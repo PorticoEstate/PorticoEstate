@@ -31,6 +31,12 @@
 	class rental_application extends rental_model
 	{
 
+		const STATUS_REGISTERED = 1;
+		const STATUS_PENDING = 2;
+		const STATUS_REJECTED = 3;
+		const STATUS_APPROVED = 4;
+
+		protected $status;
 		protected $ecodimb;
 		protected $district_id;
 		protected $composite_type;
@@ -49,6 +55,15 @@
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);
+		}
+		public function set_status( $status )
+		{
+			$this->ecodimb = $status;
+		}
+
+		public function get_status()
+		{
+			return $this->status;
 		}
 		public function set_ecodimb( $ecodimb )
 		{

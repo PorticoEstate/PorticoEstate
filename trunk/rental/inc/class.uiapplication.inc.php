@@ -26,7 +26,6 @@
 	 * @subpackage application
 	 * @version $Id: $
 	 */
-
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.soapplication');
 
@@ -53,6 +52,33 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
 		}
 
+		private function get_status_options( $selected = 0 )
+		{
+			$status_options = array();
+			$status_options[] = array(
+				'id' => rental_application::STATUS_REGISTERED,
+				'name' => lang('registered')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_PENDING,
+				'name' => lang('pending')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_REJECTED,
+				'name' => lang('rejected')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_APPROVED,
+				'name' => lang('approved')
+			);
+
+			foreach ($status_options as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+			return $status_options;
+		}
+
 		public function index()
 		{
 			if (!$this->isExecutiveOfficer())
@@ -67,24 +93,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$types_options = array();
-			$types_options[] = array(
-				'id'	=> 1,
-				'name'	=> 'registrert'
-			);
-			$types_options[] = array(
-				'id'	=> 2,
-				'name'	=> 'under behandling'
-			);
-			$types_options[] = array(
-				'id'	=> 3,
-				'name'	=> 'avvist'
-			);
-			$types_options[] = array(
-				'id'	=> 3,
-				'name'	=> 'godkjent'
-			);
-
+			$status_options = $this->get_status_options();
 			$function_msg = lang('application');
 
 			$data = array(
@@ -96,14 +105,14 @@
 								'type' => 'filter',
 								'name' => 'responsibility_id',
 								'text' => lang('status'),
-								'list' => $types_options
+								'list' => $status_options
 							),
 							array('type' => 'autocomplete',
 								'name' => 'dimb',
 								'app' => 'property',
 								'ui' => 'generic',
-								'label_attr'=>'descr',
-				//				'show_id'=> true,
+								'label_attr' => 'descr',
+								//				'show_id'=> true,
 								'text' => lang('dimb') . ':',
 								'requestGenerator' => 'requestWithDimbFilter',
 							),
@@ -252,7 +261,7 @@ JS;
 //				$application->set_price_type_id(1); // defaults to year
 			}
 
-	//		$responsibility_title = ($application->get_responsibility_title()) ? $application->get_responsibility_title() : rental_socontract::get_instance()->get_responsibility_title($responsibility_id);
+			//		$responsibility_title = ($application->get_responsibility_title()) ? $application->get_responsibility_title() : rental_socontract::get_instance()->get_responsibility_title($responsibility_id);
 
 			$link_save = array(
 				'menuaction' => 'rental.uiapplication.save'
@@ -270,11 +279,11 @@ JS;
 			$active_tab = 'showing';
 
 //			$current_price_type_id = $application->get_price_type_id();
-			$types_options = array();
+			$status_options = array();
 //			foreach ($application->get_price_types() as $price_type_id => $price_type_title)
 //			{
 //				$selected = ($current_price_type_id == $price_type_id) ? 1 : 0;
-//				$types_options[] = array('id' => $price_type_id, 'name' => lang($price_type_title),
+//				$status_options[] = array('id' => $price_type_id, 'name' => lang($price_type_title),
 //					'selected' => $selected);
 //			}
 
@@ -292,21 +301,28 @@ JS;
 
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
 			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_end');
 
 			$data = array(
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_save),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_index),
 				'lang_save' => lang('save'),
 				'lang_cancel' => lang('cancel'),
-				'value_ecodimb'	=> $application->get_ecodimb(),
-				'value_ecodimb_descr'	=> ExecMethod('property.bogeneric.get_single_attrib_value', array('type' => 'dimb', 'id' => $application->get_ecodimb(), 'attrib_name' => 'descr' )),
-				'district_list'			=> array('options' => $bocommon->select_district_list('', $application->get_district_id())),
-				'composite_type_list'		=> array('options' => $bocommon->select_list( $application->get_composite_type(), $composite_type)),
-				'value_date_start'	=> $GLOBALS['phpgw']->common->show_date($application->get_start_date(),$this->dateFormat),
-				'value_date_end'	=> $GLOBALS['phpgw']->common->show_date($application->get_end_date(),$this->dateFormat),
-				'value_cleaning'	=> $application->get_cleaning(),
-				'payment_method_list'		=> array('options' => $bocommon->select_list( $application->get_payment_method(), $payment_method)),
-
+				'value_ecodimb' => $application->get_ecodimb(),
+				'value_ecodimb_descr' => ExecMethod('property.bogeneric.get_single_attrib_value', array(
+					'type' => 'dimb',
+					'id' => $application->get_ecodimb(),
+					'attrib_name' => 'descr')
+				),
+				'district_list' => array('options' => $bocommon->select_district_list('', $application->get_district_id())),
+				'composite_type_list' => array('options' => $bocommon->select_list($application->get_composite_type(), $composite_type)),
+				'value_date_start' => $GLOBALS['phpgw']->common->show_date($application->get_start_date(), $this->dateFormat),
+				'value_date_end' => $GLOBALS['phpgw']->common->show_date($application->get_end_date(), $this->dateFormat),
+				'value_cleaning' => $application->get_cleaning(),
+				'payment_method_list' => array('options' => $bocommon->select_list($application->get_payment_method(), $payment_method)),
+				'value_application_id' => $application->get_id(),
+				'status_list' => array('options' => $this->get_status_options($application->get_status())),
 //				'lang_current_price_type' => lang($application->get_price_type_title()),
 //				'lang_adjustable_text' => $application->get_adjustable_text(),
 //				'lang_standard_text' => $application->get_standard_text(),
@@ -314,19 +330,18 @@ JS;
 //				'value_field_of_responsibility' => lang($responsibility_title),
 //				'value_agresso_id' => $application->get_agresso_id(),
 //				'is_area' => ($application->is_area()) ? 1 : 0,
-//				'list_type' => array('options' => $types_options),
+//				'list_type' => array('options' => $status_options),
 //				'value_price' => $application->get_price(),
 //				'value_price_formatted' => number_format($application->get_price(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator) . ' ' . $this->currency_suffix,
 //				'has_active_contract' => (rental_soapplication::get_instance()->has_active_contract($application->get_id())) ? 1 : 0,
 //				'is_inactive' => ($application->is_inactive()) ? 1 : 0,
 //				'is_adjustable' => ($application->is_adjustable()) ? 1 : 0,
 //				'is_standard' => ($application->is_standard()) ? 1 : 0,
-				'application_id' => $application->get_id(),
 //				'responsibility_id' => $responsibility_id,
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 			);
-			phpgwapi_jquery::formvalidator_generate(array('date','security', 'file'));
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('rental', 'rental', 'application.edit.js');
 
@@ -349,6 +364,7 @@ JS;
 
 		public function save()
 		{
+			_debug_array($_POST);
 			$application_id = phpgw::get_var('id', 'int');
 
 			if (!empty($application_id))
@@ -406,7 +422,7 @@ JS;
 			switch ($field_name)
 			{
 				case 'count':
-					$value = (int) $value;
+					$value = (int)$value;
 					break;
 				case 'price':
 					$value = trim(str_replace(array($this->currency_suffix, " "), '', $value));
@@ -469,7 +485,6 @@ JS;
 			$filters = array();
 			$result_objects = rental_soapplication::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 			$object_count = 0;//rental_soapplication::get_instance()->get_count($search_for, $search_type, $filters);
-
 			// Create an empty row set
 			$rows = array();
 			foreach ($result_objects as $record)
@@ -488,5 +503,4 @@ JS;
 
 			return $this->jquery_results($result_data);
 		}
-
 	}
