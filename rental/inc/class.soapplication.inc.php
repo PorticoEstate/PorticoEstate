@@ -265,6 +265,7 @@
 
 		protected function add( &$object )
 		{
+			_debug_array($object);
 
 		}
 
