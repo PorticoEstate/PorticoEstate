@@ -36,7 +36,9 @@
 			'query' => true,
 			'index' => true,
 			'get_locations_for_type' => true,
-			'file_upload_handler' => true
+			'import_component_files' => true,
+			'delete_file_upload' => true,
+			'import_components' => true
 		);
 
 		public function __construct()
@@ -55,11 +57,131 @@
 			return;
 		}
 
-		public function file_upload_handler()
+		public function import_component_files()
 		{
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+			$get_identificator = true;
+
+			$result = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
+	
+			print_r($result); die;
+			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
+			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
+			$upload_handler = new UploadHandler($options);*/
 			
-			$upload_handler = new UploadHandler();
+		}
+		
+		/*public function delete_file_upload()
+		{
+			require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
+			//return $this->jquery_results(array('mensaje' => 'mensaje 1'));
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
+			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
+			$upload_handler = new UploadHandler($options, false);
+			$upload_handler->delete(true);
+			
+		}*/
+		
+		public function import_components()
+		{
+			$get_identificator = false;
+
+			$location = phpgw::get_var('location_code');
+			
+			$entity_categories_in_xml = array();
+
+			$result = $this->getxmldata($_FILES['file']['tmp_name'], $get_identificator);
+
+			$postnrdelkode = $result['Prosjekter']['ProsjektNS']['Postnrplan']['PostnrdelKoder']['PostnrdelKode'];
+			$entities_name = array();
+			foreach ($postnrdelkode as $items) 
+			{
+				if ($items['PostnrdelKoder']['PostnrdelKode']['Kode'])
+				{
+						$entities_name[$items['PostnrdelKoder']['PostnrdelKode']['Kode']] = array(
+							'name' => $items['PostnrdelKoder']['PostnrdelKode']['Kode'].' - '.$items['PostnrdelKoder']['PostnrdelKode']['Navn']
+						);							
+				}
+				else {
+					foreach ($items['PostnrdelKoder']['PostnrdelKode'] as $item) 
+					{
+						$entities_name[$item['Kode']] = array('name' => $item['Kode'].' - '.$item['Navn']);
+					}
+				}
+			}
+
+			$posts = $result['Prosjekter']['ProsjektNS']['Prosjektdata']['Post'];
+			foreach ($posts as $post) 
+			{
+				$buildingpart = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
+				$entity_categories_in_xml[$buildingpart]['name'] = $entities_name[$buildingpart]['name'];
+				$entity_categories_in_xml[$buildingpart]['components'][] = array(
+					array('name' => 'benevnelse', 'value' => trim($post['Egenskaper']['Egenskap']['Verdi'])),
+					array('name' => 'beskrivelse', 'value' => trim($post['Tekst']['Uformatert']))
+				);
+
+				//$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
+			}
+
+			//echo '<li class="info">Import: finished step ' . print_r($buildingpart) . '</li>';
+
+
+			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
+
+			$import_components = new import_components();
+			$entity_categories  = $import_components->get_entity_categories();
+
+			$buildingpart_out_table = array();
+			foreach ($entity_categories_in_xml as $k => $v) 
+			{
+				if (!array_key_exists((string)$k, $entity_categories))
+				{
+					$buildingpart_parent = substr($k, 0, strlen($k) -1);
+					$buildingpart_out_table[$k] = array('parent' => $entity_categories[$buildingpart_parent], 'name' => $v['name']);
+				} else {
+					$entity_categories_in_xml[$k]['cat_id'] = $entity_categories[$k]['id'];
+					$entity_categories_in_xml[$k]['entity_id'] = $entity_categories[$k]['entity_id'];
+				}
+			}
+
+			if (count($buildingpart_out_table))
+			{
+				$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
+
+				if (count($buildingpart_processed['added']))
+				{
+					echo 'Entities added: <br>';
+					foreach($buildingpart_processed['added'] as $k => $v)
+					{
+						$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
+						$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
+						echo $v['name'].'<br>';
+					}
+				} 
+
+				if (count($buildingpart_processed['not_added']))
+				{
+					echo '<br>Entities not added: <br>';
+					foreach($buildingpart_processed['not_added'] as $k => $v)
+					{
+						unset($entity_categories_in_xml[$k]);	
+						echo $v['name'].'<br>';
+					}						
+				}
+			}
+
+			$components_not_added = $import_components->add_bim_item($entity_categories_in_xml, $location);
+			if (count($components_not_added))
+			{
+				echo '<br>Components not added: <br>';
+				foreach ($components_not_added as $k => $v)
+				{
+					echo $k.' => not added: '.$v.'<br>';
+				}
+			}*/
+
+			print_r($entity_categories_in_xml); die;
+
 		}
 		
 		/**
@@ -68,203 +190,10 @@
 		 */
 		public function index()
 		{
-			// Set the submit button label to its initial state
-			$this->import_button_label = "Start import";
-
-			$check_method = 0;
-			$get_identificator = false;
-
-			if ($check_method > 1)
-			{
-				phpgwapi_cache::session_set('property', 'import_message', 'choose only one target!');
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
-			}
-
-			phpgwapi_cache::session_set('property', 'import_settings', $_POST);
-
-
-			// If the parameter 'importsubmit' exist (submit button in import form), set path
-			if (phpgw::get_var("importsubmit"))
-			{
-				if ($GLOBALS['phpgw']->session->is_repost() && !phpgw::get_var('debug', 'bool'))
-				{
-					phpgwapi_cache::session_set('property', 'import_message', 'Hmm... looks like a repost!');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport_components.index'));
-				}
-				
-
-				$start_time = time(); // Start time of import
-				$start = date("G:i:s", $start_time);
-				echo "<h3>Import started at: {$start}</h3>";
-				echo "<ul>";
-
-				$this->debug = phpgw::get_var('debug', 'bool');
-				//$this->import_conversion = new import_conversion($this->location_id, $this->debug);
-
-				// Get the path for user input or use a default path
-
-				$files = array();
-				if (isset($_FILES['file']['tmp_name']) && $_FILES['file']['tmp_name'])
-				{
-					$files[] = array
-						(
-						'name' => $_FILES['file']['tmp_name'],
-						'type' => $_FILES['file']['type']
-					);
-				}
-				else
-				{
-					$path = phpgw::get_var('path', 'string');
-					$files = $this->get_files($path);
-				}
-
-				if (!$files)
-				{
-					phpgwapi_cache::session_set('property', 'import_message', 'Ingen filer er valgt');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
-				}
-
-				$entity_categories_in_xml = array();
-				foreach ($files as $file)
-				{
-					$valid_type = true;
-
-					$result = $this->getxmldata($file['name'], $get_identificator);
-					
-					$postnrdelkode = $result['Prosjekter']['ProsjektNS']['Postnrplan']['PostnrdelKoder']['PostnrdelKode'];
-					$entities_name = array();
-					foreach ($postnrdelkode as $items) 
-					{
-						if ($items['PostnrdelKoder']['PostnrdelKode']['Kode'])
-						{
-								$entities_name[$items['PostnrdelKoder']['PostnrdelKode']['Kode']] = array(
-									'name' => $items['PostnrdelKoder']['PostnrdelKode']['Kode'].' - '.$items['PostnrdelKoder']['PostnrdelKode']['Navn']
-								);							
-						}
-						else {
-							foreach ($items['PostnrdelKoder']['PostnrdelKode'] as $item) 
-							{
-								$entities_name[$item['Kode']] = array('name' => $item['Kode'].' - '.$item['Navn']);
-							}
-						}
-					}
-					
-					$posts = $result['Prosjekter']['ProsjektNS']['Prosjektdata']['Post'];
-					foreach ($posts as $post) 
-					{
-						$buildingpart = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
-						$entity_categories_in_xml[$buildingpart]['name'] = $entities_name[$buildingpart]['name'];
-						$entity_categories_in_xml[$buildingpart]['components'][] = array(
-							array('name' => 'benevnelse', 'value' => trim($post['Egenskaper']['Egenskap']['Verdi'])),
-							array('name' => 'beskrivelse', 'value' => trim($post['Tekst']['Uformatert']))
-						);
-						
-						//$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
-					}
-		
-					//echo '<li class="info">Import: finished step ' . print_r($buildingpart) . '</li>';
-				}
-				
-				require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
-
-				$import_components = new import_components();
-				$entity_categories  = $import_components->get_entity_categories();
-
-				$buildingpart_out_table = array();
-				foreach ($entity_categories_in_xml as $k => $v) 
-				{
-					if (!array_key_exists((string)$k, $entity_categories))
-					{
-						$buildingpart_parent = substr($k, 0, strlen($k) -1);
-						$buildingpart_out_table[$k] = array('parent' => $entity_categories[$buildingpart_parent], 'name' => $v['name']);
-					} else {
-						$entity_categories_in_xml[$k]['cat_id'] = $entity_categories[$k]['id'];
-						$entity_categories_in_xml[$k]['entity_id'] = $entity_categories[$k]['entity_id'];
-					}
-				}
-				
-				/*if (count($buildingpart_out_table))
-				{
-					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
-					
-					if (count($buildingpart_processed['added']))
-					{
-						echo 'Entities added: <br>';
-						foreach($buildingpart_processed['added'] as $k => $v)
-						{
-							$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
-							$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
-							echo $v['name'].'<br>';
-						}
-					} 
-					
-					if (count($buildingpart_processed['not_added']))
-					{
-						echo '<br>Entities not added: <br>';
-						foreach($buildingpart_processed['not_added'] as $k => $v)
-						{
-							unset($entity_categories_in_xml[$k]);	
-							echo $v['name'].'<br>';
-						}						
-					}
-				}
-				
-				$components_not_added = $import_components->add_bim_item($entity_categories_in_xml);
-				if (count($components_not_added))
-				{
-					echo '<br>Components not added: <br>';
-					foreach ($components_not_added as $k => $v)
-					{
-						echo $k.' => not added: '.$v.'<br>';
-					}
-				}*/
-				
-				print_r($entity_categories_in_xml);
-				
-				echo "</ul>";
-				$end_time = time();
-				$difference = ($end_time - $start_time) / 60;
-				$end = date("G:i:s", $end_time);
-				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
-
-				if ($this->errors)
-				{
-					echo "<ul>";
-					foreach ($this->errors as $error)
-					{
-						echo '<li class="error">Error: ' . $error . '</li>';
-					}
-
-					echo "</ul>";
-				}
-
-				if ($this->warnings)
-				{
-					echo "<ul>";
-					foreach ($this->warnings as $warning)
-					{
-						echo '<li class="warning">Warning: ' . $warning . '</li>';
-					}
-					echo "</ul>";
-				}
-
-				if ($this->messages)
-				{
-					echo "<ul>";
-
-					foreach ($this->messages as $message)
-					{
-						echo '<li class="info">Message: ' . $message . '</li>';
-					}
-					echo "</ul>";
-				}
-				echo '<a href="' . $GLOBALS['phpgw']->link('/home.php') . '">Home</a>';
-				echo '</br><a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.components')) . '">Import</a>';
-			}
-			
 			$tabs = array();
 			$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['upload'] = array('label' => lang('Upload'), 'link' => '#upload', 'disable' => 1);
+			$tabs['upload_components'] = array('label' => lang('Components'), 'link' => '#upload_components', 'disable' => 1);
+			$tabs['upload_files'] = array('label' => lang('Files'), 'link' => '#upload_files', 'disable' => 0);
 			
 			$active_tab = 'locations';
 
@@ -304,8 +233,8 @@
 				'type_filter' => array('options' => $type_filter),
 				'category_filter' => array('options' => $category_filter),
 				'district_filter' => array('options' => $district_filter),
-				'part_of_town_filter' => array('options' => $part_of_town_filter),
-				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
+				'part_of_town_filter' => array('options' => $part_of_town_filter)
+				//'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
 			);
 
 			self::add_javascript('property', 'portico', 'import_components.js');
@@ -418,4 +347,55 @@
 			return $out;
 		}
 		
+		protected function getexceldata( $path, $get_identificator = false )
+		{
+			phpgw::import_class('phpgwapi.phpexcel');
+
+			$objPHPExcel = PHPExcel_IOFactory::load($path);
+			$objPHPExcel->setActiveSheetIndex(0);
+
+			$result = array();
+
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+
+			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
+
+			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+
+			$start = $get_identificator ? 3 : 1; // Read the first line to get the headers out of the way
+
+			if ($get_identificator)
+			{
+				$this->identificator = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(0, 1)->getCalculatedValue();
+				for ($j = 0; $j < $highestColumnIndex; $j++)
+				{
+					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 2)->getCalculatedValue();
+				}
+			}
+			else
+			{
+				for ($j = 0; $j < $highestColumnIndex; $j++)
+				{
+					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
+				}
+			}
+
+			$rows = $rows ? $rows + 1 : 0;
+			for ($row = $start; $row < $rows; $row++)
+			{
+				$_result = array();
+
+				for ($j = 0; $j < $highestColumnIndex; $j++)
+				{
+					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
+				}
+
+				$result[] = $_result;
+			}
+
+			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
+
+			return $result;
+		}
 	}
