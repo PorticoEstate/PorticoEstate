@@ -1991,7 +1991,7 @@ JS;
 				$active_options = array
 					(
 					array('id' => 'both', 'name' => lang('all')),
-					array('id' => 'active', 'name' => lang('in_operation')),
+					array('id' => 'active', 'name' => lang('in_operation'), 'selected' => 1),
 					array('id' => 'non_active', 'name' => lang('out_of_operation')),
 				);
 				$has_contract_options = array

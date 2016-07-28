@@ -300,7 +300,7 @@ $(document).ready(function ()
 			JqueryPortico.updateinlineTableHelper(oTable1, link_included_composites);
 
 			oTable2.dataTableSettings[2]['oFeatures']['bServerSide'] = true;
-			oTable2.dataTableSettings[2]['ajax'] = {url: link_not_included_composites, data: {}, type: 'GET'};
+			oTable2.dataTableSettings[2]['ajax'] = {url: link_not_included_composites, data: {is_active:'active'}, type: 'GET'};
 			JqueryPortico.updateinlineTableHelper(oTable2);
 
 			set_composite_data = 1;
