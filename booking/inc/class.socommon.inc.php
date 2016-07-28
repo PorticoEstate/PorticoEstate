@@ -293,7 +293,7 @@
 		{
 			if (!$id)
 			{
-				return null;
+				return array();
 			}
 			$row = array();
 			$pk_params = $this->primary_key_conditions($id);
