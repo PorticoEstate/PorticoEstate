@@ -66,6 +66,66 @@ $(document).ready(function ()
 		}
     });
 	
+	$('#import_components').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
+		var requestUrl = phpGWLink('index.php', oArgs);
+		
+		if ($('#file_xml').val() === '')
+		{
+			alert('no file selected');
+			return false;
+		}
+
+		var form = document.forms.namedItem("form_components");
+		var file_data = $('#file_xml').prop('files')[0];
+		var form_data = new FormData(form);
+		form_data.append('file', file_data);
+		form_data.append('location_code', 'location_code');
+
+		$.ajax({
+			url: requestUrl,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,
+			type: 'post',
+			success: function (result)
+			{
+				alert(result);
+			}
+		});
+	});
+	
+	$('#import_files').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var requestUrl = phpGWLink('index.php', oArgs);
+		
+		if ($('#file_excel').val() === '')
+		{
+			alert('no file selected');
+			return false;
+		}
+
+		var form = document.forms.namedItem("form_files");
+		var file_data = $('#file_excel').prop('files')[0];
+		var form_data = new FormData(form);
+		form_data.append('file', file_data);
+
+		$.ajax({
+			url: requestUrl,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,
+			type: 'post',
+			success: function (result)
+			{
+				alert(result);
+			}
+		});
+	});
 });
 
 function getLocations()
