@@ -204,6 +204,8 @@
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'paste image data')"/>
+							<br/>
+							<xsl:text>Ctrl + V</xsl:text>
 						</label>
 						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
 						</canvas>
@@ -219,17 +221,17 @@
 			<input type="hidden" id="cancel" name="values[cancel]" value=""/>
 			<input class="pure-button pure-button-primary" type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="apply" value="{lang_save}" onClick="confirm_session('apply');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="cancel" value="{lang_cancel}" onClick="confirm_session('cancel');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
 				</xsl:attribute>
 			</input>
 		</div>
