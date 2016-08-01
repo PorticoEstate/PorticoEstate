@@ -323,7 +323,7 @@
 							<label>
 								<xsl:value-of select="$lang_date_start"/>
 							</label>
-							<input type="text" id="assign_date_start" name="date_start" size="10" value="{value_assign_date_start}" readonly="readonly">
+							<input type="text" id="assign_date_start" name="assign_date_start" size="10" value="{value_assign_date_start}" readonly="readonly">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -340,7 +340,7 @@
 							<label>
 								<xsl:value-of select="$lang_date_end"/>
 							</label>
-							<input type="text" id="assign_date_end" name="date_end" size="10" value="{value_assign_date_end}" readonly="readonly">
+							<input type="text" id="assign_date_end" name="assign_date_end" size="10" value="{value_assign_date_end}" readonly="readonly">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>

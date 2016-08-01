@@ -483,6 +483,8 @@
 				'payment_method' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
 				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'assign_date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'assign_date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'entry_date' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'identifier' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'adjustment_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
