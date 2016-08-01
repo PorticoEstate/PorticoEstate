@@ -472,7 +472,7 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		),/*
+		),
 		'rental_application' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
@@ -507,5 +507,19 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		)*/
+		),
+		'rental_application_composite' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'composite_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_application' => array('application_id' => 'id'),
+				'rental_composite' => array('composite_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		)
 	);
