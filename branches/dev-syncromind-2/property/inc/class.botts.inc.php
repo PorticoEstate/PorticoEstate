@@ -185,7 +185,7 @@
 			$columns['assignedto'] = array
 				(
 				'id' => 'assignedto',
-				'name' => lang('assignedto')
+				'name' => lang('assigned to')
 			);
 
 			if ($GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property'))

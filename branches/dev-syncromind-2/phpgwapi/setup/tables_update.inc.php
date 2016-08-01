@@ -3398,3 +3398,33 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.551';
+	/**
+	* Alter column definition
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_551()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_lang','app_name',array(
+			'type' => 'varchar',
+			'precision' => 30,
+			'nullable' => False,
+			'default' => 'common'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_history_log','history_old_value',array(
+			'type' => 'text',
+			'nullable' => true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.552';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

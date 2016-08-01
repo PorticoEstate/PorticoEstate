@@ -36,12 +36,14 @@
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
 		phpgwapi_jquery::load_widget('layout');
-		phpgwapi_jquery::load_widget('treeview');
+//		phpgwapi_jquery::load_widget('treeview');
+		phpgwapi_jquery::load_widget('jqtree');
 
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] = 'ajax_menu';//ajax_menu|jsmenu
 		if (isset($GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['sidecontent'] == 'ajax_menu')
 		{
-			$javascripts[] = "/phpgwapi/templates/portico/js/ajax_jsmenu.js";
+//			$javascripts[] = "/phpgwapi/templates/portico/js/ajax_jsmenu.js";
+			$javascripts[] = "/phpgwapi/templates/portico/js/jqtree_jsmenu.js";
 		}
 
 	}

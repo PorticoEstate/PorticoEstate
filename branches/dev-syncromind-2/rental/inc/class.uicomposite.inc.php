@@ -95,7 +95,7 @@
 			$active_option = array
 				(
 				array('id' => 'both', 'name' => lang('all')),
-				array('id' => 'active', 'name' => lang('in_operation')),
+				array('id' => 'active', 'name' => lang('in_operation'),	'selected' => 1	),
 				array('id' => 'non_active', 'name' => lang('out_of_operation')),
 			);
 			$filters[] = array
@@ -178,8 +178,8 @@
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'not_included_composites': // ... get all vacant and active composites not in contract
-					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'),
-						'not_in_contract' => phpgw::get_var('contract_id'));
+					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'),//is_vacant seems to be unused
+						'not_in_contract' => phpgw::get_var('contract_id'),'has_contract' => phpgw::get_var('has_contract'),'furnished_status' => phpgw::get_var('furnished_status'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;

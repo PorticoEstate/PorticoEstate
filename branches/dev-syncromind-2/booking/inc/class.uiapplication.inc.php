@@ -665,7 +665,7 @@
 						}
 						catch (booking_unauthorized_exception $e)
 						{
-							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
+							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'),'error');
 						}
 					}
 
@@ -1082,7 +1082,7 @@
 							if ($old_file['name'] == $files['name']['name'])
 							{
 								$file_exist = true;
-								phpgwapi_cache::message_set(lang('file exists'));
+								phpgwapi_cache::message_set(lang('file exists'),'error');
 								break;
 							}
 						}
@@ -1104,7 +1104,7 @@
 						}
 						catch (booking_unauthorized_exception $e)
 						{
-							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'));
+							phpgwapi_cache::message_set(lang('Could not add object due to insufficient permissions'),'error');
 						}
 					}
 

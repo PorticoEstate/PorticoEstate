@@ -586,7 +586,8 @@ update	rental	no	Oppdatér
 upload	rental	no	Last opp
 url	rental	no	Nettsted
 Unable to get a location code for the building.	rental	no	Klarte ikke å hente objektnummer for bygget.
-unit_leader rental	no	Enhetsleder
+unit_leader	rental	no	Enhetsleder
+unit_leader2	rental	no	Leder avdeling/enhet
 username	rental	no	Brukernavn
 user_or_group	rental	no	Bruker/Gruppe
 vacant	rental	no	Ledig
@@ -626,3 +627,9 @@ payment method	rental	no	Betalingsmetode
 what	rental	no	Hva
 cleaning	rental	no	Rengjøring
 assignment	rental	no	Tildeling
+assign_start	rental	no	Tildelt fra
+assign_end	rental	no	Tildelt til
+registered	rental	no	Registrert
+pending	rental	no	Under behandling
+rejected	rental	no	Avvist
+approved	rental	no	Godkjent

@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['helpdesk']['name']			= 'helpdesk';
-	$setup_info['helpdesk']['version']		= '0.9.18.000';
+	$setup_info['helpdesk']['version']		= '0.9.18.001';
 	$setup_info['helpdesk']['app_order']	= 8;
 	$setup_info['helpdesk']['enable']		= 1;
 	$setup_info['helpdesk']['app_group']	= 'office';
@@ -61,12 +61,6 @@
 		'cat_edit'		=> 'helpdesk.cat_hooks.cat_edit',
 		'config',
 		'home',
-		'addaccount'	=> 'helpdesk.hook_helper.clear_userlist',
-		'editaccount'	=> 'helpdesk.hook_helper.clear_userlist',
-		'deleteaccount'	=> 'helpdesk.hook_helper.clear_userlist',
-		'addgroup'		=> 'helpdesk.hook_helper.clear_userlist',
-		'deletegroup'	=> 'helpdesk.hook_helper.clear_userlist',
-		'editgroup'		=> 'helpdesk.hook_helper.clear_userlist'
 	);
 
 	/* Dependencies for this app to work */

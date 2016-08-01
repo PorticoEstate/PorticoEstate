@@ -31,7 +31,9 @@
 		);
 		protected
 			$cols,
-			$auto_fields;
+			$auto_fields,
+			$global_lock = false;
+
 		protected static $AUTO_FIELD_ACTIONS = array('add' => true, 'update' => true);
 
 		public function __construct( $table_name, $fields )
@@ -291,7 +293,7 @@
 		{
 			if (!$id)
 			{
-				return null;
+				return array();
 			}
 			$row = array();
 			$pk_params = $this->primary_key_conditions($id);
@@ -641,7 +643,15 @@
 		{
 			$values = $this->marshal_field_values($this->get_table_values($entry, __FUNCTION__));
 
-			$this->db->transaction_begin();
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$this->db->query('INSERT INTO ' . $this->table_name . ' (' . join(',', array_keys($values)) . ') VALUES(' . join(',', $values) . ')', __LINE__, __FILE__);
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			foreach ($this->fields as $field => $params)
@@ -701,7 +711,10 @@
 				}
 			}
 
-			$this->db->transaction_commit();
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg' => lang('Entity %1 has been saved', $receipt['id']));

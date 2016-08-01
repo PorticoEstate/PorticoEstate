@@ -2862,15 +2862,18 @@
 		{
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
-			$id =  phpgw::get_var('ecodimb');
+			$id = phpgw::get_var('ecodimb');
+		//	$id ='013000';
+
+			$amount =phpgw::get_var('amount', 'int');
 
 			if($check_external_register && $id)
 			{
 				$url		= $config->config_data['external_register']['url'];
 				$username	= $config->config_data['external_register']['username'];
 				$password	= $config->config_data['external_register']['password'];
-				$sub_check = 'objekt';
-				$fullmakt = $this->check_external_register(array(
+				$sub_check = 'fullmakter';
+				$fullmakter = $this->check_external_register(array(
 					'url'		=> $url,
 					'username'	=> $username,
 					'password'	=> $password,
@@ -2882,8 +2885,42 @@
 				/**
 				 * some magic...to decide $supervisor_lid
 				 */
+				if(isset($fullmakter[0]))
+				{
+					if($amount > 5000 && $amount <= 100000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['inntil100k']);
+					}
+					else if ($amount > 100000 && $amount <= 1000000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['fra100kTil1m']);
+					}
+					else if ($amount > 1000000 && $amount <= 5000000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['fra1mTil5m']);
+					}
+					else if ($amount > 5000000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['ubegrenset']);
+					}
+					else
+					{
+						$supervisor_lid = ''; // maybe add a required configurable failsafe as backup...
+					}
+				}
+	//			$supervisor_lid = 'hc483';
 
-				$supervisor_lid = 'hc483';
+				/*
+					[inntil100k] => (string) DV645
+					[fra100kTil1m] => (string) DV645
+					[fra1mTil5m] => (string) YN450
+					[ubegrenset] => (string) JG406
+					[periodeFra] => (string) 200300
+					[periodeTil] => (string) 209912
+					[status] => (string) N
+					[aktiv] => (bool) true
+				*/
+
 				$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
 			}
 			else
@@ -2896,7 +2933,7 @@
 
 		public function check_external_register($param)
 		{
-			$id = 5501;//$param['id'];
+			$id = $param['id'];
 	//		$url = "http://tjenester.usrv.ubergenkom.no/api/tilskudd/{$sub_check}";
 			$url = "{$param['url']}/{$param['sub_check']}";
 			$extravars = array
@@ -2933,7 +2970,7 @@
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
-			return json_decode($result);
+			return json_decode($result, true);
 		}
 
 		protected function get_supervisor_email($supervisor_id)
@@ -2948,6 +2985,7 @@
 					$supervisor_email[] = array(
 						'id' => $supervisor_id,
 						'address' => $prefs['email'],
+						'required'	=> true
 					);
 				}
 
@@ -2960,6 +2998,7 @@
 						$supervisor_email[] = array(
 							'id' => $prefs['approval_from'],
 							'address' => $prefs2['email'],
+							'required'	=> false
 						);
 						$supervisor_email = array_reverse($supervisor_email);
 					}

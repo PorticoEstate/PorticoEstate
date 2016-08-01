@@ -31,6 +31,15 @@
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="application">
 					<fieldset>
+						<xsl:if test="value_application_id != ''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'id')"/>
+								</label>
+								<input type="hidden" name="id" value="{value_application_id}"/>
+								<xsl:value-of select="value_application_id"/>
+							</div>
+						</xsl:if>
 						<div class="pure-control-group">
 							<xsl:variable name="lang_dimb">
 								<xsl:value-of select="php:function('lang', 'dimb')"/>
@@ -38,8 +47,8 @@
 							<label>
 								<xsl:value-of select="$lang_dimb"/>
 							</label>
-							<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{value_ecodimb}"/>
-							<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{value_ecodimb_descr}">
+							<input type="hidden" id="ecodimb" name="ecodimb"  value="{value_ecodimb}"/>
+							<input type="text" id="ecodimb_name" name="ecodimb_name" value="{value_ecodimb_descr}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -60,7 +69,7 @@
 								<xsl:value-of select="$lang_district"/>
 							</label>
 
-							<select name="values[district_id]">
+							<select name="district_id">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_district"/>
 								</xsl:attribute>
@@ -84,7 +93,7 @@
 								<xsl:value-of select="$lang_composite_type"/>
 							</label>
 
-							<select name="values[composite_type_id]">
+							<select name="composite_type_id">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_composite_type"/>
 								</xsl:attribute>
@@ -138,7 +147,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'cleaning')"/>
 							</label>
-							<input type="checkbox" name="values[cleaning]" id="cleaning">
+							<input type="checkbox" name="cleaning" id="cleaning" value="1">
 								<xsl:if test="value_cleaning = 1">
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
@@ -151,7 +160,7 @@
 							<label>
 								<xsl:value-of select="$lang_payment_method"/>
 							</label>
-							<select name="values[payment_method]">
+							<select name="payment_method">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_payment_method"/>
 								</xsl:attribute>
@@ -179,8 +188,10 @@
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:text>Ansattnummer</xsl:text>
+								</xsl:attribute>
 							</input>
-							<input type="hidden" name="id" value="{party_id}"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -259,18 +270,6 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'mobile_phone')"/>
-							</label>
-							<input type="text" name="mobile_phone" value="{value_mobile_phone}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'fax')"/>
-							</label>
-							<input type="text" name="fax" value="{value_fax}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
 								<xsl:value-of select="php:function('lang', 'email')"/>
 							</label>
 							<input type="text" name="email" id="email" value="{value_email}">
@@ -289,13 +288,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'url')"/>
-							</label>
-							<input type="text" name="url" value="{value_url}"></input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'unit_leader')"/>
+								<xsl:value-of select="php:function('lang', 'unit_leader2')"/>
 							</label>
 							<input type="text" id="unit_leader" name="unit_leader" value="{value_unit_leader}"></input>
 						</div>
@@ -323,16 +316,74 @@
 				</div>
 				<div id="assignment">
 					<fieldset>
+						<div class="pure-control-group">
+							<xsl:variable name="lang_date_start">
+								<xsl:value-of select="php:function('lang', 'assign_start')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_date_start"/>
+							</label>
+							<input type="text" id="assign_date_start" name="assign_date_start" size="10" value="{value_assign_date_start}" readonly="readonly">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_date_start"/>
+								</xsl:attribute>
+
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<xsl:variable name="lang_date_end">
+								<xsl:value-of select="php:function('lang', 'assign_end')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_date_end"/>
+							</label>
+							<input type="text" id="assign_date_end" name="assign_date_end" size="10" value="{value_assign_date_end}" readonly="readonly">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_date_end"/>
+								</xsl:attribute>
+
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<xsl:variable name="lang_status">
+								<xsl:value-of select="php:function('lang', 'status')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_status"/>
+							</label>
+							<select name="status">
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_status"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_status"/>
+								</xsl:attribute>
+								<option value="">
+									<xsl:value-of select="$lang_status"/>
+								</option>
+								<xsl:apply-templates select="status_list/options"/>
+							</select>
+						</div>
+						
 					</fieldset>
 				</div>
 
 			</div>
 			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save" value="{lang_save}" onMouseout="window.status='';return true;"/>
+				<input type="submit" class="pure-button pure-button-primary" name="save" value="{lang_save}"/>
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
 				</xsl:variable>				
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
 	</div>

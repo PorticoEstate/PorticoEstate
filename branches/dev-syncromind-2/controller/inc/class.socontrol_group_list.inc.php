@@ -88,7 +88,7 @@
 		 * Update the database values for an existing control_group_list object.
 		 *
 		 * @param $control_group_list the control_group_list to be updated
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		function update( $control_group_list )
 		{
@@ -240,7 +240,7 @@
 			return $control_group_list;
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 
 		}

@@ -715,7 +715,7 @@
 			return array("location_code" => $location_code, "check_lists_array" => $check_lists_array);
 		}
 
-		function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$current_time = time();
 			$buffer_in_days = 3600 * 24 * 7 * 5;

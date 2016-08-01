@@ -100,10 +100,17 @@
 					$existing_billing = 0;
 				}
 				$contract_ids = phpgw::get_var('contract'); // Ids of the contracts to bill
-
 				$contract_ids_override = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
 				$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
-				if (($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
+				if(is_array($contract_ids))
+				{
+					$contract_ids = array_unique($contract_ids);
+				}
+				if(is_array($contract_bill_only_one_time))
+				{
+					$contract_bill_only_one_time = array_unique($contract_bill_only_one_time);
+				}
+				if (($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 				{
 					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $contract_ids_override, phpgw::get_var('export_format'));
 
@@ -382,7 +389,15 @@ JS;
 
 				$contract_ids_override = phpgw::get_var('override_start_date'); //Ids of the contracts that should override billing start date with first day in period
 				$contract_bill_only_one_time = phpgw::get_var('bill_only_one_time');
-				if (($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (isset($contract_bill_only_one_time) && is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
+				if(is_array($contract_ids))
+				{
+					$contract_ids = array_unique($contract_ids);
+				}
+				if(is_array($contract_bill_only_one_time))
+				{
+					$contract_bill_only_one_time = array_unique($contract_bill_only_one_time);
+				}
+				if (($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 				{
 					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $contract_ids_override, phpgw::get_var('export_format'));
 
@@ -596,7 +611,14 @@ JS;
 
 						if (!empty($c))
 						{
-							$total_price = $socontract_price_item->get_total_price_invoice($c->get_id(), $billing_term, $month, $year);
+							if($billing_term == 5)
+							{
+								$total_price = $contract_price_item->get_total_price();
+							}
+							else
+							{
+								$total_price = $socontract_price_item->get_total_price_invoice($c->get_id(), $billing_term, $month, $year);
+							}
 							$c->set_total_price($total_price);
 							$contracts_with_one_time[] = $this->_object_to_array($c);
 						}

@@ -38,7 +38,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 
-		public function __construct( int $id )
+		public function __construct( $id )
 		{
 			$this->id = (int)$id;
 		}
@@ -83,7 +83,7 @@
 		 * in order to validate against the standard database rules.  The subclasses can in addition
 		 * add their own specific validation logic.
 		 *
-		 * @return boolean true if the object is valid, false otherwise
+		 * @return bool true if the object is valid, false otherwise
 		 */
 		public function validates()
 		{

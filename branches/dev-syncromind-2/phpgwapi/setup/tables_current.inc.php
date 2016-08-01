@@ -178,7 +178,7 @@
 		'phpgw_lang' => array(
 			'fd' => array(
 				'message_id' => array('type' => 'varchar','precision' => 255,'nullable' => False,'default' => ''),
-				'app_name' => array('type' => 'varchar','precision' => 25,'nullable' => False,'default' => 'common'),
+				'app_name' => array('type' => 'varchar','precision' => 30,'nullable' => False,'default' => 'common'),
 				'lang' => array('type' => 'varchar','precision' => 5,'nullable' => False,'default' => ''),
 				'content' => array('type' => 'text')
 			),
@@ -334,7 +334,7 @@
 				'history_status' => array('type' => 'char','precision' => 2,'nullable' => False),
 				'history_new_value' => array('type' => 'text','nullable' => False),
 				'history_timestamp' => array('type' => 'timestamp','nullable' => False),
-				'history_old_value' => array('type' => 'text','nullable' => False),
+				'history_old_value' => array('type' => 'text','nullable' => true),
 				'location_id'	=> array('type' => 'int', 'precision' => 4, 'nullable' => true)
 			),
 			'pk' => array('history_id'),

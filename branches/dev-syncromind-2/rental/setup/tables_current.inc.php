@@ -472,5 +472,56 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'rental_application' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'ecodimb' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'district_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'composite_type_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'cleaning' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+				'payment_method' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'assign_date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'assign_date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'entry_date' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'identifier' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'adjustment_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'firstname' => array('type' => 'varchar', 'precision' => '64', 'nullable' => true),
+				'lastname' => array('type' => 'varchar', 'precision' => '64', 'nullable' => true),
+				'title' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'company_name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'department' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'address_1' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'address_2' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'postal_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'place' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'phone' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'email' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'account_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'unit_leader' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'comment' => array('type' => 'text', 'nullable' => true),
+				'status' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_application_composite' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'composite_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_application' => array('application_id' => 'id'),
+				'rental_composite' => array('composite_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
