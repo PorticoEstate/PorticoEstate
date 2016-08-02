@@ -99,11 +99,9 @@
 						</xsl:variable>
 						<INPUT type="hidden" name="location" value="{$location}"/>
 						<INPUT type="hidden" name="processed" value="{$processed}"/>
-						<input type="submit" name="set_permission" value="{$lang_save}" onMouseout="window.status='';return true;">
-							<xsl:attribute name="onMouseover">
-								<xsl:text>window.status='</xsl:text>
+						<input type="submit" name="set_permission" value="{$lang_save}">
+							<xsl:attribute name="title">
 								<xsl:value-of select="lang_save_statustext"/>
-								<xsl:text>'; return true;</xsl:text>
 							</xsl:attribute>
 						</input>
 					</td>

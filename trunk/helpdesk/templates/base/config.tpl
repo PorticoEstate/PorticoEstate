@@ -29,6 +29,35 @@
 				{lang_default}: {lang_Open}</td>
 			<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
 		</tr>
+		<tr class="pure-table-odd">
+			<td >{lang_TTS_disable_assign_to_user_on_add}:</td>
+			<td>
+				<select name="newsettings[tts_disable_userassign_on_add]">
+					<option value="" {selected_tts_disable_userassign_on_add_}>NO</option>
+					<option value="1" {selected_tts_disable_userassign_on_add_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="pure-table-odd">
+			<td >{lang_TTS_disable_assign_to_group_on_add}:</td>
+			<td>
+				<select name="newsettings[tts_disable_groupassign_on_add]">
+					<option value="" {selected_tts_disable_groupassign_on_add_}>NO</option>
+					<option value="1" {selected_tts_disable_groupassign_on_add_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="pure-table-odd">
+			<td >{lang_TTS_disable_priority}:</td>
+			<td>
+				<select name="newsettings[disable_priority]">
+					<option value="" {selected_disable_priority_}>NO</option>
+					<option value="1" {selected_disable_priority_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+
+
 		<tr class="row_on">
 			<td valign = 'top'>{lang_TTS_simplified_group}:</td>
 			<td>

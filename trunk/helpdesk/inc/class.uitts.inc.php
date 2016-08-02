@@ -285,18 +285,6 @@
 			$name[] = 'entry_date';
 			$name[] = 'status';
 
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'helpdesk') )
-			{
-				$name[] = 'order_id';
-				$name[] = 'vendor';
-			}
-
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'helpdesk') )
-			{
-				$name[] = 'estimate';
-				$name[] = 'actual_cost';
-			}
-
 			$uicols_related = $this->bo->uicols_related;
 
 			foreach($uicols_related as $related)
@@ -322,10 +310,12 @@
 				array_push($descr,$_name);			
 			}
 
-			$name[] = 'finnish_date';
-			$name[] = 'delay';
-
-			array_push($descr,lang('finnish date'),lang('delay'));
+			if($this->_show_finnish_date)
+			{
+				$name[] = 'finnish_date';
+				$name[] = 'delay';
+				array_push($descr,lang('finnish date'),lang('delay'));
+			}
 
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
@@ -1034,8 +1024,10 @@
 					}
 				}
 
+				$disable_userassign_on_add = isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : false;
+				$disable_groupassign_on_add = isset($this->bo->config->config_data['tts_disable_groupassign_on_add']) ? $this->bo->config->config_data['tts_disable_groupassign_on_add'] : false;
 
-				if (!$values['assignedto'] && !$values['group_id'])
+				if (!$values['assignedto'] && !$values['group_id'] && !$disable_userassign_on_add && !$disable_groupassign_on_add)
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
 				}
@@ -1194,7 +1186,7 @@
 			$msgbox_data = (isset($receipt) ? $this->bocommon->msgbox_data($receipt) : '');
 
 
-			if (!$this->simple && $this->show_finnish_date)
+			if (!$this->simple && $this->_show_finnish_date)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
@@ -1210,13 +1202,14 @@
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
 			$active_tab = 'add';
 
+
 			$data = array(
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $values['attributes']),
 				'lookup_functions' => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
 				'contact_data' => $contact_data,
 				'simple' => $this->simple,
-				'show_finnish_date' => $this->show_finnish_date,
+				'show_finnish_date' => $this->_show_finnish_date,
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => (isset($origin) ? $origin : ''),
 				'value_origin_id' => (isset($origin_id) ? $origin_id : ''),
@@ -1224,8 +1217,10 @@
 				'lang_no_user' => lang('Select user'),
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
-				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['assignedto'], $this->acl_location),
+				'user_list' => $this->_get_user_list($values['assignedto']),
 				'disable_userassign_on_add' => isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : '',
+				'disable_groupassign_on_add' => isset($this->bo->config->config_data['tts_disable_groupassign_on_add']) ? $this->bo->config->config_data['tts_disable_groupassign_on_add'] : '',
+				'disable_priority'			=> isset($this->bo->config->config_data['disable_priority']) ? $this->bo->config->config_data['disable_priority'] : '',
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($values['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -1553,7 +1548,7 @@
 			}
 
 
-			if ($this->show_finnish_date)
+			if ($this->_show_finnish_date)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
@@ -1752,11 +1747,12 @@
 				'lookup_functions' => isset($ticket['lookup_functions']) ? $ticket['lookup_functions'] : '',
 				'simple' => $this->simple,
 				'send_response' => isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
+				'disable_priority'	=> isset($this->bo->config->config_data['disable_priority']) ? $this->bo->config->config_data['disable_priority'] : '',
 				'value_sms_phone' => $ticket['contact_phone'],
 				'value_budget' => $ticket['budget'],
 				'value_actual_cost' => $ticket['actual_cost'],
 				'contact_data' => $contact_data,
-				'show_finnish_date' => $this->show_finnish_date,
+				'show_finnish_date' => $this->_show_finnish_date,
 				'tabs' => self::_generate_tabs(true),
 				'base_java_url' => "{menuaction:'helpdesk.uitts.update_data',id:{$id}}",
 				'location_item_id' => $id,
@@ -1770,7 +1766,7 @@
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
-				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $ticket['assignedto'], $this->acl_location),
+				'user_list' => $this->_get_user_list($values['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -1800,7 +1796,7 @@
 				'contact_phone' => $ticket['contact_phone'],
 				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : '',
 				'fileupload' => true,//isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
-				'multiple_uploader' => true,
+	//			'multiple_uploader' => true,
 				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
@@ -1911,4 +1907,38 @@
 			}
 		}
 
+		private function _get_user_list($selected)
+		{
+			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
+
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(16, $this->acl_location, 'helpdesk');
+			$user_list = array();
+			$selected_found = false;
+			foreach ($users as $user)
+			{
+				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$user_list[] = array(
+					'id' => $user['account_id'],
+					'name' => $name,
+					'selected' => $user['account_id'] == $selected ? 1 : 0
+				);
+
+				if (!$selected_found)
+				{
+					$selected_found = $user['account_id'] == $selected ? true : false;
+				}
+			}
+			if ($selected && !$selected_found)
+			{
+				$user_list[] = array
+					(
+					'id' => $selected,
+					'name' => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected' => 1
+				);
+			}
+			return $user_list;
+		}
 	}

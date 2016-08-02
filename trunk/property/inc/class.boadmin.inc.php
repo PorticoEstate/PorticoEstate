@@ -67,7 +67,8 @@
 			$module = phpgw::get_var('module');
 			$granting_group = phpgw::get_var('granting_group', 'int');
 			$allrows = phpgw::get_var('allrows', 'bool');
-			$acl_app = 'property'; //get_var('acl_app',array('POST','GET'));
+			$acl_app	= phpgw::get_var('acl_app', 'string', 'REQUEST', 'property');
+			$this->acl_app = $acl_app;
 
 			if ($start)
 			{
@@ -109,10 +110,6 @@
 
 			$this->allrows = $allrows ? $allrows : '';
 
-			if (isset($acl_app))
-			{
-				$this->acl_app = $acl_app;
-			}
 		}
 
 		function read_sessiondata()
@@ -261,7 +258,7 @@
 			{
 				$check_account_type = array('accounts');
 				$acl_account_type = 'accounts';
-				$valid_users = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'property');
+				$valid_users = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $this->acl_app);
 			}
 			else
 			{
