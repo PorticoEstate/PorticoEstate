@@ -175,15 +175,6 @@
 				$where= 'AND';
 			}
 
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
-			{
-				$access_location = execMethod('property.socommon.get_location_list', PHPGW_ACL_READ);
-				if($access_location)
-				{
-					$filtermethod .= " $where phpgw_helpdesk_tickets.loc1 in ('" . implode("','", $access_location) . "')";
-					$where= 'AND';
-				}
-			}
 
 			if (is_array($this->grants))
 			{
@@ -217,12 +208,6 @@
 				{
 					$filtermethod .=')';
 				}
-			}
-
-			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','helpdesk'))
-			{
-				$filtermethod .= $where . ' phpgw_helpdesk_tickets.tenant_id=' . $tenant_id;
-				$where = 'AND';
 			}
 
 			if ($status_id == 'X')
@@ -347,7 +332,6 @@
 				. " $filtermethod $querymethod";
 
 			$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
-			_debug_array($sql2);
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
@@ -356,6 +340,10 @@
 			$tickets = array();
 			if(!$dry_run)
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+				$custom_cols = $this->custom->find('helpdesk', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+				$_return_field_array = array();
+
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -374,29 +362,40 @@
 					unset($_fetch_single);
 				}
 
+				$i = 0;
 				while ($this->db->next_record())
 				{
 					$tickets[]= array
-						(
-							'id'				=> (int) $this->db->f('id'),
-							'subject'			=> $this->db->f('subject',true),
-							'user_id'			=> $this->db->f('user_id'),
-							'assignedto'		=> $this->db->f('assignedto'),
-							'status'			=> $this->db->f('status'),
-							'priority'			=> $this->db->f('priority'),
-							'cat_id'			=> $this->db->f('cat_id'),
-							'group_id'			=> $this->db->f('group_id'),
-							'entry_date'		=> $this->db->f('entry_date'),
-							'modified_date'		=> $this->db->f('modified_date'),
-							'finnish_date'		=> $this->db->f('finnish_date'),
-							'finnish_date2'		=> $this->db->f('finnish_date2'),
-							'order_id'			=> $this->db->f('order_id'),
-							'vendor_id'			=> $this->db->f('vendor_id'),
-							'actual_cost'		=> $this->db->f('actual_cost'),
-							'estimate'			=> $this->db->f('budget'),
-							'new_ticket'		=> $this->db->f('view') ? false : true,
-							'billable_hours'	=> $this->db->f('billable_hours'),
-						);
+					(
+						'id'				=> (int) $this->db->f('id'),
+						'subject'			=> $this->db->f('subject',true),
+						'user_id'			=> $this->db->f('user_id'),
+						'assignedto'		=> $this->db->f('assignedto'),
+						'status'			=> $this->db->f('status'),
+						'priority'			=> $this->db->f('priority'),
+						'cat_id'			=> $this->db->f('cat_id'),
+						'group_id'			=> $this->db->f('group_id'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'modified_date'		=> $this->db->f('modified_date'),
+						'finnish_date'		=> $this->db->f('finnish_date'),
+						'finnish_date2'		=> $this->db->f('finnish_date2'),
+						'order_id'			=> $this->db->f('order_id'),
+						'vendor_id'			=> $this->db->f('vendor_id'),
+						'actual_cost'		=> $this->db->f('actual_cost'),
+						'estimate'			=> $this->db->f('budget'),
+						'new_ticket'		=> $this->db->f('view') ? false : true,
+						'billable_hours'	=> $this->db->f('billable_hours'),
+					);
+					foreach ($custom_cols as $custom_col)
+					{
+						if ($custom_value = $this->db->f($custom_col['column_name'], true))
+						{
+							$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
+								'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype']), $location_id);
+						}
+						$tickets[$i][$custom_col['column_name']] = $custom_value;
+					}
+					$i ++;
 				}
 			}
 
@@ -428,7 +427,7 @@
 			return $entity;
 		}
 
-		function read_single($id)
+		function read_single($id, $values = array() )
 		{
 			$id = (int) $id;
 			$sql = "SELECT * FROM phpgw_helpdesk_tickets WHERE id = {$id}";
@@ -476,6 +475,15 @@
 				if ($ticket['assignedto'] > 0)
 				{
 					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
+				}
+
+				if (isset($values['attributes']) && is_array($values['attributes']))
+				{
+					$ticket['attributes'] = $values['attributes'];
+					foreach ($ticket['attributes'] as &$attr)
+					{
+						$attr['value'] = $this->db->f($attr['column_name']);
+					}
 				}
 			}
 
@@ -928,10 +936,10 @@
 				$value_set = $this->db->validate_update($value_set);
 
 				$this->db->query("update phpgw_helpdesk_tickets set $value_set where id='$id'", __LINE__, __FILE__);
-				$this->historylog->add('G', $id, $ticket['group_id'], $oldgroup_id);
+				$this->historylog->add('G', $id, (int)$ticket['group_id'], $oldgroup_id);
 			}
 
-			if ($oldpriority != $ticket['priority'])
+			if ($ticket['priority'] && $oldpriority != $ticket['priority'])
 			{
 				$this->fields_updated[] = 'priority';
 				$this->db->query("update phpgw_helpdesk_tickets set priority='" . $ticket['priority']
@@ -1138,7 +1146,7 @@
 						'deadline'			=> ''
 					);
 
-				execMethod('helpdesk.sopending_action.close_pending_action', $action_params);
+				execMethod('property.sopending_action.close_pending_action', $action_params);
 				unset($action_params);
 			}
 			if ($this->db->f('in_progress') )
@@ -1155,7 +1163,7 @@
 						'deadline'			=> ''
 					);
 
-				execMethod('helpdesk.sopending_action.close_pending_action', $action_params);
+				execMethod('property.sopending_action.close_pending_action', $action_params);
 				unset($action_params);
 			}
 

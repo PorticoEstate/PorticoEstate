@@ -96,14 +96,14 @@
 
 				if (!$view_only && $attributes['history'])
 				{
-					$GLOBALS['phpgw']->jqcal->add_listener("values_attribute_{$i}_date");
+					$GLOBALS['phpgw']->jqcal->add_listener("values_attribute_{$attributes['id']}_date");
 				}
 
 				if ($attributes['datatype'] == 'D' || $attributes['datatype'] == 'DT' || $attributes['datatype'] == 'date' || $attributes['datatype'] == 'timestamp')
 				{
 					if (!$view_only)
 					{
-						$GLOBALS['phpgw']->jqcal->add_listener('values_attribute_' . $i);
+						$GLOBALS['phpgw']->jqcal->add_listener("values_attribute_{$attributes['id']}");
 						$attributes['lang_datetitle'] = lang('Select date');
 					}
 
@@ -115,8 +115,8 @@
 						$clear_functions[$m]['action'] = <<<JS
 							if(confirm("{$confirm_msg}"))
 							{
-								var attribute_{$i}_date = document.getElementById('values_attribute_{$i}');
-								attribute_{$i}_date.value = '';
+								var attribute_{$attributes['id']}_date = document.getElementById('values_attribute_{$attributes['id']}');
+								attribute_{$attributes['id']}_date.value = '';
 							}
 JS;
 						$m++;
@@ -128,12 +128,12 @@ JS;
 						$clear_functions[$m]['action'] = <<<JS
 							if(confirm("{$confirm_msg}"))
 							{
-								var attribute_{$i}_date = document.getElementById('values_attribute_{$i}');
-								var attribute_{$i}_hour = document.getElementById('values_attribute_{$i}_hour');
-								var attribute_{$i}_min = document.getElementById('values_attribute_{$i}_min');
-								attribute_{$i}_date.value = '';
-								attribute_{$i}_hour.value = '';
-								attribute_{$i}_min.value = '';
+								var attribute_{$attributes['id']}_date = document.getElementById('values_attribute_{$attributes['id']}');
+								var attribute_{$attributes['id']}_hour = document.getElementById('values_attribute_{$attributes['id']}_hour');
+								var attribute_{$attributes['id']}_min = document.getElementById('values_attribute_{$attributes['id']}_min');
+								attribute_{$attributes['id']}_date.value = '';
+								attribute_{$attributes['id']}_hour.value = '';
+								attribute_{$attributes['id']}_min.value = '';
 							}
 JS;
 						$m++;
