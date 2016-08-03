@@ -367,7 +367,7 @@
 			array_push($descr, lang('finnish date'), lang('delay'));
 
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
 
 			foreach ($custom_cols as $col)
 			{
@@ -403,7 +403,7 @@
 			}
 
 			$this->bo->update_status(array('status' => $new_status), $id);
-			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'] == 1 && $this->bo->fields_updated
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
 				)
 			)
 			{
@@ -433,7 +433,7 @@
 //			$ticket = $this->bo->read_single($id);
 
 			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
-			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'] == 1 && $this->bo->fields_updated
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
 				)
 			)
 			{
@@ -535,7 +535,7 @@
 			$uicols['name'][] = 'entry_date';
 			$uicols['descr'][] = lang('entry date');
 
-			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['ticket_columns'] : array();
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
 			$columns = $this->bo->get_columns();
 
 			foreach ($custom_cols as $col)
@@ -700,7 +700,7 @@
 					'list' => $values_combo_box[2]
 				);
 
-				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
+				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_assigned_to_me'];
 
 				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
 				array_unshift($values_combo_box[4], array(
@@ -773,7 +773,7 @@
 					'list' => $buildingpart_list
 				);
 
-				if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list'] == 1)
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_branch_list'] == 1)
 				{
 					$combos[] = array('type' => 'filter',
 						'name' => 'branch_id',
@@ -981,7 +981,7 @@
 				);
 			}
 
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link'] == 'yes' && $this->acl_edit)
 			{
 				$status['X'] = array
 					(
@@ -1202,26 +1202,14 @@
 					}
 				}
 
+				if (!isset($values['assignedto']))
+				{
+					$values['assignedto'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '');
+				}
 
 				if (!$values['assignedto'] && !$values['group_id'])
 				{
-					$_responsible = execMethod('property.boresponsible.get_responsible', $values);
-					if (!$_responsible)
-					{
-						$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
-					}
-					else
-					{
-						if ($GLOBALS['phpgw']->accounts->get($_responsible)->type == phpgwapi_account::TYPE_USER)
-						{
-							$values['assignedto'] = $_responsible;
-						}
-						else
-						{
-							$values['group_id'] = $_responsible;
-						}
-					}
-					unset($_responsible);
+					$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
 				}
 
 				if (!isset($values['priority']) || !$values['priority'])
@@ -1346,7 +1334,7 @@
 				'entity_data' => (isset($values['p']) ? $values['p'] : '')
 			));
 
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_me_as_contact']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_me_as_contact'] == 1)
+			if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_me_as_contact']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_me_as_contact'] == 1)
 			{
 				$ticket['contact_id'] = $GLOBALS['phpgw']->accounts->get($this->account)->person_id;
 			}
@@ -1362,16 +1350,16 @@
 
 			if (!isset($values['assignedto']))
 			{
-				$values['assignedto'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'] : '');
+				$values['assignedto'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '');
 			}
 			if (!isset($values['group_id']))
 			{
-				$values['group_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'] : '');
+				$values['group_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['groupdefault'] : '');
 			}
 
 			if (!isset($values['cat_id']))
 			{
-				$this->cat_id = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_category'] : '');
+				$this->cat_id = (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_category']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_category'] : '');
 			}
 			else
 			{
@@ -1443,7 +1431,7 @@
 				'lang_no_part_of_town' => lang('No part of town'),
 				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true)),
-				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : ''),
+				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
 				'fileupload' => (isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
@@ -1668,7 +1656,7 @@
 				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute);
 
 				if ((isset($values['send_mail']) && $values['send_mail']) || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'] && $this->bo->fields_updated
-					) || (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'] == 1 && $this->bo->fields_updated
+					) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
 					)
 				)
 				{
@@ -1931,9 +1919,9 @@
 				// approval
 				$supervisor_id = 0;
 
-				if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['approval_from']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['approval_from'])
 				{
-					$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+					$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['approval_from'];
 				}
 
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
@@ -2003,7 +1991,7 @@
 				{
 					$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
 				}
-				$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+				$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ressursnr'];
 				$location = lang('Address') . ": {$ticket['address']}<br>";
 
 				$address_element = $this->bo->get_address_element($ticket['location_code']);
@@ -2032,9 +2020,9 @@
 
 				$order_id = $ticket['order_id'];
 
-				$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
-				$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-				$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
+				$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['cellphone'];
+				$user_email = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['email'];
+				$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['order_email_template'];
 
 				$body = nl2br(str_replace(array
 					(
@@ -2137,7 +2125,7 @@
 					}
 
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+					$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['email']}>";
 					$cc = '';
 					$bcc = $coordinator_email;
 					if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
@@ -2181,7 +2169,7 @@
 			if (isset($values['approval']) && $values['approval'] && $this->bo->config->config_data['workorder_approval'])
 			{
 				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-				$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+				$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['email'];
 
 				$subject = lang(Approval) . ": " . $ticket['order_id'];
 				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
@@ -2707,7 +2695,7 @@
 			$tabs['history'] = array('label' => lang('History'), 'link' => '#history');
 			$active_tab = 'general';
 
-			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
+			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['unspsc_code'];
 			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
 			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
 			$data = array(
@@ -2790,7 +2778,7 @@
 				'add_to_project_link' => $add_to_project_link,
 				//			'lang_name'						=> lang('name'),
 				'contact_phone' => $ticket['contact_phone'],
-				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : '',
+				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : '',
 				'fileupload' => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
 				'multiple_uploader' => true,
 				'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
@@ -2805,8 +2793,8 @@
 				'lang_file_action_statustext' => lang('Check to delete file'),
 				'lang_upload_file' => lang('Upload file'),
 				'lang_file_statustext' => lang('Select file to upload'),
-				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 60,
-				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
+				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['textareacols'] : 60,
+				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['textarearows'] : 6,
 //					'order_cat_list'				=> $order_catetory,
 				'building_part_list' => array('options' => $this->bocommon->select_category_list(array(
 						'type' => 'building_part', 'selected' => $ticket['building_part'], 'order' => 'id',
@@ -2817,7 +2805,7 @@
 				'tax_code_list' => array('options' => $this->bocommon->select_category_list(array(
 						'type' => 'tax', 'selected' => $ticket['tax_code'], 'order' => 'id',
 						'id_in_name' => 'num'))),
-				'branch_list' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_branch_list'] == 1 ? array(
+				'branch_list' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_branch_list']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_branch_list'] == 1 ? array(
 					'options' => execMethod('property.boproject.select_branch_list', $values['branch_id'])) : '',
 				'preview_html' => "javascript:preview_html($id)",
 				'preview_pdf' => "javascript:preview_pdf($id)",
@@ -2925,7 +2913,7 @@
 			}
 			else
 			{
-				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['approval_from'];
 			}
 
 			return $this->get_supervisor_email($supervisor_id);
@@ -3315,7 +3303,7 @@
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
 			$pdf->ezText(lang('descr') . ':', 20);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
-			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ressursnr'];
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id' => $ticket['contact_id'],
