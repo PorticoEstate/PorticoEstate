@@ -45,7 +45,8 @@
 		var $allrows;
 		var $public_functions = array
 			(
-			'get_autocomplete' => true
+			'get_autocomplete'	=> true,
+			'get_single_name'	=> true
 		);
 
 		function __construct( $session = false )
@@ -335,7 +336,15 @@
 		function get_autocomplete()
 		{
 			$this->get_location_info();
-			$values = $this->read();
+
+			$query = phpgw::get_var('query');
+
+			$params = array(
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 10),
+				'query' => $query,
+			);
+
+			$values = $this->read($params);
 
 			foreach ($values as &$entry)
 			{
@@ -345,6 +354,23 @@
 				}
 			}
 			return array('ResultSet' => array('Result' => $values));
+		}
+
+
+		public function get_single_name( $data = array() )
+		{
+			$this->get_location_info($data['type']);
+			$values = $this->so->read_single(array('id' => $data['id']));
+//			$values['path'] = $values['name'];
+//			if ($values['parent_id'])
+//			{
+//				$path = $this->so->get_path(array('type' => $data['type'], 'id' => $values['parent_id']));
+//				if ($path)
+//				{
+//					$values['path'] .= '::' . implode(' > ', $path);
+//				}
+//			}
+			return $values['name'];
 		}
 
 		public function edit_field( $data = array() )

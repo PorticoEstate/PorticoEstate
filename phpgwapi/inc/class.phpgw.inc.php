@@ -462,7 +462,7 @@
 					default:
 						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-						$value = str_replace(array('(', ')', ';', '=', '--'),array('&#40;', '&#41;', '&#59;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
+						$value = str_replace(array(';','(', ')', '=', '--'),array('&#59;','&#40;', '&#41;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
 						break;
 
 					case 'boolean':

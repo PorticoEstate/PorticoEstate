@@ -293,7 +293,11 @@ JS;
 				{
 					if ($attributes['value'] && $attributes['get_single_function'])
 					{
-						if (!$attributes['get_single_function_input'])
+						if ($attributes['get_single_function_input'] && is_array($attributes['get_single_function_input']))
+						{
+							$attributes['get_single_function_input'] = array_merge(array('id'=>$attributes['value']),$attributes['get_single_function_input']);
+						}
+						else
 						{
 							$attributes['get_single_function_input'] = $attributes['value'];
 						}
