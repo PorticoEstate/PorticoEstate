@@ -2121,7 +2121,7 @@
 			}
 			else
  			{
- 				$_test_input = str_replace(array("\n","\r","\t", 'Array', 'array', '[', ']', '(', ')', ' ', '&gt;'), array(',','','','','','','','','','',''), stripslashes($data));
+ 				$_test_input = str_replace(array("&#61;","\n","\r","\t", 'Array', 'array', '[', ']', '(', ')', ' ', '&gt','&#59;','&#40;', '&#41;'), array('=',',','','','','','','','','','','','','',''), stripslashes(htmlspecialchars_decode($data)));
 				$_test_input= explode(',', $_test_input);
 				if(is_array($_test_input))
 				{
