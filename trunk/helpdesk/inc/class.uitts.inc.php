@@ -553,7 +553,7 @@
 				'list' => $values_combo_box[3]
 			);
 
-			if(!$this->simple)
+			if(!$this->_simple)
 			{
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
 					'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
@@ -751,118 +751,120 @@
 				'parameters' => json_encode($parameters)
 			);
 
-
-			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location)));
-
-			foreach ($jasper as $report)
+			if(!$this->_simple)
 			{
-				$data['datatable']['actions'][] = array
-					(
-					'my_name' => 'edit',
-					'text' => lang('open JasperReport %1 in new window', $report['title']),
-					'action' => $GLOBALS['phpgw']->link('/index.php', array
-						(
-						'menuaction' => 'helpdesk.uijasper.view',
-						'jasper_id' => $report['id'],
-						'target' => '_blank'
-					)),
-					'parameters' => json_encode($parameters)
-				);
-			}
+				$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location)));
 
-			if ($this->acl_delete)
-			{
-				$data['datatable']['actions'][] = array
-					(
-					'my_name' => 'delete',
-					'statustext' => lang('delete the ticket'),
-					'text' => lang('delete'),
-					'confirm_msg' => lang('do you really want to delete this ticket'),
-					'action' => $GLOBALS['phpgw']->link('/index.php', array
-						(
-						'menuaction' => 'helpdesk.uitts.delete'
-					)),
-					'parameters' => json_encode($parameters)
-				);
-			}
-
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link'] == 'yes' && $this->acl_edit)
-			{
-				$status['X'] = array
-					(
-					'status' => lang('closed'),
-				);
-				$status['O'] = array
-					(
-					'status' => isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
-				);
-
-				$custom_status = $this->bo->get_custom_status();
-
-				foreach ($custom_status as $custom)
-				{
-					$status["C{$custom['id']}"] = array
-						(
-						'status' => $custom['name'],
-					);
-				}
-
-				foreach ($status as $status_code => $status_info)
+				foreach ($jasper as $report)
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name' => 'status',
-						'statustext' => $status_info['status'],
-						'text' => lang('change to') . ' status:  ' . $status_info['status'],
-						'confirm_msg' => lang('do you really want to change the status to %1', $status_info['status']),
+						'my_name' => 'edit',
+						'text' => lang('open JasperReport %1 in new window', $report['title']),
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
-							'menuaction' => 'helpdesk.uitts.edit_status',
-							'edit_status' => true,
-							'new_status' => $status_code,
-							'second_display' => true,
-							'sort' => $this->sort,
-							'order' => $this->order,
-							'cat_id' => $this->cat_id,
-							'filter' => $this->filter,
-							'user_filter' => $this->user_filter,
-							'query' => $this->query,
-							'district_id' => $this->district_id,
-							'allrows' => $this->allrows,
-							'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							'menuaction' => 'helpdesk.uijasper.view',
+							'jasper_id' => $report['id'],
+							'target' => '_blank'
 						)),
 						'parameters' => json_encode($parameters)
 					);
 				}
 
-				$_priorities = $this->bo->get_priority_list();
-
-				foreach ($_priorities as $_priority_info)
+				if ($this->acl_delete)
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name' => 'priority',
-						'statustext' => $_priority_info['name'],
-						'text' => lang('change to') . ' ' . lang('priority') . ':  ' . $_priority_info['name'],
-						'confirm_msg' => lang('do you really want to change the priority to %1', $_priority_info['name']),
+						'my_name' => 'delete',
+						'statustext' => lang('delete the ticket'),
+						'text' => lang('delete'),
+						'confirm_msg' => lang('do you really want to delete this ticket'),
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
-							'menuaction' => 'helpdesk.uitts.edit_priority',
-							'edit_status' => true,
-							'new_priority' => $_priority_info['id'],
-							'second_display' => true,
-							'sort' => $this->sort,
-							'order' => $this->order,
-							'cat_id' => $this->cat_id,
-							'filter' => $this->filter,
-							'user_filter' => $this->user_filter,
-							'query' => $this->query,
-							'district_id' => $this->district_id,
-							'allrows' => $this->allrows,
-							'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							'menuaction' => 'helpdesk.uitts.delete'
 						)),
 						'parameters' => json_encode($parameters)
 					);
+				}
+
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link'] == 'yes' && $this->acl_edit)
+				{
+					$status['X'] = array
+						(
+						'status' => lang('closed'),
+					);
+					$status['O'] = array
+						(
+						'status' => isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
+					);
+
+					$custom_status = $this->bo->get_custom_status();
+
+					foreach ($custom_status as $custom)
+					{
+						$status["C{$custom['id']}"] = array
+							(
+							'status' => $custom['name'],
+						);
+					}
+
+					foreach ($status as $status_code => $status_info)
+					{
+						$data['datatable']['actions'][] = array
+							(
+							'my_name' => 'status',
+							'statustext' => $status_info['status'],
+							'text' => lang('change to') . ' status:  ' . $status_info['status'],
+							'confirm_msg' => lang('do you really want to change the status to %1', $status_info['status']),
+							'action' => $GLOBALS['phpgw']->link('/index.php', array
+								(
+								'menuaction' => 'helpdesk.uitts.edit_status',
+								'edit_status' => true,
+								'new_status' => $status_code,
+								'second_display' => true,
+								'sort' => $this->sort,
+								'order' => $this->order,
+								'cat_id' => $this->cat_id,
+								'filter' => $this->filter,
+								'user_filter' => $this->user_filter,
+								'query' => $this->query,
+								'district_id' => $this->district_id,
+								'allrows' => $this->allrows,
+								'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							)),
+							'parameters' => json_encode($parameters)
+						);
+					}
+
+					$_priorities = $this->bo->get_priority_list();
+
+					foreach ($_priorities as $_priority_info)
+					{
+						$data['datatable']['actions'][] = array
+							(
+							'my_name' => 'priority',
+							'statustext' => $_priority_info['name'],
+							'text' => lang('change to') . ' ' . lang('priority') . ':  ' . $_priority_info['name'],
+							'confirm_msg' => lang('do you really want to change the priority to %1', $_priority_info['name']),
+							'action' => $GLOBALS['phpgw']->link('/index.php', array
+								(
+								'menuaction' => 'helpdesk.uitts.edit_priority',
+								'edit_status' => true,
+								'new_priority' => $_priority_info['id'],
+								'second_display' => true,
+								'sort' => $this->sort,
+								'order' => $this->order,
+								'cat_id' => $this->cat_id,
+								'filter' => $this->filter,
+								'user_filter' => $this->user_filter,
+								'query' => $this->query,
+								'district_id' => $this->district_id,
+								'allrows' => $this->allrows,
+								'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							)),
+							'parameters' => json_encode($parameters)
+						);
+					}
 				}
 			}
 
@@ -1186,7 +1188,7 @@
 			$msgbox_data = (isset($receipt) ? $this->bocommon->msgbox_data($receipt) : '');
 
 
-			if (!$this->simple && $this->_show_finnish_date)
+			if (!$this->_simple && $this->_show_finnish_date)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
@@ -1208,7 +1210,7 @@
 				'custom_attributes' => array('attributes' => $values['attributes']),
 				'lookup_functions' => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
 				'contact_data' => $contact_data,
-				'simple' => $this->simple,
+				'simple' => $this->_simple,
 				'show_finnish_date' => $this->_show_finnish_date,
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => (isset($origin) ? $origin : ''),
@@ -1333,12 +1335,8 @@
 
 			$values = phpgw::get_var('values');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
-//			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
-//			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
-//			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
-
 			$values_attribute = phpgw::get_var('values_attribute');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk');
@@ -1402,32 +1400,6 @@
 				}
 
 
-				if ($access_order)
-				{
-					//test for budget
-					$_ticket = $this->bo->read_single($id);
-					if (!$_ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])))
-					{
-						$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Missing value'));
-					}
-					unset($_ticket);
-
-					$sogeneric = CreateObject('property.sogeneric');
-					$sogeneric->get_location_info('ticket_status', false);
-					$status_data = $sogeneric->read_single(array('id' => (int)ltrim($values['status'], 'C')), array());
-
-					if (isset($status_data['actual_cost']) && $status_data['actual_cost'])
-					{
-						if (!$values['actual_cost'] || !abs($values['actual_cost']) > 0)
-						{
-							$receipt['error'][] = array('msg' => lang('actual cost') . ': ' . lang('Missing value'));
-						}
-						else if (!is_numeric($values['actual_cost']))
-						{
-							$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter a numeric value'));
-						}
-					}
-				}
 
 				if (isset($values['takeover']) && $values['takeover'])
 				{
@@ -1445,7 +1417,7 @@
 				  }
 				  }
 				 */
-				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute);
+				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute, $this->_simple);
 
 				if ((isset($values['send_mail']) && $values['send_mail']) || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'] && $this->bo->fields_updated
 					) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
@@ -1745,7 +1717,7 @@
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $ticket['attributes']),
 				'lookup_functions' => isset($ticket['lookup_functions']) ? $ticket['lookup_functions'] : '',
-				'simple' => $this->simple,
+				'simple' => $this->_simple,
 				'send_response' => isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
 				'disable_priority'	=> isset($this->bo->config->config_data['disable_priority']) ? $this->bo->config->config_data['disable_priority'] : '',
 				'value_sms_phone' => $ticket['contact_phone'],

@@ -1007,7 +1007,7 @@
 			return $receipt;
 		}
 
-		public function update_ticket( &$data, $id, $receipt = array(), $values_attribute = array() )
+		public function update_ticket( &$data, $id, $receipt = array(), $values_attribute = array() , $simple = false)
 		{
 			if ($values_attribute && is_array($values_attribute))
 			{
@@ -1038,9 +1038,8 @@
 				}
 			}
 
-			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $this->simple);
+			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $simple);
 			$this->fields_updated = $this->so->fields_updated;
-
 
 			reset($custom_functions);
 
