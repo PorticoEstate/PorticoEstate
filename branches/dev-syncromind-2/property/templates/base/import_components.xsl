@@ -88,8 +88,7 @@
 				</div>
 				
 				<div id="upload_files">
-					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
-						<!-- <xsl:value-of disable-output-escaping="yes" select="form_file_upload"/> -->	
+					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">						
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'upload file')"/>
@@ -106,6 +105,7 @@
 							</input>
 						</div>
 					</form>
+					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
 				</div>
 				
 			</div>
