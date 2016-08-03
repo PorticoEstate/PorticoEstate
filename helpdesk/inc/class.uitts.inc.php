@@ -1039,6 +1039,10 @@
 					$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
 				}
 
+				if (!isset($values['status']) || !$values['status'])
+				{
+					$values['status'] = "O";
+				}
 				if (!isset($values['priority']) || !$values['priority'])
 				{
 					$_priority = $this->bo->get_priority_list();
