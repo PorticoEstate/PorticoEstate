@@ -361,7 +361,7 @@
 //			$ticket = $this->bo->read_single($id);
 
 			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
-			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_notify_me'] == 1 && $this->bo->fields_updated
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
 				)
 			)
 			{
@@ -1028,6 +1028,11 @@
 
 				$disable_userassign_on_add = isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : false;
 				$disable_groupassign_on_add = isset($this->bo->config->config_data['tts_disable_groupassign_on_add']) ? $this->bo->config->config_data['tts_disable_groupassign_on_add'] : false;
+
+				if (!isset($values['assignedto']) || !$values['assignedto'])
+				{
+					$values['assignedto'] = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '';
+				}
 
 				if (!$values['assignedto'] && !$values['group_id'] && !$disable_userassign_on_add && !$disable_groupassign_on_add)
 				{
