@@ -1033,10 +1033,10 @@
 		 * @return array attributes at location
 		 */
 		public function find($appname, $location, $start = 0, $query = '', $sort = 'ASC',
-				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
+				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array(), $results = 0)
 		{
 			$location_id	= $GLOBALS['phpgw']->locations->get_id($appname, $location);
-			return $this->find2($location_id, $start, $query, $sort, $order, $allrows, $inc_choices, $filter);
+			return $this->find2($location_id, $start, $query, $sort, $order, $allrows, $inc_choices, $filter, $results);
 		}
 
 		/**
@@ -1055,7 +1055,7 @@
 		 */
 
 		public function find2($location_id, $start = 0, $query = '', $sort = 'ASC',
-				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array())
+				$order = 'attrib_sort', $allrows = false, $inc_choices = false, $filter = array(), $results = 0)
 		{
                         
 			$location_id	= (int) $location_id;
@@ -1133,7 +1133,7 @@
 			}
 			else
 			{
-				$this->_db->limit_query($sql, $start, __LINE__, __FILE__);
+				$this->_db->limit_query($sql, $start, __LINE__, __FILE__, $results);
 			}
 
 			$attribs = array();

@@ -285,7 +285,15 @@
 			}
 
 			$attrib = $this->custom->find(
-				'property', '.location.' . $data['type_id'], $data['start'], $data['query'], $data['sort'], $data['order'], $data['allrows']
+				'property',
+				'.location.' . $data['type_id'],
+				$data['start'], $data['query'],
+				$data['sort'],
+				$data['order'],
+				$data['allrows'],
+				false,
+				array(),
+				(int)$data['results']
 			);
 			$this->total_records = $this->custom->total_records;
 

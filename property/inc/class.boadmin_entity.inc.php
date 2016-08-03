@@ -420,7 +420,17 @@
 			{
 				$this->allrows = $data['allrows'];
 			}
-			$attrib = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$data['entity_id']}.{$data['cat_id']}", $data['start'], $data['query'], $data['sort'], $data['order'], $this->allrows);
+			$attrib = $this->custom->find(
+					$this->type_app[$this->type],
+					".{$this->type}.{$data['entity_id']}.{$data['cat_id']}",
+					$data['start'], $data['query'],
+					$data['sort'],
+					$data['order'],
+					$this->allrows,
+					false,
+					array(),
+					(int)$data['results']
+			);
 			$this->total_records = $this->custom->total_records;
 			return $attrib;
 		}
