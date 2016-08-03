@@ -904,7 +904,7 @@
 
 			if (isset($this->fields_updated) && $this->fields_updated && $simple)
 			{
-				$receipt['message'][] = array('msg' => lang('Ticket1 has been updated'));
+				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
 				$this->db->transaction_commit();
 				return $receipt;
 			}
