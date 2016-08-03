@@ -1266,6 +1266,7 @@
 
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
+			phpgwapi_jquery::load_widget('autocomplete');
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
