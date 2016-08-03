@@ -81,7 +81,7 @@ $(document).ready(function ()
 		var file_data = $('#file_xml').prop('files')[0];
 		var form_data = new FormData(form);
 		form_data.append('file', file_data);
-		form_data.append('location_code', 'location_code');
+		form_data.append('location_code', $('#location_code').val());
 
 		$.ajax({
 			url: requestUrl,
