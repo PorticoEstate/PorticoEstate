@@ -37,7 +37,6 @@
 			'index' => true,
 			'get_locations_for_type' => true,
 			'import_component_files' => true,
-			'delete_file_upload' => true,
 			'import_components' => true
 		);
 
@@ -57,30 +56,45 @@
 			return;
 		}
 
+		private function valid_row($row)
+		{
+			if (empty($row[0]) && empty($row[(count($row)-1)]))
+			{
+				return false;
+			}
+			
+			if ($row[0] == 'Nummer3' && $row[(count($row)-1)] == 'Filsti')
+			{
+				return false;
+			}
+			
+			return true;
+		}
+		
 		public function import_component_files()
 		{
 			$get_identificator = true;
 
 			$result = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
-	
-			print_r($result); die;
+			$data = array();
+			
+			foreach ($result as $row) 
+			{
+				if (!$this->valid_row($row))
+				{
+					continue;
+				}
+				
+				$data[$row[0]][] = $row[(count($row)-1)];
+			}
+			
+			print_r($data); die;
 			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
 			$upload_handler = new UploadHandler($options);*/
 			
 		}
-		
-		/*public function delete_file_upload()
-		{
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
-			//return $this->jquery_results(array('mensaje' => 'mensaje 1'));
-			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
-			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
-			$upload_handler = new UploadHandler($options, false);
-			$upload_handler->delete(true);
-			
-		}*/
 		
 		public function import_components()
 		{
@@ -233,8 +247,8 @@
 				'type_filter' => array('options' => $type_filter),
 				'category_filter' => array('options' => $category_filter),
 				'district_filter' => array('options' => $district_filter),
-				'part_of_town_filter' => array('options' => $part_of_town_filter)
-				//'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
+				'part_of_town_filter' => array('options' => $part_of_town_filter),
+				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
 			);
 
 			self::add_javascript('property', 'portico', 'import_components.js');
