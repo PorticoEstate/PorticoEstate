@@ -1895,7 +1895,7 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(16, $this->acl_location, 'helpdesk');
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk');
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)
