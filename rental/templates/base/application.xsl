@@ -324,12 +324,12 @@
 								<xsl:value-of select="$lang_date_start"/>
 							</label>
 							<input type="text" id="assign_date_start" name="assign_date_start" size="10" value="{value_assign_date_start}" readonly="readonly">
-								<xsl:attribute name="data-validation">
+								<!--xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-error-msg">
 									<xsl:value-of select="$lang_date_start"/>
-								</xsl:attribute>
+								</xsl:attribute-->
 
 							</input>
 						</div>
@@ -341,12 +341,12 @@
 								<xsl:value-of select="$lang_date_end"/>
 							</label>
 							<input type="text" id="assign_date_end" name="assign_date_end" size="10" value="{value_assign_date_end}" readonly="readonly">
-								<xsl:attribute name="data-validation">
+								<!--xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-error-msg">
 									<xsl:value-of select="$lang_date_end"/>
-								</xsl:attribute>
+								</xsl:attribute-->
 
 							</input>
 						</div>
@@ -361,12 +361,12 @@
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_status"/>
 								</xsl:attribute>
-								<xsl:attribute name="data-validation">
+								<!--xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-error-msg">
 									<xsl:value-of select="$lang_status"/>
-								</xsl:attribute>
+								</xsl:attribute-->
 								<option value="">
 									<xsl:value-of select="$lang_status"/>
 								</option>
