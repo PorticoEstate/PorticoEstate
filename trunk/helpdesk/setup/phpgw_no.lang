@@ -46,7 +46,7 @@ notify	helpdesk	no	Kopi til
 re-opened	helpdesk	no	Gjenåpnet
 group	helpdesk	no	Gruppe
 action	helpdesk	no	Handling
-helpdesk	helpdesk	no	Helpdesk
+helpdesk	common	no	Helpdesk
 integer	helpdesk	no	Heltall
 event	helpdesk	no	Hendelse
 history	helpdesk	no	Historikk
