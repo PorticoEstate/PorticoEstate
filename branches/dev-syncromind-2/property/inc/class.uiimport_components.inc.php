@@ -46,7 +46,7 @@
 
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->acl = & $GLOBALS['phpgw']->acl;
-
+			$this->db = & $GLOBALS['phpgw']->db;
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::generic";
 		}
@@ -74,6 +74,9 @@
 		public function import_component_files()
 		{
 			$get_identificator = true;
+			
+			//$query = '+VZ=330.0001-UZ0010T - Sprinklerhoder';
+			//$ids = $this->get_component($query);
 
 			$result = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
 			$data = array();
@@ -88,7 +91,14 @@
 				$data[$row[0]][] = $row[(count($row)-1)];
 			}
 			
-			print_r($data); die;
+			foreach ($data as $k => $v)
+			{
+				$ids = $this->get_component($k);
+				$values[$k]['ids'] = $ids;
+				$values[$k]['files'] = $v;
+			}
+			
+			print_r($values); die;
 			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
@@ -196,6 +206,27 @@
 
 			print_r($entity_categories_in_xml); die;
 
+		}
+		
+		protected function get_component( $query )
+		{
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+			}
+
+			$sql = "SELECT * from fm_bim_item where (xpath('//./benevnelse/text()', xml_representation))[1]::text = '$query'::text";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values['id'] = $this->db->f('id');
+				$values['location_id'] = $this->db->f('location_id');
+			}
+
+			return $values;
 		}
 		
 		/**
