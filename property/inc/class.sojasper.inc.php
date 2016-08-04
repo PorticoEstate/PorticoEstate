@@ -107,7 +107,7 @@
 			}
 			if($public_user_list && !$public_group_list)
 			{
-				$filtermethod .=')';
+				$filtermethod .='))';
 			}
 
 			if ($query)
