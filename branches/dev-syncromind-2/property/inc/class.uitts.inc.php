@@ -1939,7 +1939,7 @@
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 
 				$supervisor_email = $this->get_supervisor_email($supervisor_id,  $need_approval);
-				// approval					
+				// approval
 			}
 
 			$vendor_email = array();
@@ -2671,7 +2671,7 @@
 				);
 				$cat_select['disabled'] = true;
 				$cat_select['hidden_value'] = $ticket['cat_id'];
-//_debug_array($cat_select);die();			
+//_debug_array($cat_select);die();
 			}
 
 
@@ -3339,7 +3339,7 @@
 			$pdf->ezText($ticket['order_descr'], 14);
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
-			$pdf->ezText('Kontakt på bygget:', 14);
+			$pdf->ezText('Kontakt pÃ¥ bygget:', 14);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 			$pdf->ezText($contact_name, 14);
 			$pdf->ezText($contact_email, 14);
@@ -3347,7 +3347,7 @@
 			$pdf->ezSetDy(-20);
 
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
-			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
+			$pdf->ezText("Faktura mÃ¥ merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 			if ($content)
 			{
@@ -3422,7 +3422,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		private function _insert_custom_js()
 		{

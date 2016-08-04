@@ -817,7 +817,6 @@
 				$config = CreateObject('phpgwapi.config', 'property');
 				$config->read();
 
-				$invoicehandler = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
 
 				if (!isset($config->config_data['suppress_tenant']) || !$config->config_data['suppress_tenant'])
 				{
@@ -1015,6 +1014,7 @@
 
 			if ($acl->check('.invoice', PHPGW_ACL_READ, 'property'))
 			{
+				$invoicehandler = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
 				$children = array();
 				$children_invoice = array();
 				if ($acl->check('.invoice', PHPGW_ACL_PRIVATE, 'property'))
@@ -1152,13 +1152,16 @@
 				}
 			}
 
-			$menus['navigation']['economy'] = array
-				(
-				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
-				'text' => lang('economy'),
-				'image' => array('property', 'invoice'),
-				'children' => array_merge($invoice, $budget)
-			);
+			if($invoice || $budget)
+			{
+				$menus['navigation']['economy'] = array
+					(
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.{$invoicehandler}.index")),
+					'text' => lang('economy'),
+					'image' => array('property', 'invoice'),
+					'children' => array_merge($invoice, $budget)
+				);
+			}
 
 			if ($acl->check('.agreement', PHPGW_ACL_READ, 'property'))
 			{

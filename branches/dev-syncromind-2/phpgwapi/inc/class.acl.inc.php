@@ -1975,7 +1975,7 @@
 		*
 		* @return array Array with accounts
 		*/
-		public function get_user_list_right($required, $location, $appname = '')
+		public function get_user_list_right($required, $location, $appname = '' , $group_candidates = array())
 		{
 			$myaccounts			= & $GLOBALS['phpgw']->accounts;
 			$active_accounts	= array();
@@ -2006,11 +2006,12 @@
 			}
 			else
 			{
-				$sql = "SELECT account_id, account_type FROM phpgw_accounts"
+				$sql = "SELECT DISTINCT account_id, account_type FROM phpgw_accounts"
 					. " {$this->_join} phpgw_acl on phpgw_accounts.account_id = phpgw_acl.acl_account"
 					. " {$this->_join} phpgw_locations on phpgw_acl.location_id = phpgw_locations.location_id"
+					. " {$this->_join} phpgw_applications on phpgw_locations.app_id  = phpgw_applications.app_id"
 					. " WHERE account_status = 'A' AND phpgw_locations.name = '{$location}'"
-					. " ORDER BY account_lastname ASC";
+					. " AND phpgw_applications.app_name = '{$appname}'";
 
 				$this->_db->query($sql,__LINE__,__FILE__);
 
@@ -2032,6 +2033,11 @@
 				{
 					if($entry['account_type']=='g')
 					{
+						if($group_candidates && !in_array($entry['account_id'], $group_candidates))
+						{
+							continue;
+						}
+
 						$members = $myaccounts->member($entry['account_id'], true);
 
 						if (isset($members) AND is_array($members))

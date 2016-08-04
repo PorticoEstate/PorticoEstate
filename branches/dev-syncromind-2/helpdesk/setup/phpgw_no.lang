@@ -39,14 +39,14 @@ first name	helpdesk	no	Fornavn
 prev	helpdesk	no	Forrige
 old value	helpdesk	no	Forrige verdi
 first	helpdesk	no	Første
-first note added	helpdesk	no	Første notat er registrert
+first note added	helpdesk	no	Første notat
 from	helpdesk	no	Fra
 general	helpdesk	no	Generell
-notify	helpdesk	no	Varsle
+notify	helpdesk	no	Kopi til
 re-opened	helpdesk	no	Gjenåpnet
 group	helpdesk	no	Gruppe
 action	helpdesk	no	Handling
-helpdesk	helpdesk	no	Helpdesk
+helpdesk	common	no	Helpdesk
 integer	helpdesk	no	Heltall
 event	helpdesk	no	Hendelse
 history	helpdesk	no	Historikk
@@ -91,7 +91,7 @@ ticket %1 has been deleted	helpdesk	no	Melding %1 er slettet
 my submitted tickets	helpdesk	no	Meldinger startet av meg
 check to attach file	helpdesk	no	Merk for å legge ved fil
 check to delete file	helpdesk	no	Merk for å slette fil
-note	helpdesk	no	Merknad
+note	helpdesk	no	Notat
 method	helpdesk	no	Metode
 my assigned tickets	helpdesk	no	Mine tildelte meldinger
 failed to upload file !	helpdesk	no	Opplasting av fil feilet
@@ -101,7 +101,7 @@ no	helpdesk	no	Nei
 next	helpdesk	no	Neste
 memo	helpdesk	no	Notat
 new	helpdesk	no	Ny
-new note	helpdesk	no	Ny kommentar
+new note	helpdesk	no	Nytt notat
 new value	helpdesk	no	Ny verdi
 ok	helpdesk	no	OK
 about	helpdesk	no	Om
@@ -174,3 +174,5 @@ billable hours	helpdesk	no	Egne timer
 change to	helpdesk	no	Endre til
 do you really want to change the status to %1	helpdesk	no	Vil du virkelig endre status til %1
 do you really want to change the priority to %1	helpdesk	no	Vil du virkelig endre prioritet til %1
+please enter a title!	helpdesk	no	Angi en overskrift
+ticket has been updated	helpdesk	no	Melding er oppdatert
