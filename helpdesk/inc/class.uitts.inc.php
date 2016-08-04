@@ -1891,11 +1891,22 @@
 
 		private function _get_user_list($selected)
 		{
+			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
+
 			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk');
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $_candidates);
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)
