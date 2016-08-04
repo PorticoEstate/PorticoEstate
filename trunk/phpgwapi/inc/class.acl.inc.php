@@ -1975,7 +1975,7 @@
 		*
 		* @return array Array with accounts
 		*/
-		public function get_user_list_right($required, $location, $appname = '')
+		public function get_user_list_right($required, $location, $appname = '' , $group_candidates = array())
 		{
 			$myaccounts			= & $GLOBALS['phpgw']->accounts;
 			$active_accounts	= array();
@@ -2033,6 +2033,11 @@
 				{
 					if($entry['account_type']=='g')
 					{
+						if($group_candidates && !in_array($entry['account_id'], $group_candidates))
+						{
+							continue;
+						}
+
 						$members = $myaccounts->member($entry['account_id'], true);
 
 						if (isset($members) AND is_array($members))

@@ -57,7 +57,6 @@
 			</td>
 		</tr>
 
-
 		<tr class="row_on">
 			<td valign = 'top'>{lang_TTS_simplified_group}:</td>
 			<td>
@@ -65,6 +64,16 @@
 				<input type = 'hidden' name="newsettings[fmttssimple_group][]" value="">
 				<table>
 					{hook_fmttssimple_group}
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td valign = 'top'>{lang_TTS_assign_group_candidates}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[fmtts_assign_group_candidates][]" value="">
+				<table>
+					{hook_fmtts_assign_group_candidates}
 				</table>
 			</td>
 		</tr>
