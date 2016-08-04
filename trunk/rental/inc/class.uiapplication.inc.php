@@ -28,6 +28,7 @@
 	 */
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('rental.soapplication');
+	phpgw::import_class('phpgwapi.datetime');
 
 	include_class('rental', 'application', 'inc/model/');
 
@@ -239,7 +240,6 @@ JS;
 				phpgw::no_access();
 			}
 
-			$responsibility_id = phpgw::get_var('responsibility_id');
 			$application_id = phpgw::get_var('id', 'int');
 
 			if (!empty($values['application_id']))
@@ -247,18 +247,25 @@ JS;
 				$application_id = $values['application_id'];
 			}
 
-			if (!empty($application_id))
+			if ($application_id)
 			{
 				$application = rental_application::get($application_id);
 			}
 			else
 			{
-				$title = phpgw::get_var('application_title');
+				if (!empty($values['application']))
+				{
+					$application = $values['application'];
+				}
+				else
+				{
+					$title = phpgw::get_var('application_title');
+					$application = new rental_application();
+					$application->set_title($title);
+	//				$application->set_responsibility_id($responsibility_id);
+	//				$application->set_price_type_id(1); // defaults to year
 
-				$application = new rental_application();
-				$application->set_title($title);
-//				$application->set_responsibility_id($responsibility_id);
-//				$application->set_price_type_id(1); // defaults to year
+				}
 			}
 
 			//		$responsibility_title = ($application->get_responsibility_title()) ? $application->get_responsibility_title() : rental_socontract::get_instance()->get_responsibility_title($responsibility_id);
@@ -317,8 +324,8 @@ JS;
 				),
 				'district_list' => array('options' => $bocommon->select_district_list('', $application->get_district_id())),
 				'composite_type_list' => array('options' => $bocommon->select_list($application->get_composite_type(), $composite_type)),
-				'value_date_start' => $GLOBALS['phpgw']->common->show_date($application->get_start_date(), $this->dateFormat),
-				'value_date_end' => $GLOBALS['phpgw']->common->show_date($application->get_end_date(), $this->dateFormat),
+				'value_date_start' => $GLOBALS['phpgw']->common->show_date($application->get_date_start(), $this->dateFormat),
+				'value_date_end' => $GLOBALS['phpgw']->common->show_date($application->get_date_end(), $this->dateFormat),
 				'value_cleaning' => $application->get_cleaning(),
 				'payment_method_list' => array('options' => $bocommon->select_list($application->get_payment_method(), $payment_method)),
 				'value_application_id' => $application->get_id(),
@@ -367,47 +374,75 @@ JS;
 			_debug_array($_POST);
 			$application_id = phpgw::get_var('id', 'int');
 
-			if (!empty($application_id))
+			if ($application_id)
 			{
 				$application = rental_application::get($application_id);
 			}
 			else
 			{
-				$title = phpgw::get_var('application_title');
-				$responsibility_id = phpgw::get_var('responsibility_id');
 				$application = new rental_application();
-				$application->set_title($title);
-				$application->set_responsibility_id($responsibility_id);
-				$application->set_price_type_id(1); // defaults to year
 			}
 
+			$application->set_ecodimb(phpgw::get_var('ecodimb', 'int'));
+			$application->set_district_id(phpgw::get_var('district_id', 'int'));
+			$application->set_composite_type(phpgw::get_var('composite_type_id', 'int'));
+			$date_start = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_start', 'string'));
+			$application->set_date_start($date_start);
+			$date_end = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_end', 'string'));
+			$application->set_date_start($date_end);
+
+			$application->set_cleaning(phpgw::get_var('cleaning', 'bool'));
+			$application->set_payment_method(phpgw::get_var('payment_method', 'int'));
+			$application->set_identifier(phpgw::get_var('identifier'));
+			$application->set_firstname(phpgw::get_var('firstname'));
+			$application->set_lastname(phpgw::get_var('lastname'));
 			$application->set_title(phpgw::get_var('title'));
-			$application->set_agresso_id(phpgw::get_var('agresso_id'));
-			$application->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
-			$application->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
-			$application->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
-			$application->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
-			$application->set_price(phpgw::get_var('price'));
-			$application->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
-			if ($application->get_agresso_id() == null)
-			{
-				phpgwapi_cache::message_set(lang('missing_agresso_id'), 'error');
-			}
-			else
+			$application->set_company_name(phpgw::get_var('company_name'));
+			$application->set_department(phpgw::get_var('department'));
+			$application->set_address1(phpgw::get_var('address1'));
+			$application->set_address2(phpgw::get_var('address2'));
+			$application->set_postal_code(phpgw::get_var('postal_code'));
+			$application->set_place(phpgw::get_var('place'));
+			$application->set_account_number(phpgw::get_var('account_number'));
+			$application->set_phone(phpgw::get_var('phone'));
+			$application->set_email(phpgw::get_var('email'));
+			$application->set_unit_leader(phpgw::get_var('unit_leader'));
+			$application->set_comment(phpgw::get_var('comment'));
+			$application->set_assign_date_start(phpgw::get_var('assign_date_start'));
+			$application->set_assign_date_end(phpgw::get_var('assign_date_end'));
+			$application->set_status(phpgw::get_var('status'));
+
+
+			if(self::_validate($application))
 			{
 				if (rental_soapplication::get_instance()->store($application))
 				{
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
-					$application_id = $application->get_id();
+					self::redirect(array(
+						'menuaction' => 'rental.uiapplication.edit',
+						'id'		=> $application->get_id()
+						)
+					);
 				}
 				else
 				{
 					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+
 				}
 			}
-			$this->edit(array('application_id' => $application_id));
+			$this->edit(array(
+				'id'	=>$application->get_id(),
+				'application'	=> $application
+				)
+			);
 		}
 
+
+		private function _validate( $application )
+		{
+			return true;
+		}
+		
 		public function set_value()
 		{
 			if (!self::isExecutiveOfficer())
