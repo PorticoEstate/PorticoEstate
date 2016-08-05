@@ -18,6 +18,8 @@
 		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
 	}
 
+	phpgw::import_class('phpgwapi.db_');
+
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
 	* 

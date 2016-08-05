@@ -16,6 +16,7 @@
 	{
 		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
 	}
+	phpgw::import_class('phpgwapi.db_');
 	/**
 	* Include concrete database implementation
 	*/
