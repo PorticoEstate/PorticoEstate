@@ -1,6 +1,8 @@
 <?php
 /*
-  V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
+  @version   v5.20.4  30-Mar-2016
+  @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+  @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
    Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -43,7 +45,7 @@ class ADODB_ldap extends ADOConnection {
 	# error on binding, eg. "Binding: invalid credentials"
 	var $_bind_errmsg = "Binding: %s";
 	
-	function ADODB_ldap() 
+	function __construct()
 	{		
 	}
   		
@@ -185,7 +187,10 @@ class ADODB_ldap extends ADOConnection {
 
     function ServerInfo()
     {
-        if( !empty( $this->version ) ) return $this->version;
+		if( !empty( $this->version ) ) {
+			return $this->version;
+		}
+
         $version = array();
         /*
         Determines how aliases are handled during search. 
@@ -241,8 +246,8 @@ class ADODB_ldap extends ADOConnection {
            $version['LDAP_OPT_REFERRALS'] = 'LDAP_OPT_OFF';
         } else {
            $version['LDAP_OPT_REFERRALS'] = 'LDAP_OPT_ON';
-        
         }
+
         /*
         Determines whether LDAP I/O operations are automatically restarted if they abort prematurely. 
         LDAP_OPT_ON
@@ -254,8 +259,8 @@ class ADODB_ldap extends ADOConnection {
            $version['LDAP_OPT_RESTART'] = 'LDAP_OPT_OFF';
         } else {
            $version['LDAP_OPT_RESTART'] = 'LDAP_OPT_ON';
-        
         }
+
         /*
         This option indicates the version of the LDAP protocol used when communicating with the primary LDAP server.
         LDAP_VERSION2 (2)
@@ -267,8 +272,8 @@ class ADODB_ldap extends ADOConnection {
            $version['LDAP_OPT_PROTOCOL_VERSION'] = 'LDAP_VERSION2';
         } else {
            $version['LDAP_OPT_PROTOCOL_VERSION'] = 'LDAP_VERSION3';
-        
         }
+
         /* The host name (or list of hosts) for the primary LDAP server. */
         ldap_get_option( $this->_connectionID, LDAP_OPT_HOST_NAME, $version['LDAP_OPT_HOST_NAME'] ); 
         ldap_get_option( $this->_connectionID, LDAP_OPT_ERROR_NUMBER, $version['LDAP_OPT_ERROR_NUMBER'] ); 
@@ -276,7 +281,6 @@ class ADODB_ldap extends ADOConnection {
         ldap_get_option( $this->_connectionID, LDAP_OPT_MATCHED_DN, $version['LDAP_OPT_MATCHED_DN'] ); 
         
         return $this->version = $version;
-    
     }
 }
 	
@@ -290,7 +294,7 @@ class ADORecordSet_ldap extends ADORecordSet{
 	var $canSeek = false;
 	var $_entryID; /* keeps track of the entry resource identifier */
 	
-	function ADORecordSet_ldap($queryID,$mode=false) 
+	function __construct($queryID,$mode=false)
 	{
 		if ($mode === false) { 
 			global $ADODB_FETCH_MODE;
@@ -311,7 +315,7 @@ class ADORecordSet_ldap extends ADORecordSet{
 		break;
 		}
 	
-		$this->ADORecordSet($queryID);	
+		parent::__construct($queryID);
 	}
 	
 	function _initrs()
@@ -322,7 +326,6 @@ class ADORecordSet_ldap extends ADORecordSet{
 	   GetAssoc() function
        */
 	    $this->_numOfRows = ldap_count_entries( $this->connection->_connectionID, $this->_queryID );
-
 	}
 
     /*
@@ -348,7 +351,7 @@ class ADORecordSet_ldap extends ADORecordSet{
 		return $results; 
 	}
     
-    function GetRowAssoc()
+	function GetRowAssoc($upper = ADODB_ASSOC_CASE)
 	{
         $results = array();
         foreach ( $this->fields as $k=>$v ) {
@@ -385,8 +388,9 @@ class ADORecordSet_ldap extends ADORecordSet{
 	
 	function _fetch()
 	{		
-		if ( $this->_currentRow >= $this->_numOfRows && $this->_numOfRows >= 0 )
+		if ( $this->_currentRow >= $this->_numOfRows && $this->_numOfRows >= 0 ) {
         	return false;
+		}
         	
         if ( $this->_currentRow == 0 ) {
 		  $this->_entryID = ldap_first_entry( $this->connection->_connectionID, $this->_queryID );
@@ -396,6 +400,7 @@ class ADORecordSet_ldap extends ADORecordSet{
 	    
 	    $this->fields = ldap_get_attributes( $this->connection->_connectionID, $this->_entryID );
 	    $this->_numOfFields = $this->fields['count'];	
+
 	    switch ( $this->fetchMode ) {
             
             case LDAP_ASSOC:
@@ -411,7 +416,8 @@ class ADORecordSet_ldap extends ADORecordSet{
 			$this->fields = $this->GetRowNums();
             break;
         }
-        return ( is_array( $this->fields ) );        
+
+		return is_array( $this->fields );
 	}
 	
 	function _close() {

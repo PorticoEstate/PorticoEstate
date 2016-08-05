@@ -1,12 +1,18 @@
 <?php
 /*
-V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
+@version   v5.20.4  30-Mar-2016
+@copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+@copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
   Set tabs to 8.
   
-  MySQL code that does not support transactions. Use mysqlt if you need transactions.
+  This driver only supports the original non-transactional MySQL driver. It
+  is deprected in PHP version 5.5 and removed in PHP version 7. It is deprecated
+  as of ADOdb version 5.20.0. Use the mysqli driver instead, which supports both
+  transactional and non-transactional updates
+  
   Requires mysql client. Works on Windows and Unix.
   
  28 Feb 2001: MetaColumns bug fix - suggested by  Freek Dijkstra (phpeverywhere@macfreek.com)
@@ -45,7 +51,7 @@ class ADODB_mysql extends ADOConnection {
 	var $nameQuote = '`';		/// string to use to quote identifiers and names
 	var $compat323 = false; 		// true if compat with mysql 3.23
 	
-	function ADODB_mysql() 
+	function __construct()
 	{			
 		if (defined('ADODB_EXTENSION')) $this->rsPrefix .= 'ext_';
 	}
@@ -54,8 +60,9 @@ class ADODB_mysql extends ADOConnection {
   // SetCharSet - switch the client encoding
   function SetCharSet($charset_name)
   {
-    if (!function_exists('mysql_set_charset'))
+		if (!function_exists('mysql_set_charset')) {
     	return false;
+		}
 
 	if ($this->charSet !== $charset_name) {
       $ok = @mysql_set_charset($charset_name,$this->_connectionID);
@@ -109,7 +116,6 @@ class ADODB_mysql extends ADOConnection {
 		    $procedures[$row[1]] = array(
 				    'type' => 'PROCEDURE',
 				    'catalog' => '',
-
 				    'schema' => '',
 				    'remarks' => $row[7],
 			    );
@@ -132,10 +138,8 @@ class ADODB_mysql extends ADOConnection {
         // restore fetchmode
         if (isset($savem)) {
                 $this->SetFetchMode($savem);
-
         }
         $ADODB_FETCH_MODE = $save;
-
 
         return $procedures;
     }
@@ -278,10 +282,10 @@ class ADODB_mysql extends ADOConnection {
  	 // See http://www.mysql.com/doc/M/i/Miscellaneous_functions.html
 	// Reference on Last_Insert_ID on the recommended way to simulate sequences
  	var $_genIDSQL = "update %s set id=LAST_INSERT_ID(id+1);";
-	var $_genSeqSQL = "create table %s (id int not null)";
+	var $_genSeqSQL = "create table if not exists %s (id int not null)";
 	var $_genSeqCountSQL = "select count(*) from %s";
 	var $_genSeq2SQL = "insert into %s values (%s)";
-	var $_dropSeqSQL = "drop table %s";
+	var $_dropSeqSQL = "drop table if exists %s";
 	
 	function CreateSequence($seqname='adodbseq',$startID=1)
 	{
@@ -662,7 +666,9 @@ class ADODB_mysql extends ADOConnection {
          $a_create_table = $this->getRow(sprintf('SHOW CREATE TABLE %s', $table));
 		 if ($associative) {
 		 	$create_sql = isset($a_create_table["Create Table"]) ? $a_create_table["Create Table"] : $a_create_table["Create View"];
-         } else $create_sql  = $a_create_table[1];
+		} else {
+			$create_sql = $a_create_table[1];
+		}
 
          $matches = array();
 
@@ -708,7 +714,7 @@ class ADORecordSet_mysql extends ADORecordSet{
 	var $databaseType = "mysql";
 	var $canSeek = true;
 	
-	function ADORecordSet_mysql($queryID,$mode=false) 
+	function __construct($queryID,$mode=false)
 	{
 		if ($mode === false) { 
 			global $ADODB_FETCH_MODE;
@@ -724,7 +730,7 @@ class ADORecordSet_mysql extends ADORecordSet{
 			$this->fetchMode = MYSQL_BOTH; break;
 		}
 		$this->adodbFetchMode = $mode;
-		$this->ADORecordSet($queryID);	
+		parent::__construct($queryID);
 	}
 	
 	function _initrs()
@@ -753,10 +759,14 @@ class ADORecordSet_mysql extends ADORecordSet{
 		return $o;
 	}
 
-	function GetRowAssoc($upper=true)
+	function GetRowAssoc($upper = ADODB_ASSOC_CASE)
 	{
-		if ($this->fetchMode == MYSQL_ASSOC && !$upper) $row = $this->fields;
-		else $row = ADORecordSet::GetRowAssoc($upper);
+		if ($this->fetchMode == MYSQL_ASSOC && $upper == ADODB_ASSOC_CASE_LOWER) {
+			$row = $this->fields;
+		}
+		else {
+			$row = ADORecordSet::GetRowAssoc($upper);
+		}
 		return $row;
 	}
 	
@@ -787,6 +797,7 @@ class ADORecordSet_mysql extends ADORecordSet{
 		//return adodb_movenext($this);
 		//if (defined('ADODB_EXTENSION')) return adodb_movenext($this);
 		if (@$this->fields = mysql_fetch_array($this->_queryID,$this->fetchMode)) {
+			$this->_updatefields();
 			$this->_currentRow += 1;
 			return true;
 		}
@@ -800,6 +811,7 @@ class ADORecordSet_mysql extends ADORecordSet{
 	function _fetch()
 	{
 		$this->fields =  @mysql_fetch_array($this->_queryID,$this->fetchMode);
+		$this->_updatefields();
 		return is_array($this->fields);
 	}
 	
@@ -865,23 +877,9 @@ class ADORecordSet_mysql extends ADORecordSet{
 }
 
 class ADORecordSet_ext_mysql extends ADORecordSet_mysql {	
-	function ADORecordSet_ext_mysql($queryID,$mode=false) 
-	{
-		if ($mode === false) { 
-			global $ADODB_FETCH_MODE;
-			$mode = $ADODB_FETCH_MODE;
-		}
-		switch ($mode)
+	function __construct($queryID,$mode=false)
 		{
-		case ADODB_FETCH_NUM: $this->fetchMode = MYSQL_NUM; break;
-		case ADODB_FETCH_ASSOC:$this->fetchMode = MYSQL_ASSOC; break;
-		case ADODB_FETCH_DEFAULT:
-		case ADODB_FETCH_BOTH:
-		default:
-		$this->fetchMode = MYSQL_BOTH; break;
-		}
-		$this->adodbFetchMode = $mode;
-		$this->ADORecordSet($queryID);
+		parent::__construct($queryID,$mode);
 	}
 	
 	function MoveNext()
@@ -889,6 +887,5 @@ class ADORecordSet_ext_mysql extends ADORecordSet_mysql {
 		return @adodb_movenext($this);
 	}
 }
-
 
 }
