@@ -350,7 +350,7 @@
 			{
 				if ($entry['parent_id'])
 				{
-					$entry['name'] .= "::{$entry['parent_id']}";
+					$entry['name'] = "[{$entry['name']}] ::  {$entry['parent_id']}";
 				}
 			}
 			return array('ResultSet' => array('Result' => $values));
