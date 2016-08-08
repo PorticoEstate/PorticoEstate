@@ -865,7 +865,7 @@
 
 			function __construct( $query = "" )
 			{
-				$this->db_oci8($query);
+				parent::__construct($query);
 			}
 		}
 	}
