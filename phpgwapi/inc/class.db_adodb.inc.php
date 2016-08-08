@@ -14,9 +14,9 @@
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
 	{
-		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
+		$GLOBALS['phpgw_info']['server']['db_type'] = 'postgres';
 	}
-	phpgw::import_class('phpgwapi.db_');
+	phpgw::import_class('phpgwapi.db');
 	/**
 	* Include concrete database implementation
 	*/
@@ -29,7 +29,7 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class phpgwapi_db  extends phpgwapi_db_
+	class phpgwapi_db_adodb  extends phpgwapi_db
 	{
 
 		/**
@@ -124,6 +124,7 @@
 
 			$dsn = '';
 			$port ='';
+			$_charset = '';
 			$host = $this->Host;
 			switch ($this->Type)
 			{
@@ -138,6 +139,7 @@
 				case 'oracle':
 					$type = 'oci8';
 					$port = $this->Port ? $this->Port : 1521;
+					$_charset = 'AL32UTF8';
 					break;
 				default:
 					$type = $this->Type;
@@ -150,6 +152,11 @@
 			}
 
 			$this->adodb = newADOConnection($type);
+
+			if($_charset)
+			{
+				$this->adodb->charSet = $_charset;
+			}
 
 			if($this->fetchmode == 'ASSOC')
 			{
