@@ -248,9 +248,7 @@
 				return false;
 			}
 
-//			$db = createObject('phpgwapi.db', null, null, true);
-			$db = createObject('property.db_oci8');
-
+			$db = createObject('phpgwapi.db_adodb', null, null, true);
 			$db->debug = false;
 			$db->Host = $this->config->config_data['fellesdata']['host'];
 			$db->Port = $this->config->config_data['fellesdata']['port'];
@@ -341,8 +339,8 @@
 				$name = $db->f('ORG_NAVN', true);
 				$this->names[$org_unit_id] = $name;
 			}
-
-//			_debug_array($this->names);
+//			_debug_array($db);
+//			_debug_array($this->names);die();
 			$sql = "SELECT V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.TJENESTESTED, V_ORG_ENHET.ORG_NIVAA FROM V_ORG_ENHET"
 				. " WHERE V_ORG_ENHET.ORG_NIVAA = 1 ORDER BY V_ORG_ENHET.ORG_NAVN ASC";
 
@@ -368,20 +366,7 @@
 		function get_org_unit_ids_children( $org_unit_id )
 		{
 			$org_unit_id = (int)$org_unit_id;
-			/*
-			 * FIXME: doe not work for db_oci8;
-			 */
-//			$db = clone($this->db);
-			$db = createObject('property.db_oci8');
-
-			$db->debug = false;
-			$db->Host = $this->db->Host;
-			$db->Port = $this->db->Port;
-			$db->Type = $this->db->Type;
-			$db->Database = $this->db->Database;
-			$db->User = $this->db->User;
-			$db->Password = $this->db->Password;
-			$db->connect();
+			$db = clone($this->db);
 
 			$sql = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER,V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.TJENESTESTED, ORG_NIVAA FROM V_ORG_KNYTNING"
 				. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING={$org_unit_id}";
@@ -390,6 +375,7 @@
 
 			while ($db->next_record())
 			{
+//				_debug_array($db->Record);
 				$child_org_unit_id = $db->f('ORG_ENHET_ID');
 				$arbeidssted = $db->f('TJENESTESTED');
 				$this->unit_ids[] = array
@@ -407,6 +393,6 @@
 					$this->get_org_unit_ids_children($child_org_unit_id);
 				}
 			}
-			unset($db);
+//			unset($db);
 		}
 	}

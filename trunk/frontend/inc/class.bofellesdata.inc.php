@@ -67,7 +67,11 @@
 				return false;
 			}
 
-			$db = createObject('phpgwapi.db', null, null, true);
+//			$db = createObject('phpgwapi.db', null, null, true);
+			/*
+			 * pdo for oracle is deprecated for php7 - switch to oci8/adodb
+			 */
+			$db = createObject('phpgwapi.db_adodb', null, null, true);
 
 			$db->debug = !!$config->config_data['external_db_debug'];
 			$db->Host = $config->config_data['external_db_host'];

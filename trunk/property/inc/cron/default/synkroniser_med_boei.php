@@ -49,28 +49,24 @@
 			$this->like = $this->db->like;
 			$this->left_join = " LEFT JOIN ";
 
-			if (isset($this->db->adodb) && $this->db->adodb)
+			$this->db_boei = createObject('phpgwapi.db_adodb', null, null, true);
+			$this->db_boei->Host = $GLOBALS['external_db']['boei']['db_host'];
+			$this->db_boei->Type = $GLOBALS['external_db']['boei']['db_type'];
+			$this->db_boei->Database = $GLOBALS['external_db']['boei']['db_name'];
+			$this->db_boei->Port = $GLOBALS['external_db']['boei']['db_port'];
+			$this->db_boei->User = $GLOBALS['external_db']['boei']['db_user'];
+			$this->db_boei->Password = $GLOBALS['external_db']['boei']['db_pass'];
+			$this->db_boei->Halt_On_Error = 'yes';
+
+			try
 			{
-				$this->db_boei = CreateObject('phpgwapi.db', false, $GLOBALS['external_db']['boei']['db_type']);
-				$this->db_boei->Host = $GLOBALS['external_db']['boei']['db_host'];
-				$this->db_boei->Type = $GLOBALS['external_db']['boei']['db_type'];
-				$this->db_boei->Database = $GLOBALS['external_db']['boei']['db_name'];
-				$this->db_boei->User = $GLOBALS['external_db']['boei']['db_user'];
-				$this->db_boei->Password = $GLOBALS['external_db']['boei']['db_pass'];
-				$this->db_boei->Halt_On_Error = 'yes';
 				$this->db_boei->connect();
 			}
-			else
+			catch (Exception $e)
 			{
-				$this->db_boei = CreateObject('property.db_mssql');
-				$this->db_boei->Host = $GLOBALS['external_db']['boei']['db_host'];
-				$this->db_boei->Type = $GLOBALS['external_db']['boei']['db_type'];
-				$this->db_boei->Database = $GLOBALS['external_db']['boei']['db_name'];
-				$this->db_boei->User = $GLOBALS['external_db']['boei']['db_user'];
-				$this->db_boei->Password = $GLOBALS['external_db']['boei']['db_pass'];
-				$this->db_boei->Halt_On_Error = 'yes';
+				$status = lang('unable_to_connect_to_database');
 			}
-
+	
 			$this->db_boei2 = clone($this->db_boei);
 			$this->db2 = clone($this->db);
 		}
@@ -145,7 +141,6 @@
 		function update_table_eier()
 		{
 			$metadata = $this->db_boei->metadata('Eier');
-//_debug_array($metadata);
 			$metadata = $this->db->metadata('boei_eier');
 //_debug_array($metadata);
 			if (!$metadata)
