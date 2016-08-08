@@ -133,7 +133,14 @@
 					break;
 				case 'mssql':
 					$type = 'odbc_mssql';
-					$dsn = "Driver={SQL Server};Server={$this->Host};Database={$this->Database};";
+					/*"FreeTDS" has to be defined in /etc/odbcinst.ini
+					 * http://www.bictor.com/2014/05/13/configure-unixodbc-for-ubuntu-14-04-using-freetds/
+					 */
+					$dsn = "Driver={FreeTDS};Server={$this->Host};Database={$this->Database}";
+					if($this->Port)
+					{
+						$dsn .= ";Port={$this->Port}";
+					}
 					break;
 				case 'oci8':
 				case 'oracle':
