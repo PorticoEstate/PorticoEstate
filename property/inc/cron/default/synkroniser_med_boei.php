@@ -50,10 +50,15 @@
 			$this->left_join = " LEFT JOIN ";
 
 			$this->db_boei = createObject('phpgwapi.db_adodb', null, null, true);
-			$this->db_boei->Host = $GLOBALS['external_db']['boei']['db_host'];
+			$host_info = explode(':', $GLOBALS['external_db']['boei']['db_host']);
+
+			$host = $host_info[0];
+			$port = isset($host_info[1]) && $host_info[1] ? $host_info[1] : $GLOBALS['external_db']['boei']['db_port'];
+
+			$this->db_boei->Host = $host;
 			$this->db_boei->Type = $GLOBALS['external_db']['boei']['db_type'];
 			$this->db_boei->Database = $GLOBALS['external_db']['boei']['db_name'];
-			$this->db_boei->Port = $GLOBALS['external_db']['boei']['db_port'];
+			$this->db_boei->Port = $port;
 			$this->db_boei->User = $GLOBALS['external_db']['boei']['db_user'];
 			$this->db_boei->Password = $GLOBALS['external_db']['boei']['db_pass'];
 			$this->db_boei->Halt_On_Error = 'yes';
