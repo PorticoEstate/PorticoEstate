@@ -15,10 +15,10 @@
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
 	{
-		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
+		$GLOBALS['phpgw_info']['server']['db_type'] = 'postgres';
 	}
 
-	phpgw::import_class('phpgwapi.db_');
+	phpgw::import_class('phpgwapi.db');
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
@@ -26,7 +26,7 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class phpgwapi_db  extends phpgwapi_db_
+	class phpgwapi_db_pdo  extends phpgwapi_db
 	{
 		protected $fetch_single;
 		protected $statement_object;

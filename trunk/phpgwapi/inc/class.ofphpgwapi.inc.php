@@ -81,10 +81,36 @@
 					$auth_info = ($p1 != '_UNDEF_')? $p1 : null;
 					return self::_create_mapping_object($auth_info);
 
+				case 'db':
+					$query = ($p1 != '_UNDEF_')? $p1 : null;
+					$db_type = ($p1 != '_UNDEF_')? $p1 : null;
+					$delay_connect = ($p1 != '_UNDEF_')? $p1 : null;
+					return self::_create_db_object($query, $db_type, $delay_connect);
+
 				default:
 					return parent::createObject($class, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8,
 												$p9, $p10, $p11, $p12, $p13, $p14, $p15, $p16);
 			}
+		}
+
+		/**
+		 * Create a new authentication object
+		 *
+		 * @return object new authentication object
+		 */
+		protected static function _create_db_object($query = null, $db_type = null, $delay_connect = null)
+		{
+			if ( empty($GLOBALS['phpgw_info']['server']['db_abstraction']) )
+			{
+				$db_abstraction = 'pdo';
+			}
+			else
+			{
+				$db_abstraction = $GLOBALS['phpgw_info']['server']['db_abstraction'];
+			}
+			include_once PHPGW_API_INC . "/class.db_{$db_abstraction}.inc.php";
+			$class = "phpgwapi_db_{$db_abstraction}";
+			return new $class($query, $db_type, $delay_connect);
 		}
 
 		/**
