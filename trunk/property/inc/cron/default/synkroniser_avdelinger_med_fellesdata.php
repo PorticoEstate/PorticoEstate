@@ -273,26 +273,26 @@
 
 		public function insert_values()
 		{
+			$table = 'fm_org_unit';
 
 			$db = & $GLOBALS['phpgw']->db;
 			$db->transaction_begin();
-
+			$db->query("UPDATE {$table} SET active = 0", __LINE__, __FILE__);
 			$units = $this->unit_ids;
 //			_debug_array($units);
 			foreach ($units as $unit)
 			{
-				$value_set = array
-					(
+				$value_set = array(
 					'id' => $unit['id'],
 					'parent_id' => $unit['parent'],
 					'name' => $db->db_addslashes($unit['name']),
+					'arbeidssted' => $unit['arbeidssted'],
 					'created_on' => time(),
 					'created_by' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_by' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_on' => time()
 				);
 
-				$table = 'fm_org_unit';
 				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'], __LINE__, __FILE__);
 				$db->next_record();
 
@@ -304,6 +304,7 @@
 					{
 						$this->messages[] = "ID finnes fra før: {$unit['id']}, oppdaterer: {$unit['name']}";
 					}
+					$value_set['active'] = 1;
 					$value_set = $db->validate_update($value_set);
 					$sql = "UPDATE {$table} SET {$value_set} WHERE id =" . (int)$unit['id'];
 				}
@@ -369,17 +370,15 @@
 			$db = clone($this->db);
 
 			$sql = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER,V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.TJENESTESTED, ORG_NIVAA FROM V_ORG_KNYTNING"
-				. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING={$org_unit_id}";
+				. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING={$org_unit_id}";
 
 			$db->query($sql);
 
 			while ($db->next_record())
 			{
-//				_debug_array($db->Record);
 				$child_org_unit_id = $db->f('ORG_ENHET_ID');
 				$arbeidssted = $db->f('TJENESTESTED');
-				$this->unit_ids[] = array
-					(
+				$this->unit_ids[] = array(
 					'id' => $child_org_unit_id,
 					'name' => $this->names[$child_org_unit_id],
 					'parent' => $org_unit_id,

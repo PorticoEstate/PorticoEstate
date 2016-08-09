@@ -9203,3 +9203,30 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.702 to 0.9.17.703
+	*
+	*/
+	$test[] = '0.9.17.702';
+
+	function property_upgrade0_9_17_702()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.org_unit', 'Org unit', 'property', false, 'fm_org_unit', false, true);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_org_unit", 'active', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True,
+			'default' => 1
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.703';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

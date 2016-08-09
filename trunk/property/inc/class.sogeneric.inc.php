@@ -64,6 +64,7 @@
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_criteria = isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
+			$custom_filter = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
 			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
@@ -235,6 +236,12 @@
 			if ($_filter_array)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $_filter_array);
+				$where = 'AND';
+			}
+
+			if ($custom_filter)
+			{
+				$filtermethod .= " $where " . implode(' AND ', $custom_filter);
 				$where = 'AND';
 			}
 
@@ -1753,10 +1760,8 @@
 						(
 						'table' => 'fm_org_unit',
 						'id' => array('name' => 'id', 'type' => 'int'),
-						'fields' => array
-							(
-							array
-								(
+						'fields' => array(
+							array(
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar',
@@ -1764,8 +1769,7 @@
 								'size' => 60,
 								'sortable' => true
 							),
-							array
-								(
+							array(
 								'name' => 'parent_id',
 								'descr' => lang('parent'),
 								'type' => 'select',
@@ -1779,13 +1783,24 @@
 									'method' => 'property.bogeneric.get_list',
 									'method_input' => array('type' => 'org_unit', 'role' => 'parent', 'selected' => '##parent_id##')
 								)
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
 							)
 						),
 						'edit_msg' => lang('edit'),
 						'add_msg' => lang('add'),
 						'name' => lang('department'),
 						'acl_app' => 'property',
-						'acl_location' => '.admin',
+						'acl_location' => '.org_unit',
 						'menu_selection' => 'admin::property::accounting::org_unit',
 						'default' => array
 							(
