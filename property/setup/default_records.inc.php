@@ -72,6 +72,7 @@
 	$GLOBALS['phpgw']->locations->add('.invoice.dimb', 'A dimension for accounting', 'property');
 	$GLOBALS['phpgw']->locations->add('.scheduled_events', 'Scheduled events', 'property');
 	$GLOBALS['phpgw']->locations->add('.project.condition_survey', 'Condition Survey', 'property', true, 'fm_condition_survey', true);
+	$GLOBALS['phpgw']->locations->add('.org_unit', 'Org unit', 'property', false, 'fm_org_unit', false, true);
 
 	$locations = array(
 		'property.ticket' => '.ticket',

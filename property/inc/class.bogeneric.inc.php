@@ -344,8 +344,33 @@
 				'query' => $query,
 			);
 
-			$values = $this->read($params);
+			foreach ($this->location_info['fields'] as $field)
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
+				}
+			}
 
+			$attributes = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+
+			$custom_filter = array();
+			foreach ($attributes as $attribute_id => $attribute)
+			{
+				switch(phpgw::get_var($attribute['name']))
+				{
+					case 'ISNOTNULL':
+						$custom_filter[] = "{$attribute['name']} IS NOT NULL";
+						break;
+					case 'ISNULL':
+						$custom_filter[] = "{$attribute['name']} IS NULL";
+						break;
+					default:
+				}
+			}
+			$params['custom_filter'] = $custom_filter;
+			$values = $this->read($params);
+/*
 			foreach ($values as &$entry)
 			{
 				if ($entry['parent_id'])
@@ -353,6 +378,7 @@
 					$entry['name'] = "[{$entry['name']}] ::  {$entry['parent_id']}";
 				}
 			}
+*/
 			return array('ResultSet' => array('Result' => $values));
 		}
 
