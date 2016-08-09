@@ -37,6 +37,7 @@
 			'index' => true,
 			'get_locations_for_type' => true,
 			'import_component_files' => true,
+			'file_upload_handler' => true,
 			'import_components' => true
 		);
 
@@ -73,10 +74,13 @@
 		
 		public function import_component_files()
 		{
+			$values = array();
 			$get_identificator = true;
 			
+			$components = $GLOBALS['phpgw']->session->appsession('components', 'property');
+			
 			//$query = '+VZ=330.0001-UZ0010T - Sprinklerhoder';
-			//$ids = $this->get_component($query);
+			//$values = $this->get_component($query);
 
 			$result = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
 			$data = array();
@@ -91,14 +95,17 @@
 				$data[$row[0]][] = $row[(count($row)-1)];
 			}
 			
-			foreach ($data as $k => $v)
+			/*foreach ($data as $k => $v)
 			{
-				$ids = $this->get_component($k);
-				$values[$k]['ids'] = $ids;
-				$values[$k]['files'] = $v;
-			}
+				if (!empty($k))
+				{
+					$ids = $this->get_component($k);
+					$values[$k]['ids'] = $ids;
+					$values[$k]['files'] = $v;
+				}
+			}*/
 			
-			print_r($values); die;
+			print_r($data); die;
 			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
@@ -106,11 +113,22 @@
 			
 		}
 		
+		public function file_upload_handler() 
+		{
+			require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
+			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
+			$upload_handler = new UploadHandler($options);			
+		}
+		
 		public function import_components()
 		{
+			$GLOBALS['phpgw']->session->appsession('components', 'property', '');
+			
 			$get_identificator = false;
 
-			$location = phpgw::get_var('location_code');
+			$location_code = phpgw::get_var('location_code');
+			$location_code = (!empty($location_code)) ? explode('-', $location_code) : '';
 			
 			$entity_categories_in_xml = array();
 
@@ -150,7 +168,7 @@
 			//echo '<li class="info">Import: finished step ' . print_r($buildingpart) . '</li>';
 
 
-			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
+			require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
 
 			$import_components = new import_components();
 			$entity_categories  = $import_components->get_entity_categories();
@@ -194,8 +212,8 @@
 				}
 			}
 
-			$components_not_added = $import_components->add_bim_item($entity_categories_in_xml, $location);
-			if (count($components_not_added))
+			$components_added = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
+			/*if (count($components_not_added))
 			{
 				echo '<br>Components not added: <br>';
 				foreach ($components_not_added as $k => $v)
@@ -203,6 +221,8 @@
 					echo $k.' => not added: '.$v.'<br>';
 				}
 			}*/
+			
+			$GLOBALS['phpgw']->session->appsession('components', 'property', $components_added);
 
 			print_r($entity_categories_in_xml); die;
 
