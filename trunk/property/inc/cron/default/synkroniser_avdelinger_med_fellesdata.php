@@ -300,23 +300,25 @@
 				{
 					unset($value_set['id']);
 
-					if ($this->debug)
-					{
-						$this->messages[] = "ID finnes fra før: {$unit['id']}, oppdaterer: {$unit['name']}";
-					}
 					$value_set['active'] = 1;
 					$value_set = $db->validate_update($value_set);
 					$sql = "UPDATE {$table} SET {$value_set} WHERE id =" . (int)$unit['id'];
+					if ($this->debug)
+					{
+						$this->messages[] = "ID finnes fra før: {$unit['id']}, oppdaterer: {$unit['name']}";
+						$this->messages[] = $sql;
+					}
 				}
 				else
 				{
-					if ($this->debug)
-					{
-						$this->messages[] = "ID fantes ikke fra før: {$unit['id']}, legger til: {$unit['name']}";
-					}
 					$cols = implode(',', array_keys($value_set));
 					$values = $db->validate_insert(array_values($value_set));
 					$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+					if ($this->debug)
+					{
+						$this->messages[] = "ID fantes ikke fra før: {$unit['id']}, legger til: {$unit['name']}";
+						$this->messages[] = $sql;
+					}
 				}
 
 				$db->query($sql, __LINE__, __FILE__);
