@@ -390,6 +390,7 @@
 			$cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$agreement_id = isset($data['agreement_id']) ? $data['agreement_id'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$allrows = true; // return all..
 
@@ -495,7 +496,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{
@@ -533,6 +534,7 @@
 			{
 				$agreement_id = (isset($data['agreement_id']) ? $data['agreement_id'] : 0);
 				$activity_id = (isset($data['activity_id']) ? $data['activity_id'] : 0);
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			$entity_table = 'fm_activity_price_index';
@@ -612,7 +614,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

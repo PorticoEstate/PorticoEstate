@@ -75,6 +75,7 @@
 				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : '');
 				$part_of_town_id = (isset($data['part_of_town_id']) ? $data['part_of_town_id'] : '');
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 			if (!$cat_id)
 			{
@@ -142,7 +143,7 @@
 
 				if (!$allrows)
 				{
-					$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+					$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 				}
 				else
 				{
