@@ -1006,7 +1006,7 @@
 
 			unset($parameters);
 
-			$common_data = $this->common_data();
+			$common_data = $this->common_data($workorder_id);
 
 			$data['datatable']['table_sum'] = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
@@ -2354,8 +2354,7 @@ HTML;
 
 			unset($parameters);
 
-			$common_data = $this->common_data();
-
+			$common_data = $this->common_data($workorder_id);
 			$data['datatable']['table_sum'] = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
 
@@ -2703,7 +2702,7 @@ HTML;
 
 			unset($parameters);
 
-			$common_data = $this->common_data();
+			$common_data = $this->common_data($workorder_id);
 
 			$data['datatable']['table_sum'] = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];

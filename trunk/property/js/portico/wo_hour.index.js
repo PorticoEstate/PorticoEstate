@@ -15,16 +15,4 @@ this.local_DrawCallback2 = function (oTable)
 
 	$('#value_total_sum').html($.number(data.table_sum.value_total_sum, 2, ',', '.'));
 
-
-	var project_id = data.workorder_data.project_id;
-	var link_project = data.workorder_data.link_project;
-	$('#project_id').html('<a href="' + link_project + '">' + project_id + '</a>')
-
-	var workorder_id = data.workorder_data.workorder_id;
-	var link_workorder = data.workorder_data.link_workorder;
-	$('#workorder_id').html('<a href="' + link_workorder + '">' + workorder_id + '</a>')
-
-	$('#workorder_title').html(data.workorder_data.workorder_title);
-
-	$('#vendor_name').html(data.workorder_data.vendor_name);
 };
