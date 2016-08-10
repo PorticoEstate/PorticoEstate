@@ -76,8 +76,9 @@
 		{
 			$values = array();
 			$get_identificator = true;
+			$location_code = phpgw::get_var('location_code');
 			
-			$components = $GLOBALS['phpgw']->session->appsession('components', 'property');
+			$components_added = $GLOBALS['phpgw']->session->appsession('components', 'property');
 			
 			//$query = '+VZ=330.0001-UZ0010T - Sprinklerhoder';
 			//$values = $this->get_component($query);
@@ -95,6 +96,13 @@
 				$data[$row[0]][] = $row[(count($row)-1)];
 			}
 			
+			$data_generic = array();
+			foreach ($data as $k => $v) 
+			{
+				$data_generic[$k]['ids'] = $components_added[$k];
+				$data_generic[$k]['files'] = $v;
+			}
+			
 			/*foreach ($data as $k => $v)
 			{
 				if (!empty($k))
@@ -105,7 +113,9 @@
 				}
 			}*/
 			
-			print_r($data); die;
+			
+			print_r($data_generic); die;
+			
 			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
@@ -128,7 +138,6 @@
 			$get_identificator = false;
 
 			$location_code = phpgw::get_var('location_code');
-			$location_code = (!empty($location_code)) ? explode('-', $location_code) : '';
 			
 			$entity_categories_in_xml = array();
 
@@ -161,11 +170,7 @@
 					array('name' => 'benevnelse', 'value' => trim($post['Egenskaper']['Egenskap']['Verdi'])),
 					array('name' => 'beskrivelse', 'value' => trim($post['Tekst']['Uformatert']))
 				);
-
-				//$buildingpart_in_xml[$post['Postnrdeler']['Postnrdel'][1]['Kode']] = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
 			}
-
-			//echo '<li class="info">Import: finished step ' . print_r($buildingpart) . '</li>';
 
 
 			require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
@@ -224,7 +229,8 @@
 			
 			$GLOBALS['phpgw']->session->appsession('components', 'property', $components_added);
 
-			print_r($entity_categories_in_xml); die;
+			echo count($components_added).'<br><br>';
+			print_r($components_added); die;
 
 		}
 		
@@ -257,8 +263,9 @@
 		{
 			$tabs = array();
 			$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['upload_components'] = array('label' => lang('Components'), 'link' => '#upload_components', 'disable' => 1);
-			$tabs['upload_files'] = array('label' => lang('Files'), 'link' => '#upload_files', 'disable' => 0);
+			$tabs['components'] = array('label' => lang('Components'), 'link' => '#components', 'disable' => 1);
+			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
+			$tabs['relations'] = array('label' => lang('Relations'), 'link' => '#relations', 'disable' => 0);
 			
 			$active_tab = 'locations';
 
