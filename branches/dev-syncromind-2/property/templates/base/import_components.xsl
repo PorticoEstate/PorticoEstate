@@ -59,7 +59,7 @@
 					</form>
 				</div>
 				
-				<div id="upload_components">
+				<div id="components">
 					<form id="form_components" name="form_components" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
 						<div class="pure-control-group">
 							<label>
@@ -87,7 +87,11 @@
 					</form>		
 				</div>
 				
-				<div id="upload_files">
+				<div id="files">
+					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
+				</div>
+				
+				<div id="relations">
 					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">						
 						<div class="pure-control-group">
 							<label>
@@ -105,9 +109,7 @@
 							</input>
 						</div>
 					</form>
-					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
 				</div>
-				
 			</div>
 	</div>
 
