@@ -19,8 +19,6 @@
 			$this->join = $this->db->join;
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->bo_entity = CreateObject('property.boentity', true);
-			//$this->type = $this->bo_entity->type;
-			//$this->type_app = $this->bo_entity->type_app;
 			$this->custom = CreateObject('property.custom_fields');
 			$this->bocommon = CreateObject('property.bocommon');
 		}
@@ -173,14 +171,13 @@
 						{
 							$attributes_values = $this->set_attributes_values($values, $attributes);
 							$values_insert = $this->_populate(array('location_code' => $location_code), $attributes_values);
-							//$receipt = $this->bo_entity->save(array('location' => $location_code), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
 							
-							$values['id'] = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
+							$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
 							if (!$receipt['id'])
 							{
 								throw new Exception('import - missing id');
 							}
-							$components_added[$values['benevnelse']] = $receipt['id'];
+							$components_added[$values_insert['benevnelse']] = $receipt;
 						}
 					}
 				}
@@ -198,31 +195,6 @@
 			$this->db->transaction_commit();
 			
 			return $components_added;
-			
-			/*foreach ($entity_categories as $entity) 
-			{
-				if ($entity['cat_id'])
-				{
-					$attributes = $this->get_attributes($entity['entity_id'], $entity['cat_id']);
-
-					$not_added = array();
-					foreach ($entity['components'] as $values)
-					{
-						$attributes_values = $this->set_attributes_values($values, $attributes);
-						$receipt = $this->bo_entity->save(array('location' => $location_code), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
-						if (!$receipt['id'])
-						{
-							$not_added[] = 1;
-						}
-					}
-					if (count($not_added))
-					{
-						$components_not_added[$entity['name']] = count($not_added);
-					}
-				}
-			}
-			
-			return $components_not_added;*/
 		}
 		
 		private function _save_eav( $data, $entity_id, $cat_id )
@@ -281,10 +253,16 @@
 				'user_id' => $this->account
 			);
 
-			$this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+			$result = $this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
-
-			return $id;
+			
+			if ($result)
+			{
+				return array('id' => $id, '$location_id' => $location_id); 
+			}
+			else {
+				return array();
+			}
 		}
 		
 		private function _populate( $values, $values_attribute )
