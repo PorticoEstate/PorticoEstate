@@ -299,6 +299,7 @@
 				if ($db->f('cnt'))
 				{
 					unset($value_set['id']);
+					unset($value_set['created_on']);
 
 					$value_set['active'] = 1;
 					$value_set = $db->validate_update($value_set);
