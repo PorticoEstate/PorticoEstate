@@ -335,6 +335,7 @@
 				$doc_type = isset($data['doc_type']) && $data['doc_type'] ? $data['doc_type'] : 0;
 				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 				$location_code = isset($data['location_code']) ? $data['location_code'] : '';
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if (!$location_code && !($entity_id && $cat_id && $p_num))
@@ -394,7 +395,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

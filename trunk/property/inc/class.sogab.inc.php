@@ -69,6 +69,7 @@
 				$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 				$address = isset($data['address']) ? $this->db->db_addslashes($data['address']) : '';
 				$check_payments = isset($data['check_payments']) ? $data['check_payments'] : '';
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			switch ($order)
@@ -200,7 +201,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{
@@ -325,6 +326,7 @@
 				$cat_id = (isset($data['cat_id']) ? $data['cat_id'] : 0);
 				$gab_id = (isset($data['gab_id']) ? $data['gab_id'] : '0');
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 
@@ -386,7 +388,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

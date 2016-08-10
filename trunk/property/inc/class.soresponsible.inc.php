@@ -569,6 +569,7 @@
 				$allrows = isset($data['allrows']) ? !!$data['allrows'] : '';
 				$type_id = isset($data['type_id']) && $data['type_id'] ? (int)$data['type_id'] : 0;
 				$role_id = isset($data['role_id']) && $data['role_id'] ? (int)$data['role_id'] : 0;
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -607,7 +608,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

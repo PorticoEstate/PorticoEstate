@@ -239,6 +239,7 @@
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			if (!isset($data['location_item_id']) || !$data['location_item_id'])
 			{
@@ -272,7 +273,7 @@
 
 			if (!$allrows)
 			{
-				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{
