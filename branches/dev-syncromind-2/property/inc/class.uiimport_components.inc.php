@@ -37,7 +37,7 @@
 			'index' => true,
 			'get_locations_for_type' => true,
 			'import_component_files' => true,
-			'file_upload_handler' => true,
+			'handle_import_files' => true,
 			'import_components' => true
 		);
 
@@ -48,6 +48,7 @@
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
+			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/test/';
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::generic";
 		}
@@ -80,8 +81,6 @@
 			
 			$components_added = $GLOBALS['phpgw']->session->appsession('components', 'property');
 			
-			//$query = '+VZ=330.0001-UZ0010T - Sprinklerhoder';
-			//$values = $this->get_component($query);
 
 			$result = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
 			$data = array();
@@ -96,40 +95,107 @@
 				$data[$row[0]][] = $row[(count($row)-1)];
 			}
 			
-			$data_generic = array();
-			foreach ($data as $k => $v) 
+			foreach ($data as $k => $files) 
 			{
-				$data_generic[$k]['ids'] = $components_added[$k];
-				$data_generic[$k]['files'] = $v;
+				//$data_generic[$k]['ids'] = $components_added[$k];
+				//$data_generic[$k]['files'] = $v;
+				$ids = $components_added[$k];
+				foreach($files as $file)
+				{
+					$parts = explode("\\", $file);
+					$file_id = $this->save_file($parts[count($parts)-1]);
+					$this->save_file_relation($ids['id'], $ids['location_id'], $file_id);
+				}
 			}
 			
-			/*foreach ($data as $k => $v)
-			{
-				if (!empty($k))
-				{
-					$ids = $this->get_component($k);
-					$values[$k]['ids'] = $ids;
-					$values[$k]['files'] = $v;
-				}
-			}*/
+			return;
 			
-			
-			print_r($data_generic); die;
-			
-			/*require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
-			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
-			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
-			$upload_handler = new UploadHandler($options);*/
+			//print_r($data_generic); die;
 			
 		}
 		
-		public function file_upload_handler() 
+		public function handle_import_files()
 		{
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/server/php/UploadHandler.php";
-			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'];
-			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.delete_file_upload'));
-			$upload_handler = new UploadHandler($options);			
+			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+			$options['upload_dir'] = $this->tmp_upload_dir;
+			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
+			$upload_handler = new UploadHandler($options);
 		}
+
+		
+		private function save_file( $tmp_file )
+		{
+			if (!empty($tmp_file))
+			{
+				if (!is_file($this->tmp_upload_dir.$tmp_file))
+				{
+					//phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					throw new Exception('Failed to upload file !');
+				}
+			}
+				
+			$bofiles = CreateObject('property.bofiles');
+			
+			$file_name = str_replace(' ', '_', $tmp_file);
+
+			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
+
+			$receipt = $bofiles->create_document_dir("generic_document");
+			if (count($receipt['error']))
+			{
+				throw new Exception('failed to create directory');
+			}
+			$bofiles->vfs->override_acl = 1;
+
+			$file_id = $bofiles->vfs->cp3(array(
+					'from' => $tmp_file,
+					'to' => $to_file,
+					'id' => '',
+					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
+			$bofiles->vfs->override_acl = 0;
+
+			if (empty($file_id))
+			{						
+				throw new Exception('Failed to upload file !');
+			} 
+
+			return $file_id;
+		}
+		
+		
+		private function save_file_relation( $item, $location_id, $file_id )
+		{
+			$this->db->transaction_begin();
+			
+			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
+			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
+				
+			$values_insert = array
+			(
+				'file_id' => (int)$file_id,
+				'location_id' => (int)$location_id,
+				'location_item_id' => (int)$item,
+				'is_private' => 0,
+				'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date' => $date,
+				'start_date' => $date,
+				'end_date' => $date
+			);				
+
+			$this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);				
+
+			
+			if ($this->db->transaction_commit())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
 		
 		public function import_components()
 		{
@@ -234,27 +300,6 @@
 
 		}
 		
-		protected function get_component( $query )
-		{
-			if ($query)
-			{
-				$query = $this->db->db_addslashes($query);
-			}
-
-			$sql = "SELECT * from fm_bim_item where (xpath('//./benevnelse/text()', xml_representation))[1]::text = '$query'::text";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
-			$values = array();
-			while ($this->db->next_record())
-			{
-				$values['id'] = $this->db->f('id');
-				$values['location_id'] = $this->db->f('location_id');
-			}
-
-			return $values;
-		}
-		
 		/**
 		 * Prepare UI
 		 * @return void
@@ -295,7 +340,7 @@
 				)				
 			);	
 				
-			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.file_upload_handler'));
+			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
 			
 			$data = array
 			(
