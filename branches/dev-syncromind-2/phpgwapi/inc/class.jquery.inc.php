@@ -497,7 +497,7 @@ JS;
 						<!-- The fileinput-button span is used to style the file input field as button -->
 						<span class="fileinput-button">
 							<span>Add files...</span>
-							<input type="file" name="files[]" multiple>
+							<input type="file" id="files" name="files[]" multiple>
 						</span>
 						<button type="submit" class="start">Start upload</button>
 						<button type="reset" class="cancel">Cancel upload</button>
@@ -515,7 +515,11 @@ JS;
 					</div>
 				</div>
 				<!-- The table listing the files available for upload/download -->
-				<table role="presentation"><tbody class="files"></tbody></table>
+				<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">
+					<table role="presentation">
+						<tbody class="files"></tbody>
+					</table>
+				</div>
 			</form>
 
 			<!-- The template to display files available for upload -->
@@ -579,14 +583,15 @@ HTML;
 					
 		$(function () {
 			'use strict';
-
+					
 			// Initialize the jQuery File Upload widget:
 			$('#fileupload').fileupload({
 				// Uncomment the following to send cross-domain cookies:
 				//xhrFields: {withCredentials: true},
-				url: '{$action}'
+				url: '{$action}',
+				limitConcurrentUploads: 4
 			});
-
+				
 			// Enable iframe cross-domain access via redirect option:
 			$('#fileupload').fileupload(
 				'option',
@@ -596,7 +601,7 @@ HTML;
 					'/cors/result.html?%s'
 				)
 			);
-
+				
 			// Load existing files:
 			$('#fileupload').addClass('fileupload-processing');
 			$.ajax({
