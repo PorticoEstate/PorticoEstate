@@ -54,16 +54,13 @@ $(document).ready(function ()
 		{
 			var selected = api.rows(this).data()[0];
 			//console.log(selected.location_code);
-			$('#tab-content').responsiveTabs('enable', 1);
+			$('#tab-content').responsiveTabs('enable', 2);
+			$('#tab-content').responsiveTabs('enable', 3);
 			$('#tab-content').responsiveTabs('activate', 1);
 			$('#location_name').html(selected.location_code + ' ' + selected.loc1_name);
 			$('#location_code').val(selected.location_code);
-        } else {
-			$('#tab-content').responsiveTabs('deactivate', 1);
-			$('#tab-content').responsiveTabs('disable', 1);
-			$('#location_name').html('');
-			$('#location_code').val('');
-		}
+			$('#location_item_id').val(selected.id);
+        }
     });
 	
 	$('#import_components').on('click', function ()
@@ -77,6 +74,12 @@ $(document).ready(function ()
 			return false;
 		}
 
+		if ($('#location_code').val() === '')
+		{
+			alert('select location');
+			return false;
+		}
+		
 		var form = document.forms.namedItem("form_components");
 		var file_data = $('#file_xml').prop('files')[0];
 		var form_data = new FormData(form);
@@ -108,11 +111,18 @@ $(document).ready(function ()
 			return false;
 		}
 
+		if ($('#location_code').val() === '')
+		{
+			alert('select location');
+			return false;
+		}
+		
 		var form = document.forms.namedItem("form_files");
 		var file_data = $('#file_excel').prop('files')[0];
 		var form_data = new FormData(form);
 		form_data.append('file', file_data);
 		form_data.append('location_code', $('#location_code').val());
+		form_data.append('location_item_id', $('#location_item_id').val());
 
 		$.ajax({
 			url: requestUrl,
@@ -135,11 +145,6 @@ function getLocations()
 	paramsTable0['cat_id'] = $('#cat_location_id').val();
 	paramsTable0['district_id'] = $('#district_id').val();
 	paramsTable0['part_of_town_id'] = $('#part_of_town_id').val();
-	
-	$('#tab-content').responsiveTabs('deactivate', 1);
-	$('#tab-content').responsiveTabs('disable', 1);
-	$('#location_name').html('');
-	$('#location_code').val('');
 			
 	oTable0.fnDraw();
 }
