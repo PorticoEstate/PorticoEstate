@@ -258,7 +258,7 @@
 			
 			if ($result)
 			{
-				return array('id' => $id, '$location_id' => $location_id); 
+				return array('id' => $id, 'location_id' => $location_id); 
 			}
 			else {
 				return array();
