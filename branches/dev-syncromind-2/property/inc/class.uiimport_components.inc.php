@@ -75,43 +75,86 @@
 		
 		public function import_component_files()
 		{
-			$values = array();
-			$get_identificator = true;
 			$location_code = phpgw::get_var('location_code');
+			$id = phpgw::get_var('location_item_id');
+			$message = array();
+			
+			if (empty($id))
+			{
+				return $message['error'][] = array('msg' => 'location code is empty');
+			}
 			
 			$components_added = $GLOBALS['phpgw']->session->appsession('components', 'property');
-			
 
-			$result = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
-			$data = array();
+			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
+			$relations = array();
 			
-			foreach ($result as $row) 
+			foreach ($exceldata as $row) 
 			{
 				if (!$this->valid_row($row))
 				{
 					continue;
 				}
 				
-				$data[$row[0]][] = $row[(count($row)-1)];
+				$relations[$row[0]][] = $row[(count($row)-1)];
 			}
 			
-			foreach ($data as $k => $files) 
+			$this->db->transaction_begin();
+			
+			try
 			{
-				//$data_generic[$k]['ids'] = $components_added[$k];
-				//$data_generic[$k]['files'] = $v;
-				$ids = $components_added[$k];
-				foreach($files as $file)
+				$this->db->Exception_On_Error = true;
+				
+				foreach ($relations as $k => $files) 
 				{
-					$parts = explode("\\", $file);
-					$file_id = $this->save_file($parts[count($parts)-1]);
-					$this->save_file_relation($ids['id'], $ids['location_id'], $file_id);
+					if (empty($k))
+					{
+						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
+					}
+					else {
+						$component = $components_added[$k];
+						if( empty($component['id']) || empty($component['location_id']))
+						{
+							throw new Exception("component {$k} does not exist");
+						}
+					}
+					
+					foreach($files as $path_file)
+					{
+						$parts = explode("\\", $path_file);
+						$file = $parts[count($parts)-1];
+						if (!is_file($this->tmp_upload_dir.$file))
+						{
+							throw new Exception("the file {$file} does not exist, component: {$k}");
+						}	
+						
+						$file_id = $this->save_file($file);
+						if (!$file_id)
+						{						
+							throw new Exception("failed to save file {$file}, component: {$k}");
+						} 
+			
+						$result = $this->save_file_relation($component['id'], $component['location_id'], $file_id);
+						if (!$result)
+						{						
+							throw new Exception("failed to save relation, file: {$file}, component: {$k}");
+						}
+					}
+				}
+				$this->db->Exception_On_Error = false;
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					$this->db->transaction_abort();					
+					return $message['error'][] = array('msg' => $e->getMessage());
 				}
 			}
+
+			$this->db->transaction_commit();
 			
-			return;
-			
-			//print_r($data_generic); die;
-			
+			return $message['message'][] = array('msg' => 'all files saved successfully');
 		}
 		
 		public function handle_import_files()
@@ -125,15 +168,6 @@
 		
 		private function save_file( $tmp_file )
 		{
-			if (!empty($tmp_file))
-			{
-				if (!is_file($this->tmp_upload_dir.$tmp_file))
-				{
-					//phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
-					throw new Exception('Failed to upload file !');
-				}
-			}
-				
 			$bofiles = CreateObject('property.bofiles');
 			
 			$file_name = str_replace(' ', '_', $tmp_file);
@@ -154,19 +188,12 @@
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 			$bofiles->vfs->override_acl = 0;
 
-			if (empty($file_id))
-			{						
-				throw new Exception('Failed to upload file !');
-			} 
-
 			return $file_id;
 		}
 		
 		
-		private function save_file_relation( $item, $location_id, $file_id )
+		private function save_file_relation( $id, $location_id, $file_id )
 		{
-			$this->db->transaction_begin();
-			
 			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
 			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
 				
@@ -174,7 +201,7 @@
 			(
 				'file_id' => (int)$file_id,
 				'location_id' => (int)$location_id,
-				'location_item_id' => (int)$item,
+				'location_item_id' => (int)$id,
 				'is_private' => 0,
 				'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => $date,
@@ -182,18 +209,8 @@
 				'end_date' => $date
 			);				
 
-			$this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);				
-
-			
-			if ($this->db->transaction_commit())
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			return $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 		}
 		
 		
@@ -283,21 +300,9 @@
 				}
 			}
 
-			$components_added = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
-			/*if (count($components_not_added))
-			{
-				echo '<br>Components not added: <br>';
-				foreach ($components_not_added as $k => $v)
-				{
-					echo $k.' => not added: '.$v.'<br>';
-				}
-			}*/
+			$message = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
 			
-			$GLOBALS['phpgw']->session->appsession('components', 'property', $components_added);
-
-			echo count($components_added).'<br><br>';
-			print_r($components_added); die;
-
+			return $message;
 		}
 		
 		/**
@@ -308,9 +313,9 @@
 		{
 			$tabs = array();
 			$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['components'] = array('label' => lang('Components'), 'link' => '#components', 'disable' => 1);
 			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
-			$tabs['relations'] = array('label' => lang('Relations'), 'link' => '#relations', 'disable' => 0);
+			$tabs['components'] = array('label' => lang('Components'), 'link' => '#components', 'disable' => 1);
+			$tabs['relations'] = array('label' => lang('Relations'), 'link' => '#relations', 'disable' => 1);
 			
 			$active_tab = 'locations';
 
@@ -389,11 +394,12 @@
 			
             $solocation = CreateObject('property.solocation');
             $locations = $solocation->read($params);
-			
+
 			$values = array();
 			foreach($locations as $item)
 			{
 				$values[] = array(
+					'id' => $item['id'],
 					'location_code' => $item['location_code'],
 					'loc1_name' => $item['loc1_name']
 				);				
