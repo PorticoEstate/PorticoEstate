@@ -59,6 +59,10 @@
 					</form>
 				</div>
 				
+				<div id="files">
+					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
+				</div>
+				
 				<div id="components">
 					<form id="form_components" name="form_components" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
 						<div class="pure-control-group">
@@ -67,6 +71,7 @@
 							</label>
 							<div id="location_name" class='pure-custom'></div>
 							<input type="hidden" id="location_code" name="location_code" value=""></input>
+							<input type="hidden" id="location_item_id" name="location_item_id" value=""></input>
 						</div>
 
 						<div class="pure-control-group">
@@ -85,10 +90,6 @@
 							</input>
 						</div>
 					</form>		
-				</div>
-				
-				<div id="files">
-					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
 				</div>
 				
 				<div id="relations">
