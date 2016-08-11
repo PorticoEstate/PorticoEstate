@@ -110,42 +110,62 @@
 		public function add_entity_categories ($buildingpart_out_table)
 		{
 			$buildingparts = array();
+			$message = array();
 			
-			foreach ($buildingpart_out_table as $k => $v)
-			{	
-				if ($v['parent'])
-				{
-					$cat_id = '1'; /*  Id of "211 Klargjøring av tomt" */
-					$entity_id = '3';
-					$values = array();
+			$this->db->transaction_begin();
+			
+			try
+			{
+				$this->db->Exception_On_Error = true;
+				
+				foreach ($buildingpart_out_table as $k => $v)
+				{	
+					if ($v['parent'])
+					{
+						$cat_id = '1'; /*  Id of "211 Klargjøring av tomt" */
+						$entity_id = '3';
+						$values = array();
 
-					$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
-					foreach ($attrib_list as $attrib) 
-					{
-						$values['template_attrib'][] = $attrib['id'];
+						$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
+						foreach ($attrib_list as $attrib) 
+						{
+							$values['template_attrib'][] = $attrib['id'];
+						}
+						$values['category_template'] = $entity_id.'_'.$cat_id;
+						$values['parent_id'] = $v['parent']['id'];
+						$values['name'] = $v['name'];
+						$values['descr'] = $v['name'];
+						$values['entity_id'] = $entity_id;
+						$values['fileupload'] = 1;
+						$values['loc_link'] = 1;
+						$values['is_eav'] = 1;
+
+						$receipt = $this->bo->save_category($values);
+
+						if ($receipt['id'])
+						{
+							$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => $entity_id, 'name' => $v['name']);
+						}
+						else {
+							throw new Exception("failed to save category {$v['name']}");
+						}
+					} else {
+						throw new Exception("parent category {$v['name']} not exist");
 					}
-					$values['category_template'] = $entity_id.'_'.$cat_id;
-					$values['parent_id'] = $v['parent']['id'];
-					$values['name'] = $v['name'];
-					$values['descr'] = $v['name'];
-					$values['entity_id'] = $entity_id;
-					$values['fileupload'] = 1;
-					$values['loc_link'] = 1;
-					$values['is_eav'] = 1;
-					
-					$receipt = $this->bo->save_category($values);
-					
-					if ($receipt['id'])
-					{
-						$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => $entity_id, 'name' => $v['name']);
-					}
-					else {
-						$buildingparts['not_added'][$k] = array('name' => $v['name']);
-					}
-				} else {
-					$buildingparts['not_added'][$k] = array('name' => $v['name']);
+				}
+			
+				$this->db->Exception_On_Error = false;
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					$this->db->transaction_abort();
+					return $message['error'][] = array('msg' => $e->getMessage());
 				}
 			}
+
+			$this->db->transaction_commit();
 			
 			return $buildingparts;
 		}
@@ -153,7 +173,7 @@
 		public function add_bim_item($entity_categories, $location_code)
 		{
 			$components_added = array();
-			$count = 0;
+			$message = array();
 			
 			$this->db->transaction_begin();
 			
@@ -162,24 +182,20 @@
 				$this->db->Exception_On_Error = true;
 				foreach ($entity_categories as $entity) 
 				{
-					if ($entity['cat_id'])
-					{
-						$attributes = $this->get_attributes($entity['entity_id'], $entity['cat_id']);
+					$attributes = $this->get_attributes($entity['entity_id'], $entity['cat_id']);
 
-						$not_added = array();
-						foreach ($entity['components'] as $values)
+					foreach ($entity['components'] as $values)
+					{
+						$attributes_values = $this->set_attributes_values($values, $attributes);
+						$values_insert = $this->_populate(array('location_code' => $location_code), $attributes_values);
+
+						$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
+						if (!$receipt['id'])
 						{
-							$attributes_values = $this->set_attributes_values($values, $attributes);
-							$values_insert = $this->_populate(array('location_code' => $location_code), $attributes_values);
-							
-							$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
-							if (!$receipt['id'])
-							{
-								throw new Exception('import - missing id');
-							}
-							$components_added[$values_insert['benevnelse']] = $receipt;
+							throw new Exception("component {$values_insert['benevnelse']} not added");
 						}
-					}
+						$components_added[$values_insert['benevnelse']] = $receipt;
+					}	
 				}
 				$this->db->Exception_On_Error = false;
 			}
@@ -188,13 +204,14 @@
 				if ($e)
 				{
 					$this->db->transaction_abort();
-					throw $e;
+					return $message['error'][] = array('msg' => $e->getMessage());
 				}
 			}
 
 			$this->db->transaction_commit();
+			$GLOBALS['phpgw']->session->appsession('components', 'property', $components_added);
 			
-			return $components_added;
+			return $message['message'][] = array('msg' => 'all components saved successfully');
 		}
 		
 		private function _save_eav( $data, $entity_id, $cat_id )
