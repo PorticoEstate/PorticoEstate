@@ -138,31 +138,29 @@
 
 		public function read( $data = array() )
 		{
-
-			/* $values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'allrows'=>$this->allrows),$filter); */
-
 			$values = $this->so->read($data);
 
-			foreach ($this->location_info['fields'] as $field)
+			foreach ($values as &$entry)
 			{
-				if (isset($field['role']) && $field['role'] == 'parent')
+				foreach ($this->location_info['fields'] as $field)
 				{
-					foreach ($values as &$entry)
+					if (isset($entry[$field['name']]) && $entry[$field['name']])
 					{
-						if (isset($entry[$field['name']]) && $entry[$field['name']])
+						if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'] == 'get_user')
+						{
+							$entry[$field['name']] = $GLOBALS['phpgw']->accounts->get($entry[$field['name']])->__toString();
+						}
+						else if (isset($field['role']) && $field['role'] == 'parent')
 						{
 							$path = $this->so->get_path(array('type' => $this->type, 'id' => $entry[$field['name']]));
 							$entry[$field['name']] = implode(' > ', $path);
 						}
+						else if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
+						{
+							$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], array_merge(array('id' => $entry[$field['name']]),$field['values_def']['method_input'] ));
+						}
 					}
-				}
-				if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
-				{
-					foreach ($values as &$entry)
-					{
-						$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], $entry[$field['name']]);
-					}
+
 				}
 			}
 
@@ -256,7 +254,7 @@
 			{
 				foreach ($values as &$entry)
 				{
-					$entry['selected'] = isset($data['selected']) && trim($data['selected']) == trim($entry['id']) ? 1 : 0;
+					$entry['selected'] = isset($data['selected']) && trim($data['selected']) === trim($entry['id']) ? 1 : 0;
 				}
 			}
 			return $values;

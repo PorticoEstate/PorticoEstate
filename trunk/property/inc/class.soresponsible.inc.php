@@ -434,21 +434,28 @@
 		 * @param type $id responsibility id
 		 * @return string responsibility name
 		 */
-		public function get_responsibility_name( $id )
+		public function get_responsibility_name( $data )
 		{
 			static $names = array();
-			$i = (int)$id;
-
-			if ($names[$i])
+			if(is_array($data))
 			{
-				return $names[$i];
+				$id = (int)$data['id'];
+			}
+			else
+			{
+				$id = (int)$data;
+			}
+
+			if ($names[$id])
+			{
+				return $names[$id];
 			}
 
 			$sql = "SELECT * FROM fm_responsibility WHERE id= {$id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$name = $this->db->f('name', true);
-			$names[$i] = $name;
+			$names[$id] = $name;
 			return $name;
 		}
 
