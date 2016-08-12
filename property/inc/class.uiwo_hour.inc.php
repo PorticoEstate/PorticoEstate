@@ -3242,6 +3242,10 @@ HTML;
 
 			foreach ($worksheetNames as $_index => $sheet_name)
 			{
+				if($_index == 0)
+				{
+					continue;
+				}
 				$result[$_index]['name'] = $sheet_name;
 				$objPHPExcel->setActiveSheetIndex($_index);
 
@@ -3254,7 +3258,7 @@ HTML;
 
 				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 
-				$start = 2; // Read the first line to get the headers out of the way
+				$start = 9; // Read the first line to get the headers out of the way
 
 				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
