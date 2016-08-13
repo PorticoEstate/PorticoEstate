@@ -57,7 +57,7 @@ $(document).ready(function ()
 			$('#tab-content').responsiveTabs('enable', 2);
 			$('#tab-content').responsiveTabs('enable', 3);
 			$('#tab-content').responsiveTabs('activate', 1);
-			$('#location_name').html(selected.location_code + ' ' + selected.loc1_name);
+			$('.location_name').html(selected.location_code + ' ' + selected.loc1_name);
 			$('#location_code').val(selected.location_code);
 			$('#location_item_id').val(selected.id);
         }
@@ -66,7 +66,7 @@ $(document).ready(function ()
 	$('#import_components').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
-		var requestUrl = phpGWLink('index.php', oArgs);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
 		if ($('#file_xml').val() === '')
 		{
@@ -95,7 +95,7 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
-				alert(result);
+				JqueryPortico.show_message(0, result);
 			}
 		});
 	});
@@ -103,7 +103,7 @@ $(document).ready(function ()
 	$('#import_files').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
-		var requestUrl = phpGWLink('index.php', oArgs);
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
 		if ($('#file_excel').val() === '')
 		{
@@ -133,7 +133,7 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
-				alert(result);
+				JqueryPortico.show_message(1, result);
 			}
 		});
 	});
