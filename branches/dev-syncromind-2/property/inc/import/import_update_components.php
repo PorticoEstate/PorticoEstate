@@ -5,6 +5,7 @@
 		
 		protected $db;
 		var $type = 'entity';
+		var $array_entity_categories = array();
 		protected $sql;
 		protected $type_app = array
 			(
@@ -21,8 +22,72 @@
 			$this->bo_entity = CreateObject('property.boentity', true);
 			$this->custom = CreateObject('property.custom_fields');
 			$this->bocommon = CreateObject('property.bocommon');
-		}
+			
+			$this->array_entity_categories = array(
+				'0' => array('name' => '0 - Generelt', 'cat_id' => '309'),
+				'01' => array('name' => '01 - Informasjon og hjelp', 'cat_id' => '310'),
+				'02' => array('name' => '02 - Krav til dokumentasjon', 'cat_id' => '310'),
+				
+				'1' => array('name' => '1 - Brannsikring', 'cat_id' => '309'),
+				'11' => array('name' => '11 - Branntekniske krav', 'cat_id' => '310'),
+				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer', 'cat_id' => '310'),
+				'13' => array('name' => '13 - Brannteknisk dokumentasjon', 'cat_id' => '310')
+			);
 
+		}
+		
+		public function set_parent($buildingpart)
+		{
+			for($x = 1;  $x <= (strlen($buildingpart)-1); $x++) 
+			{
+				$parents[] = substr($buildingpart, 0, $x);
+			}
+			
+			$parentID = '';
+			foreach($parents as $item)
+			{
+				$values = $this->get_entity_category_for_buildingpart($item);
+				if (empty($values['id']))
+				{
+					$category = $this->array_entity_categories[$item];
+					$parentID = (strlen($item) == 1) ? '' : $parentID;
+					$category_added = $this->save_category($category['name'], $parentID, $category['cat_id']);
+					if (empty($category_added['id']))
+					{
+						return '';
+					}
+					$parentID = $category_added['id'];
+				} else {
+					$parentID = $values['id'];
+				}
+			}
+			
+			return $parentID;
+		}
+		
+		public function get_entity_category_for_buildingpart($data)
+		{
+			$querymethod = '';
+			if ($data)
+			{
+				$querymethod .= " AND name LIKE '".$data." %'";
+			}
+			
+			$sql = "SELECT * FROM fm_entity_category WHERE entity_id = 3 {$querymethod}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			if ($this->db->next_record())
+			{
+				$values['id'] = $this->db->f('id');
+				$values['name'] = $this->db->f('name');
+				$values['location_id'] = $this->db->f('location_id');
+				$values['parent_id'] = $this->db->f('parent_id');
+				$values['entity_id'] = $this->db->f('entity_id');
+			}
+			
+			return $values;
+		}
+		
 		public function get_entity_categories ($data = array())
 		{
 			$querymethod = '';
@@ -91,81 +156,74 @@
 			return $attributes;
 		}
 		
-		/*public function set_parent($values, $attributes)
+
+		public function save_category ($name, $parent_id, $cat_id )
 		{
-			foreach($attributes as &$attribute)
+			$entity_id = '3';
+			$values = array();
+
+			$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
+			foreach ($attrib_list as $attrib) 
 			{
-				foreach ($values as $value)
-				{
-					if ($attribute['name'] ==  $value['name'])
-					{
-						$attribute['value'] = $value['value'];
-					}
-				}
+				$values['template_attrib'][] = $attrib['id'];
 			}
+			$values['category_template'] = $entity_id.'_'.$cat_id;
+			$values['parent_id'] = $parent_id;
+			$values['name'] = $name;
+			$values['descr'] = $name;
+			$values['entity_id'] = $entity_id;
+			$values['fileupload'] = 1;
+			$values['loc_link'] = 1;
+			$values['is_eav'] = 1;
+
+			$receipt = $this->bo->save_category($values);
 			
-			return $attributes;
-		}*/
+			return $receipt['id'];
+		}
 		
 		public function add_entity_categories ($buildingpart_out_table)
 		{
 			$buildingparts = array();
-			$message = array();
-			
-			$this->db->transaction_begin();
-			
-			try
-			{
-				$this->db->Exception_On_Error = true;
 				
-				foreach ($buildingpart_out_table as $k => $v)
-				{	
-					if ($v['parent'])
+			foreach ($buildingpart_out_table as $k => $v)
+			{	
+					$parent_id = (empty($v['parent']['id'])) ? $this->set_parent($k) : $v['parent']['id'];
+					if (empty($parent_id))
 					{
-						$cat_id = '1'; /*  Id of "211 Klargjøring av tomt" */
-						$entity_id = '3';
-						$values = array();
-
-						$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
-						foreach ($attrib_list as $attrib) 
-						{
-							$values['template_attrib'][] = $attrib['id'];
-						}
-						$values['category_template'] = $entity_id.'_'.$cat_id;
-						$values['parent_id'] = $v['parent']['id'];
-						$values['name'] = $v['name'];
-						$values['descr'] = $v['name'];
-						$values['entity_id'] = $entity_id;
-						$values['fileupload'] = 1;
-						$values['loc_link'] = 1;
-						$values['is_eav'] = 1;
-
-						$receipt = $this->bo->save_category($values);
-
-						if ($receipt['id'])
-						{
-							$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => $entity_id, 'name' => $v['name']);
-						}
-						else {
-							throw new Exception("failed to save category {$v['name']}");
-						}
-					} else {
-						throw new Exception("parent category {$v['name']} not exist");
+						$buildingparts['not_added'][$k] = array('name' => $v['name']);
+						continue;
 					}
-				}
-			
-				$this->db->Exception_On_Error = false;
-			}
-			catch (Exception $e)
-			{
-				if ($e)
-				{
-					$this->db->transaction_abort();
-					return $message['error'][] = array('msg' => $e->getMessage());
-				}
-			}
+				
+					$cat_id = '1'; /*  Id of "211 Klargjøring av tomt" */
+					$entity_id = '3';
+					/*$values = array();
 
-			$this->db->transaction_commit();
+					$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
+					foreach ($attrib_list as $attrib) 
+					{
+						$values['template_attrib'][] = $attrib['id'];
+					}
+					$values['category_template'] = $entity_id.'_'.$cat_id;
+					$values['parent_id'] = $parent_id;
+					$values['name'] = $v['name'];
+					$values['descr'] = $v['name'];
+					$values['entity_id'] = $entity_id;
+					$values['fileupload'] = 1;
+					$values['loc_link'] = 1;
+					$values['is_eav'] = 1;
+
+					$receipt = $this->bo->save_category($values);*/
+					
+					$receipt = $this->save_category($v['name'], $parent_id, $cat_id);
+
+					if ($receipt['id'])
+					{
+						$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => $entity_id, 'name' => $v['name']);
+					}
+					else {
+						$buildingparts['not_added'][$k] = array('name' => $v['name']);
+					}
+			}
 			
 			return $buildingparts;
 		}
