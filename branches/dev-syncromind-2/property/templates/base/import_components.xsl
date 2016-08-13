@@ -69,7 +69,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'location')"/>
 							</label>
-							<div id="location_name" class='pure-custom'></div>
+							<div class='pure-custom location_name'></div>
 							<input type="hidden" id="location_code" name="location_code" value=""></input>
 							<input type="hidden" id="location_item_id" name="location_item_id" value=""></input>
 						</div>
@@ -89,11 +89,18 @@
 								</xsl:attribute>
 							</input>
 						</div>
+						<div id="message0" class="message"></div>
 					</form>		
 				</div>
 				
 				<div id="relations">
-					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">						
+					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">	
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'location')"/>
+							</label>
+							<div class='pure-custom location_name'></div>
+						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'upload file')"/>
@@ -109,6 +116,7 @@
 								</xsl:attribute>
 							</input>
 						</div>
+						<div id="message1" class="message"></div>
 					</form>
 				</div>
 			</div>
