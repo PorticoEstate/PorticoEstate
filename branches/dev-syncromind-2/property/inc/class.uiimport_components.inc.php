@@ -86,7 +86,7 @@
 			
 			$components_added = $GLOBALS['phpgw']->session->appsession('components', 'property');
 
-			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], $get_identificator);
+			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
 			$relations = array();
 			
 			foreach ($exceldata as $row) 
@@ -147,14 +147,16 @@
 			{
 				if ($e)
 				{
-					$this->db->transaction_abort();					
-					return $message['error'][] = array('msg' => $e->getMessage());
+					$this->db->transaction_abort();				
+					$message['error'][] = array('msg' => $e->getMessage());
+					return $this->jquery_results($message);
 				}
 			}
 
 			$this->db->transaction_commit();
+			$message['message'][] = array('msg' => 'all files saved successfully');
 			
-			return $message['message'][] = array('msg' => 'all files saved successfully');
+			return $this->jquery_results($message);
 		}
 		
 		public function handle_import_files()
@@ -277,32 +279,29 @@
 			if (count($buildingpart_out_table))
 			{
 				$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
-
+				
+				if (count($buildingpart_processed['not_added']))
+				{
+					foreach($buildingpart_processed['not_added'] as $k => $v)
+					{
+						$message['error'][] = array('msg' => "parent {$k} not added");	
+					}
+					return $this->jquery_results($message);
+				}
+				
 				if (count($buildingpart_processed['added']))
 				{
-					echo 'Entities added: <br>';
 					foreach($buildingpart_processed['added'] as $k => $v)
 					{
 						$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
 						$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
-						echo $v['name'].'<br>';
 					}
 				} 
-
-				if (count($buildingpart_processed['not_added']))
-				{
-					echo '<br>Entities not added: <br>';
-					foreach($buildingpart_processed['not_added'] as $k => $v)
-					{
-						unset($entity_categories_in_xml[$k]);	
-						echo $v['name'].'<br>';
-					}						
-				}
 			}
 
 			$message = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
 			
-			return $message;
+			return $this->jquery_results($message);
 		}
 		
 		/**
