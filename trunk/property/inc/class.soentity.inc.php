@@ -925,6 +925,14 @@
 
 			$sql = str_replace('__XML-ORDER__', $xml_order, $sql);
 
+			$group_method='';
+			if ($sql_custom_field)
+			{
+				$group_method .= " GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
+				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
+				$sql .= $group_method;
+			}
+
 			$sql_pre_run = str_replace("SELECT fm_bim_item.*", "SELECT DISTINCT fm_bim_item.id,fm_bim_item.type {$sql_custom_field}", $sql);
 //			_debug_array($sql_pre_run);
 			if (!$allrows)
@@ -949,11 +957,6 @@
 				return array();
 			}
 
-			if ($sql_custom_field)
-			{
-				$sql = str_replace("SELECT fm_bim_item.*", "SELECT fm_bim_item.* {$sql_custom_field}", $sql);
-				$sql .= " GROUP BY fm_bim_item.location_id,fm_bim_item.id,fm_bim_item.type{$sql_custom_group}";
-			}
 
 			static $cache_attributes = array();
 
@@ -964,7 +967,7 @@
 			}
 			$sql = str_replace($acl_group_join,'', $sql);
 			$sql_arr = explode('WHERE', $sql);
-			$this->db->query("{$sql_arr[0]} WHERE fm_bim_item.id IN (" . implode(', ',$ids) . ") AND fm_bim_item.type IN ({$types[0]})" . $ordermethod, __LINE__, __FILE__);
+			$this->db->query("{$sql_arr[0]} WHERE fm_bim_item.id IN (" . implode(', ',$ids) . ") AND fm_bim_item.type IN ({$types[0]})" . $group_method . $ordermethod, __LINE__, __FILE__);
 
 			$j = 0;
 
