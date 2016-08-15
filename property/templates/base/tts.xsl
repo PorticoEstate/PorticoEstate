@@ -314,6 +314,11 @@
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
+							<xsl:if test="simple ='1'">
+								<xsl:attribute name="readonly">
+									<xsl:text>readonly</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
 						</input>
 					</div>
 					<xsl:for-each select="value_origin">
