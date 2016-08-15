@@ -2221,7 +2221,7 @@ JS;
             self::add_javascript('booking','booking','schedule.js');
             phpgwapi_jquery::load_widget("datepicker");
             
-            self::render_template_xsl(array('test_schedule'), array('schedule' => $contracts));
+            self::render_template_xsl(array('schedule'), array('schedule' => $contracts));
             
         }
 
