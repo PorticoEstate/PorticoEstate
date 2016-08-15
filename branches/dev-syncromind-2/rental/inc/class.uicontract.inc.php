@@ -33,6 +33,7 @@
 			'index' => true,
 			'query' => true,
 			'view' => true,
+            'schedule' => true,
 			'add_party' => true,
 			'remove_party' => true,
 			'add_composite' => true,
@@ -2206,6 +2207,23 @@ JS;
 					'location_id' => $location_id));
 			}
 		}
+        
+        /**
+		 * Create a new empty contract
+		 */
+        public function schedule () {
+            $contract_id = (int)phpgw::get_var('id');
+            $date = phpgw::get_var($date);
+
+            $contracts['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+
+//            self::add_javascript('booking','booking','common.js');
+            self::add_javascript('booking','booking','schedule.js');
+            phpgwapi_jquery::load_widget("datepicker");
+            
+            self::render_template_xsl(array('test_schedule'), array('schedule' => $contracts));
+            
+        }
 
 		/**
 		 * Create a new contract tied to the composite provided in the composite_id parameter
