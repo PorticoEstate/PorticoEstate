@@ -1612,3 +1612,17 @@ function formatGenericLink2(name, link)
 		return "<a onclick='return confirm(\"Er du sikker på at du vil slette denne?\")' href='" + link + "'>" + name + "</a>";
 	}
 }
+
+
+parseISO8601 = function (string)
+{
+	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
+	var d = string.match(new RegExp(regexp));
+	var year = d[2] ? (d[2] * 1) : 0;
+	date = new Date(year, (d[4] || 1) - 1, d[6] || 0);
+	if (d[9])
+		date.setHours(d[9]);
+	if (d[10])
+		date.setMinutes(d[10]);
+	return date;
+};
