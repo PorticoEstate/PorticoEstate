@@ -1398,6 +1398,25 @@
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
 			$active_tab = 'add';
 
+			$fmttssimple_categories = isset($this->bo->config->config_data['fmttssimple_categories']) ? $this->bo->config->config_data['fmttssimple_categories'] : array();
+
+
+
+			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true));
+
+			$_cat_list = array();
+			if(isset($fmttssimple_categories) && $fmttssimple_categories[1])
+			{
+				foreach ($cat_select['cat_list'] as $entry)
+				{
+					if(in_array($entry['cat_id'], array_values($fmttssimple_categories)))
+					{
+						$_cat_list[] = $entry;
+					}
+				}
+				$cat_select['cat_list'] = $_cat_list;
+			}
+
 			$data = array
 				(
 				'my_groups' => json_encode($my_groups),
@@ -1442,8 +1461,7 @@
 				'lang_town_statustext' => lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town' => lang('Part of town'),
 				'lang_no_part_of_town' => lang('No part of town'),
-				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true)),
+				'cat_select' => $cat_select,
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : ''),
 				'fileupload' => (isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
