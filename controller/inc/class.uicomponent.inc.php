@@ -919,10 +919,10 @@
 				for ($_month = 1; $_month < 13; $_month++)
 				{
 					$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to);
-					if ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+					if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 					{
-						$row_sum[$_month] = $entry[$_month]['info']['service_time'] + $entry[$_month]['info']['controle_time'];
-						$row_sum_actual[$_month] = + $entry[$_month]['info']['billable_hours'];
+						$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
+						$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
 					}
 					else
 					{
