@@ -1405,7 +1405,7 @@
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true));
 
 			$_cat_list = array();
-			if(isset($fmttssimple_categories) && $fmttssimple_categories[1])
+			if($this->simple && isset($fmttssimple_categories) && $fmttssimple_categories[1])
 			{
 				foreach ($cat_select['cat_list'] as $entry)
 				{
