@@ -215,7 +215,7 @@
 
 					$combos[$i] = array('type' => 'filter',
 						'name' => $field['name'],
-						'text' => lang($field['descr']) . ':',
+						'text' => $field['descr'] . ':',
 						'list' => $values_combo_box[$i]
 					);
 					$i++;
