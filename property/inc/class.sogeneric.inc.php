@@ -732,7 +732,7 @@
 								'nullable' => true,
 								'filter' => true,
 								'sortable' => false,
-								'hidden' => true,
+								'hidden' => false,
 								'values_def' => array
 									(
 									'valueset' => false,
