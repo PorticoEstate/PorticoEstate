@@ -48,7 +48,7 @@
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/test/';
+			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/tmp_upload/';
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::generic";
 		}
@@ -86,6 +86,12 @@
 			
 			$components_added = $GLOBALS['phpgw']->session->appsession('components', 'property');
 
+			if (!count($components_added))
+			{			
+				$message['error'][] = array('msg' => 'not stored components');
+				return $this->jquery_results($message);
+			}
+				
 			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
 			$relations = array();
 			
@@ -184,7 +190,7 @@
 			$bofiles->vfs->override_acl = 1;
 
 			$file_id = $bofiles->vfs->cp3(array(
-					'from' => $tmp_file,
+					'from' => $this->tmp_upload_dir.$tmp_file,
 					'to' => $to_file,
 					'id' => '',
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
