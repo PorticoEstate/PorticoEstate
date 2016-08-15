@@ -24,14 +24,14 @@
 			$this->bocommon = CreateObject('property.bocommon');
 			
 			$this->array_entity_categories = array(
-				'0' => array('name' => '0 - Generelt', 'cat_id' => '309'),
-				'01' => array('name' => '01 - Informasjon og hjelp', 'cat_id' => '310'),
-				'02' => array('name' => '02 - Krav til dokumentasjon', 'cat_id' => '310'),
+				'0' => array('name' => '0 - Generelt', 'template_cat_id' => '309'),
+				'01' => array('name' => '01 - Informasjon og hjelp', 'template_cat_id' => '310'),
+				'02' => array('name' => '02 - Krav til dokumentasjon', 'template_cat_id' => '310'),
 				
-				'1' => array('name' => '1 - Brannsikring', 'cat_id' => '309'),
-				'11' => array('name' => '11 - Branntekniske krav', 'cat_id' => '310'),
-				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer', 'cat_id' => '310'),
-				'13' => array('name' => '13 - Brannteknisk dokumentasjon', 'cat_id' => '310')
+				'1' => array('name' => '1 - Brannsikring', 'template_cat_id' => '309'),
+				'11' => array('name' => '11 - Branntekniske krav', 'template_cat_id' => '310'),
+				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer', 'template_cat_id' => '310'),
+				'13' => array('name' => '13 - Brannteknisk dokumentasjon', 'template_cat_id' => '310')
 			);
 
 		}
@@ -47,18 +47,21 @@
 			foreach($parents as $item)
 			{
 				$values = $this->get_entity_category_for_buildingpart($item);
-				if (empty($values['id']))
+				if ($values['id'])
 				{
-					$category = $this->array_entity_categories[$item];
-					$parentID = (strlen($item) == 1) ? '' : $parentID;
-					$category_added = $this->save_category($category['name'], $parentID, $category['cat_id']);
-					if (empty($category_added['id']))
-					{
-						return '';
-					}
-					$parentID = $category_added['id'];
-				} else {
 					$parentID = $values['id'];
+					continue;
+				}
+				
+				$category = $this->array_entity_categories[$item];
+				if (strlen($item) == 1)
+				{
+					$parentID = NULL;
+				}
+				$parentID = $this->save_category($category['name'], $parentID, $category['template_cat_id']);
+				if (empty($parentID))
+				{
+					break;
 				}
 			}
 			
@@ -67,11 +70,7 @@
 		
 		public function get_entity_category_for_buildingpart($data)
 		{
-			$querymethod = '';
-			if ($data)
-			{
-				$querymethod .= " AND name LIKE '".$data." %'";
-			}
+			$querymethod = " AND name LIKE '".$data." %'";
 			
 			$sql = "SELECT * FROM fm_entity_category WHERE entity_id = 3 {$querymethod}";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -191,34 +190,17 @@
 					if (empty($parent_id))
 					{
 						$buildingparts['not_added'][$k] = array('name' => $v['name']);
-						continue;
+						break; 
 					}
 				
 					$cat_id = '1'; /*  Id of "211 Klargjøring av tomt" */
 					$entity_id = '3';
-					/*$values = array();
-
-					$attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
-					foreach ($attrib_list as $attrib) 
-					{
-						$values['template_attrib'][] = $attrib['id'];
-					}
-					$values['category_template'] = $entity_id.'_'.$cat_id;
-					$values['parent_id'] = $parent_id;
-					$values['name'] = $v['name'];
-					$values['descr'] = $v['name'];
-					$values['entity_id'] = $entity_id;
-					$values['fileupload'] = 1;
-					$values['loc_link'] = 1;
-					$values['is_eav'] = 1;
-
-					$receipt = $this->bo->save_category($values);*/
 					
-					$receipt = $this->save_category($v['name'], $parent_id, $cat_id);
+					$category_id = $this->save_category($v['name'], $parent_id, $cat_id);
 
-					if ($receipt['id'])
+					if ($category_id)
 					{
-						$buildingparts['added'][$k] = array('id' => $receipt['id'], 'entity_id' => $entity_id, 'name' => $v['name']);
+						$buildingparts['added'][$k] = array('id' => $category_id, 'entity_id' => $entity_id, 'name' => $v['name']);
 					}
 					else {
 						$buildingparts['not_added'][$k] = array('name' => $v['name']);
