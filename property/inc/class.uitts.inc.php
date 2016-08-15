@@ -1415,6 +1415,7 @@
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['assignedto'], $this->acl_location),
+//				'user_list' => $this->_get_user_list($values['assignedto']),
 				'disable_userassign_on_add' => isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : '',
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($values['group_id']),
@@ -1812,7 +1813,7 @@
 			);
 
 
-			if ($ticket['origin'] || $ticket['target'])
+			if ($ticket['origin'] || $ticket['target'] || $this->simple)
 			{
 				$lookup_type = 'view2';
 				$type_id = count(explode('-', $ticket['location_data']['location_code']));
@@ -2759,6 +2760,7 @@
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
 				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $ticket['assignedto'], $this->acl_location),
+//				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -3463,4 +3465,53 @@
 				phpgwapi_jquery::load_widget('core');
 			}
 		}
+
+		private function _get_user_list($selected)
+		{
+			$_candidates = array();
+			$_candidates[] = -1;
+			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
+
+			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
+
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'property', $_candidates);
+			$user_list = array();
+			$selected_found = false;
+			foreach ($users as $user)
+			{
+				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$user_list[] = array(
+					'id' => $user['account_id'],
+					'name' => $name,
+					'selected' => $user['account_id'] == $selected ? 1 : 0
+				);
+
+				if (!$selected_found)
+				{
+					$selected_found = $user['account_id'] == $selected ? true : false;
+				}
+			}
+			if ($selected && !$selected_found)
+			{
+				$user_list[] = array
+					(
+					'id' => $selected,
+					'name' => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected' => 1
+				);
+			}
+			return $user_list;
+		}
+
 	}
