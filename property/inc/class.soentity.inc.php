@@ -284,17 +284,20 @@
 							case '=':
 							case 'equal':
 							case 'eq':
-								$_querymethod[] = "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+				//				$_querymethod[] = "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								$_querymethod[] = "CAST(json_representation->>'{$attribute_name}' AS integer) = {$condition['value']}";
 								break;
 							case 'gt':
 							case '>':
 								$operator = '>';
-								$_querymethod[] = "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+				//				$_querymethod[] = "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								$_querymethod[] = "CAST(json_representation->>'{$attribute_name}' AS integer) {$operator} {$condition['value']}";
 								break;
 							case 'lt':
 							case '<':
 								$operator = '<';
-								$_querymethod[] = "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+//								$_querymethod[] = "xmlexists('//{$attribute_name}[number() {$operator} ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+								$_querymethod[] = "CAST(json_representation->>'{$attribute_name}' AS integer) {$operator} {$condition['value']}";
 								break;
 							default:
 								throw new Exception('ERROR: Not a valid operator on conditions');
@@ -303,10 +306,13 @@
 						break;
 					case 'CH':
 						$__querymethod = array(); // remove block
-						$_querymethod[] = "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
+//						$_querymethod[] = "xmlexists('//{$attribute_name}[contains(.,'',{$condition['value']},'')]' PASSING BY REF xml_representation)";
+						$_querymethod[] = "json_representation->>'{$attribute_name}' {$this->like} '%,{$condition['value']},%'";
+
 						break;
 					default:
-						$_querymethod[] = "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+//						$_querymethod[] = "xmlexists('//{$attribute_name}[text() = ''{$condition['value']}'']' PASSING BY REF xml_representation)";
+						$_querymethod[] = "json_representation->>'{$attribute_name}' = '{$condition['value']}'";
 						$__querymethod = array(); // remove block
 				}
 			}
@@ -320,7 +326,7 @@
 				$querymethod = " $where (" . implode(' AND ', $_querymethod) . ')';
 				unset($_querymethod);
 			}
-			$sql = "SELECT id, location_code, p_location_id, p_id, org_unit_id, xml_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
+			$sql = "SELECT id, location_code, p_location_id, p_id, org_unit_id, json_representation FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
 
 			$sql_cnt = "SELECT count(id) as cnt FROM fm_bim_item WHERE location_id = {$location_id} $querymethod";
 
@@ -344,15 +350,14 @@
 			$j = 0;
 			while ($this->db->next_record())
 			{
-				$xmldata = $this->db->f('xml_representation');
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
-
-				$xml = new DOMDocument('1.0', 'utf-8');
-				$xml->loadXML($xmldata);
+//				$xml = new DOMDocument('1.0', 'utf-8');
+//				$xml->loadXML($xmldata);
 
 				foreach ($attributes as $attrib_id => $field)
 				{
-					if (!$value = $xml->getElementsByTagName($field['name'])->item(0)->nodeValue)
+					if (!$value = $jsondata[$field['name']])
 					{
 						$value = $this->db->f($field['name'], true);
 					}
@@ -683,7 +688,8 @@
 							case 'T':
 								if (!$criteria_id)
 								{
-									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''$query'')]' PASSING BY REF xml_representation)";
+//									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''$query'')]' PASSING BY REF xml_representation)";
+									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' {$this->like} '%{$query}%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -701,7 +707,8 @@
 									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''," . $this->db2->f('id') . ",'')]' PASSING BY REF xml_representation)";
+//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''," . $this->db2->f('id') . ",'')]' PASSING BY REF xml_representation)";
+										$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' {$this->like} '%,{$query},%'";
 									}
 								}
 								break;
@@ -717,7 +724,9 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+
 									}
 									$__querymethod = array(); // remove block
 								}
@@ -725,7 +734,9 @@
 							case 'I':
 								if (ctype_digit($query) && !$criteria_id)
 								{
-									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$query . "'']' PASSING BY REF xml_representation)";
+//									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$query . "'']' PASSING BY REF xml_representation)";
+									$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$query;
+
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -736,7 +747,8 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
 									}
 
 									$__querymethod = array(); // remove block
@@ -749,7 +761,8 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
 									}
 
 									$__querymethod = array(); // remove block
@@ -762,7 +775,8 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
+										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
 									}
 									$__querymethod = array(); // remove block
 								}
@@ -770,7 +784,8 @@
 							default:
 								if (!$criteria_id)
 								{
-									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''$query'']' PASSING BY REF xml_representation)";
+//									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''$query'']' PASSING BY REF xml_representation)";
+									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' = '{$query}'";
 									$__querymethod = array(); // remove block
 								}
 						}
@@ -913,9 +928,10 @@
 						$ordermethod = " ORDER BY {$entity_table}.loc1 {$sort}";
 						break;
 					default:
-						$xml_order = ',cast (_order_field[1] as text) as _order_field_text';
-						$sql = str_replace('FROM fm_bim_item', "FROM (SELECT fm_bim_item.*, xpath('$order/text()', xml_representation) as _order_field FROM fm_bim_item", $sql);
-						$sql .= ") as fm_bim_item ORDER BY _order_field_text {$sort}";
+						$ordermethod = " ORDER BY {$entity_table}.json_representation->>'{$order}' {$sort}";
+//						$xml_order = ',cast (_order_field[1] as text) as _order_field_text';
+//						$sql = str_replace('FROM fm_bim_item', "FROM (SELECT fm_bim_item.*, xpath('$order/text()', xml_representation) as _order_field FROM fm_bim_item", $sql);
+//						$sql .= ") as fm_bim_item ORDER BY _order_field_text {$sort}";
 				}
 			}
 			else
@@ -978,13 +994,15 @@
 //_debug_array($uicols);
 			while ($this->db->next_record())
 			{
-				$xmldata = $this->db->f('xml_representation');
-				$xml = new DOMDocument('1.0', 'utf-8');
-				$xml->loadXML($xmldata);
+//				$xmldata = $this->db->f('xml_representation');
+//				$xml = new DOMDocument('1.0', 'utf-8');
+//				$xml->loadXML($xmldata);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				foreach ($cols_return as $key => $field)
 				{
-					if (!$value = $xml->getElementsByTagName($field)->item(0)->nodeValue)
+			//		if (!$value = $xml->getElementsByTagName($field)->item(0)->nodeValue)
+					if (!$value = $jsondata[$field])
 					{
 						$value = $this->db->f($field, true);
 					}
@@ -1006,7 +1024,8 @@
 
 				foreach ($cache_attributes[$location_id] as $key => $attribute)
 				{
-					$description_value = $xml->getElementsByTagName($attribute['name'])->item(0)->nodeValue;
+//					$description_value = $xml->getElementsByTagName($attribute['name'])->item(0)->nodeValue;
+					$description_value = $jsondata[$attribute['name']];
 
 					if (isset($cache_attributes[$location_id][$key]['choice']) && $cache_attributes[$location_id][$key]['choice'])
 					{
@@ -2020,15 +2039,18 @@
 				$values['org_unit_id'] = $this->db->f('org_unit_id');
 				$values['entity_group_id'] = $this->db->f('entity_group_id');
 
-				$xmldata = $this->db->f('xml_representation', true);
-				$xml = new DOMDocument('1.0', 'utf-8');
-				$xml->loadXML($xmldata);
+//				$xmldata = $this->db->f('xml_representation', true);
+//				$xml = new DOMDocument('1.0', 'utf-8');
+//				$xml->loadXML($xmldata);
+
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
-						$attr['value'] = $xml->getElementsByTagName($attr['column_name'])->item(0)->nodeValue;
+//						$attr['value'] = $xml->getElementsByTagName($attr['column_name'])->item(0)->nodeValue;
+						$attr['value'] = $jsondata[$attr['column_name']];
 					}
 				}
 			}
@@ -2310,23 +2332,23 @@
 			$type = $this->db->f('type');
 			$id = $this->db->next_id('fm_bim_item', array('type' => $type));
 
-			phpgw::import_class('phpgwapi.xmlhelper');
-			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
-			$doc = new DOMDocument;
-			$doc->preserveWhiteSpace = true;
-			$doc->loadXML($xmldata);
-			$domElement = $doc->getElementsByTagName($location_name)->item(0);
-			$domAttribute = $doc->createAttribute('appname');
-			$domAttribute->value = $this->type_app[$this->type];
-
-			// Don't forget to append it to the element
-			$domElement->appendChild($domAttribute);
-
-			// Append it to the document itself
-			$doc->appendChild($domElement);
-			$doc->formatOutput = true;
-
-			$xml = $doc->saveXML();
+//			phpgw::import_class('phpgwapi.xmlhelper');
+//			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
+//			$doc = new DOMDocument;
+//			$doc->preserveWhiteSpace = true;
+//			$doc->loadXML($xmldata);
+//			$domElement = $doc->getElementsByTagName($location_name)->item(0);
+//			$domAttribute = $doc->createAttribute('appname');
+//			$domAttribute->value = $this->type_app[$this->type];
+//
+//			// Don't forget to append it to the element
+//			$domElement->appendChild($domAttribute);
+//
+//			// Append it to the document itself
+//			$doc->appendChild($domElement);
+//			$doc->formatOutput = true;
+//
+//			$xml = $doc->saveXML();
 
 			//	_debug_array($xml);
 
@@ -2345,7 +2367,8 @@
 				'location_id' => $location_id,
 				'type' => $type,
 				'guid' => $guid,
-				'xml_representation' => $this->db->db_addslashes($xml),
+//				'xml_representation' => $this->db->db_addslashes($xml),
+				'json_representation' => json_encode($data),
 				'model' => 0,
 				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
@@ -2373,43 +2396,29 @@
 
 			$location_name = str_replace('.', '_', $location_name);
 
-			phpgw::import_class('phpgwapi.xmlhelper');
-
-			/*
-			  // FIXME: not working
-			  if($data)
-			  {
-			  foreach ($data as $key => &$value)
-			  {
-			  if(preg_match('/[<>&]/', $value)) // or use CDATA..
-			  {
-			  $value =  str_ireplace ( array('&lt;','&gt;','<','>') , array('[',']', '[', ']') , $value);
-			  }
-			  }
-			  }
-			 */
-			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
-			$doc = new DOMDocument;
-			$doc->preserveWhiteSpace = true;
-			$doc->loadXML($xmldata);
-			$domElement = $doc->getElementsByTagName($location_name)->item(0);
-			$domAttribute = $doc->createAttribute('appname');
-			$domAttribute->value = $this->type_app[$this->type];
-
-			// Don't forget to append it to the element
-			$domElement->appendChild($domAttribute);
-
-			// Append it to the document itself
-			$doc->appendChild($domElement);
-
-			$doc->formatOutput = true;
-			$xml = $doc->saveXML();
-
-//			_debug_array($xml);
+//			phpgw::import_class('phpgwapi.xmlhelper');
+//
+//			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
+//			$doc = new DOMDocument;
+//			$doc->preserveWhiteSpace = true;
+//			$doc->loadXML($xmldata);
+//			$domElement = $doc->getElementsByTagName($location_name)->item(0);
+//			$domAttribute = $doc->createAttribute('appname');
+//			$domAttribute->value = $this->type_app[$this->type];
+//
+//			// Don't forget to append it to the element
+//			$domElement->appendChild($domAttribute);
+//
+//			// Append it to the document itself
+//			$doc->appendChild($domElement);
+//
+//			$doc->formatOutput = true;
+//			$xml = $doc->saveXML();
 
 			$value_set = array
 				(
-				'xml_representation' => $this->db->db_addslashes($xml),
+//				'xml_representation' => $this->db->db_addslashes($xml),
+				'json_representation' => json_encode($data),
 				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
 				'location_code' => $data['location_code'],
@@ -2532,10 +2541,13 @@
 							$this->db->query($sql, __LINE__, __FILE__);
 
 							$this->db->next_record();
-							$xmldata = $this->db->f('xml_representation');
-							$xml = new DOMDocument('1.0', 'utf-8');
-							$xml->loadXML($xmldata);
-							$old_value = $xml->getElementsByTagName($entry['name'])->item(0)->nodeValue;
+//							$xmldata = $this->db->f('xml_representation');
+//							$xml = new DOMDocument('1.0', 'utf-8');
+//							$xml->loadXML($xmldata);
+//							$old_value = $xml->getElementsByTagName($entry['name'])->item(0)->nodeValue;
+							$jsondata = json_decode($this->db->f('json_representation'), true);
+							$old_value = $jsondata[$entry['name']];
+
 						}
 
 						if ($entry['datatype'] == 'D')

@@ -254,3 +254,53 @@
 			return $GLOBALS['setup_info']['bim']['currentver'];
 		}
 	}
+	/**
+	* Update bim version from 0.9.17.510 to 0.9.17.511
+	*/
+	$test[] = '0.9.17.510';
+
+	function bim_upgrade0_9_17_510()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_bim_item', 'json_representation', array(
+			'type' => 'jsonb', 'nullable' => true));
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id,location_id,xml_representation FROM fm_bim_item", __LINE__, __FILE__);
+
+		$items = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$items[] = array
+			(
+				'id'			=> (int)$GLOBALS['phpgw_setup']->oProc->f('id'),
+				'location_id'	=> (int)$GLOBALS['phpgw_setup']->oProc->f('location_id'),
+				'xml_representation' => $GLOBALS['phpgw_setup']->oProc->f('xml_representation', true),
+			);
+		}
+
+		$xmlparse = CreateObject('property.XmlToArray');
+		$xmlparse->setEncoding('UTF-8');
+		$xmlparse->setDecodesUTF8Automaticly(false);
+
+		foreach ($items as $item)
+		{
+			$xmldata = $item['xml_representation'];
+			$var_result = $xmlparse->parse($xmldata);
+
+			$jsondata = json_encode($var_result, JSON_HEX_APOS);
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_bim_item SET json_representation = '{$jsondata}'"
+			. " WHERE id = {$item['id']} AND location_id = {$item['location_id']}", __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_bim_item', 'json_representation', array(
+			'type' => 'jsonb', 'nullable' => False));
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_bim_item', array(), 'xml_representation');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['bim']['currentver'] = '0.9.17.511';
+			return $GLOBALS['setup_info']['bim']['currentver'];
+		}
+	}
