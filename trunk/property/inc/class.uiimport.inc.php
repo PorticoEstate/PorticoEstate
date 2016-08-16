@@ -452,7 +452,7 @@ HTML;
 
 					foreach ($metadata as $field => $info)
 					{
-						if ($field == 'xml_representation' || $field == 'guid')
+						if ($field == 'json_representation' || $field == 'xml_representation' || $field == 'guid')
 						{
 							continue;
 						}
@@ -474,13 +474,15 @@ HTML;
 							$_row_data[$_field] = $this->db->f($_field, true);
 						}
 
-						$xmldata = $this->db->f('xml_representation', true);
-						$xml = new DOMDocument('1.0', 'utf-8');
-						$xml->loadXML($xmldata);
+//						$xmldata = $this->db->f('xml_representation', true);
+//						$xml = new DOMDocument('1.0', 'utf-8');
+//						$xml->loadXML($xmldata);
+						$jsondata = json_decode($this->db->f('json_representation'), true);
 
 						foreach ($attributes as $attribute)
 						{
-							$_row_data[$attribute['column_name']] = $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
+//							$_row_data[$attribute['column_name']] = $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
+							$_row_data[$attribute['column_name']] = $jsondata[$attribute['column_name']];
 						}
 
 						$data[] = $_row_data;
