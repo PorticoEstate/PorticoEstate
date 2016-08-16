@@ -47,16 +47,33 @@
 
 <xsl:template match="workorder_data">
 	<div>
-		<xsl:value-of select="lang_project_id"/>:<span id="project_id"></span>
+		<xsl:value-of select="lang_project_id"/>:
+		<span>
+			<a  href="{link_project}" >
+				<xsl:value-of select="project_id"/>
+			</a>
+		</span>
 	</div>
 	<div>
-		<xsl:value-of select="lang_workorder_id"/>:<span id="workorder_id"></span>
+		<xsl:value-of select="lang_workorder_id"/>:
+		<span>
+			<a  href="{link_workorder}" >
+				<xsl:value-of select="workorder_id"/>
+			</a>
+		</span>
 	</div>
 	<div>
-		<xsl:value-of select="lang_workorder_title"/>:<span id="workorder_title"></span>
+		<xsl:value-of select="lang_workorder_title"/>:
+		<span>
+			<xsl:value-of select="workorder_title"/>
+		</span>
 	</div>
 	<div>
-		<xsl:value-of select="lang_vendor_name"/>:<span id="vendor_name"></span>
+		<xsl:value-of select="lang_vendor_name"/>:
+		<span>
+			<xsl:value-of select="vendor_name"/>
+
+		</span>
 	</div>
 </xsl:template>
 

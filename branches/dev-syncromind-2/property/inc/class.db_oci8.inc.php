@@ -11,7 +11,7 @@
 	 *
 	 */
 
-	class DB_OCI8
+	class db_oci8
 	{
 
 		var $Debug = 0;
@@ -127,10 +127,10 @@
 				{
 					printf("<br>Freeing the statement: $this->Parse<br>\n");
 				}
-				$result = @OCIFreeStatement($this->Parse);
+				$result = @oci_free_statement($this->Parse);
 				if (!$result)
 				{
-					$this->Error = OCIError($this->Link_ID);
+					$this->Error = oci_error($this->Link_ID);
 					if ($this->Debug)
 					{
 						printf("<br>Error: %s<br>", $this->Error["message"]);
@@ -144,20 +144,20 @@
 			$this->connect();
 			$this->free();
 
-			$this->Parse = OCIParse($this->Link_ID, $Query_String);
+			$this->Parse = oci_parse($this->Link_ID, $Query_String);
 			if (!$this->Parse)
 			{
-				$this->Error = OCIError($this->Parse);
+				$this->Error = oci_error($this->Parse);
 			}
 			else
 			{
 				if ($this->autoCommit)
 				{
-					OCIExecute($this->Parse, OCI_COMMIT_ON_SUCCESS);
+					oci_execute($this->Parse, OCI_COMMIT_ON_SUCCESS);
 				}
 				else
 				{
-					OCIExecute($this->Parse, OCI_DEFAULT);
+					oci_execute($this->Parse, OCI_DEFAULT);
 				}
 				if ($this->autoCount)
 				{
@@ -165,11 +165,11 @@
 					if (preg_match("/^SELECT/i", $Query_String))
 					{
 						/* On $this->num_rows I'm storing the returned rows of the query. */
-						$this->num_rows = OCIFetchStatement($this->Parse, $aux);
-						OCIExecute($this->Parse, OCI_DEFAULT);
+						$this->num_rows = oci_fetch_all($this->Parse, $aux);
+						oci_execute($this->Parse, OCI_DEFAULT);
 					}
 				}
-				$this->Error = OCIError($this->Parse);
+				$this->Error = oci_error($this->Parse);
 			}
 
 			$this->Row = 0;
@@ -202,13 +202,13 @@
 			$this->connect();
 			$this->free();
 
-			$this->Parse = OCIParse($this->Link_ID, $sql);
+			$this->Parse = oci_parse($this->Link_ID, $sql);
 			if (!$this->Parse)
 			{
-				$this->Error = OCIError($this->Parse);
+				$this->Error = oci_error($this->Parse);
 			}
 
-			OCIExecute($this->Parse, OCI_DEFAULT);
+			oci_execute($this->Parse, OCI_DEFAULT);
 
 			if ((int)$nrows <= 0)
 			{
@@ -260,8 +260,8 @@
 			  }
 			  }
 
-			  if (!OCIExecute($stmt, OCI_DEFAULT)) {
-			  OCIFreeStatement($stmt);
+			  if (!oci_execute($stmt, OCI_DEFAULT)) {
+			  oci_free_statement($stmt);
 			  return $false;
 			  }
 
@@ -272,15 +272,15 @@
 
 			 */
 
-			$totalReg = OCINumcols($this->Parse);
+			$totalReg = oci_num_fields($this->Parse);
 			for ($ix = 1; $ix <= $totalReg; $ix++)
 			{
-				$cols[] = strtoupper(OCIColumnname($this->Parse, $ix));
+				$cols[] = strtoupper(oci_field_name($this->Parse, $ix));
 //				$colreturn = strtolower($col);
 			}
 
 
-			OCIFreeStatement($this->Parse);
+			oci_free_statement($this->Parse);
 			$fields = implode(',', $cols);
 			if ($nrows <= 0)
 				$nrows = 999999999999;
@@ -302,7 +302,7 @@
 			{
 				$this->halt("Nothing to commit because AUTO COMMIT is on.");
 			}
-			return(OCICommit($this->Link_ID));
+			return(oci_commit($this->Link_ID));
 		}
 
 		function rollback()
@@ -311,7 +311,7 @@
 			{
 				$this->halt("Nothing to rollback because AUTO COMMIT is on.");
 			}
-			return(OCIRollback($this->Link_ID));
+			return(oci_rollback($this->Link_ID));
 		}
 		/* This is requeried in some application. It emulates the mysql_insert_id() function. */
 		/* Note: this function was copied from phpBB. */
@@ -327,9 +327,9 @@
 				if (preg_match("/^(INSERT{1}|^INSERT INTO{1})[[:space:]][\"]?([a-zA-Z0-9\_\-]+)[\"]?/i", $this->last_query_text[$query_id], $tablename))
 				{
 					$query = "SELECT " . $tablename[2] . "_id_seq.CURRVAL FROM DUAL";
-					$temp_q_id = @OCIParse($this->db, $query);
-					@OCIExecute($temp_q_id, OCI_DEFAULT);
-					@OCIFetchInto($temp_q_id, $temp_result, OCI_ASSOC + OCI_RETURN_NULLS);
+					$temp_q_id = @oci_parse($this->db, $query);
+					@oci_execute($temp_q_id, OCI_DEFAULT);
+					$temp_result = oci_fetch_array($temp_q_id, OCI_ASSOC + OCI_RETURN_NULLS);
 					if ($temp_result)
 					{
 						return $temp_result["CURRVAL"];
@@ -357,7 +357,9 @@
 			{
 				return 0;
 			}
-			if (0 == OCIFetchInto($this->Parse, $result, OCI_ASSOC + OCI_RETURN_NULLS))
+//			if (0 == OCIFetchInto($this->Parse, $result, OCI_ASSOC + OCI_RETURN_NULLS))
+			$result = oci_fetch_array($this->Parse, OCI_ASSOC + OCI_RETURN_NULLS);
+			if (!$result)
 			{
 				if ($this->Debug)
 				{
@@ -365,7 +367,7 @@
 				}
 				$this->Row += 1;
 
-				$errno = OCIError($this->Parse);
+				$errno = oci_error($this->Parse);
 				if (1403 == $errno)
 				{ # 1043 means no more records found
 					$this->Error = false;
@@ -374,7 +376,7 @@
 				}
 				else
 				{
-					$this->Error = OCIError($this->Parse);
+					$this->Error = oci_error($this->Parse);
 					if ($errno && ($this->Debug))
 					{
 						printf("<br>Error: %s, %s<br>", $errno, $this->Error["message"]);
@@ -385,10 +387,10 @@
 			else
 			{
 				$this->Record = array();
-				$totalReg = OCINumcols($this->Parse);
+				$totalReg = oci_num_fields($this->Parse);
 				for ($ix = 1; $ix <= $totalReg; $ix++)
 				{
-					$col = strtoupper(OCIColumnname($this->Parse, $ix));
+					$col = strtoupper(oci_field_name($this->Parse, $ix));
 					$colreturn = strtolower($col);
 					$this->Record[$colreturn] = (is_object($result[$col])) ? $result[$col]->load() : $result[$col];
 					if ($this->Debug)
@@ -503,7 +505,7 @@
 
 		function affected_rows()
 		{
-			return OCIRowCount($this->Parse);
+			return oci_num_rows($this->Parse);
 		}
 
 		function num_rows()
@@ -513,7 +515,7 @@
 
 		function num_fields()
 		{
-			return OCINumcols($this->Parse);
+			return oci_num_fields($this->Parse);
 		}
 
 		function nf()
@@ -553,36 +555,36 @@
 		{
 			$this->connect();
 
-			$Query_ID = @OCIParse($this->Link_ID, "SELECT $seqname.NEXTVAL FROM DUAL");
+			$Query_ID = @oci_parse($this->Link_ID, "SELECT $seqname.NEXTVAL FROM DUAL");
 
-			if (!@OCIExecute($Query_ID))
+			if (!@oci_execute($Query_ID))
 			{
-				$this->Error = @OCIError($Query_ID);
+				$this->Error = @oci_error($Query_ID);
 				if (2289 == $this->Error["code"])
 				{
-					$Query_ID = OCIParse($this->Link_ID, "CREATE SEQUENCE $seqname");
-					if (!OCIExecute($Query_ID))
+					$Query_ID = oci_parse($this->Link_ID, "CREATE SEQUENCE $seqname");
+					if (!oci_execute($Query_ID))
 					{
-						$this->Error = OCIError($Query_ID);
+						$this->Error = oci_error($Query_ID);
 						$this->halt("<BR> nextid() function - unable to create sequence<br>" . $this->Error["message"]);
 					}
 					else
 					{
-						$Query_ID = OCIParse($this->Link_ID, "SELECT $seqname.NEXTVAL FROM DUAL");
-						OCIExecute($Query_ID);
+						$Query_ID = oci_parse($this->Link_ID, "SELECT $seqname.NEXTVAL FROM DUAL");
+						oci_execute($Query_ID);
 					}
 				}
 			}
 
-			if (OCIFetch($Query_ID))
+			if (oci_fetch($Query_ID))
 			{
-				$next_id = OCIResult($Query_ID, "NEXTVAL");
+				$next_id = oci_result($Query_ID, "NEXTVAL");
 			}
 			else
 			{
 				$next_id = 0;
 			}
-			OCIFreeStatement($Query_ID);
+			oci_free_statement($Query_ID);
 			return $next_id;
 		}
 
@@ -619,8 +621,8 @@
 			$this->connect();
 			if ($mode == "write")
 			{
-				$Parse = OCIParse($this->Link_ID, "lock table $table in row exclusive mode");
-				OCIExecute($Parse);
+				$Parse = oci_parse($this->Link_ID, "lock table $table in row exclusive mode");
+				oci_execute($Parse);
 			}
 			else
 			{
@@ -858,12 +860,12 @@
 	if (!class_exists("DB_Sql"))
 	{
 
-		class DB_Sql extends DB_OCI8
+		class DB_Sql extends db_oci8
 		{
 
-			function DB_Sql( $query = "" )
+			function __construct( $query = "" )
 			{
-				$this->DB_OCI8($query);
+				parent::__construct($query);
 			}
 		}
 	}

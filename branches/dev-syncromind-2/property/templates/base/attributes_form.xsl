@@ -73,7 +73,7 @@
 	<div class="pure-control-group">
 		<xsl:choose>
 			<xsl:when test="not(hide_row)">
-				<label>
+				<label id="label_{name}">
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
 							<xsl:variable name="help_url">

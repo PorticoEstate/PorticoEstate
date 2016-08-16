@@ -14,8 +14,9 @@
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
 	{
-		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
+		$GLOBALS['phpgw_info']['server']['db_type'] = 'postgres';
 	}
+	phpgw::import_class('phpgwapi.db');
 	/**
 	* Include concrete database implementation
 	*/
@@ -28,7 +29,7 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class phpgwapi_db  extends phpgwapi_db_
+	class phpgwapi_db_adodb  extends phpgwapi_db
 	{
 
 		/**
@@ -121,13 +122,48 @@
 				$this->Password = $Password;
 			}
 
-			$type = $this->Type;
-			if ( $type == 'mysql' )
+			$dsn = '';
+			$port ='';
+			$_charset = '';
+			$host = $this->Host;
+			switch ($this->Type)
 			{
-			//	$type = 'mysqlt';
-				$type = 'mysqli';
+				case 'mysql':
+					$type = 'mysqli';
+					break;
+				case 'mssql':
+					$type = 'odbc_mssql';
+					/*"FreeTDS" has to be defined in /etc/odbcinst.ini
+					 * http://www.bictor.com/2014/05/13/configure-unixodbc-for-ubuntu-14-04-using-freetds/
+					 */
+					$dsn = "Driver={FreeTDS};Server={$this->Host};Database={$this->Database}";
+					if($this->Port)
+					{
+						$dsn .= ";Port={$this->Port}";
+					}
+					break;
+				case 'oci8':
+				case 'oracle':
+					$type = 'oci8';
+					$port = $this->Port ? $this->Port : 1521;
+					$_charset = 'AL32UTF8';
+					break;
+				default:
+					$type = $this->Type;
+					break;
 			}
+
+			if($port)
+			{
+				$host .= ":{$port}";
+			}
+
 			$this->adodb = newADOConnection($type);
+
+			if($_charset)
+			{
+				$this->adodb->charSet = $_charset;
+			}
 
 			if($this->fetchmode == 'ASSOC')
 			{
@@ -142,7 +178,15 @@
 			{
 				try
 				{
-					$ret = $this->adodb->PConnect($this->Host, $this->User, $this->Password, $this->Database);
+					if($dsn)
+					{
+						$ret = $this->adodb->PConnect($dsn, $this->User, $this->Password);
+
+					}
+					else
+					{
+						$ret = $this->adodb->PConnect($host, $this->User, $this->Password, $this->Database);
+					}
 				}
 				catch(Exception $e){}
 			}
@@ -150,7 +194,14 @@
 			{
 				try
 				{
-					$ret = $this->adodb->Connect($this->Host, $this->User, $this->Password, $this->Database);
+					if($dsn)
+					{
+						$ret = $this->adodb->Connect($dsn, $this->User, $this->Password);
+					}
+					else
+					{
+						$ret = $this->adodb->Connect($host, $this->User, $this->Password, $this->Database);
+					}
 				}
 				catch(Exception $e){}
 			}

@@ -15,8 +15,10 @@
 
 	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
 	{
-		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
+		$GLOBALS['phpgw_info']['server']['db_type'] = 'postgres';
 	}
+
+	phpgw::import_class('phpgwapi.db');
 
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
@@ -24,7 +26,7 @@
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	class phpgwapi_db  extends phpgwapi_db_
+	class phpgwapi_db_pdo  extends phpgwapi_db
 	{
 		protected $fetch_single;
 		protected $statement_object;
@@ -267,10 +269,45 @@
 		*/
 		protected function _connect_adodb()
 		{
+			$dsn = '';
+			$port ='';
+			$host = $this->Host;
+			switch ($this->Type)
+			{
+				case 'mysql':
+					$type = 'mysqli';
+					break;
+				case 'mssql':
+					$type = 'odbc_mssql';
+					$dsn = "Driver={SQL Server};Server={$this->Host};Database={$this->Database};";
+					break;
+				case 'oci8':
+				case 'oracle':
+					$type = 'oci8';
+					$port = $this->Port ? $this->Port : 1521;
+					break;
+				default:
+					$type = $this->Type;
+					break;
+			}
+
+			if($port)
+			{
+				$host .= ":{$port}";
+			}
 			require_once PHPGW_API_INC . '/adodb/adodb.inc.php';
-			$this->adodb = newADOConnection($this->Type);
+			$this->adodb = newADOConnection($type);
 			$this->adodb->SetFetchMode(ADODB_FETCH_BOTH);
-			return @$this->adodb->connect($this->Host, $this->User, $this->Password, $this->Database);
+			if($dsn)
+			{
+				$ret = @$this->adodb->connect($dsn, $this->User, $this->Password);
+
+			}
+			else
+			{
+				$ret = @$this->adodb->connect($host, $this->User, $this->Password, $this->Database);
+			}
+			return $ret;
 		}
 
 		/**

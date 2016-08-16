@@ -13,28 +13,13 @@
 	* @version $Id$
 	*/
 
-	if ( empty($GLOBALS['phpgw_info']['server']['db_type']) )
-	{
-		$GLOBALS['phpgw_info']['server']['db_type'] = 'mysql';
-	}
-
-	if ( empty($GLOBALS['phpgw_info']['server']['db_abstraction']) )
-	{
-		require_once PHPGW_API_INC . '/class.db_pdo.inc.php';
-	}
-	else
-	{
-		require_once PHPGW_API_INC . "/class.db_{$GLOBALS['phpgw_info']['server']['db_abstraction']}.inc.php";	
-	}
-
-
 	/**
 	* Database abstraction class to allow phpGroupWare to use multiple database backends
-	* 
+	*
 	* @package phpgwapi
 	* @subpackage database
 	*/
-	abstract class phpgwapi_db_
+	abstract class phpgwapi_db
 	{
 		/**
 		* @var object $adodb holds the legacy ADOdb object
@@ -50,12 +35,12 @@
 		* @var string $Host database hostname
 		*/
 		var $Host;
-		
+
 		/**
 		 * @var string $join the sql syntax to use for JOIN
 		 */
 		 var $join = 'INNER JOIN';
-		 
+
 
 		 var $left_join = 'LEFT JOIN';
 		/**
@@ -106,9 +91,9 @@
 		* @var bool $auto_stripslashes automagically remove slashes from field values returned?
 		*/
 		var $auto_stripslashes = false;
-		
+
 		var $resultSet = array();
-		
+
 		var $fetchmode = 'ASSOC';//'BOTH';
 
 		protected $Transaction  = false;
@@ -149,7 +134,7 @@
 				default:
 					//do nothing for now
 			}
-			
+
 			if( !$delay_connect )
 			{
 				try
@@ -197,7 +182,7 @@
 			}
 			return true;
 		}
-	
+
 
 		/**
 		* Open a connection to a database
@@ -240,7 +225,7 @@
 		*/
 		abstract public function to_timestamp($epoch);
 		/**
-		* Convert a rdms specific timestamp to a unix timestamp 
+		* Convert a rdms specific timestamp to a unix timestamp
 		*
 		* @param string rdms specific timestamp
 		* @return int unix timestamp
@@ -339,7 +324,7 @@
 		*/
 
 		abstract function limit_query($Query_String, $offset, $line = '', $file = '', $num_rows = 0);
-		
+
 		/**
 		* Move to the next row in the results set
 		*
@@ -360,15 +345,15 @@
 		*
 		* @return integer|boolean current transaction id
 		*/
-		abstract public function transaction_begin();	
+		abstract public function transaction_begin();
 
 		/**
 		* Complete the transaction
 		*
 		* @return boolean True if sucessful, False if fails
-		*/ 
+		*/
 		abstract public function transaction_commit();
-		
+
 		/**
 		* Rollback the current transaction
 		*
@@ -394,21 +379,21 @@
 		* @return boolean True if sucessful, False if fails
 		*/
 		abstract public function lock($table, $mode='write');
-		
-		
+
+
 		/**
 		* Unlock a table
 		*
 		* @return boolean True if sucessful, False if fails
 		*/
 		abstract public function unlock();
-		
+
 		/**
 		 * Prepare the VALUES component of an INSERT sql statement by guessing data types
 		 *
-		 * It is not a good idea to rely on the data types determined by this method if 
+		 * It is not a good idea to rely on the data types determined by this method if
 		 * you are inserting numeric data into varchar/text fields, such as street numbers
-		 * 
+		 *
 		 * @param array $value_set array of values to insert into the database
 		 * @return string the prepared sql, empty string for invalid input
 		 */
@@ -418,7 +403,7 @@
 			{
 				return '';
 			}
-			
+
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
@@ -443,7 +428,7 @@
 
 		/**
 		 * Prepare the SET component of an UPDATE sql statement
-		 * 
+		 *
 		 * @param array $value_set associative array of values to update the database with
 		 * @return string the prepared sql, empty string for invalid input
 		 */
@@ -453,7 +438,7 @@
 			{
 				return '';
 			}
-			
+
 			$value_entry = array();
 			foreach ( $value_set as $field => $value )
 			{
@@ -517,7 +502,7 @@
 
 		/**
 		* Return the value of a filed
-		* 
+		*
 		* @param string $String name of field
 		* @param boolean $strip_slashes string escape chars from field(optional), default false
 		* @return string the field value
@@ -526,7 +511,7 @@
 
 		/**
 		* Print the value of a field
-		* 
+		*
 		* @param string $field name of field to print
 		* @param bool $strip_slashes string escape chars from field(optional), default false
 		*/
@@ -549,7 +534,7 @@
 		* @param string $table name of table to describe
 		* @param boolean $full optional, default False summary information, True full information
 		* @return array Table meta data
-		*/  
+		*/
 		abstract public function metadata($table,$full = false);
 
 		/**
@@ -559,7 +544,7 @@
 		* @param boolean $owner optional, default False. The optional schema or owner can be defined in $owner.
 		* @param boolean $upper optional, default False. If $upper is true, then the table names (array keys) are upper-cased.
 		* @return array Table meta data
-		*/  
+		*/
 		abstract public function MetaForeignKeys($table, $owner=false, $upper=false);
 
 		/**
@@ -568,7 +553,7 @@
 		* @param string $table name of table to describe
 		* @param boolean $primary optional, default False.
 		* @return array Index data
-		*/  
+		*/
 
 		abstract public function metaindexes($table, $primary = false);
 
@@ -580,7 +565,7 @@
 		* @param string $file file of calling method/function (optional)
 		*/
 		abstract public function halt($msg, $line = '', $file = '');
-		
+
 		/**
 		* Get a list of table names in the current database
 		*
@@ -598,7 +583,7 @@
 			//echo "depi: index_names";
 			return array();
 		}
-		
+
 		/**
 		* Create a new database
 		*
@@ -634,7 +619,7 @@
 			}
 			return $date_format;
 	 	}
-	
+
 		/**
 		* Get the correct datetime format for DATETIME field for a particular RDBMS
 		*
@@ -681,8 +666,8 @@
 		/**
 		 * Execute prepared SQL statement for insert
 		 *
-		 * @param string $sql_string 
-		 * @param array $valueset  values,id and datatypes for the insert 
+		 * @param string $sql_string
+		 * @param array $valueset  values,id and datatypes for the insert
 		 * Use type = PDO::PARAM_STR for strings and type = PDO::PARAM_INT for integers
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
@@ -692,8 +677,8 @@
 		/**
 		 * Execute prepared SQL statement for select
 		 *
-		 * @param string $sql_string 
-		 * @param array $params conditions for the select 
+		 * @param string $sql_string
+		 * @param array $params conditions for the select
 		 * @return boolean TRUE on success or FALSE on failure
 		 */
 
@@ -767,7 +752,7 @@
 						trigger_error('Attempt on SQL-injection', E_USER_ERROR);
 						exit;
 					}
-				}	
+				}
 			}
 		}
 	}

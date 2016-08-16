@@ -138,31 +138,29 @@
 
 		public function read( $data = array() )
 		{
-
-			/* $values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-			  'allrows'=>$this->allrows),$filter); */
-
 			$values = $this->so->read($data);
 
-			foreach ($this->location_info['fields'] as $field)
+			foreach ($values as &$entry)
 			{
-				if (isset($field['role']) && $field['role'] == 'parent')
+				foreach ($this->location_info['fields'] as $field)
 				{
-					foreach ($values as &$entry)
+					if (isset($entry[$field['name']]) && $entry[$field['name']])
 					{
-						if (isset($entry[$field['name']]) && $entry[$field['name']])
+						if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'] == 'get_user')
+						{
+							$entry[$field['name']] = $GLOBALS['phpgw']->accounts->get($entry[$field['name']])->__toString();
+						}
+						else if (isset($field['role']) && $field['role'] == 'parent')
 						{
 							$path = $this->so->get_path(array('type' => $this->type, 'id' => $entry[$field['name']]));
 							$entry[$field['name']] = implode(' > ', $path);
 						}
+						else if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
+						{
+							$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], array_merge(array('id' => $entry[$field['name']]),$field['values_def']['method_input'] ));
+						}
 					}
-				}
-				if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
-				{
-					foreach ($values as &$entry)
-					{
-						$entry[$field['name']] = execMethod($field['values_def']['get_single_value'], $entry[$field['name']]);
-					}
+
 				}
 			}
 
@@ -256,7 +254,7 @@
 			{
 				foreach ($values as &$entry)
 				{
-					$entry['selected'] = isset($data['selected']) && trim($data['selected']) == trim($entry['id']) ? 1 : 0;
+					$entry['selected'] = isset($data['selected']) && trim($data['selected']) === trim($entry['id']) ? 1 : 0;
 				}
 			}
 			return $values;
@@ -344,15 +342,41 @@
 				'query' => $query,
 			);
 
-			$values = $this->read($params);
+			foreach ($this->location_info['fields'] as $field)
+			{
+				if (isset($field['filter']) && $field['filter'])
+				{
+					$params['filter'][$field['name']] = phpgw::get_var($field['name']);
+				}
+			}
 
+			$attributes = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+
+			$custom_filter = array();
+			foreach ($attributes as $attribute_id => $attribute)
+			{
+				switch(phpgw::get_var($attribute['name']))
+				{
+					case 'ISNOTNULL':
+						$custom_filter[] = "{$attribute['name']} IS NOT NULL";
+						break;
+					case 'ISNULL':
+						$custom_filter[] = "{$attribute['name']} IS NULL";
+						break;
+					default:
+				}
+			}
+			$params['custom_filter'] = $custom_filter;
+			$values = $this->read($params);
+/*
 			foreach ($values as &$entry)
 			{
 				if ($entry['parent_id'])
 				{
-					$entry['name'] .= "::{$entry['parent_id']}";
+					$entry['name'] = "[{$entry['name']}] ::  {$entry['parent_id']}";
 				}
 			}
+*/
 			return array('ResultSet' => array('Result' => $values));
 		}
 

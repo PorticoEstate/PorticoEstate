@@ -1,6 +1,8 @@
 <?php
 /*
-V5.19  23-Apr-2014  (c) 2000-2014 John Lim (jlim#natsoft.com). All rights reserved.
+@version   v5.20.4  30-Mar-2016
+@copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
+@copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license. 
   Whenever there is any discrepancy between the two licenses, 
   the BSD license will take precedence.
@@ -54,7 +56,7 @@ class ADODB_ibase extends ADOConnection {
 	var $blobEncodeType = 'C';
 	var $role = false;
 	
-	function ADODB_ibase() 
+	function __construct()
 	{
 		 if (defined('IBASE_DEFAULT')) $this->ibasetrans = IBASE_DEFAULT;
   	}
@@ -84,8 +86,12 @@ class ADODB_ibase extends ADOConnection {
 		// PHP5 change.
 		if (function_exists('ibase_timefmt')) {
 			ibase_timefmt($this->ibase_datefmt,IBASE_DATE );
-			if ($this->dialect == 1) ibase_timefmt($this->ibase_datefmt,IBASE_TIMESTAMP );
-			else ibase_timefmt($this->ibase_timestampfmt,IBASE_TIMESTAMP );
+			if ($this->dialect == 1) {
+				ibase_timefmt($this->ibase_datefmt,IBASE_TIMESTAMP );
+			}
+			else {
+				ibase_timefmt($this->ibase_timestampfmt,IBASE_TIMESTAMP );
+			}
 			ibase_timefmt($this->ibase_timefmt,IBASE_TIME );
 			
 		} else {
@@ -95,6 +101,7 @@ class ADODB_ibase extends ADOConnection {
 		}
 		return true;
 	}
+
 	   // returns true or false
 	function _pconnect($argHostname, $argUsername, $argPassword, $argDatabasename)
 	{
@@ -104,7 +111,9 @@ class ADODB_ibase extends ADOConnection {
 	
 	function MetaPrimaryKeys($table,$owner_notused=false,$internalKey=false)
 	{	
-		if ($internalKey) return array('RDB$DB_KEY');
+		if ($internalKey) {
+			return array('RDB$DB_KEY');
+		}
 		
 		$table = strtoupper($table);
 		
@@ -144,9 +153,15 @@ class ADODB_ibase extends ADOConnection {
 	
 	function CommitTrans($ok=true) 
 	{ 
-		if (!$ok) return $this->RollbackTrans();
-		if ($this->transOff) return true;
-		if ($this->transCnt) $this->transCnt -= 1;
+		if (!$ok) {
+			return $this->RollbackTrans();
+		}
+		if ($this->transOff) {
+			return true;
+		}
+		if ($this->transCnt) {
+			$this->transCnt -= 1;
+		}
 		$ret = false;
 		$this->autoCommit = true;
 		if ($this->_transactionID) {
@@ -180,8 +195,9 @@ class ADODB_ibase extends ADOConnection {
 		if ($this->transCnt) $this->transCnt -= 1;
 		$ret = false;
 		$this->autoCommit = true;
-		if ($this->_transactionID) 
+		if ($this->_transactionID) {
 				  $ret = ibase_rollback($this->_transactionID);
+		}
 		$this->_transactionID = false;   
 		
 		return $ret;
@@ -219,7 +235,9 @@ class ADODB_ibase extends ADOConnection {
 		while ($row = $rs->FetchRow()) {
 			$index = $row[0];
              if (!isset($indexes[$index])) {
-             		if (is_null($row[3])) {$row[3] = 0;}
+				if (is_null($row[3])) {
+					$row[3] = 0;
+				}
                      $indexes[$index] = array(
                              'unique' => ($row[3] == 1),
                              'columns' => array()
@@ -244,20 +262,22 @@ class ADODB_ibase extends ADOConnection {
 	// See http://community.borland.com/article/0,1410,25844,00.html
 	function RowLock($tables,$where,$col=false)
 	{
-		if ($this->autoCommit) $this->BeginTrans();
+		if ($this->autoCommit) {
+			$this->BeginTrans();
+		}
 		$this->Execute("UPDATE $table SET $col=$col WHERE $where "); // is this correct - jlim?
 		return 1;
 	}
 	
 	
-	function CreateSequence($seqname,$startID=1)
+	function CreateSequence($seqname = 'adodbseq', $startID = 1)
 	{
 		$ok = $this->Execute(("INSERT INTO RDB\$GENERATORS (RDB\$GENERATOR_NAME) VALUES (UPPER('$seqname'))" ));
 		if (!$ok) return false;
 		return $this->Execute("SET GENERATOR $seqname TO ".($startID-1).';');
 	}
 	
-	function DropSequence($seqname)
+	function DropSequence($seqname = 'adodbseq')
 	{
 		$seqname = strtoupper($seqname);
 		$this->Execute("delete from RDB\$GENERATORS where RDB\$GENERATOR_NAME='$seqname'");
@@ -272,10 +292,16 @@ class ADODB_ibase extends ADOConnection {
 			$this->Execute("SET GENERATOR $seqname TO ".($startID-1).';');
 			$rs = $this->Execute($getnext);
 		}
-		if ($rs && !$rs->EOF) $this->genID = (integer) reset($rs->fields);
-		else $this->genID = 0; // false
+		if ($rs && !$rs->EOF) {
+			$this->genID = (integer) reset($rs->fields);
+		}
+		else {
+			$this->genID = 0; // false
+		}
 		
-		if ($rs) $rs->Close();
+		if ($rs) {
+			$rs->Close();
+		}
 		
 		return $this->genID;
 	}
@@ -365,7 +391,9 @@ class ADODB_ibase extends ADOConnection {
 				}
 			} else $ret = $fn($conn,$sql); 
 		}
-		if ($docommit && $ret === true) ibase_commit($this->_connectionID);
+		if ($docommit && $ret === true) {
+			ibase_commit($this->_connectionID);
+		}
 
 		$this->_handleerror();
 		return $ret;
@@ -374,7 +402,9 @@ class ADODB_ibase extends ADOConnection {
 	 // returns true or false
 	 function _close()
 	 {	   
-		if (!$this->autoCommit) @ibase_rollback($this->_connectionID);
+		if (!$this->autoCommit) {
+			@ibase_rollback($this->_connectionID);
+		}
 		return @ibase_close($this->_connectionID);
 	 }
 	
@@ -475,6 +505,7 @@ class ADODB_ibase extends ADOConnection {
 		} // switch
 	}
 	//OPN STUFF end
+
 		// returns array of ADOFieldObjects for current table
 	function MetaColumns($table, $normalize=true) 
 	{
@@ -730,12 +761,12 @@ class ADORecordset_ibase extends ADORecordSet
 	var $bind=false;
 	var $_cacheType;
 	
-	function ADORecordset_ibase($id,$mode=false)
+	function __construct($id,$mode=false)
 	{
 	global $ADODB_FETCH_MODE;
 	
 			$this->fetchMode = ($mode === false) ? $ADODB_FETCH_MODE : $mode;
-			$this->ADORecordSet($id);
+			parent::__construct($id);
 	}
 
 	/*		Returns: an object containing field information.
@@ -747,18 +778,19 @@ class ADORecordset_ibase extends ADORecordSet
 	{
 			 $fld = new ADOFieldObject;
 			 $ibf = ibase_field_info($this->_queryID,$fieldOffset);
+
+			$name = empty($ibf['alias']) ? $ibf['name'] : $ibf['alias'];
+
 			 switch (ADODB_ASSOC_CASE) {
-			 case 2: // the default
-			 	$fld->name = ($ibf['alias']);
-				 if (empty($fld->name)) $fld->name = ($ibf['name']);
+				case ADODB_ASSOC_CASE_UPPER:
+					$fld->name = strtoupper($name);
 				 break;
-			 case 0: 
-				 $fld->name = strtoupper($ibf['alias']);
-				 if (empty($fld->name)) $fld->name = strtoupper($ibf['name']);
+				case ADODB_ASSOC_CASE_LOWER:
+					$fld->name = strtolower($name);
 				 break;
-			 case 1: 
-			 	$fld->name = strtolower($ibf['alias']);
-				 if (empty($fld->name)) $fld->name = strtolower($ibf['name']);
+				case ADODB_ASSOC_CASE_NATIVE:
+				default:
+					$fld->name = $name;
 				 break;
 			 }
 			 
@@ -822,9 +854,9 @@ class ADORecordset_ibase extends ADORecordSet
 		
 		$this->fields = $f;
 		if ($this->fetchMode == ADODB_FETCH_ASSOC) {
-			$this->fields = $this->GetRowAssoc(ADODB_ASSOC_CASE);
+			$this->fields = $this->GetRowAssoc();
 		} else if ($this->fetchMode == ADODB_FETCH_BOTH) {
-			$this->fields = array_merge($this->fields,$this->GetRowAssoc(ADODB_ASSOC_CASE));
+			$this->fields = array_merge($this->fields,$this->GetRowAssoc());
 		}
 		return true;
 	}

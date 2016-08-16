@@ -967,19 +967,21 @@
 
 			if ($category['is_eav'])
 			{
-				$sql = "SELECT * FROM fm_bim_item"
+				$sql = "SELECT json_representation->>'maaler_nr' as maaler_nr FROM fm_bim_item"
 					. " WHERE location_code = '{$location_code}'"
 					. " AND location_id = '{$category['location_id']}'"
-					. " AND xmlexists('//category[text() = ''1'']' PASSING BY REF xml_representation)";
+					. " AND  json_representation->>'category' = '1'";
+				//	. " AND xmlexists('//category[text() = ''1'']' PASSING BY REF xml_representation)";
 
 				$this->db->query($sql, __LINE__, __FILE__);
 
 				$this->db->next_record();
 
-				$xmldata = $this->db->f('xml_representation');
-				$xml = new DOMDocument('1.0', 'utf-8');
-				$xml->loadXML($xmldata);
-				return $xml->getElementsByTagName('maaler_nr')->item(0)->nodeValue;
+	//			$xmldata = $this->db->f('xml_representation');
+	//			$xml = new DOMDocument('1.0', 'utf-8');
+	//			$xml->loadXML($xmldata);
+	//			return $xml->getElementsByTagName('maaler_nr')->item(0)->nodeValue;
+				return $this->db->f('maaler_nr');
 			}
 			else
 			{
