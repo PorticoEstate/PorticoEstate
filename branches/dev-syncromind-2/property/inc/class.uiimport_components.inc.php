@@ -48,7 +48,7 @@
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/tmp_upload/';
+			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/test/';
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::generic";
 		}
@@ -83,14 +83,6 @@
 			{
 				return $message['error'][] = array('msg' => 'location code is empty');
 			}
-			
-			$components_added = $GLOBALS['phpgw']->session->appsession('components', 'property');
-
-			if (!count($components_added))
-			{			
-				$message['error'][] = array('msg' => 'not stored components');
-				return $this->jquery_results($message);
-			}
 				
 			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
 			$relations = array();
@@ -118,7 +110,7 @@
 						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 					}
 					else {
-						$component = $components_added[$k];
+						$component = $this->get_component[$k];
 						if( empty($component['id']) || empty($component['location_id']))
 						{
 							throw new Exception("component {$k} does not exist");
@@ -165,6 +157,7 @@
 			return $this->jquery_results($message);
 		}
 		
+		
 		public function handle_import_files()
 		{
 			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
@@ -173,6 +166,28 @@
 			$upload_handler = new UploadHandler($options);
 		}
 
+		protected function get_component( $query )
+		{
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+			}
+
+			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'benevnelse' = '{$query}'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			
+			if ($this->db->next_record())
+			{
+				$values['id'] = $this->db->f('id');
+				$values['location_id'] = $this->db->f('location_id');
+			}
+
+			return $values;
+		}
+		
 		
 		private function save_file( $tmp_file )
 		{
