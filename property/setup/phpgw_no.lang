@@ -2060,3 +2060,5 @@ external project	property	no	Eksternt prosjekt
 unspsc code	common	no	UNSPSC-kode
 order received	property	no	Varemottak
 receive order	property	no	Motta vare
+check date type	property	no	Dato filter type
+no date	property	no	Ingen dato
