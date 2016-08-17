@@ -2062,3 +2062,4 @@ order received	property	no	Varemottak
 receive order	property	no	Motta vare
 check date type	property	no	Dato filter type
 no date	property	no	Ingen dato
+Please select an external project!	property	no	Velg et tilnyttet eksternt prosjekt

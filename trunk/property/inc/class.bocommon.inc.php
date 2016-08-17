@@ -2507,13 +2507,28 @@
 		public function get_b_account()
 		{
 			$query = phpgw::get_var('query');
+			$role = phpgw::get_var('role');
 
-			$sogeneric = CreateObject('property.sogeneric', 'budget_account');
+			$type = 'budget_account';
+
+			if($role == 'group')
+			{
+				$type = 'b_account_category';
+			}
+
+			$sogeneric = CreateObject('property.sogeneric', $type);
 			$values = $sogeneric->read(array('query' => $query));
 
 			foreach ($values as &$value)
 			{
-				$value['name'] = "{$value['id']} {$value['descr']}";
+				if (!preg_match("/^{$value['id']}/", $value['descr']))
+				{
+					$value['name'] = "{$value['id']} {$value['descr']}";
+				}
+				else
+				{
+					$value['name'] = $value['descr'];
+				}
 			}
 
 			return array('ResultSet' => array('Result' => $values));
