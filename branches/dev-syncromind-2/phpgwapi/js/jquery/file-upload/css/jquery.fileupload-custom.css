@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+.fileupload-progress {
+	margin: 10px 0;
+}
+.fileupload-progress .progress-extended {
+	margin-top: 5px;
+}
+.eror {
+  color: red;
+}
+
+.template-upload {
+	display: table-row;
+}
+.template-upload .table-cell {
+	display: table-cell;
+	vertical-align: middle;
+	padding-right: 6px;
+}
+.template-upload .error {
+	margin: 0px;
+	padding: 2px;
+}
+
+.template-download {
+	display: table-row;
+}
+.template-download .table-cell {
+	display: table-cell;
+	vertical-align: middle;
+    padding-right: 6px;
+}
+.template-download .error {
+	margin: 0px;
+	padding: 2px;
+}
+
