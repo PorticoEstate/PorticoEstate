@@ -196,6 +196,7 @@
 						"file-upload/js/jquery.fileupload-jquery-ui"
 					);
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-custom.css");
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
 					break;
 				
@@ -495,86 +496,84 @@ JS;
 				<div class="fileupload-buttonbar">
 					<div class="fileupload-buttons">
 						<!-- The fileinput-button span is used to style the file input field as button -->
-						<span class="fileinput-button">
+						<span class="fileinput-button pure-button">
 							<span>Add files...</span>
 							<input type="file" id="files" name="files[]" multiple>
 						</span>
-						<button type="submit" class="start">Start upload</button>
-						<button type="reset" class="cancel">Cancel upload</button>
-						<button type="button" class="delete">Delete</button>
+						<button type="submit" class="start pure-button">Start upload</button>
+						<button type="reset" class="cancel pure-button">Cancel upload</button>
+						<button type="button" class="delete pure-button">Delete</button>
 						<input type="checkbox" class="toggle">
 						<!-- The global file processing state -->
 						<span class="fileupload-process"></span>
+						<div class="fileupload-progress fade" style="display:none">
+							<!-- The global progress bar -->
+							<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+							<!-- The extended global progress state -->
+							<div class="progress-extended">&nbsp;</div>
+						</div>
 					</div>
-					<!-- The global progress state -->
-					<div class="fileupload-progress fade" style="display:none">
-						<!-- The global progress bar -->
-						<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-						<!-- The extended global progress state -->
-						<div class="progress-extended">&nbsp;</div>
-					</div>
+
 				</div>
 				<!-- The table listing the files available for upload/download -->
-				<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">
-					<table role="presentation">
-						<tbody class="files"></tbody>
-					</table>
+				<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">					
+					<div class="presentation files" style="display: inline-table;"></div>
 				</div>
+			
 			</form>
 
 			<!-- The template to display files available for upload -->
 			<script id="template-upload" type="text/x-tmpl">
 			{% for (var i=0, file; file=o.files[i]; i++) { %}
-				<tr class="template-upload fade">
-					<td>
+				<div class="template-upload fade table-row">
+					<div class="table-cell">
 						<span class="preview"></span>
-					</td>
-					<td>
-						<p class="name">{%=file.name%}</p>
-						<strong class="error"></strong>
-					</td>
-					<td>
-						<p class="size">Processing...</p>
+					</div>
+					<div class="table-cell">
+						<div class="name">{%=file.name%}</div>
+					</div>
+					<div class="table-cell">
+						<div class="error" style="display:none"></div>
+					</div>
+					<div class="table-cell">
+						<div class="size">Processing...</div>
+					</div>
+					<div class="table-cell">
 						<div class="progress"></div>
-					</td>
-					<td>
+					</div>
+					<div class="table-cell">
 						{% if (!i && !o.options.autoUpload) { %}
-							<button class="start" disabled>Start</button>
+							<button class="start pure-button" disabled>Start</button>
 						{% } %}
 						{% if (!i) { %}
-							<button class="cancel">Cancel</button>
+							<button class="cancel pure-button">Cancel</button>
 						{% } %}
-					</td>
-				</tr>
+					</div>
+				</div>
 			{% } %}
 			</script>
 			<!-- The template to display files available for download -->
 			<script id="template-download" type="text/x-tmpl">
 			{% for (var i=0, file; file=o.files[i]; i++) { %}
-				<tr class="template-download fade">
-					<td>
-						<span class="preview">
-							{% if (file.thumbnailUrl) { %}
-								<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-							{% } %}
-						</span>
-					</td>
-					<td>
-						<p class="name">
+				<div class="template-download fade table-row">
+					<div class="table-cell">
+						<div class="name">
 							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-						</p>
-						{% if (file.error) { %}
-							<div><span class="error">Error</span> {%=file.error%}</div>
-						{% } %}
-					</td>
-					<td>
-						<span class="size">{%=o.formatFileSize(file.size)%}</span>
-					</td>
-					<td>
-						<button class="delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
+						</div>
+					</div>
+					{% if (file.error) { %}
+						<div class="table-cell"><div class="error">Error: {%=file.error%}</div></div>
+					{% } %}
+					<div class="table-cell">
+						<div class="size">{%=o.formatFileSize(file.size)%}</div>
+					</div>
+					<div class="table-cell">
+						<button class="delete pure-button" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
+					</div>
+					<div class="table-cell">
 						<input type="checkbox" name="delete" value="1" class="toggle">
-					</td>
-				</tr>
+					</div>
+				</div>
 			{% } %}
 			</script>
 HTML;
