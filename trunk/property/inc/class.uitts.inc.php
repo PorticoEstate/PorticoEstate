@@ -155,6 +155,7 @@
 				'ecodimb' => $this->bo->ecodimb,
 				'branch_id' => phpgw::get_var('branch_id'),
 				'order_dim1' => phpgw::get_var('order_dim1'),
+				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
 			);
 
 			$values = $this->bo->read($params);
@@ -619,8 +620,36 @@
 
 		private function _get_filters()
 		{
+			$order_read = $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
+
 			$values_combo_box = array();
 			$combos = array();
+
+			$check_date_type =	array('type' => 'filter',
+				'name' => 'check_date_type',
+				'extra' => '',
+				'text' => lang('check date type'),
+				'list' => array(
+					array(
+						'id'	=> 1,
+						'name'	=> lang('modified date')
+					),
+					array(
+						'id'	=> 2,
+						'name'	=> lang('entry date')
+					)
+				)
+			);
+		
+			if($order_read)
+			{
+				$check_date_type['list'][] = array(
+					'id'	=> 3,
+					'name'	=> lang('no date')
+				);
+			}
+
+			$combos[] = $check_date_type;
 
 			$values_combo_box[3] = $this->bo->filter(array('format' => $group_filters, 'filter' => $this->status_id,
 				'default' => 'O'));
@@ -727,8 +756,6 @@
 					'list' => $values_combo_box[5]
 				);
 			}
-
-			$order_read = $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
 
 			if($order_read)
 			{
@@ -862,13 +889,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -884,9 +904,16 @@
 								'name' => 'end_date',
 								'value' => $end_date,
 								'text' => lang('to')
-							)
-						),
-					),
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
+							),
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uitts.index',
