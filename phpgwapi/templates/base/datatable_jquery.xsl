@@ -309,7 +309,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<td valign="top">
-										<input id="innertoolbar">
+										<input id="innertoolbar_{name}">
 											<xsl:attribute name="type">
 												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
 											</xsl:attribute>
@@ -1233,6 +1233,19 @@
 					{
 						filterData('<xsl:value-of select="id"/>', $(this).val());
 						previous_<xsl:value-of select="id"/> = $(this).val();
+					}
+				});
+			</xsl:if>
+			<xsl:if test="type = 'checkbox'">
+				$("#innertoolbar_<xsl:value-of select="name"/>").change( function()
+				{
+					if($(this).prop("checked"))
+					{
+						filterData('<xsl:value-of select="name"/>', 1);
+					}
+					else
+					{
+						filterData('<xsl:value-of select="name"/>', 0);
 					}
 				});
 			</xsl:if>
