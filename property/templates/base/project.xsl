@@ -376,8 +376,67 @@
 					</input>
 					<div id="ecodimb_container"/>
 				</div>
+				<xsl:if test="b_account_data =''">
+				<div class="pure-control-group">
+					<xsl:variable name="lang_budget_account">
+						<xsl:value-of select="php:function('lang', 'budget account group')"/>
+					</xsl:variable>
+					<label>
+						<xsl:value-of select="$lang_budget_account"/>
+					</label>
+					<input type="hidden" id="b_account_group" name="values[b_account_group]"  value="{b_account_group_data/value_b_account_id}"/>
+					<input type="text" id="b_account_group_name" name="values[b_account_group_name]" value="{b_account_group_data/value_b_account_name}">
+						<xsl:choose>
+							<xsl:when test="mode='edit'">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="$lang_budget_account"/>
+								</xsl:attribute>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:otherwise>
+						</xsl:choose>
+					</input>
+					<div id="b_account_group_container"/>
+				</div>
+				</xsl:if>
 
-				<xsl:choose>
+				<xsl:if test="b_account_data !=''">
+					<div class="pure-control-group">
+						<xsl:variable name="lang_budget_account">
+							<xsl:value-of select="php:function('lang', 'budget account')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_budget_account"/>
+						</label>
+						<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
+						<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_name}">
+							<xsl:choose>
+								<xsl:when test="mode='edit'">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_budget_account"/>
+									</xsl:attribute>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+						</input>
+						<div id="b_account_container"/>
+					</div>
+				</xsl:if>
+
+				<!--xsl:choose>
 					<xsl:when test="b_account_data!=''">
 						<xsl:choose>
 							<xsl:when test="mode='edit'">
@@ -388,7 +447,7 @@
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
-				</xsl:choose>
+				</xsl:choose-->
 				<xsl:if test="value_project_id &gt; 0 and mode='edit'">
 					<div class="pure-control-group">
 						<label for="name">

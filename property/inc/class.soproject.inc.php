@@ -907,7 +907,8 @@
 					'contact_phone' => $this->db->f('contact_phone'),
 					'external_project_id' => $this->db->f('external_project_id'),
 					'ecodimb' => $this->db->f('ecodimb'),
-					'b_account_id' => $this->db->f('account_group'),
+					'b_account_group' => $this->db->f('account_group'),
+					'b_account_id' => $this->db->f('b_account_id'),
 					'contact_id' => $this->db->f('contact_id'),
 					'inherit_location' => $this->db->f('inherit_location'),
 					'periodization_id' => $this->db->f('periodization_id')
@@ -1237,6 +1238,7 @@
 				$project['key_responsible'],
 				$this->account,
 				$project['ecodimb'],
+				$project['b_account_group'],
 				$project['b_account_id'],
 				$project['contact_id'],
 				$project['inherit_location'],
@@ -1246,7 +1248,7 @@
 			$values = $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_type_id,external_project_id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,contact_id,inherit_location,periodization_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,contact_id,inherit_location,periodization_id $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
 			/**
@@ -1424,7 +1426,8 @@
 				'location_code' => $project['location_code'],
 				'address' => $address,
 				'ecodimb' => $project['ecodimb'],
-				'account_group' => $project['b_account_id'],
+				'account_group' => $project['b_account_group'],
+				'b_account_id' => $project['b_account_id'],
 				'contact_id' => $project['contact_id'],
 				'inherit_location' => $project['inherit_location'],
 			);
