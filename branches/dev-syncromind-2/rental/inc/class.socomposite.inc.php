@@ -517,4 +517,23 @@
 
 			return $uicols;
 		}
+        
+        public function get_schedule () {
+            $date = new DateTime(phpgw::get_var('date'));
+            
+            if ($date->format('w') != 1) {
+                $date->modify('last monday');
+            }
+            
+            $prev_date = clone $date;
+            $prev_date->modify('-1 week');
+            $next_date = clone $date;
+            $next_date->modify('+1 week');            
+            
+            $composite['date'] = $date->format('Y-m-d');
+            $composite['prev_date'] = $prev_date->format('Y-m-d');
+            $composite['next_date'] = $next_date->format('Y-m-d');
+            
+            return $composite;
+        }
 	}

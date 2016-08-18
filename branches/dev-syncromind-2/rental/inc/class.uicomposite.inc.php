@@ -21,7 +21,8 @@
 			'add_unit' => true,
 			'remove_unit' => true,
 			'query' => true,
-			'download' => true
+			'download' => true,
+            'schedule' => true
 		);
 
 		public function __construct()
@@ -1103,4 +1104,38 @@ JS;
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 		}
+        
+        public function schedule () {
+            $composite_id = (int)phpgw::get_var('id');
+
+            $filters = array(
+                rental_socomposite::get_id_field_name() => $composite_id,
+                'availability_date_from' => '2010-1-1',
+                'availability_date_to' => '2017-12-31',
+                'has_contract' => 'both'
+            );
+
+            $composite = null;
+            $composite_obj = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', $filters);
+            
+            if (count($composite_obj) > 0)
+			{
+				$keys = array_keys($composite_obj);
+				$composite = $composite_obj[$keys[0]];
+			}
+            
+            $contracts = $composite->get_contracts();
+            var_dump($contracts);exit();
+
+            $composite = rental_socomposite::get_instance()->get_schedule();
+
+            $composite['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+
+//            self::add_javascript('booking','booking','common.js');
+            self::add_javascript('booking','booking','schedule.js');
+
+            phpgwapi_jquery::load_widget("datepicker");
+
+            self::render_template_xsl(array('schedule'), array('schedule' => $composite));            
+        }        
 	}
