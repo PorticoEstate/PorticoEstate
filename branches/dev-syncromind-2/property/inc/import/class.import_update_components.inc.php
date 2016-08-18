@@ -36,7 +36,7 @@
 
 		}
 		
-		public function set_parent($buildingpart)
+		public function set_parent_category($buildingpart)
 		{
 			for($x = 1;  $x <= (strlen($buildingpart)-1); $x++) 
 			{
@@ -46,10 +46,10 @@
 			$parentID = '';
 			foreach($parents as $item)
 			{
-				$values = $this->get_entity_category_for_buildingpart($item);
-				if ($values['id'])
+				$values = $this->get_entity_categories(array('buildingpart' => $item));
+				if ($values[$item]['id'])
 				{
-					$parentID = $values['id'];
+					$parentID = $values[$item]['id'];
 					continue;
 				}
 				
@@ -68,31 +68,16 @@
 			return $parentID;
 		}
 		
-		public function get_entity_category_for_buildingpart($data)
-		{
-			$querymethod = " AND name LIKE '".$data." %'";
-			
-			$sql = "SELECT * FROM fm_entity_category WHERE entity_id = 3 {$querymethod}";
-			$this->db->query($sql, __LINE__, __FILE__);
-			
-			if ($this->db->next_record())
-			{
-				$values['id'] = $this->db->f('id');
-				$values['name'] = $this->db->f('name');
-				$values['location_id'] = $this->db->f('location_id');
-				$values['parent_id'] = $this->db->f('parent_id');
-				$values['entity_id'] = $this->db->f('entity_id');
-			}
-			
-			return $values;
-		}
-		
 		public function get_entity_categories ($data = array())
 		{
 			$querymethod = '';
 			if ($data['parent_id'])
 			{
 				$querymethod .= " AND parent_id = ".$data['parent_id'];
+			}
+			if ($data['buildingpart'])
+			{
+				$querymethod .= " AND name LIKE '".$data['buildingpart']." %'";
 			}
 			
 			$sql = "SELECT * FROM fm_entity_category WHERE entity_id = 3 {$querymethod}";
@@ -186,7 +171,7 @@
 				
 			foreach ($buildingpart_out_table as $k => $v)
 			{	
-					$parent_id = (empty($v['parent']['id'])) ? $this->set_parent($k) : $v['parent']['id'];
+					$parent_id = (empty($v['parent']['id'])) ? $this->set_parent_category($k) : $v['parent']['id'];
 					if (empty($parent_id))
 					{
 						$buildingparts['not_added'][$k] = array('name' => $v['name']);
