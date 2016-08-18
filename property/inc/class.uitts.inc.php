@@ -1254,6 +1254,11 @@
 					unset($_responsible);
 				}
 
+				if (!isset($values['status']) || !$values['status'])
+				{
+					$values['status'] = "O";
+				}
+
 				if (!isset($values['priority']) || !$values['priority'])
 				{
 					$_priority = $this->bo->get_priority_list();
