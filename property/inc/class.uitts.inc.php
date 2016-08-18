@@ -1229,13 +1229,16 @@
 					}
 				}
 
-
 				if (!$values['assignedto'] && !$values['group_id'])
 				{
 					$_responsible = execMethod('property.boresponsible.get_responsible', $values);
 					if (!$_responsible)
 					{
-						$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
+						if(!$values['assignedto'] = $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])
+						{
+						
+							$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
+						}
 					}
 					else
 					{
