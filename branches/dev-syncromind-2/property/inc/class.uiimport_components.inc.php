@@ -29,6 +29,8 @@
 
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
+	
+	include_class('property', 'import_update_components', 'inc/import/');
 
 	class property_uiimport_components extends phpgwapi_uicommon_jquery
 	{
@@ -239,8 +241,6 @@
 		
 		public function import_components()
 		{
-			$GLOBALS['phpgw']->session->appsession('components', 'property', '');
-			
 			$get_identificator = false;
 
 			$location_code = phpgw::get_var('location_code');
@@ -277,9 +277,6 @@
 					array('name' => 'beskrivelse', 'value' => trim($post['Tekst']['Uformatert']))
 				);
 			}
-
-
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/import_update_components.php";
 
 			$import_components = new import_components();
 			$entity_categories  = $import_components->get_entity_categories();
