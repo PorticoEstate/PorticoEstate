@@ -193,7 +193,7 @@
 						"file-upload/js/jquery.fileupload-process",
 						"file-upload/js/jquery.fileupload-validate",
 						"file-upload/js/jquery.fileupload-ui",
-						"file-upload/js/jquery.fileupload-jquery-ui"
+						"file-upload/js/jquery.fileupload-jquery-ui",
 					);
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-custom.css");
@@ -490,8 +490,6 @@ JS;
 			self::load_widget('file-upload');
 			$output = <<<HTML
 			<form id="fileupload" action="{$action}" method="POST" enctype="multipart/form-data">
-				<!-- Redirect browsers with JavaScript disabled to the origin page -->
-				<noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
 				<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 				<div class="fileupload-buttonbar">
 					<div class="fileupload-buttons">
@@ -506,14 +504,13 @@ JS;
 						<input type="checkbox" class="toggle">
 						<!-- The global file processing state -->
 						<span class="fileupload-process"></span>
-						<div class="fileupload-progress fade" style="display:none">
-							<!-- The global progress bar -->
-							<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-							<!-- The extended global progress state -->
-							<div class="progress-extended">&nbsp;</div>
-						</div>
 					</div>
-
+					<div class="fileupload-progress fade" style="display:none">
+						<!-- The global progress bar -->
+						<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+						<!-- The extended global progress state -->
+						<div class="progress-extended">&nbsp;</div>
+					</div>
 				</div>
 				<!-- The table listing the files available for upload/download -->
 				<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">					
@@ -527,19 +524,14 @@ JS;
 			{% for (var i=0, file; file=o.files[i]; i++) { %}
 				<div class="template-upload fade table-row">
 					<div class="table-cell">
-						<span class="preview"></span>
-					</div>
-					<div class="table-cell">
 						<div class="name">{%=file.name%}</div>
-					</div>
-					<div class="table-cell">
-						<div class="error" style="display:none"></div>
+						<div class="error"></div>
 					</div>
 					<div class="table-cell">
 						<div class="size">Processing...</div>
 					</div>
 					<div class="table-cell">
-						<div class="progress"></div>
+						<div class="progress" style="width: 100px;"></div>
 					</div>
 					<div class="table-cell">
 						{% if (!i && !o.options.autoUpload) { %}
@@ -556,21 +548,18 @@ JS;
 			<script id="template-download" type="text/x-tmpl">
 			{% for (var i=0, file; file=o.files[i]; i++) { %}
 				<div class="template-download fade table-row">
-					<div class="table-cell">
+					<div class="table-cell">						
 						<div class="name">
-							<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+							<!--<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>-->
+							{%=file.name%}							
 						</div>
+						{% if (file.error) { %} <div class="error">Error: {%=file.error%} </div>{% } %}
 					</div>
-					{% if (file.error) { %}
-						<div class="table-cell"><div class="error">Error: {%=file.error%}</div></div>
-					{% } %}
 					<div class="table-cell">
 						<div class="size">{%=o.formatFileSize(file.size)%}</div>
 					</div>
 					<div class="table-cell">
 						<button class="delete pure-button" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>Delete</button>
-					</div>
-					<div class="table-cell">
 						<input type="checkbox" name="delete" value="1" class="toggle">
 					</div>
 				</div>
@@ -588,7 +577,8 @@ HTML;
 				// Uncomment the following to send cross-domain cookies:
 				//xhrFields: {withCredentials: true},
 				url: '{$action}',
-				limitConcurrentUploads: 4
+				limitConcurrentUploads: 4,
+				//acceptFileTypes: /(\.|\/)(png|pdf)$/i
 			});
 				
 			// Enable iframe cross-domain access via redirect option:
