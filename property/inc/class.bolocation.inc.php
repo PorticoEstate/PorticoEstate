@@ -653,6 +653,8 @@
 						$lookup_functions[$j]['link'] .= ",location_code:'{$filter_location}',block_query:'{$block_query}'";
 					}
 
+					$lookup_functions[$j]['link'] .= ",clear_state:1";
+
 					$_lookup_functions .= <<<JS
 
 						function {$lookup_functions[$j]['name']}
