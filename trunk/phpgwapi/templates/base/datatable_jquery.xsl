@@ -957,6 +957,12 @@
 			var table_url = JqueryPortico.parseURL(window.location.href);
 			var menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
 
+			//clear state
+			var clear_state = false;
+			if(typeof(table_url.searchObject.clear_state) != 'undefined' && table_url.searchObject.clear_state == 1)
+			{
+				clear_state = true;
+			}
 			//uiocation
 			if(typeof(table_url.searchObject.type_id) != 'undefined')
 			{
@@ -1038,7 +1044,10 @@
 						$.each(params, function(index, value) {
 							if ( index == oControl.attr('name') )
 							{
-								oControl.val( value );
+								if (clear_state !== true)
+								{
+									oControl.val( value );
+								}
 							}
 						});
 					});
