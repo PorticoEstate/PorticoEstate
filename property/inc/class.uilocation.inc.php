@@ -584,11 +584,11 @@
 					$_accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1);
 					break;
 				case 'groups':
-					$_accounts = $GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_lastname', '', -1);
+					$_accounts = $GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_firstname', '', -1);
 					break;
 				default:
 					$_accounts = array_merge(
-						$GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_lastname', '', -1),
+						$GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_firstname', '', -1),
 						$GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1)
 					);
 					break;
