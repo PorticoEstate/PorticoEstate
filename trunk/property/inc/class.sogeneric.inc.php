@@ -2361,18 +2361,12 @@
 								'name' => 'remark',
 								'descr' => lang('remark'),
 								'type' => 'text'
-							),/*
+							),
 							array(
 								'name' => 'location_level',
 								'descr' => lang('location level'),
-								'type' => 'select',
-								'values_def' => array
-									(
-									'valueset' => false,
-									'method' => 'preferences.boadmin_acl.get_locations',
-									'method_input' => array('acl_app' => 'property', 'selected' => '##location##')
-								)
-							),*/
+								'type' => 'varchar'
+							),
 							array
 								(
 								'name' => 'responsibility_id',
