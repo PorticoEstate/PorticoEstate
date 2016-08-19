@@ -1296,6 +1296,8 @@ function createTableSchedule(d, u, c, r, cl, dt)
 	});
 	tableHead.appendChild(tableHeadTr);
 	xtable.appendChild(tableHead);
+    
+    var key = c[0].key;
 
 	var tableBody = document.createElement('tbody');
 	var tableBodyTr = document.createElement('tr');
@@ -1349,7 +1351,7 @@ function createTableSchedule(d, u, c, r, cl, dt)
 				{
 					var k = vc.key;
 					var colorCell = "";
-					var tableBodyTrTdType = (k == "time") ? "th" : "td";
+					var tableBodyTrTdType = (k == key) ? "th" : "td";
 
 					var tableBodyTrTd = document.createElement(tableBodyTrTdType);
 
@@ -1450,7 +1452,7 @@ function createTableSchedule(d, u, c, r, cl, dt)
 					{
 						tableBodyTrTdText = (vd[k]) ? vd[k] : "";
 					}
-					if (k == "time")
+					if (k == key)
 					{
 						borderTop = (vd[k]) ? "2" : "1";
 					}
