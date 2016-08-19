@@ -55,6 +55,7 @@
 			'get_part_of_town' => true,
 			'get_history_data' => true,
 			'get_documents' => true,
+			'get_accounts'	=> true,
 			'download' => true,
 			'index' => true,
 			'view' => true,
@@ -522,31 +523,92 @@
 				'list' => $values_combo_box[4]
 			);
 
-//				$values_combo_box[5]  = $this->bocommon->get_user_list_right2('filter',PHPGW_ACL_READ,$this->user_id,".location.{$type_id}");
-			$_users = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1);
-			$values_combo_box[5] = array();
-			foreach ($_users as $_user)
-			{
-				$values_combo_box[5][] = array
-					(
-					'id' => $_user->id,
-					'name' => $_user->__toString(),
-				);
-			}
-			unset($_users);
-			unset($_user);
 
-			array_unshift($values_combo_box[5], array('id' => (-1 * $GLOBALS['phpgw_info']['user']['account_id']),
-				'name' => lang('mine roles')));
-			array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('no user')));
+/**
+ *
+ *
+ */
+			$link = self::link(array(
+					'menuaction' => 'property.uilocation.get_accounts',
+					'phpgw_return_as' => 'json'
+			));
+
+			$code = '
+				var link = "' . $link . '";
+				var data = {"account_type": $(this).val()};
+				execute_ajax(link,
+					function(result){
+						var $el = $("#user_id");
+						$el.empty();
+						$.each(result, function(key, value) {
+						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+						});
+					}, data, "GET", "json"
+				);
+				';
+
+			$account_types = array();
+			$account_types[] = array('id' => '', 'name' => lang('Select'));
+			$account_types[] = array('id' => 'accounts', 'name' => lang('user'));
+			$account_types[] = array('id' => 'groups', 'name' => lang('group'));
+	
+			$combos[] = array('type' => 'filter',
+				'name' => 'account_type',
+				'extra' => $code,
+				'text' => lang('account type'),
+				'list' => $account_types
+			);
+
+			$_users = $this->get_accounts();
+
 			$combos[] = array('type' => 'filter',
 				'name' => 'user_id',
 				'extra' => '',
 				'text' => lang('user'),
-				'list' => $values_combo_box[5]
+				'list' => $_users
 			);
 
 			return $combos;
+		}
+
+
+		public function get_accounts( $account_type = '')
+		{
+			if(!$account_type)
+			{
+				$account_type = phpgw::get_var('account_type');
+			}
+			switch ($account_type)
+			{
+				case 'accounts':
+					$_accounts = $GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1);
+					break;
+				case 'groups':
+					$_accounts = $GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_lastname', '', -1);
+					break;
+				default:
+					$_accounts = array_merge(
+						$GLOBALS['phpgw']->accounts->get_list('groups', -1, 'ASC', 'account_lastname', '', -1),
+						$GLOBALS['phpgw']->accounts->get_list('accounts', -1, 'ASC', 'account_lastname', '', -1)
+					);
+					break;
+			}
+			$values = array();
+			foreach ($_accounts as $_account)
+			{
+				$values[] = array
+					(
+					'id' => $_account->id,
+					'name' => $_account->__toString(),
+				);
+			}
+			if($account_type == 'accounts')
+			{
+				array_unshift($values, array('id' => (-1 * $GLOBALS['phpgw_info']['user']['account_id']),
+						'name' => lang('mine roles')));
+			}
+			array_unshift($values, array('id' => '', 'name' => lang('Select')));
+			return $values;
 		}
 
 		private function _get_categories_summary()
