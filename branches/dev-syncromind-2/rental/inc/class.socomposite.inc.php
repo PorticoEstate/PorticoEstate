@@ -520,6 +520,7 @@
         
         public function get_schedule () {
             $date = new DateTime(phpgw::get_var('date'));
+            $composite_id = (int)phpgw::get_var('id');
             
             if ($date->format('w') != 1) {
                 $date->modify('last monday');
@@ -528,12 +529,49 @@
             $prev_date = clone $date;
             $prev_date->modify('-1 week');
             $next_date = clone $date;
-            $next_date->modify('+1 week');            
+            $next_date->modify('+1 week');
             
-            $composite['date'] = $date->format('Y-m-d');
-            $composite['prev_date'] = $prev_date->format('Y-m-d');
-            $composite['next_date'] = $next_date->format('Y-m-d');
+            $composite1['date'] = $date->format('Y-m-d');
+            $composite1['prev_date'] = $prev_date->format('Y-m-d');
+            $composite1['next_date'] = $next_date->format('Y-m-d');
             
-            return $composite;
+            $days = array();
+            $date_to_array = clone $date;
+            for ($i = 0; $i < 7; $i++)
+            {
+                $days[] = clone $date_to_array->modify("+1 day");
+            }
+            /*----------------------------------------------------------------*/
+            
+            $filters = array(
+                rental_socomposite::get_id_field_name() => $composite_id,
+                'availability_date_from' => '2010-1-1',
+                'availability_date_to' => '2017-12-31',
+                'has_contract' => 'both'
+            );
+
+            $composite = null;
+            $composite_obj = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', $filters);
+            
+            if (count($composite_obj) > 0)
+			{
+				$keys = array_keys($composite_obj);
+				$composite = $composite_obj[$keys[0]];
+			}
+
+            $contracts = $composite->get_contracts();
+            
+            $data_contracts = array();
+
+            foreach ($contracts as $contract) {
+                $contract = $contract->serialize();
+                $contract_date = date_format(date_create_from_format('d/m/Y', $contract['date_start']), 'Y-m-d');
+                $data_contracts[date_format($date, 'D')] = $contract_date;
+            }
+            
+            var_dump($data_contracts);
+            exit();
+            
+            return $composite1;
         }
 	}

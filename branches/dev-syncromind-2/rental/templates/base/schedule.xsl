@@ -47,12 +47,8 @@
 
             var img_src = '<xsl:value-of select="picker_img"/>';
 
-            <![CDATA[
-            schedule.datasourceUrl = '/dev-syncromind-2/index.php?menuaction=booking.uibooking.resource_schedule&resource_id=1&phpgw_return_as=json&click_history=69fd120cc81d86e6d90b214b5ab89033';
-            schedule.newApplicationUrl = '/dev-syncromind-2/index.php?menuaction=booking.uiapplication.add&building_id=3&building_name=Vitalitetsenteret&activity_id=1&resource=1&click_history=69fd120cc81d86e6d90b214b5ab89033';
-            ]]>
-            var next_date = '<xsl:value-of select="next_date" />';
-            var prev_date = '<xsl:value-of select="prev_date" />';
+            schedule.datasourceUrl = '<xsl:value-of select="datasource_url"/>';
+            var initialRequest = getUrlData("date") || '<xsl:value-of select="date"/>';
 
             schedule.includeResource = false;
             schedule.colFormatter = '';
@@ -60,8 +56,6 @@
                 schedule.date = parseISO8601(state);
                 schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             };
-
-            var initialRequest = getUrlData("date") || '<xsl:value-of select="date"/>';
 
             var state = getUrlData("date") || initialRequest;
             if (state){
