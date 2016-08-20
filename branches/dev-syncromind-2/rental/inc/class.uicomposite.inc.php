@@ -1115,14 +1115,14 @@ JS;
 
             $schedule['datasource_url'] = self::link(array(
                'menuaction' => 'rental.uicomposite.get_schedule',
-                'composite_id' => $composite_id,
+                'id' => $composite_id,
                 'phpgw_return_as' => 'json'
             ));            
             $schedule['date'] = $date;
             $schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
 //            self::add_javascript('booking','booking','common.js');
-            self::add_javascript('booking','booking','schedule.js');
+            self::add_javascript('rental','rental','schedule.js');
 
             phpgwapi_jquery::load_widget("datepicker");
 
@@ -1131,9 +1131,17 @@ JS;
         
         public function get_schedule () {
             $composite_id = (int)phpgw::get_var('id');
-            $date = phpgw::get_var('date');
-            $schedule = rental_socomposite::get_instance()->get_schedule();
+            $date = new DateTime(phpgw::get_var('date'));
+
+            $schedule = rental_socomposite::get_instance()->get_schedule($composite_id, $date);
             
-            return $date;
+            $data = array(
+                'ResultSet' => array(
+                    "totalResultsAvailable" => $schedule['total_records'],
+					"Result" => $schedule['results']
+                )
+            );
+
+            return $data;
         }
 	}

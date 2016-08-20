@@ -518,9 +518,10 @@
 			return $uicols;
 		}
         
-        public function get_schedule () {
-            $date = new DateTime(phpgw::get_var('date'));
-            $composite_id = (int)phpgw::get_var('id');
+        public function get_schedule ($composite_id, $date) {
+            //$date = new DateTime('2016-8-24');
+            //$date = new DateTime(phpgw::get_var('date'));
+            //$composite_id = (int)phpgw::get_var('id');
             
             if ($date->format('w') != 1) {
                 $date->modify('last monday');
@@ -539,7 +540,8 @@
             $date_to_array = clone $date;
             for ($i = 0; $i < 7; $i++)
             {
-                $days[] = clone $date_to_array->modify("+1 day");
+                $days[] = clone $date_to_array;
+                $date_to_array->modify("+1 day");
             }
             /*----------------------------------------------------------------*/
             
@@ -563,15 +565,47 @@
             
             $data_contracts = array();
 
-            foreach ($contracts as $contract) {
+            //foreach ($contracts as $contract) {
+                //$contract = $contract->serialize();
+                //$contract_date = new DateTime($contract['date_start']);
+                //$contract_date = date("d-m-Y", strtotime($contract['date_start']));
+                //$contract_date = date_format(date_create_from_format('d/m/Y', $contract['date_start']), 'Y-m-d');
+                //$data_contracts[date_format($date, 'D')] = $contract_date;
+            //}
+            //var_dump($contracts);exit();
+            foreach ($contracts as $contract)
+            {
                 $contract = $contract->serialize();
-                $contract_date = date_format(date_create_from_format('d/m/Y', $contract['date_start']), 'Y-m-d');
-                $data_contracts[date_format($date, 'D')] = $contract_date;
+                
+                //$contract_date_start = new DateTime(date_format(date_create_from_format('d/m/Y', $contract['date_start']), 'Y-m-d'));
+                //$contract_date_end = new DateTime(date_format(date_create_from_format('d/m/Y', $contract['date_end']), 'Y-m-d'));
+                
+                $contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+                $contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
+                
+                $data_contract = array();
+                
+                foreach ($days as $day)
+                {
+                    if ($day >= $contract_date_start && $day <= $contract_date_end)
+                    {
+                        $data_contract[date_format($day, 'D')] = $contract;
+                    }
+                }
+                if ($data_contract) {
+                    $data_contracts[] = $data_contract;
+                }
+                
             }
             
-            var_dump($data_contracts);
-            exit();
+            if (!(count($data_contracts) > 0))
+            {
+                $data_contracts[] = '';
+            }
             
-            return $composite1;
+            return array(
+                'total_records' => count($data_contracts),
+                'results' => $data_contracts
+                );
         }
 	}
