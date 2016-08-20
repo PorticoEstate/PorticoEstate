@@ -238,7 +238,95 @@
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 		}
 		
+		private function valid_row_component($row)
+		{
+			if ($row[0] == '' || $row[2] == '')
+			{
+				return false;
+			}
+			
+			if ($row[0] == 'Systemgruppe' && $row[1] == 'TFM nr' && $row[2] == 'Navn')
+			{
+				return false;
+			}
+			
+			return true;
+		}
 		
+		public function import_components()
+		{
+			$get_identificator = false;
+
+			$location_code = phpgw::get_var('location_code');
+			
+			$entity_categories_in_xml = array();
+
+			$import_components = new import_components();
+			$entity_categories  = $import_components->get_entity_categories();
+
+			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
+
+			foreach ($exceldata as $row) 
+			{
+				if (!$this->valid_row_component($row))
+				{
+					continue;
+				}
+
+				if (array_key_exists((string)$row[0], $entity_categories))
+				{						
+					$cat_id = $entity_categories[$row[0]]['id'];
+					$entity_id = $entity_categories[$row[0]]['entity_id'];						
+				} 
+				else {
+					$buildingpart_out_table[$row[0]] = $row[0].' - '.$row[2];
+					$cat_id = '';
+					$entity_id = '';
+				}
+
+				if (!empty($row[1]))
+				{
+					$entity_categories_in_xml[$row[0]]['cat_id'] = $cat_id;
+					$entity_categories_in_xml[$row[0]]['entity_id'] = $entity_id;
+					$entity_categories_in_xml[$row[0]]['components'][] = array(
+						array('name' => 'benevnelse', 'value' => trim($row[1])),
+						array('name' => 'beskrivelse', 'value' => trim($row[3]))
+					);							
+				}				
+			}
+	
+			if (count($buildingpart_out_table))
+			{
+				ksort($buildingpart_out_table);
+				$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
+				
+				if (count($buildingpart_processed['not_added']))
+				{
+					foreach($buildingpart_processed['not_added'] as $k => $v)
+					{
+						$message['error'][] = array('msg' => "parent {$k} not added");	
+					}
+					return $this->jquery_results($message);
+				}
+				
+				if (count($buildingpart_processed['added']))
+				{
+					foreach($buildingpart_processed['added'] as $k => $v)
+					{
+						$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
+						$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
+					}
+				} 
+			}
+			
+
+
+			$message = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
+			
+			return $this->jquery_results($message);
+		}
+		
+/*
 		public function import_components()
 		{
 			$get_identificator = false;
@@ -321,7 +409,8 @@
 			
 			return $this->jquery_results($message);
 		}
-		
+*/
+
 		/**
 		 * Prepare UI
 		 * @return void
