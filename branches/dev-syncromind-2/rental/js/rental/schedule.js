@@ -50,7 +50,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	}
     
     var colDefs = [
-        {key: '', label: ''}
+//        {key: '', label: ''}
     ]
 
     var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

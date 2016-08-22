@@ -45,7 +45,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	}
 
 	var colDefs = [
-		{key: 'time', label: date.getFullYear() + '<br/>' + lang['LBL_TIME']}];
+		{key: 'time', label: date.getFullYear() + '<br/>' + lang['LBL_TIME'], type: 'th'}];
 	if (includeResource)
 	{
 		colDefs.push({key: 'resource', label: lang['LBL_RESOURCE'], formatter: 'scheduleResourceColumn'});

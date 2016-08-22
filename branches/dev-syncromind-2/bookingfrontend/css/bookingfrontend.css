@@ -407,7 +407,7 @@ dl.proplist dd.address, dl.proplist-col dd.address {
     border-top: 1px solid #ccc;
     white-space: nowrap;
 }
-#schedule_container tr td:first-child {
+#schedule_container tbody tr th:first-child {
     background: #eee none repeat scroll 0 0;
 }
 #schedule_container tr.time td {
