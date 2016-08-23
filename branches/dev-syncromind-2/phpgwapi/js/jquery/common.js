@@ -1605,6 +1605,7 @@ function frontendScheduleDateColumn (data, col, date)
         {
             name = formatScheduleShorten('Privat arr.', 9);
         }
+
         text = name;
         classes = "cellInfo " + colorCell + " " + type ;
         trFunction.push(
