@@ -294,7 +294,7 @@
 					);							
 				}				
 			}
-	
+	//print_r($buildingpart_out_table); die;
 			if (count($buildingpart_out_table))
 			{
 				ksort($buildingpart_out_table);
