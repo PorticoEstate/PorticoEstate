@@ -24,19 +24,24 @@
 			$this->bocommon = CreateObject('property.bocommon');
 			
 			$this->array_entity_categories = array(
-				'0' => array('name' => '0 - Generelt', 'template_cat_id' => '309'),
-				'01' => array('name' => '01 - Informasjon og hjelp', 'template_cat_id' => '310'),
-				'02' => array('name' => '02 - Krav til dokumentasjon', 'template_cat_id' => '310'),
+				'0' => array('name' => '0 - Generelt'),
+				'01' => array('name' => '01 - Informasjon og hjelp'),
+				'02' => array('name' => '02 - Krav til dokumentasjon'),
 				
-				'1' => array('name' => '1 - Brannsikring', 'template_cat_id' => '309'),
-				'11' => array('name' => '11 - Branntekniske krav', 'template_cat_id' => '310'),
-				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer', 'template_cat_id' => '310'),
-				'13' => array('name' => '13 - Brannteknisk dokumentasjon', 'template_cat_id' => '310')
+				'1' => array('name' => '1 - Brannsikring'),
+				'11' => array('name' => '11 - Branntekniske krav'),
+				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer'),
+				'13' => array('name' => '13 - Brannteknisk dokumentasjon')
 			);
-
+			
+			$this->template_cat_id = array(
+				'1' =>  '309',
+				'2' => '310',
+				'3' => '1',
+				'4' =>  '1' /*  Id of "211 Klargjøring av tomt" */
+			);
 		}
 		
-		/*
 		public function set_parent_category($buildingpart)
 		{
 			for($x = 1;  $x <= (strlen($buildingpart)-1); $x++) 
@@ -59,7 +64,7 @@
 				{
 					$parentID = NULL;
 				}
-				$parentID = $this->save_category($category['name'], $parentID, $category['template_cat_id']);
+				$parentID = $this->save_category($category['name'], $parentID, $this->template_cat_id[strlen($item)]);
 				if (empty($parentID))
 				{
 					break;
@@ -68,16 +73,15 @@
 			
 			return $parentID;
 		}
-		*/
-		 
-		public function get_parent_category($buildingpart)
+
+		/*public function get_parent_category($buildingpart)
 		{
-			$$buildingpart = substr($buildingpart, 0, strlen($buildingpart)-1);
+			$buildingpart = substr($buildingpart, 0, strlen($buildingpart)-1);
 			
 			$values = $this->get_entity_categories(array('buildingpart' => $buildingpart));
 
 			return $values[$buildingpart]['id'];
-		}
+		}*/
 		
 		
 		public function get_entity_categories ($data = array())
@@ -180,42 +184,35 @@
 		public function add_entity_categories ($buildingpart_out_table)
 		{
 			$buildingparts = array();
-				
-			$template_cat_id = array(
-				'1' =>  '309',
-				'2' => '310',
-				'3' => '1',
-				'4' =>  '1' /*  Id of "211 Klargjøring av tomt" */
-			);
 			
 			foreach ($buildingpart_out_table as $k => $name)
 			{	
-					if (strlen($k) == 1) 
+				if (strlen($k) == 1) 
+				{
+					$parent_id = '';
+				} 
+				else 
+				{
+					$parent_id = $this->set_parent_category($k);
+					if (empty($parent_id))
 					{
-						$parent_id = '';
-					} 
-					else 
-					{
-						$parent_id = $this->get_parent_category($k);
-						if (empty($parent_id))
-						{
-							$buildingparts['not_added'][$k] = array('name' => $name);
-							break; 
-						}
-					}
-				
-					$cat_id = $template_cat_id[strlen($k)];
-					$entity_id = '3';
-					
-					$category_id = $this->save_category($name, $parent_id, $cat_id);
-
-					if ($category_id)
-					{
-						$buildingparts['added'][$k] = array('id' => $category_id, 'entity_id' => $entity_id, 'name' => $name);
-					}
-					else {
 						$buildingparts['not_added'][$k] = array('name' => $name);
+						break; 
 					}
+				}
+
+				$cat_id = $this->template_cat_id[strlen($k)];
+				$entity_id = '3';
+
+				$category_id = $this->save_category($name, $parent_id, $cat_id);
+
+				if ($category_id)
+				{
+					$buildingparts['added'][$k] = array('id' => $category_id, 'entity_id' => $entity_id, 'name' => $name);
+				}
+				else {
+					$buildingparts['not_added'][$k] = array('name' => $name);
+				}
 			}
 			
 			return $buildingparts;
