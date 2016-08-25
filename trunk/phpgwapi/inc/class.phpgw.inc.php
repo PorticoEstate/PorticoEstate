@@ -27,6 +27,8 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	* Global ugliness class
 	*
@@ -571,6 +573,9 @@
 					
 					case 'html':
 						$value = self::clean_html($value);
+						break;
+					case 'date':
+						$value = phpgwapi_datetime::date_to_timestamp($value);
 						break;
 				}
 				return $value;
