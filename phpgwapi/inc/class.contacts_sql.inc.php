@@ -3421,7 +3421,9 @@
 
 		function get_account_id($contact_id)
 		{
-			$account_id = 0;
+
+			return (int) $this->is_user($contact_id);
+/*
 			$accounts = $GLOBALS['phpgw']->accounts->get_list();
 			foreach($accounts as $account_data)
 			{
@@ -3433,6 +3435,7 @@
 			}
 
 			return $account_id;
+*/
 		}
 
 
