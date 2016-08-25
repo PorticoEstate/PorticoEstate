@@ -430,7 +430,71 @@
 		function read_single($id, $values = array() )
 		{
 			$id = (int) $id;
-			$sql = "SELECT * FROM phpgw_helpdesk_tickets WHERE id = {$id}";
+
+
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
+			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
+
+			$acl_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
+			$acl_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
+
+			$categories = $GLOBALS['phpgw']->locations->get_subs('helpdesk', '.ticket.category');
+
+			$grant_category = array();
+			foreach ($categories as $location)
+			{
+				if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, 'helpdesk'))
+				{
+					$category = explode('.',$location);
+					$grant_category[] = $category[3];
+				}
+			}
+
+			$grant_category[] = -1;//If no one found - not breaking the query
+
+
+			$GLOBALS['phpgw']->config->read();
+
+			$filtermethod = '';
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+			{
+				$filtermethod = " AND phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+			}
+
+
+			if (is_array($this->grants))
+			{
+				$public_user_list = array();
+				if (is_array($this->grants['accounts']) && $this->grants['accounts'])
+				{
+					foreach($this->grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$filtermethod .= " AND (phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+				}
+
+				$public_group_list = array();
+				if (is_array($this->grants['groups']) && $this->grants['groups'])
+				{
+					foreach($this->grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
+				}
+			}
+
+			$sql = "SELECT * FROM phpgw_helpdesk_tickets {$acl_join} WHERE id = {$id} {$filtermethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
