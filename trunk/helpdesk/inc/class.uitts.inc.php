@@ -989,9 +989,17 @@
 
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
-				if (!$values['subject'] && isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+				if (!$values['subject'])
 				{
-					$receipt['error'][] = array('msg' => lang('Please enter a title !'));
+					if(isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+					{
+						$receipt['error'][] = array('msg' => lang('Please enter a title !'));
+					}
+					else
+					{
+						$_cat = $this->cats->return_single($values['cat_id']);
+						$values['subject'] = $_cat[0]['name'];
+					}
 				}
 
 				if (!$values['cat_id'])
@@ -1095,8 +1103,9 @@
 							$bofiles->vfs->override_acl = 0;
 						}
 					}
-
-					if($_POST['pasted_image'])
+					if($_POST['pasted_image'] &&
+						$_POST['pasted_image'] !='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAPklEQVR4nO3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgKcBnKQAAaZ1lY4AAAAASUVORK5CYII='
+						)
 					{
 						$img = $_POST['pasted_image'];
 						$img = str_replace('data:image/png;base64,', '', $img);
