@@ -1502,6 +1502,10 @@
 
 			$ticket = $this->bo->read_single($id, $values);
 
+			if(!$ticket)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+			}
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
 				foreach ($ticket['attributes'] as & $attribute)
