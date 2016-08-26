@@ -75,88 +75,119 @@
 			return true;
 		}
 		
+		private function getexcelcolumnname( $index )
+		{
+			//Get the quotient : if the index superior to base 26 max ?
+			$quotient = $index / 26;
+			if ($quotient >= 1)
+			{
+				//If yes, get top level column + the current column code
+				return $this->getexcelcolumnname($quotient - 1) . chr(($index % 26) + 65);
+			}
+			else
+			{
+				//If no just return the current column code
+				return chr(65 + $index);
+			}
+		}
+		
 		public function import_component_files()
 		{
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
 			$message = array();
 			
+			phpgw::import_class('phpgwapi.phpexcel');
+			
 			if (empty($id))
 			{
 				return $message['error'][] = array('msg' => 'location code is empty');
 			}
 				
-			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
-			$relations = array();
-			
-			foreach ($exceldata as $row) 
-			{
-				if (!$this->valid_row($row))
-				{
-					continue;
-				}
-				
-				$relations[$row[0]][] = $row[(count($row)-1)];
-			}
-			
-			$this->db->transaction_begin();
-			
-			try
-			{
-				$this->db->Exception_On_Error = true;
-				
-				foreach ($relations as $k => $files) 
-				{
-					if (empty($k))
-					{
-						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
-					}
-					else {
-						$component = $this->get_component[$k];
-						if( empty($component['id']) || empty($component['location_id']))
-						{
-							throw new Exception("component {$k} does not exist");
-						}
-					}
-					
-					foreach($files as $path_file)
-					{
-						$parts = explode("\\", $path_file);
-						$file = $parts[count($parts)-1];
-						if (!is_file($this->tmp_upload_dir.$file))
-						{
-							throw new Exception("the file {$file} does not exist, component: {$k}");
-						}	
-						
-						$file_id = $this->save_file($file);
-						if (!$file_id)
-						{						
-							throw new Exception("failed to save file {$file}, component: {$k}");
-						} 
-			
-						$result = $this->save_file_relation($component['id'], $component['location_id'], $file_id);
-						if (!$result)
-						{						
-							throw new Exception("failed to save relation, file: {$file}, component: {$k}");
-						}
-					}
-				}
-				$this->db->Exception_On_Error = false;
-			}
-			catch (Exception $e)
-			{
-				if ($e)
-				{
-					$this->db->transaction_abort();				
-					$message['error'][] = array('msg' => $e->getMessage());
-					return $this->jquery_results($message);
-				}
-			}
+			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
 
-			$this->db->transaction_commit();
-			$message['message'][] = array('msg' => 'all files saved successfully');
+		
+			if (isset($_FILES['file']['tmp_name']))
+			{
+					
+				$file = $_FILES['file']['tmp_name'];
+				$cached_file = "{$file}_temporary_import_file";
+				// save a copy to survive multiple steps
+				file_put_contents($cached_file, file_get_contents($file));
+				phpgwapi_cache::session_set('property', 'components_import_file', $cached_file);
+			}
 			
-			return $this->jquery_results($message);
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+			$AllSheets = $objPHPExcel->getSheetNames();
+
+			$sheets = array();
+			if ($AllSheets)
+			{
+				foreach ($AllSheets as $key => $sheet)
+					$sheets[] = array
+						(
+						'id' => ($key + 1),
+						'name' => $sheet,
+						'selected' => $sheet_id == ($key + 1)
+					);
+			}					
+			
+			if ($sheet_id) 
+			{
+				$cached_file = phpgwapi_cache::session_get('property', 'components_import_file');
+				
+				$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+				$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
+				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+				$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);		
+	
+				$html_table = '<table class="pure-table pure-table-bordered">';
+				
+				$cols = array();
+				for ($j = 0; $j < $highestColumnIndex; $j++)
+				{
+					$cols[] = $this->getexcelcolumnname($j);
+				}
+
+				$html_table .= "<thead><tr><th align = 'center'>" . lang('select') . "</th><th align = 'center'>" . lang('row') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr></thead>';
+				foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
+				{
+					if ($i > 20)
+					{
+						break;
+					}
+					$i++;
+
+					$row_key = $i;
+					$_checked = '';
+					if ($start_line == $row_key)
+					{
+						$_checked = 'checked="checked"';
+					}
+
+					$_radio = "<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
+
+					$cellIterator = $row->getCellIterator();
+					$cellIterator->setIterateOnlyExistingCells(false);
+
+					$row_values = array();
+					foreach ($cellIterator as $cell)
+					{
+						if (!is_null($cell))
+						{
+							$row_values[] = $cell->getCalculatedValue();
+						}
+					}
+					$html_table .= "<tr><td>{$_radio}</td><td>{$row_key}</td><td>" . implode('</td><td>', $row_values) . '</td></tr>';
+				}
+				$html_table .= '</table>';
+				
+				return $html_table;
+			}
+			
+			$result_data = array('results' => $sheets);
+			return $this->jquery_results($result_data);
 		}
 		
 		
