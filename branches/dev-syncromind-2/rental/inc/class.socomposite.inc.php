@@ -517,94 +517,80 @@
 
 			return $uicols;
 		}
-        
-        public function get_schedule ($composite_id, $date)
-        {
-            //$date = new DateTime('2016-8-24');
-            //$date = new DateTime(phpgw::get_var('date'));
-            //$composite_id = (int)phpgw::get_var('id');
 
-            if ($date->format('w') != 1)
-            {
-                $date->modify('last monday');
-            }
+		public function get_schedule ($composite_id, $date)
+		{
+			//$date = new DateTime('2016-8-24');
+			//$date = new DateTime(phpgw::get_var('date'));
+			//$composite_id = (int)phpgw::get_var('id');
 
-            $prev_date = clone $date;
-            $prev_date->modify('-1 week');
-            $next_date = clone $date;
-            $next_date->modify('+1 week');
-
-            $composite1['date'] = $date->format('Y-m-d');
-            $composite1['prev_date'] = $prev_date->format('Y-m-d');
-            $composite1['next_date'] = $next_date->format('Y-m-d');
-
-            $days = array();
-            $date_to_array = clone $date;
-            for ($i = 0; $i < 7; $i++)
-            {
-                $days[] = clone $date_to_array;
-                $date_to_array->modify("+1 day");
-            }
-            /*----------------------------------------------------------------*/
-
-            $filters = array(
-                rental_socomposite::get_id_field_name() => $composite_id,
-                'availability_date_from' => '2010-1-1',
-                'availability_date_to' => '2017-12-31',
-                'has_contract' => 'both'
-            );
-
-            $composite = null;
-            $composite_obj = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', $filters);
-
-            if (count($composite_obj) > 0)
+			if ($date->format('w') != 1)
 			{
-				$keys = array_keys($composite_obj);
-				$composite = $composite_obj[$keys[0]];
+				$date->modify('last monday');
 			}
 
-            $contracts = $composite->get_contracts();
+			$prev_date = clone $date;
+			$prev_date->modify('-1 week');
+			$next_date = clone $date;
+			$next_date->modify('+1 week');
 
-            $data_contracts = array();
+			$composite1['date'] = $date->format('Y-m-d');
+			$composite1['prev_date'] = $prev_date->format('Y-m-d');
+			$composite1['next_date'] = $next_date->format('Y-m-d');
 
-            foreach ($contracts as $contract)
-            {
-                $contract = $contract->serialize();
+			$days = array();
+			$date_to_array = clone $date;
+			for ($i = 0; $i < 7; $i++)
+			{
+				$days[] = clone $date_to_array;
+				$date_to_array->modify("+1 day");
+			}
+			/*----------------------------------------------------------------*/
 
-                $contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
-                $contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
+			$filters = array(
+				rental_socomposite::get_id_field_name() => $composite_id
+			);
+			
+			$contracts = rental_socontract::get_instance()->get(0, 30, '', false, '', 'all', $filters);
 
-                $data_contract = array();
+			$data_contracts = array();
+			foreach ($contracts as $contract)
+			{
+				$contract = $contract->serialize();
 
-                foreach ($days as $day)
-                {
-                    if ($day >= $contract_date_start && $day <= $contract_date_end)
-                    {
-                        $data_contract[date_format($day, 'D')] = $contract;
-                    }
-                }
+				$contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+				$contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
 
-                $link = $GLOBALS['phpgw']->link('/index.php', array(
-                    'menuaction' => 'rental.uicontract.view',
-					'id' => $contract['id']
-                ));
+				$data_contract = array();
 
-                $data_contract['contract_link'] = $link;
+				foreach ($days as $day)
+				{
+					if ($day >= $contract_date_start && $day <= $contract_date_end)
+					{
+						$data_contract[date_format($day, 'D')] = $contract;
+					}
+				}
 
-                if ($data_contract)
-                {
-                    $data_contracts[] = $data_contract;
-                }
-            }
-            
-            if (!(count($data_contracts) > 0))
-            {
-                $data_contracts[] = '';
-            }
+				if ($data_contract)
+				{
+					$link = $GLOBALS['phpgw']->link('/index.php', array(
+						'menuaction' => 'rental.uicontract.view',
+						'id' => $contract['id']
+					));
 
-            return array(
-                'total_records' => count($data_contracts),
-                'results' => $data_contracts
-            );
-        }
+					$data_contract['contract_link'] = $link;
+					$data_contracts[] = $data_contract;
+				}
+			}
+
+			if (!(count($data_contracts) > 0))
+			{
+				$data_contracts[] = '';
+			}
+
+			return array(
+				'total_records' => count($data_contracts),
+				'results' => $data_contracts
+			);
+		}
 	}
