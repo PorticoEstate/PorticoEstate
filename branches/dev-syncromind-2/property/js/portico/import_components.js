@@ -133,7 +133,43 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
-				JqueryPortico.show_message(1, result);
+				var combo = $('<select>');
+				combo.append($('<option></option>').val('').html('Select Sheet'));
+
+				$.each(result.data, function (k, v)
+				{
+					combo.append($('<option></option>').val(v.id).html(v.name));
+				});				
+				$('#sheet_id').empty();
+				$('#sheet_id').append(combo.html());
+				//JqueryPortico.show_message(1, result);
+			}
+		});
+	});
+	
+	$('#sheet_id').on('change', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		
+		var form = document.forms.namedItem("form_files");
+		var file_data = $('#file_excel').prop('files')[0];
+		var form_data = new FormData(form);
+		form_data.append('file', file_data);
+		form_data.append('sheet_id', $('#sheet_id').val());
+		form_data.append('location_code', $('#location_code').val());
+		form_data.append('location_item_id', $('#location_item_id').val());
+		
+		$.ajax({
+			url: requestUrl,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,
+			type: 'post',
+			success: function (result)
+			{
+				$('#content').html(result);
 			}
 		});
 	});
