@@ -116,6 +116,21 @@
 								</xsl:attribute>
 							</input>
 						</div>
+						<div class="pure-control-group">
+							<label for="vendor">
+								<xsl:value-of select="php:function('lang', 'Sheet')" />
+							</label>
+							<select id="sheet_id" name="sheet_id">
+								<option vale=''>Select Sheet</option>
+							</select>
+						</div>	
+						<div class="pure-control-group">
+							<label for="vendor">
+								<xsl:value-of select="php:function('lang', 'Choose start line')" />
+							</label>
+							<div id="content">
+							</div>
+						</div>	
 						<div id="message1" class="message"></div>
 					</form>
 				</div>
