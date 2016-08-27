@@ -95,6 +95,13 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
+			
+			$step = phpgw::get_var('step', 'int', 'REQUEST');
+			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
+			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
+			$columns = phpgw::get_var('columns');
+			$columns = $columns && is_array($columns) ? $columns : array();
+					
 			$message = array();
 			
 			phpgw::import_class('phpgwapi.phpexcel');
@@ -104,35 +111,34 @@
 				return $message['error'][] = array('msg' => 'location code is empty');
 			}
 				
-			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
-
-		
-			if (isset($_FILES['file']['tmp_name']))
+			if ($step == 1 && isset($_FILES['file']['tmp_name']))
 			{
-					
 				$file = $_FILES['file']['tmp_name'];
 				$cached_file = "{$file}_temporary_import_file";
-				// save a copy to survive multiple steps
+
 				file_put_contents($cached_file, file_get_contents($file));
 				phpgwapi_cache::session_set('property', 'components_import_file', $cached_file);
-			}
-			
-			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-			$AllSheets = $objPHPExcel->getSheetNames();
+				
+				$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+				$AllSheets = $objPHPExcel->getSheetNames();
 
-			$sheets = array();
-			if ($AllSheets)
-			{
-				foreach ($AllSheets as $key => $sheet)
-					$sheets[] = array
-						(
-						'id' => ($key + 1),
-						'name' => $sheet,
-						'selected' => $sheet_id == ($key + 1)
-					);
-			}					
-			
-			if ($sheet_id) 
+				$sheets = array();
+				if ($AllSheets)
+				{
+					foreach ($AllSheets as $key => $sheet)
+					{
+						$sheets[] = array
+							(
+							'id' => ($key + 1),
+							'name' => $sheet
+						);
+					}
+				}	
+				
+				return $sheets;
+			}
+						
+			if ($step > 1) 
 			{
 				$cached_file = phpgwapi_cache::session_get('property', 'components_import_file');
 				
@@ -140,10 +146,13 @@
 				$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
 				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 				$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);		
-	
+				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);					
+			}	
+			
+			if ($step == 2 && $sheet_id) 
+			{
 				$html_table = '<table class="pure-table pure-table-bordered">';
-				
+				$i = 0;
 				$cols = array();
 				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
@@ -157,16 +166,11 @@
 					{
 						break;
 					}
+					
 					$i++;
-
 					$row_key = $i;
-					$_checked = '';
-					if ($start_line == $row_key)
-					{
-						$_checked = 'checked="checked"';
-					}
 
-					$_radio = "<input id=\"start_line\" type =\"radio\" {$_checked} name=\"start_line\" value=\"{$row_key}\">";
+					$_radio = "<input type =\"radio\" name=\"start_line\" value=\"{$row_key}\" onchange=\"selectStartLine()\">";
 
 					$cellIterator = $row->getCellIterator();
 					$cellIterator->setIterateOnlyExistingCells(false);
@@ -186,8 +190,52 @@
 				return $html_table;
 			}
 			
-			$result_data = array('results' => $sheets);
-			return $this->jquery_results($result_data);
+			if ($step == 3 && $start_line) 
+			{
+				$html_table = '<table class="pure-table pure-table-bordered">';
+				
+				$_options = array
+					(
+					'_skip_import_' => 'Utelates fra import/implisitt',
+					'import_type' => 'import type',
+					'building_part' => 'bygningsdels kode',
+					'descr' => 'Tilstandbeskrivelse',
+					'title' => 'Tiltak/overskrift',
+					'condition_degree' => 'Tilstandsgrad',
+					'condition_type' => 'Konsekvenstype',
+					'consequence' => 'Konsekvensgrad',
+					'probability' => 'Sannsynlighet',
+					'due_year' => 'År (innen)',
+					'amount_investment' => 'Beløp investering',
+					'amount_operation' => 'Beløp drift',
+					'amount_potential_grants' => 'Potensial for offentlig støtte',
+				);
+
+				$custom = createObject('phpgwapi.custom_fields');
+				$attributes = $custom->find('property', '.project.request', 0, '', '', '', true, true);
+
+				foreach ($attributes as $attribute)
+				{
+					$_options["custom_attribute_{$attribute['id']}"] = $attribute['input_text'];
+				}
+
+				phpgw::import_class('phpgwapi.sbox');
+
+				for ($j = 0; $j < $highestColumnIndex; $j++)
+				{
+					$_column = $this->getexcelcolumnname($j);
+					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
+					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
+
+					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true);
+					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
+				}
+				
+				$html_table .= '</table>';
+				
+				return $html_table;
+			}
+			
 		}
 		
 		
@@ -453,7 +501,7 @@
 			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
 			$tabs['components'] = array('label' => lang('Components'), 'link' => '#components', 'disable' => 1);
 			$tabs['relations'] = array('label' => lang('Relations'), 'link' => '#relations', 'disable' => 1);
-			
+					
 			$active_tab = 'locations';
 
 			$type_filter = 	execMethod('property.soadmin_location.read', array());			
@@ -483,7 +531,7 @@
 			);	
 				
 			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
-			
+
 			$data = array
 			(
 				'datatable_def' => $datatable_def,
