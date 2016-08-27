@@ -100,7 +100,7 @@ $(document).ready(function ()
 		});
 	});
 	
-	$('#import_files').on('click', function ()
+	$('#import_files').click(function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -120,6 +120,7 @@ $(document).ready(function ()
 		var form = document.forms.namedItem("form_files");
 		var file_data = $('#file_excel').prop('files')[0];
 		var form_data = new FormData(form);
+		form_data.append('step', 1);
 		form_data.append('file', file_data);
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
@@ -133,15 +134,14 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
-				var combo = $('<select>');
-				combo.append($('<option></option>').val('').html('Select Sheet'));
-
-				$.each(result.data, function (k, v)
+				var $el = $("#sheet_id");
+				$el.empty();
+				$el.append($("<option></option>").attr("value", '').text('Select Sheet'));
+						
+				$.each(result, function (k, v)
 				{
-					combo.append($('<option></option>').val(v.id).html(v.name));
+					$el.append($("<option></option>").attr("value", v.id).text(v.name));
 				});				
-				$('#sheet_id').empty();
-				$('#sheet_id').append(combo.html());
 				//JqueryPortico.show_message(1, result);
 			}
 		});
@@ -152,29 +152,39 @@ $(document).ready(function ()
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
-		var form = document.forms.namedItem("form_files");
-		var file_data = $('#file_excel').prop('files')[0];
-		var form_data = new FormData(form);
-		form_data.append('file', file_data);
-		form_data.append('sheet_id', $('#sheet_id').val());
-		form_data.append('location_code', $('#location_code').val());
-		form_data.append('location_item_id', $('#location_item_id').val());
-		
-		$.ajax({
-			url: requestUrl,
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: form_data,
-			type: 'post',
-			success: function (result)
-			{
-				$('#content').html(result);
-			}
-		});
+		var data = {
+			"step": 2,
+			"sheet_id": $('#sheet_id').val(), 
+			'location_code': $('#location_code').val(),
+			'location_item_id': $('#location_item_id').val()
+		};
+		JqueryPortico.execute_ajax(requestUrl,
+			function(result){
+				$('#content_lines').html(result);
+			}, data, "GET", "json"
+		);
 	});
 });
 
+function selectStartLine ()
+{
+	var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	var data = {
+		"step": 3,
+		"sheet_id": $('#sheet_id').val(), 
+		'start_line': $('input:radio[name=start_line]:checked').val(),
+		'location_code': $('#location_code').val(),
+		'location_item_id': $('#location_item_id').val()
+	};
+	JqueryPortico.execute_ajax(requestUrl,
+		function(result){
+			$('#content_columns').html(result);
+		}, data, "GET", "json"
+	);
+};
+	
 function getLocations()
 {
 	paramsTable0['type_id'] = $('#type_id').val();
