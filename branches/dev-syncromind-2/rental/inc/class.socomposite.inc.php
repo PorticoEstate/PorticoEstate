@@ -518,7 +518,7 @@
 			return $uicols;
 		}
 
-		public function get_schedule ($composite_id, $date)
+		public function get_schedule ($date, $filters, $options)
 		{
 			//$date = new DateTime('2016-8-24');
 			//$date = new DateTime(phpgw::get_var('date'));
@@ -547,11 +547,11 @@
 			}
 			/*----------------------------------------------------------------*/
 
-			$filters = array(
-				rental_socomposite::get_id_field_name() => $composite_id
-			);
+//			$filters = array(
+//				rental_socomposite::get_id_field_name() => $composite_id
+//			);
 			
-			$contracts = rental_socontract::get_instance()->get(0, 30, '', false, '', 'all', $filters);
+			$contracts = rental_socontract::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
 
 			$data_contracts = array();
 			foreach ($contracts as $contract)

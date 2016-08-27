@@ -135,3 +135,48 @@ schedule.nextWeek = function ()
 {
 	schedule.moveWeek(7)
 }
+
+$(window).load(function() {
+    function searchSchedule () {
+        var location_id = $('#location_id').val();
+        var search_option = $('#search_option').val();
+        var contract_status = $('#contract_status').val();
+        var contract_type = $('#contract_type').val();
+        var search = $('#txtSearchSchedule').val();
+        var n_objects = $('#cboNObjects').val();
+        
+        var args = {
+            menuaction: 'rental.uicomposite.get_schedule',
+            composite_id: composite_id,
+            location_id: location_id,
+            search_option: search_option,
+            contract_status: contract_status,
+            contract_type: contract_type,
+            search: search,
+            n_objects: n_objects
+        }
+        
+        var new_url = phpGWLink('index.php', args, true);
+        
+        schedule.renderSchedule('schedule_container', new_url, schedule.date, schedule.colFormatter, schedule.includeResource);
+        
+        //console.log(new_url);
+
+        //console.log(location_id + ' / ' + search_option + ' / ' + contract_status + ' / ' + contract_type + ' / ' + txtSearchSchedule);
+    }
+
+    $('select.searchSchedule').on('change', function() {
+        searchSchedule();
+    });    
+    $('input.searchSchedule').on('keyup', function() {
+        var $this = $(this);
+        if ($this.data('text') != $this.val()) {
+            setTimeout(function(){
+                $this.data('text', $this.val());
+                searchSchedule();
+            }, 500);
+        }
+    });    
+})
+
+

@@ -1114,10 +1114,11 @@ JS;
             }
 
             $schedule['datasource_url'] = self::link(array(
-               'menuaction' => 'rental.uicomposite.get_schedule',
+                'menuaction' => 'rental.uicomposite.get_schedule',
                 'id' => $composite_id,
                 'phpgw_return_as' => 'json'
-            ));            
+            ));
+            $schedule['composite_id'] = $composite_id;
             $schedule['date'] = $date;
             $schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
@@ -1132,8 +1133,29 @@ JS;
         public function get_schedule () {
             $composite_id = (int)phpgw::get_var('id');
             $date = new DateTime(phpgw::get_var('date'));
+            
+            $filters = array();
+            $options = array();
+            
+            if (phpgw::get_var('composite_id'))
+                $filters['composite_id'] = phpgw::get_var('composite_id');
+            
+            if (phpgw::get_var('contract_status'))
+                $filters['contract_status'] = phpgw::get_var('contract_status');
+            
+            if (phpgw::get_var('contract_type'))
+                $filters['contract_type'] = phpgw::get_var('contract_type');
 
-            $schedule = rental_socomposite::get_instance()->get_schedule($composite_id, $date);
+            $options['start_index'] = 0;
+            $options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 30;
+            $options['sort_field'] = '';
+            $options['ascending'] = false;
+            $options['search_for'] = (phpgw::get_var('search')) ? phpgw::get_var('search') : '' ;
+            $options['search_type'] = (phpgw::get_var('search_option')) ? phpgw::get_var('search_option') : 'all';
+
+            //$filter['location_id'] = phpgw::get_var('location_id');
+
+            $schedule = rental_socomposite::get_instance()->get_schedule($date, $filters, $options);
             
             $data = array(
                 'ResultSet' => array(
