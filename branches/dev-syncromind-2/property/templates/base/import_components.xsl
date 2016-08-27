@@ -128,15 +128,19 @@
 							<label for="vendor">
 								<xsl:value-of select="php:function('lang', 'Choose start line')" />
 							</label>
-							<div id="content">
-							</div>
+							<div id="content_lines" class="pure-custom"></div>
+						</div>
+						<div class="pure-control-group">
+							<label for="vendor">
+								<xsl:value-of select="php:function('lang', 'Choose columns')" />
+							</label>
+							<div id="content_columns" class="pure-custom"></div>
 						</div>	
 						<div id="message1" class="message"></div>
 					</form>
 				</div>
 			</div>
 	</div>
-
 </xsl:template>
 
 <xsl:template match="options">
