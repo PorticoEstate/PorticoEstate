@@ -821,9 +821,23 @@
 					}
 				}
 			}
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			foreach ($update_queries as $update_query)
 			{
 				$this->db->query($update_query, __LINE__, __FILE__);
+			}
+
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
 			}
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg' => lang('Entity %1 has been updated', $entry['id']));
