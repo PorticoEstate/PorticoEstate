@@ -420,23 +420,23 @@
 							'id' => array('type' => 'auto', 'nullable' => false),
 							'ecodimb' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 							'district_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-							'composite_type_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-							'cleaning' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+							'composite_type' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+							'cleaning' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
 							'payment_method' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
 							'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 							'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 							'assign_date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 							'assign_date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 							'entry_date' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
-							'identifier' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+							'identifier' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false),
 							'adjustment_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 							'firstname' => array('type' => 'varchar', 'precision' => '64', 'nullable' => true),
 							'lastname' => array('type' => 'varchar', 'precision' => '64', 'nullable' => true),
 							'title' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 							'company_name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 							'department' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-							'address_1' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-							'address_2' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+							'address1' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+							'address2' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 							'postal_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 							'place' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 							'phone' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
@@ -474,4 +474,91 @@
 		return $GLOBALS['setup_info']['rental']['currentver'];
 	}
 
+
+	$test[] = '0.1.0.24';
+	function rental_upgrade0_1_0_24()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite', 'part_of_town_id', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite', 'custom_prize_factor', array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true,
+			'default' => '1.00'
+			));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_application', 'executive_officer', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+			));
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_application', 'title', 'job_title');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_application', 'ecodimb', 'ecodimb_id');
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT composite_id, part_of_town_id  FROM rental_unit"
+			. " JOIN fm_locations ON rental_unit.location_code = fm_locations.location_code"
+			. " JOIN fm_location1 ON fm_locations.loc1 = fm_location1.loc1"
+			. " ORDER BY part_of_town_id", __LINE__, __FILE__);
+
+		$composites = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$composites[] = array(
+				'composite_id' => $GLOBALS['phpgw_setup']->oProc->f('composite_id'),
+				'part_of_town_id' => $GLOBALS['phpgw_setup']->oProc->f('part_of_town_id'),
+			);
+		}
+
+		foreach ($composites as $composite)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE rental_composite SET part_of_town_id = {$composite['part_of_town_id']} WHERE id = {$composite['composite_id']}", __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'rental_location_factor', array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => false),
+						'part_of_town_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+						'factor' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => false, 'default' => '1.00'),
+						'remark' => array('type' => 'text', 'nullable' => true),
+						'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+						'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+						'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+					),
+					'pk' => array('id'),
+					'fk' => array('fm_part_of_town' => array('part_of_town_id' => 'id')),
+					'ix' => array(),
+					'uc' => array()
+				)
+			);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT id FROM fm_part_of_town ORDER BY id", __LINE__, __FILE__);
+		$part_of_towns = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$part_of_towns[] =  $GLOBALS['phpgw_setup']->oProc->f('id');
+		}
+
+		$now = time();
+		foreach ($part_of_towns as $part_of_town)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_location_factor"
+				. " (part_of_town_id, factor, entry_date, modified_date) VALUES ({$part_of_town},'1.00',{$now}, {$now} )", __LINE__, __FILE__);
+		}
+
+		$GLOBALS['phpgw']->locations->add('.application', 'Application', 'rental', $allow_grant = false, $custom_tbl = false, $c_function = true);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.25';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
 
