@@ -238,7 +238,7 @@
 		{
 			$errors = array();
 			$this->preValidate( $this );
-			$this->_validate( $this, $this->get_fields(), $errors);
+			$this->_validate( $this, $errors);
 			$this->doValidate( $this, $errors);
 			foreach ($errors as $key => $message)
 			{
@@ -263,9 +263,9 @@
 
 		}
 
-		private function _validate( $entity, array $fields, array &$errors, $field_prefix = '' )
+		private function _validate( $entity, array &$errors, $field_prefix = '' )
 		{
-			
+			$fields = $this->get_fields();
 			foreach ($fields as $field => $params)
 			{
 				if (!is_array($params))

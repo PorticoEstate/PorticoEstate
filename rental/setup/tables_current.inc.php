@@ -518,12 +518,27 @@
 				'email' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'account_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'unit_leader' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
-				'comment' => array('type' => 'text', 'nullable' => true),
 				'status' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
 				'executive_officer' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_application_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,
+					'default' => 'comment'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_application' => array('application_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),

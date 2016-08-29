@@ -562,3 +562,37 @@
 		}
 	}
 
+	$test[] = '0.1.0.25';
+	function rental_upgrade0_1_0_25()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('rental_application', array(), 'comment');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+				'rental_application_comment', array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => False),
+						'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+						'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+						'author' => array('type' => 'text', 'nullable' => False),
+						'comment' => array('type' => 'text', 'nullable' => False),
+						'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,
+							'default' => 'comment'),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						'rental_application' => array('application_id' => 'id')),
+					'ix' => array(),
+					'uc' => array()
+				)
+			);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.26';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

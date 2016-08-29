@@ -231,6 +231,7 @@
 
 		public function edit( $values = array(), $mode = 'edit' )
 		{
+			$active_tab = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			if (!$this->acl_add)
 			{
@@ -269,14 +270,24 @@
 			}
 
 			$tabs = array();
-			$tabs['application'] = array('label' => lang('application'), 'link' => '#application');
-			$tabs['party'] = array('label' => lang('party'), 'link' => '#party');
+			$tabs['application'] = array(
+				'label' => lang('application'),
+				'link' => '#application',
+				'function' => "set_tab('application')"
+			);
+			$tabs['party'] = array(
+				'label' => lang('party'),
+				'link' => '#party',
+				'function' => "set_tab('party')"
+				);
 			if($step > 1)
 			{
-				$tabs['assignment'] = array('label' => lang('assignment'), 'link' => '#assignment');
+				$tabs['assignment'] = array(
+					'label' => lang('assignment'),
+					'link' => '#assignment',
+					'function' => "set_tab('assignment')"
+				);
 			}
-
-			$active_tab = 'showing';
 
 			$composite_type = array();
 			foreach ($this->composite_types as $_key => $_value)
@@ -307,8 +318,33 @@
 					'selected' => ($account['account_id'] == $application->executive_officer) ? 1 : 0
 				);
 			}
+			$comments = (array)$application->comments;
+			foreach ($comments as $key => &$comment)
+			{
+				$comment['value_count'] = $key +1;
+				$comment['value_date'] = $GLOBALS['phpgw']->common->show_date($comment['time']);
+			}
+
+			$comments_def = array(
+				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
+			);
+ 
+			$datatable_def[] = array(
+				'container' => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => $comments_def,
+				'data' => json_encode($comments),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
 
 			$data = array(
+				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index',)),
 				'application' => $application,//->toArray(),
@@ -330,7 +366,7 @@
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('rental', 'rental', 'application.edit.js');
 
-			self::render_template_xsl(array('application'), array($mode => $data));
+			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}
 		/*
 		 * To be removed
@@ -353,8 +389,9 @@
 			{
 				phpgw::no_access();
 			}
-			_debug_array($_POST);
+//			_debug_array($_POST);
 			$application_id = phpgw::get_var('id', 'int');
+			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'application');
 
 			if ($application_id)
 			{
@@ -377,19 +414,20 @@
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 					self::redirect(array(
 						'menuaction' => 'rental.uiapplication.edit',
-						'id'		=> $application->get_id()
+						'id'		=> $application->get_id(),
+						'active_tab' => $active_tab
 						)
 					);
 				}
 				else
 				{
 					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
-
+					$this->edit(array('application'	=> $application, 'active_tab' => $active_tab));
 				}
 			}
 			else
 			{
-				$this->edit(array('application'	=> $application));
+				$this->edit(array('application'	=> $application, 'active_tab' => $active_tab));
 			}
 		}
 
@@ -399,7 +437,7 @@
 
 			foreach ($fields as $field	=> $field_info)
 			{
-				if($field_info['action'] & PHPGW_ACL_ADD)
+				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
 				{
 					$application->set_field( $field, phpgw::get_var($field, $field_info['type'] ) );
 				}

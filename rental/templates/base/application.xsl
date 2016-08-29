@@ -33,6 +33,7 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<input type="hidden" id="active_tab" name="active_tab"/>
 				<div id="application">
 					<fieldset>
 						<xsl:if test="application/id != ''">
@@ -238,11 +239,10 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'company')"/>
 							</label>
-							<input type="text" id="company_name" name="company_name" value="{application/company}">
+							<input type="text" id="company_name" name="company_name" value="{application/company_name}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>naming</xsl:text>
 								</xsl:attribute>
-
 							</input>
 						</div>
 						<div class="pure-control-group">
@@ -306,14 +306,6 @@
 							</label>
 							<input type="text" id="unit_leader" name="unit_leader" value="{application/unit_leader}"></input>
 						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'comment')"/>
-							</label>
-							<textarea cols="47" rows="7" name="comment">
-								<xsl:value-of select="application/comment"/>
-							</textarea>
-						</div>
 						<xsl:choose>
 							<xsl:when test="use_fellesdata = 1">
 								<div class="pure-control-group">
@@ -347,11 +339,11 @@
 									<xsl:value-of select="$lang_date_start"/>
 								</label>
 								<input type="text" id="assign_date_start" name="assign_date_start" size="10" readonly="readonly">
-								<xsl:if test="application/assign_date_start != 0 and application/assign_date_start != ''">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>
-									</xsl:attribute>
-								</xsl:if>
+									<xsl:if test="application/assign_date_start != 0 and application/assign_date_start != ''">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>
+										</xsl:attribute>
+									</xsl:if>
 									<!--xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -369,11 +361,11 @@
 									<xsl:value-of select="$lang_date_end"/>
 								</label>
 								<input type="text" id="assign_date_end" name="assign_date_end" size="10" readonly="readonly">
-								<xsl:if test="application/assign_date_end != 0 and application/assign_date_end != ''">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_end))"/>
-									</xsl:attribute>
-								</xsl:if>
+									<xsl:if test="application/assign_date_end != 0 and application/assign_date_end != ''">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_end))"/>
+										</xsl:attribute>
+									</xsl:if>
 									<!--xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -405,6 +397,39 @@
 									</option>
 									<xsl:apply-templates select="status_list/options"/>
 								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'comment')"/>
+								</label>
+								<textarea cols="47" rows="7" name="comment">
+									<xsl:value-of select="application/comment"/>
+								</textarea>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'details')"/>
+								</label>
+								<xsl:choose>
+									<xsl:when test="additional_notes=''">
+										<xsl:value-of select="php:function('lang', 'no additional notes')"/>
+									</xsl:when>
+									<xsl:otherwise>
+										<div class = 'pure-u-md-1-2'>
+											<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_0'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl'/>
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+														<xsl:with-param name="data" select ='data'/>
+														<xsl:with-param name="config" select ='config'/>
+													</xsl:call-template>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+									</xsl:otherwise>
+								</xsl:choose>
 							</div>
 						
 						</fieldset>
