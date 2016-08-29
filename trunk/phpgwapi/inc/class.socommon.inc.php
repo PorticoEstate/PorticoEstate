@@ -472,8 +472,6 @@
 					}
 				}
 			}
-			_debug_array($row);
-
 			if($return_object)
 			{
 				return $this->populate($row);
