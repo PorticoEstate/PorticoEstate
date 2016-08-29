@@ -1115,7 +1115,7 @@ JS;
 
             $schedule['datasource_url'] = self::link(array(
                 'menuaction' => 'rental.uicomposite.get_schedule',
-                'id' => $composite_id,
+                'composite_id' => $composite_id,
                 'phpgw_return_as' => 'json'
             ));
             $schedule['composite_id'] = $composite_id;
