@@ -65,6 +65,8 @@
 			$email,
 			$unit_leader,
 			$comment,
+			$comments,
+			$comment_input,
 			$assign_date_start,
 			$assign_date_end,
 			$entry_date,
@@ -169,26 +171,31 @@
 					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
 				'unit_leader' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string'),
-				'comment' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string'),
+				'comments' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'manytomany' => array(
+						'input_field' => 'comment_input',
+						'table' => 'rental_application_comment',
+						'key' => 'application_id',
+						'column' => array('time', 'author', 'comment', 'type'),
+						'order' => array('sort' => 'time', 'dir' => 'ASC')
+					)),
+				'comment' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'related' => true,
+					),
 				'assign_date_start' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
 					'type' => 'date'),
 				'assign_date_end' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
 					'type' => 'date'),
 				'status' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'),
-	/*			'status_text' => array('action'=> PHPGW_ACL_READ,
-					'type' => 'string',
-					'label' => 'status',
-					'className' => '',
-					'sortable' => true,
-					'hidden' => false
-					),*/
 				'entry_date' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD,
 					'type' => 'int',
 					'label' => 'entry_date',
 					'sortable' => true,
-
 					),
 				'executive_officer' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
@@ -214,6 +221,21 @@
 			return $fields;
 		}
 
+		/**
+		 * Implement in subclasses to perform actions on entity before validation
+		 */
+		protected function preValidate( &$entity )
+		{
+			if (!empty($entity->comment))
+			{
+				$entity->comment_input = array(
+					'time' => time(),
+					'author' => $GLOBALS['phpgw_info']['user']['fullname'],
+					'comment' => $entity->comment,
+					'type' => 'comment'
+				);
+			}
+		}
 
 		public function serialize()
 		{

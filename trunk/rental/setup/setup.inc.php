@@ -1,6 +1,6 @@
 <?php
 	$setup_info['rental']['name'] = 'rental';  // Module identifier
-	$setup_info['rental']['version'] = '0.1.0.25'; // Current module version
+	$setup_info['rental']['version'] = '0.1.0.26'; // Current module version
 	$setup_info['rental']['app_order'] = 51;  // (?)
 	$setup_info['rental']['tables'] = array(
 		'rental_party', // All contract participants, tenants etc.
@@ -28,6 +28,7 @@
 		'rental_billing_info', // Term information for each billing
 		'rental_adjustment',  // Price regulations
 		'rental_application',
+		'rental_application_comment',
 		'rental_application_composite'
 	);
 	$setup_info['rental']['enable'] = 1;

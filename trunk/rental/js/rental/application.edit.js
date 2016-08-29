@@ -24,3 +24,8 @@ $(document).ready(function ()
 		errorMessageKey: ''
 	});
 });
+
+function set_tab(tab)
+{
+	$("#active_tab").val(tab);
+}
