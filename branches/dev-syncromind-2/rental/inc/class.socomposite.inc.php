@@ -547,10 +547,6 @@
 			}
 			/*----------------------------------------------------------------*/
 
-//			$filters = array(
-//				rental_socomposite::get_id_field_name() => $composite_id
-//			);
-			
 			$contracts = rental_socontract::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
 
 			$data_contracts = array();

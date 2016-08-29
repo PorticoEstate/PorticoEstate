@@ -1105,65 +1105,62 @@ JS;
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
 		}
-        
-        public function schedule () {
-            $composite_id = (int)phpgw::get_var('id');
-            $date = new DateTime(phpgw::get_var('date'));
-            if ($date->format('w') != 1) {
-                $date->modify('last monday');
-            }
 
-            $schedule['datasource_url'] = self::link(array(
-                'menuaction' => 'rental.uicomposite.get_schedule',
-                'composite_id' => $composite_id,
-                'phpgw_return_as' => 'json'
-            ));
-            $schedule['composite_id'] = $composite_id;
-            $schedule['date'] = $date;
-            $schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+		public function schedule () {
+			$composite_id = (int)phpgw::get_var('id');
+			$date = new DateTime(phpgw::get_var('date'));
+			if ($date->format('w') != 1) {
+				$date->modify('last monday');
+			}
 
-//            self::add_javascript('booking','booking','common.js');
-            self::add_javascript('rental','rental','schedule.js');
+			$schedule['datasource_url'] = self::link(array(
+				'menuaction' => 'rental.uicomposite.get_schedule',
+				'composite_id' => $composite_id,
+				'phpgw_return_as' => 'json'
+			));
+			$schedule['composite_id'] = $composite_id;
+			$schedule['date'] = $date;
+			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 
-            phpgwapi_jquery::load_widget("datepicker");
+			self::add_javascript('rental','rental','schedule.js');
 
-            self::render_template_xsl(array('schedule'), array('schedule' => $schedule));            
-        }
-        
-        public function get_schedule () {
-            $composite_id = (int)phpgw::get_var('id');
-            $date = new DateTime(phpgw::get_var('date'));
-            
-            $filters = array();
-            $options = array();
-            
-            if (phpgw::get_var('composite_id'))
-                $filters['composite_id'] = phpgw::get_var('composite_id');
-            
-            if (phpgw::get_var('contract_status'))
-                $filters['contract_status'] = phpgw::get_var('contract_status');
-            
-            if (phpgw::get_var('contract_type'))
-                $filters['contract_type'] = phpgw::get_var('contract_type');
+			phpgwapi_jquery::load_widget("datepicker");
 
-            $options['start_index'] = 0;
-            $options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 30;
-            $options['sort_field'] = '';
-            $options['ascending'] = false;
-            $options['search_for'] = (phpgw::get_var('search')) ? phpgw::get_var('search') : '' ;
-            $options['search_type'] = (phpgw::get_var('search_option')) ? phpgw::get_var('search_option') : 'all';
+			self::render_template_xsl(array('schedule'), array('schedule' => $schedule));
+		}
 
-            //$filter['location_id'] = phpgw::get_var('location_id');
+		public function get_schedule () {
+			$composite_id = (int)phpgw::get_var('id');
+			$date = new DateTime(phpgw::get_var('date'));
 
-            $schedule = rental_socomposite::get_instance()->get_schedule($date, $filters, $options);
-            
-            $data = array(
-                'ResultSet' => array(
-                    "totalResultsAvailable" => $schedule['total_records'],
+			$filters = array();
+			$options = array();
+
+			if (phpgw::get_var('composite_id'))
+				$filters['composite_id'] = phpgw::get_var('composite_id');
+
+			if (phpgw::get_var('contract_status'))
+				$filters['contract_status'] = phpgw::get_var('contract_status');
+
+			if (phpgw::get_var('contract_type'))
+				$filters['contract_type'] = phpgw::get_var('contract_type');
+
+			$options['start_index'] = 0;
+			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 30;
+			$options['sort_field'] = '';
+			$options['ascending'] = false;
+			$options['search_for'] = (phpgw::get_var('search')) ? phpgw::get_var('search') : '' ;
+			$options['search_type'] = (phpgw::get_var('search_option')) ? phpgw::get_var('search_option') : 'all';
+
+			$schedule = rental_socomposite::get_instance()->get_schedule($date, $filters, $options);
+
+			$data = array(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $schedule['total_records'],
 					"Result" => $schedule['results']
-                )
-            );
+				)
+			);
 
-            return $data;
-        }
+			return $data;
+		}
 	}

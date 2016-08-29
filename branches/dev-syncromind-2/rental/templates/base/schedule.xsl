@@ -49,7 +49,7 @@
                                         <option value="838">!contract_type_eksternleie</option>
                                     </select>
                                 </td>
-                            </tr>                            
+                            </tr>
                             <tr>
                                 <td><label for="search_option">!search_where</label></td>
                                 <td valign="top">
@@ -62,7 +62,7 @@
                                         <option value="location_code">!object_number</option>
                                     </select>
                                 </td>
-                            </tr>                            
+                            </tr>
                             <tr>
                                 <td><label for="contract_status">Status</label></td>
                                 <td valign="top">

@@ -103,7 +103,7 @@ $(function ()
 });
 
 schedule.updateSchedule = function (date)
-{
+{   
 	schedule.week = $.datepicker.iso8601Week(date);
 	$('#cal_container #numberWeek').text(schedule.week);
 	$("#cal_container #datepicker").datepicker("setDate", date);
@@ -156,13 +156,9 @@ $(window).load(function() {
             n_objects: n_objects
         }
         
-        var new_url = phpGWLink('index.php', args, true);
+        schedule.datasourceUrl = phpGWLink('index.php', args, true);
         
-        schedule.renderSchedule('schedule_container', new_url, schedule.date, schedule.colFormatter, schedule.includeResource);
-        
-        //console.log(new_url);
-
-        //console.log(location_id + ' / ' + search_option + ' / ' + contract_status + ' / ' + contract_type + ' / ' + txtSearchSchedule);
+        schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
     }
 
     $('select.searchSchedule').on('change', function() {
