@@ -4,6 +4,8 @@
 	abstract class booking_socommon
 	{
 
+		protected $db;
+		protected $db2;
 		protected $db_null = 'NULL';
 		protected $valid_field_types = array(
 			'date' => true,
@@ -41,6 +43,7 @@
 			$this->table_name = $table_name;
 			$this->fields = $fields;
 			$this->db = $GLOBALS['phpgw']->db;
+			$this->db2 = clone($GLOBALS['phpgw']->db);
 			$this->join = & $this->db->join;
 			$this->like = & $this->db->like;
 		}
@@ -325,9 +328,9 @@
 								$order_method = "ORDER BY {$params['manytomany']['order']['sort']} {$params['manytomany']['order']['dir']}";
 							}
 
-							$this->db->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
+							$this->db2->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while ($this->db2->next_record())
 							{
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
@@ -343,7 +346,7 @@
 										$type = $params['type'];
 									}
 
-									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
+									$data[$col] = $this->_unmarshal($this->db2->f($col, false), $type);
 								}
 								$row[$field][] = $data;
 							}
@@ -351,11 +354,11 @@
 						else
 						{
 							$column = $params['manytomany']['column'];
-							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
+							$this->db2->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while ($this->db2->next_record())
 							{
-								$row[$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
+								$row[$field][] = $this->_unmarshal($this->db2->f($column, false), $params['type']);
 							}
 						}
 					}
