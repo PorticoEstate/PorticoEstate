@@ -1273,7 +1273,7 @@ function populateSelect_activityCalendar(url, container, attr)
 }
 
 
-function createTableSchedule(d, u, c, r, cl, dt)
+function createTableSchedule (d, u, c, r, cl, dt)
 {
 	var container = document.getElementById(d);
 	var xtable = document.createElement('table');
@@ -1352,7 +1352,7 @@ function createTableSchedule(d, u, c, r, cl, dt)
 					var k = vc.key;
 
 //					var tableBodyTrTdType = (k == key) ? "th" : "td";
-                    var tableBodyTrTdType = (vc['type']) ? (vc['type'] == "th") ? "th" : "td" : "td";
+					var tableBodyTrTdType = (vc['type']) ? (vc['type'] == "th") ? "th" : "td" : "td";
 
 					var tableBodyTrTd = document.createElement(tableBodyTrTdType);
 
@@ -1361,36 +1361,36 @@ function createTableSchedule(d, u, c, r, cl, dt)
 
 					if (vc['formatter'])
 					{
-                        //var dataFormat = {};
-                        var dataFormat = setFormatter(vc['formatter'], vd, vc, date)
+						//var dataFormat = {};
+						var dataFormat = setFormatter(vc['formatter'], vd, vc, date)
 
-                        if (dataFormat['text'])
-                        {
-                            tableBodyTrTdText = dataFormat['text'];
-                        }
+						if (dataFormat['text'])
+						{
+							tableBodyTrTdText = dataFormat['text'];
+						}
 
-                        if (dataFormat['classes'])
-                        {
-                            classes += " " + dataFormat['classes'];
-                        }
+						if (dataFormat['classes'])
+						{
+							classes += " " + dataFormat['classes'];
+						}
 
-                        if (dataFormat['trAttributes'])
-                        {
-                            $.each(dataFormat['trAttributes'], function (i, v)
-                            {
-                                tableBodyTr.setAttribute(v['attribute'], v['value']);
-                            });
-                        }
+						if (dataFormat['trAttributes'])
+						{
+							$.each(dataFormat['trAttributes'], function (i, v)
+							{
+								tableBodyTr.setAttribute(v['attribute'], v['value']);
+							});
+						}
 
-                        if (dataFormat['trFunction'])
-                        {
-                            $.each(dataFormat['trFunction'], function (i, v)
-                            {
-                                tableBodyTrTd.addEventListener(v['event'], v['callFunction'], false);
-                            });
-                        }
+						if (dataFormat['trFunction'])
+						{
+							$.each(dataFormat['trFunction'], function (i, v)
+							{
+								tableBodyTrTd.addEventListener(v['event'], v['callFunction'], false);
+							});
+						}
 
-                        tableBodyTrTd.setAttribute('class', classes);
+						tableBodyTrTd.setAttribute('class', classes);
 					}
 					else
 					{
@@ -1421,256 +1421,254 @@ function createTableSchedule(d, u, c, r, cl, dt)
 
 function setFormatter (callFunc, data, col, date)
 {
-    return eval(callFunc+'(data,col,date)');
+	return eval(callFunc+'(data,col,date)');
 }
 
 function scheduleResourceColumn (data, col, date)
 {
-    var text = "";
-    var classes = "";
-    var trAttributes = [];
-    var trFunction = [];
-    
-    var k = col.key;
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
 
-    if (data[k])
-    {
-        trAttributes.push( {attribute: 'resource', value: data['resource_id']} );
-    }
+	var k = col.key;
 
-    var resourceLink = (date) ? data['resource_link'] + "#date=" + date : data['resource_link'];
-    text = (data[k]) ? formatGenericLink(data['resource'], resourceLink) : "";
+	if (data[k])
+	{
+		trAttributes.push( {attribute: 'resource', value: data['resource_id']} );
+	}
 
-    var data_return = {
-        text: text,
-        classes: classes,
-        trAttributes: trAttributes,
-        trFunction: trFunction
-    }
+	var resourceLink = (date) ? data['resource_link'] + "#date=" + date : data['resource_link'];
+	text = (data[k]) ? formatGenericLink(data['resource'], resourceLink) : "";
 
-    return data_return;
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
 }
 
 function seasonDateColumn (data, col, date)
 {
-    var text = "";
-    var classes = "";
-    var trAttributes = [];
-    var trFunction = [];
-    
-    var k = col.key;
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
 
-    if (data[k])
-    {
-        var id = data[k]['id'];
-        var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
-        var type = data[k]['type'];
-        var colorCell = formatScheduleCellDateColumn(name, type);
+	var k = col.key;
 
-        text = name;
-        classes = colorCell;
-        trFunction.push(
-            {
-                event: 'click',
-                callFunction: function () {
-//                    schedule.newAllocationForm({id: data[k]['id']});
-                    schedule.newAllocationForm({id: id});
-                }
-                
-            }
-        );
-    }
-    else
-    {
-        text = "free";
-        classes = "free";
-        trFunction.push(
-            {
-                event: 'click',
-                callFunction: function () {
-                    schedule.newAllocationForm({'_from': data['_from'], '_to': data['_to'], 'wday': col['key']});
-                }
-                
-            }
-        );
-    }
-    
-    var data_return = {
-        text: text,
-        classes: classes,
-        trAttributes: trAttributes,
-        trFunction: trFunction
-    }
+	if (data[k])
+	{
+		var id = data[k]['id'];
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
 
-    return data_return;
+		text = name;
+		classes = colorCell;
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+//					schedule.newAllocationForm({id: data[k]['id']});
+					schedule.newAllocationForm({id: id});
+				}
+			}
+		);
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					schedule.newAllocationForm({'_from': data['_from'], '_to': data['_to'], 'wday': col['key']});
+				}
+			}
+		);
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
 }
 
 function scheduleDateColumn (data, col, date)
 {
-    var text = "";
-    var classes = "";
-    var trAttributes = [];
-    var trFunction = [];
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
 
-    var k = col.key;
+	var k = col.key;
 
-    if (data[k])
-    {
-        var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
-        var type = data[k]['type'];
-        var colorCell = formatScheduleCellDateColumn(name, type);
+	if (data[k])
+	{
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
 
-        text = formatGenericLink(name, null);
-        classes = colorCell;
-    }
+		text = formatGenericLink(name, null);
+		classes = colorCell;
+	}
 
-    var data_return = {
-        text: text,
-        classes: classes,
-        trAttributes: trAttributes,
-        trFunction: trFunction
-    }
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
 
-    return data_return;
+	return data_return;
 }
 
 function backendScheduleDateColumn (data, col, date)
 {
-    var text = "";
-    var classes = "";
-    var trAttributes = [];
-    var trFunction = [];
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
 
-    var k = col.key;
+	var k = col.key;
 
-    if (data[k])
-    {
-        var id = data[k]['id'];
-        var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
-        var type = data[k]['type'];
-        var colorCell = formatScheduleCellDateColumn(name, type);
+	if (data[k])
+	{
+		var id = data[k]['id'];
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
 
-        var conflicts = new Array();
-    
-        if (data[k]['conflicts'])
-        {
-            if (data[k]['conflicts'].length > 0)
-            {
-                conflicts = data[k]['conflicts'];
-            }
-        }
-        text = formatBackendScheduleDateColumn(id, name, type, conflicts);
-        classes = colorCell + " " + type;
-    }
-    else
-    {
-        text = "free";
-        classes = "free";
-        trFunction.push(
-            {
-                event: 'click',
-                callFunction: function () {
-                    schedule.newApplicationForm(col['date'], data['_from'], data['_to'])
-                }
-            }
-        )
-    }
+		var conflicts = new Array();
 
-    var data_return = {
-        text: text,
-        classes: classes,
-        trAttributes: trAttributes,
-        trFunction: trFunction
-    }
+		if (data[k]['conflicts'])
+		{
+			if (data[k]['conflicts'].length > 0)
+			{
+				conflicts = data[k]['conflicts'];
+			}
+		}
+		text = formatBackendScheduleDateColumn(id, name, type, conflicts);
+		classes = colorCell + " " + type;
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					schedule.newApplicationForm(col['date'], data['_from'], data['_to'])
+				}
+			}
+		)
+	}
 
-    return data_return;
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
 }
 
 function frontendScheduleDateColumn (data, col, date)
 {
-    var text = "";
-    var classes = "";
-    var trAttributes = [];
-    var trFunction = [];
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
 
-    var k = col.key;
+	var k = col.key;
 
-    if (data[k])
-    {
-        var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
-        var type = data[k]['type'];
-        var colorCell = formatScheduleCellDateColumn(name, type);
+	if (data[k])
+	{
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
 
-        if (data[k]['is_public'] == 0)
-        {
-            name = formatScheduleShorten('Privat arr.', 9);
-        }
+		if (data[k]['is_public'] == 0)
+		{
+			name = formatScheduleShorten('Privat arr.', 9);
+		}
 
-        text = name;
-        classes = "cellInfo " + colorCell + " " + type ;
-        trFunction.push(
-            {
-                event: 'click',
-                callFunction: function () {
-                    var resource = $(this).parent().attr('resource');
-                    schedule.showInfo(data[k]['info_url'], resource);
-                }
-            }
-        );
-    }
-    else
-    {
-        text = "free";
-        classes = "free";
-        trFunction.push(
-            {
-                event: 'click',
-                callFunction: function () {
-                    var resource = $(this).parent().attr('resource');
-                    schedule.newApplicationForm(col['date'], data['_from'], data['_to'], resource);
-                }
-            }
-        );
-    }
+		text = name;
+		classes = "cellInfo " + colorCell + " " + type ;
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					var resource = $(this).parent().attr('resource');
+					schedule.showInfo(data[k]['info_url'], resource);
+				}
+			}
+		);
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					var resource = $(this).parent().attr('resource');
+					schedule.newApplicationForm(col['date'], data['_from'], data['_to'], resource);
+				}
+			}
+		);
+	}
 
-    var data_return = {
-        text: text,
-        classes: classes,
-        trAttributes: trAttributes,
-        trFunction: trFunction
-    }
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
 
-    return data_return;
+	return data_return;
 }
 
 function rentalSchedule (data, col, date)
 {
-    var text = "";
-    var classes = "";
-    var trAttributes = [];
-    var trFunction = [];
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
 
-    var k = col.key;
+	var k = col.key;
 
-    if (data[k])
-    {
-        var contratctLink = (data['contract_link']) ? data['contract_link'] : null;
-        text = (data[k]['old_contract_id'] ? formatGenericLink(data[k]['old_contract_id'], contratctLink) : "");
-    }
-    else
-    {
-        text = "free";
-        classes = "free";
-    }
+	if (data[k])
+	{
+		var contratctLink = (data['contract_link']) ? data['contract_link'] : null;
+		text = (data[k]['old_contract_id'] ? formatGenericLink(data[k]['old_contract_id'], contratctLink) : "");
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+	}
 
-    var data_return = {
-        text: text,
-        classes: classes,
-        trAttributes: trAttributes,
-        trFunction: trFunction
-    }
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
 
-    return data_return;
+	return data_return;
 }
 
 function restartColors()
