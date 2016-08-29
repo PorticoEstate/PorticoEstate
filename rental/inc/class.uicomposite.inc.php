@@ -735,7 +735,9 @@
 						(
 						'container' => 'datatable-container_1',
 						'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uiproperty_location.query',
-								'composite_id' => $composite_id, 'phpgw_return_as' => 'json'))),
+							'composite_id' => $composite_id,
+							'phpgw_return_as' => 'json',
+							'part_of_town_id' => $composite->get_part_of_town_id()))),
 						'ColumnDefs' => array(
 							array('key' => 'location_code', 'label' => lang('location_code'), 'sortable' => true),
 							array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => false),
@@ -942,6 +944,12 @@ JS;
 				'list_composite_standard' => array('options' => $composite_standard_options),
 				'value_furnish_type_name' => $furnish_type_name,
 				'list_furnish_type' => array('options' => $furnish_types_options),
+				'contract_furnished_status'	=>	!empty($this->config->config_data['contract_furnished_status']),
+				'value_part_of_town_id'=>$composite->get_part_of_town_id(),
+				'list_part_of_town' => array('options' => execMethod('property.bogeneric.get_list', array(
+						'type' => 'part_of_town', 'selected' => $composite->get_part_of_town_id(), 'add_empty' => true))),
+				'value_custom_prize_factor' => $composite->get_custom_prize_factor(),
+				'value_unit_count' => rental_sounit::get_instance()->get_count('', 'all', array('composite_id' => $composite_id)),
 				'value_address_1' => $address_1,
 				'has_custom_address' => ($composite->has_custom_address()) ? 1 : 0,
 				'value_custom_address_1' => $composite->get_custom_address_1(),
@@ -1000,6 +1008,8 @@ JS;
 				$composite->set_description(phpgw::get_var('description'));
 				$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
 				$composite->set_standard_id(phpgw::get_var('composite_standard_id', 'int'));
+				$composite->set_part_of_town_id(phpgw::get_var('part_of_town_id', 'int'));
+				$composite->set_custom_prize_factor(phpgw::get_var('custom_prize_factor', 'float'));
 
 				if (rental_socomposite::get_instance()->store($composite))
 				{
