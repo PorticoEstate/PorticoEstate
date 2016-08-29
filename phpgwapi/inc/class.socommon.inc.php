@@ -30,6 +30,7 @@
 	{
 
 		protected $db;
+		protected $db2;
 		protected $db_null = 'NULL';
 		protected $like;
 		protected $join;
@@ -43,6 +44,7 @@
 		public function __construct($table_name, $fields)
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
+			$this->db2 = clone($GLOBALS['phpgw']->db);
 			$this->like = & $this->db->like;
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
@@ -50,7 +52,6 @@
 			$this->skip_limit_query = null;
 			$this->fields = $fields;
 			$this->table_name = $table_name;
-
 		}
 
 		/**
@@ -431,9 +432,9 @@
 								$order_method = "ORDER BY {$params['manytomany']['order']['sort']} {$params['manytomany']['order']['dir']}";
 							}
 
-							$this->db->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
+							$this->db2->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while ($this->db2->next_record())
 							{
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
@@ -449,7 +450,7 @@
 										$type = $params['type'];
 									}
 
-									$data[$col] = $this->unmarshal($this->db->f($col, false), $type);
+									$data[$col] = $this->unmarshal($this->db2->f($col, false), $type);
 								}
 								$row[$field][] = $data;
 							}
@@ -457,11 +458,11 @@
 						else
 						{
 							$column = $params['manytomany']['column'];
-							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
+							$this->db2->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while ($this->db2->next_record())
 							{
-								$row[$field][] = $this->unmarshal($this->db->f($column, false), $params['type']);
+								$row[$field][] = $this->unmarshal($this->db2->f($column, false), $params['type']);
 							}
 						}
 					}
@@ -471,6 +472,8 @@
 					}
 				}
 			}
+			_debug_array($row);
+
 			if($return_object)
 			{
 				return $this->populate($row);
@@ -629,6 +632,10 @@
 				{
 					continue;
 				}
+				if (isset($params['related']) && $params['related'])
+				{
+					continue;
+				}
 				else if (isset($params['join']) && $params['join'])
 				{
 					if ($params['join_type'] == 'manytomany' && !isset($filters[$field]) && !$filters[$field])
@@ -686,7 +693,10 @@
 
 			foreach ($fields as $field	=> $field_info)
 			{
-				if(($field_info['action'] & PHPGW_ACL_ADD) && empty($field_info['join']))
+				if(($field_info['action'] & PHPGW_ACL_ADD)
+					&& empty($field_info['join'])
+					&& empty($field_info['related'])
+					&& empty($field_info['manytomany']))
 				{
 					$value_set[$field] = $object->$field;
 				}
@@ -696,21 +706,48 @@
 				. ') VALUES ('
 				. $this->db->validate_insert(array_values($value_set))
 				. ')';
+
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$this->db->query($sql,__LINE__,__FILE__);
 
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			$object->set_id($id);
+			$this->add_manytomany($object);
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
 			return $object;
 		}
 
 		protected function update( $object )
 		{
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			$id = $object->get_id();
 			$value_set = array();
 
 			foreach ($this->fields as $field => $field_info)
 			{
-				if(($field_info['action'] & PHPGW_ACL_EDIT) && empty($field_info['join']))
+				if(($field_info['action'] & PHPGW_ACL_EDIT) 
+					&& empty($field_info['join'])
+					&& empty($field_info['related'])
+					&& empty($field_info['manytomany']))
 				{
 					$value_set[$field] = $object->$field;
 				}
@@ -720,8 +757,76 @@
 				. $this->db->validate_update($value_set)
 				. " WHERE id = {$id}";
 
-			return $this->db->query($sql,__LINE__,__FILE__);
+			$ret1 = $this->db->query($sql,__LINE__,__FILE__);
 
+			$ret2 = $this->add_manytomany($object);
+
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
+			}
+			return ($ret1 && $ret2);
+		}
+
+		protected function add_manytomany( $object )
+		{
+			$id = $object->get_id();
+
+			foreach ($this->fields as $field => $params)
+			{
+				if ($params['manytomany'] && !empty($object->get_field($params['manytomany']['input_field'])))
+				{
+					$table = $params['manytomany']['table'];
+					$key = $params['manytomany']['key'];
+
+					if (is_array($params['manytomany']['column']))
+					{
+						$colnames = array();
+						foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+						{
+							$colnames[(is_array($paramsOrCol) ? $intOrCol : $paramsOrCol)] = true;
+						}
+						unset($colnames['id']);
+
+						$colnames = join(',', array_keys($colnames));
+
+						$v = $object->get_field($params['manytomany']['input_field']);
+						
+						$data = array();
+						foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+						{
+							if (is_array($paramsOrCol))
+							{
+								$col = $intOrCol;
+								$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+							}
+							else
+							{
+								$col = $paramsOrCol;
+								$type = $params['type'];
+							}
+
+							if ($col == 'id')
+							{
+								continue;
+							}
+
+							$data[] = $this->marshal($v[$col], $type);
+						}
+						$v = join(',', $data);
+						$update_query = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";
+						return $this->db->query($update_query,__LINE__,__FILE__);
+					}
+					else
+					{
+						$colname = $params['manytomany']['column'];
+						$v = $this->marshal($object->get_field($params['manytomany']['input_field']), $params['type']);
+						$update_query = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
+						return $this->db->query($update_query,__LINE__,__FILE__);
+					}
+				}
+			}
+			return true;
 		}
 
 		/**
