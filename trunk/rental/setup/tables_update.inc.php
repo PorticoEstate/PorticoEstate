@@ -558,7 +558,7 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.25';
-			return $GLOBALS['setup_info']['property']['currentver'];
+			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
 
@@ -592,7 +592,7 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.26';
-			return $GLOBALS['setup_info']['property']['currentver'];
+			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
 
