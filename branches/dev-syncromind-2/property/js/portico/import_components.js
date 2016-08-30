@@ -147,10 +147,16 @@ $(document).ready(function ()
 		});
 	});
 	
-	$('#sheet_id').on('change', function ()
+	$('#step2').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
+		
+		if ($('#sheet_id').val() == '')
+		{
+			alert('select sheet');
+			return false;
+		}
 		
 		var data = {
 			"step": 2,
@@ -161,29 +167,64 @@ $(document).ready(function ()
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
 				$('#content_lines').html(result);
+				$('#responsiveTabsDemo').responsiveTabs('enable', 1);
+				$('#responsiveTabsDemo').responsiveTabs('activate', 1);
 			}, data, "GET", "json"
 		);
 	});
+	
+	$('#step3').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		if (!$('input:radio[name=start_line]:checked').val())
+		{
+			alert('select start line');
+			return false;
+		}
+		
+		var data = {
+			"step": 3,
+			"sheet_id": $('#sheet_id').val(), 
+			'start_line': $('input:radio[name=start_line]:checked').val(),
+			'template_id': $('#template_list').val(),
+			'location_code': $('#location_code').val(),
+			'location_item_id': $('#location_item_id').val()
+		};
+		JqueryPortico.execute_ajax(requestUrl,
+			function(result){
+				$('#content_columns').html(result);
+				$('#responsiveTabsDemo').responsiveTabs('enable', 2);
+				$('#responsiveTabsDemo').responsiveTabs('activate', 2);
+			}, data, "GET", "json"
+		);
+	});
+	
+	$('#step4').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		var data = {
+			"step": 3,
+			"sheet_id": $('#sheet_id').val(), 
+			'start_line': $('input:radio[name=start_line]:checked').val(),
+			'location_code': $('#location_code').val(),
+			'location_item_id': $('#location_item_id').val()
+		};
+		JqueryPortico.execute_ajax(requestUrl,
+			function(result){
+				$('#content_columns').html(result);
+				$('#responsiveTabsDemo').responsiveTabs('enable', 2);
+				$('#responsiveTabsDemo').responsiveTabs('activate', 2);
+			}, data, "GET", "json"
+		);
+	});
+	
 });
 
-function selectStartLine ()
-{
-	var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
-	var requestUrl = phpGWLink('index.php', oArgs, true);
 
-	var data = {
-		"step": 3,
-		"sheet_id": $('#sheet_id').val(), 
-		'start_line': $('input:radio[name=start_line]:checked').val(),
-		'location_code': $('#location_code').val(),
-		'location_item_id': $('#location_item_id').val()
-	};
-	JqueryPortico.execute_ajax(requestUrl,
-		function(result){
-			$('#content_columns').html(result);
-		}, data, "GET", "json"
-	);
-};
 	
 function getLocations()
 {
