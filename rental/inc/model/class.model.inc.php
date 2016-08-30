@@ -11,7 +11,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 
-		public function __construct( int $id = null)
+		public function __construct( int $id )
 		{
 			$this->id = (int)$id;
 		}
