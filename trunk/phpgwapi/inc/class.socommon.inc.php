@@ -700,7 +700,7 @@
 				}
 			}
 			
-			$sql = "INSERT INTO {$this->table_name} (". implode(',',$cols)
+			$sql = "INSERT INTO {$this->table_name} (". implode(',',  array_keys($value_set))
 				. ') VALUES ('
 				. $this->db->validate_insert(array_values($value_set))
 				. ')';
