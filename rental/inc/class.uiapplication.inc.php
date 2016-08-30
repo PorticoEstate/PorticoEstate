@@ -257,7 +257,6 @@
 				else
 				{
 					$application = new rental_application();
-					$application->status = rental_application::STATUS_REGISTERED;
 				}
 			}
 
@@ -401,7 +400,6 @@
 			else
 			{
 				$application = new rental_application();
-				$application->status = $application::STATUS_REGISTERED;
 			}
 			/*
 			 * Overrides with incoming data from POST
