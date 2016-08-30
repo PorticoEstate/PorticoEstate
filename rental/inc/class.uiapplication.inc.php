@@ -182,7 +182,7 @@
 					)
 				)
 			);
-
+/*
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
@@ -193,7 +193,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
