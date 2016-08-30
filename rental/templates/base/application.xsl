@@ -33,7 +33,7 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<input type="hidden" id="active_tab" name="active_tab"/>
+				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="application">
 					<fieldset>
 						<xsl:if test="application/id != ''">
@@ -288,7 +288,7 @@
 							</label>
 							<input type="text" name="email" id="email" value="{application/email}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>email</xsl:text>
 								</xsl:attribute>
 							</input>
 							<xsl:choose>
