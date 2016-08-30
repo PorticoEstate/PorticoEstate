@@ -27,7 +27,7 @@
 	 * @version $Id: $
 	 */
 
-	phpgw::import_class('rental.soapplication');
+	phpgw::import_class('rental.boapplication');
 
 	include_class('rental', 'model', 'inc/model/');
 
@@ -249,12 +249,12 @@
 
 		public function store()
 		{
-			return rental_soapplication::get_instance()->store($this);
+			return rental_boapplication::get_instance()->store($this);
 		}
 
-		public function get($id)
+		public function read_single($id)
 		{
-			return rental_soapplication::get_instance()->read_single($id, true);
+			return rental_boapplication::get_instance()->read_single($id, true);
 		}
 
 	}
