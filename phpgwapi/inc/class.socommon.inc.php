@@ -684,7 +684,7 @@
 
 		protected function add( &$object )
 		{
-			$object->set_entry_date(time());
+			$object->entry_date = time();
 			$value_set = array();
 
 			$fields = $object::get_fields();
