@@ -772,7 +772,7 @@
 
 			foreach ($this->fields as $field => $params)
 			{
-				if ($params['manytomany'] && !empty($object->get_field($params['manytomany']['input_field'])))
+				if (!empty($params['manytomany']) && !empty($params['manytomany']['input_field']) && $object->get_field($params['manytomany']['input_field']))
 				{
 					$table = $params['manytomany']['table'];
 					$key = $params['manytomany']['key'];
