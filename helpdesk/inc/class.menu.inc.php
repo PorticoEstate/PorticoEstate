@@ -72,6 +72,18 @@
 							'text'	=> lang('Configuration'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index', 'appname' => 'helpdesk') )
 						),
+						'ticket_attribs' => array
+							(
+							'text' => lang('ticket Attributes'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+								'appname' => 'helpdesk', 'location' => '.ticket', 'menu_selection' => 'admin::helpdesk::ticket_attribs'))
+						),
+						'ticket_functions' => array
+							(
+							'text' => lang('custom functions'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
+								'appname' => 'helpdesk', 'location' => '.ticket', 'menu_selection' => 'admin::helpdesk::ticket_functions'))
+						),
 						'ticket_cats'	=> array
 						(
 							'text'	=> lang('Ticket Categories'),
@@ -102,7 +114,7 @@
 						array
 						(
 							'text'	=> $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uiadmin.aclprefs', 'acl_app'=> 'helpdesk'))
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs', 'acl_app'=> 'helpdesk'))
 						)
 					);
 
@@ -116,7 +128,7 @@
 
 			$menus['navigation'] = array();
 
-
+/*
 			if ( $acl->check('.ticket',PHPGW_ACL_READ, 'helpdesk') )
 			{
 				$menus['navigation']['helpdesk'] = array
@@ -126,21 +138,7 @@
 						'image'		=> array('helpdesk', 'helpdesk')
 					);
 			}
-
-			if ( $acl->check('.ticket.order',PHPGW_ACL_ADD, 'helpdesk') )
-			{
-				$menus['navigation']['helpdesk']['children'] = array
-					(
-						'order_template' => array
-						(	
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'order_template') ),
-							'text'	=> lang('order template'),
-							'image'		=> array('helpdesk', 'helpdesk')
-						)
-					);
-			}
-
-
+*/
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

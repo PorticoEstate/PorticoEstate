@@ -28,10 +28,27 @@
 					'default' => null),
 				'area' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => true),
 				'furnish_type_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
-				'standard_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true)
+				'standard_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'part_of_town_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'custom_prize_factor' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => true, 'default' => '1.00'),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_location_factor' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'part_of_town_id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+				'factor' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => false, 'default' => '1.00'),
+				'remark' => array('type' => 'text', 'nullable' => true),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_part_of_town' => array('part_of_town_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -470,6 +487,72 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_application' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'ecodimb_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'district_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'composite_type' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'cleaning' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+				'payment_method' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'assign_date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'assign_date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'entry_date' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
+				'identifier' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false),
+				'adjustment_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'firstname' => array('type' => 'varchar', 'precision' => '64', 'nullable' => true),
+				'lastname' => array('type' => 'varchar', 'precision' => '64', 'nullable' => true),
+				'job_title' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'company_name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'department' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'address1' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'address2' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'postal_code' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'place' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'phone' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'email' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'account_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'unit_leader' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'status' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+				'executive_officer' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_application_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,
+					'default' => 'comment'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_application' => array('application_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_application_composite' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'application_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'composite_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_application' => array('application_id' => 'id'),
+				'rental_composite' => array('composite_id' => 'id')
+			),
 			'ix' => array(),
 			'uc' => array()
 		)

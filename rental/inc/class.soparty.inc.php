@@ -448,7 +448,7 @@
 
 		public function get_export_data()
 		{
-			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, null);
+			$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array());
 			$exportable = new rental_agresso_cs15($parties);
 			return $exportable->get_contents();
 		}

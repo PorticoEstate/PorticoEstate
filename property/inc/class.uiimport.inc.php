@@ -72,9 +72,12 @@
 
 			$location_types = execMethod('property.soadmin_location.select_location_type');
 
+			$lang_category = lang('category');
 			foreach ($location_types as $location_type)
 			{
 				$this->valid_tables["fm_location{$location_type['id']}"] = array('name' => "fm_location{$location_type['id']} ({$location_type['name']})",
+					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
+				$this->valid_tables["fm_location{$location_type['id']}_category"] = array('name' => "fm_location{$location_type['id']}_category ({$location_type['name']} {$lang_category})",
 					'permission' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT);
 			}
 
@@ -449,7 +452,7 @@ HTML;
 
 					foreach ($metadata as $field => $info)
 					{
-						if ($field == 'xml_representation' || $field == 'guid')
+						if ($field == 'json_representation' || $field == 'xml_representation' || $field == 'guid')
 						{
 							continue;
 						}
@@ -471,13 +474,15 @@ HTML;
 							$_row_data[$_field] = $this->db->f($_field, true);
 						}
 
-						$xmldata = $this->db->f('xml_representation', true);
-						$xml = new DOMDocument('1.0', 'utf-8');
-						$xml->loadXML($xmldata);
+//						$xmldata = $this->db->f('xml_representation', true);
+//						$xml = new DOMDocument('1.0', 'utf-8');
+//						$xml->loadXML($xmldata);
+						$jsondata = json_decode($this->db->f('json_representation'), true);
 
 						foreach ($attributes as $attribute)
 						{
-							$_row_data[$attribute['column_name']] = $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
+//							$_row_data[$attribute['column_name']] = $xml->getElementsByTagName($attribute['column_name'])->item(0)->nodeValue;
+							$_row_data[$attribute['column_name']] = $jsondata[$attribute['column_name']];
 						}
 
 						$data[] = $_row_data;

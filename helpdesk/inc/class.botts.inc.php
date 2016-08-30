@@ -125,7 +125,7 @@
 			$columns['assignedto'] = array
 				(
 				'id' => 'assignedto',
-				'name' => lang('assignedto')
+				'name' => lang('assigned to')
 			);
 
 			$columns['billable_hours'] = array(
@@ -437,11 +437,16 @@
 			return $tickets;
 		}
 
-		function read_single($id)
+		function read_single($id, $values = array(), $view = false )
 		{
 			$this->so->update_view($id);
 
-			$ticket = $this->so->read_single($id);
+			$values['attributes'] = $this->get_custom_cols();
+			if(!$ticket = $this->so->read_single($id, $values))
+			{
+				return array();
+			}
+			$ticket = $this->custom->prepare($ticket, 'helpdesk', '.ticket', $view);
 
 			$ticket['user_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
 			$ticket['group_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
@@ -657,59 +662,67 @@
 			return $record_history;
 		}
 
-		function add($ticket)
+		function add( $data, $values_attribute = array() )
 		{
-			if((!isset($ticket['location_code']) || ! $ticket['location_code']) && isset($ticket['location']) && is_array($ticket['location']))
+
+			$data['finnish_date'] = $this->bocommon->date_to_timestamp($data['finnish_date']);
+
+			if ($values_attribute && is_array($values_attribute))
 			{
-				while (is_array($ticket['location']) && list(,$value) = each($ticket['location']))
-				{
-					if($value)
-					{
-						$location[] = $value;
-					}
-				}
-				$ticket['location_code']=implode("-", $location);
-			}
-
-			$ticket['finnish_date']	= $this->bocommon->date_to_timestamp($ticket['finnish_date']);
-
-			$receipt = $this->so->add($ticket);
-
-			$this->config->read();
-
-			if ( (isset($ticket['send_mail']) && $ticket['send_mail']) 
-				|| (isset($this->config->config_data['mailnotification'])
-				&& $this->config->config_data['mailnotification'])
-			)
-			{
-				$receipt_mail = $this->mail_ticket($receipt['id'],false,$receipt,$ticket['location_code']);
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
 
 			$criteria = array
 				(
-					'appname'	=> 'helpdesk',
-					'location'	=> $this->acl_location,
-					'allrows'	=> true
-				);
+				'appname' => 'helpdesk',
+				'location' => $this->acl_location,
+				'allrows' => true
+			);
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
-			foreach ( $custom_functions as $entry )
+			foreach ($custom_functions as $entry)
 			{
 				// prevent path traversal
-				if ( preg_match('/\.\./', $entry['file_name']) )
+				if (preg_match('/\.\./', $entry['file_name']))
 				{
 					continue;
 				}
 
 				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ( $entry['active'] && is_file($file) )
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
+			$receipt = $this->so->add($data, $values_attribute);
+
+			$this->config->read();
+
+			if ((isset($data['send_mail']) && $data['send_mail']) || (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'])
+			)
+			{
+				$receipt_mail = $this->mail_ticket($receipt['id'], false, $receipt, $data['location_code'], false, isset($data['send_mail']) && $data['send_mail'] ? true : false);
+			}
+
+			reset($custom_functions);
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
 				{
 					require_once $file;
 				}
 			}
 
-			if(isset($receipt_mail) && is_array($receipt_mail))
+			if (isset($receipt_mail) && is_array($receipt_mail))
 			{
 				$receipt = array_merge($receipt, $receipt_mail);
 			}
@@ -990,10 +1003,64 @@
 			return $receipt;
 		}
 
-		public function update_ticket($data, $id)
+		public function update_priority( $data, $id = 0 )
 		{
-			$receipt 	= $this->so->update_ticket($data, $id);
-			$this->fields_updated = $this->so->fields_updated;		
+			$receipt = $this->so->update_priority($data, $id);
+			$this->fields_updated = $this->so->fields_updated;
+			return $receipt;
+		}
+
+		public function update_ticket( &$data, $id, $receipt = array(), $values_attribute = array() , $simple = false)
+		{
+			if ($values_attribute && is_array($values_attribute))
+			{
+				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
+			}
+
+			$criteria = array
+				(
+				'appname' => 'helpdesk',
+				'location' => $this->acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
+			$receipt = $this->so->update_ticket($data, $id, $receipt, $values_attribute, $simple);
+			$this->fields_updated = $this->so->fields_updated;
+
+			reset($custom_functions);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
 			return $receipt;
 		}
 

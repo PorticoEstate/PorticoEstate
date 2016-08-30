@@ -50,7 +50,7 @@
 				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'type' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'guid' => array('type' => 'varchar', 'precision' => 50, 'nullable' => False),
-				'xml_representation' => array('type' => 'xml', 'nullable' => False),
+				'json_representation' => array('type' => 'jsonb', 'nullable' => False),
 				'model' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'p_location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'p_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),

@@ -418,7 +418,9 @@
 						{
 							if ($category['is_eav'])
 							{
-								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[text() = ''$_attrib_filter_value'']' PASSING BY REF xml_representation)";
+							//	$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[text() = ''$_attrib_filter_value'']' PASSING BY REF xml_representation)";
+								$attrib_filter[] = "json_representation->>'{$attrib['column_name']}' = '{$_attrib_filter_value}'";
+
 							}
 							else
 							{
@@ -432,7 +434,8 @@
 						{
 							if ($category['is_eav'])
 							{
-								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[contains(.,'',$_attrib_filter_value,'')]' PASSING BY REF xml_representation)";
+//								$attrib_filter[] = "xmlexists('//{$attrib['column_name']}[contains(.,'',$_attrib_filter_value,'')]' PASSING BY REF xml_representation)";
+								$attrib_filter[] = "json_representation->>'{$attrib['column_name']}' {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
 							}
 							else
 							{

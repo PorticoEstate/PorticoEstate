@@ -27,6 +27,8 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.datetime');
+
 	/**
 	* Global ugliness class
 	*
@@ -462,7 +464,7 @@
 					default:
 						$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
 						$value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-						$value = str_replace(array('(', ')', ';', '=', '--'),array('&#40;', '&#41;', '&#59;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
+						$value = str_replace(array(';','(', ')', '=', '--'),array('&#59;','&#40;', '&#41;', '&#61;','&#8722;&#8722;'), $value); // prevent SQL-injection
 						break;
 
 					case 'boolean':
@@ -571,6 +573,9 @@
 					
 					case 'html':
 						$value = self::clean_html($value);
+						break;
+					case 'date':
+						$value = phpgwapi_datetime::date_to_timestamp($value);
 						break;
 				}
 				return $value;

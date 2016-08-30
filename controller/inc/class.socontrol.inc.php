@@ -84,7 +84,7 @@
 		 * Update the database values for an existing control object.
 		 *
 		 * @param $control the control to be updated
-		 * @return boolean true if successful, false otherwise
+		 * @return bool true if successful, false otherwise
 		 */
 		function update( $control )
 		{
@@ -1151,7 +1151,8 @@
 				. " FROM controller_control_component_list"
 				. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id"
 				. " {$this->db->left_join} controller_control_serie ON (controller_control_component_list.id = controller_control_serie.control_relation_id AND controller_control_serie.control_relation_type = 'component')"
-				. " WHERE location_id = {$location_id} AND component_id = {$component_id}";
+				. " WHERE location_id = {$location_id} AND component_id = {$component_id}"
+				. " ORDER BY repeat_type, repeat_interval";
 //			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -1220,7 +1221,7 @@
 			return $ret;
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 

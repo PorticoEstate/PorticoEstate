@@ -699,6 +699,7 @@
 				'sms'			=> array('top_grant' => true),
 				'todo'			=> array('top_grant' => true),
 				'tts'			=> array('top_grant' => true),
+				'helpdesk'		=> array('top_grant' => true),
 			);
 			$GLOBALS['phpgw']->locations->verify($apps_with_acl);
 

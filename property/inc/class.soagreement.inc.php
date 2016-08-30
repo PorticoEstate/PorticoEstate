@@ -39,6 +39,7 @@
 		function __construct()
 		{
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->custom = createObject('property.custom_fields');
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->db = clone($GLOBALS['phpgw']->db);
 			$this->db2 = clone($this->db);
@@ -192,6 +193,7 @@
 
 			$this->db->query("SELECT * FROM $attribute_table WHERE list=1 AND $attribute_filter $user_column_filter ");
 
+			$cols_return_extra = array();
 			while ($this->db->next_record())
 			{
 				$uicols['input_type'][] = 'text';
@@ -248,6 +250,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 
+				$querymethod[] = "fm_vendor.org_name {$this->like} '%{$query}%'";
 				$querymethod[] = "fm_branch.descr {$this->like} '%{$query}%'";
 				$querymethod[] = "{$entity_table}.name {$this->like} '%{$query}%'";
 
@@ -255,13 +258,17 @@
 
 				while ($this->db->next_record())
 				{
-					if ($this->db->f('datatype') == 'V' || $this->db->f('datatype') == 'email' || $this->db->f('datatype') == 'CH')
+					switch ($this->db->f('datatype'))
 					{
-						$querymethod[] = "$entity_table." . $this->db->f('column_name') . " $this->like '%$query%'";
-					}
-					else
-					{
-						$querymethod[] = "$entity_table." . $this->db->f('column_name') . " = '$query'";
+						case 'V':
+						case 'T':
+						case 'email':
+						case 'CH':
+							$querymethod[] = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%$query%'";
+							break;
+						default:
+							$querymethod[] = "$entity_table." . $this->db->f('column_name') . " = '$query'";
+							break;
 					}
 				}
 
@@ -299,70 +306,16 @@
 					$agreement_list[$j][$cols_return[$i]] = $this->db->f($cols_return[$i]);
 				}
 
-				if (isset($cols_return_extra) && is_array($cols_return_extra))
+				foreach ($cols_return_extra as $custom_col)
 				{
-					for ($i = 0; $i < count($cols_return_extra); $i++)
+					if ($custom_value = $this->db->f($custom_col['name'], true))
 					{
-						$value = '';
-						$value = $this->db->f($cols_return_extra[$i]['name']);
-
-						if (($cols_return_extra[$i]['datatype'] == 'R' || $cols_return_extra[$i]['datatype'] == 'LB') && $value)
-						{
-							$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . $cols_return_extra[$i]['attrib_id'] . "  AND id=" . $value;
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('value');
-						}
-						else if ($cols_return_extra[$i]['datatype'] == 'AB' && $value)
-						{
-							$contact_data = $contacts->read_single_entry($value, array('n_given' => 'n_given',
-								'n_family' => 'n_family', 'email' => 'email'));
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = $contact_data[0]['n_family'] . ', ' . $contact_data[0]['n_given'];
-						}
-						else if ($cols_return_extra[$i]['datatype'] == 'VENDOR' && $value)
-						{
-							$sql = "SELECT org_name FROM fm_vendor where id=$value";
-							$this->db2->query($sql);
-							$this->db2->next_record();
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = $this->db2->f('org_name');
-						}
-						else if ($cols_return_extra[$i]['datatype'] == 'CH' && $value)
-						{
-//							$ch= unserialize($value);
-							$ch = explode(',', trim($data['value'], ','));
-							if (isset($ch) AND is_array($ch))
-							{
-								for ($k = 0; $k < count($ch); $k++)
-								{
-									$sql = "SELECT value FROM $choice_table WHERE $attribute_filter AND attrib_id=" . $cols_return_extra[$i]['attrib_id'] . "  AND id=" . $ch[$k];
-									$this->db2->query($sql);
-									while ($this->db2->next_record())
-									{
-										$ch_value[] = $this->db2->f('value');
-									}
-								}
-								$agreement_list[$j][$cols_return_extra[$i]['name']] = @implode(",", $ch_value);
-								unset($ch_value);
-							}
-						}
-						else if ($cols_return_extra[$i]['datatype'] == 'D' && $value)
-						{
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], strtotime($value));
-						}
-						else if ($cols_return_extra[$i]['datatype'] == 'timestamp' && $value)
-						{
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $value);
-						}
-						else if ($cols_return_extra[$i]['datatype'] == 'link' && $value)
-						{
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = phpgw::safe_redirect($value);
-						}
-						else
-						{
-							$agreement_list[$j][$cols_return_extra[$i]['name']] = $value;
-						}
+						$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
+							'attrib_id' => $custom_col['attrib_id'], 'datatype' => $custom_col['datatype']), $location_id);
 					}
+					$agreement_list[$j][$custom_col['name']] = $custom_value;
 				}
+
 				$j++;
 			}
 			//_debug_array($agreement_list);
@@ -390,6 +343,7 @@
 			$cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$agreement_id = isset($data['agreement_id']) ? $data['agreement_id'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$allrows = true; // return all..
 
@@ -495,7 +449,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{
@@ -533,6 +487,7 @@
 			{
 				$agreement_id = (isset($data['agreement_id']) ? $data['agreement_id'] : 0);
 				$activity_id = (isset($data['activity_id']) ? $data['activity_id'] : 0);
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			$entity_table = 'fm_activity_price_index';
@@ -612,7 +567,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

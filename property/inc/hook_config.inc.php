@@ -76,6 +76,34 @@ HTML;
 		}
 		return $out;
 	}
+	/**
+	 * Get HTML checkbox with groups that are candidates for simplified tts interface
+	 *
+	 * @param $config
+	 * @return string HTML checkboxes to be placed in a table
+	 */
+	function fmttssimple_categories( $config )
+	{
+		$cats = CreateObject('phpgwapi.categories', -1, 'property', '.ticket');
+		$cats->supress_info = true;
+		$values = $cats->return_sorted_array(0, false, '', '', '', $globals = true, '', $use_acl = false);
+
+		$cats_assigned = isset($config['fmttssimple_categories']) ? $config['fmttssimple_categories'] : array();
+		$out = '';
+		foreach ($values as $key => $group)
+		{
+			$checked = '';
+			if (in_array($group['id'], $cats_assigned))
+			{
+				$checked = ' checked';
+			}
+
+			$out .= <<<HTML
+			<tr><td><input type="checkbox" name="newsettings[fmttssimple_categories][]" value="{$group['id']}" {$checked}><label>{$group['name']}</label></td></tr>
+HTML;
+		}
+		return $out;
+	}
 
 	/**
 	 * Get HTML checkbox with groups that are candidates for the field finnish date at tts

@@ -903,6 +903,8 @@
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
 
+			$filters = array();
+			$search_type = '';
 
 			$ctrl_area = phpgw::get_var('control_areas');
 			if (isset($ctrl_area) && $ctrl_area > 0)

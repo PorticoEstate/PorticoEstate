@@ -8,6 +8,12 @@
 	{
 
 		protected static $so;
+		protected $db2;
+		public function __construct()
+		{
+			parent::__construct();
+			$this->db2 = clone($this->db);
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -77,6 +83,28 @@
 			return $notification;
 		}
 
+		protected function populate2( int $notification_id, &$notification )
+		{
+			if (!isset($notification_id) || $notification_id < 1)
+			{
+				$notification_id = $this->unmarshal($this->db2->f('notification_id', true), 'int');
+			}
+			$notification = new rental_notification(
+				$notification_id,
+				$this->unmarshal($this->db2->f('account_id'), 'int'),
+				$this->unmarshal($this->db2->f('location_id'), 'int'),
+				$this->unmarshal($this->db2->f('contract_id'), 'int'),
+				$this->unmarshal($this->db2->f('date'), 'int'),
+				$this->unmarshal($this->db2->f('message', true), 'text'),
+				$this->unmarshal($this->db2->f('recurrence'), 'int'),
+				$this->unmarshal($this->db2->f('last_notified'), 'int'),
+				$this->unmarshal($this->db2->f('title', true), 'string'),
+				$this->unmarshal($this->db2->f('originated_from'), 'int')
+			);
+			$notification->set_field_of_responsibility_id($this->db2->f('location_id'));
+			return $notification;
+		}
+
 		function add( &$notification )
 		{
 			$cols = array('contract_id', 'date', 'message', 'recurrence');
@@ -142,19 +170,19 @@
 			// Select all notifications not marked as deleted
 			$sql = "SELECT * FROM rental_notification WHERE deleted = false";
 
-			$result = $this->db->query($sql);
+			$result = $this->db2->query($sql);
 
 			//Iterate through all notifications
-			while ($this->db->next_record())
+			while ($this->db2->next_record())
 			{
-				$result_id = $this->unmarshal($this->db->f('id', true), 'int'); // The id of object
+				$result_id = $this->unmarshal($this->db2->f('id', true), 'int'); // The id of object
 				// Create notification object
-				$notification = $this->populate($result_id, $notification);
+				$notification = $this->populate2($result_id, $notification);
 
 				// Calculate timestamps the notification date, target date (default: today) and last notified
 				$notification_date = date("Y-m-d", $notification->get_date());
 
-				if (!$day)
+				if (!$day || is_array($day))
 				{
 					$day = date("Y-m-d", strtotime('now'));
 				}
@@ -258,11 +286,17 @@
 						if ($unique_account && $unique_account > 0)
 						{
 
-							$notification = new rental_notification
-								(
+							$notification = new rental_notification(
 								0, // No notification identifier
-		$unique_account, 0, // No location identifier
-		$this->unmarshal($this->db->f('contract_id', true), 'int'), $ts_today, null, null, null, null, $notification_id
+								$unique_account,
+								0, // No location identifier
+								$this->unmarshal($this->db2->f('contract_id', true), 'int'),
+								$ts_today,
+								null,
+								null,
+								null,
+								null,
+								$notification_id
 							);
 							rental_soworkbench_notification::get_instance()->store($notification);
 						}

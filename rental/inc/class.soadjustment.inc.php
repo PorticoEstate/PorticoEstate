@@ -306,7 +306,7 @@
 						//update adjustment_year on contract
 						rental_socontract::get_instance()->update_adjustment_year($contract_id, $adjustment->get_year());
 						//gather price items to be adjusted
-						$contract_price_items = rental_socontract_price_item::get_instance()->get(null, null, null, null, null, null, array(
+						$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 							'contract_id' => $contract_id));
 						foreach ($contract_price_items as $cpi)
 						{

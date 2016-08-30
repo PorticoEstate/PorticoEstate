@@ -26,9 +26,8 @@
 	 * @subpackage application
 	 * @version $Id: $
 	 */
-
 	phpgw::import_class('rental.uicommon');
-	phpgw::import_class('rental.soapplication');
+	phpgw::import_class('phpgwapi.datetime');
 
 	include_class('rental', 'application', 'inc/model/');
 
@@ -43,14 +42,84 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'set_value' => true,
 		);
+
+		protected
+			$fields,
+			$composite_types,
+			$payment_methods;
 
 		public function __construct()
 		{
 			parent::__construct();
 			self::set_active_menu('rental::application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl_location = '.application';
+			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'rental');
+			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'rental');
+			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'rental');
+			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'rental');
+			$this->acl_manage = $this->acl->check($this->acl_location, PHPGW_ACL_PRIVATE, 'rental'); // manage
+			$this->composite_types = rental_application::get_composite_types();
+			$this->payment_methods = rental_application::get_payment_methods();
+			$this->fields = rental_application::get_fields();
+		}
+
+		private function get_status_options( $selected = 0 )
+		{
+			$status_options = array();
+			$status_options[] = array(
+				'id' => '',
+				'name' => lang('all')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_REGISTERED,
+				'name' => lang('registered')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_PENDING,
+				'name' => lang('pending')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_REJECTED,
+				'name' => lang('rejected')
+			);
+			$status_options[] = array(
+				'id' => rental_application::STATUS_APPROVED,
+				'name' => lang('approved')
+			);
+
+			foreach ($status_options as &$entry)
+			{
+				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+			}
+			return $status_options;
+		}
+
+		private function _get_fields()
+		{
+			$values = array();
+			foreach ($this->fields as $field => $field_info)
+			{
+				if($field_info['action'] & PHPGW_ACL_READ)
+				{
+					$data = array(
+						'key' => $field,
+						'label' => !empty($field_info['label']) ? lang($field_info['label']) : $field,
+						'sortable' => !empty($field_info['sortable']) ? true : false,
+						'hidden' => !empty($field_info['hidden']) ? true : false,
+					);
+
+					if(!empty($field_info['formatter']))
+					{
+						$data['formatter'] = $field_info['formatter'];
+					}
+
+					$values[] = $data;
+				}
+			}
+			return $values;
 		}
 
 		public function index()
@@ -67,24 +136,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$types_options = array();
-			$types_options[] = array(
-				'id'	=> 1,
-				'name'	=> 'registrert'
-			);
-			$types_options[] = array(
-				'id'	=> 2,
-				'name'	=> 'under behandling'
-			);
-			$types_options[] = array(
-				'id'	=> 3,
-				'name'	=> 'avvist'
-			);
-			$types_options[] = array(
-				'id'	=> 3,
-				'name'	=> 'godkjent'
-			);
-
+			$status_options = $this->get_status_options();
 			$function_msg = lang('application');
 
 			$data = array(
@@ -94,16 +146,16 @@
 						'item' => array(
 							array(
 								'type' => 'filter',
-								'name' => 'responsibility_id',
+								'name' => 'filter_status',
 								'text' => lang('status'),
-								'list' => $types_options
+								'list' => $status_options
 							),
 							array('type' => 'autocomplete',
-								'name' => 'dimb',
+								'name' => 'ecodimb',
 								'app' => 'property',
 								'ui' => 'generic',
-								'label_attr'=>'descr',
-				//				'show_id'=> true,
+								'label_attr' => 'descr',
+						//		'show_id'=> true,
 								'text' => lang('dimb') . ':',
 								'requestGenerator' => 'requestWithDimbFilter',
 							),
@@ -118,43 +170,7 @@
 					'allrows' => true,
 					'new_item' => self::link(array('menuaction' => 'rental.uiapplication.add')),
 					'editor_action' => '',
-					'field' => array(
-						array(
-							'key' => 'title',
-							'label' => lang('name'),
-							'className' => '',
-							'sortable' => true,
-							'hidden' => false
-						),
-						array(
-							'key' => 'is_area',
-							'label' => 'Avdeling',
-							'className' => '',
-							'sortable' => true,
-							'hidden' => false
-						),
-						array(
-							'key' => 'status',
-							'label' => lang('status'),
-							'className' => '',
-							'sortable' => true,
-							'hidden' => false
-						),
-						array(
-							'key' => 'assignedto',
-							'label' => 'saksbehandler',
-							'className' => '',
-							'sortable' => true,
-							'hidden' => false
-						),
-						array(
-							'key' => 'type',
-							'label' => lang('type'),
-							'className' => '',
-							'sortable' => false,
-							'hidden' => false
-						)
-					)
+					'field' => $this->_get_fields()
 				)
 			);
 
@@ -189,15 +205,6 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			$code = <<<JS
-				var thousandsSeparator = '$this->thousandsSeparator';
-				var decimalSeparator = '$this->decimalSeparator';
-				var decimalPlaces = '$this->decimalPlaces';
-				var currency_suffix = '$this->currency_suffix';
-JS;
-
-			$GLOBALS['phpgw']->js->add_code('', $code);
-
 			self::add_javascript('rental', 'rental', 'application.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
@@ -224,113 +231,142 @@ JS;
 
 		public function edit( $values = array(), $mode = 'edit' )
 		{
+			$active_tab = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
-			if (!self::isExecutiveOfficer())
+			if (!$this->acl_add)
 			{
 				phpgw::no_access();
 			}
 
-			$responsibility_id = phpgw::get_var('responsibility_id');
-			$application_id = phpgw::get_var('id', 'int');
-
-			if (!empty($values['application_id']))
+			if (!empty($values['application']))
 			{
-				$application_id = $values['application_id'];
-			}
-
-			if (!empty($application_id))
-			{
-				$application = rental_application::get($application_id);
+				$application = $values['application'];
 			}
 			else
 			{
-				$title = phpgw::get_var('application_title');
+				$application_id = phpgw::get_var('id', 'int');
 
-				$application = new rental_application();
-				$application->set_title($title);
-//				$application->set_responsibility_id($responsibility_id);
-//				$application->set_price_type_id(1); // defaults to year
+				if (!empty($values['application_id']))
+				{
+					$application_id = $values['application_id'];
+				}
+				if ($application_id)
+				{
+					$application = rental_application::get($application_id);
+				}
+				else
+				{
+					$application = new rental_application();
+				}
 			}
 
-	//		$responsibility_title = ($application->get_responsibility_title()) ? $application->get_responsibility_title() : rental_socontract::get_instance()->get_responsibility_title($responsibility_id);
-
-			$link_save = array(
-				'menuaction' => 'rental.uiapplication.save'
-			);
-
-			$link_index = array(
-				'menuaction' => 'rental.uiapplication.index',
-			);
+			if (!$this->acl_edit)
+			{
+				$step = 1;
+			}
+			else if ($application->get_id())
+			{
+				$step = 2;
+			}
 
 			$tabs = array();
-			$tabs['application'] = array('label' => lang('application'), 'link' => '#application');
-			$tabs['party'] = array('label' => lang('party'), 'link' => '#party');
-			$tabs['assignment'] = array('label' => lang('assignment'), 'link' => '#assignment');
-
-			$active_tab = 'showing';
-
-//			$current_price_type_id = $application->get_price_type_id();
-			$types_options = array();
-//			foreach ($application->get_price_types() as $price_type_id => $price_type_title)
-//			{
-//				$selected = ($current_price_type_id == $price_type_id) ? 1 : 0;
-//				$types_options[] = array('id' => $price_type_id, 'name' => lang($price_type_title),
-//					'selected' => $selected);
-//			}
-
+			$tabs['application'] = array(
+				'label' => lang('application'),
+				'link' => '#application',
+				'function' => "set_tab('application')"
+			);
+			$tabs['party'] = array(
+				'label' => lang('party'),
+				'link' => '#party',
+				'function' => "set_tab('party')"
+				);
+			if($step > 1)
+			{
+				$tabs['assignment'] = array(
+					'label' => lang('assignment'),
+					'link' => '#assignment',
+					'function' => "set_tab('assignment')"
+				);
+			}
 
 			$composite_type = array();
-			$composite_type[] = array('id' => 1, 'name' => 'Hybel');
-			$composite_type[] = array('id' => 2, 'name' => 'Leilighet');
+			foreach ($this->composite_types as $_key => $_value)
+			{
+				$composite_type[] = array('id' => $_key, 'name' => $_value);
+			}
 
-			$payment_method = array();
-			$payment_method[] = array('id' => 1, 'name' => 'Faktura');
-			$payment_method[] = array('id' => 2, 'name' => 'Trekk i lønn');
-			$payment_method[] = array('id' => 3, 'name' => 'intern faktura');
+			$payment_methods = array();
+			foreach ($this->payment_methods as $_key => $_value)
+			{
+				$payment_methods[] = array('id' => $_key, 'name' => $_value);
+			}
 
 			$bocommon = CreateObject('property.bocommon');
 
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
 			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_end');
+
+			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'rental');
+			$executive_officer_options[] = array('id' => '', 'name' => lang('nobody'), 'selected' => 0);
+			foreach ($accounts as $account)
+			{
+				$executive_officer_options[] = array(
+					'id' => $account['account_id'],
+					'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString(),
+					'selected' => ($account['account_id'] == $application->executive_officer) ? 1 : 0
+				);
+			}
+			$comments = (array)$application->comments;
+			foreach ($comments as $key => &$comment)
+			{
+				$comment['value_count'] = $key +1;
+				$comment['value_date'] = $GLOBALS['phpgw']->common->show_date($comment['time']);
+			}
+
+			$comments_def = array(
+				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
+			);
+ 
+			$datatable_def[] = array(
+				'container' => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => $comments_def,
+				'data' => json_encode($comments),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
 
 			$data = array(
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_save),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_index),
-				'lang_save' => lang('save'),
-				'lang_cancel' => lang('cancel'),
-				'value_ecodimb'	=> $application->get_ecodimb(),
-				'value_ecodimb_descr'	=> ExecMethod('property.bogeneric.get_single_attrib_value', array('type' => 'dimb', 'id' => $application->get_ecodimb(), 'attrib_name' => 'descr' )),
-				'district_list'			=> array('options' => $bocommon->select_district_list('', $application->get_district_id())),
-				'composite_type_list'		=> array('options' => $bocommon->select_list( $application->get_composite_type(), $composite_type)),
-				'value_date_start'	=> $GLOBALS['phpgw']->common->show_date($application->get_start_date(),$this->dateFormat),
-				'value_date_end'	=> $GLOBALS['phpgw']->common->show_date($application->get_end_date(),$this->dateFormat),
-				'value_cleaning'	=> $application->get_cleaning(),
-				'payment_method_list'		=> array('options' => $bocommon->select_list( $application->get_payment_method(), $payment_method)),
-
-//				'lang_current_price_type' => lang($application->get_price_type_title()),
-//				'lang_adjustable_text' => $application->get_adjustable_text(),
-//				'lang_standard_text' => $application->get_standard_text(),
-//				'value_title' => $application->get_title(),
-//				'value_field_of_responsibility' => lang($responsibility_title),
-//				'value_agresso_id' => $application->get_agresso_id(),
-//				'is_area' => ($application->is_area()) ? 1 : 0,
-//				'list_type' => array('options' => $types_options),
-//				'value_price' => $application->get_price(),
-//				'value_price_formatted' => number_format($application->get_price(), $this->decimalPlaces, $this->decimalSeparator, $this->thousandsSeparator) . ' ' . $this->currency_suffix,
-//				'has_active_contract' => (rental_soapplication::get_instance()->has_active_contract($application->get_id())) ? 1 : 0,
-//				'is_inactive' => ($application->is_inactive()) ? 1 : 0,
-//				'is_adjustable' => ($application->is_adjustable()) ? 1 : 0,
-//				'is_standard' => ($application->is_standard()) ? 1 : 0,
-				'application_id' => $application->get_id(),
-//				'responsibility_id' => $responsibility_id,
+				'datatable_def' => $datatable_def,
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.save')),
+				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index',)),
+				'application' => $application,//->toArray(),
+				'list_executive_officer' => array('options' => $executive_officer_options),
+				'step'		=> $step,
+				'value_ecodimb_descr' => ExecMethod('property.bogeneric.get_single_attrib_value', array(
+					'type' => 'dimb',
+					'id' => $application->ecodimb_id,
+					'attrib_name' => 'descr')
+				),
+				'district_list' => array('options' => $bocommon->select_district_list('', $application->district_id)),
+				'composite_type_list' => array('options' => $bocommon->select_list($application->composite_type, $composite_type)),
+				'payment_method_list' => array('options' => $bocommon->select_list($application->payment_method, $payment_methods)),
+				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 			);
-			phpgwapi_jquery::formvalidator_generate(array('date','security', 'file'));
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('rental', 'rental', 'application.edit.js');
 
-			self::render_template_xsl(array('application'), array($mode => $data));
+			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}
 		/*
 		 * To be removed
@@ -339,7 +375,7 @@ JS;
 
 		public function add()
 		{
-			if (!self::isExecutiveOfficer())
+			if (!$this->acl_add)
 			{
 				phpgw::no_access();
 			}
@@ -349,93 +385,66 @@ JS;
 
 		public function save()
 		{
+			if (!$this->acl_add)
+			{
+				phpgw::no_access();
+			}
+//			_debug_array($_POST);
 			$application_id = phpgw::get_var('id', 'int');
+			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'application');
 
-			if (!empty($application_id))
+			if ($application_id)
 			{
-				$application = rental_application::get($application_id);
+				$application = rental_soapplication::get_instance()->read_single($application_id, true);
 			}
 			else
 			{
-				$title = phpgw::get_var('application_title');
-				$responsibility_id = phpgw::get_var('responsibility_id');
 				$application = new rental_application();
-				$application->set_title($title);
-				$application->set_responsibility_id($responsibility_id);
-				$application->set_price_type_id(1); // defaults to year
+				$application->status = $application::STATUS_REGISTERED;
 			}
+			/*
+			 * Overrides with incoming data from POST
+			 */
+			$application = $this->_populate($application);
 
-			$application->set_title(phpgw::get_var('title'));
-			$application->set_agresso_id(phpgw::get_var('agresso_id'));
-			$application->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
-			$application->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
-			$application->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
-			$application->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
-			$application->set_price(phpgw::get_var('price'));
-			$application->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
-			if ($application->get_agresso_id() == null)
+			if($application->validate())
 			{
-				phpgwapi_cache::message_set(lang('missing_agresso_id'), 'error');
-			}
-			else
-			{
-				if (rental_soapplication::get_instance()->store($application))
+				if($application->store($application))
 				{
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
-					$application_id = $application->get_id();
+					self::redirect(array(
+						'menuaction' => 'rental.uiapplication.edit',
+						'id'		=> $application->get_id(),
+						'active_tab' => $active_tab
+						)
+					);
 				}
 				else
 				{
 					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+					$this->edit(array('application'	=> $application, 'active_tab' => $active_tab));
 				}
-			}
-			$this->edit(array('application_id' => $application_id));
-		}
-
-		public function set_value()
-		{
-			if (!self::isExecutiveOfficer())
-			{
-				return;
-			}
-
-			$field_name = phpgw::get_var('field_name');
-			$value = phpgw::get_var('value');
-			$id = phpgw::get_var('id');
-
-			switch ($field_name)
-			{
-				case 'count':
-					$value = (int) $value;
-					break;
-				case 'price':
-					$value = trim(str_replace(array($this->currency_suffix, " "), '', $value));
-					break;
-				case 'date_start':
-				case 'date_end':
-					$value = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('value'));
-					break;
-				default:
-					$value = phpgw::get_var('value');
-					break;
-			}
-
-			$application = rental_socontract_application::get_instance()->get_single($id);
-			$application->set_field($field_name, $value);
-			$result = rental_socontract_application::get_instance()->store($application);
-
-			$message = array();
-			if ($result)
-			{
-				$message['message'][] = array('msg' => lang('data has been saved'));
 			}
 			else
 			{
-				$message['error'][] = array('msg' => lang('data has not been saved'));
+				$this->edit(array('application'	=> $application, 'active_tab' => $active_tab));
 			}
-
-			return $message;
 		}
+
+		private function _populate($application)
+		{
+			$fields = $this->fields;
+
+			foreach ($fields as $field	=> $field_info)
+			{
+				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
+				{
+					$application->set_field( $field, phpgw::get_var($field, $field_info['type'] ) );
+				}
+			}
+			return $application;
+		}
+
 
 		/**
 		 * (non-PHPdoc)
@@ -443,50 +452,54 @@ JS;
 		 */
 		public function query()
 		{
+			$params = $this->build_default_read_params();
+			$applications = rental_soapplication::get_instance()->read($params);
+			$status_text = array(
+				rental_application::STATUS_REGISTERED => lang('registered'),
+				rental_application::STATUS_PENDING	=> lang('pending'),
+				rental_application::STATUS_REJECTED => lang('rejected'),
+				rental_application::STATUS_APPROVED	=> lang('approved')
+			);
 
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
+			foreach ($applications['results'] as &$application)
 			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
+					$application['status'] = $status_text[$application['status']];
+					$application['composite_type'] = $this->composite_types[$application['composite_type']];
 
+					$application['entry_date'] = $GLOBALS['phpgw']->common->show_date($application['entry_date'], $dateformat);
+					$application['executive_officer'] = $application['executive_officer'] ? $GLOBALS['phpgw']->accounts->get($application['executive_officer'])->__toString() : '';
+			}
+			array_walk($applications["results"], array($this, "_add_links"), "rental.uiapplication.edit");
+
+			return $this->jquery_results($applications);
+		}
+
+		protected function build_default_read_params()
+		{
+			$fields = $this->fields;
+
+			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
-			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'agresso_id';
-			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
+				'sort' => $columns[$order[0]['column']]['data'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1,
+			);
 
-			$search_for = '';
-			$search_type = '';
-
-
-			$filters = array();
-			$result_objects = rental_soapplication::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
-			$object_count = 0;//rental_soapplication::get_instance()->get_count($search_for, $search_type, $filters);
-
-			// Create an empty row set
-			$rows = array();
-			foreach ($result_objects as $record)
+			foreach ($fields as $field => $_params)
 			{
-				if (isset($record))
+				if (!empty($_REQUEST["filter_$field"]))
 				{
-					// ... add a serialized record
-					$rows[] = $record->serialize();
+					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
 				}
 			}
 
-
-			$result_data = array('results' => $rows);
-			$result_data['total_records'] = $object_count;
-			$result_data['draw'] = $draw;
-
-			return $this->jquery_results($result_data);
+			return $params;
 		}
-
 	}

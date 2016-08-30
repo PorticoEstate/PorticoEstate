@@ -69,26 +69,26 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="simple !='1'">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Group')"/>
-								</label>
+							<xsl:if test="disable_groupassign_on_add !='1'">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Group')"/>
+									</label>
 
-								<xsl:call-template name="group_select"/>
-							</div>
-							<xsl:choose>
-								<xsl:when test="disable_userassign_on_add !='1'">
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'Assign to')"/>
-										</label>
+									<xsl:call-template name="group_select"/>
+								</div>
+							</xsl:if>
+							<xsl:if test="disable_userassign_on_add !='1'">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Assign to')"/>
+									</label>
 
-										<xsl:call-template name="user_id_select"/>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-							<xsl:call-template name="contact_form"/>
-							<div class="pure-control-group">
+									<xsl:call-template name="user_id_select"/>
+								</div>
+							</xsl:if>
+							<!--xsl:call-template name="contact_form"/-->
+							<!--div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'Send e-mail')"/>
 								</label>
@@ -102,22 +102,24 @@
 										</xsl:attribute>
 									</xsl:if>
 								</input>
-							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Priority')"/>
-								</label>
+							</div-->
+							<xsl:if test="disable_priority !='1'">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Priority')"/>
+									</label>
 
-								<xsl:variable name="lang_priority_statustext">
-									<xsl:value-of select="lang_priority_statustext"/>
-								</xsl:variable>
-								<xsl:variable name="select_priority_name">
-									<xsl:value-of select="select_priority_name"/>
-								</xsl:variable>
-								<select name="{$select_priority_name}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
-									<xsl:apply-templates select="priority_list/options"/>
-								</select>
-							</div>
+									<xsl:variable name="lang_priority_statustext">
+										<xsl:value-of select="lang_priority_statustext"/>
+									</xsl:variable>
+									<xsl:variable name="select_priority_name">
+										<xsl:value-of select="select_priority_name"/>
+									</xsl:variable>
+									<select name="{$select_priority_name}" title="{$lang_priority_statustext}">
+										<xsl:apply-templates select="priority_list/options"/>
+									</select>
+								</div>
+							</xsl:if>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'status')"/>
@@ -161,7 +163,7 @@
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="php:function('lang', 'Please enter a title !')"/>
+									<xsl:value-of select="php:function('lang', 'Please enter a title!')"/>
 								</xsl:attribute>
 							</xsl:if>
 
@@ -200,6 +202,18 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'paste image data')"/>
+							<br/>
+							<xsl:text>Ctrl + V</xsl:text>
+						</label>
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
+						</canvas>
+						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+					</div>
+
 				</fieldset>
 			</div>
 		</div>
@@ -209,17 +223,17 @@
 			<input type="hidden" id="cancel" name="values[cancel]" value=""/>
 			<input class="pure-button pure-button-primary" type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="apply" value="{lang_save}" onClick="confirm_session('apply');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="cancel" value="{lang_cancel}" onClick="confirm_session('cancel');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
 				</xsl:attribute>
 			</input>
 		</div>
@@ -281,7 +295,7 @@
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 
-	//	var initialSelection = <xsl:value-of select="resources_json"/>;
+		//	var initialSelection = <xsl:value-of select="resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 
 
@@ -314,6 +328,9 @@
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
 						</input>
+						<input type="hidden" id="id" name="id" value="{id}">
+						</input>
+
 					</div>
 					<xsl:for-each select="value_origin">
 						<div class="pure-control-group">
@@ -342,7 +359,7 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:call-template name="contact_form"/>
+					<!--xsl:call-template name="contact_form"/-->
 					<xsl:for-each select="value_target">
 						<div class="pure-control-group">
 							<label>
@@ -383,12 +400,12 @@
 					</div>
 					<xsl:choose>
 						<xsl:when test="simple !='1'">
-							<div class="pure-control-group">
+							<!--div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'group')"/>
 								</label>
 								<xsl:call-template name="group_select"/>
-							</div>
+							</div-->
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'assigned to')"/>
@@ -424,35 +441,33 @@
 									</xsl:if>
 								</input>
 							</div>
+							<xsl:if test="disable_priority !='1'">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'Priority')"/>
+									</label>
+									<xsl:variable name="lang_priority_statustext">
+										<xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')"/>
+									</xsl:variable>
+									<xsl:variable name="select_priority_name">
+										<xsl:value-of select="select_priority_name"/>
+									</xsl:variable>
+									<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
+										<xsl:apply-templates select="priority_list/options"/>
+									</select>
+								</div>
+							</xsl:if>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'Priority')"/>
+									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<xsl:variable name="lang_priority_statustext">
-									<xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')"/>
-								</xsl:variable>
-								<xsl:variable name="select_priority_name">
-									<xsl:value-of select="select_priority_name"/>
-								</xsl:variable>
-								<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
-									<xsl:apply-templates select="priority_list/options"/>
+								<select id="status_id" name="values[status]" class="forms">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="status_list/options"/>
 								</select>
 							</div>
-							<xsl:choose>
-								<xsl:when test="value_order_id=''">
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'status')"/>
-										</label>
-										<select id="status_id" name="values[status]" class="forms">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
-											</xsl:attribute>
-											<xsl:apply-templates select="status_list/options"/>
-										</select>
-									</div>
-								</xsl:when>
-							</xsl:choose>
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'category')"/>
@@ -546,6 +561,19 @@
 							<xsl:call-template name="file_upload"/>
 						</xsl:when>
 					</xsl:choose>
+
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'paste image data')"/>
+							<br/>
+							<xsl:text>Ctrl + V</xsl:text>
+						</label>
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
+						</canvas>
+						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+					</div>
+
 					<xsl:choose>
 						<xsl:when test="send_response = 1">
 							<div class="pure-control-group">

@@ -27,6 +27,8 @@
 		protected $standard_id;
 		protected $units;
 		protected $contracts;
+		protected $part_of_town_id;
+		protected $custom_prize_factor = '1.00';
 		protected static $furnish_types_arr;
 
 		/**
@@ -35,9 +37,9 @@
 		 * 
 		 * @param int $id the id of this composite
 		 */
-		public function __construct( int $id = null )
+		public function __construct( int $id = null)
 		{
-			parent::__construct($id);
+			parent::__construct((int)$id);
 			$this->units = array();
 			$this->contracts = array();
 		}
@@ -309,6 +311,26 @@
 			return (int)$this->furnish_type_id;
 		}
 
+		public function set_part_of_town_id(  $part_of_town_id )
+		{
+			$this->part_of_town_id = $part_of_town_id;
+		}
+
+		public function get_part_of_town_id()
+		{
+			return $this->part_of_town_id;
+		}
+
+		public function set_custom_prize_factor( float $custom_prize_factor )
+		{
+			$this->custom_prize_factor = $custom_prize_factor;
+		}
+
+		public function get_custom_prize_factor()
+		{
+			return (float)$this->custom_prize_factor;
+		}
+
 		public function get_furnish_type()
 		{
 
@@ -460,7 +482,10 @@
 				'area_net' => $this->get_area_net(),
 				'status' => $this->get_status(),
 				'contracts' => $contract_dates,
-				'furnished_status' => $this->get_furnish_type()
+				'furnished_status' => $this->get_furnish_type(),
+				'standard_id' =>  $this->get_standard_id(),
+				'part_of_town_id' =>  $this->get_part_of_town_id(),
+				'custom_prize_factor' =>  $this->get_custom_prize_factor(),
 			);
 		}
 	}

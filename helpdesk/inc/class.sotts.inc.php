@@ -131,18 +131,13 @@
 			{
 				if( $order == 'assignedto' )
 				{
-//					$result_order_field = ',account_lastname';
-//					$order_join = "LEFT OUTER JOIN phpgw_accounts ON phpgw_helpdesk_tickets.assignedto=phpgw_accounts.account_id";
-//					$order = 'account_lastname';
+					$result_order_field = ',account_lastname';
+					$order = 'account_lastname';
 				}
 				else if( $order == 'user' )
 				{
 					$result_order_field = ',account_lastname';
 					$order = 'account_lastname';
-				}
-				else
-				{
-					$order_join = '';
 				}
 
 				$ordermethod = " ORDER BY $order $sort";
@@ -180,15 +175,6 @@
 				$where= 'AND';
 			}
 
-			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_location']) && $GLOBALS['phpgw']->config->config_data['acl_at_location'])
-			{
-				$access_location = execMethod('property.socommon.get_location_list', PHPGW_ACL_READ);
-				if($access_location)
-				{
-					$filtermethod .= " $where phpgw_helpdesk_tickets.loc1 in ('" . implode("','", $access_location) . "')";
-					$where= 'AND';
-				}
-			}
 
 			if (is_array($this->grants))
 			{
@@ -222,12 +208,6 @@
 				{
 					$filtermethod .=')';
 				}
-			}
-
-			if($tenant_id = $GLOBALS['phpgw']->session->appsession('tenant_id','helpdesk'))
-			{
-				$filtermethod .= $where . ' phpgw_helpdesk_tickets.tenant_id=' . $tenant_id;
-				$where = 'AND';
 			}
 
 			if ($status_id == 'X')
@@ -352,7 +332,6 @@
 				. " $filtermethod $querymethod";
 
 			$sql2 = "SELECT count(*) as cnt FROM ({$sql}) as t";
-			_debug_array($sql2);
 			$this->db->query($sql2,__LINE__,__FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
@@ -361,6 +340,10 @@
 			$tickets = array();
 			if(!$dry_run)
 			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+				$custom_cols = $this->custom->find('helpdesk', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
+				$_return_field_array = array();
+
 				if(!$allrows)
 				{
 					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
@@ -379,42 +362,41 @@
 					unset($_fetch_single);
 				}
 
+				$i = 0;
 				while ($this->db->next_record())
 				{
 					$tickets[]= array
-						(
-							'id'				=> (int) $this->db->f('id'),
-							'subject'			=> $this->db->f('subject',true),
-							'user_id'			=> $this->db->f('user_id'),
-							'assignedto'		=> $this->db->f('assignedto'),
-							'status'			=> $this->db->f('status'),
-							'priority'			=> $this->db->f('priority'),
-							'cat_id'			=> $this->db->f('cat_id'),
-							'group_id'			=> $this->db->f('group_id'),
-							'entry_date'		=> $this->db->f('entry_date'),
-							'finnish_date'		=> $this->db->f('finnish_date'),
-							'finnish_date2'		=> $this->db->f('finnish_date2'),
-							'order_id'			=> $this->db->f('order_id'),
-							'vendor_id'			=> $this->db->f('vendor_id'),
-							'actual_cost'		=> $this->db->f('actual_cost'),
-							'estimate'			=> $this->db->f('budget'),
-							'new_ticket'		=> $this->db->f('view') ? false : true,
-							'billable_hours'	=> $this->db->f('billable_hours'),
-						);
-				}
-/*			
-				foreach ($tickets as &$ticket)
-				{
-					$this->db->query("SELECT count(*) as hits FROM phpgw_helpdesk_views where id={$ticket['id']}"
-						. " AND account_id='{$this->account}'",__LINE__,__FILE__);
-					$this->db->next_record();
-
-					if(! $this->db->f('hits'))
+					(
+						'id'				=> (int) $this->db->f('id'),
+						'subject'			=> $this->db->f('subject',true),
+						'user_id'			=> $this->db->f('user_id'),
+						'assignedto'		=> $this->db->f('assignedto'),
+						'status'			=> $this->db->f('status'),
+						'priority'			=> $this->db->f('priority'),
+						'cat_id'			=> $this->db->f('cat_id'),
+						'group_id'			=> $this->db->f('group_id'),
+						'entry_date'		=> $this->db->f('entry_date'),
+						'modified_date'		=> $this->db->f('modified_date'),
+						'finnish_date'		=> $this->db->f('finnish_date'),
+						'finnish_date2'		=> $this->db->f('finnish_date2'),
+						'order_id'			=> $this->db->f('order_id'),
+						'vendor_id'			=> $this->db->f('vendor_id'),
+						'actual_cost'		=> $this->db->f('actual_cost'),
+						'estimate'			=> $this->db->f('budget'),
+						'new_ticket'		=> $this->db->f('view') ? false : true,
+						'billable_hours'	=> $this->db->f('billable_hours'),
+					);
+					foreach ($custom_cols as $custom_col)
 					{
-						$ticket['new_ticket'] = true;
+						if ($custom_value = $this->db->f($custom_col['column_name'], true))
+						{
+							$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
+								'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype']), $location_id);
+						}
+						$tickets[$i][$custom_col['column_name']] = $custom_value;
 					}
+					$i ++;
 				}
- */
 			}
 
 			return $tickets;
@@ -445,10 +427,74 @@
 			return $entity;
 		}
 
-		function read_single($id)
+		function read_single($id, $values = array() )
 		{
 			$id = (int) $id;
-			$sql = "SELECT * FROM phpgw_helpdesk_tickets WHERE id = {$id}";
+
+
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
+			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
+
+			$acl_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
+			$acl_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
+
+			$categories = $GLOBALS['phpgw']->locations->get_subs('helpdesk', '.ticket.category');
+
+			$grant_category = array();
+			foreach ($categories as $location)
+			{
+				if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, 'helpdesk'))
+				{
+					$category = explode('.',$location);
+					$grant_category[] = $category[3];
+				}
+			}
+
+			$grant_category[] = -1;//If no one found - not breaking the query
+
+
+			$GLOBALS['phpgw']->config->read();
+
+			$filtermethod = '';
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+			{
+				$filtermethod = " AND phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+			}
+
+
+			if (is_array($this->grants))
+			{
+				$public_user_list = array();
+				if (is_array($this->grants['accounts']) && $this->grants['accounts'])
+				{
+					foreach($this->grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$filtermethod .= " AND (phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+				}
+
+				$public_group_list = array();
+				if (is_array($this->grants['groups']) && $this->grants['groups'])
+				{
+					foreach($this->grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
+				}
+			}
+
+			$sql = "SELECT * FROM phpgw_helpdesk_tickets {$acl_join} WHERE id = {$id} {$filtermethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -485,6 +531,7 @@
 				$ticket['order_dim1']		= $this->db->f('order_dim1');
 				$ticket['publish_note']		= $this->db->f('publish_note');
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
+				$ticket['modified_date'] = $this->db->f('modified_date');
 
 				$user_id=(int)$this->db->f('user_id');
 
@@ -492,6 +539,15 @@
 				if ($ticket['assignedto'] > 0)
 				{
 					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
+				}
+
+				if (isset($values['attributes']) && is_array($values['attributes']))
+				{
+					$ticket['attributes'] = $values['attributes'];
+					foreach ($ticket['attributes'] as &$attr)
+					{
+						$attr['value'] = $this->db->f($attr['column_name']);
+					}
 				}
 			}
 
@@ -513,100 +569,47 @@
 			}
 		}
 
-		function add($ticket)
+		function add( &$ticket, $values_attribute = array() )
 		{
-			if(isset($ticket['location']) && is_array($ticket['location']))
+			$table = 'phpgw_helpdesk_tickets';
+
+			$value_set = array();
+			$data_attribute = $this->custom->prepare_for_db($table, $values_attribute);
+			if (isset($data_attribute['value_set']))
 			{
-				foreach ($ticket['location'] as $input_name => $value)
+				foreach ($data_attribute['value_set'] as $input_name => $value)
 				{
-					if(isset($value) && $value)
+					if (isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$value_set[$input_name] = $value;
 					}
 				}
 			}
 
-			if(isset($ticket['extra']) && is_array($ticket['extra']))
-			{
-				foreach ($ticket['extra'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$cols[] = $input_name;
-						$vals[] = $value;
-					}
-				}
-			}
+			$value_set['priority'] = isset($ticket['priority']) ? $ticket['priority'] : 0;
+			$value_set['user_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+			$value_set['assignedto'] = $ticket['assignedto'];
+			$value_set['group_id'] = $ticket['group_id'];
+			$value_set['subject'] = $this->db->db_addslashes($ticket['subject']);
+			$value_set['cat_id'] = $ticket['cat_id'];
+			$value_set['status'] = $ticket['status'];
+			$value_set['details'] = $this->db->db_addslashes($ticket['details']);
+			$value_set['location_code'] = $ticket['location_code'];
+			$value_set['entry_date'] = time();
+			$value_set['modified_date'] = time();
+			$value_set['finnish_date'] = $ticket['finnish_date'];
+			$value_set['contact_id'] = $ticket['contact_id'];
+			$value_set['publish_note'] = 1;
 
-			if($cols)
-			{
-				$cols	= "," . implode(",", $cols);
-				$vals	= ",'" . implode("','", $vals) . "'";
-			}
 
-			$address = '';
-			if(isset($ticket['street_name']) && $ticket['street_name'])
-			{
-				$address[]= $ticket['street_name'];
-				$address[]= $ticket['street_number'];
-				$address	= $this->db->db_addslashes(implode(" ", $address));
-			}
-
-			if(!$address)
-			{
-				$address = $this->db->db_addslashes($ticket['location_name']);
-			}
-
-			$values= array
-				(
-					isset($ticket['priority'])?$ticket['priority']:0,
-					$GLOBALS['phpgw_info']['user']['account_id'],
-					$ticket['assignedto'],
-					$ticket['group_id'],
-					$this->db->db_addslashes($ticket['subject']),
-					$ticket['cat_id'],
-					$ticket['status'],
-					$this->db->db_addslashes($ticket['details']),
-					$ticket['location_code'],
-					$address,
-					time(),
-					$ticket['finnish_date'],
-					$ticket['contact_id'],
-					1
-				);
-
-			$values	= $this->db->validate_insert($values);
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
 
-			$this->db->query("insert into phpgw_helpdesk_tickets (priority,user_id,"
-				. "assignedto,group_id,subject,cat_id,status,details,location_code,"
-				. "address,entry_date,finnish_date,contact_id,publish_note $cols)"
-				. "VALUES ($values $vals )",__LINE__,__FILE__);
+			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
-			$id = $this->db->get_last_insert_id('phpgw_helpdesk_tickets','id');
-			if(isset($ticket['extra']['contact_phone']) && $ticket['extra']['contact_phone'] && isset($ticket['extra']['tenant_id']) && $ticket['extra']['tenant_id'])
-			{
-				$this->db->query("update fm_tenant set contact_phone='". $ticket['extra']['contact_phone']. "' where id='". $ticket['extra']['tenant_id']. "'",__LINE__,__FILE__);
-			}
+			$id = $this->db->get_last_insert_id($table, 'id');
 
-			if(isset($ticket['origin']) && is_array($ticket['origin']))
-			{
-				if($ticket['origin'][0]['data'][0]['id'])
-				{
-					$interlink_data = array
-						(
-							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('helpdesk', $ticket['origin'][0]['location']),
-							'location1_item_id' => $ticket['origin'][0]['data'][0]['id'],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket'),			
-							'location2_item_id' => $id,
-							'account_id'		=> $this->account
-						);
-
-					$interlink 	= CreateObject('helpdesk.interlink');
-					$interlink->add($interlink_data,$this->db);
-				}
-			}
 
 			if($this->db->transaction_commit())
 			{
@@ -700,6 +703,7 @@
 
 			if ($this->fields_updated)
 			{
+				$this->db->query('UPDATE phpgw_helpdesk_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
 				$receipt['message'][]= array('msg' => lang('Ticket %1 has been updated',$id));
 			}
 
@@ -707,383 +711,332 @@
 
 		}
 
-		function update_ticket($ticket,$id = 0)
+		function update_priority( $ticket, $id = 0 )
 		{
-			$id = (int) $id;
+			$id = (int)$id;
 			$receipt = array();
+			$this->fields_updated = false;
+
+			$this->db->query("SELECT priority FROM phpgw_helpdesk_tickets WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$oldpriority = $this->db->f('priority');
+
+			$this->db->transaction_begin();
+
+			if ($oldpriority != $ticket['priority'])
+			{
+				$this->fields_updated = true;
+				$this->db->query("UPDATE phpgw_helpdesk_tickets set priority='" . $ticket['priority']
+					. "' WHERE id={$id}", __LINE__, __FILE__);
+				$this->historylog->add('P', $id, $ticket['priority'], $oldpriority);
+			}
+
+			if ($this->fields_updated)
+			{
+				$this->db->query('UPDATE phpgw_helpdesk_tickets SET modified_date= ' . time() . " WHERE id={$id}", __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('Ticket %1 has been updated', $id));
+			}
+
+			$this->db->transaction_commit();
+
+			return $receipt;
+		}
+
+		function update_ticket( &$ticket, $id = 0, $receipt = array(), $values_attribute = array(), $simple = false )
+		{
+			$this->fields_updated = array();
+			$id = (int)$id;
+			$ticket['id'] = $id;
 			// DB Content is fresher than http posted value.
-			$this->db->query("select * from phpgw_helpdesk_tickets where id='$id'",__LINE__,__FILE__);
+			$this->db->query("SELECT * FROM phpgw_helpdesk_tickets WHERE id='$id'", __LINE__, __FILE__);
 			$this->db->next_record();
 
-			$location_code 	= $this->db->f('location_code');
-			$oldlocation_code 	= $this->db->f('location_code');
-			$oldfinnish_date 	= $this->db->f('finnish_date');
-			$oldfinnish_date2 	= $this->db->f('finnish_date2');
-			$oldassigned 		= $this->db->f('assignedto');
-			$oldgroup_id 		= $this->db->f('group_id');
-			$oldpriority 		= $this->db->f('priority');
-			$oldcat_id 			= $this->db->f('cat_id');
-			$old_status  		= $this->db->f('status');
-			$old_budget  		= $this->db->f('budget');
-			$old_billable_hours	= $this->db->f('billable_hours');
+			$location_code = $this->db->f('location_code');
+			$oldlocation_code = $this->db->f('location_code');
+			$oldfinnish_date = $this->db->f('finnish_date');
+			$oldfinnish_date2 = $this->db->f('finnish_date2');
+			$oldassigned = $this->db->f('assignedto');
+			$oldgroup_id = $this->db->f('group_id');
+			$oldpriority = $this->db->f('priority');
+			$oldcat_id = $this->db->f('cat_id');
+			$old_status = $this->db->f('status');
+			$ticket['old_status'] = $old_status; // used for custom functions
+			//	$old_budget  			= $this->db->f('budget');
+			$old_billable_hours = (float)$this->db->f('billable_hours');
 			//	$old_billable_rate	= $this->db->f('billable_rate');
-			$old_subject		= $this->db->f('subject');
-			$old_contact_id		= $this->db->f('contact_id');
-			$old_actual_cost	= $this->db->f('actual_cost');
-			$old_order_cat_id	= $this->db->f('order_cat_id');
-			$old_building_part	= $this->db->f('building_part',true);
-			$old_order_dim1		= (int)$this->db->f('order_dim1');
+			$old_subject = $this->db->f('subject');
+			$old_contact_id = $this->db->f('contact_id');
+			$old_order_cat_id = $this->db->f('order_cat_id');
+			$old_building_part = $this->db->f('building_part', true);
+			$old_order_dim1 = (int)$this->db->f('order_dim1');
 
 
-			if($oldcat_id ==0){$oldcat_id ='';}
-			if($old_order_cat_id ==0){$old_order_cat_id ='';}
-				if($oldassigned ==0){$oldassigned ='';}
-					if($oldgroup_id ==0){$oldgroup_id ='';}
+			if ($oldcat_id == 0)
+			{
+				$oldcat_id = '';
+			}
+			if ($old_order_cat_id == 0)
+			{
+				$old_order_cat_id = '';
+			}
+			if ($oldassigned == 0)
+			{
+				$oldassigned = '';
+			}
+			if ($oldgroup_id == 0)
+			{
+				$oldgroup_id = '';
+			}
 
-						// Figure out and last note
+			// Figure out and last note
 
-						$history_values = $this->historylog->return_array(array(),array('C'),'history_timestamp','DESC',$id);
+			$history_values = $this->historylog->return_array(array(), array('C'), 'history_timestamp', 'DESC', $id);
 			$old_note = $history_values[0]['new_value'];
 
-			if(!$old_note)
+			if (!$old_note)
 			{
 				$old_note = $this->db->f('details');
 			}
 
-
 			$this->db->transaction_begin();
 
 			/*
-			 ** phpgw_phpgw_helpdesk_append.append_type - Defs
-			 ** R - Reopen ticket
-			 ** X - Ticket closed
-			 ** O - Ticket opened
-			 ** C - Comment appended
-			 ** A - Ticket assignment
-			 ** G - Ticket group assignment
-			 ** P - Priority change
-			 ** T - Category change
-			 ** S - Subject change
-			 ** B - Budget change
-			 ** H - Billing hours
-			 ** F - finnish date
-			 ** C% - Status change
-			 ** L - Location changed
-			 ** M - Mail sent to vendor
+			 * * phpgw_fm_tts_append.append_type - Defs
+			 * * R - Reopen ticket
+			 * * X - Ticket closed
+			 * * O - Ticket opened
+			 * * C - Comment appended
+			 * * A - Ticket assignment
+			 * * G - Ticket group assignment
+			 * * P - Priority change
+			 * * T - Category change
+			 * * S - Subject change
+			 * * B - Budget change
+			 * *	AC - actual cost changed
+			 * * H - Billing hours
+			 * * F - finnish date
+			 * * C% - Status change
+			 * * L - Location changed
+			 * * M - Mail sent to vendor
 			 */
 
-			$this->db->query("UPDATE phpgw_helpdesk_tickets SET publish_note = NULL WHERE id = {$id}",__LINE__,__FILE__);
-			$this->db->query("UPDATE phpgw_history_log SET publish = NULL WHERE history_record_id = {$id}",__LINE__,__FILE__);
-			if(isset($ticket['publish_note']))
+			if (!$simple)
 			{
-				foreach ($ticket['publish_note'] as $publish_info)
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET publish_note = NULL WHERE id = {$id}", __LINE__, __FILE__);
+				$this->db->query("UPDATE phpgw_history_log SET publish = NULL WHERE history_record_id = {$id}", __LINE__, __FILE__);
+				if (isset($ticket['publish_note']))
 				{
-					$note = explode('_', $publish_info);
-					if(!$note[1])
+					foreach ($ticket['publish_note'] as $publish_info)
 					{
-						$this->db->query("UPDATE phpgw_helpdesk_tickets SET publish_note = 1 WHERE id = {$note[0]}",__LINE__,__FILE__);
+						$note = explode('_', $publish_info);
+						if (!$note[1])
+						{
+							$this->db->query("UPDATE phpgw_helpdesk_tickets SET publish_note = 1 WHERE id = {$note[0]}", __LINE__, __FILE__);
+						}
+						else
+						{
+							$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = {$note[1]}", __LINE__, __FILE__);
+						}
 					}
-					else
-					{
-						$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = {$note[1]}",__LINE__,__FILE__);
-					}
+				}
+				if ($ticket['assignedto'] && ( ($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore'))
+				{
+					$this->fields_updated[] = 'assignedto';
+
+					$value_set = array('assignedto' => $ticket['assignedto']);
+					$value_set = $this->db->validate_update($value_set);
+
+					$this->db->query("update phpgw_helpdesk_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+					$this->historylog->add('A', $id, $ticket['assignedto'], $oldassigned);
+				}
+
+				if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
+				{
+					$this->fields_updated[] = 'group_id';
+
+					$value_set = array('group_id' => $ticket['group_id']);
+					$value_set = $this->db->validate_update($value_set);
+
+					$this->db->query("update phpgw_helpdesk_tickets set $value_set where id='$id'", __LINE__, __FILE__);
+					$this->historylog->add('G', $id, (int)$ticket['group_id'], $oldgroup_id);
+				}
+
+				if ($ticket['priority'] && $oldpriority != $ticket['priority'])
+				{
+					$this->fields_updated[] = 'priority';
+					$this->db->query("update phpgw_helpdesk_tickets set priority='" . $ticket['priority']
+						. "' where id='$id'", __LINE__, __FILE__);
+					$this->historylog->add('P', $id, $ticket['priority'], $oldpriority);
+				}
+
+				if ($old_contact_id != $ticket['contact_id'])
+				{
+					$contact_id = (int)$ticket['contact_id'];
+					$this->fields_updated[] = 'contact_id';
+					$this->db->query("update phpgw_helpdesk_tickets set contact_id={$contact_id} WHERE id=$id", __LINE__, __FILE__);
+				}
+
+				if ($ticket['cat_id'] && ( ($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore'))
+				{
+					$this->fields_updated[] = 'cat_id';
+					$this->db->query("update phpgw_helpdesk_tickets set cat_id='" . $ticket['cat_id']
+						. "' where id='$id'", __LINE__, __FILE__);
+					$this->historylog->add('T', $id, $ticket['cat_id'], $oldcat_id);
 				}
 			}
 
-			$finnish_date	= (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']):'');
+			if (($old_note != $ticket['note']) && $ticket['note'])
+			{
+				$this->fields_updated[] = 'note';
+				$this->historylog->add('C', $id, $ticket['note'], $old_note);
+				$_history_id = $this->db->get_last_insert_id('phpgw_history_log', 'history_id');
+				$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
+				unset($_history_id);
+			}
+
+			$value_set = array();
+
+			$data_attribute = $this->custom->prepare_for_db('phpgw_helpdesk_tickets', $values_attribute);
+
+			if (isset($data_attribute['value_set']))
+			{
+				foreach ($data_attribute['value_set'] as $input_name => $value)
+				{
+					$this->fields_updated[] = $input_name;
+					$value_set[$input_name] = $value;
+				}
+			}
+
+			$value_set['modified_date'] = time();
+
+			$value_set = $this->db->validate_update($value_set);
+			$this->db->query("UPDATE phpgw_helpdesk_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
+
+			if (isset($this->fields_updated) && $this->fields_updated && $simple)
+			{
+				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+				$this->db->transaction_commit();
+				return $receipt;
+			}
+
+			$finnish_date = (isset($ticket['finnish_date']) ? phpgwapi_datetime::date_to_timestamp($ticket['finnish_date']) : '');
 
 			if ($oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update phpgw_helpdesk_tickets set finnish_date2='" . $finnish_date
-					. "' where id='$id'",__LINE__,__FILE__);
+					. "' where id='$id'", __LINE__, __FILE__);
 			}
-			else if(!$oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
+			else if (!$oldfinnish_date && isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				$this->db->query("update phpgw_helpdesk_tickets set finnish_date='" . $finnish_date
-					. "' where id='$id'",__LINE__,__FILE__);
+					. "' where id='$id'", __LINE__, __FILE__);
 			}
 
-			if($oldfinnish_date2>0)
+			if ($oldfinnish_date2 > 0)
 			{
 				$oldfinnish_date = $oldfinnish_date2;
 			}
-			if(isset($ticket['finnish_date']) && $ticket['finnish_date'])
+			if (isset($ticket['finnish_date']) && $ticket['finnish_date'])
 			{
 				if ($oldfinnish_date != $finnish_date)
 				{
-					$this->fields_updated = true;
-					$this->historylog->add('F',$id,$finnish_date,$oldfinnish_date);
+					$this->fields_updated[] = 'finnish_date';
+					$this->historylog->add('F', $id, $finnish_date, $oldfinnish_date);
 				}
 			}
 
 			if (isset($ticket['status']) && ($old_status != $ticket['status']))
 			{
-				$check_old_custom = (int) trim($old_status,'C');
-				$this->db->query("SELECT * from phpgw_helpdesk_status WHERE id = {$check_old_custom}",__LINE__,__FILE__);
+				$check_old_custom = (int)trim($old_status, 'C');
+				$this->db->query("SELECT * from phpgw_helpdesk_status WHERE id = {$check_old_custom}", __LINE__, __FILE__);
 				$this->db->next_record();
-				$this->fields_updated = true;
-				if($old_status=='X' || $this->db->f('closed'))
+				$old_closed = $this->db->f('closed');
+				$this->fields_updated[] = 'status';
+				if ($old_status == 'X' || $old_closed)
 				{
 					$new_status = $ticket['status'];
-					$this->historylog->add('R',$id,$ticket['status'],$old_status);
+					$this->historylog->add('R', $id, $ticket['status'], $old_status);
 
-					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}",__LINE__,__FILE__);
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
 				}
 				else
 				{
-					$this->historylog->add($ticket['status'],$id,$ticket['status'],$old_status);
-					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$ticket['status']}' WHERE id={$id}",__LINE__,__FILE__);
+					$this->historylog->add($ticket['status'], $id, $ticket['status'], $old_status);
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$ticket['status']}' WHERE id={$id}", __LINE__, __FILE__);
 				}
 				$this->check_pending_action($ticket, $id);
+
+				//Close cases at related
+				$check_new_custom = (int)trim($ticket['status'], 'C');
+				$this->db->query("SELECT closed from phpgw_helpdesk_status WHERE id = {$check_new_custom}", __LINE__, __FILE__);
+				$this->db->next_record();
+
+				if (($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status != 'X' && !$old_closed))
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+					// at controller
+					if (isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+					{
+						$controller = CreateObject('controller.uicase');
+						$controller->updateStatusForCases($location_id, $id, 1);
+					}
+					// at request
+					execMethod('property.sorequest.update_status_from_related', array(
+						'location_id' => $location_id,
+						'id' => $id,
+						'status' => 'closed')
+					);
+				}
 			}
 
-			if (($oldassigned != $ticket['assignedto']) && $ticket['assignedto'] != 'ignore')
-			{
-				$this->fields_updated = true;
 
-				$value_set=array('assignedto'	=> $ticket['assignedto']);
-				$value_set	= $this->db->validate_update($value_set);
-
-				$this->db->query("update phpgw_helpdesk_tickets set $value_set where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('A',$id,$ticket['assignedto'],$oldassigned);
-			}
-
-			if (($oldgroup_id != $ticket['group_id']) && $ticket['group_id'] != 'ignore')
-			{
-				$this->fields_updated = true;
-
-				$value_set=array('group_id'	=> $ticket['group_id']);
-				$value_set	= $this->db->validate_update($value_set);
-
-				$this->db->query("update phpgw_helpdesk_tickets set $value_set where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('G',$id,$ticket['group_id'],$oldgroup_id);
-			}
-
-			if ($oldpriority != $ticket['priority'])
-			{
-				$this->fields_updated = true;
-				$this->db->query("update phpgw_helpdesk_tickets set priority='" . $ticket['priority']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('P',$id,$ticket['priority'],$oldpriority);
-			}
-
-			if ($old_contact_id != $ticket['contact_id'])
-			{
-				$contact_id  = (int) $ticket['contact_id'];
-				$this->fields_updated = true;
-				$this->db->query("update phpgw_helpdesk_tickets set contact_id={$contact_id} WHERE id=$id",__LINE__,__FILE__);
-			}
-
-			if (($oldcat_id != $ticket['cat_id']) && $ticket['cat_id'] != 'ignore')
-			{
-				$this->fields_updated = true;
-				$this->db->query("update phpgw_helpdesk_tickets set cat_id='" . $ticket['cat_id']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('T',$id,$ticket['cat_id'],$oldcat_id);
-			}
-
-			if ($old_budget != $ticket['budget'])
-			{
-				$this->fields_updated = true;
-				$this->db->query("UPDATE phpgw_helpdesk_tickets set budget='" . (int)$ticket['budget']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('B',$id,$ticket['budget'],$old_budget);
-			}
-	/*
-			if ($old_billable_rate != $ticket['billable_rate'])
-			{
-				$this->fields_updated = true;
-				$this->db->query("update phpgw_helpdesk_tickets set billable_rate='" . $ticket['billable_rate']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('B',$id,$ticket['billable_rate'],$old_billable_rate);
-			}
-	 */
+			/*
+			  if ($old_billable_rate != $ticket['billable_rate'])
+			  {
+			  $this->fields_updated[] = 'billable_rate';
+			  $this->db->query("update phpgw_helpdesk_tickets set billable_rate='" . $ticket['billable_rate']
+			  . "' where id='$id'",__LINE__,__FILE__);
+			  $this->historylog->add('B',$id,$ticket['billable_rate'],$old_billable_rate);
+			  }
+			 */
 			if ($old_subject != $ticket['subject'])
 			{
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET subject='" . $ticket['subject']
-					. "' where id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('S',$id,$ticket['subject'],$old_subject);
-				$receipt['message'][]= array('msg' => lang('Subject has been updated'));
+					. "' where id='$id'", __LINE__, __FILE__);
+				$this->historylog->add('S', $id, $ticket['subject'], $old_subject);
+				$receipt['message'][] = array('msg' => lang('Subject has been updated'));
 			}
 
-			if($ticket['billable_hours'])
+			if ($ticket['billable_hours'])
 			{
-				$ticket['billable_hours'] = str_replace(',','.', $ticket['billable_hours']);
-			}
-			if ((float)$old_billable_hours != (float)$ticket['billable_hours'])
-			{
+				$ticket['billable_hours'] = (float)str_replace(',', '.', $ticket['billable_hours']);
+				$ticket['billable_hours'] += (float)$old_billable_hours;
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET billable_hours='{$ticket['billable_hours']}'"
-					. " WHERE id='{$id}'",__LINE__,__FILE__);
-				$this->historylog->add('H',$id,$ticket['billable_hours'],$old_billable_hours);
-				$receipt['message'][]= array('msg' => lang('billable hours has been updated'));
+					. " WHERE id='{$id}'", __LINE__, __FILE__);
+				$this->historylog->add('H', $id, $ticket['billable_hours'], $old_billable_hours);
+				$receipt['message'][] = array('msg' => lang('billable hours has been updated'));
 			}
 
-			if ((int)$old_actual_cost != (int)$ticket['actual_cost'])
-			{
-				$this->db->query("UPDATE phpgw_helpdesk_tickets SET actual_cost='" . (float)$ticket['actual_cost']
-					. "' WHERE id='$id'",__LINE__,__FILE__);
-				$this->historylog->add('AC',$id,(float)$ticket['actual_cost'] , $old_actual_cost);
-				$receipt['message'][]= array('msg' => lang('actual_cost has been updated'));
-			}
 
-			if ((int)$old_order_cat_id != (int)$ticket['order_cat_id'])
-			{
-				$this->db->query("UPDATE phpgw_helpdesk_tickets SET order_cat_id='" . (int)$ticket['order_cat_id']
-					. "' WHERE id='$id'",__LINE__,__FILE__);
-				$receipt['message'][]= array('msg' => lang('order category has been updated'));
-				$this->fields_updated = true;
-			}
+			$value_set = array();
 
-			if ((int)$old_order_dim1 != (int)$ticket['order_dim1'])
+			if (isset($ticket['extra']) && is_array($ticket['extra']) && $ticket['extra'])
 			{
-				$this->db->query("UPDATE phpgw_helpdesk_tickets SET order_dim1='" . (int)$ticket['order_dim1']
-					. "' WHERE id='$id'",__LINE__,__FILE__);
-				$receipt['message'][]= array('msg' => lang('order_dim1 has been updated'));
-				$this->fields_updated = true;
-			}
-
-			if ($old_building_part != $ticket['building_part'])
-			{
-				$this->db->query("UPDATE phpgw_helpdesk_tickets SET building_part='" . $ticket['building_part']
-					. "' WHERE id='$id'",__LINE__,__FILE__);
-				$receipt['message'][]= array('msg' => lang('building part has been updated'));
-				$this->fields_updated = true;
-			}
-
-			if (($old_note != $ticket['note']) && $ticket['note'])
-			{
-				$this->fields_updated = true;
-				$this->historylog->add('C',$id,$ticket['note'],$old_note);
-				$_history_id = $this->db->get_last_insert_id('phpgw_history_log','history_id');
-				$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id",__LINE__,__FILE__);
-				unset($_history_id);
-			}
-
-			if(isset($ticket['location']) && $ticket['location'])
-			{
-				$ticket['location_code'] = implode('-', $ticket['location']);
-			}
-
-			if (isset($ticket['location_code']) && $ticket['location_code'] && ($oldlocation_code != $ticket['location_code']))
-			{
-				$interlink 	= CreateObject('helpdesk.interlink');
-				if( $interlink->get_relation('helpdesk', '.ticket', $id, 'origin') || $interlink->get_relation('helpdesk', '.ticket', $id, 'target'))
+				foreach ($ticket['extra'] as $column => $value)
 				{
-					$receipt['message'][]= array('msg' => lang('location could not be changed'));
+					$value_set[$column] = $value;
 				}
-				else
-				{
-					$value_set	= array();
 
-					if(isset($ticket['street_name']) && $ticket['street_name'])
-					{
-						$address[]= $ticket['street_name'];
-						$address[]= $ticket['street_number'];
-						$value_set['address'] = $this->db->db_addslashes(implode(" ", $address));
-					}
+				$value_set = $this->db->validate_update($value_set);
 
-					if(!isset($address) || !$address)
-					{
-						$address = isset($ticket['location_name']) ? $this->db->db_addslashes($ticket['location_name']) : '';
-						if($address)
-						{
-							$value_set['address'] = $address;
-						}
-					}
-
-					if (isset($ticket['location_code']) && $ticket['location_code'])
-					{
-						$value_set['location_code'] = $ticket['location_code'];
-					}
-
-					$admin_location	= CreateObject('helpdesk.soadmin_location');
-					$admin_location->read(false);
-
-					// Delete old values for location - in case of moving up in the hierarchy
-					$metadata = $this->db->metadata('phpgw_helpdesk_tickets');
-					for ($i = 1;$i < $admin_location->total_records + 1; $i++)
-					{
-						if(isset($metadata["loc{$i}"]))
-						{
-							$value_set["loc{$i}"]	= false;
-						}
-					}
-
-					if(isset($ticket['location']) && is_array($ticket['location']))
-					{
-						foreach ($ticket['location'] as $column => $value)
-						{
-							$value_set[$column]	= $value;
-						}
-					}
-
-					if(isset($ticket['extra']) && is_array($ticket['extra']))
-					{
-						foreach ($ticket['extra'] as $column => $value)
-						{
-							$value_set[$column]	= $value;
-						}
-					}
-
-					$value_set	= $this->db->validate_update($value_set);
-
-					$this->db->query("UPDATE phpgw_helpdesk_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
-
-					$this->historylog->add('L',$id,$ticket['location_code'],$oldlocation_code);
-					$receipt['message'][]= array('msg' => lang('Location has been updated'));
-				}
-				unset($interlink);
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 			}
-
-
-			if(isset($ticket['make_order']) && $ticket['make_order'])
-			{
-				$order_id = execMethod('property.socommon.increment_id', 'helpdesk');
-				if($order_id)
-				{
-					$this->db->query("UPDATE phpgw_helpdesk_tickets SET order_id = {$order_id} WHERE id={$id}",__LINE__,__FILE__);
-					$this->db->query("INSERT INTO fm_orders (id, type) VALUES ({$order_id}, 'helpdesk')",__LINE__,__FILE__);
-				}
-			}
-
-			$value_set					= array();
-			$value_set['vendor_id']		= $ticket['vendor_id'];
-			$value_set['b_account_id']	= $ticket['b_account_id'];
-			$value_set['order_descr']	= $this->db->db_addslashes($ticket['order_descr']);
-			$value_set['ecodimb']		= $ticket['ecodimb'];
-			$value_set['budget']		= $ticket['budget'];
-			$value_set					= $this->db->validate_update($value_set);
-			$this->db->query("UPDATE phpgw_helpdesk_tickets SET $value_set WHERE id={$id}",__LINE__,__FILE__);
 
 			$this->db->transaction_commit();
 
-			if (isset($this->fields_updated))
+			if (isset($this->fields_updated) && $this->fields_updated)
 			{
-				$receipt['message'][]= array('msg' => lang('Ticket has been updated'));
-
-				$criteria = array
-					(
-						'appname'	=> 'helpdesk',
-						'location'	=> $this->acl_location,
-						'allrows'	=> true
-					);
-
-				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
-
-				foreach ( $custom_functions as $entry )
-				{
-					// prevent path traversal
-					if ( preg_match('/\.\./', $entry['file_name']) )
-					{
-						continue;
-					}
-
-					$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-					if ( $entry['active'] && is_file($file) )
-					{
-						require_once $file;
-					}
-				}
+				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
 			}
 			return $receipt;
 		}
@@ -1109,7 +1062,7 @@
 						'deadline'			=> ''
 					);
 
-				execMethod('helpdesk.sopending_action.close_pending_action', $action_params);
+				execMethod('property.sopending_action.close_pending_action', $action_params);
 				unset($action_params);
 			}
 			if ($this->db->f('in_progress') )
@@ -1126,7 +1079,7 @@
 						'deadline'			=> ''
 					);
 
-				execMethod('helpdesk.sopending_action.close_pending_action', $action_params);
+				execMethod('property.sopending_action.close_pending_action', $action_params);
 				unset($action_params);
 			}
 
@@ -1152,7 +1105,7 @@
 			$this->db->query("DELETE FROM fm_action_pending WHERE location_id = {$location_id} AND item_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id}",__LINE__,__FILE__);
-			$this->db->query("DELETE FROM phpgw_helpdesk_history WHERE history_record_id = {$id}",__LINE__,__FILE__);
+			$this->db->query("DELETE FROM phpgw_history_log WHERE history_record_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_helpdesk_tickets WHERE id = {$id}",__LINE__,__FILE__);
 

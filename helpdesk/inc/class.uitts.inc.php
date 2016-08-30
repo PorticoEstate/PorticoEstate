@@ -45,9 +45,12 @@
 				'download'			=> true,
 				'view_file'			=> true,
 				'edit_status'		=> true,
+				'edit_priority' => true,
 				'get_vendor_email'	=> true,
 				'_print'			=> true,
-				'columns'			=> true
+				'columns'			=> true,
+				'update_data'		=> true,
+				'upload_clip'		=> true
 			);
 
 		/**
@@ -282,18 +285,6 @@
 			$name[] = 'entry_date';
 			$name[] = 'status';
 
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'helpdesk') )
-			{
-				$name[] = 'order_id';
-				$name[] = 'vendor';
-			}
-
-			if( $this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'helpdesk') )
-			{
-				$name[] = 'estimate';
-				$name[] = 'actual_cost';
-			}
-
 			$uicols_related = $this->bo->uicols_related;
 
 			foreach($uicols_related as $related)
@@ -319,10 +310,12 @@
 				array_push($descr,$_name);			
 			}
 
-			$name[] = 'finnish_date';
-			$name[] = 'delay';
-
-			array_push($descr,lang('finnish date'),lang('delay'));
+			if($this->_show_finnish_date)
+			{
+				$name[] = 'finnish_date';
+				$name[] = 'delay';
+				array_push($descr,lang('finnish date'),lang('delay'));
+			}
 
 
 			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['ticket_columns'] : array();
@@ -353,6 +346,28 @@
 			}
 			//	$GLOBALS['phpgw']->session->appsession('receipt','helpdesk',$receipt);
 			return "id ".$id." ".lang('Status has been changed');
+		}
+
+		function edit_priority()
+		{
+			if (!$this->acl_edit)
+			{
+				return lang('sorry - insufficient rights');
+			}
+
+			$new_priority = phpgw::get_var('new_priority', 'int');
+			$id = phpgw::get_var('id', 'int');
+
+//			$ticket = $this->bo->read_single($id);
+
+			$receipt = $this->bo->update_priority(array('priority' => $new_priority), $id);
+			if ((isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification']) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
+				)
+			)
+			{
+				$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt);
+			}
+			return "id {$id} " . lang('priority has been changed');
 		}
 
 		function delete()
@@ -446,7 +461,7 @@
 			$uicols['name'][] = 'link_view';
 			$uicols['descr'][] = lang('link view');
 			$uicols['name'][] = 'lang_view_statustext';
-			$uicols['descr'][] = lang('lang view statustext');
+			$uicols['descr'][] = lang('view statustext');
 			$uicols['name'][] = 'text_view';
 			$uicols['descr'][] = lang('text view');
 
@@ -538,7 +553,7 @@
 				'list' => $values_combo_box[3]
 			);
 
-			if(!$this->simple)
+			if(!$this->_simple)
 			{
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
 					'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
@@ -736,118 +751,120 @@
 				'parameters' => json_encode($parameters)
 			);
 
-
-			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location)));
-
-			foreach ($jasper as $report)
+			if(!$this->_simple)
 			{
-				$data['datatable']['actions'][] = array
-					(
-					'my_name' => 'edit',
-					'text' => lang('open JasperReport %1 in new window', $report['title']),
-					'action' => $GLOBALS['phpgw']->link('/index.php', array
-						(
-						'menuaction' => 'helpdesk.uijasper.view',
-						'jasper_id' => $report['id'],
-						'target' => '_blank'
-					)),
-					'parameters' => json_encode($parameters)
-				);
-			}
+				$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location)));
 
-			if ($this->acl_delete)
-			{
-				$data['datatable']['actions'][] = array
-					(
-					'my_name' => 'delete',
-					'statustext' => lang('delete the ticket'),
-					'text' => lang('delete'),
-					'confirm_msg' => lang('do you really want to delete this ticket'),
-					'action' => $GLOBALS['phpgw']->link('/index.php', array
-						(
-						'menuaction' => 'helpdesk.uitts.delete'
-					)),
-					'parameters' => json_encode($parameters)
-				);
-			}
-
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link'] == 'yes' && $this->acl_edit)
-			{
-				$status['X'] = array
-					(
-					'status' => lang('closed'),
-				);
-				$status['O'] = array
-					(
-					'status' => isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
-				);
-
-				$custom_status = $this->bo->get_custom_status();
-
-				foreach ($custom_status as $custom)
-				{
-					$status["C{$custom['id']}"] = array
-						(
-						'status' => $custom['name'],
-					);
-				}
-
-				foreach ($status as $status_code => $status_info)
+				foreach ($jasper as $report)
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name' => 'status',
-						'statustext' => $status_info['status'],
-						'text' => lang('change to') . ' status:  ' . $status_info['status'],
-						'confirm_msg' => lang('do you really want to change the status to %1', $status_info['status']),
+						'my_name' => 'edit',
+						'text' => lang('open JasperReport %1 in new window', $report['title']),
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
-							'menuaction' => 'helpdesk.uitts.edit_status',
-							'edit_status' => true,
-							'new_status' => $status_code,
-							'second_display' => true,
-							'sort' => $this->sort,
-							'order' => $this->order,
-							'cat_id' => $this->cat_id,
-							'filter' => $this->filter,
-							'user_filter' => $this->user_filter,
-							'query' => $this->query,
-							'district_id' => $this->district_id,
-							'allrows' => $this->allrows,
-							'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							'menuaction' => 'helpdesk.uijasper.view',
+							'jasper_id' => $report['id'],
+							'target' => '_blank'
 						)),
 						'parameters' => json_encode($parameters)
 					);
 				}
 
-				$_priorities = $this->bo->get_priority_list();
-
-				foreach ($_priorities as $_priority_info)
+				if ($this->acl_delete)
 				{
 					$data['datatable']['actions'][] = array
 						(
-						'my_name' => 'priority',
-						'statustext' => $_priority_info['name'],
-						'text' => lang('change to') . ' ' . lang('priority') . ':  ' . $_priority_info['name'],
-						'confirm_msg' => lang('do you really want to change the priority to %1', $_priority_info['name']),
+						'my_name' => 'delete',
+						'statustext' => lang('delete the ticket'),
+						'text' => lang('delete'),
+						'confirm_msg' => lang('do you really want to delete this ticket'),
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
-							'menuaction' => 'helpdesk.uitts.edit_priority',
-							'edit_status' => true,
-							'new_priority' => $_priority_info['id'],
-							'second_display' => true,
-							'sort' => $this->sort,
-							'order' => $this->order,
-							'cat_id' => $this->cat_id,
-							'filter' => $this->filter,
-							'user_filter' => $this->user_filter,
-							'query' => $this->query,
-							'district_id' => $this->district_id,
-							'allrows' => $this->allrows,
-							'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							'menuaction' => 'helpdesk.uitts.delete'
 						)),
 						'parameters' => json_encode($parameters)
 					);
+				}
+
+				if (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_status_link'] == 'yes' && $this->acl_edit)
+				{
+					$status['X'] = array
+						(
+						'status' => lang('closed'),
+					);
+					$status['O'] = array
+						(
+						'status' => isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'] ? $this->bo->config->config_data['tts_lang_open'] : lang('Open'),
+					);
+
+					$custom_status = $this->bo->get_custom_status();
+
+					foreach ($custom_status as $custom)
+					{
+						$status["C{$custom['id']}"] = array
+							(
+							'status' => $custom['name'],
+						);
+					}
+
+					foreach ($status as $status_code => $status_info)
+					{
+						$data['datatable']['actions'][] = array
+							(
+							'my_name' => 'status',
+							'statustext' => $status_info['status'],
+							'text' => lang('change to') . ' status:  ' . $status_info['status'],
+							'confirm_msg' => lang('do you really want to change the status to %1', $status_info['status']),
+							'action' => $GLOBALS['phpgw']->link('/index.php', array
+								(
+								'menuaction' => 'helpdesk.uitts.edit_status',
+								'edit_status' => true,
+								'new_status' => $status_code,
+								'second_display' => true,
+								'sort' => $this->sort,
+								'order' => $this->order,
+								'cat_id' => $this->cat_id,
+								'filter' => $this->filter,
+								'user_filter' => $this->user_filter,
+								'query' => $this->query,
+								'district_id' => $this->district_id,
+								'allrows' => $this->allrows,
+								'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							)),
+							'parameters' => json_encode($parameters)
+						);
+					}
+
+					$_priorities = $this->bo->get_priority_list();
+
+					foreach ($_priorities as $_priority_info)
+					{
+						$data['datatable']['actions'][] = array
+							(
+							'my_name' => 'priority',
+							'statustext' => $_priority_info['name'],
+							'text' => lang('change to') . ' ' . lang('priority') . ':  ' . $_priority_info['name'],
+							'confirm_msg' => lang('do you really want to change the priority to %1', $_priority_info['name']),
+							'action' => $GLOBALS['phpgw']->link('/index.php', array
+								(
+								'menuaction' => 'helpdesk.uitts.edit_priority',
+								'edit_status' => true,
+								'new_priority' => $_priority_info['id'],
+								'second_display' => true,
+								'sort' => $this->sort,
+								'order' => $this->order,
+								'cat_id' => $this->cat_id,
+								'filter' => $this->filter,
+								'user_filter' => $this->user_filter,
+								'query' => $this->query,
+								'district_id' => $this->district_id,
+								'allrows' => $this->allrows,
+								'delete' => 'dummy'// FIXME to trigger the json in property.js.
+							)),
+							'parameters' => json_encode($parameters)
+						);
+					}
 				}
 			}
 
@@ -856,9 +873,53 @@
 				$data['datatable']['group_buttons'] = false;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		function upload_clip()
+		{
+			$id = phpgw::get_var('id', 'POST', 'int');
+			$ret = array(
+				'status' => 'error',
+				'message'=> lang('No data')
+			);
+
+			if($_POST['pasted_image'])
+			{
+				$_ticket = $this->bo->read_single($id);
+				$bofiles = CreateObject('property.bofiles','/helpdesk');
+				$img = $_POST['pasted_image'];
+				$img = str_replace('data:image/png;base64,', '', $img);
+				$img = str_replace(' ', '+', $img);
+				$data = base64_decode($img);
+				$file = '/tmp/' . uniqid() . '.png';
+				if (file_put_contents($file, $data))
+				{
+					$to_file = "{$bofiles->fakebase}/{$id}/" .  str_replace(' ', '_', $_ticket['subject']) . '_' . ( (int)count($_ticket['files']) +1 ) . '.png';
+					$bofiles->create_document_dir("{$id}");
+					$bofiles->vfs->override_acl = 1;
+
+					$ret = array(
+						'status' => 'ok',
+						'message'=> 'Ok'
+					);
+					if (!$bofiles->vfs->cp(array(
+							'from' => $file,
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						$ret = array(
+							'status' => 'error',
+							'message'=> lang('Failed to upload file !')
+						);
+
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+			return $ret;
 		}
 
 		function add()
@@ -928,9 +989,17 @@
 
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
-				if (!$values['subject'] && isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+				if (!$values['subject'])
 				{
-					$receipt['error'][] = array('msg' => lang('Please enter a title !'));
+					if(isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+					{
+						$receipt['error'][] = array('msg' => lang('Please enter a title !'));
+					}
+					else
+					{
+						$_cat = $this->cats->return_single($values['cat_id']);
+						$values['subject'] = $_cat[0]['name'];
+					}
 				}
 
 				if (!$values['cat_id'])
@@ -965,12 +1034,23 @@
 					}
 				}
 
+				$disable_userassign_on_add = isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : false;
+				$disable_groupassign_on_add = isset($this->bo->config->config_data['tts_disable_groupassign_on_add']) ? $this->bo->config->config_data['tts_disable_groupassign_on_add'] : false;
 
-				if (!$values['assignedto'] && !$values['group_id'])
+				if (!isset($values['assignedto']) || !$values['assignedto'])
+				{
+					$values['assignedto'] = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '';
+				}
+
+				if (!$values['assignedto'] && !$values['group_id'] && !$disable_userassign_on_add && !$disable_groupassign_on_add)
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
 				}
 
+				if (!isset($values['status']) || !$values['status'])
+				{
+					$values['status'] = "O";
+				}
 				if (!isset($values['priority']) || !$values['priority'])
 				{
 					$_priority = $this->bo->get_priority_list();
@@ -996,10 +1076,10 @@
 					//------------ files
 					$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
 
+					$bofiles = CreateObject('property.bofiles','/helpdesk');
 					if ($values['file_name'] && $receipt['id'])
 					{
-						$bofiles = CreateObject('property.bofiles');
-						$to_file = $bofiles->fakebase . '/helpdesk/' . $receipt['id'] . '/' . $values['file_name'];
+						$to_file = "{$bofiles->fakebase}/{$receipt['id']}/{$values['file_name']}";
 
 						if ($bofiles->vfs->file_exists(array(
 								'string' => $to_file,
@@ -1010,7 +1090,7 @@
 						}
 						else
 						{
-							$bofiles->create_document_dir("helpdesk/{$receipt['id']}");
+							$bofiles->create_document_dir("{$receipt['id']}");
 							$bofiles->vfs->override_acl = 1;
 
 							if (!$bofiles->vfs->cp(array(
@@ -1023,6 +1103,32 @@
 							$bofiles->vfs->override_acl = 0;
 						}
 					}
+					if($_POST['pasted_image'] &&
+						$_POST['pasted_image'] !='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAPklEQVR4nO3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgKcBnKQAAaZ1lY4AAAAASUVORK5CYII='
+						)
+					{
+						$img = $_POST['pasted_image'];
+						$img = str_replace('data:image/png;base64,', '', $img);
+						$img = str_replace(' ', '+', $img);
+						$data = base64_decode($img);
+						$file = '/tmp/' . uniqid() . '.png';
+						if (file_put_contents($file, $data))
+						{
+							$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(' ', '_', $values['subject']) . '.png';
+							$bofiles->create_document_dir("{$receipt['id']}");
+							$bofiles->vfs->override_acl = 1;
+
+							if (!$bofiles->vfs->cp(array(
+									'from' => $file,
+									'to' => $to_file,
+									'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+							{
+								$receipt['error'][] = array('msg' => lang('Failed to upload file !'));
+							}
+							$bofiles->vfs->override_acl = 0;
+						}
+					}
+
 					//--------------end files
 					$GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk', $receipt);
 					//	$GLOBALS['phpgw']->session->appsession('session_data','fm_tts','');
@@ -1100,7 +1206,7 @@
 			$msgbox_data = (isset($receipt) ? $this->bocommon->msgbox_data($receipt) : '');
 
 
-			if (!$this->simple && $this->show_finnish_date)
+			if (!$this->_simple && $this->_show_finnish_date)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
@@ -1116,13 +1222,14 @@
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
 			$active_tab = 'add';
 
+
 			$data = array(
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $values['attributes']),
 				'lookup_functions' => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
 				'contact_data' => $contact_data,
-				'simple' => $this->simple,
-				'show_finnish_date' => $this->show_finnish_date,
+				'simple' => $this->_simple,
+				'show_finnish_date' => $this->_show_finnish_date,
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => (isset($origin) ? $origin : ''),
 				'value_origin_id' => (isset($origin_id) ? $origin_id : ''),
@@ -1130,8 +1237,10 @@
 				'lang_no_user' => lang('Select user'),
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
-				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['assignedto'], $this->acl_location),
+				'user_list' => $this->_get_user_list($values['assignedto']),
 				'disable_userassign_on_add' => isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : '',
+				'disable_groupassign_on_add' => isset($this->bo->config->config_data['tts_disable_groupassign_on_add']) ? $this->bo->config->config_data['tts_disable_groupassign_on_add'] : '',
+				'disable_priority'			=> isset($this->bo->config->config_data['disable_priority']) ? $this->bo->config->config_data['disable_priority'] : '',
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($values['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -1150,9 +1259,6 @@
 				'tts_mandatory_title' => $this->bo->config->config_data['tts_mandatory_title'],
 				'value_finnish_date' => (isset($values['finnish_date']) ? $values['finnish_date'] : ''),
 				'lang_finnish_date_statustext' => lang('Select the estimated date for closing the task'),
-				'lang_cancel_statustext' => lang('Back to the ticket list'),
-				'lang_send_statustext' => lang('Save the entry and return to list'),
-				'lang_save_statustext' => lang('Save the ticket'),
 				'lang_no_cat' => lang('no category'),
 				'lang_town_statustext' => lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town' => lang('Part of town'),
@@ -1160,20 +1266,81 @@
 				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true)),
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
-				'fileupload' => (isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
+				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
 			//_debug_array($data);
-			$appname = lang('helpdesk');
 			$function_msg = lang('add ticket');
 
 			self::add_javascript('helpdesk', 'portico', 'tts.add.js');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
+			phpgwapi_jquery::load_widget('autocomplete');
 			$this->_insert_custom_js();
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
+		}
+
+		function update_data()
+		{
+			$action = phpgw::get_var('action', 'string', 'GET');
+			switch ($action)
+			{
+				case 'get_vendor':
+					return $this->bocommon->get_vendor_email();
+					break;
+				case 'get_files':
+					return $this->get_files();
+					break;
+				default:
+			}
+		}
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'property.uitts.view_file',
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$values = $this->bo->read_single($id);
+
+			$content_files = array();
+
+			foreach ($values['files'] as $_entry)
+			{
+				$content_files[] = array
+					(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
 		}
 
 		function view()
@@ -1187,12 +1354,8 @@
 
 			$values = phpgw::get_var('values');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
-//			$values['ecodimb'] = phpgw::get_var('ecodimb');
 			$values['vendor_id'] = phpgw::get_var('vendor_id', 'int', 'POST');
 			$values['vendor_name'] = phpgw::get_var('vendor_name', 'string', 'POST');
-//			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
-//			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
-
 			$values_attribute = phpgw::get_var('values_attribute');
 
 			$receipt = $GLOBALS['phpgw']->session->appsession('receipt', 'helpdesk');
@@ -1256,32 +1419,6 @@
 				}
 
 
-				if ($access_order)
-				{
-					//test for budget
-					$_ticket = $this->bo->read_single($id);
-					if (!$_ticket['budget'] && ((isset($values['order_id']) && $values['order_id']) && (!isset($values['budget']) || !$values['budget'])))
-					{
-						$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Missing value'));
-					}
-					unset($_ticket);
-
-					$sogeneric = CreateObject('property.sogeneric');
-					$sogeneric->get_location_info('ticket_status', false);
-					$status_data = $sogeneric->read_single(array('id' => (int)ltrim($values['status'], 'C')), array());
-
-					if (isset($status_data['actual_cost']) && $status_data['actual_cost'])
-					{
-						if (!$values['actual_cost'] || !abs($values['actual_cost']) > 0)
-						{
-							$receipt['error'][] = array('msg' => lang('actual cost') . ': ' . lang('Missing value'));
-						}
-						else if (!is_numeric($values['actual_cost']))
-						{
-							$receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter a numeric value'));
-						}
-					}
-				}
 
 				if (isset($values['takeover']) && $values['takeover'])
 				{
@@ -1299,7 +1436,7 @@
 				  }
 				  }
 				 */
-				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute);
+				$receipt = $this->bo->update_ticket($values, $id, $receipt, $values_attribute, $this->_simple);
 
 				if ((isset($values['send_mail']) && $values['send_mail']) || (isset($this->bo->config->config_data['mailnotification']) && $this->bo->config->config_data['mailnotification'] && $this->bo->fields_updated
 					) || (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me']) && $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_notify_me'] == 1 && $this->bo->fields_updated
@@ -1310,17 +1447,17 @@
 				}
 
 				//--------- files
-				$bofiles = CreateObject('property.bofiles');
+				$bofiles = CreateObject('property.bofiles','/helpdesk');
 				if (isset($values['file_action']) && is_array($values['file_action']))
 				{
-					$bofiles->delete_file("/helpdesk/{$id}/", $values);
+					$bofiles->delete_file("/{$id}", $values);
 				}
 
 				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
 
 				if ($values['file_name'])
 				{
-					$to_file = $bofiles->fakebase . '/helpdesk/' . $id . '/' . $values['file_name'];
+					$to_file = "{$bofiles->fakebase}/{$id}/{$values['file_name']}";
 
 					if ($bofiles->vfs->file_exists(array(
 							'string' => $to_file,
@@ -1331,7 +1468,7 @@
 					}
 					else
 					{
-						$bofiles->create_document_dir("helpdesk/{$id}");
+						$bofiles->create_document_dir("{$id}");
 						$bofiles->vfs->override_acl = 1;
 
 						if (!$bofiles->vfs->cp(array(
@@ -1365,6 +1502,10 @@
 
 			$ticket = $this->bo->read_single($id, $values);
 
+			if(!$ticket)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+			}
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
 				foreach ($ticket['attributes'] as & $attribute)
@@ -1401,12 +1542,8 @@
 				$this->cat_id = $ticket['cat_id'];
 			}
 
-			$link_file_data = array(
-				'menuaction' => 'helpdesk.uitts.view_file',
-				'id' => $id
-			);
 
-			if ($this->show_finnish_date)
+			if ($this->_show_finnish_date)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
@@ -1483,8 +1620,9 @@
 				)
 			);
 
+			$link_file_data = array('menuaction' => 'helpdesk.uitts.view_file');
 
-			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view_file'));
 
 			for ($z = 0; $z < count($ticket['files']); $z++)
 			{
@@ -1564,8 +1702,7 @@
 				$category = $this->cats->return_single($ticket['cat_id']);
 //_debug_array($category);
 
-				array_unshift($cat_select['cat_list'], array
-					(
+				array_unshift($cat_select['cat_list'], array(
 					'cat_id' => $category[0]['id'],
 					'name' => $category[0]['name'],
 					'description' => $category[0]['description'],
@@ -1603,12 +1740,14 @@
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $ticket['attributes']),
 				'lookup_functions' => isset($ticket['lookup_functions']) ? $ticket['lookup_functions'] : '',
+				'simple' => $this->_simple,
 				'send_response' => isset($this->bo->config->config_data['tts_send_response']) ? $this->bo->config->config_data['tts_send_response'] : '',
+				'disable_priority'	=> isset($this->bo->config->config_data['disable_priority']) ? $this->bo->config->config_data['disable_priority'] : '',
 				'value_sms_phone' => $ticket['contact_phone'],
 				'value_budget' => $ticket['budget'],
 				'value_actual_cost' => $ticket['actual_cost'],
 				'contact_data' => $contact_data,
-				'show_finnish_date' => $this->show_finnish_date,
+				'show_finnish_date' => $this->_show_finnish_date,
 				'tabs' => self::_generate_tabs(true),
 				'base_java_url' => "{menuaction:'helpdesk.uitts.update_data',id:{$id}}",
 				'location_item_id' => $id,
@@ -1622,7 +1761,7 @@
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
-				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $ticket['assignedto'], $this->acl_location),
+				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -1640,6 +1779,7 @@
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index')),
 				'value_subject' => $ticket['subject'],
 				'value_id' => '[ #' . $id . ' ] - ',
+				'id'		=> $id,
 				'value_details' => $ticket['details'],
 				'value_opendate' => $ticket['entry_date'],
 				'value_assignedfrom' => $ticket['user_name'],
@@ -1650,10 +1790,9 @@
 				'record_history' => $record_history,
 				'contact_phone' => $ticket['contact_phone'],
 				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : '',
-				'fileupload' => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
-				'multiple_uploader' => true,
+				'fileupload' => true,//isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
+	//			'multiple_uploader' => true,
 				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
-				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
 				'lang_filename' => lang('Filename'),
@@ -1685,9 +1824,8 @@
 			//-----------------------datatable settings---
 			//_debug_array($data);die();
 
-			$appname = lang('helpdesk');
 			$function_msg = lang('view ticket detail');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
 
@@ -1698,7 +1836,7 @@
 				phpgw::no_access();
 			}
 
-			ExecMethod('helpdesk.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
 		protected function _generate_tabs( $history = '' )
@@ -1764,4 +1902,49 @@
 			}
 		}
 
+		private function _get_user_list($selected)
+		{
+			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
+
+			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
+
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $_candidates);
+			$user_list = array();
+			$selected_found = false;
+			foreach ($users as $user)
+			{
+				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$user_list[] = array(
+					'id' => $user['account_id'],
+					'name' => $name,
+					'selected' => $user['account_id'] == $selected ? 1 : 0
+				);
+
+				if (!$selected_found)
+				{
+					$selected_found = $user['account_id'] == $selected ? true : false;
+				}
+			}
+			if ($selected && !$selected_found)
+			{
+				$user_list[] = array
+					(
+					'id' => $selected,
+					'name' => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected' => 1
+				);
+			}
+			return $user_list;
+		}
 	}

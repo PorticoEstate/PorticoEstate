@@ -26,174 +26,230 @@
 	 * @subpackage application
 	 * @version $Id: $
 	 */
+
+	phpgw::import_class('rental.soapplication');
+
 	include_class('rental', 'model', 'inc/model/');
 
 	class rental_application extends rental_model
 	{
 
-		protected $ecodimb;
-		protected $district_id;
-		protected $composite_type;
-		protected $start_date;
-		protected $end_date;
-		protected $cleaning;
-		protected $payment_method;
-		protected $title;
-		protected $description;
-		protected $name;
-		protected $type;
-		protected $type_id;
-		protected $contract_id;
-		protected $party_id;
+		const STATUS_REGISTERED = 1;
+		const STATUS_PENDING = 2;
+		const STATUS_REJECTED = 3;
+		const STATUS_APPROVED = 4;
+
+		protected
+			$id,
+			$status,
+			$ecodimb_id,
+			$ecodimb_name,
+			$district_id,
+			$composite_type,
+			$date_start,
+			$date_end,
+			$cleaning,
+			$payment_method,
+			$job_title,
+			$description,
+			$firstname,
+			$lastname,
+			$company_name,
+			$department,
+			$address1,
+			$address2,
+			$postal_code,
+			$place,
+			$account_number,
+			$phone,
+			$email,
+			$unit_leader,
+			$comment,
+			$comments,
+			$comment_input,
+			$assign_date_start,
+			$assign_date_end,
+			$entry_date,
+			$executive_officer,
+			$identifier;
+
 
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);
 		}
-		public function set_ecodimb( $ecodimb )
+
+		public static function get_composite_types()
 		{
-			$this->ecodimb = $ecodimb;
+			return array(1 => 'Hybel', 2 => 'Leilighet');
 		}
 
-		public function get_ecodimb()
+		public static function get_payment_methods()
 		{
-			return $this->ecodimb;
+			return array(1 => 'Faktura', 2 => 'Trekk i lønn',3 => 'intern faktura');
 		}
 
-		public function set_district_id( $district_id )
+		public static function get_fields($debug = true)
 		{
-			$this->district_id = $district_id;
+			 $fields = array(
+				'id' => array('action'=> PHPGW_ACL_READ,
+					'type' => 'int',
+					'label' => 'id',
+					'sortable'=> true,
+					'formatter' => 'JqueryPortico.formatLink',
+					),
+				'ecodimb_id' => array(
+					'action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label' => 'dimb',
+					),
+				'ecodimb_name' => array(
+					'action'=>  PHPGW_ACL_READ,
+					'type' => 'string',
+					'label' => 'dimb',
+					'join' => array(
+						'table' => 'fm_ecodimb',
+						'fkey' => 'ecodimb_id',
+						'key' => 'id',
+						'column' => 'descr'
+						)
+					),
+				'district_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'),
+				'composite_type' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'),
+				'date_start' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'date'),
+				'date_end' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'date'),
+				'cleaning' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'bool'),
+				'payment_method' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'),
+				'firstname' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'alternative' => array('company_name'),
+					'query' => true,
+					'label' => 'first name',
+					),
+				'lastname' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'query' => true,
+					'alternative' => array('company_name'),
+					'label' => 'last name',
+					),
+				'job_title' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'company_name' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'alternative' => array('firstname','lastname'),
+					),
+				'department' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'address1' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'address2' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'postal_code' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'place' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'account_number' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'phone' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'email' => array(
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid'))),
+				'unit_leader' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+				'comments' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'manytomany' => array(
+						'input_field' => 'comment_input',
+						'table' => 'rental_application_comment',
+						'key' => 'application_id',
+						'column' => array('time', 'author', 'comment', 'type'),
+						'order' => array('sort' => 'time', 'dir' => 'ASC')
+					)),
+				'comment' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'related' => true,
+					),
+				'assign_date_start' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
+					'type' => 'date'),
+				'assign_date_end' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
+					'type' => 'date'),
+				'status' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int'),
+				'entry_date' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD,
+					'type' => 'int',
+					'label' => 'entry_date',
+					'sortable' => true,
+					),
+				'executive_officer' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label' => 'executive_officer',
+					'sortable' => true,
+					'hidden' => false
+					),
+				'identifier' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string'),
+			);
+
+			if($debug)
+			{
+				foreach ($fields as $field => $field_info)
+				{
+					if(!property_exists('rental_application', $field))
+					{
+					   phpgwapi_cache::message_set("$field is missing from model-definition", 'error');
+					}
+
+				}
+			}
+			return $fields;
 		}
 
-		public function get_district_id()
+		/**
+		 * Implement in subclasses to perform actions on entity before validation
+		 */
+		protected function preValidate( &$entity )
 		{
-			return $this->district_id;
-		}
-		public function set_composite_type( $composite_type )
-		{
-			$this->composite_type = $composite_type;
-		}
-
-		public function get_composite_type()
-		{
-			return $this->composite_type;
-		}
-		public function set_start_date( $start_date )
-		{
-			$this->start_date = $start_date;
-		}
-
-		public function get_start_date()
-		{
-			return $this->start_date;
-		}
-		public function set_end_date( $end_date )
-		{
-			$this->end_date = $end_date;
-		}
-		public function get_end_date()
-		{
-			return $this->end_date;
-		}
-
-		public function set_cleaning( $cleaning )
-		{
-			$this->cleaning = $cleaning;
-		}
-
-		public function get_cleaning()
-		{
-			return (bool)$this->cleaning;
-		}
-
-		public function set_payment_method( $payment_method )
-		{
-			$this->payment_method = $payment_method;
-		}
-
-		public function get_payment_method()
-		{
-			return $this->payment_method;
-		}
-
-		public function set_title( $title )
-		{
-			$this->title = $title;
-		}
-
-		public function get_title()
-		{
-			return $this->title;
-		}
-
-		public function set_description( $description )
-		{
-			$this->description = $description;
-		}
-
-		public function get_description()
-		{
-			return $this->description;
-		}
-
-		public function set_name( $name )
-		{
-			$this->name = $name;
-		}
-
-		public function get_name()
-		{
-			return $this->name;
-		}
-
-		public function set_type( $type )
-		{
-			$this->type = $type;
-		}
-
-		public function get_type()
-		{
-			return $this->type;
-		}
-
-		public function set_type_id( $type_id )
-		{
-			$this->type_id = $type_id;
-		}
-
-		public function get_type_id()
-		{
-			return $this->type_id;
-		}
-
-		public function set_contract_id( $contract_id )
-		{
-			$this->contract_id = $contract_id;
-		}
-
-		public function get_contract_id()
-		{
-			return $this->contract_id;
-		}
-
-		public function set_party_id( $party_id )
-		{
-			$this->party_id = $party_id;
-		}
-
-		public function get_party_id()
-		{
-			return $this->party_id;
+			if (!empty($entity->comment))
+			{
+				$entity->comment_input = array(
+					'time' => time(),
+					'author' => $GLOBALS['phpgw_info']['user']['fullname'],
+					'comment' => $entity->comment,
+					'type' => 'comment'
+				);
+			}
 		}
 
 		public function serialize()
 		{
-			return array(
-				'id' => $this->get_id(),
-				'title' => $this->get_title(),
-				'description' => $this->get_description(),
-				'name' => $this->get_name(),
-				'type' => lang($this->get_type())
-			);
+			return self::toArray();
 		}
+
+		public function store()
+		{
+			return rental_soapplication::get_instance()->store($this);
+		}
+
+		public function get($id)
+		{
+			return rental_soapplication::get_instance()->read_single($id, true);
+		}
+
 	}

@@ -374,7 +374,7 @@
 				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
 
 				$control_group_array = $control_group->toArray();
-				$control_items_array = $this->so_control_item->get(null, null, 'controller_control_item.control_area_id', true, null, null, array(
+				$control_items_array = $this->so_control_item->get(0, 0, 'controller_control_item.control_area_id', true, '', '', array(
 					'available' => 'yes'));
 
 				$control_items = array();
@@ -488,7 +488,7 @@
 				$building_part_options = $this->so->get_building_part_select_array($control_group->get_building_part_id());
 
 				$control_group_array = $control_group->toArray();
-				$control_items_array = $this->so_control_item->get(null, null, 'controller_control_item.control_area_id', true, null, null, array(
+				$control_items_array = $this->so_control_item->get(0, 0, 'controller_control_item.control_area_id', true, '', '', array(
 					'available' => 'yes'));
 
 				$control_items = array();
@@ -760,7 +760,9 @@
 			// YUI variables for paging and sorting
 			$start_index = $params['start'];
 			$num_of_objects = $params['results'] > 0 ? $params['results'] : null;
-			$sort_field = $params['order'];
+			$sort_field = ($params['order']) ? $params['order'] : '';
+			$filters = array();
+			$search_type = '';
 
 			$ctrl_area = phpgw::get_var('control_areas');
 			if (isset($ctrl_area) && $ctrl_area > 0)

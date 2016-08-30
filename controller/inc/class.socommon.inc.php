@@ -92,11 +92,11 @@
 		{
 			if ($type == 'bool')
 			{
-				return (boolean)$value;
+				return (bool)$value;
 			}
 			else if ($type == 'boolean')
 			{
-				return (boolean)$value;
+				return (bool)$value;
 			}
 			else if ($type == 'int')
 			{
@@ -150,7 +150,7 @@
 		 */
 		public function get_single( int $id )
 		{
-			$objects = $this->get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
+			$objects = $this->get(0, 0, '', false, '', '', array($this->get_id_field_name() => $id));
 			if (count($objects) > 0)
 			{
 				$keys = array_keys($objects);
@@ -173,7 +173,7 @@
 		 * @param $start_index int with index of first object.
 		 * @param $num_of_objects int with max number of objects to return.
 		 * @param $sort_field string representing the object field to sort on.
-		 * @param $ascending boolean true for ascending sort on sort field, false
+		 * @param $ascending bool true for ascending sort on sort field, false
 		 * for descending.
 		 * @param $search_for string with free text search query.
 		 * @param $search_type string with the query type.
@@ -181,7 +181,7 @@
 		 * @return array of objects. May return an empty
 		 * array, never null. The array keys are the respective index numbers.
 		 */
-		public function get( int $start_index, int $num_of_objects, string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters )
+		public function get( int $start_index, int $num_of_objects, string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters )
 		{
 			$results = array();   // Array to store result objects
 			$map = array(); // Array to hold number of records per target object
@@ -309,7 +309,7 @@
 		 */
 		public function get_count( string $search_for, string $search_type, array $filters )
 		{
-			return $this->get_query_count($this->get_query(null, null, $search_for, $search_type, $filters, true));
+			return $this->get_query_count($this->get_query('', false, $search_for, $search_type, $filters, true));
 		}
 
 		/**
@@ -326,16 +326,16 @@
 		 * @param $start_index int with index of first object.
 		 * @param $num_of_objects int with max number of objects to return.
 		 * @param $sort_field string representing the object field to sort on.
-		 * @param $ascending boolean true for ascending sort on sort field, false
+		 * @param $ascending bool true for ascending sort on sort field, false
 		 * for descending.
 		 * @param $search_for string with free text search query.
 		 * @param $search_type string with the query type.
 		 * @param $filters array with key => value of filters.
-		 * @param $return_count boolean telling to return only the count of the
+		 * @param $return_count bool telling to return only the count of the
 		 * matching objects, or the objects themself.
 		 * @return string with SQL.
 		 */
-		protected abstract function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count );
+		protected abstract function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count );
 
 		protected abstract function populate( int $object_id, &$object );
 

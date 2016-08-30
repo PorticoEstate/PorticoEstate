@@ -335,6 +335,16 @@
 				</table>
 			</td>
 		</tr>
+		<tr>
+			<td valign = 'top'>{lang_TTS_simplified_categories}:</td>
+			<td>
+				<!--to be able to blank the setting - need an empty value-->
+				<input type = 'hidden' name="newsettings[fmttssimple_categories][]" value="">
+				<table>
+					{hook_fmttssimple_categories}
+				</table>
+			</td>
+		</tr>
 		<tr class="pure-table-odd">
 			<td>{lang_Mail_Notification}:</td>
 			<td>
@@ -564,6 +574,15 @@
 				<select name="newsettings[budget_at_project]">
 					<option value="" {selected_budget_at_project_}>NO</option>
 					<option value="1" {selected_budget_at_project_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="pure-table-odd">
+			<td>{lang_common_budget_account_at_project_level}.</td>
+			<td>
+				<select name="newsettings[budget_account_at_project]">
+					<option value="" {selected_budget_account_at_project_}>NO</option>
+					<option value="1" {selected_budget_account_at_project_1}>YES</option>
 				</select>
 			</td>
 		</tr>

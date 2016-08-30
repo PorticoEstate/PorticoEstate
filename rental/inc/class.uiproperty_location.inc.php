@@ -36,6 +36,7 @@
 			$type_id = phpgw::get_var('type_id');
 			//$composite_id	= phpgw::get_var('composite_id');
 			$search_type = phpgw::get_var('search_option');
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
 
 			// YUI variables for paging and sorting
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
@@ -56,7 +57,9 @@
 					'bruksnr' => empty($query[1]) ? '' : $query[1],
 					'feste_nr' => empty($query[2]) ? '' : $query[2],
 					'seksjons_nr' => empty($query[3]) ? '' : $query[3],
-					'allrows' => true));
+					'allrows' => true,
+					'part_of_town_id' => $part_of_town_id,
+					));
 
 				$rows_total = count($gabinfo);
 				$gab_list = array_slice($gabinfo, $start_index, $num_of_objects);
@@ -81,7 +84,8 @@
 					'order' => $sort_field,
 					'sort' => $sort,
 					'allrows' => phpgw::get_var('length', 'int') == -1,
-					'type_id' => $type_id
+					'type_id' => $type_id,
+					'part_of_town_id' => $part_of_town_id,
 				);
 				$rows = $property_bolocation->read($params);
 				$rows_total = $property_bolocation->total_records;

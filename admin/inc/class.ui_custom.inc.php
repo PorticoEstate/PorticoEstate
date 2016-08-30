@@ -368,10 +368,25 @@
 				'menu_selection' => $GLOBALS['phpgw_info']['flags']['menu_selection']
 			);
 
-			$multiple_choice = '';
-			if(isset($values['column_info']['type']) && ($values['column_info']['type'] == 'R' || $values['column_info']['type'] == 'CH' || $values['column_info']['type'] == 'LB'))
+			$multiple_choice = false;
+			$custom_get_list = false;
+			$custom_get_single = false;
+			switch ($values['column_info']['type'])
 			{
-				$multiple_choice = True;
+				case 'R':
+				case 'CH':
+				case 'LB':
+					$multiple_choice = true;
+					break;
+				case 'custom1':
+					$custom_get_list = true;
+					break;
+				case 'custom2':
+				case 'custom3':
+					$custom_get_list = true;
+					$custom_get_single = true;
+					break;
+				default:
 			}
 
 //_debug_array($values);
@@ -386,6 +401,8 @@
 				'lang_new_value_statustext'			=> lang('New value for multiple choice'),
 				'multiple_choice'					=> $multiple_choice,
 				'value_choice'					 => (isset($values['choice']) ? $values['choice'] : ''),
+				'custom_get_list' => $custom_get_list,
+				'custom_get_single' => $custom_get_single,
 				'lang_delete_value'					=> lang('Delete value'),
 				'lang_value'						=> lang('value'),
 				'lang_delete_choice_statustext'		=> lang('Delete this value from the list of multiple choice'),
@@ -444,7 +461,11 @@
 				'value_helpmsg'						=> isset($values['helpmsg']) ? $values['helpmsg'] : '',
 				'lang_helpmsg'						=> lang('help message'),
 				'lang_helpmsg_statustext'			=> lang('Enables help message for this attribute'),
-				'value_location'					=> $location
+				'value_location'					=> $location,
+				'value_get_list_function' => $values['get_list_function'],
+				'value_get_list_function_input' => print_r($values['get_list_function_input'], true),
+				'value_get_single_function' => $values['get_single_function'],
+				'value_get_single_function_input' => print_r($values['get_single_function_input'], true),
 			);
 //_debug_array($values);
 

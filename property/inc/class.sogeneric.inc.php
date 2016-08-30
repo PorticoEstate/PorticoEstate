@@ -64,6 +64,7 @@
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_criteria = isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
+			$custom_filter = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
 			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
@@ -91,36 +92,6 @@
 				}
 			}
 
-			/*
-			  $valid_order = false;
-
-			  if($order)
-			  {
-			  if($this->location_info['id']['name'] != $order)
-			  {
-
-			  foreach ($this->location_info['fields'] as $field)
-			  {
-			  if($field['name'] == $order)
-			  {
-			  $valid_order = true;
-			  break;
-			  }
-			  }
-			  }
-			  else
-			  {
-			  $valid_order = true;
-			  }
-
-			  if(!$valid_order)
-			  {
-			  //					$order = '';
-			  }
-			  }
-			 */
-
-			$get_single = array();
 			foreach ($this->location_info['fields'] as $field)
 			{
 				if (isset($field['filter']) && $field['filter'])
@@ -133,10 +104,6 @@
 					{
 						$_filter_array[] = "{$field['name']} = '{$filter[$field['name']]}'";
 					}
-				}
-				if (isset($field['get_single']) && $field['get_single'])
-				{
-					$get_single[$field['name']] = $field['get_single'];
 				}
 			}
 
@@ -235,6 +202,12 @@
 			if ($_filter_array)
 			{
 				$filtermethod .= " $where " . implode(' AND ', $_filter_array);
+				$where = 'AND';
+			}
+
+			if ($custom_filter)
+			{
+				$filtermethod .= " $where " . implode(' AND ', $custom_filter);
 				$where = 'AND';
 			}
 
@@ -364,32 +337,6 @@
 
 			$values = $this->custom->translate_value($dataset, $location_id);
 
-			if ($get_single)
-			{
-				foreach ($values as $set => &$entry)
-				{
-					foreach ($entry as $field => &$value)
-					{
-						foreach ($get_single as $key => $method)
-						{
-							if ($field == $key)
-							{
-								switch ($method)
-								{
-									case 'get_user':
-										if ($value)
-										{
-											$value = $GLOBALS['phpgw']->accounts->get($value)->__toString();
-										}
-										break;
-									default:
-									// nothing
-								}
-							}
-						}
-					}
-				}
-			}
 			return $values;
 		}
 
@@ -434,6 +381,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'district', 'selected' => '##district_id##')
 								)
 							),
@@ -482,6 +430,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'org_unit', 'selected' => '##org_unit_id##')
 								)
 							)
@@ -770,6 +719,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'vendor_cats', 'selected' => '##category##')
 								)
 							),
@@ -782,7 +732,7 @@
 								'nullable' => true,
 								'filter' => true,
 								'sortable' => false,
-								'hidden' => true,
+								'hidden' => false,
 								'values_def' => array
 									(
 									'valueset' => false,
@@ -831,6 +781,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'owner_cats', 'selected' => '##category##')
 								)
 							),
@@ -875,6 +826,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'tenant_cats', 'selected' => '##category##')
 								)
 							)
@@ -1552,6 +1504,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'ns3420', 'role' => 'parent', 'selected' => '##parent_id##',
 										'id_in_name' => 'num', 'mapping' => array('name' => 'tekst1')
 									)
@@ -1667,6 +1620,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'b_account', 'selected' => '##category##')//b_account_category
 								)
 							),
@@ -1685,10 +1639,10 @@
 								'descr' => lang('responsible'),
 								'type' => 'select',
 								'filter' => true,
-								'get_single' => 'get_user',
 								'values_def' => array
 									(
 									'valueset' => false,
+									'get_single_value' => 'get_user',
 									'method' => 'property.bocommon.get_user_list_right2',
 									'method_input' => array('selected' => '##responsible##', 'right' => 128,
 										'acl_location' => '.invoice')
@@ -1753,10 +1707,8 @@
 						(
 						'table' => 'fm_org_unit',
 						'id' => array('name' => 'id', 'type' => 'int'),
-						'fields' => array
-							(
-							array
-								(
+						'fields' => array(
+							array(
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar',
@@ -1764,8 +1716,7 @@
 								'size' => 60,
 								'sortable' => true
 							),
-							array
-								(
+							array(
 								'name' => 'parent_id',
 								'descr' => lang('parent'),
 								'type' => 'select',
@@ -1779,13 +1730,24 @@
 									'method' => 'property.bogeneric.get_list',
 									'method_input' => array('type' => 'org_unit', 'role' => 'parent', 'selected' => '##parent_id##')
 								)
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
 							)
 						),
 						'edit_msg' => lang('edit'),
 						'add_msg' => lang('add'),
 						'name' => lang('department'),
 						'acl_app' => 'property',
-						'acl_location' => '.admin',
+						'acl_location' => '.org_unit',
 						'menu_selection' => 'admin::property::accounting::org_unit',
 						'default' => array
 							(
@@ -1863,6 +1825,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'dimb_role', 'selected' => '##role_id##')
 								)
 							),
@@ -1872,10 +1835,10 @@
 								'descr' => lang('user'),
 								'type' => 'select',
 								'filter' => true,
-								'get_single' => 'get_user',
 								'values_def' => array
 									(
 									'valueset' => false,
+									'get_single_value' => 'get_user',
 									'method' => 'property.bocommon.get_user_list_right2',
 									'method_input' => array('selected' => '##user_id##', 'right' => 1, 'acl_location' => '.invoice')
 								)
@@ -2399,17 +2362,10 @@
 								'descr' => lang('remark'),
 								'type' => 'text'
 							),
-							array
-								(
+							array(
 								'name' => 'location_level',
 								'descr' => lang('location level'),
-								'type' => 'select',
-								'values_def' => array
-									(
-									'valueset' => false,
-									'method' => 'preferences.boadmin_acl.get_locations',
-									'method_input' => array('acl_app' => 'property', 'selected' => '##location##')
-								)
+								'type' => 'varchar'
 							),
 							array
 								(
@@ -2599,6 +2555,7 @@
 									(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'periodization', 'selected' => '##periodization_id##')
 								)
 							),
@@ -2852,18 +2809,16 @@
 						(
 						'table' => 'bb_office_user',
 						'id' => array('name' => 'id', 'type' => 'auto'),
-						'fields' => array
-							(
-							array
-								(
+						'fields' => array(
+							array(
 								'name' => 'office',
 								'descr' => $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
 								'type' => 'select',
 								'filter' => true,
-								'values_def' => array
-									(
+								'values_def' => array(
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'bb_office', 'selected' => '##office##')
 								)
 							)
@@ -2937,6 +2892,52 @@
 
 // END CONTROLLER TABLES
 // START RENTAL TABLES
+				case 'location_factor':
+					$info = array
+						(
+						'table' => 'rental_location_factor',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array(
+							array(
+								'name' => 'part_of_town_id',
+								'descr' => lang('location'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'values_def' => array(
+									'valueset' => false,
+									'get_single_value' => 'property.sogeneric.get_name',
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'part_of_town', 'selected' => '##part_of_town_id##')
+								)
+							),
+							array(
+								'name' => 'factor',
+								'descr' => lang('factor'),
+								'type' => 'numeric',
+								'nullable' => false,
+								'size' => 4,
+								'sortable' => true
+							),
+							array(
+								'name' => 'remark',
+								'descr' => lang('remark'),
+								'type' => 'text'
+							)
+						),
+						'edit_msg' => lang('edit unit'),
+						'add_msg' => lang('add unit'),
+						'name' => lang('unit'),
+						'acl_app' => 'rental',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::rental::location_factor',
+						'default' => array(
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
+						)
+					);
+					break;
 				case 'composite_standard':
 					$info = array
 						(
@@ -3000,6 +3001,16 @@
 
 			$this->location_info = $info;
 			return $info;
+		}
+
+		public function get_name( $data )
+		{
+			if (isset($data['type']) && $data['type'] && ! $this->location_info)
+			{
+				$this->get_location_info($data['type']);
+			}
+			$values = $this->read_single($data);
+			return isset($values['name']) ? $values['name'] : $values['descr'];
 		}
 
 		function read_single( $data, $values = array() )

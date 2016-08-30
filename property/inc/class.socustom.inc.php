@@ -292,6 +292,7 @@
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_id = isset($data['custom_id']) && $data['custom_id'] ? (int)$data['custom_id'] : 0;
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			$this->db->query("SELECT sql_text FROM fm_custom where id={$custom_id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -308,7 +309,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

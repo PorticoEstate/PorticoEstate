@@ -1189,7 +1189,7 @@
 						while ($this->db->next_record())
 						{
 							$data = $this->db->Record;
-
+/*
 							$xmldata = phpgwapi_xmlhelper::toXML($data, "_{$this->type}_{$category['entity_id']}_{$category['id']}");
 							$doc = new DOMDocument('1.0', 'utf-8');
 							$doc->loadXML($xmldata);
@@ -1206,7 +1206,7 @@
 							$doc->preserveWhiteSpace = true;
 							$doc->formatOutput = true;
 							$xml = $doc->saveXML();
-
+*/
 							$p_location_id = '';
 							if ($data['p_cat_id'])
 							{
@@ -1233,7 +1233,8 @@
 								'location_id' => $location_id,
 								'type' => $type,
 								'guid' => $guid,
-								'xml_representation' => $this->db->db_addslashes($xml),
+//								'xml_representation' => $this->db->db_addslashes($xml),
+								'json_representation' => json_encode($data),
 								'model' => 0,
 								'p_location_id' => $p_location_id,
 								'p_id' => isset($data['p_num']) && $data['p_num'] ? (int)$data['p_num'] : '',
