@@ -1,7 +1,7 @@
 
 var oArgs = {menuaction: 'property.uigeneric.index', type: 'dimb', type_id:0};
 var strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb', 'ecodimb_container', 'descr');
+JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb_id', 'ecodimb_container', 'descr');
 
 $(document).ready(function ()
 {
