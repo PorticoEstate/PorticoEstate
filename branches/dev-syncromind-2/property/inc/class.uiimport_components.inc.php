@@ -34,6 +34,13 @@
 
 	class property_uiimport_components extends phpgwapi_uicommon_jquery
 	{
+		var $type = 'entity';
+		protected $type_app = array
+			(
+			'entity' => 'property',
+			'catch' => 'catch'
+		);
+		
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
@@ -48,6 +55,8 @@
 			parent::__construct();
 
 			$this->bocommon = CreateObject('property.bocommon');
+			$this->custom = CreateObject('property.custom_fields');
+			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/test/';
@@ -95,6 +104,7 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
+			$template_id = phpgw::get_var('template_id');
 			
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
 			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
@@ -170,7 +180,7 @@
 					$i++;
 					$row_key = $i;
 
-					$_radio = "<input type =\"radio\" name=\"start_line\" value=\"{$row_key}\" onchange=\"selectStartLine()\">";
+					$_radio = "<input type =\"radio\" name=\"start_line\" value=\"{$row_key}\">";
 
 					$cellIterator = $row->getCellIterator();
 					$cellIterator->setIterateOnlyExistingCells(false);
@@ -195,28 +205,39 @@
 				$html_table = '<table class="pure-table pure-table-bordered">';
 				
 				$_options = array
-					(
-					'_skip_import_' => 'Utelates fra import/implisitt',
-					'import_type' => 'import type',
-					'building_part' => 'bygningsdels kode',
-					'descr' => 'Tilstandbeskrivelse',
-					'title' => 'Tiltak/overskrift',
-					'condition_degree' => 'Tilstandsgrad',
-					'condition_type' => 'Konsekvenstype',
-					'consequence' => 'Konsekvensgrad',
-					'probability' => 'Sannsynlighet',
-					'due_year' => 'År (innen)',
-					'amount_investment' => 'Beløp investering',
-					'amount_operation' => 'Beløp drift',
-					'amount_potential_grants' => 'Potensial for offentlig støtte',
+				(
+					'custom_attribute_1' => 'Romfnr',
+					'custom_attribute_2' => 'Prosj. romnr',
+					'custom_attribute_3' => 'Bruksromnr',
+					'custom_attribute_4' => 'Kontrakt',
+					'custom_attribute_5' => 'Kontrakt - navn',
+					'custom_attribute_6' => 'NS3420 - Kode',
+					'custom_attribute_7' => 'NS3420 - Beskrivelsestekst',
+					'custom_attribute_8' => 'Produkttype',
+					'custom_attribute_9' => 'Produktbetegnelse',
+					'custom_attribute_10' => 'EL.nr./NRF.nr.',
+					'custom_attribute_11' => 'Produsent',
+					'custom_attribute_12' => 'Leverandør',
+					'custom_attribute_13' => 'Ansvar',
+					'custom_attribute_14' => 'Antall dokumenter',
+					'custom_attribute_15' => 'Bygning',
+					'custom_attribute_16' => 'Komponentløpenr',
+					'custom_attribute_17' => 'Leverandør/Organisjonsnr',
+					'custom_attribute_18' => 'Produsent/Organisjonsnr',
+					'custom_attribute_19' => 'Prosjekt',
+					'custom_attribute_20' => 'Status',
+					'custom_attribute_21' => 'Systemløpenr',
+					'custom_attribute_22' => 'TFM Type',
+					'custom_attribute_23' => 'Typeunikt'
 				);
-
-				$custom = createObject('phpgwapi.custom_fields');
-				$attributes = $custom->find('property', '.project.request', 0, '', '', '', true, true);
+				
+				$template = explode("_", $template_id);
+				
+				$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$template[0]}.{$template[1]}", 0, '', 'ASC', 'attrib_sort', true, true);
 
 				foreach ($attributes as $attribute)
 				{
-					$_options["custom_attribute_{$attribute['id']}"] = $attribute['input_text'];
+					$_options[$attribute['input_text']] = $attribute['input_text'];
 				}
 
 				phpgw::import_class('phpgwapi.sbox');
@@ -530,6 +551,22 @@
 				)				
 			);	
 				
+			$entity_list = $this->bo->read(array('allrows' => true));
+			$category_list = array();
+			foreach ($entity_list as $entry)
+			{
+				$cat_list = $this->bo->read_category(array('entity_id' => $entry['id'], 'allrows' => true));
+
+				foreach ($cat_list as $category)
+				{
+					$category_list[] = array
+						(
+						'id' => "{$entry['id']}_{$category['id']}",
+						'name' => "{$entry['name']}::{$category['name']}"
+					);
+				}
+			}
+		
 			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
 
 			$data = array
@@ -541,6 +578,7 @@
 				'category_filter' => array('options' => $category_filter),
 				'district_filter' => array('options' => $district_filter),
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
+				'template_list' => array('options' => $category_list),
 				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
 			);
 
