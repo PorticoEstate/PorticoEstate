@@ -236,7 +236,7 @@
 				);
 			}
 
-			if(!$entity-get_id())
+			if(!$entity->get_id())
 			{
 				$entity->status = rental_application::STATUS_REGISTERED;
 			}
