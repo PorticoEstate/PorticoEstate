@@ -257,6 +257,7 @@
 				else
 				{
 					$application = new rental_application();
+					$application->status = rental_application::STATUS_REGISTERED;
 				}
 			}
 
