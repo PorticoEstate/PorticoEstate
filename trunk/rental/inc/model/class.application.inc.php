@@ -235,6 +235,11 @@
 					'type' => 'comment'
 				);
 			}
+
+			if(!$entity-get_id())
+			{
+				$entity->status = rental_application::STATUS_REGISTERED;
+			}
 		}
 
 		public function serialize()
