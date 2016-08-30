@@ -14,7 +14,7 @@ $(document).ready(function ()
 	{
 		if (set_history_data === 0)
 		{
-			JqueryPortico.updateinlineTableHelper(oTable1, link_history);
+			JqueryPortico.updateinlineTableHelper(oTable2, link_history);
 			set_history_data = 1;
 		}
 	};

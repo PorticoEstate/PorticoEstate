@@ -186,28 +186,29 @@
 					unset($value_set[$remove_key]);
 				}
 
-				phpgw::import_class('phpgwapi.xmlhelper');
-
-				$xmldata = phpgwapi_xmlhelper::toXML($value_set, $location_name);
-				$doc = new DOMDocument;
-				$doc->preserveWhiteSpace = true;
-				$doc->loadXML($xmldata);
-				$domElement = $doc->getElementsByTagName($location_name)->item(0);
-				$domAttribute = $doc->createAttribute('appname');
-				$domAttribute->value = 'property';
-
-				// Don't forget to append it to the element
-				$domElement->appendChild($domAttribute);
-
-				// Append it to the document itself
-				$doc->appendChild($domElement);
-
-				$doc->formatOutput = true;
-				$xml = $doc->saveXML();
+//				phpgw::import_class('phpgwapi.xmlhelper');
+//
+//				$xmldata = phpgwapi_xmlhelper::toXML($value_set, $location_name);
+//				$doc = new DOMDocument;
+//				$doc->preserveWhiteSpace = true;
+//				$doc->loadXML($xmldata);
+//				$domElement = $doc->getElementsByTagName($location_name)->item(0);
+//				$domAttribute = $doc->createAttribute('appname');
+//				$domAttribute->value = 'property';
+//
+//				// Don't forget to append it to the element
+//				$domElement->appendChild($domAttribute);
+//
+//				// Append it to the document itself
+//				$doc->appendChild($domElement);
+//
+//				$doc->formatOutput = true;
+//				$xml = $doc->saveXML();
 
 				$_value_set = array
 					(
-					'xml_representation' => $this->db->db_addslashes($xml),
+//					'xml_representation' => $this->db->db_addslashes($xml),
+					'json_representation' => json_encode($value_set),
 					'p_location_id' => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
 					'p_id' => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',
 					'location_code' => $value_set['location_code'],
@@ -223,23 +224,23 @@
 			{
 				$this->warnings[] = "Denne er ny: {$id}, legger til";
 
-				phpgw::import_class('phpgwapi.xmlhelper');
-				$xmldata = phpgwapi_xmlhelper::toXML($value_set, $location_name);
-				$doc = new DOMDocument;
-				$doc->preserveWhiteSpace = true;
-				$doc->loadXML($xmldata);
-				$domElement = $doc->getElementsByTagName($location_name)->item(0);
-				$domAttribute = $doc->createAttribute('appname');
-				$domAttribute->value = 'property';
-
-				// Don't forget to append it to the element
-				$domElement->appendChild($domAttribute);
-
-				// Append it to the document itself
-				$doc->appendChild($domElement);
-				$doc->formatOutput = true;
-
-				$xml = $doc->saveXML();
+//				phpgw::import_class('phpgwapi.xmlhelper');
+//				$xmldata = phpgwapi_xmlhelper::toXML($value_set, $location_name);
+//				$doc = new DOMDocument;
+//				$doc->preserveWhiteSpace = true;
+//				$doc->loadXML($xmldata);
+//				$domElement = $doc->getElementsByTagName($location_name)->item(0);
+//				$domAttribute = $doc->createAttribute('appname');
+//				$domAttribute->value = 'property';
+//
+//				// Don't forget to append it to the element
+//				$domElement->appendChild($domAttribute);
+//
+//				// Append it to the document itself
+//				$doc->appendChild($domElement);
+//				$doc->formatOutput = true;
+//
+//				$xml = $doc->saveXML();
 
 				if (function_exists('com_create_guid') === true)
 				{
@@ -256,7 +257,8 @@
 					'type' => $type,
 					'location_id' => $location_id,
 					'guid' => $guid,
-					'xml_representation' => $this->db->db_addslashes($xml),
+//					'xml_representation' => $this->db->db_addslashes($xml),
+					'json_representation' => json_encode($value_set),
 					'model' => 0,
 					'p_location_id' => isset($value_set['p_location_id']) && $value_set['p_location_id'] ? $value_set['p_location_id'] : '',
 					'p_id' => isset($value_set['p_id']) && $value_set['p_id'] ? $value_set['p_id'] : '',

@@ -73,7 +73,7 @@
 	<div class="pure-control-group">
 		<xsl:choose>
 			<xsl:when test="not(hide_row)">
-				<label>
+				<label id="label_{name}">
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
 							<xsl:variable name="help_url">
@@ -110,14 +110,14 @@
 
 		<xsl:choose>
 			<xsl:when test="name!=''">
-				<input type="hidden" name="values_attribute[{counter}][name]" value="{name}"/>
-				<input type="hidden" name="values_attribute[{counter}][datatype]" value="{datatype}"/>
-				<input type="hidden" name="values_attribute[{counter}][precision]" value="{precision}"/>
-				<input type="hidden" name="values_attribute[{counter}][history]" value="{history}"/>
-				<input type="hidden" name="values_attribute[{counter}][attrib_id]" value="{id}"/>
-				<input type="hidden" name="values_attribute[{counter}][nullable]" value="{nullable}"/>
-				<input type="hidden" name="values_attribute[{counter}][input_text]" value="{input_text}"/>
-				<input type="hidden" name="values_attribute[{counter}][disabled]" value="{disabled}"/>
+				<input type="hidden" name="values_attribute[{id}][name]" value="{name}"/>
+				<input type="hidden" name="values_attribute[{id}][datatype]" value="{datatype}"/>
+				<input type="hidden" name="values_attribute[{id}][precision]" value="{precision}"/>
+				<input type="hidden" name="values_attribute[{id}][history]" value="{history}"/>
+				<input type="hidden" name="values_attribute[{id}][attrib_id]" value="{id}"/>
+				<input type="hidden" name="values_attribute[{id}][nullable]" value="{nullable}"/>
+				<input type="hidden" name="values_attribute[{id}][input_text]" value="{input_text}"/>
+				<input type="hidden" name="values_attribute[{id}][disabled]" value="{disabled}"/>
 				<xsl:choose>
 					<xsl:when test="datatype='R'">
 						<xsl:call-template name="choice"/>
@@ -126,7 +126,7 @@
 						<xsl:call-template name="choice"/>
 					</xsl:when>
 					<xsl:when test="datatype='LB'">
-						<select id="id_{name}" name="values_attribute[{counter}][value]" title="{$statustext}">
+						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -291,7 +291,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='custom1'">
-						<select name="values_attribute[{counter}][value]">
+						<select name="values_attribute[{id}][value]">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -376,7 +376,7 @@
 							<xsl:text>_container</xsl:text>
 						</xsl:variable>
 
-						<input id="{$custom_id}" name="values_attribute[{counter}][value]" type="hidden" value="{value}">
+						<input id="{$custom_id}" name="values_attribute[{id}][value]" type="hidden" value="{value}">
 							<xsl:choose>
 								<xsl:when test="nullable!='1'">
 									<xsl:attribute name="data-validation">
@@ -431,7 +431,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='D'">
-						<input data-validation="date" data-validation-format="dd/mm/yyyy" type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value]" value="{value}" size="12" maxlength="12">
+						<input data-validation="date" data-validation-format="dd/mm/yyyy" type="text" id="values_attribute_{id}" name="values_attribute[{id}][value]" value="{value}" size="12" maxlength="12">
 							<xsl:attribute name="readonly">
 								<xsl:text> readonly</xsl:text>
 							</xsl:attribute>
@@ -459,7 +459,7 @@
 						<table>
 							<tr>
 								<td>
-									<input type="text" id="values_attribute_{counter}" name="values_attribute[{counter}][value][date]" value="{value/date}" size="12" maxlength="12">
+									<input type="text" id="values_attribute_{id}" name="values_attribute[{id}][value][date]" value="{value/date}" size="12" maxlength="12">
 										<xsl:attribute name="readonly">
 											<xsl:text> readonly</xsl:text>
 										</xsl:attribute>
@@ -478,7 +478,7 @@
 									</input>
 								</td>
 								<td>
-									<input type="text" id="values_attribute_{counter}_hour" name="values_attribute[{counter}][value][hour]" value="{value/hour}" size="2" maxlength="2" title="{$lang_hour}">
+									<input type="text" id="values_attribute_{id}_hour" name="values_attribute[{id}][value][hour]" value="{value/hour}" size="2" maxlength="2" title="{$lang_hour}">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">
@@ -492,7 +492,7 @@
 									<xsl:text> : </xsl:text>
 								</td>
 								<td>
-									<input type="text" id="values_attribute_{counter}_min" name="values_attribute[{counter}][value][min]" value="{value/min}" size="2" maxlength="2" title="{$lang_min}">
+									<input type="text" id="values_attribute_{id}_min" name="values_attribute[{id}][value][min]" value="{value/min}" size="2" maxlength="2" title="{$lang_min}">
 										<xsl:choose>
 											<xsl:when test="disabled!=''">
 												<xsl:attribute name="disabled">
@@ -517,7 +517,7 @@
 						</table>
 					</xsl:when>
 					<xsl:when test="datatype='T'">
-						<textarea id="id_{name}"  name="values_attribute[{counter}][value]">
+						<textarea id="id_{name}"  name="values_attribute[{id}][value]">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -554,7 +554,7 @@
 						</textarea>
 					</xsl:when>
 					<xsl:when test="datatype='pwd'">
-						<input type="password" name="values_attribute[{counter}][value]" size="30">
+						<input type="password" name="values_attribute[{id}][value]" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -568,7 +568,7 @@
 								</xsl:when>
 							</xsl:choose>
 						</input>
-						<input type="password" name="values_attribute[{counter}][value2]" size="30">
+						<input type="password" name="values_attribute[{id}][value2]" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -584,7 +584,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='bolean'">
-						<input id="id_{name}" type="checkbox" name="values_attribute[{counter}][value]" value="1">
+						<input id="id_{name}" type="checkbox" name="values_attribute[{id}][value]" value="1">
 							<xsl:choose>
 								<xsl:when test="value!=''">
 									<xsl:attribute name="checked">
@@ -595,7 +595,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='link'">
-						<input type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+						<input type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -663,7 +663,7 @@
 						</xsl:choose>
 					</xsl:when>
 					<xsl:when test="datatype='I'">
-						<input data-validation="number" id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+						<input data-validation="number" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -679,7 +679,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='N'">
-						<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+						<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -695,7 +695,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='email'">
-						<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{counter}][value]" value="{value}" size="30">
+						<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -711,7 +711,7 @@
 						</input>
 					</xsl:when>
 					<xsl:otherwise>
-						<input id="id_{name}" type="text" name="values_attribute[{counter}][value]" size="30">
+						<input id="id_{name}" type="text" name="values_attribute[{id}][value]" size="30">
 							<xsl:attribute name="value">
 								<xsl:choose>
 									<xsl:when test="value!=''">
@@ -739,7 +739,7 @@
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="history=1">
-						<input type="text" id="values_attribute_{counter}_date" name="values_attribute[{counter}][date]" value="" size="12" maxlength="10" readonly="readonly">
+						<input type="text" id="values_attribute_{id}_date" name="values_attribute[{id}][date]" value="" size="12" maxlength="10" readonly="readonly">
 						</input>
 						<xsl:variable name="link_history">
 							<xsl:value-of select="link_history"/>

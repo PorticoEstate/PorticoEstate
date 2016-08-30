@@ -417,7 +417,7 @@
 				$section_name = $valueset['name'];
 				foreach ($valueset['data'] as $entry)
 				{
-					if ((int)$entry[5] > 0)
+					if ((int)$entry[4] > 0)
 					{
 						$descr = $entry[1];
 
@@ -432,8 +432,8 @@
 							'descr' => $descr,
 							'unit' => $entry[2],
 							'cost' => $entry[6],
-							'quantity' => $entry[5],
-							'billperae' => $entry[4],
+							'quantity' => $entry[4],
+							'billperae' => $entry[5],
 							'ns3420_id' => '',
 							'dim_d' => '',
 							'new_grouping' => $section_name,

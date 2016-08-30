@@ -302,10 +302,16 @@
 								'text' => lang('User'),
 								'list' => $user_list,
 								'onchange' => 'update_table();'
-							),
+							),/*
 							array('type' => 'checkbox',
 								'name' => 'user_only',
 								'text' => 'Filtrer bruker',
+								'value' => 1,
+								'onclick' => 'update_table();'
+							),*/
+							array('type' => 'checkbox',
+								'name' => 'all_users',
+								'text' => 'Vis totale timer',
 								'value' => 1,
 								'onclick' => 'update_table();'
 							),
@@ -469,7 +475,9 @@
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
-			$user_only = phpgw::get_var('user_only', 'bool');
+			$all_users = phpgw::get_var('all_users', 'bool');
+//			$user_only = phpgw::get_var('user_only', 'bool');
+			$user_only = $all_users ? false : true;
 			$filter_status = phpgw::get_var('status', 'string');
 			$report_type = phpgw::get_var('report_type', 'string');
 			if ($filter_component_str = phpgw::get_var('filter_component', 'string'))
@@ -837,6 +845,11 @@
 
 			if ($report_type == 'summary')
 			{
+				if($all_users)
+				{
+					$user_id = 0;
+				}
+
 				return array(
 					'components' => null,
 					'summary' => $this->get_summary($values, $user_id),
@@ -906,10 +919,10 @@
 				for ($_month = 1; $_month < 13; $_month++)
 				{
 					$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to);
-					if ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+					if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 					{
-						$row_sum[$_month] = $entry[$_month]['info']['service_time'] + $entry[$_month]['info']['controle_time'];
-						$row_sum_actual[$_month] = + $entry[$_month]['info']['billable_hours'];
+						$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
+						$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
 					}
 					else
 					{

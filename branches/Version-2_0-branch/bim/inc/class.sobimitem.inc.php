@@ -53,14 +53,14 @@
 		{
 		$itemTable = self::bimItemTable;
 		$typeTable = self::bimTypeTable;
-			$sql = "SELECT $itemTable.id, fm_bim_type.name AS type,  $itemTable.guid,  $itemTable.xml_representation " .
+			$sql = "SELECT $itemTable.id, fm_bim_type.name AS type,  $itemTable.guid,  $itemTable.json_representation " .
 			"FROM public. $itemTable,  public.$typeTable " .
 					"WHERE   $itemTable.type = $typeTable.id";
 		$bimItemArray = array();
 		$this->db->query($sql);
 		while($this->db->next_record())
 		{
-				$bimItem = new BimItem($this->db->f('id'), $this->db->f('guid'), $this->db->f('type'), $this->db->f('xml_representation', true));
+				$bimItem = new BimItem($this->db->f('id'), $this->db->f('guid'), $this->db->f('type'), $this->db->f('json_representation'));
 			array_push($bimItemArray, $bimItem);
 		}
 
@@ -71,7 +71,7 @@
 		{
 		$itemTable = self::bimItemTable;
 		$typeTable = self::bimTypeTable;
-			$sql = "SELECT $itemTable.id, fm_bim_type.name AS type, $itemTable.guid, $itemTable.xml_representation, $itemTable.model " .
+			$sql = "SELECT $itemTable.id, fm_bim_type.name AS type, $itemTable.guid, $itemTable.json_representation, $itemTable.model " .
 			"FROM public.$itemTable,  public.$typeTable " .
 					"WHERE  $itemTable.type = $typeTable.id " .
         			"AND $itemTable.guid ='$bimObjectGuid'";
@@ -83,7 +83,7 @@
 			else
 			{
 			$this->db->next_record();
-				return new BimItem($this->db->f('id'), $this->db->f('guid'), $this->db->f('type'), $this->db->f('xml_representation', true), $this->db->f('model'));
+				return new BimItem($this->db->f('id'), $this->db->f('guid'), $this->db->f('type'), $this->db->f('json_representation'), $this->db->f('model'));
 		}
 	}
 	
@@ -100,7 +100,7 @@
 		$type = $this->db->f('type');
 			$id = $this->db->next_id('fm_bim_item', array('type' => $type));
 
-			$sql = "INSERT INTO " . self::bimItemTable . " (type, id, guid, xml_representation, model) values ($type, $id,";
+			$sql = "INSERT INTO " . self::bimItemTable . " (type, id, guid, json_representation, model) values ($type, $id,";
 	//	$sql = $sql."(select id from ".self::bimTypeTable." where name = '".$bimItem->getType()."'),";
 			$sql = $sql . "'" . $bimItem->getGuid() . "', '" . $this->db->db_addslashes($bimItem->getXml()) . "', " . $bimItem->getModelId() . ")";
 			try
@@ -164,7 +164,7 @@
 			{
 			throw new Exception("Item does not exist!");
 		}
-			$sql = "Update " . self::bimItemTable . " set xml_representation='" . $this->db->db_addslashes($bimItem->getXml()) . "' where guid='" . $bimItem->getGuid() . "'";
+			$sql = "Update " . self::bimItemTable . " set json_representation='" . $bimItem->getXml() . "' where guid='" . $bimItem->getGuid() . "'";
 		
 			if(is_null($this->db->query($sql, __LINE__, __FILE__)))
 			{
@@ -191,8 +191,8 @@
 		{
 		$columnAlias = "attribute_values";
 		$itemTable = self::bimItemTable;
-		//$sql = "select xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from fm_bim_data where guid='$bimItemGuid'))";
-		$sql = "select array_to_string(xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select xml_representation from $itemTable where guid='$bimItemGuid')), ',') as $columnAlias";
+		//$sql = "select xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select json_representation from fm_bim_data where guid='$bimItemGuid'))";
+		$sql = "select array_to_string(xpath('descendant-or-self::*[$attribute]/$attribute/text()', (select json_representation from $itemTable where guid='$bimItemGuid')), ',') as $columnAlias";
 			$this->db->query($sql, __LINE__, __FILE__);
 			if($this->db->num_rows() == 0)
 			{

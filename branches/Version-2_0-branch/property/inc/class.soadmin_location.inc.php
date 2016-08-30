@@ -92,7 +92,6 @@
 			{
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
-			#$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 
 			$standard = array();
 			while ($this->db->next_record())

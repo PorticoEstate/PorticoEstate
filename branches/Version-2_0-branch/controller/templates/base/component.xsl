@@ -313,13 +313,14 @@
 			var report_type = $("#report_type").val();
 			var user_id = $("#user_id").val();
 			var custom_frontend = $("[name='custom_frontend']").val();
+			var hide_all_users = false;
 
 			if(custom_frontend ==1)
 			{
 				$( "#user_id" ).hide();
 				$("[for='user_id']").hide();
 			}
-
+//console.log(user_id);
 			if(user_id < 0 || custom_frontend ==1)
 			{
 				$( "#entity_group_id" ).hide();
@@ -330,8 +331,9 @@
 				$("[for='all_items']").hide();
 				$( "#org_unit_id" ).hide();
 				$("[for='org_unit_id']").hide();
-				$("[name='user_only']").hide();
-				$("[for='user_only']").hide();
+				$("[name='all_users']").hide();
+				$("[for='all_users']").hide();
+				hide_all_users = true;
 			}
 			else
 			{
@@ -343,19 +345,28 @@
 				$("[for='all_items']").show();
 				$( "#org_unit_id" ).show();
 				$("[for='org_unit_id']").show();
-				$("[name='user_only']").show();
-				$("[for='user_only']").show();
+				$("[name='all_users']").show();
+				$("[for='all_users']").show();
+			}
+
+			if(report_type != 'summary' && hide_all_users == false)
+			{
+				$("[name='all_users']").show();
+				$("[for='all_users']").show();
+			}
+
+			if(user_id == '')
+			{
+				$("[name='all_users']").hide();
+				$("[for='all_users']").hide();
 			}
 
 			if(report_type == 'summary')
 			{
-				$("[name='user_only']").hide();
-				$("[for='user_only']").hide();
-			}
-			else
-			{
-				$("[name='user_only']").show();
-				$("[for='user_only']").show();
+				$("[name='all_items']").hide();
+				$("[for='all_items']").hide();
+				$("[name='status']").hide();
+				$("[for='status']").hide();
 			}
 
 			var requestUrl = $("#queryForm").attr("action");

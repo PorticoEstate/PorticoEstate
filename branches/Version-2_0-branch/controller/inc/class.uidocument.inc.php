@@ -280,13 +280,16 @@
 					else
 					{
 						// Handle failure on storing document
-						$this->redirect($document, $document_propeties, '', '');
+						$this->redirect($document, $document_properties, '', '');
 					}
 				}
 				else
 				{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show',
+							'procedure_id' => $procedure->get_id(),
+							'tab' => 'documents'));
 					//Handle vfs failure to store document
-					$this->redirect($document, $document_propeties, '', '');
+//					$this->redirect($document, $document_properties, '', '');
 				}
 			}
 		}
@@ -464,7 +467,7 @@
 					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				}
 
-				$documents = $this->so->get(null, null, null, null, null, null, array(
+				$documents = $this->so->get(0, 0, '', false, '', '', array(
 					'procedure_id' => $procedure_id,
 					'type' => $document_type));
 

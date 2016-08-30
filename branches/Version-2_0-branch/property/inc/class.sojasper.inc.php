@@ -74,8 +74,14 @@
 				$ordermethod = ' ORDER BY id asc';
 			}
 
+			$where = 'WHERE';
+			if ($location_id)
+			{
+				$filtermethod = "{$where} location_id = {$location_id}";
+				$where = 'AND';
+			}
 
-			$filtermethod = "WHERE {$table}.user_id = {$this->account}";
+			$filtermethod .= " {$where} ({$table}.user_id = {$this->account}";
 			$public_user_list = array();
 			if (is_array($grants['accounts']) && $grants['accounts'])
 			{
@@ -96,17 +102,12 @@
 				}
 				unset($user);
 				reset($public_group_list);
-				$filtermethod .= " OR access='public' AND phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				$filtermethod .= " OR access='public' AND phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")))";
 				$where = 'AND';
 			}
 			if($public_user_list && !$public_group_list)
 			{
-				$filtermethod .=')';
-			}
-
-			if ($location_id)
-			{
-				$filtermethod .= " AND location_id = {$location_id}";
+				$filtermethod .='))';
 			}
 
 			if ($query)

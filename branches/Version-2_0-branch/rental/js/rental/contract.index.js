@@ -38,17 +38,15 @@ function contract_export(ctype)
 		type: ctype,
 		contract_type: typeoption,
 		contract_status: statusoption,
-		type				: 'all_contracts',
-			query: query,
+		type			: 'all_contracts',
+		query: query,
 		search_option: sOption,
-		start_date_report: startDate,
-		end_date_report: endDate,
+		filter_start_date_report: startDate,
+		filter_end_date_report: endDate,
 		export: true
 	};
 
 	var sUrl = phpGWLink('index.php', oArgs);
-	alert(sUrl);
-	return;
 	var dl = window.open(sUrl);
 }
 
@@ -74,18 +72,15 @@ function contract_export_price_items(ctype)
 		contract_type: typeoption,
 		contract_status: statusoption,
 		type				: 'all_contracts',
-			query: query,
+		query: query,
 		search_option: sOption,
-		start_date_report: startDate,
-		end_date_report: endDate,
+		filter_start_date_report: startDate,
+		filter_end_date_report: endDate,
 		price_items: true,
 		export: true
 	};
 
 	var sUrl = phpGWLink('index.php', oArgs);
-	alert(sUrl);
-	return;
-
 	var dl = window.open(sUrl);
 }
 

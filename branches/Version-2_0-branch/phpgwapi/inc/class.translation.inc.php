@@ -254,7 +254,7 @@
 
 				if( !$GLOBALS['phpgw']->db->next_record() )
 				{	
-					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','##{$GLOBALS['phpgw_info']['flags']['currentapp']}##','$userlang','missing')",__LINE__,__FILE__);
+					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','##{$app_name}##','$userlang','missing')",__LINE__,__FILE__);
 				}
 			}
 

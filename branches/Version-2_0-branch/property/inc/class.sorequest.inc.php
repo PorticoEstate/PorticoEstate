@@ -309,6 +309,7 @@
 			$district_id = isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
 			$project_id = isset($data['project_id']) ? $data['project_id'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$results = isset($data['results']) ? (int)$data['results'] : 0;
 			$list_descr = isset($data['list_descr']) ? $data['list_descr'] : '';
 			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 			$p_num = isset($data['p_num']) ? $data['p_num'] : '';
@@ -815,7 +816,7 @@
 			{
 				if (!$allrows)
 				{
-					$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+					$this->_db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 				}
 				else
 				{

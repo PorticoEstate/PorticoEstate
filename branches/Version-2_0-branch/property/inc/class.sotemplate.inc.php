@@ -153,6 +153,7 @@
 				$chapter_id = (isset($data['chapter_id']) ? $data['chapter_id'] : 0);
 				$allrows = (isset($data['allrows']) ? $data['allrows'] : '');
 				$template_id = (isset($data['template_id']) ? $data['template_id'] : 0);
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -188,7 +189,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

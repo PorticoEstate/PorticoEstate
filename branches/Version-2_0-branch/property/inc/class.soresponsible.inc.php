@@ -434,21 +434,28 @@
 		 * @param type $id responsibility id
 		 * @return string responsibility name
 		 */
-		public function get_responsibility_name( $id )
+		public function get_responsibility_name( $data )
 		{
 			static $names = array();
-			$i = (int)$id;
-
-			if ($names[$i])
+			if(is_array($data))
 			{
-				return $names[$i];
+				$id = (int)$data['id'];
+			}
+			else
+			{
+				$id = (int)$data;
+			}
+
+			if ($names[$id])
+			{
+				return $names[$id];
 			}
 
 			$sql = "SELECT * FROM fm_responsibility WHERE id= {$id}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$name = $this->db->f('name', true);
-			$names[$i] = $name;
+			$names[$id] = $name;
 			return $name;
 		}
 
@@ -569,6 +576,7 @@
 				$allrows = isset($data['allrows']) ? !!$data['allrows'] : '';
 				$type_id = isset($data['type_id']) && $data['type_id'] ? (int)$data['type_id'] : 0;
 				$role_id = isset($data['role_id']) && $data['role_id'] ? (int)$data['role_id'] : 0;
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			if ($order)
@@ -607,7 +615,7 @@
 
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

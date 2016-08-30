@@ -1343,7 +1343,7 @@
 					}
 				}
 				$so_price_item = rental_socontract_price_item::get_instance();
-				$price_items = $so_price_item->get(null, null, null, null, null, null, array(
+				$price_items = $so_price_item->get(0, 0, '', false, '', '', array(
 					'contract_id' => $this->get_id()));
 				foreach ($price_items as $price_item)
 				{

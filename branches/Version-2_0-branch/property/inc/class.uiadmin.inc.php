@@ -45,6 +45,7 @@
 		var $permission;
 		var $sub;
 		var $currentapp;
+		var $acl_app;
 		var $public_functions = array
 			(
 			'list_acl' => true,
@@ -62,18 +63,18 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo = CreateObject('property.boadmin', true);
-			$this->bopreferences = createObject('preferences.boadmin_acl', true);
+			$this->acl_app	= $this->bo->acl_app;
+			$this->bopreferences = createObject('preferences.boadmin_acl');
 			$this->bocommon = CreateObject('property.bocommon');
 
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.admin';
-			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
-			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'property');
-			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'property');
-			$this->acl_manage = $this->acl->check($this->acl_location, 16, 'property');
+			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->acl_app);
+			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->acl_app);
+			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->acl_app);
+			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->acl_app);
+			$this->acl_manage = $this->acl->check($this->acl_location, 16, $this->acl_app);
 
-			//		$this->acl_app				= $this->bo->acl_app;
 			$this->start = $this->bo->start;
 			$this->query = $this->bo->query;
 			$this->sort = $this->bo->sort;
@@ -116,7 +117,6 @@
 
 			$values = phpgw::get_var('values');
 			$r_processed = phpgw::get_var('processed');
-			//		$acl_app			= get_var('acl_app',array('GET'));
 			$set_permission = phpgw::get_var('set_permission', 'bool');
 
 			if ($set_permission)
@@ -228,7 +228,7 @@
 				'query' => $this->query,
 				'module' => $this->location,
 				'granting_group' => $this->granting_group,
-				'acl_app' => $acl_app
+				'acl_app' => $this->acl_app
 			);
 
 			if (!$this->location)
@@ -252,6 +252,7 @@
 				(
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'value_acl_app' => $this->acl_app,
 				'done_action' => $GLOBALS['phpgw']->link('/preferences/index.php'),
 				'lang_save' => lang('save'),
 				'lang_done' => lang('done'),
@@ -262,7 +263,7 @@
 				'record_limit' => $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'],
 				'num_records' => $num_records,
 				'all_records' => (isset($this->bo->total_records) ? $this->bo->total_records : ''),
-				'link_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs')),
+				'link_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs', 'acl_app' => $this->acl_app)),
 				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default'),
 				'lang_groups' => lang('groups'),
 				'lang_users' => lang('users'),
@@ -298,7 +299,7 @@
 			$function_msg = lang('set grants');
 			$owner_name = $GLOBALS['phpgw']->accounts->id2name($this->account);  // get owner name for title
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg . ': ' . $owner_name;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->acl_app) . ' - ' . $appname . ': ' . $function_msg . ': ' . $owner_name;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list_permission' => $data));
 			$this->save_sessiondata();
 		}
@@ -562,7 +563,7 @@
 			$appname = lang('permission');
 			$function_msg = lang('set permission');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->acl_app) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('list_permission' => $data));
 			$this->save_sessiondata();
 		}

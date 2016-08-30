@@ -784,6 +784,7 @@
 			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$search = phpgw::get_var('search');
+			$query = phpgw::get_var('query');//direct url override
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
@@ -794,7 +795,14 @@
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'old_contract_id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
-			$search_for = $search['value'];
+			if($query)
+			{
+				$search_for = $query;
+			}
+			else
+			{
+				$search_for = $search['value'] ? $search['value'] : '';
+			}
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			$export = phpgw::get_var('export', 'bool');
@@ -805,7 +813,7 @@
 
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			$price_items_only = phpgw::get_var('price_items'); //should only export contract price items
@@ -905,8 +913,8 @@
 					$filters = array('contract_status' => phpgw::get_var('contract_status'),
 						'contract_type' => phpgw::get_var('contract_type'));
 					$filters['status_date'] = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('date_status'));
-					$filters['start_date_report'] = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('start_date_report'));
-					$filters['end_date_report'] = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('end_date_report'));
+					$filters['start_date_report'] = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('filter_start_date_report'));
+					$filters['end_date_report'] = phpgwapi_datetime::date_to_timestamp(phpgw::get_var('filter_end_date_report'));
 			}
 
 			$result_objects = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
@@ -957,6 +965,16 @@
 
 			if ($export)
 			{
+				/*
+				 * reverse of nl2br()
+				 */
+				foreach ($rows as &$row)
+				{
+					foreach ($row as $key => &$value)
+					{
+						$value = preg_replace('#<br\s*?/?>#i', "\n", $value);
+					}
+				}
 				return $rows;
 			}
 
@@ -966,80 +984,6 @@
 
 			return $this->jquery_results($result_data);
 		}
-		/**
-		 * Add data for context menu
-		 *
-		 * @param $value pointer to
-		 * @param $key ?
-		 * @param $params [type of query, editable]
-		 */
-		/* public function add_actions(&$value, $key, $params)
-		  {
-		  $type = $params[0];
-		  $ids = $params[1];
-		  $adjustment_id = $params[2];
-		  $entity_id_in = $params[3];
-		  $entity_id_out = $params[4];
-		  $category_id_in = $params[5];
-		  $category_id_out = $params[6];
-		  $actions = array();
-
-		  switch($type)
-		  {
-		  case 'last_edited_by':
-		  case 'contracts_for_executive_officer':
-		  case 'ending_contracts':
-		  case 'ended_contracts':
-		  case 'closing_due_date':
-		  case 'terminated_contracts':
-		  if(count($ids) > 0)
-		  {
-		  $url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
-		  $actions[] = '<a href="'.$url.'">'.lang('edit_contract').'</a>';
-		  }
-		  else
-		  {
-		  $url  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
-		  $actions[] = '<a href="'.$url.'">'.lang('show').'</a>';
-		  }
-		  break;
-		  case 'contracts_for_adjustment':
-		  $actions[] = '';
-		  break;
-		  default:
-		  if(!isset($ids) || count($ids) > 0)
-		  {
-		  $url1  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.edit', 'id' => $value['id'], 'initial_load' => 'no')));
-		  $actions[] = '<a href="'.$url1.'">'.lang('edit').'</a>';
-
-		  $url2  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.copy_contract', 'id' => $value['id'])));
-		  $actions[] = '<a href="'.$url2.'">'.lang('copy').'</a>';
-		  }
-		  $url3  = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.view', 'id' => $value['id'], 'initial_load' => 'no')));
-		  $actions[] = '<a href="'.$url3.'">'.lang('show').'</a>';
-		  $temlate_counter = 0;
-		  foreach ($this->pdf_templates as $pdf_template)
-		  {
-		  $url4  = html_entity_decode(self::link(array('menuaction' => 'rental.uimakepdf.view', 'id' => $value['id'], 'pdf_template' => $temlate_counter )));
-		  $actions[] = '<a href="'.$url4.'">'.lang('make_pdf').": ". $pdf_template[0].'</a>';
-		  $temlate_counter++;
-		  }
-
-		  if(isset($entity_id_in) && $entity_id_in != '' && isset($category_id_in) && $category_id_in != '')
-		  {
-		  $url5  = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_in, 'cat_id' => $category_id_in,'query' => $value['old_contract_id'], 'type' => 'catch')));
-		  $actions[] = '<a href="'.$url5.'">'.lang('show_move_in_reports').'</a>';
-		  }
-
-		  if(isset($entity_id_out) && $entity_id_out != '' && isset($category_id_out) && $category_id_out != '')
-		  {
-		  $url6  = html_entity_decode(self::link(array('menuaction' => 'property.uientity.index', 'entity_id' => $entity_id_out, 'cat_id' => $category_id_out,'query' => $value['old_contract_id'], 'type' => 'catch')));
-		  $actions[] = '<a href="'.$url6.'">'.lang('show_move_out_reports').'</a>';
-		  }
-		  }
-
-		  $value['actions'] = implode(' | ', $actions);
-		  } */
 
 		/**
 		 * View a list of all contracts
@@ -2047,7 +1991,7 @@ JS;
 				$active_options = array
 					(
 					array('id' => 'both', 'name' => lang('all')),
-					array('id' => 'active', 'name' => lang('in_operation')),
+					array('id' => 'active', 'name' => lang('in_operation'), 'selected' => 1),
 					array('id' => 'non_active', 'name' => lang('out_of_operation')),
 				);
 				$has_contract_options = array

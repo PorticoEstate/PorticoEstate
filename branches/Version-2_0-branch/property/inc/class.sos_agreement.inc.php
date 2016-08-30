@@ -609,6 +609,8 @@
 			{
 				$s_agreement_id = (isset($data['s_agreement_id']) ? $data['s_agreement_id'] : 0);
 				$item_id = (isset($data['item_id']) ? $data['item_id'] : 0);
+				$allrows = isset($data['allrows']) ? !!$data['allrows'] : '';
+				$results = isset($data['results']) ? (int)$data['results'] : 0;
 			}
 
 			$entity_table = 'fm_s_agreement_pricing';
@@ -674,7 +676,7 @@
 			$this->total_records = $this->db2->num_rows();
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__);
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__,$results);
 			}
 			else
 			{

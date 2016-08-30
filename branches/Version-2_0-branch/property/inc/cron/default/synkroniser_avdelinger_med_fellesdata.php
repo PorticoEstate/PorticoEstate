@@ -56,7 +56,7 @@
 
 			if ($this->debug)
 			{
-//				_debug_array($fellesdata->unit_ids);
+				_debug_array($fellesdata->unit_ids);
 			}
 
 			try
@@ -248,8 +248,7 @@
 				return false;
 			}
 
-			$db = createObject('phpgwapi.db', null, null, true);
-
+			$db = createObject('phpgwapi.db_adodb', null, null, true);
 			$db->debug = false;
 			$db->Host = $this->config->config_data['fellesdata']['host'];
 			$db->Port = $this->config->config_data['fellesdata']['port'];
@@ -274,49 +273,53 @@
 
 		public function insert_values()
 		{
+			$table = 'fm_org_unit';
 
 			$db = & $GLOBALS['phpgw']->db;
 			$db->transaction_begin();
-
+			$db->query("UPDATE {$table} SET active = 0", __LINE__, __FILE__);
 			$units = $this->unit_ids;
-
+//			_debug_array($units);
 			foreach ($units as $unit)
 			{
-				$value_set = array
-					(
+				$value_set = array(
 					'id' => $unit['id'],
 					'parent_id' => $unit['parent'],
 					'name' => $db->db_addslashes($unit['name']),
+					'arbeidssted' => $unit['arbeidssted'],
 					'created_on' => time(),
 					'created_by' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_by' => $GLOBALS['phpgw_info']['user']['account_id'],
 					'modified_on' => time()
 				);
 
-				$table = 'fm_org_unit';
 				$db->query("SELECT count(*) as cnt FROM {$table} WHERE id =" . (int)$unit['id'], __LINE__, __FILE__);
 				$db->next_record();
 
 				if ($db->f('cnt'))
 				{
 					unset($value_set['id']);
+					unset($value_set['created_on']);
 
+					$value_set['active'] = 1;
+					$value_set = $db->validate_update($value_set);
+					$sql = "UPDATE {$table} SET {$value_set} WHERE id =" . (int)$unit['id'];
 					if ($this->debug)
 					{
 						$this->messages[] = "ID finnes fra før: {$unit['id']}, oppdaterer: {$unit['name']}";
+						$this->messages[] = $sql;
 					}
-					$value_set = $db->validate_update($value_set);
-					$sql = "UPDATE {$table} SET {$value_set} WHERE id =" . (int)$unit['id'];
 				}
 				else
 				{
-					if ($this->debug)
-					{
-						$this->messages[] = "ID fantes ikke fra før: {$unit['id']}, legger til: {$unit['name']}";
-					}
 					$cols = implode(',', array_keys($value_set));
 					$values = $db->validate_insert(array_values($value_set));
 					$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+					if ($this->debug)
+					{
+						$this->messages[] = "ID fantes ikke fra før: {$unit['id']}, legger til: {$unit['name']}";
+						$this->messages[] = $sql;
+					}
 				}
 
 				$db->query($sql, __LINE__, __FILE__);
@@ -333,17 +336,16 @@
 			}
 
 			$sql = "SELECT ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET";
-//			$sql = "SELECT * FROM V_ORG_ENHET";
 			$db->query($sql, __LINE__, __FILE__);
 			while ($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
 				$name = $db->f('ORG_NAVN', true);
-
 				$this->names[$org_unit_id] = $name;
 			}
-
-			$sql = "SELECT V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN FROM V_ORG_ENHET"
+//			_debug_array($db);
+//			_debug_array($this->names);die();
+			$sql = "SELECT V_ORG_ENHET.ORG_ENHET_ID, V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.TJENESTESTED, V_ORG_ENHET.ORG_NIVAA FROM V_ORG_ENHET"
 				. " WHERE V_ORG_ENHET.ORG_NIVAA = 1 ORDER BY V_ORG_ENHET.ORG_NAVN ASC";
 
 			$db->query($sql);
@@ -351,16 +353,17 @@
 			while ($db->next_record())
 			{
 				$org_unit_id = $db->f('ORG_ENHET_ID');
+				$arbeidssted = $db->f('TJENESTESTED');
 				$this->unit_ids[] = array
 					(
 					'id' => $org_unit_id,
 					'name' => $this->names[$org_unit_id],
-					'parent' => ''
+					'parent' => '',
+					'arbeidssted'	=> $arbeidssted
 				);
 
 				$this->get_org_unit_ids_children($org_unit_id);
 			}
-
 			return $this->unit_ids;
 		}
 
@@ -369,20 +372,22 @@
 			$org_unit_id = (int)$org_unit_id;
 			$db = clone($this->db);
 
-			$q = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER,V_ORG_ENHET.ORG_NAVN,ORG_NIVAA FROM V_ORG_KNYTNING"
-				. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING=$org_unit_id";
+			$sql = "SELECT V_ORG_KNYTNING.*, ANT_ENHETER_UNDER,V_ORG_ENHET.ORG_NAVN, V_ORG_ENHET.TJENESTESTED, ORG_NIVAA FROM V_ORG_KNYTNING"
+				. " JOIN V_ORG_ENHET ON (V_ORG_ENHET.ORG_ENHET_ID = V_ORG_KNYTNING.ORG_ENHET_ID ) WHERE V_ORG_KNYTNING.ORG_ENHET_ID_KNYTNING={$org_unit_id}";
 
-			$db->query($q);
+			$db->query($sql);
 
 			while ($db->next_record())
 			{
 				$child_org_unit_id = $db->f('ORG_ENHET_ID');
-				$this->unit_ids[] = array
-					(
+				$arbeidssted = $db->f('TJENESTESTED');
+				$this->unit_ids[] = array(
 					'id' => $child_org_unit_id,
 					'name' => $this->names[$child_org_unit_id],
 					'parent' => $org_unit_id,
-					'level' => $db->f('ORG_NIVAA')
+					'level' => $db->f('ORG_NIVAA'),
+					'arbeidssted'	=> $arbeidssted,
+					'ant_enheter_under'	=> $db->f('ANT_ENHETER_UNDER')
 				);
 
 				if ($db->f('ANT_ENHETER_UNDER'))
@@ -390,5 +395,6 @@
 					$this->get_org_unit_ids_children($child_org_unit_id);
 				}
 			}
+//			unset($db);
 		}
 	}

@@ -136,7 +136,7 @@
 								<xsl:when test="type = 'autocomplete'">
 									<td class="auto">
 										<div class="auto">
-											<input id="filter_{name}_name" name="filter_{name}_name" type="text">
+											<input id="filter_{name}_name" name="{name}_name" type="text">
 												<xsl:attribute name="value">
 													<xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/>
 												</xsl:attribute>
@@ -309,7 +309,7 @@
 								</xsl:when>
 								<xsl:otherwise>
 									<td valign="top">
-										<input id="innertoolbar">
+										<input id="innertoolbar_{name}">
 											<xsl:attribute name="type">
 												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
 											</xsl:attribute>
@@ -957,6 +957,12 @@
 			var table_url = JqueryPortico.parseURL(window.location.href);
 			var menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
 
+			//clear state
+			var clear_state = false;
+			if(typeof(table_url.searchObject.clear_state) != 'undefined' && table_url.searchObject.clear_state == 1)
+			{
+				clear_state = true;
+			}
 			//uiocation
 			if(typeof(table_url.searchObject.type_id) != 'undefined')
 			{
@@ -1038,7 +1044,10 @@
 						$.each(params, function(index, value) {
 							if ( index == oControl.attr('name') )
 							{
-								oControl.val( value );
+								if (clear_state !== true)
+								{
+									oControl.val( value );
+								}
 							}
 						});
 					});
@@ -1233,6 +1242,19 @@
 					{
 						filterData('<xsl:value-of select="id"/>', $(this).val());
 						previous_<xsl:value-of select="id"/> = $(this).val();
+					}
+				});
+			</xsl:if>
+			<xsl:if test="type = 'checkbox'">
+				$("#innertoolbar_<xsl:value-of select="name"/>").change( function()
+				{
+					if($(this).prop("checked"))
+					{
+						filterData('<xsl:value-of select="name"/>', 1);
+					}
+					else
+					{
+						filterData('<xsl:value-of select="name"/>', 0);
 					}
 				});
 			</xsl:if>

@@ -1006,7 +1006,7 @@
 
 			unset($parameters);
 
-			$common_data = $this->common_data();
+			$common_data = $this->common_data($workorder_id);
 
 			$data['datatable']['table_sum'] = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
@@ -2354,8 +2354,7 @@ HTML;
 
 			unset($parameters);
 
-			$common_data = $this->common_data();
-
+			$common_data = $this->common_data($workorder_id);
 			$data['datatable']['table_sum'] = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
 
@@ -2703,7 +2702,7 @@ HTML;
 
 			unset($parameters);
 
-			$common_data = $this->common_data();
+			$common_data = $this->common_data($workorder_id);
 
 			$data['datatable']['table_sum'] = $common_data['table_sum'][0];
 			$data['datatable']['workorder_data'] = $common_data['workorder_data'];
@@ -3243,6 +3242,10 @@ HTML;
 
 			foreach ($worksheetNames as $_index => $sheet_name)
 			{
+				if($_index == 0)
+				{
+					continue;
+				}
 				$result[$_index]['name'] = $sheet_name;
 				$objPHPExcel->setActiveSheetIndex($_index);
 
@@ -3255,7 +3258,7 @@ HTML;
 
 				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 
-				$start = 2; // Read the first line to get the headers out of the way
+				$start = 9; // Read the first line to get the headers out of the way
 
 				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{

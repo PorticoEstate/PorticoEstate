@@ -68,7 +68,8 @@
 				'order_cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'building_part'=> array('type' => 'varchar','precision' => 4,'nullable' => True),
 				'order_dim1'=> array('type' => 'int','precision' => 4,'nullable' => True),
-				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True)
+				'publish_note'=> array('type' => 'int','precision' => 2,'nullable' => True),
+				'modified_date' => array('type' => 'int', 'precision' => '8', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

@@ -155,6 +155,7 @@
 				'ecodimb' => $this->bo->ecodimb,
 				'branch_id' => phpgw::get_var('branch_id'),
 				'order_dim1' => phpgw::get_var('order_dim1'),
+				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
 			);
 
 			$values = $this->bo->read($params);
@@ -619,8 +620,36 @@
 
 		private function _get_filters()
 		{
+			$order_read = $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
+
 			$values_combo_box = array();
 			$combos = array();
+
+			$check_date_type =	array('type' => 'filter',
+				'name' => 'check_date_type',
+				'extra' => '',
+				'text' => lang('check date type'),
+				'list' => array(
+					array(
+						'id'	=> 1,
+						'name'	=> lang('modified date')
+					),
+					array(
+						'id'	=> 2,
+						'name'	=> lang('entry date')
+					)
+				)
+			);
+		
+			if($order_read)
+			{
+				$check_date_type['list'][] = array(
+					'id'	=> 3,
+					'name'	=> lang('no date')
+				);
+			}
+
+			$combos[] = $check_date_type;
 
 			$values_combo_box[3] = $this->bo->filter(array('format' => $group_filters, 'filter' => $this->status_id,
 				'default' => 'O'));
@@ -727,8 +756,6 @@
 					'list' => $values_combo_box[5]
 				);
 			}
-
-			$order_read = $this->acl->check('.ticket.order', PHPGW_ACL_READ, 'property');
 
 			if($order_read)
 			{
@@ -862,13 +889,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -884,9 +904,16 @@
 								'name' => 'end_date',
 								'value' => $end_date,
 								'text' => lang('to')
-							)
-						),
-					),
+							),
+							array(
+								'type' => 'link',
+								'value' => lang('columns'),
+								'href' => '#',
+								'class' => '',
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
+							),
+						)
+					)
 				),
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'property.uitts.index',
@@ -1202,13 +1229,16 @@
 					}
 				}
 
-
 				if (!$values['assignedto'] && !$values['group_id'])
 				{
 					$_responsible = execMethod('property.boresponsible.get_responsible', $values);
 					if (!$_responsible)
 					{
-						$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
+						if(!$values['assignedto'] = $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])
+						{
+						
+							$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
+						}
 					}
 					else
 					{
@@ -1222,6 +1252,11 @@
 						}
 					}
 					unset($_responsible);
+				}
+
+				if (!isset($values['status']) || !$values['status'])
+				{
+					$values['status'] = "O";
 				}
 
 				if (!isset($values['priority']) || !$values['priority'])
@@ -1398,6 +1433,25 @@
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
 			$active_tab = 'add';
 
+			$fmttssimple_categories = isset($this->bo->config->config_data['fmttssimple_categories']) ? $this->bo->config->config_data['fmttssimple_categories'] : array();
+
+
+
+			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true));
+
+			$_cat_list = array();
+			if($this->simple && isset($fmttssimple_categories) && $fmttssimple_categories[1])
+			{
+				foreach ($cat_select['cat_list'] as $entry)
+				{
+					if(in_array($entry['cat_id'], array_values($fmttssimple_categories)))
+					{
+						$_cat_list[] = $entry;
+					}
+				}
+				$cat_select['cat_list'] = $_cat_list;
+			}
+
 			$data = array
 				(
 				'my_groups' => json_encode($my_groups),
@@ -1415,6 +1469,7 @@
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['assignedto'], $this->acl_location),
+//				'user_list' => $this->_get_user_list($values['assignedto']),
 				'disable_userassign_on_add' => isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : '',
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($values['group_id']),
@@ -1441,8 +1496,7 @@
 				'lang_town_statustext' => lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town' => lang('Part of town'),
 				'lang_no_part_of_town' => lang('No part of town'),
-				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true)),
+				'cat_select' => $cat_select,
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : ''),
 				'fileupload' => (isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
@@ -1812,7 +1866,7 @@
 			);
 
 
-			if ($ticket['origin'] || $ticket['target'])
+			if ($ticket['origin'] || $ticket['target'] || $this->simple)
 			{
 				$lookup_type = 'view2';
 				$type_id = count(explode('-', $ticket['location_data']['location_code']));
@@ -1939,7 +1993,7 @@
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 
 				$supervisor_email = $this->get_supervisor_email($supervisor_id,  $need_approval);
-				// approval					
+				// approval
 			}
 
 			$vendor_email = array();
@@ -2671,7 +2725,7 @@
 				);
 				$cat_select['disabled'] = true;
 				$cat_select['hidden_value'] = $ticket['cat_id'];
-//_debug_array($cat_select);die();			
+//_debug_array($cat_select);die();
 			}
 
 
@@ -2759,6 +2813,7 @@
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
 				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $ticket['assignedto'], $this->acl_location),
+//				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -3339,7 +3394,7 @@
 			$pdf->ezText($ticket['order_descr'], 14);
 			$pdf->ezSetDy(-20);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
-			$pdf->ezText('Kontakt på bygget:', 14);
+			$pdf->ezText('Kontakt pÃ¥ bygget:', 14);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 			$pdf->ezText($contact_name, 14);
 			$pdf->ezText($contact_email, 14);
@@ -3347,7 +3402,7 @@
 			$pdf->ezSetDy(-20);
 
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
-			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
+			$pdf->ezText("Faktura mÃ¥ merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
 			if ($content)
 			{
@@ -3422,7 +3477,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 */
 		private function _insert_custom_js()
 		{
@@ -3463,4 +3518,53 @@
 				phpgwapi_jquery::load_widget('core');
 			}
 		}
+
+		private function _get_user_list($selected)
+		{
+			$_candidates = array();
+			$_candidates[] = -1;
+			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$_candidates[] = $group_candidate;
+					}
+				}
+			}
+
+			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
+
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'property', $_candidates);
+			$user_list = array();
+			$selected_found = false;
+			foreach ($users as $user)
+			{
+				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$user_list[] = array(
+					'id' => $user['account_id'],
+					'name' => $name,
+					'selected' => $user['account_id'] == $selected ? 1 : 0
+				);
+
+				if (!$selected_found)
+				{
+					$selected_found = $user['account_id'] == $selected ? true : false;
+				}
+			}
+			if ($selected && !$selected_found)
+			{
+				$user_list[] = array
+					(
+					'id' => $selected,
+					'name' => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'selected' => 1
+				);
+			}
+			return $user_list;
+		}
+
 	}

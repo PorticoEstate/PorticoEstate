@@ -67,7 +67,7 @@
 				$this->start=0;
 			}
 
-			if($acl_app && !$this->acl_app)
+			if($acl_app)
 			{
 				$this->acl_app = $acl_app;
 			}
