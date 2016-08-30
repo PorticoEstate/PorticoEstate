@@ -59,7 +59,7 @@
 								<xsl:value-of select="php:function('lang', 'location')"/>
 							</label>
 							<xsl:if test="value_unit_count > 0">
-								<input type="text" name="part_of_town_id"  value="{value_part_of_town_id}"/>
+								<input type="hidden" name="part_of_town_id"  value="{value_part_of_town_id}"/>
 							</xsl:if>
 							<select id="part_of_town_id" name="part_of_town_id">
 								<xsl:choose>
