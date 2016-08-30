@@ -27,7 +27,7 @@
 		 */
 		public function __construct( $id = 0 )
 		{
-			parent::__construct($id);
+			parent::__construct((int)$id);
 			/*
 			  if ($id) {
 			  parent::__construct($price_item->get_id());
