@@ -273,16 +273,20 @@
 					continue;
 				}
 
-				$v = trim($entity->get_field($field));
+				$value = $entity->get_field($field);
+				if(!is_array($value))
+				{
+					$value = trim($value);
+				}
 				$empty = false;
 
 				if (isset($params['manytomany']) && isset($params['manytomany']['column']))
 				{
 					$sub_entity_count = 0;
 
-					if (!empty($entity->get_field($field)) && is_array($entity->get_field($field)))
+					if (!empty($value) && is_array($value))
 					{
-						foreach ($entity->get_field($field) as $key => $sub_entity)
+						foreach ($value as $key => $sub_entity)
 						{
 							$this->_validate(
 								(array)$sub_entity, (array)$params['manytomany']['column'], $errors, sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
@@ -315,20 +319,20 @@
 					}
 				}
 				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
-				if ($params['required'] && (!isset($v) || ($v !== '0' && empty($v))) && !$alternatives_ok)
+				if ($params['required'] && (!isset($value) || ($value !== '0' && empty($value))) && !$alternatives_ok)
 				{
 
 					$errors[$error_key] = lang("Field %1 is required", lang($error_key));
 					$empty = true;
 				}
-				if ($params['type'] == 'date' && !empty($entity->get_field($field)))
+				if ($params['type'] == 'date' && !empty($value))
 				{
 					/**
 					 * Already converted to integer
 					 */
-					//$date = date_parse($entity->get_field($field));
+					//$date = date_parse($value);
 					//if (!$date || count($date['errors']) > 0)
-					if (!ctype_digit($entity->get_field($field)))
+					if (!ctype_digit($value))
 					{
 						$errors[$error_key] = lang("Field %1: Invalid format", lang($error_key));
 					}
@@ -339,7 +343,7 @@
 					try
 					{
 						$params['sf_validator']->setOption('required', false);
-						$params['sf_validator']->clean($entity->get_field($field));
+						$params['sf_validator']->clean($value);
 					}
 					catch (sfValidatorError $e)
 					{
