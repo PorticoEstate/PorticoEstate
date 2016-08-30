@@ -102,11 +102,18 @@
 							<div class='pure-custom location_name'></div>
 						</div>
 						<div class="pure-control-group">
+							<label for="vendor">
+								<xsl:value-of select="php:function('lang', 'Template')" />
+							</label>
+							<select id="template_list" name="template_list">
+								<xsl:apply-templates select="template_list/options"/>
+							</select>
+						</div>
+						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'upload file')"/>
 							</label>
-							<input type="file" id="file_excel" name="file_excel" size="40">
-							</input>
+							<input type="file" id="file_excel" name="file_excel" size="40"></input>
 						</div>
 						<div class="pure-control-group">
 							<label></label>
@@ -116,31 +123,50 @@
 								</xsl:attribute>
 							</input>
 						</div>
-						<div class="pure-control-group">
-							<label for="vendor">
-								<xsl:value-of select="php:function('lang', 'Sheet')" />
-							</label>
-							<select id="sheet_id" name="sheet_id">
-								<option vale=''>Select Sheet</option>
-							</select>
-						</div>	
-						<div class="pure-control-group">
-							<label for="vendor">
-								<xsl:value-of select="php:function('lang', 'Choose start line')" />
-							</label>
-							<div id="content_lines" class="pure-custom"></div>
+						<div id="responsiveTabsDemo">
+							<ul>
+								<li><a href="#tab-1">Choose Sheet</a></li>
+								<li><a href="#tab-2">Choose start line</a></li>
+								<li><a href="#tab-3">Choose columns</a></li>
+							</ul>
+							<div id="tab-1">
+								<select id="sheet_id" name="sheet_id">
+									<option value=''>Select Sheet</option>
+								</select>
+								<input type="button" id="step2" name="step2" size="40">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'Continue')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div id="tab-2">
+								<input type="button" id="step3" name="step3" size="40">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'Continue')"/>
+									</xsl:attribute>
+								</input>
+								<div id="content_lines" class="pure-custom"></div>
+							</div>
+							<div id="tab-3">
+								<input type="button" id="step4" name="step4" size="40">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'Continue')"/>
+									</xsl:attribute>
+								</input>
+								<div id="content_columns" class="pure-custom"></div>
+							</div>
 						</div>
-						<div class="pure-control-group">
-							<label for="vendor">
-								<xsl:value-of select="php:function('lang', 'Choose columns')" />
-							</label>
-							<div id="content_columns" class="pure-custom"></div>
-						</div>	
 						<div id="message1" class="message"></div>
 					</form>
 				</div>
 			</div>
 	</div>
+	<script>
+		$('#responsiveTabsDemo').responsiveTabs({
+			startCollapsed: 'accordion',
+			disabled: [1,2]
+		});
+	</script>
 </xsl:template>
 
 <xsl:template match="options">
