@@ -64,37 +64,7 @@
 				</div>
 				
 				<div id="components">
-					<form id="form_components" name="form_components" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'location')"/>
-							</label>
-							<div class='pure-custom location_name'></div>
-							<input type="hidden" id="location_code" name="location_code" value=""></input>
-							<input type="hidden" id="location_item_id" name="location_item_id" value=""></input>
-						</div>
-
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'upload file')"/>
-							</label>
-							<input type="file" id="file_xml" name="file_xml" size="40">
-							</input>
-						</div>
-						<div class="pure-control-group">
-							<label></label>
-							<input type="button" id="import_components" name="import_components" size="40">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'Start import')"/>
-								</xsl:attribute>
-							</input>
-						</div>
-						<div id="message0" class="message"></div>
-					</form>		
-				</div>
-				
-				<div id="relations">
-					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">	
+					<form id="form_components" name="form_components" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">	
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'location')"/>
@@ -113,11 +83,11 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'upload file')"/>
 							</label>
-							<input type="file" id="file_excel" name="file_excel" size="40"></input>
+							<input type="file" id="excel_components" name="excel_components" size="40"></input>
 						</div>
 						<div class="pure-control-group">
 							<label></label>
-							<input type="button" id="import_files" name="import_files" size="40">
+							<input type="button" id="import_components" name="import_components" size="40">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'Start import')"/>
 								</xsl:attribute>
@@ -156,9 +126,40 @@
 								<div id="content_columns" class="pure-custom"></div>
 							</div>
 						</div>
-						<div id="message1" class="message"></div>
+						<div id="message0" class="message"></div>
 					</form>
 				</div>
+				
+				<div id="relations">
+					<form id="form_files" name="form_files" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'location')"/>
+							</label>
+							<div class='pure-custom location_name'></div>
+							<input type="hidden" id="location_code" name="location_code" value=""></input>
+							<input type="hidden" id="location_item_id" name="location_item_id" value=""></input>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'upload file')"/>
+							</label>
+							<input type="file" id="excel_files" name="excel_files" size="40">
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label></label>
+							<input type="button" id="import_components_files" name="import_components" size="40">
+								<xsl:attribute name="value">
+									<xsl:value-of select="php:function('lang', 'Start import')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div id="message1" class="message"></div>
+					</form>		
+				</div>
+		
 			</div>
 	</div>
 	<script>
