@@ -104,6 +104,227 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
+			$message = array();
+			
+			if (empty($id))
+			{
+				return $message['error'][] = array('msg' => 'location code is empty');
+			}
+				
+			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
+			$relations = array();
+			
+			foreach ($exceldata as $row) 
+			{
+				if (!$this->valid_row($row))
+				{
+					continue;
+				}
+				
+				$relations[$row[0]][] = $row[(count($row)-1)];
+			}
+			
+			$this->db->transaction_begin();
+			
+			try
+			{
+				$this->db->Exception_On_Error = true;
+				
+				foreach ($relations as $k => $files) 
+				{
+					if (empty($k))
+					{
+						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
+					}
+					else {
+						$component = $this->get_component[$k];
+						if( empty($component['id']) || empty($component['location_id']))
+						{
+							throw new Exception("component {$k} does not exist");
+						}
+					}
+					
+					foreach($files as $path_file)
+					{
+						$parts = explode("\\", $path_file);
+						$file = $parts[count($parts)-1];
+						if (!is_file($this->tmp_upload_dir.$file))
+						{
+							throw new Exception("the file {$file} does not exist, component: {$k}");
+						}	
+						
+						$file_id = $this->save_file($file);
+						if (!$file_id)
+						{						
+							throw new Exception("failed to save file {$file}, component: {$k}");
+						} 
+			
+						$result = $this->save_file_relation($component['id'], $component['location_id'], $file_id);
+						if (!$result)
+						{						
+							throw new Exception("failed to save relation, file: {$file}, component: {$k}");
+						}
+					}
+				}
+				$this->db->Exception_On_Error = false;
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					$this->db->transaction_abort();				
+					$message['error'][] = array('msg' => $e->getMessage());
+					return $this->jquery_results($message);
+				}
+			}
+
+			$this->db->transaction_commit();
+			$message['message'][] = array('msg' => 'all files saved successfully');
+			
+			return $this->jquery_results($message);
+		}
+		
+		private function getArrayItem($id, $name, $selected, $options = array(), $no_lang = false, $attribs = '' )
+		{
+			// should be in class common.sbox
+			if ( !is_array($options) || !count($options) )
+			{
+				$options = array('no', 'yes');
+			}
+
+			$html = <<<HTML
+			<select name="$name" id="$id" $attribs>
+
+HTML;
+
+			$check = array();
+
+			if (!is_array($selected))
+			{
+				$check[$selected] = true;	
+			}
+			else
+			{
+				foreach ($selected as $sel)
+				{
+					$check[$sel] = true;
+				}
+			}
+
+			foreach ( $options as $value => $option )
+			{
+				$check2 = isset( $check[$value] ) ? ' selected' : '';
+				$option = $no_lang ? $option : lang($option);
+
+				$html .= <<<HTML
+					<option value="{$value}"{$check2}>{$option}</option>
+
+HTML;
+			}
+			$html .= <<<HTML
+			</select>
+
+HTML;
+			return $html;
+		}
+		
+		public function handle_import_files()
+		{
+			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+			$options['upload_dir'] = $this->tmp_upload_dir;
+			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
+			$upload_handler = new UploadHandler($options);
+		}
+
+		protected function get_component( $query )
+		{
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+			}
+
+			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'benevnelse' = '{$query}'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			
+			if ($this->db->next_record())
+			{
+				$values['id'] = $this->db->f('id');
+				$values['location_id'] = $this->db->f('location_id');
+			}
+
+			return $values;
+		}
+		
+		
+		private function save_file( $tmp_file )
+		{
+			$bofiles = CreateObject('property.bofiles');
+			
+			$file_name = str_replace(' ', '_', $tmp_file);
+
+			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
+
+			$receipt = $bofiles->create_document_dir("generic_document");
+			if (count($receipt['error']))
+			{
+				throw new Exception('failed to create directory');
+			}
+			$bofiles->vfs->override_acl = 1;
+
+			$file_id = $bofiles->vfs->cp3(array(
+					'from' => $this->tmp_upload_dir.$tmp_file,
+					'to' => $to_file,
+					'id' => '',
+					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
+			$bofiles->vfs->override_acl = 0;
+
+			return $file_id;
+		}
+		
+		
+		private function save_file_relation( $id, $location_id, $file_id )
+		{
+			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
+			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
+				
+			$values_insert = array
+			(
+				'file_id' => (int)$file_id,
+				'location_id' => (int)$location_id,
+				'location_item_id' => (int)$id,
+				'is_private' => 0,
+				'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date' => $date,
+				'start_date' => $date,
+				'end_date' => $date
+			);				
+
+			return $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+		}
+		
+		private function valid_row_component($row)
+		{
+			if ($row[0] == '' || $row[2] == '')
+			{
+				return false;
+			}
+			
+			if ($row[0] == 'Systemgruppe' && $row[1] == 'TFM nr' && $row[2] == 'Navn')
+			{
+				return false;
+			}
+			
+			return true;
+		}
+		
+		public function import_components()
+		{
+			$location_code = phpgw::get_var('location_code');
+			$id = phpgw::get_var('location_item_id');
 			$template_id = phpgw::get_var('template_id');
 			
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
@@ -206,29 +427,9 @@
 				
 				$_options = array
 				(
-					'custom_attribute_1' => 'Romfnr',
-					'custom_attribute_2' => 'Prosj. romnr',
-					'custom_attribute_3' => 'Bruksromnr',
-					'custom_attribute_4' => 'Kontrakt',
-					'custom_attribute_5' => 'Kontrakt - navn',
-					'custom_attribute_6' => 'NS3420 - Kode',
-					'custom_attribute_7' => 'NS3420 - Beskrivelsestekst',
-					'custom_attribute_8' => 'Produkttype',
-					'custom_attribute_9' => 'Produktbetegnelse',
-					'custom_attribute_10' => 'EL.nr./NRF.nr.',
-					'custom_attribute_11' => 'Produsent',
-					'custom_attribute_12' => 'Leverandør',
-					'custom_attribute_13' => 'Ansvar',
-					'custom_attribute_14' => 'Antall dokumenter',
-					'custom_attribute_15' => 'Bygning',
-					'custom_attribute_16' => 'Komponentløpenr',
-					'custom_attribute_17' => 'Leverandør/Organisjonsnr',
-					'custom_attribute_18' => 'Produsent/Organisjonsnr',
-					'custom_attribute_19' => 'Prosjekt',
-					'custom_attribute_20' => 'Status',
-					'custom_attribute_21' => 'Systemløpenr',
-					'custom_attribute_22' => 'TFM Type',
-					'custom_attribute_23' => 'Typeunikt'
+					'' => ' ... ',
+					'new_column' => 'New column',
+					'building_part' => 'Building part'
 				);
 				
 				$template = explode("_", $template_id);
@@ -239,6 +440,13 @@
 				{
 					$_options[$attribute['input_text']] = $attribute['input_text'];
 				}
+				
+				$data_types = $this->bocommon->select_datatype();
+				foreach($data_types as $row) 
+				{
+					$_options_data_type[$row['id']] = $row['name'];
+				}
+				
 
 				phpgw::import_class('phpgwapi.sbox');
 
@@ -248,269 +456,16 @@
 					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
 					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
 
-					$_listbox = phpgwapi_sbox::getArrayItem("columns[{$_column}]", $selected, $_options, true);
-					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><tr>";
+					$_listbox = $this->getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\"");
+					$_listTypes = $this->getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, 'disabled');
+					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled></input></td><td>{$_listTypes}</td></tr>";
 				}
 				
 				$html_table .= '</table>';
 				
 				return $html_table;
 			}
-			
 		}
-		
-		
-		public function handle_import_files()
-		{
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
-			$options['upload_dir'] = $this->tmp_upload_dir;
-			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
-			$upload_handler = new UploadHandler($options);
-		}
-
-		protected function get_component( $query )
-		{
-			if ($query)
-			{
-				$query = $this->db->db_addslashes($query);
-			}
-
-			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'benevnelse' = '{$query}'";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
-			$values = array();
-			
-			if ($this->db->next_record())
-			{
-				$values['id'] = $this->db->f('id');
-				$values['location_id'] = $this->db->f('location_id');
-			}
-
-			return $values;
-		}
-		
-		
-		private function save_file( $tmp_file )
-		{
-			$bofiles = CreateObject('property.bofiles');
-			
-			$file_name = str_replace(' ', '_', $tmp_file);
-
-			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
-
-			$receipt = $bofiles->create_document_dir("generic_document");
-			if (count($receipt['error']))
-			{
-				throw new Exception('failed to create directory');
-			}
-			$bofiles->vfs->override_acl = 1;
-
-			$file_id = $bofiles->vfs->cp3(array(
-					'from' => $this->tmp_upload_dir.$tmp_file,
-					'to' => $to_file,
-					'id' => '',
-					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
-			$bofiles->vfs->override_acl = 0;
-
-			return $file_id;
-		}
-		
-		
-		private function save_file_relation( $id, $location_id, $file_id )
-		{
-			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
-			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
-				
-			$values_insert = array
-			(
-				'file_id' => (int)$file_id,
-				'location_id' => (int)$location_id,
-				'location_item_id' => (int)$id,
-				'is_private' => 0,
-				'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => $date,
-				'start_date' => $date,
-				'end_date' => $date
-			);				
-
-			return $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
-		}
-		
-		private function valid_row_component($row)
-		{
-			if ($row[0] == '' || $row[2] == '')
-			{
-				return false;
-			}
-			
-			if ($row[0] == 'Systemgruppe' && $row[1] == 'TFM nr' && $row[2] == 'Navn')
-			{
-				return false;
-			}
-			
-			return true;
-		}
-		
-		public function import_components()
-		{
-			$get_identificator = false;
-
-			$location_code = phpgw::get_var('location_code');
-			
-			$entity_categories_in_xml = array();
-
-			$import_components = new import_components();
-			$entity_categories  = $import_components->get_entity_categories();
-
-			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
-
-			foreach ($exceldata as $row) 
-			{
-				if (!$this->valid_row_component($row))
-				{
-					continue;
-				}
-
-				if (array_key_exists((string)$row[0], $entity_categories))
-				{						
-					$cat_id = $entity_categories[$row[0]]['id'];
-					$entity_id = $entity_categories[$row[0]]['entity_id'];						
-				} 
-				else {
-					$buildingpart_out_table[$row[0]] = $row[0].' - '.$row[2];
-					$cat_id = '';
-					$entity_id = '';
-				}
-
-				if (!empty($row[1]))
-				{
-					$entity_categories_in_xml[$row[0]]['cat_id'] = $cat_id;
-					$entity_categories_in_xml[$row[0]]['entity_id'] = $entity_id;
-					$entity_categories_in_xml[$row[0]]['components'][] = array(
-						array('name' => 'benevnelse', 'value' => trim($row[1])),
-						array('name' => 'beskrivelse', 'value' => trim($row[3]))
-					);							
-				}				
-			}
-	//print_r($buildingpart_out_table); die;
-			if (count($buildingpart_out_table))
-			{
-				ksort($buildingpart_out_table);
-				$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
-				
-				if (count($buildingpart_processed['not_added']))
-				{
-					foreach($buildingpart_processed['not_added'] as $k => $v)
-					{
-						$message['error'][] = array('msg' => "parent {$k} not added");	
-					}
-					return $this->jquery_results($message);
-				}
-				
-				if (count($buildingpart_processed['added']))
-				{
-					foreach($buildingpart_processed['added'] as $k => $v)
-					{
-						$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
-						$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
-					}
-				} 
-			}
-			
-
-
-			$message = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
-			
-			return $this->jquery_results($message);
-		}
-		
-/*
-		public function import_components()
-		{
-			$get_identificator = false;
-
-			$location_code = phpgw::get_var('location_code');
-			
-			$entity_categories_in_xml = array();
-
-			$result = $this->getxmldata($_FILES['file']['tmp_name'], $get_identificator);
-
-			$postnrdelkode = $result['Prosjekter']['ProsjektNS']['Postnrplan']['PostnrdelKoder']['PostnrdelKode'];
-			$entities_name = array();
-			foreach ($postnrdelkode as $items) 
-			{
-				if ($items['PostnrdelKoder']['PostnrdelKode']['Kode'])
-				{
-						$entities_name[$items['PostnrdelKoder']['PostnrdelKode']['Kode']] = array(
-							'name' => $items['PostnrdelKoder']['PostnrdelKode']['Kode'].' - '.$items['PostnrdelKoder']['PostnrdelKode']['Navn']
-						);							
-				}
-				else {
-					foreach ($items['PostnrdelKoder']['PostnrdelKode'] as $item) 
-					{
-						$entities_name[$item['Kode']] = array('name' => $item['Kode'].' - '.$item['Navn']);
-					}
-				}
-			}
-
-			$posts = $result['Prosjekter']['ProsjektNS']['Prosjektdata']['Post'];
-			foreach ($posts as $post) 
-			{
-				$buildingpart = $post['Postnrdeler']['Postnrdel'][1]['Kode'];
-				$entity_categories_in_xml[$buildingpart]['name'] = $entities_name[$buildingpart]['name'];
-				$entity_categories_in_xml[$buildingpart]['components'][] = array(
-					array('name' => 'benevnelse', 'value' => trim($post['Egenskaper']['Egenskap']['Verdi'])),
-					array('name' => 'beskrivelse', 'value' => trim($post['Tekst']['Uformatert']))
-				);
-			}
-
-			$import_components = new import_components();
-			$entity_categories  = $import_components->get_entity_categories();
-
-			$buildingpart_out_table = array();
-			foreach ($entity_categories_in_xml as $k => $v) 
-			{
-				if (!array_key_exists((string)$k, $entity_categories))
-				{
-					$buildingpart_parent = substr($k, 0, strlen($k) -1);
-					$buildingpart_out_table[$k] = array('parent' => $entity_categories[$buildingpart_parent], 'name' => $v['name']);
-				} else {
-					$entity_categories_in_xml[$k]['cat_id'] = $entity_categories[$k]['id'];
-					$entity_categories_in_xml[$k]['entity_id'] = $entity_categories[$k]['entity_id'];
-				}
-			}
-
-			if (count($buildingpart_out_table))
-			{
-				$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
-				
-				if (count($buildingpart_processed['not_added']))
-				{
-					foreach($buildingpart_processed['not_added'] as $k => $v)
-					{
-						$message['error'][] = array('msg' => "parent {$k} not added");	
-					}
-					return $this->jquery_results($message);
-				}
-				
-				if (count($buildingpart_processed['added']))
-				{
-					foreach($buildingpart_processed['added'] as $k => $v)
-					{
-						$entity_categories_in_xml[$k]['cat_id'] = $v['id'];
-						$entity_categories_in_xml[$k]['entity_id'] = $v['entity_id'];			
-					}
-				} 
-			}
-
-			$message = $import_components->add_bim_item($entity_categories_in_xml, $location_code);
-			
-			return $this->jquery_results($message);
-		}
-*/
-
 		/**
 		 * Prepare UI
 		 * @return void
@@ -664,6 +619,12 @@
 			array_unshift($categories, array('id' => '', 'name' => lang('no category')));
 
 			return $categories;
+		}
+		
+		public function get_data_type()
+		{
+			$values = $this->bocommon->select_datatype();
+			return $values;
 		}
 		
 		public function get_part_of_town()
