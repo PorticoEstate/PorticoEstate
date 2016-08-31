@@ -63,9 +63,9 @@ $(document).ready(function ()
         }
     });
 	
-	$('#import_components').on('click', function ()
+	$('#import_components_files').on('click', function ()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
 		if ($('#file_xml').val() === '')
@@ -80,8 +80,8 @@ $(document).ready(function ()
 			return false;
 		}
 		
-		var form = document.forms.namedItem("form_components");
-		var file_data = $('#file_xml').prop('files')[0];
+		var form = document.forms.namedItem("form_files");
+		var file_data = $('#excel_files').prop('files')[0];
 		var form_data = new FormData(form);
 		form_data.append('file', file_data);
 		form_data.append('location_code', $('#location_code').val());
@@ -100,12 +100,12 @@ $(document).ready(function ()
 		});
 	});
 	
-	$('#import_files').click(function ()
+	$('#import_components').click(function ()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
-		if ($('#file_excel').val() === '')
+		if ($('#excel_components').val() === '')
 		{
 			alert('no file selected');
 			return false;
@@ -117,8 +117,8 @@ $(document).ready(function ()
 			return false;
 		}
 		
-		var form = document.forms.namedItem("form_files");
-		var file_data = $('#file_excel').prop('files')[0];
+		var form = document.forms.namedItem("form_components");
+		var file_data = $('#excel_components').prop('files')[0];
 		var form_data = new FormData(form);
 		form_data.append('step', 1);
 		form_data.append('file', file_data);
@@ -149,7 +149,7 @@ $(document).ready(function ()
 	
 	$('#step2').on('click', function ()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
 		if ($('#sheet_id').val() == '')
@@ -175,7 +175,7 @@ $(document).ready(function ()
 	
 	$('#step3').on('click', function ()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		if (!$('input:radio[name=start_line]:checked').val())
@@ -203,7 +203,7 @@ $(document).ready(function ()
 	
 	$('#step4').on('click', function ()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		var data = {
@@ -222,9 +222,21 @@ $(document).ready(function ()
 		);
 	});
 	
+
 });
 
-
+function enabledAtributes (column)
+{
+	var columValue = $('#column_' + column).val();
+	if (columValue === 'new_column')
+	{
+		$('#data_type_'+ column).prop('disabled', false);
+		$('#name_'+ column).prop('disabled', false);
+	} else {
+		$('#data_type_'+ column).prop('disabled', true);
+		$('#name_'+ column).prop('disabled', true);		
+	}
+}
 	
 function getLocations()
 {
