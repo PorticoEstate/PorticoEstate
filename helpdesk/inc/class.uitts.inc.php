@@ -57,6 +57,7 @@
 		 * @var boolean $_simple use simplified interface
 		 */
 		protected $_simple = false;
+		protected $_group_candidates = array();
 		protected $_show_finnish_date = false;
 		protected $_category_acl = false;
 		var $part_of_town_id;
@@ -105,9 +106,19 @@
 			$this->p_num				= $this->bo->p_num;
 			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
+			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$this->_group_candidates[] = $group_candidate;
+					}
+				}
+			}
 			foreach ( $user_groups as $group => $dummy)
 			{
-				if ( in_array($group, $simple_group))
+				if ( in_array($group, $simple_group) && !in_array($group, $this->_group_candidates))
 				{
 					$this->_simple = true;
 					break;
@@ -1904,22 +1915,11 @@
 
 		private function _get_user_list($selected)
 		{
-			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
-			{
-				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
-				{
-					if ($group_candidate)
-					{
-						$_candidates[] = $group_candidate;
-					}
-				}
-			}
-
 			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $_candidates);
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $this->_group_candidates);
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)
