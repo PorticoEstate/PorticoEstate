@@ -67,6 +67,8 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
+			$status_text = rental_application::get_status_list();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$original = $this->read_single($object->get_id());//returned as array()
 			foreach ($this->fields as $field => $params)
@@ -76,6 +78,25 @@
 				$label = !empty($params['label']) ? lang($params['label']) : $field;
 				if (!empty($params['history']) && ($new_value != $old_value))
 				{
+					switch ($field)
+					{
+						case 'status':
+							$old_value = $status_text[$old_value];
+							$new_value = $status_text[$new_value];
+							break;
+						case 'assign_date_start':
+						case 'assign_date_end':
+							$old_value = $GLOBALS['phpgw']->common->show_date($old_value, $dateformat);
+							$new_value = $GLOBALS['phpgw']->common->show_date($new_value, $dateformat);
+
+							break;
+						case 'executive_officer':
+							$old_value = $old_value ? $GLOBALS['phpgw']->accounts->get($old_value)->__toString() : '';
+							$new_value = $new_value ? $GLOBALS['phpgw']->accounts->get($new_value)->__toString() : '';
+							break;
+						default:
+							break;
+					}
 					$value_set = array
 					(
 						'application_id'	=> $object->get_id(),
@@ -92,7 +113,7 @@
 			}
 
 			parent::update($object);
-	
+
 			return	$this->db->transaction_commit();
 
 
