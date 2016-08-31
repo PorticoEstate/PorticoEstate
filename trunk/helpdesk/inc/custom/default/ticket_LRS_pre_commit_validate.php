@@ -57,6 +57,22 @@
 			{
 				$data['assignedto'] = isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['assigntodefault'] : '';
 			}
+
+			$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
+			if(empty($current_prefs_user['email']))
+			{
+				$GLOBALS['phpgw']->preferences->add('helpdesk', 'email', "{$GLOBALS['phpgw_info']['user']['account_lid']}@bergen.kommune.no");
+				$GLOBALS['phpgw']->preferences->save_repository();
+			}
+
+			$assigned_prefs = createObject('phpgwapi.preferences', (int)$data['assignedto']);
+			$assigned_prefs_data = $assigned_prefs->read();
+			if(empty($assigned_prefs_data['helpdesk']['email']))
+			{
+				$assigned_prefs->add('helpdesk', 'email', "{$alias}@bergen.kommune.no");
+				$assigned_prefs->save_repository();
+			}
+
 			return true;
 		}
 	}
