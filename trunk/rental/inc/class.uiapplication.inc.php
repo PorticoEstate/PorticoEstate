@@ -69,30 +69,20 @@
 		private function get_status_options( $selected = 0 )
 		{
 			$status_options = array();
+			$status_list = rental_application::get_status_list();
+
 			$status_options[] = array(
 				'id' => '',
 				'name' => lang('all')
 			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_REGISTERED,
-				'name' => lang('registered')
-			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_PENDING,
-				'name' => lang('pending')
-			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_REJECTED,
-				'name' => lang('rejected')
-			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_APPROVED,
-				'name' => lang('approved')
-			);
 
-			foreach ($status_options as &$entry)
+			foreach ($status_list as $_key => $_value)
 			{
-				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+				$status_options[] = array(
+					'id' => $_key,
+					'name' => $_value,
+					'selected' => $_key == $selected ? 1 : 0
+				);
 			}
 			return $status_options;
 		}
@@ -420,12 +410,7 @@
 		{
 			$params = $this->bo->build_default_read_params();
 			$applications = $this->bo->read($params);
-			$status_text = array(
-				rental_application::STATUS_REGISTERED => lang('registered'),
-				rental_application::STATUS_PENDING	=> lang('pending'),
-				rental_application::STATUS_REJECTED => lang('rejected'),
-				rental_application::STATUS_APPROVED	=> lang('approved')
-			);
+			$status_text = rental_application::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($applications['results'] as &$application)
 			{
