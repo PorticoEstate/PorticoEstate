@@ -64,4 +64,38 @@
 			return $object;
 		}
 
+		protected function update( $object )
+		{
+			$this->db->transaction_begin();
+
+			$original = $this->read_single($object->get_id());//returned as array()
+			foreach ($this->fields as $field => $params)
+			{
+				$new_value = $object->$field;
+				$old_value = $original[$field];
+				$label = !empty($params['label']) ? lang($params['label']) : $field;
+				if (!empty($params['history']) && ($new_value != $old_value))
+				{
+					$value_set = array
+					(
+						'application_id'	=> $object->get_id(),
+						'time'		=> time(),
+						'author'	=> $GLOBALS['phpgw_info']['user']['fullname'],
+						'comment'	=> $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' .lang('new value') . ': ' . $this->db->db_addslashes($new_value),
+						'type'	=> 'history',
+					);
+
+					$this->db->query( 'INSERT INTO rental_application_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
+					. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
+				}
+
+			}
+
+			parent::update($object);
+	
+			return	$this->db->transaction_commit();
+
+
+		}
+
 	}
