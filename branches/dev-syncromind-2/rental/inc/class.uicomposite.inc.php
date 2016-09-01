@@ -1136,14 +1136,14 @@ JS;
 			$filters = array();
 			$options = array();
 
-			if (phpgw::get_var('composite_id'))
-				$filters['composite_id'] = phpgw::get_var('composite_id');
-
-			if (phpgw::get_var('contract_status'))
-				$filters['contract_status'] = phpgw::get_var('contract_status');
-
-			if (phpgw::get_var('contract_type'))
-				$filters['contract_type'] = phpgw::get_var('contract_type');
+//			if (phpgw::get_var('composite_id'))
+//				$filters['composite_id'] = phpgw::get_var('composite_id');
+//
+//			if (phpgw::get_var('contract_status'))
+//				$filters['contract_status'] = phpgw::get_var('contract_status');
+//
+//			if (phpgw::get_var('contract_type'))
+//				$filters['contract_type'] = phpgw::get_var('contract_type');
 
 			$options['start_index'] = 0;
 			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 30;

@@ -547,9 +547,45 @@
 			}
 			/*----------------------------------------------------------------*/
 
-			$contracts = rental_socontract::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
+//			$contracts = rental_socontract::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
+// 29 Jun 2016
+// 01 Sep 2016
+            
+            $data = null;
+            $composite_obj = rental_socomposite::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
+
+            foreach ($composite_obj as $composite)
+            {
+                $contracts = $composite->get_contracts();
+                foreach ($contracts as $contract) {
+                    $contract = $contract->serialize();
+
+                    $contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+    				$contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
+
+                    $data_contract = array();
+
+                    foreach ($days as $day)
+                    {
+                        if ($day >= $contract_date_start && $day <= $contract_date_end)
+                        {
+                            $data_contract[date_format($day, 'D')] = $contract;
+                        }
+                    }
+                    $data_contracts[] = $data_contract;
+                }
+            }
+
+            if (count($composite_obj) > 0)
+			{
+				$keys = array_keys($composite_obj);
+				$composite = $composite_obj[$keys[0]];
+			}
+
+            $contracts = $composite->get_contracts();
 
 			$data_contracts = array();
+
 			foreach ($contracts as $contract)
 			{
 				$contract = $contract->serialize();
