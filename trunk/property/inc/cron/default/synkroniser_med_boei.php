@@ -79,7 +79,7 @@
 		function execute()
 		{
 			$start = time();
-			set_time_limit(1200);
+			set_time_limit(2000);
 			$this->update_tables();
 
 			$this->legg_til_eier_phpgw();
@@ -98,9 +98,10 @@
 			$this->update_tenant_name();
 			$this->update_obskode();
 			$this->oppdater_namssakstatus_pr_leietaker();
+ 
 			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
-
+			echo "$msg\n";
 			$this->receipt['message'][] = array('msg' => $msg);
 		}
 
@@ -145,7 +146,7 @@
 
 		function update_table_eier()
 		{
-			$metadata = $this->db_boei->metadata('Eier');
+//			$metadata_boei = $this->db_boei->metadata('Eier');
 			$metadata = $this->db->metadata('boei_eier');
 //_debug_array($metadata);
 			if (!$metadata)
@@ -162,7 +163,7 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_eier', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Eier';
+			$sql_boei = 'SELECT TOP 100 PERCENT Eier_ID,CAST(Navn as TEXT) AS Navn,EierType_ID  FROM Eier';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql = 'INSERT INTO boei_eier (eier_id, navn, eiertype_id)'
@@ -196,8 +197,8 @@ SQL;
 
 		function update_table_Gateadresse()
 		{
-			$metadata = $this->db_boei->metadata('Gateadresse');
-//_debug_array($metadata);
+			$metadata_boei = $this->db_boei->metadata('Gateadresse');
+//_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_gateadresse');
 //_debug_array($metadata);
 //die();
@@ -215,8 +216,9 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_gateadresse', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Gateadresse';
+			$sql_boei = 'SELECT TOP 100 PERCENT Gateadresse_ID, CAST(GateNavn as TEXT) AS GateNavn, NasjonalID FROM Gateadresse';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
+
 			// using stored prosedures
 			$sql = 'INSERT INTO boei_gateadresse (gateadresse_id, gatenavn, nasjonalid)'
 				. ' VALUES(?, ?, ?)';
@@ -249,8 +251,8 @@ SQL;
 
 		function update_table_Objekt()
 		{
-			$metadata = $this->db_boei->metadata('Objekt');
-//_debug_array($metadata);
+			$metadata_boei = $this->db_boei->metadata('Objekt');
+//	_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_objekt');
 //_debug_array($metadata);
 //die();
@@ -272,11 +274,12 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_objekt', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Objekt';
+			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, CAST(Navn as TEXT) AS Navn, Bydel_ID, Postnr_ID, Eier_ID, Tjenestested  FROM Objekt';
+
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_objekt (objekt_id, navn, generelladresse, bydel_id,postnr_id,eier_id,tjenestested)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO boei_objekt (objekt_id, navn, bydel_id,postnr_id,eier_id,tjenestested)'
+				. ' VALUES(?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
 			while ($this->db_boei->next_record())
@@ -290,44 +293,40 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => utf8_encode($this->db_boei->f('Navn')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Navn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
 						(
-						'value' => utf8_encode($this->db_boei->f('GenerellAdresse')),
-						'type' => PDO::PARAM_STR
-					),
-					4 => array
-						(
 						'value' => (int)$this->db_boei->f('Bydel_ID'),
 						'type' => PDO::PARAM_INT
 					),
-					5 => array
+					4 => array
 						(
 						'value' => $this->db_boei->f('Postnr_ID'),
 						'type' => PDO::PARAM_STR
 					),
-					6 => array
+					5 => array
 						(
 						'value' => (int)$this->db_boei->f('Eier_ID'),
 						'type' => PDO::PARAM_INT
 					),
-					7 => array
+					6 => array
 						(
 						'value' => (int)$this->db_boei->f('Tjenestested'),
 						'type' => PDO::PARAM_INT
 					)
 				);
 			}
-
+//			_debug_array($valueset);
 			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
 		}
 
 		function update_table_Bygg()
 		{
-			$metadata = $this->db_boei->metadata('Bygg');
-//_debug_array($metadata);
+//_debug_array($this->db_boei);
+			$metadata_boei = $this->db_boei->metadata('Bygg');
+//_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_bygg');
 //_debug_array($metadata);
 //die();
@@ -347,11 +346,11 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_bygg', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Bygg';
+			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, CAST(ByggNavn as TEXT) AS ByggNavn, Driftstatus FROM Bygg';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_bygg (objekt_id, bygg_id, byggnavn, generelladresse, driftstatus)'
-				. ' VALUES(?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO boei_bygg (objekt_id, bygg_id, byggnavn, driftstatus)'
+				. ' VALUES(?, ?, ?, ?)';
 			$valueset = array();
 
 			while ($this->db_boei->next_record())
@@ -370,15 +369,10 @@ SQL;
 					),
 					3 => array
 						(
-						'value' => utf8_encode($this->db_boei->f('ByggNavn')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('ByggNavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					4 => array
-						(
-						'value' => utf8_encode($this->db_boei->f('GenerellAdresse')),
-						'type' => PDO::PARAM_STR
-					),
-					5 => array
 						(
 						'value' => (int)$this->db_boei->f('Driftstatus'),
 						'type' => PDO::PARAM_INT
@@ -391,8 +385,8 @@ SQL;
 
 		function update_table_Seksjon()
 		{
-			$metadata = $this->db_boei->metadata('Seksjon');
-//_debug_array($metadata);
+			$metadata_boei = $this->db_boei->metadata('Seksjon');
+//_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_seksjon');
 //_debug_array($metadata);
 //die();
@@ -411,7 +405,7 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_seksjon', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Seksjon';
+			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, Seksjons_ID, CAST(Beskrivelse as TEXT) AS Beskrivelse  FROM Seksjon';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql = 'INSERT INTO boei_seksjon (objekt_id, bygg_id, seksjons_id, beskrivelse)'
@@ -450,8 +444,8 @@ SQL;
 
 		function update_table_leieobjekt()
 		{
-			$metadata = $this->db_boei->metadata('Leieobjekt');
-//_debug_array($metadata);
+			$metadata_boei = $this->db_boei->metadata('Leieobjekt');
+//_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_leieobjekt');
 //_debug_array($metadata);
 //die();
@@ -484,10 +478,16 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_leieobjekt', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Leieobjekt';
+			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, Seksjons_ID, Leie_ID, Flyttenr,'
+				. ' Formaal_ID, Gateadresse_ID, Gatenr, Etasje, AntallRom, Boareal,'
+				. ' AndelAvFellesareal, Livslopsstd, Heis, Driftsstatus_ID, Leietaker_ID, Beregnet_Boa'
+				. ' FROM Leieobjekt';
+
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr, formaal_id, gateadresse_id, gatenr, etasje, antallrom, boareal, andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa)'
+			$sql = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr,'
+				. ' formaal_id, gateadresse_id, gatenr, etasje, antallrom, boareal,'
+				. ' andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
@@ -588,8 +588,8 @@ SQL;
 
 		function update_table_leietaker()
 		{
-			$metadata = $this->db_boei->metadata('Leietaker');
-//_debug_array($metadata);
+			$metadata_boei = $this->db_boei->metadata('Leietaker');
+//_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_leietaker');
 //_debug_array($metadata);
 //die();
@@ -613,10 +613,14 @@ SQL;
 				$this->db->query($sql_table, __LINE__, __FILE__);
 			}
 			$this->db->query('DELETE FROM boei_leietaker', __LINE__, __FILE__);
-			$sql_boei = 'SELECT TOP 100 PERCENT * FROM Leietaker';
+
+			$sql_boei = 'SELECT TOP 100 PERCENT Leietaker_ID, CAST(Fornavn as TEXT) AS Fornavn, CAST(Etternavn as TEXT) AS Etternavn, Kjonn_Juridisk,'
+				. ' OppsagtDato, NamssakStatusDrift_ID, NamssakStatusOkonomi_ID, hemmeligAdresse, OBSKode'
+				. ' FROM Leietaker';
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
-			$sql = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
+			$sql = 'INSERT INTO boei_leietaker (leietaker_id, fornavn, etternavn, kjonn_juridisk,'
+				. ' oppsagtdato,namssakstatusdrift_id,namssakstatusokonomi_id,hemmeligadresse,obskode)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
@@ -676,8 +680,8 @@ SQL;
 
 		function update_table_reskontro()
 		{
-			$metadata = $this->db_boei->metadata('reskontro');
-//_debug_array($metadata);
+			$metadata_boei = $this->db_boei->metadata('reskontro');
+//_debug_array($metadata_boei);
 			$metadata = $this->db->metadata('boei_reskontro');
 //_debug_array($metadata);
 //die();
