@@ -36,6 +36,7 @@
 			$bo,
 			$fields;
 
+		public 	$acl_location = '.application';
 
 		public function __construct()
 		{
@@ -58,7 +59,48 @@
 
 		public function store($object)
 		{
-			return rental_soapplication::get_instance()->store($object);
+			$criteria = array(
+				'appname' => 'rental',
+				'location' => $this->bo->acl_location,
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/rental/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'])
+				{
+					require $file;
+				}
+			}
+
+			$ret = rental_soapplication::get_instance()->store($object);
+
+			reset($custom_functions);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/rental/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+			return $ret;
 		}
 
 		public function read($params)

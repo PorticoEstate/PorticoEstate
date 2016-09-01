@@ -55,7 +55,7 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
 			$this->bo = createObject('rental.boapplication');
 			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->acl_location = '.application';
+			$this->acl_location = $this->bo->acl_location;
 			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'rental');
 			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'rental');
 			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'rental');
