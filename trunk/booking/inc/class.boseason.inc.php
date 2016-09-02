@@ -149,12 +149,12 @@
 				{
 					if ($write)
 					{
-						$this->so->db->transaction_begin();
+						$this->so->transaction_begin();
 						foreach ($valid as $alloc)
 						{
 							$this->bo_allocation->add($alloc);
 						}
-						$this->so->db->transaction_commit();
+						$this->so->transaction_commit();
 					}
 					return array('valid' => $valid, 'invalid' => $invalid);
 				}
