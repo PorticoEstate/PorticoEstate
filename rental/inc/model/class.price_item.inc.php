@@ -24,8 +24,8 @@
 		protected $price_types = array(
 			1 => 'year',
 			2 => 'month',
-			3 => 'day',
-			4 => 'hour',
+//			3 => 'day',
+//			4 => 'hour',
 		);
 
 		//protected $is_one_time;
@@ -148,6 +148,7 @@
 				'responsibility_id' => $this->get_responsibility_id(),
 				'responsibility_title' => lang($this->get_responsibility_title()),
 				'price_type_title' => lang($this->get_price_type_title()),
+				'price_type_id' => $this->get_price_type_id(),
 				//'is_one_time' => $this->is_one_time()
 			);
 		}

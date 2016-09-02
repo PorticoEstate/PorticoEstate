@@ -10,10 +10,10 @@
 		</xsl:when>
 		<xsl:when test="adjustment_price">
 			<xsl:apply-templates select="adjustment_price" />
-			
+
 		</xsl:when>
 	</xsl:choose>
-	
+
 </xsl:template>
 
 <!-- add / edit  -->
@@ -33,7 +33,7 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-				<input type="hidden" id="active_tab" name="active_tab"/>
+				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="application">
 					<fieldset>
 						<xsl:if test="application/id != ''">
@@ -288,7 +288,7 @@
 							</label>
 							<input type="text" name="email" id="email" value="{application/email}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>email</xsl:text>
 								</xsl:attribute>
 							</input>
 							<xsl:choose>
@@ -410,28 +410,20 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'details')"/>
 								</label>
-								<xsl:choose>
-									<xsl:when test="additional_notes=''">
-										<xsl:value-of select="php:function('lang', 'no additional notes')"/>
-									</xsl:when>
-									<xsl:otherwise>
-										<div class = 'pure-u-md-1-2'>
-											<xsl:for-each select="datatable_def">
-												<xsl:if test="container = 'datatable-container_0'">
-													<xsl:call-template name="table_setup">
-														<xsl:with-param name="container" select ='container'/>
-														<xsl:with-param name="requestUrl" select ='requestUrl'/>
-														<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-														<xsl:with-param name="data" select ='data'/>
-														<xsl:with-param name="config" select ='config'/>
-													</xsl:call-template>
-												</xsl:if>
-											</xsl:for-each>
-										</div>
-									</xsl:otherwise>
-								</xsl:choose>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_0'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
 							</div>
-						
 						</fieldset>
 					</div>
 				</xsl:if>
@@ -445,7 +437,7 @@
 				</input>
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
-				</xsl:variable>				
+				</xsl:variable>
 				<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'cancel')"/>
@@ -482,7 +474,7 @@
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'field_of_responsibility')"/>
-							</label>						
+							</label>
 							<xsl:value-of select="value_field_of_responsibility"/>
 						</div>
 						<div class="pure-control-group">
@@ -501,7 +493,7 @@
 										<xsl:if test="is_area = 1">
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
-									</input> 
+									</input>
 									<xsl:value-of select="php:function('lang', 'calculate_price_per_area')"/>
 								</div>
 								<div>
@@ -509,7 +501,7 @@
 										<xsl:if test="is_area = 0">
 											<xsl:attribute name="checked" value="checked"/>
 										</xsl:if>
-									</input> 
+									</input>
 									<xsl:value-of select="php:function('lang', 'calculate_price_apiece')"/>
 								</div>
 							</div>
@@ -537,7 +529,7 @@
 							</input>
 							<xsl:if test="has_active_contract = 1">
 								<xsl:value-of select="lang_price_element_in_use"/>
-							</xsl:if>									
+							</xsl:if>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -557,7 +549,7 @@
 			<div class="proplist-col">
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
-				</xsl:variable>				
+				</xsl:variable>
 				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>

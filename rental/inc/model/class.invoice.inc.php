@@ -515,7 +515,8 @@
 					 $contract_price_item->get_area(), // the rented area on this contract (derived from contract)
 					 $contract_price_item->get_count(), // the number of items on this price item
 					 $invoice_price_item_start, // the start date from which this price item should be calculated
-					 $invoice_price_item_end   // the end date to which this price item should be calculated
+					 $invoice_price_item_end,   // the end date to which this price item should be calculated
+					 $contract_price_item->get_price_type_id() // The price type, default: year
 				);
 
 				// If the contract price item is of type one-time and it's dates are within the invoice period ...

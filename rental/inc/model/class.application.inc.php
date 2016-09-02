@@ -27,7 +27,7 @@
 	 * @version $Id: $
 	 */
 
-	phpgw::import_class('rental.soapplication');
+	phpgw::import_class('rental.boapplication');
 
 	include_class('rental', 'model', 'inc/model/');
 
@@ -83,6 +83,16 @@
 		{
 			return array(1 => 'Hybel', 2 => 'Leilighet');
 		}
+		public static function get_status_list()
+		{
+			return array(
+				self::STATUS_REGISTERED => lang('registered'),
+				self::STATUS_PENDING	=> lang('pending'),
+				self::STATUS_REJECTED => lang('rejected'),
+				self::STATUS_APPROVED	=> lang('approved')
+			);
+		}
+
 
 		public static function get_payment_methods()
 		{
@@ -187,11 +197,19 @@
 					'related' => true,
 					),
 				'assign_date_start' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
-					'type' => 'date'),
+					'type' => 'date',
+					'label'=> 'assign_start',
+					'history' => true
+					),
 				'assign_date_end' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
-					'type' => 'date'),
+					'type' => 'date',
+					'label'=> 'assign_end',
+					'history' => true
+					),
 				'status' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int'),
+					'type' => 'int',
+					'history' => true,
+					),
 				'entry_date' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD,
 					'type' => 'int',
 					'label' => 'entry_date',
@@ -201,7 +219,7 @@
 					'type' => 'int',
 					'label' => 'executive_officer',
 					'sortable' => true,
-					'hidden' => false
+					'history' => true,
 					),
 				'identifier' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string'),
@@ -235,6 +253,11 @@
 					'type' => 'comment'
 				);
 			}
+
+			if(!$entity->get_id())
+			{
+				$entity->status = rental_application::STATUS_REGISTERED;
+			}
 		}
 
 		public function serialize()
@@ -244,12 +267,12 @@
 
 		public function store()
 		{
-			return rental_soapplication::get_instance()->store($this);
+			return rental_boapplication::get_instance()->store($this);
 		}
 
-		public function get($id)
+		public function read_single($id)
 		{
-			return rental_soapplication::get_instance()->read_single($id, true);
+			return rental_boapplication::get_instance()->read_single($id, true);
 		}
 
 	}

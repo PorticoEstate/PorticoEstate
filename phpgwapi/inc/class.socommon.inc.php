@@ -169,23 +169,6 @@
 		 */
 		public abstract static function get_instance();
 
-		/**
-		 * Convenience method for getting one single object. Calls get() with the
-		 * specified id as a filter.
-		 *
-		 * @param $id int with id of object to return.
-		 * @return object with the specified id, null if not found.
-		 */
-		public function get_single( int $id )
-		{
-			$objects = $this->get(0, 0, '', false, '', '', array($this->get_id_field_name() => $id));
-			if (count($objects) > 0)
-			{
-				$keys = array_keys($objects);
-				return $objects[$keys[0]];
-			}
-			return null;
-		}
 
 		/**
 		 * Method for retrieving the db-object (security "forgotten")
@@ -195,50 +178,6 @@
 			return $this->db;
 		}
 
-		/**
-		 * Method for retreiving objects.
-		 *
-		 * @param $start_index int with index of first object.
-		 * @param $num_of_objects int with max number of objects to return.
-		 * @param $sort_field string representing the object field to sort on.
-		 * @param $ascending bool true for ascending sort on sort field, false
-		 * for descending.
-		 * @param $search_for string with free text search query.
-		 * @param $search_type string with the query type.
-		 * @param $filters array with key => value of filters.
-		 * @return array of objects. May return an empty
-		 * array, never null. The array keys are the respective index numbers.
-		 */
-		public function get( int $start_index, int $num_of_objects, string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters )
-		{
-			// Only allow positive start index
-			if ($start_index < 0)
-			{
-				$start_index = 0;
-			}
-
-
-			$sql = $this->get_query($sort_field, $ascending, $search_for, $search_type, $filters, false);
-//			$sql_parts = explode('1=1', $sql); // Split the query to insert extra condition on test for break
-
-			if($num_of_objects)
-			{
-				$this->db->limit_query($sql, $start_index, __LINE__, __FILE__, (int)$num_of_objects);
-			}
-			else
-			{
-				$this->db->query($sql,__LINE__,__FILE__);
-			}
-
-			$results = array();
-
-			while ($this->db->next_record())
-			{
-				$results[] = $this->populate((int)$this->db->f('id'));
-			}
-
-			return $results;
-		}
 		/**
 		 * Return all entries matching $params. Valid parameters:
 		 *
@@ -377,6 +316,7 @@
 				'dir' => $dir
 			);
 		}
+
 		protected function primary_key_conditions( $id_params )
 		{
 			if (is_array($id_params))
@@ -482,61 +422,6 @@
 			}
 		}
 
-		/**
-		 * Returns SQL for retrieving matching objects or object count.
-		 *
-		 * @param $start_index int with index of first object.
-		 * @param $num_of_objects int with max number of objects to return.
-		 * @param $sort_field string representing the object field to sort on.
-		 * @param $ascending bool true for ascending sort on sort field, false
-		 * for descending.
-		 * @param $search_for string with free text search query.
-		 * @param $search_type string with the query type.
-		 * @param $filters array with key => value of filters.
-		 * @param $return_count bool telling to return only the count of the
-		 * matching objects, or the objects themself.
-		 * @return string with SQL.
-		 */
-		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
-		{
-
-			//Add columns to this array to include them in the query
-			$columns = array();
-
-			if ($sort_field != null)
-			{
-				$dir = $ascending ? 'ASC' : 'DESC';
-				if ($sort_field == 'name')
-				{
-					$order = "ORDER BY {$this->table_name}.last_name {$dir}, {$this->table_name}.first_name {$dir}";
-					$this->sort_field = array("{$this->table_name}.last_name", "{$this->table_name}.first_name");
-				}
-				else
-				{
-					if ($sort_field == 'address')
-					{
-						$sort_field = "{$this->table_name}.address1";
-						$this->sort_field = array("{$this->table_name}.address1");
-					}
-					$order = "ORDER BY {$this->marshal($sort_field, 'field')} $dir";
-				}
-			}
-
-			$condition = $this->_get_conditions( $search_for, $filters );
-			if ($return_count) // We should only return a count
-			{
-				$cols = "COUNT(DISTINCT({$this->table_name}.id)) AS count";
-			}
-			else
-			{
-				$columns[] = "{$this->table_name}.*";
-				$cols = implode(',', $columns);
-			}
-
-			$joins = '';
-
-			return $sql = "SELECT {$cols} FROM {$this->table_name} {$joins} WHERE {$condition} {$order}";
-		}
 
 		function _get_conditions( $query, $filters )
 		{
@@ -655,18 +540,6 @@
 			return array($cols, $joins);
 		}
 
-		/**
-		 * Returns count of matching objects.
-		 *
-		 * @param $search_for string with free text search query.
-		 * @param $search_type string with the query type.
-		 * @param $filters array with key => value of filters.
-		 * @return int with object count.
-		 */
-		public function get_count( string $search_for, string $search_type, array $filters )
-		{
-			return $this->get_query_count($this->get_query('', false, $search_for, $search_type, $filters, true));
-		}
 
 		/**
 		 * Implementing classes must return the name of the field used in the query
@@ -684,7 +557,7 @@
 
 		protected function add( &$object )
 		{
-			$object->set_entry_date(time());
+			$object->entry_date = time();
 			$value_set = array();
 
 			$fields = $object::get_fields();
@@ -700,7 +573,7 @@
 				}
 			}
 			
-			$sql = "INSERT INTO {$this->table_name} (". implode(',',$cols)
+			$sql = "INSERT INTO {$this->table_name} (". implode(',',  array_keys($value_set))
 				. ') VALUES ('
 				. $this->db->validate_insert(array_values($value_set))
 				. ')';
@@ -833,21 +706,15 @@
 		 */
 		public function store( &$object )
 		{
-			if ($object->validates())
+			if ($object->get_id() > 0)
 			{
-				if ($object->get_id() > 0)
-				{
-					// We can assume this composite came from the database since it has an ID. Update the existing row
-					return $this->update($object);
-				}
-				else
-				{
-					// This object does not have an ID, so will be saved as a new DB row
-					return $this->add($object);
-				}
+				// We can assume this composite came from the database since it has an ID. Update the existing row
+				return $this->update($object);
 			}
-
-			// The object did not validate
-			return false;
+			else
+			{
+				// This object does not have an ID, so will be saved as a new DB row
+				return $this->add($object);
+			}
 		}
 	}

@@ -106,3 +106,4 @@
 
 	create_input_box('With of textarea', 'textareacols', 'With of textarea in forms');
 	create_input_box('Height of textarea', 'textarearows', 'Height of textarea in forms');
+	create_input_box('Your Email', 'email', 'Insert your email address');
