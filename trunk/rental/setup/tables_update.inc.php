@@ -596,3 +596,38 @@
 		}
 	}
 
+	$test[] = '0.1.0.26';
+	function rental_upgrade0_1_0_26()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract_price_item', 'location_factor', array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true,
+			'default' => '1.00'
+			));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract_price_item', 'standard_factor', array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true,
+			'default' => '1.00'
+			));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract_price_item', 'custom_factor', array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true,
+			'default' => '1.00'
+			));
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.27';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
