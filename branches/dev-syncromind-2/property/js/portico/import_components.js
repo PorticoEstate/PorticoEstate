@@ -207,12 +207,34 @@ $(document).ready(function ()
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		var data = {
-			"step": 3,
+			"step": 4,
 			"sheet_id": $('#sheet_id').val(), 
 			'start_line': $('input:radio[name=start_line]:checked').val(),
+			'template_id': $('#template_list').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
+		
+		data['columns'] = {};
+		data['attrib_names'] = {};
+		data['attrib_data_types'] = {};
+
+		var columns = $('.columns');
+
+		columns.each(function (i, obj)
+		{
+			var code = obj.id.split('_');
+			if (obj.value != '')
+			{
+				if (obj.value === 'new_column') 
+				{
+					data['attrib_names'][code[1]] = $('#name_' + code[1]).val();
+					data['attrib_data_types'][code[1]] = $('#data_type_' + code[1]).val();
+				}
+				data['columns'][code[1]] = obj.value;
+			}
+		});
+					
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
 				$('#content_columns').html(result);
@@ -234,7 +256,9 @@ function enabledAtributes (column)
 		$('#name_'+ column).prop('disabled', false);
 	} else {
 		$('#data_type_'+ column).prop('disabled', true);
-		$('#name_'+ column).prop('disabled', true);		
+		$('#name_'+ column).prop('disabled', true);
+		$('#data_type_'+ column).prop('selectedIndex', 0);
+		$('#name_'+ column).val('');
 	}
 }
 	
