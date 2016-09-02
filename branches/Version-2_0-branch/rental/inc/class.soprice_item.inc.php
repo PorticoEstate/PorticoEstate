@@ -363,11 +363,32 @@
 		 * @param $price_item	the price item to add
 		 * @return true if successful, false otherwise
 		 */
-		function add_price_item( $contract_id, $price_item_id, $factor )
+		function add_price_item( $contract_id, $price_item_id )
 		{
+			$contract = rental_socontract::get_instance()->get_single($contract_id);
+			$composites = $contract->get_composites();
+			foreach ($composites as $composite_id => $composite)
+			{
+				$composite_obj = rental_socomposite::get_instance()->get_single($composite_id);
+				break;
+			}
+
+			$custom_factor = $composite_obj->get_custom_prize_factor();
+			$custom_factor = $custom_factor ? (float)$custom_factor : 1;
+
+			$location_info = ExecMethod('property.bogeneric.read', array(
+				'location_info'=> array('type' => 'location_factor'),
+				'custom_filter' => array('part_of_town_id = ' . (int)$composite_obj->get_part_of_town_id())
+				)
+			);
+			$location_factor = (float)abs($location_info[0]['factor']) > 0 ? (float)$location_info[0]['factor'] : 1;
+
+			$standard_info = ExecMethod('property.bogeneric.read_single', array('type' => 'composite_standard', 'id' => $composite_obj->get_standard_id()));
+			$standard_factor = (float)abs($standard_info['factor']) > 0 ? (float)$standard_info['factor'] : 1;
+
+			$factor = $location_factor * $standard_factor * $custom_factor;
 			$factor = $factor ? (float)$factor : 1;
 			$price_item = $this->get_single($price_item_id);
-			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			$rented_area = 0;
 			$total_price = 0;
 			if ($price_item->is_area())
@@ -380,6 +401,12 @@
 				$total_price = ($rented_area * $price_item->get_price() * $factor);
 				//var_dump($total_price, $rented_area, $price_item->get_price());
 			}
+			else
+			{
+				$location_factor = 1;
+				$standard_factor = 1;
+				$custom_factor = 1;
+			}
 			if ($price_item)
 			{
 				$values = array(
@@ -389,8 +416,11 @@
 					str_replace(',', '.', $rented_area),
 					"'" . $price_item->get_agresso_id() . "'",
 					$price_item->is_area() ? 'true' : 'false',
-					(str_replace(',', '.', $price_item->get_price()) * $factor),
-					str_replace(',', '.', $total_price)
+					(str_replace(',', '.', $price_item->get_price())),
+					str_replace(',', '.', $total_price),
+					$location_factor,
+					$standard_factor,
+					$custom_factor
 				);
 				$start_date_field = '';
 				$end_date_field = '';
@@ -406,7 +436,7 @@
 					$end_date_field = ", date_end";
 				}
 
-				$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price {$start_date_field} {$end_date_field}) VALUES (" . join(',', $values) . ")";
+				$q = "INSERT INTO rental_contract_price_item (price_item_id, contract_id, title, area, agresso_id, is_area, price, total_price, location_factor, standard_factor, custom_factor {$start_date_field} {$end_date_field}) VALUES (" . join(',', $values) . ")";
 				//var_dump($q);
 				$result = $this->db->query($q);
 				if ($result)

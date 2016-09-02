@@ -138,6 +138,11 @@
 
 		public function read( $data = array() )
 		{
+			if (isset($data['location_info']) && $data['location_info']['type'])
+			{
+				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
+				unset($data['location_info']);
+			}
 			$values = $this->so->read($data);
 
 			foreach ($values as &$entry)
@@ -174,7 +179,7 @@
 		{
 			if (isset($data['location_info']) && $data['location_info']['type'])
 			{
-				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type']);
+				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
 				unset($data['location_info']);
 			}
 			$custom_fields = false;

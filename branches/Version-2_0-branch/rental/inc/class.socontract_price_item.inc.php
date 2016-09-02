@@ -118,11 +118,12 @@
 			}
 			else if (isset($filters['export']))
 			{
-				$cols = "rental_contract_price_item.id, rental_contract_price_item.price_item_id,"
+				$cols = "rental_contract_price_item.id,rental_contract_price_item.location_factor,rental_contract_price_item.standard_factor,"
+					. " rental_contract_price_item.custom_factor, rental_contract_price_item.price_item_id,"
 					. " rental_contract_price_item.contract_id, rental_contract_price_item.area, rental_contract_price_item.count,"
 					. " rental_contract_price_item.agresso_id, rental_contract_price_item.title, rental_contract_price_item.is_area,"
 					. " rental_contract_price_item.price, rental_contract_price_item.total_price, rental_contract_price_item.is_one_time,"
-					. " rental_contract_price_item.date_start, rental_contract_price_item.date_end";
+					. " rental_contract_price_item.date_start, rental_contract_price_item.date_end,rental_price_item.type'";
 			}
 			else
 			{
@@ -158,6 +159,9 @@
 				$price_type_id = (int)$this->db->f('type');
 				$price_item->set_price_type_id($price_type_id);
 				$price_item->set_price_type_title($price_type_id);
+				$price_item->set_location_factor($this->unmarshal($this->db->f('location_factor'), 'float'));
+				$price_item->set_standard_factor($this->unmarshal($this->db->f('standard_factor'), 'float'));
+				$price_item->set_custom_factor($this->unmarshal($this->db->f('custom_factor'), 'float'));
 			}
 			return $price_item;
 		}
@@ -285,6 +289,40 @@
 		{
 			$id = intval($price_item->get_id());
 
+			/*
+			 * Start correction by factors
+			 */
+
+			phpgw::import_class('rental.socomposite');
+			$contract = rental_socontract::get_instance()->get_single($price_item->get_contract_id());
+			$composites = $contract->get_composites();
+			foreach ($composites as $composite_id => $composite)
+			{
+				$composite_obj = rental_socomposite::get_instance()->get_single($composite_id);
+				break;
+			}
+
+			$custom_factor = $composite_obj->get_custom_prize_factor();
+			$custom_factor = $custom_factor ? (float)$custom_factor : 1;
+
+			$location_info = ExecMethod('property.bogeneric.read', array(
+				'location_info'=> array('type' => 'location_factor'),
+				'custom_filter' => array('part_of_town_id = ' . (int)$composite_obj->get_part_of_town_id())
+				)
+			);
+			$location_factor = (float)abs($location_info[0]['factor']) > 0 ? (float)$location_info[0]['factor'] : 1;
+
+			$standard_info = ExecMethod('property.bogeneric.read_single', array('type' => 'composite_standard', 'id' => $composite_obj->get_standard_id()));
+			$standard_factor = (float)abs($standard_info['factor']) > 0 ? (float)$standard_info['factor'] : 1;
+
+			$factor = $location_factor * $standard_factor * $custom_factor;
+			$factor = $factor ? (float)$factor : 1;
+
+
+			/*
+			 * End correction by factors
+			 */
+
 			$price = $price_item->get_price() ? $price_item->get_price() : 0;
 			//$total_price = $price_item->get_total_price() ? $price_item->get_total_price() : 0;
 			//if($total_price == 0){
@@ -292,11 +330,14 @@
 
 			if ($price_item->is_area())
 			{
-				$total_price = $price_item->get_area() * $price_item->get_price();
+				$total_price = $price_item->get_area() * $price_item->get_price() * $factor;
 			}
 			else
 			{
 				$total_price = $price_item->get_count() * $price_item->get_price();
+				$location_factor = 1;
+				$standard_factor = 1;
+				$custom_factor = 1;
 			}
 
 			// Build a db-friendly array of the composite object
@@ -313,7 +354,10 @@
 				"date_start=" . $this->marshal($price_item->get_date_start(), 'int'),
 				"date_end=" . $this->marshal($price_item->get_date_end(), 'int'),
 				"is_one_time=" . ($price_item->get_is_one_time() == "true" ? "true" : "false"),
-				"is_billed=" . ($price_item->is_billed() ? "true" : "false")
+				"is_billed=" . ($price_item->is_billed() ? "true" : "false"),
+				"location_factor = '{$location_factor}'",
+				"standard_factor = '{$standard_factor}'",
+				"custom_factor = '{$custom_factor}'"
 			);
 			$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 

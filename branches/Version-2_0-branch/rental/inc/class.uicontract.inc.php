@@ -447,29 +447,68 @@
 
 		private function _get_tableDef_price( $mode, $contract_id )
 		{
-			$columns_def = array(
-				array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',
-					'sortable' => true, 'hidden' => false),
-				array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,
-					'hidden' => false, 'editor' => $mode == 'edit' ? true : false),
-				array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,
-					'hidden' => false),
-				array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,
-					'formatter' => 'formatterPrice', 'className' => 'right', 'editor' => $mode == 'edit' ? true : false),
-				array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",
-					'className' => 'right'),
-				array("key" => "count", "label" => lang('count'), 'editor' => $mode == 'edit' ? true : false),
-				array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',
-					'className' => 'right'),
-				array("key" => "date_start", "label" => lang('date_start'), 'formatter' => $mode == 'edit' ? 'formatterDateStart_price_item' : "",
-					'className' => 'center'),
-				array("key" => "date_end", "label" => lang('date_end'), 'formatter' => $mode == 'edit' ? 'formatterDateEnd_price_item' : "",
-					'className' => 'center'),
-				array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => $mode == 'edit' ? 'formatterIs_one_time' : "",
-					'className' => 'center'),
-				array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,
-					'className' => 'center')
-			);
+			if (empty($this->config->config_data['contract_furnished_status']))
+			{
+				$columns_def = array(
+					array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',
+						'sortable' => true, 'hidden' => false),
+					array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,
+						'hidden' => false, 'editor' => $mode == 'edit' ? true : false),
+					array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,
+						'hidden' => false),
+					array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,
+						'formatter' => 'formatterPrice', 'className' => 'right', 'editor' => $mode == 'edit' ? true : false),
+					array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",
+						'className' => 'right'),
+					array("key" => "count", "label" => lang('count'), 'editor' => $mode == 'edit' ? true : false),
+					array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',
+						'className' => 'right'),
+					array("key" => "date_start", "label" => lang('date_start'), 'formatter' => $mode == 'edit' ? 'formatterDateStart_price_item' : "",
+						'className' => 'center'),
+					array("key" => "date_end", "label" => lang('date_end'), 'formatter' => $mode == 'edit' ? 'formatterDateEnd_price_item' : "",
+						'className' => 'center'),
+					array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => $mode == 'edit' ? 'formatterIs_one_time' : "",
+						'className' => 'center'),
+					array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,
+						'className' => 'center')
+				);
+
+			}
+			else
+			{
+					$columns_def = array(
+					array('key' => 'agresso_id', 'label' => lang('agresso_id'), 'className' => '',
+						'sortable' => true, 'hidden' => false),
+					array('key' => 'title', 'label' => lang('name'), 'className' => '', 'sortable' => true,
+						'hidden' => false, 'editor' => $mode == 'edit' ? true : false),
+					array('key' => 'is_area', 'label' => lang('title'), 'className' => '', 'sortable' => true,
+						'hidden' => false),
+					array('key' => 'price', 'label' => lang('price'), 'sortable' => false, 'hidden' => false,
+						'formatter' => 'formatterPrice', 'className' => 'right', 'editor' => $mode == 'edit' ? true : false),
+					array('key' => 'location_factor', 'label' => lang('location'), 'className' => '', 'sortable' => true,
+						'hidden' => false),
+					array('key' => 'standard_factor', 'label' => lang('standard'), 'className' => '', 'sortable' => true,
+						'hidden' => false),
+					array('key' => 'custom_factor', 'label' => lang('custom prize factor'), 'className' => '', 'sortable' => true,
+						'hidden' => false),
+					array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",
+						'className' => 'right'),
+					array("key" => "count", "label" => lang('count'), 'editor' => $mode == 'edit' ? true : false),
+					array("key" => "total_price", "label" => lang('total_price'), 'formatter' => 'formatterPrice',
+						'className' => 'right'),
+					array("key" => "date_start", "label" => lang('date_start'), 'formatter' => $mode == 'edit' ? 'formatterDateStart_price_item' : "",
+						'className' => 'center'),
+					array("key" => "date_end", "label" => lang('date_end'), 'formatter' => $mode == 'edit' ? 'formatterDateEnd_price_item' : "",
+						'className' => 'center'),
+					array("key" => "is_one_time", "label" => lang('is_one_time'), 'formatter' => $mode == 'edit' ? 'formatterIs_one_time' : "",
+						'className' => 'center'),
+					array("key" => "price_type_title", "label" => lang('type'), 'sortable' => false,
+						'className' => 'center')
+				);
+
+			}
+
+
 
 			if ($mode == 'edit')
 			{
@@ -536,7 +575,7 @@
 						addPrice(oArgs, parameters);
 					"
 				);
-
+/*
 				$sogeneric = CreateObject('property.sogeneric', 'composite_standard');
 				$composite_standards = $sogeneric->read(array('allrows' => true));
 				foreach ($composite_standards as $composite_standard)
@@ -559,13 +598,28 @@
 						"
 					);
 				}
-
-				unset($columns_def[4]);
-				unset($columns_def[5]);
-				unset($columns_def[6]);
-				unset($columns_def[7]);
-				unset($columns_def[8]);
-				unset($columns_def[9]);
+*/
+				if (empty($this->config->config_data['contract_furnished_status']))
+				{
+					unset($columns_def[4]);
+					unset($columns_def[5]);
+					unset($columns_def[6]);
+					unset($columns_def[7]);
+					unset($columns_def[8]);
+					unset($columns_def[9]);
+				}
+				else
+				{
+					unset($columns_def[4]);
+					unset($columns_def[5]);
+					unset($columns_def[6]);
+					unset($columns_def[7]);
+					unset($columns_def[8]);
+					unset($columns_def[9]);
+					unset($columns_def[10]);
+					unset($columns_def[11]);
+					unset($columns_def[12]);
+				}
 
 				$datatable_def[] = array
 					(
@@ -1293,14 +1347,14 @@ JS;
 				// Redirect with error message if responsibility area is eksternleie and contract type not set
 				if (!is_numeric(phpgw::get_var('contract_type')) && (strcmp($responsibility_area, "contract_type_eksternleie") == 0))
 				{
-					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));	
+					//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit', 'id' => $contract->get_id(), 'message' => $message, 'error' => $error));
 					phpgwapi_cache::message_set(lang('billing_removed_external_contract'), 'error');
 					$this->edit();
 				}
 			}
 			else
 			{
-				// Gets responsibility area from db (ex: eksternleie, internleie) 
+				// Gets responsibility area from db (ex: eksternleie, internleie)
 				$responsibility_area = rental_socontract::get_instance()->get_responsibility_title($location_id);
 
 				// Redirect with error message if responsibility area is eksternleie and contract type not set
@@ -2514,7 +2568,6 @@ JS;
 		{
 			$contract_id = (int)phpgw::get_var('contract_id');
 			$list_price_item_id = phpgw::get_var('price_item_id');
-			$factor = phpgw::get_var('factor', 'float');
 
 			$so_contract = rental_socontract::get_instance();
 			$contract = $so_contract->get_single($contract_id);
@@ -2524,7 +2577,7 @@ JS;
 				//return rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
 				foreach ($list_price_item_id as $price_item_id)
 				{
-					$result = rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id, $factor);
+					$result = rental_soprice_item::get_instance()->add_price_item($contract_id, $price_item_id);
 					if ($result)
 					{
 						$message['message'][] = array('msg' => 'price_item ' . $price_item_id . ' ' . lang('has been added'));
@@ -2678,8 +2731,8 @@ JS;
 		}
 
 		/**
-		 * 
-		 * Public function scans the contract template directory for pdf contract templates 
+		 *
+		 * Public function scans the contract template directory for pdf contract templates
 		 */
 		public function get_pdf_templates()
 		{

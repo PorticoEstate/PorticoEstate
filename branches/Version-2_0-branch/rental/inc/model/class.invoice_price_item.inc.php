@@ -14,7 +14,8 @@
 		protected $invoice_id;
 		protected $is_area;
 		protected $is_one_time;
-		protected $price_per_year;
+		protected $price_per_type;
+		protected $price_type_id;
 		protected $area;
 		protected $count;
 		protected $total_price;
@@ -22,7 +23,7 @@
 		protected $timestamp_end; // End date for the given invoice
 		public static $so;
 
-		public function __construct( int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, bool $is_area, float $price_per_year, float $area, int $count, int $timestamp_start, int $timestamp_end )
+		public function __construct( int $decimals, int $id, int $invoice_id, string $title, string $agresso_id, bool $is_area, float $price_per_type, float $area, int $count, int $timestamp_start, int $timestamp_end, int $price_type_id )
 		{
 			$this->decimals = (int)$decimals;
 			$this->id = (int)$id;
@@ -30,12 +31,13 @@
 			$this->title = $title;
 			$this->agresso_id = $agresso_id;
 			$this->is_area = (bool)$is_area;
-			$this->price_per_year = (float)$price_per_year;
+			$this->price_per_type = (float)$price_per_type;
 			$this->area = (float)$area;
 			$this->count = (int)$count;
 			$this->timestamp_start = (int)$timestamp_start;
 			$this->timestamp_end = (int)$timestamp_end;
 			$this->total_price = null; // Needs to be re-calculated
+			$this->price_type_id = $price_type_id ? $price_type_id : 1;
 		}
 
 		public function set_invoice_id( int $invoice_id )
@@ -65,15 +67,24 @@
 			$this->total_price = null; // Needs to be re-calculated
 		}
 
-		public function set_price( $price_per_year )
+		public function set_price( $price_per_type )
 		{
-			$this->price_per_year = (float)$price_per_year;
+			$this->price_per_type = (float)$price_per_type;
 			$this->total_price = null; // Needs to be re-calculated
 		}
 
 		public function get_price()
 		{
-			return $this->price_per_year;
+			return $this->price_per_type;
+		}
+		public function set_price_type_id( $price_type_id = 1)
+		{
+			$this->price_type_id = (int)$price_type_id;
+		}
+
+		public function get_price_type_id()
+		{
+			return $this->price_type_id;
 		}
 
 		public function set_area( $area )
@@ -173,9 +184,21 @@
 						else // Incomplete month
 						{
 							// YYY: There must be a better day to do this!?
-							$num_of_days_in_current_year = (date('L', strtotime($current_year . '01-01')) == 0) ? 365 : 366;
-							$num_of_days = $last_day - $first_day + 1;
-							$incomplete_months[] = array($num_of_days_in_current_year, $num_of_days);
+							if($this->price_type_id == 1) // year
+							{
+								$num_of_days_in_current_year = (date('L', strtotime($current_year . '01-01')) == 0) ? 365 : 366;
+								$num_of_days = $last_day - $first_day + 1;
+								$incomplete_months[] = array($num_of_days_in_current_year, $num_of_days);
+							}
+							else if($this->price_type_id == 2) //month
+							{
+								$num_of_days = $last_day - $first_day + 1;
+								$incomplete_months[] = array($num_of_days_in_current_month, $num_of_days);
+							}
+							else
+							{
+								throw new Exception('Price type not supported');
+							}
 						}
 					}
 				}
@@ -184,18 +207,30 @@
 				$amount = $this->is_area() ? $this->get_area() : $this->get_count();
 
 				// The total price of this price element for complete months
-				$this->total_price = (($this->get_price() * $num_of_complete_months) / 12.0) * $amount;
+				
+				if($this->price_type_id == 1) // year
+				{
+					$this->total_price = (($this->get_price() * $num_of_complete_months) / 12.0) * $amount;
+				}
+				else if($this->price_type_id == 2) //month
+				{
+					$this->total_price = ($this->get_price() * $num_of_complete_months) * $amount;
+				}
+				else
+				{
+					throw new Exception('Price type not supported');
+				}
 
 				// ---- Calculate incomplete months
 
-				$price_per_year = $this->get_price() * $amount;
+				$price_per_type = $this->get_price() * $amount;
 
 				// Run through all the incomplete months ...
 				foreach ($incomplete_months as $day_factors)
 				{
 					// ... and add the sum of each incomplete month to the total price of the price item
 					// Calculation: Price per day (price per year divided with number of days in year) multiplied with number of days in incomplete month
-					$this->total_price += ($price_per_year / $day_factors[0]) * $day_factors[1];
+					$this->total_price += ($price_per_type / $day_factors[0]) * $day_factors[1];
 				}
 				// We round the total price for each price item with the specified number of decimals precision
 				$this->total_price = round($this->total_price, $this->decimals);

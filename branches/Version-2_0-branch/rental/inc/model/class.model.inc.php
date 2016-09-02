@@ -263,7 +263,7 @@
 
 		}
 
-		private function _validate( $entity, array &$errors, $field_prefix = '' )
+		private function _validate( $entity, array &$errors )
 		{
 			$fields = $this->get_fields();
 			foreach ($fields as $field => $params)
@@ -318,7 +318,7 @@
 						$alternatives_ok = true;
 					}
 				}
-				$error_key = empty($field_prefix) ? $field : "{$field_prefix}[{$field}]";
+				$error_key = empty($params['label']) ? $field : $params['label'];
 				if ($params['required'] && (!isset($value) || ($value !== '0' && empty($value))) && !$alternatives_ok)
 				{
 

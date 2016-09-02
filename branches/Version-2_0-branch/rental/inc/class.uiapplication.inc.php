@@ -34,8 +34,7 @@
 	class rental_uiapplication extends rental_uicommon
 	{
 
-		public $public_functions = array
-			(
+		public $public_functions = array(
 			'add' => true,
 			'index' => true,
 			'query' => true,
@@ -54,8 +53,9 @@
 			parent::__construct();
 			self::set_active_menu('rental::application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
+			$this->bo = createObject('rental.boapplication');
 			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->acl_location = '.application';
+			$this->acl_location = $this->bo->acl_location;
 			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'rental');
 			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'rental');
 			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'rental');
@@ -69,30 +69,20 @@
 		private function get_status_options( $selected = 0 )
 		{
 			$status_options = array();
+			$status_list = rental_application::get_status_list();
+
 			$status_options[] = array(
 				'id' => '',
 				'name' => lang('all')
 			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_REGISTERED,
-				'name' => lang('registered')
-			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_PENDING,
-				'name' => lang('pending')
-			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_REJECTED,
-				'name' => lang('rejected')
-			);
-			$status_options[] = array(
-				'id' => rental_application::STATUS_APPROVED,
-				'name' => lang('approved')
-			);
 
-			foreach ($status_options as &$entry)
+			foreach ($status_list as $_key => $_value)
 			{
-				$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
+				$status_options[] = array(
+					'id' => $_key,
+					'name' => $_value,
+					'selected' => $_key == $selected ? 1 : 0
+				);
 			}
 			return $status_options;
 		}
@@ -182,7 +172,7 @@
 					)
 				)
 			);
-
+/*
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
@@ -193,7 +183,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -244,20 +234,8 @@
 			}
 			else
 			{
-				$application_id = phpgw::get_var('id', 'int');
-
-				if (!empty($values['application_id']))
-				{
-					$application_id = $values['application_id'];
-				}
-				if ($application_id)
-				{
-					$application = rental_application::get($application_id);
-				}
-				else
-				{
-					$application = new rental_application();
-				}
+				$application_id = !empty($values['application_id']) ? $values['application_id'] : phpgw::get_var('id', 'int');
+				$application = $this->bo->read_single($application_id);
 			}
 
 			if (!$this->acl_edit)
@@ -361,11 +339,11 @@
 				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('rental', 'rental', 'application.edit.js');
-
 			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}
 		/*
@@ -389,23 +367,16 @@
 			{
 				phpgw::no_access();
 			}
-//			_debug_array($_POST);
-			$application_id = phpgw::get_var('id', 'int');
 			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'application');
 
-			if ($application_id)
-			{
-				$application = rental_soapplication::get_instance()->read_single($application_id, true);
-			}
-			else
-			{
-				$application = new rental_application();
-				$application->status = $application::STATUS_REGISTERED;
-			}
+			$application_id = phpgw::get_var('id', 'int');
+
+			$application = $this->bo->read_single($application_id, true);
+
 			/*
 			 * Overrides with incoming data from POST
 			 */
-			$application = $this->_populate($application);
+			$application = $this->bo->populate($application);
 
 			if($application->validate())
 			{
@@ -431,75 +402,28 @@
 			}
 		}
 
-		private function _populate($application)
-		{
-			$fields = $this->fields;
-
-			foreach ($fields as $field	=> $field_info)
-			{
-				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
-				{
-					$application->set_field( $field, phpgw::get_var($field, $field_info['type'] ) );
-				}
-			}
-			return $application;
-		}
-
-
 		/**
 		 * (non-PHPdoc)
 		 * @see rental/inc/rental_uicommon#query()
 		 */
 		public function query()
 		{
-			$params = $this->build_default_read_params();
-			$applications = rental_soapplication::get_instance()->read($params);
-			$status_text = array(
-				rental_application::STATUS_REGISTERED => lang('registered'),
-				rental_application::STATUS_PENDING	=> lang('pending'),
-				rental_application::STATUS_REJECTED => lang('rejected'),
-				rental_application::STATUS_APPROVED	=> lang('approved')
-			);
-
+			$params = $this->bo->build_default_read_params();
+			$applications = $this->bo->read($params);
+			$status_text = rental_application::get_status_list();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($applications['results'] as &$application)
 			{
 					$application['status'] = $status_text[$application['status']];
 					$application['composite_type'] = $this->composite_types[$application['composite_type']];
 
-					$application['entry_date'] = $GLOBALS['phpgw']->common->show_date($application['entry_date'], $dateformat);
+					$application['entry_date'] = $GLOBALS['phpgw']->common->show_date($application['entry_date']);
+					$application['assign_date_start'] = $GLOBALS['phpgw']->common->show_date($application['assign_date_start'], $dateformat);
+					$application['assign_date_end'] = $GLOBALS['phpgw']->common->show_date($application['assign_date_end'], $dateformat);
 					$application['executive_officer'] = $application['executive_officer'] ? $GLOBALS['phpgw']->accounts->get($application['executive_officer'])->__toString() : '';
 			}
 			array_walk($applications["results"], array($this, "_add_links"), "rental.uiapplication.edit");
 
 			return $this->jquery_results($applications);
-		}
-
-		protected function build_default_read_params()
-		{
-			$fields = $this->fields;
-
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
-
-			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'sort' => $columns[$order[0]['column']]['data'],
-				'dir' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
-			);
-
-			foreach ($fields as $field => $_params)
-			{
-				if (!empty($_REQUEST["filter_$field"]))
-				{
-					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
-				}
-			}
-
-			return $params;
 		}
 	}

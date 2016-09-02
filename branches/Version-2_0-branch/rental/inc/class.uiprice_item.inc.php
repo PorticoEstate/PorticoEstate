@@ -350,13 +350,12 @@ JS;
 				$price_item->set_responsibility_id($responsibility_id);
 				$price_item->set_price_type_id(1); // defaults to year
 			}
-
 			$price_item->set_title(phpgw::get_var('title'));
 			$price_item->set_agresso_id(phpgw::get_var('agresso_id'));
 			$price_item->set_is_area(phpgw::get_var('is_area') == 'true' ? true : false);
 			$price_item->set_is_inactive(phpgw::get_var('is_inactive') == 'on' ? true : false);
 			$price_item->set_is_adjustable(phpgw::get_var('is_adjustable') == 'on' ? true : false);
-			$price_item->set_standard(phpgw::get_var('standard') == 'on' ? true : false);
+			$price_item->set_standard(phpgw::get_var('is_standard') == 'on' ? true : false);
 			$price_item->set_price(phpgw::get_var('price'));
 			$price_item->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
 			if ($price_item->get_agresso_id() == null)
@@ -429,21 +428,16 @@ JS;
 		 */
 		public function query()
 		{
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
+			$length = phpgw::get_var('length', 'int');
+			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$num_of_objects = $length == -1 ? 0 : $user_rows_per_page;
+
 
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'agresso_id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 
