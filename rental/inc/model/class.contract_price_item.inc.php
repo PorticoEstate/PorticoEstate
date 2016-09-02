@@ -21,6 +21,7 @@
 		protected $location_factor;
 		protected $standard_factor;
 		protected $custom_factor;
+		protected $price_type_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
