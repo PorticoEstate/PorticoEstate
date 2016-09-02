@@ -312,13 +312,13 @@
 
 			foreach($name_temp as $_key => $_name)
 			{
-				array_push($name,$_key);			
+				array_push($name,$_key);
 			}
 
 
 			foreach($descr_temp as $_key => $_name)
 			{
-				array_push($descr,$_name);			
+				array_push($descr,$_name);
 			}
 
 			if($this->_show_finnish_date)
@@ -395,7 +395,7 @@
 			}
 			else
 			{
-				return lang('delete failed');			
+				return lang('delete failed');
 			}
 		}
 
@@ -586,7 +586,8 @@
 
 				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_assigned_to_me'];
 
-				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
+				$values_combo_box[4] = $this->_get_user_list($this->user_id);
+
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my assigned tickets'),
