@@ -874,16 +874,17 @@
 				// Create a new invoice price item
 				$invoice_price_item = new rental_invoice_price_item(
 					2, // the number of decimals to use for the total price of the price item
-	 -1, // no price item identifier
-	 0, // the invoice identifier
-	 $contract_price_item->get_title(), // the contract price item title
-	 $contract_price_item->get_agresso_id(), // the contract price item agresso identifier
-	 $contract_price_item->is_area(), // flag for specifying if the contract is of area/piece
-	 $contract_price_item->get_price(), // the price of the contract price item
-	 $contract_price_item->get_area(), // the rented area on this contract (derived from contract)
-	 $contract_price_item->get_count(), // the number of items on this price item
-	 $invoice_price_item_start, // the start date from which this price item should be calculated
-	 $invoice_price_item_end   // the end date to which this price item should be calculated
+					-1, // no price item identifier
+					0, // the invoice identifier
+					$contract_price_item->get_title(), // the contract price item title
+					$contract_price_item->get_agresso_id(), // the contract price item agresso identifier
+					$contract_price_item->is_area(), // flag for specifying if the contract is of area/piece
+					$contract_price_item->get_price(), // the price of the contract price item
+					$contract_price_item->get_area(), // the rented area on this contract (derived from contract)
+					$contract_price_item->get_count(), // the number of items on this price item
+					$invoice_price_item_start, // the start date from which this price item should be calculated
+					$invoice_price_item_end,   // the end date to which this price item should be calculated
+					$contract_price_item->get_price_type_id()
 				);
 
 
