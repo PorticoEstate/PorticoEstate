@@ -1273,7 +1273,7 @@ function populateSelect_activityCalendar(url, container, attr)
 }
 
 
-function createTableSchedule (d, u, c, r, cl, dt)
+function createTableSchedule (d, u, c, r, cl, dt, a, p)
 {
 	var container = document.getElementById(d);
 	var xtable = document.createElement('table');
@@ -1311,7 +1311,7 @@ function createTableSchedule (d, u, c, r, cl, dt)
 	container.innerHTML = "";
 	container.appendChild(xtable);
 
-	$.get(u, function (data)
+	$.post(u, a, function (data)
 	{
 		var selected = new Array();
 		if (typeof (r) == 'object')
@@ -1416,6 +1416,21 @@ function createTableSchedule (d, u, c, r, cl, dt)
 				tableBody.appendChild(tableBodyTr);
 			});
 		}
+
+        if (p)
+        {
+            var start = a.start;
+            var total = data['ResultSet'].totalResultsAvailable;
+            var n_objects = a.n_objects;
+
+            var pages = Math.floor(total / n_objects);
+            var res = total % n_objects;
+
+            if (res > 0)
+            {
+                pages++;
+            }
+        }
 	});
 }
 
@@ -1653,7 +1668,7 @@ function rentalSchedule (data, col, date)
 	if (data[k])
 	{
 		var contratctLink = (data['contract_link']) ? data['contract_link'] : null;
-		text = (data[k]['old_contract_id'] ? formatGenericLink(data[k]['old_contract_id'], contratctLink) : "");
+		text = data[k]['status'];
 	}
 	else
 	{

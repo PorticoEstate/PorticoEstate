@@ -547,82 +547,108 @@
 			}
 			/*----------------------------------------------------------------*/
 
-//			$contracts = rental_socontract::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
-// 29 Jun 2016
-// 01 Sep 2016
-            
-            $data = null;
-            $composite_obj = rental_socomposite::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
+//            if (count($composite_obj) > 0)
+//			{
+//				$keys = array_keys($composite_obj);
+//				$composite = $composite_obj[$keys[0]];
+//			}
+//
+//            $contracts = $composite->get_contracts();
+//
+//			$data_contracts = array();
+//
+//			foreach ($contracts as $contract)
+//			{
+//				$contract = $contract->serialize();
+//
+//				$contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+//				$contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
+//
+//				$data_contract = array();
+//
+//				foreach ($days as $day)
+//				{
+//					if ($day >= $contract_date_start && $day <= $contract_date_end)
+//					{
+//						$data_contract[date_format($day, 'D')] = $contract;
+//					}
+//				}
+//
+//				if ($data_contract)
+//				{
+//					$link = $GLOBALS['phpgw']->link('/index.php', array(
+//						'menuaction' => 'rental.uicontract.view',
+//						'id' => $contract['id']
+//					));
+//
+//					$data_contract['contract_link'] = $link;
+//					$data_contracts[] = $data_contract;
+//				}
+//			}
 
-            foreach ($composite_obj as $composite)
+// Mixtos K00006822 K00006853
+            $composites_obj = rental_socomposite::get_instance()->get($options['start_index'], $options['num_of_objects'], $options['sort_field'], $options['ascending'], $options['search_for'], $options['search_type'], $filters);
+            $composite_count = rental_socomposite::get_instance()->get_count($options['search_for'], $options['search_type'], $filters);
+
+            $composites = array();
+            $n = 0;
+            foreach ($composites_obj as $composite)
             {
                 $contracts = $composite->get_contracts();
-                foreach ($contracts as $contract) {
-                    $contract = $contract->serialize();
+                $composite = $composite->serialize();
 
-                    $contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
-    				$contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
+                if (count($contracts) > 0)
+                {
+                    foreach ($contracts as $contract)
+                    {
+                        $contract = $contract->serialize();
+                        
+                        if ($composites[$n-1]['id'] != $composite['id'])
+                        {
+                            $composites[$n]['id'] = $composite['id'];
+                        }
+                        
+                        $composites[$n]['name'] = $composite['name'];
 
-                    $data_contract = array();
+                        $contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+                        $contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
 
+                        foreach ($days as $day)
+                        {
+                            if ($day >= $contract_date_start && ($day <= $contract_date_end || $contract['date_end'] == ''))
+                            {
+                                $composites[$n]['contract_id'] = $contract['id'];
+                                $composites[$n]['old_contract_id'] = $contract['old_contract_id'];
+                                $composites[$n][date_format($day, 'D')]['status'] = 'Ikke ledig';
+                            }
+                            else
+                            {
+                                $composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
+                            }
+                        }
+                        $n++;
+                    }
+                }
+                else
+                {
+                    $composites[$n]['id'] = $composite['id'];
+                    $composites[$n]['name'] = $composite['name'];
                     foreach ($days as $day)
                     {
-                        if ($day >= $contract_date_start && $day <= $contract_date_end)
-                        {
-                            $data_contract[date_format($day, 'D')] = $contract;
-                        }
+                        $composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
                     }
-                    $data_contracts[] = $data_contract;
+                    $n++;
                 }
             }
-
-            if (count($composite_obj) > 0)
-			{
-				$keys = array_keys($composite_obj);
-				$composite = $composite_obj[$keys[0]];
-			}
-
-            $contracts = $composite->get_contracts();
-
-			$data_contracts = array();
-
-			foreach ($contracts as $contract)
-			{
-				$contract = $contract->serialize();
-
-				$contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
-				$contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
-
-				$data_contract = array();
-
-				foreach ($days as $day)
-				{
-					if ($day >= $contract_date_start && $day <= $contract_date_end)
-					{
-						$data_contract[date_format($day, 'D')] = $contract;
-					}
-				}
-
-				if ($data_contract)
-				{
-					$link = $GLOBALS['phpgw']->link('/index.php', array(
-						'menuaction' => 'rental.uicontract.view',
-						'id' => $contract['id']
-					));
-
-					$data_contract['contract_link'] = $link;
-					$data_contracts[] = $data_contract;
-				}
-			}
-
-			if (!(count($data_contracts) > 0))
-			{
-				$data_contracts[] = '';
-			}
+            
+//			if (!(count($composites) > 0))
+//			{
+//				$composites[] = '';
+//			}
 
 			return array(
-				'total_records' => count($data_contracts),
-				'results' => $data_contracts
+				'total_records' => $composite_count,
+				'results' => $composites
 			);
 		}
 	}

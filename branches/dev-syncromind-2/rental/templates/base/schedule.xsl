@@ -42,50 +42,61 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><label for="location_id">!t_new_contract</label></td>
-                                <td valign="top">
-                                    <select style="width: 250px" width="250" name="location_id" id="location_id" class="searchSchedule">
-                                        <option value="838">!contract_type_eksternleie</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="search_option">!search_where</label></td>
-                                <td valign="top">
-                                    <select style="width: 250px" width="250" name="search_option" id="search_option" class="searchSchedule">
-                                        <option value="all">All</option>
-                                        <option value="id">!contract_id</option>
-                                        <option value="party_name">!party_name</option>
-                                        <option value="composite">!composite_name</option>
-                                        <option value="composite_address">!composite_address</option>
-                                        <option value="location_code">!object_number</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="contract_status">Status</label></td>
-                                <td valign="top">
-                                    <select style="width: 250px" width="250" name="contract_status" id="contract_status" class="searchSchedule">
-                                        <option value="all">All</option>
-                                        <option value="under_planning">!under_planning</option>
-                                        <option value="active">!active_plural</option>
-                                        <option value="under_dismissal">!under_dismissal</option>
-                                        <option value="ended">!ended</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="contract_type">!field_of_responsibility</label></td>
-                                <td valign="top">
-                                    <select style="width: 250px" width="250" name="contract_type" id="contract_type" class="searchSchedule">
-                                        <option value="all">All</option>
-                                        <option value="836">!contract_type_internleie</option>
-                                        <option value="837">!contract_type_innleie</option>
-                                        <option value="838">!contract_type_eksternleie</option>
-                                    </select>
-                                </td>
-                            </tr>
+                            <script type="text/javascript">
+                                schedule.params = {};
+                            </script>
+                            <xsl:for-each select="filters">
+                                <tr>
+                                    <td><xsl:value-of select="text" /></td>
+                                    <td>                           
+                                        <xsl:variable name="name">
+											<xsl:value-of select="name"/>
+										</xsl:variable>
+                                        <xsl:if test="type = 'filter'">
+                                            <select id="{$name}" name="{$name}" class="searchSchedule" width="250" style="width: 250px">                                                
+                                                <xsl:for-each select="list">
+                                                    <xsl:variable name="id">
+                                                        <xsl:value-of select="id"/>
+                                                    </xsl:variable>
+                                                    <xsl:choose>
+                                                        <xsl:when test="id = 'NEW'">
+                                                            <option value="{$id}" selected="selected">
+                                                                <xsl:value-of select="name"/>
+                                                            </option>
+                                                        </xsl:when>
+                                                        <xsl:otherwise>
+                                                            <xsl:choose>
+                                                                <xsl:when test="selected = 'selected'">
+                                                                    <option value="{$id}" selected="selected">
+                                                                        <xsl:value-of select="name"/>
+                                                                    </option>
+                                                                </xsl:when>
+                                                                <xsl:when test="selected = '1'">
+                                                                    <option value="{$id}" selected="selected">
+                                                                        <xsl:value-of select="name"/>
+                                                                    </option>
+                                                                </xsl:when>
+                                                                <xsl:otherwise>
+                                                                    <option value="{$id}">
+                                                                        <xsl:value-of select="name"/>
+                                                                    </option>
+                                                                </xsl:otherwise>
+                                                            </xsl:choose>
+                                                        </xsl:otherwise>
+                                                    </xsl:choose>
+                                                </xsl:for-each>
+                                            </select>
+                                        </xsl:if>
+                                    </td>
+                                </tr>
+                                <script type="text/javascript">
+                                    schedule.params.<xsl:value-of select="name"/> = $('select#<xsl:value-of select="name"/>').val();
+                                    $('select#<xsl:value-of select="name"/>').change( function()
+                                    {
+                                        schedule.params.<xsl:value-of select="name"/> = $(this).val();
+                                    });
+                                </script>
+                            </xsl:for-each>
                         </tbody>
                     </table>
                 </div>
@@ -126,11 +137,22 @@
                 <option value="0">All</option>
             </select>
             <label for="cboNObjects">Entries</label>
+            <script type="text/javascript">
+                schedule.params.n_objects = $('select#cboNObjects').val();
+                $('select#cboNObjects').change( function()
+                {
+                    schedule.params.n_objects = $(this).val();
+                });
+            </script>
         </p>
     </div>
     <script type="text/javascript">
         var composite_id = '<xsl:value-of select="composite_id"/>';
 		$(window).load(function() {
+            
+            schedule.params.n_objects = $('#cboNObjects').val();
+            schedule.params.search = $('#txtSearchSchedule').val();
+        
             schedule.setupWeekPicker('cal_container');
 
             var img_src = '<xsl:value-of select="picker_img"/>';

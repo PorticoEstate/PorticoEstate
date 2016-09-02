@@ -7,7 +7,7 @@
 var schedule = new Array();
 
 schedule.renderSchedule = function (container, url, date, colFormatter, includeResource, classTable)
-{
+{   
     classTable = (classTable) ? classTable : "pure-table";
     while (date.getDay() != 1)
 	{
@@ -50,7 +50,8 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	}
     
     var colDefs = [
-//        {key: '', label: ''}
+        {key: 'id', label: 'Composite ID', type: 'th'},
+        {key: 'old_contract_id', label: 'Contract'}
     ]
 
     var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -71,7 +72,10 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
     
     var r = [{n: 'ResultSet'}, {n: 'Result'}];
     
-    createTableSchedule(container, url, colDefs, r, classTable, datestr)
+    var params = (schedule.params) ? schedule.params : new Array();
+    var pagination = true;
+    
+    createTableSchedule(container, url, colDefs, r, classTable, datestr, params, pagination)
     
 }
 
@@ -162,14 +166,15 @@ $(window).load(function() {
     }
 
     $('select.searchSchedule').on('change', function() {
-        searchSchedule();
+        schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
     });    
     $('input.searchSchedule').on('keyup', function() {
         var $this = $(this);
         if ($this.data('text') != $this.val()) {
             setTimeout(function(){
                 $this.data('text', $this.val());
-                searchSchedule();
+                schedule.params.search = $this.val();
+                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             }, 500);
         }
     });    

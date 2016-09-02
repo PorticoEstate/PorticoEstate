@@ -1112,6 +1112,10 @@ JS;
 			if ($date->format('w') != 1) {
 				$date->modify('last monday');
 			}
+            
+            $filters = $this->_get_filters();
+            
+            $schedule['filters'] = $filters;
 
 			$schedule['datasource_url'] = self::link(array(
 				'menuaction' => 'rental.uicomposite.get_schedule',
@@ -1136,17 +1140,20 @@ JS;
 			$filters = array();
 			$options = array();
 
-//			if (phpgw::get_var('composite_id'))
-//				$filters['composite_id'] = phpgw::get_var('composite_id');
-//
-//			if (phpgw::get_var('contract_status'))
-//				$filters['contract_status'] = phpgw::get_var('contract_status');
-//
-//			if (phpgw::get_var('contract_type'))
-//				$filters['contract_type'] = phpgw::get_var('contract_type');
+			if (phpgw::get_var('furnished_status'))
+				$filters['furnished_status'] = phpgw::get_var('furnished_status');
+
+			if (phpgw::get_var('district_id'))
+				$filters['district_id'] = phpgw::get_var('district_id');
+
+			if (phpgw::get_var('is_active'))
+				$filters['is_active'] = phpgw::get_var('is_active');
+
+            if (phpgw::get_var('has_contract'))
+				$filters['has_contract'] = phpgw::get_var('has_contract');
 
 			$options['start_index'] = 0;
-			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 30;
+			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 15;
 			$options['sort_field'] = '';
 			$options['ascending'] = false;
 			$options['search_for'] = (phpgw::get_var('search')) ? phpgw::get_var('search') : '' ;
