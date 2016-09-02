@@ -306,20 +306,6 @@ HTML;
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 		}
 		
-		private function valid_row_component($row)
-		{
-			if ($row[0] == '' || $row[2] == '')
-			{
-				return false;
-			}
-			
-			if ($row[0] == 'Systemgruppe' && $row[1] == 'TFM nr' && $row[2] == 'Navn')
-			{
-				return false;
-			}
-			
-			return true;
-		}
 		
 		public function import_components()
 		{
@@ -330,8 +316,11 @@ HTML;
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
 			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
 			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
+			
 			$columns = phpgw::get_var('columns');
 			$columns = $columns && is_array($columns) ? $columns : array();
+			$attrib_data_types = phpgw::get_var('attrib_data_types');
+			$attrib_names = phpgw::get_var('attrib_names');
 					
 			$message = array();
 			
@@ -438,17 +427,15 @@ HTML;
 
 				foreach ($attributes as $attribute)
 				{
-					$_options[$attribute['input_text']] = $attribute['input_text'];
+					$_options[$attribute['name']] = $attribute['input_text'];
 				}
 				
 				$data_types = $this->bocommon->select_datatype();
+				$_options_data_type[''] = 'select data type';
 				foreach($data_types as $row) 
 				{
 					$_options_data_type[$row['id']] = $row['name'];
 				}
-				
-
-				phpgw::import_class('phpgwapi.sbox');
 
 				for ($j = 0; $j < $highestColumnIndex; $j++)
 				{
@@ -456,16 +443,50 @@ HTML;
 					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
 					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
 
-					$_listbox = $this->getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\"");
-					$_listTypes = $this->getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, 'disabled');
-					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled></input></td><td>{$_listTypes}</td></tr>";
+					$_listbox = $this->getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\" class='columns'");
+					$_listTypes = $this->getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, "disabled class='data_types'");
+					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names'></input></td><td>{$_listTypes}</td></tr>";
 				}
 				
 				$html_table .= '</table>';
 				
 				return $html_table;
 			}
+			
+			if ($step == 4 && $start_line) 
+			{
+				if (count($attrib_names))
+				{
+					$columns = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $template_id);
+				}
+					
+				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+				$rows = $rows ? $rows + 1 : 0;
+
+				$import_data = array();
+
+				for ($i = $start_line; $i < $rows; $i++)
+				{
+					$_result = array();
+
+					foreach ($columns as $_row_key => $_value_key)
+					{
+						$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
+					}
+					$import_data[] = $_result;
+				}
+				
+				
+				return $import_data;
+			}
 		}
+		
+		private function add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $template_id)
+		{
+			
+			return $columns;
+		}
+		
 		/**
 		 * Prepare UI
 		 * @return void
