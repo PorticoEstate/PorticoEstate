@@ -48,6 +48,36 @@
 			$this->like = & $this->db->like;
 		}
 
+		/**
+		 * Begin transaction
+		 *
+		 * @return integer|bool current transaction id
+		 */
+		public function transaction_begin()
+		{
+			return $this->db->transaction_begin();
+		}
+
+		/**
+		 * Complete the transaction
+		 *
+		 * @return bool True if sucessful, False if fails
+		 */
+		public function transaction_commit()
+		{
+			return $this->db->transaction_commit();
+		}
+
+		/**
+		 * Rollback the current transaction
+		 *
+		 * @return bool True if sucessful, False if fails
+		 */
+		public function transaction_abort()
+		{
+			return $this->db->transaction_abort();
+		}
+
 		public function get_db()
 		{
 			return $this->db;

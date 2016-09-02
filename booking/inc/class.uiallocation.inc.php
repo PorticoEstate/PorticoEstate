@@ -287,7 +287,7 @@
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$season = $this->season_bo->read_single($_POST['season_id']);
+				$season = $this->season_bo->read_single(phpgw::get_var('season_id', 'int'));
 				array_set_default($_POST, 'resources', array());
 				$allocation = extract_values($_POST, $this->fields);
 				if ($_POST['cost'])
@@ -301,6 +301,17 @@
 				$to_date = $_POST['to_'];
 				$from_date_arr = explode(' ', $_POST['from_']);
 				$to_date_arr = explode(' ', $_POST['to_']);
+				if(count($from_date_arr) == 2)
+				{
+					$from_time = $from_date_arr[1];
+					$to_time = $to_date_arr[1];
+				}
+				else
+				{
+					$from_time = $_POST['from_'];
+					$to_time = $_POST['to_'];
+				}
+
 				if(!isset($_POST['weekday']))
 				{
 					$_POST['weekday'] = strtolower (date('l', phpgwapi_datetime::date_to_timestamp($_POST['from_'])));
@@ -310,8 +321,8 @@
 
 //				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
 //				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
-				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $from_date_arr[1]));
-				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $to_date_arr[1]));
+				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $from_time));
+				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $to_time));
 
 				if (($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == '0' && date('w') < date('w', strtotime($_POST['weekday']))))
 				{
@@ -398,14 +409,14 @@
 			}
 			else
 			{
-				$dateTimeFrom = phpgw::get_var('from_', 'string');
-				$dateTimeTo = phpgw::get_var('to_', 'string');
+				$dateTimeFrom = phpgw::get_var('from_', 'string', 'POST');
+				$dateTimeTo = phpgw::get_var('to_', 'string', 'POST');
 				$dateTimeFromE = explode(" ", $dateTimeFrom[0]);
 				$dateTimeToE = explode(" ", $dateTimeTo[0]);
 				if (phpgw::get_var('from_', 'string') < 14)
 				{
-					$timeFrom[] = phpgw::get_var('from_', 'string');
-					$timeTo[] = phpgw::get_var('to_', 'string');
+					$timeFrom[] = phpgw::get_var('from_', 'string', 'POST');
+					$timeTo[] = phpgw::get_var('to_', 'string', 'POST');
 				}
 				else
 				{
