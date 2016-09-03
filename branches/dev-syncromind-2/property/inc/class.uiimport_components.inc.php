@@ -34,6 +34,7 @@
 
 	class property_uiimport_components extends phpgwapi_uicommon_jquery
 	{
+		private $receipt = array();
 		var $type = 'entity';
 		protected $type_app = array
 			(
@@ -457,7 +458,11 @@ HTML;
 			{
 				if (count($attrib_names))
 				{
-					$columns = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $template_id);
+					$receipt = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $template_id);
+					if ($receipt['error'])
+					{
+						print_r($receipt); die;
+					}
 				}
 					
 				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
@@ -476,17 +481,119 @@ HTML;
 					$import_data[] = $_result;
 				}
 				
-				
+				print_r($import_data); die;
 				return $import_data;
 			}
 		}
 		
-		private function add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $template_id)
+		private function add_attribute_to_template(&$columns, $attrib_names, $attrib_data_types, $template_id)
 		{
+			$receipt = array();
 			
-			return $columns;
+			$template = explode('_', $template_id);
+			$entity_id = $template[0];
+			$cat_id = $template[1];
+
+			$appname = $this->type_app[$this->type];
+			$location = ".{$this->type}.{$entity_id}.{$cat_id}";
+			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
+			
+			$attributes = array();
+			
+			foreach ($columns as $_row_key => $_value_key)
+			{
+				$attrib = array();
+				if ($_value_key == 'new_column')
+				{
+					$attrib['entity_id'] = $entity_id;
+					$attrib['cat_id'] = $cat_id;
+					$attrib['appname'] = $appname;
+					$attrib['location'] = $location;
+			
+					$attrib['column_name'] = $attrib_names[$_row_key];
+					$attrib['input_text'] = ucfirst($attrib_names[$_row_key]);
+					$attrib['statustext'] = ucfirst($attrib_names[$_row_key]);
+					$attrib['column_info']['type'] = $attrib_data_types[$_row_key];
+					$attrib['column_info']['precision'] = 255;
+					$attrib['column_info']['nullable'] = 'True';
+					$attrib['search'] = 1;
+					
+					$receipt = $this->valid_attributes($attrib);
+					if ($receipt['error'])
+					{
+						break;
+					}
+					$attrib['_row_key'] = $_row_key;
+					$attributes[] = $attrib;
+				}
+			}
+			
+			foreach($attributes as $attrib)
+			{
+				$id = $this->custom->add($attrib, $attrib_table);	
+				if ($id <= 0)
+				{
+					$receipt['error'][] = array('msg' => lang('Unable to add field'));
+					break;
+				}
+				else if ($id == -1)
+				{
+					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
+					$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+					break;
+				}
+				$columns[$attrib['_row_key']] = $attrib['column_name'];
+			}
+			
+			return $receipt;
 		}
 		
+		private function valid_attributes($values)
+		{
+			$receipt = array();
+			
+			if (!$values['column_name'])
+			{
+				$receipt['error'][] = array('msg' => lang('Column name not entered!'));
+			}
+
+			if (!preg_match('/^[a-z0-9_]+$/i', $values['column_name']))
+			{
+				$receipt['error'][] = array('msg' => lang('Column name %1 contains illegal character', $values['column_name']));
+			}
+
+			if (!$values['input_text'])
+			{
+				$receipt['error'][] = array('msg' => lang('Input text not entered!'));
+			}
+			
+			if (!$values['statustext'])
+			{
+				$receipt['error'][] = array('msg' => lang('Statustext not entered!'));
+			}
+
+			if (!$values['entity_id'])
+			{
+				$receipt['error'][] = array('msg' => lang('entity type not chosen!'));
+			}
+
+			if (!$values['column_info']['type'])
+			{
+				$receipt['error'][] = array('msg' => lang('Datatype type not chosen!'));
+			}
+
+			if (!ctype_digit($values['column_info']['precision']) && $values['column_info']['precision'])
+			{
+				$receipt['error'][] = array('msg' => lang('Please enter precision as integer !'));
+			}
+
+			if (!$values['column_info']['nullable'])
+			{
+				$receipt['error'][] = array('msg' => lang('Nullable not chosen!'));
+			}			
+			
+			return $receipt;
+		}
 		/**
 		 * Prepare UI
 		 * @return void
