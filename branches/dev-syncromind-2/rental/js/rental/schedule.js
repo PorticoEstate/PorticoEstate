@@ -7,7 +7,7 @@
 var schedule = new Array();
 
 schedule.renderSchedule = function (container, url, date, colFormatter, includeResource, classTable)
-{   
+{
     classTable = (classTable) ? classTable : "pure-table";
     while (date.getDay() != 1)
 	{
@@ -50,8 +50,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	}
     
     var colDefs = [
-        {key: 'id', label: 'Composite ID', type: 'th'},
-        {key: 'old_contract_id', label: 'Contract'}
+        {key: 'id', label: 'Composite ID', type: 'th'}
     ]
 
     var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -140,6 +139,208 @@ schedule.nextWeek = function ()
 	schedule.moveWeek(7)
 }
 
+// p -> pages
+// a -> page actual
+
+schedule.create_paginator = function (p, a)
+{
+    var max = 7;
+    var m = 4;
+//    var n_buttons = (p > max) ? max : p;
+    var ini = 1;
+    var end = p;
+
+    var buttons = new Array();
+    var n_button = "";
+    var old_button = "";
+
+    for (i = ini; i <= end; i++)
+    {
+        if (i == ini)
+        {
+            n_button = i;
+        }
+        else if ( (a - ini < m ) && (i <= ini + m) )
+        {
+            n_button = i;
+        }
+        else if ( (i >= a - 1) && (i <= a + 1) )
+        {
+            n_button = i;
+        }
+        else if ( (end - a < m ) && (i >= end - m) )
+        {
+            n_button = i;
+        }
+        else if (i == end)
+        {
+            n_button = i;
+        }
+        else
+        {
+            n_button = "...";
+        }
+        if (n_button != old_button)
+        {
+            buttons.push(n_button);
+            old_button = n_button;
+        }
+    }
+
+    var container = document.createElement('div');
+    container.classList.add('schedule_paginate');
+    container.id = "schedule-container_paginate";
+    
+    var paginatorPrevButton = document.createElement('a');
+    var paginatorNextButton = document.createElement('a');
+    
+    paginatorPrevButton.classList.add('paginate_button', 'previous');
+    paginatorNextButton.classList.add('paginate_button', 'next');
+    
+    paginatorPrevButton.innerHTML = "Prev";
+    paginatorNextButton.innerHTML = "Next";
+
+    if (a > 1)
+    {
+        paginatorPrevButton.dataset.page = (a - 1);
+    }
+    else
+    {
+        paginatorPrevButton.classList.add('disabled');
+    }
+    if (a < p)
+    {
+        paginatorNextButton.dataset.page = (a + 1);
+    }
+    else
+    {
+        paginatorNextButton.classList.add('disabled');
+    }
+
+    container.appendChild(paginatorPrevButton);
+    var button_class = "paginate_button";
+    $.each(buttons, function (i, v)
+    {
+        button_class = "paginate_button"
+        var button = document.createElement('span');
+        if (v == "...")
+        {
+            button_class = 'ellipsis';
+        }
+        button.classList.add(button_class);
+        button.dataset.page = v;
+        if (v == a)
+        {
+            button.classList.add('current');
+        }
+        button.innerHTML = v;
+        container.appendChild(button);
+    });
+    container.appendChild(paginatorNextButton);
+
+    return container;
+}
+    
+
+
+
+
+
+//schedule.create_paginator = function (p, a)
+//{
+//    var max = 7;
+//    var m = 4;
+//    
+//    var n_buttons = (p > max) ? max : p;
+//    
+//    var ini = 1;
+//    var end = p;
+//    
+//    var buttons = new Array();
+
+//    for (i = ini; i <= n_buttons; i++)
+//    {
+//        if (i == ini)
+//        {
+//            buttons.push(ini);
+//        }
+//        
+//        else if ( (a - ini < m) && (i > ini) && (i < a + 1) && ( (i != a + 1) && (i != a) && (i != a - 1) )  )
+//        {
+//            buttons.push(i);
+//        }
+//        
+//        else if ()
+//        {
+//            
+//        }
+//        
+//        else if (i == n_buttons)
+//        {
+//            buttons.push(end);
+//        }
+//        else
+//        {
+//            buttons.push('...');
+//        }
+//    }
+    
+    
+    
+//    for (i = ini; i <= end; i++)
+//    {
+//        if (i == ini)
+//        {
+//          console.log(1);
+//            button = i;
+//        }
+//      
+//      
+//        else if ( (a - ini < m ) && (i <= ini + m) )
+//        {
+//          console.log(2);
+//           button = i;
+//        }
+//      
+//      
+//        else if ( (i >= a - 1) && (i <= a + 1) )
+//        {
+//          console.log(3);
+//           button = i;
+//        }
+//      
+//        else if ( (end - a < m ) && (i >= end - m) )
+//        {
+//          console.log(4);
+//           button = i;
+//        }
+//      
+//      
+//      
+//      
+//      
+//      
+//      
+//      
+//        else if (i == end)
+//        {
+//          console.log(5);
+//            button = i;
+//        }
+//        else
+//        {
+//            button = "...";
+//        }
+//
+//        buttons.push(button);
+//    }
+//    
+//    console.log(buttons);
+
+    // Si entre el inicio y la pagina activa hay una diferencia de tres o menos, se muestran todos esos
+    // Si entre la pagina activa y el fin hay una diferencia de tres o menos, se muestran todos esos
+//}
+
 $(window).load(function() {
     function searchSchedule () {
         var location_id = $('#location_id').val();
@@ -177,7 +378,19 @@ $(window).load(function() {
                 schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
             }, 500);
         }
-    });    
+    });
+
+    $('#schedule_container').on('click', '.paginate_button', function()
+    {
+        if ($(this).data('page'))
+        {
+            var page = $(this).data('page');
+            var l = $('#cboNObjects').val();
+            var start = l * (page - 1);
+            schedule.params.start = start;
+            schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+        }
+    })
 })
 
 

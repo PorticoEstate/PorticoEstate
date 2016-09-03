@@ -602,7 +602,7 @@
                     foreach ($contracts as $contract)
                     {
                         $contract = $contract->serialize();
-                        
+
                         if ($composites[$n-1]['id'] != $composite['id'])
                         {
                             $composites[$n]['id'] = $composite['id'];
@@ -626,7 +626,7 @@
                                 $composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
                             }
                         }
-                        $n++;
+//                        $n++;
                     }
                 }
                 else
@@ -637,10 +637,11 @@
                     {
                         $composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
                     }
-                    $n++;
+//                    $n++;
                 }
+                $n++;
             }
-            
+
 //			if (!(count($composites) > 0))
 //			{
 //				$composites[] = '';

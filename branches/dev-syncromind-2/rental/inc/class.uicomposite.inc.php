@@ -1152,8 +1152,8 @@ JS;
             if (phpgw::get_var('has_contract'))
 				$filters['has_contract'] = phpgw::get_var('has_contract');
 
-			$options['start_index'] = 0;
-			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 15;
+			$options['start'] = (phpgw::get_var('start')) ? phpgw::get_var('start') : 0;
+			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 0;
 			$options['sort_field'] = '';
 			$options['ascending'] = false;
 			$options['search_for'] = (phpgw::get_var('search')) ? phpgw::get_var('search') : '' ;

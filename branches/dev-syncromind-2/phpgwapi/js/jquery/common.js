@@ -1425,11 +1425,20 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
 
             var pages = Math.floor(total / n_objects);
             var res = total % n_objects;
-
-            if (res > 0)
-            {
-                pages++;
-            }
+            var page = (start == 0) ? 1 : (start / n_objects) + 1;
+            
+            pages = (res > 0) ? pages++ : pages;
+            
+            var paginator = schedule.create_paginator(pages, page);
+            container.appendChild(paginator);
+            
+            var input_start = document.createElement('input');
+            input_start.setAttribute('type', 'hidden');
+            input_start.setAttribute('name', 'start_index');
+            input_start.setAttribute('id', 'start_index');
+            input_start.value = start;
+            container.appendChild(input_start);
+            
         }
 	});
 }

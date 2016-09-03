@@ -16,9 +16,23 @@
 		#cal_container {margin: 0 20px;}
 		#cal_container #datepicker {width: 2px;opacity: 0;position: absolute;display:none;}
 		#cal_container #numberWeek {width: 20px;display: inline-block;}
+        #schedule_container {display: inline-block;position: relative;}
         #scheduleSearchBox {display: inline-block; vertical-align: middle;}
             #scheduleSearchBox label {margin-right: 5px; margin-left: 20px;}
             #scheduleSearchBox #txtSearchSchedule {}
+        .schedule_paginate#schedule-container_paginate {bottom: -50px;position: absolute;right: 0;}
+        .schedule_paginate#schedule-container_paginate .ellipsis {padding: 0 1em;}
+        .paginate_button {border: 1px solid transparent;border-radius: 2px;box-sizing: border-box;color: #333 !important;cursor: pointer;display: inline-block;margin-left: 2px;min-width: 1.5em;padding: 0.5em 1em;text-align: center;text-decoration: none !important;}
+        .paginate_button:hover {background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #585858 0%, #111 100%) repeat scroll 0 0;border: 1px solid #111;color: white !important;}
+        .paginate_button:active {background: rgba(0, 0, 0, 0) linear-gradient(to bottom, #2b2b2b 0%, #0c0c0c 100%) repeat scroll 0 0;box-shadow: 0 0 3px #111 inset;outline: medium none;}
+        .paginate_button.disabled,
+        .paginate_button.disabled:hover,
+        .paginate_button.disabled:active {background: transparent none repeat scroll 0 0;border: 1px solid transparent;box-shadow: none;color: #666 !important;cursor: default;}
+        .paginate_button.previous {}
+        .paginate_button.next {}
+        .paginate_button.current,
+        .paginate_button.current:hover {background: rgba(0, 0, 0, 0) linear-gradient(to bottom, white 0%, #dcdcdc 100%) repeat scroll 0 0;border: 1px solid #979797;color: #333 !important;}
+        
 	</style>
     <div id="contract_schedule">
         <div id="shceduleFilters">
@@ -145,6 +159,23 @@
                 });
             </script>
         </p>
+
+
+        <!--div class="schedule_paginate" id="schedule-container_paginate">
+            <a class="paginate_button previous disabled" data-dt-idx="0" tabindex="1" id="schedule-container_previous">!prev</a>
+            <span>
+                <a class="paginate_button current" data-dt-idx="1" tabindex="1">1</a>
+                <a class="paginate_button " data-dt-idx="2" tabindex="1">2</a>
+                <a class="paginate_button " data-dt-idx="3" tabindex="1">3</a>
+                <a class="paginate_button " data-dt-idx="4" tabindex="1">4</a>
+                <a class="paginate_button " data-dt-idx="5" tabindex="1">5</a>
+                <span class="ellipsis">…</span>
+                <a class="paginate_button " data-dt-idx="6" tabindex="1">25</a>
+            </span>
+            <a class="paginate_button next" data-dt-idx="7" tabindex="1" id="schedule-container_next">Next</a>
+        </div-->
+
+
     </div>
     <script type="text/javascript">
         var composite_id = '<xsl:value-of select="composite_id"/>';
@@ -152,6 +183,7 @@
             
             schedule.params.n_objects = $('#cboNObjects').val();
             schedule.params.search = $('#txtSearchSchedule').val();
+            schedule.params.start = 0;
         
             schedule.setupWeekPicker('cal_container');
 
