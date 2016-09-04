@@ -8,6 +8,11 @@
 	class rental_price_item extends rental_model
 	{
 
+		const PRICE_TYPE_YEAR = 1;
+		const PRICE_TYPE_MONTH = 2;
+		const PRICE_TYPE_DAY = 3;
+		const PRICE_TYPE_HOUR = 4;
+
 		public static $so;
 		protected $id;
 		protected $title;
@@ -24,7 +29,7 @@
 		protected $price_types = array(
 			1 => 'year',
 			2 => 'month',
-//			3 => 'day',
+			3 => 'day',
 //			4 => 'hour',
 		);
 
