@@ -779,6 +779,34 @@
 
 			if($check_for_control && !$control_registered)
 			{
+
+				/*
+				 * Filter inactive
+				 */
+				if(!isset($cache_attribute_status[$location_id]))
+				{
+					$filters = array("column_name" => "status");
+					$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
+				}
+
+				if(!empty($cache_attribute_status[$location_id]))
+				{
+					foreach ($cache_attribute_status[$location_id] as $attibute_id => $attibute)
+					{
+						if(!empty($attibute['choice']))
+						{
+							foreach ($attibute['choice'] as $choice)
+							{
+								if($choice['id'] < 90)
+								{
+									$_querymethod[]= "xmlexists('//status[text() = ''{$choice['id']}'']' PASSING BY REF xml_representation)";
+									$__querymethod = array(); // remove block
+								}
+							}
+						}
+					}
+				}
+
 				$sql .= "{$this->left_join} {$join_control}";
 
 				$sql_custom_field .= ',count(control_id) AS has_control';
