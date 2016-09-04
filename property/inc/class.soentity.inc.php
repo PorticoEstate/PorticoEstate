@@ -783,6 +783,7 @@
 				/*
 				 * Filter inactive
 				 */
+				static $cache_attribute_status = array();
 				if(!isset($cache_attribute_status[$location_id]))
 				{
 					$filters = array("column_name" => "status");
