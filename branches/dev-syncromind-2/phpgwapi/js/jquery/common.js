@@ -181,10 +181,10 @@ JqueryPortico.formatCheck = function (key, oData)
 };
 
 //JqueryPortico.formatCheckEvent = function(key, oData) {
-//     
-//        var hidden = '';
-//        
-//        return hidden + "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"values[events]["+oData['id']+"_"+oData['schedule_time']+"]\" value=\""+oData['id']+"\"/></center>";
+//	
+//		var hidden = '';
+//		
+//		return hidden + "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"values[events]["+oData['id']+"_"+oData['schedule_time']+"]\" value=\""+oData['id']+"\"/></center>";
 //}
 
 JqueryPortico.formatCheckUis_agremment = function (key, oData)
@@ -1417,29 +1417,30 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
 			});
 		}
 
-        if (p)
-        {
-            var start = a.start;
-            var total = data['ResultSet'].totalResultsAvailable;
-            var n_objects = a.length;
+		if (p)
+		{
+			var start = a.start;
+			var total = data['ResultSet'].totalResultsAvailable;
+			var n_objects = a.length;
+            start = (start > total) ? 0 : start;
 
-            var pages = Math.floor(total / n_objects);
-            var res = total % n_objects;
-            var page = (start == 0) ? 1 : (start / n_objects) + 1;
+			var pages = Math.floor(total / n_objects);
+			var res = total % n_objects;
+			var page = (start == 0) ? 1 : (start / n_objects) + 1;
 
-            pages = (res > 0) ? pages+1 : pages;
-            pages = (pages == 0) ? pages+1 : pages;
+			pages = (res > 0) ? pages+1 : pages;
+			pages = (pages == 0) ? pages+1 : pages;
 
-            var paginator = createPaginatorSchedule(pages, page);
-            container.appendChild(paginator);
-            
-            var input_start = document.createElement('input');
-            input_start.setAttribute('type', 'hidden');
-            input_start.setAttribute('name', 'start_index');
-            input_start.setAttribute('id', 'start_index');
-            input_start.value = start;
-            container.appendChild(input_start);
-        }
+			var paginator = createPaginatorSchedule(pages, page);
+			container.appendChild(paginator);
+			
+			var input_start = document.createElement('input');
+			input_start.setAttribute('type', 'hidden');
+			input_start.setAttribute('name', 'start_index');
+			input_start.setAttribute('id', 'start_index');
+			input_start.value = start;
+			container.appendChild(input_start);
+		}
 	});
 }
 
@@ -1447,101 +1448,101 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
 // a -> current page
 function createPaginatorSchedule (p, a)
 {
-    var max = 7;
-    var m = 4;
+	var max = 7;
+	var m = 4;
 
-    var ini = 1;
-    var end = p;
+	var ini = 1;
+	var end = p;
 
-    var buttons = new Array();
-    var n_button = "";
-    var old_button = "";
+	var buttons = new Array();
+	var n_button = "";
+	var old_button = "";
 
-    for (i = ini; i <= end; i++)
-    {
-        if (i == ini)
-        {
-            n_button = i;
-        }
-        else if ( (a - ini < m ) && (i <= ini + m) )
-        {
-            n_button = i;
-        }
-        else if ( (i >= a - 1) && (i <= a + 1) )
-        {
-            n_button = i;
-        }
-        else if ( (end - a < m ) && (i >= end - m) )
-        {
-            n_button = i;
-        }
-        else if (i == end)
-        {
-            n_button = i;
-        }
-        else
-        {
-            n_button = "...";
-        }
-        if (n_button != old_button)
-        {
-            buttons.push(n_button);
-            old_button = n_button;
-        }
-    }
+	for (i = ini; i <= end; i++)
+	{
+		if (i == ini)
+		{
+			n_button = i;
+		}
+		else if ( (a - ini < m ) && (i <= ini + m) )
+		{
+			n_button = i;
+		}
+		else if ( (i >= a - 1) && (i <= a + 1) )
+		{
+			n_button = i;
+		}
+		else if ( (end - a < m ) && (i >= end - m) )
+		{
+			n_button = i;
+		}
+		else if (i == end)
+		{
+			n_button = i;
+		}
+		else
+		{
+			n_button = "...";
+		}
+		if (n_button != old_button)
+		{
+			buttons.push(n_button);
+			old_button = n_button;
+		}
+	}
 
-    var container = document.createElement('div');
-    container.classList.add('schedule_paginate');
-    container.id = "schedule-container_paginate";
-    
-    var paginatorPrevButton = document.createElement('a');
-    var paginatorNextButton = document.createElement('a');
-    
-    paginatorPrevButton.classList.add('paginate_button', 'previous');
-    paginatorNextButton.classList.add('paginate_button', 'next');
-    
-    paginatorPrevButton.innerHTML = "Prev";
-    paginatorNextButton.innerHTML = "Next";
+	var container = document.createElement('div');
+	container.classList.add('schedule_paginate');
+	container.id = "schedule-container_paginate";
 
-    if (a > 1)
-    {
-        paginatorPrevButton.dataset.page = (a - 1);
-    }
-    else
-    {
-        paginatorPrevButton.classList.add('disabled');
-    }
-    if (a < p)
-    {
-        paginatorNextButton.dataset.page = (a + 1);
-    }
-    else
-    {
-        paginatorNextButton.classList.add('disabled');
-    }
+	var paginatorPrevButton = document.createElement('a');
+	var paginatorNextButton = document.createElement('a');
 
-    container.appendChild(paginatorPrevButton);
-    var button_class = "paginate_button";
-    $.each(buttons, function (i, v)
-    {
-        button_class = "paginate_button"
-        var button = document.createElement('span');
-        if (v == "...")
-        {
-            button_class = 'ellipsis';
-        }
-        button.classList.add(button_class);
-        button.dataset.page = v;
-        if (v == a)
-        {
-            button.classList.add('current');
-        }
-        button.innerHTML = v;
-        container.appendChild(button);
-    });
-    container.appendChild(paginatorNextButton);
+	paginatorPrevButton.classList.add('paginate_button', 'previous');
+	paginatorNextButton.classList.add('paginate_button', 'next');
 
-    return container;
+	paginatorPrevButton.innerHTML = "Prev";
+	paginatorNextButton.innerHTML = "Next";
+
+	if (a > 1)
+	{
+		paginatorPrevButton.dataset.page = (a - 1);
+	}
+	else
+	{
+		paginatorPrevButton.classList.add('disabled');
+	}
+	if (a < p)
+	{
+		paginatorNextButton.dataset.page = (a + 1);
+	}
+	else
+	{
+		paginatorNextButton.classList.add('disabled');
+	}
+
+	container.appendChild(paginatorPrevButton);
+	var button_class = "paginate_button";
+	$.each(buttons, function (i, v)
+	{
+		button_class = "paginate_button"
+		var button = document.createElement('span');
+		if (v == "...")
+		{
+			button_class = 'ellipsis';
+		}
+		button.classList.add(button_class);
+		button.dataset.page = v;
+		if (v == a)
+		{
+			button.classList.add('current');
+		}
+		button.innerHTML = v;
+		container.appendChild(button);
+	});
+	container.appendChild(paginatorNextButton);
+
+	return container;
 }
 
 function setFormatter (callFunc, data, col, date)
@@ -1818,6 +1819,7 @@ function formatScheduleCellDateColumn(name, type)
 	var color = colorMap[name];
 	return color;
 }
+
 function formatBackendScheduleDateColumn(id, name, type, conflicts)
 {
 	var link = "";
@@ -1846,6 +1848,7 @@ function formatBackendScheduleDateColumn(id, name, type, conflicts)
 	}
 	return text;
 }
+
 function formatFrontendScheduleDateColumn()
 {
 }
@@ -1895,8 +1898,6 @@ function _decodeStringUrl(string)
 	return decodeURIComponent(string.replace(/\+/g, ' '));
 }
 
-
-
 function genericLink()
 {
 	var data = [];
@@ -1904,6 +1905,7 @@ function genericLink()
 	data['type'] = 'genericLink';
 	return data;
 }
+
 function genericLink2()
 {
 	var data = [];
@@ -1912,7 +1914,6 @@ function genericLink2()
 	return data;
 }
 
-// nl = numero links
 function formatGenericLink(name, link)
 {
 	if (!name || !link)
@@ -1924,6 +1925,7 @@ function formatGenericLink(name, link)
 		return "<a href='" + link + "'>" + name + "</a>";
 	}
 }
+
 function formatGenericLink2(name, link)
 {
 	if (!name || !link)
@@ -1935,7 +1937,6 @@ function formatGenericLink2(name, link)
 		return "<a onclick='return confirm(\"Er du sikker på at du vil slette denne?\")' href='" + link + "'>" + name + "</a>";
 	}
 }
-
 
 parseISO8601 = function (string)
 {
