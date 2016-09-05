@@ -336,15 +336,17 @@
                 $document->get_name()
             );
             
-            if($result)
-            {
-                $this->so->delete_document($document_id);
-                $GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show', 
-                            												'procedure_id' => $procedure->get_id(), 
-                            												'tab' => 'documents'));
-            } 
-            // TODO: communicate error/message to user
-            return false;
+			if ($result)
+			{
+				$this->so->delete_document($document_id);
+			}
+			else
+			{
+				phpgwapi_cache::message_set('Not deleted', 'error');
+			}
+			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show',
+					'procedure_id' => $procedure->get_id(),
+					'tab' => 'documents'));
         }
 		
         /**
