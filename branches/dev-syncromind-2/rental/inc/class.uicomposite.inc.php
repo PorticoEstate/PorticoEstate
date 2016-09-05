@@ -1106,7 +1106,8 @@ JS;
 			}
 		}
 
-		public function schedule () {
+		public function schedule ()
+        {
 			$composite_id = (int)phpgw::get_var('id');
 			$date = new DateTime(phpgw::get_var('date'));
 			if ($date->format('w') != 1) {
@@ -1119,8 +1120,8 @@ JS;
 
 			$schedule['datasource_url'] = self::link(array(
 				'menuaction' => 'rental.uicomposite.get_schedule',
-				'composite_id' => $composite_id,
-				'phpgw_return_as' => 'json'
+				'phpgw_return_as' => 'json',
+                'type' => 'all_composites'
 			));
 			$schedule['composite_id'] = $composite_id;
 			$schedule['date'] = $date;
@@ -1133,38 +1134,82 @@ JS;
 			self::render_template_xsl(array('schedule'), array('schedule' => $schedule));
 		}
 
-		public function get_schedule () {
+		public function get_schedule ()
+        {
 			$composite_id = (int)phpgw::get_var('id');
 			$date = new DateTime(phpgw::get_var('date'));
 
-			$filters = array();
-			$options = array();
+            if ($date->format('w') != 1)
+			{
+				$date->modify('last monday');
+			}
 
-			if (phpgw::get_var('furnished_status'))
-				$filters['furnished_status'] = phpgw::get_var('furnished_status');
+            $days = array();
+			$date_to_array = clone $date;
+			for ($i = 0; $i < 7; $i++)
+			{
+				$days[] = clone $date_to_array;
+				$date_to_array->modify("+1 day");
+			}
 
-			if (phpgw::get_var('district_id'))
-				$filters['district_id'] = phpgw::get_var('district_id');
+            $composites_obj = $this->query();
+            $composites_data = $composites_obj['data'];
+            
+            $composites = array();
+            $n = 0;
+            
+            foreach ($composites_data as $composite)
+            {
+                $composite_obj = rental_socomposite::get_instance()->get_single($composite['id']);
+                $contracts = $composite_obj->get_contracts();
 
-			if (phpgw::get_var('is_active'))
-				$filters['is_active'] = phpgw::get_var('is_active');
+                if (count($contracts) > 0)
+                {
+                    foreach ($contracts as $contract)
+                    {
+                        $contract = $contract->serialize();
 
-            if (phpgw::get_var('has_contract'))
-				$filters['has_contract'] = phpgw::get_var('has_contract');
+                        if ($composites[$n-1]['id'] != $composite['id'])
+                        {
+                            $composites[$n]['id'] = $composite['id'];
+                        }
+                        
+                        $composites[$n]['name'] = $composite['name'];
 
-			$options['start'] = (phpgw::get_var('start')) ? phpgw::get_var('start') : 0;
-			$options['num_of_objects'] = (phpgw::get_var('n_objects')) ? phpgw::get_var('n_objects') : 0;
-			$options['sort_field'] = '';
-			$options['ascending'] = false;
-			$options['search_for'] = (phpgw::get_var('search')) ? phpgw::get_var('search') : '' ;
-			$options['search_type'] = (phpgw::get_var('search_option')) ? phpgw::get_var('search_option') : 'all';
+                        $contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+                        $contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
 
-			$schedule = rental_socomposite::get_instance()->get_schedule($date, $filters, $options);
+                        foreach ($days as $day)
+                        {
+                            if ($day >= $contract_date_start && ($day <= $contract_date_end || $contract['date_end'] == ''))
+                            {
+                                $composites[$n]['contract_id'] = $contract['id'];
+                                $composites[$n]['old_contract_id'] = $contract['old_contract_id'];
+                                $composites[$n][date_format($day, 'D')]['status'] = 'Ikke ledig';
+                            }
+                            else
+                            {
+                                $composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    $composites[$n]['id'] = $composite['id'];
+                    $composites[$n]['name'] = $composite['name'];
+                    foreach ($days as $day)
+                    {
+                        $composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
+                    }
+                }
+                $n++;
+            }
 
 			$data = array(
 				'ResultSet' => array(
-					"totalResultsAvailable" => $schedule['total_records'],
-					"Result" => $schedule['results']
+					"totalResultsAvailable" => $composites_obj['recordsTotal'],
+					"Result" => $composites
 				)
 			);
 

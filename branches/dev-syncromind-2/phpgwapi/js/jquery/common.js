@@ -1426,10 +1426,11 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
             var pages = Math.floor(total / n_objects);
             var res = total % n_objects;
             var page = (start == 0) ? 1 : (start / n_objects) + 1;
-            
-            pages = (res > 0) ? pages++ : pages;
-            
-            var paginator = schedule.create_paginator(pages, page);
+
+            pages = (res > 0) ? pages+1 : pages;
+            pages = (pages == 0) ? pages+1 : pages;
+
+            var paginator = createPaginatorSchedule(pages, page);
             container.appendChild(paginator);
             
             var input_start = document.createElement('input');
@@ -1438,9 +1439,109 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
             input_start.setAttribute('id', 'start_index');
             input_start.value = start;
             container.appendChild(input_start);
-            
         }
 	});
+}
+
+// p -> n pages
+// a -> current page
+function createPaginatorSchedule (p, a)
+{
+    var max = 7;
+    var m = 4;
+
+    var ini = 1;
+    var end = p;
+
+    var buttons = new Array();
+    var n_button = "";
+    var old_button = "";
+
+    for (i = ini; i <= end; i++)
+    {
+        if (i == ini)
+        {
+            n_button = i;
+        }
+        else if ( (a - ini < m ) && (i <= ini + m) )
+        {
+            n_button = i;
+        }
+        else if ( (i >= a - 1) && (i <= a + 1) )
+        {
+            n_button = i;
+        }
+        else if ( (end - a < m ) && (i >= end - m) )
+        {
+            n_button = i;
+        }
+        else if (i == end)
+        {
+            n_button = i;
+        }
+        else
+        {
+            n_button = "...";
+        }
+        if (n_button != old_button)
+        {
+            buttons.push(n_button);
+            old_button = n_button;
+        }
+    }
+
+    var container = document.createElement('div');
+    container.classList.add('schedule_paginate');
+    container.id = "schedule-container_paginate";
+    
+    var paginatorPrevButton = document.createElement('a');
+    var paginatorNextButton = document.createElement('a');
+    
+    paginatorPrevButton.classList.add('paginate_button', 'previous');
+    paginatorNextButton.classList.add('paginate_button', 'next');
+    
+    paginatorPrevButton.innerHTML = "Prev";
+    paginatorNextButton.innerHTML = "Next";
+
+    if (a > 1)
+    {
+        paginatorPrevButton.dataset.page = (a - 1);
+    }
+    else
+    {
+        paginatorPrevButton.classList.add('disabled');
+    }
+    if (a < p)
+    {
+        paginatorNextButton.dataset.page = (a + 1);
+    }
+    else
+    {
+        paginatorNextButton.classList.add('disabled');
+    }
+
+    container.appendChild(paginatorPrevButton);
+    var button_class = "paginate_button";
+    $.each(buttons, function (i, v)
+    {
+        button_class = "paginate_button"
+        var button = document.createElement('span');
+        if (v == "...")
+        {
+            button_class = 'ellipsis';
+        }
+        button.classList.add(button_class);
+        button.dataset.page = v;
+        if (v == a)
+        {
+            button.classList.add('current');
+        }
+        button.innerHTML = v;
+        container.appendChild(button);
+    });
+    container.appendChild(paginatorNextButton);
+
+    return container;
 }
 
 function setFormatter (callFunc, data, col, date)
