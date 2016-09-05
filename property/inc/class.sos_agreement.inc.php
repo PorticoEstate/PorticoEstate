@@ -387,6 +387,8 @@
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
+				$_querymethod[] = "fm_vendor.org_name {$this->like} '%{$query}%'";
+				$__querymethod = array(); // remove block
 
 				if ($p_num)
 				{
