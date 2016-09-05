@@ -1438,7 +1438,7 @@ HTML;
 
 				if ($_address)
 				{
-					$subject .= ', ' . implode(', ', $_address);
+					$_address_txt = $_address ? implode(', ', $_address) : '';
 				}
 				unset($_address);
 				unset($address_element);
@@ -1485,7 +1485,7 @@ HTML;
 								'type' => 'application/pdf'
 							);
 						}
-						$body = lang('order') . '.</br></br>' . lang('see attachment');
+						$body = lang('order') . " {$workorder_id}.</br></br>{$_address_txt}</br></br>" . lang('see attachment');
 					}
 					else
 					{
@@ -3307,7 +3307,6 @@ HTML;
 				'type' => 'application/pdf'
 			);
 
-			$body = lang('order') . '.</br></br>' . lang('see attachment');
 			$_to = isset($workorder['mail_recipients'][0]) && $workorder['mail_recipients'][0] ? implode(';', $workorder['mail_recipients']) : '';
 //			_debug_array($_to);die();
 			$GLOBALS['phpgw']->preferences->set_account_id($workorder['user_id'], true);
@@ -3330,8 +3329,10 @@ HTML;
 
 			if ($_address)
 			{
-				$subject .= ', ' . implode(', ', $_address);
+				$_address_txt = $_address ? implode(', ', $_address) : '';
 			}
+
+			$body = lang('order') . " {$workorder_id}.</br></br>{$_address_txt}</br></br>" . lang('see attachment');
 
 			if (!is_object($GLOBALS['phpgw']->send))
 			{
