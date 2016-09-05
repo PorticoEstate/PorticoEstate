@@ -27,6 +27,7 @@
 	 */
 
 	phpgw::import_class('phpgwapi.jquery');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
 	/**
 	* phpGroupWare Administration - Accounts User Interface
@@ -39,7 +40,7 @@
 	* @subpackage admin
 	* @category accounts
 	*/
-	class admin_uiaccounts
+	class admin_uiaccounts extends phpgwapi_uicommon_jquery
 	{
 		/**
 		 * @var array $public_functions Publicly available methods
@@ -57,7 +58,11 @@
 			'clear_user_cache'			=> true,
 			'clear_cache'				=> true,
 			'global_message'			=> true,
-                        'home_screen_message'                   => true
+			'home_screen_message'		=> true,
+			'query'						=> true,
+			'remove_group_user'			=> true,
+			'reset_group_users'			=> true,
+			'add_group_users'			=> true,
 		);
 
 		/**
@@ -82,6 +87,8 @@
 		 */
 		public function __construct()
 		{
+			parent::__construct();
+
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'admin::admin';
 
@@ -93,6 +100,152 @@
 				&& $GLOBALS['phpgw_info']['server']['ldap_extra_attributes'];
 		}
 
+		function query( )
+		{
+			$account_id		= phpgw::get_var('group_id', 'int');
+
+			if ( !$account_id
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT, 'admin')
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::PRIV, 'admin') )
+			{
+				return;
+			}
+
+			$type = phpgw::get_var('type');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$dir = $order[0]['dir'];
+			$columns = phpgw::get_var('columns');
+			$results = phpgw::get_var('length', 'int', 'REQUEST', 0);
+			$allrows = phpgw::get_var('length', 'int') == -1;
+			$query = $search['value'];
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+
+
+			switch ($columns[$order[0]['column']]['data'])
+			{
+				case 'id':
+					$order = 'account_id';
+					break;
+				case 'name':
+					$order = 'account_lastname';
+					break;
+				default:
+					$order = 'account_lastname';
+					break;
+			}
+
+			$accounts =& $GLOBALS['phpgw']->accounts;
+
+			$group_members = $accounts->member($account_id);
+
+			//local application admin
+			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+				$available_apps = $GLOBALS['phpgw_info']['apps'];
+				$valid_users = array();
+				foreach($available_apps as $_app => $dummy)
+				{
+					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
+					{
+						$_valid_users	= $GLOBALS['phpgw']->acl->get_user_list_right(phpgwapi_acl::READ, 'run', $_app);
+
+						foreach($_valid_users as $_user)
+						{
+							$valid_users[] = $_user['account_id'];
+						}
+						unset($_user);
+						unset($_valid_users);
+					}
+				}
+
+				$valid_users = array_unique($valid_users);
+
+				$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$dir, $order,  $query);
+				foreach($account_list as  $user)
+				{
+					if(!in_array($user->id, $valid_users))
+					{
+						unset($account_list[$user->id]);
+					}
+				}
+				unset($user);
+			}
+			else
+			{
+				$account_list = $accounts->get_list('accounts', -1, $dir, $order, $query);
+			}
+
+			$members = array();
+			$user_list = array();
+			foreach ( $account_list as $id => $user )
+			{
+				if(isset($group_members[$id]))
+				{
+					$member_list[] = array
+					(
+						'id'	=> $id,
+						'lid'	=> $user->lid,
+						'name'	=> $user->__toString()
+					);
+				}
+				else
+				{
+					$user_list[] = array
+					(
+						'id'	=> $id,
+						'lid'	=> $user->lid,
+						'name'	=> $user->__toString()
+					);
+				}
+			}
+
+			switch ($type)
+			{
+				case 'included_users':
+					$values = $member_list;
+					break;
+				case 'not_included_users':
+					$values = $user_list;
+					break;
+				default :
+				$values = array();
+			}
+
+			$total_records = count($values);
+			if (!$allrows)
+			{
+				if ($results)
+				{
+					$num_rows = $results;
+				}
+				else
+				{
+					$num_rows = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? intval($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) : 15;
+				}
+				//_debug_array(array($start,$this->total_records,$this->total_records,$num_rows));
+				$page = ceil(( $start / $total_records ) * ($total_records / $num_rows));
+
+				$out = array_chunk($values, $num_rows);
+
+				$result_data = array('results' => $out[$page]);
+			}
+			else
+			{
+				$result_data = array('results' => $values);
+			}
+
+			$link_data = array(
+				'menuaction' => 'admin.uiaccounts.edit_user',
+			);
+
+			$result_data['total_records'] = $total_records;
+			$result_data['draw'] = phpgw::get_var('draw', 'int');
+
+			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
+			return $this->jquery_results($result_data);
+
+		}
 		/**
 		 * Render a list of groups
 		 *
@@ -574,14 +727,6 @@
 			{
 				$values			= phpgw::get_var('values', 'string', 'POST', array());
 				$account_apps	= phpgw::get_var('account_apps', 'string', 'POST');
-				$account_user	= phpgw::get_var('account_user', 'int', 'POST');
-
-				$values['account_user'] = array();
-				if (is_array($account_user))
-				{
-					
-					$values['account_user'] = $account_user;
-				}
 
 				$values['account_apps'] = array();
 				if ( is_array($account_apps) && count($account_apps) )
@@ -625,7 +770,7 @@
 
 			$group_members = $accounts->member($account_id);
 
-			//local application admin
+/*			//local application admin
 			if(!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$available_apps = $GLOBALS['phpgw_info']['apps'];
@@ -683,7 +828,7 @@
 					);				
 				}
 			}
-
+*/
 			//FIXME this needs to be provided by the app itself - thats why we have hooks
 			$apps_with_acl = array
 			(
@@ -783,7 +928,7 @@
 
 			// this is in the api, so lets not waste loops looking for it the app tpl dirs
 			$GLOBALS['phpgw']->xslttpl->add_file('msgbox', PHPGW_TEMPLATE_DIR, 3);
-			$GLOBALS['phpgw']->xslttpl->add_file('groups');
+//			$GLOBALS['phpgw']->xslttpl->add_file('groups');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] =  lang('edit group');
 			if ( $account_id )
@@ -793,6 +938,7 @@
 
 			$data = array
 			(
+				'datatable_def'		=> $this->_get_tableDef_user('edit', $account_id),
 				'page_title'		=> $account_id ? lang('edit group') : lang('add group'),
 				'account_id'		=> $account_id,
 				'app_list'			=> $app_list,
@@ -801,8 +947,8 @@
 											'menuaction' => 'admin.uiaccounts.edit_group',
 											'account_id' => $account_id
 										)),
-				'guser_list'		=> $user_list,
-				'member_list'		=> $member_list,
+//				'guser_list'		=> $user_list,
+//				'member_list'		=> $member_list,
 				'img_close'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_close', '.png', false),
 				'img_save'			=> $GLOBALS['phpgw']->common->image('phpgwapi', 'stock_save', '.png', false),
 				'lang_cancel'		=> lang('cancel'),
@@ -814,7 +960,195 @@
 				'tabs'				=> phpgwapi_jquery::tabview_generate($tabs, 'data','group_edit_tabview')
 			);
 
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('group_edit' => $data));
+			self::render_template_xsl(array('groups', 'datatable_inline'), array('group_edit' => $data));
+		}
+
+		function remove_group_user(  )
+		{
+			$group_id		= phpgw::get_var('group_id', 'int');
+			$account_user	= (array)phpgw::get_var('account_user', 'int');
+
+			if ( !$group_id
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT, 'admin')
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::PRIV, 'admin') )
+			{
+				return array('error' => 'error');
+			}
+
+			if($group_id && isset($_POST['account_user']))
+			{
+				foreach ($account_user as $user_id)
+				{
+					$GLOBALS['phpgw']->accounts->delete_account4group($user_id, $group_id);
+					//Delete cached menu for members of group
+					phpgwapi_cache::user_clear('phpgwapi', 'menu', $user_id);
+				}
+				return array('message' => 'OK');
+			}
+		}
+
+		function reset_group_users(  )
+		{
+			$group_id		= phpgw::get_var('group_id', 'int');
+			$account_user	= array();
+
+			if ( !$group_id
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT, 'admin')
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::PRIV, 'admin') )
+			{
+				return array('error' => 'error');
+			}
+
+			if($group_id && isset($_POST))
+			{
+				$members = $GLOBALS['phpgw']->accounts->member($group_id);
+				foreach($members as $entry)
+				{
+					$GLOBALS['phpgw']->accounts->delete_account4group($entry['account_id'], $group_id);
+					//Delete cached menu for members of group
+					phpgwapi_cache::user_clear('phpgwapi', 'menu', $entry['account_id']);
+				}
+				return array('message' => 'OK');
+			}
+		}
+
+		function add_group_users(  )
+		{
+			$group_id		= phpgw::get_var('group_id', 'int');
+			$account_user	= (array)phpgw::get_var('account_user', 'int');
+
+			if ( !$group_id
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT, 'admin')
+				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::PRIV, 'admin') )
+			{
+				return array('error' => 'error');
+			}
+
+			if($group_id && isset($_POST['account_user']))
+			{
+				foreach ($account_user as $user_id)
+				{
+					$GLOBALS['phpgw']->accounts->add_user2group($user_id, $group_id);
+					//Delete cached menu for members of group
+					phpgwapi_cache::user_clear('phpgwapi', 'menu', $user_id);
+				}
+				return array('message' => 'OK');
+			}
+		}
+
+		private function _get_tableDef_user( $mode, $group_id )
+		{
+			$columns_def = array(
+				array('key' => 'id', 'label' => 'ID', 'className' => '','sortable' => true, 'hidden' => false,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'lid', 'label' => lang('loginid'), 'className' => '', 'sortable' => true,'hidden' => false),
+				array('key' => 'name', 'label' => lang('name'), 'className' => '', 'sortable' => true,'hidden' => false),
+			);
+
+
+			if ($mode == 'edit')
+			{
+				$tabletools_user1 = array(
+					array('my_name' => 'select_all'),
+					array('my_name' => 'select_none')
+				);
+				$tabletools_user1[] = array
+					(
+					'my_name' => 'remove',
+					'text' => lang('remove'),
+					'type' => 'custom',
+					'custom_code' => "
+						var oArgs = " . json_encode(array(
+						'menuaction' => 'admin.uiaccounts.remove_group_user',
+						'group_id' => $group_id,
+						'phpgw_return_as' => 'json'
+					)) . ";
+						var parameters = " . json_encode(array('parameter' => array(array('name' => 'account_user',
+								'source' => 'id')))) . ";
+						removeUser(oArgs, parameters);
+					"
+				);
+
+				$tabletools_user1[] = array
+					(
+					'my_name' => 'reset',
+					'text' => lang('reset'),
+					'type' => 'custom',
+					'custom_code' => "
+						var oArgs = " . json_encode(array(
+						'menuaction' => 'admin.uiaccounts.reset_group_users',
+						'group_id' => $group_id,
+						'phpgw_return_as' => 'json'
+					)) . ";
+						var parameters = " . json_encode(array('parameter' => array(array('name' => 'account_user',
+								'source' => 'id')))) . ";
+						removeUser(oArgs, parameters);
+					"
+				);
+
+				$datatable_def[] = array
+					(
+					'container' => 'datatable-container_1',
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'admin.uiaccounts.query',
+						'type' => 'included_users', 'group_id' => $group_id,
+						'phpgw_return_as' => 'json'))),
+					'data' => json_encode(array()),
+					'ColumnDefs' => $columns_def,
+					'tabletools' => $tabletools_user1,
+					'config' => array(
+			//			array('disableFilter' => true),
+					)
+				);
+
+				$tabletools_user2 = array(
+					array('my_name' => 'select_all'),
+					array('my_name' => 'select_none')
+				);
+				$tabletools_user2[] = array
+					(
+					'my_name' => 'add',
+					'text' => lang('add'),
+					'type' => 'custom',
+					'custom_code' => "
+						var oArgs = " . json_encode(array(
+						'menuaction' => 'admin.uiaccounts.add_group_users',
+						'group_id' => $group_id,
+						'phpgw_return_as' => 'json'
+					)) . ";
+						var parameters = " . json_encode(array('parameter' => array(array('name' => 'account_user',
+								'source' => 'id')))) . ";
+						addUser(oArgs, parameters);
+					"
+				);
+
+				$datatable_def[] = array
+					(
+					'container' => 'datatable-container_2',
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'admin.uiaccounts.query',
+						'type' => 'not_included_users', 'group_id' => $group_id,
+						'phpgw_return_as' => 'json'))),
+					'data' => json_encode(array()),
+					'ColumnDefs' => $columns_def,
+					'tabletools' => $tabletools_user2,
+					'config' => array(
+			//			array('disableFilter' => true)
+					)
+				);
+			}
+			else
+			{
+				$datatable_def[] = array
+					(
+					'container' => 'datatable-container_1',
+					'requestUrl' => "''",
+					'data' => json_encode(array()),
+					'ColumnDefs' => $columns_def,
+					'config' => array(
+			//			array('disableFilter' => true)
+					)
+				);
+			}
+
+			return $datatable_def;
 		}
 
 		/**
@@ -840,6 +1174,8 @@
 			}
 
 			$account_id = phpgw::get_var('account_id', 'int');
+			$id = phpgw::get_var('id', 'int');
+			$account_id = $account_id ? $account_id : $id;
 			if ( $account_id )
 			{
 				$user = $GLOBALS['phpgw']->accounts->get($account_id);

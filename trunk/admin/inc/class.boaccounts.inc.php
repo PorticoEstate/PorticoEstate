@@ -186,13 +186,12 @@
 			if ( !$id ) // add new group?
 			{
 				$new_group->id = $id;
-				$id = $GLOBALS['phpgw']->accounts->create($new_group, $values['account_user'],
+				$id = $GLOBALS['phpgw']->accounts->create($new_group, array(),
 														array(), array_keys($values['account_apps']));
 			}
 			else //edit group
 			{
-				$GLOBALS['phpgw']->accounts->update_group($new_group, $values['account_user'],
-														$values['account_apps']);
+				$GLOBALS['phpgw']->accounts->update_group($new_group, $values['account_apps']);
 			}
 
 			//Delete cached menu for members of group

@@ -649,34 +649,15 @@
 		 * Update the data for a group
 		 *
 		 * @param object $group   the phpgwapi_account_group object to use for the update
-		 * @param array  $users   the list of users who belong in the group
 		 * @param array  $modules the list of modules the group shall have access to
 		 *
 		 * @return integer the group id
 		 */
-		public function update_group($group, $users, $modules = null)
+		public function update_group($group, $modules = null)
 		{
 			$this->account = $group;
 			$this->account_id = $group->id;
 			$this->save_repository();
-
-			// handle group memberships
-			$old_users = array_keys($this->member($group->id));
-			$new_users = $users;
-			$drop_users = array_diff($old_users, $new_users);
-			if ( is_array($drop_users) && count($drop_users) )
-			{
-				foreach ( $drop_users as $user )
-				{
-					$this->delete_account4group($user, $group->id);
-				}
-			}
-			unset($old_users, $users, $drop_users);
-
-			foreach ( $new_users as $user )
-			{
-				$this->add_user2group($user, $group->id);
-			}
 
 			// module permissions
 			if ( is_array($modules) )
