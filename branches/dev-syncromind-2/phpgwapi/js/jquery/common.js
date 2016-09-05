@@ -1421,7 +1421,7 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
         {
             var start = a.start;
             var total = data['ResultSet'].totalResultsAvailable;
-            var n_objects = a.n_objects;
+            var n_objects = a.length;
 
             var pages = Math.floor(total / n_objects);
             var res = total % n_objects;

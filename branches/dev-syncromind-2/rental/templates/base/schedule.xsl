@@ -155,7 +155,7 @@
                 schedule.params.n_objects = $('select#cboNObjects').val();
                 $('select#cboNObjects').change( function()
                 {
-                    schedule.params.n_objects = $(this).val();
+                    schedule.params.length = $(this).val();
                 });
             </script>
         </p>
@@ -181,7 +181,7 @@
         var composite_id = '<xsl:value-of select="composite_id"/>';
 		$(window).load(function() {
             
-            schedule.params.n_objects = $('#cboNObjects').val();
+            schedule.params.length = $('#cboNObjects').val();
             schedule.params.search = $('#txtSearchSchedule').val();
             schedule.params.start = 0;
         
