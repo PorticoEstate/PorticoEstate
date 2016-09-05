@@ -720,7 +720,7 @@
 									<xsl:value-of select="php:function('lang', 'interval')" />
 								</td>
 								<td>
-								<input type="text" name="repeat_interval" id="repeat_interval" value="1" size="2">
+								<input type="text" name="repeat_interval" id="repeat_interval" value="0" size="2">
 								</input>
 								</td>
 								</tr>
