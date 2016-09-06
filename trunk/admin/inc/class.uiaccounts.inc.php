@@ -114,7 +114,7 @@
 			$type = phpgw::get_var('type');
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
-			$dir = $order[0]['dir'];
+			$dir = strtoupper($order[0]['dir']);
 			$columns = phpgw::get_var('columns');
 			$results = phpgw::get_var('length', 'int', 'REQUEST', 0);
 			$allrows = phpgw::get_var('length', 'int') == -1;
@@ -126,6 +126,9 @@
 			{
 				case 'id':
 					$order = 'account_id';
+					break;
+				case 'lid':
+					$order = 'account_lid';
 					break;
 				case 'name':
 					$order = 'account_lastname';
@@ -176,6 +179,8 @@
 				$account_list = $accounts->get_list('accounts', -1, $dir, $order, $query);
 			}
 
+			$lang_disabled	= lang('disabled');
+			$lang_enabled	= lang('enabled');
 			$members = array();
 			$user_list = array();
 			foreach ( $account_list as $id => $user )
@@ -186,7 +191,8 @@
 					(
 						'id'	=> $id,
 						'lid'	=> $user->lid,
-						'name'	=> $user->__toString()
+						'name'	=> $user->__toString(),
+						'status'	=> $user->enabled ? $lang_enabled : $lang_disabled
 					);
 				}
 				else
@@ -195,7 +201,8 @@
 					(
 						'id'	=> $id,
 						'lid'	=> $user->lid,
-						'name'	=> $user->__toString()
+						'name'	=> $user->__toString(),
+						'status'	=> $user->enabled ? $lang_enabled : $lang_disabled
 					);
 				}
 			}
@@ -975,10 +982,19 @@
 				return array('error' => 'error');
 			}
 
+			$acl = createObject('phpgwapi.acl', $group_id);
+			$is_admin_group = $acl->check('run', phpgwapi_acl::READ, 'admin');
+			$current_user = $GLOBALS['phpgw_info']['user']['account_id'];
+
 			if($group_id && isset($_POST['account_user']))
 			{
 				foreach ($account_user as $user_id)
 				{
+					//Don't lock your self out
+					if($is_admin_group && ($current_user == $user_id))
+					{
+						continue;
+					}
 					$GLOBALS['phpgw']->accounts->delete_account4group($user_id, $group_id);
 					//Delete cached menu for members of group
 					phpgwapi_cache::user_clear('phpgwapi', 'menu', $user_id);
@@ -999,11 +1015,20 @@
 				return array('error' => 'error');
 			}
 
+			$acl = createObject('phpgwapi.acl', $group_id);
+			$is_admin_group = $acl->check('run', phpgwapi_acl::READ, 'admin');
+			$current_user = $GLOBALS['phpgw_info']['user']['account_id'];
+
 			if($group_id && isset($_POST))
 			{
 				$members = $GLOBALS['phpgw']->accounts->member($group_id);
 				foreach($members as $entry)
 				{
+					//Don't lock your self out
+					if($is_admin_group && ($current_user == $entry['account_id']))
+					{
+						continue;
+					}
 					$GLOBALS['phpgw']->accounts->delete_account4group($entry['account_id'], $group_id);
 					//Delete cached menu for members of group
 					phpgwapi_cache::user_clear('phpgwapi', 'menu', $entry['account_id']);
@@ -1042,6 +1067,7 @@
 				array('key' => 'id', 'label' => 'ID', 'className' => '','sortable' => true, 'hidden' => false,'formatter' => 'JqueryPortico.formatLink'),
 				array('key' => 'lid', 'label' => lang('loginid'), 'className' => '', 'sortable' => true,'hidden' => false),
 				array('key' => 'name', 'label' => lang('name'), 'className' => '', 'sortable' => true,'hidden' => false),
+				array('key' => 'status', 'label' => 'Status', 'className' => '', 'sortable' => false,'hidden' => false),
 			);
 
 
