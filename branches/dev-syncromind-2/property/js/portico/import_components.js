@@ -68,7 +68,7 @@ $(document).ready(function ()
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
-		if ($('#file_xml').val() === '')
+		if ($('#excel_files').val() === '')
 		{
 			alert('no file selected');
 			return false;
@@ -218,6 +218,7 @@ $(document).ready(function ()
 		data['columns'] = {};
 		data['attrib_names'] = {};
 		data['attrib_data_types'] = {};
+		data['attrib_precision'] = {};
 
 		var columns = $('.columns');
 
@@ -230,6 +231,7 @@ $(document).ready(function ()
 				{
 					data['attrib_names'][code[1]] = $('#name_' + code[1]).val();
 					data['attrib_data_types'][code[1]] = $('#data_type_' + code[1]).val();
+					data['attrib_precision'][code[1]] = $('#precision_' + code[1]).val();
 				}
 				data['columns'][code[1]] = obj.value;
 			}
@@ -254,11 +256,14 @@ function enabledAtributes (column)
 	{
 		$('#data_type_'+ column).prop('disabled', false);
 		$('#name_'+ column).prop('disabled', false);
+		$('#precision_'+ column).prop('disabled', false);
 	} else {
 		$('#data_type_'+ column).prop('disabled', true);
 		$('#name_'+ column).prop('disabled', true);
+		$('#precision_'+ column).prop('disabled', true);
 		$('#data_type_'+ column).prop('selectedIndex', 0);
 		$('#name_'+ column).val('');
+		$('#precision_'+ column).val('');
 	}
 }
 	
