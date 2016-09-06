@@ -147,14 +147,24 @@
 			}
 
 			$location_info = $this->bo->get_location($directory);
-
 			if (!$this->acl->check($location_info['location'], PHPGW_ACL_READ, 'property'))
 			{
 				echo 'sorry - no access';
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$img_id = phpgw::get_var('img_id', 'int');
+
 			$bofiles = CreateObject('property.bofiles');
+
+			if($img_id)
+			{
+				$file_info = $bofiles->vfs->get_info($img_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+
+
+
 			$source = "{$bofiles->rootdir}{$file}";
 			$thumbfile = "$source.thumb";
 
@@ -178,6 +188,10 @@
 			{
 				$this->create_thumb($source, $thumbfile, $thumb_size = 100);
 				readfile($thumbfile);
+			}
+			else if ($img_id)
+			{
+				$bofiles->get_file($img_id);
 			}
 			else
 			{
