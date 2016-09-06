@@ -34,7 +34,6 @@
 
 	class property_uiimport_components extends phpgwapi_uicommon_jquery
 	{
-		private $receipt = array();
 		var $type = 'entity';
 		protected $type_app = array
 			(
@@ -322,14 +321,15 @@ HTML;
 			$columns = $columns && is_array($columns) ? $columns : array();
 			$attrib_data_types = phpgw::get_var('attrib_data_types');
 			$attrib_names = phpgw::get_var('attrib_names');
+			$attrib_precision = phpgw::get_var('attrib_precision');
 					
-			$message = array();
+			$receipt = array();
 			
 			phpgw::import_class('phpgwapi.phpexcel');
 			
 			if (empty($id))
 			{
-				return $message['error'][] = array('msg' => 'location code is empty');
+				return $receipt['error'][] = array('msg' => 'location code is empty');
 			}
 				
 			if ($step == 1 && isset($_FILES['file']['tmp_name']))
@@ -419,7 +419,8 @@ HTML;
 				(
 					'' => ' ... ',
 					'new_column' => 'New column',
-					'building_part' => 'Building part'
+					'building_part' => 'Building part',
+					'category_name' => 'Categry name'
 				);
 				
 				$template = explode("_", $template_id);
@@ -446,7 +447,13 @@ HTML;
 
 					$_listbox = $this->getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\" class='columns'");
 					$_listTypes = $this->getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, "disabled class='data_types'");
-					$html_table .= "<tr><td>[{$_column}] {$_value}</td><td>{$_listbox}</td><td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names'></input></td><td>{$_listTypes}</td></tr>";
+					$html_table .= "<tr>";
+					$html_table .= "<td>[{$_column}] {$_value}</td>";
+					$html_table .= "<td>{$_listbox}</td>";
+					$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names'></input></td>";
+					$html_table .= "<td>{$_listTypes}</td>";
+					$html_table .= "<td><input type='text' id='precision_{$_column}' name='precision[{$_column}]' disabled class='precision'></input></td>";
+					$html_table .= "</tr>";
 				}
 				
 				$html_table .= '</table>';
@@ -458,7 +465,7 @@ HTML;
 			{
 				if (count($attrib_names))
 				{
-					$receipt = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $template_id);
+					$receipt = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision, $template_id);
 					if ($receipt['error'])
 					{
 						print_r($receipt); die;
@@ -468,8 +475,12 @@ HTML;
 				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 				$rows = $rows ? $rows + 1 : 0;
 
+				$buildingpart_out_table = array();
 				$import_data = array();
 
+				$import_components = new import_components();
+				$entity_categories  = $import_components->get_entity_categories();
+			
 				for ($i = $start_line; $i < $rows; $i++)
 				{
 					$_result = array();
@@ -478,15 +489,60 @@ HTML;
 					{
 						$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
 					}
-					$import_data[] = $_result;
+					
+					if ((int)$_result['building_part'] || $_result['building_part'] === '0')
+					{
+						if (array_key_exists((string)$_result['building_part'], $entity_categories))
+						{						
+							$cat_id = $entity_categories[$_result['building_part']]['id'];
+							$entity_id = $entity_categories[$_result['building_part']]['entity_id'];						
+						} 
+						else {
+							$buildingpart_out_table[$_result['building_part']] = $_result['building_part'].' - '.$_result['category_name'];
+							$cat_id = '';
+							$entity_id = '';
+						}
+
+						if (!empty($_result['benevnelse']))
+						{
+							$import_data[$_result['building_part']]['cat_id'] = $cat_id;
+							$import_data[$_result['building_part']]['entity_id'] = $entity_id;
+							$import_data[$_result['building_part']]['components'] = $_result;						
+						}
+					}
 				}
 				
-				print_r($import_data); die;
-				return $import_data;
+				if (count($buildingpart_out_table))
+				{
+					ksort($buildingpart_out_table);
+					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
+
+					if (count($buildingpart_processed['not_added']))
+					{
+						foreach($buildingpart_processed['not_added'] as $k => $v)
+						{
+							$receipt['error'][] = array('msg' => "parent {$k} not added");	
+						}
+						return $this->jquery_results($receipt);
+					}
+
+					if (count($buildingpart_processed['added']))
+					{
+						foreach($buildingpart_processed['added'] as $k => $v)
+						{
+							$import_data[$k]['cat_id'] = $v['id'];
+							$import_data[$k]['entity_id'] = $v['entity_id'];			
+						}
+					} 
+				}
+
+				$receipt = $import_components->add_bim_item($import_data, $location_code);
+			
+				return $this->jquery_results($receipt);
 			}
 		}
 		
-		private function add_attribute_to_template(&$columns, $attrib_names, $attrib_data_types, $template_id)
+		private function add_attribute_to_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision, $template_id)
 		{
 			$receipt = array();
 			
@@ -514,7 +570,7 @@ HTML;
 					$attrib['input_text'] = ucfirst($attrib_names[$_row_key]);
 					$attrib['statustext'] = ucfirst($attrib_names[$_row_key]);
 					$attrib['column_info']['type'] = $attrib_data_types[$_row_key];
-					$attrib['column_info']['precision'] = 255;
+					$attrib['column_info']['precision'] = $attrib_precision[$_row_key];
 					$attrib['column_info']['nullable'] = 'True';
 					$attrib['search'] = 1;
 					
