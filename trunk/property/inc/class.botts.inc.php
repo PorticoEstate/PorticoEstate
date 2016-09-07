@@ -56,6 +56,7 @@
 		public $sum_difference = 0;
 		public $show_finnish_date = false;
 		public $simple = false;
+		public $group_candidates = array(-1);
 		protected $custom_filters = array();
 		var $public_functions = array
 			(
@@ -86,6 +87,29 @@
 			$this->config->read();
 
 
+			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
+			$simple_group = isset($this->config->config_data['fmttssimple_group']) ? $this->config->config_data['fmttssimple_group'] : array();
+
+			if (isset($this->config->config_data['fmtts_assign_group_candidates']) && is_array($this->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$this->group_candidates[] = $group_candidate;
+					}
+				}
+			}
+			foreach ( $user_groups as $group => $dummy)
+			{
+				if ( in_array($group, $simple_group) && !in_array($group, $this->group_candidates))
+				{
+					$this->simple = true;
+					break;
+				}
+			}
+
+			reset($user_groups);
 			$user_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->config->config_data['fmttssimple_group']) ? $this->config->config_data['fmttssimple_group'] : array();
 			foreach ($user_groups as $group => $dummy)
