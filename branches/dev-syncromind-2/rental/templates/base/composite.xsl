@@ -56,22 +56,54 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'composite standard')"/>
+								<xsl:value-of select="php:function('lang', 'location')"/>
 							</label>
-							<xsl:if test="count(//list_composite_standard/options) > 0">
-								<select id="composite_standard_id" name="composite_standard_id">
-									<xsl:apply-templates select="list_composite_standard/options"/>
-								</select>
+							<xsl:if test="value_unit_count > 0">
+								<input type="hidden" name="part_of_town_id"  value="{value_part_of_town_id}"/>
 							</xsl:if>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'furnish_type')"/>
-							</label>
-							<select id="furnish_type_id" name="furnish_type_id">
-								<xsl:apply-templates select="list_furnish_type/options"/>
+							<select id="part_of_town_id" name="part_of_town_id">
+								<xsl:choose>
+									<xsl:when test="value_unit_count > 0">
+										<xsl:attribute name="disabled">
+											<xsl:text>disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:when>
+									<xsl:otherwise>
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:otherwise>
+								</xsl:choose>
+								<xsl:apply-templates select="list_part_of_town/options"/>
 							</select>
-						</div>	
+						</div>
+						<xsl:if test="contract_furnished_status = 1">
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'custom prize factor')"/>
+								</label>
+								<input type="text" name="custom_prize_factor" id="custom_prize_factor" value="{value_custom_prize_factor}"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'composite standard')"/>
+								</label>
+								<xsl:if test="count(//list_composite_standard/options) > 0">
+									<select id="composite_standard_id" name="composite_standard_id">
+										<xsl:apply-templates select="list_composite_standard/options"/>
+									</select>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'furnish_type')"/>
+								</label>
+								<select id="furnish_type_id" name="furnish_type_id">
+									<xsl:apply-templates select="list_furnish_type/options"/>
+								</select>
+							</div>
+						</xsl:if>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'has_custom_address')"/>
@@ -164,7 +196,7 @@
 										</label>
 										<select id="search_option" name="search_option">
 											<xsl:apply-templates select="list_search_option/options"/>
-										</select>										
+										</select>
 									</div>
 									<div class="pure-control-group">
 										<label>
@@ -190,7 +222,7 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-						</div>	
+						</div>
 						<div id="contracts">
 							<div class="pure-control-group">
 								<label>
@@ -228,7 +260,7 @@
 										<select id="contract_type" name="contract_type">
 											<xsl:apply-templates select="list_fields_of_responsibility_options/options"/>
 										</select>
-									</div>									
+									</div>
 								</div>
 							</div>
 							<div>
@@ -250,11 +282,19 @@
 				</xsl:choose>
 			</div>
 			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save" value="{lang_save}" onMouseout="window.status='';return true;"/>
+				<input type="submit" class="pure-button pure-button-primary" name="save">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'save')"/>
+					</xsl:attribute>
+				</input>
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
-				</xsl:variable>				
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
+				</xsl:variable>
+				<input type="button" class="pure-button pure-button-primary" name="cancel" onClick="window.location = '{cancel_url}';">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'cancel')"/>
+					</xsl:attribute>
+				</input>
 			</div>
 		</form>
 	</div>
@@ -281,7 +321,7 @@
 							<xsl:if test="has_custom_address = 1">
 								<label>
 									<xsl:value-of select="php:function('lang', 'custom_address')"/>
-								</label>								
+								</label>
 								<div class="pure-custom">
 									<div>
 										<xsl:value-of select="value_custom_address_1"/>
@@ -302,13 +342,13 @@
 											<xsl:text> </xsl:text>
 											<xsl:value-of select="value_custom_place"/>
 										</div>
-									</xsl:if>																											
+									</xsl:if>
 								</div>
 							</xsl:if>
 							<xsl:if test="has_custom_address = 0">
 								<label>
 									<xsl:value-of select="php:function('lang', 'address')"/>
-								</label>								
+								</label>
 								<xsl:value-of select="value_address_1"/>
 							</xsl:if>
 						</div>
@@ -323,7 +363,7 @@
 								<xsl:value-of select="php:function('lang', 'furnish_type')"/>
 							</label>
 							<xsl:value-of select="value_furnish_type_name"/>
-						</div>	
+						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'description')"/>
@@ -372,7 +412,7 @@
 							</xsl:if>
 						</xsl:for-each>
 					</div>
-				</div>	
+				</div>
 				<div id="contracts">
 					<div class="pure-control-group">
 						<label>
@@ -410,7 +450,7 @@
 								<select id="contract_type" name="contract_type">
 									<xsl:apply-templates select="list_fields_of_responsibility_options/options"/>
 								</select>
-							</div>									
+							</div>
 						</div>
 					</div>
 					<div>
@@ -432,7 +472,7 @@
 			<div class="proplist-col">
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
-				</xsl:variable>				
+				</xsl:variable>
 				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>

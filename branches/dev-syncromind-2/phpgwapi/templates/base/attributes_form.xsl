@@ -397,6 +397,14 @@
 									</xsl:attribute>
 								</xsl:when>
 							</xsl:choose>
+							<xsl:if test="nullable!='1'">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="input_text"/>
+								</xsl:attribute>
+							</xsl:if>
 						</input>
 						<div id="{$custom_container}"/>
 					</xsl:when>

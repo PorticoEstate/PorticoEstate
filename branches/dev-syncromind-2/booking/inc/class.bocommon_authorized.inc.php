@@ -776,7 +776,14 @@
 		function read_single( $id )
 		{
 			$entity = parent::read_single($id);
-			$this->authorize_read($entity);
-			return $this->add_permission_data($entity);
+			if($entity)
+			{
+				$this->authorize_read($entity);
+				return $this->add_permission_data($entity);
+			}
+			else
+			{
+				return array();
+			}
 		}
 	}

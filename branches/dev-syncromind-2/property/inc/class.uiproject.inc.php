@@ -734,8 +734,6 @@ JS;
 			$values_attribute = phpgw::get_var('values_attribute');
 //			$values['external_project_id'] = phpgw::get_var('external_project_id');
 //			$values['ecodimb'] = phpgw::get_var('ecodimb');
-			$values['b_account_id'] = phpgw::get_var('b_account_id', 'int', 'POST');
-			$values['b_account_name'] = phpgw::get_var('b_account_name', 'string', 'POST');
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 
 			$config = CreateObject('phpgwapi.config', 'property');
@@ -788,14 +786,22 @@ JS;
 			if (isset($values['b_account_id']) && $values['b_account_id'])
 			{
 				$sogeneric = CreateObject('property.sogeneric');
-				$sogeneric->get_location_info('b_account_category', false);
+				$sogeneric->get_location_info('budget_account', false);
 				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
+				$values['b_account_group'] = $status_data['category'];
+			}
+
+			if (isset($values['b_account_group']) && $values['b_account_group'])
+			{
+				$sogeneric = CreateObject('property.sogeneric');
+				$sogeneric->get_location_info('b_account_category', false);
+				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_group']), array());
 
 				if (isset($status_data['external_project']) && $status_data['external_project'])//mandatory for this account group
 				{
 					if (!isset($values['external_project_id']) || !$values['external_project_id'])
 					{
-						$this->receipt['error'][] = array('msg' => lang('Please select a project group!'));
+						$this->receipt['error'][] = array('msg' => lang('Please select an external project!'));
 						$error_id = true;
 					}
 				}
@@ -1381,21 +1387,41 @@ JS;
 
 			$b_account_data = array();
 			$ecodimb_data = array();
-
 			if (isset($config->config_data['budget_at_project']) && $config->config_data['budget_at_project'])
 			{
-				$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
+				$b_account_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
-					'b_account_id' => $values['b_account_id'],
-					'b_account_name' => $values['b_account_name'],
+					'b_account_id' => $values['b_account_group'],
+					'b_account_name' => $values['b_account_group_name'],
 					'role' => 'group',
 					'type' => $lookup_type
 					)
 				);
 
+
+				$b_account_data = array();
+
+				if (isset($config->config_data['budget_account_at_project']) && $config->config_data['budget_account_at_project'])
+				{
+					$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
+						(
+						'b_account_id' => $values['b_account_id'],
+						'b_account_name' => $values['b_account_name'],
+						'type' => $lookup_type
+						)
+					);
+				}
+
+				$default_ecodimb = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['dimb']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'] : '');
+				if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
+				{
+					$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
+					$GLOBALS['phpgw']->preferences->save_repository();
+				}
+
 				$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 					(
-					'ecodimb' => $values['ecodimb'],
+					'ecodimb' => $values['ecodimb'] ? $values['ecodimb'] : $default_ecodimb,
 					'ecodimb_descr' => $values['ecodimb_descr'],
 					'disabled' => $mode == 'view'
 				));
@@ -1432,7 +1458,9 @@ JS;
 				(
 				'menuaction' => 'property.uirequest.index',
 				'query' => (isset($values['location_data']['loc1']) ? $values['location_data']['loc1'] : ''),
-				'project_id' => (isset($id) ? $id : '')
+				'make_relation' => !!$id,
+				'relation_id' => isset($id) ? $id : 0,
+				'relation_type' => 'project'
 			);
 
 			$supervisor_email = array();
@@ -1993,7 +2021,8 @@ JS;
 				'suppresscoordination' => $suppresscoordination,
 				'custom_attributes' => array('attributes' => $values['attributes']),
 				'lookup_functions' => isset($values['lookup_functions']) ? $values['lookup_functions'] : '',
-				'b_account_data' => $b_account_data,
+				'b_account_group_data' => $b_account_group_data,
+				'b_account_data'		=> $b_account_data,
 				'ecodimb_data' => $ecodimb_data,
 				'contact_data' => $contact_data,
 				'tabs' => self::_generate_tabs($tabs, $active_tab, array('documents' => $id ? false : true,

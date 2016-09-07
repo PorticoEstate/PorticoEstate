@@ -8,6 +8,11 @@
 	class rental_price_item extends rental_model
 	{
 
+		const PRICE_TYPE_YEAR = 1;
+		const PRICE_TYPE_MONTH = 2;
+		const PRICE_TYPE_DAY = 3;
+		const PRICE_TYPE_HOUR = 4;
+
 		public static $so;
 		protected $id;
 		protected $title;
@@ -25,7 +30,7 @@
 			1 => 'year',
 			2 => 'month',
 			3 => 'day',
-			4 => 'hour',
+//			4 => 'hour',
 		);
 
 		//protected $is_one_time;
@@ -148,6 +153,7 @@
 				'responsibility_id' => $this->get_responsibility_id(),
 				'responsibility_title' => lang($this->get_responsibility_title()),
 				'price_type_title' => lang($this->get_price_type_title()),
+				'price_type_id' => $this->get_price_type_id(),
 				//'is_one_time' => $this->is_one_time()
 			);
 		}

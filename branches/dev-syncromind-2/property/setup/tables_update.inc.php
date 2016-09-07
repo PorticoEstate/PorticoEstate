@@ -9230,3 +9230,43 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.703 to 0.9.17.704
+	*
+	*/
+	$test[] = '0.9.17.703';
+
+	function property_upgrade0_9_17_703()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_project", 'b_account_id', array(
+			'type' => 'varchar',
+			'precision' => 20,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT account_id, project_id FROM fm_workorder WHERE account_id IS NOT NULL AND account_id != '0'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$projects = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$projects[] = array(
+				'id' => $GLOBALS['phpgw_setup']->oProc->f('project_id'),
+				'b_account_id' => $GLOBALS['phpgw_setup']->oProc->f('account_id'),
+			);
+		}
+
+		foreach ($projects as $project)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_project SET b_account_id = '{$project['b_account_id']}' WHERE id = {$project['id']}");
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.704';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

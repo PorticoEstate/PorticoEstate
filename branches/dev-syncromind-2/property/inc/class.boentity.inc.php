@@ -954,6 +954,7 @@ JS;
 			$start_date = phpgw::get_var('control_start_date', 'string');
 			$repeat_type = phpgw::get_var('repeat_type', 'int');
 			$repeat_interval = phpgw::get_var('repeat_interval', 'int');
+			$repeat_interval = $repeat_interval ? $repeat_interval : 1;
 			$controle_time = phpgw::get_var('controle_time', 'float');
 			$service_time = phpgw::get_var('service_time', 'float');
 

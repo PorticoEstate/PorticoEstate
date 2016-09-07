@@ -449,6 +449,15 @@ var oArgs = {menuaction: 'property.uiproject.get_external_project'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'external_project_name', 'external_project_id', 'external_project_container');
 
-var oArgs = {menuaction: 'property.uiproject.get_ecodimb'};
-var strURL = phpGWLink('index.php', oArgs, true);
+oArgs = {menuaction: 'property.uiproject.get_ecodimb'};
+strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb', 'ecodimb_container');
+
+oArgs = {menuaction: 'property.uiworkorder.get_b_account', role: 'group'};
+strURL = phpGWLink('index.php', oArgs, true);
+JqueryPortico.autocompleteHelper(strURL, 'b_account_group_name', 'b_account_group', 'b_account_group_container');
+
+oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
+strURL = phpGWLink('index.php', oArgs, true);
+JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
+

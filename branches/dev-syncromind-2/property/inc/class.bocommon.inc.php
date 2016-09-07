@@ -1609,12 +1609,14 @@
 			if ($filename)
 			{
 				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0] . '.xlsx';
+				$filename = $filename_arr[0];
 			}
 			else
 			{
-				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']) . '.xlsx';
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename .= "_{$date_time}.xlsx";
 
 			$browser = CreateObject('phpgwapi.browser');
 //			$browser->content_header($filename,'application/vnd.ms-excel');
@@ -1721,7 +1723,9 @@
 
 		function excel_out_old( $list, $name, $descr, $input_type = array() )
 		{
-			$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']) . '.xls';
+			$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename .= "_{$date_time}.xls";
 
 			$workbook = CreateObject('phpgwapi.excel', "-");
 			$browser = CreateObject('phpgwapi.browser');
@@ -1789,12 +1793,14 @@
 			if ($filename)
 			{
 				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0] . '.csv';
+				$filename = $filename_arr[0];
 			}
 			else
 			{
-				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']) . '.csv';
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename .= "_{$date_time}.csv";
 
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/csv');
@@ -1859,12 +1865,15 @@
 			if ($filename)
 			{
 				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0] . '.ods';
+				$filename = $filename_arr[0];
 			}
 			else
 			{
-				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']) . '.ods';
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
+
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename .= "_{$date_time}'.ods'";
 
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/ods');
@@ -2507,13 +2516,28 @@
 		public function get_b_account()
 		{
 			$query = phpgw::get_var('query');
+			$role = phpgw::get_var('role');
 
-			$sogeneric = CreateObject('property.sogeneric', 'budget_account');
+			$type = 'budget_account';
+
+			if($role == 'group')
+			{
+				$type = 'b_account_category';
+			}
+
+			$sogeneric = CreateObject('property.sogeneric', $type);
 			$values = $sogeneric->read(array('query' => $query));
 
 			foreach ($values as &$value)
 			{
-				$value['name'] = "{$value['id']} {$value['descr']}";
+				if (!preg_match("/^{$value['id']}/", $value['descr']))
+				{
+					$value['name'] = "{$value['id']} {$value['descr']}";
+				}
+				else
+				{
+					$value['name'] = $value['descr'];
+				}
 			}
 
 			return array('ResultSet' => array('Result' => $values));

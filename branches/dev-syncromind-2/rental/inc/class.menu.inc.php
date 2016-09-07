@@ -176,6 +176,12 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 						'type' => 'composite_standard', 'admin' => true))
 				),
+				'location_factor' => array
+					(
+					'text' => lang('location factor'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+						'type' => 'location_factor', 'admin' => true))
+				),
 				'responsibility_unit' => array
 					(
 					'text' => lang('responsibility'),

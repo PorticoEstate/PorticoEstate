@@ -50,13 +50,15 @@
 				'_print'			=> true,
 				'columns'			=> true,
 				'update_data'		=> true,
-				'upload_clip'		=> true
+				'upload_clip'		=> true,
+				'view_image'		=> true
 			);
 
 		/**
 		 * @var boolean $_simple use simplified interface
 		 */
 		protected $_simple = false;
+		protected $_group_candidates = array();
 		protected $_show_finnish_date = false;
 		protected $_category_acl = false;
 		var $part_of_town_id;
@@ -105,9 +107,19 @@
 			$this->p_num				= $this->bo->p_num;
 			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
+			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
+			{
+				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
+				{
+					if ($group_candidate)
+					{
+						$this->_group_candidates[] = $group_candidate;
+					}
+				}
+			}
 			foreach ( $user_groups as $group => $dummy)
 			{
-				if ( in_array($group, $simple_group))
+				if ( in_array($group, $simple_group) && !in_array($group, $this->_group_candidates))
 				{
 					$this->_simple = true;
 					break;
@@ -301,13 +313,13 @@
 
 			foreach($name_temp as $_key => $_name)
 			{
-				array_push($name,$_key);			
+				array_push($name,$_key);
 			}
 
 
 			foreach($descr_temp as $_key => $_name)
 			{
-				array_push($descr,$_name);			
+				array_push($descr,$_name);
 			}
 
 			if($this->_show_finnish_date)
@@ -384,7 +396,7 @@
 			}
 			else
 			{
-				return lang('delete failed');			
+				return lang('delete failed');
 			}
 		}
 
@@ -575,7 +587,8 @@
 
 				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_assigned_to_me'];
 
-				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
+				$values_combo_box[4] = $this->_get_user_list($this->user_id);
+
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my assigned tickets'),
@@ -989,9 +1002,17 @@
 
 				$values = $this->bocommon->collect_locationdata($values, $insert_record);
 
-				if (!$values['subject'] && isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+				if (!$values['subject'])
 				{
-					$receipt['error'][] = array('msg' => lang('Please enter a title !'));
+					if(isset($this->bo->config->config_data['tts_mandatory_title']) && $this->bo->config->config_data['tts_mandatory_title'])
+					{
+						$receipt['error'][] = array('msg' => lang('Please enter a title !'));
+					}
+					else
+					{
+						$_cat = $this->cats->return_single($values['cat_id']);
+						$values['subject'] = $_cat[0]['name'];
+					}
 				}
 
 				if (!$values['cat_id'])
@@ -1095,8 +1116,9 @@
 							$bofiles->vfs->override_acl = 0;
 						}
 					}
-
-					if($_POST['pasted_image'])
+					if($_POST['pasted_image'] &&
+						$_POST['pasted_image'] !='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAPklEQVR4nO3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgKcBnKQAAaZ1lY4AAAAASUVORK5CYII='
+						)
 					{
 						$img = $_POST['pasted_image'];
 						$img = str_replace('data:image/png;base64,', '', $img);
@@ -1288,6 +1310,68 @@
 			}
 		}
 
+		function view_image()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$img_id = phpgw::get_var('img_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($img_id)
+			{
+				$file_info = $bofiles->vfs->get_info($img_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($img_id)
+			{
+				$bofiles->get_file($img_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -1307,15 +1391,32 @@
 			$values = $this->bo->read_single($id);
 
 			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
 
+			$z = 0;
 			foreach ($values['files'] as $_entry)
 			{
-				$content_files[] = array
-					(
+				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
 					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
 				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'helpdesk.uitts.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -1493,6 +1594,10 @@
 
 			$ticket = $this->bo->read_single($id, $values);
 
+			if(!$ticket)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+			}
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
 				foreach ($ticket['attributes'] as & $attribute)
@@ -1611,17 +1716,41 @@
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view_file'));
 
-			for ($z = 0; $z < count($ticket['files']); $z++)
-			{
-				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $ticket['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $ticket['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $ticket['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
-				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="' . $ticket['files'][$z]['file_id'] . '" title="' . lang('Check to attach file') . '">';
-			}
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
 
+			$content_files = array();
+
+			$z = 0;
+			foreach ($ticket['files'] as $_entry)
+			{
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'helpdesk.uitts.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
 
 			$attach_file_def = array(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),
+				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
 				array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
 					'resizeable' => true, 'formatter' => 'FormatterCenter'),
 			);
@@ -1748,7 +1877,7 @@
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
-				'user_list' => $this->_get_user_list($values['assignedto']),
+				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -1891,22 +2020,11 @@
 
 		private function _get_user_list($selected)
 		{
-			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
-			{
-				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
-				{
-					if ($group_candidate)
-					{
-						$_candidates[] = $group_candidate;
-					}
-				}
-			}
-
 			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $_candidates);
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $this->_group_candidates);
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)

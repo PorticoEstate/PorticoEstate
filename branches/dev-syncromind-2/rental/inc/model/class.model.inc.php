@@ -16,6 +16,55 @@
 			$this->id = (int)$id;
 		}
 
+		public function __set($name, $value)
+		{	
+			$this->$name = $value;
+		}
+
+		/**
+		 * Magic get method
+		 *
+		 * @param string $name the variable to fetch
+		 *
+		 * @return mixed the value of the variable sought - null if not found
+		 */
+		public function __get($name)
+		{
+			$called_class = get_called_class();
+
+			$datatype = 'string';
+			if( method_exists($called_class, 'get_fields'))
+			{
+				$fields = $called_class::get_fields();
+				$datatype = $fields[$name]['type'];
+			}
+
+			if ( isset($this->$name) )
+			{
+				switch ($datatype)
+				{
+					case 'int':
+					case 'integert':
+						$value = (int)$this->$name;
+						break;
+					case 'float':
+						$value = (float)$this->$name;
+						break;
+					case 'bool':
+					case 'boolean':
+						$value = (bool)$this->$name;
+						break;
+					default:
+						$value = $this->$name;
+						break;
+				}
+
+				return $value;
+			}
+
+			return null;
+		}
+
 		public function get_id()
 		{
 			return $this->id;
@@ -172,4 +221,136 @@
 		}
 
 		public abstract function serialize();
+
+		public function toArray()
+		{
+			$rental_item_arr = array();
+
+			$fields =  get_object_vars($this);
+			foreach ($fields as $field => $value)
+			{
+				$rental_item_arr[$field] = $this->get_field($field);
+			}
+			return $rental_item_arr;
+		}
+
+		function validate( )
+		{
+			$errors = array();
+			$this->preValidate( $this );
+			$this->_validate( $this, $errors);
+			$this->doValidate( $this, $errors);
+			foreach ($errors as $key => $message)
+			{
+				phpgwapi_cache::message_set($message, 'error');
+			}
+			return $errors ? false : true;
+		}
+
+		/**
+		 * Implement in subclasses to perform actions on entity before validation
+		 */
+		protected function preValidate( &$entity )
+		{
+
+		}
+
+		/**
+		 * Implement in subclasses to perform custom validation.
+		 */
+		protected function doValidate( $entity,  &$errors )
+		{
+
+		}
+
+		private function _validate( $entity, array &$errors )
+		{
+			$fields = $this->get_fields();
+			foreach ($fields as $field => $params)
+			{
+				if (!is_array($params))
+				{
+					continue;
+				}
+
+				$value = $entity->get_field($field);
+				if(!is_array($value))
+				{
+					$value = trim($value);
+				}
+				$empty = false;
+
+				if (isset($params['manytomany']) && isset($params['manytomany']['column']))
+				{
+					$sub_entity_count = 0;
+
+					if (!empty($value) && is_array($value))
+					{
+						foreach ($value as $key => $sub_entity)
+						{
+							$this->_validate(
+								(array)$sub_entity, (array)$params['manytomany']['column'], $errors, sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
+							);
+							$sub_entity_count++;
+						}
+					}
+
+					if ($params['required'] && $sub_entity_count == 0)
+					{
+						$errors[$field] = lang("Field %1 is required", lang($field));
+					}
+					continue;
+				}
+
+				if(!empty($params['alternative']) && is_array($params['alternative']))
+				{
+					$alternatives_ok = false;
+					$found_alternatives = 0;
+					foreach ($params['alternative'] as $alternative)
+					{
+						if($entity->get_field($alternative))
+						{
+							$found_alternatives ++;
+						}
+					}
+					if($found_alternatives == count($params['alternative']))
+					{
+						$alternatives_ok = true;
+					}
+				}
+				$error_key = empty($params['label']) ? $field : $params['label'];
+				if ($params['required'] && (!isset($value) || ($value !== '0' && empty($value))) && !$alternatives_ok)
+				{
+
+					$errors[$error_key] = lang("Field %1 is required", lang($error_key));
+					$empty = true;
+				}
+				if ($params['type'] == 'date' && !empty($value))
+				{
+					/**
+					 * Already converted to integer
+					 */
+					//$date = date_parse($value);
+					//if (!$date || count($date['errors']) > 0)
+					if (!ctype_digit($value))
+					{
+						$errors[$error_key] = lang("Field %1: Invalid format", lang($error_key));
+					}
+				}
+
+				if (!$empty && $params['sf_validator'])
+				{
+					try
+					{
+						$params['sf_validator']->setOption('required', false);
+						$params['sf_validator']->clean($value);
+					}
+					catch (sfValidatorError $e)
+					{
+						$errors[$error_key] = lang(strtr($e->getMessage(), array('%field%' => $error_key)));
+					}
+				}
+			}
+		}
+
 	}

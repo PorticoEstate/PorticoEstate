@@ -4,6 +4,8 @@
 	abstract class booking_socommon
 	{
 
+		protected $db;
+		protected $db2;
 		protected $db_null = 'NULL';
 		protected $valid_field_types = array(
 			'date' => true,
@@ -41,8 +43,39 @@
 			$this->table_name = $table_name;
 			$this->fields = $fields;
 			$this->db = $GLOBALS['phpgw']->db;
+			$this->db2 = clone($GLOBALS['phpgw']->db);
 			$this->join = & $this->db->join;
 			$this->like = & $this->db->like;
+		}
+
+		/**
+		 * Begin transaction
+		 *
+		 * @return integer|bool current transaction id
+		 */
+		public function transaction_begin()
+		{
+			return $this->db->transaction_begin();
+		}
+
+		/**
+		 * Complete the transaction
+		 *
+		 * @return bool True if sucessful, False if fails
+		 */
+		public function transaction_commit()
+		{
+			return $this->db->transaction_commit();
+		}
+
+		/**
+		 * Rollback the current transaction
+		 *
+		 * @return bool True if sucessful, False if fails
+		 */
+		public function transaction_abort()
+		{
+			return $this->db->transaction_abort();
 		}
 
 		public function get_db()
@@ -325,9 +358,9 @@
 								$order_method = "ORDER BY {$params['manytomany']['order']['sort']} {$params['manytomany']['order']['dir']}";
 							}
 
-							$this->db->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
+							$this->db2->query("SELECT {$column} FROM {$table} WHERE {$key}={$id} {$order_method}", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while ($this->db2->next_record())
 							{
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
@@ -343,7 +376,7 @@
 										$type = $params['type'];
 									}
 
-									$data[$col] = $this->_unmarshal($this->db->f($col, false), $type);
+									$data[$col] = $this->_unmarshal($this->db2->f($col, false), $type);
 								}
 								$row[$field][] = $data;
 							}
@@ -351,11 +384,11 @@
 						else
 						{
 							$column = $params['manytomany']['column'];
-							$this->db->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
+							$this->db2->query("SELECT $column FROM $table WHERE $key=$id", __LINE__, __FILE__);
 							$row[$field] = array();
-							while ($this->db->next_record())
+							while ($this->db2->next_record())
 							{
-								$row[$field][] = $this->_unmarshal($this->db->f($column, false), $params['type']);
+								$row[$field][] = $this->_unmarshal($this->db2->f($column, false), $params['type']);
 							}
 						}
 					}
@@ -821,9 +854,23 @@
 					}
 				}
 			}
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
+
 			foreach ($update_queries as $update_query)
 			{
 				$this->db->query($update_query, __LINE__, __FILE__);
+			}
+
+			if (!$this->global_lock)
+			{
+				$this->db->transaction_commit();
 			}
 			$receipt['id'] = $id;
 			$receipt['message'][] = array('msg' => lang('Entity %1 has been updated', $entry['id']));

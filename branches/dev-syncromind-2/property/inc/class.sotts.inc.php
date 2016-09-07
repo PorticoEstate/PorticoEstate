@@ -138,6 +138,7 @@
 			$branch_id = isset($data['branch_id']) && $data['branch_id'] ? (int)$data['branch_id'] : 0;
 			$order_dim1 = isset($data['order_dim1']) && $data['order_dim1'] ? (int)$data['order_dim1'] : 0;
 			$custom_filtermethod = isset($data['custom_filtermethod']) && $data['custom_filtermethod'] ? (array)$data['custom_filtermethod'] : array();
+			$check_date_type = isset($data['check_date_type']) && $data['check_date_type'] ? (int)$data['check_date_type'] : 1;
 
 
 			$result_order_field = array();
@@ -413,7 +414,14 @@
 				$order_edit = $GLOBALS['phpgw']->acl->check('.ticket.order', PHPGW_ACL_EDIT, 'property');
 				$_end_date = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
 				$_start_date = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
-				$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
+				if($check_date_type == 1)
+				{
+					$filtermethod .= " $where fm_tts_tickets.modified_date >= $_start_date AND fm_tts_tickets.modified_date <= $_end_date ";
+				}
+				else if($check_date_type == 2)
+				{
+					$filtermethod .= " $where fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date ";
+				}
 
 				if ($order_add || $order_edit)
 				{
@@ -1970,5 +1978,50 @@
 			}
 
 			return $values;
+		}
+
+		function add_relation( $add_relation, $id )
+		{
+			$config = $GLOBALS['phpgw']->config->read();
+			$interlink = CreateObject('property.interlink');
+			$this->db->transaction_begin();
+
+			foreach ($add_relation['request_id'] as $relation_id)
+			{
+				$target_id = false;
+				$target = $interlink->get_specific_relation('property', '.project.request', '.ticket', $relation_id, 'target');
+				if ($target)
+				{
+					$target_id =  $target[0];
+				}
+
+				if (!$target_id)
+				{
+					$interlink_data = array(
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
+						'location1_item_id' => $relation_id,
+						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+						'location2_item_id' => $id,
+						'account_id' => $this->account
+					);
+
+					$interlink->add($interlink_data);
+
+					$request_ticket_hookup_status = isset($config['request_ticket_hookup_status']) && $config['request_ticket_hookup_status'] ? $config['request_ticket_hookup_status'] : false;
+
+					if ($request_ticket_hookup_status)
+					{
+						$this->db->query("UPDATE fm_request SET status='{$request_ticket_hookup_status}' WHERE id='" . $relation_id . "'", __LINE__, __FILE__);
+					}
+
+					phpgwapi_cache::message_set(lang('request %1 has been added', $relation_id), 'message');
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('request %1 has already been added to ticket %2', $relation_id, $target_id), 'error');
+				}
+			}
+			$this->db->transaction_commit();
+			return $receipt;
 		}
 	}

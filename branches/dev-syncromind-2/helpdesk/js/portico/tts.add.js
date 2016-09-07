@@ -81,6 +81,10 @@ $.formUtils.addValidator({
 	errorMessageKey: ''
 });
 
+upload_canvas = function ()
+{
+	confirm_session('apply');
+}
 
 $(document).ready(function ()
 {
@@ -247,6 +251,10 @@ $(document).ready(function ()
 				ctx.drawImage(pastedImage, 0, 0);
 			};
 			pastedImage.src = source;
+			setTimeout(function ()
+			{
+				upload_canvas();
+			}, 500);
 		};
 	}
 

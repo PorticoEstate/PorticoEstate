@@ -335,7 +335,7 @@
 			unset($sql_cnt);
 
 			$this->total_records = $this->db->f('cnt');
-
+			_debug_array($sql . $ordermethod);
 			$ordermethod = '';
 			if (!$allrows)
 			{
@@ -654,6 +654,18 @@
 			$__querymethod = array();
 			$_joinmethod_datatype = array();
 			$_joinmethod_datatype_custom = array();
+			$custom_attribs = array();
+			$this->db->query("SELECT * FROM $attribute_table WHERE $attribute_filter AND search='1'");
+			while ($this->db->next_record())
+			{
+				$custom_attribs[$this->db->f('column_name')] = array(
+					'id'	=> $this->db->f('id'),
+					'datatype'	=> $this->db->f('datatype'),
+					'location_id'	=> $this->db->f('location_id'),
+					'search'	=> $this->db->f('search'),
+				);
+			}
+
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -688,7 +700,6 @@
 							case 'T':
 								if (!$criteria_id)
 								{
-//									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''$query'')]' PASSING BY REF xml_representation)";
 									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' {$this->like} '%{$query}%'";
 									$__querymethod = array(); // remove block
 								}
@@ -707,7 +718,6 @@
 									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
 									while ($this->db2->next_record())
 									{
-//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[contains(.,''," . $this->db2->f('id') . ",'')]' PASSING BY REF xml_representation)";
 										$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' {$this->like} '%,{$query},%'";
 									}
 								}
@@ -724,9 +734,7 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
 										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
-
 									}
 									$__querymethod = array(); // remove block
 								}
@@ -734,9 +742,8 @@
 							case 'I':
 								if (ctype_digit($query) && !$criteria_id)
 								{
-//									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$query . "'']' PASSING BY REF xml_representation)";
-									$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$query;
-
+//									$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$query;
+									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."'  {$this->like} '" .(int)$query . "%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -747,7 +754,6 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
 										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
 									}
 
@@ -761,7 +767,6 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
 										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
 									}
 
@@ -775,7 +780,6 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-//										$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''" . (int)$this->db2->f('id') . "'']' PASSING BY REF xml_representation)";
 										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
 									}
 									$__querymethod = array(); // remove block
@@ -784,7 +788,6 @@
 							default:
 								if (!$criteria_id)
 								{
-//									$_querymethod[] = "xmlexists('//" . $this->db->f('column_name') . "[text() = ''$query'']' PASSING BY REF xml_representation)";
 									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' = '{$query}'";
 									$__querymethod = array(); // remove block
 								}
@@ -817,6 +820,37 @@
 
 			if ($check_for_control && !$control_registered)
 			{
+				/*
+				 * Filter inactive
+				 */
+				static $cache_attribute_status = array();
+
+				if(!isset($cache_attribute_status[$location_id]))
+				{
+					$filters = array("column_name" => "status");
+					$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
+				}
+
+				if(!empty($cache_attribute_status[$location_id]))
+				{
+					foreach ($cache_attribute_status[$location_id] as $attibute_id => $attibute)
+					{
+						if(!empty($attibute['choice']))
+						{
+							$_querymethod[] = "CAST( json_representation->>'status' AS integer) < 90";
+							$__querymethod = array(); // remove block
+//							foreach ($attibute['choice'] as $choice)
+//							{
+//								if($choice['id'] < 90)
+//								{
+//									$_querymethod[] = "CAST( json_representation->>'status' AS integer) = " .(int)$choice['id'];
+//									$__querymethod = array(); // remove block
+//								}
+//							}
+						}
+					}
+				}
+
 				$sql .= "{$this->left_join} {$join_control}";
 
 				$sql_custom_field .= ',count(control_id) AS has_control';
@@ -852,6 +886,11 @@
 				$this->uicols['exchange'][] = false;
 				$this->uicols['formatter'][] = '';
 				$this->uicols['classname'][] = '';
+			}
+
+			if ($dry_run)
+			{
+				return array();
 			}
 
 			$_joinmethod_datatype = array_merge($_joinmethod_datatype, $_joinmethod_datatype_custom);
@@ -903,10 +942,6 @@
 			$this->total_records = $cache_info['total_records'];
 
 
-			if ($dry_run)
-			{
-				return array();
-			}
 
 			$ordermethod = '';
 			$xml_order = '';
@@ -914,9 +949,6 @@
 			{
 				switch ($order)
 				{
-					case 'user_id':
-						//				$ordermethod = " ORDER BY phpgw_accounts.account_lastname {$sort}";  // Don't work with LDAP.
-						break;
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
 						break;
@@ -927,11 +959,22 @@
 					case 'loc1':
 						$ordermethod = " ORDER BY {$entity_table}.loc1 {$sort}";
 						break;
+					case 'user_id';
+					case 'modified_on';
+					case 'entry_date':
+						$ordermethod = " ORDER BY {$entity_table}.$order {$sort}";
+						$xml_order = ",fm_bim_item.{$order}";
+						break;
 					default:
-						$ordermethod = " ORDER BY {$entity_table}.json_representation->>'{$order}' {$sort}";
-//						$xml_order = ',cast (_order_field[1] as text) as _order_field_text';
-//						$sql = str_replace('FROM fm_bim_item', "FROM (SELECT fm_bim_item.*, xpath('$order/text()', xml_representation) as _order_field FROM fm_bim_item", $sql);
-//						$sql .= ") as fm_bim_item ORDER BY _order_field_text {$sort}";
+						$ordermethod = " ORDER BY {$order} {$sort}";
+						if($custom_attribs[$order]['datatype'] == 'I')
+						{
+							$xml_order = ",CAST(json_representation->>'{$order}' AS integer) AS {$order}";
+						}
+						else
+						{
+							$xml_order = ",json_representation->>'{$order}' AS {$order}";
+						}
 				}
 			}
 			else
@@ -953,11 +996,11 @@
 //			_debug_array($sql_pre_run);
 			if (!$allrows)
 			{
-				$this->db->limit_query($sql_pre_run, $start, __LINE__, __FILE__, $results);
+				$this->db->limit_query($sql_pre_run. $ordermethod, $start, __LINE__, __FILE__, $results);
 			}
 			else
 			{
-				$this->db->query($sql_pre_run, __LINE__, __FILE__);
+				$this->db->query($sql_pre_run. $ordermethod, __LINE__, __FILE__);
 			}
 
 			$ids = array();

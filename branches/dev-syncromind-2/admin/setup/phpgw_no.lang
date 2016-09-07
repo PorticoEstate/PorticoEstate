@@ -39,3 +39,4 @@ you must select a file type	admin	no	Du må velge en filtype
 home screen message	admin	no	Melding på hjemmeskjerm
 title	admin	no	Overskrift
 important message	admin	no	Viktig informasjon
+enabled	admin	no	Aktiv

@@ -430,7 +430,71 @@
 		function read_single($id, $values = array() )
 		{
 			$id = (int) $id;
-			$sql = "SELECT * FROM phpgw_helpdesk_tickets WHERE id = {$id}";
+
+
+			$GLOBALS['phpgw']->acl->set_account_id($this->account);
+			$this->grants	= $GLOBALS['phpgw']->acl->get_grants2('helpdesk','.ticket');
+
+			$acl_join = "{$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id=phpgw_accounts.account_id";
+			$acl_join .= " {$this->join} phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
+
+			$categories = $GLOBALS['phpgw']->locations->get_subs('helpdesk', '.ticket.category');
+
+			$grant_category = array();
+			foreach ($categories as $location)
+			{
+				if ($GLOBALS['phpgw']->acl->check($location, PHPGW_ACL_READ, 'helpdesk'))
+				{
+					$category = explode('.',$location);
+					$grant_category[] = $category[3];
+				}
+			}
+
+			$grant_category[] = -1;//If no one found - not breaking the query
+
+
+			$GLOBALS['phpgw']->config->read();
+
+			$filtermethod = '';
+			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
+			{
+				$filtermethod = " AND phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+			}
+
+
+			if (is_array($this->grants))
+			{
+				$public_user_list = array();
+				if (is_array($this->grants['accounts']) && $this->grants['accounts'])
+				{
+					foreach($this->grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$filtermethod .= " AND (phpgw_helpdesk_tickets.user_id IN(" . implode(',', $public_user_list) . ")";
+				}
+
+				$public_group_list = array();
+				if (is_array($this->grants['groups']) && $this->grants['groups'])
+				{
+					foreach($this->grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					$filtermethod .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . "))";
+				}
+				if($public_user_list && !$public_group_list)
+				{
+					$filtermethod .=')';
+				}
+			}
+
+			$sql = "SELECT * FROM phpgw_helpdesk_tickets {$acl_join} WHERE id = {$id} {$filtermethod}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 
@@ -505,101 +569,47 @@
 			}
 		}
 
-		function add($ticket)
+		function add( &$ticket, $values_attribute = array() )
 		{
-			if(isset($ticket['location']) && is_array($ticket['location']))
+			$table = 'phpgw_helpdesk_tickets';
+
+			$value_set = array();
+			$data_attribute = $this->custom->prepare_for_db($table, $values_attribute);
+			if (isset($data_attribute['value_set']))
 			{
-				foreach ($ticket['location'] as $input_name => $value)
+				foreach ($data_attribute['value_set'] as $input_name => $value)
 				{
-					if(isset($value) && $value)
+					if (isset($value) && $value)
 					{
-						$cols[] = $input_name;
-						$vals[] = $value;
+						$value_set[$input_name] = $value;
 					}
 				}
 			}
 
-			if(isset($ticket['extra']) && is_array($ticket['extra']))
-			{
-				foreach ($ticket['extra'] as $input_name => $value)
-				{
-					if(isset($value) && $value)
-					{
-						$cols[] = $input_name;
-						$vals[] = $value;
-					}
-				}
-			}
+			$value_set['priority'] = isset($ticket['priority']) ? $ticket['priority'] : 0;
+			$value_set['user_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+			$value_set['assignedto'] = $ticket['assignedto'];
+			$value_set['group_id'] = $ticket['group_id'];
+			$value_set['subject'] = $this->db->db_addslashes($ticket['subject']);
+			$value_set['cat_id'] = $ticket['cat_id'];
+			$value_set['status'] = $ticket['status'];
+			$value_set['details'] = $this->db->db_addslashes($ticket['details']);
+			$value_set['location_code'] = $ticket['location_code'];
+			$value_set['entry_date'] = time();
+			$value_set['modified_date'] = time();
+			$value_set['finnish_date'] = $ticket['finnish_date'];
+			$value_set['contact_id'] = $ticket['contact_id'];
+			$value_set['publish_note'] = 1;
 
-			if($cols)
-			{
-				$cols	= "," . implode(",", $cols);
-				$vals	= ",'" . implode("','", $vals) . "'";
-			}
 
-			$address = '';
-			if(isset($ticket['street_name']) && $ticket['street_name'])
-			{
-				$address[]= $ticket['street_name'];
-				$address[]= $ticket['street_number'];
-				$address	= $this->db->db_addslashes(implode(" ", $address));
-			}
-
-			if(!$address)
-			{
-				$address = $this->db->db_addslashes($ticket['location_name']);
-			}
-
-			$values= array
-				(
-					isset($ticket['priority'])?$ticket['priority']:0,
-					$GLOBALS['phpgw_info']['user']['account_id'],
-					$ticket['assignedto'],
-					$ticket['group_id'],
-					$this->db->db_addslashes($ticket['subject']),
-					$ticket['cat_id'],
-					$ticket['status'],
-					$this->db->db_addslashes($ticket['details']),
-					$ticket['location_code'],
-					$address,
-					time(),
-					time(),
-					$ticket['finnish_date'],
-					$ticket['contact_id'],
-					1
-				);
-
-			$values	= $this->db->validate_insert($values);
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
 			$this->db->transaction_begin();
 
-			$this->db->query("insert into phpgw_helpdesk_tickets (priority,user_id,"
-				. "assignedto,group_id,subject,cat_id,status,details,location_code,"
-				. "address,entry_date,modified_date,finnish_date,contact_id,publish_note $cols)"
-				. "VALUES ($values $vals )",__LINE__,__FILE__);
+			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
-			$id = $this->db->get_last_insert_id('phpgw_helpdesk_tickets','id');
-			if(isset($ticket['extra']['contact_phone']) && $ticket['extra']['contact_phone'] && isset($ticket['extra']['tenant_id']) && $ticket['extra']['tenant_id'])
-			{
-				$this->db->query("update fm_tenant set contact_phone='". $ticket['extra']['contact_phone']. "' where id='". $ticket['extra']['tenant_id']. "'",__LINE__,__FILE__);
-			}
+			$id = $this->db->get_last_insert_id($table, 'id');
 
-			if(isset($ticket['origin']) && is_array($ticket['origin']))
-			{
-				if($ticket['origin'][0]['data'][0]['id'])
-				{
-					$interlink_data = array
-						(
-							'location1_id'		=> $GLOBALS['phpgw']->locations->get_id('helpdesk', $ticket['origin'][0]['location']),
-							'location1_item_id' => $ticket['origin'][0]['data'][0]['id'],
-							'location2_id'		=> $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket'),			
-							'location2_item_id' => $id,
-							'account_id'		=> $this->account
-						);
-
-					$interlink 	= CreateObject('helpdesk.interlink');
-					$interlink->add($interlink_data,$this->db);
-				}
-			}
 
 			if($this->db->transaction_commit())
 			{

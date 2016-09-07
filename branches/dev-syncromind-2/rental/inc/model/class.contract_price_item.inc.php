@@ -18,6 +18,10 @@
 		protected $date_end;
 		protected $is_one_time;
 		protected $is_billed;
+		protected $location_factor;
+		protected $standard_factor;
+		protected $custom_factor;
+		protected $price_type_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -27,7 +31,7 @@
 		 */
 		public function __construct( $id = 0 )
 		{
-			parent::__construct($id);
+			parent::__construct((int)$id);
 			/*
 			  if ($id) {
 			  parent::__construct($price_item->get_id());
@@ -119,6 +123,33 @@
 			$this->date_end = $date_end;
 		}
 
+		public function get_location_factor()
+		{
+			return $this->location_factor;
+		}
+
+		public function set_location_factor( $location_factor )
+		{
+			$this->location_factor = $location_factor;
+		}
+		public function get_standard_factor()
+		{
+			return $this->standard_factor;
+		}
+
+		public function set_standard_factor( $standard_factor )
+		{
+			$this->standard_factor = $standard_factor;
+		}
+		public function get_custom_factor()
+		{
+			return $this->custom_factor;
+		}
+
+		public function set_custom_factor( $custom_factor )
+		{
+			$this->custom_factor = $custom_factor;
+		}
 		/**
 		 * Returns true if the price item is active at the given date, false otherwise
 		 * 
@@ -199,6 +230,9 @@
 				//'total_price' => $currency_prefix.' '.$this->get_total_price(),
 				'total_price' => $this->get_total_price(),
 				'is_one_time' => $this->is_one_time(),
+				'location_factor' => $this->get_location_factor(),
+				'standard_factor' => $this->get_standard_factor(),
+				'custom_factor' => $this->get_custom_factor(),
 				// We set a format fitting for the DateCellEditor here because
 				// this table has inline editing enabled.  The DateCellEditor is not
 				// happy about empty values if a custom parser is set, so we use the

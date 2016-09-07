@@ -495,6 +495,8 @@
 
 		public function save_attrib( $attrib, $action = '' )
 		{
+			_debug_array($attrib);
+			die();
 			$receipt = array();
 			$attrib['appname'] = $this->type_app[$this->type];
 			$attrib['location'] = ".{$this->type}.{$attrib['entity_id']}.{$attrib['cat_id']}";

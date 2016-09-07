@@ -1279,7 +1279,21 @@
 				{
 					if ($project['project_type_id'] == 1)//operation
 					{
-						$values['start_date'] = $GLOBALS['phpgw']->common->show_date(time(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+						phpgw::import_class('phpgwapi.datetime');
+						if( $project['end_date'] && phpgwapi_datetime::date_to_timestamp($project['end_date']) < time() )
+						{
+							$values['start_date'] = $GLOBALS['phpgw']->common->show_date(
+								phpgwapi_datetime::date_to_timestamp($project['end_date']),
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+							);
+						}
+						else
+						{
+							$values['start_date'] = $GLOBALS['phpgw']->common->show_date(
+								time(),
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+							);
+						}
 					}
 					else
 					{
@@ -1431,15 +1445,15 @@
 
 
 			$b_group_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
-				'b_account_id' => $project['b_account_id'],
+				'b_account_id' => $project['b_account_group'],
 				'role' => 'group',
 				'type' => $mode));
 
 			$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array(
-				'b_account_id' => $values['b_account_id'],
+				'b_account_id' => $project['b_account_id'] ? $project['b_account_id'] : $values['b_account_id'],
 				'b_account_name' => $values['b_account_name'],
 				'disabled' => '',
-				'parent' => $project['b_account_id'],
+				'parent' => $project['b_account_group'],
 				'type' => $mode,
 				'required' => true
 			));

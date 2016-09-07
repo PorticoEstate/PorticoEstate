@@ -105,11 +105,11 @@ new note	helpdesk	no	Nytt notat
 new value	helpdesk	no	Ny verdi
 ok	helpdesk	no	OK
 about	helpdesk	no	Om
-update subject	helpdesk	no	Oppdater overskrift
+update subject	helpdesk	no	Oppdater emne
 failed to create directory	helpdesk	no	Opplasting av fil feilet
 organisation	helpdesk	no	Organisasjon
-subject	helpdesk	no	Overskrift
-subject changed	helpdesk	no	Overskrift er endret
+subject	helpdesk	no	Emne
+subject changed	helpdesk	no	Emne er endret
 password	helpdesk	no	Passord
 item	helpdesk	no	Post
 print view	helpdesk	no	Print visning
@@ -125,7 +125,7 @@ choose to send mailnotification	helpdesk	no	Send epost
 send e-mail	helpdesk	no	Send epost
 sent by email to	helpdesk	no	sendt med epost til
 last	helpdesk	no	Siste
-enter the subject of this ticket	helpdesk	no	Skriv overskrift
+enter the subject of this ticket	helpdesk	no	Angi emne
 print	helpdesk	no	Skriv ut
 print the ticket	helpdesk	no	Skriv ut melding
 delete	helpdesk	no	Slett
@@ -174,5 +174,6 @@ billable hours	helpdesk	no	Egne timer
 change to	helpdesk	no	Endre til
 do you really want to change the status to %1	helpdesk	no	Vil du virkelig endre status til %1
 do you really want to change the priority to %1	helpdesk	no	Vil du virkelig endre prioritet til %1
-please enter a title!	helpdesk	no	Angi en overskrift
+please enter a title!	helpdesk	no	Angi et emne
 ticket has been updated	helpdesk	no	Melding er oppdatert
+picture	helpdesk	no	Bilde

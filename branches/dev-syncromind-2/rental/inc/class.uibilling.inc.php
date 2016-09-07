@@ -112,7 +112,7 @@
 				}
 				if (($contract_ids != null && is_array($contract_ids) && count($contract_ids) > 0) || (is_array($contract_bill_only_one_time) && count($contract_bill_only_one_time) > 0)) // User submitted contracts to bill
 				{
-					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, $contract_ids_override, phpgw::get_var('export_format'));
+					$missing_billing_info = rental_sobilling::get_instance()->get_missing_billing_info(phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), $contract_ids, (array)$contract_ids_override, phpgw::get_var('export_format'));
 
 					if ($missing_billing_info == null || count($missing_billing_info) == 0)
 					{
@@ -126,7 +126,7 @@
 							phpgw::get_var('title'),
 							$GLOBALS['phpgw_info']['user']['account_id'],
 							$contract_ids,
-							$contract_ids_override,
+							(array) $contract_ids_override,
 							phpgw::get_var('export_format'),
 							$existing_billing,
 							$contract_bill_only_one_time,
@@ -577,11 +577,11 @@ JS;
 						//... 1. Contracts following regular billing cycle
 						$filters = array('contracts_for_billing' => true, 'contract_type' => $contract_type,
 							'billing_term_id' => $billing_term, 'year' => $year, 'month' => $month);
-						$contracts = rental_socontract::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+						$contracts = rental_socontract::get_instance()->get($start_index = 0, $num_of_objects = 0, $sort_field = '', (bool)$sort_ascending, (string)$search_for, (string)$search_type, $filters);
 						$filters2 = array('contract_ids_one_time' => true, 'billing_term_id' => $billing_term,
 							'year' => $year, 'month' => $month);
 					}
-					$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
+					$contract_price_items = $socontract_price_item->get($start_index = 0, $num_of_objects = 0, $sort_field = '', (bool)$sort_ascending, (string)$search_for, (string)$search_type, $filters2);
 
 					foreach ($contract_price_items as $contract_price_item)
 					{
@@ -1478,7 +1478,7 @@ JS;
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 
-			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$start_index = (int)phpgw::get_var('start', 'int' );
 			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;

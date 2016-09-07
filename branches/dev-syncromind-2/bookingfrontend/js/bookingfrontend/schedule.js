@@ -13,7 +13,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	var detected_lang = navigator.language || navigator.userLanguage;
 	var lang = {};
 
-	if(detected_lang == 'no' || detected_lang == 'nn' || detected_lang == 'nb')
+	if(detected_lang == 'no' || detected_lang == 'nn' || detected_lang == 'nb' ||detected_lang == 'nb-no' || detected_lang == 'no-no' || detected_lang == 'nn-no')
 	{
 		lang = {
 			WEEKDAYS_FULL: [

@@ -442,7 +442,10 @@
 			$this->so->update_view($id);
 
 			$values['attributes'] = $this->get_custom_cols();
-			$ticket = $this->so->read_single($id, $values);
+			if(!$ticket = $this->so->read_single($id, $values))
+			{
+				return array();
+			}
 			$ticket = $this->custom->prepare($ticket, 'helpdesk', '.ticket', $view);
 
 			$ticket['user_lid'] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);

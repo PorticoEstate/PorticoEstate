@@ -2060,3 +2060,10 @@ external project	property	no	Eksternt prosjekt
 unspsc code	common	no	UNSPSC-kode
 order received	property	no	Varemottak
 receive order	property	no	Motta vare
+check date type	property	no	Dato filter type
+no date	property	no	Ingen dato
+Please select an external project!	property	no	Velg et tilnyttet eksternt prosjekt
+mine roles	property	no	Mine roller
+account type	property	no	Rolletype
+update ticket	property	no	Oppdater melding
+make relation	property	no	Opprett kopling

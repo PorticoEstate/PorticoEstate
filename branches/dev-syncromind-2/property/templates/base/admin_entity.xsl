@@ -915,7 +915,7 @@
 					</xsl:choose>
 					<tr height="50">
 						<td>
-							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onClick="onActionsClick()">
+							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'save')"/>
 								</xsl:attribute>
@@ -936,21 +936,15 @@
 					<xsl:value-of select="lang_done"/>
 				</xsl:variable>
 				<form method="post" action="{$done_action}">
-					<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onMouseout="window.status='';return true;">
-						<xsl:attribute name="onMouseover">
-							<xsl:text>window.status='</xsl:text>
+					<input type="submit" class="pure-button pure-button-primary" name="done" value="{$lang_done}">
+						<xsl:attribute name="title">
 							<xsl:value-of select="lang_done_standardtext"/>
-							<xsl:text>'; return true;</xsl:text>
 						</xsl:attribute>
 					</input>
 				</form>
 			</td>
 		</tr>
 	</table>
-	<!--  DATATABLE DEFINITIONS-->
-	<script type="text/javascript">
-		var base_java_url = <xsl:value-of select="base_java_url"/>;
-	</script>
 </xsl:template>
 
 <!-- list attribute -->
