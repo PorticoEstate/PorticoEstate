@@ -1585,12 +1585,18 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$id = phpgw::get_var('id', 'int', 'GET');
+			$id = phpgw::get_var('id', 'int');
 
 			if ($this->tenant_id)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view2',
 					'id' => $id));
+			}
+
+			$add_relation = phpgw::get_var('add_request');
+			if($add_relation)
+			{
+				$receipt = $this->bo->add_relation($add_relation, $id);
 			}
 
 			$bolocation = CreateObject('property.bolocation');
@@ -2768,17 +2774,17 @@
 
 			$relation_type_list = array(
 				array(
-					'id'	=> 'property.uiproject.index',
-					'name'	=> lang('project')
-				),
-				array(
 					'id'	=> 'property.uirequest.index',
 					'name'	=> lang('request')
 				),
-				array(
-					'id'	=> 'property.uilookup.entity',
-					'name'	=> 'Everything else'
-				),
+//				array(
+//					'id'	=> 'property.uiproject.index',
+//					'name'	=> lang('project')
+//				),
+//				array(
+//					'id'	=> 'property.uilookup.entity',
+//					'name'	=> 'Everything else'
+//				),
 			);
 
 			$data = array(

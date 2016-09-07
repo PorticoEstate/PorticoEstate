@@ -1458,7 +1458,9 @@ JS;
 				(
 				'menuaction' => 'property.uirequest.index',
 				'query' => (isset($values['location_data']['loc1']) ? $values['location_data']['loc1'] : ''),
-				'project_id' => (isset($id) ? $id : '')
+				'make_relation' => !!$id,
+				'relation_id' => isset($id) ? $id : 0,
+				'relation_type' => 'project'
 			);
 
 			$supervisor_email = array();

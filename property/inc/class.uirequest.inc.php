@@ -120,7 +120,7 @@
 		 */
 		public function query()
 		{
-			$project_id = phpgw::get_var('project_id', 'int');
+			$make_relation =  phpgw::get_var('make_relation', 'bool');
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
@@ -150,7 +150,7 @@
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
-				'project_id' => $project_id,
+				'make_relation' => $make_relation,
 				'start_date' => $start_date,
 				'end_date' => $end_date,
 				'list_descr' => $list_descr
@@ -615,10 +615,27 @@
 				return $this->query();
 			}
 
-			$project_id = phpgw::get_var('project_id', 'int'); // lookup for maintenance planning
+			$make_relation =  phpgw::get_var('make_relation', 'bool'); // lookup for maintenance planning
+			$relation_id = phpgw::get_var('relation_id', 'int');
+			$relation_type = phpgw::get_var('relation_type');
+
+			switch ($relation_type)
+			{
+				case 'ticket':
+					$update_menuaction = 'property.uitts.view';
+					$lang_update_relation = lang('update ticket');
+					break;
+				case 'project':
+					$update_menuaction = 'property.uiproject.edit';
+					$lang_update_relation = lang('update project');
+					break;
+				default:
+					break;
+			}
+
 			$query = phpgw::get_var('query');
 
-			if ($project_id)
+			if ($make_relation)
 			{
 				$lookup = true;
 			}
@@ -678,7 +695,9 @@
 					'source' => self::link(array(
 						'menuaction' => 'property.uirequest.index',
 						'lookup' => $lookup,
-						'project_id' => $project_id,
+						'make_relation' => $make_relation,
+						'relation_id' => $relation_id,
+						'relation_type' => $relation_type,
 						'nonavbar' => $this->nonavbar,
 						'phpgw_return_as' => 'json'
 					)),
@@ -690,7 +709,7 @@
 						'menuaction' => 'property.uirequest.add'
 					)),
 					'allrows' => true,
-					'select_all' => !!$project_id,
+					'select_all' => $make_relation,
 					'editor_action' => array(),
 					'field' => array(),
 					'query'	=> phpgw::get_var('query')
@@ -738,7 +757,7 @@
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			$this->bo->read(array('project_id' => $project_id, 'allrows' => $this->allrows,
+			$this->bo->read(array('make_relation' => $make_relation, 'allrows' => $this->allrows,
 				'dry_run' => true));
 			$uicols = $this->bo->uicols;
 			//_debug_array($uicols);die();
@@ -884,8 +903,8 @@
 				$data['datatable']['actions'][] = array
 					(
 					'my_name' => 'update_project',
-					'statustext' => lang('Update project'),
-					'text' => lang('Update project'),
+					'statustext' => $lang_update_relation,
+					'text' => $lang_update_relation,
 					'type' => 'custom',
 					'custom_code' => "
 											
@@ -906,8 +925,8 @@
 			}
 
 											var path_update = new Array();
-											path_update['menuaction'] = 'property.uiproject.edit';
-											path_update['id'] = '" . $project_id . "';
+											path_update['menuaction'] = '{$update_menuaction}';
+											path_update['id'] = '{$relation_id}';
 
 											var sUrl = phpGWLink('index.php', path_update);
 

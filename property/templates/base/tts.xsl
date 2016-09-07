@@ -371,7 +371,7 @@
 							</xsl:for-each>
 						</div>
 					</xsl:for-each>
-					<!--div class="pure-control-group">
+					<div class="pure-control-group">
 						<xsl:variable name="lang_make_relation">
 							<xsl:value-of select="php:function('lang', 'make relation')"/>
 						</xsl:variable>
@@ -393,7 +393,7 @@
 							</option>
 							<xsl:apply-templates select="relation_type_list/options"/>
 						</select>
-					</div-->
+					</div>
 
 					<div class="pure-control-group">
 						<label>

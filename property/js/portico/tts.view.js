@@ -254,16 +254,23 @@ this.make_relation = function (id)
 	relation_type = $('#make_relation').val();
 	if (relation_type)
 	{
-		oArgs = {
-			menuaction: relation_type,
-			make_relation: true,
-			relation_id: id,
-			relation_type: 'ticket',
-			query: location_code, //defined in xsl
-			clear_state:1,
-		};
-		var strURL = phpGWLink('index.php', oArgs);
-		window.open(strURL, '_self');
+		if (confirm("Du vil miste informasjon som ikke er lagret"))
+		{
+			oArgs = {
+				menuaction: relation_type,
+				make_relation: true,
+				relation_id: id,
+				relation_type: 'ticket',
+				query: location_code, //defined in xsl
+				clear_state: 1,
+			};
+			var strURL = phpGWLink('index.php', oArgs);
+			window.open(strURL, '_self');
+		}
+	}
+	else
+	{
+		alert('Velg type');
 	}
 };
 
