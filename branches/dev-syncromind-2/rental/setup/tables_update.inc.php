@@ -641,7 +641,14 @@
 		{
 			$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_application', 'composite_type', 'composite_type_id');
 		}
-
+		if(isset($metadata['address_1']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_application', 'address_1', 'address1');
+		}
+		if(isset($metadata['address_2']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_application', 'address_2', 'address2');
+		}
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
