@@ -1273,7 +1273,7 @@ function populateSelect_activityCalendar(url, container, attr)
 }
 
 
-function createTableSchedule (d, u, c, r, cl, dt, a, p)
+function createTableSchedule (d, u, c, r, cl, dt, a, p, t)
 {
 	var container = document.getElementById(d);
 	var xtable = document.createElement('table');
@@ -1415,31 +1415,37 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p)
 				});
 				tableBody.appendChild(tableBodyTr);
 			});
-		}
 
-		if (p)
-		{
-			var start = a.start;
-			var total = data['ResultSet'].totalResultsAvailable;
-			var n_objects = a.length;
-            start = (start > total) ? 0 : start;
+			if (p)
+			{
+				var start = a.start;
+				var total = data['ResultSet'].totalResultsAvailable;
+				var n_objects = a.length;
+				start = (start > total) ? 0 : start;
 
-			var pages = Math.floor(total / n_objects);
-			var res = total % n_objects;
-			var page = (start == 0) ? 1 : (start / n_objects) + 1;
+				var pages = Math.floor(total / n_objects);
+				var res = total % n_objects;
+				var page = (start == 0) ? 1 : (start / n_objects) + 1;
 
-			pages = (res > 0) ? pages+1 : pages;
-			pages = (pages == 0) ? pages+1 : pages;
+				pages = (res > 0) ? pages+1 : pages;
+				pages = (pages == 0) ? pages+1 : pages;
 
-			var paginator = createPaginatorSchedule(pages, page);
-			container.appendChild(paginator);
-			
-			var input_start = document.createElement('input');
-			input_start.setAttribute('type', 'hidden');
-			input_start.setAttribute('name', 'start_index');
-			input_start.setAttribute('id', 'start_index');
-			input_start.value = start;
-			container.appendChild(input_start);
+				var paginator = createPaginatorSchedule(pages, page);
+				container.appendChild(paginator);
+
+				var input_start = document.createElement('input');
+				input_start.setAttribute('type', 'hidden');
+				input_start.setAttribute('name', 'start_index');
+				input_start.setAttribute('id', 'start_index');
+				input_start.value = start;
+				container.appendChild(input_start);
+			}
+
+			if (t)
+			{
+				var toolbar = schedule.createToolbar();
+				container.insertBefore(toolbar, xtable);
+			}
 		}
 	});
 }
@@ -1778,7 +1784,6 @@ function rentalSchedule (data, col, date)
 
 	if (data[k])
 	{
-		var contratctLink = (data['contract_link']) ? data['contract_link'] : null;
 		text = data[k]['status'];
 	}
 	else
@@ -1786,6 +1791,18 @@ function rentalSchedule (data, col, date)
 		text = "free";
 		classes = "free";
 	}
+
+	trAttributes.push( {attribute: 'data-id', value: data['id']} );
+	trFunction.push(
+		{
+			event: 'click',
+			callFunction: function () {
+				$(this).parent().parent().find('tr').removeClass("trselected")
+				$(this).parent().addClass("trselected");
+				$('#schedule_toolbar button').attr('disabled', false);
+			}
+		}
+	);
 
 	var data_return = {
 		text: text,

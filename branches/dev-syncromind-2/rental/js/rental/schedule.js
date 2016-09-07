@@ -8,16 +8,16 @@ var schedule = new Array();
 
 schedule.renderSchedule = function (container, url, date, colFormatter, includeResource, classTable)
 {
-    classTable = (classTable) ? classTable : "pure-table";
-    while (date.getDay() != 1)
+	classTable = (classTable) ? classTable : "pure-table rentalScheduleTable";
+	while (date.getDay() != 1)
 	{
 		date.setDate(date.getDate() - 1);
 	}
-    
-    var datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+
+	var datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 	url += '&date=' + datestr;
-    
-    var detected_lang = navigator.language || navigator.userLanguage;
+
+	var detected_lang = navigator.language || navigator.userLanguage;
 	var lang = {};
 
 	if(detected_lang == 'no' || detected_lang == 'nn' || detected_lang == 'nb')
@@ -48,39 +48,42 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 			LBL_WEEK: 'Week'
 		};
 	}
-    
-    var colDefs = [
-        {key: 'id', label: 'Composite ID', type: 'th'}
-    ]
 
-    var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    schedule.dates = {};
+	var colDefs = [
+		{key: 'object_number', label: 'Object Number', type: 'th'},
+		{key: 'name', label: 'Name', type: 'th'},
+		{key: 'id', label: 'Composite ID', type: 'th'}
+	]
 
-    for (var i = 0; i < 7; i++)
-    {
-        var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        d.setDate(d.getDate() + i);
-        var x = (i < 6) ? i + 1 : 0;
-        schedule.dates[keys[x]] = d;
-        colDefs.push({
-            key: keys[x],
-            value: 'old_contract_id',
-            label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, date: d, day: d.getDate()
-        });
-    }
-    
-    var r = [{n: 'ResultSet'}, {n: 'Result'}];
-    
-    var params = (schedule.params) ? schedule.params : new Array();
-    var pagination = true;
-    
-    createTableSchedule(container, url, colDefs, r, classTable, datestr, params, pagination)
-    
+	var keys = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	schedule.dates = {};
+
+	for (var i = 0; i < 7; i++)
+	{
+		var d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+		d.setDate(d.getDate() + i);
+		var x = (i < 6) ? i + 1 : 0;
+		schedule.dates[keys[x]] = d;
+		colDefs.push({
+			key: keys[x],
+			value: 'old_contract_id',
+			label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, date: d, day: d.getDate()
+		});
+	}
+
+	var r = [{n: 'ResultSet'}, {n: 'Result'}];
+
+	var params = (schedule.params) ? schedule.params : new Array();
+	var pagination = true;
+	var toolbar = true;
+
+	createTableSchedule(container, url, colDefs, r, classTable, datestr, params, pagination, toolbar);
 }
 
 schedule.setupWeekPicker = function ()
 {
 }
+
 $(function ()
 {
 	$("#cal_container #datepicker").datepicker({
@@ -99,6 +102,7 @@ $(function ()
 			}
 		}
 	});
+
 	$("#cal_container #pickerImg").on('click', function ()
 	{
 		$("#cal_container #datepicker").datepicker("show");
@@ -110,7 +114,7 @@ schedule.updateSchedule = function (date)
 	schedule.week = $.datepicker.iso8601Week(date);
 	$('#cal_container #numberWeek').text(schedule.week);
 	$("#cal_container #datepicker").datepicker("setDate", date);
-	classTable = (schedule.classTable) ? schedule.classTable : 'pure-table';
+	classTable = (schedule.classTable) ? schedule.classTable : 'pure-table rentalScheduleTable';
 
 	var url = self.location.href;
 	url = url.substr(0, (url.indexOf("#date")));
@@ -130,10 +134,12 @@ schedule.moveWeek = function (n)
 	date.setDate(date.getDate() + n);
 	schedule.updateSchedule(date);
 }
+
 schedule.prevWeek = function ()
 {
 	schedule.moveWeek(-7)
 };
+
 schedule.nextWeek = function ()
 {
 	schedule.moveWeek(7)
@@ -141,60 +147,129 @@ schedule.nextWeek = function ()
 
 $(window).load(function()
 {
-    function searchSchedule ()
-    {
-        var location_id = $('#location_id').val();
-        var search_option = $('#search_option').val();
-        var contract_status = $('#contract_status').val();
-        var contract_type = $('#contract_type').val();
-        var search = $('#txtSearchSchedule').val();
-        var n_objects = $('#cboNObjects').val();
-        
-        var args = {
-            menuaction: 'rental.uicomposite.get_schedule',
-            composite_id: composite_id,
-            location_id: location_id,
-            search_option: search_option,
-            contract_status: contract_status,
-            contract_type: contract_type,
-            search: search,
-            n_objects: n_objects
-        }
-        
-        schedule.datasourceUrl = phpGWLink('index.php', args, true);
-        
-        schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-    }
+	function searchSchedule ()
+	{
+		var location_id = $('#location_id').val();
+		var search_option = $('#search_option').val();
+		var contract_status = $('#contract_status').val();
+		var contract_type = $('#contract_type').val();
+		var search = $('#txtSearchSchedule').val();
+		var n_objects = $('#cboNObjects').val();
 
-    $('select.searchSchedule').on('change', function()
-    {
-        schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-    });    
-    $('input.searchSchedule').on('keyup', function()
-    {
-        var $this = $(this);
-        if ($this.data('text') != $this.val())
-        {
-            setTimeout(function()
-            {
-                $this.data('text', $this.val());
-                schedule.params.search = $this.val();
-                schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-            }, 500);
-        }
-    });
+		var args = {
+			menuaction: 'rental.uicomposite.get_schedule',
+			composite_id: composite_id,
+			location_id: location_id,
+			search_option: search_option,
+			contract_status: contract_status,
+			contract_type: contract_type,
+			search: search,
+			n_objects: n_objects
+		}
 
-    $('#schedule_container').on('click', '.paginate_button', function()
-    {
-        if ($(this).data('page'))
-        {
-            var page = $(this).data('page');
-            var l = $('#cboNObjects').val();
-            var start = l * (page - 1);
-            schedule.params.start = start;
-            schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
-        }
-    })
+		schedule.datasourceUrl = phpGWLink('index.php', args, true);
+
+		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+	}
+
+	$('select.searchSchedule').on('change', function()
+	{
+		schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+	});
+
+	$('input.searchSchedule').on('keyup', function()
+	{
+		var $this = $(this);
+		if ($this.data('text') != $this.val())
+		{
+			setTimeout(function()
+			{
+				$this.data('text', $this.val());
+				schedule.params.search = $this.val();
+				schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+			}, 500);
+		}
+	});
+
+	$('#schedule_container').on('click', '.paginate_button', function()
+	{
+		if ($(this).data('page'))
+		{
+			var page = $(this).data('page');
+			var l = $('#cboNObjects').val();
+			var start = l * (page - 1);
+			schedule.params.start = start;
+			schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+		}
+	})
 })
 
+schedule.createToolbar = function ()
+{
+	var toolbar = schedule.toolbar;
+	var container = document.createElement('div');
+	container.setAttribute('id', 'schedule_toolbar');
+	var id = "$('.rentalScheduleTable .trselected').data('id')";
+	$.each(toolbar, function(i, v)
+	{
+		var name = v['name'];
+		var text = v['text'];
+		var action = v['action'];
 
+		var  parameters = (v['parameters']) ? v['parameters'] : "";
+
+		var button = document.createElement('button');
+		button.innerHTML = text;
+		if (parameters)
+		{
+			button.disabled = true;
+		}
+		if (name == 'download')
+		{
+			button.addEventListener('click', function()
+			{
+				var new_action = action;
+				$.each(schedule.params, function(i, v)
+				{
+					new_action += '&' + i + '=' + v;
+				});
+				if (parameters)
+				{
+					for (var i = 0; i < parameters.length; i++)
+					{
+						var val = eval(parameters[i]['source']);
+						new_action += '&' + parameters[i]['name'] + '=' + eval(val);
+					}
+				}
+				var iframe = document.createElement('iframe');
+				iframe.style.height = "0px";
+				iframe.style.width = "0px";
+				iframe.src = new_action;
+				if(confirm("This will take some time..."))
+				{
+					document.body.appendChild( iframe );
+				}
+			}, false);
+		}
+		else
+		{
+			button.addEventListener('click', function()
+			{
+				var new_action = action;
+				if (parameters)
+				{
+					for (var i = 0; i < parameters.length; i++)
+					{
+						var val = eval(parameters[i]['source']);
+						new_action += '&' + parameters[i]['name'] + '=' + eval(val);
+					}
+				}
+				window.open(new_action);
+			}, false);
+		}
+
+		container.appendChild(button);
+	});
+
+	return container;
+}
