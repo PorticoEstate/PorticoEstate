@@ -181,7 +181,41 @@
 			return $receipt['id'];
 		}
 		
-		public function add_entity_categories ($buildingpart_out_table)
+		public function add_attributes_to_categories ($buildingpart_in_table, $template_id)
+		{
+			$template = explode("_", $template_id);
+			$entity_id = $template[0];
+			$cat_id = $template[1];
+			
+			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+
+			$receipt = array();
+			
+			foreach ($buildingpart_in_table as $template)
+			{	
+				$appname = $this->type_app[$this->type];
+				$location = ".{$this->type}.{$template['entity_id']}.{$template['cat_id']}";
+				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
+			
+				foreach($attributes as $attrib)
+				{
+					$id = $this->custom->add($attrib, $attrib_table);	
+					if ($id <= 0)
+					{
+						$receipt['error'][] = array('msg' => lang('Unable to add field'));
+					}
+					else if ($id == -1)
+					{
+						$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
+						$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+					}
+				}
+			}
+			
+			return $receipt;
+		}
+		
+		public function add_entity_categories ($buildingpart_out_table, $template_id)
 		{
 			$buildingparts = array();
 			
@@ -201,8 +235,14 @@
 					}
 				}
 
+				$template = explode("_", $template_id);
+			
 				$cat_id = $this->template_cat_id[strlen($k)];
-				$entity_id = '3';
+				if (strlen($k) > 2)
+				{
+					$cat_id = $template[1];
+				}
+				$entity_id = $template[0];
 
 				$category_id = $this->save_category($name, $parent_id, $cat_id);
 
