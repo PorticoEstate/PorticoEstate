@@ -285,6 +285,51 @@
 			return $this->db->next_record();
 		}
 
+		function get_column_list($location_id)
+		{
+			$sql = "SELECT * FROM phpgw_cust_attribute "
+				. " WHERE location_id = {$location_id}"
+				. " AND custom = 1 OR column_name = 'category'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			
+			while ($this->db->next_record())
+			{
+			$attribs = array();
+				$id = $this->db->f('id');
+				$attribs[$id] = array
+				(
+					'id'					=> $id,
+					'group_id'				=> (int) $this->db->f('group_id'),
+					'attrib_sort'			=> (int) $this->db->f('attrib_sort'),
+					'list'					=> $this->db->f('list'),
+					'lookup_form'			=> $this->db->f('lookup_form'),
+					'entity_form'			=> $this->db->f('entity_form'),
+					'column_name'			=> $this->db->f('column_name'),
+					'name'					=> $this->db->f('column_name'),
+					'size'					=> $this->db->f('size'),
+					'precision'				=> $this->db->f('precision_'),
+					'statustext'			=> $this->db->f('statustext', true),
+					'input_text'			=> $this->db->f('input_text', true),
+					'type_name'				=> $this->db->f('type'),
+					'datatype'				=> $this->db->f('datatype'),
+					'search'				=> $this->db->f('search'),
+					'nullable'				=> ($this->db->f('nullable') == 'True'),
+					'history'				=> $this->db->f('history'),
+					'disabled'				=> $this->db->f('disabled'),
+					'helpmsg'				=> !!$this->db->f('helpmsg'),
+					'get_list_function'		=> $this->db->f('get_list_function'),
+					'get_list_function_input' => $this->db->f('get_list_function_input') ? unserialize($this->db->f('get_list_function_input', true)) : '',
+					'get_single_function'		=> $this->db->f('get_single_function'),
+					'get_single_function_input' => $this->db->f('get_single_function_input') ? unserialize($this->db->f('get_single_function_input', true)) : '',
+					'short_description'			=> $this->db->f('short_description'),
+					'javascript_action'			=> $this->db->f('javascript_action',true),
+					'default_value'				=> $this->db->f('default_value',true)
+				);
+			}
+			return $attribs;
+		}
+
 		function read( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
@@ -615,11 +660,19 @@
 
 			//---------------------start custom user cols
 
-			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup] : '';
-			$user_column_filter = '';
-			if (isset($user_columns) AND is_array($user_columns) AND $user_columns[0])
+			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup] : array();
+			$_user_columns = array();
+			foreach ($user_columns as $user_column_id)
 			{
-				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',', $user_columns) . '))';
+				if (ctype_digit($user_column_id))
+				{
+					$_user_columns[] = $user_column_id;
+				}
+			}
+			$user_column_filter = '';
+			if ($_user_columns)
+			{
+				$user_column_filter = " OR ($attribute_filter AND id IN (" . implode(',', $_user_columns) . '))';
 			}
 
 			$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
