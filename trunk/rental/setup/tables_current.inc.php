@@ -495,7 +495,7 @@
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'ecodimb_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'district_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'composite_type' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'composite_type_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'cleaning' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
 				'payment_method' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
 				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),

@@ -267,10 +267,10 @@
 				);
 			}
 
-			$composite_type = array();
+			$composite_types = array();
 			foreach ($this->composite_types as $_key => $_value)
 			{
-				$composite_type[] = array('id' => $_key, 'name' => $_value);
+				$composite_types[] = array('id' => $_key, 'name' => $_value);
 			}
 
 			$payment_methods = array();
@@ -334,7 +334,7 @@
 					'attrib_name' => 'descr')
 				),
 				'district_list' => array('options' => $bocommon->select_district_list('', $application->district_id)),
-				'composite_type_list' => array('options' => $bocommon->select_list($application->composite_type, $composite_type)),
+				'composite_type_list' => array('options' => $bocommon->select_list($application->composite_type, $composite_types)),
 				'payment_method_list' => array('options' => $bocommon->select_list($application->payment_method, $payment_methods)),
 				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'mode' => $mode,

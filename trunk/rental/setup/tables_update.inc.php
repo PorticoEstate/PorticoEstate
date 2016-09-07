@@ -631,3 +631,22 @@
 		}
 	}
 
+	$test[] = '0.1.0.27';
+	function rental_upgrade0_1_0_27()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('rental_application');
+		if(isset($metadata['composite_type']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_application', 'composite_type', 'composite_type_id');
+		}
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.28';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
