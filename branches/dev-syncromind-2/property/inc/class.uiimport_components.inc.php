@@ -471,11 +471,12 @@ HTML;
 						print_r($receipt); die;
 					}
 				}
-					
+				
 				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 				$rows = $rows ? $rows + 1 : 0;
 
 				$buildingpart_out_table = array();
+				$buildingpart_in_table = array();
 				$import_data = array();
 
 				$import_components = new import_components();
@@ -493,9 +494,13 @@ HTML;
 					if ((int)$_result['building_part'] || $_result['building_part'] === '0')
 					{
 						if (array_key_exists((string)$_result['building_part'], $entity_categories))
-						{						
+						{				
 							$cat_id = $entity_categories[$_result['building_part']]['id'];
-							$entity_id = $entity_categories[$_result['building_part']]['entity_id'];						
+							$entity_id = $entity_categories[$_result['building_part']]['entity_id'];	
+							if (empty($_result['benevnelse']))
+							{
+								$buildingpart_in_table[$_result['building_part']] = array('entity_id' => $entity_id, 'cat_id' => $cat_id);
+							}
 						} 
 						else {
 							$buildingpart_out_table[$_result['building_part']] = $_result['building_part'].' - '.$_result['category_name'];
@@ -507,15 +512,21 @@ HTML;
 						{
 							$import_data[$_result['building_part']]['cat_id'] = $cat_id;
 							$import_data[$_result['building_part']]['entity_id'] = $entity_id;
-							$import_data[$_result['building_part']]['components'] = $_result;						
+							$import_data[$_result['building_part']]['components'][] = $_result;						
 						}
 					}
+				}
+				//print_r($buildingpart_in_table); die;
+				
+				if (count($buildingpart_in_table))
+				{
+					$receipt = $import_components->add_attributes_to_categories($buildingpart_in_table, $template_id);
 				}
 				
 				if (count($buildingpart_out_table))
 				{
 					ksort($buildingpart_out_table);
-					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table);
+					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table, $template_id);
 
 					if (count($buildingpart_processed['not_added']))
 					{
