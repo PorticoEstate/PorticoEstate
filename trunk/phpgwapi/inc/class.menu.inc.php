@@ -110,6 +110,10 @@
 			foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $app_info)
 			//	foreach ( $raw_menus as $app => $raw_menu )
 			{
+				if($app_info['status'] == 2) // hidden
+				{
+					continue;
+				}
 				$raw_menu = $raw_menus[$app];
 				// Ignore invalid entries
 				if(!is_array($raw_menu))
