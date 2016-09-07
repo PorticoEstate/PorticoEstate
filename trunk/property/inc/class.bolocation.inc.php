@@ -180,9 +180,24 @@
 				$selected = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : '';
 			}
 			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = $this->custom->find('property', '.location.' . $type_id, 0, '', '', '', true, false, $filter);
-			$column_list = $this->bocommon->select_multi_list($selected, $columns);
-			return $column_list;
+			//$columns = $this->custom->find('property', '.location.' . $type_id, 0, '', '', '', true, false, $filter);
+
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$this->type_id}");
+
+			$columns = $this->so->get_column_list($location_id);
+			$columns = array_merge($columns, $this->get_column_list());
+			return $this->bocommon->select_multi_list($selected, $columns);
+		}
+
+		function get_column_list()
+		{
+			$columns = array();
+//			$columns['category_text'] = array(
+//				'id' => 'category_text',
+//				'name' => lang('category'),
+//				'sortable' => false
+//			);
+			return $columns;
 		}
 
 		function select_status_list( $format = '', $selected = '' )
@@ -750,6 +765,32 @@ JS;
 
 			$this->total_records = $this->so->total_records;
 			$this->uicols = $this->so->uicols;
+
+			$custom_cols = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $this->type_id . !!$this->lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']["location_columns_" . $this->type_id . !!$this->lookup] : '';
+
+			$column_list = $this->get_column_list();
+			$get_vendor_names = false;
+
+			foreach ($custom_cols as $col_id)
+			{
+				if (!ctype_digit($col_id))
+				{
+					$this->uicols['input_type'][] = 'text';
+					$this->uicols['name'][] = $col_id;
+					$this->uicols['descr'][] = $column_list[$col_id]['name'];
+					$this->uicols['statustext'][] = $column_list[$col_id]['name'];
+					$this->uicols['exchange'][] = false;
+					$this->uicols['align'][] = '';
+					$this->uicols['datatype'][] = false;
+					$this->uicols['sortable'][] = $column_list[$col_id]['sortable'];
+					$this->uicols['formatter'][] = $column_list[$col_id]['formatter'];
+					$this->uicols['classname'][] = $column_list[$col_id]['classname'];
+					if ($col_id == 'vendor_names')
+					{
+						$get_vendor_names = true;
+					}
+				}
+			}
 
 			return $locations;
 		}
