@@ -181,35 +181,92 @@
 			return $receipt['id'];
 		}
 		
-		public function add_attributes_to_categories ($buildingpart_in_table, $template_id)
+		function _add_attrib_from_template( $values )
 		{
-			$template = explode("_", $template_id);
-			$entity_id = $template[0];
-			$cat_id = $template[1];
-			
-			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
-
 			$receipt = array();
-			
-			foreach ($buildingpart_in_table as $template)
-			{	
-				$appname = $this->type_app[$this->type];
-				$location = ".{$this->type}.{$template['entity_id']}.{$template['cat_id']}";
-				$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
-			
-				foreach($attributes as $attrib)
+		
+			$template_info = explode('_', $values['category_template']);
+			$template_entity_id = $template_info[0];
+			$template_cat_id = $template_info[1];
+
+			$attrib_group_list = $this->bo->read_attrib_group(array('entity_id' => $template_entity_id,
+				'cat_id' => $template_cat_id, 'allrows' => true));
+
+			foreach ($attrib_group_list as $attrib_group)
+			{
+				$group = array
+					(
+					'appname' => $this->type_app[$this->type],
+					'location' => ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}",
+					'group_name' => $attrib_group['name'],
+					'descr' => $attrib_group['descr'],
+					'remark' => $attrib_group['remark']
+				);
+				$this->custom->add_group($group);
+			}
+
+			$attrib_list = $this->bo->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id,
+				'allrows' => true));
+
+			$template_attribs = array();
+			foreach ($attrib_list as $attrib)
+			{
+
+					$template_attribs[] = $this->bo->read_single_attrib($template_entity_id, $template_cat_id, $attrib['id']);
+		
+			}
+
+			foreach ($template_attribs as $attrib)
+			{
+				$attrib['appname'] = $this->type_app[$this->type];
+				$attrib['location'] = ".{$this->type}.{$values['entity_id']}.{$values['cat_id']}";
+
+				$choices = array();
+				if (isset($attrib['choice']) && $attrib['choice'])
 				{
-					$id = $this->custom->add($attrib, $attrib_table);	
-					if ($id <= 0)
+					$choices = $attrib['choice'];
+					unset($attrib['choice']);
+				}
+
+				$id = $this->custom->add($attrib);
+				if ($choices)
+				{
+					foreach ($choices as $choice)
 					{
-						$receipt['error'][] = array('msg' => lang('Unable to add field'));
-					}
-					else if ($id == -1)
-					{
-						$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-						$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+						$attrib['new_choice'] = $choice['value'];
+						$attrib['id'] = $id;
+						$this->custom->edit($attrib);
 					}
 				}
+				if ($id <= 0)
+				{
+					$receipt['error'][] = array('msg' => lang('Unable to add field'));
+				}
+				else if ($id == -1)
+				{
+					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
+					$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+				}
+			}
+			
+			return $receipt;
+		}
+		
+		public function add_attributes_to_categories ($buildingpart_in_table, $template_id)
+		{
+			$receipt = array();
+			
+			foreach ($buildingpart_in_table as $k => $template)
+			{	
+				$values2 = array
+					(
+					'entity_id' => $template['entity_id'],
+					'cat_id' => $template['cat_id'],
+					'category_template' => $template_id,
+					'selected' => ''
+				);
+				
+				$receipt = $this->_add_attrib_from_template( $values2 );
 			}
 			
 			return $receipt;
