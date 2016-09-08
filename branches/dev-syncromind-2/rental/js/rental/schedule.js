@@ -221,6 +221,7 @@ schedule.createToolbar = function ()
 
 		var button = document.createElement('button');
 		button.innerHTML = text;
+		button.classList.add('toolbar_button')
 
 		if (parameters)
 		{

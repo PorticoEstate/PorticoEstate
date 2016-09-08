@@ -37,7 +37,7 @@
 			$this->config->read();
 		}
 
-		private function _get_filters()
+		public function get_filters()
 		{
 			$filters = array();
 
@@ -454,7 +454,7 @@
 				)
 			);
 
-			$filters = $this->_get_Filters();
+			$filters = $this->get_Filters();
 			krsort($filters);
 			foreach ($filters as $filter)
 			{
@@ -1127,7 +1127,7 @@ JS;
 			$editable = phpgw::get_var('editable', 'bool');
 			$type = 'all_composites';
 
-			$filters = $this->_get_filters();
+			$filters = $this->get_filters();
 
 			$schedule['filters'] = $filters;
 
@@ -1245,12 +1245,12 @@ JS;
 			$schedule['date'] = $date;
 			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$schedule['toolbar'] = json_encode($toolbar);
-
+			$data['schedule'] = $schedule;
 			self::add_javascript('rental','rental','schedule.js');
 
 			phpgwapi_jquery::load_widget("datepicker");
 
-			self::render_template_xsl(array('schedule'), array('schedule' => $schedule));
+			self::render_template_xsl(array('schedule', 'rental_schedule'), array('schedule' => $data));
 		}
 
 		public function get_schedule ()

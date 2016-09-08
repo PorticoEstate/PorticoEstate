@@ -424,6 +424,9 @@
 									</xsl:for-each>
 								</div>
 							</div>
+							<xsl:call-template name="rental_schedule">
+								<xsl:with-param name="schedule" select ='./schedule'/>
+							</xsl:call-template>
 						</fieldset>
 					</div>
 				</xsl:if>

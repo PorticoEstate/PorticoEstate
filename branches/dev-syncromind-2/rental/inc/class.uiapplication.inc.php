@@ -26,6 +26,7 @@
 	 * @subpackage application
 	 * @version $Id: $
 	 */
+	phpgw::import_class('rental.uicomposite');
 	phpgw::import_class('rental.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
@@ -309,7 +310,7 @@
 				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
- 
+
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
@@ -341,10 +342,144 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
 			);
+
+			// Composite
+			$composite_id = (int)phpgw::get_var('id');
+			$date = new DateTime(phpgw::get_var('date'));
+			if ($date->format('w') != 1) {
+				$date->modify('last monday');
+			}
+
+			$editable = phpgw::get_var('editable', 'bool');
+			$type = 'all_composites';
+
+			$filters = rental_uicomposite::get_filters();
+
+			$schedule['filters'] = $filters;
+
+			$schedule['datasource_url'] = self::link(array(
+				'menuaction' => 'rental.uicomposite.get_schedule',
+				'editable' => ($editable) ? 1 : 0,
+				'type' => $type,
+				'phpgw_return_as' => 'json'
+			));
+
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+						)
+					)
+				);
+
+			$toolbar = array();
+
+			$toolbar[] = array(
+				'name' => 'new',
+				'text' => lang('new'),
+				'action' => self::link(array(
+					'menuaction' => 'rental.uicomposite.add'
+				))
+			);
+
+			$toolbar[] = array(
+				'name' => 'download',
+				'text' => lang('download'),
+				'action' => self::link(array(
+					'menuaction' => 'rental.uicomposite.download',
+					'type' => $type,
+					'export' => true,
+					'allrows' => true
+				))
+			);
+
+			$toolbar[] = array(
+				'name' => 'edit',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'rental.uicomposite.edit'
+				)),
+				'parameters' => $parameters
+			);
+
+			$toolbar[] = array(
+				'name' => 'view',
+				'text' => lang('show'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'rental.uicomposite.view'
+				)),
+				'parameters' => $parameters
+			);
+
+			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+
+			$valid_contract_types = array();
+			if (isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
+			{
+				foreach ($this->config->config_data['contract_types'] as $_key => $_value)
+				{
+					if ($_value)
+					{
+						$valid_contract_types[] = $_value;
+					}
+				}
+			}
+
+			$create_types = array();
+			foreach ($contract_types as $id => $label)
+			{
+				if ($valid_contract_types && !in_array($id, $valid_contract_types))
+				{
+					continue;
+				}
+
+				$names = $this->locations->get_name($id);
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					{
+						$create_types[] = array($id, $label);
+					}
+				}
+			}
+
+			foreach ($create_types as $create_type)
+			{
+				$toolbar[] = array
+					(
+					'name' => $create_type[1],
+					'text' => lang('create_contract_' . $create_type[1]),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'rental.uicontract.add_from_composite',
+						'responsibility_id' => $create_type[0]
+					)),
+					'attributes' => array(
+						'class' => 'create_type'
+					),
+					'parameters' => $parameters
+				);
+			}
+
+			$schedule['composite_id'] = $composite_id;
+			$schedule['date'] = $date;
+			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+			$schedule['toolbar'] = json_encode($toolbar);
+
+			$data['schedule'] = $schedule;
+
+			phpgwapi_jquery::load_widget("datepicker");
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
+			self::add_javascript('rental','rental','schedule.js');
 			self::add_javascript('rental', 'rental', 'application.edit.js');
-			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
+			self::render_template_xsl(array('application', 'datatable_inline', 'rental_schedule'), array($mode => $data));
 		}
 		/*
 		 * To be removed
