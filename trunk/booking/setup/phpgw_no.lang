@@ -341,6 +341,7 @@ Overlaps with existing allocation	booking	no	Overlapper med eksisterende tildeli
 Overlaps with existing booking	booking	no	Overlapper med eksisterende booking
 This booking is not within the selected season	booking	no	Denne bookingen ligger utenfor angitt sesong
 Invalid from date	booking	no	Ugyldig fradato
+invalid to date	booking	no	Ugyldig tildato
 This booking is outside the organization's allocated time	booking	no	Denne bookingen ligger utenfor organisasjonens tildelte tid
 Overlaps other organizations allocation	booking	no	Overlapper med en annen organisasjons tildeling
 The booking uses resources not in the containing allocation	booking	no	Bookingen bruker ressurser som ikke finnes i gitt tildeling
