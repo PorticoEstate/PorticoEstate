@@ -61,6 +61,8 @@
 				$this->severity = $parms['severity'];
 				$this->msg = trim($etext);
 			}
+
+			$this->severity = $this->severity ? $this->severity : 'E';
 			
 			foreach ( $parray as $key => $val )
 			{
