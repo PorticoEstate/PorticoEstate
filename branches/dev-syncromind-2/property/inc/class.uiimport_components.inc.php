@@ -471,7 +471,11 @@ HTML;
 						print_r($receipt); die;
 					}
 				}
-				
+			/*$template = explode("_", $template_id);
+			$entity_id = $template[0];
+			$cat_id = $template[1];
+$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);	
+print_r($attributes); die;*/
 				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 				$rows = $rows ? $rows + 1 : 0;
 
@@ -516,11 +520,15 @@ HTML;
 						}
 					}
 				}
-				//print_r($buildingpart_in_table); die;
+				/*
+				//$buildingpart_in_table = array();
+		//$buildingpart_in_table['216'] = array('entity_id' => 3, 'cat_id' => 6);		
+		//print_r($buildingpart_in_table); die;*/
 				
 				if (count($buildingpart_in_table))
 				{
 					$receipt = $import_components->add_attributes_to_categories($buildingpart_in_table, $template_id);
+					print_r($receipt); die;
 				}
 				
 				if (count($buildingpart_out_table))
