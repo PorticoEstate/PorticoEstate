@@ -505,6 +505,19 @@
 				unset($location);
 			}
 
+			// Sort the data with account_lastname ascending, account_firstname ascending
+			// Add $data as the last parameter, to sort by the common key
+			if ($locations_list)
+			{
+				$locations_location_code = array();
+				foreach ($locations_list as $key => $row)
+				{
+					$locations_location_code[$key] = $row['location_code'];
+				}
+				array_multisort($locations_location_code, SORT_ASC, $locations_list);
+			}
+
+
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
 
@@ -745,6 +758,7 @@
 				$bookmark_locations[] = $location_code;
 			}
 
+			$locations_list = array();
 			if (is_numeric($control_id) & $control_id > 0)
 			{
 				$locations_for_control_array = $this->so_control->get_locations_for_control($control_id);
@@ -761,6 +775,17 @@
 
 				reset($locations_for_control_array);
 				unset($location);
+			}
+			// Sort the data with account_lastname ascending, account_firstname ascending
+			// Add $data as the last parameter, to sort by the common key
+			if ($locations_list)
+			{
+				$locations_location_code = array();
+				foreach ($locations_list as $key => $row)
+				{
+					$locations_location_code[$key] = $row['location_code'];
+				}
+				array_multisort($locations_location_code, SORT_ASC, $locations_list);
 			}
 
 			// Validates year. If year is not set, current year is chosen
