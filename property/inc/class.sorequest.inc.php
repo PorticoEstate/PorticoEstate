@@ -307,7 +307,7 @@
 			$property_cat_id = isset($data['property_cat_id']) ? $data['property_cat_id'] : 0;
 			$status_id = isset($data['status_id']) && $data['status_id'] ? $data['status_id'] : 'open';
 			$district_id = isset($data['district_id']) && $data['district_id'] ? $data['district_id'] : 0;
-			$project_id = isset($data['project_id']) ? $data['project_id'] : '';
+			$make_relation = isset($data['make_relation']) ? $data['make_relation'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 			$list_descr = isset($data['list_descr']) ? $data['list_descr'] : '';
@@ -716,9 +716,8 @@
 				$where = 'AND';
 			}
 
-			if ($project_id && !$status_id)// lookup requests not already allocated to projects
+			if ($make_relation && !$status_id)// lookup requests not already allocated to projects
 			{
-//				$filtermethod .= " $where project_id is NULL ";
 				$filtermethod .= " $where fm_request_status.closed is NULL ";
 				$where = 'AND';
 			}

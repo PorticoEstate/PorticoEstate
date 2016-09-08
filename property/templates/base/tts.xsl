@@ -281,6 +281,7 @@
 
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
+		var location_code = '<xsl:value-of select="value_location_code"/>';
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
@@ -371,6 +372,30 @@
 						</div>
 					</xsl:for-each>
 					<div class="pure-control-group">
+						<xsl:variable name="lang_make_relation">
+							<xsl:value-of select="php:function('lang', 'make relation')"/>
+						</xsl:variable>
+
+						<label>
+							<a href="#" onClick="make_relation({location_item_id});">
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_make_relation"/>
+								</xsl:attribute>
+								<xsl:value-of select="$lang_make_relation"/>
+							</a>
+						</label>
+						<select name="make_relation" id="make_relation">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_make_relation"/>
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="relation_type_list/options"/>
+						</select>
+					</div>
+
+					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'details')"/>
 						</label>
@@ -448,7 +473,7 @@
 								<xsl:variable name="select_priority_name">
 									<xsl:value-of select="select_priority_name"/>
 								</xsl:variable>
-								<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
+								<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}">
 									<xsl:apply-templates select="priority_list/options"/>
 								</select>
 							</div>

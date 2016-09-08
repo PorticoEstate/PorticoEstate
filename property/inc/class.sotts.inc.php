@@ -1979,4 +1979,49 @@
 
 			return $values;
 		}
+
+		function add_relation( $add_relation, $id )
+		{
+			$config = $GLOBALS['phpgw']->config->read();
+			$interlink = CreateObject('property.interlink');
+			$this->db->transaction_begin();
+
+			foreach ($add_relation['request_id'] as $relation_id)
+			{
+				$target_id = false;
+				$target = $interlink->get_specific_relation('property', '.project.request', '.ticket', $relation_id, 'target');
+				if ($target)
+				{
+					$target_id =  $target[0];
+				}
+
+				if (!$target_id)
+				{
+					$interlink_data = array(
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.request'),
+						'location1_item_id' => $relation_id,
+						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.ticket'),
+						'location2_item_id' => $id,
+						'account_id' => $this->account
+					);
+
+					$interlink->add($interlink_data);
+
+					$request_ticket_hookup_status = isset($config['request_ticket_hookup_status']) && $config['request_ticket_hookup_status'] ? $config['request_ticket_hookup_status'] : false;
+
+					if ($request_ticket_hookup_status)
+					{
+						$this->db->query("UPDATE fm_request SET status='{$request_ticket_hookup_status}' WHERE id='" . $relation_id . "'", __LINE__, __FILE__);
+					}
+
+					phpgwapi_cache::message_set(lang('request %1 has been added', $relation_id), 'message');
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('request %1 has already been added to ticket %2', $relation_id, $target_id), 'error');
+				}
+			}
+			$this->db->transaction_commit();
+			return $receipt;
+		}
 	}
