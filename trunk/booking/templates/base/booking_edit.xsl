@@ -157,10 +157,10 @@
 								</label>
 								<input class="datetime" id="field_from" name="from_" type="text" style="display:inline-block;">
 									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
+										<xsl:text>time_span_edit</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter a from date')" />
+										<xsl:value-of select="php:function('lang', 'Please enter a valid from date')" />
 									</xsl:attribute>
 									<xsl:attribute name="value">
 										<xsl:value-of select="booking/from_"/>
@@ -173,10 +173,10 @@
 								</label>
 								<input class="datetime" id="field_to" name="to_" type="text" style="display:inline-block;">
 									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
+										<xsl:text>time_span_edit</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'Please enter an end date')" />
+										<xsl:value-of select="php:function('lang', 'Please enter an valid end date')" />
 									</xsl:attribute>
 									<xsl:attribute name="value">
 										<xsl:value-of select="booking/to_"/>
