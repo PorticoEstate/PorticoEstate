@@ -289,13 +289,13 @@
 		{
 			$sql = "SELECT * FROM phpgw_cust_attribute "
 				. " WHERE location_id = {$location_id}"
-				. " AND custom = 1 OR column_name = 'category'";
+				. " AND (custom = 1 OR column_name = 'category')";
 
 			$this->db->query($sql, __LINE__, __FILE__);
+			$attribs = array();
 			
 			while ($this->db->next_record())
 			{
-			$attribs = array();
 				$id = $this->db->f('id');
 				$attribs[$id] = array
 				(
