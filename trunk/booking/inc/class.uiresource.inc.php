@@ -447,7 +447,7 @@
 			{
 				foreach ($resource['buildings'] as $building_id)
 				{
-					$building = $this->bo->read_single($building_id);
+					$building = $this->sobuilding->read_single($building_id);
 					$building_names[] = $building['name'];
 				}
 				$GLOBALS['phpgw_info']['flags']['app_header'] .= ' (' . implode('',$building_names) . ')';
