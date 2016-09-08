@@ -1275,6 +1275,19 @@ function populateSelect_activityCalendar(url, container, attr)
 
 function createTableSchedule(d, u, c, r, cl, dt)
 {
+//	var detected_lang = navigator.language || navigator.userLanguage;
+	var lang = {};
+
+//	if(detected_lang == 'no' || detected_lang == 'nn' || detected_lang == 'nb' ||detected_lang == 'nb-no' || detected_lang == 'no-no' || detected_lang == 'nn-no')
+	if (window.navigator.language != "en")
+	{
+		lang = {free: 'Ledig'};
+	}
+	else
+	{
+		lang = {free: 'free'};
+	}
+
 	var container = document.getElementById(d);
 	var xtable = document.createElement('table');
 	var tableHead = document.createElement('thead');
@@ -1419,7 +1432,7 @@ function createTableSchedule(d, u, c, r, cl, dt)
 							}
 							else
 							{
-								tableBodyTrTdText = "free";
+								tableBodyTrTdText = lang.free;
 								classes += " free";
 								tableBodyTrTd.setAttribute('class', classes);
 								if (vc['formatter'] == "frontendScheduleDateColumn")
