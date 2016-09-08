@@ -214,7 +214,7 @@
 				'in_sender' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'in_masked' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'in_code' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'in_msg' => array('type' => 'varchar', 'precision' => 200, 'nullable' => False),
+				'in_msg' => array('type' => 'text', 'nullable' => False),
 				'in_datetime' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp')
 			),
 			'pk' => array('in_id'),
@@ -287,7 +287,7 @@
 				'in_id' => array('type' => 'auto', 'nullable' => False),
 				'in_sender' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'in_uid' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
-				'in_msg' => array('type' => 'varchar', 'precision' => 200, 'nullable' => False),
+				'in_msg' => array('type' => 'text', 'nullable' => False),
 				'in_datetime' => array('type' => 'timestamp', 'nullable' => False, 'default' => 'current_timestamp'),
 				'in_hidden' => array('type' => 'int', 'precision' => 2, 'nullable' => False,
 					'default' => '0')
