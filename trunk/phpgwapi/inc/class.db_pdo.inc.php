@@ -831,7 +831,7 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return htmlspecialchars_decode(stripslashes(str_replace(array('&#40&#59;', '&#41&#59;'), array('(', ')'), $this->Record[$name])));
+						return htmlspecialchars_decode(stripslashes(str_replace(array('&#40&#59;', '&#41&#59;'), array('(', ')'), $this->Record[$name])),ENT_QUOTES);
 //						return htmlspecialchars_decode(stripslashes($this->Record[$name]));
 					}
 					else
