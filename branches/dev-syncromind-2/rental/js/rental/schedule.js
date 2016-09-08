@@ -216,14 +216,31 @@ schedule.createToolbar = function ()
 		var text = v['text'];
 		var action = v['action'];
 
-		var  parameters = (v['parameters']) ? v['parameters'] : "";
+		var parameters = (v['parameters']) ? v['parameters'] : "";
+		var attributes = (v['attributes']) ? v['attributes'] : "";
 
 		var button = document.createElement('button');
 		button.innerHTML = text;
+
 		if (parameters)
 		{
 			button.disabled = true;
 		}
+
+		if (attributes)
+		{
+			$.each(v['attributes'], function(i, v){
+				if (i == 'class')
+				{
+					button.classList.add(v);
+				}
+				else
+				{
+					button.setAttribute(i, v);
+				}
+			});
+		}
+
 		if (name == 'download')
 		{
 			button.addEventListener('click', function()
@@ -258,13 +275,19 @@ schedule.createToolbar = function ()
 				var new_action = action;
 				if (parameters)
 				{
-					for (var i = 0; i < parameters.length; i++)
+					for (var i = 0; i < parameters.parameter.length; i++)
 					{
-						var val = eval(parameters[i]['source']);
-						new_action += '&' + parameters[i]['name'] + '=' + eval(val);
+						var val = eval(parameters.parameter[i]['source']);
+						new_action += '&' + parameters.parameter[i]['name'] + '=' + eval(val);
 					}
 				}
-				window.open(new_action);
+				if (button.classList.contains('create_type'))
+				{
+					var date = schedule.rental['col']['date'];
+					date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+					new_action += '&date=' + date;
+				}
+                window.open(new_action);
 			}, false);
 		}
 

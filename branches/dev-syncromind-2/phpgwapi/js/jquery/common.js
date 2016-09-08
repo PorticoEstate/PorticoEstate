@@ -1782,9 +1782,14 @@ function rentalSchedule (data, col, date)
 
 	var k = col.key;
 
+	var is_create = true;
 	if (data[k])
 	{
 		text = data[k]['status'];
+		if (text == "Ikke ledig")
+		{
+			is_create = false;
+		}
 	}
 	else
 	{
@@ -1800,6 +1805,13 @@ function rentalSchedule (data, col, date)
 				$(this).parent().parent().find('tr').removeClass("trselected")
 				$(this).parent().addClass("trselected");
 				$('#schedule_toolbar button').attr('disabled', false);
+				var b_is_create = eval(is_create);
+				if (!b_is_create)
+				{
+					$('#schedule_toolbar button.create_type').attr('disabled', true);
+				}
+				schedule.rental.data = data;
+				schedule.rental.col = col;
 			}
 		}
 	);

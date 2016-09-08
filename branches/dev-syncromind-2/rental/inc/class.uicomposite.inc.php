@@ -1138,12 +1138,17 @@ JS;
 				'phpgw_return_as' => 'json'
 			));
 
-			$parameters = array();
-			
-			$parameters[] = array(
-				'name' => 'id',
-				'source' => 'id'
-			);
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+						)
+					)
+				);
 
 			$toolbar = array();
 
@@ -1154,7 +1159,7 @@ JS;
 					'menuaction' => 'rental.uicomposite.add'
 				))
 			);
-			
+
 			$toolbar[] = array(
 				'name' => 'download',
 				'text' => lang('download'),
@@ -1165,7 +1170,7 @@ JS;
 					'allrows' => true
 				))
 			);
-			
+
 			$toolbar[] = array(
 				'name' => 'edit',
 				'text' => lang('edit'),
@@ -1175,7 +1180,7 @@ JS;
 				)),
 				'parameters' => $parameters
 			);
-			
+
 			$toolbar[] = array(
 				'name' => 'view',
 				'text' => lang('show'),
@@ -1185,7 +1190,7 @@ JS;
 				)),
 				'parameters' => $parameters
 			);
-			
+
 			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
 
 			$valid_contract_types = array();
@@ -1229,6 +1234,9 @@ JS;
 						'menuaction' => 'rental.uicontract.add_from_composite',
 						'responsibility_id' => $create_type[0]
 					)),
+					'attributes' => array(
+						'class' => 'create_type'
+					),
 					'parameters' => $parameters
 				);
 			}
