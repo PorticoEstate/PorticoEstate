@@ -587,7 +587,7 @@
 				break;
 			}
 		}
-	
+
 		$receipt = $custom_config->add_attrib(array(
 			'section_id' => $section_id,
 			'input_type' => 'text',
@@ -599,6 +599,32 @@
 		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.513';
+			return $GLOBALS['setup_info']['sms']['currentver'];
+		}
+	}
+
+	/**
+	 * Update sms version from 0.9.17.513 to 0.9.17.514
+	 *
+	 */
+	$test[] = '0.9.17.513';
+
+	function sms_upgrade0_9_17_513()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tblsmsincoming', 'in_msg', array(
+			'type' => 'text',
+			'nullable' => false
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_sms_tbluserinbox', 'in_msg', array(
+			'type' => 'text',
+			'nullable' => false
+		));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['sms']['currentver'] = '0.9.17.514';
 			return $GLOBALS['setup_info']['sms']['currentver'];
 		}
 	}
