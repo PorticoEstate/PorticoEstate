@@ -248,6 +248,32 @@ this.refresh_files = function ()
 	JqueryPortico.updateinlineTableHelper(oTable2, strURL);
 };
 
+this.make_relation = function (id)
+{
+	var oArgs = null;
+	relation_type = $('#make_relation').val();
+	if (relation_type)
+	{
+		if (confirm("Du vil miste informasjon som ikke er lagret"))
+		{
+			oArgs = {
+				menuaction: relation_type,
+				make_relation: true,
+				relation_id: id,
+				relation_type: 'ticket',
+				query: location_code, //defined in xsl
+				clear_state: 1,
+			};
+			var strURL = phpGWLink('index.php', oArgs);
+			window.open(strURL, '_self');
+		}
+	}
+	else
+	{
+		alert('Velg type');
+	}
+};
+
 window.addEventListener("load", function ()
 {
 	d = document.getElementById('vendor_id');
@@ -370,11 +396,11 @@ function populateTableChkApproval(ecodimb)
 {
 	ecodimb = ecodimb || $('#ecodimb').val();
 
-	if(!ecodimb)
+	if (!ecodimb)
 	{
 		return;
 	}
-	
+
 	var total_amount = Number(amount) + Number($('#budget').val());
 	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
@@ -400,10 +426,10 @@ function populateTableChkApproval(ecodimb)
 
 					if (obj[i].required == true)
 					{
-						htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address +"\"></input>";
+						htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
 						required = 'checked="checked" disabled="disabled"';
 					}
-					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address +"\"" + required +"></input>";
+					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
 					htmlString += "</td><td valign=\"top\">";
 					htmlString += obj[i].address;
 					htmlString += "</td></tr>";

@@ -42,7 +42,7 @@
 			$GLOBALS['phpgw']->template->set_block('applications','list','list');
 			$GLOBALS['phpgw']->template->set_block('applications','row','row');
 
-			$start	= phpgw::get_var('start', 'int', 'POST');
+			$start	= phpgw::get_var('start', 'int', 'GET');
 			$sort	= phpgw::get_var('sort', 'string', 'GET');
 			$order	= phpgw::get_var('order', 'string', 'GET');
 			$offset	= $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];

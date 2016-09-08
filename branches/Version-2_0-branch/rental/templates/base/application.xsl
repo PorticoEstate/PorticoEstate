@@ -98,7 +98,7 @@
 								<xsl:value-of select="$lang_composite_type"/>
 							</label>
 
-							<select name="composite_type">
+							<select name="composite_type_id">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_composite_type"/>
 								</xsl:attribute>

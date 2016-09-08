@@ -1279,7 +1279,21 @@
 				{
 					if ($project['project_type_id'] == 1)//operation
 					{
-						$values['start_date'] = $GLOBALS['phpgw']->common->show_date(time(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+						phpgw::import_class('phpgwapi.datetime');
+						if( $project['end_date'] && phpgwapi_datetime::date_to_timestamp($project['end_date']) < time() )
+						{
+							$values['start_date'] = $GLOBALS['phpgw']->common->show_date(
+								phpgwapi_datetime::date_to_timestamp($project['end_date']),
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+							);
+						}
+						else
+						{
+							$values['start_date'] = $GLOBALS['phpgw']->common->show_date(
+								time(),
+								$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+							);
+						}
 					}
 					else
 					{

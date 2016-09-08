@@ -63,6 +63,7 @@
 		 * @var boolean $_simple use simplified interface
 		 */
 		protected $simple = false;
+		protected $group_candidates = array(-1);
 		protected $_show_finnish_date = false;
 		protected $_category_acl = false;
 		var $part_of_town_id;
@@ -112,6 +113,7 @@
 			$this->location_code = $this->bo->location_code;
 			$this->p_num = $this->bo->p_num;
 			$this->simple = $this->bo->simple;
+			$this->group_candidates = $this->bo->group_candidates;
 			$this->show_finnish_date = $this->bo->show_finnish_date;
 
 			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
@@ -729,9 +731,8 @@
 					'list' => $values_combo_box[2]
 				);
 
-				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
+				$values_combo_box[4] = $this->_get_user_list($this->user_id);
 
-				$values_combo_box[4] = $this->bocommon->get_user_list_right2('filter', PHPGW_ACL_EDIT, $this->user_id, $this->acl_location);
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my assigned tickets'),
@@ -1468,8 +1469,8 @@
 				'lang_no_user' => lang('Select user'),
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
-				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['assignedto'], $this->acl_location),
-//				'user_list' => $this->_get_user_list($values['assignedto']),
+//				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $values['assignedto'], $this->acl_location),
+				'user_list' => $this->_get_user_list($values['assignedto']),
 				'disable_userassign_on_add' => isset($this->bo->config->config_data['tts_disable_userassign_on_add']) ? $this->bo->config->config_data['tts_disable_userassign_on_add'] : '',
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($values['group_id']),
@@ -1584,12 +1585,18 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
-			$id = phpgw::get_var('id', 'int', 'GET');
+			$id = phpgw::get_var('id', 'int');
 
 			if ($this->tenant_id)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uitts.view2',
 					'id' => $id));
+			}
+
+			$add_relation = phpgw::get_var('add_request');
+			if($add_relation)
+			{
+				$receipt = $this->bo->add_relation($add_relation, $id);
 			}
 
 			$bolocation = CreateObject('property.bolocation');
@@ -2764,8 +2771,25 @@
 			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
 			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
 			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
+
+			$relation_type_list = array(
+				array(
+					'id'	=> 'property.uirequest.index',
+					'name'	=> lang('request')
+				),
+//				array(
+//					'id'	=> 'property.uiproject.index',
+//					'name'	=> lang('project')
+//				),
+//				array(
+//					'id'	=> 'property.uilookup.entity',
+//					'name'	=> 'Everything else'
+//				),
+			);
+
 			$data = array(
 				'datatable_def' => $datatable_def,
+				'relation_type_list' => array('options' => $relation_type_list),
 				'my_groups' => json_encode($my_groups),
 				'custom_attributes' => array('attributes' => $ticket['attributes']),
 				'lookup_functions' => isset($ticket['lookup_functions']) ? $ticket['lookup_functions'] : '',
@@ -2800,6 +2824,7 @@
 				'td_count' => '""',
 				'base_java_url' => "{menuaction:'property.uitts.update_data',id:{$id}}",
 				'location_item_id' => $id,
+				'value_location_code'	=> $ticket['location_code'],
 				'value_origin' => $ticket['origin'],
 				'value_target' => $ticket['target'],
 				'value_finnish_date' => $ticket['finnish_date'],
@@ -2812,8 +2837,8 @@
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
-				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $ticket['assignedto'], $this->acl_location),
-//				'user_list' => $this->_get_user_list($ticket['assignedto']),
+//				'user_list' => $this->bocommon->get_user_list_right2('select', 4, $ticket['assignedto'], $this->acl_location),
+				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),
 				'select_group_name' => 'values[group_id]',
@@ -3521,24 +3546,11 @@
 
 		private function _get_user_list($selected)
 		{
-			$_candidates = array();
-			$_candidates[] = -1;
-			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
-			{
-				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
-				{
-					if ($group_candidate)
-					{
-						$_candidates[] = $group_candidate;
-					}
-				}
-			}
-
 			$xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/{$GLOBALS['phpgw_info']['server']['template_set']}";
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'property', $_candidates);
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'property', $this->group_candidates);
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)
