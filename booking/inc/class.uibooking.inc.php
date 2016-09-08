@@ -918,6 +918,11 @@
 					}
 					if ($step == 3)
 					{
+						$application_id = $booking['application_id'] ? $booking['application_id'] : $allocation['application_id'];
+						if($application_id)
+						{
+							$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $application_id));
+						}
 						$building_id = $booking['building_id'] ? $booking['building_id'] : $allocation['building_id'];
 						$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $building_id));
 					}
