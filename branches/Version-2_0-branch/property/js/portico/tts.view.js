@@ -262,7 +262,7 @@ this.make_relation = function (id)
 				relation_id: id,
 				relation_type: 'ticket',
 				query: location_code, //defined in xsl
-				clear_state: 1,
+				clear_state: 1
 			};
 			var strURL = phpGWLink('index.php', oArgs);
 			window.open(strURL, '_self');
@@ -422,7 +422,7 @@ function populateTableChkApproval(ecodimb)
 				{
 					required = '';
 
-					htmlString += "<tr><td>"
+					htmlString += "<tr><td>";
 
 					if (obj[i].required == true)
 					{

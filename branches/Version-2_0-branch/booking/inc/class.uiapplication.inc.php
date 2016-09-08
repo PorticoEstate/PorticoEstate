@@ -393,11 +393,11 @@
 				unset($filters['activity_id']);
 			}
 			$filters['status'] = 'NEW';
-			if (isset($_SESSION['showall']))
-			{
-				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
-			}
-			else
+//			if (isset($_SESSION['showall']))
+//			{
+//				$filters['status'] = array('NEW', 'PENDING', 'REJECTED', 'ACCEPTED');
+//			}
+//			else
 			{
 				$test = phpgw::get_var('status', 'string', 'REQUEST', null);
 				if (phpgw::get_var('status') == 'none')

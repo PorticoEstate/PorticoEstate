@@ -365,6 +365,9 @@
 		 */
 		function add_price_item( $contract_id, $price_item_id )
 		{
+			$location_factor = 1;
+			$standard_factor = 1;
+			$custom_factor = 1;
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 			$composites = $contract->get_composites();
 			foreach ($composites as $composite_id => $composite)
@@ -373,18 +376,28 @@
 				break;
 			}
 
-			$custom_factor = $composite_obj->get_custom_prize_factor();
-			$custom_factor = $custom_factor ? (float)$custom_factor : 1;
-
-			$location_info = ExecMethod('property.bogeneric.read', array(
-				'location_info'=> array('type' => 'location_factor'),
-				'custom_filter' => array('part_of_town_id = ' . (int)$composite_obj->get_part_of_town_id())
-				)
-			);
-			$location_factor = (float)abs($location_info[0]['factor']) > 0 ? (float)$location_info[0]['factor'] : 1;
-
-			$standard_info = ExecMethod('property.bogeneric.read_single', array('type' => 'composite_standard', 'id' => $composite_obj->get_standard_id()));
-			$standard_factor = (float)abs($standard_info['factor']) > 0 ? (float)$standard_info['factor'] : 1;
+			if(!$composite_obj)
+			{
+				$GLOBALS['phpgw']->log->message(array(
+					'text' => "rental_soprice_item::add_price_item() : Contract %1 is missing composite ",
+					'p1'   => $contract_id,
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+			}
+			else
+			{
+				$custom_factor = $composite_obj->get_custom_prize_factor();
+				$custom_factor = $custom_factor ? (float)$custom_factor : 1;
+				$location_info = ExecMethod('property.bogeneric.read', array(
+					'location_info'=> array('type' => 'location_factor'),
+					'custom_filter' => array('part_of_town_id = ' . (int)$composite_obj->get_part_of_town_id())
+					)
+				);
+				$location_factor = (float)abs($location_info[0]['factor']) > 0 ? (float)$location_info[0]['factor'] : 1;
+				$standard_info = ExecMethod('property.bogeneric.read_single', array('type' => 'composite_standard', 'id' => $composite_obj->get_standard_id()));
+				$standard_factor = (float)abs($standard_info['factor']) > 0 ? (float)$standard_info['factor'] : 1;
+			}
 
 			$factor = $location_factor * $standard_factor * $custom_factor;
 			$factor = $factor ? (float)$factor : 1;
