@@ -476,6 +476,7 @@
 				unset($booking['agegroups']);
 			}
 			//Sigurd: 09. Sept: testing
+			$allocations = $this->split_allocations_test($allocations, $bookings);
 //			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_building($building_id, $from, $to);
@@ -876,7 +877,7 @@
 				$booking['type'] = 'booking';
 			}
 			//Sigurd: 09. Sept: testing
-//			$allocations = $this->split_allocations($allocations, $bookings);
+			$allocations = $this->split_allocations_test($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_resource($resource_id, $from, $to);
 			$events = $this->event_so->read(array('filters' => array('id' => $event_ids)));
@@ -899,7 +900,7 @@
 		 * Split allocations overlapped by bookings into multiple allocations
 		 * to avoid overlaps
 		 */
-		function split_allocations( $allocations, $all_bookings )
+		function split_allocations_test( $allocations, $all_bookings )
 		{
 
 			function get_from2( $a )
@@ -921,7 +922,9 @@
 				foreach ($all_bookings as $b)
 				{
 					if ($b['allocation_id'] == $allocation['id'])
+					{
 						$bookings[] = $b;
+					}
 				}
 				$times = array($allocation['from_'], $allocation['to_']);
 				$times = array_merge(array_map("get_from2", $bookings), $times);
@@ -932,26 +935,78 @@
 				{
 					$from_ = $times[0];
 					$to_ = $times[1];
-					$resources = $allocation['resources'];
-					$used = array();
 					foreach ($all_bookings as $b)
 					{
+						$found = false;
 
-						if (($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
-							$resources = array_minus($resources, $b['resources']);
-					}
-					if ($resources)
-					{
-						$a = $allocation;
-						$a['from_'] = $times[0];
-						$a['to_'] = $times[1];
-						$new_allocations[] = $a;
+                        if(($b['from_'] >= $from_ && $b['from_'] <= $to_) 
+							|| ($b['to_'] > $from_ && $b['to_'] < $to_)
+							|| ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						{
+							$found = true;
+						}
+						if (!$found)
+						{
+							$a = $allocation;
+							$a['from_'] = $from_;
+							$a['to_'] = $to_;
+							$new_allocations[] = $a;
+						}
 					}
 					array_shift($times);
 				}
 			}
+
 			return $new_allocations;
 		}
+
+		/**
+         * Split allocations overlapped by bookings into multiple allocations
+         * to avoid overlaps
+         */
+        function split_allocations($allocations, $all_bookings)
+        {
+            function get_from2($a) {return $a['from_'];};
+            function get_to2($a) {return $a['to_'];};
+            $new_allocations = array();
+            foreach($allocations as $allocation)
+            {
+                // $ Find all associated bookings
+                $bookings = array();
+                foreach($all_bookings as $b)
+                {
+                    if($b['allocation_id'] == $allocation['id'])
+                        $bookings[] = $b;
+                }
+                $times = array($allocation['from_'], $allocation['to_']);
+                $times = array_merge(array_map("get_from2", $bookings), $times);
+                $times = array_merge(array_map("get_to2", $bookings), $times);
+                $times = array_unique($times);
+                sort($times);
+                while(count($times) >= 2)
+                {
+                    $from_ = $times[0];
+                    $to_ = $times[1];
+                    $resources = $allocation['resources'];
+                    $used = array();
+                    foreach($all_bookings as $b)
+                    {
+
+                        if(($b['from_'] >= $from_ && $b['from_'] < $to_) || ($b['to_'] > $from_ && $b['to_'] <= $to_) || ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+                            $resources = array_minus($resources, $b['resources']);
+                    }
+                    if($resources)
+                    {
+                        $a = $allocation;
+                        $a['from_'] = $times[0];
+                        $a['to_'] = $times[1];
+                        $new_allocations[] = $a;
+                    }
+                    array_shift($times);
+                }
+            }
+            return $new_allocations;
+        }
 
 		/**
 		 * Split Multi-day bookings into separate single-day bookings
