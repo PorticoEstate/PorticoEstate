@@ -520,15 +520,17 @@ print_r($attributes); die;*/
 						}
 					}
 				}
-				/*
+				
 				//$buildingpart_in_table = array();
 		//$buildingpart_in_table['216'] = array('entity_id' => 3, 'cat_id' => 6);		
-		//print_r($buildingpart_in_table); die;*/
-				
+						
 				if (count($buildingpart_in_table))
 				{
 					$receipt = $import_components->add_attributes_to_categories($buildingpart_in_table, $template_id);
-					print_r($receipt); die;
+					if ($receipt['error'])
+					{
+						print_r($receipt); die;
+					}
 				}
 				
 				if (count($buildingpart_out_table))
@@ -557,7 +559,7 @@ print_r($attributes); die;*/
 
 				$receipt = $import_components->add_bim_item($import_data, $location_code);
 			
-				return $this->jquery_results($receipt);
+				print_r($receipt); die;
 			}
 		}
 		
