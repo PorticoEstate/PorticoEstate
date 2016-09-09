@@ -260,6 +260,13 @@
 			$external_project = trim($data[0]);
 			$prosjektstatus = trim($data[1]);
 			$order_id = trim($data[2]);
+
+			if(!ctype_digit($order_id))
+			{
+				$this->receipt['error'][] = array('msg' => "Feil format på bestillingsnummeret: {$order_id}");
+				return false;
+
+			}
 			$diff_actual_cost = (float)trim($data[3]);
 
 			$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$order_id}'", __LINE__, __FILE__);
