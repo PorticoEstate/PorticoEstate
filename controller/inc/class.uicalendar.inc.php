@@ -528,6 +528,7 @@
 			$to_date_ts = $this->get_end_date_year_ts($year);
 
 			$locations_with_calendar_array = array();
+			$locations_location_code = array();
 
 
 			// LOCATIONS: Process aggregated values for controls with repeat type day or week
@@ -555,12 +556,13 @@
 					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 
-					$locations_with_calendar_array[] = array
-						(
+					$locations_with_calendar_array[] = array(
 						'location' => $location,
 						'calendar_array' => $calendar_array,
 						'selected' => $bookmarks && isset($bookmarks[$curr_location_code])
 					);
+					$locations_location_code[] = $location;
+
 				}
 
 				// COMPONENTS: Process aggregated values for controls with repeat type day or week
@@ -625,12 +627,12 @@
 					$year_calendar = new year_calendar($control, $year, null, $curr_location_code, "location");
 					$calendar_array = $year_calendar->build_calendar($check_lists_array);
 
-					$locations_with_calendar_array[] = array
-						(
+					$locations_with_calendar_array[] = array(
 						'location' => $location,
 						'calendar_array' => $calendar_array,
 						'selected' => $bookmarks && isset($bookmarks[$curr_location_code])
 					);
+					$locations_location_code[] = $location;
 				}
 
 				foreach ($components_for_control_array as $component)
@@ -704,6 +706,7 @@
 			$my_locations = $this->get_my_assigned_locations($location_code);
 
 			$heading_array = year_calendar::get_heading_array();
+			array_multisort($locations_location_code, SORT_ASC, $locations_with_calendar_array);
 
 			$data = array
 				(
@@ -801,7 +804,7 @@
 			$to_date_ts = month_calendar::get_next_start_date_month_ts($year, intval($month));
 
 			$locations_with_calendar_array = array();
-
+			$locations_location_code = array();
 			foreach ($locations_for_control_array as $location)
 			{
 				$curr_location_code = $location['location_code'];
@@ -823,6 +826,9 @@
 					'calendar_array' => $calendar_array,
 					'selected' => $bookmarks && isset($bookmarks[$curr_location_code])
 				);
+
+				$locations_location_code[] = $location;
+
 			}
 
 			foreach ($components_for_control_array as $component)
@@ -892,6 +898,8 @@
 			$my_locations = $this->get_my_assigned_locations($location_code);
 
 			$heading_array = month_calendar::get_heading_array($year, $month);
+
+			array_multisort($locations_location_code, SORT_ASC, $locations_with_calendar_array);
 
 			$data = array
 				(
