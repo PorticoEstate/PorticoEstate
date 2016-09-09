@@ -88,10 +88,18 @@
 						}
 						if (in_array($res['id'], $booking['resources']))
 						{
-							if (!(($tempbooking[$booking['wday']]['from_'] <= $booking['from_']) and ( $tempbooking[$booking['wday']]['to_'] == $booking['to_']) and ( $tempbooking[$booking['wday']]['allocation_id'] == $booking['id']) and ( $booking['type'] == 'allocation')))
+							if (!(($tempbooking[$booking['wday']]['from_'] <= $booking['from_']) 
+								and ( $tempbooking[$booking['wday']]['to_'] == $booking['to_'])
+								and ( $tempbooking[$booking['wday']]['allocation_id'] == $booking['id'])
+								and ( $booking['type'] == 'allocation'))
+								)
 							{
 								$empty = false;
-								$row[$booking['wday']] = $booking;
+
+								if(empty($row[$booking['wday']]['type']) || $row[$booking['wday']]['type'] != 'booking')
+								{
+									$row[$booking['wday']] = $booking;
+								}
 							}
 							if ($booking['type'] == 'booking')
 							{
