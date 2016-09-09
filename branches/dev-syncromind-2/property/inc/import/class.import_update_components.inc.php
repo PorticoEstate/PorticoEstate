@@ -144,13 +144,7 @@
 		{
 			foreach($attributes as &$attribute)
 			{
-				foreach ($values as $value)
-				{
-					if ($attribute['name'] ==  $value['name'])
-					{
-						$attribute['value'] = $value['value'];
-					}
-				}
+				$attribute['value'] = $values[$attribute['name']];
 			}
 			
 			return $attributes;
@@ -204,16 +198,22 @@
 				);
 				$this->custom->add_group($group);
 			}
-
-			$attrib_list = $this->bo->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id,
-				'allrows' => true));
-
-			$template_attribs = array();
+			
+			$attrib_list = $this->bo->read_attrib(array('entity_id' => $values['entity_id'], 'cat_id' => $values['cat_id'], 'allrows' => true));
+			$column_names = array();
 			foreach ($attrib_list as $attrib)
 			{
+				$column_names[] = $attrib['column_name'];
+			}
 
+			$attrib_list_template = $this->bo->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' => true));
+			$template_attribs = array();
+			foreach ($attrib_list_template as $attrib)
+			{
+				if(!in_array($attrib['column_name'], $column_names, true))
+				{
 					$template_attribs[] = $this->bo->read_single_attrib($template_entity_id, $template_cat_id, $attrib['id']);
-		
+				}
 			}
 
 			foreach ($template_attribs as $attrib)
@@ -238,14 +238,10 @@
 						$this->custom->edit($attrib);
 					}
 				}
-				if ($id <= 0)
+				
+				if (!$id)
 				{
-					$receipt['error'][] = array('msg' => lang('Unable to add field'));
-				}
-				else if ($id == -1)
-				{
-					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-					$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+					$receipt['error'][] = array('msg' => lang('Unable to add field').' '.$attrib['column_name']);
 				}
 			}
 			
@@ -266,7 +262,16 @@
 					'selected' => ''
 				);
 				
-				$receipt = $this->_add_attrib_from_template( $values2 );
+				$result = $this->_add_attrib_from_template( $values2 );
+				if ($result['error'])
+				{
+					foreach ($result['error'] as $error) 
+					{
+						$receipt['error'][] = array('msg' => $error['msg'].' BuildingPart: '. $k);
+					}
+				} else {
+					$receipt['message'][] = array('msg' => lang('Custom field has been created').' BuildingPart: '. $k);
+				}
 			}
 			
 			return $receipt;
@@ -320,6 +325,15 @@
 			$components_added = array();
 			$message = array();
 			
+			$location_code_values = explode('-', $location_code);
+			$i = 0;
+			$location = array();
+			foreach ($location_code_values as $loc) 
+			{
+				$i++;
+				$location['loc'.$i] = $loc;
+			}
+			
 			$this->db->transaction_begin();
 			
 			try
@@ -332,7 +346,8 @@
 					foreach ($entity['components'] as $values)
 					{
 						$attributes_values = $this->set_attributes_values($values, $attributes);
-						$values_insert = $this->_populate(array('location_code' => $location_code), $attributes_values);
+						
+						$values_insert = $this->_populate(array('location_code'=>$location_code, 'location'=>$location), $attributes_values);
 
 						$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
 						if (!$receipt['id'])
@@ -355,8 +370,36 @@
 
 			$this->db->transaction_commit();
 			$GLOBALS['phpgw']->session->appsession('components', 'property', $components_added);
+			 
+			return $message['message'][] = array('msg' => 'all components saved successfully');			 
 			
-			return $message['message'][] = array('msg' => 'all components saved successfully');
+			/*$components_not_added = array();
+			
+			foreach ($entity_categories as $entity) 
+			{
+				if ($entity['cat_id'])
+				{
+					$attributes = $this->get_attributes($entity['entity_id'], $entity['cat_id']);
+
+					$not_added = array();
+					foreach ($entity['components'] as $values)
+					{
+						$attributes_values = $this->set_attributes_values($values, $attributes);
+						
+						$receipt = $this->bo_entity->save(array('location' => $location_code), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
+						if (!$receipt['id'])
+						{
+							$not_added[] = 1;
+						}
+					}
+					if (count($not_added))
+					{
+						$components_not_added[$entity['name']] = count($not_added);
+					}
+				}
+			}
+			
+			return $components_not_added;*/
 		}
 		
 		private function _save_eav( $data, $entity_id, $cat_id )
