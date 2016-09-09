@@ -875,7 +875,8 @@
 				$booking['shortname'] = $booking['group_shortname'];
 				$booking['type'] = 'booking';
 			}
-			$allocations = $this->split_allocations($allocations, $bookings);
+			//Sigurd: 09. Sept: testing
+//			$allocations = $this->split_allocations($allocations, $bookings);
 
 			$event_ids = $this->so->event_ids_for_resource($resource_id, $from, $to);
 			$events = $this->event_so->read(array('filters' => array('id' => $event_ids)));
