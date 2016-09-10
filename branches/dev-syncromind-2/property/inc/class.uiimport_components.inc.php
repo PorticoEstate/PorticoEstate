@@ -174,14 +174,14 @@
 				{
 					$this->db->transaction_abort();				
 					$message['error'][] = array('msg' => $e->getMessage());
-					return $this->jquery_results($message);
+					return $message;
 				}
 			}
 
 			$this->db->transaction_commit();
 			$message['message'][] = array('msg' => 'all files saved successfully');
 			
-			return $this->jquery_results($message);
+			return $message;
 		}
 		
 		private function getArrayItem($id, $name, $selected, $options = array(), $no_lang = false, $attribs = '' )
@@ -468,14 +468,10 @@ HTML;
 					$receipt = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision, $template_id);
 					if ($receipt['error'])
 					{
-						print_r($receipt); die;
+						return $receipt;
 					}
 				}
-			/*$template = explode("_", $template_id);
-			$entity_id = $template[0];
-			$cat_id = $template[1];
-$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);	
-print_r($attributes); die;*/
+
 				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
 				$rows = $rows ? $rows + 1 : 0;
 
@@ -519,17 +515,14 @@ print_r($attributes); die;*/
 							$import_data[$_result['building_part']]['components'][] = $_result;						
 						}
 					}
-				}
-				
-				//$buildingpart_in_table = array();
-		//$buildingpart_in_table['216'] = array('entity_id' => 3, 'cat_id' => 6);		
+				}		
 						
 				if (count($buildingpart_in_table))
 				{
 					$receipt = $import_components->add_attributes_to_categories($buildingpart_in_table, $template_id);
 					if ($receipt['error'])
 					{
-						print_r($receipt); die;
+						return $receipt;
 					}
 				}
 				
@@ -544,7 +537,7 @@ print_r($attributes); die;*/
 						{
 							$receipt['error'][] = array('msg' => "parent {$k} not added");	
 						}
-						return $this->jquery_results($receipt);
+						return $receipt;
 					}
 
 					if (count($buildingpart_processed['added']))
@@ -559,7 +552,7 @@ print_r($attributes); die;*/
 
 				$receipt = $import_components->add_bim_item($import_data, $location_code);
 			
-				print_r($receipt); die;
+				return $receipt;
 			}
 		}
 		
@@ -570,6 +563,13 @@ print_r($attributes); die;*/
 			$template = explode('_', $template_id);
 			$entity_id = $template[0];
 			$cat_id = $template[1];
+			
+			$template_attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
+			$template_attrib_names = array();
+			foreach ($template_attrib_list as $attrib)
+			{
+				$template_attrib_names[] = $attrib['column_name'];
+			}
 
 			$appname = $this->type_app[$this->type];
 			$location = ".{$this->type}.{$entity_id}.{$cat_id}";
@@ -600,26 +600,44 @@ print_r($attributes); die;*/
 					{
 						break;
 					}
+					
+					if(in_array($attrib['column_name'], $template_attrib_names, true))
+					{
+						continue;
+					}
+					
 					$attrib['_row_key'] = $_row_key;
 					$attributes[] = $attrib;
 				}
 			}
 			
+			if ($receipt['error'])
+			{
+				return $receipt;
+			}
+			
+			$count = 0;
 			foreach($attributes as $attrib)
 			{
 				$id = $this->custom->add($attrib, $attrib_table);	
 				if ($id <= 0)
 				{
-					$receipt['error'][] = array('msg' => lang('Unable to add field'));
+					$receipt['error'][] = array('msg' => lang('Unable to add field %1 ', $attrib['column_name']));
 					break;
 				}
 				else if ($id == -1)
 				{
-					$receipt['error'][] = array('msg' => lang('field already exists, please choose another name'));
-					$receipt['error'][] = array('msg' => lang('Attribute has NOT been saved'));
+					$receipt['error'][] = array('msg' => lang('field %1 already exists, please choose another name', $attrib['column_name']));
+					$receipt['error'][] = array('msg' => lang('Attribute %1 has NOT been saved', $attrib['column_name']));
 					break;
 				}
 				$columns[$attrib['_row_key']] = $attrib['column_name'];
+				$count++;
+			}
+			
+			if ($count)
+			{
+				$receipt['message'][] = array('msg' => lang('%1 attributes has been added to template', $count));
 			}
 			
 			return $receipt;
@@ -739,7 +757,8 @@ print_r($attributes); die;*/
 				'district_filter' => array('options' => $district_filter),
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
 				'template_list' => array('options' => $category_list),
-				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action)
+				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action),
+				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
 			);
 
 			self::add_javascript('property', 'portico', 'import_components.js');
