@@ -241,7 +241,7 @@
 				
 				if (!$id)
 				{
-					$receipt['error'][] = array('msg' => lang('Unable to add field').' '.$attrib['column_name']);
+					$receipt['error'][] = array('msg' => lang('Unable to add field %1 ', $attrib['column_name']));
 				}
 			}
 			
@@ -267,10 +267,10 @@
 				{
 					foreach ($result['error'] as $error) 
 					{
-						$receipt['error'][] = array('msg' => $error['msg'].' BuildingPart: '. $k);
+						$receipt['error'][] = array('msg' => $error['msg'].'. Building Part: '. $k);
 					}
 				} else {
-					$receipt['message'][] = array('msg' => lang('Custom field has been created').' BuildingPart: '. $k);
+					$receipt['message'][] = array('msg' => lang('Attributes has been added').'. Building Part: '. $k);
 				}
 			}
 			
@@ -364,14 +364,14 @@
 				if ($e)
 				{
 					$this->db->transaction_abort();
-					return $message['error'][] = array('msg' => $e->getMessage());
+					$message['error'][] = array('msg' => $e->getMessage());
+					return $message;
 				}
 			}
 
 			$this->db->transaction_commit();
-			$GLOBALS['phpgw']->session->appsession('components', 'property', $components_added);
-			 
-			return $message['message'][] = array('msg' => 'all components saved successfully');			 
+			$message['message'][] = array('msg' => 'all components saved successfully');
+			return $message; 		 
 			
 			/*$components_not_added = array();
 			
