@@ -353,7 +353,8 @@
 			$editable = phpgw::get_var('editable', 'bool');
 			$type = 'all_composites';
 
-			$filters = rental_uicomposite::get_filters();
+//			$filters = rental_uicomposite::get_filters();
+			$filters = ExecMethod('rental.uicomposite.get_filters');
 
 			$schedule['filters'] = $filters;
 
