@@ -1,6 +1,12 @@
 
 $(document).ready(function ()
 {
+	$('.processing-import').hide();
+	$('.processing-sheet').hide();
+	$('.processing-start-line').hide();
+	$('.processing-columns').hide();
+	$('.processing-import-relations').hide();
+	
 	$('select#type_id').change( function()
 	{
 		var oArgs1 = {menuaction: 'property.uigeneric_document.get_categories_for_type'};
@@ -86,6 +92,8 @@ $(document).ready(function ()
 		form_data.append('file', file_data);
 		form_data.append('location_code', $('#location_code').val());
 
+		$('.processing-import-relations').show();
+		
 		$.ajax({
 			url: requestUrl,
 			cache: false,
@@ -95,6 +103,7 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
+				$('.processing-import-relations').hide();
 				JqueryPortico.show_message(0, result);
 			}
 		});
@@ -125,6 +134,8 @@ $(document).ready(function ()
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
 
+		$('.processing-import').show();
+		
 		$.ajax({
 			url: requestUrl,
 			cache: false,
@@ -141,7 +152,8 @@ $(document).ready(function ()
 				$.each(result, function (k, v)
 				{
 					$el.append($("<option></option>").attr("value", v.id).text(v.name));
-				});				
+				});
+				$('.processing-import').hide();
 				//JqueryPortico.show_message(1, result);
 			}
 		});
@@ -164,11 +176,15 @@ $(document).ready(function ()
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
+		
+		$('.processing-sheet').show();
+		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
 				$('#content_lines').html(result);
 				$('#responsiveTabsDemo').responsiveTabs('enable', 1);
 				$('#responsiveTabsDemo').responsiveTabs('activate', 1);
+				$('.processing-sheet').hide();
 			}, data, "GET", "json"
 		);
 	});
@@ -192,11 +208,15 @@ $(document).ready(function ()
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
+		
+		$('.processing-start-line').show();
+		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
 				$('#content_columns').html(result);
 				$('#responsiveTabsDemo').responsiveTabs('enable', 2);
 				$('#responsiveTabsDemo').responsiveTabs('activate', 2);
+				$('.processing-start-line').hide();
 			}, data, "GET", "json"
 		);
 	});
@@ -237,12 +257,15 @@ $(document).ready(function ()
 			}
 		});
 					
+		$('.processing-columns').show();
+		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
-				$('#content_columns').html(result);
-				$('#responsiveTabsDemo').responsiveTabs('enable', 2);
-				$('#responsiveTabsDemo').responsiveTabs('activate', 2);
-			}, data, "GET", "json"
+				$('#responsiveTabsDemo').responsiveTabs('enable', 3);
+				$('#responsiveTabsDemo').responsiveTabs('activate', 3);
+				$('.processing-columns').hide();
+				JqueryPortico.show_message(1, result);
+			}, data, "GET", "JSON"
 		);
 	});
 	
