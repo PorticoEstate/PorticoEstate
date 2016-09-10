@@ -92,12 +92,14 @@
 									<xsl:value-of select="php:function('lang', 'Start import')"/>
 								</xsl:attribute>
 							</input>
+							<img src="{image_loader}" class="processing-import" align="absmiddle"></img>
 						</div>
 						<div id="responsiveTabsDemo">
 							<ul>
 								<li><a href="#tab-1">Choose Sheet</a></li>
 								<li><a href="#tab-2">Choose start line</a></li>
 								<li><a href="#tab-3">Choose columns</a></li>
+								<li><a href="#tab-4">Result</a></li>
 							</ul>
 							<div id="tab-1">
 								<select id="sheet_id" name="sheet_id">
@@ -108,6 +110,7 @@
 										<xsl:value-of select="php:function('lang', 'Continue')"/>
 									</xsl:attribute>
 								</input>
+								<img src="{image_loader}" class="processing-sheet" align="absmiddle"></img>
 							</div>
 							<div id="tab-2">
 								<input type="button" id="step3" name="step3" size="40">
@@ -115,6 +118,7 @@
 										<xsl:value-of select="php:function('lang', 'Continue')"/>
 									</xsl:attribute>
 								</input>
+								<img src="{image_loader}" class="processing-start-line" align="absmiddle"></img>
 								<div id="content_lines" class="pure-custom"></div>
 							</div>
 							<div id="tab-3">
@@ -123,10 +127,13 @@
 										<xsl:value-of select="php:function('lang', 'Continue')"/>
 									</xsl:attribute>
 								</input>
+								<img src="{image_loader}" class="processing-columns" align="absmiddle"></img>
 								<div id="content_columns" class="pure-custom"></div>
 							</div>
+							<div id="tab-4">
+								<div id="message1" class="message"></div>
+							</div>
 						</div>
-						<div id="message0" class="message"></div>
 					</form>
 				</div>
 				
@@ -155,8 +162,9 @@
 									<xsl:value-of select="php:function('lang', 'Start import')"/>
 								</xsl:attribute>
 							</input>
+							<img src="{image_loader}" class="processing-import-relations" align="absmiddle"></img>
 						</div>
-						<div id="message1" class="message"></div>
+						<div id="message0" class="message"></div>
 					</form>		
 				</div>
 		
@@ -165,7 +173,7 @@
 	<script>
 		$('#responsiveTabsDemo').responsiveTabs({
 			startCollapsed: 'accordion',
-			disabled: [1,2]
+			disabled: [1,2,3]
 		});
 	</script>
 </xsl:template>
