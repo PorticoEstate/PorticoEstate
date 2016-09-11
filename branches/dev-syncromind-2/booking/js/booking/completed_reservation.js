@@ -14,7 +14,7 @@ function clearBuildingFilter()
 
 function requestWithBuildingFilter(sQuery)
 {
-	return 'query=' + sQuery + (seasonFilterBuildingId ? '&filter_building_id=' + seasonFilterBuildingId : '');
+	return sQuery + (seasonFilterBuildingId ? '&filter_building_id=' + seasonFilterBuildingId : '');
 }
 
 function export_completed_reservations()

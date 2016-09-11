@@ -1,6 +1,10 @@
 var building_id_selection = "";
 $(document).ready(function ()
 {
+	$("#start_date").change(function ()
+	{
+		$("#end_date").val($("#start_date").val());
+	});
 
 	$('#field_cost_comment').hide();
 	$('#field_cost').on('input propertychange paste', function ()

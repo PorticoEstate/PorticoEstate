@@ -2,6 +2,11 @@ var building_id_selection = "";
 var organization_id_selection = "";
 $(document).ready(function ()
 {
+	$("#start_date").change(function ()
+	{
+		$("#end_date").val($("#start_date").val());
+	});
+
 
 	$('#field_cost_comment').hide();
 	$('#field_cost').on('input propertychange paste', function ()
@@ -121,6 +126,50 @@ $(window).load(function ()
 
 if ($.formUtils)
 {
+	$.formUtils.addValidator({
+		name: 'time_span',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var v = false;
+			var end_date = $("#end_date").val();
+			var start_date = $("#start_date").val();
+			if (end_date != "" && start_date != "")
+			{
+				v = true;
+			}
+			if (end_date == start_date)
+			{
+				v = false;
+			}
+			return v;
+
+		},
+		errorMessage: 'Invalid timespan',
+		errorMessageKey: ''
+	});
+
+	$.formUtils.addValidator({
+		name: 'time_span_edit',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var v = false;
+			var end_date = $("#field_from").val();
+			var start_date = $("#field_to").val();
+			if (end_date != "" && start_date != "")
+			{
+				v = true;
+			}
+			if (end_date == start_date)
+			{
+				v = false;
+			}
+			return v;
+
+		},
+		errorMessage: 'Invalid timespan',
+		errorMessageKey: ''
+	});
+
 	$.formUtils.addValidator({
 		name: 'target_audience',
 		validatorFunction: function (value, $el, config, languaje, $form)

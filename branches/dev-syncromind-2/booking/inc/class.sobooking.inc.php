@@ -146,6 +146,11 @@
 			$start = $from_->format('Y-m-d H:i');
 			$end = $to_->format('Y-m-d H:i');
 
+			if ($entity['from_'] == $entity['to_'])
+			{
+				$errors['to_'] = lang('Invalid to date');
+				return; //No need to continue validation if dates are invalid
+			}
 			if (strtotime($start) > strtotime($end))
 			{
 				$errors['from_'] = lang('Invalid from date');
@@ -165,7 +170,7 @@
 				$this->db->query("SELECT e.id FROM bb_event e 
 									WHERE e.active = 1 AND 
 									e.id IN (SELECT event_id FROM bb_event_resource WHERE resource_id IN ($rids)) AND
-									((e.from_ > '$start' AND e.from_ < '$end') OR 
+									((e.from_ >= '$start' AND e.from_ < '$end') OR
 						 			 (e.to_ > '$start' AND e.to_ < '$end') OR 
 						 			 (e.from_ < '$start' AND e.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
@@ -176,7 +181,7 @@
 				$this->db->query("SELECT a.id FROM bb_allocation a 
 									WHERE a.active = 1 AND a.id<>$allocation_id AND 
 									a.id IN (SELECT allocation_id FROM bb_allocation_resource WHERE resource_id IN ($rids)) AND
-									((a.from_ > '$start' AND a.from_ < '$end') OR 
+									((a.from_ >= '$start' AND a.from_ < '$end') OR
 						 			 (a.to_ > '$start' AND a.to_ < '$end') OR 
 						 			 (a.from_ < '$start' AND a.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
@@ -188,7 +193,7 @@
 				$this->db->query("SELECT b.id FROM bb_booking b 
 									WHERE  b.active = 1 AND b.id<>$booking_id AND 
 									b.id IN (SELECT booking_id FROM bb_booking_resource WHERE resource_id IN ($rids)) AND
-									((b.from_ > '$start' AND b.from_ < '$end') OR 
+									((b.from_ >= '$start' AND b.from_ < '$end') OR
 						 			 (b.to_ > '$start' AND b.to_ < '$end') OR 
 						 			 (b.from_ < '$start' AND b.to_ > '$end'))", __LINE__, __FILE__);
 				if ($this->db->next_record())
