@@ -334,7 +334,7 @@
 					'attrib_name' => 'descr')
 				),
 				'district_list' => array('options' => $bocommon->select_district_list('', $application->district_id)),
-				'composite_type_list' => array('options' => $bocommon->select_list($application->composite_type, $composite_types)),
+				'composite_type_list' => array('options' => $bocommon->select_list($application->composite_type_id, $composite_types)),
 				'payment_method_list' => array('options' => $bocommon->select_list($application->payment_method, $payment_methods)),
 				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'mode' => $mode,
