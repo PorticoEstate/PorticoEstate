@@ -850,11 +850,76 @@ function array_minus($a, $b)
             return array('total_records'=>count($results), 'results'=>$results);
         }
 
-        /**
+ 		/**
+		 * Sigurd: 13 sept 2016: reworked from split_allocations_old()
+		 * Split allocations overlapped by bookings into multiple allocations
+		 * to avoid overlaps
+		 */
+		function split_allocations( $allocations, $all_bookings )
+		{
+
+			function get_from2( $a )
+			{
+				return $a['from_'];
+			}
+			;
+
+			function get_to2( $a )
+			{
+				return $a['to_'];
+			}
+			;
+			$new_allocations = array();
+			foreach ($allocations as $allocation)
+			{
+				// $ Find all associated bookings
+				$bookings = array();
+				foreach ($all_bookings as $b)
+				{
+					if ($b['allocation_id'] == $allocation['id'])
+					{
+						$bookings[] = $b;
+					}
+				}
+				$times = array($allocation['from_'], $allocation['to_']);
+				$times = array_merge(array_map("get_from2", $bookings), $times);
+				$times = array_merge(array_map("get_to2", $bookings), $times);
+				$times = array_unique($times);
+				sort($times);
+				while (count($times) >= 2)
+				{
+					$from_ = $times[0];
+					$to_ = $times[1];
+					foreach ($all_bookings as $b)
+					{
+						$found = false;
+
+                        if(($b['from_'] >= $from_ && $b['from_'] <= $to_)
+							|| ($b['to_'] > $from_ && $b['to_'] < $to_)
+							|| ($b['from_'] <= $from_ && $b['to_'] >= $to_))
+						{
+							$found = true;
+						}
+						if (!$found)
+						{
+							$a = $allocation;
+							$a['from_'] = $from_;
+							$a['to_'] = $to_;
+							$new_allocations[] = $a;
+						}
+					}
+					array_shift($times);
+				}
+			}
+
+			return $new_allocations;
+		}
+
+		/**
          * Split allocations overlapped by bookings into multiple allocations
          * to avoid overlaps
          */
-        function split_allocations($allocations, $all_bookings)
+        function split_allocations_old($allocations, $all_bookings)
         {
             function get_from2($a) {return $a['from_'];};
             function get_to2($a) {return $a['to_'];};
