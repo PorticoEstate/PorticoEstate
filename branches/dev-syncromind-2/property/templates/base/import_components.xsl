@@ -112,7 +112,7 @@
 								</input>
 								<img src="{image_loader}" class="processing-sheet" align="absmiddle"></img>
 							</div>
-							<div id="tab-2">
+							<div id="tab-2" style="overflow: scroll">
 								<input type="button" id="step3" name="step3" size="40">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('lang', 'Continue')"/>
