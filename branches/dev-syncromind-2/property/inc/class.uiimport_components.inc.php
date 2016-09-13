@@ -112,7 +112,7 @@
 			}
 				
 			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
-			$relations = array();
+			$component_files = array();
 			
 			foreach ($exceldata as $row) 
 			{
@@ -121,39 +121,45 @@
 					continue;
 				}
 				
-				$relations[$row[0]][] = $row[(count($row)-1)];
+				$array_path = explode("\\", $row[(count($row)-1)]);
+						
+				$component_files[$row[0]][] = array(
+					'name' => $row[1],
+					'desription' => $row[2],
+					'file' => $array_path[count($array_path)-1]
+				);
 			}
-			
+
 			$this->db->transaction_begin();
 			
 			try
 			{
 				$this->db->Exception_On_Error = true;
 				
-				foreach ($relations as $k => $files) 
+				foreach ($component_files as $k => $files) 
 				{
 					if (empty($k))
 					{
 						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 					}
 					else {
-						$component = $this->get_component[$k];
+						$component = $this->get_component($k);
 						if( empty($component['id']) || empty($component['location_id']))
 						{
 							throw new Exception("component {$k} does not exist");
 						}
 					}
 					
-					foreach($files as $path_file)
+					foreach($files as $file_data)
 					{
-						$parts = explode("\\", $path_file);
-						$file = $parts[count($parts)-1];
+						$file = $file_data['file'];
+						
 						if (!is_file($this->tmp_upload_dir.$file))
 						{
 							throw new Exception("the file {$file} does not exist, component: {$k}");
 						}	
 						
-						$file_id = $this->save_file($file);
+						$file_id = $this->save_file($file_data);
 						if (!$file_id)
 						{						
 							throw new Exception("failed to save file {$file}, component: {$k}");
@@ -259,8 +265,12 @@ HTML;
 		}
 		
 		
-		private function save_file( $tmp_file )
+		private function save_file( $file_data )
 		{
+			$metadata = array();
+			
+			$tmp_file = $file_data['file'];
+			
 			$bofiles = CreateObject('property.bofiles');
 			
 			$file_name = str_replace(' ', '_', $tmp_file);
@@ -277,18 +287,33 @@ HTML;
 			$file_id = $bofiles->vfs->cp3(array(
 					'from' => $this->tmp_upload_dir.$tmp_file,
 					'to' => $to_file,
-					'id' => '',
+		 			'id' => '',
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 			$bofiles->vfs->override_acl = 0;
 
+			if ($file_id) 
+			{
+				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
+				$metadata['title'] = $file_data['name']; 
+				$metadata['descr'] = $file_data['desription'];
+				
+				$values_insert = array
+					(
+					'file_id' => $file_id,
+					'metadata' => json_encode($metadata)
+				);
+
+				$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+			}
+			
 			return $file_id;
 		}
 		
 		
 		private function save_file_relation( $id, $location_id, $file_id )
 		{
-			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
-			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
+			$date = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				
 			$values_insert = array
 			(
