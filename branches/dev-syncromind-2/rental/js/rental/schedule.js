@@ -299,7 +299,7 @@ schedule.createToolbar = function ()
 		{
 			button.addEventListener('click', function(event){
 				event.preventDefault()
-				self[callFunction]();
+				self[callFunction['name']](callFunction['args'], this);
 			});
 		}
 

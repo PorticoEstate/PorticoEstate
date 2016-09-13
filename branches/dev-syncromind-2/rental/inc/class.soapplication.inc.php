@@ -118,5 +118,16 @@
 
 
 		}
+		
+		public function add_composite($application_id, $composite_id)
+		{
+			$q = "INSERT INTO rental_application_composite (application_id, composite_id) VALUES ($application_id, $composite_id)";
+			$result = $this->db->query($q);
+			if ($result)
+			{
+				return true;
+			}
+			return false;
+		}
 
 	}

@@ -30,8 +30,20 @@ function set_tab(tab)
 	$("#active_tab").val(tab);
 }
 
-function reserveComposite ()
+function reserveComposite (data, button)
 {
-	var text = "Composite " + schedule.rental['data']['id'] + ", application_id " + $('#application_id').val();
-	$('#tempMessage').append("<li>" + text + "</li>");
+	button.disabled = true;
+	data = jQuery.parseJSON(data);
+
+	var url = data['url'];
+	var application_id = $('#application_id').val();
+	var composite_id = schedule.rental['data']['id'];
+
+	var params = {application_id: application_id, composite_id: composite_id};
+	
+	$.post(url, params, function(m)
+	{
+		button.disabled = false;
+		$('#tempMessage').append("<li>" + m + "</li>");
+	});
 }

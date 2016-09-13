@@ -42,6 +42,7 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
+			'add_composite' => true
 		);
 
 		protected
@@ -474,7 +475,15 @@
 			$toolbar[] = array (
 				'name' => 'reserve',
 				'text' => 'Reserve',
-				'callFunction' => 'reserveComposite',
+				'callFunction' => array(
+					'name' => 'reserveComposite',
+					'args' => json_encode(array(
+						'url' => self::link(array(
+							'menuaction' => 'rental.uiapplication.add_composite',
+							'phpgw_return_as' => 'json'
+						))
+					))
+				),
 				'attributes' => array(
 					'class' => 'need-free'
 				),
@@ -574,5 +583,23 @@
 			array_walk($applications["results"], array($this, "_add_links"), "rental.uiapplication.edit");
 
 			return $this->jquery_results($applications);
+		}
+		
+		public function add_composite()
+		{
+			$application_id = (int)phpgw::get_var('application_id');
+			$composite_id = (int)phpgw::get_var('composite_id');
+			
+			$so_application = rental_soapplication::get_instance();
+			$result = $so_application->add_composite($application_id, $composite_id);
+			if ($result)
+			{
+				$message = 'Composite ' . $composite_id . ' ' . lang('has been added');
+			}
+			else
+			{
+				$message = 'Composite ' . $composite_id . ' ' . lang('not added');
+			}
+			return $message;
 		}
 	}
