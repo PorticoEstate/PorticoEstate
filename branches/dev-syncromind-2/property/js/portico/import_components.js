@@ -101,6 +101,7 @@ $(document).ready(function ()
 			processData: false,
 			data: form_data,
 			type: 'post',
+			dataType: 'JSON',
 			success: function (result)
 			{
 				$('.processing-import-relations').hide();
