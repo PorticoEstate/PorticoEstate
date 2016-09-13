@@ -166,6 +166,8 @@
 			schedule.params.length = $('#cboNObjects').val();
 			schedule.params.search = $('#txtSearchSchedule').val();
 			schedule.params.start = 0;
+			schedule.params.availability_date_from = "";
+			schedule.params.availability_date_to = "";
 
 			schedule.setupWeekPicker('cal_container');
 

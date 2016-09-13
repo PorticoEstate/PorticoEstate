@@ -41,7 +41,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'id')"/>
 								</label>
-								<input type="hidden" name="id" value="{application/id}"/>
+								<input type="hidden" id="application_id" name="id" value="{application/id}"/>
 								<xsl:value-of select="application/id"/>
 							</div>
 						</xsl:if>
@@ -424,9 +424,32 @@
 									</xsl:for-each>
 								</div>
 							</div>
+							<div class="pure-control-group">
+								<ul id="tempMessage">
+									
+								</ul>
+							</div>
 							<xsl:call-template name="rental_schedule">
 								<xsl:with-param name="schedule" select ='./schedule'/>
 							</xsl:call-template>
+							<script type="text/javascript">
+								$(document).ready(function ()
+								{
+									$('#assign_date_start').datepicker("option", "onSelect", function (a, e) {
+										console.log(a);
+										//console.log(e);
+										schedule.params.availability_date_from = a;
+										schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+									});
+
+									$('#assign_date_end').datepicker("option", "onSelect", function (a, e) {
+										console.log(a);
+										//console.log(e);
+										schedule.params.availability_date_to = a;
+										schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+									});
+								});
+							</script>
 						</fieldset>
 					</div>
 				</xsl:if>

@@ -29,3 +29,9 @@ function set_tab(tab)
 {
 	$("#active_tab").val(tab);
 }
+
+function reserveComposite ()
+{
+	var text = "Composite " + schedule.rental['data']['id'] + ", application_id " + $('#application_id').val();
+	$('#tempMessage').append("<li>" + text + "</li>");
+}

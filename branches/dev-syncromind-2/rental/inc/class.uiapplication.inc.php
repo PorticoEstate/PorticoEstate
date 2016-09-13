@@ -345,7 +345,10 @@
 
 			// Composite
 			$composite_id = (int)phpgw::get_var('id');
-			$date = new DateTime(phpgw::get_var('date'));
+
+			$date = ($application->assign_date_start) ? date("Y-m-d", $application->assign_date_start) : "";
+			$date = new DateTime($date);
+
 			if ($date->format('w') != 1) {
 				$date->modify('last monday');
 			}
@@ -462,11 +465,21 @@
 						'responsibility_id' => $create_type[0]
 					)),
 					'attributes' => array(
-						'class' => 'create_type'
+						'class' => 'need-free'
 					),
 					'parameters' => $parameters
 				);
 			}
+			
+			$toolbar[] = array (
+				'name' => 'reserve',
+				'text' => 'Reserve',
+				'callFunction' => 'reserveComposite',
+				'attributes' => array(
+					'class' => 'need-free'
+				),
+				'parameters' => $parameters
+			);
 
 			$schedule['composite_id'] = $composite_id;
 			$schedule['date'] = $date;

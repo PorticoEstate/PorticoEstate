@@ -215,6 +215,7 @@ schedule.createToolbar = function ()
 		var name = v['name'];
 		var text = v['text'];
 		var action = v['action'];
+		var callFunction = v['callFunction'];
 
 		var parameters = (v['parameters']) ? v['parameters'] : "";
 		var attributes = (v['attributes']) ? v['attributes'] : "";
@@ -241,55 +242,65 @@ schedule.createToolbar = function ()
 				}
 			});
 		}
-
-		if (name == 'download')
+		
+		if (action)
 		{
-			button.addEventListener('click', function()
+			if (name == 'download')
 			{
-				var new_action = action;
-				$.each(schedule.params, function(i, v)
+				button.addEventListener('click', function()
 				{
-					new_action += '&' + i + '=' + v;
-				});
-				if (parameters)
-				{
-					for (var i = 0; i < parameters.length; i++)
+					var new_action = action;
+					$.each(schedule.params, function(i, v)
 					{
-						var val = eval(parameters[i]['source']);
-						new_action += '&' + parameters[i]['name'] + '=' + eval(val);
+						new_action += '&' + i + '=' + v;
+					});
+					if (parameters)
+					{
+						for (var i = 0; i < parameters.length; i++)
+						{
+							var val = eval(parameters[i]['source']);
+							new_action += '&' + parameters[i]['name'] + '=' + eval(val);
+						}
 					}
-				}
-				var iframe = document.createElement('iframe');
-				iframe.style.height = "0px";
-				iframe.style.width = "0px";
-				iframe.src = new_action;
-				if(confirm("This will take some time..."))
+					var iframe = document.createElement('iframe');
+					iframe.style.height = "0px";
+					iframe.style.width = "0px";
+					iframe.src = new_action;
+					if(confirm("This will take some time..."))
+					{
+						document.body.appendChild( iframe );
+					}
+				}, false);
+			}
+			else
+			{
+				button.addEventListener('click', function()
 				{
-					document.body.appendChild( iframe );
-				}
-			}, false);
+					var new_action = action;
+					if (parameters)
+					{
+						for (var i = 0; i < parameters.parameter.length; i++)
+						{
+							var val = eval(parameters.parameter[i]['source']);
+							new_action += '&' + parameters.parameter[i]['name'] + '=' + eval(val);
+						}
+					}
+					if (button.classList.contains('create_type'))
+					{
+						var date = schedule.rental['col']['date'];
+						date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+						new_action += '&date=' + date;
+					}
+					window.open(new_action);
+				}, false);
+			}
 		}
-		else
+		else if (callFunction)
 		{
-			button.addEventListener('click', function()
-			{
-				var new_action = action;
-				if (parameters)
-				{
-					for (var i = 0; i < parameters.parameter.length; i++)
-					{
-						var val = eval(parameters.parameter[i]['source']);
-						new_action += '&' + parameters.parameter[i]['name'] + '=' + eval(val);
-					}
-				}
-				if (button.classList.contains('create_type'))
-				{
-					var date = schedule.rental['col']['date'];
-					date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
-					new_action += '&date=' + date;
-				}
-                window.open(new_action);
-			}, false);
+			button.addEventListener('click', function(event){
+				event.preventDefault()
+				self[callFunction]();
+			});
 		}
 
 		container.appendChild(button);
