@@ -30,7 +30,8 @@
 	phpgw::import_class('phpgwapi.uicommon_jquery');
 	phpgw::import_class('phpgwapi.jquery');
 	
-	include_class('property', 'import_update_components', 'inc/import/');
+	include_class('property', 'import_entity_categories', 'inc/import/');
+	include_class('property', 'import_components', 'inc/import/');
 
 	class property_uiimport_components extends phpgwapi_uicommon_jquery
 	{
@@ -357,6 +358,11 @@ HTML;
 				return $receipt['error'][] = array('msg' => 'location code is empty');
 			}
 				
+			if (empty($template_id))
+			{
+				return $receipt['error'][] = array('msg' => 'template id is empty');
+			}
+			
 			if ($step == 1 && isset($_FILES['file']['tmp_name']))
 			{
 				$file = $_FILES['file']['tmp_name'];
@@ -445,7 +451,8 @@ HTML;
 					'' => ' ... ',
 					'new_column' => 'New column',
 					'building_part' => 'Building part',
-					'category_name' => 'Categry name'
+					'category_name' => 'Categry name',
+					'component_id'    => 'Component ID'
 				);
 				
 				$template = explode("_", $template_id);
@@ -488,9 +495,12 @@ HTML;
 			
 			if ($step == 4 && $start_line) 
 			{
+				$import_entity_categories = new import_entity_categories($template_id);
+				$import_components = new import_components();
+				
 				if (count($attrib_names))
 				{
-					$receipt = $this->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision, $template_id);
+					$receipt = $import_entity_categories->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
 					if ($receipt['error'])
 					{
 						return $receipt;
@@ -503,9 +513,8 @@ HTML;
 				$buildingpart_out_table = array();
 				$buildingpart_in_table = array();
 				$import_data = array();
-
-				$import_components = new import_components();
-				$entity_categories  = $import_components->get_entity_categories();
+					
+				$entity_categories  = $import_entity_categories->list_entity_categories();
 			
 				for ($i = $start_line; $i < $rows; $i++)
 				{
@@ -522,7 +531,7 @@ HTML;
 						{				
 							$cat_id = $entity_categories[$_result['building_part']]['id'];
 							$entity_id = $entity_categories[$_result['building_part']]['entity_id'];	
-							if (empty($_result['benevnelse']))
+							if (empty($_result['component_id']))
 							{
 								$buildingpart_in_table[$_result['building_part']] = array('entity_id' => $entity_id, 'cat_id' => $cat_id);
 							}
@@ -533,7 +542,7 @@ HTML;
 							$entity_id = '';
 						}
 
-						if (!empty($_result['benevnelse']))
+						if (!empty($_result['component_id']))
 						{
 							$import_data[$_result['building_part']]['cat_id'] = $cat_id;
 							$import_data[$_result['building_part']]['entity_id'] = $entity_id;
@@ -541,10 +550,10 @@ HTML;
 						}
 					}
 				}		
-						
+						print_r($import_data); die;
 				if (count($buildingpart_in_table))
 				{
-					$receipt = $import_components->add_attributes_to_categories($buildingpart_in_table, $template_id);
+					$receipt = $import_entity_categories->add_attributes_to_categories($buildingpart_in_table);
 					if ($receipt['error'])
 					{
 						return $receipt;
@@ -554,7 +563,7 @@ HTML;
 				if (count($buildingpart_out_table))
 				{
 					ksort($buildingpart_out_table);
-					$buildingpart_processed = $import_components->add_entity_categories($buildingpart_out_table, $template_id);
+					$buildingpart_processed = $import_entity_categories->add_entity_categories($buildingpart_out_table);
 
 					if (count($buildingpart_processed['not_added']))
 					{
@@ -581,139 +590,6 @@ HTML;
 			}
 		}
 		
-		private function add_attribute_to_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision, $template_id)
-		{
-			$receipt = array();
-			
-			$template = explode('_', $template_id);
-			$entity_id = $template[0];
-			$cat_id = $template[1];
-			
-			$template_attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
-			$template_attrib_names = array();
-			foreach ($template_attrib_list as $attrib)
-			{
-				$template_attrib_names[] = $attrib['column_name'];
-			}
-
-			$appname = $this->type_app[$this->type];
-			$location = ".{$this->type}.{$entity_id}.{$cat_id}";
-			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $location);
-			
-			$attributes = array();
-			
-			foreach ($columns as $_row_key => $_value_key)
-			{
-				$attrib = array();
-				if ($_value_key == 'new_column')
-				{
-					$attrib['entity_id'] = $entity_id;
-					$attrib['cat_id'] = $cat_id;
-					$attrib['appname'] = $appname;
-					$attrib['location'] = $location;
-			
-					$attrib['column_name'] = $attrib_names[$_row_key];
-					$attrib['input_text'] = ucfirst($attrib_names[$_row_key]);
-					$attrib['statustext'] = ucfirst($attrib_names[$_row_key]);
-					$attrib['column_info']['type'] = $attrib_data_types[$_row_key];
-					$attrib['column_info']['precision'] = $attrib_precision[$_row_key];
-					$attrib['column_info']['nullable'] = 'True';
-					$attrib['search'] = 1;
-					
-					$receipt = $this->valid_attributes($attrib);
-					if ($receipt['error'])
-					{
-						break;
-					}
-					
-					if(in_array($attrib['column_name'], $template_attrib_names, true))
-					{
-						continue;
-					}
-					
-					$attrib['_row_key'] = $_row_key;
-					$attributes[] = $attrib;
-				}
-			}
-			
-			if ($receipt['error'])
-			{
-				return $receipt;
-			}
-			
-			$count = 0;
-			foreach($attributes as $attrib)
-			{
-				$id = $this->custom->add($attrib, $attrib_table);	
-				if ($id <= 0)
-				{
-					$receipt['error'][] = array('msg' => lang('Unable to add field %1 ', $attrib['column_name']));
-					break;
-				}
-				else if ($id == -1)
-				{
-					$receipt['error'][] = array('msg' => lang('field %1 already exists, please choose another name', $attrib['column_name']));
-					$receipt['error'][] = array('msg' => lang('Attribute %1 has NOT been saved', $attrib['column_name']));
-					break;
-				}
-				$columns[$attrib['_row_key']] = $attrib['column_name'];
-				$count++;
-			}
-			
-			if ($count)
-			{
-				$receipt['message'][] = array('msg' => lang('%1 attributes has been added to template', $count));
-			}
-			
-			return $receipt;
-		}
-		
-		private function valid_attributes($values)
-		{
-			$receipt = array();
-			
-			if (!$values['column_name'])
-			{
-				$receipt['error'][] = array('msg' => lang('Column name not entered!'));
-			}
-
-			if (!preg_match('/^[a-z0-9_]+$/i', $values['column_name']))
-			{
-				$receipt['error'][] = array('msg' => lang('Column name %1 contains illegal character', $values['column_name']));
-			}
-
-			if (!$values['input_text'])
-			{
-				$receipt['error'][] = array('msg' => lang('Input text not entered!'));
-			}
-			
-			if (!$values['statustext'])
-			{
-				$receipt['error'][] = array('msg' => lang('Statustext not entered!'));
-			}
-
-			if (!$values['entity_id'])
-			{
-				$receipt['error'][] = array('msg' => lang('entity type not chosen!'));
-			}
-
-			if (!$values['column_info']['type'])
-			{
-				$receipt['error'][] = array('msg' => lang('Datatype type not chosen!'));
-			}
-
-			if (!ctype_digit($values['column_info']['precision']) && $values['column_info']['precision'])
-			{
-				$receipt['error'][] = array('msg' => lang('Please enter precision as integer !'));
-			}
-
-			if (!$values['column_info']['nullable'])
-			{
-				$receipt['error'][] = array('msg' => lang('Nullable not chosen!'));
-			}			
-			
-			return $receipt;
-		}
 		/**
 		 * Prepare UI
 		 * @return void
@@ -883,24 +759,6 @@ HTML;
 			array_unshift($values, array('id' => '', 'name' => lang('no part of town')));
 
 			return $values;
-		}
-		
-		private function _xml2array ( $xmlObject, $out = array () )
-		{
-			foreach ( (array) $xmlObject as $index => $node )
-			{
-				$out[$index] = ( is_object($node) || is_array($node) ) ? $this->_xml2array ( $node ) : $node;
-			}
-			
-			return $out;
-		}
-
-		protected function getxmldata( $path, $get_identificator = true )
-		{
-			$xml = simplexml_load_file($path);
-			$out = $this->_xml2array($xml);
-
-			return $out;
 		}
 		
 		protected function getexceldata( $path, $get_identificator = false )
