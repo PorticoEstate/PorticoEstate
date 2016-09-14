@@ -17,9 +17,9 @@
 			</label>
 			<a href="{event/building_link}">
 				<xsl:value-of select="event/resources[position()=1]/building_name"/>
+				(<xsl:value-of select="event/resource_info"/>)
 			</a>
-			(<xsl:value-of select="event/resource_info"/>)
-		</div>
+			</div>
 		<div class="pure-control-group">
 			<label>
 				<h4>
