@@ -132,6 +132,7 @@ $(document).ready(function ()
 		var form_data = new FormData(form);
 		form_data.append('step', 1);
 		form_data.append('file', file_data);
+		form_data.append('template_id', $('#template_list').val());
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
 
@@ -174,6 +175,7 @@ $(document).ready(function ()
 		var data = {
 			"step": 2,
 			"sheet_id": $('#sheet_id').val(), 
+			'template_id': $('#template_list').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
