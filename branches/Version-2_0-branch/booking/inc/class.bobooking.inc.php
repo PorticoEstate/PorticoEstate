@@ -952,6 +952,13 @@
 							$new_allocations[] = $a;
 						}
 					}
+					if(!$all_bookings)
+					{
+						$a = $allocation;
+						$a['from_'] = $from_;
+						$a['to_'] = $to_;
+						$new_allocations[] = $a;
+					}
 					array_shift($times);
 				}
 			}
