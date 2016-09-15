@@ -80,6 +80,13 @@
 							</select>
 						</div>
 						<div class="pure-control-group">
+							<label for="vendor">
+								<xsl:value-of select="php:function('lang', 'Component ID')" />
+							</label>
+							<select id="component_id" name="component_id">
+							</select>
+						</div>
+						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'upload file')"/>
 							</label>
