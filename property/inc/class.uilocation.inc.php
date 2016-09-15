@@ -1696,8 +1696,14 @@ JS;
 			foreach ($documents as $item) 
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.view_file', 'id'=>$item['document_id'])).'" target="_blank">'.$item['document_name'].'</a>';
-				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+				$values[] =  array(
+					'id'=> $item['document_id'],
+					'type'=> 'location',
+					'document_name' => $document_name,
+					'title'=> $item['title']
+					);
 			}
+			unset($item);
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $location_code)));
 			$generic_document = CreateObject('property.sogeneric_document');
@@ -1708,7 +1714,12 @@ JS;
 			foreach ($documents2 as $item) 
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
-				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
+				$values[] =  array(
+					'id'=> $item['id'],
+					'type'=> 'generic',
+					'document_name' => $document_name,
+					'title'=> $item['title']
+					);
 			}
 			
 			$result_data = array('results' => $values);
@@ -2103,7 +2114,8 @@ JS;
 				
 					$tabs['document'] = array('label' => lang('document'), 'link' => '#document');
 					
-					$documents_tabletools = array
+					$documents_tabletools = array();
+					$documents_tabletools[] = array
 						(
 						'my_name' => 'add',
 						'text' => lang('add new document'),
@@ -2111,15 +2123,29 @@ JS;
 						'className' => 'add',
 						'custom_code' => "
 								var oArgs = " . json_encode(array(
-									'menuaction' => 'property.uidocument.edit',							
+									'menuaction' => 'property.uidocument.edit',
 									'location_code' => $location_code
 						)) . ";
 								newDocument(oArgs);
 							"
 					);
-					
-					$documents_def = array
+					$documents_tabletools[] = array
 						(
+						'my_name' => 'edit',
+						'text' => lang('edit'),
+						'type' => 'custom',
+						'custom_code' => "
+							var oArgs = " . json_encode(array(
+							'menuaction' => 'property.uidocument.edit'
+						)) . ";
+							var parameters = " . json_encode(array('parameter' => array(array('name' => 'document_id',
+									'source' => 'id')))) . ";
+							editDocument(oArgs, parameters);
+						"
+					);
+
+					$documents_def = array(
+						array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
 					);
