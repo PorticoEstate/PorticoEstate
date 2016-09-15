@@ -39,7 +39,7 @@ function receive_order(workorder_id)
 	var oArgs = {
 		menuaction: 'property.uiworkorder.receive_order',
 		id: workorder_id,
-		received_percent: $("#slider-range-min").slider("value")
+		received_amount: $("#order_received_amount").val()
 	};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	$.ajax({
@@ -390,18 +390,5 @@ $(document).ready(function ()
 		parent.closeJS_remote();
 //		parent.hide_popupBox();
 	});
-
-	$("#slider-range-min").slider({
-		range: "min",
-		value: $("#value_order_received_percent").val() || 0,
-		min: 0,
-		max: 100,
-		step: 10,
-		slide: function (event, ui)
-		{
-			$("#order_received_percent").val(ui.value + " %");
-		}
-	});
-	$("#order_received_percent").val($("#slider-range-min").slider("value") + " %");
 
 });

@@ -986,7 +986,7 @@
 					'order_dim1' => $this->db->f('order_dim1'),
 					'order_sent' => $this->db->f('order_sent'),
 					'order_received' => $this->db->f('order_received'),
-					'order_received_percent' => $this->db->f('order_received_percent')
+					'order_received_amount' => $this->db->f('order_received_amount')
 					);
 
 				$sql = "SELECT periodization_id,"
