@@ -1279,15 +1279,65 @@ JS;
 
 			foreach ($composites_data as $composite)
 			{
-				$composites[$n]['id'] = $composite['id'];
-				$composites[$n]['name'] = $composite['name'];
-				$composites[$n]['object_number'] = $composite['location_code'];
-
-				foreach ($days as $day)
+				$composite_obj = rental_socomposite::get_instance()->get_single($composite['id']);
+				$contracts = $composite_obj->get_contracts();
+				$c = 0;
+				if (count($contracts) > 0)
 				{
-					$composites[$n][date_format($day, 'D')]['status'] = $composite['status'];
+					foreach ($contracts as $contract)
+					{
+						$contract = $contract->serialize();
+
+						if ($composites[$n-1]['id'] != $composite['id'])
+						{
+							$composites[$n]['id'] = $composite['id'];
+						}
+						
+						$composites[$n]['name'] = $composite['name'];
+						$composites[$n]['object_number'] = $composite['location_code'];
+
+						$contract_date_start = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_start'])));
+						$contract_date_end = new DateTime(date('Y-m-d', phpgwapi_datetime::date_to_timestamp($contract['date_end'])));
+						
+						foreach ($days as $day)
+						{
+							if ($composites[$n][date_format($day, 'D')]['status'] == 'Ikke ledig') {
+								break 2;
+							}
+							if ($day >= $contract_date_start && ($day <= $contract_date_end || $contract['date_end'] != ''))
+							{
+								$composites[$n][date_format($day, 'D')]['status'] = 'Ikke ledig';
+								$c++;
+							}
+							else
+							{
+								$composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
+							}
+						}
+//						$n++;
+					}
 				}
-				$n++;
+				else
+				{
+					$composites[$n]['id'] = $composite['id'];
+					$composites[$n]['name'] = $composite['name'];
+					$composites[$n]['object_number'] = $composite['location_code'];
+
+					foreach ($days as $day)
+					{
+						$composites[$n][date_format($day, 'D')]['status'] = 'Ledig';
+					}
+//					$n++;
+				}
+				if ($c >= 7)
+				{
+					unset($composites[$n]);
+				}
+				else
+				{
+					$n++;
+				}
+				//$n++;
 			}
 
 			$data = array(

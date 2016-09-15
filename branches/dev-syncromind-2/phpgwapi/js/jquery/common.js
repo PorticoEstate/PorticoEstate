@@ -1276,6 +1276,7 @@ function populateSelect_activityCalendar(url, container, attr)
 function createTableSchedule (d, u, c, r, cl, dt, a, p, t)
 {
 	var container = document.getElementById(d);
+	var container_toolbar = document.createElement('div');
 	var xtable = document.createElement('table');
 	var tableHead = document.createElement('thead');
 	var tableHeadTr = document.createElement('tr');
@@ -1309,6 +1310,7 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p, t)
 	xtable.appendChild(tableBody);
 
 	container.innerHTML = "";
+	container.appendChild(container_toolbar);
 	container.appendChild(xtable);
 
 	$.post(u, a, function (data)
@@ -1444,7 +1446,8 @@ function createTableSchedule (d, u, c, r, cl, dt, a, p, t)
 			if (t)
 			{
 				var toolbar = schedule.createToolbar();
-				container.insertBefore(toolbar, xtable);
+				container_toolbar.appendChild(toolbar);
+//				container.insertBefore(toolbar, xtable);
 			}
 		}
 	});

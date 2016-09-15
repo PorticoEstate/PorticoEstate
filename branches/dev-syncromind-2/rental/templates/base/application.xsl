@@ -433,13 +433,22 @@
 								<xsl:with-param name="schedule" select ='./schedule'/>
 							</xsl:call-template>
 							<script type="text/javascript">
-								$(document).ready(function ()
+								$(window).load(function ()
 								{
+
+									<xsl:if test="application/assign_date_start != 0 and application/assign_date_start != ''">
+										var adend = '<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>';
+										var adend_date = new Date(adend.substr(6,4), adend.substr(3,2) - 1, adend.substr(0,2));
+										schedule.updateSchedule(adend_date);
+									</xsl:if>
+
 									$('#assign_date_start').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
 										//console.log(e);
 										schedule.params.availability_date_from = a;
-										schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+										var date = new Date(a);
+										schedule.updateSchedule(date);
+										//schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
 									});
 
 									$('#assign_date_end').datepicker("option", "onSelect", function (a, e) {
