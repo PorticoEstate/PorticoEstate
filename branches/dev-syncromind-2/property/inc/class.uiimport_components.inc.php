@@ -48,7 +48,8 @@
 			'get_locations_for_type' => true,
 			'import_component_files' => true,
 			'handle_import_files' => true,
-			'import_components' => true
+			'import_components' => true,
+			'get_attributes_for_template' => true
 		);
 
 		public function __construct()
@@ -109,7 +110,8 @@
 			
 			if (empty($id))
 			{
-				return $message['error'][] = array('msg' => 'location code is empty');
+				$message['error'][] = array('msg' => 'location code is empty');
+				return $message;
 			}
 				
 			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
@@ -338,6 +340,7 @@ HTML;
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
 			$template_id = phpgw::get_var('template_id');
+			$component_id = phpgw::get_var('component_id');
 			
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
 			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
@@ -451,7 +454,7 @@ HTML;
 					'' => ' ... ',
 					'new_column' => 'New column',
 					'building_part' => 'Building part',
-					'category_name' => 'Categry name',
+					'category_name' => 'Category name',
 					'component_id'    => 'Component ID'
 				);
 				
@@ -465,7 +468,7 @@ HTML;
 				}
 				
 				$data_types = $this->bocommon->select_datatype();
-				$_options_data_type[''] = 'select data type';
+				$_options_data_type[''] = 'data type';
 				foreach($data_types as $row) 
 				{
 					$_options_data_type[$row['id']] = $row['name'];
@@ -482,9 +485,9 @@ HTML;
 					$html_table .= "<tr>";
 					$html_table .= "<td>[{$_column}] {$_value}</td>";
 					$html_table .= "<td>{$_listbox}</td>";
-					$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names'></input></td>";
+					$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names' placeholder='column name'></input></td>";
 					$html_table .= "<td>{$_listTypes}</td>";
-					$html_table .= "<td><input type='text' id='precision_{$_column}' name='precision[{$_column}]' disabled class='precision'></input></td>";
+					$html_table .= "<td><input type='text' id='precision_{$_column}' name='precision[{$_column}]' disabled class='precision' placeholder='length'></input></td>";
 					$html_table .= "</tr>";
 				}
 				
@@ -500,7 +503,7 @@ HTML;
 				
 				if (count($attrib_names))
 				{
-					$receipt = $import_entity_categories->add_attribute_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
+					$receipt = $import_entity_categories->add_attributes_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
 					if ($receipt['error'])
 					{
 						return $receipt;
@@ -526,31 +529,35 @@ HTML;
 					}
 					
 					if ((int)$_result['building_part'] || $_result['building_part'] === '0')
-					{
+					{							
+						$cat_id = '';
+						$entity_id = '';
+						
 						if (array_key_exists((string)$_result['building_part'], $entity_categories))
 						{				
-							$cat_id = $entity_categories[$_result['building_part']]['id'];
-							$entity_id = $entity_categories[$_result['building_part']]['entity_id'];	
-							if (empty($_result['component_id']))
+							if (!empty($_result['component_id']))
 							{
+								$cat_id = $entity_categories[$_result['building_part']]['id'];
+								$entity_id = $entity_categories[$_result['building_part']]['entity_id'];
+								
 								$buildingpart_in_table[$_result['building_part']] = array('entity_id' => $entity_id, 'cat_id' => $cat_id);
 							}
 						} 
 						else {
 							$buildingpart_out_table[$_result['building_part']] = $_result['building_part'].' - '.$_result['category_name'];
-							$cat_id = '';
-							$entity_id = '';
 						}
 
 						if (!empty($_result['component_id']))
 						{
 							$import_data[$_result['building_part']]['cat_id'] = $cat_id;
 							$import_data[$_result['building_part']]['entity_id'] = $entity_id;
+							$_result[$component_id] = $_result['component_id'];
+							unset($_result['component_id']);
 							$import_data[$_result['building_part']]['components'][] = $_result;						
 						}
 					}
-				}		
-						print_r($import_data); die;
+				}
+				
 				if (count($buildingpart_in_table))
 				{
 					$receipt = $import_entity_categories->add_attributes_to_categories($buildingpart_in_table);
@@ -668,6 +675,26 @@ HTML;
 			self::render_template_xsl(array('import_components', 'datatable_inline'), $data);
 		}
 
+		public function get_attributes_for_template()
+		{
+			$category_template = phpgw::get_var('category_template');
+
+			$template_info = explode('_', $category_template);
+			$template_entity_id = $template_info[0];
+			$template_cat_id = $template_info[1];
+
+			$attrib_list = $this->bo->read_attrib(array('entity_id' => $template_entity_id, 'cat_id' => $template_cat_id, 'allrows' => true));
+			$list = array();
+			foreach ($attrib_list as $attrib)
+			{
+				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text']); 
+			}
+			
+			array_unshift($list, array('id' => '', 'name' => lang('Select Component ID')));
+
+			return $list;
+		}
+		
 		public function get_locations_for_type()
 		{
 			$type_id = phpgw::get_var('type_id', 'int');
