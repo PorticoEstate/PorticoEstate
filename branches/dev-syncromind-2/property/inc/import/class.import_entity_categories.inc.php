@@ -289,7 +289,7 @@
 			return $receipt;
 		}
 		
-		public function add_attribute_to_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision)
+		public function add_attributes_to_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision)
 		{
 			$receipt = array();
 			
