@@ -92,7 +92,7 @@
 						'ticket_status'	=> array
 						(
 							'text'	=> lang('Ticket status'),
-							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'helpdesk_status') )
+							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index', 'type' => 'helpdesk_status') )
 						),
 						'acl'	=> array
 						(
