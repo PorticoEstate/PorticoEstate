@@ -108,35 +108,8 @@
 
 			$this->db->transaction_commit();
 			$message['message'][] = array('msg' => 'all components saved successfully');
-			return $message; 		 
 			
-			/*$components_not_added = array();
-			
-			foreach ($entity_categories as $entity) 
-			{
-				if ($entity['cat_id'])
-				{
-					$attributes = $this->get_attributes($entity['entity_id'], $entity['cat_id']);
-
-					$not_added = array();
-					foreach ($entity['components'] as $values)
-					{
-						$attributes_values = $this->set_attributes_values($values, $attributes);
-						
-						$receipt = $this->bo_entity->save(array('location' => $location_code), $attributes_values, 'add', $entity['entity_id'], $entity['cat_id']);
-						if (!$receipt['id'])
-						{
-							$not_added[] = 1;
-						}
-					}
-					if (count($not_added))
-					{
-						$components_not_added[$entity['name']] = count($not_added);
-					}
-				}
-			}
-			
-			return $components_not_added;*/
+			return $message; 
 		}
 		
 		private function _save_eav( $data, $entity_id, $cat_id )
