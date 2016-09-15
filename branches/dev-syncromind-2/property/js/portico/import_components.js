@@ -69,6 +69,24 @@ $(document).ready(function ()
         }
     });
 	
+	
+	$('#template_list').change( function()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.get_attributes_for_template'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);	
+		
+		var data = {"category_template": $(this).val()};
+		JqueryPortico.execute_ajax(requestUrl,
+			function(result){
+				var $el = $("#component_id");
+				$el.empty();
+				$.each(result, function(key, value) {
+					$el.append($("<option></option>").attr("value", value.id).text(value.name));
+				});
+			}, data, "GET", "json"
+		);				
+	});
+	
 	$('#import_components_files').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
@@ -91,6 +109,7 @@ $(document).ready(function ()
 		var form_data = new FormData(form);
 		form_data.append('file', file_data);
 		form_data.append('location_code', $('#location_code').val());
+		form_data.append('location_item_id', $('#location_item_id').val());
 
 		$('.processing-import-relations').show();
 		
@@ -229,11 +248,19 @@ $(document).ready(function ()
 		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
+		if (!$('#component_id').val())
+		{
+			alert('Select Component ID from template');
+			return false;
+		}
+		
+		
 		var data = {
 			"step": 4,
 			"sheet_id": $('#sheet_id').val(), 
 			'start_line': $('input:radio[name=start_line]:checked').val(),
 			'template_id': $('#template_list').val(),
+			'component_id': $('#component_id').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
@@ -244,6 +271,16 @@ $(document).ready(function ()
 		data['attrib_precision'] = {};
 
 		var columns = $('.columns');
+		var column_building_part = false;
+		var column_category_name = false;
+		var column_component_id = false;
+		var new_column_attributes = true;
+		
+		if (columns.length == 0)
+		{
+			alert('Select some columns to continue');
+			return false;
+		}
 
 		columns.each(function (i, obj)
 		{
@@ -252,14 +289,53 @@ $(document).ready(function ()
 			{
 				if (obj.value === 'new_column') 
 				{
+					if (!valid_new_column_attributes(code[1]))
+					{
+						new_column_attributes = false;
+						return false;
+					}
 					data['attrib_names'][code[1]] = $('#name_' + code[1]).val();
 					data['attrib_data_types'][code[1]] = $('#data_type_' + code[1]).val();
 					data['attrib_precision'][code[1]] = $('#precision_' + code[1]).val();
 				}
+				
+				if (obj.value === 'building_part')
+				{
+					column_building_part = true;
+				}
+				if (obj.value === 'category_name')
+				{
+					column_category_name = true;
+				}
+				if (obj.value === 'component_id')
+				{
+					column_component_id = true;
+				}
+				
 				data['columns'][code[1]] = obj.value;
 			}
 		});
-					
+		
+		if (!new_column_attributes)
+		{
+			return;
+		}
+		if (!column_building_part)
+		{
+			alert('Select a Building part column');
+			return;
+		}
+		if (!column_category_name)
+		{
+			alert('Select a Category name column');
+			return;
+		}
+		if (!column_component_id)
+		{
+			alert('Select a Component ID column');
+			return;
+		}
+		
 		$('.processing-columns').show();
 		
 		JqueryPortico.execute_ajax(requestUrl,
@@ -272,8 +348,34 @@ $(document).ready(function ()
 		);
 	});
 	
-
+	$('#template_list').change();
 });
+
+function valid_new_column_attributes (code)
+{
+	if ($('#name_' + code).val() == '')
+	{
+		alert('Enter a name for the new column');
+		$('#name_' + code).select();
+		return false;
+	}
+	
+	if ($('#data_type_' + code).val() == '')
+	{
+		alert('Select a data type for the new column');
+		$('#data_type_' + code).select();
+		return false;
+	}
+	
+	if ($('#precision_' + code).val() == '')
+	{
+		alert('Enter a length for the new column');
+		$('#precision_' + code).select();
+		return false;
+	}
+	
+	return true;
+}
 
 function enabledAtributes (column)
 {
