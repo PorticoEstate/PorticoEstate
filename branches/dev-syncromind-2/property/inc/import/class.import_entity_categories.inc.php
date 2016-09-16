@@ -289,7 +289,117 @@
 			return $receipt;
 		}
 		
-		public function add_attributes_to_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision)
+		public function prepare_attributes_for_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision)
+		{
+			$receipt = array();
+			
+			$entity_id = $this->entity_id_from_template;
+			$cat_id = $this->cat_id_from_template;
+			
+			$template_attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
+			$template_attrib_names = array();
+			foreach ($template_attrib_list as $attrib)
+			{
+				$template_attrib_names[] = $attrib['column_name'];
+			}
+
+			$appname = $this->type_app[$this->type];
+			$location = ".{$this->type}.{$entity_id}.{$cat_id}";
+			
+			$attributes = array();
+			
+			foreach ($columns as $_row_key => $_value_key)
+			{
+				$attrib = array();
+				if ($_value_key == 'new_column')
+				{
+					$attrib['entity_id'] = $entity_id;
+					$attrib['cat_id'] = $cat_id;
+					$attrib['appname'] = $appname;
+					$attrib['location'] = $location;
+			
+					$attrib['column_name'] = $attrib_names[$_row_key];
+					$attrib['input_text'] = ucfirst($attrib_names[$_row_key]);
+					$attrib['statustext'] = ucfirst($attrib_names[$_row_key]);
+					$attrib['column_info']['type'] = $attrib_data_types[$_row_key];
+					$attrib['column_info']['precision'] = $attrib_precision[$_row_key];
+					$attrib['column_info']['nullable'] = 'True';
+					$attrib['search'] = 1;
+					
+					$receipt = $this->_valid_attributes($attrib);
+					if ($receipt['error'])
+					{
+						break;
+					}
+					
+					if(in_array($attrib['column_name'], $template_attrib_names, true))
+					{
+						continue;
+					}
+					
+					$columns[$_row_key] = $attrib['column_name'];
+					$attributes[] = $attrib;
+				}
+			}
+			
+			if ($receipt['error'])
+			{
+				return $receipt;
+			}
+			
+			if (count($attributes))
+			{
+				$config = createObject('phpgwapi.config', 'phpgwapi');
+				$config->read_repository();
+				$config->value('component_import_attribs_for_template', serialize($attributes));
+				$config->save_repository();
+			
+				$receipt['message'][] = array('msg' => lang('%1 attributes prepared for template', count($attributes)));
+			} else {
+				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
+			}
+			
+			return $receipt;
+		}
+		
+		public function add_attributes_to_template()
+		{
+			$receipt = array();
+			
+			$attributes =  unserialize($GLOBALS['phpgw_info']['server']['component_import_attribs_for_template']);
+			if (!count($attributes))
+			{
+				$receipt['error'][] = array('msg' => lang('Not exist attributes to insert the template'));
+				return $receipt;
+			}
+			
+			foreach($attributes as $attrib)
+			{
+				$id = $this->custom->add($attrib);	
+				if ($id <= 0)
+				{
+					$receipt['error'][] = array('msg' => lang('Unable to add field %1 ', $attrib['column_name']));
+					break;
+				}
+				else if ($id == -1)
+				{
+					$receipt['error'][] = array('msg' => lang('field %1 already exists, please choose another name', $attrib['column_name']));
+					$receipt['error'][] = array('msg' => lang('Attribute %1 has NOT been saved', $attrib['column_name']));
+					break;
+				}
+			}
+			
+			if ($receipt['error'])
+			{
+				return $receipt;
+			}
+			
+			$receipt['message'][] = array('msg' => lang('%1 attributes has been added to template', count($attributes)));
+			
+			return $receipt;
+		}
+		
+		/*public function add_attributes_to_template(&$columns, $attrib_names, $attrib_data_types, $attrib_precision)
 		{
 			$receipt = array();
 			
@@ -373,7 +483,7 @@
 			}
 			
 			return $receipt;
-		}
+		}*/
 		
 		private function _valid_attributes($values)
 		{
