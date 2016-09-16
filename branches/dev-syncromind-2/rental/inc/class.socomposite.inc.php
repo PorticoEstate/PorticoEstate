@@ -154,6 +154,11 @@
 				$filter_clauses[] = "contract_id = {$this->marshal($filters['contract_id'], 'int')}";
 			}
 
+			if (isset($filters['application_id']))
+			{
+				$filter_clauses[] = "application_id = {$this->marshal($filters['application_id'], 'int')}";
+			}
+
 			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
@@ -164,6 +169,8 @@
 			$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";
 			$joins .= "	{$this->left_join} rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id)";
 			$joins .= "	{$this->left_join} rental_contract ON (rental_contract.id = rental_contract_composite.contract_id)";
+			$joins .= " {$this->left_join} rental_application_composite ON (rental_application_composite.composite_id = rental_composite.id)";
+			$joins .= " {$this->left_join} rental_application ON (rental_application.id = rental_application_composite.application_id)";
 
 			if (isset($filters['district_id']) && $filters['district_id'])
 			{
@@ -202,15 +209,26 @@
 					  rental_composite.furnish_type_id, rental_composite.standard_id,
 					  rental_composite.part_of_town_id, rental_composite.custom_prize_factor,";
 				$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
+				$cols .= "rental_application.id AS application_id, rental_application.date_start AS application_date_start, rental_application.date_end AS application_date_end, ";
 				$cols .= "
-			CASE WHEN 
+			CASE WHEN
 			(
+				(
 				NOT rental_contract_composite.contract_id IS NULL AND
 				NOT rental_contract.date_start IS NULL AND
 				NOT rental_contract.location_id = {$location_id_into} AND
 				((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
 		 		OR
 				(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+				)
+				OR
+				(
+				NOT rental_application_composite.application_id IS NULL AND
+				NOT rental_application.date_start IS NULL AND
+				((NOT rental_application.date_start > $availability_date_to AND rental_application.date_end IS NULL)
+				OR
+				(NOT rental_application.date_start > $availability_date_to AND NOT rental_application.date_end IS NULL AND NOT rental_application.date_end < $availability_date_from))
+				)
 			)
 			THEN 'Ikke ledig' ELSE 'Ledig' END as status";
 			}
