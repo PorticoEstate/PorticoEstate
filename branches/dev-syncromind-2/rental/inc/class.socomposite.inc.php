@@ -80,14 +80,14 @@
 
 			if (isset($filters['availability_date_from']) && $filters['availability_date_from'] != '')
 			{
-				//$availability_date_from = strtotime($filters['availability_date_from']);
-				$availability_date_from =  phpgwapi_datetime::date_to_timestamp($filters['availability_date_from']);
+				$availability_date_from = strtotime($filters['availability_date_from']);
+//				$availability_date_from =  phpgwapi_datetime::date_to_timestamp($filters['availability_date_from']);
 			}
 
 			if (isset($filters['availability_date_to']) && $filters['availability_date_to'] != '')
 			{
-				//$availability_date_to = strtotime($filters['availability_date_to']);
-				$availability_date_to =  phpgwapi_datetime::date_to_timestamp($filters['availability_date_to']);
+				$availability_date_to = strtotime($filters['availability_date_to']);
+//				$availability_date_to =  phpgwapi_datetime::date_to_timestamp($filters['availability_date_to']);
 			}
 
 			switch ($filters['has_contract'])
@@ -163,7 +163,7 @@
 			{
 				$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
 			}
-
+			
 
 			$tables = "rental_composite";
 			$joins = "	{$this->left_join} rental_unit ON (rental_composite.id = rental_unit.composite_id)";

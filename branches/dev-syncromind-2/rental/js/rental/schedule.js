@@ -137,12 +137,40 @@ schedule.moveWeek = function (n)
 
 schedule.prevWeek = function ()
 {
-	schedule.moveWeek(-7)
+	var move = true;
+	var date = schedule.date;
+	
+	if ( (schedule.rental.availability_from) && (schedule.rental.availability_to) )
+	{
+		if (date <= schedule.rental.availability_from){
+			move = false;
+		}
+	}
+	
+	if (move)
+	{
+		schedule.moveWeek(-7);
+	}
 };
 
 schedule.nextWeek = function ()
 {
-	schedule.moveWeek(7)
+	var move = true;
+	var date = schedule.date;
+	date.setDate(date.getDate() + 7); // Revisar, aumenta dos semanas
+	
+	if ( (schedule.rental.availability_from) && (schedule.rental.availability_to) )
+	{
+		if (date >= schedule.rental.availability_to)
+		{
+			move = false;
+		}
+	}
+
+	if (move)
+	{
+		schedule.moveWeek(7);
+	}
 }
 
 $(window).load(function()

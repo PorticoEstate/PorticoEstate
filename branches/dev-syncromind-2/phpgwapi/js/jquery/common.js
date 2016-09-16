@@ -1829,6 +1829,70 @@ function rentalSchedule (data, col, date)
 	return data_return;
 }
 
+function rentalScheduleApplication (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+	
+	var validate = false;
+	
+	if ( (schedule.rental.availability_from) && (schedule.rental.availability_to) ){
+		if (col.date >= schedule.rental.availability_from && col.date <= schedule.rental.availability_to){
+			validate = true;
+		}
+	}
+	
+	if (validate)
+	{
+		var k = col.key;
+
+		var needFree = true;
+		if (data[k])
+		{
+			text = data[k]['status'];
+			if (text == "Ikke ledig")
+			{
+				needFree = false;
+			}
+		}
+		else
+		{
+			text = "free";
+			classes = "free";
+		}
+
+		trAttributes.push( {attribute: 'data-id', value: data['id']} );
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					$(this).parent().parent().find('tr').removeClass("trselected")
+					$(this).parent().addClass("trselected");
+					$('#schedule_toolbar button').attr('disabled', false);
+					var b_needFree = eval(needFree);
+					if (!b_needFree)
+					{
+						$('#schedule_toolbar button.need-free').attr('disabled', true);
+					}
+					schedule.rental.data = data;
+					schedule.rental.col = col;
+				}
+			}
+		);
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
 function restartColors()
 {
 	colors = [

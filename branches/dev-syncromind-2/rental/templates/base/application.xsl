@@ -433,31 +433,81 @@
 								<xsl:with-param name="schedule" select ='./schedule'/>
 							</xsl:call-template>
 							<script type="text/javascript">
-								$(window).load(function ()
-								{
 
+								var composite_id = '<xsl:value-of select="schedule/composite_id"/>';
+								schedule.params.application_id = $('#application_id').val();
+
+								schedule.rental = {};
+								$(window).load(function() {
+
+									schedule.params.length = $('#cboNObjects').val();
+									schedule.params.search = $('#txtSearchSchedule').val();
+									schedule.params.start = 0;
+									schedule.params.availability_date_from = "";
+									schedule.params.availability_date_to = "";
+								
+									schedule.rental.availability_from = "";
+									schedule.rental.availability_to = "";
+								
 									<xsl:if test="application/assign_date_start != 0 and application/assign_date_start != ''">
-										var adend = '<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>';
-										var adend_date = new Date(adend.substr(6,4), adend.substr(3,2) - 1, adend.substr(0,2));
-										schedule.updateSchedule(adend_date);
+										var adstart = '<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>';
+										var adstart_date = adstart.substr(6,4) + "-" + adstart.substr(3,2) + "-" + adstart.substr(0,2);
+										schedule.params.availability_date_from = adstart_date;
+										schedule.rental.availability_from = new Date(adstart_date);
+										<xsl:if test="application/assign_date_end != 0 and application/assign_date_end != ''">
+											var adend = '<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_end))"/>';
+											var adend_date = adend.substr(6,4) + "-" + adend.substr(3,2) + "-" + adend.substr(0,2);
+											schedule.params.availability_date_to = adend_date;
+											schedule.rental.availability_to = new Date(adend_date);
+										</xsl:if>
 									</xsl:if>
 
+									schedule.setupWeekPicker('cal_container');
+									$("#cal_container #datepicker").datepicker( "option", "minDate", schedule.params.availability_date_from );
+									$("#cal_container #datepicker").datepicker( "option", "maxDate", schedule.params.availability_date_to );
+
+									var img_src = '<xsl:value-of select="schedule/picker_img"/>';
+
+									schedule.datasourceUrl = '<xsl:value-of select="schedule/datasource_url"/>';
+									var initialRequest = ((schedule.params.availability_date_from) ? schedule.params.availability_date_from : '<xsl:value-of select="schedule/date"/>') || getUrlData("date");
+
+									schedule.includeResource = false;
+									schedule.colFormatter = 'rentalScheduleApplication';
+									var handleHistoryNavigation = function (state) {
+										schedule.date = parseISO8601(state);
+										schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+									};
+
+									var state = getUrlData("date") || initialRequest;
+									if (state){
+										handleHistoryNavigation(state);
+										schedule.week = $.datepicker.iso8601Week(schedule.date);
+										$('#cal_container #numberWeek').text(schedule.week);
+										$("#cal_container #datepicker").datepicker("setDate", parseISO8601(state));
+									}
+									schedule.toolbar = <xsl:value-of select="schedule/toolbar" />;
+									
 									$('#assign_date_start').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
-										//console.log(e);
-										schedule.params.availability_date_from = a;
-										var date = new Date(a);
-										schedule.updateSchedule(date);
-										//schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+										var adstart_date = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
+										schedule.params.availability_date_from = adstart_date;
+										schedule.rental.availability_from = new Date(adstart_date);
+										schedule.date = parseISO8601(adstart_date);
+										$("#cal_container #datepicker").datepicker( "option", "minDate", adstart_date );
+										schedule.updateSchedule(schedule.date);
 									});
 
 									$('#assign_date_end').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
-										//console.log(e);
-										schedule.params.availability_date_to = a;
-										schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
+										var adstart_end = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
+										schedule.params.availability_date_to = adstart_end;
+										schedule.rental.availability_to = new Date(adend_date);
+										$("#cal_container #datepicker").datepicker( "option", "maxDate", adstart_end );
+										schedule.updateSchedule(schedule.date);
 									});
+									
 								});
+
 							</script>
 						</fieldset>
 					</div>
