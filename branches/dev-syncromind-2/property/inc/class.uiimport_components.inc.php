@@ -503,7 +503,7 @@ HTML;
 				
 				if (count($attrib_names))
 				{
-					$receipt = $import_entity_categories->add_attributes_to_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
+					$receipt = $import_entity_categories->prepare_attributes_for_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
 					if ($receipt['error'])
 					{
 						return $receipt;
@@ -557,7 +557,73 @@ HTML;
 						}
 					}
 				}
+
+			
+				if (count($buildingpart_in_table))
+				{
+					$receipt = $import_entity_categories->add_attributes_to_categories($buildingpart_in_table);
+					if ($receipt['error'])
+					{
+						return $receipt;
+					}
+				}
 				
+				if (count($buildingpart_out_table))
+				{
+					ksort($buildingpart_out_table);
+					$buildingpart_processed = $import_entity_categories->add_entity_categories($buildingpart_out_table);
+
+					if (count($buildingpart_processed['not_added']))
+					{
+						foreach($buildingpart_processed['not_added'] as $k => $v)
+						{
+							$receipt['error'][] = array('msg' => "parent {$k} not added");	
+						}
+						return $receipt;
+					}
+
+					if (count($buildingpart_processed['added']))
+					{
+						foreach($buildingpart_processed['added'] as $k => $v)
+						{
+							$import_data[$k]['cat_id'] = $v['id'];
+							$import_data[$k]['entity_id'] = $v['entity_id'];			
+						}
+					} 
+				}
+
+				$receipt = $import_components->add_bim_item($import_data, $location_code);
+			
+				return $receipt;
+			}
+			
+			if ($step == 5 && $save) 
+			{
+				$receipt = array();
+				
+				$import_entity_categories = new import_entity_categories($template_id);
+				$import_components = new import_components();
+				
+				$receipt = $import_entity_categories->add_attributes_to_template();
+				if ($receipt['error'])
+				{
+					return $receipt;
+				}
+
+				//$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+				$rows = $rows ? $rows + 1 : 0;
+
+				$buildingpart_out_table = array();
+				$buildingpart_in_table = array();
+				$import_data = array();
+					
+				$entity_categories  = $import_entity_categories->list_entity_categories();
+			
+				/*$config = createObject('phpgwapi.config', 'phpgwapi');
+				$values = $config->read_repository();
+  
+				print_r($values); die;*/
+			
 				if (count($buildingpart_in_table))
 				{
 					$receipt = $import_entity_categories->add_attributes_to_categories($buildingpart_in_table);
