@@ -62,10 +62,12 @@
 		function __construct()
 		{
 			parent::__construct();
+			$called_class = get_called_class();
+			$called_class_arr = explode('_', $called_class);
+			$appname = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			$this->bo = CreateObject("{$appname}.bogeneric");
 
-			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo = CreateObject('property.bogeneric', true);
 			$this->bo->get_location_info();
 			$this->bocommon = & $this->bo->bocommon;
 			$this->custom = & $this->bo->custom;

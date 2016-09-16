@@ -51,7 +51,11 @@
 
 		function __construct( $session = false )
 		{
-			$this->so = CreateObject('property.sogeneric');
+			$called_class = get_called_class();
+			$called_class_arr = explode('_', $called_class);
+			$appname = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			$this->so = CreateObject("{$appname}.sogeneric");
+
 			$this->custom = & $this->so->custom;
 			$this->bocommon = CreateObject('property.bocommon');
 
