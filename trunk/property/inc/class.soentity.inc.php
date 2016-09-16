@@ -818,19 +818,19 @@
 
 			$sql_custom_field = '';
 
-			if ($check_for_control && !$control_registered)
+			/*
+			 * Filter inactive
+			 */
+			static $cache_attribute_status = array();
+
+			if(!isset($cache_attribute_status[$location_id]))
 			{
-				/*
-				 * Filter inactive
-				 */
-				static $cache_attribute_status = array();
+				$filters = array("column_name" => "status");
+				$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
+			}
 
-				if(!isset($cache_attribute_status[$location_id]))
-				{
-					$filters = array("column_name" => "status");
-					$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
-				}
-
+			if(!phpgw::get_var('status', 'int'))
+			{
 				if(!empty($cache_attribute_status[$location_id]))
 				{
 					foreach ($cache_attribute_status[$location_id] as $attibute_id => $attibute)
@@ -839,18 +839,13 @@
 						{
 							$_querymethod[] = "CAST( json_representation->>'status' AS integer) < 90";
 							$__querymethod = array(); // remove block
-//							foreach ($attibute['choice'] as $choice)
-//							{
-//								if($choice['id'] < 90)
-//								{
-//									$_querymethod[] = "CAST( json_representation->>'status' AS integer) = " .(int)$choice['id'];
-//									$__querymethod = array(); // remove block
-//								}
-//							}
 						}
 					}
 				}
+			}
 
+			if ($check_for_control && !$control_registered)
+			{
 				$sql .= "{$this->left_join} {$join_control}";
 
 				$sql_custom_field .= ',count(control_id) AS has_control';
