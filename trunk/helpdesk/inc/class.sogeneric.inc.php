@@ -26,12 +26,106 @@
 	 * @subpackage generic
 	 * @version $Id: $
 	 */
-	phpgw::import_class('property.sogeneric');
+	phpgw::import_class('property.sogeneric_');
 
-	class helpdesk_sogeneric extends property_sogeneric
+	class helpdesk_sogeneric extends property_sogeneric_
 	{
-		public function __construct()
+		var $appname = 'helpdesk';
+
+		function __construct( $type = '', $type_id = 0 )
 		{
-			parent::__construct();
+			parent::__construct($type, $type_id);
 		}
+
+
+		public function get_location_info( $type, $type_id )
+		{
+
+			$type_id = (int)$type_id;
+			$this->type = $type;
+			$this->type_id = $type_id;
+			$info = array();
+
+			if (!$type)
+			{
+				return $info;
+			}
+
+			switch ($type)
+			{
+//START HELPDESK - APP
+				case 'helpdesk_status':
+					// the helpdesk app
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_status',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'sorting',
+								'descr' => lang('sorting'),
+								'type' => 'integer',
+								'sortable' => true
+							),
+							array
+								(
+								'name' => 'color',
+								'descr' => lang('color'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'approved',
+								'descr' => lang('approved'),
+								'type' => 'checkbox'
+							),
+							array
+								(
+								'name' => 'in_progress',
+								'descr' => lang('In progress'),
+								'type' => 'checkbox'
+							),
+							array
+								(
+								'name' => 'delivered',
+								'descr' => lang('delivered'),
+								'type' => 'checkbox'
+							),
+							array
+								(
+								'name' => 'closed',
+								'descr' => lang('closed'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('event action'),
+						'acl_app' => 'helpdesk',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::helpdesk::ticket_status'
+					);
+					break;
+
+//END HELPDESK - APP
+
+				default:
+					$message = lang('ERROR: illegal type %1', $type);
+					phpgwapi_cache::message_set($message, 'error');
+//				throw new Exception(lang('ERROR: illegal type %1', $type));
+			}
+
+			$this->location_info = $info;
+			return $info;
+		}
+
+
 	}
