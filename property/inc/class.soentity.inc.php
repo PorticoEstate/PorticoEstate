@@ -776,20 +776,18 @@
 			}
 
 			$sql_custom_field = '';
-
-			if($check_for_control && !$control_registered)
+			/*
+			 * Filter inactive
+			 */
+			static $cache_attribute_status = array();
+			if(!isset($cache_attribute_status[$location_id]))
 			{
+				$filters = array("column_name" => "status");
+				$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
+			}
 
-				/*
-				 * Filter inactive
-				 */
-				static $cache_attribute_status = array();
-				if(!isset($cache_attribute_status[$location_id]))
-				{
-					$filters = array("column_name" => "status");
-					$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
-				}
-
+			if(!phpgw::get_var('status', 'int'))
+			{
 				if(!empty($cache_attribute_status[$location_id]))
 				{
 					foreach ($cache_attribute_status[$location_id] as $attibute_id => $attibute)
@@ -807,6 +805,10 @@
 						}
 					}
 				}
+			}
+
+			if($check_for_control && !$control_registered)
+			{
 
 				$sql .= "{$this->left_join} {$join_control}";
 
