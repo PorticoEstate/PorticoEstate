@@ -138,6 +138,21 @@
 								<div id="content_columns" class="pure-custom"></div>
 							</div>
 							<div id="tab-4">
+								<input type="button" id="donwload" name="donwload" size="40">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'Download')"/>
+									</xsl:attribute>
+								</input>
+								<input type="button" id="save" name="save" size="40">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'Save')"/>
+									</xsl:attribute>
+								</input>
+								<input type="button" id="cancel" name="cancel" size="40">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'Cancel')"/>
+									</xsl:attribute>
+								</input>
 								<div id="message1" class="message"></div>
 							</div>
 						</div>
@@ -180,7 +195,7 @@
 	<script>
 		$('#responsiveTabsDemo').responsiveTabs({
 			startCollapsed: 'accordion',
-			disabled: [1,2,3]
+			disabled: [1,2]
 		});
 	</script>
 </xsl:template>
