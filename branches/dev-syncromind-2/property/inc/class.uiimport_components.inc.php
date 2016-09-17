@@ -68,7 +68,13 @@
 
 		public function download()
 		{
-			return;
+			$components =  unserialize($GLOBALS['phpgw_info']['server']['component_import_preview_components']);
+			
+			$fields = array_keys($components[0]);
+
+			$bocommon = CreateObject('property.bocommon');
+			$bocommon->download($components, $fields, $fields);
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
 		private function valid_row($row)
@@ -557,42 +563,18 @@ HTML;
 						}
 					}
 				}
-
-			
-				if (count($buildingpart_in_table))
+				
+				if (count($buildingpart_out_table))
 				{
-					$receipt = $import_entity_categories->add_attributes_to_categories($buildingpart_in_table);
+					ksort($buildingpart_out_table);
+					$receipt = $import_entity_categories->prepare_entity_categories($buildingpart_out_table);
 					if ($receipt['error'])
 					{
 						return $receipt;
 					}
 				}
-				
-				if (count($buildingpart_out_table))
-				{
-					ksort($buildingpart_out_table);
-					$buildingpart_processed = $import_entity_categories->add_entity_categories($buildingpart_out_table);
 
-					if (count($buildingpart_processed['not_added']))
-					{
-						foreach($buildingpart_processed['not_added'] as $k => $v)
-						{
-							$receipt['error'][] = array('msg' => "parent {$k} not added");	
-						}
-						return $receipt;
-					}
-
-					if (count($buildingpart_processed['added']))
-					{
-						foreach($buildingpart_processed['added'] as $k => $v)
-						{
-							$import_data[$k]['cat_id'] = $v['id'];
-							$import_data[$k]['entity_id'] = $v['entity_id'];			
-						}
-					} 
-				}
-
-				$receipt = $import_components->add_bim_item($import_data, $location_code);
+				$import_components->prepare_preview_components($import_data);
 			
 				return $receipt;
 			}
