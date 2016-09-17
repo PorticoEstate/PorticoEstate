@@ -56,7 +56,26 @@
 			return $attributes;
 		}
 		
+		public function prepare_preview_components($entity_categories)
+		{
+			$components = array();
+		
+			foreach ($entity_categories as $entity) 
+			{
+				foreach ($entity['components'] as $values)
+				{
+					unset($values['building_part']);
+					unset($values['category_name']);
+					$components[] = $values;
+				}	
+			}
 
+			$config = createObject('phpgwapi.config', 'phpgwapi');
+			$config->read_repository();
+			$config->value('component_import_preview_components', serialize($components));
+			$config->save_repository();
+		}
+		
 		public function add_bim_item($entity_categories, $location_code)
 		{
 			$components_added = array();
