@@ -56,44 +56,89 @@
 			return $this->array_cat_id[strlen($building_part)];
 		}
 		
-		private function _set_parent_category($building_part)
+		private function _search_parent_category(&$new_categories, $list_entity_categories, $building_part)
 		{
+			$receipt = array();
+			
 			for($x = 1;  $x <= (strlen($building_part)-1); $x++) 
 			{
 				$parents[] = substr($building_part, 0, $x);
 			}
 			
-			$parentID = '';
 			foreach($parents as $item)
 			{
-				$values = $this->list_entity_categories(array('building_part' => $item));
-				if ($values[$item]['id'])
+				if (array_key_exists($item, $new_categories))
 				{
-					$parentID = $values[$item]['id'];
 					continue;
 				}
-							
-				if (strlen($item) == 1)
+					
+				if (array_key_exists($item, $list_entity_categories))
 				{
-					$parentID = NULL;
+					continue;
 				}
 				
 				$category = $this->array_entity_categories[$item];
-				$parentID = $this->_save_category($category['name'], $parentID, $item);
-				if (empty($parentID))
+				if (empty($category['name']))
 				{
+					$receipt['error'][] = array('msg' => 'Building Part: '.$item.' not define');
 					break;
 				}
+				
+				$new_categories[$item] = $category['name'];
 			}
 			
-			return $parentID;
+			return $receipt;
 		}
-		
-		public function add_entity_categories ($building_part_out_table)
+			
+		public function prepare_entity_categories($building_part_out_table)
 		{
-			$categories = array();
+			$new_categories = array();
+			
+			$list_entity_categories  = $this->list_entity_categories();
 			
 			foreach ($building_part_out_table as $building_part => $name)
+			{	
+				$receipt = array();
+				
+				if (strlen($building_part) > 1) 
+				{
+					$receipt = $this->_search_parent_category($new_categories, $list_entity_categories, $building_part);
+					if ($receipt['error'])
+					{
+						break; 
+					}
+				}
+				
+				$new_categories[$building_part] = $name;
+			}
+			
+			if (!$receipt['error'])
+			{
+				$config = createObject('phpgwapi.config', 'phpgwapi');
+				$config->read_repository();
+				$config->value('component_import_new_entity_categories', serialize($new_categories));
+				$config->save_repository();
+			}
+			
+			return $receipt;
+		}
+	
+		
+		public function add_entity_categories ()
+		{
+			$receipt = array();
+			
+			$new_categories =  unserialize($GLOBALS['phpgw_info']['server']['component_import_new_entity_categories']);
+			if (!count($new_categories))
+			{
+				$receipt['message'][] = array('msg' => lang('Not exist new categories to insert'));
+				return $receipt;
+			}
+			
+			$categories = array();
+			$parent_id = NULL;
+			
+			foreach ($new_categories as $building_part => $name)
 			{	
 				if (strlen($building_part) == 1) 
 				{
@@ -101,8 +146,10 @@
 				} 
 				else 
 				{
-					$parent_id = $this->_set_parent_category($building_part);
-					if (empty($parent_id))
+					$building_part_parent = substr($building_part, 0, (strlen($building_part)-1));
+					$values = $this->list_entity_categories(array('building_part' => $building_part_parent));
+					$parent_id = $values[$building_part_parent]['id'];
+					if (!$parent_id)
 					{
 						$categories['not_added'][$building_part] = array('name' => $name);
 						break; 
@@ -297,16 +344,16 @@
 			$cat_id = $this->cat_id_from_template;
 			
 			$template_attrib_list = $this->bo->read_attrib(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'allrows' => true));
-			$template_attrib_names = array();
+			$current_attrib_names = array();
 			foreach ($template_attrib_list as $attrib)
 			{
-				$template_attrib_names[] = $attrib['column_name'];
+				$current_attrib_names[] = $attrib['column_name'];
 			}
 
 			$appname = $this->type_app[$this->type];
 			$location = ".{$this->type}.{$entity_id}.{$cat_id}";
 			
-			$attributes = array();
+			$new_attributes = array();
 			
 			foreach ($columns as $_row_key => $_value_key)
 			{
@@ -332,13 +379,14 @@
 						break;
 					}
 					
-					if(in_array($attrib['column_name'], $template_attrib_names, true))
+					if(in_array($attrib['column_name'], $current_attrib_names, true))
 					{
-						continue;
+						$receipt['error'][] = array('msg' => lang('Column name %1 already exists, please choose another name', $attrib['column_name']));
+						break;
 					}
 					
 					$columns[$_row_key] = $attrib['column_name'];
-					$attributes[] = $attrib;
+					$new_attributes[] = $attrib;
 				}
 			}
 			
@@ -347,14 +395,14 @@
 				return $receipt;
 			}
 			
-			if (count($attributes))
+			if (count($new_attributes))
 			{
 				$config = createObject('phpgwapi.config', 'phpgwapi');
 				$config->read_repository();
-				$config->value('component_import_attribs_for_template', serialize($attributes));
+				$config->value('component_import_attribs_for_template', serialize($new_attributes));
 				$config->save_repository();
 			
-				$receipt['message'][] = array('msg' => lang('%1 attributes prepared for template', count($attributes)));
+				$receipt['message'][] = array('msg' => lang('%1 attributes prepared for template', count($new_attributes)));
 			} else {
 				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
 			}
@@ -369,7 +417,7 @@
 			$attributes =  unserialize($GLOBALS['phpgw_info']['server']['component_import_attribs_for_template']);
 			if (!count($attributes))
 			{
-				$receipt['error'][] = array('msg' => lang('Not exist attributes to insert the template'));
+				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
 				return $receipt;
 			}
 			
