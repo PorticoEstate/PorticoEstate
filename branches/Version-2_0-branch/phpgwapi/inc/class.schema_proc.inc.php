@@ -522,7 +522,7 @@
 				{
 					if($DEBUG) { echo '<br>_GetFieldSQL(): Calling TranslateDefault for "' . $sDefault . '"'; }
 					// Get default DDL - useful for differences in date defaults (eg, now() vs. getdate())
-					$sTranslatedDefault = $this->m_oTranslator->TranslateDefault($sDefault);
+					$sTranslatedDefault = $this->m_oTranslator->TranslateDefault($sDefault, $sType);
 					$sBufDefault = " DEFAULT $sTranslatedDefault";
 					//$sFieldSQL .= " DEFAULT $sTranslatedDefault";
 				}

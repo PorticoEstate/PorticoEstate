@@ -37,6 +37,7 @@
 
 		protected $appname = 'property';
 		private $receipt = array();
+		private $call_appname;
 		var $grants;
 		var $start;
 		var $query;
@@ -62,10 +63,14 @@
 		function __construct()
 		{
 			parent::__construct();
+			array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/property/templates/base');
+			$called_class = get_called_class();
+			$called_class_arr = explode('_', $called_class);
+			$call_appname = !empty($called_class_arr[0]) && !empty($GLOBALS['phpgw_info']['apps'][$called_class_arr[0]]) ? $called_class_arr[0] : 'property';
+			$this->bo = CreateObject("{$call_appname}.bogeneric");
+			$this->call_appname = $call_appname;
 
-			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->bo = CreateObject('property.bogeneric', true);
 			$this->bo->get_location_info();
 			$this->bocommon = & $this->bo->bocommon;
 			$this->custom = & $this->bo->custom;
@@ -268,7 +273,7 @@
 
 			$link_data = array
 				(
-				'menuaction' => 'property.uigeneric.columns',
+				'menuaction' => "{$this->call_appname}.uigeneric.columns",
 				'type' => $this->type,
 				'type_id' => $this->type_id
 			);
@@ -323,33 +328,33 @@
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
+								'onclick' => "JqueryPortico.openPopup({menuaction:'{$this->call_appname}.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
 							)
 						)
 					)
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'property.uigeneric.index',
+						'menuaction' => "{$this->call_appname}.uigeneric.index",
 						'appname' => $this->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id,
 						'phpgw_return_as' => 'json'
 					)),
-					'download' => self::link(array('menuaction' => 'property.uigeneric.download',
+					'download' => self::link(array('menuaction' => "{$this->call_appname}.uigeneric.download",
 						'appname' => $this->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id,
 						'export' => true,
 						'allrows' => true)),
 					'new_item' => self::link(array(
-						'menuaction' => 'property.uigeneric.add',
+						'menuaction' => "{$this->call_appname}.uigeneric.add",
 						'appname' => $this->bo->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id
 					)),
 					'allrows' => true,
-					'editor_action' => self::link(array('menuaction' => 'property.uigeneric.edit_field',
+					'editor_action' => self::link(array('menuaction' => "{$this->call_appname}.uigeneric.edit_field",
 						'appname' => $this->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id)),
@@ -416,7 +421,7 @@
 					'text' => lang('edit'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => isset($this->location_info['edit_action']) && $this->location_info['edit_action'] ? $this->location_info['edit_action'] : 'property.uigeneric.edit',
+						'menuaction' => isset($this->location_info['edit_action']) && $this->location_info['edit_action'] ? $this->location_info['edit_action'] : "{$this->call_appname}.uigeneric.edit",
 						'appname' => $this->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id
@@ -431,7 +436,7 @@
 					'text' => lang('open edit in new window'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => isset($this->location_info['edit_action']) && $this->location_info['edit_action'] ? $this->location_info['edit_action'] : 'property.uigeneric.edit',
+						'menuaction' => isset($this->location_info['edit_action']) && $this->location_info['edit_action'] ? $this->location_info['edit_action'] : "{$this->call_appname}.uigeneric.edit",
 						'appname' => $this->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id
@@ -451,7 +456,7 @@
 					'confirm_msg' => lang('do you really want to delete this entry'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => 'property.uigeneric.delete',
+						'menuaction' => "{$this->call_appname}.uigeneric.delete",
 						'appname' => $this->appname,
 						'type' => $this->type,
 						'type_id' => $this->type_id
@@ -512,7 +517,7 @@
 
 			$link_data = array
 				(
-				'menuaction' => 'property.uigeneric.edit',
+				'menuaction' => "{$this->call_appname}.uigeneric.edit",
 				'appname' => $this->appname,
 				'type' => $this->type,
 				'type_id' => $this->type_id
@@ -570,7 +575,7 @@
 
 			$link_save = array
 				(
-				'menuaction' => 'property.uigeneric.save',
+				'menuaction' => "{$this->call_appname}.uigeneric.save",
 				'id' => $id,
 				'appname' => $this->appname,
 				'type' => $this->type,
@@ -579,7 +584,7 @@
 
 			$link_index = array
 				(
-				'menuaction' => 'property.uigeneric.index',
+				'menuaction' => "{$this->call_appname}.uigeneric.index",
 				'appname' => $this->appname,
 				'type' => $this->type,
 				'type_id' => $this->type_id
@@ -597,7 +602,7 @@
 					{
 						$link_history_data = array
 							(
-							'menuaction' => 'property.uigeneric.attrib_history',
+							'menuaction' => "{$this->call_appname}.uigeneric.attrib_history",
 							'appname' => $this->appname,
 							'attrib_id' => $attribute['id'],
 							'id' => $id,
@@ -688,7 +693,7 @@
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_save),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', $link_index),
-				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->call_appname}.uigeneric.index",
 					'type' => $this->type, 'type_id' => $this->type_id)),
 				'lang_descr' => lang('Descr'),
 				'lang_save' => lang('save'),
@@ -745,7 +750,7 @@
 
 			$link_data = array
 				(
-				'menuaction' => 'property.uigeneric.attrib_history',
+				'menuaction' => "{$this->call_appname}.uigeneric.attrib_history",
 				'appname' => $appname,
 				'acl_location' => $acl_location,
 				'id' => $id,
@@ -828,7 +833,7 @@
 					'confirm_msg' => lang('do you really want to delete this entry'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => 'property.uigeneric.attrib_history',
+						'menuaction' => "{$this->call_appname}.uigeneric.attrib_history",
 						'acl_location' => $acl_location,
 						'id' => $id,
 						'attrib_id' => $attrib_id,
@@ -863,7 +868,7 @@
 
 			$data = array
 				(
-				'base_java_url' => json_encode(array(menuaction => "property.uigeneric.attrib_history")),
+				'base_java_url' => json_encode(array(menuaction => "{$this->call_appname}.uigeneric.attrib_history")),
 				'datatable_def' => $datatable_def,
 				'link_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'img_path' => $GLOBALS['phpgw']->common->get_image_path('phpgwapi', 'default')
@@ -960,7 +965,7 @@
 					if ($id)
 					{
 						self::message_set($this->receipt);
-						self::redirect(array('menuaction' => 'property.uigeneric.edit',
+						self::redirect(array('menuaction' => "{$this->call_appname}.uigeneric.edit",
 							'id' => $id,
 							'appname' => $this->appname,
 							'type' => $this->type,
@@ -971,7 +976,7 @@
 					$this->edit();
 					return;
 				}
-				self::redirect(array('menuaction' => 'property.uigeneric.index',
+				self::redirect(array('menuaction' => "{$this->call_appname}.uigeneric.index",
 					'appname' => $this->appname,
 					'type' => $this->type,
 					'type_id' => $this->type_id));

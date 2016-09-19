@@ -1008,7 +1008,7 @@ HTML;
 			}
 		}
 
-		public function receive_order( $id, $received_percent )
+		public function receive_order( $id, $received_amount )
 		{
 			$receive_order = true; // used as trigger within the custom function
 			$acl_location = '.project.workorder';

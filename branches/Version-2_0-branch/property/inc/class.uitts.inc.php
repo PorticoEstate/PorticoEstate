@@ -2902,9 +2902,9 @@
 				'preview_html' => "javascript:preview_html($id)",
 				'preview_pdf' => "javascript:preview_pdf($id)",
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'value_order_sent'	=> $ticket['order_sent'],
+				'value_order_sent'	=> !!$ticket['order_sent'],
 				'value_order_received'	=> $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
-				'value_order_received_percent' => (int) $ticket['order_received_percent']
+				'value_order_received_amount' => (int) $ticket['order_received_amount']
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3153,8 +3153,8 @@
 			}
 
 			$id = phpgw::get_var('id', 'int');
-			$received_percent = phpgw::get_var('received_percent', 'int');
-			return $this->bo->receive_order($id, $received_percent);
+			$received_amount = phpgw::get_var('received_amount', 'float');
+			return $this->bo->receive_order($id, $received_amount);
 		}
 
 		private function _get_eco_service_name( $id )

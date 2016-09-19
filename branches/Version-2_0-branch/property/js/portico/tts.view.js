@@ -316,7 +316,7 @@ function receive_order(order_id)
 	var oArgs = {
 		menuaction: 'property.uitts.receive_order',
 		id: order_id,
-		received_percent: $("#slider-range-min").slider("value")
+		received_amount: $("#order_received_amount").val()
 	};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	$.ajax({
@@ -332,6 +332,7 @@ function receive_order(order_id)
 				{
 					msg = 'OK';
 					$("#order_received_time").html(data['time']);
+					$("#current_received_amount").html($("#order_received_amount").val());
 				}
 				else
 				{
@@ -348,22 +349,6 @@ function receive_order(order_id)
 		timeout: 5000
 	});
 }
-
-$(function ()
-{
-	$("#slider-range-min").slider({
-		range: "min",
-		value: $("#value_order_received_percent").val() || 0,
-		min: 0,
-		max: 100,
-		step: 10,
-		slide: function (event, ui)
-		{
-			$("#order_received_percent").val(ui.value + " %");
-		}
-	});
-	$("#order_received_percent").val($("#slider-range-min").slider("value") + " %");
-});
 
 var ecodimb_selection = "";
 
@@ -402,6 +387,8 @@ function populateTableChkApproval(ecodimb)
 	}
 
 	var total_amount = Number(amount) + Number($('#budget').val());
+	$("#order_received_amount").val(total_amount);
+
 	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
