@@ -994,11 +994,21 @@
 									</xsl:if>
 								</input>
 								<div id="order_received_time" class="pure-custom">
-									<xsl:value-of select="value_order_received"/>
-									<div id="slider-range-min"></div>
+									<table>
+										<tr>
+											<td>
+
+												<xsl:value-of select="value_order_received"/>
+											</td>
+										</tr>
+										<tr>
+											<td align="right">
+												<xsl:value-of select="value_order_received_amount"/>
+											</td>
+										</tr>
+									</table>
 								</div>
-								<input  class="pure-custom" type="text" id="order_received_percent" readonly="readonly" size="6"/>
-								<input type="hidden" id="value_order_received_percent" value="{value_order_received_percent}"/>
+								<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
 							</div>
 						</xsl:when>
 					</xsl:choose>

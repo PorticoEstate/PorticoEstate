@@ -1690,9 +1690,10 @@ JS;
 				'location_code' => $location_code
 			);
 			
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$document = CreateObject('property.sodocument');
 			$documents = $document->read_at_location($params);
-		
+			$total_records = $document->total_records;
 			foreach ($documents as $item) 
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.view_file', 'id'=>$item['document_id'])).'" target="_blank">'.$item['document_name'].'</a>';
@@ -1700,7 +1701,8 @@ JS;
 					'id'=> $item['document_id'],
 					'type'=> 'location',
 					'document_name' => $document_name,
-					'title'=> $item['title']
+					'title'=> $item['title'],
+					'document_date'	=> $GLOBALS['phpgw']->common->show_date($item['document_date'],$dateformat)
 					);
 			}
 			unset($item);
@@ -1711,6 +1713,7 @@ JS;
 			$params['order'] = 'name';
 			$params['cat_id'] = $doc_type;
 			$documents2 = $generic_document->read($params);
+			$total_records += $generic_document->total_records;
 			foreach ($documents2 as $item) 
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
@@ -1718,13 +1721,14 @@ JS;
 					'id'=> $item['id'],
 					'type'=> 'generic',
 					'document_name' => $document_name,
-					'title'=> $item['title']
+					'title'=> $item['title'],
+					'document_date'	=> $item['document_date'] // fixme
 					);
 			}
 			
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = count($values);
+			$result_data['total_records'] = $total_records;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
@@ -2146,8 +2150,9 @@ JS;
 
 					$documents_def = array(
 						array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
-						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
-						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true)
+						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'document_date', 'label' => lang('date'), 'sortable' => true, 'resizeable' => true),
 					);
 
 					$datatable_def[] = array
@@ -2158,7 +2163,7 @@ JS;
 						'tabletools' => ($mode == 'edit') ? $documents_tabletools : array(),
 						'ColumnDefs' => $documents_def,
 						'config' => array(
-							array('disableFilter' => true)
+				//			array('disableFilter' => true)
 						)
 					);				
 				}

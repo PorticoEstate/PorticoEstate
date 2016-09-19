@@ -116,7 +116,7 @@
 			return $sTranslated;
 		}
 
-		function TranslateDefault($sDefault)
+		function TranslateDefault($sDefault, $sType)
 		{
 			// Need Strict comparisons for true/false in case of datatype bolean
 			if ($sDefault === true || $sDefault === 'true' || $sDefault === 'True')
@@ -129,7 +129,14 @@
 			}
 			else if ($sDefault == 'current_date' || $sDefault == 'current_timestamp')
 			{
-				$ret= "now()";
+				if(preg_match('/int/i', $sType))
+				{
+					$ret= "extract( epoch from now())";
+				}
+				else
+				{
+					$ret= "now()";
+				}
 			}
 			else
 			{
@@ -681,7 +688,7 @@
 			}								
 			elseif(!is_numeric($sDefault) && $sDefault != '')
 			{
-				$sTranslatedDefault = $this->TranslateDefault($sDefault);
+				$sTranslatedDefault = $this->TranslateDefault($sDefault, $sType);
 				$defaultSQL = " DEFAULT $sTranslatedDefault";
 			}
 			elseif($sDefault)
