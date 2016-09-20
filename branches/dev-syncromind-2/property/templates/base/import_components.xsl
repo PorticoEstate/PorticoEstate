@@ -134,26 +134,52 @@
 										<xsl:value-of select="php:function('lang', 'Continue')"/>
 									</xsl:attribute>
 								</input>
+								<div id="message1" class="message"></div>
 								<img src="{image_loader}" class="processing-columns" align="absmiddle"></img>
 								<div id="content_columns" class="pure-custom"></div>
 							</div>
 							<div id="tab-4">
-								<input type="button" id="donwload" name="donwload" size="40">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'Download')"/>
-									</xsl:attribute>
-								</input>
-								<input type="button" id="save" name="save" size="40">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'Save')"/>
-									</xsl:attribute>
-								</input>
-								<input type="button" id="cancel" name="cancel" size="40">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'Cancel')"/>
-									</xsl:attribute>
-								</input>
-								<div id="message1" class="message"></div>
+								<div class="pure-control-group">
+									<label for="vendor"></label>
+									<div id="message2" class="message"></div>
+								</div>
+								<div class="pure-control-group">
+									<label for="vendor">
+										<xsl:value-of select="php:function('lang', 'New Categories')" />
+									</label>
+									<div id="new_entity_categories" class="pure-custom"></div>
+								</div>
+								<div class="pure-control-group">
+									<label for="vendor">
+										<xsl:value-of select="php:function('lang', 'New Attributes')" />
+									</label>
+									<div id="new_attributes" class="pure-custom"></div>
+								</div>
+								<div class="pure-control-group">
+									<label for="vendor">
+										<xsl:value-of select="php:function('lang', 'Download preview components')" />
+									</label>
+									<input type="button" id="donwload_preview_components" name="donwload_preview_components" size="40">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'Download')"/>
+										</xsl:attribute>
+									</input>
+								</div>
+								<div class="pure-control-group">
+									<label for="vendor"></label>
+									<input type="button" id="step5" name="step5" size="40">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'Save')"/>
+										</xsl:attribute>
+									</input>
+									<img src="{image_loader}" class="processing-save" align="absmiddle"></img>
+									<input type="button" id="cancel" name="cancel" size="40">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'Cancel')"/>
+										</xsl:attribute>
+									</input>	
+									<div id="message3" class="message"></div>	
+								</div>							
 							</div>
 						</div>
 					</form>
