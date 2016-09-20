@@ -69,14 +69,16 @@
 					$components[] = $values;
 				}	
 			}
+			
+			return $components;
 
-			$config = createObject('phpgwapi.config', 'phpgwapi');
+			/*$config = createObject('phpgwapi.config', 'component_import');
 			$config->read_repository();
-			$config->value('component_import_preview_components', serialize($components));
-			$config->save_repository();
+			$config->value('import_preview_components', serialize($components));
+			$config->save_repository();*/
 		}
 		
-		public function add_bim_item($entity_categories, $location_code)
+		public function add_components($entity_categories, $location_code)
 		{
 			$components_added = array();
 			$message = array();
