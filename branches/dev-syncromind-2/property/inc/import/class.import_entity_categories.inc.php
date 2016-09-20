@@ -24,6 +24,8 @@
 			$this->join = $this->db->join;
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->custom = CreateObject('property.custom_fields');
+			$this->config = createObject('phpgwapi.config', 'component_import');
+			$this->config_repository = $this->config->read_repository();
 			
 			$this->array_entity_categories = array(
 				'0' => array('name' => '0 - Generelt'),
@@ -112,13 +114,20 @@
 				$new_categories[$building_part] = $name;
 			}
 			
-			if (!$receipt['error'])
+			if ($receipt['error'])
 			{
-				$config = createObject('phpgwapi.config', 'phpgwapi');
-				$config->read_repository();
-				$config->value('component_import_new_entity_categories', serialize($new_categories));
-				$config->save_repository();
+				return $receipt;
 			}
+			
+			$receipt['new_entity_categories'] = $new_categories;
+			
+			/*if (!$receipt['error'])
+			{
+				$config = createObject('phpgwapi.config', 'component_import');
+				$config->read_repository();
+				$config->value('new_entity_categories', serialize($new_categories));
+				$config->save_repository();
+			}*/
 			
 			return $receipt;
 		}
@@ -128,7 +137,7 @@
 		{
 			$receipt = array();
 			
-			$new_categories =  unserialize($GLOBALS['phpgw_info']['server']['component_import_new_entity_categories']);
+			$new_categories = $this->config_repository['new_entity_categories'];
 			if (!count($new_categories))
 			{
 				$receipt['message'][] = array('msg' => lang('Not exist new categories to insert'));
@@ -229,11 +238,18 @@
 		}
 		
 		
-		public function add_attributes_to_categories ($buildingpart_in_table)
+		public function add_attributes_to_categories ()
 		{
 			$receipt = array();
 			
-			foreach ($buildingpart_in_table as $k => $v)
+			$building_part_in_table = $this->config_repository['building_part_in_table'];
+			if (!count($building_part_in_table))
+			{
+				$receipt['message'][] = array('msg' => lang('Not exist new categories to insert'));
+				return $receipt;
+			}
+			
+			foreach ($building_part_in_table as $k => $v)
 			{	
 				$values2 = array
 					(
@@ -395,17 +411,19 @@
 				return $receipt;
 			}
 			
-			if (count($new_attributes))
+			$receipt['new_attribs_for_template'] = $new_attributes;
+			
+			/*if (count($new_attributes))
 			{
-				$config = createObject('phpgwapi.config', 'phpgwapi');
+				$config = createObject('phpgwapi.config', 'component_import');
 				$config->read_repository();
-				$config->value('component_import_attribs_for_template', serialize($new_attributes));
+				$config->value('attribs_for_template', serialize($new_attributes));
 				$config->save_repository();
 			
 				$receipt['message'][] = array('msg' => lang('%1 attributes prepared for template', count($new_attributes)));
 			} else {
 				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
-			}
+			}*/
 			
 			return $receipt;
 		}
@@ -414,7 +432,7 @@
 		{
 			$receipt = array();
 			
-			$attributes =  unserialize($GLOBALS['phpgw_info']['server']['component_import_attribs_for_template']);
+			$attributes = $this->config_repository['new_attribs_for_template'];
 			if (!count($attributes))
 			{
 				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
