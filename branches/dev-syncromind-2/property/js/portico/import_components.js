@@ -6,6 +6,7 @@ $(document).ready(function ()
 	$('.processing-start-line').hide();
 	$('.processing-columns').hide();
 	$('.processing-import-relations').hide();
+	$('.processing-save').hide();
 	
 	$('select#type_id').change( function()
 	{
@@ -340,14 +341,76 @@ $(document).ready(function ()
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
+
+				$('.processing-columns').hide();
+				if (typeof(result.error) !== 'undefined')
+				{
+					JqueryPortico.show_message(1, result);
+					return;
+				}				
+				
 				$('#responsiveTabsDemo').responsiveTabs('enable', 3);
 				$('#responsiveTabsDemo').responsiveTabs('activate', 3);
-				$('.processing-columns').hide();
-				JqueryPortico.show_message(1, result);
+				JqueryPortico.show_message(2, result);
+				
+				$('#new_entity_categories').empty();
+				if (typeof(result.new_entity_categories) !== 'undefined')
+				{
+					$.each(result.new_entity_categories, function(i, field){
+						$('#new_entity_categories').append(field + "<br>");
+					});
+				}
+				
+				$('#new_attributes').empty();
+				if (typeof(result.new_attribs_for_template) !== 'undefined')
+				{
+					$.each(result.new_attribs_for_template, function(i, field){
+						$('#new_attributes').append(field + "<br>");
+					});
+				}
+
 			}, data, "GET", "JSON"
 		);
 	});
 	
+	$('#step5').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		
+		var data = {
+			"step": 5,
+			'save': 1,
+			'template_id': $('#template_list').val(),
+			'location_code': $('#location_code').val(),
+			'location_item_id': $('#location_item_id').val()
+		};
+		
+		$('.processing-save').show();
+		
+		JqueryPortico.execute_ajax(requestUrl,
+			function(result){
+
+				$('.processing-save').hide();
+				JqueryPortico.show_message(3, result);
+
+			}, data, "GET", "JSON"
+		);
+	});
+	
+	$('#donwload_preview_components').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.download'};
+		var requestUrl = phpGWLink('index.php', oArgs);
+		
+		if (!confirm("This will take some time..."))
+		{
+			return false;
+		}
+
+		window.open(requestUrl, '_self');
+	});
+
 	$('#template_list').change();
 });
 
