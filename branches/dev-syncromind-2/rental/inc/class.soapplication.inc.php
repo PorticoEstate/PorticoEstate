@@ -129,5 +129,16 @@
 			}
 			return false;
 		}
+		
+		public function remove_composite($application_id, $composite_id)
+		{
+			$q = "DELETE FROM rental_application_composite WHERE application_id = {$application_id} AND composite_id = {$composite_id}";
+			$result = $this->db->query($q);
+			if ($result)
+			{
+				return true;
+			}
+			return false;
+		}
 
 	}

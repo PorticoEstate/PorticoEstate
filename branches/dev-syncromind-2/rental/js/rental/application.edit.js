@@ -45,5 +45,20 @@ function reserveComposite (data, button)
 	{
 		button.disabled = false;
 		$('#tempMessage').append("<li>" + m + "</li>");
+		schedule.updateSchedule(schedule.date);
+		renderComposites('schedule_composites_container');
 	});
+}
+
+renderComposites = function (container)
+{
+	var classTable = "pure-table rentalScheduleTable";
+
+	var columns = [];
+	$.each(composites.columns, function(i, v)
+	{
+		columns.push({key: v['key'], label: v['label'], type: 'td'});
+	});
+	var r = [{n: 'ResultSet'}, {n: 'Result'}];
+	createTableSchedule(container, composites.datasourceUrl, columns);
 }

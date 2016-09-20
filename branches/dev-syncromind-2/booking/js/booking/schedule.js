@@ -1,4 +1,5 @@
 var schedule = new Array();
+schedule.params = {};
 
 schedule.renderSchedule = function (container, url, date, colFormatter, includeResource, classTable)
 {
@@ -11,6 +12,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 //    container.innerHTML = '';
 	var datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 	url += '&date=' + datestr;
+	schedule.params.date = datestr;
 
 	var detected_lang = navigator.language || navigator.userLanguage;
 	var lang = {};
@@ -62,8 +64,10 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 		colDefs.push({key: keys[x], label: lang['WEEKDAYS_FULL'][x] + '<br>' + lang['MONTHS_LONG'][d.getMonth()] + ' ' + d.getDate(), formatter: colFormatter, date: d, day: d.getDate()});
 	}
 	var r = [{n: 'ResultSet'}, {n: 'Result'}];
+	var params = (schedule.params) ? schedule.params : new Array();
+
 //    createta d u c r cl
-	createTableSchedule(container, url, colDefs, r, classTable, datestr);
+	createTableSchedule(container, url, colDefs, r, classTable, params);
 
 };
 

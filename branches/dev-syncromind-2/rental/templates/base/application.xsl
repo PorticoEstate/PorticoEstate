@@ -429,13 +429,14 @@
 									
 								</ul>
 							</div>
+							<div id="schedule_composites_container"></div>
 							<xsl:call-template name="rental_schedule">
 								<xsl:with-param name="schedule" select ='./schedule'/>
 							</xsl:call-template>
 							<script type="text/javascript">
 
 								var composite_id = '<xsl:value-of select="schedule/composite_id"/>';
-								schedule.params.application_id = $('#application_id').val();
+								var application_id = $('#application_id').val();
 
 								schedule.rental = {};
 								$(window).load(function() {
@@ -449,13 +450,13 @@
 									schedule.rental.availability_from = "";
 									schedule.rental.availability_to = "";
 								
-									<xsl:if test="application/assign_date_start != 0 and application/assign_date_start != ''">
-										var adstart = '<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>';
+									<xsl:if test="application/date_start != 0 and application/date_start != ''">
+										var adstart = '<xsl:value-of select="php:function('date', $date_format, number(application/date_start))"/>';
 										var adstart_date = adstart.substr(6,4) + "-" + adstart.substr(3,2) + "-" + adstart.substr(0,2);
 										schedule.params.availability_date_from = adstart_date;
 										schedule.rental.availability_from = new Date(adstart_date);
-										<xsl:if test="application/assign_date_end != 0 and application/assign_date_end != ''">
-											var adend = '<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_end))"/>';
+										<xsl:if test="application/date_end != 0 and application/date_end != ''">
+											var adend = '<xsl:value-of select="php:function('date', $date_format, number(application/date_end))"/>';
 											var adend_date = adend.substr(6,4) + "-" + adend.substr(3,2) + "-" + adend.substr(0,2);
 											schedule.params.availability_date_to = adend_date;
 											schedule.rental.availability_to = new Date(adend_date);
@@ -478,7 +479,7 @@
 										schedule.renderSchedule('schedule_container', schedule.datasourceUrl, schedule.date, schedule.colFormatter, schedule.includeResource);
 									};
 
-									var state = getUrlData("date") || initialRequest;
+									var state = initialRequest || getUrlData("date");
 									if (state){
 										handleHistoryNavigation(state);
 										schedule.week = $.datepicker.iso8601Week(schedule.date);
@@ -487,7 +488,7 @@
 									}
 									schedule.toolbar = <xsl:value-of select="schedule/toolbar" />;
 									
-									$('#assign_date_start').datepicker("option", "onSelect", function (a, e) {
+									$('#date_start').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
 										var adstart_date = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
 										schedule.params.availability_date_from = adstart_date;
@@ -497,7 +498,7 @@
 										schedule.updateSchedule(schedule.date);
 									});
 
-									$('#assign_date_end').datepicker("option", "onSelect", function (a, e) {
+									$('#date_end').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
 										var adstart_end = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
 										schedule.params.availability_date_to = adstart_end;
@@ -506,6 +507,13 @@
 										schedule.updateSchedule(schedule.date);
 									});
 									
+									composites = new Array();
+
+									composites.datasourceUrl = '<xsl:value-of select="composites/datasource_url"/>';
+									composites.columns = <xsl:value-of select="composites/columns"/>;
+									composites.toolbar = <xsl:value-of select="composites/toolbar" />;
+
+									renderComposites('schedule_composites_container');
 								});
 
 							</script>

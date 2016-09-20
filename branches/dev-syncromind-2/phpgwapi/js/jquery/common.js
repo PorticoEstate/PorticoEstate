@@ -1273,14 +1273,14 @@ function populateSelect_activityCalendar(url, container, attr)
 }
 
 
-function createTableSchedule (d, u, c, r, cl, dt, a, p, t)
+function createTableSchedule (d, u, c, r, cl, a, p, t)
 {
 	var container = document.getElementById(d);
 	var container_toolbar = document.createElement('div');
 	var xtable = document.createElement('table');
 	var tableHead = document.createElement('thead');
 	var tableHeadTr = document.createElement('tr');
-	var date = (dt) ? dt : "";
+	var date = (a) ? (a.date) ? a.date : "" : "";
 
 	restartColors();
 	r = (r) ? r : 'data';

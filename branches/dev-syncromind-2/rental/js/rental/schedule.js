@@ -16,6 +16,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 
 	var datestr = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 	url += '&date=' + datestr;
+	schedule.params.date = datestr;
 
 	var detected_lang = navigator.language || navigator.userLanguage;
 	var lang = {};
@@ -77,7 +78,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 	var pagination = true;
 	var toolbar = true;
 
-	createTableSchedule(container, url, colDefs, r, classTable, datestr, params, pagination, toolbar);
+	createTableSchedule(container, url, colDefs, r, classTable, params, pagination, toolbar);
 }
 
 schedule.setupWeekPicker = function ()
@@ -156,9 +157,9 @@ schedule.prevWeek = function ()
 schedule.nextWeek = function ()
 {
 	var move = true;
-	var date = schedule.date;
+	var date = new Date(schedule.date);
 	date.setDate(date.getDate() + 7); // Revisar, aumenta dos semanas
-	
+
 	if ( (schedule.rental.availability_from) && (schedule.rental.availability_to) )
 	{
 		if (date >= schedule.rental.availability_to)
@@ -275,8 +276,9 @@ schedule.createToolbar = function ()
 		{
 			if (name == 'download')
 			{
-				button.addEventListener('click', function()
+				button.addEventListener('click', function(event)
 				{
+					event.preventDefault();
 					var new_action = action;
 					$.each(schedule.params, function(i, v)
 					{
@@ -302,8 +304,9 @@ schedule.createToolbar = function ()
 			}
 			else
 			{
-				button.addEventListener('click', function()
+				button.addEventListener('click', function(event)
 				{
+					event.preventDefault();
 					var new_action = action;
 					if (parameters)
 					{

@@ -98,27 +98,52 @@
 
 					/* The contract's start date not after the end of the period if there is no end date */
 					$filter_clauses[] = "
-					((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 OR
-					(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))";
+					(
+						(
+							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+							OR
+							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+						)
+						OR
+						(
+							((NOT rental_application.date_start > $availability_date_to AND rental_application.date_end IS NULL)
+							OR
+							(NOT rental_application.date_start > $availability_date_to AND NOT rental_application.date_end IS NULL AND NOT rental_application.date_end < $availability_date_from))
+						)
+					)";
 					$special_query = true;
 					break;
 				case "has_no_contract":
 					$filter_clauses[] = "
 				(
-					rental_contract_composite.contract_id IS NULL OR 
-					NOT rental_composite.id IN 
+					rental_contract_composite.contract_id IS NULL OR
+					rental_application_composite.application_id IS NULL OR
+					NOT rental_composite.id IN
 					(
 						SELECT rental_composite.id FROM rental_composite 
-						LEFT JOIN  rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
-						LEFT JOIN  rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) 
+						LEFT JOIN rental_contract_composite ON (rental_contract_composite.composite_id = rental_composite.id) 
+						LEFT JOIN rental_contract ON (rental_contract.id = rental_contract_composite.contract_id) 
+						LEFT JOIN rental_application_composite ON (rental_application_composite.composite_id = rental_composite.id)
+						LEFT JOIN rental_application ON (rental_application.id = rental_application_composite.application_id)
 						WHERE  
 						(
-							NOT rental_contract_composite.contract_id IS NULL AND
-							NOT rental_contract.date_start IS NULL AND
-							((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
-					 		OR
-							(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+							(
+								NOT rental_contract_composite.contract_id IS NULL AND
+								NOT rental_contract.date_start IS NULL AND
+								((NOT rental_contract.date_start > $availability_date_to AND rental_contract.date_end IS NULL)
+								OR
+								(NOT rental_contract.date_start > $availability_date_to AND NOT rental_contract.date_end IS NULL AND NOT rental_contract.date_end < $availability_date_from))
+							)
+							OR
+							(
+								NOT rental_application_composite.application_id IS NULL AND
+								NOT rental_application.date_start IS NULL AND
+								((NOT rental_application.date_start > $availability_date_to AND rental_application.date_end IS NULL)
+								OR
+								(NOT rental_application.date_start > $availability_date_to AND NOT rental_application.date_end IS NULL AND NOT rental_application.date_end < $availability_date_from))
+							)
+
+
 						)
 					)
 				)
@@ -319,7 +344,7 @@
 					$composite->add_contract($contract);
 				}
 			}
-
+			
 			if (!$composite->contains_unit($location_code))
 			{
 				//composite inneholder ikke unit -> legg den til

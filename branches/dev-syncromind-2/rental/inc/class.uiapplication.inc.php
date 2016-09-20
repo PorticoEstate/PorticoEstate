@@ -42,7 +42,8 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'add_composite' => true
+			'add_composite' => true,
+			'remove_composite' => true
 		);
 
 		protected
@@ -360,6 +361,20 @@
 //			$filters = rental_uicomposite::get_filters();
 			$filters = ExecMethod('rental.uicomposite.get_filters');
 
+			foreach ($filters as $k1 => $filter)
+			{
+				if ($filter['name'] == 'has_contract')
+				{
+					foreach ($filter['list'] as $k2 => $option)
+					{
+						if ($option['id'] == 'has_no_contract')
+						{
+							$filters[$k1]['list'][$k2]['selected'] = 'selected';
+						}
+					}
+				}
+			}
+
 			$schedule['filters'] = $filters;
 
 			$schedule['datasource_url'] = self::link(array(
@@ -494,8 +509,51 @@
 			$schedule['date'] = $date;
 			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$schedule['toolbar'] = json_encode($toolbar);
+			
+			$composites['datasource_url'] = self::link(array(
+				'menuaction' => 'rental.uicomposite.query',
+				'editable' => ($editable) ? 1 : 0,
+				'application_id' => $application->get_id(),
+				'type' => $type,
+				'phpgw_return_as' => 'json'
+			));
+			$uicols_composite = rental_socomposite::get_instance()->get_uicols();
+			$columns_def = array();
+			$uicols_count = count($uicols_composite['descr']);
+			for ($i = 0; $i < $uicols_count; $i++)
+			{
+				if ($uicols_composite['input_type'][$i] != 'hidden')
+				{
+					$columns_def[$i]['key'] = $uicols_composite['name'][$i];
+					$columns_def[$i]['label'] = $uicols_composite['descr'][$i];
+					$columns_def[$i]['sortable'] = $uicols_composite['sortable'][$i];
+				}
+			}
+			$composites['columns'] = json_encode($columns_def);
+			$composites['application_id'] = $application->get_id();
+			
+			$toolbar_composites = array();
+			$toolbar_composites[] = array (
+				'name' => 'remove',
+				'text' => 'Remove',
+				'callFunction' => array(
+					'name' => 'removeComposite',
+					'args' => json_encode(array(
+						'url' => self::link(array(
+							'menuaction' => 'rental.uiapplication.remove_composite',
+							'phpgw_return_as' => 'json'
+						))
+					))
+				),
+				'attributes' => array(
+					'class' => 'need-free'
+				),
+				'parameters' => $parameters
+			);
+			$composites['toolbar'] = json_encode($toolbar_composites);
 
 			$data['schedule'] = $schedule;
+			$data['composites'] = $composites;
 
 			phpgwapi_jquery::load_widget("datepicker");
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
@@ -599,6 +657,24 @@
 			else
 			{
 				$message = 'Composite ' . $composite_id . ' ' . lang('not added');
+			}
+			return $message;
+		}
+		
+		public function remove_composite()
+		{
+			$application_id = (int)phpgw::get_var('application_id');
+			$composite_id = (int)phpgw::get_var('composite_id');
+			
+			$so_application = rental_soapplication::get_instance();
+			$result = $so_application->remove_composite($application_id, $composite_id);
+			if ($result)
+			{
+				$message = 'Composite ' . $composite_id . ' ' . lang('has been removed');
+			}
+			else
+			{
+				$message = 'Composite ' . $composite_id . ' ' . lang('not removed');
 			}
 			return $message;
 		}

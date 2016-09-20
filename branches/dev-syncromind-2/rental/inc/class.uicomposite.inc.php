@@ -158,6 +158,8 @@
 
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
+			
+			$application_id = (phpgw::get_var('application_id')) ? phpgw::get_var('application_id') : 0;
 
 			if ($export)
 			{
@@ -195,6 +197,10 @@
 						'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'),
 						'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from'),
 						'availability_date_to' => phpgw::get_var('availability_date_to'), 'district_id' => $district_id);
+					if ($application_id > 0)
+					{
+						$filters['application_id'] = $application_id;
+					}
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
