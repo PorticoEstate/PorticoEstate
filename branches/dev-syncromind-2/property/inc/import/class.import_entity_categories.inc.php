@@ -28,14 +28,14 @@
 			$this->config_repository = $this->config->read_repository();
 			
 			$this->array_entity_categories = array(
-				'0' => array('name' => '0 - Generelt'),
-				'01' => array('name' => '01 - Informasjon og hjelp'),
-				'02' => array('name' => '02 - Krav til dokumentasjon'),
+				'0' => array('name' => '0 Generelt'),
+				'01' => array('name' => '01 Informasjon og hjelp'),
+				'02' => array('name' => '02 Krav til dokumentasjon'),
 				
-				'1' => array('name' => '1 - Brannsikring'),
-				'11' => array('name' => '11 - Branntekniske krav'),
-				'12' => array('name' => '12 - Tegninger(.pdf)/o-planer'),
-				'13' => array('name' => '13 - Brannteknisk dokumentasjon')
+				'1' => array('name' => '1 Brannsikring'),
+				'11' => array('name' => '11 Branntekniske krav'),
+				'12' => array('name' => '12 Tegninger(.pdf)/o-planer'),
+				'13' => array('name' => '13 Brannteknisk dokumentasjon')
 			);
 			
 			if ($template_id)
@@ -95,13 +95,12 @@
 		public function prepare_entity_categories($building_part_out_table)
 		{
 			$new_categories = array();
+			$receipt = array();
 			
 			$list_entity_categories  = $this->list_entity_categories();
 			
 			foreach ($building_part_out_table as $building_part => $name)
-			{	
-				$receipt = array();
-				
+			{					
 				if (strlen($building_part) > 1) 
 				{
 					$receipt = $this->_search_parent_category($new_categories, $list_entity_categories, $building_part);
@@ -120,14 +119,6 @@
 			}
 			
 			$receipt['new_entity_categories'] = $new_categories;
-			
-			/*if (!$receipt['error'])
-			{
-				$config = createObject('phpgwapi.config', 'component_import');
-				$config->read_repository();
-				$config->value('new_entity_categories', serialize($new_categories));
-				$config->save_repository();
-			}*/
 			
 			return $receipt;
 		}
@@ -381,7 +372,7 @@
 					$attrib['appname'] = $appname;
 					$attrib['location'] = $location;
 			
-					$attrib['column_name'] = $attrib_names[$_row_key];
+					$attrib['column_name'] = mb_strtolower($attrib_names[$_row_key], 'UTF-8');
 					$attrib['input_text'] = ucfirst($attrib_names[$_row_key]);
 					$attrib['statustext'] = ucfirst($attrib_names[$_row_key]);
 					$attrib['column_info']['type'] = $attrib_data_types[$_row_key];
@@ -412,18 +403,6 @@
 			}
 			
 			$receipt['new_attribs_for_template'] = $new_attributes;
-			
-			/*if (count($new_attributes))
-			{
-				$config = createObject('phpgwapi.config', 'component_import');
-				$config->read_repository();
-				$config->value('attribs_for_template', serialize($new_attributes));
-				$config->save_repository();
-			
-				$receipt['message'][] = array('msg' => lang('%1 attributes prepared for template', count($new_attributes)));
-			} else {
-				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
-			}*/
 			
 			return $receipt;
 		}
