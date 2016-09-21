@@ -171,13 +171,13 @@
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('lang', 'Save')"/>
 										</xsl:attribute>
-									</input>
-									<img src="{image_loader}" class="processing-save" align="absmiddle"></img>
+									</input>								
 									<input type="button" id="cancel" name="cancel" size="40">
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('lang', 'Cancel')"/>
 										</xsl:attribute>
-									</input>	
+									</input>
+									<img src="{image_loader}" class="processing-save" align="absmiddle"></img>
 									<div id="message3" class="message"></div>	
 								</div>							
 							</div>
