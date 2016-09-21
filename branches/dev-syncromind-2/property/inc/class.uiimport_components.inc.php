@@ -71,7 +71,7 @@
 		{
 			$config = createObject('phpgwapi.config', 'component_import');
 			$values = $config->read_repository();
-			$components = $values['new_components'];
+			$components = $values['preview_components'];
 			
 			$fields = array_keys($components[0]);
 
@@ -463,9 +463,9 @@ HTML;
 				(
 					'' => ' ... ',
 					'new_column' => 'New column',
-					'building_part' => 'Building part',
-					'category_name' => 'Category name',
-					'component_id'    => 'Component ID'
+					'building_part' => '-- Building Part',
+					'name_building_part' => '-- Name of the Building Part',
+					'component_id'    => '-- Component ID'
 				);
 				
 				$template = explode("_", $template_id);
@@ -528,7 +528,7 @@ HTML;
 				$building_part_in_table = array();
 				$import_data = array();
 					
-				$entity_categories  = $import_entity_categories->list_entity_categories();
+				$list_entity_categories  = $import_entity_categories->list_entity_categories();
 			
 				for ($i = $start_line; $i < $rows; $i++)
 				{
@@ -540,22 +540,25 @@ HTML;
 					}
 					
 					if ((int)$_result['building_part'] || $_result['building_part'] === '0')
-					{							
+					{
 						$cat_id = '';
 						$entity_id = '';
 						
-						if (array_key_exists((string)$_result['building_part'], $entity_categories))
-						{				
+						if (array_key_exists((string)$_result['building_part'], $list_entity_categories))
+						{
 							if (!empty($_result['component_id']))
 							{
-								$cat_id = $entity_categories[$_result['building_part']]['id'];
-								$entity_id = $entity_categories[$_result['building_part']]['entity_id'];
+								$cat_id = $list_entity_categories[$_result['building_part']]['id'];
+								$entity_id = $list_entity_categories[$_result['building_part']]['entity_id'];
 								
 								$building_part_in_table[$_result['building_part']] = array('entity_id' => $entity_id, 'cat_id' => $cat_id);
 							}
-						} 
+						}
 						else {
-							$building_part_out_table[$_result['building_part']] = $_result['building_part'].' - '.$_result['category_name'];
+							if (empty($_result['component_id']))
+							{
+								$building_part_out_table[$_result['building_part']] = $_result['building_part'].' '.$_result['name_building_part'];
+							}
 						}
 
 						if (!empty($_result['component_id']))
@@ -564,15 +567,16 @@ HTML;
 							$import_data[$_result['building_part']]['entity_id'] = $entity_id;
 							
 							$_result = array($component_id => $_result['component_id']) + $_result;
-							unset($_result['component_id']);
+							$_result = array('building part' => $_result['building_part']) + $_result;
+	
 							$import_data[$_result['building_part']]['components'][] = $_result;						
 						}
 					}
 				}
-				
+			
 				if (count($building_part_out_table))
 				{
-					ksort($building_part_out_table);
+					asort($building_part_out_table);
 					$receipt = $import_entity_categories->prepare_entity_categories($building_part_out_table);
 					if ($receipt['error'])
 					{
@@ -583,10 +587,9 @@ HTML;
 				}
 				
 				$receipt = array();
-				$new_components = $import_components->prepare_preview_components($import_data);
+				$preview_components = $import_components->prepare_preview_components($import_data);
 				
 				$config = createObject('phpgwapi.config', 'component_import');
-				$config->delete_repository();
 				
 				if (count($new_attribs_for_template))
 				{
@@ -608,8 +611,9 @@ HTML;
 					$receipt['message'][] = array('msg' => lang('Not exist new entity categories'));
 				}
 				
-				$config->value('building_part_in_table', serialize($building_part_in_table));		
-				$config->value('new_components', serialize($new_components));
+				$config->value('building_part_in_table', serialize($building_part_in_table));
+				$config->value('preview_components', serialize($preview_components));
+				$config->value('new_components', serialize($import_data));
 				$config->save_repository();
 			
 				return $receipt;
@@ -617,7 +621,7 @@ HTML;
 			
 			if ($step == 5 && $save) 
 			{
-				$receipt = array();
+				$message = array();
 				
 				$import_entity_categories = new import_entity_categories($template_id);
 				$import_components = new import_components();
@@ -627,12 +631,14 @@ HTML;
 				{
 					return $receipt;
 				}
+				array_push($message['message'], array_values($receipt['message']));
 			
 				$receipt = $import_entity_categories->add_attributes_to_categories();
 				if ($receipt['error'])
 				{
 					return $receipt;
 				}
+				array_push($message['message'], array_values($receipt['message']));
 				
 				$building_part_processed = $import_entity_categories->add_entity_categories();
 
@@ -640,9 +646,8 @@ HTML;
 				{
 					foreach($building_part_processed['not_added'] as $k => $v)
 					{
-						$receipt['error'][] = array('msg' => "parent {$k} not added");	
+						$message['message'][] = array('msg' => "Entity category {$v} not added");	
 					}
-					return $receipt;
 				}
 
 				$config = createObject('phpgwapi.config', 'component_import');
@@ -657,8 +662,13 @@ HTML;
 						$import_data[$k]['entity_id'] = $v['entity_id'];			
 					}
 				} 
-				
-				$receipt = $import_components->add_components($import_data, $location_code);
+
+				$receipt = $import_components->add_components($import_data, $location_code, $component_id);
+				if ($receipt['error'])
+				{
+					return $receipt;
+				}
+				//array_push($message['message'], array_values($receipt['message']));
 			
 				return $receipt;
 			}
