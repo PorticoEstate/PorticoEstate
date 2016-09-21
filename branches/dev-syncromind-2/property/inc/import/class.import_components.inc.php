@@ -56,31 +56,26 @@
 			return $attributes;
 		}
 		
-		public function prepare_preview_components($entity_categories)
+		public function prepare_preview_components($import_data)
 		{
 			$components = array();
 		
-			foreach ($entity_categories as $entity) 
+			foreach ($import_data as $entity) 
 			{
 				foreach ($entity['components'] as $values)
 				{
+					unset($values['component_id']);
 					unset($values['building_part']);
-					unset($values['category_name']);
+					unset($values['name_building_part']);
 					$components[] = $values;
 				}	
 			}
 			
 			return $components;
-
-			/*$config = createObject('phpgwapi.config', 'component_import');
-			$config->read_repository();
-			$config->value('import_preview_components', serialize($components));
-			$config->save_repository();*/
 		}
 		
-		public function add_components($entity_categories, $location_code)
+		public function add_components($import_data, $location_code, $component_id)
 		{
-			$components_added = array();
 			$message = array();
 			
 			$location_code_values = explode('-', $location_code);
@@ -97,7 +92,8 @@
 			try
 			{
 				$this->db->Exception_On_Error = true;
-				foreach ($entity_categories as $entity) 
+				$count = 0;
+				foreach ($import_data as $entity) 
 				{
 					$attributes = $this->_get_attributes($entity['entity_id'], $entity['cat_id']);
 
@@ -106,14 +102,14 @@
 						$attributes_values = $this->_set_attributes_values($values, $attributes);
 						
 						$values_insert = $this->_populate(array('location_code'=>$location_code, 'location'=>$location), $attributes_values);
-
+						
 						$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
 						if (!$receipt['id'])
 						{
-							throw new Exception("component {$values_insert['benevnelse']} not added");
+							throw new Exception("component {$values_insert[$component_id]} not added");
 						}
-						$components_added[$values_insert['benevnelse']] = $receipt;
-					}	
+						$count++;
+					}
 				}
 				$this->db->Exception_On_Error = false;
 			}
@@ -128,7 +124,7 @@
 			}
 
 			$this->db->transaction_commit();
-			$message['message'][] = array('msg' => 'all components saved successfully');
+			$message['message'][] = array('msg' => lang('%1 components saved successfully', $count));
 			
 			return $message; 
 		}
