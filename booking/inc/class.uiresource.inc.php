@@ -140,7 +140,7 @@
 				$resource = extract_values($_POST, $this->fields);
 				$resource['active'] = '1';
 				$building_id = phpgw::get_var('building_id', 'int');
-				$resource['buildings'] = array('building_id' => $building_id);
+				$resource['buildings'][] = $building_id;
 				$building = $this->sobuilding->read_single($building_id);
 				$resource['activity_id'] = $building['activity_id'];
 
