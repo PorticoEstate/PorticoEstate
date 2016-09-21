@@ -273,7 +273,7 @@ $(document).ready(function ()
 
 		var columns = $('.columns');
 		var column_building_part = false;
-		var column_category_name = false;
+		var column_name_building_part = false;
 		var column_component_id = false;
 		var new_column_attributes = true;
 		
@@ -304,9 +304,9 @@ $(document).ready(function ()
 				{
 					column_building_part = true;
 				}
-				if (obj.value === 'category_name')
+				if (obj.value === 'name_building_part')
 				{
-					column_category_name = true;
+					column_name_building_part = true;
 				}
 				if (obj.value === 'component_id')
 				{
@@ -323,17 +323,17 @@ $(document).ready(function ()
 		}
 		if (!column_building_part)
 		{
-			alert('Select a Building part column');
+			alert('Select Building part');
 			return;
 		}
-		if (!column_category_name)
+		if (!column_name_building_part)
 		{
-			alert('Select a Category name column');
+			alert('Select Name of the Building part');
 			return;
 		}
 		if (!column_component_id)
 		{
-			alert('Select a Component ID column');
+			alert('Select Component ID');
 			return;
 		}
 		
@@ -382,6 +382,7 @@ $(document).ready(function ()
 			"step": 5,
 			'save': 1,
 			'template_id': $('#template_list').val(),
+			'component_id': $('#component_id').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
