@@ -425,11 +425,19 @@
 								</div>
 							</div>
 							<div class="pure-control-group">
-								<ul id="tempMessage">
-									
-								</ul>
+								<label>
+									<xsl:value-of select="php:function('lang', 'composites')" />
+								</label>
+								<div class="pure-custom">
+									<div id="schedule_composites_container"></div>
+								</div>
 							</div>
-							<div id="schedule_composites_container"></div>
+							<div class="pure-control-group">
+								<label></label>
+								<div class="pure-custom">
+									<ul id="tempMessage"></ul>
+								</div>
+							</div>
 							<xsl:call-template name="rental_schedule">
 								<xsl:with-param name="schedule" select ='./schedule'/>
 							</xsl:call-template>
@@ -506,9 +514,8 @@
 										$("#cal_container #datepicker").datepicker( "option", "maxDate", adstart_end );
 										schedule.updateSchedule(schedule.date);
 									});
-									
-									composites = new Array();
 
+									composites.rental = {};
 									composites.datasourceUrl = '<xsl:value-of select="composites/datasource_url"/>';
 									composites.columns = <xsl:value-of select="composites/columns"/>;
 									composites.toolbar = <xsl:value-of select="composites/toolbar" />;

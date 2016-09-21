@@ -76,7 +76,7 @@ schedule.renderSchedule = function (container, url, date, colFormatter, includeR
 
 	var params = (schedule.params) ? schedule.params : new Array();
 	var pagination = true;
-	var toolbar = true;
+	var toolbar = "schedule.createToolbar";
 
 	createTableSchedule(container, url, colDefs, r, classTable, params, pagination, toolbar);
 }
@@ -238,6 +238,7 @@ schedule.createToolbar = function ()
 	var toolbar = schedule.toolbar;
 	var container = document.createElement('div');
 	container.setAttribute('id', 'schedule_toolbar');
+	container.classList.add('schedule_toolbar');
 	var id = "$('.rentalScheduleTable .trselected').data('id')";
 	$.each(toolbar, function(i, v)
 	{
@@ -251,7 +252,7 @@ schedule.createToolbar = function ()
 
 		var button = document.createElement('button');
 		button.innerHTML = text;
-		button.classList.add('toolbar_button')
+		button.classList.add('toolbar_button');
 
 		if (parameters)
 		{

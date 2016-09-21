@@ -1445,7 +1445,7 @@ function createTableSchedule (d, u, c, r, cl, a, p, t)
 
 			if (t)
 			{
-				var toolbar = schedule.createToolbar();
+				var toolbar = eval(t + "()");
 				container_toolbar.appendChild(toolbar);
 //				container.insertBefore(toolbar, xtable);
 			}
@@ -1882,6 +1882,41 @@ function rentalScheduleApplication (data, col, date)
 			}
 		);
 	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function rentalScheduleComposites (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+	
+	text = data[k];
+
+	trAttributes.push( {attribute: 'data-id', value: data['id']} );
+	trFunction.push(
+		{
+			event: 'click',
+			callFunction: function () {
+				$(this).parent().parent().find('tr').removeClass("trselected")
+				$(this).parent().addClass("trselected");
+				$('#composites_toolbar button').attr('disabled', false);
+				composites.rental.data = data;
+				composites.rental.col = col;
+			}
+		}
+	);
 
 	var data_return = {
 		text: text,

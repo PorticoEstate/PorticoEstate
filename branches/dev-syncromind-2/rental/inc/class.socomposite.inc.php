@@ -116,8 +116,8 @@
 				case "has_no_contract":
 					$filter_clauses[] = "
 				(
-					rental_contract_composite.contract_id IS NULL OR
-					rental_application_composite.application_id IS NULL OR
+					-- rental_contract_composite.contract_id IS NULL OR
+					-- rental_application_composite.application_id IS NULL OR
 					NOT rental_composite.id IN
 					(
 						SELECT rental_composite.id FROM rental_composite 

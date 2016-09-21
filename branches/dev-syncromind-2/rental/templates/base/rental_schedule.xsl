@@ -3,7 +3,7 @@
 
 	<style typ="text/css" rel="stylesheet">
 		#schedule_container tbody tr th {background: #eee none repeat scroll 0 0;}
-		#schedule_toolbar {margin-bottom: 10px;}
+		.schedule_toolbar {margin-bottom: 10px;}
 		#week-selector {list-style: outside none none;display: inline-block;vertical-align: middle;}
 		#week-selector li {display: inline-block;vertical-align: middle;}
 		#cal_container {margin: 0 20px;}
