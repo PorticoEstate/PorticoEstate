@@ -116,18 +116,6 @@
 
 		public function read( $data = array() )
 		{
-			//$dry_run=''
-			//$data = array()
-			//$start_date	= phpgwapi_datetime::date_to_timestamp($this->start_date);
-			//$end_date	= phpgwapi_datetime::date_to_timestamp($this->end_date);
-//			$valid_locations = $this->get_gallery_location();
-//            //echo '<pre>'; print_r($valid_locations);echo '</pre>';
-//            array_unshift($data['valid_locations'],$valid_locations);
-//			$values = $this->so->read(array('start' => $this->start,'query' => $this->query,'sort' => $this->sort,'order' => $this->order,
-//			'allrows'=>$this->allrows, 'location_id' => $this->location_id, 'user_id' => $this->user_id,
-//			'mime_type' => $this->mime_type, 'start_date' => $start_date, 'end_date' => $end_date,
-//			'cat_id' => $this->cat_id, 'valid_locations' => $valid_locations, 'dry_run'=>$dry_run));
-
 			$values = $this->so->read($data);
 
 			$img_types = array
@@ -150,8 +138,15 @@
 				$entry['img_id'] = '';
 				if (in_array($entry['mime_type'], $img_types))
 				{
-					$entry['img_id'] = "img-{$i}";
-					$i++;
+					$entry['img_id'] = $entry['id'];
+					$entry['file_name'] = $entry['name'];
+					$entry['img_url'] = $GLOBALS['phpgw']->link('/index.php', array(
+							'menuaction' => 'property.uigallery.view_file',
+							'img_id' => $entry['img_id'],
+							'file' => "{$entry['directory']}/{$entry['file_name']}"
+						)
+					);
+					$entry['thumbnail_flag'] = 'thumb=1';
 				}
 
 				$entry['date'] = $GLOBALS['phpgw']->common->show_date(strtotime($entry['created']), $dateformat);
