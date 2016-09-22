@@ -101,6 +101,9 @@
 							</input>
 							<img src="{image_loader}" class="processing-import" align="absmiddle"></img>
 						</div>
+						<div class="pure-control-group">
+							<div id="message1" class="message"></div>
+						</div>
 						<div id="responsiveTabsDemo">
 							<ul>
 								<li><a href="#tab-1">Choose Sheet</a></li>
@@ -134,15 +137,10 @@
 										<xsl:value-of select="php:function('lang', 'Continue')"/>
 									</xsl:attribute>
 								</input>
-								<div id="message1" class="message"></div>
 								<img src="{image_loader}" class="processing-columns" align="absmiddle"></img>
 								<div id="content_columns" class="pure-custom"></div>
 							</div>
 							<div id="tab-4">
-								<div class="pure-control-group">
-									<label for="vendor"></label>
-									<div id="message2" class="message"></div>
-								</div>
 								<div class="pure-control-group">
 									<label for="vendor">
 										<xsl:value-of select="php:function('lang', 'New Categories')" />
@@ -177,9 +175,11 @@
 											<xsl:value-of select="php:function('lang', 'Cancel')"/>
 										</xsl:attribute>
 									</input>
-									<img src="{image_loader}" class="processing-save" align="absmiddle"></img>
-									<div id="message3" class="message"></div>	
-								</div>							
+									<img src="{image_loader}" class="processing-save" align="absmiddle"></img>	
+								</div>
+								<div class="pure-control-group">
+									<div id="message3" class="message"></div>
+								</div>						
 							</div>
 						</div>
 					</form>
@@ -212,7 +212,9 @@
 							</input>
 							<img src="{image_loader}" class="processing-import-relations" align="absmiddle"></img>
 						</div>
-						<div id="message0" class="message"></div>
+						<div class="pure-control-group">
+							<div id="message4" class="message"></div>
+						</div>						
 					</form>		
 				</div>
 		
@@ -221,7 +223,7 @@
 	<script>
 		$('#responsiveTabsDemo').responsiveTabs({
 			startCollapsed: 'accordion',
-			disabled: [1,2]
+			disabled: [1,2,3]
 		});
 	</script>
 </xsl:template>
