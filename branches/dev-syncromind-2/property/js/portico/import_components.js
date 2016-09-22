@@ -121,11 +121,11 @@ $(document).ready(function ()
 			processData: false,
 			data: form_data,
 			type: 'post',
-			dataType: 'JSON',
+			dataType: 'json',
 			success: function (result)
 			{
 				$('.processing-import-relations').hide();
-				JqueryPortico.show_message(0, result);
+				JqueryPortico.show_message(4, result);
 			}
 		});
 	});
@@ -167,6 +167,12 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
+				$('.processing-import').hide();
+				if (typeof(result.error) !== 'undefined')
+				{
+					JqueryPortico.show_message(1, result);
+					return;
+				}
 				var $el = $("#sheet_id");
 				$el.empty();
 				$el.append($("<option></option>").attr("value", '').text('Select Sheet'));
@@ -175,8 +181,6 @@ $(document).ready(function ()
 				{
 					$el.append($("<option></option>").attr("value", v.id).text(v.name));
 				});
-				$('.processing-import').hide();
-				//JqueryPortico.show_message(1, result);
 			}
 		});
 	});
@@ -204,10 +208,15 @@ $(document).ready(function ()
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
+				$('.processing-sheet').hide();
+				if (typeof(result.error) !== 'undefined')
+				{
+					JqueryPortico.show_message(1, result);
+					return;
+				}
 				$('#content_lines').html(result);
 				$('#responsiveTabsDemo').responsiveTabs('enable', 1);
-				$('#responsiveTabsDemo').responsiveTabs('activate', 1);
-				$('.processing-sheet').hide();
+				$('#responsiveTabsDemo').responsiveTabs('activate', 1);				
 			}, data, "GET", "json"
 		);
 	});
@@ -236,10 +245,15 @@ $(document).ready(function ()
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
+				$('.processing-start-line').hide();
+				if (typeof(result.error) !== 'undefined')
+				{
+					JqueryPortico.show_message(1, result);
+					return;
+				}
 				$('#content_columns').html(result);
 				$('#responsiveTabsDemo').responsiveTabs('enable', 2);
-				$('#responsiveTabsDemo').responsiveTabs('activate', 2);
-				$('.processing-start-line').hide();
+				$('#responsiveTabsDemo').responsiveTabs('activate', 2);				
 			}, data, "GET", "json"
 		);
 	});
@@ -254,7 +268,6 @@ $(document).ready(function ()
 			alert('Select Component ID from template');
 			return false;
 		}
-		
 		
 		var data = {
 			"step": 4,
@@ -351,7 +364,6 @@ $(document).ready(function ()
 				
 				$('#responsiveTabsDemo').responsiveTabs('enable', 3);
 				$('#responsiveTabsDemo').responsiveTabs('activate', 3);
-				JqueryPortico.show_message(2, result);
 				
 				$('#new_entity_categories').empty();
 				if (typeof(result.new_entity_categories) !== 'undefined')
