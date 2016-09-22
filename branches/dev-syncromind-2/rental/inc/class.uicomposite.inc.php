@@ -146,6 +146,7 @@
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			$search_for = (is_array($search)) ? $search['value'] : $search;
+			$search_for = $search_for ? $search_for : '';
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			$export = phpgw::get_var('export', 'bool');

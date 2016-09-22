@@ -143,6 +143,11 @@
 			if(!$use_fellesdata)
 			{
 				$menus['navigation'] = array_reverse($menus['navigation'], true);
+				$menus['navigation']['schedule'] = array(
+					'text' => lang('schedule'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.schedule')),
+					'image' => array('rental', 'text-x-generic'),
+				);
 				$menus['navigation']['application'] = array(
 					'text' => lang('application'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index')),
