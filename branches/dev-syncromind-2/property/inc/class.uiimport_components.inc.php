@@ -32,10 +32,12 @@
 	
 	include_class('property', 'import_entity_categories', 'inc/import/');
 	include_class('property', 'import_components', 'inc/import/');
+	include_class('property', 'import_component_files', 'inc/import/');
 
 	class property_uiimport_components extends phpgwapi_uicommon_jquery
 	{
 		var $type = 'entity';
+		private $receipt = array();
 		protected $type_app = array
 			(
 			'entity' => 'property',
@@ -75,33 +77,38 @@
 			
 			$fields = array_keys($components[0]);
 
-			$bocommon = CreateObject('property.bocommon');
-			$bocommon->download($components, $fields, $fields);
+			$this->bocommon->download($components, $fields, $fields);
 		}
 
-		private function valid_row($row)
+		private function _msg_data( $receipt )
 		{
-			if (empty($row[0]) && empty($row[(count($row)-1)]))
+			if (isset($receipt['error']) && is_array($receipt['error']))
 			{
-				return false;
+				foreach ($receipt['error'] as $dummy => $error)
+				{
+					$this->receipt['error'][] = $error;
+				}
 			}
-			
-			if ($row[0] == 'Nummer3' && $row[(count($row)-1)] == 'Filsti')
+
+			if (isset($receipt['message']) && is_array($receipt['message']))
 			{
-				return false;
+				foreach ($receipt['message'] as $dummy => $message)
+				{
+					$this->receipt['message'][] = $message;
+				}
 			}
-			
-			return true;
+
+			return $this->receipt;
 		}
 		
-		private function getexcelcolumnname( $index )
+		private function _getexcelcolumnname( $index )
 		{
 			//Get the quotient : if the index superior to base 26 max ?
 			$quotient = $index / 26;
 			if ($quotient >= 1)
 			{
 				//If yes, get top level column + the current column code
-				return $this->getexcelcolumnname($quotient - 1) . chr(($index % 26) + 65);
+				return $this->_getexcelcolumnname($quotient - 1) . chr(($index % 26) + 65);
 			}
 			else
 			{
@@ -122,86 +129,13 @@
 				return $message;
 			}
 				
-			$exceldata = $this->getexceldata($_FILES['file']['tmp_name'], true);
-			$component_files = array();
-			
-			foreach ($exceldata as $row) 
-			{
-				if (!$this->valid_row($row))
-				{
-					continue;
-				}
-				
-				$array_path = explode("\\", $row[(count($row)-1)]);
-						
-				$component_files[$row[0]][] = array(
-					'name' => $row[1],
-					'desription' => $row[2],
-					'file' => $array_path[count($array_path)-1]
-				);
-			}
-
-			$this->db->transaction_begin();
-			
-			try
-			{
-				$this->db->Exception_On_Error = true;
-				
-				foreach ($component_files as $k => $files) 
-				{
-					if (empty($k))
-					{
-						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
-					}
-					else {
-						$component = $this->get_component($k);
-						if( empty($component['id']) || empty($component['location_id']))
-						{
-							throw new Exception("component {$k} does not exist");
-						}
-					}
-					
-					foreach($files as $file_data)
-					{
-						$file = $file_data['file'];
-						
-						if (!is_file($this->tmp_upload_dir.$file))
-						{
-							throw new Exception("the file {$file} does not exist, component: {$k}");
-						}	
-						
-						$file_id = $this->save_file($file_data);
-						if (!$file_id)
-						{						
-							throw new Exception("failed to save file {$file}, component: {$k}");
-						} 
-			
-						$result = $this->save_file_relation($component['id'], $component['location_id'], $file_id);
-						if (!$result)
-						{						
-							throw new Exception("failed to save relation, file: {$file}, component: {$k}");
-						}
-					}
-				}
-				$this->db->Exception_On_Error = false;
-			}
-			catch (Exception $e)
-			{
-				if ($e)
-				{
-					$this->db->transaction_abort();				
-					$message['error'][] = array('msg' => $e->getMessage());
-					return $message;
-				}
-			}
-
-			$this->db->transaction_commit();
-			$message['message'][] = array('msg' => 'all files saved successfully');
+			$import_component_files = new import_component_files();
+			$message = $import_component_files->add_files($id, $location_code);
 			
 			return $message;
 		}
 		
-		private function getArrayItem($id, $name, $selected, $options = array(), $no_lang = false, $attribs = '' )
+		private function _getArrayItem($id, $name, $selected, $options = array(), $no_lang = false, $attribs = '' )
 		{
 			// should be in class common.sbox
 			if ( !is_array($options) || !count($options) )
@@ -253,425 +187,462 @@ HTML;
 			$upload_handler = new UploadHandler($options);
 		}
 
-		protected function get_component( $query )
+		private function _get_components_cached_file ()
 		{
-			if ($query)
-			{
-				$query = $this->db->db_addslashes($query);
-			}
-
-			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'benevnelse' = '{$query}'";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
-			$values = array();
+			$cached_file = phpgwapi_cache::session_get('property', 'components_import_file');
 			
-			if ($this->db->next_record())
+			if ($_FILES['file']['tmp_name'])
 			{
-				$values['id'] = $this->db->f('id');
-				$values['location_id'] = $this->db->f('location_id');
-			}
-
-			return $values;
-		}
-		
-		
-		private function save_file( $file_data )
-		{
-			$metadata = array();
-			
-			$tmp_file = $file_data['file'];
-			
-			$bofiles = CreateObject('property.bofiles');
-			
-			$file_name = str_replace(' ', '_', $tmp_file);
-
-			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
-
-			$receipt = $bofiles->create_document_dir("generic_document");
-			if (count($receipt['error']))
-			{
-				throw new Exception('failed to create directory');
-			}
-			$bofiles->vfs->override_acl = 1;
-
-			$file_id = $bofiles->vfs->cp3(array(
-					'from' => $this->tmp_upload_dir.$tmp_file,
-					'to' => $to_file,
-		 			'id' => '',
-					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
-			$bofiles->vfs->override_acl = 0;
-
-			if ($file_id) 
-			{
-				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
-				$metadata['title'] = $file_data['name']; 
-				$metadata['descr'] = $file_data['desription'];
+				if ($cached_file)
+				{
+					phpgwapi_cache::session_clear('property', 'components_import_file');
+					unlink($cached_file);
+					unset($cached_file);
+				}
 				
-				$values_insert = array
-					(
-					'file_id' => $file_id,
-					'metadata' => json_encode($metadata)
-				);
-
-				$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
-			}
-			
-			return $file_id;
-		}
-		
-		
-		private function save_file_relation( $id, $location_id, $file_id )
-		{
-			$date = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
-				
-			$values_insert = array
-			(
-				'file_id' => (int)$file_id,
-				'location_id' => (int)$location_id,
-				'location_item_id' => (int)$id,
-				'is_private' => 0,
-				'account_id' => $GLOBALS['phpgw_info']['user']['account_id'],
-				'entry_date' => $date,
-				'start_date' => $date,
-				'end_date' => $date
-			);				
-
-			return $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
-		}
-		
-		
-		public function import_components()
-		{
-			$location_code = phpgw::get_var('location_code');
-			$id = phpgw::get_var('location_item_id');
-			$template_id = phpgw::get_var('template_id');
-			$component_id = phpgw::get_var('component_id');
-			
-			$step = phpgw::get_var('step', 'int', 'REQUEST');
-			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
-			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
-			
-			$columns = phpgw::get_var('columns');
-			$columns = $columns && is_array($columns) ? $columns : array();
-			$attrib_data_types = phpgw::get_var('attrib_data_types');
-			$attrib_names = phpgw::get_var('attrib_names');
-			$attrib_precision = phpgw::get_var('attrib_precision');
-			
-			$save = phpgw::get_var('save', 'int', 'REQUEST');
-					
-			$receipt = array();
-			
-			phpgw::import_class('phpgwapi.phpexcel');
-			
-			if (empty($id))
-			{
-				return $receipt['error'][] = array('msg' => 'location code is empty');
-			}
-				
-			if (empty($template_id))
-			{
-				return $receipt['error'][] = array('msg' => 'template id is empty');
-			}
-			
-			if ($step == 1 && isset($_FILES['file']['tmp_name']))
-			{
 				$file = $_FILES['file']['tmp_name'];
 				$cached_file = "{$file}_temporary_import_file";
 
 				file_put_contents($cached_file, file_get_contents($file));
 				phpgwapi_cache::session_set('property', 'components_import_file', $cached_file);
-				
-				$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-				$AllSheets = $objPHPExcel->getSheetNames();
-
-				$sheets = array();
-				if ($AllSheets)
-				{
-					foreach ($AllSheets as $key => $sheet)
-					{
-						$sheets[] = array
-							(
-							'id' => ($key + 1),
-							'name' => $sheet
-						);
-					}
-				}	
-				
-				return $sheets;
 			}
-						
-			if ($step > 1 && $step < 5) 
+			
+			return $cached_file;
+		}
+		
+		private function _build_sheets()
+		{
+			$cached_file = $this->_get_components_cached_file();
+			if (!$cached_file)
 			{
-				$cached_file = phpgwapi_cache::session_get('property', 'components_import_file');
-				
-				$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
-				$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
-				$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-				$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-				$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);					
+				$this->receipt['error'][] = array('msg' => lang('Cached file not exists'));
+				return;
+			}
+			
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+			$AllSheets = $objPHPExcel->getSheetNames();
+
+			$sheets = array();
+			if ($AllSheets)
+			{
+				foreach ($AllSheets as $key => $sheet)
+				{
+					$sheets[] = array
+						(
+						'id' => ($key + 1),
+						'name' => $sheet
+					);
+				}
 			}	
-			
-			if ($step == 2 && $sheet_id) 
+
+			return $sheets;			
+		}
+		
+		private function _build_start_line()
+		{
+			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
+			if (!$sheet_id)
 			{
-				$html_table = '<table class="pure-table pure-table-bordered">';
-				$i = 0;
-				$cols = array();
-				for ($j = 0; $j < $highestColumnIndex; $j++)
-				{
-					$cols[] = $this->getexcelcolumnname($j);
-				}
-
-				$html_table .= "<thead><tr><th align = 'center'>" . lang('select') . "</th><th align = 'center'>" . lang('row') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr></thead>';
-				foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
-				{
-					if ($i > 20)
-					{
-						break;
-					}
-					
-					$i++;
-					$row_key = $i;
-
-					$_radio = "<input type =\"radio\" name=\"start_line\" value=\"{$row_key}\">";
-
-					$cellIterator = $row->getCellIterator();
-					$cellIterator->setIterateOnlyExistingCells(false);
-
-					$row_values = array();
-					foreach ($cellIterator as $cell)
-					{
-						if (!is_null($cell))
-						{
-							$row_values[] = $cell->getCalculatedValue();
-						}
-					}
-					$html_table .= "<tr><td>{$_radio}</td><td>{$row_key}</td><td>" . implode('</td><td>', $row_values) . '</td></tr>';
-				}
-				$html_table .= '</table>';
-				
-				return $html_table;
+				$this->receipt['error'][] = array('msg' => lang('Select Sheet'));
+				return;
 			}
 			
-			if ($step == 3 && $start_line) 
+			$cached_file = $this->_get_components_cached_file();
+			if (!$cached_file)
 			{
-				$html_table = '<table class="pure-table pure-table-bordered">';
-				
-				$_options = array
-				(
-					'' => ' ... ',
-					'new_column' => 'New column',
-					'building_part' => '-- Building Part',
-					'name_building_part' => '-- Name of the Building Part',
-					'component_id'    => '-- Component ID'
-				);
-				
-				$template = explode("_", $template_id);
-				
-				$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$template[0]}.{$template[1]}", 0, '', 'ASC', 'attrib_sort', true, true);
-
-				foreach ($attributes as $attribute)
-				{
-					$_options[$attribute['name']] = $attribute['input_text'];
-				}
-				
-				$data_types = $this->bocommon->select_datatype();
-				$_options_data_type[''] = 'data type';
-				foreach($data_types as $row) 
-				{
-					$_options_data_type[$row['id']] = $row['name'];
-				}
-
-				for ($j = 0; $j < $highestColumnIndex; $j++)
-				{
-					$_column = $this->getexcelcolumnname($j);
-					$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
-					$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
-
-					$_listbox = $this->getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\" class='columns'");
-					$_listTypes = $this->getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, "disabled class='data_types'");
-					$html_table .= "<tr>";
-					$html_table .= "<td>[{$_column}] {$_value}</td>";
-					$html_table .= "<td>{$_listbox}</td>";
-					$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names' placeholder='column name'></input></td>";
-					$html_table .= "<td>{$_listTypes}</td>";
-					$html_table .= "<td><input type='text' id='precision_{$_column}' name='precision[{$_column}]' disabled class='precision' placeholder='length'></input></td>";
-					$html_table .= "</tr>";
-				}
-				
-				$html_table .= '</table>';
-				
-				return $html_table;
+				$this->receipt['error'][] = array('msg' => lang('Cached file not exists'));
+				return;
 			}
 			
-			if ($step == 4 && $start_line) 
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);	
+
+			$html_table = '<table class="pure-table pure-table-bordered">';
+			$i = 0;
+			$cols = array();
+			for ($j = 0; $j < $highestColumnIndex; $j++)
 			{
-				$import_entity_categories = new import_entity_categories($template_id);
-				$import_components = new import_components();
-				
-				if (count($attrib_names))
+				$cols[] = $this->_getexcelcolumnname($j);
+			}
+
+			$html_table .= "<thead><tr><th align = 'center'>" . lang('select') . "</th><th align = 'center'>" . lang('row') . "</th><th align='center'>" . implode("</th><th align='center'>", $cols) . '</th></tr></thead>';
+			foreach ($objPHPExcel->getActiveSheet()->getRowIterator() as $row)
+			{
+				if ($i > 20)
 				{
-					$receipt = $import_entity_categories->prepare_attributes_for_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
-					if ($receipt['error'])
-					{
-						return $receipt;
-					} else {
-						$new_attribs_for_template = $receipt['new_attribs_for_template'];
-					}
+					break;
 				}
 
-				$rows = $rows ? $rows + 1 : 0;
+				$i++;
+				$row_key = $i;
 
-				$building_part_out_table = array();
-				$building_part_in_table = array();
-				$import_data = array();
-					
-				$list_entity_categories  = $import_entity_categories->list_entity_categories();
-			
-				for ($i = $start_line; $i < $rows; $i++)
+				$_radio = "<input type =\"radio\" name=\"start_line\" value=\"{$row_key}\">";
+
+				$cellIterator = $row->getCellIterator();
+				$cellIterator->setIterateOnlyExistingCells(false);
+
+				$row_values = array();
+				foreach ($cellIterator as $cell)
 				{
-					$_result = array();
-
-					foreach ($columns as $_row_key => $_value_key)
+					if (!is_null($cell))
 					{
-						$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
+						$row_values[] = $cell->getCalculatedValue();
 					}
-					
-					if ((int)$_result['building_part'] || $_result['building_part'] === '0')
-					{
-						$cat_id = '';
-						$entity_id = '';
-						
-						if (array_key_exists((string)$_result['building_part'], $list_entity_categories))
-						{
-							if (!empty($_result['component_id']))
-							{
-								$cat_id = $list_entity_categories[$_result['building_part']]['id'];
-								$entity_id = $list_entity_categories[$_result['building_part']]['entity_id'];
-								
-								$building_part_in_table[$_result['building_part']] = array('entity_id' => $entity_id, 'cat_id' => $cat_id);
-							}
-						}
-						else {
-							if (empty($_result['component_id']))
-							{
-								$building_part_out_table[$_result['building_part']] = $_result['building_part'].' '.$_result['name_building_part'];
-							}
-						}
+				}
+				$html_table .= "<tr><td>{$_radio}</td><td>{$row_key}</td><td>" . implode('</td><td>', $row_values) . '</td></tr>';
+			}
+			$html_table .= '</table>';
 
+			return $html_table;		
+		}
+		
+		private function _build_columns()
+		{
+			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
+			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
+			$template_id = phpgw::get_var('template_id');
+			
+			$cached_file = $this->_get_components_cached_file();
+			if (!$cached_file)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Cached file not exists'));
+				return;
+			}
+			if (!$start_line)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select start line'));
+				return;
+			}
+			if (!$template_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select template'));
+				return;
+			}
+			if (!$sheet_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select sheet'));
+				return;
+			}
+			
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
+			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
+			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);	
+
+			$html_table = '<table class="pure-table pure-table-bordered">';
+
+			$_options = array
+			(
+				'' => ' ... ',
+				'new_column' => 'New column',
+				'building_part' => '-- Building Part',
+				'name_building_part' => '-- Name of the Building Part',
+				'component_id'    => '-- Component ID'
+			);
+
+			$template = explode("_", $template_id);
+
+			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$template[0]}.{$template[1]}", 0, '', 'ASC', 'attrib_sort', true, true);
+
+			foreach ($attributes as $attribute)
+			{
+				$_options[$attribute['name']] = $attribute['input_text'];
+			}
+
+			$data_types = $this->bocommon->select_datatype();
+			$_options_data_type[''] = 'data type';
+			foreach($data_types as $row) 
+			{
+				$_options_data_type[$row['id']] = $row['name'];
+			}
+
+			for ($j = 0; $j < $highestColumnIndex; $j++)
+			{
+				$_column = $this->_getexcelcolumnname($j);
+				$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
+				//$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
+				$selected = '';
+
+				$_listbox = $this->_getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\" class='columns'");
+				$_listTypes = $this->_getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, "disabled class='data_types'");
+				$html_table .= "<tr>";
+				$html_table .= "<td>[{$_column}] {$_value}</td>";
+				$html_table .= "<td>{$_listbox}</td>";
+				$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names' placeholder='column name'></input></td>";
+				$html_table .= "<td>{$_listTypes}</td>";
+				$html_table .= "<td><input type='text' id='precision_{$_column}' name='precision[{$_column}]' disabled class='precision' placeholder='length'></input></td>";
+				$html_table .= "</tr>";
+			}
+
+			$html_table .= '</table>';
+
+			return $html_table;	
+		}
+		
+		private function _prepare_values_to_preview()
+		{
+			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
+			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
+			$template_id = phpgw::get_var('template_id');
+			$component_id = phpgw::get_var('component_id');
+			
+			$columns = (array) phpgw::get_var('columns');
+			$attrib_data_types = phpgw::get_var('attrib_data_types');
+			$attrib_names = phpgw::get_var('attrib_names');
+			$attrib_precision = phpgw::get_var('attrib_precision');
+			
+			$cached_file = $this->_get_components_cached_file();
+			if (!$cached_file)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Cached file not exists'));
+				return;
+			}
+			if (!$start_line)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select start line'));
+				return;
+			}
+			if (!$template_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select template'));
+				return;
+			}
+			if (!$sheet_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select sheet'));
+				return;
+			}
+			if (!$component_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select component id from template'));
+				return;
+			}
+			
+			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
+			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
+			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
+			
+			$import_entity_categories = new import_entity_categories($template_id);
+			$import_components = new import_components();
+
+			if (count($attrib_names))
+			{
+				$receipt = $import_entity_categories->prepare_attributes_for_template($columns, $attrib_names, $attrib_data_types, $attrib_precision);
+				$this->receipt = $this->_msg_data($receipt);
+				if ($this->receipt['error'])
+				{
+					return;
+				} else {
+					$new_attribs_for_template = $receipt['new_attribs_for_template'];
+				}
+			}
+
+			$rows = $rows ? $rows + 1 : 0;
+
+			$building_part_out_table = array();
+			$building_part_in_table = array();
+			$import_data = array();
+
+			$list_entity_categories  = $import_entity_categories->list_entity_categories();
+
+			for ($i = $start_line; $i < $rows; $i++)
+			{
+				$_result = array();
+
+				foreach ($columns as $_row_key => $_value_key)
+				{
+					$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
+				}
+
+				if ((int)$_result['building_part'] || $_result['building_part'] === '0')
+				{
+					$cat_id = '';
+					$entity_id = '';
+
+					if (array_key_exists((string)$_result['building_part'], $list_entity_categories))
+					{
 						if (!empty($_result['component_id']))
 						{
-							$import_data[$_result['building_part']]['cat_id'] = $cat_id;
-							$import_data[$_result['building_part']]['entity_id'] = $entity_id;
-							
-							$_result = array($component_id => $_result['component_id']) + $_result;
-							$_result = array('building part' => $_result['building_part']) + $_result;
-	
-							$import_data[$_result['building_part']]['components'][] = $_result;						
+							$cat_id = $list_entity_categories[$_result['building_part']]['id'];
+							$entity_id = $list_entity_categories[$_result['building_part']]['entity_id'];
+
+							$building_part_in_table[$_result['building_part']] = array('entity_id' => $entity_id, 'cat_id' => $cat_id);
 						}
 					}
-				}
-			
-				if (count($building_part_out_table))
-				{
-					asort($building_part_out_table);
-					$receipt = $import_entity_categories->prepare_entity_categories($building_part_out_table);
-					if ($receipt['error'])
+					else {
+						if (empty($_result['component_id']))
+						{
+							$building_part_out_table[$_result['building_part']] = $_result['building_part'].' '.$_result['name_building_part'];
+						}
+					}
+
+					if (!empty($_result['component_id']))
 					{
-						return $receipt;
-					} else {
-						$new_entity_categories = $receipt['new_entity_categories'];
+						$import_data[$_result['building_part']]['cat_id'] = $cat_id;
+						$import_data[$_result['building_part']]['entity_id'] = $entity_id;
+
+						$_result = array($component_id => $_result['component_id']) + $_result;
+						$_result = array('building part' => $_result['building_part']) + $_result;
+
+						$import_data[$_result['building_part']]['components'][] = $_result;						
 					}
 				}
-				
-				$receipt = array();
-				$preview_components = $import_components->prepare_preview_components($import_data);
-				
-				$config = createObject('phpgwapi.config', 'component_import');
-				
-				if (count($new_attribs_for_template))
+			}
+
+			if (count($building_part_out_table))
+			{
+				asort($building_part_out_table);
+				$receipt = $import_entity_categories->prepare_entity_categories($building_part_out_table);
+				$this->receipt = $this->_msg_data($receipt);
+				if ($this->receipt['error'])
 				{
-					$config->value('new_attribs_for_template', serialize($new_attribs_for_template));
-					foreach($new_attribs_for_template as $attrib)
-					{
-						$values[] = $attrib['column_name'];
-					}
-					$receipt['new_attribs_for_template'] = $values;
+					return;
 				} else {
-					$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
+					$new_entity_categories = $receipt['new_entity_categories'];
 				}
-						
-				if (count($new_entity_categories))
-				{
-					$config->value('new_entity_categories', serialize($new_entity_categories));
-					$receipt['new_entity_categories'] = array_values($new_entity_categories);
-				} else {
-					$receipt['message'][] = array('msg' => lang('Not exist new entity categories'));
-				}
-				
-				$config->value('building_part_in_table', serialize($building_part_in_table));
-				$config->value('preview_components', serialize($preview_components));
-				$config->value('new_components', serialize($import_data));
-				$config->save_repository();
+			}
 			
-				return $receipt;
+			$result = array();
+			$preview_components = $import_components->prepare_preview_components($import_data);
+
+			$config = createObject('phpgwapi.config', 'component_import');
+
+			if (count($new_attribs_for_template))
+			{
+				$config->value('new_attribs_for_template', serialize($new_attribs_for_template));
+				foreach($new_attribs_for_template as $attrib)
+				{
+					$values[] = $attrib['column_name'];
+				}
+				$result['new_attribs_for_template'] = $values;
+			} else {
+				$result['new_attribs_for_template'][] = lang('Not exist attributes to insert the template');
+			}
+
+			if (count($new_entity_categories))
+			{
+				$config->value('new_entity_categories', serialize($new_entity_categories));
+				$result['new_entity_categories'] = array_values($new_entity_categories);
+			} else {
+				$result['new_entity_categories'][] = lang('Not exist new entity categories');
+			}
+
+			$config->value('building_part_in_table', serialize($building_part_in_table));
+			$config->value('preview_components', serialize($preview_components));
+			$config->value('new_components', serialize($import_data));
+			$config->save_repository();
+
+			return $result;
+		}
+		
+		private function _save_values_import()
+		{
+			$location_code = phpgw::get_var('location_code');
+			$template_id = phpgw::get_var('template_id');
+			$component_id = phpgw::get_var('component_id');	
+			
+			if (!$template_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select template'));
+				return;
+			}
+			if (!$location_code)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Location code is empty'));
+				return;
+			}
+			if (!$component_id)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Select component id from template'));
+				return;
+			}
+			
+			$import_entity_categories = new import_entity_categories($template_id);
+			$import_components = new import_components();
+
+			$receipt = $import_entity_categories->add_attributes_to_template();
+			$this->receipt = $this->_msg_data($receipt);
+			if ($this->receipt['error'])
+			{
+				return;
+			}
+
+			$receipt = $import_entity_categories->add_attributes_to_categories();
+			$this->receipt = $this->_msg_data($receipt);
+			if ($this->receipt['error'])
+			{
+				return;
+			}
+
+			$building_part_processed = $import_entity_categories->add_entity_categories();
+			if (count($building_part_processed['not_added']))
+			{
+				foreach($building_part_processed['not_added'] as $k => $v)
+				{
+					$this->receipt['message'][] = array('msg' => lang("entity category {$v} not added"));	
+				}
+			}
+
+			$config = createObject('phpgwapi.config', 'component_import');
+			$config_repository = $config->read_repository();
+			$import_data = $config_repository['new_components'];
+
+			if (count($building_part_processed['added']))
+			{
+				foreach($building_part_processed['added'] as $k => $v)
+				{
+					$import_data[$k]['cat_id'] = $v['id'];
+					$import_data[$k]['entity_id'] = $v['entity_id'];			
+				}
+				$this->receipt['message'][] = array('msg' => lang("%1 entity category has been added", count($building_part_processed['added'])));	
+			}
+
+			$receipt = $import_components->add_components($import_data, $location_code, $component_id);
+			$this->receipt = $this->_msg_data($receipt);
+
+			return $this->receipt;
+		}
+		
+		public function import_components()
+		{	
+			$step = phpgw::get_var('step', 'int', 'REQUEST');
+			$save = phpgw::get_var('save', 'int', 'REQUEST');
+			
+			phpgw::import_class('phpgwapi.phpexcel');
+			
+			if ($step == 1)
+			{
+				$result = $this->_build_sheets();
+			}
+			
+			if ($step == 2) 
+			{
+				$result = $this->_build_start_line();
+			}
+			
+			if ($step == 3) 
+			{
+				$result = $this->_build_columns();
+			}
+			
+			if ($step == 4) 
+			{
+				$result = $this->_prepare_values_to_preview();
 			}
 			
 			if ($step == 5 && $save) 
 			{
-				$message = array();
-				
-				$import_entity_categories = new import_entity_categories($template_id);
-				$import_components = new import_components();
-				
-				$receipt = $import_entity_categories->add_attributes_to_template();
-				if ($receipt['error'])
-				{
-					return $receipt;
-				}
-				array_push($message['message'], array_values($receipt['message']));
-			
-				$receipt = $import_entity_categories->add_attributes_to_categories();
-				if ($receipt['error'])
-				{
-					return $receipt;
-				}
-				array_push($message['message'], array_values($receipt['message']));
-				
-				$building_part_processed = $import_entity_categories->add_entity_categories();
-
-				if (count($building_part_processed['not_added']))
-				{
-					foreach($building_part_processed['not_added'] as $k => $v)
-					{
-						$message['message'][] = array('msg' => "Entity category {$v} not added");	
-					}
-				}
-
-				$config = createObject('phpgwapi.config', 'component_import');
-				$config_repository = $config->read_repository();
-				$import_data = $config_repository['new_components'];
-
-				if (count($building_part_processed['added']))
-				{
-					foreach($building_part_processed['added'] as $k => $v)
-					{
-						$import_data[$k]['cat_id'] = $v['id'];
-						$import_data[$k]['entity_id'] = $v['entity_id'];			
-					}
-				} 
-
-				$receipt = $import_components->add_components($import_data, $location_code, $component_id);
-				if ($receipt['error'])
-				{
-					return $receipt;
-				}
-				//array_push($message['message'], array_values($receipt['message']));
-			
-				return $receipt;
+				$result = $this->_save_values_import();
 			}
+			
+			if ($this->receipt['error'])
+			{
+				return $this->receipt;
+			}
+			
+			return $result;
 		}
 		
 		/**
@@ -864,56 +835,5 @@ HTML;
 
 			return $values;
 		}
-		
-		protected function getexceldata( $path, $get_identificator = false )
-		{
-			phpgw::import_class('phpgwapi.phpexcel');
 
-			$objPHPExcel = PHPExcel_IOFactory::load($path);
-			$objPHPExcel->setActiveSheetIndex(0);
-
-			$result = array();
-
-			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
-
-			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);
-
-			$rows = $objPHPExcel->getActiveSheet()->getHighestDataRow();
-
-			$start = $get_identificator ? 3 : 1; // Read the first line to get the headers out of the way
-
-			if ($get_identificator)
-			{
-				$this->identificator = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow(0, 1)->getCalculatedValue();
-				for ($j = 0; $j < $highestColumnIndex; $j++)
-				{
-					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 2)->getCalculatedValue();
-				}
-			}
-			else
-			{
-				for ($j = 0; $j < $highestColumnIndex; $j++)
-				{
-					$this->fields[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, 1)->getCalculatedValue();
-				}
-			}
-
-			$rows = $rows ? $rows + 1 : 0;
-			for ($row = $start; $row < $rows; $row++)
-			{
-				$_result = array();
-
-				for ($j = 0; $j < $highestColumnIndex; $j++)
-				{
-					$_result[] = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $row)->getCalculatedValue();
-				}
-
-				$result[] = $_result;
-			}
-
-			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
-			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
-
-			return $result;
-		}
 	}
