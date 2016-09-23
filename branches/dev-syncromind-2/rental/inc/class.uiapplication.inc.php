@@ -628,7 +628,7 @@
 			$applications = $this->bo->read($params);
 			$status_text = rental_application::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			foreach ($applications['results'] as &$application)
+			foreach ($applications['results'] as $key => &$application)
 			{
 					$application['status'] = $status_text[$application['status']];
 					$application['composite_type'] = $this->composite_types[$application['composite_type']];
@@ -637,7 +637,27 @@
 					$application['assign_date_start'] = $GLOBALS['phpgw']->common->show_date($application['assign_date_start'], $dateformat);
 					$application['assign_date_end'] = $GLOBALS['phpgw']->common->show_date($application['assign_date_end'], $dateformat);
 					$application['executive_officer'] = $application['executive_officer'] ? $GLOBALS['phpgw']->accounts->get($application['executive_officer'])->__toString() : '';
+					if (isset($params['filters']['composite_id']))
+					{
+						$composite_id = $params['filters']['composite_id'];
+						$n_composites = 0;
+						foreach ($application['composites'] as $value)
+						{
+							if ($value == $composite_id)
+							{
+								$n_composites++;
+								break;
+							}
+						}
+						if ($n_composites == 0)
+						{
+							$applications['total_records']--;
+							$applications['recordsTotal']--;
+							array_splice($applications['results'], $key, 1);
+						}
+					}
 			}
+
 			array_walk($applications["results"], array($this, "_add_links"), "rental.uiapplication.edit");
 
 			return $this->jquery_results($applications);

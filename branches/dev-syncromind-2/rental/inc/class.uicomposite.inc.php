@@ -1,9 +1,11 @@
 <?php
 	phpgw::import_class('rental.socomposite');
 	phpgw::import_class('rental.socontract');
+	phpgw::import_class('rental.soapplication');
 	phpgw::import_class('rental.sounit');
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'composite', 'inc/model/');
+	include_class('rental', 'application', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
 
 	class rental_uicomposite extends rental_uicommon
@@ -893,6 +895,54 @@
 
 				$units = $composite->get_units();
 				$address_1 = $units[0]->get_location()->get_address_1();
+
+//				application
+				$tabletools4 = array
+					(
+					'my_name' => 'edit',
+					'text' => lang('edit'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'rental.uiapplication.edit'
+					)),
+					'parameters' => json_encode(array('parameter' => array(array('name' => 'id','source' => 'id'))))
+				);
+				
+				$datatable_container_application_name = ($mode == 'edit') ? 'datatable-container_3' : 'datatable-container_2';
+				
+				$datatable_def[] = array(
+					'container' => $datatable_container_application_name,
+					'requestUrl' => json_encode(self::link(array(
+						'menuaction' => 'rental.uiapplication.query',
+						'composite_id' => $composite_id,
+						'editable' => 0,
+						'phpgw_return_as' => 'json'))),
+					'ColumnDefs' => array(
+						array('key' => 'id', 'label' => 'id', 'formatter' => 'JqueryPortico.formatLink', 'sortable' => true),
+						array('key' => 'ecodimb_name', 'label' => 'dimb', 'sortable' => false),
+						array('key' => 'email', 'label' => 'email', 'sortable' => false),
+						array('key' => 'assign_date_start', 'label' => 'assign_start', 'sortable' => false),
+						array('key' => 'assign_date_end', 'label' => 'assign_end', 'sortable' => false),
+						array('key' => 'status', 'label' => 'status', 'sortable' => false),
+						array('key' => 'entry_date', 'label' => 'entry_date', 'sortable' => true),
+						array('key' => 'executive_officer', 'label' => 'executive_officer', 'sortable' => true),
+					),
+					'tabletools' => $tabletools4,
+					'config' => array(
+						array('disableFilter' => true)
+					)
+				);
+				
+				$applications_search_options[] = array('id' => 'all', 'name' => lang('all'), 'selected' => 1);
+				$applications_search_options[] = array('id' => 'ecodimb_name', 'name' => 'dimb', 'selected' => 0);
+				
+				
+				$status_application_options[] = array('id' => '', 'name' => lang('all'), 'selected' => 1);
+				$status_application_options[] = array('id' => 1, 'name' => lang('registered'), 'selected' => 0);
+				$status_application_options[] = array('id' => 2, 'name' => lang('pending'), 'selected' => 0);
+				$status_application_options[] = array('id' => 3, 'name' => lang('rejected'), 'selected' => 0);
+				$status_application_options[] = array('id' => 4, 'name' => lang('approved'), 'selected' => 0);
+
 			}
 
 			$link_index = array
@@ -973,7 +1023,9 @@ JS;
 				'list_search_option' => array('options' => $search_options),
 				'list_type_id' => array('options' => $level_options),
 				'list_contracts_search_options' => array('options' => $contracts_search_options),
+				'list_applications_search_options' => array('options' => $applications_search_options),
 				'list_status_options' => array('options' => $status_options),
+				'list_status_application_options' => array('options' => $status_application_options),
 				'list_fields_of_responsibility_options' => array('options' => $fields_of_responsibility_options),
 				'composite_id' => $composite_id,
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
