@@ -74,7 +74,29 @@
 			return $components;
 		}
 		
-		public function add_components($import_data, $location_code, $component_id)
+		private function _get_component( $query, $attrib_name_componentID)
+		{
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+			}
+
+			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'{$attrib_name_componentID}' = '{$query}'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			
+			if ($this->db->next_record())
+			{
+				$values['id'] = $this->db->f('id');
+				$values['location_id'] = $this->db->f('location_id');
+			}
+
+			return $values;
+		}
+		
+		public function add_components($import_data, $location_code, $attrib_name_componentID)
 		{
 			$message = array();
 			
@@ -92,7 +114,8 @@
 			try
 			{
 				$this->db->Exception_On_Error = true;
-				$count = 0;
+				$count_added = 0;
+				$count_updated = 0;
 				foreach ($import_data as $entity) 
 				{
 					$attributes = $this->_get_attributes($entity['entity_id'], $entity['cat_id']);
@@ -100,15 +123,24 @@
 					foreach ($entity['components'] as $values)
 					{
 						$attributes_values = $this->_set_attributes_values($values, $attributes);
-						
 						$values_insert = $this->_populate(array('location_code'=>$location_code, 'location'=>$location), $attributes_values);
-						
-						$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
-						if (!$receipt['id'])
+
+						$component = $this->_get_component($values_insert[$attrib_name_componentID], $attrib_name_componentID);
+						if ($component['id'])
 						{
-							throw new Exception("component {$values_insert[$component_id]} not added");
+							$receipt = $this->_edit_eav($values_insert, $entity['entity_id'], $entity['cat_id'], $component['id']);
+							$action = 'updated';
+							$count_updated++;
+						} else {
+							$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
+							$action = 'added';
+							$count_added++;
 						}
-						$count++;
+						
+						if (!$receipt)
+						{
+							throw new Exception("component {$values_insert[$attrib_name_componentID]} not {$action}");
+						}
 					}
 				}
 				$this->db->Exception_On_Error = false;
@@ -124,15 +156,22 @@
 			}
 
 			$this->db->transaction_commit();
-			$message['message'][] = array('msg' => lang('%1 components saved successfully', $count));
 			
+			if ($count_added)
+			{
+				$message['message'][] = array('msg' => lang('%1 components added successfully', $count_added));
+			}
+			if ($count_updated)
+			{
+				$message['message'][] = array('msg' => lang('%1 components updated successfully', $count_updated));
+			}			
+
 			return $message; 
 		}
 		
 		private function _save_eav( $data, $entity_id, $cat_id )
 		{
 			$location_id = (int) $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-			//$location_name = "_{$this->type}_{$entity_id}_{$cat_id}";
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -168,13 +207,36 @@
 			$result = $this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 			
-			if ($result)
-			{
-				return array('id' => $id, 'location_id' => $location_id); 
-			}
-			else {
-				return array();
-			}
+			return $result;
+		}
+		
+		protected function _edit_eav( $data, $entity_id, $cat_id, $id )
+		{
+			$location_id = (int) $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+			$id = (int)$id;
+
+			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$type = (int)$this->db->f('type');
+
+			$location_name = str_replace('.', '_', $location_name);
+
+			$value_set = array
+				(
+				'json_representation' => json_encode($data),
+				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
+				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
+				'location_code' => $data['location_code'],
+				'loc1' => $data['loc1'],
+				'address' => $data['address'],
+				'org_unit_id' => $data['org_unit_id'],
+				'entity_group_id' => $data['entity_group_id'],
+				'modified_by' => $this->account,
+				'modified_on' => time()
+			);
+
+			$value_set = $this->db->validate_update($value_set);
+			return $this->db->query("UPDATE fm_bim_item SET $value_set WHERE id = $id AND type = {$type}", __LINE__, __FILE__);
 		}
 		
 		private function _populate( $values, $values_attribute )
