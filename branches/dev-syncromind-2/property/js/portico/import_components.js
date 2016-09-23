@@ -73,13 +73,13 @@ $(document).ready(function ()
 	
 	$('#template_list').change( function()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.get_attributes_for_template'};
+		var oArgs = {menuaction: 'property.uiimport_components.get_attributes_from_template'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);	
 		
 		var data = {"category_template": $(this).val()};
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
-				var $el = $("#component_id");
+				var $el = $("#attribute_name_component_id");
 				$el.empty();
 				$.each(result, function(key, value) {
 					$el.append($("<option></option>").attr("value", value.id).text(value.name));
@@ -104,6 +104,11 @@ $(document).ready(function ()
 			alert('select location');
 			return false;
 		}
+		if ($('#attribute_name_component_id').val() === '')
+		{
+			alert('Choose attribute name for Component ID');
+			return false;
+		}
 		
 		var form = document.forms.namedItem("form_files");
 		var file_data = $('#excel_files').prop('files')[0];
@@ -111,6 +116,7 @@ $(document).ready(function ()
 		form_data.append('file', file_data);
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
+		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 
 		$('.processing-import-relations').show();
 		
@@ -263,9 +269,9 @@ $(document).ready(function ()
 		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
-		if (!$('#component_id').val())
+		if ($('#attribute_name_component_id').val() === '')
 		{
-			alert('Select Component ID from template');
+			alert('Choose attribute name for Component ID');
 			return false;
 		}
 		
@@ -274,7 +280,7 @@ $(document).ready(function ()
 			"sheet_id": $('#sheet_id').val(), 
 			'start_line': $('input:radio[name=start_line]:checked').val(),
 			'template_id': $('#template_list').val(),
-			'component_id': $('#component_id').val(),
+			'attribute_name_component_id': $('#attribute_name_component_id').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
@@ -288,7 +294,7 @@ $(document).ready(function ()
 		var column_building_part = false;
 		var column_name_building_part = false;
 		var column_component_id = false;
-		var new_column_attributes = true;
+		var new_attribute = true;
 		
 		if (columns.length == 0)
 		{
@@ -303,9 +309,9 @@ $(document).ready(function ()
 			{
 				if (obj.value === 'new_column') 
 				{
-					if (!valid_new_column_attributes(code[1]))
+					if (!valid_new_attribute(code[1]))
 					{
-						new_column_attributes = false;
+						new_attribute = false;
 						return false;
 					}
 					data['attrib_names'][code[1]] = $('#name_' + code[1]).val();
@@ -330,7 +336,7 @@ $(document).ready(function ()
 			}
 		});
 		
-		if (!new_column_attributes)
+		if (!new_attribute)
 		{
 			return;
 		}
@@ -346,7 +352,7 @@ $(document).ready(function ()
 		}
 		if (!column_component_id)
 		{
-			alert('Select Component ID');
+			alert('Select attribute name for Component ID');
 			return;
 		}
 		
@@ -364,6 +370,8 @@ $(document).ready(function ()
 				
 				$('#responsiveTabsDemo').responsiveTabs('enable', 3);
 				$('#responsiveTabsDemo').responsiveTabs('activate', 3);
+				$('#message3').empty();
+				$('#message1').empty();
 				
 				$('#new_entity_categories').empty();
 				if (typeof(result.new_entity_categories) !== 'undefined')
@@ -394,7 +402,7 @@ $(document).ready(function ()
 			"step": 5,
 			'save': 1,
 			'template_id': $('#template_list').val(),
-			'component_id': $('#component_id').val(),
+			'attribute_name_component_id': $('#attribute_name_component_id').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
@@ -427,25 +435,25 @@ $(document).ready(function ()
 	$('#template_list').change();
 });
 
-function valid_new_column_attributes (code)
+function valid_new_attribute (code)
 {
 	if ($('#name_' + code).val() == '')
 	{
-		alert('Enter a name for the new column');
+		alert('Enter a name for the new attribute');
 		$('#name_' + code).select();
 		return false;
 	}
 	
 	if ($('#data_type_' + code).val() == '')
 	{
-		alert('Select a data type for the new column');
+		alert('Select a data type for the new attribute');
 		$('#data_type_' + code).select();
 		return false;
 	}
 	
 	if ($('#precision_' + code).val() == '')
 	{
-		alert('Enter a length for the new column');
+		alert('Enter a length for the new attribute');
 		$('#precision_' + code).select();
 		return false;
 	}
