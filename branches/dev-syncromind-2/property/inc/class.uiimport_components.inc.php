@@ -51,7 +51,7 @@
 			'import_component_files' => true,
 			'handle_import_files' => true,
 			'import_components' => true,
-			'get_attributes_for_template' => true,
+			'get_attributes_from_template' => true,
 			'download' => true
 		);
 
@@ -121,16 +121,20 @@
 		{
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
-			$message = array();
-			
+			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			if (!$attrib_name_componentID)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
+				return;
+			}
 			if (empty($id))
 			{
-				$message['error'][] = array('msg' => 'location code is empty');
+				$message['error'][] = array('msg' => 'Choose Location');
 				return $message;
 			}
 				
 			$import_component_files = new import_component_files();
-			$message = $import_component_files->add_files($id, $location_code);
+			$message = $import_component_files->add_files($id, $location_code, $attrib_name_componentID);
 			
 			return $message;
 		}
@@ -336,7 +340,7 @@ HTML;
 			$_options = array
 			(
 				'' => ' ... ',
-				'new_column' => 'New column',
+				'new_column' => 'New attribute',
 				'building_part' => '-- Building Part',
 				'name_building_part' => '-- Name of the Building Part',
 				'component_id'    => '-- Component ID'
@@ -370,7 +374,7 @@ HTML;
 				$html_table .= "<tr>";
 				$html_table .= "<td>[{$_column}] {$_value}</td>";
 				$html_table .= "<td>{$_listbox}</td>";
-				$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names' placeholder='column name'></input></td>";
+				$html_table .= "<td><input type='text' id='name_{$_column}' name='names[{$_column}]' disabled class='names' placeholder='attribute name'></input></td>";
 				$html_table .= "<td>{$_listTypes}</td>";
 				$html_table .= "<td><input type='text' id='precision_{$_column}' name='precision[{$_column}]' disabled class='precision' placeholder='length'></input></td>";
 				$html_table .= "</tr>";
@@ -386,7 +390,7 @@ HTML;
 			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
 			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
 			$template_id = phpgw::get_var('template_id');
-			$component_id = phpgw::get_var('component_id');
+			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			
 			$columns = (array) phpgw::get_var('columns');
 			$attrib_data_types = phpgw::get_var('attrib_data_types');
@@ -414,9 +418,9 @@ HTML;
 				$this->receipt['error'][] = array('msg' => lang('Select sheet'));
 				return;
 			}
-			if (!$component_id)
+			if (!$attrib_name_componentID)
 			{
-				$this->receipt['error'][] = array('msg' => lang('Select component id from template'));
+				$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
 				return;
 			}
 			
@@ -483,7 +487,7 @@ HTML;
 						$import_data[$_result['building_part']]['cat_id'] = $cat_id;
 						$import_data[$_result['building_part']]['entity_id'] = $entity_id;
 
-						$_result = array($component_id => $_result['component_id']) + $_result;
+						$_result = array($attrib_name_componentID => $_result['component_id']) + $_result;
 						$_result = array('building part' => $_result['building_part']) + $_result;
 
 						$import_data[$_result['building_part']]['components'][] = $_result;						
@@ -541,7 +545,7 @@ HTML;
 		{
 			$location_code = phpgw::get_var('location_code');
 			$template_id = phpgw::get_var('template_id');
-			$component_id = phpgw::get_var('component_id');	
+			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');	
 			
 			if (!$template_id)
 			{
@@ -550,12 +554,12 @@ HTML;
 			}
 			if (!$location_code)
 			{
-				$this->receipt['error'][] = array('msg' => lang('Location code is empty'));
+				$this->receipt['error'][] = array('msg' => lang('Choose Location'));
 				return;
 			}
-			if (!$component_id)
+			if (!$attrib_name_componentID)
 			{
-				$this->receipt['error'][] = array('msg' => lang('Select component id from template'));
+				$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
 				return;
 			}
 			
@@ -599,7 +603,7 @@ HTML;
 				$this->receipt['message'][] = array('msg' => lang("%1 entity category has been added", count($building_part_processed['added'])));	
 			}
 
-			$receipt = $import_components->add_components($import_data, $location_code, $component_id);
+			$receipt = $import_components->add_components($import_data, $location_code, $attrib_name_componentID);
 			$this->receipt = $this->_msg_data($receipt);
 
 			return $this->receipt;
@@ -723,7 +727,7 @@ HTML;
 			self::render_template_xsl(array('import_components', 'datatable_inline'), $data);
 		}
 
-		public function get_attributes_for_template()
+		public function get_attributes_from_template()
 		{
 			$category_template = phpgw::get_var('category_template');
 
@@ -738,7 +742,7 @@ HTML;
 				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text']); 
 			}
 			
-			array_unshift($list, array('id' => '', 'name' => lang('Select Component ID')));
+			array_unshift($list, array('id' => '', 'name' => lang('choose attribute')));
 
 			return $list;
 		}
