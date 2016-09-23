@@ -24,7 +24,7 @@
 			return true;
 		}
 		
-		public function add_files($id, $location_code)
+		public function add_files($id, $location_code, $component_id)
 		{		
 			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], true);
 			$component_files = array();
@@ -60,7 +60,7 @@
 						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 					}
 					else {
-						$component = $this->_get_component($k);
+						$component = $this->_get_component($k, $component_id);
 						if( empty($component['id']) || empty($component['location_id']))
 						{
 							throw new Exception("component {$k} does not exist");
@@ -109,14 +109,14 @@
 		}
 		
 		
-		private function _get_component( $query )
+		private function _get_component( $query, $component_id)
 		{
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 			}
 
-			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'benevnelse' = '{$query}'";
+			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'{$component_id}' = '{$query}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
