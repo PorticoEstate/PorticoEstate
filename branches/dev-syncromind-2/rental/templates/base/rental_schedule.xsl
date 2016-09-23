@@ -140,7 +140,7 @@
 			<input type="text" id="txtSearchSchedule" class="searchSchedule" />
 		</p>
 		<div id="schedule_container"></div>
-		<p>
+		<p style="height: 50px; line-height: 50px;">
 			<label for="cboNObjects">Show</label>
 			<select name="cboNObjects" id="cboNObjects" class="searchSchedule">
 				<option selected="selected" value="15">15</option>
