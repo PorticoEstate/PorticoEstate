@@ -252,6 +252,11 @@
 				);
 				
 				$result = $this->_add_attrib_from_template( $values2 );
+				if (empty($result))
+				{
+					continue;
+				}
+				
 				if ($result['error'])
 				{
 					foreach ($result['error'] as $error) 
@@ -260,9 +265,9 @@
 					}
 				} else {
 					$count++;
-					
 				}
 			}
+			
 			if ($count)
 			{
 				$receipt['message'][] = array('msg' => lang('attributes has been added to %1 entity categories', $count));
@@ -342,7 +347,7 @@
 				
 				if (!$id)
 				{
-					$receipt['error'][] = array('msg' => lang('Unable to add field %1 ', $attrib['column_name']));
+					$receipt['error'][] = array('msg' => lang('Unable to add attribute %1 ', $attrib['column_name']));
 				}
 			}
 			
@@ -394,7 +399,7 @@
 					
 					if(in_array($attrib['column_name'], $current_attrib_names, true))
 					{
-						$receipt['error'][] = array('msg' => lang('Column name %1 already exists, please choose another name', $attrib['column_name']));
+						$receipt['error'][] = array('msg' => lang('Attribute name %1 already exists, please choose another name', $attrib['column_name']));
 						break;
 					}
 					
@@ -429,12 +434,12 @@
 				$id = $this->custom->add($attrib);	
 				if ($id <= 0)
 				{
-					$receipt['error'][] = array('msg' => lang('Unable to add field %1 ', $attrib['column_name']));
+					$receipt['error'][] = array('msg' => lang('Unable to add attribute %1 ', $attrib['column_name']));
 					break;
 				}
 				else if ($id == -1)
 				{
-					$receipt['error'][] = array('msg' => lang('field %1 already exists, please choose another name', $attrib['column_name']));
+					$receipt['error'][] = array('msg' => lang('attribute %1 already exists, please choose another name', $attrib['column_name']));
 					$receipt['error'][] = array('msg' => lang('Attribute %1 has NOT been saved', $attrib['column_name']));
 					break;
 				}
@@ -456,12 +461,12 @@
 			
 			if (!$values['column_name'])
 			{
-				$receipt['error'][] = array('msg' => lang('Column name not entered!'));
+				$receipt['error'][] = array('msg' => lang('Attribute name not entered!'));
 			}
 
 			if (!preg_match('/^[a-z0-9_]+$/i', $values['column_name']))
 			{
-				$receipt['error'][] = array('msg' => lang('Column name %1 contains illegal character', $values['column_name']));
+				$receipt['error'][] = array('msg' => lang('Attribute name %1 contains illegal character', $values['column_name']));
 			}
 
 			if (!$values['input_text'])
