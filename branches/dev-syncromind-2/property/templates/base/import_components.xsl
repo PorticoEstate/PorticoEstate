@@ -81,10 +81,11 @@
 						</div>
 						<div class="pure-control-group">
 							<label for="vendor">
-								<xsl:value-of select="php:function('lang', 'Component ID')" />
+								<xsl:value-of select="php:function('lang', 'Attributes template')" />
 							</label>
-							<select id="component_id" name="component_id">
+							<select id="attribute_name_component_id" name="attribute_name_component_id">
 							</select>
+							<div style='display:inline-block; margin-left:10px;'><xsl:value-of select="php:function('lang', 'choose attribute name for Component ID')" /></div>
 						</div>
 						<div class="pure-control-group">
 							<label>
