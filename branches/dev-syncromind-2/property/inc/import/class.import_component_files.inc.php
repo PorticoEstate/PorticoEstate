@@ -6,7 +6,67 @@
 		{
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/test/';
+			$this->vfs = CreateObject('phpgwapi.vfs');
+			
+			$this->fakebase = '/temp_files_components';
+			$this->tmp_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
+		}
+		
+		public function get_upload_dir()
+		{
+			return $this->tmp_upload_dir;
+		}
+		
+		public function check_upload_dir()
+		{
+			$rs = $this->create_document_dir();
+			if (!$rs)
+			{
+				$receipt['error'] = lang('failed to create directory') . ' :' . $this->fakebase;
+			}
+			
+			if(!$this->vfs->acl_check(array(
+					'string'	=> $this->fakebase,
+					'relatives'	=> array(32),
+					'operation'	=> PHPGW_ACL_READ
+				))
+				&& !$this->vfs->acl_check(array(
+					'string'	=> $this->fakebase,
+					'relatives'	=> array(32),
+					'operation'	=> PHPGW_ACL_DELETE
+				))
+			)
+			{
+				$receipt['error'] = lang('Not have permission to access the directory') . ' :' . $this->fakebase;
+			}
+				
+			return $receipt;
+		}
+		
+		public function create_document_dir()
+		{
+			$receipt = true;
+			
+			if (!$this->vfs->file_exists(array(
+					'string' => $this->fakebase,
+					'relatives' => array(RELATIVE_NONE)
+				)))
+			{
+				$this->vfs->override_acl = 1;
+				if (!$this->vfs->mkdir(array(
+						'string' => $this->fakebase,
+						'relatives' => array(
+							RELATIVE_NONE
+						)
+					)))
+				{
+					$receipt = false;
+				}
+				
+				$this->vfs->override_acl = 0;
+			}
+
+			return $receipt;
 		}
 		
 		private function _valid_row($row)
