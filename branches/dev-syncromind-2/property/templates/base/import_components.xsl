@@ -60,6 +60,9 @@
 				</div>
 				
 				<div id="files">
+					<label>
+						<xsl:value-of select="access_error_upload_dir" />
+					</label>
 					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
 				</div>
 				
