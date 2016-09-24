@@ -64,9 +64,6 @@
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->tmp_upload_dir = '/var/lib/phpgw/syncromind/test/';
-
-			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "property::documentation::generic";
 		}
 
 		public function download()
@@ -185,8 +182,14 @@ HTML;
 		
 		public function handle_import_files()
 		{
+			$temp_files_components = phpgwapi_cache::session_get('property', 'temp_files_components');
+			if (empty($temp_files_components))
+			{
+				return false;
+			}
 			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
-			$options['upload_dir'] = $this->tmp_upload_dir;
+			
+			$options['upload_dir'] = $temp_files_components;
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
 			$upload_handler = new UploadHandler($options);
 		}
@@ -706,7 +709,17 @@ HTML;
 			}
 		
 			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
-
+			
+			$access_error_upload_dir = '';
+			$import_component_files = new import_component_files();
+			$receipt = $import_component_files->check_upload_dir();		
+			if (($receipt['error']))
+			{
+				$access_error_upload_dir = $receipt['error'];
+			} else {
+				phpgwapi_cache::session_set('property', 'temp_files_components', $import_component_files->get_upload_dir());
+			}
+			
 			$data = array
 			(
 				'datatable_def' => $datatable_def,
@@ -718,6 +731,7 @@ HTML;
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
 				'template_list' => array('options' => $category_list),
 				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action),
+				'access_error_upload_dir' => $access_error_upload_dir,
 				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
 			);
 
