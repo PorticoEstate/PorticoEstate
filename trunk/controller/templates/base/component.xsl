@@ -199,8 +199,20 @@
 						</td>
 					</tr>
 				</xsl:for-each>
+				<tr id = 'extra_row'>
+					<td>
+						<label for='extra_filter'>
+							Extra
+						</label>
+						</td>
+					<td>
+						<div id="extra_filter">
+						</div>
+					</td>
+				</tr>
 			</tbody>
 		</table>
+		<input type ='hidden' id='filtered_location_id'/>
 	</div>
 </xsl:template>
 
@@ -412,6 +424,55 @@
 
 							$("#location_id").html( htmlString );
 
+						}
+
+
+						var filter_options = data.location_filter_options;
+						var return_location_id = data.return_location_id;
+						var filtered_location_id = $("#filtered_location_id").val();
+						var location_id = $("#location_id").val();
+						if(filter_options == null)
+						{
+							$("#extra_row").hide();
+
+						}
+						if(filter_options !==null && filtered_location_id != return_location_id)
+						{
+							$("#filtered_location_id").val(location_id);
+							$("#extra_row").show();
+							$("#extra_filter").html('');
+							var $extra_filter = $("#extra_filter");
+							$.each(filter_options, function(key, filter) {
+								var list = filter.list;
+								$extra_filter.append($("<select></select>").attr("id", location_id + '_' + filter.name).text(location_id + '_' + filter.name));
+
+								var custom_select = $("#" + location_id + '_' + filter.name);
+
+								$.each(list, function(key, value) {
+								custom_select.append($("<option></option>").attr("value", value.id).text(value.name));
+								});
+
+								$(document).on("change", "#" + location_id + '_' + filter.name , function() {
+
+									var custom_input = document.getElementById("custom_" + location_id + '_' + filter.name);
+
+									if(custom_input != null)
+									{
+										$("#custom_" + location_id + '_' + filter.name).val($(this).val());
+									}
+									else
+									{
+										$('<input />').attr('type', 'hidden')
+										.attr('id', 'custom_' + location_id + '_' + filter.name)
+										.attr('name', 'custom_' + location_id + '_' + filter.name)
+										.attr('value', $(this).val())
+										.appendTo('#queryForm');
+									}
+									update_table();
+
+							    });
+
+							});
 						}
 
 						if(components_data !==null)
