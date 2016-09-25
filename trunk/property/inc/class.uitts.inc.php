@@ -2735,6 +2735,7 @@
 //_debug_array($cat_select);die();
 			}
 
+			$cat_select['disabled'] = !!$this->simple;
 
 //			$this->cats->set_appname('property','.project');
 //			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[order_cat_id]','selected' => $ticket['order_cat_id']));
