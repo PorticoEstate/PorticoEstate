@@ -38,7 +38,7 @@
 	if (isset($id) && $id && isset($acl_location) && $acl_location && isset($receive_order) && $receive_order)
 	{
 		$exporter_varemottak = new lag_agresso_varemottak($acl_location, $id);
-		$result = $exporter_varemottak->transfer($id, $received_percent);
+		$result = $exporter_varemottak->transfer($id, $received_amount);
 	}
 
 	class lag_agresso_varemottak
@@ -63,7 +63,7 @@
 			}
 		}
 
-		public function transfer( $id, $received_percent )
+		public function transfer( $id, $received_amount )
 		{
 			$values = $this->values;
 //		_debug_array($values);die();
@@ -73,28 +73,28 @@
 				'lines' => array(
 					array(
 						'UnitCode' => 'STK',
-						'Quantity' => ($received_percent / 100),
+						'Quantity' => ($received_amount),
 					)
 				)
 			);
 
 			$exporter_varemottak = new BkBygg_exporter_varemottak_til_Agresso(array('order_id' => $values['order_id']));
 			$exporter_varemottak->create_transfer_xml($param);
-			$exporter_varemottak->output();
+	//		$exporter_varemottak->output();
 			$export_ok = true;
 	//		die();
 	//		$export_ok = $exporter_varemottak->transfer();
 			if ($export_ok)
 			{
-				$this->log_transfer( $id, $received_percent );
+				$this->log_transfer( $id, $received_amount );
 			}
 			return $export_ok;
 		}
 
-		private function log_transfer( $id, $received_percent )
+		private function log_transfer( $id, $received_amount )
 		{
 			$id = (int)$id;
-			$received_percent = (int)$received_percent;
+			$received_amount = (int)$received_amount;
 			switch ($this->acl_location)
 			{
 				case '.ticket':
@@ -106,9 +106,9 @@
 					$table = 'fm_workorder';
 					break;
 			}
-			$historylog->add('RM', $id, "Varemottak ({$received_percent} %) overført til agresso");
+			$historylog->add('RM', $id, "Varemottak: {$received_amount} overført til agresso");
 			$now = time();
-			$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now}, order_received_percent = {$received_percent} WHERE id = {$id}");
+			$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now}, order_received_amount = {$received_amount} WHERE id = {$id}");
 		}
 	}
 

@@ -2375,7 +2375,7 @@
 				'order_dim1_list' => $order_dim1_list,
 				'value_order_sent'	=> $values['order_sent'],
 				'value_order_received'	=> $values['order_received'] ? $GLOBALS['phpgw']->common->show_date($values['order_received']) : '[ DD/MM/YYYY - H:i ]',
-				'value_order_received_percent' => (int) $values['order_received_percent']
+				'value_order_received_amount' => (int) $values['order_received_amount']
 			);
 
 			$appname = lang('Workorder');
@@ -2900,8 +2900,8 @@
 			}
 
 			$id = phpgw::get_var('id', 'int');
-			$received_percent = phpgw::get_var('received_percent', 'int');
-			return $this->bo->receive_order($id, $received_percent);
+			$received_amount = phpgw::get_var('received_amount', 'float');
+			return $this->bo->receive_order($id, $received_amount);
 		}
 
 		private function _get_eco_service_name( $id )

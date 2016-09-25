@@ -371,29 +371,31 @@
 							</xsl:for-each>
 						</div>
 					</xsl:for-each>
-					<div class="pure-control-group">
-						<xsl:variable name="lang_make_relation">
-							<xsl:value-of select="php:function('lang', 'make relation')"/>
-						</xsl:variable>
+					<xsl:if test="simple !='1'">
+						<div class="pure-control-group">
+							<xsl:variable name="lang_make_relation">
+								<xsl:value-of select="php:function('lang', 'make relation')"/>
+							</xsl:variable>
 
-						<label>
-							<a href="#" onClick="make_relation({location_item_id});">
+							<label>
+								<a href="#" onClick="make_relation({location_item_id});">
+									<xsl:attribute name="title">
+										<xsl:value-of select="$lang_make_relation"/>
+									</xsl:attribute>
+									<xsl:value-of select="$lang_make_relation"/>
+								</a>
+							</label>
+							<select name="make_relation" id="make_relation">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_make_relation"/>
 								</xsl:attribute>
-								<xsl:value-of select="$lang_make_relation"/>
-							</a>
-						</label>
-						<select name="make_relation" id="make_relation">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_make_relation"/>
-							</xsl:attribute>
-							<option value="">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</option>
-							<xsl:apply-templates select="relation_type_list/options"/>
-						</select>
-					</div>
+								<option value="">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="relation_type_list/options"/>
+							</select>
+						</div>
+					</xsl:if>
 
 					<div class="pure-control-group">
 						<label>
@@ -463,41 +465,55 @@
 									</xsl:if>
 								</input>
 							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Priority')"/>
+						</label>
+						<xsl:variable name="lang_priority_statustext">
+							<xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')"/>
+						</xsl:variable>
+						<xsl:variable name="select_priority_name">
+							<xsl:value-of select="select_priority_name"/>
+						</xsl:variable>
+						<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}">
+							<xsl:if test="simple ='1'">
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+							<xsl:apply-templates select="priority_list/options"/>
+						</select>
+					</div>
+					<xsl:choose>
+						<xsl:when test="value_order_id=''">
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'Priority')"/>
+									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<xsl:variable name="lang_priority_statustext">
-									<xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')"/>
-								</xsl:variable>
-								<xsl:variable name="select_priority_name">
-									<xsl:value-of select="select_priority_name"/>
-								</xsl:variable>
-								<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}">
-									<xsl:apply-templates select="priority_list/options"/>
+								<select id="status_id" name="values[status]" class="forms">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+									</xsl:attribute>
+									<xsl:if test="simple ='1'">
+										<xsl:attribute name="disabled">
+											<xsl:text>disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+									<xsl:apply-templates select="status_list/options"/>
 								</select>
 							</div>
-							<xsl:choose>
-								<xsl:when test="value_order_id=''">
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'status')"/>
-										</label>
-										<select id="status_id" name="values[status]" class="forms">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
-											</xsl:attribute>
-											<xsl:apply-templates select="status_list/options"/>
-										</select>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'category')"/>
-								</label>
-								<xsl:call-template name="categories"/>
-							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'category')"/>
+						</label>
+						<xsl:call-template name="categories"/>
+					</div>
+					<xsl:choose>
+						<xsl:when test="simple !='1'">
 							<xsl:choose>
 								<xsl:when test="show_finnish_date ='1'">
 									<div class="pure-control-group">
@@ -1074,12 +1090,21 @@
 												</xsl:attribute>
 											</xsl:if>
 										</input>
-										<div id="order_received_time" class="pure-custom">
-											<xsl:value-of select="value_order_received"/>
-											<div id="slider-range-min"></div>
+										<div  class="pure-custom">
+											<table>
+												<tr>
+													<td id="order_received_time">
+														<xsl:value-of select="value_order_received"/>
+													</td>
+												</tr>
+												<tr>
+													<td align="right" id ="current_received_amount">
+														<xsl:value-of select="value_order_received_amount"/>
+													</td>
+												</tr>
+											</table>
 										</div>
-										<input  class="pure-custom" type="text" id="order_received_percent" readonly="readonly" size="6"/>
-										<input type="hidden" id="value_order_received_percent" value="{value_order_received_percent}"/>
+										<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
 									</div>
 
 									<div class="pure-control-group">

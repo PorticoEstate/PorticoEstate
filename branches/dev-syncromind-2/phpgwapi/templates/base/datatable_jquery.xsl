@@ -328,6 +328,9 @@
 											<xsl:attribute name="class">
 												<xsl:value-of select="phpgw:conditional(not(class), '', class)"/>
 											</xsl:attribute>
+											<xsl:attribute name="checked">
+												<xsl:value-of select="phpgw:conditional(not(checked), '', checked)"/>
+											</xsl:attribute>
 										</input>
 									</td>
 								</xsl:otherwise>

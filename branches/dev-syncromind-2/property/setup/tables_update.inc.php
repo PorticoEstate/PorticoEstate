@@ -9270,3 +9270,42 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.704 to 0.9.17.705
+	*
+	*/
+	$test[] = '0.9.17.704';
+
+	function property_upgrade0_9_17_704()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_workorder', array(), 'order_received_percent');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('fm_tts_tickets', array(), 'order_received_percent');
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_workorder", 'order_received_amount', array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => True,
+			'default' => '0.00'
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'order_received_amount', array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => True,
+			'default' => '0.00'
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.705';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

@@ -239,7 +239,7 @@
 				{
 					if(!property_exists('rental_application', $field))
 					{
-					   phpgwapi_cache::message_set("$field is missing from model-definition", 'error');
+					   phpgwapi_cache::message_set('$'."{$field}", 'error');
 					}
 
 				}

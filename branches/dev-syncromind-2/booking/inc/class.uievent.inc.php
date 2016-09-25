@@ -1062,7 +1062,7 @@
 			$event['resource'] = phpgw::get_var('resource');
 			$event['resource_info'] = join(', ', $res_names);
 			$event['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
-					'id' => $event['resources'][0]['building_id']));
+					'id' => $event['resources'][0]['buildings'][0]));
 			$event['org_link'] = self::link(array('menuaction' => 'booking.uiorganization.show',
 					'id' => $event['organization_id']));
 			$event['add_link'] = self::link(array('menuaction' => 'booking.uibooking.add',
