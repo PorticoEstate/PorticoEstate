@@ -184,6 +184,7 @@
 				return $this->query();
 			}
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 			$user_list = array();
@@ -361,6 +362,9 @@
 					'field' => $this->get_fields($filter_component),
 				),
 			);
+
+			self::add_javascript('controller', 'controller', 'component.index.js');
+
 			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}
 
@@ -554,6 +558,7 @@
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
+			$location_code = phpgw::get_var('location_code', 'string');
 			$control_area = phpgw::get_var('control_area', 'int');
 			$user_id = phpgw::get_var('user_id', 'int');
 			$district_id = phpgw::get_var('district_id', 'int');
@@ -626,6 +631,7 @@
 						'filter_entity_group' => $entity_group_id,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
+						'location_code'	=> $location_code,
 						'allrows' => true,
 						'filter_item' => $component_list
 						)
@@ -664,6 +670,7 @@
 						'filter_entity_group' => $entity_group_id,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
+						'location_code'	=> $location_code,
 						'org_units' => $this->org_units,
 						'allrows' => true,
 						'control_registered' => !$all_items,
@@ -683,6 +690,7 @@
 						'exclude_locations' => $exclude_locations,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
+						'location_code'	=> $location_code,
 						'org_units' => $this->org_units,
 						'allrows' => true,
 						'control_registered' => !$all_items,
