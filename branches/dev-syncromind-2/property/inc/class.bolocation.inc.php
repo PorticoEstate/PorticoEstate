@@ -56,7 +56,8 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'get_locations_by_name' => true
+			'get_locations_by_name' => true,
+			'get_locations'	=> true
 		);
 
 		function __construct( $session = false )
@@ -1092,8 +1093,7 @@ JS;
 		 */
 		public function get_locations_by_name()
 		{
-			$data = array
-				(
+			$data = array(
 				'level' => phpgw::get_var('level', 'int'),
 				'location_name' => phpgw::get_var('location_name')
 			);
@@ -1134,5 +1134,30 @@ JS;
 		function get_item_id( $location_code )
 		{
 			return $this->so->get_item_id($location_code);
+		}
+
+		public function get_locations(  )
+		{
+			$location_code = phpgw::get_var('query');
+			$_level = count(explode('-', $location_code)) + 1;
+
+			$values = $this->so->get_locations($location_code);
+			if($values)
+			{
+				$part = explode('-', $values[0]['id']);
+				$parent_level = count($part);
+				$_loc_arr = array();
+				for ($i = 0; $i < ($parent_level -1); $i++)
+				{
+					$_loc_arr[] = $part[$i];
+				}
+				$parent_location_code = implode('-', $_loc_arr);
+				if($parent_location_code)
+				{
+					array_unshift($values, array('id' => $parent_location_code, 'name' => $parent_location_code . '::' . $this->get_location_name($parent_location_code)));
+				}
+			}
+			return array('ResultSet' => array('Result' => $values));
+
 		}
 	}
