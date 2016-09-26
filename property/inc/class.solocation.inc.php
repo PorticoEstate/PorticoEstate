@@ -2118,4 +2118,48 @@
 			return $values;
 
 		}
+
+		/**
+		 * Get location by location_code
+		 *
+		 * @param string   location_code
+		 *
+		 * @return array array of hits
+		 */
+		public function get_locations( $location_code )
+		{
+			$location_arr = explode('-', $location_code);
+			$level = count($location_arr) +1;
+
+			$filtermethod = '';
+
+			if(ctype_digit($location_arr[0]))
+			{
+				$filtermethod = "WHERE location_code {$this->like} '{$location_code}%'";
+			}
+			else
+			{
+				$query = $this->db->db_addslashes($location_arr[0]);
+				$filtermethod = "WHERE loc{$level}_name {$this->like} '%{$query}%'";
+			}
+
+			$values = array();
+			if ($location_code)
+			{
+				$sql = "SELECT loc{$level}_name as name, location_code FROM fm_location{$level} {$filtermethod}"
+				. " ORDER BY location_code";
+				$this->db->limit_query($sql, 0, __LINE__, __FILE__);
+				while ($this->db->next_record())
+				{
+					$_location_code = $this->db->f('location_code');
+
+					$values[] = array(
+						'id' => $_location_code,
+						'name' => $_location_code . '::' . $this->db->f('name', true)
+					);
+				}
+			}
+			return $values;
+		}
+
 	}
