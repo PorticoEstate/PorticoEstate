@@ -110,10 +110,10 @@
 						</div>
 						<div id="responsiveTabsDemo">
 							<ul>
-								<li><a href="#tab-1">Choose Sheet</a></li>
-								<li><a href="#tab-2">Choose start line</a></li>
-								<li><a href="#tab-3">Choose columns</a></li>
-								<li><a href="#tab-4">Result</a></li>
+								<li><a href="#tab-1"><xsl:value-of select="php:function('lang', 'Choose Sheet')"/></a></li>
+								<li><a href="#tab-2"><xsl:value-of select="php:function('lang', 'Choose start line')"/></a></li>
+								<li><a href="#tab-3"><xsl:value-of select="php:function('lang', 'Choose columns')"/></a></li>
+								<li><a href="#tab-4"><xsl:value-of select="php:function('lang', 'Preview')"/></a></li>
 							</ul>
 							<div id="tab-1">
 								<select id="sheet_id" name="sheet_id">
@@ -174,7 +174,7 @@
 											<xsl:value-of select="php:function('lang', 'Save')"/>
 										</xsl:attribute>
 									</input>								
-									<input type="button" id="cancel" name="cancel" size="40">
+									<input type="button" id="cancel_steps" name="cancel_steps" size="40">
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('lang', 'Cancel')"/>
 										</xsl:attribute>
