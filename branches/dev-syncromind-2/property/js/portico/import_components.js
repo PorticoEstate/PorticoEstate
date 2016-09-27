@@ -98,15 +98,9 @@ $(document).ready(function ()
 			alert('no file selected');
 			return false;
 		}
-
-		if ($('#location_code').val() === '')
+		
+		if (isSendingData())
 		{
-			alert('select location');
-			return false;
-		}
-		if ($('#attribute_name_component_id').val() === '')
-		{
-			alert('Choose attribute name for Component ID');
 			return false;
 		}
 		
@@ -114,9 +108,6 @@ $(document).ready(function ()
 		var file_data = $('#excel_files').prop('files')[0];
 		var form_data = new FormData(form);
 		form_data.append('file', file_data);
-		form_data.append('location_code', $('#location_code').val());
-		form_data.append('location_item_id', $('#location_item_id').val());
-		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 
 		$('.processing-import-relations').show();
 		
@@ -130,8 +121,10 @@ $(document).ready(function ()
 			dataType: 'json',
 			success: function (result)
 			{
+				statusSend = false;
 				$('.processing-import-relations').hide();
 				JqueryPortico.show_message(4, result);
+				$('#import_components_files').prop('disabled', true);
 			}
 		});
 	});
@@ -146,10 +139,9 @@ $(document).ready(function ()
 			alert('no file selected');
 			return false;
 		}
-
-		if ($('#location_code').val() === '')
+		
+		if (isSendingData())
 		{
-			alert('select location');
 			return false;
 		}
 		
@@ -158,9 +150,6 @@ $(document).ready(function ()
 		var form_data = new FormData(form);
 		form_data.append('step', 1);
 		form_data.append('file', file_data);
-		form_data.append('template_id', $('#template_list').val());
-		form_data.append('location_code', $('#location_code').val());
-		form_data.append('location_item_id', $('#location_item_id').val());
 
 		$('.processing-import').show();
 		
@@ -173,6 +162,7 @@ $(document).ready(function ()
 			type: 'post',
 			success: function (result)
 			{
+				statusSend = false;
 				$('.processing-import').hide();
 				if (typeof(result.error) !== 'undefined')
 				{
@@ -187,12 +177,20 @@ $(document).ready(function ()
 				{
 					$el.append($("<option></option>").attr("value", v.id).text(v.name));
 				});
+				$('#responsiveTabsDemo').responsiveTabs('activate', 0);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 1);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 2);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 3);
+				$('#content_lines').empty();
+				$('#content_columns').empty();
+				$('#template_list').prop('disabled', false);
+				$('#attribute_name_component_id').prop('disabled', false);
 			}
 		});
 	});
 	
 	$('#step2').on('click', function ()
-	{
+	{	
 		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
@@ -202,18 +200,22 @@ $(document).ready(function ()
 			return false;
 		}
 		
+		if (isSendingData())
+		{
+			return false;
+		}
+		
 		var data = {
 			"step": 2,
-			"sheet_id": $('#sheet_id').val(), 
-			'template_id': $('#template_list').val(),
-			'location_code': $('#location_code').val(),
-			'location_item_id': $('#location_item_id').val()
+			"sheet_id": $('#sheet_id').val()
 		};
 		
 		$('.processing-sheet').show();
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
+				
+				statusSend = false;
 				$('.processing-sheet').hide();
 				if (typeof(result.error) !== 'undefined')
 				{
@@ -221,8 +223,14 @@ $(document).ready(function ()
 					return;
 				}
 				$('#content_lines').html(result);
+				$('#content_columns').empty();
 				$('#responsiveTabsDemo').responsiveTabs('enable', 1);
-				$('#responsiveTabsDemo').responsiveTabs('activate', 1);				
+				$('#responsiveTabsDemo').responsiveTabs('activate', 1);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 2);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 3);
+				$('#template_list').prop('disabled', false);
+				$('#attribute_name_component_id').prop('disabled', false);
+				
 			}, data, "GET", "json"
 		);
 	});
@@ -237,20 +245,31 @@ $(document).ready(function ()
 			alert('select start line');
 			return false;
 		}
+
+		if ($('#template_list').val() === '')
+		{
+			alert('select category template');
+			return false;
+		}
+		
+		if (isSendingData())
+		{
+			return false;
+		}
 		
 		var data = {
 			"step": 3,
 			"sheet_id": $('#sheet_id').val(), 
 			'start_line': $('input:radio[name=start_line]:checked').val(),
-			'template_id': $('#template_list').val(),
-			'location_code': $('#location_code').val(),
-			'location_item_id': $('#location_item_id').val()
+			'template_id': $('#template_list').val()
 		};
 		
 		$('.processing-start-line').show();
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
+				
+				statusSend = false;
 				$('.processing-start-line').hide();
 				if (typeof(result.error) !== 'undefined')
 				{
@@ -259,7 +278,10 @@ $(document).ready(function ()
 				}
 				$('#content_columns').html(result);
 				$('#responsiveTabsDemo').responsiveTabs('enable', 2);
-				$('#responsiveTabsDemo').responsiveTabs('activate', 2);				
+				$('#responsiveTabsDemo').responsiveTabs('activate', 2);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 3);
+				$('#template_list').prop('disabled', true);
+			
 			}, data, "GET", "json"
 		);
 	});
@@ -275,14 +297,14 @@ $(document).ready(function ()
 			return false;
 		}
 		
+		if (isSendingData())
+		{
+			return false;
+		}
+		
 		var data = {
 			"step": 4,
-			"sheet_id": $('#sheet_id').val(), 
-			'start_line': $('input:radio[name=start_line]:checked').val(),
-			'template_id': $('#template_list').val(),
-			'attribute_name_component_id': $('#attribute_name_component_id').val(),
-			'location_code': $('#location_code').val(),
-			'location_item_id': $('#location_item_id').val()
+			'attribute_name_component_id': $('#attribute_name_component_id').val()
 		};
 		
 		data['columns'] = {};
@@ -360,7 +382,8 @@ $(document).ready(function ()
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
-
+				
+				statusSend = false;
 				$('.processing-columns').hide();
 				if (typeof(result.error) !== 'undefined')
 				{
@@ -388,6 +411,8 @@ $(document).ready(function ()
 						$('#new_attributes').append(field + "<br>");
 					});
 				}
+				$('#attribute_name_component_id').prop('disabled', true);
+				$('#step5').prop('disabled', false);
 
 			}, data, "GET", "JSON"
 		);
@@ -398,11 +423,20 @@ $(document).ready(function ()
 		var oArgs = {menuaction: 'property.uiimport_components.import_components'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
+		if ($('#location_item_id').val() === '')
+		{
+			alert('Choose Location');
+			return false;
+		}
+		
+		if (isSendingData())
+		{
+			return false;
+		}
+		
 		var data = {
 			"step": 5,
 			'save': 1,
-			'template_id': $('#template_list').val(),
-			'attribute_name_component_id': $('#attribute_name_component_id').val(),
 			'location_code': $('#location_code').val(),
 			'location_item_id': $('#location_item_id').val()
 		};
@@ -411,10 +445,16 @@ $(document).ready(function ()
 		
 		JqueryPortico.execute_ajax(requestUrl,
 			function(result){
-
+				
+				statusSend = false;
 				$('.processing-save').hide();
 				JqueryPortico.show_message(3, result);
-
+				$('#step5').prop('disabled', true);
+				$('#cancel_steps').prop('disabled', true);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 0);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 1);
+				$('#responsiveTabsDemo').responsiveTabs('disable', 2);
+		
 			}, data, "GET", "JSON"
 		);
 	});
@@ -433,6 +473,19 @@ $(document).ready(function ()
 	});
 
 	$('#template_list').change();
+	
+	$('#cancel_steps').on('click', function ()
+	{
+		$('#content_lines').empty();
+		$('#content_columns').empty();
+		$('#responsiveTabsDemo').responsiveTabs('activate', 0);
+		$('#responsiveTabsDemo').responsiveTabs('disable', 1);
+		$('#responsiveTabsDemo').responsiveTabs('disable', 2);
+		$('#responsiveTabsDemo').responsiveTabs('disable', 3);
+		$('#template_list').prop('disabled', false);
+		$('#attribute_name_component_id').prop('disabled', false);
+	});
+	
 });
 
 function valid_new_attribute (code)
@@ -478,7 +531,7 @@ function enabledAtributes (column)
 		$('#precision_'+ column).val('');
 	}
 }
-	
+
 function getLocations()
 {
 	paramsTable0['type_id'] = $('#type_id').val();
@@ -488,7 +541,17 @@ function getLocations()
 			
 	oTable0.fnDraw();
 }
-
+	
+var statusSend = false;
+function isSendingData() {
+	if (!statusSend) {
+		statusSend = true;
+		return false;
+	} else {
+		alert("the process is running...");
+		return true;
+	}
+}
 
 	/*
 this.local_DrawCallback1 = function (oTable)
