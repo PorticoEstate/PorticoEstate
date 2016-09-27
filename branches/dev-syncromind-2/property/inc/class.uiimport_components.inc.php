@@ -116,24 +116,25 @@
 		
 		public function import_component_files()
 		{
-			$location_code = phpgw::get_var('location_code');
-			$id = phpgw::get_var('location_item_id');
-			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			$location_code = phpgwapi_cache::session_get('property', 'location_code');
+			$id = phpgwapi_cache::session_get('property', 'location_item_id');
+			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
+			
 			if (!$attrib_name_componentID)
 			{
-				$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
-				return;
+				$receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
+				return $receipt;
 			}
-			if (empty($id))
+			if (!$location_code)
 			{
-				$message['error'][] = array('msg' => 'Choose Location');
-				return $message;
+				$receipt['error'][] = array('msg' => lang('Choose Location'));
+				return $receipt;
 			}
-				
-			$import_component_files = new import_component_files();
-			$message = $import_component_files->add_files($id, $location_code, $attrib_name_componentID);
 			
-			return $message;
+			$import_component_files = new import_component_files();
+			$receipt = $import_component_files->add_files($id, $location_code, $attrib_name_componentID);
+			
+			return $receipt;
 		}
 		
 		private function _getArrayItem($id, $name, $selected, $options = array(), $no_lang = false, $attribs = '' )
@@ -182,14 +183,14 @@ HTML;
 		
 		public function handle_import_files()
 		{
-			$temp_files_components = phpgwapi_cache::session_get('property', 'temp_files_components');
-			if (empty($temp_files_components))
+			$path_upload_dir = phpgwapi_cache::session_get('property', 'path_upload_dir');
+			if (empty($path_upload_dir))
 			{
 				return false;
 			}
 			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
 			
-			$options['upload_dir'] = $temp_files_components;
+			$options['upload_dir'] = $path_upload_dir;
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
 			$upload_handler = new UploadHandler($options);
 		}
@@ -247,13 +248,7 @@ HTML;
 		
 		private function _build_start_line()
 		{
-			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
-			if (!$sheet_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select Sheet'));
-				return;
-			}
-			
+			$sheet_id = phpgwapi_cache::session_get('property', 'sheet_id');
 			$cached_file = $this->_get_components_cached_file();
 			if (!$cached_file)
 			{
@@ -307,32 +302,16 @@ HTML;
 		
 		private function _build_columns()
 		{
-			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
-			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
-			$template_id = phpgw::get_var('template_id');
-			
 			$cached_file = $this->_get_components_cached_file();
 			if (!$cached_file)
 			{
 				$this->receipt['error'][] = array('msg' => lang('Cached file not exists'));
 				return;
 			}
-			if (!$start_line)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select start line'));
-				return;
-			}
-			if (!$template_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select template'));
-				return;
-			}
-			if (!$sheet_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select sheet'));
-				return;
-			}
-			
+			$sheet_id = phpgwapi_cache::session_get('property', 'sheet_id');
+			$start_line = phpgwapi_cache::session_get('property', 'start_line');
+			$template_id = phpgwapi_cache::session_get('property', 'template_id');
+
 			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
 			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
 			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
@@ -390,11 +369,6 @@ HTML;
 		
 		private function _prepare_values_to_preview()
 		{
-			$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
-			$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
-			$template_id = phpgw::get_var('template_id');
-			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
-			
 			$columns = (array) phpgw::get_var('columns');
 			$attrib_data_types = phpgw::get_var('attrib_data_types');
 			$attrib_names = phpgw::get_var('attrib_names');
@@ -406,26 +380,11 @@ HTML;
 				$this->receipt['error'][] = array('msg' => lang('Cached file not exists'));
 				return;
 			}
-			if (!$start_line)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select start line'));
-				return;
-			}
-			if (!$template_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select template'));
-				return;
-			}
-			if (!$sheet_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select sheet'));
-				return;
-			}
-			if (!$attrib_name_componentID)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
-				return;
-			}
+			
+			$sheet_id = phpgwapi_cache::session_get('property', 'sheet_id');
+			$start_line = phpgwapi_cache::session_get('property', 'start_line');
+			$template_id = phpgwapi_cache::session_get('property', 'template_id');
+			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
 			
 			$objPHPExcel = PHPExcel_IOFactory::load($cached_file);
 			$objPHPExcel->setActiveSheetIndex((int)($sheet_id - 1));
@@ -545,26 +504,10 @@ HTML;
 		}
 		
 		private function _save_values_import()
-		{
-			$location_code = phpgw::get_var('location_code');
-			$template_id = phpgw::get_var('template_id');
-			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');	
-			
-			if (!$template_id)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Select template'));
-				return;
-			}
-			if (!$location_code)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Choose Location'));
-				return;
-			}
-			if (!$attrib_name_componentID)
-			{
-				$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
-				return;
-			}
+		{			
+			$template_id = phpgwapi_cache::session_get('property', 'template_id');
+			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
+			$location_code = phpgwapi_cache::session_get('property', 'location_code');
 			
 			$import_entity_categories = new import_entity_categories($template_id);
 			$import_components = new import_components();
@@ -616,7 +559,7 @@ HTML;
 		{	
 			$step = phpgw::get_var('step', 'int', 'REQUEST');
 			$save = phpgw::get_var('save', 'int', 'REQUEST');
-			
+				
 			phpgw::import_class('phpgwapi.phpexcel');
 			
 			if ($step == 1)
@@ -626,21 +569,62 @@ HTML;
 			
 			if ($step == 2) 
 			{
+				$sheet_id = phpgw::get_var('sheet_id', 'int', 'REQUEST');
+				if (!$sheet_id)
+				{
+					$this->receipt['error'][] = array('msg' => lang('Select Sheet'));
+					return $this->receipt;
+				}
+				phpgwapi_cache::session_set('property', 'sheet_id', $sheet_id);
+				
 				$result = $this->_build_start_line();
 			}
 			
 			if ($step == 3) 
 			{
+				$start_line = phpgw::get_var('start_line', 'int', 'REQUEST');
+				$template_id = phpgw::get_var('template_id');
+				if (!$start_line)
+				{
+					$this->receipt['error'][] = array('msg' => lang('Select start line'));
+					return $this->receipt;
+				}
+				if (!$template_id)
+				{
+					$this->receipt['error'][] = array('msg' => lang('Select template'));
+					return $this->receipt;
+				}
+				phpgwapi_cache::session_set('property', 'start_line', $start_line);
+				phpgwapi_cache::session_set('property', 'template_id', $template_id);
+			
 				$result = $this->_build_columns();
 			}
 			
 			if ($step == 4) 
 			{
+				$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+				if (!$attrib_name_componentID)
+				{
+					$this->receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
+					return $this->receipt;
+				}
+				phpgwapi_cache::session_set('property', 'attrib_name_componentID', $attrib_name_componentID);
+				
 				$result = $this->_prepare_values_to_preview();
 			}
 			
 			if ($step == 5 && $save) 
 			{
+				$location_code = phpgw::get_var('location_code');
+				$location_item_id = phpgw::get_var('location_item_id');
+				if (!$location_code)
+				{
+					$this->receipt['error'][] = array('msg' => lang('Choose Location'));
+					return $this->receipt;
+				}
+				phpgwapi_cache::session_set('property', 'location_code', $location_code);
+				phpgwapi_cache::session_set('property', 'location_item_id', $location_item_id);
+				
 				$result = $this->_save_values_import();
 			}
 			
@@ -717,7 +701,7 @@ HTML;
 			{
 				$access_error_upload_dir = $receipt['error'];
 			} else {
-				phpgwapi_cache::session_set('property', 'temp_files_components', $import_component_files->get_upload_dir());
+				phpgwapi_cache::session_set('property', 'path_upload_dir', $import_component_files->get_path_upload_dir());
 			}
 			
 			$data = array
