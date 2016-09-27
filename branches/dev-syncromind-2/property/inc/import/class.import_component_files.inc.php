@@ -6,15 +6,15 @@
 		{
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->vfs = CreateObject('phpgwapi.vfs');
+			//$this->vfs = CreateObject('phpgwapi.vfs');
 			
 			$this->fakebase = '/temp_files_components';
-			$this->tmp_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
+			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 		}
 		
-		public function get_upload_dir()
+		public function get_path_upload_dir()
 		{
-			return $this->tmp_upload_dir;
+			return $this->path_upload_dir;
 		}
 		
 		public function check_upload_dir()
@@ -22,51 +22,29 @@
 			$rs = $this->create_document_dir();
 			if (!$rs)
 			{
-				$receipt['error'] = lang('failed to create directory') . ' :' . $this->fakebase;
+				$receipt['error'] = lang('failed to create directory') . ': ' . $this->fakebase;
 			}
 			
-			if(!$this->vfs->acl_check(array(
-					'string'	=> $this->fakebase,
-					'relatives'	=> array(32),
-					'operation'	=> PHPGW_ACL_READ
-				))
-				&& !$this->vfs->acl_check(array(
-					'string'	=> $this->fakebase,
-					'relatives'	=> array(32),
-					'operation'	=> PHPGW_ACL_DELETE
-				))
-			)
+			if (!is_writable($this->path_upload_dir))
 			{
-				$receipt['error'] = lang('Not have permission to access the directory') . ' :' . $this->fakebase;
+				$receipt['error'] = lang('Not have permission to access the directory') . ': ' . $this->fakebase;
 			}
 				
 			return $receipt;
 		}
 		
-		public function create_document_dir()
+		private function create_document_dir()
 		{
-			$receipt = true;
-			
-			if (!$this->vfs->file_exists(array(
-					'string' => $this->fakebase,
-					'relatives' => array(RELATIVE_NONE)
-				)))
+			if (is_dir($this->path_upload_dir))
 			{
-				$this->vfs->override_acl = 1;
-				if (!$this->vfs->mkdir(array(
-						'string' => $this->fakebase,
-						'relatives' => array(
-							RELATIVE_NONE
-						)
-					)))
-				{
-					$receipt = false;
-				}
-				
-				$this->vfs->override_acl = 0;
+				return true;
 			}
-
-			return $receipt;
+			
+			$old = umask(0); 
+			$rs = mkdir($this->path_upload_dir, 0755);
+			umask($old); 
+			
+			return $rs;
 		}
 		
 		private function _valid_row($row)
@@ -131,7 +109,7 @@
 					{
 						$file = $file_data['file'];
 						
-						if (!is_file($this->tmp_upload_dir.$file))
+						if (!is_file($this->path_upload_dir.$file))
 						{
 							throw new Exception("the file {$file} does not exist, component: {$k}");
 						}	
@@ -163,7 +141,7 @@
 			}
 
 			$this->db->transaction_commit();
-			$message['message'][] = array('msg' => '%1 files saved successfully', $count);		
+			$message['message'][] = array('msg' => lang('%1 files saved successfully', $count));		
 			
 			return $message;
 		}
@@ -212,7 +190,7 @@
 			$bofiles->vfs->override_acl = 1;
 
 			$file_id = $bofiles->vfs->cp3(array(
-					'from' => $this->tmp_upload_dir.$tmp_file,
+					'from' => $this->path_upload_dir.$tmp_file,
 					'to' => $to_file,
 		 			'id' => '',
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
