@@ -604,6 +604,11 @@ JqueryPortico.execute_ajax = function (requestUrl, callback, data, type, dataTyp
 		url: requestUrl,
 		success: function (result)
 		{
+			if (typeof (result.sessionExpired) !== 'undefined')
+			{
+				alert('sessionExpired - please log in');
+				return;
+			}
 			callback(result);
 		}
 	});
