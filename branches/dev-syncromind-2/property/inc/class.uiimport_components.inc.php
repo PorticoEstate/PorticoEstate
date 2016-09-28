@@ -468,9 +468,16 @@ HTML;
 				} else {
 					$new_entity_categories = $receipt['new_entity_categories'];
 				}
-			}
+			}			
 			
 			$result = array();
+			
+			if (!count($import_data))
+			{
+				$result['error'][] = array('msg' => lang('not exist components to import'));
+				return $result;
+			}
+			
 			$preview_components = $import_components->prepare_preview_components($import_data);
 
 			$config = createObject('phpgwapi.config', 'component_import');
@@ -526,6 +533,16 @@ HTML;
 				return;
 			}
 
+			$config = createObject('phpgwapi.config', 'component_import');
+			$config_repository = $config->read_repository();
+			$import_data = $config_repository['new_components'];
+			
+			if (!count($import_data))
+			{
+				$this->receipt['error'][] = array('msg' => lang("not exist components to import"));
+				return;
+			}
+			
 			$building_part_processed = $import_entity_categories->add_entity_categories();
 			if (count($building_part_processed['not_added']))
 			{
@@ -534,10 +551,6 @@ HTML;
 					$this->receipt['message'][] = array('msg' => lang("entity category {$v} not added"));	
 				}
 			}
-
-			$config = createObject('phpgwapi.config', 'component_import');
-			$config_repository = $config->read_repository();
-			$import_data = $config_repository['new_components'];
 
 			if (count($building_part_processed['added']))
 			{
