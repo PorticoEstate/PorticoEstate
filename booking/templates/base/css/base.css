@@ -180,7 +180,7 @@ dl.proplist-col dd.address {
 #week-selector li { display: inline; padding-right: .5em;}
 
 #schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
-#schedule_container tr td:first-child { background: #eee; }
+#schedule_container tbody tr th:first-child { background: #eee; }
 #schedule_container tr.time td { border-top: 1px solid #444;}
 #schedule_container .color1  { background-color: #ccccff;}
 #schedule_container .color2  { background-color: #ccffcc;}

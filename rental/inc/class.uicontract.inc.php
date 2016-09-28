@@ -1917,6 +1917,13 @@ JS;
 			$end_date = ($contract->get_contract_date() && $contract->get_contract_date()->has_end_date()) ? date($this->dateFormat, $contract->get_contract_date()->get_end_date()) : '';
 			$due_date = ($contract->get_due_date()) ? date($this->dateFormat, $contract->get_due_date()) : '';
 
+			if ($start_date == "") {
+				$date = phpgw::get_var('start_date');
+				$date = str_replace("-", "/", $date);
+
+				$start_date = ($date) ? ($date) : '';
+			}
+
 			$_contract_id = $contract->get_id();
 			if (empty($_contract_id))
 			{
@@ -2260,8 +2267,8 @@ JS;
 					'location_id' => $location_id));
 			}
 		}
-
-		/**
+        
+        /**
 		 * Create a new contract tied to the composite provided in the composite_id parameter
 		 */
 		public function add_from_composite()
@@ -2316,12 +2323,22 @@ JS;
 					$success = $so_contract->add_composite($contract->get_id(), phpgw::get_var('id'));
 					if ($success)
 					{
+						$parameters = array(
+							'menuaction' => 'rental.uicontract.edit',
+							'id' => $contract->get_id()
+						);
+
+						$date = (phpgw::get_var('date')) ? phpgw::get_var('date') : '';
+						if ($date != "")
+						{
+							$parameters['start_date'] = $date;
+						}
+
 						$db_contract->transaction_commit();
 						$comp_name = rental_socomposite::get_instance()->get_single(phpgw::get_var('id'))->get_name();
 						$message = lang('messages_new_contract_from_composite') . ' ' . $comp_name;
 						phpgwapi_cache::message_set($message, 'message');
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicontract.edit',
-							'id' => $contract->get_id()));
+						$GLOBALS['phpgw']->redirect_link('/index.php', $parameters);
 					}
 					else
 					{

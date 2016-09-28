@@ -519,6 +519,11 @@
 						'text' => lang('Generic import'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'))
 					),
+					'import_components' => array
+						(
+						'text' => lang('import components'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.index'))
+					),
 					'entity' => array
 						(
 						'text' => lang('Admin entity'),

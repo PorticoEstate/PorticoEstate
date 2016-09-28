@@ -35,12 +35,33 @@ $(document).ready(function ()
 	{
 		filterDataContracts('contract_type', $(this).val());
 	});
+	
+	var previous_application_query = '';
+	$('#applications_query').on('keyup change', function ()
+	{
+		if ($.trim($(this).val()) != $.trim(previous_application_query))
+		{
+			filterDataApplications('search', {'value': $(this).val()});
+			previous_application_query = $(this).val();
+		}
+	});
+	
+	$('#application_status').change(function ()
+	{
+		filterDataApplications('filter_status', $(this).val());
+	});
 });
 
 function filterDataContracts(param, value)
 {
 	oTable1.dataTableSettings[1]['ajax']['data'][param] = value;
 	oTable1.fnDraw();
+}
+
+function filterDataApplications(param, value)
+{
+	oTable2.dataTableSettings[2]['ajax']['data'][param] = value;
+	oTable2.fnDraw();
 }
 
 function formatterArea(key, oData)
