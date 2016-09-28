@@ -297,11 +297,6 @@ $(document).ready(function ()
 			return false;
 		}
 		
-		if (isSendingData())
-		{
-			return false;
-		}
-		
 		var data = {
 			"step": 4,
 			'attribute_name_component_id': $('#attribute_name_component_id').val()
@@ -317,18 +312,14 @@ $(document).ready(function ()
 		var column_name_building_part = false;
 		var column_component_id = false;
 		var new_attribute = true;
-		
-		if (columns.length == 0)
-		{
-			alert('Select some columns to continue');
-			return false;
-		}
 
+		var _count = 0; 
 		columns.each(function (i, obj)
 		{
 			var code = obj.id.split('_');
 			if (obj.value != '')
 			{
+				_count++;
 				if (obj.value === 'new_column') 
 				{
 					if (!valid_new_attribute(code[1]))
@@ -358,6 +349,12 @@ $(document).ready(function ()
 			}
 		});
 		
+		if (_count == 0)
+		{
+			alert('Select some columns to continue');
+			return false;
+		}
+		
 		if (!new_attribute)
 		{
 			return;
@@ -367,15 +364,20 @@ $(document).ready(function ()
 			alert('Select Building part');
 			return;
 		}
+		if (!column_component_id)
+		{
+			alert('Select attribute name for Component ID');
+			return;
+		}
 		if (!column_name_building_part)
 		{
 			alert('Select Name of the Building part');
 			return;
 		}
-		if (!column_component_id)
+		
+		if (isSendingData())
 		{
-			alert('Select attribute name for Component ID');
-			return;
+			return false;
 		}
 		
 		$('.processing-columns').show();
@@ -552,21 +554,3 @@ function isSendingData() {
 		return true;
 	}
 }
-
-	/*
-this.local_DrawCallback1 = function (oTable)
-{
-	var api = oTable.api();
-	
-	api.$('tr').click( function () 
-	{
-        if ( $(this).hasClass('selected') ) {
-			var selected = api.rows(this).data()[0];
-			console.log(selected.location_code);
-			$('#tab-content').responsiveTabs('activate', 1);
-			$(this).addClass('selected row_selected');
-        }
-
-	});
-};
-*/
