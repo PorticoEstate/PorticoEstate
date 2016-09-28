@@ -2515,9 +2515,9 @@
 			// start invoice
 			$invoices = array();
 			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'order_id' => $id));
+				'order_id' => $ticket['order_id']));
 			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'order_id' => $id,
+				'order_id' => $ticket['order_id'],
 				'paid' => true));
 			$invoices = array_merge($active_invoices, $historical_invoices);
 
@@ -2636,7 +2636,7 @@
 					'sortable' => false,
 					'className' => 'right',
 					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
-				array(
+/*				array(
 					'key' => 'period',
 					'label' => lang('period'),
 					'sortable' => false),
@@ -2647,7 +2647,7 @@
 				array(
 					'key' => 'periodization_start',
 					'label' => lang('periodization start'),
-					'sortable' => false),
+					'sortable' => false),*/
 				array(
 					'key' => 'currency',
 					'label' => lang('currency'),
