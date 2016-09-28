@@ -2580,6 +2580,7 @@
 
 				$content_invoice[] = array
 					(
+					'external_voucher_id'	=> $entry['external_voucher_id'],
 					'voucher_id' => ($_lean) ? $entry['voucher_id'] : $link_voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'status' => $entry['status'],
@@ -2606,13 +2607,62 @@
 				$approved_amount += $entry['approved_amount'];
 			}
 
+			foreach ($invoices as $entry)
+			{
+
+				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' .$entry['external_voucher_id'];
+				$attachmen_list = array();
+				try
+				{
+					$dir = new DirectoryIterator("$directory_attachment/");
+					if (is_object($dir))
+					{
+						foreach ($dir as $file)
+						{
+							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
+							{
+								continue;
+							}
+
+							$attachmen_list[] = array(
+								'voucher_id'	=> $entry['external_voucher_id'],
+								'file_name'		=> (string)$file
+							);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+
+				}
+			}
+			$attachmen_def = array(
+				array(
+					'key' => 'voucher_id',
+					'label' => 'key',
+					'hidden' => false
+					),
+				array(
+					'key' => 'file_name',
+					'label' => lang('attachments'),
+					'hidden' => false,
+					'sortable' => true,
+					)
+				);
+
 			$invoice_def = array
 				(
 				array(
-					'key' => 'voucher_id',
-					'label' => lang('bilagsnr'),
+					'key' => 'external_voucher_id',
+					'label' => 'key',
 					'sortable' => false,
 					'value_footer' => lang('Sum')),
+				array(
+					'key' => 'voucher_id',
+					'label' => lang('bilagsnr'),
+					'sortable' => false),
 				array(
 					'key' => 'voucher_out_id',
 					'hidden' => true),
@@ -2676,6 +2726,20 @@
 				'requestUrl' => "''",
 				'data' => json_encode($content_invoice),
 				'ColumnDefs' => $invoice_def,
+				'config' => array(
+					array(
+						'disableFilter' => true),
+					array(
+						'disablePagination' => true)
+				)
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_8',
+				'requestUrl' => "''",
+				'data' => json_encode($attachmen_list),
+				'ColumnDefs' => $attachmen_def,
 				'config' => array(
 					array(
 						'disableFilter' => true),
