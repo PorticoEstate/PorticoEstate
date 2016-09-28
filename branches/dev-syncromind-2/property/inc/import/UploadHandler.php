@@ -52,7 +52,7 @@ class UploadHandler
             'param_name' => 'files',
             // Set the following option to 'POST', if your server does not support
             // DELETE requests. This is a parameter sent to the client:
-            'delete_type' => 'DELETE',
+            'delete_type' => 'POST',
             'access_control_allow_origin' => '*',
             'access_control_allow_credentials' => false,
             'access_control_allow_methods' => array(
