@@ -597,10 +597,10 @@
 			}
 
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
-				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start";
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id";
 
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
-				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start"
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id"
 				. " FROM {$table}"
 //				. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
 //				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
@@ -613,8 +613,7 @@
 			$values = array();
 			while ($this->db->next_record())
 			{
-				$values[] = array
-					(
+				$values[] = array(
 					'workorder_id' => $this->db->f('pmwrkord_code'),
 					'voucher_id' => $this->db->f('bilagsnr'),
 					'voucher_out_id' => $this->db->f('bilagsnr_ut'),
@@ -626,7 +625,8 @@
 					'period' => $this->db->f('periode'),
 					'periodization' => $this->db->f('periodization'),
 					'periodization_start' => $this->db->f('periodization_start'),
-					'budget_responsible' => $this->db->f('budsjettansvarligid')
+					'budget_responsible' => $this->db->f('budsjettansvarligid'),
+					'external_voucher_id' => $this->db->f('external_voucher_id'),
 				);
 			}
 
