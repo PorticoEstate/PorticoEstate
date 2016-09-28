@@ -1251,4 +1251,4 @@
 			}
 			return $price_items;
 		}
-	}
+    }

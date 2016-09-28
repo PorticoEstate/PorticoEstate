@@ -181,10 +181,10 @@ JqueryPortico.formatCheck = function (key, oData)
 };
 
 //JqueryPortico.formatCheckEvent = function(key, oData) {
-//     
-//        var hidden = '';
-//        
-//        return hidden + "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"values[events]["+oData['id']+"_"+oData['schedule_time']+"]\" value=\""+oData['id']+"\"/></center>";
+//	
+//		var hidden = '';
+//		
+//		return hidden + "<center><input type=\"checkbox\" class=\"mychecks\"  name=\"values[events]["+oData['id']+"_"+oData['schedule_time']+"]\" value=\""+oData['id']+"\"/></center>";
 //}
 
 JqueryPortico.formatCheckUis_agremment = function (key, oData)
@@ -604,6 +604,11 @@ JqueryPortico.execute_ajax = function (requestUrl, callback, data, type, dataTyp
 		url: requestUrl,
 		success: function (result)
 		{
+			if (typeof (result.sessionExpired) !== 'undefined')
+			{
+				alert('sessionExpired - please log in');
+				return;
+			}
 			callback(result);
 		}
 	});
@@ -1273,26 +1278,14 @@ function populateSelect_activityCalendar(url, container, attr)
 }
 
 
-function createTableSchedule(d, u, c, r, cl, dt)
+function createTableSchedule (d, u, c, r, cl, a, p, t)
 {
-//	var detected_lang = navigator.language || navigator.userLanguage;
-	var lang = {};
-
-//	if(detected_lang == 'no' || detected_lang == 'nn' || detected_lang == 'nb' ||detected_lang == 'nb-no' || detected_lang == 'no-no' || detected_lang == 'nn-no')
-	if (window.navigator.language != "en")
-	{
-		lang = {free: 'Ledig'};
-	}
-	else
-	{
-		lang = {free: 'free'};
-	}
-
 	var container = document.getElementById(d);
+	var container_toolbar = document.createElement('div');
 	var xtable = document.createElement('table');
 	var tableHead = document.createElement('thead');
 	var tableHeadTr = document.createElement('tr');
-	var date = (dt) ? dt : "";
+	var date = (a) ? (a.date) ? a.date : "" : "";
 
 	restartColors();
 	r = (r) ? r : 'data';
@@ -1310,6 +1303,8 @@ function createTableSchedule(d, u, c, r, cl, dt)
 	tableHead.appendChild(tableHeadTr);
 	xtable.appendChild(tableHead);
 
+	var key = c[0].key;
+
 	var tableBody = document.createElement('tbody');
 	var tableBodyTr = document.createElement('tr');
 	var tableBodyTrTd = document.createElement('td');
@@ -1320,9 +1315,10 @@ function createTableSchedule(d, u, c, r, cl, dt)
 	xtable.appendChild(tableBody);
 
 	container.innerHTML = "";
+	container.appendChild(container_toolbar);
 	container.appendChild(xtable);
 
-	$.get(u, function (data)
+	$.post(u, a, function (data)
 	{
 		var selected = new Array();
 		if (typeof (r) == 'object')
@@ -1361,8 +1357,9 @@ function createTableSchedule(d, u, c, r, cl, dt)
 				$.each(c, function (ic, vc)
 				{
 					var k = vc.key;
-					var colorCell = "";
-					var tableBodyTrTdType = (k == "time") ? "th" : "td";
+
+//					var tableBodyTrTdType = (k == key) ? "th" : "td";
+					var tableBodyTrTdType = (vc['type']) ? (vc['type'] == "th") ? "th" : "td" : "td";
 
 					var tableBodyTrTd = document.createElement(tableBodyTrTdType);
 
@@ -1371,99 +1368,42 @@ function createTableSchedule(d, u, c, r, cl, dt)
 
 					if (vc['formatter'])
 					{
-						if (vc['formatter'] == "scheduleResourceColumn")
+						//var dataFormat = {};
+						var dataFormat = setFormatter(vc['formatter'], vd, vc, date)
+
+						if (dataFormat['text'])
 						{
-							if (vd[k])
-							{
-								tableBodyTr.setAttribute('resource', vd['resource_id']);
-							}
-							var resourceLink = (date) ? vd['resource_link'] + "#date=" + date : vd['resource_link'];
-							tableBodyTrTdText = (vd[k]) ? formatGenericLink(vd['resource'], resourceLink) : "";
+							tableBodyTrTdText = dataFormat['text'];
 						}
-						else
+
+						if (dataFormat['classes'])
 						{
-							if (vd[k])
-							{
-								var id = vd[k]['id'];
-								var name = (vd[k]['shortname']) ? formatScheduleShorten(vd[k]['shortname'], 9) : formatScheduleShorten(vd[k]['name'], 9);
-								var type = vd[k]['type'];
-								if (vc['formatter'] == "seasonDateColumn")
-								{
-									tableBodyTrTdText = name;
-									tableBodyTrTd.addEventListener('click', function ()
-									{
-										schedule.newAllocationForm({'id': vd[k]['id']})
-									});
-								}
-								if (vc['formatter'] == "scheduleDateColumn")
-								{
-									tableBodyTrTdText = formatGenericLink(name, null);
-								}
-								if (vc['formatter'] == "backendScheduleDateColumn")
-								{
-									var conflicts = new Array();
-									if (vd[k]['conflicts'])
-									{
-										if (vd[k]['conflicts'].length > 0)
-										{
-											conflicts = vd[k]['conflicts'];
-										}
-									}
-									tableBodyTrTdText = formatBackendScheduleDateColumn(id, name, type, conflicts);
-									classes += " " + type;
-								}
-								if (vc['formatter'] == "frontendScheduleDateColumn")
-								{
-									if (vd[k]['is_public'] == 0)
-									{
-										name = formatScheduleShorten('Privat arr.', 9);
-									}
-									tableBodyTrTdText = name;
-									classes += " cellInfo";
-									classes += " " + type;
-									tableBodyTrTd.addEventListener('click', function ()
-									{
-										schedule.showInfo(vd[k]['info_url'], tableBodyTr.getAttribute('resource'))
-									}, false);
-								}
-								colorCell = formatScheduleCellDateColumn(name, type);
-								classes += " " + colorCell;
-								tableBodyTrTd.setAttribute('class', classes);
-							}
-							else
-							{
-								tableBodyTrTdText = lang.free;
-								classes += " free";
-								tableBodyTrTd.setAttribute('class', classes);
-								if (vc['formatter'] == "frontendScheduleDateColumn")
-								{
-									tableBodyTrTd.addEventListener('click', function ()
-									{
-										schedule.newApplicationForm(vc['date'], vd['_from'], vd['_to'], tableBodyTr.getAttribute('resource'))
-									});
-								}
-								if (vc['formatter'] == "backendScheduleDateColumn")
-								{
-									tableBodyTrTd.addEventListener('click', function ()
-									{
-										schedule.newApplicationForm(vc['date'], vd['_from'], vd['_to'])
-									});
-								}
-								if (vc['formatter'] == "seasonDateColumn")
-								{
-									tableBodyTrTd.addEventListener('click', function ()
-									{
-										schedule.newAllocationForm({'_from': vd['_from'], '_to': vd['_to'], 'wday': vc['key']})
-									});
-								}
-							}
+							classes += " " + dataFormat['classes'];
 						}
+
+						if (dataFormat['trAttributes'])
+						{
+							$.each(dataFormat['trAttributes'], function (i, v)
+							{
+								tableBodyTr.setAttribute(v['attribute'], v['value']);
+							});
+						}
+
+						if (dataFormat['trFunction'])
+						{
+							$.each(dataFormat['trFunction'], function (i, v)
+							{
+								tableBodyTrTd.addEventListener(v['event'], v['callFunction'], false);
+							});
+						}
+
+						tableBodyTrTd.setAttribute('class', classes);
 					}
 					else
 					{
-						tableBodyTrTdText = (vd[k]) ? vd[k] : "";
+						tableBodyTrTdText = (vd[k]) ? (vc['value']) ? vd[k][vc['value']] : (vd[k]) : "";
 					}
-					if (k == "time")
+					if (k == key)
 					{
 						borderTop = (vd[k]) ? "2" : "1";
 					}
@@ -1482,8 +1422,515 @@ function createTableSchedule(d, u, c, r, cl, dt)
 				});
 				tableBody.appendChild(tableBodyTr);
 			});
+
+			if (p)
+			{
+				var start = a.start;
+				var total = data['ResultSet'].totalResultsAvailable;
+				var n_objects = a.length;
+				start = (start > total) ? 0 : start;
+
+				var pages = Math.floor(total / n_objects);
+				var res = total % n_objects;
+				var page = (start == 0) ? 1 : (start / n_objects) + 1;
+
+				pages = (res > 0) ? pages+1 : pages;
+				pages = (pages == 0) ? pages+1 : pages;
+
+				var paginator = createPaginatorSchedule(pages, page);
+				container.appendChild(paginator);
+
+				var input_start = document.createElement('input');
+				input_start.setAttribute('type', 'hidden');
+				input_start.setAttribute('name', 'start_index');
+				input_start.setAttribute('id', 'start_index');
+				input_start.value = start;
+				container.appendChild(input_start);
+			}
+
+			if (t)
+			{
+				var toolbar = eval(t + "()");
+				container_toolbar.appendChild(toolbar);
+//				container.insertBefore(toolbar, xtable);
+			}
 		}
 	});
+}
+
+// p -> n pages
+// a -> current page
+function createPaginatorSchedule (p, a)
+{
+	var max = 7;
+	var m = 4;
+
+	var ini = 1;
+	var end = p;
+
+	var buttons = new Array();
+	var n_button = "";
+	var old_button = "";
+
+	for (i = ini; i <= end; i++)
+	{
+		if (i == ini)
+		{
+			n_button = i;
+		}
+		else if ( (a - ini < m ) && (i <= ini + m) )
+		{
+			n_button = i;
+		}
+		else if ( (i >= a - 1) && (i <= a + 1) )
+		{
+			n_button = i;
+		}
+		else if ( (end - a < m ) && (i >= end - m) )
+		{
+			n_button = i;
+		}
+		else if (i == end)
+		{
+			n_button = i;
+		}
+		else
+		{
+			n_button = "...";
+		}
+		if (n_button != old_button)
+		{
+			buttons.push(n_button);
+			old_button = n_button;
+		}
+	}
+
+	var container = document.createElement('div');
+	container.classList.add('schedule_paginate');
+	container.id = "schedule-container_paginate";
+
+	var paginatorPrevButton = document.createElement('a');
+	var paginatorNextButton = document.createElement('a');
+
+	paginatorPrevButton.classList.add('paginate_button', 'previous');
+	paginatorNextButton.classList.add('paginate_button', 'next');
+
+	paginatorPrevButton.innerHTML = "Prev";
+	paginatorNextButton.innerHTML = "Next";
+
+	if (a > 1)
+	{
+		paginatorPrevButton.dataset.page = (a - 1);
+	}
+	else
+	{
+		paginatorPrevButton.classList.add('disabled');
+	}
+	if (a < p)
+	{
+		paginatorNextButton.dataset.page = (a + 1);
+	}
+	else
+	{
+		paginatorNextButton.classList.add('disabled');
+	}
+
+	container.appendChild(paginatorPrevButton);
+	var button_class = "paginate_button";
+	$.each(buttons, function (i, v)
+	{
+		button_class = "paginate_button"
+		var button = document.createElement('span');
+		if (v == "...")
+		{
+			button_class = 'ellipsis';
+		}
+		button.classList.add(button_class);
+		button.dataset.page = v;
+		if (v == a)
+		{
+			button.classList.add('current');
+		}
+		button.innerHTML = v;
+		container.appendChild(button);
+	});
+	container.appendChild(paginatorNextButton);
+
+	return container;
+}
+
+function setFormatter (callFunc, data, col, date)
+{
+	return eval(callFunc+'(data,col,date)');
+}
+
+function scheduleResourceColumn (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+
+	if (data[k])
+	{
+		trAttributes.push( {attribute: 'resource', value: data['resource_id']} );
+	}
+
+	var resourceLink = (date) ? data['resource_link'] + "#date=" + date : data['resource_link'];
+	text = (data[k]) ? formatGenericLink(data['resource'], resourceLink) : "";
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function seasonDateColumn (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+
+	if (data[k])
+	{
+		var id = data[k]['id'];
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
+
+		text = name;
+		classes = colorCell;
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+//					schedule.newAllocationForm({id: data[k]['id']});
+					schedule.newAllocationForm({id: id});
+				}
+			}
+		);
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					schedule.newAllocationForm({'_from': data['_from'], '_to': data['_to'], 'wday': col['key']});
+				}
+			}
+		);
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function scheduleDateColumn (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+
+	if (data[k])
+	{
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
+
+		text = formatGenericLink(name, null);
+		classes = colorCell;
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function backendScheduleDateColumn (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+
+	if (data[k])
+	{
+		var id = data[k]['id'];
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
+
+		var conflicts = new Array();
+
+		if (data[k]['conflicts'])
+		{
+			if (data[k]['conflicts'].length > 0)
+			{
+				conflicts = data[k]['conflicts'];
+			}
+		}
+		text = formatBackendScheduleDateColumn(id, name, type, conflicts);
+		classes = colorCell + " " + type;
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					schedule.newApplicationForm(col['date'], data['_from'], data['_to'])
+				}
+			}
+		)
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function frontendScheduleDateColumn (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+
+	if (data[k])
+	{
+		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
+		var type = data[k]['type'];
+		var colorCell = formatScheduleCellDateColumn(name, type);
+
+		if (data[k]['is_public'] == 0)
+		{
+			name = formatScheduleShorten('Privat arr.', 9);
+		}
+
+		text = name;
+		classes = "cellInfo " + colorCell + " " + type ;
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					var resource = $(this).parent().attr('resource');
+					schedule.showInfo(data[k]['info_url'], resource);
+				}
+			}
+		);
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					var resource = $(this).parent().attr('resource');
+					schedule.newApplicationForm(col['date'], data['_from'], data['_to'], resource);
+				}
+			}
+		);
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function rentalSchedule (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+
+	var needFree = true;
+	if (data[k])
+	{
+		text = data[k]['status'];
+		if (text == "Ikke ledig")
+		{
+			needFree = false;
+		}
+	}
+	else
+	{
+		text = "free";
+		classes = "free";
+	}
+
+	trAttributes.push( {attribute: 'data-id', value: data['id']} );
+	trFunction.push(
+		{
+			event: 'click',
+			callFunction: function () {
+				$(this).parent().parent().find('tr').removeClass("trselected")
+				$(this).parent().addClass("trselected");
+				$('#schedule_toolbar button').attr('disabled', false);
+				var b_needFree = eval(needFree);
+				if (!b_needFree)
+				{
+					$('#schedule_toolbar button.need-free').attr('disabled', true);
+				}
+				schedule.rental.data = data;
+				schedule.rental.col = col;
+			}
+		}
+	);
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function rentalScheduleApplication (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+	
+	var validate = false;
+	
+	if ( (schedule.rental.availability_from) && (schedule.rental.availability_to) ){
+		if (col.date >= schedule.rental.availability_from && col.date <= schedule.rental.availability_to){
+			validate = true;
+		}
+	}
+	
+	if (validate)
+	{
+		var k = col.key;
+
+		var needFree = true;
+		if (data[k])
+		{
+			text = data[k]['status'];
+			if (text == "Ikke ledig")
+			{
+				needFree = false;
+			}
+		}
+		else
+		{
+			text = "free";
+			classes = "free";
+		}
+
+		trAttributes.push( {attribute: 'data-id', value: data['id']} );
+		trFunction.push(
+			{
+				event: 'click',
+				callFunction: function () {
+					$(this).parent().parent().find('tr').removeClass("trselected")
+					$(this).parent().addClass("trselected");
+					$('#schedule_toolbar button').attr('disabled', false);
+					var b_needFree = eval(needFree);
+					if (!b_needFree)
+					{
+						$('#schedule_toolbar button.need-free').attr('disabled', true);
+					}
+					schedule.rental.data = data;
+					schedule.rental.col = col;
+				}
+			}
+		);
+	}
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
+}
+
+function rentalScheduleComposites (data, col, date)
+{
+	var text = "";
+	var classes = "";
+	var trAttributes = [];
+	var trFunction = [];
+
+	var k = col.key;
+	
+	text = data[k];
+
+	trAttributes.push( {attribute: 'data-id', value: data['id']} );
+	trFunction.push(
+		{
+			event: 'click',
+			callFunction: function () {
+				$(this).parent().parent().find('tr').removeClass("trselected")
+				$(this).parent().addClass("trselected");
+				$('#composites_toolbar button').attr('disabled', false);
+				composites.rental.data = data;
+				composites.rental.col = col;
+			}
+		}
+	);
+
+	var data_return = {
+		text: text,
+		classes: classes,
+		trAttributes: trAttributes,
+		trFunction: trFunction
+	}
+
+	return data_return;
 }
 
 function restartColors()
@@ -1508,6 +1955,7 @@ function formatScheduleCellDateColumn(name, type)
 	var color = colorMap[name];
 	return color;
 }
+
 function formatBackendScheduleDateColumn(id, name, type, conflicts)
 {
 	var link = "";
@@ -1536,6 +1984,7 @@ function formatBackendScheduleDateColumn(id, name, type, conflicts)
 	}
 	return text;
 }
+
 function formatFrontendScheduleDateColumn()
 {
 }
@@ -1585,8 +2034,6 @@ function _decodeStringUrl(string)
 	return decodeURIComponent(string.replace(/\+/g, ' '));
 }
 
-
-
 function genericLink()
 {
 	var data = [];
@@ -1594,6 +2041,7 @@ function genericLink()
 	data['type'] = 'genericLink';
 	return data;
 }
+
 function genericLink2()
 {
 	var data = [];
@@ -1602,7 +2050,6 @@ function genericLink2()
 	return data;
 }
 
-// nl = numero links
 function formatGenericLink(name, link)
 {
 	if (!name || !link)
@@ -1614,6 +2061,7 @@ function formatGenericLink(name, link)
 		return "<a href='" + link + "'>" + name + "</a>";
 	}
 }
+
 function formatGenericLink2(name, link)
 {
 	if (!name || !link)
@@ -1625,3 +2073,16 @@ function formatGenericLink2(name, link)
 		return "<a onclick='return confirm(\"Er du sikker på at du vil slette denne?\")' href='" + link + "'>" + name + "</a>";
 	}
 }
+
+parseISO8601 = function (string)
+{
+	var regexp = "(([0-9]{4})(-([0-9]{1,2})(-([0-9]{1,2}))))?( )?(([0-9]{1,2}):([0-9]{1,2}))?";
+	var d = string.match(new RegExp(regexp));
+	var year = d[2] ? (d[2] * 1) : 0;
+	date = new Date(year, (d[4] || 1) - 1, d[6] || 0);
+	if (d[9])
+		date.setHours(d[9]);
+	if (d[10])
+		date.setMinutes(d[10]);
+	return date;
+};
