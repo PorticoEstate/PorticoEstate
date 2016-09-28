@@ -82,7 +82,7 @@
 				$category = $this->array_entity_categories[$item];
 				if (empty($category['name']))
 				{
-					$receipt['error'][] = array('msg' => 'Building Part: '.$item.' not define');
+					$receipt['error'][] = array('msg' => lang('Building Part '.$item.' not define'));
 					break;
 				}
 				
