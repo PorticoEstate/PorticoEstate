@@ -232,7 +232,7 @@
 
 		function show_attachment(  )
 		{
-			if (!$this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property'))
+			if (!$this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') && !$this->acl->check('.project', PHPGW_ACL_ADD, 'property'))
 			{
 				phpgw::no_access();
 			}
