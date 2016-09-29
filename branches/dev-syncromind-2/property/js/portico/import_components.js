@@ -61,7 +61,7 @@ $(document).ready(function ()
 		{
 			var selected = api.rows(this).data()[0];
 			//console.log(selected.location_code);
-			$('#tab-content').responsiveTabs('enable', 2);
+			$('#tab-content').responsiveTabs('enable', 1);
 			$('#tab-content').responsiveTabs('enable', 3);
 			$('#tab-content').responsiveTabs('activate', 1);
 			$('.location_name').html(selected.location_code + ' ' + selected.loc1_name);
@@ -99,6 +99,18 @@ $(document).ready(function ()
 			return false;
 		}
 		
+		if ($('#location_item_id').val() === '')
+		{
+			alert('Choose Location');
+			return false;
+		}	
+	
+		if ($('#attribute_name_component_id').val() === '')
+		{
+			alert('Choose attribute name for Component ID');
+			return false;
+		}
+		
 		if (isSendingData())
 		{
 			return false;
@@ -108,6 +120,9 @@ $(document).ready(function ()
 		var file_data = $('#excel_files').prop('files')[0];
 		var form_data = new FormData(form);
 		form_data.append('file', file_data);
+		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
+		form_data.append('location_code', $('#location_code').val());
+		form_data.append('location_item_id', $('#location_item_id').val());
 
 		$('.processing-import-relations').show();
 		
@@ -124,7 +139,7 @@ $(document).ready(function ()
 				statusSend = false;
 				$('.processing-import-relations').hide();
 				JqueryPortico.show_message(4, result);
-				$('#import_components_files').prop('disabled', true);
+				//$('#import_components_files').prop('disabled', true);
 			}
 		});
 	});
@@ -413,7 +428,7 @@ $(document).ready(function ()
 						$('#new_attributes').append(field + "<br>");
 					});
 				}
-				$('#attribute_name_component_id').prop('disabled', true);
+				//$('#attribute_name_component_id').prop('disabled', true);
 				$('#step5').prop('disabled', false);
 
 			}, data, "GET", "JSON"
