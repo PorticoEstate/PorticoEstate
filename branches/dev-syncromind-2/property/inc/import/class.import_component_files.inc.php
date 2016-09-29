@@ -82,6 +82,92 @@
 					'file' => $array_path[count($array_path)-1]
 				);
 			}
+	
+			$count = 0;
+			foreach ($component_files as $k => $files) 
+			{
+				if (empty($k))
+				{
+					$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
+				}
+				else {
+					$component = $this->_get_component($k, $attrib_name_componentID, $location_code);
+					if( empty($component['id']) || empty($component['location_id']))
+					{
+						$message['message'][] = array('msg' => lang('Component %1 does not exist', $k));
+						continue;
+					}
+				}
+
+				foreach ($files as $file_data)
+				{
+					$this->db->transaction_begin();
+					try
+					{
+						$this->db->Exception_On_Error = true;						
+
+						$file = $file_data['file'];
+						if (!is_file($this->path_upload_dir.$file))
+						{
+							throw new Exception("the file {$file} does not exist. Component: {$k}");
+						}	
+						$file_id = $this->_save_file($file_data);
+						if (!$file_id)
+						{						
+							throw new Exception("failed to save file {$file}. Component: {$k}");
+						} 
+						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
+						if (!$result)
+						{						
+							throw new Exception("failed to save relation. File: {$file}. Component: {$k}");
+						}					
+
+						$this->db->Exception_On_Error = false;
+					}
+					catch (Exception $e)
+					{
+						if ($e)
+						{
+							$this->db->transaction_abort();				
+							$message['error'][] = array('msg' => $e->getMessage());
+							continue;
+						}
+					}
+					$this->db->transaction_commit();
+					$count++;
+				}
+			}
+
+			if ($count)
+			{
+				$message['message'][] = array('msg' => lang('%1 files saved successfully', $count));
+			}
+			
+			return $message;
+		}
+		
+		
+		/*public function add_files($id, $location_code, $attrib_name_componentID)
+		{		
+			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], true);
+			$component_files = array();
+			$message = array();
+			
+			foreach ($exceldata as $row) 
+			{
+				if (!$this->_valid_row($row))
+				{
+					continue;
+				}
+				
+				$array_path = explode("\\", $row[(count($row)-1)]);
+						
+				$component_files[$row[0]][] = array(
+					'name' => $row[1],
+					'desription' => $row[2],
+					'file' => $array_path[count($array_path)-1]
+				);
+			}
 
 			$this->db->transaction_begin();
 			
@@ -97,7 +183,7 @@
 						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 					}
 					else {
-						$component = $this->_get_component($k, $attrib_name_componentID);
+						$component = $this->_get_component($k, $attrib_name_componentID, $location_code);
 						if( empty($component['id']) || empty($component['location_id']))
 						{
 							throw new Exception("component {$k} does not exist");
@@ -143,17 +229,20 @@
 			$message['message'][] = array('msg' => lang('%1 files saved successfully', $count));		
 			
 			return $message;
-		}
+		}*/
 		
 		
-		private function _get_component( $query, $attrib_name_componentID)
+		private function _get_component( $query, $attrib_name_componentID, $location_code)
 		{
+			$location_code_values = explode('-', $location_code);
+			$loc1 =  $location_code_values[0];
+			 
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 			}
 
-			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'{$attrib_name_componentID}' = '{$query}'";
+			$sql = "SELECT * FROM fm_bim_item WHERE loc1 = '{$loc1}' AND json_representation->>'{$attrib_name_componentID}' = '{$query}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
