@@ -74,14 +74,17 @@
 			return $components;
 		}
 		
-		private function _get_component( $query, $attrib_name_componentID)
+		private function _get_component( $query, $attrib_name_componentID, $location_code)
 		{
+			$location_code_values = explode('-', $location_code);
+			$loc1 =  $location_code_values[0];
+			
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
 			}
 
-			$sql = "SELECT * FROM fm_bim_item WHERE json_representation->>'{$attrib_name_componentID}' = '{$query}'";
+			$sql = "SELECT * FROM fm_bim_item WHERE loc1 = '{$loc1}' AND json_representation->>'{$attrib_name_componentID}' = '{$query}'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -125,7 +128,7 @@
 						$attributes_values = $this->_set_attributes_values($values, $attributes);
 						$values_insert = $this->_populate(array('location_code'=>$location_code, 'location'=>$location), $attributes_values);
 
-						$component = $this->_get_component($values_insert[$attrib_name_componentID], $attrib_name_componentID);
+						$component = $this->_get_component($values_insert[$attrib_name_componentID], $attrib_name_componentID, $location_code);
 						if ($component['id'])
 						{
 							$receipt = $this->_edit_eav($values_insert, $entity['entity_id'], $entity['cat_id'], $component['id']);
