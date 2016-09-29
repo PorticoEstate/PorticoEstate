@@ -763,6 +763,8 @@
 
 				$values_combo_box[4] = $this->_get_user_list($this->user_id);
 
+				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
+
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
 					'name' => lang('my assigned tickets'),
@@ -970,12 +972,18 @@
 
 			$parameters = array
 				(
-				'parameter' => array
-					(
-					array
-						(
+				'parameter' => array(
+					array(
 						'name' => 'id',
 						'source' => 'id'
+					),
+				)
+			);
+			$parameters_location = array(
+				'parameter' => array(
+					array(
+						'name' => 'location_code',
+						'source' => 'location_code'
 					),
 				)
 			);
@@ -999,11 +1007,10 @@
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uitts._print',
-					'target' => '_blank'
 				)),
+				'target' => '_blank',
 				'parameters' => json_encode($parameters)
 			);
-
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
@@ -1017,8 +1024,8 @@
 						(
 						'menuaction' => 'property.uijasper.view',
 						'jasper_id' => $report['id'],
-						'target' => '_blank'
 					)),
+					'target' => '_blank',
 					'parameters' => json_encode($parameters)
 				);
 			}
@@ -1038,6 +1045,18 @@
 					'parameters' => json_encode($parameters)
 				);
 			}
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'docs',
+				'statustext' => lang('documents'),
+				'text' => lang('documents'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uidocument.list_doc',
+				)),
+				'target' => '_blank',
+				'parameters' => json_encode($parameters_location)
+			);
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
 			{
