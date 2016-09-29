@@ -72,8 +72,8 @@
 				'order_id' => $values['order_id'],
 				'lines' => array(
 					array(
-						'UnitCode' => 'STK',
-						'Quantity' => ($received_amount),
+						'UnitCode' => 'SUM',
+						'Amount' => ($received_amount),
 					)
 				)
 			);
