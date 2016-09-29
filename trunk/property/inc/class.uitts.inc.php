@@ -56,7 +56,8 @@
 			'get_external_project'=> true,
 			'get_unspsc_code'=> true,
 			'receive_order'	=> true,
-			'check_purchase_right'=> true
+			'check_purchase_right'=> true,
+			'show_attachment'	=> true
 		);
 
 		/**
@@ -227,6 +228,35 @@
 			$html .= "</body></html>";
 
 			echo $html;
+		}
+
+		function show_attachment(  )
+		{
+			if (!$this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property'))
+			{
+				phpgw::no_access();
+			}
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$file_name = urldecode(phpgw::get_var('file_name'));
+			$key = phpgw::get_var('key');
+			$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' . $key;
+
+			$file = "$directory_attachment/$file_name";
+
+			if (file_exists($file))
+			{
+				$size = filesize($file);
+				$content = file_get_contents($file);
+
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($document['name'], '', $size);
+				echo $content;
+			}
+	
 		}
 
 		function download2()
@@ -2607,11 +2637,14 @@
 				$approved_amount += $entry['approved_amount'];
 			}
 
+
+			if($invoices)
+			{
+				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			}
+
 			foreach ($invoices as $entry)
 			{
-
-				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-
 				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' .$entry['external_voucher_id'];
 				$attachmen_list = array();
 				try
@@ -2626,9 +2659,15 @@
 								continue;
 							}
 
+							$url = self::link(array(
+								'menuaction'=> 'property.uitts.show_attachment',
+								'file_name' => urlencode((string)$file),
+								'key'=> $entry['external_voucher_id']
+								));
+
 							$attachmen_list[] = array(
 								'voucher_id'	=> $entry['external_voucher_id'],
-								'file_name'		=> (string)$file
+								'file_name'		=> "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
 							);
 						}
 					}
