@@ -1064,12 +1064,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('new'),
-								'onclick' => 'onNew_contract()',
-								'class' => 'new_item'
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -1205,6 +1199,12 @@
 
 			$filters = $this->_get_Filters();
 			krsort($filters);
+
+			$filters[] = array('type' => 'link',
+								'value' => lang('new'),
+								'onclick' => 'onNew_contract()',
+								'class' => 'new_item'
+							);
 			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
