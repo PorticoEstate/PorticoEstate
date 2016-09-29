@@ -115,10 +115,14 @@
 		}
 		
 		public function import_component_files()
-		{
-			$location_code = phpgwapi_cache::session_get('property', 'location_code');
+		{		
+			/*$location_code = phpgwapi_cache::session_get('property', 'location_code');
 			$id = phpgwapi_cache::session_get('property', 'location_item_id');
-			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
+			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');*/
+			
+			$location_code = phpgw::get_var('location_code');
+			$id = phpgw::get_var('location_item_id');
+			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			
 			if (!$attrib_name_componentID)
 			{
@@ -657,8 +661,8 @@ HTML;
 		{
 			$tabs = array();
 			$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
 			$tabs['components'] = array('label' => lang('Components'), 'link' => '#components', 'disable' => 1);
+			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
 			$tabs['relations'] = array('label' => lang('Relations'), 'link' => '#relations', 'disable' => 1);
 					
 			$active_tab = 'locations';
@@ -673,8 +677,8 @@ HTML;
 
 			$related_def = array
 				(
-				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true)
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true)
 			);
 
 
