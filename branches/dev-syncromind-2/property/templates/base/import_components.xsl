@@ -147,6 +147,30 @@
 							<div id="tab-4">
 								<div class="pure-control-group">
 									<label for="vendor">
+										<xsl:value-of select="php:function('lang', 'Profile')" />
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Category template')" /></label>
+											<div id="template_name" class="pure-custom"></div>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Attribute name for Component ID')" /></label>
+											<div id="component_id_text" class="pure-custom"></div>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Columns and attributes')" /></label>
+											<div id="columns_name" class="pure-custom"></div>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Save Profile')" /></label>
+											<input type="checkbox" value="1" id="save_profile" name="save_profile" checked="true"/>
+										</div>
+									</div>
+									
+								</div>
+								<div class="pure-control-group">
+									<label for="vendor">
 										<xsl:value-of select="php:function('lang', 'New Categories')" />
 									</label>
 									<div id="new_entity_categories" class="pure-custom"></div>
