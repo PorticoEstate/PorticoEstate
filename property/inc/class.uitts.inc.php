@@ -2563,13 +2563,15 @@
 
 			// start invoice
 			$invoices = array();
-			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'order_id' => $ticket['order_id']));
-			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'order_id' => $ticket['order_id'],
-				'paid' => true));
-			$invoices = array_merge($active_invoices, $historical_invoices);
-
+			if(!empty($ticket['order_id']))
+			{
+				$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+					'order_id' => $ticket['order_id']));
+				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+					'order_id' => $ticket['order_id'],
+					'paid' => true));
+				$invoices = array_merge($active_invoices, $historical_invoices);
+			}
 
 			$link_data_invoice1 = array
 				(
