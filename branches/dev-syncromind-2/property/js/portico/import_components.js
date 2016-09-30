@@ -82,7 +82,12 @@ $(document).ready(function ()
 				var $el = $("#attribute_name_component_id");
 				$el.empty();
 				$.each(result, function(key, value) {
-					$el.append($("<option></option>").attr("value", value.id).text(value.name));
+					if (value.selected)
+					{
+						$el.append($("<option selected></option>").attr("value", value.id).text(value.name));
+					} else {
+						$el.append($("<option></option>").attr("value", value.id).text(value.name));
+					}
 				});
 			}, data, "GET", "json"
 		);				
@@ -413,6 +418,24 @@ $(document).ready(function ()
 				$('#message3').empty();
 				$('#message1').empty();
 				
+				$('#template_name').empty();
+				if (typeof(result.profile.template) !== 'undefined')
+				{
+					$('#template_name').append(result.profile.template.template_name);
+				}
+				$('#component_id_text').empty();
+				if (typeof(result.profile.attrib_name_componentID) !== 'undefined')
+				{
+					$('#component_id_text').append(result.profile.attrib_name_componentID.text);
+				}
+				$('#columns_name').empty();
+				if (typeof(result.profile.columns.columns_name) !== 'undefined')
+				{
+					$.each(result.profile.columns.columns_name, function(i, field){
+						$('#columns_name').append(field + "<br>");
+					});
+				}
+				
 				$('#new_entity_categories').empty();
 				if (typeof(result.new_entity_categories) !== 'undefined')
 				{
@@ -450,12 +473,13 @@ $(document).ready(function ()
 		{
 			return false;
 		}
-		
+		 
 		var data = {
 			"step": 5,
 			'save': 1,
 			'location_code': $('#location_code').val(),
-			'location_item_id': $('#location_item_id').val()
+			'location_item_id': $('#location_item_id').val(),
+			'save_profile': $('#save_profile:checked').length
 		};
 		
 		$('.processing-save').show();
