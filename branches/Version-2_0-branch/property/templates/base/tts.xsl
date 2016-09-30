@@ -371,29 +371,31 @@
 							</xsl:for-each>
 						</div>
 					</xsl:for-each>
-					<div class="pure-control-group">
-						<xsl:variable name="lang_make_relation">
-							<xsl:value-of select="php:function('lang', 'make relation')"/>
-						</xsl:variable>
+					<xsl:if test="simple !='1'">
+						<div class="pure-control-group">
+							<xsl:variable name="lang_make_relation">
+								<xsl:value-of select="php:function('lang', 'make relation')"/>
+							</xsl:variable>
 
-						<label>
-							<a href="#" onClick="make_relation({location_item_id});">
+							<label>
+								<a href="#" onClick="make_relation({location_item_id});">
+									<xsl:attribute name="title">
+										<xsl:value-of select="$lang_make_relation"/>
+									</xsl:attribute>
+									<xsl:value-of select="$lang_make_relation"/>
+								</a>
+							</label>
+							<select name="make_relation" id="make_relation">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_make_relation"/>
 								</xsl:attribute>
-								<xsl:value-of select="$lang_make_relation"/>
-							</a>
-						</label>
-						<select name="make_relation" id="make_relation">
-							<xsl:attribute name="title">
-								<xsl:value-of select="$lang_make_relation"/>
-							</xsl:attribute>
-							<option value="">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</option>
-							<xsl:apply-templates select="relation_type_list/options"/>
-						</select>
-					</div>
+								<option value="">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="relation_type_list/options"/>
+							</select>
+						</div>
+					</xsl:if>
 
 					<div class="pure-control-group">
 						<label>
@@ -463,41 +465,55 @@
 									</xsl:if>
 								</input>
 							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Priority')"/>
+						</label>
+						<xsl:variable name="lang_priority_statustext">
+							<xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')"/>
+						</xsl:variable>
+						<xsl:variable name="select_priority_name">
+							<xsl:value-of select="select_priority_name"/>
+						</xsl:variable>
+						<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}">
+							<xsl:if test="simple ='1'">
+								<xsl:attribute name="disabled">
+									<xsl:text>disabled</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+							<xsl:apply-templates select="priority_list/options"/>
+						</select>
+					</div>
+					<xsl:choose>
+						<xsl:when test="value_order_id=''">
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'Priority')"/>
+									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<xsl:variable name="lang_priority_statustext">
-									<xsl:value-of select="php:function('lang', 'Select the priority the selection belongs to')"/>
-								</xsl:variable>
-								<xsl:variable name="select_priority_name">
-									<xsl:value-of select="select_priority_name"/>
-								</xsl:variable>
-								<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}">
-									<xsl:apply-templates select="priority_list/options"/>
+								<select id="status_id" name="values[status]" class="forms">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
+									</xsl:attribute>
+									<xsl:if test="simple ='1'">
+										<xsl:attribute name="disabled">
+											<xsl:text>disabled</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+									<xsl:apply-templates select="status_list/options"/>
 								</select>
 							</div>
-							<xsl:choose>
-								<xsl:when test="value_order_id=''">
-									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'status')"/>
-										</label>
-										<select id="status_id" name="values[status]" class="forms">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
-											</xsl:attribute>
-											<xsl:apply-templates select="status_list/options"/>
-										</select>
-									</div>
-								</xsl:when>
-							</xsl:choose>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'category')"/>
-								</label>
-								<xsl:call-template name="categories"/>
-							</div>
+						</xsl:when>
+					</xsl:choose>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'category')"/>
+						</label>
+						<xsl:call-template name="categories"/>
+					</div>
+					<xsl:choose>
+						<xsl:when test="simple !='1'">
 							<xsl:choose>
 								<xsl:when test="show_finnish_date ='1'">
 									<div class="pure-control-group">
@@ -1095,6 +1111,23 @@
 										<div class="pure-custom">
 											<xsl:for-each select="datatable_def">
 												<xsl:if test="container = 'datatable-container_7'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+									</div>
+
+									<div class="pure-control-group">
+										<div class="pure-custom">
+											<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_8'">
 													<xsl:call-template name="table_setup">
 														<xsl:with-param name="container" select ='container'/>
 														<xsl:with-param name="requestUrl" select ='requestUrl' />

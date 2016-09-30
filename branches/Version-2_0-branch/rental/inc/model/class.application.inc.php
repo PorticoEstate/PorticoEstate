@@ -44,6 +44,7 @@
 			$status,
 			$ecodimb_id,
 			$ecodimb_name,
+			$composites,
 			$district_id,
 			$composite_type_id,
 			$date_start,
@@ -122,6 +123,13 @@
 						'fkey' => 'ecodimb_id',
 						'key' => 'id',
 						'column' => 'descr'
+						)
+					),
+				'composites' => array('type' => 'string',
+					'manytomany' => array(
+						'table' => 'rental_application_composite',
+						'key' => 'application_id',
+						'column' => 'composite_id'
 						)
 					),
 				'district_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,

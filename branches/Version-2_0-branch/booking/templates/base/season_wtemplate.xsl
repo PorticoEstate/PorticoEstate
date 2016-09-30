@@ -96,7 +96,7 @@
 		var colDefs = [];
 		$(window).load(function() {
 		colDefs = [
-		{key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />'},
+		{key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />', type: 'th'},
 		{key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: 'scheduleResourceColumn'},
 		{key: '1', label: '<xsl:value-of select="php:function('lang', 'Monday')" />', formatter: 'seasonDateColumn'},
 		{key: '2', label: '<xsl:value-of select="php:function('lang', 'Tuesday')" />', formatter: 'seasonDateColumn'},

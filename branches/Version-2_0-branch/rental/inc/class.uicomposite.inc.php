@@ -1,9 +1,11 @@
 <?php
 	phpgw::import_class('rental.socomposite');
 	phpgw::import_class('rental.socontract');
+	phpgw::import_class('rental.soapplication');
 	phpgw::import_class('rental.sounit');
 	phpgw::import_class('rental.uicommon');
 	include_class('rental', 'composite', 'inc/model/');
+	include_class('rental', 'application', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
 
 	class rental_uicomposite extends rental_uicommon
@@ -21,7 +23,9 @@
 			'add_unit' => true,
 			'remove_unit' => true,
 			'query' => true,
-			'download' => true
+			'download' => true,
+			'schedule' => true,
+			'get_schedule' => true
 		);
 
 		public function __construct()
@@ -35,7 +39,7 @@
 			$this->config->read();
 		}
 
-		private function _get_filters()
+		public function get_filters()
 		{
 			$filters = array();
 
@@ -144,6 +148,7 @@
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			$search_for = (is_array($search)) ? $search['value'] : $search;
+			$search_for = $search_for ? $search_for : '';
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			$export = phpgw::get_var('export', 'bool');
@@ -156,6 +161,8 @@
 
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
+			
+			$application_id = (phpgw::get_var('application_id')) ? phpgw::get_var('application_id') : 0;
 
 			if ($export)
 			{
@@ -193,6 +200,10 @@
 						'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'),
 						'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from'),
 						'availability_date_to' => phpgw::get_var('availability_date_to'), 'district_id' => $district_id);
+					if ($application_id > 0)
+					{
+						$filters['application_id'] = $application_id;
+					}
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
@@ -452,7 +463,7 @@
 				)
 			);
 
-			$filters = $this->_get_Filters();
+			$filters = $this->get_Filters();
 			krsort($filters);
 			foreach ($filters as $filter)
 			{
@@ -884,6 +895,54 @@
 
 				$units = $composite->get_units();
 				$address_1 = $units[0]->get_location()->get_address_1();
+
+//				application
+				$tabletools4 = array
+					(
+					'my_name' => 'edit',
+					'text' => lang('edit'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'rental.uiapplication.edit'
+					)),
+					'parameters' => json_encode(array('parameter' => array(array('name' => 'id','source' => 'id'))))
+				);
+				
+				$datatable_container_application_name = ($mode == 'edit') ? 'datatable-container_3' : 'datatable-container_2';
+				
+				$datatable_def[] = array(
+					'container' => $datatable_container_application_name,
+					'requestUrl' => json_encode(self::link(array(
+						'menuaction' => 'rental.uiapplication.query',
+						'composite_id' => $composite_id,
+						'editable' => 0,
+						'phpgw_return_as' => 'json'))),
+					'ColumnDefs' => array(
+						array('key' => 'id', 'label' => 'id', 'formatter' => 'JqueryPortico.formatLink', 'sortable' => true),
+						array('key' => 'ecodimb_name', 'label' => 'dimb', 'sortable' => false),
+						array('key' => 'email', 'label' => 'email', 'sortable' => false),
+						array('key' => 'assign_date_start', 'label' => 'assign_start', 'sortable' => false),
+						array('key' => 'assign_date_end', 'label' => 'assign_end', 'sortable' => false),
+						array('key' => 'status', 'label' => 'status', 'sortable' => false),
+						array('key' => 'entry_date', 'label' => 'entry_date', 'sortable' => true),
+						array('key' => 'executive_officer', 'label' => 'executive_officer', 'sortable' => true),
+					),
+					'tabletools' => $tabletools4,
+					'config' => array(
+						array('disableFilter' => true)
+					)
+				);
+				
+				$applications_search_options[] = array('id' => 'all', 'name' => lang('all'), 'selected' => 1);
+				$applications_search_options[] = array('id' => 'ecodimb_name', 'name' => 'dimb', 'selected' => 0);
+				
+				
+				$status_application_options[] = array('id' => '', 'name' => lang('all'), 'selected' => 1);
+				$status_application_options[] = array('id' => 1, 'name' => lang('registered'), 'selected' => 0);
+				$status_application_options[] = array('id' => 2, 'name' => lang('pending'), 'selected' => 0);
+				$status_application_options[] = array('id' => 3, 'name' => lang('rejected'), 'selected' => 0);
+				$status_application_options[] = array('id' => 4, 'name' => lang('approved'), 'selected' => 0);
+
 			}
 
 			$link_index = array
@@ -964,7 +1023,9 @@ JS;
 				'list_search_option' => array('options' => $search_options),
 				'list_type_id' => array('options' => $level_options),
 				'list_contracts_search_options' => array('options' => $contracts_search_options),
+				'list_applications_search_options' => array('options' => $applications_search_options),
 				'list_status_options' => array('options' => $status_options),
+				'list_status_application_options' => array('options' => $status_application_options),
 				'list_fields_of_responsibility_options' => array('options' => $fields_of_responsibility_options),
 				'composite_id' => $composite_id,
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
@@ -1112,5 +1173,189 @@ JS;
 				$GLOBALS['phpgw']->preferences->add('rental', 'rental_columns_composite', $values['columns'], 'user');
 				$GLOBALS['phpgw']->preferences->save_repository();
 			}
+		}
+
+		public function schedule ()
+		{
+			$composite_id = (int)phpgw::get_var('id');
+			$date = new DateTime(phpgw::get_var('date'));
+			if ($date->format('w') != 1) {
+				$date->modify('last monday');
+			}
+
+			$editable = phpgw::get_var('editable', 'bool');
+			$type = 'all_composites';
+
+			$filters = $this->get_filters();
+
+			$schedule['filters'] = $filters;
+
+			$schedule['datasource_url'] = self::link(array(
+				'menuaction' => 'rental.uicomposite.get_schedule',
+				'editable' => ($editable) ? 1 : 0,
+				'type' => $type,
+				'phpgw_return_as' => 'json'
+			));
+
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+						)
+					)
+				);
+
+			$toolbar = array();
+
+			$toolbar[] = array(
+				'name' => 'new',
+				'text' => lang('new'),
+				'action' => self::link(array(
+					'menuaction' => 'rental.uicomposite.add'
+				))
+			);
+
+			$toolbar[] = array(
+				'name' => 'download',
+				'text' => lang('download'),
+				'action' => self::link(array(
+					'menuaction' => 'rental.uicomposite.download',
+					'type' => $type,
+					'export' => true,
+					'allrows' => true
+				))
+			);
+
+			$toolbar[] = array(
+				'name' => 'edit',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'rental.uicomposite.edit'
+				)),
+				'parameters' => $parameters
+			);
+
+			$toolbar[] = array(
+				'name' => 'view',
+				'text' => lang('show'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'rental.uicomposite.view'
+				)),
+				'parameters' => $parameters
+			);
+
+			$contract_types = rental_socontract::get_instance()->get_fields_of_responsibility();
+
+			$valid_contract_types = array();
+			if (isset($this->config->config_data['contract_types']) && is_array($this->config->config_data['contract_types']))
+			{
+				foreach ($this->config->config_data['contract_types'] as $_key => $_value)
+				{
+					if ($_value)
+					{
+						$valid_contract_types[] = $_value;
+					}
+				}
+			}
+
+			$create_types = array();
+			foreach ($contract_types as $id => $label)
+			{
+				if ($valid_contract_types && !in_array($id, $valid_contract_types))
+				{
+					continue;
+				}
+
+				$names = $this->locations->get_name($id);
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					if ($this->hasPermissionOn($names['location'], PHPGW_ACL_ADD))
+					{
+						$create_types[] = array($id, $label);
+					}
+				}
+			}
+
+			foreach ($create_types as $create_type)
+			{
+				$toolbar[] = array
+					(
+					'name' => $create_type[1],
+					'text' => lang('create_contract_' . $create_type[1]),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'rental.uicontract.add_from_composite',
+						'responsibility_id' => $create_type[0]
+					)),
+					'attributes' => array(
+						'class' => 'need-free'
+					),
+					'parameters' => $parameters
+				);
+			}
+
+			$schedule['composite_id'] = $composite_id;
+			$schedule['date'] = $date;
+			$schedule['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+			$schedule['toolbar'] = json_encode($toolbar);
+			$data['schedule'] = $schedule;
+			self::add_javascript('rental','rental','schedule.js');
+
+			phpgwapi_jquery::load_widget("datepicker");
+
+			self::render_template_xsl(array('schedule', 'rental_schedule'), array('schedule' => $data));
+		}
+
+		public function get_schedule ()
+		{
+			$composite_id = (int)phpgw::get_var('id');
+			$date = new DateTime(phpgw::get_var('date'));
+
+			if ($date->format('w') != 1)
+			{
+				$date->modify('last monday');
+			}
+
+			$days = array();
+			$date_to_array = clone $date;
+			for ($i = 0; $i < 7; $i++)
+			{
+				$days[] = clone $date_to_array;
+				$date_to_array->modify("+1 day");
+			}
+
+			$composites_obj = $this->query();
+			$composites_data = $composites_obj['data'];
+
+			$composites = array();
+			$n = 0;
+
+			foreach ($composites_data as $composite)
+			{
+				$composites[$n]['id'] = $composite['id'];
+				$composites[$n]['name'] = $composite['name'];
+				$composites[$n]['object_number'] = $composite['location_code'];
+
+				foreach ($days as $day)
+				{
+					$composites[$n][date_format($day, 'D')]['status'] = $composite['status'];
+				}
+				$n++;
+			}
+
+			$data = array(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $composites_obj['recordsTotal'],
+					"Result" => $composites
+				)
+			);
+
+			return $data;
 		}
 	}

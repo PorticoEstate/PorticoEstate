@@ -277,6 +277,45 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
+
+							<br />
+							<br />
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'search_options')"/>
+								</label>
+								<div class="pure-custom">
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'search_for')"/>
+										</label>
+										<input type="text" id="applications_query" name="applications_query" value=""></input>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'status')"/>
+										</label>
+										<select id="application_status" name="application_status">
+											<xsl:apply-templates select="list_status_application_options/options"/>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div>
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_3'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl' />
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+											<xsl:with-param name="tabletools" select ='tabletools' />
+											<xsl:with-param name="data" select ='data' />
+											<xsl:with-param name="config" select ='config' />
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
 						</div>
 					</xsl:when>
 				</xsl:choose>
@@ -456,6 +495,45 @@
 					<div>
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_1'">
+								<xsl:call-template name="table_setup">
+									<xsl:with-param name="container" select ='container'/>
+									<xsl:with-param name="requestUrl" select ='requestUrl' />
+									<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+									<xsl:with-param name="tabletools" select ='tabletools' />
+									<xsl:with-param name="data" select ='data' />
+									<xsl:with-param name="config" select ='config' />
+								</xsl:call-template>
+							</xsl:if>
+						</xsl:for-each>
+					</div>
+					
+					<br />
+					<br />
+					
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'search_options')"/>
+						</label>
+						<div class="pure-custom">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'search_for')"/>
+								</label>
+								<input type="text" id="applications_query" name="applications_query" value=""></input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'status')"/>
+								</label>
+								<select id="application_status" name="application_status">
+									<xsl:apply-templates select="list_status_application_options/options"/>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div>
+						<xsl:for-each select="datatable_def">
+							<xsl:if test="container = 'datatable-container_2'">
 								<xsl:call-template name="table_setup">
 									<xsl:with-param name="container" select ='container'/>
 									<xsl:with-param name="requestUrl" select ='requestUrl' />
