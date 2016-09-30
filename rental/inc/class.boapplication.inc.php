@@ -147,6 +147,10 @@
 					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
 				}
 			}
+			if (phpgw::get_var('composite_id'))
+			{
+				$params['filters']['composite_id'] = phpgw::get_var('composite_id');
+			}
 
 			return $params;
 		}

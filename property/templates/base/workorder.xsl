@@ -975,7 +975,7 @@
 						</input>
 					</div>
 					<xsl:choose>
-						<xsl:when test="mode='edit'">
+						<xsl:when test="value_workorder_id!='' and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
 									<xsl:value-of select="php:function('lang', 'order received')"/>
@@ -1012,34 +1012,57 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<div class="pure-control-group">
-						<label for="name">
-							<xsl:choose>
-								<xsl:when test="value_workorder_id!='' and mode='edit'">
-									<xsl:variable name="lang_add_invoice_statustext">
-										<xsl:value-of select="php:function('lang', 'add invoice')"/>
-									</xsl:variable>
-									<a href="javascript:showlightbox_manual_invoice({value_workorder_id})" title="{$lang_add_invoice_statustext}">
-										<xsl:value-of select="php:function('lang', 'add invoice')"/>
-									</a>
-								</xsl:when>
-							</xsl:choose>
-						</label>
-						<div class="pure-custom">
-							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_2'">
-									<xsl:call-template name="table_setup">
-										<xsl:with-param name="container" select ='container'/>
-										<xsl:with-param name="requestUrl" select ='requestUrl' />
-										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-										<xsl:with-param name="tabletools" select ='tabletools' />
-										<xsl:with-param name="data" select ='data' />
-										<xsl:with-param name="config" select ='config' />
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
-						</div>
-					</div>
+					<xsl:choose>
+						<xsl:when test="value_workorder_id!=''">
+							<div class="pure-control-group">
+								<label for="name">
+									<xsl:choose>
+										<xsl:when test="mode='edit'">
+											<xsl:variable name="lang_add_invoice_statustext">
+												<xsl:value-of select="php:function('lang', 'add invoice')"/>
+											</xsl:variable>
+											<a href="javascript:showlightbox_manual_invoice({value_workorder_id})" title="{$lang_add_invoice_statustext}">
+												<xsl:value-of select="php:function('lang', 'add invoice')"/>
+											</a>
+										</xsl:when>
+									</xsl:choose>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_2'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
+							<div class="pure-control-group">
+								<label for="name">
+									<xsl:value-of select="php:function('lang', 'attachments')"/>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_6'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
+						</xsl:when>
+					</xsl:choose>
 				</fieldset>
 			</div>
 			<div id="coordination">

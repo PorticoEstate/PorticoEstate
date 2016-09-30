@@ -759,8 +759,8 @@
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'helpdesk.uitts._print',
-					'target' => '_blank'
 				)),
+				'target' => '_blank',
 				'parameters' => json_encode($parameters)
 			);
 
@@ -778,8 +778,8 @@
 							(
 							'menuaction' => 'helpdesk.uijasper.view',
 							'jasper_id' => $report['id'],
-							'target' => '_blank'
 						)),
+						'target' => '_blank',
 						'parameters' => json_encode($parameters)
 					);
 				}

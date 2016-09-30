@@ -36,7 +36,7 @@ $(document).ready(function ()
 			previous_contract_query = $(this).val();
 		}
 	});
-
+	
 	$('#contract_status').change(function ()
 	{
 		filterDataContracts('contract_status', $(this).val());
@@ -56,6 +56,21 @@ $(document).ready(function ()
 	{
 		filterDataContracts('contract_type', $(this).val());
 	});
+	
+	var previous_application_query = '';
+	$('#applications_query').on('keyup change', function ()
+	{
+		if ($.trim($(this).val()) != $.trim(previous_application_query))
+		{
+			filterDataApplications('search', {'value': $(this).val()});
+			previous_application_query = $(this).val();
+		}
+	});
+	
+	$('#application_status').change(function ()
+	{
+		filterDataApplications('filter_status', $(this).val());
+	});
 });
 
 function filterDataLocations(param, value)
@@ -68,6 +83,12 @@ function filterDataContracts(param, value)
 {
 	oTable2.dataTableSettings[2]['ajax']['data'][param] = value;
 	oTable2.fnDraw();
+}
+
+function filterDataApplications(param, value)
+{
+	oTable3.dataTableSettings[3]['ajax']['data'][param] = value;
+	oTable3.fnDraw();
 }
 
 function formatterArea(key, oData)

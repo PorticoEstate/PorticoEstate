@@ -1781,6 +1781,59 @@
 				$approved_amount += $entry['approved_amount'];
 			}
 
+			if($invoices)
+			{
+				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			}
+
+			foreach ($invoices as $entry)
+			{
+				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' .$entry['external_voucher_id'];
+				$attachmen_list = array();
+				try
+				{
+					$dir = new DirectoryIterator("$directory_attachment/");
+					if (is_object($dir))
+					{
+						foreach ($dir as $file)
+						{
+							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
+							{
+								continue;
+							}
+
+							$url = self::link(array(
+								'menuaction'=> 'property.uitts.show_attachment',
+								'file_name' => urlencode((string)$file),
+								'key'=> $entry['external_voucher_id']
+								));
+
+							$attachmen_list[] = array(
+								'voucher_id'	=> $entry['external_voucher_id'],
+								'file_name'		=> "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
+							);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+
+				}
+			}
+			$attachmen_def = array(
+				array(
+					'key' => 'voucher_id',
+					'label' => 'key',
+					'hidden' => false
+					),
+				array(
+					'key' => 'file_name',
+					'label' => lang('attachments'),
+					'hidden' => false,
+					'sortable' => true,
+					)
+				);
+
 			$invoice_def = array
 				(
 				array(
@@ -1873,6 +1926,19 @@
 						'location_item_id' => $id,
 						'action' => 'refresh_notify_contact',
 						'phpgw_return_as' => 'json'))),
+				)
+			);
+
+			$datatable_def[] = array(
+				'container' => 'datatable-container_6',
+				'requestUrl' => "''",
+				'data' => json_encode($attachmen_list),
+				'ColumnDefs' => $attachmen_def,
+				'config' => array(
+					array(
+						'disableFilter' => true),
+					array(
+						'disablePagination' => true)
 				)
 			);
 

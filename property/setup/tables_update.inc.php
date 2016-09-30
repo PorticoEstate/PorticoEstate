@@ -9249,7 +9249,6 @@
 		);
 
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT account_id, project_id FROM fm_workorder WHERE account_id IS NOT NULL AND account_id != '0'");
-		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$projects = array();
 		while($GLOBALS['phpgw_setup']->oProc->next_record())
 		{
@@ -9306,6 +9305,44 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.705';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.705 to 0.9.17.706
+	*
+	*/
+	$test[] = '0.9.17.705';
+
+	function property_upgrade0_9_17_705()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT DISTINCT order_id FROM fm_tts_tickets WHERE order_id IS NOT NULL");
+		$orders = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$orders[] = $GLOBALS['phpgw_setup']->oProc->f('order_id');
+		}
+
+		foreach ($orders as $order_id)
+		{
+			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_orders (id,type) VALUES ({$order_id},'ticket')");
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_tts_tickets", 'ordered_by', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => True
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_tts_tickets SET ordered_by = assignedto WHERE order_id IS NOT NULL");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.706';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

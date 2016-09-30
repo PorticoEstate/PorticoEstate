@@ -1565,7 +1565,8 @@
 				$order_id = execMethod('property.socommon.increment_id', 'order');
 				if ($order_id)
 				{
-					$this->db->query("UPDATE fm_tts_tickets SET order_id = {$order_id} WHERE id={$id}", __LINE__, __FILE__);
+					$this->db->query("UPDATE fm_tts_tickets SET order_id = {$order_id}, ordered_by = {$this->account} WHERE id={$id}", __LINE__, __FILE__);
+					$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$order_id},'ticket')");
 				}
 			}
 

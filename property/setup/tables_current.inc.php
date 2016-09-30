@@ -1146,6 +1146,7 @@
 				'finnish_date2' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'contact_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'order_id' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'ordered_by' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'vendor_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'contract_id' => array('type' => 'varchar', 'precision' => '30', 'nullable' => True),
 				'tax_code' => array('type' => 'int', 'precision' => 4, 'nullable' => True),

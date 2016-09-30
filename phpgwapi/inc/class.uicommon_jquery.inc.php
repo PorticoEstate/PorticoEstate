@@ -185,11 +185,17 @@
 		public function link( $data )
 		{
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
 				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
-			elseif ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'activitycalendarfrontend')
+			}
+			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'activitycalendarfrontend')
+			{
 				return $GLOBALS['phpgw']->link('/activitycalendarfrontend/', $data);
+			}
 			else
+			{
 				return $GLOBALS['phpgw']->link('/index.php', $data);
+			}
 		}
 
 		public function redirect( $link_data )

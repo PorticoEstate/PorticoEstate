@@ -57,6 +57,7 @@
 		private $edit;
 		private $delete;
 		private $org_units;
+		private $custom;
 		public $public_functions = array
 			(
 			'index' => true,
@@ -85,6 +86,8 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
+			$this->custom = createObject('phpgwapi.custom_fields');
+
 		}
 
 		public function add_controll_from_master()
@@ -181,6 +184,7 @@
 				return $this->query();
 			}
 			phpgwapi_jquery::load_widget('core');
+			phpgwapi_jquery::load_widget('autocomplete');
 
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist');
 			$user_list = array();
@@ -358,6 +362,9 @@
 					'field' => $this->get_fields($filter_component),
 				),
 			);
+
+			self::add_javascript('controller', 'controller', 'component.index.js');
+
 			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}
 
@@ -465,10 +472,93 @@
 			}
 		}
 
+		private function _get_location_filter_options( $location_id )
+		{
+			$attrib_data = $this->_get_attrib_data( $location_id );
+
+			$combos = array();
+			$values_combo_box = array();
+
+			if ($attrib_data)
+			{
+				$count = 0;
+				foreach ($attrib_data as $attrib)
+				{
+					if (($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'CH' || $attrib['datatype'] == 'R') && $attrib['choice'])
+					{
+						$values_combo_box[$count][] = array(
+							'id' => '',
+							'name' => lang('select') . " '{$attrib['input_text']}'"
+						);
+
+						foreach ($attrib['choice'] as $choice)
+						{
+							$values_combo_box[$count][] = array(
+								'id' => $choice['id'],
+								'name' => htmlspecialchars($choice['value'], ENT_QUOTES, 'UTF-8'),
+							);
+						}
+
+						$combos[] = array(
+							'type' => 'filter',
+							'name' => $attrib['column_name'],
+							'list' => $values_combo_box[$count]
+						);
+
+						$count++;
+					}
+				}
+			}
+
+			return $combos;
+
+		}
+
+		private function _get_attrib_data( $location_id )
+		{
+			static $attrib_data = array();
+			if(!isset($attrib_data[$location_id]))
+			{
+				$attrib_data[$location_id] = $this->custom->find2($location_id, 0, '', '', '', true, true);
+			}
+			return $attrib_data[$location_id];
+		}
+
+		private function _get_attrib_filter( $location_id )
+		{
+			$attrib_data = $this->_get_attrib_data( $location_id );
+
+			$attrib_filter = array();
+			if ($attrib_data)
+			{
+				foreach ($attrib_data as $attrib)
+				{
+					if ($attrib['datatype'] == 'LB' || $attrib['datatype'] == 'R')
+					{
+						if ($_attrib_filter_value = phpgw::get_var("custom_{$location_id}_{$attrib['column_name']}", 'int'))
+						{
+							$attrib_filter[] = "json_representation->>'{$attrib['column_name']}' = '{$_attrib_filter_value}'";
+						}
+					}
+					else if ($attrib['datatype'] == 'CH')
+					{
+						if ($_attrib_filter_value = phpgw::get_var("custom_{$location_id}_{$attrib['column_name']}", 'int'))
+						{
+							$attrib_filter[] = "json_representation->>'{$attrib['column_name']}' {$GLOBALS['phpgw']->db->like} '%,{$_attrib_filter_value},%'";
+						}
+					}
+				}
+			}
+			return $attrib_filter;
+		}
+
+
+
 		public function query()
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
+			$location_code = phpgw::get_var('location_code', 'string');
 			$control_area = phpgw::get_var('control_area', 'int');
 			$user_id = phpgw::get_var('user_id', 'int');
 			$district_id = phpgw::get_var('district_id', 'int');
@@ -541,6 +631,7 @@
 						'filter_entity_group' => $entity_group_id,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
+						'location_code'	=> $location_code,
 						'allrows' => true,
 						'filter_item' => $component_list
 						)
@@ -573,18 +664,23 @@
 					$_location_id = (int)$_location_filter['id'];
 					$exclude_locations[] = $_location_id;
 
+					$location_filter_options = $this->_get_location_filter_options($_location_id);
+
 					$_components = execMethod('property.soentity.read', array(
 						'filter_entity_group' => $entity_group_id,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
+						'location_code'	=> $location_code,
 						'org_units' => $this->org_units,
 						'allrows' => true,
 						'control_registered' => !$all_items,
 						'check_for_control' => true,
-						'filter_item' => $filter_component ? array($filter_component) : array()
+						'filter_item' => $filter_component ? array($filter_component) : array(),
+						'attrib_filter'	=> $this->_get_attrib_filter($_location_id)
 						)
 					);
 					$components = array_merge($components, $_components);
+
 				}
 
 				if ($lookup_stray_items)
@@ -594,6 +690,7 @@
 						'exclude_locations' => $exclude_locations,
 						'location_id' => $_location_id,
 						'district_id' => $district_id,
+						'location_code'	=> $location_code,
 						'org_units' => $this->org_units,
 						'allrows' => true,
 						'control_registered' => !$all_items,
@@ -1021,7 +1118,9 @@
 			return array(
 				'components' => $result,
 				'summary' => null,
-				'location_filter' => $location_filter
+				'location_filter' => $location_filter,
+				'location_filter_options'	=> $location_filter_options,
+				'return_location_id'		=> (int)$_location_id
 			);
 		}
 
