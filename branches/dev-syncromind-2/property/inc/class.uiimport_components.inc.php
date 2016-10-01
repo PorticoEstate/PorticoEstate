@@ -306,6 +306,17 @@ HTML;
 			return $html_table;		
 		}
 		
+		private function _get_default_options() 
+		{
+			return 	array (
+				'' => ' ... ',
+				'new_column' => lang('New attribute'),
+				'building_part' => lang('Building Part'),
+				'name_building_part' => lang('Name of the Building Part'),
+				'component_id'    => lang('Component ID')
+			);
+		}
+		
 		private function _build_columns()
 		{
 			$cached_file = $this->_get_components_cached_file();
@@ -327,14 +338,7 @@ HTML;
 
 			$html_table = '<table class="pure-table pure-table-bordered">';
 
-			$_options = array
-			(
-				'' => ' ... ',
-				'new_column' => 'New attribute',
-				'building_part' => '-- Building Part',
-				'name_building_part' => '-- Name of the Building Part',
-				'component_id'    => '-- Component ID'
-			);
+			$_options = $this->_get_default_options();
 
 			$template = explode("_", $template_id);
 
@@ -386,7 +390,7 @@ HTML;
 			$cat_id = $template[1];
 			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
 			
-			$_options = array();
+			$_options = $this->_get_default_options();
 			foreach ($attributes as $attribute)
 			{
 				if ($attrib_name_componentID == $attribute['column_name'])
@@ -395,14 +399,15 @@ HTML;
 				}
 				$_options[$attribute['column_name']] = $attribute['input_text'];
 			}
-
-			$_options['building_part'] = 'Building Part';
-			$_options['component_id'] = 'Component ID';
-			$_options['name_building_part'] = 'Name of the Building Part';
 			
 			$columns_name = array();
 			foreach ($columns as $k => $v)
 			{
+				if ($v == 'new_column')
+				{
+					unset($columns[$k]);
+					continue;
+				}
 				$columns_name[] = $k .' => '.$_options[$v];
 			}
 			
