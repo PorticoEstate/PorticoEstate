@@ -50,6 +50,7 @@
 			$fields,
 			$composite_types,
 			$payment_methods;
+		private $bo;
 
 		public function __construct()
 		{
@@ -67,6 +68,27 @@
 			$this->composite_types = rental_application::get_composite_types();
 			$this->payment_methods = rental_application::get_payment_methods();
 			$this->fields = rental_application::get_fields();
+		}
+
+		private function get_composite_type_options( $selected = 0 )
+		{
+			$type_options = array();
+			$type_list = execMethod('rental.bogeneric.get_list', array('type' => 'composite_type'));
+
+			$type_options[] = array(
+				'id' => '',
+				'name' => lang('select')
+			);
+
+			foreach ($type_list as $type)
+			{
+				$type_options[] = array(
+					'id' => $type['id'],
+					'name' => $type['name'],
+					'selected' => $type['id'] == $selected ? 1 : 0
+				);
+			}
+			return $type_options;
 		}
 
 		private function get_status_options( $selected = 0 )
@@ -142,6 +164,12 @@
 								'name' => 'filter_status',
 								'text' => lang('status'),
 								'list' => $status_options
+							),
+							array(
+								'type' => 'filter',
+								'name' => 'filter_composite_type_id',
+								'text' => lang('composite type'),
+								'list' =>  $this->get_composite_type_options()
 							),
 							array('type' => 'autocomplete',
 								'name' => 'ecodimb',
@@ -284,10 +312,10 @@
 
 			$bocommon = CreateObject('property.bocommon');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
-			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
-			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_start');
-			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_end');
+			$GLOBALS['phpgw']->jqcal->add_listener('date_start','datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('date_end','datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_start','datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_end','datetime');
 
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'rental');
 			$executive_officer_options[] = array('id' => '', 'name' => lang('nobody'), 'selected' => 0);
@@ -324,11 +352,20 @@
 				)
 			);
 
+			if(!$application->assign_date_start && $application->date_start)
+			{
+				$application->assign_date_start = $application->date_start;
+			}
+			if(!$application->assign_date_end && $application->date_end)
+			{
+				$application->assign_date_end = $application->date_end;
+			}
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index',)),
-				'application' => $application,//->toArray(),
+				'application' => $application,
 				'list_executive_officer' => array('options' => $executive_officer_options),
 				'step'		=> $step,
 				'value_ecodimb_descr' => ExecMethod('property.bogeneric.get_single_attrib_value', array(
@@ -337,7 +374,7 @@
 					'attrib_name' => 'descr')
 				),
 				'district_list' => array('options' => $bocommon->select_district_list('', $application->district_id)),
-				'composite_type_list' => array('options' => $bocommon->select_list($application->composite_type_id, $composite_types)),
+				'composite_type_list' => array('options' => $this->get_composite_type_options($application->composite_type_id)),
 				'payment_method_list' => array('options' => $bocommon->select_list($application->payment_method, $payment_methods)),
 				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'mode' => $mode,
@@ -358,11 +395,15 @@
 			$editable = phpgw::get_var('editable', 'bool');
 			$type = 'all_composites';
 
-//			$filters = rental_uicomposite::get_filters();
 			$filters = ExecMethod('rental.uicomposite.get_filters');
 
-			foreach ($filters as $k1 => $filter)
+			foreach ($filters as $k1 => &$filter)
 			{
+				if ($filter['name'] == 'district_id')
+				{
+					unset($filters[$k1]);
+					continue;
+				}
 				if ($filter['name'] == 'has_contract')
 				{
 					foreach ($filter['list'] as $k2 => $option)
@@ -631,7 +672,7 @@
 			foreach ($applications['results'] as $key => &$application)
 			{
 					$application['status'] = $status_text[$application['status']];
-					$application['composite_type'] = $this->composite_types[$application['composite_type']];
+					$application['composite_type'] = $this->composite_types[$application['composite_type_id']];
 
 					$application['entry_date'] = $GLOBALS['phpgw']->common->show_date($application['entry_date']);
 					$application['assign_date_start'] = $GLOBALS['phpgw']->common->show_date($application['assign_date_start'], $dateformat);

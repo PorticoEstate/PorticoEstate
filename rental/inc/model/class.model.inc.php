@@ -234,11 +234,12 @@
 			return $rental_item_arr;
 		}
 
+	
 		function validate( )
 		{
 			$errors = array();
 			$this->preValidate( $this );
-			$this->_validate( $this, $errors);
+			$this->_validate( $this, array(), $errors);
 			$this->doValidate( $this, $errors);
 			foreach ($errors as $key => $message)
 			{
@@ -263,9 +264,12 @@
 
 		}
 
-		private function _validate( $entity, array &$errors )
+		private function _validate( $entity, array $fields, array &$errors )
 		{
-			$fields = $this->get_fields();
+			if(!$fields)
+			{
+				$fields = $this->get_fields();
+			}
 			foreach ($fields as $field => $params)
 			{
 				if (!is_array($params))
@@ -289,7 +293,8 @@
 						foreach ($value as $key => $sub_entity)
 						{
 							$this->_validate(
-								(array)$sub_entity, (array)$params['manytomany']['column'], $errors, sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
+//								(array)$sub_entity, (array)$params['manytomany']['column'], $errors, sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
+								(array)$sub_entity, (array)$params['manytomany']['column'], $errors
 							);
 							$sub_entity_count++;
 						}

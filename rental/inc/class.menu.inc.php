@@ -175,22 +175,28 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
 						'acl_app' => 'rental'))
 				),
+				'composite_type' => array
+					(
+					'text' => lang('composite type'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uigeneric.index',
+						'type' => 'composite_type', 'admin' => true))
+				),
 				'composite_standard' => array
 					(
 					'text' => lang('composite standard'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uigeneric.index',
 						'type' => 'composite_standard', 'admin' => true))
 				),
 				'location_factor' => array
 					(
 					'text' => lang('location factor'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uigeneric.index',
 						'type' => 'location_factor', 'admin' => true))
 				),
 				'responsibility_unit' => array
 					(
 					'text' => lang('responsibility'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uigeneric.index',
 						'type' => 'responsibility_unit', 'admin' => true))
 				),
 				'import' => array
