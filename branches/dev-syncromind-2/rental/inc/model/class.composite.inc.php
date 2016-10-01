@@ -25,6 +25,7 @@
 		protected $status;
 		protected $furnish_type_id;
 		protected $standard_id;
+		protected $composite_type_id;
 		protected $units;
 		protected $contracts;
 		protected $part_of_town_id;
@@ -354,13 +355,21 @@
 
 		public function set_standard_id( $standard_id )
 		{
-//			_debug_array($standard_id);die();
 			$this->standard_id = (int)$standard_id;
 		}
 
 		public function get_standard_id()
 		{
 			return (int)$this->standard_id;
+		}
+		public function set_composite_type_id( $composite_type_id )
+		{
+			$this->composite_type_id = (int)$composite_type_id;
+		}
+
+		public function get_composite_type_id()
+		{
+			return (int)$this->composite_type_id;
 		}
 
 		/**
@@ -369,12 +378,26 @@
 		 */
 		public function get_standards( $selected )
 		{
-			if ($composite_standards = execMethod('property.bogeneric.get_list', array('type' => 'composite_standard',
+			if ($composite_standards = execMethod('rental.bogeneric.get_list', array('type' => 'composite_standard',
 				'selected' => $selected)))
 			{
 				array_unshift($composite_standards, array('id' => '', 'name' => lang('none')));
 			}
 			return $composite_standards;
+		}
+
+		/**
+		 * Fetch composite types on the form array(array('id' => 1, 'name' => 'some text', 'selected' => 1|0))
+		 * @return array
+		 */
+		public function get_types( $selected )
+		{
+			if ($composite_types = execMethod('rental.bogeneric.get_list', array('type' => 'composite_type',
+				'selected' => $selected)))
+			{
+				array_unshift($composite_types, array('id' => '', 'name' => lang('none')));
+			}
+			return $composite_types;
 		}
 
 		public function set_area( $area )
@@ -484,6 +507,7 @@
 				'contracts' => $contract_dates,
 				'furnished_status' => $this->get_furnish_type(),
 				'standard_id' =>  $this->get_standard_id(),
+				'composite_type_id' =>  $this->get_composite_type_id(),
 				'part_of_town_id' =>  $this->get_part_of_town_id(),
 				'custom_prize_factor' =>  $this->get_custom_prize_factor(),
 			);

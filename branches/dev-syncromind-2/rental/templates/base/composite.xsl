@@ -97,6 +97,16 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'composite type')"/>
+								</label>
+								<xsl:if test="count(//list_composite_type/options) > 0">
+									<select id="composite_type_id" name="composite_type_id">
+										<xsl:apply-templates select="list_composite_type/options"/>
+									</select>
+								</xsl:if>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'furnish_type')"/>
 								</label>
 								<select id="furnish_type_id" name="furnish_type_id">
@@ -396,6 +406,12 @@
 								<xsl:value-of select="php:function('lang', 'composite standard')"/>
 							</label>
 							<xsl:value-of select="value_composite_standard_name"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'composite type')"/>
+							</label>
+							<xsl:value-of select="value_composite_type_name"/>
 						</div>
 						<div class="pure-control-group">
 							<label>

@@ -10,7 +10,6 @@
 		</xsl:when>
 		<xsl:when test="adjustment_price">
 			<xsl:apply-templates select="adjustment_price" />
-
 		</xsl:when>
 	</xsl:choose>
 
@@ -20,6 +19,7 @@
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+		<xsl:text> H:m</xsl:text>
 	</xsl:variable>
 
 	<div>
@@ -36,7 +36,7 @@
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="application">
 					<fieldset>
-						<xsl:if test="application/id != ''">
+						<xsl:if test="application/id > 0">
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'id')"/>
@@ -74,7 +74,7 @@
 								<xsl:value-of select="$lang_district"/>
 							</label>
 
-							<select name="district_id">
+							<select id="district_id" name="district_id">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_district"/>
 								</xsl:attribute>
@@ -98,7 +98,7 @@
 								<xsl:value-of select="$lang_composite_type"/>
 							</label>
 
-							<select name="composite_type_id">
+							<select id="composite_type_id" name="composite_type_id">
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_composite_type"/>
 								</xsl:attribute>
@@ -108,9 +108,6 @@
 								<xsl:attribute name="data-validation-error-msg">
 									<xsl:value-of select="$lang_composite_type"/>
 								</xsl:attribute>
-								<option value="">
-									<xsl:value-of select="$lang_composite_type"/>
-								</option>
 								<xsl:apply-templates select="composite_type_list/options"/>
 							</select>
 						</div>
@@ -121,7 +118,7 @@
 							<label>
 								<xsl:value-of select="$lang_date_start"/>
 							</label>
-							<input type="text" id="date_start" name="date_start" size="10" readonly="readonly">
+							<input type="text" id="date_start" name="date_start" readonly="readonly" size="16">
 								<xsl:if test="application/date_start != 0 and application/date_start != ''">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('date', $date_format, number(application/date_start))"/>
@@ -143,7 +140,7 @@
 							<label>
 								<xsl:value-of select="$lang_date_end"/>
 							</label>
-							<input type="text" id="date_end" name="date_end" size="10" readonly="readonly">
+							<input type="text" id="date_end" name="date_end" size="16" readonly="readonly">
 								<xsl:if test="application/date_end != 0 and application/date_end != ''">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('date', $date_format, number(application/date_end))"/>
@@ -338,7 +335,7 @@
 								<label>
 									<xsl:value-of select="$lang_date_start"/>
 								</label>
-								<input type="text" id="assign_date_start" name="assign_date_start" size="10" readonly="readonly">
+								<input type="text" id="assign_date_start" name="assign_date_start" size="16" readonly="readonly">
 									<xsl:if test="application/assign_date_start != 0 and application/assign_date_start != ''">
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_start))"/>
@@ -352,6 +349,9 @@
 									</xsl:attribute-->
 
 								</input>
+								<xsl:text>  [ </xsl:text>
+								<xsl:value-of select="php:function('date', $date_format, number(application/date_start))"/>
+								<xsl:text> ]</xsl:text>
 							</div>
 							<div class="pure-control-group">
 								<xsl:variable name="lang_date_end">
@@ -360,7 +360,7 @@
 								<label>
 									<xsl:value-of select="$lang_date_end"/>
 								</label>
-								<input type="text" id="assign_date_end" name="assign_date_end" size="10" readonly="readonly">
+								<input type="text" id="assign_date_end" name="assign_date_end" size="16" readonly="readonly">
 									<xsl:if test="application/assign_date_end != 0 and application/assign_date_end != ''">
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('date', $date_format, number(application/assign_date_end))"/>
@@ -374,6 +374,9 @@
 									</xsl:attribute-->
 
 								</input>
+								<xsl:text>  [ </xsl:text>
+								<xsl:value-of select="php:function('date', $date_format, number(application/date_end))"/>
+								<xsl:text> ]</xsl:text>
 							</div>
 							<div class="pure-control-group">
 								<xsl:variable name="lang_status">
@@ -452,6 +455,8 @@
 									schedule.params.length = $('#cboNObjects').val();
 									schedule.params.search = $('#txtSearchSchedule').val();
 									schedule.params.start = 0;
+									schedule.params.district_id = $('#district_id').val();
+									schedule.params.composite_type_id = $('#composite_type_id').val();
 									schedule.params.availability_date_from = "";
 									schedule.params.availability_date_to = "";
 								
@@ -495,24 +500,30 @@
 										$("#cal_container #datepicker").datepicker("setDate", parseISO8601(state));
 									}
 									schedule.toolbar = <xsl:value-of select="schedule/toolbar" />;
-									
+	
 									$('#date_start').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
 										var adstart_date = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
-										schedule.params.availability_date_from = adstart_date;
-										schedule.rental.availability_from = new Date(adstart_date);
-										schedule.date = parseISO8601(adstart_date);
-										$("#cal_container #datepicker").datepicker( "option", "minDate", adstart_date );
-										schedule.updateSchedule(schedule.date);
+										if(a)
+										{
+											schedule.params.availability_date_from = adstart_date;
+											schedule.rental.availability_from = new Date(adstart_date);
+											schedule.date = parseISO8601(adstart_date);
+											$("#cal_container #datepicker").datepicker( "option", "minDate", adstart_date );
+											schedule.updateSchedule(schedule.date);
+										}
 									});
 
 									$('#date_end').datepicker("option", "onSelect", function (a, e) {
 										console.log(a);
-										var adstart_end = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
-										schedule.params.availability_date_to = adstart_end;
-										schedule.rental.availability_to = new Date(adend_date);
-										$("#cal_container #datepicker").datepicker( "option", "maxDate", adstart_end );
-										schedule.updateSchedule(schedule.date);
+										if(a)
+										{
+											var adstart_end = a.substr(6,4) + "-" + a.substr(3,2) + "-" + a.substr(0,2);
+											schedule.params.availability_date_to = adstart_end;
+											schedule.rental.availability_to = new Date(adend_date);
+											$("#cal_container #datepicker").datepicker( "option", "maxDate", adstart_end );
+											schedule.updateSchedule(schedule.date);
+										}
 									});
 
 									composites.rental = {};
