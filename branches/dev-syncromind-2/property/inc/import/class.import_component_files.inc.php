@@ -61,6 +61,26 @@
 			return true;
 		}
 		
+		private function _get_files_by_component($id, $location_id)
+		{
+			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
+					. " ON a.file_id = b.file_id WHERE a.location_item_id = '{$id}' AND a.location_id = '{$location_id}'"
+					. " AND b.mime_type != 'Directory' AND b.mime_type != 'journal' AND b.mime_type != 'journal-deleted'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			
+			while ($this->db->next_record())
+			{
+				$healthy = $this->db->f('file_id').'_#';
+				$values[] = trim(str_replace($healthy, '', $this->db->f('name')));
+			}
+
+			return $values;			
+		}
+		
+		
 		public function add_files($id, $location_code, $attrib_name_componentID)
 		{		
 			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], true);
@@ -82,8 +102,9 @@
 					'file' => $array_path[count($array_path)-1]
 				);
 			}
-	
+
 			$count = 0;
+			$count_existing = 0;
 			foreach ($component_files as $k => $files) 
 			{
 				if (empty($k))
@@ -94,13 +115,21 @@
 					$component = $this->_get_component($k, $attrib_name_componentID, $location_code);
 					if( empty($component['id']) || empty($component['location_id']))
 					{
-						$message['message'][] = array('msg' => lang('Component %1 does not exist', $k));
+						$message['message'][] = array('msg' => lang('Component %1 with location code %2 does not exist', $k, $location_code));
 						continue;
 					}
 				}
+				
+				$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
 
 				foreach ($files as $file_data)
 				{
+					if (in_array(str_replace(' ', '_', $file_data['file']), $files_in_component))
+					{
+						$count_existing++;
+						continue;
+					}
+					
 					$this->db->transaction_begin();
 					try
 					{
@@ -137,7 +166,11 @@
 					$count++;
 				}
 			}
-
+			
+			if ($count_existing)
+			{
+				$message['message'][] = array('msg' => lang('%1 files already exist and were rejected', $count_existing));
+			}
 			if ($count)
 			{
 				$message['message'][] = array('msg' => lang('%1 files saved successfully', $count));
