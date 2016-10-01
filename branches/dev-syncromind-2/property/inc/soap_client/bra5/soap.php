@@ -76,12 +76,27 @@
 
 	$location_id = phpgw::get_var('location_id', 'int');
 	$section = phpgw::get_var('section', 'string');
-	$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
 	$fileid = phpgw::get_var('fileid', 'string');
 
-	if (!$fileid && !$bygningsnr)
+	$where_parameter =  phpgw::get_var('where_parameter', 'string');
+
+	$_where = '';
+	if (!$fileid)
 	{
-		$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Bygningsnr ikke angitt som innparameter";
+		if ($where_parameter)
+		{
+			$_where = "{$where_parameter} = ". phpgw::get_var($where_parameter);
+		}
+		else
+		{
+			$bygningsnr = (int)phpgw::get_var('bygningsnr', 'int');
+			$_where = "Byggnr = {$bygningsnr}";
+		}
+
+		if (!$_where)
+		{
+			$GLOBALS['phpgw_info']['message']['errors'][] = "{$system_name}::Mangler innparameter for avgrensing av listesøk";
+		}
 	}
 
 	$c = CreateObject('admin.soconfig', $location_id);
@@ -175,7 +190,7 @@
 	}
 	$bra5ServiceSearch = new Bra5ServiceSearch();
 	/*
-	  if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where = "Byggnr = {$bygningsnr}",$_maxhits = 2)))
+	  if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where,$_maxhits = 2)))
 	  {
 	  //		_debug_array($bra5ServiceSearch->getResult());
 	  }
@@ -184,7 +199,7 @@
 	  print_r($bra5ServiceSearch->getLastError());
 	  }
 	 */
-	if ($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where = "Byggnr = {$bygningsnr}", $_maxhits = -1)))
+	if ($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where, $_maxhits = -1)))
 	{
 //		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;

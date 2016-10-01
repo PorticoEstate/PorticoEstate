@@ -56,7 +56,8 @@
 			'get_external_project'=> true,
 			'get_unspsc_code'=> true,
 			'receive_order'	=> true,
-			'check_purchase_right'=> true
+			'check_purchase_right'=> true,
+			'show_attachment'	=> true
 		);
 
 		/**
@@ -227,6 +228,35 @@
 			$html .= "</body></html>";
 
 			echo $html;
+		}
+
+		function show_attachment(  )
+		{
+			if (!$this->acl->check('.ticket.order', PHPGW_ACL_ADD, 'property') && !$this->acl->check('.project', PHPGW_ACL_ADD, 'property'))
+			{
+				phpgw::no_access();
+			}
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			$file_name = urldecode(phpgw::get_var('file_name'));
+			$key = phpgw::get_var('key');
+			$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' . $key;
+
+			$file = "$directory_attachment/$file_name";
+
+			if (file_exists($file))
+			{
+				$size = filesize($file);
+				$content = file_get_contents($file);
+
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header($document['name'], '', $size);
+				echo $content;
+			}
+
 		}
 
 		function download2()
@@ -642,7 +672,7 @@
 					)
 				)
 			);
-		
+
 			if($order_read)
 			{
 				$check_date_type['list'][] = array(
@@ -732,6 +762,8 @@
 				);
 
 				$values_combo_box[4] = $this->_get_user_list($this->user_id);
+
+				$filter_tts_assigned_to_me = $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_assigned_to_me'];
 
 				array_unshift($values_combo_box[4], array(
 					'id' => -1 * $GLOBALS['phpgw_info']['user']['account_id'],
@@ -940,12 +972,18 @@
 
 			$parameters = array
 				(
-				'parameter' => array
-					(
-					array
-						(
+				'parameter' => array(
+					array(
 						'name' => 'id',
 						'source' => 'id'
+					),
+				)
+			);
+			$parameters_location = array(
+				'parameter' => array(
+					array(
+						'name' => 'location_code',
+						'source' => 'location_code'
 					),
 				)
 			);
@@ -969,11 +1007,10 @@
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uitts._print',
-					'target' => '_blank'
 				)),
+				'target' => '_blank',
 				'parameters' => json_encode($parameters)
 			);
-
 
 			$jasper = execMethod('property.sojasper.read', array('location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location)));
 
@@ -987,8 +1024,8 @@
 						(
 						'menuaction' => 'property.uijasper.view',
 						'jasper_id' => $report['id'],
-						'target' => '_blank'
 					)),
+					'target' => '_blank',
 					'parameters' => json_encode($parameters)
 				);
 			}
@@ -1008,6 +1045,18 @@
 					'parameters' => json_encode($parameters)
 				);
 			}
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'docs',
+				'statustext' => lang('documents'),
+				'text' => lang('documents'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uidocument.list_doc',
+				)),
+				'target' => '_blank',
+				'parameters' => json_encode($parameters_location)
+			);
 
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
 			{
@@ -1237,7 +1286,7 @@
 					{
 						if(!$values['assignedto'] = $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])
 						{
-						
+
 							$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
 						}
 					}
@@ -2514,13 +2563,15 @@
 
 			// start invoice
 			$invoices = array();
-			$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'order_id' => $ticket['order_id']));
-			$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
-				'order_id' => $ticket['order_id'],
-				'paid' => true));
-			$invoices = array_merge($active_invoices, $historical_invoices);
-
+			if(!empty($ticket['order_id']))
+			{
+				$active_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+					'order_id' => $ticket['order_id']));
+				$historical_invoices = execMethod('property.soinvoice.read_invoice_sub_sum', array(
+					'order_id' => $ticket['order_id'],
+					'paid' => true));
+				$invoices = array_merge($active_invoices, $historical_invoices);
+			}
 
 			$link_data_invoice1 = array
 				(
@@ -2580,6 +2631,7 @@
 
 				$content_invoice[] = array
 					(
+					'external_voucher_id'	=> $entry['external_voucher_id'],
 					'voucher_id' => ($_lean) ? $entry['voucher_id'] : $link_voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'status' => $entry['status'],
@@ -2606,13 +2658,71 @@
 				$approved_amount += $entry['approved_amount'];
 			}
 
+
+			if($invoices)
+			{
+				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			}
+
+			foreach ($invoices as $entry)
+			{
+				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' .$entry['external_voucher_id'];
+				$attachmen_list = array();
+				try
+				{
+					$dir = new DirectoryIterator("$directory_attachment/");
+					if (is_object($dir))
+					{
+						foreach ($dir as $file)
+						{
+							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
+							{
+								continue;
+							}
+
+							$url = self::link(array(
+								'menuaction'=> 'property.uitts.show_attachment',
+								'file_name' => urlencode((string)$file),
+								'key'=> $entry['external_voucher_id']
+								));
+
+							$attachmen_list[] = array(
+								'voucher_id'	=> $entry['external_voucher_id'],
+								'file_name'		=> "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
+							);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+
+				}
+			}
+			$attachmen_def = array(
+				array(
+					'key' => 'voucher_id',
+					'label' => 'key',
+					'hidden' => false
+					),
+				array(
+					'key' => 'file_name',
+					'label' => lang('attachments'),
+					'hidden' => false,
+					'sortable' => true,
+					)
+				);
+
 			$invoice_def = array
 				(
 				array(
-					'key' => 'voucher_id',
-					'label' => lang('bilagsnr'),
+					'key' => 'external_voucher_id',
+					'label' => 'key',
 					'sortable' => false,
 					'value_footer' => lang('Sum')),
+				array(
+					'key' => 'voucher_id',
+					'label' => lang('bilagsnr'),
+					'sortable' => false),
 				array(
 					'key' => 'voucher_out_id',
 					'hidden' => true),
@@ -2676,6 +2786,20 @@
 				'requestUrl' => "''",
 				'data' => json_encode($content_invoice),
 				'ColumnDefs' => $invoice_def,
+				'config' => array(
+					array(
+						'disableFilter' => true),
+					array(
+						'disablePagination' => true)
+				)
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_8',
+				'requestUrl' => "''",
+				'data' => json_encode($attachmen_list),
+				'ColumnDefs' => $attachmen_def,
 				'config' => array(
 					array(
 						'disableFilter' => true),

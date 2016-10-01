@@ -596,6 +596,11 @@
 				$where = 'AND';
 			}
 
+			if(!$filtermethod)
+			{
+				return array();
+			}
+
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
 				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start";
 
