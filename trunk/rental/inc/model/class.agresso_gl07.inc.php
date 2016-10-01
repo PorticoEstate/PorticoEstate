@@ -61,7 +61,7 @@
 			  static $responsibility_check = array();
 			  if(!$responsibility_arr)
 			  {
-			  $responsibility_arr = execMethod('property.bogeneric.get_list',array('type' => 'responsibility_unit'));
+			  $responsibility_arr = execMethod('rental.bogeneric.get_list',array('type' => 'responsibility_unit'));
 			  foreach ($responsibility_arr as $responsibility_entry)
 			  {
 			  $responsibility_check[$responsibility_entry['id']] = true;

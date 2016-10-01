@@ -550,7 +550,7 @@ JS;
 		  $value['actions'][] = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.add_price_item', 'price_item_id' => $value['id'], 'contract_id' => $contract_id)));
 		  $value['labels'][] = lang('add');
 
-		  $sogeneric 			= CreateObject('property.sogeneric','composite_standard');
+		  $sogeneric 			= CreateObject('rental.sogeneric','composite_standard');
 		  $composite_standards = $sogeneric->read(array('allrows' => true));
 		  foreach($composite_standards as $composite_standard)
 		  {

@@ -196,10 +196,16 @@
 					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
 					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
 					phpgwapi_cache::session_set('rental', 'composite_furnished_status', phpgw::get_var('furnished_status'));
-					$filters = array('furnished_status' => phpgw::get_var('furnished_status'),
-						'is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'),
-						'has_contract' => phpgw::get_var('has_contract'), 'availability_date_from' => phpgw::get_var('availability_date_from'),
-						'availability_date_to' => phpgw::get_var('availability_date_to'), 'district_id' => $district_id);
+					$filters = array(
+						'furnished_status' => phpgw::get_var('furnished_status'),
+						'is_active' => phpgw::get_var('is_active'),
+						'is_vacant' => phpgw::get_var('occupancy'),
+						'has_contract' => phpgw::get_var('has_contract'),
+						'availability_date_from' => phpgw::get_var('availability_date_from'),
+						'availability_date_to' => phpgw::get_var('availability_date_to'),
+						'district_id' => $district_id,
+						'composite_type_id'	=> phpgw::get_var('composite_type_id', 'int'),
+						);
 					if ($application_id > 0)
 					{
 						$filters['application_id'] = $application_id;
@@ -966,6 +972,20 @@
 				$composite_standard_options[] = array('id' => $composite_standard['id'], 'name' => $composite_standard['name'],
 					'selected' => $selected);
 			}
+			$composite_type_name = '';
+			$cur_type_id = $composite->get_composite_type_id();
+			$composite_type_arr = $composite->get_types($cur_type_id);
+			$composite_type_options = array();
+			foreach ($composite_type_arr as $composite_type)
+			{
+				$selected = ($composite_type['selected']) ? 1 : 0;
+				if ($selected)
+				{
+					$composite_type_name = $composite_type['name'];
+				}
+				$composite_type_options[] = array('id' => $composite_type['id'], 'name' => $composite_type['name'],
+					'selected' => $selected);
+			}
 
 			$furnish_type_name = '';
 			$furnish_types_arr = $composite->get_furnish_types();
@@ -1001,6 +1021,8 @@ JS;
 				'value_name' => $composite->get_name(),
 				'value_composite_standard_name' => $composite_standard_name,
 				'list_composite_standard' => array('options' => $composite_standard_options),
+				'value_composite_type_name' => $composite_type_name,
+				'list_composite_type' => array('options' => $composite_type_options),
 				'value_furnish_type_name' => $furnish_type_name,
 				'list_furnish_type' => array('options' => $furnish_types_options),
 				'contract_furnished_status'	=>	!empty($this->config->config_data['contract_furnished_status']),
@@ -1069,6 +1091,7 @@ JS;
 				$composite->set_description(phpgw::get_var('description'));
 				$composite->set_furnish_type_id(phpgw::get_var('furnish_type_id'));
 				$composite->set_standard_id(phpgw::get_var('composite_standard_id', 'int'));
+				$composite->set_composite_type_id(phpgw::get_var('composite_type_id', 'int'));
 				$composite->set_part_of_town_id(phpgw::get_var('part_of_town_id', 'int'));
 				$composite->set_custom_prize_factor(phpgw::get_var('custom_prize_factor', 'float'));
 
