@@ -513,15 +513,21 @@
 		public function edit( $project = null )
 		{
 			$project_id = phpgw::get_var('id');
+			$activities = array();
 			if ($project_id && is_numeric($project_id))
 			{
 				$project = $this->so->get_single($project_id);
+				$activities = createObject('logistic.soactivity')->get(0, 1, 'name', true, '', '', array('project' => $project_id), true);
 			}
 			else
 			{
 				if ($project == null)
 				{
 					$project = new logistic_project();
+				}
+				else if($project->get_project_id())
+				{
+					$activities = createObject('logistic.soactivity')->get(0, 1, 'name', true, '', '', array('project' => $project->get_project_id()), true);
 				}
 			}
 
@@ -534,10 +540,22 @@
 				}
 			}
 
+			$project_list = $this->so->get_projects();
+
+			foreach ($project_list as $key => $entry)
+			{
+				if($project_id && $entry['id'] ==  $project_id)
+				{
+					unset($project_list[$key]);
+				}
+			}
+
 			$data = array
 				(
 				'project' => $project,
 				'options' => $project_types,
+				'project_list'	=> array('options' => $project_list),
+				'activities'	=> !!$activities,
 				'editable' => true
 			);
 
@@ -570,6 +588,8 @@
 			if ($project->validate())
 			{
 				$project_id = $this->so->store($project);
+				$from_project_id = phpgw::get_var('copy_project_activities', 'int');
+				$this->so->copy_project_activities($from_project_id,$project_id);
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view',
 					'id' => $project_id));
 			}
