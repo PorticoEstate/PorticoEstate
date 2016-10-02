@@ -231,12 +231,16 @@
 			return $project;
 		}
 
+		public function copy_project_activities( $from, $to )
+		{
+			throw new Exception('Implement me');
+		}
 		public function get_projects()
 		{
 			$project_array = array();
 			$project_array[] = array(
 				'id' => '',
-				'name' => lang('all_types'),
+				'name' => lang('select'),
 				'selected' => 1
 			);
 			$sql = "SELECT id, name FROM lg_project";
