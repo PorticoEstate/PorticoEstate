@@ -435,7 +435,7 @@
 
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-			$activities = $this->so->get(0, 0, 'name', true, '', '', array(), true);
+			$activities = $this->so->get(0, 0, 'name', true, '', '', array('project' => $project_id), true);
 
 			if ($activity_id)
 			{
