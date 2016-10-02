@@ -262,8 +262,8 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'query' => !empty($search['value']) ? $search['value'] : '',
+				'order' => !empty($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : '',
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -274,7 +274,7 @@
 			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 			// Form variables
 			$search_for = $params['query'];
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 
 			// Create an empty result set
 			$result_objects = array();
@@ -298,7 +298,7 @@
 					$activity_id = phpgw::get_var('activity_id');
 					$filters = array('id' => $activity_id);
 					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
-					$object_count = $this->so->get_count();
+					$object_count = $this->so->get_count('', '', array());
 					array_shift($result_objects);
 					if ($result_objects)
 					{
@@ -327,7 +327,7 @@
 				if (isset($activity))
 				{
 					$filters = array('activity' => $activity->get_id());
-					$requirements_for_activity = $this->so_requirement->get(0, null, null, null, null, null, $filters);
+					$requirements_for_activity = $this->so_requirement->get(0, 0, '', false, '', '', $filters);
 
 					if (count($requirements_for_activity) > 0)
 					{
@@ -337,7 +337,7 @@
 						foreach ($requirements_for_activity as $requirement)
 						{
 							$filters = array('requirement_id' => $requirement->get_id());
-							$num_allocated = $this->so_resource_allocation->get_count(null, null, $filters);
+							$num_allocated = $this->so_resource_allocation->get_count('', '', $filters);
 
 							$num_required = $requirement->get_no_of_items();
 
@@ -435,7 +435,7 @@
 
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'logistic');
 
-			$activities = $this->so->get(0, 0, 'name', true, null, null, null, true);
+			$activities = $this->so->get(0, 0, 'name', true, '', '', array(), true);
 
 			if ($activity_id)
 			{
@@ -475,7 +475,7 @@
 //			if(	$activity_id )
 			if ($project_id)
 			{
-				$parent_activity = $this->so->get_single($activity->get_parent_id());
+				$parent_activity = $this->so->get_single((int)$activity->get_parent_id());
 				$data['parent_activity'] = $parent_activity;
 			}
 			else

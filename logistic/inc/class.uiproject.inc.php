@@ -86,8 +86,8 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'query' => !empty($search['value']) ? $search['value'] : '',
+				'order' => !empty($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : '',
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -98,7 +98,7 @@
 			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 			// Form variables
 			$search_for = $params['query'];
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;

@@ -127,8 +127,8 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'query' => !empty($search['value']) ? $search['value'] : '',
+				'order' => !empty($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : '',
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -142,7 +142,7 @@
 
 			$activity_id = phpgw::get_var('activity_id');
 
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -155,7 +155,7 @@
 			if (isset($exp_param))
 			{
 				$export = true;
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			//Retrieve the type of query and perform type specific logic
@@ -166,7 +166,7 @@
 				default: // ... all composites, filters (active and vacant)
 					phpgwapi_cache::session_set('logistic', 'requirement_query', $search_for);
 					$filters = array('activity' => $activity_id);
-					$result_objects = $this->so->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
+					$result_objects = $this->so->get($start_index, (int)$num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters, $params['allrows']);
 					$object_count = $this->so->get_count($search_for, $search_type, $filters);
 					break;
 			}
@@ -470,7 +470,7 @@
 
 			$filters = array('project_type_id' => $project->get_project_type_id());
 			$search_type = 'distinct_location_id';
-			$distict_location_ids = $this->so_resource_type_requirement->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
+			$distict_location_ids = $this->so_resource_type_requirement->get((int)$start_index, (int)$num_of_objects, (string)$sort_field, (bool)$sort_ascending, (string)$search_for, (string)$search_type, $filters);
 
 			$distict_location_ids_array = array();
 
