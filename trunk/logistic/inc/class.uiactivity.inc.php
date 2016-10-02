@@ -480,7 +480,7 @@
 			}
 			else
 			{
-				$projects = $this->so_project->get();
+				$projects = $this->so_project->get(0,0,'',false,'','',array());
 				$data['projects'] = $projects;
 			}
 
