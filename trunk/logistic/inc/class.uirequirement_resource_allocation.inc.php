@@ -183,8 +183,8 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'query' => !empty($search['value']) ? $search['value'] : '',
+				'order' => !empty($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : '',
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -196,7 +196,7 @@
 			// Form variables
 			$search_for = $params['query'];
 
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 
 			// Create an empty result set
 			$result_objects = array();
@@ -362,7 +362,7 @@
 
 			if ($requirement)
 			{
-				$requirement_values = $this->so_requirement_value->get(null, null, null, null, null, null, array(
+				$requirement_values = $this->so_requirement_value->get(0, 0, '', false, '', '', array(
 					'requirement_id' => $requirement->get_id()));
 
 				$criterias_array = array();
@@ -534,7 +534,7 @@
 			//FIXME: Bruk 'allocation_id' i staden.
 //_debug_array($inventory_ids_orig);die();
 			$filters = array('requirement_id' => $requirement->get_id());
-			$num_allocated = $this->so->get_count($search_for, $search_type, $filters);
+			$num_allocated = $this->so->get_count((string)$search_for, (string)$search_type, $filters);
 
 			$num_required = $requirement->get_no_of_items();
 
