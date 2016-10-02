@@ -3,7 +3,7 @@
 	 * phpGroupWare - property: a Facilities Management System.
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2003-2010 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2003-2016 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -1185,28 +1185,11 @@
 						$type = $this->db->get_last_insert_id('fm_bim_type', 'id');
 
 						$sql = "SELECT * FROM fm_{$this->type}_{$category['entity_id']}_{$category['id']}";
-						$this->db->query($sql, __LINE__, __FILE__);
-						while ($this->db->next_record())
+						$this->db2->query($sql, __LINE__, __FILE__);
+						while ($this->db2->next_record())
 						{
-							$data = $this->db->Record;
-/*
-							$xmldata = phpgwapi_xmlhelper::toXML($data, "_{$this->type}_{$category['entity_id']}_{$category['id']}");
-							$doc = new DOMDocument('1.0', 'utf-8');
-							$doc->loadXML($xmldata);
-							$domElement = $doc->getElementsByTagName("_{$this->type}_{$category['entity_id']}_{$category['id']}")->item(0);
-							$domAttribute = $doc->createAttribute('appname');
-							$domAttribute->value = 'property';
+							$data = $this->db2->Record;
 
-							// Don't forget to append it to the element
-							$domElement->appendChild($domAttribute);
-
-							// Append it to the document itself
-							$doc->appendChild($domElement);
-
-							$doc->preserveWhiteSpace = true;
-							$doc->formatOutput = true;
-							$xml = $doc->saveXML();
-*/
 							$p_location_id = '';
 							if ($data['p_cat_id'])
 							{
@@ -1233,7 +1216,6 @@
 								'location_id' => $location_id,
 								'type' => $type,
 								'guid' => $guid,
-//								'xml_representation' => $this->db->db_addslashes($xml),
 								'json_representation' => json_encode($data),
 								'model' => 0,
 								'p_location_id' => $p_location_id,
