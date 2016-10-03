@@ -78,7 +78,21 @@
 	$section = phpgw::get_var('section', 'string');
 	$fileid = phpgw::get_var('fileid', 'string');
 
-	$where_parameter =  phpgw::get_var('where_parameter', 'string');
+	$c = CreateObject('admin.soconfig', $location_id);
+
+	$login = $c->config_data[$section]['anonymous_user'];
+	$passwd = $c->config_data[$section]['anonymous_pass'];
+	$location_url = $c->config_data[$section]['location_url'];
+	$braarkiv_user = $c->config_data[$section]['braarkiv_user'];
+	$braarkiv_pass = $c->config_data[$section]['braarkiv_pass'];
+	$classname = $c->config_data[$section]['arkd'];
+	$where_parameter = $c->config_data[$section]['where_parameter'];
+	$baseclassname = !empty($c->config_data[$section]['baseclassname']) ? $c->config_data[$section]['baseclassname'] : 'Eiendomsarkiver';
+
+	if(!$where_parameter)
+	{
+		$where_parameter =  phpgw::get_var('where_parameter', 'string');
+	}
 
 	$_where = '';
 	if (!$fileid)
@@ -99,14 +113,6 @@
 		}
 	}
 
-	$c = CreateObject('admin.soconfig', $location_id);
-
-	$login = $c->config_data[$section]['anonymous_user'];
-	$passwd = $c->config_data[$section]['anonymous_pass'];
-	$location_url = $c->config_data[$section]['location_url'];
-	$braarkiv_user = $c->config_data[$section]['braarkiv_user'];
-	$braarkiv_pass = $c->config_data[$section]['braarkiv_pass'];
-	$classname = $c->config_data[$section]['arkd'];
 
 	$_POST['submitit'] = "";
 
@@ -190,7 +196,7 @@
 	}
 	$bra5ServiceSearch = new Bra5ServiceSearch();
 	/*
-	  if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$_baseclassname = 'Eiendomsarkiver',$classname,$_where,$_maxhits = 2)))
+	  if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$baseclassname,$classname,$_where,$_maxhits = 2)))
 	  {
 	  //		_debug_array($bra5ServiceSearch->getResult());
 	  }
@@ -199,7 +205,7 @@
 	  print_r($bra5ServiceSearch->getLastError());
 	  }
 	 */
-	if ($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $_baseclassname = 'Eiendomsarkiver', $classname, $_where, $_maxhits = -1)))
+	if ($bra5ServiceSearch->searchAndGetDocuments(new Bra5StructSearchAndGetDocuments($secKey, $baseclassname, $classname, $_where, $_maxhits = -1)))
 	{
 //		_debug_array($bra5ServiceSearch->getResult());die();
 		$_result = $bra5ServiceSearch->getResult()->getsearchAndGetDocumentsResult()->getExtendedDocument()->getsearchAndGetDocumentsResult()->ExtendedDocument;
