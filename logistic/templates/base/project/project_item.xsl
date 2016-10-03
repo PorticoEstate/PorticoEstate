@@ -94,9 +94,6 @@
 										<xsl:apply-templates select="project_list/options"/>
 									</select>
 								</xsl:when>
-								<xsl:otherwise>
-									<xsl:value-of select="php:function('lang','not empty')" />
-								</xsl:otherwise>
 							</xsl:choose>
 						</dd>
 						<dt>
