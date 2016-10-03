@@ -695,3 +695,29 @@
 		}
 	}
 
+	$test[] = '0.1.0.29';
+	function rental_upgrade0_1_0_29()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite', 'prize_type_id', array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => true,
+			'default' => 2
+			));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite', 'custom_prize',array(
+			'type' => 'decimal',
+			'precision' => '20',
+			'scale' => '2',
+			'nullable' => true,
+			'default' => '0.00'
+			));
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.30';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

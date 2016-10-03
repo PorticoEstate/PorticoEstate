@@ -78,6 +78,22 @@
 							</select>
 						</div>
 						<xsl:if test="contract_furnished_status = 1">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'custom prize')"/>
+								</label>
+								<input type="text" name="custom_prize" id="custom_prize" value="{value_custom_prize}"/>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'prize type')"/>
+								</label>
+								<xsl:if test="count(//list_prize_type/options) > 0">
+									<select id="prize_type_id" name="prize_type_id">
+										<xsl:apply-templates select="list_prize_type/options"/>
+									</select>
+								</xsl:if>
+							</div>
 
 							<div class="pure-control-group">
 								<label>

@@ -32,6 +32,8 @@
 				'standard_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'part_of_town_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'custom_prize_factor' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => true, 'default' => '1.00'),
+				'custom_prize' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => true, 'default' => '1.00'),
+				'prize_type_id'  => array('type' => 'int', 'precision' => 2, 'nullable' => true,'default' => 1),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
