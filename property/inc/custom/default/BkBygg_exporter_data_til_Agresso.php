@@ -222,7 +222,7 @@
 			return $filename;
 		}
 
-		public function transfer( )
+		public function transfer( $debug )
 		{
 			$this->db->transaction_begin();
 
@@ -244,7 +244,7 @@
 
 			$transfer_ok = false;
 //			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
-			if (false)//Not yet...
+			if (!$debug)//Not yet...
 			{
 				if (!$connection = $this->connection)
 				{
@@ -291,6 +291,18 @@
 					$this->soXport->log_transaction($batchid, $this->order_id, lang('Failed to transfere Order %1 to Agresso', basename($filename)));
 			//		@unlink($filename);
 				}
+			}
+			else
+			{
+				$transfer_ok = true;
+
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				$size = strlen($content);
+				$browser = CreateObject('phpgwapi.browser');
+				$browser->content_header(basename($filename), '', $size);
+				echo $content;
 			}
 			return $transfer_ok;
 		}
