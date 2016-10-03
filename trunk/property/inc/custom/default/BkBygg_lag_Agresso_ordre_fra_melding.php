@@ -40,6 +40,7 @@
 	class lag_agresso_ordre_fra_melding
 	{
 
+		var $debug = true;
 		function __construct()
 		{
 			
@@ -48,7 +49,7 @@
 		public function transfer( $id )
 		{
 			$_ticket = ExecMethod('property.sotts.read_single', $id);
-			if ($_ticket['order_sent'])
+			if (!$this->debug && $_ticket['order_sent'])
 			{
 				return 2;
 			}
@@ -153,9 +154,9 @@
 
 			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array('order_id' => $_ticket['order_id']));
 			$exporter_ordre->create_transfer_xml($param);
-			$exporter_ordre->output();
-			die();
-			$export_ok = $exporter_ordre->transfer();
+
+			$export_ok = $exporter_ordre->transfer($this->debug);
+
 			if ($export_ok)
 			{
 				$this->log_transfer( $id );
