@@ -1187,7 +1187,7 @@
 		 */
 		public function get_responsibility_arr( $selected )
 		{
-			if ($responsibility_arr = execMethod('property.bogeneric.get_list', array('type' => 'responsibility_unit',
+			if ($responsibility_arr = execMethod('rental.bogeneric.get_list', array('type' => 'responsibility_unit',
 				'selected' => $selected)))
 			{
 				array_unshift($responsibility_arr, array('id' => '', 'name' => lang('none')));

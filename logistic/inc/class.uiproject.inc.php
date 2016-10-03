@@ -86,8 +86,8 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'query' => !empty($search['value']) ? $search['value'] : '',
+				'order' => !empty($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : '',
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -98,7 +98,7 @@
 			$sort_ascending = $params['sort'] == 'desc' ? false : true;
 			// Form variables
 			$search_for = $params['query'];
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 			// Create an empty result set
 			$result_objects = array();
 			$result_count = 0;
@@ -116,6 +116,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
+			$filters = array();
 			//var_dump($query_type);
 			switch ($query_type)
 			{
@@ -409,7 +410,7 @@
 			{
 				if ($project_type_id && is_numeric($project_type_id))
 				{
-					$objects = $this->so->get(null, null, null, null, null, 'project_type', array(
+					$objects = $this->so->get(0,0,'',false,'', 'project_type', array(
 						'id' => $project_type_id));
 					if (count($objects) > 0)
 					{
@@ -432,7 +433,7 @@
 			$project_type_id = phpgw::get_var('id');
 			if ($project_type_id && is_numeric($project_type_id))
 			{
-				$objects = $this->so->get(null, null, null, null, null, 'project_type', array(
+				$objects = $this->so->get(0,0,'',false,'', 'project_type', array(
 					'id' => $project_type_id));
 				if (count($objects) > 0)
 				{
@@ -486,7 +487,7 @@
 
 			if ($project_type_id && is_numeric($project_type_id))
 			{
-				$objects = $this->so->get(null, null, null, null, null, 'project_type', array(
+				$objects = $this->so->get(0,0,'',false,'', 'project_type', array(
 					'id' => $project_type_id));
 				if (count($objects) > 0)
 				{
@@ -513,15 +514,21 @@
 		public function edit( $project = null )
 		{
 			$project_id = phpgw::get_var('id');
+			$activities = array();
 			if ($project_id && is_numeric($project_id))
 			{
 				$project = $this->so->get_single($project_id);
+				$activities = createObject('logistic.soactivity')->get(0, 1, 'name', true, '', '', array('project' => $project_id), true);
 			}
 			else
 			{
 				if ($project == null)
 				{
 					$project = new logistic_project();
+				}
+				if($project->get_id())
+				{
+					$activities = createObject('logistic.soactivity')->get(0, 1, 'name', true, '', '', array('project' => $project->get_id()), true);
 				}
 			}
 
@@ -534,10 +541,22 @@
 				}
 			}
 
+			$project_list = $this->so->get_projects();
+
+			foreach ($project_list as $key => $entry)
+			{
+				if($project_id && $entry['id'] ==  $project_id)
+				{
+					unset($project_list[$key]);
+				}
+			}
+
 			$data = array
 				(
 				'project' => $project,
 				'options' => $project_types,
+				'project_list'	=> array('options' => $project_list),
+				'activities'	=> false,//!!$activities,
 				'editable' => true
 			);
 
@@ -570,6 +589,11 @@
 			if ($project->validate())
 			{
 				$project_id = $this->so->store($project);
+				$copy_from_project_id = phpgw::get_var('copy_project_activities', 'int');
+				if($copy_from_project_id)
+				{
+					$this->so->copy_project_activities($copy_from_project_id,$project_id, $project->get_start_date());
+				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view',
 					'id' => $project_id));
 			}

@@ -636,3 +636,5 @@ approved	rental	no	Godkjent
 location	rental	no	Lokalisering
 custom prize factor	rental	no	Prisfaktor
 standard	rental	no	Standard
+composite type	rental	no	Leieobjekt type
+type	rental	no	Type

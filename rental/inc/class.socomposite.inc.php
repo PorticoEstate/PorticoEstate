@@ -184,6 +184,11 @@
 				$filter_clauses[] = "application_id = {$this->marshal($filters['application_id'], 'int')}";
 			}
 
+			if (isset($filters['composite_type_id']))
+			{
+				$filter_clauses[] = "rental_composite.composite_type_id = {$this->marshal($filters['composite_type_id'], 'int')}";
+			}
+
 			if (isset($filters[$this->get_id_field_name()]))
 			{
 				$filter_clauses[] = "rental_composite.id = {$this->marshal($filters[$this->get_id_field_name()], 'int')}";
@@ -231,7 +236,7 @@
 					rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number,
 					  rental_composite.address_2, rental_composite.postcode, rental_composite.place,
 					  rental_composite.is_active, rental_composite.area, rental_composite.description,
-					  rental_composite.furnish_type_id, rental_composite.standard_id,
+					  rental_composite.furnish_type_id, rental_composite.standard_id,rental_composite.composite_type_id,
 					  rental_composite.part_of_town_id, rental_composite.custom_prize_factor,";
 				$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
 				$cols .= "rental_application.id AS application_id, rental_application.date_start AS application_date_start, rental_application.date_end AS application_date_end, ";
@@ -308,6 +313,7 @@
 				$composite->set_area($this->unmarshal($this->db->f('area', true), 'float'));
 				$composite->set_furnish_type_id($this->unmarshal($this->db->f('furnish_type_id'), 'int'));
 				$composite->set_standard_id($this->unmarshal($this->db->f('standard_id'), 'int'));
+				$composite->set_composite_type_id($this->unmarshal($this->db->f('composite_type_id'), 'int'));
 				$composite->set_part_of_town_id($this->unmarshal($this->db->f('part_of_town_id'), 'int'));
 				$composite->set_custom_prize_factor($this->unmarshal($this->db->f('custom_prize_factor', true), 'float'));
 			}
@@ -452,6 +458,7 @@
 				'area = ' . $this->marshal($composite->get_area(), 'float'),
 				'furnish_type_id = ' . $composite->get_furnish_type_id(),
 				'standard_id = ' . $composite->get_standard_id(),
+				'composite_type_id = ' . $composite->get_composite_type_id(),
 				'part_of_town_id = ' . $composite->get_part_of_town_id(),
 				'custom_prize_factor = \'' . $composite->get_custom_prize_factor() . '\''
 			);
@@ -473,7 +480,7 @@
 			// Build a db-friendly array of the composite object
 			$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2',
 				'house_number', 'postcode', 'place', 'object_type_id', 'area', 'furnish_type_id',
-				'standard_id', 'part_of_town_id', 'custom_prize_factor');
+				'standard_id','composite_type_id', 'part_of_town_id', 'custom_prize_factor');
 			$values = array(
 				"'" . $composite->get_name() . "'",
 				"'" . $composite->get_description() . "'",
@@ -487,6 +494,7 @@
 				$this->marshal($composite->get_area(), 'float'),
 				$composite->get_furnish_type_id(),
 				$composite->get_standard_id(),
+				$composite->get_composite_type_id(),
 				$composite->get_part_of_town_id(),
 				$composite->get_custom_prize_factor()
 			);

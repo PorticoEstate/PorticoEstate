@@ -275,3 +275,7 @@
 		array('day' => "*/1"), 'rental_run_adjustments', 'rental.soadjustment.run_adjustments', null
 	);
 
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_composite_type"
+			. " (id, name) VALUES (1, 'Type 1' )", __LINE__, __FILE__);
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_composite_type"
+			. " (id, name) VALUES (2, 'Type 2' )", __LINE__, __FILE__);
