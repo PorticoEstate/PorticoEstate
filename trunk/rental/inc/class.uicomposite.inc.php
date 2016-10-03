@@ -7,6 +7,7 @@
 	include_class('rental', 'composite', 'inc/model/');
 	include_class('rental', 'application', 'inc/model/');
 	include_class('rental', 'property_location', 'inc/model/');
+	include_class('rental', 'price_item', 'inc/model/');
 
 	class rental_uicomposite extends rental_uicommon
 	{
@@ -1010,6 +1011,16 @@
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
+			$current_prize_type_id = $composite->get_prize_type_id();
+			$prize_type_options = array();
+			$price_item = new rental_price_item();
+			foreach ($price_item->get_price_types() as $prize_type_id => $prize_type_title)
+			{
+				$selected = ($current_prize_type_id == $prize_type_id) ? 1 : 0;
+				$prize_type_options[] = array('id' => $prize_type_id, 'name' => lang($prize_type_title),
+					'selected' => $selected);
+			}
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -1021,6 +1032,8 @@ JS;
 				'value_name' => $composite->get_name(),
 				'value_composite_standard_name' => $composite_standard_name,
 				'list_composite_standard' => array('options' => $composite_standard_options),
+				'value_custom_prize' => $composite->get_custom_prize(),
+				'list_prize_type' => array('options' => $prize_type_options),
 				'value_composite_type_name' => $composite_type_name,
 				'list_composite_type' => array('options' => $composite_type_options),
 				'value_furnish_type_name' => $furnish_type_name,
@@ -1094,6 +1107,8 @@ JS;
 				$composite->set_composite_type_id(phpgw::get_var('composite_type_id', 'int'));
 				$composite->set_part_of_town_id(phpgw::get_var('part_of_town_id', 'int'));
 				$composite->set_custom_prize_factor(phpgw::get_var('custom_prize_factor', 'float'));
+				$composite->set_custom_prize(phpgw::get_var('custom_prize', 'float'));
+				$composite->set_prize_type_id(phpgw::get_var('prize_type_id', 'int'));
 
 				if (rental_socomposite::get_instance()->store($composite))
 				{
