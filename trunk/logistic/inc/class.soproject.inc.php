@@ -217,8 +217,8 @@
 			{
 				$project = new logistic_project((int)$project_id);
 
-				$project->set_name($this->unmarshal($this->db->f('name'), 'string'));
-				$project->set_description($this->unmarshal($this->db->f('description'), 'string'));
+				$project->set_name($this->unmarshal($this->db->f('name',true), 'string'));
+				$project->set_description($this->unmarshal($this->db->f('description',true), 'string'));
 				$project->set_project_type_id($this->unmarshal($this->db->f('project_type_id'), 'int'));
 				if ($project->get_project_type_id() && $project->get_project_type_id() > 0)
 				{
