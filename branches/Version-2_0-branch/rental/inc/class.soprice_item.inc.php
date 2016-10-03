@@ -389,13 +389,13 @@
 			{
 				$custom_factor = $composite_obj->get_custom_prize_factor();
 				$custom_factor = $custom_factor ? (float)$custom_factor : 1;
-				$location_info = ExecMethod('property.bogeneric.read', array(
+				$location_info = ExecMethod('rental.bogeneric.read', array(
 					'location_info'=> array('type' => 'location_factor'),
 					'custom_filter' => array('part_of_town_id = ' . (int)$composite_obj->get_part_of_town_id())
 					)
 				);
 				$location_factor = (float)abs($location_info[0]['factor']) > 0 ? (float)$location_info[0]['factor'] : 1;
-				$standard_info = ExecMethod('property.bogeneric.read_single', array('type' => 'composite_standard', 'id' => $composite_obj->get_standard_id()));
+				$standard_info = ExecMethod('rental.bogeneric.read_single', array('type' => 'composite_standard', 'id' => $composite_obj->get_standard_id()));
 				$standard_factor = (float)abs($standard_info['factor']) > 0 ? (float)$standard_info['factor'] : 1;
 			}
 

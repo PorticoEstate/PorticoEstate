@@ -352,7 +352,7 @@
 			{
 				foreach ($this->fields as $field => $params)
 				{
-					if ($params['manytomany'])
+					if (!empty($params['manytomany']))
 					{
 						$table = $params['manytomany']['table'];
 						$key = $params['manytomany']['key'];

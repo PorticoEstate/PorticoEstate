@@ -576,7 +576,7 @@
 					"
 				);
 /*
-				$sogeneric = CreateObject('property.sogeneric', 'composite_standard');
+				$sogeneric = CreateObject('rental.sogeneric', 'composite_standard');
 				$composite_standards = $sogeneric->read(array('allrows' => true));
 				foreach ($composite_standards as $composite_standard)
 				{

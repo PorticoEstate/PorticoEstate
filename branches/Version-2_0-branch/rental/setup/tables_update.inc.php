@@ -657,3 +657,41 @@
 		}
 	}
 
+	$test[] = '0.1.0.28';
+	function rental_upgrade0_1_0_28()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite', 'composite_type_id', array(
+			'type' => 'int',
+			'precision' => '2',
+			'nullable' => true,
+			));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_composite_type', array(
+				'fd' => array(
+					'id' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_composite_type"
+			. " (id, name) VALUES (1, 'Type 1' )", __LINE__, __FILE__);
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO rental_composite_type"
+			. " (id, name) VALUES (2, 'Type 2' )", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE rental_composite SET composite_type_id = 1", __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.29';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+

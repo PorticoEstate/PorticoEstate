@@ -89,8 +89,8 @@
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', $user_rows_per_page),
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
+				'query' => !empty($search['value']) ? $search['value'] : '',
+				'order' => !empty($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : '',
 				'sort' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -104,7 +104,7 @@
 
 			$activity_id = phpgw::get_var('activity_id');
 
-			$search_type = phpgw::get_var('search_option');
+			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', '');
 
 			// Form variables
 			$search_type = phpgw::get_var('search_option');
@@ -270,7 +270,7 @@
 			$project_type_id = phpgw::get_var('project_type_id');
 			if ($location_id)
 			{
-				$req_types = $this->so->get(null, null, null, null, null, null, array('location_id' => $location_id,
+				$req_types = $this->so->get(0,0,'',false,'','', array('location_id' => $location_id,
 					'project_type_id' => $project_type_id));
 				if (count($req_types) > 0)
 				{
@@ -293,7 +293,7 @@
 				$cust_attr_ids = phpgw::get_var('attributes');
 				$selected_attributes[] = array();
 
-				$req_type_array = $this->so->get(null, null, null, null, null, null, array('location_id' => $location_id,
+				$req_type_array = $this->so->get(0,0,'',false,'','', array('location_id' => $location_id,
 					'project_type_id' => $project_type_id));
 				$req_types_for_delete = array();
 				if (count($req_type_array) > 0)
@@ -446,7 +446,7 @@
 
 			if ($location_id && is_numeric($location_id))
 			{
-				$req_types = $this->so->get(null, null, null, null, null, null, array('location_id' => $location_id,
+				$req_types = $this->so->get(0,0,'',false,'','', array('location_id' => $location_id,
 					'project_type_id' => $project_type_id));
 				$loc_arr = $GLOBALS['phpgw']->locations->get_name($location_id);
 				$entity_arr = explode('.', $loc_arr['location']);
@@ -469,7 +469,7 @@
 					}
 				}
 
-				$objects = $this->so_project->get(null, null, null, null, null, 'project_type', array(
+				$objects = $this->so_project->get(0,0,'',false,'', 'project_type', array(
 					'id' => $project_type_id));
 				if (count($objects) > 0)
 				{

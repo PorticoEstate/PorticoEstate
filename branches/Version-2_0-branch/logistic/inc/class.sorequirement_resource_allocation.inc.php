@@ -181,7 +181,7 @@
 			return $ret;
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -222,7 +222,8 @@
 				$cols .= "lg_calendar.item_inventory_amount as count,";
 				$cols .= "lg_calendar.item_inventory_id as inventory_id,";
 				$cols .= "phpgw_locations.descr AS resource_type_descr, ";
-				$cols .= "fm_bim_item.location_code AS location_code, (xpath('//address/node()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_address, (xpath('//navn[1]/text()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_name ";
+//				$cols .= "fm_bim_item.location_code AS location_code, (xpath('//address/node()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_address, (xpath('//navn[1]/text()', fm_bim_item.xml_representation))[1]::text AS fm_bim_item_name ";
+				$cols .= "fm_bim_item.location_code AS location_code, fm_bim_item.json_representation->>'address' AS fm_bim_item_address, fm_bim_item.json_representation->>'navn' AS fm_bim_item_name ";
 			}
 
 			$dir = $ascending ? 'ASC' : 'DESC';

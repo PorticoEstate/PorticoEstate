@@ -335,7 +335,7 @@
 			unset($sql_cnt);
 
 			$this->total_records = $this->db->f('cnt');
-			_debug_array($sql . $ordermethod);
+//			_debug_array($sql . $ordermethod);
 			$ordermethod = '';
 			if (!$allrows)
 			{

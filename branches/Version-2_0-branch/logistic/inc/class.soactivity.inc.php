@@ -143,7 +143,7 @@
 			return $ret;
 		}
 
-		protected function get_query( string $sort_field, boolean $ascending, string $search_for, string $search_type, array $filters, boolean $return_count )
+		protected function get_query( string $sort_field, bool $ascending, string $search_for, string $search_type, array $filters, bool $return_count )
 		{
 			$clauses = array('1=1');
 
@@ -207,7 +207,7 @@
 		 * @param $start_index int with index of first object.
 		 * @param $num_of_objects int with max number of objects to return.
 		 * @param $sort_field string representing the object field to sort on.
-		 * @param $ascending boolean true for ascending sort on sort field, false
+		 * @param $ascending bool true for ascending sort on sort field, false
 		 * for descending.
 		 * @param $search_for string with free text search query.
 		 * @param $search_type string with the query type.
@@ -236,7 +236,7 @@
 
 		public function get_single( int $id )
 		{
-			$objects = parent::get(null, null, null, null, null, null, array($this->get_id_field_name() => $id));
+			$objects = parent::get(0, 0, '', false, '', '', array($this->get_id_field_name() => $id));
 			if (count($objects) > 0)
 			{
 				$keys = array_keys($objects);

@@ -495,7 +495,7 @@ th.yui-dt-sortable div{
 }
 
 #date_start, #date_end{
-	width: 90px;	
+/*	width: 90px;	*/
 }
 
 input.email, input.url, #unit_leader{

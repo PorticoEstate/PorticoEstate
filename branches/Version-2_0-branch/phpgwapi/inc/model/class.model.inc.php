@@ -1,7 +1,30 @@
 <?php
-	include_class('rental', 'validator', 'inc/model/');
+	/**
+	* Generic parent for objects
+	* @author Sigurd Nes <sigurdne@online.no> and others
+	* @copyright Copyright (C) 2016 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License v2 or later
+	* @package phpgwapi
+	* @subpackage model
+	* @version $Id:$
+	*/
 
-	abstract class rental_model
+	/*
+		This program is free software: you can redistribute it and/or modify
+		it under the terms of the GNU Lesser General Public License as published by
+		the Free Software Foundation, either version 2 of the License, or
+		(at your option) any later version.
+
+		This program is distributed in the hope that it will be useful,
+		but WITHOUT ANY WARRANTY; without even the implied warranty of
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+		GNU Lesser General Public License for more details.
+
+		You should have received a copy of the GNU Lesser General Public License
+		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	 */
+
+	abstract class phpgwapi_model
 	{
 
 		protected $validation_errors = array();
@@ -10,10 +33,12 @@
 		protected $field_of_responsibility_id;
 		protected $field_of_responsibility_name;
 		protected $permission_array;
+		protected $appname;
 
 		public function __construct( int $id )
 		{
 			$this->id = (int)$id;
+			$this->appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		public function __set($name, $value)
@@ -113,7 +138,7 @@
 		 */
 		public function has_permission( $permission = PHPGW_ACL_PRIVATE )
 		{
-			return $GLOBALS['phpgw']->acl->check($this->get_field_of_responsibility_name(), $permission, 'rental');
+			return $GLOBALS['phpgw']->acl->check($this->get_field_of_responsibility_name(), $permission, $this->appname);
 		}
 
 		/**
@@ -135,11 +160,11 @@
 		{
 			$location_name = $this->get_field_of_responsibility_name();
 			return array(
-				PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_READ, 'rental'),
-				PHPGW_ACL_ADD => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_ADD, 'rental'),
-				PHPGW_ACL_EDIT => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_EDIT, 'rental'),
-				PHPGW_ACL_DELETE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_DELETE, 'rental'),
-				PHPGW_ACL_PRIVATE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_PRIVATE, 'rental')
+				PHPGW_ACL_READ => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_READ, $this->appname),
+				PHPGW_ACL_ADD => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_ADD, $this->appname),
+				PHPGW_ACL_EDIT => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_EDIT, $this->appname),
+				PHPGW_ACL_DELETE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_DELETE, $this->appname),
+				PHPGW_ACL_PRIVATE => $GLOBALS['phpgw']->acl->check($location_name, PHPGW_ACL_PRIVATE, $this->appname)
 			);
 		}
 
@@ -234,7 +259,6 @@
 			return $rental_item_arr;
 		}
 
-	
 		function validate( )
 		{
 			$errors = array();
@@ -324,7 +348,7 @@
 					}
 				}
 				$error_key = empty($params['label']) ? $field : $params['label'];
-				if ($params['required'] && (!isset($value) || ($value !== '0' && empty($value))) && !$alternatives_ok)
+				if ($params['required'] && (($value !== '0' && empty($value)) || empty($value) ) && !$alternatives_ok)
 				{
 
 					$errors[$error_key] = lang("Field %1 is required", lang($error_key));
@@ -357,5 +381,4 @@
 				}
 			}
 		}
-
 	}
