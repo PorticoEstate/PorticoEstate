@@ -231,9 +231,64 @@
 			return $project;
 		}
 
-		public function copy_project_activities( $from, $to )
+		public function copy_project_activities( $from, $to, $start_date )
 		{
-			throw new Exception('Implement me');
+			//throw new Exception('Implement me');
+
+			$start_date = $start_date ? $start_date : time();
+			$from = (int) $from;
+			$to = (int) $to;
+			
+			$this->db->transaction_begin();
+			$this->db->query("SELECT start_date FROM lg_project WHERE id = " . (int)$from, __LINE__, __FILE__);
+			$this->db->next_record();
+			$orig_start_date = $this->db->f('start_date');
+
+			$this->db->query("SELECT start_date FROM lg_project WHERE id = " . (int)$to, __LINE__, __FILE__);
+			$this->db->next_record();
+			$new_start_date = $this->db->f('start_date');
+
+			$date_diff = $new_start_date - $orig_start_date;
+
+			$this->db->query("SELECT * FROM lg_activity WHERE project_id = {$from} ORDER BY id", __LINE__, __FILE__);
+
+			$id_map = array();
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = $this->db->Record;
+			}
+
+			foreach ($values as &$entry)
+			{
+				$orig_id = $entry['id'];
+				unset($entry['id']);
+				$entry['project_id'] = $to;
+				$entry['start_date'] += $date_diff;
+				$entry['end_date'] += $date_diff;
+
+				$this->db->query("INSERT INTO lg_activity (" . implode(',', array_keys($entry)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($entry)) . ')', __LINE__, __FILE__);
+
+				$new_id = $this->db->get_last_insert_id('lg_activity', 'id');
+
+				$id_map[$orig_id] = $new_id;
+			}
+
+			foreach ($id_map as $orig_id => $new_id)
+			{
+				$this->db->query("SELECT parent_activity_id FROM lg_activity WHERE parent_activity_id IS NOT NULL AND id = " . (int)$new_id, __LINE__, __FILE__);
+				$this->db->next_record();
+				$parent_activity_id = $this->db->f('parent_activity_id');
+				if($parent_activity_id)
+				{
+					$new_parent_id = (int)$id_map[$parent_activity_id];
+					$this->db->query("UPDATE lg_activity SET parent_activity_id = {$new_parent_id} WHERE id = " . (int)$new_id, __LINE__, __FILE__);
+				}
+			}
+
+			$this->db->transaction_commit();
+
 		}
 		public function get_projects()
 		{

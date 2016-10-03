@@ -525,9 +525,9 @@
 				{
 					$project = new logistic_project();
 				}
-				else if($project->get_project_id())
+				if($project->get_id())
 				{
-					$activities = createObject('logistic.soactivity')->get(0, 1, 'name', true, '', '', array('project' => $project->get_project_id()), true);
+					$activities = createObject('logistic.soactivity')->get(0, 1, 'name', true, '', '', array('project' => $project->get_id()), true);
 				}
 			}
 
@@ -588,8 +588,11 @@
 			if ($project->validate())
 			{
 				$project_id = $this->so->store($project);
-				$from_project_id = phpgw::get_var('copy_project_activities', 'int');
-				$this->so->copy_project_activities($from_project_id,$project_id);
+				$copy_from_project_id = phpgw::get_var('copy_project_activities', 'int');
+				if($copy_from_project_id)
+				{
+					$this->so->copy_project_activities($copy_from_project_id,$project_id, $project->get_start_date());
+				}
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'logistic.uiproject.view',
 					'id' => $project_id));
 			}
