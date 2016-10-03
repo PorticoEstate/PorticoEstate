@@ -555,7 +555,7 @@
 				'project' => $project,
 				'options' => $project_types,
 				'project_list'	=> array('options' => $project_list),
-				'activities'	=> !!$activities,
+				'activities'	=> false,//!!$activities,
 				'editable' => true
 			);
 
