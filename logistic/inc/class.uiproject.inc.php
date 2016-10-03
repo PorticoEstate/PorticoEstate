@@ -116,6 +116,7 @@
 
 			//Retrieve the type of query and perform type specific logic
 			$query_type = phpgw::get_var('type');
+			$filters = array();
 			//var_dump($query_type);
 			switch ($query_type)
 			{
@@ -409,7 +410,7 @@
 			{
 				if ($project_type_id && is_numeric($project_type_id))
 				{
-					$objects = $this->so->get(null, null, null, null, null, 'project_type', array(
+					$objects = $this->so->get(0,0,'',false,'', 'project_type', array(
 						'id' => $project_type_id));
 					if (count($objects) > 0)
 					{
@@ -432,7 +433,7 @@
 			$project_type_id = phpgw::get_var('id');
 			if ($project_type_id && is_numeric($project_type_id))
 			{
-				$objects = $this->so->get(null, null, null, null, null, 'project_type', array(
+				$objects = $this->so->get(0,0,'',false,'', 'project_type', array(
 					'id' => $project_type_id));
 				if (count($objects) > 0)
 				{
@@ -486,7 +487,7 @@
 
 			if ($project_type_id && is_numeric($project_type_id))
 			{
-				$objects = $this->so->get(null, null, null, null, null, 'project_type', array(
+				$objects = $this->so->get(0,0,'',false,'', 'project_type', array(
 					'id' => $project_type_id));
 				if (count($objects) > 0)
 				{
