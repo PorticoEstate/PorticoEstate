@@ -130,14 +130,9 @@
 
 		public function query()
 		{
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
+			$length = phpgw::get_var('length', 'int');
+
+			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -145,7 +140,7 @@
 			$columns = phpgw::get_var('columns');
 
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
+			$num_of_objects = $length == -1 ? 0 : $user_rows_per_page;
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			$search_for = (is_array($search)) ? $search['value'] : $search;
@@ -167,7 +162,7 @@
 
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			//Retrieve the type of query and perform type specific logic
@@ -294,6 +289,16 @@
 			  } */
 			if ($export)
 			{
+				/*
+				 * reverse of nl2br()
+				 */
+				foreach ($rows as &$row)
+				{
+					foreach ($row as $key => &$value)
+					{
+						$value = preg_replace('#<br\s*?/?>#i', "\n", $value);
+					}
+				}
 				return $rows;
 			}
 
