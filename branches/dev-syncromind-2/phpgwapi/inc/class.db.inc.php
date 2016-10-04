@@ -99,6 +99,7 @@
 		protected $Transaction  = false;
 
 		var $persistent = false;
+		var $delayPointer = false;
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)

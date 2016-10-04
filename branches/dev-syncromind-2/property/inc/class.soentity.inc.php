@@ -335,7 +335,7 @@
 			unset($sql_cnt);
 
 			$this->total_records = $this->db->f('cnt');
-			_debug_array($sql . $ordermethod);
+//			_debug_array($sql . $ordermethod);
 			$ordermethod = '';
 			if (!$allrows)
 			{
@@ -837,7 +837,7 @@
 					{
 						if(!empty($attibute['choice']))
 						{
-							$_querymethod[] = "CAST( json_representation->>'status' AS integer) < 90";
+							$_querymethod[] = "(json_representation->>'status' IS NULL OR CAST( json_representation->>'status' AS integer) < 90)";
 							$__querymethod = array(); // remove block
 						}
 					}
