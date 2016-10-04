@@ -2,7 +2,7 @@
 	/**
 	* Preferences - user manual
 	*
-	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2000-2016 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package preferences
 	* @subpackage setup
@@ -11,10 +11,10 @@
 
 	$setup_info['preferences']['name']      = 'preferences';
 	$setup_info['preferences']['title']     = 'Preferences';
-	$setup_info['preferences']['version']   = '0.9.17.500';
+	$setup_info['preferences']['version']   = '0.9.17.501';
 	$setup_info['preferences']['app_order'] = 1;
 	$setup_info['preferences']['tables']    = '';
-	$setup_info['preferences']['enable']    = 2;
+	$setup_info['preferences']['enable']    = 1;
 	$setup_info['preferences']['app_group']	= 'systools';
 
 	// The hooks this app includes, needed for hooks registration
@@ -29,4 +29,3 @@
 		 'appname' => 'phpgwapi',
 		 'versions' => array('0.9.17', '0.9.18')
 	);
-?>
