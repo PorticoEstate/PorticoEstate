@@ -24,8 +24,8 @@
 			$this->join = $this->db->join;
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->custom = CreateObject('property.custom_fields');
-			$this->config = createObject('phpgwapi.config', 'component_import');
-			$this->config_repository = $this->config->read_repository();
+			//$this->config = createObject('phpgwapi.config', 'component_import');
+			//$this->config_repository = $this->config->read_repository();
 			
 			$this->array_entity_categories = array(
 				'0' => array('name' => '0 Generelt'),
@@ -128,7 +128,10 @@
 		{
 			$receipt = array();
 			
-			$new_categories = $this->config_repository['new_entity_categories'];
+			//$new_categories = $this->config_repository['new_entity_categories'];
+			$new_categories = phpgwapi_cache::session_get('property', 'new_entity_categories');
+			$new_categories = ($new_categories) ? unserialize($new_categories) : array();
+			
 			if (!count($new_categories))
 			{
 				$receipt['message'][] = array('msg' => lang('Not exist new categories to insert'));
@@ -233,7 +236,10 @@
 		{
 			$receipt = array();
 			
-			$building_part_in_table = $this->config_repository['building_part_in_table'];
+			//$building_part_in_table = $this->config_repository['building_part_in_table'];
+			$building_part_in_table = phpgwapi_cache::session_get('property', 'building_part_in_table');
+			$building_part_in_table = ($building_part_in_table) ? unserialize($building_part_in_table) : array();
+
 			if (!count($building_part_in_table))
 			{
 				$receipt['message'][] = array('msg' => lang('Not exist new categories to insert'));
@@ -422,7 +428,10 @@
 		{
 			$receipt = array();
 			
-			$attributes = $this->config_repository['new_attribs_for_template'];
+			//$attributes = $this->config_repository['new_attribs_for_template'];
+			$attributes = phpgwapi_cache::session_get('property', 'new_attribs_for_template');
+			$attributes = ($attributes) ? unserialize($attributes) : array();
+			
 			if (!count($attributes))
 			{
 				$receipt['message'][] = array('msg' => lang('Not exist attributes to insert the template'));
