@@ -837,7 +837,7 @@
 					{
 						if(!empty($attibute['choice']))
 						{
-							$_querymethod[] = "CAST( json_representation->>'status' AS integer) < 90";
+							$_querymethod[] = "(json_representation->>'status' IS NULL OR CAST( json_representation->>'status' AS integer) < 90)";
 							$__querymethod = array(); // remove block
 						}
 					}
