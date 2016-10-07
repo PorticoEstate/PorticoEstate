@@ -30,6 +30,8 @@
 		protected $contracts;
 		protected $part_of_town_id;
 		protected $custom_prize_factor = '1.00';
+		protected $custom_prize;
+		protected $prize_type_id;
 		protected static $furnish_types_arr;
 
 		/**
@@ -372,6 +374,26 @@
 			return (int)$this->composite_type_id;
 		}
 
+		public function set_custom_prize( $custom_prize )
+		{
+			$this->custom_prize = (float)$custom_prize;
+		}
+
+		public function get_custom_prize()
+		{
+			return (float)$this->custom_prize;
+		}
+
+		public function set_prize_type_id( $prize_type_id )
+		{
+			$this->prize_type_id = (int)$prize_type_id;
+		}
+
+		public function get_prize_type_id()
+		{
+			return (int)$this->prize_type_id;
+		}
+
 		/**
 		 * Fetch composite standards on the form array(array('id' => 1, 'name' => 'some text', 'selected' => 1|0))
 		 * @return array
@@ -510,6 +532,8 @@
 				'composite_type_id' =>  $this->get_composite_type_id(),
 				'part_of_town_id' =>  $this->get_part_of_town_id(),
 				'custom_prize_factor' =>  $this->get_custom_prize_factor(),
+				'custom_prize' =>  $this->get_custom_prize(),
+				'prize_type_id' =>  $this->get_prize_type_id(),
 			);
 		}
 	}

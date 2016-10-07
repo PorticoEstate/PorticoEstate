@@ -2048,7 +2048,7 @@
 
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 
-				$supervisor_email = $this->get_supervisor_email($supervisor_id,  $need_approval);
+		//		$supervisor_email = $this->get_supervisor_email($supervisor_id,  $need_approval);
 				// approval
 			}
 
@@ -2940,7 +2940,7 @@
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
 				'period_list' => array('options' => execMethod('property.boinvoice.period_list', date('Ym'))),
 				'need_approval' => $need_approval,
-				'value_approval_mail_address' => $supervisor_email,
+	//			'value_approval_mail_address' => $supervisor_email,
 				'contact_data' => $contact_data,
 				'lookup_type' => $lookup_type,
 				'simple' => $this->simple,
@@ -3065,10 +3065,17 @@
 
 		public function check_purchase_right()
 		{
+			$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
+			if(!$need_approval)
+			{
+				return;
+			}
+
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
-			$id = phpgw::get_var('ecodimb');
-		//	$id ='013000';
+
+			$id = sprintf("%06s", phpgw::get_var('ecodimb'));
+	//		$id ='013000';
 
 			$amount =phpgw::get_var('amount', 'int');
 
@@ -3190,6 +3197,14 @@
 					$supervisor_email[] = array(
 						'id' => $supervisor_id,
 						'address' => $prefs['email'],
+						'required'	=> true
+					);
+				}
+				else
+				{
+					$supervisor_email[] = array(
+						'id' => $supervisor_id,
+						'address' => $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '@bergen.kommune.no',
 						'required'	=> true
 					);
 				}

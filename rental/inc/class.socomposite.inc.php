@@ -237,7 +237,7 @@
 					  rental_composite.address_2, rental_composite.postcode, rental_composite.place,
 					  rental_composite.is_active, rental_composite.area, rental_composite.description,
 					  rental_composite.furnish_type_id, rental_composite.standard_id,rental_composite.composite_type_id,
-					  rental_composite.part_of_town_id, rental_composite.custom_prize_factor,";
+					  rental_composite.part_of_town_id, rental_composite.custom_prize_factor, rental_composite.custom_prize, rental_composite.prize_type_id,";
 				$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
 				$cols .= "rental_application.id AS application_id, rental_application.date_start AS application_date_start, rental_application.date_end AS application_date_end, ";
 				$cols .= "
@@ -316,6 +316,8 @@
 				$composite->set_composite_type_id($this->unmarshal($this->db->f('composite_type_id'), 'int'));
 				$composite->set_part_of_town_id($this->unmarshal($this->db->f('part_of_town_id'), 'int'));
 				$composite->set_custom_prize_factor($this->unmarshal($this->db->f('custom_prize_factor', true), 'float'));
+				$composite->set_prize_type_id($this->unmarshal($this->db->f('prize_type_id'), 'int'));
+				$composite->set_custom_prize($this->unmarshal($this->db->f('custom_prize'), 'float'));
 			}
 			// Location code
 			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
@@ -460,7 +462,9 @@
 				'standard_id = ' . $composite->get_standard_id(),
 				'composite_type_id = ' . $composite->get_composite_type_id(),
 				'part_of_town_id = ' . $composite->get_part_of_town_id(),
-				'custom_prize_factor = \'' . $composite->get_custom_prize_factor() . '\''
+				'custom_prize_factor = \'' . $composite->get_custom_prize_factor() . '\'',
+				'prize_type_id = ' . $composite->get_prize_type_id(),
+				'custom_prize = \'' . $composite->get_custom_prize() . '\''
 			);
 
 			$result = $this->db->query('UPDATE rental_composite SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
@@ -480,7 +484,7 @@
 			// Build a db-friendly array of the composite object
 			$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2',
 				'house_number', 'postcode', 'place', 'object_type_id', 'area', 'furnish_type_id',
-				'standard_id','composite_type_id', 'part_of_town_id', 'custom_prize_factor');
+				'standard_id','composite_type_id', 'part_of_town_id', 'custom_prize_factor','prize_type_id', 'custom_prize');
 			$values = array(
 				"'" . $composite->get_name() . "'",
 				"'" . $composite->get_description() . "'",
@@ -496,7 +500,9 @@
 				$composite->get_standard_id(),
 				$composite->get_composite_type_id(),
 				$composite->get_part_of_town_id(),
-				$composite->get_custom_prize_factor()
+				"'" . $composite->get_custom_prize_factor() . "'",
+				$composite->get_prize_type_id(),
+				"'" . $composite->get_custom_prize() . "'"
 			);
 
 			$query = "INSERT INTO rental_composite (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
