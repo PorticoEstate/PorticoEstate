@@ -50,6 +50,7 @@
 		var $transfer_xml;
 		var $connection;
 		var $order_id;
+		var $voucher_type;
 
 		public function __construct( $param )
 		{
@@ -57,6 +58,7 @@
 			$this->soXport = CreateObject('property.soXport');
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			$this->order_id = $param['order_id'];
+			$this->voucher_type = $param['voucher_type'];
 		}
 
 		public function create_transfer_xml( $param )
@@ -105,7 +107,7 @@
 			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'C1',
-					'Value' => $param['dim1'] // Ansvar
+					'Value' => sprintf("%06s", $param['dim1']) // Ansvar
 				)
 			);
 			$DetailInfo[] = array(
@@ -129,7 +131,7 @@
 			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'B0',
-					'Value' => $param['dim5'] // Prosjekt
+					'Value' => $param['dim5'] ? $param['dim5'] : 9 // Prosjekt
 				)
 			);
 			$DetailInfo[] = array(
@@ -157,9 +159,9 @@
 					'BuyerProductCode' => $line['unspsc_code'], //74000176, //UN-kode
 					'BuyerProductDescr' => $line['descr'], //'Kopipapir',
 					'UnitCode' => 'STK',
-					'Quantity' => 100,
-					'Price' =>'',
-					'Linetotal'=> '',
+					'Quantity' => 1,
+					'Price' => $line['price'],
+					'Linetotal'=> $line['price'],
 					'DetailInfo' => $DetailInfo
 				);
 
@@ -169,7 +171,7 @@
 
 			$Orders['Order'][] = array(
 				'OrderNo' => $param['order_id'],
-				'VoucherType' => 'P3',
+				'VoucherType' => $param['voucher_type'],
 				'TransType' => 41,
 				'Header' => array($Header),
 				'Details' => array('Detail' => $Detail)
@@ -209,9 +211,14 @@
 			{
 				throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler referanse');
 			}
+			$voucher_type = $this->voucher_type;
+			if (!$voucher_type)
+			{
+				throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler bilagstype');
+			}
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$filename = "{$fil_katalog}/FDV_ordre_{$ref}.xml";
+			$filename = "{$fil_katalog}/{$voucher_type}_ordre_{$ref}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($filename))
@@ -224,17 +231,16 @@
 
 		public function transfer( $debug )
 		{
-			$this->db->transaction_begin();
 
 			$filename = $this->create_file_name($this->order_id);
 			$batchid = $this->soXport->increment_batchid();
 			$content = $this->transfer_xml;
 
-			if(false) // keep a copy?
+			if($debug) // keep a copy?
 			{
 				$file_written = false;
 				$fp = fopen($filename, "wb");
-				fwrite($fp, $buffer);
+				fwrite($fp, $content);
 
 				if (fclose($fp))
 				{
@@ -246,6 +252,8 @@
 //			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
 			if (!$debug)//Not yet...
 			{
+				$this->db->transaction_begin();
+
 				if (!$connection = $this->connection)
 				{
 					$connection = $this->phpftp_connect();

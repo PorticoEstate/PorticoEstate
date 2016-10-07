@@ -54,6 +54,14 @@
 				return 2;
 			}
 
+			$price = 0;
+			$budgets = ExecMethod('property.botts.get_budgets',$id);
+			foreach ($budgets as $budget)
+			{
+
+				$price += $budget['amount'];
+			}
+
 //		_debug_array($_ticket);die();
 
 			$contacts = CreateObject('property.sogeneric');
@@ -103,9 +111,9 @@
 				),
 				'BuyerReferences' => array(
 					array(
-						'Responsible' => $account_lid,
-						'RequestedBy' => $account_lid,
-						'Accountable' => $account_lid,
+						'Responsible' => strtoupper($account_lid),
+						'RequestedBy' => strtoupper($account_lid),
+						'Accountable' => strtoupper($account_lid),
 					)
 				)
 			);
@@ -129,8 +137,30 @@
 					$dim6 = "{$_ticket['building_part']}{$sogeneric_data['num']}";
 				}
 			}
+			/*
+			P3: EBF Innkjøpsordre Portico : 45000000-45249999
+			V3: EBF Varemotttak Portico   : 45500000-45749999
+			P4: EBE Innkjøpsordre Portico : 45250000-45499999
+			V4: EBE Varemotttak Portico   : 45750000-45999999
+			*/
+
+
+			if($_ticket['order_id'] >= 45000000 && $_ticket['order_id'] <= 45249999)
+			{
+				$voucher_type = 'P3';
+			}
+			else if ($_ticket['order_id'] >= 45250000 && $_ticket['order_id'] <= 45499999)
+			{
+				$voucher_type = 'P4';
+			}
+			else
+			{
+				throw new Exception("Ordrenummer '{$_ticket['order_id']}' er utenfor serien");
+			}
+
 
 			$param = array(
+				'voucher_type'	=> $voucher_type,
 				'dim0' => $_ticket['b_account_id'],			// Art
 				'dim1' => $_ticket['ecodimb'],				// Ansvar
 				'dim2' => $_ticket['service_id'] ? $_ticket['service_id'] : 9, // Tjeneste liste 30 stk, default 9
@@ -146,13 +176,19 @@
 				'buyer' => $buyer,
 				'lines' => array(
 					array(
-						'unspsc_code' => $_ticket['unspsc_code'],
-						'descr' => strip_tags($_ticket['order_descr'])
+						'unspsc_code' => $_ticket['unspsc_code'] ? $_ticket['unspsc_code'] : 'UN-72000000',
+//						'descr' => $_ticket['order_descr'] ? strip_tags($_ticket['order_descr']) : 'Bygnings-, konstruksjons- og vedlikeholdstjenester'
+						'descr' => $_ticket['unspsc_code'] ? $this->get_unspsc_code_descr($_ticket['unspsc_code']) : 'Bygnings-, konstruksjons- og vedlikeholdstjenester',
+						'price'	=> $price,
 					)
 				)
 			);
-
-			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array('order_id' => $_ticket['order_id']));
+	
+			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array(
+				'order_id' => $_ticket['order_id'],
+				'voucher_type' => $voucher_type
+				)
+			);
 			$exporter_ordre->create_transfer_xml($param);
 
 			$export_ok = $exporter_ordre->transfer($this->debug);
@@ -169,5 +205,12 @@
 			$historylog->add('RM', $id, "Ordre overført til agresso");
 			$now = time();
 			$GLOBALS['phpgw']->db->query("UPDATE fm_tts_tickets SET order_sent = {$now} WHERE id = {$id}");
+		}
+
+		private function get_unspsc_code_descr( $unspsc_code )
+		{
+			$GLOBALS['phpgw']->db->query("SELECT name FROM fm_unspsc_code WHERE id = '{$unspsc_code}'");
+			$GLOBALS['phpgw']->db->next_record();
+			return $GLOBALS['phpgw']->db->f('name');
 		}
 	}
