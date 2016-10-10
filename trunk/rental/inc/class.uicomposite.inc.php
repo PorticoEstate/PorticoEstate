@@ -221,6 +221,14 @@
 					break;
 			}
 
+			$price_item = new rental_price_item();
+			$price_types = $price_item->get_price_types();
+			foreach ($price_types as $price_type_id => &$price_type_title)
+			{
+				$price_type_title = lang($price_type_title);
+
+			}
+
 			//Create an empty row set
 			$rows = array();
 			foreach ($result_objects as $result)
@@ -231,7 +239,9 @@
 					{
 						$result->set_status('Ikke i drift');
 					}
-					$rows[] = $result->serialize();
+					$row = $result->serialize();
+					$row['prize_type'] = $price_types[$row['prize_type_id']];
+					$rows[] = $row;
 				}
 			}
 
