@@ -584,10 +584,15 @@
 				$where = 'AND';
 			}
 
+			$join_project = '';
 			if ($project_id)
 			{
 				$filtermethod .= " {$where} fm_project.id = '{$project_id}'";
 				$where = 'AND';
+				$join_project = ""
+			//		. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
+					. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
+					. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id";
 			}
 
 			if ($year)
@@ -606,10 +611,7 @@
 
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
 				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id"
-				. " FROM {$table}"
-//				. " {$this->join} fm_ecoart ON fm_ecoart.id = $table.artid"
-//				. " {$this->join} fm_workorder ON fm_workorder.id = $table.pmwrkord_code"
-//				. " {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+				. " FROM {$table}{$join_project}"
 				. " {$this->join} fm_vendor ON {$table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
 
 			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);

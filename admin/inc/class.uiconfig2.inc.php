@@ -735,7 +735,7 @@
 			$section_id	= phpgw::get_var('section_id', 'int');
 			$attrib_id	= phpgw::get_var('attrib_id', 'int');
 			$id			= phpgw::get_var('id', 'int');
-			$values		= phpgw::get_var('values');
+			$values		= phpgw::get_var('values', 'raw');
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('config'));
 

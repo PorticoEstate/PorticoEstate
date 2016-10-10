@@ -100,6 +100,10 @@
 
 		function index()
 		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -330,6 +334,11 @@
 				return $this->edit();
 			}
 
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
+
 			$id = phpgw::get_var('id', 'int');
 			$values = phpgw::get_var('values');
 
@@ -345,7 +354,7 @@
 			}
 
 			$data = str_replace(' ', '', stripslashes($values['data']));
-			$data = stripslashes($values['data']);
+			$data = html_entity_decode(stripslashes($values['data']));
 
 			$data = explode(",", $data);
 
@@ -389,9 +398,11 @@
 
 		function edit()
 		{
+			if(!$this->acl_edit)
+			{
+				phpgw::no_access();
+			}
 			$id = phpgw::get_var('id', 'int');
-			$values = phpgw::get_var('values');
-
 			$tabs = array();
 			$tabs['general'] = array('label' => lang('general'), 'link' => '#general');
 			$active_tab = 'general';
