@@ -114,14 +114,10 @@
 				switch ($attributes['column_name'])
 				{
 					case 'area_gross':
-						$location->set_area_gros($attributes['value']);
-						break;
-					case 'area_net':
-						$location->set_area_net($attributes['value']);
-						break;
 					case 'bruttoareal':
 						$location->set_area_gros($attributes['value']);
 						break;
+					case 'area_net':
 					case 'nettoareal':
 						$location->set_area_net($attributes['value']);
 						break;
