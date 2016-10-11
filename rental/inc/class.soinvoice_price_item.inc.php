@@ -74,9 +74,10 @@
 					$this->db->f('is_area', true),
 					$this->db->f('price', true),
 					$this->db->f('area', true),
-					$this->db->f('count', true),
+				(int)$this->db->f('count'),
 					strtotime($this->db->f('date_start', true)),
-					strtotime($this->db->f('date_end', true))
+					strtotime($this->db->f('date_end', true)),
+					0 // price_type_id
 				);
 	
 				$price_item->set_total_price($this->db->f('total_price', true));
