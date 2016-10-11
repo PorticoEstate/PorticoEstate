@@ -9,6 +9,8 @@
 			
 			$this->fakebase = '/temp_files_components';
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
+			
+			$this->latest_uploads = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -80,6 +82,38 @@
 			return $values;			
 		}
 		
+		private function _search_in_latest_uploads($file)
+		{
+			$file_name = str_replace(' ', '_', $file);
+			$file_id = array_search($file_name, $this->latest_uploads);
+			if ($file_id)
+			{
+				return $file_id;
+			}
+			
+			return false;
+		}
+		
+		private function _search_file_in_db($file)
+		{
+			$file_name = str_replace(' ', '_', $file);
+			
+			$sql = "SELECT file_id, name FROM phpgw_vfs "
+					. " WHERE name LIKE '%{$file_name}'"
+					. " AND mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$value = array();
+
+			if ($this->db->next_record())
+			{
+				$value['file_id'] = $this->db->f('file_id');
+				$value['name'] = $this->db->f('name');
+			}
+
+			return $value['file_id'];			
+		}
 		
 		public function add_files($id, $location_code, $attrib_name_componentID)
 		{		
@@ -103,8 +137,11 @@
 				);
 			}
 
-			$count = 0;
-			$count_existing = 0;
+			$count_new_relations = 0;
+			$count_relations_existing = 0;
+			$count_new_files = 0;
+			$count_files_existing = 0;
+			
 			foreach ($component_files as $k => $files) 
 			{
 				if (empty($k))
@@ -115,7 +152,7 @@
 					$component = $this->_get_component($k, $attrib_name_componentID, $location_code);
 					if( empty($component['id']) || empty($component['location_id']))
 					{
-						$message['message'][] = array('msg' => lang('Component %1 with location code %2 does not exist', $k, $location_code));
+						$message['message'][] = array('msg' => lang("Component '%1' with location code '%2' does not exist", $k, $location_code));
 						continue;
 					}
 				}
@@ -126,7 +163,7 @@
 				{
 					if (in_array(str_replace(' ', '_', $file_data['file']), $files_in_component))
 					{
-						$count_existing++;
+						$count_relations_existing++;
 						continue;
 					}
 					
@@ -136,19 +173,37 @@
 						$this->db->Exception_On_Error = true;						
 
 						$file = $file_data['file'];
-						if (!is_file($this->path_upload_dir.$file))
-						{
-							throw new Exception("the file {$file} does not exist. Component: {$k}");
-						}	
-						$file_id = $this->_save_file($file_data);
+						
+						$file_id = $this->_search_in_latest_uploads($file);
 						if (!$file_id)
-						{						
-							throw new Exception("failed to save file {$file}. Component: {$k}");
-						} 
+						{
+							$file_id = $this->_search_file_in_db($file);
+							if ($file_id)
+							{
+								throw new Exception("file '{$file}' exist in DB. Component: '{$k}'");
+								$count_files_existing++;
+							}
+
+							if (!is_file($this->path_upload_dir.$file))
+							{
+								throw new Exception("file '{$file}' does not exist in folder temporary. Component: '{$k}'");
+							}	
+
+							$file_id = $this->_save_file($file_data);
+							if (!$file_id)
+							{						
+								throw new Exception("failed to copy file '{$file}'. Component: '{$k}'");
+							} 
+							unlink($this->path_upload_dir.$file);
+							$count_new_files++;
+						}
+						
 						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
 						if (!$result)
 						{						
-							throw new Exception("failed to save relation. File: {$file}. Component: {$k}");
+							$message['error'][] = array('msg' => "failed to save relation. File: '{$file}'. Component: '{$k}'");
+						} else {
+							$count_new_relations++;
 						}					
 
 						$this->db->Exception_On_Error = false;
@@ -163,17 +218,24 @@
 						}
 					}
 					$this->db->transaction_commit();
-					$count++;
 				}
 			}
 			
-			if ($count_existing)
+			if ($count_new_files)
 			{
-				$message['message'][] = array('msg' => lang('%1 files already exist and were rejected', $count_existing));
+				$message['message'][] = array('msg' => lang('%1 files copy successfully', $count_new_files));
 			}
-			if ($count)
+			if ($count_relations_existing)
 			{
-				$message['message'][] = array('msg' => lang('%1 files saved successfully', $count));
+				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
+			}
+			if ($count_new_relations)
+			{
+				$message['message'][] = array('msg' => lang('%1 relations saved successfully', $count_new_relations));
+			}
+			if ($count_files_existing)
+			{
+				$message['message'][] = array('msg' => lang('%1 files already exist and were rejected', $count_files_existing));
 			}
 			
 			return $message;
@@ -319,6 +381,8 @@
 
 			if ($file_id) 
 			{
+				$this->latest_uploads[$file_id] = $file_name;
+				
 				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				$metadata['title'] = $file_data['name']; 
 				$metadata['descr'] = $file_data['desription'];
