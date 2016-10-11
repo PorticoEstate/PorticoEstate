@@ -593,7 +593,17 @@
 
 			$uicols['name'][] = 'prize_type';
 			$uicols['descr'][] = lang('prize type');
-			$uicols['sortable'][] = true;
+			$uicols['sortable'][] = false;
+			$uicols['input_type'][] = 'text';
+
+			$uicols['name'][] = 'area_net';
+			$uicols['descr'][] = lang('area_net');
+			$uicols['sortable'][] = false;
+			$uicols['input_type'][] = 'text';
+
+			$uicols['name'][] = 'area_gros';
+			$uicols['descr'][] = lang('area_gros');
+			$uicols['sortable'][] = false;
 			$uicols['input_type'][] = 'text';
 
 			return $uicols;
