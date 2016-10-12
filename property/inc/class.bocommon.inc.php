@@ -2526,7 +2526,8 @@
 			}
 
 			$sogeneric = CreateObject('property.sogeneric', $type);
-			$values = $sogeneric->read(array('query' => $query));
+			$filter = array('active' => 1);
+			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
 
 			foreach ($values as &$value)
 			{
@@ -2579,7 +2580,8 @@
 			$query = phpgw::get_var('query');
 
 			$sogeneric = CreateObject('property.sogeneric', 'dimb');
-			$values = $sogeneric->read(array('query' => $query));
+			$filter = array('active' => 1);
+			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
 
 			foreach ($values as &$value)
 			{
