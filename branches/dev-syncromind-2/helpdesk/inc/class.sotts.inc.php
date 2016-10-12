@@ -300,7 +300,7 @@
 				$where = 'AND';
 
 				$membership = $GLOBALS['phpgw']->accounts->membership($user_id);
-				$filtermethod .= ' OR (assignedto IS NULL AND group_id IN (' . implode(',',array_keys($membership)) . ')))'; 
+				$filtermethod .= ' OR (assignedto IS NULL AND phpgw_helpdesk_tickets.group_id IN (' . implode(',',array_keys($membership)) . ')))';
 			}
 
 			if ($owner_id > 0)
