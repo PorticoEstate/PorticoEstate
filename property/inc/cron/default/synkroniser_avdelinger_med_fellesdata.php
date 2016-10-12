@@ -51,7 +51,7 @@
 
 			$fellesdata->set_debug($this->debug);
 
-
+			$fellesdata->update_dimb();
 			$fellesdata->get_org_unit_ids_from_top();
 
 			if ($this->debug)
@@ -326,6 +326,44 @@
 			}
 
 			$db->transaction_commit();
+		}
+
+		function update_dimb()
+		{
+			if (!$db = $this->get_db())
+			{
+				return;
+			}
+
+			$sql = "SELECT V_ANSVAR.ANSVAR, V_ANSVAR.BESKRIVELSE,V_ANSVAR.STATUS, V_ORG_ENHET.ORG_ENHET_ID"
+				. "  FROM V_ANSVAR JOIN V_ORG_ENHET ON (V_ANSVAR.RESULTATENHET = V_ORG_ENHET.RESULTATENHET)";
+
+			$db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			while ($db->next_record())
+			{
+				$values[] = array(
+					'id'	=> (int)$db->f('ANSVAR'),
+					'descr'	=> $GLOBALS['phpgw']->db->db_addslashes($db->f('BESKRIVELSE', true)),
+					'active' => $db->f('STATUS') == 'C' ? 0 : 1,
+					'org_unit_id' => (int)$db->f('ORG_ENHET_ID')
+				);
+			}
+
+			foreach ($values as $entry)
+			{
+				$GLOBALS['phpgw']->db->query("SELECT id FROM fm_ecodimb WHERE id = {$entry['id']}", __LINE__, __FILE__);
+				if($GLOBALS['phpgw']->db->next_record())
+				{
+					$sql = "UPDATE fm_ecodimb SET descr = '{$entry['descr']}', active = {$entry['active']}, org_unit_id = {$entry['org_unit_id']}  WHERE id = {$entry['id']}";
+				}
+				else
+				{
+					$sql = "INSERT INTO fm_ecodimb (id, descr, active, org_unit_id)"
+						. " VALUES ({$entry['id']}, '{$entry['descr']}',  {$entry['active']}, {$entry['org_unit_id']})";
+				}
+				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			}
 		}
 
 		function get_org_unit_ids_from_top()

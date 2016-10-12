@@ -9346,3 +9346,32 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.706 to 0.9.17.707
+	*
+	*/
+	$test[] = '0.9.17.706';
+
+	function property_upgrade0_9_17_706()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_ecodimb', 'id', array('type' => 'int', 'precision' => '4', 'nullable' => False));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_ecodimb", 'active', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True,
+			'default' => 1
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.707';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	
