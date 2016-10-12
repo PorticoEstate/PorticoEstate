@@ -394,9 +394,11 @@
 						{
 							switch ($attributes['column_name'])
 							{
+								case 'bruttoareal':
 								case 'area_gross':
 									$location->set_area_gros($attributes['value']);
 									break;
+								case 'nettoareal':
 								case 'area_net':
 									$location->set_area_net($attributes['value']);
 									break;
@@ -582,6 +584,26 @@
 			$uicols['name'][] = 'status';
 			$uicols['descr'][] = lang('status');
 			$uicols['sortable'][] = true;
+			$uicols['input_type'][] = 'text';
+
+			$uicols['name'][] = 'custom_prize';
+			$uicols['descr'][] = lang('custom prize');
+			$uicols['sortable'][] = true;
+			$uicols['input_type'][] = 'text';
+
+			$uicols['name'][] = 'prize_type';
+			$uicols['descr'][] = lang('prize type');
+			$uicols['sortable'][] = false;
+			$uicols['input_type'][] = 'text';
+
+			$uicols['name'][] = 'area_net';
+			$uicols['descr'][] = lang('area_net');
+			$uicols['sortable'][] = false;
+			$uicols['input_type'][] = 'text';
+
+			$uicols['name'][] = 'area_gros';
+			$uicols['descr'][] = lang('area_gros');
+			$uicols['sortable'][] = false;
 			$uicols['input_type'][] = 'text';
 
 			return $uicols;

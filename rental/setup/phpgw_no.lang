@@ -638,3 +638,5 @@ custom prize factor	rental	no	Prisfaktor
 standard	rental	no	Standard
 composite type	rental	no	Leieobjekt type
 type	rental	no	Type
+custom prize	rental	no	Taksering
+prize type	rental	no	Pristype
