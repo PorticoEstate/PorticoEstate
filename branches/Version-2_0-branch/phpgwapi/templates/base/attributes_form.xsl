@@ -765,8 +765,7 @@
 <!-- New template-->
 <xsl:template name="choice">
 	<xsl:param name="input_type" />
-
-	<xsl:variable name="id">
+	<xsl:variable name="attrib_id">
 		<xsl:value-of select="id"/>
 	</xsl:variable>
 	<xsl:variable name="name">
@@ -776,10 +775,10 @@
 		<xsl:for-each select="choice">
 			<xsl:choose>
 				<xsl:when test="selected='1'">
-					<input id="id_{$name}_{id}" type="{$input_type}" name="values_attribute[{$id}][value][]" value="{id}" checked="checked"/>
+					<input id="id_{$name}_{id}" type="{$input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}" checked="checked"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<input id="id_{$name}_{id}" type="{$input_type}" name="values_attribute[{$id}][value][]" value="{id}"/>
+					<input id="id_{$name}_{id}" type="{$input_type}" name="values_attribute[{$attrib_id}][value][]" value="{id}"/>
 				</xsl:otherwise>
 			</xsl:choose>
 			<xsl:value-of select="value"/>

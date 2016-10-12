@@ -2894,9 +2894,8 @@
 			$active_tab = 'general';
 
 			$unspsc_code = $ticket['unspsc_code'] ? $ticket['unspsc_code'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['unspsc_code'];
-			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
-			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
-
+			$enable_order_service_id = !empty($this->bo->config->config_data['enable_order_service_id']) ? true : false;
+			$enable_unspsc = !empty($this->bo->config->config_data['enable_unspsc']) ? true : false;
 			$relation_type_list = array(
 				array(
 					'id'	=> 'property.uirequest.index',

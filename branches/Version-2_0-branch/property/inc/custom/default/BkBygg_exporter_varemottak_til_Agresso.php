@@ -46,6 +46,7 @@
 
 		private $acl_location;
 		private $values;
+		var $debug = true;
 
 		function __construct( $acl_location, $id )
 		{
@@ -68,7 +69,29 @@
 			$values = $this->values;
 //		_debug_array($values);die();
 
+			/*
+			P3: EBF Innkjøpsordre Portico : 45000000-45249999
+			V3: EBF Varemotttak Portico   : 45500000-45749999
+			P4: EBE Innkjøpsordre Portico : 45250000-45499999
+			V4: EBE Varemotttak Portico   : 45750000-45999999
+			*/
+
+
+			if($values['order_id'] >= 45000000 && $values['order_id'] <= 45249999)
+			{
+				$voucher_type = 'V3';
+			}
+			else if ($values['order_id'] >= 45250000 && $values['order_id'] <= 45499999)
+			{
+				$voucher_type = 'V4';
+			}
+			else
+			{
+				throw new Exception("Ordrenummer '{$values['order_id']}' er utenfor serien");
+			}
+
 			$param = array(
+				'voucher_type'	=> $voucher_type,
 				'order_id' => $values['order_id'],
 				'lines' => array(
 					array(
@@ -78,12 +101,13 @@
 				)
 			);
 
-			$exporter_varemottak = new BkBygg_exporter_varemottak_til_Agresso(array('order_id' => $values['order_id']));
+			$exporter_varemottak = new BkBygg_exporter_varemottak_til_Agresso(array(
+				'order_id' => $values['order_id'],
+				'voucher_type' => $voucher_type
+				));
 			$exporter_varemottak->create_transfer_xml($param);
-	//		$exporter_varemottak->output();
-			$export_ok = true;
-	//		die();
-	//		$export_ok = $exporter_varemottak->transfer();
+
+			$export_ok = $exporter_varemottak->transfer($this->debug);
 			if ($export_ok)
 			{
 				$this->log_transfer( $id, $received_amount );
@@ -118,6 +142,7 @@
 		var $transfer_xml;
 		var $connection;
 		var $order_id;
+		var $voucher_type;
 
 		public function __construct( $param )
 		{
@@ -142,7 +167,7 @@
 
 			$Orders['Order'][] = array(
 				'OrderNo' => $param['order_id'],
-				'VoucherType' => 'VV',
+				'VoucherType' => $param['voucher_type'],
 				'TransType' => 51,
 				'Details' => array('Detail' => $Detail)
 			);
@@ -167,9 +192,15 @@
 			{
 				throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler referanse');
 			}
+			$voucher_type = $this->voucher_type;
+			if (!$voucher_type)
+			{
+				throw new Exception('BkBygg_exporter_varemottak_til_Agresso::create_file_name() Mangler bilagstype');
+			}
+
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$filename = "{$fil_katalog}/FDV_varemottak_{$ref}.xml";
+			$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$ref}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($filename))
