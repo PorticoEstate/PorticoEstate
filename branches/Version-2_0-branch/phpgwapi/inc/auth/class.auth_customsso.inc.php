@@ -108,17 +108,7 @@
 
 			$headers = getallheaders();
 
-//			$headers['Osso-User-Dn'] = 'cn=02035701829,cn=users,dc=usrv,dc=ubergenkom,dc=no';// test
-
-			$header_regular_expression =  '/^cn=(.*),cn=users.*$/';
-			$header_key = 'Osso-User-Dn';
-			$matches = array();
-			preg_match_all($header_regular_expression,$headers[$header_key], $matches);
-			$fodsels_nr = $matches[1][0];
-
-			$uid = $headers['uid'];
-
-			$fodsels_nr = $uid ? $uid : $fodsels_nr;
+			$fodsels_nr = $headers['uid'];
 
 			$sql = "SELECT BRUKERNAVN FROM V_AD_PERSON WHERE FODSELSNR ='{$fodsels_nr}'";
 			$db->query($sql,__LINE__,__FILE__);

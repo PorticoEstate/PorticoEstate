@@ -93,7 +93,7 @@
 
 				while (list($key,$config) = each($_POST['newsettings']))
 				{
-					if ($config)
+					if ($config || $config === '0')
 					{
 						if(isset($GLOBALS['phpgw_info']['server']['found_validation_hook']) && $GLOBALS['phpgw_info']['server']['found_validation_hook'] && function_exists($key))
 						{
