@@ -29,9 +29,9 @@
 		protected $units;
 		protected $contracts;
 		protected $part_of_town_id;
-		protected $custom_prize_factor = '1.00';
-		protected $custom_prize;
-		protected $prize_type_id;
+		protected $custom_price_factor = '1.00';
+		protected $custom_price;
+		protected $price_type_id;
 		protected static $furnish_types_arr;
 
 		/**
@@ -324,14 +324,14 @@
 			return $this->part_of_town_id;
 		}
 
-		public function set_custom_prize_factor( float $custom_prize_factor )
+		public function set_custom_price_factor( float $custom_price_factor )
 		{
-			$this->custom_prize_factor = $custom_prize_factor;
+			$this->custom_price_factor = $custom_price_factor;
 		}
 
-		public function get_custom_prize_factor()
+		public function get_custom_price_factor()
 		{
-			return (float)$this->custom_prize_factor;
+			return (float)$this->custom_price_factor;
 		}
 
 		public function get_furnish_type()
@@ -374,24 +374,24 @@
 			return (int)$this->composite_type_id;
 		}
 
-		public function set_custom_prize( $custom_prize )
+		public function set_custom_price( $custom_price )
 		{
-			$this->custom_prize = (float)$custom_prize;
+			$this->custom_price = (float)$custom_price;
 		}
 
-		public function get_custom_prize()
+		public function get_custom_price()
 		{
-			return (float)$this->custom_prize;
+			return (float)$this->custom_price;
 		}
 
-		public function set_prize_type_id( $prize_type_id )
+		public function set_price_type_id( $price_type_id )
 		{
-			$this->prize_type_id = (int)$prize_type_id;
+			$this->price_type_id = (int)$price_type_id;
 		}
 
-		public function get_prize_type_id()
+		public function get_price_type_id()
 		{
-			return (int)$this->prize_type_id;
+			return (int)$this->price_type_id;
 		}
 
 		/**
@@ -531,9 +531,9 @@
 				'standard_id' =>  $this->get_standard_id(),
 				'composite_type_id' =>  $this->get_composite_type_id(),
 				'part_of_town_id' =>  $this->get_part_of_town_id(),
-				'custom_prize_factor' =>  $this->get_custom_prize_factor(),
-				'custom_prize' =>  $this->get_custom_prize(),
-				'prize_type_id' =>  $this->get_prize_type_id(),
+				'custom_price_factor' =>  $this->get_custom_price_factor(),
+				'custom_price' =>  $this->get_custom_price(),
+				'price_type_id' =>  $this->get_price_type_id(),
 			);
 		}
 	}
