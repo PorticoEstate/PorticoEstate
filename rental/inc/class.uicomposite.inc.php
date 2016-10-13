@@ -240,7 +240,7 @@
 						$result->set_status('Ikke i drift');
 					}
 					$row = $result->serialize();
-					$row['prize_type'] = $price_types[$row['prize_type_id']];
+					$row['price_type'] = $price_types[$row['price_type_id']];
 					$rows[] = $row;
 				}
 			}
@@ -1026,13 +1026,13 @@
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $code);
 
-			$current_prize_type_id = $composite->get_prize_type_id();
-			$prize_type_options = array();
+			$current_price_type_id = $composite->get_price_type_id();
+			$price_type_options = array();
 			$price_item = new rental_price_item();
-			foreach ($price_item->get_price_types() as $prize_type_id => $prize_type_title)
+			foreach ($price_item->get_price_types() as $price_type_id => $price_type_title)
 			{
-				$selected = ($current_prize_type_id == $prize_type_id) ? 1 : 0;
-				$prize_type_options[] = array('id' => $prize_type_id, 'name' => lang($prize_type_title),
+				$selected = ($current_price_type_id == $price_type_id) ? 1 : 0;
+				$price_type_options[] = array('id' => $price_type_id, 'name' => lang($price_type_title),
 					'selected' => $selected);
 			}
 
@@ -1047,8 +1047,8 @@ JS;
 				'value_name' => $composite->get_name(),
 				'value_composite_standard_name' => $composite_standard_name,
 				'list_composite_standard' => array('options' => $composite_standard_options),
-				'value_custom_prize' => $composite->get_custom_prize(),
-				'list_prize_type' => array('options' => $prize_type_options),
+				'value_custom_price' => $composite->get_custom_price(),
+				'list_price_type' => array('options' => $price_type_options),
 				'value_composite_type_name' => $composite_type_name,
 				'list_composite_type' => array('options' => $composite_type_options),
 				'value_furnish_type_name' => $furnish_type_name,
@@ -1057,7 +1057,7 @@ JS;
 				'value_part_of_town_id'=>$composite->get_part_of_town_id(),
 				'list_part_of_town' => array('options' => execMethod('property.bogeneric.get_list', array(
 						'type' => 'part_of_town', 'selected' => $composite->get_part_of_town_id(), 'add_empty' => true))),
-				'value_custom_prize_factor' => $composite->get_custom_prize_factor(),
+				'value_custom_price_factor' => $composite->get_custom_price_factor(),
 				'value_unit_count' => rental_sounit::get_instance()->get_count('', 'all', array('composite_id' => $composite_id)),
 				'value_address_1' => $address_1,
 				'has_custom_address' => ($composite->has_custom_address()) ? 1 : 0,
@@ -1121,9 +1121,9 @@ JS;
 				$composite->set_standard_id(phpgw::get_var('composite_standard_id', 'int'));
 				$composite->set_composite_type_id(phpgw::get_var('composite_type_id', 'int'));
 				$composite->set_part_of_town_id(phpgw::get_var('part_of_town_id', 'int'));
-				$composite->set_custom_prize_factor(phpgw::get_var('custom_prize_factor', 'float'));
-				$composite->set_custom_prize(phpgw::get_var('custom_prize', 'float'));
-				$composite->set_prize_type_id(phpgw::get_var('prize_type_id', 'int'));
+				$composite->set_custom_price_factor(phpgw::get_var('custom_price_factor', 'float'));
+				$composite->set_custom_price(phpgw::get_var('custom_price', 'float'));
+				$composite->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
 
 				if (rental_socomposite::get_instance()->store($composite))
 				{

@@ -489,7 +489,7 @@
 						'hidden' => false),
 					array('key' => 'standard_factor', 'label' => lang('standard'), 'className' => '', 'sortable' => true,
 						'hidden' => false),
-					array('key' => 'custom_factor', 'label' => lang('custom prize factor'), 'className' => '', 'sortable' => true,
+					array('key' => 'custom_factor', 'label' => lang('custom price factor'), 'className' => '', 'sortable' => true,
 						'hidden' => false),
 					array("key" => "area", "label" => lang('area'), "formatter" => "formatterArea",
 						'className' => 'right'),
