@@ -1194,6 +1194,8 @@
 			{
 				$('#header1').prop("checked", true);
 			}
+
+			$('div.dataTables_filter input').focus();
 		});
 	]]>
 
