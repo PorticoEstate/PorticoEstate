@@ -64,24 +64,31 @@
 				$datatype = $fields[$name]['type'];
 			}
 
-			if ( isset($this->$name) )
+			if ( isset($this->$name))
 			{
-				switch ($datatype)
+				if(is_array($this->$name))
 				{
-					case 'int':
-					case 'integert':
-						$value = (int)$this->$name;
-						break;
-					case 'float':
-						$value = (float)$this->$name;
-						break;
-					case 'bool':
-					case 'boolean':
-						$value = (bool)$this->$name;
-						break;
-					default:
-						$value = $this->$name;
-						break;
+					$value = $this->$name;
+				}
+				else
+				{
+					switch ($datatype)
+					{
+						case 'int':
+						case 'integert':
+							$value = (int)$this->$name;
+							break;
+						case 'float':
+							$value = (float)$this->$name;
+							break;
+						case 'bool':
+						case 'boolean':
+							$value = (bool)$this->$name;
+							break;
+						default:
+							$value = $this->$name;
+							break;
+					}
 				}
 
 				return $value;
@@ -318,7 +325,7 @@
 						{
 							$this->_validate(
 //								(array)$sub_entity, (array)$params['manytomany']['column'], $errors, sprintf('%s%s[%s]', $field_prefix, empty($field_prefix) ? $field : "[{$field}]", (is_string($key) ? $key : $sub_entity_count))
-								(array)$sub_entity, (array)$params['manytomany']['column'], $errors
+								$entity, array($field => $params['manytomany']['column']), $errors
 							);
 							$sub_entity_count++;
 						}
