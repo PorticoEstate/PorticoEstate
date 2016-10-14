@@ -466,7 +466,7 @@
 			$i = 0;
 			while ($this->_db->next_record())
 			{
-				$_extra = $this->_db->f($id_in_name);
+				$_extra = $this->_db->f($id_in_name, true);
 				$id = $this->_db->f('id');
 				if (!$name = $this->_db->f('name', true))
 				{

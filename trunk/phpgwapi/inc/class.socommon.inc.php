@@ -408,7 +408,7 @@
 					}
 					else
 					{
-						$row[$field] = $this->unmarshal($this->db->f($field, false), $params['type']);
+						$row[$field] = $this->unmarshal($this->db->f($field, true), $params['type']);
 					}
 				}
 			}
@@ -645,6 +645,7 @@
 
 			foreach ($this->fields as $field => $params)
 			{
+				$value = $object->get_field($field);
 				if (!empty($params['manytomany']) && !empty($params['manytomany']['input_field']) && $object->get_field($params['manytomany']['input_field']))
 				{
 					$table = $params['manytomany']['table'];
@@ -695,6 +696,66 @@
 						$update_query = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
 						return $this->db->query($update_query,__LINE__,__FILE__);
 					}
+				}
+				else if(!empty($params['manytomany']) && is_array($value))
+				{
+					$update_queries = array();
+					$table = $params['manytomany']['table'];
+					$key = $params['manytomany']['key'];
+					$update_queries[] = "DELETE FROM $table WHERE $key=$id";
+
+					if (is_array($params['manytomany']['column']))
+					{
+						$colnames = array();
+						foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+						{
+							$colnames[(is_array($paramsOrCol) ? $intOrCol : $paramsOrCol)] = true;
+						}
+						unset($colnames['id']);
+
+						$colnames = join(',', array_keys($colnames));
+
+						foreach ($value as $v)
+						{
+							$data = array();
+							foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
+							{
+								if (is_array($paramsOrCol))
+								{
+									$col = $intOrCol;
+									$type = isset($paramsOrCol['type']) ? $paramsOrCol['type'] : $params['type'];
+								}
+								else
+								{
+									$col = $paramsOrCol;
+									$type = $params['type'];
+								}
+
+								if ($col == 'id')
+								{
+									continue;
+								}
+
+								$data[] = $this->marshal($v, $type);
+							}
+							$v = join(',', $data);
+							$update_queries[] = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";
+						}
+					}
+					else
+					{
+						$colname = $params['manytomany']['column'];
+						foreach ($value as $v)
+						{
+							$v = $this->marshal($v, $params['type']);
+							$update_queries[] = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
+						}
+					}
+					foreach ($update_queries as $update_query)
+					{
+						$this->db->query($update_query, __LINE__, __FILE__);
+					}
+
 				}
 			}
 			return true;
