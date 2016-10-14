@@ -16,6 +16,17 @@ $(document).ready(function ()
 
 	calculate_total_amount();
 
+	$("#stage_width").change(function ()
+	{
+		calculate_stage_size();
+	});
+	$("#stage_depth").change(function ()
+	{
+		calculate_stage_size();
+	});
+
+	calculate_stage_size();
+
 	$.formUtils.addValidator({
 		name: 'naming',
 		validatorFunction: function (value, $el, config, languaje, $form)
@@ -48,10 +59,24 @@ function calculate_total_amount()
 	var number_of_units = $("#number_of_units").val();
 	var charge_per_unit = $("#charge_per_unit").val();
 
-	if(charge_per_unit && charge_per_unit)
+	if(charge_per_unit && number_of_units)
 	{
 		total_amount = number_of_units * charge_per_unit;
 	}
 	$("#total_amount").val(total_amount);
+}
+
+function calculate_stage_size()
+{
+	var total_size = 0
+
+	var stage_width = $("#stage_width").val();
+	var stage_depth = $("#stage_depth").val();
+
+	if(stage_width && stage_depth)
+	{
+		total_size = stage_width * stage_depth;
+	}
+	$("#stage_size").val(total_size);
 }
 

@@ -39,7 +39,7 @@ payment	eventplanner	no	Betaling
 labour support	eventplanner	no	Personellstøtte
 technical support	eventplanner	no	Teknisk støtte
 charge per unit	eventplanner	no	betaling pr stk
-timespan	eventplanner	no	lengde på arrangement (min.)
+timespan	eventplanner	no	Varighet (min.)
 number of units	eventplanner	no	Antall arrangement
 integer	eventplanner	no	Heltall
 total amount	eventplanner	no	Sum
@@ -49,3 +49,15 @@ id	eventplanner	no	Id
 messages_saved_form	eventplanner	no	Skjemaet er lagret
 field %1 is required	eventplanner	no	Feltet %1 er påkrevd
 please select a category !	eventplanner	no	Velg en kategori
+title	eventplanner	no	Programtittel
+description	eventplanner	no	Omtale av program
+might be published	eventplanner	no	Kan bli publisert på internett
+other participants	eventplanner	no	Navn på andre medvirkende (+ rolle)
+arena requirement	eventplanner	no	Krav til lokale
+stage	eventplanner	no	Scene
+stage requirement	eventplanner	no	Krav til scene
+width	eventplanner	no	Bredde
+depth	eventplanner	no	Dybde
+wardrobe	eventplanner	no	Garderobe
+audience limit	eventplanner	no	Maksimum antall publikum
+raider	eventplanner	no	Raider

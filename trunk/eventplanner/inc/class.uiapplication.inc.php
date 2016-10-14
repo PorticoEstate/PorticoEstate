@@ -283,6 +283,34 @@
 				)
 			);
 
+			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
+			$types = (array)$application->types;
+			if($types)
+			{
+				foreach ($application_type_list as &$application_type)
+				{
+					foreach ($types as $type)
+					{
+						if($type['type_id'] == $application_type['id'])
+						{
+							$application_type['selected'] = 1;
+							break;
+						}
+					}
+				}
+			}
+			$wardrobe_list = array();
+			$wardrobe_list[] = array('id' => 0, 'name' => lang('no'));
+			$wardrobe_list[] = array('id' => 1, 'name' => lang('yes'));
+
+			foreach ($wardrobe_list as &$wardrobe)
+			{
+				$wardrobe['selected'] = $wardrobe['id'] == $application->wardrobe ? 1: 0;
+			}
+
+//			_debug_array($application_type_list);
+//			_debug_array($application->types);
+//			die();
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.save')),
@@ -295,6 +323,8 @@
 					'use_acl' => $this->_category_acl,
 					'required' => true)),
 				'status_list' => array('options' => $this->get_status_options($application->status)),
+				'application_type_list' => $application_type_list,
+				'wardrobe_list'	=>  array('options' => $wardrobe_list),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab

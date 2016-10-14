@@ -78,6 +78,14 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'other participants')"/>
+							</label>
+							<textarea cols="47" rows="7" name="other_participants">
+								<xsl:value-of select="application/other_participants"/>
+							</textarea>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'active')"/>
 							</label>
 							<input type="checkbox" name="active" id="active" value="1">
@@ -142,6 +150,42 @@
 									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</xsl:attribute>
 							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'type')"/>
+							</label>
+							<div class="pure-custom">
+								<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
+									<thead>
+										<tr>
+											<th>
+												<xsl:value-of select="php:function('lang', 'select')"/>
+											</th>
+											<th>
+												<xsl:value-of select="php:function('lang', 'type')"/>
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<xsl:for-each select="application_type_list">
+											<tr>
+												<td>
+													<input type="checkbox" name="types[]" value="{id}">
+														<xsl:if test="selected = 1">
+															<xsl:attribute name="checked" value="checked"/>
+														</xsl:if>
+													</input>
+												</td>
+												<td>
+													<xsl:value-of disable-output-escaping="yes" select="name"/>
+												</td>
+											</tr>
+										</xsl:for-each>
+									</tbody>
+								</table>
+							</div>
+
 						</div>
 						<div class="pure-control-group">
 							<xsl:variable name="lang_status">
@@ -265,13 +309,32 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'total amount')"/>
 							</label>
-							<input id="total_amount" type="text" disabled="disabled="/>
+							<input id="total_amount" type="text" disabled="disabled"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'title')"/>
+							</label>
+							<input type="text" id="title" name="title" value="{application/title}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'title')"/>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'title')"/>
+								</xsl:attribute>
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'description')"/>
 							</label>
 							<textarea cols="47" rows="7" name="description">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'might be published')"/>
+								</xsl:attribute>
 								<xsl:value-of select="application/description"/>
 							</textarea>
 						</div>
@@ -314,182 +377,274 @@
 				<div id="demands">
 					<fieldset>
 						<legend>
+							<xsl:value-of select="php:function('lang', 'arena requirement')"/>
+						</legend>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'stage')"/>
+							</label>
+							<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'width')"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation">
+									<xsl:text>number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+							</input>
+							<xsl:text> X </xsl:text>
+							<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'depth')"/>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+							</input>
+							<xsl:text> M </xsl:text>
+							<input id="stage_size" type="text" disabled="disabled"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'stage requirement')"/>
+							</label>
+							<textarea cols="47" rows="7" name="stage_requirement">
+								<xsl:value-of select="application/stage_requirement"/>
+							</textarea>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'wardrobe')"/>
+							</label>
+							<input type="checkbox" name="wardrobe" id="wardrobe" value="1">
+								<xsl:if test="application/wardrobe = 1">
+									<xsl:attribute name="checked" value="checked"/>
+								</xsl:if>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'audience limit')"/>
+							</label>
+							<input type="text" id="audience_limit" name="audience_limit" value="{application/audience_limit}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'audience_limit')"/>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'integer')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+
+					</fieldset>
+					<fieldset>
+						<legend>
 							<xsl:value-of select="php:function('lang', 'labour support')"/>
 						</legend>
 
-						<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
-							<thead>
-								<tr>
-									<th></th>
-									<th>minutt før</th>
-									<th>Antall personer</th>
-									<th>minutt etter</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Hjelp til opprigging</td>
-									<td>
-										<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{application/rig_up_min_before}" size="3">
-											<xsl:attribute name="data-validation">
-												<xsl:text>number</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-optional">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</input>
-									</td>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'support')"/>
+							</label>
+							<div class="pure-custom">
+								<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
+									<thead>
+										<tr>
+											<th></th>
+											<th>minutt før</th>
+											<th>Antall personer</th>
+											<th>minutt etter</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Hjelp til opprigging</td>
+											<td>
+												<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{application/rig_up_min_before}" size="3">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+													<xsl:attribute name="data-validation-optional">
+														<xsl:text>true</xsl:text>
+													</xsl:attribute>
+												</input>
+											</td>
 
-									<td>
-										<input type="text" id="rig_up_num_person" name="rig_up_num_person" value="{application/rig_up_num_person}" size="3">
-											<xsl:attribute name="data-validation">
-												<xsl:text>number</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-optional">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</input>
-									</td>
-									<td>
-									</td>
-								</tr>
-								<tr>
-									<td>Hjelp undervegs i arraggement</td>
-									<td>
-									</td>
+											<td>
+												<input type="text" id="rig_up_num_person" name="rig_up_num_person" value="{application/rig_up_num_person}" size="3">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+													<xsl:attribute name="data-validation-optional">
+														<xsl:text>true</xsl:text>
+													</xsl:attribute>
+												</input>
+											</td>
+											<td>
+											</td>
+										</tr>
+										<tr>
+											<td>Hjelp undervegs i arrangement</td>
+											<td>
+											</td>
 
-									<td>
-										<input type="text" id="during_num_person" name="during_num_person" value="{application/during_num_person}" size="3">
-											<xsl:attribute name="data-validation">
-												<xsl:text>number</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-optional">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</input>
-									</td>
-									<td>
-									</td>
-								</tr>
-								<tr>
-									<td>Hjelp til nedrigging</td>
-									<td>
-									</td>
+											<td>
+												<input type="text" id="during_num_person" name="during_num_person" value="{application/during_num_person}" size="3">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+													<xsl:attribute name="data-validation-optional">
+														<xsl:text>true</xsl:text>
+													</xsl:attribute>
+												</input>
+											</td>
+											<td>
+											</td>
+										</tr>
+										<tr>
+											<td>Hjelp til nedrigging</td>
+											<td>
+											</td>
 
-									<td>
-										<input type="text" id="rig_down_num_person" name="rig_down_num_person" value="{application/rig_down_num_person}" size="3">
-											<xsl:attribute name="data-validation">
-												<xsl:text>number</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-optional">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</input>
-									</td>
-									<td>
-										<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{application/rig_down_min_after}" size="3">
-											<xsl:attribute name="data-validation">
-												<xsl:text>number</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-optional">
-												<xsl:text>true</xsl:text>
-											</xsl:attribute>
-										</input>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-
-
-
+											<td>
+												<input type="text" id="rig_down_num_person" name="rig_down_num_person" value="{application/rig_down_num_person}" size="3">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+													<xsl:attribute name="data-validation-optional">
+														<xsl:text>true</xsl:text>
+													</xsl:attribute>
+												</input>
+											</td>
+											<td>
+												<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{application/rig_down_min_after}" size="3">
+													<xsl:attribute name="data-validation">
+														<xsl:text>number</xsl:text>
+													</xsl:attribute>
+													<xsl:attribute name="data-validation-optional">
+														<xsl:text>true</xsl:text>
+													</xsl:attribute>
+												</input>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</fieldset>
 					<fieldset>
 						<legend>
 							<xsl:value-of select="php:function('lang', 'technical support')"/>
 						</legend>
-						<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
-							<thead>
-								<tr>
-									<th>Hva</th>
-									<th>Ja/Nei</th>
-									<th>Fritekst</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>Strøm</td>
-									<td>
-										<input type="checkbox" name="power" id="power" value="1">
-											<xsl:if test="application/power = 1">
-												<xsl:attribute name="checked" value="checked"/>
-											</xsl:if>
-										</input>
-									</td>
-									<td>
-										<input type="text" id="power_remark" name="power_remark" value="{application/power_remark}">
-										</input>
-									</td>
-								</tr>
-								<tr>
-									<td>Lydanlegg</td>
-									<td>
-										<input type="checkbox" name="sound" id="sound" value="1">
-											<xsl:if test="application/sound = 1">
-												<xsl:attribute name="checked" value="checked"/>
-											</xsl:if>
-										</input>
-									</td>
-									<td>
-										<input type="text" id="sound_remark" name="sound_remark" value="{application/sound_remark}">
-										</input>
-									</td>
-								</tr>
-								<tr>
-									<td>Lyssetting/blending</td>
-									<td>
-										<input type="checkbox" name="light" id="light" value="1">
-											<xsl:if test="application/light = 1">
-												<xsl:attribute name="checked" value="checked"/>
-											</xsl:if>
-										</input>
-									</td>
-									<td>
-										<input type="text" id="light_remark" name="light_remark" value="{application/light_remark}">
-										</input>
-									</td>
-								</tr>
-								<tr>
-									<td>Piano</td>
-									<td>
-										<input type="checkbox" name="piano" id="piano" value="1">
-											<xsl:if test="application/piano = 1">
-												<xsl:attribute name="checked" value="checked"/>
-											</xsl:if>
-										</input>
-									</td>
-									<td>
-										<input type="text" id="piano_remark" name="piano_remark" value="{application/piano_remark}">
-										</input>
-									</td>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'support')"/>
+							</label>
+							<div class="pure-custom">
+								<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
+									<thead>
+										<tr>
+											<th>Hva</th>
+											<th>Ja/Nei</th>
+											<th>Fritekst</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Strøm</td>
+											<td>
+												<input type="checkbox" name="power" id="power" value="1">
+													<xsl:if test="application/power = 1">
+														<xsl:attribute name="checked" value="checked"/>
+													</xsl:if>
+												</input>
+											</td>
+											<td>
+												<input type="text" id="power_remark" name="power_remark" value="{application/power_remark}">
+												</input>
+											</td>
+										</tr>
+										<tr>
+											<td>Lydanlegg</td>
+											<td>
+												<input type="checkbox" name="sound" id="sound" value="1">
+													<xsl:if test="application/sound = 1">
+														<xsl:attribute name="checked" value="checked"/>
+													</xsl:if>
+												</input>
+											</td>
+											<td>
+												<input type="text" id="sound_remark" name="sound_remark" value="{application/sound_remark}">
+												</input>
+											</td>
+										</tr>
+										<tr>
+											<td>Lyssetting/blending</td>
+											<td>
+												<input type="checkbox" name="light" id="light" value="1">
+													<xsl:if test="application/light = 1">
+														<xsl:attribute name="checked" value="checked"/>
+													</xsl:if>
+												</input>
+											</td>
+											<td>
+												<input type="text" id="light_remark" name="light_remark" value="{application/light_remark}">
+												</input>
+											</td>
+										</tr>
+										<tr>
+											<td>Piano</td>
+											<td>
+												<input type="checkbox" name="piano" id="piano" value="1">
+													<xsl:if test="application/piano = 1">
+														<xsl:attribute name="checked" value="checked"/>
+													</xsl:if>
+												</input>
+											</td>
+											<td>
+												<input type="text" id="piano_remark" name="piano_remark" value="{application/piano_remark}">
+												</input>
+											</td>
 
-								</tr>
-								<tr>
-									<td>Anna utstyr (prosjektor, lerret mm)</td>
-									<td>
-									</td>
-									<td>
-										<input type="text" id="equipment_remark" name="equipment_remark" value="{application/equipment_remark}">
-										</input>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+										</tr>
+										<tr>
+											<td>Anna utstyr (prosjektor, lerret mm)</td>
+											<td>
+											</td>
+											<td>
+												<input type="text" id="equipment_remark" name="equipment_remark" value="{application/equipment_remark}">
+												</input>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 
 					</fieldset>
+					<fieldset>
+						<legend>
+							<xsl:value-of select="php:function('lang', 'raider')"/>
+						</legend>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'raider')"/>
+							</label>
+							<textarea cols="47" rows="7" name="raider">
+								<xsl:value-of select="application/raider"/>
+							</textarea>
+						</div>
+					</fieldset>
 				</div>
-
-
-
 			</div>
 			<div class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save">
