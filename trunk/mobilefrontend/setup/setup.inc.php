@@ -50,6 +50,7 @@
 		(
 		'config',
 		'home',
+		'set_cookie_domain' => 'mobilefrontend.hook_helper.set_cookie_domain',
 		'set_auth_type' => 'mobilefrontend.hook_helper.set_auth_type',
 		'menu' => 'mobilefrontend.menu.get_menu'
 	);
