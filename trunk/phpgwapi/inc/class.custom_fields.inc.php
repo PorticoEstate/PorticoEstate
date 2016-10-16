@@ -931,7 +931,7 @@
 			
 			if(isset($attrib['new_choice']) && $attrib['new_choice'] && !$doubled )
 			{
-				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id']);
+				$this->add_choice($location_id, $attrib_id, $attrib['new_choice'], $attrib['new_choice_id'], $attrib['new_title_choice']);
 			}
 
 			if ( count($attrib['edit_choice'])  && !$doubled )
@@ -992,7 +992,7 @@
 		 * @param integer $choice_id
 
 		 */
-		public function add_choice($location_id,$attrib_id,$value, $choice_id = 0)
+		public function add_choice($location_id,$attrib_id,$value, $choice_id = 0, $title = '')
 		{
 			if(!$choice_id)
 			{
@@ -1008,12 +1008,13 @@
 				$attrib_id,
 				$choice_id,
 				$choice_sort,
-				$value
+				$value,
+				$title
 				);
 
 			$values	= $this->_db->validate_insert($values);
 
-			$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value) "
+			$this->_db->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id,choice_sort, value, title) "
 			. "VALUES ({$values})",__LINE__,__FILE__);
 		}
 
