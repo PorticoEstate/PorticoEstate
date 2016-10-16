@@ -153,7 +153,12 @@
 			{
 				$use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
-				$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
+
+				if(!$this->_sessionid)
+				{
+					$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
+				}
+
 				$this->_phpgw_set_cookie_params();
 			}
 			else
