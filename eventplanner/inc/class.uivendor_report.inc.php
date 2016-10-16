@@ -23,15 +23,15 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
 	 * @package eventplanner
-	 * @subpackage application
+	 * @subpackage vendor_report
 	 * @version $Id: $
 	 */
 	phpgw::import_class('eventplanner.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-	include_class('eventplanner', 'application', 'inc/model/');
+	include_class('eventplanner', 'vendor_report', 'inc/model/');
 
-	class eventplanner_uiapplication extends eventplanner_uicommon
+	class eventplanner_uivendor_report extends eventplanner_uicommon
 	{
 
 		public $public_functions = array(
@@ -50,18 +50,19 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::application');
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
-			$this->bo = createObject('eventplanner.boapplication');
+			self::set_active_menu('eventplanner::vendor_report');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('vendor_report');
+			$this->bo = createObject('eventplanner.bovendor_report');
 			$this->cats = & $this->bo->cats;
-			$this->fields = eventplanner_application::get_fields();
-			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
+			$this->fields = eventplanner_vendor_report::get_fields();
+			$this->permissions = eventplanner_vendor_report::get_instance()->get_permission_array();
+			$this->custom_fields = eventplanner_vendor_report::get_instance()->get_custom_fields();
 		}
 
 		private function get_status_options( $selected = 0 )
 		{
 			$status_options = array();
-			$status_list = eventplanner_application::get_status_list();
+			$status_list = eventplanner_vendor_report::get_status_list();
 
 			foreach ($status_list as $_key => $_value)
 			{
@@ -133,7 +134,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('application');
+			$function_msg = lang('vendor_report');
 
 			$data = array(
 				'datatable_name' => $function_msg,
@@ -145,11 +146,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uiapplication.index',
+						'menuaction' => 'eventplanner.uivendor_report.index',
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uiapplication.add')),
+					'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -177,7 +178,7 @@
 				'text' => lang('show'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'eventplanner.uiapplication.view'
+					'menuaction' => 'eventplanner.uivendor_report.view'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -188,12 +189,12 @@
 				'text' => lang('edit'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'eventplanner.uiapplication.edit'
+					'menuaction' => 'eventplanner.uivendor_report.edit'
 				)),
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'application.index.js');
+			self::add_javascript('eventplanner', 'portico', 'vendor_report.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -214,117 +215,61 @@
 
 			if (!empty($values['object']))
 			{
-				$application = $values['object'];
+				$vendor_report = $values['object'];
 			}
 			else
 			{
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
-				$application = $this->bo->read_single($id);
+				$vendor_report = $this->bo->read_single($id);
 			}
 
-
-			$tabs = array();
-			$tabs['first_tab'] = array(
-				'label' => lang('application'),
-				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
-			);
-			$tabs['demands'] = array(
-				'label' => lang('demands'),
-				'link' => '#demands',
-				'function' => "set_tab('demands')"
-			);
-
-			$bocommon = CreateObject('property.bocommon');
-
-			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
-			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
-
-			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.application', 'eventplanner');
-			$case_officer_options[] = array('id' => '', 'name' => lang('select'), 'selected' => 0);
-			foreach ($accounts as $account)
+			$custom_values = $vendor_report->json_representation;
+			$custom_fields = createObject('booking.custom_fields','eventplanner');
+			$fields = $this->custom_fields;
+			foreach ($fields as $attrib_id => &$attrib)
 			{
-				$case_officer_options[] = array(
-					'id' => $account['account_id'],
-					'name' => $GLOBALS['phpgw']->accounts->get($account['account_id'])->__toString(),
-					'selected' => ($account['account_id'] == $application->case_officer_id) ? 1 : 0
-				);
-			}
-			$comments = (array)$application->comments;
-			foreach ($comments as $key => &$comment)
-			{
-				$comment['value_count'] = $key +1;
-				$comment['value_date'] = $GLOBALS['phpgw']->common->show_date($comment['time']);
-			}
+				$attrib['value'] = isset($custom_values[$attrib['name']]) ? $custom_values[$attrib['name']] : null;
 
-			$comments_def = array(
-				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
-				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
-			);
- 
-			$datatable_def[] = array(
-				'container' => 'datatable-container_0',
-				'requestUrl' => "''",
-				'ColumnDefs' => $comments_def,
-				'data' => json_encode($comments),
-				'config' => array(
-					array('disableFilter' => true),
-					array('disablePagination' => true)
-				)
-			);
-
-			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
-			$types = (array)$application->types;
-			if($types)
-			{
-				foreach ($application_type_list as &$application_type)
+				if (isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
 				{
-					foreach ($types as $type)
+					foreach ($attrib['choice'] as &$choice)
 					{
-						if($type['type_id'] == $application_type['id'])
+						if (is_array($attrib['value']))
 						{
-							$application_type['selected'] = 1;
-							break;
+							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
+						}
+						else
+						{
+							$choice['selected'] = $choice['id'] == $attrib['value'] ? 1 : 0;
 						}
 					}
 				}
 			}
-			$wardrobe_list = array();
-			$wardrobe_list[] = array('id' => 0, 'name' => lang('no'));
-			$wardrobe_list[] = array('id' => 1, 'name' => lang('yes'));
+//			_debug_array($fields);
+			$organized_fields = $custom_fields->organize_fields(eventplanner_vendor_report::acl_location, $fields);
 
-			foreach ($wardrobe_list as &$wardrobe)
-			{
-				$wardrobe['selected'] = $wardrobe['id'] == $application->wardrobe ? 1: 0;
-			}
+			$tabs = array();
+			$tabs['first_tab'] = array(
+				'label' => lang('vendor_report'),
+				'link' => '#first_tab',
+				'function' => "set_tab('first_tab')"
+			);
 
-//			_debug_array($application_type_list);
-//			_debug_array($application->types);
-//			die();
 			$data = array(
-				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.index',)),
-				'application' => $application,
-				'list_case_officer' => array('options' => $case_officer_options),
-				'cat_select' => $this->cats->formatted_xslt_list(array(
-					'select_name' => 'category_id',
-					'selected'	=> $application->category_id,
-					'use_acl' => $this->_category_acl,
-					'required' => true)),
-				'status_list' => array('options' => $this->get_status_options($application->status)),
-				'application_type_list' => $application_type_list,
-				'wardrobe_list'	=>  array('options' => $wardrobe_list),
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor_report.save')),
+				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor_report.index',)),
+				'vendor_report' => $vendor_report,
+				'status_list' => array('options' => $this->get_status_options($vendor_report->status)),
+				'vendor_report_type_list' => $vendor_report_type_list,
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'value_active_tab' => $active_tab
+				'value_active_tab' => $active_tab,
+				'attributes_group' => $organized_fields,
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('eventplanner', 'portico', 'application.edit.js');
-			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
+			self::add_javascript('eventplanner', 'portico', 'vendor_report.edit.js');
+			self::render_template_xsl(array('vendor_report', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 
 		

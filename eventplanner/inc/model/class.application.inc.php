@@ -109,10 +109,6 @@
 			return new eventplanner_application();
 		}
 
-		public static function get_composite_types()
-		{
-			return array(1 => 'Hybel', 2 => 'Leilighet');
-		}
 		public static function get_status_list()
 		{
 			return array(
