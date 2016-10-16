@@ -920,18 +920,7 @@
 								'name'	 => 'location',
 								'text'	 => lang('location'),
 								'list'	 => $location_list,
-							),
-							array
-								(
-								'type'	 => 'link',
-								'value'	 => lang('new'),
-								'href'	 => self::link(array(
-									'menuaction' => 'admin.ui_custom.edit_attrib_group',
-									'appname'	 => $this->appname,
-									'menu_selection'	 => $this->menu_selection
-								)),
-								'class'	 => 'new_item'
-							),
+							)
 						)
 					)
 				),
@@ -942,6 +931,10 @@
 						'phpgw_return_as'	 => 'json'
 					)),
 					'allrows'		 => true,
+					'new_item' => self::link(array(
+									'menuaction' => 'admin.ui_custom.edit_attrib_group',
+									'appname'	 => $this->appname,
+									'menu_selection'	 => $this->menu_selection)),
 					'editor_action'	 => '',
 					'field'			 => array(
 						array(
