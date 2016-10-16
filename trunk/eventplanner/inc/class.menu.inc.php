@@ -102,6 +102,19 @@
 						'text'	=> lang('resource category'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uigeneric.index', 'type' => 'resource_category') )
 					),
+					'custom_field_groups' => array
+						(
+						'text' => lang('custom field groups'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute_group',
+							'appname' => 'eventplanner', 'menu_selection' => 'admin::eventplanner::custom_field_groups'))
+					),
+					'custom_fields' => array
+						(
+						'text' => lang('custom fields'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+							'appname' => 'eventplanner', 'menu_selection' => 'admin::eventplanner::custom_fields'))
+					),
+
 				);
 			}
 

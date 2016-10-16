@@ -338,9 +338,9 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
-				'author' => array('type' => 'text', 'nullable' => False),
-				'comment' => array('type' => 'text', 'nullable' => False),
+				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
+//				'author' => array('type' => 'text', 'nullable' => False),
+				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
@@ -352,9 +352,9 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
-				'author' => array('type' => 'text', 'nullable' => False),
-				'comment' => array('type' => 'text', 'nullable' => False),
+				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
+//				'author' => array('type' => 'text', 'nullable' => False),
+				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
