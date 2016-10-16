@@ -22,6 +22,10 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_cookie_domain_for_sessions_-_if_Same_as_framework_leave_empty}</td>
+			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
+		</tr>
 		<!-- END body -->
 		<!-- BEGIN footer -->
 		<tr class="th">

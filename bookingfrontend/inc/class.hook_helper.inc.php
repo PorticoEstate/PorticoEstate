@@ -1,12 +1,12 @@
 <?php
 	/**
-	 * Mobilefrontend - Hook helper
+	 * Bookingfrontend - Hook helper
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2013 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @package Property
-	 * @version $Id$
+	 * @version $Id: class.hook_helper.inc.php 14728 2016-02-11 22:28:46Z sigurdne $
 	 */
 	/*
 	  This program is free software: you can redistribute it and/or modify
@@ -26,37 +26,20 @@
 	/**
 	 * Hook helper
 	 *
-	 * @package controller
+	 * @package bookingfrontend
 	 */
-	class mobilefrontend_hook_helper
+	class bookingfrontend_hook_helper
 	{
 
-		/**
-		 * set auth_type for custom login - called from login
-		 *
-		 * @return void
-		 */
-		public function set_auth_type()
-		{
-			//get from local config
-
-			$config = CreateObject('phpgwapi.config', 'mobilefrontend');
-			$config->read();
-
-			if (!empty($config->config_data['auth_type']))
-			{
-				$GLOBALS['phpgw_info']['server']['auth_type'] = $config->config_data['auth_type'];
-			}
-		}
 
 		public function set_cookie_domain()
 		{
 			$script_path = dirname(phpgw::get_var('SCRIPT_FILENAME', 'string', 'SERVER'));
 			
-			if(preg_match('/mobilefrontend/', $script_path))
+			if(preg_match('/bookingfrontend/', $script_path))
 			{
 				//get from local config
-				$config = CreateObject('phpgwapi.config', 'mobilefrontend');
+				$config = CreateObject('phpgwapi.config', 'bookingfrontend');
 				$config->read();
 
 				$GLOBALS['phpgw_info']['server']['cookie_domain'] = !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) ? $GLOBALS['phpgw_info']['server']['cookie_domain'] : '';

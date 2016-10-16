@@ -34,5 +34,6 @@
 	$setup_info['bookingfrontend']['hooks'] = array
 		(
 		'menu' => 'bookingfrontend.menu.get_menu',
+		'set_cookie_domain' => 'bookingfrontend.hook_helper.set_cookie_domain',
 		'config'
 	);
