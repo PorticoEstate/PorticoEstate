@@ -46,7 +46,7 @@
 		 *
 		 * @return void
 		 */
-		public function __construct( $appname = null )
+		public function __construct( $appname = 'booking' )
 		{
 			parent::__construct($appname);
 		}
@@ -58,7 +58,7 @@
 		 */
 		public function get_fields( $location )
 		{
-			$appname = 'booking';
+			$appname = $this->_appname;
 			return parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
 		}
 
@@ -70,7 +70,8 @@
 		 */
 		public function organize_fields( $location, $fields = array() )
 		{
-			$field_groups = $this->get_field_groups('booking', $location, $fields);
+			$appname = $this->_appname;
+			$field_groups = $this->get_field_groups($appname, $location, $fields);
 			$i = -1;
 			$attributes = array();
 			$_dummy = array(array());
@@ -119,7 +120,7 @@
 		 */
 		public function get_organized_fields( $location )
 		{
-			$appname = 'booking';
+			$appname = $this->_appname;
 			$fields = parent::find($appname, $location, 0, '', 'ASC', 'attrib_sort', true, true);
 			return $this->get_field_groups($appname, $location, $fields);
 		}
