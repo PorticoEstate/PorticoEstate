@@ -209,6 +209,8 @@
 				case 'text':
 				case 'blob':
 				case 'date':
+				case 'json':
+				case 'jsonb':
 					$sTranslated = "'type' => '$sType'";
 					break;
 				case 'bool':

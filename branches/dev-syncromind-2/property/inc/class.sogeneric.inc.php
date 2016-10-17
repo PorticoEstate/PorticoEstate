@@ -137,6 +137,17 @@
 									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('type' => 'org_unit', 'selected' => '##org_unit_id##')
 								)
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
 							)
 						),
 						'custom_criteria' => array

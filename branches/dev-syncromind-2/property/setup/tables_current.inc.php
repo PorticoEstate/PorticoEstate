@@ -1237,7 +1237,7 @@
 		'fm_eco_service' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => 1),
 			),
 			'pk' => array('id'),
@@ -1453,6 +1453,7 @@
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => False),
 				'org_unit_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => 1),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

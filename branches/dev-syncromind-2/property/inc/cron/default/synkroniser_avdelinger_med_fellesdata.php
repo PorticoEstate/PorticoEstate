@@ -51,9 +51,27 @@
 
 			$fellesdata->set_debug($this->debug);
 
-
+			/*
+			 * ansvar
+			 * art
+			 * objekt
+			 * prosjekt
+			 * tjeneste
+			 */
+	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
+	//		$fellesdata->update_art();				//for mange treff
+			$fellesdata->update_tjeneste();
+			$fellesdata->update_dimb(); // ansvar
 			$fellesdata->get_org_unit_ids_from_top();
 
+
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/art
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/ansvar?id=013000
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/objekt?id=5001
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/prosjekt?id=5001
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/tjeneste?id=88010
+
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/leverandorer?leverandorNr=722920
 			if ($this->debug)
 			{
 				_debug_array($fellesdata->unit_ids);
@@ -326,6 +344,163 @@
 			}
 
 			$db->transaction_commit();
+		}
+
+		/*
+		 * ansvar
+		 * art
+		 * objekt
+		 * prosjekt
+		 * tjeneste
+		 */
+		function update_agresso_prosjekt()
+		{
+			//det er for mange...16396 stk...
+			return;
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/prosjekt
+
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/tilskudd/prosjekt';
+			$values = array();
+			try
+			{
+				$values = $this->check_external_register($url);
+
+			}
+			catch (Exception $exc)
+			{
+				echo $exc->getTraceAsString();
+			}
+
+			_debug_array($values);
+
+		}
+		function update_art()
+		{
+			//det er for mange...
+			return;
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/art
+
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/tilskudd/art';
+			$values = array();
+			try
+			{
+				$values = $this->check_external_register($url);
+
+			}
+			catch (Exception $exc)
+			{
+				echo $exc->getTraceAsString();
+			}
+
+		}
+
+		function update_tjeneste()
+		{
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/tjeneste?id=88010
+			//fm_eco_service
+
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/tilskudd/tjeneste';
+			$values = array();
+			try
+			{
+				$values = $this->check_external_register($url);
+
+			}
+			catch (Exception $exc)
+			{
+				echo $exc->getTraceAsString();
+			}
+//			[tab] => A
+//          [dimValue] => 19050
+//          [description] => Renholdstjenester
+//          [periodFrom] => 200200
+//          [periodTo] => 209912
+//          [status] => N
+
+			if($values)
+			{
+				$GLOBALS['phpgw']->db->query("UPDATE fm_eco_service SET active = 0" , __LINE__, __FILE__);
+			}
+
+			foreach ($values as $entry)
+			{
+				$active = $entry['status'] == 'C' ? 0 : 1;
+				$GLOBALS['phpgw']->db->query("SELECT id FROM fm_eco_service WHERE id =" . (int) $entry['dimValue'], __LINE__, __FILE__);
+				if($GLOBALS['phpgw']->db->next_record())
+				{
+					$sql = "UPDATE fm_eco_service SET name = '{$entry['dimValue']} {$entry['description']}', active = {$active} WHERE id = " . (int) $entry['dimValue'];
+				}
+				else
+				{
+					$sql = "INSERT INTO fm_eco_service (id, name, active)"
+						. " VALUES ({$entry['dimValue']}, '{$entry['dimValue']} {$entry['description']}',  {$active})";
+				}
+				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			}
+		}
+
+		public function check_external_register($url)
+		{
+
+			$username = 'portico';
+			$password = 'BgPor790gfol';
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			return json_decode($result, true);
+		}
+
+
+		/**
+		 * ansvar
+		 */
+		function update_dimb()
+		{
+			if (!$db = $this->get_db())
+			{
+				return;
+			}
+
+			$sql = "SELECT V_ANSVAR.ANSVAR, V_ANSVAR.BESKRIVELSE,V_ANSVAR.STATUS, V_ORG_ENHET.ORG_ENHET_ID"
+				. "  FROM V_ANSVAR JOIN V_ORG_ENHET ON (V_ANSVAR.RESULTATENHET = V_ORG_ENHET.RESULTATENHET)";
+
+			$db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			while ($db->next_record())
+			{
+				$values[] = array(
+					'id'	=> (int)$db->f('ANSVAR'),
+					'descr'	=> $GLOBALS['phpgw']->db->db_addslashes($db->f('BESKRIVELSE', true)),
+					'active' => $db->f('STATUS') == 'C' ? 0 : 1,
+					'org_unit_id' => (int)$db->f('ORG_ENHET_ID')
+				);
+			}
+
+			foreach ($values as $entry)
+			{
+				$GLOBALS['phpgw']->db->query("SELECT id FROM fm_ecodimb WHERE id = {$entry['id']}", __LINE__, __FILE__);
+				if($GLOBALS['phpgw']->db->next_record())
+				{
+					$sql = "UPDATE fm_ecodimb SET descr = '{$entry['descr']}', active = {$entry['active']}, org_unit_id = {$entry['org_unit_id']}  WHERE id = {$entry['id']}";
+				}
+				else
+				{
+					$sql = "INSERT INTO fm_ecodimb (id, descr, active, org_unit_id)"
+						. " VALUES ({$entry['id']}, '{$entry['descr']}',  {$entry['active']}, {$entry['org_unit_id']})";
+				}
+				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			}
 		}
 
 		function get_org_unit_ids_from_top()

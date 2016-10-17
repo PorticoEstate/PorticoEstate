@@ -302,7 +302,7 @@
 				break;
 			}
 
-			$custom_factor = $composite_obj->get_custom_prize_factor();
+			$custom_factor = $composite_obj->get_custom_price_factor();
 			$custom_factor = $custom_factor ? (float)$custom_factor : 1;
 
 			$location_info = ExecMethod('rental.bogeneric.read', array(
