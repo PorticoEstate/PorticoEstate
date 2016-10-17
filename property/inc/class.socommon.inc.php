@@ -166,12 +166,83 @@
 			return $this->db->affected_rows();
 		}
 
+		/**
+		 * unquote (stripslashes) recursivly the whole array
+		 *
+		 * @param $arr array to unquote (var-param!)
+		 */
+		public function unquote(&$arr)
+		{
+			if (!is_array($arr))
+			{
+				$arr = stripslashes($arr);
+				return;
+			}
+			foreach($arr as $key => $value)
+			{
+				if (is_array($value))
+				{
+					$this->unquote($arr[$key]);
+				}
+				else
+				{
+					$arr[$key] = stripslashes($value);
+				}
+			}
+		}
+
 		function create_preferences( $app = '', $user_id = '' )
 		{
-			$this->db->query("SELECT preference_value FROM phpgw_preferences where preference_app = '$app' AND preference_owner=" . (int)$user_id);
-			$this->db->next_record();
-			$value = unserialize($this->db->f('preference_value'));
-			return $value;
+			$this->db->query("SELECT preference_value, preference_owner FROM phpgw_preferences where preference_app = '{$app}'"
+			. " AND preference_owner IN (-1,-2," . (int)$user_id .')', __LINE__, __FILE__);
+			$forced = $default = $user = array();
+			while($this->db->next_record())
+			{
+				// The following ereg is required for PostgreSQL to work
+				$value = unserialize($this->db->f('preference_value'));
+				$this->unquote($value);
+				if (!is_array($value))
+				{
+					continue;
+				}
+				switch($this->db->f('preference_owner'))
+				{
+					case -1:	// forced
+						$forced[$app] = $value;
+						break;
+					case -2:	// default
+						$default[$app] = $value;
+						break;
+					default:	// user
+						$user[$app] = $value;
+						break;
+				}
+			}
+			$data = $user;
+
+			// now use defaults if needed (user-value unset or empty)
+			//
+			foreach($default as $app => $values)
+			{
+				foreach($values as $var => $value)
+				{
+					if (!isset($data[$app][$var]) || $data[$app][$var] === '')
+					{
+						$data[$app][$var] = $value;
+					}
+				}
+			}
+			// now set/force forced values
+			//
+			foreach($forced as $app => $values)
+			{
+				foreach($values as $var => $value)
+				{
+					$data[$app][$var] = $value;
+				}
+			}
+
+			return $data[$app];
 		}
 
 		function read_single_tenant( $id )

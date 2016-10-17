@@ -60,7 +60,7 @@
 			 */
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
-			$fellesdata->update_tjeneste();
+	//		$fellesdata->update_tjeneste();
 			$fellesdata->update_dimb(); // ansvar
 			$fellesdata->get_org_unit_ids_from_top();
 
