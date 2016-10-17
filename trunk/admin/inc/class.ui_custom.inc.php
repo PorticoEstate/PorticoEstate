@@ -920,6 +920,11 @@
 								'name'	 => 'location',
 								'text'	 => lang('location'),
 								'list'	 => $location_list,
+							),
+							array('type'	 => 'hidden',
+								'id'	 => 'appname',
+								'name'	 => 'appname',
+								'value'	 => $this->appname,
 							)
 						)
 					)
@@ -931,10 +936,10 @@
 						'phpgw_return_as'	 => 'json'
 					)),
 					'allrows'		 => true,
-					'new_item' => self::link(array(
+					'new_item' => array('onclick' => 'onNew_group()'),/*self::link(array(
 									'menuaction' => 'admin.ui_custom.edit_attrib_group',
 									'appname'	 => $this->appname,
-									'menu_selection'	 => $this->menu_selection)),
+									'menu_selection'	 => $this->menu_selection)),*/
 					'editor_action'	 => '',
 					'field'			 => array(
 						array(
@@ -953,7 +958,7 @@
 							'sortable'	 => true
 						),
 						array(
-							'key'		 => 'text',
+							'key'		 => 'descr',
 							'label'		 => lang('Descr'),
 							'sortable'	 => false
 						),
@@ -1097,6 +1102,8 @@
 
 			unset($parameters);
 			unset($parameters2);
+			self::add_javascript('admin', 'base', 'ui_custom.list_attribute_group.js');
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 

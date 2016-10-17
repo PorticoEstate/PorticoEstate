@@ -570,12 +570,12 @@
 								<xsl:value-of select="php:function('lang', 'get single function input')"/>
 							</td>
 							<td>
-							<textarea cols="60" rows="10" name="values[get_single_function_input]">
-								<xsl:attribute name="title">
-									<xsl:text>parameter1 = value1, parameter2 = value2...</xsl:text>
-								</xsl:attribute>
-								<xsl:value-of select="value_get_single_function_input"/>
-							</textarea>
+								<textarea cols="60" rows="10" name="values[get_single_function_input]">
+									<xsl:attribute name="title">
+										<xsl:text>parameter1 = value1, parameter2 = value2...</xsl:text>
+									</xsl:attribute>
+									<xsl:value-of select="value_get_single_function_input"/>
+								</textarea>
 							</td>
 						</tr>
 					</xsl:when>
@@ -1173,74 +1173,70 @@
 
 <xsl:template name="choice" xmlns:php="http://php.net/xsl">
 	<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
-		<xsl:choose>
-			<xsl:when test="value_choice!=''">
-				<thead>
-				<tr>
-					<th width="5%" align="left">
-						<xsl:value-of select="php:function('lang', 'id')" />
-					</th>
-					<th width="40%" align="left">
-						<xsl:value-of select="php:function('lang', 'value')" />
-					</th>
-					<th  width="40%" align="left">
-						<xsl:value-of select="php:function('lang', 'title')" />
-					</th>
-					<th width="5%" align="left">
-						<xsl:value-of select="php:function('lang', 'order')" />
-					</th>
-					<th width="10%" align="center">
-						<xsl:value-of select="lang_delete_value"/>
-					</th>
-				</tr>
-				</thead>
-				<xsl:for-each select="value_choice" >
-					<tr>
-						<xsl:attribute name="class">
-							<xsl:choose>
-								<xsl:when test="@class">
-									<xsl:value-of select="@class"/>
-								</xsl:when>
-								<xsl:when test="position() mod 2 != 0">
-									<xsl:text>pure-table-odd</xsl:text>
-								</xsl:when>
-							</xsl:choose>
+		<thead>
+			<tr>
+				<th width="5%" align="left">
+					<xsl:value-of select="php:function('lang', 'id')" />
+				</th>
+				<th width="40%" align="left">
+					<xsl:value-of select="php:function('lang', 'value')" />
+				</th>
+				<th  width="40%" align="left">
+					<xsl:value-of select="php:function('lang', 'title')" />
+				</th>
+				<th width="5%" align="left">
+					<xsl:value-of select="php:function('lang', 'order')" />
+				</th>
+				<th width="10%" align="center">
+					<xsl:value-of select="lang_delete_value"/>
+				</th>
+			</tr>
+		</thead>
+		<xsl:for-each select="value_choice" >
+			<tr>
+				<xsl:attribute name="class">
+					<xsl:choose>
+						<xsl:when test="@class">
+							<xsl:value-of select="@class"/>
+						</xsl:when>
+						<xsl:when test="position() mod 2 != 0">
+							<xsl:text>pure-table-odd</xsl:text>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:attribute>
+				<td align="left">
+					<xsl:value-of select="id"/>
+				</td>
+				<td align="left">
+					<input type="textbox" name="values[edit_choice][{id}]" value="{value}" size='15'>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'value')" />
 						</xsl:attribute>
-						<td align="left">
-							<xsl:value-of select="id"/>
-						</td>
-						<td align="left">
-							<input type="textbox" name="values[edit_choice][{id}]" value="{value}" size='15'>
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'value')" />
-								</xsl:attribute>
-							</input>
-						</td>
-						<td align="left">
-							<input type="textbox" name="values[title_choice][{id}]" value="{title}" size='15'>
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'value')" />
-								</xsl:attribute>
-							</input>
-						</td>
-						<td align="center">
-							<input type="textbox" name="values[order_choice][{id}]" value="{order}" size='4'>
-								<xsl:attribute name="title">
-									<xsl:value-of select="php:function('lang', 'order')" />
-								</xsl:attribute>
-							</input>
-						</td>
-						<td align="center">
-							<input type="checkbox" name="values[delete_choice][]" value="{id}">
-								<xsl:attribute name="title">
-									<xsl:value-of select="//lang_delete_choice_statustext"/>
-								</xsl:attribute>
-							</input>
-						</td>
-					</tr>
-				</xsl:for-each>
-			</xsl:when>
-		</xsl:choose>
+					</input>
+				</td>
+				<td align="left">
+					<input type="textbox" name="values[title_choice][{id}]" value="{title}" size='15'>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'value')" />
+						</xsl:attribute>
+					</input>
+				</td>
+				<td align="center">
+					<input type="textbox" name="values[order_choice][{id}]" value="{order}" size='4'>
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'order')" />
+						</xsl:attribute>
+					</input>
+				</td>
+				<td align="center">
+					<input type="checkbox" name="values[delete_choice][]" value="{id}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="//lang_delete_choice_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+		</xsl:for-each>
 		<tr>
 			<td valign="top">
 				<input type="text" name="values[new_choice_id]" size = '3'>
@@ -1262,6 +1258,10 @@
 						<xsl:value-of select="php:function('lang', 'title')" />
 					</xsl:attribute>
 				</input>
+			</td>
+			<td>
+			</td>
+			<td>
 			</td>
 		</tr>
 	</table>
