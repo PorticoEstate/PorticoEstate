@@ -20,7 +20,7 @@ registered	eventplanner	no	Registrert
 pending	eventplanner	no	Under behandling
 rejected	eventplanner	no	Avvist
 approved	eventplanner	no	Godkjent
-vendor	eventplanner	no	Leverandør
+vendor	eventplanner	no	Utøver
 new	eventplanner	no	Ny
 show	eventplanner	no	vis
 history	eventplanner	no	Historikk
@@ -61,3 +61,4 @@ depth	eventplanner	no	Dybde
 wardrobe	eventplanner	no	Garderobe
 audience limit	eventplanner	no	Maksimum antall publikum
 raider	eventplanner	no	Raider
+vendor report	eventplanner	no	Utøverrapport

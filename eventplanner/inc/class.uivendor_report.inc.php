@@ -51,7 +51,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('eventplanner::vendor_report');
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('vendor_report');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('vendor report');
 			$this->bo = createObject('eventplanner.bovendor_report');
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_vendor_report::get_fields();
@@ -134,7 +134,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('vendor_report');
+			$function_msg = lang('vendor report');
 
 			$data = array(
 				'datatable_name' => $function_msg,
@@ -250,7 +250,7 @@
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
-				'label' => lang('vendor_report'),
+				'label' => lang('vendor report'),
 				'link' => '#first_tab',
 				'function' => "set_tab('first_tab')"
 			);
