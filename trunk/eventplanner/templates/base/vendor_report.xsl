@@ -43,7 +43,8 @@
 								<xsl:value-of select="vendor/id"/>
 							</div>
 						</xsl:if>
-						<xsl:apply-templates select="attributes_group/attributes"/>
+						<!--xsl:apply-templates select="attributes_group/attributes"/-->
+						<xsl:call-template name="attributes_values"/>
 
 					</fieldset>
 				</div>

@@ -39,6 +39,8 @@
 		 */
 		public function get_menu()
 		{
+			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplanner';
 			$start_page = 'application';
 			if (isset($GLOBALS['phpgw_info']['user']['preferences']['eventplanner']['default_start_page']) && $GLOBALS['phpgw_info']['user']['preferences']['eventplanner']['default_start_page'])
 			{
@@ -146,7 +148,7 @@
 
 			$menus['navigation'] = array(
 				'application' => array(
-					'text' => 'application',
+					'text' => lang('application'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.index'))
 				),
 				'resource' => array(
@@ -180,6 +182,7 @@
 					'image' => array('customer_report', 'navbar'),
 				)
 			);
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}
 	}
