@@ -1107,6 +1107,7 @@
 						'export' => true,
 						'allrows' => true
 					)),
+//					'new_item' => array('onclick' => 'onNew_contract()'),
 					'allrows' => true,
 					'editor_action' => '',
 					'query' => phpgw::get_var('search_for'),
