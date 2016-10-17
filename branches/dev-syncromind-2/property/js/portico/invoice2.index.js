@@ -3,7 +3,7 @@
 $(document).ready(function ()
 {
 
-	var api = oTable0.api();
+	var api = oTable1.api();
 	api.on('draw', sum_columns);
 
 	var image_iframe = '<iframe id="image_content" width="100%" height="1000"><p>Your browser does not support iframes.</p></iframe>';
@@ -14,7 +14,7 @@ $(document).ready(function ()
 
 function sum_columns()
 {
-	var api = oTable0.api();
+	var api = oTable1.api();
 	var data = api.ajax.json().data;
 	var amount = 0;
 	var approved_amount = 0;
