@@ -63,7 +63,8 @@
 					<label>
 						<xsl:value-of select="access_error_upload_dir" />
 					</label>
-					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
+					<xsl:call-template name="multi_upload_file"/>
+					<!--<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>-->
 				</div>
 				
 				<div id="components">
