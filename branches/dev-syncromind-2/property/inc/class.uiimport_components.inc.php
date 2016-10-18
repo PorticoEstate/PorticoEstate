@@ -821,7 +821,7 @@ HTML;
 				}
 			}
 		
-			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
 			
 			$access_error_upload_dir = '';
 			$import_component_files = new import_component_files();
@@ -832,6 +832,7 @@ HTML;
 			} else {
 				phpgwapi_cache::session_set('property', 'path_upload_dir', $import_component_files->get_path_upload_dir());
 			}
+			phpgwapi_jquery::init_multi_upload_file();
 			
 			$data = array
 			(
@@ -844,7 +845,7 @@ HTML;
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
 				'template_list' => array('options' => $category_list),
 				'profile_list' => array('options' => $profile_list),
-				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action),
+				'multi_upload_action' => $multi_upload_action,
 				'access_error_upload_dir' => $access_error_upload_dir,
 				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
 			);
@@ -852,7 +853,7 @@ HTML;
 			self::add_javascript('property', 'portico', 'import_components.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('Importer ');
 
-			self::render_template_xsl(array('import_components', 'datatable_inline'), $data);
+			self::render_template_xsl(array('import_components', 'multi_upload_file', 'datatable_inline'), $data);
 		}
 
 		public function get_attributes_from_template()
