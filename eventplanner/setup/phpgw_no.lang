@@ -1,0 +1,64 @@
+eventplanner	common	no	Turneplanlegger
+Add	eventplanner	no	Legg til
+Delete	eventplanner	no	Slett
+Edit	eventplanner	no	Editer
+View	eventplanner	no	Vis
+apply	eventplanner	no	Mellomlagre
+list	eventplanner	no	Liste
+general	eventplanner	no	Generell
+dates	eventplanner	no	Datoer
+custom attributes	eventplanner	no	Egendefinerte attributter
+no category	eventplanner	no	Kategori ikke valgt
+time created	eventplanner	no	Tidsstempel
+inline tables	eventplanner	no	Tabeller
+table	eventplanner	no	Tabell
+application	eventplanner	no	Søknad
+old value	eventplanner	no	Opprinnelig verdi
+new value	eventplanner	no	Ny verdi
+all	eventplanner	no	Alle
+registered	eventplanner	no	Registrert
+pending	eventplanner	no	Under behandling
+rejected	eventplanner	no	Avvist
+approved	eventplanner	no	Godkjent
+vendor	eventplanner	no	Utøver
+new	eventplanner	no	Ny
+show	eventplanner	no	vis
+history	eventplanner	no	Historikk
+date start	eventplanner	no	Første dato
+date end	eventplanner	no	Siste dato
+contact name	eventplanner	no	Kontaktperson
+contact email	eventplanner	no	Epost kontaktperson
+contact phone	eventplanner	no	Tlf. kontaktperson
+case officer	eventplanner	no	Saksbehandler
+active	eventplanner	no	Aktiv
+select	eventplanner	no	Velg
+remark	eventplanner	no	Merknad
+comment	eventplanner	no	Kommentar
+demands	eventplanner	no	Forutsetning
+payment	eventplanner	no	Betaling
+labour support	eventplanner	no	Personellstøtte
+technical support	eventplanner	no	Teknisk støtte
+charge per unit	eventplanner	no	betaling pr stk
+timespan	eventplanner	no	Varighet (min.)
+number of units	eventplanner	no	Antall arrangement
+integer	eventplanner	no	Heltall
+total amount	eventplanner	no	Sum
+created	eventplanner	no	Registrert
+modified	eventplanner	no	Endret
+id	eventplanner	no	Id
+messages_saved_form	eventplanner	no	Skjemaet er lagret
+field %1 is required	eventplanner	no	Feltet %1 er påkrevd
+please select a category !	eventplanner	no	Velg en kategori
+title	eventplanner	no	Programtittel
+description	eventplanner	no	Omtale av program
+might be published	eventplanner	no	Kan bli publisert på internett
+other participants	eventplanner	no	Navn på andre medvirkende (+ rolle)
+arena requirement	eventplanner	no	Krav til lokale
+stage	eventplanner	no	Scene
+stage requirement	eventplanner	no	Krav til scene
+width	eventplanner	no	Bredde
+depth	eventplanner	no	Dybde
+wardrobe	eventplanner	no	Garderobe
+audience limit	eventplanner	no	Maksimum antall publikum
+raider	eventplanner	no	Raider
+vendor report	eventplanner	no	Utøverrapport

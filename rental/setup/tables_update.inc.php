@@ -721,3 +721,21 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+
+	$test[] = '0.1.0.30';
+	function rental_upgrade0_1_0_30()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_composite', 'custom_prize_factor', 'custom_price_factor');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_composite', 'custom_prize', 'custom_price');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('rental_composite', 'prize_type_id', 'price_type_id');
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.31';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

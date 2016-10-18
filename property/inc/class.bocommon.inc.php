@@ -2455,7 +2455,7 @@
 		}
 
 		/**
-		 * Gets vendor canidated to be used as vendor - called as ajax from edit form
+		 * called as ajax from edit form
 		 *
 		 * @param string  $query
 		 *

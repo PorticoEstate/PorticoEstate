@@ -619,15 +619,27 @@
 				//},
 				<xsl:choose>
 					<xsl:when test="new_item">
-						{
-						text: "<xsl:value-of select="php:function('lang', 'new')"/>",
-						sUrl: '<xsl:value-of select="new_item"/>',
+						<xsl:choose>
+							<xsl:when test="new_item/onclick">
+							{
+								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+								action: function (e, dt, node, config) {
+									<xsl:value-of select="new_item/onclick"/>;
+								}
+							},
+							</xsl:when>
+							<xsl:otherwise>
+							{
+								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
+								sUrl: '<xsl:value-of select="new_item"/>',
 
-						action: function (e, dt, node, config) {
-						var sUrl = config.sUrl;
-						window.open(sUrl, '_self');
-						}
-						},
+								action: function (e, dt, node, config) {
+									var sUrl = config.sUrl;
+									window.open(sUrl, '_self');
+								}
+							},
+							</xsl:otherwise>
+						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:choose>
@@ -1194,6 +1206,8 @@
 			{
 				$('#header1').prop("checked", true);
 			}
+
+			$('div.dataTables_filter input').focus();
 		});
 	]]>
 
