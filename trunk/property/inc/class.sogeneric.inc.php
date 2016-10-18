@@ -414,16 +414,24 @@
 						(
 						'table' => 'fm_vendor',
 						'id' => array('name' => 'id', 'type' => 'int'),
-						'fields' => array
-							(
-							array
-								(
+						'fields' => array(
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
+							),
+							array(
 								'name' => 'contact_phone',
 								'descr' => lang('contact phone'),
 								'type' => 'varchar'
 							),
-							array
-								(
+							array(
 								'name' => 'category',
 								'descr' => lang('category'),
 								'type' => 'select',

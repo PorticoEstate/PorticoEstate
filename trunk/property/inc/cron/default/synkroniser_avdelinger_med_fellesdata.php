@@ -58,6 +58,7 @@
 			 * prosjekt
 			 * tjeneste
 			 */
+	//		$fellesdata->update_vendor();
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
 	//		$fellesdata->update_tjeneste();
@@ -65,13 +66,13 @@
 			$fellesdata->get_org_unit_ids_from_top();
 
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/art
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/ansvar?id=013000
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/objekt?id=5001
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/prosjekt?id=5001
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/tjeneste?id=88010
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/ansvar?id=013000
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/objekt?id=5001
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt?id=5001
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/leverandorer?leverandorNr=722920
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
 			if ($this->debug)
 			{
 				_debug_array($fellesdata->unit_ids);
@@ -357,9 +358,9 @@
 		{
 			//det er for mange...16396 stk...
 			return;
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/prosjekt
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/tilskudd/prosjekt';
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt';
 			$values = array();
 			try
 			{
@@ -378,9 +379,9 @@
 		{
 			//det er for mange...
 			return;
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/art
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/tilskudd/art';
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/art';
 			$values = array();
 			try
 			{
@@ -396,10 +397,10 @@
 
 		function update_tjeneste()
 		{
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/tilskudd/tjeneste?id=88010
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 			//fm_eco_service
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/tilskudd/tjeneste';
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste';
 			$values = array();
 			try
 			{
@@ -436,6 +437,183 @@
 						. " VALUES ({$entry['dimValue']}, '{$entry['dimValue']} {$entry['description']}',  {$active})";
 				}
 				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			}
+		}
+
+		function update_vendor()
+		{
+			$metadata = $GLOBALS['phpgw']->db->metadata('fm_vendor_temp');
+//_debug_array($metadata);
+			if (!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE fm_vendor_temp
+				(
+				  id integer NOT NULL,
+				  status character varying(1),
+				  navn character varying(255),
+				  adresse character varying(255),
+				  postnummer character varying(10),
+				  sted character varying(50),
+				  organisasjonsnr character varying(50),
+				  bankkontonr character varying(50),
+				  aktiv integer,
+				  CONSTRAINT fm_vendor_temp_pkey PRIMARY KEY (id)
+				);
+SQL;
+				$GLOBALS['phpgw']->db->query($sql_table, __LINE__, __FILE__);
+			}
+			$GLOBALS['phpgw']->db->query('DELETE FROM fm_vendor_temp', __LINE__, __FILE__);
+
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**
+			//fm_vendor
+
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**';
+			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=100304';
+
+			$values = array();
+			try
+			{
+				$values = $this->check_external_register($url);
+
+			}
+			catch (Exception $exc)
+			{
+				echo $exc->getTraceAsString();
+			}
+			_debug_array($values);die();
+			$sql = 'INSERT INTO fm_vendor_temp (id, status, navn, adresse, postnummer, sted, organisasjonsnr, bankkontonr, aktiv)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$valueset = array();
+
+			foreach ($values as $entry)
+			{
+				$valueset[] = array
+					(
+					1 => array
+						(
+						'value' => (int)$entry['leverandornummer'],
+						'type' => PDO::PARAM_INT
+					),
+					2 => array
+						(
+						'value' => $entry['status'],
+						'type' => PDO::PARAM_STR
+					),
+					3 => array
+						(
+						'value' => $entry['navn'],
+						'type' => PDO::PARAM_STR
+					),
+					4 => array
+						(
+						'value' => $entry['adresse'],
+						'type' => PDO::PARAM_STR
+					),
+					5 => array
+						(
+						'value' => $entry['postnummer'],
+						'type' => PDO::PARAM_STR
+					),
+					6 => array
+						(
+						'value' => $entry['sted'],
+						'type' => PDO::PARAM_STR
+					),
+					7 => array
+						(
+						'value' => $entry['organisasjonsNr'],
+						'type' => PDO::PARAM_STR
+					),
+					8 => array
+						(
+						'value' => $entry['bankkontoNr'],
+						'type' => PDO::PARAM_STR
+					),
+					9 => array
+						(
+						'value' => (int)$entry['aktiv'],
+						'type' => PDO::PARAM_INT
+					)
+				);
+			}
+
+			$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+
+/*
+            [leverandornummer] => 9906
+            [status] => N
+            [navn] => Bergen Vann KF (BV)
+            [adresse] => Postboks 7700
+            [postnummer] => 5020
+            [sted] => BERGEN
+            [organisasjonsNr] => 987328096
+            [bankkontoNr] => 52020801786
+            [aktiv] => 1
+*/
+			_debug_array($values);die();
+
+
+			$sql = "SELECT fm_vendor_temp.*"
+				. " FROM fm_vendor RIGHT OUTER JOIN fm_vendor_temp ON (fm_vendor.id = fm_vendor_temp.id)"
+				. " WHERE fm_vendor.id IS NULL";
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			$vendors = array();
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$vendors[] = array(
+					1 => array(
+						'value' => (int)$GLOBALS['phpgw']->db->f('id'),
+						'type' => PDO::PARAM_INT
+					),
+					2 => array(
+						'value' => $GLOBALS['phpgw']->db->f('navn'),
+						'type' => PDO::PARAM_STR
+					),
+					3 => array(
+						'value' => 1,
+						'type' => PDO::PARAM_INT
+					),
+					4 => array(
+						'value' => 6,
+						'type' => PDO::PARAM_INT
+					),
+					5 => array(
+						'value' => (int)$GLOBALS['phpgw']->db->f('aktiv'),
+						'type' => PDO::PARAM_INT
+					),
+					6 => array(
+						'value' => $GLOBALS['phpgw']->db->f('adresse'),
+						'type' => PDO::PARAM_STR
+					),
+					7 => array(
+						'value' => $GLOBALS['phpgw']->db->f('postnummer'),
+						'type' => PDO::PARAM_STR
+					),
+					8 => array(
+						'value' => $GLOBALS['phpgw']->db->f('sted'),
+						'type' => PDO::PARAM_STR
+					),
+					9 => array(
+						'value' => $GLOBALS['phpgw']->db->f('organisasjonsnr'),
+						'type' => PDO::PARAM_STR
+					),
+					10 => array(
+						'value' => $GLOBALS['phpgw']->db->f('bankkontonr'),
+						'type' => PDO::PARAM_STR
+					),
+					10 => array(
+						'value' => time(),
+						'type' => PDO::PARAM_INT
+					)
+				);
+			}
+			$sql = 'INSERT INTO fm_vendor (id, org_name,category, owner_id, active, adresse, postnr, poststed, org_nr, konto_nr,entry_date)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			if($vendors)
+			{
+				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
 			}
 		}
 
