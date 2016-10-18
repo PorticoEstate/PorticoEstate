@@ -3077,6 +3077,7 @@
 	//		$id ='013000';
 
 			$amount =phpgw::get_var('amount', 'int');
+			$ticket_id =phpgw::get_var('ticket_id', 'int');
 
 			if($check_external_register && $id)
 			{
@@ -3139,7 +3140,7 @@
 				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 			}
 
-			return $this->get_supervisor_email($supervisor_id);
+			return $this->get_supervisor_email($supervisor_id, $ticket_id);
 		}
 
 		public function check_external_register($param)
@@ -3184,19 +3185,38 @@
 			return json_decode($result, true);
 		}
 
-		protected function get_supervisor_email($supervisor_id)
+		protected function get_supervisor_email($supervisor_id, $ticket_id)
 		{
 			$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 			$supervisor_email = array();
 			if ($supervisor_id && $need_approval)
 			{
+
+				$pending_action = CreateObject('property.sopending_action');
+
+				$action_params = array(
+					'appname' => 'property',
+					'location' => '.ticket',
+					'id'		=> $ticket_id,
+					'responsible' => $supervisor_id,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'deadline' => '',
+					'created_by' => '',
+					'allrows' => false
+				);
+
+				$approval = $pending_action->get_pending_action($action_params);
+
 				$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 				if (isset($prefs['email']) && $prefs['email'])
 				{
 					$supervisor_email[] = array(
 						'id' => $supervisor_id,
 						'address' => $prefs['email'],
-						'required'	=> true
+						'required'	=> true,
+						'approved'	=> !!$approval['action_performed'],
+						'is_user'	=> $supervisor_id == $this->account ? true : false
 					);
 				}
 				else
@@ -3210,6 +3230,20 @@
 
 				if (isset($prefs['approval_from']) && $prefs['approval_from'])
 				{
+					$action_params = array(
+						'appname' => 'property',
+						'location' => '.ticket',
+						'id'		=> $ticket_id,
+						'responsible' => $supervisor_id,
+						'responsible_type' => 'user',
+						'action' => 'approval',
+						'deadline' => '',
+						'created_by' => '',
+						'allrows' => false
+					);
+
+					$approval = $pending_action->get_pending_action($action_params);
+
 					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
 					if (isset($prefs2['email']) && $prefs2['email'])
@@ -3217,7 +3251,9 @@
 						$supervisor_email[] = array(
 							'id' => $prefs['approval_from'],
 							'address' => $prefs2['email'],
-							'required'	=> false
+							'required'	=> false,
+							'approved'	=> !!$approval['action_performed'],
+							'is_user'	=> $prefs['approval_from'] == $this->account ? true : false
 						);
 						$supervisor_email = array_reverse($supervisor_email);
 					}
@@ -3225,6 +3261,10 @@
 				}
 				unset($prefs);
 			}
+
+
+
+
 			return $supervisor_email;
 		}
 

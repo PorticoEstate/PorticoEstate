@@ -389,7 +389,7 @@ function populateTableChkApproval(ecodimb)
 	var total_amount = Number(amount) + Number($('#budget').val());
 	$("#order_received_amount").val(total_amount);
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount};
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id:location_item_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 
@@ -401,7 +401,7 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table>";
+				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjenn</th></thead><tbody>";
 				var obj = data;
 				var required = '';
 
@@ -411,18 +411,41 @@ function populateTableChkApproval(ecodimb)
 
 					htmlString += "<tr><td>";
 
-					if (obj[i].required == true)
+					if (obj[i].required === true)
 					{
-						htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
-						required = 'checked="checked" disabled="disabled"';
+						if(obj[i].approved === true)
+						{
+							required = 'disabled="disabled"';
+						}
+						else
+						{
+							htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
+							required = 'checked="checked" disabled="disabled"';
+						}
 					}
 					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
 					htmlString += "</td><td valign=\"top\">";
 					htmlString += obj[i].address;
-					htmlString += "</td></tr>";
-				});
-				htmlString += "</table>";
+					htmlString += "</td>";
+					htmlString += "<td>";
 
+					if (obj[i].approved === true)
+					{
+						htmlString + "X";
+					}
+					else
+					{
+						if (obj[i].is_user === true)
+						{
+							htmlString += "<input type=\"checkbox\" name=\"values[do_approve][" + obj[i].id + "]\" value=\"" + obj[i].id + "\"></input>";
+						}
+					}
+					htmlString += "</td>";
+					
+					htmlString += "</tr>";
+				});
+				htmlString += "</tbody></table>";
+//console.log(htmlString);
 				$("#approval_container").html(htmlString);
 			}
 		}

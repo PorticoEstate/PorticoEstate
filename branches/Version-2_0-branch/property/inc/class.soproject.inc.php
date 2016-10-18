@@ -1116,8 +1116,15 @@
 				//		$_taxfactor = 1 + ($_taxcode[(int)$this->db->f('mvakode')]/100);
 				//		$_actual_cost = round($actual_cost/$_taxfactor);
 
-				$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['combined_cost'];
-				$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];
+				if($entry['closed'])
+				{
+					$entry['diff'] = 0;
+				}
+				else
+				{
+					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['combined_cost'];
+					$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];				
+				}
 			}
 
 			return $values;
@@ -2382,7 +2389,7 @@
 					$budget_acc = 0;
 				}
 
-				if (abs($entry['actual_cost']) > 0)
+				if (abs($entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
 					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];

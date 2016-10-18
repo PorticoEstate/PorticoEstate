@@ -80,26 +80,26 @@
 						<xsl:if test="contract_furnished_status = 1">
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'custom prize')"/>
+									<xsl:value-of select="php:function('lang', 'custom price')"/>
 								</label>
-								<input type="text" name="custom_prize" id="custom_prize" value="{value_custom_prize}"/>
+								<input type="text" name="custom_price" id="custom_price" value="{value_custom_price}"/>
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'prize type')"/>
+									<xsl:value-of select="php:function('lang', 'price type')"/>
 								</label>
-								<xsl:if test="count(//list_prize_type/options) > 0">
-									<select id="prize_type_id" name="prize_type_id">
-										<xsl:apply-templates select="list_prize_type/options"/>
+								<xsl:if test="count(//list_price_type/options) > 0">
+									<select id="price_type_id" name="price_type_id">
+										<xsl:apply-templates select="list_price_type/options"/>
 									</select>
 								</xsl:if>
 							</div>
 
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'custom prize factor')"/>
+									<xsl:value-of select="php:function('lang', 'custom price factor')"/>
 								</label>
-								<input type="text" name="custom_prize_factor" id="custom_prize_factor" value="{value_custom_prize_factor}"/>
+								<input type="text" name="custom_price_factor" id="custom_price_factor" value="{value_custom_price_factor}"/>
 							</div>
 							<div class="pure-control-group">
 								<label>

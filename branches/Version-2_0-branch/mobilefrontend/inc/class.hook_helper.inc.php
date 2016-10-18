@@ -5,7 +5,7 @@
 	 * @author Sigurd Nes <sigurdne@online.no>
 	 * @copyright Copyright (C) 2013 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @package controller
+	 * @package Property
 	 * @version $Id$
 	 */
 	/*
@@ -43,11 +43,28 @@
 			$config = CreateObject('phpgwapi.config', 'mobilefrontend');
 			$config->read();
 
-			if (isset($config->config_data['auth_type']) && $config->config_data['auth_type'])
+			if (!empty($config->config_data['auth_type']))
 			{
 				$GLOBALS['phpgw_info']['server']['auth_type'] = $config->config_data['auth_type'];
 			}
+		}
 
-//_debug_array($GLOBALS['phpgw_info']['server']);die();
+		public function set_cookie_domain()
+		{
+			$script_path = dirname(phpgw::get_var('SCRIPT_FILENAME', 'string', 'SERVER'));
+			
+			if(preg_match('/mobilefrontend/', $script_path))
+			{
+				//get from local config
+				$config = CreateObject('phpgwapi.config', 'mobilefrontend');
+				$config->read();
+
+				$GLOBALS['phpgw_info']['server']['cookie_domain'] = !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) ? $GLOBALS['phpgw_info']['server']['cookie_domain'] : '';
+
+				if (!empty($config->config_data['cookie_domain']))
+				{
+					$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config->config_data['cookie_domain'];
+				}
+			}
 		}
 	}

@@ -39,5 +39,6 @@
 	$setup_info['activitycalendarfrontend']['hooks'] = array
 		(
 		'menu' => 'activitycalendarfrontend.menu.get_menu',
+		'set_cookie_domain' => 'activitycalendarfrontend.hook_helper.set_cookie_domain',
 		'config'
 	);
