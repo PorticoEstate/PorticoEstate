@@ -2304,8 +2304,7 @@
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
 
-					$action_params = array
-						(
+					$action_params = array(
 						'appname' => 'property',
 						'location' => '.ticket',
 						'id' => $id,
@@ -2333,6 +2332,31 @@
 					$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
 				}
 			}
+	
+			if (!empty($values['do_approve']) && is_array($values['do_approve']))
+			{
+				$action_params = array(
+					'appname' => 'property',
+					'location' => '.ticket',
+					'id' => $id,
+					'responsible' => '',
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'remark' => '',
+					'deadline' => ''
+				);
+
+				foreach ($values['do_approve'] as $_account_id => $_dummy)
+				{
+					$action_params['responsible'] = $_account_id;
+				//	if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					{
+						execMethod('property.sopending_action.set_pending_action', $action_params);
+					}
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+				}
+			}
+
 
 			// end approval
 			// -------- end order section
@@ -3191,6 +3215,8 @@
 			$supervisor_email = array();
 			if ($supervisor_id && $need_approval)
 			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date =
 
 				$pending_action = CreateObject('property.sopending_action');
 
@@ -3215,7 +3241,8 @@
 						'id' => $supervisor_id,
 						'address' => $prefs['email'],
 						'required'	=> true,
-						'approved'	=> !!$approval['action_performed'],
+						'approved'	=> true,//!!$approval['action_performed'],
+						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approval['action_performed'], $dateformat),
 						'is_user'	=> $supervisor_id == $this->account ? true : false
 					);
 				}
@@ -3253,6 +3280,7 @@
 							'address' => $prefs2['email'],
 							'required'	=> false,
 							'approved'	=> !!$approval['action_performed'],
+							'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approval['action_performed'], $dateformat),
 							'is_user'	=> $prefs['approval_from'] == $this->account ? true : false
 						);
 						$supervisor_email = array_reverse($supervisor_email);
