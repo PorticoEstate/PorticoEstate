@@ -247,7 +247,7 @@
 			}
 
 			$ret = array();
-			$condition = " WHERE action_performed IS NULL AND expired_on IS NULL AND num = '{$action}' AND location_id = {$location_id}";
+			$condition = " WHERE num = '{$action}' AND location_id = {$location_id}";
 
 			if ($responsible)
 			{
@@ -280,7 +280,12 @@
 
 			if($closed)
 			{
-
+				$ordermethod = ' ORDER BY action_performed DESC';
+				$condition .= " AND action_performed IS NOT NULL";
+			}
+			else
+			{
+				$condition .= " AND action_performed IS NULL AND expired_on IS NULL ";
 			}
 
 			$sql = "SELECT fm_action_pending.* FROM fm_action_pending {$this->join} fm_action_pending_category"

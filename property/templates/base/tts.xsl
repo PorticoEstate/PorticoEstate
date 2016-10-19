@@ -230,6 +230,19 @@
 
 <!-- view -->
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
+	<style type="text/css">
+		#floating-box {
+		position: relative;
+		z-index: 1000;
+		}
+		#box {
+		position: absolute;
+		right: 10px;
+		border: 1px solid #B5076D;
+		padding: 0 10px 10px 10px;
+		width: 200px;
+		background-color: #FFF;
+		} 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
@@ -303,6 +316,37 @@
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="floating-box">
+				<div id="box">
+					<table width="200px">
+						<tbody>
+							<tr>
+								<td width="200px">
+									<input type="hidden" id="save" name="values[save]" value=""/>
+									<input type="button" class="pure-button pure-button-primary" name="save" onClick="confirm_session('save');">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'save')"/>
+										</xsl:attribute>
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<xsl:variable name="lang_done">
+										<xsl:value-of select="php:function('lang', 'done')"/>
+									</xsl:variable>
+									<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.cancel_form.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 			<div id="general">
 				<fieldset>
 					<div class="pure-control-group">
@@ -1002,7 +1046,7 @@
 										<xsl:when test="need_approval='1'">
 											<div class="pure-control-group">
 												<label>
-													<xsl:value-of select="php:function('lang', 'ask for approval')"/>
+													<xsl:value-of select="php:function('lang', 'approval')"/>
 												</label>
 												<div id="approval_container" class="pure-table pure-u-md-1-2">
 												</div>
@@ -1239,7 +1283,7 @@
 			</input>
 		</div>
 	</form>
-	
+
 	<xsl:variable name="done_action">
 		<xsl:value-of select="done_action"/>
 	</xsl:variable>
