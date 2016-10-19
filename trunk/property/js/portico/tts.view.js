@@ -389,7 +389,7 @@ function populateTableChkApproval(ecodimb)
 	var total_amount = Number(amount) + Number($('#budget').val());
 	$("#order_received_amount").val(total_amount);
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id:location_item_id};
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id: location_item_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 
@@ -411,19 +411,20 @@ function populateTableChkApproval(ecodimb)
 
 					htmlString += "<tr><td>";
 
-					if (obj[i].required === true)
+					var left_cell = "Ikke relevant";
+					if (obj[i].is_user !== true)
 					{
-						if(obj[i].approved === true)
+						if (obj[i].approved !== true)
 						{
-							required = 'disabled="disabled"';
-						}
-						else
-						{
-							htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
-							required = 'checked="checked" disabled="disabled"';
+							if (obj[i].required === true)
+							{
+								required = 'checked="checked" disabled="disabled"';
+								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
+							}
+							left_cell += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
 						}
 					}
-					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
+					htmlString += left_cell;
 					htmlString += "</td><td valign=\"top\">";
 					htmlString += obj[i].address;
 					htmlString += "</td>";
@@ -431,7 +432,7 @@ function populateTableChkApproval(ecodimb)
 
 					if (obj[i].approved === true)
 					{
-						htmlString + "X";
+						htmlString += obj[i].approved_time;
 					}
 					else
 					{
@@ -441,7 +442,7 @@ function populateTableChkApproval(ecodimb)
 						}
 					}
 					htmlString += "</td>";
-					
+
 					htmlString += "</tr>";
 				});
 				htmlString += "</tbody></table>";

@@ -222,8 +222,7 @@
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$appname = isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
 			$location = isset($data['location']) && $data['location'] ? $data['location'] : '';
-			$item_id = isset($data['id']) && $data['id'] ? $data['id'] : '';
-			$data['id']; //possible bigint
+			$item_id = isset($data['id']) && $data['id'] ? $data['id'] : '';//possible bigint
 			$responsible = (int)$data['responsible'];
 			$responsible_type = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
 			$action = isset($data['action']) && $data['action'] ? $this->db->db_addslashes($data['action']) : '';
@@ -232,6 +231,7 @@
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$closed = isset($data['closed']) ? $data['closed'] : '';
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
 
 			if (!in_array($responsible_type, $this->valid_responsible_types))
@@ -276,6 +276,11 @@
 			else
 			{
 				$ordermethod = ' ORDER BY created_on DESC';
+			}
+
+			if($closed)
+			{
+
 			}
 
 			$sql = "SELECT fm_action_pending.* FROM fm_action_pending {$this->join} fm_action_pending_category"
