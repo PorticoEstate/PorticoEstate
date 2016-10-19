@@ -412,7 +412,12 @@ function populateTableChkApproval(ecodimb)
 					htmlString += "<tr><td>";
 
 					var left_cell = "Ikke relevant";
-					if (obj[i].is_user !== true)
+
+					if (obj[i].requested === true)
+					{
+						left_cell = obj[i].requested_time;
+					}
+					else if (obj[i].is_user !== true)
 					{
 						if (obj[i].approved !== true)
 						{
@@ -421,8 +426,16 @@ function populateTableChkApproval(ecodimb)
 								required = 'checked="checked" disabled="disabled"';
 								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
 							}
+							else
+							{
+								left_cell = '';
+							}
 							left_cell += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
 						}
+					}
+					else if (obj[i].is_user === true)
+					{
+						left_cell = '(Meg selv...)';
 					}
 					htmlString += left_cell;
 					htmlString += "</td><td valign=\"top\">";
@@ -451,6 +464,25 @@ function populateTableChkApproval(ecodimb)
 			}
 		}
 	});
-
 }
-;
+$(document).ready(function ()
+{
+	var offset = $("#box").offset();
+	var topPadding = 180;
+	$(window).scroll(function ()
+	{
+		if ($(window).scrollTop() > offset.top)
+		{
+			$("#box").stop().animate({
+				marginTop: $(window).scrollTop() - offset.top + topPadding
+			}, 100);
+		}
+		else
+		{
+			$("#box").stop().animate({
+				marginTop: 0
+			}, 100);
+		}
+		;
+	});
+});

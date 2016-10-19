@@ -2318,12 +2318,18 @@
 					foreach ($values['approval'] as $_account_id => $_address)
 					{
 						$action_params['responsible'] = $_account_id;
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-						if ($rcpt)
+						try
 						{
-							$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
+							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+							if ($rcpt)
+							{
+								$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
+							}
 						}
-
+						catch (Exception $exc)
+						{
+							$receipt['error'][] = array('msg' => $exc->getMessage());
+						}
 						execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
 				}
@@ -2349,7 +2355,7 @@
 				foreach ($values['do_approve'] as $_account_id => $_dummy)
 				{
 					$action_params['responsible'] = $_account_id;
-				//	if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
 					{
 						execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
@@ -3216,7 +3222,6 @@
 			if ($supervisor_id && $need_approval)
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$date =
 
 				$pending_action = CreateObject('property.sopending_action');
 
@@ -3229,10 +3234,17 @@
 					'action' => 'approval',
 					'deadline' => '',
 					'created_by' => '',
-					'allrows' => false
+					'allrows' => false,
+					'closed' => true
 				);
 
-				$approval = $pending_action->get_pending_action($action_params);
+				$approvals = $pending_action->get_pending_action($action_params);
+				if(!$approvals)
+				{
+					$action_params['closed'] = false;
+				}
+
+				$requests = $pending_action->get_pending_action($action_params);
 
 				$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 				if (isset($prefs['email']) && $prefs['email'])
@@ -3241,8 +3253,10 @@
 						'id' => $supervisor_id,
 						'address' => $prefs['email'],
 						'required'	=> true,
-						'approved'	=> true,//!!$approval['action_performed'],
-						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approval['action_performed'], $dateformat),
+						'requested'	=> !!$requests[0]['action_requested'],
+						'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
+						'approved'	=> !!$approvals[0]['action_performed'],
+						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
 						'is_user'	=> $supervisor_id == $this->account ? true : false
 					);
 				}
@@ -3261,15 +3275,22 @@
 						'appname' => 'property',
 						'location' => '.ticket',
 						'id'		=> $ticket_id,
-						'responsible' => $supervisor_id,
+						'responsible' => $prefs['approval_from'],
 						'responsible_type' => 'user',
 						'action' => 'approval',
 						'deadline' => '',
 						'created_by' => '',
-						'allrows' => false
+						'allrows' => false,
+						'closed' => true
 					);
 
-					$approval = $pending_action->get_pending_action($action_params);
+					$approvals = $pending_action->get_pending_action($action_params);
+					if(!$approvals)
+					{
+						$action_params['closed'] = false;
+					}
+
+					$requests = $pending_action->get_pending_action($action_params);
 
 					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
 
@@ -3279,8 +3300,10 @@
 							'id' => $prefs['approval_from'],
 							'address' => $prefs2['email'],
 							'required'	=> false,
-							'approved'	=> !!$approval['action_performed'],
-							'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approval['action_performed'], $dateformat),
+							'requested'	=> !!$requests[0]['action_requested'],
+							'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
+							'approved'	=> !!$approvals[0]['action_performed'],
+							'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
 							'is_user'	=> $prefs['approval_from'] == $this->account ? true : false
 						);
 						$supervisor_email = array_reverse($supervisor_email);
