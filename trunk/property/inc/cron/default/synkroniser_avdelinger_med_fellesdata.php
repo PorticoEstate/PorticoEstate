@@ -58,11 +58,11 @@
 			 * prosjekt
 			 * tjeneste
 			 */
-	//		$fellesdata->update_vendor();
+			$fellesdata->update_vendor();
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
 	//		$fellesdata->update_tjeneste();
-			$fellesdata->update_dimb(); // ansvar
+	//		$fellesdata->update_dimb(); // ansvar, or mange treff
 			$fellesdata->get_org_unit_ids_from_top();
 
 
@@ -397,6 +397,8 @@
 
 		function update_tjeneste()
 		{
+			//det er for mange...
+			return;
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 			//fm_eco_service
 
@@ -453,7 +455,7 @@
 				  status character varying(1),
 				  navn character varying(255),
 				  adresse character varying(255),
-				  postnummer character varying(10),
+				  postnummer character varying(50),
 				  sted character varying(50),
 				  organisasjonsnr character varying(50),
 				  bankkontonr character varying(50),
@@ -469,7 +471,8 @@ SQL;
 			//fm_vendor
 
 			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**';
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=100304';
+//			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=100304';
+			$error = false;
 
 			$values = array();
 			try
@@ -479,14 +482,32 @@ SQL;
 			}
 			catch (Exception $exc)
 			{
+				$error = true;
 				echo $exc->getTraceAsString();
 			}
-			_debug_array($values);die();
+
 			$sql = 'INSERT INTO fm_vendor_temp (id, status, navn, adresse, postnummer, sted, organisasjonsnr, bankkontonr, aktiv)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
+			//remove duplicates
+
+			if(empty($values[0]['leverandornummer']))
+			{
+				_debug_array($values);
+				$error = true;
+			}
+			$vendors = array();
+			foreach ($values as $entry)
+			{
+				$vendors[$entry['leverandornummer']] = $entry;
+			}
+
+			unset($entry);
+//			_debug_array($vendors);die();
+
 			$valueset = array();
 
-			foreach ($values as $entry)
+			foreach ($vendors as $key => $entry)
 			{
 				$valueset[] = array
 					(
@@ -538,7 +559,10 @@ SQL;
 				);
 			}
 
-			$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+			if($valueset && !$error)
+			{
+				$GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+			}
 
 /*
             [leverandornummer] => 9906
@@ -551,7 +575,7 @@ SQL;
             [bankkontoNr] => 52020801786
             [aktiv] => 1
 */
-			_debug_array($values);die();
+//			_debug_array($valueset);die();
 
 
 			$sql = "SELECT fm_vendor_temp.*"
@@ -602,19 +626,21 @@ SQL;
 					10 => array(
 						'value' => $GLOBALS['phpgw']->db->f('bankkontonr'),
 						'type' => PDO::PARAM_STR
-					),
-					10 => array(
-						'value' => time(),
-						'type' => PDO::PARAM_INT
 					)
 				);
 			}
-			$sql = 'INSERT INTO fm_vendor (id, org_name,category, owner_id, active, adresse, postnr, poststed, org_nr, konto_nr,entry_date)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+			$sql = 'INSERT INTO fm_vendor (id, org_name,category, owner_id, active, adresse, postnr, poststed, org_nr, konto_nr)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			if($vendors)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
 			}
+
+			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0", __LINE__, __FILE__);
+
+			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 1"
+				. " FROM fm_vendor_temp WHERE fm_vendor.id = fm_vendor_temp.id", __LINE__, __FILE__);
+
 		}
 
 		public function check_external_register($url)
