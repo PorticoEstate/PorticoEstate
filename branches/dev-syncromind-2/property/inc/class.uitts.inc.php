@@ -497,62 +497,35 @@
 
 		public function handle_files()
 		{
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
-			//include_class('phpgwapi', 'UploadHandler', 'js/jquery/file-upload/server/php/');
+			$id = phpgw::get_var('id');
 			
-			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_files'));
-			$upload_handler = new UploadHandler($options);
+			phpgw::import_class('property.multiuploader');
 			
-			die;
-		}
+			$options['base_dir'] = 'fmticket/'.$id;
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_files', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+			
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->post_and_save();
+					break;
+				case 'DELETE':
+					$upload_handler->delete2();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
 		
-		public function addfiles()
-		{
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
-			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-
-			$id = phpgw::get_var('id', 'int');
-			$jasperfile = phpgw::get_var('jasperfile', 'bool');
-
-			$fileuploader = CreateObject('property.fileuploader');
-
-
-			if (!$this->acl_add && !$this->acl_edit)
-			{
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
-			if (!$id)
-			{
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
-			$test = false;//true;
-			if ($test)
-			{
-				if (!empty($_FILES))
-				{
-					$tempFile = $_FILES['Filedata']['tmp_name'];
-					$targetPath = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/";
-					$targetFile = str_replace('//', '/', $targetPath) . $_FILES['Filedata']['name'];
-					move_uploaded_file($tempFile, $targetFile);
-					echo str_replace($GLOBALS['phpgw_info']['server']['temp_dir'], '', $targetFile);
-				}
-				$GLOBALS['phpgw']->common->phpgw_exit();
-			}
-
-			$values = $this->bo->read_single(array('entity_id' => $this->entity_id, 'cat_id' => $this->cat_id,
-				'id' => $id));
-
-			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
-			if ($this->type_app[$this->type] == 'catch')
-			{
-				$loc1 = 'dummy';
-			}
-
-			$fileuploader->upload("{$this->category_dir}/{$loc1}/{$id}");
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 		
 		function columns()
@@ -1212,11 +1185,12 @@
 		public function multi_upload()
 		{
 			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
 			
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			
-			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_files'));
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_files', 'id' => $id));
 
 			$data = array
 				(
@@ -3080,6 +3054,7 @@
 				'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
 				. "upload_target:'property.botts.addfiles',"
 				. "id:'{$id}'}",
+				'multi_upload_parans' => "{menuaction:'property.uitts.multi_upload', id:'{$id}'}",
 				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
