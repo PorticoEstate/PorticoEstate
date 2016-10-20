@@ -31,7 +31,7 @@
 		</div>
 		<!-- The table listing the files available for upload/download -->
 		<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">					
-			<div class="presentation files" style="display: inline-table;"></div>
+			<div class="presentation files" style="display: inline-table; width: 100%;"></div>
 		</div>
 	</form>
 
