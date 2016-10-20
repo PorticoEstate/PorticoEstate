@@ -401,7 +401,7 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjenn</th></thead><tbody>";
+				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
 				var obj = data;
 				var required = '';
 

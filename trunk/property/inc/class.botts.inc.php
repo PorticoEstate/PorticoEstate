@@ -475,19 +475,21 @@
 			$status_text = array(
 				'R' => lang('Re-opened'),
 				'X' => lang('Closed'),
-				'O' => isset($this->config->config_data['tts_lang_open']) && $this->config->config_data['tts_lang_open'] ? $this->config->config_data['tts_lang_open'] : lang('Open'),
+				'O' => !empty($this->config->config_data['tts_lang_open']) ? $this->config->config_data['tts_lang_open'] : lang('Open'),
 				'A' => lang('Re-assigned'),
 				'G' => lang('Re-assigned group'),
 				'P' => lang('Priority changed'),
 				'T' => lang('Category changed'),
 				'S' => lang('Subject changed'),
-				'B' => lang('Billing rate'),
+				'B' => lang('Budget changed'),
 				'H' => lang('Billing hours'),
 				'F' => lang('finnish date'),
 				'SC' => lang('Status changed'),
 				'M' => lang('Sent by email to'),
 				'MS' => lang('Sent by sms'),
 				'AC' => lang('actual cost changed'),
+				'AR' => lang('Request for approval'),
+				'AA' => lang('approved'),
 			);
 
 			$custom_status = $this->so->get_custom_status();
@@ -899,6 +901,10 @@
 						$type = lang('Sent by sms');
 						break;
 					case 'RM': $type = lang('remark');
+						break;
+					case 'AR': $type = lang('request for approval');
+						break;
+					case 'AA': $type = lang('approved');
 						break;
 					default:
 					// nothing

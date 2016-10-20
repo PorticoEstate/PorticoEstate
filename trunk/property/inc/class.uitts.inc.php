@@ -2082,6 +2082,13 @@
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
+			$budgets = $this->bo->get_budgets($id);
+			$_budget_amount = 0;
+			foreach ($budgets as $budget)
+			{
+				$_budget_amount += $budget['amount'];
+			}
+
 			if ($vendor_email || $preview_html)
 			{
 				$subject = lang('workorder') . ": {$ticket['order_id']}";
@@ -2239,55 +2246,61 @@
 					$body = lang('order') . '.</br></br>' . lang('see attachment');
 				}
 
-				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+				if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 				{
-					if (!is_object($GLOBALS['phpgw']->send))
-					{
-						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-					}
+					$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
+				}
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
 
-					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
-					$cc = '';
-					$bcc = $coordinator_email;
-					if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
-					{
-						$cc = $contact_data['value_contact_email'];
-					}
+				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+				$cc = '';
+				$bcc = $coordinator_email;
+				if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+				{
+					$cc = $contact_data['value_contact_email'];
+				}
 
-					$_to = implode(';', $vendor_email);
+				$_to = implode(';', $vendor_email);
 
+				$check_purchase = $this->check_purchase_right($ticket['ecodimb'], $_budget_amount, $id);
+//				_debug_array($check_purchase); die();
+
+				try
+				{
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
 					if ($rcpt)
 					{
 						$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
 						$historylog->add('M', $id, "{$_to}{$attachment_log}");
 						$receipt['message'][] = array('msg' => lang('Workorder is sent by email!'));
-						//Sigurd: Consider remove
-						/*
-						  $action_params = array
-						  (
-						  'appname'			=> 'property',
-						  'location'			=> '.ticket',
-						  'id'				=> $id,
-						  'responsible'		=> $values['vendor_id'],
-						  'responsible_type'  => 'vendor',
-						  'action'			=> 'remind',
-						  'remark'			=> '',
-						  'deadline'			=> ''
-						  );
+					//Sigurd: Consider remove
+					/*
+					  $action_params = array
+					  (
+					  'appname'			=> 'property',
+					  'location'			=> '.ticket',
+					  'id'				=> $id,
+					  'responsible'		=> $values['vendor_id'],
+					  'responsible_type'  => 'vendor',
+					  'action'			=> 'remind',
+					  'remark'			=> '',
+					  'deadline'			=> ''
+					  );
 
-						  $reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
-						 */
+					  $reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
+					 */
 					}
 				}
-				else
+				catch (Exception $exc)
 				{
-					$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
+					$receipt['error'][] = array('msg' => $exc->getMessage());
 				}
 			}
 
-			// start approval
 			if (isset($values['approval']) && $values['approval'] && $this->bo->config->config_data['workorder_approval'])
 			{
 				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
@@ -2297,46 +2310,47 @@
 				$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 						'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $ticket['order_id']) . '</a>';
 
-				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
-				{
-					if (!is_object($GLOBALS['phpgw']->send))
-					{
-						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-					}
-
-					$action_params = array(
-						'appname' => 'property',
-						'location' => '.ticket',
-						'id' => $id,
-						'responsible' => '',
-						'responsible_type' => 'user',
-						'action' => 'approval',
-						'remark' => '',
-						'deadline' => ''
-					);
-					$bcc = '';//$coordinator_email;
-					foreach ($values['approval'] as $_account_id => $_address)
-					{
-						$action_params['responsible'] = $_account_id;
-						try
-						{
-							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-							if ($rcpt)
-							{
-								$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
-							}
-						}
-						catch (Exception $exc)
-						{
-							$receipt['error'][] = array('msg' => $exc->getMessage());
-						}
-						execMethod('property.sopending_action.set_pending_action', $action_params);
-					}
-				}
-				else
+				if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 				{
 					$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
 				}
+
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+
+				$action_params = array(
+					'appname' => 'property',
+					'location' => '.ticket',
+					'id' => $id,
+					'responsible' => '',
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'remark' => '',
+					'deadline' => ''
+				);
+				$bcc = '';//$coordinator_email;
+				foreach ($values['approval'] as $_account_id => $_address)
+				{
+					$action_params['responsible'] = $_account_id;
+					try
+					{
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+						if ($rcpt)
+						{
+
+							$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
+						}
+					}
+					catch (Exception $exc)
+					{
+						$receipt['error'][] = array('msg' => $exc->getMessage());
+					}
+					$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+					execMethod('property.sopending_action.set_pending_action', $action_params);
+				}
+				
 			}
 	
 			if (!empty($values['do_approve']) && is_array($values['do_approve']))
@@ -2360,6 +2374,7 @@
 						execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
 					execMethod('property.sopending_action.close_pending_action', $action_params);
+					$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
 				}
 			}
 
@@ -2455,11 +2470,20 @@
 			//_debug_Array($additional_notes);die();
 			//---datatable settings---------------------------------------------------
 
+			$z = 1;
+			foreach ($record_history as &$history_entry)
+			{
+				$history_entry['sort_key'] = $z++;
+				
+			}
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_1',
 				'requestUrl' => "''",
-				'ColumnDefs' => array(array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true,
+				'ColumnDefs' => array(
+					array('key' => 'sort_key', 'label' => '#', 'sortable' => true,
+						'resizeable' => true),
+					array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => false,
 						'resizeable' => true),
 					array('key' => 'value_user', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 					array('key' => 'value_action', 'label' => lang('Action'), 'sortable' => true,
@@ -3092,7 +3116,7 @@
 		}
 
 
-		public function check_purchase_right()
+		public function check_purchase_right($ecodimb = 0, $amount = 0, $ticket_id = 0)
 		{
 			$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 			if(!$need_approval)
@@ -3103,13 +3127,13 @@
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
 
-			$id = sprintf("%06s", phpgw::get_var('ecodimb'));
-	//		$id ='013000';
+			$ecodimb = $ecodimb ? sprintf("%06s", $ecodimb) : sprintf("%06s", phpgw::get_var('ecodimb'));
+	//		$ecodimb ='013000';
 
-			$amount =phpgw::get_var('amount', 'int');
-			$ticket_id =phpgw::get_var('ticket_id', 'int');
+			$amount = $amount ? $amount : phpgw::get_var('amount', 'int');
+			$ticket_id = $ticket_id ? $ticket_id : phpgw::get_var('ticket_id', 'int');
 
-			if($check_external_register && $id)
+			if($check_external_register && $ecodimb)
 			{
 				$url		= $config->config_data['external_register']['url'];
 				$username	= $config->config_data['external_register']['username'];
@@ -3120,7 +3144,7 @@
 					'username'	=> $username,
 					'password'	=> $password,
 					'sub_check'	=> $sub_check,
-					'id'		=> $id
+					'id'		=> $ecodimb
 					)
 				);
 
