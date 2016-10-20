@@ -236,11 +236,13 @@ this.onDOMAttrModified = function (e)
 
 this.fileuploader = function ()
 {
-	var sUrl = phpGWLink('index.php', {'menuaction':'property.uitts.multi_upload'});
-	TINY.box.show({iframe: sUrl, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true}); //refresh_files is called after upload
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	//TINY.box.show({iframe: sUrl, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true}); //refresh_files is called after upload
+	JqueryPortico.openPopup(multi_upload_parans,{closeAction:'close'})
 };
 
-this.refresh_files = function ()
+
+this.afterPopupClose = function ()
 {
 	base_java_url['action'] = 'get_files';
 	var oArgs = base_java_url;
