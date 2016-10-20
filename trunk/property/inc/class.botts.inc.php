@@ -1796,5 +1796,226 @@
 			return $this->so->add_relation($add_relation, $id);
 		}
 
+		public function check_purchase_right($ecodimb = 0, $amount = 0, $ticket_id = 0)
+		{
+			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
+			if(!$need_approval)
+			{
+				return array();
+			}
+
+			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
+
+			if($check_external_register && $ecodimb)
+			{
+				$url		= $config->config_data['external_register']['url'];
+				$username	= $config->config_data['external_register']['username'];
+				$password	= $config->config_data['external_register']['password'];
+				$sub_check = 'fullmakter';
+				$fullmakter = $this->check_external_register(array(
+					'url'		=> $url,
+					'username'	=> $username,
+					'password'	=> $password,
+					'sub_check'	=> $sub_check,
+					'id'		=> sprintf("%06s", $ecodimb)
+					)
+				);
+
+				/**
+				 * some magic...to decide $supervisor_lid
+				 */
+				if(isset($fullmakter[0]))
+				{
+					if($amount > 5000 && $amount <= 100000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['inntil100k']);
+					}
+					else if ($amount > 100000 && $amount <= 1000000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['fra100kTil1m']);
+					}
+					else if ($amount > 1000000 && $amount <= 5000000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['fra1mTil5m']);
+					}
+					else if ($amount > 5000000)
+					{
+						$supervisor_lid = strtolower($fullmakter[0]['ubegrenset']);
+					}
+					else
+					{
+						$supervisor_lid = ''; // maybe add a required configurable failsafe as backup...
+					}
+				}
+	//			$supervisor_lid = 'hc483';
+
+				/*
+					[inntil100k] => (string) DV645
+					[fra100kTil1m] => (string) DV645
+					[fra1mTil5m] => (string) YN450
+					[ubegrenset] => (string) JG406
+					[periodeFra] => (string) 200300
+					[periodeTil] => (string) 209912
+					[status] => (string) N
+					[aktiv] => (bool) true
+				*/
+
+				$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+			}
+			else
+			{
+				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+			}
+
+			return $this->get_supervisor_email($supervisor_id, $ticket_id);
+		}
+
+		public function check_external_register($param)
+		{
+			$id = $param['id'];
+	//		$url = "http://tjenester.usrv.ubergenkom.no/api/tilskudd/{$sub_check}";
+			$url = "{$param['url']}/{$param['sub_check']}";
+			$extravars = array
+			(
+				'id'		=> $id,
+			);
+
+			$url .= '?' . http_build_query($extravars, null, '&');
+
+			$post_data = array();
+
+			$ch = curl_init();
+	//		curl_setopt($ch, CURLOPT_PROXY, $proxy);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$param['username']}:{$param['password']}");
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			// Set The Response Format to Json
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			//set data to be posted
+			if($post_data)
+			{
+				$post_items = array();
+				foreach ( $post_data as $key => $value)
+				{
+					$post_items[] = "{$key}={$value}";
+				}
+				curl_setopt($ch, CURLOPT_POSTFIELDS, implode ('&', $post_items));
+			}
+
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			return json_decode($result, true);
+		}
+
+		protected function get_supervisor_email($supervisor_id, $ticket_id)
+		{
+			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
+			$supervisor_email = array();
+			if ($supervisor_id && $need_approval)
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+				$pending_action = CreateObject('property.sopending_action');
+
+				$action_params = array(
+					'appname' => 'property',
+					'location' => '.ticket',
+					'id'		=> $ticket_id,
+					'responsible' => $supervisor_id,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'deadline' => '',
+					'created_by' => '',
+					'allrows' => false,
+					'closed' => true
+				);
+
+				$approvals = $pending_action->get_pending_action($action_params);
+				if(!$approvals)
+				{
+					$action_params['closed'] = false;
+				}
+
+				$requests = $pending_action->get_pending_action($action_params);
+
+				$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+				if (isset($prefs['email']) && $prefs['email'])
+				{
+					$supervisor_email[] = array(
+						'id' => $supervisor_id,
+						'address' => $prefs['email'],
+						'required'	=> true,
+						'requested'	=> !!$requests[0]['action_requested'],
+						'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
+						'approved'	=> !!$approvals[0]['action_performed'],
+						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
+						'is_user'	=> $supervisor_id == $this->account ? true : false
+					);
+				}
+				else
+				{
+					$supervisor_email[] = array(
+						'id' => $supervisor_id,
+						'address' => $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '@bergen.kommune.no',
+						'required'	=> true
+					);
+				}
+
+				if (isset($prefs['approval_from']) && $prefs['approval_from'])
+				{
+					$action_params = array(
+						'appname' => 'property',
+						'location' => '.ticket',
+						'id'		=> $ticket_id,
+						'responsible' => $prefs['approval_from'],
+						'responsible_type' => 'user',
+						'action' => 'approval',
+						'deadline' => '',
+						'created_by' => '',
+						'allrows' => false,
+						'closed' => true
+					);
+
+					$approvals = $pending_action->get_pending_action($action_params);
+					if(!$approvals)
+					{
+						$action_params['closed'] = false;
+					}
+
+					$requests = $pending_action->get_pending_action($action_params);
+
+					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
+
+					if (isset($prefs2['email']) && $prefs2['email'])
+					{
+						$supervisor_email[] = array(
+							'id' => $prefs['approval_from'],
+							'address' => $prefs2['email'],
+							'required'	=> false,
+							'requested'	=> !!$requests[0]['action_requested'],
+							'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
+							'approved'	=> !!$approvals[0]['action_performed'],
+							'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
+							'is_user'	=> $prefs['approval_from'] == $this->account ? true : false
+						);
+						$supervisor_email = array_reverse($supervisor_email);
+					}
+					unset($prefs2);
+				}
+				unset($prefs);
+			}
+
+
+
+
+			return $supervisor_email;
+		}
+
 
 	}
