@@ -30,8 +30,8 @@
 			</div>
 		</div>
 		<!-- The table listing the files available for upload/download -->
-		<div style="position: relative; overflow: auto; max-height: 50vh; width: 100%;">					
-			<div class="presentation files" style="display: inline-table; width: 100%;"></div>
+		<div class="content_upload_download">					
+			<div class="presentation files" style="display: inline-table;"></div>
 		</div>
 	</form>
 
@@ -39,7 +39,7 @@
 	<script id="template-upload" type="text/x-tmpl">
 <![CDATA[
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
-		<div class="template-upload fade table-row">
+		<div class="template-upload">
 			<div class="table-cell">
 				<div class="name">{%=file.name%}</div>
 				<div class="error"></div>
@@ -66,7 +66,7 @@
 	<script id="template-download" type="text/x-tmpl">
 <![CDATA[
 	{% for (var i=0, file; file=o.files[i]; i++) { %}
-		<div class="template-download fade table-row">
+		<div class="template-download">
 			<div class="table-cell">						
 				<div class="name">
 					<!--<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>-->
