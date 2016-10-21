@@ -41,13 +41,13 @@
 		{
 			$this->bofiles = CreateObject('property.bofiles', '/property');
 			
-			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].$this->bofiles->fakebase.'/'.$options['base_dir'].'/';
 			parent::__construct($options, $initialize, $error_messages);
 		}
 		
-		public function post_and_save($print_response = true) {
+		public function add_file($print_response = true) 
+		{
 			if ($this->get_query_param('_method') === 'DELETE') {
-				return $this->delete2($print_response);
+				return $this->delete_file($print_response);
 			}
 			$upload = $this->get_upload_data($this->options['param_name']);
 
@@ -71,7 +71,7 @@
 					// param_name is an array identifier like "files[]",
 					// $upload is a multi-dimensional array:
 					foreach ($upload['tmp_name'] as $index => $value) {
-						$files[] = $this->handle_file_upload2(
+						$files[] = $this->handle_file_upload_custom(
 							$upload['tmp_name'][$index],
 							$file_name ? $file_name : $upload['name'][$index],
 							$size ? $size : $upload['size'][$index],
@@ -84,7 +84,7 @@
 				} else {
 					// param_name is a single object identifier like "file",
 					// $upload is a one-dimensional array:
-					$files[] = $this->handle_file_upload2(
+					$files[] = $this->handle_file_upload_custom(
 						isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
 						$file_name ? $file_name : (isset($upload['name']) ?
 								$upload['name'] : null),
@@ -102,24 +102,29 @@
 			return $this->generate_response($response, $print_response);
 		}
 	
-		protected function handle_file_upload2($uploaded_file, $name, $size, $type, $error,
-				$index = null, $content_range = null) {
+		protected function handle_file_upload_custom($uploaded_file, $name, $size, $type, $error,
+				$index = null, $content_range = null) 
+		{
 			$file = new \stdClass();
 			$file->name = $this->get_file_name($uploaded_file, $name, $size, $type, $error,
 				$index, $content_range);
 			$file->size = $this->fix_integer_overflow((int)$size);
 			$file->type = $type;
 
-			if ($this->validate2($uploaded_file, $file, $error, $index)) {
+			if ($this->custom_validate($uploaded_file, $file, $error, $index)) 
+			{
 				$this->handle_form_data($file, $index);
-				$upload_dir = $this->get_upload_path();
+				//$upload_dir = $this->get_upload_path();
 
 				$file_path = $this->get_upload_path($file->name);
 				$append_file = $content_range && is_file($file_path) &&
 					$file->size > $this->get_file_size($file_path);
 				
-				$this->upload($this->options['base_dir'], $uploaded_file, $file);
-				
+				$this->upload_file($this->options['base_dir'], $uploaded_file, $file);
+				if ($file->error) {
+					return $file;
+				}
+			
 				$file_size = $this->get_file_size($file_path, $append_file);
 				if ($file_size === $file->size) {
 					$file->url = $this->get_download_url($file->name);
@@ -139,27 +144,8 @@
 			return $file;
 		}
 		
-		public function check( $save_path = '', $fakebase = '/property' )
-		{
-			$bofiles = CreateObject('property.bofiles', $fakebase);
-
-			$to_file = "{$bofiles->fakebase}/{$save_path}/{$_POST['filename']}";
-			//Return true if the file exists
-
-			if ($bofiles->vfs->file_exists(array(
-					'string' => $to_file,
-					'relatives' => Array(RELATIVE_NONE))))
-			{
-				echo 1;
-			}
-			else
-			{
-				echo 0;
-			}
-			$GLOBALS['phpgw']->common->phpgw_exit();
-		}
 		
-		public function validate2( $uploaded_file, $file, $error, $index)
+		public function custom_validate( $uploaded_file, $file, $error, $index)
 		{
 			// Check post_max_size (http://us3.php.net/manual/en/features.file-upload.php#73762)
 			$POST_MAX_SIZE = ini_get('post_max_size');
@@ -168,11 +154,10 @@
 
 			if ((int)$_SERVER['CONTENT_LENGTH'] > $multiplier * (int)$POST_MAX_SIZE && $POST_MAX_SIZE)
 			{
-				$file->error = 'POST exceeded maximum allowed size.';
+				$file->error = lang('POST exceeded maximum allowed size.');
 				return false;				
 			}
 
-			$upload_name = "Filedata";
 			$max_file_size_in_bytes = 2147483647; // 2GB in bytes
 
 			$config = CreateObject('phpgwapi.config', 'property');
@@ -187,18 +172,18 @@
 			$MAX_FILENAME_LENGTH = 260;
 			$uploadErrors = array
 				(
-				0 => "There is no error, the file uploaded successfully",
-				1 => "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-				2 => "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form",
-				3 => "The uploaded file was only partially uploaded",
-				4 => "No file was uploaded",
-				6 => "Missing a temporary folder"
+				0 => lang("There is no error, the file uploaded successfully"),
+				1 => lang("The uploaded file exceeds the upload_max_filesize directive in php.ini"),
+				2 => lang("The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form"),
+				3 => lang("The uploaded file was only partially uploaded"),
+				4 => lang("No file was uploaded"),
+				6 => lang("Missing a temporary folder")
 			);
 
 			// Validate the upload
 			if (!isset($uploaded_file))
 			{
-				$file->error = "No upload found in \$_FILES for " . $upload_name;
+				$file->error = lang("No upload found");
 				return false;	
 			}
 			else if (isset($error) && $error != 0)
@@ -208,12 +193,12 @@
 			}
 			else if (!isset($uploaded_file) || !@is_uploaded_file($uploaded_file))
 			{
-				$file->error = "Upload failed is_uploaded_file test.";
+				$file->error = lang("Upload failed is_uploaded_file test.");
 				return false;
 			}
 			else if (!isset($file->name))
 			{
-				$file->error = "File has no name.";
+				$file->error = lang("File has no name.");
 				return false;
 			}
 
@@ -232,7 +217,7 @@
 			
 			if (!$is_valid_extension)
 			{
-				$file->error = "Invalid file extension";
+				$file->error = lang("Invalid file extension");
 				return false;
 			}
 			
@@ -240,13 +225,13 @@
 			$file_size = $file->size;
 			if (!$file_size || $file_size > $max_file_size_in_bytes)
 			{
-				$file->error = "File exceeds the maximum allowed size";
+				$file->error = lang("File exceeds the maximum allowed size");
 				return false;
 			}
 
 			if ($file_size <= 0)
 			{
-				$file->error = "File size outside allowed lower bound";
+				$file->error = lang("File size outside allowed lower bound");
 				return false;
 			}
 
@@ -254,7 +239,7 @@
 			$file_name = preg_replace('/[^' . $valid_chars_regex . ']|\.+$/i', "", basename($file->name));
 			if (strlen($file_name) == 0 || strlen($file_name) > $MAX_FILENAME_LENGTH)
 			{
-				$file->error = "Invalid file name";
+				$file->error = lang("Invalid file name");
 				return false;
 			}
 			
@@ -262,9 +247,8 @@
 		}
 		
 
-		function upload( $save_path, $uploaded_file, $file)
-		{
-			
+		private function upload_file( $save_path, $uploaded_file, $file)
+		{			
 			$to_file = "{$this->bofiles->fakebase}/{$save_path}/{$file->name}";
 
 			// Validate that we won't over-write an existing file
@@ -277,7 +261,12 @@
 				return false;
 			}
 
-			$this->bofiles->create_document_dir($save_path);
+			$receipt = $this->bofiles->create_document_dir($save_path);
+			if ($receipt['error'])
+			{
+				$file->error = $receipt['error'][0]['msg'];
+				return false;
+			}
 
 			$this->bofiles->vfs->override_acl = 1;
 			if ($this->bofiles->vfs->cp(array(
@@ -296,7 +285,7 @@
 			$this->bofiles->vfs->override_acl = 0;
 		}
 		
-		public function delete2($print_response = true) 
+		public function delete_file($print_response = true) 
 		{
 			$file_names = $this->get_file_names_params();
 			if (empty($file_names)) {
@@ -358,5 +347,5 @@
 			}
 			return $this->generate_response($response, $print_response);
 		}
-
+		
 	}
