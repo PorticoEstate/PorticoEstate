@@ -596,7 +596,6 @@
 					<xsl:choose>
 						<xsl:when test="fileupload = 1">
 							<script type="text/javascript">
-								var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
 								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 							</script>
 							<xsl:call-template name="file_upload"/>
