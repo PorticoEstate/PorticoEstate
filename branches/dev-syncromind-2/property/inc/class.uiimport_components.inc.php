@@ -197,11 +197,11 @@ HTML;
 			{
 				return false;
 			}
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+			phpgw::import_class('property.multiuploader');
 			
 			$options['upload_dir'] = $path_upload_dir;
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
-			$upload_handler = new UploadHandler($options);
+			$upload_handler = new property_multiuploader($options);
 		}
 
 		private function _get_components_cached_file ()
