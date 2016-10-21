@@ -748,7 +748,7 @@ JqueryPortico.onPopupClose = function (closeAction)
 	}
 	if (closeAction == 'close')
 	{
-		//TINY.box.hide();
+		TINY.box.hide();
 
 		if (typeof (afterPopupClose) == 'function')
 		{
