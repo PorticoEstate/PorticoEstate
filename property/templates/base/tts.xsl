@@ -235,13 +235,8 @@
 		position: relative;
 		z-index: 1000;
 		}
-		#box {
-		position: absolute;
-		right: 10px;
-		border: 1px solid #B5076D;
-		padding: 0 10px 10px 10px;
-		width: 200px;
-		background-color: #FFF;
+		#submitbox {
+		display: none;
 		} 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
@@ -317,12 +312,11 @@
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="floating-box">
-				<div id="box">
+				<div id="submitbox">
 					<table width="200px">
 						<tbody>
 							<tr>
 								<td width="200px">
-									<input type="hidden" id="save" name="values[save]" value=""/>
 									<input type="button" class="pure-button pure-button-primary" name="save" onClick="confirm_session('save');">
 										<xsl:attribute name="value">
 											<xsl:value-of select="php:function('lang', 'save')"/>
@@ -332,6 +326,24 @@
 										</xsl:attribute>
 									</input>
 								</td>
+								<xsl:choose>
+									<xsl:when test="access_order = 1">
+										<xsl:choose>
+											<xsl:when test="value_order_id!=''">
+												<td>
+													<xsl:variable name="lang_send_order">
+														<xsl:value-of select="php:function('lang', 'send order')"/>
+													</xsl:variable>
+													<input type="button" class="pure-button pure-button-primary" id="send_order_button" name="send_order" value="{$lang_send_order}" onClick="confirm_session('send_order');">
+														<xsl:attribute name="title">
+															<xsl:value-of select="$lang_send_order"/>
+														</xsl:attribute>
+													</input>
+												</td>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:when>
+								</xsl:choose>
 								<td>
 									<xsl:variable name="lang_done">
 										<xsl:value-of select="php:function('lang', 'done')"/>
@@ -1273,6 +1285,26 @@
 					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
 				</xsl:attribute>
 			</input>
+			<input type="hidden" id="send_order" name="values[send_order]" value=""/>
+			<xsl:choose>
+				<xsl:when test="access_order = 1">
+					<xsl:choose>
+						<xsl:when test="value_order_id!=''">
+							<xsl:variable name="lang_send_order">
+								<xsl:value-of select="php:function('lang', 'send order')"/>
+							</xsl:variable>
+							<input type="button" class="pure-button pure-button-primary" name="send_order" onClick="confirm_session('send_order');">
+								<xsl:attribute name="value">
+									<xsl:value-of select="$lang_send_order"/>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_send_order"/>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:variable name="lang_done">
 				<xsl:value-of select="php:function('lang', 'done')"/>
 			</xsl:variable>

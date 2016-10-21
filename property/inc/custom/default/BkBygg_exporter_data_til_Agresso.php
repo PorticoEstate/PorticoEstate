@@ -304,13 +304,13 @@
 			{
 				$transfer_ok = true;
 
-				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-				$size = strlen($content);
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header(basename($filename), '', $size);
-				echo $content;
+//				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+//				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+//				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+//				$size = strlen($content);
+//				$browser = CreateObject('phpgwapi.browser');
+//				$browser->content_header(basename($filename), '', $size);
+//				echo $content;
 			}
 			return $transfer_ok;
 		}

@@ -1221,7 +1221,7 @@
 				);
 			}
 			//_debug_array($insert_record);
-			if ((isset($values['save']) && $values['save']) || (isset($values['apply']) && $values['apply']))
+			if (!empty($values['save']) || !empty($values['apply']))
 			{
 				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
 
@@ -1682,7 +1682,7 @@
 				$access_order = true;
 			}
 
-			if (isset($values['save']))
+			if (!empty($values['save']) || !empty($values['send_order']))
 			{
 				if (!$this->acl_edit)
 				{
@@ -2051,27 +2051,6 @@
 				// approval
 			}
 
-			$vendor_email = array();
-			$validator = CreateObject('phpgwapi.EmailAddressValidator');
-			if (isset($values['vendor_email']) && is_array($values['vendor_email']))
-			{
-				foreach ($values['vendor_email'] as $_temp)
-				{
-					if ($_temp)
-					{
-						if ($validator->check_email_address($_temp))
-						{
-							$vendor_email[] = $_temp;
-						}
-						else
-						{
-							$receipt['error'][] = array('msg' => lang('%1 is not a valid address', $_temp));
-						}
-					}
-				}
-			}
-			unset($_temp);
-
 			$preview_html = phpgw::get_var('preview_html', 'bool');
 			$preview_pdf = phpgw::get_var('preview_pdf', 'bool');
 
@@ -2080,246 +2059,13 @@
 				$this->_pdf_order($id, true);
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
-
-			$budgets = $this->bo->get_budgets($id);
-			$_budget_amount = 0;
-			foreach ($budgets as $budget)
+			if ($preview_html)
 			{
-				$_budget_amount += $budget['amount'];
+				$this->_html_order($id, true);
+				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 
-			if ($vendor_email || $preview_html)
-			{
-				$subject = lang('workorder') . ": {$ticket['order_id']}";
-
-				$organisation = '';
-				$contact_name = '';
-				$contact_email = '';
-				$contact_phone = '';
-
-				if (isset($this->bo->config->config_data['org_name']))
-				{
-					$organisation = $this->bo->config->config_data['org_name'];
-				}
-
-				$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
-				if ($on_behalf_of_assigned && isset($ticket['assignedto_name']))
-				{
-					$user_name = $ticket['assignedto_name'];
-					$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
-					$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
-					if (!$preview_html && !$preview_pdf)
-					{
-						$_behalf_alert = lang('this order is sent by %1 on behalf of %2', $GLOBALS['phpgw_info']['user']['fullname'], $user_name);
-						$historylog->add('C', $id, $_behalf_alert);
-						unset($_behalf_alert);
-					}
-				}
-				else
-				{
-					$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
-				}
-				$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
-				$location = lang('Address') . ": {$ticket['address']}<br>";
-
-				$address_element = $this->bo->get_address_element($ticket['location_code']);
-
-				foreach ($address_element as $address_entry)
-				{
-					$location .= "{$address_entry['text']}: {$address_entry['value']} <br>";
-				}
-
-				$location = rtrim($location, '<br>');
-
-				$order_description = $ticket['order_descr'];
-
-				if (isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
-				{
-					$contact_name = $contact_data['value_contact_name'];
-				}
-				if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
-				{
-					$contact_email = "<a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
-				}
-				if (isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
-				{
-					$contact_phone = $contact_data['value_contact_tel'];
-				}
-
-				$order_id = $ticket['order_id'];
-
-				$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
-				$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-				$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
-
-				$body = nl2br(str_replace(array
-					(
-					'__vendor_name__',
-					'__organisation__',
-					'__user_name__',
-					'__user_phone__',
-					'__user_email__',
-					'__ressursnr__',
-					'__location__',
-					'__order_description__',
-					'__contact_name__',
-					'__contact_email__',
-					'__contact_phone__',
-					'__order_id__',
-					'[b]',
-					'[/b]'
-						), array
-					(
-					$vendor_data['value_vendor_name'],
-					$organisation,
-					$user_name,
-					$user_phone,
-					$user_email,
-					$ressursnr,
-					$location,
-					$order_description,
-					$contact_name,
-					$contact_email,
-					$contact_phone,
-					$order_id,
-					'<b>',
-					'</b>'
-						), $order_email_template));
-
-				$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title></head>";
-
-				$body .='</br>';
-				$body .='</br>';
-				$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-						'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>';
-				$html .= "<body>{$body}</body></html>";
-
-
-				if ($preview_html)
-				{
-
-					$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-					$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-					$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-					echo $html;
-					$GLOBALS['phpgw']->common->phpgw_exit();
-				}
-
-
-				if (isset($values['file_attach']) && is_array($values['file_attach']))
-				{
-					$bofiles = CreateObject('property.bofiles');
-					$attachments = $bofiles->get_attachments($values['file_attach']);
-					$_attachment_log = array();
-					foreach ($attachments as $_attachment)
-					{
-						$_attachment_log[] = $_attachment['name'];
-					}
-					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
-				}
-
-				if (isset($values['send_order_format']) && $values['send_order_format'] == 'pdf')
-				{
-					$pdfcode = $this->_pdf_order($id);
-					if ($pdfcode)
-					{
-						$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
-
-						//save the file
-						if (!file_exists($dir))
-						{
-							mkdir($dir, 0777);
-						}
-						$fname = tempnam($dir . '/', 'PDF_') . '.pdf';
-						$fp = fopen($fname, 'w');
-						fwrite($fp, $pdfcode);
-						fclose($fp);
-
-						$attachments[] = array
-							(
-							'file' => $fname,
-							'name' => "order_{$id}.pdf",
-							'type' => 'application/pdf'
-						);
-					}
-					$body = lang('order') . '.</br></br>' . lang('see attachment');
-				}
-
-				if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
-				{
-					$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
-				}
-				if (!is_object($GLOBALS['phpgw']->send))
-				{
-					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-				}
-
-				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-				$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
-				$cc = '';
-				$bcc = $coordinator_email;
-				if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
-				{
-					$cc = $contact_data['value_contact_email'];
-				}
-
-				$_to = implode(';', $vendor_email);
-
-				if (empty($ticket['purchase_grant_checked']))
-				{
-					$purchase_grant_error = false;
-					$check_purchase = $this->bo->check_purchase_right($ticket['ecodimb'], $_budget_amount, $id);
-					foreach ($check_purchase as $purchase_grant)
-					{
-						if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-						{
-							$purchase_grant_error = true;
-							$receipt['error'][] = array('msg' => lang('approval from %1 is required',
-								$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()));
-						}
-					}
-				}
-				else
-				{
-					$purchase_grant_error = $ticket['purchase_grant_error'];
-				}
-
-//				_debug_array($check_purchase); die();
-
-				if(!$purchase_grant_error)
-				{
-					try
-					{
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
-						if ($rcpt)
-						{
-							$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
-							$historylog->add('M', $id, "{$_to}{$attachment_log}");
-							$receipt['message'][] = array('msg' => lang('Workorder is sent by email!'));
-						//Sigurd: Consider remove
-						/*
-						  $action_params = array
-						  (
-						  'appname'			=> 'property',
-						  'location'			=> '.ticket',
-						  'id'				=> $id,
-						  'responsible'		=> $values['vendor_id'],
-						  'responsible_type'  => 'vendor',
-						  'action'			=> 'remind',
-						  'remark'			=> '',
-						  'deadline'			=> ''
-						  );
-
-						  $reminds = execMethod('property.sopending_action.set_pending_action', $action_params);
-						 */
-						}
-					}
-					catch (Exception $exc)
-					{
-						$receipt['error'][] = array('msg' => $exc->getMessage());
-					}
-				}
-			}
+			$_budget_amount = $this->_get_budget_amount($id);
 
 			if (isset($values['approval']) && $values['approval'] && $this->bo->config->config_data['workorder_approval'])
 			{
@@ -2359,8 +2105,7 @@
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 						if ($rcpt)
 						{
-
-							$receipt['message'][] = array('msg' => lang('%1 is notified', $_address));
+							phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
 						}
 					}
 					catch (Exception $exc)
@@ -2402,7 +2147,36 @@
 			// end approval
 			// -------- end order section
 
+			if(!empty($values['send_order']))
+			{
+				$vendor_email = array();
+				$validator = CreateObject('phpgwapi.EmailAddressValidator');
+				if (isset($values['vendor_email']) && is_array($values['vendor_email']))
+				{
+					foreach ($values['vendor_email'] as $_temp)
+					{
+						if ($_temp)
+						{
+							if ($validator->check_email_address($_temp))
+							{
+								$vendor_email[] = $_temp;
+							}
+							else
+							{
+								$receipt['error'][] = array('msg' => lang('%1 is not a valid address', $_temp));
+							}
+						}
+					}
+				}
+				unset($_temp);
+				$file_attach = !empty($values['file_attach']) ? $values['file_attach'] : array();
+				$send_order_format = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
+				$purchase_grant_checked = !empty($values['purchase_grant_checked']) ? true : false;
+				$purchase_grant_error = !empty($values['purchase_grant_error']) ? true : false;
 
+				$this->_send_order($ticket, $send_order_format, $file_attach, $vendor_email, $purchase_grant_checked, $purchase_grant_error);
+
+			}
 
 			$additional_notes = $this->bo->read_additional_notes($id);
 			$record_history = $this->bo->read_record_history($id);
@@ -3254,8 +3028,7 @@
 		{
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
@@ -3273,7 +3046,7 @@
 				$show_cost = phpgw::get_var('show_cost', 'bool');
 			}
 
-			$ticket = $this->bo->read_single($id, $values);
+			$ticket = $this->bo->read_single($id);
 
 
 			$content = array(); //$this->_get_order_details($common_data['content'],	$show_cost);
@@ -3380,25 +3153,7 @@
 
 			if (isset($ticket['vendor_id']) && $ticket['vendor_id'])
 			{
-				$contacts = CreateObject('property.sogeneric');
-				$contacts->get_location_info('vendor', false);
-
-				$custom = createObject('property.custom_fields');
-				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
-
-				$vendor_data = $contacts->read_single(array('id' => $ticket['vendor_id']), $vendor_data);
-				if (is_array($vendor_data))
-				{
-					foreach ($vendor_data['attributes'] as $attribute)
-					{
-						if ($attribute['name'] == 'org_name')
-						{
-							$ticket['vendor_name'] = $attribute['value'];
-							break;
-						}
-					}
-				}
-				unset($contacts);
+				$ticket['vendor_name'] = $this->_get_vendor_name($ticket['vendor_id']);
 			}
 
 			$data = array
@@ -3527,6 +3282,173 @@
 			}
 		}
 
+		private function _html_order( $id = 0, $preview = false, $show_cost = false )
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			if (!$id)
+			{
+				$id = phpgw::get_var('id'); // in case of bigint
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+			}
+
+			if (!$show_cost)
+			{
+				$show_cost = phpgw::get_var('show_cost', 'bool');
+			}
+
+			$ticket = $this->bo->read_single($id);
+			$subject = lang('workorder') . ": {$ticket['order_id']}";
+
+			$organisation = '';
+			$contact_name = '';
+			$contact_email = '';
+			$contact_phone = '';
+
+			if (isset($this->bo->config->config_data['org_name']))
+			{
+				$organisation = $this->bo->config->config_data['org_name'];
+			}
+
+			$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
+			if ($on_behalf_of_assigned && isset($ticket['assignedto_name']))
+			{
+				$user_name = $ticket['assignedto_name'];
+				$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
+				$GLOBALS['phpgw_info']['user']['preferences'] = $GLOBALS['phpgw']->preferences->data;
+				if (!$preview)
+				{
+					$_behalf_alert = lang('this order is sent by %1 on behalf of %2', $GLOBALS['phpgw_info']['user']['fullname'], $user_name);
+					$historylog->add('C', $id, $_behalf_alert);
+					unset($_behalf_alert);
+				}
+			}
+			else
+			{
+				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
+			}
+			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+			$location = lang('Address') . ": {$ticket['address']}<br>";
+
+			$address_element = $this->bo->get_address_element($ticket['location_code']);
+
+			foreach ($address_element as $address_entry)
+			{
+				$location .= "{$address_entry['text']}: {$address_entry['value']} <br>";
+			}
+
+			$location = rtrim($location, '<br>');
+
+			$order_description = $ticket['order_descr'];
+
+			if (isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
+			{
+				$contact_name = $contact_data['value_contact_name'];
+			}
+			if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+			{
+				$contact_email = "<a href='mailto:{$contact_data['value_contact_email']}'>{$contact_data['value_contact_email']}</a>";
+			}
+			if (isset($contact_data['value_contact_tel']) && $contact_data['value_contact_tel'])
+			{
+				$contact_phone = $contact_data['value_contact_tel'];
+			}
+
+			$order_id = $ticket['order_id'];
+
+			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
+			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
+
+			$body = nl2br(str_replace(array
+				(
+				'__vendor_name__',
+				'__organisation__',
+				'__user_name__',
+				'__user_phone__',
+				'__user_email__',
+				'__ressursnr__',
+				'__location__',
+				'__order_description__',
+				'__contact_name__',
+				'__contact_email__',
+				'__contact_phone__',
+				'__order_id__',
+				'[b]',
+				'[/b]'
+					), array
+				(
+				$this->_get_vendor_name($ticket['vendor_id']),
+				$organisation,
+				$user_name,
+				$user_phone,
+				$user_email,
+				$ressursnr,
+				$location,
+				$order_description,
+				$contact_name,
+				$contact_email,
+				$contact_phone,
+				$order_id,
+				'<b>',
+				'</b>'
+					), $order_email_template));
+
+			$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title></head>";
+
+			$body .='</br>';
+			$body .='</br>';
+			$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
+					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>';
+			$html .= "<body>{$body}</body></html>";
+
+
+			if ($preview)
+			{
+
+				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+				echo $html;
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			return $html;
+		}
+
+
+
+		private function _get_vendor_name($vendor_id = 0)
+		{
+			$vendor_name = '';
+			if (!empty($vendor_id))
+			{
+				$contacts = CreateObject('property.sogeneric');
+				$contacts->get_location_info('vendor', false);
+
+				$custom = createObject('property.custom_fields');
+				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
+
+				$vendor_data = $contacts->read_single(array('id' => $ticket['vendor_id']), $vendor_data);
+				if (is_array($vendor_data))
+				{
+					foreach ($vendor_data['attributes'] as $attribute)
+					{
+						if ($attribute['name'] == 'org_name')
+						{
+							$vendor_name = $attribute['value'];
+							break;
+						}
+					}
+				}
+				unset($contacts);
+			}
+			return $vendor_name;
+		}
+
 		/**
 		 *
 		 */
@@ -3605,4 +3527,127 @@
 			return $user_list;
 		}
 
+		private function _send_order( $ticket, $send_order_format, $file_attach, $vendor_email, $purchase_grant_checked = false, $purchase_grant_error = false )
+		{
+			$subject = lang('workorder') . ": {$ticket['order_id']}";
+
+			if ($vendor_email)
+			{
+				if ($file_attach)
+				{
+					$attachments = CreateObject('property.bofiles')->get_attachments($file_attach);
+					$_attachment_log = array();
+					foreach ($attachments as $_attachment)
+					{
+						$_attachment_log[] = $_attachment['name'];
+					}
+					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
+				}
+
+				if ($send_order_format == 'pdf')
+				{
+					$pdfcode = $this->_pdf_order($id);
+					if ($pdfcode)
+					{
+						$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+
+						//save the file
+						if (!file_exists($dir))
+						{
+							mkdir($dir, 0777);
+						}
+						$fname = tempnam($dir . '/', 'PDF_') . '.pdf';
+						$fp = fopen($fname, 'w');
+						fwrite($fp, $pdfcode);
+						fclose($fp);
+
+						$attachments[] = array
+							(
+							'file' => $fname,
+							'name' => "order_{$id}.pdf",
+							'type' => 'application/pdf'
+						);
+					}
+					$body = lang('order') . '.</br></br>' . lang('see attachment');
+				}
+				else
+				{
+					$body = $this->_html_order($id);
+				}
+
+				if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
+				{
+					phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'),'error' );
+				}
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
+
+				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
+				$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+				$cc = '';
+				$bcc = $coordinator_email;
+				if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+				{
+					$cc = $contact_data['value_contact_email'];
+				}
+
+				$_to = implode(';', $vendor_email);
+
+				if (empty($purchase_grant_checked))
+				{
+					$_budget_amount = $this->_get_budget_amount($id);
+
+					$purchase_grant_error = false;
+					$check_purchase = $this->bo->check_purchase_right($ticket['ecodimb'], $_budget_amount, $id);
+					foreach ($check_purchase as $purchase_grant)
+					{
+						if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+						{
+							$purchase_grant_error = true;
+							phpgwapi_cache::message_set(lang('approval from %1 is required',
+									$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
+									'error'
+							);
+						}
+					}
+				}
+
+//				_debug_array($check_purchase); die();
+
+				if(!$purchase_grant_error)
+				{
+					try
+					{
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
+						if ($rcpt)
+						{
+							phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message' );
+							$historylog->add('M', $id, "{$_to}{$attachment_log}");
+							phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
+						}
+					}
+					catch (Exception $exc)
+					{
+						phpgwapi_cache::message_set($exc->getMessage(),'error' );
+					}
+				}
+			}
+
+		}
+
+		private function _get_budget_amount($id)
+		{
+			static $_budget_amount = 0;
+			if(!$_budget_amount)
+			{
+				$budgets = $this->bo->get_budgets($id);
+				foreach ($budgets as $budget)
+				{
+					$_budget_amount += $budget['amount'];
+				}
+			}
+			return $_budget_amount;
+		}
 	}

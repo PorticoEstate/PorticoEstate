@@ -46,6 +46,7 @@
 
 		private $acl_location;
 		private $values;
+		private $ordered_amount = 1;
 		var $debug = true;
 
 		function __construct( $acl_location, $id )
@@ -55,13 +56,32 @@
 				case '.ticket':
 					$this->acl_location = $acl_location;
 					$this->values = ExecMethod('property.sotts.read_single', $id);
+					$this->ordered_amount = $this->_get_ordered_ticket_amount($id);
 					break;
 				default:
 					$this->acl_location = '.project.workorder';
 					$this->values = ExecMethod('property.soworkorder.read_single', $id);
 					$this->values['order_id'] = $id;
+					$this->ordered_amount = $this->_get_ordered_workorder_amount($id);
 					break;
 			}
+		}
+
+		private function _get_ordered_ticket_amount($id)
+		{
+			$amount = 0;
+			$budgets = ExecMethod('property.botts.get_budgets',$id);
+			foreach ($budgets as $budget)
+			{
+
+				$amount += $budget['amount'];
+			}
+			return $amount;
+		}
+
+		private function _get_ordered_workorder_amount($id)
+		{
+			throw new Exception('Implement me');
 		}
 
 		public function transfer( $id, $received_amount )
@@ -95,8 +115,8 @@
 				'order_id' => $values['order_id'],
 				'lines' => array(
 					array(
-						'UnitCode' => 'SUM',
-						'Amount' => ($received_amount),
+						'UnitCode' => 'STK',
+						'Quantity' => ($this->ordered_amount/$received_amount),
 					)
 				)
 			);
