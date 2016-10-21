@@ -71,7 +71,7 @@ var FormatterCenter = function (key, oData)
 
 this.confirm_session = function (action)
 {
-	if (action == 'save' || action == 'apply')
+	if (action === 'save' || action === 'apply'  || action === 'send_order')
 	{
 		conf = {
 			modules: 'date, security, file',
@@ -108,6 +108,7 @@ this.confirm_session = function (action)
 					document.getElementById(action).value = 1;
 					try
 					{
+						//Extra logic for custom js
 						validate_submit();
 					}
 					catch (e)
@@ -467,22 +468,63 @@ function populateTableChkApproval(ecodimb)
 }
 $(document).ready(function ()
 {
-	var offset = $("#box").offset();
-	var topPadding = 180;
-	$(window).scroll(function ()
+
+	var test = document.getElementById('send_order_button');
+	var width = 200;
+	if (test !== null)
 	{
-		if ($(window).scrollTop() > offset.top)
-		{
-			$("#box").stop().animate({
-				marginTop: $(window).scrollTop() - offset.top + topPadding
-			}, 100);
-		}
-		else
-		{
-			$("#box").stop().animate({
-				marginTop: 0
-			}, 100);
-		}
-		;
+		width = 280;
+	}
+
+	$("#submitbox").css({
+		position: 'absolute',
+		right: '10px',
+		border: '1px solid #B5076D',
+		padding: '0 10px 10px 10px',
+		width: width + 'px',
+		"background - color": '#FFF',
+		display: "block",
 	});
+
+	var offset = $("#submitbox").offset();
+	var topPadding = 180;
+
+	if ($("#center_content").length === 1)
+	{
+		$("#center_content").scroll(function ()
+		{
+			if ($("#center_content").scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $("#center_content").scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+	else
+	{
+		$(window).scroll(function ()
+		{
+			if ($(window).scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $(window).scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
 });

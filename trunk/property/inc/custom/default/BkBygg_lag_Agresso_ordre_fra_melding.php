@@ -31,7 +31,7 @@
 	 * @package property
 	 */
 	//if (false)
-	if (!empty($data['order_id']) && !empty($data['save'])  && !empty($data['vendor_email'][0]))
+	if (!empty($data['order_id']) && !empty($data['send_order'])  && !empty($data['vendor_email'][0]))
 	{
 		$exporter_ordre = new lag_agresso_ordre_fra_melding();
 		$data['purchase_grant_error'] = $exporter_ordre->transfer($id) == 3 ? true : false;
@@ -70,16 +70,14 @@
 				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
 				{
 					$purchase_grant_error = true;
-					$receipt['error'][] = array('msg' => lang('approval from %1 is required',
-						$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()));
+					phpgwapi_cache::message_set(lang('approval from %1 is required',
+							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
+							'error'
+					);
 				}
 			}
 			if (!$this->debug && $purchase_grant_error)
 			{
-				phpgwapi_cache::message_set(lang('approval from %1 is required',
-						$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
-						'error'
-				);
 				return 3;
 			}
 	//		_debug_array($_ticket);die();
@@ -197,8 +195,7 @@
 				'lines' => array(
 					array(
 						'unspsc_code' => $_ticket['unspsc_code'] ? $_ticket['unspsc_code'] : 'UN-72000000',
-//						'descr' => $_ticket['order_descr'] ? strip_tags($_ticket['order_descr']) : 'Bygnings-, konstruksjons- og vedlikeholdstjenester'
-						'descr' => $_ticket['unspsc_code'] ? $this->get_unspsc_code_descr($_ticket['unspsc_code']) : 'Bygnings-, konstruksjons- og vedlikeholdstjenester',
+						'descr' => '',
 						'price'	=> $price,
 					)
 				)
@@ -215,6 +212,7 @@
 
 			if ($export_ok)
 			{
+				phpgwapi_cache::message_set("Ordre #{$_ticket['order_id']} er overført");
 				$this->log_transfer( $id );
 			}
 		}
