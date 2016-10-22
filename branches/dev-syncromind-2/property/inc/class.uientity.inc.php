@@ -63,7 +63,7 @@
 			'attrib_help' => true,
 			'print_pdf' => true,
 			'index' => true,
-			'addfiles' => true,
+			//'addfiles' => true,
 			'get_documents' => true,
 			'get_files' => true,
 			'get_target' => true,
@@ -867,6 +867,7 @@
 			$this->bocommon->download($list, $uicols['name'], $uicols['descr'], $uicols['input_type']);
 		}
 
+		/*
 		function addfiles()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -913,7 +914,7 @@
 			}
 
 			$fileuploader->upload("{$this->category_dir}/{$loc1}/{$id}");
-		}
+		}*/
 
 		/**
 		 * Function to get related via Ajax-call
