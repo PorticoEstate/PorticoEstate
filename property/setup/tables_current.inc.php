@@ -1170,6 +1170,8 @@
 				'order_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received_amount' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True, 'default' => '0.00'),
+				'mail_recipients' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

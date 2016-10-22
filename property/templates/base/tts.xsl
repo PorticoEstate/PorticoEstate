@@ -1108,7 +1108,7 @@
 													</label>
 												</td>
 												<td>
-													<input type="text" name="values[vendor_email][]" value="">
+													<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
 														</xsl:attribute>

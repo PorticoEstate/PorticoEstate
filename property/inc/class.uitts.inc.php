@@ -1598,15 +1598,22 @@
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 			$values = $this->bo->read_single($id);
 
+			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
+
 			$content_files = array();
 
 			foreach ($values['files'] as $_entry)
 			{
-				$content_files[] = array
-					(
+				$_checked = '';
+				if (in_array($_entry['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+
+				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
 					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
-					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+					'attach_file' => '<input type="checkbox"' .$_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
 				);
 			}
 
@@ -2149,33 +2156,11 @@
 
 			if(!empty($values['send_order']))
 			{
-				$vendor_email = array();
-				$validator = CreateObject('phpgwapi.EmailAddressValidator');
-				if (isset($values['vendor_email']) && is_array($values['vendor_email']))
-				{
-					foreach ($values['vendor_email'] as $_temp)
-					{
-						if ($_temp)
-						{
-							if ($validator->check_email_address($_temp))
-							{
-								$vendor_email[] = $_temp;
-							}
-							else
-							{
-								$receipt['error'][] = array('msg' => lang('%1 is not a valid address', $_temp));
-							}
-						}
-					}
-				}
-				unset($_temp);
-				$file_attach = !empty($values['file_attach']) ? $values['file_attach'] : array();
 				$send_order_format = !empty($values['send_order_format']) ? $values['send_order_format'] : 'html';
 				$purchase_grant_checked = !empty($values['purchase_grant_checked']) ? true : false;
 				$purchase_grant_error = !empty($values['purchase_grant_error']) ? true : false;
 
-				$this->_send_order($ticket, $send_order_format, $file_attach, $vendor_email, $purchase_grant_checked, $purchase_grant_error);
-
+				$this->_send_order($ticket, $send_order_format, $purchase_grant_checked, $purchase_grant_error);
 			}
 
 			$additional_notes = $this->bo->read_additional_notes($id);
@@ -2296,13 +2281,25 @@
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
 
-			for ($z = 0; $z < count($ticket['files']); $z++)
-			{
-				$content_files[$z]['file_name'] = '<a href="' . $link_view_file . '&amp;file_id=' . $ticket['files'][$z]['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $ticket['files'][$z]['name'] . '</a>';
-				$content_files[$z]['delete_file'] = '<input type="checkbox" name="values[file_action][]" value="' . $ticket['files'][$z]['file_id'] . '" title="' . lang('Check to delete file') . '">';
-				$content_files[$z]['attach_file'] = '<input type="checkbox" name="values[file_attach][]" value="' . $ticket['files'][$z]['file_id'] . '" title="' . lang('Check to attach file') . '">';
-			}
 
+			$file_attachments = isset($ticket['file_attachments']) && is_array($ticket['file_attachments']) ? $ticket['file_attachments'] : array();
+
+			$content_files = array();
+
+			foreach ($ticket['files'] as $_entry)
+			{
+				$_checked = '';
+				if (in_array($_entry['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox"' .$_checked . ' name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+			}
 
 			$attach_file_def = array
 				(
@@ -2332,6 +2329,20 @@
 
 
 			$content_email = $this->bocommon->get_vendor_email(isset($ticket['vendor_id']) ? $ticket['vendor_id'] : 0);
+
+			if (isset($ticket['mail_recipients']) && is_array($ticket['mail_recipients']))
+			{
+				$_recipients_found = array();
+				foreach ($content_email as &$vendor_email)
+				{
+					if (in_array($vendor_email['value_email'], $ticket['mail_recipients']))
+					{
+						$vendor_email['value_select'] = str_replace("type='checkbox'", "type='checkbox' checked='checked'", $vendor_email['value_select']);
+						$_recipients_found[] = $vendor_email['value_email'];
+					}
+				}
+				$value_extra_mail_address = implode(',', array_diff($ticket['mail_recipients'], $_recipients_found));
+			}
 
 			$datatable_def[] = array
 				(
@@ -2876,7 +2887,8 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_order_sent'	=> !!$ticket['order_sent'],
 				'value_order_received'	=> $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
-				'value_order_received_amount' => (int) $ticket['order_received_amount']
+				'value_order_received_amount' => (int) $ticket['order_received_amount'],
+				'value_extra_mail_address' => $value_extra_mail_address,
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3527,15 +3539,17 @@
 			return $user_list;
 		}
 
-		private function _send_order( $ticket, $send_order_format, $file_attach, $vendor_email, $purchase_grant_checked = false, $purchase_grant_error = false )
+		private function _send_order( $ticket, $send_order_format, $purchase_grant_checked = false, $purchase_grant_error = false )
 		{
+			$_to = !empty($ticket['mail_recipients'][0]) ? implode(';', $ticket['mail_recipients']) : '';
+
 			$subject = lang('workorder') . ": {$ticket['order_id']}";
 
-			if ($vendor_email)
+			if ($_to)
 			{
-				if ($file_attach)
+				if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
 				{
-					$attachments = CreateObject('property.bofiles')->get_attachments($file_attach);
+					$attachments = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
 					$_attachment_log = array();
 					foreach ($attachments as $_attachment)
 					{
@@ -3592,8 +3606,6 @@
 				{
 					$cc = $contact_data['value_contact_email'];
 				}
-
-				$_to = implode(';', $vendor_email);
 
 				if (empty($purchase_grant_checked))
 				{
