@@ -18,10 +18,19 @@
 
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
+	<style type="text/css">
+		#floating-box {
+		position: relative;
+		z-index: 1000;
+		}
+		#submitbox {
+		display: none;
+		} 	</style>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
 
+	<div id='receipt'></div>
 	<div>
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
@@ -33,6 +42,39 @@
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="floating-box">
+				<div id="submitbox">
+					<table width="200px">
+						<tbody>
+							<tr>
+								<td width="200px">
+									<xsl:variable name="lang_savel">
+										<xsl:value-of select="php:function('lang', 'save')"/>
+									</xsl:variable>
+									<input type="submit" class="pure-button pure-button-primary" name="save">
+										<xsl:attribute name="value">
+											<xsl:value-of select="$lang_savel"/>
+										</xsl:attribute>
+										<xsl:attribute name="title">
+											<xsl:value-of select="$lang_savel"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<td>
+									<xsl:variable name="lang_cancel">
+										<xsl:value-of select="php:function('lang', 'cancel')"/>
+									</xsl:variable>
+									<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_cancel}" onClick="window.location = '{cancel_url}';">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="first_tab">
 					<fieldset>
@@ -41,7 +83,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'id')"/>
 								</label>
-								<input type="hidden" name="id" value="{application/id}"/>
+								<input type="hidden" id="application_id" name="id" value="{application/id}"/>
 								<xsl:value-of select="application/id"/>
 							</div>
 						</xsl:if>
@@ -645,8 +687,70 @@
 						</div>
 					</fieldset>
 				</div>
+				<div id='calendar'>
+					<fieldset>
+					
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'date start')"/>
+							</label>
+							<xsl:if test="application/date_start != 0 and application/date_start != ''">
+								<xsl:value-of select="php:function('date', $date_format, number(application/date_start))"/>
+							</xsl:if>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'date end')"/>
+							</label>
+							<xsl:if test="application/date_end != 0 and application/date_end != ''">
+								<xsl:value-of select="php:function('date', $date_format, number(application/date_end))"/>
+							</xsl:if>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'from')"/>
+							</label>
+							<input type="text" id="from_" name="from_" size="16" readonly="readonly">
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'to')"/>
+							</label>
+							<input type="text" id="to_" name="to_" size="16" readonly="readonly">
+							</input>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'dates')"/>
+							</label>
+							<div class="pure-custom">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_1'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="tabletools" select ='tabletools'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+
+
+					</fieldset>
+
+
+
+				</div>
+
 			</div>
-			<div class="proplist-col">
+			<div id="submit_group_bottom" class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'save')"/>
