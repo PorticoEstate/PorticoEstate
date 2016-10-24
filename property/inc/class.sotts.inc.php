@@ -845,8 +845,10 @@
 				$ticket['order_sent'] = $this->db->f('order_sent');
 				$ticket['order_received'] = $this->db->f('order_received');
 				$ticket['order_received_amount'] = $this->db->f('order_received_amount');
-				$ticket['mail_recipients'] = explode(',', trim($this->db->f('mail_recipients'), ','));
-				$ticket['file_attachments'] = explode(',', trim($this->db->f('file_attachments'), ','));
+				$mail_recipients = trim($this->db->f('mail_recipients'), ',');
+				$ticket['mail_recipients'] = $mail_recipients ? explode(',', $mail_recipients) : array();
+				$file_attachments = trim($this->db->f('file_attachments'), ',');
+				$ticket['file_attachments'] = $file_attachments ? explode(',', $file_attachments) : array();
 
 				$user_id = (int)$this->db->f('user_id');
 

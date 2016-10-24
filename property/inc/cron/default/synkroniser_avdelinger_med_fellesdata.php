@@ -357,7 +357,7 @@
 		function update_agresso_prosjekt()
 		{
 			//det er for mange...16396 stk...
-			return;
+			//return;
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt
 
 			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt';
@@ -371,8 +371,36 @@
 			{
 				echo $exc->getTraceAsString();
 			}
+/**
+            [tab] => A
+            [dimValue] => A00001
+            [description] => ADM.BYGG VEDTATT BUDSJETT 2001
+            [periodFrom] => 200612
+            [periodTo] => 209912
+            [status] => N
 
-			_debug_array($values);
+ */
+			if($values)
+			{
+				$GLOBALS['phpgw']->db->query("UPDATE fm_external_project SET active = 0" , __LINE__, __FILE__);
+			}
+
+			foreach ($values as $entry)
+			{
+				$active = $entry['status'] == 'C' ? 0 : 1;
+				$GLOBALS['phpgw']->db->query("SELECT id FROM fm_external_project WHERE id ='{$entry['dimValue']}'", __LINE__, __FILE__);
+				if($GLOBALS['phpgw']->db->next_record())
+				{
+					$sql = "UPDATE fm_external_project SET name = '{$entry['dimValue']} {$entry['description']}', active = {$active} WHERE id = '{$entry['dimValue']}'";
+				}
+				else
+				{
+					$name = $GLOBALS['phpgw']->db->db_addslashes("{$entry['dimValue']} {$entry['description']}");
+					$sql = "INSERT INTO fm_external_project (id, name, active)"
+						. " VALUES ('{$entry['dimValue']}', '{$name}',  {$active})";
+				}
+				$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+			}
 
 		}
 		function update_art()

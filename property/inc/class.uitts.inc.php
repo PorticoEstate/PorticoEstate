@@ -3545,108 +3545,110 @@
 
 			$subject = lang('workorder') . ": {$ticket['order_id']}";
 
-			if ($_to)
+			if (!$_to)
 			{
-				if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
+				phpgwapi_cache::message_set(lang('missing recipient for order %1', $ticket['order_id']),'error' );
+				return false;
+			}
+
+			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
+			{
+				$attachments = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
+				$_attachment_log = array();
+				foreach ($attachments as $_attachment)
 				{
-					$attachments = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
-					$_attachment_log = array();
-					foreach ($attachments as $_attachment)
-					{
-						$_attachment_log[] = $_attachment['name'];
-					}
-					$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
+					$_attachment_log[] = $_attachment['name'];
 				}
+				$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
+			}
 
-				if ($send_order_format == 'pdf')
+			if ($send_order_format == 'pdf')
+			{
+				$pdfcode = $this->_pdf_order($id);
+				if ($pdfcode)
 				{
-					$pdfcode = $this->_pdf_order($id);
-					if ($pdfcode)
+					$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+
+					//save the file
+					if (!file_exists($dir))
 					{
-						$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
+						mkdir($dir, 0777);
+					}
+					$fname = tempnam($dir . '/', 'PDF_') . '.pdf';
+					$fp = fopen($fname, 'w');
+					fwrite($fp, $pdfcode);
+					fclose($fp);
 
-						//save the file
-						if (!file_exists($dir))
-						{
-							mkdir($dir, 0777);
-						}
-						$fname = tempnam($dir . '/', 'PDF_') . '.pdf';
-						$fp = fopen($fname, 'w');
-						fwrite($fp, $pdfcode);
-						fclose($fp);
+					$attachments[] = array
+						(
+						'file' => $fname,
+						'name' => "order_{$id}.pdf",
+						'type' => 'application/pdf'
+					);
+				}
+				$body = lang('order') . '.</br></br>' . lang('see attachment');
+			}
+			else
+			{
+				$body = $this->_html_order($id);
+			}
 
-						$attachments[] = array
-							(
-							'file' => $fname,
-							'name' => "order_{$id}.pdf",
-							'type' => 'application/pdf'
+			if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
+				phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'),'error' );
+			}
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+
+			$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
+			$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+			$cc = '';
+			$bcc = $coordinator_email;
+			if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
+			{
+				$cc = $contact_data['value_contact_email'];
+			}
+
+			if (empty($purchase_grant_checked))
+			{
+				$_budget_amount = $this->_get_budget_amount($id);
+
+				$purchase_grant_error = false;
+				$check_purchase = $this->bo->check_purchase_right($ticket['ecodimb'], $_budget_amount, $id);
+				foreach ($check_purchase as $purchase_grant)
+				{
+					if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+					{
+						$purchase_grant_error = true;
+						phpgwapi_cache::message_set(lang('approval from %1 is required',
+								$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
+								'error'
 						);
-					}
-					$body = lang('order') . '.</br></br>' . lang('see attachment');
-				}
-				else
-				{
-					$body = $this->_html_order($id);
-				}
-
-				if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
-				{
-					phpgwapi_cache::message_set(lang('SMTP server is not set! (admin section)'),'error' );
-				}
-				if (!is_object($GLOBALS['phpgw']->send))
-				{
-					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-				}
-
-				$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-				$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
-				$cc = '';
-				$bcc = $coordinator_email;
-				if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
-				{
-					$cc = $contact_data['value_contact_email'];
-				}
-
-				if (empty($purchase_grant_checked))
-				{
-					$_budget_amount = $this->_get_budget_amount($id);
-
-					$purchase_grant_error = false;
-					$check_purchase = $this->bo->check_purchase_right($ticket['ecodimb'], $_budget_amount, $id);
-					foreach ($check_purchase as $purchase_grant)
-					{
-						if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-						{
-							$purchase_grant_error = true;
-							phpgwapi_cache::message_set(lang('approval from %1 is required',
-									$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
-									'error'
-							);
-						}
-					}
-				}
-
-//				_debug_array($check_purchase); die();
-
-				if(!$purchase_grant_error)
-				{
-					try
-					{
-						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
-						if ($rcpt)
-						{
-							phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message' );
-							$historylog->add('M', $id, "{$_to}{$attachment_log}");
-							phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
-						}
-					}
-					catch (Exception $exc)
-					{
-						phpgwapi_cache::message_set($exc->getMessage(),'error' );
 					}
 				}
 			}
 
+//				_debug_array($check_purchase); die();
+
+			if(!$purchase_grant_error)
+			{
+				try
+				{
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
+					if ($rcpt)
+					{
+						phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message' );
+						$historylog->add('M', $id, "{$_to}{$attachment_log}");
+						phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
+					}
+				}
+				catch (Exception $exc)
+				{
+					phpgwapi_cache::message_set($exc->getMessage(),'error' );
+				}
+			}
 		}
 
 		private function _get_budget_amount($id)

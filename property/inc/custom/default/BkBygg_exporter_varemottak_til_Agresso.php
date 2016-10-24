@@ -76,7 +76,7 @@
 
 				$amount += $budget['amount'];
 			}
-			return $amount;
+			return $amount ? $amount : 1;
 		}
 
 		private function _get_ordered_workorder_amount($id)
@@ -116,7 +116,7 @@
 				'lines' => array(
 					array(
 						'UnitCode' => 'STK',
-						'Quantity' => ($this->ordered_amount/$received_amount),
+						'Quantity' => ($received_amount/$this->ordered_amount),
 					)
 				)
 			);
