@@ -63,7 +63,7 @@
 			'attrib_help' => true,
 			'print_pdf' => true,
 			'index' => true,
-			'addfiles' => true,
+			//'addfiles' => true,
 			'get_documents' => true,
 			'get_files' => true,
 			'get_target' => true,
@@ -76,7 +76,9 @@
 			'get_assigned_history' => true,
 			'get_cases' => true,
 			'get_checklists'=>true,
-			'get_cases_for_checklist' => true
+			'get_cases_for_checklist' => true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true
 		);
 
 		function __construct()
@@ -360,6 +362,87 @@
 			unset($file);
 		}
 
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+			$entity_id = phpgw::get_var('entity_id');
+			$cat_id = phpgw::get_var('cat_id');
+			$type = phpgw::get_var('type');
+			
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', 
+					array('menuaction' => 'property.uientity.handle_multi_upload_file', 
+								'id' => $id,
+								'entity_id' => $entity_id,
+								'cat_id' => $cat_id,
+								'type' => $type));
+			
+			phpgw::import_class('property.multiuploader');
+			
+			$values = $this->bo->read_single(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
+				'id' => $id));
+
+			$loc1 = isset($values['location_data']['loc1']) && $values['location_data']['loc1'] ? $values['location_data']['loc1'] : 'dummy';
+			if ($this->type_app[$this->type] == 'catch')
+			{
+				$loc1 = 'dummy';
+			}
+
+			$options['base_dir'] = "{$this->category_dir}/{$loc1}/{$id}";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode($multi_upload_action);
+			$upload_handler = new property_multiuploader($options, false);
+			
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+		
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+		
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			
+			$id = phpgw::get_var('id');
+			$entity_id = phpgw::get_var('_entity_id');
+			$cat_id = phpgw::get_var('_cat_id');
+			$type = phpgw::get_var('_type');
+			
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', 
+					array('menuaction' => 'property.uientity.handle_multi_upload_file', 
+								'id' => $id,
+								'entity_id' => $entity_id,
+								'cat_id' => $cat_id,
+								'type' => $type));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action					
+			);
+	
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
+		}
+		
 		private function _get_filters( $selected = 0 )
 		{
 			$values_combo_box = array();
@@ -784,6 +867,7 @@
 			$this->bocommon->download($list, $uicols['name'], $uicols['descr'], $uicols['input_type']);
 		}
 
+		/*
 		function addfiles()
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
@@ -830,7 +914,7 @@
 			}
 
 			$fileuploader->upload("{$this->category_dir}/{$loc1}/{$id}");
-		}
+		}*/
 
 		/**
 		 * Function to get related via Ajax-call
@@ -2411,8 +2495,13 @@ JS;
 				'files' => isset($values['files']) ? $values['files'] : '',
 				//		'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
 				'multiple_uploader' => $id ? true : '',
-				'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
+				/*'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
 				. "upload_target:'property.uientity.addfiles',"
+				. "id:'{$id}',"
+				. "_entity_id:'{$this->entity_id}',"
+				. "_cat_id:'{$this->cat_id}',"
+				. "_type:'{$this->type}'}",*/
+				'multi_upload_parans' => "{menuaction:'property.uientity.build_multi_upload_file',"
 				. "id:'{$id}',"
 				. "_entity_id:'{$this->entity_id}',"
 				. "_cat_id:'{$this->cat_id}',"

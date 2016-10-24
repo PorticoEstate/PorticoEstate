@@ -53,7 +53,9 @@
 			'view_file' => true,
 			'import' => true,
 			'download' => true,
-			'summation' => true
+			'summation' => true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true
 		);
 
 		public function __construct()
@@ -100,6 +102,66 @@
 			$this->bocommon->download($values, $columns, $descr);
 		}
 
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+			
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', 
+					array('menuaction' => 'property.uicondition_survey.handle_multi_upload_file', 'id' => $id));
+			
+			phpgw::import_class('property.multiuploader');
+	
+
+			$options['base_dir'] = "condition_survey/{$id}";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode($multi_upload_action);
+			$upload_handler = new property_multiuploader($options, false);
+			
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+		
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+		
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			
+			$id = phpgw::get_var('id');
+			
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', 
+					array('menuaction' => 'property.uicondition_survey.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action					
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
+		}
+		
 		/**
 		 * Prepare UI
 		 * @return void
@@ -540,6 +602,7 @@
 				self::add_javascript('property', 'portico', 'condition_survey_edit.js');
 				phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 					'file'));
+				$data['multi_upload_parans'] = "{menuaction:'property.uicondition_survey.build_multi_upload_file', id:'{$id}'}";			
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -548,7 +611,7 @@
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/tinybox2/style.css');
 
-			self::render_template_xsl(array('condition_survey', 'datatable_inline'), $data);
+			self::render_template_xsl(array('condition_survey', 'files', 'datatable_inline'), $data);
 		}
 
 		/**

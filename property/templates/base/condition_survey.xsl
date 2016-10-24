@@ -242,11 +242,7 @@
 					<script type="text/javascript">
 				   
 						var survey_id = '<xsl:value-of select='survey/id'/>';
-						var fileuploader_action = {
-						menuaction:'property.fileuploader.add',
-						upload_target:'property.bocondition_survey.addfiles',
-						id: survey_id
-						};
+						var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 					
 						this.show_related_requests = function()
 						{
@@ -435,34 +431,5 @@
 		<xsl:attribute name="title" value="description" />
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
-</xsl:template>
-
-<xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
-	<dt>
-		<label>
-			<xsl:value-of select="php:function('lang', 'upload file')"/>
-		</label>
-	</dt>
-	<dd>
-		<input type="file" name="file" size="40">
-			<xsl:attribute name="title">
-				<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-			</xsl:attribute>
-		</input>
-	</dd>
-	<xsl:choose>
-		<xsl:when test="multiple_uploader!=''">
-			<dt>
-				<label>
-					<a href="javascript:fileuploader()">
-						<xsl:attribute name="title">
-							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-						</xsl:attribute>
-						<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
-					</a>
-				</label>
-			</dt>
-		</xsl:when>
-	</xsl:choose>
 </xsl:template>
 

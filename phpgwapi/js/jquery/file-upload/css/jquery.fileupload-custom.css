@@ -28,7 +28,7 @@
 .template-upload .table-cell {
 	display: table-cell;
 	vertical-align: middle;
-	padding-right: 7px;
+	padding-right: 15px;
 }
 .template-upload .error {
 	margin: 0px;
@@ -46,7 +46,7 @@
 .template-download .table-cell {
 	display: table-cell;
 	vertical-align: middle;
-    padding-right: 7px;
+    padding-right: 15px;
 }
 .template-download .error {
 	margin: 0px;
@@ -98,4 +98,34 @@
     border: 1px solid #aaaaaa;
     color: #222222;
     font-weight: normal;
+}
+
+.content_upload_download {
+	position: relative; 
+	overflow: auto; 
+	max-height: 50vh; 
+	width: 100%;	
+}
+
+@media (max-width: 767px) {
+  .fileupload-buttonbar .toggle,
+  .files .toggle,
+  .files .btn span {
+    display:inline;
+  }
+  .files .name {
+    width: auto;
+    word-wrap: break-word;
+  }
+  .files audio,
+  .files video {
+    max-width: 80px;
+  }
+  .files img,
+  .files canvas {
+    max-width: 100%;
+  }
+  .content_upload_download {
+	max-height: 80vh; 
+  }
 }

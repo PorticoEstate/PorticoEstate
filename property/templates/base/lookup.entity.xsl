@@ -692,6 +692,7 @@
 					}
 
 					api = oTable.api();
+					api.buttons(0,null).remove();
 					api.destroy();
 
 					//Reset the destroyed values.

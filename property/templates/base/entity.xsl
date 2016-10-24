@@ -706,7 +706,7 @@
 					<xsl:when test="files!='' or  fileupload = 1 and value_id!=''">
 						<div id="files">
 							<script type="text/javascript">
-								var fileuploader_action = <xsl:value-of select="fileuploader_action"/>;
+								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 							</script>
 							<fieldset>
 								<div class="pure-control-group">
