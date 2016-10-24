@@ -95,9 +95,9 @@
 			);
 
 			$DetailInfo = array();
-			$DetailInfo[] = array(
-				'TaxCode' => $param['tax_code'] // Moms kode
-			);
+//			$DetailInfo[] = array(
+//				'TaxCode' => $param['tax_code'] // Moms kode
+//			);
 			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'A0',
@@ -140,14 +140,14 @@
 					'Value' => $param['dim6'] // Aktivitet
 				)
 			);
-/*
+
 			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'A1',
 					'Value' => $param['tax_code'] // Moms kode
 				)
 			);
-*/
+
 			$Detail = array();
 			$i = 1;
 			foreach ($param['lines'] as $line)
@@ -161,7 +161,7 @@
 					'UnitCode' => 'STK',
 					'Quantity' => 1,
 					'Price' => $line['price'],
-					'Linetotal'=> $line['price'],
+					'LineTotal'=> $line['price'],
 					'DetailInfo' => $DetailInfo
 				);
 
@@ -304,13 +304,13 @@
 			{
 				$transfer_ok = true;
 
-				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
-				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-				$size = strlen($content);
-				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header(basename($filename), '', $size);
-				echo $content;
+//				$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+//				$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+//				$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+//				$size = strlen($content);
+//				$browser = CreateObject('phpgwapi.browser');
+//				$browser->content_header(basename($filename), '', $size);
+//				echo $content;
 			}
 			return $transfer_ok;
 		}

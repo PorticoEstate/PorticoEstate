@@ -267,11 +267,12 @@
 				'to_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
 				'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,'default' => '0'),
-				'cost' => array('type' => 'decimal', 'precision' => 10, 'scale' => 2, 'nullable' => True,'default' => '0.0'),
+				'cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2, 'nullable' => True,'default' => '0.00'),
 				'application_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'reminder' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 				'secret' => array('type' => 'text', 'nullable' => False),
-				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
 			),
 			'pk' => array('id'),
 			'fk' => array(

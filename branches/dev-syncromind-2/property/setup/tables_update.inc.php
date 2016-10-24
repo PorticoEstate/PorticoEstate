@@ -9376,4 +9376,63 @@
 		}
 	}
 
-	
+	/**
+	* Update property version from 0.9.17.707 to 0.9.17.708
+	*
+	*/
+	$test[] = '0.9.17.707';
+
+	function property_upgrade0_9_17_707()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn("fm_vendor", 'active', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => True,
+			'default' => 1
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_vendor', 'entry_date',
+				array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp')
+			);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.708';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.708 to 0.9.17.709
+	*
+	*/
+	$test[] = '0.9.17.708';
+
+	function property_upgrade0_9_17_708()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'mail_recipients', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'file_attachments', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.709';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

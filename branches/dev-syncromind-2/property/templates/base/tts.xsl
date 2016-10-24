@@ -230,6 +230,14 @@
 
 <!-- view -->
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
+	<style type="text/css">
+		#floating-box {
+		position: relative;
+		z-index: 1000;
+		}
+		#submitbox {
+		display: none;
+		} 	</style>
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
@@ -303,6 +311,54 @@
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="floating-box">
+				<div id="submitbox">
+					<table width="200px">
+						<tbody>
+							<tr>
+								<td width="200px">
+									<input type="button" class="pure-button pure-button-primary" name="save" onClick="confirm_session('save');">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'save')"/>
+										</xsl:attribute>
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+								<xsl:choose>
+									<xsl:when test="access_order = 1">
+										<xsl:choose>
+											<xsl:when test="value_order_id!=''">
+												<td>
+													<xsl:variable name="lang_send_order">
+														<xsl:value-of select="php:function('lang', 'send order')"/>
+													</xsl:variable>
+													<input type="button" class="pure-button pure-button-primary" id="send_order_button" name="send_order" value="{$lang_send_order}" onClick="confirm_session('send_order');">
+														<xsl:attribute name="title">
+															<xsl:value-of select="$lang_send_order"/>
+														</xsl:attribute>
+													</input>
+												</td>
+											</xsl:when>
+										</xsl:choose>
+									</xsl:when>
+								</xsl:choose>
+								<td>
+									<xsl:variable name="lang_done">
+										<xsl:value-of select="php:function('lang', 'done')"/>
+									</xsl:variable>
+									<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.cancel_form.submit();">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
+										</xsl:attribute>
+									</input>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 			<div id="general">
 				<fieldset>
 					<div class="pure-control-group">
@@ -1002,7 +1058,7 @@
 										<xsl:when test="need_approval='1'">
 											<div class="pure-control-group">
 												<label>
-													<xsl:value-of select="php:function('lang', 'ask for approval')"/>
+													<xsl:value-of select="php:function('lang', 'approval')"/>
 												</label>
 												<div id="approval_container" class="pure-table pure-u-md-1-2">
 												</div>
@@ -1052,7 +1108,7 @@
 													</label>
 												</td>
 												<td>
-													<input type="text" name="values[vendor_email][]" value="">
+													<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
 														</xsl:attribute>
@@ -1212,6 +1268,26 @@
 					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
 				</xsl:attribute>
 			</input>
+			<input type="hidden" id="send_order" name="values[send_order]" value=""/>
+			<xsl:choose>
+				<xsl:when test="access_order = 1">
+					<xsl:choose>
+						<xsl:when test="value_order_id!=''">
+							<xsl:variable name="lang_send_order">
+								<xsl:value-of select="php:function('lang', 'send order')"/>
+							</xsl:variable>
+							<input type="button" class="pure-button pure-button-primary" name="send_order" onClick="confirm_session('send_order');">
+								<xsl:attribute name="value">
+									<xsl:value-of select="$lang_send_order"/>
+								</xsl:attribute>
+								<xsl:attribute name="title">
+									<xsl:value-of select="$lang_send_order"/>
+								</xsl:attribute>
+							</input>
+						</xsl:when>
+					</xsl:choose>
+				</xsl:when>
+			</xsl:choose>
 			<xsl:variable name="lang_done">
 				<xsl:value-of select="php:function('lang', 'done')"/>
 			</xsl:variable>
@@ -1222,7 +1298,7 @@
 			</input>
 		</div>
 	</form>
-	
+
 	<xsl:variable name="done_action">
 		<xsl:value-of select="done_action"/>
 	</xsl:variable>

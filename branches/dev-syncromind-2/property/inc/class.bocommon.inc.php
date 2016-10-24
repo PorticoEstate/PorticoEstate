@@ -2552,10 +2552,10 @@
 			$filter = array('active' => 1);
 			$values = $sogeneric->read(array('filter' => $filter,'query' => $query));
 
-			foreach ($values as &$value)
-			{
-				$value['name'] = "{$value['id']} {$value['name']}";
-			}
+//			foreach ($values as &$value)
+//			{
+//				$value['name'] = "{$value['id']} {$value['name']}";
+//			}
 
 			return array('ResultSet' => array('Result' => $values));
 		}

@@ -845,6 +845,10 @@
 				$ticket['order_sent'] = $this->db->f('order_sent');
 				$ticket['order_received'] = $this->db->f('order_received');
 				$ticket['order_received_amount'] = $this->db->f('order_received_amount');
+				$mail_recipients = trim($this->db->f('mail_recipients'), ',');
+				$ticket['mail_recipients'] = $mail_recipients ? explode(',', $mail_recipients) : array();
+				$file_attachments = trim($this->db->f('file_attachments'), ',');
+				$ticket['file_attachments'] = $file_attachments ? explode(',', $file_attachments) : array();
 
 				$user_id = (int)$this->db->f('user_id');
 
@@ -1686,6 +1690,39 @@
 				$value_set['ecodimb'] = $ticket['ecodimb'];
 				$value_set['branch_id'] = $ticket['branch_id'];
 				$value_set['tax_code'] = $ticket['tax_code'];
+
+				if(isset($ticket['vendor_email']) && is_array($ticket['vendor_email']))
+				{
+					$vendor_email = array();
+					$validator = CreateObject('phpgwapi.EmailAddressValidator');
+					foreach ($ticket['vendor_email'] as $_temp)
+					{
+						if ($_temp)
+						{
+							if ($validator->check_email_address($_temp))
+							{
+								$vendor_email[] = $_temp;
+							}
+							else
+							{
+								$receipt['error'][] = array('msg' => lang('%1 is not a valid address', $_temp));
+							}
+						}
+					}
+					$value_set['mail_recipients'] = implode(',', $vendor_email);
+					unset($_temp);
+				}
+
+				if(isset($ticket['file_attach']) && is_array($ticket['file_attach']))
+				{
+					$file_attachments = array();
+					$validator = CreateObject('phpgwapi.EmailAddressValidator');
+					foreach ($ticket['file_attach'] as $_temp)
+					{
+						$file_attachments[] = (int)$_temp;
+					}
+					$value_set['file_attachments'] = implode(',', $file_attachments);
+				}
 			}
 
 			$value_set = $this->db->validate_update($value_set);
