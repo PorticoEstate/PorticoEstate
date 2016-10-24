@@ -261,6 +261,7 @@
 					}
 				}
 			}
+			$filter['active'] = 1;
 			$data['filter'] = $filter;
 
 			$values = $sogeneric->read($data);

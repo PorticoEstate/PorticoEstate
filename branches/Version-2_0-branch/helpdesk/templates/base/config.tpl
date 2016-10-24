@@ -12,6 +12,11 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_helpdesk}/{lang_settings}</b></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_app_name}: <br>
+				{lang_default}: {lang_Helpdesk}</td>
+			<td><input name="newsettings[app_name]" value="{value_app_name}"></td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_show_billable_hours}:</td>
 			<td>

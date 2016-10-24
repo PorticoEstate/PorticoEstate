@@ -45,12 +45,21 @@
 			$acl = & $GLOBALS['phpgw']->acl;
 			$menus = array();
 
+			$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+			if (!empty($config['app_name']))
+			{
+				$lang_app_name = $config['app_name'];
+			}
+			else
+			{
+				$lang_app_name = lang('helpdesk');
+			}
 
 			$menus['navbar'] = array
 				(
 					'helpdesk' => array
 					(
-						'text'	=> lang('helpdesk'),
+						'text'	=> $lang_app_name,
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "helpdesk.uitts.index") ),
 						'image'	=> array('helpdesk', 'navbar'),
 						'order'	=> 35,

@@ -431,7 +431,7 @@
 					'sort' => $order[0]['dir'],
 					'dir' => $order[0]['dir'],
 					'allrows' => phpgw::get_var('length', 'int') == -1,
-					'filter' => ''
+					'filter' => array()
 				);
 
 				$values = $this->bo->read_vendor($params);

@@ -2067,3 +2067,6 @@ mine roles	property	no	Mine roller
 account type	property	no	Rolletype
 update ticket	property	no	Oppdater melding
 make relation	property	no	Opprett kopling
+request for approval	property	no	Anmodning om godkjenning
+approval from %1 is required	property	no	Godkjenning fra %1 er påkrevd
+missing recipient for order %1	property	no	Mangler mottaker for ordre %1

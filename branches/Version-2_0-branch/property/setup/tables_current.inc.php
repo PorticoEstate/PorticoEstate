@@ -88,7 +88,7 @@
 		'fm_vendor' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'entry_date' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
 				'org_name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => True),
 				'email' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 				'contact_phone' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
@@ -96,7 +96,8 @@
 				'member_of' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'category' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'mva' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
-				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True)
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => True, 'default' => 1)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1169,6 +1170,8 @@
 				'order_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received_amount' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True, 'default' => '0.00'),
+				'mail_recipients' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

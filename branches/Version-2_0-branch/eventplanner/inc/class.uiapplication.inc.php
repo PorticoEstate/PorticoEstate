@@ -234,6 +234,11 @@
 				'link' => '#demands',
 				'function' => "set_tab('demands')"
 			);
+			$tabs['calendar'] = array(
+				'label' => lang('calendar'),
+				'link' => '#calendar',
+				'function' => "set_tab('calendar')"
+			);
 
 			$bocommon = CreateObject('property.bocommon');
 
@@ -263,7 +268,7 @@
 				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
- 
+
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
@@ -274,6 +279,69 @@
 					array('disablePagination' => true)
 				)
 			);
+
+			$dates_def = array(
+				array('key' => 'id',  'hidden' => true),
+				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'where', 'label' => lang('where'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'customer_name', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'application_id', 'hidden' => true),
+			);
+
+			$tabletools = array(
+				array(
+					'my_name' => 'add',
+					'text' => lang('add'),
+					'type' => 'custom',
+					'className' => 'add',
+					'custom_code' => "
+								add_booking();"
+				),
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none'),
+				array(
+					'my_name' => 'enable',
+					'text' => lang('enable'),
+					'type' => 'custom',
+					'custom_code' => "
+								onActionsClick('enable');"
+				),
+				array(
+					'my_name' => 'disable',
+					'text' => lang('disable'),
+					'type' => 'custom',
+					'custom_code' => "
+								onActionsClick('disable');"
+				),
+				array(
+					'my_name' => 'edit',
+					'text' => lang('edit'),
+					'type' => 'custom',
+					'custom_code' => "
+								onActionsClick('edit');"
+				)
+			);
+
+			$datatable_def[] = array(
+				'container' => 'datatable-container_1',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uibooking.query',
+					'filter_application_id' => $id,
+					'filter_active'	=> 1,
+					'phpgw_return_as' => 'json'))),
+//				'requestUrl' => "''",
+				'tabletools' => $tabletools,
+				'ColumnDefs' => $dates_def,
+				'data' => json_encode(array()),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'datetime');
 
 			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
 			$types = (array)$application->types;

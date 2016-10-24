@@ -71,7 +71,7 @@ var FormatterCenter = function (key, oData)
 
 this.confirm_session = function (action)
 {
-	if (action == 'save' || action == 'apply')
+	if (action === 'save' || action === 'apply'  || action === 'send_order')
 	{
 		conf = {
 			modules: 'date, security, file',
@@ -108,6 +108,7 @@ this.confirm_session = function (action)
 					document.getElementById(action).value = 1;
 					try
 					{
+						//Extra logic for custom js
 						validate_submit();
 					}
 					catch (e)
@@ -389,7 +390,7 @@ function populateTableChkApproval(ecodimb)
 	var total_amount = Number(amount) + Number($('#budget').val());
 	$("#order_received_amount").val(total_amount);
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id:location_item_id};
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id: location_item_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 
@@ -401,7 +402,7 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjenn</th></thead><tbody>";
+				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
 				var obj = data;
 				var required = '';
 
@@ -411,19 +412,33 @@ function populateTableChkApproval(ecodimb)
 
 					htmlString += "<tr><td>";
 
-					if (obj[i].required === true)
+					var left_cell = "Ikke relevant";
+
+					if (obj[i].requested === true)
 					{
-						if(obj[i].approved === true)
+						left_cell = obj[i].requested_time;
+					}
+					else if (obj[i].is_user !== true)
+					{
+						if (obj[i].approved !== true)
 						{
-							required = 'disabled="disabled"';
-						}
-						else
-						{
-							htmlString += "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
-							required = 'checked="checked" disabled="disabled"';
+							if (obj[i].required === true)
+							{
+								required = 'checked="checked" disabled="disabled"';
+								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
+							}
+							else
+							{
+								left_cell = '';
+							}
+							left_cell += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
 						}
 					}
-					htmlString += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
+					else if (obj[i].is_user === true)
+					{
+						left_cell = '(Meg selv...)';
+					}
+					htmlString += left_cell;
 					htmlString += "</td><td valign=\"top\">";
 					htmlString += obj[i].address;
 					htmlString += "</td>";
@@ -431,7 +446,7 @@ function populateTableChkApproval(ecodimb)
 
 					if (obj[i].approved === true)
 					{
-						htmlString + "X";
+						htmlString += obj[i].approved_time;
 					}
 					else
 					{
@@ -441,7 +456,7 @@ function populateTableChkApproval(ecodimb)
 						}
 					}
 					htmlString += "</td>";
-					
+
 					htmlString += "</tr>";
 				});
 				htmlString += "</tbody></table>";
@@ -450,6 +465,66 @@ function populateTableChkApproval(ecodimb)
 			}
 		}
 	});
-
 }
-;
+$(document).ready(function ()
+{
+
+	var test = document.getElementById('send_order_button');
+	var width = 200;
+	if (test !== null)
+	{
+		width = 280;
+	}
+
+	$("#submitbox").css({
+		position: 'absolute',
+		right: '10px',
+		border: '1px solid #B5076D',
+		padding: '0 10px 10px 10px',
+		width: width + 'px',
+		"background - color": '#FFF',
+		display: "block",
+	});
+
+	var offset = $("#submitbox").offset();
+	var topPadding = 180;
+
+	if ($("#center_content").length === 1)
+	{
+		$("#center_content").scroll(function ()
+		{
+			if ($("#center_content").scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $("#center_content").scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+	else
+	{
+		$(window).scroll(function ()
+		{
+			if ($(window).scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $(window).scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+});

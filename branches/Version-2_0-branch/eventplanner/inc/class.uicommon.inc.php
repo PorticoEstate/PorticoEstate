@@ -112,7 +112,7 @@
 			$this->edit();
 		}
 
-		public function save()
+		public function save($ajax = false)
 		{
 			$called_class = get_called_class();
 
@@ -135,23 +135,59 @@
 			{
 				if($object->store($object))
 				{
-					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
-					self::redirect(array(
-						'menuaction' => "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit",
-						'id'		=> $object->get_id(),
-						'active_tab' => $active_tab
-						)
-					);
+					if($ajax)
+					{
+						phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+						return array(
+							'status_kode' => 'ok',
+							'status' => lang('ok'),
+							'msg' => lang('messages_saved_form')
+						);
+					}
+					else
+					{
+						phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
+						self::redirect(array(
+							'menuaction' => "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit",
+							'id'		=> $object->get_id(),
+							'active_tab' => $active_tab
+							)
+						);
+					}
 				}
 				else
 				{
-					phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
-					$this->edit(array('object'	=> $object, 'active_tab' => $active_tab));
+					if($ajax)
+					{
+						phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+						return array(
+							'status_kode' => 'error',
+							'status' => lang('error'),
+							'msg' => lang('messages_form_error')
+						);
+					}
+					else
+					{
+						phpgwapi_cache::message_set(lang('messages_form_error'), 'error');
+						$this->edit(array('object'	=> $object, 'active_tab' => $active_tab));
+					}
 				}
 			}
 			else
 			{
-				$this->edit(array('object'	=> $object, 'active_tab' => $active_tab));
+				if($ajax)
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					return array(
+						'status_kode' => 'error',
+						'status' => lang('error'),
+						'msg' => lang('Did not validate')
+					);
+				}
+				else
+				{
+					$this->edit(array('object'	=> $object, 'active_tab' => $active_tab));
+				}
 			}
 		}
 
