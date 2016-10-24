@@ -52,6 +52,7 @@
 			'handle_import_files' => true,
 			'import_components' => true,
 			'get_attributes_from_template' => true,
+			'get_profile' => true,
 			'download' => true
 		);
 
@@ -64,13 +65,17 @@
 			$this->bo = CreateObject('property.boadmin_entity', true);
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
+			$this->config = createObject('phpgwapi.config', 'component_import');
+			$this->config_repository = $this->config->read_repository();
 		}
 
 		public function download()
 		{
-			$config = createObject('phpgwapi.config', 'component_import');
-			$values = $config->read_repository();
-			$components = $values['preview_components'];
+			/*$config = createObject('phpgwapi.config', 'component_import');
+			$values = $config->read_repository();*/
+			//$components = $this->config_repository['preview_components'];
+			$components = phpgwapi_cache::session_get('property', 'preview_components');
+			$components = ($components) ? unserialize($components) : array();
 			
 			$fields = array_keys($components[0]);
 
@@ -115,10 +120,14 @@
 		}
 		
 		public function import_component_files()
-		{
-			$location_code = phpgwapi_cache::session_get('property', 'location_code');
+		{		
+			/*$location_code = phpgwapi_cache::session_get('property', 'location_code');
 			$id = phpgwapi_cache::session_get('property', 'location_item_id');
-			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
+			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');*/
+			
+			$location_code = phpgw::get_var('location_code');
+			$id = phpgw::get_var('location_item_id');
+			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			
 			if (!$attrib_name_componentID)
 			{
@@ -188,11 +197,11 @@ HTML;
 			{
 				return false;
 			}
-			require_once PHPGW_SERVER_ROOT . "/property/inc/import/UploadHandler.php";
+			phpgw::import_class('property.multiuploader');
 			
 			$options['upload_dir'] = $path_upload_dir;
 			$options['script_url'] = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
-			$upload_handler = new UploadHandler($options);
+			$upload_handler = new property_multiuploader($options);
 		}
 
 		private function _get_components_cached_file ()
@@ -300,8 +309,21 @@ HTML;
 			return $html_table;		
 		}
 		
+		private function _get_default_options() 
+		{
+			return 	array (
+				'' => ' ... ',
+				'new_column' => lang('New attribute'),
+				'building_part' => lang('Building Part'),
+				'name_building_part' => lang('Name of the Building Part'),
+				'component_id'    => lang('Component ID')
+			);
+		}
+		
 		private function _build_columns()
 		{
+			$cod_profile = phpgw::get_var('cod_profile');
+			
 			$cached_file = $this->_get_components_cached_file();
 			if (!$cached_file)
 			{
@@ -317,16 +339,17 @@ HTML;
 			$highestColumm = $objPHPExcel->getActiveSheet()->getHighestDataColumn();
 			$highestColumnIndex = PHPExcel_Cell::columnIndexFromString($highestColumm);	
 
+			$profile = array();
+			
+			if ($cod_profile)
+			{
+				$profiles = $this->config_repository['profiles'];
+				$profile = $profiles[$cod_profile]['content'];
+			}
+
 			$html_table = '<table class="pure-table pure-table-bordered">';
 
-			$_options = array
-			(
-				'' => ' ... ',
-				'new_column' => 'New attribute',
-				'building_part' => '-- Building Part',
-				'name_building_part' => '-- Name of the Building Part',
-				'component_id'    => '-- Component ID'
-			);
+			$_options = $this->_get_default_options();
 
 			$template = explode("_", $template_id);
 
@@ -348,8 +371,7 @@ HTML;
 			{
 				$_column = $this->_getexcelcolumnname($j);
 				$_value = $objPHPExcel->getActiveSheet()->getCellByColumnAndRow($j, $start_line)->getCalculatedValue();
-				//$selected = isset($columns[$_column]) && $columns[$_column] ? $columns[$_column] : '';
-				$selected = '';
+				$selected = isset($profile['columns']['columns'][$_column]) && $profile['columns']['columns'][$_column] ? $profile['columns']['columns'][$_column] : '';
 
 				$_listbox = $this->_getArrayItem("column_{$_column}", "columns[{$_column}]", $selected, $_options, true, "onchange=\"enabledAtributes('{$_column}')\" class='columns'");
 				$_listTypes = $this->_getArrayItem("data_type_{$_column}", "data_types[{$_column}]", $selected, $_options_data_type, true, "disabled class='data_types'");
@@ -365,6 +387,51 @@ HTML;
 			$html_table .= '</table>';
 
 			return $html_table;	
+		}
+		
+		private function _prepare_profile ()
+		{
+			$columns = (array) phpgw::get_var('columns');
+			
+			$template_id = phpgwapi_cache::session_get('property', 'template_id');
+			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
+			
+			$template = explode("_", $template_id);
+			$entity_id = $template[0];
+			$cat_id = $template[1];
+			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
+			
+			$_options = $this->_get_default_options();
+			foreach ($attributes as $attribute)
+			{
+				if ($attrib_name_componentID == $attribute['column_name'])
+				{
+					$attrib_name_componentID_Text = $attribute['input_text'];
+				}
+				$_options[$attribute['column_name']] = $attribute['input_text'];
+			}
+			
+			$columns_name = array();
+			foreach ($columns as $k => $v)
+			{
+				if ($v == 'new_column')
+				{
+					unset($columns[$k]);
+					continue;
+				}
+				$columns_name[] = $k .' => '.$_options[$v];
+			}
+			
+			$entity_info = $this->bo->read_single($entity_id);
+			$category_info = $this->bo->read_single_category($entity_id, $cat_id);
+			$template_name = "{$entity_info['name']}::{$category_info['name']}";
+			
+			$profile['columns'] = array('columns' => $columns, 'columns_name' => $columns_name);
+			$profile['template'] = array('template_id' => $template_id, 'template_name' => $template_name);
+			$profile['attrib_name_componentID'] = array('id' => $attrib_name_componentID, 'text' => $attrib_name_componentID_Text);
+			phpgwapi_cache::session_set('property', 'profile', serialize($profile));		
+			
+			return $profile;
 		}
 		
 		private function _prepare_values_to_preview()
@@ -480,38 +547,54 @@ HTML;
 			
 			$preview_components = $import_components->prepare_preview_components($import_data);
 
-			$config = createObject('phpgwapi.config', 'component_import');
+			//$config = createObject('phpgwapi.config', 'component_import');
 
 			if (count($new_attribs_for_template))
 			{
-				$config->value('new_attribs_for_template', serialize($new_attribs_for_template));
+				//$this->config->value('new_attribs_for_template', serialize($new_attribs_for_template));
+				phpgwapi_cache::session_set('property', 'new_attribs_for_template', serialize($new_attribs_for_template));
 				foreach($new_attribs_for_template as $attrib)
 				{
 					$values[] = $attrib['column_name'];
 				}
 				$result['new_attribs_for_template'] = $values;
 			} else {
+				phpgwapi_cache::session_set('property', 'new_attribs_for_template', '');
 				$result['new_attribs_for_template'][] = lang('Not exist attributes to insert the template');
 			}
 
 			if (count($new_entity_categories))
 			{
-				$config->value('new_entity_categories', serialize($new_entity_categories));
+				//$this->config->value('new_entity_categories', serialize($new_entity_categories));
+				phpgwapi_cache::session_set('property', 'new_entity_categories', serialize($new_entity_categories));
 				$result['new_entity_categories'] = array_values($new_entity_categories);
 			} else {
+				phpgwapi_cache::session_set('property', 'new_entity_categories', '');
 				$result['new_entity_categories'][] = lang('Not exist new entity categories');
 			}
+			
+			$profile = $this->_prepare_profile();
+			$result['profile'] = $profile;
 
-			$config->value('building_part_in_table', serialize($building_part_in_table));
-			$config->value('preview_components', serialize($preview_components));
-			$config->value('new_components', serialize($import_data));
-			$config->save_repository();
+			/*$this->config->value('building_part_in_table', serialize($building_part_in_table));
+			$this->config->value('preview_components', serialize($preview_components));
+			$this->config->value('new_components', serialize($import_data));
+			$this->config->save_repository();*/
+			
+			phpgwapi_cache::session_set('property', 'building_part_in_table', serialize($building_part_in_table));
+			phpgwapi_cache::session_set('property', 'preview_components', serialize($preview_components));
+			phpgwapi_cache::session_set('property', 'new_components', serialize($import_data));
 
 			return $result;
 		}
 		
 		private function _save_values_import()
 		{			
+			$name_profile = phpgw::get_var('name_profile', 'REQUEST');
+			$cod_profile = phpgw::get_var('cod_profile', 'REQUEST');
+			$profile_option_save = phpgw::get_var('profile_option_save', 'int', 'REQUEST');
+			$save_profile = phpgw::get_var('save_profile', 'int', 'REQUEST');
+			
 			$template_id = phpgwapi_cache::session_get('property', 'template_id');
 			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
 			$location_code = phpgwapi_cache::session_get('property', 'location_code');
@@ -533,9 +616,11 @@ HTML;
 				return;
 			}
 
-			$config = createObject('phpgwapi.config', 'component_import');
-			$config_repository = $config->read_repository();
-			$import_data = $config_repository['new_components'];
+			/*$config = createObject('phpgwapi.config', 'component_import');
+			$config_repository = $config->read_repository();*/
+			//$import_data = $this->config_repository['new_components'];
+			$import_data = phpgwapi_cache::session_get('property', 'new_components');
+			$import_data = ($import_data) ? unserialize($import_data) : array();
 			
 			if (!count($import_data))
 			{
@@ -564,7 +649,28 @@ HTML;
 
 			$receipt = $import_components->add_components($import_data, $location_code, $attrib_name_componentID);
 			$this->receipt = $this->_msg_data($receipt);
+			
+			if ($save_profile)
+			{
+				$profiles = $this->config_repository['profiles'];
+				
+				if ($profile_option_save == 1)
+				{
+					$cod_profile = str_replace(' ', '_',  mb_strtolower($name_profile, 'UTF-8'));
+					$profiles[$cod_profile]['name'] = $name_profile;
+				}
+				
+				if ($cod_profile)
+				{				
+					$content = phpgwapi_cache::session_get('property', 'profile');
+					$content = ($content) ? unserialize($content) : array();
+					$profiles[$cod_profile]['content'] = $content;
 
+					$this->config->value('profiles', serialize($profiles));
+					$this->config->save_repository();
+				}
+			}			
+			
 			return $this->receipt;
 		}
 		
@@ -657,8 +763,8 @@ HTML;
 		{
 			$tabs = array();
 			$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
 			$tabs['components'] = array('label' => lang('Components'), 'link' => '#components', 'disable' => 1);
+			$tabs['files'] = array('label' => lang('Files'), 'link' => '#files', 'disable' => 0);
 			$tabs['relations'] = array('label' => lang('Relations'), 'link' => '#relations', 'disable' => 1);
 					
 			$active_tab = 'locations';
@@ -673,8 +779,8 @@ HTML;
 
 			$related_def = array
 				(
-				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true)
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true)
 			);
 
 
@@ -689,6 +795,15 @@ HTML;
 				)				
 			);	
 				
+			$profile_list = array();
+			$profiles = $this->config_repository['profiles'];
+			foreach($profiles as $k => $v)
+			{
+				$profile_list[] = array('id'=> $k, 'name'=>$v['name']);
+			}
+			array_unshift($profile_list, array('id' => '', 'name' => lang('choose profile')));
+			
+			//$profile = $this->config_repository['profile'];
 			$entity_list = $this->bo->read(array('allrows' => true));
 			$category_list = array();
 			foreach ($entity_list as $entry)
@@ -697,6 +812,7 @@ HTML;
 
 				foreach ($cat_list as $category)
 				{
+					//$selected = ($profile['template']['template_id'] == "{$entry['id']}_{$category['id']}") ? 1 :0;
 					$category_list[] = array
 						(
 						'id' => "{$entry['id']}_{$category['id']}",
@@ -705,7 +821,7 @@ HTML;
 				}
 			}
 		
-			$form_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport_components.handle_import_files'));
 			
 			$access_error_upload_dir = '';
 			$import_component_files = new import_component_files();
@@ -716,6 +832,7 @@ HTML;
 			} else {
 				phpgwapi_cache::session_set('property', 'path_upload_dir', $import_component_files->get_path_upload_dir());
 			}
+			phpgwapi_jquery::init_multi_upload_file();
 			
 			$data = array
 			(
@@ -727,7 +844,8 @@ HTML;
 				'district_filter' => array('options' => $district_filter),
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
 				'template_list' => array('options' => $category_list),
-				'form_file_upload' => phpgwapi_jquery::form_file_upload_generate($form_upload_action),
+				'profile_list' => array('options' => $profile_list),
+				'multi_upload_action' => $multi_upload_action,
 				'access_error_upload_dir' => $access_error_upload_dir,
 				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
 			);
@@ -735,11 +853,13 @@ HTML;
 			self::add_javascript('property', 'portico', 'import_components.js');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('Importer ');
 
-			self::render_template_xsl(array('import_components', 'datatable_inline'), $data);
+			self::render_template_xsl(array('import_components', 'multi_upload_file', 'datatable_inline'), $data);
 		}
 
 		public function get_attributes_from_template()
 		{
+			//$profile = $this->config_repository['profile'];
+			
 			$category_template = phpgw::get_var('category_template');
 
 			$template_info = explode('_', $category_template);
@@ -750,6 +870,7 @@ HTML;
 			$list = array();
 			foreach ($attrib_list as $attrib)
 			{
+				//$selected = ($profile['attrib_name_componentID']['id'] == $attrib['column_name']) ? 1 : 0;
 				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text']); 
 			}
 			
@@ -834,6 +955,19 @@ HTML;
 			array_unshift($categories, array('id' => '', 'name' => lang('no category')));
 
 			return $categories;
+		}
+		
+		public function get_profile()
+		{
+			$cod_profile = phpgw::get_var('cod_profile', 'REQUEST');
+
+			$profiles = $this->config_repository['profiles'];
+			$content = $profiles[$cod_profile]['content'];
+			
+			$template_id = ($content['template']['template_id']);
+			$attrib_name_componentID = $content['attrib_name_componentID']['id'];
+
+			return array('template_id'=>$template_id, 'attrib_name_componentID'=>$attrib_name_componentID);
 		}
 		
 		public function get_data_type()

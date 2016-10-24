@@ -1,10 +1,20 @@
 
 <!-- $Id$ -->
+
+<xsl:template name="multi_upload">
+	<xsl:apply-templates select="multi_upload"/>
+</xsl:template>
+
+<xsl:template xmlns:php="http://php.net/xsl" match="multi_upload">
+	<xsl:call-template name="multi_upload_file"/>
+</xsl:template>
+
+
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
 	<div class="pure-control-group">
 		<label>
-				<xsl:value-of select="php:function('lang', 'upload file')"/>
+				<xsl:value-of select="php:function('lang', 'upload files')"/>
 		</label>
 				<input type="file" name="file" size="40">
 					<xsl:attribute name="title">

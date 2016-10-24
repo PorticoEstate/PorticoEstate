@@ -237,8 +237,15 @@ this.onDOMAttrModified = function (e)
 
 this.fileuploader = function ()
 {
-	var sUrl = phpGWLink('index.php', fileuploader_action);
-	TINY.box.show({iframe: sUrl, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true}); //refresh_files is called after upload
+	//JqueryPortico.openPopup(multi_upload_parans,{closeAction:'close'})
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+		close: true,
+		closejs: function ()
+		{
+			refresh_files()
+		}
+	});	
 };
 
 this.refresh_files = function ()

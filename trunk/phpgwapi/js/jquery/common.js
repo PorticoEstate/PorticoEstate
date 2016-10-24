@@ -578,7 +578,8 @@ JqueryPortico.show_message = function (n, result)
 	{
 		$.each(result.message, function (k, v)
 		{
-			document.getElementById('message' + n).innerHTML += v.msg + '<br/>';
+			//document.getElementById('message' + n).innerHTML += v.msg + '<br/>';
+			$('#message' + n).append(v.msg + "<br>");
 		});
 	}
 
@@ -586,7 +587,8 @@ JqueryPortico.show_message = function (n, result)
 	{
 		$.each(result.error, function (k, v)
 		{
-			document.getElementById('message' + n).innerHTML += v.msg + '<br/>';
+			//document.getElementById('message' + n).innerHTML += v.msg + '<br/>';
+			$('#message' + n).append(v.msg + "<br>");
 		});
 	}
 };

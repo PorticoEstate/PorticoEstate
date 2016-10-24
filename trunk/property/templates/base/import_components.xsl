@@ -63,7 +63,8 @@
 					<label>
 						<xsl:value-of select="access_error_upload_dir" />
 					</label>
-					<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>
+					<xsl:call-template name="multi_upload_file"/>
+					<!--<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>-->
 				</div>
 				
 				<div id="components">
@@ -73,6 +74,15 @@
 								<xsl:value-of select="php:function('lang', 'location')"/>
 							</label>
 							<div class='pure-custom location_name'></div>
+						</div>
+						<div class="pure-control-group">
+							<label for="vendor">
+								<xsl:value-of select="php:function('lang', 'Profile')" />
+							</label>
+							<select id="profile_list" name="profile_list">
+								<xsl:apply-templates select="profile_list/options"/>
+							</select>
+							<img src="{image_loader}" class="get-profile" align="absmiddle"></img>
 						</div>
 						<div class="pure-control-group">
 							<label for="vendor">
@@ -117,7 +127,7 @@
 							</ul>
 							<div id="tab-1">
 								<select id="sheet_id" name="sheet_id">
-									<option value=''>Select Sheet</option>
+									<option value=''><xsl:value-of select="php:function('lang', 'Select Sheet')"/></option>
 								</select>
 								<input type="button" id="step2" name="step2" size="40">
 									<xsl:attribute name="value">
@@ -145,6 +155,40 @@
 								<div id="content_columns" class="pure-custom"></div>
 							</div>
 							<div id="tab-4">
+								<div class="pure-control-group">
+									<label for="vendor">
+										<xsl:value-of select="php:function('lang', 'Profile')" />
+									</label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Category template')" /></label>
+											<div id="template_name" class="pure-custom"></div>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Attribute name for Component ID')" /></label>
+											<div id="component_id_text" class="pure-custom"></div>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Columns and attributes')" /></label>
+											<div id="columns_name" class="pure-custom"></div>
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Save Profile')" /></label>
+											<input type="checkbox" value="1" id="save_profile" name="save_profile" checked="true"/>																			
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'add')" /></label>
+											<input type="radio" value="1" id="profile_option_save_1" name="profile_option_save" checked="true"/>
+											<input type="text" value="" id="name_profile" name="name_profile" />
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'update')" /></label>
+											<input type="radio" value="2" id="profile_option_save_2" name="profile_option_save" disabled="true"/>
+											<div id="profile_selected" style="display:inline-block; margin-right:10px;"></div>
+											<input type="hidden" id="cod_profile_selected" name="cod_profile_selected" value=""></input>
+										</div>
+									</div>				
+								</div>
 								<div class="pure-control-group">
 									<label for="vendor">
 										<xsl:value-of select="php:function('lang', 'New Categories')" />
