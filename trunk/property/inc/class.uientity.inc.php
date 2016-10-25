@@ -121,7 +121,17 @@
 			{
 				$this->acl_location .= ".{$this->cat_id}";
 			}
-			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->type_app[$this->type]);
+			$config = CreateObject('phpgwapi.config', 'property')->read();
+
+			if(!empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($this->entity_id, $config['bypass_acl_at_entity']))
+			{
+				$this->acl_read = true;
+			}
+			else
+			{
+				$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->type_app[$this->type]);
+			}
+
 			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->type_app[$this->type]);
 			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->type_app[$this->type]);
 			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
@@ -1247,8 +1257,9 @@
 			//redirect if no rights
 			if (!$this->acl_read && $this->cat_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				phpgw::no_access('property', lang('No access') .' :: '. $this->acl_location);
+//				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+//					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
