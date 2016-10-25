@@ -668,19 +668,35 @@
 
 			if ($query)
 			{
-				$query = $this->db->db_addslashes($query);
+				$query = html_entity_decode($this->db->db_addslashes($query));
 				$query = str_replace(",", '.', $query);
-				$_int_query = (int)$query;
+				$_int_query = 0;
+				$query_parts = array();
+				if(ctype_digit($query))
+				{
+					$_int_query = (int)$query;
+				}
 				if (stristr($query, '.'))
 				{
-					$query = explode(".", $query);
-					$_querymethod[] = "($entity_table.location_code $this->like '" . $query[0] . "%' AND $entity_table.location_code $this->like '%" . $query[1] . "')";
+					$query_parts = explode(".", $query);
+				}
+
+				if(ctype_digit( $query_parts[0]) && !empty($query_parts[1]) && ctype_digit( $query_parts[1]))
+				{
+					$_querymethod[] = "($entity_table.location_code $this->like '" . $query_parts[0] . "%' AND $entity_table.location_code $this->like '%" . $query_parts[1] . "')";
 				}
 				else
 				{
 					if (!$criteria_id)
 					{
-						$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.id = {$_int_query} OR address {$this->like} '%{$query}%')";
+						if($_int_query)
+						{
+							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.id = {$_int_query} OR address {$this->like} '%{$query}%')";			
+						}
+						else
+						{
+							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";										
+						}
 //						$where= 'OR';
 					}
 					else
@@ -795,7 +811,7 @@
 					}
 				}
 			}
-
+//_debug_array($_querymethod);
 			$sql = "SELECT fm_bim_item.* __XML-ORDER__ FROM fm_bim_item {$this->join} fm_bim_type ON (fm_bim_item.type = fm_bim_type.id)"
 				. " {$this->join} phpgw_accounts ON $entity_table.user_id = phpgw_accounts.account_id"
 				. " {$acl_group_join}";
@@ -837,8 +853,7 @@
 					{
 						if(!empty($attibute['choice']))
 						{
-							$_querymethod[] = "(json_representation->>'status' IS NULL OR CAST( json_representation->>'status' AS integer) < 90)";
-							$__querymethod = array(); // remove block
+							$_querymethod_status = "(json_representation->>'status' IS NULL OR CAST( json_representation->>'status' AS integer) < 90)";
 						}
 					}
 				}
@@ -898,10 +913,16 @@
 			$querymethod = '';
 
 			$_querymethod = array_merge($__querymethod, $_querymethod);
+//			_debug_array($_querymethod);
 			if ($_querymethod)
 			{
 				$querymethod = " $where (" . implode(' OR ', $_querymethod) . ')';
 				unset($_querymethod);
+
+				if($_querymethod_status)
+				{
+					$querymethod .= " AND {$_querymethod_status}";
+				}
 			}
 
 //			$filtermethod .= "AND xmlexists('//location_code[text() = ''5002-02'']' PASSING BY REF xml_representation)";
@@ -1723,17 +1744,34 @@
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
+				$_int_query = 0;
+				$query_parts = array();
+				if(ctype_digit($query))
+				{
+					$_int_query = (int)$query;
+				}
 				$query = str_replace(",", '.', $query);
 				if (stristr($query, '.'))
 				{
-					$query = explode(".", $query);
-					$_querymethod[] = "($entity_table.location_code $this->like '" . $query[0] . "%' AND $entity_table.location_code $this->like '%" . $query[1] . "')";
+					$query_parts = explode(".", $query);
+				}
+
+				if(ctype_digit( $query_parts[0]) && !empty($query_parts[1]) && ctype_digit( $query_parts[1]))
+				{
+					$_querymethod[] = "($entity_table.location_code $this->like '" . $query_parts[0] . "%' AND $entity_table.location_code $this->like '%" . $query_parts[1] . "')";
 				}
 				else
 				{
 					if (!$criteria_id)
 					{
-						$_querymethod[] .= "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.num {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
+						if($_int_query)
+						{
+							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.id = {$_int_query} OR address {$this->like} '%{$query}%')";
+						}
+						else
+						{
+							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
+						}
 //						$where= 'OR';
 					}
 					else
