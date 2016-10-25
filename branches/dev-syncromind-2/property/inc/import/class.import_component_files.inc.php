@@ -140,7 +140,8 @@
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			$count_files_existing = 0;
+			$files_existing = array();
+			$files_not_existing = array();
 			
 			foreach ($component_files as $k => $files) 
 			{
@@ -180,13 +181,16 @@
 							$file_id = $this->_search_file_in_db($file);
 							if ($file_id)
 							{
-								throw new Exception("file '{$file}' exist in DB. Component: '{$k}'");
-								$count_files_existing++;
+								$files_existing[$file] = $file;
+								//throw new Exception("file '{$file}' exist in DB. Component: '{$k}'");
+								throw new Exception();
 							}
 
 							if (!is_file($this->path_upload_dir.$file))
 							{
-								throw new Exception("file '{$file}' does not exist in folder temporary. Component: '{$k}'");
+								$files_not_existing[$file] = $file;
+								//throw new Exception("file '{$file}' does not exist in folder temporary. Component: '{$k}'");
+								throw new Exception();
 							}	
 
 							$file_id = $this->_save_file($file_data);
@@ -212,8 +216,11 @@
 					{
 						if ($e)
 						{
-							$this->db->transaction_abort();				
-							$message['error'][] = array('msg' => $e->getMessage());
+							$this->db->transaction_abort();	
+							if ($e->getMessage())
+							{
+								$message['error'][] = array('msg' => $e->getMessage());
+							}
 							continue;
 						}
 					}
@@ -224,18 +231,31 @@
 			if ($count_new_files)
 			{
 				$message['message'][] = array('msg' => lang('%1 files copy successfully', $count_new_files));
+			} else {
+				$message['message'][] = array('msg' => lang('%1 files copy', $count_new_files));
+			}
+			if ($count_new_relations)
+			{
+				$message['message'][] = array('msg' => lang('%1 relations saved successfully', $count_new_relations));
+			} else {
+				$message['message'][] = array('msg' => lang('any relation has been saved'));
 			}
 			if ($count_relations_existing)
 			{
 				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
 			}
-			if ($count_new_relations)
+			
+			if (count($files_not_existing))
 			{
-				$message['message'][] = array('msg' => lang('%1 relations saved successfully', $count_new_relations));
+				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($files_not_existing)));
 			}
-			if ($count_files_existing)
+			
+			if (count($files_existing))
 			{
-				$message['message'][] = array('msg' => lang('%1 files already exist and were rejected', $count_files_existing));
+				foreach($files_existing as $file)
+				{
+					$message['error'][] = array('msg' => lang("file %1 exist in DB", $file));
+				}
 			}
 			
 			return $message;
