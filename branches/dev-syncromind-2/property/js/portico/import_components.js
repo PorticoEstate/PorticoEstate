@@ -99,11 +99,11 @@ $(document).ready(function ()
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		
-		if ($('#excel_files').val() === '')
+		/*if ($('#excel_files').val() === '')
 		{
 			alert('no file selected');
 			return false;
-		}
+		}*/
 		
 		if ($('#location_item_id').val() === '')
 		{
@@ -123,9 +123,14 @@ $(document).ready(function ()
 		}
 		
 		var form = document.forms.namedItem("form_files");
-		var file_data = $('#excel_files').prop('files')[0];
 		var form_data = new FormData(form);
-		form_data.append('file', file_data);
+		
+		if ($('#excel_files').val() !== '')
+		{
+			var file_data = $('#excel_files').prop('files')[0];	
+			form_data.append('file', file_data);
+		}
+		
 		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
