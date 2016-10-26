@@ -227,7 +227,7 @@
 			}
 
 			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
-			if ($results)
+			if ($results > -1)
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
 			}

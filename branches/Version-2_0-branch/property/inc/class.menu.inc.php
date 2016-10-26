@@ -53,11 +53,21 @@
 				$start_page = $GLOBALS['phpgw_info']['user']['preferences']['property']['default_start_page'];
 			}
 
+			$config = CreateObject('phpgwapi.config', 'property')->read();
+			if (!empty($config['app_name']))
+			{
+				$lang_app_name = $config['app_name'];
+			}
+			else
+			{
+				$lang_app_name = lang('property');
+			}
+
 			$menus['navbar'] = array
 				(
 				'property' => array
 					(
-					'text' => lang('property'),
+					'text' => $lang_app_name,
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "property.ui{$start_page}.index")),
 					'image' => array('property', 'navbar'),
 					'order' => 35,
@@ -819,11 +829,7 @@
 					}
 				}
 
-				$config = CreateObject('phpgwapi.config', 'property');
-				$config->read();
-
-
-				if (!isset($config->config_data['suppress_tenant']) || !$config->config_data['suppress_tenant'])
+				if (!isset($config['suppress_tenant']) || !$config['suppress_tenant'])
 				{
 					$children['tenant'] = array
 						(
@@ -1019,7 +1025,7 @@
 
 			if ($acl->check('.invoice', PHPGW_ACL_READ, 'property'))
 			{
-				$invoicehandler = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
+				$invoicehandler = isset($config['invoicehandler']) && $config['invoicehandler'] == 2 ? 'uiinvoice2' : 'uiinvoice';
 				$children = array();
 				$children_invoice = array();
 				if ($acl->check('.invoice', PHPGW_ACL_PRIVATE, 'property'))
@@ -1312,7 +1318,9 @@
 
 						if ($type != 'horisontal')
 						{
-							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uientity.index', PHPGW_ACL_READ);
+							//bypass_acl_at_entity
+							$_required = !empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($entry['id'], $config['bypass_acl_at_entity']) ? '' : PHPGW_ACL_READ ;
+							$menus['navigation']["entity_{$entry['id']}"]['children'] = $entity->read_category_tree($entry['id'], 'property.uientity.index', $_required);
 						}
 
 						$custom_menu_items = $custom_menus->read_tree(array('type' => 'custom_menu_items',

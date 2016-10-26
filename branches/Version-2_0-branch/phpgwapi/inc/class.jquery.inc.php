@@ -196,8 +196,9 @@
 						"file-upload/js/jquery.fileupload-jquery-ui",
 					);
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload.css");
-						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-custom.css");
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-ui.css");
+						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/file-upload/css/jquery.fileupload-custom.css");
+						
 					break;
 				
 				default:
@@ -485,6 +486,12 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
 		}
 		
+		public static function init_multi_upload_file()
+		{
+			self::load_widget('file-upload');
+		}
+		
+		/*
 		public static function form_file_upload_generate( $action )
 		{
 			self::load_widget('file-upload');
@@ -611,6 +618,6 @@ JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);
 			
 			return $output;
-		}
+		}*/
 		
 	}
