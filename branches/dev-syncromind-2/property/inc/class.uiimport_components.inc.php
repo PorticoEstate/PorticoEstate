@@ -141,7 +141,13 @@
 			}
 			
 			$import_component_files = new import_component_files();
-			$receipt = $import_component_files->add_files($id, $location_code, $attrib_name_componentID);
+			
+			if ($_FILES['file']['tmp_name'])
+			{
+				$receipt = $import_component_files->add_files_components($id, $location_code, $attrib_name_componentID);
+			} else {
+				$receipt = $import_component_files->add_files_location($id, $location_code);
+			}
 			
 			return $receipt;
 		}
