@@ -57,7 +57,9 @@
 			'get_unspsc_code'=> true,
 			'receive_order'	=> true,
 			'check_purchase_right'=> true,
-			'show_attachment'	=> true
+			'show_attachment'	=> true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true
 		);
 
 		/**
@@ -256,7 +258,7 @@
 				$browser->content_header($document['name'], '', $size);
 				echo $content;
 			}
-	
+
 		}
 
 		function download2()
@@ -493,6 +495,59 @@
 			}
 		}
 
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+			
+			phpgw::import_class('property.multiuploader');
+			
+			$options['base_dir'] = 'fmticket/'.$id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+			
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+		
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+		
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+			
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action					
+			);
+	
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
+		}
+		
 		function columns()
 		{
 			$receipt = array();
@@ -672,7 +727,7 @@
 					)
 				)
 			);
-		
+
 			if($order_read)
 			{
 				$check_date_type['list'][] = array(
@@ -1146,7 +1201,7 @@
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
-
+		
 		function add()
 		{
 			if (!$this->acl_add)
@@ -1286,7 +1341,7 @@
 					{
 						if(!$values['assignedto'] = $GLOBALS['phpgw_info']['user']['preferences']['property']['assigntodefault'])
 						{
-						
+
 							$receipt['error'][] = array('msg' => lang('Please select a person or a group to handle the ticket !'));
 						}
 					}
@@ -2856,9 +2911,10 @@
 				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : '',
 				'fileupload' => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
 				'multiple_uploader' => true,
-				'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
+				/*'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
 				. "upload_target:'property.botts.addfiles',"
-				. "id:'{$id}'}",
+				. "id:'{$id}'}",*/
+				'multi_upload_parans' => "{menuaction:'property.uitts.build_multi_upload_file', id:'{$id}'}",
 				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',

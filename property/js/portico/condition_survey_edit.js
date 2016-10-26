@@ -9,10 +9,16 @@ JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_con
 
 this.fileuploader = function ()
 {
-	var requestUrl = phpGWLink('index.php', fileuploader_action);
-	TINY.box.show({iframe: requestUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true, close: true});
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	//TINY.box.show({iframe: sUrl, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true}); //refresh_files is called after upload
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+		close: true,
+		closejs: function ()
+		{
+			refresh_files()
+		}
+	});	
 }
-
 
 function refresh_files()
 {

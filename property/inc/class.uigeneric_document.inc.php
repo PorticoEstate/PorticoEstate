@@ -466,8 +466,8 @@
 				
 				$related_def2 = array
 					(
-					array('key' => 'location_code', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true, 'resizeable' => true),
+					array('key' => 'loc1_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
 					//array('key' => 'location_id', 'label' => lang('location id'), 'sortable' => false, 'resizeable' => true, 'hidden' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 				);

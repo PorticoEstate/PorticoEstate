@@ -816,6 +816,8 @@ JS;
 			{
 				$responsible_item = $soresponsible->get_active_responsible_at_location($location['location_code'], $data['role_id']);
 				$location['responsible_item'] = $responsible_item['id'];
+				$location['responsible_contact'] = ''; //placeholder
+				$location['responsible_contact_id'] = ''; //placeholder
 				if(isset($responsible_item['contact_id']))
 				{
 					if(isset($names[$responsible_item['contact_id']]))
