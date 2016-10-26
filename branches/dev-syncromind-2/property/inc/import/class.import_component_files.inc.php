@@ -115,12 +115,135 @@
 			return $value['file_id'];			
 		}
 		
-		public function add_files($id, $location_code, $attrib_name_componentID)
+		public function add_files_location($id, $location_code)
+		{		
+			$message = array();
+			
+			$files = array();
+			$dh  = opendir($this->path_upload_dir);
+			if ($dh) 
+			{
+				while (false !== ($filename = readdir($dh))) 
+				{
+					if ($filename != '.' && $filename != '..') {
+						$files[] = $filename;
+					}
+				}
+				closedir($dh);
+			}
+
+			if (!count($files))
+			{
+				$message['error'][] = array('msg' => lang("no exist files to import"));
+				return $message;
+			}
+			
+			$count_new_relations = 0;
+			$count_relations_existing = 0;
+			$count_new_files = 0;
+			$files_existing = array();
+			$files_not_existing = array();
+			
+			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
+
+			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
+
+			foreach ($files as $file_name)
+			{
+				if (in_array(str_replace(' ', '_', $file_name), $files_in_component))
+				{
+					$count_relations_existing++;
+					continue;
+				}
+
+				$this->db->transaction_begin();
+				try
+				{
+					$this->db->Exception_On_Error = true;						
+
+					//$file = $file_data['file'];
+
+					$file_id = $this->_search_file_in_db($file_name);
+					if ($file_id)
+					{
+						$files_existing[$file_name] = $file_name;
+						throw new Exception();
+					}
+
+					$file_id = $this->_save_file($file_name);
+					if (!$file_id)
+					{						
+						throw new Exception("failed to copy file '{$file_name}'");
+					} 
+					unlink($this->path_upload_dir.$file_name);
+					$count_new_files++;
+					
+					$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
+					if (!$result)
+					{						
+						$message['error'][] = array('msg' => "failed to save relation. File: '{$file_name}'");
+					} else {
+						$count_new_relations++;
+					}
+
+					$this->db->Exception_On_Error = false;
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						$this->db->transaction_abort();	
+						if ($e->getMessage())
+						{
+							$message['error'][] = array('msg' => $e->getMessage());
+						}
+						continue;
+					}
+				}
+				$this->db->transaction_commit();
+			}
+
+			if ($count_new_files)
+			{
+				$message['message'][] = array('msg' => lang('%1 files copy successfully', $count_new_files));
+			} else {
+				$message['message'][] = array('msg' => lang('%1 files copy', $count_new_files));
+			}
+			if ($count_new_relations)
+			{
+				$message['message'][] = array('msg' => lang('%1 relations saved successfully', $count_new_relations));
+			} else {
+				$message['message'][] = array('msg' => lang('any relation has been saved'));
+			}
+			if ($count_relations_existing)
+			{
+				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
+			}
+			
+			if (count($files_not_existing))
+			{
+				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($files_not_existing)));
+			}
+			
+			if (count($files_existing))
+			{
+				foreach($files_existing as $file)
+				{
+					$message['error'][] = array('msg' => lang("file %1 exist in DB", $file));
+				}
+			}
+			
+			return $message;
+		}
+		
+		public function add_files_components($id, $location_code, $attrib_name_componentID)
 		{		
 			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], true);
 			$component_files = array();
 			$message = array();
 			
+			$patrones = array('(\\/)', '(\\\\)', '( )');
+			$sustituciones = array('_', '_', '_');
 			foreach ($exceldata as $row) 
 			{
 				if (!$this->_valid_row($row))
@@ -133,10 +256,11 @@
 				$component_files[$row[0]][] = array(
 					'name' => $row[1],
 					'desription' => $row[2],
-					'file' => $array_path[count($array_path)-1]
+					'file' => $array_path[count($array_path)-1],
+					'file-path' => preg_replace($patrones, $sustituciones, $row[(count($row)-1)])
 				);
 			}
-
+			
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
@@ -193,7 +317,7 @@
 								throw new Exception();
 							}	
 
-							$file_id = $this->_save_file($file_data);
+							$file_id = $this->_save_file($file);
 							if (!$file_id)
 							{						
 								throw new Exception("failed to copy file '{$file}'. Component: '{$k}'");
@@ -260,7 +384,6 @@
 			
 			return $message;
 		}
-		
 		
 		/*public function add_files($id, $location_code, $attrib_name_componentID)
 		{		
@@ -373,11 +496,11 @@
 		}
 		
 		
-		private function _save_file( $file_data )
+		private function _save_file( $file )
 		{
 			$metadata = array();
 			
-			$tmp_file = $file_data['file'];
+			$tmp_file = $file;
 			
 			$bofiles = CreateObject('property.bofiles');
 			
