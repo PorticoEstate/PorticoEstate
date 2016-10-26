@@ -150,7 +150,8 @@
 			{
 				$GLOBALS['phpgw_setup']->db->query("DELETE FROM phpgw_config WHERE config_name='{$setting}'", __LINE__, __FILE__);
 			}
-			if($value)
+			/* cookie_domain has to allow an empty value*/
+			if($value || $setting == 'cookie_domain')
 			{
 				$value = $GLOBALS['phpgw_setup']->db->db_addslashes($value);
 				$GLOBALS['phpgw_setup']->db->query("INSERT INTO phpgw_config (config_app,config_name, config_value) VALUES ('phpgwapi', '{$setting}','{$value}')", __LINE__, __FILE__);
