@@ -11,6 +11,7 @@
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 			
 			$this->latest_uploads = array();
+			$this->latest_uploads_path = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -82,8 +83,9 @@
 			return $values;			
 		}
 		
-		private function _search_in_latest_uploads($file)
+		private function _search_in_latest_uploads($file_data)
 		{
+			$file = $file_data['file'];
 			$file_name = str_replace(' ', '_', $file);
 			$file_id = array_search($file_name, $this->latest_uploads);
 			if ($file_id)
@@ -161,7 +163,7 @@
 				{
 					$this->db->Exception_On_Error = true;						
 
-					//$file = $file_data['file'];
+					$file_data['file'] = $file_name;
 
 					$file_id = $this->_search_file_in_db($file_name);
 					if ($file_id)
@@ -170,7 +172,7 @@
 						throw new Exception();
 					}
 
-					$file_id = $this->_save_file($file_name);
+					$file_id = $this->_save_file($file_data);
 					if (!$file_id)
 					{						
 						throw new Exception("failed to copy file '{$file_name}'");
@@ -260,13 +262,13 @@
 					'file-path' => preg_replace($patrones, $sustituciones, $row[(count($row)-1)])
 				);
 			}
-			
+
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
 			$files_existing = array();
 			$files_not_existing = array();
-			
+			$paths = array();
 			foreach ($component_files as $k => $files) 
 			{
 				if (empty($k))
@@ -299,25 +301,30 @@
 
 						$file = $file_data['file'];
 						
-						$file_id = $this->_search_in_latest_uploads($file);
-						if (!$file_id)
+						$file_id = $this->_search_in_latest_uploads($file_data);
+						if ($file_id) 
+						{
+							if ($this->latest_uploads_path[$file_id] !== $file_data['file-path'])
+							{
+								throw new Exception("file '{$file}' already exists on another path. Component: '{$k}'");
+							}
+						}
+						else
 						{
 							$file_id = $this->_search_file_in_db($file);
 							if ($file_id)
 							{
 								$files_existing[$file] = $file;
-								//throw new Exception("file '{$file}' exist in DB. Component: '{$k}'");
 								throw new Exception();
 							}
 
 							if (!is_file($this->path_upload_dir.$file))
 							{
 								$files_not_existing[$file] = $file;
-								//throw new Exception("file '{$file}' does not exist in folder temporary. Component: '{$k}'");
 								throw new Exception();
 							}	
 
-							$file_id = $this->_save_file($file);
+							$file_id = $this->_save_file($file_data);
 							if (!$file_id)
 							{						
 								throw new Exception("failed to copy file '{$file}'. Component: '{$k}'");
@@ -382,92 +389,10 @@
 				}
 			}
 			
+			print_r($paths).'<br>'.print_r($this->latest_uploads_path); die; 
+			
 			return $message;
 		}
-		
-		/*public function add_files($id, $location_code, $attrib_name_componentID)
-		{		
-			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], true);
-			$component_files = array();
-			$message = array();
-			
-			foreach ($exceldata as $row) 
-			{
-				if (!$this->_valid_row($row))
-				{
-					continue;
-				}
-				
-				$array_path = explode("\\", $row[(count($row)-1)]);
-						
-				$component_files[$row[0]][] = array(
-					'name' => $row[1],
-					'desription' => $row[2],
-					'file' => $array_path[count($array_path)-1]
-				);
-			}
-
-			$this->db->transaction_begin();
-			
-			try
-			{
-				$this->db->Exception_On_Error = true;
-				
-				$count = 0;
-				foreach ($component_files as $k => $files) 
-				{
-					if (empty($k))
-					{
-						$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
-					}
-					else {
-						$component = $this->_get_component($k, $attrib_name_componentID, $location_code);
-						if( empty($component['id']) || empty($component['location_id']))
-						{
-							throw new Exception("component {$k} does not exist");
-						}
-					}
-					
-					foreach($files as $file_data)
-					{
-						$file = $file_data['file'];
-						
-						if (!is_file($this->path_upload_dir.$file))
-						{
-							throw new Exception("the file {$file} does not exist, component: {$k}");
-						}	
-						
-						$file_id = $this->_save_file($file_data);
-						if (!$file_id)
-						{						
-							throw new Exception("failed to save file {$file}, component: {$k}");
-						} 
-			
-						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
-						if (!$result)
-						{						
-							throw new Exception("failed to save relation, file: {$file}, component: {$k}");
-						}
-						$count++;
-					}
-				}
-				$this->db->Exception_On_Error = false;
-			}
-			catch (Exception $e)
-			{
-				if ($e)
-				{
-					$this->db->transaction_abort();				
-					$message['error'][] = array('msg' => $e->getMessage());
-					return $message;
-				}
-			}
-
-			$this->db->transaction_commit();
-			$message['message'][] = array('msg' => lang('%1 files saved successfully', $count));		
-			
-			return $message;
-		}*/
 		
 		
 		private function _get_component( $query, $attrib_name_componentID, $location_code)
@@ -496,11 +421,11 @@
 		}
 		
 		
-		private function _save_file( $file )
+		private function _save_file( $file_data )
 		{
 			$metadata = array();
 			
-			$tmp_file = $file;
+			$tmp_file = $file_data['file'];
 			
 			$bofiles = CreateObject('property.bofiles');
 			
@@ -525,6 +450,7 @@
 			if ($file_id) 
 			{
 				$this->latest_uploads[$file_id] = $file_name;
+				$this->latest_uploads_path[$file_id] = $file_data['file-path'];
 				
 				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				$metadata['title'] = $file_data['name']; 
