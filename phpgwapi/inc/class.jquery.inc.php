@@ -91,6 +91,29 @@
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					break;
 
+//				case 'datetimepicker2':
+//					$load = array
+//						(
+//						"js/{$_jquery_core}{$_type}",
+//						'DateTimePicker' => array(
+//							"js/DateTimePicker",
+//							"i18n/DateTimePicker-i18n"
+//						)
+//					);
+//					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/DateTimePicker/css/DateTimePicker.css");
+//					break;
+				case 'datetimepicker':
+					$load = array
+						(
+						"js/{$_jquery_core}{$_type}",
+						'datetimepicker' => array(
+							"js/jquery.datetimepicker.full{$_type}",
+							"i18n/DateTimePicker-i18n"
+						)
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/datetimepicker/css/jquery.datetimepicker.min.css");
+					break;
+
 				case 'validator':
 					$load = array
 						(
