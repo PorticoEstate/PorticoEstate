@@ -301,6 +301,7 @@
 												</input>
 											</dd>
 										</div>
+										<!--div id="dtBox"></div-->
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>

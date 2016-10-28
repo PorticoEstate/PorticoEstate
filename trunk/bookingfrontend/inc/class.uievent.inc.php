@@ -166,8 +166,8 @@
 			$event['from_2'] = date("H:i", phpgwapi_datetime::date_to_timestamp($event['from_']));
 			$event['to_2'] = date("H:i", phpgwapi_datetime::date_to_timestamp($event['to_']));
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'time');
-			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'time');
 			phpgwapi_jquery::load_widget('datepicker');
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
