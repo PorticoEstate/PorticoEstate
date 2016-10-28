@@ -11,7 +11,7 @@
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 			
 			$this->latest_uploads = array();
-			$this->latest_uploads_path = array();
+			//$this->latest_uploads_path = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -51,7 +51,7 @@
 		
 		private function _valid_row($row)
 		{
-			if (empty($row[0]) && empty($row[(count($row)-1)]))
+			if (empty($row[(count($row)-1)]))
 			{
 				return false;
 			}
@@ -238,15 +238,61 @@
 			return $message;
 		}
 		
+		private function search_repeated_names($component_files)
+		{
+			$message = array();
+			$names = array();
+			$paths = array();
+			$rows = array();
+			$files_repeated = array();
+			/*$patrones = array('(\\/)', '(\\\\)', '( )');
+			$sustituciones = array('_', '_', '_');*/
+			
+			foreach ($component_files as $k => $files) 
+			{
+				foreach ($files as $file_data)
+				{
+					//$file_data['file-path'] = preg_replace($patrones, $sustituciones, $file_data['path']);
+					if (in_array($file_data['file'], $names)) 
+					{
+						if (!in_array($file_data['path'], $paths))
+						{
+							//$message['error'][] = array('msg' => "file '{$file_data['path']}' already exists on another path");
+							$files_repeated[$file_data['file']][] = $file_data['path'].' ==> row: '.$file_data['row'];
+							
+						}
+						continue;
+					}
+					$names[] = $file_data['file'];
+					$rows[$file_data['file']] = $file_data['row'];
+					$paths[$file_data['file']] = $file_data['path'];
+				}
+			}
+			
+			if (count($files_repeated))
+			{
+				foreach($files_repeated as $k => $v)
+				{
+					//$files_repeated[$k]['exist'] = $paths[$k].' ==> row: '.$rows[$k];
+					$cad = "<ul><b>File path: {$paths[$k]}</b> ==> row: {$rows[$k]} <br>Files repeated in another path (".count($v)."):";
+					foreach ($v as $file) {
+						$cad .= "<li>{$file}</li>";
+					}
+					$cad .= "</ul>";
+					$message['error'][] = array('msg' => $cad);
+				}
+			}
+			
+			return $message;
+		}
+		
 		public function add_files_components($id, $location_code, $attrib_name_componentID)
 		{		
-			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], true);
+			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
 			$message = array();
-			
-			$patrones = array('(\\/)', '(\\\\)', '( )');
-			$sustituciones = array('_', '_', '_');
-			foreach ($exceldata as $row) 
+	
+			foreach ($exceldata as $k => $row) 
 			{
 				if (!$this->_valid_row($row))
 				{
@@ -259,8 +305,15 @@
 					'name' => $row[1],
 					'desription' => $row[2],
 					'file' => $array_path[count($array_path)-1],
-					'file-path' => preg_replace($patrones, $sustituciones, $row[(count($row)-1)])
+					'path' => $row[(count($row)-1)],
+					'row' => ($k + 1)
 				);
+			}
+			
+			$message = $this->search_repeated_names($component_files);
+			if ($message['error'])
+			{
+				return $message;
 			}
 
 			$count_new_relations = 0;
@@ -268,7 +321,7 @@
 			$count_new_files = 0;
 			$files_existing = array();
 			$files_not_existing = array();
-			$paths = array();
+	
 			foreach ($component_files as $k => $files) 
 			{
 				if (empty($k))
@@ -302,14 +355,7 @@
 						$file = $file_data['file'];
 						
 						$file_id = $this->_search_in_latest_uploads($file_data);
-						if ($file_id) 
-						{
-							if ($this->latest_uploads_path[$file_id] !== $file_data['file-path'])
-							{
-								throw new Exception("file '{$file}' already exists on another path. Component: '{$k}'");
-							}
-						}
-						else
+						if (!$file_id) 
 						{
 							$file_id = $this->_search_file_in_db($file);
 							if ($file_id)
@@ -389,7 +435,7 @@
 				}
 			}
 			
-			print_r($paths).'<br>'.print_r($this->latest_uploads_path); die; 
+			//print_r($paths).'<br>'.print_r($this->latest_uploads_path); die; 
 			
 			return $message;
 		}
@@ -450,7 +496,7 @@
 			if ($file_id) 
 			{
 				$this->latest_uploads[$file_id] = $file_name;
-				$this->latest_uploads_path[$file_id] = $file_data['file-path'];
+				//$this->latest_uploads_path[$file_id] = $file_data['file-path'];
 				
 				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				$metadata['title'] = $file_data['name']; 
