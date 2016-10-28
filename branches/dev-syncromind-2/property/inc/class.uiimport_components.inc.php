@@ -129,11 +129,15 @@
 			$id = phpgw::get_var('location_item_id');
 			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			
-			if (!$attrib_name_componentID)
+			if ($_FILES['file']['tmp_name'])
 			{
-				$receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
-				return $receipt;
+				if (!$attrib_name_componentID)
+				{
+					$receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
+					return $receipt;
+				}
 			}
+			
 			if (!$location_code)
 			{
 				$receipt['error'][] = array('msg' => lang('Choose Location'));
