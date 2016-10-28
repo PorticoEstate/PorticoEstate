@@ -270,9 +270,9 @@
 				$res_names[] = array('id' => $res['id'], 'name' => $res['name']);
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
-			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
-			$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 			$booking['from_'] = pretty_timestamp($booking['from_']);
 			$booking['to_'] = pretty_timestamp($booking['to_']);
@@ -517,10 +517,10 @@
 					'active' => 1)));
 			$groups = $groups['results'];
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 			$booking['from_'] = pretty_timestamp($booking['from_']);
 			$booking['to_'] = pretty_timestamp($booking['to_']);
@@ -853,7 +853,7 @@
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
 
-				$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 
 				$this->flash_form_errors($errors);
@@ -1111,7 +1111,7 @@
 				$booking['booking_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show',
 						'id' => $booking['id']));
 
-				$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 				if ($step < 2)
 				{

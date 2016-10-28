@@ -707,7 +707,7 @@
 			}
 		}
 
-		public function adddatetimepicker( $type = 'datetime' )
+		public function adddatetimepicker_old( $type = 'datetime' )
 		{
 			phpgwapi_jquery::load_widget('datepicker');
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
@@ -800,11 +800,11 @@
 				$('#add-date-link').click(function(){
 					var add = $(this);
 					var html = '';
-                                    
+
 					this.counter = $('.date-container').length - 1;
 
 					if (!this.counter) { this.counter = 0; }
-                                    
+
                     {$html}
 
 					add.parent().parent().children('#dates-container').append(html);
@@ -819,6 +819,140 @@
 						buttonImage: "{$img_cal}",
 						buttonText: "{$lang_select_date}",
 						buttonImageOnly: true
+					});
+					this.counter++;
+				});
+			});
+
+			$(document).on("click",".btnclose",function(){
+				var the = $(this);
+				RemoveDate(the);
+			});
+
+			RemoveDate = function(the){
+				the.parent().remove();
+			}
+
+JS;
+			$GLOBALS['phpgw']->js->add_code('', $js);
+		}
+
+		public function adddatetimepicker( $type = 'datetime' )
+		{
+			phpgwapi_jquery::load_widget('datetimepicker');
+
+			$dateformat = str_ireplace(array('y'), array('Y'), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+
+			switch($type)
+			{
+				case 'datetime':
+					$_type = 'datetime';
+					$dateformat .= " H:i";
+					break;
+				case 'time':
+					$_type	 = 'time';
+					$dateformat = "H:i";
+					break;
+				default:
+					$_type = 'date';
+			}
+
+			$img_cal = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
+
+			$userlang = 'en';
+			if ( isset($GLOBALS['phpgw_info']['user']['preferences']['common']['lang']) )
+			{
+				$userlang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+			}
+
+			$lang_select_date = lang('select date');
+			$lang_from = lang('from');
+			$lang_to = lang('to');
+			$lang_remove = lang('remove date');
+
+			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
+			{
+				$html = 'var html = "<div class=\'date-container\'>"+
+                            "<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>' . $lang_remove . '</a>"+
+                            "<dt><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label></dt>"+
+                            "<dd><input class=\'new_datepicker time\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+                            "</input></dd>"+
+                            "<dt><label for=\'new_end_date_"+this.counter+"\' >' . $lang_to . '</label></dt>"+
+                            "<dd><input class=\'new_datepicker time\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+                            "</input></dd>"+
+                        "</div>"';
+			}
+			else
+			{
+				$html = 'var html = "<div class=\'date-container\'>"+
+						"<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
+						"<div class=\'pure-control-group\'>"+
+							"<label for=\'new_start_date_"+this.counter+"\'><h4>' . $lang_from . '</h4></label>"+
+							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+							"</input>"+
+						"</div>"+
+						"<div class=\'pure-control-group\'>"+
+							"<label for=\'new_end_date_"+this.counter+"\' ><h4>' . $lang_to . '</h4></label>"+
+							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+							"</input>"+
+						"</div>"+
+				 	"</div>"';
+			}
+
+//            echo $html;
+//            exit();
+
+			$datepicker = $_type == 'time' ? false : true;
+			$timepicker = $_type == 'date' ? false : true;
+
+			$js = <<<JS
+
+			$(function() {
+
+				var logic = function( currentDateTime ){
+						console.log(currentDateTime);
+
+				};
+
+				$.each($('.newaddedpicker'), function(i, v)
+				{
+					var id = v.id;
+					v.classList.remove('newaddedpicker');
+	
+					$( "#"+id ).datetimepicker({
+						format: '{$dateformat}',
+						datepicker:{$datepicker},
+						timepicker: {$timepicker},
+						step: 15,
+						weeks: true,
+						dayOfWeekStart:1,
+						minDate:0,
+//						onChangeDateTime:logic
+					});
+				});
+
+				$('#add-date-link').click(function(){
+					var add = $(this);
+					var html = '';
+
+					this.counter = $('.date-container').length - 1;
+
+					if (!this.counter) { this.counter = 0; }
+
+                    {$html}
+
+					add.parent().parent().children('#dates-container').append(html);
+
+					$( ".new_datepicker" ).datetimepicker(
+					{
+						format: '{$dateformat}',
+						datepicker:{$datepicker},
+						timepicker: {$timepicker},
+						step: 15,
+						weeks: true,
+						dayOfWeekStart:1,
+						minDate:0,
+						onChangeDateTime:logic
 					});
 					this.counter++;
 				});

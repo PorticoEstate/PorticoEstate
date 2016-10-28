@@ -125,7 +125,7 @@
 
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
-				$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 				self::rich_text_editor('field-message');
 				self::render_template_xsl('allocation_cancel', array('allocation' => $allocation));
@@ -322,7 +322,7 @@
 				$allocation['from_'] = pretty_timestamp($allocation['from_']);
 				$allocation['to_'] = pretty_timestamp($allocation['to_']);
 
-				$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 				if ($step < 2)
 				{
