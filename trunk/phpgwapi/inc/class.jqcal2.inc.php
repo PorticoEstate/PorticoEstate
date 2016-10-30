@@ -74,10 +74,13 @@
 		{
 			$datepicker = $type == 'time' ? 0 : 1;
 			$timepicker = $type == 'date' ? 0 : 1;
+			$placeholder = str_ireplace(array('Y','m', 'd', 'H', 'i'), array('YYYY', 'MM', 'DD', 'HH', 'mm' ),$dateformat);
+
 			$js = <<<JS
 			$(document).ready(function()
 			{
 				$( "#{$id}" ).attr('readonly', false);
+				$( "#{$id}" ).attr('placeholder', '{$placeholder}');
 
 				jQuery.datetimepicker.setLocale('{$this->userlang}');
 				$( "#{$id}" ).datetimepicker(

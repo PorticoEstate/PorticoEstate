@@ -870,15 +870,17 @@ JS;
 			$lang_to = lang('to');
 			$lang_remove = lang('remove date');
 
+			$placeholder = str_ireplace(array('Y','m', 'd', 'H', 'i'), array('YYYY', 'MM', 'DD', 'HH', 'mm' ),$dateformat);
+
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				$html = 'var html = "<div class=\'date-container\'>"+
                             "<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>' . $lang_remove . '</a>"+
                             "<dt><label for=\'new_start_date_"+this.counter+"\'>' . $lang_from . '</label></dt>"+
-                            "<dd><input class=\'new_datepicker time\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+                            "<dd><input class=\'new_datepicker time\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></dd>"+
                             "<dt><label for=\'new_end_date_"+this.counter+"\' >' . $lang_to . '</label></dt>"+
-                            "<dd><input class=\'new_datepicker time\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+                            "<dd><input class=\'new_datepicker time\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
                             "</input></dd>"+
                         "</div>"';
 			}
@@ -888,12 +890,12 @@ JS;
 						"<a class=\'close-btn btnclose\' href=\'javascript:void(0);\'>-</a>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_start_date_"+this.counter+"\'><h4>' . $lang_from . '</h4></label>"+
-							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\'>"+
+							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'from_[]\' id=\'new_start_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 						"<div class=\'pure-control-group\'>"+
 							"<label for=\'new_end_date_"+this.counter+"\' ><h4>' . $lang_to . '</h4></label>"+
-							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\'>"+
+							"<input class=\'new_datepicker time pure-input-2-3\'  name=\'to_[]\' id=\'new_end_date_"+this.counter+"\' type=\'text\' placeholder =\'' . $placeholder . '\'>"+
 							"</input>"+
 						"</div>"+
 				 	"</div>"';
