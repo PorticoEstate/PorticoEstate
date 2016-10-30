@@ -1977,7 +1977,7 @@
 			{
 				if($entry['periodization'])
 				{
-					$periodization_start = $entry['periodization_start'] ? $entry['periodization_start'] : $entry['periodization'];
+					$periodization_start = $entry['periodization_start'] ? $entry['periodization_start'] : $entry['periode'];
 
 					$periodization_start_year	 = (int) substr($periodization_start, 0, 4);
 					$periodization_start_month	 = (int) substr($periodization_start, -2);
@@ -2390,18 +2390,16 @@
 					$budget_acc		 = 0;
 				}
 
+				$_diff_start	= abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
+				$entry['diff']	= $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
 				if (abs($entry['actual_cost']) > 0 ||  $entry['period'] < date('Ym'))
 				{
-					$_diff_start	= abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
-					$entry['diff']	= $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
-
 					$_deviation		= $entry['budget'] - $entry['actual_cost'];
 					$deviation		= $_deviation;
 					$deviation_acc += $deviation;
 				}
 				else
 				{
-					$entry['diff']	 = 0;
 					$deviation		 = 0;
 				}
 
@@ -2416,8 +2414,8 @@
 				$entry['budget_acc'] = $budget_acc;
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 
-				$entry['deviation_percent_period'] = $deviation / $entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $entry['deviation_acc'] / $budget_acc * 100;
+				$entry['deviation_percent_period'] = abs($entry['budget']) > 0 ? ($deviation / $entry['budget'] * 100) : 0;
+				$entry['deviation_percent_acc'] = abs($budget_acc) > 0 ? ($entry['deviation_acc'] / $budget_acc * 100) : 0;
 
 				$entry['closed'] = isset($closed_period[$entry['period']]) && $closed_period[$entry['period']];
 				$entry['fictive'] = isset($fictive_period[$entry['period']]) && $fictive_period[$entry['period']];
