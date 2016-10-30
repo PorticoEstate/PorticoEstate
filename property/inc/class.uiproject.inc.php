@@ -1768,7 +1768,7 @@ JS;
 				'data' => json_encode(array()),
 				'ColumnDefs' => $orders_def,
 				'config' => array(
-					array('disableFilter' => true),
+			//		array('disableFilter' => true),
 			//		array('disablePagination' => true)
 				)
 			);
@@ -2208,6 +2208,7 @@ JS;
 			$draw = phpgw::get_var('draw', 'int');
 			$order = phpgw::get_var('order');
 			$columns = phpgw::get_var('columns');
+			$search = phpgw::get_var('search');
 
 			$values = $this->bo->get_orders(array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -2216,6 +2217,7 @@ JS;
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $search['value'],
 				)
 			);
 			foreach ($values as & $_order_entry)
