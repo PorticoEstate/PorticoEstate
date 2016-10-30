@@ -2140,7 +2140,6 @@
 			$closed_period			 = array();
 			$active_period			 = array();
 			$project_budget			 = array();
-			$project_total_budget	 = 0;
 
 			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget,"
 			. " fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, project_type_id"
@@ -2185,12 +2184,13 @@
 
 			$soworkorder = CreateObject('property.soworkorder');
 
-			$order_budget = array();
+			$order_budgets = array();
 			foreach($_order_list as $_order_id)
 			{
 				$order_budgets[$_order_id] = $soworkorder->get_budget($_order_id);
 			}
 
+			$_orders = array();
 			foreach($order_budgets as $_order_id => $order_budget)
 			{
 
@@ -2266,7 +2266,7 @@
 			unset($_budget);
 			unset($period);
 
-			if(isset($_orders) && $_orders)
+			if (!empty($_orders))
 			{
 				foreach($_orders as $period => $_budget)
 				{
@@ -2349,8 +2349,8 @@
 
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 
-				$entry['deviation_percent_period']	 = $corretion * $deviation / $entry['budget'] * 100;
-				$entry['deviation_percent_acc']		 = $corretion * $entry['deviation_acc'] / $total_sum * 100;
+				$entry['deviation_percent_period'] =  abs($entry['budget']) > 0 ? ($corretion * $deviation / $entry['budget'] * 100) : 0;
+				$entry['deviation_percent_acc'] = abs($total_sum) > 0 ? ($corretion * $entry['deviation_acc'] / $total_sum * 100) : 0;
 				$entry['closed']					 = $closed_period[$entry['period']];
 				$entry['active']					 = $active_period[$entry['period']];
 			}
