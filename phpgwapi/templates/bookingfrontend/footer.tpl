@@ -1,10 +1,10 @@
 		</div>
-		<!--div id="footer">
+		<div id="footer">
 
 		</div>
 		<div id="footer_address">
 			{footer_address}
-		</div-->
+		</div>
 	</body>
 	{javascript_end}
 </html>
