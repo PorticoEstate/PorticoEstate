@@ -13,6 +13,10 @@
 			<td colspan="2">&nbsp;<b>{lang_bookingfrontend_settings}</b></td>
 		</tr>
 		<tr class="row_on">
+			<td>{lang_site_title}</td>
+			<td><input name="newsettings[site_title]" value="{value_site_title}"></td>
+		</tr>
+		<tr class="row_off">
 			<td>{lang_remote_authentication}:</td>
 			<td>
 				<select name="newsettings[authentication_method]">
@@ -20,19 +24,19 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_cookie_domain_for_sessions_-_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_Anonymous_user}:</td>
 			<td><input name="newsettings[anonymous_user]" value="{value_anonymous_user}"></td>
 		</tr>
-		<tr class="row_off">
+		<tr class="row_on">
 			<td>{lang_Anonymous_password}:</td>
 			<td><input type="password" name="newsettings[anonymous_passwd]" value="{value_anonymous_passwd}"></td>
 		</tr>
-		<tr class="row_on">
+		<tr class="row_off">
 			<td>{lang_custom_login_url}:</td>
 			<td><input name="newsettings[custom_login_url]" value="{value_custom_login_url}"></td>
 		</tr>
