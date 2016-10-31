@@ -232,7 +232,7 @@ ul.pathway li:first-child {background: rgba(0, 0, 0, 0) none repeat scroll 0 0;p
 
 
 /* BOOKINGFRONTEND */
-#content {
+.content {
     margin: 2em 1em;
 }
 .clr {
