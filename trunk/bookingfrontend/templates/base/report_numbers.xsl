@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div class="content">
 		<xsl:call-template name="msgbox"/>
 
 		<xsl:if test="step = 1">

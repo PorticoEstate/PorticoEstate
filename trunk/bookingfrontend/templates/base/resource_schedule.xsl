@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
-	<div id="content">
+	<div class="content">
 		<xsl:for-each select="pathway">
 			<ul class="pathway">
 				<li>

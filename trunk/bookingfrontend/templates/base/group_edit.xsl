@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div class="content">
         
 		<div class="pure-g">
 			<div class="pure-u-1">

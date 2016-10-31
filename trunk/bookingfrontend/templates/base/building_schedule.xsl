@@ -1,6 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	
-	<div id="content">
+	<div class="content">
 		<xsl:if test="backend != 'true'">
 			<ul class="pathway">
 				<li>
