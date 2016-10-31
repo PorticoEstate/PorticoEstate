@@ -10,17 +10,19 @@
 			<xsl:value-of select="php:function('lang', 'please wait')" />
 		</p>
 	</div>
+	<div class="content">
 	<div class="pure-g">
-		<div class="pure-u-1" id="no_result">
-			<xsl:if test="not(search)">
+		<xsl:if test="not(search)">
+			<div class="pure-u-1" id="no_result">
 				<div id="cloud">
 					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 				</div>
-			</xsl:if>
-		</div>
+			</div>
+		</xsl:if>
 	</div>
-	<div id="content">
-		<form action="" method="GET" id="search">
+	</div>
+	<div class="content">
+		<form method="GET" id="search">
 			<input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
 			<!--input type="hidden" id="activity_top_level" name="activity_top_level" value="{activity_top_level}" /-->
 		</form>
@@ -154,7 +156,7 @@
 				<div class="pure-u-1">
 					<div class="heading">
 						<!--xsl:value-of select="php:function('lang', 'type')" /-->
-						 Vis kun treff som er:
+						Vis kun treff som er:
 					</div>
 					<ul id="search_type">
 						<li>
@@ -191,8 +193,8 @@
 
 		</div>
 		<div class="pure-g">
-			<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
-				<xsl:if test="not(search)">
+			<xsl:if test="search = '1'">
+				<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
 					<div id="cloud">
 						<div class="frontpagetext">
 						</div>
@@ -204,9 +206,8 @@
 							</xsl:attribute>
 						</img>
 					</div>
-				</xsl:if>
-			</div>
+				</div>
+			</xsl:if>
 		</div>
-
 	</div>
 </xsl:template>
