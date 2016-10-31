@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div class="content">
 
 		<h3>
 			<xsl:value-of select="php:function('lang', 'New application')"/>
