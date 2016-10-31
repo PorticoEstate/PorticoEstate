@@ -2,7 +2,7 @@
 		<div id="footer">
 
 		</div>
-		<div id="footer_address">
+		<div class="footer l-box is-center">
 			{footer_address}
 		</div>
 	</body>
