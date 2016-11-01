@@ -482,6 +482,10 @@ $(document).ready(function ()
 	{
 		width = 280;
 	}
+	else
+	{
+		return;
+	}
 
 	$("#submitbox").css({
 		position: 'absolute',
