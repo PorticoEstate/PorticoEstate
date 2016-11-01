@@ -1,6 +1,7 @@
 var pageLayout;
 
-$(document).ready(function () {
+$(document).ready(function ()
+{
 	// create page layout
 	pageLayout = $('body').layout({
 		stateManagement__enabled: true
@@ -27,7 +28,7 @@ $(document).ready(function () {
 			initClosed: true
 			, initHidden: true
 			, spacing_closed: 0
-					//	,   closable:				false
+				//	,   closable:				false
 			, resizable: true
 			, slidable: true
 
@@ -39,7 +40,7 @@ $(document).ready(function () {
 			, slidable: false		// REFERENCE - cannot slide if spacing_closed = 0
 			, initClosed: false
 			, resizable: false
-	}
+		}
 
 	});
 
@@ -64,17 +65,19 @@ $(document).ready(function () {
 		$.ajax({
 			type: 'GET',
 			url: requestUrl,
-			success: function (data) {
+			success: function (data)
+			{
 				if (data != null)
-	{
+				{
 					$("#center_content").html(data);
+				}
 			}
-		}
-        });
+		});
 
-		}
+	}
 
-	$("#template_selector").change(function () {
+	$("#template_selector").change(function ()
+	{
 
 		var template = $(this).val();
 		//user[template_set] = template;
@@ -86,11 +89,13 @@ $(document).ready(function () {
 			dataType: 'json',
 			data: {user: {template_set: template}, submit: true},
 			url: requestUrl,
-			success: function (data) {
-				console.log(data);
+			success: function (data)
+			{
+		//		console.log(data);
 				location.reload(true);
-	}
+			}
 		});
-		});
+
+	});
 
 });

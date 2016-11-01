@@ -581,6 +581,19 @@
 			$error = process_array($GLOBALS['phpgw']->preferences->forced, $forced,$session_data['notifys']);
 		}
 
+		if (phpgw::get_var('phpgw_return_as') == 'json')
+		{
+			if($error)
+			{
+				echo json_encode(array('status' => 'error'));
+			}
+			else
+			{
+				echo json_encode(array('status' => 'ok'));
+			}
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
 		if(is_admin() && $account_id)
 		{
 			$GLOBALS['phpgw']->preferences->set_account_id($GLOBALS['phpgw_info']['user']['account_id'], true);
