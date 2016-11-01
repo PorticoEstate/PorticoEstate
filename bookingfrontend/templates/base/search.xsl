@@ -13,8 +13,8 @@
 	<div class="content">
 		<div class="pure-g">
 			<xsl:if test="not(search)">
-				<div class="pure-u-1" id="no_result">
-					<div id="cloud">
+				<div class="pure-u-1 no_result">
+					<div class="cloud">
 						<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
 					</div>
 				</div>
@@ -194,8 +194,8 @@
 		</div>
 		<xsl:if test="not(search)">
 			<div class="pure-g">
-				<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
-					<div id="cloud">
+				<div class="pure-u-1  pure-u-lg-1-1 no_result">
+					<div class="cloud">
 						<div class="frontpagetext">
 						</div>
 					</div>
