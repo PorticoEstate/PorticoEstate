@@ -153,8 +153,20 @@
 		protected $messages = array();
 		protected $debug = false;
 
+		private $soap_url,
+			$soap_username,
+			$soap_password;
+
 		function __construct()
 		{
+			/**
+			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
+			 */
+			$config					= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->soap_url			= $config->config_data['external_register']['url'];
+			$this->soap_username	= $config->config_data['external_register']['username'];
+			$this->soap_password	= $config->config_data['external_register']['password'];
+
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
 
 			if (!isset($this->config->config_data['fellesdata']) || !$this->config->config_data['fellesdata'])
@@ -360,7 +372,8 @@
 			//return;
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt';
+//			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/prosjekt';
+			$url = "{$this->soap_url}/prosjekt";
 			$values = array();
 			try
 			{
@@ -409,7 +422,8 @@
 			return;
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/art';
+//			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/art';
+			$url = "{$this->soap_url}/art";
 			$values = array();
 			try
 			{
@@ -430,7 +444,8 @@
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 			//fm_eco_service
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste';
+//			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste';
+			$url = "{$this->soap_url}/tjeneste";
 			$values = array();
 			try
 			{
@@ -498,15 +513,16 @@ SQL;
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**
 			//fm_vendor
 
-			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**';
+//			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=**';
 //			$url = 'http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=100304';
+			$url = "{$this->soap_url}/leverandorer?leverandorNr=**";
+
 			$error = false;
 
 			$values = array();
 			try
 			{
 				$values = $this->check_external_register($url);
-
 			}
 			catch (Exception $exc)
 			{
@@ -673,9 +689,8 @@ SQL;
 
 		public function check_external_register($url)
 		{
-
-			$username = 'portico';
-			$password = 'BgPor790gfol';
+			$username = $this->soap_username; //'portico';
+			$password = $this->soap_password; //'BgPor790gfol';
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
