@@ -36,7 +36,6 @@
 			{win_on_events}
 			//-->
 		</script>
-	<div class="header">
 	</head>
 	<body>
 		<div class="home-menu custom-menu-wrapper">
@@ -53,8 +52,8 @@
 				</ul>
 			</div>
 		</div>
-		<span id="change"></span>
 
 		<div id="content-wrapper">
+			<!-- END head -->
 
 

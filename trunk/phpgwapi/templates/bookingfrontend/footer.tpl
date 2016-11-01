@@ -5,9 +5,8 @@
 <div class="footer l-box is-center">
 	{footer_info}
 </div>
-</body>
 {javascript_end}
-<script>
+<script type="text/javascript">
 	(function (window, document)
 	{
 		document.getElementById('toggle').addEventListener('click', function (e)
@@ -17,4 +16,5 @@
 		});
 	})(this, this.document);
 </script>
+</body>
 </html>

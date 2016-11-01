@@ -41,7 +41,6 @@ JS;
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
 	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-	$javascripts = array();
 
 	phpgwapi_jquery::load_widget('core');
 
@@ -65,10 +64,14 @@ JS;
 		}
 	}
 
+	$javascripts = array();
 	//FIXME: To consider...
 	/*
 	$javascripts[] = "/phpgwapi/templates/stavanger/js/minid.js";
 */
+//	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
+//	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
+
 	foreach ( $javascripts as $javascript )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )

@@ -224,7 +224,7 @@ $(document).ready(function ()
 				{
 					$("#loading").dialog('close');
 //		            $('#loading').html("<p>Result Complete...</p>");
-					$("#no_result").hide();
+					$(".no_result").hide();
 					$("#result").html(data);
 					$("#total_records_top").html($("#total_records").html());
 
