@@ -51,7 +51,6 @@
 					<div class="custom-menu-screen"></div>
 					<ul class="pure-menu-list">
 						<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
-						<li class="pure-menu-item"><a href="{help_url}" class="pure-menu-link">{help_text}</a></li>
 						<li class="pure-menu-item"><a href="{org_url}" class="pure-menu-link">{login_text_org}</a></li>
 						<li class="pure-menu-item"><a href="{login_url}" class="pure-menu-link">{login_text}</a></li>
 					</ul>

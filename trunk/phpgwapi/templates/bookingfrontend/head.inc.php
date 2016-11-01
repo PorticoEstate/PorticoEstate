@@ -188,8 +188,6 @@ JS;
 	{
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
-#		$tpl_vars['help_text'] = lang('help');
-#		$tpl_vars['help_url'] = => '#';
 	}
 	$bouser = CreateObject('bookingfrontend.bouser');
     $org = CreateObject('bookingfrontend.uiorganization');
