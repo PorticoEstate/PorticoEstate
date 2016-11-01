@@ -155,7 +155,14 @@ JS;
 		$site_title = $GLOBALS['phpgw_info']['server']['site_title'];
 	}
 
-    $test = $GLOBALS['phpgw']->common->get_on_events();
+	if(! $footer_info = $config_frontend['footer_info'])
+	{
+		$footer_info = 'footer info settes i bookingfrontend config';
+	}
+
+   phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);
+
+	$test = $GLOBALS['phpgw']->common->get_on_events();
     $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
     $test = str_replace("\n}\n","\n})\n",$test);
 	$app = lang($app);

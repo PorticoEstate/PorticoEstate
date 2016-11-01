@@ -32,9 +32,10 @@
 		$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 		$GLOBALS['phpgw']->template->set_file('footer', 'footer.tpl');
 
+		$footer_info = phpgwapi_cache::session_get('phpgwapi', 'footer_info');
 		$var = array
 		(
-			'footer_address'	=> 'Bergen kommune | R&aring;dhusgt 10 | Postboks 7700 | 5020 Bergen',
+			'footer_info'	=> $footer_info, //'Bergen kommune | R&aring;dhusgt 10 | Postboks 7700 | 5020 Bergen',
 			'powered_by'	=> lang('Powered by phpGroupWare version %1', $GLOBALS['phpgw_info']['server']['versions']['phpgwapi']),
 			'javascript_end'=> $GLOBALS['phpgw']->common->get_javascript_end()
 		);
