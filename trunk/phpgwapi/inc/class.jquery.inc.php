@@ -57,18 +57,20 @@
 			else
 			{
 				$_jquery_core = 'jquery-2.1.4';
+				$_jquery_core = 'jquery-3.1.1';
 			}
 
-			$_jquery_ui = 'jquery-ui-1.11.4';
+		//	$_jquery_ui = 'jquery-ui-1.11.4';
+			$_jquery_ui = 'jquery-ui-1.12.1';
 			$_type = '.min'; // save some download
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
-				$theme = 'humanity';
+				$theme = 'redmond';
 			}
 			else
 			{
-				$theme = 'ui-lightness';
+				$theme = 'redmond';
 			}
 			$load = array();
 			switch ($widget)
@@ -87,7 +89,7 @@
 						"js/{$_jquery_ui}{$_type}",
 						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.12.1.min.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					break;
 
@@ -132,7 +134,7 @@
 						"js/{$_jquery_ui}{$_type}",
 					);
 
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.12.1.min.css");
 
 					break;
 

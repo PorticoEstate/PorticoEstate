@@ -3,7 +3,7 @@
 	* jQuery datepicker wrapper-class
 	*
 	* @author Sigurd Nes
-	* @copyright Copyright (C) 2012 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2016 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.fsf.org/licenses/gpl.html GNU General Public License
 	* @package phpgwapi
 	* @subpackage gui
@@ -31,8 +31,6 @@
 		{
 			phpgwapi_jquery::load_widget('datepicker');
 
-			$theme = 'ui-lightness';
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
 			$this->img_cal			 = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			$this->dateformat		 = str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			$this->lang_select_date      = lang('select date');
