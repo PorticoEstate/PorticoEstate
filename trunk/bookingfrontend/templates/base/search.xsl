@@ -11,15 +11,15 @@
 		</p>
 	</div>
 	<div class="content">
-	<div class="pure-g">
-		<xsl:if test="not(search)">
-			<div class="pure-u-1" id="no_result">
-				<div id="cloud">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+		<div class="pure-g">
+			<xsl:if test="not(search)">
+				<div class="pure-u-1" id="no_result">
+					<div id="cloud">
+						<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+					</div>
 				</div>
-			</div>
-		</xsl:if>
-	</div>
+			</xsl:if>
+		</div>
 	</div>
 	<div class="content">
 		<form method="GET" id="search">
@@ -29,7 +29,6 @@
 		<div class="pure-g">
 			<div class="pure-u-1 pure-u-lg-1-2">
 				
-				<div id = "total_records_top"></div>
 				<div class="pure-u-1">
 					<div class="heading">
 						<xsl:value-of select="php:function('lang', 'building')" />
@@ -188,12 +187,13 @@
 				
 			</div>
 			<div class="pure-u-1 pure-u-lg-1-2">
+				<div id = "total_records_top"></div>
 				<div id="result"></div>
 			</div>
 
 		</div>
-		<div class="pure-g">
-			<xsl:if test="search = '1'">
+		<xsl:if test="not(search)">
+			<div class="pure-g">
 				<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
 					<div id="cloud">
 						<div class="frontpagetext">
@@ -207,7 +207,7 @@
 						</img>
 					</div>
 				</div>
-			</xsl:if>
-		</div>
+			</div>
+		</xsl:if>
 	</div>
 </xsl:template>

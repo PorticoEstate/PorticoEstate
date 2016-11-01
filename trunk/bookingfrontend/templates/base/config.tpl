@@ -16,6 +16,10 @@
 			<td>{lang_site_title}</td>
 			<td><input name="newsettings[site_title]" value="{value_site_title}"></td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_footer_info}</td>
+			<td><input name="newsettings[footer_info]" value="{value_footer_info}"></td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_remote_authentication}:</td>
 			<td>

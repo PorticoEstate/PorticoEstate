@@ -227,6 +227,9 @@ $(document).ready(function ()
 					$("#no_result").hide();
 					$("#result").html(data);
 					$("#total_records_top").html($("#total_records").html());
+
+					var top = $("#total_records_top").position().top;
+					$(window).scrollTop( top );
 				}
 			}
 		});
