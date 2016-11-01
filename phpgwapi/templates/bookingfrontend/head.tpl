@@ -39,25 +39,21 @@
 	<div class="header">
 	</head>
 	<body>
-		<div class="header">
-
-
-			<div class="home-menu custom-menu-wrapper">
-				<div class="pure-menu custom-menu custom-menu-top">
-					<a href="{site_url}" class="pure-menu-heading custom-menu-brand">{site_title}</a>
-					<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
-				</div>
-				<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
-					<div class="custom-menu-screen"></div>
-					<ul class="pure-menu-list">
-						<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
-						<li class="pure-menu-item"><a href="{org_url}" class="pure-menu-link">{login_text_org}</a></li>
-						<li class="pure-menu-item"><a href="{login_url}" class="pure-menu-link">{login_text}</a></li>
-					</ul>
-				</div>
+		<div class="home-menu custom-menu-wrapper">
+			<div class="pure-menu custom-menu custom-menu-top">
+				<a href="{site_url}" class="pure-menu-heading custom-menu-brand">{site_title}</a>
+				<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
 			</div>
-			<span id="change"></span>
+			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
+				<div class="custom-menu-screen"></div>
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
+					<li class="pure-menu-item"><a href="{org_url}" class="pure-menu-link">{login_text_org}</a></li>
+					<li class="pure-menu-item"><a href="{login_url}" class="pure-menu-link">{login_text}</a></li>
+				</ul>
+			</div>
 		</div>
+		<span id="change"></span>
 
 		<div id="content-wrapper">
 
