@@ -321,7 +321,7 @@
 												<xsl:value-of select="name"/>
 											</th>
 											<td>
-												<input type="text">
+												<input type="text" size="4">
 													<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
@@ -329,7 +329,7 @@
 												</input>
 											</td>
 											<td>
-												<input type="text">
+												<input type="text" size="4">
 													<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
