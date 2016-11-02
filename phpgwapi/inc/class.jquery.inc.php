@@ -50,7 +50,7 @@
 		 */
 		public static function load_widget( $widget )
 		{
-			$migration_test = true;
+			$migration_test = false;
 
 			if (preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
 			{
