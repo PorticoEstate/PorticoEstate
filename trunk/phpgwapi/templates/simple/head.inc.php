@@ -32,9 +32,7 @@
 
 		$javascripts = array
 		(
-			"/phpgwapi/js/json/json.js",
 			"/phpgwapi/templates/portico/js/base.js"
-
 		);
 
 		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/base.css";

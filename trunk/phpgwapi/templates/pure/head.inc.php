@@ -2,8 +2,6 @@
 	$javascripts = array();
 	$stylesheets = array();
 
-	$javascripts[] = "/phpgwapi/js/json/json.js";
-
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 

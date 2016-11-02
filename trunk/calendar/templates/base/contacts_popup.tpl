@@ -4,7 +4,6 @@
 		<title>{lang_title}</title>
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/core/base.js"></script>
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/core/events.js"></script>
-	<!--<script type="text/javascript" src="{webserver_url}/phpgwapi/js/json/json.js"></script> -->
 		<script type="text/javascript" src="{webserver_url}/phpgwapi/js/sarissa/sarissa.js"></script>
 		<script type="text/javascript">
 
