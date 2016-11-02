@@ -84,10 +84,22 @@ nav:not(.mm-menu)
 {
 	position: absolute;
 	top: 40px;
+    left: 0px;
     right: 0px;
     z-index: 1;
-}
+	background-color: #fff;
 
+}
+/*
+#horizontal-menu
+{
+    float: left;
+    text-align: left;
+    width: auto;
+	z-index: 1;
+	background-color: #fff;
+}
+*/
 .header a
 {
 	background: center center no-repeat transparent;
@@ -98,6 +110,11 @@ nav:not(.mm-menu)
 	position: absolute;
 	top: 0;
 	left: 10px;
+}
+
+.content
+{
+	padding: 15px 50px 50px 10px;
 }
 
 /*
