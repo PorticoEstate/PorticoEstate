@@ -160,7 +160,7 @@
 				createTable('documents_container', documentURL, colDefsDocument);
 				createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, '', paginatorTableBuilding_users);
 
-				$(window).load(function(){
+				$(window).on('load', function(){
 				// Load image
 				JqueryPortico.booking.inlineImages('images_container', document_buildingURL);
 

@@ -360,7 +360,7 @@ function receive_order(order_id)
 
 var ecodimb_selection = "";
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	ecodimb = $('#ecodimb').val();
 	if (ecodimb)

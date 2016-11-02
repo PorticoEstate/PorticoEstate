@@ -58,7 +58,7 @@
 
 	<script type="text/javascript">
 		schedule.createDialogSchedule(300);
-		$(window).load(function(){
+		$(window).on('load', function(){
 		schedule.setupWeekPicker('cal_container');
 		schedule.datasourceUrl = '<xsl:value-of select="resource/datasource_url" />';
 		schedule.newApplicationUrl = '<xsl:value-of select="resource/application_link" />';
