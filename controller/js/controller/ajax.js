@@ -400,7 +400,7 @@ $(document).ready(function ()
 		var thisRadio = $(this).find("input[type=radio]");
 
 		// Clears active button and checked underlying radiobutton
-		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
+		$(".control_item_type").find("input[type=radio]").prop( "checked", false );
 		$(".control_item_type").find(".btn").removeClass("active");
 
 		// Makes button active and checkes underlying radiobutton
