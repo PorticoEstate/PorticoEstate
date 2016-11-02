@@ -94,7 +94,7 @@
 	var weekUrl = 'index.php?menuaction=booking.uiseason.wtemplate_json&id=' + season_id + '&phpgw_return_as=json&';
         ]]>
 		var colDefs = [];
-		$(window).load(function() {
+		$(window).on('load', function() {
 		colDefs = [
 		{key: 'time', label: '<xsl:value-of select="php:function('lang', 'Time')" />', type: 'th'},
 		{key: 'resource', label: '<xsl:value-of select="php:function('lang', 'Resources')" />', formatter: 'scheduleResourceColumn'},

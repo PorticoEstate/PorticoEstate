@@ -92,7 +92,7 @@
 		var colDefsDocumentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 
 		createTable('documents_container', documentsResourceURL, colDefsDocumentsResource);
-		$(window).load(function(){
+		$(window).on('load', function(){
 		JqueryPortico.booking.inlineImages('images_container', documentsResourceImagesURL);
 
 		// Load Google map

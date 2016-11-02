@@ -257,7 +257,7 @@ $(document).ready(function ()
 
 });
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	$("#field_building_name").on("autocompleteselect", function (event, ui)
 	{

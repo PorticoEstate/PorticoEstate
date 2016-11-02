@@ -57,7 +57,7 @@
 			else
 			{
 				$_jquery_core = 'jquery-2.1.4';
-				$_jquery_core = 'jquery-3.1.1';
+		//		$_jquery_core = 'jquery-3.1.1';
 			}
 
 		//	$_jquery_ui = 'jquery-ui-1.11.4';

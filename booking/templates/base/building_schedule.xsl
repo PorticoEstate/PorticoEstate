@@ -46,7 +46,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		$(window).load(function() {
+		$(window).on('load', function() {
 		schedule.setupWeekPicker('cal_container');
 		schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
 		schedule.includeResource = true;
