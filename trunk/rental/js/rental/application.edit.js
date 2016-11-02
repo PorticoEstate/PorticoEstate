@@ -35,7 +35,7 @@ function set_tab(tab)
 function reserveComposite (data, button)
 {
 	button.disabled = true;
-	data = jQuery.parseJSON(data);
+	data = JSON.parse(data);
 
 	var url = data['url'];
 	var application_id = $('#application_id').val();
@@ -55,7 +55,7 @@ function reserveComposite (data, button)
 function removeComposite (data, button)
 {
 	button.disabled = true;
-	data = jQuery.parseJSON(data);
+	data = JSON.parse(data);
 	
 	var url = data['url'];
 	var application_id = $('#application_id').val();

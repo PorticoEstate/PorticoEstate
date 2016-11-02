@@ -50,14 +50,18 @@
 		 */
 		public static function load_widget( $widget )
 		{
+			$migration_test = true;
+
 			if (preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
 			{
 				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
+				$_jquery_migrate = 'jquery-migrate-1.4.1.min';
 			}
 			else
 			{
-				$_jquery_core = 'jquery-2.1.4';
-		//		$_jquery_core = 'jquery-3.1.1';
+		//		$_jquery_core = 'jquery-2.1.4';
+				$_jquery_core = 'jquery-3.1.1';
+				$_jquery_migrate = 'jquery-migrate-3.0.0.min';
 			}
 
 		//	$_jquery_ui = 'jquery-ui-1.11.4';
@@ -76,8 +80,7 @@
 			switch ($widget)
 			{
 				case 'core':
-					$load = array
-						(
+					$load = array(
 						"js/{$_jquery_core}{$_type}",
 					);
 					break;
@@ -257,6 +260,12 @@
 					}
 				}
 			}
+			if($migration_test)
+			{
+				//_debug_array($_jquery_migrate);
+				$GLOBALS['phpgw']->js->validate_file('jquery', "js/$_jquery_migrate");
+			}
+
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
 
