@@ -22,6 +22,10 @@
 		</div>
 	</div>
 	<div class="content">
+		 <a href="#" class="scrollup">
+			<xsl:value-of select="php:function('lang', 'scroll to top')" />
+		 </a>
+
 		<form method="GET" id="search">
 			<input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
 			<!--input type="hidden" id="activity_top_level" name="activity_top_level" value="{activity_top_level}" /-->
