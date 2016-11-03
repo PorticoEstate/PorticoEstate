@@ -24,11 +24,14 @@
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
-	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+//	$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	$stylesheets[] = "/{$app}/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
-	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/frontend.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
+    $stylesheets[] = "/bookingfrontend/css/bookingfrontend.css";
+
+//	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/frontend.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
@@ -56,6 +59,7 @@
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
+		'site_url'		=> $GLOBALS['phpgw']->link('/home.php', array()),
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
