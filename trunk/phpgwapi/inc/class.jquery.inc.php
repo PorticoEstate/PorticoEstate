@@ -52,7 +52,7 @@
 		{
 			$migration_test = false;
 
-			if (preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
+			if (preg_match('/MSIE (6|7|8)/i', $_SERVER['HTTP_USER_AGENT']))
 			{
 				$message = lang('outdated browser: %1', $_SERVER['HTTP_USER_AGENT']);
 				phpgwapi_cache::message_set($message, 'error');
