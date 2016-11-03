@@ -54,6 +54,9 @@
 
 			if (preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
 			{
+				$message = lang('outdated browser: %1', $_SERVER['HTTP_USER_AGENT']);
+				phpgwapi_cache::message_set($message, 'error');
+
 				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
 				$_jquery_migrate = 'jquery-migrate-1.4.1.min';
 			}
