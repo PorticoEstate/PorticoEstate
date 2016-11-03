@@ -31,46 +31,16 @@
 	 */
 	require_once '../header.inc.php';
 
-	/*
-	  // check if forward parameter is set
-	  if ( isset($_GET['phpgw_forward']) && is_array($_GET['phpgw_forward']) )
-	  {
-	  foreach($_GET as $name => $value)
-	  {
-	  // find phpgw_ in the $_GET parameters but skip phpgw_forward because of redirect call below
-	  if (preg_match('/phpgw_/', $name) && ($name != 'phpgw_forward'))
-	  {
-	  $name = substr($name, 6); // cut 'phpgw_'
-	  $extra_vars[$name] = $value;
-	  }
-	  }
-
-	  $GLOBALS['phpgw']->redirect_link($_GET['phpgw_forward'], $extra_vars);
-	  exit;
-	  }
-	 */
 	if (isset($GLOBALS['phpgw_info']['server']['force_default_app']) && $GLOBALS['phpgw_info']['server']['force_default_app'] != 'user_choice')
 	{
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] = $GLOBALS['phpgw_info']['server']['force_default_app'];
 	}
 
-	/*
-	  if (isset($_GET['cd']) && $_GET['cd']=='yes'
-	  && isset($GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'])
-	  && $GLOBALS['phpgw_info']['user']['preferences']['common']['default_app']
-	  && $GLOBALS['phpgw_info']['user']['apps'][$GLOBALS['phpgw_info']['user']['preferences']['common']['default_app']])
-	  {
-	  $GLOBALS['phpgw']->redirect_link('/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['default_app'] . '/' . 'index.php');
-	  exit;
-	  }
-	  else */
-	{
+	phpgw::import_class('phpgwapi.jquery');
+	phpgwapi_jquery::load_widget('core');
+	$GLOBALS['phpgw']->common->phpgw_header();
+	echo parse_navbar();
 
-		phpgw::import_class('phpgwapi.jquery');
-		phpgwapi_jquery::load_widget('core');
-		$GLOBALS['phpgw']->common->phpgw_header();
-		echo parse_navbar();
-	}
 
 	$GLOBALS['phpgw']->translation->add_app('mainscreen');
 	if (lang('mainscreen_message') != '!mainscreen_message')
@@ -107,23 +77,6 @@
 			}
 		}
 	}
-
-	$controller_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicontrol.control_list'));
-	$controller_text = lang('controller');
-	$tts_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.index'));
-	$tts_text = lang('ticket');
-	$condition_survey_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.index'));
-	$condition_survey_text = $GLOBALS['phpgw']->translation->translate('condition survey', array(), false, 'property');
-
-	$temp_menu = <<<HTML
-	<div id="home-menu">
-		<a href="{$controller_url}">{$controller_text}</a>
-		<a href="{$tts_url}">{$tts_text}</a>
-		<a href="{$condition_survey_url}">{$condition_survey_text}</a>
-	</div>
-HTML;
-
-	echo $temp_menu;
 
 	$GLOBALS['phpgw']->hooks->process('home_mobilefrontend', $sorted_apps);
 
