@@ -52,8 +52,14 @@ JS;
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
     $stylesheets[] = "/bookingfrontend/css/bookingfrontend.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
+
+	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
+	{
+		$stylesheets[] = "/phpgwapi/templates/bookingfrontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "/{$app}/templates/bookingfrontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+	}
 
 	foreach ( $stylesheets as $stylesheet )
 	{
