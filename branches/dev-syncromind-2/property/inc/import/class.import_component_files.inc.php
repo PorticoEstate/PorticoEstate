@@ -165,12 +165,12 @@
 
 					$file_data['file'] = $file_name;
 
-					$file_id = $this->_search_file_in_db($file_name);
+					/*$file_id = $this->_search_file_in_db($file_name);
 					if ($file_id)
 					{
 						$files_existing[$file_name] = $file_name;
 						throw new Exception();
-					}
+					}*/
 
 					$file_id = $this->_save_file($file_data);
 					if (!$file_id)
@@ -286,12 +286,63 @@
 			return $message;
 		}
 		
+		private function get_files()
+		{
+
+			$file = 'Dokumentasjon.zip';
+			$dir = 'Dokumentasjon';
+			
+			if (is_dir($this->path_upload_dir.$dir))
+			{
+				//$ficheros  = scandir($this->path_upload_dir.$dir, 1);
+				$ficheros  = $this->getDirContents($this->path_upload_dir.$dir);
+			}
+			else if (is_file($this->path_upload_dir.$file))
+			{
+				$zip = new ZipArchive;
+				if ($zip->open($this->path_upload_dir.$file) === TRUE) 
+				{
+					$zip->extractTo($this->path_upload_dir.$dir);
+					$zip->close();
+					//$ficheros  = scandir($this->path_upload_dir.$dir, 1);
+					$ficheros  = $this->getDirContents($this->path_upload_dir.$dir);
+				} else {
+					$ficheros  = array();
+				}
+			}	
+
+			return $ficheros;
+		}
+		
+		private function getDirContents($dir, &$results = array())
+		{
+			$files = scandir($dir);
+
+			
+			foreach($files as $key => $value)
+			{
+				$path = realpath($dir.'/'.$value);
+				if(is_file($path)) 
+				{				
+					exec("md5sum {$path} 2>&1", $output, $ret);
+					$results[] = array('name'=>$value, 'md5sum'=>$output, 'path'=>$path);
+				} else if($value != "." && $value != "..") {
+					$this->getDirContents($path, $results);
+				}
+			}
+		
+
+			return $results;
+		}
+
 		public function add_files_components($id, $location_code, $attrib_name_componentID)
 		{		
-			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
+			//$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
 			$message = array();
 	
+			$ficheros = $this->get_files();
+			print_r($ficheros); die;
 			foreach ($exceldata as $k => $row) 
 			{
 				if (!$this->_valid_row($row))
@@ -305,11 +356,11 @@
 					'name' => $row[1],
 					'desription' => $row[2],
 					'file' => $array_path[count($array_path)-1],
-					'path' => $row[(count($row)-1)],
+					'path' => $array_path,
 					'row' => ($k + 1)
 				);
 			}
-			
+			print_r($component_files); die;
 			$message = $this->search_repeated_names($component_files);
 			if ($message['error'])
 			{
@@ -357,13 +408,6 @@
 						$file_id = $this->_search_in_latest_uploads($file_data);
 						if (!$file_id) 
 						{
-							$file_id = $this->_search_file_in_db($file);
-							if ($file_id)
-							{
-								$files_existing[$file] = $file;
-								throw new Exception();
-							}
-
 							if (!is_file($this->path_upload_dir.$file))
 							{
 								$files_not_existing[$file] = $file;
@@ -434,8 +478,6 @@
 					$message['error'][] = array('msg' => lang("file %1 exist in DB", $file));
 				}
 			}
-			
-			//print_r($paths).'<br>'.print_r($this->latest_uploads_path); die; 
 			
 			return $message;
 		}
