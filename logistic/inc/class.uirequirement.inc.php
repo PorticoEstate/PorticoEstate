@@ -526,8 +526,8 @@
 				$data['activity'] = $activity;
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 
 			self::render_template_xsl(array('requirement/requirement_tabs', 'requirement/requirement_item'), $data);
 		}

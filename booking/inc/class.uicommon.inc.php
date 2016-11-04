@@ -718,19 +718,19 @@
 			{
 				$theme = 'ui-lightness';
 			}
-//			$theme = 'ui-lightness';
-			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+			$theme = 'redmond';
+			$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
 
 			switch ($type)
 			{
 				case 'datetime':
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
-					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon.min');
 					$_type = 'datetime';
 					break;
 				case 'time':
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
-					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon');
+					$GLOBALS['phpgw']->js->validate_file('jquery', 'js/jquery-ui-timepicker-addon.min');
 					$_type = 'time';
 					break;
 				default:
