@@ -340,8 +340,8 @@
 					array('disablePagination' => true)
 				)
 			);
-			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime');
 
 			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
 			$types = (array)$application->types;

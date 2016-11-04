@@ -312,10 +312,10 @@
 
 			$bocommon = CreateObject('property.bocommon');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('date_start','datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('date_end','datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_start','datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('assign_date_end','datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('date_start','datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('date_end','datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('assign_date_start','datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('assign_date_end','datetime');
 
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'rental');
 			$executive_officer_options[] = array('id' => '', 'name' => lang('nobody'), 'selected' => 0);

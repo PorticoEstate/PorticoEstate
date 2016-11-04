@@ -67,7 +67,6 @@
 				$_jquery_migrate = 'jquery-migrate-3.0.0.min';
 			}
 
-		//	$_jquery_ui = 'jquery-ui-1.11.4';
 			$_jquery_ui = 'jquery-ui-1.12.1';
 			$_type = '.min'; // save some download
 
@@ -93,9 +92,9 @@
 						(
 						"js/{$_jquery_core}{$_type}",
 						"js/{$_jquery_ui}{$_type}",
-						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
+						"ui/i18n/datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.12.1.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
 					break;
 
@@ -129,7 +128,7 @@
 						"js/{$_jquery_ui}{$_type}",
 					);
 
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.12.1.min.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
 
 					break;
 
