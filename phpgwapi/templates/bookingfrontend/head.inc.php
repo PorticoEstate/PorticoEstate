@@ -50,7 +50,6 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
-	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
     $stylesheets[] = "/bookingfrontend/css/bookingfrontend.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
