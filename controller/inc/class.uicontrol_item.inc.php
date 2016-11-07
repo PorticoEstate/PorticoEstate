@@ -77,7 +77,7 @@
 			$this->add = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_ADD, 'controller');//2
 			$this->edit = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_EDIT, 'controller');//4
 			$this->delete = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller');//8
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		public function index()
