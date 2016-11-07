@@ -338,7 +338,6 @@
 			static $account = array();
 			static $vendor_cache = array();
 
-			$interlink = CreateObject('property.interlink');
 			$data['start_date'] = $this->bocommon->date_to_timestamp($data['start_date']);
 			$data['end_date'] = $this->bocommon->date_to_timestamp($data['end_date']);
 

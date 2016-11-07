@@ -1212,7 +1212,7 @@
 
 			$msgbox_data = (isset($receipt) ? $GLOBALS['phpgw']->common->msgbox_data($receipt) : '');
 
-			$lookup_link_contact = "menuaction:'property.uilookup.addressbook', column:'contact'";
+			$lookup_link_contact = "menuaction:'property.uilookup.addressbook', column:'contact', clear_state:1";
 			$lookup_link_responsibility = "menuaction:'property.uiresponsible.index', location:'{$this->location}', lookup:1";
 
 			$lookup_function = "\n"
