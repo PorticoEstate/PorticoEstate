@@ -106,7 +106,7 @@
 			$this->home_alternative = isset($config->config_data['home_alternative']) && $config->config_data['home_alternative'] == 1 ? true : false;
 
 			self::set_active_menu('controller::control');
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		/**
