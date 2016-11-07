@@ -20,7 +20,7 @@ this.notify_contact_lookup = function ()
 		alert(notify_lang_alert);
 		return;
 	}
-	var oArgs = {menuaction: 'property.uilookup.addressbook', column: 'notify_contact'};
+	var oArgs = {menuaction: 'property.uilookup.addressbook', column: 'notify_contact', clear_state:1};
 	var strURL = phpGWLink('index.php', oArgs);
 	TINY.box.show({iframe: strURL, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true});
 };
