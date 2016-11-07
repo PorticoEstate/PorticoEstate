@@ -10,8 +10,7 @@
 			$this->fakebase = '/temp_files_components';
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 			
-			$this->latest_uploads = array();
-			//$this->latest_uploads_path = array();
+			$this->last_files_added = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -83,38 +82,19 @@
 			return $values;			
 		}
 		
-		private function _search_in_latest_uploads($file_data)
+		private function _search_in_last_files_added($file_data)
 		{
-			$file = $file_data['file'];
-			$file_name = str_replace(' ', '_', $file);
-			$file_id = array_search($file_name, $this->latest_uploads);
+			//$file = $file_data['file'];
+			$val_md5sum = $file_data['val_md5sum'];
+			//$file_name = str_replace(' ', '_', trim($file));
+			
+			$file_id = array_search($val_md5sum, $this->last_files_added);
 			if ($file_id)
 			{
 				return $file_id;
 			}
 			
 			return false;
-		}
-		
-		private function _search_file_in_db($file)
-		{
-			$file_name = str_replace(' ', '_', $file);
-			
-			$sql = "SELECT file_id, name FROM phpgw_vfs "
-					. " WHERE name LIKE '%{$file_name}'"
-					. " AND mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
-			$value = array();
-
-			if ($this->db->next_record())
-			{
-				$value['file_id'] = $this->db->f('file_id');
-				$value['name'] = $this->db->f('name');
-			}
-
-			return $value['file_id'];			
 		}
 		
 		public function add_files_location($id, $location_code)
@@ -143,8 +123,6 @@
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			$files_existing = array();
-			$files_not_existing = array();
 			
 			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 
@@ -164,13 +142,6 @@
 					$this->db->Exception_On_Error = true;						
 
 					$file_data['file'] = $file_name;
-
-					/*$file_id = $this->_search_file_in_db($file_name);
-					if ($file_id)
-					{
-						$files_existing[$file_name] = $file_name;
-						throw new Exception();
-					}*/
 
 					$file_id = $this->_save_file($file_data);
 					if (!$file_id)
@@ -222,80 +193,39 @@
 				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
 			}
 			
-			if (count($files_not_existing))
-			{
-				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($files_not_existing)));
-			}
-			
-			if (count($files_existing))
-			{
-				foreach($files_existing as $file)
-				{
-					$message['error'][] = array('msg' => lang("file %1 exist in DB", $file));
-				}
-			}
-			
 			return $message;
 		}
 		
-		private function search_repeated_names($component_files)
+		private function _compare_names(&$component_files, $uploaded_files)
 		{
-			$message = array();
-			$names = array();
-			$paths = array();
-			$rows = array();
-			$files_repeated = array();
-			/*$patrones = array('(\\/)', '(\\\\)', '( )');
-			$sustituciones = array('_', '_', '_');*/
-			
-			foreach ($component_files as $k => $files) 
+			foreach ($component_files as &$files) 
 			{
-				foreach ($files as $file_data)
+				foreach ($files as &$file_data)
 				{
-					//$file_data['file-path'] = preg_replace($patrones, $sustituciones, $file_data['path']);
-					if (in_array($file_data['file'], $names)) 
+					foreach ($uploaded_files as $file)
 					{
-						if (!in_array($file_data['path'], $paths))
+						if ($file['file'] == $file_data['file'])
 						{
-							//$message['error'][] = array('msg' => "file '{$file_data['path']}' already exists on another path");
-							$files_repeated[$file_data['file']][] = $file_data['path'].' ==> row: '.$file_data['row'];
-							
+							$pos = stripos($file['path_file_string'], $file_data['path_file_string']);
+							if ($pos !== false)
+							{
+								$file_data['path_file'] = $file['path_file'];
+								$file_data['val_md5sum'] = $file['val_md5sum'];
+							}
 						}
-						continue;
 					}
-					$names[] = $file_data['file'];
-					$rows[$file_data['file']] = $file_data['row'];
-					$paths[$file_data['file']] = $file_data['path'];
 				}
 			}
-			
-			if (count($files_repeated))
-			{
-				foreach($files_repeated as $k => $v)
-				{
-					//$files_repeated[$k]['exist'] = $paths[$k].' ==> row: '.$rows[$k];
-					$cad = "<ul><b>File path: {$paths[$k]}</b> ==> row: {$rows[$k]} <br>Files repeated in another path (".count($v)."):";
-					foreach ($v as $file) {
-						$cad .= "<li>{$file}</li>";
-					}
-					$cad .= "</ul>";
-					$message['error'][] = array('msg' => $cad);
-				}
-			}
-			
-			return $message;
 		}
 		
-		private function get_files()
+		private function _get_uploaded_files()
 		{
-
 			$file = 'Dokumentasjon.zip';
 			$dir = 'Dokumentasjon';
 			
 			if (is_dir($this->path_upload_dir.$dir))
 			{
-				//$ficheros  = scandir($this->path_upload_dir.$dir, 1);
-				$ficheros  = $this->getDirContents($this->path_upload_dir.$dir);
+				$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir);
 			}
 			else if (is_file($this->path_upload_dir.$file))
 			{
@@ -304,45 +234,59 @@
 				{
 					$zip->extractTo($this->path_upload_dir.$dir);
 					$zip->close();
-					//$ficheros  = scandir($this->path_upload_dir.$dir, 1);
-					$ficheros  = $this->getDirContents($this->path_upload_dir.$dir);
+					$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir);
 				} else {
-					$ficheros  = array();
+					$list_files  = array();
 				}
 			}	
 
-			return $ficheros;
+			return $list_files;
 		}
 		
-		private function getDirContents($dir, &$results = array())
+		private function _get_dir_contents($dir, &$results = array())
 		{
-			$files = scandir($dir);
-
+			$content = scandir($dir);
+			$patrones = array('(\\/)', '(\\\\)', '(")');
+			$sustituciones = array('_', '_', '_');
 			
-			foreach($files as $key => $value)
+			$output = array();
+			foreach($content as $key => $value)
 			{
 				$path = realpath($dir.'/'.$value);
 				if(is_file($path)) 
 				{				
-					exec("md5sum {$path} 2>&1", $output, $ret);
-					$results[] = array('name'=>$value, 'md5sum'=>$output, 'path'=>$path);
-				} else if($value != "." && $value != "..") {
-					$this->getDirContents($path, $results);
+					unset($output);
+					exec("md5sum '{$path}' 2>&1", $output, $ret);
+					if ($ret)
+					{
+						$val_md5sum = '';
+					} else {
+						$val_md5sum = trim(substr($output[0], 0, -(strlen($path)))).'_'.$value;
+					}
+					$results[] = array('file'=>$value, 
+						'val_md5sum'=>$val_md5sum, 
+						'path_file_string'=>preg_replace($patrones, $sustituciones, $path), 
+						'path_file'=>$path);
+				} 
+				else if($value != "." && $value != "..") 
+				{
+					$this->_get_dir_contents($path, $results);
 				}
 			}
 		
-
 			return $results;
 		}
 
 		public function add_files_components($id, $location_code, $attrib_name_componentID)
 		{		
-			//$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
+			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
 			$message = array();
 	
-			$ficheros = $this->get_files();
-			print_r($ficheros); die;
+			$uploaded_files = $this->_get_uploaded_files();
+			
+			$patrones = array('(\\/)', '(\\\\)', '(")');
+			$sustituciones = array('_', '_', '_');
 			foreach ($exceldata as $k => $row) 
 			{
 				if (!$this->_valid_row($row))
@@ -350,28 +294,25 @@
 					continue;
 				}
 				
-				$array_path = explode("\\", $row[(count($row)-1)]);
+				$path_file = $row[(count($row)-1)];
+				$array_path = explode("\\", $path_file);
 						
 				$component_files[$row[0]][] = array(
 					'name' => $row[1],
 					'desription' => $row[2],
 					'file' => $array_path[count($array_path)-1],
-					'path' => $array_path,
+					'path_file_string' => preg_replace($patrones, $sustituciones, $path_file),
 					'row' => ($k + 1)
 				);
 			}
-			print_r($component_files); die;
-			$message = $this->search_repeated_names($component_files);
-			if ($message['error'])
-			{
-				return $message;
-			}
 
+			$this->_compare_names($component_files, $uploaded_files);
+
+//print_r($component_files); die;
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			$files_existing = array();
-			$files_not_existing = array();
+			$count_files_not_existing = 0;
 	
 			foreach ($component_files as $k => $files) 
 			{
@@ -405,12 +346,12 @@
 
 						$file = $file_data['file'];
 						
-						$file_id = $this->_search_in_latest_uploads($file_data);
+						$file_id = $this->_search_in_last_files_added($file_data);
 						if (!$file_id) 
 						{
-							if (!is_file($this->path_upload_dir.$file))
+							if (!is_file($file_data['path_file']))
 							{
-								$files_not_existing[$file] = $file;
+								$count_files_not_existing++;
 								throw new Exception();
 							}	
 
@@ -419,7 +360,7 @@
 							{						
 								throw new Exception("failed to copy file '{$file}'. Component: '{$k}'");
 							} 
-							unlink($this->path_upload_dir.$file);
+							//unlink($this->path_upload_dir.$file);
 							$count_new_files++;
 						}
 						
@@ -466,17 +407,9 @@
 				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
 			}
 			
-			if (count($files_not_existing))
+			if ($count_files_not_existing)
 			{
-				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($files_not_existing)));
-			}
-			
-			if (count($files_existing))
-			{
-				foreach($files_existing as $file)
-				{
-					$message['error'][] = array('msg' => lang("file %1 exist in DB", $file));
-				}
+				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', $count_files_not_existing));
 			}
 			
 			return $message;
@@ -508,16 +441,17 @@
 			return $values;
 		}
 		
-		
 		private function _save_file( $file_data )
 		{
 			$metadata = array();
 			
 			$tmp_file = $file_data['file'];
+			$val_md5sum = $file_data['val_md5sum'];
+			$path_file = $file_data['path_file'];
 			
 			$bofiles = CreateObject('property.bofiles');
 			
-			$file_name = str_replace(' ', '_', $tmp_file);
+			$file_name = str_replace(' ', '_', trim($tmp_file));
 
 			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 
@@ -529,7 +463,7 @@
 			$bofiles->vfs->override_acl = 1;
 
 			$file_id = $bofiles->vfs->cp3(array(
-					'from' => $this->path_upload_dir.$tmp_file,
+					'from' => $path_file,
 					'to' => $to_file,
 		 			'id' => '',
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
@@ -537,8 +471,7 @@
 
 			if ($file_id) 
 			{
-				$this->latest_uploads[$file_id] = $file_name;
-				//$this->latest_uploads_path[$file_id] = $file_data['file-path'];
+				$this->last_files_added[$file_id] = $val_md5sum;
 				
 				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				$metadata['title'] = $file_data['name']; 
