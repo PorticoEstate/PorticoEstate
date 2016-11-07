@@ -1,28 +1,32 @@
 /* Global Styles */
 
 BODY {
-	font-family: Lucida Grande, Lucida Sans, Arial, Helvetica, sans-serif;
-	font-size: 100%;
+	/*font-family: Lucida Grande, Lucida Sans, Arial, Helvetica, sans-serif;*/
+	/*font-size: 100%;*/
 	color: #000;
-	background-color: #677;
+	/*background-color: #677;*/
 	margin: 0;
 	padding: 0;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 12px;
+	background-color: #f9f9f9;
+
 }
 
 A {
 	color: #00D;
 	text-decoration: none;
-	}
-	A:visited {
-		color: #60C;
-	}
-	A:hover {
-		color: #00F;
-		text-decoration: underline;
-	}
-	A:visited:hover {
-		color: #80E;
-	}
+}
+A:visited {
+	color: #60C;
+}
+A:hover {
+	color: #00F;
+	text-decoration: underline;
+}
+A:visited:hover {
+	color: #80E;
+}
 
 /* bookmarks - depricated? */
 A.bm ,
@@ -44,19 +48,19 @@ P {
 
 H1 {
 	color: #C30;
-/*	font: 1.65em Georgia, "Times New Roman", Times, serif;*/
+	/*	font: 1.65em Georgia, "Times New Roman", Times, serif;*/
 	font-weight: normal;
 	letter-spacing: 0.1em;
 	margin: 0 0 0.75em;
-	}
-	H1 A , /* bookmarks - depricated? */
-	H1 A:visited ,
-	H1 A:hover {
-		color: #C30 !important;
-	}
+}
+H1 A , /* bookmarks - depricated? */
+H1 A:visited ,
+H1 A:hover {
+	color: #C30 !important;
+}
 
 H2 {
-/*	font: 1.3em Georgia, "Times New Roman", Times, serif;*/
+	/*	font: 1.3em Georgia, "Times New Roman", Times, serif;*/
 	font-weight: bold;
 	text-transform: uppercase;
 	letter-spacing: 0.1em;
@@ -64,12 +68,12 @@ H2 {
 	border-bottom:  1px dotted #566F6F;
 	padding: 1em 0 3px;
 	margin: 0.5em 0 0.75em;
-	}
-	H2 A , /* bookmarks - depricated? */
-	H2 A:visited ,
-	H2 A:hover {
-		color: #566F6F !important;
-	}
+}
+H2 A , /* bookmarks - depricated? */
+H2 A:visited ,
+H2 A:hover {
+	color: #566F6F !important;
+}
 
 H3 {
 	font-size: 1.2em;
@@ -116,17 +120,17 @@ UL, OL {
 	margin-bottom: 1ex;
 	margin-left: 2em;
 	padding: 0;
-	}
-	LI {
-		line-height: 1.35em;
-		padding: 0.75ex 0;
-		margin: 0;
-	}
+}
+LI {
+	line-height: 1.35em;
+	padding: 0.75ex 0;
+	margin: 0;
+}
 
 /* ID Styles */
 
 #logo {
-/*	font: 2em Georgia, "Times New Roman", Times, serif;*/
+	/*	font: 2em Georgia, "Times New Roman", Times, serif;*/
 	color: #FFF;
 	letter-spacing: 1px;
 	font-weight: bold;
@@ -139,45 +143,45 @@ UL, OL {
 	border-top: 1px solid #FFF;
 	border-bottom: 1px solid #FFF;
 	text-align:		right;
-	}
-	#navigation A {
-		color: #255;
-		font-size: 0.85em;
-		font-weight: bold;
-		text-decoration: none;
-		letter-spacing: 1px;
-		margin-right: 1em;
-		}
-		#navigation A:hover {
-			color: #033;
-			text-decoration: none;
-		}
-		#navigation A.current ,
-		#navigation A.current:hover {
-			color: #C30;
-		}
+}
+#navigation A {
+	color: #255;
+	font-size: 0.85em;
+	font-weight: bold;
+	text-decoration: none;
+	letter-spacing: 1px;
+	margin-right: 1em;
+}
+#navigation A:hover {
+	color: #033;
+	text-decoration: none;
+}
+#navigation A.current ,
+#navigation A.current:hover {
+	color: #C30;
+}
 
 #nav2 {
 	padding: 5px 5px 7px 3em;
 	background-color: #a4c2c2;
 	border-bottom: 1px solid #fff;
-	}
-	#nav2 A {
-		color: #04E;
-		font-size: 0.85em;
-		font-weight: bold;
-		text-decoration: none;
-		letter-spacing: 1px;
-		margin-right: 1em;
-		}
-		#nav2 A:hover {
-			color: #00E;
-			text-decoration: none;
-		}
-		#nav2 A.current ,
-		#nav2 A.current:hover {
-			color: #C30;
-		}
+}
+#nav2 A {
+	color: #04E;
+	font-size: 0.85em;
+	font-weight: bold;
+	text-decoration: none;
+	letter-spacing: 1px;
+	margin-right: 1em;
+}
+#nav2 A:hover {
+	color: #00E;
+	text-decoration: none;
+}
+#nav2 A.current ,
+#nav2 A.current:hover {
+	color: #C30;
+}
 
 #iframeInstructions {
 	font-size: 1.1em;
@@ -191,48 +195,48 @@ IFRAME {
 
 TR.main {
 	background-color: #fff;
-	}
+}
 
-	TD.content {
-		padding: 1em 2em 3em;
-	}
+TD.content {
+	padding: 1em 2em 3em;
+}
 
-	TD.sidebarLeft {
-		background-color: #a4c2c2;
-		}
-		TD.sidebarLeft P {
-		/*	font: 1em Georgia, "Times New Roman", Times, serif;*/
-			color: #366;
-			line-height: 1.5em;
-			padding: 20px;
+TD.sidebarLeft {
+	background-color: #a4c2c2;
+}
+TD.sidebarLeft P {
+	/*	font: 1em Georgia, "Times New Roman", Times, serif;*/
+	color: #366;
+	line-height: 1.5em;
+	padding: 20px;
 	margin: 0;
-		}
+}
 
-	TD.sidebarRight {
-		padding: 1em;
-		padding-left: 0;
-		}
-		DIV.bookmarks {
-			background-color: #a4c2c2;
-			padding: 0.5em;
-			}
-			.bookmarks UL {
-				margin-top: 0;
-				margin-bottom: 0.5em;
-				margin-left: 2em;
-				list-style-type: square;
-				/*
-				list-style: none;
-				margin: 0;
-				padding: 0;
-				*/
-				}
-				.bookmarks LI {
-					font-size: 0.9em;
-					text-transform: uppercase;
-					padding-top: 0.25em;
-					padding-bottom: 0.25em;
-					}
+TD.sidebarRight {
+	padding: 1em;
+	padding-left: 0;
+}
+DIV.bookmarks {
+	background-color: #a4c2c2;
+	padding: 0.5em;
+}
+.bookmarks UL {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	margin-left: 2em;
+	list-style-type: square;
+	/*
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	*/
+}
+.bookmarks LI {
+	font-size: 0.9em;
+	text-transform: uppercase;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+}
 
 /* Generic Classes */
 
@@ -260,37 +264,32 @@ TR.main {
 */
 
 
-body {
-	font-family: Arial, Helvetica, Verdana, sans-serif;
-	font-size: 12px;
-	background-color: #f9f9f9;
-}
 
 TABLE.TOC {
 	border: 1px solid #BBB;
 	border-collapse: collapse;
 	margin: 1em 0;
-	}
-	.TOC TR.rTitle TD{
-		font-size:		0.95em;
-		font-weight:	bold;
-		letter-spacing:	1px;
-		padding-top:	4px;
-		padding-bottom:	5px;
-		background:		#99B5B5;
-		color:			#FFF
-	}
-	.TOC TR.r0 {
-		background:	#FFF;
-	}
-	.TOC TR.r0 {
-		background:	#EEE;
-		}
-		.TOC TD {
-			padding: 2px 10px 4px;
-			white-space: nowrap;
-			border-left: 1px solid #BBB;
-		}
+}
+.TOC TR.rTitle TD{
+	font-size:		0.95em;
+	font-weight:	bold;
+	letter-spacing:	1px;
+	padding-top:	4px;
+	padding-bottom:	5px;
+	background:		#99B5B5;
+	color:			#FFF
+}
+.TOC TR.r0 {
+	background:	#FFF;
+}
+.TOC TR.r0 {
+	background:	#EEE;
+}
+.TOC TD {
+	padding: 2px 10px 4px;
+	white-space: nowrap;
+	border-left: 1px solid #BBB;
+}
 
 
 H5 {
@@ -300,33 +299,33 @@ H5 {
 	padding: 1em 0 5px;
 	margin: 1em 0 1em;
 	border-bottom: 1px dotted #CCC;
-	}
-	H5.withNext {
-		border-bottom: none;
-		padding-bottom: 0;
-		margin-bottom: -1em;
-	}
-	H5 A.bm {
-		font-weight: bold;
-		color:#C30;
-	}
-	H5 EM {
-		font-style: normal;
-		font-size: 0.9em;
+}
+H5.withNext {
+	border-bottom: none;
+	padding-bottom: 0;
+	margin-bottom: -1em;
+}
+H5 A.bm {
+	font-weight: bold;
+	color:#C30;
+}
+H5 EM {
+	font-style: normal;
+	font-size: 0.9em;
 	float: right;
-		margin-top: -1.4em;
-	}
+	margin-top: -1.4em;
+}
 
 #navigation {
 	border-bottom: 0;
 }
 
 UL, OL {
-	}
-	LI {
-		padding-top: 2px;
-		padding-bottom: 3px;
-	}
+}
+LI {
+	padding-top: 2px;
+	padding-bottom: 3px;
+}
 
 
 /*
@@ -339,46 +338,46 @@ UL#TOC {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	}
-	#TOC LI {
-		padding: 2px 0;
-		}
-		#TOC A {
-			color: #000;
-	display: block;
-			padding: 1px 0 2px 3px;
-			}
-			#TOC A:visited {
-				color: #000;
-			}
-			#TOC A:hover {
+}
+#TOC LI {
+	padding: 2px 0;
+}
+#TOC A {
 	color: #000;
-				background-color: #FEC;
+	display: block;
+	padding: 1px 0 2px 3px;
+}
+#TOC A:visited {
+	color: #000;
+}
+#TOC A:hover {
+	color: #000;
+	background-color: #FEC;
 	text-decoration: none;
-			}
-		#TOC LI UL {
-			list-style: none;
-			margin: 0;
-			margin-left: 1em;
-			padding: 0.25em 0;
-			}
-			#TOC LI UL LI {
-				font-size: 0.9em;
-				padding: 1px 0;
-				}
-				#TOC LI UL LI A {
-					padding-top: 0px;
-					padding-bottom: 1px;
-				}
+}
+#TOC LI UL {
+	list-style: none;
+	margin: 0;
+	margin-left: 1em;
+	padding: 0.25em 0;
+}
+#TOC LI UL LI {
+	font-size: 0.9em;
+	padding: 1px 0;
+}
+#TOC LI UL LI A {
+	padding-top: 0px;
+	padding-bottom: 1px;
+}
 
-	#TOC .tocBtn {
-		float:			left;
-		margin-left:	-17px; /* move button into left-margin */
-		margin-top:		2px;
-		width:			16px;
-		height:			16px;
-		cursor:			pointer;
-	}
+#TOC .tocBtn {
+	float:			left;
+	margin-left:	-17px; /* move button into left-margin */
+	margin-top:		2px;
+	width:			16px;
+	height:			16px;
+	cursor:			pointer;
+}
 
 
 H2 {
@@ -389,18 +388,18 @@ DIV.collapsible {
 	border: 1px solid #FFF; /* same as page-color */
 	border-top: none;
 	position: relative;
-	}
-	DIV.highlightCollapsible {
-		border: 1px dotted #566F6F; /* same as H2 border-bottom */
-		border-top: none;
-	}
-	DIV.highlightCollapsible ,
-	DIV.highlightCollapsible PRE {
-		background-color: #F2F6F4;
-	}
-	DIV.collapsible H4 {
-		margin-top: 0 !important; /* div has padding-top */
-	}
+}
+DIV.highlightCollapsible {
+	border: 1px dotted #566F6F; /* same as H2 border-bottom */
+	border-top: none;
+}
+DIV.highlightCollapsible ,
+DIV.highlightCollapsible PRE {
+	background-color: #F2F6F4;
+}
+DIV.collapsible H4 {
+	margin-top: 0 !important; /* div has padding-top */
+}
 
 SPAN.expander {
 	float:		right;
@@ -408,7 +407,7 @@ SPAN.expander {
 	width:		16px;
 	height:		16px;
 	cursor:		pointer;
-	}
+}
 
 
 /*
@@ -438,7 +437,7 @@ SPAN.expander {
 .layouheader {
 	background: #eee;
 	border-bottom: 1px solid #677;
-  font-weight: bold;
+	font-weight: bold;
 	text-align: center;
 	padding: 2px 0 4px;
 	position: relative;
@@ -500,30 +499,30 @@ SPAN.expander {
 	border-top:			1px solid #677;
 	border-bottom:		1px solid #677;
 	border-left:		1px solid #677;
-	}
-	.ui-layout-resizer-west-closed:hover {
-		background-color: #E6E6E6;
-		}
-		.ui-layout-resizer-west-closed:hover .content {
-			color: #C30;
-		}
-	.ui-layout-toggler-west-closed {
-		background-color:	#EEE;
-		border-top:			1px solid #FFF;
-		border-left:		1px solid #FFF;
-		border-bottom:		1px solid #677;
-		}
-		.ui-layout-toggler-west-closed:hover {
-			background-color: #F6F6F6;
-		}
-		.ui-layout-toggler-west-closed .content {
-			color:			#033;
-			font-size:		12px !important;
-			font-weight:	bold;
-			text-transform:	uppercase;
-			text-align:		center;
-			padding-right:	1px;
-		}
+}
+.ui-layout-resizer-west-closed:hover {
+	background-color: #E6E6E6;
+}
+.ui-layout-resizer-west-closed:hover .content {
+	color: #C30;
+}
+.ui-layout-toggler-west-closed {
+	background-color:	#EEE;
+	border-top:			1px solid #FFF;
+	border-left:		1px solid #FFF;
+	border-bottom:		1px solid #677;
+}
+.ui-layout-toggler-west-closed:hover {
+	background-color: #F6F6F6;
+}
+.ui-layout-toggler-west-closed .content {
+	color:			#033;
+	font-size:		12px !important;
+	font-weight:	bold;
+	text-transform:	uppercase;
+	text-align:		center;
+	padding-right:	1px;
+}
 .button-bar {
     background-color: #a4c2c2;
     border-bottom: 1px solid #fff;
