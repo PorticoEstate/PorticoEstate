@@ -53,9 +53,7 @@
 
 			switch ($type)
 			{
-//START HELPDESK - APP
 				case 'helpdesk_status':
-					// the helpdesk app
 					$info = array
 						(
 						'table' => 'phpgw_helpdesk_status',
@@ -114,9 +112,48 @@
 						'menu_selection' => 'admin::helpdesk::ticket_status'
 					);
 					break;
+				case 'response_template':
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_response_template',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+								(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('response template'),
+						'acl_app' => 'property',
+						'acl_location' => '.ticket',
+						'menu_selection' => 'helpdesk::response_template',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
+						),
+						'check_grant' => true
+					);
 
-//END HELPDESK - APP
-
+					break;
 				default:
 					$message = lang('ERROR: illegal type %1', $type);
 					phpgwapi_cache::message_set($message, 'error');

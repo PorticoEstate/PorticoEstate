@@ -31,3 +31,37 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	/**
+	* Update helpdesk version from 0.9.18.001 to 0.9.18.002
+	*/
+	$test[] = '0.9.18.001';
+
+	function helpdesk_upgrade0_9_18_001()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_response_template', array(
+				'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'content' => array('type' => 'text', 'nullable' => True),
+				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.002';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}	

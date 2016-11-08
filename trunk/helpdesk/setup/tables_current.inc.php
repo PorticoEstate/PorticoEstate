@@ -86,5 +86,20 @@
 			'ix' => array(),
 			'fk' => array(),
 			'uc' => array()
-		)
+		),
+		'phpgw_helpdesk_response_template' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'content' => array('type' => 'text', 'nullable' => True),
+				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 	);
