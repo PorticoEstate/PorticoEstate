@@ -218,10 +218,41 @@
 			}
 		}
 		
+		private function _un_zip($file, $dir)
+		{
+			$zip = new ZipArchive;
+			if ($zip->open($file) === TRUE) 
+			{
+				$zip->extractTo($dir);
+				$zip->close();
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		private function _un_rar($file, $dir)
+		{
+			$archive = RarArchive::open($file);
+			$entries = $archive->getEntries();
+			foreach ($entries as $entry) {
+				$entry->extract($dir);
+			}
+			$archive->close();	
+			
+			/*$rar_file = rar_open($file);
+			$entries = rar_list($rar_file);
+			foreach ($entries as $entry) {
+				$entry->extract($dir);
+			}
+			rar_close($rar_file);*/
+		}
+		
 		private function _get_uploaded_files()
 		{
 			$file = 'Dokumentasjon.zip';
-			$dir = 'Dokumentasjon';
+			$info = pathinfo($this->path_upload_dir.$file);
+			$dir = $info['filename'];
 			
 			if (is_dir($this->path_upload_dir.$dir))
 			{
@@ -229,15 +260,16 @@
 			}
 			else if (is_file($this->path_upload_dir.$file))
 			{
-				$zip = new ZipArchive;
-				if ($zip->open($this->path_upload_dir.$file) === TRUE) 
+				if ($info['extension'] == 'zip')
 				{
-					$zip->extractTo($this->path_upload_dir.$dir);
-					$zip->close();
-					$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir);
-				} else {
-					$list_files  = array();
+					$this->_un_zip($this->path_upload_dir.$file, $this->path_upload_dir.$dir);
+				} 
+				else if ($info['extension'] == 'rar')
+				{
+					$this->_un_rar($this->path_upload_dir.$file, $this->path_upload_dir.$dir);
 				}
+				
+				$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir);
 			}	
 
 			return $list_files;
@@ -284,7 +316,7 @@
 			$message = array();
 	
 			$uploaded_files = $this->_get_uploaded_files();
-			
+
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
 			foreach ($exceldata as $k => $row) 
