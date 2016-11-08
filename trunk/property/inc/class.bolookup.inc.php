@@ -100,7 +100,7 @@
 		 *
 		 * @return array of contacts
 		 */
-		function read_addressbook( $data = array() )
+		function read_addressbook_old( $data = array() )
 		{
 			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] && $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
 			{
@@ -175,6 +175,57 @@
 			}
 
 			return $contacts;
+		}
+		function read_addressbook( $data = array() )
+		{
+			$accounts = & $GLOBALS['phpgw']->accounts;
+			$users = $accounts->get_list('accounts', $data['start'], $data['sort'], $data['order'], $data['query'], $data['offset']);
+			$values = array();
+			$addressbook = CreateObject('addressbook.boaddressbook');
+			$socommon = CreateObject('property.socommon');
+
+			foreach ($users as $account_id => $user)
+			{
+
+				$comms = $addressbook->get_comm_contact_data($user->person_id, $fields_comms = '', $simple = false);
+
+				if(!empty($comms[$user->person_id]['work email']))
+				{
+					$email = $comms[$user->person_id]['work email'];
+				}
+				else
+				{
+					$prefs = $socommon->create_preferences('property', $user->id);
+					$email  = $prefs['email'];
+				}
+				if(!empty($comms[$user->person_id]['mobile (cell) phone']))
+				{
+					$mobile = $comms[$user->person_id]['mobile (cell) phone'];
+				}
+				else
+				{
+					$prefs = $socommon->create_preferences('property', $user->id);
+					$mobile  = $prefs['cellphone'];
+				}
+
+				$values[] = array(
+					'id'			=> $user->id,
+					'lid'			=> $user->lid,
+					'fullname'		=> $user->__toString(),
+					'firstname'		=> $user->firstname,
+					'lastname'		=> $user->lastname,
+					'enabled'		=> $user->enabled,
+					'contact_id'	=> $user->person_id,
+					'email'			=> $email,
+					'mobile'		=> $mobile
+				);
+
+			}
+	
+
+			$this->total_records = $accounts->total;
+
+			return $values;
 		}
 
 		/**

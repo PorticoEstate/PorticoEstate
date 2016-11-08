@@ -112,14 +112,14 @@
 
 				switch ($columns[$order[0]['column']]['data'])
 				{
-					case 'contact_id':
-						$order_field = 'person_id';
+					case 'lastname':
+						$order_field = 'account_lastname';
 						break;
-					case 'contact_name':
-						$order_field = 'last_name';
+					case 'firstname':
+						$order_field = 'account_firstname';
 						break;
 					default:
-						$order_field = $columns[$order[0]['column']]['data'];
+						$order_field = "account_lastname";
 				}
 
 				$params = array(
@@ -127,22 +127,13 @@
 					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 					'query' => $search['value'],
 					'order' => $order_field,
-					'sort' => $order[0]['dir'],
+					'sort' => strtoupper($order[0]['dir']),
 					'dir' => $order[0]['dir'],
 					'allrows' => phpgw::get_var('length', 'int') == -1,
 					'filter' => ''
 				);
 
-				$values = $this->bo->read_addressbook($params);
-				/**
-				 * Sigurd: For some reason - this one starts on 1 - not 0 as it is supposed to.
-				 */
-				$results = array();
-				foreach ($values as $entry)
-				{
-					$results[] = $entry;
-				}
-				$result_data = array('results' => $results);
+				$result_data = array('results' =>  $this->bo->read_addressbook($params));
 
 				$result_data['total_records'] = $this->bo->total_records;
 				$result_data['draw'] = $draw;
@@ -164,8 +155,6 @@
 				$this->cat_id = $default_category;
 			}
 
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
-			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			if ($column)
 			{
@@ -182,7 +171,7 @@
 			$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].value = "";' . "\r\n";
 			$action .= 'parent.document.getElementsByName("' . $contact_name . '")[0].value = "";' . "\r\n";
 			$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].value = aData["contact_id"];' . "\r\n";
-			$action .= 'parent.document.getElementsByName("' . $contact_name . '")[0].value = aData["contact_name"];' . "\r\n";
+			$action .= 'parent.document.getElementsByName("' . $contact_name . '")[0].value = aData["fullname"];' . "\r\n";
 			//trigger ajax-call
 			$action .= "parent.document.getElementsByName('{$contact_id}')[0].setAttribute('{$contact_id}','{$contact_id}',0);\r\n";
 
@@ -211,31 +200,12 @@
 				)
 			);
 
-			$values_combo_box = $this->cats->formatted_xslt_list(array('selected' => $this->cat_id,
-				'globals' => true));
-			foreach ($values_combo_box['cat_list'] as &$val)
-			{
-				$val['id'] = $val['cat_id'];
-			}
-			$default_value = array('id' => '', 'name' => lang('no category'));
-			array_unshift($values_combo_box['cat_list'], $default_value);
-
-			$filter = array('type' => 'filter',
-				'name' => 'cat_id',
-				'text' => lang('Category'),
-				'list' => $values_combo_box['cat_list']
-			);
-
-			array_unshift($data['form']['toolbar']['item'], $filter);
-
 			$uicols = array(
-				'name' => array('contact_id', 'contact_name', 'email', 'wphone', 'mobile',
-					'is_user'),
-				'sort_field' => array('person_id', 'last_name', '', '', '', ''),
-				'sortable' => array(true, true, false, false, false, false),
-				'formatter' => array('', '', '', '', '', ''),
-				'descr' => array(lang('ID'), lang('Name'), lang('email'), lang('phone'), lang('mobile'),
-					lang('is user'))
+				'name' => array('id', 'lid', 'lastname','firstname' ,'email', 'mobile','enabled'),
+				'sort_field' => array('id', 'lid', 'lastname','firstname' ,'email', 'mobile','enabled'),
+				'sortable' => array(false, true, true, true, false, false, false),
+				'formatter' => array('', '', '', '', '', '', ''),
+				'descr' => array(lang('ID'), lang('lid'), lang('lastname'),lang('firstname'), lang('email'),  lang('mobile'),lang('enabled'))
 			);
 
 			$count_uicols_name = count($uicols['name']);
