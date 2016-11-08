@@ -674,11 +674,15 @@
 						},
 					</xsl:when>
 				</xsl:choose>
-				'csvHtml5',
+                {
+					extend:    'csvHtml5',
+					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>"
+				}
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
 						text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+						titleAttr: "<xsl:value-of select="php:function('lang', 'download data')"/>",
 						className: 'download',
 						sUrl: '<xsl:value-of select="download"/>',
 						action: function (e, dt, node, config) {
