@@ -125,6 +125,7 @@
 
 					$entry['email'] = isset($entry['email']) && $entry['email'] ? $entry['email'] : $prefs['email'];
 					$entry['sms'] = isset($entry['sms']) && $entry['sms'] ? $entry['sms'] : $prefs['cellphone'];
+					$entry['account_id'] = $account_id;
 				}
 			}
 
