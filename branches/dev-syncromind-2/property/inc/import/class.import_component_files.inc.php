@@ -9,7 +9,7 @@
 			
 			$this->fakebase = '/temp_files_components';
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
-			
+
 			$this->last_files_added = array();
 		}
 		
@@ -220,6 +220,8 @@
 		
 		private function _un_zip($file, $dir)
 		{
+			@set_time_limit(5 * 60);
+
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE) 
 			{
@@ -233,6 +235,8 @@
 		
 		private function _un_rar($file, $dir)
 		{
+			@set_time_limit(5 * 60);
+			
 			$archive = RarArchive::open($file);
 			$entries = $archive->getEntries();
 			foreach ($entries as $entry) {
@@ -248,35 +252,95 @@
 			rar_close($rar_file);*/
 		}
 		
+		/*
+		private function _upload_compresed_file()
+		{
+			@set_time_limit(5 * 60);
+			
+			if (!$_FILES['compressed_file']['tmp_name'])
+			{
+				return false;
+			}
+			
+			$path_file = $this->path_upload_dir.$_FILES['compressed_file']['name'];
+			
+			if (!move_uploaded_file($_FILES['compressed_file']['tmp_name'], $path_file))
+			{
+				return false;
+			}			
+			
+			$info = pathinfo($path_file);
+			$path_dir = $this->path_upload_dir.$info['filename'];
+			
+			if (is_dir($path_dir))
+			{
+				exec("rm -Rf '{$path_dir}'", $ret);
+			}
+			
+			if ($info['extension'] == 'zip')
+			{
+				$this->_un_zip($path_file, $path_dir);
+			} 
+			else if ($info['extension'] == 'rar')
+			{
+				$this->_un_rar($path_file, $path_dir);
+			}
+	
+
+			return true;
+		}*/
+	
+		private function _uncompresed_file($file_name)
+		{
+			$path_file = $this->path_upload_dir.$file_name;		
+			$info = pathinfo($path_file);
+			$path_dir = $this->path_upload_dir.$info['filename'];
+
+			/*if (is_dir($path_dir))
+			{
+				exec("rm -Rf '{$path_dir}'", $ret);
+			}*/
+			
+			if ($info['extension'] == 'zip')
+			{
+				$this->_un_zip($path_file, $path_dir);
+			} 
+			else if ($info['extension'] == 'rar')
+			{
+				$this->_un_rar($path_file, $path_dir);
+			}
+	
+
+			return true;
+		}
+		
+		
 		private function _get_uploaded_files()
 		{
-			$file = 'Dokumentasjon.zip';
-			$info = pathinfo($this->path_upload_dir.$file);
-			$dir = $info['filename'];
+			$compressed_file = phpgw::get_var('compressed_file_check');
+			$compressed_file_name = phpgw::get_var('compressed_file_name');
 			
-			if (is_dir($this->path_upload_dir.$dir))
+			$dir_name = '';
+			if ($compressed_file)
 			{
-				$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir);
-			}
-			else if (is_file($this->path_upload_dir.$file))
-			{
-				if ($info['extension'] == 'zip')
-				{
-					$this->_un_zip($this->path_upload_dir.$file, $this->path_upload_dir.$dir);
-				} 
-				else if ($info['extension'] == 'rar')
-				{
-					$this->_un_rar($this->path_upload_dir.$file, $this->path_upload_dir.$dir);
-				}
+				$this->_uncompresed_file($compressed_file_name);
 				
-				$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir);
-			}	
+				$info = pathinfo($this->path_upload_dir.$compressed_file_name);
+				$dir_name = $info['filename'];
+			}
+			
+			$list_files = array();
+			
+			if (is_dir($this->path_upload_dir.$dir_name))
+			{
+				$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir_name);
+			}
 
 			return $list_files;
 		}
 		
 		private function _get_dir_contents($dir, &$results = array())
-		{
+		{			
 			$content = scandir($dir);
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
