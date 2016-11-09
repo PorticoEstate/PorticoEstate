@@ -53,7 +53,8 @@
 			'import_components' => true,
 			'get_attributes_from_template' => true,
 			'get_profile' => true,
-			'download' => true
+			'download' => true,
+			'import_compressed_file' => true
 		);
 
 		public function __construct()
@@ -117,6 +118,19 @@
 				//If no just return the current column code
 				return chr(65 + $index);
 			}
+		}
+		
+		public function import_compressed_file()
+		{		
+			
+			$import_component_files = new import_component_files();
+			
+			if ($_FILES['compressed_file']['tmp_name'])
+			{
+				$receipt = $import_component_files->_upload_compresed_file();
+			} 
+			
+			return $receipt;
 		}
 		
 		public function import_component_files()
