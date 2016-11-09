@@ -536,7 +536,7 @@
 			$cols = array();
 			$vals = array();
 
-			$data['descr'] = $this->_db->db_addslashes($data['descr']);
+			$data['descr'] = $this->_db->db_addslashes(html_entity_decode($value));
 
 			if (isset($data['extra']))
 			{
@@ -556,7 +556,7 @@
 				if (isset($value) && $value)
 				{
 					$cols[] = $input_name;
-					$vals[] = $this->_db->db_addslashes($value);
+					$vals[] = $this->_db->db_addslashes(html_entity_decode($value));
 				}
 			}
 
@@ -568,7 +568,7 @@
 					if (isset($value) && $value)
 					{
 						$cols[] = $input_name;
-						$vals[] = $value;
+						$vals[] = $this->_db->db_addslashes(html_entity_decode($value));
 					}
 				}
 			}
@@ -674,7 +674,7 @@
 						$data[$field['name']] = ',' . implode(',', $data[$field['name']]) . ',';
 					}
 				}
-				$value_set[$field['name']] = $this->_db->db_addslashes($data[$field['name']]);
+				$value_set[$field['name']] = $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
 
 				// keep hierarchy in order
 				if (isset($field['role']) && $field['role'] == 'parent')
