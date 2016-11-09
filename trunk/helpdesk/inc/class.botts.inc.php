@@ -770,6 +770,7 @@
 
 		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
 		{
+			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
 
 			$ticket	= $this->so->read_single($id);
@@ -876,8 +877,9 @@
 
 			$members = array();
 
-			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification'] && $ticket['group_id'] )
+			if( isset($this->config->config_data['groupnotification']) && $this->config->config_data['groupnotification']==1 && $ticket['group_id'] )
 			{
+				$log_recipients[] = $group_name;
 				$members_gross = $GLOBALS['phpgw']->accounts->member($ticket['group_id'], true);
 				foreach($members_gross as $user)
 				{
@@ -894,6 +896,7 @@
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
+				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
 			}
 
 			$GLOBALS['phpgw']->preferences->set_account_id($ticket['assignedto'], true);
@@ -905,6 +908,7 @@
 			{
 				// add assigned to recipients
 				$members[$ticket['assignedto']] = $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']);
+				$log_recipients[] = $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
 			}
 
 			$error = array();
@@ -937,6 +941,56 @@
 				}
 			}
 
+			$notify_list = execMethod('property.notify.read', array
+				(
+				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location),
+				'location_item_id' => $id
+				)
+			);
+
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
+			{
+
+				$sms_text = "{$subject}. \r\n{$GLOBALS['phpgw_info']['user']['fullname']} \r\n{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}";
+				$sms = CreateObject('sms.sms');
+
+				foreach ($notify_list as $entry)
+				{
+					if ($entry['is_active'] && $entry['notification_method'] == 'sms' && $entry['sms'])
+					{
+						$sms->websend2pv($this->account, $entry['sms'], $sms_text);
+						$toarray_sms[] = "{$entry['first_name']} {$entry['last_name']}({$entry['sms']})";
+						$receipt['message'][] = array('msg' => lang('%1 is notified', "{$entry['first_name']} {$entry['last_name']}"));
+					}
+				}
+				unset($entry);
+				if ($toarray_sms)
+				{
+					$this->historylog->add('MS', $id, "{$subject}::" . implode(',', $toarray_sms));
+				}
+			}
+
+			reset($notify_list);
+			foreach ($notify_list as $entry)
+			{
+				/**
+				 * Calculate email from username
+				 */
+				if(!$entry['email'])
+				{
+					$entry['email'] = "{$entry['account_lid']}@bergen.kommune.no";
+				}
+
+				if ($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
+				{
+					$toarray[] = "{$entry['first_name']} {$entry['last_name']}<{$entry['email']}>";
+				}
+
+				$log_recipients[] = "{$entry['first_name']} {$entry['last_name']}";
+			}
+			unset($entry);
+
+			$rc = false;
 			if($toarray)
 			{
 				$to = implode(';',$toarray);
@@ -959,23 +1013,11 @@
 				}
 			}
 
-			if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
+			if ($rc && $log_recipients)
 			{
-				$receipt['error'][] = array('msg'=> lang('Your message could not be sent by mail!'));
-				$receipt['error'][] = array('msg'=> lang('The mail server returned'));
-				$receipt['error'][] = array('msg'=> "From : {$current_user_address}");
-				$receipt['error'][] = array('msg'=> 'to: '.$to);
-				$receipt['error'][] = array('msg'=> 'subject: '.$subject);
-				$receipt['error'][] = array('msg'=> $body );
-	//			$receipt['error'][] = array('msg'=> 'cc: ' . $cc);
-	//			$receipt['error'][] = array('msg'=> 'bcc: '.$bcc);
-				$receipt['error'][] = array('msg'=> 'group: '.$group_name);
-				$receipt['error'][] = array('msg'=> 'err_code: '.$this->send->err['code']);
-				$receipt['error'][] = array('msg'=> 'err_msg: '. htmlspecialchars($this->send->err['msg']));
-				$receipt['error'][] = array('msg'=> 'err_desc: '. $this->send->err['desc']);
+				$this->historylog->add('M', $id, implode(';', array_unique($log_recipients)));
 			}
 
-			//_debug_array($receipt);
 			return $receipt;
 		}
 

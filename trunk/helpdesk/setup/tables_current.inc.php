@@ -102,4 +102,23 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'phpgw_helpdesk_custom_menu_items' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'parent_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
+				'text' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'url' => array('type' => 'text', 'nullable' => True),
+				'target' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
+				'location' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'local_files' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		)
+
 	);
