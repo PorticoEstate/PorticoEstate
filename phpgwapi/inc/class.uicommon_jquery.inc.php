@@ -378,9 +378,17 @@
 			$this->add_template_file('helpers');
 		}
 
-		public function render_template_xsl( $files, $data )
+		public function render_template_xsl( $files, $data, $xsl_rootdir = '' )
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			if($xsl_rootdir)
+			{
+				if(!in_array($xsl_rootdir, $this->tmpl_search_path))
+				{
+					array_push($this->tmpl_search_path, $xsl_rootdir);
+				}
+			}
 
 			if ($this->flash_msgs)
 			{
