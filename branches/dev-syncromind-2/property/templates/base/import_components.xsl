@@ -63,24 +63,6 @@
 					<label>
 						<xsl:value-of select="access_error_upload_dir" />
 					</label>
-					<form id="form_compressed_file" name="form_compressed_file" class="pure-form pure-form-aligned" action="" method="POST" enctype="multipart/form-data">
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'upload compressed file')"/>
-							</label>
-							<input type="file" id="compressed_file" name="compressed_file" size="40"></input>
-
-							<input type="button" id="import_compressed_file" name="import_compressed_file" size="40">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'Start import and decompress')"/>
-								</xsl:attribute>
-							</input>
-							<img src="{image_loader}" class="processing-import-relations" align="absmiddle"></img>
-						</div>
-						<div class="pure-control-group">
-							<div id="message5" class="message"></div>
-						</div>						
-					</form>
 					<xsl:call-template name="multi_upload_file"/>
 					<!--<xsl:value-of disable-output-escaping="yes" select="form_file_upload"/>-->
 				</div>
@@ -280,7 +262,7 @@
 								<div class="pure-control-group">
 									<label><xsl:value-of select="php:function('lang', 'Compressed')" /></label>
 									<input type="radio" value="1" name="compressed_file_check" />
-									<input type="text" value="" id="compressed_file_name" name="compressed_file_name" /> (zip, rar)
+									<input type="text" value="" id="compressed_file_name" name="compressed_file_name" /> (file name with extension: zip, rar)
 								</div>
 							</div>
 						</div>
