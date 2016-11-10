@@ -590,11 +590,11 @@
 				$values_insert = array
 					(
 					'file_id' => $file_id,
-					'metadata' => json_encode($metadata)
+					'metadata' => "'" . json_encode($metadata) . "'"
 				);
 
 				$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+					. implode(",", array_values($values_insert)) . ')', __LINE__, __FILE__);
 				
 			}
 			
