@@ -94,49 +94,6 @@ $(document).ready(function ()
 		);				
 	});
 	
-	$('#import_compressed_file').on('click', function ()
-	{
-		var oArgs = {menuaction: 'property.uiimport_components.import_compressed_file'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);
-		
-	
-		if ($('#compressed_file').val() == '')
-		{
-			alert('Choose file');
-			return false;
-		}
-		
-		if (isSendingData())
-		{
-			return false;
-		}
-		
-		var form = document.forms.namedItem("form_compressed_file");
-		var form_data = new FormData(form);
-		
-		var file_data = $('#compressed_file').prop('files')[0];	
-		form_data.append('compressed_file', file_data);
-
-		$('.processing-import-relations').show();
-		
-		$.ajax({
-			url: requestUrl,
-			cache: false,
-			contentType: false,
-			processData: false,
-			data: form_data,
-			type: 'post',
-			dataType: 'json',
-			success: function (result)
-			{
-				statusSend = false;
-				$('.processing-import-relations').hide();
-				JqueryPortico.show_message(4, result);
-				//$('#import_components_files').prop('disabled', true);
-			}
-		});
-	});
-	
 	$('#import_components_files').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
