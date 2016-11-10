@@ -95,8 +95,7 @@
 				// Uncomment the following to send cross-domain cookies:
 				//xhrFields: {withCredentials: true},
 				url: '<xsl:value-of select="multi_upload_action"/>',
-				limitConcurrentUploads: 4,
-				maxChunkSize: 10000000
+				limitConcurrentUploads: 4
 				//acceptFileTypes: /(\.|\/)(png|pdf)$/i
 			});
 				
