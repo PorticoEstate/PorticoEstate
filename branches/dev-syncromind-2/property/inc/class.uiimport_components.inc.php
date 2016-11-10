@@ -119,20 +119,7 @@
 				return chr(65 + $index);
 			}
 		}
-		
-		public function import_compressed_file()
-		{		
-			
-			$import_component_files = new import_component_files();
-			
-			if ($_FILES['compressed_file']['tmp_name'])
-			{
-				$receipt = $import_component_files->_upload_compresed_file();
-			} 
-			
-			return $receipt;
-		}
-		
+
 		public function import_component_files()
 		{		
 			/*$location_code = phpgwapi_cache::session_get('property', 'location_code');
