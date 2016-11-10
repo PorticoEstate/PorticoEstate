@@ -388,6 +388,8 @@
 			
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
+			$patrones_2 = array('(\\/)', '(")');
+			$sustituciones_2 = array('_', '_');
 			foreach ($exceldata as $k => $row) 
 			{
 				if (!$this->_valid_row($row))
@@ -395,6 +397,7 @@
 					continue;
 				}
 				
+				$path = $row[(count($row)-2)];
 				$path_file = $row[(count($row)-1)];
 				$array_path = explode("\\", $path_file);
 						
@@ -402,6 +405,7 @@
 					'name' => $row[1],
 					'desription' => $row[2],
 					'file' => $array_path[count($array_path)-1],
+					'path' => preg_replace($patrones_2, $sustituciones_2, $path),
 					'path_file_string' => preg_replace($patrones, $sustituciones, $path_file),
 					'row' => ($k + 1)
 				);
@@ -581,6 +585,7 @@
 				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				$metadata['title'] = $file_data['name']; 
 				$metadata['descr'] = $file_data['desription'];
+				$metadata['path'] = $file_data['path'];
 				
 				$values_insert = array
 					(
