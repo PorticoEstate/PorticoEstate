@@ -2,6 +2,8 @@
 
 	class import_component_files
 	{	
+		private $receipt = array();
+		
 		public function __construct()
 		{
 			$this->acl = & $GLOBALS['phpgw']->acl;
@@ -65,7 +67,7 @@
 		
 		private function _get_files_by_component($id, $location_id)
 		{
-			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
+			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name, b.md5_sum FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
 					. " ON a.file_id = b.file_id WHERE a.location_item_id = '{$id}' AND a.location_id = '{$location_id}'"
 					. " AND b.mime_type != 'Directory' AND b.mime_type != 'journal' AND b.mime_type != 'journal-deleted'";
 
@@ -76,7 +78,7 @@
 			while ($this->db->next_record())
 			{
 				$healthy = $this->db->f('file_id').'_#';
-				$values[] = trim(str_replace($healthy, '', $this->db->f('name')));
+				$values[] = $this->db->f('md5_sum').'_'.trim(str_replace($healthy, '', $this->db->f('name')));
 			}
 
 			return $values;			
@@ -100,24 +102,12 @@
 		public function add_files_location($id, $location_code)
 		{		
 			$message = array();
-			
-			$files = array();
-			$dh  = opendir($this->path_upload_dir);
-			if ($dh) 
-			{
-				while (false !== ($filename = readdir($dh))) 
-				{
-					if ($filename != '.' && $filename != '..') {
-						$files[] = $filename;
-					}
-				}
-				closedir($dh);
-			}
 
-			if (!count($files))
+			$uploaded_files = $this->_get_uploaded_files();
+
+			if ($this->receipt['error'])
 			{
-				$message['error'][] = array('msg' => lang("no exist files to import"));
-				return $message;
+				return $this->receipt;
 			}
 			
 			$count_new_relations = 0;
@@ -128,9 +118,9 @@
 
 			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
 
-			foreach ($files as $file_name)
+			foreach ($uploaded_files as $file_data)
 			{
-				if (in_array(str_replace(' ', '_', $file_name), $files_in_component))
+				if (in_array(str_replace(' ', '_', $file_data['val_md5sum']), $files_in_component))
 				{
 					$count_relations_existing++;
 					continue;
@@ -140,21 +130,25 @@
 				try
 				{
 					$this->db->Exception_On_Error = true;						
-
-					$file_data['file'] = $file_name;
-
-					$file_id = $this->_save_file($file_data);
-					if (!$file_id)
-					{						
-						throw new Exception("failed to copy file '{$file_name}'");
-					} 
-					unlink($this->path_upload_dir.$file_name);
-					$count_new_files++;
 					
+					$file = $file_data['file'];
+
+					$file_id = $this->_search_in_last_files_added($file_data);
+					if (!$file_id) 
+					{
+						$file_id = $this->_save_file($file_data);
+						if (!$file_id)
+						{						
+							throw new Exception("failed to copy file '{$file}'");
+						} 
+						unlink($file_data['path_file']);
+						$count_new_files++;
+					}
+						
 					$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
 					if (!$result)
 					{						
-						$message['error'][] = array('msg' => "failed to save relation. File: '{$file_name}'");
+						$message['error'][] = array('msg' => "failed to save relation. File: '{$file}'");
 					} else {
 						$count_new_relations++;
 					}
@@ -251,27 +245,12 @@
 			}
 			rar_close($rar_file);*/
 		}
-		
-		/*
-		private function _upload_compresed_file()
-		{
-			@set_time_limit(5 * 60);
-			
-			if (!$_FILES['compressed_file']['tmp_name'])
-			{
-				return false;
-			}
-			
-			$path_file = $this->path_upload_dir.$_FILES['compressed_file']['name'];
-			
-			if (!move_uploaded_file($_FILES['compressed_file']['tmp_name'], $path_file))
-			{
-				return false;
-			}			
-			
+	
+		private function _uncompresed_file($path_file)
+		{		
 			$info = pathinfo($path_file);
 			$path_dir = $this->path_upload_dir.$info['filename'];
-			
+
 			if (is_dir($path_dir))
 			{
 				exec("rm -Rf '{$path_dir}'", $ret);
@@ -285,58 +264,77 @@
 			{
 				$this->_un_rar($path_file, $path_dir);
 			}
-	
-
-			return true;
-		}*/
-	
-		private function _uncompresed_file($file_name)
-		{
-			$path_file = $this->path_upload_dir.$file_name;		
-			$info = pathinfo($path_file);
-			$path_dir = $this->path_upload_dir.$info['filename'];
-
-			/*if (is_dir($path_dir))
-			{
-				exec("rm -Rf '{$path_dir}'", $ret);
-			}*/
-			
-			if ($info['extension'] == 'zip')
-			{
-				$this->_un_zip($path_file, $path_dir);
-			} 
-			else if ($info['extension'] == 'rar')
-			{
-				$this->_un_rar($path_file, $path_dir);
-			}
-	
 
 			return true;
 		}
-		
 		
 		private function _get_uploaded_files()
 		{
 			$compressed_file = phpgw::get_var('compressed_file_check');
 			$compressed_file_name = phpgw::get_var('compressed_file_name');
 			
-			$dir_name = '';
-			if ($compressed_file)
-			{
-				$this->_uncompresed_file($compressed_file_name);
-				
-				$info = pathinfo($this->path_upload_dir.$compressed_file_name);
-				$dir_name = $info['filename'];
-			}
-			
 			$list_files = array();
 			
-			if (is_dir($this->path_upload_dir.$dir_name))
+			if ($compressed_file)
 			{
-				$list_files  = $this->_get_dir_contents($this->path_upload_dir.$dir_name);
+				$path_file = $this->path_upload_dir.$compressed_file_name;
+				
+				if (!is_file($path_file))
+				{
+					$this->receipt['error'][] = array('msg' => lang('File %1 not exist', $path_file));
+					return;
+				}
+				
+				$this->_uncompresed_file($path_file);
+				
+				$info = pathinfo($path_file);
+				$path_dir = $this->path_upload_dir.$info['filename'];
+				
+				if (!is_dir($path_dir))
+				{
+					$this->receipt['error'][] = array('msg' => lang('Directory %1 not exist', $path_dir));
+					return;
+				}
+				
+				$list_files  = $this->_get_dir_contents($path_dir);
+			} 
+			else {
+				$list_files  = $this->_get_files($this->path_upload_dir);			
+			}
+			
+			if (!count($list_files))
+			{
+				$this->receipt['error'][] = array('msg' => lang("no exist files to import"));
 			}
 
 			return $list_files;
+		}
+		
+		private function _get_files($dir, $results = array())
+		{			
+			$content = scandir($dir);
+			
+			$output = array();
+			foreach($content as $key => $value)
+			{
+				$path = realpath($dir.'/'.$value);
+				if(is_file($path)) 
+				{				
+					unset($output);
+					exec("md5sum '{$path}' 2>&1", $output, $ret);
+					if ($ret)
+					{
+						$val_md5sum = '';
+					} else {
+						$val_md5sum = trim(substr($output[0], 0, -(strlen($path)))).'_'.$value;
+					}
+					$results[] = array('file'=>$value, 
+						'val_md5sum'=>$val_md5sum, 
+						'path_file'=>$path);
+				} 
+			}
+		
+			return $results;
 		}
 		
 		private function _get_dir_contents($dir, &$results = array())
@@ -381,6 +379,13 @@
 	
 			$uploaded_files = $this->_get_uploaded_files();
 
+			if ($this->receipt['error'])
+			{
+				return $this->receipt;
+			}
+			
+			//print_r($uploaded_files); die;
+			
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
 			foreach ($exceldata as $k => $row) 
@@ -404,7 +409,6 @@
 
 			$this->_compare_names($component_files, $uploaded_files);
 
-//print_r($component_files); die;
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
@@ -429,7 +433,7 @@
 
 				foreach ($files as $file_data)
 				{
-					if (in_array(str_replace(' ', '_', $file_data['file']), $files_in_component))
+					if (in_array(str_replace(' ', '_', $file_data['val_md5sum']), $files_in_component))
 					{
 						$count_relations_existing++;
 						continue;
@@ -569,6 +573,11 @@
 			{
 				$this->last_files_added[$file_id] = $val_md5sum;
 				
+				$md5_sum = trim(substr($val_md5sum, 0, -(strlen($tmp_file)+1)));
+				
+				$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
+					. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
+					
 				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 				$metadata['title'] = $file_data['name']; 
 				$metadata['descr'] = $file_data['desription'];
@@ -581,6 +590,7 @@
 
 				$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+				
 			}
 			
 			return $file_id;
