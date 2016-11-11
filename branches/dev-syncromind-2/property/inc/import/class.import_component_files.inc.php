@@ -86,10 +86,7 @@
 		
 		private function _search_in_last_files_added($file_data)
 		{
-			//$file = $file_data['file'];
 			$val_md5sum = $file_data['val_md5sum'];
-			//$file_name = str_replace(' ', '_', trim($file));
-			
 			$file_id = array_search($val_md5sum, $this->last_files_added);
 			if ($file_id)
 			{
@@ -200,11 +197,17 @@
 					{
 						if ($file['file'] == $file_data['file'])
 						{
-							$pos = stripos($file['path_file_string'], $file_data['path_file_string']);
-							if ($pos !== false)
+							if ($file['path_file_string'])
 							{
+								$pos = stripos($file['path_file_string'], $file_data['path_file_string']);
+								if ($pos !== false)
+								{
+									$file_data['path_file'] = $file['path_file'];
+									$file_data['val_md5sum'] = $file['val_md5sum'];
+								}
+							} else {
 								$file_data['path_file'] = $file['path_file'];
-								$file_data['val_md5sum'] = $file['val_md5sum'];
+								$file_data['val_md5sum'] = $file['val_md5sum'];								
 							}
 						}
 					}
@@ -223,6 +226,7 @@
 				$zip->close();
 				return true;
 			} else {
+				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
 				return false;
 			}
 		}
@@ -232,24 +236,32 @@
 			@set_time_limit(5 * 60);
 			
 			$archive = RarArchive::open($file);
+			if ($archive === FALSE)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
+				return false;
+			}
+
 			$entries = $archive->getEntries();
 			foreach ($entries as $entry) {
 				$entry->extract($dir);
 			}
 			$archive->close();	
 			
-			/*$rar_file = rar_open($file);
-			$entries = rar_list($rar_file);
-			foreach ($entries as $entry) {
-				$entry->extract($dir);
-			}
-			rar_close($rar_file);*/
+			return true;
 		}
 	
 		private function _uncompresed_file($path_file)
 		{		
 			$info = pathinfo($path_file);
 			$path_dir = $this->path_upload_dir.$info['filename'];
+			$result = true;
+			
+			if (!in_array($info['extension'], array('zip', 'rar')))
+			{
+				$this->receipt['error'][] = array('msg' => lang('The file extension should be zip or rar'));
+				return false;
+			}
 
 			if (is_dir($path_dir))
 			{
@@ -258,14 +270,14 @@
 			
 			if ($info['extension'] == 'zip')
 			{
-				$this->_un_zip($path_file, $path_dir);
+				$result = $this->_un_zip($path_file, $path_dir);
 			} 
 			else if ($info['extension'] == 'rar')
 			{
-				$this->_un_rar($path_file, $path_dir);
+				$result = $this->_un_rar($path_file, $path_dir);
 			}
 
-			return true;
+			return $result;
 		}
 		
 		private function _get_uploaded_files()
@@ -285,7 +297,10 @@
 					return;
 				}
 				
-				$this->_uncompresed_file($path_file);
+				if (!$this->_uncompresed_file($path_file))
+				{
+					return false;
+				}
 				
 				$info = pathinfo($path_file);
 				$path_dir = $this->path_upload_dir.$info['filename'];
@@ -326,10 +341,10 @@
 					{
 						$val_md5sum = '';
 					} else {
-						$val_md5sum = trim(substr($output[0], 0, -(strlen($path)))).'_'.$value;
+						$val_md5sum = trim(strstr($output[0], ' ', true)).'_'.$value;
 					}
 					$results[] = array('file'=>$value, 
-						'val_md5sum'=>$val_md5sum, 
+						'val_md5sum'=>$val_md5sum,  
 						'path_file'=>$path);
 				} 
 			}
@@ -355,7 +370,7 @@
 					{
 						$val_md5sum = '';
 					} else {
-						$val_md5sum = trim(substr($output[0], 0, -(strlen($path)))).'_'.$value;
+						$val_md5sum = trim(strstr($output[0], ' ', true)).'_'.$value;
 					}
 					$results[] = array('file'=>$value, 
 						'val_md5sum'=>$val_md5sum, 
@@ -371,7 +386,7 @@
 			return $results;
 		}
 
-		public function add_files_components($id, $location_code, $attrib_name_componentID)
+		public function add_files_components_location($id, $location_code, $attrib_name_componentID)
 		{		
 			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
@@ -464,7 +479,7 @@
 							{						
 								throw new Exception("failed to copy file '{$file}'. Component: '{$k}'");
 							} 
-							//unlink($this->path_upload_dir.$file);
+							unlink($file_data['path_file']);
 							$count_new_files++;
 						}
 						
@@ -577,7 +592,7 @@
 			{
 				$this->last_files_added[$file_id] = $val_md5sum;
 				
-				$md5_sum = trim(substr($val_md5sum, 0, -(strlen($tmp_file)+1)));
+				$md5_sum = trim(strstr($val_md5sum, '_', true));
 				
 				$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
 					. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
