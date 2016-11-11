@@ -17,8 +17,18 @@
 		$_templates[$key] = $value['title'];
 	}
 
+	$template_set = '';
+
+	$account_id = phpgw::get_var('account_id', 'int');
+
+	if($account_id)
+	{
+		$user_pref = createObject('phpgwapi.preferences', $account_id)->read();
+		$template_set = $user_pref['common']['template_set'];
+	}
+
 	$_themes = array();
-	foreach ( phpgwapi_common::list_themes() as $theme )
+	foreach ( phpgwapi_common::list_themes($template_set) as $theme )
 	{
 		$_themes[$theme] = $theme;
 	}

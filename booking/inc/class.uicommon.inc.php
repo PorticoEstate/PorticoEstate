@@ -153,13 +153,6 @@
 			$this->config = CreateObject('phpgwapi.config', 'bookingfrontend');
 			$this->config->read();
 
-			// Add configurable bookingfrontend template search path.
-			// This is being done here in booking because ui-classes in bookingfrontend inherit either directly or indirectly from this class.
-			if (strlen($this->config->config_data['customtemplate']))
-			{
-				array_push($this->tmpl_search_path, PHPGW_SERVER_ROOT . '/' . $GLOBALS['phpgw_info']['flags']['currentapp'] . '/templates/' . $this->config->config_data['customtemplate']);
-			}
-
 			if ($this->current_app() == 'bookingfrontend')
 			{
 				$GLOBALS['phpgw']->translation->add_app('booking');

@@ -13,8 +13,8 @@
 
 
 
-		<link rel="icon" href="{img_icon}" type="image/x-ico">
-		<link rel="shortcut icon" href="{img_icon}">
+		<link href="{img_icon}" type="image/x-ico" rel="icon">
+		<link href="{img_icon}" rel="shortcut icon">
 		<!-- BEGIN stylesheet -->
 		<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
