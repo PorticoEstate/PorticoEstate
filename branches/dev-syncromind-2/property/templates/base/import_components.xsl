@@ -262,7 +262,11 @@
 								<div class="pure-control-group">
 									<label><xsl:value-of select="php:function('lang', 'Compressed')" /></label>
 									<input type="radio" value="1" name="compressed_file_check" />
-									<input type="text" value="" id="compressed_file_name" name="compressed_file_name" /> (file name with extension: zip, rar)
+									<input type="text" value="" id="compressed_file_name" name="compressed_file_name" >
+										<xsl:attribute name="placeholder">
+											<xsl:value-of select="php:function('lang', 'File name')"/>
+										</xsl:attribute>
+									</input> (zip, rar)
 								</div>
 							</div>
 						</div>
