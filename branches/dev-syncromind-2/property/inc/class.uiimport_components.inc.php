@@ -53,8 +53,7 @@
 			'import_components' => true,
 			'get_attributes_from_template' => true,
 			'get_profile' => true,
-			'download' => true,
-			'import_compressed_file' => true
+			'download' => true
 		);
 
 		public function __construct()
@@ -149,7 +148,7 @@
 			
 			if ($_FILES['file']['tmp_name'])
 			{
-				$receipt = $import_component_files->add_files_components($id, $location_code, $attrib_name_componentID);
+				$receipt = $import_component_files->add_files_components_location($id, $location_code, $attrib_name_componentID);
 			} else {
 				$receipt = $import_component_files->add_files_location($id, $location_code);
 			}
