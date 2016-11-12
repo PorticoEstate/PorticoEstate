@@ -167,9 +167,14 @@
 			return $values;
 		}
 		
-		public function get_file_relations($location_id, $file_id) 
+		public function get_file_relations($file_id, $location_id = null) 
 		{
-			$filtermethod = "WHERE location_id = {$location_id} AND file_id = {$file_id}";
+			if ($location_id)
+			{
+				$filtermethod = "WHERE location_id = {$location_id} AND file_id = {$file_id}";
+			} else {
+				$filtermethod = "WHERE file_id = {$file_id}";
+			}
 			
 			$sql = "SELECT * FROM phpgw_vfs_file_relation " ." {$filtermethod} ";
 			$this->db->query($sql, __LINE__, __FILE__);
