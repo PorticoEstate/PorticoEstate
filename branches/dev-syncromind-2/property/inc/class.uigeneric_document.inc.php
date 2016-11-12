@@ -300,7 +300,7 @@
 				'type_id' => $type_id,
 				'district_id' => phpgw::get_var('district_id', 'int', 'REQUEST', 0),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => ($only_related) ? 1 : (phpgw::get_var('length', 'int') == -1)
 			);
 			
             $solocation = CreateObject('property.solocation');
@@ -309,7 +309,7 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			if ($file_id)
 			{
-				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+				$relation_values = $this->bo->get_file_relations($file_id);
 			}
 			$values_location_item_id = array();
 			if (count($relation_values))
@@ -695,7 +695,7 @@
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
                 'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
                 'query' => $search['value'],
-                'allrows' => phpgw::get_var('length', 'int') == -1,
+                'allrows' => ($only_related) ? 1 : (phpgw::get_var('length', 'int') == -1),
                 'filter_entity_group' => 0,
                 'location_id' => $location_id,
                 'filter_item' => array()
@@ -703,7 +703,7 @@
 
 			if ($file_id)
 			{
-				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+				$relation_values = $this->bo->get_file_relations($file_id, $location_id );
 			}
 			$values_location_item_id = array();
 			if (count($relation_values))
