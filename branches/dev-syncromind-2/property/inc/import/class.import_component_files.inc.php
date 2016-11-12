@@ -136,7 +136,7 @@
 						$file_id = $this->_save_file($file_data);
 						if (!$file_id)
 						{						
-							throw new Exception("failed to copy file '{$file}'");
+							throw new Exception("failed to copy file '{$file_data['path_file']}'");
 						} 
 						unlink($file_data['path_file']);
 						$count_new_files++;
@@ -204,7 +204,7 @@
 								{
 									$file_data['path_file'] = $file['path_file'];
 									$file_data['val_md5sum'] = $file['val_md5sum'];
-								}
+								} 
 							} else {
 								$file_data['path_file'] = $file['path_file'];
 								$file_data['val_md5sum'] = $file['val_md5sum'];								
@@ -399,8 +399,6 @@
 				return $this->receipt;
 			}
 			
-			//print_r($uploaded_files); die;
-			
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
 			$patrones_2 = array('(\\/)', '(")');
@@ -431,7 +429,8 @@
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			$count_files_not_existing = 0;
+			//$count_files_not_existing = 0;
+			$files_not_existing = array();
 	
 			foreach ($component_files as $k => $files) 
 			{
@@ -470,14 +469,15 @@
 						{
 							if (!is_file($file_data['path_file']))
 							{
-								$count_files_not_existing++;
+								//$count_files_not_existing++;
+								$files_not_existing[] = ($file_data['path_file']) ? $file_data['path_file'] : $file_data['path'].'/'.$file_data['file'];
 								throw new Exception();
 							}	
 
 							$file_id = $this->_save_file($file_data);
 							if (!$file_id)
 							{						
-								throw new Exception("failed to copy file '{$file}'. Component: '{$k}'");
+								throw new Exception("failed to copy file: '{$file_data['path_file']}'. Component: '{$k}'");
 							} 
 							unlink($file_data['path_file']);
 							$count_new_files++;
@@ -526,9 +526,17 @@
 				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
 			}
 			
-			if ($count_files_not_existing)
+			if (count($files_not_existing))
 			{
-				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', $count_files_not_existing));
+				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($files_not_existing)));
+			}
+			
+			if (count($files_not_existing))
+			{
+				foreach($files_not_existing as $c => $v)
+				{
+					$message['error'][] = array('msg' => lang("file not exist: %1", $v));
+				}
 			}
 			
 			return $message;
