@@ -61,9 +61,9 @@
 			return json_decode($values);
 		}
 
-		function get_file_relations( $location_id, $file_id )
+		function get_file_relations( $file_id, $location_id )
 		{
-			$values = $this->so->get_file_relations($location_id, $file_id);
+			$values = $this->so->get_file_relations($file_id, $location_id);
 
 			return $values;
 		}
