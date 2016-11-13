@@ -177,3 +177,8 @@ collection	common	no	Samling..
 item	common	no	Valg
 download visible data	common	no	last ned innholdet i synlig tabell til excel
 download data	common	no	last ned alt filtrert innholdet til excel
+previous week	common	no	Forrige uke
+next week	common	no	Neste uke
+next	common	no	Neste
+week	common	no	Uke
+week day	common	no	Ukedag

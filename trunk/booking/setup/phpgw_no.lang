@@ -188,8 +188,6 @@ new resource	booking	no	Ny ressurs
 new root permission	booking	no	Nye systemrettigheter
 new season	booking	no	Ny sesong
 new season permission	booking	no	Nye rettigheter sesong
-next	booking	no	Neste
-next week	booking	no	Neste uke
 no Data.	booking	no	Ingen treff.
 no description yet	booking	no	Beskrivelse manglar
 no parents	booking	no	Ingen overordnet
@@ -213,7 +211,6 @@ picture	booking	no	Bilde
 planning	booking	no	Planlegging
 prev	booking	no	Forrige
 preview	booking	no	Forhåndsvisning
-previous week	booking	no	Forrige uke
 price list	booking	no	Prisliste
 primary admin	booking	no	Kontaktperson 1
 primary contact	booking	no	Kontaktperson 1
@@ -259,8 +256,6 @@ tu	booking	no	ti.
 upload document	booking	no	Last opp dokument
 user	booking	no	Bruker
 we	booking	no	on.
-week	booking	no	Uke
-week day	booking	no	Ukedag
 week template	booking	no	Ukeplan
 when	booking	no	Når
 when?	booking	no	Når?
