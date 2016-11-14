@@ -289,6 +289,7 @@
 
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
+		var order_id = '<xsl:value-of select="value_order_id"/>';
 		var location_code = '<xsl:value-of select="value_location_code"/>';
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;

@@ -2979,9 +2979,9 @@
 		{
 			$ecodimb	= phpgw::get_var('ecodimb');
 			$amount		= phpgw::get_var('amount', 'int');
-			$ticket_id	=  phpgw::get_var('ticket_id', 'int');
+			$order_id	=  phpgw::get_var('order_id', 'int');
 
-			return $this->bo->check_purchase_right($ecodimb, $amount, $ticket_id);
+			return $this->bo->check_purchase_right($ecodimb, $amount, $order_id);
 		}
 
 		/**
