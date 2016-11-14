@@ -1778,7 +1778,7 @@
 			return $this->so->add_relation($add_relation, $id);
 		}
 
-		public function check_purchase_right($ecodimb = 0, $amount = 0, $ticket_id = 0)
+		public function check_purchase_right($ecodimb = 0, $amount = 0, $order_id = 0)
 		{
 			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
 			if(!$need_approval)
@@ -1850,7 +1850,7 @@
 				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 			}
 
-			return $this->get_supervisor_email($supervisor_id, $ticket_id);
+			return $this->get_supervisor_email($supervisor_id, $order_id);
 		}
 
 		public function check_external_register($param)
@@ -1895,9 +1895,26 @@
 			return json_decode($result, true);
 		}
 
-		protected function get_supervisor_email($supervisor_id, $ticket_id)
+		protected function get_supervisor_email($supervisor_id, $order_id)
 		{
 			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
+
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			switch ($order_type)
+			{
+				case 'workorder':
+					$location = '.project.workorder';
+					$location_item_id = $order_id;
+					break;
+				case 'ticket':
+					$location = '.ticket';
+					$location_item_id = $this->so->get_ticket_from_order($order_id);
+					break;
+				default:
+					throw new Exception('Not supported');
+			}
+
 			$supervisor_email = array();
 			if ($supervisor_id && $need_approval)
 			{
@@ -1907,8 +1924,8 @@
 
 				$action_params = array(
 					'appname' => 'property',
-					'location' => '.ticket',
-					'id'		=> $ticket_id,
+					'location' => $location,
+					'id'		=> $location_item_id,
 					'responsible' => $supervisor_id,
 					'responsible_type' => 'user',
 					'action' => 'approval',
@@ -1953,8 +1970,8 @@
 				{
 					$action_params = array(
 						'appname' => 'property',
-						'location' => '.ticket',
-						'id'		=> $ticket_id,
+						'location' => $location,
+						'id'		=> $location_item_id,
 						'responsible' => $prefs['approval_from'],
 						'responsible_type' => 'user',
 						'action' => 'approval',
@@ -1992,9 +2009,6 @@
 				}
 				unset($prefs);
 			}
-
-
-
 
 			return $supervisor_email;
 		}

@@ -1,6 +1,37 @@
 
 var vendor_id;
 
+function calculate_order()
+{
+	if (!validate_form())
+	{
+		return;
+	}
+	document.getElementsByName("calculate_workorder")[0].value = 1;
+	check_and_submit_valid_session();
+}
+;
+
+function submit_workorder()
+{
+	if (!validate_form())
+	{
+		return;
+	}
+	check_and_submit_valid_session();
+}
+
+
+function send_order()
+{
+	if (!validate_form())
+	{
+		return;
+	}
+	document.getElementsByName("send_workorder")[0].value = 1;
+	check_and_submit_valid_session();
+}
+
 $(document).ready(function ()
 {
 	$('form[name=form]').submit(function (e)
@@ -55,6 +86,7 @@ function receive_order(workorder_id)
 				{
 					msg = 'OK';
 					$("#order_received_time").html(data['time']);
+					$("#current_received_amount").html($("#order_received_amount").val());
 				}
 				else
 				{
@@ -116,33 +148,6 @@ this.validate_form = function ()
 	return $('form').isValid(validateLanguage, conf);
 }
 
-function submit_workorder()
-{
-	if (!validate_form())
-	{
-		return;
-	}
-	check_and_submit_valid_session();
-}
-
-function calculate_workorder()
-{
-	if (!validate_form())
-	{
-		return;
-	}
-	document.getElementsByName("calculate_workorder")[0].value = 1;
-	check_and_submit_valid_session();
-}
-function send_workorder()
-{
-	if (!validate_form())
-	{
-		return;
-	}
-	document.getElementsByName("send_workorder")[0].value = 1;
-	check_and_submit_valid_session();
-}
 function set_tab(tab)
 {
 	$("#order_tab").val(tab);
@@ -391,4 +396,189 @@ $(document).ready(function ()
 //		parent.hide_popupBox();
 	});
 
+
+	var test = document.getElementById('save_button');
+	var width = 200;
+	if (test !== null)
+	{
+		width = 160;
+	}
+	else
+	{
+		return;
+	}
+
+	test = document.getElementById('calculate_button');
+	if (test !== null)
+	{
+		width = 380;
+	}
+
+	$("#submitbox").css({
+		position: 'absolute',
+		right: '10px',
+		border: '1px solid #B5076D',
+		padding: '0 10px 10px 10px',
+		width: width + 'px',
+		"background - color": '#FFF',
+		display: "block",
+	});
+
+	var offset = $("#submitbox").offset();
+	var topPadding = 180;
+
+	if ($("#center_content").length === 1)
+	{
+		$("#center_content").scroll(function ()
+		{
+			if ($("#center_content").scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $("#center_content").scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+	else
+	{
+		$(window).scroll(function ()
+		{
+			if ($(window).scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $(window).scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
 });
+
+
+var ecodimb_selection = "";
+
+$(window).on('load', function ()
+{
+	ecodimb = $('#ecodimb').val();
+	if (ecodimb)
+	{
+		populateTableChkApproval();
+		ecodimb_selection = ecodimb;
+	}
+	$("#ecodimb_name").on("autocompleteselect", function (event, ui)
+	{
+		var ecodimb = ui.item.value;
+		if (ecodimb != ecodimb_selection)
+		{
+			populateTableChkApproval(ecodimb);
+		}
+	});
+
+	$("#budget").change(function ()
+	{
+		populateTableChkApproval();
+	});
+
+});
+
+function populateTableChkApproval(ecodimb)
+{
+	ecodimb = ecodimb || $('#ecodimb').val();
+
+	if (!ecodimb)
+	{
+		return;
+	}
+
+	var total_amount = Number(value_budget) + Number($('#field_budget').val());
+	$("#order_received_amount").val(total_amount);
+
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var htmlString = "";
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
+				var obj = data;
+				var required = '';
+
+				$.each(obj, function (i)
+				{
+					required = '';
+
+					htmlString += "<tr><td>";
+
+					var left_cell = "Ikke relevant";
+
+					if (obj[i].requested === true)
+					{
+						left_cell = obj[i].requested_time;
+					}
+					else if (obj[i].is_user !== true)
+					{
+						if (obj[i].approved !== true)
+						{
+							if (obj[i].required === true)
+							{
+								required = 'checked="checked" disabled="disabled"';
+								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
+							}
+							else
+							{
+								left_cell = '';
+							}
+							left_cell += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
+						}
+					}
+					else if (obj[i].is_user === true)
+					{
+						left_cell = '(Meg selv...)';
+					}
+					htmlString += left_cell;
+					htmlString += "</td><td valign=\"top\">";
+					htmlString += obj[i].address;
+					htmlString += "</td>";
+					htmlString += "<td>";
+
+					if (obj[i].approved === true)
+					{
+						htmlString += obj[i].approved_time;
+					}
+					else
+					{
+						if (obj[i].is_user === true)
+						{
+							htmlString += "<input type=\"checkbox\" name=\"values[do_approve][" + obj[i].id + "]\" value=\"" + obj[i].id + "\"></input>";
+						}
+					}
+					htmlString += "</td>";
+
+					htmlString += "</tr>";
+				});
+				htmlString += "</tbody></table>";
+//console.log(htmlString);
+				$("#approval_container").html(htmlString);
+			}
+		}
+	});
+}

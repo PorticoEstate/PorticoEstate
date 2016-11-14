@@ -2329,7 +2329,7 @@
 				'lang_budget' => lang('Budget'),
 				'value_budget' => isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['budget'] : '',
 				'check_for_budget' => abs($budget),
-
+				'value_budget' => $budget,
 				'lang_budget_statustext' => lang('Enter the budget'),
 				'lang_incl_tax' => lang('incl tax'),
 				'lang_calculation' => lang('Calculation'),
