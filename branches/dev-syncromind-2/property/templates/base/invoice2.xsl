@@ -37,10 +37,13 @@
 
 	<script type="text/javascript">
 		$(document).ready(function(){
-		pageLayout.open("east");		
-		pageLayout.sizePane("east", 400);
-		pageLayout.close("west");
-		//		localStorage['pageLayout_west_closed'] = 1;
+			if(typeof(pageLayout) !== 'undefined')
+			{
+				pageLayout.open("east");
+				pageLayout.sizePane("east", 400);
+				pageLayout.close("west");
+				//		localStorage['pageLayout_west_closed'] = 1;
+			}
 		});
 		var lang = <xsl:value-of select="php:function('js_lang', 'edit')"/>;
 	</script>

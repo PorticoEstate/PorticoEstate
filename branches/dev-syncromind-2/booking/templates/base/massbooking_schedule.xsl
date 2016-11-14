@@ -55,7 +55,7 @@
 
 		schedule.createDialogSchedule(300);
 
-		$(window).load(function() {
+		$(window).on('load', function() {
 		$('body').prepend($('#content_overlay'));
 		schedule.datasourceUrl = '<xsl:value-of select="building/datasource_url"/>';
 		schedule.newApplicationUrl = '<xsl:value-of select="building/application_link"/>';

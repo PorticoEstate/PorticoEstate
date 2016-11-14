@@ -581,8 +581,8 @@
 				$date['to_'] = pretty_timestamp($date['to_']);
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Event New'), 'link' => '#event_new');
@@ -990,8 +990,8 @@
 			$event['from_'] = pretty_timestamp($event['from_']);
 			$event['to_'] = pretty_timestamp($event['to_']);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime');
 			phpgwapi_jquery::load_widget('datepicker');
 
 

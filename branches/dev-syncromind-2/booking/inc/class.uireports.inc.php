@@ -167,8 +167,8 @@
 				$entry['selected'] = $entry['id'] == $report['variable_vertical'] ? 1 : 0;
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Report New'), 'link' => '#report_new');
@@ -600,8 +600,8 @@ HTML;
 
 			phpgwapi_cache::message_set($errors, 'error');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('to', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to', 'date');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Report Participants'), 'link' => '#report_part');
@@ -668,8 +668,8 @@ HTML;
 			phpgwapi_cache::message_set($errors, 'error');
 			//$this->flash_form_errors($errors);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('to', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to', 'date');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Report FreeTime'), 'link' => '#report_freetime');

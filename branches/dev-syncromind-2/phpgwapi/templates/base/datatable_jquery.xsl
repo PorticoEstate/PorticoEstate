@@ -28,18 +28,20 @@
 
 
 <xsl:template name="datatable">
-	<script type="text/javascript">
-		var number_of_toolbar_items = 0;
-		var filter_selects = {};
-	</script>
-	<xsl:call-template name="jquery_phpgw_i18n"/>
-	<xsl:apply-templates select="form" />
-	<div id="list_flash">
-		<xsl:call-template name="msgbox"/>
+	<div class="content">
+		<script type="text/javascript">
+			var number_of_toolbar_items = 0;
+			var filter_selects = {};
+		</script>
+		<xsl:call-template name="jquery_phpgw_i18n"/>
+		<xsl:apply-templates select="form" />
+		<div id="list_flash">
+			<xsl:call-template name="msgbox"/>
+		</div>
+		<div id="message" class='message'/>
+		<xsl:apply-templates select="datatable"/>
+		<xsl:apply-templates select="form/list_actions"/>
 	</div>
-	<div id="message" class='message'/>
-	<xsl:apply-templates select="datatable"/>
-	<xsl:apply-templates select="form/list_actions"/>
 </xsl:template>
 
 
@@ -621,23 +623,23 @@
 					<xsl:when test="new_item">
 						<xsl:choose>
 							<xsl:when test="new_item/onclick">
-							{
+								{
 								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
 								action: function (e, dt, node, config) {
-									<xsl:value-of select="new_item/onclick"/>;
+								<xsl:value-of select="new_item/onclick"/>;
 								}
-							},
+								},
 							</xsl:when>
 							<xsl:otherwise>
-							{
+								{
 								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
 								sUrl: '<xsl:value-of select="new_item"/>',
 
 								action: function (e, dt, node, config) {
-									var sUrl = config.sUrl;
-									window.open(sUrl, '_self');
+								var sUrl = config.sUrl;
+								window.open(sUrl, '_self');
 								}
-							},
+								},
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
@@ -672,11 +674,15 @@
 						},
 					</xsl:when>
 				</xsl:choose>
-				'csvHtml5',
+                {
+					extend:    'csvHtml5',
+					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>"
+				}
 				<xsl:choose>
 					<xsl:when test="download">
 						,{
 						text: "<xsl:value-of select="php:function('lang', 'download')"/>",
+						titleAttr: "<xsl:value-of select="php:function('lang', 'download data')"/>",
 						className: 'download',
 						sUrl: '<xsl:value-of select="download"/>',
 						action: function (e, dt, node, config) {
@@ -722,7 +728,7 @@
 									document.body.appendChild( iframe );
 								}
 								]]>
-							}
+						}
 
 						}
 					</xsl:when>
@@ -731,121 +737,121 @@
 				var action_def = [
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
-					<xsl:for-each select="//datatable/actions">
+						<xsl:for-each select="//datatable/actions">
 							<xsl:choose>
 								<xsl:when test="type = 'custom'">
 									{
-										text: "<xsl:value-of select="text"/>",
-										<xsl:choose>
-											<xsl:when test="className">
-												className: "<xsl:value-of select="className"/>",
-											</xsl:when>
-											<xsl:otherwise>
-												enabled: false,
-												className: 'record',
-											</xsl:otherwise>
-										</xsl:choose>
-										action: function (e, dt, node, config)
-										{
-										<xsl:if test="confirm_msg">
-											var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-											var r = confirm(confirm_msg);
-											if (r != true) {
-											return false;
-											}
-										</xsl:if>
-										fnSetSelected(this, dt);
-										<xsl:value-of select="custom_code"/>
+									text: "<xsl:value-of select="text"/>",
+									<xsl:choose>
+										<xsl:when test="className">
+											className: "<xsl:value-of select="className"/>",
+										</xsl:when>
+										<xsl:otherwise>
+											enabled: false,
+											className: 'record',
+										</xsl:otherwise>
+									</xsl:choose>
+									action: function (e, dt, node, config)
+									{
+									<xsl:if test="confirm_msg">
+										var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+										var r = confirm(confirm_msg);
+										if (r != true) {
+										return false;
 										}
+									</xsl:if>
+									fnSetSelected(this, dt);
+									<xsl:value-of select="custom_code"/>
+									}
 									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 								</xsl:when>
 								<xsl:otherwise>
 									{
-										text: "<xsl:value-of select="text"/>",
-										<xsl:choose>
-											<xsl:when test="className">
-												className: "<xsl:value-of select="className"/>",
-											</xsl:when>
-											<xsl:otherwise>
-												enabled: false,
-												className: 'record',
-											</xsl:otherwise>
-										</xsl:choose>
-										action: function (e, dt, node, config) {
-											var receiptmsg = [];
-											fnSetSelected(this, dt);
+									text: "<xsl:value-of select="text"/>",
+									<xsl:choose>
+										<xsl:when test="className">
+											className: "<xsl:value-of select="className"/>",
+										</xsl:when>
+										<xsl:otherwise>
+											enabled: false,
+											className: 'record',
+										</xsl:otherwise>
+									</xsl:choose>
+									action: function (e, dt, node, config) {
+									var receiptmsg = [];
+									fnSetSelected(this, dt);
 
-											var selected = fnGetSelected();
-											var numSelected = 	selected.length;
+									var selected = fnGetSelected();
+									var numSelected = 	selected.length;
 
-											if (numSelected ==0){
-												alert('None selected');
-												return false;
-											}
+									if (numSelected ==0){
+									alert('None selected');
+									return false;
+									}
 
-											<xsl:if test="confirm_msg">
-												var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
-												var r = confirm(confirm_msg);
-												if (r != true) {
-												return false;
-												}
-											</xsl:if>
-
-											var target = "<xsl:value-of select="target"/>";
-											if(!target)
-											{
-												target = '_self';
-											}
-
-											if (numSelected &gt; 1){
-												target = '_blank';
-											}
-
-											var n = 0;
-											for (; n &lt; numSelected; ) {
-												//				console.log(selected[n]);
-													var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
-												//				console.log(aData);
-
-												//delete stuff comes here
-												var action = "<xsl:value-of select="action"/>";
-												var my_name = "<xsl:value-of select="my_name"/>";
-
-												<xsl:if test="parameters">
-													var parameters = <xsl:value-of select="parameters"/>;
-													//						console.log(parameters.parameter);
-													var i = 0;
-													len = parameters.parameter.length;
-													for (; i &lt; len; ) {
-													action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
-													i++;
-													}
-												</xsl:if>
-
-												// look for the word "DELETE" in URL and my_name
-												if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
-												{
-													action += "&amp;confirm=yes&amp;phpgw_return_as=json";
-													execute_ajax(action, function(result){
-														document.getElementById("message").innerHTML += '<br/>' + result;
-														oTable.fnDraw();
-													});
-												}
-												else if (target == 'ajax')
-												{
-													action += "&amp;phpgw_return_as=json";
-													execute_ajax(action, function(result){
-														document.getElementById("message").innerHTML += '<br/>' + result;
-														oTable.fnDraw();
-													});
-												}
-												else
-												{
-													window.open(action,target);
-												}
-												n++;
-											}
+									<xsl:if test="confirm_msg">
+										var confirm_msg = "<xsl:value-of select="confirm_msg"/>";
+										var r = confirm(confirm_msg);
+										if (r != true) {
+										return false;
 										}
+									</xsl:if>
+
+									var target = "<xsl:value-of select="target"/>";
+									if(!target)
+									{
+									target = '_self';
+									}
+
+									if (numSelected &gt; 1){
+									target = '_blank';
+									}
+
+									var n = 0;
+									for (; n &lt; numSelected; ) {
+									//				console.log(selected[n]);
+									var aData = oTable.fnGetData( selected[n] ); //complete dataset from json returned from server
+									//				console.log(aData);
+
+									//delete stuff comes here
+									var action = "<xsl:value-of select="action"/>";
+									var my_name = "<xsl:value-of select="my_name"/>";
+
+									<xsl:if test="parameters">
+										var parameters = <xsl:value-of select="parameters"/>;
+										//						console.log(parameters.parameter);
+										var i = 0;
+										len = parameters.parameter.length;
+										for (; i &lt; len; ) {
+										action += '&amp;' + parameters.parameter[i]['name'] + '=' + aData[parameters.parameter[i]['source']];
+										i++;
+										}
+									</xsl:if>
+
+									// look for the word "DELETE" in URL and my_name
+									if(substr_count(action,'delete')>0 || substr_count(my_name,'delete')>0)
+									{
+									action += "&amp;confirm=yes&amp;phpgw_return_as=json";
+									execute_ajax(action, function(result){
+									document.getElementById("message").innerHTML += '<br/>' + result;
+									oTable.fnDraw();
+									});
+									}
+									else if (target == 'ajax')
+									{
+									action += "&amp;phpgw_return_as=json";
+									execute_ajax(action, function(result){
+									document.getElementById("message").innerHTML += '<br/>' + result;
+									oTable.fnDraw();
+									});
+									}
+									else
+									{
+									window.open(action,target);
+									}
+									n++;
+									}
+									}
 									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -884,30 +890,30 @@
 	]]>
 				if($(document).width() &lt; 1000)
 				{
-					group_buttons = true;
+				group_buttons = true;
 				}
 				$.fn.dataTable.Buttons.swfPath = "phpgwapi/js/DataTables/extensions/Buttons/swf/flashExport.swf";
 
 
 				if(isChrome == true)
 				{
-					group_buttons = false;
+				group_buttons = false;
 				}
 
 				if(group_buttons === true)
 				{
-					JqueryPortico.buttons = [
-						{
-							extend: 'collection',
-							text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
-							collectionLayout: 'three-column',
-							buttons: button_def
-						}
-					];
+				JqueryPortico.buttons = [
+				{
+				extend: 'collection',
+				text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
+				collectionLayout: 'three-column',
+				buttons: button_def
+				}
+				];
 				}
 				else
 				{
-					JqueryPortico.buttons = button_def;
+				JqueryPortico.buttons = button_def;
 				}
 			</xsl:when>
 			<xsl:otherwise>
@@ -1054,18 +1060,21 @@
 					}
 				//	console.log(oData);
 				//	console.log(params);
-					oControls.each(function() {
-						var oControl = $(this);
-						$.each(params, function(index, value) {
-							if ( index == oControl.attr('name') )
-							{
-								if (clear_state !== true)
+					if(params !== null)
+					{
+						oControls.each(function() {
+							var oControl = $(this);
+							$.each(params, function(index, value) {
+								if ( index == oControl.attr('name') )
 								{
-									oControl.val( value );
+									if (clear_state !== true)
+									{
+										oControl.val( value );
+									}
 								}
-							}
+							});
 						});
-					});
+					}
 					return true;
 				},
 				fnServerParams: function ( aoData ) {
@@ -1247,46 +1256,46 @@
 			<xsl:if test="type = 'filter'">
 				$('select#<xsl:value-of select="name"/>').change( function()
 				{
-					<xsl:value-of select="extra"/>
-					filterData('<xsl:value-of select="name"/>', $(this).val());
+				<xsl:value-of select="extra"/>
+				filterData('<xsl:value-of select="name"/>', $(this).val());
 				});
 			</xsl:if>
 			<xsl:if test="type = 'date-picker'">
 				var previous_<xsl:value-of select="id"/>;
 				$("#filter_<xsl:value-of select="id"/>").on('keyup change', function ()
 				{
-					if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) )
-					{
-						filterData('<xsl:value-of select="id"/>', $(this).val());
-						previous_<xsl:value-of select="id"/> = $(this).val();
-					}
+				if ( $.trim($(this).val()) != $.trim(previous_<xsl:value-of select="id"/>) )
+				{
+				filterData('<xsl:value-of select="id"/>', $(this).val());
+				previous_<xsl:value-of select="id"/> = $(this).val();
+				}
 				});
 			</xsl:if>
 			<xsl:if test="type = 'checkbox'">
 				$("#innertoolbar_<xsl:value-of select="name"/>").change( function()
 				{
-					if($(this).prop("checked"))
-					{
-						filterData('<xsl:value-of select="name"/>', 1);
-					}
-					else
-					{
-						filterData('<xsl:value-of select="name"/>', 0);
-					}
+				if($(this).prop("checked"))
+				{
+				filterData('<xsl:value-of select="name"/>', 1);
+				}
+				else
+				{
+				filterData('<xsl:value-of select="name"/>', 0);
+				}
 				});
 			</xsl:if>
 			<xsl:if test="type = 'autocomplete'">
 				$(document).ready(function() {
-					$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('autocompleteselect', function(event, ui){
-						filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
-					});
-					$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
-						if ($(this).val() == '')
-						{
-							$('#filter_<xsl:value-of select="name"/>_id').val('');
-							filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
-						}
-					});
+				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('autocompleteselect', function(event, ui){
+				filterData('filter_<xsl:value-of select="name"/>_id', ui.item.value);
+				});
+				$('input.ui-autocomplete-input#filter_<xsl:value-of select="name"/>_name').on('keyup', function(){
+				if ($(this).val() == '')
+				{
+				$('#filter_<xsl:value-of select="name"/>_id').val('');
+				filterData('filter_<xsl:value-of select="name"/>_id', $(this).val());
+				}
+				});
 				});
 			</xsl:if>
 		</xsl:for-each>

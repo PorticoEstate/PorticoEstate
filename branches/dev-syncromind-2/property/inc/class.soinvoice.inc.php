@@ -607,10 +607,10 @@
 			}
 
 			$groupmethod = "GROUP BY pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,"
-				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start";
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id";
 
 			$sql = "SELECT DISTINCT pmwrkord_code,bilagsnr,bilagsnr_ut,fakturanr,sum(belop) as belop, sum(godkjentbelop) as godkjentbelop,"
-				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start"
+				. " currency,budsjettansvarligid,org_name,periode,periodization,periodization_start,external_voucher_id"
 				. " FROM {$table}{$join_project}"
 				. " {$this->join} fm_vendor ON {$table}.spvend_code = fm_vendor.id {$filtermethod} {$groupmethod}";
 
@@ -633,7 +633,8 @@
 					'period' => $this->db->f('periode'),
 					'periodization' => $this->db->f('periodization'),
 					'periodization_start' => $this->db->f('periodization_start'),
-					'budget_responsible' => $this->db->f('budsjettansvarligid')
+					'budget_responsible' => $this->db->f('budsjettansvarligid'),
+					'external_voucher_id' => $this->db->f('external_voucher_id')
 				);
 			}
 

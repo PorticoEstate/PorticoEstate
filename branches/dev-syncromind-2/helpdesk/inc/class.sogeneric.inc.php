@@ -53,9 +53,7 @@
 
 			switch ($type)
 			{
-//START HELPDESK - APP
 				case 'helpdesk_status':
-					// the helpdesk app
 					$info = array
 						(
 						'table' => 'phpgw_helpdesk_status',
@@ -114,10 +112,134 @@
 						'menu_selection' => 'admin::helpdesk::ticket_status'
 					);
 					break;
+				case 'response_template':
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_response_template',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+								(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('response template'),
+						'acl_app' => 'property',
+						'acl_location' => '.ticket',
+						'menu_selection' => 'helpdesk::response_template',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
+						),
+						'check_grant' => true
+					);
 
-//END HELPDESK - APP
+					break;
+				case 'custom_menu_items':
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_custom_menu_items',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'parent_id',
+								'descr' => lang('parent'),
+								'type' => 'select',
+								'sortable' => true,
+								'nullable' => true,
+								'filter' => false,
+								'role' => 'parent',
+								'values_def' => array
+									(
+									'valueset' => false,
+									'method' => 'helpdesk.bogeneric.get_list',
+									'method_input' => array('type' => 'custom_menu_items', 'role' => 'parent',
+										'selected' => '##parent_id##', 'mapping' => array('name' => 'text'))
+								)
+							),
+							array
+								(
+								'name' => 'text',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'url',
+								'descr' => lang('url'),
+								'type' => 'text'
+							),
+							array
+								(
+								'name' => 'target',
+								'descr' => lang('target'),
+								'type' => 'select',
+								'filter' => false,
+								'values_def' => array
+									(
+									'valueset' => array(array('id' => '_blank', 'name' => '_blank'), array(
+											'id' => '_parent', 'name' => '_parent')),
+								)
+							),
+							array
+								(
+								'name' => 'location',
+								'descr' => lang('location'),
+								'type' => 'select',
+								'filter' => true,
+								'values_def' => array
+									(
+									'valueset' => false,
+									'method' => 'preferences.boadmin_acl.get_locations',
+									'method_input' => array('acl_app' => 'helpdesk', 'selected' => '##location##')
+								)
+							),
+							array
+								(
+								'name' => 'local_files',
+								'descr' => lang('local files'),
+								'type' => 'checkbox',
+								'default' => ''
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('custom menu items'),
+						'acl_app' => 'helpdesk',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::helpdesk::custom_menu_items',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('edit' => 'time()'),
+						),
+						'check_grant' => false,
+						'mapping' => array('name' => 'text')
+					);
 
-				default:
+					break;				default:
 					$message = lang('ERROR: illegal type %1', $type);
 					phpgwapi_cache::message_set($message, 'error');
 //				throw new Exception(lang('ERROR: illegal type %1', $type));

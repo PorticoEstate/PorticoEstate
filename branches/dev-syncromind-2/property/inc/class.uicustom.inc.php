@@ -35,14 +35,25 @@
 
 	class property_uicustom extends phpgwapi_uicommon_jquery
 	{
+		protected $currentapp,
+			$account,
+			$bo,
+			$bocommon,
+			$start,
+			$query,
+			$sort,
+			$order,
+			$filter,
+			$cat_id,
+			$allrows,
+			$acl,
+			$acl_location,
+			$acl_read,
+			$acl_add,
+			$acl_edit,
+			$acl_delete,
+			$xsl_rootdir;
 
-		var $grants;
-		var $cat_id;
-		var $start;
-		var $query;
-		var $sort;
-		var $order;
-		var $filter;
 		var $public_functions = array
 			(
 			'query' => true,
@@ -62,6 +73,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'property::custom';
 
+			$this->currentapp	= $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$this->bo = CreateObject('property.bocustom', true);
@@ -77,29 +89,20 @@
 
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.custom';
-			$this->acl_read = $this->acl->check('.custom', PHPGW_ACL_READ, 'property');
-			$this->acl_add = $this->acl->check('.custom', PHPGW_ACL_ADD, 'property');
-			$this->acl_edit = $this->acl->check('.custom', PHPGW_ACL_EDIT, 'property');
-			$this->acl_delete = $this->acl->check('.custom', PHPGW_ACL_DELETE, 'property');
-		}
-
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'filter' => $this->filter,
-				'cat_id' => $this->cat_id,
-				'this->allrows' => $this->allrows
-			);
-			$this->bo->save_sessiondata($data);
+			$this->acl_read = $this->acl->check('.custom', PHPGW_ACL_READ, $this->currentapp);
+			$this->acl_add = $this->acl->check('.custom', PHPGW_ACL_ADD, $this->currentapp);
+			$this->acl_edit = $this->acl->check('.custom', PHPGW_ACL_EDIT, $this->currentapp);
+			$this->acl_delete = $this->acl->check('.custom', PHPGW_ACL_DELETE, $this->currentapp);
+			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/base";
 		}
 
 		function index()
 		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
 			$receipt = $GLOBALS['phpgw']->session->appsession('session_data', 'custom_receipt');
 			$GLOBALS['phpgw']->session->appsession('session_data', 'custom_receipt', '');
 
@@ -114,7 +117,7 @@
 			$appname = lang('custom');
 			$function_msg = lang('list custom');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
 				'datatable_name' => $appname,
@@ -124,12 +127,12 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'property.uicustom.index',
+						'menuaction' => "{$this->currentapp}.uicustom.index",
 						'cat_id' => $this->cat_id,
 						'phpgw_return_as' => 'json'
 					)),
 					'new_item' => self::link(array(
-						'menuaction' => 'property.uicustom.edit'
+						'menuaction' => "{$this->currentapp}.uicustom.edit"
 					)),
 					'allrows' => true,
 					'editor_action' => '',
@@ -181,7 +184,7 @@
 					'text' => lang('view'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => 'property.uicustom.view'
+						'menuaction' => "{$this->currentapp}.uicustom.view"
 					)),
 					'parameters' => json_encode($parameters)
 				);
@@ -196,7 +199,7 @@
 					'text' => lang('edit'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => 'property.uicustom.edit'
+						'menuaction' => "{$this->currentapp}.uicustom.edit"
 					)),
 					'parameters' => json_encode($parameters)
 				);
@@ -212,7 +215,7 @@
 					'confirm_msg' => lang('do you really want to delete this entry'),
 					'action' => $GLOBALS['phpgw']->link('/index.php', array
 						(
-						'menuaction' => 'property.uicustom.delete'
+						'menuaction' => "{$this->currentapp}.uicustom.delete"
 					)),
 					'parameters' => json_encode($parameters)
 				);
@@ -294,7 +297,7 @@
 						if ($values['save'])
 						{
 							$GLOBALS['phpgw']->session->appsession('session_data', 'custom_receipt', $receipt);
-							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicustom.index'));
+							$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => "{$this->currentapp}.uicustom.index"));
 						}
 					}
 					catch (Exception $e)
@@ -308,7 +311,7 @@
 					}
 
 					self::message_set($receipt);
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicustom.edit',
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => "{$this->currentapp}.uicustom.edit",
 						'custom_id' => $custom_id));
 				}
 				else
@@ -326,8 +329,7 @@
 		{
 			if (!$this->acl_add && !$this->acl_edit)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 2, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$custom_id = phpgw::get_var('custom_id', 'int');
@@ -348,7 +350,7 @@
 
 			if ($values['cancel'])
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicustom.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => "{$this->currentapp}.uicustom.index"));
 			}
 
 			if ($custom_id)
@@ -359,7 +361,7 @@
 
 			$link_data = array
 				(
-				'menuaction' => 'property.uicustom.save',
+				'menuaction' => "{$this->currentapp}.uicustom.save",
 				'custom_id' => $custom_id
 			);
 
@@ -389,9 +391,9 @@
 					'descr' => $entry['descr'],
 					'order' => $entry['sorting'],
 					'sorting' => $entry['sorting'],
-					'link_up' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicustom.edit',
+					'link_up' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uicustom.edit",
 						'resort' => 'up', 'cols_id' => $entry['id'], 'custom_id' => $custom_id)),
-					'link_down' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicustom.edit',
+					'link_down' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uicustom.edit",
 						'resort' => 'down', 'cols_id' => $entry['id'], 'custom_id' => $custom_id)),
 					'delete' => $entry['id'],
 				);
@@ -452,7 +454,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			self::render_template_xsl(array('custom', 'datatable_inline'), array('edit' => $data));
+			self::render_template_xsl(array('custom', 'datatable_inline'), array('edit' => $data),$this->xsl_rootdir);
 		}
 
 		function delete()
@@ -462,7 +464,7 @@
 
 			$link_data = array
 				(
-				'menuaction' => 'property.uicustom.index'
+				'menuaction' => "{$this->currentapp}.uicustom.index"
 			);
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -471,12 +473,12 @@
 				return "custom_id " . $custom_id . " " . lang("has been deleted");
 			}
 
-			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'));
+			$GLOBALS['phpgw']->xslttpl->add_file(array('app_delete'),$this->xsl_rootdir);
 
 			$data = array
 				(
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicustom.delete',
+				'delete_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uicustom.delete",
 					'custom_id' => $custom_id)),
 				'lang_confirm_msg' => lang('do you really want to delete this entry'),
 				'lang_yes' => lang('yes'),
@@ -488,7 +490,7 @@
 			$appname = lang('custom');
 			$function_msg = lang('delete custom');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
@@ -501,10 +503,12 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
-			$appname = lang('documents');
-			$function_msg = lang('list documents');
+			$custom = $this->bo->read_single($custom_id);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$appname = lang($this->currentapp);
+			$function_msg = $custom['name'];
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $appname . ': ' . $function_msg;
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
@@ -521,13 +525,13 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'property.uicustom.view',
+						'menuaction' => "{$this->currentapp}.uicustom.view",
 						'custom_id' => $custom_id,
 						'filter' => $this->filter,
 						'phpgw_return_as' => 'json'
 					)),
 					'download' => self::link(array(
-						'menuaction' => 'property.uicustom.download',
+						'menuaction' => "{$this->currentapp}.uicustom.download",
 						'filter' => $this->filter,
 						'custom_id' => $custom_id,
 						'export' => true,

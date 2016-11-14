@@ -30,20 +30,22 @@
 
 	</head>
 	<body>
-		<div id="wrapper">
-			<div id="header">
-				<div id="login-bar">
-					<a href="{manual_url}">{manual_text}</a>
-					<a href="{home_url}">{home_text}</a>
-					<a href="{logout_url}">{logout_text}</a>
-				</div>
-        		<div id="current_user">{current_user}</div>
-	 			<div id="app_header">{current_app_header}</div>
-        		<!--<div id="logo">	</div>
-				<div id="centerimage"></div>-->
-			</div>
-			<div class="yui-skin-sam" id='frontend'>
-				<div id="line"></div>
-				<div style='margin:0; padding: 0; line-height: 0'>&nbsp;</div>
 
+		<div class="home-menu custom-menu-wrapper">
+			<div class="pure-menu custom-menu custom-menu-top">
+				<a href="{site_url}" class="pure-menu-heading custom-menu-brand">{site_title}</a>
+				<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
+			</div>
+			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
+				<div class="custom-menu-screen"></div>
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
+					<li class="pure-menu-item"><a href="{home_url}" class="pure-menu-link">{home_text}</a></li>
+					<li class="pure-menu-item"><a href="{logout_url}" class="pure-menu-link">{logout_text}</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div id="content-wrapper">
+	 			<div id="app_header">{current_app_header}</div>
 

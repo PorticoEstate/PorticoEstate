@@ -628,7 +628,8 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return htmlspecialchars_decode(stripslashes($this->resultSet->fields[$name]),ENT_QUOTES);
+						return htmlspecialchars_decode(stripslashes(str_replace(array('&amp;','&#40;', '&#41;', '&#61;','&#8722;&#8722;','&#59;'), array('&','(', ')', '=', '--',';'), $this->resultSet->fields[$name])),ENT_QUOTES);
+//						return htmlspecialchars_decode(stripslashes($this->resultSet->fields[$name]),ENT_QUOTES);
 					}
 					else
 					{

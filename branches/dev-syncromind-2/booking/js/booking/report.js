@@ -6,7 +6,7 @@ $(document).ready(function ()
 	JqueryPortico.autocompleteHelper(requestUrl, 'field_building_name', 'field_building_id', 'building_container');
 });
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	var building_id = $('#field_building_id').val();
 	if (building_id > 0)

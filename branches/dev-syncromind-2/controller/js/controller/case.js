@@ -37,7 +37,7 @@ $(document).ready(function ()
 				{
 					if (data)
 					{
-						var jsonObj = jQuery.parseJSON(data);
+						var jsonObj = JSON.parse(data);
 
 						if (jsonObj.status == "saved")
 						{
@@ -86,7 +86,7 @@ $(document).ready(function ()
 				{
 					if (data != null)
 					{
-						var obj = jQuery.parseJSON(data);
+						var obj = JSON.parse(data);
 
 						$.each(obj, function (i, control_group)
 						{
@@ -148,7 +148,7 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					var jsonObj = jQuery.parseJSON(data);
+					var jsonObj = JSON.parse(data);
 
 					if (jsonObj.status == "saved")
 					{
@@ -240,7 +240,7 @@ $(document).ready(function ()
 			url: url,
 			success: function (data)
 			{
-				var obj = jQuery.parseJSON(data);
+				var obj = JSON.parse(data);
 
 				if (obj.status == "deleted")
 				{
@@ -290,7 +290,7 @@ $(document).ready(function ()
 			url: url,
 			success: function (data)
 			{
-				var obj = jQuery.parseJSON(data);
+				var obj = JSON.parse(data);
 
 				if (obj.status == "true")
 				{
@@ -340,7 +340,7 @@ $(document).ready(function ()
 			url: url,
 			success: function (data)
 			{
-				var obj = jQuery.parseJSON(data);
+				var obj = JSON.parse(data);
 
 				if (obj.status == "true")
 				{

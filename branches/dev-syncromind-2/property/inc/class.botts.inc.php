@@ -1436,24 +1436,6 @@
 			{
 				$this->historylog->add('M', $id, implode(';', array_unique($log_recipients)));
 			}
-			/*
-			  if (!$rc && ($this->config->config_data['groupnotification'] || $this->config->config_data['ownernotification'] || $this->config->config_data['groupnotification']))
-			  {
-			  $receipt['error'][] = array('msg'=> lang('Your message could not be sent by mail!'));
-			  $receipt['error'][] = array('msg'=> lang('The mail server returned'));
-			  $receipt['error'][] = array('msg'=> "From : {$current_user_address}");
-			  $receipt['error'][] = array('msg'=> 'to: '.$to);
-			  $receipt['error'][] = array('msg'=> 'subject: '.$subject);
-			  $receipt['error'][] = array('msg'=> $body );
-			  //			$receipt['error'][] = array('msg'=> 'cc: ' . $cc);
-			  //			$receipt['error'][] = array('msg'=> 'bcc: '.$bcc);
-			  $receipt['error'][] = array('msg'=> 'group: '.$group_name);
-			  $receipt['error'][] = array('msg'=> 'err_code: '.$this->send->err['code']);
-			  $receipt['error'][] = array('msg'=> 'err_msg: '. htmlspecialchars($this->send->err['msg']));
-			  $receipt['error'][] = array('msg'=> 'err_desc: '. $this->send->err['desc']);
-			  }
-			 */
-			//_debug_array($receipt);
 			return $receipt;
 		}
 

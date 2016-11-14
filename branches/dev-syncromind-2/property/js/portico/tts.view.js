@@ -360,7 +360,7 @@ function receive_order(order_id)
 
 var ecodimb_selection = "";
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	ecodimb = $('#ecodimb').val();
 	if (ecodimb)
@@ -481,6 +481,10 @@ $(document).ready(function ()
 	if (test !== null)
 	{
 		width = 280;
+	}
+	else
+	{
+		return;
 	}
 
 	$("#submitbox").css({

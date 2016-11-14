@@ -21,7 +21,7 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					var jsonObj = jQuery.parseJSON(data);
+					var jsonObj = JSON.parse(data);
 
 					if (jsonObj.status == 'not_saved')
 					{

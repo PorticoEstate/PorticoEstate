@@ -81,7 +81,7 @@ p.conflicts {margin: 0;color: #000;}
 }
 
 .date-container .close-btn {
-    background: transparent url("../../../../phpgwapi/js/yahoo/assets/skins/sam/sprite.png") no-repeat scroll 0 -300px;
+    background: transparent url("../../../../phpgwapi/js/yui3/assets/skins/sam/sprite.png") no-repeat scroll 0 -300px;
     border: medium none;
     color: white;
     cursor: pointer;

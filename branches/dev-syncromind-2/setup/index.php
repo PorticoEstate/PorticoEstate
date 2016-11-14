@@ -429,12 +429,60 @@
 		case 10:
 			$setup_tpl->set_var('config_status_img',$completed);
 			$setup_tpl->set_var('config_status_alt',lang('completed'));
+			$completed_notice = '';
+			$GLOBALS['phpgw_setup']->db->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name='files_dir'");
+			$GLOBALS['phpgw_setup']->db->next_record();
+			$files_dir = $GLOBALS['phpgw_setup']->db->f('config_value');
+			$GLOBALS['phpgw_setup']->db->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name='file_store_contents'");
+			$GLOBALS['phpgw_setup']->db->next_record();
+			$file_store_contents = $GLOBALS['phpgw_setup']->db->f('config_value');
+			if($files_dir && $file_store_contents == 'filesystem')
+			{
+				if(!is_dir($files_dir))
+				{
+					$completed_notice .= '<br /><b>' . lang('files dir %1 is not a directory', $files_dir) . '</b>';
+				}
+				if(!is_readable($files_dir))
+				{
+					$completed_notice .= '<br /><b>' . lang('files dir %1 is not readable', $files_dir) . '</b>';
+				}
+				if(!is_writable($files_dir))
+				{
+					$completed_notice .= '<br /><b>' . lang('files dir %1 is not writeable', $files_dir) . '</b>';
+				}
+			}
+
+			$GLOBALS['phpgw_setup']->db->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name='temp_dir'");
+			$GLOBALS['phpgw_setup']->db->next_record();
+			$temp_dir = $GLOBALS['phpgw_setup']->db->f('config_value');
+			if($temp_dir)
+			{
+				if(!is_dir($temp_dir))
+				{
+					$completed_notice .= '<br /><b>' . lang('temp dir %1 is not a directory', $temp_dir) . '</b>';
+				}
+				if(!is_readable($temp_dir))
+				{
+					$completed_notice .= '<br /><b>' . lang('temp dir %1 is not readable', $temp_dir) . '</b>';
+				}
+				if(!is_writable($temp_dir))
+				{
+					$completed_notice .= '<br /><b>' . lang('temp dir %1 is not writeable', $temp_dir) . '</b>';
+				}
+			}
+
 			$btn_edit_config = $GLOBALS['phpgw_setup']->html->make_frm_btn_simple(
 				lang('Configuration completed'),
 				'POST','config.php',
 				'submit',lang('Edit Current Configuration'),
-				''
+				$completed_notice
 			);
+
+			if($completed_notice)
+			{
+				$GLOBALS['phpgw_setup']->html->show_alert_msg('Error', $completed_notice );
+			}
+
 			$GLOBALS['phpgw_setup']->db->query("select config_value FROM phpgw_config WHERE config_name='auth_type'");
 			$GLOBALS['phpgw_setup']->db->next_record();
 			if ($GLOBALS['phpgw_setup']->db->f('config_value') == 'ldap')

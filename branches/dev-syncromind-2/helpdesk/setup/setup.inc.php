@@ -12,7 +12,7 @@
 	*/
 
 	$setup_info['helpdesk']['name']			= 'helpdesk';
-	$setup_info['helpdesk']['version']		= '0.9.18.001';
+	$setup_info['helpdesk']['version']		= '0.9.18.003';
 	$setup_info['helpdesk']['app_order']	= 8;
 	$setup_info['helpdesk']['enable']		= 1;
 	$setup_info['helpdesk']['app_group']	= 'office';
@@ -48,6 +48,8 @@
 		'phpgw_helpdesk_status',
 		'phpgw_helpdesk_tickets',
 		'phpgw_helpdesk_views',
+		'phpgw_helpdesk_response_template',
+		'phpgw_helpdesk_custom_menu_items'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */

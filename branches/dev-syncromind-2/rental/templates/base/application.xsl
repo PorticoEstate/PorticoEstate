@@ -450,7 +450,7 @@
 								var application_id = $('#application_id').val();
 
 								schedule.rental = {};
-								$(window).load(function() {
+								$(window).on('load', function() {
 
 									schedule.params.length = $('#cboNObjects').val();
 									schedule.params.search = $('#txtSearchSchedule').val();

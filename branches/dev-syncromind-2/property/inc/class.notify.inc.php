@@ -53,6 +53,7 @@
 		function __construct()
 		{
 			$this->_db = & $GLOBALS['phpgw']->db;
+			$this->_db2 = clone($this->_db);
 			$this->_join = & $this->_db->join;
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
@@ -116,18 +117,19 @@
 				$entry['sms'] = $comms[$entry['contact_id']]['mobile (cell) phone'];
 				$entry['is_active_text'] = $entry['is_active'] ? $lang_yes : $lang_no;
 
-				$sql = "SELECT account_id FROM phpgw_accounts WHERE person_id = " . (int)$entry['contact_id'];
-				$this->_db->query($sql, __LINE__, __FILE__);
-				if ($this->_db->next_record())
+				$sql = "SELECT account_id, account_lid FROM phpgw_accounts WHERE person_id = " . (int)$entry['contact_id'];
+				$this->_db2->query($sql, __LINE__, __FILE__);
+				if ($this->_db2->next_record())
 				{
-					$account_id = $this->_db->f('account_id');
+					$account_id = $this->_db2->f('account_id');
+					$entry['account_id'] = $account_id;
+					$entry['account_lid'] = $this->_db2->f('account_lid');
 					$prefs = $socommon->create_preferences('property', $account_id);
 
 					$entry['email'] = isset($entry['email']) && $entry['email'] ? $entry['email'] : $prefs['email'];
 					$entry['sms'] = isset($entry['sms']) && $entry['sms'] ? $entry['sms'] : $prefs['cellphone'];
 				}
 			}
-
 			return $values;
 		}
 
@@ -175,6 +177,8 @@
 				'values' => array(array('key' => 'id', 'hidden' => true),
 					array('key' => 'contact_id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true,
 						'formatter' => 'formatLink_notify'),
+					array('key' => 'account_lid', 'label' => lang('username'), 'sortable' => true,
+						'resizeable' => true),
 					array('key' => 'first_name', 'label' => lang('first name'), 'sortable' => true,
 						'resizeable' => true),
 					array('key' => 'last_name', 'label' => lang('last name'), 'sortable' => true,

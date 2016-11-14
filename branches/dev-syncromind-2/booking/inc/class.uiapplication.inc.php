@@ -31,6 +31,9 @@
 		public function __construct()
 		{
 			parent::__construct();
+
+			phpgwapi_jquery::load_widget('autocomplete');
+
 			$this->set_module();
 //			Analizar esta linea self::process_booking_unauthorized_exceptions();
 			$this->bo = CreateObject('booking.boapplication');
@@ -789,8 +792,10 @@
 				$date['to_'] = pretty_timestamp($date['to_']);
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+//			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
+//			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{
@@ -895,8 +900,8 @@
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
 			//test
 
-			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
 			//			self::render_template('application_edit', array('application' => $application, 'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience));
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
