@@ -963,7 +963,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
 										</label>
-										<input id="budget" type="text" name="values[budget]">
+										<input id="field_budget" type="text" name="values[budget]">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 											</xsl:attribute>
@@ -1061,7 +1061,7 @@
 												<label>
 													<xsl:value-of select="php:function('lang', 'approval')"/>
 												</label>
-												<div id="approval_container" class="pure-table pure-u-md-1-2">
+												<div id="approval_container" class="pure-u-md-1-2">
 												</div>
 											</div>
 										</xsl:when>

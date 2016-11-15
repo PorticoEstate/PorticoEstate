@@ -1,4 +1,4 @@
-
+var amount = 0;
 var vendor_id;
 
 function calculate_order()
@@ -396,23 +396,13 @@ $(document).ready(function ()
 //		parent.hide_popupBox();
 	});
 
-
 	var test = document.getElementById('save_button');
-	var width = 200;
-	if (test !== null)
-	{
-		width = 160;
-	}
-	else
+	if (test === null)
 	{
 		return;
 	}
 
-	test = document.getElementById('calculate_button');
-	if (test !== null)
-	{
-		width = 380;
-	}
+	var width =  $("#submitbox").width();
 
 	$("#submitbox").css({
 		position: 'absolute',
@@ -487,7 +477,7 @@ $(window).on('load', function ()
 		}
 	});
 
-	$("#budget").change(function ()
+	$("#field_budget").change(function ()
 	{
 		populateTableChkApproval();
 	});
@@ -503,7 +493,7 @@ function populateTableChkApproval(ecodimb)
 		return;
 	}
 
-	var total_amount = Number(value_budget) + Number($('#field_budget').val());
+	var total_amount = Number(amount) + Number($('#field_budget').val());
 	$("#order_received_amount").val(total_amount);
 
 	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
@@ -518,7 +508,9 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
+				htmlString = "<table class='pure-table pure-table-striped'>";
+				htmlString += "<thead><th>" + $.number(total_amount, 0, ',', '.') + "</th><th></th><th></th></thead>";
+				htmlString += "<thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
 				var obj = data;
 				var required = '';
 
@@ -576,7 +568,6 @@ function populateTableChkApproval(ecodimb)
 					htmlString += "</tr>";
 				});
 				htmlString += "</tbody></table>";
-//console.log(htmlString);
 				$("#approval_container").html(htmlString);
 			}
 		}

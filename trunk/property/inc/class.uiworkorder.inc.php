@@ -49,6 +49,7 @@
 		var $currentapp;
 		var $criteria_id;
 		var $filter_year;
+		var $account;
 		var $public_functions = array
 			(
 			'columns' => true,
@@ -725,20 +726,25 @@
 					'msg' => lang('Hmm... looks like a repost!'));
 			}
 
-			if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
+			if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb' && !empty($values['do_approve']))
 			{
 				if (!$this->acl_manage)
 				{
-					$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']);
-					if (!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
+					foreach ($values['do_approve'] as $_account_id => $_dummy)
 					{
-						$this->receipt['error'][] = array(
-							'msg' => lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
-						$error_id = true;
-					}
+						if($_account_id != $this->account)
+						{
+							continue;
+						}
 
-					if (isset($values['approved']) && $values['approved'] && (!isset($values['approved_orig']) || !$values['approved_orig']))
-					{
+						$approve_role = execMethod('property.boinvoice.check_role', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb']);
+						if (!$approve_role['is_janitor'] && !$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
+						{
+							$this->receipt['error'][] = array(
+								'msg' => lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
+							$error_id = true;
+						}
+						
 						if (!$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
 						{
 							$this->receipt['error'][] = array(
@@ -960,58 +966,87 @@
 
 				$this->_handle_files($values);
 
-				if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
+				// start approval
+
+				$_budget_amount = $this->bo->get_budget_amount($id);
+
+				if (isset($values['approval']) && $values['approval'] && $config->config_data['workorder_approval'])
 				{
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-					$subject = lang('Approval') . ": " . $id;
-					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array(
-							'menuaction' => 'property.uiworkorder.edit',
-							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $id) . '</a>';
+					$subject = lang(Approval) . ": " . $id;
+					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
+							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $ticket['order_id']) . '</a>';
 
-					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
+					if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 					{
-						if (!is_object($GLOBALS['phpgw']->send))
-						{
-							$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-						}
+						$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
+					}
 
-						$action_params = array
-							(
-							'appname' => 'property',
-							'location' => '.project.workorder',
-							'id' => $id,
-							'responsible' => '',
-							'responsible_type' => 'user',
-							'action' => 'approval',
-							'remark' => '',
-							'deadline' => ''
-						);
-						$bcc = '';//$coordinator_email;
-						foreach ($values['mail_address'] as $_account_id => $_address)
+					if (!is_object($GLOBALS['phpgw']->send))
+					{
+						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+					}
+
+					$action_params = array(
+						'appname' => 'property',
+						'location' => '.project.workorder',
+						'id' => $id,
+						'responsible' => '',
+						'responsible_type' => 'user',
+						'action' => 'approval',
+						'remark' => '',
+						'deadline' => ''
+					);
+					$bcc = '';//$coordinator_email;
+					foreach ($values['approval'] as $_account_id => $_address)
+					{
+						$action_params['responsible'] = $_account_id;
+						try
 						{
-							if (isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
+							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+							if ($rcpt)
 							{
-								$action_params['responsible'] = $_account_id;
-								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-								if ($rcpt)
-								{
-									$historylog->add('AP', $id, lang('%1 is notified', $_address));
-									$receipt['message'][] = array(
-										'msg' => lang('%1 is notified', $_address));
-								}
-
-								execMethod('property.sopending_action.set_pending_action', $action_params);
+								phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
 							}
 						}
+						catch (Exception $exc)
+						{
+							$receipt['error'][] = array('msg' => $exc->getMessage());
+						}
+						$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+						execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
-					else
+
+				}
+
+				if (!empty($values['do_approve']) && is_array($values['do_approve']))
+				{
+					$action_params = array(
+						'appname' => 'property',
+						'location' => '.project.workorder',
+						'id' => $id,
+						'responsible' => '',
+						'responsible_type' => 'user',
+						'action' => 'approval',
+						'remark' => '',
+						'deadline' => ''
+					);
+
+					foreach ($values['do_approve'] as $_account_id => $_dummy)
 					{
-						$this->receipt['error'][] = array(
-							'msg' => lang('SMTP server is not set! (admin section)'));
+						$action_params['responsible'] = $_account_id;
+						if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+						{
+							execMethod('property.sopending_action.set_pending_action', $action_params);
+						}
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+						$historylog->add('OA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
 					}
 				}
+
+				//end approval
 				$toarray = array();
 				$toarray_sms = array();
 
@@ -1495,86 +1530,6 @@
 				'id' => $id
 			);
 
-			$supervisor_email = array();
-			if ($need_approval = isset($config->config_data['workorder_approval']) ? $config->config_data['workorder_approval'] : '')
-			{
-				$invoice = CreateObject('property.soinvoice');
-				if (isset($config->config_data['invoice_acl']) && $config->config_data['invoice_acl'] == 'dimb')
-				{
-
-					$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
-						(
-						'dimb_id' => $values['ecodimb'],
-						'role_id' => 2,
-						'query_start' => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-						'get_netto_list' => true
-						)
-					);
-					if (isset($sodimb_role_users[$values['ecodimb']][2]) && is_array($sodimb_role_users[$values['ecodimb']][2]))
-					{
-						foreach ($sodimb_role_users[$values['ecodimb']][2] as $supervisor_id => $entry)
-						{
-							$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
-							$supervisor_email[] = array
-								(
-								'id' => $supervisor_id,
-								'address' => $prefs['email'],
-								'default' => $entry['default_user'],
-							);
-						}
-					}
-
-//					$supervisor_id = $invoice->get_default_dimb_role_user(2, $values['ecodimb']);
-
-					$supervisor2_id = $invoice->get_default_dimb_role_user(3, $values['ecodimb']);
-					$prefs2 = $this->bocommon->create_preferences('property', $supervisor2_id);
-					$supervisor_email[] = array
-						(
-						'id' => $supervisor2_id,
-						'address' => $prefs2['email'],
-					);
-					unset($prefs);
-					unset($prefs2);
-					unset($invoice);
-				}
-				else
-				{
-					$supervisor_id = 0;
-
-					if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-					{
-						$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-					}
-
-
-					if ($supervisor_id)
-					{
-						$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
-						$supervisor_email[] = array
-							(
-							'id' => $supervisor_id,
-							'address' => $prefs['email'],
-						);
-
-						if (isset($prefs['approval_from']))
-						{
-							$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
-
-							if (isset($prefs2['email']))
-							{
-								$supervisor_email[] = array
-									(
-									'id' => $prefs['approval_from'],
-									'address' => $prefs2['email'],
-								);
-								$supervisor_email = array_reverse($supervisor_email);
-							}
-							unset($prefs2);
-						}
-						unset($prefs);
-					}
-				}
-			}
 			$workorder_status = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['workorder_status'] : '');
 			if (!$values['status'])
 			{
@@ -2329,7 +2284,7 @@
 				'lang_budget' => lang('Budget'),
 				'value_budget' => isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['budget'] : '',
 				'check_for_budget' => abs($budget),
-				'value_budget' => $budget,
+				'check_value_budget' => $budget,
 				'lang_budget_statustext' => lang('Enter the budget'),
 				'lang_incl_tax' => lang('incl tax'),
 				'lang_calculation' => lang('Calculation'),
@@ -2402,10 +2357,9 @@
 				'value_approved' => isset($values['approved']) ? $values['approved'] : '',
 				'value_continuous' => isset($values['continuous']) ? $values['continuous'] : '',
 				'value_fictive_periodization' => isset($values['fictive_periodization']) ? $values['fictive_periodization'] : '',
-				'need_approval' => $need_approval,
+				'need_approval' => !empty($config->config_data['workorder_approval']),
 				'lang_ask_approval' => lang('Ask for approval'),
 				'lang_ask_approval_statustext' => lang('Check this to send a mail to your supervisor for approval'),
-				'value_approval_mail_address' => $supervisor_email,
 				'currency' => $GLOBALS['phpgw_info']['user']['preferences']['common']['currency'],
 				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files' => (isset($config->config_data['files_url']) ? $config->config_data['files_url'] : ''),
@@ -3017,5 +2971,4 @@
 
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
-
 	}

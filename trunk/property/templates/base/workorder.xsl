@@ -173,7 +173,7 @@
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="floating-box">
 				<div id="submitbox">
-					<table width="200px">
+					<table>
 						<tbody>
 							<tr>
 								<xsl:choose>
@@ -419,40 +419,17 @@
 						<xsl:call-template name="status_select"/>
 					</div>
 					<xsl:choose>
-						<xsl:when test="need_approval='1' and mode='edit'">
+						<xsl:when test="need_approval='1'">
 							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_ask_approval"/>
+								<label>
+									<xsl:value-of select="php:function('lang', 'approval')"/>
 								</label>
-								<div class="pure-custom">
-									<table>
-										<xsl:for-each select="value_approval_mail_address">
-											<tr>
-												<td>
-													<input type="checkbox" name="values[approval][{id}]" value="True">
-														<xsl:attribute name="title">
-															<xsl:value-of select="//lang_ask_approval_statustext"/>
-														</xsl:attribute>
-													</input>
-												</td>
-												<td>
-													<input type="text" name="values[mail_address][{id}]" value="{address}">
-														<xsl:attribute name="title">
-															<xsl:value-of select="//lang_ask_approval_statustext"/>
-														</xsl:attribute>
-													</input>
-													<xsl:if test="default = '1'">
-														<xsl:text>&lt;=</xsl:text>
-													</xsl:if>
-												</td>
-											</tr>
-										</xsl:for-each>
-									</table>
+								<div id="approval_container" class="pure-u-md-1-2">
 								</div>
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
+					<!--xsl:choose>
 						<xsl:when test="value_workorder_id!=''">
 							<div class="pure-control-group">
 								<label for="name">
@@ -476,7 +453,7 @@
 								</input>
 							</div>
 						</xsl:when>
-					</xsl:choose>
+					</xsl:choose-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_remark"/>
@@ -985,17 +962,6 @@
 							</xsl:for-each>
 						</div>
 					</div>
-					<xsl:choose>
-						<xsl:when test="need_approval='1'">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'approval')"/>
-								</label>
-								<div id="approval_container" class="pure-table pure-u-md-1-2">
-								</div>
-							</div>
-						</xsl:when>
-					</xsl:choose>
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:choose>
@@ -1270,7 +1236,7 @@
 			<script type="text/javascript">
 				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum')"/>;
 				var check_for_budget = <xsl:value-of select="check_for_budget"/>;
-				var value_budget = <xsl:value-of select="value_budget"/>;
+				var amount = <xsl:value-of select="check_value_budget"/>;
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
 				var location_item_id = '<xsl:value-of select="location_item_id"/>';
 				var order_id = '<xsl:value-of select="value_workorder_id"/>';
