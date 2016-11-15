@@ -1330,6 +1330,14 @@
 					}
 					unset($_ok);
 				}
+				else
+				{
+					if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
+							'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+					}
+				}
 
 				$criteria = array
 					(
@@ -1863,6 +1871,14 @@ HTML;
 						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
 				}
 				unset($_ok);
+			}
+			else
+			{
+				if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+				{
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
+						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+				}
 			}
 
 			$content = $this->_get_order_details($common_data['content'], $show_cost);
@@ -3393,5 +3409,30 @@ HTML;
 				$formatted_gab_id = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
 			return $formatted_gab_id;
+		}
+
+
+		private function _validate_purchase_grant( $id, $ecodimb )
+		{
+			$_budget_amount = $this->boworkorder->get_budget_amount($id);
+
+			$purchase_grant_ok = false;
+			$check_purchase = createObject('property.botts')->check_purchase_right($ecodimb, $_budget_amount, $id);
+			if($check_purchase)
+			{
+				$purchase_grant_ok = true;
+			}
+			foreach ($check_purchase as $purchase_grant)
+			{
+				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+				{
+					$purchase_grant_ok = false;
+					phpgwapi_cache::message_set(lang('approval from %1 is required',
+							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
+							'error'
+					);
+				}
+			}
+			return $purchase_grant_ok;
 		}
 	}

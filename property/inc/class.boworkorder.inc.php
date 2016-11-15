@@ -665,7 +665,7 @@
 						break;
 					case 'SC': $type = lang('Status confirmed');
 						break;
-					case 'AP': $type = lang('Ask for approval');
+					case 'AP': $type = lang('Request for approval');
 						break;
 					case 'ON': $type = lang('Owner notified');
 						break;
@@ -1041,4 +1041,22 @@ HTML;
 				'time'	=> $GLOBALS['phpgw']->common->show_date(time())
 				);
 		}
+
+		function get_budget_amount($id)
+		{
+			static $_budget_amount = 0;
+			if(!$_budget_amount)
+			{
+				$budgets = $this->get_budget($id);
+				foreach ($budgets as $budget)
+				{
+					if ($budget['active'] == 1)
+					{
+						$_budget_amount += $budget['budget'];
+					}
+				}
+			}
+			return $_budget_amount;
+		}
+
 	}

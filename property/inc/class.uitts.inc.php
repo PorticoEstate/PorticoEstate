@@ -2850,7 +2850,6 @@
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
 				'period_list' => array('options' => execMethod('property.boinvoice.period_list', date('Ym'))),
 				'need_approval' => $need_approval,
-	//			'value_approval_mail_address' => $supervisor_email,
 				'contact_data' => $contact_data,
 				'lookup_type' => $lookup_type,
 				'simple' => $this->simple,
