@@ -1,5 +1,5 @@
 <?php
-
+	
 	class import_component_files
 	{	
 		private $receipt = array();
@@ -13,6 +13,7 @@
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 
 			$this->last_files_added = array();
+			$this->names = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -101,7 +102,7 @@
 			$message = array();
 
 			$uploaded_files = $this->_get_uploaded_files();
-
+			
 			if ($this->receipt['error'])
 			{
 				return $this->receipt;
@@ -214,16 +215,28 @@
 				}
 			}
 		}
-		
+	
 		private function _un_zip($file, $dir)
 		{
+			header('Content-Type: text/plain; charset=utf-8');
+			
 			@set_time_limit(5 * 60);
+			//$this->names = array();
+			
+			mkdir($dir, 0777, true);
 
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE) 
 			{
-				$zip->extractTo($dir);
+				for($i = 0; $i < $zip->numFiles; $i++) 
+				{
+					//$this->names[] = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
+					$filename = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
+					mkdir(dirname($dir.'/'.$filename), 0777, true);					
+					copy("zip://".$file."#".$zip->getNameIndex($i), "{$dir}/{$filename}");
+				}
 				$zip->close();
+				
 				return true;
 			} else {
 				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
