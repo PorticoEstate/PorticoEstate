@@ -1,5 +1,6 @@
 var amount = 0;
 var vendor_id;
+var project_ecodimb;
 
 function calculate_order()
 {
@@ -402,7 +403,7 @@ $(document).ready(function ()
 		return;
 	}
 
-	var width =  $("#submitbox").width();
+	var width = $("#submitbox").width();
 
 	$("#submitbox").css({
 		position: 'absolute',
@@ -463,6 +464,7 @@ var ecodimb_selection = "";
 $(window).on('load', function ()
 {
 	ecodimb = $('#ecodimb').val();
+	ecodimb = ecodimb || project_ecodimb
 	if (ecodimb)
 	{
 		populateTableChkApproval();
@@ -487,6 +489,7 @@ $(window).on('load', function ()
 function populateTableChkApproval(ecodimb)
 {
 	ecodimb = ecodimb || $('#ecodimb').val();
+	ecodimb = ecodimb || project_ecodimb
 
 	if (!ecodimb)
 	{
@@ -530,10 +533,17 @@ function populateTableChkApproval(ecodimb)
 					{
 						if (obj[i].approved !== true)
 						{
-							if (obj[i].required === true)
+							if (obj[i].required === true || obj[i].default === true)
 							{
-								required = 'checked="checked" disabled="disabled"';
 								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
+								if (obj[i].required === true)
+								{
+									required = 'checked="checked" disabled="disabled"';
+								}
+								else
+								{
+						//			required = 'checked="checked"';
+								}
 							}
 							else
 							{
@@ -548,7 +558,14 @@ function populateTableChkApproval(ecodimb)
 					}
 					htmlString += left_cell;
 					htmlString += "</td><td valign=\"top\">";
-					htmlString += obj[i].address;
+					if (obj[i].required === true || obj[i].default === true)
+					{
+						htmlString += '<b>[' + obj[i].address + ']</b>';
+					}
+					else
+					{
+						htmlString += obj[i].address;
+					}
 					htmlString += "</td>";
 					htmlString += "<td>";
 
