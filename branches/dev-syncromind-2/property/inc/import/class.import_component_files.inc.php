@@ -102,7 +102,7 @@
 			$message = array();
 
 			$uploaded_files = $this->_get_uploaded_files();
-			
+//print_r($this->names); die;			
 			if ($this->receipt['error'])
 			{
 				return $this->receipt;
@@ -218,22 +218,20 @@
 	
 		private function _un_zip($file, $dir)
 		{
-			header('Content-Type: text/plain; charset=utf-8');
-			
 			@set_time_limit(5 * 60);
-			//$this->names = array();
-			
-			mkdir($dir, 0777, true);
 
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE) 
 			{
 				for($i = 0; $i < $zip->numFiles; $i++) 
 				{
-					//$this->names[] = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
 					$filename = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
-					mkdir(dirname($dir.'/'.$filename), 0777, true);					
-					copy("zip://".$file."#".$zip->getNameIndex($i), "{$dir}/{$filename}");
+					$copy_to = $dir.'/'.$filename;
+					if (!is_dir(dirname($copy_to)))
+					{
+						mkdir(dirname($copy_to), 0777, true);
+					}					
+					copy("zip://".$file."#".$zip->getNameIndex($i), "{$copy_to}");
 				}
 				$zip->close();
 				
@@ -247,7 +245,7 @@
 		private function _un_rar($file, $dir)
 		{
 			@set_time_limit(5 * 60);
-			
+					
 			$archive = RarArchive::open($file);
 			if ($archive === FALSE)
 			{
@@ -256,8 +254,15 @@
 			}
 
 			$entries = $archive->getEntries();
-			foreach ($entries as $entry) {
-				$entry->extract($dir);
+			foreach ($entries as $entry) 
+			{
+				//$entry->extract($dir);
+				$copy_to = $dir.'/'.$entry->getName();
+				if (!is_dir(dirname($copy_to)))
+				{
+					mkdir(dirname($copy_to), 0777, true);
+				}
+				copy("rar://".$file."#".$entry->getName(), "{$copy_to}");
 			}
 			$archive->close();	
 			
@@ -280,6 +285,7 @@
 			{
 				exec("rm -Rf '{$path_dir}'", $ret);
 			}
+			mkdir($path_dir, 0777, true);
 			
 			if ($info['extension'] == 'zip')
 			{
@@ -591,7 +597,7 @@
 			
 			$bofiles = CreateObject('property.bofiles');
 			
-			$file_name = str_replace(' ', '_', trim($tmp_file));
+			$file_name = str_replace(array(' ', '..'), array('_', '.'), trim($tmp_file));
 
 			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 
