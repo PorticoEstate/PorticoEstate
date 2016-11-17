@@ -2393,7 +2393,7 @@
 				'collect_building_part'	=> $collect_building_part,
 				'building_part_list' => $building_part_list,
 				'order_dim1_list' => $order_dim1_list,
-				'value_order_sent'	=> $values['order_sent'],
+				'value_order_sent'	=> !!$values['order_sent'],
 				'value_order_received'	=> $values['order_received'] ? $GLOBALS['phpgw']->common->show_date($values['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount' => (int) $values['order_received_amount']
 			);
