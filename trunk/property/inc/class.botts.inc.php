@@ -1786,11 +1786,20 @@
 				return array();
 			}
 
-///////////
+			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
 			$supervisors = array();
 			$invoice = CreateObject('property.soinvoice');
 			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
+				$default_found = false;
+				$supervisor_id = $invoice->get_default_dimb_role_user(3, $ecodimb);
+				if($supervisor_id)
+				{
+					$supervisors[$supervisor_id] =  array('id' => $supervisor_id, 'required' => false, 'default' => true);
+					$default_found = true;
+				}
+
 				$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
 					(
 					'dimb_id' => $ecodimb,
@@ -1803,44 +1812,12 @@
 				{
 					foreach ($sodimb_role_users[$ecodimb][2] as $supervisor_id => $entry)
 					{
-						$supervisors[] = $supervisor_id;
+						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' =>  !$default_found ? !!$entry['default_user'] : false);
 					}
 				}
 
-				$supervisors[] =  $invoice->get_default_dimb_role_user(3, $ecodimb);
 			}
-			else
-			{
-				$supervisor_id = 0;
-
-				if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-				{
-					$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-				}
-
-
-				if ($supervisor_id)
-				{
-					$supervisors[] = $supervisor_id;
-
-					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
-
-					if (!empty($prefs['approval_from']))
-					{
-						$supervisors[] = $prefs['approval_from'];
-					}
-					unset($prefs);
-				}
-			}
-			$supervisors = array_reverse($supervisors);
-
-				
-////////////////
-
-			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
-			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
-
-			if($check_external_register && $ecodimb)
+			else if($check_external_register && $ecodimb)
 			{
 				$url		= $config->config_data['external_register']['url'];
 				$username	= $config->config_data['external_register']['username'];
@@ -1857,6 +1834,7 @@
 
 				/**
 				 * some magic...to decide $supervisor_lid
+				 * Agresso/Bergen spesific
 				 */
 				if(isset($fullmakter[0]))
 				{
@@ -1894,15 +1872,38 @@
 					[aktiv] => (bool) true
 				*/
 
-				$supervisors[] = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+				$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
 			}
 			else
 			{
-				if(!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-					&& !in_array($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'],$supervisors))
+				$supervisor_id = 0;
+
+				if (!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
 				{
-					$supervisors[] =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+					$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 				}
+
+				if ($supervisor_id)
+				{
+					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
+
+					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+
+					if (!empty($prefs['approval_from']))
+					{
+						$supervisor_id = $prefs['approval_from'];
+						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
+					}
+					unset($prefs);
+				}
+			}
+
+			if(!$check_external_register && !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+				&& !in_array($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'],$supervisors))
+			{
+				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
 			}
 
 			return $this->get_supervisor_email($supervisors, $order_id);
@@ -1973,7 +1974,7 @@
 			$supervisor_email = array();
 			if ($supervisors && $need_approval)
 			{
-				foreach ($supervisors as $supervisor_id)
+				foreach ($supervisors as $supervisor_id => $info)
 				{
 					$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -2006,7 +2007,8 @@
 						$supervisor_email[] = array(
 							'id' => $supervisor_id,
 							'address' => $prefs['email'],
-							'required'	=> true,
+							'required'	=> $info['required'],
+							'default'	=> !!$info['default'],
 							'requested'	=> !!$requests[0]['action_requested'],
 							'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
 							'approved'	=> !!$approvals[0]['action_performed'],
@@ -2019,7 +2021,8 @@
 						$supervisor_email[] = array(
 							'id' => $supervisor_id,
 							'address' => $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '@bergen.kommune.no',
-							'required'	=> true
+							'required'	=> $info['required'],
+							'default'	=> !!$info['default']
 						);
 					}
 				
