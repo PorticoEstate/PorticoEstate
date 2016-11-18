@@ -619,6 +619,7 @@
 			
 			$document = CreateObject('property.sodocument');
 			$documents = $document->read_at_location($params);
+			$total_records = $document->total_records;
 		
 			foreach ($documents as $item) 
 			{
@@ -636,6 +637,7 @@
 			$params['order'] = 'name';
 			$params['cat_id'] = $doc_type;
 			$documents2 = $generic_document->read($params);
+			$total_records += $generic_document->total_records;
 			foreach ($documents2 as $item) 
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
@@ -644,7 +646,7 @@
 			
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = count($values);
+			$result_data['total_records'] = $total_records;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
@@ -2126,7 +2128,7 @@
 					}
 				}
 
-				if ($get_docs)
+				if ($get_docs || !empty($entity['documentation']))
 				{
 					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
 					
