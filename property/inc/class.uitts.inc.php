@@ -2158,6 +2158,17 @@
 				$bcc = '';//$coordinator_email;
 				foreach ($values['approval'] as $_account_id => $_address)
 				{
+					$prefs = $this->bocommon->create_preferences('property', $_account_id);
+					if (!empty($prefs['email']))
+					{
+						$_address = $prefs['email'];
+					}
+					else
+					{
+						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+						$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
+					}
+
 					$action_params['responsible'] = $_account_id;
 					try
 					{
@@ -2165,14 +2176,14 @@
 						if ($rcpt)
 						{
 							phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+							$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+							execMethod('property.sopending_action.set_pending_action', $action_params);
 						}
 					}
 					catch (Exception $exc)
 					{
-						$receipt['error'][] = array('msg' => $exc->getMessage());
+						phpgwapi_cache::message_set($exc->getMessage(),'error');
 					}
-					$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-					execMethod('property.sopending_action.set_pending_action', $action_params);
 				}
 				
 			}
