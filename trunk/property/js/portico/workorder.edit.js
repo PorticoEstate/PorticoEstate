@@ -11,7 +11,6 @@ function calculate_order()
 	document.getElementsByName("calculate_workorder")[0].value = 1;
 	check_and_submit_valid_session();
 }
-;
 
 function submit_workorder()
 {

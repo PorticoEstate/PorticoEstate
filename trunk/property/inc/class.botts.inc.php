@@ -1906,7 +1906,7 @@
 				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
 			}
 
-			return $this->get_supervisor_email($supervisors, $order_id);
+			return $this->get_supervisor_approval($supervisors, $order_id);
 		}
 
 		public function check_external_register($param)
@@ -1951,7 +1951,7 @@
 			return json_decode($result, true);
 		}
 
-		protected function get_supervisor_email($supervisors, $order_id)
+		protected function get_supervisor_approval($supervisors, $order_id)
 		{
 			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
 
@@ -2002,29 +2002,27 @@
 					$requests = $pending_action->get_pending_action($action_params);
 
 					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
-					if (isset($prefs['email']) && $prefs['email'])
+					if (!empty($prefs['email']))
 					{
-						$supervisor_email[] = array(
-							'id' => $supervisor_id,
-							'address' => $prefs['email'],
-							'required'	=> $info['required'],
-							'default'	=> !!$info['default'],
-							'requested'	=> !!$requests[0]['action_requested'],
-							'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
-							'approved'	=> !!$approvals[0]['action_performed'],
-							'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
-							'is_user'	=> $supervisor_id == $this->account ? true : false
-						);
+						$address = $prefs['email'];
 					}
 					else
 					{
-						$supervisor_email[] = array(
-							'id' => $supervisor_id,
-							'address' => $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '@bergen.kommune.no',
-							'required'	=> $info['required'],
-							'default'	=> !!$info['default']
-						);
+						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+						$address = $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '&lt;' . $GLOBALS['phpgw']->accounts->id2lid($supervisor_id) . "@{$email_domain}&gt;";
 					}
+
+					$supervisor_email[] = array(
+						'id' => $supervisor_id,
+						'address' => $address,
+						'required'	=> $info['required'],
+						'default'	=> !!$info['default'],
+						'requested'	=> !!$requests[0]['action_requested'],
+						'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
+						'approved'	=> !!$approvals[0]['action_performed'],
+						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
+						'is_user'	=> $supervisor_id == $this->account ? true : false
+					);
 				
 					unset($prefs);
 				}
