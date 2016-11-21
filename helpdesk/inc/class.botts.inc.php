@@ -978,7 +978,9 @@
 				 */
 				if(!$entry['email'])
 				{
-					$entry['email'] = "{$entry['account_lid']}@bergen.kommune.no";
+					$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+
+					$entry['email'] = "{$entry['account_lid']}@{$email_domain}";
 				}
 
 				if ($entry['is_active'] && $entry['notification_method'] == 'email' && $entry['email'])
