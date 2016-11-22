@@ -155,7 +155,8 @@
 			}
 			$this->db->query($sql, __LINE__, __FILE__);
 			$vouchers_step1 = array();
-			while ($this->db->next_record())
+//			while ($this->db->next_record())
+			if ($this->db->next_record()) // Sigurd: 22/11-2016 Temporary testing - only one
 			{
 				$vouchers_step1[] = $this->db->f('bilagsnr');
 			}
@@ -179,7 +180,11 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
-				$extra_candidates[] = $this->db->f('bilagsnr');
+
+				/**
+				 * Sigurd: 22/11-2016 uncomment me when done testing
+				 */
+//				$extra_candidates[] = $this->db->f('bilagsnr');
 			}
 
 			foreach ($extra_candidates as $extra_candidate)
