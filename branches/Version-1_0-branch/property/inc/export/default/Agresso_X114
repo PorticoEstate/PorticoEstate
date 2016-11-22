@@ -156,7 +156,8 @@
 			}
 			$this->db->query($sql,__LINE__,__FILE__);
 			$vouchers_step1 = array();
-			while ($this->db->next_record())
+//			while ($this->db->next_record())
+			if ($this->db->next_record()) // testing for transfere to new version
 			{
 				$vouchers_step1[]	= $this->db->f('bilagsnr');
 			}
@@ -180,7 +181,8 @@
 			$this->db->query($sql,__LINE__,__FILE__);
 			while( $this->db->next_record() )
 			{
-				$extra_candidates[]	= $this->db->f('bilagsnr');
+				// testing for transfere to new version
+//				$extra_candidates[]	= $this->db->f('bilagsnr');
 			}
 
 			foreach($extra_candidates as $extra_candidate)
