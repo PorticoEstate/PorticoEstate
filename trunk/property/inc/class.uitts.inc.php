@@ -2172,12 +2172,12 @@
 					$action_params['responsible'] = $_account_id;
 					try
 					{
+						$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+						execMethod('property.sopending_action.set_pending_action', $action_params);
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 						if ($rcpt)
 						{
 							phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
-							$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-							execMethod('property.sopending_action.set_pending_action', $action_params);
 						}
 					}
 					catch (Exception $exc)

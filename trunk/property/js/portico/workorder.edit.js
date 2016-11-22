@@ -1,4 +1,5 @@
 var amount = 0;
+var order_id;
 var vendor_id;
 var project_ecodimb;
 
@@ -463,7 +464,8 @@ var ecodimb_selection = "";
 $(window).on('load', function ()
 {
 	ecodimb = $('#ecodimb').val();
-	ecodimb = ecodimb || project_ecodimb
+	ecodimb = ecodimb || project_ecodimb;
+
 	if (ecodimb)
 	{
 		populateTableChkApproval();
@@ -472,10 +474,15 @@ $(window).on('load', function ()
 	$("#ecodimb_name").on("autocompleteselect", function (event, ui)
 	{
 		var ecodimb = ui.item.value;
-		if (ecodimb != ecodimb_selection)
+		if (ecodimb !== ecodimb_selection)
 		{
 			populateTableChkApproval(ecodimb);
 		}
+	});
+
+	$("#field_contract_sum").change(function ()
+	{
+		populateTableChkApproval();
 	});
 
 	$("#field_budget").change(function ()
@@ -488,14 +495,18 @@ $(window).on('load', function ()
 function populateTableChkApproval(ecodimb)
 {
 	ecodimb = ecodimb || $('#ecodimb').val();
-	ecodimb = ecodimb || project_ecodimb
+	ecodimb = ecodimb || project_ecodimb;
 
 	if (!ecodimb)
 	{
 		return;
 	}
 
-	var total_amount = Number(amount) + Number($('#field_budget').val());
+	var contract_sum = Number($('#field_contract_sum').val());
+	var budget_sum = Number($('#field_budget').val());
+
+	var total_amount = Math.max(contract_sum, budget_sum) || Number(amount);
+
 	$("#order_received_amount").val(total_amount);
 
 	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
