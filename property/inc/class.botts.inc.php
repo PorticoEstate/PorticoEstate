@@ -1854,12 +1854,7 @@
 					{
 						$supervisor_lid = strtolower($fullmakter[0]['ubegrenset']);
 					}
-					else
-					{
-						$supervisor_lid = ''; // maybe add a required configurable failsafe as backup...
-					}
 				}
-	//			$supervisor_lid = 'hc483';
 
 				/*
 					[inntil100k] => (string) DV645
@@ -1872,8 +1867,11 @@
 					[aktiv] => (bool) true
 				*/
 
-				$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
-				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
+				if($supervisor_lid)
+				{
+					$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
+				}
 			}
 			else
 			{

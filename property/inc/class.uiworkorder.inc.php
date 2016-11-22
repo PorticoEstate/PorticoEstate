@@ -851,9 +851,9 @@
 					'msg' => lang('Percentage addition') . ': ' . lang('Please enter an integer !'));
 			}
 
-			if ($values['approval'] && $values['mail_address'] && $config->config_data['workorder_approval'])
+			if (!empty($values['approval']) && !empty($config->config_data['workorder_approval']))
 			{
-				if (isset($config->config_data['workorder_approval_status']) && $config->config_data['workorder_approval_status'])
+				if (!empty($config->config_data['workorder_approval_status']))
 				{
 					$values['status'] = $config->config_data['workorder_approval_status'];
 				}
@@ -1016,12 +1016,12 @@
 						$action_params['responsible'] = $_account_id;
 						try
 						{
+							$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+							execMethod('property.sopending_action.set_pending_action', $action_params);
 							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 							if ($rcpt)
 							{
 								phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
-								$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-								execMethod('property.sopending_action.set_pending_action', $action_params);
 							}
 						}
 						catch (Exception $exc)
