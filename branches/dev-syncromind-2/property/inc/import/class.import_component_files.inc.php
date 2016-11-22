@@ -225,8 +225,9 @@
 			{
 				for($i = 0; $i < $zip->numFiles; $i++) 
 				{
-					$filename = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
-					$copy_to = $dir.'/'.$filename;
+					//$filename = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
+					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
+					$copy_to = $dir.'/'.$file_name;
 					if (!is_dir(dirname($copy_to)))
 					{
 						mkdir(dirname($copy_to), 0777, true);
@@ -257,7 +258,8 @@
 			foreach ($entries as $entry) 
 			{
 				//$entry->extract($dir);
-				$copy_to = $dir.'/'.$entry->getName();
+				$file_name = str_replace('..', '.', $entry->getName());
+				$copy_to = $dir.'/'.$file_name;
 				if (!is_dir(dirname($copy_to)))
 				{
 					mkdir(dirname($copy_to), 0777, true);
@@ -430,7 +432,7 @@
 				}
 				
 				$path = $row[(count($row)-2)];
-				$path_file = $row[(count($row)-1)];
+				$path_file = str_replace('..', '.', $row[(count($row)-1)]);
 				$array_path = explode("\\", $path_file);
 						
 				$component_files[$row[0]][] = array(
@@ -498,7 +500,7 @@
 							{						
 								throw new Exception("failed to copy file: '{$file_data['path_file']}'. Component: '{$k}'");
 							} 
-							unlink($file_data['path_file']);
+							//unlink($file_data['path_file']);
 							$count_new_files++;
 						}
 						
@@ -597,7 +599,7 @@
 			
 			$bofiles = CreateObject('property.bofiles');
 			
-			$file_name = str_replace(array(' ', '..'), array('_', '.'), trim($tmp_file));
+			$file_name = str_replace(' ', '_', trim($tmp_file));
 
 			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 
@@ -615,31 +617,32 @@
 					'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 			$bofiles->vfs->override_acl = 0;
 
-			if ($file_id) 
+			if (empty($file_id))
 			{
-				$this->last_files_added[$file_id] = $val_md5sum;
-				
-				$md5_sum = trim(strstr($val_md5sum, '_', true));
-				
-				$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
-					. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
-					
-				$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
-				$metadata['title'] = $file_data['name']; 
-				$metadata['descr'] = $file_data['desription'];
-				$metadata['path'] = $file_data['path'];
-				
-				$values_insert = array
-					(
-					'file_id' => $file_id,
-					'metadata' => "'" . json_encode($metadata) . "'"
-				);
-
-				$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-					. implode(",", array_values($values_insert)) . ')', __LINE__, __FILE__);
-				
+				return false;
 			}
 			
+			$this->last_files_added[$file_id] = $val_md5sum;
+
+			$md5_sum = trim(strstr($val_md5sum, '_', true));
+
+			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
+				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
+
+			$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
+			$metadata['title'] = $file_data['name']; 
+			$metadata['descr'] = $file_data['desription'];
+			$metadata['path'] = $file_data['path'];
+
+			$values_insert = array
+				(
+				'file_id' => $file_id,
+				'metadata' => "'" . json_encode($metadata) . "'"
+			);
+
+			$this->db->query("INSERT INTO phpgw_vfs_filedata (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+				. implode(",", array_values($values_insert)) . ')', __LINE__, __FILE__);
+				
 			return $file_id;
 		}
 		
