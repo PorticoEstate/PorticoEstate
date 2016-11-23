@@ -644,7 +644,7 @@
 			
 			$result_data = array('results' => $values);
 
-			$result_data['total_records'] = count($values);
+			$result_data['total_records'] = $generic_document->total_records;
 			$result_data['draw'] = $draw;
 
 			return $this->jquery_results($result_data);
