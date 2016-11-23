@@ -444,7 +444,7 @@
 					'row' => ($k + 1)
 				);
 			}
-
+	
 			$this->_compare_names($component_files, $uploaded_files);
 
 			$count_new_relations = 0;
@@ -500,7 +500,7 @@
 							{						
 								throw new Exception("failed to copy file: '{$file_data['path_file']}'. Component: '{$k}'");
 							} 
-							//unlink($file_data['path_file']);
+							unlink($file_data['path_file']);
 							$count_new_files++;
 						}
 						
