@@ -13,6 +13,7 @@
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 
 			$this->last_files_added = array();
+			$this->paths_from_file = array();
 			$this->names = array();
 		}
 		
@@ -102,7 +103,7 @@
 			$message = array();
 
 			$uploaded_files = $this->_get_uploaded_files();
-//print_r($this->names); die;			
+			
 			if ($this->receipt['error'])
 			{
 				return $this->receipt;
@@ -210,6 +211,7 @@
 								$file_data['path_file'] = $file['path_file'];
 								$file_data['val_md5sum'] = $file['val_md5sum'];								
 							}
+							$this->paths_from_file[$file_data['val_md5sum']][] = $file_data['path'];
 						}
 					}
 				}
@@ -225,7 +227,6 @@
 			{
 				for($i = 0; $i < $zip->numFiles; $i++) 
 				{
-					//$filename = iconv("CP850", "UTF-8", $zip->getNameIndex($i));
 					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
 					$copy_to = $dir.'/'.$file_name;
 					if (!is_dir(dirname($copy_to)))
@@ -257,7 +258,6 @@
 			$entries = $archive->getEntries();
 			foreach ($entries as $entry) 
 			{
-				//$entry->extract($dir);
 				$file_name = str_replace('..', '.', $entry->getName());
 				$copy_to = $dir.'/'.$file_name;
 				if (!is_dir(dirname($copy_to)))
@@ -592,7 +592,7 @@
 		private function _save_file( $file_data )
 		{
 			$metadata = array();
-			
+		
 			$tmp_file = $file_data['file'];
 			$val_md5sum = $file_data['val_md5sum'];
 			$path_file = $file_data['path_file'];
@@ -628,11 +628,18 @@
 
 			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
 				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
+				
+			if (count($this->paths_from_file[$val_md5sum]))
+			{
+				$paths = array_values(array_unique($this->paths_from_file[$val_md5sum]));
+			} else {
+				$paths = array();
+			}
 
 			$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 			$metadata['title'] = $file_data['name']; 
 			$metadata['descr'] = $file_data['desription'];
-			$metadata['path'] = $file_data['path'];
+			$metadata['path'] = $paths;
 
 			$values_insert = array
 				(
