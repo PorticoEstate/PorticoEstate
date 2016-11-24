@@ -676,7 +676,9 @@
 				</xsl:choose>
                 {
 					extend:    'csvHtml5',
-					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>"
+					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
+					fieldSeparator: ';',
+					bom:true
 				}
 				<xsl:choose>
 					<xsl:when test="download">
