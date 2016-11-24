@@ -161,11 +161,17 @@ $(document).ready(function ()
 		JqueryPortico.updateinlineTableHelper(oTable2, requestUrl2);
 	});
 
-	var api1 = oTable1.api();
-	api1.on('draw', sum_columns_table_orders);
+	if(typeof(oTable1) !== 'undefined')
+	{
+		var api1 = oTable1.api();
+		api1.on('draw', sum_columns_table_orders);
+	}
 
-	var api2 = oTable2.api();
-	api2.on('draw', sum_columns_table_invoice);
+	if(typeof(oTable2) !== 'undefined')
+	{
+		var api2 = oTable2.api();
+		api2.on('draw', sum_columns_table_invoice);
+	}
 
 
 // -- buttons--//

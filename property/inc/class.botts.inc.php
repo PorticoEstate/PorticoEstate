@@ -1949,55 +1949,62 @@
 			return json_decode($result, true);
 		}
 
-		protected function get_supervisor_approval($supervisors, $order_id)
+		protected function get_supervisor_approval($supervisors, $order_id = 0)
 		{
 			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
 
-			$order_type = $this->bocommon->socommon->get_order_type($order_id);
-
-			switch ($order_type)
+			if($order_id)
 			{
-				case 'workorder':
-					$location = '.project.workorder';
-					$location_item_id = $order_id;
-					break;
-				case 'ticket':
-					$location = '.ticket';
-					$location_item_id = $this->so->get_ticket_from_order($order_id);
-					break;
-				default:
-					throw new Exception('Not supported');
+				$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+				switch ($order_type)
+				{
+					case 'workorder':
+						$location = '.project.workorder';
+						$location_item_id = $order_id;
+						break;
+					case 'ticket':
+						$location = '.ticket';
+						$location_item_id = $this->so->get_ticket_from_order($order_id);
+						break;
+					default:
+						throw new Exception('Not supported');
+				}
 			}
 
 			$supervisor_email = array();
 			if ($supervisors && $need_approval)
 			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
 				foreach ($supervisors as $supervisor_id => $info)
 				{
-					$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-					$pending_action = CreateObject('property.sopending_action');
-
-					$action_params = array(
-						'appname' => 'property',
-						'location' => $location,
-						'id'		=> $location_item_id,
-						'responsible' => $supervisor_id,
-						'responsible_type' => 'user',
-						'action' => 'approval',
-						'deadline' => '',
-						'created_by' => '',
-						'allrows' => false,
-						'closed' => true
-					);
-
-					$approvals = $pending_action->get_pending_action($action_params);
-					if(!$approvals)
+					if($location_item_id)
 					{
-						$action_params['closed'] = false;
-					}
+						$pending_action = CreateObject('property.sopending_action');
 
-					$requests = $pending_action->get_pending_action($action_params);
+						$action_params = array(
+							'appname' => 'property',
+							'location' => $location,
+							'id'		=> $location_item_id,
+							'responsible' => $supervisor_id,
+							'responsible_type' => 'user',
+							'action' => 'approval',
+							'deadline' => '',
+							'created_by' => '',
+							'allrows' => false,
+							'closed' => true
+						);
+
+						$approvals = $pending_action->get_pending_action($action_params);
+						if(!$approvals)
+						{
+							$action_params['closed'] = false;
+						}
+
+						$requests = $pending_action->get_pending_action($action_params);
+					}
 
 					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 					if (!empty($prefs['email']))
