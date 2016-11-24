@@ -783,12 +783,28 @@ JS;
 				$error_id = true;
 			}
 
-			if (isset($values['b_account_id']) && $values['b_account_id'])
+			if (!empty($values['b_account_id']))
 			{
-				$sogeneric = CreateObject('property.sogeneric');
-				$sogeneric->get_location_info('budget_account', false);
-				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
-				$values['b_account_group'] = $status_data['category'];
+//				$sogeneric = CreateObject('property.sogeneric');
+//				$sogeneric->get_location_info('budget_account', false);
+//				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
+//				$values['b_account_group'] = $status_data['category'];
+
+
+				$_b_account = execMethod('property.bogeneric.read_single', array(
+					'id' => $values['b_account_id'],
+					'location_info' => array(
+						'type' => 'budget_account')));
+				$values['b_account_group'] = $_b_account['category'];
+
+				if (!$_b_account || !$_b_account['active'])
+				{
+					$values['b_account_id'] = '';
+					$values['b_account_name'] = '';
+					$values['b_account_group'] = '';
+					$this->receipt['error'][] = array(
+						'msg' => lang('Please select a valid budget account !'));
+				}
 			}
 
 			if (isset($values['b_account_group']) && $values['b_account_group'])

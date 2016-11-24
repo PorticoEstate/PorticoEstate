@@ -597,6 +597,10 @@ function populateTableChkApproval(ecodimb)
 				htmlString += "</tbody></table>";
 				$("#approval_container").html(htmlString);
 			}
+		},
+		error: function()
+		{
+			alert('feil med oppslag til fullmakter');
 		}
 	});
 }
