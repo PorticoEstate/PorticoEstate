@@ -267,7 +267,7 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
+					<!--xsl:choose>
 						<xsl:when test="need_approval='1' and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
@@ -294,7 +294,7 @@
 								</div>
 							</div>
 						</xsl:when>
-					</xsl:choose>
+					</xsl:choose-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_remark"/>

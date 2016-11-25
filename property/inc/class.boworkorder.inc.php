@@ -1044,19 +1044,19 @@ HTML;
 
 		function get_budget_amount($id)
 		{
-			static $_budget_amount = 0;
-			if(!$_budget_amount)
+			static $_budget_amount = array();
+			if(empty($_budget_amount[$id]))
 			{
 				$budgets = $this->get_budget($id);
 				foreach ($budgets as $budget)
 				{
 					if ($budget['active'] == 1)
 					{
-						$_budget_amount += $budget['budget'];
+						$_budget_amount[$id] += $budget['budget'];
 					}
 				}
 			}
-			return $_budget_amount;
+			return $_budget_amount[$id];
 		}
 
 	}

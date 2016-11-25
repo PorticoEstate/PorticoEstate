@@ -1165,7 +1165,9 @@ JS;
 			if ($id)
 			{
 				self::message_set($this->receipt);
-				self::redirect(array('menuaction' => 'property.uiproject.edit', 'id' => $id));
+				$active_tab = phpgw::get_var('tab');
+
+				self::redirect(array('menuaction' => 'property.uiproject.edit', 'id' => $id, 'tab' => $active_tab));
 			}
 
 			$this->edit($values, 'edit');

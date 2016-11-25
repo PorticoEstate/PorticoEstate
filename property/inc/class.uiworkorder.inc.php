@@ -1195,9 +1195,11 @@
 				if ($id)
 				{
 					self::message_set($this->receipt);
+					$active_tab = phpgw::get_var('tab');
 					self::redirect(array(
 						'menuaction' => 'property.uiworkorder.edit',
-						'id' => $id));
+						'id' => $id,
+						'tab' => $active_tab));
 				}
 				$this->edit($values);
 
