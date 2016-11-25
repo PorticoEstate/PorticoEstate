@@ -1823,14 +1823,22 @@
 				$username	= $config->config_data['external_register']['username'];
 				$password	= $config->config_data['external_register']['password'];
 				$sub_check = 'fullmakter';
-				$fullmakter = $this->check_external_register(array(
-					'url'		=> $url,
-					'username'	=> $username,
-					'password'	=> $password,
-					'sub_check'	=> $sub_check,
-					'id'		=> sprintf("%06s", $ecodimb)
-					)
-				);
+
+				try
+				{
+					$fullmakter = $this->check_external_register(array(
+						'url'		=> $url,
+						'username'	=> $username,
+						'password'	=> $password,
+						'sub_check'	=> $sub_check,
+						'id'		=> sprintf("%06s", $ecodimb)
+						)
+					);
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
 
 				/**
 				 * some magic...to decide $supervisor_lid
@@ -1945,6 +1953,11 @@
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
+
+			if($httpCode != 200)
+			{
+				throw new Exception("HTTP-status {$httpCode}");
+			}
 
 			return json_decode($result, true);
 		}
