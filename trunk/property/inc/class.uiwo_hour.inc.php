@@ -1908,7 +1908,16 @@ HTML;
 			}
 			else
 			{
-				if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+				try
+				{
+					$_validated = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']);
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
+
+				if(!$_validated)
 				{
 					throw new Exception(lang('order %1 is not approved'), $workorder_id);
 //					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
@@ -3405,6 +3414,7 @@ HTML;
 			{
 				if ($e)
 				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
 					throw $e;
 				}
 			}
@@ -3452,12 +3462,18 @@ HTML;
 			$_budget_amount = $this->boworkorder->get_budget_amount($id);
 			$historylog = CreateObject('property.historylog', 'workorder');
 
-			$purchase_grant_ok = false;
-			$check_purchase = createObject('property.botts')->check_purchase_right($ecodimb, $_budget_amount, $id);
-			if($check_purchase)
+			try
 			{
-				$purchase_grant_ok = true;
+				$check_purchase = createObject('property.botts')->check_purchase_right($ecodimb, $_budget_amount, $id);
+
 			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$purchase_grant_ok = true;
+
 			foreach ($check_purchase as $purchase_grant)
 			{
 				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
