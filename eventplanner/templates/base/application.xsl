@@ -38,7 +38,7 @@
 			</xsl:variable>
 
 			<script type="text/javascript">
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save')"/>;
 			</script>
 			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
@@ -50,9 +50,9 @@
 									<tr>
 										<td width="200px">
 											<xsl:variable name="lang_savel">
-												<xsl:value-of select="php:function('lang', 'save')"/>
+												<xsl:value-of select="php:function('lang', 'next')"/>
 											</xsl:variable>
-											<input type="submit" class="pure-button pure-button-primary" name="save">
+											<input type="button" class="pure-button pure-button-primary" name="save" id="save_button" onClick="validate_submit();">
 												<xsl:attribute name="value">
 													<xsl:value-of select="$lang_savel"/>
 												</xsl:attribute>
@@ -707,6 +707,14 @@
 									<xsl:value-of select="php:function('date', $date_format, number(application/date_end))"/>
 								</xsl:if>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'timespan')"/>
+								</label>
+								<xsl:if test="application/date_end != 0 and application/timespan != ''">
+									<xsl:value-of select="application/timespan"/>
+								</xsl:if>
+							</div>
 
 							<div class="pure-control-group">
 								<label>
@@ -715,13 +723,13 @@
 								<input type="text" id="from_" name="from_" size="16" readonly="readonly">
 								</input>
 							</div>
-							<div class="pure-control-group">
+							<!--div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'to')"/>
 								</label>
 								<input type="text" id="to_" name="to_" size="16" readonly="readonly">
 								</input>
-							</div>
+							</div-->
 
 							<div class="pure-control-group">
 								<label>

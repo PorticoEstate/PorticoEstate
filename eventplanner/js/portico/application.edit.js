@@ -3,8 +3,25 @@ var oArgs = {menuaction: 'eventplanner.uivendor.index', organization_number: tru
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container', 'name');
 
+validate_submit = function()
+{
+	var active_tab = $("#active_tab").val();
+
+	if(active_tab === 'first_tab')
+	{
+		$('#tab-content').responsiveTabs('activate', 1);
+		$("#save_button").val(lang['save']);
+	}
+	else
+	{
+		document.form.submit();
+	}
+};
+
 $(document).ready(function ()
 {
+	check_button_names();
+
 	$("#number_of_units").change(function ()
 	{
 		calculate_total_amount();
@@ -52,14 +69,13 @@ $(document).ready(function ()
 		$("#to_").val($("#from_").val());
 	});
 
-	var width = 200;
 
 	$("#submitbox").css({
 		position: 'absolute',
 		right: '10px',
 		border: '1px solid #B5076D',
 		padding: '0 5px 5px 5px',
-		width: width + 'px',
+		width: $("#submitbox").width() + 'px',
 		"background - color": '#FFF',
 		display: "block",
 	});
@@ -108,19 +124,32 @@ $(document).ready(function ()
 
 });
 
-function set_tab(tab)
+check_button_names = function()
 {
-	$("#active_tab").val(tab);
+	var tab = $("#active_tab").val();
 	if (tab === 'calendar')
 	{
 		$("#floating-box").hide();
 		$("#submit_group_bottom").hide();
 	}
-	else
+	else if(tab === 'first_tab')
 	{
+		$("#save_button").val(lang['next']);
 		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
+	else
+	{
+		$("#save_button").val(lang['save']);
+		$("#floating-box").show();
+		$("#submit_group_bottom").show();
+	}
+};
+
+function set_tab(tab)
+{
+	$("#active_tab").val(tab);
+	check_button_names();
 }
 
 function calculate_total_amount()
@@ -165,7 +194,7 @@ add_booking = function ()
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {from_: $("#from_").val(), to_: $("#to_").val(), active: 1},
+		data: {from_: $("#from_").val(), active: 1},
 		url: requestUrl,
 		success: function (data)
 		{
@@ -174,7 +203,6 @@ add_booking = function ()
 				if (data.status_kode == 'ok')
 				{
 					$("#from_").val('');
-					$("#to_").val('');
 					htmlString += "<div class=\"msg_good\">";
 				}
 				else

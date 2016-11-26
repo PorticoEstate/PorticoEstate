@@ -177,7 +177,7 @@
 					),
 			 	'description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'label' => 'description',
+					'label' => 'application description',
 					'sortable' => false,
 					),
 			 	'remark' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
