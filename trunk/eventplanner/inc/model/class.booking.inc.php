@@ -189,6 +189,12 @@
 				);
 			}
 
+			if (!empty($entity->application_id))
+			{
+				$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
+				$entity->to_ = $entity->from_ + ((int)$application->timespan * 60);
+			}
+
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
 

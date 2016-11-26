@@ -21,6 +21,6 @@
 	$GLOBALS['phpgw']->locations->add('.customer', 'customer', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.vendor', 'vendor', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.booking', 'booking', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
-	$GLOBALS['phpgw']->locations->add('.vendor_report', 'vendor_report', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
-	$GLOBALS['phpgw']->locations->add('.customer_report', 'customer_report', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
+	$GLOBALS['phpgw']->locations->add('.vendor_report', 'vendor_report', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true, $c_attrib = true);
+	$GLOBALS['phpgw']->locations->add('.customer_report', 'customer_report', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true, $c_attrib = true);
 

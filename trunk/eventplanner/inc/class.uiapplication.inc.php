@@ -351,7 +351,7 @@
 				{
 					foreach ($types as $type)
 					{
-						if($type['type_id'] == $application_type['id'])
+						if((!empty($type['type_id']) && $type['type_id'] == $application_type['id']) || ($type == $application_type['id']))
 						{
 							$application_type['selected'] = 1;
 							break;
