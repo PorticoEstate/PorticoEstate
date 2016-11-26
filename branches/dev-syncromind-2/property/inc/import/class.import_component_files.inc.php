@@ -197,7 +197,7 @@
 				{
 					foreach ($uploaded_files as $file)
 					{
-						if ($file['file'] == $file_data['file'])
+						if (strtolower($file['file']) == strtolower($file_data['file']))
 						{
 							if ($file['path_file_string'])
 							{
@@ -362,7 +362,7 @@
 					{
 						$val_md5sum = '';
 					} else {
-						$val_md5sum = trim(strstr($output[0], ' ', true)).'_'.$value;
+						$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
 					}
 					$results[] = array('file'=>$value, 
 						'val_md5sum'=>$val_md5sum,  
@@ -391,7 +391,7 @@
 					{
 						$val_md5sum = '';
 					} else {
-						$val_md5sum = trim(strstr($output[0], ' ', true)).'_'.$value;
+						$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
 					}
 					$results[] = array('file'=>$value, 
 						'val_md5sum'=>$val_md5sum, 
@@ -419,7 +419,7 @@
 			{
 				return $this->receipt;
 			}
-			
+		
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
 			$patrones_2 = array('(\\/)', '(")');
@@ -444,7 +444,7 @@
 					'row' => ($k + 1)
 				);
 			}
-	
+
 			$this->_compare_names($component_files, $uploaded_files);
 
 			$count_new_relations = 0;
@@ -593,13 +593,16 @@
 		{
 			$metadata = array();
 		
-			$tmp_file = $file_data['file'];
+			//$tmp_file = $file_data['file'];
+			
 			$val_md5sum = $file_data['val_md5sum'];
 			$path_file = $file_data['path_file'];
 			
+			$md5_sum = trim(strstr($val_md5sum, ' ', true));
+			
 			$bofiles = CreateObject('property.bofiles');
 			
-			$file_name = str_replace(' ', '_', trim($tmp_file));
+			$file_name = str_replace(' ', '_', trim(strstr($val_md5sum, ' ')));
 
 			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 
@@ -623,8 +626,6 @@
 			}
 			
 			$this->last_files_added[$file_id] = $val_md5sum;
-
-			$md5_sum = trim(strstr($val_md5sum, '_', true));
 
 			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
 				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
