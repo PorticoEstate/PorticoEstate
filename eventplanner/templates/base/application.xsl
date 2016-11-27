@@ -49,15 +49,15 @@
 								<tbody>
 									<tr>
 										<td width="200px">
-											<xsl:variable name="lang_savel">
+											<xsl:variable name="lang_save">
 												<xsl:value-of select="php:function('lang', 'next')"/>
 											</xsl:variable>
 											<input type="button" class="pure-button pure-button-primary" name="save" id="save_button" onClick="validate_submit();">
 												<xsl:attribute name="value">
-													<xsl:value-of select="$lang_savel"/>
+													<xsl:value-of select="$lang_save"/>
 												</xsl:attribute>
 												<xsl:attribute name="title">
-													<xsl:value-of select="$lang_savel"/>
+													<xsl:value-of select="$lang_save"/>
 												</xsl:attribute>
 											</input>
 										</td>
@@ -480,7 +480,7 @@
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'audience_limit')"/>
+										<xsl:value-of select="php:function('lang', 'audience limit')"/>
 									</xsl:attribute>
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="php:function('lang', 'integer')"/>
@@ -750,19 +750,20 @@
 									</xsl:for-each>
 								</div>
 							</div>
-
-
 						</fieldset>
-
-
-
 					</div>
 
 				</div>
 				<div id="submit_group_bottom" class="proplist-col">
-					<input type="submit" class="pure-button pure-button-primary" name="save">
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="php:function('lang', 'next')"/>
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="save" id="save_button_bottom" onClick="validate_submit();">
 						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'save')"/>
+							<xsl:value-of select="$lang_save"/>
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_save"/>
 						</xsl:attribute>
 					</input>
 					<xsl:variable name="cancel_url">
