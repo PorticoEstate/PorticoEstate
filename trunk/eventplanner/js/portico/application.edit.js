@@ -6,11 +6,26 @@ JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_con
 validate_submit = function()
 {
 	var active_tab = $("#active_tab").val();
+	conf = {
+	//	modules: 'date, security, file',
+		validateOnBlur: false,
+		scrollToTopOnError: true,
+		errorMessagePosition: 'top'
+	//	language: validateLanguage
+	};
+
+	var test = $('form').isValid(false, conf);
+	if (!test)
+	{
+		return;
+	}
 
 	if(active_tab === 'first_tab')
 	{
 		$('#tab-content').responsiveTabs('activate', 1);
 		$("#save_button").val(lang['save']);
+		$("#save_button_bottom").val(lang['save']);
+		$("#active_tab").val('demands');
 	}
 	else
 	{
@@ -135,12 +150,14 @@ check_button_names = function()
 	else if(tab === 'first_tab')
 	{
 		$("#save_button").val(lang['next']);
+		$("#save_button_bottom").val(lang['next']);
 		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
 	else
 	{
 		$("#save_button").val(lang['save']);
+		$("#save_button_bottom").val(lang['save']);
 		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
