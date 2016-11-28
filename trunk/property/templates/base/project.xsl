@@ -31,6 +31,7 @@
 		var project_id = '<xsl:value-of select="value_project_id"/>';
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'next', 'save')"/>;
 	</script>
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
@@ -45,7 +46,7 @@
 		<xsl:variable name="decimal_separator">
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>
-		<input id="project_tab" type="hidden" name="tab" value=""/>
+		<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 

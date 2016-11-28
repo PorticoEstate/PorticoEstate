@@ -386,7 +386,7 @@ JS;
 					form: '#{$form_id}',
 					validateOnBlur : false,
 					scrollToTopOnError : false,
-					validateHiddenInputs: true,
+			//		validateHiddenInputs: true,
 					errorMessagePosition : {$errorMessagePosition},
 					scrollToTopOnError: {$scrollToTopOnError}
 				});
