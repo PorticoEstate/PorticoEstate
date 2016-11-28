@@ -1,4 +1,4 @@
-
+var project_id;
 var sUrl_workorder = phpGWLink('index.php', {'menuaction': 'property.uiworkorder.edit'});
 var sUrl_invoice = phpGWLink('index.php', {'menuaction': 'property.uiinvoice.index'});
 
@@ -161,13 +161,13 @@ $(document).ready(function ()
 		JqueryPortico.updateinlineTableHelper(oTable2, requestUrl2);
 	});
 
-	if(typeof(oTable1) !== 'undefined')
+	if (typeof (oTable1) !== 'undefined')
 	{
 		var api1 = oTable1.api();
 		api1.on('draw', sum_columns_table_orders);
 	}
 
-	if(typeof(oTable2) !== 'undefined')
+	if (typeof (oTable2) !== 'undefined')
 	{
 		var api2 = oTable2.api();
 		api2.on('draw', sum_columns_table_invoice);
@@ -271,14 +271,7 @@ function check_and_submit_valid_session()
 
 this.validate_form = function ()
 {
-	conf = {
-		modules: 'location, date, security, file',
-		validateOnBlur: false,
-		scrollToTopOnError: true,
-		errorMessagePosition: 'top',
-		language: validateLanguage
-	};
-	return $('form').isValid(validateLanguage, conf);
+	return $('form').isValid();
 }
 
 JqueryPortico.FormatterClosed = function (key, oData)
@@ -291,22 +284,65 @@ JqueryPortico.FormatterActive = function (key, oData)
 	return "<div align=\"center\">" + oData['active'] + oData['active_orig'] + "</div>";
 };
 
-function set_tab(tab)
+function set_tab(active_tab)
 {
-	$("#project_tab").val(tab);
+	$("#active_tab").val(active_tab);
+	check_button_names();
 }
+
+check_button_names = function ()
+{
+	var active_tab = $("#active_tab").val();
+
+	if (Number(project_id) === 0)
+	{
+		if (active_tab === 'general')
+		{
+			$("#submitform").val(lang['next']);
+		}
+		else if (active_tab === 'location')
+		{
+			$("#submitform").val(lang['next']);
+		}
+		else
+		{
+			$("#submitform").val(lang['save']);
+		}
+	}
+};
 
 $(document).ready(function ()
 {
+	check_button_names();
+
 	$('form[name=form]').submit(function (e)
 	{
 		e.preventDefault();
+
+		var active_tab = $("#active_tab").val();
 
 		if (!validate_form())
 		{
 			return;
 		}
-		check_and_submit_valid_session();
+
+		if (active_tab === 'general' && Number(project_id) === 0)
+		{
+			$('#tab-content').responsiveTabs('activate', 1);
+			$("#submitform").val(lang['next']);
+			$("#active_tab").val('location');
+		}
+		else if (active_tab === 'location' && Number(project_id) === 0)
+		{
+			$('#tab-content').responsiveTabs('activate', 2);
+			$("#submitform").val(lang['save']);
+			$("#active_tab").val('budget');
+		}
+		else
+		{
+			check_and_submit_valid_session();
+		}
+
 	});
 });
 

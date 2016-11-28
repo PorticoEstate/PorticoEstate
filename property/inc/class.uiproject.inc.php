@@ -1165,9 +1165,9 @@ JS;
 			if ($id)
 			{
 				self::message_set($this->receipt);
-				$active_tab = phpgw::get_var('tab');
+				$active_tab = phpgw::get_var('active_tab');
 
-				self::redirect(array('menuaction' => 'property.uiproject.edit', 'id' => $id, 'tab' => $active_tab));
+				self::redirect(array('menuaction' => 'property.uiproject.edit', 'id' => $id, 'active_tab' => $active_tab));
 			}
 
 			$this->edit($values, 'edit');
@@ -2027,7 +2027,7 @@ JS;
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
-			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
+			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'general');
 
 			$data = array
 				(
@@ -2046,6 +2046,7 @@ JS;
 				'contact_data' => $contact_data,
 				'tabs' => self::_generate_tabs($tabs, $active_tab, array('documents' => $id ? false : true,
 					'history' => $id ? false : true)),
+				'value_active_tab' => $active_tab,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => isset($origin) ? $origin : '',
