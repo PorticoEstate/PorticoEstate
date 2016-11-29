@@ -76,7 +76,7 @@
 										</xsl:variable>
 										<td>
 											<input type="hidden" name='save'  value=""/>
-											<input type="submit" id="submitform" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}">
+											<input type="button" id="submitform" class="pure-button pure-button-primary" name="values[save]" value="{$lang_save}" onClick="validate_submit();">
 												<xsl:attribute name="title">
 													<xsl:value-of select="lang_save_statustext"/>
 												</xsl:attribute>

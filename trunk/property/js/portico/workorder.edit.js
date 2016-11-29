@@ -15,11 +15,25 @@ function calculate_order()
 
 function submit_workorder()
 {
+	var active_tab = $("#active_tab").val();
+
 	if (!validate_form())
 	{
 		return;
 	}
-	check_and_submit_valid_session();
+
+	if (active_tab === 'general' && Number(order_id) === 0)
+	{
+		$('#tab-content').responsiveTabs('enable', 1);
+		$('#tab-content').responsiveTabs('activate', 1);
+		$("#save_button").val(lang['save']);
+		$("#save_button_bottom").val(lang['save']);
+		$("#active_tab").val('budget');
+	}
+	else
+	{
+		check_and_submit_valid_session();
+	}
 }
 
 
@@ -33,38 +47,24 @@ function send_order()
 	check_and_submit_valid_session();
 }
 
-$(document).ready(function ()
+check_button_names = function ()
 {
-	$('form[name=form]').submit(function (e)
+	var active_tab = $("#active_tab").val();
+	if (Number(order_id) === 0)
 	{
-		e.preventDefault();
-
-		if (!validate_form())
+		if (active_tab === 'general')
 		{
-			return;
+			$("#save_button").val(lang['next']);
+			$("#save_button_bottom").val(lang['next']);
 		}
-		check_and_submit_valid_session();
-	});
-
-	$.formUtils.addValidator({
-		name: 'budget',
-		validatorFunction: function (value, $el, config, languaje, $form)
+		else
 		{
-			//check_for_budget is defined in xsl-template
-			var v = false;
-			var budget = $('#field_budget').val();
-			var contract_sum = $('#field_contract_sum').val();
-			if ((budget != "" || contract_sum != "") || (check_for_budget > 0))
-			{
-				v = true;
-			}
-			return v;
-		},
-		errorMessage: lang['please enter either a budget or contrakt sum'],
-		errorMessageKey: ''
-	});
+			$("#save_button").val(lang['save']);
+			$("#save_button_bottom").val(lang['save']);
+		}
+	}
+};
 
-});
 
 function receive_order(workorder_id)
 {
@@ -149,9 +149,10 @@ this.validate_form = function ()
 	return $('form').isValid(validateLanguage, conf);
 }
 
-function set_tab(tab)
+function set_tab(active_tab)
 {
-	$("#order_tab").val(tab);
+	$("#active_tab").val(active_tab);
+	check_button_names();
 }
 
 this.showlightbox_manual_invoice = function (workorder_id)
@@ -278,6 +279,37 @@ JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'uns
 
 $(document).ready(function ()
 {
+
+	check_button_names();
+
+//	$('form[name=form]').submit(function (e)
+//	{
+//		e.preventDefault();
+//
+//		if (!validate_form())
+//		{
+//			return;
+//		}
+//		check_and_submit_valid_session();
+//	});
+
+	$.formUtils.addValidator({
+		name: 'budget',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			//check_for_budget is defined in xsl-template
+			var v = false;
+			var budget = $('#field_budget').val();
+			var contract_sum = $('#field_contract_sum').val();
+			if ((budget != "" || contract_sum != "") || (check_for_budget > 0))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: lang['please enter either a budget or contrakt sum'],
+		errorMessageKey: ''
+	});
 
 	$("#global_category_id").change(function ()
 	{
@@ -552,7 +584,7 @@ function populateTableChkApproval(ecodimb)
 								}
 								else
 								{
-						//			required = 'checked="checked"';
+									//			required = 'checked="checked"';
 								}
 							}
 							else
@@ -598,7 +630,7 @@ function populateTableChkApproval(ecodimb)
 				$("#approval_container").html(htmlString);
 			}
 		},
-		error: function()
+		error: function ()
 		{
 			alert('feil med oppslag til fullmakter');
 		}
