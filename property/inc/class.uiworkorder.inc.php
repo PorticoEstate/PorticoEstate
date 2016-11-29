@@ -1195,11 +1195,11 @@
 				if ($id)
 				{
 					self::message_set($this->receipt);
-					$active_tab = phpgw::get_var('tab');
+					$active_tab = phpgw::get_var('active_tab');
 					self::redirect(array(
 						'menuaction' => 'property.uiworkorder.edit',
 						'id' => $id,
-						'tab' => $active_tab));
+						'active_tab' => $active_tab));
 				}
 				$this->edit($values);
 
@@ -2211,7 +2211,7 @@
 
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
-			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
+			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'general');
 
 			$collect_building_part = false;
 			$building_part_list = array();
@@ -2255,9 +2255,12 @@
 				'suppresscoordination' => $suppresscoordination,
 				'enable_unspsc' => $enable_unspsc,
 				'enable_order_service_id' => $enable_order_service_id,
-				'tabs' => self::_generate_tabs(array(), $active_tab, array(
+				'tabs' => self::_generate_tabs(array(), $active_tab, $_disable = array(
+					'budget' => !$id && empty($this->receipt['error']) ? true : false,
+					'coordination' => $id ? false : true,
 					'documents' => $id ? false : true,
 					'history' => $id ? false : true)),
+				'value_active_tab'	=> $active_tab,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => isset($origin) ? $origin : '',
@@ -2818,7 +2821,7 @@
 				'redirect' => isset($redirect) && $redirect ? $GLOBALS['phpgw']->link('/index.php', array(
 						'menuaction' => 'property.uiworkorder.edit',
 						'id' => $order_id,
-						'tab' => 'budget')) : null,
+						'active_tab' => 'budget')) : null,
 			);
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array(
@@ -2946,7 +2949,7 @@
 			return $this->bocommon->get_unspsc_code_name($id);
 		}
 
-		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $suppress = array() )
+		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $_disable = array() )
 		{
 			$tabs = array
 				(
@@ -2973,11 +2976,11 @@
 			);
 			$tabs = array_merge($tabs, $tabs_);
 
-			foreach ($suppress as $tab => $remove)
+			foreach ($_disable as $tab => $disable)
 			{
-				if ($remove)
+				if ($disable)
 				{
-					unset($tabs[$tab]);
+					$tabs[$tab]['disable'] = true;
 				}
 			}
 

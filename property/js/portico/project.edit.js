@@ -125,6 +125,7 @@ function sum_columns_table_invoice()
 
 $(document).ready(function ()
 {
+	check_button_names();
 
 	$("#global_category_id").change(function ()
 	{
@@ -271,7 +272,15 @@ function check_and_submit_valid_session()
 
 this.validate_form = function ()
 {
-	return $('form').isValid();
+	conf = {
+	//	modules: 'date, security, file',
+		validateOnBlur: false,
+		scrollToTopOnError: true,
+		errorMessagePosition: 'top'
+	//	language: validateLanguage
+	};
+
+	return $('form').isValid(false, conf);
 }
 
 JqueryPortico.FormatterClosed = function (key, oData)
@@ -311,40 +320,45 @@ check_button_names = function ()
 	}
 };
 
-$(document).ready(function ()
+validate_submit = function ()
 {
-	check_button_names();
+	var active_tab = $("#active_tab").val();
 
-	$('form[name=form]').submit(function (e)
+	if (!validate_form())
 	{
-		e.preventDefault();
+		return;
+	}
 
-		var active_tab = $("#active_tab").val();
+	if (active_tab === 'general' && Number(project_id) === 0)
+	{
+		$('#tab-content').responsiveTabs('enable', 1);
+		$('#tab-content').responsiveTabs('activate', 1);
+		$("#submitform").val(lang['next']);
+		$("#active_tab").val('location');
+	}
+	else if (active_tab === 'location' && Number(project_id) === 0)
+	{
+		$('#tab-content').responsiveTabs('enable', 2);
+		$('#tab-content').responsiveTabs('activate', 2);
+		$("#submitform").val(lang['save']);
+		$("#active_tab").val('budget');
+	}
+	else
+	{
+		check_and_submit_valid_session();
+	}
 
-		if (!validate_form())
-		{
-			return;
-		}
+};
 
-		if (active_tab === 'general' && Number(project_id) === 0)
-		{
-			$('#tab-content').responsiveTabs('activate', 1);
-			$("#submitform").val(lang['next']);
-			$("#active_tab").val('location');
-		}
-		else if (active_tab === 'location' && Number(project_id) === 0)
-		{
-			$('#tab-content').responsiveTabs('activate', 2);
-			$("#submitform").val(lang['save']);
-			$("#active_tab").val('budget');
-		}
-		else
-		{
-			check_and_submit_valid_session();
-		}
-
-	});
-});
+//$(document).ready(function ()
+//{
+//
+//	$('form[name=form]').submit(function (e)
+//	{
+//		e.preventDefault();
+//
+//	});
+//});
 
 var oArgs = {menuaction: 'property.uiproject.get_external_project'};
 var strURL = phpGWLink('index.php', oArgs, true);

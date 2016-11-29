@@ -168,7 +168,7 @@
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>
 
-		<input id="order_tab" type="hidden" name="tab" value=""/>
+		<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="floating-box">
@@ -1234,7 +1234,7 @@
 				</xsl:when>
 			</xsl:choose>
 			<script type="text/javascript">
-				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum', 'next', 'save')"/>;
 				var check_for_budget = <xsl:value-of select="check_for_budget"/>;
 				var amount = <xsl:value-of select="check_value_budget"/>;
 				var project_ecodimb = '<xsl:value-of select="project_ecodimb"/>';
@@ -1247,7 +1247,7 @@
 			<xsl:choose>
 				<xsl:when test="mode='edit'">
 					<input type="hidden" name="values[save]" value="1"/>
-					<input type="submit" class="pure-button pure-button-primary" name="save" value="{$lang_save}">
+					<input type="button" class="pure-button pure-button-primary" id="save_button_bottom" name="save" value="{$lang_save}" onClick="submit_workorder();">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>

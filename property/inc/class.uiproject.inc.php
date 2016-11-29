@@ -881,7 +881,13 @@ JS;
 				$error_id = true;
 			}
 
-			if (isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'], '-')))
+			if(!$id && empty($values['budget']))
+			{
+				$this->receipt['error'][] = array('msg' => lang('enter the budget'));
+				$error_id = true;
+			}
+			
+			if (!empty($values['budget']) && !ctype_digit(ltrim($values['budget'], '-')))
 			{
 				$this->receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter an integer !'));
 				$error_id = true;
@@ -2044,8 +2050,13 @@ JS;
 				'b_account_data'		=> $b_account_data,
 				'ecodimb_data' => $ecodimb_data,
 				'contact_data' => $contact_data,
-				'tabs' => self::_generate_tabs($tabs, $active_tab, array('documents' => $id ? false : true,
-					'history' => $id ? false : true)),
+				'tabs' => self::_generate_tabs($tabs, $active_tab, $_disable = array(
+					'location' => !$id && empty($this->receipt['error']) ? true : false,
+					'budget' => !$id && empty($this->receipt['error']) ? true : false,
+					'coordination' => $id ? false : true,
+					'documents' => $id ? false : true,
+					'history' => $id ? false : true
+					)),
 				'value_active_tab' => $active_tab,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
@@ -2700,7 +2711,7 @@ JS;
 			return $this->bocommon->get_external_project_name($id);
 		}
 
-		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $suppress = array() )
+		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $_disable = array() )
 		{
 			$tabs = array
 				(
@@ -2714,11 +2725,11 @@ JS;
 			);
 
 			$tabs = array_merge($tabs, $tabs_);
-			foreach ($suppress as $tab => $remove)
+			foreach ($_disable as $tab => $disable)
 			{
-				if ($remove)
+				if ($disable)
 				{
-					unset($tabs[$tab]);
+					$tabs[$tab]['disable'] = true;
 				}
 			}
 
