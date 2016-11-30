@@ -87,10 +87,10 @@
 			return $receipt;
 		}
 		
-		function save_file_relations( $items = array(), $location_id, $file_id  )
+		function save_file_relations( $add, $delete, $location_id, $file_id  )
 		{
 			
-			$receipt = $this->so->save_file_relations( $items, $location_id, $file_id );
+			$receipt = $this->so->save_file_relations( $add, $delete, $location_id, $file_id );
 			
 			return $receipt;
 		}
