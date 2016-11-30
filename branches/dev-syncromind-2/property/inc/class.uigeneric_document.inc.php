@@ -309,7 +309,7 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			if ($file_id)
 			{
-				$relation_values = $this->bo->get_file_relations($file_id);
+				$relation_values = $this->bo->get_file_relations($file_id, $location_id);
 			}
 			$values_location_item_id = array();
 			if (count($relation_values))
@@ -324,6 +324,7 @@
 			foreach($locations as $item)
 			{
 				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				$hidden = ($checked) ? '<input type="hidden" class="locations_related" value="'.$item['id'].'">' : '';
 				
 				if ($only_related && empty($checked))
 				{
@@ -333,7 +334,7 @@
 				$values[] = array(
 					'location_code' => '<a href="'.self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $item['location_code'])).'">'.$item['location_code'].'</a>',
 					'loc1_name' => $item['loc1_name'],
-					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'
+					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'.$hidden
 				);				
 			}
 
@@ -718,6 +719,7 @@
 			foreach($_components as $item)
 			{
 				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				$hidden = ($checked) ? '<input type="hidden" class="components_related" value="'.$item['id'].'">' : '';
 
 				if ($only_related && empty($checked))
 				{
@@ -727,7 +729,7 @@
 				$values[] = array(
 					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
 					'name' => $item['benevnelse'],
-					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>',
+					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>'.$hidden,
 				);
 			}
 			
@@ -747,14 +749,18 @@
 			$type_id = phpgw::get_var('type_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$file_id = phpgw::get_var('file_id', 'int');
-			$items = phpgw::get_var('items');
+			$items = phpgw::get_var('items', 'array', 'REQUEST', array());
+			$related = phpgw::get_var('related', 'array', 'REQUEST', array());
+			
+			$add = array_diff($items, $related);
+			$delete = array_diff($related, $items);
 			
 			if (empty($location_id))
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			}
-			
-			$result = $this->bo->save_file_relations( $items, $location_id, $file_id );
+	
+			$result = $this->bo->save_file_relations( $add, $delete, $location_id, $file_id );
 			
 			if ($result)
 			{
