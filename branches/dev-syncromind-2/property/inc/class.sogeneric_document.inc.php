@@ -193,18 +193,24 @@
 			return $values;
 		}
 		
-		function save_file_relations( $items = array(), $location_id, $file_id )
+		function save_file_relations( $add, $delete, $location_id, $file_id )
 		{
 			$this->db->transaction_begin();
 			
-			$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE file_id = {$file_id} AND location_id = {$location_id}", __LINE__, __FILE__);
-			
+			if (count($delete))
+			{
+				foreach($delete as $item)
+				{
+					$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE location_item_id = {$item} AND file_id = {$file_id} AND location_id = {$location_id}", __LINE__, __FILE__);
+				}
+			}
+						
 			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
 			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
 				
-			if (count($items))
+			if (count($add))
 			{
-				foreach($items as $item)
+				foreach($add as $item)
 				{
 					$values_insert = array
 					(
