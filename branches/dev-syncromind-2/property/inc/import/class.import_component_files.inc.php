@@ -13,8 +13,8 @@
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 
 			$this->last_files_added = array();
+			$this->list_component_id = array();
 			$this->paths_from_file = array();
-			$this->names = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -103,7 +103,7 @@
 			$message = array();
 
 			$uploaded_files = $this->_get_uploaded_files();
-			
+
 			if ($this->receipt['error'])
 			{
 				return $this->receipt;
@@ -566,6 +566,11 @@
 		
 		private function _get_component( $query, $attrib_name_componentID, $location_code)
 		{
+			if (array_key_exists($query, $this->list_component_id))
+			{
+				return $this->list_component_id[$query];
+			}
+			
 			$location_code_values = explode('-', $location_code);
 			$loc1 =  $location_code_values[0];
 			 
@@ -584,6 +589,11 @@
 			{
 				$values['id'] = $this->db->f('id');
 				$values['location_id'] = $this->db->f('location_id');
+			}
+			
+			if ($values['id'])
+			{
+				$this->list_component_id[$query] = $values;
 			}
 
 			return $values;
