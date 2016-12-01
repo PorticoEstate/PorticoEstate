@@ -564,7 +564,7 @@ $(document).ready(function ()
 	{
 		$('#profile_selected').empty();
 		$('#profile_selected').append($("#profile_list option:selected").text());
-		$('#cod_profile_selected').val($('#profile_selected').val());
+		$('#cod_profile_selected').val($("#profile_list").val());
 
 		if ($('#profile_list').val())
 		{
