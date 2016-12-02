@@ -116,7 +116,14 @@
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="$lang_vendor"/>
 									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
 								</input>
+								<xsl:text> </xsl:text>
+								<a href="{new_vendor_url}" target="_blank">
+									<xsl:value-of select="php:function('lang', 'new')"/>
+								</a>
 								<div id="vendor_container"/>
 							</div>
 							<div class="pure-control-group">

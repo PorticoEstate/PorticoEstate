@@ -101,4 +101,9 @@
 
 			return $values;
 		}
+
+		public function update_bookings( $ids, $action )
+		{
+			return eventplanner_sobooking::get_instance()->update_bookings($ids, $action);
+		}
 	}

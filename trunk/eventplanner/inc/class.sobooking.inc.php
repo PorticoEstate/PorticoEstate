@@ -113,4 +113,29 @@
 			return	$this->db->transaction_commit();
 		}
 
+		public function update_bookings($ids, $action )
+		{
+			if(!$ids || !is_array($ids))
+			{
+				return;
+			}
+
+			switch ($action)
+			{
+				case 'disable':
+					$sql = "UPDATE eventplanner_booking SET active = 0";
+
+					break;
+				case 'enable':
+					$sql = "UPDATE eventplanner_booking SET active = 1";
+					break;
+
+				default:
+					throw new Exception("action {$action} not supported");
+					break;
+			}
+
+			$sql .= 'WHERE id IN(' . implode(',', $ids) . ')';
+			return $this->db->query($sql,__LINE__,__FILE__);
+		}
 	}
