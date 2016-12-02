@@ -243,46 +243,57 @@
 							<input type="hidden" id="location_code" name="location_code" value=""></input>
 							<input type="hidden" id="location_item_id" name="location_item_id" value=""></input>
 						</div>
-
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'upload file')"/>
-							</label>
-							<input type="file" id="excel_files" name="excel_files" size="40">
-							</input>
-						</div>
 						
-						<div class="pure-control-group">
-							<label><xsl:value-of select="php:function('lang', 'Files')" /></label>
-							<div class="pure-custom">
+						<div id="responsiveTabsDemo2">
+							<ul>
+								<li><a href="#tab-components"><xsl:value-of select="php:function('lang', 'Components')"/></a></li>
+								<li><a href="#tab-files"><xsl:value-of select="php:function('lang', 'Files')"/></a></li>
+								<li><a href="#tab-preview"><xsl:value-of select="php:function('lang', 'Preview')"/></a></li>
+							</ul>
+							<div id="tab-components">
 								<div class="pure-control-group">
-									<label><xsl:value-of select="php:function('lang', 'Uncompressed')" /></label>
-									<input type="radio" value="0" name="compressed_file_check" checked="true" />
-								</div>
-								<div class="pure-control-group">
-									<label><xsl:value-of select="php:function('lang', 'Compressed')" /></label>
-									<input type="radio" value="1" name="compressed_file_check" />
-									<input type="text" value="" id="compressed_file_name" name="compressed_file_name" >
-										<xsl:attribute name="placeholder">
-											<xsl:value-of select="php:function('lang', 'File name')"/>
-										</xsl:attribute>
-									</input> (zip, rar)
-								</div>
+									<label>
+										<xsl:value-of select="php:function('lang', 'upload file')"/>
+									</label>
+									<input type="file" id="excel_files" name="excel_files" size="40">
+									</input>
+								</div>								
 							</div>
-						</div>
-
-						<div class="pure-control-group">
-							<label></label>
-							<input type="button" id="import_components_files" name="import_components" size="40">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'Start import')"/>
-								</xsl:attribute>
-							</input>
-							<img src="{image_loader}" class="processing-import-relations" align="absmiddle"></img>
-						</div>
-						<div class="pure-control-group">
-							<div id="message4" class="message"></div>
-						</div>						
+							<div id="tab-files">
+								<div class="pure-control-group">
+									<label><xsl:value-of select="php:function('lang', 'Files')" /></label>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Uncompressed')" /></label>
+											<input type="radio" value="0" name="compressed_file_check" checked="true" />
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'Compressed')" /></label>
+											<input type="radio" value="1" name="compressed_file_check" />
+											<input type="text" value="" id="compressed_file_name" name="compressed_file_name" >
+												<xsl:attribute name="placeholder">
+													<xsl:value-of select="php:function('lang', 'File name')"/>
+												</xsl:attribute>
+											</input> (zip, rar)
+										</div>
+									</div>
+								</div>								
+							</div>
+							<div id="tab-preview">
+								<div class="pure-control-group">
+									<label></label>
+									<input type="button" id="import_components_files" name="import_components" size="40">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'Start import')"/>
+										</xsl:attribute>
+									</input>
+									<img src="{image_loader}" class="processing-import-relations" align="absmiddle"></img>
+								</div>
+								<div class="pure-control-group">
+									<div id="message4" class="message"></div>
+								</div>								
+							</div>
+						</div>					
 					</form>		
 				</div>
 		
@@ -292,6 +303,10 @@
 		$('#responsiveTabsDemo').responsiveTabs({
 			startCollapsed: 'accordion',
 			disabled: [1,2,3]
+		});
+		
+		$('#responsiveTabsDemo2').responsiveTabs({
+			startCollapsed: 'accordion'
 		});
 	</script>
 </xsl:template>
