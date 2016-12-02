@@ -1,5 +1,5 @@
 <?php
-/**
+	/**
 	 * phpGroupWare - eventplanner: a part of a Facilities Management System.
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
@@ -41,9 +41,9 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'save_ajax'	=> true
+			'save_ajax' => true,
+			'update' => true
 		);
-
 		protected
 			$fields,
 			$permissions;
@@ -57,7 +57,6 @@
 			$this->fields = eventplanner_booking::get_fields();
 			$this->permissions = eventplanner_booking::get_instance()->get_permission_array();
 		}
-
 
 		public function index()
 		{
@@ -93,8 +92,8 @@
 								'type' => 'checkbox',
 								'name' => 'filter_active',
 								'text' => lang('showall'),
-								'value' =>  1,
-								'checked'=> 1,
+								'value' => 1,
+								'checked' => 1,
 							)
 						)
 					)
@@ -147,7 +146,6 @@
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
-
 		/*
 		 * Edit the price item with the id given in the http variable 'id'
 		 */
@@ -183,7 +181,7 @@
 			$comments = (array)$booking->comments;
 			foreach ($comments as $key => &$comment)
 			{
-				$comment['value_count'] = $key +1;
+				$comment['value_count'] = $key + 1;
 				$comment['value_date'] = $GLOBALS['phpgw']->common->show_date($comment['time']);
 			}
 
@@ -193,7 +191,7 @@
 				array('key' => 'author', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true)
 			);
- 
+
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
@@ -218,13 +216,38 @@
 			self::add_javascript('eventplanner', 'portico', 'booking.edit.js');
 			self::render_template_xsl(array('booking', 'datatable_inline'), array($mode => $data));
 		}
-		
+
 		public function save()
 		{
 			parent::save();
 		}
+
 		public function save_ajax()
 		{
 			return parent::save(true);
+		}
+
+		public function update()
+		{
+			$ids = phpgw::get_var('ids', 'int');
+			$action = phpgw::get_var('action', 'string');
+
+			if ($this->bo->update_bookings($ids, $action))
+			{
+				return array(
+					'status_kode' => 'ok',
+					'status' => lang('ok'),
+					'msg' => lang('messages_saved_form')
+				);
+			}
+			else
+			{
+				return array
+				(
+					'status_kode' => 'error',
+					'status' => lang('error'),
+					'msg' => lang('messages_form_error')
+				);
+			}
 		}
 	}

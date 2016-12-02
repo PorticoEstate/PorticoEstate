@@ -3,15 +3,15 @@ var oArgs = {menuaction: 'eventplanner.uivendor.index', organization_number: tru
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container', 'name');
 
-validate_submit = function()
+validate_submit = function ()
 {
 	var active_tab = $("#active_tab").val();
 	conf = {
-	//	modules: 'date, security, file',
+		//	modules: 'date, security, file',
 		validateOnBlur: false,
 		scrollToTopOnError: true,
 		errorMessagePosition: 'top'
-	//	language: validateLanguage
+			//	language: validateLanguage
 	};
 
 	var test = $('form').isValid(false, conf);
@@ -20,7 +20,7 @@ validate_submit = function()
 		return;
 	}
 
-	if(active_tab === 'first_tab')
+	if (active_tab === 'first_tab')
 	{
 		$('#tab-content').responsiveTabs('activate', 1);
 		$("#save_button").val(lang['save']);
@@ -139,7 +139,7 @@ $(document).ready(function ()
 
 });
 
-check_button_names = function()
+check_button_names = function ()
 {
 	var tab = $("#active_tab").val();
 	if (tab === 'calendar')
@@ -147,7 +147,7 @@ check_button_names = function()
 		$("#floating-box").hide();
 		$("#submit_group_bottom").hide();
 	}
-	else if(tab === 'first_tab')
+	else if (tab === 'first_tab')
 	{
 		$("#save_button").val(lang['next']);
 		$("#save_button_bottom").val(lang['next']);
@@ -197,8 +197,14 @@ function calculate_stage_size()
 	$("#stage_size").val(total_size);
 }
 
-add_booking = function ()
+add_booking = function (id)
 {
+	var from_ = $("#from_").val();
+	if (!from_)
+	{
+		return;
+	}
+
 	oArgs = {
 		menuaction: 'eventplanner.uibooking.save_ajax',
 		application_id: $("#application_id").val()
@@ -211,7 +217,7 @@ add_booking = function ()
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		data: {from_: $("#from_").val(), active: 1},
+		data: {from_: from_, active: 1, id:id || ''},
 		url: requestUrl,
 		success: function (data)
 		{
@@ -241,6 +247,7 @@ this.onActionsClick = function (action)
 	if (action === 'add')
 	{
 		add_booking();
+		return;
 	}
 
 	var api = $('#datatable-container_1').dataTable().api();
@@ -258,18 +265,27 @@ this.onActionsClick = function (action)
 	{
 		var aData = selected[n];
 		ids.push(aData['id']);
+
+		if (action === 'edit')
+		{
+			add_booking(aData['id']);
+			return;
+		}
+
 	}
 
 	if (ids.length > 0)
 	{
-		var data = {"ids": ids, "action": action, from_: $("#from_").val(), to_: $("#to_").val()};
+		var data = {"ids": ids, "action": action, from_: $("#from_").val()};
 
 		oArgs = {
-			menuaction: 'eventplanner.uibooking.update',
-			application_id: $("#application_id").val()
+			menuaction: 'eventplanner.uibooking.update'
 		};
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		var htmlString = '';
+		$("#receipt").html("");
 
 		$.ajax({
 			type: 'POST',
@@ -283,7 +299,6 @@ this.onActionsClick = function (action)
 					if (data.status_kode == 'ok')
 					{
 						$("#from_").val('');
-						$("#to_").val('');
 						htmlString += "<div class=\"msg_good\">";
 					}
 					else
@@ -297,6 +312,6 @@ this.onActionsClick = function (action)
 			}
 		});
 
-		JqueryPortico.updateinlineTableHelper('datatable-container_4');
+		JqueryPortico.updateinlineTableHelper('datatable-container_1');
 	}
 };

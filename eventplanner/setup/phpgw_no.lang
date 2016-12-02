@@ -65,3 +65,6 @@ raider	eventplanner	no	Raider
 vendor report	eventplanner	no	Utøverrapport
 calendar	eventplanner	no	Kalender
 from	eventplanner	no	Fra
+select all	eventplanner	no	Velg alle
+enable	eventplanner	no	Aktiver
+disable	eventplanner	no	Deaktiver

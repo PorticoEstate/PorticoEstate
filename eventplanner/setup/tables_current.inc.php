@@ -282,6 +282,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'eventplanner_booking_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'eventplanner_booking' => array('booking_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'eventplanner_booking_cost' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),

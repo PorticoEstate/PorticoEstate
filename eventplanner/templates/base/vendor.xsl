@@ -167,7 +167,7 @@
 									<xsl:text>email</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-								<xsl:value-of select="php:function('lang', 'email')"/>
+									<xsl:value-of select="php:function('lang', 'email')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -210,6 +210,9 @@
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
 								<xsl:value-of select="vendor/remark"/>
 							</textarea>
 						</div>
