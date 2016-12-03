@@ -101,13 +101,8 @@
 		public function add_files_location($id, $location_code)
 		{		
 			$message = array();
-
-			$uploaded_files = $this->_get_uploaded_files();
-
-			if ($this->receipt['error'])
-			{
-				return $this->receipt;
-			}
+			
+			$uploaded_files = phpgwapi_cache::session_get('property', 'import_data');
 			
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
@@ -406,14 +401,11 @@
 		
 			return $results;
 		}
-
-		public function add_files_components_location($id, $location_code, $attrib_name_componentID)
-		{		
+		
+		public function get_relations ()
+		{
 			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
-			$message = array();
-	
-			$uploaded_files = $this->_get_uploaded_files();
 
 			if ($this->receipt['error'])
 			{
@@ -444,10 +436,36 @@
 					'row' => ($k + 1)
 				);
 			}
+			
+			return $component_files;
+		}
+		
+		public function preview ()
+		{
+			$with_components = phpgw::get_var('with_components_check');
+			
+			$uploaded_files = $this->_get_uploaded_files();
+			
+			if ($with_components)
+			{
+				$relations = $this->get_relations();
+				$this->_compare_names($relations, $uploaded_files);
+			} else {
+				$relations = $uploaded_files;
+			}
+			
+			phpgwapi_cache::session_set('property', 'import_data', $relations);
+			
+			return $relations;
+		}
 
-			$this->_compare_names($component_files, $uploaded_files);
+		public function add_files_components_location($id, $location_code, $attrib_name_componentID)
+		{		
+			$message = array();
 
-			$count_new_relations = 0;
+			$component_files = phpgwapi_cache::session_get('property', 'import_data');
+			
+			$count_new_relations = 0; 
 			$count_relations_existing = 0;
 			$count_new_files = 0;
 			//$count_files_not_existing = 0;
