@@ -67,13 +67,22 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
+			$this->update_history($object, $this->fields);
+
+			parent::update($object);
+
+			return	$this->db->transaction_commit();
+		}
+
+		protected function update_history( $object, $fields )
+		{
 	//		$status_text = eventplanner_booking::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$lang_active = lang('active');
 			$lang_inactive = lang('inactive');
 
 			$original = $this->read_single($object->get_id());//returned as array()
-			foreach ($this->fields as $field => $params)
+			foreach ($fields as $field => $params)
 			{
 				$new_value = $object->$field;
 				$old_value = $original[$field];
@@ -89,6 +98,11 @@
 						case 'active':
 							$old_value = $old_value ? $lang_active : $lang_inactive;
 							$new_value = $new_value ? $lang_active : $lang_inactive;
+							break;
+						case 'from_':
+						case 'to_':
+							$old_value = $GLOBALS['phpgw']->common->show_date($old_value, $dateformat);
+							$new_value = $GLOBALS['phpgw']->common->show_date($new_value, $dateformat);
 							break;
 						default:
 							break;
@@ -107,13 +121,9 @@
 				}
 
 			}
-
-			parent::update($object);
-
-			return	$this->db->transaction_commit();
 		}
 
-		public function update_bookings($ids, $action )
+		public function update_active_status($ids, $action )
 		{
 			if(!$ids || !is_array($ids))
 			{
@@ -136,6 +146,11 @@
 			}
 
 			$sql .= 'WHERE id IN(' . implode(',', $ids) . ')';
-			return $this->db->query($sql,__LINE__,__FILE__);
+			$this->db->transaction_begin();
+			
+			$this->db->query($sql,__LINE__,__FILE__);
+
+
+			return	$this->db->transaction_commit();
 		}
 	}

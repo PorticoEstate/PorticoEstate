@@ -42,7 +42,8 @@
 			'edit' => true,
 			'save' => true,
 			'save_ajax' => true,
-			'update' => true
+			'update_active_status' => true,
+			'update_schedule'		=> true
 		);
 		protected
 			$fields,
@@ -104,7 +105,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uibooking.add')),
+			//		'new_item' => self::link(array('menuaction' => 'eventplanner.uibooking.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -181,15 +182,15 @@
 			$comments = (array)$booking->comments;
 			foreach ($comments as $key => &$comment)
 			{
-				$comment['value_count'] = $key + 1;
+				$comment['value_count'] = $key +1;
 				$comment['value_date'] = $GLOBALS['phpgw']->common->show_date($comment['time']);
 			}
 
 			$comments_def = array(
-				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'author', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true)
+				array('key' => 'value_count', 'label' => '#', 'sortable' => true, 'resizeable' => true),
+				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
 
 			$datatable_def[] = array(
@@ -203,17 +204,47 @@
 				)
 			);
 
+			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
+
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $booking->from_, array(
+					'min_date' => date('Y/m/d', $application->date_start),
+					'max_date' => date('Y/m/d', $application->date_end)
+				)
+			);
+			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
+			$types = (array)$application->types;
+			if($types)
+			{
+				foreach ($application_type_list as &$application_type)
+				{
+					foreach ($types as $type)
+					{
+						if((!empty($type['type_id']) && $type['type_id'] == $application_type['id']) || ($type == $application_type['id']))
+						{
+							$application_type['selected'] = 1;
+							break;
+						}
+					}
+				}
+			}
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uibooking.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uibooking.index',)),
 				'booking' => $booking,
+				'application' => $application,
+				'application_type_list' => $application_type_list,
+				'new_customer_url' => self::link(array('menuaction' => 'eventplanner.uicustomer.add')),
+				'application_url' => self::link(array('menuaction' => 'eventplanner.uiapplication.edit', 'id' => $booking->application_id)),
+				'customer_url' => self::link(array('menuaction' => 'eventplanner.uicustomer.edit', 'id' => $booking->customer_id)),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('eventplanner', 'portico', 'booking.edit.js');
+			phpgwapi_jquery::load_widget('autocomplete');
 			self::render_template_xsl(array('booking', 'datatable_inline'), array($mode => $data));
 		}
 
@@ -227,12 +258,12 @@
 			return parent::save(true);
 		}
 
-		public function update()
+		public function update_active_status()
 		{
 			$ids = phpgw::get_var('ids', 'int');
 			$action = phpgw::get_var('action', 'string');
 
-			if ($this->bo->update_bookings($ids, $action))
+			if ($this->bo->update_active_status($ids, $action))
 			{
 				return array(
 					'status_kode' => 'ok',
@@ -249,5 +280,29 @@
 					'msg' => lang('messages_form_error')
 				);
 			}
+		}
+
+		public function update_schedule( )
+		{
+			$id = phpgw::get_var('id', 'int');
+			$from_ = phpgw::get_var('from_', 'date');
+			if ($this->bo->update_schedule($id, $from_))
+			{
+				return array(
+					'status_kode' => 'ok',
+					'status' => lang('ok'),
+					'msg' => lang('messages_saved_form')
+				);
+			}
+			else
+			{
+				return array
+				(
+					'status_kode' => 'error',
+					'status' => lang('error'),
+					'msg' => lang('messages_form_error')
+				);
+			}
+
 		}
 	}

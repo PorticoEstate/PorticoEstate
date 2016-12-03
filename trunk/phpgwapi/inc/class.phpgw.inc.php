@@ -577,6 +577,10 @@
 						break;
 					case 'date':
 						$value = phpgwapi_datetime::date_to_timestamp($value);
+						if($value)
+						{
+							$value -= phpgwapi_datetime::user_timezone();
+						}
 						break;
 				}
 				return $value;

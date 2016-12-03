@@ -279,7 +279,7 @@
 			);
 
 			$dates_def = array(
-				array('key' => 'id',  'hidden' => true),
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
 				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'resizeable' => true),
