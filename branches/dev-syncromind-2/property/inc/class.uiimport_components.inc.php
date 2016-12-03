@@ -128,15 +128,17 @@
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
 			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			$preview = phpgw::get_var('preview');
+			$with_components = phpgw::get_var('with_components_check');
 			
-			if ($_FILES['file']['tmp_name'])
+			/*if ($_FILES['file']['tmp_name'])
 			{
 				if (!$attrib_name_componentID)
 				{
 					$receipt['error'][] = array('msg' => lang('Choose attribute name for Component ID'));
 					return $receipt;
 				}
-			}
+			}*/
 			
 			if (!$location_code)
 			{
@@ -146,7 +148,13 @@
 			
 			$import_component_files = new import_component_files();
 			
-			if ($_FILES['file']['tmp_name'])
+			if ($preview)
+			{
+				$receipt = $import_component_files->preview();
+				return $receipt;
+			}
+			
+			if ($with_components)
 			{
 				$receipt = $import_component_files->add_files_components_location($id, $location_code, $attrib_name_componentID);
 			} else {
