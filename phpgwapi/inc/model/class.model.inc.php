@@ -76,7 +76,7 @@
 					{
 						case 'int':
 						case 'integert':
-							$value = (int)$this->$name;
+							$value = empty($this->$name) && $this->$name === '' ? null : (int)$this->$name;
 							break;
 						case 'float':
 							$value = (float)$this->$name;

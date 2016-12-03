@@ -1,4 +1,5 @@
 
+var lang;
 var oArgs = {menuaction: 'eventplanner.uivendor.index', organization_number: true};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container', 'name');
@@ -171,7 +172,7 @@ function set_tab(tab)
 
 function calculate_total_amount()
 {
-	var total_amount = 0
+	var total_amount = 0;
 
 	var number_of_units = $("#number_of_units").val();
 	var charge_per_unit = $("#charge_per_unit").val();
@@ -185,7 +186,7 @@ function calculate_total_amount()
 
 function calculate_stage_size()
 {
-	var total_size = 0
+	var total_size = 0;
 
 	var stage_width = $("#stage_width").val();
 	var stage_depth = $("#stage_depth").val();
@@ -197,7 +198,7 @@ function calculate_stage_size()
 	$("#stage_size").val(total_size);
 }
 
-add_booking = function (id)
+add_booking = function ()
 {
 	var from_ = $("#from_").val();
 	if (!from_)
@@ -213,32 +214,67 @@ add_booking = function (id)
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = '';
 	$("#receipt").html("");
+	var data =  {from_: from_, active: 1};
 
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		data: {from_: from_, active: 1, id:id || ''},
-		url: requestUrl,
-		success: function (data)
+	JqueryPortico.execute_ajax(requestUrl,
+		function (result)
 		{
-			if (data != null)
+			if (result.status_kode === 'ok')
 			{
-				if (data.status_kode == 'ok')
-				{
-					$("#from_").val('');
-					htmlString += "<div class=\"msg_good\">";
-				}
-				else
-				{
-					htmlString += "<div class=\"error\">";
-				}
-				htmlString += data.msg;
-				htmlString += '</div>';
-				$("#receipt").html(htmlString);
+				$("#from_").val('');
+				htmlString += "<div class=\"msg_good\">";
 			}
-		}
-	});
-	JqueryPortico.updateinlineTableHelper('datatable-container_1');
+			else
+			{
+				htmlString += "<div class=\"error\">";
+			}
+			htmlString += result.msg;
+			htmlString += '</div>';
+			$("#receipt").html(htmlString);
+
+			JqueryPortico.updateinlineTableHelper('datatable-container_1');
+
+		}, data, "POST", "json"
+	);
+
+};
+
+update_schedule = function (id)
+{
+	var from_ = $("#from_").val();
+	if (!from_)
+	{
+		return;
+	}
+	oArgs = {menuaction: 'eventplanner.uibooking.update_schedule'};
+
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var htmlString = '';
+	$("#receipt").html("");
+
+	var data = {from_: from_, id: id};
+
+	JqueryPortico.execute_ajax(requestUrl,
+		function (result)
+		{
+			if (result.status_kode === 'ok')
+			{
+				$("#from_").val('');
+				htmlString += "<div class=\"msg_good\">";
+			}
+			else
+			{
+				htmlString += "<div class=\"error\">";
+			}
+			htmlString += result.msg;
+			htmlString += '</div>';
+			$("#receipt").html(htmlString);
+
+			JqueryPortico.updateinlineTableHelper('datatable-container_1');
+
+		}, data, "POST", "json"
+	);
+
 };
 
 this.onActionsClick = function (action)
@@ -268,50 +304,46 @@ this.onActionsClick = function (action)
 
 		if (action === 'edit')
 		{
-			add_booking(aData['id']);
+			if (numSelected > 1)
+			{
+				alert('There must be only one...');
+				return false;
+			}
+			update_schedule(aData['id']);
 			return;
 		}
-
 	}
 
 	if (ids.length > 0)
 	{
 		var data = {"ids": ids, "action": action, from_: $("#from_").val()};
 
-		oArgs = {
-			menuaction: 'eventplanner.uibooking.update'
-		};
+		oArgs = {menuaction: 'eventplanner.uibooking.update_active_status'};
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 
 		var htmlString = '';
 		$("#receipt").html("");
 
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: requestUrl,
-			data: data,
-			success: function (data)
+		JqueryPortico.execute_ajax(requestUrl,
+			function (result)
 			{
-				if (data != null)
+				if (result.status_kode === 'ok')
 				{
-					if (data.status_kode == 'ok')
-					{
-						$("#from_").val('');
-						htmlString += "<div class=\"msg_good\">";
-					}
-					else
-					{
-						htmlString += "<div class=\"error\">";
-					}
-					htmlString += data.msg;
-					htmlString += '</div>';
-					$("#receipt").html(htmlString);
+					$("#from_").val('');
+					htmlString += "<div class=\"msg_good\">";
 				}
-			}
-		});
+				else
+				{
+					htmlString += "<div class=\"error\">";
+				}
+				htmlString += result.msg;
+				htmlString += '</div>';
+				$("#receipt").html(htmlString);
 
-		JqueryPortico.updateinlineTableHelper('datatable-container_1');
+				JqueryPortico.updateinlineTableHelper('datatable-container_1');
+
+			}, data, "POST", "json"
+		);
 	}
 };

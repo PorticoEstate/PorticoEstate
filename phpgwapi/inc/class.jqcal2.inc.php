@@ -43,7 +43,7 @@
 
 		}
 
-		function add_listener($name, $type = 'date', $value = '', $config = array())
+		function add_listener($name, $type = 'date', $value = 0, $config = array())
 		{
 			switch($type)
 			{
@@ -59,8 +59,15 @@
 					$_type = 'date';
 					$dateformat = "{$this->dateformat}";
 			}
-
-			$this->_input_modern($name, $_type, $dateformat, $config);
+			if(ctype_digit($value) && $value)
+			{
+				$start_value = date('Y/m/d H:i', $value);
+			}
+			else
+			{
+				$start_value = '';
+			}
+			$this->_input_modern($name, $_type, $dateformat, $config, $start_value);
 			return "<input id='{$name}' type='text' value='{$value}' size='10' name='{$name}'/>";
 		}
 
@@ -70,7 +77,7 @@
 		* @access private
 		* @param string $name the element ID
 		*/
-		function _input_modern($id, $type, $dateformat, $config = array())
+		function _input_modern($id, $type, $dateformat, $config = array(), $start_value = '')
 		{
 			$datepicker = $type == 'time' ? 0 : 1;
 			$timepicker = $type == 'date' ? 0 : 1;
@@ -91,6 +98,15 @@
 				$min_date .= ",maxDate:'{$config['max_date']}'";
 			}
 
+			if(!$start_value)
+			{
+				$start_value = 'new Date()';
+			}
+			else
+			{
+				$start_value = "new Date('{$start_value}')";
+			}
+
 
 			$js = <<<JS
 			$(document).ready(function()
@@ -108,7 +124,9 @@
 					weeks: true,
 					dayOfWeekStart:1,
 //					mask:true,
-					startDate: new Date,
+					formatDate:'Y/m/d', //Format date for minDate and maxDate
+					formatTime: 'H:i',
+					startDate: {$start_value},
 					minDate:{$min_date}
 				});
 			});

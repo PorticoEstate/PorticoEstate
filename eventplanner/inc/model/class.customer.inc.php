@@ -247,6 +247,10 @@
 					'type' => 'comment'
 				);
 			}
+			if (!empty($entity->customer_organization_number))
+			{
+				$entity->customer_organization_number = str_replace(' ', '', $entity->customer_organization_number);
+			}
 
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
