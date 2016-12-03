@@ -6,6 +6,7 @@ $(document).ready(function ()
 	$('.processing-start-line').hide();
 	$('.processing-columns').hide();
 	$('.processing-import-relations').hide();
+	$('.processing-preview-relations').hide();
 	$('.processing-save').hide();
 	$('.get-profile').hide();
 	
@@ -94,6 +95,71 @@ $(document).ready(function ()
 		);				
 	});
 	
+	$('#preview_components_files').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		
+		/*if ($('#excel_files').val() === '')
+		{
+			alert('no file selected');
+			return false;
+		}*/
+		
+		if ($('#location_item_id').val() === '')
+		{
+			alert('Choose Location');
+			return false;
+		}	
+		
+		if ($('input:radio[name=compressed_file_check]:checked').val() == 1 && $('#compressed_file_name').val() == '')
+		{
+			alert('Enter the name of the compressed file');
+			return false;
+		}
+		
+		if (isSendingData())
+		{
+			return false;
+		}
+		
+		var form = document.forms.namedItem("form_files");
+		var form_data = new FormData(form);
+		
+		if ($('#excel_files').val() !== '')
+		{
+			var file_data = $('#excel_files').prop('files')[0];	
+			form_data.append('file', file_data);
+		}
+		
+		//form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
+		form_data.append('location_code', $('#location_code').val());
+		form_data.append('location_item_id', $('#location_item_id').val());
+		form_data.append('compressed_file_check', $('input:radio[name=compressed_file_check]:checked').val());
+		form_data.append('with_components_check', $('input:radio[name=with_components_check"]:checked').val());
+		form_data.append('compressed_file_name', $('#compressed_file_name').val());
+		form_data.append('preview', 1);
+
+		$('.processing-import-relations').show();
+		
+		$.ajax({
+			url: requestUrl,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,
+			type: 'post',
+			dataType: 'json',
+			success: function (result)
+			{
+				statusSend = false;
+				$('.processing-import-relations').hide();
+				JqueryPortico.show_message(5, result);
+				//$('#import_components_files').prop('disabled', true);
+			}
+		});
+	});
+	
 	$('#import_components_files').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
@@ -111,7 +177,7 @@ $(document).ready(function ()
 			return false;
 		}	
 	
-		if ($('#excel_files').val() !== '')
+		if ($('input:radio[name=with_components_check"]:checked').val())
 		{
 			if ($('#attribute_name_component_id').val() === '')
 			{
@@ -144,6 +210,7 @@ $(document).ready(function ()
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
 		form_data.append('compressed_file_check', $('input:radio[name=compressed_file_check]:checked').val());
+		form_data.append('with_components_check', $('input:radio[name=with_components_check"]:checked').val());
 		form_data.append('compressed_file_name', $('#compressed_file_name').val());
 
 		$('.processing-import-relations').show();
