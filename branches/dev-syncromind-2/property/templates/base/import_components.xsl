@@ -252,16 +252,21 @@
 							</ul>
 							<div id="tab-components">
 								<div class="pure-control-group">
-									<label>
-										<xsl:value-of select="php:function('lang', 'upload file')"/>
-									</label>
-									<input type="file" id="excel_files" name="excel_files" size="40">
-									</input>
+									<div class="pure-custom">
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'without components')" /></label>
+											<input type="radio" value="0" name="with_components_check" checked="true" />
+										</div>
+										<div class="pure-control-group">
+											<label><xsl:value-of select="php:function('lang', 'with components')" /></label>
+											<input type="radio" value="1" name="with_components_check" />
+											<input type="file" id="excel_files" name="excel_files" size="40"></input>
+										</div>
+									</div>
 								</div>								
 							</div>
 							<div id="tab-files">
 								<div class="pure-control-group">
-									<label><xsl:value-of select="php:function('lang', 'Files')" /></label>
 									<div class="pure-custom">
 										<div class="pure-control-group">
 											<label><xsl:value-of select="php:function('lang', 'Uncompressed')" /></label>
@@ -275,6 +280,15 @@
 													<xsl:value-of select="php:function('lang', 'File name')"/>
 												</xsl:attribute>
 											</input> (zip, rar)
+										</div>
+										<div class="pure-control-group">
+											<label></label>
+											<input type="button" id="preview_components_files" name="preview_components_files" size="40">
+												<xsl:attribute name="value">
+													<xsl:value-of select="php:function('lang', 'Preview')"/>
+												</xsl:attribute>
+											</input>
+											<!--<img src="{image_loader}" class="processing-preview-relations" align="absmiddle"></img>-->
 										</div>
 									</div>
 								</div>								
@@ -291,7 +305,10 @@
 								</div>
 								<div class="pure-control-group">
 									<div id="message4" class="message"></div>
-								</div>								
+								</div>
+								<div class="pure-control-group">
+									<div id="message5" class="message"></div>
+								</div>					
 							</div>
 						</div>					
 					</form>		
