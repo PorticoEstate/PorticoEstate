@@ -51,6 +51,9 @@
 			$application_name,
 			$customer_id,
 			$customer_name,
+			$customer_contact_name,
+			$customer_contact_email,
+			$customer_contact_phone,
 			$comments,
 			$created,
 			$secret;
@@ -148,6 +151,31 @@
 						'key' => 'id',
 						'column' => 'name'
 						)
+					),
+				'customer_contact_name' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'query' => true,
+					'label' => 'customer contact name',
+					'history' => true,
+					),
+				'customer_contact_email' => array(
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
+					'label' => 'customer contact email',
+					'history' => true,
+					),
+				'customer_contact_phone' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'query' => true,
+					'label' => 'customer contact phone',
+					'history' => true,
 					),
 				'comments' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,

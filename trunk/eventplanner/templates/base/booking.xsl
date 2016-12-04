@@ -50,6 +50,12 @@
 						</legend>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'vendor')"/>
+							</label>
+							<xsl:value-of select="application/vendor_name"/>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<a href="{application_url}" target="_blank">
 									<xsl:value-of select="php:function('lang', 'application')"/>
 								</a>
@@ -58,7 +64,12 @@
 							<xsl:value-of select="booking/application_name"/>
 						</div>
 
-
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'remark')"/>
+							</label>
+							<xsl:value-of select="application/remark"/>
+						</div>
 
 						<div class="pure-control-group">
 							<label>
@@ -175,7 +186,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
-							<input type="text" name="contact_name" value="{booking/contact_name}">
+							<input type="text" id="customer_contact_name"  name="customer_contact_name" value="{booking/customer_contact_name}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -188,7 +199,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'email')"/>
 							</label>
-							<input type="text" name="contact_email" id="contact_email" value="{booking/contact_email}">
+							<input type="text" id="customer_contact_email" name="customer_contact_email"  value="{booking/customer_contact_email}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>email</xsl:text>
 								</xsl:attribute>
@@ -209,7 +220,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact phone')"/>
 							</label>
-							<input type="text" name="contact_phone" value="{booking/contact_phone}">
+							<input type="text" id="customer_contact_phone"  name="customer_contact_phone" value="{booking/customer_contact_phone}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -230,7 +241,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'active')"/>
 							</label>
-							<input type="checkbox" name="active" id="active" value="1">
+							<input type="checkbox" name="active" id="active" value="1" readonly="readonly">
 								<xsl:if test="booking/active = 1">
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
@@ -257,7 +268,7 @@
 							<input type="text" id="from_" name="from_" size="16" readonly="readonly">
 								<xsl:if test="booking/from_ != 0 and booking/from_ != ''">
 									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('date', $date_format, number(booking/from_))"/>
+										<xsl:value-of select="php:function('show_date', number(booking/from_), $date_format)"/>
 									</xsl:attribute>
 								</xsl:if>
 								<xsl:attribute name="data-validation">
@@ -279,7 +290,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'to')"/>
 							</label>
-							<xsl:value-of select="php:function('date', $date_format, number(booking/to_))"/>
+							<xsl:value-of select="php:function('show_date', number(booking/to_), $date_format)"/>
 						</div>
 						
 						<div class="pure-control-group">

@@ -87,7 +87,17 @@
 		}
 		return json_encode($strings);
 	}
-	
+	/**
+	 * Generate formatted datetime for use with xslt templates
+	 * @return string datetime
+	 */
+	function show_date()
+	{
+		$args = func_get_args();
+		$timestamp = $args[0];
+		$dateformat = !empty($args[1]) ? $args[1] : '';
+		return $GLOBALS['phpgw']->common->show_date($timestamp, $dateformat);
+	}
 
 
 	/**

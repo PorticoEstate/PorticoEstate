@@ -86,7 +86,7 @@
 			{
 				$new_value = $object->$field;
 				$old_value = $original[$field];
-				if (!empty($params['history']) && ($new_value != $old_value))
+				if (!empty($params['history']) && $new_value && $old_value && ($new_value != $old_value))
 				{
 					$label = !empty($params['label']) ? lang($params['label']) : $field;
 					switch ($field)
@@ -101,8 +101,13 @@
 							break;
 						case 'from_':
 						case 'to_':
-							$old_value = $GLOBALS['phpgw']->common->show_date($old_value, $dateformat);
-							$new_value = $GLOBALS['phpgw']->common->show_date($new_value, $dateformat);
+							if(($old_value + phpgwapi_datetime::user_timezone()) == $new_value)
+							{
+								continue;
+							}
+
+							$old_value = $GLOBALS['phpgw']->common->show_date($old_value);
+							$new_value = $GLOBALS['phpgw']->common->show_date($new_value);
 							break;
 						default:
 							break;
