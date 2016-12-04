@@ -210,28 +210,6 @@
 					'label' => 'contact phone',
 					'history' => true,
 					),
-	/*			'customer_identifier_type' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'customer_identifier_type',
-					),
-				'customer_ssn' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required' => false)),
-					'label' => 'customer_ssn'
-					),
-				'customer_organization_number' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'customer_organization_number'
-					),*/
 				'vendor_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'vendor',

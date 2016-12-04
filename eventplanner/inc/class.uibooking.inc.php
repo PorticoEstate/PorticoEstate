@@ -206,11 +206,12 @@
 
 			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $booking->from_, array(
-					'min_date' => date('Y/m/d', $application->date_start),
-					'max_date' => date('Y/m/d', $application->date_end)
-				)
-			);
+//			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $booking->from_, array(
+//					'min_date' => date('Y/m/d', $application->date_start),
+//					'max_date' => date('Y/m/d', $application->date_end)
+//				)
+//			);
+
 			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
 			$types = (array)$application->types;
 			if($types)
