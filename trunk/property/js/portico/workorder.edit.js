@@ -444,7 +444,7 @@ $(document).ready(function ()
 		padding: '0 10px 10px 10px',
 		width: width + 'px',
 		"background - color": '#FFF',
-		display: "block",
+		display: "block"
 	});
 
 	var offset = $("#submitbox").offset();

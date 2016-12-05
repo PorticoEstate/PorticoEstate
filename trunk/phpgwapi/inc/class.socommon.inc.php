@@ -569,7 +569,14 @@
 					&& empty($field_info['related'])
 					&& empty($field_info['manytomany']))
 				{
-					$value_set[$field] = $object->$field;
+					if($field_info['type'] == 'jsonb')
+					{
+						$value_set[$field] = json_encode($object->$field);
+					}
+					else
+					{
+						$value_set[$field] = $object->$field;
+					}
 				}
 			}
 			
@@ -620,7 +627,14 @@
 					&& empty($field_info['related'])
 					&& empty($field_info['manytomany']))
 				{
-					$value_set[$field] = $object->$field;
+					if($field_info['type'] == 'jsonb')
+					{
+						$value_set[$field] = json_encode($object->$field);
+					}
+					else
+					{
+						$value_set[$field] = $object->$field;
+					}
 				}
 			}
 

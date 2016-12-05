@@ -26,7 +26,8 @@
 			}
 			#submitbox {
 			display: none;
-			} 	</style>
+			}
+		</style>
 		<xsl:variable name="date_format">
 			<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 		</xsl:variable>
@@ -434,7 +435,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'stage')"/>
 								</label>
-								<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}">
+								<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}" size="2">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'width')"/>
 									</xsl:attribute>
@@ -446,7 +447,7 @@
 									</xsl:attribute>
 								</input>
 								<xsl:text> X </xsl:text>
-								<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}">
+								<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}" size="2">
 									<xsl:attribute name="data-validation">
 										<xsl:text>number</xsl:text>
 									</xsl:attribute>
@@ -458,7 +459,7 @@
 									</xsl:attribute>
 								</input>
 								<xsl:text> M </xsl:text>
-								<input id="stage_size" type="text" disabled="disabled"/>
+								<input id="stage_size" type="text" disabled="disabled" size="3"/>
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -482,7 +483,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'audience limit')"/>
 								</label>
-								<input type="text" id="audience_limit" name="audience_limit" value="{application/audience_limit}">
+								<input type="text" id="audience_limit" name="audience_limit" value="{application/audience_limit}"  size="5">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -494,7 +495,6 @@
 									</xsl:attribute>
 								</input>
 							</div>
-
 						</fieldset>
 						<fieldset>
 							<legend>

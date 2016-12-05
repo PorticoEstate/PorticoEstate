@@ -26,7 +26,6 @@
 	 * @subpackage vendor_report
 	 * @version $Id: $
 	 */
-
 	phpgw::import_class('eventplanner.bovendor_report');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
@@ -42,11 +41,11 @@
 
 		protected
 			$id,
+			$booking_id,
+			$booking_location,
 			$created,
 			$json_representation;
-
 		static $custom_fields = array();
-
 		protected $field_of_responsibility_name = '.vendor_report';
 
 		public function __construct( int $id = null )
@@ -69,9 +68,9 @@
 		{
 			return array(
 				self::STATUS_REGISTERED => lang('registered'),
-				self::STATUS_PENDING	=> lang('pending'),
+				self::STATUS_PENDING => lang('pending'),
 				self::STATUS_REJECTED => lang('rejected'),
-				self::STATUS_APPROVED	=> lang('approved')
+				self::STATUS_APPROVED => lang('approved')
 			);
 		}
 
@@ -82,7 +81,7 @@
 
 		public function get_custom_fields()
 		{
-			if(! $this->custom_fields)
+			if (!$this->custom_fields)
 			{
 				$this->set_custom_fields();
 			}
@@ -91,43 +90,58 @@
 
 		public function get_organized_fields()
 		{
-			if(! $this->custom_fields)
+			if (!$this->custom_fields)
 			{
 				$this->custom_fields = createObject('booking.custom_fields', 'eventplanner')->get_organized_fields(self::acl_location);
 			}
 			return $this->custom_fields;
 		}
 
-
-		public static function get_fields($debug = true)
+		public static function get_fields( $debug = true )
 		{
-			 $fields = array(
-				'id' => array('action'=> PHPGW_ACL_READ,
+			$fields = array(
+				'id' => array('action' => PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
-					'sortable'=> true,
+					'sortable' => true,
 					'formatter' => 'JqueryPortico.formatLink',
-					),
-				'created' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD,
+				),
+				'booking_id' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label' => 'booking',
+					'sortable' => true,
+					'required' => true,
+				),
+				'booking_location' => array('action' => PHPGW_ACL_READ,
+					'type' => 'string',
+					'query' => true,
+					'label' => 'location',
+					'join' => array(
+						'table' => 'eventplanner_booking',
+						'fkey' => 'booking_id',
+						'key' => 'id',
+						'column' => 'location'
+					)
+				),
+				'created' => array('action' => PHPGW_ACL_READ | PHPGW_ACL_ADD,
 					'type' => 'date',
 					'label' => 'created',
 					'sortable' => true,
-					),
-				'json_representation' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				),
+				'json_representation' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'jsonb',
 					'sortable' => false,
-					),
+				),
 			);
 
-			if($debug)
+			if ($debug)
 			{
 				foreach ($fields as $field => $field_info)
 				{
-					if(!property_exists('eventplanner_vendor_report', $field))
+					if (!property_exists('eventplanner_vendor_report', $field))
 					{
-					   phpgwapi_cache::message_set('$'."{$field},", 'error');
+						phpgwapi_cache::message_set('$' . "{$field},", 'error');
 					}
-
 				}
 			}
 			return $fields;
@@ -150,7 +164,7 @@
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
 
-			if(!$entity->get_id())
+			if (!$entity->get_id())
 			{
 				$entity->created = time();
 				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -174,7 +188,7 @@
 			return eventplanner_bovendor_report::get_instance()->store($this);
 		}
 
-		public function read_single($id)
+		public function read_single( $id )
 		{
 			return eventplanner_bovendor_report::get_instance()->read_single($id, true);
 		}
