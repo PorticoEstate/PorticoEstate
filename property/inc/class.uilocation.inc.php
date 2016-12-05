@@ -1412,6 +1412,11 @@ JS;
 							. "return oData['{$uicols['name'][$k]}'];"
 							. "}";
 
+						if ($uicols['datatype'][$k] == 'link')
+						{
+							$uicols['formatter'][$k] = 'JqueryPortico.formatLinkGeneric';
+						}
+
 						if (!empty($uicols['formatter'][$k]))
 						{
 							$params['formatter'] = <<<JS

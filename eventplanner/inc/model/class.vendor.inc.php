@@ -137,7 +137,7 @@
 					),
 				'address_2' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true),
+					'required' => false),
 				'zip_code' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => true),

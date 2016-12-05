@@ -107,7 +107,7 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		private function _get_case_data()

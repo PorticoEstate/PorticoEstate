@@ -84,15 +84,6 @@
 //				)
 			);
 
-			$Header = array(
-				'AcceptFlag' => 1,
-				'OrderType]' => 'WB',
-				'Status' => 'N',
-				'OrderDate' => date('Y-m-d'),
-				'Currency' => 'NOK',
-				'Seller' => array($Seller),
-				'Buyer' => array($param['buyer']),
-			);
 
 			$DetailInfo = array();
 //			$DetailInfo[] = array(
@@ -146,6 +137,17 @@
 					'Code' => 'A1',
 					'Value' => $param['tax_code'] // Moms kode
 				)
+			);
+
+			$Header = array(
+				'AcceptFlag' => 1,
+				'OrderType]' => 'WB',
+				'Status' => 'N',
+				'OrderDate' => date('Y-m-d'),
+				'Currency' => 'NOK',
+				'Seller' => array($Seller),
+				'Buyer' => array($param['buyer']),
+				$DetailInfo
 			);
 
 			$Detail = array();

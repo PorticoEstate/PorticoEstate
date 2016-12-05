@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div class="content">
 		<ul class="pathway">
 			<li>
 				<a href="{booking/bookings_link}">

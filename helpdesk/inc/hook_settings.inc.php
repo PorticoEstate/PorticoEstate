@@ -27,6 +27,8 @@
 	 * @version $Id: hook_settings.inc.php 14969 2016-05-04 08:19:06Z sigurdne $
 	 */
 
+	create_input_box('Refresh TTS every (seconds)', 'refreshinterval', 'The intervall for Helpdesk refresh - cheking for new tickets');
+
 	$yes_and_no = array(
 		'yes' => 'Yes',
 		'no' => 'No'

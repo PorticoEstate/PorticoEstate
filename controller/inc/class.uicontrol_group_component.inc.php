@@ -74,7 +74,7 @@
 			$this->location_code = $this->bo->location_code;
 
 			self::set_active_menu('controller::control_group::component_for_control_group');
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		function index()

@@ -63,6 +63,7 @@
 			$this->account		= (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->historylog	= CreateObject('phpgwapi.historylog','helpdesk');
 			$this->db 			= & $GLOBALS['phpgw']->db;
+			$this->db2 			= clone($this->db);
 			$this->like 		= & $this->db->like;
 			$this->join 		= & $this->db->join;
 			$this->left_join 	= & $this->db->left_join;
@@ -346,7 +347,7 @@
 
 				if(!$allrows)
 				{
-					$this->db->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$this->db2->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
 				}
 				else
 				{
@@ -358,40 +359,46 @@
 					{
 						$_fetch_single = false;
 					}
-					$this->db->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
+					$this->db2->query($sql . $ordermethod,__LINE__,__FILE__, false, $_fetch_single );
 					unset($_fetch_single);
 				}
 
 				$i = 0;
-				while ($this->db->next_record())
+				while ($this->db2->next_record())
 				{
 					$tickets[]= array
 					(
-						'id'				=> (int) $this->db->f('id'),
-						'subject'			=> $this->db->f('subject',true),
-						'user_id'			=> $this->db->f('user_id'),
-						'assignedto'		=> $this->db->f('assignedto'),
-						'status'			=> $this->db->f('status'),
-						'priority'			=> $this->db->f('priority'),
-						'cat_id'			=> $this->db->f('cat_id'),
-						'group_id'			=> $this->db->f('group_id'),
-						'entry_date'		=> $this->db->f('entry_date'),
-						'modified_date'		=> $this->db->f('modified_date'),
-						'finnish_date'		=> $this->db->f('finnish_date'),
-						'finnish_date2'		=> $this->db->f('finnish_date2'),
-						'order_id'			=> $this->db->f('order_id'),
-						'vendor_id'			=> $this->db->f('vendor_id'),
-						'actual_cost'		=> $this->db->f('actual_cost'),
-						'estimate'			=> $this->db->f('budget'),
-						'new_ticket'		=> $this->db->f('view') ? false : true,
-						'billable_hours'	=> $this->db->f('billable_hours'),
+						'id'				=> (int) $this->db2->f('id'),
+						'subject'			=> $this->db2->f('subject',true),
+						'user_id'			=> $this->db2->f('user_id'),
+						'assignedto'		=> $this->db2->f('assignedto'),
+						'status'			=> $this->db2->f('status'),
+						'priority'			=> $this->db2->f('priority'),
+						'cat_id'			=> $this->db2->f('cat_id'),
+						'group_id'			=> $this->db2->f('group_id'),
+						'entry_date'		=> $this->db2->f('entry_date'),
+						'modified_date'		=> $this->db2->f('modified_date'),
+						'finnish_date'		=> $this->db2->f('finnish_date'),
+						'finnish_date2'		=> $this->db2->f('finnish_date2'),
+						'order_id'			=> $this->db2->f('order_id'),
+						'vendor_id'			=> $this->db2->f('vendor_id'),
+						'actual_cost'		=> $this->db2->f('actual_cost'),
+						'estimate'			=> $this->db2->f('budget'),
+						'new_ticket'		=> $this->db2->f('view') ? false : true,
+						'billable_hours'	=> $this->db2->f('billable_hours'),
 					);
 					foreach ($custom_cols as $custom_col)
 					{
-						if ($custom_value = $this->db->f($custom_col['column_name'], true))
+						if ($custom_value = $this->db2->f($custom_col['column_name'], true))
 						{
-							$custom_value = $this->custom->get_translated_value(array('value' => $custom_value,
-								'attrib_id' => $custom_col['id'], 'datatype' => $custom_col['datatype']), $location_id);
+							$custom_value = $this->custom->get_translated_value(array(
+								'value' => $custom_value,
+								'attrib_id' => $custom_col['id'],
+								'datatype' => $custom_col['datatype'],
+								'get_single_function' => $custom_col['get_single_function'],
+								'get_single_function_input' => $custom_col['get_single_function_input']
+								),
+								$location_id);
 						}
 						$tickets[$i][$custom_col['column_name']] = $custom_value;
 					}

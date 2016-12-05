@@ -1041,7 +1041,7 @@
 				{
 					$dataset[$j][$field] = array
 						(
-						'value' => $this->db->f($field),
+						'value' => $this->db->f($field, true),
 						'datatype' => $uicols['datatype'][$key],
 						'attrib_id' => isset($uicols['cols_return_extra'][$key]['attrib_id']) ? $uicols['cols_return_extra'][$key]['attrib_id'] : ''
 					);

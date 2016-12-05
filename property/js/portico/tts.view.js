@@ -360,7 +360,7 @@ function receive_order(order_id)
 
 var ecodimb_selection = "";
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	ecodimb = $('#ecodimb').val();
 	if (ecodimb)
@@ -378,7 +378,7 @@ $(window).load(function ()
 		}
 	});
 
-	$("#budget").change(function ()
+	$("#field_budget").change(function ()
 	{
 		populateTableChkApproval();
 	});
@@ -394,10 +394,10 @@ function populateTableChkApproval(ecodimb)
 		return;
 	}
 
-	var total_amount = Number(amount) + Number($('#budget').val());
+	var total_amount = Number(amount) + Number($('#field_budget').val());
 	$("#order_received_amount").val(total_amount);
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id: location_item_id};
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 
@@ -409,7 +409,7 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
+				htmlString = "<table class='pure-table pure-table-striped'><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
 				var obj = data;
 				var required = '';
 
@@ -477,12 +477,12 @@ $(document).ready(function ()
 {
 
 	var test = document.getElementById('send_order_button');
-	var width = 200;
-	if (test !== null)
+	if (test == null)
 	{
-		width = 280;
+		return;
 	}
-
+	//var width = 200;
+	var width =  $("#submitbox").width();
 	$("#submitbox").css({
 		position: 'absolute',
 		right: '10px',

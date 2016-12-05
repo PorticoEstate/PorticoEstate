@@ -64,7 +64,7 @@
 			}
 
 			$purchase_grant_error = false;
-			$check_purchase = CreateObject('property.botts')->check_purchase_right($data['ecodimb'], $price, $id);
+			$check_purchase = CreateObject('property.botts')->check_purchase_right($data['ecodimb'], $price, $_ticket['order_id']);
 			foreach ($check_purchase as $purchase_grant)
 			{
 				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
@@ -173,7 +173,7 @@
 			}
 			else
 			{
-				throw new Exception("Ordrenummer '{$_ticket['order_id']}' er utenfor serien");
+				throw new Exception("Ordrenummer '{$_ticket['order_id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
 			}
 
 

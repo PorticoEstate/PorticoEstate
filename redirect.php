@@ -14,13 +14,12 @@
 
 
 	//Get the session variables set for non cookie based sessions
-	if ( !isset($_COOKIES['PHPSESSID']) 
-		|| isset($_COOKIES['sessionid']) ) 
+	if ( !isset($_COOKIES['sessionphpgwsessid']) || isset($_COOKIES['sessionid']) )
 	{
 		// nothing else we can do
-		if ( !isset($_SERVER['HTTP_REFERER']) 
-				&& isset($_GET['go']) )
+		if ( !isset($_SERVER['HTTP_REFERER']) && isset($_GET['go']) )
 		{
+			$_GET['go'] = htmlspecialchars_decode(urldecode($_GET['go']));
 			Header("Location: {$_GET['go']}");
 			exit;
 		}

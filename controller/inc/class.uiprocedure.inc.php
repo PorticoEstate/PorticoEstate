@@ -76,7 +76,7 @@
 			$config = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
+//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		public function index()

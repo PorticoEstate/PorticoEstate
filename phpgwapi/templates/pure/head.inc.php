@@ -2,19 +2,17 @@
 	$javascripts = array();
 	$stylesheets = array();
 
-	$javascripts[] = "/phpgwapi/js/json/json.js";
-
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
 	$GLOBALS['phpgw_info']['server']['no_jscombine']=true;
 	if( !$GLOBALS['phpgw_info']['flags']['noframework'] && !$GLOBALS['phpgw_info']['flags']['nonavbar'] )
 	{
-		$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
-		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu/gallery-sm-menu-min.js";
-		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
-		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
-		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
+//		$javascripts[] = "/phpgwapi/js/yui3/yui/yui-min.js";
+//		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu/gallery-sm-menu-min.js";
+//		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-base/gallery-sm-menu-base-min.js";
+//		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-item/gallery-sm-menu-item-min.js";
+//		$javascripts[] = "/phpgwapi/js/yui3-gallery/gallery-sm-menu-templates/gallery-sm-menu-templates-min.js";
 		$javascripts[] = "/phpgwapi/js/jquery/mmenu/core/js/jquery.mmenu.min.all.js";
 		$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
 

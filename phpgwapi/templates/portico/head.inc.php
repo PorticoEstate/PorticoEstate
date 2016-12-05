@@ -23,11 +23,6 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
-	$javascripts = array
-	(
-		"/phpgwapi/js/json/json.js"
-	);
-
 	if( !isset($GLOBALS['phpgw_info']['flags']['noframework']) )
 	{
 		$javascripts[] = "/phpgwapi/templates/portico/js/base.js";

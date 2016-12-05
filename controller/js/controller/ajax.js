@@ -54,7 +54,7 @@ $(document).ready(function ()
 			{
 				if (data != null)
 				{
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -100,7 +100,7 @@ $(document).ready(function ()
 				if (data != null)
 				{
 					htmlString = "<option>Velg kontroll</option>"
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -146,7 +146,7 @@ $(document).ready(function ()
 				if (data != null)
 				{
 					htmlString = "<option>Velg kontrollgruppe</option>"
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -183,7 +183,7 @@ $(document).ready(function ()
 			{
 				if (data != null)
 				{
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -222,7 +222,7 @@ $(document).ready(function ()
 				if (data != null)
 				{
 					htmlString = "<option>Velg type</option>"
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -262,7 +262,7 @@ $(document).ready(function ()
 				if (data != null)
 				{
 					htmlString = "<option>Velg prosedyre</option>"
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -304,7 +304,7 @@ $(document).ready(function ()
 				if (data != null)
 				{
 					htmlString = "<option>Velg kontrollgruppe</option>"
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -400,7 +400,7 @@ $(document).ready(function ()
 		var thisRadio = $(this).find("input[type=radio]");
 
 		// Clears active button and checked underlying radiobutton
-		$(".control_item_type").find("input[type=radio]").removeAttr("checked");
+		$(".control_item_type").find("input[type=radio]").prop( "checked", false );
 		$(".control_item_type").find(".btn").removeClass("active");
 
 		// Makes button active and checkes underlying radiobutton
@@ -732,7 +732,7 @@ $(document).ready(function ()
 			{
 				if (data)
 				{
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					// Show info box with info about check list
 					var infoBox = $(divWrp).find("#info_box");

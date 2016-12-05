@@ -10,24 +10,29 @@
 			<xsl:value-of select="php:function('lang', 'please wait')" />
 		</p>
 	</div>
-	<div class="pure-g">
-		<div class="pure-u-1" id="no_result">
+	<div class="content">
+		<div class="pure-g">
 			<xsl:if test="not(search)">
-				<div id="cloud">
-					<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+				<div class="pure-u-1 no_result">
+					<div class="cloud">
+						<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+					</div>
 				</div>
 			</xsl:if>
 		</div>
 	</div>
-	<div id="content">
-		<form action="" method="GET" id="search">
+	<div class="content">
+		 <a href="#" class="scrollup">
+			<xsl:value-of select="php:function('lang', 'scroll to top')" />
+		 </a>
+
+		<form method="GET" id="search">
 			<input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
 			<!--input type="hidden" id="activity_top_level" name="activity_top_level" value="{activity_top_level}" /-->
 		</form>
 		<div class="pure-g">
 			<div class="pure-u-1 pure-u-lg-1-2">
 				
-				<div id = "total_records_top"></div>
 				<div class="pure-u-1">
 					<div class="heading">
 						<xsl:value-of select="php:function('lang', 'building')" />
@@ -154,7 +159,7 @@
 				<div class="pure-u-1">
 					<div class="heading">
 						<!--xsl:value-of select="php:function('lang', 'type')" /-->
-						 Vis kun treff som er:
+						Vis kun treff som er:
 					</div>
 					<ul id="search_type">
 						<li>
@@ -186,14 +191,15 @@
 				
 			</div>
 			<div class="pure-u-1 pure-u-lg-1-2">
+				<div id = "total_records_top"></div>
 				<div id="result"></div>
 			</div>
 
 		</div>
-		<div class="pure-g">
-			<div class="pure-u-1  pure-u-lg-1-1" id="no_result">
-				<xsl:if test="not(search)">
-					<div id="cloud">
+		<xsl:if test="not(search)">
+			<div class="pure-g">
+				<div class="pure-u-1  pure-u-lg-1-1 no_result">
+					<div class="cloud">
 						<div class="frontpagetext">
 						</div>
 					</div>
@@ -204,9 +210,8 @@
 							</xsl:attribute>
 						</img>
 					</div>
-				</xsl:if>
+				</div>
 			</div>
-		</div>
-
+		</xsl:if>
 	</div>
 </xsl:template>

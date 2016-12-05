@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div class="content">
 
 		<h3>
 			<xsl:value-of select="php:function('lang', 'New application')"/>
@@ -8,7 +8,7 @@
 
 		<form action="" method="POST" id='application_form' enctype='multipart/form-data' name="form">
 			<xsl:if test="config/application_new_application">
-				<p style="width: 750px;">
+				<p >
 					<xsl:value-of select="config/application_new_application"/>
 				</p>
 			</xsl:if>
@@ -125,7 +125,7 @@
 												<xsl:value-of select="name"/>
 											</th>
 											<td>
-												<input type="text">
+												<input type="text" size="4">
 													<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../application/agegroups/male[../agegroup_id = $id]"/>
@@ -133,7 +133,7 @@
 												</input>
 											</td>
 											<td>
-												<input type="text">
+												<input type="text" size="4">
 													<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
 													<xsl:attribute name="value">
 														<xsl:value-of select="../application/agegroups/female[../agegroup_id = $id]"/>
@@ -301,6 +301,7 @@
 												</input>
 											</dd>
 										</div>
+										<!--div id="dtBox"></div-->
 									</xsl:otherwise>
 								</xsl:choose>
 							</xsl:for-each>

@@ -13,7 +13,7 @@
 	<script type="text/javascript">
 		var composite_id = '<xsl:value-of select="schedule/composite_id"/>';
 		schedule.rental = {};
-		$(window).load(function() {
+		$(window).on('load', function() {
 
 			schedule.params.length = $('#cboNObjects').val();
 			schedule.params.search = $('#txtSearchSchedule').val();

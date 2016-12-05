@@ -59,7 +59,7 @@ $(document).ready(function ()
 	});
 });
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	var building_id = $('#field_building_id').val();
 	var organization_id = $('#field_org_id').val();

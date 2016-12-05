@@ -124,7 +124,7 @@
 				return $this->export();
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('filter_to');
+			$GLOBALS['phpgw']->jqcal2->add_listener('filter_to');
 			phpgwapi_jquery::load_widget('datepicker');
 
 			self::add_javascript('booking', 'booking', 'completed_reservation.js');

@@ -289,6 +289,7 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$mode = phpgw::get_var('mode');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -323,7 +324,17 @@
 			$values = array();
 			foreach($locations as $item)
 			{
-				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				if($mode == 'edit')
+				{
+					$checked = in_array($item['id'], $values_location_item_id) ? ' checked="checked"' : '';
+					$relate = "<input value='{$item['id']}' class='components mychecks' type='checkbox'{$checked}>";
+
+				}
+				else
+				{
+					$relate = in_array($item['id'], $values_location_item_id) ? 'X' : '';
+					$checked = $relate;
+				}
 				
 				if ($only_related && empty($checked))
 				{
@@ -333,7 +344,7 @@
 				$values[] = array(
 					'location_code' => '<a href="'.self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $item['location_code'])).'">'.$item['location_code'].'</a>',
 					'loc1_name' => $item['loc1_name'],
-					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'
+					'relate' => $relate
 				);				
 			}
 
@@ -459,7 +470,7 @@
 				(
 					'container' => 'datatable-container_0',
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_componentes',
-							'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
+							'id' => $id, 'location_id' => $values_location[0]['id'], 'mode' => $mode, 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def,
 					'tabletools' => ($mode == 'edit') ? $tabletools : array()
 				);
@@ -490,7 +501,7 @@
 				$datatable_def[] = array
 				(
 					'container' => 'datatable-container_1',
-					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'phpgw_return_as' => 'json'))),
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'mode' => $mode, 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def2,
 					'tabletools' => ($mode == 'edit') ? $tabletools2 : array()
 				);				
@@ -531,6 +542,7 @@
 			}
 
 			phpgwapi_jquery::load_widget('numberformat');
+			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('property', 'portico', 'generic_document.edit.js');
 
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
@@ -687,6 +699,7 @@
 			$file_id = phpgw::get_var('id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$search = phpgw::get_var('search');
+			$mode = phpgw::get_var('mode');
 			$draw = phpgw::get_var('draw', 'int');
 			$only_related = phpgw::get_var('only_related', 'boolean');
 			
@@ -717,7 +730,17 @@
 			$values = array();
 			foreach($_components as $item)
 			{
-				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				if($mode == 'edit')
+				{
+					$checked = in_array($item['id'], $values_location_item_id) ? ' checked="checked"' : '';
+					$relate = "<input value='{$item['id']}' class='components mychecks' type='checkbox'{$checked}>";
+
+				}
+				else
+				{
+					$relate = in_array($item['id'], $values_location_item_id) ? 'X' : '';
+					$checked = $relate;
+				}
 
 				if ($only_related && empty($checked))
 				{
@@ -727,7 +750,7 @@
 				$values[] = array(
 					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
 					'name' => $item['benevnelse'],
-					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>',
+					'relate' => $relate
 				);
 			}
 			

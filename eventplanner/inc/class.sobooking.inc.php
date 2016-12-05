@@ -67,17 +67,26 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
+			$this->update_history($object, $this->fields);
+
+			parent::update($object);
+
+			return	$this->db->transaction_commit();
+		}
+
+		protected function update_history( $object, $fields )
+		{
 	//		$status_text = eventplanner_booking::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$lang_active = lang('active');
 			$lang_inactive = lang('inactive');
 
 			$original = $this->read_single($object->get_id());//returned as array()
-			foreach ($this->fields as $field => $params)
+			foreach ($fields as $field => $params)
 			{
 				$new_value = $object->$field;
 				$old_value = $original[$field];
-				if (!empty($params['history']) && ($new_value != $old_value))
+				if (!empty($params['history']) && $new_value && $old_value && ($new_value != $old_value))
 				{
 					$label = !empty($params['label']) ? lang($params['label']) : $field;
 					switch ($field)
@@ -89,6 +98,16 @@
 						case 'active':
 							$old_value = $old_value ? $lang_active : $lang_inactive;
 							$new_value = $new_value ? $lang_active : $lang_inactive;
+							break;
+						case 'from_':
+						case 'to_':
+							if(($old_value + phpgwapi_datetime::user_timezone()) == $new_value)
+							{
+								continue;
+							}
+
+							$old_value = $GLOBALS['phpgw']->common->show_date($old_value);
+							$new_value = $GLOBALS['phpgw']->common->show_date($new_value);
 							break;
 						default:
 							break;
@@ -107,10 +126,36 @@
 				}
 
 			}
+		}
 
-			parent::update($object);
+		public function update_active_status($ids, $action )
+		{
+			if(!$ids || !is_array($ids))
+			{
+				return;
+			}
+
+			switch ($action)
+			{
+				case 'disable':
+					$sql = "UPDATE eventplanner_booking SET active = 0";
+
+					break;
+				case 'enable':
+					$sql = "UPDATE eventplanner_booking SET active = 1";
+					break;
+
+				default:
+					throw new Exception("action {$action} not supported");
+					break;
+			}
+
+			$sql .= 'WHERE id IN(' . implode(',', $ids) . ')';
+			$this->db->transaction_begin();
+			
+			$this->db->query($sql,__LINE__,__FILE__);
+
 
 			return	$this->db->transaction_commit();
 		}
-
 	}

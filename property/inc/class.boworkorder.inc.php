@@ -665,7 +665,7 @@
 						break;
 					case 'SC': $type = lang('Status confirmed');
 						break;
-					case 'AP': $type = lang('Ask for approval');
+					case 'AP': $type = lang('Request for approval');
 						break;
 					case 'ON': $type = lang('Owner notified');
 						break;
@@ -1011,7 +1011,7 @@ HTML;
 		public function receive_order( $id, $received_amount )
 		{
 			$receive_order = true; // used as trigger within the custom function
-			$acl_location = '.project.workorder';
+			$acl_location = '.project.workorder.transfer';
 
 			$criteria = array(
 				'appname' => 'property',
@@ -1041,4 +1041,22 @@ HTML;
 				'time'	=> $GLOBALS['phpgw']->common->show_date(time())
 				);
 		}
+
+		function get_budget_amount($id)
+		{
+			static $_budget_amount = array();
+			if(empty($_budget_amount[$id]))
+			{
+				$budgets = $this->get_budget($id);
+				foreach ($budgets as $budget)
+				{
+					if ($budget['active'] == 1)
+					{
+						$_budget_amount[$id] += $budget['budget'];
+					}
+				}
+			}
+			return $_budget_amount[$id];
+		}
+
 	}

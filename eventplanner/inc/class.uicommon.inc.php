@@ -186,6 +186,15 @@
 				}
 				else
 				{
+					foreach ($this->fields as $field => $field_info)
+					{
+						$_temp = $object->$field;
+						if($_temp && !is_array($_temp))
+						{
+							$object->$field = htmlspecialchars_decode(str_replace(array('&amp;','&#40;', '&#41;', '&#61;','&#8722;&#8722;','&#59;'), array('&','(', ')', '=', '--',';'), $_temp),ENT_QUOTES);
+						}
+					}
+
 					$this->edit(array('object'	=> $object, 'active_tab' => $active_tab));
 				}
 			}
