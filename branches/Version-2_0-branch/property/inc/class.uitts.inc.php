@@ -1594,9 +1594,6 @@
 				'tts_mandatory_title' => $this->bo->config->config_data['tts_mandatory_title'],
 				'value_finnish_date' => (isset($values['finnish_date']) ? $values['finnish_date'] : ''),
 				'lang_finnish_date_statustext' => lang('Select the estimated date for closing the task'),
-				'lang_cancel_statustext' => lang('Back to the ticket list'),
-				'lang_send_statustext' => lang('Save the entry and return to list'),
-				'lang_save_statustext' => lang('Save the ticket'),
 				'lang_no_cat' => lang('no category'),
 				'lang_town_statustext' => lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town' => lang('Part of town'),
@@ -2161,9 +2158,22 @@
 				$bcc = '';//$coordinator_email;
 				foreach ($values['approval'] as $_account_id => $_address)
 				{
+					$prefs = $this->bocommon->create_preferences('property', $_account_id);
+					if (!empty($prefs['email']))
+					{
+						$_address = $prefs['email'];
+					}
+					else
+					{
+						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+						$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
+					}
+
 					$action_params['responsible'] = $_account_id;
 					try
 					{
+						$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+						execMethod('property.sopending_action.set_pending_action', $action_params);
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 						if ($rcpt)
 						{
@@ -2172,10 +2182,8 @@
 					}
 					catch (Exception $exc)
 					{
-						$receipt['error'][] = array('msg' => $exc->getMessage());
+						phpgwapi_cache::message_set($exc->getMessage(),'error');
 					}
-					$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-					execMethod('property.sopending_action.set_pending_action', $action_params);
 				}
 				
 			}
@@ -2853,7 +2861,6 @@
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
 				'period_list' => array('options' => execMethod('property.boinvoice.period_list', date('Ym'))),
 				'need_approval' => $need_approval,
-	//			'value_approval_mail_address' => $supervisor_email,
 				'contact_data' => $contact_data,
 				'lookup_type' => $lookup_type,
 				'simple' => $this->simple,
@@ -2982,9 +2989,9 @@
 		{
 			$ecodimb	= phpgw::get_var('ecodimb');
 			$amount		= phpgw::get_var('amount', 'int');
-			$ticket_id	=  phpgw::get_var('ticket_id', 'int');
+			$order_id	=  phpgw::get_var('order_id', 'int');
 
-			return $this->bo->check_purchase_right($ecodimb, $amount, $ticket_id);
+			return $this->bo->check_purchase_right($ecodimb, $amount, $order_id);
 		}
 
 		/**

@@ -140,8 +140,6 @@ new resource	activitycalendar	no	Ny ressurs
 new root permission	activitycalendar	no	Nye systemrettigheter
 new season	activitycalendar	no	Ny sesong
 new season permission	activitycalendar	no	Nye rettigheter sesong
-next	activitycalendar	no	Neste
-next week	activitycalendar	no	Neste uke
 no Data.	activitycalendar	no	Ingen treff.
 no description yet	activitycalendar	no	Beskrivelse mangler
 no parents	activitycalendar	no	Ingen overordnet
@@ -166,7 +164,6 @@ picture	activitycalendar	no	Bilde
 planning	activitycalendar	no	Planlegging
 prev	activitycalendar	no	Forrige
 preview	activitycalendar	no	Forhåndsvisning
-previous week	activitycalendar	no	Forrige uke
 price list	activitycalendar	no	Prisliste
 primary admin	activitycalendar	no	Kontaktperson 1
 primary contact	activitycalendar	no	Kontaktperson 1
@@ -212,8 +209,6 @@ tu	activitycalendar	no	ti.
 upload document	activitycalendar	no	Last opp dokument
 user	activitycalendar	no	Bruker
 we	activitycalendar	no	on.
-week	activitycalendar	no	Uke
-week day	activitycalendar	no	Ukedag
 week template	activitycalendar	no	Ukeplan
 when	activitycalendar	no	Når
 when?	activitycalendar	no	Når?

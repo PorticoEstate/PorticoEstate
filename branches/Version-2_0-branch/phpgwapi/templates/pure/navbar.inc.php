@@ -43,27 +43,27 @@
 
 
 		$var['topmenu'] = <<<HTML
-
-			<ul id="std-menu-items">
-				<li>
-					<a href="#">{$user_fullname}</a>
-			 <ul>
-				<li>
-							<a href="{$preferences_url}">{$preferences_text}</a>
+		<div class="pure-menu pure-menu-horizontal">
+			<ul id="std-menu-items" class="pure-menu-list">
+				<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+					<a class="pure-menu-link" href="#">{$user_fullname}</a>
+					<ul class="pure-menu-children">
+						<li class="pure-menu-item">
+							<a href="{$preferences_url}" class="pure-menu-link">{$preferences_text}</a>
 						</li>
-						<li>
-							<a href="{$logout_url}">{$logout_text}</a>
+						<li class="pure-menu-item">
+							<a href="{$logout_url}" class="pure-menu-link">{$logout_text}</a>
 						</li>
 					</ul>
 				</li>
-				<li>
-					<a href="{$print_url}"  target="_blank">{$print_text}</a>
+				<li class="pure-menu-item">
+					<a href="{$print_url}"  target="_blank" class="pure-menu-link">{$print_text}</a>
 				</li>
-				<li>
-					<a href="{$home_url}">{$home_text}</a>
+				<li class="pure-menu-item">
+					<a href="{$home_url}" class="pure-menu-link">{$home_text}</a>
 				</li>
-				<li>
-					<a href="{$about_url}">{$about_text}</a>
+				<li class="pure-menu-item">
+					<a href="{$about_url}" class="pure-menu-link">{$about_text}</a>
 				</li>
 HTML;
 
@@ -80,8 +80,8 @@ HTML;
 
 			$help_text = lang('help');
 			$var['topmenu'] .= <<<HTML
-			<li>
-				<a href="{$help_url}">{$help_text}</a>
+			<li class="pure-menu-item">
+				<a href="{$help_url}" class="pure-menu-link">{$help_text}</a>
 			</li>
 HTML;
 			}
@@ -99,8 +99,8 @@ HTML;
 			$support_text = lang('support');
 
 			$var['topmenu'] .= <<<HTML
-			<li>
-				<a href="{$support_url}">{$support_text}</a>
+			<li class="pure-menu-item">
+				<a href="{$support_url}" class="pure-menu-link">{$support_text}</a>
 			</li>
 HTML;
 		}
@@ -116,8 +116,8 @@ HTML;
 
 			$debug_text = lang('debug');
 			$var['topmenu'] .= <<<HTML
-			<li>
-				<a href="{$debug_url}">{$debug_text}</a>
+			<li class="pure-menu-item">
+				<a href="{$debug_url}" class="pure-menu-link">{$debug_text}</a>
 			</li>
 HTML;
 		}
@@ -194,37 +194,51 @@ HTML;
 			</ul>
 HTML;
 
-		$var['topmenu'] .= <<<HTML
 
-				<li >
-					<a href="#">{$lang_bookmarks}</a>
-					<ul>
+			$collected_bm = set_get_bookmarks();
+			if($collected_bm)
+			{
+				$var['topmenu'] .= <<<HTML
+
+				<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+					<a href="#" class="pure-menu-link">{$lang_bookmarks}</a>
+					<ul class="pure-menu-children">
 HTML;
-
-				$collected_bm = set_get_bookmarks();
-				foreach($collected_bm as $entry)
-				{
-					$seleced_bm = '';
-					if( isset($entry['selected']) && $entry['selected'])
+				
+					foreach($collected_bm as $entry)
 					{
-						$seleced_bm = 'class="pure-menu-selected"' ;
-						$entry['text'] = "<b>[ {$entry['text']} ]</b>";
-					}
+						$seleced_bm = 'class="pure-menu-item"';
+						if( isset($entry['selected']) && $entry['selected'])
+						{
+							$seleced_bm = 'class="pure-menu-item pure-menu-selected"' ;
+							$entry['text'] = "<b>[ {$entry['text']} ]</b>";
+						}
 
-					$var['topmenu'] .= <<<HTML
+						$var['topmenu'] .= <<<HTML
 
-					<li {$seleced_bm}>
-						<a href="{$entry['url']}">{$entry['text']}</a>
-					</li>
+						<li {$seleced_bm}>
+							<a href="{$entry['url']}" class="pure-menu-link">{$entry['text']}</a>
+						</li>
 
 HTML;
 					
-				}
-		$var['topmenu'] .= <<<HTML
+					}
+					$var['topmenu'] .= '</ul>';
+			}
+			else
+			{
+				$var['topmenu'] .= <<<HTML
 
-				</ul>
+				<li class="pure-menu-item pure-menu-disabled">
+					<a href="#" class="pure-menu-link">{$lang_bookmarks}</a>
+HTML;
+
+			}
+		$var['topmenu'] .= <<<HTML
+				
 			</li>
 		</ul>
+	</div>
 HTML;
 
 

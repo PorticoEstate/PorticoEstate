@@ -73,6 +73,15 @@
 
 <!-- add / edit -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
+	<style type="text/css">
+		#floating-box {
+		position: relative;
+		z-index: 10;
+		}
+		#submitbox {
+		display: none;
+		}
+	</style>
 
 	<xsl:variable name="lang_done">
 		<xsl:value-of select="lang_done"/>
@@ -92,6 +101,7 @@
 	<table cellpadding="2" cellspacing="2" align="center">
 		<div id="receipt"></div>
 		<input type="hidden" id = "lean" name="lean" value="{lean}"/>
+		<!--
 		<xsl:choose>
 			<xsl:when test="mode='edit' and lean = 0">
 				<td>
@@ -125,7 +135,7 @@
 								<xsl:variable name="lang_calculate">
 									<xsl:value-of select="lang_calculate"/>
 								</xsl:variable>
-								<input type="button" class="pure-button pure-button-primary" name="calculate" value="{$lang_calculate}" onClick="calculate_workorder()">
+								<input type="button" class="pure-button pure-button-primary" name="calculate" value="{$lang_calculate}" onClick="calculate_order();">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_calculate_statustext"/>
 									</xsl:attribute>
@@ -135,7 +145,7 @@
 								<xsl:variable name="lang_send">
 									<xsl:value-of select="lang_send"/>
 								</xsl:variable>
-								<input type="button" class="pure-button pure-button-primary" name="send" value="{$lang_send}" onClick="send_workorder()">
+								<input type="button" class="pure-button pure-button-primary" name="send" value="{$lang_send}" onClick="send_order()">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_send_statustext"/>
 									</xsl:attribute>
@@ -146,6 +156,7 @@
 				</td>
 			</xsl:when>
 		</xsl:choose>
+		-->
 	</table>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
@@ -157,9 +168,61 @@
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>
 
-		<input id="order_tab" type="hidden" name="tab" value=""/>
+		<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="floating-box">
+				<div id="submitbox">
+					<table>
+						<tbody>
+							<tr>
+								<xsl:choose>
+									<xsl:when test="mode='edit' and lean = 0">
+										<td>
+											<input type="button" class="pure-button pure-button-primary" id="save_button" name="save" value="{$lang_save}" onClick="submit_workorder();">
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_save_statustext"/>
+												</xsl:attribute>
+											</input>
+										</td>
+										<td>
+											<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.done_form.submit();">
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_done_statustext"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</xsl:when>
+								</xsl:choose>
+								<xsl:choose>
+									<xsl:when test="value_workorder_id!='' and mode='edit' and lean = 0">
+										<td valign="top">
+											<xsl:variable name="lang_calculate">
+												<xsl:value-of select="lang_calculate"/>
+											</xsl:variable>
+											<input type="button" class="pure-button pure-button-primary" id="calculate_button" name="calculate" value="{$lang_calculate}" onClick="calculate_order();">
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_calculate_statustext"/>
+												</xsl:attribute>
+											</input>
+										</td>
+										<td>
+											<xsl:variable name="lang_send">
+												<xsl:value-of select="lang_send"/>
+											</xsl:variable>
+											<input type="button" class="pure-button pure-button-primary" name="send" value="{$lang_send}" onClick="send_order();">
+												<xsl:attribute name="title">
+													<xsl:value-of select="lang_send_statustext"/>
+												</xsl:attribute>
+											</input>
+										</td>
+									</xsl:when>
+								</xsl:choose>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 			<div id="general">
 				<fieldset>
 					<xsl:choose>
@@ -356,40 +419,17 @@
 						<xsl:call-template name="status_select"/>
 					</div>
 					<xsl:choose>
-						<xsl:when test="need_approval='1' and mode='edit'">
+						<xsl:when test="need_approval='1'">
 							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="lang_ask_approval"/>
+								<label>
+									<xsl:value-of select="php:function('lang', 'approval')"/>
 								</label>
-								<div class="pure-custom">
-									<table>
-										<xsl:for-each select="value_approval_mail_address">
-											<tr>
-												<td>
-													<input type="checkbox" name="values[approval][{id}]" value="True">
-														<xsl:attribute name="title">
-															<xsl:value-of select="//lang_ask_approval_statustext"/>
-														</xsl:attribute>
-													</input>
-												</td>
-												<td>
-													<input type="text" name="values[mail_address][{id}]" value="{address}">
-														<xsl:attribute name="title">
-															<xsl:value-of select="//lang_ask_approval_statustext"/>
-														</xsl:attribute>
-													</input>
-													<xsl:if test="default = '1'">
-														<xsl:text>&lt;=</xsl:text>
-													</xsl:if>
-												</td>
-											</tr>
-										</xsl:for-each>
-									</table>
+								<div id="approval_container" class="pure-u-md-1-2">
 								</div>
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
+					<!--xsl:choose>
 						<xsl:when test="value_workorder_id!=''">
 							<div class="pure-control-group">
 								<label for="name">
@@ -413,7 +453,7 @@
 								</input>
 							</div>
 						</xsl:when>
-					</xsl:choose>
+					</xsl:choose-->
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_remark"/>
@@ -993,16 +1033,15 @@
 										</xsl:attribute>
 									</xsl:if>
 								</input>
-								<div id="order_received_time" class="pure-custom">
+								<div  class="pure-custom">
 									<table>
 										<tr>
-											<td>
-
+											<td id="order_received_time">
 												<xsl:value-of select="value_order_received"/>
 											</td>
 										</tr>
 										<tr>
-											<td align="right">
+											<td align="right" id ="current_received_amount">
 												<xsl:value-of select="value_order_received_amount"/>
 											</td>
 										</tr>
@@ -1195,17 +1234,20 @@
 				</xsl:when>
 			</xsl:choose>
 			<script type="text/javascript">
-				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum', 'next', 'save')"/>;
 				var check_for_budget = <xsl:value-of select="check_for_budget"/>;
+				var amount = <xsl:value-of select="check_value_budget"/>;
+				var project_ecodimb = '<xsl:value-of select="project_ecodimb"/>';
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
 				var location_item_id = '<xsl:value-of select="location_item_id"/>';
+				var order_id = '<xsl:value-of select="value_workorder_id"/>';
 			</script>
 		</div>
 		<div class="proplist-col">
 			<xsl:choose>
 				<xsl:when test="mode='edit'">
 					<input type="hidden" name="values[save]" value="1"/>
-					<input type="submit" class="pure-button pure-button-primary" name="save" value="{$lang_save}">
+					<input type="button" class="pure-button pure-button-primary" id="save_button_bottom" name="save" value="{$lang_save}" onClick="submit_workorder();">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_save_statustext"/>
 						</xsl:attribute>

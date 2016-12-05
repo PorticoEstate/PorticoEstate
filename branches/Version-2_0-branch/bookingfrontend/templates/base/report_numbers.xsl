@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div class="content">
 		<xsl:call-template name="msgbox"/>
 
 		<xsl:if test="step = 1">
@@ -70,7 +70,7 @@
 											<xsl:value-of select="name"/>
 										</th>
 										<td>
-											<input type="text">
+											<input type="text" size="4">
 												<xsl:attribute name="name">male[<xsl:value-of select="id"/>]</xsl:attribute>
 												<xsl:attribute name="value">
 													<xsl:value-of select="../event_object/agegroups/male[../agegroup_id = $id]"/>
@@ -78,7 +78,7 @@
 											</input>
 										</td>
 										<td>
-											<input type="text">
+											<input type="text" size="4">
 												<xsl:attribute name="name">female[<xsl:value-of select="id"/>]</xsl:attribute>
 												<xsl:attribute name="value">
 													<xsl:value-of select="../event_object/agegroups/female[../agegroup_id = $id]"/>

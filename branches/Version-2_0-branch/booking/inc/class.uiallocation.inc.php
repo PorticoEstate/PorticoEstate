@@ -438,8 +438,8 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
-			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
@@ -567,8 +567,8 @@
 					'date', 'security', 'file'));
 			$cost_history = $this->bo->so->get_ordered_costs($id);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
 
 			self::render_template_xsl('allocation_edit', array('allocation' => $allocation,
 				'cost_history' => $cost_history));
@@ -691,7 +691,7 @@
 			$active_tab = 'generic';
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_repeat_until', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 			if ($step < 2)
 			{

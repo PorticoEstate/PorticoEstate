@@ -9,7 +9,7 @@ $(document).ready(function ()
 		'field_building_name', 'field_building_id', 'building_container');
 });
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	building_id = $('#field_building_id').val();
 	if (building_id)

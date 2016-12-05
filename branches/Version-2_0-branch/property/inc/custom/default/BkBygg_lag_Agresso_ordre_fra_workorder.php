@@ -33,12 +33,13 @@
 	
 	if (!$workorder['order_sent'])
 	{
-		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
-		$exporter_ordre->transfer($project, $workorder);
+//		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
+//		$exporter_ordre->transfer($project, $workorder);
 	}
 
 	class lag_agresso_ordre_fra_workorder
 	{
+		var $debug = true;
 
 		public function __construct()
 		{
@@ -49,6 +50,30 @@
 		public function transfer( $project, $workorder )
 		{
 //	_debug_array($workorder);die();
+			if (!$this->debug && $workorder['order_sent'])
+			{
+				return 2;
+			}
+
+			$price = ExecMethod('property.boworkorder.get_budget_amount',$workorder['id']);
+
+			$purchase_grant_error = false;
+			$check_purchase = CreateObject('property.botts')->check_purchase_right($data['ecodimb'], $price, $workorder['id']);
+			foreach ($check_purchase as $purchase_grant)
+			{
+				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+				{
+					$purchase_grant_error = true;
+					phpgwapi_cache::message_set(lang('approval from %1 is required',
+							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
+							'error'
+					);
+				}
+			}
+			if (!$this->debug && $purchase_grant_error)
+			{
+				return 3;
+			}
 
 			$contacts = CreateObject('property.sogeneric');
 			$contacts->get_location_info('vendor', false);
@@ -189,6 +214,28 @@
 				$dim6 = (int)trim($category_arr[0]);
 			}
 
+			/*
+			P3: EBF Innkjøpsordre Portico : 45000000-45249999
+			V3: EBF Varemotttak Portico   : 45500000-45749999
+			P4: EBE Innkjøpsordre Portico : 45250000-45499999
+			V4: EBE Varemotttak Portico   : 45750000-45999999
+			*/
+
+//			$voucher_type = 'P4';
+
+			if($workorder['id'] >= 45000000 && $workorder['id'] <= 45249999)
+			{
+				$voucher_type = 'P3';
+			}
+			else if ($workorder['id'] >= 45250000 && $workorder['id'] <= 45499999)
+			{
+				$voucher_type = 'P4';
+			}
+			else
+			{
+				throw new Exception("Ordrenummer '{$workorder['id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
+			}
+
 			$param = array(
 				'dim0' => $workorder['b_account_id'], // Art
 				'dim1' => $workorder['ecodimb'], // Ansvar
@@ -205,19 +252,27 @@
 				'buyer' => $buyer,
 				'lines' => array(
 					array(
-						'unspsc_code' => $workorder['unspsc_code'],
-						'descr' => strip_tags($workorder['descr'])
+						'unspsc_code' => $workorder['unspsc_code'] ? $workorder['unspsc_code'] : 'UN-72000000',
+//						'descr' => strip_tags($workorder['descr'])
+						'descr' => '',
+						'price'	=> $price,
 					)
 				)
 			);
 
-			$exporter_ordre = new BkBygg_exporter_data_til_Agresso();
+
+			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array(
+				'order_id' => $workorder['id'],
+				'voucher_type' => $voucher_type
+				)
+			);
 			$exporter_ordre->create_transfer_xml($param);
-			$exporter_ordre->output();
-			die();
-			$export_ok = $exporter_ordre->transfer();
+
+			$export_ok = $exporter_ordre->transfer($this->debug);
+
 			if ($export_ok)
 			{
+				phpgwapi_cache::message_set("Ordre #{$workorder['id']} er overført");
 				$this->log_transfer( $workorder['id'] );
 			}
 		}

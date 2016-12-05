@@ -475,4 +475,17 @@
 			}
 			return $access_location;
 		}
+
+		/**
+		 * 
+		 * @param int $id
+		 * @return string
+		 */
+		public function get_order_type($id)
+		{
+			$id = (int) $id;
+			$this->db->query("SELECT type FROM fm_orders WHERE id={$id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('type');
+		}
 	}

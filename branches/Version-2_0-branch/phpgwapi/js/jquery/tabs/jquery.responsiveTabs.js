@@ -1,11 +1,3 @@
-/*!
- *  Project: jquery.responsiveTabs.js
- *  Description: A plugin that creates responsive tabs, optimized for all devices
- *  Author: Jelle Kralt (jelle@jellekralt.nl)
- *  Version: 1.5.1
- *  License: MIT
- */
-
 ;(function ( $, window, undefined ) {
 
     /** Default settings */
@@ -20,9 +12,12 @@
         animation: 'default',
         animationQueue: false,
         duration: 500,
+        fluidHeight: true,
         scrollToAccordion: false,
+        scrollToAccordionOnLoad: true,
         scrollToAccordionOffset: 0,
         accordionTabElement: '<div></div>',
+        click: function(){},
         activate: function(){},
         deactivate: function(){},
         load: function(){},
@@ -77,6 +72,9 @@
         // Window resize bind to check state
         $(window).on('resize', function(e) {
             _this._setState(e);
+            if(_this.options.fluidHeight !== true) {
+                _this._equaliseHeights();
+            }
         });
 
         // Hashchange event
@@ -96,9 +94,19 @@
             this.startRotation();
         }
 
+        // Set fluid height
+        if(this.options.fluidHeight !== true) {
+            _this._equaliseHeights();
+        }
+
         // --------------------
         // Define plugin events
         //
+
+        // Activate: this event is called when a tab is selected
+        this.$element.bind('tabs-click', function(e, oTab) {
+            _this.options.click.call(this, e, oTab);
+        });
 
         // Activate: this event is called when a tab is selected
         this.$element.bind('tabs-activate', function(e, oTab) {
@@ -134,7 +142,7 @@
         // Trigger loaded event
         this.$element.trigger('tabs-load');
     };
-    
+
     //
     // PRIVATE FUNCTIONS
     //
@@ -145,7 +153,7 @@
      */
     ResponsiveTabs.prototype._loadElements = function() {
         var _this = this;
-        var $ul = this.$element.children('ul');
+        var $ul = this.$element.children('ul:first');
         var tabs = [];
         var id = 0;
 
@@ -157,19 +165,16 @@
         $('li', $ul).each(function() {
             var $tab = $(this);
             var isExcluded = $tab.hasClass(_this.options.classes.stateExcluded);
-            var $anchor, $panel, $accordionTab, $accordionAnchor, panelSelector, onClickMethod;
+            var $anchor, $panel, $accordionTab, $accordionAnchor, panelSelector;
 
             // Check if the tab should be excluded
             if(!isExcluded) {
 
                 $anchor = $('a', $tab);
                 panelSelector = $anchor.attr('href');
-				onClickMethod = $anchor.attr('onclick');
                 $panel = $(panelSelector);
                 $accordionTab = $(_this.options.accordionTabElement).insertBefore($panel);
                 $accordionAnchor = $('<a></a>').attr('href', panelSelector).html($anchor.html()).appendTo($accordionTab);
-                $accordionAnchor.attr('onclick', onClickMethod);
-
 
                 var oTab = {
                     _ignoreHashChange: false,
@@ -224,6 +229,9 @@
 
             e.preventDefault();
 
+            // Trigger click event for whenever a tab is clicked/touched even if the tab is disabled
+            activatedTab.tab.trigger('tabs-click', activatedTab);
+
             // Make sure this tab isn't disabled
             if(!activatedTab.disabled) {
 
@@ -231,7 +239,7 @@
                 if(_this.options.setHash) {
                     // Set the hash using the history api if available to tackle Chromes repaint bug on hash change
                     if(history.pushState) {
-                        history.pushState(null, null, activatedTab.selector);
+                        history.pushState(null, null, window.location.origin + window.location.pathname + window.location.search + activatedTab.selector);
                     } else {
                         // Otherwise fallback to the hash update for sites that don't support the history api
                         window.location.hash = activatedTab.selector;
@@ -289,7 +297,7 @@
      * @param {Event} e - The event that triggers the state change
      */
     ResponsiveTabs.prototype._setState = function(e) {
-        var $ul = $('ul', this.$element);
+        var $ul = $('ul:first', this.$element);
         var oldState = this.state;
         var startCollapsedIsState = (typeof this.options.startCollapsed === 'string');
         var startTab;
@@ -347,11 +355,13 @@
 
         // Run panel transiton
         _this._doTransition(oTab.panel, _this.options.animation, 'open', function() {
+            var scrollOnLoad = (e.type !== 'tabs-load' || _this.options.scrollToAccordionOnLoad);
+
             // When finished, set active class to the panel
             oTab.panel.removeClass(_this.options.classes.stateDefault).addClass(_this.options.classes.stateActive);
 
             // And if enabled and state is accordion, scroll to the accordion tab
-            if(_this.getState() === 'accordion' && _this.options.scrollToAccordion && (!_this._isInView(oTab.accordionTab) || _this.options.animation !== 'default')) {
+            if(_this.getState() === 'accordion' && _this.options.scrollToAccordion && (!_this._isInView(oTab.accordionTab) || _this.options.animation !== 'default') && scrollOnLoad) {
 
                 // Add offset element's height to scroll position
                 scrollOffset = oTab.accordionTab.offset().top - _this.options.scrollToAccordionOffset;
@@ -532,6 +542,20 @@
         return -1;
     };
 
+    /**
+     * This function gets the tallest tab and applied the height to all tabs
+     */
+    ResponsiveTabs.prototype._equaliseHeights = function() {
+        var maxHeight = 0;
+
+        $.each($.map(this.tabs, function(tab) {
+            maxHeight = Math.max(maxHeight, tab.panel.css('minHeight', '').height());
+            return tab.panel;
+        }), function() {
+            this.css('minHeight', maxHeight);
+        });
+    };
+
     //
     // HELPER FUNCTIONS
     //
@@ -646,6 +670,8 @@
     /** jQuery wrapper */
     $.fn.responsiveTabs = function ( options ) {
         var args = arguments;
+        var instance;
+
         if (options === undefined || typeof options === 'object') {
             return this.each(function () {
                 if (!$.data(this, 'responsivetabs')) {
@@ -653,19 +679,19 @@
                 }
             });
         } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-            return this.each(function () {
-                var instance = $.data(this, 'responsivetabs');
+            instance = $.data(this[0], 'responsivetabs');
 
-                if (instance instanceof ResponsiveTabs && typeof instance[options] === 'function') {
-                    instance[options].apply( instance, Array.prototype.slice.call( args, 1 ) );
-                }
+            // Allow instances to be destroyed via the 'destroy' method
+            if (options === 'destroy') {
+                // TODO: destroy instance classes, etc
+                $.data(this, 'responsivetabs', null);
+            }
 
-                // Allow instances to be destroyed via the 'destroy' method
-                if (options === 'destroy') {
-                    // TODO: destroy instance classes, etc
-                    $.data(this, 'responsivetabs', null);
-                }
-            });
+            if (instance instanceof ResponsiveTabs && typeof instance[options] === 'function') {
+                return instance[options].apply( instance, Array.prototype.slice.call( args, 1 ) );
+            } else {
+                return this;
+            }
         }
     };
 

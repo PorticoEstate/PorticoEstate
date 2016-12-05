@@ -106,9 +106,6 @@
 
 							</input>
 							<input type="text" name="address_2" value="{customer/address_2}">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="$lang_address_2"/>
 								</xsl:attribute>

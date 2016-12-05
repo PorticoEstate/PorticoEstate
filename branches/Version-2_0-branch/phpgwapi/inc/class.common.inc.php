@@ -586,9 +586,9 @@ HTML;
 		* Themes are CSS files stored under the template directory
 		* @return array List with available themes
 		*/
-		public static function list_themes()
+		public static function list_themes($layout = '')
 		{
-			$tpl_dir = self::get_tpl_dir('phpgwapi');
+			$tpl_dir = self::get_tpl_dir('phpgwapi', $layout);
 
 			$css_dir = "$tpl_dir/themes";
 

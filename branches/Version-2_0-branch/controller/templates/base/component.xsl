@@ -17,19 +17,20 @@
 </func:function>
 
 <xsl:template match="data">
-	<h2>
-		<xsl:value-of select="datatable_name"/>
-	</h2>
-	<div id="receipt"></div>
+		<h2>
+			<xsl:value-of select="datatable_name"/>
+		</h2>
+	<div class="content">
+		<div id="receipt"></div>
 
-	<div class="pure-g">
-		<div class="pure-u-1 pure-u-md-1-2">
-			<xsl:apply-templates select="form" />
+		<div class="pure-g">
+			<div class="pure-u-1 pure-u-md-1-2">
+				<xsl:apply-templates select="form" />
+			</div>
+			<div class="pure-u-1 pure-u-md-1-2">
+				<xsl:call-template name="icon_color_map" />
+			</div>
 		</div>
-		<div class="pure-u-1 pure-u-md-1-2">
-			<xsl:call-template name="icon_color_map" />
-		</div>
-	</div>
 
 
 		<xsl:apply-templates select="paging"/>
@@ -38,6 +39,7 @@
 		</div>
 		<xsl:apply-templates select="datatable"/>
 		<xsl:apply-templates select="form/list_actions"/>
+	</div>
 	
 </xsl:template>
 
@@ -202,9 +204,9 @@
 				<tr id = 'location_code'>
 					<td>
 						<label for='location_code'>
-						<xsl:value-of select="php:function('lang', 'location')"/>
+							<xsl:value-of select="php:function('lang', 'location')"/>
 						</label>
-						</td>
+					</td>
 					<td>
 						<input type="hidden" id="location_code" name="location_code" />
 						<input type="text" id="location_name" name="location_name" />
@@ -216,7 +218,7 @@
 						<label for='extra_filter'>
 							Extra
 						</label>
-						</td>
+					</td>
 					<td>
 						<div id="extra_filter">
 						</div>

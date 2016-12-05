@@ -7,7 +7,7 @@ $(document).ready(function ()
 });
 
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	building_id = $('#field_building_id').val();
 	if (building_id)

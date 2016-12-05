@@ -11,7 +11,7 @@
 	 * @version $Id: setup.inc.php 14728 2016-02-11 22:28:46Z sigurdne $
 	 */
 	$setup_info['eventplanner']['name'] = 'eventplanner';
-	$setup_info['eventplanner']['version'] = '0.9.18.001';
+	$setup_info['eventplanner']['version'] = '0.9.18.002';
 	$setup_info['eventplanner']['app_order'] = 20;
 	$setup_info['eventplanner']['enable'] = 1;
 	$setup_info['eventplanner']['app_group'] = 'office';
@@ -58,6 +58,7 @@
 		'eventplanner_resource',
 		'eventplanner_resource_comment',
 		'eventplanner_booking',
+		'eventplanner_booking_comment',
 		'eventplanner_booking_cost',
 		'eventplanner_booking_resource',
 		'eventplanner_order',

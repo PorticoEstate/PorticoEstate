@@ -221,14 +221,14 @@
 			<input type="hidden" id="save" name="values[save]" value=""/>
 			<input type="hidden" id="apply" name="values[apply]" value=""/>
 			<input type="hidden" id="cancel" name="values[cancel]" value=""/>
-			<input class="pure-button pure-button-primary" type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
+			<!--input class="pure-button pure-button-primary" type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 				</xsl:attribute>
-			</input>
-			<input class="pure-button pure-button-primary" type="button" name="apply" value="{lang_save}" onClick="confirm_session('apply');">
+			</input-->
+			<input class="pure-button pure-button-primary" type="button" name="apply" value="{lang_send}" onClick="confirm_session('apply');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+					<xsl:value-of select="lang_send"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="cancel" value="{lang_cancel}" onClick="confirm_session('cancel');">
@@ -246,48 +246,12 @@
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
-		function generate_order()
-		{
-		Window1=window.open('<xsl:value-of select="order_link"/>','','left=50,top=100');
-		}
-
-		function generate_request()
-		{
-		Window1=window.open('<xsl:value-of select="request_link"/>','','left=50,top=100');
-		}
-
-		function template_lookup()
-		{
-		var oArgs = {menuaction:'property.uilookup.order_template',type:'order_template'};
-		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
-		}
 
 		function response_lookup()
 		{
-		var oArgs = {menuaction:'property.uilookup.response_template',type:'response_template'};
-		var strURL = phpGWLink('index.php', oArgs);
-		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
-		}
-
-		function preview_html(id)
-		{
-
-		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
-
-		var oArgs = {menuaction:'property.uitts.view',id:id, preview_html:true, on_behalf_of_assigned: on_behalf_of_assigned};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
-
-		}
-
-		function preview_pdf(id)
-		{
-		var on_behalf_of_assigned = document.getElementById("on_behalf_of_assigned").checked ? 1 : 0;
-
-		var oArgs = {menuaction:'property.uitts.view',id:id, preview_pdf:true, on_behalf_of_assigned: on_behalf_of_assigned};
-		var strURL = phpGWLink('index.php', oArgs);
-		Window1=window.open(strURL,'Search',"left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");
+			var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+			var strURL = phpGWLink('index.php', oArgs);
+			TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
@@ -521,10 +485,24 @@
 					</xsl:choose>
 					<xsl:apply-templates select="custom_attributes/attributes"/>
 					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'new note')"/>
-						</label>
-						<textarea cols="{textareacols}" rows="{textarearows}" name="values[note]">
+						<xsl:choose>
+							<xsl:when test="simple !='1'">
+								<label>
+									<a href="javascript:response_lookup()">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'standard text')"/>
+										</xsl:attribute>
+										<xsl:value-of select="php:function('lang', 'standard text')"/>
+									</a>
+								</label>
+							</xsl:when>
+							<xsl:otherwise>
+								<label>
+									<xsl:value-of select="php:function('lang', 'new note')"/>
+								</label>
+							</xsl:otherwise>
+						</xsl:choose>
+						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'add new comments')"/>
 							</xsl:attribute>

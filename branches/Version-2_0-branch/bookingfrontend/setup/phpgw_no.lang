@@ -157,8 +157,6 @@ new resource	bookingfrontend	no	Ny ressurs
 new root permission	bookingfrontend	no	Nye systemrettigheter
 new season	bookingfrontend	no	Ny sesong
 new season permission	bookingfrontend	no	Nye rettigheter sesong
-next	bookingfrontend	no	Neste
-next week	bookingfrontend	no	Neste uke
 no Data.	bookingfrontend	no	Ingen treff.
 no description yet	bookingfrontend	no	Beskrivelse mangler
 no parents	bookingfrontend	no	Ingen overordnet
@@ -183,7 +181,6 @@ picture	bookingfrontend	no	Bilde
 planning	bookingfrontend	no	Planlegging
 prev	bookingfrontend	no	Forrige
 preview	bookingfrontend	no	Forhåndsvisning
-previous week	bookingfrontend	no	Forrige uke
 price list	bookingfrontend	no	Prisliste
 primary admin	bookingfrontend	no	Kontaktperson 1
 primary contact	bookingfrontend	no	Kontaktperson 1
@@ -228,8 +225,6 @@ tu	bookingfrontend	no	ti.
 upload document	bookingfrontend	no	Last opp dokument
 user	bookingfrontend	no	Bruker
 we	bookingfrontend	no	on.
-week	bookingfrontend	no	Uke
-week day	bookingfrontend	no	Ukedag
 week template	bookingfrontend	no	Ukeplan
 when	bookingfrontend	no	Når
 when?	bookingfrontend	no	Når?

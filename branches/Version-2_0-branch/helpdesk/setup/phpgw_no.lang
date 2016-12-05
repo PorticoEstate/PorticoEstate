@@ -15,7 +15,7 @@ closed	helpdesk	no	Avsluttet
 processing...	helpdesk	no	Behandler data
 descr	helpdesk	no	Beskrivelse
 bookmarks	helpdesk	no	Bokmerker
-user	helpdesk	no	Bruker
+user	helpdesk	no	Innmelder
 part of town	helpdesk	no	Bydel
 building part	helpdesk	no	Bygningsdel
 date	helpdesk	no	Dato
@@ -177,3 +177,8 @@ do you really want to change the priority to %1	helpdesk	no	Vil du virkelig endr
 please enter a title!	helpdesk	no	Angi et emne
 ticket has been updated	helpdesk	no	Melding er oppdatert
 picture	helpdesk	no	Bilde
+response template	helpdesk	no	Standardtekster
+inbox	helpdesk	no	Innboks
+standard text	helpdesk	no	Standardtekst
+custom menu items	helpdesk	no	Tilpassede menyer
+reports	helpdesk	no	Rapporter

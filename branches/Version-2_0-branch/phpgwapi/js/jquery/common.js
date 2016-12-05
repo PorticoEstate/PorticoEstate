@@ -202,7 +202,7 @@ JqueryPortico.formatCheckCustom = function (key, oData)
 	var checked = '';
 	var hidden = '';
 
-	return hidden + "<center><input type=\"checkbox\" " + checked + " class=\"mychecks\"  name=\"values[delete][]\" value=\"" + oData['id'] + "\" onMouseout=\"window.status='';return true;\" /></center>";
+	return hidden + "<center><input type=\"checkbox\" " + checked + " class=\"mychecks\"  name=\"values[delete][]\" value=\"" + oData['id'] + "\" /></center>";
 };
 
 JqueryPortico.formatUpDown = function (key, oData)

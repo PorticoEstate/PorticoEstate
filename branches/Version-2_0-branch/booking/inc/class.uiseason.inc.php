@@ -191,8 +191,8 @@
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.index'));
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Season New'), 'link' => '#season_new');
@@ -244,8 +244,8 @@
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show',
 					'id' => $season['id']));
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Season Edit'), 'link' => '#season_new');
@@ -349,8 +349,8 @@
 				$boundary['to_'] = "{$to_arr[0]}:{$to_arr[1]}";
 			}
 
-			$GLOBALS['phpgw']->jqcal->add_listener('field_from', 'time');
-			$GLOBALS['phpgw']->jqcal->add_listener('field_to', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time');
 
 			self::render_template('season_boundaries', array('boundary' => $boundary, 'boundaries' => $boundaries,
 				'season' => $season));
@@ -541,8 +541,8 @@ JS;
 			$to = pretty_timestamp($season['to_']);
 			$interval = 1;
 
-			$GLOBALS['phpgw']->jqcal->add_listener('from_', 'date');
-			$GLOBALS['phpgw']->jqcal->add_listener('to_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date');
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
@@ -580,8 +580,8 @@ JS;
 
 			$this->flash_form_errors($errors);
 
-			/* $GLOBALS['phpgw']->jqcal->add_listener('field_from', 'date');
-			  $GLOBALS['phpgw']->jqcal->add_listener('field_to', 'date');
+			/* $GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'date');
+			  $GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'date');
 
 			  $tabs = array();
 			  $tabs['generic'] = array('label' => lang('Season'), 'link' => '#season_generate');

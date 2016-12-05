@@ -169,7 +169,8 @@ JS;
 
 					$insert_record_values[] = $attributes['name'];
 					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.addressbook',
-						'column' => $attributes['name']));
+						'column' => $attributes['name'],
+						'clear_state'=> 1));
 
 					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
 					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
@@ -328,17 +329,17 @@ JS;
 				}
 				else if ($attributes['datatype'] == 'user')
 				{
+					$attributes['value'] = empty($attributes['value']) ? $GLOBALS['phpgw_info']['user']['account_id'] : $attributes['value'];
 					if ($attributes['value'])
 					{
 						$attributes['user_name'] = $GLOBALS['phpgw']->accounts->id2name($attributes['value']);
 					}
 
 					$insert_record_values[] = $attributes['name'];
-					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $this->_appname . '.uilookup.phpgw_user',
-						'column' => $attributes['name']));
+					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.phpgw_user',
+						'column' => $attributes['name'],'clear_state'=> 1));
 
 					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-					//$lookup_functions[$m]['action']	= 'Window1=window.open('."'" . $lookup_link ."'" .',"Search","left=50,top=100,width=800,height=700,toolbar=no,scrollbars=yes,resizable=yes");';
 					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
 					$m++;
 				}
@@ -751,9 +752,15 @@ JS;
 					break;
 				case 'custom2':
 				case 'custom3':
+					$ret = $data['value'];
 					if ($data['value'] && $data['get_single_function'])
 					{
-						if (!$data['get_single_function_input'])
+
+						if ($data['get_single_function_input'] && is_array($data['get_single_function_input']))
+						{
+							$data['get_single_function_input'] = array_merge(array('id'=>$data['value']),$data['get_single_function_input']);
+						}
+						else
 						{
 							$data['get_single_function_input'] = $data['value'];
 						}

@@ -107,6 +107,12 @@
 						(
 							'text'	=> lang('Configure Access Permissions'),
 							'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl', 'acl_app' => 'helpdesk') )
+						),
+						'custom_menu_items' => array
+							(
+							'text' => lang('custom menu items'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'custom_menu_items'))
 						)
 					);
 			}
@@ -137,7 +143,7 @@
 
 			$menus['navigation'] = array();
 
-/*
+
 			if ( $acl->check('.ticket',PHPGW_ACL_READ, 'helpdesk') )
 			{
 				$menus['navigation']['helpdesk'] = array
@@ -147,7 +153,34 @@
 						'image'		=> array('helpdesk', 'helpdesk')
 					);
 			}
-*/
+			if ( $acl->check('.ticket',PHPGW_ACL_PRIVATE, 'helpdesk') ) //manage
+			{
+				$menus['navigation']['response_template'] = array
+					(
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+						'type' => 'response_template')),
+					'text' => lang('response template'),
+					'image' => array('helpdesk', 'helpdesk')
+				);
+
+				$custom_menu_items = CreateObject('helpdesk.sogeneric','custom_menu_items')->read_tree(array('type' => 'custom_menu_items',
+							'filter' => array('location' => '.ticket')));
+
+				if ($custom_menu_items)
+				{
+					$menus['navigation']['report'] = array
+						(
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uicustom.index')),
+							'text' => lang('reports'),
+							'image' => array('helpdesk', 'helpdesk')
+					);
+					foreach ($custom_menu_items as $item)
+					{
+						$menus['navigation']['report']['children'][] = $item;
+					}
+				}
+			}
+
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}

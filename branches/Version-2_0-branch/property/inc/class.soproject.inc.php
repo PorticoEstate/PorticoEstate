@@ -1000,6 +1000,7 @@
 			$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
 			$order = isset($data['order']) ? $data['order'] : 'fm_workorder';
 			$results = (isset($data['results']) ? $data['results'] : 0);
+			$query = isset($data['query']) ? $data['query'] : '';
 
 			$ordermethod = 'ORDER BY fm_workorder.id DESC';
 
@@ -1024,6 +1025,16 @@
 
 			$values = array();
 
+			$filtermethod = '';
+
+			if($query)
+			{
+				$query_order_id = (int) $query;
+				$query = $this->db->db_addslashes($query);
+				
+				$filtermethod .= " AND (fm_workorder.id = '{$query_order_id}' OR fm_vendor.org_name {$this->like} '%$query%')";
+			}
+
 			$filter_year = '';
 			if ($year)
 			{
@@ -1036,12 +1047,14 @@
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
-				. " WHERE project_id={$project_id} {$filter_year} {$ordermethod}";
+				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
+				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}{$ordermethod}";
 
 			$this->db->query("SELECT count(fm_workorder.id) AS cnt FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
-				. " WHERE project_id={$project_id} {$filter_year}", __LINE__, __FILE__);
+				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
+				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}", __LINE__, __FILE__);
 				
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
@@ -2201,7 +2214,6 @@
 			$closed_period = array();
 			$active_period = array();
 			$project_budget = array();
-			$project_total_budget = 0;
 
 			$sql = "SELECT fm_project_budget.year, fm_project_budget.month, fm_project_budget.budget,"
 				. " fm_project_budget.closed, fm_project_budget.active, sum(combined_cost) AS order_amount, project_type_id"
@@ -2246,12 +2258,14 @@
 
 			$soworkorder = CreateObject('property.soworkorder');
 
-			$order_budget = array();
+			$order_budgets = array();
 			foreach ($_order_list as $_order_id)
 			{
 				$order_budgets[$_order_id] = $soworkorder->get_budget($_order_id);
 			}
 
+			$_orders = array();
+//			_debug_array($order_budgets);
 			foreach ($order_budgets as $_order_id => $order_budget)
 			{
 
@@ -2327,7 +2341,7 @@
 			unset($_budget);
 			unset($period);
 
-			if (isset($_orders) && $_orders)
+			if (!empty($_orders))
 			{
 				foreach ($_orders as $period => $_budget)
 				{
@@ -2358,7 +2372,6 @@
 					$total_sum +=$_budget['budget'];
 				}
 			}
-
 			$corretion = $total_sum >= 0 ? 1 : -1;
 			$deviation_acc = 0;
 			$budget_acc = 0;
@@ -2389,18 +2402,16 @@
 					$budget_acc = 0;
 				}
 
+				$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
+				$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
 				if (abs($entry['actual_cost']) > 0 || $entry['period'] < date('Ym'))
 				{
-					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['sum_orders'];
-					$entry['diff'] = $_diff_start - $entry['sum_oblications'] - $entry['actual_cost'];
-
 					$_deviation = $entry['budget'] - $entry['actual_cost'];
 					$deviation = $_deviation;
 					$deviation_acc += $deviation;
 				}
 				else
 				{
-					$entry['diff'] = 0;
 					$deviation = 0;
 				}
 
@@ -2409,8 +2420,8 @@
 
 				$entry['deviation_acc'] = abs($deviation) > 0 ? $deviation_acc : 0;
 
-				$entry['deviation_percent_period'] = $corretion * $deviation / $entry['budget'] * 100;
-				$entry['deviation_percent_acc'] = $corretion * $entry['deviation_acc'] / $total_sum * 100;
+				$entry['deviation_percent_period'] =  abs($entry['budget']) > 0 ? ($corretion * $deviation / $entry['budget'] * 100) : 0;
+				$entry['deviation_percent_acc'] = abs($total_sum) > 0 ? ($corretion * $entry['deviation_acc'] / $total_sum * 100) : 0;
 				$entry['closed'] = $closed_period[$entry['period']];
 				$entry['active'] = $active_period[$entry['period']];
 			}

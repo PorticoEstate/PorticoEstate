@@ -23,7 +23,7 @@ $(document).ready(function ()
 				if (data != null)
 				{
 					htmlString = "<option>Velg kontroll</option>"
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{
@@ -124,7 +124,7 @@ $(document).ready(function ()
 			{
 				if (data != null)
 				{
-					var obj = jQuery.parseJSON(data);
+					var obj = JSON.parse(data);
 
 					$.each(obj, function (i)
 					{

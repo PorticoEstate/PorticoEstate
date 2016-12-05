@@ -1,8 +1,10 @@
-var $, DragAndDropHandler, DragElement, HitAreasGenerator, Position, VisibleNodeIterator, node_module,
+var $, DragAndDropHandler, DragElement, HitAreasGenerator, Position, VisibleNodeIterator, node_module, util,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
 node_module = require('./node');
+
+util = require('./util');
 
 Position = node_module.Position;
 
@@ -38,10 +40,16 @@ DragAndDropHandler = (function() {
   };
 
   DragAndDropHandler.prototype.mouseStart = function(position_info) {
-    var offset;
+    var node, node_name, offset;
     this.refresh();
     offset = $(position_info.target).offset();
-    this.drag_element = new DragElement(this.current_item.node, position_info.page_x - offset.left, position_info.page_y - offset.top, this.tree_widget.element);
+    node = this.current_item.node;
+    if (this.tree_widget.options.autoEscape) {
+      node_name = util.html_escape(node.name);
+    } else {
+      node_name = node.name;
+    }
+    this.drag_element = new DragElement(node_name, position_info.page_x - offset.left, position_info.page_y - offset.top, this.tree_widget.element);
     this.is_dragging = true;
     this.current_item.$element.addClass('jqtree-moving');
     return true;
@@ -79,7 +87,7 @@ DragAndDropHandler = (function() {
   };
 
   DragAndDropHandler.prototype.mustCaptureElement = function($element) {
-    return !$element.is('input,select');
+    return !$element.is('input,select,textarea');
   };
 
   DragAndDropHandler.prototype.canMoveToArea = function(area) {
@@ -451,10 +459,10 @@ HitAreasGenerator = (function(superClass) {
 })(VisibleNodeIterator);
 
 DragElement = (function() {
-  function DragElement(node, offset_x, offset_y, $tree) {
+  function DragElement(node_name, offset_x, offset_y, $tree) {
     this.offset_x = offset_x;
     this.offset_y = offset_y;
-    this.$element = $("<span class=\"jqtree-title jqtree-dragging\">" + node.name + "</span>");
+    this.$element = $("<span class=\"jqtree-title jqtree-dragging\">" + node_name + "</span>");
     this.$element.css("position", "absolute");
     $tree.append(this.$element);
   }

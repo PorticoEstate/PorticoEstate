@@ -50,32 +50,39 @@
 		 */
 		public static function load_widget( $widget )
 		{
-			if (preg_match('/MSIE (6|7|8)/', $_SERVER['HTTP_USER_AGENT']))
+			$migration_test = false;
+
+			if (preg_match('/MSIE (6|7|8)/i', $_SERVER['HTTP_USER_AGENT']))
 			{
+				$message = lang('outdated browser: %1', $_SERVER['HTTP_USER_AGENT']);
+				phpgwapi_cache::message_set($message, 'error');
+
 				$_jquery_core = 'jquery-1.11.3'; // In case we need IE 6–8 support.
+				$_jquery_migrate = 'jquery-migrate-1.4.1.min';
 			}
 			else
 			{
-				$_jquery_core = 'jquery-2.1.4';
+		//		$_jquery_core = 'jquery-2.1.4';
+				$_jquery_core = 'jquery-3.1.1';
+				$_jquery_migrate = 'jquery-migrate-3.0.0.min';
 			}
 
-			$_jquery_ui = 'jquery-ui-1.11.4';
+			$_jquery_ui = 'jquery-ui-1.12.1';
 			$_type = '.min'; // save some download
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
-				$theme = 'humanity';
+				$theme = 'redmond';
 			}
 			else
 			{
-				$theme = 'ui-lightness';
+				$theme = 'redmond';
 			}
 			$load = array();
 			switch ($widget)
 			{
 				case 'core':
-					$load = array
-						(
+					$load = array(
 						"js/{$_jquery_core}{$_type}",
 					);
 					break;
@@ -85,10 +92,22 @@
 						(
 						"js/{$_jquery_core}{$_type}",
 						"js/{$_jquery_ui}{$_type}",
-						"development-bundle/ui/i18n/jquery.ui.datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
+						"ui/i18n/datepicker-{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}",
 					);
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/jquery-ui-timepicker-addon.css");
+					break;
+
+				case 'datetimepicker':
+					$load = array
+						(
+						"js/{$_jquery_core}{$_type}",
+						'datetimepicker' => array(
+							"js/jquery.datetimepicker.full{$_type}",
+							"i18n/DateTimePicker-i18n"
+						)
+					);
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/datetimepicker/css/jquery.datetimepicker.min.css");
 					break;
 
 				case 'validator':
@@ -109,7 +128,7 @@
 						"js/{$_jquery_ui}{$_type}",
 					);
 
-					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui-1.10.4.custom.css");
+					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/css/{$theme}/jquery-ui.min.css");
 
 					break;
 
@@ -118,7 +137,7 @@
 						(
 						"js/{$_jquery_core}{$_type}",
 						//	"tabs/jquery.responsiveTabs{$_type}",
-						"tabs/jquery.responsiveTabs",
+						"tabs/jquery.responsiveTabs{$_type}",
 						'common'
 					);
 
@@ -232,6 +251,12 @@
 					}
 				}
 			}
+			if($migration_test)
+			{
+				//_debug_array($_jquery_migrate);
+				$GLOBALS['phpgw']->js->validate_file('jquery', "js/$_jquery_migrate");
+			}
+
 			return "phpgroupware.{$widget}" . ++self::$counter;
 		}
 
@@ -361,7 +386,7 @@ JS;
 					form: '#{$form_id}',
 					validateOnBlur : false,
 					scrollToTopOnError : false,
-					validateHiddenInputs: true,
+			//		validateHiddenInputs: true,
 					errorMessagePosition : {$errorMessagePosition},
 					scrollToTopOnError: {$scrollToTopOnError}
 				});

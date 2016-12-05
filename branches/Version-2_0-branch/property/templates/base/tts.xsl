@@ -210,17 +210,17 @@
 			<input type="hidden" id="cancel" name="values[cancel]" value=""/>
 			<input class="pure-button pure-button-primary" type="button" name="save" value="{lang_send}" onClick="confirm_session('save');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Save the entry and return to list')"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="apply" value="{lang_save}" onClick="confirm_session('apply');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Save the ticket')"/>
 				</xsl:attribute>
 			</input>
 			<input class="pure-button pure-button-primary" type="button" name="cancel" value="{lang_cancel}" onClick="confirm_session('cancel');">
 				<xsl:attribute name="title">
-					<xsl:value-of select="lang_send_statustext"/>
+					<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
 				</xsl:attribute>
 			</input>
 		</div>
@@ -233,7 +233,7 @@
 	<style type="text/css">
 		#floating-box {
 		position: relative;
-		z-index: 1000;
+		z-index: 10;
 		}
 		#submitbox {
 		display: none;
@@ -289,6 +289,7 @@
 
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 		var location_item_id = '<xsl:value-of select="location_item_id"/>';
+		var order_id = '<xsl:value-of select="value_order_id"/>';
 		var location_code = '<xsl:value-of select="value_location_code"/>';
 
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
@@ -962,7 +963,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
 										</label>
-										<input id="budget" type="text" name="values[budget]">
+										<input id="field_budget" type="text" name="values[budget]">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 											</xsl:attribute>
@@ -1060,7 +1061,7 @@
 												<label>
 													<xsl:value-of select="php:function('lang', 'approval')"/>
 												</label>
-												<div id="approval_container" class="pure-table pure-u-md-1-2">
+												<div id="approval_container" class="pure-u-md-1-2">
 												</div>
 											</div>
 										</xsl:when>
@@ -1180,6 +1181,25 @@
 										</div>
 									</div>
 
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'attachments')"/>
+										</label>
+										<div class="pure-custom">
+											<xsl:for-each select="datatable_def">
+												<xsl:if test="container = 'datatable-container_8'">
+													<xsl:call-template name="table_setup">
+														<xsl:with-param name="container" select ='container'/>
+														<xsl:with-param name="requestUrl" select ='requestUrl' />
+														<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+														<xsl:with-param name="tabletools" select ='tabletools' />
+														<xsl:with-param name="data" select ='data' />
+														<xsl:with-param name="config" select ='config' />
+													</xsl:call-template>
+												</xsl:if>
+											</xsl:for-each>
+										</div>
+									</div>
 
 								</xsl:when>
 							</xsl:choose>

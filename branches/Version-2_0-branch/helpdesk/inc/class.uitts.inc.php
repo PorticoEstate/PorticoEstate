@@ -61,6 +61,7 @@
 		protected $_group_candidates = array();
 		protected $_show_finnish_date = false;
 		protected $_category_acl = false;
+		protected $lang_app_name;
 		var $part_of_town_id;
 		var $status;
 		var $filter;
@@ -138,6 +139,14 @@
 			}
 
 			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
+			if (!empty($this->bo->config->config_data['app_name']))
+			{
+				$this->lang_app_name = $this->bo->config->config_data['app_name'];
+			}
+			else
+			{
+				$this->lang_app_name = lang('helpdesk');
+			}
 		}
 
 		/**
@@ -454,8 +463,13 @@
 
 			$uicols['name'][] = 'id';
 			$uicols['descr'][] = lang('id');
-			$uicols['name'][] = 'priority';
-			$uicols['descr'][] = lang('priority');
+
+			 if(empty($this->bo->config->config_data['disable_priority']))
+			 {
+				$uicols['name'][] = 'priority';
+				$uicols['descr'][] = lang('priority');
+			}
+
 			$uicols['name'][] = 'subject';
 			$uicols['descr'][] = lang('subject');
 			$uicols['name'][] = 'entry_date';
@@ -666,6 +680,20 @@
 				return $this->query();
 			}
 
+			if (!empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval']) && (int)$GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] > 0)
+			{
+				$refreshinterval = (int) $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] * 1000;
+
+			$js =<<<JS
+				setInterval( function () {
+					var api = oTable.api();
+					api.ajax.reload();
+			}, {$refreshinterval} );
+JS;
+
+				$GLOBALS['phpgw']->js->add_code('', $js, true);
+			}
+
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
@@ -677,7 +705,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 
-			$appname = lang('helpdesk');
+			$appname = $this->lang_app_name;
 			$function_msg = lang('list ticket');
 
 			$data = array(
@@ -886,7 +914,7 @@
 				$data['datatable']['group_buttons'] = false;
 			}
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
@@ -1290,7 +1318,7 @@
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			$this->_insert_custom_js();
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
 		}
@@ -1941,7 +1969,7 @@
 			//_debug_array($data);die();
 
 			$function_msg = lang('view ticket detail');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
 

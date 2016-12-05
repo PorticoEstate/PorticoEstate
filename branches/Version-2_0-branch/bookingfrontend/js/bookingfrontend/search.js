@@ -18,6 +18,21 @@ $(document).ready(function ()
 		autoOpen: false
 	});
 
+	$(window).scroll(function () {
+        if ($(this).scrollTop() > 100) {
+            $('.scrollup').fadeIn();
+        } else {
+            $('.scrollup').fadeOut();
+        }
+    });
+
+    $('.scrollup').click(function () {
+        $("html, body").animate({
+            scrollTop: 0
+        }, 600);
+        return false;
+    });
+
 	update_autocompleteHelper = function ()
 	{
 		oArgs = {
@@ -224,9 +239,12 @@ $(document).ready(function ()
 				{
 					$("#loading").dialog('close');
 //		            $('#loading').html("<p>Result Complete...</p>");
-					$("#no_result").hide();
+					$(".no_result").hide();
 					$("#result").html(data);
 					$("#total_records_top").html($("#total_records").html());
+
+					var top = $("#total_records_top").position().top;
+					$(window).scrollTop( top );
 				}
 			}
 		});
@@ -254,7 +272,7 @@ $(document).ready(function ()
 
 });
 
-$(window).load(function ()
+$(window).on('load', function()
 {
 	$("#field_building_name").on("autocompleteselect", function (event, ui)
 	{
