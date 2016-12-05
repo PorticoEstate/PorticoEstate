@@ -16,6 +16,7 @@
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
+		<xsl:text> H:i</xsl:text>
 	</xsl:variable>
 	<xsl:variable name="form_action">
 		<xsl:value-of select="form_action"/>
@@ -33,16 +34,66 @@
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="first_tab">
+					<xsl:if test="booking/id > 0">
+						<div class="pure-control-group">
+							<label>
+								<a href="{booking_url}">
+									<xsl:value-of select="php:function('lang', 'booking')"/>
+								</a>
+							</label>
+							<input type="hidden" name="booking_id" value="{booking/id}"/>
+							<xsl:value-of select="booking/id"/>
+						</div>
+					</xsl:if>
+					<xsl:if test="vendor_report/id > 0">
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'report')"/>
+							</label>
+							<input type="hidden" name="id" value="{vendor_report/id}"/>
+							<xsl:value-of select="vendor_report/id"/>
+						</div>
+					</xsl:if>
+					<xsl:call-template name="application_info">
+						<xsl:with-param name="application" select ='application'/>
+						<xsl:with-param name="application_type_list" select ='application_type_list'/>
+					</xsl:call-template>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_from">
+							<xsl:value-of select="php:function('lang', 'from')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_from"/>
+						</label>
+						<xsl:value-of select="php:function('show_date', number(booking/from_), $date_format)"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'timespan')"/>
+						</label>
+						<xsl:value-of select="application/timespan"/>
+					</div>
+
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'to')"/>
+						</label>
+						<xsl:value-of select="php:function('show_date', number(booking/to_), $date_format)"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'customer')"/>
+						</label>
+						<xsl:value-of select="booking/customer_name"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'location')"/>
+						</label>
+						<xsl:value-of select="booking/location"/>
+					</div>
+			
 					<fieldset>
-						<xsl:if test="vendor/id > 0">
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'id')"/>
-								</label>
-								<input type="hidden" name="id" value="{vendor/id}"/>
-								<xsl:value-of select="vendor/id"/>
-							</div>
-						</xsl:if>
 						<!--xsl:apply-templates select="attributes_group/attributes"/-->
 						<xsl:call-template name="attributes_values"/>
 

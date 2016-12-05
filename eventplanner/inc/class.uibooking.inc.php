@@ -176,6 +176,11 @@
 				'link' => '#first_tab',
 				'function' => "set_tab('first_tab')"
 			);
+			$tabs['reports'] = array(
+				'label' => lang('reports'),
+				'link' => '#reports',
+				'function' => "set_tab('reports')"
+			);
 
 			$bocommon = CreateObject('property.bocommon');
 
@@ -198,6 +203,71 @@
 				'requestUrl' => "''",
 				'ColumnDefs' => $comments_def,
 				'data' => json_encode($comments),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$vendor_report_def = array(
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'created', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
+			);
+
+			$vendor_report = array();
+
+			$tabletools = array(
+				array(
+					'my_name' => 'add',
+					'text' => lang('add'),
+					'type' => 'custom',
+					'className' => 'add',
+					'custom_code' => "
+								add_report('vendor');"
+				)
+			);
+
+			$datatable_def[] = array(
+				'container' => 'datatable-container_1',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uivendor_report.query',
+					'filter_booking_id' => $id,
+					'filter_active'	=> 1,
+					'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $vendor_report_def,
+				'data' => json_encode($vendor_report),
+				'tabletools' => $tabletools,
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$customer_report_def = array(
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'created', 'label' => lang('Date'), 'sortable' => true, 'resizeable' => true),
+			);
+
+			$customer_report = array();
+			$tabletools = array(
+				array(
+					'my_name' => 'add',
+					'text' => lang('add'),
+					'type' => 'custom',
+					'className' => 'add',
+					'custom_code' => "
+								add_report('vendor');"
+				)
+			);
+			$datatable_def[] = array(
+				'container' => 'datatable-container_2',
+//				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uicustomer_report.query',
+//					'filter_booking_id' => $id,
+//					'filter_active'	=> 1,
+//					'phpgw_return_as' => 'json'))),
+				'requestUrl' => "''",
+				'ColumnDefs' => $customer_report_def,
+				'data' => json_encode($customer_report),
+				'tabletools' => $tabletools,
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)

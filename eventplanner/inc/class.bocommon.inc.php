@@ -86,7 +86,22 @@
 			{
 				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
 				{
-					$object->set_field( $field, phpgw::get_var($field, $field_info['type'] ) );
+					if($field_info['type'] == 'jsonb')
+					{
+						$values = array();
+						$custom_fields = $object->get_custom_fields();
+						$values_attribute = phpgw::get_var('values_attribute');
+
+						foreach ($custom_fields as $key => $custom_field)
+						{
+							$values[$custom_field['name']] = $values_attribute[$key]['value'];
+						}
+						$object->set_field( $field, $values);
+					}
+					else
+					{
+						$object->set_field( $field, phpgw::get_var($field, $field_info['type'] ) );
+					}
 				}
 			}
 			return $object;
