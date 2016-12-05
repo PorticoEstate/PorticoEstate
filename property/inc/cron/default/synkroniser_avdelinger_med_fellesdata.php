@@ -487,6 +487,11 @@
 
 		function update_vendor()
 		{
+			if(empty($this->soap_password))
+			{
+				return;
+			}
+
 			$metadata = $GLOBALS['phpgw']->db->metadata('fm_vendor_temp');
 //_debug_array($metadata);
 			if (!$metadata)
