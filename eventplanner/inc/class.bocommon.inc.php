@@ -86,7 +86,7 @@
 			{
 				if(($field_info['action'] & PHPGW_ACL_ADD) ||  ($field_info['action'] & PHPGW_ACL_EDIT))
 				{
-					if($field_info['type'] == 'jsonb')
+					if($field_info['type'] == 'json')
 					{
 						$values = array();
 						$custom_fields = $object->get_custom_fields();

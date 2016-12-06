@@ -33,10 +33,6 @@
 	class eventplanner_vendor_report extends phpgwapi_model
 	{
 
-		const STATUS_REGISTERED = 1;
-		const STATUS_PENDING = 2;
-		const STATUS_REJECTED = 3;
-		const STATUS_APPROVED = 4;
 		const acl_location = '.vendor_report';
 
 		protected
@@ -62,16 +58,6 @@
 		public static function get_instance()
 		{
 			return new eventplanner_vendor_report();
-		}
-
-		public static function get_status_list()
-		{
-			return array(
-				self::STATUS_REGISTERED => lang('registered'),
-				self::STATUS_PENDING => lang('pending'),
-				self::STATUS_REJECTED => lang('rejected'),
-				self::STATUS_APPROVED => lang('approved')
-			);
 		}
 
 		public function set_custom_fields()
@@ -129,7 +115,7 @@
 					'sortable' => true,
 				),
 				'json_representation' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'jsonb',
+					'type' => 'json',
 					'sortable' => false,
 				),
 			);

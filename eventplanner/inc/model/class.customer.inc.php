@@ -125,7 +125,7 @@
 					'sortable' => false,
 					),
 				'name' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'label' => 'name',
 					'required' => true,

@@ -339,7 +339,7 @@
 			);
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
 			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', '', array(
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $application->date_start, array(
 					'min_date' => date('Y/m/d', $application->date_start),
 					'max_date' => date('Y/m/d', $application->date_end)
 				)

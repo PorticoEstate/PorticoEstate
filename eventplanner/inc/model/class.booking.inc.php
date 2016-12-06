@@ -156,7 +156,7 @@
 				'customer_contact_name' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true,
+					'required' => false,
 					'query' => true,
 					'label' => 'customer contact name',
 					'history' => true,
@@ -164,7 +164,7 @@
 				'customer_contact_email' => array(
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true,
+					'required' => false,
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'customer contact email',
@@ -173,7 +173,7 @@
 				'customer_contact_phone' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true,
+					'required' => false,
 					'query' => true,
 					'label' => 'customer contact phone',
 					'history' => true,
@@ -181,7 +181,7 @@
 				'location' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true,
+					'required' => false,
 					'query' => true,
 					'label' => 'location',
 					'history' => true,

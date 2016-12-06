@@ -59,21 +59,6 @@
 			$this->custom_fields = eventplanner_vendor_report::get_instance()->get_custom_fields();
 		}
 
-		private function get_status_options( $selected = 0 )
-		{
-			$status_options = array();
-			$status_list = eventplanner_vendor_report::get_status_list();
-
-			foreach ($status_list as $_key => $_value)
-			{
-				$status_options[] = array(
-					'id' => $_key,
-					'name' => $_value,
-					'selected' => $_key == $selected ? 1 : 0
-				);
-			}
-			return $status_options;
-		}
 
 		private function _get_filters()
 		{
@@ -86,35 +71,6 @@
 				'label_attr' => 'name',
 				'text' => lang('vendor') . ':',
 				'requestGenerator' => 'requestWithVendorFilter'
-			);
-
-			$status_options = $this->get_status_options();
-			array_unshift($status_options, array('id' => '','name' => lang('all')));
-
-			$combos[] = array(
-				'type' => 'filter',
-				'name' => 'filter_status',
-				'extra' => '',
-				'text' => lang('status'),
-				'list' => $status_options
-			);
-
-			$categories = $this->cats->formatted_xslt_list(array('format' => 'filter',
-					'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
-			$default_value = array('cat_id' => '', 'name' => lang('no category'));
-			array_unshift($categories['cat_list'], $default_value);
-
-			$_categories = array();
-			foreach ($categories['cat_list'] as $_category)
-			{
-				$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
-			}
-
-			$combos[] = array('type' => 'filter',
-				'name' => 'filter_category_id',
-				'extra' => '',
-				'text' => lang('category'),
-				'list' => $_categories
 			);
 
 			return $combos;
@@ -150,7 +106,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
+	//				'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -244,7 +200,7 @@
 				}
 			}
 
-			$custom_values = $vendor_report->json_representation ? json_decode($vendor_report->json_representation, true) : array();
+			$custom_values = $vendor_report->json_representation ? $vendor_report->json_representation : array();
 			$custom_fields = createObject('booking.custom_fields','eventplanner');
 			$fields = $this->custom_fields;
 			foreach ($fields as $attrib_id => &$attrib)
