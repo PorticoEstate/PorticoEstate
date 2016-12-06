@@ -112,6 +112,10 @@
 			{
 				return $this->db->db_addslashes($value);
 			}
+			else if ($type == 'jsonb')
+			{
+				return "'" . json_encode($value) . "'";
+			}
 			return "'" . $this->db->db_addslashes($value) . "'";
 		}
 
@@ -569,7 +573,7 @@
 					&& empty($field_info['related'])
 					&& empty($field_info['manytomany']))
 				{
-					if($field_info['type'] == 'jsonb')
+					if($field_info['type'] == 'json')
 					{
 						$value_set[$field] = json_encode($object->$field);
 					}
@@ -627,7 +631,7 @@
 					&& empty($field_info['related'])
 					&& empty($field_info['manytomany']))
 				{
-					if($field_info['type'] == 'jsonb')
+					if($field_info['type'] == 'json')
 					{
 						$value_set[$field] = json_encode($object->$field);
 					}
