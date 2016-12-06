@@ -68,3 +68,7 @@ from	eventplanner	no	Fra
 select all	eventplanner	no	Velg alle
 enable	eventplanner	no	Aktiver
 disable	eventplanner	no	Deaktiver
+reports	eventplanner	no	Rapporter
+location	eventplanner	no	Lokalisering
+who	eventplanner	no	Hvem
+note	eventplanner	no	Merknad

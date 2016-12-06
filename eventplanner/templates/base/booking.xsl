@@ -14,6 +14,15 @@
 
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
+	<style type="text/css">
+		#floating-box {
+		position: relative;
+		z-index: 1000;
+		}
+		#submitbox {
+		display: none;
+		}
+	</style>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 		<xsl:text> H:i</xsl:text>
@@ -25,13 +34,46 @@
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
 
-	<div>
+	<div class="content">
 		<script type="text/javascript">
 			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'customer')"/>;
 		</script>
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+				<div id="floating-box">
+					<div id="submitbox">
+						<table width="200px">
+							<tbody>
+								<tr>
+									<td width="200px">
+										<xsl:variable name="lang_save">
+											<xsl:value-of select="php:function('lang', 'save')"/>
+										</xsl:variable>
+										<input type="button" class="pure-button pure-button-primary" name="save" id="save_button" onClick="validate_submit();">
+											<xsl:attribute name="value">
+												<xsl:value-of select="$lang_save"/>
+											</xsl:attribute>
+											<xsl:attribute name="title">
+												<xsl:value-of select="$lang_save"/>
+											</xsl:attribute>
+										</input>
+									</td>
+									<td>
+										<xsl:variable name="lang_cancel">
+											<xsl:value-of select="php:function('lang', 'cancel')"/>
+										</xsl:variable>
+										<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_cancel}" onClick="window.location = '{cancel_url}';">
+											<xsl:attribute name="title">
+												<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
+											</xsl:attribute>
+										</input>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="first_tab">
 					<xsl:if test="booking/id > 0">
@@ -39,7 +81,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'id')"/>
 							</label>
-							<input type="hidden" name="id" value="{booking/id}"/>
+							<input type="hidden" id="booking_id" name="id" value="{booking/id}"/>
 							<input type="hidden" name="application_id" value="{booking/application_id}"/>
 							<xsl:value-of select="booking/id"/>
 						</div>
@@ -295,6 +337,17 @@
 						
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'location')"/>
+							</label>
+							<textarea cols="47" rows="7" id="location" name="location">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:value-of select="booking/location"/>
+							</textarea>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
@@ -329,9 +382,56 @@
 						</div>
 					</fieldset>
 				</div>
+				<div id="reports">
+					<fieldset>
+						<legend>
+							<xsl:value-of select="php:function('lang', 'vendor report')"/>
+						</legend>
+						<div class="pure-control-group">
+							<div class="pure-custom">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_1'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="tabletools" select ='tabletools'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+
+					</fieldset>
+					<fieldset>
+						<legend>
+							<xsl:value-of select="php:function('lang', 'customer report')"/>
+						</legend>
+						<div class="pure-control-group">
+							<div class="pure-custom">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_2'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="tabletools" select ='tabletools'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+
+					</fieldset>
+
+				</div>
 			</div>
-			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save">
+			<div id="submit_group_bottom">
+				<input type="button" class="pure-button pure-button-primary" name="save" onClick="validate_submit();">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'save')"/>
 					</xsl:attribute>
@@ -347,6 +447,7 @@
 			</div>
 		</form>
 	</div>
+
 </xsl:template>
 
 <xsl:template match="options">

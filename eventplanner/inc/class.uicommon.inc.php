@@ -53,7 +53,7 @@
 		{
 			parent::__construct();
 			$called_class = get_called_class();
-			$this->called_class_arr = explode('_', $called_class);
+			$this->called_class_arr = explode('_', $called_class, 2);
 		}
 
 

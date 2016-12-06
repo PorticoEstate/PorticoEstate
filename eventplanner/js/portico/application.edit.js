@@ -93,7 +93,7 @@ $(document).ready(function ()
 		padding: '0 5px 5px 5px',
 		width: $("#submitbox").width() + 'px',
 		"background - color": '#FFF',
-		display: "block",
+		display: "block"
 	});
 
 	var offset = $("#submitbox").offset();
