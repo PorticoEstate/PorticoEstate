@@ -157,6 +157,9 @@
 			{
 				$GLOBALS['phpgw']->translation->add_app('booking');
 			}
+
+			phpgwapi_jquery::load_widget('autocomplete');
+
 		}
 
 		/**
