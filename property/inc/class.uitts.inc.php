@@ -3374,6 +3374,7 @@
 			{
 				$show_cost = phpgw::get_var('show_cost', 'bool');
 			}
+			$historylog = CreateObject('property.historylog', 'tts');
 
 			$ticket = $this->bo->read_single($id);
 			$subject = lang('workorder') . ": {$ticket['order_id']}";
@@ -3418,6 +3419,11 @@
 			$location = rtrim($location, '<br>');
 
 			$order_description = $ticket['order_descr'];
+
+			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
+				'contact_id' => $ticket['contact_id'],
+				'field' => 'contact',
+				'type' => 'form'));
 
 			if (isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
 			{
@@ -3613,7 +3619,9 @@
 				phpgwapi_cache::message_set(lang('missing recipient for order %1', $ticket['order_id']),'error' );
 				return false;
 			}
+			$historylog = CreateObject('property.historylog', 'tts');
 
+			$id = $ticket['id'];
 			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
 			{
 				$attachments = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
@@ -3669,6 +3677,10 @@
 			$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 			$cc = '';
 			$bcc = $coordinator_email;
+			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
+				'contact_id' => $ticket['contact_id'],
+				'field' => 'contact',
+				'type' => 'form'));
 			if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 			{
 				$cc = $contact_data['value_contact_email'];
@@ -3746,12 +3758,9 @@
 				try
 				{
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
-					if ($rcpt)
-					{
-						phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message' );
-						$historylog->add('M', $id, "{$_to}{$attachment_log}");
-						phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
-					}
+					phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
+					$historylog->add('M', $id, "{$_to}{$attachment_log}");
+					phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
 				}
 				catch (Exception $exc)
 				{
