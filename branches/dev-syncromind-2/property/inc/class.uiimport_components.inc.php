@@ -121,10 +121,6 @@
 
 		public function import_component_files()
 		{		
-			/*$location_code = phpgwapi_cache::session_get('property', 'location_code');
-			$id = phpgwapi_cache::session_get('property', 'location_item_id');
-			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');*/
-			
 			$location_code = phpgw::get_var('location_code');
 			$id = phpgw::get_var('location_item_id');
 			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
