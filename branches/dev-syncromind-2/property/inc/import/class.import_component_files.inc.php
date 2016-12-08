@@ -15,6 +15,7 @@
 			$this->last_files_added = array();
 			$this->list_component_id = array();
 			$this->paths_from_file = array();
+			$this->paths_empty = array();
 		}
 		
 		public function get_path_upload_dir()
@@ -100,6 +101,8 @@
 		
 		public function add_files_location($id, $location_code)
 		{		
+			@set_time_limit(5 * 60);
+			
 			$message = array();
 			
 			$uploaded_files = phpgwapi_cache::session_get('property', 'import_data');
@@ -201,13 +204,18 @@
 								{
 									$file_data['path_file'] = $file['path_file'];
 									$file_data['val_md5sum'] = $file['val_md5sum'];
-								} 
+								}
 							} else {
 								$file_data['path_file'] = $file['path_file'];
-								$file_data['val_md5sum'] = $file['val_md5sum'];								
-							}
-							$this->paths_from_file[$file_data['val_md5sum']][] = $file_data['path'];
+								$file_data['val_md5sum'] = $file['val_md5sum'];		
+							}							
 						}
+					}
+					if (!empty($file_data['val_md5sum'])) 
+					{
+						$this->paths_from_file[$file_data['val_md5sum']][] = $file_data['path'];
+					} else {
+						$this->paths_empty[$file_data['path_file_string']] = $file_data['path'].'/'.$file_data['file'];
 					}
 				}
 			}
@@ -453,14 +461,24 @@
 			} else {
 				$relations = $uploaded_files;
 			}
-			
+		
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
-			return $relations;
+
+			$message['message'][] = array('msg' => lang('%1 files prepare to copy', count($this->paths_from_file)));
+			
+			if (count($this->paths_empty))
+			{
+				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($this->paths_empty)));
+			}
+			//print_r($this->paths_empty ); die;
+			return $message;
 		}
 
 		public function add_files_components_location($id, $location_code, $attrib_name_componentID)
 		{		
+			@set_time_limit(5 * 60);
+			
 			$message = array();
 
 			$component_files = phpgwapi_cache::session_get('property', 'import_data');
