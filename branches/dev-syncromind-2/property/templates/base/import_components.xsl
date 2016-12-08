@@ -244,7 +244,7 @@
 							<input type="hidden" id="location_item_id" name="location_item_id" value=""></input>
 						</div>
 						
-						<div id="responsiveTabsDemo2">
+						<div id="responsiveTabsRelations">
 							<ul>
 								<li><a href="#tab-components"><xsl:value-of select="php:function('lang', 'Components')"/></a></li>
 								<li><a href="#tab-files"><xsl:value-of select="php:function('lang', 'Files')"/></a></li>
@@ -263,7 +263,16 @@
 											<input type="file" id="excel_files" name="excel_files" size="40"></input>
 										</div>
 									</div>
-								</div>								
+								</div>
+								<div class="pure-control-group">
+									<label></label>
+									<input type="button" id="relations_step_1" name="relations_step_1" size="40">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'Continue')"/>
+										</xsl:attribute>
+									</input>
+									<img src="{image_loader}" class="processing-relations" align="absmiddle"></img>	
+								</div>											
 							</div>
 							<div id="tab-files">
 								<div class="pure-control-group">
@@ -281,33 +290,39 @@
 												</xsl:attribute>
 											</input> (zip, rar)
 										</div>
-										<div class="pure-control-group">
-											<label></label>
-											<input type="button" id="preview_components_files" name="preview_components_files" size="40">
-												<xsl:attribute name="value">
-													<xsl:value-of select="php:function('lang', 'Preview')"/>
-												</xsl:attribute>
-											</input>
-											<!--<img src="{image_loader}" class="processing-preview-relations" align="absmiddle"></img>-->
-										</div>
 									</div>
-								</div>								
+								</div>
+								<div class="pure-control-group">
+									<label></label>
+									<input type="button" id="relations_step_2" name="relations_step_2" size="40">
+										<xsl:attribute name="value">
+											<xsl:value-of select="php:function('lang', 'Continue')"/>
+										</xsl:attribute>
+									</input>
+									<img src="{image_loader}" class="processing-relations" align="absmiddle"></img>
+								</div>						
 							</div>
 							<div id="tab-preview">
 								<div class="pure-control-group">
+									<label for="vendor">
+										<xsl:value-of select="php:function('lang', 'Messages')" />
+									</label>
+									<div class="pure-custom">
+										<div id="message5" class="message"></div>
+									</div>
+								</div>
+								<div class="pure-control-group">
 									<label></label>
-									<input type="button" id="import_components_files" name="import_components" size="40">
+									<input type="button" id="save_relations" name="save_relations" size="40">
 										<xsl:attribute name="value">
-											<xsl:value-of select="php:function('lang', 'Start import')"/>
+											<xsl:value-of select="php:function('lang', 'Save')"/>
 										</xsl:attribute>
-									</input>
-									<img src="{image_loader}" class="processing-import-relations" align="absmiddle"></img>
+									</input>								
+									<img src="{image_loader}" class="processing-relations" align="absmiddle"></img>	
 								</div>
 								<div class="pure-control-group">
+									<label></label>
 									<div id="message4" class="message"></div>
-								</div>
-								<div class="pure-control-group">
-									<div id="message5" class="message"></div>
 								</div>					
 							</div>
 						</div>					
@@ -322,8 +337,9 @@
 			disabled: [1,2,3]
 		});
 		
-		$('#responsiveTabsDemo2').responsiveTabs({
-			startCollapsed: 'accordion'
+		$('#responsiveTabsRelations').responsiveTabs({
+			startCollapsed: 'accordion',
+			disabled: [2]
 		});
 	</script>
 </xsl:template>
