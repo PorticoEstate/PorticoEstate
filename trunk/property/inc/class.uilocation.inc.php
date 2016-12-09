@@ -1663,6 +1663,11 @@ JS;
 			$location_code = phpgw::get_var('location_code');
 
 			$values = $this->bo->get_history($location_code);
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($values as &$entry)
+			{
+				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'],$dateformat);
+			}
 
 			$result_data = array('results' => $values);
 

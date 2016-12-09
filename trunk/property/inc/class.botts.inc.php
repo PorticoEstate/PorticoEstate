@@ -2001,6 +2001,39 @@
 			}
 
 			$supervisor_email = array();
+
+			//Check if user is asked for approval
+			if($need_approval && empty($supervisors[$this->account]))
+			{
+				$action_params = array(
+					'appname' => 'property',
+					'location' => $location,
+					'id'		=> $location_item_id,
+					'responsible' => $this->account,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'deadline' => '',
+					'created_by' => '',
+					'allrows' => false,
+					'closed' => false
+				);
+				$requests = CreateObject('property.sopending_action')->get_pending_action($action_params);
+				if($requests)
+				{
+					$supervisors[$this->account] = array('id' => $this->account, 'required' => true, 'default' => true);
+				}
+				else
+				{
+					$action_params['closed'] = true;
+					$requests = CreateObject('property.sopending_action')->get_pending_action($action_params);
+					if($requests)
+					{
+						$supervisors[$this->account] = array('id' => $this->account, 'required' => false, 'default' => true);
+					}
+				}
+			}
+
+
 			if ($supervisors && $need_approval)
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
