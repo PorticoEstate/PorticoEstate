@@ -31,10 +31,10 @@
 	 * @package property
 	 */
 	
-	if (!$workorder['order_sent'])
+//	if (!$workorder['order_sent'])
 	{
-//		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
-//		$exporter_ordre->transfer($project, $workorder);
+		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
+		$exporter_ordre->transfer($project, $workorder);
 	}
 
 	class lag_agresso_ordre_fra_workorder
@@ -57,20 +57,16 @@
 
 			$price = ExecMethod('property.boworkorder.get_budget_amount',$workorder['id']);
 
-			$purchase_grant_error = false;
-			$check_purchase = CreateObject('property.botts')->check_purchase_right($data['ecodimb'], $price, $workorder['id']);
-			foreach ($check_purchase as $purchase_grant)
+			try
 			{
-				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-				{
-					$purchase_grant_error = true;
-					phpgwapi_cache::message_set(lang('approval from %1 is required',
-							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
-							'error'
-					);
-				}
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $workorder['ecodimb'], $price, $workorder['id']);
 			}
-			if (!$this->debug && $purchase_grant_error)
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			if (!$this->debug && !$purchase_grant_ok)
 			{
 				return 3;
 			}

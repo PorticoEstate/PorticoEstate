@@ -295,6 +295,9 @@ JqueryPortico.FormatterActive = function (key, oData)
 
 function set_tab(active_tab)
 {
+//	var test = $('#tab-content').responsiveTabs('activate');
+//	alert(test);
+//console.log(test);
 	$("#active_tab").val(active_tab);
 	check_button_names();
 }

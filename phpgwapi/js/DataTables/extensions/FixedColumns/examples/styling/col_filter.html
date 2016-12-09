@@ -51,14 +51,14 @@ $(document).ready(function() {
 		paging:         false,
 		fixedColumns:   true
 	} );
-	 
+
 	// Filter event handler
 	$( table.table().container() ).on( 'keyup', 'tfoot input', function () {
-			table
+		table
 			.column( $(this).data('index') )
-				.search( this.value )
-				.draw();
-		} );
+			.search( this.value )
+			.draw();
+	} );
 } );
 
 
@@ -755,14 +755,14 @@ $(document).ready(function() {
 		paging:         false,
 		fixedColumns:   true
 	} );
-	 
+
 	// Filter event handler
 	$( table.table().container() ).on( 'keyup', 'tfoot input', function () {
-			table
+		table
 			.column( $(this).data('index') )
-				.search( this.value )
-				.draw();
-		} );
+			.search( this.value )
+			.draw();
+	} );
 } );</code>
 					<p>In addition to the above code, the following Javascript library files are loaded for use in this example:</p>
 					<ul>

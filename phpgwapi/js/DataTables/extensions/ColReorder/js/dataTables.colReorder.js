@@ -204,13 +204,13 @@ $.fn.dataTableExt.oApi.fnColReorder = function ( oSettings, iFrom, iTo, drop, in
 		}
 
 		// Update the column indexes
-			oCol.idx = aiInvertMapping[ oCol.idx ];
-		}
+		oCol.idx = aiInvertMapping[ oCol.idx ];
+	}
 
-		// Update 1.10 optimised sort class removal variable
-		$.each( oSettings.aLastSort, function (i, val) {
-			oSettings.aLastSort[i].src = aiInvertMapping[ val.src ];
-		} );
+	// Update 1.10 optimised sort class removal variable
+	$.each( oSettings.aLastSort, function (i, val) {
+		oSettings.aLastSort[i].src = aiInvertMapping[ val.src ];
+	} );
 
 	/* Update the Get and Set functions for each column */
 	for ( i=0, iLen=iCols ; i<iLen ; i++ )
@@ -305,15 +305,15 @@ $.fn.dataTableExt.oApi.fnColReorder = function ( oSettings, iFrom, iTo, drop, in
 					cells[j]._DT_CellIndex.column = j;
 				}
 			}
-			}
-
-			// For DOM sourced data, the invalidate will reread the cell into
-			// the data array, but for data sources as an array, they need to
-			// be flipped
-			if ( data.src !== 'dom' && $.isArray( data._aData ) ) {
-				fnArraySwitch( data._aData, iFrom, iTo );
-			}
 		}
+
+		// For DOM sourced data, the invalidate will reread the cell into
+		// the data array, but for data sources as an array, they need to
+		// be flipped
+		if ( data.src !== 'dom' && $.isArray( data._aData ) ) {
+			fnArraySwitch( data._aData, iFrom, iTo );
+		}
+	}
 
 	/* Reposition the header elements in the header layout array */
 	for ( i=0, iLen=oSettings.aoHeader.length ; i<iLen ; i++ )
@@ -374,7 +374,7 @@ var ColReorder = function( dt, opts )
 	// Ensure that we can't initialise on the same table twice
 	if ( settings._colReorder ) {
 		return settings._colReorder;
-		}
+	}
 
 	// Allow the options to be a boolean for defaults
 	if ( opts === true ) {
@@ -572,7 +572,7 @@ $.extend( ColReorder.prototype, {
 	 *    );
 	 */
 	"fnOrder": function ( set, original )
-			{
+	{
 		var a = [], i, ien, j, jen;
 		var columns = this.s.dt.aoColumns;
 
@@ -719,12 +719,12 @@ $.extend( ColReorder.prototype, {
 			{
 				var bDone = false;
 				$(table).on( 'draw.dt.colReorder', function () {
-						if ( !that.s.dt._bInitComplete && !bDone )
-						{
-							bDone = true;
-							var resort = fnInvertKeyValues( aiOrder );
-							that._fnOrderColumns.call( that, resort );
-						}
+					if ( !that.s.dt._bInitComplete && !bDone )
+					{
+						bDone = true;
+						var resort = fnInvertKeyValues( aiOrder );
+						that._fnOrderColumns.call( that, resort );
+					}
 				} );
 			}
 			else
@@ -1307,21 +1307,21 @@ $(document).on( 'preInit.dt.colReorder', function (e, settings) {
 
 // API augmentation
 $.fn.dataTable.Api.register( 'colReorder.reset()', function () {
-		return this.iterator( 'table', function ( ctx ) {
-			ctx._colReorder.fnReset();
-		} );
+	return this.iterator( 'table', function ( ctx ) {
+		ctx._colReorder.fnReset();
+	} );
 } );
 
 $.fn.dataTable.Api.register( 'colReorder.order()', function ( set, original ) {
-		if ( set ) {
-			return this.iterator( 'table', function ( ctx ) {
+	if ( set ) {
+		return this.iterator( 'table', function ( ctx ) {
 			ctx._colReorder.fnOrder( set, original );
-			} );
-		}
+		} );
+	}
 
-		return this.context.length ?
-			this.context[0]._colReorder.fnOrder() :
-			null;
+	return this.context.length ?
+		this.context[0]._colReorder.fnOrder() :
+		null;
 } );
 
 $.fn.dataTable.Api.register( 'colReorder.transpose()', function ( idx, dir ) {

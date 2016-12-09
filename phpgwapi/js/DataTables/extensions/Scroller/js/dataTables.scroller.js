@@ -432,9 +432,9 @@ $.extend( Scroller.prototype, {
 		var heights = this.s.heights;
 
 		if ( heights.row ) {
-		heights.viewport = $(this.dom.scroller).height();
-		this.s.viewportRows = parseInt( heights.viewport / heights.row, 10 )+1;
-		this.s.dt._iDisplayLength = this.s.viewportRows * this.s.displayBuffer;
+			heights.viewport = $(this.dom.scroller).height();
+			this.s.viewportRows = parseInt( heights.viewport / heights.row, 10 )+1;
+			this.s.dt._iDisplayLength = this.s.viewportRows * this.s.displayBuffer;
 		}
 
 		if ( bRedraw === undefined || bRedraw )
@@ -889,9 +889,9 @@ $.extend( Scroller.prototype, {
 		// take precedence over the one we want here. So a 'thread' break is
 		// needed.  Only add the thread break if bInfo is set
 		if ( this.s.dt.oFeatures.bInfo ) {
-		setTimeout( function () {
-			that._fnInfo.call( that );
-		}, 0 );
+			setTimeout( function () {
+				that._fnInfo.call( that );
+			}, 0 );
 		}
 
 		// Hide the loading indicator
@@ -1275,38 +1275,38 @@ $.fn.DataTable.Scroller = Scroller;
 var Api = $.fn.dataTable.Api;
 
 Api.register( 'scroller()', function () {
-		return this;
+	return this;
 } );
 
 // Undocumented and deprecated - is it actually useful at all?
 Api.register( 'scroller().rowToPixels()', function ( rowIdx, intParse, virtual ) {
-		var ctx = this.context;
+	var ctx = this.context;
 
-		if ( ctx.length && ctx[0].oScroller ) {
-			return ctx[0].oScroller.fnRowToPixels( rowIdx, intParse, virtual );
-		}
-		// undefined
+	if ( ctx.length && ctx[0].oScroller ) {
+		return ctx[0].oScroller.fnRowToPixels( rowIdx, intParse, virtual );
+	}
+	// undefined
 } );
 
 // Undocumented and deprecated - is it actually useful at all?
 Api.register( 'scroller().pixelsToRow()', function ( pixels, intParse, virtual ) {
-		var ctx = this.context;
+	var ctx = this.context;
 
-		if ( ctx.length && ctx[0].oScroller ) {
-			return ctx[0].oScroller.fnPixelsToRow( pixels, intParse, virtual );
-		}
-		// undefined
+	if ( ctx.length && ctx[0].oScroller ) {
+		return ctx[0].oScroller.fnPixelsToRow( pixels, intParse, virtual );
+	}
+	// undefined
 } );
 
 // Undocumented and deprecated - use `row().scrollTo()` instead
 Api.register( 'scroller().scrollToRow()', function ( row, ani ) {
-		this.iterator( 'table', function ( ctx ) {
-			if ( ctx.oScroller ) {
-				ctx.oScroller.fnScrollToRow( row, ani );
-			}
-		} );
+	this.iterator( 'table', function ( ctx ) {
+		if ( ctx.oScroller ) {
+			ctx.oScroller.fnScrollToRow( row, ani );
+		}
+	} );
 
-		return this;
+	return this;
 } );
 
 Api.register( 'row().scrollTo()', function ( ani ) {
@@ -1327,13 +1327,13 @@ Api.register( 'row().scrollTo()', function ( ani ) {
 } );
 
 Api.register( 'scroller.measure()', function ( redraw ) {
-		this.iterator( 'table', function ( ctx ) {
-			if ( ctx.oScroller ) {
-				ctx.oScroller.fnMeasure( redraw );
-			}
-		} );
+	this.iterator( 'table', function ( ctx ) {
+		if ( ctx.oScroller ) {
+			ctx.oScroller.fnMeasure( redraw );
+		}
+	} );
 
-		return this;
+	return this;
 } );
 
 Api.register( 'scroller.page()', function() {

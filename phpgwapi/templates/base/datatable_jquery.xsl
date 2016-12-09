@@ -904,13 +904,17 @@
 
 				if(group_buttons === true)
 				{
-				JqueryPortico.buttons = [
-				{
-				extend: 'collection',
-				text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
-				collectionLayout: 'three-column',
-				buttons: button_def
-				}
+//					button_def.push({text: 'Esc',
+//                       action: function ( e, dt, node, config ) {
+//                        }});
+					JqueryPortico.buttons = [
+					{
+						extend: 'collection',
+						autoClose: true,
+						text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
+						collectionLayout: 'three-column',
+						buttons: button_def
+					}
 				];
 				}
 				else

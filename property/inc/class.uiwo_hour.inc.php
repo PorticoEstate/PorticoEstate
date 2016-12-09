@@ -3460,55 +3460,16 @@ HTML;
 		private function _validate_purchase_grant( $id, $ecodimb )
 		{
 			$_budget_amount = $this->boworkorder->get_budget_amount($id);
-			$historylog = CreateObject('property.historylog', 'workorder');
 
 			try
 			{
-				$check_purchase = createObject('property.botts')->check_purchase_right($ecodimb, $_budget_amount, $id);
-
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $ecodimb, $_budget_amount, $id);
 			}
 			catch (Exception $ex)
 			{
 				throw $ex;
 			}
 
-			$purchase_grant_ok = true;
-
-			foreach ($check_purchase as $purchase_grant)
-			{
-				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-				{
-					$purchase_grant_ok = false;
-					phpgwapi_cache::message_set(lang('approval from %1 is required for order %2',
-							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString(), $id),
-							'error'
-					);
-				}
-				else if( $purchase_grant['is_user'] && ( $purchase_grant['required'] && $purchase_grant['requested'] && !$purchase_grant['approved']))
-				{
-					$action_params = array(
-						'appname' => 'property',
-						'location' => '.project.workorder',
-						'id' => $id,
-						'responsible' => '',
-						'responsible_type' => 'user',
-						'action' => 'approval',
-						'remark' => '',
-						'deadline' => ''
-					);
-
-					$_account_id = $purchase_grant['id'];//$this->account
-
-					$action_params['responsible'] = $_account_id;
-					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
-					{
-						execMethod('property.sopending_action.set_pending_action', $action_params);
-					}
-					execMethod('property.sopending_action.close_pending_action', $action_params);
-					$historylog->add('OA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-					$purchase_grant_ok = true;
-				}
-			}
 			return $purchase_grant_ok;
 		}
 	}

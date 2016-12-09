@@ -447,7 +447,14 @@ function populateTableChkApproval(ecodimb)
 					}
 					htmlString += left_cell;
 					htmlString += "</td><td valign=\"top\">";
-					htmlString += obj[i].address;
+					if (obj[i].required === true || obj[i].default === true)
+					{
+						htmlString += '<b>[' + obj[i].address + ']</b>';
+					}
+					else
+					{
+						htmlString += obj[i].address;
+					}
 					htmlString += "</td>";
 					htmlString += "<td>";
 
@@ -467,9 +474,12 @@ function populateTableChkApproval(ecodimb)
 					htmlString += "</tr>";
 				});
 				htmlString += "</tbody></table>";
-//console.log(htmlString);
 				$("#approval_container").html(htmlString);
 			}
+		},
+		error: function ()
+		{
+			alert('feil med oppslag til fullmakter');
 		}
 	});
 }
