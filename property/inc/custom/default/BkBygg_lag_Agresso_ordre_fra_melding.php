@@ -63,44 +63,16 @@
 				$price += $budget['amount'];
 			}
 
-			$purchase_grant_error = false;
-			$check_purchase = CreateObject('property.botts')->check_purchase_right($_ticket['ecodimb'], $price, $_ticket['order_id']);
-			foreach ($check_purchase as $purchase_grant)
+			try
 			{
-				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-				{
-					$purchase_grant_error = true;
-					phpgwapi_cache::message_set(lang('approval from %1 is required',
-							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
-							'error'
-					);
-				}
-				else if( $purchase_grant['is_user'] && ( $purchase_grant['required'] && $purchase_grant['requested'] && !$purchase_grant['approved']))
-				{
-					$action_params = array(
-						'appname' => 'property',
-						'location' => '.ticket',
-						'id' => $id,
-						'responsible' => '',
-						'responsible_type' => 'user',
-						'action' => 'approval',
-						'remark' => '',
-						'deadline' => ''
-					);
-
-					$_account_id = $purchase_grant['id'];//$this->account
-
-					$action_params['responsible'] = $_account_id;
-					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
-					{
-						execMethod('property.sopending_action.set_pending_action', $action_params);
-					}
-					execMethod('property.sopending_action.close_pending_action', $action_params);
-					$historylog->add('OA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$price}");
-					$purchase_grant_error = false;
-				}
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $_ticket['ecodimb'], $price, $_ticket['order_id'] );
 			}
-			if (!$this->debug && $purchase_grant_error)
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			if (!$this->debug && !$purchase_grant_ok)
 			{
 				return 3;
 			}

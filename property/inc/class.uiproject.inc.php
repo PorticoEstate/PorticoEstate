@@ -2715,13 +2715,12 @@ JS;
 		{
 			$tabs = array
 				(
-				'general' => array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
-				'location' => array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
-				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
-				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination',
-					'function' => "set_tab('coordination')"),
-				'documents' => array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
-				'history' => array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')"),
+				'general' => array('label' => lang('general'), 'link' => '#general'),//, 'function' => "set_tab('general')"),
+				'location' => array('label' => lang('location'), 'link' => '#location'),//, 'function' => "set_tab('location')"),
+				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget'),//, 'function' => "set_tab('budget')"),
+				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination'),//,'function' => "set_tab('coordination')"),
+				'documents' => array('label' => lang('documents'), 'link' => '#documents'),//, 'function' => "set_tab('documents')"),
+				'history' => array('label' => lang('history'), 'link' => '#history'),//, 'function' => "set_tab('history')"),
 			);
 
 			$tabs = array_merge($tabs, $tabs_);

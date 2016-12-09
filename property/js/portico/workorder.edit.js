@@ -575,17 +575,10 @@ function populateTableChkApproval(ecodimb)
 					{
 						if (obj[i].approved !== true)
 						{
-							if (obj[i].required === true || obj[i].default === true)
+							if (obj[i].required === true)
 							{
 								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
-								if (obj[i].required === true)
-								{
-									required = 'checked="checked" disabled="disabled"';
-								}
-								else
-								{
-									//			required = 'checked="checked"';
-								}
+								required = 'checked="checked" disabled="disabled"';
 							}
 							else
 							{

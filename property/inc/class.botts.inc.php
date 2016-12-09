@@ -1778,6 +1778,14 @@
 			return $this->so->add_relation($add_relation, $id);
 		}
 
+		/**
+		 * 
+		 * @param type $ecodimb
+		 * @param type $amount
+		 * @param type $order_id
+		 * @return array
+		 * @throws Exception
+		 */
 		public function check_purchase_right($ecodimb = 0, $amount = 0, $order_id = 0)
 		{
 			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
@@ -1892,11 +1900,11 @@
 
 				if ($supervisor_id)
 				{
-					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
+					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
 
 					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 
-					if (!empty($prefs['approval_from']))
+					if (!empty($prefs['approval_from']) && empty($supervisors[$prefs['approval_from']]))
 					{
 						$supervisor_id = $prefs['approval_from'];
 						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
@@ -1906,7 +1914,7 @@
 			}
 
 			if(!$check_external_register && !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-				&& !in_array($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'],$supervisors))
+				&& empty($supervisors[$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']]))
 			{
 				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
 				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
@@ -1962,6 +1970,13 @@
 			return json_decode($result, true);
 		}
 
+		/**
+		 * 
+		 * @param array $supervisors
+		 * @param int $order_id
+		 * @return array
+		 * @throws Exception
+		 */
 		protected function get_supervisor_approval($supervisors, $order_id = 0)
 		{
 			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
@@ -1981,7 +1996,7 @@
 						$location_item_id = $this->so->get_ticket_from_order($order_id);
 						break;
 					default:
-						throw new Exception('Not supported');
+						throw new Exception('Order type not supported');
 				}
 			}
 
@@ -2048,4 +2063,78 @@
 			return $supervisor_email;
 		}
 
+		function validate_purchase_grant( $ecodimb, $budget_amount, $order_id )
+		{
+			if($order_id)
+			{
+				$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+				switch ($order_type)
+				{
+					case 'workorder':
+						$location = '.project.workorder';
+						$location_item_id = $order_id;
+						$historylog = CreateObject('property.historylog', 'workorder');
+						$history_code = 'OA';
+						break;
+					case 'ticket':
+						$location = '.ticket';
+						$location_item_id = $this->so->get_ticket_from_order($order_id);
+						$historylog = CreateObject('property.historylog', 'tts');
+						$history_code = 'AA';
+						break;
+					default:
+						throw new Exception('Order type not supported');
+				}
+			}
+
+			try
+			{
+				$check_purchase = $this->check_purchase_right($ecodimb, $budget_amount, $order_id);
+
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$purchase_grant_ok = true;
+
+			foreach ($check_purchase as $purchase_grant)
+			{
+				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
+				{
+					$purchase_grant_ok = false;
+					phpgwapi_cache::message_set(lang('approval from %1 is required for order %2',
+							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString(), $order_id),
+							'error'
+					);
+				}
+				else if( $purchase_grant['is_user'] && ( $purchase_grant['required']  && !$purchase_grant['approved']))
+				{
+					$action_params = array(
+						'appname' => 'property',
+						'location' => $location,
+						'id' => $location_item_id,
+						'responsible' => '',
+						'responsible_type' => 'user',
+						'action' => 'approval',
+						'remark' => '',
+						'deadline' => ''
+					);
+
+					$_account_id = $purchase_grant['id'];//$this->account
+
+					$action_params['responsible'] = $_account_id;
+					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					{
+						execMethod('property.sopending_action.set_pending_action', $action_params);
+					}
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					$historylog->add($history_code, $location_item_id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$budget_amount}");
+					$purchase_grant_ok = true;
+				}
+			}
+			return $purchase_grant_ok;
+		}
 	}
