@@ -2955,24 +2955,24 @@
 				(
 				'general' => array(
 					'label' => lang('general'),
-					'link' => '#general',
-					'function' => "set_tab('general')"),
+					'link' => '#general'
+					),
 				'budget' => array(
 					'label' => lang('Time and budget'),
-					'link' => '#budget',
-					'function' => "set_tab('budget')"),
+					'link' => '#budget'
+					),
 				'coordination' => array(
 					'label' => lang('coordination'),
-					'link' => '#coordination',
-					'function' => "set_tab('coordination')"),
+					'link' => '#coordination'
+					),
 				'documents' => array(
 					'label' => lang('documents'),
-					'link' => '#documents',
-					'function' => "set_tab('documents')"),
+					'link' => '#documents'
+					),
 				'history' => array(
 					'label' => lang('history'),
-					'link' => '#history',
-					'function' => "set_tab('history')"),
+					'link' => '#history'
+					),
 			);
 			$tabs = array_merge($tabs, $tabs_);
 
