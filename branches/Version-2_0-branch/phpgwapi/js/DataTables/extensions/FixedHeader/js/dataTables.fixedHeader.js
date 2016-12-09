@@ -34,14 +34,14 @@
 		module.exports = function (root, $) {
 			if ( ! root ) {
 				root = window;
-	}
+			}
 
 			if ( ! $ || ! $.fn.dataTable ) {
 				$ = require('datatables.net')(root, $).$;
 			}
 
 			return factory( $, root, root.document );
-	};
+		};
 	}
 	else {
 		// Browser
@@ -134,7 +134,7 @@ $.extend( FixedHeader.prototype, {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * API methods
 	 */
-
+	
 	/**
 	 * Enable / disable the fixed elements
 	 *
@@ -154,7 +154,7 @@ $.extend( FixedHeader.prototype, {
 
 		this.update();
 	},
-
+	
 	/**
 	 * Set header offset 
 	 *
@@ -165,18 +165,18 @@ $.extend( FixedHeader.prototype, {
 		if ( offset !== undefined ) {
 			this.c.headerOffset = offset;
 			this.update();
-			}
+		}
 
 		return this.c.headerOffset;
 	},
-
+	
 	/**
 	 * Set footer offset
 	 *
 	 * @param  {int} new value for footerOffset
-		 */
+	 */
 	footerOffset: function ( offset )
-		{
+	{
 		if ( offset !== undefined ) {
 			this.c.footerOffset = offset;
 			this.update();
@@ -185,12 +185,12 @@ $.extend( FixedHeader.prototype, {
 		return this.c.footerOffset;
 	},
 
-
+	
 	/**
 	 * Recalculate the position of the fixed elements and force them into place
 	 */
 	update: function ()
-			{
+	{
 		this._positions();
 		this._scroll( true );
 	},
@@ -199,7 +199,7 @@ $.extend( FixedHeader.prototype, {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Constructor
 	 */
-
+	
 	/**
 	 * FixedHeader constructor - adding the required event listeners and
 	 * simple initialisation
@@ -405,7 +405,7 @@ $.extend( FixedHeader.prototype, {
 			if ( itemDom.placeholder ) {
 				itemDom.placeholder.remove();
 				itemDom.placeholder = null;
-		}
+			}
 
 			this._unsize( item );
 
@@ -419,7 +419,7 @@ $.extend( FixedHeader.prototype, {
 			if ( itemDom.floating ) {
 				itemDom.floating.remove();
 				itemDom.floating = null;
-		}
+			}
 		}
 		else if ( mode === 'in' ) {
 			// Remove the header from the read header and insert into a fixed
@@ -530,13 +530,13 @@ $.extend( FixedHeader.prototype, {
 		if ( this.c.header ) {
 			if ( ! position.visible || windowTop <= position.theadTop - this.c.headerOffset ) {
 				headerMode = 'in-place';
-		}
+			}
 			else if ( windowTop <= position.tfootTop - position.theadHeight - this.c.headerOffset ) {
 				headerMode = 'in';
 			}
 			else {
 				headerMode = 'below';
-		}
+			}
 
 			if ( forceChange || headerMode !== this.s.headerMode ) {
 				this._modeChange( headerMode, 'header', forceChange );
@@ -554,7 +554,7 @@ $.extend( FixedHeader.prototype, {
 			}
 			else {
 				footerMode = 'above';
-		}
+			}
 
 			if ( forceChange || footerMode !== this.s.footerMode ) {
 				this._modeChange( footerMode, 'footer', forceChange );
@@ -570,7 +570,7 @@ $.extend( FixedHeader.prototype, {
  * Version
  * @type {String}
  * @static
-	 */
+ */
 FixedHeader.version = "3.1.2";
 
 /**
@@ -609,8 +609,8 @@ $(document).on( 'init.dt.dtfh', function (e, settings, json) {
 		var opts = $.extend( {}, defaults, init );
 
 		if ( init !== false ) {
-		new FixedHeader( settings, opts );
-	}
+			new FixedHeader( settings, opts );
+		}
 	}
 } );
 
@@ -633,7 +633,7 @@ DataTable.Api.register( 'fixedHeader.enable()', function ( flag ) {
 
 		if ( fh ) {
 			fh.enable( flag !== undefined ? flag : true );
-	}
+		}
 	} );
 } );
 

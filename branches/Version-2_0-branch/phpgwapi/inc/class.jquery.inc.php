@@ -472,11 +472,19 @@ HTML;
 					collapsible: 'accordion',
 					setHash: true,
 					activate: function(e, tab) {
-						$('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
+						if(tab.disabled == false)
+						{
+							var selector = tab.selector;
+							var active_tab = selector.replace("#", '');
+
+							if (typeof set_tab === "function")
+							{
+								set_tab(active_tab);
+							}
+						}
 					}
 
 				});
-
 				$('#{$tab_set}').responsiveTabs('activate', {$selected});
 
 			};

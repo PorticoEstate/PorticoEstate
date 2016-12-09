@@ -1,11 +1,11 @@
-/*! Responsive 2.1.0
+/*! Responsive 2.1.1
  * 2014-2016 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     Responsive
  * @description Responsive tables plug-in for DataTables
- * @version     2.1.0
+ * @version     2.1.1
  * @file        dataTables.responsive.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -156,7 +156,7 @@ $.extend( Responsive.prototype, {
 			var width = $(window).width();
 
 			if ( width !== oldWindowWidth ) {
-			that._resize();
+				that._resize();
 				oldWindowWidth = width;
 			}
 		} ) );
@@ -166,7 +166,7 @@ $.extend( Responsive.prototype, {
 		// new data is added
 		dtPrivateSettings.oApi._fnCallbackReg( dtPrivateSettings, 'aoRowCreatedCallback', function (tr, data, idx) {
 			if ( $.inArray( false, that.s.current ) !== -1 ) {
-				$('td, th', tr).each( function ( i ) {
+				$('>td, >th', tr).each( function ( i ) {
 					var idx = dt.column.index( 'toData', i );
 
 					if ( that.s.current[idx] === false ) {
@@ -225,15 +225,32 @@ $.extend( Responsive.prototype, {
 		}
 
 		dt.on( 'column-reorder.dtr', function (e, settings, details) {
-				that._classLogic();
-				that._resizeAuto();
-				that._resize();
+			that._classLogic();
+			that._resizeAuto();
+			that._resize();
 		} );
 
 		// Change in column sizes means we need to calc
 		dt.on( 'column-sizing.dtr', function () {
 			that._resizeAuto();
 			that._resize();
+		});
+
+		// On Ajax reload we want to reopen any child rows which are displayed
+		// by responsive
+		dt.on( 'preXhr.dtr', function () {
+			var rowIds = [];
+			dt.rows().every( function () {
+				if ( this.child.isShown() ) {
+					rowIds.push( this.id(true) );
+				}
+			} );
+
+			dt.one( 'draw.dtr', function () {
+				dt.rows( rowIds ).every( function () {
+					that._detailsDisplay( this, false );
+				} );
+			} );
 		});
 
 		dt.on( 'init.dtr', function (e, settings, details) {
@@ -545,13 +562,13 @@ $.extend( Responsive.prototype, {
 		if ( details && details.type !== false ) {
 			var res = details.display( row, update, function () {
 				return details.renderer(
-				dt, row[0], that._detailsObj(row[0])
-			);
-		} );
+					dt, row[0], that._detailsObj(row[0])
+				);
+			} );
 
-		if ( res === true || res === false ) {
-			$(dt.table().node()).triggerHandler( 'responsive-display.dt', [dt, row, res, update] );
-		}
+			if ( res === true || res === false ) {
+				$(dt.table().node()).triggerHandler( 'responsive-display.dt', [dt, row, res, update] );
+			}
 		}
 	},
 
@@ -591,38 +608,38 @@ $.extend( Responsive.prototype, {
 		// Click handler to show / hide the details rows when they are available
 		$( dt.table().body() )
 			.on( 'click.dtr mousedown.dtr mouseup.dtr', selector, function (e) {
-			// If the table is not collapsed (i.e. there is no hidden columns)
-			// then take no action
-			if ( ! $(dt.table().node()).hasClass('collapsed' ) ) {
-				return;
-			}
-
-			// Check that the row is actually a DataTable's controlled node
-			if ( ! dt.row( $(this).closest('tr') ).length ) {
-				return;
-			}
-
-			// For column index, we determine if we should act or not in the
-			// handler - otherwise it is already okay
-			if ( typeof target === 'number' ) {
-				var targetIdx = target < 0 ?
-					dt.columns().eq(0).length + target :
-					target;
-
-				if ( dt.cell( this ).index().column !== targetIdx ) {
+				// If the table is not collapsed (i.e. there is no hidden columns)
+				// then take no action
+				if ( ! $(dt.table().node()).hasClass('collapsed' ) ) {
 					return;
 				}
-			}
 
-			// $().closest() includes itself in its check
-			var row = dt.row( $(this).closest('tr') );
+				// Check that the row is actually a DataTable's controlled node
+				if ( $.inArray( $(this).closest('tr').get(0), dt.rows().nodes().toArray() ) === -1 ) {
+					return;
+				}
+
+				// For column index, we determine if we should act or not in the
+				// handler - otherwise it is already okay
+				if ( typeof target === 'number' ) {
+					var targetIdx = target < 0 ?
+						dt.columns().eq(0).length + target :
+						target;
+
+					if ( dt.cell( this ).index().column !== targetIdx ) {
+						return;
+					}
+				}
+
+				// $().closest() includes itself in its check
+				var row = dt.row( $(this).closest('tr') );
 
 				// Check event type to do an action
 				if ( e.type === 'click' ) {
-				// The renderer is given as a function so the caller can execute it
-				// only when they need (i.e. if hiding there is no point is running
-				// the renderer)
-				that._detailsDisplay( row, false );
+					// The renderer is given as a function so the caller can execute it
+					// only when they need (i.e. if hiding there is no point is running
+					// the renderer)
+					that._detailsDisplay( row, false );
 				}
 				else if ( e.type === 'mousedown' ) {
 					// For mouse users, prevent the focus ring from showing
@@ -632,7 +649,7 @@ $.extend( Responsive.prototype, {
 					// And then re-allow at the end of the click
 					$(this).blur().css('outline', '');
 				}
-		} );
+			} );
 	},
 
 
@@ -650,16 +667,16 @@ $.extend( Responsive.prototype, {
 			// Never and control columns should not be passed to the renderer
 			if ( col.never || col.control ) {
 				return;
-		}
+			}
 
 			return {
-				title:   dt.settings()[0].aoColumns[ i ].sTitle,
-				data:    dt.cell( rowIdx, i ).render( that.c.orthogonal ),
+				title:       dt.settings()[0].aoColumns[ i ].sTitle,
+				data:        dt.cell( rowIdx, i ).render( that.c.orthogonal ),
 				hidden:      dt.column( i ).visible() && !that.s.current[ i ],
 				columnIndex: i,
 				rowIndex:    rowIdx
 			};
-			} );
+		} );
 	},
 
 
@@ -821,11 +838,11 @@ $.extend( Responsive.prototype, {
 				.to$()
 				.clone( false )
 				.css( 'display', 'table-cell' );
-			
+
 			$('<tr/>')
 				.append( footerCells )
 				.appendTo( clonedFooter );
-			}
+		}
 
 		$('<tr/>')
 			.append( headerCells )
@@ -837,13 +854,13 @@ $.extend( Responsive.prototype, {
 		if ( this.c.details.type === 'inline' ) {
 			$(clonedTable).addClass( 'dtr-inline collapsed' );
 		}
-
+		
 		// It is unsafe to insert elements with the same name into the DOM
 		// multiple times. For example, cloning and inserting a checked radio
 		// clears the chcecked state of the original radio.
 		$( clonedTable ).find( '[name]' ).removeAttr( 'name' );
 		
-		var inserted     = $('<div/>')
+		var inserted = $('<div/>')
 			.css( {
 				width: 1,
 				height: 1,
@@ -906,6 +923,12 @@ $.extend( Responsive.prototype, {
 		var selector = typeof target === 'number' ?
 			':eq('+target+')' :
 			target;
+
+		// This is a bit of a hack - we need to limit the selected nodes to just
+		// those of this table
+		if ( selector === 'td:first-child, th:first-child' ) {
+			selector = '>td:first-child, >th:first-child';
+		}
 
 		$( selector, dt.rows( { page: 'current' } ).nodes() )
 			.attr( 'tabIndex', ctx.iTabIndex )
@@ -1062,7 +1085,7 @@ Responsive.renderer = {
 			} ).join('');
 
 			return data ?
-				$('<ul data-dtr-index="'+rowIdx+'"/>').append( data ) :
+				$('<ul data-dtr-index="'+rowIdx+'" class="dtr-details"/>').append( data ) :
 				false;
 		}
 	},
@@ -1080,7 +1103,7 @@ Responsive.renderer = {
 					'</tr>';
 			} ).join('');
 
-			return $('<table class="'+options.tableClass+'" width="100%"/>').append( data );
+			return $('<table class="'+options.tableClass+' dtr-details" width="100%"/>').append( data );
 		}
 	}
 };
@@ -1201,7 +1224,7 @@ Api.register( 'responsive.hasHidden()', function () {
  * @name Responsive.version
  * @static
  */
-Responsive.version = '2.1.0';
+Responsive.version = '2.1.1';
 
 
 $.fn.dataTable.Responsive = Responsive;
