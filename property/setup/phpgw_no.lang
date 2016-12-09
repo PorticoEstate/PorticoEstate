@@ -1977,7 +1977,7 @@ workorder detail categories	property	no	Detaljering av bestilling
 workorder end date	property	no	Sluttdato
 workorder entry date	property	no	Registreringsdato
 workorder id	property	no	Bestilling
-workorder is sent by email!	property	no	Bestilling er sendt pr e-post!
+Workorder %1 is sent by email to %2	property	no	Bestilling %1 er sendt pr e-post til %2
 workorders status	property	no	Status bestilling
 workorder start date	property	no	Start dato for bestilling
 workorder status	property	no	Status

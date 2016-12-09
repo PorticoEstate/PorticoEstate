@@ -1536,7 +1536,7 @@ HTML;
 					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
 					$historylog = CreateObject('property.historylog', 'workorder');
 					$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
-					$receipt['message'][] = array('msg' => lang('Workorder is sent by email!'));
+					$receipt['message'][] = array('msg' => lang('Workorder %1 is sent by email!', $workorder_id));
 					if ($attachment_log)
 					{
 						$receipt['message'][] = array('msg' => $attachment_log);
@@ -3344,7 +3344,7 @@ HTML;
 		function send_order( $workorder_id )
 		{
 			$workorder = $this->boworkorder->read_single($workorder_id);
-			$show_cost = true;
+			$show_cost = false;
 			$email_receipt = true;
 			$pdfcode = $this->pdf_order($workorder_id, $show_cost);
 			$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
@@ -3373,10 +3373,7 @@ HTML;
 
 			$from_name = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
 			$from_email = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
-			if ($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt'] == 1)
-			{
-				$bcc = $from_email;
-			}
+			$bcc = !empty($GLOBALS['phpgw']->preferences->data['property']['email']) ? $from_email : '';
 
 			$subject = lang('Workorder') . ": " . $workorder_id;
 
@@ -3409,6 +3406,8 @@ HTML;
 			try
 			{
 				$GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+				phpgwapi_cache::message_set(lang('Workorder %1 is sent by email to %2', $workorder_id, $_to),'message');
+				phpgwapi_cache::message_set(lang('%1 is notified', $bcc),'message');
 			}
 			catch (Exception $e)
 			{

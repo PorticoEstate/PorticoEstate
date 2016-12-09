@@ -3622,6 +3622,8 @@
 			$historylog = CreateObject('property.historylog', 'tts');
 
 			$id = $ticket['id'];
+			$order_id = $ticket['order_id'];
+
 			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
 			{
 				$attachments = CreateObject('property.bofiles')->get_attachments($ticket['file_attachments']);
@@ -3712,7 +3714,7 @@
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
 					phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
 					$historylog->add('M', $id, "{$_to}{$attachment_log}");
-					phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
+					phpgwapi_cache::message_set(lang('Workorder %1 is sent by email to %2', $order_id, $_to),'message' );
 				}
 				catch (Exception $exc)
 				{
