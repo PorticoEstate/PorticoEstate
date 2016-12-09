@@ -1,15 +1,15 @@
-/*! AutoFill 2.1.2
- * ©2008-2015 SpryMedia Ltd - datatables.net/license
+/*! AutoFill 2.1.3
+ * ©2008-2016 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     AutoFill
  * @description Add Excel like click and drag auto-fill options to DataTables
- * @version     2.1.2
+ * @version     2.1.3
  * @file        dataTables.autoFill.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2010-2015 SpryMedia Ltd.
+ * @copyright   Copyright 2010-2016 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -192,8 +192,6 @@ $.extend( AutoFill.prototype, {
 		var idx = dt.cell( node ).index();
 		var handle = this.dom.handle;
 		var handleDim = this.s.handle;
-		var dtScroll = $('div.dataTables_scrollBody', this.s.dt.table().container() );
-		var scrollOffsetX=0, scrollOffsetY=0;
 
 		if ( ! idx || dt.columns( this.c.columns ).indexes().indexOf( idx.column ) === -1 ) {
 			this._detach();
@@ -201,8 +199,9 @@ $.extend( AutoFill.prototype, {
 		}
 
 		if ( ! this.dom.offsetParent ) {
-			this.dom.offsetParent = $(node).offsetParent();
-			}
+			// We attach to the table's offset parent
+			this.dom.offsetParent = $( dt.table().node() ).offsetParent();
+		}
 
 		if ( ! handleDim.height || ! handleDim.width ) {
 			// Append to document so we can get its size. Not expecting it to
@@ -212,20 +211,14 @@ $.extend( AutoFill.prototype, {
 			handleDim.width = handle.outerWidth();
 		}
 
-		var offset = $(node).position();
-
-		// If scrolling, and the table is not itself the offset parent, need to
-		// offset for the scrolling position
-		if ( dtScroll.length && this.dom.offsetParent[0] !== dt.table().node() ) {
-			scrollOffsetY = dtScroll.scrollTop();
-			scrollOffsetX = dtScroll.scrollLeft();
-		}
+		// Might need to go through multiple offset parents
+		var offset = this._getPosition( node, this.dom.offsetParent );
 
 		this.dom.attachedTo = node;
 		handle
 			.css( {
-				top: offset.top + node.offsetHeight - handleDim.height + scrollOffsetY,
-				left: offset.left + node.offsetWidth - handleDim.width + scrollOffsetX
+				top: offset.top + node.offsetHeight - handleDim.height,
+				left: offset.left + node.offsetWidth - handleDim.width
 			} )
 			.appendTo( this.dom.offsetParent );
 	},
@@ -257,7 +250,7 @@ $.extend( AutoFill.prototype, {
 			// Only one action available - enact it immediately
 			var result = actions[ available[0] ].execute( dt, cells );
 			this._update( result, cells );
-			}
+		}
 		else {
 			// Multiple actions available - ask the end user what they want to do
 			var list = this.dom.list.children('ul').empty();
@@ -327,6 +320,7 @@ $.extend( AutoFill.prototype, {
 			row: dt.rows( { page: 'current' } ).nodes().indexOf( endCell.parent()[0] ),
 			column: endCell.index()
 		};
+		var colIndx = dt.column.index( 'toData', end.column );
 
 		// Be sure that is a DataTables controlled cell
 		if ( ! dt.cell( endCell ).any() ) {
@@ -334,7 +328,7 @@ $.extend( AutoFill.prototype, {
 		}
 
 		// if target is not in the columns available - do nothing
-		if ( dt.columns( this.c.columns ).indexes().indexOf( end.column ) === -1 ) {
+		if ( dt.columns( this.c.columns ).indexes().indexOf( colIndx ) === -1 ) {
 			return;
 		}
 
@@ -347,16 +341,10 @@ $.extend( AutoFill.prototype, {
 		left   = start.column < end.column ? startCell : endCell;
 		right  = start.column < end.column ? endCell   : startCell;
 
-		top    = top.position().top;
-		left   = left.position().left;
-		height = bottom.position().top + bottom.outerHeight() - top;
-		width  = right.position().left + right.outerWidth() - left;
-
-		var dtScroll = this.dom.dtScroll;
-		if ( dtScroll && this.dom.offsetParent[0] !== dt.table().node() ) {
-			top += dtScroll.scrollTop();
-			left += dtScroll.scrollLeft();
-		}
+		top    = this._getPosition( top ).top;
+		left   = this._getPosition( left ).left;
+		height = this._getPosition( bottom ).top + bottom.outerHeight() - top;
+		width  = this._getPosition( right ).left + right.outerWidth() - left;
 
 		var select = this.dom.select;
 		select.top.css( {
@@ -394,7 +382,7 @@ $.extend( AutoFill.prototype, {
 	 * @private
 	 */
 	_editor: function ( cells )
-		{
+	{
 		var dt = this.s.dt;
 		var editor = this.c.editor;
 
@@ -428,8 +416,8 @@ $.extend( AutoFill.prototype, {
 							fieldName = field.name();
 							break;
 						}
-			}
-			}
+					}
+				}
 
 				if ( ! fieldName ) {
 					throw 'Could not automatically determine field data. '+
@@ -446,8 +434,8 @@ $.extend( AutoFill.prototype, {
 				// Keep a list of cells so we can activate the bubble editing
 				// with them
 				nodes.push( cell.index );
-				}
 			}
+		}
 
 		// Perform the edit using bubble editing as it allows us to specify
 		// the cells to be edited, rather than using full rows
@@ -480,13 +468,13 @@ $.extend( AutoFill.prototype, {
 	 * @private
 	 */
 	_focusListener: function ()
-			{
+	{
 		var that = this;
 		var dt = this.s.dt;
 		var namespace = this.s.namespace;
 		var focus = this.c.focus !== null ?
 			this.c.focus :
-			dt.settings()[0].keytable ?
+			dt.init().keys || dt.settings()[0].keytable ?
 				'focus' :
 				'hover';
 
@@ -500,7 +488,7 @@ $.extend( AutoFill.prototype, {
 				.on( 'key-blur.autoFill', function ( e, dt, cell ) {
 					that._detach();
 				} );
-			}
+		}
 		else if ( focus === 'click' ) {
 			$(dt.table().body()).on( 'click'+namespace, 'td, th', function (e) {
 				that._attach( this );
@@ -511,7 +499,7 @@ $.extend( AutoFill.prototype, {
 					that._detach();
 				}
 			} );
-				}
+		}
 		else {
 			$(dt.table().body())
 				.on( 'mouseenter'+namespace, 'td, th', function (e) {
@@ -520,11 +508,55 @@ $.extend( AutoFill.prototype, {
 				.on( 'mouseleave'+namespace, function (e) {
 					if ( $(e.relatedTarget).hasClass('dt-autofill-handle') ) {
 						return;
-			}
+					}
 
 					that._detach();
 				} );
+		}
+	},
+
+
+	/**
+	 * Get the position of a node, relative to another, including any scrolling
+	 * offsets.
+	 * @param  {Node}   node         Node to get the position of
+	 * @param  {jQuery} targetParent Node to use as the parent
+	 * @return {object}              Offset calculation
+	 * @private
+	 */
+	_getPosition: function ( node, targetParent )
+	{
+		var
+			currNode = $(node),
+			currOffsetParent,
+			position,
+			top = 0,
+			left = 0;
+
+		if ( ! targetParent ) {
+			targetParent = $( this.s.dt.table().node() ).offsetParent();
+		}
+
+		do {
+			position = currNode.position();
+			currOffsetParent = currNode.offsetParent();
+
+			top += position.top + currOffsetParent.scrollTop();
+			left += position.left + currOffsetParent.scrollLeft();
+
+			// Emergency fall back. Shouldn't happen, but just in case!
+			if ( currNode.get(0).nodeName.toLowerCase() === 'body' ) {
+				break;
 			}
+
+			currNode = currOffsetParent; // for next loop
+		}
+		while ( currOffsetParent.get(0) !== targetParent.get(0) )
+
+		return {
+			top: top,
+			left: left
+		};
 	},
 
 
@@ -554,7 +586,7 @@ $.extend( AutoFill.prototype, {
 			} );
 
 		var select = this.dom.select;
-		var offsetParent = $(this.s.dt.table().body()).offsetParent();
+		var offsetParent = $( dt.table().node() ).offsetParent();
 		select.top.appendTo( offsetParent );
 		select.left.appendTo( offsetParent );
 		select.right.appendTo( offsetParent );
@@ -587,7 +619,7 @@ $.extend( AutoFill.prototype, {
 	 * @private
 	 */
 	_mousemove: function ( e )
-		{
+	{	
 		var that = this;
 		var dt = this.s.dt;
 		var name = e.target.nodeName.toLowerCase();
@@ -629,9 +661,9 @@ $.extend( AutoFill.prototype, {
 		}
 
 		// Build a matrix representation of the selected rows
-		var rows     = this._range( start.row, end.row );
-		var columns  = this._range( start.column, end.column );
-		var selected = [];
+		var rows       = this._range( start.row, end.row );
+		var columns    = this._range( start.column, end.column );
+		var selected   = [];
 		var dtSettings = dt.settings()[0];
 		var dtColumns  = dtSettings.aoColumns;
 
@@ -655,7 +687,7 @@ $.extend( AutoFill.prototype, {
 						data:  data,
 						label: cell.data(),
 						index: cellIndex
-		};
+					};
 				} )
 			);
 		}
@@ -684,13 +716,13 @@ $.extend( AutoFill.prototype, {
 		if ( start <= end ) {
 			for ( i=start ; i<=end ; i++ ) {
 				out.push( i );
-					}
-				}
-				else {
+			}
+		}
+		else {
 			for ( i=start ; i>=end ; i-- ) {
 				out.push( i );
-					}
-				}
+			}
+		}
 
 		return out;
 	},
@@ -725,30 +757,30 @@ $.extend( AutoFill.prototype, {
 		// regardless of scrolling
 		if ( windowY < buffer ) {
 			windowVert = scrollSpeed * -1;
-			}
+		}
 		else if ( windowY > scroll.windowHeight - buffer ) {
 			windowVert = scrollSpeed;
 		}
 
 		if ( windowX < buffer ) {
 			windowHoriz = scrollSpeed * -1;
-					}
+		}
 		else if ( windowX > scroll.windowWidth - buffer ) {
 			windowHoriz = scrollSpeed;
-				}
+		}
 
 		// DataTables scrolling calculations - based on the table's position in
 		// the document and the mouse position on the page
 		if ( scroll.dtTop !== null && e.pageY < scroll.dtTop + buffer ) {
 			dtVert = scrollSpeed * -1;
-					}
+		}
 		else if ( scroll.dtTop !== null && e.pageY > scroll.dtTop + scroll.dtHeight - buffer ) {
 			dtVert = scrollSpeed;
-				}
+		}
 
 		if ( scroll.dtLeft !== null && e.pageX < scroll.dtLeft + buffer ) {
 			dtHoriz = scrollSpeed * -1;
-			}
+		}
 		else if ( scroll.dtLeft !== null && e.pageX > scroll.dtLeft + scroll.dtWidth - buffer ) {
 			dtHoriz = scrollSpeed;
 		}
@@ -793,11 +825,11 @@ $.extend( AutoFill.prototype, {
 
 					if ( scroll.dtVert ) {
 						scroller.scrollTop += scroll.dtVert;
-		}
+					}
 					if ( scroll.dtHoriz ) {
 						scroller.scrollLeft += scroll.dtHoriz;
-		}
-		}
+					}
+				}
 			}, 20 );
 		}
 	},
@@ -814,7 +846,7 @@ $.extend( AutoFill.prototype, {
 	 * @private
 	 */
 	_update: function ( result, cells )
-		{
+	{
 		// Do nothing on `false` return from an execute function
 		if ( result === false ) {
 			return;
@@ -844,7 +876,7 @@ $.extend( AutoFill.prototype, {
 
 					cell.cell.data( cell.set );
 				}
-		}
+			}
 
 			dt.draw(false);
 		}
@@ -885,7 +917,7 @@ AutoFill.actions = {
 
 					value += increment;
 				}
-		}
+			}
 		}
 	},
 
@@ -904,7 +936,7 @@ AutoFill.actions = {
 			for ( var i=0, ien=cells.length ; i<ien ; i++ ) {
 				for ( var j=0, jen=cells[i].length ; j<jen ; j++ ) {
 					cells[i][j].set = value;
-	}
+				}
 			}
 		}
 	},
@@ -968,15 +1000,15 @@ AutoFill.actions = {
  * AutoFill version
  * 
  * @static
- *  @type      String
+ * @type      String
  */
-AutoFill.version = '2.1.2';
+AutoFill.version = '2.1.3';
 
 
 /**
  * AutoFill defaults
  * 
- *  @namespace
+ * @namespace
  */
 AutoFill.defaults = {
 	/** @type {Boolean} Ask user what they want to do, even for a single option */
@@ -998,9 +1030,9 @@ AutoFill.defaults = {
 
 /**
  * Classes used by AutoFill that are configurable
-		 *
+ * 
  * @namespace
-		 */
+ */
 AutoFill.classes = {
 	/** @type {String} Class used by the selection button */
 	btn: 'btn'
