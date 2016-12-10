@@ -537,7 +537,7 @@ function populateTableChkApproval(ecodimb)
 	var contract_sum = Number($('#field_contract_sum').val());
 	var budget_sum = Number($('#field_budget').val());
 
-	var total_amount = Math.max(contract_sum, budget_sum) || Number(amount);
+	var total_amount = Math.max(contract_sum, budget_sum, Number(amount));// || Number(amount);
 
 	$("#order_received_amount").val(total_amount);
 

@@ -1022,6 +1022,18 @@
 			return $budget;
 		}
 
+		function get_order_list( $project_id = 0 )
+		{
+			$project_id = (int)$project_id;
+			$this->db->query("select id FROM fm_workorder WHERE project_id={$project_id}");
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] =  $this->db->f('id');
+			}
+			return $values;
+		}
+
 		/**
 		 * planned cost start out as the project budget - and reflect the amount yet to be spent on the project
 		 * When an order is placed  - the "planned cost" is reduced with expected cost for that order.

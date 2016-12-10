@@ -972,12 +972,29 @@
 
 				if (isset($values['approval']) && $values['approval'] && $config->config_data['workorder_approval'])
 				{
+					$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
+
+					switch ($approval_level)
+					{
+						case 'project':
+							$approval_menuaction = 'property.uiproject.edit';
+							$subject = lang('Approval') . ": {$values['project_id']}";
+							$message = '<a href ="' . $GLOBALS['phpgw']->link( array('menuaction' => $approval_menuaction,
+									'id' => $values['project_id']), false, true) . '">' . lang('project %1 needs approval', $values['project_id']) . '</a>';
+
+							break;
+						default:
+							$approval_menuaction = 'property.uiworkorder.edit';
+							$subject = lang('Approval') . ": {$id}";
+							$message = '<a href ="' . $GLOBALS['phpgw']->link( array('menuaction' => $approval_menuaction,
+							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $id) . '</a>';
+
+							break;
+					}
+
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-					$subject = lang(Approval) . ": " . $id;
-					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
-							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $ticket['order_id']) . '</a>';
 
 					if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 					{
@@ -2241,6 +2258,15 @@
 
 			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
 			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
+
+			$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
+
+			$_accumulated_budget_amount = 0;
+			if($approval_level == 'project')
+			{
+				$_accumulated_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
+			}
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'periodization_data' => $periodization_data,
@@ -2299,7 +2325,7 @@
 				'lang_budget' => lang('Budget'),
 				'value_budget' => isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['budget'] : '',
 				'check_for_budget' => abs($budget),
-				'check_value_budget' => $budget,
+				'check_value_budget' => $_accumulated_budget_amount ? $_accumulated_budget_amount : $budget,
 				'lang_budget_statustext' => lang('Enter the budget'),
 				'lang_incl_tax' => lang('incl tax'),
 				'lang_calculation' => lang('Calculation'),
