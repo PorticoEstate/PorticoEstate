@@ -1209,6 +1209,7 @@ operation	property	no	Drift
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
 order approved	property	no	Bestilling godkjent
+order %1 approved for amount %2	property	no	Bestilling %1 er godkjent med beløp %2
 order order %1 is not approved	property	no	Bestilling %1 er ikke godkjent
 order_dim1	property	no	Aktivitet
 order id	property	no	BestillingsNr
