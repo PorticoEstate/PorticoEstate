@@ -1910,7 +1910,7 @@ HTML;
 			{
 				try
 				{
-					$_validated = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']);
+					$_validated = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
 				}
 				catch (Exception $ex)
 				{
@@ -3457,9 +3457,20 @@ HTML;
 		}
 
 
-		private function _validate_purchase_grant( $id, $ecodimb )
+		private function _validate_purchase_grant( $id, $ecodimb, $project_id )
 		{
-			$_budget_amount = $this->boworkorder->get_budget_amount($id);
+
+			$approval_level = !empty($this->config->config_data['approval_level']) ? $this->config->config_data['approval_level'] : 'order';
+
+			$_accumulated_budget_amount = 0;
+			if($approval_level == 'project')
+			{
+				$_budget_amount = $this->boworkorder->get_accumulated_budget_amount($project_id);
+			}
+			else
+			{
+				$_budget_amount = $this->boworkorder->get_budget_amount($id);
+			}
 
 			try
 			{

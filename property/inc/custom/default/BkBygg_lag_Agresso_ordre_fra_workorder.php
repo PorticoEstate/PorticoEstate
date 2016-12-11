@@ -55,7 +55,19 @@
 				return 2;
 			}
 
-			$price = ExecMethod('property.boworkorder.get_budget_amount',$workorder['id']);
+			$config = CreateObject('phpgwapi.config', 'property');
+			$config->read();
+			$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
+
+			$price = 0;
+			if($approval_level == 'project')
+			{
+				$price = ExecMethod('property.boworkorder.get_accumulated_budget_amount', $workorder['project_id']);
+			}
+			else
+			{
+				$price = ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
+			}
 
 			try
 			{

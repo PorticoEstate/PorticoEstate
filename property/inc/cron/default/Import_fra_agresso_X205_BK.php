@@ -732,6 +732,23 @@
 				try
 				{
 					$bilagsnr = $this->import_end_file($buffer);
+					
+					$previous_received = $this->get_previous_received((int)$order_id);
+					$received_amount = (float) $previous_received + (float) $belop;
+					$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+					switch ($order_type)
+					{
+						case 'workorder':
+							$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount );
+							break;
+						case 'ticket':
+							$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount );
+							break;
+						default:
+							throw new Exception('Order type not supported');
+					}
+
 				}
 				catch (Exception $e)
 				{
@@ -752,6 +769,20 @@
 				$GLOBALS['phpgw']->db->Exception_On_Error = false;
 				return $bilagsnr;
 			}
+		}
+
+		function get_previous_received( $order_id )
+		{
+			$amount = 0;
+			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilag WHERE pmwrkord_code = {$order_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$amount += (float)$this->db->f('amount');
+			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilagoverf WHERE pmwrkord_code = {$order_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$amount += (float)$this->db->f('amount');
+			return $amount;
 		}
 
 		function get_order_info( $order_id = 0 )
@@ -839,7 +870,15 @@
 
 		function import_end_file( $buffer )
 		{
-			$num = $this->soXport->add($buffer, $this->skip_update_voucher_id);
+			try
+			{
+				$num = $this->soXport->add($buffer, $this->skip_update_voucher_id);
+			}
+			catch (Exception $e)
+			{
+				throw $e;
+			}
+
 			if ($this->debug)
 			{
 				_debug_array("import_end_file() ");
