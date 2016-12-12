@@ -189,35 +189,49 @@
 		
 		private function _compare_names(&$component_files, $uploaded_files)
 		{
-			foreach ($component_files as &$files) 
+			if (count($component_files))
 			{
-				foreach ($files as &$file_data)
+				foreach ($component_files as &$files) 
 				{
-					foreach ($uploaded_files as $file)
+					foreach ($files as &$file_data)
 					{
-						if (strtolower($file['file']) == strtolower($file_data['file']))
+						foreach ($uploaded_files as $file)
 						{
-							if ($file['path_file_string'])
+							if (strtolower($file['file']) == strtolower($file_data['file']))
 							{
-								$pos = stripos($file['path_file_string'], $file_data['path_file_string']);
-								if ($pos !== false)
+								if ($file['path_file_string'])
 								{
+									$pos = stripos($file['path_file_string'], $file_data['path_file_string']);
+									if ($pos !== false)
+									{
+										$file_data['path_file'] = $file['path_file'];
+										$file_data['val_md5sum'] = $file['val_md5sum'];
+									}
+								} else {
 									$file_data['path_file'] = $file['path_file'];
-									$file_data['val_md5sum'] = $file['val_md5sum'];
-								}
-							} else {
-								$file_data['path_file'] = $file['path_file'];
-								$file_data['val_md5sum'] = $file['val_md5sum'];		
-							}							
+									$file_data['val_md5sum'] = $file['val_md5sum'];		
+								}							
+							}
+						}
+						if (!empty($file_data['val_md5sum'])) 
+						{
+							$this->paths_from_file[$file_data['val_md5sum']][] = $file_data['path'];
+						} else {
+							$this->paths_empty[$file_data['path_file_string']] = $file_data['path'].'/'.$file_data['file'];
 						}
 					}
-					if (!empty($file_data['val_md5sum'])) 
-					{
-						$this->paths_from_file[$file_data['val_md5sum']][] = $file_data['path'];
-					} else {
-						$this->paths_empty[$file_data['path_file_string']] = $file_data['path'].'/'.$file_data['file'];
-					}
 				}
+			} else {
+				foreach ($uploaded_files as $file)
+				{
+					if (!empty($file['val_md5sum'])) 
+					{
+						$this->paths_from_file[$file['val_md5sum']][] = basename($file['path_file']);
+					} else {
+						$this->paths_empty[] = $file['path_file'];
+					}				
+				}
+				$component_files = $uploaded_files;
 			}
 		}
 	
@@ -459,19 +473,19 @@
 				$relations = $this->get_relations();
 				$this->_compare_names($relations, $uploaded_files);
 			} else {
-				$relations = $uploaded_files;
+				$relations = array();
+				$this->_compare_names($relations, $uploaded_files);
 			}
-		
+
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
-
 			$message['message'][] = array('msg' => lang('%1 files prepare to copy', count($this->paths_from_file)));
 			
 			if (count($this->paths_empty))
 			{
 				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($this->paths_empty)));
 			}
-			//print_r($this->paths_empty ); die;
+			
 			return $message;
 		}
 
@@ -675,7 +689,7 @@
 
 			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
 				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
-				
+
 			if (count($this->paths_from_file[$val_md5sum]))
 			{
 				$paths = array_values(array_unique($this->paths_from_file[$val_md5sum]));
