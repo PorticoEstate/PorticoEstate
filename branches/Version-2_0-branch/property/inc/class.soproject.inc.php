@@ -3426,6 +3426,7 @@
 					'deadline' => ''
 				);
 
+				//approval_substitute
 				if(!execMethod('property.sopending_action.get_pending_action', $action_params))
 				{
 					execMethod('property.sopending_action.set_pending_action', $action_params);
