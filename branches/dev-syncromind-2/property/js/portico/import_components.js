@@ -206,6 +206,7 @@ $(document).ready(function ()
 		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
+		form_data.append('with_components_check', $('input:radio[name=with_components_check]:checked').val());
 
 		$('.processing-relations').show();
 		
