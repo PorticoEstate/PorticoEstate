@@ -106,11 +106,12 @@
 			$message = array();
 			
 			$uploaded_files = phpgwapi_cache::session_get('property', 'import_data');
+			$this->paths_from_file = phpgwapi_cache::session_get('property', 'paths_from_file');
 			
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			
+			//print_r($this->paths_from_file).'<br>'.print_r($uploaded_files); die;
 			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 
 			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
@@ -226,7 +227,7 @@
 				{
 					if (!empty($file['val_md5sum'])) 
 					{
-						$this->paths_from_file[$file['val_md5sum']][] = basename($file['path_file']);
+						$this->paths_from_file[$file['val_md5sum']][] = dirname($file['path_file']);
 					} else {
 						$this->paths_empty[] = $file['path_file'];
 					}				
@@ -477,6 +478,7 @@
 				$this->_compare_names($relations, $uploaded_files);
 			}
 
+			phpgwapi_cache::session_set('property', 'paths_from_file', $this->paths_from_file);
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
 			$message['message'][] = array('msg' => lang('%1 files prepare to copy', count($this->paths_from_file)));
@@ -484,8 +486,13 @@
 			if (count($this->paths_empty))
 			{
 				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($this->paths_empty)));
+				
+				foreach($this->paths_empty as $c => $v)
+				{
+					$message['error'][] = array('msg' => lang("file not exist: %1", $v));
+				}				
 			}
-			
+		
 			return $message;
 		}
 
@@ -496,6 +503,7 @@
 			$message = array();
 
 			$component_files = phpgwapi_cache::session_get('property', 'import_data');
+			$this->paths_from_file = phpgwapi_cache::session_get('property', 'paths_from_file');
 			
 			$count_new_relations = 0; 
 			$count_relations_existing = 0;
