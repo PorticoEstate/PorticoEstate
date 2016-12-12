@@ -1640,7 +1640,7 @@ workorder %1 has been saved	property	en	workorder %1 has been saved
 Workorder end date	property	en	Workorder end date
 workorder entry date	property	en	Workorder entry date
 Workorder ID	property	en	Workorder ID
-Workorder is sent by email!	property	en	Workorder is sent by email!
+Workorder %1 is sent by email to %2	property	en	Workorder %1 is sent by email to %2
 Workorder start date	property	en	Workorder start date
 workorder status	property	en	Workorder status
 Workorder template	property	en	Workorder template

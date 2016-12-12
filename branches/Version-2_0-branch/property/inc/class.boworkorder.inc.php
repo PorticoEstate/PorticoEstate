@@ -1059,4 +1059,24 @@ HTML;
 			return $_budget_amount[$id];
 		}
 
+		function get_accumulated_budget_amount($project_id)
+		{
+			$_budget_amount = 0;
+			$orders = $this->so->get_order_list($project_id);
+			foreach ($orders as $order_id)
+			{
+				$_budget_amount += (int) $this->get_budget_amount($order_id);
+			}
+			return $_budget_amount;
+		}
+
+		/**
+		 * Get orders related to a project
+		 * @param int $project_id
+		 * @return array of ids
+		 */
+		function get_order_list($project_id)
+		{
+			return $this->so->get_order_list($project_id);
+		}
 	}

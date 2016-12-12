@@ -972,12 +972,35 @@
 
 				if (isset($values['approval']) && $values['approval'] && $config->config_data['workorder_approval'])
 				{
+					$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
+
+					switch ($approval_level)
+					{
+						case 'project':
+							$approval_menuaction = 'property.uiproject.edit';
+							$subject = lang('Approval') . ": {$values['project_id']}";
+							$message = '<a href ="' . $GLOBALS['phpgw']->link( array('menuaction' => $approval_menuaction,
+									'id' => $values['project_id']), false, true) . '">' . lang('project %1 needs approval', $values['project_id']) . '</a>';
+							if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
+							{
+								$_project_status = $config->config_data['project_approval_status'];
+								createObject('property.soproject')->set_status($values['project_id'],$_project_status);
+							}
+
+							$_orders = $this->bo->get_order_list($values['project_id']);
+							break;
+						default:
+							$approval_menuaction = 'property.uiworkorder.edit';
+							$subject = lang('Approval') . ": {$id}";
+							$message = '<a href ="' . $GLOBALS['phpgw']->link( array('menuaction' => $approval_menuaction,
+							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $id) . '</a>';
+							$_orders = array($id);
+							break;
+					}
+
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 
-					$subject = lang(Approval) . ": " . $id;
-					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.edit',
-							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $ticket['order_id']) . '</a>';
 
 					if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 					{
@@ -1013,20 +1036,24 @@
 							$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
 						}
 
-						$action_params['responsible'] = $_account_id;
-						try
+						foreach ($_orders as $_order_id)
 						{
-							$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-							execMethod('property.sopending_action.set_pending_action', $action_params);
-							$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-							if ($rcpt)
+							$action_params['responsible'] = $_account_id;
+							$action_params['id'] = $_order_id;
+							try
 							{
-								phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+								$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+								execMethod('property.sopending_action.set_pending_action', $action_params);
+								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+								if ($rcpt)
+								{
+									phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+								}
 							}
-						}
-						catch (Exception $exc)
-						{
-							phpgwapi_cache::message_set($exc->getMessage(),'error');
+							catch (Exception $exc)
+							{
+								phpgwapi_cache::message_set($exc->getMessage(),'error');
+							}
 						}
 					}
 				}
@@ -2241,6 +2268,15 @@
 
 			$enable_unspsc = isset($config->config_data['enable_unspsc']) && $config->config_data['enable_unspsc'] ? true : false;
 			$enable_order_service_id = isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'] ? true : false;
+
+			$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
+
+			$accumulated_budget_amount = 0;
+			if($approval_level == 'project')
+			{
+				$accumulated_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
+			}
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'periodization_data' => $periodization_data,
@@ -2299,7 +2335,8 @@
 				'lang_budget' => lang('Budget'),
 				'value_budget' => isset($this->receipt['error']) && $this->receipt['error'] ? $_POST['values']['budget'] : '',
 				'check_for_budget' => abs($budget),
-				'check_value_budget' => $budget,
+				'local_value_budget' => $budget,
+				'accumulated_budget_amount' => $accumulated_budget_amount ? $accumulated_budget_amount : $budget,
 				'lang_budget_statustext' => lang('Enter the budget'),
 				'lang_incl_tax' => lang('incl tax'),
 				'lang_calculation' => lang('Calculation'),

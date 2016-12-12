@@ -1056,7 +1056,15 @@ JS;
 							{
 								if (isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 								{
-									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
+									try
+									{
+										$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');										
+									}
+									catch (Exception $e)
+									{
+										phpgwapi_cache::message_set($e->getMessage(), 'error');
+									}
+
 									$action_params['responsible'] = $_account_id;
 									execMethod('property.sopending_action.set_pending_action', $action_params);
 									if (!$rcpt)
@@ -1150,7 +1158,14 @@ JS;
 
 							$body = nl2br($body);
 
-							$returncode = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, false, false, $from_email, $from_name, 'html');
+							try
+							{
+								$returncode = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, false, false, $from_email, $from_name, 'html');
+							}
+							catch (Exception $e)
+							{
+								phpgwapi_cache::message_set($e->getMessage(), 'error');
+							}
 
 							if (!$returncode) // not nice, but better than failing silently
 							{
