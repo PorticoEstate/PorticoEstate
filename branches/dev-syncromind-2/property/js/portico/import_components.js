@@ -167,6 +167,7 @@ $(document).ready(function ()
 			JqueryPortico.show_message(5, result);
 			$('#responsiveTabsRelations').responsiveTabs('enable', 2);
 			$('#responsiveTabsRelations').responsiveTabs('activate', 2);
+			$('#message4').empty();
 			//$('#import_components_files').prop('disabled', true);
 		})
 		.fail(function() {
