@@ -164,6 +164,7 @@
 		var $connection;
 		var $order_id;
 		var $voucher_type;
+		var $batch_id;
 
 		public function __construct( $param )
 		{
@@ -209,7 +210,7 @@
 
 		protected function create_file_name( $ref = '' )
 		{
-			if (!$ref)
+			if (!$this->batchid)
 			{
 				throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler referanse');
 			}
@@ -221,7 +222,7 @@
 
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$ref}.xml";
+			$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$this->batchid}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($filename))
