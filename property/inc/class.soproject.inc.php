@@ -2523,6 +2523,23 @@
 //_debug_array($open_period);die();
 		}
 
+		function set_status( $id, $status_new)
+		{
+			$id = (int)$id;
+			$this->db->query("SELECT status FROM fm_project WHERE id = '{$id}'", __LINE__, __FILE__);
+			$this->db->next_record();
+			$old_status = $this->db->f('status');
+
+			if ($old_status != $status_new)
+			{
+				$this->db->transaction_begin();
+				$this->db->query("UPDATE fm_project SET status = '{$status_new}' WHERE id = '{$id}'", __LINE__, __FILE__);
+				$historylog = CreateObject('property.historylog', 'project');
+				$historylog->add('S', $id, $status_new, $old_status);
+				$this->db->transaction_commit();
+			}
+		}
+
 		function update_request_status( $project_id = '', $status = '', $category = 0, $coordinator = 0 )
 		{
 			$historylog_r = CreateObject('property.historylog', 'request');

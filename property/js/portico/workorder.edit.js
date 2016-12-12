@@ -1,4 +1,6 @@
-var amount = 0;
+//var amount = 0;
+var local_value_budget;
+var accumulated_budget_amount;
 var order_id;
 var vendor_id;
 var project_ecodimb;
@@ -537,7 +539,10 @@ function populateTableChkApproval(ecodimb)
 	var contract_sum = Number($('#field_contract_sum').val());
 	var budget_sum = Number($('#field_budget').val());
 
-	var total_amount = Math.max((contract_sum + Number(amount)), (budget_sum +Number(amount)) );// || Number(amount);
+
+	var total_amount = Math.max((contract_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
+	(budget_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
+	(Number(local_value_budget),Number(accumulated_budget_amount)));
 
 	$("#order_received_amount").val(total_amount);
 

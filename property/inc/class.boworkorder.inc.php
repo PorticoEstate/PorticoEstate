@@ -1069,4 +1069,14 @@ HTML;
 			}
 			return $_budget_amount;
 		}
+
+		/**
+		 * Get orders related to a project
+		 * @param int $project_id
+		 * @return array of ids
+		 */
+		function get_order_list($project_id)
+		{
+			return $this->so->get_order_list($project_id);
+		}
 	}
