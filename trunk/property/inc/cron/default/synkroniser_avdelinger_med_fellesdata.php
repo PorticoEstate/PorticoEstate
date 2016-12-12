@@ -687,7 +687,13 @@ SQL;
 
 			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0", __LINE__, __FILE__);
 
-			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 1"
+			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET"
+				. " active = 1,"
+				. " org_name = fm_vendor_temp.navn,"
+				. " adresse = fm_vendor_temp.adresse,"
+				. " postnr = fm_vendor_temp.postnummer,"
+				. " poststed = fm_vendor_temp.sted,"
+				. " org_nr = fm_vendor_temp.organisasjonsnr"
 				. " FROM fm_vendor_temp WHERE fm_vendor.id = fm_vendor_temp.id", __LINE__, __FILE__);
 
 		}
