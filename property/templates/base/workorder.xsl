@@ -1236,7 +1236,8 @@
 			<script type="text/javascript">
 				var lang = <xsl:value-of select="php:function('js_lang', 'please enter either a budget or contrakt sum', 'next', 'save')"/>;
 				var check_for_budget = <xsl:value-of select="check_for_budget"/>;
-				var amount = <xsl:value-of select="check_value_budget"/>;
+				var local_value_budget = <xsl:value-of select="local_value_budget"/>;
+				var accumulated_budget_amount = <xsl:value-of select="accumulated_budget_amount"/>;
 				var project_ecodimb = '<xsl:value-of select="project_ecodimb"/>';
 				var base_java_url = <xsl:value-of select="base_java_url"/>;
 				var location_item_id = '<xsl:value-of select="location_item_id"/>';

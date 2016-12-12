@@ -1788,18 +1788,19 @@
 		 */
 		public function check_purchase_right($ecodimb = 0, $amount = 0, $order_id = 0)
 		{
-			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
+			$need_approval = empty($this->config->config_data['workorder_approval']) ? false : true;
 			if(!$need_approval)
 			{
 				return array();
 			}
+			$approval_amount_limit = !empty($this->config->config_data['approval_amount_limit']) ? (int) $this->config->config_data['approval_amount_limit'] : 0;
 
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
 			$supervisors = array();
-			$invoice = CreateObject('property.soinvoice');
 			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
+				$invoice = CreateObject('property.soinvoice');
 				$default_found = false;
 				$supervisor_id = $invoice->get_default_dimb_role_user(3, $ecodimb);
 				if($supervisor_id)
@@ -1889,7 +1890,7 @@
 					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
 				}
 			}
-			else
+			else if($approval_amount_limit > 0 && $amount > $approval_amount_limit)
 			{
 				$supervisor_id = 0;
 
@@ -1900,7 +1901,7 @@
 
 				if ($supervisor_id)
 				{
-					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
+					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true, 'default' => true);
 
 					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
 
@@ -1913,61 +1914,14 @@
 				}
 			}
 
-			if(!$check_external_register && !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
-				&& empty($supervisors[$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']]))
-			{
-				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
-				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
-			}
+//			if(!$check_external_register && !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+//				&& empty($supervisors[$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']]))
+//			{
+//				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+//				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
+//			}
 
 			return $this->get_supervisor_approval($supervisors, $order_id);
-		}
-
-		public function check_external_register($param)
-		{
-			$id = $param['id'];
-	//		$url = "http://tjenester.usrv.ubergenkom.no/api/tilskudd/{$sub_check}";
-			$url = "{$param['url']}/{$param['sub_check']}";
-			$extravars = array
-			(
-				'id'		=> $id,
-			);
-
-			$url .= '?' . http_build_query($extravars, null, '&');
-
-			$post_data = array();
-
-			$ch = curl_init();
-	//		curl_setopt($ch, CURLOPT_PROXY, $proxy);
-			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_USERPWD, "{$param['username']}:{$param['password']}");
-			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			// Set The Response Format to Json
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-			//set data to be posted
-			if($post_data)
-			{
-				$post_items = array();
-				foreach ( $post_data as $key => $value)
-				{
-					$post_items[] = "{$key}={$value}";
-				}
-				curl_setopt($ch, CURLOPT_POSTFIELDS, implode ('&', $post_items));
-			}
-
-			$result = curl_exec($ch);
-
-			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-			curl_close($ch);
-
-			if($httpCode != 200)
-			{
-				throw new Exception("HTTP-status {$httpCode}");
-			}
-
-			return json_decode($result, true);
 		}
 
 		/**
@@ -1979,12 +1933,10 @@
 		 */
 		protected function get_supervisor_approval($supervisors, $order_id = 0)
 		{
-			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
 			if($order_id)
 			{
-				$order_type = $this->bocommon->socommon->get_order_type($order_id);
-
 				switch ($order_type)
 				{
 					case 'workorder':
@@ -2001,7 +1953,40 @@
 			}
 
 			$supervisor_email = array();
-			if ($supervisors && $need_approval)
+
+			//Check if user is asked for approval
+			if(empty($supervisors[$this->account]) && $order_id)
+			{
+				$action_params = array(
+					'appname' => 'property',
+					'location' => $location,
+					'id'		=> $location_item_id,
+					'responsible' => $this->account,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'deadline' => '',
+					'created_by' => '',
+					'allrows' => false,
+					'closed' => false
+				);
+				$requests = CreateObject('property.sopending_action')->get_pending_action($action_params);
+				if($requests)
+				{
+					$supervisors[$this->account] = array('id' => $this->account, 'required' => true, 'default' => true);
+				}
+				else
+				{
+					$action_params['closed'] = true;
+					$requests = CreateObject('property.sopending_action')->get_pending_action($action_params);
+					if($requests)
+					{
+						$supervisors[$this->account] = array('id' => $this->account, 'required' => false, 'default' => true);
+					}
+				}
+			}
+
+
+			if ($supervisors)
 			{
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
@@ -2062,6 +2047,55 @@
 			}
 			return $supervisor_email;
 		}
+
+
+		public function check_external_register($param)
+		{
+			$id = $param['id'];
+	//		$url = "http://tjenester.usrv.ubergenkom.no/api/tilskudd/{$sub_check}";
+			$url = "{$param['url']}/{$param['sub_check']}";
+			$extravars = array
+			(
+				'id'		=> $id,
+			);
+
+			$url .= '?' . http_build_query($extravars, null, '&');
+
+			$post_data = array();
+
+			$ch = curl_init();
+	//		curl_setopt($ch, CURLOPT_PROXY, $proxy);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$param['username']}:{$param['password']}");
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			// Set The Response Format to Json
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			//set data to be posted
+			if($post_data)
+			{
+				$post_items = array();
+				foreach ( $post_data as $key => $value)
+				{
+					$post_items[] = "{$key}={$value}";
+				}
+				curl_setopt($ch, CURLOPT_POSTFIELDS, implode ('&', $post_items));
+			}
+
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			if($httpCode != 200)
+			{
+				throw new Exception("HTTP-status {$httpCode}");
+			}
+
+			return json_decode($result, true);
+		}
+
 
 		function validate_purchase_grant( $ecodimb, $budget_amount, $order_id )
 		{
