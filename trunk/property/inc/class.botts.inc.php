@@ -1798,9 +1798,9 @@
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
 			$supervisors = array();
-			$invoice = CreateObject('property.soinvoice');
 			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 			{
+				$invoice = CreateObject('property.soinvoice');
 				$default_found = false;
 				$supervisor_id = $invoice->get_default_dimb_role_user(3, $ecodimb);
 				if($supervisor_id)
@@ -1935,24 +1935,27 @@
 		{
 			$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
-			switch ($order_type)
+			if($order_id)
 			{
-				case 'workorder':
-					$location = '.project.workorder';
-					$location_item_id = $order_id;
-					break;
-				case 'ticket':
-					$location = '.ticket';
-					$location_item_id = $this->so->get_ticket_from_order($order_id);
-					break;
-				default:
-					throw new Exception('Order type not supported');
+				switch ($order_type)
+				{
+					case 'workorder':
+						$location = '.project.workorder';
+						$location_item_id = $order_id;
+						break;
+					case 'ticket':
+						$location = '.ticket';
+						$location_item_id = $this->so->get_ticket_from_order($order_id);
+						break;
+					default:
+						throw new Exception('Order type not supported');
+				}
 			}
 
 			$supervisor_email = array();
 
 			//Check if user is asked for approval
-			if(empty($supervisors[$this->account]))
+			if(empty($supervisors[$this->account]) && $order_id)
 			{
 				$action_params = array(
 					'appname' => 'property',
