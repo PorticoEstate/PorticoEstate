@@ -272,7 +272,7 @@
 				'customer_contact_name' => array('type' => 'text', 'nullable' => True),
 				'customer_contact_email' => array('type' => 'text', 'nullable' => True),
 				'customer_contact_phone' => array('type' => 'text', 'nullable' => True),
-				'where' => array('type' => 'text', 'nullable' => True),
+				'location' => array('type' => 'text', 'nullable' => True),
 				'reminder' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
