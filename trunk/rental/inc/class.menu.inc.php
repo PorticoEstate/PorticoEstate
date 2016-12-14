@@ -143,6 +143,11 @@
 			if(!$use_fellesdata)
 			{
 				$menus['navigation'] = array_reverse($menus['navigation'], true);
+				$menus['navigation']['moveout'] = array(
+					'text' => lang('moveout'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index')),
+					'image' => array('rental', 'text-x-generic'),
+				);
 				$menus['navigation']['schedule'] = array(
 					'text' => lang('schedule'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.schedule')),
@@ -153,6 +158,7 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index')),
 					'image' => array('rental', 'text-x-generic'),
 				);
+
 				$menus['navigation'] = array_reverse($menus['navigation'], true);
 			}
 

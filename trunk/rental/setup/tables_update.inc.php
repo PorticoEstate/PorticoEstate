@@ -739,3 +739,18 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+
+	$test[] = '0.1.0.31';
+	function rental_upgrade0_1_0_31()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+	//	$GLOBALS['phpgw']->locations->add('.moveout', 'Moveout', 'rental', $allow_grant = true, $custom_tbl = false, $c_function = true);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.31';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
