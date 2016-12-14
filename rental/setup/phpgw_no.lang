@@ -641,3 +641,4 @@ type	rental	no	Type
 custom price	rental	no	Taksering
 price type	rental	no	Pristype
 schedule	rental	no	Kalender
+moveout	rental	no	Utflytting
