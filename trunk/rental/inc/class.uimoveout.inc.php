@@ -191,6 +191,7 @@
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
+			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('rental', 'rental', 'moveout.edit.js');
 			self::render_template_xsl(array('moveout', 'datatable_inline'), array($mode => $data));
 		}
