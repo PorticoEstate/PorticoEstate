@@ -1999,7 +1999,7 @@
 					{
 						if($this->file_actions)
 						{
-							$new_name = $t->fake_leading_dirs .'/'.$file_id.'_#' .$t->fake_name_clean;
+							$new_name = $t->fake_leading_dirs .'/'.$file_id.'_#' .$t->fake_name;
 
 							$t2 = $this->path_parts(array(
 									'string'	=> $new_name,
@@ -2015,7 +2015,7 @@
 								. " directory='{$t2->fake_leading_dirs_clean}',"
 								. " name='{$t2->fake_name_clean}'"
 								. " WHERE owner_id='{$this->working_id}' AND directory='{$t->fake_leading_dirs_clean}'"
-								. " AND name='{$t->fake_name_clean}'", __LINE__, __FILE__);	
+								. " AND name='{$GLOBALS['phpgw']->db->db_addslashes($t->fake_name_clean)}'", __LINE__, __FILE__);	
 
 								$t = $t2;
 							}
