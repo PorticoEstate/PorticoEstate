@@ -1105,7 +1105,9 @@
 				$data = array ();
 			}
 
-			$string = preg_replace ("/'/", "/\'/", $data['string']);
+			//$string = preg_replace ("/'/", "/\'/", $data['string']);
+			$string = $GLOBALS['phpgw']->db->db_addslashes($data['string']);
+			
 
 			return $string;
 		}
