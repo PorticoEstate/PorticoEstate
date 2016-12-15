@@ -375,7 +375,7 @@
 				if(is_file($path)) 
 				{				
 					unset($output);
-					exec("md5sum '{$path}' 2>&1", $output, $ret);
+					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
 					if ($ret)
 					{
 						$val_md5sum = '';
@@ -404,7 +404,7 @@
 				if(is_file($path)) 
 				{				
 					unset($output);
-					exec("md5sum '{$path}' 2>&1", $output, $ret);
+					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
 					if ($ret)
 					{
 						$val_md5sum = '';
@@ -468,7 +468,7 @@
 			$with_components = phpgw::get_var('with_components_check');
 			
 			$uploaded_files = $this->_get_uploaded_files();
-			
+	
 			if ($with_components)
 			{
 				$relations = $this->get_relations();
@@ -504,7 +504,7 @@
 
 			$component_files = phpgwapi_cache::session_get('property', 'import_data');
 			$this->paths_from_file = phpgwapi_cache::session_get('property', 'paths_from_file');
-			
+
 			$count_new_relations = 0; 
 			$count_relations_existing = 0;
 			$count_new_files = 0;
@@ -660,12 +660,12 @@
 		private function _save_file( $file_data )
 		{
 			$metadata = array();
-		
+
 			//$tmp_file = $file_data['file'];
 			
 			$val_md5sum = $file_data['val_md5sum'];
 			$path_file = $file_data['path_file'];
-			
+
 			$md5_sum = trim(strstr($val_md5sum, ' ', true));
 			
 			$bofiles = CreateObject('property.bofiles');
