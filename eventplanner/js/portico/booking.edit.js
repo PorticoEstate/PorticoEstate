@@ -1,3 +1,4 @@
+var customer_id_selection;
 var lang;
 var oArgs = {menuaction: 'eventplanner.uicustomer.index', organization_number: true};
 var strURL = phpGWLink('index.php', oArgs, true);
