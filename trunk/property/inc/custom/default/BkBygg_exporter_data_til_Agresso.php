@@ -250,6 +250,10 @@
 				{
 					$file_written = true;
 				}
+				else
+				{
+					phpgwapi_cache::message_set("$filename feilet", 'error');
+				}
 			}
 
 			$transfer_ok = false;
