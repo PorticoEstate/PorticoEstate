@@ -59,18 +59,21 @@ function populateContractParty(contract_id)
 	JqueryPortico.execute_ajax(requestUrl,
 		function (result)
 		{
-			$("#contract_party_name").val(result.party_name);
-			$("#contract_party_email").val(result.party_email);
-			$("#contract_party_phone").val(result.party_phone);
-
-			var location = result.address_1;
-			if (result.address_2)
-			{
-				location += "\n" + result.address_2;
-			}
-			location += "\n" + result.zip_code;
-			location += ' ' + result.city;
-			$("#location").val(location);
+		
+			$("#executive_officer").html(result.executive_officer);
+			$("#composite").html(result.composite);
+			$("#rented_area").html(result.rented_area);
+			$("#security_amount").html(result.security_amount);
+			$("#date_start").html(result.date_start);
+			$("#date_end").html(result.date_end);
+			$("#type").html(result.type);
+			$("#party").html(result.party);
+			$("#identifier").html(result.identifier);
+			$("#mobile_phone").html(result.mobile_phone);
+			$("#department").html(result.department);
+			$("#contract_status").html(result.contract_status);
+			$("#rented_area").html(result.rented_area);
+			$("#term_label").html(result.term_label);
 
 		}, data, "POST", "json"
 		);
