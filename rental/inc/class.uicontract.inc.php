@@ -33,6 +33,7 @@
 			'index' => true,
 			'query' => true,
 			'view' => true,
+			'get'	=>  true,
 			'add_party' => true,
 			'remove_party' => true,
 			'add_composite' => true,
@@ -1490,6 +1491,46 @@ JS;
 				phpgwapi_cache::message_set($message, 'message');
 			}
 			$this->edit(array('contract_id' => $contract_id));
+		}
+
+
+		public function get( $id = 0 )
+		{
+			$contract_id =  $id ? (int)$id : (int)phpgw::get_var('id');
+			if (!empty($contract_id))
+			{
+				$contract = rental_socontract::get_instance()->get_single($contract_id);
+
+				if (!($contract && $contract->has_permission(PHPGW_ACL_READ)))
+				{
+					phpgw::no_access($GLOBALS['phpgw_info']['flags']['currentapp'], lang('permission_denied_view_contract'));
+				}
+
+				$ret = $contract->serialize();
+				foreach ($ret as &$entry)
+				{
+					$entry = rtrim($entry, '<br/>');
+				}
+
+			//	$ret['last_edited_by'] = $contract->get_last_edited_by();
+				$ret['executive_officer'] = $GLOBALS['phpgw']->accounts->id2name($contract->get_executive_officer_id());
+				$ret['security_amount'] = $contract->get_security_amount();
+				phpgw::import_class('rental.soparty');
+
+				$parties =  $contract->get_parties();
+				foreach ($parties as $party_id => $value) // get the last one
+				{
+
+				}
+
+				$party =  rental_soparty::get_instance()->get_single($party_id);
+	//			_debug_array($party);
+
+				$ret['identifier'] = $party->get_identifier();
+				$ret['mobile_phone'] = $party->get_mobile_phone();
+
+				return $ret;
+			}
 		}
 
 		/**
