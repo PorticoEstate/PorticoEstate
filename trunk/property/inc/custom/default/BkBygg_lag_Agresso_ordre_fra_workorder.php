@@ -59,19 +59,23 @@
 			$config->read();
 			$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
 
+			$approval_amount = 0;
 			$price = 0;
 			if($approval_level == 'project')
 			{
-				$price = ExecMethod('property.boworkorder.get_accumulated_budget_amount', $workorder['project_id']);
+				$approval_amount = ExecMethod('property.boworkorder.get_accumulated_budget_amount', $workorder['project_id']);
+				$price = ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
 			}
 			else
 			{
-				$price = ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
+				$approval_amount = ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
+				$price = $approval_amount;
+
 			}
 
 			try
 			{
-				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $workorder['ecodimb'], $price, $workorder['id']);
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $workorder['ecodimb'], $approval_amount, $workorder['id']);
 			}
 			catch (Exception $ex)
 			{

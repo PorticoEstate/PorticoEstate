@@ -544,7 +544,9 @@ function populateTableChkApproval(ecodimb)
 	(budget_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
 	(Number(local_value_budget),Number(accumulated_budget_amount)));
 
-	$("#order_received_amount").val(total_amount);
+	var order_received_amount = Math.max(contract_sum,	budget_sum,	Number(local_value_budget));
+
+	$("#order_received_amount").val(order_received_amount);
 
 	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
