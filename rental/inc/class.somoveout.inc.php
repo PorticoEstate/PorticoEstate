@@ -47,11 +47,25 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('eventplanner.socustomer');
+				self::$so = CreateObject('rental.somoveout');
 			}
 			return self::$so;
 		}
 
+		public function read_custom_field_values( $id, $custom_fields )
+		{
+			$sql = "SELECT * FROM {$this->table_name} WHERE id = " . (int)$id;
+			$this->db->query($sql,__LINE__,__FILE__);
+
+			if ($this->db->next_record() && is_array($custom_fields))
+			{
+				foreach ($custom_fields as &$attr)
+				{
+					$attr['value'] = $this->db->f($attr['column_name']);
+				}
+			}
+			return $custom_fields;
+		}
 
 		protected function populate( array $data )
 		{
@@ -67,7 +81,7 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
-	//		$status_text = rental_moveout::get_status_list();
+			//		$status_text = rental_moveout::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$lang_active = lang('active');
 			$lang_inactive = lang('inactive');
@@ -94,23 +108,21 @@
 							break;
 					}
 					$value_set = array
-					(
-						'customer_id'	=> $object->get_id(),
-						'time'		=> time(),
-						'author'	=> $GLOBALS['phpgw_info']['user']['fullname'],
-						'comment'	=> $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' .lang('new value') . ': ' . $this->db->db_addslashes($new_value),
-						'type'	=> 'history',
+						(
+						'moveout_id' => $object->get_id(),
+						'time' => time(),
+						'author' => $GLOBALS['phpgw_info']['user']['fullname'],
+						'comment' => $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' . lang('new value') . ': ' . $this->db->db_addslashes($new_value),
+						'type' => 'history',
 					);
 
-					$this->db->query( 'INSERT INTO rental_moveout_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
-					. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
+					$this->db->query('INSERT INTO rental_moveout_comment (' . implode(',', array_keys($value_set)) . ') VALUES ('
+						. $this->db->validate_insert(array_values($value_set)) . ')', __LINE__, __FILE__);
 				}
-
 			}
 
 			parent::update($object);
 
-			return	$this->db->transaction_commit();
+			return $this->db->transaction_commit();
 		}
-
 	}
