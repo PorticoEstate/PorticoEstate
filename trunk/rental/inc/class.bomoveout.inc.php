@@ -101,6 +101,22 @@
 				$values = new rental_moveout();
 			}
 
+			$custom_fields = rental_moveout::get_instance()->get_custom_fields();
+			if($custom_fields)
+			{
+				$custom_fields = rental_somoveout::get_instance()->read_custom_field_values($id, $custom_fields);
+				$_values = createObject('property.custom_fields')->prepare(array('attributes' => $custom_fields), 'rental', rental_moveout::acl_location, $view = false);
+
+				if($return_object)
+				{
+					$values->attributes = $_values[attributes];
+				}
+				else
+				{
+					$values['attributes'] = $_values[attributes];
+				}
+			}
+
 			return $values;
 		}
 	}

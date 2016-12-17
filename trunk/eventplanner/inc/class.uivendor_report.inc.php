@@ -45,7 +45,8 @@
 
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$custom_fields;
 
 		public function __construct()
 		{

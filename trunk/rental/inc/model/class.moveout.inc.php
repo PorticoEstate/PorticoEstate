@@ -34,36 +34,21 @@
 	class rental_moveout extends phpgwapi_model
 	{
 
-		const STATUS_REGISTERED = 1;
-		const STATUS_PENDING = 2;
-		const STATUS_REJECTED = 3;
-		const STATUS_APPROVED = 4;
 		const acl_location = '.moveout';
 
 		protected
 			$id,
-			$active,
-			$category_id,
+			$contract_id,
+			$old_contract_id,
 			$created,
 			$modified,
-			$secret,
-			$name,
-			$address_1,
-			$address_2,
-			$zip_code,
-			$city,
-			$moveout_organization_number,
-			$contact_name,
-			$contact_email,
-			$contact_phone,
-			$account_number,
-			$description,
-			$remark,
-	//		$moveout_identifier_type,
-	//		$moveout_ssn,
-
+			$account_id,
 			$comments,
-			$comment;
+			$comment,
+			$attributes,// custom fields
+			$values_attribute;// custom fields
+
+		static $custom_fields = array();
 
 		protected $field_of_responsibility_name = '.moveout';
 
@@ -83,14 +68,27 @@
 			return new rental_moveout();
 		}
 
-		public static function get_status_list()
+		public function set_custom_fields()
 		{
-			return array(
-				self::STATUS_REGISTERED => lang('registered'),
-				self::STATUS_PENDING	=> lang('pending'),
-				self::STATUS_REJECTED => lang('rejected'),
-				self::STATUS_APPROVED	=> lang('approved')
-			);
+			$this->custom_fields = $GLOBALS['phpgw']->custom_fields->find('rental', self::acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
+		}
+
+		public function get_custom_fields()
+		{
+			if (!$this->custom_fields)
+			{
+				$this->set_custom_fields();
+			}
+			return $this->custom_fields;
+		}
+
+		public function get_organized_fields()
+		{
+			if (!$this->custom_fields)
+			{
+				$this->custom_fields = createObject('booking.custom_fields', 'rental')->get_organized_fields(self::acl_location);
+			}
+			return $this->custom_fields;
 		}
 
 		public static function get_fields($debug = true)
@@ -102,105 +100,36 @@
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
 					),
-				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int',
-					'history'	=> true
-					),
-				'category_id' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int'
-					),
 				'created' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'date',
 					'label' => 'created',
 					'sortable' => true,
 					),
-				'modified' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
+				'modified' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'date',
 					'label' => 'modified',
 					'sortable' => true,
 					),
-				'secret' => array('action'=> PHPGW_ACL_ADD,
-					'type' => 'string',
-					'label' => 'secret',
-					'sortable' => false,
+				'account_id' => array('action'=> PHPGW_ACL_ADD,
+					'type' => 'int',
+					'label' => 'contract_id',
+					'sortable' => true,
 					),
-				'name' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'contract_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label' => 'contract_id',
+					'sortable' => true,
+					),
+				'old_contract_id' => array('action'=>  PHPGW_ACL_READ,
 					'type' => 'string',
-					'label' => 'name',
-					'required' => true,
 					'query' => true,
-					),
-				'address_1' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true
-					),
-				'address_2' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false),
-				'zip_code' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true),
-				'city' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true),
-				'account_number' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true),
-			 	'description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'label' => 'description',
-					'sortable' => false,
-					'required' => true
-					),
-			 	'remark' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'label' => 'description',
-					'sortable' => false,
-					),
-				'contact_name' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'query' => true,
-					'label' => 'contact name',
-					),
-				'contact_email' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'contact email',
-					),
-				'contact_phone' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'query' => true,
-					'label' => 'contact phone',
-					),
-/*				'moveout_identifier_type' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'moveout_identifier_type',
-					),
-				'moveout_ssn' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required' => false)),
-					'label' => 'moveout_ssn'
-					),*/
-				'moveout_organization_number' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'organization_number'
+					'label' => 'contract',
+					'join' => array(
+						'table' => 'rental_contract',
+						'fkey' => 'contract_id',
+						'key' => 'id',
+						'column' => 'old_contract_id'
+						)
 					),
 				'comments' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
@@ -253,22 +182,13 @@
 			}
 
 			$entity->modified = time();
-			$entity->active = (int)$entity->active;
+			if(!$entity->get_id())
+			{
+				$entity->account_id = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			}
 
-			if($entity->get_id())
-			{
-			}
-			else
-			{
-				$entity->status = rental_moveout::STATUS_REGISTERED;
-				$entity->secret = self::generate_secret();
-			}
 		}
 
-		protected function generate_secret( $length = 10 )
-		{
-			return substr(base64_encode(rand(1000000000, 9999999999)), 0, $length);
-		}
 
 		public function serialize()
 		{

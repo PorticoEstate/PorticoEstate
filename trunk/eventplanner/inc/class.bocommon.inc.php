@@ -104,6 +104,9 @@
 					}
 				}
 			}
+			$values_attribute = phpgw::get_var('values_attribute');
+			$object->set_field( 'values_attribute', $values_attribute);
+
 			return $object;
 		}
 

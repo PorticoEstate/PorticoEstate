@@ -286,7 +286,7 @@
 						<xsl:value-of select="php:function('lang', 'column name')" />
 					</td>
 					<td>
-						<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="20">
+						<input type="text" name="values[column_name]" value="{value_column_name}" maxlength="50">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'enter the name for the column')" />
 							</xsl:attribute>

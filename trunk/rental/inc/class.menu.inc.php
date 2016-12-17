@@ -225,6 +225,18 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
 						'appname' => 'rental', 'location' => '.contract', 'menu_selection' => 'admin::rental::custom_functions'))
 				),
+				'custom_field_groups' => array
+						(
+						'text' => lang('custom field groups'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute_group',
+							'appname' => 'rental', 'menu_selection' => 'admin::rental::custom_field_groups'))
+					),
+					'custom_fields' => array
+						(
+						'text' => lang('custom fields'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+							'appname' => 'rental', 'menu_selection' => 'admin::rental::custom_fields'))
+					),
 			);
 
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');

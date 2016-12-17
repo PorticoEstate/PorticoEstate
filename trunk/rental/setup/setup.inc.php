@@ -30,7 +30,9 @@
 		'rental_adjustment',  // Price regulations
 		'rental_application',
 		'rental_application_comment',
-		'rental_application_composite'
+		'rental_application_composite',
+		'rental_moveout',
+		'rental_moveout_comment'
 	);
 	$setup_info['rental']['enable'] = 1;
 	$setup_info['rental']['app_group'] = 'office';

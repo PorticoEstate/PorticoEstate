@@ -44,8 +44,10 @@
 			'get' => true
 		);
 		protected
+			$bo,
 			$fields,
-			$permissions;
+			$permissions,
+			$custom_fields;
 
 		public function __construct()
 		{
@@ -55,6 +57,7 @@
 			$this->bo = createObject('rental.bomoveout');
 			$this->fields = rental_moveout::get_fields();
 			$this->permissions = rental_moveout::get_instance()->get_permission_array();
+			$this->custom_fields = rental_moveout::get_instance()->get_custom_fields();
 		}
 
 		public function index()
@@ -181,19 +184,43 @@
 				)
 			);
 
+
+			$custom_values = $moveout->attributes ? $moveout->attributes : array();
+
+			foreach ($custom_values as $attrib_id => &$attrib)
+			{
+				if (isset($attrib['choice']) && is_array($attrib['choice']) && $attrib['value'])
+				{
+					foreach ($attrib['choice'] as &$choice)
+					{
+						if (is_array($attrib['value']))
+						{
+							$choice['selected'] = in_array($choice['id'], $attrib['value']) ? 1 : 0;
+						}
+						else
+						{
+							$choice['selected'] = $choice['id'] == $attrib['value'] ? 1 : 0;
+						}
+					}
+				}
+			}
+			$organized_fields = createObject('booking.custom_fields','rental')->organize_fields(rental_moveout::acl_location, $custom_values);
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index',)),
 				'moveout' => $moveout,
+				'contract'	=> createObject('rental.uicontract')->get($moveout->contract_id),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'value_active_tab' => $active_tab
+				'value_active_tab' => $active_tab,
+				'attributes_group' => $organized_fields,
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('rental', 'rental', 'moveout.edit.js');
-			self::render_template_xsl(array('moveout', 'datatable_inline'), array($mode => $data));
+			self::render_template_xsl(array('moveout', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 
 		/*
