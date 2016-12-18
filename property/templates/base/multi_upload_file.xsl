@@ -96,6 +96,7 @@
 				//xhrFields: {withCredentials: true},
 				url: '<xsl:value-of select="multi_upload_action"/>',
 				limitConcurrentUploads: 4,
+				maxChunkSize: 10000000000
 				//acceptFileTypes: /(\.|\/)(png|pdf)$/i
 			});
 				

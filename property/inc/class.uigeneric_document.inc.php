@@ -119,7 +119,7 @@
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 			$categories = $this->_get_categories();
-			
+
 			$data = array(
 				'datatable_name' => lang('generic document'),
 				'form' => array(
@@ -228,7 +228,7 @@
 					'parameters' => json_encode($parameters)
 				);
 			}
-			
+
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
@@ -259,13 +259,13 @@
 			{
 				return $values;
 			}
-			
+
 			foreach($values as &$item)
-			{	
+			{
 				$item['name'] = '<a href="'.self::link(array('menuaction' => 'property.uigeneric_document.view_file', 'file_id' => $item['id'])).'">'.$item['name'].'</a>';
 				$item['link'] = self::link(array('menuaction' => 'property.uigeneric_document.view', 'id' => $item['id']));
 			}
-			
+
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $this->bo->total_records;
@@ -284,12 +284,11 @@
 			{
 				$type_id = 1;
 			}
-			
+
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
-			$mode = phpgw::get_var('mode');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -301,16 +300,16 @@
 				'type_id' => $type_id,
 				'district_id' => phpgw::get_var('district_id', 'int', 'REQUEST', 0),
 				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1
+				'allrows' => ($only_related) ? 1 : (phpgw::get_var('length', 'int') == -1)
 			);
-			
+
             $solocation = CreateObject('property.solocation');
             $locations = $solocation->read($params);
 
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			if ($file_id)
 			{
-				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+				$relation_values = $this->bo->get_file_relations($file_id, $location_id);
 			}
 			$values_location_item_id = array();
 			if (count($relation_values))
@@ -320,32 +319,23 @@
 					$values_location_item_id[] = $item['location_item_id'];
 				}
 			}
-			
+
 			$values = array();
 			foreach($locations as $item)
 			{
-				if($mode == 'edit')
-				{
-					$checked = in_array($item['id'], $values_location_item_id) ? ' checked="checked"' : '';
-					$relate = "<input value='{$item['id']}' class='components mychecks' type='checkbox'{$checked}>";
+				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				$hidden = ($checked) ? '<input type="hidden" class="locations_related" value="'.$item['id'].'">' : '';
 
-				}
-				else
-				{
-					$relate = in_array($item['id'], $values_location_item_id) ? 'X' : '';
-					$checked = $relate;
-				}
-				
 				if ($only_related && empty($checked))
 				{
 					continue;
 				}
-				
+
 				$values[] = array(
 					'location_code' => '<a href="'.self::link(array('menuaction' => 'property.uilocation.view', 'location_code' => $item['location_code'])).'">'.$item['location_code'].'</a>',
 					'loc1_name' => $item['loc1_name'],
-					'relate' => $relate
-				);				
+					'relate' => '<input value="'.$item['id'].'" class="locations mychecks" type="checkbox" '.$checked.'>'.$hidden
+				);
 			}
 
 			$result_data = array('results' => $values);
@@ -355,7 +345,7 @@
 
 			return $this->jquery_results($result_data);
 		}
-		
+
 		public function view()
 		{
 			if (!$this->acl_read)
@@ -383,7 +373,7 @@
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
-			
+
 			if (!$this->acl_add && !$this->acl_edit)
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uigeneric_document.view',
@@ -415,23 +405,23 @@
 			{
 				if (!$values)
 				{
-					$values = (array) $this->bo->read_single($id);		
-					$values['report_date'] = ($values['report_date']) ? date($this->dateFormat, $values['report_date']) : '';			
+					$values = (array) $this->bo->read_single($id);
+					$values['report_date'] = ($values['report_date']) ? date($this->dateFormat, $values['report_date']) : '';
 				}
 				$values['id'] = $id;
 			}
-			
+
 			$categories = $this->_get_categories($values['cat_id']);
 
 			self::message_set($this->receipt);
-			
+
 			$datatable_def = array();
-			
+
 			if ($id)
 			{
 				$tabs['relations'] = array('label' => lang('Components'), 'link' => '#relations');
 				$tabs['locations'] = array('label' => lang('Locations'), 'link' => '#locations');
-				
+
 				$related_def = array
 					(
 					array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
@@ -441,14 +431,14 @@
 
 				$values_location = $this->get_location_filter();
 				$entity_group = execMethod('property.bogeneric.get_list', array('type' => 'entity_group', 'add_empty' => true));
-				$type_filter = 	execMethod('property.soadmin_location.read', array());			
+				$type_filter = 	execMethod('property.soadmin_location.read', array());
 				$category_filter = $this->get_categories_for_type();
-							
+
 				$district_filter = $this->bocommon->select_district_list('filter');
 				array_unshift($district_filter, array('id' => '', 'name' => lang('no district')));
-				
+
 				$part_of_town_filter = $this->get_part_of_town();
-			
+
 				$tabletools[] = array
 					(
 					'my_name' => 'relate',
@@ -470,11 +460,11 @@
 				(
 					'container' => 'datatable-container_0',
 					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_componentes',
-							'id' => $id, 'location_id' => $values_location[0]['id'], 'mode' => $mode, 'phpgw_return_as' => 'json'))),
+							'id' => $id, 'location_id' => $values_location[0]['id'], 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def,
 					'tabletools' => ($mode == 'edit') ? $tabletools : array()
 				);
-				
+
 				$related_def2 = array
 					(
 					array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true, 'resizeable' => true),
@@ -482,7 +472,7 @@
 					//array('key' => 'location_id', 'label' => lang('location id'), 'sortable' => false, 'resizeable' => true, 'hidden' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 				);
-				
+
 				$tabletools2[] = array
 					(
 					'my_name' => 'relate_locations',
@@ -497,19 +487,19 @@
 						setRelationsLocations(oArgs);
 					"
 				);
-				
+
 				$datatable_def[] = array
 				(
 					'container' => 'datatable-container_1',
-					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'mode' => $mode, 'phpgw_return_as' => 'json'))),
+					'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uigeneric_document.get_locations_for_type', 'id' => $id, 'phpgw_return_as' => 'json'))),
 					'ColumnDefs' => $related_def2,
 					'tabletools' => ($mode == 'edit') ? $tabletools2 : array()
-				);				
+				);
 			}
-			
+
 			$vfs = CreateObject('phpgwapi.vfs');
 			$file_info = $vfs->get_info($id);
-	
+
 			$data = array
 			(
 				'datatable_def' => $datatable_def,
@@ -523,12 +513,12 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'location_filter' => array('options' => $values_location),
 				'entity_group_filter' => array('options' => $entity_group),
-				
+
 				'type_filter' => array('options' => $type_filter),
 				'category_filter' => array('options' => $category_filter),
 				'district_filter' => array('options' => $district_filter),
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
-				
+
 				'link_controller_example' => self::link(array('menuaction' => 'controller.uicomponent.index'))
 			);
 
@@ -559,7 +549,7 @@
 			{
 				$type_id = 1;
 			}
-			
+
 			$categories = $this->bocommon->select_category_list(array
 				('format' => 'filter',
 				'selected' => '',
@@ -571,7 +561,7 @@
 
 			return $categories;
 		}
-		
+
 		public function get_part_of_town()
 		{
 			$district_id = phpgw::get_var('district_id', 'int');
@@ -580,11 +570,11 @@
 
 			return $values;
 		}
-		
+
 		public function get_location_filter()
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
-			
+
 			$location_filter = phpgwapi_cache::session_get('property', "location_filter_{$entity_group_id}");
 
 			if (!$location_filter)
@@ -670,8 +660,8 @@
 						return;
 					}
 				}
-				
-				if ($receipt['message']) 
+
+				if ($receipt['message'])
 				{
 					phpgwapi_cache::message_set($receipt['message'], 'message');
 				} else {
@@ -695,20 +685,19 @@
 			{
 				return;
 			}
-			
+
 			$file_id = phpgw::get_var('id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$search = phpgw::get_var('search');
-			$mode = phpgw::get_var('mode');
 			$draw = phpgw::get_var('draw', 'int');
 			$only_related = phpgw::get_var('only_related', 'boolean');
-			
+
             $soentity = CreateObject('property.soentity');
             $_components = $soentity->read( array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
                 'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
                 'query' => $search['value'],
-                'allrows' => phpgw::get_var('length', 'int') == -1,
+                'allrows' => ($only_related) ? 1 : (phpgw::get_var('length', 'int') == -1),
                 'filter_entity_group' => 0,
                 'location_id' => $location_id,
                 'filter_item' => array()
@@ -716,7 +705,7 @@
 
 			if ($file_id)
 			{
-				$relation_values = $this->bo->get_file_relations($location_id, $file_id);
+				$relation_values = $this->bo->get_file_relations($file_id, $location_id );
 			}
 			$values_location_item_id = array();
 			if (count($relation_values))
@@ -726,34 +715,25 @@
 					$values_location_item_id[] = $item['location_item_id'];
 				}
 			}
-			
+
 			$values = array();
 			foreach($_components as $item)
 			{
-				if($mode == 'edit')
-				{
-					$checked = in_array($item['id'], $values_location_item_id) ? ' checked="checked"' : '';
-					$relate = "<input value='{$item['id']}' class='components mychecks' type='checkbox'{$checked}>";
-
-				}
-				else
-				{
-					$relate = in_array($item['id'], $values_location_item_id) ? 'X' : '';
-					$checked = $relate;
-				}
+				$checked = in_array($item['id'], $values_location_item_id) ? 'checked="checked"' : '';
+				$hidden = ($checked) ? '<input type="hidden" class="components_related" value="'.$item['id'].'">' : '';
 
 				if ($only_related && empty($checked))
 				{
 					continue;
 				}
-				
+
 				$values[] = array(
 					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
 					'name' => $item['benevnelse'],
-					'relate' => $relate
+					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>'.$hidden,
 				);
 			}
-			
+
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = ($only_related) ? count($values_location_item_id) : $soentity->total_records;
@@ -762,23 +742,27 @@
 			return $this->jquery_results($result_data);
 		}
 
-		 
+
 		public function save_file_relations()
 		{
 			$receipt = array();
-			
+
 			$type_id = phpgw::get_var('type_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$file_id = phpgw::get_var('file_id', 'int');
-			$items = phpgw::get_var('items');
-			
+			$items = phpgw::get_var('items', 'array', 'REQUEST', array());
+			$related = phpgw::get_var('related', 'array', 'REQUEST', array());
+
+			$add = array_diff($items, $related);
+			$delete = array_diff($related, $items);
+
 			if (empty($location_id))
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			}
-			
-			$result = $this->bo->save_file_relations( $items, $location_id, $file_id );
-			
+
+			$result = $this->bo->save_file_relations( $add, $delete, $location_id, $file_id );
+
 			if ($result)
 			{
 				$receipt['message'][] = array('msg' => lang('Records has been added'));
@@ -787,10 +771,10 @@
 			{
 				$receipt['error'][] = array('msg' => lang('Nothing changed'));
 			}
-			
+
 			return $receipt;
 		}
-		
+
 
 		/**
 		 * Dowloads a single file to the browser
@@ -827,9 +811,9 @@
 					throw new Exception('Failed to upload file !');
 				}
 			}
-				
+
 			$bofiles = CreateObject('property.bofiles');
-			
+
 			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
 
 			if ($file_name)
@@ -851,19 +835,19 @@
 						throw new Exception('failed to create directory');
 					}
 					$bofiles->vfs->override_acl = 1;
-					
+
 					$file_id = $bofiles->vfs->cp3(array(
 							'from' => $_FILES['file']['tmp_name'],
 							'to' => $to_file,
 							'id' => $id,
 							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL)));
 					$bofiles->vfs->override_acl = 0;
-					
+
 					if (empty($file_id))
-					{						
+					{
 						throw new Exception('Failed to upload file !');
-					} 
-					
+					}
+
 					return $file_id;
 				//}
 			} else {

@@ -5,7 +5,8 @@ $(document).ready(function ()
 	$('.processing-sheet').hide();
 	$('.processing-start-line').hide();
 	$('.processing-columns').hide();
-	$('.processing-import-relations').hide();
+	//$('.processing-import-relations').hide();
+	$('.processing-relations').hide();
 	$('.processing-save').hide();
 	$('.get-profile').hide();
 	
@@ -94,43 +95,64 @@ $(document).ready(function ()
 		);				
 	});
 	
-	$('#import_components_files').on('click', function ()
+	$('#relations_step_1').on('click', function ()
+	{
+		if ($('input:radio[name=with_components_check]:checked').val() == 1)
+		{
+			if ($('#excel_files').val() == '')
+			{
+				alert('no file selected');
+				return false;
+			}
+		}
+		
+		$('#responsiveTabsRelations').responsiveTabs('activate', 1);
+	});
+	
+	$('#relations_step_2').on('click', function ()
 	{
 		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-		
-		if ($('#excel_files').val() === '')
-		{
-			alert('no file selected');
-			return false;
-		}
 		
 		if ($('#location_item_id').val() === '')
 		{
 			alert('Choose Location');
 			return false;
 		}	
-	
-		if ($('#attribute_name_component_id').val() === '')
+		
+		if ($('input:radio[name=compressed_file_check]:checked').val() == 1 && $('#compressed_file_name').val() == '')
 		{
-			alert('Choose attribute name for Component ID');
+			alert('Enter the name of the compressed file');
 			return false;
+		}
+		
+		var form = document.forms.namedItem("form_files");
+		var form_data = new FormData(form);
+		
+		if ($('input:radio[name=with_components_check]:checked').val() == 1)
+		{
+			if ($('#excel_files').val() == '')
+			{
+				alert('no file selected');
+				return false;
+			}
+			var file_data = $('#excel_files').prop('files')[0];	
+			form_data.append('file', file_data);
 		}
 		
 		if (isSendingData())
 		{
 			return false;
 		}
-		
-		var form = document.forms.namedItem("form_files");
-		var file_data = $('#excel_files').prop('files')[0];
-		var form_data = new FormData(form);
-		form_data.append('file', file_data);
-		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
+		//form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
+		form_data.append('compressed_file_check', $('input:radio[name=compressed_file_check]:checked').val());
+		form_data.append('with_components_check', $('input:radio[name=with_components_check]:checked').val());
+		form_data.append('compressed_file_name', $('#compressed_file_name').val());
+		form_data.append('preview', 1);
 
-		$('.processing-import-relations').show();
+		$('.processing-relations').show();
 		
 		$.ajax({
 			url: requestUrl,
@@ -139,14 +161,75 @@ $(document).ready(function ()
 			processData: false,
 			data: form_data,
 			type: 'post',
-			dataType: 'json',
-			success: function (result)
-			{
-				statusSend = false;
-				$('.processing-import-relations').hide();
-				JqueryPortico.show_message(4, result);
-				//$('#import_components_files').prop('disabled', true);
-			}
+			dataType: 'json'
+		})
+		.done(function(result) {
+			JqueryPortico.show_message(5, result);
+			$('#responsiveTabsRelations').responsiveTabs('enable', 2);
+			$('#responsiveTabsRelations').responsiveTabs('activate', 2);
+			$('#message4').empty();
+			//$('#import_components_files').prop('disabled', true);
+		})
+		.fail(function() {
+		    alert( "error" );
+		})
+		.always(function() {
+			statusSend = false;
+			$('.processing-relations').hide();
+		});
+	});
+	
+	$('#save_relations').on('click', function ()
+	{
+		var oArgs = {menuaction: 'property.uiimport_components.import_component_files'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		
+		/*if ($('#excel_files').val() === '')
+		{
+			alert('no file selected');
+			return false;
+		}*/
+		
+		if ($('#location_item_id').val() === '')
+		{
+			alert('Choose Location');
+			return false;
+		}	
+		
+		if (isSendingData())
+		{
+			return false;
+		}
+		
+		var form = document.forms.namedItem("form_files");
+		var form_data = new FormData(form);
+		
+		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
+		form_data.append('location_code', $('#location_code').val());
+		form_data.append('location_item_id', $('#location_item_id').val());
+		form_data.append('with_components_check', $('input:radio[name=with_components_check]:checked').val());
+
+		$('.processing-relations').show();
+		
+		$.ajax({
+			url: requestUrl,
+			cache: false,
+			contentType: false,
+			processData: false,
+			data: form_data,
+			type: 'post',
+			dataType: 'json'
+		})
+		.done(function(result) {
+			JqueryPortico.show_message(4, result);
+			//$('#import_components_files').prop('disabled', true);
+		})
+		.fail(function() {
+		    alert( "error" );
+		})
+		.always(function() {
+			statusSend = false;
+			$('.processing-relations').hide();
 		});
 	});
 	
@@ -548,7 +631,7 @@ $(document).ready(function ()
 	{
 		$('#profile_selected').empty();
 		$('#profile_selected').append($("#profile_list option:selected").text());
-		$('#cod_profile_selected').val($('#profile_selected').val());
+		$('#cod_profile_selected').val($("#profile_list").val());
 
 		if ($('#profile_list').val())
 		{
