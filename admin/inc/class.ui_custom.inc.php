@@ -61,7 +61,7 @@
 			$this->bolocation->acl_app 	= $this->appname;
 
 			$this->acl			 = & $GLOBALS['phpgw']->acl;
-			$this->acl_location	 = 'admin';
+			$this->acl_location	 = '.admin';
 			$this->acl_read		 = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->appname);
 			$this->acl_add		 = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->appname);
 			$this->acl_edit		 = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->appname);
@@ -96,6 +96,11 @@
 
 		function list_attribute()
 		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access($this->appname);
+			}
+
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
@@ -259,6 +264,11 @@
 
 		function edit_attrib()
 		{
+			if(!$this->acl_add)
+			{
+				phpgw::no_access($this->appname);
+			}
+
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
@@ -477,6 +487,11 @@
 
 		function list_custom_function()
 		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access($this->appname);
+			}
+
 			if($this->local_menu_selection)
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
@@ -663,7 +678,12 @@
 
 		function edit_custom_function()
 		{
-	//		$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
+			if(!$this->acl_add)
+			{
+				phpgw::no_access($this->appname);
+			}
+
+			//		$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::list_functions';
 			$appname	= $this->appname;
 			$location	= $this->location;
 			$id			= phpgw::get_var('id', 'int');
@@ -782,6 +802,11 @@
 
 		function delete()
 		{
+			if(!$this->acl_delete)
+			{
+				phpgw::no_access($this->appname);
+			}
+
 			$appname				= phpgw::get_var('appname');
 			$location				= phpgw::get_var('location');
 			$attrib_id				= phpgw::get_var('attrib_id', 'int');
@@ -1270,6 +1295,10 @@
 
 		public function query($data = array())
 		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access($this->appname);
+			}
 
 			$search	 = phpgw::get_var('search');
 			$order	 = phpgw::get_var('order');
