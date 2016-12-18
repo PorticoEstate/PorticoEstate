@@ -94,12 +94,6 @@
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->custom = createObject('property.custom_fields');
 
-			if ($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = true;
-			}
-
 			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$query = phpgw::get_var('query');
 			$sort = phpgw::get_var('sort');
@@ -109,6 +103,9 @@
 			$allrows = phpgw::get_var('allrows', 'bool');
 			$entity_id = phpgw::get_var('entity_id', 'int');
 
+			$this->so = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
+			$this->type_app = $this->so->get_type_app();
+
 			$this->start = $start ? $start : 0;
 			$this->query = isset($query) ? $query : $this->query;
 			$this->sort = isset($sort) && $sort ? $sort : '';
@@ -117,30 +114,8 @@
 			$this->cat_id = isset($cat_id) && $cat_id ? $cat_id : '';
 			$this->entity_id = isset($entity_id) && $entity_id ? $entity_id : '';
 			$this->allrows = phpgw::get_var('allrows', 'bool');
-			$this->so = CreateObject('property.soadmin_entity', '', '', $this->bocommon);
 			$this->so->type = $this->type;
-			$this->type_app = $this->so->get_type_app();
-		}
 
-		function save_sessiondata( $data )
-		{
-			if ($this->use_session)
-			{
-				$GLOBALS['phpgw']->session->appsession('session_data', 'standard_e', $data);
-			}
-		}
-
-		function read_sessiondata()
-		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data', 'standard_e');
-
-			$this->start = isset($data['start']) ? $data['start'] : '';
-			$this->query = isset($data['query']) ? $data['query'] : '';
-			$this->sort = isset($data['sort']) ? $data['sort'] : '';
-			$this->order = isset($data['order']) ? $data['order'] : '';
-			$this->cat_id = isset($data['cat_id']) ? $data['cat_id'] : '';
-			$this->entity_id = isset($data['entity_id']) ? $data['entity_id'] : '';
-			$this->allrows = isset($data['allrows']) ? $data['allrows'] : '';
 		}
 
 		function get_location_level_list( $selected = '' )
