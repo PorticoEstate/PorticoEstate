@@ -2158,9 +2158,22 @@
 				$bcc = '';//$coordinator_email;
 				foreach ($values['approval'] as $_account_id => $_address)
 				{
+					$prefs = $this->bocommon->create_preferences('property', $_account_id);
+					if (!empty($prefs['email']))
+					{
+						$_address = $prefs['email'];
+					}
+					else
+					{
+						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+						$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
+					}
+
 					$action_params['responsible'] = $_account_id;
 					try
 					{
+						$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+						execMethod('property.sopending_action.set_pending_action', $action_params);
 						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 						if ($rcpt)
 						{
@@ -2169,10 +2182,8 @@
 					}
 					catch (Exception $exc)
 					{
-						$receipt['error'][] = array('msg' => $exc->getMessage());
+						phpgwapi_cache::message_set($exc->getMessage(),'error');
 					}
-					$historylog->add('AR', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-					execMethod('property.sopending_action.set_pending_action', $action_params);
 				}
 				
 			}
@@ -2850,7 +2861,6 @@
 				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
 				'period_list' => array('options' => execMethod('property.boinvoice.period_list', date('Ym'))),
 				'need_approval' => $need_approval,
-	//			'value_approval_mail_address' => $supervisor_email,
 				'contact_data' => $contact_data,
 				'lookup_type' => $lookup_type,
 				'simple' => $this->simple,
@@ -2979,9 +2989,9 @@
 		{
 			$ecodimb	= phpgw::get_var('ecodimb');
 			$amount		= phpgw::get_var('amount', 'int');
-			$ticket_id	=  phpgw::get_var('ticket_id', 'int');
+			$order_id	=  phpgw::get_var('order_id', 'int');
 
-			return $this->bo->check_purchase_right($ecodimb, $amount, $ticket_id);
+			return $this->bo->check_purchase_right($ecodimb, $amount, $order_id);
 		}
 
 		/**
@@ -3364,6 +3374,7 @@
 			{
 				$show_cost = phpgw::get_var('show_cost', 'bool');
 			}
+			$historylog = CreateObject('property.historylog', 'tts');
 
 			$ticket = $this->bo->read_single($id);
 			$subject = lang('workorder') . ": {$ticket['order_id']}";
@@ -3408,6 +3419,11 @@
 			$location = rtrim($location, '<br>');
 
 			$order_description = $ticket['order_descr'];
+
+			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
+				'contact_id' => $ticket['contact_id'],
+				'field' => 'contact',
+				'type' => 'form'));
 
 			if (isset($contact_data['value_contact_name']) && $contact_data['value_contact_name'])
 			{
@@ -3497,7 +3513,7 @@
 				$custom = createObject('property.custom_fields');
 				$vendor_data['attributes'] = $custom->find('property', '.vendor', 0, '', 'ASC', 'attrib_sort', true, true);
 
-				$vendor_data = $contacts->read_single(array('id' => $ticket['vendor_id']), $vendor_data);
+				$vendor_data = $contacts->read_single(array('id' => $vendor_id), $vendor_data);
 				if (is_array($vendor_data))
 				{
 					foreach ($vendor_data['attributes'] as $attribute)
@@ -3603,6 +3619,10 @@
 				phpgwapi_cache::message_set(lang('missing recipient for order %1', $ticket['order_id']),'error' );
 				return false;
 			}
+			$historylog = CreateObject('property.historylog', 'tts');
+
+			$id = $ticket['id'];
+			$order_id = $ticket['order_id'];
 
 			if (isset($ticket['file_attachments']) && is_array($ticket['file_attachments']))
 			{
@@ -3659,6 +3679,10 @@
 			$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 			$cc = '';
 			$bcc = $coordinator_email;
+			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
+				'contact_id' => $ticket['contact_id'],
+				'field' => 'contact',
+				'type' => 'form'));
 			if (isset($contact_data['value_contact_email']) && $contact_data['value_contact_email'])
 			{
 				$cc = $contact_data['value_contact_email'];
@@ -3666,21 +3690,19 @@
 
 			if (empty($purchase_grant_checked))
 			{
-				$_budget_amount = $this->_get_budget_amount($id);
+				$budget_amount = $this->_get_budget_amount($id);
 
-				$purchase_grant_error = false;
-				$check_purchase = $this->bo->check_purchase_right($ticket['ecodimb'], $_budget_amount, $id);
-				foreach ($check_purchase as $purchase_grant)
+				try
 				{
-					if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-					{
-						$purchase_grant_error = true;
-						phpgwapi_cache::message_set(lang('approval from %1 is required',
-								$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
-								'error'
-						);
-					}
+					$purchase_grant_ok = $this->bo->validate_purchase_grant( $ecodimb, $budget_amount, $order_id );
 				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
+
+				$purchase_grant_error = $purchase_grant_ok ? false : true;
+
 			}
 
 //				_debug_array($check_purchase); die();
@@ -3690,12 +3712,9 @@
 				try
 				{
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html', '', $attachments, true);
-					if ($rcpt)
-					{
-						phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message' );
-						$historylog->add('M', $id, "{$_to}{$attachment_log}");
-						phpgwapi_cache::message_set(lang('Workorder is sent by email!'),'message' );
-					}
+					phpgwapi_cache::message_set(lang('%1 is notified', $_to),'message' );
+					$historylog->add('M', $id, "{$_to}{$attachment_log}");
+					phpgwapi_cache::message_set(lang('Workorder %1 is sent by email to %2', $order_id, $_to),'message' );
 				}
 				catch (Exception $exc)
 				{

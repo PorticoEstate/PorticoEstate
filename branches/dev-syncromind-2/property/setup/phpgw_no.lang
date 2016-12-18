@@ -1209,7 +1209,8 @@ operation	property	no	Drift
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
 order approved	property	no	Bestilling godkjent
-order is not approved	property	no	Bestilling er ikke godkjent
+order %1 approved for amount %2	property	no	Bestilling %1 er godkjent med beløp %2
+order order %1 is not approved	property	no	Bestilling %1 er ikke godkjent
 order_dim1	property	no	Aktivitet
 order id	property	no	BestillingsNr
 order_id	property	no	BestillingsNr
@@ -1977,7 +1978,7 @@ workorder detail categories	property	no	Detaljering av bestilling
 workorder end date	property	no	Sluttdato
 workorder entry date	property	no	Registreringsdato
 workorder id	property	no	Bestilling
-workorder is sent by email!	property	no	Bestilling er sendt pr e-post!
+Workorder %1 is sent by email to %2	property	no	Bestilling %1 er sendt pr e-post til %2
 workorders status	property	no	Status bestilling
 workorder start date	property	no	Start dato for bestilling
 workorder status	property	no	Status
@@ -2068,5 +2069,5 @@ account type	property	no	Rolletype
 update ticket	property	no	Oppdater melding
 make relation	property	no	Opprett kopling
 request for approval	property	no	Anmodning om godkjenning
-approval from %1 is required	property	no	Godkjenning fra %1 er påkrevd
+approval from %1 is required for order %2	property	no	Godkjenning fra %1 er påkrevd for ordre %2
 missing recipient for order %1	property	no	Mangler mottaker for ordre %1

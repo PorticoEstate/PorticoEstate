@@ -45,7 +45,8 @@
 
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$custom_fields;
 
 		public function __construct()
 		{
@@ -59,21 +60,6 @@
 			$this->custom_fields = eventplanner_vendor_report::get_instance()->get_custom_fields();
 		}
 
-		private function get_status_options( $selected = 0 )
-		{
-			$status_options = array();
-			$status_list = eventplanner_vendor_report::get_status_list();
-
-			foreach ($status_list as $_key => $_value)
-			{
-				$status_options[] = array(
-					'id' => $_key,
-					'name' => $_value,
-					'selected' => $_key == $selected ? 1 : 0
-				);
-			}
-			return $status_options;
-		}
 
 		private function _get_filters()
 		{
@@ -86,35 +72,6 @@
 				'label_attr' => 'name',
 				'text' => lang('vendor') . ':',
 				'requestGenerator' => 'requestWithVendorFilter'
-			);
-
-			$status_options = $this->get_status_options();
-			array_unshift($status_options, array('id' => '','name' => lang('all')));
-
-			$combos[] = array(
-				'type' => 'filter',
-				'name' => 'filter_status',
-				'extra' => '',
-				'text' => lang('status'),
-				'list' => $status_options
-			);
-
-			$categories = $this->cats->formatted_xslt_list(array('format' => 'filter',
-					'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
-			$default_value = array('cat_id' => '', 'name' => lang('no category'));
-			array_unshift($categories['cat_list'], $default_value);
-
-			$_categories = array();
-			foreach ($categories['cat_list'] as $_category)
-			{
-				$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
-			}
-
-			$combos[] = array('type' => 'filter',
-				'name' => 'filter_category_id',
-				'extra' => '',
-				'text' => lang('category'),
-				'list' => $_categories
 			);
 
 			return $combos;
@@ -150,7 +107,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
+	//				'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -223,7 +180,28 @@
 				$vendor_report = $this->bo->read_single($id);
 			}
 
-			$custom_values = $vendor_report->json_representation;
+			$booking_id = $vendor_report->booking_id ? $vendor_report->booking_id : phpgw::get_var('booking_id', 'int');
+			$booking = createObject('eventplanner.bobooking')->read_single($booking_id);
+
+			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
+			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
+			$types = (array)$application->types;
+			if($types)
+			{
+				foreach ($application_type_list as &$application_type)
+				{
+					foreach ($types as $type)
+					{
+						if((!empty($type['type_id']) && $type['type_id'] == $application_type['id']) || ($type == $application_type['id']))
+						{
+							$application_type['selected'] = 1;
+							break;
+						}
+					}
+				}
+			}
+
+			$custom_values = $vendor_report->json_representation ? $vendor_report->json_representation : array();
 			$custom_fields = createObject('booking.custom_fields','eventplanner');
 			$fields = $this->custom_fields;
 			foreach ($fields as $attrib_id => &$attrib)
@@ -259,8 +237,10 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor_report.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor_report.index',)),
 				'vendor_report' => $vendor_report,
-				'status_list' => array('options' => $this->get_status_options($vendor_report->status)),
-				'vendor_report_type_list' => $vendor_report_type_list,
+				'booking'		=> $booking,
+				'application'	=> $application,
+				'application_type_list' => $application_type_list,
+				'booking_url' => self::link(array('menuaction' => 'eventplanner.uibooking.edit', 'id' => $booking->id, 'active_tab' => 'reports')),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab,
@@ -269,7 +249,7 @@
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('eventplanner', 'portico', 'vendor_report.edit.js');
-			self::render_template_xsl(array('vendor_report', 'datatable_inline', 'attributes_form'), array($mode => $data));
+			self::render_template_xsl(array('vendor_report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 
 		

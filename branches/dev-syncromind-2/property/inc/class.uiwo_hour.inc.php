@@ -1330,6 +1330,14 @@
 					}
 					unset($_ok);
 				}
+				else
+				{
+					if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+					{
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
+							'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+					}
+				}
 
 				$criteria = array
 					(
@@ -1492,11 +1500,30 @@ HTML;
 						$body = $header . $html . $footer;
 					}
 
+					$_status = isset($this->config->config_data['workorder_ordered_status']) && $this->config->config_data['workorder_ordered_status'] ? $this->config->config_data['workorder_ordered_status'] : 0;
+
+					if (!$_status)
+					{
+						throw new Exception('status on ordered not given in config');
+					}
+
 					if (!is_object($GLOBALS['phpgw']->send))
 					{
 						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 					}
-					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+
+					try
+					{
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+					}
+					catch (Exception $e)
+					{
+						if ($e)
+						{
+							throw $e;
+						}
+					}
+
 				}
 				else
 				{
@@ -1509,7 +1536,7 @@ HTML;
 					$_attachment_log = $attachment_log ? "::$attachment_log" : '';
 					$historylog = CreateObject('property.historylog', 'workorder');
 					$historylog->add('M', $workorder_id, "{$_to}{$_attachment_log}");
-					$receipt['message'][] = array('msg' => lang('Workorder is sent by email!'));
+					$receipt['message'][] = array('msg' => lang('Workorder %1 is sent by email!', $workorder_id));
 					if ($attachment_log)
 					{
 						$receipt['message'][] = array('msg' => $attachment_log);
@@ -1526,6 +1553,21 @@ HTML;
 							$workorder_id), $this->config->config_data['sms_client_order_notice']));
 						$historylog->add('MS', $workorder_id, $to_sms_phone);
 					}
+
+					try
+					{
+						execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
+							'status' => $_status));
+					}
+					catch (Exception $e)
+					{
+						if ($e)
+						{
+							throw $e;
+						}
+					}
+
+
 					//Sigurd: Consider remove
 					/*
 					  if( $this->boworkorder->order_sent_adress )
@@ -1817,8 +1859,7 @@ HTML;
 		{
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 			if (!$workorder_id)
 			{
@@ -1858,11 +1899,30 @@ HTML;
 
 				if (!$_ok)
 				{
-					phpgwapi_cache::message_set(lang('order is not approved'), 'error');
-					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
-						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+					throw new Exception(lang('order %1 is not approved'), $workorder_id);
+//					phpgwapi_cache::message_set(lang('order is not approved'), 'error');
+//					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
+//						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
 				}
 				unset($_ok);
+			}
+			else
+			{
+				try
+				{
+					$_validated = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
+
+				if(!$_validated)
+				{
+					throw new Exception(lang('order %1 is not approved'), $workorder_id);
+//					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
+//						'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
+				}
 			}
 
 			$content = $this->_get_order_details($common_data['content'], $show_cost);
@@ -3284,7 +3344,7 @@ HTML;
 		function send_order( $workorder_id )
 		{
 			$workorder = $this->boworkorder->read_single($workorder_id);
-			$show_cost = true;
+			$show_cost = false;
 			$email_receipt = true;
 			$pdfcode = $this->pdf_order($workorder_id, $show_cost);
 			$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
@@ -3313,10 +3373,7 @@ HTML;
 
 			$from_name = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
 			$from_email = "{$from_name}<{$GLOBALS['phpgw']->preferences->data['property']['email']}>";
-			if ($GLOBALS['phpgw']->preferences->data['property']['order_email_rcpt'] == 1)
-			{
-				$bcc = $from_email;
-			}
+			$bcc = !empty($GLOBALS['phpgw']->preferences->data['property']['email']) ? $from_email : '';
 
 			$subject = lang('Workorder') . ": " . $workorder_id;
 
@@ -3349,11 +3406,15 @@ HTML;
 			try
 			{
 				$GLOBALS['phpgw']->send->msg('email', $_to, $subject, $body, '', $cc, $bcc, $from_email, $from_name, 'html', '', $attachments, $email_receipt);
+				phpgwapi_cache::message_set(lang('Workorder %1 is sent by email to %2', $workorder_id, $_to),'message');
+				phpgwapi_cache::message_set(lang('%1 is notified', $bcc),'message');
 			}
 			catch (Exception $e)
 			{
 				if ($e)
 				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+					phpgwapi_cache::message_set("Bestilling {$workorder_id} er ikke sendt", 'error');
 					throw $e;
 				}
 			}
@@ -3393,5 +3454,33 @@ HTML;
 				$formatted_gab_id = substr($gab_id, 4, 5) . ' / ' . substr($gab_id, 9, 4) . ' / ' . substr($gab_id, 13, 4) . ' / ' . substr($gab_id, 17, 3);
 			}
 			return $formatted_gab_id;
+		}
+
+
+		private function _validate_purchase_grant( $id, $ecodimb, $project_id )
+		{
+
+			$approval_level = !empty($this->config->config_data['approval_level']) ? $this->config->config_data['approval_level'] : 'order';
+
+			$_accumulated_budget_amount = 0;
+			if($approval_level == 'project')
+			{
+				$_budget_amount = $this->boworkorder->get_accumulated_budget_amount($project_id);
+			}
+			else
+			{
+				$_budget_amount = $this->boworkorder->get_budget_amount($id);
+			}
+
+			try
+			{
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $ecodimb, $_budget_amount, $id);
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			return $purchase_grant_ok;
 		}
 	}

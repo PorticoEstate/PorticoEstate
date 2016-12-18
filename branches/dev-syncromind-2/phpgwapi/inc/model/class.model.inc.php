@@ -76,7 +76,7 @@
 					{
 						case 'int':
 						case 'integert':
-							$value = (int)$this->$name;
+							$value = empty($this->$name) && $this->$name === '' ? null : (int)$this->$name;
 							break;
 						case 'float':
 							$value = (float)$this->$name;
@@ -279,6 +279,14 @@
 			return $errors ? false : true;
 		}
 
+
+		/**
+		 * Implement in subclasses
+		 */
+		public function get_custom_fields()
+		{
+			return array();
+		}
 		/**
 		 * Implement in subclasses to perform actions on entity before validation
 		 */

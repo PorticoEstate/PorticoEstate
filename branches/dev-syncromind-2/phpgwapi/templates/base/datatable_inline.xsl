@@ -93,7 +93,9 @@
 														{
 															 $(this).prop("checked", true);
 														});
-														var selectedRows = api.rows( { selected: true } ).count();
+													//	var selectedRows = api.rows( { selected: true } ).count();
+														var selectedRows = api.rows('.selected').data().length;
+
 														api.buttons( '.record' ).enable( selectedRows > 0 );
 													}
 												}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>

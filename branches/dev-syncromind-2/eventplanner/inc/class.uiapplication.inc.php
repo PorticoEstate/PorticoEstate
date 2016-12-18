@@ -237,13 +237,11 @@
 			$tabs['calendar'] = array(
 				'label' => lang('calendar'),
 				'link' => '#calendar',
-				'function' => "set_tab('calendar')"
+				'function' => "set_tab('calendar')",
+				'disable'	=> $id ? false : true
 			);
 
 			$bocommon = CreateObject('property.bocommon');
-
-			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
-			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
 
 			$accounts = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.application', 'eventplanner');
 			$case_officer_options[] = array('id' => '', 'name' => lang('select'), 'selected' => 0);
@@ -281,11 +279,11 @@
 			);
 
 			$dates_def = array(
-				array('key' => 'id',  'hidden' => true),
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
 				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'where', 'label' => lang('where'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'location', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'customer_name', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'application_id', 'hidden' => true),
@@ -331,7 +329,6 @@
 					'filter_application_id' => $id,
 					'filter_active'	=> 1,
 					'phpgw_return_as' => 'json'))),
-//				'requestUrl' => "''",
 				'tabletools' => $tabletools,
 				'ColumnDefs' => $dates_def,
 				'data' => json_encode(array()),
@@ -340,8 +337,13 @@
 					array('disablePagination' => true)
 				)
 			);
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'datetime');
+			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
+			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $application->date_start, array(
+					'min_date' => date('Y/m/d', $application->date_start),
+					'max_date' => date('Y/m/d', $application->date_end)
+				)
+			);
 
 			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
 			$types = (array)$application->types;
@@ -351,7 +353,7 @@
 				{
 					foreach ($types as $type)
 					{
-						if($type['type_id'] == $application_type['id'])
+						if((!empty($type['type_id']) && $type['type_id'] == $application_type['id']) || ($type == $application_type['id']))
 						{
 							$application_type['selected'] = 1;
 							break;
@@ -376,6 +378,7 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.index',)),
 				'application' => $application,
+				'new_vendor_url' => self::link(array('menuaction' => 'eventplanner.uivendor.add')),
 				'list_case_officer' => array('options' => $case_officer_options),
 				'cat_select' => $this->cats->formatted_xslt_list(array(
 					'select_name' => 'category_id',

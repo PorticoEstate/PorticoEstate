@@ -43,7 +43,7 @@
 
 		}
 
-		function add_listener($name, $type = 'date', $value = '')
+		function add_listener($name, $type = 'date', $value = 0, $config = array())
 		{
 			switch($type)
 			{
@@ -59,8 +59,15 @@
 					$_type = 'date';
 					$dateformat = "{$this->dateformat}";
 			}
-
-			$this->_input_modern($name, $_type, $dateformat);
+			if(ctype_digit($value) && $value)
+			{
+				$start_value = date('Y/m/d H:i', $value);
+			}
+			else
+			{
+				$start_value = '';
+			}
+			$this->_input_modern($name, $_type, $dateformat, $config, $start_value);
 			return "<input id='{$name}' type='text' value='{$value}' size='10' name='{$name}'/>";
 		}
 
@@ -70,11 +77,36 @@
 		* @access private
 		* @param string $name the element ID
 		*/
-		function _input_modern($id, $type, $dateformat)
+		function _input_modern($id, $type, $dateformat, $config = array(), $start_value = '')
 		{
 			$datepicker = $type == 'time' ? 0 : 1;
 			$timepicker = $type == 'date' ? 0 : 1;
 			$placeholder = str_ireplace(array('Y','m', 'd', 'H', 'i'), array('YYYY', 'MM', 'DD', 'HH', 'mm' ),$dateformat);
+
+
+			if(empty($config['min_date']))
+			{
+				$min_date = 0;
+			}
+			else
+			{
+				$min_date = "'{$config['min_date']}'";
+			}
+
+			if(!empty($config['max_date']))
+			{
+				$min_date .= ",maxDate:'{$config['max_date']}'";
+			}
+
+			if(!$start_value)
+			{
+				$start_value = 'new Date()';
+			}
+			else
+			{
+				$start_value = "new Date('{$start_value}')";
+			}
+
 
 			$js = <<<JS
 			$(document).ready(function()
@@ -91,12 +123,12 @@
 					step: 15,
 					weeks: true,
 					dayOfWeekStart:1,
-		//			mask:true,
-					minDate:0
+//					mask:true,
+					formatDate:'Y/m/d', //Format date for minDate and maxDate
+					formatTime: 'H:i',
+					startDate: {$start_value},
+					minDate:{$min_date}
 				});
-//jQuery('#image_button').click(function(){
-//  jQuery('#datetimepicker4').datetimepicker('show'); //support hide,show and destroy command
-//});
 			});
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $js);

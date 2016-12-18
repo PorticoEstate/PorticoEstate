@@ -41,6 +41,7 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
+			'get' => true
 		);
 
 		protected
@@ -235,7 +236,27 @@
 			self::add_javascript('eventplanner', 'portico', 'customer.edit.js');
 			self::render_template_xsl(array('customer', 'datatable_inline'), array($mode => $data));
 		}
-		
+
+		/*
+		 * Get the customer with the id given in the http variable 'id'
+		 */
+
+		public function get( $id = 0 )
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				phpgw::no_access();
+			}
+
+			$id = !empty($id) ? $id : phpgw::get_var('id', 'int');
+
+			$customer = $this->bo->read_single($id)->toArray();
+
+			unset($customer['secret']);
+
+			return $customer;
+		}
+
 		public function save()
 		{
 			parent::save();

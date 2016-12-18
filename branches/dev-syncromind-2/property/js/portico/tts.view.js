@@ -378,7 +378,7 @@ $(window).on('load', function()
 		}
 	});
 
-	$("#budget").change(function ()
+	$("#field_budget").change(function ()
 	{
 		populateTableChkApproval();
 	});
@@ -394,10 +394,10 @@ function populateTableChkApproval(ecodimb)
 		return;
 	}
 
-	var total_amount = Number(amount) + Number($('#budget').val());
+	var total_amount = Number(amount) + Number($('#field_budget').val());
 	$("#order_received_amount").val(total_amount);
 
-	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, ticket_id: location_item_id};
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = "";
 
@@ -409,7 +409,7 @@ function populateTableChkApproval(ecodimb)
 		{
 			if (data != null)
 			{
-				htmlString = "<table><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
+				htmlString = "<table class='pure-table pure-table-striped'><thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
 				var obj = data;
 				var required = '';
 
@@ -447,7 +447,14 @@ function populateTableChkApproval(ecodimb)
 					}
 					htmlString += left_cell;
 					htmlString += "</td><td valign=\"top\">";
-					htmlString += obj[i].address;
+					if (obj[i].required === true || obj[i].default === true)
+					{
+						htmlString += '<b>[' + obj[i].address + ']</b>';
+					}
+					else
+					{
+						htmlString += obj[i].address;
+					}
 					htmlString += "</td>";
 					htmlString += "<td>";
 
@@ -467,9 +474,12 @@ function populateTableChkApproval(ecodimb)
 					htmlString += "</tr>";
 				});
 				htmlString += "</tbody></table>";
-//console.log(htmlString);
 				$("#approval_container").html(htmlString);
 			}
+		},
+		error: function ()
+		{
+			alert('feil med oppslag til fullmakter');
 		}
 	});
 }
@@ -477,16 +487,12 @@ $(document).ready(function ()
 {
 
 	var test = document.getElementById('send_order_button');
-	var width = 200;
-	if (test !== null)
-	{
-		width = 280;
-	}
-	else
+	if (test == null)
 	{
 		return;
 	}
-
+	//var width = 200;
+	var width =  $("#submitbox").width();
 	$("#submitbox").css({
 		position: 'absolute',
 		right: '10px',
@@ -494,7 +500,7 @@ $(document).ready(function ()
 		padding: '0 10px 10px 10px',
 		width: width + 'px',
 		"background - color": '#FFF',
-		display: "block",
+		display: "block"
 	});
 
 	var offset = $("#submitbox").offset();

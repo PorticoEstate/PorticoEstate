@@ -2062,4 +2062,12 @@
 			$this->db->transaction_commit();
 			return $receipt;
 		}
+		function get_ticket_from_order($order_id)
+		{
+			$order_id = (int) $order_id;
+			$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id = {$order_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			return $this->db->f('id');
+
+		}
 	}

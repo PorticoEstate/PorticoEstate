@@ -63,20 +63,16 @@
 				$price += $budget['amount'];
 			}
 
-			$purchase_grant_error = false;
-			$check_purchase = CreateObject('property.botts')->check_purchase_right($data['ecodimb'], $price, $id);
-			foreach ($check_purchase as $purchase_grant)
+			try
 			{
-				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
-				{
-					$purchase_grant_error = true;
-					phpgwapi_cache::message_set(lang('approval from %1 is required',
-							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString()),
-							'error'
-					);
-				}
+				$purchase_grant_ok = CreateObject('property.botts')->validate_purchase_grant( $_ticket['ecodimb'], $price, $_ticket['order_id'] );
 			}
-			if (!$this->debug && $purchase_grant_error)
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			if (!$this->debug && !$purchase_grant_ok)
 			{
 				return 3;
 			}
@@ -173,7 +169,7 @@
 			}
 			else
 			{
-				throw new Exception("Ordrenummer '{$_ticket['order_id']}' er utenfor serien");
+				throw new Exception("Ordrenummer '{$_ticket['order_id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
 			}
 
 

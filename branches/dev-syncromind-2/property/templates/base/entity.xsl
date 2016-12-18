@@ -725,7 +725,7 @@
 									</xsl:for-each>
 								</div>
 								<xsl:choose>
-									<xsl:when test="cat_list='' and fileupload = 1 and mode = 'edit'">
+									<xsl:when test="value_id!='' and fileupload = 1 and mode = 'edit'">
 										<xsl:call-template name="file_upload"/>
 									</xsl:when>
 								</xsl:choose>

@@ -85,16 +85,13 @@
 			}
 
 			$values =  eventplanner_sovendor_report::get_instance()->read($params);
-			$status_text = eventplanner_vendor_report::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
-				$entry['status'] = $status_text[$entry['status']];
 				$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
 				$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
 				$entry['date_start'] = $GLOBALS['phpgw']->common->show_date($entry['date_start'], $dateformat);
 				$entry['date_end'] = $GLOBALS['phpgw']->common->show_date($entry['date_end'], $dateformat);
-				$entry['case_officer_id'] = $entry['case_officer_id'] ? $GLOBALS['phpgw']->accounts->get($entry['case_officer_id'])->__toString() : '';
 			}
 			return $values;
 		}

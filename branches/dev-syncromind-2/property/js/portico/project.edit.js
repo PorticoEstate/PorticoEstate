@@ -1,206 +1,4 @@
-$(document).ready(function ()
-{
-
-	/*
-	 Float Submit Button To Right Edge Of Window
-	 Version 1.0
-	 April 11, 2010
-
-	 Will Bontrager
-	 http://www.willmaster.com/
-	 Copyright 2010 Bontrager Connection, LLC
-
-	 Generated with customizations on February 23, 2016 at
-	 http://www.willmaster.com/library/manage-forms/floating-submit-button.php
-
-	 Bontrager Connection, LLC grants you
-	 a royalty free license to use or modify
-	 this software provided this notice appears
-	 on all copies. This software is provided
-	 "AS IS," without a warranty of any kind.
-	 */
-
-//*****************************//
-
-	/** Five places to customize **/
-
-// Place 1:
-// The id value of the button.
-
-	var ButtonId = "submitform";
-
-
-// Place 2:
-// The width of the button.
-
-	var ButtonWidth = 60;
-
-
-// Place 3:
-// Left/Right location of button (specify "left" or "right").
-
-	var ButtonLocation = "right";
-
-
-// Place 4:
-// How much space (in pixels) between button and window left/right edge.
-
-	var SpaceBetweenButtonAndEdge = 30;
-
-
-// Place 5:
-// How much space (in pixels) between button and window top edge.
-
-	var SpaceBetweenButtonAndTop = 100;
-
-
-	/** No other customization required. **/
-
-//************************************//
-
-	TotalWidth = parseInt(ButtonWidth) + parseInt(SpaceBetweenButtonAndEdge);
-	ButtonLocation = ButtonLocation.toLowerCase();
-	ButtonLocation = ButtonLocation.substr(0, 1);
-	var ButtonOnLeftEdge = (ButtonLocation == 'l') ? true : false;
-
-	function AddButtonPlacementEvents(f)
-	{
-		var cache = window.onload;
-		if (typeof window.onload != 'function')
-		{
-			window.onload = f;
-		}
-		else
-		{
-			window.onload = function ()
-			{
-				if (cache)
-				{
-					cache();
-				}
-				f();
-			};
-		}
-		cache = window.onresize;
-		if (typeof window.onresize != 'function')
-		{
-			window.onresize = f;
-		}
-		else
-		{
-			window.onresize = function ()
-			{
-				if (cache)
-				{
-					cache();
-				}
-				f();
-			};
-		}
-	}
-
-	function WindowHasScrollbar()
-	{
-		var ht = 0;
-		if (document.all)
-		{
-			if (document.documentElement)
-			{
-				ht = document.documentElement.clientHeight;
-			}
-			else
-			{
-				ht = document.body.clientHeight;
-			}
-		}
-		else
-		{
-			ht = window.innerHeight;
-		}
-		if (document.body.offsetHeight > ht)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
-	function GlueButton(ledge)
-	{
-		var test = document.getElementById('add_sub_entry');
-
-		var left_submit = 400;
-		var left_cancel = 800;
-		if(test != null )
-		{
-			$("#add_sub_entry").css({
-				top: SpaceBetweenButtonAndTop + "px",
-				left: (ledge - 80) + "px",
-				display : "block",
-				zIndex : "9999",
-				position:'fixed'
-			});
-
-			ledge -= 140;
-		}
-
-		$("#submitform").css({
-			top: SpaceBetweenButtonAndTop + "px",
-			width : ButtonWidth + "px",
-			left: (ledge - 100 )+ "px",
-			display : "block",
-			zIndex : "9999",
-			position:'fixed'
-		});
-
-		$("#cancelform").css({
-			top: SpaceBetweenButtonAndTop + "px",
-			width : ButtonWidth + "px",
-			left: (ledge -20)+ "px",
-			display : "block",
-			zIndex : "9999",
-			position:'fixed'
-		});
-
-
-	}
-
-	function PlaceTheButton()
-	{
-		if (ButtonOnLeftEdge)
-		{
-			GlueButton(SpaceBetweenButtonAndEdge);
-			return;
-		}
-		if (document.documentElement && document.documentElement.clientWidth)
-		{
-			GlueButton(document.documentElement.clientWidth - TotalWidth);
-		}
-		else
-		{
-			if (navigator.userAgent.indexOf('MSIE') > 0)
-			{
-				GlueButton(document.body.clientWidth - TotalWidth + 19);
-			}
-			else
-			{
-				var scroll = WindowHasScrollbar() ? 0 : 15;
-				if (typeof window.innerWidth == 'number')
-				{
-					GlueButton(window.innerWidth - TotalWidth - 15 + scroll);
-				}
-				else
-				{
-					GlueButton(document.body.clientWidth - TotalWidth + 15);
-				}
-			}
-		}
-	}
-
-	AddButtonPlacementEvents(PlaceTheButton);
-});
+var project_id;
 var sUrl_workorder = phpGWLink('index.php', {'menuaction': 'property.uiworkorder.edit'});
 var sUrl_invoice = phpGWLink('index.php', {'menuaction': 'property.uiinvoice.index'});
 
@@ -327,6 +125,7 @@ function sum_columns_table_invoice()
 
 $(document).ready(function ()
 {
+	check_button_names();
 
 	$("#global_category_id").change(function ()
 	{
@@ -363,13 +162,80 @@ $(document).ready(function ()
 		JqueryPortico.updateinlineTableHelper(oTable2, requestUrl2);
 	});
 
-	var api1 = oTable1.api();
-	api1.on('draw', sum_columns_table_orders);
+	if (typeof (oTable1) !== 'undefined')
+	{
+		var api1 = oTable1.api();
+		api1.on('draw', sum_columns_table_orders);
+	}
 
-	var api2 = oTable2.api();
-	api2.on('draw', sum_columns_table_invoice);
+	if (typeof (oTable2) !== 'undefined')
+	{
+		var api2 = oTable2.api();
+		api2.on('draw', sum_columns_table_invoice);
+	}
+
+
+// -- buttons--//
+
+	$("#submitbox").css({
+		position: 'absolute',
+		right: '10px',
+		border: '1px solid #B5076D',
+		padding: '0 10px 10px 10px',
+		width: $("#submitbox").width() + 'px',
+		"background - color": '#FFF',
+		display: "block"
+	});
+
+	var offset = $("#submitbox").offset();
+	var topPadding = 180;
+
+	if ($("#center_content").length === 1)
+	{
+		$("#center_content").scroll(function ()
+		{
+			if ($("#center_content").scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $("#center_content").scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+	else
+	{
+		$(window).scroll(function ()
+		{
+			if ($(window).scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $(window).scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+
 
 });
+
+function addSubEntry()
+{
+	document.add_sub_entry_form.submit();
+}
 
 function check_and_submit_valid_session()
 {
@@ -407,13 +273,14 @@ function check_and_submit_valid_session()
 this.validate_form = function ()
 {
 	conf = {
-		modules: 'location, date, security, file',
+	//	modules: 'date, security, file',
 		validateOnBlur: false,
 		scrollToTopOnError: true,
-		errorMessagePosition: 'top',
-		language: validateLanguage
+		errorMessagePosition: 'top'
+	//	language: validateLanguage
 	};
-	return $('form').isValid(validateLanguage, conf);
+
+	return $('form').isValid(false, conf);
 }
 
 JqueryPortico.FormatterClosed = function (key, oData)
@@ -426,24 +293,75 @@ JqueryPortico.FormatterActive = function (key, oData)
 	return "<div align=\"center\">" + oData['active'] + oData['active_orig'] + "</div>";
 };
 
-function set_tab(tab)
+function set_tab(active_tab)
 {
-	$("#project_tab").val(tab);
+//	var test = $('#tab-content').responsiveTabs('activate');
+//	alert(test);
+//console.log(test);
+	$("#active_tab").val(active_tab);
+	check_button_names();
 }
 
-$(document).ready(function ()
+check_button_names = function ()
 {
-	$('form[name=form]').submit(function (e)
-	{
-		e.preventDefault();
+	var active_tab = $("#active_tab").val();
 
-		if (!validate_form())
+	if (Number(project_id) === 0)
+	{
+		if (active_tab === 'general')
 		{
-			return;
+			$("#submitform").val(lang['next']);
 		}
+		else if (active_tab === 'location')
+		{
+			$("#submitform").val(lang['next']);
+		}
+		else
+		{
+			$("#submitform").val(lang['save']);
+		}
+	}
+};
+
+validate_submit = function ()
+{
+	var active_tab = $("#active_tab").val();
+
+	if (!validate_form())
+	{
+		return;
+	}
+
+	if (active_tab === 'general' && Number(project_id) === 0)
+	{
+		$('#tab-content').responsiveTabs('enable', 1);
+		$('#tab-content').responsiveTabs('activate', 1);
+		$("#submitform").val(lang['next']);
+		$("#active_tab").val('location');
+	}
+	else if (active_tab === 'location' && Number(project_id) === 0)
+	{
+		$('#tab-content').responsiveTabs('enable', 2);
+		$('#tab-content').responsiveTabs('activate', 2);
+		$("#submitform").val(lang['save']);
+		$("#active_tab").val('budget');
+	}
+	else
+	{
 		check_and_submit_valid_session();
-	});
-});
+	}
+
+};
+
+//$(document).ready(function ()
+//{
+//
+//	$('form[name=form]').submit(function (e)
+//	{
+//		e.preventDefault();
+//
+//	});
+//});
 
 var oArgs = {menuaction: 'property.uiproject.get_external_project'};
 var strURL = phpGWLink('index.php', oArgs, true);

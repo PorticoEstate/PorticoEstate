@@ -976,7 +976,7 @@
 						{
 							if ($e)
 							{
-								phpgwapi_cache::message_set($e->getMessage(), 'error');
+//								phpgwapi_cache::message_set($e->getMessage(), 'error');
 							}
 						}
 					}

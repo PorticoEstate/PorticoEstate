@@ -513,7 +513,7 @@ $.extend( FixedColumns.prototype , {
 		$(this.dom.scroller)
 			.on( 'mouseover.DTFC touchstart.DTFC', function () {
 				if ( ! mouseDown ) {
-				mouseController = 'main';
+					mouseController = 'main';
 				}
 			} )
 			.on( 'scroll.DTFC', function (e) {
@@ -540,7 +540,7 @@ $.extend( FixedColumns.prototype , {
 			$(that.dom.grid.left.liner)
 				.on( 'mouseover.DTFC touchstart.DTFC', function () {
 					if ( ! mouseDown ) {
-					mouseController = 'left';
+						mouseController = 'left';
 					}
 				} )
 				.on( 'scroll.DTFC', function ( e ) {
@@ -569,7 +569,7 @@ $.extend( FixedColumns.prototype , {
 			$(that.dom.grid.right.liner)
 				.on( 'mouseover.DTFC touchstart.DTFC', function () {
 					if ( ! mouseDown ) {
-					mouseController = 'right';
+						mouseController = 'right';
 					}
 				} )
 				.on( 'scroll.DTFC', function ( e ) {
@@ -612,9 +612,9 @@ $.extend( FixedColumns.prototype , {
 			} )
 			.on( 'column-visibility.dt.DTFC', function ( e, settings, column, vis, recalc ) {
 				if ( recalc === undefined || recalc ) {
-				that._fnColCalc();
-				that._fnGridLayout( that );
-				that._fnDraw( true );
+					that._fnColCalc();
+					that._fnGridLayout( that );
+					that._fnDraw( true );
 				}
 			} )
 			.on( 'select.dt.DTFC deselect.dt.DTFC', function ( e, dt, type, indexes ) {

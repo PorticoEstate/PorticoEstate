@@ -509,8 +509,11 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	});
 	$("#" + container + ' tbody').on('click', 'tr', function ()
 	{
+		$(this).toggleClass('selected');
 		var api = oTable.api();
-		var selectedRows = api.rows({selected: true}).count();
+//		var selectedRows = api.rows({selected: true}).count();
+		var selectedRows = api.rows('.selected').data().length;
+
 		api.buttons('.record').enable(selectedRows > 0);
 
 		var row = $(this);

@@ -26,7 +26,8 @@
 			}
 			#submitbox {
 			display: none;
-			} 	</style>
+			}
+		</style>
 		<xsl:variable name="date_format">
 			<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 		</xsl:variable>
@@ -38,7 +39,7 @@
 			</xsl:variable>
 
 			<script type="text/javascript">
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save')"/>;
 			</script>
 			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
@@ -49,15 +50,15 @@
 								<tbody>
 									<tr>
 										<td width="200px">
-											<xsl:variable name="lang_savel">
-												<xsl:value-of select="php:function('lang', 'save')"/>
+											<xsl:variable name="lang_save">
+												<xsl:value-of select="php:function('lang', 'next')"/>
 											</xsl:variable>
-											<input type="submit" class="pure-button pure-button-primary" name="save">
+											<input type="button" class="pure-button pure-button-primary" name="save" id="save_button" onClick="validate_submit();">
 												<xsl:attribute name="value">
-													<xsl:value-of select="$lang_savel"/>
+													<xsl:value-of select="$lang_save"/>
 												</xsl:attribute>
 												<xsl:attribute name="title">
-													<xsl:value-of select="$lang_savel"/>
+													<xsl:value-of select="$lang_save"/>
 												</xsl:attribute>
 											</input>
 										</td>
@@ -116,7 +117,14 @@
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="$lang_vendor"/>
 									</xsl:attribute>
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
 								</input>
+								<xsl:text> </xsl:text>
+								<a href="{new_vendor_url}" target="_blank">
+									<xsl:value-of select="php:function('lang', 'new')"/>
+								</a>
 								<div id="vendor_container"/>
 							</div>
 							<div class="pure-control-group">
@@ -427,7 +435,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'stage')"/>
 								</label>
-								<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}">
+								<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}" size="2">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'width')"/>
 									</xsl:attribute>
@@ -439,7 +447,7 @@
 									</xsl:attribute>
 								</input>
 								<xsl:text> X </xsl:text>
-								<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}">
+								<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}" size="2">
 									<xsl:attribute name="data-validation">
 										<xsl:text>number</xsl:text>
 									</xsl:attribute>
@@ -451,7 +459,7 @@
 									</xsl:attribute>
 								</input>
 								<xsl:text> M </xsl:text>
-								<input id="stage_size" type="text" disabled="disabled"/>
+								<input id="stage_size" type="text" disabled="disabled" size="3"/>
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -475,19 +483,18 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'audience limit')"/>
 								</label>
-								<input type="text" id="audience_limit" name="audience_limit" value="{application/audience_limit}">
+								<input type="text" id="audience_limit" name="audience_limit" value="{application/audience_limit}"  size="5">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 									<xsl:attribute name="data-validation-error-msg">
-										<xsl:value-of select="php:function('lang', 'audience_limit')"/>
+										<xsl:value-of select="php:function('lang', 'audience limit')"/>
 									</xsl:attribute>
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="php:function('lang', 'integer')"/>
 									</xsl:attribute>
 								</input>
 							</div>
-
 						</fieldset>
 						<fieldset>
 							<legend>
@@ -707,6 +714,14 @@
 									<xsl:value-of select="php:function('date', $date_format, number(application/date_end))"/>
 								</xsl:if>
 							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'timespan')"/>
+								</label>
+								<xsl:if test="application/date_end != 0 and application/timespan != ''">
+									<xsl:value-of select="application/timespan"/>
+								</xsl:if>
+							</div>
 
 							<div class="pure-control-group">
 								<label>
@@ -715,13 +730,13 @@
 								<input type="text" id="from_" name="from_" size="16" readonly="readonly">
 								</input>
 							</div>
-							<div class="pure-control-group">
+							<!--div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'to')"/>
 								</label>
 								<input type="text" id="to_" name="to_" size="16" readonly="readonly">
 								</input>
-							</div>
+							</div-->
 
 							<div class="pure-control-group">
 								<label>
@@ -742,19 +757,20 @@
 									</xsl:for-each>
 								</div>
 							</div>
-
-
 						</fieldset>
-
-
-
 					</div>
 
 				</div>
 				<div id="submit_group_bottom" class="proplist-col">
-					<input type="submit" class="pure-button pure-button-primary" name="save">
+					<xsl:variable name="lang_save">
+						<xsl:value-of select="php:function('lang', 'next')"/>
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="save" id="save_button_bottom" onClick="validate_submit();">
 						<xsl:attribute name="value">
-							<xsl:value-of select="php:function('lang', 'save')"/>
+							<xsl:value-of select="$lang_save"/>
+						</xsl:attribute>
+						<xsl:attribute name="title">
+							<xsl:value-of select="$lang_save"/>
 						</xsl:attribute>
 					</input>
 					<xsl:variable name="cancel_url">

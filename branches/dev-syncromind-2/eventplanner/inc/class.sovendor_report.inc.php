@@ -82,7 +82,6 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
-			$status_text = eventplanner_vendor_report::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$original = $this->read_single($object->get_id());//returned as array()

@@ -51,6 +51,8 @@
 		var $connection;
 		var $order_id;
 		var $voucher_type;
+		var $batchid;
+
 
 		public function __construct( $param )
 		{
@@ -233,9 +235,9 @@
 
 		public function transfer( $debug )
 		{
-
-			$filename = $this->create_file_name($this->order_id);
 			$batchid = $this->soXport->increment_batchid();
+			$this->batchid = $batchid;
+			$filename = $this->create_file_name($this->order_id);
 			$content = $this->transfer_xml;
 
 			if($debug) // keep a copy?
@@ -247,6 +249,10 @@
 				if (fclose($fp))
 				{
 					$file_written = true;
+				}
+				else
+				{
+					phpgwapi_cache::message_set("$filename feilet", 'error');
 				}
 			}
 

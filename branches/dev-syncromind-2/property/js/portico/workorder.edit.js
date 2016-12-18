@@ -1,38 +1,72 @@
-
+//var amount = 0;
+var local_value_budget;
+var accumulated_budget_amount;
+var order_id;
 var vendor_id;
+var project_ecodimb;
 
-$(document).ready(function ()
+function calculate_order()
 {
-	$('form[name=form]').submit(function (e)
+	if (!validate_form())
 	{
-		e.preventDefault();
+		return;
+	}
+	document.getElementsByName("calculate_workorder")[0].value = 1;
+	check_and_submit_valid_session();
+}
 
-		if (!validate_form())
-		{
-			return;
-		}
+function submit_workorder()
+{
+	var active_tab = $("#active_tab").val();
+
+	if (!validate_form())
+	{
+		return;
+	}
+
+	if (active_tab === 'general' && Number(order_id) === 0)
+	{
+		$('#tab-content').responsiveTabs('enable', 1);
+		$('#tab-content').responsiveTabs('activate', 1);
+		$("#save_button").val(lang['save']);
+		$("#save_button_bottom").val(lang['save']);
+		$("#active_tab").val('budget');
+	}
+	else
+	{
 		check_and_submit_valid_session();
-	});
+	}
+}
 
-	$.formUtils.addValidator({
-		name: 'budget',
-		validatorFunction: function (value, $el, config, languaje, $form)
+
+function send_order()
+{
+	if (!validate_form())
+	{
+		return;
+	}
+	document.getElementsByName("send_workorder")[0].value = 1;
+	check_and_submit_valid_session();
+}
+
+check_button_names = function ()
+{
+	var active_tab = $("#active_tab").val();
+	if (Number(order_id) === 0)
+	{
+		if (active_tab === 'general')
 		{
-			//check_for_budget is defined in xsl-template
-			var v = false;
-			var budget = $('#field_budget').val();
-			var contract_sum = $('#field_contract_sum').val();
-			if ((budget != "" || contract_sum != "") || (check_for_budget > 0))
-			{
-				v = true;
-			}
-			return v;
-		},
-		errorMessage: lang['please enter either a budget or contrakt sum'],
-		errorMessageKey: ''
-	});
+			$("#save_button").val(lang['next']);
+			$("#save_button_bottom").val(lang['next']);
+		}
+		else
+		{
+			$("#save_button").val(lang['save']);
+			$("#save_button_bottom").val(lang['save']);
+		}
+	}
+};
 
-});
 
 function receive_order(workorder_id)
 {
@@ -55,6 +89,7 @@ function receive_order(workorder_id)
 				{
 					msg = 'OK';
 					$("#order_received_time").html(data['time']);
+					$("#current_received_amount").html($("#order_received_amount").val());
 				}
 				else
 				{
@@ -116,36 +151,10 @@ this.validate_form = function ()
 	return $('form').isValid(validateLanguage, conf);
 }
 
-function submit_workorder()
+function set_tab(active_tab)
 {
-	if (!validate_form())
-	{
-		return;
-	}
-	check_and_submit_valid_session();
-}
-
-function calculate_workorder()
-{
-	if (!validate_form())
-	{
-		return;
-	}
-	document.getElementsByName("calculate_workorder")[0].value = 1;
-	check_and_submit_valid_session();
-}
-function send_workorder()
-{
-	if (!validate_form())
-	{
-		return;
-	}
-	document.getElementsByName("send_workorder")[0].value = 1;
-	check_and_submit_valid_session();
-}
-function set_tab(tab)
-{
-	$("#order_tab").val(tab);
+	$("#active_tab").val(active_tab);
+	check_button_names();
 }
 
 this.showlightbox_manual_invoice = function (workorder_id)
@@ -273,6 +282,37 @@ JqueryPortico.autocompleteHelper(strURL, 'unspsc_code_name', 'unspsc_code', 'uns
 $(document).ready(function ()
 {
 
+	check_button_names();
+
+//	$('form[name=form]').submit(function (e)
+//	{
+//		e.preventDefault();
+//
+//		if (!validate_form())
+//		{
+//			return;
+//		}
+//		check_and_submit_valid_session();
+//	});
+
+	$.formUtils.addValidator({
+		name: 'budget',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			//check_for_budget is defined in xsl-template
+			var v = false;
+			var budget = $('#field_budget').val();
+			var contract_sum = $('#field_contract_sum').val();
+			if ((budget != "" || contract_sum != "") || (check_for_budget > 0))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: lang['please enter either a budget or contrakt sum'],
+		errorMessageKey: ''
+	});
+
 	$("#global_category_id").change(function ()
 	{
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
@@ -391,4 +431,208 @@ $(document).ready(function ()
 //		parent.hide_popupBox();
 	});
 
+	var test = document.getElementById('save_button');
+	if (test === null)
+	{
+		return;
+	}
+
+	var width = $("#submitbox").width();
+
+	$("#submitbox").css({
+		position: 'absolute',
+		right: '10px',
+		border: '1px solid #B5076D',
+		padding: '0 10px 10px 10px',
+		width: width + 'px',
+		"background - color": '#FFF',
+		display: "block"
+	});
+
+	var offset = $("#submitbox").offset();
+	var topPadding = 180;
+
+	if ($("#center_content").length === 1)
+	{
+		$("#center_content").scroll(function ()
+		{
+			if ($("#center_content").scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $("#center_content").scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
+	else
+	{
+		$(window).scroll(function ()
+		{
+			if ($(window).scrollTop() > offset.top)
+			{
+				$("#submitbox").stop().animate({
+					marginTop: $(window).scrollTop() - offset.top + topPadding
+				}, 100);
+			}
+			else
+			{
+				$("#submitbox").stop().animate({
+					marginTop: 0
+				}, 100);
+			}
+			;
+		});
+	}
 });
+
+
+var ecodimb_selection = "";
+
+$(window).on('load', function ()
+{
+	ecodimb = $('#ecodimb').val();
+	ecodimb = ecodimb || project_ecodimb;
+
+	if (ecodimb)
+	{
+		populateTableChkApproval();
+		ecodimb_selection = ecodimb;
+	}
+	$("#ecodimb_name").on("autocompleteselect", function (event, ui)
+	{
+		var ecodimb = ui.item.value;
+		if (ecodimb !== ecodimb_selection)
+		{
+			populateTableChkApproval(ecodimb);
+		}
+	});
+
+	$("#field_contract_sum").change(function ()
+	{
+		populateTableChkApproval();
+	});
+
+	$("#field_budget").change(function ()
+	{
+		populateTableChkApproval();
+	});
+
+});
+
+function populateTableChkApproval(ecodimb)
+{
+	ecodimb = ecodimb || $('#ecodimb').val();
+	ecodimb = ecodimb || project_ecodimb;
+
+	if (!ecodimb)
+	{
+		return;
+	}
+
+	var contract_sum = Number($('#field_contract_sum').val());
+	var budget_sum = Number($('#field_budget').val());
+
+
+	var total_amount = Math.max((contract_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
+	(budget_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
+	(Number(local_value_budget),Number(accumulated_budget_amount)));
+
+	var order_received_amount = Math.max(contract_sum,	budget_sum,	Number(local_value_budget));
+
+	$("#order_received_amount").val(order_received_amount);
+
+	var oArgs = {menuaction: 'property.uitts.check_purchase_right', ecodimb: ecodimb, amount: total_amount, order_id: order_id};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var htmlString = "";
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				htmlString = "<table class='pure-table pure-table-striped'>";
+				htmlString += "<thead><th>" + $.number(total_amount, 0, ',', '.') + "</th><th></th><th></th></thead>";
+				htmlString += "<thead><th>Be om godkjenning</th><th>Adresse</th><th>Godkjent</th></thead><tbody>";
+				var obj = data;
+				var required = '';
+
+				$.each(obj, function (i)
+				{
+					required = '';
+
+					htmlString += "<tr><td>";
+
+					var left_cell = "Ikke relevant";
+
+					if (obj[i].requested === true)
+					{
+						left_cell = obj[i].requested_time;
+					}
+					else if (obj[i].is_user !== true)
+					{
+						if (obj[i].approved !== true)
+						{
+							if (obj[i].required === true)
+							{
+								left_cell = "<input type=\"hidden\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"></input>";
+								required = 'checked="checked" disabled="disabled"';
+							}
+							else
+							{
+								left_cell = '';
+							}
+							left_cell += "<input type=\"checkbox\" name=\"values[approval][" + obj[i].id + "]\" value=\"" + obj[i].address + "\"" + required + "></input>";
+						}
+					}
+					else if (obj[i].is_user === true)
+					{
+						left_cell = '(Meg selv...)';
+					}
+					htmlString += left_cell;
+					htmlString += "</td><td valign=\"top\">";
+					if (obj[i].required === true || obj[i].default === true)
+					{
+						htmlString += '<b>[' + obj[i].address + ']</b>';
+					}
+					else
+					{
+						htmlString += obj[i].address;
+					}
+					htmlString += "</td>";
+					htmlString += "<td>";
+
+					if (obj[i].approved === true)
+					{
+						htmlString += obj[i].approved_time;
+					}
+					else
+					{
+						if (obj[i].is_user === true)
+						{
+							htmlString += "<input type=\"checkbox\" name=\"values[do_approve][" + obj[i].id + "]\" value=\"" + obj[i].id + "\"></input>";
+						}
+					}
+					htmlString += "</td>";
+
+					htmlString += "</tr>";
+				});
+				htmlString += "</tbody></table>";
+				$("#approval_container").html(htmlString);
+			}
+		},
+		error: function ()
+		{
+			alert('feil med oppslag til fullmakter');
+		}
+	});
+}

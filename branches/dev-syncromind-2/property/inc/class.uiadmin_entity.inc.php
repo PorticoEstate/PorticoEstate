@@ -95,20 +95,6 @@
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "admin::{$this->type_app[$this->type]}::entity";
 		}
 
-		function save_sessiondata()
-		{
-			$data = array
-				(
-				'start' => $this->start,
-				'query' => $this->query,
-				'sort' => $this->sort,
-				'order' => $this->order,
-				'entity_id' => $this->entity_id,
-				'cat_id' => $this->cat_id
-			);
-			$this->bo->save_sessiondata($data);
-		}
-
 		function index()
 		{
 			if (!$this->acl_read)

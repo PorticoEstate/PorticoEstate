@@ -676,7 +676,9 @@
 				</xsl:choose>
                 {
 					extend:    'csvHtml5',
-					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>"
+					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
+					fieldSeparator: ';',
+					bom:true
 				}
 				<xsl:choose>
 					<xsl:when test="download">
@@ -902,13 +904,17 @@
 
 				if(group_buttons === true)
 				{
-				JqueryPortico.buttons = [
-				{
-				extend: 'collection',
-				text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
-				collectionLayout: 'three-column',
-				buttons: button_def
-				}
+//					button_def.push({text: 'Esc',
+//                       action: function ( e, dt, node, config ) {
+//                        }});
+					JqueryPortico.buttons = [
+					{
+						extend: 'collection',
+						autoClose: true,
+						text: "<xsl:value-of select="php:function('lang', 'toolbar')"/>",
+						collectionLayout: 'three-column',
+						buttons: button_def
+					}
 				];
 				}
 				else
@@ -1184,8 +1190,11 @@
 			});
 
 			$('#datatable-container tbody').on( 'click', 'tr', function () {
+					$(this).toggleClass('selected');
 					var api = oTable.api();
-					var selectedRows = api.rows( { selected: true } ).count();
+//					alert( api.rows('.selected').data().length +' row(s) selected' );
+//					var selectedRows = api.rows( { selected: true } ).count();
+					var selectedRows = api.rows('.selected').data().length;
 					api.buttons( '.record' ).enable( selectedRows > 0 );
 					var row = $(this);
 					var checkbox = row.find('input[type="checkbox"]');

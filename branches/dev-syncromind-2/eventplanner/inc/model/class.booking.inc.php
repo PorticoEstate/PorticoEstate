@@ -51,6 +51,11 @@
 			$application_name,
 			$customer_id,
 			$customer_name,
+			$customer_contact_name,
+			$customer_contact_email,
+			$customer_contact_phone,
+			$location,
+			$comments,
 			$created,
 			$secret;
 
@@ -148,6 +153,49 @@
 						'column' => 'name'
 						)
 					),
+				'customer_contact_name' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'customer contact name',
+					'history' => true,
+					),
+				'customer_contact_email' => array(
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
+					'label' => 'customer contact email',
+					'history' => true,
+					),
+				'customer_contact_phone' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'customer contact phone',
+					'history' => true,
+					),
+				'location' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'location',
+					'history' => true,
+					),
+				'comments' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'manytomany' => array(
+						'input_field' => 'comment_input',
+						'table' => 'eventplanner_booking_comment',
+						'key' => 'booking_id',
+						'column' => array('time', 'author', 'comment', 'type'),
+						'order' => array('sort' => 'time', 'dir' => 'ASC')
+					)),
 				'created' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'date',
 					'label' => 'created',
@@ -189,17 +237,26 @@
 				);
 			}
 
-			$entity->modified = time();
-			$entity->active = (int)$entity->active;
-
-			if($entity->get_id())
-			{
-			}
-			else
+			if(!$entity->get_id())
 			{
 				$entity->status = eventplanner_booking::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
 			}
+
+			if (empty($entity->completed))
+			{
+				$entity->completed = 0;
+			}
+
+			if (!empty($entity->application_id))
+			{
+				$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
+				$entity->to_ = $entity->from_ + ((int)$application->timespan * 60);
+			}
+
+			$entity->modified = time();
+			$entity->active = (int)$entity->active;
+
 		}
 
 		protected function generate_secret( $length = 10 )

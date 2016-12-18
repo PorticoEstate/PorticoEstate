@@ -50,7 +50,8 @@ messages_saved_form	eventplanner	no	Skjemaet er lagret
 field %1 is required	eventplanner	no	Feltet %1 er påkrevd
 please select a category !	eventplanner	no	Velg en kategori
 title	eventplanner	no	Programtittel
-description	eventplanner	no	Omtale av program
+description	eventplanner	no	Beskrivelse
+application description	eventplanner	no	Omtale av program
 might be published	eventplanner	no	Kan bli publisert på internett
 other participants	eventplanner	no	Navn på andre medvirkende (+ rolle)
 arena requirement	eventplanner	no	Krav til lokale
@@ -62,3 +63,12 @@ wardrobe	eventplanner	no	Garderobe
 audience limit	eventplanner	no	Maksimum antall publikum
 raider	eventplanner	no	Raider
 vendor report	eventplanner	no	Utøverrapport
+calendar	eventplanner	no	Kalender
+from	eventplanner	no	Fra
+select all	eventplanner	no	Velg alle
+enable	eventplanner	no	Aktiver
+disable	eventplanner	no	Deaktiver
+reports	eventplanner	no	Rapporter
+location	eventplanner	no	Lokalisering
+who	eventplanner	no	Hvem
+note	eventplanner	no	Merknad

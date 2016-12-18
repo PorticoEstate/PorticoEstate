@@ -1778,34 +1778,80 @@
 			return $this->so->add_relation($add_relation, $id);
 		}
 
-		public function check_purchase_right($ecodimb = 0, $amount = 0, $ticket_id = 0)
+		/**
+		 * 
+		 * @param type $ecodimb
+		 * @param type $amount
+		 * @param type $order_id
+		 * @return array
+		 * @throws Exception
+		 */
+		public function check_purchase_right($ecodimb = 0, $amount = 0, $order_id = 0)
 		{
-			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
+			$need_approval = empty($this->config->config_data['workorder_approval']) ? false : true;
 			if(!$need_approval)
 			{
 				return array();
 			}
+			$approval_amount_limit = !empty($this->config->config_data['approval_amount_limit']) ? (int) $this->config->config_data['approval_amount_limit'] : 0;
 
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
+			$supervisors = array();
+			if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
+			{
+				$invoice = CreateObject('property.soinvoice');
+				$default_found = false;
+				$supervisor_id = $invoice->get_default_dimb_role_user(3, $ecodimb);
+				if($supervisor_id)
+				{
+					$supervisors[$supervisor_id] =  array('id' => $supervisor_id, 'required' => false, 'default' => true);
+					$default_found = true;
+				}
 
-			if($check_external_register && $ecodimb)
+				$sodimb_role_users = execMethod('property.sodimb_role_user.read', array
+					(
+					'dimb_id' => $ecodimb,
+					'role_id' => 2,
+					'query_start' => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					'get_netto_list' => true
+					)
+				);
+				if (isset($sodimb_role_users[$ecodimb][2]) && is_array($sodimb_role_users[$ecodimb][2]))
+				{
+					foreach ($sodimb_role_users[$ecodimb][2] as $supervisor_id => $entry)
+					{
+						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' =>  !$default_found ? !!$entry['default_user'] : false);
+					}
+				}
+
+			}
+			else if($check_external_register && $ecodimb)
 			{
 				$url		= $config->config_data['external_register']['url'];
 				$username	= $config->config_data['external_register']['username'];
 				$password	= $config->config_data['external_register']['password'];
 				$sub_check = 'fullmakter';
-				$fullmakter = $this->check_external_register(array(
-					'url'		=> $url,
-					'username'	=> $username,
-					'password'	=> $password,
-					'sub_check'	=> $sub_check,
-					'id'		=> sprintf("%06s", $ecodimb)
-					)
-				);
+
+				try
+				{
+					$fullmakter = $this->check_external_register(array(
+						'url'		=> $url,
+						'username'	=> $username,
+						'password'	=> $password,
+						'sub_check'	=> $sub_check,
+						'id'		=> sprintf("%06s", $ecodimb)
+						)
+					);
+				}
+				catch (Exception $ex)
+				{
+					throw $ex;
+				}
 
 				/**
 				 * some magic...to decide $supervisor_lid
+				 * Agresso/Bergen spesific
 				 */
 				if(isset($fullmakter[0]))
 				{
@@ -1825,12 +1871,7 @@
 					{
 						$supervisor_lid = strtolower($fullmakter[0]['ubegrenset']);
 					}
-					else
-					{
-						$supervisor_lid = ''; // maybe add a required configurable failsafe as backup...
-					}
 				}
-	//			$supervisor_lid = 'hc483';
 
 				/*
 					[inntil100k] => (string) DV645
@@ -1843,15 +1884,170 @@
 					[aktiv] => (bool) true
 				*/
 
-				$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+				if($supervisor_lid)
+				{
+					$supervisor_id = $GLOBALS['phpgw']->accounts->name2id($supervisor_lid);
+					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true);
+				}
 			}
-			else
+			else if($approval_amount_limit > 0 && $amount > $approval_amount_limit)
 			{
-				$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				$supervisor_id = 0;
+
+				if (!empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']))
+				{
+					$supervisor_id = $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+				}
+
+				if ($supervisor_id)
+				{
+					$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => true, 'default' => true);
+
+					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+
+					if (!empty($prefs['approval_from']) && empty($supervisors[$prefs['approval_from']]))
+					{
+						$supervisor_id = $prefs['approval_from'];
+						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
+					}
+					unset($prefs);
+				}
 			}
 
-			return $this->get_supervisor_email($supervisor_id, $ticket_id);
+//			if(!$check_external_register && !empty($GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'])
+//				&& empty($supervisors[$GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from']]))
+//			{
+//				$supervisor_id =  $GLOBALS['phpgw_info']['user']['preferences']['property']['approval_from'];
+//				$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false, 'default' => true);
+//			}
+
+			return $this->get_supervisor_approval($supervisors, $order_id);
 		}
+
+		/**
+		 * 
+		 * @param array $supervisors
+		 * @param int $order_id
+		 * @return array
+		 * @throws Exception
+		 */
+		protected function get_supervisor_approval($supervisors, $order_id = 0)
+		{
+			$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+			if($order_id)
+			{
+				switch ($order_type)
+				{
+					case 'workorder':
+						$location = '.project.workorder';
+						$location_item_id = $order_id;
+						break;
+					case 'ticket':
+						$location = '.ticket';
+						$location_item_id = $this->so->get_ticket_from_order($order_id);
+						break;
+					default:
+						throw new Exception('Order type not supported');
+				}
+			}
+
+			$supervisor_email = array();
+
+			//Check if user is asked for approval
+			if(empty($supervisors[$this->account]) && $order_id)
+			{
+				$action_params = array(
+					'appname' => 'property',
+					'location' => $location,
+					'id'		=> $location_item_id,
+					'responsible' => $this->account,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'deadline' => '',
+					'created_by' => '',
+					'allrows' => false,
+					'closed' => false
+				);
+				$requests = CreateObject('property.sopending_action')->get_pending_action($action_params);
+				if($requests)
+				{
+					$supervisors[$this->account] = array('id' => $this->account, 'required' => true, 'default' => true);
+				}
+				else
+				{
+					$action_params['closed'] = true;
+					$requests = CreateObject('property.sopending_action')->get_pending_action($action_params);
+					if($requests)
+					{
+						$supervisors[$this->account] = array('id' => $this->account, 'required' => false, 'default' => true);
+					}
+				}
+			}
+
+
+			if ($supervisors)
+			{
+				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+				foreach ($supervisors as $supervisor_id => $info)
+				{
+
+					if($location_item_id)
+					{
+						$pending_action = CreateObject('property.sopending_action');
+
+						$action_params = array(
+							'appname' => 'property',
+							'location' => $location,
+							'id'		=> $location_item_id,
+							'responsible' => $supervisor_id,
+							'responsible_type' => 'user',
+							'action' => 'approval',
+							'deadline' => '',
+							'created_by' => '',
+							'allrows' => false,
+							'closed' => true
+						);
+
+						$approvals = $pending_action->get_pending_action($action_params);
+						if(!$approvals)
+						{
+							$action_params['closed'] = false;
+						}
+
+						$requests = $pending_action->get_pending_action($action_params);
+					}
+
+					$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
+					if (!empty($prefs['email']))
+					{
+						$address = $prefs['email'];
+					}
+					else
+					{
+						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+						$address = $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '&lt;' . $GLOBALS['phpgw']->accounts->id2lid($supervisor_id) . "@{$email_domain}&gt;";
+					}
+
+					$supervisor_email[] = array(
+						'id' => $supervisor_id,
+						'address' => $address,
+						'required'	=> $info['required'],
+						'default'	=> !!$info['default'],
+						'requested'	=> !!$requests[0]['action_requested'],
+						'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
+						'approved'	=> !!$approvals[0]['action_performed'],
+						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
+						'is_user'	=> $supervisor_id == $this->account ? true : false
+					);
+				
+					unset($prefs);
+				}
+			}
+			return $supervisor_email;
+		}
+
 
 		public function check_external_register($param)
 		{
@@ -1892,112 +2088,87 @@
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
+			if($httpCode != 200)
+			{
+				throw new Exception("HTTP-status {$httpCode}");
+			}
+
 			return json_decode($result, true);
 		}
 
-		protected function get_supervisor_email($supervisor_id, $ticket_id)
+
+		function validate_purchase_grant( $ecodimb, $budget_amount, $order_id )
 		{
-			$need_approval = isset($this->config->config_data['workorder_approval']) ? $this->config->config_data['workorder_approval'] : '';
-			$supervisor_email = array();
-			if ($supervisor_id && $need_approval)
+			if($order_id)
 			{
-				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+				$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
-				$pending_action = CreateObject('property.sopending_action');
-
-				$action_params = array(
-					'appname' => 'property',
-					'location' => '.ticket',
-					'id'		=> $ticket_id,
-					'responsible' => $supervisor_id,
-					'responsible_type' => 'user',
-					'action' => 'approval',
-					'deadline' => '',
-					'created_by' => '',
-					'allrows' => false,
-					'closed' => true
-				);
-
-				$approvals = $pending_action->get_pending_action($action_params);
-				if(!$approvals)
+				switch ($order_type)
 				{
-					$action_params['closed'] = false;
+					case 'workorder':
+						$location = '.project.workorder';
+						$location_item_id = $order_id;
+						$historylog = CreateObject('property.historylog', 'workorder');
+						$history_code = 'OA';
+						break;
+					case 'ticket':
+						$location = '.ticket';
+						$location_item_id = $this->so->get_ticket_from_order($order_id);
+						$historylog = CreateObject('property.historylog', 'tts');
+						$history_code = 'AA';
+						break;
+					default:
+						throw new Exception('Order type not supported');
 				}
+			}
 
-				$requests = $pending_action->get_pending_action($action_params);
+			try
+			{
+				$check_purchase = $this->check_purchase_right($ecodimb, $budget_amount, $order_id);
 
-				$prefs = $this->bocommon->create_preferences('property', $supervisor_id);
-				if (isset($prefs['email']) && $prefs['email'])
+			}
+			catch (Exception $ex)
+			{
+				throw $ex;
+			}
+
+			$purchase_grant_ok = true;
+
+			foreach ($check_purchase as $purchase_grant)
+			{
+				if(!$purchase_grant['is_user'] && ($purchase_grant['required'] && !$purchase_grant['approved']))
 				{
-					$supervisor_email[] = array(
-						'id' => $supervisor_id,
-						'address' => $prefs['email'],
-						'required'	=> true,
-						'requested'	=> !!$requests[0]['action_requested'],
-						'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
-						'approved'	=> !!$approvals[0]['action_performed'],
-						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
-						'is_user'	=> $supervisor_id == $this->account ? true : false
+					$purchase_grant_ok = false;
+					phpgwapi_cache::message_set(lang('approval from %1 is required for order %2',
+							$GLOBALS['phpgw']->accounts->get($purchase_grant['id'])->__toString(), $order_id),
+							'error'
 					);
 				}
-				else
-				{
-					$supervisor_email[] = array(
-						'id' => $supervisor_id,
-						'address' => $GLOBALS['phpgw']->accounts->id2name($supervisor_id) . '@bergen.kommune.no',
-						'required'	=> true
-					);
-				}
-
-				if (isset($prefs['approval_from']) && $prefs['approval_from'])
+				else if( $purchase_grant['is_user'] && ( $purchase_grant['required']  && !$purchase_grant['approved']))
 				{
 					$action_params = array(
 						'appname' => 'property',
-						'location' => '.ticket',
-						'id'		=> $ticket_id,
-						'responsible' => $prefs['approval_from'],
+						'location' => $location,
+						'id' => $location_item_id,
+						'responsible' => '',
 						'responsible_type' => 'user',
 						'action' => 'approval',
-						'deadline' => '',
-						'created_by' => '',
-						'allrows' => false,
-						'closed' => true
+						'remark' => '',
+						'deadline' => ''
 					);
 
-					$approvals = $pending_action->get_pending_action($action_params);
-					if(!$approvals)
+					$_account_id = $purchase_grant['id'];//$this->account
+
+					$action_params['responsible'] = $_account_id;
+					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
 					{
-						$action_params['closed'] = false;
+						execMethod('property.sopending_action.set_pending_action', $action_params);
 					}
-
-					$requests = $pending_action->get_pending_action($action_params);
-
-					$prefs2 = $this->bocommon->create_preferences('property', $prefs['approval_from']);
-
-					if (isset($prefs2['email']) && $prefs2['email'])
-					{
-						$supervisor_email[] = array(
-							'id' => $prefs['approval_from'],
-							'address' => $prefs2['email'],
-							'required'	=> false,
-							'requested'	=> !!$requests[0]['action_requested'],
-							'requested_time'=> $GLOBALS['phpgw']->common->show_date($requests[0]['action_requested'], $dateformat),
-							'approved'	=> !!$approvals[0]['action_performed'],
-							'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
-							'is_user'	=> $prefs['approval_from'] == $this->account ? true : false
-						);
-						$supervisor_email = array_reverse($supervisor_email);
-					}
-					unset($prefs2);
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					$historylog->add($history_code, $location_item_id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$budget_amount}");
+					$purchase_grant_ok = true;
 				}
-				unset($prefs);
 			}
-
-
-
-
-			return $supervisor_email;
+			return $purchase_grant_ok;
 		}
-
-
 	}

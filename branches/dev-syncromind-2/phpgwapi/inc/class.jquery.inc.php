@@ -137,7 +137,7 @@
 						(
 						"js/{$_jquery_core}{$_type}",
 						//	"tabs/jquery.responsiveTabs{$_type}",
-						"tabs/jquery.responsiveTabs",
+						"tabs/jquery.responsiveTabs{$_type}",
 						'common'
 					);
 
@@ -386,7 +386,7 @@ JS;
 					form: '#{$form_id}',
 					validateOnBlur : false,
 					scrollToTopOnError : false,
-					validateHiddenInputs: true,
+			//		validateHiddenInputs: true,
 					errorMessagePosition : {$errorMessagePosition},
 					scrollToTopOnError: {$scrollToTopOnError}
 				});
@@ -472,11 +472,19 @@ HTML;
 					collapsible: 'accordion',
 					setHash: true,
 					activate: function(e, tab) {
-						$('.info').html('Tab <strong>' + tab.id + '</strong> activated!');
+						if(tab.disabled == false)
+						{
+							var selector = tab.selector;
+							var active_tab = selector.replace("#", '');
+
+							if (typeof set_tab === "function")
+							{
+								set_tab(active_tab);
+							}
+						}
 					}
 
 				});
-
 				$('#{$tab_set}').responsiveTabs('activate', {$selected});
 
 			};

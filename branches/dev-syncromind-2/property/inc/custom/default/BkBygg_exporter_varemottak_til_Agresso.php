@@ -81,7 +81,7 @@
 
 		private function _get_ordered_workorder_amount($id)
 		{
-			throw new Exception('Implement me');
+			return ExecMethod('property.boworkorder.get_budget_amount',$id);
 		}
 
 		public function transfer( $id, $received_amount )
@@ -96,6 +96,7 @@
 			V4: EBE Varemotttak Portico   : 45750000-45999999
 			*/
 
+			$voucher_type = 'P4';
 
 			if($values['order_id'] >= 45000000 && $values['order_id'] <= 45249999)
 			{
@@ -107,7 +108,7 @@
 			}
 			else
 			{
-				throw new Exception("Ordrenummer '{$values['order_id']}' er utenfor serien");
+				throw new Exception("Ordrenummer '{$values['order_id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
 			}
 
 			$param = array(
@@ -163,6 +164,7 @@
 		var $connection;
 		var $order_id;
 		var $voucher_type;
+		var $batch_id;
 
 		public function __construct( $param )
 		{
@@ -208,7 +210,7 @@
 
 		protected function create_file_name( $ref = '' )
 		{
-			if (!$ref)
+			if (!$this->batchid)
 			{
 				throw new Exception('BkBygg_exporter_data_til_Agresso::create_file_name() Mangler referanse');
 			}
@@ -220,7 +222,7 @@
 
 			$fil_katalog = $this->config->config_data['export']['path'];
 
-			$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$ref}.xml";
+			$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$this->batchid}.xml";
 
 			//Sjekk om filen eksisterer
 			if (file_exists($filename))

@@ -143,6 +143,11 @@
 			if(!$use_fellesdata)
 			{
 				$menus['navigation'] = array_reverse($menus['navigation'], true);
+				$menus['navigation']['moveout'] = array(
+					'text' => lang('moveout'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index')),
+					'image' => array('rental', 'text-x-generic'),
+				);
 				$menus['navigation']['schedule'] = array(
 					'text' => lang('schedule'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.schedule')),
@@ -153,6 +158,7 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiapplication.index')),
 					'image' => array('rental', 'text-x-generic'),
 				);
+
 				$menus['navigation'] = array_reverse($menus['navigation'], true);
 			}
 
@@ -219,6 +225,18 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
 						'appname' => 'rental', 'location' => '.contract', 'menu_selection' => 'admin::rental::custom_functions'))
 				),
+				'custom_field_groups' => array
+						(
+						'text' => lang('custom field groups'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute_group',
+							'appname' => 'rental', 'menu_selection' => 'admin::rental::custom_field_groups'))
+					),
+					'custom_fields' => array
+						(
+						'text' => lang('custom fields'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+							'appname' => 'rental', 'menu_selection' => 'admin::rental::custom_fields'))
+					),
 			);
 
 			$menus['folders'] = phpgwapi_menu::get_categories('bergen');

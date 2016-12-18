@@ -783,12 +783,28 @@ JS;
 				$error_id = true;
 			}
 
-			if (isset($values['b_account_id']) && $values['b_account_id'])
+			if (!empty($values['b_account_id']))
 			{
-				$sogeneric = CreateObject('property.sogeneric');
-				$sogeneric->get_location_info('budget_account', false);
-				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
-				$values['b_account_group'] = $status_data['category'];
+//				$sogeneric = CreateObject('property.sogeneric');
+//				$sogeneric->get_location_info('budget_account', false);
+//				$status_data = $sogeneric->read_single(array('id' => (int)$values['b_account_id']), array());
+//				$values['b_account_group'] = $status_data['category'];
+
+
+				$_b_account = execMethod('property.bogeneric.read_single', array(
+					'id' => $values['b_account_id'],
+					'location_info' => array(
+						'type' => 'budget_account')));
+				$values['b_account_group'] = $_b_account['category'];
+
+				if (!$_b_account || !$_b_account['active'])
+				{
+					$values['b_account_id'] = '';
+					$values['b_account_name'] = '';
+					$values['b_account_group'] = '';
+					$this->receipt['error'][] = array(
+						'msg' => lang('Please select a valid budget account !'));
+				}
 			}
 
 			if (isset($values['b_account_group']) && $values['b_account_group'])
@@ -865,7 +881,13 @@ JS;
 				$error_id = true;
 			}
 
-			if (isset($values['budget']) && $values['budget'] && !ctype_digit(ltrim($values['budget'], '-')))
+			if(!$id && empty($values['budget']))
+			{
+				$this->receipt['error'][] = array('msg' => lang('enter the budget'));
+				$error_id = true;
+			}
+			
+			if (!empty($values['budget']) && !ctype_digit(ltrim($values['budget'], '-')))
 			{
 				$this->receipt['error'][] = array('msg' => lang('budget') . ': ' . lang('Please enter an integer !'));
 				$error_id = true;
@@ -1034,7 +1056,15 @@ JS;
 							{
 								if (isset($values['approval'][$_account_id]) && $values['approval'][$_account_id])
 								{
-									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');
+									try
+									{
+										$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_name, 'html');										
+									}
+									catch (Exception $e)
+									{
+										phpgwapi_cache::message_set($e->getMessage(), 'error');
+									}
+
 									$action_params['responsible'] = $_account_id;
 									execMethod('property.sopending_action.set_pending_action', $action_params);
 									if (!$rcpt)
@@ -1128,7 +1158,14 @@ JS;
 
 							$body = nl2br($body);
 
-							$returncode = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, false, false, $from_email, $from_name, 'html');
+							try
+							{
+								$returncode = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, false, false, $from_email, $from_name, 'html');
+							}
+							catch (Exception $e)
+							{
+								phpgwapi_cache::message_set($e->getMessage(), 'error');
+							}
 
 							if (!$returncode) // not nice, but better than failing silently
 							{
@@ -1149,7 +1186,9 @@ JS;
 			if ($id)
 			{
 				self::message_set($this->receipt);
-				self::redirect(array('menuaction' => 'property.uiproject.edit', 'id' => $id));
+				$active_tab = phpgw::get_var('active_tab');
+
+				self::redirect(array('menuaction' => 'property.uiproject.edit', 'id' => $id, 'active_tab' => $active_tab));
 			}
 
 			$this->edit($values, 'edit');
@@ -1412,20 +1451,21 @@ JS;
 					);
 				}
 
-				$default_ecodimb = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['dimb']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'] : '');
-				if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
-				{
-					$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
-					$GLOBALS['phpgw']->preferences->save_repository();
-				}
-
-				$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
-					(
-					'ecodimb' => $values['ecodimb'] ? $values['ecodimb'] : $default_ecodimb,
-					'ecodimb_descr' => $values['ecodimb_descr'],
-					'disabled' => $mode == 'view'
-				));
 			}
+
+			$default_ecodimb = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['dimb']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'] : '');
+			if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
+			{
+				$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+			}
+
+			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
+				(
+				'ecodimb' => $values['ecodimb'] ? $values['ecodimb'] : $default_ecodimb,
+				'ecodimb_descr' => $values['ecodimb_descr'],
+				'disabled' => $mode == 'view'
+			));
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array
 				(
@@ -2008,7 +2048,7 @@ JS;
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
-			$active_tab = phpgw::get_var('tab', 'string', 'REQUEST', 'general');
+			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'general');
 
 			$data = array
 				(
@@ -2025,8 +2065,14 @@ JS;
 				'b_account_data'		=> $b_account_data,
 				'ecodimb_data' => $ecodimb_data,
 				'contact_data' => $contact_data,
-				'tabs' => self::_generate_tabs($tabs, $active_tab, array('documents' => $id ? false : true,
-					'history' => $id ? false : true)),
+				'tabs' => self::_generate_tabs($tabs, $active_tab, $_disable = array(
+					'location' => !$id && empty($this->receipt['error']) ? true : false,
+					'budget' => !$id && empty($this->receipt['error']) ? true : false,
+					'coordination' => $id ? false : true,
+					'documents' => $id ? false : true,
+					'history' => $id ? false : true
+					)),
+				'value_active_tab' => $active_tab,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'value_origin' => isset($values['origin_data']) ? $values['origin_data'] : '',
 				'value_origin_type' => isset($origin) ? $origin : '',
@@ -2680,25 +2726,24 @@ JS;
 			return $this->bocommon->get_external_project_name($id);
 		}
 
-		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $suppress = array() )
+		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $_disable = array() )
 		{
 			$tabs = array
 				(
-				'general' => array('label' => lang('general'), 'link' => '#general', 'function' => "set_tab('general')"),
-				'location' => array('label' => lang('location'), 'link' => '#location', 'function' => "set_tab('location')"),
-				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget', 'function' => "set_tab('budget')"),
-				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination',
-					'function' => "set_tab('coordination')"),
-				'documents' => array('label' => lang('documents'), 'link' => '#documents', 'function' => "set_tab('documents')"),
-				'history' => array('label' => lang('history'), 'link' => '#history', 'function' => "set_tab('history')"),
+				'general' => array('label' => lang('general'), 'link' => '#general'),//, 'function' => "set_tab('general')"),
+				'location' => array('label' => lang('location'), 'link' => '#location'),//, 'function' => "set_tab('location')"),
+				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget'),//, 'function' => "set_tab('budget')"),
+				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination'),//,'function' => "set_tab('coordination')"),
+				'documents' => array('label' => lang('documents'), 'link' => '#documents'),//, 'function' => "set_tab('documents')"),
+				'history' => array('label' => lang('history'), 'link' => '#history'),//, 'function' => "set_tab('history')"),
 			);
 
 			$tabs = array_merge($tabs, $tabs_);
-			foreach ($suppress as $tab => $remove)
+			foreach ($_disable as $tab => $disable)
 			{
-				if ($remove)
+				if ($disable)
 				{
-					unset($tabs[$tab]);
+					$tabs[$tab]['disable'] = true;
 				}
 			}
 

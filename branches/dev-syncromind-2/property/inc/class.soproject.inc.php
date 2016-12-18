@@ -1763,6 +1763,8 @@
 
 					execMethod('property.sopending_action.close_pending_action', $action_params);
 					unset($action_params);
+
+					$this->approve_related_workorders($project['id']);
 				}
 
 				$workorder_closed_status = isset($this->config->config_data['workorder_closed_status']) && $this->config->config_data['workorder_closed_status'] ? $this->config->config_data['workorder_closed_status'] : 'closed';
@@ -2519,6 +2521,23 @@
 			}
 //_debug_array($close_period);
 //_debug_array($open_period);die();
+		}
+
+		function set_status( $id, $status_new)
+		{
+			$id = (int)$id;
+			$this->db->query("SELECT status FROM fm_project WHERE id = '{$id}'", __LINE__, __FILE__);
+			$this->db->next_record();
+			$old_status = $this->db->f('status');
+
+			if ($old_status != $status_new)
+			{
+				$this->db->transaction_begin();
+				$this->db->query("UPDATE fm_project SET status = '{$status_new}' WHERE id = '{$id}'", __LINE__, __FILE__);
+				$historylog = CreateObject('property.historylog', 'project');
+				$historylog->add('S', $id, $status_new, $old_status);
+				$this->db->transaction_commit();
+			}
 		}
 
 		function update_request_status( $project_id = '', $status = '', $category = 0, $coordinator = 0 )
@@ -3379,6 +3398,45 @@
 				{
 					$this->check_and_update_project_budget($project_id, $_year);
 				}
+			}
+		}
+
+		private function approve_related_workorders( $project_id )
+		{
+			$project_id = (int)$project_id;
+			$ids = array();
+			$this->db->query("SELECT id FROM fm_workorder WHERE project_id = {$project_id}", __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$ids[] = $this->db->f('id');
+			}
+
+			$historylog = CreateObject('property.historylog', 'workorder');
+
+			foreach ($ids as $order_id)
+			{
+				$action_params = array(
+					'appname' => 'property',
+					'location' => '.project.workorder',
+					'id' => $order_id,
+					'responsible' => $this->account,
+					'responsible_type' => 'user',
+					'action' => 'approval',
+					'remark' => '',
+					'deadline' => ''
+				);
+
+				//approval_substitute
+				if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+				{
+					execMethod('property.sopending_action.set_pending_action', $action_params);
+				}
+				execMethod('property.sopending_action.close_pending_action', $action_params);
+				$budget_amount = execMethod('property.boworkorder.get_budget_amount', $order_id);
+
+				$historylog->add('OA', $order_id, $GLOBALS['phpgw']->accounts->get($this->account)->__toString() . "::{$budget_amount}");
+
+				phpgwapi_cache::message_set(lang('order %1 approved for amount %2', $order_id, $budget_amount),'message');
 			}
 		}
 	}

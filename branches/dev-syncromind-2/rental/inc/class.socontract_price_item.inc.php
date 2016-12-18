@@ -123,7 +123,7 @@
 					. " rental_contract_price_item.contract_id, rental_contract_price_item.area, rental_contract_price_item.count,"
 					. " rental_contract_price_item.agresso_id, rental_contract_price_item.title, rental_contract_price_item.is_area,"
 					. " rental_contract_price_item.price, rental_contract_price_item.total_price, rental_contract_price_item.is_one_time,"
-					. " rental_contract_price_item.date_start, rental_contract_price_item.date_end,rental_price_item.type'";
+					. " rental_contract_price_item.date_start, rental_contract_price_item.date_end,rental_price_item.type";
 			}
 			else
 			{
