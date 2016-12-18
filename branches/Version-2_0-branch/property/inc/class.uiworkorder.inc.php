@@ -979,7 +979,7 @@
 						case 'project':
 							$approval_menuaction = 'property.uiproject.edit';
 							$subject = lang('Approval') . ": {$values['project_id']}";
-							$message = '<a href ="' . $GLOBALS['phpgw']->link( array('menuaction' => $approval_menuaction,
+							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $approval_menuaction,
 									'id' => $values['project_id']), false, true) . '">' . lang('project %1 needs approval', $values['project_id']) . '</a>';
 							if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
 							{
@@ -992,7 +992,7 @@
 						default:
 							$approval_menuaction = 'property.uiworkorder.edit';
 							$subject = lang('Approval') . ": {$id}";
-							$message = '<a href ="' . $GLOBALS['phpgw']->link( array('menuaction' => $approval_menuaction,
+							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $approval_menuaction,
 							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $id) . '</a>';
 							$_orders = array($id);
 							break;

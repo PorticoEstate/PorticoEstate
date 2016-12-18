@@ -1,4 +1,5 @@
 <?php
+
 	/**
 	 * phpGroupWare
 	 *
@@ -10,23 +11,22 @@
 	 * @subpackage phpgwapi
 	 * @version $Id: class.custom_fields.inc.php 15409 2016-08-03 11:52:23Z sigurdne $
 	 */
-
 	/*
-	   This program is free software: you can redistribute it and/or modify
-	   it under the terms of the GNU General Public License as published by
-	   the Free Software Foundation, either version 2 of the License, or
-	   (at your option) any later version.
+	  This program is free software: you can redistribute it and/or modify
+	  it under the terms of the GNU General Public License as published by
+	  the Free Software Foundation, either version 2 of the License, or
+	  (at your option) any later version.
 
-	   This program is distributed in the hope that it will be useful,
-	   but WITHOUT ANY WARRANTY; without even the implied warranty of
-	   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	   GNU Lesser General Public License for more details.
+	  This program is distributed in the hope that it will be useful,
+	  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	  GNU Lesser General Public License for more details.
 
-	   You should have received a copy of the GNU General Public License
-	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	  You should have received a copy of the GNU General Public License
+	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	abstract class  phpgwapi_socommon
+	abstract class phpgwapi_socommon
 	{
 
 		protected $db;
@@ -41,7 +41,7 @@
 		protected static $so;
 		protected $table_name;
 
-		public function __construct($table_name, $fields)
+		public function __construct( $table_name, $fields )
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->db2 = clone($GLOBALS['phpgw']->db);
@@ -77,7 +77,7 @@
 		/**
 		 * Rollback the current transaction
 		 *
-		 * @return bool True if sucessful, False if fails
+		 * @return bool True if successful, False if fails
 		 */
 		public function transaction_abort()
 		{
@@ -172,7 +172,6 @@
 		 * @return the class instance.
 		 */
 		public abstract static function get_instance();
-
 
 		/**
 		 * Method for retrieving the db-object (security "forgotten")
@@ -340,7 +339,7 @@
 			return $this->table_name . '.id=' . $id_value;
 		}
 
-		function read_single( $id, $return_object = false)
+		function read_single( $id, $return_object = false )
 		{
 			if (!$id && !$return_object)
 			{
@@ -416,7 +415,7 @@
 					}
 				}
 			}
-			if($return_object)
+			if ($return_object)
 			{
 				return $this->populate($row);
 			}
@@ -425,7 +424,6 @@
 				return $row;
 			}
 		}
-
 
 		function _get_conditions( $query, $filters )
 		{
@@ -484,7 +482,7 @@
 					}
 					else
 					{
-						$_column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;					
+						$_column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;
 						$clauses[] = "{$table}.{$_column}=" . $this->marshal($val, $this->fields[$key]['type']);
 					}
 				}
@@ -544,7 +542,6 @@
 			return array($cols, $joins);
 		}
 
-
 		/**
 		 * Implementing classes must return the name of the field used in the query
 		 * returned from get_query().
@@ -558,7 +555,6 @@
 
 		protected abstract function populate( array $data );
 
-
 		protected function add( &$object )
 		{
 			$object->entry_date = time();
@@ -566,14 +562,11 @@
 
 			$fields = $object::get_fields();
 
-			foreach ($fields as $field	=> $field_info)
+			foreach ($fields as $field => $field_info)
 			{
-				if(($field_info['action'] & PHPGW_ACL_ADD)
-					&& empty($field_info['join'])
-					&& empty($field_info['related'])
-					&& empty($field_info['manytomany']))
+				if (($field_info['action'] & PHPGW_ACL_ADD) && empty($field_info['join']) && empty($field_info['related']) && empty($field_info['manytomany']))
 				{
-					if($field_info['type'] == 'json')
+					if ($field_info['type'] == 'json')
 					{
 						$value_set[$field] = json_encode($object->$field);
 					}
@@ -583,8 +576,25 @@
 					}
 				}
 			}
-			
-			$sql = "INSERT INTO {$this->table_name} (". implode(',',  array_keys($value_set))
+//			$custom_fields = $object::get_custom_fields();
+			$values_attribute = createObject('phpgwapi.custom_fields')->convert_attribute_save($object->values_attribute);
+
+			if ( $values_attribute)
+			{
+				foreach ($values_attribute as $attrib_id => $entry)
+				{
+					if ($entry['value'])
+					{
+						if ($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
+						{
+							$entry['value'] = $this->db->db_addslashes($entry['value']);
+						}
+						$value_set[$entry['name']] = $entry['value'];
+					}
+				}
+			}
+
+			$sql = "INSERT INTO {$this->table_name} (" . implode(',', array_keys($value_set))
 				. ') VALUES ('
 				. $this->db->validate_insert(array_values($value_set))
 				. ')';
@@ -598,7 +608,7 @@
 				$this->db->transaction_begin();
 			}
 
-			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->query($sql, __LINE__, __FILE__);
 
 			$id = $this->db->get_last_insert_id($this->table_name, 'id');
 			$object->set_id($id);
@@ -626,12 +636,9 @@
 
 			foreach ($this->fields as $field => $field_info)
 			{
-				if(($field_info['action'] & PHPGW_ACL_EDIT) 
-					&& empty($field_info['join'])
-					&& empty($field_info['related'])
-					&& empty($field_info['manytomany']))
+				if (($field_info['action'] & PHPGW_ACL_EDIT) && empty($field_info['join']) && empty($field_info['related']) && empty($field_info['manytomany']))
 				{
-					if($field_info['type'] == 'json')
+					if ($field_info['type'] == 'json')
 					{
 						$value_set[$field] = json_encode($object->$field);
 					}
@@ -641,12 +648,28 @@
 					}
 				}
 			}
+			$values_attribute = createObject('phpgwapi.custom_fields')->convert_attribute_save($object->values_attribute);
+
+			if ( $values_attribute)
+			{
+				foreach ($values_attribute as $attrib_id => $entry)
+				{
+					if ($entry['value'])
+					{
+						if ($entry['datatype'] == 'C' || $entry['datatype'] == 'T' || $entry['datatype'] == 'V' || $entry['datatype'] == 'link')
+						{
+							$entry['value'] = $this->db->db_addslashes($entry['value']);
+						}
+						$value_set[$entry['name']] = $entry['value'];
+					}
+				}
+			}
 
 			$sql = "UPDATE {$this->table_name} SET "
 				. $this->db->validate_update($value_set)
 				. " WHERE id = {$id}";
 
-			$ret1 = $this->db->query($sql,__LINE__,__FILE__);
+			$ret1 = $this->db->query($sql, __LINE__, __FILE__);
 
 			$ret2 = $this->add_manytomany($object);
 
@@ -681,7 +704,7 @@
 						$colnames = join(',', array_keys($colnames));
 
 						$v = $object->get_field($params['manytomany']['input_field']);
-						
+
 						$data = array();
 						foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 						{
@@ -705,17 +728,17 @@
 						}
 						$v = join(',', $data);
 						$update_query = "INSERT INTO $table ($key, $colnames) VALUES($id, $v)";
-						return $this->db->query($update_query,__LINE__,__FILE__);
+						return $this->db->query($update_query, __LINE__, __FILE__);
 					}
 					else
 					{
 						$colname = $params['manytomany']['column'];
 						$v = $this->marshal($object->get_field($params['manytomany']['input_field']), $params['type']);
 						$update_query = "INSERT INTO $table ($key, $colname) VALUES($id, $v)";
-						return $this->db->query($update_query,__LINE__,__FILE__);
+						return $this->db->query($update_query, __LINE__, __FILE__);
 					}
 				}
-				else if(!empty($params['manytomany']) && is_array($value))
+				else if (!empty($params['manytomany']) && is_array($value))
 				{
 					$update_queries = array();
 					$table = $params['manytomany']['table'];
@@ -773,7 +796,6 @@
 					{
 						$this->db->query($update_query, __LINE__, __FILE__);
 					}
-
 				}
 			}
 			return true;

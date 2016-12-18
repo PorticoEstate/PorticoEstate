@@ -739,3 +739,55 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+
+	$test[] = '0.1.0.31';
+	function rental_upgrade0_1_0_31()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.moveout', 'Moveout', 'rental', $allow_grant = true, $custom_tbl = 'rental_moveout', $c_function = true, $c_attrib = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_moveout', array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => false),
+						'contract_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'account_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'created' => array('type' => 'int', 'precision' => '8',  'nullable' => false, 'default' => 'current_timestamp'),
+						'modified' => array('type' => 'int', 'precision' => '8',  'nullable' => false, 'default' => 'current_timestamp'),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						'rental_contract' => array('contract_id' => 'id'),
+						'phpgw_accounts' => array('account_id' => 'account_id')
+					),
+					'ix' => array(),
+					'uc' => array()
+				)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_moveout_comment',  array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => False),
+						'moveout_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+						'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
+						'author' => array('type' => 'text', 'nullable' => False),
+						'comment' => array('type' => 'text', 'nullable' => False),
+						'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						'rental_moveout' => array('moveout_id' => 'id')),
+					'ix' => array(),
+					'uc' => array()
+				)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.32';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
