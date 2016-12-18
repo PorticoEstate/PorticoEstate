@@ -3428,3 +3428,31 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.552';
+	/**
+	* Alter column definition
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_552()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$metadata = $GLOBALS['phpgw_setup']->oProc->m_odb->metadata('phpgw_vfs');
+
+		if(empty($metadata['md5_sum']))
+		{
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_vfs','md5_sum', array(
+				'type' => 'varchar',
+				'precision' => 64,
+				'nullable' => true
+			));
+
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.553';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
