@@ -48,8 +48,6 @@
 			$attributes,// custom fields
 			$values_attribute;// custom fields
 
-		static $custom_fields = array();
-
 		protected $field_of_responsibility_name = '.moveout';
 
 		public function __construct( int $id = null )
@@ -68,18 +66,14 @@
 			return new rental_moveout();
 		}
 
-		public function set_custom_fields()
+		public static function get_custom_fields()
 		{
-			$this->custom_fields = $GLOBALS['phpgw']->custom_fields->find('rental', self::acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
-		}
-
-		public function get_custom_fields()
-		{
-			if (!$this->custom_fields)
+			static $custom_fields = array();
+			if(!$custom_fields)
 			{
-				$this->set_custom_fields();
+				$custom_fields = $GLOBALS['phpgw']->custom_fields->find('rental', self::acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
-			return $this->custom_fields;
+			return $custom_fields;
 		}
 
 		public function get_organized_fields()
@@ -148,6 +142,7 @@
 					)
 			);
 
+
 			if($debug)
 			{
 				foreach ($fields as $field => $field_info)
@@ -158,6 +153,20 @@
 					}
 
 				}
+			}
+
+			$custom_fields = self::get_custom_fields();
+
+			foreach ($custom_fields as $attrib_id => $attrtib)
+			{
+				$fields[$attrtib['name']] = array(
+						'action'=> $attrtib['list'],
+						'type' => $attrtib['datatype'] == 'D' || $attrtib['datatype'] == 'DT' ? 'datestring' : 'string',
+						'label' => $attrtib['input_text'],
+						'translated_label' => $attrtib['input_text'],
+						'sortable' => !!$attrtib['attrib_sort'],
+						'query' => !!$attrtib['search']
+				);
 			}
 			return $fields;
 		}

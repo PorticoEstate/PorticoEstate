@@ -188,14 +188,6 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'rented_area')"/>
-							</label>
-							<div id="rented_area" class="pure-custom">
-								<xsl:value-of select="contract/rented_area"/>
-							</div>
-						</div>
-						<div class="pure-control-group">
-							<label>
 								<xsl:value-of select="php:function('lang', 'billing_terms')"/>
 							</label>
 							<div id="term_label" class="pure-custom">
