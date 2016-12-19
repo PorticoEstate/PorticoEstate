@@ -57,7 +57,7 @@
 			$this->bo = createObject('rental.bomoveout');
 			$this->fields = rental_moveout::get_fields();
 			$this->permissions = rental_moveout::get_instance()->get_permission_array();
-			$this->custom_fields = rental_moveout::get_instance()->get_custom_fields();
+			$this->custom_fields = rental_moveout::get_custom_fields();
 		}
 
 		public function index()

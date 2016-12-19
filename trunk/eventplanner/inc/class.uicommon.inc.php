@@ -64,9 +64,15 @@
 			{
 				if($field_info['action'] & PHPGW_ACL_READ)
 				{
+					$label = !empty($field_info['translated_label'])  ? $field_info['translated_label'] :'';
+					if(!$label)
+					{
+						$label =!empty($field_info['label']) ? lang($field_info['label']) : $field;
+					}
+
 					$data = array(
 						'key' => $field,
-						'label' => !empty($field_info['label']) ? lang($field_info['label']) : $field,
+						'label' =>  $label,
 						'sortable' => !empty($field_info['sortable']) ? true : false,
 						'hidden' => !empty($field_info['hidden']) ? true : false,
 					);

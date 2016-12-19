@@ -79,13 +79,11 @@
 				unset($params['filters']['active']);
 			}
 			$values =  rental_somoveout::get_instance()->read($params);
-	//		$status_text = rental_moveout::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
-	//				$entry['status'] = $status_text[$entry['status']];
-					$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
-					$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
+					$entry['created'] = date($dateformat, $entry['created']);//$GLOBALS['phpgw']->common->show_date($entry['created']);
+					$entry['modified'] = date($dateformat, $entry['modified']);//$GLOBALS['phpgw']->common->show_date($entry['modified']);
 			}
 			return $values;
 		}
@@ -101,7 +99,7 @@
 				$values = new rental_moveout();
 			}
 
-			$custom_fields = rental_moveout::get_instance()->get_custom_fields();
+			$custom_fields = rental_moveout::get_custom_fields();
 			if($custom_fields)
 			{
 				$custom_fields = rental_somoveout::get_instance()->read_custom_field_values($id, $custom_fields);
