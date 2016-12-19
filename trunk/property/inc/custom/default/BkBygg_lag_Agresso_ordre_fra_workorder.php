@@ -39,12 +39,14 @@
 
 	class lag_agresso_ordre_fra_workorder
 	{
-		var $debug = true;
+		var $debug = false;
 
 		public function __construct()
 		{
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$this->cats->supress_info = true;
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->debug = empty($config->config_data['export']['activate_transfer']) ? true : false;
 		}
 
 		public function transfer( $project, $workorder )
@@ -52,6 +54,8 @@
 //	_debug_array($workorder);die();
 			if (!$this->debug && $workorder['order_sent'])
 			{
+				$transfer_time = $GLOBALS['phpgw']->common->show_date($workorder['order_sent']);
+				phpgwapi_cache::message_set("Info: Ordre #{$workorder['id']} er allerede overført til Agresso {$transfer_time}");
 				return 2;
 			}
 
@@ -195,8 +199,6 @@
 			$tjeneste = $workorder['service_id'] ? $workorder['service_id'] : $tjeneste;
 
 //			_debug_array($location_info);die();
-			$config = CreateObject('phpgwapi.config', 'property');
-			$config->read();
 
 			$collect_building_part = false;
 			if (isset($config->config_data['workorder_require_building_part']))
