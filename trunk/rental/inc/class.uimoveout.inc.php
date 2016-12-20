@@ -157,6 +157,10 @@
 				'label' => lang('moveout'),
 				'link' => '#first_tab'
 			);
+//			$tabs['signature'] = array(
+//				'label' => lang('signature'),
+//				'link' => '#signature'
+//			);
 
 
 			$comments = (array)$moveout->comments;
@@ -219,8 +223,11 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
 			phpgwapi_jquery::load_widget('autocomplete');
+//			self::add_javascript('phpgwapi', 'signature_pad', 'signature_pad.min.js');
+//			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/signature_pad/signature-pad.css');
+			$attributes_xsl = $mode == 'edit' ? 'attributes_form' : 'attributes_view';
 			self::add_javascript('rental', 'rental', 'moveout.edit.js');
-			self::render_template_xsl(array('moveout', 'datatable_inline', 'attributes_form'), array($mode => $data));
+			self::render_template_xsl(array('moveout', 'datatable_inline', $attributes_xsl), array($mode => $data));
 		}
 
 		/*
@@ -247,4 +254,18 @@
 		{
 			parent::save();
 		}
+
+		/**
+		 * (non-PHPdoc)
+		 * @see eventplanner/inc/eventplanner_uicommon#query()
+		 */
+		public function query()
+		{
+			$params = $this->bo->build_default_read_params();
+			$values = $this->bo->read($params);
+			array_walk($values["results"], array($this, "_add_links"), "rental.uimoveout.edit");
+
+			return $this->jquery_results($values);
+		}
+
 	}

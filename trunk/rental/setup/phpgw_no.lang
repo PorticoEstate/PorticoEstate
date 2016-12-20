@@ -644,3 +644,7 @@ schedule	rental	no	Kalender
 moveout	rental	no	Utflytting
 custom fields	rental	no	Egendefinerte felt
 custom field groups	rental	no	Grupper for Egendefinerte felt
+report	rental	no	Rapport
+basis data 	rental	no	Grunnlagsdata
+created	rental	no	Registrert
+modified	rental	no	Endret
