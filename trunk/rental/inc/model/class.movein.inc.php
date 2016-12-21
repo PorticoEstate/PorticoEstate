@@ -23,18 +23,18 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
 	 * @package rental
-	 * @subpackage moveout
+	 * @subpackage movein
 	 * @version $Id: $
 	 */
 
-	phpgw::import_class('rental.bomoveout');
+	phpgw::import_class('rental.bomovein');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
 
-	class rental_moveout extends phpgwapi_model
+	class rental_movein extends phpgwapi_model
 	{
 
-		const acl_location = '.moveout';
+		const acl_location = '.movein';
 
 		protected
 			$id,
@@ -48,7 +48,7 @@
 			$attributes,// custom fields
 			$values_attribute;// custom fields
 
-		protected $field_of_responsibility_name = '.moveout';
+		protected $field_of_responsibility_name = '.movein';
 
 		public function __construct( int $id = null )
 		{
@@ -63,7 +63,7 @@
 		 */
 		public static function get_instance()
 		{
-			return new rental_moveout();
+			return new rental_movein();
 		}
 
 		public static function get_custom_fields()
@@ -130,8 +130,8 @@
 					'type' => 'string',
 					'manytomany' => array(
 						'input_field' => 'comment_input',
-						'table' => 'rental_moveout_comment',
-						'key' => 'moveout_id',
+						'table' => 'rental_movein_comment',
+						'key' => 'movein_id',
 						'column' => array('time', 'author', 'comment', 'type'),
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
@@ -147,7 +147,7 @@
 			{
 				foreach ($fields as $field => $field_info)
 				{
-					if(!property_exists('rental_moveout', $field))
+					if(!property_exists('rental_movein', $field))
 					{
 					   phpgwapi_cache::message_set('$'."{$field},", 'error');
 					}
@@ -202,11 +202,11 @@
 
 		public function store()
 		{
-			return rental_bomoveout::get_instance()->store($this);
+			return rental_bomovein::get_instance()->store($this);
 		}
 
 		public function read_single($id)
 		{
-			return rental_bomoveout::get_instance()->read_single($id, true);
+			return rental_bomovein::get_instance()->read_single($id, true);
 		}
 	}

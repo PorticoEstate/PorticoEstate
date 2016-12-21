@@ -21,17 +21,17 @@
 	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	 *
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @internal Development of this moveout was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
+	 * @internal Development of this movein was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
 	 * @package rental
-	 * @subpackage moveout
+	 * @subpackage movein
 	 * @version $Id: $
 	 */
 	phpgw::import_class('eventplanner.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-	include_class('rental', 'moveout', 'inc/model/');
+	include_class('rental', 'movein', 'inc/model/');
 
-	class rental_uimoveout extends eventplanner_uicommon
+	class rental_uimovein extends eventplanner_uicommon
 	{
 
 		public $public_functions = array(
@@ -54,17 +54,17 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('rental::moveout');
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('moveout');
-			$this->bo = createObject('rental.bomoveout');
-			$this->fields = rental_moveout::get_fields();
-			$this->permissions = rental_moveout::get_instance()->get_permission_array();
-			$this->custom_fields = rental_moveout::get_custom_fields();
+			self::set_active_menu('rental::movein');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('movein');
+			$this->bo = createObject('rental.bomovein');
+			$this->fields = rental_movein::get_fields();
+			$this->permissions = rental_movein::get_instance()->get_permission_array();
+			$this->custom_fields = rental_movein::get_custom_fields();
 		}
 
 		public function index()
 		{
-			$function_msg = lang('moveout');
+			$function_msg = lang('movein');
 
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
@@ -88,11 +88,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'rental.uimoveout.index',
+						'menuaction' => 'rental.uimovein.index',
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'rental.uimoveout.add')),
+					'new_item' => self::link(array('menuaction' => 'rental.uimovein.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -113,7 +113,7 @@
 				'text' => lang('show'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'rental.uimoveout.view'
+					'menuaction' => 'rental.uimovein.view'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -124,12 +124,12 @@
 				'text' => lang('edit'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'rental.uimoveout.edit'
+					'menuaction' => 'rental.uimovein.edit'
 				)),
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('rental', 'rental', 'moveout.index.js');
+			self::add_javascript('rental', 'rental', 'movein.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -146,17 +146,17 @@
 
 			if (!empty($values['object']))
 			{
-				$moveout = $values['object'];
+				$movein = $values['object'];
 			}
 			else
 			{
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
-				$moveout = $this->bo->read_single($id);
+				$movein = $this->bo->read_single($id);
 			}
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
-				'label' => lang('moveout'),
+				'label' => lang('movein'),
 				'link' => '#first_tab'
 			);
 //			$tabs['signature'] = array(
@@ -164,7 +164,8 @@
 //				'link' => '#signature'
 //			);
 
-			$custom_values = $moveout->attributes ? $moveout->attributes : array();
+
+			$custom_values = $movein->attributes ? $movein->attributes : array();
 
 			foreach ($custom_values as $attrib_id => &$attrib)
 			{
@@ -184,7 +185,7 @@
 				}
 			}
 
-			$organized_fields = createObject('booking.custom_fields','rental')->organize_fields(rental_moveout::acl_location, $custom_values);
+			$organized_fields = createObject('booking.custom_fields','rental')->organize_fields(rental_movein::acl_location, $custom_values);
 			$file_def = array(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),
@@ -197,7 +198,7 @@
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uimoveout.get_files',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uimovein.get_files',
 						'id' => $id,
 						'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $file_def,
@@ -208,7 +209,7 @@
 				)
 			);
 
-			$comments = (array)$moveout->comments;
+			$comments = (array)$movein->comments;
 			foreach ($comments as $key => &$comment)
 			{
 				$comment['value_count'] = $key + 1;
@@ -235,10 +236,10 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index',)),
-				'moveout' => $moveout,
-				'contract'	=> createObject('rental.uicontract')->get($moveout->contract_id),
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimovein.save')),
+				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimovein.index',)),
+				'movein' => $movein,
+				'contract'	=> createObject('rental.uicontract')->get($movein->contract_id),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab,
@@ -249,12 +250,12 @@
 //			self::add_javascript('phpgwapi', 'signature_pad', 'signature_pad.min.js');
 //			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/signature_pad/signature-pad.css');
 			$attributes_xsl = $mode == 'edit' ? 'attributes_form' : 'attributes_view';
-			self::add_javascript('rental', 'rental', 'moveout.edit.js');
-			self::render_template_xsl(array('moveout', 'contract_info', 'datatable_inline', $attributes_xsl), array($mode => $data));
+			self::add_javascript('rental', 'rental', 'movein.edit.js');
+			self::render_template_xsl(array('movein', 'contract_info', 'datatable_inline', $attributes_xsl), array($mode => $data));
 		}
 
 		/*
-		 * Get the moveout with the id given in the http variable 'id'
+		 * Get the movein with the id given in the http variable 'id'
 		 */
 
 		public function get( $id = 0 )
@@ -266,11 +267,11 @@
 
 			$id = !empty($id) ? $id : phpgw::get_var('id', 'int');
 
-			$moveout = $this->bo->read_single($id)->toArray();
+			$movein = $this->bo->read_single($id)->toArray();
 
-			unset($moveout['secret']);
+			unset($movein['secret']);
 
-			return $moveout;
+			return $movein;
 		}
 
 		public function save()
@@ -286,7 +287,7 @@
 		{
 			$params = $this->bo->build_default_read_params();
 			$values = $this->bo->read($params);
-			array_walk($values["results"], array($this, "_add_links"), "rental.uimoveout.edit");
+			array_walk($values["results"], array($this, "_add_links"), "rental.uimovein.edit");
 
 			return $this->jquery_results($values);
 		}
@@ -304,7 +305,7 @@
 			}
 
 			$id = phpgw::get_var('id', 'int');
-			return parent::get_files('rental', 'moveout', 'rental.uimoveout.view_file', $id);
+			return parent::get_files('rental', 'movein', 'rental.uimovein.view_file', $id);
 		}
 		/**
 		 * Store and / or delete files related to an entity
@@ -315,7 +316,7 @@
 		 */
 		protected function _handle_files( $id )
 		{
-			parent::_handle_files('rental', 'moveout', $id);
+			parent::_handle_files('rental', 'movein', $id);
 		}
 
 	}
