@@ -37,13 +37,13 @@
 						<legend>
 							<xsl:value-of select="php:function('lang', 'basis data')"/>
 						</legend>
-						<xsl:if test="moveout/id > 0">
+						<xsl:if test="movein/id > 0">
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'id')"/>
 								</label>
-								<input type="hidden" name="id" value="{moveout/id}"/>
-								<xsl:value-of select="moveout/id"/>
+								<input type="hidden" name="id" value="{movein/id}"/>
+								<xsl:value-of select="movein/id"/>
 							</div>
 						</xsl:if>
 
@@ -125,7 +125,7 @@
 								<xsl:value-of select="php:function('lang', 'note')"/>
 							</label>
 							<textarea cols="47" rows="7" name="comment">
-								<xsl:value-of select="moveout/comment"/>
+								<xsl:value-of select="movein/comment"/>
 							</textarea>
 						</div>
 						<div class="pure-control-group">
@@ -197,13 +197,13 @@
 						<legend>
 							<xsl:value-of select="php:function('lang', 'basis data')"/>
 						</legend>
-						<xsl:if test="moveout/id > 0">
+						<xsl:if test="movein/id > 0">
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'id')"/>
 								</label>
-								<input type="hidden" name="id" value="{moveout/id}"/>
-								<xsl:value-of select="moveout/id"/>
+								<input type="hidden" name="id" value="{movein/id}"/>
+								<xsl:value-of select="movein/id"/>
 							</div>
 						</xsl:if>
 

@@ -600,5 +600,36 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'rental_movein' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'contract_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'account_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => false, 'default' => 'current_timestamp'),
+				'modified' => array('type' => 'int', 'precision' => '8',  'nullable' => false, 'default' => 'current_timestamp'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_contract' => array('contract_id' => 'id'),
+				'phpgw_accounts' => array('account_id' => 'account_id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_movein_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'movein_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_movein' => array('movein_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
 
 	);

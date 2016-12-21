@@ -23,19 +23,19 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
 	 * @package rental
-	 * @subpackage moveout
+	 * @subpackage movein
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
 
-	class rental_somoveout extends phpgwapi_socommon
+	class rental_somovein extends phpgwapi_socommon
 	{
 
 		protected static $so;
 
 		public function __construct()
 		{
-			parent::__construct('rental_moveout', rental_moveout::get_fields());
+			parent::__construct('rental_movein', rental_movein::get_fields());
 		}
 
 		/**
@@ -47,7 +47,7 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('rental.somoveout');
+				self::$so = CreateObject('rental.somovein');
 			}
 			return self::$so;
 		}
@@ -69,7 +69,7 @@
 
 		protected function populate( array $data )
 		{
-			$object = new rental_moveout();
+			$object = new rental_movein();
 			foreach ($this->fields as $field => $field_info)
 			{
 				$object->set_field($field, $data[$field]);
