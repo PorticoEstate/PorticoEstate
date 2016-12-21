@@ -141,6 +141,8 @@
 			{
 				if($object->store($object))
 				{
+					$this->_handle_files($object->get_id());
+
 					if($ajax)
 					{
 						phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
@@ -218,4 +220,195 @@
 
 			return $this->jquery_results($values);
 		}
+
+		/**
+		 * Called from  subclasses
+		 * @param type $id
+		 */
+		protected function _handle_files( $fakebase, $sub_module, $id  )
+		{
+			$id = (int)$id;
+			if (!$id)
+			{
+				throw new Exception(__CLASS__.'::' . __FUNCTION__.'() - missing id');
+			}
+			if (!$sub_module)
+			{
+				throw new Exception(__CLASS__.'::' . __FUNCTION__.'() - missing sub_module');
+			}
+			if (!$fakebase)
+			{
+				throw new Exception(__CLASS__.'::' . __FUNCTION__.'() - missing fakebase');
+			}
+
+			$bofiles = CreateObject('property.bofiles', '/' . ltrim($fakebase, '/'));
+
+			if (isset($_POST['delete_file']) && is_array($_POST['delete_file']))
+			{
+				$bofiles->delete_file("/{$sub_module}/{$id}/",array('file_action' => $_POST['delete_file']));
+			}
+			$file_name = str_replace(' ', '_', $_FILES['file']['name']);
+
+			if ($file_name)
+			{
+				if (!is_file($_FILES['file']['tmp_name']))
+				{
+					phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					return;
+				}
+
+				$to_file = "{$bofiles->fakebase}/{$sub_module}/{$id}/{$file_name}";
+				if ($bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => Array(RELATIVE_NONE)
+					)))
+				{
+					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
+				}
+				else
+				{
+					$bofiles->create_document_dir("{$sub_module}/{$id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if (!$bofiles->vfs->cp(array(
+							'from' => $_FILES['file']['tmp_name'],
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+		}
+
+		public function get_files($fakebase, $sub_module, $menuaction,  $id)
+		{
+
+			if (empty($this->permissions[PHPGW_ACL_READ]))
+			{
+				phpgw::no_access();
+			}
+
+			$id = (int)$id;
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$values = (array)$vfs->ls (array(
+				'string' => "/{$fakebase}/{$sub_module}/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$link_view_file = self::link(array('menuaction' => $menuaction));
+
+			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$lang_view =  lang('click to view file');
+			$lang_delete =  lang('Check to delete file');
+			$z = 0;
+			foreach ($values as $_entry)
+			{
+				$content_files[] = array(
+					'file_name' => "<a href=\"{$link_view_file}&file_id={$_entry['file_id']}\" target=\"_blank\" title=\"{$lang_view}\">{$_entry['name']}</a>",
+					'delete_file' => "<input type=\"checkbox\" name=\"delete_file[]\" value=\"{$_entry['file_id']}\" title=\"{$lang_delete}\">",
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => $menuaction,
+							'file_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . urlencode($_entry['name'])
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+
+		public function view_file()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (empty($this->permissions[PHPGW_ACL_READ]))
+			{
+				phpgw::no_access();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$file_id = phpgw::get_var('file_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($file_id)
+			{
+				$file_info = $bofiles->vfs->get_info($file_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($file_id)
+			{
+				$bofiles->get_file($file_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
 	}

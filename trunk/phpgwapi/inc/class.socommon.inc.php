@@ -669,6 +669,7 @@
 						$value_set[$entry['name']] = $entry['value'];
 					}
 				}
+				$object->values_attribute = $values_attribute; // update with converted
 			}
 
 			$sql = "UPDATE {$this->table_name} SET "

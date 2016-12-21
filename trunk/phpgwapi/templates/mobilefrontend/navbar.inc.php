@@ -20,6 +20,8 @@
 		$tts_text = lang('ticket');
 		$condition_survey_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uicondition_survey.index'));
 		$condition_survey_text = $GLOBALS['phpgw']->translation->translate('condition survey', array(), false, 'property');
+		$movein_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimovein.index'));
+		$movein_text = $GLOBALS['phpgw']->translation->translate('movein', array(), false, 'rental');
 		$moveout_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index'));
 		$moveout_text = $GLOBALS['phpgw']->translation->translate('moveout', array(), false, 'rental');
 
@@ -37,6 +39,9 @@
 				</li>
 				<li class="pure-menu-item">
 					<a href="{$condition_survey_url}" class="pure-menu-link">{$condition_survey_text}</a>
+				</li>
+				<li class="pure-menu-item">
+					<a href="{$movein_url}" class="pure-menu-link">{$movein_text}</a>
 				</li>
 				<li class="pure-menu-item">
 					<a href="{$moveout_url}" class="pure-menu-link">{$moveout_text}</a>
