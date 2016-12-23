@@ -164,8 +164,8 @@
 					'BuyerProductDescr' => $line['descr'], //'Kopipapir',
 					'UnitCode' => 'STK',
 					'Quantity' => 1,
-					'Price' => $line['price'],
-					'LineTotal'=> $line['price'],
+					'Price' => number_format($line['price'], 2, '.', ''),
+					'LineTotal'=> number_format($line['price'], 2, '.', ''),
 					'DetailInfo' => $DetailInfo
 				);
 
@@ -175,7 +175,7 @@
 
 			$Orders['Order'][] = array(
 				'OrderNo' => $param['order_id'],
-				'VoucherType' => $param['voucher_type'],
+				'VoucherType' => $this->voucher_type,
 				'TransType' => 41,
 				'Header' => array($Header),
 				'Details' => array('Detail' => $Detail)
