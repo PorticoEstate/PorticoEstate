@@ -195,6 +195,18 @@
 		}
 
 
+		protected function doValidate( $entity, &$errors )
+		{
+			$values =  rental_somoveout::get_instance()->read(array('filters' => array('contract_id' => $entity->contract_id)));
+
+			//Duplicate
+			if(!$entity->get_id() &&!empty($values['results']))
+			{
+				$errors['contract_id'] = lang("report is already recorded for %1", $entity->contract_id);
+			}
+		}
+
+
 		public function serialize()
 		{
 			return self::toArray();

@@ -154,6 +154,8 @@
 				$moveout = $this->bo->read_single($id);
 			}
 
+			$contract_id = $moveout->contract_id ? $moveout->contract_id : phpgw::get_var('contract_id', 'int');
+
 			$tabs = array();
 			$tabs['first_tab'] = array(
 				'label' => lang('moveout'),
@@ -238,7 +240,7 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index',)),
 				'moveout' => $moveout,
-				'contract'	=> createObject('rental.uicontract')->get($moveout->contract_id),
+				'contract'	=> createObject('rental.uicontract')->get($contract_id),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab,

@@ -1719,6 +1719,28 @@ JS;
 			$document_search_options[] = array('id' => 'name', 'name' => lang('document_name'));
 			/*			 * ******************************************************************************** */
 
+
+			$moveout_gross = createObject('rental.bomoveout')->read(array('filters' => array('contract_id' => $contract_id)));
+			$moveout = $moveout_gross['results'] ? $moveout_gross['results'][0] : array();
+			if($moveout)
+			{
+				$moveout['url'] = self::link(array('menuaction' => 'rental.uimoveout.view','id' => $moveout['id']));
+			}
+			else
+			{
+				$moveout['new_report'] = self::link(array('menuaction' => 'rental.uimoveout.edit','contract_id' => $contract_id));
+			}
+			$movein_gross = createObject('rental.bomovein')->read(array('filters' => array('contract_id' => $contract_id)));
+			$movein = $movein_gross['results'] ? $movein_gross['results'][0] : array();
+			if($movein)
+			{
+				$movein['url'] = self::link(array('menuaction' => 'rental.uimovein.view','id' => $movein['id']));
+			}
+			else
+			{
+				$movein['new_report'] = self::link(array('menuaction' => 'rental.uimovein.edit','contract_id' => $contract_id));
+			}
+
 			$code = <<<JS
 				var thousandsSeparator = '$this->thousandsSeparator';
 				var decimalSeparator = '$this->decimalSeparator';
@@ -1776,7 +1798,9 @@ JS;
 				'value_security_amount_view' => ($contract->get_security_amount()) ? $contract->get_security_amount() : '0',
 				'value_current_interval' => $current_interval . " " . lang('year'),
 				'value_current_share' => $current_share . " %",
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'moveout' => $moveout,
+				'movein' => $movein
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
@@ -2207,6 +2231,28 @@ JS;
 				$document_search_options[] = array('id' => 'title', 'name' => lang('document_title'));
 				$document_search_options[] = array('id' => 'name', 'name' => lang('document_name'));
 				/*				 * ******************************************************************************** */
+
+				$moveout_gross = createObject('rental.bomoveout')->read(array('filters' => array('contract_id' => $contract_id)));
+				$moveout = $moveout_gross['results'] ? $moveout_gross['results'][0] : array();
+				if($moveout)
+				{
+					$moveout['url'] = self::link(array('menuaction' => 'rental.uimoveout.view','id' => $moveout['id']));
+				}
+				else
+				{
+					$moveout['new_report'] = self::link(array('menuaction' => 'rental.uimoveout.edit','contract_id' => $contract_id));
+				}
+				$movein_gross = createObject('rental.bomovein')->read(array('filters' => array('contract_id' => $contract_id)));
+				$movein = $movein_gross['results'] ? $movein_gross['results'][0] : array();
+				if($movein)
+				{
+					$movein['url'] = self::link(array('menuaction' => 'rental.uimovein.view','id' => $movein['id']));
+				}
+				else
+				{
+					$movein['new_report'] = self::link(array('menuaction' => 'rental.uimovein.edit','contract_id' => $contract_id));
+				}
+
 			}
 
 			$code = <<<JS
@@ -2287,6 +2333,8 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'img_cal' => json_encode($GLOBALS['phpgw']->common->image('phpgwapi', 'cal')),
 				'dateformat' => str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+				'moveout' => $moveout,
+				'movein' => $movein
 			);
 
 			//$appname	=  $this->location_info['name'];

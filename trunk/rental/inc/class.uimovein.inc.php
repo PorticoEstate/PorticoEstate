@@ -154,6 +154,8 @@
 				$movein = $this->bo->read_single($id);
 			}
 
+			$contract_id = $movein->contract_id ? $movein->contract_id : phpgw::get_var('contract_id', 'int');
+
 			$tabs = array();
 			$tabs['first_tab'] = array(
 				'label' => lang('movein'),
@@ -239,7 +241,7 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimovein.save')),
 				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimovein.index',)),
 				'movein' => $movein,
-				'contract'	=> createObject('rental.uicontract')->get($movein->contract_id),
+				'contract'	=> createObject('rental.uicontract')->get($contract_id),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab,
