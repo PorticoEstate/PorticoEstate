@@ -168,7 +168,9 @@
 				'adjustment_year' => array('type' => 'int', 'precision' => '4', 'nullable' => true), //Sist regulert
 				'adjustable' => array('type' => 'bool', 'nullable' => true, 'default' => 'false'), //Regulerbar
 				'override_adjustment_start' => array('type' => 'int','precision' => 4,'nullable' => true),
-				'publish_comment' => array('type' => 'bool', 'nullable' => true, 'default' => 'false') //skal kommentar vises i frontend
+				'publish_comment' => array('type' => 'bool', 'nullable' => true, 'default' => 'false'), //skal kommentar vises i frontend
+				'notify_on_expire' => array('type' => 'int','precision' => 2,'nullable' => true),
+				'notified_time' => array('type' => 'int','precision' => 8,'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(
