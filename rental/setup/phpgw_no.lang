@@ -653,3 +653,4 @@ picture	rental	no	Bilde
 delete file	rental	no	Slett fil
 user	rental	no	Bruker
 note	rental	no	Merknad
+report is already recorded for %1	rental	no	Rapport finnes allerede for %1
