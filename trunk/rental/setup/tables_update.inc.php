@@ -842,3 +842,21 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.0.33';
+	function rental_upgrade0_1_0_33()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'notify_on_expire', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => 0));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'notified_time', array(
+			'type' => 'int', 'precision' => 8, 'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.34';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

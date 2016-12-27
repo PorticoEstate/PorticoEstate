@@ -355,7 +355,7 @@
 			else
 			{
 				// columns to retrieve
-				$columns[] = 'contract.id AS contract_id';
+				$columns[] = 'contract.id AS contract_id, contract.notify_on_expire, contract.notified_time';
 				$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,override_adjustment_start,contract.publish_comment';
 				$columns[] = 'party.id AS party_id';
 				$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id';
@@ -446,6 +446,9 @@
 				$contract->set_notify_before($this->unmarshal($this->db->f('notify_before'), 'int'));
 				$contract->set_notify_before_due_date($this->unmarshal($this->db->f('notify_before_due_date'), 'int'));
 				$contract->set_notify_after_termination_date($this->unmarshal($this->db->f('notify_after_termination_date'), 'int'));
+				$contract->set_notify_on_expire($this->unmarshal($this->db->f('notify_on_expire'), 'int'));
+				$contract->set_notified_time($this->unmarshal($this->db->f('notified_time'), 'int'));
+
 			}
 
 			$timestamp_end = $this->unmarshal($this->db->f('timestamp_end'), 'int');
@@ -1250,5 +1253,14 @@
 				$price_items[] = $price_item_id;
 			}
 			return $price_items;
+		}
+
+		public function set_notified_on_expire( $contract_id, $current_notify_on_expire )
+		{
+			$contract_id = (int) $contract_id;
+			$new_notify_on_expire = (int)$current_notify_on_expire + 1;
+			$now = time();
+			$sql = "UPDATE rental_contract SET notify_on_expire = {$new_notify_on_expire}, notified_time = $now  WHERE id={$contract_id} ";
+			return $this->db->query($sql);
 		}
     }
