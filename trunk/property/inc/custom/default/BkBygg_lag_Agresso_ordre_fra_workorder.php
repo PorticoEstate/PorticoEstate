@@ -213,6 +213,19 @@
 
 			//Override from workorder
 			$tax_code = $workorder['tax_code'] ? $workorder['tax_code'] : $tax_code;
+			switch ($tax_code)
+			{
+				case '0':
+					$tax_code = '6A';
+					break;
+				case '75':
+					$tax_code = '60';
+					break;
+				default:
+					$tax_code = '6A';
+					break;
+			}
+
 			$tjeneste = $workorder['service_id'] ? $workorder['service_id'] : $tjeneste;
 
 //			_debug_array($location_info);die();
