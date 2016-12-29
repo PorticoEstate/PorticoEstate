@@ -763,7 +763,7 @@
 						'phpgw_accounts' => array('account_id' => 'account_id')
 					),
 					'ix' => array(),
-					'uc' => array()
+					'uc' => array('contract_id')
 				)
 		);
 
@@ -814,7 +814,7 @@
 						'phpgw_accounts' => array('account_id' => 'account_id')
 					),
 					'ix' => array(),
-					'uc' => array()
+					'uc' => array('contract_id')
 				)
 		);
 
@@ -860,3 +860,39 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.0.34';
+	function rental_upgrade0_1_0_34()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw']->locations->add('.email_out', 'email out', 'rental');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_email_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'content' => array('type' => 'text', 'nullable' => True),
+					'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.35';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
+
+

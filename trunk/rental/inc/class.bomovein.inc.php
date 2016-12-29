@@ -21,19 +21,19 @@
 	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	 *
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @internal Development of this customer was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
 	 * @package rental
 	 * @subpackage movein
 	 * @version $Id: $
 	 */
 
 
-	phpgw::import_class('eventplanner.bocommon');
+	phpgw::import_class('phpgwapi.bocommon');
 	phpgw::import_class('rental.somovein');
 
 	include_class('rental', 'movein', 'inc/model/');
 
-	class rental_bomovein extends eventplanner_bocommon
+	class rental_bomovein extends phpgwapi_bocommon
 	{
 		protected static
 			$bo,

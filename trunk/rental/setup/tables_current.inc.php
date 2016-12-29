@@ -585,7 +585,7 @@
 				'phpgw_accounts' => array('account_id' => 'account_id')
 			),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('contract_id')
 		),
 		'rental_moveout_comment' => array(
 			'fd' => array(
@@ -616,7 +616,7 @@
 				'phpgw_accounts' => array('account_id' => 'account_id')
 			),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('contract_id')
 		),
 		'rental_movein_comment' => array(
 			'fd' => array(
@@ -630,6 +630,53 @@
 			'pk' => array('id'),
 			'fk' => array(
 				'rental_movein' => array('movein_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+
+		'rental_email_out' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'remark' => array('type' => 'text', 'nullable' => True),
+				'subject' => array('type' => 'text', 'nullable' => false),
+				'content' => array('type' => 'text', 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_email_out_party' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'email_out_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'party_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'status' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'rental_email_out' => array('email_out_id' => 'id'),
+				'rental_party' => array('party_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'rental_email_template' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'content' => array('type' => 'text', 'nullable' => True),
+				'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
 		),
