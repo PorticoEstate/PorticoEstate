@@ -21,7 +21,7 @@
 	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	 *
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @internal Development of this vendor was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
+	 * @internal Development of this vendor was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
 	 * @subpackage vendor
 	 * @version $Id: $
