@@ -205,8 +205,8 @@
 						'default' => array
 							(
 							'user_id' => array('add' => '$this->account'),
-							'entry_date' => array('add' => 'time()'),
-							'modified_date' => array('edit' => 'time()'),
+							'created' => array('add' => 'time()'),
+							'modified' => array('edit' => 'time()'),
 						),
 						'check_grant' => true
 					);
@@ -218,6 +218,7 @@
 				default:
 					$message = lang('ERROR: illegal type %1', $type);
 					phpgwapi_cache::message_set($message, 'error');
+					throw new Exception;
 			}
 
 			$this->location_info = $info;

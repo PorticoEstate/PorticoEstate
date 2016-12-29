@@ -633,7 +633,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-
 		'rental_email_out' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
@@ -642,8 +641,8 @@
 				'subject' => array('type' => 'text', 'nullable' => false),
 				'content' => array('type' => 'text', 'nullable' => True),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'entry_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
-				'modified_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
