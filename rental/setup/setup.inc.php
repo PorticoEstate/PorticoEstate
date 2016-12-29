@@ -34,7 +34,10 @@
 		'rental_moveout',
 		'rental_moveout_comment',
 		'rental_movein',
-		'rental_movein_comment'
+		'rental_movein_comment',
+		'rental_email_out',
+		'rental_email_out_party',
+		'rental_email_template'
 	);
 	$setup_info['rental']['enable'] = 1;
 	$setup_info['rental']['app_group'] = 'office';

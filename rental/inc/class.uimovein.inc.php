@@ -26,12 +26,12 @@
 	 * @subpackage movein
 	 * @version $Id: $
 	 */
-	phpgw::import_class('eventplanner.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
 	include_class('rental', 'movein', 'inc/model/');
 
-	class rental_uimovein extends eventplanner_uicommon
+	class rental_uimovein extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(
@@ -283,7 +283,7 @@
 
 		/**
 		 * (non-PHPdoc)
-		 * @see eventplanner/inc/eventplanner_uicommon#query()
+		 * @see phpgwapi/inc/phpgwapi_uicommon#query()
 		 */
 		public function query()
 		{

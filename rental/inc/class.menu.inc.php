@@ -143,6 +143,19 @@
 			if(!$use_fellesdata)
 			{
 				$menus['navigation'] = array_reverse($menus['navigation'], true);
+				$menus['navigation']['email_out'] = array(
+					'text' => lang('email out'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiemail_out.index')),
+					'image' => array('rental', 'text-x-generic'),
+					'children' => array(
+						'email_template' => array(
+							'text' => lang('email template'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uigeneric.index',
+								'type' => 'email_template', 'admin' => true))
+						)
+					)
+				);
+
 				$menus['navigation']['moveout'] = array(
 					'text' => lang('moveout'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index')),
