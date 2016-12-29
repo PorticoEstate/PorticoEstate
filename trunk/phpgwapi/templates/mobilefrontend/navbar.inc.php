@@ -25,6 +25,9 @@
 		$moveout_url = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uimoveout.index'));
 		$moveout_text = $GLOBALS['phpgw']->translation->translate('moveout', array(), false, 'rental');
 
+		$acl = & $GLOBALS['phpgw']->acl;
+
+
 		$topmenu = <<<HTML
 		<div class="pure-menu pure-menu-horizontal">
 			<ul class="pure-menu-list">
@@ -40,12 +43,29 @@
 				<li class="pure-menu-item">
 					<a href="{$condition_survey_url}" class="pure-menu-link">{$condition_survey_text}</a>
 				</li>
+HTML;
+
+		if($acl->check('.movein', PHPGW_ACL_READ, 'rental'))
+		{
+			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
 					<a href="{$movein_url}" class="pure-menu-link">{$movein_text}</a>
 				</li>
+HTML;
+
+		}
+		if($acl->check('.moveout', PHPGW_ACL_READ, 'rental'))
+		{
+			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
 					<a href="{$moveout_url}" class="pure-menu-link">{$moveout_text}</a>
 				</li>
+HTML;
+
+		}
+
+
+		$topmenu .= <<<HTML
 			</ul>
 		</div>
 HTML;
