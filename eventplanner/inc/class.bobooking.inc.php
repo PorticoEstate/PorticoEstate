@@ -26,12 +26,12 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
-	phpgw::import_class('eventplanner.bocommon');
+	phpgw::import_class('phpgwapi.bocommon');
 	phpgw::import_class('eventplanner.sobooking');
 
 	include_class('eventplanner', 'booking', 'inc/model/');
 
-	class eventplanner_bobooking extends eventplanner_bocommon
+	class eventplanner_bobooking extends phpgwapi_bocommon
 	{
 		protected static
 			$bo,
