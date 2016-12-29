@@ -141,7 +141,9 @@
 			{
 				if($object->store($object))
 				{
-					$this->_handle_files($object->get_id());
+					$class_info = explode('_', get_class($object), 2);
+
+					$this->_handle_files($class_info[0], $class_info[1], $object->get_id());
 
 					if($ajax)
 					{
