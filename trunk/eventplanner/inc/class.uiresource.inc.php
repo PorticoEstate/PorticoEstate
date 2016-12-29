@@ -26,13 +26,13 @@
 	 * @subpackage resource
 	 * @version $Id: $
 	 */
-	phpgw::import_class('eventplanner.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
 	include_class('eventplanner', 'resource', 'inc/model/');
 	use eventplanner_resource;
 
-	class eventplanner_uiresource extends eventplanner_uicommon
+	class eventplanner_uiresource extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(

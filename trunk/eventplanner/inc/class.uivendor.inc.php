@@ -26,12 +26,12 @@
 	 * @subpackage vendor
 	 * @version $Id: $
 	 */
-	phpgw::import_class('eventplanner.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
 	include_class('eventplanner', 'vendor', 'inc/model/');
 
-	class eventplanner_uivendor extends eventplanner_uicommon
+	class eventplanner_uivendor extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(
