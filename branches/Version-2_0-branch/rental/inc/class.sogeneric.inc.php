@@ -170,11 +170,55 @@
 						'menu_selection' => 'admin::rental::composite_type'
 					);
 					break;
+				case 'email_template':
+					$info = array
+						(
+						'table' => 'rental_email_template',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+								(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('email template'),
+						'acl_app' => 'rental',
+						'acl_location' => '.email_out',
+						'menu_selection' => 'rental::email_out::email_template',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'created' => array('add' => 'time()'),
+							'modified' => array('edit' => 'time()'),
+						),
+						'check_grant' => true
+					);
+
+					break;
+
 // END RENTAL TABLES
 
 				default:
 					$message = lang('ERROR: illegal type %1', $type);
 					phpgwapi_cache::message_set($message, 'error');
+					throw new Exception;
 			}
 
 			$this->location_info = $info;

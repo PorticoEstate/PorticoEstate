@@ -67,6 +67,8 @@
 			if($frontend)
 			{
 				$GLOBALS['phpgw']->hooks->process('set_auth_type', array($frontend));
+				$GLOBALS['phpgw_info']['login_left_message'] = '';
+				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
 			
 			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote']) // In case a user failed logged in via SSO - get another try

@@ -283,7 +283,7 @@
 		/**
 		 * Implement in subclasses
 		 */
-		public function get_custom_fields()
+		public static function get_custom_fields()
 		{
 			return array();
 		}
