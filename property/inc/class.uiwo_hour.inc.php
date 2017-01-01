@@ -1520,7 +1520,7 @@ HTML;
 					{
 						if ($e)
 						{
-							throw $e;
+							phpgwapi_cache::message_set($e->getMessage(), 'error');
 						}
 					}
 

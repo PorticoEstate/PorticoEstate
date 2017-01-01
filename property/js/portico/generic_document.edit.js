@@ -103,6 +103,7 @@ function getComponents()
 function setRelationsComponents(oArgs)
 {
 	var values = {};
+	var related = {};
 	
 	var select_check = $('.components');
 	select_check.each(function (i, obj)
@@ -113,11 +114,17 @@ function setRelationsComponents(oArgs)
 		}
 	});
 	
+	var select_related = $('.components_related');
+	select_related.each(function (i, obj)
+	{
+		related[obj.value] = obj.value;
+	});
+	
 	oArgs['location_id'] = $('#location_id').val();
 	oArgs['file_id'] = $('#id').val();
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	var data = {"items": values};
+	var data = {"items":values, "related":related};
 	JqueryPortico.execute_ajax(requestUrl, function (result)
 	{
 		JqueryPortico.show_message(0, result);
@@ -129,6 +136,7 @@ function setRelationsComponents(oArgs)
 function setRelationsLocations(oArgs)
 {
 	var values = {};
+	var related = {};
 	
 	var select_check = $('.locations');
 	select_check.each(function (i, obj)
@@ -139,11 +147,17 @@ function setRelationsLocations(oArgs)
 		}
 	});
 	
+	var select_related = $('.locations_related');
+	select_related.each(function (i, obj)
+	{
+		related[obj.value] = obj.value;
+	});
+	
 	oArgs['type_id'] = $('#type_id').val();
 	oArgs['file_id'] = $('#id').val();
 	var requestUrl = phpGWLink('index.php', oArgs);
 
-	var data = {"items": values};
+	var data = {"items":values, "related":related};
 	JqueryPortico.execute_ajax(requestUrl, function (result)
 	{
 		JqueryPortico.show_message(1, result);

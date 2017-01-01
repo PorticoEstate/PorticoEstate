@@ -25,11 +25,10 @@
 	 * @package mobilefrontend
 	 * @version $Id$
 	 */
-	phpgw::import_class('phpgwapi.uicommon');
 
-//	phpgw::import_class('phpgwapi.jquery');
+	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class mobilefrontend_uifront extends phpgwapi_uicommon
+	class mobilefrontend_uifront extends phpgwapi_uicommon_jquery
 	{
 
 		public $public_functions = array

@@ -164,6 +164,8 @@
 	<form ENCTYPE="multipart/form-data" method="post" id='form' name="form" action="{$form_action}" class= "pure-form pure-form-aligned">
 		<input type="hidden" name="send_workorder" value=""/>
 		<input type="hidden" name='calculate_workorder'  value=""/>
+		<input type="hidden" name='validatet_category' id="validatet_category" value="{validatet_category}"/>
+
 		<xsl:variable name="decimal_separator">
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>

@@ -52,6 +52,8 @@
 			$this->skip_limit_query = null;
 			$this->fields = $fields;
 			$this->table_name = $table_name;
+			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
 		}
 
 		/**
@@ -146,6 +148,10 @@
 			else if ($type == 'json')
 			{
 				return json_decode($value, true);
+			}
+			else if ($type == 'datestring')
+			{
+				return date($this->dateformat, strtotime($value));
 			}
 			return $value;
 		}
@@ -663,6 +669,7 @@
 						$value_set[$entry['name']] = $entry['value'];
 					}
 				}
+				$object->values_attribute = $values_attribute; // update with converted
 			}
 
 			$sql = "UPDATE {$this->table_name} SET "

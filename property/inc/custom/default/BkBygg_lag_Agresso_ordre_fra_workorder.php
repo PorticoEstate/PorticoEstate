@@ -39,12 +39,14 @@
 
 	class lag_agresso_ordre_fra_workorder
 	{
-		var $debug = true;
+		var $debug = false;
 
 		public function __construct()
 		{
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'property', '.project');
 			$this->cats->supress_info = true;
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+			$this->debug = empty($config->config_data['export']['activate_transfer']) ? true : false;
 		}
 
 		public function transfer( $project, $workorder )
@@ -52,6 +54,8 @@
 //	_debug_array($workorder);die();
 			if (!$this->debug && $workorder['order_sent'])
 			{
+				$transfer_time = $GLOBALS['phpgw']->common->show_date($workorder['order_sent']);
+				phpgwapi_cache::message_set("Info: Ordre #{$workorder['id']} er allerede overført til Agresso {$transfer_time}");
 				return 2;
 			}
 
@@ -64,12 +68,12 @@
 			if($approval_level == 'project')
 			{
 				$approval_amount = ExecMethod('property.boworkorder.get_accumulated_budget_amount', $workorder['project_id']);
-				$price = ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
+				$price = (float) ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
 			}
 			else
 			{
 				$approval_amount = ExecMethod('property.boworkorder.get_budget_amount', $workorder['id']);
-				$price = $approval_amount;
+				$price = (float) $approval_amount;
 
 			}
 
@@ -115,17 +119,34 @@
 			$user_name = $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString();
 			$account_lid = $GLOBALS['phpgw']->accounts->id2lid($workorder['user_id']);
 
+
+			if ($workorder['ecodimb'])
+			{
+				$dim1 = $workorder['ecodimb'];
+			}
+			else if ($project['ecodimb'])
+			{
+				$dim1 = $project['ecodimb'];
+			}
+			else
+			{
+				throw new Exception('Dimensjonen "Ansvar" mangler');
+			}
+
 			if ($workorder['location_code'])
 			{
 				$location_code = $workorder['location_code'];
 				$location = explode('-', $location_code);
-				$dim3 = isset($location[1]) && $location[1] ? "{$location[0]}{$location[1]}" : "{$location[0]}01";
+//				$dim3 = isset($location[1]) && $location[1] ? "{$location[0]}{$location[1]}" : "{$location[0]}01";
+				$dim3 = $location[0];
+
 			}
 			else if ($project['location_code'])
 			{
 				$location_code = $project['location_code'];
 				$location = explode('-', $location_code);
-				$dim3 = isset($location[1]) && $location[1] ? "{$location[0]}{$location[1]}" : "{$location[0]}01";
+//				$dim3 = isset($location[1]) && $location[1] ? "{$location[0]}{$location[1]}" : "{$location[0]}01";
+				$dim3 = $location[0];
 			}
 			else
 			{
@@ -154,9 +175,9 @@
 				),
 				'BuyerReferences' => array(
 					array(
-						'Responsible' => $account_lid,
-						'RequestedBy' => $account_lid,
-						'Accountable' => $account_lid,
+						'Responsible' => strtoupper($account_lid),
+						'RequestedBy' => strtoupper($account_lid),
+						'Accountable' => strtoupper($account_lid),
 					)
 				)
 			);
@@ -192,11 +213,22 @@
 
 			//Override from workorder
 			$tax_code = $workorder['tax_code'] ? $workorder['tax_code'] : $tax_code;
+			switch ($tax_code)
+			{
+				case '0':
+					$tax_code = '6A';
+					break;
+				case '75':
+					$tax_code = '60';
+					break;
+				default:
+					$tax_code = '6A';
+					break;
+			}
+
 			$tjeneste = $workorder['service_id'] ? $workorder['service_id'] : $tjeneste;
 
 //			_debug_array($location_info);die();
-			$config = CreateObject('phpgwapi.config', 'property');
-			$config->read();
 
 			$collect_building_part = false;
 			if (isset($config->config_data['workorder_require_building_part']))
@@ -250,7 +282,7 @@
 
 			$param = array(
 				'dim0' => $workorder['b_account_id'], // Art
-				'dim1' => $workorder['ecodimb'], // Ansvar
+				'dim1' => $dim1, // Ansvar
 				'dim2' => $tjeneste, // Tjeneste liste 30 stk, default 9
 				'dim3' => $dim3, // Objekt: eiendom + bygg: 6 siffer
 				'dim4' => $workorder['contract_id'], // Kontrakt - frivillig / 9, 7 tegn - alfanumerisk

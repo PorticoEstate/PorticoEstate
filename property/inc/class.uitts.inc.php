@@ -998,7 +998,7 @@
 								'value' => lang('columns'),
 								'href' => '#',
 								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload'})"
+								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload', height: 500})"
 							),
 						)
 					)

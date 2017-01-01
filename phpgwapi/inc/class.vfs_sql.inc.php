@@ -1157,7 +1157,7 @@
 			(
 				'owner_id'	=> $this->working_id,
 				'directory'	=> $p->fake_leading_dirs_clean,
-				'name'		=> $p->fake_name_clean
+				'name'		=> $p->fake_name
 			);
 
 			$cols = implode(',', array_keys($value_set));
@@ -1167,7 +1167,7 @@
 			$query = $GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 			
 			$last_insert_id = $GLOBALS['phpgw']->db->get_last_insert_id('phpgw_vfs', 'file_id');
-			
+
 			$this->set_attributes(array(
 				'string'		=> $p->fake_full_path,
 				'relatives'		=> array($p->mask),
@@ -1780,7 +1780,7 @@
 			{
 				throw new Exception('nothing to copy from');
 			}
-
+			
 			if(!is_array($data))
 			{
 				$data = array();
@@ -1919,7 +1919,7 @@
 							'relatives'	=> array($data['relatives'][0])
 						)
 					);
-
+ 
 					if(!$this->acl_check(array(
 							'string'	=> $p->fake_full_path,
 							'relatives'	=> array($p->mask),
@@ -1942,12 +1942,17 @@
 						}
 					}
 					
-					$file_name = $t->fake_leading_dirs .'/'.$data['id'].'_#' .$t->fake_name_clean;
+					$file_name = $t->fake_leading_dirs .'/'.$data['id'].'_#' .$t->fake_name;
 					$t2 = $this->path_parts(array(
 							'string'	=> $file_name,
 							'relatives'	=> array($data['relatives'][1])
 						)
-					);	
+					);						
+
+					if (!$this->fileoperation->rename($t, $t2))
+					{
+						return false;
+					}
 							
 					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET owner_id='{$this->working_id}',"
 					. " directory='{$t2->fake_leading_dirs_clean}',"
@@ -1999,7 +2004,7 @@
 					{
 						if($this->file_actions)
 						{
-							$new_name = $t->fake_leading_dirs .'/'.$file_id.'_#' .$t->fake_name_clean;
+							$new_name = $t->fake_leading_dirs .'/'.$file_id.'_#' .$t->fake_name;
 
 							$t2 = $this->path_parts(array(
 									'string'	=> $new_name,

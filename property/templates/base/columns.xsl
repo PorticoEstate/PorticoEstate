@@ -10,7 +10,7 @@
 
 <!-- New template-->
 <xsl:template match="columns">
-	<div align="left">
+	<div class='body'>
 		<form method="post" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
 			<table cellpadding="2" cellspacing="2" width="80%" align="center">
 				<xsl:choose>
@@ -23,6 +23,13 @@
 					</xsl:when>
 				</xsl:choose>
 			</table>
+			<div class="proplist-col">
+				<input type="submit" class="pure-button pure-button-primary" name="values[save]">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'save')"/>
+					</xsl:attribute>
+				</input>
+			</div>
 
 			<fieldset>
 				<legend>
@@ -32,19 +39,6 @@
 					<xsl:apply-templates select="column_list"/>
 				</div>
 			</fieldset>
-
-			<tr height="50">
-				<td>
-					<xsl:variable name="lang_save">
-						<xsl:value-of select="lang_save"/>
-					</xsl:variable>
-					<input type="submit" name="values[save]" value="{$lang_save}">
-						<xsl:attribute name="title">
-							<xsl:value-of select="lang_save_statustext"/>
-						</xsl:attribute>
-					</input>
-				</td>
-			</tr>
 		</form>
 	</div>
 </xsl:template>

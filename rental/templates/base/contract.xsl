@@ -270,6 +270,40 @@
 								</xsl:attribute>
 							</input>
 						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'movein')"/>
+							</label>
+							<xsl:choose>
+								<xsl:when test="movein/url">
+									<a href="{movein/url}">
+										<xsl:value-of select="movein/created"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{movein/new_report}">
+										<xsl:value-of select="php:function('lang', 'new')"/>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'moveout')"/>
+							</label>
+							<xsl:choose>
+								<xsl:when test="moveout/url">
+									<a href="{moveout/url}">
+										<xsl:value-of select="moveout/created"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{moveout/new_report}">
+										<xsl:value-of select="php:function('lang', 'new')"/>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
 					</div>
 					<div class="pure-u-1 pure-u-lg-1-2">
 						<div class="pure-control-group">
@@ -844,6 +878,41 @@
 								</div>
 							</xsl:otherwise>
 						</xsl:choose>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'movein')"/>
+							</label>
+							<xsl:choose>
+								<xsl:when test="movein/url">
+									<a href="{movein/url}">
+										<xsl:value-of select="movein/created"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{movein/new_report}">
+										<xsl:value-of select="php:function('lang', 'new')"/>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'moveout')"/>
+							</label>
+							<xsl:choose>
+								<xsl:when test="moveout/url">
+									<a href="{moveout/url}">
+										<xsl:value-of select="moveout/created"/>
+									</a>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{moveout/new_report}">
+										<xsl:value-of select="php:function('lang', 'new')"/>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
+
 					</div>
 					<div class="pure-u-1 pure-u-lg-1-2">
 

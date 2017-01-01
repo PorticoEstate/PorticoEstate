@@ -164,8 +164,8 @@
 					'BuyerProductDescr' => $line['descr'], //'Kopipapir',
 					'UnitCode' => 'STK',
 					'Quantity' => 1,
-					'Price' => $line['price'],
-					'LineTotal'=> $line['price'],
+					'Price' => number_format($line['price'], 2, '.', ''),
+					'LineTotal'=> number_format($line['price'], 2, '.', ''),
 					'DetailInfo' => $DetailInfo
 				);
 
@@ -175,7 +175,7 @@
 
 			$Orders['Order'][] = array(
 				'OrderNo' => $param['order_id'],
-				'VoucherType' => $param['voucher_type'],
+				'VoucherType' => $this->voucher_type,
 				'TransType' => 41,
 				'Header' => array($Header),
 				'Details' => array('Detail' => $Detail)
@@ -233,14 +233,15 @@
 			return $filename;
 		}
 
-		public function transfer( $debug )
+		public function transfer( )
 		{
 			$batchid = $this->soXport->increment_batchid();
 			$this->batchid = $batchid;
 			$filename = $this->create_file_name($this->order_id);
 			$content = $this->transfer_xml;
+			$debug = empty($this->config->config_data['export']['activate_transfer']) ? true : false;
 
-			if($debug) // keep a copy?
+			if(!empty($this->config->config_data['export']['path']) && is_dir($this->config->config_data['export']['path'])) // keep a copy
 			{
 				$file_written = false;
 				$fp = fopen($filename, "wb");
@@ -257,8 +258,7 @@
 			}
 
 			$transfer_ok = false;
-//			if ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh')
-			if (!$debug)//Not yet...
+			if (!$debug && ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh'))
 			{
 				$this->db->transaction_begin();
 

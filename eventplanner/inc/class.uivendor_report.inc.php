@@ -21,17 +21,17 @@
 	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	 *
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @internal Development of this application was funded by http://www.bergen.kommune.no/ and Nordlandssykehuset
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
 	 * @subpackage vendor_report
 	 * @version $Id: $
 	 */
-	phpgw::import_class('eventplanner.uicommon');
+	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
 	include_class('eventplanner', 'vendor_report', 'inc/model/');
 
-	class eventplanner_uivendor_report extends eventplanner_uicommon
+	class eventplanner_uivendor_report extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(

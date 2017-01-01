@@ -6,8 +6,8 @@
 	 * @copyright Copyright (C) 2016 Free Software Foundation http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v2 or later
 	 * @internal
-	 * @package eventplanner
-	 * @subpackage application
+	 * @package phpgwapi
+	 * @subpackage utilities
 	 * @version $Id:$
 	 */
 
@@ -27,7 +27,7 @@
 	 */
 
 
-	abstract class eventplanner_bocommon
+	abstract class phpgwapi_bocommon
 	{
 
 		protected static
