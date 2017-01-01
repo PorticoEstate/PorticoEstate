@@ -47,6 +47,7 @@
 			<xsl:value-of select="decimal_separator"/>
 		</xsl:variable>
 		<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
+		<input type="hidden" name='validatet_category' id="validatet_category" value="1"/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 
