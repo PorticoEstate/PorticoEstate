@@ -348,4 +348,42 @@
 			return $this->generate_response($response, $print_response);
 		}
 		
+		public function generate_response($content, $print_response = true) {
+			$this->response = $content;
+			
+			if ($print_response) 
+			{
+				$content_files = scandir($this->options['upload_dir']);
+				$count_files = 0;
+				foreach($content_files as $key => $value)
+				{
+					$path = realpath($this->options['upload_dir'].'/'.$value);
+					if(is_file($path)) 
+					{				
+						$count_files ++;
+					} 
+				}
+				$content['num_files'] = $count_files;
+			
+				$json = json_encode($content);
+				$redirect = stripslashes($this->get_post_param('redirect'));
+				if ($redirect && preg_match($this->options['redirect_allow_target'], $redirect)) {
+					$this->header('Location: '.sprintf($redirect, rawurlencode($json)));
+					return;
+				}
+				$this->head();
+				if ($this->get_server_var('HTTP_CONTENT_RANGE')) {
+					$files = isset($content[$this->options['param_name']]) ?
+						$content[$this->options['param_name']] : null;
+					if ($files && is_array($files) && is_object($files[0]) && $files[0]->size) {
+						$this->header('Range: 0-'.(
+							$this->fix_integer_overflow((int)$files[0]->size) - 1
+						));
+					}
+				}
+				$this->body($json);
+			}
+			return $content;
+		}
+		
 	}
