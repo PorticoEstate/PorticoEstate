@@ -127,6 +127,24 @@ $(document).ready(function ()
 {
 	check_button_names();
 
+	$.formUtils.addValidator({
+		name: 'category',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var validatet_category = $('#validatet_category').val();
+			if(validatet_category ==1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		},
+		errorMessage: 'Ugyldig kategori',
+		errorMessageKey: ''
+	});
+
 	$("#global_category_id").change(function ()
 	{
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};

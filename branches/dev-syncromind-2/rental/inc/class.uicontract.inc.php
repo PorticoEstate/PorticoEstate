@@ -44,7 +44,8 @@
 			'reset_price_item' => true,
 			'add_notification' => true,
 			'download' => true,
-			'get_total_price' => true
+			'get_total_price' => true,
+			'notify_on_expire'	=> true
 		);
 
 		public function __construct()
@@ -1719,6 +1720,28 @@ JS;
 			$document_search_options[] = array('id' => 'name', 'name' => lang('document_name'));
 			/*			 * ******************************************************************************** */
 
+
+			$moveout_gross = createObject('rental.bomoveout')->read(array('filters' => array('contract_id' => $contract_id)));
+			$moveout = $moveout_gross['results'] ? $moveout_gross['results'][0] : array();
+			if($moveout)
+			{
+				$moveout['url'] = self::link(array('menuaction' => 'rental.uimoveout.view','id' => $moveout['id']));
+			}
+			else
+			{
+				$moveout['new_report'] = self::link(array('menuaction' => 'rental.uimoveout.edit','contract_id' => $contract_id));
+			}
+			$movein_gross = createObject('rental.bomovein')->read(array('filters' => array('contract_id' => $contract_id)));
+			$movein = $movein_gross['results'] ? $movein_gross['results'][0] : array();
+			if($movein)
+			{
+				$movein['url'] = self::link(array('menuaction' => 'rental.uimovein.view','id' => $movein['id']));
+			}
+			else
+			{
+				$movein['new_report'] = self::link(array('menuaction' => 'rental.uimovein.edit','contract_id' => $contract_id));
+			}
+
 			$code = <<<JS
 				var thousandsSeparator = '$this->thousandsSeparator';
 				var decimalSeparator = '$this->decimalSeparator';
@@ -1776,7 +1799,9 @@ JS;
 				'value_security_amount_view' => ($contract->get_security_amount()) ? $contract->get_security_amount() : '0',
 				'value_current_interval' => $current_interval . " " . lang('year'),
 				'value_current_share' => $current_share . " %",
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'moveout' => $moveout,
+				'movein' => $movein
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('view');
@@ -2207,6 +2232,28 @@ JS;
 				$document_search_options[] = array('id' => 'title', 'name' => lang('document_title'));
 				$document_search_options[] = array('id' => 'name', 'name' => lang('document_name'));
 				/*				 * ******************************************************************************** */
+
+				$moveout_gross = createObject('rental.bomoveout')->read(array('filters' => array('contract_id' => $contract_id)));
+				$moveout = $moveout_gross['results'] ? $moveout_gross['results'][0] : array();
+				if($moveout)
+				{
+					$moveout['url'] = self::link(array('menuaction' => 'rental.uimoveout.view','id' => $moveout['id']));
+				}
+				else
+				{
+					$moveout['new_report'] = self::link(array('menuaction' => 'rental.uimoveout.edit','contract_id' => $contract_id));
+				}
+				$movein_gross = createObject('rental.bomovein')->read(array('filters' => array('contract_id' => $contract_id)));
+				$movein = $movein_gross['results'] ? $movein_gross['results'][0] : array();
+				if($movein)
+				{
+					$movein['url'] = self::link(array('menuaction' => 'rental.uimovein.view','id' => $movein['id']));
+				}
+				else
+				{
+					$movein['new_report'] = self::link(array('menuaction' => 'rental.uimovein.edit','contract_id' => $contract_id));
+				}
+
 			}
 
 			$code = <<<JS
@@ -2287,6 +2334,8 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'img_cal' => json_encode($GLOBALS['phpgw']->common->image('phpgwapi', 'cal')),
 				'dateformat' => str_ireplace(array('d', 'm', 'y'), array('dd', 'mm', 'yy'), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+				'moveout' => $moveout,
+				'movein' => $movein
 			);
 
 			//$appname	=  $this->location_info['name'];
@@ -2806,6 +2855,93 @@ JS;
 					$template_files = array($template_name, $file);
 					$this->pdf_templates[] = $template_files;
 				}
+			}
+		}
+
+
+
+		/**
+		 * Sending email - consider the workbench instead
+		 * run as cron-job
+		 */
+		public function notify_on_expire(  )
+		{
+			// Queries that depend on areas of responsibility
+			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
+			$ids = array();
+			$read_access = array();
+			foreach ($types as $id => $label)
+			{
+				$names = $this->locations->get_name($id);
+				if ($names['appname'] == $GLOBALS['phpgw_info']['flags']['currentapp'])
+				{
+					$ids[] = $id;
+				}
+			}
+			$comma_seperated_ids = implode(',', $ids);
+			$filters = array('contract_status' => 'under_dismissal', 'contract_type' => $comma_seperated_ids);
+
+			$candidates = array();
+			$candidates = rental_socontract::get_instance()->get(0, 0, '', false, '', '', $filters);
+
+			$notify_on_expire_email = $this->config->config_data['notify_on_expire_email'];
+			$from_email = $this->config->config_data['from_email_setting'];
+			$notify_reminder_days = $this->config->config_data['notify_reminder_days'];
+
+			if(!$notify_on_expire_email)
+			{
+				throw new Exception(__CLASS__.'::' . __FUNCTION__.'() - missing email target');
+			}
+
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+
+			$do_notify = false;
+			foreach ($candidates as $contract_id => $contract)
+			{
+				$notify_on_expire = $contract->get_notify_on_expire();
+
+				if($notify_on_expire > 1)
+				{
+					continue;
+				}
+
+				$now = time();
+				$end_date = $contract->get_contract_date()->get_end_date();
+				$datediff = $end_date - $now;
+				$days_to_expire =  floor($datediff / (60 * 60 * 24));
+
+				_debug_array($days_to_expire);
+
+				if ($notify_on_expire == 0 && ($notify_reminder_days > $days_to_expire)) // first time
+				{
+					$do_notify = true;
+				}
+				else if($notify_reminder_days >= $days_to_expire)// second time
+				{
+					$do_notify = true;
+					$notify_on_expire = 1;
+				}
+
+				if($do_notify)
+				{
+					$subject = lang('contract %1 expires in %2 days', $contract_id, $days_to_expire);
+					$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicontract.edit',
+							'id' => $contract_id), false, true) . '">' . $subject . '</a>';
+					try
+					{
+						$rcpt = $GLOBALS['phpgw']->send->msg('email', $notify_on_expire_email, $subject, stripslashes($message), '', $cc, $bcc, $from_email, $from_email, 'html');
+					}
+					catch (Exception $exc)
+					{
+						phpgwapi_cache::message_set($exc->getMessage(),'error');
+					}
+
+					rental_socontract::get_instance()->set_notified_on_expire($contract_id, $notify_on_expire);
+				}
+
 			}
 		}
 	}

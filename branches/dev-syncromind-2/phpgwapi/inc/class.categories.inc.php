@@ -498,7 +498,7 @@
 			$cats = array();
 			if ($this->db->next_record())
 			{
-				$cats[0] = array
+				$cat = array
 				(
 					'id'			=> $this->db->f('cat_id'),
 					'owner'			=> $this->db->f('cat_owner'),
@@ -510,8 +510,16 @@
 					'name'			=> $this->db->f('cat_name', true),
 					'description'	=> $this->db->f('cat_description', true),
 					'data'			=> $this->db->f('cat_data'),
-					'active'		=> (int)$this->db->f('active')
+					'active'		=> (int)$this->db->f('active'),
+					'is_node'		=> true
 				);
+				$this->db->query("SELECT cat_id FROM phpgw_categories WHERE cat_parent = {$id}",__LINE__,__FILE__);
+
+				if ($this->db->next_record())
+				{
+					$cat['is_node'] = false;
+				}
+				$cats[] = $cat;
 			}
 
 			return $cats;

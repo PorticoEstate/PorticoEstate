@@ -746,7 +746,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw']->locations->add('.moveout', 'Moveout', 'rental', $allow_grant = true, $custom_tbl = 'rental_moveout', $c_function = true, $c_attrib = true);
+		$GLOBALS['phpgw']->locations->add('.moveout', 'Movein', 'rental', $allow_grant = true, $custom_tbl = 'rental_moveout', $c_function = true, $c_attrib = true);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'rental_moveout', array(
@@ -763,7 +763,7 @@
 						'phpgw_accounts' => array('account_id' => 'account_id')
 					),
 					'ix' => array(),
-					'uc' => array()
+					'uc' => array('contract_id')
 				)
 		);
 
@@ -791,3 +791,144 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.0.32';
+	function rental_upgrade0_1_0_32()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.movein', 'Movein', 'rental', $allow_grant = true, $custom_tbl = 'rental_movein', $c_function = true, $c_attrib = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_movein', array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => false),
+						'contract_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'account_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+						'created' => array('type' => 'int', 'precision' => '8',  'nullable' => false, 'default' => 'current_timestamp'),
+						'modified' => array('type' => 'int', 'precision' => '8',  'nullable' => false, 'default' => 'current_timestamp'),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						'rental_contract' => array('contract_id' => 'id'),
+						'phpgw_accounts' => array('account_id' => 'account_id')
+					),
+					'ix' => array(),
+					'uc' => array('contract_id')
+				)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_movein_comment',  array(
+					'fd' => array(
+						'id' => array('type' => 'auto', 'nullable' => False),
+						'movein_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+						'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
+						'author' => array('type' => 'text', 'nullable' => False),
+						'comment' => array('type' => 'text', 'nullable' => False),
+						'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
+					),
+					'pk' => array('id'),
+					'fk' => array(
+						'rental_movein' => array('movein_id' => 'id')),
+					'ix' => array(),
+					'uc' => array()
+				)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.33';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.0.33';
+	function rental_upgrade0_1_0_33()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'notify_on_expire', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => true, 'default' => 0));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract', 'notified_time', array(
+			'type' => 'int', 'precision' => 8, 'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.34';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
+	$test[] = '0.1.0.34';
+	function rental_upgrade0_1_0_34()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw']->locations->add('.email_out', 'email out', 'rental');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_email_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'content' => array('type' => 'text', 'nullable' => True),
+					'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_email_out', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'remark' => array('type' => 'text', 'nullable' => True),
+					'subject' => array('type' => 'text', 'nullable' => false),
+					'content' => array('type' => 'text', 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'rental_email_out_party', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'email_out_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'party_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'status' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'rental_email_out' => array('email_out_id' => 'id'),
+					'rental_party' => array('party_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.35';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}
+
+
+

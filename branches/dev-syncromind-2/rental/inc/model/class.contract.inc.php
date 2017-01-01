@@ -79,6 +79,8 @@
 		protected $bill_only_one_time;
 		protected $publish_comment;
 		protected $total_price_current_year;
+		protected $notify_on_expire;
+		protected $notified_time;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a contract is created from outside
@@ -1214,6 +1216,27 @@
 		{
 			$this->publish_comment = (bool)$publish_comment;
 		}
+
+		public function get_notify_on_expire()
+		{
+			return (int)$this->notify_on_expire;
+		}
+
+		public function set_notify_on_expire( $notify_on_expire )
+		{
+			$this->notify_on_expire = (int)$notify_on_expire;
+		}
+
+		public function get_notified_time()
+		{
+			return (int)$this->notified_time;
+		}
+
+		public function set_notified_time( $notified_time )
+		{
+			$this->notified_time = (int)$notified_time;
+		}
+
 
 		/**
 		 * (non-PHPdoc)
