@@ -2192,12 +2192,26 @@
 			$_cat_sub = $this->cats->return_sorted_array($start = 0, $limit = false, $query = '', $sort = '', $order = '', $globals = False, false);
 
 			$selected_cat = $values['cat_id'] ? $values['cat_id'] : $project['cat_id'];
+			$validatet_category = '';
+
 			$cat_sub = array();
 			foreach ($_cat_sub as $entry)
 			{
 				if ($entry['active'] == 2 && !$entry['id'] == $selected_cat)//hidden
 				{
 					continue;
+				}
+
+				if(!$validatet_category)
+				{
+					if ($entry['active'] && $entry['id'] == $selected_cat)
+					{
+						$_category = $this->cats->return_single($entry['id']);
+						if($_category[0]['is_node'])
+						{
+							$validatet_category = 1;
+						}
+					}
 				}
 				$entry['name'] = str_repeat(' . ', (int)$entry['level']) . $entry['name'];
 				$entry['title'] = $entry['description'];
@@ -2378,6 +2392,7 @@
 				'cat_sub_list' => $this->bocommon->select_list($selected_cat, $cat_sub),
 				'cat_sub_name' => 'values[cat_id]',
 				'lang_cat_sub_statustext' => lang('select sub category'),
+				'validatet_category'	=> $validatet_category,
 				'sum_workorder_budget' => (isset($values['sum_workorder_budget']) ? $values['sum_workorder_budget'] : ''),
 				'workorder_budget' => (isset($values['workorder_budget']) ? $values['workorder_budget'] : ''),
 				'lang_coordinator' => lang('Coordinator'),

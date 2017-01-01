@@ -313,6 +313,24 @@ $(document).ready(function ()
 		errorMessageKey: ''
 	});
 
+	$.formUtils.addValidator({
+		name: 'category',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			var validatet_category = $('#validatet_category').val();
+			if(validatet_category ==1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		},
+		errorMessage: 'Ugyldig kategori',
+		errorMessageKey: ''
+	});
+
 	$("#global_category_id").change(function ()
 	{
 		var oArgs = {menuaction: 'property.boworkorder.get_category', cat_id: $(this).val()};
@@ -328,9 +346,14 @@ $(document).ready(function ()
 			{
 				if (data != null)
 				{
-					if (data.active != 1)
+					if (data.active != 1 || data.is_node === false)
 					{
 						alert('Denne kan ikke velges');
+						$('#validatet_category').val('');
+					}
+					else
+					{
+						$('#validatet_category').val(1);
 					}
 				}
 			}
@@ -541,10 +564,10 @@ function populateTableChkApproval(ecodimb)
 
 
 	var total_amount = Math.max((contract_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
-	(budget_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
-	(Number(local_value_budget),Number(accumulated_budget_amount)));
+		(budget_sum - Number(local_value_budget) + Number(accumulated_budget_amount)),
+		(Number(local_value_budget), Number(accumulated_budget_amount)));
 
-	var order_received_amount = Math.max(contract_sum,	budget_sum,	Number(local_value_budget));
+	var order_received_amount = Math.max(contract_sum, budget_sum, Number(local_value_budget));
 
 	$("#order_received_amount").val(order_received_amount);
 
