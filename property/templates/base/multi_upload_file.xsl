@@ -96,7 +96,7 @@
 				//xhrFields: {withCredentials: true},
 				url: '<xsl:value-of select="multi_upload_action"/>',
 				limitConcurrentUploads: 4,
-				maxChunkSize: 10000000000
+				maxChunkSize: 838855500
 				//acceptFileTypes: /(\.|\/)(png|pdf)$/i
 			});
 				
@@ -110,6 +110,11 @@
 				)
 			);
 				
+			$('#multi_upload_file')
+				.bind('fileuploadcompleted', function (e, data) { 
+				console.log(data.result.num_files); 	
+			});
+								
 			// Load existing files:
 			$('#multi_upload_file').addClass('fileupload-processing');
 			$.ajax({
