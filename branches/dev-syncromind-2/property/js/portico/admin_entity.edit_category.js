@@ -30,12 +30,14 @@ var myFormatterCheck = function (key, oData)
 
 this.onActionsClick = function ()
 {
+alert('hei');
 	$(".mychecks:checked").each(function ()
 	{
 		values_tophp.push($(this).val());
 	});
 
 	document.form.template_attrib.value = values_tophp;
+	document.form.submit();
 }
 
 this.get_template_attributes = function ()

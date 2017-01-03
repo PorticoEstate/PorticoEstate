@@ -437,6 +437,7 @@
 	<script type="text/javascript">
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
+		var base_java_url = <xsl:value-of select="base_java_url"/>;
 	</script>
 	
 	<dl>
@@ -915,7 +916,7 @@
 					</xsl:choose>
 					<tr height="50">
 						<td>
-							<input type="submit" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}">
+							<input type="button" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onClick="onActionsClick();">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'save')"/>
 								</xsl:attribute>
