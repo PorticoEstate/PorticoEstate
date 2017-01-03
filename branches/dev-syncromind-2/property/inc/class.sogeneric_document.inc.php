@@ -53,6 +53,7 @@
 			$user_id = isset($data['user_id']) && $data['user_id'] ? (int)$data['user_id'] : 0;
 			$cat_id = isset($data['cat_id']) && $data['cat_id'] ? (int)$data['cat_id'] : 0;
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$location_item_id = isset($data['location_item_id']) && $data['location_item_id'] ? (int)$data['location_item_id'] : 0;
 			$mime_type = isset($data['mime_type']) ? $data['mime_type'] : '';
 			$start_date = isset($data['start_date']) ? $data['start_date'] : 0;
 			$end_date = isset($data['end_date']) ? $data['end_date'] : 0;
@@ -94,6 +95,11 @@
 				$filtermethod .= " AND c.location_id = {$location_id}";
 			} 
 			
+			if($location_item_id)
+			{
+				$filtermethod .= " AND c.location_item_id = {$location_item_id}";
+			}
+
 			if ($user_id)
 			{
 				$filtermethod .= " AND a.createdby_id = {$user_id}";
