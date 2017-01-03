@@ -500,8 +500,7 @@ HTML;
 
 				foreach ($columns as $_row_key => $_value_key)
 				{
-					$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
-				}
+					$_result[$_value_key] = htmlspecialchars($objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue(), ENT_QUOTES, 'UTF-8');				}
 
 				if ((int)$_result['building_part'] || $_result['building_part'] === '0')
 				{
