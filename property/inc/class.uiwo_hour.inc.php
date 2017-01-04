@@ -1332,7 +1332,7 @@
 				}
 				else
 				{
-					if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+					if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']))
 					{
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
 							'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));

@@ -88,9 +88,9 @@
 
 
 			$DetailInfo = array();
-//			$DetailInfo[] = array(
-//				'TaxCode' => $param['tax_code'] // Moms kode
-//			);
+			$DetailInfo[] = array(
+				'TaxCode' => $param['tax_code'] // Moms kode
+			);
 			$DetailInfo[] = array(
 				'ReferenceCode' => array(
 					'Code' => 'A0',
