@@ -879,7 +879,8 @@
 			{
 				$project = array
 					(
-					'project_id' => $this->db->f('id'),
+					'id' => $project_id,
+					'project_id' => $this->db->f('id'),//consider this one
 					'project_type_id' => $this->db->f('project_type_id'),
 					'title' => $this->db->f('title'),
 					'name' => $this->db->f('name'),

@@ -34,9 +34,16 @@
 //	if (!$workorder['order_sent'])
 	{
 		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
-		$exporter_ordre->transfer($project, $workorder);
-	}
+		try
+		{
+			$exporter_ordre->transfer($project, $workorder);
+		}
+		catch (Exception $exc)
+		{
+			phpgwapi_cache::message_set($exc->getMessage(), 'error');
+		}
 
+	}
 	class lag_agresso_ordre_fra_workorder
 	{
 		var $debug = false;
