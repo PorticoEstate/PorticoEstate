@@ -1206,6 +1206,8 @@ open edit in new window	property	no	Åpne endring i nytt vindu
 open JasperReport %1 in new window	property	no	Åpne JasperReport %1 i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 operation	property	no	Drift
+O&M	property	no	D/V
+Operations and Maintenance	no	Drift og vedlikehold
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
 order approved	property	no	Bestilling godkjent
@@ -2040,7 +2042,7 @@ request action mouseover title	property	no	Beskriv tiltak
 request action title	property	no	Tiltaksbeskrivelse
 request condition mouseover description	property	no	Beskriv tilstand
 request condition description	property	no	Tilstandsbeskrivelse
-cost operation	property	no	Andel driftskonstnad i kr.
+cost operation	property	no	Andel kostnad D/V i kr.
 cost investment	property	no	Andel investering i kr.
 grant category	property	no	Tilskuddskategori
 what	property	no	Hva
