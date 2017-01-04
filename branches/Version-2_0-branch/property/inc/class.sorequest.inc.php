@@ -458,7 +458,7 @@
 			$cols_group[] = 'amount_operation';
 			$uicols['input_type'][] = 'text';
 			$uicols['name'][] = 'amount_operation';
-			$uicols['descr'][] = lang('operation');
+			$uicols['descr'][] = lang('O&M');//Operations and Maintenance
 			$uicols['statustext'][] = lang('cost estimate');
 			$uicols['exchange'][] = '';
 			$uicols['align'][] = '';
