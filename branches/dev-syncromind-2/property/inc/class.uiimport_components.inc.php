@@ -71,9 +71,6 @@
 
 		public function download()
 		{
-			/*$config = createObject('phpgwapi.config', 'component_import');
-			$values = $config->read_repository();*/
-			//$components = $this->config_repository['preview_components'];
 			$components = phpgwapi_cache::session_get('property', 'preview_components');
 			$components = ($components) ? unserialize($components) : array();
 			
@@ -406,6 +403,7 @@ HTML;
 		private function _prepare_profile ()
 		{
 			$columns = (array) phpgw::get_var('columns');
+			$attrib_names = (array) phpgw::get_var('attrib_names');
 			
 			$template_id = phpgwapi_cache::session_get('property', 'template_id');
 			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
@@ -430,10 +428,11 @@ HTML;
 			{
 				if ($v == 'new_column')
 				{
-					unset($columns[$k]);
-					continue;
+					$columns_name[] = $k .' => '.$attrib_names[$k];
+					$columns[$k] = strtolower($attrib_names[$k]);
+				} else {
+					$columns_name[] = $k .' => '.$_options[$v];
 				}
-				$columns_name[] = $k .' => '.$_options[$v];
 			}
 			
 			$entity_info = $this->bo->read_single($entity_id);
@@ -588,11 +587,6 @@ HTML;
 			
 			$profile = $this->_prepare_profile();
 			$result['profile'] = $profile;
-
-			/*$this->config->value('building_part_in_table', serialize($building_part_in_table));
-			$this->config->value('preview_components', serialize($preview_components));
-			$this->config->value('new_components', serialize($import_data));
-			$this->config->save_repository();*/
 			
 			phpgwapi_cache::session_set('property', 'building_part_in_table', serialize($building_part_in_table));
 			phpgwapi_cache::session_set('property', 'preview_components', serialize($preview_components));
@@ -629,9 +623,6 @@ HTML;
 				return;
 			}
 
-			/*$config = createObject('phpgwapi.config', 'component_import');
-			$config_repository = $config->read_repository();*/
-			//$import_data = $this->config_repository['new_components'];
 			$import_data = phpgwapi_cache::session_get('property', 'new_components');
 			$import_data = ($import_data) ? unserialize($import_data) : array();
 			
