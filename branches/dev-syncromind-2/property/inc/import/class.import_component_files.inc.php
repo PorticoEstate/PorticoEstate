@@ -141,14 +141,14 @@
 						} 
 						unlink($file_data['path_file']);
 						$count_new_files++;
-					}
 						
-					$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
-					if (!$result)
-					{						
-						$message['error'][] = array('msg' => "failed to save relation. File: '{$file}'");
-					} else {
-						$count_new_relations++;
+						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
+						if (!$result)
+						{						
+							$message['error'][] = array('msg' => "failed to save relation. File: '{$file}'");
+						} else {
+							$count_new_relations++;
+						}
 					}
 
 					$this->db->Exception_On_Error = false;
@@ -701,7 +701,12 @@
 
 			if (count($this->paths_from_file[$val_md5sum]))
 			{
-				$paths = array_values(array_unique($this->paths_from_file[$val_md5sum]));
+				$paths = array();
+				$paths_values = array_values(array_unique($this->paths_from_file[$val_md5sum]));
+				foreach ($paths_values as $item) {
+					$path = substr(strstr($item, $this->fakebase), strlen($this->fakebase));
+					$paths[] = ($path) ? $path : '/';
+				}
 			} else {
 				$paths = array();
 			}
