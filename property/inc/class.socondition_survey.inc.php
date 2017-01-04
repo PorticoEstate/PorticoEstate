@@ -574,7 +574,7 @@
 				);
 			}
 
-			$lang_operation = lang('operation');
+			$lang_operation = lang('O&M');//Operations and Maintenance
 			$lang_investment = lang('investment');
 
 			$return = array();
