@@ -196,6 +196,12 @@ $(document).ready(function ()
 			return false;
 		}	
 		
+		if ($('#attribute_name_component_id').val() === '')
+		{
+			alert('Choose attribute name for Component ID');
+			return false;
+		}
+		
 		if (isSendingData())
 		{
 			return false;
