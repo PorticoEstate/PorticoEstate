@@ -68,6 +68,7 @@
 			return true;
 		}
 		
+		/*
 		private function _get_files_by_component($id, $location_id)
 		{
 			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name, b.md5_sum FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
@@ -85,18 +86,52 @@
 			}
 
 			return $values;			
+		}*/
+		
+		private function _get_files_by_component($id, $location_id)
+		{
+			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name, b.md5_sum FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
+					. " ON a.file_id = b.file_id WHERE a.location_item_id = '{$id}' AND a.location_id = '{$location_id}'"
+					. " AND b.mime_type != 'Directory' AND b.mime_type != 'journal' AND b.mime_type != 'journal-deleted'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			
+			while ($this->db->next_record())
+			{
+				$values[] = $this->db->f('md5_sum');
+			}
+
+			return $values;			
+		}
+		
+		private function _search_file($md5_sum)
+		{
+			$sql = "SELECT file_id, md5_sum FROM phpgw_vfs "
+					. " WHERE md5_sum = '{$md5_sum}'"
+					. " AND mime_type != 'Directory' AND mime_type != 'journal' AND mime_type != 'journal-deleted'";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if ($this->db->next_record())
+			{
+				$id = $this->db->f('file_id');
+			}
+
+			return $id;			
 		}
 		
 		private function _search_in_last_files_added($file_data)
 		{
-			$val_md5sum = $file_data['val_md5sum'];
-			$file_id = array_search($val_md5sum, $this->last_files_added);
-			if ($file_id)
+			$md5sum = $file_data['md5sum'];
+			$file_id = array_search($md5sum, $this->last_files_added);
+			if (!$file_id)
 			{
-				return $file_id;
+				$file_id = $this->_search_file($md5sum);
 			}
 			
-			return false;
+			return $file_id;
 		}
 		
 		public function add_files_location($id, $location_code)
@@ -111,14 +146,14 @@
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			//print_r($this->paths_from_file).'<br>'.print_r($uploaded_files); die;
+			
 			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
 
 			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
 
 			foreach ($uploaded_files as $file_data)
 			{
-				if (in_array(str_replace(' ', '_', $file_data['val_md5sum']), $files_in_component))
+				if (in_array($file_data['md5sum'], $files_in_component))
 				{
 					$count_relations_existing++;
 					continue;
@@ -206,17 +241,17 @@
 									if ($pos !== false)
 									{
 										$file_data['path_file'] = $file['path_file'];
-										$file_data['val_md5sum'] = $file['val_md5sum'];
+										$file_data['md5sum'] = $file['md5sum'];
 									}
 								} else {
 									$file_data['path_file'] = $file['path_file'];
-									$file_data['val_md5sum'] = $file['val_md5sum'];		
+									$file_data['md5sum'] = $file['md5sum'];		
 								}							
 							}
 						}
-						if (!empty($file_data['val_md5sum'])) 
+						if (!empty($file_data['md5sum'])) 
 						{
-							$this->paths_from_file[$file_data['val_md5sum']][] = $file_data['path'];
+							$this->paths_from_file[$file_data['md5sum']][] = $file_data['path'];
 						} else {
 							$this->paths_empty[$file_data['path_file_string']] = $file_data['path'].'/'.$file_data['file'];
 						}
@@ -225,9 +260,9 @@
 			} else {
 				foreach ($uploaded_files as $file)
 				{
-					if (!empty($file['val_md5sum'])) 
+					if (!empty($file['md5sum'])) 
 					{
-						$this->paths_from_file[$file['val_md5sum']][] = dirname($file['path_file']);
+						$this->paths_from_file[$file['md5sum']][] = dirname($file['path_file']);
 					} else {
 						$this->paths_empty[] = $file['path_file'];
 					}				
@@ -379,12 +414,15 @@
 					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
 					if ($ret)
 					{
-						$val_md5sum = '';
+						//$val_md5sum = '';
+						$md5sum = '';
 					} else {
-						$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
+						//$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
+						$md5sum = trim(strstr($output[0], ' ', true));
 					}
 					$results[] = array('file'=>$value, 
-						'val_md5sum'=>$val_md5sum,  
+						//'val_md5sum'=>$val_md5sum,
+						'md5sum'=>$md5sum, 
 						'path_file'=>$path);
 				} 
 			}
@@ -408,12 +446,15 @@
 					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
 					if ($ret)
 					{
-						$val_md5sum = '';
+						//$val_md5sum = '';
+						$md5sum = '';
 					} else {
-						$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
+						//$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
+						$md5sum = trim(strstr($output[0], ' ', true));
 					}
 					$results[] = array('file'=>$value, 
-						'val_md5sum'=>$val_md5sum, 
+						'//val_md5sum'=>$val_md5sum, 
+						'md5sum'=>$md5sum, 
 						'path_file_string'=>preg_replace($patrones, $sustituciones, $path), 
 						'path_file'=>$path);
 				} 
@@ -531,7 +572,7 @@
 
 				foreach ($files as $file_data)
 				{
-					if (in_array(str_replace(' ', '_', $file_data['val_md5sum']), $files_in_component))
+					if (in_array($file_data['md5sum'], $files_in_component))
 					{
 						$count_relations_existing++;
 						continue;
@@ -550,7 +591,8 @@
 							if (!is_file($file_data['path_file']))
 							{
 								//$count_files_not_existing++;
-								$files_not_existing[] = ($file_data['path_file']) ? $file_data['path_file'] : $file_data['path'].'/'.$file_data['file'];
+								$_file = ($file_data['path_file']) ? $file_data['path_file'] : $file_data['path'].'/'.$file_data['file'];
+								$files_not_existing[$_file] = $_file;
 								throw new Exception();
 							}	
 
@@ -664,14 +706,13 @@
 
 			//$tmp_file = $file_data['file'];
 			
-			$val_md5sum = $file_data['val_md5sum'];
+			//$val_md5sum = $file_data['val_md5sum'];
 			$path_file = $file_data['path_file'];
-
-			$md5_sum = trim(strstr($val_md5sum, ' ', true));
+			$md5sum = $file_data['md5sum'];
 			
 			$bofiles = CreateObject('property.bofiles');
 			
-			$file_name = str_replace(' ', '_', trim(strstr($val_md5sum, ' ')));
+			$file_name = str_replace(' ', '_', trim($file_data['file']));
 
 			$to_file = $bofiles->fakebase . '/generic_document/' .$file_name;
 
@@ -694,15 +735,15 @@
 				return false;
 			}
 			
-			$this->last_files_added[$file_id] = $val_md5sum;
+			$this->last_files_added[$file_id] = $md5sum;
 
-			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5_sum}'"
+			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5sum}'"
 				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
 
-			if (count($this->paths_from_file[$val_md5sum]))
+			if (count($this->paths_from_file[$md5sum]))
 			{
 				$paths = array();
-				$paths_values = array_values(array_unique($this->paths_from_file[$val_md5sum]));
+				$paths_values = array_values(array_unique($this->paths_from_file[$md5sum]));
 				foreach ($paths_values as $item) {
 					$path = substr(strstr($item, $this->fakebase), strlen($this->fakebase));
 					$paths[] = ($path) ? $path : '/';
