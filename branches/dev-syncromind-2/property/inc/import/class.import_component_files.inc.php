@@ -106,7 +106,7 @@
 			return $values;			
 		}
 		
-		private function _search_file($md5_sum)
+		private function _search_file_in_db($md5_sum)
 		{
 			$sql = "SELECT file_id, md5_sum FROM phpgw_vfs "
 					. " WHERE md5_sum = '{$md5_sum}'"
@@ -126,10 +126,10 @@
 		{
 			$md5sum = $file_data['md5sum'];
 			$file_id = array_search($md5sum, $this->last_files_added);
-			if (!$file_id)
+			/*if (!$file_id)
 			{
 				$file_id = $this->_search_file($md5sum);
-			}
+			}*/
 			
 			return $file_id;
 		}
@@ -169,19 +169,24 @@
 					$file_id = $this->_search_in_last_files_added($file_data);
 					if (!$file_id) 
 					{
-						$file_id = $this->_save_file($file_data);
+						$file_id = $this->_search_file_in_db($file_data['md5sum']);
 						if (!$file_id)
-						{						
-							throw new Exception("failed to copy file '{$file_data['path_file']}'");
-						} 
-						unlink($file_data['path_file']);
-						$count_new_files++;
+						{
+							$file_id = $this->_save_file($file_data);
+							if (!$file_id)
+							{						
+								throw new Exception("failed to copy file '{$file_data['path_file']}'");
+							} 
+							unlink($file_data['path_file']);
+							$count_new_files++;
+						}
 						
 						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
 						if (!$result)
 						{						
 							$message['error'][] = array('msg' => "failed to save relation. File: '{$file}'");
 						} else {
+							$this->last_files_added[$file_id] = $file_data['md5sum'];
 							$count_new_relations++;
 						}
 					}
@@ -585,12 +590,12 @@
 
 						$file = $file_data['file'];
 						
-						$file_id = $this->_search_in_last_files_added($file_data);
+						$id = $this->_search_in_last_files_added($file_data);
+						$file_id = ($id) ? $id : $this->_search_file_in_db($file_data['md5sum']);
 						if (!$file_id) 
 						{
 							if (!is_file($file_data['path_file']))
 							{
-								//$count_files_not_existing++;
 								$_file = ($file_data['path_file']) ? $file_data['path_file'] : $file_data['path'].'/'.$file_data['file'];
 								$files_not_existing[$_file] = $_file;
 								throw new Exception();
@@ -610,6 +615,7 @@
 						{						
 							$message['error'][] = array('msg' => "failed to save relation. File: '{$file}'. Component: '{$k}'");
 						} else {
+							$this->last_files_added[$file_id] = $file_data['md5sum'];
 							$count_new_relations++;
 						}					
 
@@ -735,7 +741,7 @@
 				return false;
 			}
 			
-			$this->last_files_added[$file_id] = $md5sum;
+			//$this->last_files_added[$file_id] = $md5sum;
 
 			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5sum}'"
 				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
