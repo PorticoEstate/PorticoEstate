@@ -42,7 +42,9 @@
 			'edit' => true,
 			'save' => true,
 			'get' => true,
-			'get_candidates' => true
+			'get_candidates' => true,
+			'set_candidates' => true,
+			'get_recipients'=> true
 		);
 
 		protected
@@ -192,8 +194,8 @@
 				)
 			);
 
-			$candidates_def = array(
-				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
+			$parties_def = array(
+				array('key' => 'id', 'label' => 'ID', 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'email', 'label' => lang('email'), 'sortable' => true, 'resizeable' => true),
 			);
@@ -204,7 +206,8 @@
 				array('my_name' => 'select_none')
 			);
 
-			$tabletools[] = array
+			$tabletools_candidate = array();
+			$tabletools_candidate[] = array
 				(
 				'my_name' => 'add',
 				'text' => lang('add'),
@@ -236,9 +239,54 @@
 //				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
 //						'location_id' => $location_id, 'location_item_id' => $id, 'action' => 'refresh_notify_contact',
 //						'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $candidates_def,
+				'ColumnDefs' => $parties_def,
 				'data' => json_encode(array()),
-				'tabletools' => $tabletools,
+				'tabletools' => array_merge($tabletools,$tabletools_candidate),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+
+			$tabletools_recipient = array();
+			$tabletools_recipient[] = array
+				(
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'type' => 'custom',
+				'custom_code' => "
+						var api = oTable2.api();
+						var selected = api.rows( { selected: true } ).data();
+
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['id']);
+						}
+						onActionsClick_recipient('delete', ids);
+						"
+			);
+
+
+			$parties_def[] = array('key' => 'status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true);
+
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_2',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uiemail_out.get_recipients',
+						'id' => $id,'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $parties_def,
+				'data' => json_encode(array()),
+				'tabletools' => array_merge($tabletools,$tabletools_recipient),
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -298,6 +346,8 @@
 			{
 				case 'composite':
 					$values = $this->bo->get_composite_candidates($id);
+					array_walk($values, array($this, "_add_links"), "rental.uiparty.edit");
+
 					break;
 
 				default:
@@ -306,5 +356,21 @@
 			}
 
 			return $this->jquery_results(array('results' => $values));
+		}
+
+		public function set_candidates()
+		{
+			$id =  phpgw::get_var('id', 'int');
+			$ids =  (array) phpgw::get_var('ids', 'int');
+			$ret = $this->bo->set_candidates($id, $ids);
+		}
+
+		public function get_recipients()
+		{
+			$id =  phpgw::get_var('id', 'int');
+			$values = $this->bo->get_recipients($id);
+			array_walk($values, array($this, "_add_links"), "rental.uiparty.edit");
+			return $this->jquery_results(array('results' => $values));
+
 		}
 	}

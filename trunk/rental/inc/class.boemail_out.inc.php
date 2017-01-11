@@ -106,4 +106,15 @@
 		{
 			return rental_soemail_out::get_instance()->get_composite_candidates($composite_id);
 		}
+
+		function set_candidates($id, $ids)
+		{
+			return rental_soemail_out::get_instance()->set_candidates($id, $ids);
+		}
+
+		public function get_recipients( $email_out_id )
+		{
+			return rental_soemail_out::get_instance()->get_recipients($email_out_id);
+		}
+
 	}
