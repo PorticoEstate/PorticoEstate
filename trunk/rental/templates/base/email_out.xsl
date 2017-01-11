@@ -107,6 +107,33 @@
 						</div>
 					</fieldset>
 				</div>
+				<div id="recipient">
+
+					<fieldset>
+
+						<div class="pure-control-group">
+							<xsl:variable name="lang_composite">
+								<xsl:value-of select="php:function('lang', 'composite')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_composite"/>
+							</label>
+							<input type="hidden" id="composite_id" name="composite_id"  value="">
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="$lang_composite"/>
+								</xsl:attribute>
+							</input>
+							<input type="text" id="composite_name" name="composite_name" value="">
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="$lang_composite"/>
+								</xsl:attribute>
+							</input>
+							<div id="composite_container"/>
+						</div>
+					</fieldset>
+
+				</div>
+
 			</div>
 			<div class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save">
