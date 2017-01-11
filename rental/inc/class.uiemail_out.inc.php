@@ -52,7 +52,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('rental::email_out');
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('email_out');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('email out');
 			$this->bo = createObject('rental.boemail_out');
 			$this->fields = rental_email_out::get_fields();
 			$this->permissions = rental_email_out::get_instance()->get_permission_array();
@@ -155,10 +155,14 @@
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
-				'label' => lang('email_out'),
-				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
+				'label' => lang('email out'),
+				'link' => '#first_tab'
 			);
+			$tabs['recipient'] = array(
+				'label' => lang('recipient'),
+				'link' => '#recipient',
+			);
+
 
 			$bocommon = CreateObject('property.bocommon');
 
@@ -196,8 +200,9 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
 			);
+			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('rental', 'portico', 'email_out.edit.js');
+			self::add_javascript('rental', 'rental', 'email_out.edit.js');
 			self::render_template_xsl(array('email_out', 'datatable_inline'), array($mode => $data));
 		}
 
