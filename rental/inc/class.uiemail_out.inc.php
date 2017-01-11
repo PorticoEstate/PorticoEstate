@@ -41,7 +41,8 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'get' => true
+			'get' => true,
+			'get_candidates' => true
 		);
 
 		protected
@@ -191,6 +192,59 @@
 				)
 			);
 
+			$candidates_def = array(
+				array('key' => 'id', 'label' => '#', 'sortable' => true, 'resizeable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'email', 'label' => lang('email'), 'sortable' => true, 'resizeable' => true),
+			);
+
+			$tabletools = array
+				(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'add',
+				'text' => lang('add'),
+				'type' => 'custom',
+				'custom_code' => "
+						var api = oTable1.api();
+						var selected = api.rows( { selected: true } ).data();
+
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['id']);
+						}
+						onActionsClick_candidates('add', ids);
+						"
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_1',
+				'requestUrl' => "''",
+//				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
+//						'location_id' => $location_id, 'location_item_id' => $id, 'action' => 'refresh_notify_contact',
+//						'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $candidates_def,
+				'data' => json_encode(array()),
+				'tabletools' => $tabletools,
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiemail_out.save')),
@@ -229,5 +283,28 @@
 		public function save()
 		{
 			parent::save();
+		}
+
+		public function get_candidates( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				phpgw::no_access();
+			}
+			$type =  phpgw::get_var('type', 'string');
+			$id =  phpgw::get_var('id', 'int');
+
+			switch ($type)
+			{
+				case 'composite':
+					$values = $this->bo->get_composite_candidates($id);
+					break;
+
+				default:
+					$values = array();
+					break;
+			}
+
+			return $this->jquery_results(array('results' => $values));
 		}
 	}
