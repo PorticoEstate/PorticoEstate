@@ -101,4 +101,9 @@
 
 			return $values;
 		}
+
+		public function get_composite_candidates( $composite_id )
+		{
+			return rental_soemail_out::get_instance()->get_composite_candidates($composite_id);
+		}
 	}

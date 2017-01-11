@@ -113,4 +113,48 @@
 			return	$this->db->transaction_commit();
 		}
 
+		public function get_composite_candidates( $composite_id )
+		{
+			$composite_id = (int) $composite_id;
+			$values = array();
+			$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+
+			$sql = "SELECT email, first_name, last_name, company_name, rental_party.id"
+				. " FROM rental_contract_composite"
+				. " {$this->join} rental_contract ON rental_contract_composite.contract_id = rental_contract.id"
+				. " {$this->join} rental_contract_party ON rental_contract_party.contract_id = rental_contract.id"
+				. " {$this->join} rental_party ON rental_contract_party.party_id = rental_party.id"
+				. " WHERE rental_contract_composite.composite_id = {$composite_id}"
+				. " AND rental_contract.date_start <= {$ts_query} AND ( rental_contract.date_end >= {$ts_query} OR rental_contract.date_end IS NULL)";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$first_name = $this->db->f('first_name',true);
+				$last_name = $this->db->f('last_name',true);
+				$company_name = $this->db->f('company_name',true);
+
+				$name = '';
+				if($last_name)
+				{
+					$name .= "$last_name, $first_name";
+				}
+				if($last_name && $company_name)
+				{
+					$name .= " ({$company_name})";
+				}
+				else if($company_name)
+				{
+					$name = $company_name;
+				}
+
+				$values[] = array(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $name,
+					'email'	=> $this->db->f('email',true),
+				);
+			}
+			return $values;
+		}
+
 	}
