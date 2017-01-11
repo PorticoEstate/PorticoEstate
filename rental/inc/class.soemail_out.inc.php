@@ -157,4 +157,84 @@
 			return $values;
 		}
 
+		public function get_recipients( $email_out_id )
+		{
+			$email_out_id = (int) $email_out_id;
+			$values = array();
+
+			$sql = "SELECT email, first_name, last_name, company_name, rental_party.id, status"
+				. " FROM rental_email_out_party"
+				. " {$this->join} rental_party ON rental_email_out_party.party_id = rental_party.id"
+				. " WHERE rental_email_out_party.email_out_id = {$email_out_id}";
+
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$first_name = $this->db->f('first_name',true);
+				$last_name = $this->db->f('last_name',true);
+				$company_name = $this->db->f('company_name',true);
+
+				$name = '';
+				if($last_name)
+				{
+					$name .= "$last_name, $first_name";
+				}
+				if($last_name && $company_name)
+				{
+					$name .= " ({$company_name})";
+				}
+				else if($company_name)
+				{
+					$name = $company_name;
+				}
+
+				$values[] = array(
+					'id'	=> $this->db->f('id'),
+					'name'	=> $name,
+					'email'	=> $this->db->f('email',true),
+					'status'	=> $this->db->f('status')
+				);
+			}
+			return $values;
+		}
+
+		function set_candidates($id, $ids)
+		{
+			$recipients = $this->get_recipients($id);
+			
+			$check_duplicates = array();
+			foreach ($recipients as $entry)
+			{
+				$check_duplicates[] = $entry['id'];
+			}
+
+
+			$sql = 'INSERT INTO rental_email_out_party (email_out_id, party_id)'
+				. ' VALUES(?, ?)';
+			foreach ($ids as $party_id)
+			{
+				if(in_array($party_id, $check_duplicates))
+				{
+					continue;
+				}
+
+				$valueset[] = array
+					(
+					1 => array
+						(
+						'value' => (int)$id,
+						'type' => PDO::PARAM_INT
+					),
+					2 => array
+						(
+						'value' => $party_id,
+						'type' => PDO::PARAM_INT
+					)
+				);
+			}
+			if($valueset)
+			{
+				return $GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
+			}
+		}
 	}
