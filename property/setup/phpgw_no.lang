@@ -1206,7 +1206,7 @@ open edit in new window	property	no	Åpne endring i nytt vindu
 open JasperReport %1 in new window	property	no	Åpne JasperReport %1 i nytt vindu
 open view in new window	property	no	Åpne visning i nytt vindu
 operation	property	no	Drift
-O&M	property	no	D/V
+o&m	property	no	D/V
 Operations and Maintenance	no	Drift og vedlikehold
 order	property	no	Bestilling
 order approval revoked	property	no	Bestillingsgodkjenning opphevet
@@ -2073,3 +2073,4 @@ make relation	property	no	Opprett kopling
 request for approval	property	no	Anmodning om godkjenning
 approval from %1 is required for order %2	property	no	Godkjenning fra %1 er påkrevd for ordre %2
 missing recipient for order %1	property	no	Mangler mottaker for ordre %1
+export	property	no	Eksport

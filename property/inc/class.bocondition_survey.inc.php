@@ -441,4 +441,11 @@
 				}
 			}
 		}
+
+		function get_export_data($id)
+		{
+			$condition_survey = $this->read_single(array('id' => (int)$id));
+			$values =  $this->so->get_export_data($id);
+			return array('condition_survey' => $condition_survey, 'values' => $values);
+		}
 	}

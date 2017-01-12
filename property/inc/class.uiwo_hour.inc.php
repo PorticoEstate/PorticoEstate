@@ -59,7 +59,7 @@
 			'edit_deviation' => true,
 			'pdf_order' => true,
 			'import_calculation' => true,
-			'send_all_orders'	=> true
+	//		'send_all_orders'	=> true
 		);
 
 		function __construct()

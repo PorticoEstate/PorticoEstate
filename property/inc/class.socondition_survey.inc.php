@@ -689,4 +689,58 @@
 				$this->_db->transaction_commit();
 			}
 		}
+
+		function get_export_data($id)
+		{
+			$condition_survey_id = (int) $id;
+
+			$sql = "SELECT DISTINCT fm_request.location_code,fm_request.id as request_id,fm_request_status.descr as status,"
+				. "fm_request.building_part,fm_building_part.descr as building_part_text, fm_request.start_date,fm_request.entry_date,fm_request.closed_date,"
+				. "fm_request.in_progress_date,fm_request.delivered_date,fm_request.title as title,fm_request.descr,"
+				. "max(fm_request_condition.degree) as condition_degree,"
+				. "max(fm_request_condition.consequence) as consequence,"
+				. "max(fm_request_condition.probability) as probability,"
+				. "fm_request_condition_type.name as condition_type_name,"
+				. "fm_request_condition_type.priority_key as priority_key,"
+				. "(fm_request.amount_investment * multiplier) as amount_investment,"
+				. "(fm_request.amount_operation * multiplier) as amount_operation,"
+				. "(fm_request.amount_potential_grants * multiplier) as amount_potential_grants,fm_request.score,"
+				. "recommended_year,start_date AS planned_year,fm_request.coordinator,"
+				. "fm_location1.loc1_name,loc1_name,loc2_name,loc3_name,fm_request.address "
+				. "FROM (((((((((( fm_request  LEFT JOIN fm_request_status ON fm_request.status = fm_request_status.id) "
+				. "LEFT JOIN fm_request_planning ON fm_request.id = fm_request_planning.request_id) "
+				. "LEFT JOIN fm_request_consume ON fm_request.id = fm_request_consume.request_id) "
+				. "LEFT JOIN fm_request_condition ON fm_request.id = fm_request_condition.request_id) "
+				. "JOIN  fm_location1 ON (fm_request.loc1 = fm_location1.loc1)) "
+				. "JOIN  fm_request_condition_type ON (fm_request_condition.condition_type = fm_request_condition_type.id) "
+				. "JOIN  fm_building_part ON (fm_request.building_part = fm_building_part.id)) "
+				. "JOIN  fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)) "
+				. "JOIN   fm_owner ON (fm_location1.owner_id = fm_owner.id)) "
+				. "LEFT JOIN  fm_location2 ON (fm_location2.loc1 = fm_location1.loc1 AND  fm_location2.loc2 = fm_request.loc2)) "
+				. "LEFT JOIN  fm_location3 ON (fm_location3.loc2 = fm_location2.loc2 AND  fm_location3.loc3 = fm_request.loc3) AND (fm_location3.loc1 = fm_location2.loc1 AND  fm_location3.loc3 = fm_request.loc3)) "
+				. "WHERE fm_request.condition_survey_id = {$condition_survey_id} "
+				. "GROUP BY fm_request.location_code,fm_location1.loc1_name,fm_request_status.descr,building_part,fm_building_part.descr,"
+				. "fm_request_condition_type.name,fm_request.entry_date,fm_request.closed_date,fm_request.in_progress_date,"
+				. "fm_request.delivered_date,title,priority_key,"
+				. "fm_request.descr,amount_investment,amount_operation,amount_potential_grants,score,recommended_year,start_date,coordinator,fm_location2.loc2_name,fm_location3.loc3_name,fm_request.multiplier,fm_request.id,fm_request_status.descr,fm_request.address"
+				. " ORDER BY fm_request.building_part ASC";
+//			_debug_array($sql);die();
+			$this->_db->query($sql);
+			$values = array();
+			while ($this->_db->next_record())
+			{
+				$values[] = $this->_db->Record;
+			}
+			foreach ($values as &$value)
+			{
+				$value['risk'] = $value['consequence'] * $value['probability'];
+				$value['score'] = $value['risk'] * $value['priority_key'];
+				$value['amount_total'] = $value['amount_investment'] + $value['amount_operation'];
+				$value['percentage_investment'] = ($value['amount_investment'] / $value['amount_total']) * 100;
+				$value['percentage_grants'] = ($value['amount_potential_grants'] / $value['amount_investment']) * 100;
+			}
+
+			return $values;
+		}
+
 	}
