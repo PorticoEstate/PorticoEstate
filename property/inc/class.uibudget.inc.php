@@ -967,7 +967,7 @@
 								'submit_search' => true))),
 						'diff_ex' => $entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'],
 						'diff' => number_format($entry['budget_cost'] - $entry['actual_cost'] - $entry['obligation'], 0, ',', ' '),
-						'percent' => $entry['percent'],
+						'percent' => (int)$entry['percent'],
 						'year' => $this->year,
 						'month' => $this->month
 					);
