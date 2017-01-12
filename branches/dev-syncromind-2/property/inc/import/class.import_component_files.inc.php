@@ -145,6 +145,7 @@
 			
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
+			$count_files_existing = 0;
 			$count_new_files = 0;
 			
 			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
@@ -175,10 +176,12 @@
 							$file_id = $this->_save_file($file_data);
 							if (!$file_id)
 							{						
-								throw new Exception("failed to copy file '{$file_data['path_file']}'");
+								throw new Exception("failed to copy file '{$file_data['path_absolute']}'");
 							} 
 							unlink($file_data['path_file']);
 							$count_new_files++;
+						} else {
+							$count_files_existing++;
 						}
 						
 						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
@@ -214,6 +217,9 @@
 			} else {
 				$message['message'][] = array('msg' => lang('%1 files copy', $count_new_files));
 			}
+			if ($count_files_existing){
+				$message['message'][] = array('msg' => lang('%1 files existing in db', $count_files_existing));
+			}
 			if ($count_new_relations)
 			{
 				$message['message'][] = array('msg' => lang('%1 relations saved successfully', $count_new_relations));
@@ -240,25 +246,27 @@
 						{
 							if (strtolower($file['file']) == strtolower($file_data['file']))
 							{
-								if ($file['path_file_string'])
+								if ($file['path_string'])
 								{
-									$pos = stripos($file['path_file_string'], $file_data['path_file_string']);
+									$pos = stripos($file['path_string'], $file_data['path_string']);
 									if ($pos !== false)
 									{
-										$file_data['path_file'] = $file['path_file'];
+										$file_data['path_absolute'] = $file['path_absolute'];
+										$file_data['path_relative'] = $file['path_relative'];
 										$file_data['md5sum'] = $file['md5sum'];
 									}
 								} else {
-									$file_data['path_file'] = $file['path_file'];
+									$file_data['path_absolute'] = $file['path_absolute'];
+									$file_data['path_relative'] = $file_data['path'];
 									$file_data['md5sum'] = $file['md5sum'];		
 								}							
 							}
 						}
 						if (!empty($file_data['md5sum'])) 
 						{
-							$this->paths_from_file[$file_data['md5sum']][] = $file_data['path'];
+							$this->paths_from_file[$file_data['md5sum']][] = $file_data['path_relative'];
 						} else {
-							$this->paths_empty[$file_data['path_file_string']] = $file_data['path'].'/'.$file_data['file'];
+							$this->paths_empty[$file_data['path_string']] = $file_data['path'].'/'.$file_data['file'];
 						}
 					}
 				}
@@ -267,9 +275,9 @@
 				{
 					if (!empty($file['md5sum'])) 
 					{
-						$this->paths_from_file[$file['md5sum']][] = dirname($file['path_file']);
+						$this->paths_from_file[$file['md5sum']][] = $file['path_relative'];
 					} else {
-						$this->paths_empty[] = $file['path_file'];
+						$this->paths_empty[] = $file['path_absolute'];
 					}				
 				}
 				$component_files = $uploaded_files;
@@ -426,9 +434,9 @@
 						$md5sum = trim(strstr($output[0], ' ', true));
 					}
 					$results[] = array('file'=>$value, 
-						//'val_md5sum'=>$val_md5sum,
 						'md5sum'=>$md5sum, 
-						'path_file'=>$path);
+						'path_absolute'=>$path,
+						'path_relative'=>'/');
 				} 
 			}
 		
@@ -458,10 +466,11 @@
 						$md5sum = trim(strstr($output[0], ' ', true));
 					}
 					$results[] = array('file'=>$value, 
-						'//val_md5sum'=>$val_md5sum, 
+						//val_md5sum'=>$val_md5sum, 
 						'md5sum'=>$md5sum, 
-						'path_file_string'=>preg_replace($patrones, $sustituciones, $path), 
-						'path_file'=>$path);
+						'path_string'=>preg_replace($patrones, $sustituciones, $path), 
+						'path_absolute'=>$path,
+						'path_relative'=>substr($dir, strlen($this->path_upload_dir)));
 				} 
 				else if($value != "." && $value != "..") 
 				{
@@ -484,6 +493,7 @@
 		
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
+			
 			$patrones_2 = array('(\\/)', '(")');
 			$sustituciones_2 = array('_', '_');
 			foreach ($exceldata as $k => $row) 
@@ -493,16 +503,22 @@
 					continue;
 				}
 				
-				$path = $row[(count($row)-2)];
+				//$path = $row[(count($row)-2)];
 				$path_file = str_replace('..', '.', $row[(count($row)-1)]);
+				$path_file = preg_replace($patrones_2, $sustituciones_2, $path_file);
+				//$path_file = str_replace('\\', '/', $path_file);
 				$array_path = explode("\\", $path_file);
+				
+				$file_name = $array_path[count($array_path)-1];
+				$path = implode("/", array_slice($array_path, 0, (count($array_path)-1)));
+				$path_string = implode("_", $array_path);
 						
 				$component_files[$row[0]][] = array(
 					'name' => $row[1],
 					'desription' => $row[2],
-					'file' => $array_path[count($array_path)-1],
-					'path' => preg_replace($patrones_2, $sustituciones_2, $path),
-					'path_file_string' => preg_replace($patrones, $sustituciones, $path_file),
+					'file' => $file_name,
+					'path' => $path,
+					'path_string' => $path_string,
 					'row' => ($k + 1)
 				);
 			}
@@ -515,16 +531,18 @@
 			$with_components = phpgw::get_var('with_components_check');
 			
 			$uploaded_files = $this->_get_uploaded_files();
-	
+
 			if ($with_components)
 			{
 				$relations = $this->get_relations();
+				//print_r($relations).'<br><br>';
 				$this->_compare_names($relations, $uploaded_files);
 			} else {
 				$relations = array();
 				$this->_compare_names($relations, $uploaded_files);
 			}
-
+			//print_r($uploaded_files).'<br><br>';
+//print_r($relations).'<br><br>'; print_r($this->paths_from_file);  die;
 			phpgwapi_cache::session_set('property', 'paths_from_file', $this->paths_from_file);
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
@@ -546,7 +564,7 @@
 		public function add_files_components_location($id, $location_code, $attrib_name_componentID)
 		{		
 			@set_time_limit(5 * 60);
-			
+
 			$message = array();
 
 			$component_files = phpgwapi_cache::session_get('property', 'import_data');
@@ -555,7 +573,7 @@
 			$count_new_relations = 0; 
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			//$count_files_not_existing = 0;
+			$count_files_existing = 0;
 			$files_not_existing = array();
 	
 			foreach ($component_files as $k => $files) 
@@ -590,24 +608,29 @@
 
 						$file = $file_data['file'];
 						
-						$id = $this->_search_in_last_files_added($file_data);
-						$file_id = ($id) ? $id : $this->_search_file_in_db($file_data['md5sum']);
+						$file_id = $this->_search_in_last_files_added($file_data);
 						if (!$file_id) 
-						{
-							if (!is_file($file_data['path_file']))
+						{						
+							$file_id = $this->_search_file_in_db($file_data['md5sum']);
+							if (!$file_id) 
 							{
-								$_file = ($file_data['path_file']) ? $file_data['path_file'] : $file_data['path'].'/'.$file_data['file'];
-								$files_not_existing[$_file] = $_file;
-								throw new Exception();
-							}	
+								if (!is_file($file_data['path_absolute']))
+								{
+									$_file = ($file_data['path_absolute']) ? $file_data['path_absolute'] : $file_data['path'].'/'.$file_data['file'];
+									$files_not_existing[$_file] = $_file;
+									throw new Exception();
+								}	
 
-							$file_id = $this->_save_file($file_data);
-							if (!$file_id)
-							{						
-								throw new Exception("failed to copy file: '{$file_data['path_file']}'. Component: '{$k}'");
-							} 
-							unlink($file_data['path_file']);
-							$count_new_files++;
+								$file_id = $this->_save_file($file_data);
+								if (!$file_id)
+								{						
+									throw new Exception("failed to copy file: '{$file_data['path_absolute']}'. Component: '{$k}'");
+								} 
+								unlink($file_data['path_file']);
+								$count_new_files++;
+							} else {
+								$count_files_existing++;
+							}
 						}
 						
 						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
@@ -642,6 +665,9 @@
 				$message['message'][] = array('msg' => lang('%1 files copy successfully', $count_new_files));
 			} else {
 				$message['message'][] = array('msg' => lang('%1 files copy', $count_new_files));
+			}
+			if ($count_files_existing){
+				$message['message'][] = array('msg' => lang('%1 files existing in db', $count_files_existing));
 			}
 			if ($count_new_relations)
 			{
@@ -713,7 +739,7 @@
 			//$tmp_file = $file_data['file'];
 			
 			//$val_md5sum = $file_data['val_md5sum'];
-			$path_file = $file_data['path_file'];
+			$path_file = $file_data['path_absolute'];
 			$md5sum = $file_data['md5sum'];
 			
 			$bofiles = CreateObject('property.bofiles');
@@ -748,12 +774,7 @@
 
 			if (count($this->paths_from_file[$md5sum]))
 			{
-				$paths = array();
-				$paths_values = array_values(array_unique($this->paths_from_file[$md5sum]));
-				foreach ($paths_values as $item) {
-					$path = substr(strstr($item, $this->fakebase), strlen($this->fakebase));
-					$paths[] = ($path) ? $path : '/';
-				}
+				$paths = array_values(array_unique($this->paths_from_file[$md5sum]));
 			} else {
 				$paths = array();
 			}
