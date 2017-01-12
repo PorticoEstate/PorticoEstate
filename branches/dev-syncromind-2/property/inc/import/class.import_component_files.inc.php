@@ -126,10 +126,6 @@
 		{
 			$md5sum = $file_data['md5sum'];
 			$file_id = array_search($md5sum, $this->last_files_added);
-			/*if (!$file_id)
-			{
-				$file_id = $this->_search_file($md5sum);
-			}*/
 			
 			return $file_id;
 		}
@@ -178,7 +174,7 @@
 							{						
 								throw new Exception("failed to copy file '{$file_data['path_absolute']}'");
 							} 
-							unlink($file_data['path_file']);
+							unlink($file_data['path_absolute']);
 							$count_new_files++;
 						} else {
 							$count_files_existing++;
@@ -423,14 +419,23 @@
 				$path = realpath($dir.'/'.$value);
 				if(is_file($path)) 
 				{				
+					$pos = strpos($value, '..');
+					if (!$pos === false) 
+					{
+						$new_path = str_replace('..', '.', $path);
+						if (rename($path, $new_path))
+						{
+							$value = str_replace('..', '.', $value);
+							$path = $new_path;
+						}
+					}					
+					
 					unset($output);
 					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
 					if ($ret)
 					{
-						//$val_md5sum = '';
 						$md5sum = '';
 					} else {
-						//$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
 						$md5sum = trim(strstr($output[0], ' ', true));
 					}
 					$results[] = array('file'=>$value, 
@@ -459,14 +464,11 @@
 					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
 					if ($ret)
 					{
-						//$val_md5sum = '';
 						$md5sum = '';
 					} else {
-						//$val_md5sum = trim(strstr($output[0], ' ', true)).' '.$value;
 						$md5sum = trim(strstr($output[0], ' ', true));
 					}
 					$results[] = array('file'=>$value, 
-						//val_md5sum'=>$val_md5sum, 
 						'md5sum'=>$md5sum, 
 						'path_string'=>preg_replace($patrones, $sustituciones, $path), 
 						'path_absolute'=>$path,
@@ -491,11 +493,8 @@
 				return $this->receipt;
 			}
 		
-			$patrones = array('(\\/)', '(\\\\)', '(")');
-			$sustituciones = array('_', '_', '_');
-			
-			$patrones_2 = array('(\\/)', '(")');
-			$sustituciones_2 = array('_', '_');
+			$patrones = array('(\\/)', '(")');
+			$sustituciones = array('_', '_');
 			foreach ($exceldata as $k => $row) 
 			{
 				if (!$this->_valid_row($row))
@@ -503,10 +502,8 @@
 					continue;
 				}
 				
-				//$path = $row[(count($row)-2)];
 				$path_file = str_replace('..', '.', $row[(count($row)-1)]);
-				$path_file = preg_replace($patrones_2, $sustituciones_2, $path_file);
-				//$path_file = str_replace('\\', '/', $path_file);
+				$path_file = preg_replace($patrones, $sustituciones, $path_file);
 				$array_path = explode("\\", $path_file);
 				
 				$file_name = $array_path[count($array_path)-1];
@@ -535,14 +532,12 @@
 			if ($with_components)
 			{
 				$relations = $this->get_relations();
-				//print_r($relations).'<br><br>';
 				$this->_compare_names($relations, $uploaded_files);
 			} else {
 				$relations = array();
 				$this->_compare_names($relations, $uploaded_files);
 			}
-			//print_r($uploaded_files).'<br><br>';
-//print_r($relations).'<br><br>'; print_r($this->paths_from_file);  die;
+
 			phpgwapi_cache::session_set('property', 'paths_from_file', $this->paths_from_file);
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
@@ -626,7 +621,7 @@
 								{						
 									throw new Exception("failed to copy file: '{$file_data['path_absolute']}'. Component: '{$k}'");
 								} 
-								unlink($file_data['path_file']);
+								unlink($file_data['path_absolute']);
 								$count_new_files++;
 							} else {
 								$count_files_existing++;
@@ -736,9 +731,6 @@
 		{
 			$metadata = array();
 
-			//$tmp_file = $file_data['file'];
-			
-			//$val_md5sum = $file_data['val_md5sum'];
 			$path_file = $file_data['path_absolute'];
 			$md5sum = $file_data['md5sum'];
 			
@@ -766,8 +758,6 @@
 			{
 				return false;
 			}
-			
-			//$this->last_files_added[$file_id] = $md5sum;
 
 			$this->db->query("UPDATE phpgw_vfs SET md5_sum='{$md5sum}'"
 				. " WHERE file_id='{$file_id}'", __LINE__, __FILE__);
