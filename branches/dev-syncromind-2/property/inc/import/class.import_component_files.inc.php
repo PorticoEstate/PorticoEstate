@@ -553,7 +553,7 @@
 					
 			if ($files_in_db)
 			{
-				$message['message'][] = array('msg' => lang('%1 files exist in bd', $files_in_db));
+				$message['message'][] = array('msg' => lang('%1 files exist in db', $files_in_db));
 			}
 			$message['message'][] = array('msg' => lang('%1 files prepare to copy', (count($this->paths_from_file) - $files_in_db)));
 			
