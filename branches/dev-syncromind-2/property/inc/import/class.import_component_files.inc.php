@@ -263,7 +263,7 @@
 						{
 							$this->paths_from_file[$file_data['md5sum']][] = $file_data['path_relative'];
 						} else {
-							$this->paths_empty[$file_data['path_string']] = $file_data['path'].'/'.$file_data['file'];
+							$this->paths_empty[$file_data['file']] = $file_data['path'].'/'.$file_data['file'];
 						}
 					}
 				}
@@ -627,7 +627,7 @@
 								if (!is_file($file_data['path_absolute']))
 								{
 									$_file = ($file_data['path_absolute']) ? $file_data['path_absolute'] : $file_data['path'].'/'.$file_data['file'];
-									$files_not_existing[$_file] = $_file;
+									$files_not_existing[$file_data['file']] = $_file;
 									throw new Exception();
 								}	
 
