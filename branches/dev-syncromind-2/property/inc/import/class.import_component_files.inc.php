@@ -141,7 +141,7 @@
 			
 			$count_new_relations = 0;
 			$count_relations_existing = 0;
-			$count_files_existing = 0;
+			$files_existing = array();
 			$count_new_files = 0;
 			
 			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
@@ -153,6 +153,7 @@
 				if (in_array($file_data['md5sum'], $files_in_component))
 				{
 					$count_relations_existing++;
+					$files_existing[$file_data['md5sum']] = $file_data['md5sum'];
 					continue;
 				}
 
@@ -177,7 +178,7 @@
 							unlink($file_data['path_absolute']);
 							$count_new_files++;
 						} else {
-							$count_files_existing++;
+							$files_existing[$file_data['md5sum']] = $file_data['md5sum'];
 						}
 						
 						$result = $this->_save_file_relation($component['id'], $component['location_id'], $file_id);
@@ -213,8 +214,8 @@
 			} else {
 				$message['message'][] = array('msg' => lang('%1 files copy', $count_new_files));
 			}
-			if ($count_files_existing){
-				$message['message'][] = array('msg' => lang('%1 files existing in db', $count_files_existing));
+			if (count($files_existing)){
+				$message['message'][] = array('msg' => lang('%1 files existing in db', count($files_existing)));
 			}
 			if ($count_new_relations)
 			{
@@ -541,7 +542,20 @@
 			phpgwapi_cache::session_set('property', 'paths_from_file', $this->paths_from_file);
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
-			$message['message'][] = array('msg' => lang('%1 files prepare to copy', count($this->paths_from_file)));
+			$files_in_db = 0;
+			foreach ($this->paths_from_file as $k => $v)
+			{
+				if ($this->_search_file_in_db($k))
+				{
+					$files_in_db++;
+				}
+			}
+					
+			if ($files_in_db)
+			{
+				$message['message'][] = array('msg' => lang('%1 files exist in bd', $files_in_db));
+			}
+			$message['message'][] = array('msg' => lang('%1 files prepare to copy', (count($this->paths_from_file) - $files_in_db)));
 			
 			if (count($this->paths_empty))
 			{
@@ -568,7 +582,7 @@
 			$count_new_relations = 0; 
 			$count_relations_existing = 0;
 			$count_new_files = 0;
-			$count_files_existing = 0;
+			$files_existing = array();
 			$files_not_existing = array();
 	
 			foreach ($component_files as $k => $files) 
@@ -593,6 +607,7 @@
 					if (in_array($file_data['md5sum'], $files_in_component))
 					{
 						$count_relations_existing++;
+						$files_existing[$file_data['md5sum']] = $file_data['md5sum'];
 						continue;
 					}
 					
@@ -624,7 +639,7 @@
 								unlink($file_data['path_absolute']);
 								$count_new_files++;
 							} else {
-								$count_files_existing++;
+								$files_existing[$file_data['md5sum']] = $file_data['md5sum'];
 							}
 						}
 						
@@ -661,8 +676,8 @@
 			} else {
 				$message['message'][] = array('msg' => lang('%1 files copy', $count_new_files));
 			}
-			if ($count_files_existing){
-				$message['message'][] = array('msg' => lang('%1 files existing in db', $count_files_existing));
+			if (count($files_existing)){
+				$message['message'][] = array('msg' => lang('%1 files existing in db', count($files_existing)));
 			}
 			if ($count_new_relations)
 			{
