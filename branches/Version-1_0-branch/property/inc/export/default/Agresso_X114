@@ -893,7 +893,7 @@
 					'ACCOUNTLINK.CODE'		=> $line['spbudact_code'], // 4180
 					'CURRENCY'				=> $line['currency'],
 					'AMOUNT'				=> $amount, // 312500
-					'TAXCODE'				=> $line['mvakode'],
+					'TAXCODE'				=> !empty($line['mvakode']) ? $line['mvakode'] : 22,
 					'APPROVER.FULLNAME'		=> $line['budsjettansvarligid'], //Batch 04 - 14
 					'DIMENSION.D1.CODE'		=> $line['dimb'], // 1111
 					'DIMENSION.D2.CODE'		=> '',//$line['dima'], // 62000
@@ -944,7 +944,7 @@
 					'ACCOUNTLINK.CODE'		=> $reskontroart,
 					'CURRENCY'				=> $oRsBilag[0]['currency'],
 					'AMOUNT'				=> (-1 * $sum_amount),
-					'TAXCODE'				=> $oRsBilag[0]['mvakode'],
+					'TAXCODE'				=> !empty($oRsBilag[0]['mvakode']) ? $oRsBilag[0]['mvakode'] : 22,
 					'APPROVER.FULLNAME'		=> '',
 					'DIMENSION.D1.CODE'		=> '',
 					'DIMENSION.D2.CODE'		=> '',
