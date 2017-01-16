@@ -862,8 +862,7 @@ HTML;
 
 		public function get_attributes_from_template()
 		{
-			//$profile = $this->config_repository['profile'];
-			
+			$selected_attribute = phpgw::get_var('selected_attribute');
 			$category_template = phpgw::get_var('category_template');
 
 			$template_info = explode('_', $category_template);
@@ -874,8 +873,8 @@ HTML;
 			$list = array();
 			foreach ($attrib_list as $attrib)
 			{
-				//$selected = ($profile['attrib_name_componentID']['id'] == $attrib['column_name']) ? 1 : 0;
-				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text']); 
+				$selected = ($selected_attribute == $attrib['column_name']) ? 1 : 0;
+				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text'], 'selected' => $selected); 
 			}
 			
 			array_unshift($list, array('id' => '', 'name' => lang('choose attribute')));
