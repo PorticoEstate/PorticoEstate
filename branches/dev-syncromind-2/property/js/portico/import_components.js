@@ -72,27 +72,9 @@ $(document).ready(function ()
         }
     });
 	
-	
 	$('#template_list').change( function()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.get_attributes_from_template'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);	
-		
-		var data = {"category_template": $(this).val()};
-		JqueryPortico.execute_ajax(requestUrl,
-			function(result){
-				var $el = $("#attribute_name_component_id");
-				$el.empty();
-				$.each(result, function(key, value) {
-					if (value.selected)
-					{
-						$el.append($("<option selected></option>").attr("value", value.id).text(value.name));
-					} else {
-						$el.append($("<option></option>").attr("value", value.id).text(value.name));
-					}
-				});
-			}, data, "GET", "json"
-		);				
+		fill_template_attributes('');
 	});
 	
 	$('#relations_step_1').on('click', function ()
@@ -669,15 +651,36 @@ $(document).ready(function ()
 				if (result.template_id)
 				{
 					$('#template_list').val(result.template_id);
+					fill_template_attributes(result.attrib_name_componentID);
 				}
-				$('#attribute_name_component_id').val(result.attrib_name_componentID);
-		
 			}, data, "GET", "JSON"
 		);
 	});
 	
 });
 
+function fill_template_attributes (selected_attribute)
+{
+	var oArgs = {menuaction: 'property.uiimport_components.get_attributes_from_template'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);	
+
+	var data = {"category_template": $("#template_list").val(), "selected_attribute":  selected_attribute};
+	JqueryPortico.execute_ajax(requestUrl,
+		function(result){
+			var $el = $("#attribute_name_component_id");
+			$el.empty();
+			$.each(result, function(key, value) {
+				if (value.selected)
+				{
+					$el.append($("<option selected></option>").attr("value", value.id).text(value.name));
+				} else {
+					$el.append($("<option></option>").attr("value", value.id).text(value.name));
+				}
+			});
+		}, data, "GET", "json"
+	);			
+}
+	
 function valid_new_attribute (code)
 {
 	if ($('#name_' + code).val() == '')
