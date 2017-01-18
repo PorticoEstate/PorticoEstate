@@ -343,7 +343,7 @@
 			$id = intval($party->get_id());
 
 
-			$location_id = $this->marshal($party->get_location_id(), 'int');
+			$location_id = $party->get_location_id();
 
 			if ($location_id)
 			{
@@ -376,7 +376,7 @@
 				'comment = ' . $this->marshal($party->get_comment(), 'string'),
 				'org_enhet_id = ' . $this->marshal($party->get_org_enhet_id(), 'int'),
 				'unit_leader = ' . $this->marshal($party->get_unit_leader(), 'string'),
-				'location_id = ' . $location_id,
+				'location_id = ' . $this->marshal($party->get_location_id(), 'int'),
 				'result_unit_number = ' . $result_unit_number
 			);
 
