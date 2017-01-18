@@ -67,7 +67,6 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
-	//		$status_text = rental_email_out::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$lang_active = lang('active');
 			$lang_inactive = lang('inactive');
@@ -80,19 +79,6 @@
 				if (!empty($params['history']) && ($new_value != $old_value))
 				{
 					$label = !empty($params['label']) ? lang($params['label']) : $field;
-					switch ($field)
-					{
-						case 'status':
-							$old_value = $status_text[$old_value];
-							$new_value = $status_text[$new_value];
-							break;
-						case 'active':
-							$old_value = $old_value ? $lang_active : $lang_inactive;
-							$new_value = $new_value ? $lang_active : $lang_inactive;
-							break;
-						default:
-							break;
-					}
 					$value_set = array
 					(
 						'email_out_id'	=> $object->get_id(),
@@ -159,6 +145,9 @@
 
 		public function get_recipients( $email_out_id )
 		{
+
+			$status_list = rental_email_out::get_status_list();
+
 			$email_out_id = (int) $email_out_id;
 			$values = array();
 
@@ -192,7 +181,7 @@
 					'id'	=> $this->db->f('id'),
 					'name'	=> $name,
 					'email'	=> $this->db->f('email',true),
-					'status'	=> $this->db->f('status')
+					'status'	=> $status_list[$this->db->f('status')]
 				);
 			}
 			return $values;
@@ -201,7 +190,7 @@
 		function set_candidates($id, $ids)
 		{
 			$recipients = $this->get_recipients($id);
-			
+
 			$check_duplicates = array();
 			foreach ($recipients as $entry)
 			{
@@ -236,5 +225,25 @@
 			{
 				return $GLOBALS['phpgw']->db->insert($sql, $valueset, __LINE__, __FILE__);
 			}
+		}
+
+		function delete_recipients($id, $ids = array())
+		{
+			$id = (int) $id;
+			if($ids)
+			{
+				$parties = implode(',', $ids);
+				$sql = "DELETE FROM rental_email_out_party WHERE email_out_id = {$id} AND party_id IN ({$parties})";
+				return $this->db->query($sql,__LINE__,__FILE__);
+			}
+		}
+
+		function set_status($id, $party_id, $status)
+		{
+			$id = (int) $id;
+			$party_id = (int) $party_id;
+			$status = (int) $status;
+			$sql = "UPDATE rental_email_out_party SET status = {$status} WHERE email_out_id = {$id} AND party_id = {$party_id}";
+			return $this->db->query($sql,__LINE__,__FILE__);
 		}
 	}

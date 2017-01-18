@@ -85,3 +85,41 @@ this.onActionsClick_candidates = function (type, ids)
 	});
 
 }
+this.onActionsClick_recipient = function (type, ids)
+{
+	oArgs = {
+		menuaction: 'rental.uiemail_out.' + type,
+		id: $('#id').val()
+	};
+
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		data: {ids: ids, type: type},
+		success: function (data)
+		{
+			if (data != null)
+			{
+
+			}
+			oArgs = {
+				menuaction: 'rental.uiemail_out.get_recipients',
+				id: $('#id').val()
+			};
+
+			var requestUrl = phpGWLink('index.php', oArgs, true);
+			JqueryPortico.updateinlineTableHelper(oTable2, requestUrl);
+		}
+	});
+
+}
+
+function template_lookup()
+{
+	var oArgs = {menuaction: 'rental.uilookup.email_template'};
+	var strURL = phpGWLink('index.php', oArgs);
+	TINY.box.show({iframe: strURL, boxid: "frameless", width: 750, height: 450, fixed: false, maskid: "darkmask", maskopacity: 40, mask: true, animate: true, close: true});
+}

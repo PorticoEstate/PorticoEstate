@@ -78,16 +78,21 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'content')"/>
+								<a href="javascript:template_lookup();">
+									<xsl:attribute name="title">
+										<xsl:value-of select="php:function('lang', 'content')"/>
+									</xsl:attribute>
+									<xsl:value-of select="php:function('lang', 'content')"/>
+								</a>
 							</label>
-							<textarea cols="47" rows="7" name="content">
+							<textarea cols="47" rows="7" id="content" name="content">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:value-of select="email_out/content"/>
 							</textarea>
 						</div>
-						<div class="pure-control-group">
+						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'details')"/>
 							</label>
@@ -104,7 +109,7 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-						</div>
+						</div-->
 					</fieldset>
 				</div>
 				<div id="recipient">

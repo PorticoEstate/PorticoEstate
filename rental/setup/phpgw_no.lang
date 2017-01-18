@@ -655,4 +655,13 @@ user	rental	no	Bruker
 note	rental	no	Merknad
 report is already recorded for %1	rental	no	Rapport finnes allerede for %1
 email out	rental	no	Epost ut
-recipient	rental	no	Adressat
+recipient	rental	no	Mottaker
+recipients	rental	no	Mottakere
+candidates	rental	no	Kandidater
+send email	rental	no	Send epost
+remark	rental	no	Merknad
+subject	rental	no	Overskrift
+content	rental	no	Innhold
+select all	rental	no	Velg alle
+planned	rental	no	Planlagt
+email template	rental	no	Standardtekster

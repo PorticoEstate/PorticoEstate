@@ -44,7 +44,10 @@
 			'get' => true,
 			'get_candidates' => true,
 			'set_candidates' => true,
-			'get_recipients'=> true
+			'delete_recipients'	=> true,
+			'get_recipients'=> true,
+			'set_email'		=> true,
+			'send_email'	=> true
 		);
 
 		protected
@@ -197,7 +200,7 @@
 			$parties_def = array(
 				array('key' => 'id', 'label' => 'ID', 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
 				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'email', 'label' => lang('email'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'email', 'label' => lang('email'), 'sortable' => true, 'resizeable' => true, 'editor' =>true),
 			);
 
 			$tabletools = array
@@ -244,7 +247,8 @@
 				'tabletools' => array_merge($tabletools,$tabletools_candidate),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('editor_action' => self::link(array('menuaction' => 'rental.uiemail_out.set_email')))
 				)
 			);
 
@@ -271,7 +275,31 @@
 							var aData = selected[n];
 							ids.push(aData['id']);
 						}
-						onActionsClick_recipient('delete', ids);
+						onActionsClick_recipient('delete_recipients', ids);
+						"
+			);
+			$tabletools_recipient[] = array
+				(
+				'my_name' => 'send_email',
+				'text' => lang('send email'),
+				'type' => 'custom',
+				'custom_code' => "
+						var api = oTable2.api();
+						var selected = api.rows( { selected: true } ).data();
+
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['id']);
+						}
+						onActionsClick_recipient('send_email', ids);
 						"
 			);
 
@@ -289,7 +317,8 @@
 				'tabletools' => array_merge($tabletools,$tabletools_recipient),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('editor_action' => self::link(array('menuaction' => 'rental.uiemail_out.set_email')))
 				)
 			);
 
@@ -360,17 +389,85 @@
 
 		public function set_candidates()
 		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
 			$id =  phpgw::get_var('id', 'int');
 			$ids =  (array) phpgw::get_var('ids', 'int');
 			$ret = $this->bo->set_candidates($id, $ids);
 		}
 
+		public function delete_recipients()
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$id =  phpgw::get_var('id', 'int');
+			$ids =  (array) phpgw::get_var('ids', 'int');
+			$ret = $this->bo->delete_recipients($id, $ids);
+		}
+
 		public function get_recipients()
 		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
 			$id =  phpgw::get_var('id', 'int');
 			$values = $this->bo->get_recipients($id);
 			array_walk($values, array($this, "_add_links"), "rental.uiparty.edit");
 			return $this->jquery_results(array('results' => $values));
+
+		}
+
+		public function send_email( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$id =  phpgw::get_var('id', 'int');
+			$ids =  (array) phpgw::get_var('ids', 'int');
+			$ret = $this->bo->send_email($id, $ids);
+		}
+
+		public function set_email( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+
+			phpgw::import_class('rental.soparty');
+
+			$field_name = phpgw::get_var('field_name');
+			$email = phpgw::get_var('value');
+			$id = phpgw::get_var('id');
+			$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
+			$message = array();
+			if (!$email_validator->check_email_address($email) )
+			{
+				$message['error'][] = array('msg' => lang('data has not validated'));
+				return $message;
+			}
+
+			$party = rental_soparty::get_instance()->get_single($id);
+			$party->set_field('email', $email);
+			$result = rental_soparty::get_instance()->store($party);
+
+			$message = array();
+			if ($result)
+			{
+				$message['message'][] = array('msg' => lang('data has been saved'));
+			}
+			else
+			{
+				$message['error'][] = array('msg' => lang('data has not been saved'));
+			}
+
+			return $message;
 
 		}
 	}
