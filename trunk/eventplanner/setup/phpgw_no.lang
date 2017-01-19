@@ -72,3 +72,6 @@ reports	eventplanner	no	Rapporter
 location	eventplanner	no	Lokalisering
 who	eventplanner	no	Hvem
 note	eventplanner	no	Merknad
+customer	eventplanner	no	Mottakersted
+customer report	eventplanner	no	Rapport fra mottakersted
+organization number	eventplanner	no	Organisasjonsnummer
