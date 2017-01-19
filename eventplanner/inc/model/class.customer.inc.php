@@ -200,7 +200,7 @@
 					'required' => true,
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'organization_number'
+					'label' => 'organization number'
 					),
 				'comments' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,

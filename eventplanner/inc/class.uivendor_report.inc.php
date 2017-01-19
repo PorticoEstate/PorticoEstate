@@ -29,7 +29,7 @@
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-	include_class('eventplanner', 'vendor_report', 'inc/model/');
+//	include_class('eventplanner', 'vendor_report', 'inc/model/');
 
 	class eventplanner_uivendor_report extends phpgwapi_uicommon
 	{
