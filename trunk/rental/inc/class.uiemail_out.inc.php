@@ -167,6 +167,7 @@
 			$tabs['recipient'] = array(
 				'label' => lang('recipient'),
 				'link' => '#recipient',
+				'disable' => $email_out->get_id() ? false : true,
 			);
 
 
