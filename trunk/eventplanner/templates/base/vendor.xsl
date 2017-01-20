@@ -88,10 +88,12 @@
 						</div>
 						<div class="pure-control-group">
 							<xsl:variable name="lang_address_1">
-								<xsl:value-of select="php:function('lang', 'address_1')"/>
+								<xsl:value-of select="php:function('lang', 'address')"/>
+								<xsl:text> 1</xsl:text>
 							</xsl:variable>
 							<xsl:variable name="lang_address_2">
-								<xsl:value-of select="php:function('lang', 'address_2')"/>
+								<xsl:value-of select="php:function('lang', 'address')"/>
+								<xsl:text> 2</xsl:text>
 							</xsl:variable>
 							<label>
 								<xsl:value-of select="php:function('lang', 'address')"/>
@@ -113,14 +115,14 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'postal_code_place')"/>
+								<xsl:value-of select="php:function('lang', 'zip code')"/>
 							</label>
 							<input type="text" name="zip_code" value="{vendor/zip_code}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'zip_code')"/>
+									<xsl:value-of select="php:function('lang', 'zip code')"/>
 								</xsl:attribute>
 							</input>
 							<input type="text" name="city" value="{vendor/city}">
@@ -134,27 +136,27 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'vendor_organization_number')"/>
+								<xsl:value-of select="php:function('lang', 'organization number')"/>
 							</label>
 							<input type="text" id="lastname" name="vendor_organization_number" value="{vendor/vendor_organization_number}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'vendor_organization_number')"/>
+									<xsl:value-of select="php:function('lang', 'organization number')"/>
 								</xsl:attribute>
 							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'contact_name')"/>
+								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
 							<input type="text" name="contact_name" value="{vendor/contact_name}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'contact_name')"/>
+									<xsl:value-of select="php:function('lang', 'contact name')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -173,27 +175,27 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'contact_phone')"/>
+								<xsl:value-of select="php:function('lang', 'contact phone')"/>
 							</label>
 							<input type="text" name="contact_phone" value="{vendor/contact_phone}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'contact_phone')"/>
+									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</xsl:attribute>
 							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'account_number')"/>
+								<xsl:value-of select="php:function('lang', 'account number')"/>
 							</label>
 							<input type="text" name="account_number" value="{vendor/account_number}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'account_number')"/>
+									<xsl:value-of select="php:function('lang', 'account number')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -226,7 +228,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'details')"/>
+								<xsl:value-of select="php:function('lang', 'history')"/>
 							</label>
 							<div class="pure-custom">
 								<xsl:for-each select="datatable_def">

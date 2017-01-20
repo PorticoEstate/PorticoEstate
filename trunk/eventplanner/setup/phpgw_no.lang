@@ -7,6 +7,7 @@ apply	eventplanner	no	Mellomlagre
 list	eventplanner	no	Liste
 general	eventplanner	no	Generell
 dates	eventplanner	no	Datoer
+event dates	eventplanner	no	Arrangement-dato
 custom attributes	eventplanner	no	Egendefinerte attributter
 no category	eventplanner	no	Kategori ikke valgt
 time created	eventplanner	no	Tidsstempel
@@ -31,18 +32,20 @@ contact email	eventplanner	no	Epost kontaktperson
 contact phone	eventplanner	no	Tlf. kontaktperson
 case officer	eventplanner	no	Saksbehandler
 active	eventplanner	no	Aktiv
+inactive	eventplanner	no	Inaktiv
 select	eventplanner	no	Velg
 remark	eventplanner	no	Merknad
 comment	eventplanner	no	Kommentar
 demands	eventplanner	no	Forutsetning
 payment	eventplanner	no	Betaling
-labour support	eventplanner	no	Personellstøtte
+labour support	eventplanner	no	Opprigging/nedrigging
 technical support	eventplanner	no	Teknisk støtte
-charge per unit	eventplanner	no	betaling pr stk
-timespan	eventplanner	no	Varighet (min.)
+charge per unit	eventplanner	no	Betaling pr forestilling/kurs/omvisning
+event timespan	eventplanner	no	Programvarighet (minutter)
 number of units	eventplanner	no	Antall arrangement
 integer	eventplanner	no	Heltall
-total amount	eventplanner	no	Sum
+total amount	eventplanner	no	Søknadssum
+number of granted events	eventplanner	no	Antall innvilgede arrangementer
 created	eventplanner	no	Registrert
 modified	eventplanner	no	Endret
 id	eventplanner	no	Id
@@ -56,15 +59,18 @@ might be published	eventplanner	no	Kan bli publisert på internett
 other participants	eventplanner	no	Navn på andre medvirkende (+ rolle)
 arena requirement	eventplanner	no	Krav til lokale
 stage	eventplanner	no	Scene
+size of stage	eventplanner	no	Scenestørrelse
 stage requirement	eventplanner	no	Krav til scene
 width	eventplanner	no	Bredde
 depth	eventplanner	no	Dybde
-wardrobe	eventplanner	no	Garderobe
+wardrobe	eventplanner	no	Behov for utøvergarderobe
 audience limit	eventplanner	no	Maksimum antall publikum
-raider	eventplanner	no	Raider
+raider	eventplanner	no	Andre raiderønsker – (valgfri)
 vendor report	eventplanner	no	Utøverrapport
 calendar	eventplanner	no	Kalender
 from	eventplanner	no	Fra
+event start	eventplanner	no	Ønsket arrangement dato/tid
+select event start	eventplanner	no	Klikk på og velg ønsket måned, dato og klokkeslett
 select all	eventplanner	no	Velg alle
 enable	eventplanner	no	Aktiver
 disable	eventplanner	no	Deaktiver
@@ -75,3 +81,13 @@ note	eventplanner	no	Merknad
 customer	eventplanner	no	Mottakersted
 customer report	eventplanner	no	Rapport fra mottakersted
 organization number	eventplanner	no	Organisasjonsnummer
+program type	eventplanner	no	Programtype
+program title	eventplanner	no	Programtittel
+program description	eventplanner	no	Programbeskrivelse
+zip code	eventplanner	no	Postnummer
+city	eventplanner	no	Sted
+address	eventplanner	no	Adresse
+account number	eventplanner	no	Kontonummer
+history	eventplanner	no	Endringslogg
+user	eventplanner	no	Bruker
+proceedings	eventplanner	no	Saksbehandling

@@ -62,6 +62,12 @@
 			{
 				$menus['admin'] = array
 					(
+					'index' => array
+						(
+						'text' => lang('Configuration'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+							'appname' => 'eventplanner'))
+					),
 					'acl' => array(
 						'text' => $GLOBALS['phpgw']->translation->translate('Configure Access Permissions', array(), true),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',

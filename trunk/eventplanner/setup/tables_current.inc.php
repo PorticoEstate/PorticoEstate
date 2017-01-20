@@ -138,6 +138,7 @@
 				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
 				'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
 				'modified' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+				'num_granted_events' => array('type' => 'int', 'precision' => '4', 'nullable' => True,'default' => '0'),
 				'frontend_modified' => array('type' => 'int', 'precision' => '8', 'nullable' => True),
 				'other_participants' => array('type' => 'text', 'nullable' => True),
 				'title' => array('type' => 'text', 'nullable' => False),
