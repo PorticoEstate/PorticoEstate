@@ -12,6 +12,10 @@
 			$this->fakebase = '/temp_files_components';
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'].$this->fakebase.'/';
 
+			$this->location_code = phpgw::get_var('location_code');
+			$this->location_item_id = phpgw::get_var('location_item_id');
+			$this->attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			
 			$this->last_files_added = array();
 			$this->list_component_id = array();
 			$this->paths_from_file = array();
@@ -130,7 +134,7 @@
 			return $file_id;
 		}
 		
-		public function add_files_location($id, $location_code)
+		public function add_files_location()
 		{		
 			@set_time_limit(5 * 60);
 			
@@ -144,7 +148,7 @@
 			$files_existing = array();
 			$count_new_files = 0;
 			
-			$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
+			$component = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $this->location_code))));
 
 			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
 
@@ -231,6 +235,20 @@
 			return $message;
 		}
 		
+		private function _generate_md5sum($path) 
+		{
+			$output = array();				
+			exec('md5sum "'.$path.'" 2>&1', $output, $ret);
+			if ($ret)
+			{
+				$md5sum = '';
+			} else {
+				$md5sum = trim(strstr($output[0], ' ', true));
+			}		
+			
+			return $md5sum;
+		}
+		
 		private function _compare_names(&$component_files, $uploaded_files)
 		{
 			if (count($component_files))
@@ -250,12 +268,12 @@
 									{
 										$file_data['path_absolute'] = $file['path_absolute'];
 										$file_data['path_relative'] = $file['path_relative'];
-										$file_data['md5sum'] = $file['md5sum'];
+										$file_data['md5sum'] = $this->_generate_md5sum($file['path_absolute']);
 									}
 								} else {
 									$file_data['path_absolute'] = $file['path_absolute'];
 									$file_data['path_relative'] = $file_data['path'];
-									$file_data['md5sum'] = $file['md5sum'];		
+									$file_data['md5sum'] = $this->_generate_md5sum($file['path_absolute']);
 								}							
 							}
 						}
@@ -263,16 +281,17 @@
 						{
 							$this->paths_from_file[$file_data['md5sum']][] = $file_data['path_relative'];
 						} else {
-							$this->paths_empty[$file_data['file']] = $file_data['path'].'/'.$file_data['file'];
+							$this->paths_empty[strtolower($file_data['file'])] = $file_data['path'].'/'.$file_data['file'];
 						}
 					}
 				}
 			} else {
 				foreach ($uploaded_files as $file)
 				{
-					if (!empty($file['md5sum'])) 
+					$md5sum = $this->_generate_md5sum($file['path_absolute']);
+					if (!empty($md5sum)) 
 					{
-						$this->paths_from_file[$file['md5sum']][] = $file['path_relative'];
+						$this->paths_from_file[$md5sum][] = $file['path_relative'];
 					} else {
 						$this->paths_empty[] = $file['path_absolute'];
 					}				
@@ -414,7 +433,6 @@
 		{			
 			$content = scandir($dir);
 			
-			$output = array();
 			foreach($content as $key => $value)
 			{
 				$path = realpath($dir.'/'.$value);
@@ -430,17 +448,8 @@
 							$path = $new_path;
 						}
 					}					
-					
-					unset($output);
-					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
-					if ($ret)
-					{
-						$md5sum = '';
-					} else {
-						$md5sum = trim(strstr($output[0], ' ', true));
-					}
+
 					$results[] = array('file'=>$value, 
-						'md5sum'=>$md5sum, 
 						'path_absolute'=>$path,
 						'path_relative'=>'/');
 				} 
@@ -455,22 +464,12 @@
 			$patrones = array('(\\/)', '(\\\\)', '(")');
 			$sustituciones = array('_', '_', '_');
 			
-			$output = array();
 			foreach($content as $key => $value)
 			{
 				$path = realpath($dir.'/'.$value);
 				if(is_file($path)) 
 				{				
-					unset($output);
-					exec('md5sum "'.$path.'" 2>&1', $output, $ret);
-					if ($ret)
-					{
-						$md5sum = '';
-					} else {
-						$md5sum = trim(strstr($output[0], ' ', true));
-					}
 					$results[] = array('file'=>$value, 
-						'md5sum'=>$md5sum, 
 						'path_string'=>preg_replace($patrones, $sustituciones, $path), 
 						'path_absolute'=>$path,
 						'path_relative'=>substr($dir, strlen($this->path_upload_dir)));
@@ -488,11 +487,6 @@
 		{
 			$exceldata = $this->_getexceldata($_FILES['file']['tmp_name'], false);
 			$component_files = array();
-
-			if ($this->receipt['error'])
-			{
-				return $this->receipt;
-			}
 		
 			$patrones = array('(\\/)', '(")');
 			$sustituciones = array('_', '_');
@@ -524,21 +518,114 @@
 			return $component_files;
 		}
 		
+		private function _search_relations_with_components_location($relations) 
+		{
+			$count_new_relations = 0; 
+			$count_relations_existing = 0;
+			foreach ($relations as $k => $files) 
+			{
+				if (empty($k))
+				{
+					$component = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $this->location_code))));
+				}
+				else {
+					$component = $this->_get_component($k, $this->attrib_name_componentID, $this->location_code);
+					if( empty($component['id']) || empty($component['location_id']))
+					{
+						$this->receipt['message'][] = array('msg' => lang("Component '%1' with location code '%2' does not exist", $k, $this->location_code));
+						continue;
+					}
+				}
+				
+				$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
+
+				foreach ($files as $file_data)
+				{
+					if (empty($file_data['md5sum']))
+					{
+						continue;
+					}
+					
+					if (in_array($file_data['md5sum'], $files_in_component))
+					{
+						$count_relations_existing++;
+					} else {
+						$count_new_relations++;
+					}
+				}
+			}			
+			
+			if ($count_relations_existing)
+			{
+				$this->receipt['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
+			}			
+			
+			if ($count_new_relations)
+			{
+				$this->receipt['message'][] = array('msg' => lang('%1 new relations to add', $count_new_relations));
+			} else {
+				$this->receipt['message'][] = array('msg' => lang('any relation to add'));
+			}
+		}
+		
+		private function _search_relations_with_location($relations) 
+		{
+			$count_new_relations = 0; 
+			$count_relations_existing = 0;
+			
+			$component = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $this->location_code))));
+			$files_in_component = $this->_get_files_by_component($component['id'], $component['location_id']);
+
+			foreach ($relations as $file_data)
+			{
+				if (empty($file_data['md5sum']))
+				{
+					continue;
+				}
+
+				if (in_array($file_data['md5sum'], $files_in_component))
+				{
+					$count_relations_existing++;
+				} else {
+					$count_new_relations++;
+				}
+			}			
+			
+			if ($count_relations_existing)
+			{
+				$this->receipt['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
+			}			
+			
+			if ($count_new_relations)
+			{
+				$this->receipt['message'][] = array('msg' => lang('%1 new relations to add', $count_new_relations));
+			} else {
+				$this->receipt['message'][] = array('msg' => lang('any relation to add'));
+			}
+		}
+		
 		public function preview ()
 		{
 			$with_components = phpgw::get_var('with_components_check');
 			
 			$uploaded_files = $this->_get_uploaded_files();
-
+			
+			if ($this->receipt['error'])
+			{
+				return $this->receipt;
+			}
+			
 			if ($with_components)
 			{
 				$relations = $this->get_relations();
 				$this->_compare_names($relations, $uploaded_files);
+				$this->_search_relations_with_components_location($relations);
 			} else {
 				$relations = array();
 				$this->_compare_names($relations, $uploaded_files);
+				$this->_search_relations_with_location($relations);
 			}
-
+					
 			phpgwapi_cache::session_set('property', 'paths_from_file', $this->paths_from_file);
 			phpgwapi_cache::session_set('property', 'import_data', $relations);
 			
@@ -553,24 +640,24 @@
 					
 			if ($files_in_db)
 			{
-				$message['message'][] = array('msg' => lang('%1 files exist in db', $files_in_db));
+				$this->receipt['message'][] = array('msg' => lang('%1 files exist in db', $files_in_db));
 			}
-			$message['message'][] = array('msg' => lang('%1 files prepare to copy', (count($this->paths_from_file) - $files_in_db)));
+			$this->receipt['message'][] = array('msg' => lang('%1 files prepare to copy', (count($this->paths_from_file) - $files_in_db)));
 			
 			if (count($this->paths_empty))
 			{
-				$message['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($this->paths_empty)));
+				$this->receipt['error'][] = array('msg' => lang('%1 files not exist in the temporary folder', count($this->paths_empty)));
 				
 				foreach($this->paths_empty as $c => $v)
 				{
-					$message['error'][] = array('msg' => lang("file not exist: %1", $v));
+					$this->receipt['error'][] = array('msg' => lang("file not exist: %1", $v));
 				}				
 			}
 		
-			return $message;
+			return $this->receipt;
 		}
 
-		public function add_files_components_location($id, $location_code, $attrib_name_componentID)
+		public function add_files_components_location()
 		{		
 			@set_time_limit(5 * 60);
 
@@ -589,13 +676,13 @@
 			{
 				if (empty($k))
 				{
-					$component = array('id' => $id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $location_code))));
+					$component = array('id' => $this->location_item_id, 'location_id' => $GLOBALS['phpgw']->locations->get_id('property', '.location.'.count(explode('-', $this->location_code))));
 				}
 				else {
-					$component = $this->_get_component($k, $attrib_name_componentID, $location_code);
+					$component = $this->_get_component($k, $this->attrib_name_componentID, $this->location_code);
 					if( empty($component['id']) || empty($component['location_id']))
 					{
-						$message['message'][] = array('msg' => lang("Component '%1' with location code '%2' does not exist", $k, $location_code));
+						$message['message'][] = array('msg' => lang("Component '%1' with location code '%2' does not exist", $k, $this->location_code));
 						continue;
 					}
 				}
@@ -627,7 +714,7 @@
 								if (!is_file($file_data['path_absolute']))
 								{
 									$_file = ($file_data['path_absolute']) ? $file_data['path_absolute'] : $file_data['path'].'/'.$file_data['file'];
-									$files_not_existing[$file_data['file']] = $_file;
+									$files_not_existing[strtolower($file_data['file'])] = $_file;
 									throw new Exception();
 								}	
 
