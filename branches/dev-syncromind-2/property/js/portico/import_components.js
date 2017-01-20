@@ -102,6 +102,12 @@ $(document).ready(function ()
 			return false;
 		}	
 		
+		if ($('#attribute_name_component_id').val() === '')
+		{
+			alert('Choose attribute name for Component ID');
+			return false;
+		}
+		
 		if ($('input:radio[name=compressed_file_check]:checked').val() == 1 && $('#compressed_file_name').val() == '')
 		{
 			alert('Enter the name of the compressed file');
@@ -126,7 +132,7 @@ $(document).ready(function ()
 		{
 			return false;
 		}
-		//form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
+		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
 		form_data.append('compressed_file_check', $('input:radio[name=compressed_file_check]:checked').val());
