@@ -119,8 +119,8 @@
 		public function import_component_files()
 		{		
 			$location_code = phpgw::get_var('location_code');
-			$id = phpgw::get_var('location_item_id');
-			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			//$id = phpgw::get_var('location_item_id');
+			//$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			$preview = phpgw::get_var('preview');
 			$with_components = phpgw::get_var('with_components_check');
 			
@@ -149,9 +149,9 @@
 			
 			if ($with_components)
 			{
-				$receipt = $import_component_files->add_files_components_location($id, $location_code, $attrib_name_componentID);
+				$receipt = $import_component_files->add_files_components_location();
 			} else {
-				$receipt = $import_component_files->add_files_location($id, $location_code);
+				$receipt = $import_component_files->add_files_location();
 			}
 			
 			return $receipt;
