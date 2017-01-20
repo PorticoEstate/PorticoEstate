@@ -20,6 +20,13 @@ validate_submit = function ()
 	{
 		return;
 	}
+	var id = $("#application_id").val();
+
+	if(id > 0)
+	{
+		document.form.submit();
+		return;
+	}
 
 	if (active_tab === 'first_tab')
 	{
@@ -143,6 +150,8 @@ $(document).ready(function ()
 check_button_names = function ()
 {
 	var tab = $("#active_tab").val();
+	var id = $("#application_id").val();
+
 	if (tab === 'calendar')
 	{
 		$("#floating-box").hide();
@@ -150,8 +159,16 @@ check_button_names = function ()
 	}
 	else if (tab === 'first_tab')
 	{
-		$("#save_button").val(lang['next']);
-		$("#save_button_bottom").val(lang['next']);
+		if(id > 0)
+		{
+			$("#save_button").val(lang['save']);
+			$("#save_button_bottom").val(lang['save']);
+		}
+		else
+		{
+			$("#save_button").val(lang['next']);
+			$("#save_button_bottom").val(lang['next']);
+		}
 		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}

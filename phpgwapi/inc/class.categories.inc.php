@@ -269,8 +269,8 @@
 						'main'			=> $this->db->f('cat_main'),
 						'level'			=> $this->db->f('cat_level'),
 						'parent'		=> $this->db->f('cat_parent'),
-						'name'			=> $this->db->f('cat_name'),
-						'description'	=> $this->db->f('cat_description'),
+						'name'			=> $this->db->f('cat_name',true),
+						'description'	=> $this->db->f('cat_description',true),
 						'data'			=> $this->db->f('cat_data'),
 						'last_mod'		=> $this->db->f('last_mod'),
 						'active'		=> (int)$this->db->f('active')
@@ -367,8 +367,8 @@
 					'main'			=> (int)$this->db->f('cat_main'),
 					'level'			=> (int)$this->db->f('cat_level'),
 					'parent'		=> (int)$this->db->f('cat_parent'),
-					'name'			=> $this->db->f('cat_name'),
-					'description'	=> $this->db->f('cat_description'),
+					'name'			=> $this->db->f('cat_name',true),
+					'description'	=> $this->db->f('cat_description',true),
 					'data'			=> $this->db->f('cat_data'),
 					'active'		=> (int)$this->db->f('active')
 				);
@@ -413,8 +413,8 @@
 						'main'			=> (int)$this->db->f('cat_main'),
 						'level'			=> (int)$this->db->f('cat_level'),
 						'parent'		=> (int)$this->db->f('cat_parent'),
-						'name'			=> $this->db->f('cat_name'),
-						'description'	=> $this->db->f('cat_description'),
+						'name'			=> $this->db->f('cat_name',true),
+						'description'	=> $this->db->f('cat_description',true),
 						'data'			=> $this->db->f('cat_data'),
 						'active'		=> (int)$this->db->f('active')
 					);
@@ -595,9 +595,9 @@
 					}
 */
 
-					$s .= '>' . str_repeat('&nbsp;' , (int)$cat['level'] ) . $GLOBALS['phpgw']->strip_html($cat['name']);
+					$s .= '>' . str_repeat('.&nbsp;' , (int)$cat['level'] ) . $GLOBALS['phpgw']->strip_html($cat['name']);
 
-					$s .= $GLOBALS['phpgw']->strip_html($cat['name']);
+//					$s .= $GLOBALS['phpgw']->strip_html($cat['name']);
 					if ($cat['app_name'] == 'phpgw')
 					{
 						$s .= '&nbsp;[' . lang('Global') . ']';

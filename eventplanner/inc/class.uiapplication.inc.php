@@ -206,7 +206,7 @@
 		public function edit( $values = array(), $mode = 'edit' )
 		{
 			$active_tab = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'first_tab');
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
+		//	$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				phpgw::no_access();
@@ -221,7 +221,8 @@
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
 				$application = $this->bo->read_single($id);
 			}
-
+			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+			$default_category = !empty($config['default_application_category']) ? $config['default_application_category'] : null;
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
@@ -282,9 +283,9 @@
 				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
 				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'active', 'label' => lang('active'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'location', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'customer_name', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'location', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'application_id', 'hidden' => true),
 			);
@@ -382,7 +383,7 @@
 				'list_case_officer' => array('options' => $case_officer_options),
 				'cat_select' => $this->cats->formatted_xslt_list(array(
 					'select_name' => 'category_id',
-					'selected'	=> $application->category_id,
+					'selected'	=> $application->category_id ? $application->category_id : $default_category,
 					'use_acl' => $this->_category_acl,
 					'required' => true)),
 				'status_list' => array('options' => $this->get_status_options($application->status)),

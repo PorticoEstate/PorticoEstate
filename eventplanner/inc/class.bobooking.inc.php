@@ -68,6 +68,7 @@
 
 		public function read($params)
 		{
+			$status_text = array(lang('inactive'), lang('active'));
 			if(empty($params['filters']['active']))
 			{
 				$params['filters']['active'] = 1;
@@ -84,6 +85,7 @@
 				$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
 				$entry['from_'] = $GLOBALS['phpgw']->common->show_date($entry['from_']);
 				$entry['to_'] = $GLOBALS['phpgw']->common->show_date($entry['to_']);
+				$entry['status'] = $status_text[$entry['active']];
 			}
 			return $values;
 		}

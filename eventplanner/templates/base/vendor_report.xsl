@@ -69,7 +69,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'timespan')"/>
+							<xsl:value-of select="php:function('lang', 'event timespan')"/>
 						</label>
 						<xsl:value-of select="application/timespan"/>
 					</div>
