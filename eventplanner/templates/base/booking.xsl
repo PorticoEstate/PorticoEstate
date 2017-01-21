@@ -134,7 +134,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'type')"/>
+								<xsl:value-of select="php:function('lang', 'program type')"/>
 							</label>
 							<div class="pure-custom">
 								<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
@@ -144,7 +144,7 @@
 												<xsl:value-of select="php:function('lang', 'select')"/>
 											</th>
 											<th>
-												<xsl:value-of select="php:function('lang', 'type')"/>
+												<xsl:value-of select="php:function('lang', 'program type')"/>
 											</th>
 										</tr>
 									</thead>
@@ -166,10 +166,6 @@
 							</div>
 
 						</div>
-
-
-
-
 					</fieldset>
 
 					<fieldset>

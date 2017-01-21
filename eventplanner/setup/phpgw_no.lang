@@ -95,3 +95,6 @@ maximum of granted events are reached	eventplanner	no	Maksimalt antall arrangeme
 did not validate	eventplanner	no	Feil med datasettet
 date is outside the scope	eventplanner	no	Dato ligger utenfor tillat tidsrom
 can not delete booking with customer	eventplanner	no	Kan ikke slette booking som er koplet med mottakersted
+report	eventplanner	no	Rapport
+events	eventplanner	no	Arrangementer
+event	eventplanner	no	Arrangement

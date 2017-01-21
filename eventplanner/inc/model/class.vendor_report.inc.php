@@ -149,8 +149,6 @@
 			if (!$entity->get_id())
 			{
 				$entity->created = time();
-				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
-				$entity->status = eventplanner_vendor_report::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
 			}
 		}

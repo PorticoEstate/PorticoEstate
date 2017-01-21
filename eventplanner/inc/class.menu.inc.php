@@ -157,10 +157,10 @@
 					'text' => lang('application'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.index'))
 				),
-				'resource' => array(
-					'text' => lang('resource'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "eventplanner.uiresource.index")),
-					'image' => array('resource', 'navbar'),
+				'events' => array(
+					'text' => lang('events'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "eventplanner.uievents.index")),
+					'image' => array('events', 'navbar'),
 				),
 				'customer' => array(
 					'text' => lang('customer'),
