@@ -106,7 +106,59 @@
 
 		public function update_active_status( $ids, $action )
 		{
-			return eventplanner_sobooking::get_instance()->update_active_status($ids, $action);
+			if($action == 'enable' && $ids)
+			{
+				$_ids = array();
+				$application_id = eventplanner_sobooking::get_instance()->read_single($ids[0], true)->application_id;
+
+				$application = createObject('eventplanner.boapplication')->read_single($application_id);
+				$params = array();
+				$params['filters']['active'] = 1;
+				$params['filters']['application_id'] = $application_id;
+
+				$bookings =  eventplanner_sobooking::get_instance()->read($params);
+
+				$number_of_active = (int)$bookings['total_records'];
+				$limit = (int)$application->num_granted_events;
+
+
+				foreach ($ids as $id)
+				{
+					if($limit > $number_of_active)
+					{
+						$_ids[] = $id;
+						$number_of_active ++;
+					}
+					else
+					{
+						$message = lang('maximum of granted events are reached');
+						phpgwapi_cache::message_set($message, 'error');
+						break;
+					}
+				}
+			}
+			else if ($action == 'delete' && $ids)
+			{
+				foreach ($ids as $id)
+				{
+					$booking = eventplanner_sobooking::get_instance()->read_single($id, true);
+					if(!$booking->customer_id)
+					{
+						$_ids[] = $id;
+					}
+					else
+					{
+						$message = lang('can not delete booking with customer');
+						phpgwapi_cache::message_set($message, 'error');
+					}
+				}		
+			}
+			else
+			{
+				$_ids = $ids;
+			}
+
+			return eventplanner_sobooking::get_instance()->update_active_status($_ids, $action);
 		}
 
 		public function update_schedule( $id, $from_ )

@@ -22,7 +22,7 @@ validate_submit = function ()
 	}
 	var id = $("#application_id").val();
 
-	if(id > 0)
+	if (id > 0)
 	{
 		document.form.submit();
 		return;
@@ -159,7 +159,7 @@ check_button_names = function ()
 	}
 	else if (tab === 'first_tab')
 	{
-		if(id > 0)
+		if (id > 0)
 		{
 			$("#save_button").val(lang['save']);
 			$("#save_button_bottom").val(lang['save']);
@@ -231,7 +231,7 @@ add_booking = function ()
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = '';
 	$("#receipt").html("");
-	var data =  {from_: from_, active: 1};
+	var data = {from_: from_, active: 1};
 
 	JqueryPortico.execute_ajax(requestUrl,
 		function (result)
@@ -240,19 +240,30 @@ add_booking = function ()
 			{
 				$("#from_").val('');
 				htmlString += "<div class=\"msg_good\">";
+				htmlString += result.msg;
 			}
 			else
 			{
 				htmlString += "<div class=\"error\">";
+				var msg = result.msg;
+				if (typeof (msg) == 'object')
+				{
+					htmlString += msg['error'][0]['msg'];
+				}
+				else
+				{
+					htmlString += result.msg;
+				}
 			}
-			htmlString += result.msg;
+
+
 			htmlString += '</div>';
 			$("#receipt").html(htmlString);
 
 			JqueryPortico.updateinlineTableHelper('datatable-container_1');
 
 		}, data, "POST", "json"
-	);
+		);
 
 };
 
@@ -290,7 +301,7 @@ update_schedule = function (id)
 			JqueryPortico.updateinlineTableHelper('datatable-container_1');
 
 		}, data, "POST", "json"
-	);
+		);
 
 };
 
@@ -349,18 +360,27 @@ this.onActionsClick = function (action)
 				{
 					$("#from_").val('');
 					htmlString += "<div class=\"msg_good\">";
+					htmlString += result.msg;
 				}
 				else
 				{
 					htmlString += "<div class=\"error\">";
+					var msg = result.msg;
+					if (typeof (msg) == 'object')
+					{
+						htmlString += msg['error'][0]['msg'];
+					}
+					else
+					{
+						htmlString += result.msg;
+					}
 				}
-				htmlString += result.msg;
 				htmlString += '</div>';
 				$("#receipt").html(htmlString);
 
 				JqueryPortico.updateinlineTableHelper('datatable-container_1');
 
 			}, data, "POST", "json"
-		);
+			);
 	}
 };

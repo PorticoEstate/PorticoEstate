@@ -187,11 +187,11 @@
 			{
 				if($ajax)
 				{
-					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$messages = phpgwapi_cache::message_get(true);
 					return array(
 						'status_kode' => 'error',
 						'status' => lang('error'),
-						'msg' => lang('Did not validate')
+						'msg' => $messages ? $messages : lang('did not validate')
 					);
 				}
 				else
