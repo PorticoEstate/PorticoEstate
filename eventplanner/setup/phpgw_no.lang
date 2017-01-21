@@ -91,3 +91,7 @@ account number	eventplanner	no	Kontonummer
 history	eventplanner	no	Endringslogg
 user	eventplanner	no	Bruker
 proceedings	eventplanner	no	Saksbehandling
+maximum of granted events are reached	eventplanner	no	Maksimalt antall arrangement er nådd
+did not validate	eventplanner	no	Feil med datasettet
+date is outside the scope	eventplanner	no	Dato ligger utenfor tillat tidsrom
+can not delete booking with customer	eventplanner	no	Kan ikke slette booking som er koplet med mottakersted

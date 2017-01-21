@@ -316,6 +316,13 @@
 								onActionsClick('disable');"
 				),
 				array(
+					'my_name' => 'delete',
+					'text' => lang('delete'),
+					'type' => 'custom',
+					'custom_code' => "
+								onActionsClick('delete');"
+				),
+				array(
 					'my_name' => 'edit',
 					'text' => lang('edit'),
 					'type' => 'custom',

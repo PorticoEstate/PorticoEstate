@@ -139,10 +139,17 @@
 			{
 				case 'disable':
 					$sql = "UPDATE eventplanner_booking SET active = 0";
+					$where = 'WHERE';
 
 					break;
 				case 'enable':
 					$sql = "UPDATE eventplanner_booking SET active = 1";
+					$where = 'WHERE';
+					break;
+
+				case 'delete':
+					$sql = "DELETE FROM eventplanner_booking WHERE customer_id IS NULL";
+					$where = 'AND';
 					break;
 
 				default:
@@ -150,7 +157,7 @@
 					break;
 			}
 
-			$sql .= 'WHERE id IN(' . implode(',', $ids) . ')';
+			$sql .= " {$where} id IN('". implode(',', $ids) . ')';
 			$this->db->transaction_begin();
 			
 			$this->db->query($sql,__LINE__,__FILE__);
