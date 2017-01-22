@@ -154,6 +154,8 @@
 											$(document).ready(function() {
 											var app = "<xsl:value-of select="app"/>";
 											app = app || 'booking';
+											var FunctionName = "<xsl:value-of select="function"/>";
+											FunctionName = FunctionName || 'index';
 											var label_attr = "<xsl:value-of select="label_attr"/>";
 											label_attr = label_attr || 'name';
 											var show_id =  false;
@@ -179,7 +181,7 @@
 												if (filter_select != filter_selected){
 												if (filter_depends) {
 													<![CDATA[
-															JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&filter_'+depends+'_id='+filter_depends+'&',
+															JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.' + FunctionName + '&filter_'+depends+'_id='+filter_depends+'&',
 																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 												}
@@ -194,7 +196,7 @@
 												filter_depends = false;
 												if (!filter_depends) {
 															<![CDATA[
-																JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&',
+																JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ ui + '.' + FunctionName +'&',
 																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 															]]>
 												}
@@ -207,12 +209,12 @@
 											</xsl:if>
 											if (filter_depends) {
 													<![CDATA[
-														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&filter_'+depends+'_id='+filter_depends+'&',
+														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.' + FunctionName + '&filter_'+depends+'_id='+filter_depends+'&',
 																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 											}else{
 													<![CDATA[
-														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.index&',
+														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.' + FunctionName + '&',
 																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 											}
@@ -982,7 +984,15 @@
 			* For namespacing the state
 			*/
 			var table_url = JqueryPortico.parseURL(window.location.href);
-			var menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
+			var menuaction = 'dummy';
+
+			try
+			{
+				menuaction = table_url.searchObject.menuaction.replace(/\./g, '_');
+			}
+			catch (e)
+			{
+			}
 
 			//clear state
 			var clear_state = false;
@@ -1055,13 +1065,14 @@
 					var retrievedObject = localStorage.getItem('state_' + menuaction);
 					if(typeof(retrievedObject) != 'undefined')
 					{
+						var	params = {};
+
 						try
 						{
-							var params = JSON.parse(retrievedObject);
+							params = JSON.parse(retrievedObject);
 						}
 						catch(err)
 						{
-							params = {}
 						}
 					}
 				//	console.log(oData);
