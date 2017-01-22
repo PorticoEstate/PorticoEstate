@@ -13,18 +13,26 @@
 
 	if (!$GLOBALS['phpgw']->accounts->exists('bookingguest')) // no guest account already exists
 	{
+		$passwd = $GLOBALS['phpgw']->common->randomstring(6) . "ABab1!";
+
 		$GLOBALS['phpgw_info']['server']['password_level'] = '8CHAR';
 		$account = new phpgwapi_user();
 		$account->lid = 'bookingguest';
 		$account->firstname = 'booking';
 		$account->lastname = 'Guest';
-		$account->passwd = 'bkbooking';
+		$account->passwd = $passwd;
 		$account->enabled = true;
 		$account->expires = -1;
 		$bookingguest = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
 
 		$preferences = createObject('phpgwapi.preferences');
 		$preferences->set_account_id($bookingguest);
-		$preferences->add('bookingfrontend', 'template_set', 'bkbooking');
+		$preferences->add('common', 'template_set', 'bookingfrontend');
 		$preferences->save_repository(true, $GLOBALS['type']);
+
+		$config = CreateObject('phpgwapi.config', 'bookingfrontend');
+		$config->read();
+		$config->value('anonymous_user', 'bookingguest');
+		$config->value('anonymous_passwd', $passwd);
+		$config->save_repository();
 	}
