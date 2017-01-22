@@ -1,0 +1,753 @@
+ul.pathway {font-size: 110%;font-weight: bolder;margin: 1em 0;padding: 0;}
+ul.pathway li a {color: #000;text-decoration: none;}
+ul.pathway li a:hover {color: #008;}
+ul.pathway li {background: rgba(0, 0, 0, 0) url("../../phpgwapi/templates/pure/images/pathwaysep.png") no-repeat scroll 0 50%;display: inline;padding-left: 16px;}
+ul.pathway li:first-child {background: rgba(0, 0, 0, 0) none repeat scroll 0 0;padding-left: 0;}
+
+.bookingfrontend-table {border: 1px solid #cbcbcb;border-collapse: collapse;border-spacing: 0;empty-cells: show;font-size: 12px;font-family: Arial,Helvetica,Verdana,sans-serif;}
+.bookingfrontend-table caption {color: #000;font: italic 85%/1 arial,sans-serif;padding: 1em 0;text-align: center;}
+.bookingfrontend-table td, .bookingfrontend-table th {border-left: 1px solid #cbcbcb;border-width: 0 0 0 1px;font-size: inherit;margin: 0;overflow: visible;padding: 0.5em 1em;}
+.bookingfrontend-table td:first-child, .bookingfrontend-table th:first-child {border-left-width: 0;}
+.bookingfrontend-table thead {background: #e0e0e0 none repeat scroll 0 0;color: #000;text-align: left;vertical-align: bottom;}
+.bookingfrontend-table td {background-color: transparent;}
+.bookingfrontend-table-odd td {background-color: #f2f2f2;}
+.bookingfrontend-table-striped tr:nth-child(2n-1) td {background-color: #f2f2f2;}
+.bookingfrontend-table-bordered td {border-bottom: 1px solid #cbcbcb;}
+.bookingfrontend-table-bordered tbody > tr:last-child td, .bookingfrontend-table-horizontal tbody > tr:last-child td {border-bottom-width: 0;}
+.bookingfrontend-table-horizontal td, .bookingfrontend-table-horizontal th {border-bottom: 1px solid #cbcbcb;border-width: 0 0 1px;}
+.bookingfrontend-table-horizontal tbody > tr:last-child td {border-bottom-width: 0;}
+
+.bookingfrontend-table th {background: #e0e0e0 none repeat scroll 0 0;}
+.bookingfrontend-table thead th{text-align: center;font-weight: bold;}
+.bookingfrontend-table tbody th{border-top: 1px solid #cbcbcb;text-align: right;font-weight: bold;color: #000;}
+
+/* TABLE PAGINATOR */
+.tablePaginator {margin-bottom: 10px;}
+.tablePaginator li {display: inline;}
+.tablePaginator li a {text-decoration: underline;}
+.tablePaginator li a.disabled {cursor: not-allowed;text-decoration: none;}
+.tablePaginator li a.enabled {cursor: pointer;}
+.tablePaginatorText {margin: 0 15px;}
+
+/*SCHEDULE*/
+#schedule_container {color: #000;margin-top: 15px;}
+#schedule_container .pure-table thead th {line-height: 1.4;}
+#schedule_container p.conflicts {margin: 0;color: #000;}
+#schedule_container .cellInfo:hover {background-image: url("../../phpgwapi/templates/pure/images/info.png");background-position: 100% 0;background-repeat: no-repeat;cursor: pointer;}
+#schedule_container .free:hover {cursor: pointer;}
+#schedule_overlay {background-color: #fff;border: 1px solid #000;height: auto;left: 0;margin: auto;padding: 20px;position: absolute;right: 0;width: 400px;z-index: 9;}
+#schedule_overlay img {bottom: 0;display: block;left: 0;margin: auto;position: absolute;right: 0;top: 0;}
+#week-selector {list-style: outside none none;margin-top: 10px;cursor: pointer;}
+#week-selector li {display: inline-block;}
+#week-selector .moveWeek{text-decoration: underline;}
+#cal_container {margin: 0 20px;}
+#cal_container #datepicker {width: 2px;opacity: 0;position: absolute;display:none;}
+#cal_container #numberWeek {width: 20px;display: inline-block;}
+#cal_container > div {display: inline;}
+#dialog_schedule {text-align: left;}
+#dialog_schedule dl {margin-top: 10px;}
+#dialog_schedule dt {font-weight: bold;margin-top: 10px;}
+#dialog_schedule dd {padding-left: 25px;}
+/*SCHEDULE COLORS*/
+/*#schedule_container .color1 {
+    background-color: #ccccff;
+}
+#schedule_container .color2 {
+    background-color: #ccffcc;
+}
+#schedule_container .color3 {
+    background-color: #ffcccc;
+}
+#schedule_container .color4 {
+    background-color: #ffffbb;
+}
+#schedule_container .color5 {
+    background-color: #bbffff;
+}
+#schedule_container .color6 {
+    background-color: #ffbbff;
+}
+#schedule_container .color7 {
+    background-color: #de6d6d;
+}
+#schedule_container .color8 {
+    background-color: #f0f0f0;
+}
+#schedule_container .color9 {
+    background-color: #6495ed;
+}
+#schedule_container .color10 {
+    background-color: #90ee90;
+}
+#schedule_container .color11 {
+    background-color: #eee8aa;
+}
+#schedule_container .color12 {
+    background-color: #afeeee;
+}
+#schedule_container .color13 {
+    background-color: #ffb6c1;
+}
+#schedule_container .color14 {
+    background-color: #f0e68c;
+}
+#schedule_container .color15 {
+    background-color: #66cdaa;
+}
+#schedule_container .color16 {
+    background-color: #ffe4c4;
+}
+#schedule_container .color17 {
+    background-color: #ffa500;
+}
+#schedule_container .color18 {
+    background-color: #bdb76b;
+}
+#schedule_container .color19 {
+    background-color: #32cd32;
+}
+#schedule_container .color20 {
+    background-color: #ffe4b5;
+}
+#schedule_container .color21 {
+    background-color: #ff4040;
+}
+#schedule_container .color22 {
+    background-color: #ee3b3b;
+}
+#schedule_container .color23 {
+    background-color: #cd3333;
+}
+#schedule_container .color24 {
+    background-color: #8b2323;
+}
+#schedule_container .color25 {
+    background-color: #deb887;
+}
+#schedule_container .color26 {
+    background-color: #ffd39b;
+}
+#schedule_container .color27 {
+    background-color: #eec591;
+}
+#schedule_container .color28 {
+    background-color: #5f9ea0;
+}
+#schedule_container .color29 {
+    background-color: #98f5ff;
+}
+#schedule_container .color30 {
+    background-color: #8ee5ee;
+}
+#schedule_container .color31 {
+    background-color: #53868b;
+}
+#schedule_container .color32 {
+    background-color: #66cd00;
+}
+#schedule_container .color33 {
+    background-color: #458b00;
+}
+#schedule_container .color34 {
+    background-color: #d2691e;
+}
+#schedule_container .color35 {
+    background-color: #ff7f24;
+}
+#schedule_container .color36 {
+    background-color: #8b4513;
+}
+#schedule_container .color37 {
+    background-color: #ff7256;
+}
+#schedule_container .color38 {
+    background-color: #ffb90f;
+}
+#schedule_container .color39 {
+    background-color: #cd950c;
+}
+#schedule_container .color40 {
+    background-color: #8fbc8f;
+}
+#schedule_container .color41 {
+    background-color: #8b0000;
+}
+#schedule_container .color42 {
+    background-color: #c1ffc1;
+}
+#schedule_container .color43 {
+    background-color: #b4eeb4;
+}
+#schedule_container .color44 {
+    background-color: #9bcd9b;
+}
+#schedule_container .color45 {
+    background-color: #698b69;
+}
+#schedule_container .color46 {
+    background-color: #433d8b;
+}
+#schedule_container .color47 {
+    background-color: #ee1289;
+}
+#schedule_container .color48 {
+    background-color: #cd1076;
+}
+#schedule_container .color49 {
+    background-color: #8b0a50;
+}
+#schedule_container .color50 {
+    background-color: #ccc;
+}
+#schedule_container .color51 {
+    background-color: #ddd;
+}
+#schedule_container .color52 {
+    background-color: #eee;
+}
+#schedule_container .color53 {
+    background-color: #333;
+}
+#schedule_container .color54 {
+    background-color: #444;
+}
+#schedule_container .color55 {
+    background-color: #555;
+}
+#schedule_container .color56 {
+    background-color: #666;
+}
+#schedule_container .color57 {
+    background-color: #777;
+}
+#schedule_container .color58 {
+    background-color: #888;
+}
+#schedule_container .color59 {
+    background-color: #999;
+}
+#schedule_container .color60 {
+    background-color: #aaa;
+}*/
+
+
+/* BOOKINGFRONTEND */
+.content {
+    margin: 2em 1em;
+}
+.clr {
+    clear: both;
+}
+#inactive {
+    background-color: #ff5555;
+    border: 0.2em dotted #000000;
+    letter-spacing: 2px;
+    padding: 1em;
+    width: 10em;
+}
+#active {
+    background-color: #ffffff;
+    border: 0 dotted #000000;
+    letter-spacing: 2px;
+    padding: 1em;
+    width: 10em;
+}
+#inactivate-button {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    margin-top: 1em;
+    padding: 0.1em;
+}
+#activate-button {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    margin-top: 1em;
+    padding: 0.1em;
+}
+/*ul.pathway {
+    font-size: 110%;
+    font-weight: bolder;
+    margin: 1em 0;
+}
+ul.pathway li a {
+    color: #000;
+    text-decoration: none;
+}
+ul.pathway li a:hover {
+    color: #008;
+}
+ul.pathway li {
+    background: rgba(0, 0, 0, 0) url("../images/pathwaysep.png") no-repeat scroll 0 50%;
+    display: inline;
+    padding-left: 16px;
+}
+ul.pathway li:first-child {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    padding-left: 0;
+}*/
+
+dl.form, dl.form-col, dl.form-2col {
+    margin: 1em 1em 1em 0;
+    padding-right: 1em;
+}
+dl.form dt, dl.form-col dt, dl.form-2col dt {
+    color: #002;
+    font-style: italic;
+    font-weight: bolder;
+    margin: 0.5em 0 0.1em;
+}
+dl.form dt p, dl.form-col dt p, dl.form-2col dt p, dl.form-col p {
+    color: #002;
+    font-size: smaller;
+    font-style: normal;
+    font-weight: normal;
+}
+dl.form dd textarea, dl.form-col dd textarea {
+    height: 6em;
+    width: 15em;
+}
+dl.form-2col dd textarea {
+    height: 6em;
+    width: 36em;
+}
+dl.form dd textarea.full-width, dl.form-col dd textarea.full-width {
+    height: 10em;
+    width: 33em;
+}
+dl.form dd textarea.threecol-width, dl.form-col dd textarea.threecol-width {
+    height: 5em;
+    width: 58em;
+}
+/*dl.form dd input[type="text"], dl.form dd .autocomplete, dl.form-col dd input[type="text"], dl.form-col dd .autocomplete {
+    width: 15em;
+}*/
+/*dl.form dd .autocomplete, dl.form-col dd .autocomplete, dl.form-2col dd .autocomplete {
+    padding-bottom: 2em;
+}
+div.autocomplete {
+    position: relative;
+}
+div.autocomplete input {
+    z-index: 500;
+}*/
+#building_container ul {
+    z-index: 1000;
+}
+dl.form dt.heading, dl.form-col dt.heading, dl.form-2col dt.heading, div.heading, dl.proplist dt.heading, dl.proplist-col dt.heading {
+    border-bottom: 1px solid #aaa;
+    color: #448;
+    font-size: 110%;
+    font-weight: normal;
+    margin-bottom: 0.6em;
+    margin-top: 1.4em;
+}
+dl.proplist {
+    clear: both;
+}
+dl.proplist, dl.proplist-col {
+    margin: 1em 0;
+    padding-right: 0.5em;
+}
+dl.proplist dt, dl.proplist-col dt {
+    font-size: 90%;
+    font-style: italic;
+    font-weight: bolder;
+    margin: 0.8em 0 0.1em;
+}
+/*dl.proplist-col, dl.form-col {
+    float: left;
+    width: 18em;
+}
+dl.form-2col {
+    float: left;
+    width: 38em;
+}*/
+.form-buttons {
+    clear: both;
+    padding-top: 2em;
+}
+.form-buttons button {
+    margin-right: 0.5em;
+}
+.form-buttons .cancel {
+    margin-left: 0.6em;
+}
+.date-picker .container, .datetime-picker .container {
+    display: none;
+    position: absolute;
+    z-index: 1;
+}
+#toolbar {
+    background-color: #eee;
+    border: 1px solid #bbb;
+    margin-bottom: 1em;
+    padding: 0.3em;
+    width: 100%;
+}
+#toolbar input[type="text"] {
+    font-size: 120%;
+    margin: auto 0.25em;
+    vertical-align: text-bottom;
+}
+#list_actions {
+    margin-top: 0.5em;
+}
+dl.proplist dd.address, dl.proplist-col dd.address {
+    white-space: pre;
+}
+#week-selector {
+    margin: 1em 0;
+}
+#week-selector li {
+    display: inline;
+    padding-right: 0.5em;
+}
+#schedule_container tr td {
+    background: white none repeat scroll 0 0;
+    border-top: 1px solid #ccc;
+    white-space: nowrap;
+}
+#schedule_container tbody tr th:first-child {
+    background: #eee none repeat scroll 0 0;
+}
+#schedule_container tr.time td {
+    border-top: 1px solid #444;
+}
+#schedule_container .color1 {
+    background-color: #ccccff;
+}
+#schedule_container .color2 {
+    background-color: #ccffcc;
+}
+#schedule_container .color3 {
+    background-color: #ffcccc;
+}
+#schedule_container .color4 {
+    background-color: #ffffbb;
+}
+#schedule_container .color5 {
+    background-color: #bbffff;
+}
+#schedule_container .color6 {
+    background-color: #ffbbff;
+}
+#schedule_container .color7 {
+    background-color: #de6d6d;
+}
+#schedule_container .color8 {
+    background-color: #f0f0f0;
+}
+#schedule_container .color9 {
+    background-color: #6495ed;
+}
+#schedule_container .color10 {
+    background-color: #90ee90;
+}
+#schedule_container .color11 {
+    background-color: #eee8aa;
+}
+#schedule_container .color12 {
+    background-color: #afeeee;
+}
+#schedule_container .color13 {
+    background-color: #ffb6c1;
+}
+#schedule_container .color14 {
+    background-color: #f0e68c;
+}
+#schedule_container .color15 {
+    background-color: #66cdaa;
+}
+#schedule_container .color16 {
+    background-color: #ffe4c4;
+}
+#schedule_container .color17 {
+    background-color: #ffa500;
+}
+#schedule_container .color18 {
+    background-color: #bdb76b;
+}
+#schedule_container .color19 {
+    background-color: #32cd32;
+}
+#schedule_container .color20 {
+    background-color: #ffe4b5;
+}
+#schedule_container .color21 {
+    background-color: #ff4040;
+}
+#schedule_container .color22 {
+    background-color: #ee3b3b;
+}
+#schedule_container .color23 {
+    background-color: #cd3333;
+}
+#schedule_container .color24 {
+    background-color: #8b2323;
+}
+#schedule_container .color25 {
+    background-color: #deb887;
+}
+#schedule_container .color26 {
+    background-color: #ffd39b;
+}
+#schedule_container .color27 {
+    background-color: #eec591;
+}
+#schedule_container .color28 {
+    background-color: #5f9ea0;
+}
+#schedule_container .color29 {
+    background-color: #98f5ff;
+}
+#schedule_container .color30 {
+    background-color: #8ee5ee;
+}
+#schedule_container .color31 {
+    background-color: #53868b;
+}
+#schedule_container .color32 {
+    background-color: #66cd00;
+}
+#schedule_container .color33 {
+    background-color: #458b00;
+}
+#schedule_container .color34 {
+    background-color: #d2691e;
+}
+#schedule_container .color35 {
+    background-color: #ff7f24;
+}
+#schedule_container .color36 {
+    background-color: #8b4513;
+}
+#schedule_container .color37 {
+    background-color: #ff7256;
+}
+#schedule_container .color38 {
+    background-color: #ffb90f;
+}
+#schedule_container .color39 {
+    background-color: #cd950c;
+}
+#schedule_container .color40 {
+    background-color: #8fbc8f;
+}
+#schedule_container .color41 {
+    background-color: #8b0000;
+}
+#schedule_container .color42 {
+    background-color: #c1ffc1;
+}
+#schedule_container .color43 {
+    background-color: #b4eeb4;
+}
+#schedule_container .color44 {
+    background-color: #9bcd9b;
+}
+#schedule_container .color45 {
+    background-color: #698b69;
+}
+#schedule_container .color46 {
+    background-color: #433d8b;
+}
+#schedule_container .color47 {
+    background-color: #ee1289;
+}
+#schedule_container .color48 {
+    background-color: #cd1076;
+}
+#schedule_container .color49 {
+    background-color: #8b0a50;
+}
+#schedule_container .color50 {
+    background-color: #ccc;
+}
+#schedule_container .color51 {
+    background-color: #ddd;
+}
+#schedule_container .color52 {
+    background-color: #eee;
+}
+#schedule_container .color53 {
+    background-color: #333;
+}
+#schedule_container .color54 {
+    background-color: #444;
+}
+#schedule_container .color55 {
+    background-color: #555;
+}
+#schedule_container .color56 {
+    background-color: #666;
+}
+#schedule_container .color57 {
+    background-color: #777;
+}
+#schedule_container .color58 {
+    background-color: #888;
+}
+#schedule_container .color59 {
+    background-color: #999;
+}
+#schedule_container .color60 {
+    background-color: #aaa;
+}
+#boundary-table td, #boundary-table th {
+    padding: 0.1em 0.2em;
+}
+.date-container {
+    margin-bottom: 0.8em;
+    white-space: nowrap;
+}
+.date-container .close-btn {
+    border: medium none;
+    color: black;
+    cursor: pointer;
+    display: block;
+    float: right;
+    height: 25px;
+    text-decoration: none;
+    width: 25px;
+	font-size: 100%;
+}
+#agegroup {
+    background: #eee none repeat scroll 0 0;
+    border: 1px solid #7f7f7f;
+}
+table#report {
+    background: #eee none repeat scroll 0 0;
+    border: 1px solid #7f7f7f;
+    white-space: nowrap;
+}
+table#report td, table#report th {
+    padding: 0.2em 0.5em;
+}
+div.allocation-list {
+    border: 1px solid #555;
+    height: 10em;
+    overflow: auto;
+    padding: 0.4em;
+    width: 30em;
+}
+.showit {
+    visibility: visible;
+}
+.hideit {
+    visibility: hidden;
+}
+.datetime-picker .time-picker-inputs {
+    position: relative;
+    top: 6px;
+    vertical-align: top;
+}
+.yui-overlay {
+    background-color: white;
+    border: 3px inset #999;
+}
+.yui-overlay .hd {
+    padding: 5px;
+}
+.yui-overlay .bd {
+    padding: 5px;
+}
+.yui overlay .ft {
+    padding: 5px;
+}
+.yui-calendar td.calcell {
+    border: 0 none !important;
+}
+.yui-skin-sam .yui-dt TABLE TH {
+    border: medium none !important;
+}
+.yui-skin-sam .yui-dt TABLE TD {
+    border: medium none !important;
+}
+div.info:hover {
+    background-image: url("../images/info.png");
+    background-position: 100% 0;
+    background-repeat: no-repeat;
+}
+#overlay-info {
+    padding: 1em;
+    text-align: left;
+}
+#overlay-info h3 {
+    margin: 0 0 0.9em;
+}
+#overlay-info dt {
+    font-size: 90%;
+    font-style: italic;
+    font-weight: bolder;
+}
+#overlay-info dd {
+    padding-left: 2em;
+}
+#overlay-info .close {
+    float: right;
+}
+#overlay-info .actions {
+    margin-top: 1em;
+}
+
+/* AUTOCOMPLETE */
+.ui-widget.ui-autocomplete {
+    max-height: 224px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.ui-menu .ui-menu-item {
+    text-align: left;
+}
+
+/* GENERAL */
+#wrapper {max-width: 1000px;width: 90%;}
+dd {margin-left: 0;}
+#dates-container {width: 18em;}
+
+.ui-widget-overlay {background-image: none;}
+
+#field_customer_ssn {display: block;}
+#field_customer_organization_number {display: block;}
+
+.pure-g [class*="pure-u"] {padding: 0;font-family: verdana,​sans-serif;}
+.pure-g [class*="pure-u"] button,
+.pure-g [class*="pure-u"] input,
+.pure-g [class*="pure-u"] select,
+.pure-g [class*="pure-u"] textarea {max-width: 90%;}
+.pure-table {font-size: 12px;font-family: Arial,Helvetica,Verdana,sans-serif;}
+
+#frontend .pure-g dl.proplist-col main {width: 100%;}
+#frontend .pure-g dl.proplist-col.main {width: 100%;}
+#frontend .pure-g dl.proplist-col.images {margin: 0 auto;max-width: 300px;width: 90%;clear: none;float: none;}
+#frontend .pure-g dl.proplist-col.images.map {max-width: 500px;width: 100%;max-height: 300px;}
+.gmap-container {position: relative;padding-bottom: 60%;height: 0;overflow: hidden;}
+.gmap-container iframe {position: absolute;top: 0;left: 0;width: 100% !important;height: 100% !important;}
+#frontend .pure-g dl.proplist.images dd img {width: 100%;}
+
+ol#result .header {text-align: left;}
+
+select.error,
+select.valid {background-position: right 18px center !important;}
+
+.error,
+.valid {border-width: 1px;border-style: solid;box-shadow: 0 0 0 0 transparent inset;}
+
+.dataTables_wrapper {width: 98%;margin: 0 auto;}
+.dataTable thead,
+.dataTable th,
+.dataTable .th {background-color: transparent;}
+.dataTable {text-align: initial;}
+
+.scrollup {
+    position: fixed;
+    bottom: 50px;
+    right: 10px;
+    display: none;
+    text-indent: -9999px;
+	width: 50px;
+	height: 50px;
+	background-repeat: no-repeat;
+	background-image: url("../../phpgwapi/templates/pure/images/arrow34.png");
+}
+
