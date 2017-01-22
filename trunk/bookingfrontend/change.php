@@ -16,9 +16,9 @@
 		include_once('../header.inc.php');
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
-
-	$login = "bookingguest";
-	$passwd = "bkbooking";
+	$config = createobject('phpgwapi.config', 'bookingfrontend')->read();
+	$login = $config['anonymous_user'];
+	$passwd = $config['anonymous_passwd'];
 
 	$_POST['submitit'] = "";
 	$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
