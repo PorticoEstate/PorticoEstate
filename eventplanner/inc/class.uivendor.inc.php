@@ -41,6 +41,7 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
+			'get_list' => true
 		);
 
 		protected
