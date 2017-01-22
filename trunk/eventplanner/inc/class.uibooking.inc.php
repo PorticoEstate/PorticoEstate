@@ -38,6 +38,7 @@
 			'add' => true,
 			'index' => true,
 			'query' => true,
+			'get_list'=> true,
 			'view' => true,
 			'edit' => true,
 			'save' => true,
@@ -47,7 +48,8 @@
 		);
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$currentapp;
 
 		public function __construct()
 		{
@@ -57,6 +59,7 @@
 			$this->bo = createObject('eventplanner.bobooking');
 			$this->fields = eventplanner_booking::get_fields();
 			$this->permissions = eventplanner_booking::get_instance()->get_permission_array();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		public function index()
@@ -83,8 +86,9 @@
 							array(
 								'type' => 'autocomplete',
 								'name' => 'application',
-								'app' => 'eventplanner',
+								'app' => $this->currentapp,
 								'ui' => 'application',
+								'function' => 'get_list',
 								'label_attr' => 'title',
 								'text' => lang('application') . ':',
 								'requestGenerator' => 'requestWithApplicationFilter'
@@ -101,7 +105,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uibooking.index',
+						'menuaction' => "{$this->currentapp}.uibooking.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
@@ -126,7 +130,7 @@
 				'text' => lang('show'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'eventplanner.uibooking.view'
+					'menuaction' => "{$this->currentapp}.uibooking.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -137,7 +141,7 @@
 				'text' => lang('edit'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'eventplanner.uibooking.edit'
+					'menuaction' => "{$this->currentapp}.uibooking.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -229,7 +233,7 @@
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uivendor_report.query',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.query",
 					'filter_booking_id' => $id,
 					'filter_active'	=> 1,
 					'phpgw_return_as' => 'json'))),
@@ -260,7 +264,7 @@
 			);
 			$datatable_def[] = array(
 				'container' => 'datatable-container_2',
-//				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uicustomer_report.query',
+//				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicustomer_report.query",
 //					'filter_booking_id' => $id,
 //					'filter_active'	=> 1,
 //					'phpgw_return_as' => 'json'))),
@@ -301,14 +305,14 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uibooking.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uibooking.index',)),
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uibooking.save")),
+				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uibooking.index",)),
 				'booking' => $booking,
 				'application' => $application,
 				'application_type_list' => $application_type_list,
-				'new_customer_url' => self::link(array('menuaction' => 'eventplanner.uicustomer.add')),
-				'application_url' => self::link(array('menuaction' => 'eventplanner.uiapplication.edit', 'id' => $booking->application_id)),
-				'customer_url' => self::link(array('menuaction' => 'eventplanner.uicustomer.edit', 'id' => $booking->customer_id)),
+				'new_customer_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.add")),
+				'application_url' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.edit", 'id' => $booking->application_id)),
+				'customer_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.edit", 'id' => $booking->customer_id)),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab

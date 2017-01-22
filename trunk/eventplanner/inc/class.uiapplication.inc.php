@@ -38,6 +38,7 @@
 			'add' => true,
 			'index' => true,
 			'query' => true,
+			'get_list'=> true,
 			'view' => true,
 			'edit' => true,
 			'save' => true,
@@ -82,6 +83,7 @@
 				'name' => 'vendor',
 				'app' => 'eventplanner',
 				'ui' => 'vendor',
+				'function' => 'get_list',
 				'label_attr' => 'name',
 				'text' => lang('vendor') . ':',
 				'requestGenerator' => 'requestWithVendorFilter'

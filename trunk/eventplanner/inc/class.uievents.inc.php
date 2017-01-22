@@ -36,12 +36,13 @@
 		public $public_functions = array(
 			'index' => true,
 			'query' => true,
-			'edit' => true,
+			'edit' => true
 		);
 
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$currentapp;
 
 		public function __construct()
 		{
@@ -52,6 +53,8 @@
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_application::get_fields();
 			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
 		}
 
 		private function get_status_options( $selected = 0 )
@@ -76,8 +79,9 @@
 			$combos[] = array(
 				'type' => 'autocomplete',
 				'name' => 'vendor',
-				'app' => 'eventplanner',
+				'app' => $this->currentapp,
 				'ui' => 'vendor',
+				'function' => 'get_list',
 				'label_attr' => 'name',
 				'text' => lang('vendor') . ':',
 				'requestGenerator' => 'requestWithVendorFilter'
@@ -118,7 +122,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('application');
+			$function_msg = lang('events');
 
 			$data = array(
 				'datatable_name' => $function_msg,
@@ -130,7 +134,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uievents.index',
+						'menuaction' => "{$this->currentapp}.uievents.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
@@ -161,12 +165,12 @@
 				'text' => lang('show'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'eventplanner.uiapplication.view'
+					'menuaction' => "{$this->currentapp}.uievents.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'application.index.js');
+			self::add_javascript('eventplanner', 'portico', 'events.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -208,7 +212,7 @@
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uibooking.query',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query",
 					'filter_application_id' => $id,
 			//		'filter_active'	=> 1,
 					'phpgw_return_as' => 'json'))),
@@ -241,7 +245,7 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uievents.index',)),
+				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uievents.index",)),
 				'application' => $application,
 				'category_name' => $category[0]['name'],
 				'status_list' => array('options' => $this->get_status_options($application->status)),
