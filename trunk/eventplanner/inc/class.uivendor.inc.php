@@ -46,7 +46,8 @@
 
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$currentapp;
 
 		public function __construct()
 		{
@@ -56,6 +57,7 @@
 			$this->bo = createObject('eventplanner.bovendor');
 			$this->fields = eventplanner_vendor::get_fields();
 			$this->permissions = eventplanner_vendor::get_instance()->get_permission_array();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		private function get_category_options( $selected = 0 )
@@ -118,11 +120,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uivendor.index',
+						'menuaction' => "{$this->currentapp}.uivendor.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor.add')),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -141,9 +143,9 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uivendor.view'
+					'menuaction' => "{$this->currentapp}.uivendor.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -152,9 +154,9 @@
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uivendor.edit'
+					'menuaction' => "{$this->currentapp}.uivendor.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -224,8 +226,8 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor.index',)),
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.index",)),
 				'vendor' => $vendor,
 				'category_list' => array('options' => $this->get_category_options( $vendor->category_id )),
 				'mode' => $mode,
@@ -233,7 +235,7 @@
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('eventplanner', 'portico', 'vendor.edit.js');
+			self::add_javascript('eventplannerfrontend', 'portico', 'validate.js');
 			self::render_template_xsl(array('vendor', 'datatable_inline'), array($mode => $data));
 		}
 		

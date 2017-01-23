@@ -1,7 +1,7 @@
 var customer_id_selection;
 var lang;
-var oArgs = {menuaction: 'eventplanner.uicustomer.index', organization_number: true};
-var strURL = phpGWLink('index.php', oArgs, true);
+var oArgs = {menuaction: 'eventplannerfrontend.uicustomer.index', organization_number: true};
+var strURL = phpGWLink('eventplannerfrontend/', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'customer_name', 'customer_id', 'customer_container', 'name');
 
 $(window).on('load', function ()
@@ -30,11 +30,11 @@ function populateCustomerContact(customer_id)
 		return;
 	}
 	oArgs = {
-		menuaction: 'eventplanner.uicustomer.get',
+		menuaction: 'eventplannerfrontend.uicustomer.get',
 		id: customer_id
 	};
 
-	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 	var data = {};
 
 	JqueryPortico.execute_ajax(requestUrl,
@@ -80,11 +80,11 @@ add_report = function (type)
 	if (type === 'vendor')
 	{
 		oArgs = {
-			menuaction: 'eventplanner.uivendor_report.add',
+			menuaction: 'eventplannerfrontend.uivendor_report.add',
 			booking_id: booking_id
 		};
 
-		var requestUrl = phpGWLink('index.php', oArgs);
+		var requestUrl = phpGWLink('eventplannerfrontend/', oArgs);
 		win = window.open(requestUrl, '_blank');
 		win.focus();
 
@@ -92,11 +92,11 @@ add_report = function (type)
 	else if (type === 'customer')
 	{
 		oArgs = {
-			menuaction: 'eventplanner.uicustomer_report.add',
+			menuaction: 'eventplannerfrontend.uicustomer_report.add',
 			booking_id: booking_id
 		};
 
-		var requestUrl = phpGWLink('index.php', oArgs);
+		var requestUrl = phpGWLink('eventplannerfrontend/', oArgs);
 		win = window.open(requestUrl, '_blank');
 		win.focus();
 

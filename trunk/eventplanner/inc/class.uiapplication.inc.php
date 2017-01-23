@@ -177,7 +177,7 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link( array
 					(
 					'menuaction' => 'eventplanner.uiapplication.view'
 				)),
@@ -188,7 +188,7 @@
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => 'eventplanner.uiapplication.edit'
 				)),
@@ -385,8 +385,8 @@
 //			die();
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiapplication.index',)),
+				'form_action' => self::link(array('menuaction' => 'eventplanner.uiapplication.save')),
+				'cancel_url' => self::link(array('menuaction' => 'eventplanner.uiapplication.index',)),
 				'application' => $application,
 				'new_vendor_url' => self::link(array('menuaction' => 'eventplanner.uivendor.add')),
 				'list_case_officer' => array('options' => $case_officer_options),

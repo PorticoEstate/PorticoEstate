@@ -133,7 +133,7 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => 'eventplanner.uivendor_report.view'
 				)),
@@ -144,7 +144,7 @@
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => 'eventplanner.uivendor_report.edit'
 				)),
@@ -234,8 +234,8 @@
 			);
 
 			$data = array(
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor_report.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uivendor_report.index',)),
+				'form_action' => self::link(array('menuaction' => 'eventplanner.uivendor_report.save')),
+				'cancel_url' => self::link(array('menuaction' => 'eventplanner.uivendor_report.index',)),
 				'vendor_report' => $vendor_report,
 				'booking'		=> $booking,
 				'application'	=> $application,

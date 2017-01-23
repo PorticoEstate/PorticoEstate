@@ -52,16 +52,13 @@
 			$address_2,
 			$zip_code,
 			$city,
-			$customer_organization_number,
+			$organization_number,
 			$contact_name,
 			$contact_email,
 			$contact_phone,
 			$account_number,
 			$description,
 			$remark,
-	//		$customer_identifier_type,
-	//		$customer_ssn,
-
 			$comments,
 			$comment;
 
@@ -180,21 +177,7 @@
 					'query' => true,
 					'label' => 'contact phone',
 					),
-/*				'customer_identifier_type' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'customer_identifier_type',
-					),
-				'customer_ssn' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required' => false)),
-					'label' => 'customer_ssn'
-					),*/
-				'customer_organization_number' => array(
+				'organization_number' => array(
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => true,
@@ -247,9 +230,9 @@
 					'type' => 'comment'
 				);
 			}
-			if (!empty($entity->customer_organization_number))
+			if (!empty($entity->organization_number))
 			{
-				$entity->customer_organization_number = str_replace(' ', '', $entity->customer_organization_number);
+				$entity->organization_number = str_replace(' ', '', $entity->organization_number);
 			}
 
 			$entity->modified = time();

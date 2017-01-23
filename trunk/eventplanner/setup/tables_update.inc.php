@@ -59,3 +59,24 @@
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}
+
+	$test[] = '0.9.18.003';
+
+	function eventplanner_upgrade0_9_18_003()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('eventplanner_vendor', 'vendor_organization_number', 'organization_number');
+		$GLOBALS['phpgw_setup']->oProc->RenameColumn('eventplanner_customer', 'customer_organization_number', 'organization_number');
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_vendor', array(), 'vendor_identifier_type');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_vendor', array(), 'vendor_ssn');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_customer', array(), 'customer_identifier_type');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_customer', array(), 'customer_ssn');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.004';
+		}
+		return $GLOBALS['setup_info']['eventplanner']['currentver'];
+	}
