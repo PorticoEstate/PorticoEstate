@@ -147,7 +147,7 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => 'eventplanner.uiresource.view'
 				)),
@@ -158,7 +158,7 @@
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => 'eventplanner.uiresource.edit'
 				)),
@@ -279,8 +279,8 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiresource.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uiresource.index',)),
+				'form_action' => self::link(array('menuaction' => 'eventplanner.uiresource.save')),
+				'cancel_url' => self::link(array('menuaction' => 'eventplanner.uiresource.index',)),
 				'resource' => $resource,//->toArray(),
 				'list_executive_officer' => array('options' => $executive_officer_options),
 				'step'		=> $step,

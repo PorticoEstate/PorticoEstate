@@ -52,6 +52,10 @@
 			$this->bo = createObject('eventplanner.boapplication');
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_application::get_fields();
+			unset($this->fields['modified']);
+			unset($this->fields['created']);
+			unset($this->fields['contact_email']);
+			unset($this->fields['case_officer_name']);
 			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
@@ -163,7 +167,7 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => "{$this->currentapp}.uievents.edit"
 				)),
@@ -245,7 +249,7 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uievents.index",)),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uievents.index",)),
 				'application' => $application,
 				'category_name' => $category[0]['name'],
 				'status_list' => array('options' => $this->get_status_options($application->status)),

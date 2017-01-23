@@ -157,7 +157,7 @@
 					break;
 			}
 
-			$sql .= " {$where} id IN('". implode(',', $ids) . ')';
+			$sql .= " {$where} id IN(". implode(',', $ids) . ')';
 			$this->db->transaction_begin();
 			
 			$this->db->query($sql,__LINE__,__FILE__);

@@ -128,7 +128,7 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => "{$this->currentapp}.uibooking.view"
 				)),
@@ -139,7 +139,7 @@
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
 					'menuaction' => "{$this->currentapp}.uibooking.edit"
 				)),
@@ -259,7 +259,7 @@
 					'type' => 'custom',
 					'className' => 'add',
 					'custom_code' => "
-								add_report('vendor');"
+								add_report('customer');"
 				)
 			);
 			$datatable_def[] = array(
@@ -303,22 +303,35 @@
 				}
 			}
 
+			
+			
+			
+			$application_url = self::link(array('menuaction' => "{$this->currentapp}.uiapplication.edit", 'id' => $booking->application_id));
+			$lang_application = lang('application');
+			if($this->currentapp == 'eventplannerfrontend')
+			{
+				$application_url = self::link(array('menuaction' => "{$this->currentapp}.uievents.edit", 'id' => $booking->application_id));
+				$lang_application = lang('event');
+			}
+
+
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uibooking.save")),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => "{$this->currentapp}.uibooking.index",)),
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uibooking.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uibooking.index",)),
 				'booking' => $booking,
 				'application' => $application,
 				'application_type_list' => $application_type_list,
 				'new_customer_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.add")),
-				'application_url' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.edit", 'id' => $booking->application_id)),
+				'application_url' => $application_url,
+				'lang_application' => $lang_application,
 				'customer_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.edit", 'id' => $booking->customer_id)),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('eventplanner', 'portico', 'booking.edit.js');
+			self::add_javascript($this->currentapp, 'portico', 'booking.edit.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::render_template_xsl(array('booking', 'datatable_inline'), array($mode => $data));
 		}

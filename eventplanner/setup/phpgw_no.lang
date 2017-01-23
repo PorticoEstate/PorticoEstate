@@ -25,8 +25,8 @@ vendor	eventplanner	no	Utøver
 new	eventplanner	no	Ny
 show	eventplanner	no	vis
 history	eventplanner	no	Historikk
-date start	eventplanner	no	Første dato
-date end	eventplanner	no	Siste dato
+date start	eventplanner	no	Første arrangementsdato
+date end	eventplanner	no	Siste arrangementsdato
 contact name	eventplanner	no	Kontaktperson
 contact email	eventplanner	no	Epost kontaktperson
 contact phone	eventplanner	no	Tlf. kontaktperson
@@ -39,6 +39,8 @@ comment	eventplanner	no	Kommentar
 demands	eventplanner	no	Forutsetning
 payment	eventplanner	no	Betaling
 labour support	eventplanner	no	Opprigging/nedrigging
+rig up min before	eventplanner	no	Antatt oppriggingstid
+rig down min after	eventplanner	no	Antatt nedriggingstid
 technical support	eventplanner	no	Teknisk støtte
 charge per unit	eventplanner	no	Betaling pr forestilling/kurs/omvisning
 event timespan	eventplanner	no	Programvarighet (minutter)
@@ -63,7 +65,7 @@ size of stage	eventplanner	no	Scenestørrelse
 stage requirement	eventplanner	no	Krav til scene
 width	eventplanner	no	Bredde
 depth	eventplanner	no	Dybde
-wardrobe	eventplanner	no	Behov for utøvergarderobe
+wardrobe	eventplanner	no	Kryss av for behov for utøvergarderobe
 audience limit	eventplanner	no	Maksimum antall publikum
 raider	eventplanner	no	Andre raiderønsker – (valgfri)
 vendor report	eventplanner	no	Utøverrapport
@@ -98,3 +100,6 @@ can not delete booking with customer	eventplanner	no	Kan ikke slette booking som
 report	eventplanner	no	Rapport
 events	eventplanner	no	Arrangementer
 event	eventplanner	no	Arrangement
+please enter a valid organization number	eventplanner	no	Angi et gyldig organisasjonsnummer
+please enter a valid account number	eventplanner	no	Angi et gyldig kontonummer
+program data	eventplanner	no	Om programmet
