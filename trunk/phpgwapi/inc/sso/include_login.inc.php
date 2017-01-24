@@ -14,6 +14,11 @@
 	/* 
 	 * Generic include for login.php like pages
 	 */
+	if(!empty( $GLOBALS['phpgw_info']['flags']['session_name'] ))
+	{
+		$session_name = $GLOBALS['phpgw_info']['flags']['session_name'];
+	}
+
 	$GLOBALS['phpgw_info'] = array();
 
 	$GLOBALS['phpgw_info']['flags'] = array
@@ -23,6 +28,10 @@
 		'currentapp'             => 'login',
 		'noheader'               => true
 	);
+	if($session_name)
+	{
+		$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
+	}
 
 	$header = dirname(realpath(__FILE__)) . '/../../../header.inc.php';
 	if ( !file_exists($header) )
