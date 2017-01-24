@@ -141,25 +141,19 @@
 									<thead>
 										<tr>
 											<th>
-												<xsl:value-of select="php:function('lang', 'select')"/>
-											</th>
-											<th>
 												<xsl:value-of select="php:function('lang', 'program type')"/>
 											</th>
 										</tr>
 									</thead>
 									<tbody>
 										<xsl:for-each select="application_type_list">
-											<tr>
-												<td>
-													<xsl:if test="selected = 1">
-														<xsl:text>X</xsl:text>
-													</xsl:if>
-												</td>
-												<td>
-													<xsl:value-of disable-output-escaping="yes" select="name"/>
-												</td>
-											</tr>
+											<xsl:if test="selected = 1">
+												<tr>
+													<td>
+														<xsl:value-of disable-output-escaping="yes" select="name"/>
+													</td>
+												</tr>
+											</xsl:if>
 										</xsl:for-each>
 									</tbody>
 								</table>

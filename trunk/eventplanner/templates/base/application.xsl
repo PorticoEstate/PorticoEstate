@@ -113,7 +113,7 @@
 							</div>
 							<div class="pure-control-group">
 								<xsl:variable name="lang_vendor">
-									<xsl:value-of select="php:function('lang', 'vendor')"/>
+									<xsl:value-of select="php:function('lang', 'vendor name')"/>
 								</xsl:variable>
 								<label>
 									<xsl:value-of select="$lang_vendor"/>
@@ -141,19 +141,10 @@
 								<a href="{new_vendor_url}" target="_blank">
 									<xsl:value-of select="php:function('lang', 'new')"/>
 									<xsl:text> </xsl:text>
-									<xsl:value-of select="$lang_vendor"/>
+									<xsl:value-of select="php:function('lang', 'vendor')"/>
 								</a>
 								<div id="vendor_container"/>
 							</div>
-							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'other participants')"/>
-								</label>
-								<textarea cols="47" rows="7" name="other_participants">
-									<xsl:value-of select="application/other_participants"/>
-								</textarea>
-							</div>
-
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'contact name')"/>
@@ -202,6 +193,14 @@
 										<xsl:value-of select="php:function('lang', 'contact phone')"/>
 									</xsl:attribute>
 								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'other participants')"/>
+								</label>
+								<textarea cols="47" rows="7" name="other_participants">
+									<xsl:value-of select="application/other_participants"/>
+								</textarea>
 							</div>
 						</fieldset>
 						<fieldset>

@@ -45,7 +45,6 @@
 	// Make sure we're always logged in
 	if (!phpgw::get_var(session_name()) || !$GLOBALS['phpgw']->session->verify())
 	{
-//		$login				 = "bookingguest";
 		$c = createobject('phpgwapi.config', 'eventplannerfrontend');
 		$c->read();
 		$config = $c->config_data;
@@ -68,7 +67,9 @@ HTML;
 			$GLOBALS['phpgw']->common->phpgw_exit(True);
 		}
 	}
+
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplannerfrontend';
+	$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
 
 /////////////////////////////////////////////////////////////////////////////
 // BEGIN Stuff copied from functions.inc.php

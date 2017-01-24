@@ -22,12 +22,14 @@ pending	eventplanner	no	Under behandling
 rejected	eventplanner	no	Avvist
 approved	eventplanner	no	Godkjent
 vendor	eventplanner	no	Utøver
+vendor name	eventplanner	no	Navn på utøver/utøvergruppe
+vendor description	eventplanner	no	Beskrivelse av utøver
 new	eventplanner	no	Ny
 show	eventplanner	no	vis
 history	eventplanner	no	Historikk
 date start	eventplanner	no	Første arrangementsdato
 date end	eventplanner	no	Siste arrangementsdato
-contact name	eventplanner	no	Kontaktperson
+contact name	eventplanner	no	Navn kontaktperson
 contact email	eventplanner	no	Epost kontaktperson
 contact phone	eventplanner	no	Tlf. kontaktperson
 case officer	eventplanner	no	Saksbehandler

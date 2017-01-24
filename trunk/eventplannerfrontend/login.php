@@ -1,6 +1,13 @@
 <?php
-	$phpgw_info = array();
 
+
+	$GLOBALS['phpgw_info']['flags']['session_name'] = 'eventplannerfrontendsession';
+	require_once '../phpgwapi/inc/class.login.inc.php';
+
+	$phpgwlogin = new phpgwapi_login;
+	$phpgwlogin->login('eventplannerfrontend');
+
+/*
 	$GLOBALS['phpgw_info']['flags'] = array
 		(
 		'disable_template_class' => true,
@@ -17,7 +24,6 @@
 		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
 	}
 
-//	$login = "bookingguest";
 	$c = createobject('phpgwapi.config', 'eventplannerfrontend');
 	$c->read();
 	$config = $c->config_data;
@@ -38,3 +44,4 @@
 	}
 	$GLOBALS['phpgw']->redirect_link('/eventplannerfrontend/index.php', $after);
 	exit;
+*/

@@ -26,7 +26,7 @@
 
 	<div>
 		<script type="text/javascript">
-			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'please enter a valid organization number', 'please enter a valid account number')"/>;
 		</script>
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
@@ -140,7 +140,7 @@
 							</label>
 							<input type="text" id="organization_number" name="organization_number" value="{vendor/organization_number}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>organization_number</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="php:function('lang', 'organization number')"/>
@@ -192,7 +192,7 @@
 							</label>
 							<input type="text" name="account_number" value="{vendor/account_number}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>account_number</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="php:function('lang', 'account number')"/>
@@ -201,7 +201,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'description')"/>
+								<xsl:value-of select="php:function('lang', 'vendor description')"/>
 							</label>
 							<textarea cols="47" rows="7" name="description">
 								<xsl:value-of select="vendor/description"/>

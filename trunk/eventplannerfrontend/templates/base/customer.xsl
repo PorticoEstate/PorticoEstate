@@ -142,6 +142,9 @@
 								<xsl:attribute name="data-validation">
 									<xsl:text>organization_number</xsl:text>
 								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="php:function('lang', 'organization number')"/>
 								</xsl:attribute>
@@ -201,6 +204,9 @@
 							<input type="text" id="account_number" name="account_number" value="{customer/account_number}">
 								<xsl:attribute name="data-validation">
 									<xsl:text>account_number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="php:function('lang', 'account number')"/>

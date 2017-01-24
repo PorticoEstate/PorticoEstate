@@ -197,6 +197,9 @@ JS;
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
 	}
+//	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+//	_debug_array($user);
+
 	$bouser = CreateObject('bookingfrontend.bouser');
     $org = CreateObject('bookingfrontend.uiorganization');
     $orgid = $org->get_orgid($bouser->orgnr);
