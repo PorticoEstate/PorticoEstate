@@ -40,11 +40,9 @@ $(document).ready(function ()
 		name: 'organization_number',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
-			//check_for_budget is defined in xsl-template
 			var v = false;
-			var organization_number = $('#organization_number').val();
 
-			organization_number = organization_number.replace(/\s/g, '');
+			var organization_number = value.replace(/\s/g, '');
 			if (!organization_number.match(/(^\d{9}$)/))
 			{
 				return false;
@@ -53,7 +51,7 @@ $(document).ready(function ()
 			v = parseInt(organization_number.charAt(organization_number.length - 1), 10) === mod11OfNumberWithControlDigit(organization_number)
 			return v;
 		},
-		errorMessage: lang['please enter a valid organization number'],
+		errorMessage: lang['please enter a valid organization number'] || 'please enter a valid organization number',
 		errorMessageKey: ''
 	});
 
@@ -61,11 +59,9 @@ $(document).ready(function ()
 		name: 'account_number',
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
-			//check_for_budget is defined in xsl-template
 			var v = false;
-			var account_number = $('#account_number').val();
 
-			account_number = account_number.toString().replace(/\./g, '');
+			var account_number = value.toString().replace(/\./g, '');
 			if (account_number.length !== 11)
 			{
 				return false;
@@ -74,7 +70,7 @@ $(document).ready(function ()
 
 			return v;
 		},
-		errorMessage: lang['please enter a valid account number'],
+		errorMessage: lang['please enter a valid account number'] || 'please enter a valid account number',
 		errorMessageKey: ''
 	});
 });

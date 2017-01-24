@@ -1,117 +1,71 @@
 <?php
-	$phpgw_info = array();
+	/**
+	* phpGroupWare
+	*
+	* phpgroupware base
+	* @author Joseph Engo <jengo@phpgroupware.org>
+	* @copyright Copyright (C) 2000-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	* @package phpgroupware
+	* @version $Id: logout.php 6669 2010-12-11 22:27:07Z sigurdne $
+	*/
 
-	$GLOBALS['phpgw_info']['flags'] = array
-		(
-		'disable_template_class' => true,
-		'currentapp' => 'logout',
-		'noheader' => true,
-		'nofooter' => true,
-		'nonavbar' => true,
+	$GLOBALS['phpgw_info']        = array();
+	
+	$GLOBALS['phpgw_info']['flags'] = array(
+		'disable_template_class' => True,
+		'currentapp'             => 'logout',
+		'noheader'               => True,
+		'nofooter'               => True,
+		'nonavbar'               => True
 	);
-	$GLOBALS['phpgw_info']['flags']['session_name'] = 'eventplannerfrontendsession';
 
-	if (file_exists('../header.inc.php'))
-	{
-		include_once('../header.inc.php');
-		$GLOBALS['phpgw']->sessions = createObject('phpgwapi.sessions');
-	}
+	/**
+	* Include phpgroupware header
+	*/
+	include_once('../header.inc.php');
 
-	$sessionid = phpgw::get_var('eventplannerfrontendsession');
+	$session_name = 'eventplannerfrontendsession';
+	$sessionid = phpgw::get_var($session_name);
 
 	$verified = $GLOBALS['phpgw']->session->verify();
-
-	$eventplannerfrontend_host = '';
-	$external_logout = '';
 	if ($verified)
 	{
-		$config = CreateObject('phpgwapi.config', 'eventplannerfrontend');
-		$config->read();
-
-		$eventplannerfrontend_host = isset($config->config_data['eventplannerfrontend_host']) && $config->config_data['eventplannerfrontend_host'] ? $config->config_data['eventplannerfrontend_host'] : '';
-		$eventplannerfrontend_host = rtrim($eventplannerfrontend_host, '/');
-		$external_logout = isset($config->config_data['external_logout']) && $config->config_data['external_logout'] ? $config->config_data['external_logout'] : '';
-//		$external_logout = "https://login-vip.bergen.kommune.no/SSO/logout?p_done_url=";//https://www.bergen.kommune.no"
-
-		$frontend_user = CreateObject('eventplannerfrontend.bouser');
-		$frontend_user->log_off();
-		/*
-		  // testing external logout
-
-
-		  $arguments = array('p_done_url' => 'https://www.bergen.kommune.no');
-		  $query = http_build_query($arguments);
-		  $auth_url = $_integration_config['auth_url'];
-		  $request = "https://login-vip.bergen.kommune.no/SSO/logout?{$query}";
-
-		  $aContext = array
-		  (
-		  'https' => array
-		  (
-		  'request_fulluri' => true,
-		  ),
-		  );
-
-		  if(isset($GLOBALS['phpgw_info']['server']['httpproxy_server']))
-		  {
-		  $aContext['http']['proxy'] = "{$GLOBALS['phpgw_info']['server']['httpproxy_server']}:{$GLOBALS['phpgw_info']['server']['httpproxy_port']}";
-		  }
-
-		  $cxContext = stream_context_create($aContext);
-		  $response = file_get_contents($request, False, $cxContext);
-		 */
-
-		execMethod('phpgwapi.menu.clear');
+		if ( is_dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}") && !empty($session_id) )
+		{
+			$dh = dir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
+			while ( ($file = $dh->read()) !== false )
+			{
+				if ( $file == '.' || $file == '..' )
+				{
+					continue;
+				}
+				unlink("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}/{$file}");
+			}
+			rmdir("{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$sessionid}");
+			$dh->close();
+		}
+//		execMethod('phpgwapi.menu.clear'); // moved to hook for login
 		$GLOBALS['phpgw']->hooks->process('logout');
 		$GLOBALS['phpgw']->session->destroy($sessionid);
 	}
-
-	$forward = phpgw::get_var('phpgw_forward', 'int');
-
-	if ($forward)
-	{
-		$extra_vars['phpgw_forward'] = $forward;
-		foreach ($_GET as $name => $value)
-		{
-			if (preg_match('/phpgw_/', $name))
-			{
-				$extra_vars[$name] = phpgw::clean_value($value);
-			}
-		}
-	}
-
-	$redirect = phpgw::get_var('redirect_menuaction', 'string');
-
-	if ($redirect)
-	{
-		$matches = array();
-		$extra_vars['menuaction'] = $redirect;
-		foreach ($_GET as $name => $value)
-		{
-			if (preg_match('/^redirect_([\w\_\-]+)/', $name, $matches) && $matches[1] != 'menuaction')
-			{
-				$extra_vars[$matches[1]] = phpgw::clean_value($value);
-			}
-		}
-	}
-
-	if (!isset($extra_vars['menuaction']))
-	{
-		$extra_vars['menuaction'] = 'eventplannerfrontend.uievents.index';
-	}
-
-	if (!$external_logout)
-	{
-		$GLOBALS['phpgw']->redirect_link('/eventplannerfrontend/', $extra_vars);
-	}
 	else
 	{
-		$result_redirect = '';
-		if (substr($external_logout, -1) == '=')
+		if(is_object($GLOBALS['phpgw']->log))
 		{
-			$result_redirect = $GLOBALS['phpgw']->link('/eventplannerfrontend/', $extra_vars, true);
+			$GLOBALS['phpgw']->log->write(array(
+				'text' => 'W-VerifySession, could not verify session during logout',
+				'line' => __LINE__,
+				'file' => __FILE__
+			));
 		}
-		$external_logout_url = "{$external_logout}{$eventplannerfrontend_host}{$result_redirect}";
-		Header("Location: {$external_logout_url}");
 	}
-	exit;
+
+	if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
+		&& $GLOBALS['phpgw_info']['server']['usecookies'] )
+	{
+		$GLOBALS['phpgw']->session->phpgw_setcookie($session_name);
+		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
+	}
+
+	$GLOBALS['phpgw']->redirect_link('/eventplannerfrontend/', array('cd' => 1, 'logout' => true));

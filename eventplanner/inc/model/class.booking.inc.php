@@ -268,7 +268,16 @@
 
 			$bookings =  eventplanner_sobooking::get_instance()->read($params);
 
-			if((int)$bookings['total_records'] >= (int)$application->num_granted_events)
+			if($entity->customer_id)
+			{
+				$test_total_tecords = (int)$bookings['total_records'];
+			}
+			else
+			{
+				$test_total_tecords = (int)$bookings['total_records'] + 1;
+			}
+
+			if($test_total_tecords > (int)$application->num_granted_events)
 			{
 				$errors['num_granted_events'] = lang('maximum of granted events are reached');
 			}
