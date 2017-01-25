@@ -268,11 +268,11 @@
 
 			$bookings =  eventplanner_sobooking::get_instance()->read($params);
 
-			if($entity->customer_id)
+			if($entity->customer_id) // update
 			{
 				$test_total_tecords = (int)$bookings['total_records'];
 			}
-			else
+			else // new entry
 			{
 				$test_total_tecords = (int)$bookings['total_records'] + 1;
 			}
