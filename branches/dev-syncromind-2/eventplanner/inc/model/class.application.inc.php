@@ -48,6 +48,7 @@
 			$vendor_id,
 			$vendor_name,
 			$status,
+			$num_granted_events,
 			$created,
 			$modified,
 			$secret,
@@ -142,6 +143,11 @@
 				'status' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'status',
+					'history' => true
+					),
+				'num_granted_events' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label' => 'number of granted events',
 					'history' => true
 					),
 				'created' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD,
@@ -293,7 +299,7 @@
 					),
 				'timespan' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
-					'label'	=> 'timespan',
+					'label'	=> 'event timespan',
 					'required' => true,
 					'history' => true,
 					),

@@ -504,7 +504,7 @@ function update_form_values(line_id, voucher_id_orig)
 					$.each(obj, function (i)
 					{
 						var selected = '';
-						if (obj[i].id == voucher[0].tax_code)
+						if (obj[i].id == voucher[0].tax_code || obj[i].selected)
 						{
 							selected = ' selected';
 						}

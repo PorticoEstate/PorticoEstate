@@ -52,16 +52,13 @@
 			$address_2,
 			$zip_code,
 			$city,
-			$vendor_organization_number,
+			$organization_number,
 			$contact_name,
 			$contact_email,
 			$contact_phone,
 			$account_number,
 			$description,
 			$remark,
-	//		$vendor_identifier_type,
-	//		$vendor_ssn,
-
 			$comments,
 			$comment;
 
@@ -180,27 +177,13 @@
 					'query' => true,
 					'label' => 'contact phone',
 					),
-/*				'vendor_identifier_type' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'vendor_identifier_type',
-					),
-				'vendor_ssn' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required' => false)),
-					'label' => 'vendor_ssn'
-					),*/
-				'vendor_organization_number' => array(
+				'organization_number' => array(
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => true,
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'organization_number'
+					'label' => 'organization number'
 					),
 				'comments' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,

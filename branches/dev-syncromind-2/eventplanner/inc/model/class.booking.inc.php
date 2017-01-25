@@ -259,6 +259,39 @@
 
 		}
 
+		protected function doValidate( $entity, &$errors )
+		{
+			$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
+			$params = array();
+			$params['filters']['active'] = 1;
+			$params['filters']['application_id'] = $entity->application_id;
+
+			$bookings =  eventplanner_sobooking::get_instance()->read($params);
+
+			if($entity->customer_id)
+			{
+				$test_total_tecords = (int)$bookings['total_records'];
+			}
+			else
+			{
+				$test_total_tecords = (int)$bookings['total_records'] + 1;
+			}
+
+			if($test_total_tecords > (int)$application->num_granted_events)
+			{
+				$errors['num_granted_events'] = lang('maximum of granted events are reached');
+			}
+
+			$date_start = date('Ymd',$application->date_start);
+			$date_end = date('Ymd',$application->date_end);
+			$from_ = date('Ymd',$entity->from_);
+
+			if($from_ < $date_start || $from_ > $date_end)
+			{
+				$errors['from_'] = lang('date is outside the scope');
+			}
+		}
+
 		protected function generate_secret( $length = 10 )
 		{
 			return substr(base64_encode(rand(1000000000, 9999999999)), 0, $length);

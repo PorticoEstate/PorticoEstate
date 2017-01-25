@@ -22,7 +22,9 @@
 
 		public function index()
 		{
-			$config = CreateObject('phpgwapi.config', 'booking');
+			$appname = phpgw::get_var('appname');
+			$appname = $appname ? $appname : 'booking';
+			$config = CreateObject('phpgwapi.config', $appname);
 			$config->read();
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')

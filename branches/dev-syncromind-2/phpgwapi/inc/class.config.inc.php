@@ -50,6 +50,12 @@
 		public $config_data = array();
 
 		/**
+		 *
+		 * @var bool  $global_lock to be used in nested transactions
+		 */
+		protected $global_lock = false;
+
+		/**
 		 * Constructor
 		 *
 		 * @param string $module the module to store the data for
@@ -115,7 +121,15 @@
 
 			if ( is_array($config_data) && count($config_data) )
 			{
-				$this->db->transaction_begin();
+				if ( $this->db->get_transaction() )
+				{
+					$this->global_lock = true;
+				}
+				else
+				{
+					$this->db->transaction_begin();
+				}
+
 				$this->delete_repository();
 				foreach ( $config_data as $name => $value )
 				{
@@ -129,7 +143,11 @@
 						. "VALUES ('{$this->module}', '{$name}', '{$value}')";
 					$this->db->query($query, __LINE__, __FILE__);
 				}
-				$this->db->transaction_commit();
+
+				if ( !$this->global_lock )
+				{
+					$this->db->transaction_commit();
+				}
 			}
 		}
 

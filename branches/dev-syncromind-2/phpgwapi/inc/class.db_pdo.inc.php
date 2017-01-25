@@ -831,8 +831,11 @@
 				{
 					if ($strip_slashes || ($this->auto_stripslashes && ! $strip_slashes))
 					{
-						return htmlspecialchars_decode(stripslashes(str_replace(array('&amp;','&#40;', '&#41;', '&#61;','&#8722;&#8722;','&#59;'), array('&','(', ')', '=', '--',';'), $this->Record[$name])),ENT_QUOTES);
-//						return htmlspecialchars_decode(stripslashes($this->Record[$name]));
+				//		$str =  preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match){
+						$str =  preg_replace_callback('/u([0-9a-fA-F]{4})/', function ($match){
+								return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
+						}, $this->Record[$name]);
+						return  htmlspecialchars_decode(stripslashes(str_replace(array('&amp;','&#40;', '&#41;', '&#61;','&#8722;&#8722;','&#59;'), array('&','(', ')', '=', '--',';'), $str)),ENT_QUOTES);
 					}
 					else
 					{

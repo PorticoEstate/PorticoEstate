@@ -60,18 +60,14 @@
 			return new eventplanner_vendor_report();
 		}
 
-		public function set_custom_fields()
+		public static function get_custom_fields()
 		{
-			$this->custom_fields = $GLOBALS['phpgw']->custom_fields->find('eventplanner', self::acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
-		}
-
-		public function get_custom_fields()
-		{
-			if (!$this->custom_fields)
+			static $custom_fields = array();
+			if(!$custom_fields)
 			{
-				$this->set_custom_fields();
+				$custom_fields = $GLOBALS['phpgw']->custom_fields->find('eventplanner', self::acl_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
-			return $this->custom_fields;
+			return $custom_fields;
 		}
 
 		public function get_organized_fields()
@@ -153,8 +149,6 @@
 			if (!$entity->get_id())
 			{
 				$entity->created = time();
-				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
-				$entity->status = eventplanner_vendor_report::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
 			}
 		}

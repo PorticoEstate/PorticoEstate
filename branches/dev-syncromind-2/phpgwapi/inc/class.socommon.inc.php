@@ -582,8 +582,16 @@
 					}
 				}
 			}
-//			$custom_fields = $object::get_custom_fields();
-			$values_attribute = createObject('phpgwapi.custom_fields')->convert_attribute_save($object->values_attribute);
+
+			$class_info = explode('_', get_class($object), 2);
+			$appname = $class_info[0];
+
+			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $object::acl_location);
+			$values_attribute = array();
+			if($attrib_table)
+			{
+				$values_attribute = createObject('phpgwapi.custom_fields')->convert_attribute_save($object->values_attribute);
+			}
 
 			if ( $values_attribute)
 			{
@@ -654,7 +662,16 @@
 					}
 				}
 			}
-			$values_attribute = createObject('phpgwapi.custom_fields')->convert_attribute_save($object->values_attribute);
+
+			$class_info = explode('_', get_class($object), 2);
+			$appname = $class_info[0];
+
+			$attrib_table = $GLOBALS['phpgw']->locations->get_attrib_table($appname, $object::acl_location);
+			$values_attribute = array();
+			if($attrib_table)
+			{
+				$values_attribute = createObject('phpgwapi.custom_fields')->convert_attribute_save($object->values_attribute);
+			}
 
 			if ( $values_attribute)
 			{

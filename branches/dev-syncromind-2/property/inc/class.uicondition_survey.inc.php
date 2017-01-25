@@ -52,6 +52,7 @@
 			'get_summation' => true,
 			'view_file' => true,
 			'import' => true,
+			'export'	=> true,
 			'download' => true,
 			'summation' => true,
 			'handle_multi_upload_file' => true,
@@ -302,6 +303,17 @@
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'property.uicondition_survey.import'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'export_survey',
+				'text' => lang('export'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uicondition_survey.export'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -913,6 +925,260 @@
 			}
 		}
 
+
+		public function export()
+		{
+			$id = phpgw::get_var('id', 'int', 'REQUEST');
+			$data = $this->bo->get_export_data($id);
+
+			$filename = 'tilstandsanalyse';
+
+			$names = array(
+				'request_id',
+				'building_part',
+				'building_part_text',
+				'title',
+				'descr',
+				'Bilde nr',
+				'Hjemmel',
+				'condition_degree',
+				'condition_type_name',
+				'consequence',
+				'probability',
+				'risk',
+				'score',
+				'recommended_year',
+				'amount_total',
+				'percentage_investment',
+				'percentage_grants',
+				'amount_operation',
+				'amount_investment',
+				'amount_potential_grants'
+			);
+
+			$descr = array(
+				'ID',
+				'Bygningsdel',
+				'Bygningsdel tekst',
+				'Tilstandbeskrivelse',
+				'Tiltak',
+				'Bildenummer fotoserie',
+				'Hjemmel/ krav',
+				'Tilstandsgrad 0-3',
+				'Konsekvenstype',
+				'Konsekvensgrad 0-3',
+				'Sannsynlighet 0-3',
+				'Risiko=KGXS',
+				'Score=TGxKTxR',
+				'Anbefales utført innen',
+				'Kalkyle netto TOTALT (V+U)',
+				'Andel U',
+				'Andel off. tilskudd av U',
+				'Andel Vedlikeholds-kostnad (V)',
+				'Andel Utviklings- kostnad (U)',
+				'Andel off. tilskudd potensiale (av U)'
+			);
+			$this->excel_out($data, $names, $descr, $input_type = array(), $filename);
+		}
+
+		function excel_out( $data, $names, $descr, $input_type = array(), $filename = '' )
+		{
+			$condition_survey = $data['condition_survey'];
+//			_debug_array($condition_survey);die();
+
+			phpgw::import_class('phpgwapi.phpexcel');
+			if ($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename = $filename_arr[0] . '.xlsx';
+			}
+			else
+			{
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']) . '.xlsx';
+			}
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+			$cacheSettings = array('memoryCacheSize' => '32MB');
+			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+
+			$objPHPExcel = new PHPExcel();
+
+
+			$objPHPExcel->getProperties()->setCreator($GLOBALS['phpgw_info']['user']['fullname'])
+				->setLastModifiedBy($GLOBALS['phpgw_info']['user']['fullname'])
+				->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}")
+				->setSubject("Office 2007 XLSX Document")
+				->setDescription("document for Office 2007 XLSX, generated using PHP classes.")
+				->setKeywords("office 2007 openxml php")
+				->setCategory("downloaded file");
+
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$objPHPExcel->setActiveSheetIndex(0);
+//			$sheet = $objPHPExcel->getActiveSheet();
+// 			$sheet->getRowDimension('1');
+
+			$objPHPExcel->getActiveSheet()->getStyle('A1:T14')->getFill()->applyFromArray(array(
+				'type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'startcolor' => array(
+					'rgb' => '99cc33'
+				)
+			));
+			$objPHPExcel->getActiveSheet()->getStyle('A15:T15')->getFill()->applyFromArray(array(
+				'type' => PHPExcel_Style_Fill::FILL_SOLID,
+				'startcolor' => array(
+					'rgb' => 'ffff66'
+				)
+			));
+
+			$i = 0;
+			$row = 1;
+			//heading
+			$lang = array
+				(
+				'id' => 'Tilstandsanalyse #',
+				'title' => 'Navn',
+				'descr' => 'Beskrivelse',
+				'location_code' => 'Objekt',
+				//			'status_id' => 'Status',
+				//			'cat_id' => 'Kategori',
+				'vendor_id' => 'Leverandør ID',
+				'vendor_name' => 'Utført av',
+				//			'coordinator_id' => 'Koordinator',
+				'report_date' => 'Analyse dato',
+				'multiplier' => 'Multiplikator',
+			);
+			PHPExcel_Shared_Font::setAutoSizeMethod(PHPExcel_Shared_Font::AUTOSIZE_METHOD_EXACT);
+//			_debug_array($condition_survey);die();
+			foreach ($lang as $key => $translation)
+			{
+				if (isset($condition_survey[$key]))
+				{
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow(1, $row, $translation);
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow(2, $row, $condition_survey[$key]);
+					$objPHPExcel->getActiveSheet()->getStyle("B{$row}")->getAlignment()->applyFromArray(
+						array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+							'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+							//	'justify'   => PHPExcel_Style_Alignment::VERTICAL_JUSTIFY,
+							'rotation' => 0,
+							'wrap' => false
+						)
+					);
+					$objPHPExcel->getActiveSheet()->getStyle("C{$row}")->getAlignment()->applyFromArray(
+						array(
+							'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+							'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+							//	'justify'   => PHPExcel_Style_Alignment::VERTICAL_JUSTIFY,
+							'rotation' => 0,
+							'wrap' => false
+						)
+					);
+					$row++;
+				}
+			}
+			foreach (range('B', 'C', 'D') as $columnID)
+			{
+				$objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			$count_uicols_name = count($names);
+			$_first_row = 15;
+
+			$text_format = array();
+			//overskrifter
+			$m = 0;
+			$col = 'A';
+			$objPHPExcel->getActiveSheet()->getRowDimension($_first_row)->setRowHeight(210);
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+				{
+					if (preg_match('/^loc/i', $names[$k]))
+					{
+						$text_format[$m] = true;
+					}
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($m, $_first_row, $descr[$k]);
+					if ($m > 0)
+					{
+						$objPHPExcel->getActiveSheet()->getStyle("{$col}{$_first_row}")->getAlignment()->setTextRotation(90);
+					}
+					$m++;
+					$col++;
+					/*
+					  $objPHPExcel->getActiveSheet()->getStyle("D{$_first_row}")->getAlignment()->applyFromArray(
+					  array(
+					  'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+					  'vertical'   => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+					  //	'justify'   => PHPExcel_Style_Alignment::VERTICAL_JUSTIFY,
+					  'rotation'   => 90,
+					  'wrap'       => false
+					  )
+					  );
+					 */
+				}
+			}
+			//data
+			$j = 0;
+			if (isset($data['values']) && is_array($data['values']))
+			{
+				foreach ($data['values'] as $entry)
+				{
+					$m = 0;
+					foreach ($names as $name)
+					{
+						$content[$j][$m] = str_replace("\r\n", " ", $entry[$name]);
+						$m++;
+					}
+					$j++;
+				}
+
+				$line = $_first_row;
+
+				foreach ($content as $row)
+				{
+					$col = 'A';
+
+					$line++;
+					$rows = count($row);
+					for ($i = 0; $i < $rows; $i++)
+					{
+						if (isset($text_format[$i]))
+						{
+							$objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicitByColumnAndRow($i, $line, $row[$i], PHPExcel_Cell_DataType::TYPE_STRING);
+						}
+						else
+						{
+							$objPHPExcel->setActiveSheetIndex(0)->setCellValueByColumnAndRow($i, $line, $row[$i]);
+						}
+						$objPHPExcel->getActiveSheet()->getStyle("{$col}{$line}")->getAlignment()->applyFromArray(
+							array(
+								'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+								'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
+								'rotation' => 0,
+								'wrap' => true
+							)
+						);
+						$objPHPExcel->getActiveSheet()->getRowDimension($line)->setRowHeight(100);
+
+
+						$col++;
+					}
+				}
+			}
+
+			// Save Excel 2007 file
+//			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+			$objWriter->setUseDiskCaching(true, $GLOBALS['phpgw_info']['server']['temp_dir']);
+			$objWriter->setOffice2003Compatibility(true);
+//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
+//			die();
+
+			$objWriter->save('php://output');
+		}
 		public function import()
 		{
 			$id = phpgw::get_var('id', 'int', 'REQUEST');

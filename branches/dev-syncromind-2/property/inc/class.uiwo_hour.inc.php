@@ -59,6 +59,7 @@
 			'edit_deviation' => true,
 			'pdf_order' => true,
 			'import_calculation' => true,
+	//		'send_all_orders'	=> true
 		);
 
 		function __construct()
@@ -1332,7 +1333,7 @@
 				}
 				else
 				{
-					if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb']))
+					if(!$this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']))
 					{
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiwo_hour.view',
 							'workorder_id' => $workorder_id, 'from' => phpgw::get_var('from')));
@@ -3341,12 +3342,85 @@ HTML;
 			return $result;
 		}
 
+
+		function send_all_orders( )
+		{
+			if(!$this->acl->check('.admin', PHPGW_ACL_ADD, 'property'))
+			{
+				phpgw::no_access();
+			}
+
+			$start_from = 45000000;
+			$sql = "SELECT id, status FROM fm_workorder WHERE id >= $start_from";
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query($sql, __LINE__, __FILE__);
+			$ids = array();
+
+			while ($db->next_record())
+			{
+				$status = $db->f('status');
+				if($status == 'Avbrutt' || $status == 'Dublisert')
+				{
+					phpgwapi_cache::message_set("Hopper over [{$status}]: " . $db->f('id') , 'error');
+				}
+				else
+				{
+					$ids[] = $db->f('id');
+				}
+			}
+
+			foreach ($ids as $workorder_id)
+			{
+				try
+				{
+					$this->send_order( $workorder_id );
+				}
+				catch (Exception $e)
+				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+				}
+			}
+		}
+
 		function send_order( $workorder_id )
 		{
 			$workorder = $this->boworkorder->read_single($workorder_id);
 			$show_cost = false;
 			$email_receipt = true;
-			$pdfcode = $this->pdf_order($workorder_id, $show_cost);
+
+			try
+			{
+				$pdfcode = $this->pdf_order($workorder_id, $show_cost);
+			}
+			catch (Exception $e)
+			{
+				phpgwapi_cache::message_set($e->getMessage(), 'error');
+			}
+
+			$criteria = array
+			(
+				'appname' => 'property',
+				'location' => '.project.workorder.transfer',
+				'allrows' => true
+			);
+
+			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
+				{
+					require $file;
+				}
+			}
+
 			$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
 			$attachments = array();
 
