@@ -412,12 +412,16 @@
 				{
 					if ( is_numeric($value) )
 					{
-						$insert_value[]	= "'$value'";
+						$insert_value[]	= "'{$value}'";
 					}
 					else
 					{
 						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
+				}
+				else if($value && $this->isJson($value))
+				{
+					$insert_value[]	= "'{$value}'";
 				}
 				else
 				{
@@ -425,6 +429,12 @@
 				}
 			}
 			return implode(",", $insert_value);
+		}
+
+		final public function isJson($string)
+		{
+			json_decode($string);
+			return (json_last_error() == JSON_ERROR_NONE);
 		}
 
 		/**
@@ -460,6 +470,10 @@
 					{
 						$value_entry[]= "{$field}='{$value}'";
 					}
+				}
+				else if($value && $this->isJson($value))
+				{
+					$value_entry[]= "{$field}='{$value}'";
 				}
 				else
 				{

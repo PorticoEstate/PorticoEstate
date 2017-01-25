@@ -11,6 +11,12 @@
 	vertical-align: bottom;
 	margin-left: 10px;
 }
+.fileupload-count {
+	display: inline-block;
+	margin-bottom: 10px;
+	vertical-align: bottom;
+	margin-left: 10px;
+}
 .error {
   color: red;
 }

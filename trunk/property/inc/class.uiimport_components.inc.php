@@ -71,9 +71,6 @@
 
 		public function download()
 		{
-			/*$config = createObject('phpgwapi.config', 'component_import');
-			$values = $config->read_repository();*/
-			//$components = $this->config_repository['preview_components'];
 			$components = phpgwapi_cache::session_get('property', 'preview_components');
 			$components = ($components) ? unserialize($components) : array();
 			
@@ -122,8 +119,8 @@
 		public function import_component_files()
 		{		
 			$location_code = phpgw::get_var('location_code');
-			$id = phpgw::get_var('location_item_id');
-			$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			//$id = phpgw::get_var('location_item_id');
+			//$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			$preview = phpgw::get_var('preview');
 			$with_components = phpgw::get_var('with_components_check');
 			
@@ -152,9 +149,9 @@
 			
 			if ($with_components)
 			{
-				$receipt = $import_component_files->add_files_components_location($id, $location_code, $attrib_name_componentID);
+				$receipt = $import_component_files->add_files_components_location();
 			} else {
-				$receipt = $import_component_files->add_files_location($id, $location_code);
+				$receipt = $import_component_files->add_files_location();
 			}
 			
 			return $receipt;
@@ -406,6 +403,7 @@ HTML;
 		private function _prepare_profile ()
 		{
 			$columns = (array) phpgw::get_var('columns');
+			$attrib_names = (array) phpgw::get_var('attrib_names');
 			
 			$template_id = phpgwapi_cache::session_get('property', 'template_id');
 			$attrib_name_componentID = phpgwapi_cache::session_get('property', 'attrib_name_componentID');
@@ -430,10 +428,11 @@ HTML;
 			{
 				if ($v == 'new_column')
 				{
-					unset($columns[$k]);
-					continue;
+					$columns_name[] = $k .' => '.$attrib_names[$k];
+					$columns[$k] = strtolower($attrib_names[$k]);
+				} else {
+					$columns_name[] = $k .' => '.$_options[$v];
 				}
-				$columns_name[] = $k .' => '.$_options[$v];
 			}
 			
 			$entity_info = $this->bo->read_single($entity_id);
@@ -500,8 +499,7 @@ HTML;
 
 				foreach ($columns as $_row_key => $_value_key)
 				{
-					$_result[$_value_key] = $objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue();
-				}
+					$_result[$_value_key] = htmlspecialchars($objPHPExcel->getActiveSheet()->getCell("{$_row_key}{$i}")->getCalculatedValue(), ENT_QUOTES, 'UTF-8');				}
 
 				if ((int)$_result['building_part'] || $_result['building_part'] === '0')
 				{
@@ -589,11 +587,6 @@ HTML;
 			
 			$profile = $this->_prepare_profile();
 			$result['profile'] = $profile;
-
-			/*$this->config->value('building_part_in_table', serialize($building_part_in_table));
-			$this->config->value('preview_components', serialize($preview_components));
-			$this->config->value('new_components', serialize($import_data));
-			$this->config->save_repository();*/
 			
 			phpgwapi_cache::session_set('property', 'building_part_in_table', serialize($building_part_in_table));
 			phpgwapi_cache::session_set('property', 'preview_components', serialize($preview_components));
@@ -630,9 +623,6 @@ HTML;
 				return;
 			}
 
-			/*$config = createObject('phpgwapi.config', 'component_import');
-			$config_repository = $config->read_repository();*/
-			//$import_data = $this->config_repository['new_components'];
 			$import_data = phpgwapi_cache::session_get('property', 'new_components');
 			$import_data = ($import_data) ? unserialize($import_data) : array();
 			
@@ -872,8 +862,7 @@ HTML;
 
 		public function get_attributes_from_template()
 		{
-			//$profile = $this->config_repository['profile'];
-			
+			$selected_attribute = phpgw::get_var('selected_attribute');
 			$category_template = phpgw::get_var('category_template');
 
 			$template_info = explode('_', $category_template);
@@ -884,8 +873,8 @@ HTML;
 			$list = array();
 			foreach ($attrib_list as $attrib)
 			{
-				//$selected = ($profile['attrib_name_componentID']['id'] == $attrib['column_name']) ? 1 : 0;
-				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text']); 
+				$selected = ($selected_attribute == $attrib['column_name']) ? 1 : 0;
+				$list[] = array('id' => $attrib['column_name'], 'name' => $attrib['input_text'], 'selected' => $selected); 
 			}
 			
 			array_unshift($list, array('id' => '', 'name' => lang('choose attribute')));
