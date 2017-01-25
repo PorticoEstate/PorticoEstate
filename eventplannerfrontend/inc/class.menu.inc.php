@@ -40,7 +40,8 @@
 		public function get_menu()
 		{
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplanner';
+			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplannerfrontend';
+			$GLOBALS['phpgw']->translation->add_app('eventplanner');
 	
 			$menus['navbar'] = array(
 				'eventplannerfrontend' => array(
@@ -53,40 +54,52 @@
 			);
 
 			$menus['toolbar'] = array();
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['admin']))
+			{
+				$menus['admin'] = array
+					(
+					'index' => array
+						(
+						'text' => lang('Configuration'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
+							'appname' => 'eventplannerfrontend'))
+					)
+				);
+			}
 	
 			$menus['navigation'] = array(
 				'application' => array(
 					'text' => lang('application'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => 'eventplannerfrontend.uiapplication.index'))
+					'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => 'eventplannerfrontend.uiapplication.index'))
 				),
 				'events' => array(
 					'text' => lang('events'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uievents.index")),
+					'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => "eventplannerfrontend.uievents.index")),
 					'image' => array('events', 'navbar'),
 				),
 				'customer' => array(
 					'text' => lang('customer'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uicustomer.index")),
+					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uicustomer.index")),
 					'image' => array('customer', 'navbar'),
 				),
 				'vendor' => array(
 					'text' => lang('vendor'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uivendor.index")),
+					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uivendor.index")),
 					'image' => array('vendor', 'navbar'),
 				),
 				'booking' => array(
 					'text' => lang('booking'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uibooking.index")),
+					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uibooking.index")),
 					'image' => array('customer', 'navbar'),
 				),
 				'vendor_report' => array(
 					'text' => lang('vendor report'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uivendor_report.index")),
+					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uivendor_report.index")),
 					'image' => array('vendor_report', 'navbar'),
 				),
 				'customer_report' => array(
 					'text' => lang('customer report'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uicustomer_report.index")),
+					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uicustomer_report.index")),
 					'image' => array('customer_report', 'navbar'),
 				)
 			);
