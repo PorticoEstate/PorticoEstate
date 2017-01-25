@@ -69,7 +69,7 @@ HTML;
 	}
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplannerfrontend';
-	$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'bookingfrontend';
+	$GLOBALS['phpgw_info']['user']['preferences']['common']['template_set'] = 'frontend';
 
 /////////////////////////////////////////////////////////////////////////////
 // BEGIN Stuff copied from functions.inc.php
