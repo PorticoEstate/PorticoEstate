@@ -45,14 +45,13 @@ JS;
 	phpgwapi_jquery::load_widget('core');
 
 	$stylesheets = array();
-	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
     $stylesheets[] = "/{$app}/css/frontend.css";
+	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
 	$stylesheets[] = "/phpgwapi/templates/frontend/css/frontend.css";
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
@@ -60,7 +59,6 @@ JS;
 		$stylesheets[] = "/phpgwapi/templates/frontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 		$stylesheets[] = "/{$app}/templates/frontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
 
 	foreach ( $stylesheets as $stylesheet )
 	{
