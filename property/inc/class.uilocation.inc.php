@@ -1720,6 +1720,7 @@ JS;
 			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.' . count(explode('-', $location_code)));
 			$generic_document = CreateObject('property.sogeneric_document');
 			$params['location_id'] = $location_id;
+			$params['location_item_id'] = $this->bo->get_item_id( $location_code );
 			$params['order'] = 'name';
 			$params['cat_id'] = $doc_type;
 			$documents2 = $generic_document->read($params);
