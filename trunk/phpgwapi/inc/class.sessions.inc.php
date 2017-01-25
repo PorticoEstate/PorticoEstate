@@ -286,9 +286,18 @@
 				$this->phpgw_setcookie('domain', $this->_account_domain);
 			}
 
-			if ( ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
+			if ( $GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') )
+			{
+				$session_flags = 'A';
+			}
+			else
+			{
+				$session_flags = 'N';
+			}
+
+			if ( $session_flags =='N' && (( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 					&& $GLOBALS['phpgw_info']['server']['usecookies'] )
-				|| isset($_COOKIE['last_loginid']))
+				|| isset($_COOKIE['last_loginid'])))
 			{
 				// Create a cookie which expires in 14 days
 				$cookie_expires = $now + (60 * 60 * 24 * 14);
@@ -325,14 +334,6 @@
 	//		$GLOBALS['phpgw_info']['hooks'] = $this->hooks;
 
 			phpgwapi_cache::session_set('phpgwapi', 'password', base64_encode($this->_passwd));
-			if ( $GLOBALS['phpgw']->acl->check('anonymous', 1, 'phpgwapi') )
-			{
-				$session_flags = 'A';
-			}
-			else
-			{
-				$session_flags = 'N';
-			}
 
 			$GLOBALS['phpgw']->db->transaction_begin();
 			$this->register_session($login, $user_ip, $now, $session_flags);
