@@ -137,7 +137,7 @@ JS;
 
 	if(! $footer_info = $config_frontend['footer_info'])
 	{
-		$footer_info = 'footer info settes i bookingfrontend config';
+		$footer_info = "footer info settes i {$app} config";
 	}
 
    phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);

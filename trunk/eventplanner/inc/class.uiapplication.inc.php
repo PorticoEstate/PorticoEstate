@@ -46,7 +46,8 @@
 
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$currentapp;
 
 		public function __construct()
 		{
@@ -57,6 +58,7 @@
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_application::get_fields();
 			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 		}
 
 		private function get_status_options( $selected = 0 )
@@ -81,7 +83,7 @@
 			$combos[] = array(
 				'type' => 'autocomplete',
 				'name' => 'vendor',
-				'app' => 'eventplanner',
+				'app' => $this->currentapp,
 				'ui' => 'vendor',
 				'function' => 'get_list',
 				'label_attr' => 'name',
@@ -147,11 +149,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uiapplication.index',
+						'menuaction' => "{$this->currentapp}.uiapplication.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uiapplication.add')),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -179,7 +181,7 @@
 				'text' => lang('show'),
 				'action' => self::link( array
 					(
-					'menuaction' => 'eventplanner.uiapplication.view'
+					'menuaction' => "{$this->currentapp}.uiapplication.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -190,12 +192,12 @@
 				'text' => lang('edit'),
 				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uiapplication.edit'
+					'menuaction' => "{$this->currentapp}.uiapplication.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'application.index.js');
+			self::add_javascript('eventplannerfrontend', 'portico', 'application.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -335,7 +337,7 @@
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'eventplanner.uibooking.query',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query",
 					'filter_application_id' => $id,
 					'filter_active'	=> 1,
 					'phpgw_return_as' => 'json'))),
@@ -385,10 +387,10 @@
 //			die();
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => self::link(array('menuaction' => 'eventplanner.uiapplication.save')),
-				'cancel_url' => self::link(array('menuaction' => 'eventplanner.uiapplication.index',)),
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.index",)),
 				'application' => $application,
-				'new_vendor_url' => self::link(array('menuaction' => 'eventplanner.uivendor.add')),
+				'new_vendor_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.add")),
 				'list_case_officer' => array('options' => $case_officer_options),
 				'cat_select' => $this->cats->formatted_xslt_list(array(
 					'select_name' => 'category_id',

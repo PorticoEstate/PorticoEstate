@@ -39,14 +39,15 @@
 		 */
 		public function get_menu()
 		{
+			phpgw::import_class('phpgwapi.uicommon_jquery');
 			$incoming_app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplannerfrontend';
 			$GLOBALS['phpgw']->translation->add_app('eventplanner');
 	
 			$menus['navbar'] = array(
 				'eventplannerfrontend' => array(
-					'text' => lang('eventplanner'),
-					'url' => $GLOBALS['phpgw']->link('eventplannerfrontend/', array('menuaction' => "eventplannerfrontend.uiapplication.index")),
+					'text' => lang('eventplannerfrontend'),
+					'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => "eventplannerfrontend.uiapplication.index")),
 					'image' => array('eventplannerfrontend', 'navbar'),
 					'order' => 35,
 					'group' => 'office'
