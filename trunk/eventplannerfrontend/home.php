@@ -1,21 +1,32 @@
 <?php
-	/* 
- * Copyright (C) 2017 hc483
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
+	/**
+	 * phpGroupWare
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2017 Free Software Foundation, Inc. http://www.fsf.org/
+	 * This file is part of phpGroupWare.
+	 *
+	 * phpGroupWare is free software; you can redistribute it and/or modify
+	 * it under the terms of the GNU General Public License as published by
+	 * the Free Software Foundation; either version 2 of the License, or
+	 * (at your option) any later version.
+	 *
+	 * phpGroupWare is distributed in the hope that it will be useful,
+	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	 * GNU General Public License for more details.
+	 *
+	 * You should have received a copy of the GNU General Public License
+	 * along with phpGroupWare; if not, write to the Free Software
+	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	 *
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package eventplannerfrontend
+	 * @version $Id: index.php 14959 2016-04-30 21:09:01Z sigurdne $
+	 */
 
-	//alias for index.php
-	require_once 'index.php';
+	include_once('session.php');
+
+	$GLOBALS['phpgw']->hooks->single('home', 'eventplannerfrontend');
+	$GLOBALS['phpgw']->common->phpgw_footer();

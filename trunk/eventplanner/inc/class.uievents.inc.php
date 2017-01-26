@@ -47,7 +47,6 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::uievents');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('events');
 			$this->bo = createObject('eventplanner.boapplication');
 			$this->cats = & $this->bo->cats;
@@ -58,7 +57,7 @@
 			unset($this->fields['case_officer_name']);
 			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
-
+			self::set_active_menu("{$this->currentapp}::events");
 		}
 
 		private function get_status_options( $selected = 0 )

@@ -1,12 +1,13 @@
 <?php
 	/**
-	 * Bookingfrontend - Hook helper
+	 * property - Hook helper
 	 *
+	 * @author Dave Hall <skwashd@phpgroupware.org>
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2013 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2007,2008 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @package Property
-	 * @version $Id: class.hook_helper.inc.php 14728 2016-02-11 22:28:46Z sigurdne $
+	 * @package property
+	 * @version $Id: class.hook_helper.inc.php 14726 2016-02-11 20:07:07Z sigurdne $
 	 */
 	/*
 	  This program is free software: you can redistribute it and/or modify
@@ -23,31 +24,33 @@
 	  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.uicommon');
+
 	/**
 	 * Hook helper
 	 *
-	 * @package eventplannerfrontend
+	 * @package property
 	 */
-	class eventplannerfrontend_hook_helper
+	class eventplannerfrontend_hook_helper extends phpgwapi_uicommon
 	{
 
-
-		public function set_cookie_domain()
+		public function __construct()
 		{
-			$script_path = dirname(phpgw::get_var('SCRIPT_FILENAME', 'string', 'SERVER'));
-			
-			if(preg_match('/eventplannerfrontend/', $script_path))
-			{
-				//get from local config
-				$config = CreateObject('phpgwapi.config', 'eventplannerfrontend');
-				$config->read();
-
-				$GLOBALS['phpgw_info']['server']['cookie_domain'] = !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) ? $GLOBALS['phpgw_info']['server']['cookie_domain'] : '';
-
-				if (!empty($config->config_data['cookie_domain']))
-				{
-					$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config->config_data['cookie_domain'];
-				}
-			}
+			parent::__construct();
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+		}
+		/**
+		 * Show info for homepage
+		 *
+		 * @return void
+		 */
+		public function home()
+		{
+			$data = array(
+				'config' => CreateObject('phpgwapi.config', 'eventplannerfrontend')->read(),
+			);
+			phpgwapi_jquery::formvalidator_generate(array());
+			self::add_javascript('eventplannerfrontend', 'portico', 'validate.js');
+			self::render_template_xsl(array('home'), array('view' => $data));
 		}
 	}

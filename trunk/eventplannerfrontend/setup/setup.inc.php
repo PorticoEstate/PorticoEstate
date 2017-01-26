@@ -41,5 +41,6 @@
 		(
 		'menu' => 'eventplannerfrontend.menu.get_menu',
 		'set_cookie_domain' => 'eventplannerfrontend.hook_helper.set_cookie_domain',
-		'config'
+		'config',
+		'home'				=> 'eventplannerfrontend.hook_helper.home',
 	);
