@@ -72,26 +72,6 @@
 			return true;
 		}
 		
-		/*
-		private function _get_files_by_component($id, $location_id)
-		{
-			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name, b.md5_sum FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
-					. " ON a.file_id = b.file_id WHERE a.location_item_id = '{$id}' AND a.location_id = '{$location_id}'"
-					. " AND b.mime_type != 'Directory' AND b.mime_type != 'journal' AND b.mime_type != 'journal-deleted'";
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
-			$values = array();
-			
-			while ($this->db->next_record())
-			{
-				$healthy = $this->db->f('file_id').'_#';
-				$values[] = $this->db->f('md5_sum').'_'.trim(str_replace($healthy, '', $this->db->f('name')));
-			}
-
-			return $values;			
-		}*/
-		
 		private function _get_files_by_component($id, $location_id)
 		{
 			$sql = "SELECT a.location_id, a.location_item_id, b.file_id, b.name, b.md5_sum FROM phpgw_vfs_file_relation a INNER JOIN phpgw_vfs b "
@@ -286,17 +266,19 @@
 					}
 				}
 			} else {
-				foreach ($uploaded_files as $file)
+				foreach ($uploaded_files as &$file)
 				{
 					$md5sum = $this->_generate_md5sum($file['path_absolute']);
 					if (!empty($md5sum)) 
 					{
+						$file['md5sum'] = $md5sum;
+						$component_files[$md5sum] = $file;
 						$this->paths_from_file[$md5sum][] = $file['path_relative'];
 					} else {
 						$this->paths_empty[] = $file['path_absolute'];
 					}				
 				}
-				$component_files = $uploaded_files;
+				//$component_files = $uploaded_files;
 			}
 		}
 	
