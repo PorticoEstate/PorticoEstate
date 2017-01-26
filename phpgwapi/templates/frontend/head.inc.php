@@ -44,21 +44,43 @@ JS;
 
 	phpgwapi_jquery::load_widget('core');
 
+
+	$old_ie = false;
+	if (preg_match('/MSIE (6|7|8)/i', $_SERVER['HTTP_USER_AGENT']))
+	{
+		$old_ie = true;
+		$message = lang('outdated browser: %1', $_SERVER['HTTP_USER_AGENT']);
+		phpgwapi_cache::message_set($message, 'error');
+	}
+
+
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
-	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
-    $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
-	$stylesheets[] = "/{$app}/templates/base/css/base.css";
-    $stylesheets[] = "/{$app}/css/frontend.css";
-	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
+	if ($old_ie)
+	{
+		$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-old-ie-min.css";
+
+	}
+	else
+	{
+		$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
+	}
+
+	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
+//	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+//	$stylesheets[] = "/{$app}/css/frontend.css";
 	$stylesheets[] = "/phpgwapi/templates/frontend/css/frontend.css";
+//	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.css";
+	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
 		$stylesheets[] = "/phpgwapi/templates/frontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 		$stylesheets[] = "/{$app}/templates/frontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
+
+
 
 	foreach ( $stylesheets as $stylesheet )
 	{

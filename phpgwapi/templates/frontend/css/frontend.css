@@ -6,7 +6,7 @@ nav:not(.mm-menu)
 }
 
 
-.header.mm-fixed-top
+.header1.mm-fixed-top
 {
 	position: fixed;
 	top: 0;
@@ -14,7 +14,7 @@ nav:not(.mm-menu)
 }
 
 
-.header a
+.header1 a
 {
 	background: center center no-repeat transparent;
 	background-image: url( data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNpi/P//PwOtARMDHQBdLGFBYtMq3BiHT3DRPU4YR4NrNAmPJuHRJDyahEeT8Ii3BCDAAF0WBj5Er5idAAAAAElFTkSuQmCC );
@@ -22,8 +22,9 @@ nav:not(.mm-menu)
 	width: 40px;
 	height: 40px;
 	position: absolute;
-	top: 16px;
+	top: 10px;
 	left: 10px;
+	z-index: 1000;
 }
 
 .pure-menu-heading {
@@ -243,6 +244,8 @@ label {
     /* We want to give the content area some more padding */
     .content {
         padding: 1em;
+		padding-top: 3em;
+
     }
 
     /* We can align the menu header to the left, but float the

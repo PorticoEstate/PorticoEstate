@@ -52,13 +52,13 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
 			$this->bo = createObject('eventplanner.boapplication');
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_application::get_fields();
 			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			self::set_active_menu("{$this->currentapp}::application");
 		}
 
 		private function get_status_options( $selected = 0 )

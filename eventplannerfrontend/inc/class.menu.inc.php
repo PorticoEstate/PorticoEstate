@@ -64,6 +64,12 @@
 						'text' => lang('Configuration'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uiconfig.index',
 							'appname' => 'eventplannerfrontend'))
+					),
+					'metasettings' => array
+						(
+						'text' => lang('metasettings'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplannerfrontend.uimetasettings.index',
+							'appname' => 'eventplannerfrontend'))
 					)
 				);
 			}
