@@ -212,6 +212,8 @@
 				$message['message'][] = array('msg' => lang('%1 relations existing', $count_relations_existing));
 			}
 			
+			$this->_delete_all_dir_temp();
+			
 			return $message;
 		}
 		
@@ -500,6 +502,20 @@
 			return $component_files;
 		}
 		
+		private function _delete_all_dir_temp()
+		{
+			$files = glob($this->path_upload_dir . '*', GLOB_MARK);
+			
+			foreach ($files as $file)
+			{
+				$path = realpath($file);
+				if (is_dir($path)) 
+				{				
+					exec("rm -Rf '{$path}'", $ret);					
+				} 			
+			}
+		}
+		
 		private function _search_relations_with_components_location($relations) 
 		{
 			$count_new_relations = 0; 
@@ -771,6 +787,8 @@
 					$message['error'][] = array('msg' => lang("file not exist: %1", $v));
 				}
 			}
+			
+			$this->_delete_all_dir_temp();
 			
 			return $message;
 		}
