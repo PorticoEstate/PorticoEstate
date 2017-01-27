@@ -35,8 +35,8 @@
 	{
 		$selected = $config['authentication_method'];
 
-		$dirname = PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}";
-		$dirname = PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/default";
+		$dirname = PHPGW_SERVER_ROOT . "/eventplannerfrontend/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}";
+		$dirname = PHPGW_SERVER_ROOT . "/eventplannerfrontend/inc/custom/default";
 
 		$find = array('/_/', '/\.php$/');
 		$replace = array(' ', '');
