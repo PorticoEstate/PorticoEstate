@@ -66,7 +66,7 @@
 
 			if($frontend)
 			{
-				$GLOBALS['phpgw']->hooks->process('set_auth_type', array($frontend));
+				$GLOBALS['phpgw']->hooks->single('set_auth_type', $frontend);
 				$GLOBALS['phpgw_info']['login_left_message'] = '';
 				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
