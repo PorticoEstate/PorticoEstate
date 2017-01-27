@@ -74,26 +74,45 @@
 
 		public function get_username()
 		{
-			$config	= CreateObject('phpgwapi.config','rental');
-			$config->read();
+			$headers = getallheaders();
 
-			if(! $config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			$ssn = $headers['uid'];
+
+			$ssn_hash = $this->create_hash($ssn);
+			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
+			$sql = "SELECT account_lid FROM phpgw_accounts"
+				. " JOIN phpgw_accounts_data ON phpgw_accounts.account_id = phpgw_accounts_data.account_id"
+				. " WHERE account_data->>'ssn_hash' = '{$hash_safe}'";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+			$GLOBALS['phpgw']->db->next_record();
+			$username = $GLOBALS['phpgw']->db->f('account_lid',true);
+			
+			if($username)
 			{
-				$message ="Database server {$config->config_data['external_db_host']} is not accessible";
+				return $username;
+			}
+
+
+			// Alternative
+			$config	= CreateObject('phpgwapi.config','rental')->read();
+
+			if(! $config['external_db_host'] || !$this->ping($config['external_db_host']))
+			{
+				$message ="Database server {$config['external_db_host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
-				return false;
+	//			return false;
 			}
 
 //			$db = createObject('phpgwapi.db', null, null, true);
 			$db = createObject('phpgwapi.db_adodb', null, null, true);
 
-			$db->debug = !!$config->config_data['external_db_debug'];
-			$db->Host = $config->config_data['external_db_host'];
-			$db->Port = $config->config_data['external_db_port'];
-			$db->Type = $config->config_data['external_db_type'];
-			$db->Database = $config->config_data['external_db_name'];
-			$db->User = $config->config_data['external_db_user'];
-			$db->Password = $config->config_data['external_db_password'];
+			$db->debug = !!$config['external_db_debug'];
+			$db->Host = $config['external_db_host'];
+			$db->Port = $config['external_db_port'];
+			$db->Type = $config['external_db_type'];
+			$db->Database = $config['external_db_name'];
+			$db->User = $config['external_db_user'];
+			$db->Password = $config['external_db_password'];
 
 			try
 			{
@@ -106,14 +125,13 @@
 				return false;
 			}
 
-			$headers = getallheaders();
 
-			$fodsels_nr = $headers['uid'];
-
-			$sql = "SELECT BRUKERNAVN FROM V_AD_PERSON WHERE FODSELSNR ='{$fodsels_nr}'";
+			$sql = "SELECT BRUKERNAVN FROM V_AD_PERSON WHERE FODSELSNR ='{$ssn}'";
 			$db->query($sql,__LINE__,__FILE__);
 			$db->next_record();
-			return $db->f('BRUKERNAVN',true);
+			$username = $db->f('BRUKERNAVN',true);
+			return $username;
+
 		}
 
 		/**
