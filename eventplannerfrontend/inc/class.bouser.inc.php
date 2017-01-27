@@ -32,7 +32,7 @@
 		protected function get_orgname_from_db( $orgnr )
 		{
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db->limit_query("select name from bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
+			$this->db->limit_query("SELECT name FROM bb_organization WHERE organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{
 				return $orgnr;
@@ -44,7 +44,7 @@
 		{
 			$results = array();
 			$this->db = & $GLOBALS['phpgw']->db;
-			$this->db->query("select organization_number from bb_organization ORDER by organization_number ASC", __LINE__, __FILE__);
+			$this->db->query("SELECT organization_number FROM bb_organization ORDER by organization_number ASC", __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
 				$results[] = $this->db->f('organization_number', false);
@@ -236,16 +236,22 @@
 			}
 		}
 
+		/**
+		 * Used???
+		 * @param type $fodselsnr
+		 * @return type
+		 */
 		protected function get_breg_orgs( $fodselsnr )
 		{
-			$breg_conn = pg_connect("host=" . $GLOBALS['phpgw_domain']['default']['db_host'] . " port=5432 dbname=breg user=" . $GLOBALS['phpgw_domain']['default']['db_user'] . " password=" . $GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
-			$sql = "SELECT distinct orgnr FROM breg.personcurrent WHERE fodselsnr ='" . $fodselsnr . "'";
-			$results = pg_query($breg_conn, $sql);
-			$orgs = pg_fetch_all($results);
-			print_r($sql);
-			print_r($orgs);
-			pg_close($breg_conn);
-			return $orgs;
+			$sql = "SELECT DISTINCT orgnr FROM breg.personcurrent WHERE fodselsnr ='" . $fodselsnr . "'";
+			$results = array();
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query($sql, __LINE__, __FILE__);
+			while ($db->next_record())
+			{
+				$results[] = $db->f('orgnr', true);
+			}
+			return $results;
 		}
 
 		protected function get_user_orgnr_from_auth_header()

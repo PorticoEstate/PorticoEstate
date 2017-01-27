@@ -30,22 +30,26 @@
 	 * Wrapper for custom methods
 	 *
 	 * @package phpgroupware
-	 * @subpackage bookingfrontend
+	 * @subpackage eventplannerfrontend
 	 */
-	class bookingfrontend_external_user extends bookingfrontend_bouser
+	class eventplannerfrontend_external_user extends eventplannerfrontend_bouser
 	{
 
+		var $debug = true;
 		public function __construct()
 		{
 			parent::__construct();
+			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			{
+				$this->debug = true;
+			}
 		}
 
 		public function get_user_org_id()
 		{
 			$headers = getallheaders();
-			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			if ($this->debug)
 			{
-				$this->debug = true;
 				echo 'headers:<br>';
 				_debug_array($headers);
 			}
@@ -86,7 +90,7 @@
 			try
 			{
 				$action = "";
-				$response = $client->__doRequest($request, $location_URL, $action, 1);
+		//		$response = $client->__doRequest($request, $location_URL, $action, 1);
 				$reader = new XMLReader();
 				$reader->xml($response);
 
@@ -108,6 +112,7 @@
 							'name' => $xml->getElementsByTagName('name')->item(0)->nodeValue,
 						);
 						$orgs_validate[] = $_org_id;
+
 					}
 				}
 			}
@@ -117,6 +122,14 @@
 				var_dump(get_class($exception));
 				var_dump($exception);
 			}
+
+			if ($this->debug)
+			{
+				$orgs[] = array('id' => '123456789', 'name' => 'Bergen kommune');
+			}
+			$_SESSION['orgs'] = $orgs;
+			$_SESSION['org_id'] = $_org_id; // one of them..
+return;
 
 			$stage = phpgw::get_var('stage');
 			$org_id = phpgw::get_var('org_id');
@@ -154,7 +167,7 @@ HTML;
 
 			if ($orgs)
 			{
-				$action = $GLOBALS['phpgw']->link('/bookingfrontend/login.php', array('stage' => 2));
+				$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/login.php', array('stage' => 2));
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML
@@ -168,7 +181,7 @@ HTML;
 			}
 			else
 			{
-				$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
+				$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/index.php');
 				$message = 'Ikke representant for noen organisasjon';
 				$org_select = '';
 			}
