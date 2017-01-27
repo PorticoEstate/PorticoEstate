@@ -37,10 +37,12 @@
 
 
 	/* The hooks this app includes, needed for hooks registration */
-	$setup_info['eventplannerfrontend']['hooks'] = array
-		(
-		'menu' => 'eventplannerfrontend.menu.get_menu',
+	$setup_info['eventplannerfrontend']['hooks'] = array(
+		'menu'				=> 'eventplannerfrontend.menu.get_menu',
 		'set_cookie_domain' => 'eventplannerfrontend.hook_helper.set_cookie_domain',
-		'config',
+		'set_auth_type'		=> 'eventplannerfrontend.hook_helper.set_auth_type',
 		'home'				=> 'eventplannerfrontend.hook_helper.home',
+		'login'				=> 'eventplannerfrontend.hook_helper.login',
+		'after_navbar'		=> 'eventplannerfrontend.hook_helper.after_navbar',
+		'config',
 	);
