@@ -24,7 +24,7 @@
 		{
 			$this->set_module();
 			$this->orgnr = $this->get_user_orgnr_from_session();
-			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
+//			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
 			$this->config = CreateObject('phpgwapi.config', 'eventplannerfrontend');
 			$this->config->read();
 		}
@@ -85,7 +85,7 @@
 			$external_user = new eventplannerfrontend_external_user();
 
 			$this->orgnr = $external_user->get_user_org_id();
-			$this->orgname = $this->get_orgname_from_db($this->orgnr);
+	//		$this->orgname = $this->get_orgname_from_db($this->orgnr);
 
 			if ($this->is_logged_in())
 			{
@@ -116,7 +116,7 @@
 			{
 
 				$this->orgnr = $orgnumber;
-				$this->orgname = $this->get_orgname_from_db($this->orgnr);
+	//			$this->orgname = $this->get_orgname_from_db($this->orgnr);
 
 				if ($this->is_logged_in())
 				{
