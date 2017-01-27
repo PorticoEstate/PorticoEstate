@@ -1325,7 +1325,7 @@
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
-						$attr['value'] = $this->db->f($attr['column_name']);
+						$attr['value'] = $this->db->f($attr['column_name'], true);
 						if ($attr['lookup_form'])
 						{
 							$values[$attr['column_name']] = $attr['value'];

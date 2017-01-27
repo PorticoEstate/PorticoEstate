@@ -163,11 +163,13 @@
 					$address = implode(', ', $_address);
 				}
 
+				$address = substr(htmlspecialchars($address, ENT_QUOTES, 'UTF-8', true), 0, 50);
+
 				$buyer = array(
 					'Name' => $user_name,
 					'AddressInfo' => array(
 						array(
-							'Address' => $address
+							'Address' => htmlspecialchars_decode($address, ENT_QUOTES)
 						)
 					),
 					'BuyerReferences' => array(
@@ -287,7 +289,7 @@
 					'dim6' => $dim6, // Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
 					'vendor_id' => $workorder['vendor_id'],
 					'vendor_name' => $vendor['name'],
-					'vendor_address' => $vendor['address'],
+					'vendor_address' => substr($vendor['address'], 0, 50),
 					'order_id' => $workorder['id'],
 					'tax_code' => $tax_code,
 					'buyer' => $buyer,
