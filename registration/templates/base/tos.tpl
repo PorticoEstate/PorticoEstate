@@ -1,1 +1,1 @@
-<p><center>[ Put your real TOS here :) ]</center>
+<p><center>{extra_text}</center>

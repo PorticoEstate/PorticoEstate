@@ -13,7 +13,7 @@
 
 		if (true)
 		{
-			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
+//			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 			$lang_bookmarks = lang('bookmarks');
 
 			$navigation = execMethod('phpgwapi.menu.get', 'navigation');
@@ -22,7 +22,7 @@
 			{
 				if($app == $GLOBALS['phpgw_info']['flags']['currentapp'])
 				{
-					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], $bookmarks) : '';
+					$submenu = isset($navigation[$app]) ? render_submenu($app, $navigation[$app], array()) : '';
 			//		$treemenu .= render_item($app_data, "navbar::{$app}", $submenu, $bookmarks);
 				}
 			}
@@ -38,6 +38,8 @@ HTML;
 		$GLOBALS['phpgw']->template->set_var($var);
 		$GLOBALS['phpgw']->template->pfp('out','navbar');
 
+		$GLOBALS['phpgw']->hooks->process('after_navbar');
+
 		if( phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
 		{
 			phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
@@ -51,7 +53,6 @@ HTML;
 			}
 		}
 
-		$GLOBALS['phpgw']->hooks->process('after_navbar');
 		register_shutdown_function('parse_footer_end');
 	}
 

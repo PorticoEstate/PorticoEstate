@@ -68,7 +68,12 @@
 			}
 			else
 			{
-				if ($this->config['username_is'] != 'email')
+				if ($this->config['username_is'] == 'email')
+				{
+					$GLOBALS['phpgw']->session->appsession('loginid', 'registration', $r_reg['email']);
+					$r_reg['loginid'] = $r_reg['email'];
+				}
+				else
 				{
 					$GLOBALS['phpgw']->session->appsession('loginid', 'registration', $r_reg['loginid']);
 				}
@@ -93,34 +98,34 @@
 //-------
 			if ($this->config['username_is'] == 'email')
 			{
-				$this->fields['loginid'] = array
-					(
-					'field_name' => 'loginid',
-					'field_text' => lang('username'),
-					'field_type' => 'email',
-					'field_values' => '',
-					'field_required' => 'Y',
-					'field_order' => 1
-				);
+//				$this->fields['loginid'] = array
+//					(
+//					'field_name' => 'loginid',
+//					'field_text' => lang('username'),
+//					'field_type' => 'email',
+//					'field_values' => '',
+//					'field_required' => 'Y',
+//					'field_order' => 1
+//				);
 
-				if (!$r_reg['loginid'])
+				if (!$r_reg['email'])
 				{
-					$missing_fields[] = 'loginid';
+					$missing_fields[] = 'email';
 					$errors[] = lang('you must enter a username');
 				}
 				else
 				{
 					$loginid = $GLOBALS['phpgw']->session->appsession('loginid', 'registration');
 
-					if ($r_reg['loginid'] != $loginid)
+					if ($r_reg['email'] != $loginid)
 					{
-						$GLOBALS['phpgw']->session->appsession('loginid', 'registration', $r_reg['loginid']);
+						$GLOBALS['phpgw']->session->appsession('loginid', 'registration', $r_reg['email']);
 						$loginid = false;
 					}
 
 					if (!$loginid)
 					{
-						if (execMethod('registration.soreg.account_exists', $r_reg['loginid']))
+						if (execMethod('registration.soreg.account_exists', $r_reg['email']))
 						{
 							$errors[] = lang('Sorry, that username is already taken.');
 						}
