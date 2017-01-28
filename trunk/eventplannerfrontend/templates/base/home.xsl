@@ -20,7 +20,8 @@
 	<xsl:variable name="mode">
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
-	<div class="splash-container">
+	<div class="content"></div>
+	<!--div class="splash-container">
 		<div class="splash">
 			<h1 class="splash-head">
 
@@ -34,7 +35,7 @@
 			<xsl:value-of  disable-output-escaping="yes" select="config/frontpage_text"/>
 
 		</div>
-	</div>
+	</div-->
 
 </xsl:template>
 

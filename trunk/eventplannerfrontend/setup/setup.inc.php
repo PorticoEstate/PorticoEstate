@@ -44,5 +44,6 @@
 		'home'				=> 'eventplannerfrontend.hook_helper.home',
 		'login'				=> 'eventplannerfrontend.hook_helper.login',
 		'after_navbar'		=> 'eventplannerfrontend.hook_helper.after_navbar',
+		'addaccount'		=> 'eventplannerfrontend.hook_helper.addaccount',
 		'config',
 	);

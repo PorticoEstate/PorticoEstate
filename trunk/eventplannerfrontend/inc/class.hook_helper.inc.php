@@ -124,26 +124,38 @@
 			{
 				return;
 			}
-			//parent::__construct();
-
+			
+			$session_org_id = phpgw::get_var('session_org_id','int' , 'POST');
+			if($session_org_id)
+			{
+				try
+				{
+					$_SESSION['org_id'] = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+				}
+				catch (sfValidatorError $e)
+				{
+					$_SESSION['org_id'] = '';
+				}
+			}
 
 			if(!empty($_SESSION['orgs']) && is_array($_SESSION['orgs']))
 			{
-				$orgs = $_SESSION['orgs'];
-				$org_id = !empty($_SESSION['org_id']) ? $_SESSION['org_id'] : '';
+				$orgs = phpgw::get_var('orgs', 'string', 'SESSION');
+				$org_id = phpgw::get_var('org_id','int' , 'SESSION');
 			}
 			else
 			{
 				return;
 			}
 
-			$org_option ='';
+			$lang_none = lang('none');
+			$org_option ="<option value='-1'>{$lang_none}</option>";
 			foreach ($orgs as $org)
 			{
 				$selected = '';
-				if ($org_id == $org['id'])
+				if ($org_id == (int)$org['id'])
 				{
-					$selected = 'selected = "selected"';
+					$selected = ' selected="selected"';
 				}
 
 				$org_option .= <<<HTML
@@ -153,41 +165,51 @@
 HTML;
 			}
 
-
-//			_debug_array($_SERVER);
-
 			if ($orgs)
 			{
-//				$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/login.php', array('stage' => 2));
 				$action = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML
-							<p>
-								<label for="org_id">Velg Organisasjon:</label>
-								<select name="org_id" id="org_id">
-									{$org_option}
-								</select>
-							</p>
+				<p>
+					<label for="org_id">Velg Organisasjon:</label>
+					<select name="session_org_id" id="org_id" onChange="this.form.submit();">
+						{$org_option}
+					</select>
+				</p>
 HTML;
 			}
 
 			$html = <<<HTML
-			﻿<!DOCTYPE html>
-					<h2>{$message}</h2>
-					<form action="{$action}" method="POST">
-						<fieldset>
-							<legend>
-								Organisasjon
-							</legend>
-							$org_select
-							<p>
-								<input type="submit" name="submit" value="Fortsett"  />
-							</p>
-			 			</fieldset>
-					</form>
+			<form action="{$action}" method="POST">
+				$org_select
+			</form>
 HTML;
 
 			echo $html;
 		}
+
+		/**
+		* hook to add account
+		*
+		* this function is a wrapper function for emailadmin
+		*
+		* @param _hookValues contains the hook values as array
+		* @returns nothing
+		*/
+		function addaccount()
+		{
+			$account_id = (int)$GLOBALS['hook_values']['account_id'];
+			$headers = getallheaders();
+			$ssn = $headers['uid'];
+			$auth	= createObject('phpgwapi.auth');
+			$ssn_hash = $auth->create_hash($ssn);
+			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
+
+			$data = json_encode(array('ssn_hash' => $hash_safe));
+
+			$sql = "INSERT INTO phpgw_accounts_data (account_id, account_data) VALUES ({$account_id}, '{$data}')";
+			$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+		}
+
 	}

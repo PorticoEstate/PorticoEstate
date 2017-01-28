@@ -182,6 +182,16 @@ label {
     letter-spacing: 0.05em;
     opacity: 0.8;
 }
+.error {
+        padding: 1em;
+		padding-top: 3em;
+	    background: #DD7777;
+}
+.msg_good {
+        padding: 1em;
+		padding-top: 3em;
+	    background: #66cd00;
+}
 
 /*
  * -- CONTENT STYLES --

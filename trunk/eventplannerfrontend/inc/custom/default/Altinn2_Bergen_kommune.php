@@ -118,14 +118,15 @@
 			}
 			catch (SoapFault $exception)
 			{
-				echo "Dette gikk ikke så bra.";
+				echo "Feilet på oppslag mot soaptjeneste.";
 				var_dump(get_class($exception));
 				var_dump($exception);
 			}
 
 			if ($this->debug)
 			{
-				$orgs[] = array('id' => '123456789', 'name' => 'Bergen kommune');
+				$orgs[] = array('id' => '964338531', 'name' => 'Bergen kommune');
+				$_org_id = 964338531;
 			}
 			$_SESSION['orgs'] = $orgs;
 			$_SESSION['org_id'] = $_org_id; // one of them..

@@ -16,6 +16,7 @@
 </func:function>
 
 <xsl:template match="data">
+	<div class="content">
 	<xsl:choose>
 		<xsl:when test="datatable_name">
 			<h3>
@@ -24,24 +25,23 @@
 		</xsl:when>
 	</xsl:choose>
 	<xsl:call-template name="datatable" />
+	</div>
 </xsl:template>
 
 
 <xsl:template name="datatable">
-	<div class="content">
-		<script type="text/javascript">
+	<script type="text/javascript">
 			var number_of_toolbar_items = 0;
 			var filter_selects = {};
-		</script>
-		<xsl:call-template name="jquery_phpgw_i18n"/>
-		<xsl:apply-templates select="form" />
-		<div id="list_flash">
-			<xsl:call-template name="msgbox"/>
-		</div>
-		<div id="message" class='message'/>
-		<xsl:apply-templates select="datatable"/>
-		<xsl:apply-templates select="form/list_actions"/>
+	</script>
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+	<xsl:apply-templates select="form" />
+	<div id="list_flash">
+		<xsl:call-template name="msgbox"/>
 	</div>
+	<div id="message" class='message'/>
+	<xsl:apply-templates select="datatable"/>
+	<xsl:apply-templates select="form/list_actions"/>
 </xsl:template>
 
 

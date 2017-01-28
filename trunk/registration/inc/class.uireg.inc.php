@@ -237,7 +237,7 @@ HTML;
 			}
 
 //----
-			if ($this->config['username_is'] == 'email')
+			if ($this->config['username_is'] != 'email')
 			{
 				$this->template->set_var('message', lang('username as email'));
 				$username_fields = $this->get_username_fields();
@@ -573,7 +573,10 @@ HTML;
 			$this->template->set_file(array(
 				'screen' => 'welcome_message.tpl'
 			));
-			$this->template->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url']);
+
+			$login_url = $this->config['login_url'] ? $this->config['login_url'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$this->template->set_var('login_url', $login_url);
 
 			$this->template->pfp('out', 'screen');
 			$this->footer();
@@ -581,6 +584,7 @@ HTML;
 
 		function tos()
 		{
-			$this->simple_screen('tos.tpl');
+			$text = $this->config['terms_of_service'] ? $this->config['terms_of_service'] : '[ Put your real TOS here :) ]';
+			$this->simple_screen('tos.tpl', $text);
 		}
 	}
