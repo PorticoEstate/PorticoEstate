@@ -13,7 +13,6 @@
 		public function query()
 		{
 			$params = $this->bo->build_default_read_params();
-			$params['filters']['status'] = eventplanner_application::STATUS_APPROVED;
 			$values = $this->bo->read($params);
 			array_walk($values["results"], array($this, "_add_links"), "eventplannerfrontend.uivendor.edit");
 

@@ -99,7 +99,7 @@
 					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uivendor.index")),
 					'image' => array('vendor', 'navbar'),
 				),
-				'booking' => array(
+/*				'booking' => array(
 					'text' => lang('booking'),
 					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uibooking.index")),
 					'image' => array('customer', 'navbar'),
@@ -113,7 +113,7 @@
 					'text' => lang('customer report'),
 					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uicustomer_report.index")),
 					'image' => array('customer_report', 'navbar'),
-				)
+				)*/
 			);
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;

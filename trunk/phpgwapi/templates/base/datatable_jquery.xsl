@@ -16,7 +16,7 @@
 </func:function>
 
 <xsl:template match="data">
-	<div class="content">
+	<div id="content" class="content">
 	<xsl:choose>
 		<xsl:when test="datatable_name">
 			<h3>

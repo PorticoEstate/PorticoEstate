@@ -20,22 +20,9 @@
 	<xsl:variable name="mode">
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
-	<div class="content"></div>
-	<!--div class="splash-container">
-		<div class="splash">
-			<h1 class="splash-head">
-
-				<xsl:value-of select="config/frontpage_header"/>
-
-			</h1>
-			<p class="splash-subhead">
-				<xsl:value-of select="config/frontpage_sub_header"/>
-			</p>
-
-			<xsl:value-of  disable-output-escaping="yes" select="config/frontpage_text"/>
-
-		</div>
-	</div-->
+	<div id="content" class="content">
+		<xsl:value-of  disable-output-escaping="yes" select="config/frontpage_text"/>
+	</div>
 
 </xsl:template>
 
