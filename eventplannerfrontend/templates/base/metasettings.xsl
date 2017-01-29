@@ -25,8 +25,8 @@
 							</xsl:attribute>
 						</input>
 					</div>
-					<div class="pure-control-group">
-						<label for="field_metatag_robots">
+					<!--div class="pure-control-group">
+						<label for="field_frontpage_header">
 							<xsl:value-of select="php:function('lang', 'frontpage header')"/>
 						</label>
 						<input id="field_frontpage_header" name="frontpage_header" type="text" size="50">
@@ -44,7 +44,7 @@
 								<xsl:value-of select="config_data/frontpage_sub_header"/>
 							</xsl:attribute>
 						</input>
-					</div>
+					</div-->
 					<div class="pure-control-group">
 						<label for="field_frontpage_text">
 							<xsl:value-of select="php:function('lang', 'Frontpage text')"/>
