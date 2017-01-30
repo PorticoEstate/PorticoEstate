@@ -109,7 +109,7 @@
 								'list' =>  $this->get_category_options()
 							),
 							array(
-								'type' => 'checkbox',
+								'type' =>  $this->currentapp == 'eventplanner' ? 'checkbox' : 'hidden',
 								'name' => 'filter_active',
 								'text' => lang('showall'),
 								'value' =>  1,
