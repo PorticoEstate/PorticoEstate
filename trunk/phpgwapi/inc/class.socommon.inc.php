@@ -40,6 +40,9 @@
 		protected $fields = array();
 		protected static $so;
 		protected $table_name;
+		protected $use_acl = false;
+		protected $currentapp;
+		protected $acl;
 
 		public function __construct( $table_name, $fields )
 		{
@@ -53,7 +56,8 @@
 			$this->fields = $fields;
 			$this->table_name = $table_name;
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->acl = & $GLOBALS['phpgw']->acl;
 		}
 
 		/**
@@ -235,7 +239,7 @@
 				}
 			}
 
-			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
+			$base_sql = "SELECT DISTINCT $cols FROM $this->table_name $joins WHERE $condition $order ";
 			if ($results > -1)
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
@@ -504,7 +508,65 @@
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
+
+			$clause = $this->get_acl_condition();
+
+			if($clause)
+			{
+				$clauses[] = $clause;
+			}
+
 			return join(' AND ', $clauses);
+		}
+
+		function get_acl_condition( )
+		{
+			$clause = '';
+
+			if($this->use_acl && $this->currentapp && $this->acl_location)
+			{
+				$paranthesis = false;
+
+				$grants = $this->acl->get_grants2($this->currentapp, $this->acl_location);
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
+				{
+					foreach($grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$clause .= "({$this->table_name}.owner_id IN(" . implode(',', $public_user_list) . ")";
+					$paranthesis = true;
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					if(!$paranthesis)
+					{
+						$clause .='(';
+					}
+					$clause .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
+
+					$paranthesis = true;
+				}
+
+				if($paranthesis)
+				{
+					$clause .=')';
+				}
+			}
+
+			return $clause;
 		}
 
 		protected function build_join_table_alias( $field, array $params )
@@ -544,6 +606,12 @@
 						'(' . strtr($params['expression'], array('%%table%%' => $this->table_name)) . ')' : "{$this->table_name}.{$field}";
 					$cols[] = "{$value_expression} AS {$field}";
 				}
+			}
+
+			if($this->use_acl && $this->currentapp && $this->acl_location)
+			{
+				$joins[] = " JOIN phpgw_accounts ON ({$this->table_name}.owner_id = phpgw_accounts.account_id)";
+				$joins[] = " JOIN phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 			}
 			return array($cols, $joins);
 		}

@@ -25,7 +25,7 @@
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
 
-	<div>
+	<div class="content">
 		<script type="text/javascript">
 			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
 		</script>

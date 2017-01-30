@@ -1,5 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<div id="content">
+	<div id="content" class="content">
 		<xsl:call-template name="msgbox"/>
 		<form action="" method="POST" id='form' class="pure-form pure-form-aligned" name="form">
 			<div id="tab-content">

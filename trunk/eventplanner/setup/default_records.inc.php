@@ -17,7 +17,7 @@
 	$GLOBALS['phpgw']->locations->add('.', 'Tom', 'eventplanner');
 	$GLOBALS['phpgw']->locations->add('.admin', 'admin', 'eventplanner');
 	$GLOBALS['phpgw']->locations->add('.application', 'application', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
-	$GLOBALS['phpgw']->locations->add('.resource', 'resource', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
+	$GLOBALS['phpgw']->locations->add('.events', 'events', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.customer', 'customer', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.vendor', 'vendor', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.booking', 'booking', 'eventplanner', $allow_grant = true, $custom_tbl = '', $c_function = true);

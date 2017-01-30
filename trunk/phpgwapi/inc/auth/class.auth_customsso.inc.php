@@ -78,6 +78,11 @@
 
 			$ssn = $headers['uid'];
 
+			if(!$ssn)
+			{
+				return;
+			}
+
 			$ssn_hash = $this->create_hash($ssn);
 			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
 			$sql = "SELECT account_lid FROM phpgw_accounts"

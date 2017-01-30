@@ -29,7 +29,7 @@
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-	include_class('eventplanner', 'application', 'inc/model/');
+	include_class('eventplanner', 'events', 'inc/model/');
 
 	class eventplanner_uievents extends phpgwapi_uicommon
 	{
@@ -50,12 +50,12 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('events');
 			$this->bo = createObject('eventplanner.boevents');
 			$this->cats = & $this->bo->cats;
-			$this->fields = eventplanner_application::get_fields();
+			$this->fields = eventplanner_events::get_fields();
 			unset($this->fields['modified']);
 			unset($this->fields['created']);
 			unset($this->fields['contact_email']);
 			unset($this->fields['case_officer_name']);
-			$this->permissions = eventplanner_application::get_instance()->get_permission_array();
+			$this->permissions = eventplanner_events::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			self::set_active_menu("{$this->currentapp}::events");
 		}
@@ -63,7 +63,7 @@
 		private function get_status_options( $selected = 0 )
 		{
 			$status_options = array();
-			$status_list = eventplanner_application::get_status_list();
+			$status_list = eventplanner_events::get_status_list();
 
 			foreach ($status_list as $_key => $_value)
 			{
@@ -270,7 +270,7 @@
 		public function query()
 		{
 			$params = $this->bo->build_default_read_params();
-			$params['filters']['status'] = eventplanner_application::STATUS_APPROVED;
+			$params['filters']['status'] = eventplanner_events::STATUS_APPROVED;
 			$values = $this->bo->read($params);
 			array_walk($values["results"], array($this, "_add_links"), "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit");
 

@@ -25,7 +25,7 @@
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
 
-	<div>
+	<div id="content" class="content">
 		<script type="text/javascript">
 			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
 		</script>
@@ -45,13 +45,13 @@
 							<xsl:value-of select="booking/id"/>
 						</div>
 					</xsl:if>
-					<xsl:if test="vendor_report/id > 0">
+					<xsl:if test="report/id > 0">
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'report')"/>
 							</label>
-							<input type="hidden" name="id" value="{vendor_report/id}"/>
-							<xsl:value-of select="vendor_report/id"/>
+							<input type="hidden" name="id" value="{report/id}"/>
+							<xsl:value-of select="report/id"/>
 						</div>
 					</xsl:if>
 					<xsl:call-template name="application_info">

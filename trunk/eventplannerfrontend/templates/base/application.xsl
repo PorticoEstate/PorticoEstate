@@ -18,7 +18,7 @@
 
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
-	<div class="content">
+	<div id="content" class="content">
 		<style type="text/css">
 			#floating-box {
 			position: relative;
