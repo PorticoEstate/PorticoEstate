@@ -37,6 +37,7 @@
 		{
 			parent::__construct('eventplanner_application', eventplanner_application::get_fields());
 			$this->acl_location = eventplanner_application::acl_location;
+			$this->use_acl = true;
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'eventplanner', $this->acl_location);
 			$this->cats->supress_info = true;
 		}
@@ -55,6 +56,74 @@
 			return self::$so;
 		}
 
+		public function _get_cols_and_joins( $filters = array() )
+		{
+			$cols_joins = parent::_get_cols_and_joins($filters);
+
+			$cols = $cols_joins[0];
+			$joins = $cols_joins[1];
+
+			$joins[] = " JOIN eventplanner_vendor on eventplanner_vendor.id=eventplanner_application.vendor_id";
+
+			return array($cols, $joins);
+		}
+
+
+		function get_acl_condition( )
+		{
+			$clause = '';
+
+			if($this->use_acl && $this->currentapp && $this->acl_location)
+			{
+				$paranthesis = false;
+
+				$grants = $this->acl->get_grants2($this->currentapp, $this->acl_location);
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
+				{
+					foreach($grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$clause .= "({$this->table_name}.owner_id IN(" . implode(',', $public_user_list) . ")";
+					$paranthesis = true;
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					if(!$paranthesis)
+					{
+						$clause .='(';
+					}
+					$clause .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
+
+					$paranthesis = true;
+				}
+
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$org_id = phpgw::get_var('org_id','string' , 'SESSION', -1);
+					$clause .= " AND eventplanner_vendor.organization_number = '{$org_id}'";
+				}
+
+				if($paranthesis)
+				{
+					$clause .=')';
+				}
+			}
+
+			return $clause;
+		}
 
 		protected function populate( array $data )
 		{

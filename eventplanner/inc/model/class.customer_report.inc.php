@@ -23,17 +23,17 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
-	 * @subpackage vendor_report
+	 * @subpackage customer_report
 	 * @version $Id: $
 	 */
-	phpgw::import_class('eventplanner.bovendor_report');
+	phpgw::import_class('eventplanner.bocustomer_report');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
 
-	class eventplanner_vendor_report extends phpgwapi_model
+	class eventplanner_customer_report extends phpgwapi_model
 	{
 
-		const acl_location = '.vendor_report';
+		const acl_location = '.customer_report';
 
 		protected
 			$id,
@@ -43,7 +43,7 @@
 			$created,
 			$json_representation;
 		static $custom_fields = array();
-		protected $field_of_responsibility_name = '.vendor_report';
+		protected $field_of_responsibility_name = '.customer_report';
 
 		public function __construct( int $id = null )
 		{
@@ -58,7 +58,7 @@
 		 */
 		public static function get_instance()
 		{
-			return new eventplanner_vendor_report();
+			return new eventplanner_customer_report();
 		}
 
 		public static function get_custom_fields()
@@ -125,7 +125,7 @@
 			{
 				foreach ($fields as $field => $field_info)
 				{
-					if (!property_exists('eventplanner_vendor_report', $field))
+					if (!property_exists('eventplanner_customer_report', $field))
 					{
 						phpgwapi_cache::message_set('$' . "{$field},", 'error');
 					}
@@ -171,11 +171,11 @@
 
 		public function store()
 		{
-			return eventplanner_bovendor_report::get_instance()->store($this);
+			return eventplanner_bocustomer_report::get_instance()->store($this);
 		}
 
 		public function read_single( $id )
 		{
-			return eventplanner_bovendor_report::get_instance()->read_single($id, true);
+			return eventplanner_bocustomer_report::get_instance()->read_single($id, true);
 		}
 	}

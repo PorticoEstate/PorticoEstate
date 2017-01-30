@@ -42,6 +42,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$active,
 			$category_id,
 			$created,
@@ -98,6 +99,10 @@
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
+					),
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
+					'type' => 'int',
+					'required' => false
 					),
 				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
@@ -238,13 +243,11 @@
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
 
-			if($entity->get_id())
-			{
-			}
-			else
+			if(!$entity->get_id())
 			{
 				$entity->status = eventplanner_customer::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 		}
 
