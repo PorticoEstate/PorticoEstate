@@ -202,6 +202,12 @@ HTML;
 			$account_id = (int)$GLOBALS['hook_values']['account_id'];
 			$headers = getallheaders();
 			$ssn = $headers['uid'];
+
+			if(!$ssn)
+			{
+				return;
+			}
+
 			$auth	= createObject('phpgwapi.auth');
 			$ssn_hash = $auth->create_hash($ssn);
 			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)

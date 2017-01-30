@@ -11,7 +11,7 @@
 	 * @version $Id: setup.inc.php 14728 2016-02-11 22:28:46Z sigurdne $
 	 */
 	$setup_info['eventplannerfrontend']['name'] = 'eventplannerfrontend';
-	$setup_info['eventplannerfrontend']['version'] = '0.1.1';
+	$setup_info['eventplannerfrontend']['version'] = '0.1.2';
 	$setup_info['eventplannerfrontend']['app_order'] = 9;
 	$setup_info['eventplannerfrontend']['enable'] = 1;
 	$setup_info['eventplannerfrontend']['app_group'] = 'office';

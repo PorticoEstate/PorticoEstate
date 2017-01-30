@@ -142,6 +142,11 @@
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_booking_customer_report', 'owner_id', array(
 			'type' => 'int', 'precision' => 4, 'nullable' => false));
 
+
+		$GLOBALS['phpgw']->locations->delete('eventplanner', '.resource');
+		$GLOBALS['phpgw']->locations->add('.events', 'events', 'eventplanner', $allow_grant = true);
+
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.005';
