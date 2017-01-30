@@ -48,7 +48,7 @@
 		{
 			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('events');
-			$this->bo = createObject('eventplanner.boapplication');
+			$this->bo = createObject('eventplanner.boevents');
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_application::get_fields();
 			unset($this->fields['modified']);

@@ -23,15 +23,15 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
-	 * @subpackage vendor_report
+	 * @subpackage customer_report
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.uicommon');
 	phpgw::import_class('phpgwapi.datetime');
 
-//	include_class('eventplanner', 'vendor_report', 'inc/model/');
+//	include_class('eventplanner', 'customer_report', 'inc/model/');
 
-	class eventplanner_uivendor_report extends phpgwapi_uicommon
+	class eventplanner_uicustomer_report extends phpgwapi_uicommon
 	{
 
 		public $public_functions = array(
@@ -52,14 +52,14 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('vendor report');
-			$this->bo = createObject('eventplanner.bovendor_report');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('customer report');
+			$this->bo = createObject('eventplanner.bocustomer_report');
 			$this->cats = & $this->bo->cats;
-			$this->fields = eventplanner_vendor_report::get_fields();
-			$this->permissions = eventplanner_vendor_report::get_instance()->get_permission_array();
-			$this->custom_fields = eventplanner_vendor_report::get_instance()->get_custom_fields();
+			$this->fields = eventplanner_customer_report::get_fields();
+			$this->permissions = eventplanner_customer_report::get_instance()->get_permission_array();
+			$this->custom_fields = eventplanner_customer_report::get_instance()->get_custom_fields();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
-			self::set_active_menu("{$this->currentapp}::vendor_report");
+			self::set_active_menu("{$this->currentapp}::customer_report");
 		}
 
 
@@ -68,11 +68,11 @@
 			$combos = array();
 			$combos[] = array(
 				'type' => 'autocomplete',
-				'name' => 'vendor',
+				'name' => 'customer',
 				'app' => 'eventplanner',
-				'ui' => 'vendor',
+				'ui' => 'customer',
 				'label_attr' => 'name',
-				'text' => lang('vendor') . ':',
+				'text' => lang('customer') . ':',
 				'requestGenerator' => 'requestWithVendorFilter'
 			);
 
@@ -93,7 +93,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('vendor report');
+			$function_msg = lang('customer report');
 
 			$data = array(
 				'datatable_name' => $function_msg,
@@ -105,11 +105,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => "{$this->currentapp}.uivendor_report.index",
+						'menuaction' => "{$this->currentapp}.uicustomer_report.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-	//				'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
+	//				'new_item' => self::link(array('menuaction' => 'eventplanner.uicustomer_report.add')),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -137,7 +137,7 @@
 				'text' => lang('show'),
 				'action' => self::link(array
 					(
-					'menuaction' => "{$this->currentapp}.uivendor_report.view"
+					'menuaction' => "{$this->currentapp}.uicustomer_report.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -148,12 +148,12 @@
 				'text' => lang('edit'),
 				'action' => self::link(array
 					(
-					'menuaction' => "{$this->currentapp}.uivendor_report.edit"
+					'menuaction' => "{$this->currentapp}.uicustomer_report.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'vendor_report.index.js');
+			self::add_javascript('eventplanner', 'portico', 'customer_report.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -174,15 +174,15 @@
 
 			if (!empty($values['object']))
 			{
-				$vendor_report = $values['object'];
+				$customer_report = $values['object'];
 			}
 			else
 			{
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
-				$vendor_report = $this->bo->read_single($id);
+				$customer_report = $this->bo->read_single($id);
 			}
 
-			$booking_id = $vendor_report->booking_id ? $vendor_report->booking_id : phpgw::get_var('booking_id', 'int');
+			$booking_id = $customer_report->booking_id ? $customer_report->booking_id : phpgw::get_var('booking_id', 'int');
 			$booking = createObject('eventplanner.bobooking')->read_single($booking_id);
 
 			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
@@ -203,7 +203,7 @@
 				}
 			}
 
-			$custom_values = $vendor_report->json_representation ? $vendor_report->json_representation : array();
+			$custom_values = $customer_report->json_representation ? $customer_report->json_representation : array();
 			$custom_fields = createObject('booking.custom_fields','eventplanner');
 			$fields = $this->custom_fields;
 			foreach ($fields as $attrib_id => &$attrib)
@@ -226,19 +226,19 @@
 				}
 			}
 //			_debug_array($fields);
-			$organized_fields = $custom_fields->organize_fields(eventplanner_vendor_report::acl_location, $fields);
+			$organized_fields = $custom_fields->organize_fields(eventplanner_customer_report::acl_location, $fields);
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
-				'label' => lang('vendor report'),
+				'label' => lang('customer report'),
 				'link' => '#first_tab',
 				'function' => "set_tab('first_tab')"
 			);
 
 			$data = array(
-				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.save")),
-				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.index",)),
-				'report' => $vendor_report,
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer_report.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer_report.index",)),
+				'report' => $customer_report,
 				'booking'		=> $booking,
 				'application'	=> $application,
 				'application_type_list' => $application_type_list,
@@ -250,7 +250,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-		//	self::add_javascript('eventplanner', 'portico', 'vendor_report.edit.js');
+		//	self::add_javascript('eventplanner', 'portico', 'customer_report.edit.js');
 			self::render_template_xsl(array('report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 

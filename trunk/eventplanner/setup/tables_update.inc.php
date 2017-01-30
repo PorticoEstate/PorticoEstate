@@ -80,3 +80,71 @@
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}
+
+	$test[] = '0.9.18.004';
+
+	function eventplanner_upgrade0_9_18_004()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->DropTable('eventplanner_resource_comment');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('eventplanner_booking_resource');
+		$GLOBALS['phpgw_setup']->oProc->DropTable('eventplanner_resource');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_vendor', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_vendor', 'public', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'public', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking', 'public', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_order', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => false));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_application', 'public', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking_vendor_report', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking_vendor_report', 'public', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking_customer_report', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => True));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking_customer_report', 'public', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		$sql = "UPDATE eventplanner_vendor SET owner_id = 7";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$sql = "UPDATE eventplanner_customer SET owner_id = 7";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$sql = "UPDATE eventplanner_booking SET owner_id = 7";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$sql = "UPDATE eventplanner_booking_vendor_report SET owner_id = 7";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		$sql = "UPDATE eventplanner_booking_customer_report SET owner_id = 7";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_vendor', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_customer', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_booking', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_booking_vendor_report', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => false));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_booking_customer_report', 'owner_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => false));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.005';
+		}
+		return $GLOBALS['setup_info']['eventplanner']['currentver'];
+	}
