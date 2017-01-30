@@ -36,7 +36,7 @@
 	{
 		public function __construct()
 		{
-		
+
 		}
 
 		public function login($frontend = '')
@@ -70,7 +70,18 @@
 				$GLOBALS['phpgw_info']['login_left_message'] = '';
 				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
-			
+
+			if(!phpgw::get_var('after','raw', 'COOKIE'))
+			{
+				$after = phpgw::get_var('after', 'string');
+				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'raw'),$cookietime=0);
+			}
+			else
+			{
+				$after = true;
+			}
+
+
 			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote']) // In case a user failed logged in via SSO - get another try
 			{
 				$GLOBALS['phpgw_info']['server']['auth_type'] = $GLOBALS['phpgw_remote_user_fallback'];
@@ -168,7 +179,14 @@
 				$extra_vars['cd'] = 'yes';
 
 				$GLOBALS['phpgw']->hooks->process('login');
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+				if ($after)
+				{
+					$this->redirect_after($frontend);
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+				}
 
 			//----------------- End login ntlm
 			}
@@ -245,7 +263,14 @@
 				$extra_vars['cd'] = 'yes';
 
 				$GLOBALS['phpgw']->hooks->process('login');
-				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+				if ($after)
+				{
+					$this->redirect_after($frontend);
+				}
+				else
+				{
+					$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+				}
 			}
 
 
@@ -329,7 +354,14 @@
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					if ($after)
+					{
+						$this->redirect_after($frontend);
+					}
+					else
+					{
+						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					}
 				}
 			}
 
@@ -345,5 +377,35 @@
 			}
 
 			$uilogin->phpgw_display_login($variables);
+		}
+
+		function redirect_after($frontend = '')
+		{
+			$redirect = json_decode(phpgw::get_var('after','raw', 'COOKIE'),true);
+		//	_debug_array($_COOKIE);
+		//	_debug_array($after);
+		//	die();
+			if ( is_array($redirect) && count($redirect) )
+			{
+				foreach($redirect as $key => $value)
+				{
+					$redirect_data[$key] = phpgw::clean_value($value);
+				}
+
+				$sessid = phpgw::get_var('sessionid', 'string', 'GET');
+				if ( $sessid )
+				{
+					$redirect_data['sessionid'] = $sessid;
+					$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
+				}
+
+				$GLOBALS['phpgw']->session->phpgw_setcookie('after', false, 0);
+				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", $redirect_data);
+			}
+			else
+			{
+				//failsafe
+				$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php");
+			}
 		}
 	}

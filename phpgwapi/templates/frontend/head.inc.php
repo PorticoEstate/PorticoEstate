@@ -202,7 +202,7 @@ JS;
 	{
 		$tpl_vars['login_text_org'] = '';
 		$tpl_vars['login_text'] = lang('Login');
-		$tpl_vars['login_url'] = 'login.php?after='.urlencode($_SERVER['QUERY_STRING']);
+		$tpl_vars['login_url'] = 'login.php?after='. urlencode(json_encode($_GET));
 		$login_parameter = !empty($config_frontend['login_parameter']) ? $config_frontend['login_parameter'] : '';
 		$custom_login_url = !empty($config_frontend['custom_login_url']) ? $config_frontend['custom_login_url'] : '';
 		if($login_parameter)

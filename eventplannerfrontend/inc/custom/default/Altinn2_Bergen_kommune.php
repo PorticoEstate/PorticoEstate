@@ -35,7 +35,7 @@
 	class eventplannerfrontend_external_user extends eventplannerfrontend_bouser
 	{
 
-		var $debug = true;
+		var $debug = false;
 		public function __construct()
 		{
 			parent::__construct();

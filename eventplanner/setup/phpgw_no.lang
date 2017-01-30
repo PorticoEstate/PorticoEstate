@@ -107,3 +107,4 @@ please enter a valid account number	eventplanner	no	Angi et gyldig kontonummer
 program data	eventplanner	no	Om programmet
 booking	eventplanner	no	Booking
 customer contact email	eventplanner	no	Epost
+showall	eventplanner	no	Vis alle
