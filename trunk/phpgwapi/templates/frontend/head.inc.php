@@ -174,6 +174,7 @@ JS;
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
+		'home_text'		=> lang('home'),
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'site_url'	=> $GLOBALS['phpgw']->link("/{$app}/", array()),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
@@ -188,6 +189,7 @@ JS;
 	);
 	if ($manual !== null) 
 	{
+
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
 	}
