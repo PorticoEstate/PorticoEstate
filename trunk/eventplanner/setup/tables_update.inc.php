@@ -153,3 +153,33 @@
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}
+	$test[] = '0.9.18.005';
+
+	function eventplanner_upgrade0_9_18_005()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'eventplanner_permission', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'object_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'permission' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_accounts' => array('subject_id' => 'account_id'),
+				),
+				'ix' => array(array('object_id', 'object_type'), array('object_type')),
+				'uc' => array('subject_id', 'permission', 'object_type', 'object_id'),
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.006';
+		}
+		return $GLOBALS['setup_info']['eventplanner']['currentver'];
+	}

@@ -67,12 +67,12 @@
 					'type' => 'string',
 					'history'	=> false
 					),
-				'frontpage_header' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'metatag_keywords' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'history'	=> false
 					),
-				'frontpage_sub_header' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'html',
+				'metatag_description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
 					'history'	=> false
 					),
 				'frontpage_text' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,

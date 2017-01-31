@@ -25,26 +25,27 @@
 							</xsl:attribute>
 						</input>
 					</div>
-					<!--div class="pure-control-group">
-						<label for="field_frontpage_header">
-							<xsl:value-of select="php:function('lang', 'frontpage header')"/>
+					<div class="pure-control-group">
+						<label for="field_metatag_keywords">
+							<xsl:value-of select="php:function('lang', 'keywords')"/>
 						</label>
-						<input id="field_frontpage_header" name="frontpage_header" type="text" size="50">
+						<input id="field_metatag_keywords" name="metatag_keywords" type="text" size="50">
 							<xsl:attribute name="value">
-								<xsl:value-of select="config_data/frontpage_header"/>
+								<xsl:value-of select="config_data/metatag_keywords"/>
 							</xsl:attribute>
 						</input>
 					</div>
 					<div class="pure-control-group">
-						<label for="field_frontpage_sub_header">
-							<xsl:value-of select="php:function('lang', 'frontpage sub header')"/>
+						<label for="field_metatag_description">
+							<xsl:value-of select="php:function('lang', 'description')"/>
 						</label>
-						<input id="field_frontpage_sub_header" name="frontpage_sub_header" type="text" size="50">
-							<xsl:attribute name="value">
-								<xsl:value-of select="config_data/frontpage_sub_header"/>
-							</xsl:attribute>
-						</input>
-					</div-->
+						<div class="pure-custom">
+							<textarea id="field_metatag_description" class="full-width" name="metatag_description">
+								<xsl:value-of select="config_data/metatag_description"/>
+							</textarea>
+						</div>
+					</div>
+
 					<div class="pure-control-group">
 						<label for="field_frontpage_text">
 							<xsl:value-of select="php:function('lang', 'Frontpage text')"/>

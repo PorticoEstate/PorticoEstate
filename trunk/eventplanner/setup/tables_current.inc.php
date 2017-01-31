@@ -341,4 +341,19 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'eventplanner_permission' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'permission' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('subject_id' => 'account_id'),
+			),
+			'ix' => array(array('object_id', 'object_type'), array('object_type')),
+			'uc' => array('subject_id', 'permission', 'object_type', 'object_id'),
+		),
 	);

@@ -73,6 +73,11 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
 							'acl_app' => 'eventplanner'))
 					),
+					'permission'	=> array
+					(
+						'text'	=> lang('permission'),
+						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uipermission.index') )
+					),
 					'list_atrribs' => array(
 						'text' => $GLOBALS['phpgw']->translation->translate('custom fields', array(), true),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
