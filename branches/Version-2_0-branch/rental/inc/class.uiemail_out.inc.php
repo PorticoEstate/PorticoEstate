@@ -41,7 +41,13 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'get' => true
+			'get' => true,
+			'get_candidates' => true,
+			'set_candidates' => true,
+			'delete_recipients'	=> true,
+			'get_recipients'=> true,
+			'set_email'		=> true,
+			'send_email'	=> true
 		);
 
 		protected
@@ -52,7 +58,7 @@
 		{
 			parent::__construct();
 			self::set_active_menu('rental::email_out');
-			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('email_out');
+			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('email out');
 			$this->bo = createObject('rental.boemail_out');
 			$this->fields = rental_email_out::get_fields();
 			$this->permissions = rental_email_out::get_instance()->get_permission_array();
@@ -155,10 +161,15 @@
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
-				'label' => lang('email_out'),
-				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
+				'label' => lang('email out'),
+				'link' => '#first_tab'
 			);
+			$tabs['recipient'] = array(
+				'label' => lang('recipient'),
+				'link' => '#recipient',
+				'disable' => $email_out->get_id() ? false : true,
+			);
+
 
 			$bocommon = CreateObject('property.bocommon');
 
@@ -187,6 +198,131 @@
 				)
 			);
 
+			$parties_def = array(
+				array('key' => 'id', 'label' => 'ID', 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'email', 'label' => lang('email'), 'sortable' => true, 'resizeable' => true, 'editor' =>true),
+			);
+
+			$tabletools = array
+				(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
+			);
+
+			$tabletools_candidate = array();
+			$tabletools_candidate[] = array
+				(
+				'my_name' => 'add',
+				'text' => lang('add'),
+				'type' => 'custom',
+				'custom_code' => "
+						var api = oTable1.api();
+						var selected = api.rows( { selected: true } ).data();
+
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['id']);
+						}
+						onActionsClick_candidates('add', ids);
+						"
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_1',
+				'requestUrl' => "''",
+//				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.notify.update_data',
+//						'location_id' => $location_id, 'location_item_id' => $id, 'action' => 'refresh_notify_contact',
+//						'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $parties_def,
+				'data' => json_encode(array()),
+				'tabletools' => array_merge($tabletools,$tabletools_candidate),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+					array('editor_action' => self::link(array('menuaction' => 'rental.uiemail_out.set_email')))
+				)
+			);
+
+
+			$tabletools_recipient = array();
+			$tabletools_recipient[] = array
+				(
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'type' => 'custom',
+				'custom_code' => "
+						var api = oTable2.api();
+						var selected = api.rows( { selected: true } ).data();
+
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['id']);
+						}
+						onActionsClick_recipient('delete_recipients', ids);
+						"
+			);
+			$tabletools_recipient[] = array
+				(
+				'my_name' => 'send_email',
+				'text' => lang('send email'),
+				'type' => 'custom',
+				'custom_code' => "
+						var api = oTable2.api();
+						var selected = api.rows( { selected: true } ).data();
+
+						var numSelected = 	selected.length;
+
+						if (numSelected ==0){
+							alert('None selected');
+							return false;
+						}
+						var ids = [];
+						for ( var n = 0; n < selected.length; ++n )
+						{
+							var aData = selected[n];
+							ids.push(aData['id']);
+						}
+						onActionsClick_recipient('send_email', ids);
+						"
+			);
+
+
+			$parties_def[] = array('key' => 'status', 'label' => lang('status'), 'sortable' => true, 'resizeable' => true);
+
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_2',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'rental.uiemail_out.get_recipients',
+						'id' => $id,'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $parties_def,
+				'data' => json_encode(array()),
+				'tabletools' => array_merge($tabletools,$tabletools_recipient),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true),
+					array('editor_action' => self::link(array('menuaction' => 'rental.uiemail_out.set_email')))
+				)
+			);
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uiemail_out.save')),
@@ -196,8 +332,9 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
 			);
+			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('rental', 'portico', 'email_out.edit.js');
+			self::add_javascript('rental', 'rental', 'email_out.edit.js');
 			self::render_template_xsl(array('email_out', 'datatable_inline'), array($mode => $data));
 		}
 
@@ -224,5 +361,114 @@
 		public function save()
 		{
 			parent::save();
+		}
+
+		public function get_candidates( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				phpgw::no_access();
+			}
+			$type =  phpgw::get_var('type', 'string');
+			$id =  phpgw::get_var('id', 'int');
+
+			switch ($type)
+			{
+				case 'composite':
+					$values = $this->bo->get_composite_candidates($id);
+					array_walk($values, array($this, "_add_links"), "rental.uiparty.edit");
+
+					break;
+
+				default:
+					$values = array();
+					break;
+			}
+
+			return $this->jquery_results(array('results' => $values));
+		}
+
+		public function set_candidates()
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$id =  phpgw::get_var('id', 'int');
+			$ids =  (array) phpgw::get_var('ids', 'int');
+			$ret = $this->bo->set_candidates($id, $ids);
+		}
+
+		public function delete_recipients()
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$id =  phpgw::get_var('id', 'int');
+			$ids =  (array) phpgw::get_var('ids', 'int');
+			$ret = $this->bo->delete_recipients($id, $ids);
+		}
+
+		public function get_recipients()
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$id =  phpgw::get_var('id', 'int');
+			$values = $this->bo->get_recipients($id);
+			array_walk($values, array($this, "_add_links"), "rental.uiparty.edit");
+			return $this->jquery_results(array('results' => $values));
+
+		}
+
+		public function send_email( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+			$id =  phpgw::get_var('id', 'int');
+			$ids =  (array) phpgw::get_var('ids', 'int');
+			$ret = $this->bo->send_email($id, $ids);
+		}
+
+		public function set_email( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
+			{
+				phpgw::no_access();
+			}
+
+			phpgw::import_class('rental.soparty');
+
+			$field_name = phpgw::get_var('field_name');
+			$email = phpgw::get_var('value');
+			$id = phpgw::get_var('id');
+			$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
+			$message = array();
+			if (!$email_validator->check_email_address($email) )
+			{
+				$message['error'][] = array('msg' => lang('data has not validated'));
+				return $message;
+			}
+
+			$party = rental_soparty::get_instance()->get_single($id);
+			$party->set_field('email', $email);
+			$result = rental_soparty::get_instance()->store($party);
+
+			$message = array();
+			if ($result)
+			{
+				$message['message'][] = array('msg' => lang('data has been saved'));
+			}
+			else
+			{
+				$message['error'][] = array('msg' => lang('data has not been saved'));
+			}
+
+			return $message;
+
 		}
 	}

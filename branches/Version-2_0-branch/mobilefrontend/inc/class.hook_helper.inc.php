@@ -30,6 +30,17 @@
 	 */
 	class mobilefrontend_hook_helper
 	{
+		private $perform_action = false;
+
+		public function __construct()
+		{
+			$script_path = dirname(phpgw::get_var('SCRIPT_FILENAME', 'string', 'SERVER'));
+
+			if(preg_match('/mobilefrontend/', $script_path))
+			{
+				$this->perform_action = true;
+			}
+		}
 
 		/**
 		 * set auth_type for custom login - called from login
@@ -38,6 +49,10 @@
 		 */
 		public function set_auth_type()
 		{
+			if(!$this->perform_action)
+			{
+				return;
+			}
 			//get from local config
 
 			$config = CreateObject('phpgwapi.config', 'mobilefrontend');
@@ -51,20 +66,19 @@
 
 		public function set_cookie_domain()
 		{
-			$script_path = dirname(phpgw::get_var('SCRIPT_FILENAME', 'string', 'SERVER'));
-			
-			if(preg_match('/mobilefrontend/', $script_path))
+			if(!$this->perform_action)
 			{
-				//get from local config
-				$config = CreateObject('phpgwapi.config', 'mobilefrontend');
-				$config->read();
-
-				$GLOBALS['phpgw_info']['server']['cookie_domain'] = !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) ? $GLOBALS['phpgw_info']['server']['cookie_domain'] : '';
-
-				if (!empty($config->config_data['cookie_domain']))
-				{
-					$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config->config_data['cookie_domain'];
-				}
+				return;
 			}
+			//get from local config
+			$config = CreateObject('phpgwapi.config', 'mobilefrontend');
+			$config->read();
+
+			$GLOBALS['phpgw_info']['server']['cookie_domain'] = !empty($GLOBALS['phpgw_info']['server']['cookie_domain']) ? $GLOBALS['phpgw_info']['server']['cookie_domain'] : '';
+
+			if (!empty($config->config_data['cookie_domain']))
+			{
+				$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config->config_data['cookie_domain'];
+			}		
 		}
 	}

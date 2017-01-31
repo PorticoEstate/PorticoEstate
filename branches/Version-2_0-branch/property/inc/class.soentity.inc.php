@@ -350,7 +350,7 @@
 			$j = 0;
 			while ($this->db->next_record())
 			{
-				$jsondata = json_decode($this->db->f('json_representation'), true);
+				$jsondata = json_decode($this->db->f('json_representation', true), true);
 
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
@@ -1056,7 +1056,7 @@
 //				$xmldata = $this->db->f('xml_representation');
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
-				$jsondata = json_decode($this->db->f('json_representation'), true);
+				$jsondata = json_decode($this->db->f('json_representation', true), true);
 
 				foreach ($cols_return as $key => $field)
 				{
@@ -2062,7 +2062,7 @@
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
-						$attr['value'] = $this->db->f($attr['column_name']);
+						$attr['value'] = $this->db->f($attr['column_name'], true);
 					}
 				}
 			}
@@ -2119,7 +2119,7 @@
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
 
-				$jsondata = json_decode($this->db->f('json_representation'), true);
+				$jsondata = json_decode($this->db->f('json_representation', true), true);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
@@ -2621,7 +2621,7 @@
 //							$xml = new DOMDocument('1.0', 'utf-8');
 //							$xml->loadXML($xmldata);
 //							$old_value = $xml->getElementsByTagName($entry['name'])->item(0)->nodeValue;
-							$jsondata = json_decode($this->db->f('json_representation'), true);
+							$jsondata = json_decode($this->db->f('json_representation', true), true);
 							$old_value = $jsondata[$entry['name']];
 
 						}

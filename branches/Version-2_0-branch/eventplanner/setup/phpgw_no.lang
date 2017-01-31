@@ -7,6 +7,7 @@ apply	eventplanner	no	Mellomlagre
 list	eventplanner	no	Liste
 general	eventplanner	no	Generell
 dates	eventplanner	no	Datoer
+event dates	eventplanner	no	Arrangement-dato
 custom attributes	eventplanner	no	Egendefinerte attributter
 no category	eventplanner	no	Kategori ikke valgt
 time created	eventplanner	no	Tidsstempel
@@ -21,28 +22,34 @@ pending	eventplanner	no	Under behandling
 rejected	eventplanner	no	Avvist
 approved	eventplanner	no	Godkjent
 vendor	eventplanner	no	Utøver
+vendor name	eventplanner	no	Navn på utøver/utøvergruppe
+vendor description	eventplanner	no	Beskrivelse av utøver
 new	eventplanner	no	Ny
 show	eventplanner	no	vis
 history	eventplanner	no	Historikk
-date start	eventplanner	no	Første dato
-date end	eventplanner	no	Siste dato
-contact name	eventplanner	no	Kontaktperson
+date start	eventplanner	no	Første arrangementsdato
+date end	eventplanner	no	Siste arrangementsdato
+contact name	eventplanner	no	Navn kontaktperson
 contact email	eventplanner	no	Epost kontaktperson
 contact phone	eventplanner	no	Tlf. kontaktperson
 case officer	eventplanner	no	Saksbehandler
 active	eventplanner	no	Aktiv
+inactive	eventplanner	no	Inaktiv
 select	eventplanner	no	Velg
 remark	eventplanner	no	Merknad
 comment	eventplanner	no	Kommentar
 demands	eventplanner	no	Forutsetning
 payment	eventplanner	no	Betaling
-labour support	eventplanner	no	Personellstøtte
+labour support	eventplanner	no	Opprigging/nedrigging
+rig up min before	eventplanner	no	Antatt oppriggingstid
+rig down min after	eventplanner	no	Antatt nedriggingstid
 technical support	eventplanner	no	Teknisk støtte
-charge per unit	eventplanner	no	betaling pr stk
-timespan	eventplanner	no	Varighet (min.)
+charge per unit	eventplanner	no	Betaling pr forestilling/kurs/omvisning
+event timespan	eventplanner	no	Programvarighet (minutter)
 number of units	eventplanner	no	Antall arrangement
 integer	eventplanner	no	Heltall
-total amount	eventplanner	no	Sum
+total amount	eventplanner	no	Søknadssum
+number of granted events	eventplanner	no	Antall innvilgede arrangementer
 created	eventplanner	no	Registrert
 modified	eventplanner	no	Endret
 id	eventplanner	no	Id
@@ -56,15 +63,18 @@ might be published	eventplanner	no	Kan bli publisert på internett
 other participants	eventplanner	no	Navn på andre medvirkende (+ rolle)
 arena requirement	eventplanner	no	Krav til lokale
 stage	eventplanner	no	Scene
+size of stage	eventplanner	no	Scenestørrelse
 stage requirement	eventplanner	no	Krav til scene
 width	eventplanner	no	Bredde
 depth	eventplanner	no	Dybde
-wardrobe	eventplanner	no	Garderobe
+wardrobe	eventplanner	no	Kryss av for behov for utøvergarderobe
 audience limit	eventplanner	no	Maksimum antall publikum
-raider	eventplanner	no	Raider
+raider	eventplanner	no	Andre raiderønsker – (valgfri)
 vendor report	eventplanner	no	Utøverrapport
 calendar	eventplanner	no	Kalender
 from	eventplanner	no	Fra
+event start	eventplanner	no	Ønsket arrangement dato/tid
+select event start	eventplanner	no	Klikk på og velg ønsket måned, dato og klokkeslett
 select all	eventplanner	no	Velg alle
 enable	eventplanner	no	Aktiver
 disable	eventplanner	no	Deaktiver
@@ -72,3 +82,31 @@ reports	eventplanner	no	Rapporter
 location	eventplanner	no	Lokalisering
 who	eventplanner	no	Hvem
 note	eventplanner	no	Merknad
+customer	eventplanner	no	Mottakersted
+customer report	eventplanner	no	Rapport fra mottakersted
+organization number	eventplanner	no	Organisasjonsnummer
+program type	eventplanner	no	Programtype
+program title	eventplanner	no	Programtittel
+program description	eventplanner	no	Programbeskrivelse
+zip code	eventplanner	no	Postnummer
+city	eventplanner	no	Sted
+address	eventplanner	no	Adresse
+account number	eventplanner	no	Kontonummer
+history	eventplanner	no	Endringslogg
+user	eventplanner	no	Bruker
+proceedings	eventplanner	no	Saksbehandling
+maximum of granted events are reached	eventplanner	no	Maksimalt antall arrangement er nådd
+did not validate	eventplanner	no	Feil med datasettet
+date is outside the scope	eventplanner	no	Dato ligger utenfor tillat tidsrom
+can not delete booking with customer	eventplanner	no	Kan ikke slette booking som er koplet med mottakersted
+report	eventplanner	no	Rapport
+events	eventplanner	no	Arrangementer
+event	eventplanner	no	Arrangement
+please enter a valid organization number	eventplanner	no	Angi et gyldig organisasjonsnummer
+please enter a valid account number	eventplanner	no	Angi et gyldig kontonummer
+program data	eventplanner	no	Om programmet
+booking	eventplanner	no	Booking
+customer contact email	eventplanner	no	Epost
+showall	eventplanner	no	Vis alle
+read	eventplanner	no	Les
+permission	eventplanner	no	Rettighet

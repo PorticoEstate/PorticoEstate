@@ -10,7 +10,7 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
-	$config_frontend	= CreateObject('phpgwapi.config','bookingfrontend')->read();
+	$config_frontend	= CreateObject('phpgwapi.config',$app)->read();
 
 	$tracker_id = !empty($config_frontend['tracker_id']) ? $config_frontend['tracker_id'] : '';
 	$tracker_code1 = <<<JS
@@ -51,7 +51,7 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
-    $stylesheets[] = "/bookingfrontend/css/bookingfrontend.css";
+    $stylesheets[] = "/{$app}/css/bookingfrontend.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
@@ -173,7 +173,7 @@ JS;
 	$test = $GLOBALS['phpgw']->common->get_on_events();
     $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
     $test = str_replace("\n}\n","\n})\n",$test);
-	$app = lang($app);
+
 	$tpl_vars = array
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
@@ -181,7 +181,7 @@ JS;
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'site_url'	=> $GLOBALS['phpgw']->link('/bookingfrontend/', array()),
+		'site_url'	=> $GLOBALS['phpgw']->link("/{$app}/", array()),
 		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
         'win_on_events'	=> $test,
 		'metainfo_author' => $author,
@@ -197,6 +197,9 @@ JS;
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
 	}
+//	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+//	_debug_array($user);
+
 	$bouser = CreateObject('bookingfrontend.bouser');
     $org = CreateObject('bookingfrontend.uiorganization');
     $orgid = $org->get_orgid($bouser->orgnr);

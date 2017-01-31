@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
-<!-- BEGIN head -->
 <html>
+<!-- BEGIN head -->
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >

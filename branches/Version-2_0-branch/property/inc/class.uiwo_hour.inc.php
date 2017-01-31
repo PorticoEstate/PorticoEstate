@@ -59,7 +59,7 @@
 			'edit_deviation' => true,
 			'pdf_order' => true,
 			'import_calculation' => true,
-			'send_all_orders'	=> true
+	//		'send_all_orders'	=> true
 		);
 
 		function __construct()
@@ -3350,14 +3350,23 @@ HTML;
 				phpgw::no_access();
 			}
 
-			$start_from = 45000000;
-			$sql = "SELECT id FROM fm_workorder WHERE id >= $start_from";
+			$start_from = 45000100;
+			$sql = "SELECT id, status FROM fm_workorder WHERE id >= $start_from";
 			$db = & $GLOBALS['phpgw']->db;
 			$db->query($sql, __LINE__, __FILE__);
 			$ids = array();
+
 			while ($db->next_record())
 			{
-				$ids[] = $db->f('id');
+				$status = $db->f('status');
+				if($status == 'Avbrutt' || $status == 'Dublisert')
+				{
+					phpgwapi_cache::message_set("Hopper over [{$status}]: " . $db->f('id') , 'error');
+				}
+				else
+				{
+					$ids[] = $db->f('id');
+				}
 			}
 
 			foreach ($ids as $workorder_id)

@@ -34,9 +34,9 @@
 	class rental_email_out extends phpgwapi_model
 	{
 
-		const STATUS_PENDING = 1;
-		const STATUS_SENT = 2;
-		const STATUS_ERROR = 3;
+		const STATUS_PENDING = 0;
+		const STATUS_SENT = 1;
+		const STATUS_ERROR = 2;
 		const acl_location = '.email_out';
 
 		protected
@@ -71,7 +71,7 @@
 		public static function get_status_list()
 		{
 			return array(
-				self::STATUS_PENDING	=> lang('pending'),
+				self::STATUS_PENDING	=> lang('planned'),
 				self::STATUS_SENT => lang('sent'),
 				self::STATUS_ERROR	=> lang('error')
 			);
@@ -111,6 +111,7 @@
 					'type' => 'string',
 					'label' => 'description',
 					'sortable' => false,
+//					'history'	=> true
 					),
 				'modified' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
 					'type' => 'date',

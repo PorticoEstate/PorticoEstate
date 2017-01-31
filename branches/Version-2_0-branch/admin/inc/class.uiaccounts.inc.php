@@ -108,7 +108,7 @@
 				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::EDIT, 'admin')
 				&& !$GLOBALS['phpgw']->acl->check('group_access', phpgwapi_acl::PRIV, 'admin') )
 			{
-				return;
+				return $this->jquery_results(array('results' => array(), 'total_records' => 0));
 			}
 
 			$type = phpgw::get_var('type');

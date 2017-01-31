@@ -72,27 +72,9 @@ $(document).ready(function ()
         }
     });
 	
-	
 	$('#template_list').change( function()
 	{
-		var oArgs = {menuaction: 'property.uiimport_components.get_attributes_from_template'};
-		var requestUrl = phpGWLink('index.php', oArgs, true);	
-		
-		var data = {"category_template": $(this).val()};
-		JqueryPortico.execute_ajax(requestUrl,
-			function(result){
-				var $el = $("#attribute_name_component_id");
-				$el.empty();
-				$.each(result, function(key, value) {
-					if (value.selected)
-					{
-						$el.append($("<option selected></option>").attr("value", value.id).text(value.name));
-					} else {
-						$el.append($("<option></option>").attr("value", value.id).text(value.name));
-					}
-				});
-			}, data, "GET", "json"
-		);				
+		fill_template_attributes('');
 	});
 	
 	$('#relations_step_1').on('click', function ()
@@ -120,6 +102,12 @@ $(document).ready(function ()
 			return false;
 		}	
 		
+		if ($('#attribute_name_component_id').val() === '')
+		{
+			alert('Choose attribute name for Component ID');
+			return false;
+		}
+		
 		if ($('input:radio[name=compressed_file_check]:checked').val() == 1 && $('#compressed_file_name').val() == '')
 		{
 			alert('Enter the name of the compressed file');
@@ -144,7 +132,7 @@ $(document).ready(function ()
 		{
 			return false;
 		}
-		//form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
+		form_data.append('attribute_name_component_id', $('#attribute_name_component_id').val());
 		form_data.append('location_code', $('#location_code').val());
 		form_data.append('location_item_id', $('#location_item_id').val());
 		form_data.append('compressed_file_check', $('input:radio[name=compressed_file_check]:checked').val());
@@ -195,6 +183,12 @@ $(document).ready(function ()
 			alert('Choose Location');
 			return false;
 		}	
+		
+		if ($('#attribute_name_component_id').val() === '')
+		{
+			alert('Choose attribute name for Component ID');
+			return false;
+		}
 		
 		if (isSendingData())
 		{
@@ -663,15 +657,36 @@ $(document).ready(function ()
 				if (result.template_id)
 				{
 					$('#template_list').val(result.template_id);
+					fill_template_attributes(result.attrib_name_componentID);
 				}
-				$('#attribute_name_component_id').val(result.attrib_name_componentID);
-		
 			}, data, "GET", "JSON"
 		);
 	});
 	
 });
 
+function fill_template_attributes (selected_attribute)
+{
+	var oArgs = {menuaction: 'property.uiimport_components.get_attributes_from_template'};
+	var requestUrl = phpGWLink('index.php', oArgs, true);	
+
+	var data = {"category_template": $("#template_list").val(), "selected_attribute":  selected_attribute};
+	JqueryPortico.execute_ajax(requestUrl,
+		function(result){
+			var $el = $("#attribute_name_component_id");
+			$el.empty();
+			$.each(result, function(key, value) {
+				if (value.selected)
+				{
+					$el.append($("<option selected></option>").attr("value", value.id).text(value.name));
+				} else {
+					$el.append($("<option></option>").attr("value", value.id).text(value.name));
+				}
+			});
+		}, data, "GET", "json"
+	);			
+}
+	
 function valid_new_attribute (code)
 {
 	if ($('#name_' + code).val() == '')

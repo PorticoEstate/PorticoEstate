@@ -135,6 +135,7 @@
 			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 
 			$search = phpgw::get_var('search');
+			$query = phpgw::get_var('query');
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int', 'REQUEST', 1);
 			$columns = phpgw::get_var('columns');
@@ -145,6 +146,8 @@
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			$search_for = (is_array($search)) ? $search['value'] : $search;
 			$search_for = $search_for ? $search_for : '';
+			$search_for = $query ? $query : $search_for; //from autocomplete
+
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			$export = phpgw::get_var('export', 'bool');

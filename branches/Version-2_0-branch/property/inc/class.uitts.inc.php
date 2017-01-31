@@ -122,11 +122,7 @@
 			$this->_category_acl = isset($this->bo->config->config_data['acl_at_tts_category']) ? $this->bo->config->config_data['acl_at_tts_category'] : false;
 		}
 
-		/**
-		 * Fetch data from $this->bo based on parametres
-		 * @return array
-		 */
-		public function query()
+		function get_params()
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -163,6 +159,16 @@
 				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
 			);
 
+			return $params;
+		}
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
+		public function query()
+		{
+			$params = $this->get_params();
+
 			$values = $this->bo->read($params);
 
 			if ($values)
@@ -196,7 +202,7 @@
 			$result_data['sum_budget'] = $this->bo->sum_budget;
 			$result_data['sum_actual_cost'] = $this->bo->sum_actual_cost;
 			$result_data['sum_difference'] = $this->bo->sum_difference;
-			$result_data['draw'] = $draw;
+			$result_data['draw'] = phpgw::get_var('draw', 'int');
 
 			$link_data = array
 				(
@@ -274,43 +280,14 @@
 
 		function download( $external = '' )
 		{
-			$start_date = urldecode($this->start_date);
-			$end_date = urldecode($this->end_date);
-
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
-
-			$params = array(
-				'start' => 0,
-				'results' => -1,
-				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'dir' => $order[0]['dir'],
-				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
-				'allrows' => phpgw::get_var('length', 'int') == -1 ? true : false,
-				'status_id' => $this->bo->status_id,
-				'user_id' => $this->bo->user_id,
-				'reported_by' => $this->bo->reported_by,
-				'cat_id' => $this->bo->cat_id,
-				'vendor_id' => $this->bo->vendor_id,
-				'district_id' => $this->bo->district_id,
-				'part_of_town_id' => $this->bo->part_of_town_id,
-				'allrows' => true,
-				'start_date' => $start_date,
-				'end_date' => $end_date,
-				'location_code' => $this->bo->location_code,
-				'p_num' => $this->bo->p_num,
-				'building_part' => $this->bo->building_part,
-				'b_account' => $this->bo->b_account,
-				'ecodimb' => $this->bo->ecodimb,
-				'branch_id' => phpgw::get_var('branch_id'),
-				'order_dim1' => phpgw::get_var('order_dim1'),
-				'external' => $external,
-				'download' => true
-			);
+			$params = $this->get_params();
+			$params['start'] = 0;
+			$params['results'] = -1;
+			$params['start_date'] = urldecode($this->start_date);
+			$params['end_date'] = urldecode($this->end_date);
+			$params['download'] = true;
+			$params['allrows'] = true;
+			$params['external'] = $external;
 //			_debug_array($params); die();
 			$list = $this->bo->read($params);
 

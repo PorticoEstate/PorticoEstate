@@ -531,12 +531,14 @@
 						$data[$field['name']] = ',' . implode(',', $data[$field['name']]) . ',';
 					}
 				}
+				if ($field['type'] == 'varchar')
+				{
+					$data[$field['name']] =  $this->_db->db_addslashes(html_entity_decode($data[$field['name']]));
+				}
 			}
 
 			$cols = array();
 			$vals = array();
-
-			$data['descr'] = $this->_db->db_addslashes(html_entity_decode($value));
 
 			if (isset($data['extra']))
 			{

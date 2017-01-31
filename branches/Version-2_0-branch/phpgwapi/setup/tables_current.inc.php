@@ -73,6 +73,18 @@
 			'ix' => array(),
 			'uc' => array('account_lid')
 		),
+		'phpgw_accounts_data' => array(
+			'fd' => array(
+				'account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'account_data' => array('type' => 'jsonb', 'nullable' => true),
+			),
+			'pk' => array('account_id'),
+			'fk' => array(
+				'phpgw_accounts' => array('account_id' => 'account_id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'phpgw_account_delegates' => array(
 			'fd' => array(
 				'delegate_id' => array('type' => 'auto','precision' => 4,'nullable' => false),

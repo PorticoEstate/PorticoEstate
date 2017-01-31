@@ -99,7 +99,7 @@
 						<div class="pure-control-group">
 							<label>
 								<a href="{application_url}" target="_blank">
-									<xsl:value-of select="php:function('lang', 'application')"/>
+									<xsl:value-of select="lang_application"/>
 								</a>
 
 							</label>
@@ -134,42 +134,32 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'type')"/>
+								<xsl:value-of select="php:function('lang', 'program type')"/>
 							</label>
 							<div class="pure-custom">
 								<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
 									<thead>
 										<tr>
 											<th>
-												<xsl:value-of select="php:function('lang', 'select')"/>
-											</th>
-											<th>
-												<xsl:value-of select="php:function('lang', 'type')"/>
+												<xsl:value-of select="php:function('lang', 'program type')"/>
 											</th>
 										</tr>
 									</thead>
 									<tbody>
 										<xsl:for-each select="application_type_list">
-											<tr>
-												<td>
-													<xsl:if test="selected = 1">
-														<xsl:text>X</xsl:text>
-													</xsl:if>
-												</td>
-												<td>
-													<xsl:value-of disable-output-escaping="yes" select="name"/>
-												</td>
-											</tr>
+											<xsl:if test="selected = 1">
+												<tr>
+													<td>
+														<xsl:value-of disable-output-escaping="yes" select="name"/>
+													</td>
+												</tr>
+											</xsl:if>
 										</xsl:for-each>
 									</tbody>
 								</table>
 							</div>
 
 						</div>
-
-
-
-
 					</fieldset>
 
 					<fieldset>
@@ -233,7 +223,7 @@
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'contact_name')"/>
+									<xsl:value-of select="php:function('lang', 'contact name')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -267,7 +257,7 @@
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'contact_phone')"/>
+									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -323,7 +313,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'timespan')"/>
+								<xsl:value-of select="php:function('lang', 'event timespan')"/>
 							</label>
 							<xsl:value-of select="application/timespan"/>
 						</div>
@@ -364,7 +354,7 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'details')"/>
+								<xsl:value-of select="php:function('lang', 'history')"/>
 							</label>
 							<div class="pure-custom">
 								<xsl:for-each select="datatable_def">
