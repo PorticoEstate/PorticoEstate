@@ -114,7 +114,8 @@ JS;
 
 	$config	= CreateObject('phpgwapi.config',$app)->read();
 	$logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : '';
-	$keywords = !empty($config['keywords']) ? $config['keywords'] : '';
+	$keywords = !empty($config['metatag_keywords']) ? $config['metatag_keywords'] : '';
+	$description = !empty($config['metatag_description']) ? $config['metatag_description'] : '';
 
 	if($keywords)
 	{
@@ -124,7 +125,7 @@ JS;
 	{
 		$keywords = '<meta name="keywords" content="phpGroupWare">';
 	}
-	if(!empty($description))
+	if($description)
 	{
 		$description = '<meta name="description" content="'.$description.'">';
 	}

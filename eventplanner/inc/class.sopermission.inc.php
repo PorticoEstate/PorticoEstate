@@ -23,20 +23,19 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
-	 * @subpackage customer
+	 * @subpackage permission
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
-	include_class('eventplanner', 'customer', 'inc/model/');
 
-	class eventplanner_socustomer extends phpgwapi_socommon
+	class eventplanner_sopermission extends phpgwapi_socommon
 	{
 
 		protected static $so;
 
 		public function __construct()
 		{
-			parent::__construct('eventplanner_customer', eventplanner_customer::get_fields());
+			parent::__construct('eventplanner_permission', eventplanner_permission::get_fields());
 		}
 
 		/**
@@ -48,7 +47,7 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('eventplanner.socustomer');
+				self::$so = CreateObject('eventplanner.sopermission');
 			}
 			return self::$so;
 		}
@@ -56,7 +55,7 @@
 
 		protected function populate( array $data )
 		{
-			$object = new eventplanner_customer();
+			$object = new eventplanner_permission();
 			foreach ($this->fields as $field => $field_info)
 			{
 				$object->set_field($field, $data[$field]);
@@ -68,7 +67,7 @@
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
-	//		$status_text = eventplanner_customer::get_status_list();
+	//		$status_text = eventplanner_permission::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$lang_active = lang('active');
 			$lang_inactive = lang('inactive');
@@ -96,14 +95,14 @@
 					}
 					$value_set = array
 					(
-						'customer_id'	=> $object->get_id(),
+						'permission_id'	=> $object->get_id(),
 						'time'		=> time(),
 						'author'	=> $GLOBALS['phpgw_info']['user']['fullname'],
 						'comment'	=> $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' .lang('new value') . ': ' . $this->db->db_addslashes($new_value),
 						'type'	=> 'history',
 					);
 
-					$this->db->query( 'INSERT INTO eventplanner_customer_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
+					$this->db->query( 'INSERT INTO eventplanner_permission_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
 					. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
 				}
 
