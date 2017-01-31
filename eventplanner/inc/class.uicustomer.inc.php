@@ -46,16 +46,18 @@
 
 		protected
 			$fields,
-			$permissions;
+			$permissions,
+			$currentapp;
 
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::customer');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('customer');
 			$this->bo = createObject('eventplanner.bocustomer');
 			$this->fields = eventplanner_customer::get_fields();
 			$this->permissions = eventplanner_customer::get_instance()->get_permission_array();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			self::set_active_menu("{$this->currentapp}::customer");
 		}
 
 		private function get_category_options( $selected = 0 )
@@ -107,7 +109,7 @@
 								'list' =>  $this->get_category_options()
 							),
 							array(
-								'type' => 'checkbox',
+								'type' =>  $this->currentapp == 'eventplanner' ? 'checkbox' : 'hidden',
 								'name' => 'filter_active',
 								'text' => lang('showall'),
 								'value' =>  1,
@@ -118,11 +120,11 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uicustomer.index',
+						'menuaction' => "{$this->currentapp}.uicustomer.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'new_item' => self::link(array('menuaction' => 'eventplanner.uicustomer.add')),
+					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
@@ -141,9 +143,9 @@
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uicustomer.view'
+					'menuaction' => "{$this->currentapp}.uicustomer.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -152,9 +154,9 @@
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
+				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uicustomer.edit'
+					'menuaction' => "{$this->currentapp}.uicustomer.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -224,8 +226,8 @@
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uicustomer.save')),
-				'cancel_url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uicustomer.index',)),
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.index",)),
 				'customer' => $customer,
 				'category_list' => array('options' => $this->get_category_options( $customer->category_id )),
 				'mode' => $mode,
@@ -233,7 +235,7 @@
 				'value_active_tab' => $active_tab
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
-			self::add_javascript('eventplanner', 'portico', 'customer.edit.js');
+			self::add_javascript('eventplannerfrontend', 'portico', 'validate.js');
 			self::render_template_xsl(array('customer', 'datatable_inline'), array($mode => $data));
 		}
 

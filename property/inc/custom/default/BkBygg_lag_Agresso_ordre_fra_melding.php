@@ -116,11 +116,14 @@
 			}
 			//	$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 
+			$address = substr(htmlspecialchars($_ticket['address'], ENT_QUOTES, 'UTF-8', true), 0, 50);
+
+
 			$buyer = array(
 				'Name' => $user_name,
 				'AddressInfo' => array(
 					array(
-						'Address' => $_ticket['address']
+						'Address' => htmlspecialchars_decode($address, ENT_QUOTES)
 					)
 				),
 				'BuyerReferences' => array(
@@ -184,7 +187,7 @@
 				'dim6' => $dim6,							// Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
 				'vendor_id' => $_ticket['vendor_id'],
 				'vendor_name' => $vendor['name'],
-				'vendor_address' => $vendor['address'],
+				'vendor_address' => substr($vendor['address'], 0, 50),
 				'order_id' => $_ticket['order_id'],
 				'tax_code' => $_ticket['tax_code'],
 				'buyer' => $buyer,

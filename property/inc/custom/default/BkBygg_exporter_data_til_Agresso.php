@@ -91,9 +91,6 @@
 
 				$DetailInfo = array();
 				$DetailInfo[] = array(
-					'TaxCode' => $param['tax_code'] // Moms kode
-				);
-				$DetailInfo[] = array(
 					'ReferenceCode' => array(
 						'Code' => 'A0',
 						'Value' => $param['dim0'] // Art
@@ -153,6 +150,8 @@
 					'Buyer' => array($param['buyer']),
 					$DetailInfo
 				);
+
+				array_unshift($DetailInfo, array('TaxCode' => $param['tax_code']));
 
 				$Detail = array();
 				$i = 1;

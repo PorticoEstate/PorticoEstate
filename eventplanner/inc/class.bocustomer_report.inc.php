@@ -7,7 +7,7 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v2 or later
 	 * @internal
 	 * @package eventplanner
-	 * @subpackage resource
+	 * @subpackage customer_report
 	 * @version $Id:$
 	 */
 
@@ -27,21 +27,25 @@
 	 */
 
 	phpgw::import_class('phpgwapi.bocommon');
-	phpgw::import_class('eventplanner.soresource');
+	phpgw::import_class('eventplanner.socustomer_report');
 
-	include_class('eventplanner', 'resource', 'inc/model/');
+	include_class('eventplanner', 'customer_report', 'inc/model/');
 
-	class eventplanner_boresource extends phpgwapi_bocommon
+	class eventplanner_bocustomer_report extends phpgwapi_bocommon
 	{
 		protected static
 			$bo,
 			$fields,
 			$acl_location;
 
+		public $cats;
+
 		public function __construct()
 		{
-			$this->fields = eventplanner_resource::get_fields();
-			$this->acl_location = eventplanner_resource::acl_location;
+			$this->fields = eventplanner_customer_report::get_fields();
+			$this->acl_location = eventplanner_customer_report::acl_location;
+			$this->cats = CreateObject('phpgwapi.categories', -1, 'eventplanner', $this->acl_location);
+			$this->cats->supress_info = true;
 		}
 
 		/**
@@ -53,7 +57,7 @@
 		{
 			if (self::$bo == null)
 			{
-				self::$bo = new eventplanner_boresource();
+				self::$bo = new eventplanner_bocustomer_report();
 			}
 			return self::$bo;
 		}
@@ -61,23 +65,33 @@
 		public function store($object)
 		{
 			$this->store_pre_commit($object);
-			$ret = eventplanner_soresource::get_instance()->store($object);
+			$ret = eventplanner_socustomer_report::get_instance()->store($object);
 			$this->store_post_commit($object);
 			return $ret;
 		}
 
 		public function read($params)
 		{
-			$values =  eventplanner_soresource::get_instance()->read($params);
-			$status_text = eventplanner_resource::get_status_list();
+			if (isset($params['filters']['category_id']) && $params['filters']['category_id'] > 0)
+			{
+				$category_id = $params['filters']['category_id'];
+				$cat_list = $this->cats->return_sorted_array(0, false, '', '', '', false, $category_id, false);
+				$cat_filter = array($category_id);
+				foreach ($cat_list as $_category)
+				{
+					$cat_filter[] = $_category['id'];
+				}
+				$params['filters']['category_id'] = $cat_filter;
+			}
+
+			$values =  eventplanner_socustomer_report::get_instance()->read($params);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
-					$entry['status'] = $status_text[$entry['status']];
-					$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date']);
-					$entry['date_start'] = $GLOBALS['phpgw']->common->show_date($entry['date_start'], $dateformat);
-					$entry['date_end'] = $GLOBALS['phpgw']->common->show_date($entry['date_end'], $dateformat);
-					$entry['executive_officer'] = $entry['executive_officer'] ? $GLOBALS['phpgw']->accounts->get($entry['executive_officer'])->__toString() : '';
+				$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
+				$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
+				$entry['date_start'] = $GLOBALS['phpgw']->common->show_date($entry['date_start'], $dateformat);
+				$entry['date_end'] = $GLOBALS['phpgw']->common->show_date($entry['date_end'], $dateformat);
 			}
 			return $values;
 		}
@@ -86,11 +100,11 @@
 		{
 			if ($id)
 			{
-				$values = eventplanner_soresource::get_instance()->read_single($id, $return_object);
+				$values = eventplanner_socustomer_report::get_instance()->read_single($id, $return_object);
 			}
 			else
 			{
-				$values = new eventplanner_resource();
+				$values = new eventplanner_customer_report();
 			}
 
 			return $values;

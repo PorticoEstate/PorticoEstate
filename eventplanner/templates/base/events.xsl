@@ -25,7 +25,7 @@
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
 
-	<div>
+	<div class="content">
 		<script type="text/javascript">
 			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
 		</script>
@@ -58,54 +58,43 @@
 						<xsl:with-param name="application" select ='application'/>
 						<xsl:with-param name="application_type_list" select ='application_type_list'/>
 					</xsl:call-template>
-					<div class="pure-control-group">
-						<xsl:variable name="lang_from">
-							<xsl:value-of select="php:function('lang', 'from')"/>
-						</xsl:variable>
-						<label>
-							<xsl:value-of select="$lang_from"/>
-						</label>
-						<xsl:value-of select="php:function('show_date', number(booking/from_), $date_format)"/>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'timespan')"/>
-						</label>
-						<xsl:value-of select="application/timespan"/>
-					</div>
 
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'to')"/>
+							<xsl:value-of select="php:function('lang', 'category')"/>
 						</label>
-						<xsl:value-of select="php:function('show_date', number(booking/to_), $date_format)"/>
+						<xsl:value-of select="category_name"/>
 					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'customer')"/>
-						</label>
-						<xsl:value-of select="booking/customer_name"/>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'location')"/>
-						</label>
-						<xsl:value-of select="booking/location"/>
-					</div>
-			
-					<fieldset>
-						<!--xsl:apply-templates select="attributes_group/attributes"/-->
-						<xsl:call-template name="attributes_values"/>
 
-					</fieldset>
+					
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'event dates')"/>
+						</label>
+						<div class="pure-custom">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="tabletools" select ='tabletools'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+
 				</div>
 			</div>
 			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save">
+				<!--input type="submit" class="pure-button pure-button-primary" name="save">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'save')"/>
 					</xsl:attribute>
-				</input>
+				</input-->
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
 				</xsl:variable>

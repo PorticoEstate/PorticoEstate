@@ -2117,7 +2117,6 @@
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
 				
-				$get_docs = false;
 				$check_doc = $this->bocommon->get_lookup_entity('document');
 				foreach ($check_doc as $_check)
 				{
@@ -2130,6 +2129,8 @@
 
 				if ($get_docs || !empty($entity['documentation']))
 				{
+					$get_docs = true;
+
 					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
 					
 					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');

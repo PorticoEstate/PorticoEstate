@@ -12,17 +12,20 @@
 			<div class="fileupload-buttons">
 				<!-- The fileinput-button span is used to style the file input field as button -->
 				<span class="fileinput-button pure-button">
-					<span>Add files...</span>
+					<span><xsl:value-of select="php:function('lang', 'Add files')"/>...</span>
 					<input type="file" id="files" name="files[]" multiple=""/>
 				</span>
-				<button type="submit" class="start pure-button">Start upload</button>
-				<button type="reset" class="cancel pure-button">Cancel upload</button>
-				<button type="button" class="delete pure-button">Delete</button>
+				<button type="submit" class="start pure-button"><xsl:value-of select="php:function('lang', 'Start upload')"/></button>
+				<button type="reset" class="cancel pure-button"><xsl:value-of select="php:function('lang', 'Cancel upload')"/></button>
+				<button type="button" class="delete pure-button"><xsl:value-of select="php:function('lang', 'Delete')"/></button>
 				<input type="checkbox" class="toggle"/>
 				<!-- The global file processing state -->
 				<span class="fileupload-process"></span>
 			</div>
-			<div class="fileupload-progress fade" style="display:none">
+			<div class="fileupload-count">
+				<xsl:value-of select="php:function('lang', 'Number files')"/>: <span id="files-count"></span>
+			</div>
+			<div class="fileupload-progress fade" style="display:none">			
 				<!-- The global progress bar -->
 				<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
 				<!-- The extended global progress state -->
@@ -96,7 +99,8 @@
 				//xhrFields: {withCredentials: true},
 				url: '<xsl:value-of select="multi_upload_action"/>',
 				limitConcurrentUploads: 4,
-				maxChunkSize: 838855500
+			//	maxChunkSize: 838855500
+				maxChunkSize: 8388000
 				//acceptFileTypes: /(\.|\/)(png|pdf)$/i
 			});
 				
@@ -111,10 +115,19 @@
 			);
 				
 			$('#multi_upload_file')
-				.bind('fileuploadcompleted', function (e, data) { 
-				console.log(data.result.num_files); 	
+				.bind('fileuploadcompleted', function (e, data) { 	
+				$( "#files-count" ).html(data.result.num_files);
 			});
-								
+				
+			$('#multi_upload_file')
+				.bind('fileuploaddestroyed', function (e, data) { 	
+				var n = 0;
+				$( ".template-download" ).each(function( i ) {
+					n ++;
+				});
+				$("#files-count").html(n);
+			}); 
+												
 			// Load existing files:
 			$('#multi_upload_file').addClass('fileupload-processing');
 			$.ajax({

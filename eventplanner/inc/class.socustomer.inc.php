@@ -27,6 +27,7 @@
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
+	include_class('eventplanner', 'customer', 'inc/model/');
 
 	class eventplanner_socustomer extends phpgwapi_socommon
 	{

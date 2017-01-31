@@ -40,6 +40,7 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
+			'get_list' => true
 		);
 
 		protected
@@ -187,11 +188,11 @@
 			{
 				if($ajax)
 				{
-					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$messages = phpgwapi_cache::message_get(true);
 					return array(
 						'status_kode' => 'error',
 						'status' => lang('error'),
-						'msg' => lang('Did not validate')
+						'msg' => $messages ? $messages : lang('did not validate')
 					);
 				}
 				else
@@ -210,22 +211,57 @@
 			}
 		}
 
+		private function get_data()
+		{
+			if (empty($this->permissions[PHPGW_ACL_READ]))
+			{
+				phpgw::no_access();
+			}
+			$params = $this->bo->build_default_read_params();
+			return $this->bo->read($params);
+		}
+
 		/**
 		 * (non-PHPdoc)
 		 * @see eventplanner/inc/eventplanner_uicommon#query()
 		 */
 		public function query()
 		{
-			$params = $this->bo->build_default_read_params();
-			$values = $this->bo->read($params);
+			$values = $this->get_data();
 			array_walk($values["results"], array($this, "_add_links"), "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit");
 
 			return $this->jquery_results($values);
 		}
 
 		/**
+		 * Returns a minimum for - let say - autocomplete
+		 * @param void
+		 * @return array An associative array
+		 */
+		public function get_list()
+		{
+			$values = $this->get_data();
+
+			$results = array();
+			foreach ($values['results'] as $row)
+			{
+				$results[] = array(
+					'id' => $row['id'],
+					'name' =>$row['name'],
+					'title' =>$row['title']
+					);
+			}
+			$values['results'] = $results;
+			return $this->jquery_results($values);
+		}
+
+		/**
 		 * Called from  subclasses
+		 * @param type $fakebase
+		 * @param type $sub_module
 		 * @param type $id
+		 * @return type
+		 * @throws Exception
 		 */
 		protected function _handle_files( $fakebase, $sub_module, $id  )
 		{

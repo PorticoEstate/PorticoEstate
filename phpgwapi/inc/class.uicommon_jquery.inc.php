@@ -184,6 +184,25 @@
 
 		public function link( $data )
 		{
+			switch ($GLOBALS['phpgw_info']['flags']['currentapp'])
+			{
+				case 'bookingfrontend':
+					$base = '/bookingfrontend/';
+					break;
+				case 'activitycalendarfrontend':
+					$base = '/activitycalendarfrontend/';
+					break;
+				case 'eventplannerfrontend':
+					$base = '/eventplannerfrontend/';
+					break;
+				default:
+					$base = '/index.php/';
+					break;
+			}
+
+			return $GLOBALS['phpgw']->link($base, $data);
+
+/*
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
 			{
 				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
@@ -196,6 +215,7 @@
 			{
 				return $GLOBALS['phpgw']->link('/index.php', $data);
 			}
+ */
 		}
 
 		public function redirect( $link_data )

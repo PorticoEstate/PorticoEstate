@@ -42,6 +42,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$active,
 			$category_id,
 			$created,
@@ -52,16 +53,13 @@
 			$address_2,
 			$zip_code,
 			$city,
-			$customer_organization_number,
+			$organization_number,
 			$contact_name,
 			$contact_email,
 			$contact_phone,
 			$account_number,
 			$description,
 			$remark,
-	//		$customer_identifier_type,
-	//		$customer_ssn,
-
 			$comments,
 			$comment;
 
@@ -95,16 +93,18 @@
 
 		public static function get_fields($debug = true)
 		{
-			 $fields = array(
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			$fields = array(
 				'id' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
 					),
-				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
-					'history'	=> true
+					'required' => false
 					),
 				'category_id' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'
@@ -180,44 +180,45 @@
 					'query' => true,
 					'label' => 'contact phone',
 					),
-/*				'customer_identifier_type' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					'label' => 'customer_identifier_type',
-					),
-				'customer_ssn' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => false,
-					'query' => true,
-					'sf_validator' => createObject('booking.sfValidatorNorwegianSSN', array('full_required' => false)),
-					'label' => 'customer_ssn'
-					),*/
-				'customer_organization_number' => array(
+				'organization_number' => array(
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => true,
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'organization_number'
-					),
-				'comments' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'manytomany' => array(
-						'input_field' => 'comment_input',
-						'table' => 'eventplanner_customer_comment',
-						'key' => 'customer_id',
-						'column' => array('time', 'author', 'comment', 'type'),
-						'order' => array('sort' => 'time', 'dir' => 'ASC')
-					)),
-				'comment' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'related' => true,
+					'label' => 'organization number'
 					)
 			);
+
+			if($currentapp == 'eventplanner')
+			{
+				$backend_fields = array(
+					'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'history'	=> true
+						),
+					'comments' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'manytomany' => array(
+							'input_field' => 'comment_input',
+							'table' => 'eventplanner_vendor_comment',
+							'key' => 'vendor_id',
+							'column' => array('time', 'author', 'comment', 'type'),
+							'order' => array('sort' => 'time', 'dir' => 'ASC')
+						)),
+					'comment' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'related' => true,
+						)
+					);
+
+				foreach ($backend_fields as $key => $field_info)
+				{
+					$fields[$key] = $field_info;
+				}
+			}
 
 			if($debug)
 			{
@@ -247,21 +248,19 @@
 					'type' => 'comment'
 				);
 			}
-			if (!empty($entity->customer_organization_number))
+			if (!empty($entity->organization_number))
 			{
-				$entity->customer_organization_number = str_replace(' ', '', $entity->customer_organization_number);
+				$entity->organization_number = str_replace(' ', '', $entity->organization_number);
 			}
 
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
 
-			if($entity->get_id())
-			{
-			}
-			else
+			if(!$entity->get_id())
 			{
 				$entity->status = eventplanner_customer::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 		}
 

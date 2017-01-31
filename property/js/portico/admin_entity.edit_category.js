@@ -36,6 +36,7 @@ this.onActionsClick = function ()
 	});
 
 	document.form.template_attrib.value = values_tophp;
+	document.form.submit();
 }
 
 this.get_template_attributes = function ()

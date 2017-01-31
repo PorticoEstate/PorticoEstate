@@ -1106,6 +1106,11 @@
 
 			$ret = !!$this->_db->affected_rows();
 
+			if(!is_object($GLOBALS['phpgw']->accounts))
+			{
+				$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
+			}
+
 			if ( $ret )
 			{
 				foreach ($locations as $location_id)
@@ -1321,6 +1326,11 @@
 		*/
 		public function get_grants($app = '', $location = '')
 		{
+			if ( !$app )
+			{
+				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
 			$grant_rights = phpgwapi_cache::session_get('phpgwapi', "get_grants_{$app}_{$location}");
 			if ( !is_null($grant_rights) )
 			{
@@ -1357,6 +1367,11 @@
 		*/
 		public function get_grants2($app = '', $location = '')
 		{
+			if ( !$app )
+			{
+				$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			}
+
 			$grant_rights = phpgwapi_cache::session_get('phpgwapi', "get_grants2_{$app}_{$location}");
 			if ( !is_null($grant_rights) )
 			{

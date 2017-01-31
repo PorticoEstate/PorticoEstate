@@ -18,7 +18,7 @@
 	$setup_info['registration']['name'] = 'registration';
 	$setup_info['registration']['version'] = '0.8.5';
 	$setup_info['registration']['app_order'] = '90';
-	$setup_info['registration']['enable'] = 2;
+	$setup_info['registration']['enable'] = 1;
 	$setup_info['registration']['app_group'] = 'other';
 
 	/* The tables this app creates */

@@ -162,7 +162,7 @@ HTML;
 		}
 
 		if (!$nonavbar)
-			{
+		{
 			$bookmarks = phpgwapi_cache::user_get('phpgwapi', "bookmark_menu", $GLOBALS['phpgw_info']['user']['id']);
 			$lang_bookmarks = lang('bookmarks');
 

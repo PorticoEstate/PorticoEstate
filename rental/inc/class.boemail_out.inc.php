@@ -101,4 +101,62 @@
 
 			return $values;
 		}
+
+		public function get_composite_candidates( $composite_id )
+		{
+			return rental_soemail_out::get_instance()->get_composite_candidates($composite_id);
+		}
+
+		function set_candidates($id, $ids)
+		{
+			return rental_soemail_out::get_instance()->set_candidates($id, $ids);
+		}
+
+		function delete_recipients($id, $ids)
+		{
+			return rental_soemail_out::get_instance()->delete_recipients($id, $ids);
+		}
+
+		public function get_recipients( $email_out_id )
+		{
+			return rental_soemail_out::get_instance()->get_recipients($email_out_id);
+		}
+
+		public function send_email( $id, $ids = array() )
+		{
+			$email_out = $this->read_single($id);
+			$subject = $email_out->subject;
+			$content = $email_out->content;
+			phpgw::import_class('rental.soparty');
+			$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
+			if (!is_object($GLOBALS['phpgw']->send))
+			{
+				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+			}
+
+			$cc ='';
+			$bcc = '';
+			$from_email = '';
+			$from_name = '';
+			foreach ($ids as $party_id)
+			{
+				$party = rental_soparty::get_instance()->get_single($party_id);
+				$to_email = $party->get_email();
+				if (!$email_validator->check_email_address($to_email) )
+				{
+					rental_soemail_out::get_instance()->set_status($id, $party_id, rental_email_out::STATUS_ERROR);
+					continue;
+				}
+
+				try
+				{
+					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html');
+					rental_soemail_out::get_instance()->set_status($id, $party_id, rental_email_out::STATUS_SENT);
+				}
+				catch (Exception $exc)
+				{
+					rental_soemail_out::get_instance()->set_status($id, $party_id, rental_email_out::STATUS_ERROR);
+				}
+			}
+		}
 	}

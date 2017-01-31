@@ -42,6 +42,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$active,
 			$completed,
 			$cost,
@@ -95,6 +96,10 @@
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
+					),
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
+					'type' => 'int',
+					'required' => false
 					),
 				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
@@ -241,6 +246,7 @@
 			{
 				$entity->status = eventplanner_booking::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
 			if (empty($entity->completed))
@@ -257,6 +263,39 @@
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
 
+		}
+
+		protected function doValidate( $entity, &$errors )
+		{
+			$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
+			$params = array();
+			$params['filters']['active'] = 1;
+			$params['filters']['application_id'] = $entity->application_id;
+
+			$bookings =  eventplanner_sobooking::get_instance()->read($params);
+
+			if($entity->customer_id) // update
+			{
+				$test_total_tecords = (int)$bookings['total_records'];
+			}
+			else // new entry
+			{
+				$test_total_tecords = (int)$bookings['total_records'] + 1;
+			}
+
+			if($test_total_tecords > (int)$application->num_granted_events)
+			{
+				$errors['num_granted_events'] = lang('maximum of granted events are reached');
+			}
+
+			$date_start = date('Ymd',$application->date_start);
+			$date_end = date('Ymd',$application->date_end);
+			$from_ = date('Ymd',$entity->from_);
+
+			if($from_ < $date_start || $from_ > $date_end)
+			{
+				$errors['from_'] = lang('date is outside the scope');
+			}
 		}
 
 		protected function generate_secret( $length = 10 )

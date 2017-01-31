@@ -21,21 +21,24 @@
 	 * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 	 *
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @internal Development of this resource was funded by http://www.bergen.kommune.no/
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
-	 * @subpackage resource
+	 * @subpackage customer_report
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
 
-	class eventplanner_soresource extends phpgwapi_socommon
+	class eventplanner_socustomer_report extends phpgwapi_socommon
 	{
 
 		protected static $so;
 
 		public function __construct()
 		{
-			parent::__construct('eventplanner_resource', eventplanner_resource::get_fields());
+			parent::__construct('eventplanner_booking_customer_report', eventplanner_customer_report::get_fields());
+			$this->acl_location = eventplanner_customer_report::acl_location;
+			$this->cats = CreateObject('phpgwapi.categories', -1, 'eventplanner', $this->acl_location);
+			$this->cats->supress_info = true;
 		}
 
 		/**
@@ -47,7 +50,7 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('eventplanner.soresource');
+				self::$so = CreateObject('eventplanner.socustomer_report');
 			}
 			return self::$so;
 		}
@@ -55,7 +58,7 @@
 
 		protected function populate( array $data )
 		{
-			$object = new eventplanner_resource();
+			$object = new eventplanner_customer_report();
 			foreach ($this->fields as $field => $field_info)
 			{
 				$object->set_field($field, $data[$field]);
@@ -64,10 +67,21 @@
 			return $object;
 		}
 
+		function get_category_name( $cat_id )
+		{
+			static $category_name = array();
+
+			if (!isset($category_name[$cat_id]))
+			{
+				$category = $this->cats->return_single($cat_id);
+				$category_name[$cat_id] = $category[0]['name'];
+			}
+			return $category_name[$cat_id];
+		}
+
 		protected function update( $object )
 		{
 			$this->db->transaction_begin();
-			$status_text = eventplanner_resource::get_status_list();
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 			$original = $this->read_single($object->get_id());//returned as array()
@@ -90,23 +104,27 @@
 							$new_value = $GLOBALS['phpgw']->common->show_date($new_value, $dateformat);
 
 							break;
-						case 'executive_officer':
+						case 'case_officer_id':
 							$old_value = $old_value ? $GLOBALS['phpgw']->accounts->get($old_value)->__toString() : '';
 							$new_value = $new_value ? $GLOBALS['phpgw']->accounts->get($new_value)->__toString() : '';
+							break;
+						case 'category_id':
+							$old_value = $old_value ? $this->get_category_name($old_value) : '';
+							$new_value = $new_value ? $this->get_category_name($new_value) : '';
 							break;
 						default:
 							break;
 					}
 					$value_set = array
 					(
-						'resource_id'	=> $object->get_id(),
+						'customer_report_id'	=> $object->get_id(),
 						'time'		=> time(),
 						'author'	=> $GLOBALS['phpgw_info']['user']['fullname'],
 						'comment'	=> $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' .lang('new value') . ': ' . $this->db->db_addslashes($new_value),
 						'type'	=> 'history',
 					);
 
-					$this->db->query( 'INSERT INTO eventplanner_resource_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
+					$this->db->query( 'INSERT INTO eventplanner_customer_report_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
 					. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
 				}
 

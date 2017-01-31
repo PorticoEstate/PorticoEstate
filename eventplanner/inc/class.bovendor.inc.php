@@ -86,7 +86,7 @@
 	//				$entry['status'] = $status_text[$entry['status']];
 					if($organization_number)
 					{
-						$entry['name'] .= " [{$entry['vendor_organization_number']}]";
+						$entry['name'] .= " [{$entry['organization_number']}]";
 					}
 					$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
 					$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);

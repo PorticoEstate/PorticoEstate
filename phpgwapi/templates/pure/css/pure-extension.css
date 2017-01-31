@@ -329,3 +329,9 @@ button.ui-button {box-shadow: none;text-shadow: none;}
 ul#audience {list-style: none;padding-left: 10px;}
 /* AUTOCOMPLETE */
 .ui-widget.ui-autocomplete {max-height: 224px;overflow-x: hidden;overflow-y: auto;}
+
+
+.pure-form input[type="text"][disabled], .pure-form input[type="password"][disabled], .pure-form input[type="email"][disabled], .pure-form input[type="url"][disabled], .pure-form input[type="date"][disabled], .pure-form input[type="month"][disabled], .pure-form input[type="time"][disabled], .pure-form input[type="datetime"][disabled], .pure-form input[type="datetime-local"][disabled], .pure-form input[type="week"][disabled], .pure-form input[type="number"][disabled], .pure-form input[type="search"][disabled], .pure-form input[type="tel"][disabled], .pure-form input[type="color"][disabled], .pure-form select[disabled], .pure-form textarea[disabled]
+{
+	color: #050000;
+}
