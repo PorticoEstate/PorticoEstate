@@ -607,33 +607,33 @@
 		var disablePagination = '<xsl:value-of select="disablePagination"/>';
 		var select_all = '<xsl:value-of select="select_all"/>';
 		var initial_search = {"search": "<xsl:value-of select="query"/>" };
-		var action_def = null;
+		var action_def = [];
 		var contextMenuItems={};
 		var InitContextMenu=false
+		var button_def = [];
 
 		<xsl:choose>
 			<xsl:when test="//datatable/actions">
-				var button_def = [
-				//	{
+				//button_def.push({
 				//		extend: 'colvis',
 				//		exclude: exclude_colvis,
 				//		text: function ( dt, button, config ) {
 				//		return dt.i18n( 'buttons.show_hide', 'Show / hide columns' );
 				//	}
-				//},
+				//});
 				<xsl:choose>
 					<xsl:when test="new_item">
 						<xsl:choose>
 							<xsl:when test="new_item/onclick">
-								{
+							button_def.push({
 								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
 								action: function (e, dt, node, config) {
 								<xsl:value-of select="new_item/onclick"/>;
 								}
-								},
+								});
 							</xsl:when>
 							<xsl:otherwise>
-								{
+							button_def.push({
 								text: "<xsl:value-of select="php:function('lang', 'new')"/>",
 								sUrl: '<xsl:value-of select="new_item"/>',
 
@@ -641,14 +641,14 @@
 								var sUrl = config.sUrl;
 								window.open(sUrl, '_self');
 								}
-								},
+								});
 							</xsl:otherwise>
 						</xsl:choose>
 					</xsl:when>
 				</xsl:choose>
 				<xsl:choose>
 					<xsl:when test="select_all = '1'">
-						{
+					button_def.push({
 						text: "<xsl:value-of select="php:function('lang', 'select all')"/>",
 						action: function () {
 						var api = oTable.api();
@@ -661,8 +661,9 @@
 						api.buttons( '.record' ).enable( selectedRows > 0 );
 
 						}
-						},
-						{
+						});
+
+					button_def.push({
 						text: "<xsl:value-of select="php:function('lang', 'select none')"/>",
 						action: function () {
 						var api = oTable.api();
@@ -673,18 +674,18 @@
 						});
 						api.buttons( '.record' ).enable( false );
 						}
-						},
+						});
 					</xsl:when>
 				</xsl:choose>
-                {
-					extend:    'csvHtml5',
-					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
-					fieldSeparator: ';',
-					bom:true
-				}
+//               button_def.push({
+//					extend:    'csvHtml5',
+//					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
+//					fieldSeparator: ';',
+//					bom:true
+//				});
 				<xsl:choose>
 					<xsl:when test="download">
-						,{
+						button_def.push({
 						text: "<xsl:value-of select="php:function('lang', 'download')"/>",
 						titleAttr: "<xsl:value-of select="php:function('lang', 'download data')"/>",
 						className: 'download',
@@ -734,17 +735,16 @@
 								]]>
 						}
 
-						}
+						});
 					</xsl:when>
 				</xsl:choose>
-				];
-				var action_def = [
+
 				<xsl:choose>
 					<xsl:when test="//datatable/actions != ''">
 						<xsl:for-each select="//datatable/actions">
 							<xsl:choose>
 								<xsl:when test="type = 'custom'">
-									{
+								action_def.push({
 									text: "<xsl:value-of select="text"/>",
 									<xsl:choose>
 										<xsl:when test="className">
@@ -767,10 +767,10 @@
 									fnSetSelected(this, dt);
 									<xsl:value-of select="custom_code"/>
 									}
-									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+									});
 								</xsl:when>
 								<xsl:otherwise>
-									{
+								action_def.push({
 									text: "<xsl:value-of select="text"/>",
 									<xsl:choose>
 										<xsl:when test="className">
@@ -856,13 +856,12 @@
 									n++;
 									}
 									}
-									}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+									});
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:for-each>
 					</xsl:when>
 				</xsl:choose>
-				];
 				<xsl:choose>
 					<xsl:when test="group_buttons = '1'">
 						var group_buttons = true;
