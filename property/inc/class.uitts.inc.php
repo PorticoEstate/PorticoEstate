@@ -1077,20 +1077,24 @@
 					'parameters' => json_encode($parameters)
 				);
 			}
-			$data['datatable']['actions'][] = array
-				(
-				'my_name' => 'docs',
-				'statustext' => lang('documents'),
-				'text' => lang('documents'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
-					(
-					'menuaction' => 'property.uidocument.list_doc',
-				)),
-				'target' => '_blank',
-				'parameters' => json_encode($parameters_location)
-			);
 
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
+			if(!$this->simple)
+			{
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'docs',
+					'statustext' => lang('documents'),
+					'text' => lang('documents'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'property.uidocument.list_doc',
+					)),
+					'target' => '_blank',
+					'parameters' => json_encode($parameters_location)
+				);
+			}
+
+			if (!$this->simple && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
 			{
 				$status['X'] = array
 					(
