@@ -38,6 +38,7 @@
 			'add' => true,
 			'index' => true,
 			'query' => true,
+			'query_relaxed'=> true,
 			'get_list'=> true,
 			'view' => true,
 			'edit' => true,
