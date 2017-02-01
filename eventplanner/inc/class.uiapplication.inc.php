@@ -337,7 +337,7 @@
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query_relaxed",
 					'filter_application_id' => $id,
 					'filter_active'	=> 1,
 					'phpgw_return_as' => 'json'))),

@@ -37,6 +37,8 @@
 		public function __construct()
 		{
 			parent::__construct('eventplanner_customer', eventplanner_customer::get_fields());
+			$this->acl_location = eventplanner_customer::acl_location;
+			$this->use_acl = true;
 		}
 
 		/**
