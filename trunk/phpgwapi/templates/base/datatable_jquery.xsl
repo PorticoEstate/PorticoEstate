@@ -901,8 +901,10 @@
 
 				if(isChrome == true)
 				{
-				group_buttons = false;
+					group_buttons = false;
 				}
+				//disable grouping for now
+				group_buttons = false;
 
 				if(group_buttons === true)
 				{
