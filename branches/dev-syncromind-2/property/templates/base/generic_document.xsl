@@ -234,6 +234,10 @@
 									<xsl:value-of select="php:function('lang', 'Only Related')" />
 								</label>
 								<input type="checkbox" id="check_components_related" name="check_components_related" value="1" onchange="showRelatedComponentes()"></input>
+								<label>
+									<xsl:value-of select="php:function('lang', 'all types')" />
+								</label>
+								<input type="checkbox" id="check_all_types" name="check_all_types" value="1" onchange="showAllTypes()"></input>
 							</div>							
 							<div class="pure-control-group">
 								<label for="vendor">
