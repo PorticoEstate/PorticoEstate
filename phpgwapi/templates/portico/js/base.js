@@ -22,7 +22,7 @@ $(document).ready(function ()
 			, togglerTip_closed: "Open & Pin Contents"
 			, sliderTip: "Slide Open Contents"
 			, slideTrigger_open: "mouseover"
-			, initClosed: true
+			, initClosed: false
 		}
 		, east: {
 			initClosed: true
