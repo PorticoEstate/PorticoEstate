@@ -37,6 +37,7 @@
 			'add' => true,
 			'index' => true,
 			'query' => true,
+			'query_relaxed'=> true,
 			'view' => true,
 			'edit' => true,
 			'save' => true,
@@ -211,13 +212,14 @@
 			}
 		}
 
-		private function get_data()
+		private function get_data($relaxe_acl = false)
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
 				phpgw::no_access();
 			}
 			$params = $this->bo->build_default_read_params();
+			$params['relaxe_acl'] = $relaxe_acl;
 			return $this->bo->read($params);
 		}
 
@@ -225,12 +227,18 @@
 		 * (non-PHPdoc)
 		 * @see eventplanner/inc/eventplanner_uicommon#query()
 		 */
-		public function query()
+		public function query($relaxe_acl = false)
 		{
-			$values = $this->get_data();
+			$values = $this->get_data($relaxe_acl);
 			array_walk($values["results"], array($this, "_add_links"), "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit");
 
 			return $this->jquery_results($values);
+		}
+
+		public function query_relaxed()
+		{
+			$relaxe_acl = true;
+			return $this->query($relaxe_acl);
 		}
 
 		/**
