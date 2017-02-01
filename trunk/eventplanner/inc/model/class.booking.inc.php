@@ -96,6 +96,7 @@
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
+					'public'	=> true
 					),
 				'owner_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
@@ -117,23 +118,27 @@
 					'label'	=> 'from',
 					'history' => true,
 					'required' => true,
+					'public'	=> true
 					),
 				'to_' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'date',
 					'label'	=> 'to',
 					'history' => true,
 					'required' => true,
+					'public'	=> true
 				),
 				'application_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'application',
 					'sortable' => true,
 					'required' => true,
+					'public'	=> true
 					),
 				'application_name' => array('action'=>  PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'application',
+					'public'	=> true,
 					'join' => array(
 						'table' => 'eventplanner_application',
 						'fkey' => 'application_id',
@@ -146,11 +151,13 @@
 					'label' => 'customer',
 					'sortable' => true,
 					'history' => true,
+					'public'	=> true
 					),
 				'customer_name' => array('action'=>  PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'customer',
+					'public'	=> true,
 					'join' => array(
 						'table' => 'eventplanner_customer',
 						'fkey' => 'customer_id',
@@ -190,6 +197,7 @@
 					'query' => true,
 					'label' => 'location',
 					'history' => true,
+					'public'	=> true
 					),
 				'comments' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
