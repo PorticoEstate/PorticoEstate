@@ -97,6 +97,12 @@ function getComponents()
 		paramsTable0['only_related'] = 0;
 	}
 
+	if ($('#check_all_types').is(':checked')) {
+		paramsTable0['all_types'] = 1;
+	} else {
+		paramsTable0['all_types'] = 0;
+	}
+	
 	oTable0.fnDraw();
 }
 
@@ -167,6 +173,10 @@ function setRelationsLocations(oArgs)
 }
 
 function showRelatedComponentes() {
+	getComponents();
+}
+
+function showAllTypes() {
 	getComponents();
 }
 
