@@ -87,6 +87,16 @@
 			$this->config->read();
 
 
+			$default_interface = isset($this->config->config_data['tts_default_interface']) ? $this->config->config_data['tts_default_interface'] : '';
+
+			/*
+			 * Inverted logic
+			 */
+			if($default_interface == 'simplified')
+			{
+				$this->simple = true;
+			}
+
 			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->config->config_data['fmttssimple_group']) ? $this->config->config_data['fmttssimple_group'] : array();
 
@@ -111,12 +121,18 @@
 
 			reset($user_groups);
 			$user_groups = $GLOBALS['phpgw']->accounts->membership($this->account);
-			$simple_group = isset($this->config->config_data['fmttssimple_group']) ? $this->config->config_data['fmttssimple_group'] : array();
 			foreach ($user_groups as $group => $dummy)
 			{
 				if (in_array($group, $simple_group))
 				{
-					$this->simple = true;
+					if($default_interface == 'simplified')
+					{
+						$this->simple = false;
+					}
+					else
+					{
+						$this->simple = true;	
+					}
 					break;
 				}
 			}

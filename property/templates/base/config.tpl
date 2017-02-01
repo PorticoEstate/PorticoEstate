@@ -342,6 +342,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td >{lang_TTS_default_interface}:</td>
+				<td>
+					<select name="newsettings[tts_default_interface]">
+						<option value="" {selected_tts_default_interface_}>Full</option>
+						<option value="simplified" {selected_tts_default_interface_simplified}>{lang_simplified}</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td valign = 'top'>{lang_TTS_simplified_group}:</td>
 				<td>
 					<!--to be able to blank the setting - need an empty value-->
