@@ -732,13 +732,23 @@
 						$_querymethod = array();
 						foreach ($criteria as $field_info)
 						{
-							if ($field_info['type'] == int)
+							if ($field_info['type'] == 'int')
 							{
 								$_query = (int)$query;
 							}
 							else if ($field_info['type'] == 'bigint' && !ctype_digit($query))
 							{
+
 								$_query = 0;
+							}
+							else if ($field_info['type'] == 'bigint' && ctype_digit($query))
+							{
+								$_query = $query;
+								if($field_info['matchtype'] == 'like')
+								{
+									$_querymethod[] = " cast({$field_info['field']} as text) {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
+									continue;
+								}
 							}
 							else
 							{
