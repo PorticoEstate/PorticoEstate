@@ -677,12 +677,12 @@
 						});
 					</xsl:when>
 				</xsl:choose>
-//               button_def.push({
-//					extend:    'csvHtml5',
-//					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
-//					fieldSeparator: ';',
-//					bom:true
-//				});
+               button_def.push({
+					extend:    'csvHtml5',
+					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
+					fieldSeparator: ';',
+					bom:true
+				});
 				<xsl:choose>
 					<xsl:when test="download">
 						button_def.push({
@@ -1023,7 +1023,12 @@
 				paginate:		disablePagination ? false : true,
 				processing:		true,
 				serverSide:		true,
-				responsive:		true,
+				responsive:		{
+									details: {
+										display: $.fn.dataTable.Responsive.display.childRowImmediate,
+										type: ''
+									}
+								},
 				select: select_all ? { style: 'multi' } : true,
 				deferRender:	true,
 				ajax:{

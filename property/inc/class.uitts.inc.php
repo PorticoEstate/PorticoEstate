@@ -1315,6 +1315,11 @@
 					}
 				}
 
+				if(empty($values['group_id']))
+				{
+					$values['group_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'] : '');
+				}
+
 				if (!$values['assignedto'] && !$values['group_id'])
 				{
 					$_responsible = execMethod('property.boresponsible.get_responsible', $values);
