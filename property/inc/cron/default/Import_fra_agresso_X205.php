@@ -37,7 +37,7 @@
 	{
 
 		protected $auto_tax = true;
-		protected $mvakode = 0;
+		protected $mvakode = '';
 		protected $kildeid = 1;
 		protected $splitt = 0;
 		protected $soXport;
