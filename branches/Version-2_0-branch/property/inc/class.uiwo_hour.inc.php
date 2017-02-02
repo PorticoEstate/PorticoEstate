@@ -3358,7 +3358,7 @@ HTML;
 				phpgw::no_access();
 			}
 
-			$start_from = 45000100;
+			$start_from = 45001065;
 			$sql = "SELECT id, status FROM fm_workorder WHERE id >= $start_from";
 			$db = & $GLOBALS['phpgw']->db;
 			$db->query($sql, __LINE__, __FILE__);

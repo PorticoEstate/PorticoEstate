@@ -207,7 +207,7 @@ this.fetch_vendor_contract = function ()
 						return;
 					}
 
-					htmlString = "<option>" + data.length + " kontrakter funnet</option>";
+					htmlString = "<option value=''>" + data.length + " kontrakter funnet</option>"
 					var obj = data;
 
 					$.each(obj, function (i)
