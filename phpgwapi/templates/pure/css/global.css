@@ -37,3 +37,12 @@ div.error, div.warn
 	padding: 2px;
 	text-align: center;
 }
+
+.ui-datepicker-month
+{
+	color: black;
+}
+.ui-datepicker-year
+{
+	color: black;
+}

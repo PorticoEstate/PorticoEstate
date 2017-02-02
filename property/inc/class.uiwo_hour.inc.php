@@ -1351,6 +1351,8 @@
 					'allrows' => true
 				);
 
+				$transfer_action = 'workorder'; // trigger for transfer
+
 				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
 				foreach ($custom_functions as $entry)
@@ -3411,6 +3413,8 @@ HTML;
 				'location' => '.project.workorder.transfer',
 				'allrows' => true
 			);
+
+			$transfer_action = 'workorder';
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 

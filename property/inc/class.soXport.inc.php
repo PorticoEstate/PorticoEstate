@@ -233,6 +233,11 @@
 						$this->voucher_id = $fields['bilagsnr'];
 					}
 
+					if($fields['pmwrkord_code'])
+					{
+						phpgwapi_cache::system_clear('property', "budget_order_{$fields['pmwrkord_code']}");
+					}
+
 					$values = array(
 						$fields['project_id'],
 						$fields['kostra_id'],
