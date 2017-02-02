@@ -12,7 +12,7 @@ var JqueryPortico = {};
 JqueryPortico.inlineTablesDefined = 0;
 JqueryPortico.inlineTablesRendered = 0;
 
-JqueryPortico.parseURL = function(url)
+JqueryPortico.parseURL = function (url)
 {
 	var parser = document.createElement('a'),
 		searchObject = {},
@@ -290,13 +290,13 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 
 	var lengthMenu = null;
 
-	if(pageLength != 10)
+	if (pageLength != 10)
 	{
-		lengthMenu = [[],[]];
+		lengthMenu = [[], []];
 		for (var i = 1; i < 5; i++)
 		{
-			lengthMenu[0].push( pageLength*i );
-			lengthMenu[1].push( pageLength*i );
+			lengthMenu[0].push(pageLength * i);
+			lengthMenu[1].push(pageLength * i);
 		}
 	}
 	else
@@ -307,8 +307,18 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		}
 		catch (err)
 		{
-			lengthMenu = [[10, 25, 50, 100],[10, 25, 50, 100]];
+			lengthMenu = [[10, 25, 50, 100], [10, 25, 50, 100]];
 		}
+	}
+	var responsive_def = false;
+
+	if (responsive == true)
+	{
+		responsive_def = {details: {
+				display: $.fn.dataTable.Responsive.display.childRowImmediate,
+				type: ''
+			}
+		};
 	}
 
 	if (allrows == true && data.length == 0)
@@ -392,20 +402,20 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		order: order,
 		processing: true,
 		serverSide: serverSide_def,
-		responsive: responsive,
+		responsive: responsive_def,
 		deferRender: true,
 		select: select,
 		data: data,
 		ajax: ajax_def,
 		fnServerParams: function (aoData)
-		{			
+		{
 			try
 			{
-				if ($.isNumeric(container.substr(container.length -1, 1)))
+				if ($.isNumeric(container.substr(container.length - 1, 1)))
 				{
-					if (!$.isEmptyObject(eval('paramsTable' + container.substr(container.length -1, 1))))
+					if (!$.isEmptyObject(eval('paramsTable' + container.substr(container.length - 1, 1))))
 					{
-						$.each(eval('paramsTable' + container.substr(container.length -1, 1)), function (k, v)
+						$.each(eval('paramsTable' + container.substr(container.length - 1, 1)), function (k, v)
 						{
 							aoData[k] = v;
 						});
@@ -653,13 +663,13 @@ JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, 
 	label_attr = (label_attr) ? label_attr : 'name';
 	$(document).ready(function ()
 	{
-		if(requestGenerator)
+		if (requestGenerator)
 		{
 			try
 			{
 				baseUrl = window[requestGenerator](baseUrl);
 			}
-			catch(err)
+			catch (err)
 			{
 
 			}
@@ -690,9 +700,9 @@ JqueryPortico.autocompleteHelper = function (baseUrl, field, hidden, container, 
 						}
 						response($.map(data_t, function (item)
 						{
-							if(show_id)
+							if (show_id)
 							{
-								label = item.id + ' ' + item[label_attr];					
+								label = item.id + ' ' + item[label_attr];
 							}
 							else
 							{
@@ -1283,7 +1293,7 @@ function populateSelect_activityCalendar(url, container, attr)
 }
 
 
-function createTableSchedule (d, u, c, r, cl, a, p, t)
+function createTableSchedule(d, u, c, r, cl, a, p, t)
 {
 	var container = document.getElementById(d);
 	var container_toolbar = document.createElement('div');
@@ -1439,8 +1449,8 @@ function createTableSchedule (d, u, c, r, cl, a, p, t)
 				var res = total % n_objects;
 				var page = (start == 0) ? 1 : (start / n_objects) + 1;
 
-				pages = (res > 0) ? pages+1 : pages;
-				pages = (pages == 0) ? pages+1 : pages;
+				pages = (res > 0) ? pages + 1 : pages;
+				pages = (pages == 0) ? pages + 1 : pages;
 
 				var paginator = createPaginatorSchedule(pages, page);
 				container.appendChild(paginator);
@@ -1465,7 +1475,7 @@ function createTableSchedule (d, u, c, r, cl, a, p, t)
 
 // p -> n pages
 // a -> current page
-function createPaginatorSchedule (p, a)
+function createPaginatorSchedule(p, a)
 {
 	var max = 7;
 	var m = 4;
@@ -1483,15 +1493,15 @@ function createPaginatorSchedule (p, a)
 		{
 			n_button = i;
 		}
-		else if ( (a - ini < m ) && (i <= ini + m) )
+		else if ((a - ini < m) && (i <= ini + m))
 		{
 			n_button = i;
 		}
-		else if ( (i >= a - 1) && (i <= a + 1) )
+		else if ((i >= a - 1) && (i <= a + 1))
 		{
 			n_button = i;
 		}
-		else if ( (end - a < m ) && (i >= end - m) )
+		else if ((end - a < m) && (i >= end - m))
 		{
 			n_button = i;
 		}
@@ -1564,12 +1574,12 @@ function createPaginatorSchedule (p, a)
 	return container;
 }
 
-function setFormatter (callFunc, data, col, date)
+function setFormatter(callFunc, data, col, date)
 {
-	return eval(callFunc+'(data,col,date)');
+	return eval(callFunc + '(data,col,date)');
 }
 
-function scheduleResourceColumn (data, col, date)
+function scheduleResourceColumn(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1580,7 +1590,7 @@ function scheduleResourceColumn (data, col, date)
 
 	if (data[k])
 	{
-		trAttributes.push( {attribute: 'resource', value: data['resource_id']} );
+		trAttributes.push({attribute: 'resource', value: data['resource_id']});
 	}
 
 	var resourceLink = (date) ? data['resource_link'] + "#date=" + date : data['resource_link'];
@@ -1596,7 +1606,7 @@ function scheduleResourceColumn (data, col, date)
 	return data_return;
 }
 
-function seasonDateColumn (data, col, date)
+function seasonDateColumn(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1615,13 +1625,14 @@ function seasonDateColumn (data, col, date)
 		text = name;
 		classes = colorCell;
 		trFunction.push(
+		{
+			event: 'click',
+			callFunction: function ()
 			{
-				event: 'click',
-				callFunction: function () {
 //					schedule.newAllocationForm({id: data[k]['id']});
-					schedule.newAllocationForm({id: id});
-				}
+				schedule.newAllocationForm({id: id});
 			}
+		}
 		);
 	}
 	else
@@ -1629,12 +1640,13 @@ function seasonDateColumn (data, col, date)
 		text = "free";
 		classes = "free";
 		trFunction.push(
+		{
+			event: 'click',
+			callFunction: function ()
 			{
-				event: 'click',
-				callFunction: function () {
-					schedule.newAllocationForm({'_from': data['_from'], '_to': data['_to'], 'wday': col['key']});
-				}
+				schedule.newAllocationForm({'_from': data['_from'], '_to': data['_to'], 'wday': col['key']});
 			}
+		}
 		);
 	}
 
@@ -1648,7 +1660,7 @@ function seasonDateColumn (data, col, date)
 	return data_return;
 }
 
-function scheduleDateColumn (data, col, date)
+function scheduleDateColumn(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1677,7 +1689,7 @@ function scheduleDateColumn (data, col, date)
 	return data_return;
 }
 
-function backendScheduleDateColumn (data, col, date)
+function backendScheduleDateColumn(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1710,12 +1722,13 @@ function backendScheduleDateColumn (data, col, date)
 		text = "free";
 		classes = "free";
 		trFunction.push(
+		{
+			event: 'click',
+			callFunction: function ()
 			{
-				event: 'click',
-				callFunction: function () {
-					schedule.newApplicationForm(col['date'], data['_from'], data['_to'])
-				}
+				schedule.newApplicationForm(col['date'], data['_from'], data['_to'])
 			}
+		}
 		)
 	}
 
@@ -1729,7 +1742,7 @@ function backendScheduleDateColumn (data, col, date)
 	return data_return;
 }
 
-function frontendScheduleDateColumn (data, col, date)
+function frontendScheduleDateColumn(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1750,15 +1763,16 @@ function frontendScheduleDateColumn (data, col, date)
 		}
 
 		text = name;
-		classes = "cellInfo " + colorCell + " " + type ;
+		classes = "cellInfo " + colorCell + " " + type;
 		trFunction.push(
+		{
+			event: 'click',
+			callFunction: function ()
 			{
-				event: 'click',
-				callFunction: function () {
-					var resource = $(this).parent().attr('resource');
-					schedule.showInfo(data[k]['info_url'], resource);
-				}
+				var resource = $(this).parent().attr('resource');
+				schedule.showInfo(data[k]['info_url'], resource);
 			}
+		}
 		);
 	}
 	else
@@ -1766,13 +1780,14 @@ function frontendScheduleDateColumn (data, col, date)
 		text = "free";
 		classes = "free";
 		trFunction.push(
+		{
+			event: 'click',
+			callFunction: function ()
 			{
-				event: 'click',
-				callFunction: function () {
-					var resource = $(this).parent().attr('resource');
-					schedule.newApplicationForm(col['date'], data['_from'], data['_to'], resource);
-				}
+				var resource = $(this).parent().attr('resource');
+				schedule.newApplicationForm(col['date'], data['_from'], data['_to'], resource);
 			}
+		}
 		);
 	}
 
@@ -1786,7 +1801,7 @@ function frontendScheduleDateColumn (data, col, date)
 	return data_return;
 }
 
-function rentalSchedule (data, col, date)
+function rentalSchedule(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1810,23 +1825,24 @@ function rentalSchedule (data, col, date)
 		classes = "free";
 	}
 
-	trAttributes.push( {attribute: 'data-id', value: data['id']} );
+	trAttributes.push({attribute: 'data-id', value: data['id']});
 	trFunction.push(
+	{
+		event: 'click',
+		callFunction: function ()
 		{
-			event: 'click',
-			callFunction: function () {
-				$(this).parent().parent().find('tr').removeClass("trselected")
-				$(this).parent().addClass("trselected");
-				$('#schedule_toolbar button').attr('disabled', false);
-				var b_needFree = eval(needFree);
-				if (!b_needFree)
-				{
-					$('#schedule_toolbar button.need-free').attr('disabled', true);
-				}
-				schedule.rental.data = data;
-				schedule.rental.col = col;
+			$(this).parent().parent().find('tr').removeClass("trselected")
+			$(this).parent().addClass("trselected");
+			$('#schedule_toolbar button').attr('disabled', false);
+			var b_needFree = eval(needFree);
+			if (!b_needFree)
+			{
+				$('#schedule_toolbar button.need-free').attr('disabled', true);
 			}
+			schedule.rental.data = data;
+			schedule.rental.col = col;
 		}
+	}
 	);
 
 	var data_return = {
@@ -1839,21 +1855,23 @@ function rentalSchedule (data, col, date)
 	return data_return;
 }
 
-function rentalScheduleApplication (data, col, date)
+function rentalScheduleApplication(data, col, date)
 {
 	var text = "";
 	var classes = "";
 	var trAttributes = [];
 	var trFunction = [];
-	
+
 	var validate = false;
-	
-	if ( (schedule.rental.availability_from) && (schedule.rental.availability_to) ){
-		if (col.date >= schedule.rental.availability_from && col.date <= schedule.rental.availability_to){
+
+	if ((schedule.rental.availability_from) && (schedule.rental.availability_to))
+	{
+		if (col.date >= schedule.rental.availability_from && col.date <= schedule.rental.availability_to)
+		{
 			validate = true;
 		}
 	}
-	
+
 	if (validate)
 	{
 		var k = col.key;
@@ -1873,23 +1891,24 @@ function rentalScheduleApplication (data, col, date)
 			classes = "free";
 		}
 
-		trAttributes.push( {attribute: 'data-id', value: data['id']} );
+		trAttributes.push({attribute: 'data-id', value: data['id']});
 		trFunction.push(
+		{
+			event: 'click',
+			callFunction: function ()
 			{
-				event: 'click',
-				callFunction: function () {
-					$(this).parent().parent().find('tr').removeClass("trselected")
-					$(this).parent().addClass("trselected");
-					$('#schedule_toolbar button').attr('disabled', false);
-					var b_needFree = eval(needFree);
-					if (!b_needFree)
-					{
-						$('#schedule_toolbar button.need-free').attr('disabled', true);
-					}
-					schedule.rental.data = data;
-					schedule.rental.col = col;
+				$(this).parent().parent().find('tr').removeClass("trselected")
+				$(this).parent().addClass("trselected");
+				$('#schedule_toolbar button').attr('disabled', false);
+				var b_needFree = eval(needFree);
+				if (!b_needFree)
+				{
+					$('#schedule_toolbar button.need-free').attr('disabled', true);
 				}
+				schedule.rental.data = data;
+				schedule.rental.col = col;
 			}
+		}
 		);
 	}
 
@@ -1903,7 +1922,7 @@ function rentalScheduleApplication (data, col, date)
 	return data_return;
 }
 
-function rentalScheduleComposites (data, col, date)
+function rentalScheduleComposites(data, col, date)
 {
 	var text = "";
 	var classes = "";
@@ -1911,21 +1930,22 @@ function rentalScheduleComposites (data, col, date)
 	var trFunction = [];
 
 	var k = col.key;
-	
+
 	text = data[k];
 
-	trAttributes.push( {attribute: 'data-id', value: data['id']} );
+	trAttributes.push({attribute: 'data-id', value: data['id']});
 	trFunction.push(
+	{
+		event: 'click',
+		callFunction: function ()
 		{
-			event: 'click',
-			callFunction: function () {
-				$(this).parent().parent().find('tr').removeClass("trselected")
-				$(this).parent().addClass("trselected");
-				$('#composites_toolbar button').attr('disabled', false);
-				composites.rental.data = data;
-				composites.rental.col = col;
-			}
+			$(this).parent().parent().find('tr').removeClass("trselected")
+			$(this).parent().addClass("trselected");
+			$('#composites_toolbar button').attr('disabled', false);
+			composites.rental.data = data;
+			composites.rental.col = col;
 		}
+	}
 	);
 
 	var data_return = {
