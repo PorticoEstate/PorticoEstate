@@ -330,7 +330,9 @@
 		}
 	}
 //	if (!$workorder['order_sent'])
+	if (!empty($transfer_action) && $transfer_action == 'workorder')
 	{
+
 		$exporter_ordre = new lag_agresso_ordre_fra_workorder();
 		try
 		{

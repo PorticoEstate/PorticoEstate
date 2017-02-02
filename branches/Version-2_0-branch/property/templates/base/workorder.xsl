@@ -1016,7 +1016,7 @@
 							</xsl:attribute>
 						</input>
 					</div>
-					<xsl:choose>
+					<!--xsl:choose>
 						<xsl:when test="value_workorder_id!='' and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
@@ -1052,7 +1052,7 @@
 								<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
 							</div>
 						</xsl:when>
-					</xsl:choose>
+					</xsl:choose-->
 					<xsl:choose>
 						<xsl:when test="value_workorder_id!=''">
 							<div class="pure-control-group">

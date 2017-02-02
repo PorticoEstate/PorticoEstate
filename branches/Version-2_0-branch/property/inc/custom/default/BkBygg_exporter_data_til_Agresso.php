@@ -53,6 +53,7 @@
 			var $connection;
 			var $order_id;
 			var $voucher_type;
+			var $voucher_id;
 			var $batchid;
 
 
