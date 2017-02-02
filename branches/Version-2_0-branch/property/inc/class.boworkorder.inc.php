@@ -353,9 +353,9 @@
 				(
 				'field' => 'fm_workorder.id',
 				'type' => 'bigint',
-				'matchtype' => 'exact',
+				'matchtype' => 'like',
 				'front' => "'",
-				'back' => "'"
+				'back' => "%'",
 			);
 			$criteria[4] = array
 				(
