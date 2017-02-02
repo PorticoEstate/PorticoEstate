@@ -814,7 +814,8 @@
 					$sql = "SELECT fm_workorder.location_code,"
 						. " fm_workorder.vendor_id,"
 						. " fm_workorder.account_id,"
-						. " fm_project.ecodimb,"
+						. " fm_project.ecodimb as project_ecodimb,"
+						. " fm_workorder.ecodimb,"
 						. " fm_workorder.category,"
 						. " fm_workorder.user_id,"
 						. " fm_workorder.title"
@@ -841,7 +842,8 @@
 
 			$order_info['vendor_id'] = $this->db->f('vendor_id');
 			$order_info['spbudact_code'] = $this->db->f('account_id');
-			$order_info['dimb'] = $this->db->f('ecodimb');
+			$ecodimb = $this->db->f('ecodimb');
+			$order_info['dimb'] = $ecodimb ? $ecodimb : $this->db->f('project_ecodimb');
 			$order_info['dime'] = $this->db->f('category');
 			$order_info['title'] = $this->db->f('title', true);
 
