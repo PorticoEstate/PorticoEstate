@@ -1322,6 +1322,10 @@
 					{
 						$_ok = true;
 					}
+					else
+					{
+						$_ok = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
+					}
 
 					if (!$_ok)
 					{
@@ -1896,6 +1900,10 @@ HTML;
 				else if ($common_data['workorder']['approved'])
 				{
 					$_ok = true;
+				}
+				else
+				{
+					$_ok = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
 				}
 
 				if (!$_ok)
