@@ -769,7 +769,7 @@
 						break;
 				}
 
-				$selected_tax_code = !empty($voucher[0]['tax_code']) ? $voucher[0]['tax_code'] : $default_tax_code;
+				$selected_tax_code = isset($voucher[0]['tax_code'])  && ($voucher[0]['tax_code'] || $voucher[0]['tax_code'] === 0)? $voucher[0]['tax_code'] : $default_tax_code;
 
 				if (isset($this->config->config_data['invoice_acl']) && $this->config->config_data['invoice_acl'] == 'dimb')
 				{
