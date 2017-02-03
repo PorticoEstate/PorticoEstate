@@ -733,8 +733,7 @@
 				{
 					$bilagsnr = $this->import_end_file($buffer);
 					
-					$previous_received = $this->get_previous_received((int)$order_id);
-					$received_amount = (float) $previous_received + (float) $belop;
+					$received_amount = $this->get_total_received((int)$order_id);
 					$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
 					switch ($order_type)
@@ -771,7 +770,7 @@
 			}
 		}
 
-		function get_previous_received( $order_id )
+		function get_total_received( $order_id )
 		{
 			$amount = 0;
 			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilag WHERE pmwrkord_code = {$order_id}";
