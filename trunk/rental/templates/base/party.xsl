@@ -31,9 +31,9 @@
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
-	<script type="text/javascript">
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
-	</script>
+		<script type="text/javascript">
+			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+		</script>
 
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
@@ -94,10 +94,6 @@
 								<xsl:value-of select="php:function('lang', 'department')"/>
 							</label>
 							<input type="text" id="department" name="department" value="{value_department}">
-								<xsl:attribute name="data-validation">
-									<xsl:text>naming</xsl:text>
-								</xsl:attribute>
-
 							</input>
 						</div>
 						<div class="pure-control-group">
@@ -154,7 +150,10 @@
 							</label>
 							<input type="text" name="email" id="email" value="{value_email}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
+									<xsl:text>email</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
 								</xsl:attribute>
 							</input>
 							<xsl:choose>
