@@ -108,7 +108,7 @@ $(document).ready(function ()
 			var lastname = $('#lastname').val();
 			var company_name = $('#company_name').val();
 			var department = $('#department').val();
-			if ((firstname != "" && lastname != "") || (company_name != "" && department != ""))
+			if ((firstname != "" && lastname != "") || (company_name != ""))// && department != ""))
 			{
 				v = true;
 			}
