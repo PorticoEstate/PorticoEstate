@@ -544,6 +544,7 @@
 				'service_id' => 'fm_tts_tickets.service_id',
 				'tax_code' => 'fm_tts_tickets.tax_code',
 				'unspsc_code' => 'fm_tts_tickets.unspsc_code',
+				'b_account_id' => 'fm_tts_tickets.b_account_id',
 			);
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
@@ -736,6 +737,7 @@
 						'service_id' => $this->db->f('service_id'),
 						'tax_code' => $this->db->f('tax_code'),
 						'unspsc_code' => $this->db->f('unspsc_code'),
+						'b_account_id' => $this->db->f('b_account_id'),
 					);
 
 					foreach ($custom_cols as $custom_col)

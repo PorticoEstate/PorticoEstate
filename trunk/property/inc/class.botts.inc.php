@@ -282,6 +282,11 @@
 					'id' => 'unspsc_code',
 					'name' => lang('unspsc code')
 				);
+				$columns['b_account_id'] = array
+					(
+					'id' => 'b_account_id',
+					'name' => lang('budget account')
+				);
 			}
 
 			$columns['ecodimb'] = array
