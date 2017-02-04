@@ -323,13 +323,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'{$this->call_appname}.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
-							)
 						)
 					)
 				),
@@ -347,6 +340,7 @@
 						'type_id' => $this->type_id,
 						'export' => true,
 						'allrows' => true)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'{$this->call_appname}.uigeneric.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => "{$this->call_appname}.uigeneric.add",
 						'appname' => $this->bo->appname,

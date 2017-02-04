@@ -1304,13 +1304,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uientity.columns', entity_id:'{$this->entity_id}', cat_id:'{$this->cat_id}', type:'{$this->type}'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'link',
@@ -1370,6 +1363,7 @@
 						'export' => true,
 						'allrows' => true
 					)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uientity.columns', entity_id:'{$this->entity_id}', cat_id:'{$this->cat_id}', type:'{$this->type}'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uientity.edit',
 						'entity_id' => $this->entity_id,

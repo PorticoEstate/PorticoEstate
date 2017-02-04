@@ -1030,13 +1030,6 @@ JS;
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uilocation.columns', type_id:'{$type_id}',parent:'{$this->location_code}'}, {closeAction:'reload'})"
-							)
 						)
 					)
 				),
@@ -1051,6 +1044,7 @@ JS;
 						'block_query' => $block_query,
 						'phpgw_return_as' => 'json'
 					)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uilocation.columns', type_id:'{$type_id}',parent:'{$this->location_code}'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uilocation.add',
 						'type_id' => $type_id,

@@ -261,13 +261,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uis_agreement.columns', role:'{$this->role}'},{closeAction:'reload'})"
-							)
 						)
 					)
 				),
@@ -287,6 +280,7 @@
 						'menuaction' => 'property.uis_agreement.download',
 						'id' => $id
 					)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uis_agreement.columns', role:'{$this->role}'},{closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uis_agreement.edit',
 						'role' => $this->role

@@ -97,7 +97,7 @@
 		</label>
 		<div id="toolbar" class='dtable_custom_controls'>
 			<table id="toolbar_table" class="pure-table pure-table-horizontal">
-				<thead>
+				<!--thead>
 					<tr>
 						<th>
 							<xsl:value-of select="php:function('lang', 'name')"/>
@@ -106,7 +106,7 @@
 							<xsl:value-of select="php:function('lang', 'item')"/>
 						</th>
 					</tr>
-				</thead>
+				</thead-->
 				<tbody>
 					<xsl:for-each select="item">
 						<script type="text/javascript">
@@ -131,7 +131,11 @@
 								<xsl:when test="type = 'date-picker'">
 									<td valign="top">
 										<div>
-											<input id="filter_{name}" name="filter_{name}" value="{value}" type="text"></input>
+											<input id="filter_{name}" name="filter_{name}" value="{value}" type="text">
+												<xsl:attribute name="title">
+													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+												</xsl:attribute>
+											</input>
 										</div>
 									</td>
 								</xsl:when>
@@ -141,6 +145,9 @@
 											<input id="filter_{name}_name" name="{name}_name" type="text">
 												<xsl:attribute name="value">
 													<xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/>
+												</xsl:attribute>
+												<xsl:attribute name="title">
+													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 												</xsl:attribute>
 											</input>
 											<input id="filter_{name}_id" name="filter_{name}_id" type="hidden">
@@ -231,6 +238,9 @@
 											filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 										</script>
 										<select id="{$name}" name="{$name}" width="250" style="width: 250px">
+												<xsl:attribute name="title">
+													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+												</xsl:attribute>
 											<xsl:for-each select="list">
 												<xsl:variable name="id">
 													<xsl:value-of select="id"/>
@@ -735,6 +745,18 @@
 								]]>
 						}
 
+						});
+					</xsl:when>
+				</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="columns">
+						button_def.push({
+						text: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+						titleAttr: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+						className: 'download',
+						action: function (e, dt, node, config) {
+							<xsl:value-of select="columns/onclick"/>;
+							}
 						});
 					</xsl:when>
 				</xsl:choose>

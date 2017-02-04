@@ -278,13 +278,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uiagreement.columns', role:'{$this->role}'},{closeAction:'reload'})"
-							)
 						)
 					)
 				),
@@ -301,6 +294,7 @@
 						'status_id' => $this->status_id,
 						'phpgw_return_as' => 'json'
 					)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uiagreement.columns', role:'{$this->role}'},{closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uiagreement.edit',
 						'role' => $this->role
