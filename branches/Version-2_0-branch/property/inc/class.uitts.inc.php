@@ -969,14 +969,7 @@
 								'name' => 'end_date',
 								'value' => $end_date,
 								'text' => lang('to')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload', height: 500})"
-							),
+							)
 						)
 					)
 				),
@@ -987,6 +980,7 @@
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'property.uitts.download',
 						'export' => true, 'allrows' => true)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload', height: 500})"),
 					'allrows' => true,
 					'new_item' => self::link(array('menuaction' => 'property.uitts.add')),
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),

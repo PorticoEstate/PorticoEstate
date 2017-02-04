@@ -33,14 +33,11 @@
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
 
-	class Import_fra_agresso_X205_BK extends property_cron_parent
+	class Import_fra_agresso_X205_BK_vedlegg extends property_cron_parent
 	{
 
-		protected $auto_tax = true;
-		protected $mvakode = 0;
 		protected $kildeid = 1;
 		protected $splitt = 0;
-		protected $soXport;
 		protected $invoice;
 		protected $default_kostra_id = 9999; //dummy
 		protected $debug = false;
@@ -55,9 +52,8 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('invoice');
-			$this->function_msg = 'Importer faktura fra Agresso';
+			$this->function_msg = 'Importer tillegsvedlegg til faktura fra Agresso';
 
-			$this->soXport = CreateObject('property.soXport');
 			$this->invoice = CreateObject('property.soinvoice');
 			$this->responsible = CreateObject('property.soresponsible');
 			$this->bocommon = CreateObject('property.bocommon');
@@ -156,7 +152,6 @@
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
 
-			$this->remind();
 		}
 
 		protected function check_archive()
@@ -189,93 +184,25 @@
 				$file_parts = explode('_', basename($file, '.xml'));
 				$external_voucher_id = $file_parts[2];
 
-				$duplicate = false;
+				$found_voucher = false;
 				$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE external_voucher_id = '{$external_voucher_id}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$duplicate = true;
+					$found_voucher = true;
 				}
 
 				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$external_voucher_id}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
-					$duplicate = true;
+					$found_voucher = true;
 				}
 
-				if (!$duplicate)
+				if ($found_voucher)
 				{
-					rename("{$archive}/{$file}", "{$dirname}/{$file}");
-					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_voucher_id}");
+					$this->receipt['message'][] = array('msg' => "Faktura funnet: {$external_voucher_id}");
 				}
-			}
-		}
-
-		protected function remind()
-		{
-			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
-			{
-				return;
-			}
-
-			if ($this->skip_email || $this->debug)
-			{
-				return;
-			}
-
-			// max. one mail each day
-			if ((int)$GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)))
-			{
-				$toarray = array();
-				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsigndato IS NULL AND oppsynsmannid IS NOT NULL AND saksigndato IS NULL';
-				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$toarray[$this->db->f('responsible')] = true;
-				}
-/*
-				$sql = 'SELECT DISTINCT saksbehandlerid as responsible FROM fm_ecobilag WHERE saksigndato IS NULL AND saksbehandlerid IS NOT NULL AND oppsynsigndato IS NULL';
-				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$toarray[$this->db->f('responsible')] = true;
-				}
-				$sql = 'SELECT DISTINCT budsjettansvarligid as responsible FROM fm_ecobilag WHERE saksigndato IS NOT NULL AND budsjettsigndato IS NULL AND budsjettansvarligid IS NOT NULL';
-				$this->db->query($sql, __LINE__, __FILE__);
-
-				while ($this->db->next_record())
-				{
-					$toarray[$this->db->f('responsible')] = true;
-				}
-*/
-				$subject = 'Du har faktura til behandling';
-
-
-				$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
-
-				foreach ($toarray as $lid => $dummy)
-				{
-					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
-					if (isset($prefs['email']) && $prefs['email'])
-					{
-						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
-								'voucher_id' => $bilagsnr, 'user_lid' => $lid), false, true) . '">Link til fakturabehandling</a>';
-						try
-						{
-							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
-						}
-						catch (phpmailerException $e)
-						{
-							$this->receipt['error'][] = array('msg' => $e->getMessage());
-						}
-					}
-				}
-				// save time of mail, to not send to many mails
-				$config = createObject('phpgwapi.config', 'phpgwapi');
-				$config->read_repository();
-				$config->value('invoice_mail_reminder_time', time());
-				$config->save_repository();
 			}
 		}
 
