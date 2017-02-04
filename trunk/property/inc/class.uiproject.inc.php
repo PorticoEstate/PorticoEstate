@@ -367,13 +367,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns'},{closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -406,6 +399,7 @@
 						'skip_origin' => true,
 						'allrows' => true
 					)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uiproject.columns'},{closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uiproject.add'
 					)),
