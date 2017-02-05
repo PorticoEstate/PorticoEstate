@@ -108,39 +108,33 @@
 					</tr>
 				</thead-->
 				<tbody>
+					<tr>
+						<td>
 					<xsl:for-each select="item">
 						<script type="text/javascript">
 							number_of_toolbar_items += 1;
 						</script>
 
-						<tr>
 							<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 							<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 							<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
-							<td>
-								<xsl:if test="name">
+								<!--xsl:if test="name">
 									<label>
 										<xsl:attribute name="for">
 											<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
 										</xsl:attribute>
 										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 									</label>
-								</xsl:if>
-							</td>
+								</xsl:if-->
 							<xsl:choose>
 								<xsl:when test="type = 'date-picker'">
-									<td valign="top">
-										<div>
 											<input id="filter_{name}" name="filter_{name}" value="{value}" type="text">
 												<xsl:attribute name="title">
 													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 												</xsl:attribute>
 											</input>
-										</div>
-									</td>
 								</xsl:when>
 								<xsl:when test="type = 'autocomplete'">
-									<td class="auto">
 										<div class="auto">
 											<input id="filter_{name}_name" name="{name}_name" type="text">
 												<xsl:attribute name="value">
@@ -227,10 +221,8 @@
 											}
 											});
 										</script>
-									</td>
 								</xsl:when>
 								<xsl:when test="type = 'filter'">
-									<td valign="top">
 										<xsl:variable name="name">
 											<xsl:value-of select="name"/>
 										</xsl:variable>
@@ -273,10 +265,8 @@
 												</xsl:choose>
 											</xsl:for-each>
 										</select>
-									</td>
 								</xsl:when>
 								<xsl:when test="type = 'link'">
-									<td valign="top">
 										<input type="button" class="pure-button pure-button-primary">
 											<xsl:choose>
 												<xsl:when test="onclick">
@@ -292,10 +282,8 @@
 												<xsl:value-of select="value"/>
 											</xsl:attribute>
 										</input>
-									</td>
 								</xsl:when>
 								<xsl:when test="type = 'hidden'">
-									<td valign="top">
 										<input>
 											<xsl:attribute name="type">
 												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
@@ -310,19 +298,15 @@
 												<xsl:value-of select="phpgw:conditional(not(value), '', value)"/>
 											</xsl:attribute>
 										</input>
-									</td>
 								</xsl:when>
 								<xsl:when test="type = 'label'">
-									<td valign="top">
 										<label>
 											<xsl:attribute name="id">
 												<xsl:value-of select="phpgw:conditional(not(id), '', id)"/>
 											</xsl:attribute>
 										</label>
-									</td>
 								</xsl:when>
 								<xsl:otherwise>
-									<td valign="top">
 										<input id="innertoolbar_{name}">
 											<xsl:attribute name="type">
 												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
@@ -346,11 +330,11 @@
 												<xsl:value-of select="phpgw:conditional(not(checked), '', checked)"/>
 											</xsl:attribute>
 										</input>
-									</td>
 								</xsl:otherwise>
 							</xsl:choose>
-						</tr>
 					</xsl:for-each>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
