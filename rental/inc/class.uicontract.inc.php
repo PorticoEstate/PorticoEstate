@@ -1265,7 +1265,7 @@
 				);
 				$temlate_counter++;
 			}
-
+/*
 			$access = $this->acl->check('.', PHPGW_ACL_READ, 'catch');
 			if ($access)
 			{
@@ -1310,7 +1310,7 @@
 					);
 				}
 			}
-
+*/
 			$code = <<<JS
 			var thousandsSeparator = '$this->thousandsSeparator';
 			var decimalSeparator = '$this->decimalSeparator';
