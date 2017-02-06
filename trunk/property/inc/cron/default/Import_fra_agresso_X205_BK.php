@@ -105,7 +105,10 @@
 						continue;
 					}
 
-					$file_list[] = (string)"{$dirname}/{$file}";
+					if(preg_match('/^X205/i', (string)$file ))
+					{
+						$file_list[] = (string)"{$dirname}/{$file}";
+					}
 				}
 			}
 
@@ -352,7 +355,7 @@
 					{
 						foreach ($files as $file_name)
 						{
-							if (stripos($file_name, 'Px205') === 0)
+							if(preg_match('/^X205/i', (string)$file_name ))
 							{
 						//		_debug_array($file_name);
 								$file_remote = "{$directory_remote}/{$file_name}";
