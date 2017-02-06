@@ -1511,7 +1511,9 @@ HTML;
 
 					if (!$_status)
 					{
-						throw new Exception('status on ordered not given in config');
+		//				throw new Exception('status on ordered not given in config');
+						phpgwapi_cache::message_set("Automatisk endring av status for bestilt er ikke konfigurert", 'error');
+
 					}
 
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -1561,19 +1563,21 @@ HTML;
 						$historylog->add('MS', $workorder_id, $to_sms_phone);
 					}
 
-					try
+					if($_status)
 					{
-						execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
-							'status' => $_status));
-					}
-					catch (Exception $e)
-					{
-						if ($e)
+						try
 						{
-							throw $e;
+							execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
+								'status' => $_status));
+						}
+						catch (Exception $e)
+						{
+							if ($e)
+							{
+								throw $e;
+							}
 						}
 					}
-
 
 					//Sigurd: Consider remove
 					/*
@@ -3486,7 +3490,7 @@ HTML;
 
 			if (!$_status)
 			{
-				throw new Exception('status on ordered not given in config');
+				phpgwapi_cache::message_set("Automatisk endring av status for bestilt er ikke konfigurert", 'error');
 			}
 
 			try
@@ -3505,16 +3509,19 @@ HTML;
 				}
 			}
 
-			try
+			if($_status)
 			{
-				execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
-					'status' => $_status));
-			}
-			catch (Exception $e)
-			{
-				if ($e)
+				try
 				{
-					throw $e;
+					execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
+						'status' => $_status));
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						throw $e;
+					}
 				}
 			}
 
