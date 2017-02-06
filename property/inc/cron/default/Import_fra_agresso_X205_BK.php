@@ -81,11 +81,6 @@
 
 		public function execute()
 		{
-			if (isset($this->config->config_data['import']['check_archive']) && $this->config->config_data['import']['check_archive'])
-			{
-				$this->check_archive();
-			}
-
 			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
 			// prevent path traversal
@@ -162,58 +157,6 @@
 			$this->remind();
 		}
 
-		protected function check_archive()
-		{
-			$dirname = $this->config->config_data['import']['local_path'];
-
-			if (preg_match('/\./', $dirname) || !is_dir($dirname))
-			{
-				return array();
-			}
-
-			$archive = "{$dirname}/archive";
-			$file_list = array();
-			$dir = new DirectoryIterator($archive);
-			if (is_object($dir))
-			{
-				foreach ($dir as $file)
-				{
-					if ($file->isDot() || !$file->isFile() || !$file->isReadable() || strcasecmp(end(explode(".", $file->getPathname())), 'xml') != 0)
-					{
-						continue;
-					}
-
-					$file_list[] = (string)$file;
-				}
-			}
-
-			foreach ($file_list as $file)
-			{
-				$file_parts = explode('_', basename($file, '.xml'));
-				$external_voucher_id = $file_parts[2];
-
-				$duplicate = false;
-				$sql = "SELECT bilagsnr FROM fm_ecobilag WHERE external_voucher_id = '{$external_voucher_id}'";
-				$this->db->query($sql, __LINE__, __FILE__);
-				if ($this->db->next_record())
-				{
-					$duplicate = true;
-				}
-
-				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$external_voucher_id}'";
-				$this->db->query($sql, __LINE__, __FILE__);
-				if ($this->db->next_record())
-				{
-					$duplicate = true;
-				}
-
-				if (!$duplicate)
-				{
-					rename("{$archive}/{$file}", "{$dirname}/{$file}");
-					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_voucher_id}");
-				}
-			}
-		}
 
 		protected function remind()
 		{
