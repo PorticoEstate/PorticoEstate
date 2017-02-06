@@ -47,6 +47,11 @@
 		$login = $c->config_data['anonymous_user'];
 		$passwd = $c->config_data['anonymous_passwd'];
 		$_POST['submitit'] = "";
+		$domain = phpgw::get_var('domain', 'string', 'GET');
+		if (strstr($login, '#') === false && $domain)
+		{
+			$login .= "#{$domain}";
+		}
 
 		$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 		if (!$GLOBALS['sessionid'])
