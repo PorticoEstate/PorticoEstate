@@ -736,19 +736,22 @@
 				{
 					$bilagsnr = $this->import_end_file($buffer);
 					
-					$received_amount = $this->get_total_received((int)$order_id);
-					$order_type = $this->bocommon->socommon->get_order_type($order_id);
-
-					switch ($order_type)
+					if($this->config->config_data['export']['auto_receive_order'])
 					{
-						case 'workorder':
-							$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount );
-							break;
-						case 'ticket':
-							$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount );
-							break;
-						default:
-							throw new Exception('Order type not supported');
+						$received_amount = $this->get_total_received((int)$order_id);
+						$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+						switch ($order_type)
+						{
+							case 'workorder':
+								$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount );
+								break;
+							case 'ticket':
+								$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount );
+								break;
+							default:
+								throw new Exception('Order type not supported');
+						}
 					}
 
 				}
