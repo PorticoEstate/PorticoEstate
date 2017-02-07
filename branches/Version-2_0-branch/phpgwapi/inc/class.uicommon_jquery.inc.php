@@ -196,7 +196,7 @@
 					$base = '/eventplannerfrontend/';
 					break;
 				default:
-					$base = '/index.php/';
+					$base = '/index.php';
 					break;
 			}
 
