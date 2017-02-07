@@ -125,7 +125,7 @@
 				'text' => lang('district'),
 				'list' => $districts
 			);
-
+/*
 			$active_option = array
 				(
 				array('id' => 'both', 'name' => lang('all')),
@@ -139,7 +139,7 @@
 				'text' => lang('availability'),
 				'list' => $active_option
 			);
-
+*/
 			$has_contract_option = array
 				(
 				array('id' => 'both', 'name' => lang('all')),
