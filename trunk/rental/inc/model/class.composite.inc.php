@@ -9,10 +9,15 @@
 	 */
 	class rental_composite extends rental_model
 	{
+		const STATUS_ACTIVE = 1;
+		const STATUS_INACTIVE = 2;
+		const STATUS_EXPIRED = 3;
+
 
 		protected $name;
 		protected $description;
 		protected $is_active;
+		protected $status_id;
 		protected $has_custom_address;
 		// These are custom fields that may be set on the composite
 		protected $custom_address_1;
@@ -47,6 +52,15 @@
 			$this->contracts = array();
 		}
 
+		public static function get_status_list()
+		{
+
+			return array(
+				self::STATUS_ACTIVE => lang('active'),
+				self::STATUS_INACTIVE	=> lang('inactive'),
+				self::STATUS_EXPIRED => lang('expired'),
+			);
+		}
 		/**
 		 * Adds a composite to the composite object. Note that this method is
 		 * meant for populating the object and will not fetch anything from
@@ -184,6 +198,15 @@
 		public function get_description()
 		{
 			return $this->description;
+		}
+		public function set_status_id( $status_id )
+		{
+			$this->status_id = $status_id;
+		}
+
+		public function get_status_id()
+		{
+			return $this->status_id;
 		}
 
 		public function set_is_active( $is_active )
@@ -519,6 +542,7 @@
 				'id' => $this->get_id(),
 				'location_code' => $location_codes,
 				'description' => $this->get_description(),
+				'status_id' => $this->get_status_id(),
 				'is_active' => $this->is_active(),
 				'name' => $this->get_name(),
 				'address' => $addresses,
