@@ -65,14 +65,20 @@
 			switch ($filters['is_active'])
 			{
 				case "active":
-					$filter_clauses[] = "rental_composite.is_active = TRUE";
+					$filter_clauses[] = "rental_composite.status_id = 1";
 					break;
 				case "non_active":
-					$filter_clauses[] = "rental_composite.is_active = FALSE";
+					$filter_clauses[] = "rental_composite.status_id = 2";
 					break;
 				case "both":
 					break;
 			}
+
+			if ((int)$filters['status_id'] > 0)
+			{
+				$filter_clauses[] = "rental_composite.status_id = " . (int) $filters['status_id'];
+			}
+
 			$special_query = false; //specify if the query should use distinct on rental_composite.id (used for selecting composites that has an active or inactive contract)
 			$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
 			$availability_date_from = $ts_query;
@@ -236,7 +242,7 @@
 					rental_composite.has_custom_address, rental_composite.address_1, rental_composite.house_number,
 					  rental_composite.address_2, rental_composite.postcode, rental_composite.place,
 					  rental_composite.is_active, rental_composite.area, rental_composite.description,
-					  rental_composite.furnish_type_id, rental_composite.standard_id,rental_composite.composite_type_id,
+					  rental_composite.furnish_type_id, rental_composite.standard_id,rental_composite.composite_type_id,rental_composite.status_id,
 					  rental_composite.part_of_town_id, rental_composite.custom_price_factor, rental_composite.custom_price, rental_composite.price_type_id,";
 				$cols .= "rental_contract.id AS contract_id, rental_contract.date_start, rental_contract.date_end, rental_contract.old_contract_id, ";
 				$cols .= "rental_application.id AS application_id, rental_application.date_start AS application_date_start, rental_application.date_end AS application_date_end, ";
@@ -318,6 +324,7 @@
 				$composite->set_custom_price_factor($this->unmarshal($this->db->f('custom_price_factor', true), 'float'));
 				$composite->set_price_type_id($this->unmarshal($this->db->f('price_type_id'), 'int'));
 				$composite->set_custom_price($this->unmarshal($this->db->f('custom_price'), 'float'));
+				$composite->set_status_id($this->unmarshal($this->db->f('status_id'), 'int'));
 			}
 			// Location code
 			$location_code = $this->unmarshal($this->db->f('location_code', true), 'string');
@@ -457,7 +464,7 @@
 				'house_number = \'' . $composite->get_custom_house_number() . '\'',
 				'postcode = \'' . $composite->get_custom_postcode() . '\'',
 				'place = \'' . $composite->get_custom_place() . '\'',
-				'is_active = \'' . ($composite->is_active() ? 'true' : 'false') . '\'',
+//				'is_active = \'' . ($composite->is_active() ? 'true' : 'false') . '\'',
 				'object_type_id = ' . $composite->get_object_type_id(),
 				'area = ' . $this->marshal($composite->get_area(), 'float'),
 				'furnish_type_id = ' . $composite->get_furnish_type_id(),
@@ -466,6 +473,7 @@
 				'part_of_town_id = ' . $composite->get_part_of_town_id(),
 				'custom_price_factor = \'' . $composite->get_custom_price_factor() . '\'',
 				'price_type_id = ' . $composite->get_price_type_id(),
+				'status_id = ' . $composite->get_status_id(),
 				'custom_price = \'' . $composite->get_custom_price() . '\''
 			);
 
@@ -486,7 +494,7 @@
 			// Build a db-friendly array of the composite object
 			$cols = array('name', 'description', 'has_custom_address', 'address_1', 'address_2',
 				'house_number', 'postcode', 'place', 'object_type_id', 'area', 'furnish_type_id',
-				'standard_id','composite_type_id', 'part_of_town_id', 'custom_price_factor','price_type_id', 'custom_price');
+				'standard_id','composite_type_id', 'part_of_town_id', 'custom_price_factor','price_type_id', 'status_id', 'custom_price');
 			$values = array(
 				"'" . $composite->get_name() . "'",
 				"'" . $composite->get_description() . "'",
@@ -504,6 +512,7 @@
 				$composite->get_part_of_town_id(),
 				"'" . $composite->get_custom_price_factor() . "'",
 				$composite->get_price_type_id(),
+				$composite->get_status_id(),
 				"'" . $composite->get_custom_price() . "'"
 			);
 

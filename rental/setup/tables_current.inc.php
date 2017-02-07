@@ -18,6 +18,7 @@
 				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
 				'description' => array('type' => 'text'),
 				'is_active' => array('type' => 'bool', 'nullable' => false, 'default' => 'true'),
+				'status_id' =>  array('type' => 'int', 'precision' => 2, 'nullable' => false,'default' => 1),
 				'address_1' => array('type' => 'varchar', 'precision' => '255'),
 				'address_2' => array('type' => 'varchar', 'precision' => '255'),
 				'house_number' => array('type' => 'varchar', 'precision' => '255'),
