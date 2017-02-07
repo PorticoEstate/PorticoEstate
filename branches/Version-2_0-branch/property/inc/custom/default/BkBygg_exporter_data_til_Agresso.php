@@ -55,6 +55,7 @@
 			var $voucher_type;
 			var $voucher_id;
 			var $batchid;
+			protected $global_lock = false;
 
 
 			public function __construct( $param )
@@ -262,7 +263,14 @@
 				$transfer_ok = false;
 				if (!$debug && ($this->config->config_data['common']['method'] == 'ftp' || $this->config->config_data['common']['method'] == 'ssh'))
 				{
-					$this->db->transaction_begin();
+					if ($this->db->get_transaction())
+					{
+						$this->global_lock = true;
+					}
+					else
+					{
+						$this->db->transaction_begin();
+					}
 
 					if (!$connection = $this->connection)
 					{
@@ -301,11 +309,17 @@
 					if ($transfer_ok)
 					{
 						$this->soXport->log_transaction($batchid, $this->order_id, lang('transferred Order %1 to Agresso', basename($filename)));
-						$this->db->transaction_commit(); // Reverse the batch_id - increment
+						if (!$this->global_lock)
+						{
+							$this->db->transaction_commit();
+						}
 					}
 					else
 					{
-						$this->db->transaction_abort();
+						if (!$this->global_lock)
+						{
+							$this->db->transaction_abort(); // Reverse the batch_id - increment
+						}
 						$this->soXport->log_transaction($batchid, $this->order_id, lang('Failed to transfere Order %1 to Agresso', basename($filename)));
 				//		@unlink($filename);
 					}
