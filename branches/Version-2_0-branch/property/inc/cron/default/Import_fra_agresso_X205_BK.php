@@ -107,7 +107,7 @@
 				}
 			}
 
-			if (is_writable("{$dirname}/archive"))
+			if (is_writable("{$dirname}/arkiv"))
 			{
 				foreach ($file_list as $file)
 				{
@@ -125,7 +125,7 @@
 						// move file
 						$_file = basename($file);
 						$movefrom = "{$dirname}/{$_file}";
-						$moveto = "{$dirname}/archive/{$_file}";
+						$moveto = "{$dirname}/arkiv/{$_file}";
 
 						if (is_file($moveto))
 						{
@@ -151,7 +151,7 @@
 			}
 			else
 			{
-				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
+				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/arkiv/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
 
 			$this->remind();
@@ -226,6 +226,96 @@
 		}
 
 		protected function get_files()
+		{
+			$method = $this->config->config_data['common']['method'];
+			if($method == 'local')
+			{
+				return;
+			}
+
+			$server = $this->config->config_data['common']['host'];
+			$user = $this->config->config_data['common']['user'];
+			$password = $this->config->config_data['common']['password'];
+			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir'], '/');
+			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
+
+
+			try
+			{
+				$connection = ftp_connect($server);
+			}
+			catch (Exception $e)
+			{
+				$this->receipt['error'][] = array('msg' => $e->getMessage());
+			}
+
+			// try to authenticate with username root, password secretpassword
+			if (!ftp_login($connection, $user, $password))
+			{
+				echo "fail: unable to authenticate\n";
+			}
+			else
+			{
+				// allright, we're in!
+				echo "okay: logged in...<br/>";
+
+				if (!ftp_chdir($connection, $directory_remote))
+				{
+					echo ("Change Dir Failed: $dir<BR>\r\n");
+					return false;
+				}
+
+				// Scan directory
+				$files = array();
+				echo "Scanning {$directory_remote}<br/>";
+
+				$files = ftp_nlist($connection, '.');
+
+				if ($this->debug)
+				{
+					_debug_array($files);
+				}
+
+				foreach ($files as $file_name)
+				{
+					if ($this->debug)
+					{
+						_debug_array('preg_match("/xml$/i",' . $file_name . ': ' . preg_match('/xml$/i', $file_name));
+					}
+
+					if(preg_match('/^X205/i', (string)$file_name ))
+					{
+						$file_remote = $file_name;
+						$file_local = "{$directory_local}/{$file_name}";
+
+						if (ftp_get($connection, $file_local, $file_remote, FTP_ASCII))
+						{
+							ftp_delete( $connection , "arkiv/{$file_remote}");
+
+							if (ftp_rename($connection, $file_remote, "arkiv/{$file_remote}"))
+							{
+								echo "File remote: {$file_remote} was moved to archive: arkiv/{$file_remote}<br/>";
+								echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
+							}
+							else
+							{
+								echo "ERROR! File remote: {$file_remote} failed to move from remote: {$directory_remote}/arkiv/{$file_name}<br/>";
+								if (unlink($file_local))
+								{
+									echo "Lokal file was deleted: {$file_local}<br/>";
+								}
+							}
+						}
+						else
+						{
+							echo "Feiler på ftp_fget()<br/>";
+						}
+					}
+				}
+			}
+		}
+
+		protected function get_files_old()
 		{
 			$method = $this->config->config_data['common']['method'];
 			if($method == 'local')
@@ -314,17 +404,17 @@
 								if (fclose($fp))
 								{
 									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-									if (ssh2_sftp_unlink($sftp, "{$directory_remote}/archive/{$file_name}"))
+									if (ssh2_sftp_unlink($sftp, "{$directory_remote}/arkiv/{$file_name}"))
 									{
-										echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
+										echo "Deleted duplicate File remote: {$directory_remote}/arkiv/{$file_name}<br/>";
 									}
-									if (ssh2_sftp_rename($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}"))
+									if (ssh2_sftp_rename($sftp, $file_remote, "{$directory_remote}/arkiv/{$file_name}"))
 									{
-										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
+										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/arkiv/{$file_name}<br/>";
 									}
 									else
 									{
-										echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
+										echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/arkiv/{$file_name}<br/>";
 										if (unlink($file_local))
 										{
 											echo "Lokal file was deleted: {$file_local}<br/>";
