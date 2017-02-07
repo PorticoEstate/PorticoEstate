@@ -2024,8 +2024,7 @@ JS;
 					{
 						if (isset($invoices['external_ref']) && $invoices['external_ref'])
 						{
-							//$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$invoices['external_ref']}','640','800')\" >{$lang_picture}</a>";
-							$json_row[$uicols[$i]['col_name']] = "<a href='#' onClick=\"JqueryPortico.openPopup({'menuaction':'{$baseurl_invoice}{$invoices['external_ref']}'})\">{$lang_picture}</a>";
+							$json_row[$uicols[$i]['col_name']] = " <a href=\"javascript:openwindow('{$baseurl_invoice}{$invoices['external_ref']}','640','800')\" >{$lang_picture}</a>";
 						}
 						else
 						{
