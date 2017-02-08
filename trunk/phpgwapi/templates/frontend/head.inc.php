@@ -68,7 +68,7 @@ JS;
 	}
 
 	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
-//	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 //	$stylesheets[] = "/{$app}/css/frontend.css";
 	$stylesheets[] = "/phpgwapi/templates/frontend/css/frontend.css";
 //	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.css";
