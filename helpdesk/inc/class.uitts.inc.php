@@ -713,13 +713,6 @@ JS;
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -745,6 +738,7 @@ JS;
 					'download' => self::link(array('menuaction' => 'helpdesk.uitts.download',
 						'export' => true, 'allrows' => true)),
 					'allrows' => true,
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add')),
 					'editor_action' => self::link(array('menuaction' => 'helpdesk.uitts.edit_survey_title')),
 					'field' => $this->_get_fields(),

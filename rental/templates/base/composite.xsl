@@ -178,7 +178,7 @@
 							</label>
 							<xsl:value-of select="value_area_net"/>
 						</div>
-						<div class="pure-control-group">
+						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'available ?')"/>
 							</label>
@@ -187,7 +187,18 @@
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
 							</input>
+						</div-->
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'available ?')"/>
+							</label>
+							<xsl:if test="count(//list_status_id/options) > 0">
+								<select id="status_id" name="status_id">
+									<xsl:apply-templates select="list_status_id/options"/>
+								</select>
+							</xsl:if>
 						</div>
+
 					</div>
 				</div>
 				<xsl:choose>
@@ -456,7 +467,7 @@
 							</label>
 							<xsl:value-of select="value_area_net"/>
 						</div>
-						<div class="pure-control-group">
+						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'available ?')"/>
 							</label>
@@ -465,6 +476,16 @@
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
 							</input>
+						</div-->
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'available ?')"/>
+							</label>
+							<xsl:for-each select="list_status_id/options">
+								<xsl:if test="selected != 0">
+									<xsl:value-of disable-output-escaping="yes" select="name"/>
+								</xsl:if>
+							</xsl:for-each>
 						</div>
 					</div>
 				</div>
