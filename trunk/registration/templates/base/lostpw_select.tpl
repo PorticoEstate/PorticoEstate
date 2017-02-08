@@ -1,18 +1,18 @@
 <!-- BEGIN form -->
-<center>{errors}</center>
-<form action="{form_action}" method="POST">
-	<table border="0" width="40%" align="center">
-		<p>
-			{lang_explain}
-		</p>
-		<tr>
-			<td>{lang_username}</td>
-			<td><input name="r_reg[loginid]" value="{value_username}"></td>
-		</tr>
+<p>{errors}</p>
+<form action="{form_action}" method="POST" class="pure-form pure-form-aligned">
+	<p>
+		{lang_explain}
+	</p>
+	<fieldset>
+		<div class="pure-control-group">
+			<label>{lang_username}</label>
+			<input name="r_reg[loginid]" value="{value_username}" required="required" type="email">
+		</div>
 
-		<tr>
-			<td colspan="2"><input type="submit" name="submit" value="{lang_submit}"></td>
-		</tr>
-	</table>
+		<div class="pure-controls">
+			<button type="submit" class="pure-button pure-button-primary" name="submit">{lang_submit}</button>
+        </div>
+	</fieldset>
 </form>
 <!-- END form -->
