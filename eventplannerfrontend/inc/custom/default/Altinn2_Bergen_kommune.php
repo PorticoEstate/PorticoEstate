@@ -90,7 +90,7 @@
 			try
 			{
 				$action = "";
-		//		$response = $client->__doRequest($request, $location_URL, $action, 1);
+				$response = $client->__doRequest($request, $location_URL, $action, 1);
 				$reader = new XMLReader();
 				$reader->xml($response);
 
