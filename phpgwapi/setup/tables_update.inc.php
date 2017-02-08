@@ -3487,3 +3487,36 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.554';
+	/**
+	* Make room for email as account_lid
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_554()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_mapping', 'account_lid', array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => false
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_accounts', 'account_lid', array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => false
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_log', 'log_account_lid', array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => false
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.555';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
