@@ -206,6 +206,7 @@
 			$file_id = isset($data['file_id']) && $data['file_id'] ? (int)$data['file_id'] : 0;
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$entity_group_id = isset($data['entity_group_id']) ? $data['entity_group_id'] : '';
 			
 			if ($location_id)
 			{
@@ -214,9 +215,14 @@
 				$filtermethod = "WHERE a.file_id = {$file_id}";
 			}
 			
-			$sql = "SELECT a.file_id, b.type, b.id, b.location_id, b.location_code, b.json_representation, c.name AS category_name "
+			if ($entity_group_id)
+			{
+				$filtermethod .= " AND c.entity_group_id = {$entity_group_id}";
+			}
+			
+			$sql = "SELECT a.file_id, b.type, b.id, b.location_id, b.location_code, b.json_representation, c.name AS category_name, c.entity_id, c.entity_group_id "
 					. "FROM phpgw_vfs_file_relation a INNER JOIN fm_bim_item b ON a.location_id = b.location_id AND a.location_item_id = b.id "
-					. "LEFT JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";
+					. "INNER JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";
 
 			if (!$allrows)
 			{
@@ -228,17 +234,29 @@
 			}
 
 			$values = array();
+			$i = 0;
 			while ($this->db->next_record())
 			{
-				$values[] = array
+				$values[$i] = array
 					(
 					'id' => $this->db->f('id'),
+					'entity_id' => $this->db->f('entity_id'),
+					'entity_group_id' => $this->db->f('entity_group_id'),
 					'location_id' => $this->db->f('location_id'),
 					'category_name' => $this->db->f('category_name')
 				);
+					
+				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				foreach ($jsondata as $k => $v)
+				{
+					$values[$i][$k] = $v;
+				}
+				$i++;
 			}
-			
-			$sql2 = "SELECT count(*) as cnt FROM phpgw_vfs_file_relation a INNER JOIN fm_bim_item b ON a.location_id = b.location_id AND a.location_item_id = b.id " ." {$filtermethod} ";
+						
+			$sql2 = "SELECT count(*) as cnt "
+					. "FROM phpgw_vfs_file_relation a INNER JOIN fm_bim_item b ON a.location_id = b.location_id AND a.location_item_id = b.id "
+					. "INNER JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";			
 			$this->db->query($sql2, __LINE__, __FILE__);
 
 			$this->db->next_record();
