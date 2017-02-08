@@ -1,18 +1,20 @@
 <!-- BEGIN header -->
 <form method="POST" action="{action_url}">
-	<table class="pure-table pure-table-bordered">
-		<tr class="th">
-			<td colspan="2"><font color="{th_text}">&nbsp;<b>{title}</b></font></td>
-		</tr>
+	<table class="pure-table pure-table-bordered pure-table-striped">
+		<thead>
+			<tr>
+				<th colspan="2">{title}</th>
+			</tr>
+		</thead>
 		<!-- END header -->
 		<!-- BEGIN body -->
-		<tr class="row_on">
+		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_helpdesk}/{lang_settings}</b></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_app_name}: <br>
 				{lang_default}: {lang_Helpdesk}</td>
 			<td><input name="newsettings[app_name]" value="{value_app_name}"></td>
@@ -29,7 +31,7 @@
 		<tr class="row_off">
 			<td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_Open_translates_to}: <br>
 				{lang_default}: {lang_Open}</td>
 			<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
@@ -61,8 +63,17 @@
 				</select>
 			</td>
 		</tr>
+		<tr>
+			<td >{lang_TTS_default_interface}:</td>
+			<td>
+				<select name="newsettings[tts_default_interface]">
+					<option value="" {selected_tts_default_interface_}>Full</option>
+					<option value="simplified" {selected_tts_default_interface_simplified}>{lang_simplified}</option>
+				</select>
+			</td>
+		</tr>
 
-		<tr class="row_on">
+		<tr>
 			<td valign = 'top'>{lang_TTS_simplified_group}:</td>
 			<td>
 				<!--to be able to blank the setting - need an empty value-->
@@ -82,7 +93,7 @@
 				</table>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_Mail_Notification}:</td>
 			<td>
 				<select name="newsettings[mailnotification]">
@@ -109,7 +120,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_Assigned_Notification_TTS}.</td>
 			<td>
 				<select name="newsettings[assignednotification]">
@@ -136,7 +147,7 @@
 				</select>
 			</td>
 		</tr>
-		<tr class="row_on">
+		<tr>
 			<td>{lang_priority_levels_TTS}.</td>
 			<td>
 				<select name="newsettings[prioritylevels]">
@@ -156,7 +167,7 @@
 			</td>
 		</tr>
 
-		<tr class="row_on">
+		<tr>
 			<td valign = 'top'>{lang_TTS_finnish_date}:</td>
 			<td>
 				<!--to be able to blank the setting - need an empty value-->
@@ -178,17 +189,19 @@
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
-		<tr class="th">
-			<td colspan="2">
-				&nbsp;
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2" align="center">
-				<input type="submit" name="submit" value="{lang_submit}">
-				<input type="submit" name="cancel" value="{lang_cancel}">
-			</td>
-		</tr>
+		<tfoot>
+			<tr>
+				<td colspan="2">
+					&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="submit" name="submit" value="{lang_submit}">
+					<input type="submit" name="cancel" value="{lang_cancel}">
+				</td>
+			</tr>
+		</tfoot>
 	</table>
 </form>
 <!-- END footer -->
