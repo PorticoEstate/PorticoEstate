@@ -64,8 +64,8 @@
 				'contact_email' => array('type' => 'varchar', 'precision' => '64', 'nullable' => True),
 				'category' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'phpgw_account_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
-				'account_lid' => array('type' => 'varchar', 'precision' => '25', 'nullable' => True),
-				'account_pwd' => array('type' => 'varchar', 'precision' => '32', 'nullable' => True),
+				'account_lid' => array('type' => 'varchar', 'precision' => 100, 'nullable' => True),
+				'account_pwd' => array('type' => 'varchar', 'precision' => 115, 'nullable' => True),
 				'account_status' => array('type' => 'int', 'precision' => '4', 'nullable' => True,
 					'default' => '1'),
 				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True)
