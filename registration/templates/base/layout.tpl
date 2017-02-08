@@ -1,18 +1,35 @@
 <!-- BEGIN header -->
-<header>
-	{javascript}
-	{css}
-</header>
+<!DOCTYPE html>
+<html lang="no">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="User registration">
+		<title>{lang_header}</title>
 
-<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
-	<table border="0" width="100%" cellspacing="0" cellpadding="2">
-		<tr bgcolor="#486591">
-			<td width="100%" bgcolor="#486591"><font color="#fefefe">{lang_header}</font></td>
-		</tr>
-	</table>
-	<!-- END header -->
 
-	<!-- BEGIN footer -->
+		<script type="text/javascript">
+			<!--
+			var strBaseURL = '{str_base_url}';
 
-	<!-- END footer -->
+			//-->
+		</script>
+		{javascript}
+		{css}
+	</head>
+
+	<body>
+		<div class="header">
+			<h1>{lang_header}</h1>
+
+		</div>
+		<div class="content">
+
+			<!-- END header -->
+
+			<!-- BEGIN footer -->
+		</div>
+	</body>
+</html>
+<!-- END footer -->
 
