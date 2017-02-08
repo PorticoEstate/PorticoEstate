@@ -171,19 +171,22 @@ HTML;
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML
-				<p>
+				
 					<label for="org_id">Velg Organisasjon:</label>
 					<select name="session_org_id" id="org_id" onChange="this.form.submit();">
 						{$org_option}
 					</select>
-				</p>
+				
 HTML;
 			}
 
 			$html = <<<HTML
-			<form action="{$action}" method="POST">
-				$org_select
-			</form>
+
+			<div id="organsation_select">
+				<form action="{$action}" method="POST">
+					$org_select
+				</form>
+			</div>
 HTML;
 
 			echo $html;

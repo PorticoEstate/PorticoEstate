@@ -1,14 +1,4 @@
 <!-- BEGIN form -->
-<style type="text/css">
-	#country { width: 300px; }
-	#gender { width: 300px; }
-	#loc1 { width: 300px; }
-	#loc2 { width: 300px; }
-	#loc3 { width: 300px; }
-	#loc4 { width: 300px; }
-	#loc5 { width: 300px; }
-	#loc6 { width: 300px; }
-</style>
 
 <script language="JavaScript" type="text/javascript">
 	var tos;
@@ -31,68 +21,57 @@
 	}
 </script>
 
-{css}
-
-<script type="text/javascript">
-<!--
-	var strBaseURL = '{str_base_url}';
-	{win_on_events}
-//-->
-</script>
-{javascript}
-
-
-<center>{message}</center>
-<center>{errors}</center>
-<form action="{form_action}" method="POST">
-	<table border="0" width="75%" align="center">
+<h2 class="content-subhead">{message}</h2>
+<p>{errors}</p>
+<form action="{form_action}" method="POST" class="pure-form pure-form-aligned">
+	<fieldset>
 
 		<!-- BEGIN username -->
-		<tr>
+		<div class="pure-control-group">
 			<td width="1%"></td>
 			{domain_select}
-		</tr>
-		<tr>
-			<td width="1%">{missing_loginid}</td>
-			<td>{lang_username}</td>
-			<td>{domain_from_host}<input name="r_reg[loginid]" value="{value_username}"></td>
-		</tr>
+		</div>
+		<div class="pure-control-group">
+			<label for="username">{missing_loginid}{lang_username}</label>
+			{domain_from_host}<input id="username" type="text" placeholder="{lang_username}" name="r_reg[loginid]" value="{value_username}" required>
+		</div>
 		<!-- END username -->
 
 
 		<!-- BEGIN password -->
-		<tr>
-			<td width="1%">{missing_passwd}</td>
-			<td><b>{lang_password}</b></td>
-			<td><input type="password" name="r_reg[passwd]" value="{value_passwd}"></td>
-		</tr>
+		<div class="pure-control-group">
+			{missing_passwd}
+			<label for="password">{lang_password}</label>
+			<input type="password" id="password" type="text" placeholder="{lang_password}" name="r_reg[passwd]" value="{value_passwd}" required>
+		</div>
 
-		<tr>
-			<td width="1%">{missing_passwd_confirm}</td>
-			<td><b>{lang_reenter_password}</b></td>
-			<td><input type="password" name="r_reg[passwd_confirm]" value="{value_passwd_confirm}"></td>
-		</tr>
+		<div class="pure-control-group">
+			<label for="password2">{missing_passwd_confirm}{lang_reenter_password}</label>
+			<input type="password" id="password2" type="text" placeholder="{lang_password}" name="r_reg[passwd_confirm]" value="{value_passwd_confirm}" required>
+		</div>
 		<!-- END password -->
 
 		<!-- BEGIN other_fields_proto -->
-		<tr>
-			<td width="1%">{missing_indicator}</td>
-			<td>{bold_start}{lang_displayed_text}{bold_end}</td>
-			<td>{input_field}</td>
-		</tr>
+		<div class="pure-control-group">
+			<label>{missing_indicator} {lang_displayed_text}</label>
+			{input_field}
+		</div>
 		<!-- END other_fields_proto -->
 
 		<!-- BEGIN tos -->
-		<tr>
-			<td width="1%">{missing_tos_agree}</td>
-			<td colspan="2"><b><font size="2"><a href="javascript:opentoswindow()">{lang_tos_agree}</a></font></b><input type="checkbox" name="r_reg[tos_agree]" {value_tos_agree}></td>
-		</tr>
+		<div class="pure-controls">
+			<label for="cb" class="pure-checkbox">
+				{missing_tos_agree}
+				<input id="cb" type="checkbox" name="r_reg[tos_agree]" {value_tos_agree} required="required">
+				<a href="javascript:opentoswindow()">{lang_tos_agree}</a>
+			</label>
+		</div>
 		<!-- END tos -->
+		<div class="pure-controls">
+			<button type="submit" class="pure-button pure-button-primary" name="submit">{lang_submit}</button>
+        </div>
 
-		<tr>
-			<td colspan="3"><input type="submit" name="submit" value="{lang_submit}"></td>
-		</tr>
-	</table>
+	</fieldset>
 </form>
 <!-- END form -->
 

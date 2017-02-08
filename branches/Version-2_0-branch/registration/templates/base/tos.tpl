@@ -1,1 +1,1 @@
-<p><center>{extra_text}</center>
+<p>{extra_text}
