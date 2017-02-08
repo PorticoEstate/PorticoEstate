@@ -237,7 +237,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'all types')" />
 								</label>
-								<input type="checkbox" id="check_all_types" name="check_all_types" value="1" onchange="showAllTypes()"></input>
+								<input type="checkbox" disabled="disabled" id="check_all_types" name="check_all_types" value="1" onchange="showAllTypes()"></input>
 							</div>							
 							<div class="pure-control-group">
 								<label for="vendor">
