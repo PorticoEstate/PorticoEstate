@@ -767,11 +767,11 @@
 						{
 							$_query = (int)$query;
 						}
-						else if ($criteria[0]['type'] == 'bigint' &&  $field_info['matchtype'] == 'like')
+						else if ($criteria[0]['type'] == 'bigint' &&  $criteria[0]['matchtype'] == 'like')
 						{
 							$_query = $query;
-							$_querymethod[] = " cast({$field_info['field']} as text) {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
-							$_query = 0;
+
+							$criteria[0]['field'] = "cast({$criteria[0]['field']} as text)";
 						}
 						else if ($criteria[0]['type'] == 'bigint' &&  $field_info['matchtype'] != 'like')
 						{
