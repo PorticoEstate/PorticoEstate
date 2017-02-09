@@ -34,6 +34,10 @@
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="first_tab">
 					<fieldset>
+						<legend>
+							<xsl:value-of select="php:function('lang', 'customer')"/>
+						</legend>
+
 						<xsl:if test="customer/id > 0">
 							<div class="pure-control-group">
 								<label>
@@ -43,16 +47,6 @@
 								<xsl:value-of select="customer/id"/>
 							</div>
 						</xsl:if>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'active')"/>
-							</label>
-							<input type="checkbox" name="active" id="active" value="1">
-								<xsl:if test="customer/active = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div>
 						<div class="pure-control-group">
 							<xsl:variable name="lang_category">
 								<xsl:value-of select="php:function('lang', 'category')"/>
@@ -152,6 +146,35 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'account number')"/>
+							</label>
+							<input type="text" id="account_number" name="account_number" value="{customer/account_number}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>account_number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'account number')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'number of users')"/>
+							</label>
+							<input type="text" name="number_of_users" value="{customer/number_of_users}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'integer')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
 							<input type="text" name="contact_name" value="{customer/contact_name}">
@@ -199,17 +222,57 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'account number')"/>
+								<xsl:value-of select="php:function('lang', 'contact name')"/>
+								<xsl:text> 2</xsl:text>
 							</label>
-							<input type="text" id="account_number" name="account_number" value="{customer/account_number}">
+							<input type="text" name="contact2_name" id="contact2_name" value="{customer/contact2_name}">
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'contact name')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'email')"/>
+								<xsl:text> 2</xsl:text>
+							</label>
+							<input type="text" name="contact2_email" id="contact2_email" value="{customer/contact2_email}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>account_number</xsl:text>
+									<xsl:text>email</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-optional">
 									<xsl:text>true</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'account number')"/>
+									<xsl:value-of select="php:function('lang', 'email')"/>
+								</xsl:attribute>
+							</input>
+							<xsl:choose>
+								<xsl:when test="valid_email = 1">
+									<xsl:text> </xsl:text>
+									<a href="{link_create_user}">
+										<xsl:value-of select="php:function('lang', 'create_user_based_on_email_link')"/>
+									</a>
+								</xsl:when>
+							</xsl:choose>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'contact phone')"/>
+								<xsl:text> 2</xsl:text>
+							</label>
+							<input type="text" name="contact2_phone" id="contact2_phone" value="{customer/contact2_phone}">
+								<xsl:attribute name="data-validation-depends-on">
+									<xsl:text>contact2_name</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</xsl:attribute>
 							</input>
 						</div>
@@ -228,6 +291,34 @@
 							<textarea cols="47" rows="7" name="remark">
 								<xsl:value-of select="customer/remark"/>
 							</textarea>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>
+							<xsl:value-of select="php:function('lang', 'proceedings')"/>
+						</legend>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'active')"/>
+							</label>
+							<input type="checkbox" name="active" id="active" value="1">
+								<xsl:if test="customer/active = 1">
+									<xsl:attribute name="checked" value="checked"/>
+								</xsl:if>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'maximum number of events')"/>
+							</label>
+							<input type="text" name="max_events" value="{customer/max_events}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'integer')"/>
+								</xsl:attribute>
+							</input>
 						</div>
 						<div class="pure-control-group">
 							<label>

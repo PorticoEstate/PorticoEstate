@@ -57,6 +57,11 @@
 			$contact_name,
 			$contact_email,
 			$contact_phone,
+			$contact2_name,
+			$contact2_email,
+			$contact2_phone,
+			$number_of_users,
+			$max_events,
 			$account_number,
 			$description,
 			$remark,
@@ -146,7 +151,7 @@
 					'required' => true),
 				'account_number' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true),
+					'required' => false),
 			 	'description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'label' => 'description',
@@ -180,6 +185,35 @@
 					'query' => true,
 					'label' => 'contact phone',
 					),
+				'contact2_name' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'contact name 2',
+					),
+				'contact2_email' => array(
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
+					'label' => 'contact email 2',
+					),
+				'contact2_phone' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'contact phone 2',
+					),
+				'number_of_users' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'required' => true,
+					'query' => true,
+					'label' => 'number of users',
+					),
 				'organization_number' => array(
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
@@ -211,7 +245,14 @@
 						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 						'type' => 'string',
 						'related' => true,
-						)
+						),
+					'max_events' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'required' => true,
+						'query' => false,
+						'label' => 'maximum number of events',
+						),
 					);
 
 				foreach ($backend_fields as $key => $field_info)
