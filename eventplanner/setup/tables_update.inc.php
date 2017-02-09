@@ -153,6 +153,7 @@
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}
+
 	$test[] = '0.9.18.005';
 
 	function eventplanner_upgrade0_9_18_005()
@@ -180,6 +181,46 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.006';
+		}
+		return $GLOBALS['setup_info']['eventplanner']['currentver'];
+	}
+
+	$test[] = '0.9.18.006';
+	function eventplanner_upgrade0_9_18_006()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'contact2_name', array(
+			'type' => 'text',
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'contact2_email', array(
+			'type' => 'text',
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'contact2_phone', array(
+			'type' => 'text',
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'max_events', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'number_of_users', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('eventplanner_customer','account_number', array(
+			'type' => 'varchar',
+			'precision' => '20',
+			'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.007';
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}

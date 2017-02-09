@@ -45,7 +45,6 @@
 		protected $default_kostra_id = 9999; //dummy
 		protected $debug = false;
 		protected $skip_import = false;
-		protected $skip_email = false;
 		protected $export;
 		protected $skip_update_voucher_id = false;
 
@@ -65,21 +64,10 @@
 			$this->dateformat = $this->db->date_format();
 			$this->datetimeformat = $this->db->datetime_format();
 			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
-			$this->send = CreateObject('phpgwapi.send');
 
 			include (PHPGW_SERVER_ROOT . "/property/inc/export/{$GLOBALS['phpgw_info']['user']['domain']}/Agresso_X114");
 			$this->export = new export_conv;
 
-			$now = time() + (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['tz_offset'] * 3600;
-
-			$now_hour = date('G', $now);
-			$now_day = date('N', $now);
-
-			if (($now_hour < 6 || $now_hour > 17) || $now_day > 5)
-			{
-
-				$this->skip_email = true;
-			}
 		}
 
 		public function execute()
@@ -158,8 +146,6 @@
 			{
 				$this->receipt['error'][] = array('msg' => "Arkiv katalog '{$dirname}/archive/' ikke er ikke skrivbar - kontakt systemadminstrator for å korrigere");
 			}
-
-			$this->remind();
 		}
 
 		protected function check_archive()
@@ -212,72 +198,6 @@
 					rename("{$archive}/{$file}", "{$dirname}/{$file}");
 					$this->receipt['message'][] = array('msg' => "fil tilbakeført fra arkiv til importkø: {$external_voucher_id}");
 				}
-			}
-		}
-
-		protected function remind()
-		{
-			if (!isset($GLOBALS['phpgw_info']['server']['smtp_server']) || !$GLOBALS['phpgw_info']['server']['smtp_server'])
-			{
-				return;
-			}
-
-			if ($this->skip_email || $this->debug)
-			{
-				return;
-			}
-
-			// max. one mail each day
-			if ((int)$GLOBALS['phpgw_info']['server']['invoice_mail_reminder_time'] < (time() - (3600 * 24)))
-			{
-				$toarray = array();
-				$sql = 'SELECT DISTINCT oppsynsmannid as responsible FROM fm_ecobilag WHERE oppsynsigndato IS NULL AND oppsynsmannid IS NOT NULL AND saksigndato IS NULL';
-				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$toarray[$this->db->f('responsible')] = true;
-				}
-				$sql = 'SELECT DISTINCT saksbehandlerid as responsible FROM fm_ecobilag WHERE saksigndato IS NULL AND saksbehandlerid IS NOT NULL AND oppsynsigndato IS NULL';
-				$this->db->query($sql, __LINE__, __FILE__);
-				while ($this->db->next_record())
-				{
-					$toarray[$this->db->f('responsible')] = true;
-				}
-				$sql = 'SELECT DISTINCT budsjettansvarligid as responsible FROM fm_ecobilag WHERE saksigndato IS NOT NULL AND budsjettsigndato IS NULL AND budsjettansvarligid IS NOT NULL';
-				$this->db->query($sql, __LINE__, __FILE__);
-
-				while ($this->db->next_record())
-				{
-					$toarray[$this->db->f('responsible')] = true;
-				}
-
-				$subject = 'Du har faktura til behandling';
-
-
-				$from = "Ikke svar<IkkeSvar@nlsh.no>";
-
-				foreach ($toarray as $lid => $dummy)
-				{
-					$prefs = $this->bocommon->create_preferences('property', $GLOBALS['phpgw']->accounts->name2id($lid));
-					if (isset($prefs['email']) && $prefs['email'])
-					{
-						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
-								'voucher_id' => $bilagsnr, 'user_lid' => $lid), false, true) . '">Link til fakturabehandling</a>';
-						try
-						{
-							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
-						}
-						catch (phpmailerException $e)
-						{
-							$this->receipt['error'][] = array('msg' => $e->getMessage());
-						}
-					}
-				}
-				// save time of mail, to not send to many mails
-				$config = createObject('phpgwapi.config', 'phpgwapi');
-				$config->read_repository();
-				$config->value('invoice_mail_reminder_time', time());
-				$config->save_repository();
 			}
 		}
 
@@ -571,29 +491,7 @@
 				{
 					$this->receipt['error'][] = array('msg' => "Importeres ikke: Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
 					$this->skip_import = true;
-
-					$to = isset($this->config->config_data['import']['email_on_error']) && $this->config->config_data['import']['email_on_error'] ? $this->config->config_data['import']['email_on_error'] : '';
-
-					if ($to && !$this->skip_email)
-					{
-						$from = "Ikke svar<IkkeSvar@nlsh.no>";
-						$body = "Ikke gyldig leverandør, id: {$_data['SUPPLIER.CODE']}</br>";
-						$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.edit',
-								'appname' => 'property', 'type' => 'vendor'), false, true) . '">Link til å legge inn ny leverandør</a>';
-
-						try
-						{
-							$rc = $this->send->msg('email', $to, 'Ikke gyldig leverandør ved import av faktura til Portico', $body, '', '', '', $from, '', 'html');
-							if ($rc)
-							{
-								$this->receipt['message'][] = array('msg' => "epost sendt til {$to}");
-							}
-						}
-						catch (phpmailerException $e)
-						{
-							$this->receipt['error'][] = array('msg' => $e->getMessage());
-						}
-					}
+		
 				}
 				else if ($order_info['vendor_id'] != $vendor_id)
 				{
@@ -660,34 +558,6 @@
 					foreach ($buffer as &$entry)
 					{
 						$entry['bilagsnr'] = $bilagsnr;
-					}
-				}
-
-				if ($order_info['toarray'] && (!$this->skip_email || !$this->debug))
-				{
-
-					$from = "Ikke svar<IkkeSvar@nlsh.no>";
-
-					$to = implode(';', $order_info['toarray']);
-
-					if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
-					{
-						$subject = 'Ny faktura venter på behandling';
-						$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiinvoice2.index',
-								'voucher_id' => $bilagsnr, 'query' => $bilagsnr, 'user_lid' => 'all'), false, true) . '">Link til fakturabehandling</a>';
-
-						try
-						{
-							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc, $from, '', 'html');
-						}
-						catch (phpmailerException $e)
-						{
-							$this->receipt['error'][] = array('msg' => $e->getMessage());
-						}
-					}
-					else
-					{
-						$this->receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
 					}
 				}
 
