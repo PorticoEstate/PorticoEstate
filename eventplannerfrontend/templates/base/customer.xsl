@@ -142,6 +142,35 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'account number')"/>
+							</label>
+							<input type="text" id="account_number" name="account_number" value="{customer/account_number}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>account_number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'account number')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'number of users')"/>
+							</label>
+							<input type="text" name="number_of_users" value="{customer/number_of_users}">
+								<xsl:attribute name="data-validation">
+									<xsl:text>number</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'integer')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
 							<input type="text" name="contact_name" value="{customer/contact_name}">
@@ -165,14 +194,6 @@
 									<xsl:value-of select="php:function('lang', 'email')"/>
 								</xsl:attribute>
 							</input>
-							<xsl:choose>
-								<xsl:when test="valid_email = 1">
-									<xsl:text> </xsl:text>
-									<a href="{link_create_user}">
-										<xsl:value-of select="php:function('lang', 'create_user_based_on_email_link')"/>
-									</a>
-								</xsl:when>
-							</xsl:choose>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -189,17 +210,49 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'account number')"/>
+								<xsl:value-of select="php:function('lang', 'contact name')"/>
+								<xsl:text> 2</xsl:text>
 							</label>
-							<input type="text" id="account_number" name="account_number" value="{customer/account_number}">
+							<input type="text" name="contact2_name" id="contact2_name" value="{customer/contact2_name}">
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'contact name')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'email')"/>
+								<xsl:text> 2</xsl:text>
+							</label>
+							<input type="text" name="contact2_email" id="contact2_email" value="{customer/contact2_email}">
 								<xsl:attribute name="data-validation">
-									<xsl:text>account_number</xsl:text>
+									<xsl:text>email</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="data-validation-optional">
 									<xsl:text>true</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'account number')"/>
+									<xsl:value-of select="php:function('lang', 'email')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'contact phone')"/>
+								<xsl:text> 2</xsl:text>
+							</label>
+							<input type="text" name="contact2_phone" id="contact2_phone" value="{customer/contact2_phone}">
+								<xsl:attribute name="data-validation-depends-on">
+									<xsl:text>contact2_name</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-optional">
+									<xsl:text>true</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="placeholder">
+									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</xsl:attribute>
 							</input>
 						</div>
