@@ -316,7 +316,7 @@
 		 *
 		 * @return void
 		 */
-		protected function _handle_files( $id )
+		protected function _handle_files($fakebase, $sub_module, $id )
 		{
 			parent::_handle_files('rental', 'movein', $id);
 		}
