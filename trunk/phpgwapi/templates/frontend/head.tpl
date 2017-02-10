@@ -45,8 +45,8 @@
 				<a href="{site_url}" class="pure-menu-heading">{site_title}</a>
 				<ul class="pure-menu-list">
 					<li class="pure-menu-item pure-menu-selected"><a href="{site_url}" class="pure-menu-link">{home_text}</a></li>
-					<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
-					<li class="pure-menu-item"><a href="{login_url}" class="pure-menu-link">{login_text}</a></li>
+					<li class="pure-menu-item pure-menu-selected"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
+					<li class="pure-menu-item pure-menu-selected"><a href="{login_url}" class="pure-menu-link">{login_text}</a></li>
 				</ul>
 			</div>
 		</div>

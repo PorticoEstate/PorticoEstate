@@ -113,6 +113,10 @@
 			</td>
 		</tr>
 		<tr>
+			<td>{lang_registration_form_header}:</td>
+			<td><input name="newsettings[form_header]" value="{value_form_header}"></td>
+		</tr>
+		<tr>
 			<td>{lang_login_url}:</td>
 			<td><input name="newsettings[login_url]" value="{value_login_url}"></td>
 		</tr>

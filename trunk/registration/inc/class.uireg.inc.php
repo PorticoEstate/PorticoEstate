@@ -83,11 +83,14 @@
 			}
 			$GLOBALS['phpgw']->css->add_external_file('registration/templates/base/css/rainbow_baby-blue.css');
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
+
+			$form_header = !empty($this->config['form_header']) ? $this->config['form_header'] : $GLOBALS['phpgw_info']['server']['system_name'];
+
 			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 			$this->template->set_var('css', $GLOBALS['phpgw']->common->get_css());
 			$this->template->set_var('javascript', $GLOBALS['phpgw']->common->get_javascript());
 			$this->template->set_var('str_base_url', $GLOBALS['phpgw']->link('/', array('logindomain' => $_REQUEST['logindomain']), true));
-			$this->template->set_var('lang_header', $GLOBALS['phpgw_info']['server']['system_name'] . ' :: ' . $sub);
+			$this->template->set_var('lang_header', "{$form_header}::{$sub}");
 			$this->template->pfp('out', 'header');
 		}
 
