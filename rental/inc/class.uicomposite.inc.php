@@ -150,7 +150,7 @@
 				(
 				'type' => 'filter',
 				'name' => 'has_contract',
-				'text' => '',
+				'text' => lang('contracts'),
 				'list' => $has_contract_option
 			);
 
@@ -528,7 +528,7 @@
 				)
 			);
 
-			$filters = $this->get_Filters();
+			$filters = $this->get_filters();
 			krsort($filters);
 			foreach ($filters as $filter)
 			{
