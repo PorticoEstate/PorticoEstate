@@ -407,7 +407,12 @@
 				if (!$values)
 				{
 					$values = (array) $this->bo->read_single($id);
+					$paths = array();
+					foreach ($values['path'] as $path){
+						$paths[] = array('value' => $path);
+					}
 					$values['report_date'] = ($values['report_date']) ? date($this->dateFormat, $values['report_date']) : '';
+					$values['paths'] = $paths;
 				}
 				$values['id'] = $id;
 			}
@@ -454,7 +459,7 @@
 					)) . ";
 						var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
 								'source' => 'id')))) . ";
-						setRelationsComponents(oArgs, parameters);
+						setRelationsComponents(oArgs);
 					"
 				);
 
@@ -720,7 +725,7 @@
 						'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $item['location_id'], 'id' => $item['id'])).'">'.$item['id'].'</a>',
 						'name' => $item['benevnelse'],
 						'category' => $e_list[$item['entity_id']].'::'.$item['category_name'],
-						'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" checked="checked"><input type="hidden" class="components_related" value="'.$item['id'].'">',
+						'relate' => '<input value="'.$item['id'].'_'.$item['location_id'].'" class="components mychecks" type="checkbox" checked="checked"><input type="hidden" class="components_related" value="'.$item['id'].'_'.$item['location_id'].'">',
 					);
 				}
 
@@ -770,7 +775,7 @@
 				$values[] = array(
 					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
 					'name' => $item['benevnelse'],
-					'category' => $e_list[$item['entity_id']].''.$category['name'],
+					'category' => $e_list[$item['entity_id']].'::'.$category['name'],
 					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>'.$hidden,
 				);
 			}
@@ -782,12 +787,12 @@
 
 			return $this->jquery_results($result_data);
 		}
-
-
+		
 		public function save_file_relations()
 		{
 			$receipt = array();
 
+			$all_types = phpgw::get_var('all_types', 'int');
 			$type_id = phpgw::get_var('type_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$file_id = phpgw::get_var('file_id', 'int');
@@ -797,12 +802,32 @@
 			$add = array_diff($items, $related);
 			$delete = array_diff($related, $items);
 
-			if (empty($location_id))
+			if ($all_types) 
 			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
-			}
+				if (count($add))
+				{
+					foreach ($add as $item) {
+						$values = explode('_', $item);
+						$result = $this->bo->save_file_relations( array($values[0]), array(), $values[1], $file_id );
+					}
+				}
 
-			$result = $this->bo->save_file_relations( $add, $delete, $location_id, $file_id );
+				if (count($delete))
+				{
+					foreach ($delete as $item) {
+						$values = explode('_', $item);
+						$result = $this->bo->save_file_relations( array(), array($values[0]), $values[1], $file_id );
+					}
+				}
+			} 
+			else {
+				
+				if (empty($location_id))
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
+				}
+				$result = $this->bo->save_file_relations( $add, $delete, $location_id, $file_id );
+			}
 
 			if ($result)
 			{
