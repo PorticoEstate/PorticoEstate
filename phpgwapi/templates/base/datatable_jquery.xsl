@@ -61,7 +61,7 @@
 
 		.toggle-box + label + #toolbar {
 		display: none;
-		margin-bottom: 10px;
+	/*	margin-bottom: 10px;*/
 		}
 
 		.toggle-box:checked + label + #toolbar {
@@ -96,7 +96,10 @@
 			<xsl:value-of select="php:function('lang', 'filter')"/>
 		</label>
 		<div id="toolbar" class='dtable_custom_controls'>
-			<table id="toolbar_table" class="pure-table pure-table-horizontal">
+			<!--table id="toolbar_table" class="pure-table pure-table-horizontal"-->
+			<form class="pure-form pure-form-stacked">
+				 <fieldset>
+
 				<!--thead>
 					<tr>
 						<th>
@@ -107,35 +110,37 @@
 						</th>
 					</tr>
 				</thead-->
-				<tbody>
+				<!--tbody>
 					<tr>
-						<td>
+						<td-->
+						<div class="pure-g">
 					<xsl:for-each select="item">
 						<script type="text/javascript">
 							number_of_toolbar_items += 1;
 						</script>
+						 <div class="pure-u-1-2 pure-u-md-1-6">
 
 							<xsl:variable name="filter_key" select="concat('filter_', name)"/>
 							<xsl:variable name="filter_key_name" select="concat(concat('filter_', name), '_name')"/>
 							<xsl:variable name="filter_key_id" select="concat(concat('filter_', name), '_id')"/>
-								<!--xsl:if test="name">
+								<xsl:if test="name">
 									<label>
 										<xsl:attribute name="for">
 											<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
 										</xsl:attribute>
 										<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 									</label>
-								</xsl:if-->
+								</xsl:if>
 							<xsl:choose>
 								<xsl:when test="type = 'date-picker'">
-											<input id="filter_{name}" name="filter_{name}" value="{value}" type="text">
-												<xsl:attribute name="title">
-													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-												</xsl:attribute>
-											</input>
+									<input class="pure-u-24-24" id="filter_{name}" name="filter_{name}" value="{value}" type="text">
+										<xsl:attribute name="title">
+											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+										</xsl:attribute>
+									</input>
 								</xsl:when>
 								<xsl:when test="type = 'autocomplete'">
-										<div class="auto">
+										<div class="auto pure-u-24-24">
 											<input id="filter_{name}_name" name="{name}_name" type="text">
 												<xsl:attribute name="value">
 													<xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/>
@@ -229,7 +234,7 @@
 										<script type="text/javascript">
 											filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 										</script>
-										<select id="{$name}" name="{$name}" width="250" style="width: 250px">
+										<select id="{$name}" name="{$name}" class="pure-u-24-24">
 												<xsl:attribute name="title">
 													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 												</xsl:attribute>
@@ -267,7 +272,10 @@
 										</select>
 								</xsl:when>
 								<xsl:when test="type = 'link'">
-										<input type="button" class="pure-button pure-button-primary">
+									<label>
+										<xsl:value-of select="value"/>
+									</label>
+										<input type="button" class="pure-button pure-button-primary pure-u-24-24">
 											<xsl:choose>
 												<xsl:when test="onclick">
 													<xsl:attribute name="onclick">
@@ -307,7 +315,7 @@
 										</label>
 								</xsl:when>
 								<xsl:otherwise>
-										<input id="innertoolbar_{name}">
+										<input id="innertoolbar_{name}" class="pure-u-24-24">
 											<xsl:attribute name="type">
 												<xsl:value-of select="phpgw:conditional(not(type), '', type)"/>
 											</xsl:attribute>
@@ -332,11 +340,15 @@
 										</input>
 								</xsl:otherwise>
 							</xsl:choose>
+						 </div>
 					</xsl:for-each>
-						</td>
+						<!--/td>
 					</tr>
-				</tbody>
-			</table>
+				</tbody-->
+			<!--/table-->
+						</div>
+			 </fieldset>
+			</form>
 		</div>
 	</xsl:if>
 
