@@ -111,7 +111,7 @@ function getComponents()
 	oTable0.fnDraw();
 }
 
-function setRelationsComponents(oArgs)
+/*function setRelationsComponents2(oArgs)
 {
 	var values = {};
 	var related = {};
@@ -131,7 +131,45 @@ function setRelationsComponents(oArgs)
 		related[obj.value] = obj.value;
 	});
 	
-	oArgs['location_id'] = $('#location_id').val();
+	oArgs['file_id'] = $('#id').val();
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	var data = {"items":values, "related":related};
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
+		JqueryPortico.show_message(0, result);
+		oTable0.fnDraw();
+		
+	}, data, "POST", "JSON");
+}
+*/
+function setRelationsComponents(oArgs)
+{	
+	var values = {};
+	var related = {};
+	
+	var select_check = $('.components');
+	select_check.each(function (i, obj)
+	{
+		if (obj.checked)
+		{
+			values[obj.value] = obj.value;
+		}
+	});
+	
+	var select_related = $('.components_related');
+	select_related.each(function (i, obj)
+	{
+		related[obj.value] = obj.value;
+	});
+	
+	if ($('#check_all_types').is(':checked')) 
+	{
+		oArgs['all_types'] = 1;
+	} else {
+		oArgs['location_id'] = $('#location_id').val();
+	}
+	
 	oArgs['file_id'] = $('#id').val();
 	var requestUrl = phpGWLink('index.php', oArgs);
 
