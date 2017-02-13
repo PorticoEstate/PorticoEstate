@@ -82,8 +82,8 @@
 				$report['variable_vertical'] = phpgw::get_var('variable_vertical');
 				$report['all_buildings'] = phpgw::get_var('all_buildings', 'bool');
 				//			_debug_array($report);
-				$from_ = phpgwapi_datetime::date_to_timestamp($report['start_date']);
-				$to_ = phpgwapi_datetime::date_to_timestamp($report['end_date']);
+				$from_ = phpgw::get_var('start_date', 'date');
+				$to_ = phpgw::get_var('end_date', 'date');
 
 				if ($report['all_buildings'] && (($to_ - $from_) > 24 * 3600 * 31))
 				{
@@ -167,15 +167,15 @@
 				$entry['selected'] = $entry['id'] == $report['variable_vertical'] ? 1 : 0;
 			}
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Report New'), 'link' => '#report_new');
 			$active_tab = 'generic';
 
 			$report['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			self::adddatetimepicker();
+//			self::adddatetimepicker();
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'report_form');
 
