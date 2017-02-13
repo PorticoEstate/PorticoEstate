@@ -469,7 +469,7 @@
 								<xsl:value-of select="$lang_budget_account"/>
 							</label>
 							<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
-							<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_name}">
+							<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}">
 								<xsl:choose>
 									<xsl:when test="mode='edit'">
 										<xsl:attribute name="data-validation">

@@ -42,6 +42,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$active = 1,
 			$category_id,
 			$created,
@@ -92,16 +93,18 @@
 
 		public static function get_fields($debug = true)
 		{
-			 $fields = array(
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			$fields = array(
 				'id' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
 					),
-				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
-					'history'	=> true
+					'required' => false
 					),
 				'category_id' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'
@@ -185,22 +188,38 @@
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'organization number'
 					),
-				'comments' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'manytomany' => array(
-						'input_field' => 'comment_input',
-						'table' => 'eventplanner_vendor_comment',
-						'key' => 'vendor_id',
-						'column' => array('time', 'author', 'comment', 'type'),
-						'order' => array('sort' => 'time', 'dir' => 'ASC')
-					)),
-				'comment' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'related' => true,
-					)
 			);
+
+			if($currentapp == 'eventplanner')
+			{
+				$backend_fields = array(
+					'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'history'	=> true
+						),
+					'comments' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'manytomany' => array(
+							'input_field' => 'comment_input',
+							'table' => 'eventplanner_vendor_comment',
+							'key' => 'vendor_id',
+							'column' => array('time', 'author', 'comment', 'type'),
+							'order' => array('sort' => 'time', 'dir' => 'ASC')
+						)),
+					'comment' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'related' => true,
+						)
+					);
+
+				foreach ($backend_fields as $key => $field_info)
+				{
+					$fields[$key] = $field_info;
+				}
+			}
+
 
 			if($debug)
 			{
@@ -238,6 +257,7 @@
 			{
 				$entity->status = eventplanner_vendor::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 		}
 

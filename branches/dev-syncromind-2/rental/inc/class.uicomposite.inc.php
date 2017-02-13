@@ -40,6 +40,22 @@
 			$this->config->read();
 		}
 
+		private function get_status_options( $selected = 0 )
+		{
+			$status_options = array();
+			$status_list = rental_composite::get_status_list();
+
+			foreach ($status_list as $_key => $_value)
+			{
+				$status_options[] = array(
+					'id' => $_key,
+					'name' => $_value,
+					'selected' => $_key == $selected ? 1 : 0
+				);
+			}
+			return $status_options;
+		}
+
 		public function get_filters()
 		{
 			$filters = array();
@@ -82,6 +98,19 @@
 				);
 			}
 
+			$status_options = $this->get_status_options();
+
+			array_unshift($status_options, array('id'=> 'all', 'name' => lang('all')));
+
+
+			$filters[] = array
+					(
+					'type' => 'filter',
+					'name' => 'status_id',
+					'text' => lang('status'),
+					'list' => $status_options
+				);
+
 			$districts_arr = execMethod('property.sogeneric.get_list', array('type' => 'district'));
 			$districts = array();
 			array_unshift($districts, array('id' => '', 'name' => lang('select')));
@@ -96,7 +125,7 @@
 				'text' => lang('district'),
 				'list' => $districts
 			);
-
+/*
 			$active_option = array
 				(
 				array('id' => 'both', 'name' => lang('all')),
@@ -110,7 +139,7 @@
 				'text' => lang('availability'),
 				'list' => $active_option
 			);
-
+*/
 			$has_contract_option = array
 				(
 				array('id' => 'both', 'name' => lang('all')),
@@ -121,7 +150,7 @@
 				(
 				'type' => 'filter',
 				'name' => 'has_contract',
-				'text' => '',
+				'text' => lang('contracts'),
 				'list' => $has_contract_option
 			);
 
@@ -157,6 +186,7 @@
 			$result_objects = array();
 			$object_count = 0;
 			$district_id = phpgw::get_var('district_id', 'int');
+			$status_id = phpgw::get_var('status_id', 'int');
 
 			//Retrieve a contract identifier and load corresponding contract
 			$contract_id = phpgw::get_var('contract_id');
@@ -184,8 +214,12 @@
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
 				case 'not_included_composites': // ... get all vacant and active composites not in contract
-					$filters = array('is_active' => phpgw::get_var('is_active'), 'is_vacant' => phpgw::get_var('occupancy'),//is_vacant seems to be unused
-						'not_in_contract' => phpgw::get_var('contract_id'),'has_contract' => phpgw::get_var('has_contract'),'furnished_status' => phpgw::get_var('furnished_status'));
+					$filters = array('is_active' => phpgw::get_var('is_active'),
+						'district_id' => $status_id,
+						'is_vacant' => phpgw::get_var('occupancy'),//is_vacant seems to be unused
+						'not_in_contract' => phpgw::get_var('contract_id'),
+						'has_contract' => phpgw::get_var('has_contract'),
+						'furnished_status' => phpgw::get_var('furnished_status'));
 					$result_objects = rental_socomposite::get_instance()->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters);
 					$object_count = rental_socomposite::get_instance()->get_count($search_for, $search_type, $filters);
 					break;
@@ -193,6 +227,7 @@
 					phpgwapi_cache::session_set('rental', 'composite_query', $search_for);
 					phpgwapi_cache::session_set('rental', 'composite_search_type', $search_type);
 					phpgwapi_cache::session_set('rental', 'composite_status', phpgw::get_var('is_active'));
+					phpgwapi_cache::session_set('rental', 'composite_status_id', phpgw::get_var('status_id'));
 					phpgwapi_cache::session_set('rental', 'composite_status_contract', phpgw::get_var('has_contract'));
 					phpgwapi_cache::session_set('rental', 'composite_furnished_status', phpgw::get_var('furnished_status'));
 					$filters = array(
@@ -203,6 +238,7 @@
 						'availability_date_from' => phpgw::get_var('availability_date_from'),
 						'availability_date_to' => phpgw::get_var('availability_date_to'),
 						'district_id' => $district_id,
+						'status_id' => $status_id,
 						'composite_type_id'	=> phpgw::get_var('composite_type_id', 'int'),
 						);
 					if ($application_id > 0)
@@ -233,15 +269,19 @@
 			}
 
 			//Create an empty row set
+
+			$status_list = rental_composite::get_status_list();
 			$rows = array();
 			foreach ($result_objects as $result)
 			{
 				if (isset($result))
 				{
-					if (!$result->is_active())
-					{
-						$result->set_status('Ikke i drift');
-					}
+//					if (!$result->is_active())
+//					{
+//						$result->set_status('Ikke i drift');
+//					}
+
+					$result->set_status($status_list[$result->get_status_id()]);
 					$row = $result->serialize();
 					$row['price_type'] = $price_types[$row['price_type_id']];
 					$rows[] = $row;
@@ -488,7 +528,7 @@
 				)
 			);
 
-			$filters = $this->get_Filters();
+			$filters = $this->get_filters();
 			krsort($filters);
 			foreach ($filters as $filter)
 			{
@@ -1054,6 +1094,7 @@ JS;
 				'list_price_type' => array('options' => $price_type_options),
 				'value_composite_type_name' => $composite_type_name,
 				'list_composite_type' => array('options' => $composite_type_options),
+				'list_status_id' => array('options' => $this->get_status_options($composite->get_status_id())),
 				'value_furnish_type_name' => $furnish_type_name,
 				'list_furnish_type' => array('options' => $furnish_types_options),
 				'contract_furnished_status'	=>	!empty($this->config->config_data['contract_furnished_status']),
@@ -1127,6 +1168,7 @@ JS;
 				$composite->set_custom_price_factor(phpgw::get_var('custom_price_factor', 'float'));
 				$composite->set_custom_price(phpgw::get_var('custom_price', 'float'));
 				$composite->set_price_type_id(phpgw::get_var('price_type_id', 'int'));
+				$composite->set_status_id(phpgw::get_var('status_id', 'int'));
 
 				if (rental_socomposite::get_instance()->store($composite))
 				{

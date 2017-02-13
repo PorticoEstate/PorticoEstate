@@ -122,17 +122,14 @@
 
 		public static function get_fields($debug = true)
 		{
-			 $fields = array(
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			$fields = array(
 				'id' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
-					),
-				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int',
-					'label' => 'active',
-					'history' => true,
 					),
 				'display_in_dashboard' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'bool'),
@@ -140,11 +137,6 @@
 					'type' => 'int',
 					'label' => 'category',
 					'history' => true),
-				'status' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int',
-					'label' => 'status',
-					'history' => true
-					),
 				'num_granted_events' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'number of granted events',
@@ -165,8 +157,6 @@
 					'label' => 'secret',
 					'sortable' => false,
 					),
-/*				'frontend_modified' => array('action'=> PHPGW_ACL_READ,
-					'type' => 'date'),*/
 				'owner_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
 					'required' => false
@@ -233,24 +223,6 @@
 						'column' => 'name'
 						)
 					),
-				'case_officer_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int',
-					'required' => true,
-					'label' => 'case officer',
-					'sortable' => true,
-					'history' => true,
-					),
-				'case_officer_name' => array('action'=>  PHPGW_ACL_READ,
-					'type' => 'string',
-					'query' => true,
-					'label' => 'case officer',
-					'join' => array(
-						'table' => 'phpgw_accounts',
-						'fkey' => 'case_officer_id',
-						'key' => 'account_id',
-						'column' => 'account_lid'
-						)
-					),
 				'types' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int', 'required' => true,
@@ -260,21 +232,6 @@
 						'column' => array(
 							'type_id' => array('type' => 'int', 'required' => true)),
 					)),
-				'comments' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'manytomany' => array(
-						'input_field' => 'comment_input',
-						'table' => 'eventplanner_application_comment',
-						'key' => 'application_id',
-						'column' => array('time', 'author', 'comment', 'type'),
-						'order' => array('sort' => 'time', 'dir' => 'ASC')
-					)),
-				'comment' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'related' => true,
-					),
 				'date_start' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'date',
 					'label'	=> 'date start',
@@ -382,14 +339,63 @@
 				'raider' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => false,
-					),
-/*
-				'company_name' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'required' => true,
-					)*/
+					)
 			);
+
+			if($currentapp == 'eventplanner')
+			{
+				$backend_fields = array(
+					'case_officer_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'required' => true,
+						'label' => 'case officer',
+						'sortable' => true,
+						'history' => true,
+						),
+					'case_officer_name' => array('action'=>  PHPGW_ACL_READ,
+						'type' => 'string',
+						'query' => true,
+						'label' => 'case officer',
+						'join' => array(
+							'table' => 'phpgw_accounts',
+							'fkey' => 'case_officer_id',
+							'key' => 'account_id',
+							'column' => 'account_lid'
+							)
+						),
+					'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'label' => 'active',
+						'history' => true,
+						),
+					'status' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'label' => 'status',
+						'history' => true
+						),
+					'comments' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'manytomany' => array(
+							'input_field' => 'comment_input',
+							'table' => 'eventplanner_application_comment',
+							'key' => 'application_id',
+							'column' => array('time', 'author', 'comment', 'type'),
+							'order' => array('sort' => 'time', 'dir' => 'ASC')
+						)),
+					'comment' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'related' => true,
+						),
+					);
+
+				foreach ($backend_fields as $key => $field_info)
+				{
+					$fields[$key] = $field_info;
+				}
+			}
+
 
 			if($debug)
 			{

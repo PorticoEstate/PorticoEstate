@@ -3456,3 +3456,67 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.553';
+	/**
+	* New table for user data
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_553()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_accounts_data', array(
+				'fd' => array(
+					'account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+					'account_data' => array('type' => 'jsonb', 'nullable' => true),
+				),
+				'pk' => array('account_id'),
+				'fk' => array(
+					'phpgw_accounts' => array('account_id' => 'account_id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.554';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
+	$test[] = '0.9.17.554';
+	/**
+	* Make room for email as account_lid
+	* @return string the new version number
+	*/
+	function phpgwapi_upgrade0_9_17_554()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_mapping', 'account_lid', array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => false
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_accounts', 'account_lid', array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => false
+		));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_log', 'log_account_lid', array(
+			'type' => 'varchar',
+			'precision' => 100,
+			'nullable' => false
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.555';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}

@@ -53,7 +53,7 @@
 		'phpgw_accounts' => array(
 			'fd' => array(
 				'account_id' => array('type' => 'auto','nullable' => False),
-				'account_lid' => array('type' => 'varchar','precision' => 25,'nullable' => False),
+				'account_lid' => array('type' => 'varchar','precision' => 100,'nullable' => False),
 				'account_pwd' => array('type' => 'varchar','precision' => 115,'nullable' => False),
 				'account_firstname' => array('type' => 'varchar','precision' => 50,'nullable' => False),
 				'account_lastname' => array('type' => 'varchar','precision' => 50,'nullable' => False),
@@ -72,6 +72,18 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array('account_lid')
+		),
+		'phpgw_accounts_data' => array(
+			'fd' => array(
+				'account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
+				'account_data' => array('type' => 'jsonb', 'nullable' => true),
+			),
+			'pk' => array('account_id'),
+			'fk' => array(
+				'phpgw_accounts' => array('account_id' => 'account_id'),
+			),
+			'ix' => array(),
+			'uc' => array()
 		),
 		'phpgw_account_delegates' => array(
 			'fd' => array(
@@ -239,7 +251,7 @@
 				'log_id' => array('type' => 'auto','precision' => 4,'nullable' => False),
 				'log_date' => array('type' => 'timestamp','nullable' => False),
 				'log_account_id' => array('type' => 'int','precision' => 4,'nullable' => False),
-				'log_account_lid' => array('type' => 'varchar','precision' => 25,'nullable' => False),
+				'log_account_lid' => array('type' => 'varchar','precision' => 100,'nullable' => False),
 				'log_app' => array('type' => 'varchar','precision' => 25,'nullable' => False),
 				'log_severity' => array('type' => 'char','precision' => 2,'nullable' => False),
 				'log_file' => array('type' => 'varchar','precision' => 255,'nullable' => False,'default' => ''),
@@ -665,7 +677,7 @@
 				'auth_type' => array('type' => 'varchar','precision' => 25,'nullable' => False),
 				'status' => array('type' => 'char','precision' => 1,'nullable' => False,'default' => 'A'),
 				'location' => array('type' => 'varchar','precision' => 200,'nullable' => False),
-				'account_lid' => array('type' => 'varchar','precision' => 25,'nullable' => False)
+				'account_lid' => array('type' => 'varchar','precision' => 100,'nullable' => False)
 			),
 			'pk' => array('ext_user','location','auth_type'),
 			'fk' => array(),

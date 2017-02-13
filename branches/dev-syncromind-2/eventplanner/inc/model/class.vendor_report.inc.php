@@ -37,6 +37,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$booking_id,
 			$booking_location,
 			$created,
@@ -88,6 +89,10 @@
 					'sortable' => true,
 					'formatter' => 'JqueryPortico.formatLink',
 				),
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
+					'type' => 'int',
+					'required' => false
+					),
 				'booking_id' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'booking',
@@ -150,6 +155,7 @@
 			{
 				$entity->created = time();
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 		}
 

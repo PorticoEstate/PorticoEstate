@@ -106,8 +106,35 @@
 			$this->end_date				= $this->bo->end_date;
 			$this->location_code		= $this->bo->location_code;
 			$this->p_num				= $this->bo->p_num;
+
+
+			$default_interface = isset($this->bo->config->config_data['tts_default_interface']) ? $this->bo->config->config_data['tts_default_interface'] : '';
+
+			/*
+			 * Inverted logic
+			 */
+			if($default_interface == 'simplified')
+			{
+				$this->_simple = true;
+			}
+
 			$user_groups =  $GLOBALS['phpgw']->accounts->membership($this->account);
 			$simple_group = isset($this->bo->config->config_data['fmttssimple_group']) ? $this->bo->config->config_data['fmttssimple_group'] : array();
+			foreach ($user_groups as $group => $dummy)
+			{
+				if (in_array($group, $simple_group))
+				{
+					if($default_interface == 'simplified')
+					{
+						$this->_simple = false;
+					}
+					else
+					{
+						$this->_simple = true;
+					}
+					break;
+				}
+			}
 			if (isset($this->bo->config->config_data['fmtts_assign_group_candidates']) && is_array($this->bo->config->config_data['fmtts_assign_group_candidates']))
 			{
 				foreach ($this->bo->config->config_data['fmtts_assign_group_candidates'] as $group_candidate)
@@ -118,11 +145,14 @@
 					}
 				}
 			}
+
+			reset($user_groups);
+
 			foreach ( $user_groups as $group => $dummy)
 			{
-				if ( in_array($group, $simple_group) && !in_array($group, $this->_group_candidates))
+				if ( in_array($group, $this->_group_candidates))
 				{
-					$this->_simple = true;
+					$this->_simple = false;
 					break;
 				}
 			}
@@ -713,13 +743,6 @@ JS;
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -745,6 +768,7 @@ JS;
 					'download' => self::link(array('menuaction' => 'helpdesk.uitts.download',
 						'export' => true, 'allrows' => true)),
 					'allrows' => true,
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add')),
 					'editor_action' => self::link(array('menuaction' => 'helpdesk.uitts.edit_survey_title')),
 					'field' => $this->_get_fields(),

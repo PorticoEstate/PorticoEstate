@@ -38,6 +38,7 @@
 			'add' => true,
 			'index' => true,
 			'query' => true,
+			'query_relaxed'=> true,
 			'get_list'=> true,
 			'view' => true,
 			'edit' => true,
@@ -54,12 +55,12 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::booking');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('booking');
 			$this->bo = createObject('eventplanner.bobooking');
 			$this->fields = eventplanner_booking::get_fields();
 			$this->permissions = eventplanner_booking::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			self::set_active_menu("{$this->currentapp}::booking");
 		}
 
 		public function index()

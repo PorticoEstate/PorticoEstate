@@ -353,9 +353,9 @@
 				(
 				'field' => 'fm_workorder.id',
 				'type' => 'bigint',
-				'matchtype' => 'exact',
+				'matchtype' => 'like',
 				'front' => "'",
-				'back' => "'"
+				'back' => "%'",
 			);
 			$criteria[4] = array
 				(
@@ -1010,7 +1010,8 @@ HTML;
 
 		public function receive_order( $id, $received_amount )
 		{
-			$receive_order = true; // used as trigger within the custom function
+			$transfer_action = 'receive_order'; // used as trigger within the custom function
+
 			$acl_location = '.project.workorder.transfer';
 
 			$criteria = array(

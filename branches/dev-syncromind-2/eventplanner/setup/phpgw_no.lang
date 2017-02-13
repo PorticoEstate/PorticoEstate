@@ -105,3 +105,10 @@ event	eventplanner	no	Arrangement
 please enter a valid organization number	eventplanner	no	Angi et gyldig organisasjonsnummer
 please enter a valid account number	eventplanner	no	Angi et gyldig kontonummer
 program data	eventplanner	no	Om programmet
+booking	eventplanner	no	Booking
+customer contact email	eventplanner	no	Epost
+showall	eventplanner	no	Vis alle
+read	eventplanner	no	Les
+permission	eventplanner	no	Rettighet
+maximum number of events	eventplanner	no	Maksimum antall arrangement
+number of users	eventplanner	no	Ca. antall brukere

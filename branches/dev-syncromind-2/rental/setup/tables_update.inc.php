@@ -746,7 +746,7 @@
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 
-		$GLOBALS['phpgw']->locations->add('.moveout', 'Movein', 'rental', $allow_grant = true, $custom_tbl = 'rental_moveout', $c_function = true, $c_attrib = true);
+		$GLOBALS['phpgw']->locations->add('.moveout', 'Moveout', 'rental', $allow_grant = true, $custom_tbl = 'rental_moveout', $c_function = true, $c_attrib = true);
 
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'rental_moveout', array(
@@ -932,3 +932,30 @@
 
 
 
+	$test[] = '0.1.0.35';
+	function rental_upgrade0_1_0_35()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_composite', 'status_id', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true,
+			'default' => 1
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE rental_composite SET status_id = 2 WHERE is_active = FALSE", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('rental_composite', 'status_id', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => false,
+			'default' => 1
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.36';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

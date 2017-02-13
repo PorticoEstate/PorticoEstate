@@ -66,10 +66,31 @@
 				$sub = lang('Account registration');
 			}
 			$this->set_header_footer_blocks();
+			$old_ie = false;
+			if (preg_match('/MSIE (6|7|8)/i', $_SERVER['HTTP_USER_AGENT']))
+			{
+				$old_ie = true;
+			}
+
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/pure/css/pure-min.css');
+			if ($old_ie)
+			{
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/pure/css/grids-responsive-old-ie-min.css');
+			}
+			else
+			{
+				$GLOBALS['phpgw']->css->add_external_file('phpgwapi/templates/pure/css/grids-responsive-min.css');
+			}
+			$GLOBALS['phpgw']->css->add_external_file('registration/templates/base/css/rainbow_baby-blue.css');
+			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
+
+			$form_header = !empty($this->config['form_header']) ? $this->config['form_header'] : $GLOBALS['phpgw_info']['server']['system_name'];
+
 			$GLOBALS['phpgw_info']['server']['no_jscombine'] = true;
 			$this->template->set_var('css', $GLOBALS['phpgw']->common->get_css());
 			$this->template->set_var('javascript', $GLOBALS['phpgw']->common->get_javascript());
-			$this->template->set_var('lang_header', $GLOBALS['phpgw_info']['server']['system_name'] . ' :: ' . $sub);
+			$this->template->set_var('str_base_url', $GLOBALS['phpgw']->link('/', array('logindomain' => $_REQUEST['logindomain']), true));
+			$this->template->set_var('lang_header', "{$form_header}::{$sub}");
 			$this->template->pfp('out', 'header');
 		}
 
@@ -84,7 +105,6 @@
 			{
 				$this->simple_screen('error_general.tpl', $GLOBALS['phpgw']->common->error_list($errors));
 			}
-			phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
 
 			$show_username_prompt = True;
 			/* Note that check_select_username() may not return */
@@ -200,15 +220,6 @@ HTML;
 			));
 			$this->template->set_block('_personal_info', 'form');
 
-			$tpl_vars = array
-				(
-				'css' => $GLOBALS['phpgw']->common->get_css(),
-				'javascript' => $GLOBALS['phpgw']->common->get_javascript(),
-				'str_base_url' => $GLOBALS['phpgw']->link('/', array('logindomain' => $_REQUEST['logindomain']), true),
-			);
-
-			$this->template->set_var($tpl_vars);
-
 			if ($missing_fields)
 			{
 				while (list(, $field) = each($missing_fields))
@@ -237,7 +248,7 @@ HTML;
 			}
 
 //----
-			if ($this->config['username_is'] == 'email')
+			if ($this->config['username_is'] != 'email')
 			{
 				$this->template->set_var('message', lang('username as email'));
 				$username_fields = $this->get_username_fields();
@@ -401,20 +412,27 @@ HTML;
 				$type = 'dropdown';
 			}
 
+			$required_attrib = '';
 			if ($required == 'Y')
 			{
 				$a = 'r_reg';
+				$required_attrib = "required='required'";
 			}
 			else
 			{
 				$a = 'o_reg';
 			}
 
+			$placeholder = ltrim(lang($field_info['field_text']), '!');
+
 			if ($type == 'text' || $type == 'email' || $type == 'first_name' ||
 				$type == 'last_name' || $type == 'address' || $type == 'city' ||
 				$type == 'zip' || $type == 'phone')
 			{
-				$rstring = '<input type=text name="' . $a . '[' . $name . ']" value="' . $post_value . '">';
+				$input_type = $type == 'email' ? 'email' : 'text';
+				$placeholder =  $type == 'email' ? 'mail@website.com' : $placeholder;
+
+				$rstring = "<input placeholder=\"{$placeholder}\" type='{$input_type}' name=\"{$a}[{$name}]\" value=\"{$post_value}\" {$required_attrib}>";
 			}
 
 			if ($type == 'textarea')
@@ -573,7 +591,10 @@ HTML;
 			$this->template->set_file(array(
 				'screen' => 'welcome_message.tpl'
 			));
-			$this->template->set_var('login_url', $GLOBALS['phpgw_info']['server']['webserver_url']);
+
+			$login_url = $this->config['login_url'] ? $this->config['login_url'] : $GLOBALS['phpgw_info']['server']['webserver_url'];
+
+			$this->template->set_var('login_url', $login_url);
 
 			$this->template->pfp('out', 'screen');
 			$this->footer();
@@ -581,6 +602,7 @@ HTML;
 
 		function tos()
 		{
-			$this->simple_screen('tos.tpl');
+			$text = $this->config['terms_of_service'] ? $this->config['terms_of_service'] : '[ Put your real TOS here :) ]';
+			$this->simple_screen('tos.tpl', $text);
 		}
 	}

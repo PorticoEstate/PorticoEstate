@@ -46,18 +46,20 @@
 		protected
 			$fields,
 			$permissions,
-			$custom_fields;
+			$custom_fields,
+			$currentapp;
 
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::vendor_report');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('vendor report');
 			$this->bo = createObject('eventplanner.bovendor_report');
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_vendor_report::get_fields();
 			$this->permissions = eventplanner_vendor_report::get_instance()->get_permission_array();
 			$this->custom_fields = eventplanner_vendor_report::get_instance()->get_custom_fields();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			self::set_active_menu("{$this->currentapp}::vendor_report");
 		}
 
 
@@ -103,7 +105,7 @@
 				),
 				'datatable' => array(
 					'source' => self::link(array(
-						'menuaction' => 'eventplanner.uivendor_report.index',
+						'menuaction' => "{$this->currentapp}.uivendor_report.index",
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
@@ -135,7 +137,7 @@
 				'text' => lang('show'),
 				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uivendor_report.view'
+					'menuaction' => "{$this->currentapp}.uivendor_report.view"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -146,7 +148,7 @@
 				'text' => lang('edit'),
 				'action' => self::link(array
 					(
-					'menuaction' => 'eventplanner.uivendor_report.edit'
+					'menuaction' => "{$this->currentapp}.uivendor_report.edit"
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -234,13 +236,13 @@
 			);
 
 			$data = array(
-				'form_action' => self::link(array('menuaction' => 'eventplanner.uivendor_report.save')),
-				'cancel_url' => self::link(array('menuaction' => 'eventplanner.uivendor_report.index',)),
-				'vendor_report' => $vendor_report,
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.index",)),
+				'report' => $vendor_report,
 				'booking'		=> $booking,
 				'application'	=> $application,
 				'application_type_list' => $application_type_list,
-				'booking_url' => self::link(array('menuaction' => 'eventplanner.uibooking.edit', 'id' => $booking->id, 'active_tab' => 'reports')),
+				'booking_url' => self::link(array('menuaction' => "{$this->currentapp}.uibooking.edit", 'id' => $booking->id, 'active_tab' => 'reports')),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab,
@@ -248,8 +250,8 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('eventplanner', 'portico', 'vendor_report.edit.js');
-			self::render_template_xsl(array('vendor_report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
+		//	self::add_javascript('eventplanner', 'portico', 'vendor_report.edit.js');
+			self::render_template_xsl(array('report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 
 		

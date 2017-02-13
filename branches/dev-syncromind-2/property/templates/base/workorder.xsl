@@ -679,7 +679,7 @@
 							<xsl:value-of select="$lang_budget_account"/>
 						</label>
 						<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
-						<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_name}">
+						<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
 									<xsl:attribute name="data-validation">
@@ -1016,7 +1016,7 @@
 							</xsl:attribute>
 						</input>
 					</div>
-					<xsl:choose>
+					<!--xsl:choose>
 						<xsl:when test="value_workorder_id!='' and mode='edit'">
 							<div class="pure-control-group">
 								<label for="name">
@@ -1052,7 +1052,7 @@
 								<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
 							</div>
 						</xsl:when>
-					</xsl:choose>
+					</xsl:choose-->
 					<xsl:choose>
 						<xsl:when test="value_workorder_id!=''">
 							<div class="pure-control-group">

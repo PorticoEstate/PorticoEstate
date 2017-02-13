@@ -42,6 +42,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$active,
 			$completed,
 			$cost,
@@ -95,6 +96,11 @@
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
+					'public'	=> true
+					),
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
+					'type' => 'int',
+					'required' => false
 					),
 				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
@@ -112,23 +118,27 @@
 					'label'	=> 'from',
 					'history' => true,
 					'required' => true,
+					'public'	=> true
 					),
 				'to_' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'date',
 					'label'	=> 'to',
 					'history' => true,
 					'required' => true,
+					'public'	=> true
 				),
 				'application_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'application',
 					'sortable' => true,
 					'required' => true,
+					'public'	=> true
 					),
 				'application_name' => array('action'=>  PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'application',
+					'public'	=> true,
 					'join' => array(
 						'table' => 'eventplanner_application',
 						'fkey' => 'application_id',
@@ -141,11 +151,13 @@
 					'label' => 'customer',
 					'sortable' => true,
 					'history' => true,
+					'public'	=> true
 					),
 				'customer_name' => array('action'=>  PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'customer',
+					'public'	=> true,
 					'join' => array(
 						'table' => 'eventplanner_customer',
 						'fkey' => 'customer_id',
@@ -185,6 +197,7 @@
 					'query' => true,
 					'label' => 'location',
 					'history' => true,
+					'public'	=> true
 					),
 				'comments' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
@@ -241,6 +254,7 @@
 			{
 				$entity->status = eventplanner_booking::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
 			if (empty($entity->completed))
@@ -268,11 +282,11 @@
 
 			$bookings =  eventplanner_sobooking::get_instance()->read($params);
 
-			if($entity->customer_id)
+			if($entity->customer_id) // update
 			{
 				$test_total_tecords = (int)$bookings['total_records'];
 			}
-			else
+			else // new entry
 			{
 				$test_total_tecords = (int)$bookings['total_records'] + 1;
 			}

@@ -399,13 +399,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uiworkorder.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'date-picker',
@@ -440,6 +433,7 @@
 						'export' => true,
 						'allrows' => true
 					)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uiworkorder.columns', appname:'{$this->bo->appname}',type:'{$this->type}', type_id:'{$this->type_id}'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uiworkorder.add'
 					)),
@@ -981,6 +975,40 @@
 							$subject = lang('Approval') . ": {$values['project_id']}";
 							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $approval_menuaction,
 									'id' => $values['project_id']), false, true) . '">' . lang('project %1 needs approval', $values['project_id']) . '</a>';
+
+
+
+							//already approved?
+
+							$pending_action = CreateObject('property.sopending_action');
+
+
+						foreach ($values['approval'] as $_account_id => $_address)
+						{
+							$action_params_approved = array
+							(
+								'appname' => 'property',
+								'location' => '.project',
+								'id' => $values['project_id'],
+								'responsible' => $_account_id,
+								'responsible_type' => 'user',
+								'action' => 'approval',
+								'remark' => '',
+								'deadline' => '',
+								'allrows' => false,
+								'closed' => true
+							);
+
+							$approvals = $pending_action->get_pending_action($action_params);
+
+							if($approvals)
+							{
+
+							}
+
+						}
+
+
 							if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
 							{
 								$_project_status = $config->config_data['project_approval_status'];
@@ -1036,23 +1064,26 @@
 							$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
 						}
 
-						foreach ($_orders as $_order_id)
+						if($approval_level == 'order')
 						{
-							$action_params['responsible'] = $_account_id;
-							$action_params['id'] = $_order_id;
-							try
+							foreach ($_orders as $_order_id)
 							{
-								$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-								execMethod('property.sopending_action.set_pending_action', $action_params);
-								$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-								if ($rcpt)
+								$action_params['responsible'] = $_account_id;
+								$action_params['id'] = $_order_id;
+								try
 								{
-									phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+									$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+									execMethod('property.sopending_action.set_pending_action', $action_params);
+									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+									if ($rcpt)
+									{
+										phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+									}
 								}
-							}
-							catch (Exception $exc)
-							{
-								phpgwapi_cache::message_set($exc->getMessage(),'error');
+								catch (Exception $exc)
+								{
+									phpgwapi_cache::message_set($exc->getMessage(),'error');
+								}
 							}
 						}
 					}

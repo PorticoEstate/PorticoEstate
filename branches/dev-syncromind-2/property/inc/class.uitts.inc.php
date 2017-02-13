@@ -732,6 +732,7 @@
 				'list' => $values_combo_box[3]
 			);
 
+			$values_combo_box[5] = array(); //reported by
 			if(!$this->simple)
 			{
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
@@ -811,16 +812,17 @@
 				);
 
 				$values_combo_box[5] = $this->bo->get_reported_by($this->reported_by);
-				array_unshift($values_combo_box[5], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
-					'name' => lang('my submitted tickets')));
-				array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('reported by')));
-				$combos[] = array('type' => 'filter',
-					'name' => 'reported_by',
-					'extra' => '',
-					'text' => lang('reported by'),
-					'list' => $values_combo_box[5]
-				);
 			}
+
+			array_unshift($values_combo_box[5], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'name' => lang('my submitted tickets')));
+			array_unshift($values_combo_box[5], array('id' => '', 'name' => lang('reported by')));
+			$combos[] = array('type' => 'filter',
+				'name' => 'reported_by',
+				'extra' => '',
+				'text' => lang('reported by'),
+				'list' => $values_combo_box[5]
+			);
 
 			if($order_read)
 			{
@@ -969,14 +971,7 @@
 								'name' => 'end_date',
 								'value' => $end_date,
 								'text' => lang('to')
-							),
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload', height: 500})"
-							),
+							)
 						)
 					)
 				),
@@ -987,6 +982,7 @@
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'property.uitts.download',
 						'export' => true, 'allrows' => true)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uitts.columns'}, {closeAction:'reload', height: 500})"),
 					'allrows' => true,
 					'new_item' => self::link(array('menuaction' => 'property.uitts.add')),
 					'editor_action' => self::link(array('menuaction' => 'property.uitts.edit_survey_title')),
@@ -1077,20 +1073,24 @@
 					'parameters' => json_encode($parameters)
 				);
 			}
-			$data['datatable']['actions'][] = array
-				(
-				'my_name' => 'docs',
-				'statustext' => lang('documents'),
-				'text' => lang('documents'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
-					(
-					'menuaction' => 'property.uidocument.list_doc',
-				)),
-				'target' => '_blank',
-				'parameters' => json_encode($parameters_location)
-			);
 
-			if (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
+			if(!$this->simple)
+			{
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'docs',
+					'statustext' => lang('documents'),
+					'text' => lang('documents'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'property.uidocument.list_doc',
+					)),
+					'target' => '_blank',
+					'parameters' => json_encode($parameters_location)
+				);
+			}
+
+			if (!$this->simple && isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_status_link'] == 'yes' && $this->acl_edit)
 			{
 				$status['X'] = array
 					(
@@ -1309,6 +1309,11 @@
 							$attribute['value'] = substr($attribute['value'], 0, $attribute['precision']);
 						}
 					}
+				}
+
+				if(empty($values['group_id']))
+				{
+					$values['group_id'] = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['groupdefault'] : '');
 				}
 
 				if (!$values['assignedto'] && !$values['group_id'])

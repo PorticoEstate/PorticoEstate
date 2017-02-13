@@ -42,6 +42,7 @@
 
 		protected
 			$id,
+			$owner_id,
 			$active,
 			$category_id,
 			$created,
@@ -56,6 +57,11 @@
 			$contact_name,
 			$contact_email,
 			$contact_phone,
+			$contact2_name,
+			$contact2_email,
+			$contact2_phone,
+			$number_of_users,
+			$max_events,
 			$account_number,
 			$description,
 			$remark,
@@ -92,16 +98,18 @@
 
 		public static function get_fields($debug = true)
 		{
-			 $fields = array(
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			$fields = array(
 				'id' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
 					),
-				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'owner_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
-					'history'	=> true
+					'required' => false
 					),
 				'category_id' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'
@@ -143,7 +151,7 @@
 					'required' => true),
 				'account_number' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
-					'required' => true),
+					'required' => false),
 			 	'description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'label' => 'description',
@@ -177,6 +185,35 @@
 					'query' => true,
 					'label' => 'contact phone',
 					),
+				'contact2_name' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'contact name 2',
+					),
+				'contact2_email' => array(
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
+					'label' => 'contact email 2',
+					),
+				'contact2_phone' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => false,
+					'query' => true,
+					'label' => 'contact phone 2',
+					),
+				'number_of_users' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'required' => true,
+					'query' => true,
+					'label' => 'number of users',
+					),
 				'organization_number' => array(
 					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
@@ -184,23 +221,45 @@
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'organization number'
-					),
-				'comments' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'manytomany' => array(
-						'input_field' => 'comment_input',
-						'table' => 'eventplanner_customer_comment',
-						'key' => 'customer_id',
-						'column' => array('time', 'author', 'comment', 'type'),
-						'order' => array('sort' => 'time', 'dir' => 'ASC')
-					)),
-				'comment' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
-					'related' => true,
 					)
 			);
+
+			if($currentapp == 'eventplanner')
+			{
+				$backend_fields = array(
+					'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'history'	=> true
+						),
+					'comments' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'manytomany' => array(
+							'input_field' => 'comment_input',
+							'table' => 'eventplanner_vendor_comment',
+							'key' => 'vendor_id',
+							'column' => array('time', 'author', 'comment', 'type'),
+							'order' => array('sort' => 'time', 'dir' => 'ASC')
+						)),
+					'comment' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'string',
+						'related' => true,
+						),
+					'max_events' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'required' => true,
+						'query' => false,
+						'label' => 'maximum number of events',
+						),
+					);
+
+				foreach ($backend_fields as $key => $field_info)
+				{
+					$fields[$key] = $field_info;
+				}
+			}
 
 			if($debug)
 			{
@@ -238,13 +297,11 @@
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
 
-			if($entity->get_id())
-			{
-			}
-			else
+			if(!$entity->get_id())
 			{
 				$entity->status = eventplanner_customer::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
+				$entity->owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 		}
 

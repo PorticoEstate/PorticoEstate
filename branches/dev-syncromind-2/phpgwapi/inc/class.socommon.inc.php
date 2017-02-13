@@ -40,6 +40,10 @@
 		protected $fields = array();
 		protected static $so;
 		protected $table_name;
+		protected $use_acl = false;
+		protected $currentapp;
+		protected $acl;
+		protected $relaxe_acl;
 
 		public function __construct( $table_name, $fields )
 		{
@@ -53,7 +57,8 @@
 			$this->fields = $fields;
 			$this->table_name = $table_name;
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			$this->acl = & $GLOBALS['phpgw']->acl;
 		}
 
 		/**
@@ -206,10 +211,13 @@
 			$dir = isset($params['dir']) && $params['dir'] ? $params['dir'] : 'asc';
 			$query = isset($params['query']) && $params['query'] ? $params['query'] : null;
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
+			$relaxe_acl = isset($params['relaxe_acl']) && $params['relaxe_acl'] ? $params['relaxe_acl'] : false;
+			$this->relaxe_acl = $relaxe_acl;
 			$cols_joins = $this->_get_cols_and_joins($filters);
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
+			$this->relaxe_acl = false;
 
 			// Calculate total number of records
 			$this->db->query("SELECT count(1) AS count FROM $this->table_name $joins WHERE $condition", __LINE__, __FILE__);
@@ -235,7 +243,7 @@
 				}
 			}
 
-			$base_sql = "SELECT $cols FROM $this->table_name $joins WHERE $condition $order ";
+			$base_sql = "SELECT DISTINCT $cols FROM $this->table_name $joins WHERE $condition $order ";
 			if ($results > -1)
 			{
 				$this->db->limit_query($base_sql, $start, __LINE__, __FILE__, $results);
@@ -252,6 +260,11 @@
 				$row = array();
 				foreach ($this->fields as $field => $params)
 				{
+					if($relaxe_acl && !$params['public'])
+					{
+						continue;
+					}
+
 					$row[$field] = $this->unmarshal($this->db->f($field, false), $params['type']);
 				}
 				$results[] = $row;
@@ -264,6 +277,10 @@
 				}
 				foreach ($this->fields as $field => $params)
 				{
+					if($relaxe_acl && !$params['public'])
+					{
+						continue;
+					}
 					if ($params['manytomany'])
 					{
 						$table = $params['manytomany']['table'];
@@ -342,7 +359,9 @@
 				$id_value = intval($id_params);
 			}
 
-			return $this->table_name . '.id=' . $id_value;
+			$conditions = "{$this->table_name}.id={$id_value}";
+
+			return $conditions;
 		}
 
 		function read_single( $id, $return_object = false )
@@ -353,12 +372,34 @@
 			}
 			$row = array();
 			$pk_params = $this->primary_key_conditions($id);
+
+			$acl_condition = $this->get_acl_condition();
+
 			$cols_joins = $this->_get_cols_and_joins();
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
-			$this->db->query("SELECT $cols FROM $this->table_name $joins WHERE $pk_params", __LINE__, __FILE__);
+
+			/**
+			 * test
+			 */
+			$acl_test = false;
+			if($acl_condition)
+			{
+				$this->db->query("SELECT DISTINCT {$cols} FROM {$this->table_name} {$joins} WHERE {$pk_params} AND {$acl_condition}", __LINE__, __FILE__); //DISTINCT: There might be LEFT JOINs..
+				if ($this->db->next_record())
+				{
+					$acl_test = true;
+				}
+			}
+
+			$this->db->query("SELECT DISTINCT $cols FROM $this->table_name $joins WHERE $pk_params", __LINE__, __FILE__); //DISTINCT: There might be LEFT JOINs..
 			if ($this->db->next_record())
 			{
+				if($acl_condition && !$acl_test)
+				{
+					phpgw::no_access();
+				}
+
 				foreach ($this->fields as $field => $params)
 				{
 					if (!empty($params['manytomany']))
@@ -504,7 +545,65 @@
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
+
+			$clause = $this->get_acl_condition();
+
+			if($clause)
+			{
+				$clauses[] = $clause;
+			}
+
 			return join(' AND ', $clauses);
+		}
+
+		function get_acl_condition( )
+		{
+			$clause = '';
+
+			if(!$this->relaxe_acl && ($this->use_acl && $this->currentapp && $this->acl_location))
+			{
+				$paranthesis = false;
+
+				$grants = $this->acl->get_grants2($this->currentapp, $this->acl_location);
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
+				{
+					foreach($grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$clause .= "({$this->table_name}.owner_id IN(" . implode(',', $public_user_list) . ")";
+					$paranthesis = true;
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					if(!$paranthesis)
+					{
+						$clause .='(';
+					}
+					$clause .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
+
+					$paranthesis = true;
+				}
+
+				if($paranthesis)
+				{
+					$clause .=')';
+				}
+			}
+
+			return $clause;
 		}
 
 		protected function build_join_table_alias( $field, array $params )
@@ -544,6 +643,12 @@
 						'(' . strtr($params['expression'], array('%%table%%' => $this->table_name)) . ')' : "{$this->table_name}.{$field}";
 					$cols[] = "{$value_expression} AS {$field}";
 				}
+			}
+
+			if(!$this->relaxe_acl && ($this->use_acl && $this->currentapp && $this->acl_location))
+			{
+				$joins[] = " JOIN phpgw_accounts ON ({$this->table_name}.owner_id = phpgw_accounts.account_id)";
+				$joins[] = " JOIN phpgw_group_map ON (phpgw_accounts.account_id = phpgw_group_map.account_id)";
 			}
 			return array($cols, $joins);
 		}

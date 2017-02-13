@@ -35,6 +35,9 @@
 	$GLOBALS['phpgw']->locations->add('.', 'Root', 'rental', false);
 	$GLOBALS['phpgw']->locations->add('.contract', 'Contract', 'rental', $allow_grant = false, $custom_tbl = false, $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.application', 'Application', 'rental', $allow_grant = false, $custom_tbl = false, $c_function = true);
+	$GLOBALS['phpgw']->locations->add('.moveout', 'Moveout', 'rental', $allow_grant = true, $custom_tbl = 'rental_moveout', $c_function = true, $c_attrib = true);
+	$GLOBALS['phpgw']->locations->add('.movein', 'Movein', 'rental', $allow_grant = true, $custom_tbl = 'rental_movein', $c_function = true, $c_attrib = true);
+
 	$GLOBALS['phpgw']->locations->add('.ORG', 'Locations for organisational units', 'rental', false);
 	$GLOBALS['phpgw']->locations->add('.ORG.BK', 'Organisational units in Bergen Kommune', 'rental', false);
 

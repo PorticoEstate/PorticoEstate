@@ -2,7 +2,7 @@
 	$GLOBALS['phpgw']->locations->add('.', 'Tom', 'eventplannerfrontend');
 	$GLOBALS['phpgw']->locations->add('.admin', 'admin', 'eventplannerfrontend');
 	$GLOBALS['phpgw']->locations->add('.application', 'application', 'eventplannerfrontend', $allow_grant = true, $custom_tbl = '', $c_function = true);
-	$GLOBALS['phpgw']->locations->add('.resource', 'resource', 'eventplannerfrontend', $allow_grant = true, $custom_tbl = '', $c_function = true);
+	$GLOBALS['phpgw']->locations->add('.events', 'events', 'eventplannerfrontend', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.customer', 'customer', 'eventplannerfrontend', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.vendor', 'vendor', 'eventplannerfrontend', $allow_grant = true, $custom_tbl = '', $c_function = true);
 	$GLOBALS['phpgw']->locations->add('.booking', 'booking', 'eventplannerfrontend', $allow_grant = true, $custom_tbl = '', $c_function = true);
@@ -36,7 +36,7 @@
 
 		$preferences = createObject('phpgwapi.preferences');
 		$preferences->set_account_id($eventplannerguest);
-		$preferences->add('common', 'template_set', 'bookingfrontend');
+		$preferences->add('common', 'template_set', 'frontend');
 		$preferences->save_repository(true, $GLOBALS['type']);
 		$config = CreateObject('phpgwapi.config', 'eventplannerfrontend');
 		$config->read();
@@ -45,10 +45,14 @@
 		$config->save_repository();
 	}
 
-	$eventplannerguest = $GLOBALS['phpgw']->accounts->name2id('eventplannerguest');
+	if(!$eventplannerguest)
+	{
+		$eventplannerguest = $GLOBALS['phpgw']->accounts->name2id('eventplannerguest');
+	}
 
 	$aclobj = & $GLOBALS['phpgw']->acl;
 	$aclobj->set_account_id($eventplannerguest, true);
+	$aclobj->add('phpgwapi', 'anonymous', 1);
 	$aclobj->add('eventplannerfrontend', 'run', 1);
 	$aclobj->add('eventplannerfrontend', '.application', 1);
 	$aclobj->add('eventplannerfrontend', '.resource', 1);

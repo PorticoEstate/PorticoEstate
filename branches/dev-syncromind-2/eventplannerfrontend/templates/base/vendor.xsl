@@ -24,7 +24,7 @@
 		<xsl:value-of select="mode"/>
 	</xsl:variable>
 
-	<div>
+	<div id="content" class="content">
 		<script type="text/javascript">
 			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'please enter a valid organization number', 'please enter a valid account number')"/>;
 		</script>
@@ -43,16 +43,6 @@
 								<xsl:value-of select="vendor/id"/>
 							</div>
 						</xsl:if>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'active')"/>
-							</label>
-							<input type="checkbox" name="active" id="active" value="1">
-								<xsl:if test="vendor/active = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div>
 						<div class="pure-control-group">
 							<xsl:variable name="lang_category">
 								<xsl:value-of select="php:function('lang', 'category')"/>
@@ -217,32 +207,6 @@
 								</xsl:attribute>
 								<xsl:value-of select="vendor/remark"/>
 							</textarea>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'comment')"/>
-							</label>
-							<textarea cols="47" rows="7" name="comment">
-								<xsl:value-of select="vendor/comment"/>
-							</textarea>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'history')"/>
-							</label>
-							<div class="pure-custom">
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_0'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl'/>
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-											<xsl:with-param name="data" select ='data'/>
-											<xsl:with-param name="config" select ='config'/>
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							</div>
 						</div>
 					</fieldset>
 				</div>

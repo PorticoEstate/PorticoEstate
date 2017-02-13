@@ -30,22 +30,26 @@
 	 * Wrapper for custom methods
 	 *
 	 * @package phpgroupware
-	 * @subpackage bookingfrontend
+	 * @subpackage eventplannerfrontend
 	 */
-	class bookingfrontend_external_user extends bookingfrontend_bouser
+	class eventplannerfrontend_external_user extends eventplannerfrontend_bouser
 	{
 
+		var $debug = false;
 		public function __construct()
 		{
 			parent::__construct();
+			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			{
+				$this->debug = true;
+			}
 		}
 
 		public function get_user_org_id()
 		{
 			$headers = getallheaders();
-			if (isset($this->config->config_data['debug']) && $this->config->config_data['debug'])
+			if ($this->debug)
 			{
-				$this->debug = true;
 				echo 'headers:<br>';
 				_debug_array($headers);
 			}
@@ -108,97 +112,24 @@
 							'name' => $xml->getElementsByTagName('name')->item(0)->nodeValue,
 						);
 						$orgs_validate[] = $_org_id;
+
 					}
 				}
 			}
 			catch (SoapFault $exception)
 			{
-				echo "Dette gikk ikke så bra.";
+				echo "Feilet på oppslag mot soaptjeneste.";
 				var_dump(get_class($exception));
 				var_dump($exception);
 			}
 
-			$stage = phpgw::get_var('stage');
-			$org_id = phpgw::get_var('org_id');
-
-			if ($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
+			if ($this->debug)
 			{
-				try
-				{
-					return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($org_id);
-				}
-				catch (sfValidatorError $e)
-				{
-					if ($this->debug)
-					{
-						echo $e->getMessage();
-						die();
-					}
-					return null;
-				}
+				$orgs[] = array('id' => '964338531', 'name' => 'Bergen kommune');
+				$_org_id = 964338531;
 			}
+			$_SESSION['orgs'] = $orgs;
+			$_SESSION['org_id'] = $_org_id; // one of them..
 
-			foreach ($orgs as $org)
-			{
-				$selected = '';
-				if ($org_id == $org['id'])
-				{
-					$selected = 'selected = "selected"';
-				}
-
-				$org_option .= <<<HTML
-				<option value='{$org['id']}'{$selected}>{$org['name']}</option>
-
-HTML;
-			}
-
-			if ($orgs)
-			{
-				$action = $GLOBALS['phpgw']->link('/bookingfrontend/login.php', array('stage' => 2));
-				$message = 'Velg organisasjon';
-
-				$org_select = <<<HTML
-							<p>
-								<label for="org_id">Velg Organisasjon:</label>
-								<select name="org_id" id="org_id">
-									{$org_option}
-								</select>
-							</p>
-HTML;
-			}
-			else
-			{
-				$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
-				$message = 'Ikke representant for noen organisasjon';
-				$org_select = '';
-			}
-
-			$html = <<<HTML
-			﻿<!DOCTYPE html>
-			<html>
-				<head>
-					<title>Velg organisasjon</title>
-					<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-				</head>
-				<body>
-					<h2>{$message}</h2>
-					<form action="{$action}" method="post">
-						<fieldset>
-							<legend>
-								Organisasjon
-							</legend>
-							$org_select
-							<p>
-								<input type="submit" name="submit" value="Fortsett"  />
-							</p>
-			 			</fieldset>
-					</form>
-				</body>
-			</html>
-HTML;
-
-			echo $html;
-
-			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 	}

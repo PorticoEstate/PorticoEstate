@@ -657,13 +657,6 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'link',
-								'value' => lang('columns'),
-								'href' => '#',
-								'class' => '',
-								'onclick' => "JqueryPortico.openPopup({menuaction:'property.uirequest.columns'}, {closeAction:'reload'})"
-							),
 							array
 								(
 								'type' => 'link',
@@ -705,6 +698,7 @@
 						'export' => true,
 						'allrows' => true,
 						'list_descr' => true)),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'property.uirequest.columns'}, {closeAction:'reload'})"),
 					'new_item' => self::link(array(
 						'menuaction' => 'property.uirequest.add'
 					)),

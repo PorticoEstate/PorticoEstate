@@ -732,13 +732,23 @@
 						$_querymethod = array();
 						foreach ($criteria as $field_info)
 						{
-							if ($field_info['type'] == int)
+							if ($field_info['type'] == 'int')
 							{
 								$_query = (int)$query;
 							}
-							else if ($field_info['type'] == 'bigint' && !ctype_digit($query))
+							else if ($field_info['type'] == 'bigint' && $field_info['matchtype'] != 'like')
 							{
+
 								$_query = 0;
+							}
+							else if ($field_info['type'] == 'bigint' && $field_info['matchtype'] == 'like')
+							{
+								$_query = $query;
+								if($field_info['matchtype'] == 'like')
+								{
+									$_querymethod[] = " cast({$field_info['field']} as text) {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
+									continue;
+								}
 							}
 							else
 							{
@@ -757,7 +767,13 @@
 						{
 							$_query = (int)$query;
 						}
-						else if ($criteria[0]['type'] == 'bigint' && !ctype_digit($query))
+						else if ($criteria[0]['type'] == 'bigint' &&  $criteria[0]['matchtype'] == 'like')
+						{
+							$_query = $query;
+
+							$criteria[0]['field'] = "cast({$criteria[0]['field']} as text)";
+						}
+						else if ($criteria[0]['type'] == 'bigint' &&  $field_info['matchtype'] != 'like')
 						{
 							$_query = 0;
 						}

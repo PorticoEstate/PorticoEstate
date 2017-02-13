@@ -1322,6 +1322,10 @@
 					{
 						$_ok = true;
 					}
+					else
+					{
+						$_ok = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
+					}
 
 					if (!$_ok)
 					{
@@ -1346,6 +1350,8 @@
 					'location' => '.project.workorder.transfer',
 					'allrows' => true
 				);
+
+				$transfer_action = 'workorder'; // trigger for transfer
 
 				$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
@@ -1505,7 +1511,9 @@ HTML;
 
 					if (!$_status)
 					{
-						throw new Exception('status on ordered not given in config');
+		//				throw new Exception('status on ordered not given in config');
+						phpgwapi_cache::message_set("Automatisk endring av status for bestilt er ikke konfigurert", 'error');
+
 					}
 
 					if (!is_object($GLOBALS['phpgw']->send))
@@ -1555,19 +1563,21 @@ HTML;
 						$historylog->add('MS', $workorder_id, $to_sms_phone);
 					}
 
-					try
+					if($_status)
 					{
-						execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
-							'status' => $_status));
-					}
-					catch (Exception $e)
-					{
-						if ($e)
+						try
 						{
-							throw $e;
+							execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
+								'status' => $_status));
+						}
+						catch (Exception $e)
+						{
+							if ($e)
+							{
+								throw $e;
+							}
 						}
 					}
-
 
 					//Sigurd: Consider remove
 					/*
@@ -1896,6 +1906,10 @@ HTML;
 				else if ($common_data['workorder']['approved'])
 				{
 					$_ok = true;
+				}
+				else
+				{
+					$_ok = $this->_validate_purchase_grant($workorder_id, $project['ecodimb'] ? $project['ecodimb'] : $workorder['ecodimb'], $project['id']);
 				}
 
 				if (!$_ok)
@@ -3350,7 +3364,7 @@ HTML;
 				phpgw::no_access();
 			}
 
-			$start_from = 45000000;
+			$start_from = 45001336;
 			$sql = "SELECT id, status FROM fm_workorder WHERE id >= $start_from";
 			$db = & $GLOBALS['phpgw']->db;
 			$db->query($sql, __LINE__, __FILE__);
@@ -3403,6 +3417,8 @@ HTML;
 				'location' => '.project.workorder.transfer',
 				'allrows' => true
 			);
+
+			$transfer_action = 'workorder';
 
 			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
 
@@ -3474,7 +3490,7 @@ HTML;
 
 			if (!$_status)
 			{
-				throw new Exception('status on ordered not given in config');
+				phpgwapi_cache::message_set("Automatisk endring av status for bestilt er ikke konfigurert", 'error');
 			}
 
 			try
@@ -3493,16 +3509,19 @@ HTML;
 				}
 			}
 
-			try
+			if($_status)
 			{
-				execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
-					'status' => $_status));
-			}
-			catch (Exception $e)
-			{
-				if ($e)
+				try
 				{
-					throw $e;
+					execMethod('property.soworkorder.update_status', array('order_id' => $workorder_id,
+						'status' => $_status));
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						throw $e;
+					}
 				}
 			}
 

@@ -49,6 +49,8 @@
 		*/
 		protected $_like = 'LIKE';
 
+		protected $global_lock = false;
+
 		/**
 		* Constructor
 		*
@@ -153,7 +155,14 @@
 
 			$tbl = $this->_db->f('c_attrib_table');
 
-			$this->_db->transaction_begin();
+			if ( $this->_db->get_transaction() )
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->_db->transaction_begin();
+			}
 
 			// if there is a table and the user wants it dropped we drop it
 			if ( $tbl && $drop_table )
@@ -167,13 +176,21 @@
 				$oProc->DropTable($tbl);
 			}
 
+			if(!is_object($GLOBALS['phpgw']->acl))
+			{
+				$GLOBALS['phpgw']->acl = createObject('phpgwapi.acl');
+			}
+
 			$GLOBALS['phpgw']->acl->delete_repository($appname, $location);
 
 			$sql = 'DELETE FROM phpgw_locations'
 				. " WHERE app_id = {$app} AND name = '{$location}'";
 			$this->_db->query($sql, __LINE__, __FILE__);
 
-			$this->_db->transaction_commit();
+			if ( !$this->global_lock )
+			{
+				$this->_db->transaction_commit();
+			}
 
 			return true;
 		}

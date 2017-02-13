@@ -39,6 +39,8 @@
 				'remark' => array('type' => 'text', 'nullable' => True),
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'organization_number' => array('type' => 'varchar', 'precision' => '9','nullable' => True),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
 				'modified' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
@@ -84,16 +86,23 @@
 				'address_2' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'zip_code' => array('type' => 'varchar', 'precision' => '10', 'nullable' => False),
 				'city' => array('type' => 'varchar', 'precision' => '64', 'nullable' => False),
-				'account_number' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
+				'account_number' => array('type' => 'varchar', 'precision' => '20', 'nullable' => true),
 				'category_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
 				'active' => array('type' => 'int', 'nullable' => False, 'precision' => '4', 'default' => 1),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
 				'contact_email' => array('type' => 'text', 'nullable' => False),
 				'contact_phone' => array('type' => 'text', 'nullable' => False),
+				'contact2_name' => array('type' => 'text', 'nullable' => true),
+				'contact2_email' => array('type' => 'text', 'nullable' => true),
+				'contact2_phone' => array('type' => 'text', 'nullable' => true),
+				'number_of_users' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
+				'max_events' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'description' => array('type' => 'text', 'nullable' => False),
 				'remark' => array('type' => 'text', 'nullable' => True),
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'organization_number' => array('type' => 'varchar', 'precision' => '9','nullable' => True),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
 				'modified' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
@@ -145,6 +154,7 @@
 				'contact_phone' => array('type' => 'text', 'nullable' => False),
 				'secret' => array('type' => 'text', 'nullable' => true),
 				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'case_officer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'charge_per_unit' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2','nullable' => true, 'default' => '0.00'),
 				'number_of_units' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
@@ -219,43 +229,6 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'eventplanner_resource' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => False),
-				'category_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
-				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => false),
-				'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => false),
-				'active' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
-				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
-				'description' => array('type' => 'text', 'nullable' => false),
-				'executive_officer' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
-				'entry_date' => array('type' => 'int', 'precision' => '8', 'nullable' => false),
-				'created_by' => array('type' => 'int', 'precision' => 4, 'nullable' => false),
-				'last_updated' => array('type' => 'int', 'precision' => '8', 'nullable' => false),
-				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
-			),
-			'pk' => array('id'),
-			'fk' => array(
-				'phpgw_accounts' => array('executive_officer' => 'account_id')
-				),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'eventplanner_resource_comment' => array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'nullable' => False),
-				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
-				'author' => array('type' => 'text', 'nullable' => False),
-				'comment' => array('type' => 'text', 'nullable' => False),
-				'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
-			),
-			'pk' => array('id'),
-			'fk' => array(
-				'eventplanner_resource' => array('resource_id' => 'id')),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'eventplanner_booking' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
@@ -273,6 +246,8 @@
 				'reminder' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
 				'secret' => array('type' => 'text', 'nullable' => False),
 				'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
 			),
 			'pk' => array('id'),
@@ -313,22 +288,10 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'eventplanner_booking_resource' => array(
-			'fd' => array(
-				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
-			),
-			'pk' => array('booking_id', 'resource_id'),
-			'fk' => array(
-				'eventplanner_booking' => array('booking_id' => 'id'),
-				'eventplanner_resource' => array('resource_id' => 'id')
-			),
-			'ix' => array(),
-			'uc' => array()
-		),
 		'eventplanner_order' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False, 'default' => 'current_timestamp'),
 				'author' => array('type' => 'text', 'nullable' => False),
@@ -356,6 +319,8 @@
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 //				'author' => array('type' => 'text', 'nullable' => False),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
 			),
@@ -370,6 +335,8 @@
 				'id' => array('type' => 'auto', 'nullable' => False),
 				'booking_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 //				'author' => array('type' => 'text', 'nullable' => False),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
 			),
@@ -378,5 +345,20 @@
 				'eventplanner_booking' => array('booking_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
+		),
+		'eventplanner_permission' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'subject_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'object_type' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'permission' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'phpgw_accounts' => array('subject_id' => 'account_id'),
+			),
+			'ix' => array(array('object_id', 'object_type'), array('object_type')),
+			'uc' => array('subject_id', 'permission', 'object_type', 'object_id'),
 		),
 	);

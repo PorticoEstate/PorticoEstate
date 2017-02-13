@@ -52,12 +52,12 @@
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('eventplanner::customer');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('customer');
 			$this->bo = createObject('eventplanner.bocustomer');
 			$this->fields = eventplanner_customer::get_fields();
 			$this->permissions = eventplanner_customer::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+			self::set_active_menu("{$this->currentapp}::customer");
 		}
 
 		private function get_category_options( $selected = 0 )
@@ -109,7 +109,7 @@
 								'list' =>  $this->get_category_options()
 							),
 							array(
-								'type' => 'checkbox',
+								'type' =>  $this->currentapp == 'eventplanner' ? 'checkbox' : 'hidden',
 								'name' => 'filter_active',
 								'text' => lang('showall'),
 								'value' =>  1,

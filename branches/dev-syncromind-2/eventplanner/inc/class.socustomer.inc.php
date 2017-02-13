@@ -27,6 +27,7 @@
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
+	include_class('eventplanner', 'customer', 'inc/model/');
 
 	class eventplanner_socustomer extends phpgwapi_socommon
 	{
@@ -36,6 +37,8 @@
 		public function __construct()
 		{
 			parent::__construct('eventplanner_customer', eventplanner_customer::get_fields());
+			$this->acl_location = eventplanner_customer::acl_location;
+			$this->use_acl = true;
 		}
 
 		/**
