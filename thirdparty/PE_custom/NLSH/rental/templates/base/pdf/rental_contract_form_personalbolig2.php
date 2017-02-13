@@ -290,7 +290,7 @@
 							}
 							else if ($loc1 > 8599 && $loc1 < 8700)
 							{
-								$municipal = "Gravdal";
+								$municipal = "Vestvågøy";
 							}
 
 

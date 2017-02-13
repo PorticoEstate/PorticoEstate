@@ -84,7 +84,7 @@ $termin_name = str_replace("vis", "", $termin_name);
 			}
 			else if($loc1 > 8599 && $loc1 < 8700)
 			{
-				$municipal = "Gravdal";
+				$municipal = "Vestvågøy";
 			}
 
 			echo $unit->get_location()->get_location_code() . ' Adresse:' . $unit->get_location()->get_address_1() . "i {$municipal} kommune.";
