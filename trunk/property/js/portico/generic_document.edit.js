@@ -90,17 +90,28 @@ function getComponents()
 {
 	paramsTable0['location_id'] = $('#location_id').val();
 	paramsTable0['id'] = $('#id').val();
+	paramsTable0['entity_group_id'] = $('#entity_group_id').val();
 	
 	if ($('#check_components_related').is(':checked')) {
 		paramsTable0['only_related'] = 1;
+		$( "#check_all_types" ).prop( "disabled", false );
 	} else {
 		paramsTable0['only_related'] = 0;
+		$( "#check_all_types" ).prop( "disabled", true );
 	}
 
+	if ($('#check_all_types').is(':checked')) {
+		paramsTable0['all_types'] = 1;
+		$( "#location_id" ).prop( "disabled", true );
+	} else {
+		paramsTable0['all_types'] = 0;
+		$( "#location_id" ).prop( "disabled", false );
+	}
+	
 	oTable0.fnDraw();
 }
 
-function setRelationsComponents(oArgs)
+/*function setRelationsComponents2(oArgs)
 {
 	var values = {};
 	var related = {};
@@ -120,7 +131,45 @@ function setRelationsComponents(oArgs)
 		related[obj.value] = obj.value;
 	});
 	
-	oArgs['location_id'] = $('#location_id').val();
+	oArgs['file_id'] = $('#id').val();
+	var requestUrl = phpGWLink('index.php', oArgs);
+
+	var data = {"items":values, "related":related};
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
+		JqueryPortico.show_message(0, result);
+		oTable0.fnDraw();
+		
+	}, data, "POST", "JSON");
+}
+*/
+function setRelationsComponents(oArgs)
+{	
+	var values = {};
+	var related = {};
+	
+	var select_check = $('.components');
+	select_check.each(function (i, obj)
+	{
+		if (obj.checked)
+		{
+			values[obj.value] = obj.value;
+		}
+	});
+	
+	var select_related = $('.components_related');
+	select_related.each(function (i, obj)
+	{
+		related[obj.value] = obj.value;
+	});
+	
+	if ($('#check_all_types').is(':checked')) 
+	{
+		oArgs['all_types'] = 1;
+	} else {
+		oArgs['location_id'] = $('#location_id').val();
+	}
+	
 	oArgs['file_id'] = $('#id').val();
 	var requestUrl = phpGWLink('index.php', oArgs);
 
@@ -167,6 +216,10 @@ function setRelationsLocations(oArgs)
 }
 
 function showRelatedComponentes() {
+	getComponents();
+}
+
+function showAllTypes() {
 	getComponents();
 }
 

@@ -204,6 +204,16 @@
 							</label>
 							<a href="{link_file}"><xsl:value-of select="file_name" /></a>
 						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'Path')"/>
+							</label>
+							<xsl:for-each select="document/paths">
+								<div class='pure-custom'>
+									<div><xsl:value-of select="value"/></div>
+								</div>								
+							</xsl:for-each>
+						</div>
 						<xsl:choose>
 							<xsl:when test="editable = 1">
 								<div class="pure-control-group">
@@ -234,6 +244,10 @@
 									<xsl:value-of select="php:function('lang', 'Only Related')" />
 								</label>
 								<input type="checkbox" id="check_components_related" name="check_components_related" value="1" onchange="showRelatedComponentes()"></input>
+								<label>
+									<xsl:value-of select="php:function('lang', 'all types')" />
+								</label>
+								<input type="checkbox" disabled="disabled" id="check_all_types" name="check_all_types" value="1" onchange="showAllTypes()"></input>
 							</div>							
 							<div class="pure-control-group">
 								<label for="vendor">
