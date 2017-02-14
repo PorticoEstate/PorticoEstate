@@ -216,6 +216,7 @@ $(document).ready(function ()
 		})
 		.done(function(result) {
 			JqueryPortico.show_message(4, result);
+			refresh_tab_files();
 			//$('#import_components_files').prop('disabled', true);
 		})
 		.fail(function() {
@@ -687,6 +688,23 @@ function fill_template_attributes (selected_attribute)
 	);			
 }
 	
+function refresh_tab_files ()
+{
+	$('#multi_upload_file').addClass('fileupload-processing');
+	$.ajax({
+		// Uncomment the following to send cross-domain cookies:
+		//xhrFields: {withCredentials: true},
+		url: $('#multi_upload_file').fileupload('option', 'url'),
+		dataType: 'json',
+		context: $('#multi_upload_file')[0]
+	}).always(function () {
+		$('#multi_upload_file').removeClass('fileupload-processing');
+	}).done(function (result) {
+		$('.presentation').empty();
+		$('#multi_upload_file').fileupload('option', 'done').call($('#multi_upload_file'), $.Event('done'), {result: result});
+	});	
+}
+
 function valid_new_attribute (code)
 {
 	if ($('#name_' + code).val() == '')

@@ -2075,3 +2075,4 @@ approval from %1 is required for order %2	property	no	Godkjenning fra %1 er påk
 missing recipient for order %1	property	no	Mangler mottaker for ordre %1
 export	property	no	Eksport
 simplified	property	no	Forenklet
+implicitly from project	property	no	Implisitt fra prosjekt

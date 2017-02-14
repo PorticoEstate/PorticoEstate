@@ -61,6 +61,7 @@
 
 			$this->bo = CreateObject('property.bogeneric_document');
 			$this->bocommon = & $this->bo->bocommon;
+			$this->soadmin_entity = CreateObject('property.soadmin_entity');
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl_location = '.document';//$this->bo->acl_location;
 			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'property');
@@ -406,7 +407,12 @@
 				if (!$values)
 				{
 					$values = (array) $this->bo->read_single($id);
+					$paths = array();
+					foreach ($values['path'] as $path){
+						$paths[] = array('value' => $path);
+					}
 					$values['report_date'] = ($values['report_date']) ? date($this->dateFormat, $values['report_date']) : '';
+					$values['paths'] = $paths;
 				}
 				$values['id'] = $id;
 			}
@@ -426,6 +432,7 @@
 					(
 					array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
 					array('key' => 'name', 'label' => lang('Benevnelse'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'category', 'label' => lang('Category'), 'sortable' => false, 'resizeable' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 				);
 
@@ -452,7 +459,7 @@
 					)) . ";
 						var parameters = " . json_encode(array('parameter' => array(array('name' => 'id',
 								'source' => 'id')))) . ";
-						setRelationsComponents(oArgs, parameters);
+						setRelationsComponents(oArgs);
 					"
 				);
 
@@ -579,7 +586,7 @@
 
 			if (!$location_filter)
 			{
-				$this->soadmin_entity = CreateObject('property.soadmin_entity');
+				//$this->soadmin_entity = CreateObject('property.soadmin_entity');
 				$entity_list = $this->soadmin_entity->read(array('allrows' => true));
 
 				$location_filter = array();
@@ -691,7 +698,44 @@
 			$search = phpgw::get_var('search');
 			$draw = phpgw::get_var('draw', 'int');
 			$only_related = phpgw::get_var('only_related', 'boolean');
+			$all_types = phpgw::get_var('all_types', 'boolean');
+			$entity_group_id = phpgw::get_var('entity_group_id');
+						
+			$entity_list = $this->soadmin_entity->read(array('allrows' => true));
+			$e_list = array();
+			foreach($entity_list as $entity)
+			{
+				$e_list[$entity['id']] = $entity['name'];
+			}
+				
+			if ($all_types)
+			{
+				$result = $this->bo->get_file_relations_componentes(array(
+					'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'allrows' => phpgw::get_var('length', 'int') == -1,
+					'file_id' => $file_id,
+					'entity_group_id' => $entity_group_id
+					));
 
+				$values = array();
+				foreach($result as $item)
+				{
+					$values[] = array(
+						'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $item['location_id'], 'id' => $item['id'])).'">'.$item['id'].'</a>',
+						'name' => $item['benevnelse'],
+						'category' => $e_list[$item['entity_id']].'::'.$item['category_name'],
+						'relate' => '<input value="'.$item['id'].'_'.$item['location_id'].'" class="components mychecks" type="checkbox" checked="checked"><input type="hidden" class="components_related" value="'.$item['id'].'_'.$item['location_id'].'">',
+					);
+				}
+
+				$result_data = array('results' => $values);
+				$result_data['total_records'] = $this->bo->total_records_componentes;
+				$result_data['draw'] = $draw;
+
+				return $this->jquery_results($result_data);
+			}
+		
             $soentity = CreateObject('property.soentity');
             $_components = $soentity->read( array(
                 'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -702,6 +746,7 @@
                 'location_id' => $location_id,
                 'filter_item' => array()
                 ));
+			$category = $this->soadmin_entity->get_single_category($location_id, true);
 
 			if ($file_id)
 			{
@@ -730,6 +775,7 @@
 				$values[] = array(
 					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
 					'name' => $item['benevnelse'],
+					'category' => $e_list[$item['entity_id']].'::'.$category['name'],
 					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>'.$hidden,
 				);
 			}
@@ -741,12 +787,12 @@
 
 			return $this->jquery_results($result_data);
 		}
-
-
+		
 		public function save_file_relations()
 		{
 			$receipt = array();
 
+			$all_types = phpgw::get_var('all_types', 'int');
 			$type_id = phpgw::get_var('type_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$file_id = phpgw::get_var('file_id', 'int');
@@ -756,12 +802,32 @@
 			$add = array_diff($items, $related);
 			$delete = array_diff($related, $items);
 
-			if (empty($location_id))
+			if ($all_types) 
 			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
-			}
+				if (count($add))
+				{
+					foreach ($add as $item) {
+						$values = explode('_', $item);
+						$result = $this->bo->save_file_relations( array($values[0]), array(), $values[1], $file_id );
+					}
+				}
 
-			$result = $this->bo->save_file_relations( $add, $delete, $location_id, $file_id );
+				if (count($delete))
+				{
+					foreach ($delete as $item) {
+						$values = explode('_', $item);
+						$result = $this->bo->save_file_relations( array(), array($values[0]), $values[1], $file_id );
+					}
+				}
+			} 
+			else {
+				
+				if (empty($location_id))
+				{
+					$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
+				}
+				$result = $this->bo->save_file_relations( $add, $delete, $location_id, $file_id );
+			}
 
 			if ($result)
 			{

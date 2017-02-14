@@ -36,7 +36,8 @@
 			'read_single' => true,
 			'save' => true,
 			'delete' => true,
-			'get_file_relations' => true
+			'get_file_relations' => true,
+			'get_file_relations_componentes' => true
 		);
 		
 		public function __construct()
@@ -64,6 +65,14 @@
 		function get_file_relations( $file_id, $location_id )
 		{
 			$values = $this->so->get_file_relations($file_id, $location_id);
+
+			return $values;
+		}
+		
+		function get_file_relations_componentes( $data )
+		{
+			$values = $this->so->get_file_relations_componentes($data);
+			$this->total_records_componentes = $this->so->total_records_componentes;
 
 			return $values;
 		}
