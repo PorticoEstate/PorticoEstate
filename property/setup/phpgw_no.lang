@@ -2076,3 +2076,24 @@ missing recipient for order %1	property	no	Mangler mottaker for ordre %1
 export	property	no	Eksport
 simplified	property	no	Forenklet
 implicitly from project	property	no	Implisitt fra prosjekt
+generic import	property	no	Generisk import
+import components	property	no	Importer FDV-dokumentasjon
+relations	property	no	Koblinger
+components	property	no	Komponenter
+locations	property	no	Lokasjoner
+choose profile	property	no	Velg profil
+attributes template	property	no	Mal for feltmapping
+preview	property	no	Forhåndsvis
+start upload	property	no	Start opplasting
+cancel upload	property	no	Kanseller opplasting
+add files	property	no	Legg til filer
+start import	property	no	Start import
+choose attribute	property	no	Velg datafelt
+choose attribute name for component id	property	no	Velg datafelt som skal representere komponent Id
+number files	property	no	Antall filer
+without components	property	no	Uten komponenter
+with components	property	no	Med komponenter
+uncompressed	property	no	Ukomprimert
+compressed	property	no	Komprimert
+file name	property	no	Filnavn
+row	property	no	Rad
