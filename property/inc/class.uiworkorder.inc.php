@@ -961,11 +961,20 @@
 				$this->_handle_files($values);
 
 				// start approval
+				if (!is_object($GLOBALS['phpgw']->send))
+				{
+					$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
+				}
 
 				$_budget_amount = $this->bo->get_budget_amount($id);
 
 				if (isset($values['approval']) && $values['approval'] && $config->config_data['workorder_approval'])
 				{
+
+					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
+					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+
+
 					$approval_level = !empty($config->config_data['approval_level']) ? $config->config_data['approval_level'] : 'order';
 
 					switch ($approval_level)
@@ -976,43 +985,87 @@
 							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $approval_menuaction,
 									'id' => $values['project_id']), false, true) . '">' . lang('project %1 needs approval', $values['project_id']) . '</a>';
 
-
-
 							//already approved?
 
 							$pending_action = CreateObject('property.sopending_action');
 
-
-						foreach ($values['approval'] as $_account_id => $_address)
-						{
-							$action_params_approved = array
-							(
-								'appname' => 'property',
-								'location' => '.project',
-								'id' => $values['project_id'],
-								'responsible' => $_account_id,
-								'responsible_type' => 'user',
-								'action' => 'approval',
-								'remark' => '',
-								'deadline' => '',
-								'allrows' => false,
-								'closed' => true
-							);
-
-							$approvals = $pending_action->get_pending_action($action_params);
-
-							if($approvals)
+							foreach ($values['approval'] as $_account_id => $_address)
 							{
+								$action_params_approved = array
+								(
+									'appname' => 'property',
+									'location' => '.project',
+									'id' => $values['project_id'],
+									'responsible' => $_account_id,
+									'responsible_type' => 'user',
+									'action' => 'approval',
+									'remark' => '',
+									'deadline' => '',
+									'closed' => true
+								);
 
-							}
-
-						}
+								$approvals = $pending_action->get_pending_action($action_params_approved);
 
 
-							if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
-							{
-								$_project_status = $config->config_data['project_approval_status'];
-								createObject('property.soproject')->set_status($values['project_id'],$_project_status);
+								if(!$approvals)
+								{
+									$_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
+
+									$pending_action->set_pending_action($action_params_approved);
+									if (isset($config->config_data['project_approval_status']) && $config->config_data['project_approval_status'])
+									{
+										$_project_status = $config->config_data['project_approval_status'];
+										createObject('property.soproject')->set_status($values['project_id'],$_project_status);
+									}
+
+									$prefs = $this->bocommon->create_preferences('property', $_account_id);
+									if (!empty($prefs['email']))
+									{
+										$_address = $prefs['email'];
+									}
+									else
+									{
+										$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+										$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
+									}
+
+									try
+									{
+										CreateObject('property.historylog', 'project')->add('AP', $values['project_id'], $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+
+										$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+										if ($rcpt)
+										{
+											phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+										}
+									}
+									catch (Exception $exc)
+									{
+										phpgwapi_cache::message_set($exc->getMessage(),'error');
+									}
+
+								}
+								else // implicite approved
+								{
+										$action_params = array(
+											'appname' => 'property',
+											'location' => '.project.workorder',
+											'id' => $id,
+											'responsible' => $_account_id,
+											'responsible_type' => 'user',
+											'action' => 'approval',
+											'remark' => '',
+											'deadline' => ''
+										);
+
+										if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+										{
+											execMethod('property.sopending_action.set_pending_action', $action_params);
+										}
+										execMethod('property.sopending_action.close_pending_action', $action_params);
+										$lang_implicitly = lang('implicitly from project');
+										$historylog->add('OA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . ", {$lang_implicitly}::{$_budget_amount}");
+								}
 							}
 
 							$_orders = $this->bo->get_order_list($values['project_id']);
@@ -1026,19 +1079,11 @@
 							break;
 					}
 
-					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
-					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
-
-
 					if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
 					{
 						$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
 					}
 
-					if (!is_object($GLOBALS['phpgw']->send))
-					{
-						$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
-					}
 
 					$action_params = array(
 						'appname' => 'property',

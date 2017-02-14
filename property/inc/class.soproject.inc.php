@@ -3424,9 +3424,17 @@
 					'responsible_type' => 'user',
 					'action' => 'approval',
 					'remark' => '',
-					'deadline' => ''
-				);
+					'deadline' => '',
+					'closed' => true
 
+				);
+				//check for approved
+				if(execMethod('property.sopending_action.get_pending_action', $action_params))
+				{
+					continue;
+				}
+
+				unset($action_params['closed']);
 				//approval_substitute
 				if(!execMethod('property.sopending_action.get_pending_action', $action_params))
 				{
