@@ -8,6 +8,7 @@
 			if(typeof(Storage)!=="undefined")
 			{
 				sessionStorage.cached_menu_tree_data = '';
+				localStorage.clear();
 		 	}
 			var $tree = $('#navbar');
 			var tree = $tree.tree('getTree');
@@ -17,6 +18,7 @@
 					$tree.tree('closeNode', node, true);
 				 }
 			);
+
 			var sUrl = phpGWLink('logout.php');
 			window.open(sUrl,'_self');
 		}
