@@ -238,130 +238,45 @@
 
 		protected function get_breg_orgs( $fodselsnr )
 		{
-			$breg_conn = pg_connect("host=" . $GLOBALS['phpgw_domain']['default']['db_host'] . " port=5432 dbname=breg user=" . $GLOBALS['phpgw_domain']['default']['db_user'] . " password=" . $GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
-			$sql = "SELECT distinct orgnr FROM breg.personcurrent WHERE fodselsnr ='" . $fodselsnr . "'";
-			$results = pg_query($breg_conn, $sql);
-			$orgs = pg_fetch_all($results);
-			print_r($sql);
-			print_r($orgs);
-			pg_close($breg_conn);
-			return $orgs;
-		}
+			$db = createObject('phpgwapi.db', null, null, true);
 
-		protected function get_user_orgnr_from_auth_header()
-		{
-			$config = CreateObject('phpgwapi.config', 'bookingfrontend');
-			$config->read();
-			if ($config->config_data['authentication_method'] === 'MinId.php')
-			{
-				$ipdp = sha1($_SERVER['HTTP_UID']);
-				$bregorgs = $this->get_breg_orgs($ipdp);
-				$myorgnr = array();
-				if ($bregorgs == array())
-				{
-					$external_user = (object)'ciao';
-					$external_user->login = '000000000';
-				}
-				else
-				{
-					foreach ($bregorgs as $org)
-					{
-						$myorgnr[] = $org['orgnr'];
-					}
-					if (count($myorgnr) > 1)
-					{
-						$external_user = (object)'ciao';
-						$external_user->login = $myorgnr[0];
-						$orgs = array();
-						foreach ($myorgnr as $org)
-						{
-							$orgs[] = array('orgnumber' => $org, 'orgname' => $this->get_orgname_from_db($org));
-						}
-						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, $orgs);
-					}
-					elseif (count($myorgnr) > 0)
-					{
-						phpgwapi_cache::session_set($this->get_module(), self::ORGARRAY_SESSION_KEY, NULL);
-						$external_user = (object)'ciao';
-						$external_user->login = $myorgnr[0];
-					}
-				}
-			}
-			else
-			{
+			$db->Host = $GLOBALS['phpgw_domain']['default']['db_host'];
+			$db->Port = '5432';
+			$db->Type = 'postgres';
+			$db->Database = 'breg';
+			$db->User = $GLOBALS['phpgw_domain']['default']['db_user'];
+			$db->Password = $GLOBALS['phpgw_domain']['default']['db_pass'];
 
-				$header_key = isset($config->config_data['header_key']) && $config->config_data['header_key'] ? $config->config_data['header_key'] : 'Osso-User-Dn';
-				$header_regular_expression = isset($config->config_data['header_regular_expression']) && $config->config_data['header_regular_expression'] ? $config->config_data['header_regular_expression'] : '/^cn=(.*),cn=users.*$/';
-
-				$headers = getallheaders();
-
-				if (isset($config->config_data['debug']) && $config->config_data['debug'])
-				{
-					$this->debug = true;
-					echo 'headers:<br>';
-					_debug_array($headers);
-				}
-
-				if (isset($headers[$header_key]) && $headers[$header_key])
-				{
-					$matches = array();
-					preg_match_all($header_regular_expression, $headers[$header_key], $matches);
-					$userid = $matches[1][0];
-
-					if ($this->debug)
-					{
-						echo 'matches:<br>';
-						_debug_array($matches);
-					}
-				}
-
-				$options = array();
-				$options['soap_version'] = SOAP_1_1;
-				$options['location'] = isset($config->config_data['soap_location']) && $config->config_data['soap_location'] ? $config->config_data['soap_location'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1';
-				$options['uri'] = isset($config->config_data['soap_uri']) && $config->config_data['soap_uri'] ? $config->config_data['soap_uri'] : '';// 'http://soat1a.srv.bergenkom.no';
-				$options['trace'] = 1;
-
-				if (isset($config->config_data['soap_proxy_host']) && $config->config_data['soap_proxy_host'])
-				{
-					$options['proxy_host'] = $config->config_data['soap_proxy_host'];
-				}
-
-				if (isset($config->config_data['soap_proxy_port']) && $config->config_data['soap_proxy_port'])
-				{
-					$options['proxy_port'] = $config->config_data['soap_proxy_port'];
-				}
-				$options['encoding'] = isset($config->config_data['soap_encoding']) && $config->config_data['soap_encoding'] ? $config->config_data['soap_encoding'] : 'UTF-8';
-				$options['login'] = isset($config->config_data['soap_login']) && $config->config_data['soap_login'] ? $config->config_data['soap_login'] : '';
-				$options['password'] = isset($config->config_data['soap_password']) && $config->config_data['soap_password'] ? $config->config_data['soap_password'] : '';
-
-				$wsdl = isset($config->config_data['soap_wsdl']) && $config->config_data['soap_wsdl'] ? $config->config_data['soap_wsdl'] : '';// 'http://soat1a.srv.bergenkom.no:8888/gateway/services/BrukerService-v1?wsdl';
-
-				$authentication_method = isset($config->config_data['authentication_method']) && $config->config_data['authentication_method'] ? $config->config_data['authentication_method'] : '';
-
-				require_once PHPGW_SERVER_ROOT . "/bookingfrontend/inc/custom/default/{$authentication_method}";
-
-				$external_user = new booking_external_user($wsdl, $options, $userid, $this->debug);
-				// test values
-				//$external_user = (object) 'ciao'; $external_user->login = 994239929;
-			}
-
-			if ($this->debug)
-			{
-				echo 'External user:<br>';
-				_debug_array($external_user);
-			}
 			try
 			{
-				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
+				$db->connect();
+				$this->connected = true;
 			}
-			catch (sfValidatorError $e)
+			catch (Exception $e)
 			{
-				if ($this->debug)
-				{
-					echo $e->getMessage();
-					die();
-				}
-				return null;
+				$status = lang('unable_to_connect_to_database');
 			}
+
+			$sql = "SELECT DISTINCT orgnr FROM personcurrent WHERE fodselsnr ='{$fodselsnr}'";
+			$results = array();
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query($sql, __LINE__, __FILE__);
+			while ($db->next_record())
+			{
+				$results[] = $db->f('orgnr', true);
+			}
+			return $results;
 		}
+
+      protected function get_breg_orgs_old($fodselsnr) {
+            $breg_conn = pg_connect("host=".$GLOBALS['phpgw_domain']['default']['db_host']." port=5432 dbname=breg user=".$GLOBALS['phpgw_domain']['default']['db_user']." password=".$GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
+            $sql = "SELECT distinct orgnr FROM breg.personcurrent WHERE fodselsnr ='".$fodselsnr."'";
+            $results = pg_query($breg_conn, $sql);
+            $orgs = pg_fetch_all($results);
+            print_r($sql);
+            print_r($orgs);
+            pg_close($breg_conn);
+            return $orgs;
+        }
+
 	}
