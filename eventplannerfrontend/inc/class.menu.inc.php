@@ -79,6 +79,25 @@
 				);
 			}
 	
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['preferences']))
+			{
+				$menus['preferences'] = array
+					(
+					array(
+						'text' => $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.aclprefs',
+							'acl_app' => 'eventplanner'))
+					)
+				);
+
+				$menus['toolbar'][] = array
+					(
+					'text' => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
+					'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'eventplanner')),
+					'image' => array('eventplanner', 'preferences')
+				);
+			}
+
 			$menus['navigation'] = array(
 				'application' => array(
 					'text' => lang('application'),

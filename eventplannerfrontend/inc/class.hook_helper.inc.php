@@ -195,7 +195,7 @@ HTML;
 		/**
 		* hook to add account
 		*
-		* this function is a wrapper function for emailadmin
+		* this function is a wrapper function for eventplanner
 		*
 		* @param _hookValues contains the hook values as array
 		* @returns nothing

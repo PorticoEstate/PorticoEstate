@@ -7,7 +7,7 @@
 	<fieldset>
 		<div class="pure-control-group">
 			<label>{lang_username}</label>
-			<input name="r_reg[loginid]" value="{value_username}" required="required" type="email">
+			<input name="r_reg[loginid]" value="{value_username}" required="required" type="{input_type}">
 		</div>
 
 		<div class="pure-controls">
