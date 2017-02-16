@@ -647,65 +647,6 @@
 				$values['p'][$p_entity_id]['p_num'] = phpgw::get_var('p_num');
 			}
 
-			if ($origin == '.ticket' && $origin_id && !$values['descr'])
-			{
-				$boticket = CreateObject('property.botts');
-				$ticket = $boticket->read_single($origin_id);
-				$values['descr'] = $ticket['details'];
-				$values['title'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
-				$ticket_notes = $boticket->read_additional_notes($origin_id);
-				$i = count($ticket_notes) - 1;
-				if (isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
-				{
-					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
-				}
-
-				$values['location_data'] = $ticket['location_data'];
-			}
-			else if (preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
-			{
-				$_origin = explode('.', $origin);
-				$_boentity = CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
-				$_entity = $_boentity->read_single(array(
-					'entity_id' => $_origin[2],
-					'cat_id' => $_origin[3],
-					'id' => $origin_id,
-					'view' => true));
-				$values['location_data'] = $_entity['location_data'];
-				unset($_origin);
-				unset($_boentity);
-				unset($_entity);
-			}
-			else if ($origin == '.project.request' && $origin_id)
-			{
-				$_borequest = CreateObject('property.borequest', false);
-				$_request = $_borequest->read_single($origin_id, array(), true);
-				$values['descr'] = $_request['descr'];
-				$values['title'] = $_request['title'];
-				$values['location_data'] = $_request['location_data'];
-				unset($_origin);
-				unset($_borequest);
-				unset($_request);
-			}
-
-			if (isset($values['origin']) && $values['origin'])
-			{
-				$origin = $values['origin'];
-				$origin_id = $values['origin_id'];
-			}
-
-			$interlink = & $this->bo->interlink;
-			if (isset($origin) && $origin)
-			{
-				$values['origin_data'][0]['location'] = $origin;
-				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
-				$values['origin_data'][0]['data'][] = array
-					(
-					'id' => $origin_id,
-					'link' => $interlink->get_relation_link(array(
-						'location' => $origin), $origin_id),
-				);
-			}
 
 			if ($project_id && !isset($values['project_id']))
 			{
@@ -1364,6 +1305,66 @@
 			$origin = phpgw::get_var('origin');
 			$origin_id = phpgw::get_var('origin_id', 'int');
 
+			if ($origin == '.ticket' && $origin_id && !$values['descr'])
+			{
+				$boticket = CreateObject('property.botts');
+				$ticket = $boticket->read_single($origin_id);
+				$values['descr'] = $ticket['details'];
+				$values['title'] = $ticket['subject'] ? $ticket['subject'] : $ticket['category_name'];
+				$ticket_notes = $boticket->read_additional_notes($origin_id);
+				$i = count($ticket_notes) - 1;
+				if (isset($ticket_notes[$i]['value_note']) && $ticket_notes[$i]['value_note'])
+				{
+					$values['descr'] .= ": " . $ticket_notes[$i]['value_note'];
+				}
+
+				$values['location_data'] = $ticket['location_data'];
+			}
+			else if (preg_match("/(^.entity.|^.catch.)/i", $origin) && $origin_id)
+			{
+				$_origin = explode('.', $origin);
+				$_boentity = CreateObject('property.boentity', false, $_origin[1], $_origin[2], $_origin[3]);
+				$_entity = $_boentity->read_single(array(
+					'entity_id' => $_origin[2],
+					'cat_id' => $_origin[3],
+					'id' => $origin_id,
+					'view' => true));
+				$values['location_data'] = $_entity['location_data'];
+				unset($_origin);
+				unset($_boentity);
+				unset($_entity);
+			}
+			else if ($origin == '.project.request' && $origin_id)
+			{
+				$_borequest = CreateObject('property.borequest', false);
+				$_request = $_borequest->read_single($origin_id, array(), true);
+				$values['descr'] = $_request['descr'];
+				$values['title'] = $_request['title'];
+				$values['location_data'] = $_request['location_data'];
+				unset($_origin);
+				unset($_borequest);
+				unset($_request);
+			}
+
+			if (isset($values['origin']) && $values['origin'])
+			{
+				$origin = $values['origin'];
+				$origin_id = $values['origin_id'];
+			}
+
+			$interlink = & $this->bo->interlink;
+			if (isset($origin) && $origin)
+			{
+				$values['origin_data'][0]['location'] = $origin;
+				$values['origin_data'][0]['descr'] = $interlink->get_location_name($origin);
+				$values['origin_data'][0]['data'][] = array
+					(
+					'id' => $origin_id,
+					'link' => $interlink->get_relation_link(array(
+						'location' => $origin), $origin_id),
+				);
+			}
+
 			if ($project_id && !isset($values['project_id']))
 			{
 				$values['project_id'] = $project_id;
@@ -1521,7 +1522,7 @@
 				$location_template_type = 'form';
 				$_location_data = array();
 
-				if (!$values['location_data'] && $origin_id)
+				if (!$values['location_data'] && ($values['location_code'] || $values['location']))
 				{
 					$location_code = isset($values['location_code']) && $values['location_code'] ? $values['location_code'] : implode("-", $values['location']);
 					$values['extra']['view'] = true;
@@ -2367,6 +2368,45 @@
 			{
 				$accumulated_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
 			}
+
+			$_origin = array();
+			if (isset($values['origin_data']) && $values['origin_data'])
+			{
+				foreach ($values['origin_data'] as $__origin)
+				{
+					foreach ($__origin['data'] as $_origin_data)
+					{
+						$_origin[] = array
+							(
+							'url' => "<a href='{$_origin_data['link']}'>{$_origin_data['id']} </a>",
+							'type' => $__origin['descr'],
+							'title' => $_origin_data['title'],
+							'status' => $_origin_data['statustext'],
+						);
+					}
+				}
+			}
+
+			$origin_def = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'type', 'label' => lang('type'), 'sortable' => true),
+				array('key' => 'title', 'label' => lang('title'), 'sortable' => false),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => false)
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_7',
+				'requestUrl' => "''",
+				'data' => json_encode($_origin),
+				'ColumnDefs' => $origin_def,
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
 
 			$data = array(
 				'datatable_def' => $datatable_def,
