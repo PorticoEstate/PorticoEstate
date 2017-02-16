@@ -37,6 +37,7 @@
 
 		var $public_functions = array
 			(
+			'report' => true,
 			'index' => true,
 			'view' => true,
 			'add' => true,
@@ -1177,6 +1178,59 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+		
+		function report()
+		{
+			if (!$this->acl_read)
+			{
+				$this->bocommon->no_access();
+				return;
+			}
+
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
+			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			
+			$filters = $this->_get_filters();
+
+			$list_categories = $this->cats->formatted_xslt_list(array('format' => 'filter',
+				'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
+
+
+			$_categories = array();
+			foreach ($list_categories['cat_list'] as $_category)
+			{
+				$_categories[$_category['cat_id']] = $_category['name'];
+			}
+			
+			$list_status = $this->bo->filter(array('format' => '', 'filter' => $this->status_id,
+				'default' => 'O'));
+
+			if (isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
+			{
+				array_unshift($list_status, array('id' => 'O2', 'name' => $this->bo->config->config_data['tts_lang_open']));
+			}
+			$default_value = array('id' => '', 'name' => lang('Open'));
+			array_unshift($list_status, $default_value);
+
+			$_status = array();
+			foreach ($list_status as $_item)
+			{
+				$_status[$_item['id']] = $_item['name'];
+			}
+			
+			$appname = lang('helpdesk');
+			$function_msg = lang('Report ticket');
+			
+			self::add_javascript('property', 'portico', 'utils.js');
+
+			$data = array(
+				'categories' => $_categories,
+				'status' => $_status
+			);
+			
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			self::render_template_xsl(array('tts_report'), $data);
 		}
 		
 		function add()
