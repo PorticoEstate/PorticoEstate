@@ -489,20 +489,18 @@
 							<fieldset>
 								<xsl:choose>
 									<xsl:when test="mode='edit'">
-										<tr>
+										<div class="pure-control-group">
 											<xsl:variable name="lang_entity_group">
 												<xsl:value-of select="php:function('lang', 'entity group')"/>
 											</xsl:variable>
-											<td>
+											<label>
 												<xsl:value-of select="$lang_entity_group"/>
-											</td>
-											<td valign="top">
-												<select name="values[entity_group_id]" title="$lang_entity_group">
-													<xsl:apply-templates select="entity_group_list/options"/>
-												</select>
-												<xsl:value-of select="entity_group_name"/>
-											</td>
-										</tr>
+											</label>
+											<select name="values[entity_group_id]" title="$lang_entity_group">
+												<xsl:apply-templates select="entity_group_list/options"/>
+											</select>
+											<xsl:value-of select="entity_group_name"/>
+										</div>
 
 										<xsl:choose>
 											<xsl:when test="org_unit='1'">
@@ -741,8 +739,8 @@
 					</div>
 				</xsl:for-each>
 
-			<xsl:choose>
-				<xsl:when test="value_id!='' and documents =1">		
+				<xsl:choose>
+					<xsl:when test="value_id!='' and documents =1">
 						<div id="document">
 							<div class="pure-control-group">
 								<label>
@@ -753,21 +751,21 @@
 								</select>
 							</div>
 									
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_7'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl' />
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-											<xsl:with-param name="tabletools" select ='tabletools' />
-											<xsl:with-param name="data" select ='data' />
-											<xsl:with-param name="config" select ='config' />
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_7'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
 						</div>
-				</xsl:when>
-			</xsl:choose>	
+					</xsl:when>
+				</xsl:choose>
 
 				<xsl:choose>
 					<xsl:when test="value_id !='' and enable_bulk = 0">
