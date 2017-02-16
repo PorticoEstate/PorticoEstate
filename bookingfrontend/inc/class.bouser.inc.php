@@ -235,48 +235,4 @@
 				return null;
 			}
 		}
-
-		protected function get_breg_orgs( $fodselsnr )
-		{
-			$db = createObject('phpgwapi.db', null, null, true);
-
-			$db->Host = $GLOBALS['phpgw_domain']['default']['db_host'];
-			$db->Port = '5432';
-			$db->Type = 'postgres';
-			$db->Database = 'breg';
-			$db->User = $GLOBALS['phpgw_domain']['default']['db_user'];
-			$db->Password = $GLOBALS['phpgw_domain']['default']['db_pass'];
-
-			try
-			{
-				$db->connect();
-				$this->connected = true;
-			}
-			catch (Exception $e)
-			{
-				$status = lang('unable_to_connect_to_database');
-			}
-
-			$sql = "SELECT DISTINCT orgnr FROM personcurrent WHERE fodselsnr ='{$fodselsnr}'";
-			$results = array();
-			$db = & $GLOBALS['phpgw']->db;
-			$db->query($sql, __LINE__, __FILE__);
-			while ($db->next_record())
-			{
-				$results[] = $db->f('orgnr', true);
-			}
-			return $results;
-		}
-
-      protected function get_breg_orgs_old($fodselsnr) {
-            $breg_conn = pg_connect("host=".$GLOBALS['phpgw_domain']['default']['db_host']." port=5432 dbname=breg user=".$GLOBALS['phpgw_domain']['default']['db_user']." password=".$GLOBALS['phpgw_domain']['default']['db_pass']) or die('connection failed');
-            $sql = "SELECT distinct orgnr FROM breg.personcurrent WHERE fodselsnr ='".$fodselsnr."'";
-            $results = pg_query($breg_conn, $sql);
-            $orgs = pg_fetch_all($results);
-            print_r($sql);
-            print_r($orgs);
-            pg_close($breg_conn);
-            return $orgs;
-        }
-
 	}
