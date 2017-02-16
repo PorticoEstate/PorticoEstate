@@ -70,10 +70,10 @@ JS;
 	}
 
 	$javascripts = array();
-	//FIXME: To consider...
-	/*
-	$javascripts[] = "/phpgwapi/templates/stavanger/js/minid.js";
-*/
+	
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/minid.js";
+
+//FIXME: To consider...
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
 
