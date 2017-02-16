@@ -1339,7 +1339,7 @@
 			  $this->db->query("UPDATE fm_project set charge_tenant = 1 WHERE id =" . $workorder['project_id']);
 			  }
 			 */
-
+/*
 			if (is_array($workorder['origin']))
 			{
 				if ($workorder['origin'][0]['data'][0]['id'])
@@ -1348,6 +1348,23 @@
 						(
 						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $workorder['origin'][0]['location']),
 						'location1_item_id' => $workorder['origin'][0]['data'][0]['id'],
+						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
+						'location2_item_id' => $id,
+						'account_id' => $this->account
+					);
+
+					$this->interlink->add($interlink_data, $this->db);
+				}
+			}
+*/
+			if (isset($workorder['origin']))
+			{
+				if ($workorder['origin_id'])
+				{
+					$interlink_data = array
+						(
+						'location1_id' => $GLOBALS['phpgw']->locations->get_id('property', $workorder['origin']),
+						'location1_item_id' => $workorder['origin_id'],
 						'location2_id' => $GLOBALS['phpgw']->locations->get_id('property', '.project.workorder'),
 						'location2_item_id' => $id,
 						'account_id' => $this->account

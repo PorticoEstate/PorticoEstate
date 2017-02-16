@@ -345,25 +345,6 @@
 						</label>
 						<xsl:value-of select="value_other_branch"/>
 					</div>
-					<xsl:for-each select="value_origin">
-						<div class="pure-control-group">
-							<label for="name">
-								<xsl:value-of select="descr"/>
-							</label>
-							<table>
-								<xsl:for-each select="data">
-									<tr>
-										<td class="th_text" align="left">
-											<a href="{link}" title="{statustext}">
-												<xsl:value-of select="id"/>
-											</a>
-											<xsl:text> </xsl:text>
-										</td>
-									</tr>
-								</xsl:for-each>
-							</table>
-						</div>
-					</xsl:for-each>
 					<xsl:choose>
 						<xsl:when test="value_workorder_id!=''">
 							<div class="pure-control-group">
@@ -386,7 +367,47 @@
 									</div>
 								</xsl:when>
 							</xsl:choose>
+							<div class="pure-control-group">
+								<label for="name">
+									<xsl:value-of select="php:function('lang', 'related')"/>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_7'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl' />
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+												<xsl:with-param name="tabletools" select ='tabletools' />
+												<xsl:with-param name="data" select ='data' />
+												<xsl:with-param name="config" select ='config' />
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
 						</xsl:when>
+						<xsl:otherwise>
+							<xsl:for-each select="value_origin">
+								<div class="pure-control-group">
+									<label for="name">
+										<xsl:value-of select="descr"/>
+									</label>
+									<table class="pure-custom">
+										<xsl:for-each select="data">
+											<tr>
+												<td class="th_text" align="left">
+													<a href="{link}" title="{statustext}">
+														<xsl:value-of select="id"/>
+													</a>
+													<xsl:text> </xsl:text>
+												</td>
+											</tr>
+										</xsl:for-each>
+									</table>
+								</div>
+							</xsl:for-each>
+						</xsl:otherwise>
 					</xsl:choose>
 					<div class="pure-control-group">
 						<label for="name">
