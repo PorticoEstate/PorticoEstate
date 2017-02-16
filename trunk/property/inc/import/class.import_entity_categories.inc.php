@@ -215,8 +215,9 @@
 			
 			while ($this->db->next_record())
 			{
-				$building_part = explode(' ', trim($this->db->f('name')))[0];
-					
+				$name_arr = explode(' ', trim($this->db->f('name')));
+				$building_part = $name_arr[0];
+
 				$values[$building_part] = array
 					(
 					'id' => $this->db->f('id'),
