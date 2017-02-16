@@ -603,6 +603,8 @@
 
 			$events = execMethod('property.soevent.read_at_location', $event_criteria);
 			$workorder['event_id'] = $events ? $events[0]['id'] : '';
+			$workorder['origin_data'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
+			$workorder['target'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'target');
 
 			return $workorder;
 		}
