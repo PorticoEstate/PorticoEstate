@@ -273,6 +273,7 @@ HTML;
 			$this->template->set_var('lang_password', lang('Password'));
 			$this->template->set_var('lang_reenter_password', lang('Re-enter password'));
 			$this->template->set_var('lang_submit', lang('Submit'));
+			$this->template->set_var('lang_error_match', lang('The two passwords are not the same'));
 
 			if (!$show_password_prompt)
 			{
@@ -380,6 +381,7 @@ HTML;
 			$this->template->set_var('lang_enter_password', lang('Enter your new password'));
 			$this->template->set_var('lang_reenter_password', lang('Re-enter your password'));
 			$this->template->set_var('lang_change', lang('Change'));
+			$this->template->set_var('lang_error_match', lang('The two passwords are not the same'));
 
 			$this->template->pfp('out', 'form');
 			$this->footer();
