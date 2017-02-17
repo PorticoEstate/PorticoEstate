@@ -1174,6 +1174,8 @@
 							{
 								$('td', nRow).addClass('priority' + aData['priority']);
 							}
+							//In case the row is folded as result of responsive behaviour
+							$('td', nRow).parents('tr').addClass('context-menu');
                 },
 				fnDrawCallback: function () {
 					oTable.makeEditable({
@@ -1250,8 +1252,8 @@
 			if(InitContextMenu === true)
 			{
 				$('#datatable-container').contextMenu({
-					  selector: 'tr',
-					   items: contextMenuItems,
+					selector: '.context-menu',
+					items: contextMenuItems,
 				});
 			}
 
@@ -1350,7 +1352,12 @@
 				 var aTrs = oTable.fnGetNodes();
 				 for ( var i=0 ; i < aTrs.length ; i++ )
 				 {
-					 if ( $(aTrs[i]).hasClass('selected') )
+					if ( $(aTrs[i]).hasClass('context-menu-active'))
+					 {
+							aReturn.push( i );
+							return aReturn;
+					 }
+					if ( $(aTrs[i]).hasClass('selected') )
 					 {
 						 aReturn.push( i );
 					 }
