@@ -1350,7 +1350,12 @@
 				 var aTrs = oTable.fnGetNodes();
 				 for ( var i=0 ; i < aTrs.length ; i++ )
 				 {
-					 if ( $(aTrs[i]).hasClass('selected') )
+					if ( $(aTrs[i]).hasClass('context-menu-active'))
+					 {
+							aReturn.push( i );
+							return aReturn;
+					 }
+					if ( $(aTrs[i]).hasClass('selected') )
 					 {
 						 aReturn.push( i );
 					 }
