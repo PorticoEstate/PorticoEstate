@@ -2097,3 +2097,12 @@ uncompressed	property	no	Ukomprimert
 compressed	property	no	Komprimert
 file name	property	no	Filnavn
 row	property	no	Rad
+download preview components	property	no	Last ned forhåndsvisning av komponenter
+new attributes	property	no	Nye attributter
+new categories	property	no	Nye kategorier
+save profile	property	no	Lagre profil
+columns and attributes	property	no	kolonner og attributter
+attribute name for component id	property	no	Attributtnavn for komponent id
+category template	property	no	Kategori mal
+profile	property	no	Profil
+new attribute	property	no	Ny attributt
