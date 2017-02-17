@@ -350,14 +350,14 @@
 			$j = 0;
 			while ($this->db->next_record())
 			{
-				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
 
 				foreach ($attributes as $attrib_id => $field)
 				{
-					if (!$value = $jsondata[$field['name']])
+					if (!$value = $this->db->stripslashes($jsondata[$field['name']]))
 					{
 						$value = $this->db->f($field['name'], true);
 					}
@@ -1056,12 +1056,12 @@
 //				$xmldata = $this->db->f('xml_representation');
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
-				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				foreach ($cols_return as $key => $field)
 				{
 			//		if (!$value = $xml->getElementsByTagName($field)->item(0)->nodeValue)
-					if (!$value = $jsondata[$field])
+					if (!$value = $this->db->stripslashes($jsondata[$field]))
 					{
 						$value = $this->db->f($field, true);
 					}
@@ -2119,14 +2119,14 @@
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
 
-				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
 //						$attr['value'] = $xml->getElementsByTagName($attr['column_name'])->item(0)->nodeValue;
-						$attr['value'] = $jsondata[$attr['column_name']];
+						$attr['value'] = $this->db->stripslashes($jsondata[$attr['column_name']]);
 					}
 				}
 			}
@@ -2621,8 +2621,8 @@
 //							$xml = new DOMDocument('1.0', 'utf-8');
 //							$xml->loadXML($xmldata);
 //							$old_value = $xml->getElementsByTagName($entry['name'])->item(0)->nodeValue;
-							$jsondata = json_decode($this->db->f('json_representation', true), true);
-							$old_value = $jsondata[$entry['name']];
+							$jsondata = json_decode($this->db->f('json_representation'), true);
+							$old_value = $this->db->stripslashes($jsondata[$entry['name']]);
 
 						}
 
