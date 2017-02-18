@@ -2345,7 +2345,7 @@
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-				$values['id'] = $this->_save_eav($values_insert, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}");
+				$values['id'] = $this->_save_eav($values_insert, $location_id);
 			}
 			else
 			{
@@ -2398,35 +2398,14 @@
 			return $receipt;
 		}
 
-		protected function _save_eav( $data = array(), $location_id, $location_name )
+		public function _save_eav( $data = array(), $location_id )
 		{
 			$location_id = (int)$location_id;
-			$location_name = str_replace('.', '_', $location_name);
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$type = $this->db->f('type');
 			$id = $this->db->next_id('fm_bim_item', array('type' => $type));
-
-//			phpgw::import_class('phpgwapi.xmlhelper');
-//			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
-//			$doc = new DOMDocument;
-//			$doc->preserveWhiteSpace = true;
-//			$doc->loadXML($xmldata);
-//			$domElement = $doc->getElementsByTagName($location_name)->item(0);
-//			$domAttribute = $doc->createAttribute('appname');
-//			$domAttribute->value = $this->type_app[$this->type];
-//
-//			// Don't forget to append it to the element
-//			$domElement->appendChild($domAttribute);
-//
-//			// Append it to the document itself
-//			$doc->appendChild($domElement);
-//			$doc->formatOutput = true;
-//
-//			$xml = $doc->saveXML();
-
-			//	_debug_array($xml);
 
 			if (function_exists('com_create_guid') === true)
 			{
@@ -2443,7 +2422,6 @@
 				'location_id' => $location_id,
 				'type' => $type,
 				'guid' => $guid,
-//				'xml_representation' => $this->db->db_addslashes($xml),
 				'json_representation' => json_encode($data),
 				'model' => 0,
 				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',

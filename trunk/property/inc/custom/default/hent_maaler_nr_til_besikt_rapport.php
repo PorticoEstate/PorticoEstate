@@ -27,7 +27,13 @@
 
 		function update_data( $values, $values_attribute = array() )
 		{
-			$sql = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='{$values['location_code']}'";
+
+			$location_id_maaler = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.11');
+
+//			$sql = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='{$values['location_code']}'";
+			$sql = "SELECT json_representation->>'maaler_nr' as maaler_nr FROM fm_bim_item"
+				. " WHERE location_id = {$location_id_maaler}"
+				. " AND location_code='{$values['location_code']}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$maaler_nr = $this->db->f('maaler_nr');
@@ -36,12 +42,21 @@
 			{
 				if ($maaler_nr)
 				{
-					$sql = "UPDATE fm_entity_2_17 SET maaler_nr= '{$maaler_nr}' WHERE location_code='{$values['location_code']}'";
+					$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
+//					$sql = "UPDATE fm_entity_2_17 SET maaler_nr= '{$maaler_nr}' WHERE location_code='{$values['location_code']}'";
+					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{maaler_nr}', '\"{$maaler_nr}\"', true)"
+						. " WHERE location_id = {$location_id_rapport}"
+						. " AND location_code='{$values['location_code']}'"
+						. " AND json_representation->>'maaler_nr' IS NULL";
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
 
-			$sql = "SELECT beskrivelse FROM fm_entity_1_14 WHERE location_code='{$values['location_code']}'";
+			$location_id_bod = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
+//			$sql = "SELECT beskrivelse FROM fm_entity_1_14 WHERE location_code='{$values['location_code']}'";
+			$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse FROM fm_bim_item"
+				. " WHERE location_id = {$location_id_bod}"
+				. " AND location_code='{$values['location_code']}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			$bod_beskrivelse = $this->db->f('beskrivelse');
@@ -51,7 +66,11 @@
 			{
 				if ($bod_beskrivelse)
 				{
-					$sql = "UPDATE fm_entity_2_17 SET boder_antall= '{$bod_beskrivelse}' WHERE location_code='{$values['location_code']}'";
+//					$sql = "UPDATE fm_entity_2_17 SET boder_antall= '{$bod_beskrivelse}' WHERE location_code='{$values['location_code']}'";
+					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{boder_antall}', '\"{$bod_beskrivelse}\"', true)"
+						. " WHERE location_id = {$location_id_rapport}"
+						. " AND location_code='{$values['location_code']}'"
+						. " AND json_representation->>'boder_antall' IS NULL";
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}
@@ -88,7 +107,12 @@
 							{
 								$new_value = $entry['value'];
 
-								$this->db->query("SELECT maaler_stand, id FROM fm_entity_1_11 WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'", __LINE__, __FILE__);
+//								$sql = "SELECT maaler_stand, id FROM fm_entity_1_11 WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'";
+								$sql = "SELECT json_representation->>'maaler_stand' as maaler_stand, id FROM fm_bim_item"
+									. " WHERE location_id = {$location_id_maaler}"
+									. " AND location_code='{$values['location_code']}'"
+									. " AND json_representation->>'maaler_nr' = '{$maaler_nr}'";
+								$this->db->query($sql, __LINE__, __FILE__);
 								$this->db->next_record();
 								$old_value = $this->db->f('maaler_stand');
 								$id = $this->db->f('id');
@@ -99,7 +123,12 @@
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_11');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-										$this->db->query("UPDATE fm_entity_1_11 SET maaler_stand = '{$new_value}' WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'", __LINE__, __FILE__);
+
+//										$sql ="UPDATE fm_entity_1_11 SET maaler_stand = '{$new_value}' WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'";
+										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{maaler_stand}', '\"{$new_value}\"', true)"
+											. " WHERE location_id = {$location_id_maaler}"
+											. " AND location_code='{$values['location_code']}'";
+										$this->db->query($sql, __LINE__, __FILE__);
 									}
 								}
 							}
@@ -110,7 +139,12 @@
 							{
 								$new_value = $entry['value'];
 
-								$this->db->query("SELECT beskrivelse, id FROM fm_entity_1_14 WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
+								//	$location_id_bod
+//								$sql = "SELECT beskrivelse, id FROM fm_entity_1_14 WHERE location_code ='{$values['location_code']}'";
+								$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse, id FROM fm_bim_item"
+									. " WHERE location_id = {$location_id_bod}"
+									. " AND location_code='{$values['location_code']}'";
+								$this->db->query($sql, __LINE__, __FILE__);
 								$this->db->next_record();
 								$old_value = $this->db->f('beskrivelse');
 								$id = $this->db->f('id');
@@ -121,7 +155,11 @@
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_14');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-										$this->db->query("UPDATE fm_entity_1_14 SET beskrivelse = '{$new_value}' WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
+//										$sql = "UPDATE fm_entity_1_14 SET beskrivelse = '{$new_value}' WHERE location_code ='{$values['location_code']}'";
+										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{beskrivelse}', '\"{$new_value}\"', true)"
+											. " WHERE location_id = {$location_id_bod}"
+											. " AND location_code='{$values['location_code']}'";
+										$this->db->query($sql, __LINE__, __FILE__);
 									}
 								}
 								else
@@ -142,8 +180,13 @@
 						case 'br_slokk_app_skiftet':
 							if ($entry['value'])
 							{
+								$location_id_br_slokk_app = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
 								$new_value = $entry['value'];
-								$this->db->query("SELECT skiftet, id FROM fm_entity_1_10 WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
+//								$sql = "SELECT skiftet, id FROM fm_entity_1_10 WHERE location_code ='{$values['location_code']}'";
+								$sql = "SELECT json_representation->>'skiftet' as skiftet, id FROM fm_bim_item"
+									. " WHERE location_id = {$location_id_br_slokk_app}"
+									. " AND location_code='{$values['location_code']}'";
+								$this->db->query($sql, __LINE__, __FILE__);
 								$this->db->next_record();
 								$old_value = $this->db->f('skiftet');
 								$id = $this->db->f('id');
@@ -154,7 +197,12 @@
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_10');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-										$this->db->query("UPDATE fm_entity_1_10 SET skiftet = '{$new_value}' WHERE location_code ='{$values['location_code']}'", __LINE__, __FILE__);
+										//									$sql = "UPDATE fm_entity_1_10 SET skiftet = '{$new_value}' WHERE location_code ='{$values['location_code']}'";
+										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{skiftet}', '\"{$new_value}\"', true)"
+											. " WHERE location_id = {$location_id_br_slokk_app}"
+											. " AND location_code='{$values['location_code']}'";
+
+										$this->db->query($sql, __LINE__, __FILE__);
 									}
 								}
 								else
@@ -180,7 +228,7 @@
 
 		private function add_bod( $beskrivelse, $location_code, $address )
 		{
-			$table = 'fm_entity_1_14';
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
 			$location = explode('-', $location_code);
 			$value_set = array();
 
@@ -195,24 +243,22 @@
 				}
 			}
 
-			$value_set['id'] = $this->bocommon->next_id($table);
-			$value_set['num'] = $value_set['id'];
 			$value_set['address'] = $address;
 			$value_set['beskrivelse'] = $beskrivelse;
 			$value_set['location_code'] = $location_code;
 			$value_set['entry_date'] = time();
 			$value_set['user_id'] = $this->account;
 
-			$cols = implode(',', array_keys($value_set));
-			$values = $this->db->validate_insert(array_values($value_set));
-			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
+			$soentity = CreateObject('property.soentity');
+			$id = $soentity->_save_eav( $value_set, $location_id );
+
 			$historylog = CreateObject('property.historylog', 'entity_1_14');
-			$historylog->add('SO', $value_set['id'], $beskrivelse, false, $attrib_id = 1, time());
+			$historylog->add('SO', $id, $beskrivelse, false, $attrib_id = 1, time());
 		}
 
 		private function br_slokk_app( $date, $location_code, $address )
 		{
-			$table = 'fm_entity_1_10';
+			$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
 			$location = explode('-', $location_code);
 			$value_set = array();
 
@@ -227,19 +273,17 @@
 				}
 			}
 
-			$value_set['id'] = $this->bocommon->next_id($table);
-			$value_set['num'] = $value_set['id'];
 			$value_set['address'] = $address;
 			$value_set['skiftet'] = $date;
 			$value_set['location_code'] = $location_code;
 			$value_set['entry_date'] = time();
 			$value_set['user_id'] = $this->account;
 
-			$cols = implode(',', array_keys($value_set));
-			$values = $this->db->validate_insert(array_values($value_set));
-			$this->db->query("INSERT INTO $table ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
+			$soentity = CreateObject('property.soentity');
+			$id = $soentity->_save_eav( $value_set, $location_id );
+
 			$historylog = CreateObject('property.historylog', 'entity_1_10');
-			$historylog->add('SO', $value_set['id'], $date, false, $attrib_id = 2, time());
+			$historylog->add('SO', $id, $date, false, $attrib_id = 2, time());
 		}
 	}
 	$data_sync = new entity_data_sync();
