@@ -525,6 +525,10 @@
 				$cat_list = $entity->read_category(array('allrows' => true, 'entity_id' => $entry['id']));
 				foreach ($cat_list as $category)
 				{
+					if($category['is_eav'])
+					{
+						continue;
+					}
 					$tables[] = "fm_entity_{$entry['id']}_{$category['id']}";
 				}
 			}
