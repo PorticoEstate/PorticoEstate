@@ -20,7 +20,7 @@
 	$dateformat = "Y-m-d"; //postgres
 	$target_field = 'last_alarm';
 
-	$entity_table = 'fm_entity_' . $entity_id . '_' . $cat_id;
+//	$entity_table = 'fm_entity_' . $entity_id . '_' . $cat_id;
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
 
@@ -31,18 +31,26 @@
 
 	$param = explode(' ', $command_param);
 
-	if (ctype_digit($param[0]))
+	if (ctype_digit($param[0]) && $location_id)
 	{
-		$id = $param[0];
+		$id = $this->db->db_addslashes($param[0]);
 		//	$status = $status_code[$param[1]];
 
-		$this->db->query("SELECT id as record_id  FROM $entity_table WHERE $id_field='$id'", __LINE__, __FILE__);
+//		$sql = "SELECT id as record_id FROM $entity_table WHERE $id_field='$id'";
+		$sql = "SELECT id as record_id FROM fm_bim_item"
+			. " WHERE location_id = {$location_id}"
+			. " AND json_representation->>'securitnet_nr' = '$id'";
+
+		$this->db->query($sql, __LINE__, __FILE__);
 		if ($this->db->next_record())
 		{
 			$record_id = $this->db->f('record_id');
 			$date = date($dateformat, time());
 
-			$this->db->query("UPDATE $entity_table set last_alarm ='$date' WHERE $id_field='$id'", __LINE__, __FILE__);
+			$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{last_alarm}', '\"{$date}\"', true)"
+				. " WHERE location_id = {$location_id}"
+				. " AND json_representation->>'securitnet_nr' = '$id'";
+			$this->db->query($sql, __LINE__, __FILE__);
 			$historylog = CreateObject('property.historylog', 'entity_' . $entity_id . '_' . $cat_id);
 			// temporary - fix this
 			$historylog->account = 6;
