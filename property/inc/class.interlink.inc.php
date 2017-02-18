@@ -407,21 +407,32 @@
 				$entity_id = $type[2];
 				$cat_id = $type[3];
 				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.{$entity_id}.{$cat_id}");
-				$metadata = $this->_db->metadata("fm_entity_{$entity_id}_{$cat_id}");
-				if (isset($metadata['status']))
+				if ($location_id)
 				{
-					$sql = "SELECT status FROM fm_entity_{$entity_id}_{$cat_id} WHERE id = {$id}";
-					$this->_db->query($sql, __LINE__, __FILE__);
-					$this->_db->next_record();
-					$status_id = (int)$this->_db->f('status');
+					$metadata = $this->_db->metadata("fm_entity_{$entity_id}_{$cat_id}");
+					if (isset($metadata['status']))
+					{
+						$sql = "SELECT status FROM fm_entity_{$entity_id}_{$cat_id} WHERE id = {$id}";
+					}
+					else
+					{
+						$sql = "SELECT json_representation->>'status' as status FROM fm_bim_item"
+						. " WHERE location_id = {$location_id}"
+						. " AND id='{$id}'";
+					}
 
-					$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
-						. " {$this->_join} phpgw_cust_choice ON phpgw_cust_attribute.location_id = phpgw_cust_choice.location_id "
-						. " AND phpgw_cust_attribute.id = phpgw_cust_choice.attrib_id WHERE phpgw_cust_attribute.column_name = 'status'"
-						. " AND phpgw_cust_choice.id = {$status_id} AND phpgw_cust_attribute.location_id = {$location_id}";
 					$this->_db->query($sql, __LINE__, __FILE__);
 					$this->_db->next_record();
-					$relation_info['statustext'] = $this->_db->f('status');
+					if($status_id = (int)$this->_db->f('status'))
+					{
+						$sql = "SELECT phpgw_cust_choice.value as status FROM phpgw_cust_attribute"
+							. " {$this->_join} phpgw_cust_choice ON phpgw_cust_attribute.location_id = phpgw_cust_choice.location_id "
+							. " AND phpgw_cust_attribute.id = phpgw_cust_choice.attrib_id WHERE phpgw_cust_attribute.column_name = 'status'"
+							. " AND phpgw_cust_choice.id = {$status_id} AND phpgw_cust_attribute.location_id = {$location_id}";
+						$this->_db->query($sql, __LINE__, __FILE__);
+						$this->_db->next_record();
+						$relation_info['statustext'] = $this->_db->f('status');
+					}
 				}
 
 				$relation_info['title'] = 'N∕A';
