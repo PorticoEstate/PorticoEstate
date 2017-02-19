@@ -41,6 +41,7 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
+			'get'	=> true,
 			'get_list' => true
 		);
 
@@ -239,6 +240,26 @@
 			self::render_template_xsl(array('vendor', 'datatable_inline'), array($mode => $data));
 		}
 		
+		/*
+		 * Get the vendor with the id given in the http variable 'id'
+		 */
+
+		public function get( $id = 0 )
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				phpgw::no_access();
+			}
+
+			$id = !empty($id) ? $id : phpgw::get_var('id', 'int');
+
+			$vendor = $this->bo->read_single($id)->toArray();
+
+			unset($vendor['secret']);
+
+			return $vendor;
+		}
+
 		public function save()
 		{
 			parent::save();
