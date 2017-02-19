@@ -75,6 +75,9 @@
 
 	<body>
 
+		{lightbox_css}
+		
+		<!-- BEGIN header_block -->
 		<div class="header">
 			<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
 				<a class="pure-menu-heading" href="">{system} {lang_login}</a>
@@ -85,88 +88,91 @@
 				</ul>
 			</div>
 		</div>
+		<!-- END header_block -->
 		<div class="content-wrapper">
-
 			<div class="content">
+
+				<!-- BEGIN instruction_block -->
 				<h2 class="content-head is-center">{instruction}</h2>
+				<!-- END instruction_block -->
 
 				<div class="pure-g">
 
-					<div class="l-box-lrg pure-u-1 pure-u-md-1-2">
-						<div class="l-box">
-							<!-- BEGIN message_block -->
-							<dl id="system-message">
-								<dt class="{message_class}">{lang_message}</dt>
-								<dd class="{message_class_item}">
-									<ul>
-										<li>{cd}</li>
-									</ul>
-								</dd>
-							</dl>
-							<!-- END message_block -->
+					<div class="l-box l-box-lrg pure-u-1 pure-u-md-1-2">
 
-							<form name="login" method="post" action="{login_url}" {autocomplete} id="form-login" class="pure-form pure-form-stacked">
-								  <fieldset>
-									<input type="hidden" name="passwd_type" value="text">
-									<!-- BEGIN loging_block -->
-									<div class="pure-control-group">
-										<label for="login">{lang_username}</label>
-										<input type="text" value="{last_loginid}" name="login" id="login" {login_read_only} required="required"/>
-										<input type="hidden" name="skip_remote" value="{skip_remote}">
-										<input type="hidden" name="lightbox" value="{lightbox}">
-									</div>
-									<!-- END loging_block -->
-									<!-- BEGIN domain_from_host -->
-									@{logindomain}<input type="hidden" id="logindomain" name="logindomain" value="{logindomain}">
-									<!-- END domain_from_host -->
-									<br>
-									<!-- BEGIN login_additional_info -->
-									<div class="pure-control-group">
-										<label for="firstname">{lang_firstname}</label>
-										<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" >
-									</div>
-									<div class="pure-control-group">
-										<label for="lastname">{lang_lastname}</label>
-										<input type="text" value="{lastname}" name="lastname" id="lastname"  maxlength="100">
-									</div>
+						<!-- BEGIN message_block -->
+						<dl id="system-message">
+							<dt class="{message_class}">{lang_message}</dt>
+							<dd class="{message_class_item}">
+								<ul>
+									<li>{cd}</li>
+								</ul>
+							</dd>
+						</dl>
+						<!-- END message_block -->
 
-									<!-- END login_additional_info -->
-									<!-- BEGIN password_block -->
-									<div class="pure-control-group">
-										<label for="passwd">{lang_password}</label>
-										<input type="password" name="passwd" id="passwd" required="required"/>
-									</div>
-									<!-- END password_block -->
-									<!-- BEGIN login_check_passwd -->
-									<div class="pure-control-group">
-										<label for="passwd_confirm">{lang_confirm_password}</label>
-										<input type="password" name="passwd_confirm" id="passwd_confirm" required="required"/>
-									</div>
-									<!-- END login_check_passwd -->
-									<!-- BEGIN domain_select -->
-									<div class="pure-control-group">
-										<label for="logindomain">{lang_domain}</label>
-										<select name="logindomain" id="logindomain">
-											<!-- BEGIN domain_option -->
-											<option value="{domain_name}" {domain_selected}>{domain_display_name}</option>
-											<!-- END domain_option -->
-										</select>
-									</div>
-									<!-- END domain_select -->
-									<!-- BEGIN button_block -->
+						<form name="login" method="post" action="{login_url}" {autocomplete} id="form-login" class="pure-form pure-form-stacked">
+							<fieldset>
+								<input type="hidden" name="passwd_type" value="text">
+								<!-- BEGIN loging_block -->
+								<div class="pure-control-group">
+									<label for="login">{lang_username}</label>
+									<input type="text" value="{last_loginid}" name="login" id="login" {login_read_only} required="required"/>
+									<input type="hidden" name="skip_remote" value="{skip_remote}">
+									<input type="hidden" name="lightbox" value="{lightbox}">
+								</div>
+								<!-- END loging_block -->
+								<!-- BEGIN domain_from_host -->
+								@{logindomain}<input type="hidden" id="logindomain" name="logindomain" value="{logindomain}">
+								<!-- END domain_from_host -->
+								<br>
+								<!-- BEGIN login_additional_info -->
+								<div class="pure-control-group">
+									<label for="firstname">{lang_firstname}</label>
+									<input type="text" value="{firstname}" maxlength="100" name="firstname" id="firstname" >
+								</div>
+								<div class="pure-control-group">
+									<label for="lastname">{lang_lastname}</label>
+									<input type="text" value="{lastname}" name="lastname" id="lastname"  maxlength="100">
+								</div>
 
-									<div class="pure-controls">
-										<button type="submit" class="pure-button pure-button-primary" name="submitit_" onclick="do_login();">{lang_login}</button>
-									</div>
-									<input type="hidden" name="submitit" value="1">
-									<p class="link_group"><a href="{return_sso_login_url}">{lang_return_sso_login}</a></p>
-									<!-- END button_block -->
-								</fieldset>
-							</form>
-						</div>
+								<!-- END login_additional_info -->
+								<!-- BEGIN password_block -->
+								<div class="pure-control-group">
+									<label for="passwd">{lang_password}</label>
+									<input type="password" name="passwd" id="passwd" required="required"/>
+								</div>
+								<!-- END password_block -->
+								<!-- BEGIN login_check_passwd -->
+								<div class="pure-control-group">
+									<label for="passwd_confirm">{lang_confirm_password}</label>
+									<input type="password" name="passwd_confirm" id="passwd_confirm" required="required"/>
+								</div>
+								<!-- END login_check_passwd -->
+								<!-- BEGIN domain_select -->
+								<div class="pure-control-group">
+									<label for="logindomain">{lang_domain}</label>
+									<select name="logindomain" id="logindomain">
+										<!-- BEGIN domain_option -->
+										<option value="{domain_name}" {domain_selected}>{domain_display_name}</option>
+										<!-- END domain_option -->
+									</select>
+								</div>
+								<!-- END domain_select -->
+								<!-- BEGIN button_block -->
+
+								<div class="pure-controls">
+									<button type="submit" class="pure-button pure-button-primary" name="submitit_" onclick="do_login();">{lang_login}</button>
+								</div>
+								<input type="hidden" name="submitit" value="1">
+								<p class="link_group"><a href="{return_sso_login_url}">{lang_return_sso_login}</a></p>
+								<!-- END button_block -->
+							</fieldset>
+						</form>
 
 					</div>
 
+					<!-- BEGIN forgotten_password_block -->
 					<div class="l-box-lrg pure-u-1 pure-u-md-1-2">
 						<p>
 							<a href="{action_new_user}">{lang_new_user}</a>
@@ -176,8 +182,11 @@
 							<a href="{action_lost_password}">{lang_forgotten_password}</a>.
 						</p>
 					</div>
+					<!-- END forgotten_password_block -->
 
 				</div>
+				<!-- BEGIN info_block -->
+
 				<div class="pure-g">
 
 					<div class="pure-u-1 pure-u-md-1-2">
@@ -191,14 +200,17 @@
 						</div>
 					</div>
 				</div>
+				<!-- END info_block -->
 
 			</div>
-		 <div class="footer l-box is-center">
-			<noscript>Warning! JavaScript must be enabled for proper operation of the Administrator back-end.</noscript>
-			<p class="copyright">
-				<a href="http://savannah.nongnu.org/projects/fmsystem/" target="_blank">{system} {version}</a> is Free Software released under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
-			</p>
-		</div>
+			<!-- BEGIN footer_block -->
+			<div class="footer is-center">
+				<noscript>Warning! JavaScript must be enabled for proper operation of the Administrator back-end.</noscript>
+				<p class="copyright">
+					<a href="http://savannah.nongnu.org/projects/fmsystem/" target="_blank">{system} {version}</a> is Free Software released under the <a href="http://www.gnu.org/licenses/gpl-2.0.html">GNU/GPL License</a>.
+				</p>
+			</div>
+			<!-- END footer_block -->
 
 		</div>
 
