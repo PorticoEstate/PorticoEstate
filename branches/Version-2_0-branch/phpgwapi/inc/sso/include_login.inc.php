@@ -11,7 +11,7 @@
 	* @version $Id$
 	*/
 
-	/* 
+	/*
 	 * Generic include for login.php like pages
 	 */
 	if(!empty( $GLOBALS['phpgw_info']['flags']['session_name'] ))
@@ -70,7 +70,7 @@
 	 * Generic include for mapping / remoteuser mode
 	 */
 	$phpgw_url_for_sso = '/login.php';
-	if(isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser')         
+	if(isset($GLOBALS['phpgw_info']['server']['half_remote_user']) && $GLOBALS['phpgw_info']['server']['half_remote_user'] == 'remoteuser')
 	{
 		$phpgw_url_for_sso = '/phpgwapi/inc/sso/login_server.php';
 	}
@@ -84,7 +84,7 @@
 	}
 
 	//Create the mapping if necessary :
-	if(isset($GLOBALS['phpgw_info']['server']['mapping']) 
+	if(isset($GLOBALS['phpgw_info']['server']['mapping'])
 		&& !empty($GLOBALS['phpgw_info']['server']['mapping']))
 	{
 		if ( !is_object($GLOBALS['phpgw']->mapping) )
@@ -186,8 +186,8 @@
 				if (file_exists($fname))
 				{
 					$ctime = filectime($fname);
-					$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang]) && 
-						isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ? 
+					$ltime = isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang]) &&
+						isset($GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app]) ?
 						(int) $GLOBALS['phpgw_info']['server']['lang_ctimes'][$lang][$app] : 0;
 					//echo "checking lang='$lang', app='$app', ctime='$ctime', ltime='$ltime'<br>\n";
 
@@ -261,6 +261,10 @@
 
 			$this->tmpl->set_file(array('login_form'  => 'login.tpl'));
 
+			$this->tmpl->set_block('login_form', 'header_block', 'header_blocks');
+			$this->tmpl->set_block('login_form', 'instruction_block', 'instruction_blocks');
+
+
 			$this->tmpl->set_block('login_form', 'message_block', 'message_blocks');
 			$this->tmpl->set_block('login_form', 'domain_option', 'domain_options');
 			$this->tmpl->set_block('login_form', 'domain_select', 'domain_selects');
@@ -269,9 +273,12 @@
 			$this->tmpl->set_block('login_form', 'domain_from_host', 'domain_from_hosts');
 			$this->tmpl->set_block('login_form', 'password_block', 'password_blocks');
 			$this->tmpl->set_block('login_form', 'loging_block', 'loging_blocks');
+			$this->tmpl->set_block('login_form', 'forgotten_password_block', 'forgotten_password_blocks');
+			$this->tmpl->set_block('login_form', 'info_block', 'info_blocks');
 			$this->tmpl->set_block('login_form', 'button_block', 'button_blocks');
+			$this->tmpl->set_block('login_form', 'footer_block', 'footer_blocks');
 
-			if( $GLOBALS['phpgw_info']['server']['domain_from_host'] 
+			if( $GLOBALS['phpgw_info']['server']['domain_from_host']
 				&& !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'] )
 			{
 				$this->tmpl->set_var(
@@ -423,7 +430,7 @@
 			}
 
 			$system_name = isset($GLOBALS['phpgw_info']['server']['system_name']) ? $GLOBALS['phpgw_info']['server']['system_name'] : 'Portico Estate';
-			
+
 			if($variables['lang_frontend'])
 			{
 				$system_name .= "::{$variables['lang_frontend']}";
@@ -520,13 +527,13 @@ JS;
 						);
 				$action_lost_password = 'javascript:lost_password();';
 			}
-			
+
 			$this->tmpl->set_var('url_lost_password', $url_lost_password);
 			$this->tmpl->set_var('action_new_user', $action_new_user);
 			$this->tmpl->set_var('action_lost_password', $action_lost_password);
 
 			$this->tmpl->set_var('website_title', isset($GLOBALS['phpgw_info']['server']['site_title'])
-								? $GLOBALS['phpgw_info']['server']['site_title'] 
+								? $GLOBALS['phpgw_info']['server']['site_title']
 								: 'phpGroupWare'
 								);
 
@@ -560,7 +567,7 @@ JS;
 			}
 
 			$rounded_css = "{$webserver_url}/phpgwapi/templates/base/css/rounded.css";
-			
+
 			$flag_no = "{$webserver_url}/phpgwapi/templates/base/images/flag_no.gif";
 			$flag_en = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
 
@@ -576,10 +583,30 @@ JS;
 			$this->tmpl->set_var('flag_en', $flag_en);
 			$this->tmpl->set_var('lightbox', $lightbox);
 
-			if(!$lightbox)
+			if($lightbox)
+			{
+				$lightbox_css = <<<HTML
+
+		<style id='lightbox-login-css' type='text/css' scoped='scoped'>
+			.content-wrapper {
+				top: 0px;
+			}
+		</style>
+
+HTML;
+				$this->tmpl->set_var('lightbox_css', $lightbox_css);
+
+			}
+			else
 			{
 				$this->tmpl->set_var('login_left_message', $GLOBALS['phpgw_info']['login_left_message']);
 				$this->tmpl->set_var('login_right_message', $GLOBALS['phpgw_info']['login_right_message']);
+				$this->tmpl->parse('header_blocks', 'header_block');
+				$this->tmpl->parse('instruction_blocks', 'instruction_block');
+				$this->tmpl->parse('forgotten_password_blocks', 'forgotten_password_block');
+				$this->tmpl->parse('info_blocks', 'info_block');
+				$this->tmpl->parse('footer_blocks', 'footer_block');
+
 			}
 
 			$autocomplete = '';
