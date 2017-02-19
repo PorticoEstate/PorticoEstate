@@ -532,6 +532,12 @@ JS;
 
 			$this->tmpl->set_var('template_set', $GLOBALS['phpgw_info']['login_template_set']);
 
+
+			$responsive_css = "{$webserver_url}/phpgwapi/templates/pure/css/pure-min.css";
+			$responsive_grid_css = "{$webserver_url}/phpgwapi/templates/pure/css/grids-responsive-min.css";
+			$responsive_grid_old_ie_css = "{$webserver_url}/phpgwapi/templates/pure/css/grids-responsive-old-ie-min.css";
+
+
 			if( is_file("{$GLOBALS['phpgw_info']['server']['template_dir']}/css/base.css") )
 			{
 				$base_css = "{$webserver_url}/phpgwapi/templates/{$GLOBALS['phpgw_info']['server']['template_set']}/css/base.css";
@@ -559,6 +565,9 @@ JS;
 			$flag_en = "{$webserver_url}/phpgwapi/templates/base/images/flag_en.gif";
 
 
+			$this->tmpl->set_var('responsive_css', $responsive_css);
+			$this->tmpl->set_var('responsive_grid_css', $responsive_grid_css);
+			$this->tmpl->set_var('responsive_grid_old_ie_css', $responsive_grid_old_ie_css);
 			$this->tmpl->set_var('system_css', $system_css);
 			$this->tmpl->set_var('base_css', $base_css);
 			$this->tmpl->set_var('login_css', $login_css);
