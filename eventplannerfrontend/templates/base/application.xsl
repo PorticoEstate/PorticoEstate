@@ -182,7 +182,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</label>
-								<input type="text" name="contact_phone" value="{application/contact_phone}">
+								<input type="text" id="contact_phone" name="contact_phone" value="{application/contact_phone}">
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
