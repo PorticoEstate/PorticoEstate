@@ -10,54 +10,48 @@
 	<div id="edit_user_tabview">
 		<xsl:value-of disable-output-escaping="yes" select="tabs" />
 
-		<form action="#" method="post" name="form">
-			<div class="yui-content">
+		<form action="#" method="post" name="form" class="pure-form pure-form-aligned">
+			<div id="tab-content">
 				<div id="main">
 
 					<input type="hidden" name="id" value = "{value_id}">
 					</input>
-					<table>
+					<fieldset>
 						<xsl:for-each select="user_data">
-							<tr>
-								<td>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="text"/>
-								</td>
-								<td>
-									<xsl:value-of select="value"/>
-								</td>
-							</tr>
+								</label>
+								<xsl:value-of select="value"/>
+							</div>
 						</xsl:for-each>
 						<xsl:call-template name="location_form"/>
-						<tr>
-							<td>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'approve')" />
-							</td>
-							<td>
-								<input type="checkbox" name="values[approve]" value="1">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'approve')"/>
+							</label>
+							<input type="checkbox" name="values[approve]" value="1">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'approve')"/>
+								</xsl:attribute>
+								<xsl:if test="value_approved = '1'">
+									<xsl:attribute name="checked">
+										<xsl:text>checked</xsl:text>
 									</xsl:attribute>
-									<xsl:if test="value_approved = '1'">
-										<xsl:attribute name="checked">
-											<xsl:text>checked</xsl:text>
-										</xsl:attribute>
-									</xsl:if>
-								</input>
-							</td>
-						</tr>
-						<tr>
-							<td>
+								</xsl:if>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'process')" />
-							</td>
-							<td>
-								<input type="checkbox" name="values[pending_users][]" value="{value_id}">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'process approved')"/>
-									</xsl:attribute>
-								</input>
-							</td>
-						</tr>
-					</table>
+							</label>
+							<input type="checkbox" name="values[pending_users][]" value="{value_id}">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'process approved')"/>
+								</xsl:attribute>
+							</input>
+						</div>
+					</fieldset>
 				</div>
 				<div id="groups">
 					<h2>
