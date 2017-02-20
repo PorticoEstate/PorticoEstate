@@ -759,7 +759,7 @@
 								if (ctype_digit($query) && !$criteria_id)
 								{
 //									$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$query;
-									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."'  {$this->like} '" .(int)$query . "%'";
+									$_querymethod[] = "CAST(json_representation->>'". $this->db->f('column_name') . "'AS text)  {$this->like} '" .(int)$query . "%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -853,7 +853,7 @@
 					{
 						if(!empty($attibute['choice']))
 						{
-							$_querymethod_status = "(json_representation->>'status' IS NULL OR CAST( json_representation->>'status' AS integer) < 90)";
+							$_querymethod_status = "(json_representation->>'status' IS NULL OR NULLIF(json_representation->>'status', '')::numeric < 90)";
 						}
 					}
 				}
