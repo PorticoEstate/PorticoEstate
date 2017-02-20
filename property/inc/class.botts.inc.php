@@ -158,7 +158,7 @@
 			$this->part_of_town_id = phpgw::get_var('part_of_town_id', 'int');
 			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 			$district_id = phpgw::get_var('district_id', 'int');
-			$this->district_id = $district_id ? $district_id : $default_district;
+			$this->district_id = isset($_REQUEST['district_id']) ? $district_id : $default_district;
 			$this->allrows = phpgw::get_var('allrows', 'bool');
 			$this->start_date = phpgw::get_var('filter_start_date', 'string');
 			$this->end_date = phpgw::get_var('filter_end_date', 'string');
