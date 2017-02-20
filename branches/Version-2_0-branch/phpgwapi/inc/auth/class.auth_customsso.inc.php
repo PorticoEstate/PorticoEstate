@@ -83,7 +83,8 @@
 				return;
 			}
 
-			$ssn_hash = $this->create_hash($ssn);
+			$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+
 			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
 			$sql = "SELECT account_lid FROM phpgw_accounts"
 				. " JOIN phpgw_accounts_data ON phpgw_accounts.account_id = phpgw_accounts_data.account_id"
