@@ -1196,17 +1196,12 @@
 			$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), '01', date("Y")), $this->dateFormat);
 			$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $this->dateFormat);
 			
-			$tabs = array();
-			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
-			$active_tab = 'report';
-			
 			$appname = lang('helpdesk');
 			$function_msg = lang('Report ticket');
 
 			self::add_javascript('property', 'portico', 'tts.report.js');
 
 			$data = array(
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'start_date' => $start_date,
 				'end_date' => $end_date,
 				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
