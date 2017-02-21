@@ -134,7 +134,9 @@
 			}
 
 			$filter = array('list' => ''); // translates to "list IS NULL"
-			$columns = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', '', '', true, false, $filter);
+			$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
+			
+			$columns = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', '', '', true, false, $filter);
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 
 			return $column_list;
@@ -187,11 +189,12 @@
 				unset($data['location_info']);
 			}
 			$custom_fields = false;
+			$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
 				$custom_fields = true;
 				$values = array();
-				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
 			if (isset($data['id']) && $data['id'])
@@ -200,7 +203,7 @@
 			}
 			if ($custom_fields)
 			{
-				$values = $this->custom->prepare($values, $this->location_info['acl_app'], $this->location_info['acl_location'], $data['view']);
+				$values = $this->custom->prepare($values, $this->location_info['acl_app'], $system_location, $data['view']);
 			}
 			return $values;
 		}
@@ -281,7 +284,8 @@
 
 		public function read_attrib_history( $data )
 		{
-			$attrib_data = $this->custom->get($data['appname'], $data['acl_location'], $data['attrib_id'], $inc_choices = true);
+			$system_location = $data['system_location'] ? $data['system_location'] :$data['acl_location'];
+			$attrib_data = $this->custom->get($data['appname'], $system_location, $data['attrib_id'], $inc_choices = true);
 			$historylog = CreateObject('property.historylog', $data['appname'], $data['acl_location']);
 			$history_values = $historylog->return_array(array(), array('SO'), 'history_timestamp', 'DESC', $data['id'], $data['attrib_id']);
 
@@ -359,7 +363,10 @@
 				}
 			}
 
-			$attributes = $this->custom->find($this->location_info['acl_app'], $this->location_info['acl_location'], 0, '', 'ASC', 'attrib_sort', true, true);
+
+			$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
+
+			$attributes = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
 
 			$custom_filter = array();
 			foreach ($attributes as $attribute_id => $attribute)
