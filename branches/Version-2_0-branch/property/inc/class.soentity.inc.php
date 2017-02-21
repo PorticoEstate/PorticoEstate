@@ -853,7 +853,7 @@
 					{
 						if(!empty($attibute['choice']))
 						{
-							$_querymethod_status = "(json_representation->>'status' IS NULL OR NULLIF(json_representation->>'status', '')::numeric < 90)";
+							$_querymethod_status = "(NULLIF(json_representation->>'status', '')::integer IS NULL OR NULLIF(json_representation->>'status', '')::integer < 90)";
 						}
 					}
 				}
