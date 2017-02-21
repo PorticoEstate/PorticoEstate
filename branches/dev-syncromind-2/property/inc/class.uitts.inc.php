@@ -1191,9 +1191,10 @@
 
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+			phpgwapi_jquery::load_widget('chart');
 				
-			$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), '01', date("Y")), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-			$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), '01', date("Y")), $this->dateFormat);
+			$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $this->dateFormat);
 			
 			$tabs = array();
 			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
@@ -1262,6 +1263,10 @@
 				$_status = array();
 				foreach ($list_status as $_item)
 				{
+					if ($_item['id'] == 'all' || $_item['id'] == 'X')
+					{
+						continue;
+					}
 					$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
 					$_status[$_item['id']] = array('label'=>$_item['name'], 'count' => 0, 
 						'backgroundColor' => $color, 'hoverBackgroundColor' => $color);					
