@@ -38,6 +38,7 @@
 		var $public_functions = array
 			(
 			'report' => true,
+			'get_data_report' => true,
 			'index' => true,
 			'view' => true,
 			'add' => true,
@@ -147,7 +148,7 @@
 				'vendor_id' => $this->bo->vendor_id,
 				'district_id' => $this->bo->district_id,
 				'part_of_town_id' => $this->bo->part_of_town_id,
-				'allrows' => $this->bo->allrows,
+				//'allrows' => $this->bo->allrows,
 				'start_date' => $this->bo->start_date,
 				'end_date' => $this->bo->end_date,
 				'location_code' => $this->bo->location_code,
@@ -1190,47 +1191,91 @@
 
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
+				
+			$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), '01', date("Y")), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
+			$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 			
-			$filters = $this->_get_filters();
-
-			$list_categories = $this->cats->formatted_xslt_list(array('format' => 'filter',
-				'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
-
-
-			$_categories = array();
-			foreach ($list_categories['cat_list'] as $_category)
-			{
-				$_categories[$_category['cat_id']] = $_category['name'];
-			}
-			
-			$list_status = $this->bo->filter(array('format' => '', 'filter' => $this->status_id,
-				'default' => 'O'));
-
-			if (isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
-			{
-				array_unshift($list_status, array('id' => 'O2', 'name' => $this->bo->config->config_data['tts_lang_open']));
-			}
-			$default_value = array('id' => '', 'name' => lang('Open'));
-			array_unshift($list_status, $default_value);
-
-			$_status = array();
-			foreach ($list_status as $_item)
-			{
-				$_status[$_item['id']] = $_item['name'];
-			}
+			$tabs = array();
+			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
+			$active_tab = 'report';
 			
 			$appname = lang('helpdesk');
 			$function_msg = lang('Report ticket');
-			
-			self::add_javascript('property', 'portico', 'utils.js');
+
+			self::add_javascript('property', 'portico', 'tts.report.js');
 
 			$data = array(
-				'categories' => $_categories,
-				'status' => $_status
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false)
 			);
-			
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			self::render_template_xsl(array('tts_report'), $data);
+		}
+		
+		function get_data_report()
+		{
+			$start_date = phpgw::get_var('start_date');
+			$end_date = phpgw::get_var('end_date');
+			$type = phpgw::get_var('type');
+			
+			$params = $this->get_params();
+			$params['start_date'] = $start_date;
+			$params['end_date'] = $end_date;
+			$params['results'] = -1;
+
+			$values = $this->bo->read($params);
+			$rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+
+			$list_categories = $this->cats->formatted_xslt_list(array('format' => 'filter',
+				'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
+			
+			if ($type == 1)
+			{
+				$_categories = array();
+				foreach ($list_categories['cat_list'] as $_category)
+				{
+					$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+					$_categories[$_category['cat_id']] = array('label'=>$_category['name'], 'count' => 0, 
+						'backgroundColor' => $color, 'hoverBackgroundColor' => $color);
+				}
+
+				foreach ($values as $item) 
+				{
+					if (array_key_exists($item['cat_id'], $_categories)) {
+						$_categories[$item['cat_id']]['count'] = $_categories[$item['cat_id']]['count'] + 1;
+					}
+				}
+
+				return $_categories;
+			} 
+			else {
+				
+				$list_status = $this->bo->filter(array('format' => '', 'filter' => $this->status_id, 'default' => 'O'));
+				if (isset($this->bo->config->config_data['tts_lang_open']) && $this->bo->config->config_data['tts_lang_open'])
+				{
+					array_unshift($list_status, array('id' => 'O2', 'name' => $this->bo->config->config_data['tts_lang_open']));
+				}
+
+				$_status = array();
+				foreach ($list_status as $_item)
+				{
+					$color = '#'.$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)].$rand[rand(0,15)];
+					$_status[$_item['id']] = array('label'=>$_item['name'], 'count' => 0, 
+						'backgroundColor' => $color, 'hoverBackgroundColor' => $color);					
+				}
+
+				foreach ($values as $item) 
+				{
+					if (array_key_exists($item['status'], $_status)) {
+						$_status[$item['status']]['count'] = $_status[$item['status']]['count'] + 1;
+					}
+				}
+
+				return $_status;
+			}
 		}
 		
 		function add()
