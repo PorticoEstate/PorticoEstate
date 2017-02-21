@@ -469,6 +469,7 @@
 						'add_msg' => lang('add'),
 						'name' => lang('vendor'),
 						'acl_app' => 'property',
+						'system_location' => '.vendor',
 						'acl_location' => '.vendor',
 						'menu_selection' => 'property::economy::vendor',
 						'default' => array
@@ -1996,6 +1997,7 @@
 						'name' => lang('response template'),
 						'acl_app' => 'property',
 						'acl_location' => '.ticket',
+						'system_location' => '.ticket.response_template',
 						'menu_selection' => 'property::helpdesk::response_template',
 						'default' => array
 							(
@@ -2459,6 +2461,7 @@
 						'name' => $GLOBALS['phpgw']->translation->translate('office', array(), false, 'booking'),
 						'acl_app' => 'booking',
 						'acl_location' => '.office',
+						'system_location' => '.office',
 						'menu_selection' => 'booking::settings::office',
 						'default' => array
 							(
@@ -2494,6 +2497,7 @@
 						'name' => $GLOBALS['phpgw']->translation->translate('office user', array(), false, 'booking'),
 						'acl_app' => 'booking',
 						'acl_location' => '.office.user',
+						'system_location' => '.office.user',
 						'menu_selection' => 'booking::settings::office::office_user',
 						'default' => array
 							(

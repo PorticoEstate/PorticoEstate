@@ -608,7 +608,9 @@
 					}
 				}
 
-				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $this->acl_location, $values['attributes']);
+				$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
+
+				$attributes_groups = $this->custom->get_attribute_groups($this->location_info['acl_app'], $system_location, $values['attributes']);
 
 				$attributes = array();
 				foreach ($attributes_groups as $group)
