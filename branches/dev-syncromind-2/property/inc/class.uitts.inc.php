@@ -1213,18 +1213,19 @@
 		
 		function get_data_report()
 		{
-			$start_date = phpgw::get_var('start_date');
-			$end_date = phpgw::get_var('end_date');
+			$start_date = phpgw::get_var('start_date', 'date');
+			$end_date = phpgw::get_var('end_date', 'date');
 			$type = phpgw::get_var('type');
 			
-			$params = $this->get_params();
 			$params['start_date'] = $start_date;
 			$params['end_date'] = $end_date;
 			$params['results'] = -1;
+			$params['type'] = $type;
 
-			$values = $this->bo->read($params);
+			$values = $this->bo->get_data_report($params);
+			
 			$rand = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-
+	
 			$list_categories = $this->cats->formatted_xslt_list(array('format' => 'filter',
 				'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
 			
@@ -1240,8 +1241,8 @@
 
 				foreach ($values as $item) 
 				{
-					if (array_key_exists($item['cat_id'], $_categories)) {
-						$_categories[$item['cat_id']]['count'] = $_categories[$item['cat_id']]['count'] + 1;
+					if ($_categories[$item['cat_id']]) {
+						$_categories[$item['cat_id']]['count'] = (int)$item['count_category'];
 					}
 				}
 
@@ -1269,8 +1270,8 @@
 
 				foreach ($values as $item) 
 				{
-					if (array_key_exists($item['status'], $_status)) {
-						$_status[$item['status']]['count'] = $_status[$item['status']]['count'] + 1;
+					if ($_status[$item['status']]) {
+						$_status[$item['status']]['count']  = (int)$item['count_status'];
 					}
 				}
 
