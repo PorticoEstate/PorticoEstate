@@ -61,6 +61,11 @@
 
 		function header( $sub = '' )
 		{
+			if(!empty($this->config['debug']))
+			{
+				$headers = getallheaders();
+				_debug_array($headers);
+			}
 			if (!$sub)
 			{
 				$sub = lang('Account registration');
