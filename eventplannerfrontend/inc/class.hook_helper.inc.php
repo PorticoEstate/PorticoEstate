@@ -205,7 +205,7 @@ HTML;
 			$account_id = (int)$GLOBALS['hook_values']['account_id'];
 			$headers = getallheaders();
 			$ssn = $headers['uid'];
-	_debug_array($headers);
+
 			if(!$ssn)
 			{
 				return;
