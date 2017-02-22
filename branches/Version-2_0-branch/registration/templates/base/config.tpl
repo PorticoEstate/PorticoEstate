@@ -121,6 +121,14 @@
 			<td><input name="newsettings[login_url]" value="{value_login_url}"></td>
 		</tr>
 		<tr>
+			<td>{lang_Debug}:</td>
+			<td>
+				<select name="newsettings[debug]">
+					<option value="" {selected_debug_}>NO</option>
+					<option value="1" {selected_debug_1}>YES</option>
+				</select>
+			</td>
+		</tr>
 
 			<!-- END body -->
 
