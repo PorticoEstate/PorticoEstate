@@ -200,6 +200,7 @@
 						'add_msg' => lang('add'),
 						'name' => lang('email template'),
 						'acl_app' => 'rental',
+						'system_location' => '.email_out.email_template',
 						'acl_location' => '.email_out',
 						'menu_selection' => 'rental::email_out::email_template',
 						'default' => array
