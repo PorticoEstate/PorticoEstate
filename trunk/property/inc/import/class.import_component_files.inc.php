@@ -311,9 +311,22 @@
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE)
 			{
+				$zip->extractTo($dir);
+				$zip->close();
+				return true;
+			}
+			else
+			{
+				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
+				return false;
+			}
+/*
+			$zip = new ZipArchive;
+			if ($zip->open($file) === TRUE)
+			{
 				for ($i = 0; $i < $zip->numFiles; $i++)
 				{
-//					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
+					//					$file_name = str_replace('..', '.', iconv("CP850", "UTF-8", $zip->getNameIndex($i)));
 					$file_name = str_replace('..', '.', $zip->getNameIndex($i));
 					$copy_to = $dir . '/' . $file_name;
 					if (!is_dir(dirname($copy_to)))
@@ -331,6 +344,7 @@
 				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
 				return false;
 			}
+  */
 		}
 
 		private function _un_rar( $file, $dir )
