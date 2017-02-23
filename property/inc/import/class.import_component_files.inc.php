@@ -11,7 +11,8 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 
 			$this->fakebase = '/temp_files_components';
-			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
+//			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
+			$this->path_upload_dir = '/data/portico/temp_files_components/';
 
 			$this->location_code = phpgw::get_var('location_code');
 			$this->location_item_id = phpgw::get_var('location_item_id');
@@ -307,7 +308,7 @@
 		private function _un_zip( $file, $dir )
 		{
 			@set_time_limit(5 * 60);
-
+/*
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE)
 			{
@@ -320,7 +321,8 @@
 				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
 				return false;
 			}
-/*
+ */
+
 			$zip = new ZipArchive;
 			if ($zip->open($file) === TRUE)
 			{
@@ -344,7 +346,6 @@
 				$this->receipt['error'][] = array('msg' => lang('Failed opening file %1', $file));
 				return false;
 			}
-  */
 		}
 
 		private function _un_rar( $file, $dir )
