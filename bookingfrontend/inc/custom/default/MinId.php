@@ -125,8 +125,12 @@
 			$db->query($sql, __LINE__, __FILE__);
 			while ($db->next_record())
 			{
-				$results[] = $db->f('orgnr', true);
+				$results[] = array
+				(
+					'orgnr' => $db->f('orgnr', true)
+				);
 			}
+			
 			return $results;
 		}
 
