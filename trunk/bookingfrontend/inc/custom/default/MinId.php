@@ -114,16 +114,14 @@
 			try
 			{
 				$db->connect();
-				$this->connected = true;
 			}
 			catch (Exception $e)
 			{
 				$status = lang('unable_to_connect_to_database');
 			}
 
-			$sql = "SELECT DISTINCT orgnr FROM personcurrent WHERE fodselsnr ='{$fodselsnr}'";
+			$sql = "SELECT DISTINCT orgnr FROM breg.personcurrent WHERE fodselsnr ='{$fodselsnr}'";
 			$results = array();
-			$db = & $GLOBALS['phpgw']->db;
 			$db->query($sql, __LINE__, __FILE__);
 			while ($db->next_record())
 			{
