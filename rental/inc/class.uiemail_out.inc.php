@@ -79,7 +79,7 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('email_out');
+			$function_msg = lang('email out');
 
 			$data = array(
 				'datatable_name' => $function_msg,
