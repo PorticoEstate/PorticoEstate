@@ -121,13 +121,17 @@
 			{
 				$this->acl_location .= ".{$this->cat_id}";
 			}
+
+			$acl_check_location = $this->acl_location;
+
 			$config = CreateObject('phpgwapi.config', 'property')->read();
 
 			if(!empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($this->entity_id, $config['bypass_acl_at_entity']))
 			{
 				$acl_check_location = ".{$this->type}.$this->entity_id"; //parent
-				$this->acl_read = true;
 			}
+
+			$this->acl_read = $this->acl->check($acl_check_location, PHPGW_ACL_READ, $this->type_app[$this->type]);
 			$this->acl_add = $this->acl->check($acl_check_location, PHPGW_ACL_ADD, $this->type_app[$this->type]);
 			$this->acl_edit = $this->acl->check($acl_check_location, PHPGW_ACL_EDIT, $this->type_app[$this->type]);
 			$this->acl_delete = $this->acl->check($acl_check_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
