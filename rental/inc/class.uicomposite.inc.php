@@ -26,7 +26,11 @@
 			'query' => true,
 			'download' => true,
 			'schedule' => true,
-			'get_schedule' => true
+			'get_schedule' => true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true,
+			'view_file' => true,
+			'get_files' => true
 		);
 
 		public function __construct()
@@ -38,6 +42,12 @@
 
 			$this->config = CreateObject('phpgwapi.config', 'rental');
 			$this->config->read();
+			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl_location = '.contract'; //for now
+			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'rental');
+			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'rental');
+			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'rental');
+			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'rental');
 		}
 
 		private function get_status_options( $selected = 0 )
@@ -1007,7 +1017,30 @@
 				$status_application_options[] = array('id' => 2, 'name' => lang('pending'), 'selected' => 0);
 				$status_application_options[] = array('id' => 3, 'name' => lang('rejected'), 'selected' => 0);
 				$status_application_options[] = array('id' => 4, 'name' => lang('approved'), 'selected' => 0);
+	
+				$file_def = array
+					(
+					array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
+						'resizeable' => true),
+					array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
+						'resizeable' => true, 'formatter' => 'JqueryPortico.FormatterCenter'),
+				);
 
+
+				$datatable_def[] = array
+					(
+					'container' => 'datatable-container_4',
+					'requestUrl' => json_encode(self::link(array(
+						'menuaction' => 'rental.uicomposite.get_files',
+						'id' => $composite_id,
+						'phpgw_return_as' => 'json'))),
+					'ColumnDefs' => $file_def,
+					'data' => array(),
+					'config' => array(
+						array('disableFilter' => true),
+						array('disablePagination' => true)
+					)
+				);
 			}
 
 			$link_index = array
@@ -1124,12 +1157,15 @@ JS;
 				'composite_id' => $composite_id,
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
 					'date',
-					'security', 'file'))
+					'security', 'file')),
+				'multiple_uploader' => true,
+				'fileupload'	=> !!$composite_id,
+				'multi_upload_parans' => "{menuaction:'rental.uicomposite.build_multi_upload_file', id:'{$composite_id}'}",
 			);
 
 			self::add_javascript('rental', 'rental', 'composite.' . $mode . '.js');
 			phpgwapi_jquery::load_widget('numberformat');
-			self::render_template_xsl(array('composite', 'datatable_inline'), array($mode => $data));
+			self::render_template_xsl(array('composite', 'datatable_inline', 'files'), array($mode => $data));
 		}
 
 		public function save()
@@ -1174,6 +1210,7 @@ JS;
 				{
 					phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 					$composite_id = $composite->get_id();
+					$this->_handle_files($composite_id);
 				}
 				else
 				{
@@ -1183,6 +1220,40 @@ JS;
 
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uicomposite.edit',
 				'id' => $composite_id));
+		}
+
+		private function _handle_files( $composite_id )
+		{
+			$file_name = @str_replace(' ', '_', $_FILES['file']['name']);
+
+			if ($file_name && $composite_id)
+			{
+				$bofiles = CreateObject('property.bofiles', '/rental');
+				$to_file = "{$bofiles->fakebase}/composite/{$composite_id}/{$file_name}";
+
+				if ($bofiles->vfs->file_exists(array(
+						'string' => $to_file,
+						'relatives' => array(RELATIVE_NONE)
+					)))
+				{
+					phpgwapi_cache::message_set(lang('This file already exists !'), 'error');
+				}
+				else
+				{
+					$bofiles->create_document_dir("composite/{$composite_id}");
+					$bofiles->vfs->override_acl = 1;
+
+					if (!$bofiles->vfs->cp(array(
+							'from' => $_FILES['file']['tmp_name'],
+							'to' => $to_file,
+							'relatives' => array(RELATIVE_NONE | VFS_REAL, RELATIVE_ALL))))
+					{
+						phpgwapi_cache::message_set(lang('Failed to upload file !'), 'error');
+					}
+					$bofiles->vfs->override_acl = 0;
+				}
+			}
+
 		}
 
 		/**
@@ -1456,4 +1527,128 @@ JS;
 
 			return $data;
 		}
+
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['base_dir'] = 'composite/'.$id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/rental/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $id)));
+			$options['fakebase'] = '/rental';
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'rental.uicomposite.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
+		}
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!($this->isExecutiveOfficer() || $this->isAdministrator()))
+			{
+				return array(
+					'data' => array(),
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => 0,
+					'recordsFiltered' => 0
+				);
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'rental.uicomposite.view_file',
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$values = $vfs->ls(array(
+				'string' => "/rental/composite/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$content_files = array();
+
+			foreach ($values as $_entry)
+			{
+
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+				);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+
+		function view_file()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+		}
+
 	}

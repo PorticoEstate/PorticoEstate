@@ -39,7 +39,9 @@
 		
 		function __construct($options = null, $initialize = true, $error_messages = null)
 		{
-			$this->bofiles = CreateObject('property.bofiles', '/property');
+			$fakebase = !empty($options['fakebase']) ? $options['fakebase'] : '/property';
+			
+			$this->bofiles = CreateObject('property.bofiles', $fakebase);
 			
 			parent::__construct($options, $initialize, $error_messages);
 		}
