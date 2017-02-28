@@ -327,9 +327,9 @@
 			return (int)$this->object_type_id;
 		}
 
-		public function set_furnish_type_id( int $furnish_type )
+		public function set_furnish_type_id( $furnish_type )
 		{
-			$this->furnish_type_id = $furnish_type;
+			$this->furnish_type_id = (int)$furnish_type;
 		}
 
 		public function get_furnish_type_id()
@@ -347,9 +347,9 @@
 			return $this->part_of_town_id;
 		}
 
-		public function set_custom_price_factor( float $custom_price_factor )
+		public function set_custom_price_factor( $custom_price_factor )
 		{
-			$this->custom_price_factor = $custom_price_factor;
+			$this->custom_price_factor = (float)$custom_price_factor;
 		}
 
 		public function get_custom_price_factor()

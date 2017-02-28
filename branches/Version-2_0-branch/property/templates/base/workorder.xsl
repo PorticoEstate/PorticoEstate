@@ -415,7 +415,7 @@
 						</label>
 						<input type="hidden" name="values[origin]" value="{value_origin_type}"/>
 						<input type="hidden" name="values[origin_id]" value="{value_origin_id}"/>
-						<input type="text" name="values[title]" value="{value_title}" size="60">
+						<input type="text" name="values[title]" value="{value_title}"  class="pure-input-1-2">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_title_statustext"/>
 							</xsl:attribute>
@@ -428,7 +428,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_descr"/>
 						</label>
-						<textarea cols="60" rows="6" name="values[descr]">
+						<textarea  class="pure-input-1-2" rows="6" name="values[descr]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_descr_statustext"/>
 							</xsl:attribute>
@@ -481,7 +481,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_remark"/>
 						</label>
-						<textarea cols="60" rows="6" name="values[remark]">
+						<textarea class="pure-input-1-2" rows="6" name="values[remark]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_remark_statustext"/>
 							</xsl:attribute>
@@ -1554,7 +1554,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'remark')"/>
 						</label>
-						<textarea cols="60" rows="10" name="values[merknad]">
+						<textarea class="pure-input-1-2" rows="10" name="values[merknad]">
 							<xsl:value-of select="value_merknad"/>
 						</textarea>
 					</div>

@@ -216,7 +216,7 @@
 			}
 			else
 			{
-				$message['message'][] = array('msg' => lang('any relation has been saved'));
+				$message['message'][] = array('msg' => lang('no relation has been saved'));
 			}
 			if ($count_relations_existing)
 			{
