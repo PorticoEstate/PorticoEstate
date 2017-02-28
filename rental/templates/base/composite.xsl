@@ -33,7 +33,7 @@
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 
-		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-stacked">
+		<form id="form" name="form" method="post" ENCTYPE="multipart/form-data" action="{$form_action}" class="pure-form pure-form-stacked">
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="details" class="pure-g">
@@ -200,7 +200,38 @@
 						</div>
 
 					</div>
+					<xsl:choose>
+						<xsl:when test="fileupload = 1">
+							<div class="pure-u-1">
+								<div class="pure-control-group">
+									<label>
+										<xsl:value-of select="php:function('lang', 'files')"/>
+									</label>
+									<div  >
+										<xsl:for-each select="datatable_def">
+											<xsl:if test="container = 'datatable-container_4'">
+												<xsl:call-template name="table_setup">
+													<xsl:with-param name="container" select ='container'/>
+													<xsl:with-param name="requestUrl" select ='requestUrl'/>
+													<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+													<xsl:with-param name="data" select ='data'/>
+													<xsl:with-param name="tabletools" select ='tabletools' />
+													<xsl:with-param name="config" select ='config'/>
+												</xsl:call-template>
+											</xsl:if>
+										</xsl:for-each>
+									</div>
+								</div>
+								<script type="text/javascript">
+									var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+								</script>
+								<xsl:call-template name="file_upload"/>
+							</div>
+						</xsl:when>
+					</xsl:choose>
+
 				</div>
+
 				<xsl:choose>
 					<xsl:when test="composite_id > 0">
 						<div id="units">
