@@ -87,7 +87,11 @@
 			$config = CreateObject('phpgwapi.config', 'rental');
 			$config->read();
 
-			if (!$config->config_data['external_db_host'] || !$this->ping($config->config_data['external_db_host']))
+			if (empty($config->config_data['external_db_host']))
+			{
+				return false;
+			}
+			if ($config->config_data['external_db_host'] && !$this->ping($config->config_data['external_db_host']))
 			{
 				$message = "Database server {$config->config_data['external_db_host']} is not accessible";
 				phpgwapi_cache::message_set($message, 'error');
@@ -116,6 +120,7 @@
 			catch (Exception $e)
 			{
 				$status = lang('unable_to_connect_to_database');
+				phpgwapi_cache::message_set($status, 'error');
 			}
 
 			$this->db = $db;

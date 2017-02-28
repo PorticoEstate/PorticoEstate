@@ -1,5 +1,5 @@
 
-<!-- $Id$ -->
+<!-- $Id: files.xsl 15892 2016-10-24 13:50:59Z sigurdne $ -->
 
 <xsl:template name="multi_upload">
 	<xsl:apply-templates select="multi_upload"/>
