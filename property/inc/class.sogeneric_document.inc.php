@@ -82,10 +82,10 @@
 			}
 			
 			$filtermethod = "WHERE a.mime_type != 'Directory' AND a.mime_type != 'journal' AND a.mime_type != 'journal-deleted'";
+			$joinmethod .= " {$this->left_join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
 
 			if ($cat_id)
 			{
-				$joinmethod .= " {$this->join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
 				$filtermethod .= " AND b.metadata @> '{\"cat_id\":\"{$cat_id}\"}'";
 			} 
 
@@ -127,7 +127,8 @@
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND a.name $this->like '%$query%'";
+				$querymethod = " AND (a.name $this->like '%{$query}%'";
+				$querymethod .= " OR metadata->>'descr' ilike '%{$query}%')";
 			}
 			
 			$sql = "SELECT DISTINCT a.file_id, a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
