@@ -1870,9 +1870,6 @@ update selected investments	property	no	opdater avmerkede investeringer
 update subject	property	no	Oppdater overskrift
 update the category to not active based on if there is only nonactive apartments	property	no	Oppdater kategori til utgått basert på om det bare finnes utgåtte leiligheter
 update the not active category for locations	property	no	Oppdater kategori til utgått for lokaliseringer
-upload file	property	no	Last opp fil
-upload multiple files	property	no	Last opp flere filer
-upload files	property	no	Last opp filer
 url	property	no	URL
 used in	property	no	Brukt i
 user	property	no	Bruker
