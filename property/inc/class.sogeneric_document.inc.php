@@ -128,7 +128,7 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND (a.name $this->like '%{$query}%'";
-				$querymethod .= " OR metadata->>'descr' ilike '%{$query}%')";
+				$querymethod .= " OR metadata->>'path' ilike '%{$query}%')";
 			}
 			
 			$sql = "SELECT DISTINCT a.file_id, a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
