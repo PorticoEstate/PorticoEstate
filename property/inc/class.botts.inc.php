@@ -556,6 +556,11 @@
 			return $locations;
 		}
 
+		function get_data_report( $data = array() )
+		{
+			return $this->so->get_data_report($data);
+		}
+
 		function read( $data = array() )
 		{
 			static $category_name = array();

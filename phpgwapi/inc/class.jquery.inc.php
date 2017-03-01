@@ -202,6 +202,14 @@
 						$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/contextMenu/jquery.contextMenu.min.css");
 					break;
 				
+				case 'chart':
+					$load = array
+						(
+						'chart' => array("Chart{$_type}")
+					);
+
+					break;
+				
 				case 'file-upload':
 					$load = array
 						(
