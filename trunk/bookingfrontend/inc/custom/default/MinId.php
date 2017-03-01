@@ -130,7 +130,18 @@
 					'orgnr' => $db->f('orgnr', true)
 				);
 			}
-			
+
+		//Testvalues
+		/*
+ 			$results[] = array
+			(
+				'orgnr' => 980016080
+			);
+			$results[] = array
+			(
+				'orgnr' => 996277267
+			);
+		*/
 			return $results;
 		}
 
