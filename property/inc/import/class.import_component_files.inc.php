@@ -11,8 +11,8 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 
 			$this->fakebase = '/temp_files_components';
-//			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
-			$this->path_upload_dir = '/data/portico/temp_files_components/';
+			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
+//			$this->path_upload_dir = '/data/portico/temp_files_components/';
 
 			$this->location_code = phpgw::get_var('location_code');
 			$this->location_item_id = phpgw::get_var('location_item_id');
@@ -225,6 +225,8 @@
 
 			$this->_delete_all_dir_temp();
 
+			$this->_delete_all_dir_temp();
+			
 			return $message;
 		}
 
@@ -849,6 +851,8 @@
 
 			$this->_delete_all_dir_temp();
 
+			$this->_delete_all_dir_temp();
+			
 			return $message;
 		}
 

@@ -910,20 +910,28 @@
 					'text' => lang('Helpdesk'),
 					'image' => array('property', 'helpdesk')
 				);
+
+				$menus['navigation']['helpdesk']['children'] = array
+					(
+					'report' => array
+						(
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.report')),
+						'text' => lang('report'),
+						'image' => array('property', 'helpdesk')
+					)
+				);
+
 			}
 
 			if ($acl->check('.ticket.order', PHPGW_ACL_ADD, 'property'))
 			{
-				$menus['navigation']['helpdesk']['children'] = array
-					(
-					'order_template' => array
+				$menus['navigation']['helpdesk']['children']['order_template'] =  array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'order_template')),
 						'text' => lang('order template'),
 						'image' => array('property', 'helpdesk')
-					)
-				);
+					);
 			}
 
 			if (isset($GLOBALS['phpgw_info']['user']['apps']['sms']))
