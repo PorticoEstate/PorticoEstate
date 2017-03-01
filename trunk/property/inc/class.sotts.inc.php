@@ -110,6 +110,48 @@
 			return $this->db->f('descr', true);
 		}
 
+		function get_data_report( $data )
+		{
+			$type = isset($data['type']) && $data['type'] ? (int)$data['type'] : 0;
+			$start_date = isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
+			$end_date = isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] :  mktime(23, 59, 59, date("n"),date("j"),date("Y"));
+			$_end_date = $end_date + 3600 * 16 + phpgwapi_datetime::user_timezone();
+			$_start_date = $start_date - 3600 * 8 + phpgwapi_datetime::user_timezone();
+
+			$data_report = array();
+			if($type ==1)
+			{
+				$fields = "count(cat_id) as count_category, cat_id";
+				$groupmethod = " GROUP BY cat_id";
+			}
+			else if ($type ==2)
+			{
+				$fields = "count(status) as count_status, status";
+				$groupmethod = " GROUP BY status";
+
+			}
+			else
+			{
+				return array();
+			}
+
+			$sql = "SELECT {$fields} FROM fm_tts_tickets WHERE fm_tts_tickets.entry_date >= $_start_date AND fm_tts_tickets.entry_date <= $_end_date "
+				. " {$groupmethod}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while($this->db->next_record())
+			{
+				$data_report[] = array(
+					'status'			=> $this->db->f('status'),
+					'count_status'		=> $this->db->f('count_status'),
+					'cat_id'			=> $this->db->f('cat_id'),
+					'count_category'	=> $this->db->f('count_category'),
+				);
+			}
+			return $data_report;
+		}
+
 		function read( $data )
 		{
 			$start = isset($data['start']) && $data['start'] ? (int)$data['start'] : 0;
