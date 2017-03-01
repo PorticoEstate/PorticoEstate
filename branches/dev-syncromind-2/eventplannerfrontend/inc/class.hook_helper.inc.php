@@ -195,7 +195,7 @@ HTML;
 		/**
 		* hook to add account
 		*
-		* this function is a wrapper function for emailadmin
+		* this function is a wrapper function for eventplanner
 		*
 		* @param _hookValues contains the hook values as array
 		* @returns nothing
@@ -211,8 +211,8 @@ HTML;
 				return;
 			}
 
-			$auth	= createObject('phpgwapi.auth');
-			$ssn_hash = $auth->create_hash($ssn);
+			$ssn_hash = "{SHA}" . base64_encode(phpgwapi_common::hex2bin(sha1($ssn)));
+
 			$hash_safe = $GLOBALS['phpgw']->db->db_addslashes($ssn_hash); // just to be safe :)
 
 			$data = json_encode(array('ssn_hash' => $hash_safe));

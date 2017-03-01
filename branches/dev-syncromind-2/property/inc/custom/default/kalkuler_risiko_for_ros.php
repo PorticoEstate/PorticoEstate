@@ -73,8 +73,19 @@
 			}
 		}
 
-		$value_set = $db->validate_update($value_set);
 		$db->transaction_begin();
-		$db->query("UPDATE fm_entity_2_6 set $value_set WHERE id=" . (int)$receipt['id'], __LINE__, __FILE__);
+
+		$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.6');
+
+//		$sql = "UPDATE fm_entity_2_6 set $value_set WHERE id=" . (int)$receipt['id'];
+
+		foreach ($value_set as $_key => $_value)
+		{
+			$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{{$_key}}', '\"{$_value}\"', true)"
+				. " WHERE location_id = {$location_id}"
+				. " AND id=" . (int)$receipt['id'];
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
 		$db->transaction_commit();
 	}

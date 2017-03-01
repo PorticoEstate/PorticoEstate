@@ -1870,9 +1870,6 @@ update selected investments	property	no	opdater avmerkede investeringer
 update subject	property	no	Oppdater overskrift
 update the category to not active based on if there is only nonactive apartments	property	no	Oppdater kategori til utgått basert på om det bare finnes utgåtte leiligheter
 update the not active category for locations	property	no	Oppdater kategori til utgått for lokaliseringer
-upload file	property	no	Last opp fil
-upload multiple files	property	no	Last opp flere filer
-upload files	property	no	Last opp filer
 url	property	no	URL
 used in	property	no	Brukt i
 user	property	no	Bruker
@@ -2075,3 +2072,35 @@ approval from %1 is required for order %2	property	no	Godkjenning fra %1 er påk
 missing recipient for order %1	property	no	Mangler mottaker for ordre %1
 export	property	no	Eksport
 simplified	property	no	Forenklet
+implicitly from project	property	no	Implisitt fra prosjekt
+generic import	property	no	Generisk import
+import components	property	no	Importer FDV-dokumentasjon
+relations	property	no	Koblinger
+components	property	no	Komponenter
+locations	property	no	Lokasjoner
+choose profile	property	no	Velg profil
+attributes template	property	no	Mal for feltmapping
+preview	property	no	Forhåndsvis
+start upload	property	no	Start opplasting
+cancel upload	property	no	Kanseller opplasting
+add files	property	no	Legg til filer
+start import	property	no	Start import
+choose attribute	property	no	Velg datafelt
+choose attribute name for component id	property	no	Velg datafelt som skal representere komponent Id
+number files	property	no	Antall filer
+without components	property	no	Uten komponenter
+with components	property	no	Med komponenter
+uncompressed	property	no	Ukomprimert
+compressed	property	no	Komprimert
+file name	property	no	Filnavn
+row	property	no	Rad
+download preview components	property	no	Last ned forhåndsvisning av komponenter
+new attributes	property	no	Nye attributter
+new categories	property	no	Nye kategorier
+save profile	property	no	Lagre profil
+columns and attributes	property	no	kolonner og attributter
+attribute name for component id	property	no	Attributtnavn for komponent id
+category template	property	no	Kategori mal
+profile	property	no	Profil
+new attribute	property	no	Ny attributt
+report	property	no	Rapport

@@ -142,6 +142,7 @@
 						'add_msg' => lang('add'),
 						'name' => lang('response template'),
 						'acl_app' => 'helpdesk',
+						'system_location' => '.ticket.response_template',
 						'acl_location' => '.ticket',
 						'menu_selection' => 'helpdesk::response_template',
 						'default' => array

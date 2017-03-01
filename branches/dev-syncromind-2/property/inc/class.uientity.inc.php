@@ -121,20 +121,20 @@
 			{
 				$this->acl_location .= ".{$this->cat_id}";
 			}
+
+			$acl_check_location = $this->acl_location;
+
 			$config = CreateObject('phpgwapi.config', 'property')->read();
 
 			if(!empty($config['bypass_acl_at_entity']) && is_array($config['bypass_acl_at_entity']) && in_array($this->entity_id, $config['bypass_acl_at_entity']))
 			{
-				$this->acl_read = true;
-			}
-			else
-			{
-				$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, $this->type_app[$this->type]);
+				$acl_check_location = ".{$this->type}.$this->entity_id"; //parent
 			}
 
-			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, $this->type_app[$this->type]);
-			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, $this->type_app[$this->type]);
-			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
+			$this->acl_read = $this->acl->check($acl_check_location, PHPGW_ACL_READ, $this->type_app[$this->type]);
+			$this->acl_add = $this->acl->check($acl_check_location, PHPGW_ACL_ADD, $this->type_app[$this->type]);
+			$this->acl_edit = $this->acl->check($acl_check_location, PHPGW_ACL_EDIT, $this->type_app[$this->type]);
+			$this->acl_delete = $this->acl->check($acl_check_location, PHPGW_ACL_DELETE, $this->type_app[$this->type]);
 
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = "{$this->type_app[$this->type]}::entity_{$this->entity_id}";
 			if ($this->cat_id > 0)
@@ -598,7 +598,7 @@
 			$doc_type = phpgw::get_var('doc_type', 'int');
 			$entity_id = phpgw::get_var('entity_id', 'int');
 			$cat_id = phpgw::get_var('cat_id', 'int');
-			$num = phpgw::get_var('num');
+			$item_id = phpgw::get_var('item_id');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$export = phpgw::get_var('export', 'bool');
 			$values = array();
@@ -614,7 +614,8 @@
 				'doc_type' => $doc_type,
 				'entity_id' => $entity_id,
 				'cat_id' => $cat_id,
-				'num' => $num
+				'num' => $item_id,
+				'location_item_id' => $item_id,
 			);
 			
 			$document = CreateObject('property.sodocument');
@@ -2167,7 +2168,7 @@
 						(
 						'container' => 'datatable-container_7',
 						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
-							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'num' => $values['num'], 'phpgw_return_as' => 'json'))),
+							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'item_id' => $id, 'phpgw_return_as' => 'json'))),
 						'data' => "",
 						'tabletools' => ($mode == 'edit') ? $documents_tabletools : array(),
 						'ColumnDefs' => $documents_def,

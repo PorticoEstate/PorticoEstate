@@ -11,7 +11,7 @@
 			'entity' => 'property',
 			'catch' => 'catch'
 		);
-		
+
 		public function __construct()
 		{
 			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
@@ -23,44 +23,44 @@
 			$this->bocommon = CreateObject('property.bocommon');
 		}
 
-		private function _get_attributes($entity_id, $cat_id)
+		private function _get_attributes( $entity_id, $cat_id )
 		{
 			$attributes = $this->custom->find($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}", 0, '', 'ASC', 'attrib_sort', true, true);
 
 			$values = array();
-			foreach($attributes as $attribute)
+			foreach ($attributes as $attribute)
 			{
 				$values[] = array(
-								'name' => $attribute['name'],
-								'datatype' => $attribute['datatype'],
-								'precision' => $attribute['precision'],
-								'history' => $attribute['history'],
-								'attrib_id' => $attribute['attrib_id'],
-								'nullable' => $attribute['nullable'],
-								'input_text' => $attribute['input_text'],
-								'disabled' => $attribute['disabled'],
-								'value' => $attribute['value']
-							);
+					'name' => $attribute['name'],
+					'datatype' => $attribute['datatype'],
+					'precision' => $attribute['precision'],
+					'history' => $attribute['history'],
+					'attrib_id' => $attribute['attrib_id'],
+					'nullable' => $attribute['nullable'],
+					'input_text' => $attribute['input_text'],
+					'disabled' => $attribute['disabled'],
+					'value' => $attribute['value']
+				);
 			}
-			
+
 			return $values;
 		}
-		
-		private function _set_attributes_values($values, $attributes)
+
+		private function _set_attributes_values( $values, $attributes )
 		{
-			foreach($attributes as &$attribute)
+			foreach ($attributes as &$attribute)
 			{
 				$attribute['value'] = $values[$attribute['name']];
 			}
-			
+
 			return $attributes;
 		}
-		
-		public function prepare_preview_components($import_data)
+
+		public function prepare_preview_components( $import_data )
 		{
 			$components = array();
-		
-			foreach ($import_data as $entity) 
+
+			foreach ($import_data as $entity)
 			{
 				foreach ($entity['components'] as $values)
 				{
@@ -68,17 +68,17 @@
 					unset($values['building_part']);
 					unset($values['name_building_part']);
 					$components[] = $values;
-				}	
+				}
 			}
-			
+
 			return $components;
 		}
-		
-		private function _get_component( $query, $attrib_name_componentID, $location_code)
+
+		private function _get_component( $query, $attrib_name_componentID, $location_code )
 		{
 			$location_code_values = explode('-', $location_code);
-			$loc1 =  $location_code_values[0];
-			
+			$loc1 = $location_code_values[0];
+
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
@@ -89,7 +89,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-			
+
 			if ($this->db->next_record())
 			{
 				$values['id'] = $this->db->f('id');
@@ -98,35 +98,36 @@
 
 			return $values;
 		}
-		
-		public function add_components($import_data, $location_code, $attrib_name_componentID)
+
+		public function add_components( $import_data, $location_code, $attrib_name_componentID )
 		{
 			$message = array();
-			
+
 			$location_code_values = explode('-', $location_code);
 			$i = 0;
 			$location = array();
-			foreach ($location_code_values as $loc) 
+			foreach ($location_code_values as $loc)
 			{
 				$i++;
-				$location['loc'.$i] = $loc;
+				$location['loc' . $i] = $loc;
 			}
-			
+
 			$this->db->transaction_begin();
-			
+
 			try
 			{
 				$this->db->Exception_On_Error = true;
 				$count_added = 0;
 				$count_updated = 0;
-				foreach ($import_data as $entity) 
+				foreach ($import_data as $entity)
 				{
 					$attributes = $this->_get_attributes($entity['entity_id'], $entity['cat_id']);
 
 					foreach ($entity['components'] as $values)
 					{
 						$attributes_values = $this->_set_attributes_values($values, $attributes);
-						$values_insert = $this->_populate(array('location_code'=>$location_code, 'location'=>$location), $attributes_values);
+						$values_insert = $this->_populate(array('location_code' => $location_code,
+							'location' => $location), $attributes_values);
 
 						$component = $this->_get_component($values_insert[$attrib_name_componentID], $attrib_name_componentID, $location_code);
 						if ($component['id'])
@@ -134,12 +135,14 @@
 							$receipt = $this->_edit_eav($values_insert, $entity['entity_id'], $entity['cat_id'], $component['id']);
 							$action = 'updated';
 							$count_updated++;
-						} else {
+						}
+						else
+						{
 							$receipt = $this->_save_eav($values_insert, $entity['entity_id'], $entity['cat_id']);
 							$action = 'added';
 							$count_added++;
 						}
-						
+
 						if (!$receipt)
 						{
 							throw new Exception("component {$values_insert[$attrib_name_componentID]} not {$action}");
@@ -159,7 +162,7 @@
 			}
 
 			$this->db->transaction_commit();
-			
+
 			if ($count_added)
 			{
 				$message['message'][] = array('msg' => lang('%1 components added successfully', $count_added));
@@ -167,14 +170,14 @@
 			if ($count_updated)
 			{
 				$message['message'][] = array('msg' => lang('%1 components updated successfully', $count_updated));
-			}			
+			}
 
-			return $message; 
+			return $message;
 		}
-		
+
 		private function _save_eav( $data, $entity_id, $cat_id )
 		{
-			$location_id = (int) $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+			$location_id = (int)$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
@@ -209,13 +212,13 @@
 
 			$result = $this->db->query("INSERT INTO fm_bim_item (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 				. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
-			
+
 			return $result;
 		}
-		
+
 		protected function _edit_eav( $data, $entity_id, $cat_id, $id )
 		{
-			$location_id = (int) $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
+			$location_id = (int)$GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
 			$id = (int)$id;
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
@@ -241,15 +244,15 @@
 			$value_set = $this->db->validate_update($value_set);
 			return $this->db->query("UPDATE fm_bim_item SET $value_set WHERE id = $id AND type = {$type}", __LINE__, __FILE__);
 		}
-		
+
 		private function _populate( $values, $values_attribute )
 		{
-			
+
 			if (is_array($values_attribute))
 			{
 				$values_attribute = $this->custom->convert_attribute_save($values_attribute);
 			}
-			
+
 			$values_insert = array();
 
 			if (isset($values['street_name']) && $values['street_name'])
@@ -333,8 +336,7 @@
 				$values_insert['p_id'] = $p_id;
 				$values_insert['p_location_id'] = $p_location_id;
 			}
-			
+
 			return $values_insert;
 		}
-		
 	}

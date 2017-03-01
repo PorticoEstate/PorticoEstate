@@ -115,7 +115,7 @@
 								<xsl:variable name="select_priority_name">
 									<xsl:value-of select="select_priority_name"/>
 								</xsl:variable>
-								<select name="{$select_priority_name}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
+								<select name="{$select_priority_name}">
 									<xsl:apply-templates select="priority_list/options"/>
 								</select>
 							</div>
@@ -137,7 +137,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'finnish date')"/>
 										</label>
-										<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;">
+										<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly">
 											<xsl:attribute name="title">
 												<xsl:value-of select="lang_finnish_date_statustext"/>
 											</xsl:attribute>
@@ -153,7 +153,7 @@
 							<xsl:value-of select="php:function('lang', 'subject')"/>
 						</label>
 						
-						<input type="text" name="values[subject]" value="{value_subject}" size="60" >
+						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 							</xsl:attribute>
@@ -173,7 +173,7 @@
 							<xsl:value-of select="php:function('lang', 'Details')"/>
 						</label>
 						
-						<textarea cols="60" rows="10" name="values[details]" >
+						<textarea class="pure-input-1-2" rows="10" name="values[details]" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 							</xsl:attribute>
@@ -193,7 +193,7 @@
 									<xsl:value-of select="lang_upload_file"/>
 								</label>
 								
-								<input type="file" name="file" size="40">
+								<input  class="pure-input-1-2" type="file" name="file">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_file_statustext"/>
 									</xsl:attribute>
@@ -368,7 +368,7 @@
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="value_id"/>
 						</label>
-						<input type="text" name="values[subject]" value="{value_subject}">
+						<input class="pure-input-1-2" type="text" name="values[subject]" value="{value_subject}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
@@ -534,7 +534,7 @@
 						<xsl:variable name="select_priority_name">
 							<xsl:value-of select="select_priority_name"/>
 						</xsl:variable>
-						<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}">
+						<select name="{$select_priority_name}" title="{$lang_priority_statustext}">
 							<xsl:if test="simple ='1'">
 								<xsl:attribute name="disabled">
 									<xsl:text>disabled</xsl:text>
@@ -549,7 +549,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<select id="status_id" name="values[status]" class="forms">
+								<select id="status_id" name="values[status]">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -578,7 +578,7 @@
 											<xsl:value-of select="php:function('lang', 'finnish date')"/>
 										</label>
 									
-										<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly" onMouseout="window.status='';return true;">
+										<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'select the estimated date for closing the task')"/>
 											</xsl:attribute>
@@ -592,12 +592,12 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'billable hours')"/>
 										</label>
-										<input type="text" id="values_billable_hour" name="values[billable_hours]" size="10" value="">
+										<input class="pure-input-1-4" type="text" id="values_billable_hour" name="values[billable_hours]" value="">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'enter the billable hour for the task')"/>
 											</xsl:attribute>
 										</input>
-										<input type="text" id="values_billable_hour_orig" name="values[billable_hours_orig]" size="10" value="{value_billable_hours}" readonly="readonly">
+										<input  class="pure-input-1-4" type="text" id="values_billable_hour_orig" name="values[billable_hours_orig]" value="{value_billable_hours}" readonly="readonly">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'enter the billable hour for the task')"/>
 											</xsl:attribute>
@@ -621,7 +621,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'new note')"/>
 						</label>
-						<textarea cols="{textareacols}" rows="{textarearows}" name="values[note]">
+						<textarea class="pure-input-1-2" rows="{textarearows}" name="values[note]">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'add new comments')"/>
 							</xsl:attribute>
@@ -669,7 +669,7 @@
 										<xsl:value-of select="value_sms_client_order_notice"/>
 									</xsl:attribute>
 								</input>
-								<input type="text" name="to_sms_phone" value="{value_sms_phone}">
+								<input  class="pure-input-1-8" type="text" name="to_sms_phone" value="{value_sms_phone}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="value_sms_client_order_notice"/>
 									</xsl:attribute>
@@ -684,7 +684,7 @@
 										<xsl:value-of select="php:function('lang', 'response')"/>
 									</a>
 								</label>
-								<textarea cols="{textareacols}" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
+								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'response')"/>
 									</xsl:attribute>
@@ -760,7 +760,7 @@
 											<xsl:value-of select="php:function('lang', 'external project')"/>
 										</label>
 										<input type="hidden" id="external_project_id" name="values[external_project_id]"  value="{value_external_project_id}"/>
-										<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}"/>
+										<input class="pure-input-1-2" type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}"/>
 										<div id="external_project_container"/>
 									</div>
 
@@ -769,7 +769,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'contract')"/>
 										</label>
-										<select id="vendor_contract_id" name="values[contract_id]">
+										<select id="vendor_contract_id" name="values[contract_id]" class="pure-input-1-2">
 											<option value="">
 												<xsl:value-of select="php:function('lang', 'select')"/>
 											</option>
@@ -785,7 +785,7 @@
 												<xsl:value-of select="$lang_service"/>
 											</label>
 											<input type="hidden" id="service_id" name="values[service_id]"  value="{value_service_id}"/>
-											<input type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
+											<input class="pure-input-1-2" type="text" id="service_name" name="values[service_name]" value="{value_service_name}">
 												<xsl:attribute name="data-validation">
 													<xsl:text>required</xsl:text>
 												</xsl:attribute>
@@ -805,7 +805,7 @@
 											<xsl:value-of select="$lang_dimb"/>
 										</label>
 										<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
-										<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}">
+										<input class="pure-input-1-2" type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}">
 											<xsl:attribute name="data-validation">
 												<xsl:text>required</xsl:text>
 											</xsl:attribute>
@@ -823,7 +823,7 @@
 											<xsl:value-of select="$lang_budget_account"/>
 										</label>
 										<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
-										<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}">
+										<input class="pure-input-1-2" type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}">
 											<xsl:attribute name="data-validation">
 												<xsl:text>required</xsl:text>
 											</xsl:attribute>
@@ -842,7 +842,7 @@
 												<xsl:value-of select="$lang_unspsc_code"/>
 											</label>
 											<input type="hidden" id="unspsc_code" name="values[unspsc_code]"  value="{value_unspsc_code}"/>
-											<input type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
+											<input class="pure-input-1-2" type="text" id="unspsc_code_name" name="values[unspsc_code_name]" value="{value_unspsc_code} {value_unspsc_code_name}">
 												<xsl:attribute name="data-validation">
 													<xsl:text>required</xsl:text>
 												</xsl:attribute>
@@ -951,7 +951,7 @@
 											</a>
 										</label>
 
-										<textarea cols="{textareacols}" rows="{textarearows}" id="order_descr" name="values[order_descr]" wrap="virtual">
+										<textarea class="pure-input-1-2" rows="{textarearows}" id="order_descr" name="values[order_descr]" wrap="virtual">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'description order')"/>
 											</xsl:attribute>
@@ -963,7 +963,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
 										</label>
-										<input id="field_budget" type="text" name="values[budget]">
+										<input class="pure-input-1-2" id="field_budget" type="text" name="values[budget]">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 											</xsl:attribute>
@@ -1023,7 +1023,7 @@
 											<xsl:value-of select="php:function('lang', 'period')"/>
 										</xsl:variable>
 
-										<select name="values[actual_cost_period]">
+										<select name="values[actual_cost_period]" class="pure-input-1-2">
 											<xsl:attribute name="title">
 												<xsl:value-of select='$lang_period'/>
 											</xsl:attribute>
@@ -1073,7 +1073,7 @@
 										<table class="pure-table pure-u-md-1-2">
 											<tr>
 												<td valign = 'top'>
-													<select name="values[send_order_format]" class="forms">
+													<select name="values[send_order_format]">
 														<xsl:attribute name="title">
 															<xsl:value-of select="php:function('lang', 'format')"/>
 														</xsl:attribute>
@@ -1123,7 +1123,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'status')"/>
 										</label>
-										<select id="status_id" name="values[status]" class="forms">
+										<select id="status_id" name="values[status]" class="pure-input-1-2">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 											</xsl:attribute>
@@ -1327,17 +1327,17 @@
 	<xsl:if test="simple !='1'">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		<div class="proplist-col">
+		 <div class="pure-g">
 			<xsl:choose>
 				<xsl:when test="request_link != ''">
 					<xsl:variable name="request_link">
 						<xsl:value-of select="request_link"/>
 					</xsl:variable>
-					<form method="post" action="{$request_link}">
+					<form method="post" action="{$request_link}" class="pure-u-1-1 pure-u-md-1-2">
 						<xsl:variable name="lang_generate_request">
 							<xsl:value-of select="php:function('lang', 'Generate Request')"/>
 						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_generate_request}">
+						<input type="submit" class="pure-button pure-button-primary pure-u-24-24" name="location" value="{$lang_generate_request}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'click this to generate a request with this information')"/>
 							</xsl:attribute>
@@ -1350,11 +1350,11 @@
 					<xsl:variable name="order_link">
 						<xsl:value-of select="order_link"/>
 					</xsl:variable>
-					<form method="post" action="{$order_link}">
+					<form method="post" action="{$order_link}" class="pure-u-1-1 pure-u-md-1-2">
 						<xsl:variable name="lang_generate_project">
 							<xsl:value-of select="php:function('lang', 'generate new project')"/>
 						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_generate_project}">
+						<input type="submit" class="pure-button pure-button-primary pure-u-24-24" name="location" value="{$lang_generate_project}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'click this to generate a project with this information')"/>
 							</xsl:attribute>
@@ -1364,11 +1364,11 @@
 					<xsl:variable name="add_to_project_link">
 						<xsl:value-of select="add_to_project_link"/>
 					</xsl:variable>
-					<form method="post" action="{$add_to_project_link}">
+					<form method="post" action="{$add_to_project_link}" class="pure-u-1-1 pure-u-md-1-2">
 						<xsl:variable name="lang_add_to_project">
 							<xsl:value-of select="php:function('lang', 'add to project')"/>
 						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$lang_add_to_project}">
+						<input type="submit" class="pure-button pure-button-primary pure-u-24-24" name="location" value="{$lang_add_to_project}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'click this to add an order to an existing project')"/>
 							</xsl:attribute>
@@ -1382,11 +1382,11 @@
 						<xsl:variable name="link">
 							<xsl:value-of select="link"/>
 						</xsl:variable>
-						<form method="post" action="{$link}">
+						<form method="post" action="{$link}" class="pure-u-1-1 pure-u-md-1-2">
 							<xsl:variable name="name">
 								<xsl:value-of select="name"/>
 							</xsl:variable>
-							<input type="submit" class="pure-button pure-button-primary" name="location" value="{$name}" onMouseout="window.status='';return true;">
+							<input type="submit" class="pure-button pure-button-primary pure-u-24-24" name="location" value="{$name}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_start_statustext"/>
 								</xsl:attribute>

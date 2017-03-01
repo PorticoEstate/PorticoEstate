@@ -46,6 +46,10 @@
 
 		function execute()
 		{
+			return;
+			
+			//konverter til eav-modell.
+
 			$this->db->transaction_begin();
 
 			$sql = "SELECT kunde_nr_lev, fm_entity_1_3.loc1, fm_entity_1_3.loc2, Count(fm_location4.location_code) AS antall_leieobjekt, fm_entity_1_3.location_code

@@ -350,14 +350,14 @@
 			$j = 0;
 			while ($this->db->next_record())
 			{
-				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
 
 				foreach ($attributes as $attrib_id => $field)
 				{
-					if (!$value = $jsondata[$field['name']])
+					if (!$value = $this->db->stripslashes($jsondata[$field['name']]))
 					{
 						$value = $this->db->f($field['name'], true);
 					}
@@ -759,7 +759,7 @@
 								if (ctype_digit($query) && !$criteria_id)
 								{
 //									$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$query;
-									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."'  {$this->like} '" .(int)$query . "%'";
+									$_querymethod[] = "CAST(json_representation->>'". $this->db->f('column_name') . "'AS text)  {$this->like} '" .(int)$query . "%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -853,7 +853,7 @@
 					{
 						if(!empty($attibute['choice']))
 						{
-							$_querymethod_status = "(json_representation->>'status' IS NULL OR CAST( json_representation->>'status' AS integer) < 90)";
+							$_querymethod_status = "(NULLIF(json_representation->>'status', '')::integer IS NULL OR NULLIF(json_representation->>'status', '')::integer < 90)";
 						}
 					}
 				}
@@ -1056,12 +1056,12 @@
 //				$xmldata = $this->db->f('xml_representation');
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
-				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				foreach ($cols_return as $key => $field)
 				{
 			//		if (!$value = $xml->getElementsByTagName($field)->item(0)->nodeValue)
-					if (!$value = $jsondata[$field])
+					if (!$value = $this->db->stripslashes($jsondata[$field]))
 					{
 						$value = $this->db->f($field, true);
 					}
@@ -2119,14 +2119,14 @@
 //				$xml = new DOMDocument('1.0', 'utf-8');
 //				$xml->loadXML($xmldata);
 
-				$jsondata = json_decode($this->db->f('json_representation', true), true);
+				$jsondata = json_decode($this->db->f('json_representation'), true);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
 //						$attr['value'] = $xml->getElementsByTagName($attr['column_name'])->item(0)->nodeValue;
-						$attr['value'] = $jsondata[$attr['column_name']];
+						$attr['value'] = $this->db->stripslashes($jsondata[$attr['column_name']]);
 					}
 				}
 			}
@@ -2345,7 +2345,7 @@
 				}
 
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], ".{$this->type}.{$entity_id}.{$cat_id}");
-				$values['id'] = $this->_save_eav($values_insert, $location_id, ".{$this->type}.{$entity_id}.{$cat_id}");
+				$values['id'] = $this->_save_eav($values_insert, $location_id);
 			}
 			else
 			{
@@ -2398,35 +2398,14 @@
 			return $receipt;
 		}
 
-		protected function _save_eav( $data = array(), $location_id, $location_name )
+		public function _save_eav( $data = array(), $location_id )
 		{
 			$location_id = (int)$location_id;
-			$location_name = str_replace('.', '_', $location_name);
 
 			$this->db->query("SELECT id as type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 			$this->db->next_record();
 			$type = $this->db->f('type');
 			$id = $this->db->next_id('fm_bim_item', array('type' => $type));
-
-//			phpgw::import_class('phpgwapi.xmlhelper');
-//			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
-//			$doc = new DOMDocument;
-//			$doc->preserveWhiteSpace = true;
-//			$doc->loadXML($xmldata);
-//			$domElement = $doc->getElementsByTagName($location_name)->item(0);
-//			$domAttribute = $doc->createAttribute('appname');
-//			$domAttribute->value = $this->type_app[$this->type];
-//
-//			// Don't forget to append it to the element
-//			$domElement->appendChild($domAttribute);
-//
-//			// Append it to the document itself
-//			$doc->appendChild($domElement);
-//			$doc->formatOutput = true;
-//
-//			$xml = $doc->saveXML();
-
-			//	_debug_array($xml);
 
 			if (function_exists('com_create_guid') === true)
 			{
@@ -2443,7 +2422,6 @@
 				'location_id' => $location_id,
 				'type' => $type,
 				'guid' => $guid,
-//				'xml_representation' => $this->db->db_addslashes($xml),
 				'json_representation' => json_encode($data),
 				'model' => 0,
 				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
@@ -2621,8 +2599,8 @@
 //							$xml = new DOMDocument('1.0', 'utf-8');
 //							$xml->loadXML($xmldata);
 //							$old_value = $xml->getElementsByTagName($entry['name'])->item(0)->nodeValue;
-							$jsondata = json_decode($this->db->f('json_representation', true), true);
-							$old_value = $jsondata[$entry['name']];
+							$jsondata = json_decode($this->db->f('json_representation'), true);
+							$old_value = $this->db->stripslashes($jsondata[$entry['name']]);
 
 						}
 

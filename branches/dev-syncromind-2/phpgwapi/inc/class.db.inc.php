@@ -408,7 +408,11 @@
 			$insert_value = array();
 			foreach ( $values as $value )
 			{
-				if($value || (is_numeric($value) && $value == 0) )
+				if($value && $this->isJson($value))
+				{
+					$insert_value[]	= "'" . $this->db_addslashes($value) . "'";
+				}
+				else if($value || (is_numeric($value) && $value == 0) )
 				{
 					if ( is_numeric($value) )
 					{
@@ -418,10 +422,6 @@
 					{
 						$insert_value[]	= "'" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
-				}
-				else if($value && $this->isJson($value))
-				{
-					$insert_value[]	= "'{$value}'";
 				}
 				else
 				{
@@ -433,6 +433,10 @@
 
 		final public function isJson($string)
 		{
+			if(!preg_match('/^{/', $string))
+			{
+				return false;
+			}
 			json_decode($string);
 			return (json_last_error() == JSON_ERROR_NONE);
 		}
@@ -453,7 +457,11 @@
 			$value_entry = array();
 			foreach ( $value_set as $field => $value )
 			{
-				if($value || (is_numeric($value) && $value == 0) )
+				if($value && $this->isJson($value))
+				{
+					$value_entry[]= "{$field}='" . $this->db_addslashes($value) . "'";
+				}
+				else if($value || (is_numeric($value) && $value == 0) )
 				{
 					if ( is_numeric($value) )
 					{
@@ -468,12 +476,8 @@
 					}
 					else
 					{
-						$value_entry[]= "{$field}='{$value}'";
+						$value_entry[]= "{$field}='" . $this->db_addslashes(stripslashes($value)) . "'"; //in case slashes are already added.
 					}
-				}
-				else if($value && $this->isJson($value))
-				{
-					$value_entry[]= "{$field}='{$value}'";
 				}
 				else
 				{
@@ -483,6 +487,15 @@
 			return implode(',', $value_entry);
 		}
 
+		final public function stripslashes( $value )
+		{
+			$str =  preg_replace_callback('/u([0-9a-fA-F]{4})/', function ($match)
+			{
+				return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
+			}, $value);
+
+			return  htmlspecialchars_decode(stripslashes(str_replace(array('&amp;','&#40;', '&#41;', '&#61;','&#8722;&#8722;','&#59;'), array('&','(', ')', '=', '--',';'), $str)),ENT_QUOTES);
+		}
 		/**
 		* Get the number of rows affected by last update
 		*

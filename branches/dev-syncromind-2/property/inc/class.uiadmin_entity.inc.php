@@ -753,6 +753,7 @@
 					'date', 'security', 'file'))
 			);
 
+			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit', 'property');
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;

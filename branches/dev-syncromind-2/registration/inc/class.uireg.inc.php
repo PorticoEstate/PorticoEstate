@@ -61,6 +61,11 @@
 
 		function header( $sub = '' )
 		{
+			if(!empty($this->config['debug']))
+			{
+				$headers = getallheaders();
+				_debug_array($headers);
+			}
 			if (!$sub)
 			{
 				$sub = lang('Account registration');
@@ -154,8 +159,9 @@
 
 				$lang_domain = lang('domain');
 				$domain_select = <<<HTML
-		<td>{$lang_domain}</td>
-		<td>
+
+	<div class="pure-control-group">
+		<label>{$lang_domain}</label>
 			<select name="logindomain" id="logindomain" class="inputbox">
 HTML;
 
@@ -178,7 +184,7 @@ HTML;
 				$domain_select .= <<<HTML
 				{$options}
 			</select>
-		</td>
+		</div>
 HTML;
 
 				$values = array
@@ -272,6 +278,7 @@ HTML;
 			$this->template->set_var('lang_password', lang('Password'));
 			$this->template->set_var('lang_reenter_password', lang('Re-enter password'));
 			$this->template->set_var('lang_submit', lang('Submit'));
+			$this->template->set_var('lang_error_match', lang('The two passwords are not the same'));
 
 			if (!$show_password_prompt)
 			{
@@ -335,8 +342,19 @@ HTML;
 				$this->template->set_var('errors', $GLOBALS['phpgw']->common->error_list($errors));
 			}
 
+			if($this->config['username_is'] == 'email')
+			{
+				$input_type = 'email';
+			}
+			else
+			{
+				$input_type = 'text';
+				
+			}
+
 			$this->template->set_var('form_action', $GLOBALS['phpgw']->link('/registration/main.php', array(
 					'menuaction' => 'registration.boreg.lostpw1', 'logindomain' => $_REQUEST['logindomain'])));
+			$this->template->set_var('input_type', $input_type);
 			$this->template->set_var('lang_explain', lang('After you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.'));
 			$this->template->set_var('lang_username', lang('Username'));
 			$this->template->set_var('lang_submit', lang('Submit'));
@@ -368,6 +386,7 @@ HTML;
 			$this->template->set_var('lang_enter_password', lang('Enter your new password'));
 			$this->template->set_var('lang_reenter_password', lang('Re-enter your password'));
 			$this->template->set_var('lang_change', lang('Change'));
+			$this->template->set_var('lang_error_match', lang('The two passwords are not the same'));
 
 			$this->template->pfp('out', 'form');
 			$this->footer();

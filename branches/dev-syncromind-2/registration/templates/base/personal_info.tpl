@@ -28,7 +28,6 @@
 
 		<!-- BEGIN username -->
 		<div class="pure-control-group">
-			<td width="1%"></td>
 			{domain_select}
 		</div>
 		<div class="pure-control-group">
@@ -42,12 +41,12 @@
 		<div class="pure-control-group">
 			{missing_passwd}
 			<label for="password">{lang_password}</label>
-			<input type="password" id="password" type="text" placeholder="{lang_password}" name="r_reg[passwd]" value="{value_passwd}" required>
+			<input type="password" id="password" placeholder="{lang_password}" name="r_reg[passwd]" value="{value_passwd}" required>
 		</div>
 
 		<div class="pure-control-group">
 			<label for="password2">{missing_passwd_confirm}{lang_reenter_password}</label>
-			<input type="password" id="password2" type="text" placeholder="{lang_password}" name="r_reg[passwd_confirm]" value="{value_passwd_confirm}" required>
+			<input type="password" id="password2" placeholder="{lang_password}" name="r_reg[passwd_confirm]" value="{value_passwd_confirm}" required oninput="check(this)">
 		</div>
 		<!-- END password -->
 
@@ -73,5 +72,19 @@
 
 	</fieldset>
 </form>
+<script language='javascript' type='text/javascript'>
+	function check(input)
+	{
+		if (input.value != document.getElementById('password').value)
+		{
+			input.setCustomValidity('{lang_error_match}');
+		}
+		else
+		{
+			// input is valid -- reset the error message
+			input.setCustomValidity('');
+		}
+	}
+</script>
 <!-- END form -->
 

@@ -1190,6 +1190,14 @@
 						{
 							$data = $this->db2->Record;
 
+							if($data)
+							{
+								foreach ($data as $key => &$value)
+								{
+									$value = $value === null ? null : $this->db->stripslashes($value);
+								}
+							}
+
 							$p_location_id = '';
 							if ($data['p_cat_id'])
 							{

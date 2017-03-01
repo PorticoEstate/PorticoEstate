@@ -1,8 +1,53 @@
+var vendor_id_selection;
 
 var lang;
 var oArgs = {menuaction: 'eventplanner.uivendor.index', organization_number: true};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container', 'name');
+
+$(window).on('load', function ()
+{
+	vendor_id = $('#vendor_id').val();
+	if (vendor_id)
+	{
+		vendor_id_selection = vendor_id;
+	}
+	$("#vendor_name").on("autocompleteselect", function (event, ui)
+	{
+		var vendor_id = ui.item.value;
+		if (vendor_id != vendor_id_selection)
+		{
+			populateVendorContact(vendor_id);
+		}
+	});
+});
+
+function populateVendorContact(vendor_id)
+{
+	vendor_id = vendor_id || $('#vendor_id').val();
+
+	if (!vendor_id)
+	{
+		return;
+	}
+	oArgs = {
+		menuaction: 'eventplanner.uivendor.get',
+		id: vendor_id
+	};
+
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var data = {};
+
+	JqueryPortico.execute_ajax(requestUrl,
+		function (result)
+		{
+			$("#contact_name").val(result.contact_name);
+			$("#contact_email").val(result.contact_email);
+			$("#contact_phone").val(result.contact_phone);
+
+		}, data, "POST", "json"
+		);
+}
 
 validate_submit = function ()
 {
