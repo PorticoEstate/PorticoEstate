@@ -9,7 +9,7 @@
 				<label>
 					<xsl:value-of select="php:function('lang', 'from')"/>
 				</label>
-				<input type="text" id="filter_start_date" name="filter_start_date" size="10" value="{start_date}" readonly="readonly" onMouseout="window.status='';return true;">
+				<input type="text" id="filter_start_date" name="filter_start_date" size="10" value="{start_date}">
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_finnish_date_statustext"/>
 					</xsl:attribute>
@@ -20,7 +20,7 @@
 				<label>
 					<xsl:value-of select="php:function('lang', 'to')"/>
 				</label>
-				<input type="text" id="filter_end_date" name="filter_end_date" size="10" value="{end_date}" readonly="readonly" onMouseout="window.status='';return true;">
+				<input type="text" id="filter_end_date" name="filter_end_date" size="10" value="{end_date}">
 					<xsl:attribute name="title">
 						<xsl:value-of select="lang_finnish_date_statustext"/>
 					</xsl:attribute>
