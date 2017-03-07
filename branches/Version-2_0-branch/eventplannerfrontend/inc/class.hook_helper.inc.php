@@ -138,6 +138,10 @@
 				}
 			}
 
+			/**
+			 * $_SESSION['orgs'] is set in eventplannerfrontend_external_user::get_user_org_id()
+			 */
+
 			if(!empty($_SESSION['orgs']) && is_array($_SESSION['orgs']))
 			{
 				$orgs = phpgw::get_var('orgs', 'string', 'SESSION');
@@ -167,7 +171,13 @@ HTML;
 
 			if ($orgs)
 			{
-				$action = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
+				$action_data = array();
+				if(!empty($_GET['menuaction']))
+				{
+					$action_data['menuaction'] = phpgw::get_var('menuaction');
+				}
+				$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/',$action_data);
+
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML

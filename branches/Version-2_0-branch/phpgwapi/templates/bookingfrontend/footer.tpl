@@ -66,7 +66,8 @@ function init() {
         oElement.setAttribute('onclick', 'clearCookie();');
 
 		var cookie = getCookie('orgbox');
-		if (cookie != 1) {
+//		if (cookie != 1)
+		{
 			orgbox();
 			var oList = document.getElementById("orglist");
 			oList.innerHTML += '<div style="padding-top: 10px">PS: Du kan bruke <i class="fa fa-users"></i> ikonet for Ã¥ bytte organisasjon.</div>';
