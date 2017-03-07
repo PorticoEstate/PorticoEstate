@@ -1,8 +1,8 @@
 var vendor_id_selection;
 
 var lang;
-var oArgs = {menuaction: 'eventplanner.uivendor.index', organization_number: true};
-var strURL = phpGWLink('index.php', oArgs, true);
+var oArgs = {menuaction: 'eventplannerfrontend.uivendor.index', organization_number: true};
+var strURL = phpGWLink('eventplannerfrontend/', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_container', 'name');
 
 $(window).on('load', function ()
@@ -31,11 +31,11 @@ function populateVendorContact(vendor_id)
 		return;
 	}
 	oArgs = {
-		menuaction: 'eventplanner.uivendor.get',
+		menuaction: 'eventplannerfrontend.uivendor.get',
 		id: vendor_id
 	};
 
-	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 	var data = {};
 
 	JqueryPortico.execute_ajax(requestUrl,
@@ -269,11 +269,11 @@ add_booking = function ()
 	}
 
 	oArgs = {
-		menuaction: 'eventplanner.uibooking.save_ajax',
+		menuaction: 'eventplannerfrontend.uibooking.save_ajax',
 		application_id: $("#application_id").val()
 	};
 
-	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 	var htmlString = '';
 	$("#receipt").html("");
 	var data = {from_: from_, active: 1};
@@ -319,9 +319,9 @@ update_schedule = function (id)
 	{
 		return;
 	}
-	oArgs = {menuaction: 'eventplanner.uibooking.update_schedule'};
+	oArgs = {menuaction: 'eventplannerfrontend.uibooking.update_schedule'};
 
-	var requestUrl = phpGWLink('index.php', oArgs, true);
+	var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 	var htmlString = '';
 	$("#receipt").html("");
 
@@ -391,9 +391,9 @@ this.onActionsClick = function (action)
 	{
 		var data = {"ids": ids, "action": action, from_: $("#from_").val()};
 
-		oArgs = {menuaction: 'eventplanner.uibooking.update_active_status'};
+		oArgs = {menuaction: 'eventplannerfrontend.uibooking.update_active_status'};
 
-		var requestUrl = phpGWLink('index.php', oArgs, true);
+		var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 
 		var htmlString = '';
 		$("#receipt").html("");

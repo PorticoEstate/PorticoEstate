@@ -420,7 +420,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('eventplanner', 'portico', 'application.edit.js');
+			self::add_javascript('eventplannerfrontend', 'portico', 'application.edit.js');
 			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}
 

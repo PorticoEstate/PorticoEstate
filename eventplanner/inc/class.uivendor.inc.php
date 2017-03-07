@@ -248,7 +248,7 @@
 					'type' => 'custom',
 					'className' => 'add',
 					'custom_code' => "
-								add_application({$id}, '{$this->currentapp}.uiapplication.edit' );"
+								add_application('{$this->currentapp}', '{$this->currentapp}.uiapplication.edit', {$id});"
 				)
 			);
 
