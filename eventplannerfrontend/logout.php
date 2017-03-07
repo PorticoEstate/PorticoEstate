@@ -68,4 +68,12 @@
 		$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
 	}
 
+	$login = phpgw::get_var('login', 'bool');
+
+	if($login)
+	{
+		$GLOBALS['phpgw']->redirect_link('/eventplannerfrontend/login.php', array('after' => phpgw::get_var('after', 'raw')));
+
+	}
+
 	$GLOBALS['phpgw']->redirect_link('/eventplannerfrontend/', array('cd' => 1, 'logout' => true));
