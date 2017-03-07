@@ -225,6 +225,20 @@
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
 				$application = $this->bo->read_single($id);
 			}
+
+
+			$vendor_id = phpgw::get_var('vendor_id', 'int');
+
+			if($vendor_id && !$application->vendor_id)
+			{
+				$vendor = createObject('eventplanner.bovendor')->read_single($vendor_id);
+				$application->vendor_id = $vendor_id;
+				$application->vendor_name = $vendor->name;
+				$application->contact_name = $vendor->contact_name;
+				$application->contact_email = $vendor->contact_email;
+				$application->contact_phone = $vendor->contact_phone;
+			}
+
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 			$default_category = !empty($config['default_application_category']) ? $config['default_application_category'] : null;
 

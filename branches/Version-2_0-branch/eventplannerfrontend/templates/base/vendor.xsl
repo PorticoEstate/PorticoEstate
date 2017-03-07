@@ -194,6 +194,9 @@
 								<xsl:value-of select="php:function('lang', 'vendor description')"/>
 							</label>
 							<textarea cols="47" rows="7" name="description">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
 								<xsl:value-of select="vendor/description"/>
 							</textarea>
 						</div>
@@ -202,16 +205,37 @@
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
 								<xsl:value-of select="vendor/remark"/>
 							</textarea>
 						</div>
 					</fieldset>
 				</div>
+				<div id="application">
+					<fieldset>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'application')"/>
+							</label>
+							<div class="pure-custom">
+								<xsl:for-each select="datatable_def">
+									<xsl:if test="container = 'datatable-container_1'">
+										<xsl:call-template name="table_setup">
+											<xsl:with-param name="container" select ='container'/>
+											<xsl:with-param name="requestUrl" select ='requestUrl'/>
+											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+											<xsl:with-param name="tabletools" select ='tabletools'/>
+											<xsl:with-param name="data" select ='data'/>
+											<xsl:with-param name="config" select ='config'/>
+										</xsl:call-template>
+									</xsl:if>
+								</xsl:for-each>
+							</div>
+						</div>
+					</fieldset>
+				</div>
 			</div>
-			<div class="proplist-col">
+			<div id="submit_group_bottom" class="proplist-col">
 				<input type="submit" class="pure-button pure-button-primary" name="save">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'save')"/>
