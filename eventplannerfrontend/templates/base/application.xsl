@@ -137,12 +137,13 @@
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 								</input>
+								<!--
 								<xsl:text> </xsl:text>
 								<a href="{new_vendor_url}" target="_blank">
 									<xsl:value-of select="php:function('lang', 'new')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'vendor')"/>
-								</a>
+								</a>-->
 								<div id="vendor_container"/>
 							</div>
 							<div class="pure-control-group">
