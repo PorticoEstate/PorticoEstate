@@ -1191,6 +1191,7 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_start_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 			phpgwapi_jquery::load_widget('chart');
+			phpgwapi_jquery::load_widget('print');
 				
 			$start_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), '01', date("Y")), $this->dateFormat);
 			$end_date = $GLOBALS['phpgw']->common->show_date(mktime(0, 0, 0, date("m"), date("d"), date("Y")), $this->dateFormat);
