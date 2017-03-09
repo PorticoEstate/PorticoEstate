@@ -44,6 +44,7 @@
 		protected $currentapp;
 		protected $acl;
 		protected $relaxe_acl;
+		protected $account;
 
 		public function __construct( $table_name, $fields )
 		{
@@ -59,6 +60,7 @@
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		/**
@@ -364,12 +366,18 @@
 			return $conditions;
 		}
 
-		function read_single( $id, $return_object = false )
+		function read_single( $id, $return_object = false , $relaxe_acl = false)
 		{
 			if (!$id && !$return_object)
 			{
 				return array();
 			}
+
+			if($relaxe_acl)
+			{
+				$this->relaxe_acl = $relaxe_acl;
+			}
+
 			$row = array();
 			$pk_params = $this->primary_key_conditions($id);
 
