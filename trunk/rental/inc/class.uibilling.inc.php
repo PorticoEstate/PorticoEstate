@@ -129,7 +129,7 @@
 							(array) $contract_ids_override,
 							phpgw::get_var('export_format'),
 							$existing_billing,
-							$contract_bill_only_one_time,
+							(array) $contract_bill_only_one_time,
 							$_dry_run = true
 						);
 						$simulation_data = array();
@@ -403,7 +403,21 @@ JS;
 
 					if ($missing_billing_info == null || count($missing_billing_info) == 0)
 					{
-						$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), phpgw::get_var('title'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $contract_ids_override, phpgw::get_var('export_format'), $existing_billing, $contract_bill_only_one_time);
+						$billing_job = rental_sobilling::get_instance()->create_billing(
+							isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2,
+							phpgw::get_var('contract_type'),
+							phpgw::get_var('billing_term'),
+							phpgw::get_var('year'),
+							phpgw::get_var('month'),
+							phpgw::get_var('title'),
+							$GLOBALS['phpgw_info']['user']['account_id'],
+							$contract_ids,
+							$contract_ids_override,
+							phpgw::get_var('export_format'),
+							$existing_billing,
+							$contract_bill_only_one_time,
+							$_dry_run = false
+						);
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.view',
 							'id' => $billing_job->get_id()));
 						return;
@@ -1483,7 +1497,7 @@ JS;
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
-			$search_for = $search['value'];
+			$search_for = (string)$search['value'];
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			// Create an empty result set
@@ -1495,7 +1509,7 @@ JS;
 			$export = phpgw::get_var('export', 'bool');
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			switch ($query_type)
