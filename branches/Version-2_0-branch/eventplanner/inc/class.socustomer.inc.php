@@ -55,6 +55,24 @@
 			return self::$so;
 		}
 
+		function get_acl_condition( )
+		{
+			$acl_condition = parent::get_acl_condition();
+			
+			$sql = "SELECT object_id, permission FROM eventplanner_permission WHERE subject_id = {$this->account}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$object_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$permission = $this->db->f('permission');
+				if($permission & PHPGW_ACL_READ)
+				{
+					$object_ids[] = $this->db->f('object_id');
+				}
+			}
+
+			return '(' . $acl_condition . ' OR eventplanner_customer.id IN (' . implode(',', $object_ids) . '))';
+		}
 
 		protected function populate( array $data )
 		{
