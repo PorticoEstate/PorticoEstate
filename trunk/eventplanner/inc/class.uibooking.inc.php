@@ -147,7 +147,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'booking.index.js');
+			self::add_javascript($this->currentapp, 'portico', 'booking.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
