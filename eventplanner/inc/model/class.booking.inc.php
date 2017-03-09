@@ -264,7 +264,7 @@
 
 			if (!empty($entity->application_id))
 			{
-				$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
+				$application = createObject('eventplanner.boapplication')->read_single($entity->application_id, true, $relaxe_acl = true);
 				$entity->to_ = $entity->from_ + ((int)$application->timespan * 60);
 			}
 

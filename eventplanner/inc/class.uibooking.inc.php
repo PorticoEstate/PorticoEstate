@@ -279,7 +279,7 @@
 				)
 			);
 
-			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
+			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id, true, $relaxe_acl = true);
 
 //			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $booking->from_, array(
 //					'min_date' => date('Y/m/d', $application->date_start),
