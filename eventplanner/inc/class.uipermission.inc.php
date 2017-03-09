@@ -214,13 +214,28 @@
 
 		public function get_subjet($selected = 0)
 		{
-			$users = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'eventplanner');
+			$users_frontend = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'eventplannerfrontend');
+			$users_backend = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'eventplanner');
+
+			$users = array();
+			foreach ($users_frontend as $user)
+			{
+				$users[$user['account_id']] = $user;
+			}
+			unset($user);
+
+			foreach ($users_backend as $user)
+			{
+				$users[$user['account_id']] = $user;
+			}
+			unset($user);
 
 			$user_list = array();
-			$user_list[] = array('id' => '','name' => lang('select'));
+			$account_name = array();
 			foreach ($users as $user)
 			{
 				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$account_name[] = $name;
 				$user_list[] = array
 				(
 					'id' => $user['account_id'],
@@ -228,6 +243,11 @@
 					'selected' => $user['account_id'] == $selected ? 1 : 0
 				);
 			}
+
+			array_multisort($account_name, SORT_ASC, $user_list);
+
+			array_unshift($user_list, array('id' => '','name' => lang('select')));
+
 			return $user_list;
 		}
 	}
