@@ -73,6 +73,7 @@ $(document).ready(function ()
 		
 		var img = $('<img id="dynamic">');
 		img.attr('src', src);
+		img.width(500);
 		img.appendTo('#content-image');
 
 		$("#content-image").print({
