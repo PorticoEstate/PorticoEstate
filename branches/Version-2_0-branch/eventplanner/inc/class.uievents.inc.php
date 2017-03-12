@@ -195,8 +195,7 @@
 			$tabs = array();
 			$tabs['first_tab'] = array(
 				'label' => lang('event'),
-				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
+				'link' => '#first_tab'
 			);
 
 
@@ -211,7 +210,6 @@
 				array('key' => 'application_id', 'hidden' => true),
 			);
 
-			
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
@@ -259,7 +257,7 @@
 			self::render_template_xsl(array('events', 'application_info', 'datatable_inline'), array('edit' => $data));
 		}
 
-		
+
 		public function save()
 		{
 			//Nothing to do here

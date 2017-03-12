@@ -643,7 +643,12 @@
 
 					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
-					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+					$joins[] = " LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+				}
+				else if (isset($params['multiple_join']) && $params['multiple_join'])
+				{
+					$joins[] = " {$params['multiple_join']['statement']}";
+					$cols[] = "{$params['multiple_join']['column']} AS {$field}";
 				}
 				else
 				{
