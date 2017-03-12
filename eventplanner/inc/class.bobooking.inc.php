@@ -118,12 +118,22 @@
 
 				$bookings =  eventplanner_sobooking::get_instance()->read($params);
 
+				$existing_booking_ids = array();
+				foreach ($bookings['results'] as $booking)
+				{
+					$existing_booking_ids[] = $booking['id'];
+				}
+
 				$number_of_active = (int)$bookings['total_records'];
 				$limit = (int)$application->num_granted_events;
 
-
+				$error = false;
 				foreach ($ids as $id)
 				{
+					if(in_array($id, $existing_booking_ids) )
+					{
+						continue;
+					}
 					if($limit > $number_of_active)
 					{
 						$_ids[] = $id;
@@ -131,10 +141,15 @@
 					}
 					else
 					{
+						$error = true;
 						$message = lang('maximum of granted events are reached');
 						phpgwapi_cache::message_set($message, 'error');
 						break;
 					}
+				}
+				if($ids && !$_ids && !$error)
+				{
+					return true;
 				}
 			}
 			else if ($action == 'delete' && $ids)

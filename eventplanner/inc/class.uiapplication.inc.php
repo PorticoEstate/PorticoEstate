@@ -346,6 +346,13 @@
 					'type' => 'custom',
 					'custom_code' => "
 								onActionsClick('edit');"
+				),
+				array(
+					'my_name' => 'disconnect',
+					'text' => lang('disconnect'),
+					'type' => 'custom',
+					'custom_code' => "
+								onActionsClick('disconnect');"
 				)
 			);
 

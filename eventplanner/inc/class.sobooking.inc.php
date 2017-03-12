@@ -152,6 +152,16 @@
 					$where = 'AND';
 					break;
 
+				case 'disconnect':
+					$sql = "UPDATE eventplanner_booking SET"
+					. " customer_id = NULL,"
+					. " customer_contact_name = NULL,"
+					. " customer_contact_email = NULL,"
+					. " customer_contact_phone = NULL,"
+					. " location = NULL";
+					$where = 'WHERE';
+					break;
+
 				default:
 					throw new Exception("action {$action} not supported");
 					break;
