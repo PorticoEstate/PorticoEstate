@@ -194,7 +194,10 @@
 			$tabs['first_tab'] = array(
 				'label' => lang('customer'),
 				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
+			);
+			$tabs['booking'] = array(
+				'label' => lang('booking'),
+				'link' => '#booking',
 			);
 
 			$bocommon = CreateObject('property.bocommon');
@@ -218,6 +221,31 @@
 				'requestUrl' => "''",
 				'ColumnDefs' => $comments_def,
 				'data' => json_encode($comments),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$dates_def = array(
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'vendor_name', 'label' => lang('vendor'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'location', 'label' => lang('location'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'application_id', 'hidden' => true),
+			);
+
+			$datatable_def[] = array(
+				'container' => 'datatable-container_1',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query_relaxed",
+					'filter_customer_id' => $id,
+					'filter_active'	=> 1,
+					'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $dates_def,
+				'data' => json_encode(array()),
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)

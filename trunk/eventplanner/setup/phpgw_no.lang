@@ -112,3 +112,4 @@ read	eventplanner	no	Les
 permission	eventplanner	no	Rettighet
 maximum number of events	eventplanner	no	Maksimum antall arrangement
 number of users	eventplanner	no	Ca. antall brukere
+disconnect	eventplanner	no	Kople fra
