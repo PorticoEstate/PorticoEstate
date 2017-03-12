@@ -1714,7 +1714,7 @@ JS;
 							$count_keys = count($keys);
 							for ($j = 0; $j < $count_keys; $j++)
 							{
-								array_push($headings, lang($keys[$j]));
+								array_push($headings, ltrim(lang($keys[$j]), '!'));
 							}
 
 //                                    _debug_array($list);

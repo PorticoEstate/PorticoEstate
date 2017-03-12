@@ -9,6 +9,7 @@
 		protected $billing_job;
 		protected $date_str;
 		protected $orders;
+		protected $prizebook;
 
 		public function __construct( $billing_job )
 		{
@@ -175,8 +176,30 @@
 			return $so_invoice->transaction_commit();
 		}
 
+
+		function get_prizebook()
+		{
+			$this->prizebook = array();
+			$db = $GLOBALS['phpgw']->db;
+			$sql = "SELECT id, agresso_id, price, type FROM rental_price_item";
+			$db->query($sql);
+			while($db->next_record())
+			{
+				$agresso_id = $db->f('agresso_id');
+
+				$entry = array(
+					'price'	=> $db->f('price'),
+					'type'	=> $db->f('type'),
+				);
+				$this->prizebook[$agresso_id] = $entry;
+			}
+		}
+
 		protected function run_excel_export( $excel_export_type )
 		{
+
+			$this->get_prizebook();
+
 			switch ($excel_export_type)
 			{
 				case 'bk':
@@ -509,7 +532,26 @@
 		protected function get_order_excel_nlsh(
 		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id )
 		{
+		
+			$article_price = $this->prizebook[$product_item['article_code']];
 
+			switch ($article_price['type'])
+			{
+				case '1'://year
+					$monthly_rent = $article_price['price'] / 12;
+					break;
+				case '2'://Month
+					$monthly_rent = $article_price['price'];
+					break;
+				case '3'://day
+					$monthly_rent = $article_price['price'] * 30;
+					break;
+				default:
+					$monthly_rent = '';
+					break;
+			}
+			
+//			_debug_array($product_item);
 //_debug_array(func_get_args());
 			$item_counter = $counter;
 			$order = array
@@ -533,6 +575,7 @@
 				'address' => $party_address,
 				'Leieboer' => $party_full_name,
 				'amount' => $this->get_formatted_amount_excel($product_item['amount']),
+				'Mnd leie' => $this->get_formatted_amount_excel($monthly_rent),
 				'article description' => $product_item['article_description'],
 				'article_code' => $product_item['article_code'],
 				'batch_id' => "BKBPE{$this->date_str}",
