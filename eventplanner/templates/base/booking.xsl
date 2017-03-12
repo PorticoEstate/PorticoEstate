@@ -336,14 +336,14 @@
 								<xsl:value-of select="booking/location"/>
 							</textarea>
 						</div>
-						<div class="pure-control-group">
+						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
 								<xsl:value-of select="booking/remark"/>
 							</textarea>
-						</div>
+						</div-->
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'comment')"/>

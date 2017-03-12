@@ -50,6 +50,7 @@
 			$to_,
 			$application_id,
 			$application_name,
+			$vendor_name,
 			$customer_id,
 			$customer_name,
 			$customer_contact_name,
@@ -57,6 +58,7 @@
 			$customer_contact_phone,
 			$location,
 			$comments,
+			$comment,
 			$created,
 			$secret;
 
@@ -104,6 +106,7 @@
 					),
 				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
+					'public'	=> true,
 					'history'	=> true
 					),
 				'completed' => array('action'=>  PHPGW_ACL_EDIT,
@@ -144,6 +147,17 @@
 						'fkey' => 'application_id',
 						'key' => 'id',
 						'column' => 'title'
+						)
+					),
+				'vendor_name' => array('action'=>  PHPGW_ACL_READ,
+					'type' => 'string',
+					'query' => true,
+					'label' => 'vendor',
+					'public'	=> true,
+					'multiple_join' => array(
+						'statement' => 'LEFT JOIN eventplanner_application ON eventplanner_application.id = eventplanner_booking.application_id'
+										. ' LEFT JOIN eventplanner_vendor ON eventplanner_application.vendor_id = eventplanner_vendor.id',
+						'column' => 'eventplanner_vendor.name'
 						)
 					),
 				'customer_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
@@ -209,6 +223,11 @@
 						'column' => array('time', 'author', 'comment', 'type'),
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
+				'comment' => array(
+					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'related' => true,
+					),
 				'created' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'date',
 					'label' => 'created',

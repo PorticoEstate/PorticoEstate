@@ -336,7 +336,7 @@
 								<xsl:value-of select="booking/location"/>
 							</textarea>
 						</div>
-						<div class="pure-control-group">
+						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
@@ -369,7 +369,7 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
-						</div>
+						</div-->
 					</fieldset>
 				</div>
 				<div id="reports">
