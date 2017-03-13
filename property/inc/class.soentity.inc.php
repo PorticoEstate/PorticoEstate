@@ -1077,6 +1077,12 @@
 				}
 				unset($key);
 
+				$dataset[$j]['user_id'] = array
+					(
+					'value' => $this->db->f('user_id'),
+					'datatype' => false,
+					'attrib_id' => false
+				);
 
 				//Start: get short descripion - if any
 				$_short_description = array();
@@ -1211,23 +1217,10 @@
 
 				$entity = $admin_entity->read_single($entity_id);
 
-
 				$cols_return_extra = array();
 				$cols_return = array();
 				$uicols = array();
 				$cols = "{$entity_table}.*";
-
-				$cols_return[] = 'location_code';
-				$uicols['input_type'][] = 'hidden';
-				$uicols['name'][] = 'location_code';
-				$uicols['descr'][] = 'dummy';
-				$uicols['statustext'][] = 'dummy';
-				$uicols['align'][] = '';
-				$uicols['datatype'][] = '';
-				$uicols['sortable'][] = true;
-				$uicols['exchange'][] = false;
-				$uicols['formatter'][] = '';
-				$uicols['classname'][] = '';
 
 				$cols_return[] = 'num';
 				$uicols['input_type'][] = 'text';
@@ -1240,6 +1233,21 @@
 				$uicols['exchange'][] = false;
 				$uicols['formatter'][] = $lookup ? '' : 'linktToEntity';
 				$uicols['classname'][] = '';
+
+				if (!empty($category['location_level']))
+				{
+					$cols_return[] = 'location_code';
+					$uicols['input_type'][] = 'text';
+					$uicols['name'][] = 'location_code';
+					$uicols['descr'][] = lang('location_code');
+					$uicols['statustext'][] = lang('location_code');
+					$uicols['align'][] = '';
+					$uicols['datatype'][] = '';
+					$uicols['sortable'][] = true;
+					$uicols['exchange'][] = false;
+					$uicols['formatter'][] = '';
+					$uicols['classname'][] = '';
+				}
 
 				if (isset($entity['lookup_entity']) && is_array($entity['lookup_entity']))
 				{
@@ -1959,6 +1967,12 @@
 						'get_single_function_input' => $uicols['get_single_function_input'][$key]
 					);
 				}
+				$dataset[$j]['user_id'] = array
+					(
+					'value' => $this->db->f('user_id'),
+					'datatype' => false,
+					'attrib_id' => false
+				);
 				$dataset[$j]['location_id'] = array
 					(
 					'value' => $location_id,
