@@ -334,12 +334,21 @@ update_schedule = function (id)
 			{
 				$("#from_").val('');
 				htmlString += "<div class=\"msg_good\">";
+				htmlString += result.msg;
 			}
 			else
 			{
 				htmlString += "<div class=\"error\">";
+				var msg = result.msg;
+				if (typeof (msg) == 'object')
+				{
+					htmlString += msg['error'][0]['msg'];
+				}
+				else
+				{
+					htmlString += result.msg;
+				}
 			}
-			htmlString += result.msg;
 			htmlString += '</div>';
 			$("#receipt").html(htmlString);
 

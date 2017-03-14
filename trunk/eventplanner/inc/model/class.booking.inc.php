@@ -60,7 +60,8 @@
 			$comments,
 			$comment,
 			$created,
-			$secret;
+			$secret,
+			$process_update;
 
 		protected $field_of_responsibility_name = '.booking';
 
@@ -301,7 +302,21 @@
 
 			$bookings =  eventplanner_sobooking::get_instance()->read($params);
 
-			if($entity->customer_id) // update
+			foreach ($bookings['results'] as $booking)
+			{
+				if($booking['id'] == $entity->get_id())
+				{
+					continue;
+				}
+
+				if(($entity->from_ > $booking['from_'] && $entity->from_ < $booking['to_'])
+					||	($entity->to_ > $booking['from_'] && $entity->to_ < $booking['to_']) )
+				{
+					$errors['from_'] = lang('Time is already booked');
+				}
+			}
+
+			if($entity->customer_id || $entity->process_update) // update
 			{
 				$test_total_tecords = (int)$bookings['total_records'];
 			}

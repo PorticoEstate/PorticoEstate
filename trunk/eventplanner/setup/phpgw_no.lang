@@ -113,3 +113,5 @@ permission	eventplanner	no	Rettighet
 maximum number of events	eventplanner	no	Maksimum antall arrangement
 number of users	eventplanner	no	Ca. antall brukere
 disconnect	eventplanner	no	Kople fra
+end date cannot be before start date	eventplanner	no	Siste dato kan ikke være før første dato
+Time is already booked	eventplanner	no	Tiden er allerede booking
