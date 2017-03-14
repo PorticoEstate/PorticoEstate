@@ -36,12 +36,16 @@
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
-			'download' => true
+			'download' => true,
+			'get_views' => true
 		);
 
 		public function __construct()
 		{
 			parent::__construct();
+			
+			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$this->bo = CreateObject('property.boreport', true);
 		}
 
 		public function download()
@@ -49,26 +53,84 @@
 			return;
 		}
 
+		private function _get_filters()
+		{
+			$combos = array();
+
+			$views = $this->bo->get_views();;
+			foreach ($views as $view)
+			{
+				$list[] = array('id' => $view['name'], 'name' => $view['name']);
+			}
+				
+			$default_value = array('id' => '', 'name' => lang('Select'));
+			array_unshift($list, $default_value);
+
+			$combos[] = array('type' => 'filter',
+				'name' => 'view',
+				'text' => lang('Views'),
+				'list' => $list
+			);
+			
+			return $combos;
+		}
+		
 		/**
 		 * Prepare UI
 		 * @return void
 		 */
 		public function index()
 		{
-			$tabs = array();
-			$tabs['report'] = array('label' => lang('Report'), 'link' => '#report');
-
-			$active_tab = 'report';
-
-			$data = array
-				(
-				'datatable_def' => array(),
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+						
+			$appname = lang('report');
+			$function_msg = lang('list');
+			
+			$data = array(
+				'datatable_name' => $appname,
+				'form' => array(
+					'toolbar' => array(
+						'item' => array(),
+					),
+				),
+				'datatable' => array(
+					'source' => self::link(array('menuaction' => 'property.uireport.index',
+						'phpgw_return_as' => 'json')),
+					'download' => self::link(array('menuaction' => 'property.uireport.download',
+						'export' => true, 'allrows' => true)),
+					'new_item' => self::link(array('menuaction' => 'property.uireport.add')),
+					'allrows' => true,
+					'field' => array(
+						array(
+							'key' => 'id',
+							'label' => lang('ID'),
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.formatLink'
+						),
+						array(
+							'key' => 'name',
+							'label' => lang('Name'),
+							'sortable' => true,
+							'editor' => true
+						)
+					)
+				),
 			);
+			
+			$filters = $this->_get_filters();
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('Report');
+			foreach ($filters as $filter)
+			{
+				$data['form']['toolbar']['item'][] = $filter;
+			}
+			
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::render_template_xsl(array('report'), $data);
+			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		/**
@@ -77,6 +139,11 @@
 		 */
 		public function query()
 		{
-			return;
+			$result_data = array('results' => array());
+
+			$result_data['total_records'] = 0;
+			$result_data['draw'] = 1;
+			
+			return $this->jquery_results($result_data);
 		}
 	}
