@@ -180,15 +180,14 @@
 		{
 			$booking = eventplanner_sobooking::get_instance()->read_single($id, true);
 			$booking->from_ = $from_;
-//			$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
-//			$booking->to_ = $booking->from_ + ((int)$application->timespan * 60);
 			$booking->customer_id = $booking->customer_id ? $booking->customer_id : '';//foreigns key
+			$booking->process_update = true;
 
 			if($booking->validate())
 			{
 				return $booking->store();
 			}
-//			return eventplanner_sobooking::get_instance()->update($booking);
+			return false;
 		}
 
 
