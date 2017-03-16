@@ -385,11 +385,12 @@
 			}
 			else
 			{
+				$messages = phpgwapi_cache::message_get(true);
 				return array
 				(
 					'status_kode' => 'error',
 					'status' => lang('error'),
-					'msg' => lang('messages_form_error')
+					'msg' => $messages ? $messages : lang('did not validate')
 				);
 			}
 
