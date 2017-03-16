@@ -282,22 +282,22 @@
 					);
 				}
 			}
-			/*
-			  $columns['user_id'] = array
-			  (
-			  'id'			=> 'user_id',
-			  'input_type'	=> 'text',
-			  'name'			=> 'user_id',
-			  'descr'			=> lang('User'),
-			  'statustext'	=> lang('User'),
-			  'align' 		=> '',
-			  'datatype'		=> 'user',
-			  'sortable'		=> false,
-			  'exchange'		=> false,
-			  'formatter'		=> '',
-			  'classname'		=> ''
+			
+			$columns['user_name'] = array
+			(
+				'id'			=> 'user_name',
+				'input_type'	=> 'text',
+				'name'			=> 'user_name',
+				'descr'			=> lang('User'),
+				'statustext'	=> lang('User'),
+				'align' 		=> '',
+				'datatype'		=> 'user',
+				'sortable'		=> false,
+				'exchange'		=> false,
+				'formatter'		=> '',
+				'classname'		=> ''
 			  );
-			 */
+			
 			return $columns;
 		}
 
@@ -466,34 +466,6 @@ JS;
 					}
 				}
 			}
-			/*
-			  $entity = $this->so->read(array
-			  (
-			  'start' => $this->start,
-			  'query' => $this->query,
-			  'sort' => $this->sort,
-			  'order' => $this->order,
-			  'filter' => $this->filter,
-			  'cat_id' => $this->cat_id,
-			  'district_id' => $this->district_id,
-			  'part_of_town_id' => $this->part_of_town_id,
-			  'lookup'=>isset($data['lookup'])?$data['lookup']:'',
-			  'allrows'=>isset($data['allrows'])?$data['allrows']:'',
-			  'results' => $this->results,
-			  'entity_id'=>$this->entity_id,
-			  'status'=>$this->status,
-			  'start_date'=>$this->bocommon->date_to_timestamp($data['start_date']),
-			  'end_date'=>$this->bocommon->date_to_timestamp($data['end_date']),
-			  'dry_run'=>$data['dry_run'],
-			  'type'=>$data['type'],
-			  'location_code' => $this->location_code,
-			  'criteria_id' => $this->criteria_id,
-			  'attrib_filter' => $attrib_filter,
-			  'p_num' => $this->p_num,
-			  'control_registered'=>isset($data['control_registered']) ? $data['control_registered'] : '',
-			  'control_id'=>isset($data['control_id']) ? $data['control_id'] : '',
-			  'org_units' => $this->org_units
-			  ) */
 			$entity = $this->so->read(array
 				(
 				'start' => $data['start'],
@@ -600,6 +572,12 @@ JS;
 					$entry[$_name] = "javascript_action_{$_name}({$entry['id']},{$entry['location_code']})";
 					$this->uicols['javascript_action'][$_name] = true;
 				}
+
+				if($entry['user_id'])
+				{
+					$entry['user_name'] = $GLOBALS['phpgw']->accounts->get($entry['user_id'])->__toString();
+				}
+
 			}
 
 			return $entity;

@@ -111,5 +111,11 @@ showall	eventplanner	no	Vis alle
 read	eventplanner	no	Les
 permission	eventplanner	no	Rettighet
 maximum number of events	eventplanner	no	Maksimum antall arrangement
+maximum of granted events per year (%1) are reached	eventplanner	no	Maksimum antall arrangementer (%1) pr år er nådd
 number of users	eventplanner	no	Ca. antall brukere
 disconnect	eventplanner	no	Kople fra
+end date cannot be before start date	eventplanner	no	Siste dato kan ikke være før første dato
+Time is already booked	eventplanner	no	Tiden er allerede booking
+booking interval	eventplanner	no	Booking intervall
+days	eventplanner	no	dager
+there is a minimum interval of %1 day(s)	eventplanner	no	Det er et minimumsintervall på %1 dag(er)

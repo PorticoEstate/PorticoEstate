@@ -88,11 +88,11 @@
 			return $values;
 		}
 
-		public function read_single($id, $return_object = true)
+		public function read_single($id, $return_object = true, $relaxe_acl = false)
 		{
 			if ($id)
 			{
-				$values = eventplanner_socustomer::get_instance()->read_single($id, $return_object);
+				$values = eventplanner_socustomer::get_instance()->read_single($id, $return_object, $relaxe_acl);
 			}
 			else
 			{

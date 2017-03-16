@@ -14,6 +14,12 @@
 				</select>
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_booking_interval}:</td>
+			<td>
+				<input type="number" name="newsettings[booking_interval]" value="{value_booking_interval}">
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
