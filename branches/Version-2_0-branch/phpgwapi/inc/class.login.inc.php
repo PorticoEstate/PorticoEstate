@@ -132,7 +132,8 @@
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']) && (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
 			{
-				$login	 = $_SERVER['REMOTE_USER'];
+				$remote_user = explode('@', $_SERVER['REMOTE_USER']);
+				$login   = $remote_user[0];//$_SERVER['REMOTE_USER'];
 				$passwd	 = '';
 
 				$GLOBALS['hook_values'] = array
