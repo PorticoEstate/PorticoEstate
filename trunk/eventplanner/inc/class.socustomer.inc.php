@@ -71,7 +71,15 @@
 				}
 			}
 
-			return '(' . $acl_condition . ' OR eventplanner_customer.id IN (' . implode(',', $object_ids) . '))';
+			if($acl_condition)
+			{
+				return '(' . $acl_condition . ' OR eventplanner_customer.id IN (' . implode(',', $object_ids) . '))';
+			}
+			else
+			{
+				return 'eventplanner_customer.id IN (' . implode(',', $object_ids) . ')';	
+			}
+
 		}
 
 		protected function populate( array $data )

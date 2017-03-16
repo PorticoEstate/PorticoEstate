@@ -221,6 +221,13 @@
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'organization number'
+					),
+					'max_events' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'required' => true,
+						'query' => false,
+						'label' => 'maximum number of events',
 					)
 			);
 
@@ -245,14 +252,7 @@
 						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 						'type' => 'string',
 						'related' => true,
-						),
-					'max_events' => array(
-						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-						'type' => 'int',
-						'required' => true,
-						'query' => false,
-						'label' => 'maximum number of events',
-						),
+						)
 					);
 
 				foreach ($backend_fields as $key => $field_info)

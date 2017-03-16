@@ -26,7 +26,6 @@
 	 * @subpackage booking
 	 * @version $Id: $
 	 */
-
 	phpgw::import_class('eventplanner.bobooking');
 
 	include_class('phpgwapi', 'model', 'inc/model/');
@@ -62,7 +61,6 @@
 			$created,
 			$secret,
 			$process_update;
-
 		protected $field_of_responsibility_name = '.booking';
 
 		public function __construct( int $id = null )
@@ -85,137 +83,137 @@
 		{
 			return array(
 				self::STATUS_REGISTERED => lang('registered'),
-				self::STATUS_PENDING	=> lang('pending'),
+				self::STATUS_PENDING => lang('pending'),
 				self::STATUS_REJECTED => lang('rejected'),
-				self::STATUS_APPROVED	=> lang('approved')
+				self::STATUS_APPROVED => lang('approved')
 			);
 		}
 
-		public static function get_fields($debug = true)
+		public static function get_fields( $debug = true )
 		{
-			 $fields = array(
-				'id' => array('action'=> PHPGW_ACL_READ,
+			$fields = array(
+				'id' => array('action' => PHPGW_ACL_READ,
 					'type' => 'int',
 					'label' => 'id',
-					'sortable'=> true,
+					'sortable' => true,
 					'formatter' => 'JqueryPortico.formatLink',
-					'public'	=> true
-					),
-				'owner_id' => array('action'=> PHPGW_ACL_ADD,
+					'public' => true
+				),
+				'owner_id' => array('action' => PHPGW_ACL_ADD,
 					'type' => 'int',
 					'required' => false
-					),
-				'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int',
-					'public'	=> true,
-					'history'	=> true
-					),
-				'completed' => array('action'=>  PHPGW_ACL_EDIT,
-					'type' => 'int',
-					'history'	=> true
-					),
-				'cost' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'decimal'
-					),
-				'from_' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'date',
-					'label'	=> 'from',
-					'history' => true,
-					'required' => true,
-					'public'	=> true
-					),
-				'to_' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'date',
-					'label'	=> 'to',
-					'history' => true,
-					'required' => true,
-					'public'	=> true
 				),
-				'application_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'active' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'public' => true,
+					'history' => true
+				),
+				'completed' => array('action' => PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'history' => true
+				),
+				'cost' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'decimal'
+				),
+				'from_' => array('action' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'date',
+					'label' => 'from',
+					'history' => true,
+					'required' => true,
+					'public' => true
+				),
+				'to_' => array('action' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'date',
+					'label' => 'to',
+					'history' => true,
+					'required' => true,
+					'public' => true
+				),
+				'application_id' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'application',
 					'sortable' => true,
 					'required' => true,
-					'public'	=> true
-					),
-				'application_name' => array('action'=>  PHPGW_ACL_READ,
+					'public' => true
+				),
+				'application_name' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'application',
-					'public'	=> true,
+					'public' => true,
 					'join' => array(
 						'table' => 'eventplanner_application',
 						'fkey' => 'application_id',
 						'key' => 'id',
 						'column' => 'title'
-						)
-					),
-				'vendor_name' => array('action'=>  PHPGW_ACL_READ,
+					)
+				),
+				'vendor_name' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'vendor',
-					'public'	=> true,
+					'public' => true,
 					'multiple_join' => array(
 						'statement' => 'LEFT JOIN eventplanner_application ON eventplanner_application.id = eventplanner_booking.application_id'
-										. ' LEFT JOIN eventplanner_vendor ON eventplanner_application.vendor_id = eventplanner_vendor.id',
+						. ' LEFT JOIN eventplanner_vendor ON eventplanner_application.vendor_id = eventplanner_vendor.id',
 						'column' => 'eventplanner_vendor.name'
-						)
-					),
-				'customer_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					)
+				),
+				'customer_id' => array('action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'label' => 'customer',
 					'sortable' => true,
 					'history' => true,
-					'public'	=> true
-					),
-				'customer_name' => array('action'=>  PHPGW_ACL_READ,
+					'public' => true
+				),
+				'customer_name' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => true,
 					'label' => 'customer',
-					'public'	=> true,
+					'public' => true,
 					'join' => array(
 						'table' => 'eventplanner_customer',
 						'fkey' => 'customer_id',
 						'key' => 'id',
 						'column' => 'name'
-						)
-					),
+					)
+				),
 				'customer_contact_name' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => false,
 					'query' => true,
 					'label' => 'customer contact name',
 					'history' => true,
-					),
+				),
 				'customer_contact_email' => array(
-					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action' => PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => false,
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'customer contact email',
 					'history' => true,
-					),
+				),
 				'customer_contact_phone' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => false,
 					'query' => true,
 					'label' => 'customer contact phone',
 					'history' => true,
-					),
+				),
 				'location' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'required' => false,
 					'query' => true,
 					'label' => 'location',
 					'history' => true,
-					'public'	=> true
-					),
+					'public' => true
+				),
 				'comments' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'manytomany' => array(
 						'input_field' => 'comment_input',
@@ -225,31 +223,30 @@
 						'order' => array('sort' => 'time', 'dir' => 'ASC')
 					)),
 				'comment' => array(
-					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'action' => PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
 					'related' => true,
-					),
-				'created' => array('action'=> PHPGW_ACL_READ,
+				),
+				'created' => array('action' => PHPGW_ACL_READ,
 					'type' => 'date',
 					'label' => 'created',
 					'sortable' => true,
-					),
-				'secret' => array('action'=> PHPGW_ACL_ADD,
+				),
+				'secret' => array('action' => PHPGW_ACL_ADD,
 					'type' => 'string',
 					'label' => 'secret',
 					'sortable' => false,
-					),
-				);
+				),
+			);
 
-			if($debug)
+			if ($debug)
 			{
 				foreach ($fields as $field => $field_info)
 				{
-					if(!property_exists('eventplanner_booking', $field))
+					if (!property_exists('eventplanner_booking', $field))
 					{
-					   phpgwapi_cache::message_set('$'."{$field},", 'error');
+						phpgwapi_cache::message_set('$' . "{$field},", 'error');
 					}
-
 				}
 			}
 			return $fields;
@@ -270,7 +267,7 @@
 				);
 			}
 
-			if(!$entity->get_id())
+			if (!$entity->get_id())
 			{
 				$entity->status = eventplanner_booking::STATUS_REGISTERED;
 				$entity->secret = self::generate_secret();
@@ -290,7 +287,6 @@
 
 			$entity->modified = time();
 			$entity->active = (int)$entity->active;
-
 		}
 
 		protected function doValidate( $entity, &$errors )
@@ -300,23 +296,69 @@
 			$params['filters']['active'] = 1;
 			$params['filters']['application_id'] = $entity->application_id;
 
-			$bookings =  eventplanner_sobooking::get_instance()->read($params);
+			$bookings = eventplanner_sobooking::get_instance()->read($params);
 
 			foreach ($bookings['results'] as $booking)
 			{
-				if($booking['id'] == $entity->get_id())
+				if ($booking['id'] == $entity->get_id())
 				{
 					continue;
 				}
 
-				if(($entity->from_ > $booking['from_'] && $entity->from_ < $booking['to_'])
-					||	($entity->to_ > $booking['from_'] && $entity->to_ < $booking['to_']) )
+				if (($entity->from_ > $booking['from_'] && $entity->from_ < $booking['to_']) || ($entity->to_ > $booking['from_'] && $entity->to_ < $booking['to_']))
 				{
 					$errors['from_'] = lang('Time is already booked');
 				}
 			}
 
-			if($entity->customer_id || $entity->process_update) // update
+			$orig_customer_id = 0;
+			if ($entity->get_id())
+			{
+				$orig_booking = createObject('eventplanner.bobooking')->read_single($entity->get_id());
+				$orig_customer_id = $orig_booking->customer_id;
+			}
+
+			$number_of_customer_bookings = 0;
+			if ($entity->customer_id && $entity->customer_id != $orig_customer_id)
+			{
+				$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+				$booking_interval = !empty($config['booking_interval']) ? (int)$config['booking_interval'] : 0;
+				$customer = createObject('eventplanner.bocustomer')->read_single($entity->customer_id);
+				$max_events = (int)$customer->max_events;
+				foreach ($bookings['results'] as $booking)
+				{
+					$current_interval = 0;
+
+					if ($booking['customer_id'] == $entity->customer_id)
+					{
+						$current_interval = floor(abs(($booking['from_'] - $entity->from_)) / (60 * 60 * 24));
+					}
+
+					if ($booking_interval && $current_interval && $current_interval < $booking_interval)
+					{
+						$errors['booking_interval'] = lang('There is a minimum interval of %1 day(s)', $booking_interval);
+					}
+
+					$booking_year = date('Y', $booking['from_']);
+
+					if ($booking_year != date('Y', $entity->from_))
+					{
+						continue;
+					}
+
+					if ($booking['customer_id'] == $entity->customer_id)
+					{
+						$number_of_customer_bookings ++;
+					}
+				}
+
+				if ($max_events && $number_of_customer_bookings >= $max_events)
+				{
+					$errors['num_granted_events_year'] = lang('maximum of granted events per year (%1) are reached', $max_events);
+				}
+			}
+
+			if ($entity->customer_id || $entity->process_update) // update
 			{
 				$test_total_tecords = (int)$bookings['total_records'];
 			}
@@ -325,16 +367,16 @@
 				$test_total_tecords = (int)$bookings['total_records'] + 1;
 			}
 
-			if($test_total_tecords > (int)$application->num_granted_events)
+			if ($test_total_tecords > (int)$application->num_granted_events)
 			{
 				$errors['num_granted_events'] = lang('maximum of granted events are reached');
 			}
 
-			$date_start = date('Ymd',$application->date_start);
-			$date_end = date('Ymd',$application->date_end);
-			$from_ = date('Ymd',$entity->from_);
+			$date_start = date('Ymd', $application->date_start);
+			$date_end = date('Ymd', $application->date_end);
+			$from_ = date('Ymd', $entity->from_);
 
-			if($from_ < $date_start || $from_ > $date_end)
+			if ($from_ < $date_start || $from_ > $date_end)
 			{
 				$errors['from_'] = lang('date is outside the scope');
 			}
@@ -355,7 +397,7 @@
 			return eventplanner_bobooking::get_instance()->store($this);
 		}
 
-		public function read_single($id)
+		public function read_single( $id )
 		{
 			return eventplanner_bobooking::get_instance()->read_single($id, true);
 		}
