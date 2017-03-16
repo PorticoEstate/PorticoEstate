@@ -54,4 +54,11 @@
 
 			return $values;
 		}
+		
+		function get_columns($table)
+		{
+			$values = $this->so->get_columns($table);
+
+			return $values;
+		}
 	}
