@@ -36,8 +36,12 @@
 		public $public_functions = array(
 			'query' => true,
 			'index' => true,
-			'download' => true,
-			'get_views' => true
+			'view' => true,
+			'add' => true,
+			'edit' => true,
+			'save' => true,
+			'delete' => true,			
+			'download' => true
 		);
 
 		public function __construct()
@@ -46,6 +50,7 @@
 			
 			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->bo = CreateObject('property.boreport', true);
+			$this->acl = & $GLOBALS['phpgw']->acl;
 		}
 
 		public function download()
@@ -81,7 +86,6 @@
 		 */
 		public function index()
 		{
-			
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
 				return $this->query();
@@ -114,8 +118,7 @@
 						array(
 							'key' => 'name',
 							'label' => lang('Name'),
-							'sortable' => true,
-							'editor' => true
+							'sortable' => true
 						)
 					)
 				),
@@ -128,11 +131,111 @@
 				$data['form']['toolbar']['item'][] = $filter;
 			}
 			
+			$parameters = array
+				(
+				'parameter' => array
+					(
+					array
+						(
+						'name' => 'id',
+						'source' => 'id'
+					),
+				)
+			);
+
+			$data['datatable']['actions'][] = array
+				(
+				'my_name' => 'edit',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uireport.edit'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		public function view()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+				return;
+			}
+			$this->edit(null, $mode = 'view');
+		}
+
+		public function add()
+		{
+			$this->edit();
+		}
+		
+		/**
+		 * Prepare data for view and edit - depending on mode
+		 *
+		 * @param array  $values  populated object in case of retry
+		 * @param string $mode    edit or view
+		 * @param int    $id      entity id - no id means 'new'
+		 *
+		 * @return void
+		 */
+		public function edit( $values = array(), $mode = 'edit' )
+		{
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
+
+			/*if (!$this->acl_add && !$this->acl_edit)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uireport.view',
+					'id' => $id));
+			}
+
+			if ($mode == 'view')
+			{
+				if (!$this->acl_read)
+				{
+					phpgw::no_access();
+					return;
+				}
+			}
+			else
+			{
+				if (!$this->acl_add && !$this->acl_edit)
+				{
+					phpgw::no_access();
+					return;
+				}
+			}*/
+
+			$link_data = array
+				(
+				'menuaction' => "property.uireport.save",
+				'id' => $id
+			);
+			
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
+			$active_tab = 'generic';
+
+			$data = array
+			(
+				'datatable_def' => array(),
+				'editable' => $mode == 'edit',
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('report');
+
+			self::add_javascript('property', 'portico', 'report.edit.js');
+
+			self::render_template_xsl(array('report'), $data);
+		}
+		
 		/**
 		 * Fetch data from $this->bo based on parametres
 		 * @return array
