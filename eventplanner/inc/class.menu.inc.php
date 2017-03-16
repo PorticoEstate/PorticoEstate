@@ -78,11 +78,6 @@
 						'text'	=> lang('permission'),
 						'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'eventplanner.uipermission.index') )
 					),
-					'list_atrribs' => array(
-						'text' => $GLOBALS['phpgw']->translation->translate('custom fields', array(), true),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
-							'appname' => 'eventplanner'))
-					),
 					'list_functions' => array(
 						'text' => $GLOBALS['phpgw']->translation->translate('custom functions', array(), true),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_custom_function',
