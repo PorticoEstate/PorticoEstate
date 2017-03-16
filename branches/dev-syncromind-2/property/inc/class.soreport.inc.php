@@ -52,7 +52,6 @@
 					AND table_type = 'VIEW'";
 	
 			$this->db->query($sql, __LINE__, __FILE__);
-			$this->total_records = $this->db->num_rows();
 
 			$values = array();
 
@@ -69,4 +68,28 @@
 			return $values;
 		}
 		
+		public function get_columns($table)
+		{
+			$sql = "SELECT column_name, data_type
+				FROM   information_schema.columns
+				WHERE  table_name = '".$table."'
+				ORDER  BY ordinal_position";
+	
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+					(
+					'name' => $this->db->f('column_name'),
+					'type' => $this->db->f('data_type')
+				);
+			}
+			
+			return $values;
+		}
 	}
