@@ -12,7 +12,7 @@
 	/**
 	* @see phpmailer
 	*/
-	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/class.phpmailer.php';
+//	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/class.phpmailer.php';
 	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/PHPMailerAutoload.php';
 	
 	/**
@@ -31,7 +31,7 @@
 		{
 			parent::__construct(true); // enable exceptions
 			$this->IsSMTP(true);
-			$this->PluginDir = PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/';
+	//		$this->PluginDir = PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/';
 			$this->Host = $GLOBALS['phpgw_info']['server']['smtp_server'];
 			$this->Port = isset($GLOBALS['phpgw_info']['server']['smtp_port']) ? $GLOBALS['phpgw_info']['server']['smtp_port'] : 25;
 			$this->SMTPSecure = isset($GLOBALS['phpgw_info']['server']['smtpSecure']) ? $GLOBALS['phpgw_info']['server']['smtpSecure'] : '';

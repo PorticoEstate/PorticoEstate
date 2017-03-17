@@ -101,6 +101,7 @@
 					'label' => 'id',
 					'sortable'=> true,
 					'formatter' => 'JqueryPortico.formatLink',
+					'public'	=> true
 					),
 				'owner_id' => array('action'=> PHPGW_ACL_ADD,
 					'type' => 'int',
@@ -130,6 +131,7 @@
 					'label' => 'name',
 					'required' => true,
 					'query' => true,
+					'public'	=> true
 					),
 				'address_1' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
@@ -186,7 +188,8 @@
 					'required' => true,
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
-					'label' => 'organization number'
+					'label' => 'organization number',
+					'public'	=> true
 					),
 			);
 
