@@ -131,6 +131,8 @@
 						<option value="0">{lang_No}</option>
 						<option value="1"{selected_SMTPDebug_1}>commands</option>
 						<option value="2"{selected_SMTPDebug_2}>commands and data</option>
+						<option value="1"{selected_SMTPDebug_3}>plus connection status</option>
+						<option value="2"{selected_SMTPDebug_4}>Low-level data output, all messages</option>
 					</select>
 				</td>
 			</tr>
