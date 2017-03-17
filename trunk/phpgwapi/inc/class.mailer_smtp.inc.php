@@ -46,7 +46,17 @@
 				$this->Password =  isset($GLOBALS['phpgw_info']['server']['smtpPassword']) ? $GLOBALS['phpgw_info']['server']['smtpPassword'] : '';
 			}
 			
-		    /**
+		    /*
+			 *	http://stackoverflow.com/questions/26827192/phpmailer-ssl3-get-server-certificatecertificate-verify-failed
+			 */
+			$this->SMTPOptions = array(
+				'ssl' => array(
+					'verify_peer' => false,
+					'verify_peer_name' => false,
+					'allow_self_signed' => true
+				)
+			);
+			/**
 		     * SMTP class debug output mode.
 		     * Options: 0 = off, 1 = commands, 2 = commands and data
 			 * (`3`) As DEBUG_SERVER plus connection status
