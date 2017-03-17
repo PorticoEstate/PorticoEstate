@@ -214,7 +214,7 @@
 
 		private function get_data($relaxe_acl = false)
 		{
-			if (empty($this->permissions[PHPGW_ACL_READ]))
+			if (!$relaxe_acl && empty($this->permissions[PHPGW_ACL_READ]))
 			{
 				phpgw::no_access();
 			}
@@ -248,7 +248,7 @@
 		 */
 		public function get_list()
 		{
-			$values = $this->get_data();
+			$values = $this->get_data(true);
 
 			$results = array();
 			foreach ($values['results'] as $row)
