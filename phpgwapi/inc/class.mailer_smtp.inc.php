@@ -49,6 +49,8 @@
 		    /**
 		     * SMTP class debug output mode.
 		     * Options: 0 = off, 1 = commands, 2 = commands and data
+			 * (`3`) As DEBUG_SERVER plus connection status
+			 * (`4`) Low-level data output, all messages
 		     * @type int
 		     */
 
