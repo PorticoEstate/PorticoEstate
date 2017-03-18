@@ -55,8 +55,6 @@
 
 			$values = array();
 
-			$this->db->query($sql, __LINE__, __FILE__);
-
 			while ($this->db->next_record())
 			{
 				$values[] = array
@@ -78,9 +76,7 @@
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$values = array();
-
-			$this->db->query($sql, __LINE__, __FILE__);
-
+			
 			while ($this->db->next_record())
 			{
 				$values[] = array
