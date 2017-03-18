@@ -13,8 +13,22 @@
 				<div id="generic">
 					<div class="pure-control-group">
 						<label>
+							<xsl:value-of select="php:function('lang', 'views')" />
+						</label>
+						<select id="view" name="view">
+							<xsl:apply-templates select="views/options"/>
+						</select>
+						<input type="button" class="pure-button pure-button-primary" name="btn_get_columns" id="btn_get_columns">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'get columns')" />
+							</xsl:attribute>
+						</input>										
+					</div>					
+					<div class="pure-control-group">
+						<label>
 							<xsl:value-of select="php:function('lang', 'Choose columns')" />
 						</label>
+						<div id="container_columns" class="pure-custom"></div>				
 					</div>
 					<div class="pure-control-group">
 						<label>
