@@ -40,7 +40,8 @@
 			'add' => true,
 			'edit' => true,
 			'save' => true,
-			'delete' => true,			
+			'delete' => true,	
+			'get_columns' => true,
 			'download' => true
 		);
 
@@ -216,6 +217,15 @@
 				'id' => $id
 			);
 			
+			$views = $this->bo->get_views();
+			foreach ($views as $view)
+			{
+				$list[] = array('id' => $view['name'], 'name' => $view['name']);
+			}
+			
+			$default_value = array('id' => '', 'name' => lang('Select'));
+			array_unshift($list, $default_value);
+			
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
 			$active_tab = 'generic';
@@ -226,6 +236,7 @@
 				'editable' => $mode == 'edit',
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
+				'views' => array('options' => $list),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
@@ -249,4 +260,14 @@
 			
 			return $this->jquery_results($result_data);
 		}
+		
+		public function get_columns()
+		{
+			$view = phpgw::get_var('view');
+
+			$columns = $this->bo->get_columns($view);
+			
+			return $columns;
+		}
+		
 	}
