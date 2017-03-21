@@ -227,6 +227,8 @@
 
 				$tjeneste = $workorder['service_id'] ? $workorder['service_id'] : $tjeneste;
 
+				$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET service_id = {$tjeneste} WHERE id = {$workorder['id']}");
+
 	//			_debug_array($location_info);die();
 
 				$collect_building_part = false;
