@@ -225,7 +225,7 @@
 						break;
 				}
 
-				$tjeneste = $workorder['service_id'] ? $workorder['service_id'] : $tjeneste;
+				$tjeneste = $workorder['service_id'] ? (int)$workorder['service_id'] : (int)$tjeneste;
 
 				$GLOBALS['phpgw']->db->query("UPDATE fm_workorder SET service_id = {$tjeneste} WHERE id = {$workorder['id']}");
 
