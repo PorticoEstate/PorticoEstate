@@ -95,7 +95,7 @@
 			{
 				xmlwriter_start_element($memory, 'Tree');
 				xmlwriter_write_element($memory, 'ID', 'TJ');
-				xmlwriter_write_element($memory, 'Verdi', substr($this->db->f('maalepunkt_id'), -8));
+				xmlwriter_write_element($memory, 'Verdi', mb_substr($this->db->f('maalepunkt_id'), -8));
 				xmlwriter_write_element($memory, 'Beskrivelse', $this->db->f('address'));
 				xmlwriter_write_element($memory, 'Firma', 'BB');
 				xmlwriter_write_element($memory, 'PeriodeFra', $PeriodFrom);
