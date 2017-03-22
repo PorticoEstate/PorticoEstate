@@ -34,16 +34,24 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Group by')" />
 						</label>
+						<div id="container_groups" class="pure-custom"></div>
 					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Sort by')" />
 						</label>
-					</div>												
+						<div id="container_order" class="pure-custom"></div>
+					</div>	
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Count / Sum')" />
+						</label>
+						<div id="container_aggregates" class="pure-custom"></div>
+					</div>											
 				</div>
 			</div>
 			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save">
+				<input type="submit" class="pure-button pure-button-primary" name="save" id="btn_save">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'save')" />
 					</xsl:attribute>						
