@@ -31,8 +31,17 @@ $(document).ready(function ()
 
 function build_check_columns(data)
 {
-	$.each(data, function(key, object) {
-		$('#container_columns').append('<span><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
+	$.each(data, function(key, object) 
+	{
+		$('#container_columns').append('<span style="margin-right:12px;"><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
+		if (object.type == 'integer')
+		{
+			var combo = build_list_aggregates(object.name);
+			var text = build_text_aggregates(object.name);
+			var check = build_check_aggregates(object.name);
+			var el_1 = '<span style="display:table-row;">'+ check + combo + text + '</span>';
+			$('#container_aggregates').append(el_1);			
+		}
 	});	
 }
 
@@ -40,26 +49,45 @@ function build_check_groups(name)
 {
 	if ($("#c_" + name).is(":checked")) 
 	{
-		var el_1 = '<span id="sg_'+ name +'"><input type="checkbox" id="g_'+ name +'" value="'+ name +'" onchange="build_check_aggregates(\''+ name +'\')"/> ' + name + '</span>';
-		var el_2 = '<span id="so_'+ name +'"><input type="checkbox" id="o_'+ name +'" value="'+ name +'"/> ' + name + '</span>';
+		var el_1 = '<span style="display:block;"><input disabled="true" type="checkbox" id="g_'+ name +'" value="'+ name +'" checked/> ' + name + '</span>';
+		var el_2 = '<span style="display:block;"><input type="checkbox" id="o_'+ name +'" value="'+ name +'"/> ' + name + '</span>';
 		$('#container_groups').append(el_1);
 		$('#container_order').append(el_2);
 	} 
 	else {
-		$("#sg_" + name).remove();
-		$("#so_" + name).remove();
-		$("#sa_" + name).remove();
+		$("#g_" + name).parent().remove();
+		$("#o_" + name).parent().remove();
 	}
 }
 
 function build_check_aggregates(name)
 {
-	if ($("#g_" + name).is(":checked")) 
+	var el = '<span style="display:table-cell;"><input type="checkbox" id="a_'+  name +'" value="'+ name +'" onchange="enabled_disabled_aggregates(\''+ name +'\')"/>' + name + '</span>';
+	return el;
+}
+
+function build_list_aggregates(name)
+{
+    var combo = $("<select></select>");
+    combo.append("<option value='sum'>Sum</option>");
+	combo.append("<option value='count'>Count</option>");
+	
+	return "<span style='display:table-cell;'><select disabled='true' id='cbo_" + name + "' name='cbo_" + name + "'>" + $(combo).html() + "</select></span>";
+}
+
+function build_text_aggregates(name)
+{
+	return "<span style='display:table-cell;'>As <input disabled='true' type='text' id='txt_" + name + "' name='txt_" + name + "'/></span>";
+}
+
+function enabled_disabled_aggregates(name)
+{
+	if ($("#a_" + name).is(":checked")) 
 	{
-		var el_1 = '<span id="sa_'+ name +'"><input type="checkbox" id="a_'+ name +'" value="'+ name +'"/> ' + name + '</span>';
-		$('#container_aggregates').append(el_1);
-	} 
-	else {
-		$("#sa_" + name).remove();
+		$("#cbo_" + name).prop('disabled', false);
+		$("#txt_" + name).prop('disabled', false);
+	} else {
+		$("#cbo_" + name).prop('disabled', true);
+		$("#txt_" + name).prop('disabled', true);		
 	}
 }
