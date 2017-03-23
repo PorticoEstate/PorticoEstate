@@ -54,13 +54,15 @@ $(document).ready(function ()
 
 function filterDataContracts(param, value)
 {
-	oTable1.dataTableSettings[1]['ajax']['data'][param] = value;
+//	oTable1.dataTableSettings[1]['ajax']['data'][param] = value;
+	paramsTable1[param] = value;
 	oTable1.fnDraw();
 }
 
 function filterDataApplications(param, value)
 {
-	oTable2.dataTableSettings[2]['ajax']['data'][param] = value;
+//	oTable2.dataTableSettings[2]['ajax']['data'][param] = value;
+	paramsTable2[param] = value;
 	oTable2.fnDraw();
 }
 
