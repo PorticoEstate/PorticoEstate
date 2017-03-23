@@ -330,10 +330,10 @@
 												});
 											}
 										},
-										'copyFlash',
-										'csvFlash',
-										'excelFlash',
-										'pdfFlash'
+										'copyHtml5',
+										'csvHtml5',
+										'excelHtml5'
+									//	'pdfFlash'
 
 
 									<xsl:choose>
