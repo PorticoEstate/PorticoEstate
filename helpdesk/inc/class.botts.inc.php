@@ -802,6 +802,13 @@
 			//-----------from--------
 
 			$current_prefs_user = $this->bocommon->create_preferences('helpdesk',$GLOBALS['phpgw_info']['user']['account_id']);
+
+			if(!$current_prefs_user['email'])
+			{
+				$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+				$current_prefs_user['email'] = "{$GLOBALS['phpgw_info']['user']['account_lid']}@{$email_domain}";
+			}
+
 			$current_user_address = "{$GLOBALS['phpgw_info']['user']['fullname']}<{$current_prefs_user['email']}>";
 
 			//-----------from--------
@@ -943,7 +950,7 @@
 
 			$notify_list = execMethod('property.notify.read', array
 				(
-				'location_id' => $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location),
+				'location_id' => $GLOBALS['phpgw']->locations->get_id('helpdesk', $this->acl_location),
 				'location_item_id' => $id
 				)
 			);
