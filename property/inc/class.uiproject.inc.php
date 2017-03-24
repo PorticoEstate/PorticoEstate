@@ -1661,9 +1661,7 @@ JS;
 						$sum_actual_cost += $b_entry['actual_cost'];
 						$sum_oblications += $b_entry['sum_oblications'];
 						$values['sum'] += $b_entry['budget'];
-					}
-					if ($b_entry['active'])
-					{
+
 						$s_budget += $b_entry['budget'];
 						$s_orders += $b_entry['sum_orders'];
 						$s_actual_cost += $b_entry['actual_cost'];

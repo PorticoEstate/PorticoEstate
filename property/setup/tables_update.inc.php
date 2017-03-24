@@ -9436,3 +9436,22 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.709 to 0.9.17.710
+	*
+	*/
+	$test[] = '0.9.17.709';
+
+	function property_upgrade0_9_17_709()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder_status', 'canceled', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.710';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
