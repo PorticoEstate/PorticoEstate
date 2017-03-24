@@ -22,6 +22,7 @@
 		protected $standard_factor;
 		protected $custom_factor;
 		protected $price_type_id;
+		protected $billing_id;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a price item is created from outside
@@ -45,6 +46,15 @@
 			 */
 		}
 
+		public function get_billing_id()
+		{
+			return $this->billing_id;
+		}
+
+		public function set_billing_id( $id )
+		{
+			$this->billing_id = $id;
+		}
 		public function get_price_item_id()
 		{
 			return $this->price_item_id;
@@ -241,6 +251,7 @@
 				'date_start' => $this->get_date_start() != NULL ? date($date_format, $this->get_date_start()) : '',
 				'date_end' => $this->get_date_end() != NULL ? date($date_format, $this->get_date_end()) : '',
 				'price_type_title' => lang($this->get_price_type_title()),
+				'billing_id' => $this->get_billing_id(),
 			);
 		}
 

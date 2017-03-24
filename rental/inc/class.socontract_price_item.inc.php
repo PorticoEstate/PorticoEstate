@@ -123,7 +123,8 @@
 					. " rental_contract_price_item.contract_id, rental_contract_price_item.area, rental_contract_price_item.count,"
 					. " rental_contract_price_item.agresso_id, rental_contract_price_item.title, rental_contract_price_item.is_area,"
 					. " rental_contract_price_item.price, rental_contract_price_item.total_price, rental_contract_price_item.is_one_time,"
-					. " rental_contract_price_item.date_start, rental_contract_price_item.date_end,rental_price_item.type";
+					. " rental_contract_price_item.date_start, rental_contract_price_item.date_end,rental_price_item.type,"
+					. " rental_contract_price_item.billing_id";
 			}
 			else
 			{
@@ -162,6 +163,7 @@
 				$price_item->set_location_factor($this->unmarshal($this->db->f('location_factor'), 'float'));
 				$price_item->set_standard_factor($this->unmarshal($this->db->f('standard_factor'), 'float'));
 				$price_item->set_custom_factor($this->unmarshal($this->db->f('custom_factor'), 'float'));
+				$price_item->set_billing_id($this->unmarshal($this->db->f('billing_id'), 'int'));
 			}
 			return $price_item;
 		}
@@ -269,6 +271,12 @@
 				$cols[] = 'date_end';
 			}
 
+			if ($price_item->get_billing_id())
+			{
+				$values[] = $this->marshal($price_item->get_billing_id(), 'int');
+				$cols[] = 'billing_id';
+			}
+
 			$q = "INSERT INTO rental_contract_price_item (" . join(',', $cols) . ") VALUES (" . join(',', $values) . ")";
 
 			$result = $this->db->query($q);
@@ -366,7 +374,8 @@
 				"is_billed=" . ($price_item->is_billed() ? "true" : "false"),
 				"location_factor = '{$location_factor}'",
 				"standard_factor = '{$standard_factor}'",
-				"custom_factor = '{$custom_factor}'"
+				"custom_factor = '{$custom_factor}'",
+				"billing_id=" . $this->marshal($price_item->get_billing_id(), 'int')
 			);
 			$this->db->query('UPDATE rental_contract_price_item SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
 
