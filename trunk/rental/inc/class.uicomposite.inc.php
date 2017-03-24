@@ -122,11 +122,16 @@
 				);
 
 			$districts_arr = execMethod('property.sogeneric.get_list', array('type' => 'district'));
+			$default_district = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['default_district']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['default_district'] : '');
 			$districts = array();
 			array_unshift($districts, array('id' => '', 'name' => lang('select')));
 			foreach ($districts_arr as $district)
 			{
-				$districts[] = array('id' => $district['id'], 'name' => $district['name']);
+				$districts[] = array(
+					'id' => $district['id'],
+					'name' => $district['name'],
+					'selected'	=> $default_district == $district['id'] ? 1 : 0
+					);
 			}
 			$filters[] = array
 				(
