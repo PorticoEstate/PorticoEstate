@@ -764,6 +764,11 @@
 					'msg' => lang('please enter either a budget or contrakt sum'));
 			}
 
+			if (((int)$values['contract_sum'] && (int)$values['budget']) && (abs($values['contract_sum']) > abs($values['budget'])))
+			{
+				$values['budget'] = $values['contract_sum'];
+			}
+
 			if (isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit(ltrim($values['addition_rs'], '-')))
 			{
 				$this->receipt['error'][] = array(
