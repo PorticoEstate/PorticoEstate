@@ -1031,6 +1031,12 @@
 								'name' => 'closed',
 								'descr' => lang('closed'),
 								'type' => 'checkbox'
+							),
+							array
+								(
+								'name' => 'canceled',
+								'descr' => lang('canceled'),
+								'type' => 'checkbox'
 							)
 						),
 						'edit_msg' => lang('edit status'),
