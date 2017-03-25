@@ -259,7 +259,7 @@ JqueryPortico.FormatterCenter = function (key, oData)
 	return "<center>" + oData[key] + "</center>";
 };
 
-JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, options, data)
+JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, options, data, num)
 {
 	options = options || {};
 	var disablePagination = options['disablePagination'] || false;
@@ -275,6 +275,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var allrows = options['allrows'] || false;
 	var pageLength = options['rows_per_page'] || 10;
 	data = data || {};
+	num = num || 0;
 
 	for (i = 0; i < columns.length; i++)
 	{
@@ -506,7 +507,8 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			}
 			try
 			{
-				window['local_DrawCallback' + JqueryPortico.inlineTablesRendered](oTable);
+//				window['local_DrawCallback' + JqueryPortico.inlineTablesRendered](oTable);
+				window['local_DrawCallback' + num](oTable);
 			}
 			catch (err)
 			{

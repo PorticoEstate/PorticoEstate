@@ -391,7 +391,7 @@
 		</xsl:variable>
 //		$(document).ready(function() {
 		var paramsTable<xsl:number value="$num"/> = {};
-		oTable<xsl:number value="$num"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="$num"/>, options<xsl:number value="$num"/> , <xsl:value-of select="$dataset"/>);
+		oTable<xsl:number value="$num"/> = JqueryPortico.inlineTableHelper("<xsl:value-of select="$container"/>", <xsl:value-of select="$requestUrl"/>, columns<xsl:number value="$num"/>, options<xsl:number value="$num"/> , <xsl:value-of select="$dataset"/>, <xsl:number value="$num"/>);
 //	});
 	</script>
 </xsl:template>
