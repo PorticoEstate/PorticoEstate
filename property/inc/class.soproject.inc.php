@@ -2250,10 +2250,6 @@
 
 			$project_total_budget = array_sum($project_budget);
 
-			$sql = "SELECT fm_workorder.id AS order_id, vendor_id"
-				. " FROM fm_workorder"
-				. " WHERE project_id = {$project_id}";
-
 			$sql = "SELECT fm_workorder.id AS order_id, vendor_id,fm_workorder_status.canceled"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"

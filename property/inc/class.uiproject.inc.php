@@ -1730,7 +1730,7 @@ JS;
 					array('key' => 'budget', 'label' => lang('budget'), 'sortable' => false, 'className' => 'right',
 						'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_budget, 0, $this->decimal_separator, '.')),
 					array('key' => 'sum_oblications', 'label' => lang('sum orders'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_orders, 0, $this->decimal_separator, '.')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($sum_oblications, 0, $this->decimal_separator, '.')),
 					array('key' => 'actual_cost', 'label' => lang('actual cost'), 'sortable' => false,
 						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_actual_cost, 0, $this->decimal_separator, '.')),
 					array('key' => 'diff', 'label' => lang('difference'), 'sortable' => false, 'className' => 'right',
