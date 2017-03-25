@@ -34,14 +34,12 @@ function build_check_columns(data)
 	$.each(data, function(key, object) 
 	{
 		$('#container_columns').append('<span style="margin-right:12px;"><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
-		if (object.type == 'integer')
-		{
-			var combo = build_list_aggregates(object.name);
-			var text = build_text_aggregates(object.name);
-			var check = build_check_aggregates(object.name);
-			var el_1 = '<span style="display:table-row;">'+ check + combo + text + '</span>';
-			$('#container_aggregates').append(el_1);			
-		}
+
+		var combo = build_list_aggregates(object.name, object.type);
+		var text = build_text_aggregates(object.name);
+		var check = build_check_aggregates(object.name);
+		var el_1 = '<span style="display:table-row;">'+ check + combo + text + '</span>';
+		$('#container_aggregates').append(el_1);			
 	});	
 }
 
@@ -49,8 +47,8 @@ function build_check_groups(name)
 {
 	if ($("#c_" + name).is(":checked")) 
 	{
-		var el_1 = '<span style="display:block;"><input disabled="true" type="checkbox" id="g_'+ name +'" value="'+ name +'" checked/> ' + name + '</span>';
-		var el_2 = '<span style="display:block;"><input type="checkbox" id="o_'+ name +'" value="'+ name +'"/> ' + name + '</span>';
+		var el_1 = '<span style="display:block;"><input onclick="return false;" onkeydown="return false;" type="checkbox" name="group['+ name +']" id="g_'+ name +'" value="'+ name +'" checked/>' + name + '</span>';
+		var el_2 = '<span style="display:block;"><input type="checkbox" name="order['+ name +']" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
 		$('#container_groups').append(el_1);
 		$('#container_order').append(el_2);
 	} 
@@ -62,22 +60,25 @@ function build_check_groups(name)
 
 function build_check_aggregates(name)
 {
-	var el = '<span style="display:table-cell;"><input type="checkbox" id="a_'+  name +'" value="'+ name +'" onchange="enabled_disabled_aggregates(\''+ name +'\')"/>' + name + '</span>';
+	var el = '<span style="display:table-cell;"><input type="checkbox" name="aggregate['+ name +']" id="a_'+  name +'" value="'+ name +'" onchange="enabled_disabled_aggregates(\''+ name +'\')"/>' + name + '</span>';
 	return el;
 }
 
-function build_list_aggregates(name)
+function build_list_aggregates(name, type)
 {
-    var combo = $("<select></select>");
-    combo.append("<option value='sum'>Sum</option>");
+    var combo = $("<select></select>");  
 	combo.append("<option value='count'>Count</option>");
+	if (type == 'integer')
+	{
+		combo.append("<option value='sum'>Sum</option>");
+	}
 	
-	return "<span style='display:table-cell;'><select disabled='true' id='cbo_" + name + "' name='cbo_" + name + "'>" + $(combo).html() + "</select></span>";
+	return "<span style='display:table-cell;'><select disabled='true' id='cbo_" + name + "' name='cbo_aggregate["+ name +"]'>" + $(combo).html() + "</select></span>";
 }
 
 function build_text_aggregates(name)
 {
-	return "<span style='display:table-cell;'>As <input disabled='true' type='text' id='txt_" + name + "' name='txt_" + name + "'/></span>";
+	return "<span style='display:table-cell;'>As <input disabled='true' type='text' id='txt_" + name + "' name='txt_aggregate["+ name +"]'/></span>";
 }
 
 function enabled_disabled_aggregates(name)
