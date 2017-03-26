@@ -36,7 +36,7 @@
 	class Import_fra_agresso_X205_BK extends property_cron_parent
 	{
 
-		protected $auto_tax = true;
+		protected $auto_tax = false;
 		protected $mvakode = 0;
 		protected $kildeid = 1;
 		protected $splitt = 0;
@@ -390,9 +390,9 @@
 				$buffer[$i]['loc1'] = $order_info['loc1'];
 				$buffer[$i]['line_text'] = $order_info['title'];
 
-				$buffer[$i]['mvakode'] = $this->mvakode;
+				$buffer[$i]['mvakode'] = $order_info['tax_code'];
 
-				if ($buffer[$i]['loc1'] && $this->auto_tax)
+				if ($buffer[$i]['loc1'] && !$buffer[$i]['mvakode'])
 				{
 					$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
 
@@ -411,7 +411,7 @@
 					$update_voucher = true;
 					$bilagsnr = $this->db->f('bilagsnr');
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
-					$this->receipt['message'][] = array('msg' => "Oppdatert med nye data i arbeidsregister: {$_data['KEY']}");
+					$this->receipt['message'][] = array('msg' => "Oppdatert med nye data i arbeidsregister: ordre = {$_order_id}, bilag = {$_data['KEY']}");
 				}
 
 				$sql = "SELECT bilagsnr FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}'";
@@ -457,13 +457,7 @@
 					$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
 				}
 
-				if ($this->auto_tax)
-				{
-					$buffer[$i]['mvakode'] = $this->soXport->tax_b_account_override($buffer[$i]['mvakode'], $order_info['spbudact_code']);
-					$buffer[$i]['mvakode'] = $this->soXport->tax_vendor_override($buffer[$i]['mvakode'], $vendor_id);
-				}
-
-				$buffer[$i]['kostra_id'] = $this->default_kostra_id;//$this->soXport->get_kostra_id($buffer[$i]['loc1']);
+				$buffer[$i]['kostra_id'] = $order_info['service_id'];
 
 				$buffer[$i]['merknad'] = $merknad;
 				$buffer[$i]['splitt'] = $this->splitt;
@@ -598,6 +592,8 @@
 						. " fm_tts_tickets.vendor_id,"
 						. " fm_tts_tickets.b_account_id as account_id,"
 						. " fm_tts_tickets.ecodimb,"
+						. " fm_tts_tickets.service_id,"
+						. " fm_tts_tickets.tax_code,"
 						. " fm_tts_tickets.cat_id as category,"
 						. " fm_tts_tickets.ordered_by as user_id,"
 						. " fm_tts_tickets.subject as title"
@@ -613,6 +609,8 @@
 						. " fm_workorder.ecodimb,"
 						. " fm_workorder.category,"
 						. " fm_workorder.user_id,"
+						. " fm_workorder.service_id,"
+						. " fm_workorder.tax_code,"
 						. " fm_workorder.title"
 						. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
 						. " WHERE fm_workorder.id = {$order_id}";
@@ -641,6 +639,8 @@
 			$order_info['dimb'] = $ecodimb ? $ecodimb : $this->db->f('project_ecodimb');
 			$order_info['dime'] = $this->db->f('category');
 			$order_info['title'] = $this->db->f('title', true);
+			$order_info['service_id'] = $this->db->f('service_id');
+			$order_info['tax_code'] = $this->db->f('tax_code');
 
 			$janitor_user_id = $this->db->f('user_id');
 			$order_info['janitor'] = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
