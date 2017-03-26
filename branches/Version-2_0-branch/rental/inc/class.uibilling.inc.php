@@ -1398,6 +1398,7 @@ JS;
 			{
 				phpgw::no_access();
 			}
+			$billing_id = phpgw::get_var('id');
 			rental_sobilling::get_instance()->transaction_begin();
 			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 			$billing_job->set_deleted(true);
@@ -1422,7 +1423,8 @@ JS;
 				foreach ($price_items as $price_item)
 				{
 					//Check for credit or valid date
-					if (($price_item->get_is_one_time() && $price_item->get_total_price() < 0) || ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()))
+//					if (($price_item->get_is_one_time() && $price_item->get_total_price() < 0) || ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()))
+					if ($price_item->get_billing_id() == $billing_id)
 					{
 						$price_item->set_is_billed(false);
 						rental_socontract_price_item::get_instance()->store($price_item);

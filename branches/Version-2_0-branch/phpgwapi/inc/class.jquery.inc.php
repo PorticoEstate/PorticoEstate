@@ -463,10 +463,7 @@ HTML;
 			$js = <<<JS
 		$(document).ready(function ()
 		{
-			/*if(typeof(JqueryPortico.inlineTablesDefined) == 'undefined' || JqueryPortico.inlineTablesDefined == 0)
-			{*/
-				JqueryPortico.render_tabs();
-			//}
+			JqueryPortico.render_tabs();
 		});
 
 			JqueryPortico.render_tabs = function ()

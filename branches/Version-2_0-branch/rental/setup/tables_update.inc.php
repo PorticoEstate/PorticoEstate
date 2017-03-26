@@ -959,3 +959,21 @@
 			return $GLOBALS['setup_info']['rental']['currentver'];
 		}
 	}
+
+	$test[] = '0.1.0.36';
+	function rental_upgrade0_1_0_36()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('rental_contract_price_item', 'billing_id', array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['rental']['currentver'] = '0.1.0.37';
+			return $GLOBALS['setup_info']['rental']['currentver'];
+		}
+	}

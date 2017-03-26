@@ -215,11 +215,6 @@
 	</table>
 	<script>
 
-		if (JqueryPortico.inlineTablesRendered == 0)
-		{
-		JqueryPortico.inlineTablesRendered = 1;
-		}
-		
 		var columns = [
 		<xsl:for-each select="//datatable/field">
 			{
