@@ -269,7 +269,6 @@
 			</xsl:when>
 	</xsl:choose>
 			
-		JqueryPortico.inlineTablesDefined += 1;
 		var PreColumns = [
 			<xsl:for-each select="$ColumnDefs">
 				{
