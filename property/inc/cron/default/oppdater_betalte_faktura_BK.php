@@ -44,6 +44,13 @@
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('property');
 			$this->function_msg = 'oppdater bestillinger med grunnlag i betalte faktura';
+			/**
+			 * Bruker konffigurasjon fra '.ticket' - fordi denne definerer oppslaget mot fullmaktsregisteret ved bestilling.
+			 */
+			$config					= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
+			$this->soap_url			= $config->config_data['external_register']['url'];
+			$this->soap_username	= $config->config_data['external_register']['username'];
+			$this->soap_password	= $config->config_data['external_register']['password'];
 		}
 
 		function execute()
@@ -164,7 +171,25 @@
 
 		function check_payment( $voucher_id )
 		{
-					//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
+			$url		= $this->soap_url;
+			$username	= $this->soap_username; //'portico';
+			$password	= $this->soap_password; //'BgPor790gfol';
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_USERPWD, "{$username}:{$password}");
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			$result = json_decode($result, true);
 
 			return false;
 

@@ -534,12 +534,18 @@
 				if ($contract_price_item->is_one_time())
 				{
 					$invoice_price_item->set_is_one_time(true);
-					if ($billing_term == 5 || ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end))
+
+
+					/**
+					 * FIXME: Sigurd: 24. mars: sjekk denne!!
+					 */
+//					if ($billing_term == 5 || ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end))
 					{
 						// ... set the total price of the invoice price item to the total price of the contract price item
 						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
 						// ... and set the contract price item as billed
 						$contract_price_item->set_is_billed(true);
+						$contract_price_item->set_billing_id($billing_id);
 						if (!$dry_run)
 						{
 							rental_socontract_price_item::get_instance()->store($contract_price_item);
