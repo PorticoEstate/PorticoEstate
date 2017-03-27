@@ -32,7 +32,7 @@
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
 
-	class synkroniser_med_boei extends property_cron_parent
+	class synkroniser_med_boei_old extends property_cron_parent
 	{
 
 		function __construct()
@@ -41,7 +41,7 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('location');
-			$this->function_msg = 'Synkroniser_med_boei';
+			$this->function_msg = 'Synkroniser_med_boei_old';
 
 			$this->bocommon = CreateObject('property.bocommon');
 			$this->db = $this->bocommon->new_db();
