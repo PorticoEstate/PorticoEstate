@@ -120,4 +120,9 @@
 
 			return $values;
 		}
+
+		public function delete( $id )
+		{
+			return eventplanner_sopermission::get_instance()->delete($id);
+		}
 	}
