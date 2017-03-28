@@ -7,7 +7,7 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License v2 or later
 	 * @internal
 	 * @package eventplanner
-	 * @subpackage booking
+	 * @subpackage calendar
 	 * @version $Id:$
 	 */
 
@@ -27,11 +27,11 @@
 	 */
 
 	phpgw::import_class('phpgwapi.bocommon');
-	phpgw::import_class('eventplanner.sobooking');
+	phpgw::import_class('eventplanner.socalendar');
 
-	include_class('eventplanner', 'booking', 'inc/model/');
+	include_class('eventplanner', 'calendar', 'inc/model/');
 
-	class eventplanner_bobooking extends phpgwapi_bocommon
+	class eventplanner_bocalendar extends phpgwapi_bocommon
 	{
 		protected static
 			$bo,
@@ -40,8 +40,8 @@
 
 		public function __construct()
 		{
-			$this->fields = eventplanner_booking::get_fields();
-			$this->acl_location = eventplanner_booking::acl_location;
+			$this->fields = eventplanner_calendar::get_fields();
+			$this->acl_location = eventplanner_calendar::acl_location;
 		}
 
 		/**
@@ -53,26 +53,15 @@
 		{
 			if (self::$bo == null)
 			{
-				self::$bo = new eventplanner_bobooking();
+				self::$bo = new eventplanner_bocalendar();
 			}
 			return self::$bo;
 		}
 
 		public function store($object)
 		{
-			$save_last_booking = false;
-			if(!$object->get_id())
-			{
-				$save_last_booking = true;
-			}
-
 			$this->store_pre_commit($object);
-			$ret = eventplanner_sobooking::get_instance()->store($object);
-			if($ret && $save_last_booking)
-			{
-				phpgwapi_cache::system_set('eventplanner', "last_booking{$object->customer_id}", time());
-			}
-
+			$ret = eventplanner_socalendar::get_instance()->store($object);
 			$this->store_post_commit($object);
 			return $ret;
 		}
@@ -88,7 +77,7 @@
 			{
 				unset($params['filters']['active']);
 			}
-			$values =  eventplanner_sobooking::get_instance()->read($params);
+			$values =  eventplanner_socalendar::get_instance()->read($params);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
@@ -105,48 +94,43 @@
 		{
 			if ($id)
 			{
-				$values = eventplanner_sobooking::get_instance()->read_single($id, $return_object);
+				$values = eventplanner_socalendar::get_instance()->read_single($id, $return_object);
 			}
 			else
 			{
-				$values = new eventplanner_booking();
+				$values = new eventplanner_calendar();
 			}
 
 			return $values;
 		}
 
-		public function get_booking_id_from_calendar( $calendar_id )
-		{
-			return eventplanner_sobooking::get_instance()->get_booking_id_from_calendar($calendar_id);
-		}
-
-/*		public function update_active_status( $ids, $action )
+		public function update_active_status( $ids, $action )
 		{
 			if($action == 'enable' && $ids)
 			{
 				$_ids = array();
-				$application_id = eventplanner_sobooking::get_instance()->read_single($ids[0], true)->application_id;
+				$application_id = eventplanner_socalendar::get_instance()->read_single($ids[0], true)->application_id;
 
 				$application = createObject('eventplanner.boapplication')->read_single($application_id);
 				$params = array();
 				$params['filters']['active'] = 1;
 				$params['filters']['application_id'] = $application_id;
 
-				$bookings =  eventplanner_sobooking::get_instance()->read($params);
+				$calendars =  eventplanner_socalendar::get_instance()->read($params);
 
-				$existing_booking_ids = array();
-				foreach ($bookings['results'] as $booking)
+				$existing_calendar_ids = array();
+				foreach ($calendars['results'] as $calendar)
 				{
-					$existing_booking_ids[] = $booking['id'];
+					$existing_calendar_ids[] = $calendar['id'];
 				}
 
-				$number_of_active = (int)$bookings['total_records'];
+				$number_of_active = (int)$calendars['total_records'];
 				$limit = (int)$application->num_granted_events;
 
 				$error = false;
 				foreach ($ids as $id)
 				{
-					if(in_array($id, $existing_booking_ids) )
+					if(in_array($id, $existing_calendar_ids) )
 					{
 						continue;
 					}
@@ -172,14 +156,15 @@
 			{
 				foreach ($ids as $id)
 				{
-					$booking = eventplanner_sobooking::get_instance()->read_single($id, true);
+					$booking_id = createObject('eventplanner.bobooking')->get_booking_id_from_calendar($id);
+					$booking = eventplanner_sobooking::get_instance()->read_single($booking_id, true);
 					if(!$booking->customer_id)
 					{
 						$_ids[] = $id;
 					}
 					else
 					{
-						$message = lang('can not delete booking with customer');
+						$message = lang('can not delete calendar with customer');
 						phpgwapi_cache::message_set($message, 'error');
 					}
 				}		
@@ -189,7 +174,19 @@
 				$_ids = $ids;
 			}
 
-			return eventplanner_sobooking::get_instance()->update_active_status($_ids, $action);
+			return eventplanner_socalendar::get_instance()->update_active_status($_ids, $action);
 		}
-*/
+
+		public function update_schedule( $id, $from_ )
+		{
+			$calendar = eventplanner_socalendar::get_instance()->read_single($id, true);
+			$calendar->from_ = $from_;
+			$calendar->process_update = true;
+
+			if($calendar->validate())
+			{
+				return $calendar->store();
+			}
+			return false;
+		}
 	}

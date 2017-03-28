@@ -23,21 +23,19 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package eventplanner
-	 * @subpackage booking
+	 * @subpackage calendar
 	 * @version $Id: $
 	 */
 	phpgw::import_class('phpgwapi.socommon');
 
-	class eventplanner_sobooking extends phpgwapi_socommon
+	class eventplanner_socalendar extends phpgwapi_socommon
 	{
 
 		protected static $so;
 
 		public function __construct()
 		{
-			parent::__construct('eventplanner_booking', eventplanner_booking::get_fields());
-			$this->acl_location = eventplanner_booking::acl_location;
-			$this->use_acl = true;
+			parent::__construct('eventplanner_calendar', eventplanner_calendar::get_fields());
 		}
 
 		/**
@@ -49,46 +47,15 @@
 		{
 			if (self::$so == null)
 			{
-				self::$so = CreateObject('eventplanner.sobooking');
+				self::$so = CreateObject('eventplanner.socalendar');
 			}
 			return self::$so;
 		}
 
-		function get_acl_condition( )
-		{
-			if($this->relaxe_acl)
-			{
-				return;
-			}
-
-			$acl_condition = parent::get_acl_condition();
-
-			$sql = "SELECT object_id, permission FROM eventplanner_permission WHERE subject_id = {$this->account}";
-			$this->db->query($sql,__LINE__,__FILE__);
-			$object_ids = array(-1);
-			while ($this->db->next_record())
-			{
-				$permission = $this->db->f('permission');
-				if($permission & PHPGW_ACL_READ)
-				{
-					$object_ids[] = $this->db->f('object_id');
-				}
-			}
-
-			if($acl_condition)
-			{
-				return '(' . $acl_condition . ' OR eventplanner_booking.customer_id IN (' . implode(',', $object_ids) . '))';
-			}
-			else
-			{
-				return 'eventplanner_booking.customer_id IN (' . implode(',', $object_ids) . ')';
-			}
-
-		}
 
 		protected function populate( array $data )
 		{
-			$object = new eventplanner_booking();
+			$object = new eventplanner_calendar();
 			foreach ($this->fields as $field => $field_info)
 			{
 				$object->set_field($field, $data[$field]);
@@ -109,6 +76,11 @@
 
 		protected function update_history( $object, $fields )
 		{
+	//		$status_text = eventplanner_calendar::get_status_list();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$lang_active = lang('active');
+			$lang_inactive = lang('inactive');
+
 			$original = $this->read_single($object->get_id());//returned as array()
 			foreach ($fields as $field => $params)
 			{
@@ -117,27 +89,84 @@
 				if (!empty($params['history']) && $new_value && $old_value && ($new_value != $old_value))
 				{
 					$label = !empty($params['label']) ? lang($params['label']) : $field;
+					switch ($field)
+					{
+						case 'status':
+							$old_value = $status_text[$old_value];
+							$new_value = $status_text[$new_value];
+							break;
+						case 'active':
+							$old_value = $old_value ? $lang_active : $lang_inactive;
+							$new_value = $new_value ? $lang_active : $lang_inactive;
+							break;
+						case 'from_':
+						case 'to_':
+							if(($old_value + phpgwapi_datetime::user_timezone()) == $new_value)
+							{
+								continue;
+							}
+
+							$old_value = $GLOBALS['phpgw']->common->show_date($old_value);
+							$new_value = $GLOBALS['phpgw']->common->show_date($new_value);
+							break;
+						default:
+							break;
+					}
 					$value_set = array
 					(
-						'booking_id'	=> $object->get_id(),
+						'calendar_id'	=> $object->get_id(),
 						'time'		=> time(),
 						'author'	=> $GLOBALS['phpgw_info']['user']['fullname'],
 						'comment'	=> $label . ':: ' . lang('old value') . ': ' . $this->db->db_addslashes($old_value) . ', ' .lang('new value') . ': ' . $this->db->db_addslashes($new_value),
 						'type'	=> 'history',
 					);
 
-					$this->db->query( 'INSERT INTO eventplanner_booking_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
+					$this->db->query( 'INSERT INTO eventplanner_calendar_comment (' .  implode( ',', array_keys( $value_set ) )   . ') VALUES ('
 					. $this->db->validate_insert( array_values( $value_set ) ) . ')',__LINE__,__FILE__);
 				}
 
 			}
 		}
 
-		public function get_booking_id_from_calendar( $calendar_id )
+		public function update_active_status($ids, $action )
 		{
-			$sql = "SELECT id FROM eventplanner_booking WHERE calendar_id = " . (int) $calendar_id;
+			if(!$ids || !is_array($ids))
+			{
+				return;
+			}
+
+			switch ($action)
+			{
+				case 'disable':
+					$sql = "UPDATE eventplanner_calendar SET active = 0";
+					$where = 'WHERE';
+
+					break;
+				case 'enable':
+					$sql = "UPDATE eventplanner_calendar SET active = 1";
+					$where = 'WHERE';
+					break;
+
+				case 'delete':
+					$sql = "DELETE FROM eventplanner_calendar WHERE customer_id IS NULL";
+					$where = 'AND';
+					break;
+
+				case 'disconnect':
+					$sql = "DELETE FROM eventplanner_booking WHERE calendar_id IN(". implode(',', $ids) . ')';
+					return $this->db->query($sql,__LINE__,__FILE__);
+
+				default:
+					throw new Exception("action {$action} not supported");
+					break;
+			}
+
+			$sql .= " {$where} id IN(". implode(',', $ids) . ')';
+			$this->db->transaction_begin();
+			
 			$this->db->query($sql,__LINE__,__FILE__);
-			$this->db->next_record();
-			return (int) $this->db->f('id');
+
+
+			return	$this->db->transaction_commit();
 		}
 	}

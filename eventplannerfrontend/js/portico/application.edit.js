@@ -260,7 +260,7 @@ function calculate_stage_size()
 	$("#stage_size").val(total_size);
 }
 
-add_booking = function ()
+add_schedule = function ()
 {
 	var from_ = $("#from_").val();
 	if (!from_)
@@ -269,7 +269,7 @@ add_booking = function ()
 	}
 
 	oArgs = {
-		menuaction: 'eventplannerfrontend.uibooking.save_ajax',
+		menuaction: 'eventplannerfrontend.uicalendar.save_ajax',
 		application_id: $("#application_id").val()
 	};
 
@@ -319,7 +319,7 @@ update_schedule = function (id)
 	{
 		return;
 	}
-	oArgs = {menuaction: 'eventplannerfrontend.uibooking.update_schedule'};
+	oArgs = {menuaction: 'eventplannerfrontend.uicalendar.update_schedule'};
 
 	var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 	var htmlString = '';
@@ -355,7 +355,7 @@ this.onActionsClick = function (action)
 	$("#receipt").html("");
 	if (action === 'add')
 	{
-		add_booking();
+		add_schedule();
 		return;
 	}
 
@@ -391,7 +391,7 @@ this.onActionsClick = function (action)
 	{
 		var data = {"ids": ids, "action": action, from_: $("#from_").val()};
 
-		oArgs = {menuaction: 'eventplannerfrontend.uibooking.update_active_status'};
+		oArgs = {menuaction: 'eventplannerfrontend.uicalendar.update_active_status'};
 
 		var requestUrl = phpGWLink('eventplannerfrontend/', oArgs, true);
 
