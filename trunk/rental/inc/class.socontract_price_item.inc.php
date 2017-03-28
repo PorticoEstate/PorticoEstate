@@ -52,7 +52,12 @@
 				if($filters['credits'])
 				{
 					$filter_clauses[] = "is_one_time";
-					$filter_clauses[] = "rental_contract_price_item.total_price < 0.00";	
+					$filter_clauses[] = "rental_contract_price_item.total_price < 0.00";
+				}
+				else if($filters['positive_one_time'])
+				{
+					$filter_clauses[] = "is_one_time";
+					$filter_clauses[] = "rental_contract_price_item.total_price > 0.00";
 				}
 				else
 				{

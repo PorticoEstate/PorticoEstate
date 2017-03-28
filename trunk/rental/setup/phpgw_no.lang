@@ -666,3 +666,4 @@ select all	rental	no	Velg alle
 planned	rental	no	Planlagt
 email template	rental	no	Standardtekster
 expired	rental	no	Utgått
+positive one time	rental	no	Positive engangsbeløp

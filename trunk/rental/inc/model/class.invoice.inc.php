@@ -329,7 +329,7 @@
 		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bill one time price elements
 		 * @return rental_invoice	the newly created invoice
 		 */
-		public static function create_invoice( int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0 )
+		public static function create_invoice( int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0, $month = 0)
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 
@@ -363,8 +363,21 @@
 				{
 					$filters2 = array(
 						'contract_id' => $contract->get_id(),
-						'contract_ids_one_time' => true, 'credits' => true
+						'contract_ids_one_time' => true
 					);
+					if($month == 2)
+					{
+						$filters2['credits'] = true;
+					}
+					else if($month == 3)
+					{
+						$filters2['positive_one_time'] = true;
+					}
+
+//					$filters2 = array(
+//						'contract_id' => $contract->get_id(),
+//						'contract_ids_one_time' => true, 'credits' => true
+//					);
 				}
 				else
 				{
