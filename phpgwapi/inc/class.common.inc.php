@@ -1591,7 +1591,7 @@ HTML;
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;
 		//	$GLOBALS['phpgw']->translation->translator_helper = '';
 
-			$data = '';
+			$data = array();
 			if (is_array($text))
 			{
 				foreach($text as $key => $value)
