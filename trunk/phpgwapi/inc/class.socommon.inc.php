@@ -271,6 +271,7 @@
 				}
 				$results[] = $row;
 			}
+			$id_map = array();
 			if (count($results) > 0)
 			{
 				foreach ($results as $id => $result)
@@ -302,6 +303,7 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
+								$results[$id_map[$id]][$field] = array();
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{

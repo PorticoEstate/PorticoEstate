@@ -22,7 +22,7 @@
 	 * Include setup functions
 	 */
 	require_once('./inc/functions.inc.php');
-	
+
 	srand((double)microtime()*1000000);
 	$random_char = array(
 		'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f',
@@ -46,6 +46,15 @@
 		for($i=0; $i < 30; ++$i)
 		{
 			$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] .= $random_char[rand(0,count($random_char)-1)];
+		}
+	}
+
+
+	if(extension_loaded('libsodium'))
+	{
+		if(empty($GLOBALS['phpgw_info']['server']['setup_libsodium_key']))
+		{
+			$GLOBALS['phpgw_info']['server']['setup_libsodium_key'] = base64_encode(\Sodium\randombytes_buf(\Sodium\CRYPTO_SECRETBOX_KEYBYTES));
 		}
 	}
 
@@ -246,10 +255,10 @@ HTML;
 			}
 */
 
-			if (version_compare(PHP_VERSION, '5.2.0') < 0)
+			if (version_compare(PHP_VERSION, '5.3.0') < 0)
 			{
 				$detected .= '<b><p align="center" class="msg">'
-					. lang('You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later', PHP_VERSION). "\n"
+					. lang('You appear to be using PHP %1, phpGroupWare requires version 5.3.0 or later', PHP_VERSION). "\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
@@ -269,13 +278,13 @@ HTML;
 				{
 					$request_order = '<li>' . lang('You appear to have set request_order = "GPCS"') . "</li>\n";
 				}
-				
+
 			}
 
 			if ( !function_exists('json_encode') ) // Some distributions have removed the standard JSON extension as of PHP 5.5rc2 due to a license conflict
 			{
 				$detected .= '<b><p align="center" class="msg">'
-					. "You have to install php5-json\n"
+					. "You have to install php-json\n"
 					. '</p></b><td></tr></table></body></html>';
 				die($detected);
 			}
@@ -293,7 +302,7 @@ HTML;
 				}
 			}
 
-			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.2) . "</li>\n";
+			$phpver = '<li>' . lang('You appear to be using PHP %1+', 5.3) . "</li>\n";
 			$supported_sessions_type = array('php', 'db');
 
 			$detected .= '<table id="manageheader">' . "\n";
@@ -356,6 +365,11 @@ HTML;
 				{
 					$detected .= '<li class="warn">' . lang('No Oracle-DB support found. Disabling') . "</li>\n";
 				}
+			}
+
+			if(!class_exists('ZipArchive'))
+			{
+				$detected .= '<li class="warn">' . lang('you need ZipArchive for Excel-support') . "</li>\n";
 			}
 
 			/* Not currently supported
@@ -429,15 +443,29 @@ HTML;
 			{
 				$detected .= '<li class="warn">' . lang('No support for shared memory found.') . "</li>\n";
 			}
+
+			$supported_crypto_type = array();
+			if(extension_loaded('libsodium') || function_exists('\Sodium\version_string()'))
+			{
+				$supported_crypto_type[] = 'libsodium';
+				$detected .= '<li>' . lang('You appear to have enabled support for libsodium %1', \Sodium\version_string()) . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('No libsodium support found.') . "</li>\n";
+			}
+
 			if(extension_loaded('mcrypt') || function_exists('mcrypt_list_modes'))
 			{
+				$supported_crypto_type[] = 'mcrypt';
 				$detected .= '<li>' . lang('You appear to have enabled support for mcrypt') . "</li>\n";
-//				$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
 			}
 			else
 			{
 				$detected .= '<li class="warn">' . lang('No mcrypt support found.') . "</li>\n";
-			}		
+			}
+
+
 			if( extension_loaded('xsl') && class_exists('XSLTProcessor') )
 			{
 				$detected .= '<li>' . lang('You appear to have XML/XSLT support enabled') . "</li>\n";
@@ -680,6 +708,28 @@ HTML;
 			}
 			$setup_tpl->set_var('session_options',$session_options);
 
+			unset($stype);
+			$selected = '';
+			$crypto_options = '';
+			$crypto_options .= <<<HTML
+				<option value="">None</option>
+
+HTML;
+			foreach ( $supported_crypto_type as $stype )
+			{
+				$selected = '';
+				if( isset($GLOBALS['phpgw_info']['server']['enable_crypto'])
+					&& $stype == $GLOBALS['phpgw_info']['server']['enable_crypto'])
+				{
+					$selected = ' selected ';
+				}
+				$crypto_options .= <<<HTML
+					<option{$selected} value="{$stype}">{$stype}</option>
+
+HTML;
+			}
+			$setup_tpl->set_var('crypto_options',$crypto_options);
+
 			if ( isset($GLOBALS['phpgw_info']['server']['mcrypt_enabled']) && $GLOBALS['phpgw_info']['server']['mcrypt_enabled'] )
 			{
 				$setup_tpl->set_var('mcrypt_enabled_yes',' selected');
@@ -692,6 +742,8 @@ HTML;
 			$setup_tpl->set_var('mcrypt_iv',$GLOBALS['phpgw_info']['server']['mcrypt_iv']);
 
 			$setup_tpl->set_var('setup_mcrypt_key',$GLOBALS['phpgw_info']['server']['setup_mcrypt_key']);
+
+			$setup_tpl->set_var('setup_libsodium_key',$GLOBALS['phpgw_info']['server']['setup_libsodium_key']);
 
 			if ( !isset($GLOBALS['phpgw_info']['server']['setup_acl']) || !$GLOBALS['phpgw_info']['server']['setup_acl'] )
 			{
@@ -773,6 +825,7 @@ HTML;
 			$setup_tpl->set_var('lang_persistdescr',lang('Do you want persistent connections (higher performance, but consumes more resources)'));
 			$setup_tpl->set_var('lang_sesstype',lang('Sessions Type'));
 			$setup_tpl->set_var('lang_sesstypedescr',lang('What type of sessions management do you want to use (PHP session management usually performs better)?'));
+			$setup_tpl->set_var('lang_enable_crypto',lang('Enable Crypto'));
 			$setup_tpl->set_var('lang_enablemcrypt',lang('Enable MCrypt'));
 			$setup_tpl->set_var('lang_mcryptversion',lang('MCrypt version'));
 			$setup_tpl->set_var('lang_mcryptversiondescr',lang('Set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.'));
@@ -781,6 +834,8 @@ HTML;
 
 			$setup_tpl->set_var('lang_setup_mcrypt_key',lang('Enter some random text as encryption key for the setup encryption'));
 			$setup_tpl->set_var('lang_setup_mcrypt_key_descr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
+
+			$setup_tpl->set_var('lang_setup_libsodium_key',lang('Libsodium key'));
 
 			$setup_tpl->set_var('lang_domselect',lang('Domain select box on login'));
 			$setup_tpl->set_var('lang_domain_from_host', lang('Automatically detect domain from hostname'));
