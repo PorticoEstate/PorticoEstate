@@ -43,18 +43,9 @@
 	if(!isset($GLOBALS['phpgw_info']['server']['setup_mcrypt_key']) || !$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'])
 	{
 		$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] = '';
-		for($i=0; $i < 30; ++$i)
+		for($i=0; $i < 32; ++$i)
 		{
 			$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] .= $random_char[rand(0,count($random_char)-1)];
-		}
-	}
-
-
-	if(extension_loaded('libsodium'))
-	{
-		if(empty($GLOBALS['phpgw_info']['server']['setup_libsodium_key']))
-		{
-			$GLOBALS['phpgw_info']['server']['setup_libsodium_key'] = base64_encode(\Sodium\randombytes_buf(\Sodium\CRYPTO_SECRETBOX_KEYBYTES));
 		}
 	}
 
@@ -752,8 +743,6 @@ HTML;
 
 			$setup_tpl->set_var('setup_mcrypt_key',$GLOBALS['phpgw_info']['server']['setup_mcrypt_key']);
 
-			$setup_tpl->set_var('setup_libsodium_key',$GLOBALS['phpgw_info']['server']['setup_libsodium_key']);
-
 			if ( !isset($GLOBALS['phpgw_info']['server']['setup_acl']) || !$GLOBALS['phpgw_info']['server']['setup_acl'] )
 			{
 				$GLOBALS['phpgw_info']['server']['setup_acl'] = '127.0.0.1';
@@ -839,12 +828,10 @@ HTML;
 			$setup_tpl->set_var('lang_mcryptversion',lang('MCrypt version'));
 			$setup_tpl->set_var('lang_mcryptversiondescr',lang('Set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.'));
 			$setup_tpl->set_var('lang_mcryptiv',lang('MCrypt initialization vector'));
-			$setup_tpl->set_var('lang_mcryptivdescr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
+			$setup_tpl->set_var('lang_mcryptivdescr',lang('This should be around 32 bytes in length.<br>Note: The default has been randomly generated.'));
 
 			$setup_tpl->set_var('lang_setup_mcrypt_key',lang('Enter some random text as encryption key for the setup encryption'));
-			$setup_tpl->set_var('lang_setup_mcrypt_key_descr',lang('This should be around 30 bytes in length.<br>Note: The default has been randomly generated.'));
-
-			$setup_tpl->set_var('lang_setup_libsodium_key',lang('Libsodium key'));
+			$setup_tpl->set_var('lang_setup_mcrypt_key_descr',lang('This should be around 32 bytes in length.<br>Note: The default has been randomly generated.'));
 
 			$setup_tpl->set_var('lang_domselect',lang('Domain select box on login'));
 			$setup_tpl->set_var('lang_domain_from_host', lang('Automatically detect domain from hostname'));

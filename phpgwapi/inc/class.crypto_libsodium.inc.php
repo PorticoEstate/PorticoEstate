@@ -26,20 +26,14 @@
 
 		function init( $vars )
 		{
-	//		$key = base64_decode($vars[0]);
 			$key = $vars[0];
-			$iv = $vars[1];
-
-	//		_debug_array(\Sodium\CRYPTO_SECRETBOX_KEYBYTES);
-	//		_debug_array(mb_strlen(base64_decode('mUVoE1U1atXQ91RgjDV0a4S2fzevs6K4GlgAEIOnu1g='),'8bit')); die();
 
 			if ($GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' && extension_loaded('libsodium') && !$this->enabled)
 			{
-				//For now...
-				$this->enabled = false;
+				$this->enabled = true;
 
 				$keysize = \Sodium\CRYPTO_SECRETBOX_KEYBYTES;
-				//_debug_array($keysize);
+
 				/* Hack Key to be the correct size */
 				$x = strlen($key);
 
@@ -54,7 +48,7 @@
 		{
 			if ($this->enabled)
 			{
-//				@mcrypt_generic_deinit($this->td);
+				\Sodium\memzero($this->key);
 			}
 		}
 
@@ -234,11 +228,12 @@
 			$decoded = base64_decode($encrypted);
 			if ($decoded === false)
 			{
-				throw new \Exception('Scream bloody murder, the encoding failed');
+				return false;
+//				throw new \Exception('Scream bloody murder, the encoding failed');
 			}
 			if (mb_strlen($decoded, '8bit') < (\Sodium\CRYPTO_SECRETBOX_NONCEBYTES + \Sodium\CRYPTO_SECRETBOX_MACBYTES))
 			{
-				throw new \Exception('Scream bloody murder, the message was truncated');
+//				throw new \Exception('Scream bloody murder, the message was truncated');
 			}
 			$nonce = mb_substr($decoded, 0, \Sodium\CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
 			$ciphertext = mb_substr($decoded, \Sodium\CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
@@ -248,7 +243,7 @@
 			);
 			if ($plain === false)
 			{
-				throw new \Exception('Scream bloody murder, the message was tampered with in transit');
+//				throw new \Exception('Scream bloody murder, the message was tampered with in transit');
 			}
 			\Sodium\memzero($ciphertext);
 			\Sodium\memzero($key);

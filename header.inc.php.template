@@ -158,8 +158,9 @@ HTML;
 	/**
 	* @global boolean $phpgw_info['server']['mcrypt_enabled']
 	* This is used to control mcrypt's use
+	* Note: deprecated
 	*/
-	$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = {ENABLE_MCRYPT};
+	$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = false;
 
 	/**
 	* @global string $phpgw_info['server']['mcrypt_iv']

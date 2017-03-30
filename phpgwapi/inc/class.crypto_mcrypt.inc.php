@@ -30,7 +30,7 @@
 			$key = $vars[0];
 			$iv = $vars[1];
 
-			if ($GLOBALS['phpgw_info']['server']['mcrypt_enabled'] && extension_loaded('mcrypt') && !$this->enabled)
+			if (($GLOBALS['phpgw_info']['server']['mcrypt_enabled'] || $GLOBALS['phpgw_info']['server']['enable_crypto'] == 'mcrypt') && extension_loaded('mcrypt') && !$this->enabled)
 			{
 				$this->algo = MCRYPT_TRIPLEDES;
 				$this->mode = MCRYPT_MODE_CBC;
