@@ -306,7 +306,7 @@ this program will help you upgrade or install different languages for phpgroupwa
 this section will help you export users and groups from phpgroupware's account tables into your ldap tree	setup	de	Dieser Abschnitt wird Ihnen beim exportieren von Benutzern/Gruppen aus phpGroupWare's Account Tabellen in Ihren LDAP Baum behilflich sein
 this section will help you import users and groups from your ldap tree into phpgroupware's account tables	setup	de	Dieser Abschnitt wird Ihnen beim importieren von Benutzern/Gruppen aus Ihrem LDAP Baum in phpGroupWare's Account Tabellen behilflich sein
 this section will help you setup your ldap accounts for use with phpgroupware	setup	de	Dieser Abschnitt wird ihnen helfen ihrer LDAP Benutzer für phpGroupWare vorzubereiten.
-this should be around 30 bytes in length.<br>note: the default has been randomly generated.	setup	de	Das sollte ungefähr 30 Zeichen lang sein<br>Hinweis: Die Vorgabe wurde zufällig erzeugt.
+this should be around 32 bytes in length.<br>note: the default has been randomly generated.	setup	de	Das sollte ungefähr 32 Zeichen lang sein<br>Hinweis: Die Vorgabe wurde zufällig erzeugt.
 this stage is completed<br>	setup	de	Dieser Schritt ist abgeschlossen<br>
 this will create 1 admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!this will delete all existing accounts!!!</b><br>	setup	de	Dies wird 1 Admin- und 3 Demo Benutzerkonten erstellen<br>Die Benutzernamen/Passworte sind: demo/guest, demo2/guest and demo3/guest.<br><b>!!!DIES WIRD ALLE EXISTIERENDEN BENUTZERKONTEN LÖSCHEN!!!</b><br>
 to a version it does not know about	setup	de	auf eine Version von der nichts bekannt ist

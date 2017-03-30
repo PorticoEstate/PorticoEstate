@@ -302,7 +302,7 @@ this program will help you upgrade or install different languages for phpgroupwa
 this section will help you export users and groups from phpgroupware's account tables into your ldap tree	setup	tr	Bu bölüm size kullanıcı ve grupları phpGroupWare hesap tablosundan LDAP ağaç yapısına taşımanıza yardım eder
 this section will help you import users and groups from your ldap tree into phpgroupware's account tables	setup	tr	Bu bölüm size kullanıcı ve grupları phpGroupWare LDAP ağaç yapısından LDAP hesap tablosuna taşımanıza yardım eder
 this section will help you setup your ldap accounts for use with phpgroupware	setup	tr	Bu bölüm size LDAP hesaplarının phpgroupware ile kullanılmasının düzenlenmesinde yardımcı olur
-this should be around 30 bytes in length.<br>note: the default has been randomly generated.	setup	tr	Bu yaklaşık 30 byte uzunluğunda olabilir.<br>Dikkat: Varsayılan rastgele oluşturuldu.
+this should be around 32 bytes in length.<br>note: the default has been randomly generated.	setup	tr	Bu yaklaşık 32 byte uzunluğunda olabilir.<br>Dikkat: Varsayılan rastgele oluşturuldu.
 this stage is completed<br>	setup	tr	Bu bölüm tamamlandı<br>
 this will create 1 admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!this will delete all existing accounts!!!</b><br>	setup	tr	Bu bir yönetici 3 te demo hesap oluşturacaktır.<br>kullanıcı adı/şifreler: demo/guest, demo2/guest and demo3/guest.<br><b>!!!BU VAROLAN BÜTÜN HESAPLARI SİLECEKTİR!!!</b><br>
 to a version it does not know about	setup	tr	bu versiyon tanınmıyor

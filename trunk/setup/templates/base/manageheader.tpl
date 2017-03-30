@@ -66,14 +66,14 @@
       </select>
     </td>
   </tr>
-  <tr>
+  <!--tr>
     <td colspan=2><b>{lang_enablemcrypt}</b><br>
       <select name="setting[enable_mcrypt]">
         <option value="True"{mcrypt_enabled_yes}>True
         <option value="False"{mcrypt_enabled_no}>False
       </select>
     </td>
-  </tr>
+  </tr-->
   <tr>
     <td><b>{lang_mcryptiv}</b><br><input type="text" name="setting[mcrypt_iv]" value="{mcrypt_iv}" size="30"></td>
     <td>{lang_mcryptivdescr}</td>
@@ -82,11 +82,6 @@
     <td><b>{lang_setup_mcrypt_key}</b><br><input type="text" name="setting[setup_mcrypt_key]" value="{setup_mcrypt_key}" size="40"></td>
     <td>{lang_setup_mcrypt_key_descr}</td>
   </tr>
-  <tr>
-	  <td><b>{lang_setup_libsodium_key}</b><br><input type="text" name="setting[setup_libsodium_key]" value="{setup_libsodium_key}" size="40" readonly="readonly" ></td>
-    <td>{lang_setup_libsodium_key_descr}</td>
-  </tr>
-
   <tr>
     <td><b>{lang_domselect}</b><br>
       <select name="setting[domain_selectbox]">

@@ -20,7 +20,7 @@
 	}
 	else
 	{
-		//Dummy
+		//Fall back
 		class phpgwapi_crypto extends phpgwapi_crypto_
 		{
 		}
