@@ -2,7 +2,7 @@
 	/**
 	* phpGroupWare Setup - http://phpgroupware.org
 	*
-	* @copyright Portions Copyright (C) 2000-2014 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Portions Copyright (C) 2000-2017 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @package setup
 	* @version $Id$
@@ -723,6 +723,12 @@ HTML;
 				{
 					$selected = ' selected ';
 				}
+
+				if($GLOBALS['phpgw_info']['server']['mcrypt_enabled'] && $stype == 'mcrypt')
+				{
+					$selected = ' selected ';
+				}
+
 				$crypto_options .= <<<HTML
 					<option{$selected} value="{$stype}">{$stype}</option>
 
