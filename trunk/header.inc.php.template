@@ -150,8 +150,8 @@ HTML;
 
 	/**
  	* @global string $phpgw_info['server']['enable_crypto']
- 	* phpGroupWare offers 2 session management systems - php and db
- 	* Unless you really know what you are doing use php here as it works better 99.5% of the time
+ 	* phpGroupWare offers 2 crypto systems - mcrypt and libsodium
+ 	* Note: mcrypt is deprecated from php 7.1+
   	*/
  	$GLOBALS['phpgw_info']['server']['enable_crypto'] = '{ENABLE_CRYPTO}';
 
