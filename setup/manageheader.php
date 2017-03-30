@@ -372,6 +372,15 @@ HTML;
 				$detected .= '<li class="warn">' . lang('you need ZipArchive for Excel-support') . "</li>\n";
 			}
 
+			if(class_exists('SoapClient'))
+			{
+				$detected .= '<li>' . lang('You appear to have Soap support enabled') . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('you may need Soap support for integration with other systems') . "</li>\n";
+			}
+
 			/* Not currently supported
 			if (extension_loaded('odbc') || function_exists('odbc_connect'))
 			{

@@ -332,6 +332,7 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
+								$results[$id_map[$id]][$field] = array();
 								$results[$id_map[$id]][$field][] = $this->unmarshal($this->db->f($column, false), $params['type']);
 							}
 						}
