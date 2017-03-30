@@ -1784,6 +1784,7 @@
 				'menuaction' => 'property.uiinvoice2.index'
 			);
 
+			$_disable_link = $_lean;
 			$content_invoice = array();
 			$amount = 0;
 			$approved_amount = 0;
@@ -1815,6 +1816,7 @@
 				}
 				else
 				{
+					$_disable_link = true;
 					if ($entry['voucher_id'] > 0)
 					{
 						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
@@ -1832,7 +1834,7 @@
 
 				$content_invoice[] = array
 					(
-					'voucher_id' => ($_lean) ? $entry['voucher_id'] : $link_voucher_id,
+					'voucher_id' => ($_disable_link) ? $entry['voucher_id'] : $link_voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'status' => $entry['status'],
 					'period' => $entry['period'],
@@ -1857,6 +1859,7 @@
 				$amount += $entry['amount'];
 				$approved_amount += $entry['approved_amount'];
 			}
+			unset($entry);
 
 			if($invoices)
 			{
@@ -1897,6 +1900,8 @@
 
 				}
 			}
+			unset($entry);
+
 			$attachmen_def = array(
 				array(
 					'key' => 'voucher_id',

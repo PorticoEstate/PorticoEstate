@@ -1805,7 +1805,7 @@ JS;
 				)
 			);
 
-			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : 'formatLink_voucher';
+			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : '';//formatLink_voucher';
 
 			$invoice_def = array
 				(
