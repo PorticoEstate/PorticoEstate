@@ -126,7 +126,18 @@
 		{
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
-				phpgw::no_access();
+				if ($ajax)
+				{
+					return array(
+						'status_kode' => 'error',
+						'status' => lang('error'),
+						'msg' => lang('no access')
+					);
+				}
+				else
+				{
+					phpgw::no_access();
+				}
 			}
 			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'first_tab');
 

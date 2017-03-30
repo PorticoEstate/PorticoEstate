@@ -206,7 +206,8 @@
 					setcookie('ConfigLang', $ConfigLang, $expire);
 					return True;
 				}
-				else if($HeaderPW == md5(stripslashes($GLOBALS['phpgw_info']['server']['header_admin_password'])))
+				else
+				if($HeaderPW == md5(stripslashes($GLOBALS['phpgw_info']['server']['header_admin_password'])))
 				{
 					setcookie('HeaderPW', $HeaderPW , $expire);
 					setcookie('ConfigLang', $ConfigLang, $expire);

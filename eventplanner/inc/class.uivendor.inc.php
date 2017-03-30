@@ -140,7 +140,7 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array
+/*			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
@@ -150,7 +150,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
