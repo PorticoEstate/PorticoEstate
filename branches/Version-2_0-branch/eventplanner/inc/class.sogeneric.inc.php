@@ -35,7 +35,7 @@
 			parent::__construct($type, $type_id);
 		}
 
-		public function get_location_info( $type, $type_id )
+		public function get_location_info( $type, $type_id = 0 )
 		{
 
 			$type_id = (int)$type_id;

@@ -149,10 +149,18 @@ HTML;
 	$GLOBALS['phpgw_info']['server']['lost_password_url'] = '{LOST_PASSWORD_URL}';
 
 	/**
+ 	* @global string $phpgw_info['server']['enable_crypto']
+ 	* phpGroupWare offers 2 session management systems - php and db
+ 	* Unless you really know what you are doing use php here as it works better 99.5% of the time
+  	*/
+ 	$GLOBALS['phpgw_info']['server']['enable_crypto'] = '{ENABLE_CRYPTO}';
+
+	/**
 	* @global boolean $phpgw_info['server']['mcrypt_enabled']
 	* This is used to control mcrypt's use
+	* Note: deprecated
 	*/
-	$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = {ENABLE_MCRYPT};
+	$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = false;
 
 	/**
 	* @global string $phpgw_info['server']['mcrypt_iv']
@@ -170,6 +178,13 @@ HTML;
 	* but you must not change it after that point!
 	*/
 	$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] = '{SETUP_MCRYPT_KEY}';
+
+	/**
+	* @global string $phpgw_info['server']['setup_libsodium_key']
+	* This is a random string used as the encryption key for libsodium
+	* Never change it!
+	*/
+	$GLOBALS['phpgw_info']['server']['setup_libsodium_key'] = '{SETUP_LIBSODIUM_KEY}';
 
 	/*
 		This ensures IE gets the right character set

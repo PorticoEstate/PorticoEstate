@@ -346,9 +346,11 @@
 
 	$GLOBALS['phpgw_info']['server']['app_images'] = 'templates/base/images';
 
-	if(isset($_POST['setting']['enable_mcrypt']) && $_POST['setting']['enable_mcrypt'] == 'True')
+//	if(isset($_POST['setting']['enable_mcrypt']) && $_POST['setting']['enable_mcrypt'] == 'True')
+	if(!empty($_POST['setting']['enable_crypto']))
 	{
-		$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
+//		$GLOBALS['phpgw_info']['server']['mcrypt_enabled'] = true;
+		$GLOBALS['phpgw_info']['server']['enable_crypto'] = $_POST['setting']['enable_crypto'];
 		$_iv  = $_POST['setting']['mcrypt_iv'];
 		$_key = $_POST['setting']['setup_mcrypt_key'];
 	}

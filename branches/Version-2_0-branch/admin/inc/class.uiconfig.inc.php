@@ -184,7 +184,8 @@
 				{
 					$valarray = explode('_', $value);
 					$type = $valarray[0];
-					$new = $newval = '';
+					$new = array();
+					$newval = '';
 
 					while($chunk = next($valarray))
 					{

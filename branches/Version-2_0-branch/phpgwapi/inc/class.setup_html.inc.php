@@ -35,8 +35,8 @@
 				$domains = array();
 			}
 
-			$setting = phpgw::get_var('setting', 'string', 'POST');
-			$settings = phpgw::get_var("settings", 'string', 'POST');
+			$setting = phpgw::get_var('setting', 'raw', 'POST');
+			$settings = phpgw::get_var("settings", 'raw', 'POST');
 
 			foreach($domains as $k => $v)
 			{
@@ -48,7 +48,7 @@
 				$GLOBALS['header_template']->set_var('DB_DOMAIN',$v);
 				foreach($dom as $x => $y)
 				{
-					if( $setting['enable_mcrypt'] == 'True' && ($x == 'db_pass' || $x == 'db_host' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass'))
+					if( ($setting['enable_mcrypt'] == 'True' || !empty($setting['enable_crypto'])) && ($x == 'db_pass' || $x == 'db_host' || $x == 'db_name' || $x == 'db_user' || $x == 'config_pass'))
 					{
 						$y = $GLOBALS['phpgw']->crypto->encrypt($y);
 					}
@@ -63,7 +63,7 @@
 			{
 				foreach($setting as $k => $v)
 				{
-					if ($setting['enable_mcrypt'] == 'True' && $k == 'HEADER_ADMIN_PASSWORD')
+					if (($setting['enable_mcrypt'] == 'True'  || !empty($setting['enable_crypto']))&& $k == 'HEADER_ADMIN_PASSWORD')
 					{
 						$v = $GLOBALS['phpgw']->crypto->encrypt($v);
 					}

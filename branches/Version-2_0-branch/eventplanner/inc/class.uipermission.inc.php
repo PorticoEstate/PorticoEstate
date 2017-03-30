@@ -41,7 +41,8 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'object'	=> true
+			'object'	=> true,
+			'delete'	=> true
 		);
 
 		protected
@@ -136,12 +137,46 @@
 				'parameters' => json_encode($parameters)
 			);
 
+			if (!empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'delete',
+					'statustext' => lang('delete entry'),
+					'text' => lang('delete'),
+					'confirm_msg' => lang('do you really want to delete this entry'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'eventplanner.uipermission.delete'
+					)),
+					'parameters' => json_encode($parameters)
+				);
+
+			}
+
 			self::add_javascript('eventplanner', 'portico', 'permission.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		function delete()
+		{
+			if (empty($this->permissions[PHPGW_ACL_DELETE]))
+			{
+				phpgw::no_access();
+			}
+
+			$id = phpgw::get_var('id', 'int');
+			if ($this->bo->delete($id))
+			{
+				return lang('entry %1 has been deleted', $id);
+			}
+			else
+			{
+				return lang('delete failed');
+			}
+		}
 		/*
 		 * Edit the price item with the id given in the http variable 'id'
 		 */

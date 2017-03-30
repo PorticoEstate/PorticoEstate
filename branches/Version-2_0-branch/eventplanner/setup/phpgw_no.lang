@@ -32,6 +32,7 @@ date end	eventplanner	no	Siste arrangementsdato
 contact name	eventplanner	no	Navn kontaktperson
 contact email	eventplanner	no	Epost kontaktperson
 contact phone	eventplanner	no	Tlf. kontaktperson
+contact email 2	eventplanner	no	Epost 2
 case officer	eventplanner	no	Saksbehandler
 active	eventplanner	no	Aktiv
 inactive	eventplanner	no	Inaktiv
@@ -118,4 +119,4 @@ end date cannot be before start date	eventplanner	no	Siste dato kan ikke være f
 Time is already booked	eventplanner	no	Tiden er allerede booking
 booking interval	eventplanner	no	Booking intervall
 days	eventplanner	no	dager
-there is a minimum interval of %1 day(s)	eventplanner	no	Det er et minimumsintervall på %1 dag(er)
+there is a minimum interval of %1 hours	eventplanner	no	Det er et minimumsintervall på %1 time(r)

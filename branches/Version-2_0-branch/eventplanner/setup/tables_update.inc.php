@@ -224,3 +224,134 @@
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}
+
+	$test[] = '0.9.18.007';
+	function eventplanner_upgrade0_9_18_007()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.calendar', 'calendar', 'eventplanner', $allow_grant = true);
+		$GLOBALS['phpgw']->locations->add('.calendar', 'calendar', 'eventplannerfrontend', $allow_grant = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'eventplanner_calendar',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'application_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'from_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+					'to_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
+					'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,'default' => '0'),
+					'cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2, 'nullable' => True,'default' => '0.00'),
+					'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'eventplanner_application' => array('application_id' => 'id'),
+					),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'eventplanner_calendar_comment',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => False),
+					'calendar_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+					'author' => array('type' => 'text', 'nullable' => False),
+					'comment' => array('type' => 'text', 'nullable' => False),
+					'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'eventplanner_calendar' => array('calendar_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			));
+
+			$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_booking', 'calendar_id',
+			array
+			(
+				'type' => 'int',
+				'precision' => 4,
+				'nullable' => true
+			)
+		);
+
+		$sql = "SELECT * FROM eventplanner_booking";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+		
+		$calendars = array();
+		while($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$calendars[] = array(
+				'id'	=> $GLOBALS['phpgw_setup']->oProc->f('id'),
+				'application_id' => $GLOBALS['phpgw_setup']->oProc->f('application_id'),
+				'customer_id' => $GLOBALS['phpgw_setup']->oProc->f('customer_id'),
+				'from_' => $GLOBALS['phpgw_setup']->oProc->f('from_'),
+				'to_' => $GLOBALS['phpgw_setup']->oProc->f('to_'),
+				'active' => $GLOBALS['phpgw_setup']->oProc->f('active'),
+				'completed' => $GLOBALS['phpgw_setup']->oProc->f('completed'),
+				'cost' => $GLOBALS['phpgw_setup']->oProc->f('cost'),
+				'customer_contact_name' => $GLOBALS['phpgw_setup']->oProc->f('customer_contact_name'),
+				'customer_contact_email' => $GLOBALS['phpgw_setup']->oProc->f('customer_contact_email'),
+				'customer_contact_phone' => $GLOBALS['phpgw_setup']->oProc->f('customer_contact_phone'),
+				'location' => $GLOBALS['phpgw_setup']->oProc->f('location'),
+				'reminder' => $GLOBALS['phpgw_setup']->oProc->f('reminder'),
+				'secret' => $GLOBALS['phpgw_setup']->oProc->f('secret'),
+				'sms_total' => $GLOBALS['phpgw_setup']->oProc->f('sms_total'),
+				'owner_id' => $GLOBALS['phpgw_setup']->oProc->f('owner_id'),
+				'public' => $GLOBALS['phpgw_setup']->oProc->f('public'),
+				'created' => $GLOBALS['phpgw_setup']->oProc->f('created')
+			);
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM eventplanner_booking WHERE customer_id IS NULL", __LINE__, __FILE__);
+
+		foreach ($calendars as $calendar)
+		{
+			$value_set = array(
+				'application_id' => $calendar['application_id'],
+				'from_' => $calendar['from_'],
+				'to_' => $calendar['to_'],
+				'active' => $calendar['active'],
+				'completed' => $calendar['completed'],
+				'cost' => $calendar['cost'],
+				'owner_id' => $calendar['owner_id'],
+				'public' => $calendar['public'],
+				'created' => $calendar['created'],
+			);
+
+			$GLOBALS['phpgw_setup']->oProc->query('INSERT INTO eventplanner_calendar (' . implode(',', array_keys($value_set)) . ') VALUES (' . $GLOBALS['phpgw_setup']->oProc->validate_insert(array_values($value_set)) . ')');
+			$calendar_id = (int)$GLOBALS['phpgw_setup']->oProc->m_odb->get_last_insert_id('eventplanner_calendar', 'id');
+			$GLOBALS['phpgw_setup']->oProc->query("UPDATE eventplanner_booking SET calendar_id = {$calendar_id}"
+			. " WHERE id = {$calendar['id']}", __LINE__, __FILE__);
+
+		}
+
+		$GLOBALS['phpgw_setup']->oProc->query("ALTER TABLE eventplanner_booking DROP CONSTRAINT eventplanner_booking_application_id_fkey", __LINE__, __FILE__);
+
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_booking', array(), 'from_');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_booking', array(), 'to_');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_booking', array(), 'cost');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_booking', array(), 'application_id');
+		$GLOBALS['phpgw_setup']->oProc->DropColumn('eventplanner_booking', array(), 'active');
+
+
+		$sql = "ALTER TABLE public.eventplanner_booking"
+			. " ADD CONSTRAINT eventplanner_booking_calendar_id_fkey FOREIGN KEY (calendar_id)"
+			. " REFERENCES eventplanner_calendar (id) MATCH SIMPLE"
+			. " ON UPDATE NO ACTION ON DELETE NO ACTION";
+		
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.008';
+		}
+		return $GLOBALS['setup_info']['eventplanner']['currentver'];
+	}

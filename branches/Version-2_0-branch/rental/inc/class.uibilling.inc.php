@@ -231,10 +231,15 @@
 								$month = 1;
 								$billing_term_label = lang('free_of_charge');
 							}
-							else
+							else if ($billing_month == '2')
 							{
 								$month = 2;
 								$billing_term_label = lang('credits');
+							}
+							else
+							{
+								$month = 3;
+								$billing_term_label = lang('positive one time');
 							}
 						}
 						else // yearly
@@ -522,10 +527,15 @@ JS;
 						$month = 1;
 						$billing_term_label = lang('free_of_charge');
 					}
-					else
+					else if ($billing_month == '2')
 					{
 						$month = 2;
 						$billing_term_label = lang('credits');
+					}
+					else
+					{
+						$month = 3;
+						$billing_term_label = lang('positive one time');
 					}
 				}
 				else // yearly
@@ -579,11 +589,21 @@ JS;
 
 					$socontract_price_item = rental_socontract_price_item::get_instance();
 
-
+					$sort_ascending = false;
+					$search_for = '';
+					$search_type = '';
 					//... 2. Contracts with one-time price items
 					if($billing_term == 5)
 					{
-						$filters2 = array('contract_ids_one_time' => true, 'credits' => true);
+						$filters2 = array('contract_ids_one_time' => true);
+						if($month == 2)
+						{
+							$filters2['credits'] = true;
+						}
+						else if($month == 3)
+						{
+							$filters2['positive_one_time'] = true;
+						}
 						$contracts = array();
 					}
 					else
@@ -961,6 +981,7 @@ JS;
 					{
 						$options[] = array('id' => $term_id . '-1', 'name' => lang($term_title), 'selected' => (($term_id . '-1' == $billing_term_selection) ? 1 : 0));
 						$options[] = array('id' => $term_id . '-2', 'name' => 'Kreditering', 'selected' => (($term_id . '-2' == $billing_term_selection) ? 1 : 0));
+						$options[] = array('id' => $term_id . '-3', 'name' => lang('positive one time'), 'selected' => (($term_id . '-3' == $billing_term_selection) ? 1 : 0));
 					}
 					$current++;
 					$billing_term_group_options[] = array('label' => lang($term_title), 'options' => $options);

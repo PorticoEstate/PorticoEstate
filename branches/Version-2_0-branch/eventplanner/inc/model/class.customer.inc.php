@@ -114,12 +114,12 @@
 				'category_id' => array('action'=>  PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'int'
 					),
-				'created' => array('action'=> PHPGW_ACL_READ,
+/*				'created' => array('action'=> PHPGW_ACL_READ,
 					'type' => 'date',
 					'label' => 'created',
 					'sortable' => true,
-					),
-				'modified' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_EDIT,
+					),*/
+				'modified' => array('action'=>  PHPGW_ACL_EDIT,
 					'type' => 'date',
 					'label' => 'modified',
 					'sortable' => true,

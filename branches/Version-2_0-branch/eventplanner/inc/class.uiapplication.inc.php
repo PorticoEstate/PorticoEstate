@@ -175,7 +175,7 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array
+/*			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
@@ -185,7 +185,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -315,7 +315,7 @@
 					'type' => 'custom',
 					'className' => 'add',
 					'custom_code' => "
-								add_booking();"
+								add_schedule();"
 				),
 				array('my_name' => 'select_all'),
 				array('my_name' => 'select_none'),
@@ -358,9 +358,10 @@
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query_relaxed",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicalendar.query_relaxed",
 					'filter_application_id' => $id,
 					'filter_active'	=> 1,
+					'redirect'	=> 'booking',
 					'phpgw_return_as' => 'json'))),
 				'tabletools' => $tabletools,
 				'ColumnDefs' => $dates_def,
