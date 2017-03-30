@@ -173,18 +173,11 @@ HTML;
 
 	/**
 	* @global string $phpgw_info['server']['setup_mcrypt_key']
-	* This is a random string used as the encryption key for mcrypt
+	* This is a random string used as the encryption key for mcrypt or libsodium
 	* feel free to change it when setting up phpgroupware on a clean database,
 	* but you must not change it after that point!
 	*/
 	$GLOBALS['phpgw_info']['server']['setup_mcrypt_key'] = '{SETUP_MCRYPT_KEY}';
-
-	/**
-	* @global string $phpgw_info['server']['setup_libsodium_key']
-	* This is a random string used as the encryption key for libsodium
-	* Never change it!
-	*/
-	$GLOBALS['phpgw_info']['server']['setup_libsodium_key'] = '{SETUP_LIBSODIUM_KEY}';
 
 	/*
 		This ensures IE gets the right character set
