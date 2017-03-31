@@ -1,5 +1,67 @@
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template match="data">
+	<xsl:choose>
+		<xsl:when test="edit">
+			<xsl:apply-templates select="edit"/>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:apply-templates select="lists"/>
+		</xsl:otherwise>
+	</xsl:choose>
+	<xsl:call-template name="jquery_phpgw_i18n"/>
+</xsl:template>
+	
+<xsl:template match="lists">
+	<div id="document_edit_tabview">
+		<xsl:value-of select="validator"/>
+		<div id="tab-content">					
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="reports">
+				<form name="form" class="pure-form pure-form-aligned" id="form" action="" method="post">								
+					<div class="pure-control-group">
+						<label for="vendor">
+							<xsl:value-of select="php:function('lang', 'views')" />
+						</label>
+						<select id="list_views" name="list_views">
+							<xsl:apply-templates select="list_views/options"/>
+						</select>
+					</div>								
+
+					<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_0'">
+							<xsl:call-template name="table_setup">
+								<xsl:with-param name="container" select ='container'/>
+								<xsl:with-param name="requestUrl" select ='requestUrl' />
+								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="config" select ='config' />
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:for-each>	
+				</form>
+			</div>
+							
+			<div id="views">
+				<form name="form" class="pure-form pure-form-aligned" id="form" action="" method="post">								
+					<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_1'">
+							<xsl:call-template name="table_setup">
+								<xsl:with-param name="container" select ='container'/>
+								<xsl:with-param name="requestUrl" select ='requestUrl' />
+								<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="config" select ='config' />
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:for-each>	
+				</form>
+			</div>
+		</div>
+	</div>
+</xsl:template>
+
+
+<xsl:template match="edit">
 
 	<div id="document_edit_tabview">
 		<xsl:value-of select="validator"/>
@@ -10,7 +72,7 @@
 		<form name="form" class="pure-form pure-form-aligned" id="form" action="{$form_action}" method="post">	
 			<div id="tab-content">					
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>						
-				<div id="generic">
+				<div id="report">
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'views')" />
