@@ -51,7 +51,7 @@
 			
 			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->bo = CreateObject('property.boreport', true);
-			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->acl = & $GLOBALS['phpgw']->acl;			
 		}
 
 		public function download()
@@ -71,14 +71,8 @@
 				
 			$default_value = array('id' => '', 'name' => lang('Select'));
 			array_unshift($list, $default_value);
-
-			$combos[] = array('type' => 'filter',
-				'name' => 'view',
-				'text' => lang('Views'),
-				'list' => $list
-			);
 			
-			return $combos;
+			return $list;
 		}
 		
 		/**
@@ -95,43 +89,10 @@
 			$appname = lang('report');
 			$function_msg = lang('list');
 			
-			$data = array(
-				'datatable_name' => $appname,
-				'form' => array(
-					'toolbar' => array(
-						'item' => array(),
-					),
-				),
-				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'property.uireport.index',
-						'phpgw_return_as' => 'json')),
-					'download' => self::link(array('menuaction' => 'property.uireport.download',
-						'export' => true, 'allrows' => true)),
-					'new_item' => self::link(array('menuaction' => 'property.uireport.add')),
-					'allrows' => true,
-					'field' => array(
-						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'sortable' => true,
-							'formatter' => 'JqueryPortico.formatLink'
-						),
-						array(
-							'key' => 'name',
-							'label' => lang('Name'),
-							'sortable' => true
-						)
-					)
-				),
-			);
-			
 			$filters = $this->_get_filters();
 
-			foreach ($filters as $filter)
-			{
-				$data['form']['toolbar']['item'][] = $filter;
-			}
-			
+			$tabletools = array();
+
 			$parameters = array
 				(
 				'parameter' => array
@@ -140,11 +101,25 @@
 						(
 						'name' => 'id',
 						'source' => 'id'
-					),
+					)
 				)
 			);
+			
+			$tabletools[] = array
+				(
+				'my_name' => 'add',
+				'text' => lang('new'),
+				'type' => 'custom',
+				'className' => 'add',
+				'custom_code' => "
+						var oArgs = " . json_encode(array(
+							'menuaction' => 'property.uireport.edit'
+				)) . ";
+						newReport(oArgs);
+					"
+			);
 
-			$data['datatable']['actions'][] = array
+			$tabletools[] = array
 				(
 				'my_name' => 'edit',
 				'text' => lang('edit'),
@@ -154,10 +129,103 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'confirm_msg' => lang('do you really want to delete this entry'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uireport.delete'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+			
+			$related_def = array
+				(
+				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true)
+			);
+
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uireport.index',
+						'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $related_def,
+				'tabletools' => $tabletools,
+				'config' => array(
+					array('singleSelect' => true)
+				)
+			);
+
+			$tabletools_views[] = array
+				(
+				'my_name' => 'add',
+				'text' => lang('new'),
+				'type' => 'custom',
+				'className' => 'add',
+				'custom_code' => "
+						var oArgs = " . json_encode(array(
+							'menuaction' => 'property.uireport.edit_view'
+				)) . ";
+						newView(oArgs);
+					"
+			);
+
+			$tabletools_views[] = array
+				(
+				'my_name' => 'edit',
+				'text' => lang('edit'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uireport.edit_view'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+
+			$tabletools_views[] = array
+				(
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'confirm_msg' => lang('do you really want to delete this entry'),
+				'action' => $GLOBALS['phpgw']->link('/index.php', array
+					(
+					'menuaction' => 'property.uireport.delete_view'
+				)),
+				'parameters' => json_encode($parameters)
+			);
+			
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_1',
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uireport.index',
+						'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $related_def,
+				'tabletools' => $tabletools_views,
+				'config' => array(
+					array('singleSelect' => true)
+				)
+			);
 			
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
-			self::render_template_xsl('datatable_jquery', $data);
+			$tabs = array();
+			$tabs['reports'] = array('label' => lang('reports'), 'link' => '#reports');
+			$tabs['views'] = array('label' => lang('views'), 'link' => '#views');
+			
+			$data = array
+				(
+				'datatable_def' => $datatable_def,
+				'list_views' => array('options' => $filters),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'reports')
+			);
+			
+			self::add_javascript('property', 'portico', 'report.index.js');
+			
+			self::render_template_xsl(array('report', 'datatable_inline'), array('lists' => $data));			
 		}
 
 		public function view()
@@ -227,8 +295,8 @@
 			array_unshift($list, $default_value);
 			
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('generic'), 'link' => '#generic');
-			$active_tab = 'generic';
+			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
+			$active_tab = 'report';
 
 			$data = array
 			(
@@ -244,7 +312,7 @@
 
 			self::add_javascript('property', 'portico', 'report.edit.js');
 
-			self::render_template_xsl(array('report'), $data);
+			self::render_template_xsl(array('report'), array('edit' => $data));
 		}
 		
 		/**
