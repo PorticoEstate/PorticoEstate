@@ -1381,7 +1381,7 @@
 
 				$email_data['use_yui_table'] = true;
 
-				$this->create_html->set_output();
+				$this->create_html->set_output('html');
 				$this->create_html->xsl_parse();
 				$this->create_html->xml_parse();
 
