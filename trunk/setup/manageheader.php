@@ -372,6 +372,15 @@ HTML;
 				$detected .= '<li class="warn">' . lang('you may need Soap support for integration with other systems') . "</li>\n";
 			}
 
+			if(function_exists('ImageCreate'))
+			{
+				$detected .= '<li>' . lang('You appear to have GD enabled') . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('you may need GD for image manipulation') . "</li>\n";
+			}
+
 			/* Not currently supported
 			if (extension_loaded('odbc') || function_exists('odbc_connect'))
 			{
