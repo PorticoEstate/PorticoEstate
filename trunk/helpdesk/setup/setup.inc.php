@@ -3,7 +3,7 @@
 	* phpGroupWare - helpdesk.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003-2009 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2017 Free Software Foundation, Inc. http://www.fsf.org/
 	* @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	* @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	* @package helpdesk
@@ -49,7 +49,10 @@
 		'phpgw_helpdesk_tickets',
 		'phpgw_helpdesk_views',
 		'phpgw_helpdesk_response_template',
-		'phpgw_helpdesk_custom_menu_items'
+		'phpgw_helpdesk_custom_menu_items',
+		'phpgw_helpdesk_email_template',
+		'phpgw_helpdesk_email_out',
+		'phpgw_helpdesk_email_out_party'
 	);
 
 	/* The hooks this app includes, needed for hooks registration */
