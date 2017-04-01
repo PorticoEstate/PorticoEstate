@@ -182,3 +182,14 @@ inbox	helpdesk	no	Innboks
 standard text	helpdesk	no	Standardtekst
 custom menu items	helpdesk	no	Tilpassede menyer
 reports	helpdesk	no	Rapporter
+email out	helpdesk	no	Epost ut
+recipient	helpdesk	no	Mottaker
+recipients	helpdesk	no	Mottakere
+candidates	helpdesk	no	Kandidater
+send email	helpdesk	no	Send epost
+remark	helpdesk	no	Merknad
+subject	helpdesk	no	Overskrift
+content	helpdesk	no	Innhold
+select all	helpdesk	no	Velg alle
+planned	helpdesk	no	Planlagt
+email template	helpdesk	no	Standardtekster

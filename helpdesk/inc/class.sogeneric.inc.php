@@ -1,5 +1,5 @@
 <?php
-/**
+	/**
 	 * phpGroupWare - eventplanner: a part of a Facilities Management System.
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
@@ -30,13 +30,13 @@
 
 	class helpdesk_sogeneric extends property_sogeneric_
 	{
+
 		var $appname = 'helpdesk';
 
 		function __construct( $type = '', $type_id = 0 )
 		{
 			parent::__construct($type, $type_id);
 		}
-
 
 		public function get_location_info( $type, $type_id = 0 )
 		{
@@ -155,6 +155,49 @@
 					);
 
 					break;
+				case 'email_template':
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_email_template',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar'
+							),
+							array
+								(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'text'
+							),
+							array
+								(
+								'name' => 'public',
+								'descr' => lang('public'),
+								'type' => 'checkbox'
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('email template'),
+						'acl_app' => 'helpdesk',
+						'system_location' => '.email_out.email_template',
+						'acl_location' => '.email_out',
+						'menu_selection' => 'helpdesk::email_out::email_template',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'created' => array('add' => 'time()'),
+							'modified' => array('edit' => 'time()'),
+						),
+						'check_grant' => true
+					);
+
+					break;
 				case 'custom_menu_items':
 					$info = array
 						(
@@ -240,7 +283,8 @@
 						'mapping' => array('name' => 'text')
 					);
 
-					break;				default:
+					break;
+				default:
 					$message = lang('ERROR: illegal type %1', $type);
 					phpgwapi_cache::message_set($message, 'error');
 //				throw new Exception(lang('ERROR: illegal type %1', $type));
@@ -249,6 +293,4 @@
 			$this->location_info = $info;
 			return $info;
 		}
-
-
 	}

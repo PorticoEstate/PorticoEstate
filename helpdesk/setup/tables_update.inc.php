@@ -104,3 +104,75 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	/**
+	* Update helpdesk version from 0.9.18.003 to 0.9.18.004
+	*/
+	$test[] = '0.9.18.003';
+
+	function helpdesk_upgrade0_9_18_003()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+
+		$GLOBALS['phpgw']->locations->add('.email_out', 'email out', 'helpdesk');
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_email_template', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'content' => array('type' => 'text', 'nullable' => True),
+					'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_email_out', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'remark' => array('type' => 'text', 'nullable' => True),
+					'subject' => array('type' => 'text', 'nullable' => false),
+					'content' => array('type' => 'text', 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_email_out_party', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'email_out_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'email_address' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'status' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_helpdesk_email_out' => array('email_out_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.004';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
