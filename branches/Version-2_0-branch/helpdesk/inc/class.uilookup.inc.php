@@ -54,6 +54,7 @@
 			'ecodimb' => true,
 			'order_template' => true,
 			'response_template' => true,
+			'email_template' => true,
 			'custom' => true
 		);
 
@@ -159,6 +160,107 @@
 			$function_msg = lang('list response template');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+
+			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		function email_template()
+		{
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$search = phpgw::get_var('search');
+				$order = phpgw::get_var('order');
+				$draw = phpgw::get_var('draw', 'int');
+				$columns = phpgw::get_var('columns');
+
+				$params = array(
+					'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+					'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+					'query' => $search['value'],
+					'order' => $columns[$order[0]['column']]['data'],
+					'sort' => $order[0]['dir'],
+					'dir' => $order[0]['dir'],
+					'allrows' => phpgw::get_var('length', 'int') == -1,
+					'filter' => ''
+				);
+
+				$values = array();
+				$bo = CreateObject('helpdesk.bogeneric');
+				$bo->get_location_info('email_template');
+				$values = $bo->read($params);
+
+				$result_data = array
+					(
+					'results' => $values,
+					'total_records' => $bo->total_records,
+					'draw' => $draw
+				);
+				return $this->jquery_results($result_data);
+			}
+
+//			$action = 'var temp = parent.document.getElementById("content").value;' . "\r\n";
+//			$action .= 'if(temp){temp = temp + "\n";}' . "\r\n";
+//			$action .= 'parent.document.getElementById("content").value = temp + aData["content"];' . "\r\n";
+//			$action .= 'parent.JqueryPortico.onPopupClose("close");' . "\r";
+
+			$action = <<<JS
+
+				var encodedStr = aData["content"];
+				var parser = new DOMParser;
+				var dom = parser.parseFromString(encodedStr,'text/html');
+				var decodedString = dom.body.textContent;
+				parent.$.fn.insertAtCaret(decodedString);
+				parent.JqueryPortico.onPopupClose("close");
+JS;
+
+			$data = array(
+				'left_click_action' => $action,
+				'datatable_name' => '',
+				'form' => array(
+					'toolbar' => array(
+						'item' => array()
+					)
+				),
+				'datatable' => array(
+					'source' => self::link(array(
+						'menuaction' => 'helpdesk.uilookup.email_template',
+						'query' => $this->query,
+						'filter' => $this->filter,
+						'cat_id' => $this->cat_id,
+						'type' => 'email_template',
+						'phpgw_return_as' => 'json'
+					)),
+					'allrows' => true,
+					'editor_action' => '',
+					'field' => array()
+				)
+			);
+
+			$uicols = array(
+				'input_type' => array('text', 'text', 'text'),
+				'name' => array('id', 'name', 'content'),
+				'formatter' => array('', '', ''),
+				'descr' => array(lang('ID'), lang('name'), lang('content'))
+			);
+
+			$count_uicols_name = count($uicols['name']);
+
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				$params = array(
+					'key' => $uicols['name'][$k],
+					'label' => $uicols['descr'][$k],
+					'sortable' => $uicols['sortable'][$k],
+					'hidden' => false
+				);
+
+				array_push($data['datatable']['field'], $params);
+			}
+
+			$appname = lang('template');
+			$function_msg = lang('list email template');
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('helpdesk') . ' - ' . $appname . ': ' . $function_msg;
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}

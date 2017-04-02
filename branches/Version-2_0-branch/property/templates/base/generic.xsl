@@ -112,8 +112,8 @@
 									<xsl:value-of select="$descr"/>
 								</label>
 								<xsl:choose>
-									<xsl:when test="type='text'">
-										<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]">
+									<xsl:when test="type='text' or type='html'">
+										<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}">
 											<xsl:value-of select="value"/>
 										</textarea>
 									</xsl:when>

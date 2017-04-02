@@ -317,14 +317,14 @@
 						'office' => array
 							(
 							'text' => lang('office'),
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
 								'type' => 'bb_office')),
 							'children' => array
 								(
 								'office_user' => array
 									(
 									'text' => lang('office user'),
-									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+									'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigeneric.index',
 										'type' => 'bb_office_user'))
 								)
 							)
