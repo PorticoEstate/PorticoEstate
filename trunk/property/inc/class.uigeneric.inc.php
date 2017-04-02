@@ -109,7 +109,28 @@
 			$id_name = $this->location_info['id']['name'];
 
 			$id = phpgw::get_var($id_name);
-			$values = phpgw::get_var('values');
+
+	//		$values = phpgw::get_var('values');
+			$values = array();
+
+			foreach ($this->location_info['fields'] as $field)
+			{
+				switch ($field['type'])
+				{
+					case 'integer':
+					case 'int':
+						$value_type = 'int';
+						break;
+					case 'html':
+						$value_type = 'html';
+						break;
+					default:
+						$value_type = 'string';
+						break;
+				}
+				$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
+			}
+
 			$values_attribute = phpgw::get_var('values_attribute');
 
 			if (!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
@@ -130,8 +151,27 @@
 
 			foreach ($this->location_info['fields'] as $_field)
 			{
+
+				switch ($_field['type'])
+				{
+					case 'integer':
+					case 'int':
+						$value_type = 'int';
+						break;
+					case 'html':
+						$value_type = 'html';
+						break;
+					default:
+						$value_type = 'string';
+						break;
+				}
+
+				if($_field['type'] == 'html')
+				{
+					$value_type = 'html';
+				}
 				$data[$_field['name']] = $values[$_field['name']];
-				$data[$_field['name']] = phpgw::clean_value($data[$_field['name']], $_field['type']);
+				$data[$_field['name']] = phpgw::clean_value($data[$_field['name']], $value_type);
 
 				if (isset($_field['nullable']) && $_field['nullable'] != true)
 				{
@@ -558,7 +598,20 @@
 			{
 				foreach ($this->location_info['fields'] as $field)
 				{
-					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']]);
+				switch ($field['type'])
+				{
+					case 'integer':
+					case 'int':
+						$value_type = 'int';
+						break;
+					case 'html':
+						$value_type = 'html';
+						break;
+					default:
+						$value_type = 'string';
+						break;
+				}
+					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
 				}
 
 				if (isset($values_attribute) && is_array($values_attribute))
@@ -627,6 +680,11 @@
 			foreach ($this->location_info['fields'] as & $field)
 			{
 				$field['value'] = isset($values[$field['name']]) ? $values[$field['name']] : '';
+
+				if($field['type'] == 'html')
+				{
+					self::rich_text_editor($field['name']);
+				}
 				if (isset($field['values_def']))
 				{
 					if ($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
@@ -912,6 +970,7 @@
 			}
 
 			$id = phpgw::get_var($this->location_info['id']['name']);
+
 			$values = phpgw::get_var('values');
 
 			if ($id)

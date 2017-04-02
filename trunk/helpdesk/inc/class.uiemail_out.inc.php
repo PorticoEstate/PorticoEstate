@@ -38,7 +38,6 @@
 			'add' => true,
 			'index' => true,
 			'query' => true,
-			'view' => true,
 			'edit' => true,
 			'save' => true,
 			'get' => true,
@@ -106,17 +105,6 @@
 						'source' => 'id'
 					)
 				)
-			);
-
-			$data['datatable']['actions'][] = array
-				(
-				'my_name' => 'view',
-				'text' => lang('show'),
-				'action' => $GLOBALS['phpgw']->link('/index.php', array
-					(
-					'menuaction' => 'helpdesk.uiemail_out.view'
-				)),
-				'parameters' => json_encode($parameters)
 			);
 
 			$data['datatable']['actions'][] = array
@@ -334,6 +322,7 @@
 			);
 			phpgwapi_jquery::load_widget('autocomplete');
 			phpgwapi_jquery::formvalidator_generate(array());
+			self::rich_text_editor('content');
 			self::add_javascript('helpdesk', 'portico', 'email_out.edit.js');
 			self::render_template_xsl(array('email_out', 'datatable_inline'), array($mode => $data));
 		}
@@ -370,13 +359,15 @@
 				phpgw::no_access();
 			}
 			$type =  phpgw::get_var('type', 'string');
-			$id =  phpgw::get_var('id', 'int');
+			$set_id =  phpgw::get_var('set_id', 'int');
+			$email_out_id =  phpgw::get_var('id', 'int');
 
 			switch ($type)
 			{
-				case 'composite':
-					$values = $this->bo->get_composite_candidates($id);
-					array_walk($values, array($this, "_add_links"), "helpdesk.uiparty.edit");
+				case 'recipient_set':
+					$values = $this->bo->get_recipient_candidates($set_id, $email_out_id);
+					array_walk($values, array($this, "_add_links"), array('menuaction' => 'helpdesk.uigeneric.edit',
+								'type' => 'email_recipient_list'));
 
 					break;
 
@@ -418,7 +409,8 @@
 			}
 			$id =  phpgw::get_var('id', 'int');
 			$values = $this->bo->get_recipients($id);
-			array_walk($values, array($this, "_add_links"), "helpdesk.uiparty.edit");
+			array_walk($values, array($this, "_add_links"), array('menuaction' => 'helpdesk.uigeneric.edit',
+								'type' => 'email_recipient_list'));
 			return $this->jquery_results(array('results' => $values));
 
 		}

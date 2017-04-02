@@ -193,3 +193,10 @@ content	helpdesk	no	Innhold
 select all	helpdesk	no	Velg alle
 planned	helpdesk	no	Planlagt
 email template	helpdesk	no	Standardtekster
+recipient set	helpdesk	no	mottaker sett
+list	helpdesk	no	List
+recipient list	helpdesk	no	Mottaker liste
+select	helpdesk	no	Velg
+modified	helpdesk	no	Endret
+sent	helpdesk	no	Sendt
+generic	helpdesk	no	Generelt

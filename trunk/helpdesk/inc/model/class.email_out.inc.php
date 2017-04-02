@@ -102,7 +102,7 @@
 					),
 				'content' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
+					'type' => 'html',
 					'label' => 'content',
 					'required' => true,
 					'query' => true,
