@@ -117,23 +117,23 @@
 					<fieldset>
 
 						<div class="pure-control-group">
-							<xsl:variable name="lang_composite">
-								<xsl:value-of select="php:function('lang', 'composite')"/>
+							<xsl:variable name="lang_recipient_set">
+								<xsl:value-of select="php:function('lang', 'recipient set')"/>
 							</xsl:variable>
 							<label>
-								<xsl:value-of select="$lang_composite"/>
+								<xsl:value-of select="$lang_recipient_set"/>
 							</label>
-							<input type="hidden" id="composite_id" name="composite_id"  value="">
+							<input type="hidden" id="recipient_set_id" name="recipient_set_id"  value="">
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="$lang_composite"/>
+									<xsl:value-of select="$lang_recipient_set"/>
 								</xsl:attribute>
 							</input>
-							<input type="text" id="composite_name" name="composite_name" value="">
+							<input type="text" id="recipient_set_name" name="recipient_set_name" value="">
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="$lang_composite"/>
+									<xsl:value-of select="$lang_recipient_set"/>
 								</xsl:attribute>
 							</input>
-							<div id="composite_container"/>
+							<div id="recipient_set_container"/>
 						</div>
 						<div class="pure-control-group">
 							<label>

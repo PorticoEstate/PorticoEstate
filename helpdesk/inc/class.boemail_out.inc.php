@@ -102,9 +102,9 @@
 			return $values;
 		}
 
-		public function get_composite_candidates( $composite_id )
+		public function get_recipient_candidates( $recipient_set_id, $email_out_id)
 		{
-			return helpdesk_soemail_out::get_instance()->get_composite_candidates($composite_id);
+			return helpdesk_soemail_out::get_instance()->get_recipient_candidates($recipient_set_id, $email_out_id);
 		}
 
 		function set_candidates($id, $ids)
@@ -126,36 +126,38 @@
 		{
 			$email_out = $this->read_single($id);
 			$subject = $email_out->subject;
-			$content = $email_out->content;
-			phpgw::import_class('helpdesk.soparty');
+			$content = nl2br($email_out->content);
+			$sogeneric = CreateObject('helpdesk.sogeneric','email_recipient_list');
 			$email_validator = CreateObject('phpgwapi.EmailAddressValidator');
 			if (!is_object($GLOBALS['phpgw']->send))
 			{
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
 			}
+			$config	= CreateObject('phpgwapi.config','helpdesk')->read();;
 
 			$cc ='';
 			$bcc = '';
-			$from_email = '';
+			$from_email = $config['from_email'];
 			$from_name = '';
-			foreach ($ids as $party_id)
+			foreach ($ids as $recipient_id)
 			{
-				$party = helpdesk_soparty::get_instance()->get_single($party_id);
-				$to_email = $party->get_email();
+				$recipient = $sogeneric->read_single(array('id' => $recipient_id));
+
+				$to_email = $recipient['email'];
 				if (!$email_validator->check_email_address($to_email) )
 				{
-					helpdesk_soemail_out::get_instance()->set_status($id, $party_id, helpdesk_email_out::STATUS_ERROR);
+					helpdesk_soemail_out::get_instance()->set_status($id, $recipient_id, helpdesk_email_out::STATUS_ERROR);
 					continue;
 				}
 
 				try
 				{
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html');
-					helpdesk_soemail_out::get_instance()->set_status($id, $party_id, helpdesk_email_out::STATUS_SENT);
+					helpdesk_soemail_out::get_instance()->set_status($id, $recipient_id, helpdesk_email_out::STATUS_SENT);
 				}
 				catch (Exception $exc)
 				{
-					helpdesk_soemail_out::get_instance()->set_status($id, $party_id, helpdesk_email_out::STATUS_ERROR);
+					helpdesk_soemail_out::get_instance()->set_status($id, $recipient_id, helpdesk_email_out::STATUS_ERROR);
 				}
 			}
 		}

@@ -99,44 +99,34 @@
 			return	$this->db->transaction_commit();
 		}
 
-		public function get_composite_candidates( $composite_id )
+		public function get_recipient_candidates( $recipient_set_id , $email_out_id)
 		{
-			$composite_id = (int) $composite_id;
-			$values = array();
-			$ts_query = strtotime(date('Y-m-d')); // timestamp for query (today)
+			$recipient_set_id = (int) $recipient_set_id;
+			$email_out_id = (int) $email_out_id;
 
-			$sql = "SELECT email, first_name, last_name, company_name, helpdesk_party.id"
-				. " FROM helpdesk_contract_composite"
-				. " {$this->join} helpdesk_contract ON helpdesk_contract_composite.contract_id = helpdesk_contract.id"
-				. " {$this->join} helpdesk_contract_party ON helpdesk_contract_party.contract_id = helpdesk_contract.id"
-				. " {$this->join} helpdesk_party ON helpdesk_contract_party.party_id = helpdesk_party.id"
-				. " WHERE helpdesk_contract_composite.composite_id = {$composite_id}"
-				. " AND helpdesk_contract.date_start <= {$ts_query} AND ( helpdesk_contract.date_end >= {$ts_query} OR helpdesk_contract.date_end IS NULL)";
+			$recipients = array(-1);
+			$sql = "SELECT recipient_id FROM phpgw_helpdesk_email_out_recipient WHERE email_out_id = {$email_out_id}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			while ($this->db->next_record())
+			{
+				$recipients[] = $this->db->f('recipient_id');
+			}
+
+			$values = array();
+
+			$sql = "SELECT phpgw_helpdesk_email_out_recipient_list.id as id,"
+				. " email, phpgw_helpdesk_email_out_recipient_list.name as name"
+				. " FROM phpgw_helpdesk_email_out_recipient_set"
+				. " {$this->join} phpgw_helpdesk_email_out_recipient_list ON phpgw_helpdesk_email_out_recipient_list.set_id = phpgw_helpdesk_email_out_recipient_set.id"
+				. " WHERE phpgw_helpdesk_email_out_recipient_set.id = {$recipient_set_id}"
+				. " AND phpgw_helpdesk_email_out_recipient_list.id NOT IN (" . implode(',', $recipients) . ")";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
-				$first_name = $this->db->f('first_name',true);
-				$last_name = $this->db->f('last_name',true);
-				$company_name = $this->db->f('company_name',true);
-
-				$name = '';
-				if($last_name)
-				{
-					$name .= "$last_name, $first_name";
-				}
-				if($last_name && $company_name)
-				{
-					$name .= " ({$company_name})";
-				}
-				else if($company_name)
-				{
-					$name = $company_name;
-				}
-
 				$values[] = array(
 					'id'	=> $this->db->f('id'),
-					'name'	=> $name,
+					'name'	=> $this->db->f('name', true),
 					'email'	=> $this->db->f('email',true),
 				);
 			}
@@ -151,35 +141,19 @@
 			$email_out_id = (int) $email_out_id;
 			$values = array();
 
-			$sql = "SELECT email, first_name, last_name, company_name, helpdesk_party.id, status"
-				. " FROM phpgw_helpdesk_email_out_party"
-				. " {$this->join} phpgw_helpdesk_party ON phpgw_helpdesk_email_out_party.party_id = phpgw_helpdesk_party.id"
-				. " WHERE phpgw_helpdesk_email_out_party.email_out_id = {$email_out_id}";
+			$sql = "SELECT email, phpgw_helpdesk_email_out_recipient_list.name as name,"
+				. " phpgw_helpdesk_email_out_recipient_list.id, status"
+				. " FROM phpgw_helpdesk_email_out"
+				. " {$this->join} phpgw_helpdesk_email_out_recipient ON phpgw_helpdesk_email_out.id = phpgw_helpdesk_email_out_recipient.email_out_id"
+				. " {$this->join} phpgw_helpdesk_email_out_recipient_list ON phpgw_helpdesk_email_out_recipient_list.id = phpgw_helpdesk_email_out_recipient.recipient_id"
+				. " WHERE phpgw_helpdesk_email_out.id = {$email_out_id}";
 
 			$this->db->query($sql,__LINE__,__FILE__);
 			while ($this->db->next_record())
 			{
-				$first_name = $this->db->f('first_name',true);
-				$last_name = $this->db->f('last_name',true);
-				$company_name = $this->db->f('company_name',true);
-
-				$name = '';
-				if($last_name)
-				{
-					$name .= "$last_name, $first_name";
-				}
-				if($last_name && $company_name)
-				{
-					$name .= " ({$company_name})";
-				}
-				else if($company_name)
-				{
-					$name = $company_name;
-				}
-
 				$values[] = array(
 					'id'	=> $this->db->f('id'),
-					'name'	=> $name,
+					'name'	=> $this->db->f('name',true),
 					'email'	=> $this->db->f('email',true),
 					'status'	=> $status_list[$this->db->f('status')]
 				);
@@ -198,25 +172,23 @@
 			}
 
 
-			$sql = 'INSERT INTO phpgw_helpdesk_email_out_party (email_out_id, party_id)'
+			$sql = 'INSERT INTO phpgw_helpdesk_email_out_recipient (email_out_id, recipient_id)'
 				. ' VALUES(?, ?)';
-			foreach ($ids as $party_id)
+			foreach ($ids as $recipient_id)
 			{
-				if(in_array($party_id, $check_duplicates))
+				if(in_array($recipient_id, $check_duplicates))
 				{
 					continue;
 				}
 
 				$valueset[] = array
 					(
-					1 => array
-						(
+					1 => array(
 						'value' => (int)$id,
 						'type' => PDO::PARAM_INT
 					),
-					2 => array
-						(
-						'value' => $party_id,
+					2 => array(
+						'value' => $recipient_id,
 						'type' => PDO::PARAM_INT
 					)
 				);
@@ -233,17 +205,18 @@
 			if($ids)
 			{
 				$parties = implode(',', $ids);
-				$sql = "DELETE FROM phpgw_helpdesk_email_out_party WHERE email_out_id = {$id} AND party_id IN ({$parties})";
+				$sql = "DELETE FROM phpgw_helpdesk_email_out_recipient WHERE email_out_id = {$id} AND recipient_id IN ({$parties})"
+				. " AND (status IS NULL OR status = 0 )";
 				return $this->db->query($sql,__LINE__,__FILE__);
 			}
 		}
 
-		function set_status($id, $party_id, $status)
+		function set_status($id, $recipient_id, $status)
 		{
 			$id = (int) $id;
-			$party_id = (int) $party_id;
+			$recipient_id = (int) $recipient_id;
 			$status = (int) $status;
-			$sql = "UPDATE phpgw_helpdesk_email_out_party SET status = {$status} WHERE email_out_id = {$id} AND party_id = {$party_id}";
+			$sql = "UPDATE phpgw_helpdesk_email_out_recipient SET status = {$status} WHERE email_out_id = {$id} AND recipient_id = {$recipient_id}";
 			return $this->db->query($sql,__LINE__,__FILE__);
 		}
 	}

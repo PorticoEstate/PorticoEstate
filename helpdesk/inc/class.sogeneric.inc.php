@@ -166,13 +166,15 @@
 								(
 								'name' => 'name',
 								'descr' => lang('name'),
-								'type' => 'varchar'
+								'type' => 'varchar',
+								'nullable' => false
 							),
 							array
 								(
 								'name' => 'content',
 								'descr' => lang('content'),
-								'type' => 'text'
+								'type' => 'html',
+								'nullable' => false
 							),
 							array
 								(
@@ -188,6 +190,112 @@
 						'system_location' => '.email_out.email_template',
 						'acl_location' => '.email_out',
 						'menu_selection' => 'helpdesk::email_out::email_template',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'created' => array('add' => 'time()'),
+							'modified' => array('edit' => 'time()'),
+						),
+						'check_grant' => true
+					);
+
+					break;
+				case 'email_recipient_set':
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_email_out_recipient_set',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('recipient set'),
+						'acl_app' => 'helpdesk',
+						'system_location' => '.email_out.recipient_set',
+						'acl_location' => '.email_out',
+						'menu_selection' => 'helpdesk::email_out::recipient_set',
+						'default' => array
+							(
+							'user_id' => array('add' => '$this->account'),
+							'created' => array('add' => 'time()'),
+							'modified' => array('edit' => 'time()'),
+						),
+						'check_grant' => true
+					);
+
+					break;
+				case 'email_recipient_list':
+					$info = array
+						(
+						'table' => 'phpgw_helpdesk_email_out_recipient_list',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+							(
+							array
+								(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+							array
+								(
+								'name' => 'email',
+								'descr' => lang('email'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+							array(
+								'name' => 'set_id',
+								'descr' => $GLOBALS['phpgw']->translation->translate('recipient set', array(), false, 'helpdesk'),
+								'type' => 'select',
+								'filter' => true,
+								'nullable' => false,
+								'values_def' => array(
+									'valueset' => false,
+									'method' => 'helpdesk.bogeneric.get_list',
+									'get_single_value' => 'helpdesk.sogeneric.get_name',
+									'method_input' => array('type' => 'email_recipient_set', 'selected' => '##set_id##')
+								)
+							),
+							array(
+								'name' => 'active',
+								'descr' => lang('active'),
+								'type' => 'checkbox',
+								'default' => 'checked',
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array(
+									'valueset' => array(array('id' => 1, 'name' => lang('active'))),
+								)
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('recipient list'),
+						'acl_app' => 'helpdesk',
+						'system_location' => '.email_out.recipient_list',
+						'acl_location' => '.email_out',
+						'menu_selection' => 'helpdesk::email_out::recipient_list',
 						'default' => array
 							(
 							'user_id' => array('add' => '$this->account'),

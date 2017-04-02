@@ -153,22 +153,63 @@
 				'uc' => array()
 			)
 		);
+
+
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'phpgw_helpdesk_email_out_party', array(
+			'phpgw_helpdesk_email_out_recipient_set',  array(
 				'fd' => array(
 					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-					'email_out_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-					'email_address' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
+					'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_email_out_recipient_list',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'set_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'email' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+					'active' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
+					'public' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'created' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+					'modified' => array('type' => 'int', 'precision' => 8, 'nullable' => True, 'default' => 'current_timestamp'),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					'phpgw_helpdesk_email_out_recipient_set' => array('set_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array('set_id', 'email')
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'phpgw_helpdesk_email_out_recipient',  array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'email_out_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'recipient_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 					'status' => array('type' => 'int', 'precision' => 2, 'nullable' => True, 'default' => '0'),
 				),
 				'pk' => array('id'),
 				'fk' => array(
 					'phpgw_helpdesk_email_out' => array('email_out_id' => 'id'),
+					'phpgw_helpdesk_email_out_recipient_list' => array('recipient_id' => 'id'),
 				),
 				'ix' => array(),
 				'uc' => array()
-			)
-		);
+		));
+
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

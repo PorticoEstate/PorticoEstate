@@ -168,11 +168,21 @@
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uiemail_out.index')),
 					'image' => array('helpdesk', 'helpdesk'),
 					'children' => array(
-						'email_template' => array(
+						'template' => array(
 							'text' => lang('email template'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
 								'type' => 'email_template', 'admin' => true))
-						)
+						),
+						'recipient_set' => array(
+							'text' => lang('recipient set'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'email_recipient_set', 'admin' => true))
+						),
+						'recipient_list' => array(
+							'text' => lang('recipient list'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'email_recipient_list', 'admin' => true))
+						),
 					)
 				);
 
