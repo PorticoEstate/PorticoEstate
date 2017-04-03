@@ -5,6 +5,19 @@
 	{
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
 	}
+	$host_info = '';
+	if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
+	{
+		$host_info = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+		if (empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
+		{
+			$host_info = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+		}
+		else
+		{
+			$host_info = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
+		}
+	}
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
@@ -35,7 +48,7 @@
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
+			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $host_info . $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
@@ -44,7 +57,7 @@
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $javascript );
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $host_info . $GLOBALS['phpgw_info']['server']['webserver_url'] . $javascript );
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
@@ -59,7 +72,7 @@
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'site_url'		=> $GLOBALS['phpgw']->link('/home.php', array()),
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
+		'webserver_url'	=> $host_info. $GLOBALS['phpgw_info']['server']['webserver_url'],
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'current_app_header' => isset($GLOBALS['phpgw_info']['flags']['app_header']) && $GLOBALS['phpgw_info']['flags']['app_header'] ? $GLOBALS['phpgw_info']['flags']['app_header'] : '',
 		'current_user'	=> $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] )->__toString()
