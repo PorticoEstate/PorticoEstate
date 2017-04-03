@@ -72,12 +72,28 @@
 		 */
 		protected $external_files;
 
+		protected $webserver_url;
+
 		/**
 		* Constructor
 		*/
 		public function __construct()
 		{
 			$this->validate_file('core', 'base');
+			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
+			{
+				if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
+				{
+					$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
+				}
+				else
+				{
+					$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+				}
+			}
+
+			$this->webserver_url = $webserver_url;
 		}
 
 		/**
@@ -165,9 +181,9 @@
 									}
 									else
 									{
-										//echo "file: {$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/js/{$pkg}/{$file}.js <br>";
+										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
 										$links .= '<script type="text/javascript" '
-										. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/js/{$pkg}/{$file}.js\">"
+										. "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js\">"
 									 	. "</script>\n";
 									}
 								}
@@ -189,7 +205,7 @@
 					else
 					{
 						$links .= <<<HTML
-						<script type="text/javascript" src="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" >
+						<script type="text/javascript" src="{$this->webserver_url}/{$file}" >
 						</script>
 HTML;
 					}
@@ -201,7 +217,7 @@ HTML;
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$jsfiles = implode(',', $jsfiles);
 				$links .= '<script type="text/javascript" '
-					. "src=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
+					. "src=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=javascript&files={$jsfiles}\">"
 					. "</script>\n";
 				unset($jsfiles);
 			}
