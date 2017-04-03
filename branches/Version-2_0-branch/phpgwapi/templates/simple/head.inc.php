@@ -8,17 +8,16 @@
 	* @version $Id$
 	*/
 
-	$host_info = '';
+	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 	if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
 	{
-		$host_info = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		if (empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
+		if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
 		{
-			$host_info = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+			$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
 		}
 		else
 		{
-			$host_info = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
+			$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
 		}
 	}
 
@@ -78,7 +77,7 @@
 
 	foreach ( $stylesheets as $style )
 	{
-		$tpl->set_var('theme_style', $host_info . $GLOBALS['phpgw_info']['server']['webserver_url'] . $style);
+		$tpl->set_var('theme_style', $webserver_url . $style);
 		$tpl->parse('theme_stylesheets', 'theme_stylesheet', true);
 	}
 

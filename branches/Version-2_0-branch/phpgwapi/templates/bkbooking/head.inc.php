@@ -8,17 +8,16 @@
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
 	}
 
-	$host_info = '';
+	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 	if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
 	{
-		$host_info = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		if (empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
+		if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
 		{
-			$host_info = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+			$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
 		}
 		else
 		{
-			$host_info = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
+			$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
 		}
 	}
 
@@ -80,7 +79,7 @@ JS;
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $host_info . $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
+			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet );
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
@@ -93,7 +92,7 @@ JS;
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $host_info . $GLOBALS['phpgw_info']['server']['webserver_url'] . $javascript );
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript );
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
@@ -203,7 +202,7 @@ JS;
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'	=> $host_info . $GLOBALS['phpgw_info']['server']['webserver_url'],
+		'webserver_url'	=> $webserver_url,
 //		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
         'win_on_events'	=> $test,
 		'navbar_config' => $_navbar_config,
