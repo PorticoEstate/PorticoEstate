@@ -396,6 +396,10 @@
 					$fields[$key] = $field_info;
 				}
 			}
+			else
+			{
+				$fields['status'] = true;
+			}
 
 
 			if($debug)
