@@ -42,6 +42,8 @@
 		 * because the css files are using relative paths
 		 */
 		var $external_files;
+
+		protected $webserver_url;
 		
 		/**
 		* Constructor
@@ -50,6 +52,20 @@
 		*/
 		function __construct()
 		{
+			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
+			{
+				if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
+				{
+					$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
+				}
+				else
+				{
+					$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+				}
+			}
+
+			$this->webserver_url = $webserver_url;
 		}
 		
 		/**
@@ -99,9 +115,9 @@
 									}
 									else
 									{
-										//echo "file: {$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/{$tpl}/css/{$file}.css <br>";
+										//echo "file: {$this->webserver_url}/{$app}/templates/{$tpl}/css/{$file}.css <br>";
 										$links .= <<<HTML
-					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/{$tpl}/css/{$file}.css" type="text/css" rel="stylesheet">
+					<link href="{$this->webserver_url}/{$app}/templates/{$tpl}/css/{$file}.css" type="text/css" rel="stylesheet">
 
 HTML;
 
@@ -127,7 +143,7 @@ HTML;
 					else
 					{
 						$links .= <<<HTML
-						<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$file}" type="text/css"  rel="stylesheet">
+						<link href="{$this->webserver_url}/{$file}" type="text/css"  rel="stylesheet">
 
 HTML;
 					}
@@ -140,7 +156,7 @@ HTML;
 			{
 				$cachedir = urlencode($GLOBALS['phpgw_info']['server']['temp_dir']);
 				$cssfiles = implode(',', $cssfiles);
-				$links .= "<link type=\"text/css\" href=\"{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=css&files={$cssfiles}\">\n";
+				$links .= "<link type=\"text/css\" href=\"{$this->webserver_url}/phpgwapi/inc/combine.php?cachedir={$cachedir}&type=css&files={$cssfiles}\">\n";
 				unset($cssfiles);
 			}
 
