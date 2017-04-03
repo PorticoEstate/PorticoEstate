@@ -170,6 +170,7 @@
 					'type' => 'string',
 					'label' => 'title',
 					'sortable' => false,
+					'query' => true,
 					),
 			 	'description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
