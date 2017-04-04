@@ -40,7 +40,10 @@
 			'add' => true,
 			'edit' => true,
 			'save' => true,
-			'delete' => true,	
+			'delete' => true,
+			'add_dataset' => true,
+			'edit_dataset' => true,
+			'save_dataset' => true,
 			'get_columns' => true,
 			'download' => true
 		);
@@ -113,7 +116,7 @@
 				'className' => 'add',
 				'custom_code' => "
 						var oArgs = " . json_encode(array(
-							'menuaction' => 'property.uireport.edit'
+							'menuaction' => 'property.uireport.add'
 				)) . ";
 						newReport(oArgs);
 					"
@@ -169,9 +172,9 @@
 				'className' => 'add',
 				'custom_code' => "
 						var oArgs = " . json_encode(array(
-							'menuaction' => 'property.uireport.edit_view'
+							'menuaction' => 'property.uireport.add_dataset'
 				)) . ";
-						newView(oArgs);
+						newDataset(oArgs);
 					"
 			);
 
@@ -181,7 +184,7 @@
 				'text' => lang('edit'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'property.uireport.edit_view'
+					'menuaction' => 'property.uireport.edit_dataset'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -193,7 +196,7 @@
 				'confirm_msg' => lang('do you really want to delete this entry'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'property.uireport.delete_view'
+					'menuaction' => 'property.uireport.delete_dataset'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -313,6 +316,120 @@
 			self::add_javascript('property', 'portico', 'report.edit.js');
 
 			self::render_template_xsl(array('report'), array('edit' => $data));
+		}
+		
+		public function add_dataset()
+		{
+			$this->edit_dataset();
+		}
+		
+		public function edit_dataset( $values = array(), $mode = 'edit' )
+		{
+			$dataset_id = phpgw::get_var('dataset_id', 'int');
+			
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('dataset_id', 'int');
+
+			if ($id)
+			{
+				$values = $this->bo->read_single_dataset($dataset_id);
+			}
+			
+			$link_data = array
+				(
+				'menuaction' => "property.uireport.save_dataset",
+				'id' => $id
+			);
+			
+			$views = $this->bo->get_views();
+			foreach ($views as $view)
+			{
+				$selected = 0;
+				if ($values['view_name'] == $view['name']){
+					$selected = 1;
+				}
+				$list[] = array('id' => $view['name'], 'name' => $view['name'], 'selected' => $selected);
+			}
+			
+			$default_value = array('id' => '', 'name' => lang('Select'));
+			array_unshift($list, $default_value);
+			
+			$tabs = array();
+			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
+			$active_tab = 'report';
+
+			$data = array
+			(
+				'datatable_def' => array(),
+				'editable' => $mode == 'edit',
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
+				'views' => array('options' => $list),
+				'value_dataset_name' => $values['dataset_name'],		
+				'dataset_id' => isset($values['id']) ? $values['id'] : '',
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('report');
+
+			self::add_javascript('property', 'portico', 'report.edit.js');
+
+			self::render_template_xsl(array('report'), array('edit_dataset' => $data));
+		}
+		
+		public function save_dataset()
+		{
+			if (!$_POST)
+			{
+				return $this->edit_dataset();
+			}
+
+			$id = (int)phpgw::get_var('id');
+
+			if ($id)
+			{
+				$action = 'edit';
+				$values = (array)$this->bo->read_single_dataset($id);
+			}
+			else
+			{
+				$action = 'add';
+				$values = array();
+			}
+
+			/*
+			 * Overrides with incoming data from POST
+			 */
+			$values = $this->_populate($values);
+
+			if ($this->receipt['error'])
+			{
+				$this->edit_dataset($values);
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save_dataset($values, $action);
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$this->edit_dataset($values);
+						return;
+					}
+				}
+
+				if ($receipt['message'])
+				{
+					phpgwapi_cache::message_set($receipt['message'], 'message');
+				} else {
+					phpgwapi_cache::message_set($receipt['message'], 'error');
+				}
+
+				self::redirect(array('menuaction' => 'property.uireport.edit_dataset', 'id' => $id));
+			}
 		}
 		
 		/**
