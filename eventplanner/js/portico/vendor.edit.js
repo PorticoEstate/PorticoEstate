@@ -32,6 +32,5 @@ add_application = function (app, menuaction, vendor_id)
 	{
 		requestUrl = phpGWLink('index.php', oArgs);
 	}
-	alert(requestUrl);
 	window.location = requestUrl;
 };
