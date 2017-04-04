@@ -6,7 +6,7 @@ function newReport(oArgs)
 	window.open(requestUrl, '_self');
 };
 
-function newView(oArgs)
+function newDataset(oArgs)
 {
 	var requestUrl = phpGWLink('index.php', oArgs);
 
