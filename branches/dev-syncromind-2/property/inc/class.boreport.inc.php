@@ -61,4 +61,33 @@
 
 			return $values;
 		}
+		
+
+		function read_single_dataset( $dataset_id = '' )
+		{
+			$dataset = $this->so->read_single_dataset($dataset_id);
+
+			return $dataset;
+		}
+		
+		
+		function save_dataset( $values, $action = '' )
+		{
+			if ($action == 'edit')
+			{
+				$receipt = $this->so->update_dataset($values);
+			}
+			else
+			{
+				$receipt = $this->so->add_dataset($values);
+			}
+			
+			return $receipt;
+		}
+		
+		function delete( $workorder_id )
+		{
+			$this->so->delete($workorder_id);
+		}
+		
 	}
