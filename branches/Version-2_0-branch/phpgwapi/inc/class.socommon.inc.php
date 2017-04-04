@@ -286,6 +286,7 @@
 					}
 					if ($params['manytomany'])
 					{
+						$row[$field] = array();
 						$table = $params['manytomany']['table'];
 						$key = $params['manytomany']['key'];
 						$ids = join(',', array_keys($id_map));
@@ -299,7 +300,7 @@
 							$colnames = join(',', $colnames);
 
 							$this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
-							$row[$field] = array();
+
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
@@ -328,11 +329,13 @@
 						{
 							$column = $params['manytomany']['column'];
 							$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
-							$row[$field] = array();
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
-								$results[$id_map[$id]][$field] = array();
+								if(!isset($results[$id_map[$id]][$field]))
+								{
+									$results[$id_map[$id]][$field] = array();
+								}
 								$results[$id_map[$id]][$field][] = $this->unmarshal($this->db->f($column, false), $params['type']);
 							}
 						}
