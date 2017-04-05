@@ -4,7 +4,7 @@
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit"/>
 		</xsl:when>
-		<xsl:when test="edit_view">
+		<xsl:when test="edit_dataset">
 			<xsl:apply-templates select="edit_dataset"/>
 		</xsl:when>
 		<xsl:otherwise>
@@ -154,7 +154,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'view')" />
 						</label>
-						<select id="view" name="view">
+						<select name="values[view_name]">
 							<xsl:apply-templates select="views/options"/>
 						</select>
 					</div>
@@ -162,7 +162,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'dataset name')" />
 						</label>
-						<input type="text" id="dataset_name" name="dataset_name" value="{dataset_name}"></input>
+						<input type="text" name="values[dataset_name]" value="{dataset_name}"></input>
 					</div>				
 				</div>
 			</div>
@@ -183,7 +183,7 @@
 						<xsl:value-of select="php:function('lang', 'cancel')" />
 					</xsl:attribute>
 				</input>
-			</div>	
+			</div>
 		</form>
 	</div>
 </xsl:template>
