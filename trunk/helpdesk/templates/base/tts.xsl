@@ -288,7 +288,7 @@
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="value_id"/>
 						</label>
-						<input type="text" name="values[subject]" value="{value_subject}">
+						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
@@ -503,7 +503,7 @@
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
-						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]">
+						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'add new comments')"/>
 							</xsl:attribute>
