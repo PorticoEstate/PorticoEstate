@@ -1724,7 +1724,7 @@ JS;
 
 			foreach ($additional_notes as &$note)
 			{
-				$note['value_note'] = nl2br($note['value_note']);
+				$note['value_note'] = htmlentities(nl2br($note['value_note']));
 			}
 
 			$datatable_def = array();
@@ -1740,7 +1740,7 @@ JS;
 				)
 			);
 
-			//_debug_Array($additional_notes);die();
+//			_debug_Array($datatable_def);die();
 			//---datatable settings---------------------------------------------------
 
 			$datatable_def[] = array(
