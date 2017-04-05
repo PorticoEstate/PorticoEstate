@@ -35,6 +35,7 @@
 
 		public $public_functions = array(
 			'query' => true,
+			'query_dataset' => true,
 			'index' => true,
 			'view' => true,
 			'add' => true,
@@ -86,6 +87,11 @@
 		{
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
+				if (phpgw::get_var('dataset'))
+				{
+					return $this->query_dataset();
+				}
+				
 				return $this->query();
 			}
 						
@@ -147,8 +153,9 @@
 			
 			$related_def = array
 				(
-				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
+				array('key' => 'dataset_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'view_name', 'label' => lang('view name'), 'sortable' => true, 'resizeable' => true)
 			);
 
 
@@ -205,7 +212,7 @@
 				(
 				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uireport.index',
-						'phpgw_return_as' => 'json'))),
+						'dataset' => '1', 'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $related_def,
 				'tabletools' => $tabletools_views,
 				'config' => array(
@@ -325,13 +332,13 @@
 		
 		public function edit_dataset( $values = array(), $mode = 'edit' )
 		{
-			$dataset_id = phpgw::get_var('dataset_id', 'int');
+			//$dataset_id = phpgw::get_var('dataset_id', 'int');
 			
-			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('dataset_id', 'int');
+			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
 			if ($id)
 			{
-				$values = $this->bo->read_single_dataset($dataset_id);
+				$values = $this->bo->read_single_dataset($id);
 			}
 			
 			$link_data = array
@@ -364,7 +371,7 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
 				'views' => array('options' => $list),
-				'value_dataset_name' => $values['dataset_name'],		
+				'dataset_name' => $values['dataset_name'],		
 				'dataset_id' => isset($values['id']) ? $values['id'] : '',
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
@@ -376,6 +383,26 @@
 			self::render_template_xsl(array('report'), array('edit_dataset' => $data));
 		}
 		
+		private function _populate_dataset( $data = array() )
+		{
+			$dataset_id = phpgw::get_var('dataset_id');
+			$values = phpgw::get_var('values');
+
+			$values['id'] = $dataset_id;
+
+			if (!$values['view_name'])
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please select a view name !'));
+			}
+
+			if (!$values['dataset_name'])
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please enter a dataset name !'));
+			}
+
+			return $values;
+		}
+		
 		public function save_dataset()
 		{
 			if (!$_POST)
@@ -383,23 +410,10 @@
 				return $this->edit_dataset();
 			}
 
-			$id = (int)phpgw::get_var('id');
-
-			if ($id)
-			{
-				$action = 'edit';
-				$values = (array)$this->bo->read_single_dataset($id);
-			}
-			else
-			{
-				$action = 'add';
-				$values = array();
-			}
-
 			/*
 			 * Overrides with incoming data from POST
 			 */
-			$values = $this->_populate($values);
+			$values = $this->_populate_dataset();
 
 			if ($this->receipt['error'])
 			{
@@ -409,7 +423,7 @@
 			{
 				try
 				{
-					$receipt = $this->bo->save_dataset($values, $action);
+					$receipt = $this->bo->save_dataset($values);
 				}
 				catch (Exception $e)
 				{
@@ -443,6 +457,45 @@
 			$result_data['total_records'] = 0;
 			$result_data['draw'] = 1;
 			
+			return $this->jquery_results($result_data);
+		}
+		
+		public function query_dataset()
+		{
+			$query = phpgw::get_var('query');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $query ? $query : $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+			);
+
+			$values = $this->bo->read_dataset($params);
+		
+			if ($export)
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records_dataset;
+			$result_data['draw'] = $draw;
+
+			$link_data = array
+				(
+				'menuaction' => "property.uireport.edit_dataset"
+			);
+
 			return $this->jquery_results($result_data);
 		}
 		
