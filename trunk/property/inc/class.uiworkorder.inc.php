@@ -1866,10 +1866,10 @@
 				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			}
 
+			$attachmen_list = array();
 			foreach ($invoices as $entry)
 			{
 				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' .$entry['external_voucher_id'];
-				$attachmen_list = array();
 				try
 				{
 					$dir = new DirectoryIterator("$directory_attachment/");
