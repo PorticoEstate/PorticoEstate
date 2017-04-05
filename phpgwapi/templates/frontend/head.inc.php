@@ -3,17 +3,6 @@
 	phpgw::import_class('phpgwapi.jquery');
 	phpgw::import_class('phpgwapi.template_portico');
 	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
-	if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
-	{
-		if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
-		{
-			$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		}
-		else
-		{
-			$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		}
-	}
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{

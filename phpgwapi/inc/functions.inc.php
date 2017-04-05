@@ -622,6 +622,18 @@ HTML;
 			$GLOBALS['phpgw_info']['server'][$k] = $v;
 		}
 
+		if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
+		{
+			if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
+			{
+				$GLOBALS['phpgw_info']['server']['webserver_url'] = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['server']['webserver_url'] = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
+			}
+		}
+
 		if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['global_level']) )
 		{
 			switch ($GLOBALS['phpgw_info']['server']['log_levels']['global_level'])
