@@ -70,10 +70,17 @@
 			return $dataset;
 		}
 		
-		
-		function save_dataset( $values, $action = '' )
+		function read_dataset( $params = array() )
 		{
-			if ($action == 'edit')
+			$dataset = $this->so->read_dataset($params);
+			$this->total_records_dataset = $this->so->total_records_dataset;
+
+			return $dataset;
+		}
+		
+		function save_dataset( $values )
+		{
+			if ($values['id'])
 			{
 				$receipt = $this->so->update_dataset($values);
 			}
@@ -85,9 +92,9 @@
 			return $receipt;
 		}
 		
-		function delete( $workorder_id )
+		function delete_dataset( $dataset_id )
 		{
-			$this->so->delete($workorder_id);
+			$this->so->delete_dataset($dataset_id);
 		}
 		
 	}
