@@ -7,17 +7,6 @@
 	}
 
 	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
-	if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
-	{
-		if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
-		{
-			$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		}
-		else
-		{
-			$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		}
-	}
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
     $GLOBALS['phpgw_info']['server']['no_jscombine'] = true;

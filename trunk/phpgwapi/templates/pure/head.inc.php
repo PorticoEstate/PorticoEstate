@@ -3,17 +3,6 @@
 	$stylesheets = array();
 
 	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
-	if($GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
-	{
-		if (!empty($GLOBALS['phpgw_info']['server']['enforce_ssl']))
-		{
-			$webserver_url = "https://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		}
-		else
-		{
-			$webserver_url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}";
-		}
-	}
 
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
