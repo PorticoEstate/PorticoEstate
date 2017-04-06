@@ -45,6 +45,7 @@
 			'add_dataset' => true,
 			'edit_dataset' => true,
 			'save_dataset' => true,
+			'delete_dataset' => true,
 			'get_columns' => true,
 			'download' => true
 		);
@@ -55,6 +56,7 @@
 			
 			//$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->bo = CreateObject('property.boreport', true);
+			$this->bocommon = & $this->bo->bocommon;
 			$this->acl = & $GLOBALS['phpgw']->acl;			
 		}
 
@@ -146,7 +148,7 @@
 				'confirm_msg' => lang('do you really want to delete this entry'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'property.uireport.delete'
+					'menuaction' => 'property.uireport.delete', 'phpgw_return_as' => 'json'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -203,7 +205,7 @@
 				'confirm_msg' => lang('do you really want to delete this entry'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'property.uireport.delete_dataset'
+					'menuaction' => 'property.uireport.delete_dataset', 'phpgw_return_as' => 'json'
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -266,39 +268,25 @@
 		{
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
-			/*if (!$this->acl_add && !$this->acl_edit)
+			if ($id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uireport.view',
-					'id' => $id));
+				$values = $this->bo->read_single($id);
 			}
-
-			if ($mode == 'view')
-			{
-				if (!$this->acl_read)
-				{
-					phpgw::no_access();
-					return;
-				}
-			}
-			else
-			{
-				if (!$this->acl_add && !$this->acl_edit)
-				{
-					phpgw::no_access();
-					return;
-				}
-			}*/
-
+			
 			$link_data = array
 				(
 				'menuaction' => "property.uireport.save",
 				'id' => $id
 			);
 			
-			$views = $this->bo->get_views();
-			foreach ($views as $view)
+			$datasets = $this->bo->get_datasets();
+			foreach ($datasets as $item)
 			{
-				$list[] = array('id' => $view['name'], 'name' => $view['name']);
+				$selected = 0;
+				if ($values['dataset_id'] == $item['id']){
+					$selected = 1;
+				}				
+				$list[] = array('id' => $item['id'], 'name' => $item['name']);
 			}
 			
 			$default_value = array('id' => '', 'name' => lang('Select'));
@@ -314,7 +302,7 @@
 				'editable' => $mode == 'edit',
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
-				'views' => array('options' => $list),
+				'datasets' => array('options' => $list),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
@@ -325,6 +313,102 @@
 			self::render_template_xsl(array('report'), array('edit' => $data));
 		}
 		
+		private function _populate( $data = array() )
+		{
+			$dataset_report_id = phpgw::get_var('dataset_report_id');
+			$dataset_id = phpgw::get_var('dataset_id');
+			
+			$group = phpgw::get_var('group');
+			$order = phpgw::get_var('order');
+			$aggregate = phpgw::get_var('aggregate');
+			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
+			$txt_aggregate = phpgw::get_var('txt_aggregate');
+
+			$values['id'] = $dataset_report_id;
+
+			if (!$dataset)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please select a view name !'));
+			}
+			
+			if (!count($group))
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please select a columns !'));
+			}
+
+			if (!count($aggregate))
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please enter a agregate !'));
+			}
+			$values['report_definition']['group'] = $group;
+			$values['report_definition']['order'] = $order;
+			$values['report_definition']['aggregate'] = $aggregate;
+			$values['report_definition']['cbo_aggregate'] = $cbo_aggregate;
+			$values['report_definition']['txt_aggregate'] = $txt_aggregate;
+			$values['dataset_id'] = $dataset_id;
+
+			return $values;
+		}
+		
+		public function save()
+		{
+			if (!$_POST)
+			{
+				return $this->edit();
+			}
+print_r($_REQUEST); die;
+			/*
+			 * Overrides with incoming data from POST
+			 */
+			$values = $this->_populate();
+
+			if ($this->receipt['error'])
+			{
+				$this->edit($values);
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save($values);
+					$id = $receipt['id'];
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$this->edit($values);
+						return;
+					}
+				}
+				
+				self::message_set($receipt);
+
+				self::redirect(array('menuaction' => 'property.uireport.edit', 'id' => $id));
+			}
+		}
+		
+		function delete()
+		{
+			$id = phpgw::get_var('id');
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$receipt = $this->bo->delete($id);
+				
+				if ($receipt['message'])
+				{
+					$message = $receipt['message'][0]['msg'];
+				} else {
+					$message = $receipt['error'][0]['msg'];
+				}
+				
+				return $message;
+			}
+		}
+		
+		
 		public function add_dataset()
 		{
 			$this->edit_dataset();
@@ -332,8 +416,6 @@
 		
 		public function edit_dataset( $values = array(), $mode = 'edit' )
 		{
-			//$dataset_id = phpgw::get_var('dataset_id', 'int');
-			
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
 			if ($id)
@@ -363,6 +445,8 @@
 			$tabs = array();
 			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
 			$active_tab = 'report';
+			
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
@@ -373,6 +457,7 @@
 				'views' => array('options' => $list),
 				'dataset_name' => $values['dataset_name'],		
 				'dataset_id' => isset($values['id']) ? $values['id'] : '',
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
@@ -424,6 +509,7 @@
 				try
 				{
 					$receipt = $this->bo->save_dataset($values);
+					$id = $receipt['id'];
 				}
 				catch (Exception $e)
 				{
@@ -434,15 +520,29 @@
 						return;
 					}
 				}
-
-				if ($receipt['message'])
-				{
-					phpgwapi_cache::message_set($receipt['message'], 'message');
-				} else {
-					phpgwapi_cache::message_set($receipt['message'], 'error');
-				}
+				
+				self::message_set($receipt);
 
 				self::redirect(array('menuaction' => 'property.uireport.edit_dataset', 'id' => $id));
+			}
+		}
+		
+		function delete_dataset()
+		{
+			$id = phpgw::get_var('id');
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				$receipt = $this->bo->delete_dataset($id);
+				
+				if ($receipt['message'])
+				{
+					$message = $receipt['message'][0]['msg'];
+				} else {
+					$message = $receipt['error'][0]['msg'];
+				}
+				
+				return $message;
 			}
 		}
 		
