@@ -39,6 +39,11 @@
 			$this->total_records = 0;
 		}
 
+		function read_single ( $id, $values = array() )
+		{
+			return array();
+		}
+		
 		public function read($data)
 		{
 			return array();
@@ -60,6 +65,26 @@
 				$values[] = array
 					(
 					'name' => $this->db->f('name')
+				);
+			}
+			
+			return $values;
+		}
+		
+		public function get_datasets()
+		{
+			$sql = "SELECT * FROM fm_view_dataset";
+	
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+					(
+					'id' => $this->db->f('id'),
+					'name' => $this->db->f('dataset_name')
 				);
 			}
 			
@@ -174,6 +199,88 @@
 			return $values;
 		}
 		
+		function add ( $data )
+		{
+			$receipt = array();
+			$values_insert = array
+				(
+				'view_name' => $data['view_name'],
+				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
+				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date' => time()
+			);
+			
+			$this->db->transaction_begin();
+
+			$this->db->query("INSERT INTO fm_view_dataset (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+			
+			if ($this->db->transaction_commit())
+			{
+				$receipt['message'][] = array('msg' => lang('dataset has been saved'));
+				$receipt['id'] = $this->db->get_last_insert_id('fm_view_dataset', 'id');
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('dataset has not been saved'));
+			}
+			
+			return $receipt;
+		}
+
+		function update ( $data )
+		{
+			$receipt = array();
+
+			$value_set = array
+				(
+				'view_name' => $data['view_name'],
+				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
+				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
+				'entry_date' => time()
+			);
+
+			$value_set = $this->db->validate_update($value_set);
+
+			$this->db->transaction_begin();
+			
+			$this->db->query("UPDATE fm_view_dataset SET {$value_set} WHERE id='" . $data['id'] . "'", __LINE__, __FILE__);
+
+			$receipt['id'] = $data['id'];
+			if ($this->db->transaction_commit())
+			{
+				$receipt['message'][] = array('msg' => lang('dataset has been updated'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('dataset has not been updated'));
+			}
+			
+			return $receipt;
+		}
+		
+		function delete ( $id )
+		{
+			$id = (int)$id;
+			$receipt = array();
+
+			$this->db->transaction_begin();
+			
+			$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_view_dataset_report WHERE dataset_id ='{$id}'", __LINE__, __FILE__);
+
+			if ($this->db->transaction_commit())
+			{
+				$receipt['message'][] = array('msg' => lang('dataset has been deleted'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('dataset has not been deleted'));
+			}
+			
+			return $receipt;
+		}	
+		
 		function add_dataset ( $data )
 		{
 			$receipt = array();
@@ -192,11 +299,12 @@
 			
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('event has been saved'));
+				$receipt['message'][] = array('msg' => lang('dataset has been saved'));
+				$receipt['id'] = $this->db->get_last_insert_id('fm_view_dataset', 'id');
 			}
 			else
 			{
-				$receipt['error'][] = array('msg' => lang('event has not been saved'));
+				$receipt['error'][] = array('msg' => lang('dataset has not been saved'));
 			}
 			
 			return $receipt;
@@ -223,11 +331,11 @@
 			$receipt['id'] = $data['id'];
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('event has been updated'));
+				$receipt['message'][] = array('msg' => lang('dataset has been updated'));
 			}
 			else
 			{
-				$receipt['error'][] = array('msg' => lang('event has not been updated'));
+				$receipt['error'][] = array('msg' => lang('dataset has not been updated'));
 			}
 			
 			return $receipt;
@@ -236,6 +344,7 @@
 		function delete_dataset ( $id )
 		{
 			$id = (int)$id;
+			$receipt = array();
 
 			$this->db->transaction_begin();
 			
@@ -244,10 +353,14 @@
 
 			if ($this->db->transaction_commit())
 			{
-				return true;
+				$receipt['message'][] = array('msg' => lang('dataset has been deleted'));
+			}
+			else
+			{
+				$receipt['error'][] = array('msg' => lang('dataset has not been deleted'));
 			}
 			
-			return false;
+			return $receipt;
 		}		
 		
 	}
