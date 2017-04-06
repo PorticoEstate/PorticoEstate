@@ -76,12 +76,13 @@
 			<div id="tab-content">					
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>						
 				<div id="report">
+					<input type="hidden" name="dataset_report_id" value="{dataset_report_id}"/>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'views')" />
 						</label>
-						<select id="view" name="view">
-							<xsl:apply-templates select="views/options"/>
+						<select id="dataset_id" name="dataset_id">
+							<xsl:apply-templates select="datasets/options"/>
 						</select>
 						<input type="button" class="pure-button pure-button-primary" name="btn_get_columns" id="btn_get_columns">
 							<xsl:attribute name="value">
@@ -139,9 +140,18 @@
 
 <xsl:template match="edit_dataset">
 
+	<xsl:choose>
+		<xsl:when test="msgbox_data != ''">
+		<dl>
+			<dt>
+				<xsl:call-template name="msgbox"/>
+			</dt>
+		</dl>
+		</xsl:when>
+	</xsl:choose>
+	
 	<div id="document_edit_tabview">
-		<xsl:value-of select="validator"/>
-		
+		<xsl:value-of select="validator"/>		
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>		
