@@ -39,8 +39,16 @@
 		public function __construct()
 		{
 			$this->so = CreateObject('property.soreport');
+			$this->bocommon = CreateObject('property.bocommon');
 		}
 
+		function read_single( $id = '' )
+		{
+			$report = $this->so->read_single($id);
+
+			return $report;
+		}
+		
 		public function read($data = array())
 		{			
 			$values =  $this->so->read($data);
@@ -55,13 +63,19 @@
 			return $values;
 		}
 		
+		function get_datasets()
+		{
+			$values = $this->so->get_datasets();
+
+			return $values;
+		}
+		
 		function get_columns($table)
 		{
 			$values = $this->so->get_columns($table);
 
 			return $values;
 		}
-		
 
 		function read_single_dataset( $dataset_id = '' )
 		{
@@ -78,6 +92,26 @@
 			return $dataset;
 		}
 		
+		function save( $values )
+		{
+			if ($values['id'])
+			{
+				$receipt = $this->so->update($values);
+			}
+			else
+			{
+				$receipt = $this->so->add($values);
+			}
+			
+			return $receipt;
+		}
+		
+		function delete( $id )
+		{
+			$receipt = $this->so->delete($id);
+			return $receipt;
+		}
+		
 		function save_dataset( $values )
 		{
 			if ($values['id'])
@@ -92,9 +126,10 @@
 			return $receipt;
 		}
 		
-		function delete_dataset( $dataset_id )
+		function delete_dataset( $id )
 		{
-			$this->so->delete_dataset($dataset_id);
+			$receipt = $this->so->delete_dataset($id);
+			return $receipt;
 		}
 		
 	}
