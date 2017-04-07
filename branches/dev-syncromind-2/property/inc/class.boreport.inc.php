@@ -52,6 +52,7 @@
 		public function read($data = array())
 		{			
 			$values =  $this->so->read($data);
+			$this->total_records_reports = $this->so->total_records_reports;
 			
 			return $values;
 		}
@@ -70,9 +71,9 @@
 			return $values;
 		}
 		
-		function get_columns($table)
+		function get_columns($id)
 		{
-			$values = $this->so->get_columns($table);
+			$values = $this->so->get_columns($id);
 
 			return $values;
 		}
