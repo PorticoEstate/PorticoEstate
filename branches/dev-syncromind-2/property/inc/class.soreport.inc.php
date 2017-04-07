@@ -41,12 +41,86 @@
 
 		function read_single ( $id, $values = array() )
 		{
-			return array();
+			$id = (int)$id;
+			$sql = "SELECT * FROM fm_view_dataset_report WHERE id = {$id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			if ($this->db->next_record())
+			{
+				$values = array
+					(
+					'id' => $this->db->f('id'),
+					'dataset_id' => $this->db->f('dataset_id'),
+					'report_definition' => $this->db->f('report_definition')
+				);
+			}
+
+			return $values;
 		}
 		
 		public function read($data)
 		{
-			return array();
+			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
+			$query = isset($data['query']) ? $data['query'] : '';
+			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
+			$order = isset($data['order']) ? $data['order'] : '';
+			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			
+			if ($order)
+			{
+				$ordermethod = " ORDER BY $order $sort";
+			}
+			else
+			{
+				$ordermethod = " ORDER BY id DESC";
+			}
+
+			$where = 'WHERE';
+
+			/*if ($dimb_id > 0)
+			{
+				$filtermethod .= " $where fm_budget.ecodimb={$dimb_id}";
+				$where = 'AND';
+			}*/
+
+			if ($query)
+			{
+				$query = $this->db->db_addslashes($query);
+				$querymethod = " $where ( fm_view_dataset.dataset_name {$this->like} '%$query%')";
+			}
+
+			$sql = "SELECT fm_view_dataset_report.id, fm_view_dataset.dataset_name"
+				. " FROM fm_view_dataset_report {$this->join} fm_view_dataset ON fm_view_dataset_report.dataset_id = fm_view_dataset.id"
+				. " {$filtermethod} {$querymethod}";
+
+			$sql_count = 'SELECT count(fm_view_dataset_report.id) AS cnt FROM fm_view_dataset_report';
+			$this->db->query($sql_count, __LINE__, __FILE__);
+			$this->db->next_record();
+			$this->total_records_reports = $this->db->f('cnt');
+
+			if (!$allrows)
+			{
+				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
+			}
+			else
+			{
+				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
+			}
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+					(
+					'id' => $this->db->f('id'),
+					'dataset_name' => $this->db->f('dataset_name')
+				);
+			}
+
+			return $values;
 		}
 		
 		public function get_views()
@@ -91,11 +165,13 @@
 			return $values;
 		}
 		
-		public function get_columns($table)
+		public function get_columns($id)
 		{
+			$dataset = $this->read_single_dataset($id);
+			
 			$sql = "SELECT column_name, data_type
 				FROM   information_schema.columns
-				WHERE  table_name = '".$table."'
+				WHERE  table_name = '".$dataset['view_name']."'
 				ORDER  BY ordinal_position";
 	
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -204,21 +280,21 @@
 			$receipt = array();
 			$values_insert = array
 				(
-				'view_name' => $data['view_name'],
-				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
+				'dataset_id' => $data['dataset_id'],
+				'report_definition' => json_encode($data['report_definition']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
 			);
 			
 			$this->db->transaction_begin();
 
-			$this->db->query("INSERT INTO fm_view_dataset (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+			$this->db->query("INSERT INTO fm_view_dataset_report (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
 			
 			if ($this->db->transaction_commit())
 			{
 				$receipt['message'][] = array('msg' => lang('dataset has been saved'));
-				$receipt['id'] = $this->db->get_last_insert_id('fm_view_dataset', 'id');
+				$receipt['id'] = $this->db->get_last_insert_id('fm_view_dataset_report', 'id');
 			}
 			else
 			{
@@ -234,8 +310,8 @@
 
 			$value_set = array
 				(
-				'view_name' => $data['view_name'],
-				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
+				'dataset_id' => $data['dataset_id'],
+				'report_definition' => json_encode($data['report_definition']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
 			);
@@ -244,7 +320,7 @@
 
 			$this->db->transaction_begin();
 			
-			$this->db->query("UPDATE fm_view_dataset SET {$value_set} WHERE id='" . $data['id'] . "'", __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_view_dataset_report SET {$value_set} WHERE id='" . $data['id'] . "'", __LINE__, __FILE__);
 
 			$receipt['id'] = $data['id'];
 			if ($this->db->transaction_commit())
