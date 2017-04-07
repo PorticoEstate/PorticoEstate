@@ -6,8 +6,13 @@ $(document).ready(function ()
 	{
 		var oArgs = {menuaction: 'property.uireport.get_columns'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-		var data = {"view": $('#view').val()};
+		var data = {"dataset_id": $('#cbo_dataset_id').val()};
 
+		if ($('#cbo_dataset_id').val() == '')
+		{
+			return;
+		}
+		
 		$('.processing').show();
 		$.ajax({
 			type: 'GET',
@@ -24,10 +29,48 @@ $(document).ready(function ()
 			$('#container_aggregates').empty();
 			
 			build_check_columns(result);
+			if (jsonB !== '')
+			{
+				set_values();
+			}
 		});		
 	});
 	
+	$('#btn_get_columns').click();
 });
+
+function set_values()
+{
+	$.each(jsonB.group, function(key, value) 
+	{
+		$("#c_" + key).prop('checked', true);
+		$("#c_" + key).change();
+	});	
+	
+	$.each(jsonB.order, function(key, value) 
+	{
+		$("#o_" + key).prop('checked', true);
+	});
+	
+	$.each(jsonB.aggregate, function(key, value) 
+	{
+		$("#a_" + key).prop('checked', true);
+		$("#a_" + key).change();
+	});
+	
+	$.each(jsonB.cbo_aggregate, function(key, value) 
+	{
+		$("#cbo_" + key).filter(function() {
+			//may want to use $.trim in here
+			return $(this).val() == value; 
+		}).prop('selected', true);
+	});
+	
+	$.each(jsonB.txt_aggregate, function(key, value) 
+	{
+		$("#txt_" + key).val(value);
+	});
+}
 
 function build_check_columns(data)
 {
