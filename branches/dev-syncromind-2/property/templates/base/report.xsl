@@ -65,7 +65,18 @@
 
 
 <xsl:template match="edit">
-
+	<xsl:choose>
+		<xsl:when test="msgbox_data != ''">
+		<dl>
+			<dt>
+				<xsl:call-template name="msgbox"/>
+			</dt>
+		</dl>
+		</xsl:when>
+	</xsl:choose>
+	<script type="text/javascript">
+		var jsonB = <xsl:value-of select="report_definition"/>;
+	</script>
 	<div id="document_edit_tabview">
 		<xsl:value-of select="validator"/>
 		
@@ -81,7 +92,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'views')" />
 						</label>
-						<select id="dataset_id" name="dataset_id">
+						<select id="cbo_dataset_id" name="dataset_id">
 							<xsl:apply-templates select="datasets/options"/>
 						</select>
 						<input type="button" class="pure-button pure-button-primary" name="btn_get_columns" id="btn_get_columns">
