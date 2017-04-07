@@ -67,12 +67,10 @@
 
 		private function _get_filters()
 		{
-			$combos = array();
-
-			$views = $this->bo->get_views();;
+			$views = $this->bo->get_datasets();;
 			foreach ($views as $view)
 			{
-				$list[] = array('id' => $view['name'], 'name' => $view['name']);
+				$list[] = array('id' => $view['id'], 'name' => $view['name']);
 			}
 				
 			$default_value = array('id' => '', 'name' => lang('Select'));
@@ -156,8 +154,7 @@
 			$related_def = array
 				(
 				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
-				array('key' => 'dataset_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'view_name', 'label' => lang('view name'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'dataset_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true)
 			);
 
 
@@ -286,7 +283,7 @@
 				if ($values['dataset_id'] == $item['id']){
 					$selected = 1;
 				}				
-				$list[] = array('id' => $item['id'], 'name' => $item['name']);
+				$list[] = array('id' => $item['id'], 'name' => $item['name'], 'selected' => $selected);
 			}
 			
 			$default_value = array('id' => '', 'name' => lang('Select'));
@@ -295,6 +292,8 @@
 			$tabs = array();
 			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
 			$active_tab = 'report';
+			
+			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$data = array
 			(
@@ -303,6 +302,9 @@
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
 				'datasets' => array('options' => $list),
+				'report_definition' => $values['report_definition'],
+				'dataset_report_id' => $values['id'],
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
@@ -326,7 +328,7 @@
 
 			$values['id'] = $dataset_report_id;
 
-			if (!$dataset)
+			if (!$dataset_id)
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a view name !'));
 			}
@@ -356,7 +358,7 @@
 			{
 				return $this->edit();
 			}
-print_r($_REQUEST); die;
+			
 			/*
 			 * Overrides with incoming data from POST
 			 */
@@ -552,11 +554,40 @@ print_r($_REQUEST); die;
 		 */
 		public function query()
 		{
-			$result_data = array('results' => array());
+			$query = phpgw::get_var('query');
+			$search = phpgw::get_var('search');
+			$order = phpgw::get_var('order');
+			$draw = phpgw::get_var('draw', 'int');
+			$columns = phpgw::get_var('columns');
+			$export = phpgw::get_var('export', 'bool');
 
-			$result_data['total_records'] = 0;
-			$result_data['draw'] = 1;
-			
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'query' => $query ? $query : $search['value'],
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'dir' => $order[0]['dir'],
+				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
+			);
+
+			$values = $this->bo->read($params);
+		
+			if ($export)
+			{
+				return $values;
+			}
+
+			$result_data = array('results' => $values);
+
+			$result_data['total_records'] = $this->bo->total_records_reports;
+			$result_data['draw'] = $draw;
+
+			$link_data = array
+				(
+				'menuaction' => "property.uireport.edit"
+			);
+
 			return $this->jquery_results($result_data);
 		}
 		
@@ -601,9 +632,9 @@ print_r($_REQUEST); die;
 		
 		public function get_columns()
 		{
-			$view = phpgw::get_var('view');
+			$dataset_id = phpgw::get_var('dataset_id');
 
-			$columns = $this->bo->get_columns($view);
+			$columns = $this->bo->get_columns($dataset_id);
 			
 			return $columns;
 		}
