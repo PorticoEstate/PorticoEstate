@@ -60,10 +60,7 @@ function set_values()
 	
 	$.each(jsonB.cbo_aggregate, function(key, value) 
 	{
-		$("#cbo_" + key).filter(function() {
-			//may want to use $.trim in here
-			return $(this).val() == value; 
-		}).prop('selected', true);
+		$("#cbo_" + key).val(value);
 	});
 	
 	$.each(jsonB.txt_aggregate, function(key, value) 
