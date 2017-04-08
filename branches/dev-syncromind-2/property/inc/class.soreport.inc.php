@@ -190,6 +190,32 @@
 			return $values;
 		}
 		
+		function read_to_export ( $id )
+		{
+			$id = (int)$id;
+			
+			$values = $this->read_single($id);
+			$dataset = $this->read_single_dataset($values['dataset_id']);
+			
+			$definition = json_decode($values['report_definition'], true);
+			
+			$columns = implode(',', $definition['group']);
+			$agregates = array();
+			foreach ($definition['aggregate'] as $c => $v)
+			{
+				$agregates[] = $definition['cbo_aggregate'][$v]."(".$v.") AS ".$definition['txt_aggregate'][$v];
+			}
+			$func_agregates = implode(',', $agregates);
+			if (count($definition['order']))
+			{
+				$order = implode(',', $definition['order']);
+			}
+			
+			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns;
+			
+			return $sql;
+		}
+		
 		function read_single_dataset ( $id, $values = array() )
 		{
 			$id = (int)$id;
