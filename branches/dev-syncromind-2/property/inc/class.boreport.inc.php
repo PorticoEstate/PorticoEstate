@@ -57,6 +57,13 @@
 			return $values;
 		}
 
+		public function read_to_export($id)
+		{			
+			$values =  $this->so->read_to_export($id);
+			
+			return $values;
+		}
+		
 		function get_views()
 		{
 			$values = $this->so->get_views();
