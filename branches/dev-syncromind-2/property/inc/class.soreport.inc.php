@@ -194,26 +194,41 @@
 		{
 			$id = (int)$id;
 			
-			$values = $this->read_single($id);
-			$dataset = $this->read_single_dataset($values['dataset_id']);
+			$definition = $this->read_single($id);
+			$dataset = $this->read_single_dataset($definition['dataset_id']);
 			
-			$definition = json_decode($values['report_definition'], true);
+			$jsonB = json_decode($definition['report_definition'], true);
 			
-			$columns = implode(',', $definition['group']);
+			$columns = implode(',', $jsonB['group']);
 			$agregates = array();
-			foreach ($definition['aggregate'] as $c => $v)
+			foreach ($jsonB['aggregate'] as $c => $v)
 			{
-				$agregates[] = $definition['cbo_aggregate'][$v]."(".$v.") AS ".$definition['txt_aggregate'][$v];
+				$agregates[] = $jsonB['cbo_aggregate'][$v]."(".$v.") AS ".$jsonB['txt_aggregate'][$v];
 			}
 			$func_agregates = implode(',', $agregates);
-			if (count($definition['order']))
+			if (count($jsonB['order']))
 			{
-				$order = implode(',', $definition['order']);
+				$order = implode(',', $jsonB['order']);
 			}
 			
 			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns;
 			
-			return $sql;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$resultado = array_merge(array_values($jsonB['group']), array_values($jsonB['txt_aggregate']));
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$value = array();
+				foreach ($resultado as $column)
+				{
+					$value[$column] = $this->db->f($column);
+				}
+				$values[] = $value;
+			}
+			
+			return $values;
 		}
 		
 		function read_single_dataset ( $id, $values = array() )
