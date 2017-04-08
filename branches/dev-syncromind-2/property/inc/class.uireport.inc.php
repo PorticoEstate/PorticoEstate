@@ -62,12 +62,18 @@
 
 		public function download()
 		{
-			return;
+			$id = phpgw::get_var('id', 'int');
+			
+			$list = $this->bo->read_to_export($id);
+
+			$names = array_keys($list[0]);
+
+			$this->bocommon->download($list, $names, $names);
 		}
 
 		private function _get_filters()
 		{
-			$views = $this->bo->get_datasets();;
+			$views = $this->bo->get_datasets();
 			foreach ($views as $view)
 			{
 				$list[] = array('id' => $view['id'], 'name' => $view['name']);
@@ -149,6 +155,21 @@
 					'menuaction' => 'property.uireport.delete', 'phpgw_return_as' => 'json'
 				)),
 				'parameters' => json_encode($parameters)
+			);
+			
+			$tabletools[] = array
+				(
+				'my_name' => 'export',
+				'text' => lang('download'),
+				'type' => 'custom',
+				'custom_code' => "
+								var oArgs = " . json_encode(array(
+									'menuaction' => 'property.uireport.download',							
+									'export' => true,
+									'allrows' => true
+						)) . ";
+						
+						download(oArgs);"
 			);
 			
 			$related_def = array
