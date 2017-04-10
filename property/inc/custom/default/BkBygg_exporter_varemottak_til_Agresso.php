@@ -108,13 +108,22 @@
 					throw new Exception("Ordrenummer '{$values['order_id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
 				}
 
+				if($this->ordered_amount)
+				{
+					$quantity = $received_amount/$this->ordered_amount;
+				}
+				else //should not happen, but just in case...
+				{
+					$quantity = 0.8;
+				}
+
 				$param = array(
 					'voucher_type'	=> $voucher_type,
 					'order_id' => $values['order_id'],
 					'lines' => array(
 						array(
 							'UnitCode' => 'STK',
-							'Quantity' => ($received_amount/$this->ordered_amount),
+							'Quantity' => $quantity,
 						)
 					)
 				);
