@@ -55,6 +55,7 @@
 
 		function execute()
 		{
+			$start = time();
 
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/art
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/ansvar?id=013000
@@ -66,6 +67,7 @@
 			if ($this->debug)
 			{
 			}
+			set_time_limit(2000);
 
 			try
 			{
@@ -75,6 +77,29 @@
 			{
 				$this->receipt['error'][] = array('msg' => $e->getMessage());
 			}
+
+			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$this->cron_log($msg, $cron);
+			echo "$msg\n";
+			$this->receipt['message'][] = array('msg' => $msg);
+
+		}
+
+		function cron_log( $receipt = '' )
+		{
+
+			$insert_values = array(
+				$this->cron,
+				date($this->db->datetime_format()),
+				$this->function_name,
+				$receipt
+			);
+
+			$insert_values = $this->db->validate_insert($insert_values);
+
+			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
+				. "VALUES ($insert_values)";
+			$this->db->query($sql, __LINE__, __FILE__);
 		}
 
 		private function update_order()
@@ -107,8 +132,11 @@
 			{
 				if(!$this->check_payment($voucher['voucher_id']))
 				{
+					$this->receipt['error'][] = array('msg' => "{$voucher['voucher_id']} er ikke betalt");
 					continue;
 				}
+
+				$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er betalt");
 
 				$ok = false;
 				$order_type = $socommon->get_order_type($voucher['order_id']);
@@ -143,7 +171,8 @@
 
 				if($ok)
 				{
-					$vouchers_ok = $voucher;
+					$vouchers_ok[] = $voucher;
+				//	$i = 60;
 				}
 
 			}
@@ -153,6 +182,7 @@
 			$cols = array_keys($metadata);
 			foreach ($vouchers_ok as $voucher)
 			{
+				$this->db->transaction_begin();
 				$value_set = array();
 				$this->db->query("SELECT * FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
 				$this->db->next_record();
@@ -161,18 +191,22 @@
 					$value_set[$col] = $this->db->f($col);
 				}
 				$value_set['filnavn'] = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
+				$value_set['ordrebelop'] = $value_set['belop'];
+				unset($value_set['pre_transfer']);
 
 				$_cols = implode(',', array_keys($value_set));
 				$values = $this->db->validate_insert(array_values($value_set));
 				$this->db->query("INSERT INTO fm_ecobilagoverf ({$_cols}) VALUES ({$values})", __LINE__, __FILE__);
 				$this->db->query("DELETE FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
+				$this->db->transaction_commit();
+				$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er overført til historikk");
 			}
 		}
 
 		function check_payment( $voucher_id )
 		{
-			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
-			$url		= $this->soap_url;
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/utlignetfaktura?bilagsNr=917039148
+			$url = "{$this->soap_url}/utlignetfaktura?bilagsNr={$voucher_id}";
 			$username	= $this->soap_username; //'portico';
 			$password	= $this->soap_password; //'BgPor790gfol';
 
@@ -187,11 +221,15 @@
 			$result = curl_exec($ch);
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			if(!$httpCode)
+			{
+				throw new Exception("No connection: {$url}");
+			}
 			curl_close($ch);
 
 			$result = json_decode($result, true);
 
-			return false;
+			return $result;
 
 		}
 
