@@ -67,6 +67,7 @@
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order = isset($data['order']) ? $data['order'] : '';
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
+			$dataset_id = isset($data['dataset_id']) ? $data['dataset_id'] : '';
 			$results = isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
 			
 			if ($order)
@@ -80,11 +81,11 @@
 
 			$where = 'WHERE';
 
-			/*if ($dimb_id > 0)
+			if ($dataset_id > 0)
 			{
-				$filtermethod .= " $where fm_budget.ecodimb={$dimb_id}";
+				$filtermethod .= " $where fm_view_dataset.id={$dataset_id}";
 				$where = 'AND';
-			}*/
+			}
 
 			if ($query)
 			{
@@ -206,12 +207,13 @@
 				$agregates[] = $jsonB['cbo_aggregate'][$v]."(".$v.") AS ".$jsonB['txt_aggregate'][$v];
 			}
 			$func_agregates = implode(',', $agregates);
+			$order = '';
 			if (count($jsonB['order']))
 			{
-				$order = implode(',', $jsonB['order']);
+				$order = ' ORDER BY '.implode(',', $jsonB['order']);
 			}
 			
-			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns;
+			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 
