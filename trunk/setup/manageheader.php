@@ -390,6 +390,14 @@ HTML;
 				$detected .= '<li class="warn">' . lang('you may need imagick for image manipulation') . "</li>\n";
 			}
 
+			if(function_exists('curl_init'))
+			{
+				$detected .= '<li>' . lang('You appear to have curl enabled') . "</li>\n";
+			}
+			else
+			{
+				$detected .= '<li class="warn">' . lang('you may need curl for integration capabilities') . "</li>\n";
+			}
 
 			/* Not currently supported
 			if (extension_loaded('odbc') || function_exists('odbc_connect'))
