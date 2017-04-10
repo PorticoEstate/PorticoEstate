@@ -272,7 +272,7 @@
 				$ordermethod = " ORDER BY id DESC";
 			}
 
-			$where = 'WHERE';
+			$where = 'HAVING';
 
 			/*if ($dimb_id > 0)
 			{
@@ -283,12 +283,13 @@
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where ( dataset_name {$this->like} '%$query%')";
+				$querymethod = " $where ( a.dataset_name {$this->like} '%$query%')";
 			}
 
-			$sql = "SELECT fm_view_dataset.id, fm_view_dataset.view_name, fm_view_dataset.dataset_name"
-				. " FROM fm_view_dataset"
-				. " {$filtermethod} {$querymethod}";
+			$sql = "SELECT a.id, a.view_name, a.dataset_name, count(b.id) AS n_reports
+						FROM fm_view_dataset a LEFT JOIN fm_view_dataset_report b ON a.id = b.dataset_id
+						GROUP BY a.id, a.view_name, a.dataset_name"
+				. " {$querymethod}";
 
 			$sql_count = 'SELECT count(fm_view_dataset.id) AS cnt FROM fm_view_dataset';
 			$this->db->query($sql_count, __LINE__, __FILE__);
@@ -311,7 +312,8 @@
 					(
 					'id' => $this->db->f('id'),
 					'view_name' => $this->db->f('view_name'),
-					'dataset_name' => $this->db->f('dataset_name')
+					'dataset_name' => $this->db->f('dataset_name'),
+					'n_reports' => $this->db->f('n_reports')
 				);
 			}
 
