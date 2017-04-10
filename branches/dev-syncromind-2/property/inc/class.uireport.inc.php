@@ -195,7 +195,8 @@
 				(
 				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
 				array('key' => 'dataset_name', 'label' => lang('dataset'), 'sortable' => true, 'resizeable' => true),
-				array('key' => 'view_name', 'label' => lang('view'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'view_name', 'label' => lang('view'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'n_reports', 'label' => lang('number of reports'), 'sortable' => true, 'resizeable' => true)
 			);
 			
 			$tabletools_views[] = array
