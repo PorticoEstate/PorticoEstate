@@ -1,4 +1,15 @@
 
+$(document).ready(function ()
+{
+	$('#list_dataset').change( function()
+	{
+		paramsTable0['dataset_id'] = $('#list_dataset').val();
+
+		oTable0.fnDraw();		
+	});
+	
+});
+
 function newReport(oArgs)
 {
 	var requestUrl = phpGWLink('index.php', oArgs);
@@ -29,13 +40,11 @@ function download(oArgs)
 		return false;
 	}
 	
-	var ids = [];
 	var requestUrl = '';
 	for (var n = 0; n < selected.length; ++n)
 	{
 		var aData = selected[n];
 		oArgs['id'] = aData['id'];
-		//ids.push(aData['id']);
 		
 		requestUrl = phpGWLink('index.php', oArgs);
 		window.open(requestUrl, '_self');
