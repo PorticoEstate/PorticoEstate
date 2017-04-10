@@ -1964,8 +1964,7 @@
 			$continuous = false;
 
 			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
-
-			if ($cached_info)
+			if ($cached_info && is_array($cached_info))
 			{
 				return $cached_info;
 			}
