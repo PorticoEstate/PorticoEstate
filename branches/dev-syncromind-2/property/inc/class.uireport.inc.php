@@ -101,8 +101,8 @@
 				return $this->query();
 			}
 						
-			$appname = lang('report');
-			$function_msg = lang('list');
+			$appname = lang('report generator');
+			//$function_msg = lang('report generator');
 			
 			$filters = $this->_get_filters();
 
@@ -175,7 +175,7 @@
 			$related_def = array
 				(
 				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
-				array('key' => 'dataset_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'dataset_name', 'label' => lang('Report'), 'sortable' => true, 'resizeable' => true)
 			);
 
 
@@ -191,6 +191,13 @@
 				)
 			);
 
+			$related_def_views = array
+				(
+				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
+				array('key' => 'dataset_name', 'label' => lang('dataset'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'view_name', 'label' => lang('view'), 'sortable' => true, 'resizeable' => true)
+			);
+			
 			$tabletools_views[] = array
 				(
 				'my_name' => 'add',
@@ -233,18 +240,18 @@
 				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uireport.index',
 						'dataset' => '1', 'phpgw_return_as' => 'json'))),
-				'ColumnDefs' => $related_def,
+				'ColumnDefs' => $related_def_views,
 				'tabletools' => $tabletools_views,
 				'config' => array(
 					array('singleSelect' => true)
 				)
 			);
 			
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname;
 
 			$tabs = array();
 			$tabs['reports'] = array('label' => lang('reports'), 'link' => '#reports');
-			$tabs['views'] = array('label' => lang('views'), 'link' => '#views');
+			$tabs['views'] = array('label' => lang('datasets'), 'link' => '#views');
 			
 			$data = array
 				(
@@ -329,7 +336,7 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('report');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('report generator');
 
 			self::add_javascript('property', 'portico', 'report.edit.js');
 
@@ -351,7 +358,7 @@
 
 			if (!$dataset_id)
 			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a view name !'));
+				$this->receipt['error'][] = array('msg' => lang('Please select dataset name !'));
 			}
 			
 			if (!count($group))
@@ -361,7 +368,7 @@
 
 			if (!count($aggregate))
 			{
-				$this->receipt['error'][] = array('msg' => lang('Please enter a agregate !'));
+				$this->receipt['error'][] = array('msg' => lang('Please select an aggregate expression (count/sum) !'));
 			}
 			$values['report_definition']['group'] = $group;
 			$values['report_definition']['order'] = $order;
@@ -466,7 +473,7 @@
 			array_unshift($list, $default_value);
 			
 			$tabs = array();
-			$tabs['report'] = array('label' => lang('report'), 'link' => '#report');
+			$tabs['report'] = array('label' => lang('dataset'), 'link' => '#report');
 			$active_tab = 'report';
 			
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
@@ -484,7 +491,7 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('report');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('report generator');
 
 			self::add_javascript('property', 'portico', 'report.edit.js');
 
@@ -581,6 +588,8 @@
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 			$export = phpgw::get_var('export', 'bool');
+			
+			$dataset_id = phpgw::get_var('dataset_id', 'int');
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
@@ -589,6 +598,7 @@
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
 				'dir' => $order[0]['dir'],
+				'dataset_id' => $dataset_id,
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 			);
 
