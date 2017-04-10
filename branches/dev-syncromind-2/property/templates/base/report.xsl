@@ -23,9 +23,9 @@
 				<form name="form" class="pure-form pure-form-aligned" id="form" action="" method="post">								
 					<div class="pure-control-group">
 						<label for="vendor">
-							<xsl:value-of select="php:function('lang', 'views')" />
+							<xsl:value-of select="php:function('lang', 'datasets')" />
 						</label>
-						<select id="list_views" name="list_views">
+						<select id="list_dataset" name="list_dataset">
 							<xsl:apply-templates select="list_views/options"/>
 						</select>
 					</div>								
@@ -90,7 +90,7 @@
 					<input type="hidden" name="dataset_report_id" value="{dataset_report_id}"/>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'views')" />
+							<xsl:value-of select="php:function('lang', 'dataset')" />
 						</label>
 						<select id="cbo_dataset_id" name="dataset_id">
 							<xsl:apply-templates select="datasets/options"/>
