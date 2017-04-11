@@ -322,10 +322,10 @@ HTML;
 			{
 				$detected .= '<li class="warn">' . lang('No Postgres-DB support found. Disabling') . "</li>\n";
 			}
-			if (extension_loaded('mysql') || function_exists('mysql_connect'))
+			if (extension_loaded('mysqli'))
 			{
 				$detected .= '<li>' . lang('You appear to have MySQL support enabled') . "</li>\n";
-				$supported_db[] = 'mysql';
+//				$supported_db[] = 'mysql';
 			}
 			else
 			{
@@ -334,7 +334,7 @@ HTML;
 			if (extension_loaded('mssql') || function_exists('mssql_connect'))
 			{
 				$detected .= '<li>' . lang('You appear to have Microsoft SQL Server support enabled') . "</li>\n";
-				$supported_db[] = 'mssql';
+//				$supported_db[] = 'mssql';
 			}
 			else
 			{
@@ -343,14 +343,14 @@ HTML;
 			if (extension_loaded('oci8'))
 			{
 				$detected .= '<li>' . lang('You appear to have Oracle V8 (OCI) support enabled') . "</li>\n";
-				$supported_db[] = 'oracle';
+//				$supported_db[] = 'oracle';
 			}
 			else
 			{
 				if(extension_loaded('oracle'))
 				{
 					$detected .= '<li>' . lang('You appear to have Oracle support enabled') . "</li>\n";
-					$supported_db[] = 'oracle';
+//					$supported_db[] = 'oracle';
 				}
 				else
 				{
