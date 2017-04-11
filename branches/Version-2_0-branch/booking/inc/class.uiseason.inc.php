@@ -244,8 +244,8 @@
 			$season['cancel_link'] = self::link(array('menuaction' => 'booking.uiseason.show',
 					'id' => $season['id']));
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'date',phpgwapi_datetime::date_to_timestamp($season['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('to_', 'date', phpgwapi_datetime::date_to_timestamp($season['to_']));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Season Edit'), 'link' => '#season_new');
@@ -349,8 +349,8 @@
 				$boundary['to_'] = "{$to_arr[0]}:{$to_arr[1]}";
 			}
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time');
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time', $boundary['from_']);
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time', $boundary['to_']);
 
 			self::render_template('season_boundaries', array('boundary' => $boundary, 'boundaries' => $boundaries,
 				'season' => $season));
