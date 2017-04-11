@@ -65,7 +65,7 @@
 			}
 			else
 			{
-				$start_value = '';
+				$start_value = $dateformat == 'H:i' ? $value : '';
 			}
 			$this->_input_modern($name, $_type, $dateformat, $config, $start_value);
 			return "<input id='{$name}' type='text' value='{$value}' size='10' name='{$name}'/>";
@@ -98,13 +98,22 @@
 				$min_date .= ",maxDate:'{$config['max_date']}'";
 			}
 
+			$value = 'false';
 			if(!$start_value)
 			{
 				$start_value = 'new Date()';
 			}
 			else
 			{
-				$start_value = "new Date('{$start_value}')";
+				if($datepicker)
+				{
+					$start_value = "new Date('{$start_value}')";
+				}
+				else if($timepicker)
+				{
+					$value = $start_value ? "'{$start_value}'" : 'false';
+					$start_value = 'false';
+				}
 			}
 
 
@@ -121,6 +130,7 @@
 					datepicker:{$datepicker},
 					timepicker: {$timepicker},
 					step: 15,
+					value: {$value},
 					weeks: true,
 					dayOfWeekStart:1,
 //					mask:true,
