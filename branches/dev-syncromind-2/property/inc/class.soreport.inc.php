@@ -53,6 +53,7 @@
 					(
 					'id' => $this->db->f('id'),
 					'dataset_id' => $this->db->f('dataset_id'),
+					'report_name' => $this->db->f('report_name'),
 					'report_definition' => $this->db->f('report_definition')
 				);
 			}
@@ -76,25 +77,25 @@
 			}
 			else
 			{
-				$ordermethod = " ORDER BY id DESC";
+				$ordermethod = " ORDER BY a.id DESC";
 			}
 
 			$where = 'WHERE';
 
 			if ($dataset_id > 0)
 			{
-				$filtermethod .= " $where fm_view_dataset.id={$dataset_id}";
+				$filtermethod .= " $where a.dataset_id={$dataset_id}";
 				$where = 'AND';
 			}
 
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where ( fm_view_dataset.dataset_name {$this->like} '%$query%')";
+				$querymethod = " $where ( b.dataset_name {$this->like} '%$query%' OR a.report_name {$this->like} '%$query%')";
 			}
 
-			$sql = "SELECT fm_view_dataset_report.id, fm_view_dataset.dataset_name"
-				. " FROM fm_view_dataset_report {$this->join} fm_view_dataset ON fm_view_dataset_report.dataset_id = fm_view_dataset.id"
+			$sql = "SELECT a.id, a.report_name, b.dataset_name"
+				. " FROM fm_view_dataset_report a {$this->join} fm_view_dataset b ON a.dataset_id = b.id"
 				. " {$filtermethod} {$querymethod}";
 
 			$sql_count = 'SELECT count(fm_view_dataset_report.id) AS cnt FROM fm_view_dataset_report';
@@ -117,6 +118,7 @@
 				$values[] = array
 					(
 					'id' => $this->db->f('id'),
+					'report_name' => $this->db->f('report_name'),
 					'dataset_name' => $this->db->f('dataset_name')
 				);
 			}
@@ -326,6 +328,7 @@
 			$values_insert = array
 				(
 				'dataset_id' => $data['dataset_id'],
+				'report_name' => $data['report_name'],
 				'report_definition' => json_encode($data['report_definition']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
@@ -356,6 +359,7 @@
 			$value_set = array
 				(
 				'dataset_id' => $data['dataset_id'],
+				'report_name' => $data['report_name'],
 				'report_definition' => json_encode($data['report_definition']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
@@ -469,8 +473,8 @@
 
 			$this->db->transaction_begin();
 			
-			$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
 			$this->db->query("DELETE FROM fm_view_dataset_report WHERE dataset_id ='{$id}'", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
 
 			if ($this->db->transaction_commit())
 			{
