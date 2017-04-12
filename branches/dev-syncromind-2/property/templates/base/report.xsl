@@ -87,7 +87,13 @@
 			<div id="tab-content">					
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>						
 				<div id="report">
-					<input type="hidden" name="dataset_report_id" value="{dataset_report_id}"/>
+					<input type="hidden" name="report_id" value="{report_id}"/>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'report name')" />
+						</label>
+						<input type="text" name="report_name" value="{report_name}"></input>
+					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'dataset')" />
@@ -100,7 +106,7 @@
 								<xsl:value-of select="php:function('lang', 'get columns')" />
 							</xsl:attribute>
 						</input>										
-					</div>					
+					</div>	
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'Choose columns')" />
@@ -139,7 +145,7 @@
 				<xsl:variable name="cancel_action">
 					<xsl:value-of select="cancel_action"/>
 				</xsl:variable>
-				<input type="button" class="pure-button pure-button-primary" name="cancel"  onclick="location.href='{$cancel_action}'">
+				<input type="button" class="pure-button pure-button-primary" name="cancel" onclick="location.href='{$cancel_action}'">
 					<xsl:attribute name="value">
 						<xsl:value-of select="php:function('lang', 'cancel')" />
 					</xsl:attribute>
