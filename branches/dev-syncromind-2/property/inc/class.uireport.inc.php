@@ -175,7 +175,8 @@
 			$related_def = array
 				(
 				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
-				array('key' => 'dataset_name', 'label' => lang('Report'), 'sortable' => true, 'resizeable' => true)
+				array('key' => 'report_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'dataset_name', 'label' => lang('dataset'), 'sortable' => true, 'resizeable' => true)
 			);
 
 
@@ -194,7 +195,7 @@
 			$related_def_views = array
 				(
 				array('key' => 'id', 'label' => lang('ID'), 'sortable' => true, 'resizeable' => true, 'hidden' => true),
-				array('key' => 'dataset_name', 'label' => lang('dataset'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'dataset_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'view_name', 'label' => lang('view'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'n_reports', 'label' => lang('number of reports'), 'sortable' => true, 'resizeable' => true)
 			);
@@ -332,7 +333,8 @@
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
 				'datasets' => array('options' => $list),
 				'report_definition' => $values['report_definition'],
-				'dataset_report_id' => $values['id'],
+				'report_id' => $values['id'],
+				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
 			);
@@ -346,7 +348,8 @@
 		
 		private function _populate( $data = array() )
 		{
-			$dataset_report_id = phpgw::get_var('dataset_report_id');
+			$report_id = phpgw::get_var('report_id');
+			$report_name = phpgw::get_var('report_name');
 			$dataset_id = phpgw::get_var('dataset_id');
 			
 			$group = phpgw::get_var('group');
@@ -355,8 +358,13 @@
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
 			$txt_aggregate = phpgw::get_var('txt_aggregate');
 
-			$values['id'] = $dataset_report_id;
+			$values['id'] = $report_id;
 
+			if (!$report_name)
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please enter a report name !'));
+			}
+			
 			if (!$dataset_id)
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select dataset name !'));
@@ -371,6 +379,8 @@
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select an aggregate expression (count/sum) !'));
 			}
+			
+			$values['report_name'] = $report_name;
 			$values['report_definition']['group'] = $group;
 			$values['report_definition']['order'] = $order;
 			$values['report_definition']['aggregate'] = $aggregate;
