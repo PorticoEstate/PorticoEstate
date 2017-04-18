@@ -118,7 +118,7 @@ function build_list_aggregates(name, type)
 
 function build_text_aggregates(name)
 {
-	return "<span style='display:table-cell;'>As <input disabled='true' type='text' id='txt_" + name + "' name='txt_aggregate["+ name +"]'/></span>";
+	return "<span style='display:table-cell;'>As <input disabled='true' data-validation='required' type='text' id='txt_" + name + "' name='txt_aggregate["+ name +"]'/></span>";
 }
 
 function enabled_disabled_aggregates(name)
