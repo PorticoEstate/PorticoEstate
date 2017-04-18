@@ -576,7 +576,7 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->_unmarshal($this->db->f($key, false), 'int');
-								if(!isset($results[$id_map[$id]][$field]))
+								if(empty($results[$id_map[$id]][$field]))
 								{
 									$results[$id_map[$id]][$field] = array();
 								}
@@ -607,7 +607,7 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->_unmarshal($this->db->f($key, false), 'int');
-								if(!isset($results[$id_map[$id]][$field]))
+								if(empty($results[$id_map[$id]][$field]))
 								{
 									$results[$id_map[$id]][$field] = array();
 								}
