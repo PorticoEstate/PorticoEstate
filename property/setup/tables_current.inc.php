@@ -2848,5 +2848,32 @@
 					'contact_id' => 'contact_id')),
 			'ix' => array(),
 			'uc' => array('contact_id', 'location_code')
+		),
+		'fm_view_dataset' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'view_name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
+				'dataset_name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_view_dataset_report' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'dataset_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'report_name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
+				'report_definition' => array('type' => 'jsonb', 'nullable' => true),
+				'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_view_dataset' => array('dataset_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
