@@ -210,6 +210,14 @@
 
 					break;
 				
+				case 'print':
+					$load = array
+						(
+						"print/jQuery.print"
+					);
+
+					break;
+				
 				case 'file-upload':
 					$load = array
 						(
