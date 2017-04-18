@@ -576,7 +576,10 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->_unmarshal($this->db->f($key, false), 'int');
-								$results[$id_map[$id]][$field] = array();
+								if(!isset($results[$id_map[$id]][$field]))
+								{
+									$results[$id_map[$id]][$field] = array();
+								}
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{
