@@ -336,7 +336,8 @@
 				'report_id' => $values['id'],
 				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'validator' => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . lang('report generator');
