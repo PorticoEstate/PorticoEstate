@@ -78,7 +78,6 @@
 		var jsonB = <xsl:value-of select="report_definition"/>;
 	</script>
 	<div id="document_edit_tabview">
-		<xsl:value-of select="validator"/>
 		
 		<xsl:variable name="form_action">
 			<xsl:value-of select="form_action"/>
@@ -92,7 +91,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'report name')" />
 						</label>
-						<input type="text" name="report_name" value="{report_name}"></input>
+						<input type="text" data-validation="required" name="report_name" value="{report_name}"></input>
 					</div>
 					<div class="pure-control-group">
 						<label>
