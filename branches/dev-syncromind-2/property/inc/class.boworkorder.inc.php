@@ -135,6 +135,12 @@
 				'name' => lang('accounting dim b'),
 				'sortable' => true
 			);
+			$columns['service_id'] = array
+				(
+				'id' => 'service_id',
+				'name' => lang('service'),
+				'sortable' => true
+			);
 			$columns['entry_date'] = array
 				(
 				'id' => 'entry_date',

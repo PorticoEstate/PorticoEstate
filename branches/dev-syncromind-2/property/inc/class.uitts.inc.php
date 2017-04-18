@@ -263,7 +263,7 @@
 				$content = file_get_contents($file);
 
 				$browser = CreateObject('phpgwapi.browser');
-				$browser->content_header($document['name'], '', $size);
+				$browser->content_header($file_name, '', $size);
 				echo $content;
 			}
 

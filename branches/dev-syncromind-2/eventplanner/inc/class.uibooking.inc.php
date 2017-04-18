@@ -44,8 +44,6 @@
 			'edit' => true,
 			'save' => true,
 			'save_ajax' => true,
-			'update_active_status' => true,
-			'update_schedule'		=> true
 		);
 		protected
 			$fields,
@@ -125,7 +123,7 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array
+/*			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
@@ -135,7 +133,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -147,7 +145,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'booking.index.js');
+			self::add_javascript($this->currentapp, 'portico', 'booking.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -172,7 +170,17 @@
 			else
 			{
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
+				$calendar_id = phpgw::get_var('calendar_id', 'int');
+				if(!$id && $calendar_id)
+				{
+					$id = $this->bo->get_booking_id_from_calendar($calendar_id);
+				}
 				$booking = $this->bo->read_single($id);
+			}
+
+			if(!$calendar_id)
+			{
+				$calendar_id = $booking->calendar_id;
 			}
 
 			$tabs = array();
@@ -279,13 +287,9 @@
 				)
 			);
 
-			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
+			$calendar = createObject('eventplanner.bocalendar')->read_single($calendar_id, true, $relaxe_acl = true);
 
-//			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $booking->from_, array(
-//					'min_date' => date('Y/m/d', $application->date_start),
-//					'max_date' => date('Y/m/d', $application->date_end)
-//				)
-//			);
+			$application = createObject('eventplanner.boapplication')->read_single($calendar->application_id, true, $relaxe_acl = true);
 
 			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
 			$types = (array)$application->types;
@@ -304,22 +308,24 @@
 				}
 			}
 
-			
-			
-			
-			$application_url = self::link(array('menuaction' => "{$this->currentapp}.uiapplication.edit", 'id' => $booking->application_id));
+			$application_url = self::link(array('menuaction' => "{$this->currentapp}.uiapplication.edit", 'id' => $calendar->application_id));
 			$lang_application = lang('application');
 			if($this->currentapp == 'eventplannerfrontend')
 			{
-				$application_url = self::link(array('menuaction' => "{$this->currentapp}.uievents.edit", 'id' => $booking->application_id));
+				$application_url = self::link(array('menuaction' => "{$this->currentapp}.uievents.edit", 'id' => $calendar->application_id));
 				$lang_application = lang('event');
 			}
 
+			if($booking->customer_id && !$booking->customer_name)
+			{
+				$booking->customer_name = createObject('eventplanner.bocustomer')->read_single($booking->customer_id)->name;
+			}
 
 			$data = array(
 				'datatable_def' => $datatable_def,
-				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uibooking.save")),
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uibooking.save", 'calendar_id' => $calendar_id)),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uibooking.index",)),
+				'calendar'	=>$calendar,
 				'booking' => $booking,
 				'application' => $application,
 				'application_type_list' => $application_type_list,
@@ -345,53 +351,5 @@
 		public function save_ajax()
 		{
 			return parent::save(true);
-		}
-
-		public function update_active_status()
-		{
-			$ids = phpgw::get_var('ids', 'int');
-			$action = phpgw::get_var('action', 'string');
-
-			if ($this->bo->update_active_status($ids, $action))
-			{
-				return array(
-					'status_kode' => 'ok',
-					'status' => lang('ok'),
-					'msg' => lang('messages_saved_form')
-				);
-			}
-			else
-			{
-				$messages = phpgwapi_cache::message_get(true);
-				return array(
-					'status_kode' => 'error',
-					'status' => lang('error'),
-					'msg' => $messages ? $messages : lang('did not validate')
-				);
-			}
-		}
-
-		public function update_schedule( )
-		{
-			$id = phpgw::get_var('id', 'int');
-			$from_ = phpgw::get_var('from_', 'date');
-			if ($this->bo->update_schedule($id, $from_))
-			{
-				return array(
-					'status_kode' => 'ok',
-					'status' => lang('ok'),
-					'msg' => lang('messages_saved_form')
-				);
-			}
-			else
-			{
-				return array
-				(
-					'status_kode' => 'error',
-					'status' => lang('error'),
-					'msg' => lang('messages_form_error')
-				);
-			}
-
 		}
 	}

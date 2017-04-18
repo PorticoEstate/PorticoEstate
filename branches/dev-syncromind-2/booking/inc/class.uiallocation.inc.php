@@ -297,6 +297,15 @@
 				$allocation['active'] = '1';
 				$allocation['completed'] = '0';
 
+				$weekday = phpgw::get_var('weekday', 'string', 'POST');
+
+				if(!$weekday)
+				{
+					$weekday = strtolower (date('l', phpgwapi_datetime::date_to_timestamp($_POST['from_'])));
+				}
+
+				$_POST['weekday'] = $weekday;
+
 				$from_date = $_POST['from_'];
 				$to_date = $_POST['to_'];
 				$from_date_arr = explode(' ', $_POST['from_']);
@@ -304,34 +313,35 @@
 				if(count($from_date_arr) == 2)
 				{
 					$from_time = $from_date_arr[1];
-					$to_time = $to_date_arr[1];
+					if(count($to_date_arr) == 2)
+					{
+						$to_time = $to_date_arr[1];
+					}
+					else
+					{
+						$to_time = $to_date_arr[0];
+					}
+
+					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $from_time));
+					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", phpgwapi_datetime::date_to_timestamp($from_date_arr[0] . " " . $to_time));
 				}
 				else
 				{
 					$from_time = $_POST['from_'];
 					$to_time = $_POST['to_'];
-				}
+					$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $from_time));
+					$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $to_time));
 
-				if(!isset($_POST['weekday']))
-				{
-					$_POST['weekday'] = strtolower (date('l', phpgwapi_datetime::date_to_timestamp($_POST['from_'])));
-				}
-
-				$weekday = $_POST['weekday'];
-
-//				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
-//				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
-				$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $from_time));
-				$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $to_time));
-
-				if (($_POST['weekday'] != 'sunday' && date('w') > date('w', strtotime($_POST['weekday']))) || (date('w') == '0' && date('w') < date('w', strtotime($_POST['weekday']))))
-				{
-					if (!phpgw::get_var('weekday', 'string', 'POST'))
+					if (($weekday != 'sunday' && date('w') > date('w', strtotime($weekday))) || (date('w') == '0' && date('w') < date('w', strtotime($weekday))))
 					{
-						$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $from_date_arr[1]) - 60 * 60 * 24 * 7);
-						$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($_POST['weekday'] . " " . $to_date_arr[1]) - 60 * 60 * 24 * 7);
+						if (!phpgw::get_var('weekday', 'string', 'POST'))
+						{
+							$allocation['from_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $from_date_arr[1]) - 60 * 60 * 24 * 7);
+							$allocation['to_'] = strftime("%Y-%m-%d %H:%M", strtotime($weekday . " " . $to_date_arr[1]) - 60 * 60 * 24 * 7);
+						}
 					}
 				}
+
 				$_POST['from_'] = $allocation['from_'];
 				$_POST['to_'] = $allocation['to_'];
 
@@ -409,19 +419,25 @@
 			}
 			else
 			{
-				$dateTimeFrom = phpgw::get_var('from_', 'string', 'POST');
-				$dateTimeTo = phpgw::get_var('to_', 'string', 'POST');
-				$dateTimeFromE = explode(" ", $dateTimeFrom[0]);
-				$dateTimeToE = explode(" ", $dateTimeTo[0]);
-				if (phpgw::get_var('from_', 'string') < 14)
+				$dateformat =  phpgw::get_var('dateformat', 'string');
+				$dateTimeFrom = phpgw::get_var('from_', 'string');
+				$dateTimeTo = phpgw::get_var('to_', 'string');
+				if(is_array($dateTimeFrom))
 				{
-					$timeFrom[] = phpgw::get_var('from_', 'string', 'POST');
-					$timeTo[] = phpgw::get_var('to_', 'string', 'POST');
+					$dateTimeFrom = $dateTimeFrom[0];
+					$dateTimeTo = $dateTimeTo[0];
+				}
+				$dateTimeFromE = explode(" ", $dateTimeFrom);
+				$dateTimeToE = explode(" ", $dateTimeTo);
+				if ($dateTimeFrom < 14)
+				{
+					$timeFrom = $dateTimeFrom;
+					$timeTo = $dateTimeTo;
 				}
 				else
 				{
-					$timeFrom[] = $dateTimeFromE[1];
-					$timeTo[] = $dateTimeToE[1];
+					$timeFrom = $dateTimeFromE[1];
+					$timeTo = $dateTimeToE[1];
 				}
 
 				array_set_default($allocation, 'resources', array(phpgw::get_var('resource', 'int')));
@@ -429,7 +445,7 @@
 				array_set_default($allocation, 'building_name', phpgw::get_var('building_name', 'string'));
 				array_set_default($allocation, 'from_', $timeFrom);
 				array_set_default($allocation, 'to_', $timeTo);
-				$weekday = phpgw::get_var('weekday', 'string', 'POST');
+				$weekday = phpgw::get_var('weekday', 'string');
 			}
 
 			$this->flash_form_errors($errors);
@@ -438,24 +454,39 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time');
+//			$_timeFrom = $timeFrom ? $timeFrom : '';
+			$_timeTo = $timeTo ? $timeTo : '';
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
 			$active_tab = 'generic';
 
 			$allocation['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$allocation['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'));
+			$allocation['validator'] = phpgwapi_jquery::formvalidator_generate(array('date', 'security'));
 
 			if ($step < 2)
 			{
+				if($dateformat == 'Y-m-d' && $_SERVER['REQUEST_METHOD'] == 'GET')
+				{
+					$allocation['from_'] = date("{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i",strtotime($dateTimeFrom));
+					$_timeFrom = strtotime($dateTimeFrom);
+				}
+				else
+				{
+					$allocation['from_'] = $dateTimeFrom;
+					$_timeFrom = phpgwapi_datetime::date_to_timestamp($dateTimeFrom);
+				}
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' && $errors)
 				{
-					$allocation['from_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
-					$allocation['to_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
+	//				$allocation['from_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
+	//				$allocation['to_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
+	//				$_timeFrom = $allocation['from_'];
+	//				$_timeTo = $allocation['to_'];
 				}
+
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time', $_timeTo);
+
 				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
 					'step' => $step,
 					'interval' => $_POST['field_interval'],

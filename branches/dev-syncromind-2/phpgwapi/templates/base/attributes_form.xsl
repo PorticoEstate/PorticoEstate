@@ -389,7 +389,7 @@
 								</xsl:when>
 							</xsl:choose>
 						</input>
-						<input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}">
+						<input id="{$custom_name}" name="{$custom_name}" type="text" value="{custom_name}" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">

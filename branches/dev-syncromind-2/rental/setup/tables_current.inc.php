@@ -240,8 +240,18 @@
 				'location_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'result_unit_number' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'org_enhet_id' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
-				'unit_leader' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true)
+				'unit_leader' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+//				'organization_number' => array('type' => 'varchar', 'precision' => '9','nullable' => True),
 			),
+/**
+ *
+1.       Kundenr.
+2.       Org.nr.
+3.       Ansattnr.
+4.       Født nr. (dd.mm.åååå)
+5.       Koststed (fire siffer)
+
+ */
 			'pk' => array('id'),
 			'fk' => array(),
 			'ix' => array(),
@@ -298,7 +308,8 @@
 				'date_start' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'date_end' => array('type' => 'int', 'precision' => '8', 'nullable' => true),
 				'is_billed' => array('type' => 'bool', 'nullable' => false, 'default' => 'false'),
-				'is_one_time' => array('type' => 'bool', 'nullable' => true, 'default' => 'false')
+				'is_one_time' => array('type' => 'bool', 'nullable' => true, 'default' => 'false'),
+				'billing_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(

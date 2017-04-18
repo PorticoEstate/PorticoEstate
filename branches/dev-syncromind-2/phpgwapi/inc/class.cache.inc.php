@@ -143,11 +143,11 @@
 		 * Prepares a value for storage - all values must  be run through here before caching
 		 *
 		 * @param mixed the value to store
+		 * @param bool $bypass to skip encryption
 		 * @return value to store as a string
 		 */
-		protected static function _value_prepare($value, $bypass = false)
+		protected static function _value_prepare($value, $bypass = true)
 		{
-		//	return $GLOBALS['phpgw']->crypto->encrypt(serialize($value));
 			return $GLOBALS['phpgw']->crypto->encrypt($value, $bypass);
 		}
 
@@ -155,9 +155,10 @@
 		 * Returns a value is a usable form - all values must be run through here before returning to the user
 		 *
 		 * @param string $str the string to process
+		 * @param bool $bypass to skip encryption
 		 * @return mixed the unserialized string
 		 */
-		protected static function _value_return($str, $bypass = false)
+		protected static function _value_return($str, $bypass = true)
 		{
 			if ( is_null($str) )
 			{
@@ -247,7 +248,7 @@
 		 * @param string $id the internal module id for the data
 		 * @return mixed the data from system wide cache
 		 */
-		public static function system_get($module, $id, $bypass = false, $compress = false)
+		public static function system_get($module, $id, $bypass = true, $compress = false)
 		{
 			$key = self::_gen_key($module, $id);
 
@@ -284,7 +285,7 @@
 		 * @param mixed $data the data to store
 		 * @return bool was the data stored in the system wide cache?
 		 */
-		public static function system_set($module, $id, $value, $bypass = false, $compress = false)
+		public static function system_set($module, $id, $value, $bypass = true, $compress = false)
 		{
 			$key = self::_gen_key($module, $id);
 			$value = self::_value_prepare($value, $bypass);

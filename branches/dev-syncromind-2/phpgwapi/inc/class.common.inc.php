@@ -35,6 +35,14 @@
 		*/
 		public $output = array();
 
+		protected $webserver_url;
+
+		public function __construct()
+		{
+			$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			$this->webserver_url = $webserver_url;
+		}
+
 		/**
 		* This function compares for major versions only
 		*
@@ -792,11 +800,11 @@ HTML;
 
 			if ($this->is_image_dir($imagedir))
 			{
-				return $GLOBALS['phpgw_info']['server']['webserver_url'].'/'.$appname.'/templates/'.$GLOBALS['phpgw_info']['server']['template_set'].'/images';
+				return $this->webserver_url.'/'.$appname.'/templates/'.$GLOBALS['phpgw_info']['server']['template_set'].'/images';
 			}
 			elseif ($this->is_image_dir ($imagedir_default))
 			{
-				return $GLOBALS['phpgw_info']['server']['webserver_url'].'/'.$appname.'/templates/base/images';
+				return $this->webserver_url.'/'.$appname.'/templates/base/images';
 			}
 			else
 			{
@@ -814,6 +822,13 @@ HTML;
 		*/
 		public static function find_image($module, $image)
 		{
+			static $webserver_url = null;
+
+			if(!$webserver_url)
+			{
+				$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+			}
+
 			static $found_files = null;
 			if ( !isset($found_files[$module]) || is_array($found_files[$module]) )
 			{
@@ -852,7 +867,7 @@ HTML;
 				{
 					if ( isset($found_files[$module]["{$image}{$ext}"]) )
 					{
-						return "{$GLOBALS['phpgw_info']['server']['webserver_url']}{$found_files[$module]["{$image}{$ext}"]}/{$image}{$ext}";
+						return "{$webserver_url}{$found_files[$module]["{$image}{$ext}"]}/{$image}{$ext}";
 					}
 				}
 			}
@@ -1591,7 +1606,7 @@ HTML;
 		//	$prev_helper = $GLOBALS['phpgw']->translation->translator_helper;
 		//	$GLOBALS['phpgw']->translation->translator_helper = '';
 
-			$data = '';
+			$data = array();
 			if (is_array($text))
 			{
 				foreach($text as $key => $value)

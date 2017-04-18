@@ -212,6 +212,7 @@
 						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
+						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
 					</div>
 
 				</fieldset>
@@ -287,7 +288,7 @@
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="value_id"/>
 						</label>
-						<input type="text" name="values[subject]" value="{value_subject}">
+						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
@@ -502,7 +503,7 @@
 								</label>
 							</xsl:otherwise>
 						</xsl:choose>
-						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]">
+						<textarea cols="{textareacols}" rows="{textarearows}" id="new_note" name="values[note]" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'add new comments')"/>
 							</xsl:attribute>

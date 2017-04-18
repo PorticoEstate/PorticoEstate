@@ -36,6 +36,8 @@
 		public function __construct()
 		{
 			parent::__construct('eventplanner_booking', eventplanner_booking::get_fields());
+			$this->acl_location = eventplanner_booking::acl_location;
+			$this->use_acl = true;
 		}
 
 		/**
@@ -52,6 +54,37 @@
 			return self::$so;
 		}
 
+		function get_acl_condition( )
+		{
+			if($this->relaxe_acl)
+			{
+				return;
+			}
+
+			$acl_condition = parent::get_acl_condition();
+
+			$sql = "SELECT object_id, permission FROM eventplanner_permission WHERE subject_id = {$this->account}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$object_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$permission = $this->db->f('permission');
+				if($permission & PHPGW_ACL_READ)
+				{
+					$object_ids[] = $this->db->f('object_id');
+				}
+			}
+
+			if($acl_condition)
+			{
+				return '(' . $acl_condition . ' OR eventplanner_booking.customer_id IN (' . implode(',', $object_ids) . '))';
+			}
+			else
+			{
+				return 'eventplanner_booking.customer_id IN (' . implode(',', $object_ids) . ')';
+			}
+
+		}
 
 		protected function populate( array $data )
 		{
@@ -76,11 +109,6 @@
 
 		protected function update_history( $object, $fields )
 		{
-	//		$status_text = eventplanner_booking::get_status_list();
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-			$lang_active = lang('active');
-			$lang_inactive = lang('inactive');
-
 			$original = $this->read_single($object->get_id());//returned as array()
 			foreach ($fields as $field => $params)
 			{
@@ -89,29 +117,6 @@
 				if (!empty($params['history']) && $new_value && $old_value && ($new_value != $old_value))
 				{
 					$label = !empty($params['label']) ? lang($params['label']) : $field;
-					switch ($field)
-					{
-						case 'status':
-							$old_value = $status_text[$old_value];
-							$new_value = $status_text[$new_value];
-							break;
-						case 'active':
-							$old_value = $old_value ? $lang_active : $lang_inactive;
-							$new_value = $new_value ? $lang_active : $lang_inactive;
-							break;
-						case 'from_':
-						case 'to_':
-							if(($old_value + phpgwapi_datetime::user_timezone()) == $new_value)
-							{
-								continue;
-							}
-
-							$old_value = $GLOBALS['phpgw']->common->show_date($old_value);
-							$new_value = $GLOBALS['phpgw']->common->show_date($new_value);
-							break;
-						default:
-							break;
-					}
 					$value_set = array
 					(
 						'booking_id'	=> $object->get_id(),
@@ -128,41 +133,11 @@
 			}
 		}
 
-		public function update_active_status($ids, $action )
+		public function get_booking_id_from_calendar( $calendar_id )
 		{
-			if(!$ids || !is_array($ids))
-			{
-				return;
-			}
-
-			switch ($action)
-			{
-				case 'disable':
-					$sql = "UPDATE eventplanner_booking SET active = 0";
-					$where = 'WHERE';
-
-					break;
-				case 'enable':
-					$sql = "UPDATE eventplanner_booking SET active = 1";
-					$where = 'WHERE';
-					break;
-
-				case 'delete':
-					$sql = "DELETE FROM eventplanner_booking WHERE customer_id IS NULL";
-					$where = 'AND';
-					break;
-
-				default:
-					throw new Exception("action {$action} not supported");
-					break;
-			}
-
-			$sql .= " {$where} id IN(". implode(',', $ids) . ')';
-			$this->db->transaction_begin();
-			
+			$sql = "SELECT id FROM eventplanner_booking WHERE calendar_id = " . (int) $calendar_id;
 			$this->db->query($sql,__LINE__,__FILE__);
-
-
-			return	$this->db->transaction_commit();
+			$this->db->next_record();
+			return (int) $this->db->f('id');
 		}
 	}

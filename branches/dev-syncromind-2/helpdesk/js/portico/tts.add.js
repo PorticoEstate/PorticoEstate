@@ -35,9 +35,9 @@ this.confirm_session = function (action)
 				else
 				{
 					document.getElementById(action).value = 1;
-					var canvas = document.getElementById("my_canvas");
-					var image_data = canvas.toDataURL('image/png');
-					$('#pasted_image').val(image_data);
+//					var canvas = document.getElementById("my_canvas");
+//					var image_data = canvas.toDataURL('image/png');
+//					$('#pasted_image').val(image_data);
 
 					try
 					{
@@ -83,6 +83,10 @@ $.formUtils.addValidator({
 
 upload_canvas = function ()
 {
+	var canvas = document.getElementById("my_canvas");
+	var image_data = canvas.toDataURL('image/png');
+	$('#pasted_image').val(image_data);
+	$('#pasted_image_is_blank').val(0);
 	confirm_session('apply');
 }
 

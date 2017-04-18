@@ -340,7 +340,7 @@
 			return $values;
 		}
 
-		abstract function get_location_info( $type, $type_id );
+		abstract function get_location_info( $type, $type_id = 0 );
 
 		public function get_name( $data )
 		{

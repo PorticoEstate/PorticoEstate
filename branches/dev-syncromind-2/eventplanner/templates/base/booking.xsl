@@ -76,13 +76,13 @@
 				</div>
 				<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 				<div id="first_tab">
+					<input type="hidden" name="calendar_id" value="{calendar/id}"/>
 					<xsl:if test="booking/id > 0">
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'id')"/>
 							</label>
 							<input type="hidden" id="booking_id" name="id" value="{booking/id}"/>
-							<input type="hidden" name="application_id" value="{booking/application_id}"/>
 							<xsl:value-of select="booking/id"/>
 						</div>
 					</xsl:if>
@@ -103,7 +103,7 @@
 								</a>
 
 							</label>
-							<xsl:value-of select="booking/application_name"/>
+							<xsl:value-of select="calendar/application_name"/>
 						</div>
 
 						<div class="pure-control-group">
@@ -274,7 +274,7 @@
 								<xsl:value-of select="php:function('lang', 'active')"/>
 							</label>
 							<input type="checkbox" name="active" id="active" value="1" readonly="readonly">
-								<xsl:if test="booking/active = 1">
+								<xsl:if test="calendar/active = 1">
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
 							</input>
@@ -284,7 +284,7 @@
 								<xsl:value-of select="php:function('lang', 'completed')"/>
 							</label>
 							<input type="checkbox" name="completed" id="completed" value="1">
-								<xsl:if test="booking/completed = 1">
+								<xsl:if test="calendar/completed = 1">
 									<xsl:attribute name="checked" value="checked"/>
 								</xsl:if>
 							</input>
@@ -298,9 +298,9 @@
 								<xsl:value-of select="$lang_from"/>
 							</label>
 							<input type="text" id="from_" name="from_" size="16" readonly="readonly">
-								<xsl:if test="booking/from_ != 0 and booking/from_ != ''">
+								<xsl:if test="calendar/from_ != 0 and calendar/from_ != ''">
 									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('show_date', number(booking/from_), $date_format)"/>
+										<xsl:value-of select="php:function('show_date', number(calendar/from_), $date_format)"/>
 									</xsl:attribute>
 								</xsl:if>
 								<xsl:attribute name="data-validation">
@@ -322,7 +322,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'to')"/>
 							</label>
-							<xsl:value-of select="php:function('show_date', number(booking/to_), $date_format)"/>
+							<xsl:value-of select="php:function('show_date', number(calendar/to_), $date_format)"/>
 						</div>
 						
 						<div class="pure-control-group">
@@ -336,14 +336,14 @@
 								<xsl:value-of select="booking/location"/>
 							</textarea>
 						</div>
-						<div class="pure-control-group">
+						<!--div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
 								<xsl:value-of select="booking/remark"/>
 							</textarea>
-						</div>
+						</div-->
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'comment')"/>
@@ -463,7 +463,7 @@
 				<xsl:variable name="cancel_url">
 					<xsl:value-of select="cancel_url"/>
 				</xsl:variable>
-				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onMouseout="window.status='';return true;" onClick="window.location = '{cancel_url}';"/>
+				<input type="button" class="pure-button pure-button-primary" name="cancel" value="{lang_cancel}" onClick="window.location = '{cancel_url}';"/>
 			</div>
 		</form>
 	</div>

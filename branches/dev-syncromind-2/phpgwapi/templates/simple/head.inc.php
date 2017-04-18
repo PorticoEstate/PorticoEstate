@@ -8,6 +8,7 @@
 	* @version $Id$
 	*/
 
+	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
 	if ( !isset($GLOBALS['phpgw_info']['server']['site_title']) )
 	{
@@ -35,37 +36,37 @@
 			"/phpgwapi/templates/portico/js/base.js"
 		);
 
-		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/base.css";
+		$stylesheets[] = "/phpgwapi/templates/simple/css/base.css";
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . '/phpgwapi/templates/simple/css/' . $GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] . '.css'))
 	{
-		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "/phpgwapi/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 	else
 	{
-		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/simple/css/simple.css";
+		$stylesheets[] = "/phpgwapi/templates/simple/css/simple.css";
 		$GLOBALS['phpgw_info']['user']['preferences']['common']['theme'] = 'simple';
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/base/css/base.css"))
 	{
-		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/base/css/base.css";
+		$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/simple/css/base.css"))
 	{
-		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/simple/css/base.css";
+		$stylesheets[] = "/{$app}/templates/simple/css/base.css";
 	}
 
 	if(file_exists(PHPGW_SERVER_ROOT . "/{$app}/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css"))
 	{
-		$stylesheets[] = "{$GLOBALS['phpgw_info']['server']['webserver_url']}/{$app}/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
+		$stylesheets[] = "/{$app}/templates/simple/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
 
 	foreach ( $stylesheets as $style )
 	{
-		$tpl->set_var('theme_style', $style);
+		$tpl->set_var('theme_style', $webserver_url . $style);
 		$tpl->parse('theme_stylesheets', 'theme_stylesheet', true);
 	}
 

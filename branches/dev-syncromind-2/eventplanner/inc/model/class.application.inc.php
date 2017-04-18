@@ -170,6 +170,7 @@
 					'type' => 'string',
 					'label' => 'title',
 					'sortable' => false,
+					'query' => true,
 					),
 			 	'description' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
@@ -395,6 +396,10 @@
 					$fields[$key] = $field_info;
 				}
 			}
+			else
+			{
+				$fields['status'] = true;
+			}
 
 
 			if($debug)
@@ -416,6 +421,13 @@
 		 */
 		protected function preValidate( &$entity )
 		{
+
+			if($entity->date_start && $entity->date_start >  $entity->date_end)
+			{
+				$entity->date_end = $entity->date_start;
+				phpgwapi_cache::message_set(lang('End date cannot be before start date'), 'error');
+			}
+
 			if (!empty($entity->comment))
 			{
 				$entity->comment_input = array(

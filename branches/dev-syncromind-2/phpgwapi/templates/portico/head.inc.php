@@ -6,6 +6,8 @@
 		$GLOBALS['phpgw_info']['server']['site_title'] = lang('please set a site name in admin &gt; siteconfig');
 	}
 
+	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
@@ -73,7 +75,7 @@
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
+			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet );
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
@@ -82,7 +84,7 @@
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $javascript );
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript );
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
@@ -151,7 +153,7 @@ HTML;
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
+		'webserver_url'	=> $webserver_url,
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'border_layout_config' => $_border_layout_config,
 		'navbar_config' => $_navbar_config,

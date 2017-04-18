@@ -67,7 +67,7 @@ var project_link = function (key, oData)
 	}
 };
 
-function sum_columns_table_orders()
+this.local_DrawCallback1 = function ()
 {
 	var api = oTable1.api();
 	// Remove the formatting to get integer data for summation
@@ -95,7 +95,7 @@ function sum_columns_table_orders()
 	});
 }
 
-function sum_columns_table_invoice()
+this.local_DrawCallback2 = function ()
 {
 	var api = oTable2.api();
 	// Remove the formatting to get integer data for summation
@@ -180,17 +180,17 @@ $(document).ready(function ()
 		JqueryPortico.updateinlineTableHelper(oTable2, requestUrl2);
 	});
 
-	if (typeof (oTable1) !== 'undefined')
-	{
-		var api1 = oTable1.api();
-		api1.on('draw', sum_columns_table_orders);
-	}
+//	if (typeof (oTable1) !== 'undefined')
+//	{
+//		var api1 = oTable1.api();
+//		api1.on('draw', sum_columns_table_orders);
+//	}
 
-	if (typeof (oTable2) !== 'undefined')
-	{
-		var api2 = oTable2.api();
-		api2.on('draw', sum_columns_table_invoice);
-	}
+//	if (typeof (oTable2) !== 'undefined')
+//	{
+//		var api2 = oTable2.api();
+//		api2.on('draw', sum_columns_table_invoice);
+//	}
 
 
 // -- buttons--//

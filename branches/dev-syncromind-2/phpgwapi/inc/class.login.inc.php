@@ -56,7 +56,7 @@
 			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 
 			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
-			$partial_url		 = "{$frontend}/login.php";
+			$partial_url		 = ltrim("{$frontend}/login.php", '/');
 			$phpgw_url_for_sso	 = 'phpgwapi/inc/sso/login_server.php';
 
 			if (isset($GLOBALS['phpgw_remote_user']) && !empty($GLOBALS['phpgw_remote_user']))
@@ -132,7 +132,8 @@
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'ntlm' && isset($_SERVER['REMOTE_USER']) && (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
 			{
-				$login	 = $_SERVER['REMOTE_USER'];
+				$remote_user = explode('@', $_SERVER['REMOTE_USER']);
+				$login   = $remote_user[0];//$_SERVER['REMOTE_USER'];
 				$passwd	 = '';
 
 				$GLOBALS['hook_values'] = array

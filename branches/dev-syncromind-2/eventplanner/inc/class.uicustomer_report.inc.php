@@ -131,7 +131,7 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array
+/*			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
@@ -141,7 +141,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -153,7 +153,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'customer_report.index.js');
+			self::add_javascript($this->currentapp, 'portico', 'customer_report.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -250,7 +250,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-		//	self::add_javascript('eventplanner', 'portico', 'customer_report.edit.js');
+		//	self::add_javascript($this->currentapp, 'portico', 'customer_report.edit.js');
 			self::render_template_xsl(array('report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 

@@ -175,7 +175,7 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array
+/*			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
@@ -185,7 +185,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -197,7 +197,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplannerfrontend', 'portico', 'application.index.js');
+			self::add_javascript($this->currentapp, 'portico', 'application.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -225,6 +225,20 @@
 				$id = !empty($values['id']) ? $values['id'] : phpgw::get_var('id', 'int');
 				$application = $this->bo->read_single($id);
 			}
+
+
+			$vendor_id = phpgw::get_var('vendor_id', 'int');
+
+			if($vendor_id && !$application->vendor_id)
+			{
+				$vendor = createObject('eventplanner.bovendor')->read_single($vendor_id);
+				$application->vendor_id = $vendor_id;
+				$application->vendor_name = $vendor->name;
+				$application->contact_name = $vendor->contact_name;
+				$application->contact_email = $vendor->contact_email;
+				$application->contact_phone = $vendor->contact_phone;
+			}
+
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 			$default_category = !empty($config['default_application_category']) ? $config['default_application_category'] : null;
 
@@ -301,7 +315,7 @@
 					'type' => 'custom',
 					'className' => 'add',
 					'custom_code' => "
-								add_booking();"
+								add_schedule();"
 				),
 				array('my_name' => 'select_all'),
 				array('my_name' => 'select_none'),
@@ -332,14 +346,22 @@
 					'type' => 'custom',
 					'custom_code' => "
 								onActionsClick('edit');"
+				),
+				array(
+					'my_name' => 'disconnect',
+					'text' => lang('disconnect'),
+					'type' => 'custom',
+					'custom_code' => "
+								onActionsClick('disconnect');"
 				)
 			);
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query_relaxed",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicalendar.query_relaxed",
 					'filter_application_id' => $id,
 					'filter_active'	=> 1,
+					'redirect'	=> 'booking',
 					'phpgw_return_as' => 'json'))),
 				'tabletools' => $tabletools,
 				'ColumnDefs' => $dates_def,
@@ -406,7 +428,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('eventplanner', 'portico', 'application.edit.js');
+			self::add_javascript($this->currentapp, 'portico', 'application.edit.js');
 			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}
 

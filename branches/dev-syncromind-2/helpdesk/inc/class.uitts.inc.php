@@ -1168,9 +1168,7 @@ JS;
 							$bofiles->vfs->override_acl = 0;
 						}
 					}
-					if($_POST['pasted_image'] &&
-						$_POST['pasted_image'] !='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAAPklEQVR4nO3BMQEAAADCoPVPbQsvoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgKcBnKQAAaZ1lY4AAAAASUVORK5CYII='
-						)
+					if(!empty($_POST['pasted_image']) && empty($_POST['pasted_image_is_blank'])	)
 					{
 						$img = $_POST['pasted_image'];
 						$img = str_replace('data:image/png;base64,', '', $img);
@@ -1742,7 +1740,7 @@ JS;
 				)
 			);
 
-			//_debug_Array($additional_notes);die();
+//			_debug_Array($datatable_def);die();
 			//---datatable settings---------------------------------------------------
 
 			$datatable_def[] = array(

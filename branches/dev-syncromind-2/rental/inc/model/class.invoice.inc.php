@@ -326,10 +326,10 @@
 		 * @param bool $override	flag to indicate if the invoice start period should be overridden with the billing start date of contract
 		 * @param int $timestamp_invoice_start	the startdate of the invoice period
 		 * @param int $timestamp_invoice_end	the enddate of the invoice period
-		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bil one time price elements
+		 * @param bool $bill_only_one_time	flag to indicate if the the invoice should only bill one time price elements
 		 * @return rental_invoice	the newly created invoice
 		 */
-		public static function create_invoice( int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0 )
+		public static function create_invoice( int $decimals, int $billing_id, int $contract_id, bool $override, int $timestamp_invoice_start, int $timestamp_invoice_end, $bill_only_one_time, $dry_run = false, $billing_term = 0, $month = 0)
 		{
 			$contract = rental_socontract::get_instance()->get_single($contract_id);
 
@@ -355,6 +355,60 @@
 				}
 			}
 
+
+			// Retrieve the contract price items: only one-time or all
+			if ($bill_only_one_time)
+			{
+				if($billing_term == 5)//credits
+				{
+					$filters2 = array(
+						'contract_id' => $contract->get_id(),
+						'contract_ids_one_time' => true
+					);
+					if($month == 2)
+					{
+						$filters2['credits'] = true;
+					}
+					else if($month == 3)
+					{
+						$filters2['positive_one_time'] = true;
+					}
+
+//					$filters2 = array(
+//						'contract_id' => $contract->get_id(),
+//						'contract_ids_one_time' => true, 'credits' => true
+//					);
+				}
+				else
+				{
+					$filters2 = array('contract_id' => $contract->get_id(),
+						'contract_ids_one_time' => true,
+						'billing_term_id' => $billing_term,
+						'year' => date('Y', $timestamp_invoice_start),
+						'month' => date('m', $timestamp_invoice_start)
+					);
+				}
+				//$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
+
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', $filters2);
+				//$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array('contract_id' => $contract->get_id(), 'one_time' => true));
+			}
+			else
+			{
+				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
+					'contract_id' => $contract->get_id()));
+			}
+
+			// Run through the contract price items
+			$_check_sum = 0;
+			foreach ($contract_price_items as $contract_price_item)
+			{
+				$_check_sum += $contract_price_item->get_total_price();
+			}
+			if( !abs($_check_sum) > 0 )
+			{
+				return null;
+			}
 			// Create invoice ...
 			$invoice = new rental_invoice(
 				-1, // no identifier
@@ -380,36 +434,6 @@
 			if (!$dry_run)
 			{
 				rental_soinvoice::get_instance()->store($invoice); // We must store the invoice at this point to have an id to give to the price item
-			}
-
-			// Retrieve the contract price items: only one-time or all
-			if ($bill_only_one_time)
-			{
-				if($billing_term == 5)//credits
-				{
-					$filters2 = array(
-						'contract_id' => $contract->get_id(),
-						'contract_ids_one_time' => true, 'credits' => true
-					);
-				}
-				else
-				{
-					$filters2 = array('contract_id' => $contract->get_id(),
-						'contract_ids_one_time' => true,
-						'billing_term_id' => $billing_term,
-						'year' => date('Y', $timestamp_invoice_start),
-						'month' => date('m', $timestamp_invoice_start)
-					);
-					}
-				//$contract_price_items = $socontract_price_item->get($start_index, $num_of_objects, $sort_field, $sort_ascending, $search_for, $search_type, $filters2);
-
-				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', $filters2);
-				//$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array('contract_id' => $contract->get_id(), 'one_time' => true));
-			}
-			else
-			{
-				$contract_price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
-					'contract_id' => $contract->get_id()));
 			}
 
 			$total_sum = 0; // Holding the total price of the invoice
@@ -523,12 +547,18 @@
 				if ($contract_price_item->is_one_time())
 				{
 					$invoice_price_item->set_is_one_time(true);
-					if ($billing_term == 5 || ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end))
+
+
+					/**
+					 * FIXME: Sigurd: 24. mars: sjekk denne!!
+					 */
+//					if ($billing_term == 5 || ($contract_price_item_start >= $timestamp_invoice_start && $contract_price_item_start <= $timestamp_invoice_end))
 					{
 						// ... set the total price of the invoice price item to the total price of the contract price item
 						$invoice_price_item->set_total_price($contract_price_item->get_total_price());
 						// ... and set the contract price item as billed
 						$contract_price_item->set_is_billed(true);
+						$contract_price_item->set_billing_id($billing_id);
 						if (!$dry_run)
 						{
 							rental_socontract_price_item::get_instance()->store($contract_price_item);

@@ -73,7 +73,7 @@
 		{
 			$clause = '';
 
-			if($this->use_acl && $this->currentapp && $this->acl_location)
+			if(!$this->relaxe_acl && ($this->use_acl && $this->currentapp && $this->acl_location))
 			{
 				$paranthesis = false;
 

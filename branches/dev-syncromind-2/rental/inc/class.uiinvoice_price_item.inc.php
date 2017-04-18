@@ -40,7 +40,7 @@
 
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			// Create an empty result set

@@ -260,7 +260,7 @@ function calculate_stage_size()
 	$("#stage_size").val(total_size);
 }
 
-add_booking = function ()
+add_schedule = function ()
 {
 	var from_ = $("#from_").val();
 	if (!from_)
@@ -269,7 +269,7 @@ add_booking = function ()
 	}
 
 	oArgs = {
-		menuaction: 'eventplanner.uibooking.save_ajax',
+		menuaction: 'eventplanner.uicalendar.save_ajax',
 		application_id: $("#application_id").val()
 	};
 
@@ -319,7 +319,7 @@ update_schedule = function (id)
 	{
 		return;
 	}
-	oArgs = {menuaction: 'eventplanner.uibooking.update_schedule'};
+	oArgs = {menuaction: 'eventplanner.uicalendar.update_schedule'};
 
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	var htmlString = '';
@@ -334,12 +334,21 @@ update_schedule = function (id)
 			{
 				$("#from_").val('');
 				htmlString += "<div class=\"msg_good\">";
+				htmlString += result.msg;
 			}
 			else
 			{
 				htmlString += "<div class=\"error\">";
+				var msg = result.msg;
+				if (typeof (msg) == 'object')
+				{
+					htmlString += msg['error'][0]['msg'];
+				}
+				else
+				{
+					htmlString += result.msg;
+				}
 			}
-			htmlString += result.msg;
 			htmlString += '</div>';
 			$("#receipt").html(htmlString);
 
@@ -355,7 +364,7 @@ this.onActionsClick = function (action)
 	$("#receipt").html("");
 	if (action === 'add')
 	{
-		add_booking();
+		add_schedule();
 		return;
 	}
 
@@ -391,7 +400,7 @@ this.onActionsClick = function (action)
 	{
 		var data = {"ids": ids, "action": action, from_: $("#from_").val()};
 
-		oArgs = {menuaction: 'eventplanner.uibooking.update_active_status'};
+		oArgs = {menuaction: 'eventplanner.uicalendar.update_active_status'};
 
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 

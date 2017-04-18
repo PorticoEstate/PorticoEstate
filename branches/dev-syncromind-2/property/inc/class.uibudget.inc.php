@@ -516,7 +516,7 @@
 			if ($acl_add)
 			{
 				$data['datatable']['new_item'] = self::link(array(
-						'menuaction' => 'property.uiasync.edit'
+						'menuaction' => 'property.uibudget.edit'
 				));
 			}
 

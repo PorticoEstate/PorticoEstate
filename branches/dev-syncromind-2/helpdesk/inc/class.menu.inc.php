@@ -163,6 +163,29 @@
 					'image' => array('helpdesk', 'helpdesk')
 				);
 
+				$menus['navigation']['email_out'] = array(
+					'text' => lang('email out'),
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uiemail_out.index')),
+					'image' => array('helpdesk', 'helpdesk'),
+					'children' => array(
+						'template' => array(
+							'text' => lang('email template'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'email_template', 'admin' => true))
+						),
+						'recipient_set' => array(
+							'text' => lang('recipient set'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'email_recipient_set', 'admin' => true))
+						),
+						'recipient_list' => array(
+							'text' => lang('recipient list'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
+								'type' => 'email_recipient_list', 'admin' => true))
+						),
+					)
+				);
+
 				$custom_menu_items = CreateObject('helpdesk.sogeneric','custom_menu_items')->read_tree(array('type' => 'custom_menu_items',
 							'filter' => array('location' => '.ticket')));
 

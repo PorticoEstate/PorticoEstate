@@ -238,6 +238,8 @@
 
 				$cols.= ",fm_project.ecodimb";
 				$cols_return[] = 'ecodimb';
+				$cols.= ",fm_workorder.service_id";
+				$cols_return[] = 'service_id';
 				$cols.= ",fm_workorder.contract_sum";
 				$cols_return[] = 'contract_sum';
 				$cols.= ",fm_workorder.approved";
@@ -514,8 +516,12 @@
 						$ordermethod = " ORDER BY fm_workorder.inspection_on_completion {$sort}, fm_workorder.id";
 						break;
 					case 'ecodimb':
-						$order_field = ", fm_project.ecodimb";
+						$order_field = ", fm_workorder.ecodimb";
 						$ordermethod = " ORDER BY fm_workorder.ecodimb {$sort}, fm_workorder.id";
+						break;
+					case 'service_id':
+						$order_field = ", fm_workorder.service_id";
+						$ordermethod = " ORDER BY fm_workorder.service_id {$sort}, fm_workorder.id";
 						break;
 					case 'budget':
 						$order_field = ", fm_workorder.budget";
@@ -1396,6 +1402,8 @@
 
 		function edit( $workorder )
 		{
+			$config	= CreateObject('phpgwapi.config','property');
+			$config->read_repository();
 			$historylog = CreateObject('property.historylog', 'workorder');
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
@@ -1425,8 +1433,6 @@
 			/* 			else if ($this->db->f('calculation') > 0)
 			  {
 			  $calculation = $this->db->f('calculation');
-			  $config	= CreateObject('phpgwapi.config','property');
-			  $config->read_repository();
 			  $tax = 1+(($config->config_data['fm_tax'])/100);
 			  $combined_cost = $calculation * $tax;
 			  } */
@@ -1478,12 +1484,15 @@
 				'contract_id' =>	$workorder['contract_id'],
 				'tax_code' => $workorder['tax_code'],
 				'unspsc_code' => $workorder['unspsc_code'],
-				'service_id' => $workorder['service_id'],
 				'building_part' => $workorder['building_part'],
 				'order_dim1' => $workorder['order_dim1'],
 				'mail_recipients' => isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
 			);
 
+			if(isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'])
+			{
+				$value_set['service_id'] = $workorder['service_id'];
+			}
 
 			$this->db->query("SELECT closed AS is_closed FROM fm_workorder_status WHERE id = '{$workorder['status']}'");
 			$this->db->next_record();
@@ -1955,8 +1964,7 @@
 			$continuous = false;
 
 			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
-
-			if ($cached_info)
+			if ($cached_info && is_array($cached_info))
 			{
 				return $cached_info;
 			}

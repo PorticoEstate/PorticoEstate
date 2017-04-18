@@ -41,7 +41,8 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
-			'object'	=> true
+			'object'	=> true,
+			'delete'	=> true
 		);
 
 		protected
@@ -136,12 +137,46 @@
 				'parameters' => json_encode($parameters)
 			);
 
+			if (!empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				$data['datatable']['actions'][] = array
+					(
+					'my_name' => 'delete',
+					'statustext' => lang('delete entry'),
+					'text' => lang('delete'),
+					'confirm_msg' => lang('do you really want to delete this entry'),
+					'action' => $GLOBALS['phpgw']->link('/index.php', array
+						(
+						'menuaction' => 'eventplanner.uipermission.delete'
+					)),
+					'parameters' => json_encode($parameters)
+				);
+
+			}
+
 			self::add_javascript('eventplanner', 'portico', 'permission.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		function delete()
+		{
+			if (empty($this->permissions[PHPGW_ACL_DELETE]))
+			{
+				phpgw::no_access();
+			}
+
+			$id = phpgw::get_var('id', 'int');
+			if ($this->bo->delete($id))
+			{
+				return lang('entry %1 has been deleted', $id);
+			}
+			else
+			{
+				return lang('delete failed');
+			}
+		}
 		/*
 		 * Edit the price item with the id given in the http variable 'id'
 		 */
@@ -214,13 +249,28 @@
 
 		public function get_subjet($selected = 0)
 		{
-			$users = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'eventplanner');
+			$users_frontend = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'eventplannerfrontend');
+			$users_backend = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_READ, 'run', 'eventplanner');
+
+			$users = array();
+			foreach ($users_frontend as $user)
+			{
+				$users[$user['account_id']] = $user;
+			}
+			unset($user);
+
+			foreach ($users_backend as $user)
+			{
+				$users[$user['account_id']] = $user;
+			}
+			unset($user);
 
 			$user_list = array();
-			$user_list[] = array('id' => '','name' => lang('select'));
+			$account_name = array();
 			foreach ($users as $user)
 			{
 				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$account_name[] = $name;
 				$user_list[] = array
 				(
 					'id' => $user['account_id'],
@@ -228,6 +278,11 @@
 					'selected' => $user['account_id'] == $selected ? 1 : 0
 				);
 			}
+
+			array_multisort($account_name, SORT_ASC, $user_list);
+
+			array_unshift($user_list, array('id' => '','name' => lang('select')));
+
 			return $user_list;
 		}
 	}

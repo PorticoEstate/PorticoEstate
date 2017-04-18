@@ -123,6 +123,12 @@
 						}
 					}
 					return $ret;
+
+				case 'BCRYPT':
+					$hash = password_hash($passwd, PASSWORD_BCRYPT);
+					$ret =  '{BCRYPT}' . base64_encode($hash);
+					return $ret;
+
 				case 'MD5':
 					return "{MD5}" . base64_encode(phpgwapi_common::hex2bin(md5($passwd)));
 
@@ -165,6 +171,12 @@
 					$salt = substr($hash, 63);
 					$hash = substr($hash, 0, 63);
 					return $hash === crypt($passwd, '$5$' . $salt);
+
+				case 'BCRYPT':
+					$hash = base64_decode($hash);
+					$hash = substr($hash, 0, 60);
+					return password_verify($passwd, $hash);
+
 				case 'MD5':
 					$hash = bin2hex(base64_decode($hash));
 					return $hash === md5($passwd);

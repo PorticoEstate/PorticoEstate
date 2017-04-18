@@ -1661,9 +1661,7 @@ JS;
 						$sum_actual_cost += $b_entry['actual_cost'];
 						$sum_oblications += $b_entry['sum_oblications'];
 						$values['sum'] += $b_entry['budget'];
-					}
-					if ($b_entry['active'])
-					{
+
 						$s_budget += $b_entry['budget'];
 						$s_orders += $b_entry['sum_orders'];
 						$s_actual_cost += $b_entry['actual_cost'];
@@ -1732,7 +1730,7 @@ JS;
 					array('key' => 'budget', 'label' => lang('budget'), 'sortable' => false, 'className' => 'right',
 						'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_budget, 0, $this->decimal_separator, '.')),
 					array('key' => 'sum_oblications', 'label' => lang('sum orders'), 'sortable' => false,
-						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_orders, 0, $this->decimal_separator, '.')),
+						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($sum_oblications, 0, $this->decimal_separator, '.')),
 					array('key' => 'actual_cost', 'label' => lang('actual cost'), 'sortable' => false,
 						'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0', 'value_footer' => number_format($s_actual_cost, 0, $this->decimal_separator, '.')),
 					array('key' => 'diff', 'label' => lang('difference'), 'sortable' => false, 'className' => 'right',
@@ -1807,7 +1805,7 @@ JS;
 				)
 			);
 
-			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : 'formatLink_voucher';
+			$_formatter_voucher_link = isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2 ? 'formatLink_invoicehandler_2' : '';//formatLink_voucher';
 
 			$invoice_def = array
 				(

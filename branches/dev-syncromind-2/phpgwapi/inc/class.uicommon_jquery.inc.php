@@ -182,8 +182,10 @@
 			$this->add_js_event('load', $js);
 		}
 
-		public function link( $data )
+		function get_link_base()
 		{
+			$base = '/index.php';
+
 			switch ($GLOBALS['phpgw_info']['flags']['currentapp'])
 			{
 				case 'bookingfrontend':
@@ -199,28 +201,19 @@
 					$base = '/index.php';
 					break;
 			}
+			return $base;
+		}
 
+		public function link( $data )
+		{
+			$base = self::get_link_base();
 			return $GLOBALS['phpgw']->link($base, $data);
-
-/*
-			if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'bookingfrontend')
-			{
-				return $GLOBALS['phpgw']->link('/bookingfrontend/', $data);
-			}
-			else if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'activitycalendarfrontend')
-			{
-				return $GLOBALS['phpgw']->link('/activitycalendarfrontend/', $data);
-			}
-			else
-			{
-				return $GLOBALS['phpgw']->link('/index.php', $data);
-			}
- */
 		}
 
 		public function redirect( $link_data )
 		{
-			$GLOBALS['phpgw']->redirect_link('/index.php', $link_data);
+			$base = self::get_link_base();
+			$GLOBALS['phpgw']->redirect_link($base, $link_data);
 		}
 
 		public function flash( $msg, $type = 'success' )

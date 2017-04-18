@@ -8,10 +8,6 @@
 ;
 var JqueryPortico = {};
 
-/* Sigurd: Need to delay tab-rendering to after all tables are finished*/
-JqueryPortico.inlineTablesDefined = 0;
-JqueryPortico.inlineTablesRendered = 0;
-
 JqueryPortico.parseURL = function (url)
 {
 	var parser = document.createElement('a'),
@@ -259,7 +255,7 @@ JqueryPortico.FormatterCenter = function (key, oData)
 	return "<center>" + oData[key] + "</center>";
 };
 
-JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, options, data)
+JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, options, data, num)
 {
 	options = options || {};
 	var disablePagination = options['disablePagination'] || false;
@@ -275,6 +271,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	var allrows = options['allrows'] || false;
 	var pageLength = options['rows_per_page'] || 10;
 	data = data || {};
+	num = num || 0;
 
 	for (i = 0; i < columns.length; i++)
 	{
@@ -393,7 +390,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 	}
 //	$(document).ready(function ()
 //	{
-	JqueryPortico.inlineTablesRendered += 1;
 
 	var oTable = $("#" + container).dataTable({
 		paginate: disablePagination ? false : true,
@@ -439,19 +435,6 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 		},
 		fnInitComplete: function (oSettings, json)
 		{
-			/*if(JqueryPortico.inlineTablesRendered == JqueryPortico.inlineTablesDefined)
-			 {
-			 if(typeof(JqueryPortico.render_tabs) == 'function')
-			 {
-			 var delay=15;//allow extra 350 milliseconds to really finish
-			 setTimeout(function()
-			 {
-			 JqueryPortico.render_tabs();
-			 alert(JqueryPortico.inlineTablesRendered);
-
-			 },delay);
-			 }
-			 }*/
 		},
 		lengthMenu: lengthMenu,
 		pageLength: pageLength,
@@ -506,7 +489,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			}
 			try
 			{
-				window['local_DrawCallback' + JqueryPortico.inlineTablesRendered](oTable);
+				window['local_DrawCallback' + num](oTable);
 			}
 			catch (err)
 			{

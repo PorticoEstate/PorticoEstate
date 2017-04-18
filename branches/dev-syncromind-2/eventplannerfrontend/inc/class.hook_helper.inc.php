@@ -124,7 +124,6 @@
 			{
 				return;
 			}
-			
 			$session_org_id = phpgw::get_var('session_org_id','int' , 'POST');
 			if($session_org_id)
 			{
@@ -137,6 +136,14 @@
 					$_SESSION['org_id'] = '';
 				}
 			}
+			else if ($_POST['session_org_id'])
+			{
+				$_SESSION['org_id'] = '';
+			}
+
+			/**
+			 * $_SESSION['orgs'] is set in eventplannerfrontend_external_user::get_user_org_id()
+			 */
 
 			if(!empty($_SESSION['orgs']) && is_array($_SESSION['orgs']))
 			{
@@ -167,7 +174,20 @@ HTML;
 
 			if ($orgs)
 			{
-				$action = "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}";
+				if(!empty($_GET['menuaction']))
+				{
+					$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/',
+						array
+						(
+							'menuaction' => phpgw::get_var('menuaction')
+						)
+					);
+				}
+				else
+				{
+					$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/home.php');
+				}
+
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML

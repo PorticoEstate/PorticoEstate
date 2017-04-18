@@ -40,7 +40,7 @@
 			return $setup_info;
 		}
 
-		function get_db_versions($setup_info='')
+		function get_db_versions($setup_info=array())
 		{
 			$tname = Array();
 			$GLOBALS['phpgw_setup']->db->Halt_On_Error = 'no';

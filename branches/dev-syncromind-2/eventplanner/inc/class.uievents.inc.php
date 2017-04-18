@@ -173,7 +173,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'events.index.js');
+			self::add_javascript($this->currentapp, 'portico', 'events.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -195,8 +195,7 @@
 			$tabs = array();
 			$tabs['first_tab'] = array(
 				'label' => lang('event'),
-				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
+				'link' => '#first_tab'
 			);
 
 
@@ -211,13 +210,13 @@
 				array('key' => 'application_id', 'hidden' => true),
 			);
 
-			
 
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
-				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uibooking.query",
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicalendar.query_relaxed",
 					'filter_application_id' => $id,
-			//		'filter_active'	=> 1,
+					'filter_active'	=> 1,
+					'redirect'	=> 'booking',
 					'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $dates_def,
 				'data' => json_encode(array()),
@@ -245,12 +244,15 @@
 			}
 
 			$category = $this->cats->return_single($application->category_id);
+			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+			$booking_interval = !empty($config['booking_interval']) ? $config['booking_interval'] : null;
 
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uievents.index",)),
 				'application' => $application,
 				'category_name' => $category[0]['name'],
+				'booking_interval' => $booking_interval,
 				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'application_type_list' => $application_type_list,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
@@ -259,7 +261,7 @@
 			self::render_template_xsl(array('events', 'application_info', 'datatable_inline'), array('edit' => $data));
 		}
 
-		
+
 		public function save()
 		{
 			//Nothing to do here

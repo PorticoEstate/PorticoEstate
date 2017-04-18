@@ -184,6 +184,7 @@
 	{
 		$hashes = array
 		(
+			'BCRYPT'=> lang('Salted BCrypt - strong encryption'),
 			'CRYPT'	=> lang('Salted Crypt - strong encryption'),
 			'SSHA'	=> lang('Salted SHA1 - strong encryption'),
 			'SMD5'	=> lang('Salted MD5'),

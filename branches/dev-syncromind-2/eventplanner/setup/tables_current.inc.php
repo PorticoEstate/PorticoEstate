@@ -50,7 +50,7 @@
 				'eventplanner_vendor_category' => array('category_id' => 'id'),
 			),
 			'ix' => array(),
-			'uc' => array()
+			'uc' => array('organization_number')
 		),
 		'eventplanner_vendor_comment' => array(
 			'fd' => array(
@@ -229,16 +229,61 @@
 			'ix' => array(),
 			'uc' => array()
 		),
-		'eventplanner_booking' => array(
+		'eventplanner_calendar' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => False),
-				'customer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'application_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+	//			'customer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'from_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
 				'to_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
 				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
 				'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,'default' => '0'),
 				'cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2, 'nullable' => True,'default' => '0.00'),
-				'application_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+	//			'customer_contact_name' => array('type' => 'text', 'nullable' => True),
+	//			'customer_contact_email' => array('type' => 'text', 'nullable' => True),
+	//			'customer_contact_phone' => array('type' => 'text', 'nullable' => True),
+	//			'location' => array('type' => 'text', 'nullable' => True),
+	//			'reminder' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '0'),
+	//			'secret' => array('type' => 'text', 'nullable' => False),
+	//			'sms_total' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'public' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
+				'created' => array('type' => 'int', 'precision' => '8',  'nullable' => False, 'default' => 'current_timestamp'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+	//			'eventplanner_customer' => array('customer_id' => 'id'),
+				'eventplanner_application' => array('application_id' => 'id'),
+				),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'eventplanner_calendar_comment' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'calendar_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'time' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+				'author' => array('type' => 'text', 'nullable' => False),
+				'comment' => array('type' => 'text', 'nullable' => False),
+				'type' => array('type' => 'varchar', 'precision' => '20', 'nullable' => false,'default' => 'comment'),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				'eventplanner_calendar' => array('calendar_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'eventplanner_booking' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => False),
+				'calendar_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'customer_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+//				'from_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+//				'to_' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
+//				'active' => array('type' => 'int', 'precision' => 4, 'nullable' => False, 'default' => '1'),
+				'completed' => array('type' => 'int', 'precision' => 4, 'nullable' => False,'default' => '0'),
+//				'cost' => array('type' => 'decimal', 'precision' => 20, 'scale' => 2, 'nullable' => True,'default' => '0.00'),
+//				'application_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'customer_contact_name' => array('type' => 'text', 'nullable' => True),
 				'customer_contact_email' => array('type' => 'text', 'nullable' => True),
 				'customer_contact_phone' => array('type' => 'text', 'nullable' => True),
@@ -252,8 +297,8 @@
 			),
 			'pk' => array('id'),
 			'fk' => array(
+				'eventplanner_calendar' => array('calendar_id' => 'id'),
 				'eventplanner_customer' => array('customer_id' => 'id'),
-				'eventplanner_application' => array('application_id' => 'id'),
 				),
 			'ix' => array(),
 			'uc' => array()

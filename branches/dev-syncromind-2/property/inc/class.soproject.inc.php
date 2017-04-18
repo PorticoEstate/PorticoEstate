@@ -1039,11 +1039,11 @@
 			$filter_year = '';
 			if ($year)
 			{
-				$filter_year = "AND (fm_workorder_budget.year = {$year} OR fm_workorder_status.closed IS NULL)";
+				$filter_year = "AND (fm_workorder_budget.year = {$year})";// OR fm_workorder_status.closed IS NULL)";
 			}
 
 			$sql =  "SELECT DISTINCT fm_workorder.id AS workorder_id, fm_workorder.title, fm_workorder.vendor_id, fm_workorder.addition,"
-				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
+				. " fm_workorder_status.descr as status, fm_workorder_status.closed, fm_workorder_status.canceled, fm_workorder.account_id AS b_account_id, fm_workorder.charge_tenant,"
 				. " fm_workorder.mail_recipients"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -1073,6 +1073,7 @@
 					'charge_tenant' => $this->db->f('charge_tenant'),
 					'status' => $this->db->f('status'),
 					'closed' => !!$this->db->f('closed'),
+					'canceled' => !!$this->db->f('canceled'),
 					'mail_recipients' => explode(',', trim($this->db->f('mail_recipients'), ',')),
 					'b_account_id' => $this->db->f('b_account_id'),
 					'addition_percentage' => (int)$this->db->f('addition'),
@@ -1099,8 +1100,16 @@
 			{
 				foreach ($order_budgets[$entry['workorder_id']] as $budget)
 				{
-					if ($budget['active'] == 2)
+					if ($budget['active'] == 2)// || $entry['canceled'])
 					{
+						continue;
+					}
+					else if($entry['canceled'])
+					{
+						$entry['actual_cost'] = 0;
+						$entry['combined_cost'] = 0;
+						$entry['budget'] = 0;
+						$entry['obligation'] = 0;
 						continue;
 					}
 
@@ -2241,9 +2250,10 @@
 
 			$project_total_budget = array_sum($project_budget);
 
-			$sql = "SELECT fm_workorder.id AS order_id, vendor_id"
+			$sql = "SELECT fm_workorder.id AS order_id, vendor_id,fm_workorder_status.canceled"
 				. " FROM fm_workorder"
-				. " WHERE project_id = {$project_id}";
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " WHERE project_id = {$project_id} AND fm_workorder_status.canceled IS NULL";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$_order_list = array();

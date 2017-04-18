@@ -19,6 +19,10 @@
 				{lang_default}: {lang_Helpdesk}</td>
 			<td><input name="newsettings[app_name]" value="{value_app_name}"></td>
 		</tr>
+		<tr>
+			<td>{lang_from_email}: <br>
+			<td><input name="newsettings[from_email]" value="{value_from_email}"></td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_show_billable_hours}:</td>
 			<td>

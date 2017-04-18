@@ -131,7 +131,7 @@
 
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			//Retrieve a contract identifier and load corresponding contract

@@ -60,8 +60,19 @@
 
 		public function store($object)
 		{
+			$save_last_booking = false;
+			if(!$object->get_id())
+			{
+				$save_last_booking = true;
+			}
+
 			$this->store_pre_commit($object);
 			$ret = eventplanner_sobooking::get_instance()->store($object);
+			if($ret && $save_last_booking)
+			{
+				phpgwapi_cache::system_set('eventplanner', "last_booking{$object->customer_id}", time());
+			}
+
 			$this->store_post_commit($object);
 			return $ret;
 		}
@@ -104,7 +115,12 @@
 			return $values;
 		}
 
-		public function update_active_status( $ids, $action )
+		public function get_booking_id_from_calendar( $calendar_id )
+		{
+			return eventplanner_sobooking::get_instance()->get_booking_id_from_calendar($calendar_id);
+		}
+
+/*		public function update_active_status( $ids, $action )
 		{
 			if($action == 'enable' && $ids)
 			{
@@ -118,12 +134,22 @@
 
 				$bookings =  eventplanner_sobooking::get_instance()->read($params);
 
+				$existing_booking_ids = array();
+				foreach ($bookings['results'] as $booking)
+				{
+					$existing_booking_ids[] = $booking['id'];
+				}
+
 				$number_of_active = (int)$bookings['total_records'];
 				$limit = (int)$application->num_granted_events;
 
-
+				$error = false;
 				foreach ($ids as $id)
 				{
+					if(in_array($id, $existing_booking_ids) )
+					{
+						continue;
+					}
 					if($limit > $number_of_active)
 					{
 						$_ids[] = $id;
@@ -131,10 +157,15 @@
 					}
 					else
 					{
+						$error = true;
 						$message = lang('maximum of granted events are reached');
 						phpgwapi_cache::message_set($message, 'error');
 						break;
 					}
+				}
+				if($ids && !$_ids && !$error)
+				{
+					return true;
 				}
 			}
 			else if ($action == 'delete' && $ids)
@@ -160,21 +191,5 @@
 
 			return eventplanner_sobooking::get_instance()->update_active_status($_ids, $action);
 		}
-
-		public function update_schedule( $id, $from_ )
-		{
-			$booking = eventplanner_sobooking::get_instance()->read_single($id, true);
-			$booking->from_ = $from_;
-//			$application = createObject('eventplanner.boapplication')->read_single($entity->application_id);
-//			$booking->to_ = $booking->from_ + ((int)$application->timespan * 60);
-			$booking->customer_id = $booking->customer_id ? $booking->customer_id : '';//foreigns key
-
-			if($booking->validate())
-			{
-				return $booking->store();
-			}
-//			return eventplanner_sobooking::get_instance()->update($booking);
-		}
-
-
+*/
 	}

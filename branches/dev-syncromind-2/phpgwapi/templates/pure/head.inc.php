@@ -2,6 +2,8 @@
 	$javascripts = array();
 	$stylesheets = array();
 
+	$webserver_url = $GLOBALS['phpgw_info']['server']['webserver_url'];
+
 	phpgw::import_class('phpgwapi.jquery');
 	phpgwapi_jquery::load_widget('core');
 
@@ -23,7 +25,7 @@
 /*
 		$menu_stylesheet_widescreen = <<<HTML
 
-		<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/js/jquery/mmenu/extensions/css/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
+		<link href="{$webserver_url}/phpgwapi/js/jquery/mmenu/extensions/css/jquery.mmenu.widescreen.css" type="text/css" rel="stylesheet" media="all and (min-width: 1430px)" />
 HTML;
 */
 	}
@@ -72,7 +74,7 @@ HTML;
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $stylesheet );
+			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet );
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
@@ -81,7 +83,7 @@ HTML;
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $GLOBALS['phpgw_info']['server']['webserver_url'] . $javascript );
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript );
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
@@ -115,7 +117,7 @@ HTML;
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'webserver_url'	=> $GLOBALS['phpgw_info']['server']['webserver_url'],
+		'webserver_url'	=> $webserver_url,
 		'win_on_events'	=> $GLOBALS['phpgw']->common->get_on_events(),
 		'menu_stylesheet_widescreen'=> $menu_stylesheet_widescreen,
 		'template_selector'			=> $template_selector

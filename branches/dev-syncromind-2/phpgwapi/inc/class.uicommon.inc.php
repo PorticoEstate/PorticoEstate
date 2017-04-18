@@ -49,12 +49,14 @@
 			$composite_types,
 			$payment_methods,
 			$permissions,
-			$called_class_arr;
+			$called_class_arr,
+			$currentapp;
 
 		public function __construct()
 		{
 			parent::__construct();
 			$called_class = get_called_class();
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->called_class_arr = explode('_', $called_class, 2);
 		}
 
@@ -122,11 +124,20 @@
 
 		public function save($ajax = false)
 		{
-			$called_class = get_called_class();
-
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
-				phpgw::no_access();
+				if ($ajax)
+				{
+					return array(
+						'status_kode' => 'error',
+						'status' => lang('error'),
+						'msg' => lang('no access')
+					);
+				}
+				else
+				{
+					phpgw::no_access();
+				}
 			}
 			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'first_tab');
 
@@ -160,7 +171,7 @@
 					{
 						phpgwapi_cache::message_set(lang('messages_saved_form'), 'message');
 						self::redirect(array(
-							'menuaction' => "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit",
+							'menuaction' => "{$this->currentapp}.{$this->called_class_arr[1]}.edit",
 							'id'		=> $object->get_id(),
 							'active_tab' => $active_tab
 							)
@@ -214,7 +225,7 @@
 
 		private function get_data($relaxe_acl = false)
 		{
-			if (empty($this->permissions[PHPGW_ACL_READ]))
+			if (!$relaxe_acl && empty($this->permissions[PHPGW_ACL_READ]))
 			{
 				phpgw::no_access();
 			}
@@ -230,7 +241,7 @@
 		public function query($relaxe_acl = false)
 		{
 			$values = $this->get_data($relaxe_acl);
-			array_walk($values["results"], array($this, "_add_links"), "{$this->called_class_arr[0]}.{$this->called_class_arr[1]}.edit");
+			array_walk($values["results"], array($this, "_add_links"), "{$this->currentapp}.{$this->called_class_arr[1]}.edit");
 
 			return $this->jquery_results($values);
 		}
@@ -248,7 +259,7 @@
 		 */
 		public function get_list()
 		{
-			$values = $this->get_data();
+			$values = $this->get_data(true);
 
 			$results = array();
 			foreach ($values['results'] as $row)

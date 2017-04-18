@@ -44,6 +44,7 @@
 		protected $currentapp;
 		protected $acl;
 		protected $relaxe_acl;
+		protected $account;
 
 		public function __construct( $table_name, $fields )
 		{
@@ -59,6 +60,7 @@
 			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$this->acl = & $GLOBALS['phpgw']->acl;
+			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
 		/**
@@ -269,6 +271,7 @@
 				}
 				$results[] = $row;
 			}
+			$id_map = array();
 			if (count($results) > 0)
 			{
 				foreach ($results as $id => $result)
@@ -283,6 +286,7 @@
 					}
 					if ($params['manytomany'])
 					{
+						$row[$field] = array();
 						$table = $params['manytomany']['table'];
 						$key = $params['manytomany']['key'];
 						$ids = join(',', array_keys($id_map));
@@ -296,10 +300,11 @@
 							$colnames = join(',', $colnames);
 
 							$this->db->query("SELECT $colnames, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
-							$row[$field] = array();
+
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
+								$results[$id_map[$id]][$field] = array();
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{
@@ -324,10 +329,13 @@
 						{
 							$column = $params['manytomany']['column'];
 							$this->db->query("SELECT $column, $key FROM $table WHERE $key IN($ids)", __LINE__, __FILE__);
-							$row[$field] = array();
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
+								if(!isset($results[$id_map[$id]][$field]))
+								{
+									$results[$id_map[$id]][$field] = array();
+								}
 								$results[$id_map[$id]][$field][] = $this->unmarshal($this->db->f($column, false), $params['type']);
 							}
 						}
@@ -364,12 +372,18 @@
 			return $conditions;
 		}
 
-		function read_single( $id, $return_object = false )
+		function read_single( $id, $return_object = false , $relaxe_acl = false)
 		{
 			if (!$id && !$return_object)
 			{
 				return array();
 			}
+
+			if($relaxe_acl)
+			{
+				$this->relaxe_acl = $relaxe_acl;
+			}
+
 			$row = array();
 			$pk_params = $this->primary_key_conditions($id);
 
@@ -635,7 +649,12 @@
 
 					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
-					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+					$joins[] = " LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+				}
+				else if (isset($params['multiple_join']) && $params['multiple_join'])
+				{
+					$joins[] = " {$params['multiple_join']['statement']}";
+					$cols[] = "{$params['multiple_join']['column']} AS {$field}";
 				}
 				else
 				{

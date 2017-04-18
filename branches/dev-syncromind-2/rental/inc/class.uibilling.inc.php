@@ -129,7 +129,7 @@
 							(array) $contract_ids_override,
 							phpgw::get_var('export_format'),
 							$existing_billing,
-							$contract_bill_only_one_time,
+							(array) $contract_bill_only_one_time,
 							$_dry_run = true
 						);
 						$simulation_data = array();
@@ -231,10 +231,15 @@
 								$month = 1;
 								$billing_term_label = lang('free_of_charge');
 							}
-							else
+							else if ($billing_month == '2')
 							{
 								$month = 2;
 								$billing_term_label = lang('credits');
+							}
+							else
+							{
+								$month = 3;
+								$billing_term_label = lang('positive one time');
 							}
 						}
 						else // yearly
@@ -403,7 +408,21 @@ JS;
 
 					if ($missing_billing_info == null || count($missing_billing_info) == 0)
 					{
-						$billing_job = rental_sobilling::get_instance()->create_billing(isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2, phpgw::get_var('contract_type'), phpgw::get_var('billing_term'), phpgw::get_var('year'), phpgw::get_var('month'), phpgw::get_var('title'), $GLOBALS['phpgw_info']['user']['account_id'], $contract_ids, $contract_ids_override, phpgw::get_var('export_format'), $existing_billing, $contract_bill_only_one_time);
+						$billing_job = rental_sobilling::get_instance()->create_billing(
+							isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) ? isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['currency_decimal_places']) : 2,
+							phpgw::get_var('contract_type'),
+							phpgw::get_var('billing_term'),
+							phpgw::get_var('year'),
+							phpgw::get_var('month'),
+							phpgw::get_var('title'),
+							$GLOBALS['phpgw_info']['user']['account_id'],
+							$contract_ids,
+							$contract_ids_override,
+							phpgw::get_var('export_format'),
+							$existing_billing,
+							$contract_bill_only_one_time,
+							$_dry_run = false
+						);
 						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'rental.uibilling.view',
 							'id' => $billing_job->get_id()));
 						return;
@@ -508,10 +527,15 @@ JS;
 						$month = 1;
 						$billing_term_label = lang('free_of_charge');
 					}
-					else
+					else if ($billing_month == '2')
 					{
 						$month = 2;
 						$billing_term_label = lang('credits');
+					}
+					else
+					{
+						$month = 3;
+						$billing_term_label = lang('positive one time');
 					}
 				}
 				else // yearly
@@ -565,11 +589,21 @@ JS;
 
 					$socontract_price_item = rental_socontract_price_item::get_instance();
 
-
+					$sort_ascending = false;
+					$search_for = '';
+					$search_type = '';
 					//... 2. Contracts with one-time price items
 					if($billing_term == 5)
 					{
-						$filters2 = array('contract_ids_one_time' => true, 'credits' => true);
+						$filters2 = array('contract_ids_one_time' => true);
+						if($month == 2)
+						{
+							$filters2['credits'] = true;
+						}
+						else if($month == 3)
+						{
+							$filters2['positive_one_time'] = true;
+						}
 						$contracts = array();
 					}
 					else
@@ -947,6 +981,7 @@ JS;
 					{
 						$options[] = array('id' => $term_id . '-1', 'name' => lang($term_title), 'selected' => (($term_id . '-1' == $billing_term_selection) ? 1 : 0));
 						$options[] = array('id' => $term_id . '-2', 'name' => 'Kreditering', 'selected' => (($term_id . '-2' == $billing_term_selection) ? 1 : 0));
+						$options[] = array('id' => $term_id . '-3', 'name' => lang('positive one time'), 'selected' => (($term_id . '-3' == $billing_term_selection) ? 1 : 0));
 					}
 					$current++;
 					$billing_term_group_options[] = array('label' => lang($term_title), 'options' => $options);
@@ -1384,6 +1419,7 @@ JS;
 			{
 				phpgw::no_access();
 			}
+			$billing_id = phpgw::get_var('id');
 			rental_sobilling::get_instance()->transaction_begin();
 			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
 			$billing_job->set_deleted(true);
@@ -1408,7 +1444,8 @@ JS;
 				foreach ($price_items as $price_item)
 				{
 					//Check for credit or valid date
-					if (($price_item->get_is_one_time() && $price_item->get_total_price() < 0) || ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()))
+//					if (($price_item->get_is_one_time() && $price_item->get_total_price() < 0) || ($price_item->get_date_start() >= $invoice->get_timestamp_start() && $price_item->get_date_start() <= $invoice->get_timestamp_end()))
+					if ($price_item->get_billing_id() == $billing_id)
 					{
 						$price_item->set_is_billed(false);
 						rental_socontract_price_item::get_instance()->store($price_item);
@@ -1483,7 +1520,7 @@ JS;
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'id';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
-			$search_for = $search['value'];
+			$search_for = (string)$search['value'];
 			$search_type = phpgw::get_var('search_option', 'string', 'REQUEST', 'all');
 
 			// Create an empty result set
@@ -1495,7 +1532,7 @@ JS;
 			$export = phpgw::get_var('export', 'bool');
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			switch ($query_type)
@@ -1700,7 +1737,7 @@ JS;
 							$count_keys = count($keys);
 							for ($j = 0; $j < $count_keys; $j++)
 							{
-								array_push($headings, lang($keys[$j]));
+								array_push($headings, ltrim(lang($keys[$j]), '!'));
 							}
 
 //                                    _debug_array($list);

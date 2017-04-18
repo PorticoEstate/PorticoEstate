@@ -764,6 +764,11 @@
 					'msg' => lang('please enter either a budget or contrakt sum'));
 			}
 
+			if (((int)$values['contract_sum'] && (int)$values['budget']) && (abs($values['contract_sum']) > abs($values['budget'])))
+			{
+				$values['budget'] = $values['contract_sum'];
+			}
+
 			if (isset($values['addition_rs']) && $values['addition_rs'] && !ctype_digit(ltrim($values['addition_rs'], '-')))
 			{
 				$this->receipt['error'][] = array(
@@ -1779,6 +1784,7 @@
 				'menuaction' => 'property.uiinvoice2.index'
 			);
 
+			$_disable_link = $_lean;
 			$content_invoice = array();
 			$amount = 0;
 			$approved_amount = 0;
@@ -1810,6 +1816,7 @@
 				}
 				else
 				{
+					$_disable_link = true;
 					if ($entry['voucher_id'] > 0)
 					{
 						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
@@ -1827,7 +1834,7 @@
 
 				$content_invoice[] = array
 					(
-					'voucher_id' => ($_lean) ? $entry['voucher_id'] : $link_voucher_id,
+					'voucher_id' => ($_disable_link) ? $entry['voucher_id'] : $link_voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'status' => $entry['status'],
 					'period' => $entry['period'],
@@ -1852,16 +1859,17 @@
 				$amount += $entry['amount'];
 				$approved_amount += $entry['approved_amount'];
 			}
+			unset($entry);
 
 			if($invoices)
 			{
 				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 			}
 
+			$attachmen_list = array();
 			foreach ($invoices as $entry)
 			{
 				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . '/attachment/' .$entry['external_voucher_id'];
-				$attachmen_list = array();
 				try
 				{
 					$dir = new DirectoryIterator("$directory_attachment/");
@@ -1892,6 +1900,8 @@
 
 				}
 			}
+			unset($entry);
+
 			$attachmen_def = array(
 				array(
 					'key' => 'voucher_id',

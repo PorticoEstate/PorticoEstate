@@ -32,6 +32,7 @@ date end	eventplanner	no	Siste arrangementsdato
 contact name	eventplanner	no	Navn kontaktperson
 contact email	eventplanner	no	Epost kontaktperson
 contact phone	eventplanner	no	Tlf. kontaktperson
+contact email 2	eventplanner	no	Epost 2
 case officer	eventplanner	no	Saksbehandler
 active	eventplanner	no	Aktiv
 inactive	eventplanner	no	Inaktiv
@@ -111,4 +112,11 @@ showall	eventplanner	no	Vis alle
 read	eventplanner	no	Les
 permission	eventplanner	no	Rettighet
 maximum number of events	eventplanner	no	Maksimum antall arrangement
+maximum of granted events per year (%1) are reached	eventplanner	no	Maksimum antall arrangementer (%1) pr år er nådd
 number of users	eventplanner	no	Ca. antall brukere
+disconnect	eventplanner	no	Kople fra
+end date cannot be before start date	eventplanner	no	Siste dato kan ikke være før første dato
+Time is already booked	eventplanner	no	Tiden er allerede booking
+booking interval	eventplanner	no	Booking intervall
+days	eventplanner	no	dager
+there is a minimum interval of %1 hours	eventplanner	no	Det er et minimumsintervall på %1 time(r)

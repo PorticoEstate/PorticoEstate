@@ -54,7 +54,6 @@
 		{
 			parent::__construct();
 
-			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo = CreateObject('property.bogallery', true);
 			$this->bocommon = CreateObject('property.bocommon');

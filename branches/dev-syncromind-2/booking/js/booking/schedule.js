@@ -161,7 +161,7 @@ schedule.newApplicationForm = function (date, _from, _to, resource)
 	weekday[4] = "thursday";
 	weekday[5] = "friday";
 	weekday[6] = "saturday";
-	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&weekday=' + weekday[day];
+	url += '&from_[]=' + state + _from + '&to_[]=' + state + _to + '&weekday=' + weekday[day] + '&dateformat=Y-m-d';
 	if (resource)
 	{
 		url += '&resource=' + resource;

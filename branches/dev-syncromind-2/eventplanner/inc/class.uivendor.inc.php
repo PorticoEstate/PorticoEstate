@@ -140,7 +140,7 @@
 				)
 			);
 
-			$data['datatable']['actions'][] = array
+/*			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'view',
 				'text' => lang('show'),
@@ -150,7 +150,7 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -162,7 +162,7 @@
 				'parameters' => json_encode($parameters)
 			);
 
-			self::add_javascript('eventplanner', 'portico', 'vendor.index.js');
+			self::add_javascript('eventplannerfrontend', 'portico', 'vendor.index.js');
 			phpgwapi_jquery::load_widget('numberformat');
 
 			self::render_template_xsl('datatable_jquery', $data);
@@ -195,7 +195,14 @@
 			$tabs['first_tab'] = array(
 				'label' => lang('vendor'),
 				'link' => '#first_tab',
-				'function' => "set_tab('first_tab')"
+		//		'function' => "set_tab('first_tab')"
+			);
+
+			$tabs['application'] = array(
+				'label' => lang('application'),
+				'link' => '#application',
+				'disable' => $id ? false : true,
+	//			'function' => "set_tab('application')"
 			);
 
 			$bocommon = CreateObject('property.bocommon');
@@ -225,6 +232,40 @@
 				)
 			);
 
+			$application_def = array(
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'date_start', 'label' => lang('date start'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'date_end', 'label' => lang('date end'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'number_of_units', 'label' => lang('number of units'), 'sortable' => true, 'resizeable' => true),
+				array('key' => 'timespan', 'label' => lang('event timespan'), 'sortable' => false, 'resizeable' => true),
+			);
+
+			$tabletools = array(
+				array(
+					'my_name' => 'add',
+					'text' => lang('add'),
+					'type' => 'custom',
+					'className' => 'add',
+					'custom_code' => "
+								add_application('{$this->currentapp}', '{$this->currentapp}.uiapplication.edit', {$id});"
+				)
+			);
+
+			$datatable_def[] = array(
+				'container' => 'datatable-container_1',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.query",
+					'filter_vendor_id' => $id,
+					'phpgw_return_as' => 'json'))),
+				'tabletools' => $tabletools,
+				'ColumnDefs' => $application_def,
+				'data' => json_encode(array()),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.save")),
@@ -237,6 +278,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array());
 			self::add_javascript('eventplannerfrontend', 'portico', 'validate.js');
+			self::add_javascript($this->currentapp, 'portico', 'vendor.edit.js');
 			self::render_template_xsl(array('vendor', 'datatable_inline'), array($mode => $data));
 		}
 		
