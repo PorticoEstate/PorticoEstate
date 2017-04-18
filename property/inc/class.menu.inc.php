@@ -923,6 +923,16 @@
 
 			}
 
+			if ($acl->check('.report', PHPGW_ACL_READ, 'property'))
+			{
+				$menus['navigation']['report'] = array
+					(
+					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
+					'text' => lang('report'),
+					'image' => array('property', 'report')
+				);
+			}
+
 			if ($acl->check('.ticket.order', PHPGW_ACL_ADD, 'property'))
 			{
 				$menus['navigation']['helpdesk']['children']['order_template'] =  array

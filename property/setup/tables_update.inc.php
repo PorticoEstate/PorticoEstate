@@ -9457,3 +9457,54 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.709 to 0.9.17.711
+	*
+	*/
+	$test[] = '0.9.17.710';
+
+	function property_upgrade0_9_17_710()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw']->locations->add('.report', 'Generic report', 'property', $allow_grant = true);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_view_dataset', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'view_name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
+					'dataset_name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
+					'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_view_dataset_report', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+					'dataset_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+					'report_name' => array('type' => 'varchar', 'precision' => 100, 'nullable' => False),
+					'report_definition' => array('type' => 'jsonb', 'nullable' => true),
+					'owner_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+					'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array('fm_view_dataset' => array('dataset_id' => 'id')),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.711';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
