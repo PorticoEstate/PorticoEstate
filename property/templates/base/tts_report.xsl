@@ -2,7 +2,11 @@
 <!-- $Id$ -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-
+	<style type="text/css">
+		.content-image {
+			display: none;
+		}
+	</style>
 	<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="">
 		<fieldset>
 			<div class="pure-control-group">
@@ -41,12 +45,18 @@
 						<xsl:value-of select="php:function('lang', 'search')"/>
 					</xsl:attribute>
 				</input>			
+				<input type="button" id="btn_print" name="btn_print" size="40">
+					<xsl:attribute name="value">
+						<xsl:value-of select="php:function('lang', 'print')"/>
+					</xsl:attribute>
+				</input>
 				<img src="{image_loader}" class="processing" align="absmiddle"></img>	
 			</div>
 			
 			<div id="canvas-holder" style="width:80%; display:inline-block;">
-				<canvas style="display:inline-block;" id="chart-area" />
+				<canvas style="display:inline-block;" id="chart-area" ></canvas>
 			</div>
+			<div id="content-image" class="content-image"></div>
 		</fieldset>
 	</form>
 
