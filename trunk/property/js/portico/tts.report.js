@@ -64,4 +64,23 @@ $(document).ready(function ()
 	
 	$("#btn_search").trigger( "click" );
 
+	$('#btn_print').click( function()
+	{
+		var canvas = document.getElementById("chart-area");
+		var src = canvas.toDataURL("image/png");
+		
+		$("#content-image").html('');
+		
+		var img = $('<img id="dynamic">');
+		img.attr('src', src);
+		img.width(500);
+		img.appendTo('#content-image');
+
+		$("#content-image").print({
+			//Use Global styles
+			globalStyles : false,
+			//Add link with attrbute media=print
+			mediaPrint : true
+		});	
+	});
 });
