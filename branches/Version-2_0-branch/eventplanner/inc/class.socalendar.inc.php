@@ -148,8 +148,13 @@
 					break;
 
 				case 'delete':
-					$sql = "DELETE FROM eventplanner_calendar WHERE customer_id IS NULL";
-					$where = 'AND';
+					$this->db->transaction_begin();
+					$sql = "DELETE FROM eventplanner_calendar_comment WHERE calendar_id IN(". implode(',', $ids) . ')';
+					$this->db->query($sql,__LINE__,__FILE__);
+
+					$sql = "DELETE FROM eventplanner_calendar WHERE id IN(". implode(',', $ids) . ')';
+					$this->db->query($sql,__LINE__,__FILE__);
+					return	$this->db->transaction_commit();
 					break;
 
 				case 'disconnect':
