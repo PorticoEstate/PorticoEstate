@@ -419,21 +419,25 @@
 			}
 			else
 			{
-//				$dateTimeFrom = phpgw::get_var('from_', 'string', 'POST');
-//				$dateTimeTo = phpgw::get_var('to_', 'string', 'POST');
+				$dateformat =  phpgw::get_var('dateformat', 'string');
 				$dateTimeFrom = phpgw::get_var('from_', 'string');
 				$dateTimeTo = phpgw::get_var('to_', 'string');
-				$dateTimeFromE = explode(" ", $dateTimeFrom[0]);
-				$dateTimeToE = explode(" ", $dateTimeTo[0]);
-				if (phpgw::get_var('from_', 'string') < 14)
+				if(is_array($dateTimeFrom))
 				{
-					$timeFrom[] = phpgw::get_var('from_', 'string', 'POST');
-					$timeTo[] = phpgw::get_var('to_', 'string', 'POST');
+					$dateTimeFrom = $dateTimeFrom[0];
+					$dateTimeTo = $dateTimeTo[0];
+				}
+				$dateTimeFromE = explode(" ", $dateTimeFrom);
+				$dateTimeToE = explode(" ", $dateTimeTo);
+				if ($dateTimeFrom < 14)
+				{
+					$timeFrom = $dateTimeFrom;
+					$timeTo = $dateTimeTo;
 				}
 				else
 				{
-					$timeFrom[] = $dateTimeFromE[1];
-					$timeTo[] = $dateTimeToE[1];
+					$timeFrom = $dateTimeFromE[1];
+					$timeTo = $dateTimeToE[1];
 				}
 
 				array_set_default($allocation, 'resources', array(phpgw::get_var('resource', 'int')));
@@ -450,10 +454,8 @@
 			$allocation['cancel_link'] = self::link(array('menuaction' => 'booking.uiallocation.index'));
 			array_set_default($allocation, 'cost', '0');
 
-
-
-			$_timeFrom = $timeFrom ? $timeFrom[0] : '';
-			$_timeTo = $timeTo ? $timeTo[0] : '';
+//			$_timeFrom = $timeFrom ? $timeFrom : '';
+			$_timeTo = $timeTo ? $timeTo : '';
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Allocation New'), 'link' => '#allocation_new');
@@ -464,17 +466,25 @@
 
 			if ($step < 2)
 			{
-				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-				$allocation['from_'] = date("{$dateformat} H:i",strtotime($dateTimeFrom[0]));
+				if($dateformat == 'Y-m-d' && $_SERVER['REQUEST_METHOD'] == 'GET')
+				{
+					$allocation['from_'] = date("{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i",strtotime($dateTimeFrom));
+					$_timeFrom = strtotime($dateTimeFrom);
+				}
+				else
+				{
+					$allocation['from_'] = $dateTimeFrom;
+					$_timeFrom = phpgwapi_datetime::date_to_timestamp($dateTimeFrom);
+				}
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' && $errors)
 				{
 	//				$allocation['from_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['from_']));
 	//				$allocation['to_'] = strftime("%H:%M", strtotime($_POST['weekday'] . " " . $_POST['to_']));
-					$_timeFrom = $allocation['from_'];
-					$_timeTo = $allocation['to_'];
+	//				$_timeFrom = $allocation['from_'];
+	//				$_timeTo = $allocation['to_'];
 				}
 
-				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', strtotime($dateTimeFrom[0]));
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time', $_timeTo);
 
 				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
@@ -487,9 +497,6 @@
 			}
 			else if ($step == 2)
 			{
-//				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time', $_timeFrom);
-//				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time', $_timeTo);
-
 				self::render_template_xsl('allocation_new_preview', array('allocation' => $allocation,
 					'step' => $step,
 					'recurring' => $_POST['recurring'],
