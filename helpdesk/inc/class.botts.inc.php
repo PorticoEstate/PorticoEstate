@@ -846,8 +846,11 @@
 				$body .= lang('Group').': '. $group_name ."\n";
 			}
 			$body .= lang('Opened By').': '. $ticket['user_name'] ."\n\n";
-			$body .= lang('First Note Added').":\n";
-			$body .= stripslashes(strip_tags($ticket['details']))."\n\n";
+			if($get_message)
+			{
+				$body .= lang('First Note Added').":\n";
+				$body .= stripslashes(strip_tags($ticket['details']))."\n\n";
+			}
 
 			/**************************************************************\
 			 * Display additional notes                                     *
@@ -860,9 +863,12 @@
 
 				foreach($history_array as $value)
 				{
-					$body .= lang('Date') . ': '.$GLOBALS['phpgw']->common->show_date($value['datetime'])."\n";
-					$body .= lang('User') . ': '.$value['owner']."\n";
-					$body .=lang('Note').': '. nl2br(stripslashes($value['new_value']))."\n\n";
+					if($get_message)
+					{
+						$body .= lang('Date') . ': '.$GLOBALS['phpgw']->common->show_date($value['datetime'])."\n";
+						$body .= lang('User') . ': '.$value['owner']."\n";
+						$body .=lang('Note').': '. nl2br(stripslashes($value['new_value']))."\n\n";
+					}
 					$i++;
 				}
 				$subject.= "-" .$i;
