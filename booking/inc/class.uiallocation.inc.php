@@ -436,8 +436,8 @@
 				}
 				else
 				{
-					$timeFrom = $dateTimeFromE[1];
-					$timeTo = $dateTimeToE[1];
+					$timeFrom = end($dateTimeFromE);
+					$timeTo = end($dateTimeToE);
 				}
 
 				array_set_default($allocation, 'resources', array(phpgw::get_var('resource', 'int')));
