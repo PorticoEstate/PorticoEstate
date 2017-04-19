@@ -215,7 +215,8 @@
 				$order = ' ORDER BY '.implode(',', $jsonB['order']);
 			}
 			
-			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
+			//$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
+			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ROLLUP (".$columns.')'.$order;
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 
