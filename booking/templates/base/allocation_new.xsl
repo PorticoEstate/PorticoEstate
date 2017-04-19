@@ -51,7 +51,7 @@
 						</xsl:attribute>
 					</input>
 				</div>
-				<div class="pure-control-group">
+				<!--div class="pure-control-group">
 					<label for="field_weekday">
 						<xsl:value-of select="php:function('lang', 'Weekday')" />
 					</label>
@@ -99,7 +99,7 @@
 							<xsl:value-of select="php:function('lang', 'Sunday')" />
 						</option>
 					</select>
-				</div>
+				</div-->
 				<div class="pure-control-group">
 					<label for="field_from">
 						<xsl:value-of select="php:function('lang', 'From')" />
