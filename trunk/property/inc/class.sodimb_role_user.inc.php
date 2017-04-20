@@ -303,4 +303,15 @@
 
 			return $ok;
 		}
+
+		public function update_substitute( $user_id, $substitute_user_id )
+		{
+			return true;
+		}
+
+		public function get_substitute( $user_id)
+		{
+			return 6;
+		}
+
 	}

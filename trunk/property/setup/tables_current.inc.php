@@ -1495,6 +1495,16 @@
 					'ecodimb' => 'id'), 'phpgw_accounts' => array('user_id' => 'account_id')),
 			'uc' => array()
 		),
+		'fm_ecodimb_role_user_substitute' => array(
+			'fd' => array(
+				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'substitute_user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('user_id', 'substitute_user_id'),
+			'ix' => array(),
+			'fk' => array(),
+			'uc' => array()
+		),
 		'fm_ecodimd' => array(
 			'fd' => array(
 				'id' => array('type' => 'varchar', 'precision' => '5', 'nullable' => False),
