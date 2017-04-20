@@ -306,12 +306,20 @@
 
 		public function update_substitute( $user_id, $substitute_user_id )
 		{
-			return true;
+			$this->db->transaction_begin();
+			$this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
+			$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id ) VALUES (' . (int)$user_id . ',' . (int) $substitute_user_id . ')', __LINE__, __FILE__);
+			if($this->db->transaction_commit())
+			{
+				phpgwapi_cache::message_set(lang('substitute') .': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString(), 'message');
+				return true;
+			}
 		}
 
 		public function get_substitute( $user_id)
 		{
-			return 6;
+			$this->db->query('SELECT substitute_user_id FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
+			$this->db->next_record();
+			return (int)$this->db->f('substitute_user_id');
 		}
-
 	}
