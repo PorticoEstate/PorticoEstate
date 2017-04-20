@@ -239,7 +239,7 @@
 							'created' => array('add' => 'time()'),
 							'modified' => array('edit' => 'time()'),
 						),
-						'check_grant' => true
+	//					'check_grant' => true
 					);
 
 					break;
@@ -302,7 +302,7 @@
 							'created' => array('add' => 'time()'),
 							'modified' => array('edit' => 'time()'),
 						),
-						'check_grant' => true
+		//				'check_grant' => true
 					);
 
 					break;
