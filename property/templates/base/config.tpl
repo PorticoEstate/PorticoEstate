@@ -129,6 +129,12 @@
 				</td>
 			</tr>
 			<tr>
+				<td>{lang_approval_amount_limit} 2:</td>
+				<td>
+					<input name="newsettings[approval_amount_limit2]" value="{value_approval_amount_limit2}">
+				</td>
+			</tr>
+			<tr>
 				<td>{lang_approval_level}:</td>
 				<td>
 					<select name="newsettings[approval_level]">
