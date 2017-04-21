@@ -1821,6 +1821,14 @@
 				return array();
 			}
 			$approval_amount_limit = !empty($this->config->config_data['approval_amount_limit']) ? (int) $this->config->config_data['approval_amount_limit'] : 0;
+			$approval_amount_limit2 = !empty($this->config->config_data['approval_amount_limit2']) ? (int) $this->config->config_data['approval_amount_limit2'] : 0;
+
+			$approval_amount_limit1 = 0;
+			if($approval_amount_limit2)
+			{
+				$approval_amount_limit1 = $approval_amount_limit;
+				$approval_amount_limit = 0;
+			}
 
 			$config		= CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.ticket'));
 			$check_external_register= !!$config->config_data['external_register']['check_external_register'];
@@ -1938,6 +1946,27 @@
 						$supervisors[$supervisor_id] = array('id' => $supervisor_id, 'required' => false);
 					}
 					unset($prefs);
+				}
+			}
+			else if($approval_amount_limit1 > 0 && $amount > $approval_amount_limit1)
+			{
+				$invoice = CreateObject('property.soinvoice');
+				$level_1_required = true;
+
+				if($approval_amount_limit2 > 0 && $amount > $approval_amount_limit2)
+				{
+					$supervisor_id = $invoice->get_default_dimb_role_user(2, $ecodimb);
+					if($supervisor_id)
+					{
+						$supervisors[$supervisor_id] =  array('id' => $supervisor_id, 'required' => true, 'default' => true);
+						$level_1_required = false;
+					}
+				}
+
+				$supervisor_id = $invoice->get_default_dimb_role_user(1, $ecodimb);
+				if($supervisor_id)
+				{
+					$supervisors[$supervisor_id] =  array('id' => $supervisor_id, 'required' => $level_1_required, 'default' => $level_1_required);
 				}
 			}
 

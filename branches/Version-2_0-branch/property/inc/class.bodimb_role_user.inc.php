@@ -69,4 +69,14 @@
 			$values = $this->so->edit($data);
 			return $values;
 		}
+
+		public function update_substitute( $user_id, $substitute_user_id )
+		{
+			return $this->so->update_substitute($user_id, $substitute_user_id);
+		}
+
+		public function get_substitute( $user_id)
+		{
+			return $this->so->get_substitute($user_id);
+		}
 	}

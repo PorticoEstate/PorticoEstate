@@ -334,12 +334,12 @@
 					  'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 					  ),
 					 */
-					/*
+					
 					  'dimb_role'	=> array
 					  (
 					  'text'	=> lang('dimb roles'),
 					  'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index', 'type' => 'dimb_role') )
-					  ),
+					  ),/*
 					  'dimb_role_user' => array
 					  (
 					  'text'	=> lang('dimb role user'),
@@ -787,16 +787,19 @@
 			{
 				$menus['preferences'] = array
 					(
-					array
-						(
+					array(
 						'text' => $GLOBALS['phpgw']->translation->translate('Preferences', array(), true),
 						'url' => $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname' => 'property',
 							'type' => 'user'))
 					),
-					array
-						(
+					array(
 						'text' => $GLOBALS['phpgw']->translation->translate('Grant Access', array(), true),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin.aclprefs',
+							'acl_app' => 'property'))
+					),
+					array(
+						'text' => lang('substitute'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.substitute',
 							'acl_app' => 'property'))
 					)
 				);

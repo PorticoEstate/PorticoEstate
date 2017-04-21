@@ -117,7 +117,12 @@
 			}
 			catch (Exception $e)
 			{
-				$status = lang('unable_to_connect_to_database');
+				$GLOBALS['phpgw']->log->error(array(
+					'text'	=> 'bookingfrontend_external_user::get_breg_orgs() : error when trying to connect. Error: %1',
+					'p1'	=> $db->get_error_message(),
+					'line'	=> __LINE__,
+					'file'	=> __FILE__
+				));
 			}
 
 			$sql = "SELECT DISTINCT orgnr FROM breg.personcurrent WHERE fodselsnr ='{$fodselsnr}'";
