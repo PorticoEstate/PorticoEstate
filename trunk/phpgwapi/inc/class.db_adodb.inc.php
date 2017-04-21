@@ -216,7 +216,7 @@
 				{
 					$message = 'could not connect to server';
 				}
-
+				$this->error_message = $e->getMessage();
 				throw new Exception($message);
 				return false;
 			}
