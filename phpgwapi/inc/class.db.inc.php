@@ -100,6 +100,8 @@
 
 		var $persistent = false;
 		var $delayPointer = false;
+
+		var $error_message = '';
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -171,6 +173,10 @@
 
 		}
 
+		public function get_error_message( )
+		{
+			return $this->error_message;
+		}
 		/**
 		* Backward compatibility for get current connection id
 		* @return bool true
