@@ -304,22 +304,59 @@
 			return $ok;
 		}
 
-		public function update_substitute( $user_id, $substitute_user_id )
+		/**
+		 * A user can only have one substitute
+		 * @param int $user_id
+		 * @param int $substitute_user_id
+		 * @return boolean true on success
+		 */
+		public function update_substitute( $user_id, $substitute_user_id = 0 )
 		{
 			$this->db->transaction_begin();
 			$this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
-			$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id ) VALUES (' . (int)$user_id . ',' . (int) $substitute_user_id . ')', __LINE__, __FILE__);
+			if($substitute_user_id)
+			{
+				$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id ) VALUES (' . (int)$user_id . ',' . (int) $substitute_user_id . ')', __LINE__, __FILE__);
+			}
 			if($this->db->transaction_commit())
 			{
-				phpgwapi_cache::message_set(lang('substitute') .': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString(), 'message');
+				if($substitute_user_id)
+				{
+					phpgwapi_cache::message_set(lang('substitute') .': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString(), 'message');
+				}
+				else
+				{
+					phpgwapi_cache::message_set(lang('substitute') . ' ' .lang('deleted'), 'message');
+				}
 				return true;
 			}
 		}
 
+		/**
+		 * Get the substitute for a user
+		 * @param int $user_id
+		 * @return int $substitute_user_id
+		 */
 		public function get_substitute( $user_id)
 		{
 			$this->db->query('SELECT substitute_user_id FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
 			$this->db->next_record();
 			return (int)$this->db->f('substitute_user_id');
+		}
+
+		/**
+		 * Get the users that the substitute is given responsibility for
+		 * @param int $substitute_user_id
+		 * @return array $users
+		 */
+		public function get_users_for_substitute( $substitute_user_id)
+		{
+			$this->db->query('SELECT user_id FROM fm_ecodimb_role_user_substitute WHERE substitute_user_id = ' . (int)$substitute_user_id, __LINE__, __FILE__);
+			$users = array();
+			while ($this->db->next_record())
+			{
+				$users[] = $this->db->f('user_id');
+			}
+			return $users;
 		}
 	}

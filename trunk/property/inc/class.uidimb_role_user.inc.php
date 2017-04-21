@@ -311,8 +311,9 @@
 		{
 			$user_id = $this->account_id;
 			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int', 'POST');
+			$save = phpgw::get_var('save', 'string', 'POST');
 
-			if($substitute_user_id)
+			if($save)
 			{
 				$this->bo->update_substitute($user_id, $substitute_user_id);
 			}
