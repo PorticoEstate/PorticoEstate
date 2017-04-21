@@ -239,7 +239,8 @@
 		'addgroup'				=> 'property.hook_helper.clear_userlist',
 		'deletegroup'			=> 'property.hook_helper.clear_userlist',
 		'editgroup'				=> 'property.hook_helper.clear_userlist',
-		'registration'			=> 'property.hook_helper.add_location_contact'
+		'registration'			=> 'property.hook_helper.add_location_contact',
+		'after_navbar'			=> 'property.hook_helper.after_navbar',
 	);
 
 	/* Dependencies for this app to work */

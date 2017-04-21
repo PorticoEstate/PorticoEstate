@@ -1638,19 +1638,36 @@
 				$this->db->next_record();
 				if ($this->db->f('approved') || $workorder['approved'])
 				{
+					$sodimb_role_user = CreateObject('property.sodimb_role_user');
+					$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+					$take_responsibility_for = array($this->account);
+
 					$action_params = array
-						(
+					(
 						'appname' => 'property',
 						'location' => '.project.workorder',
 						'id' => $workorder['id'],
-						'responsible' => $this->account,
 						'responsible_type' => 'user',
 						'action' => 'approval',
 						'remark' => '',
 						'deadline' => ''
 					);
+					$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
-					execMethod('property.sopending_action.close_pending_action', $action_params);
+					foreach ($approvals as $approval)
+					{
+						if(in_array($approval['responsible'],$users_for_substitute))
+						{
+							$take_responsibility_for[] = $approval['responsible'];
+						}
+					}
+
+					foreach ($take_responsibility_for as $__account_id)
+					{
+						$action_params['responsible'] = $__account_id;
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+					}
+
 					unset($action_params);
 				}
 				//Sigurd: Consider remove
@@ -3027,19 +3044,36 @@
 				$this->db->next_record();
 				if ($this->db->f('approved'))
 				{
+					$sodimb_role_user = CreateObject('property.sodimb_role_user');
+					$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+					$take_responsibility_for = array($this->account);
+
 					$action_params = array
-						(
+					(
 						'appname' => 'property',
 						'location' => '.project.workorder',
 						'id' => $order_id,
-						'responsible' => $this->account,
 						'responsible_type' => 'user',
 						'action' => 'approval',
 						'remark' => '',
 						'deadline' => ''
 					);
 
-					execMethod('property.sopending_action.close_pending_action', $action_params);
+					$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+					foreach ($approvals as $approval)
+					{
+						if(in_array($approval['responsible'],$users_for_substitute))
+						{
+							$take_responsibility_for[] = $approval['responsible'];
+						}
+					}
+
+					foreach ($take_responsibility_for as $__account_id)
+					{
+						$action_params['responsible'] = $__account_id;
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+					}
 					unset($action_params);
 				}
 				//Sigurd: Consider remove

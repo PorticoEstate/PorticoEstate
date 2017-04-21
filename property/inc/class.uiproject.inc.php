@@ -1044,6 +1044,10 @@ JS;
 							'deadline' => ''
 						);
 
+						/**
+						 * For now - handled by uiworkorder.
+						 * consider remove - beware of the substitute logic...see uiworkorder
+						 */
 						if (isset($values['mail_address']) && is_array($values['mail_address']))
 						{
 							foreach ($values['mail_address'] as $_account_id => $_address)

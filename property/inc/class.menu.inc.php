@@ -349,7 +349,14 @@
 					'dimb_role_user2' => array
 						(
 						'text' => lang('dimb role user'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.index'))
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.index')),
+						'children' => array(
+							'substitute' => array
+							(
+								'text' => lang('substitute'),
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.list_substitute')),
+							)
+						)
 					),
 					'accounting_dimd' => array
 						(

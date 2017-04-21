@@ -1003,12 +1003,15 @@
 					//			$portalbox->set_controls($key,$value);
 				}
 
+				$users_for_substitute = CreateObject('property.sodimb_role_user')->get_users_for_substitute( $accound_id);
+				$users_for_substitute[] = $accound_id;
+
+
 				$action_params = array
 					(
 					'appname' => 'property',
 					'location' => '.project',
-					//	'id'				=> $id,
-					'responsible' => $accound_id,
+					'responsible' => $users_for_substitute,
 					'responsible_type' => 'user',
 					'action' => 'approval',
 					'deadline' => '',
@@ -1169,5 +1172,39 @@
 
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $save_app;
 			$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] = $maxmatches;
+		}
+
+		function after_navbar( )
+		{
+			$sodimb_role_user = CreateObject('property.sodimb_role_user');
+			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
+			$substitute_user_id = $sodimb_role_user->get_substitute( $user_id);
+			$lang_substitute = $GLOBALS['phpgw']->translation->translate('substitute', array(), false, 'property');
+			if($substitute_user_id)
+			{
+				echo '<div class="msg_good">';
+				echo $lang_substitute .': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString();
+				echo '</div>';
+			}
+
+			$users_for_substitute = $sodimb_role_user->get_users_for_substitute( $user_id);
+			$names = array();
+			foreach ($users_for_substitute as $user_for_substitute)
+			{
+				$names[] = $GLOBALS['phpgw']->accounts->get($user_for_substitute)->__toString();
+			}
+			if($names)
+			{
+				echo '<div class="msg_good">';
+				echo $lang_substitute .' for : ' . implode(', ', $names);
+				echo '</div>';
+			}
+
+			if(in_array($substitute_user_id, $users_for_substitute))
+			{
+				echo '<div class="error">';
+				echo $lang_substitute .': ' . lang('circle reference');
+				echo '</div>';
+			}
 		}
 	}
