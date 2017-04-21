@@ -202,6 +202,32 @@
 			
 			$jsonB = json_decode($definition['report_definition'], true);
 			
+			$columns_a = array_values($jsonB['group']);
+
+			$first = 0;
+			$last_a = count($columns_a) -1;
+			
+			$columns_b = $columns_a;
+			unset($columns_b[$last_a]);
+			
+			$last_b = count($columns_b) -1;
+			
+			$query_columns = implode(',', $columns_b);			
+				
+			foreach ($columns_b as $c => $v)
+			{
+				if ($c == $first)
+				{
+					$query_columns .= ", CASE WHEN ".$columns_b[$first]." is null THEN 'Grand Total'";
+				} 
+				else {
+					$query_columns  .= " WHEN ".$columns_b[$c]." is null THEN concat (".$columns_b[$c-1]."::character varying, ' total')";	
+				}		
+			}
+			
+			$query_columns  .= " WHEN ".$columns_a[$last_a]." is null THEN concat (".$columns_b[$last_b]."::character varying, ' total')";				
+			$query_columns .= " ELSE ".$columns_a[$last_a]."::character varying END AS ".$columns_a[$last_a];
+				
 			$columns = implode(',', $jsonB['group']);
 			$agregates = array();
 			foreach ($jsonB['aggregate'] as $c => $v)
@@ -216,7 +242,7 @@
 			}
 			
 			//$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
-			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ROLLUP (".$columns.')'.$order;
+			$sql = "SELECT ".$query_columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ROLLUP (".$columns.')'.$order;
 			
 			$this->db->query($sql, __LINE__, __FILE__);
 
