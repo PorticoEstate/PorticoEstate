@@ -1497,10 +1497,11 @@
 		),
 		'fm_ecodimb_role_user_substitute' => array(
 			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => '4', 'nullable' => False),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'substitute_user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 			),
-			'pk' => array('user_id', 'substitute_user_id'),
+			'pk' => array('id'),
 			'ix' => array(),
 			'fk' => array(),
 			'uc' => array()
