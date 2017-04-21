@@ -193,16 +193,17 @@
 			return $values;
 		}
 		
-		function read_to_export ( $id )
+		function build_sum_of_colums($columns)
 		{
-			$id = (int)$id;
+			$columns_a = array_values($columns);
 			
-			$definition = $this->read_single($id);
-			$dataset = $this->read_single_dataset($definition['dataset_id']);
-			
-			$jsonB = json_decode($definition['report_definition'], true);
-			
-			$columns_a = array_values($jsonB['group']);
+			if (count($columns_a) == 1)
+			{
+				return "CASE 
+						WHEN ".$columns_a[0]." is null THEN '".lang('grand total')."'
+							ELSE ".$columns_a[0]."::character varying
+							END AS ".$columns_a[0];
+			}
 
 			$first = 0;
 			$last_a = count($columns_a) -1;
@@ -218,15 +219,29 @@
 			{
 				if ($c == $first)
 				{
-					$query_columns .= ", CASE WHEN ".$columns_b[$first]." is null THEN 'Grand Total'";
+					$query_columns .= ", CASE WHEN ".$columns_b[$first]." is null THEN '".lang('grand total')."'";
 				} 
 				else {
-					$query_columns  .= " WHEN ".$columns_b[$c]." is null THEN concat (".$columns_b[$c-1]."::character varying, ' total')";	
+					$query_columns .= " WHEN ".$columns_b[$c]." is null THEN concat (".$columns_b[$c-1]."::character varying, ' ".lang('total')."')";	
 				}		
 			}
 			
-			$query_columns  .= " WHEN ".$columns_a[$last_a]." is null THEN concat (".$columns_b[$last_b]."::character varying, ' total')";				
-			$query_columns .= " ELSE ".$columns_a[$last_a]."::character varying END AS ".$columns_a[$last_a];
+			$query_columns .= " WHEN ".$columns_a[$last_a]." is null THEN concat (".$columns_b[$last_b]."::character varying, ' ".lang('total')."')";				
+			$query_columns .= " ELSE ".$columns_a[$last_a]."::character varying END AS ".$columns_a[$last_a];		
+			
+			return $query_columns;
+		}
+		
+		function read_to_export ( $id )
+		{
+			$id = (int)$id;
+			
+			$definition = $this->read_single($id);
+			$dataset = $this->read_single_dataset($definition['dataset_id']);
+			
+			$jsonB = json_decode($definition['report_definition'], true);
+			
+			$query_columns = $this->build_sum_of_colums($jsonB['group']);
 				
 			$columns = implode(',', $jsonB['group']);
 			$agregates = array();
@@ -243,7 +258,7 @@
 			
 			//$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
 			$sql = "SELECT ".$query_columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ROLLUP (".$columns.')'.$order;
-			
+
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$resultado = array_merge(array_values($jsonB['group']), array_values($jsonB['txt_aggregate']));
