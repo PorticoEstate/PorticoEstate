@@ -691,11 +691,11 @@
 					{
 						if($_int_query)
 						{
-							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.id = {$_int_query} OR address {$this->like} '%{$query}%')";			
+							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR {$entity_table}.id = {$_int_query} OR address {$this->like} '%{$query}%')";
 						}
 						else
 						{
-							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";										
+							$_querymethod[] = "( {$entity_table}.location_code {$this->like} '%{$query}%' OR address {$this->like} '%{$query}%')";
 						}
 //						$where= 'OR';
 					}
@@ -923,6 +923,10 @@
 				{
 					$querymethod .= " AND {$_querymethod_status}";
 				}
+			}
+			else
+			{
+				$querymethod = " $where {$_querymethod_status}";
 			}
 
 //			$filtermethod .= "AND xmlexists('//location_code[text() = ''5002-02'']' PASSING BY REF xml_representation)";
