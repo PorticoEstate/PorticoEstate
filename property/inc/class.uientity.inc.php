@@ -713,7 +713,7 @@
 
 			$link_data = array
 				(
-				'menuaction' => 'property.uientity.edit',
+				'menuaction' => 'property.uientity.view',
 				'entity_id' => $this->entity_id,
 				'cat_id' => $this->cat_id,
 				'type' => $this->type
@@ -2504,12 +2504,7 @@ JS;
 				'files' => isset($values['files']) ? $values['files'] : '',
 				//		'jasperfiles'					=> isset($values['jasperfiles'])?$values['jasperfiles']:'',
 				'multiple_uploader' => $id ? true : '',
-				/*'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
-				. "upload_target:'property.uientity.addfiles',"
-				. "id:'{$id}',"
-				. "_entity_id:'{$this->entity_id}',"
-				. "_cat_id:'{$this->cat_id}',"
-				. "_type:'{$this->type}'}",*/
+
 				'multi_upload_parans' => "{menuaction:'property.uientity.build_multi_upload_file',"
 				. "id:'{$id}',"
 				. "_entity_id:'{$this->entity_id}',"
@@ -2571,10 +2566,14 @@ JS;
 
 			self::add_javascript('property', 'portico', 'entity.edit.js');
 
-			self::render_template_xsl(array('entity', 'datatable_inline', 'attributes_form',
-				'files'), array('edit' => $data));
+			$attribute_template = 'attributes_form';
+			if($mode == 'view')
+			{
+				$attribute_template = 'attributes_view';
+			}
 
-			//phpgwapi_jquery::load_widget('treeview');
+			self::render_template_xsl(array('entity', 'datatable_inline', $attribute_template,
+				'files'), array('edit' => $data));
 
 			$criteria = array
 				(

@@ -842,8 +842,35 @@
 						<xsl:with-param	name="cat_list" select="cat_list"/>				
 					</xsl:call-template>
 				</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="lang_edit">
+						<xsl:value-of select="php:function('lang', 'edit')" />
+					</xsl:variable>
+					<xsl:variable name="lang_new_entity">
+						<xsl:value-of select="php:function('lang', 'new')" />
+					</xsl:variable>
+					<input type="button" class="pure-button pure-button-primary" name="edit_entity" value="{$lang_edit}" title = "{$lang_edit}"  onClick="document.load_edit_form.submit();"/>
+					<!--input type="button" class="pure-button pure-button-primary" name="new_entity" value="{$lang_new_entity}" title = "{$lang_new_entity}" onClick="document.new_form.submit();"/-->
+					<!--input class="pure-button pure-button-primary" type="button" name="cancelButton" id ='cancelButton' value="{$lang_cancel}" title = "{$lang_cancel}" onClick="document.cancel_form.submit();"/-->
+				</xsl:otherwise>
 			</xsl:choose>
 		</form>
+
+		<xsl:variable name="edit_params">
+			<xsl:text>menuaction:property.uientity.edit, id:</xsl:text>
+			<xsl:value-of select="value_id"/>
+			<xsl:text>, location_id:</xsl:text>
+			<xsl:value-of select="value_location_id"/>
+		</xsl:variable>
+		<xsl:variable name="edit_url">
+			<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $edit_params )" />
+		</xsl:variable>
+
+		<form name="load_edit_form" id="load_edit_form" action="{$edit_url}" method="post">
+		</form>
+
+
+
 		<xsl:variable name="cancel_url">
 			<xsl:value-of select="cancel_url"/>
 		</xsl:variable>
