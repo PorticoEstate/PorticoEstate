@@ -845,6 +845,7 @@
 				$cache_attribute_status[$location_id] = $GLOBALS['phpgw']->custom_fields->find2($location_id, 0, '', 'ASC', '', true, true,$filters);
 			}
 
+			$_querymethod_status = '';
 			if(!phpgw::get_var('status', 'int'))
 			{
 				if(!empty($cache_attribute_status[$location_id]))
@@ -924,7 +925,7 @@
 					$querymethod .= " AND {$_querymethod_status}";
 				}
 			}
-			else
+			else if ($_querymethod_status)
 			{
 				$querymethod = " $where {$_querymethod_status}";
 			}
