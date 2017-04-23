@@ -1759,19 +1759,37 @@
 				{
 					$close_pending_action = true;
 
+
+					$sodimb_role_user = CreateObject('property.sodimb_role_user');
+					$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+					$take_responsibility_for = array($this->account);
+
 					$action_params = array
 						(
 						'appname' => 'property',
 						'location' => '.project',
 						'id' => (int)$project['id'],
-						'responsible' => $this->account,
 						'responsible_type' => 'user',
 						'action' => 'approval',
 						'remark' => '',
 						'deadline' => ''
 					);
 
-					execMethod('property.sopending_action.close_pending_action', $action_params);
+					$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+					foreach ($approvals as $approval)
+					{
+						if(in_array($approval['responsible'],$users_for_substitute))
+						{
+							$take_responsibility_for[] = $approval['responsible'];
+						}
+					}
+
+					foreach ($take_responsibility_for as $__account_id)
+					{
+						$action_params['responsible'] = $__account_id;
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+					}
 					unset($action_params);
 
 					$this->approve_related_workorders($project['id']);
@@ -3423,14 +3441,17 @@
 			}
 
 			$historylog = CreateObject('property.historylog', 'workorder');
+			$sodimb_role_user = CreateObject('property.sodimb_role_user');
 
 			foreach ($ids as $order_id)
 			{
+				$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+				$take_responsibility_for = array($this->account);
+
 				$action_params = array(
 					'appname' => 'property',
 					'location' => '.project.workorder',
 					'id' => $order_id,
-					'responsible' => $this->account,
 					'responsible_type' => 'user',
 					'action' => 'approval',
 					'remark' => '',
@@ -3438,24 +3459,38 @@
 					'closed' => true
 
 				);
-				//check for approved
-				if(execMethod('property.sopending_action.get_pending_action', $action_params))
+
+				$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+				foreach ($approvals as $approval)
 				{
-					continue;
+					if(in_array($approval['responsible'],$users_for_substitute))
+					{
+						$take_responsibility_for[] = $approval['responsible'];
+					}
 				}
 
-				unset($action_params['closed']);
-				//approval_substitute
-				if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+				foreach ($take_responsibility_for as $__account_id)
 				{
-					execMethod('property.sopending_action.set_pending_action', $action_params);
+					$action_params['responsible'] = $__account_id;
+					//check for approved
+					if(execMethod('property.sopending_action.get_pending_action', $action_params))
+					{
+						continue;
+					}
+					unset($action_params['closed']);
+					//approval_substitute
+					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					{
+						execMethod('property.sopending_action.set_pending_action', $action_params);
+					}
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+					$budget_amount = execMethod('property.boworkorder.get_budget_amount', $order_id);
+
+					$historylog->add('OA', $order_id, $GLOBALS['phpgw']->accounts->get($this->account)->__toString() . "::{$budget_amount}");
+
+					phpgwapi_cache::message_set(lang('order %1 approved for amount %2', $order_id, $budget_amount),'message');
 				}
-				execMethod('property.sopending_action.close_pending_action', $action_params);
-				$budget_amount = execMethod('property.boworkorder.get_budget_amount', $order_id);
-
-				$historylog->add('OA', $order_id, $GLOBALS['phpgw']->accounts->get($this->account)->__toString() . "::{$budget_amount}");
-
-				phpgwapi_cache::message_set(lang('order %1 approved for amount %2', $order_id, $budget_amount),'message');
 			}
 		}
 	}
