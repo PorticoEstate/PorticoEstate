@@ -1021,53 +1021,54 @@
 				}
 			}
 
-			if (isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
-			{
-
-				$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(), false, 'controller');
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
-				$socase = CreateObject('controller.socase');
-				$controller_cases = $socase->get_cases_by_component($location_id, $id);
-
-				$_statustext = array();
-				$_statustext[0] = lang('open');
-				$_statustext[1] = lang('closed');
-				$_statustext[2] = lang('pending');
-			}
-
-			foreach ($controller_cases as $case)
-			{
-				switch ($case['status'])
-				{
-					case 0:
-					case 2:
-						$_method = 'view_open_cases';
-						break;
-					case 1:
-						$_method = 'view_closed_cases';
-						break;
-					default:
-						$_method = 'view_open_cases';
-				}
-
-				$_link = $GLOBALS['phpgw']->link('/index.php', array
-					(
-					'menuaction' => "controller.uicase.{$_method}",
-					'check_list_id' => $case['check_list_id']
-					)
-				);
-
-				$values[] = array
-					(
-					'url' => "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
-					'type' => $lang_controller,
-					'title' => $case['descr'],
-					'status' => $_statustext[$case['status']],
-					'user' => $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
-					'entry_date' => $GLOBALS['phpgw']->common->show_date($case['modified_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
-				);
-				unset($_link);
-			}
+//			$controller_cases = array();
+//			if (isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
+//			{
+//
+//				$lang_controller = $GLOBALS['phpgw']->translation->translate('controller', array(), false, 'controller');
+//				$location_id = $GLOBALS['phpgw']->locations->get_id('property', $this->acl_location);
+//				$socase = CreateObject('controller.socase');
+//				$controller_cases = $socase->get_cases_by_component($location_id, $id);
+//
+//				$_statustext = array();
+//				$_statustext[0] = lang('open');
+//				$_statustext[1] = lang('closed');
+//				$_statustext[2] = lang('pending');
+//			}
+//
+//			foreach ($controller_cases as $case)
+//			{
+//				switch ($case['status'])
+//				{
+//					case 0:
+//					case 2:
+//						$_method = 'view_open_cases';
+//						break;
+//					case 1:
+//						$_method = 'view_closed_cases';
+//						break;
+//					default:
+//						$_method = 'view_open_cases';
+//				}
+//
+//				$_link = $GLOBALS['phpgw']->link('/index.php', array
+//					(
+//					'menuaction' => "controller.uicase.{$_method}",
+//					'check_list_id' => $case['check_list_id']
+//					)
+//				);
+//
+//				$values[] = array
+//					(
+//					'url' => "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
+//					'type' => $lang_controller,
+//					'title' => $case['descr'],
+//					'status' => $_statustext[$case['status']],
+//					'user' => $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
+//					'entry_date' => $GLOBALS['phpgw']->common->show_date($case['modified_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+//				);
+//				unset($_link);
+//			}
 
 			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
 			$total_records = count($values);
@@ -2415,7 +2416,7 @@
 
 					$_case_def = array
 						(
-						array('key' => 'url', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'url', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true),
 						array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
 						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'value', 'label' => lang('value'), 'sortable' => false, 'resizeable' => true),
@@ -2433,7 +2434,7 @@
 						'data' => json_encode($_cases),
 						'config' => array(
 							array('disableFilter' => true),
-							array('disablePagination' => true)
+					//		array('disablePagination' => true)
 						)
 					);
 				}
@@ -3587,12 +3588,24 @@ HTML;
 					)
 				);
 
+
+				$_value_arr = array();
+
+				if($case['measurement'])
+				{
+					$_value_arr[] = $case['measurement'];
+				}
+				if($case['descr'])
+				{
+					$_value_arr[] = $case['descr'];
+				}
+
 				$_cases[] = array
 					(
 					'url' => "<a href=\"{$_link}\" > {$case['check_list_id']}</a>",
 					'type' => $_control_name,
 					'title' => "<a href=\"{$_link}\" > {$case['title']}</a>",
-					'value' => $case['measurement'],
+					'value' => implode('</br>', $_value_arr),
 					'status' => $_statustext[$case['status']],
 					'user' => $GLOBALS['phpgw']->accounts->get($case['user_id'])->__toString(),
 					'entry_date' => $GLOBALS['phpgw']->common->show_date($case['modified_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
@@ -3664,13 +3677,23 @@ HTML;
 						'check_list_id' => $check_list_id
 						)
 					);
+					$_value_arr = array();
+
+					if($case->get_measurement())
+					{
+						$_value_arr[] = $case->get_measurement();
+					}
+					if($case->get_descr())
+					{
+						$_value_arr[] = $case->get_descr();
+					}
 
 					$_cases[] = array
 						(
 						'url' => "<a href=\"{$_link}\" > {$check_list_id}</a>",
 						'type' => $_control_name,
 						'title' => "<a href=\"{$_link}\" >" . $check_item->get_control_item()->get_title() . "</a>",
-						'value' => $case->get_measurement(),
+						'value' => implode('</br>', $_value_arr),
 						'status' => $_statustext[$case->get_status()],
 						'user' => $GLOBALS['phpgw']->accounts->get($case->get_user_id())->__toString(),
 						'entry_date' => $GLOBALS['phpgw']->common->show_date($case->get_modified_date(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
