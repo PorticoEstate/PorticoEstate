@@ -1638,8 +1638,8 @@
 				$this->db->next_record();
 				if ($this->db->f('approved') || $workorder['approved'])
 				{
-					$sodimb_role_user = CreateObject('property.sodimb_role_user');
-					$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+					$sosubstitute = CreateObject('property.sosubstitute');
+					$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
 					$take_responsibility_for = array($this->account);
 
 					$action_params = array
@@ -3044,8 +3044,8 @@
 				$this->db->next_record();
 				if ($this->db->f('approved'))
 				{
-					$sodimb_role_user = CreateObject('property.sodimb_role_user');
-					$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+					$sosubstitute = CreateObject('property.sosubstitute');
+					$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
 					$take_responsibility_for = array($this->account);
 
 					$action_params = array

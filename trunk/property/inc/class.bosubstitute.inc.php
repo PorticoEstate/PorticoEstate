@@ -24,9 +24,9 @@
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/
 	 * @package registration
-	 * @version $Id$
+	 * @version $Id: class.bodimb_role_user.inc.php 16604 2017-04-20 14:53:00Z sigurdne $
 	 */
-	class property_bodimb_role_user
+	class property_bosubstitute
 	{
 
 		var $public_functions = array
@@ -36,14 +36,13 @@
 		function __construct()
 		{
 			$this->account_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$this->so = CreateObject('property.sodimb_role_user');
+			$this->so = CreateObject('property.sosubstitute');
 			$this->allrows = $this->bo->allrows;
 		}
 
 		public function read( $data )
 		{
 			static $users = array();
-			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$values = $this->so->read($data);
 
 			foreach ($values as &$entry)
@@ -56,17 +55,38 @@
 						$users[$entry['user_id']] = $entry['user'];
 					}
 				}
+				if ($entry['substitute_user_id'])
+				{
+					if (!$entry['substitute'] = $users[$entry['substitute_user_id']])
+					{
+						$entry['substitute'] = $GLOBALS['phpgw']->accounts->get($entry['substitute_user_id'])->__toString();
+						$users[$entry['substitute_user_id']] = $entry['substitute'];
+					}
+				}
 
-				$entry['active_from'] = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_from'], $dateformat) : '';
-				$entry['active_to'] = isset($entry['active_from']) && $entry['active_from'] ? $GLOBALS['phpgw']->common->show_date($entry['active_to'], $dateformat) : '';
 			}
 
 			return $values;
+		}
+
+		public function delete( $data )
+		{
+			return $this->so->delete($data);
 		}
 
 		public function edit( $data )
 		{
 			$values = $this->so->edit($data);
 			return $values;
+		}
+
+		public function update_substitute( $user_id, $substitute_user_id )
+		{
+			return $this->so->update_substitute($user_id, $substitute_user_id);
+		}
+
+		public function get_substitute( $user_id)
+		{
+			return $this->so->get_substitute($user_id);
 		}
 	}

@@ -354,7 +354,7 @@
 							'substitute' => array
 							(
 								'text' => lang('substitute'),
-								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.list_substitute')),
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.index')),
 							)
 						)
 					),
@@ -806,7 +806,7 @@
 					),
 					array(
 						'text' => lang('substitute'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uidimb_role_user.substitute',
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.edit',
 							'acl_app' => 'property'))
 					)
 				);

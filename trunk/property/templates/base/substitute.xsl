@@ -1,35 +1,30 @@
-<!-- $Id$ -->
 
-<!-- separate tabs and  inline tables-->
+<!-- $Id: tts.xsl 16389 2017-02-28 17:35:22Z sigurdne $ -->
 
+<xsl:template match="data">
+	<xsl:choose>
+		<xsl:when test="view">
+			<xsl:apply-templates select="edit"/>
+		</xsl:when>
+	</xsl:choose>
+</xsl:template>
 
-<xsl:template match="data" xmlns:php="http://php.net/xsl">
+<xsl:template match="table" xmlns:php="http://php.net/xsl">
 	<style type="text/css">
 		#box { width: 200px; height: 5px; background: blue; }
 		select { width: 200px; }
-		.row_on,.th_bright
-		{
-		background-color: #CCEEFF;
-		}
-
-		.row_off
-		{
-		background-color: #DDF0FF;
-		}
-
 	</style>
-
-	<xsl:call-template name="table" />
-	<div id="popupBox"></div>	
+	<xsl:call-template name="table_substitute" />
+	<div id="popupBox"></div>
 	<div id="curtain"></div>
 </xsl:template>
 
-<xsl:template name="table" xmlns:php="http://php.net/xsl">
+<xsl:template name="table_substitute" xmlns:php="http://php.net/xsl">
 	<div class="body">
 		<div id="invoice-layout">
 			<div class="header">
 				<h2>
-					<xsl:value-of select="php:function('lang', 'role')"/>
+					<xsl:value-of select="php:function('lang', 'substitute')"/>
 				</h2>
 			</div>
 			<xsl:choose>
@@ -44,9 +39,8 @@
 					</table>
 					<form action="{update_action}" name="acl_form" id="acl_form" method="post">
 						<table align = "center" width="95%">
-							<xsl:call-template name="role_fields" />
 							<tr>
-								<td colspan = '6'>
+								<td colspan = '2'>
 									<xsl:for-each select="datatable_def">
 										<xsl:if test="container = 'datatable-container_0'">
 											<xsl:call-template name="table_setup">
@@ -82,51 +76,26 @@
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
-		<td colspan = '6'>
+		<td colspan = '1'>
 			<table>
 				<tr>
 					<td>
-						<xsl:value-of select="php:function('lang', 'dim b')" />
-					</td>
-					<td>
-						<xsl:value-of select="php:function('lang', 'role')" />
-					</td>
-					<td>
 						<xsl:value-of select="php:function('lang', 'user')" />
 					</td>
-					<td colspan = "2" align = "center">
-						<xsl:value-of select="php:function('lang', 'search')" />
-						<xsl:text> </xsl:text>
-						<xsl:value-of select="php:function('lang', 'date')" />
+					<td>
+						<xsl:value-of select="php:function('lang', 'substitute')" />
 					</td>
 				</tr>
 				<tr id="filters">
-					<td>
-						<select id="dimb_id" name="dimb">
-							<xsl:apply-templates select="dimb_list/options"/>
-						</select>
-					</td>
-					<td>
-						<select id="role_id" name="role_id">
-							<xsl:apply-templates select="role_list/options"/>
-						</select>
-					</td>
 					<td>
 						<select id="user_id" name="user_id">
 							<xsl:apply-templates select="user_list/options"/>
 						</select>
 					</td>
 					<td>
-						<input type="text" name="query_start" id="query_start" size = "10"/>
-					</td>
-					<td>
-						<input type="text" name="query_end" id="query_end" size = "10"/>
-					</td>
-					<td>
-						<xsl:variable name="lang_search">
-							<xsl:value-of select="php:function('lang', 'Search')" />
-						</xsl:variable>
-						<input type="button" id = "search" name="search" value="{$lang_search}" title = "{$lang_search}" />
+						<select id="substitute_user_id" name="substitute_user_id">
+							<xsl:apply-templates select="substitute_list/options"/>
+						</select>
 					</td>
 				</tr>
 			</table>
@@ -135,27 +104,53 @@
 </xsl:template>
 
 
-<xsl:template name="role_fields" xmlns:php="http://php.net/xsl">
-	<tr class ='row_off'>
-		<td>
-			<xsl:value-of select="php:function('lang', 'date from')" />
-		</td>
-		<td>
-			<input type="text" name="values[active_from]" id="active_from" value=""/>
-		</td>
-	</tr>
-	<tr class ='row_off'>
-		<td>
-			<xsl:value-of select="php:function('lang', 'date to')" />
-		</td>
-		<td>
-			<input type="text" name="values[active_to]" id="active_to" value=""/>
-		</td>
-	</tr>
+
+<!-- edit -->
+<xsl:template xmlns:php="http://php.net/xsl" match="edit">
+	<xsl:variable name="form_action">
+		<xsl:value-of select="form_action"/>
+	</xsl:variable>
+	<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{$form_action}">
+		<div id="tab-content">
+			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="general">
+				<fieldset>
+					<div class="pure-control-group">
+						<xsl:variable name="lang_substitute">
+							<xsl:value-of select="php:function('lang', 'substitute')"/>
+						</xsl:variable>
+						<label>
+							<xsl:value-of select="$lang_substitute"/>
+						</label>
+						<select name="substitute_user_id" id="substitute_user_id">
+							<xsl:attribute name="title">
+								<xsl:value-of select="$lang_substitute"/>
+							</xsl:attribute>
+							<option value="">
+								<xsl:value-of select="php:function('lang', 'select')"/>
+							</option>
+							<xsl:apply-templates select="user_list/options"/>
+						</select>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<xsl:variable name="lang_save">
+			<xsl:value-of select="php:function('lang', 'save')"/>
+		</xsl:variable>
+		<input type="submit" class="pure-button pure-button-primary" name="save">
+			<xsl:attribute name="value">
+				<xsl:value-of select="$lang_save"/>
+			</xsl:attribute>
+			<xsl:attribute name="title">
+				<xsl:value-of select="$lang_save"/>
+			</xsl:attribute>
+		</input>
+	</form>
 </xsl:template>
 
 
-<!-- options for use with select-->
+<!-- New template-->
 <xsl:template match="options">
 	<option value="{id}">
 		<xsl:if test="selected != 0">
@@ -164,4 +159,3 @@
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
 </xsl:template>
-

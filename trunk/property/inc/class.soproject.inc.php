@@ -1760,8 +1760,8 @@
 					$close_pending_action = true;
 
 
-					$sodimb_role_user = CreateObject('property.sodimb_role_user');
-					$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+					$sosubstitute = CreateObject('property.sosubstitute');
+					$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
 					$take_responsibility_for = array($this->account);
 
 					$action_params = array
@@ -3441,11 +3441,11 @@
 			}
 
 			$historylog = CreateObject('property.historylog', 'workorder');
-			$sodimb_role_user = CreateObject('property.sodimb_role_user');
+			$sosubstitute = CreateObject('property.sosubstitute');
 
 			foreach ($ids as $order_id)
 			{
-				$users_for_substitute = $sodimb_role_user->get_users_for_substitute($this->account);
+				$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
 				$take_responsibility_for = array($this->account);
 
 				$action_params = array(
