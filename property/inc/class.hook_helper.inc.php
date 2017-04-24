@@ -1003,7 +1003,7 @@
 					//			$portalbox->set_controls($key,$value);
 				}
 
-				$users_for_substitute = CreateObject('property.sodimb_role_user')->get_users_for_substitute( $accound_id);
+				$users_for_substitute = CreateObject('property.sosubstitute')->get_users_for_substitute( $accound_id);
 				$users_for_substitute[] = $accound_id;
 
 
@@ -1176,9 +1176,9 @@
 
 		function after_navbar( )
 		{
-			$sodimb_role_user = CreateObject('property.sodimb_role_user');
+			$sosubstitute = CreateObject('property.sosubstitute');
 			$user_id = $GLOBALS['phpgw_info']['user']['account_id'];
-			$substitute_user_id = $sodimb_role_user->get_substitute( $user_id);
+			$substitute_user_id = $sosubstitute->get_substitute( $user_id);
 			$lang_substitute = $GLOBALS['phpgw']->translation->translate('substitute', array(), false, 'property');
 			if($substitute_user_id)
 			{
@@ -1187,7 +1187,7 @@
 				echo '</div>';
 			}
 
-			$users_for_substitute = $sodimb_role_user->get_users_for_substitute( $user_id);
+			$users_for_substitute = $sosubstitute->get_users_for_substitute( $user_id);
 			$names = array();
 			foreach ($users_for_substitute as $user_for_substitute)
 			{
