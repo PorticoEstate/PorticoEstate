@@ -252,12 +252,15 @@
 				)
 			);
 
+			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+			$booking_interval = !empty($config['booking_interval']) ? $config['booking_interval'] : null;
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.save")),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.index",)),
 				'customer' => $customer,
 				'category_list' => array('options' => $this->get_category_options( $customer->category_id )),
+				'booking_interval' => $booking_interval,
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
