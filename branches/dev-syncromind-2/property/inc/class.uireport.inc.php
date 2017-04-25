@@ -682,4 +682,12 @@
 			return $columns;
 		}
 		
+		public function get_columns_datos()
+		{
+			$dataset_id = phpgw::get_var('dataset_id');
+
+			$columns = $this->bo->get_columns($dataset_id);
+			
+			return $columns;
+		}
 	}
