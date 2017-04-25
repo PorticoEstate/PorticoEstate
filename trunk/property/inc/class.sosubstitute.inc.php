@@ -98,13 +98,27 @@
 		 */
 		public function update_substitute( $user_id, $substitute_user_id = 0 )
 		{
+			$error = false;
 			$this->db->transaction_begin();
 			$this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
 			if($substitute_user_id)
 			{
-				$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id ) VALUES (' . (int)$user_id . ',' . (int) $substitute_user_id . ')', __LINE__, __FILE__);
+				/*
+				 * Check for circle reference
+				 */
+				$sql = 'SELECT id FROM fm_ecodimb_role_user_substitute WHERE substitute_user_id =' . (int) $user_id . ' AND user_id = ' . (int) $substitute_user_id;
+				$this->db->query($sql, __LINE__, __FILE__);
+				if($this->db->next_record())
+				{
+					phpgwapi_cache::message_set(lang('substitute') . ' ' .lang('circle reference'), 'error');
+					$error = true;
+				}
+				else
+				{
+					$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id ) VALUES (' . (int)$user_id . ',' . (int) $substitute_user_id . ')', __LINE__, __FILE__);
+				}
 			}
-			if($this->db->transaction_commit())
+			if($this->db->transaction_commit() && !$error)
 			{
 				if($substitute_user_id)
 				{
