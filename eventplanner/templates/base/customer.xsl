@@ -350,6 +350,17 @@
 				</div>
 				<div id="booking">
 					<fieldset>
+						<xsl:if test="booking_interval != ''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'booking interval')"/>
+								</label>
+								<xsl:value-of select="booking_interval"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'hours')"/>
+							</div>
+						</xsl:if>
+
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'booking')"/>

@@ -160,7 +160,7 @@
 			{
 				return date($this->dateformat, strtotime($value));
 			}
-			return $value;
+			return $this->db->stripslashes($value);
 		}
 
 		/**

@@ -58,6 +58,11 @@
 		function get_acl_condition( )
 		{
 			$acl_condition = parent::get_acl_condition();
+
+			if($this->relaxe_acl)
+			{
+				return $acl_condition;
+			}
 			
 			$sql = "SELECT object_id, permission FROM eventplanner_permission WHERE subject_id = {$this->account}";
 			$this->db->query($sql,__LINE__,__FILE__);

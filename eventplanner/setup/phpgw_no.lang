@@ -119,4 +119,5 @@ end date cannot be before start date	eventplanner	no	Siste dato kan ikke være f
 Time is already booked	eventplanner	no	Tiden er allerede booking
 booking interval	eventplanner	no	Booking intervall
 days	eventplanner	no	dager
+hours	eventplanner	no	Timer
 there is a minimum interval of %1 hours	eventplanner	no	Det er et minimumsintervall på %1 time(r)
