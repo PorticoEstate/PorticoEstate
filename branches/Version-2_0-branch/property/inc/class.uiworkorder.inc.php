@@ -913,7 +913,7 @@
 				}
 
 				$_budget_amount = $this->bo->get_budget_amount($id);
-				$sodimb_role_user = CreateObject('property.sodimb_role_user');
+				$sosubstitute = CreateObject('property.sosubstitute');
 
 				if (isset($values['approval']) && $values['approval'] && $config->config_data['workorder_approval'])
 				{
@@ -960,7 +960,7 @@
 
 								if(!$approvals)
 								{
-									$substitute = $sodimb_role_user->get_substitute($_account_id);
+									$substitute = $sosubstitute->get_substitute($_account_id);
 									
 									if($substitute)
 									{
@@ -1048,7 +1048,7 @@
 							$bcc = '';//$coordinator_email;
 							foreach ($values['approval'] as $_account_id => $_address)
 							{
-								$substitute = $sodimb_role_user->get_substitute($_account_id);
+								$substitute = $sosubstitute->get_substitute($_account_id);
 
 								/**
 								 * Alert the substitute
@@ -1111,7 +1111,7 @@
 
 					foreach ($values['do_approve'] as $_account_id => $_dummy)
 					{
-						$users_for_substitute = $sodimb_role_user->get_users_for_substitute($_account_id);
+						$users_for_substitute = $sosubstitute->get_users_for_substitute($_account_id);
 
 						$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
