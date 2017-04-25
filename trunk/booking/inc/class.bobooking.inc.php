@@ -1128,7 +1128,11 @@
 //                                echo "A0: break ef <= bf && et >= bt\n\n";
 								break;
 							}
-							elseif (($ef >= $bf) && ($et > $bt))
+							//elseif (($ef >= $bf) && ($et > $bt))
+							/**
+							 * Sigurd 20170425 - altered in an attempt to keep allocations from disappearing.
+							 */
+							elseif (($ef >= $bf) && ($et >= $bt))
 							{
 //                                echo "A1: (ef >= bf) && (et > bt)\n";
 								$tmp['from_'] = $bf;
