@@ -74,10 +74,29 @@
 
 		public function get_username()
 		{
+			if(empty($_SERVER['REMOTE_USER']))
+			{
+				return;
+			}
+
 			$headers = getallheaders();
 
 			$ssn = $headers['uid'];
 
+			$remote_user = explode('@', $_SERVER['REMOTE_USER']);
+			$username  = $remote_user[0];
+
+			/**
+			 * Shibboleth from inside firewall
+			 */
+			if($username && !$ssn)
+			{
+				return $username;
+			}
+
+			/**
+			 * Shibboleth from outside firewall
+			 */
 			if(!$ssn)
 			{
 				return;
@@ -98,27 +117,46 @@
 				return $username;
 			}
 
-
-			// Alternative
-			$config	= CreateObject('phpgwapi.config','rental')->read();
-
-			if(! $config['external_db_host'] || !$this->ping($config['external_db_host']))
-			{
-				$message ="Database server {$config['external_db_host']} is not accessible";
-				phpgwapi_cache::message_set($message, 'error');
-	//			return false;
-			}
-
-//			$db = createObject('phpgwapi.db', null, null, true);
 			$db = createObject('phpgwapi.db_adodb', null, null, true);
 
-			$db->debug = !!$config['external_db_debug'];
-			$db->Host = $config['external_db_host'];
-			$db->Port = $config['external_db_port'];
-			$db->Type = $config['external_db_type'];
-			$db->Database = $config['external_db_name'];
-			$db->User = $config['external_db_user'];
-			$db->Password = $config['external_db_password'];
+			// Alternative config
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.admin'));
+
+			if ($config->config_data['fellesdata']['host'])
+			{
+				if( !$this->ping($config->config_data['fellesdata']['host']))
+				{
+					$message = "Database server {$config->config_data['fellesdata']['host']} is not accessible";
+					phpgwapi_cache::message_set($message, 'error');
+				}
+
+				$db->debug = false;
+				$db->Host = $config->config_data['fellesdata']['host'];
+				$db->Port = $config->config_data['fellesdata']['port'];
+				$db->Type = 'oracle';
+				$db->Database = $config->config_data['fellesdata']['db_name'];
+				$db->User = $config->config_data['fellesdata']['user'];
+				$db->Password = $config->config_data['fellesdata']['password'];
+
+			}
+			else
+			{
+				$config	= CreateObject('phpgwapi.config','rental')->read();
+
+				if(! $config['external_db_host'] || !$this->ping($config['external_db_host']))
+				{
+					$message ="Database server {$config['external_db_host']} is not accessible";
+					phpgwapi_cache::message_set($message, 'error');
+				}
+
+				$db->debug = !!$config['external_db_debug'];
+				$db->Host = $config['external_db_host'];
+				$db->Port = $config['external_db_port'];
+				$db->Type = $config['external_db_type'];
+				$db->Database = $config['external_db_name'];
+				$db->User = $config['external_db_user'];
+				$db->Password = $config['external_db_password'];
+			}
 
 			try
 			{
@@ -130,7 +168,6 @@
 				phpgwapi_cache::message_set($message, 'error');
 				return false;
 			}
-
 
 			$sql = "SELECT BRUKERNAVN FROM V_AD_PERSON WHERE FODSELSNR ='{$ssn}'";
 			$db->query($sql,__LINE__,__FILE__);
