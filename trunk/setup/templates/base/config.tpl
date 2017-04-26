@@ -119,10 +119,11 @@
       <option value="sqlssl"{selected_auth_type_sqlssl}>SQL / SSL</option>
       <option value="ldap"{selected_auth_type_ldap}>LDAP</option>
       <option value="mail"{selected_auth_type_mail}>Mail</option>
-      <option value="ntlm"{selected_auth_type_ntlm}>ntlm</option>
+      <option value="ntlm"{selected_auth_type_ntlm}>NTLM</option>
       <option value="exchange"{selected_auth_type_exchange}>exchange</option>
       <option value="ads"{selected_auth_type_ads}>ads</option>
       <option value="remoteuser"{selected_auth_type_remoteuser}>Remote User</option>
+      <option value="customsso"{selected_auth_type_customsso}>Custom SSO</option>
       <!-- <option value="http"{selected_auth_type_http}>HTTP</option> -->
       <!-- <option value="nis"{selected_auth_type_nis}>NIS</option> -->
       <!-- <option value="pam"{selected_auth_type_pam}>PAM (Not Ready)</option> -->
