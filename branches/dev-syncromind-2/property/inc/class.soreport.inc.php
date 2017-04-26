@@ -193,6 +193,45 @@
 			return $values;
 		}
 		
+		function get_columns_data ( $id )
+		{
+			$id = (int)$id;
+
+			$dataset = $this->read_single_dataset($id);
+			
+			$sql = "SELECT column_name, data_type
+				FROM   information_schema.columns
+				WHERE  table_name = '".$dataset['view_name']."'
+				ORDER  BY ordinal_position";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$columns = array();
+			
+			while ($this->db->next_record())
+			{
+				$columns[] = array
+					(
+					'name' => $this->db->f('column_name')
+				);
+			}
+			
+			$sql = "SELECT * FROM ".$dataset['view_name'];
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 30);
+			
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$value = array();
+				foreach ($columns as $column)
+				{
+					$value[$column] = $this->db->f($column);
+				}
+				$values[] = $value;
+			}
+			
+			return $values;
+		}
+		
 		function build_sum_of_colums($columns)
 		{
 			$columns_a = array_values($columns);
