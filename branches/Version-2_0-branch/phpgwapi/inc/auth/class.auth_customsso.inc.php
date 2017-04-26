@@ -74,14 +74,7 @@
 
 		public function get_username()
 		{
-			if(empty($_SERVER['REMOTE_USER']))
-			{
-				return;
-			}
-
-			$headers = getallheaders();
-
-			$ssn = $headers['uid'];
+			$ssn = $_SERVER['uid'];
 
 			$remote_user = explode('@', $_SERVER['REMOTE_USER']);
 			$username  = $remote_user[0];
