@@ -232,9 +232,12 @@
 				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
 				$login = $GLOBALS['phpgw']->auth->get_username();
 
-				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
+				if($login)
+				{
+					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
+				}
 
-				if (!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
+				if (!$login || empty($GLOBALS['sessionid']))
 				{
 					$cd_array = array();
 					if ($GLOBALS['phpgw']->session->cd_reason)
