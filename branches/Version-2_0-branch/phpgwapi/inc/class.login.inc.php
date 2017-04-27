@@ -90,6 +90,11 @@
 			/* Program starts here */
 			$uilogin = new phpgw_uilogin($tmpl, $GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && !isset($GLOBALS['phpgw_remote_user']));
 
+			if(phpgw::get_var('hide_lightbox', 'bool'))
+			{
+				$uilogin->phpgw_display_login(array());
+			}
+
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
 			{
 				$login = $GLOBALS['phpgw']->mapping->get_mapping($_SERVER['REMOTE_USER']);
@@ -123,6 +128,7 @@
 				// remove entities to stop mangling
 				$passwd	 = html_entity_decode(phpgw::get_var('passwd', 'string', 'POST'));
 			}
+
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'http' && isset($_SERVER['PHP_AUTH_USER']))
 			{
 				$submit	 = true;
@@ -225,9 +231,8 @@
 				unset($sslattributes);
 			}
 
-			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'customsso' && !isset($_GET['cd']))
+			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'customsso' &&  (!isset($_REQUEST['skip_remote']) || !$_REQUEST['skip_remote']))
 			{
-
 				//Reset auth object
 				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
 				$login = $GLOBALS['phpgw']->auth->get_username();
@@ -245,6 +250,11 @@
 						$cd_array['cd']			 = $GLOBALS['phpgw']->session->cd_reason;
 					}
 					$cd_array['skip_remote'] = true;
+
+					if ($lightbox)
+					{
+						$cd_array['lightbox'] = true;
+					}
 
 					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 					exit;
@@ -266,17 +276,23 @@
 
 				$extra_vars['cd'] = 'yes';
 
-				$GLOBALS['phpgw']->hooks->process('login');
-				if ($after)
+//				if ($lightbox)
+//				{
+//					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+//				}
+//				else
 				{
-					$this->redirect_after($frontend);
-				}
-				else
-				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					$GLOBALS['phpgw']->hooks->process('login');
+					if ($after)
+					{
+						$this->redirect_after($frontend);
+					}
+					else
+					{
+						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					}
 				}
 			}
-
 
 			if ((isset($_POST['submitit']) || isset($_POST['submit_x']) || isset($_POST['submit_y'])))
 			{
@@ -350,7 +366,6 @@
 				}
 				$extra_vars['cd'] = 'yes';
 
-				$GLOBALS['phpgw']->hooks->process('login');
 
 				if ($lightbox)
 				{
@@ -358,6 +373,7 @@
 				}
 				else
 				{
+					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
 					{
 						$this->redirect_after($frontend);

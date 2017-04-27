@@ -62,6 +62,7 @@
 			$query = isset($data['query']) ? $data['query'] : '';
 			$sort = isset($data['sort']) && $data['sort'] ? $data['sort'] : 'DESC';
 			$order = isset($data['order']) ? $data['order'] : '';
+			$disable_id_search = empty($data['disable_id_search']) ? false : true;
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$custom_criteria = isset($data['custom_criteria']) && $data['custom_criteria'] ? $data['custom_criteria'] : array();
 			$custom_filter = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
@@ -242,19 +243,27 @@
 					$_query_end = ')';
 				}
 				$query = $this->_db->db_addslashes($query);
-				$querymethod = " {$where } {$_query_start} ({$table}.{$this->location_info['id']['name']} = {$id_query}";
-				//_debug_array($filtermethod);
-				//_debug_array($where);die();
-
-				if ($this->location_info['id']['type'] == 'varchar')
+				if($disable_id_search)
 				{
-						$querymethod .= " OR {$table}.{$this->location_info['id']['name']} $this->_like '%$query%'";
-						$where = 'OR';
+					$querymethod = " {$where } {$_query_start} (1=0";
 				}
 				else
 				{
-					$querymethod .= " OR CAST ({$table}.{$this->location_info['id']['name']} AS TEXT) $this->_like '%$query%'";
+					$querymethod = " {$where } {$_query_start} ({$table}.{$this->location_info['id']['name']} = {$id_query}";
+					if ($this->location_info['id']['type'] == 'varchar')
+					{
+							$querymethod .= " OR {$table}.{$this->location_info['id']['name']} $this->_like '%$query%'";
+							$where = 'OR';
+					}
+					else
+					{
+						$querymethod .= " OR CAST ({$table}.{$this->location_info['id']['name']} AS TEXT) $this->_like '%$query%'";
+					}
 				}
+				//_debug_array($filtermethod);
+				//_debug_array($where);die();
+
+				$where = 'OR';
 
 				foreach ($this->location_info['fields'] as $field)
 				{
@@ -262,7 +271,6 @@
 					{
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
-					$where = 'OR';
 				}
 				$querymethod .= ')';
 
@@ -282,7 +290,8 @@
 						{
 							if (ctype_digit($query))
 							{
-								$_querymethod[] = "$table." . $this->_db->f('column_name') . '=' . (int)$query;
+							//	$_querymethod[] = "$table." . $this->_db->f('column_name') . '=' . (int)$query;
+								$_querymethod[] = "CAST ($table." . $this->_db->f('column_name') . " AS TEXT) {$this->_like} '%" . (int)$query . "%'";
 							}
 						}
 						else
