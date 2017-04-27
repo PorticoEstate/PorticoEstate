@@ -4,7 +4,7 @@ $(document).ready(function ()
 	
 	$('#btn_get_columns').click( function()
 	{
-		var oArgs = {menuaction: 'property.uireport.get_columns'};
+		var oArgs = {menuaction: 'property.uireport.get_columns_data'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var data = {"dataset_id": $('#cbo_dataset_id').val()};
 
@@ -28,7 +28,9 @@ $(document).ready(function ()
 			$('#container_order').empty();
 			$('#container_aggregates').empty();
 			
-			build_check_columns(result);
+			$('#container_columns').html(result.preview_dataset);
+			
+			build_check_columns(result.columns);
 			if (jsonB !== '')
 			{
 				set_values();
@@ -37,6 +39,9 @@ $(document).ready(function ()
 	});
 	
 	$('#btn_get_columns').click();
+	
+
+	
 });
 
 function set_values()
@@ -73,7 +78,7 @@ function build_check_columns(data)
 {
 	$.each(data, function(key, object) 
 	{
-		$('#container_columns').append('<span style="margin-right:12px;"><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
+		//$('#container_columns').append('<span style="margin-right:12px;"><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
 
 		var combo = build_list_aggregates(object.name, object.type);
 		var text = build_text_aggregates(object.name);
