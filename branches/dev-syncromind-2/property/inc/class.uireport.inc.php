@@ -47,6 +47,8 @@
 			'save_dataset' => true,
 			'delete_dataset' => true,
 			'get_columns' => true,
+			'get_columns_data' => true,
+			'preview' => true,
 			'download' => true
 		);
 
@@ -682,12 +684,69 @@
 			return $columns;
 		}
 		
-		public function get_columns_datos()
+		public function get_columns_data()
 		{
 			$dataset_id = phpgw::get_var('dataset_id');
 
-			$columns = $this->bo->get_columns($dataset_id);
+			$columns = $this->get_columns();
 			
-			return $columns;
+			$html_table = '<table class="pure-table pure-table-bordered">';
+			$html_table .= '<thead><tr>';
+			foreach ($columns as $col)
+			{
+				$_check = '<input type="checkbox" id="c_'. $col['name'] .'" value="'. $col['name'] .'" onchange="build_check_groups(\''. $col['name'] .'\')"/>';
+				$html_table .= "<th align='center'>". $_check." ".$col['name'] ."</th>";
+			}
+			$html_table .= '</tr></thead>';
+
+			$data = $this->bo->get_columns_data($dataset_id);
+			
+			foreach ($data as $row)
+			{
+				$html_table .= "<tr><td>" . implode('</td><td>', $row) . '</td></tr>';
+			}
+			$html_table .= '</table>';
+			
+			return array('columns'=>$columns, 'preview_dataset'=>$html_table);
 		}
+		
+		public function preview()
+		{
+			if (!$_POST)
+			{
+				return $this->edit();
+			}
+			
+			/*
+			 * Overrides with incoming data from POST
+			 */
+			$values = $this->_populate();
+
+			if ($this->receipt['error'])
+			{
+				$this->edit($values);
+			}
+			else
+			{
+				try
+				{
+					$receipt = $this->bo->save($values);
+					$id = $receipt['id'];
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$this->edit($values);
+						return;
+					}
+				}
+				
+				self::message_set($receipt);
+
+				self::redirect(array('menuaction' => 'property.uireport.edit', 'id' => $id));
+			}
+		}
+		
 	}
