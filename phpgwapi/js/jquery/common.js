@@ -758,7 +758,56 @@ JqueryPortico.lightboxlogin = function ()
 	var oArgs = {lightbox: 1};
 	var strURL = phpGWLink('login.php', oArgs);
 	var width =  $(window).width() * 0.80;
-	TINY.box.show({iframe: strURL, boxid: 'frameless', width: width, height: 400, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: false, close: false, closejs: false});
+	TINY.box.show({
+		iframe: strURL,
+		boxid: 'frameless',
+		width: width,
+		height: 400,
+		fixed: false,
+		maskid: 'darkmask',
+		maskopacity: 40,
+		mask: true,
+		animate: false,
+		close: false,
+		openjs : function ()
+		{
+			lightboxlogin_check_session();
+		},
+		closejs: false
+	});
+};
+
+/**
+ * In case of SSO
+ * 
+ */
+lightboxlogin_check_session = function()
+{
+	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: strURL,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				if (data['sessionExpired'] == true)
+				{
+					//ntothing
+				}
+				else
+				{
+					TINY.box.hide();
+				}
+			}
+		},
+		failure: function (o)
+		{
+		},
+		timeout: 1000
+	});
 };
 
 JqueryPortico.showlightbox_history = function (sUrl)
