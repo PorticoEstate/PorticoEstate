@@ -121,3 +121,4 @@ booking interval	eventplanner	no	Booking intervall
 days	eventplanner	no	dager
 hours	eventplanner	no	Timer
 there is a minimum interval of %1 hours	eventplanner	no	Det er et minimumsintervall på %1 time(r)
+summary	eventplanner	no	kortversjon programbeskrivelse
