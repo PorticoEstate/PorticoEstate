@@ -15,6 +15,12 @@
 		</label>
 		<xsl:value-of select="application/title"/>
 	</div>
+	<div class="pure-control-group">
+		<label>
+			<xsl:value-of select="php:function('lang', 'program description')"/>
+		</label>
+		<xsl:value-of select="application/summary"/>
+	</div>
 
 	<div class="pure-control-group">
 		<label>
