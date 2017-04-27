@@ -769,10 +769,10 @@ JqueryPortico.lightboxlogin = function ()
 		mask: true,
 		animate: false,
 		close: false,
-		openjs : function ()
-		{
-			lightboxlogin_check_session();
-		},
+//		openjs : function ()
+//		{
+//			lightboxlogin_check_session();
+//		},
 		closejs: false
 	});
 };
