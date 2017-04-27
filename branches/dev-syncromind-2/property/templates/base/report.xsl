@@ -77,6 +77,15 @@
 	<script type="text/javascript">
 		var jsonB = <xsl:value-of select="report_definition"/>;
 	</script>
+	
+	<style type="text/css">
+	.content_upload_download {
+		position: relative; 
+		overflow: auto; 
+		max-height: 50vh; 
+		width: 100%;	
+	}
+	</style>
 	<div id="document_edit_tabview">
 		
 		<xsl:variable name="form_action">
@@ -110,7 +119,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Choose columns')" />
 						</label>
-						<div id="container_columns" class="pure-custom"></div>				
+						<div id="container_columns" class="content_upload_download"></div>			
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -129,6 +138,16 @@
 							<xsl:value-of select="php:function('lang', 'Count / Sum')" />
 						</label>
 						<div id="container_aggregates" class="pure-custom"></div>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Preview')" />
+						</label>
+						<input type="button" class="pure-button pure-button-primary" name="btn_preview" id="btn_preview">
+							<xsl:attribute name="value">
+								<xsl:value-of select="php:function('lang', 'preview')" />
+							</xsl:attribute>
+						</input>
 					</div>											
 				</div>
 			</div>
