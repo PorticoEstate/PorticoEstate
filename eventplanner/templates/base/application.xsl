@@ -129,7 +129,7 @@
 										<xsl:value-of select="$lang_vendor"/>
 									</xsl:attribute>
 								</input>
-								<input type="text" id="vendor_name" name="vendor_name" value="{application/vendor_name}">
+								<input type="text" id="vendor_name" name="vendor_name" value="{application/vendor_name}" class="pure-input-1-2" >
 									<xsl:attribute name="placeholder">
 										<xsl:value-of select="$lang_vendor"/>
 									</xsl:attribute>
@@ -149,7 +149,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'contact name')"/>
 								</label>
-								<input type="text" id="contact_name" name="contact_name" value="{application/contact_name}">
+								<input type="text" id="contact_name" name="contact_name" value="{application/contact_name}" class="pure-input-1-2" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -165,7 +165,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'contact email')"/>
 								</label>
-								<input type="text" id="contact_email" name="contact_email" value="{application/contact_email}">
+								<input type="text" id="contact_email" name="contact_email" value="{application/contact_email}" class="pure-input-1-2" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -182,7 +182,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								</label>
-								<input type="text" id="contact_phone" name="contact_phone" value="{application/contact_phone}">
+								<input type="text" id="contact_phone" name="contact_phone" value="{application/contact_phone}" class="pure-input-1-2" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -198,7 +198,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'other participants')"/>
 								</label>
-								<textarea cols="47" rows="7" name="other_participants">
+								<textarea cols="47" rows="7" name="other_participants" class="pure-input-1-2" >
 									<xsl:value-of select="application/other_participants"/>
 								</textarea>
 							</div>
@@ -211,7 +211,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'program title')"/>
 								</label>
-								<input type="text" id="title" name="title" value="{application/title}">
+								<input type="text" id="title" name="title" value="{application/title}" class="pure-input-1-2" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -227,7 +227,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'program description')"/>
 								</label>
-								<textarea cols="47" rows="7" name="description">
+								<textarea cols="47" rows="7" name="description" class="pure-input-1-2" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'might be published')"/>
 									</xsl:attribute>
@@ -377,7 +377,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'remark')"/>
 								</label>
-								<textarea cols="47" rows="7" name="remark">
+								<textarea cols="47" rows="7" name="remark" class="pure-input-1-2" >
 									<xsl:value-of select="application/remark"/>
 								</textarea>
 							</div>
@@ -438,9 +438,17 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
+									<xsl:value-of select="php:function('lang', 'summary')"/>
+								</label>
+								<textarea cols="47" rows="7" name="summary" class="pure-input-1-2" >
+									<xsl:value-of select="application/summary"/>
+								</textarea>
+							</div>
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'comment')"/>
 								</label>
-								<textarea cols="47" rows="7" name="comment">
+								<textarea cols="47" rows="7" name="comment" class="pure-input-1-2" >
 									<xsl:value-of select="application/comment"/>
 								</textarea>
 							</div>
@@ -504,7 +512,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'stage requirement')"/>
 								</label>
-								<textarea cols="47" rows="7" name="stage_requirement">
+								<textarea cols="47" rows="7" name="stage_requirement" class="pure-input-1-2" >
 									<xsl:value-of select="application/stage_requirement"/>
 								</textarea>
 							</div>
@@ -683,7 +691,7 @@
 							<div class="pure-control-group">
 								<label>
 								</label>
-								<textarea cols="47" rows="7" name="raider">
+								<textarea cols="47" rows="7" name="raider" class="pure-input-1-2" >
 									<xsl:value-of select="application/raider"/>
 								</textarea>
 							</div>
