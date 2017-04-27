@@ -276,11 +276,11 @@
 
 				$extra_vars['cd'] = 'yes';
 
-//				if ($lightbox)
-//				{
-//					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
-//				}
-//				else
+				if ($lightbox)
+				{
+					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
+				}
+				else
 				{
 					$GLOBALS['phpgw']->hooks->process('login');
 					if ($after)
