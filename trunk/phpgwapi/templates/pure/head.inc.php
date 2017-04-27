@@ -53,7 +53,7 @@ HTML;
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
-	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
+//	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
 
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/side-menu.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/baby-blue.css";
@@ -63,7 +63,7 @@ HTML;
 	{
 		$stylesheets[] = "/phpgwapi/templates/pure/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
-	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+//	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	//$stylesheets[] = "/{$app}/templates/portico/css/base.css";
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
