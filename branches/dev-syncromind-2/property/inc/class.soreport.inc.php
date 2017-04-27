@@ -209,14 +209,11 @@
 			
 			while ($this->db->next_record())
 			{
-				$columns[] = array
-					(
-					'name' => $this->db->f('column_name')
-				);
+				$columns[] = $this->db->f('column_name');
 			}
 			
 			$sql = "SELECT * FROM ".$dataset['view_name'];
-			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 30);
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 20);
 			
 			$values = array();
 			while ($this->db->next_record())
