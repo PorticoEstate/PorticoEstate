@@ -93,6 +93,7 @@
 			if(phpgw::get_var('hide_lightbox', 'bool'))
 			{
 				$uilogin->phpgw_display_login(array());
+				exit;
 			}
 
 			if ($GLOBALS['phpgw_info']['server']['auth_type'] == 'remoteuser' && isset($GLOBALS['phpgw_info']['server']['mapping']) && !empty($GLOBALS['phpgw_info']['server']['mapping']) && isset($_SERVER['REMOTE_USER']))
@@ -186,15 +187,21 @@
 				$extra_vars['cd'] = 'yes';
 
 				$GLOBALS['phpgw']->hooks->process('login');
-				if ($after)
+				if ($lightbox)
 				{
-					$this->redirect_after($frontend);
+					$GLOBALS['phpgw']->redirect_link("{$frontend}/login.php", array('hide_lightbox' => true));
 				}
 				else
 				{
-					$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					if ($after)
+					{
+						$this->redirect_after($frontend);
+					}
+					else
+					{
+						$GLOBALS['phpgw']->redirect_link("{$frontend}/home.php", $extra_vars);
+					}
 				}
-
 			//----------------- End login ntlm
 			}
 
