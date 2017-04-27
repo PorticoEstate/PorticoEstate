@@ -148,6 +148,7 @@
 				'other_participants' => array('type' => 'text', 'nullable' => True),
 				'title' => array('type' => 'text', 'nullable' => False),
 				'description' => array('type' => 'text', 'nullable' => False),
+				'summary' => array('type' => 'text', 'nullable' => true),
 				'remark' => array('type' => 'text', 'nullable' => True),
 				'contact_name' => array('type' => 'text', 'nullable' => False),
 				'contact_email' => array('type' => 'text', 'nullable' => False),
