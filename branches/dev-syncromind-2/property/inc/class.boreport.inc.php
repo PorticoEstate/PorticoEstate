@@ -85,6 +85,13 @@
 			return $values;
 		}
 
+		function get_columns_data($id)
+		{
+			$values = $this->so->get_columns_data($id);
+
+			return $values;
+		}
+		
 		function read_single_dataset( $dataset_id = '' )
 		{
 			$dataset = $this->so->read_single_dataset($dataset_id);
