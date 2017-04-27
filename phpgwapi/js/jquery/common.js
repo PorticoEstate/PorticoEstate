@@ -769,46 +769,11 @@ JqueryPortico.lightboxlogin = function ()
 		mask: true,
 		animate: false,
 		close: false,
-//		openjs : function ()
-//		{
-//			lightboxlogin_check_session();
-//		},
 		closejs: false
 	});
 };
 
-/**
- * In case of SSO
- * 
- */
-lightboxlogin_check_session = function()
-{
-	var oArgs = {menuaction: 'property.bocommon.confirm_session'};
-	var strURL = phpGWLink('index.php', oArgs, true);
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: strURL,
-		success: function (data)
-		{
-			if (data != null)
-			{
-				if (data['sessionExpired'] == true)
-				{
-					//ntothing
-				}
-				else
-				{
-					TINY.box.hide();
-				}
-			}
-		},
-		failure: function (o)
-		{
-		},
-		timeout: 1000
-	});
-};
+
 
 JqueryPortico.showlightbox_history = function (sUrl)
 {
