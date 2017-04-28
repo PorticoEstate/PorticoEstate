@@ -712,41 +712,33 @@
 		
 		public function preview()
 		{
-			if (!$_POST)
-			{
-				return $this->edit();
-			}
+			$values = phpgw::get_var('values');
+			$dataset_id = phpgw::get_var('dataset_id');
 			
-			/*
-			 * Overrides with incoming data from POST
-			 */
-			$values = $this->_populate();
+			$data['group'] = $values['group'];
+			$data['order'] = $values['order'];
+			$data['aggregate'] = $values['aggregate'];
+			$data['cbo_aggregate'] = $values['cbo_aggregate'];
+			$data['txt_aggregate'] = $values['txt_aggregate'];		
 
-			if ($this->receipt['error'])
-			{
-				$this->edit($values);
+			$list = $this->bo->read_to_export($dataset_id, $data);
+			
+			$html_table = '<table class="pure-table pure-table-bordered">';
+			$html_table .= '<thead><tr>';
+			foreach ($list[0] as $c => $v)
+			{				
+				$html_table .= "<th align='center'>".$c."</th>";
 			}
-			else
+			$html_table .= '</tr></thead>';
+			
+			foreach ($list as $row)
 			{
-				try
-				{
-					$receipt = $this->bo->save($values);
-					$id = $receipt['id'];
-				}
-				catch (Exception $e)
-				{
-					if ($e)
-					{
-						phpgwapi_cache::message_set($e->getMessage(), 'error');
-						$this->edit($values);
-						return;
-					}
-				}
-				
-				self::message_set($receipt);
-
-				self::redirect(array('menuaction' => 'property.uireport.edit', 'id' => $id));
+				$html_table .= "<tr><td>" . implode('</td><td>', $row) . '</td></tr>';
 			}
+			$html_table .= '</table>';
+			
+			return $html_table;
+			
 		}
 		
 	}
