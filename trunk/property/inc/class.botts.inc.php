@@ -1288,37 +1288,54 @@
 				$body .= lang('Group') . ': ' . $group_name . "\n";
 			}
 
-			/*			 * ************************************************************\
-			 * Display additional notes                                     *
-			  \************************************************************* */
-//			if($fields_updated)
-			{
-				$i = 1;
-
-				$history_array = $this->historylog->return_array(array(), array('C'), 'history_id', 'DESC', $id);
-
-				foreach ($history_array as $value)
-				{
-					$body .= lang('Date') . ': ' . $GLOBALS['phpgw']->common->show_date($value['datetime']) . "\n";
-					$body .= lang('User') . ': ' . $value['owner'] . "\n";
-					$body .=lang('Note') . ': ' . nl2br(stripslashes($value['new_value'])) . "\n\n";
-					$i++;
-				}
-				$subject .= "::{$i}";
-			}
-			/*			 * ************************************************************\
-			 * Display record history                                       *
-			  \************************************************************* */
-
 			if ($timestampclosed)
 			{
 				$body .= lang('Date Closed') . ': ' . $timestampclosed . "\n\n";
 			}
 
-
 			$body .= lang('Opened By') . ': ' . $ticket['user_name'] . "\n\n";
-			$body .= lang('First Note Added') . ":\n";
-			$body .= stripslashes(strip_tags($ticket['details'])) . "\n\n";
+			$body = nl2br($body);
+
+			$i = 1;
+			$lang_date = lang('date');
+			$lang_user = lang('user');
+			$lang_note = lang('note');
+			$table_content = <<<HTML
+		<thead>
+			<tr>
+				<th>
+					#
+				</th>
+				<th>
+					{$lang_date}
+				</th>
+				<th>
+					{$lang_user}
+				</th>
+				<th>
+					{$lang_note}
+				</th>
+			</tr>
+		</thead>
+HTML;
+			$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$ticket['user_name']}</td><td>{$ticket['details']}</td></tr>";
+
+			$history_array = $this->historylog->return_array(array(), array('C'), 'history_id', 'DESC', $id);
+
+			foreach ($history_array as $value)
+			{
+				$i++;
+				$_date =  $GLOBALS['phpgw']->common->show_date($value['datetime']);
+				$_note =  stripslashes($value['new_value']);
+				$table_content .= "<tr><td>{$i}</td><td>{$_date}</td><td>{$value['owner']}</td><td>{$_note}</td></tr>";
+			}
+			$body.= "<table class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
+			$subject .= "::{$i}";
+
+
+		//	$body .= lang('First Note Added') . ":\n";
+
+		//	$body .= stripslashes(strip_tags($ticket['details'])) . "\n\n";
 
 			if ($get_message)
 			{
@@ -1440,8 +1457,6 @@
 			if ($toarray)
 			{
 				$to = implode(';', $toarray);
-				$body = nl2br($body);
-
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
 					try

@@ -230,12 +230,28 @@
 			$id = phpgw::get_var('id', 'int');
 
 			$ticket = $this->bo->mail_ticket($id, $fields_updated = true, $receipt = array(), $location_code = '', $get_message = true);
+			$lang_print = lang('print');
 
-			$html = "<html><head><title>{$ticket['subject']}</title></head>";
-			$html .= "<body>";
-			$html .= $ticket['subject'] . '</br></br>';
-			$html .= nl2br($ticket['body']);
-			$html .= "</body></html>";
+			$html = <<<HTML
+
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>{$ticket['subject']}</title>
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
+				</head>
+				<body>
+					<script type="text/javascript">
+							document.write("<form><input type=button "
+							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
+					</script>
+
+
+					{$ticket['subject']}<br/><br/>
+					{$ticket['body']}
+				</body>
+			</html>
+HTML;
 
 			echo $html;
 		}
