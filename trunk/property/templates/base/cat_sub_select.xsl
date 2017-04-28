@@ -7,7 +7,7 @@
 	<xsl:variable name="cat_sub_name">
 		<xsl:value-of select="cat_sub_name"/>
 	</xsl:variable>
-	<select id = "global_category_id" name="{$cat_sub_name}" class="forms" title="{$lang_cat_sub_statustext}">
+	<select id = "global_category_id" name="{$cat_sub_name}"  title="{$lang_cat_sub_statustext}" class="pure-input-1-2">
 		<xsl:attribute name="data-validation">
 			<xsl:text>category</xsl:text>
 		</xsl:attribute>
