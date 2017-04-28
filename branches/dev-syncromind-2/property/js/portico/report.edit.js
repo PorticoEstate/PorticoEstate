@@ -40,7 +40,101 @@ $(document).ready(function ()
 	
 	$('#btn_get_columns').click();
 	
+	$('#btn_preview').click( function()
+	{
+		var oArgs = {menuaction: 'property.uireport.preview'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
 
+		if ($('#cbo_dataset_id').val() == '')
+		{
+			alert('choose dataset');
+			return;
+		}
+		
+		var values = {};
+
+		values['group'] = {};
+		values['order'] = {};
+		values['aggregate'] = {};
+		values['cbo_aggregate'] = {};
+		values['txt_aggregate'] = {};
+		
+		var invalid_groups = true;
+		$('input[name^="group"]').each(function() {
+
+			if ($(this).is(":checked"))
+			{
+				values['group'][$(this).val()] = $(this).val();
+				invalid_groups = false;
+			}
+		});
+				
+		if (invalid_groups)
+		{
+			alert('Choose columns');
+			$('#responsiveTabsGroups').responsiveTabs('activate', 0);
+			return;
+		}
+		
+		$('input[name^="order"]').each(function() {
+
+			if ($(this).is(":checked"))
+			{
+				values['order'][$(this).val()] = $(this).val();
+			}
+		});
+	  
+	    var name = '';
+		var invalid_aggregate = true;
+		var invalid_aggregate_alias = false;
+		var msg = '';
+		$('input[name^="aggregate"]').each(function() {
+
+			if ($(this).is(":checked"))
+			{
+				name = $(this).val();
+				values['aggregate'][name] = name;
+				invalid_aggregate = false;
+				
+				if ($('#txt_' + name).val() == '')
+				{
+					msg = 'Enter alias for "' + name + '"';
+					invalid_aggregate_alias = true;
+					return;
+				}
+				
+				values['cbo_aggregate'][name] = $('#cbo_' + name).val();
+				values['txt_aggregate'][name] = $('#txt_' + name).val();
+			}
+		});
+		
+		if (invalid_aggregate)
+		{
+			$('#responsiveTabsGroups').responsiveTabs('activate', 3);
+			alert('Choose COUNT/SUM option');			
+			return;
+		}
+		
+		if (invalid_aggregate_alias)
+		{
+			$('#responsiveTabsGroups').responsiveTabs('activate', 3);
+			alert(msg);			
+			return;
+		}
+		
+		var data = {"values": values, "dataset_id": $('#cbo_dataset_id').val()};
+		$('.processing').show();
+		$.ajax({
+			type: 'GET',
+			url: requestUrl,
+			dataType: 'json',
+			data: data
+		}).always(function () {
+			//$('.processing').hide();
+		}).done(function (result) {
+			$('#container_preview').html(result);
+		});		
+	});
 	
 });
 
@@ -113,7 +207,7 @@ function build_list_aggregates(name, type)
 {
     var combo = $("<select></select>");  
 	combo.append("<option value='count'>Count</option>");
-	if (type == 'integer')
+	if (type == 'integer' || type == 'numeric')
 	{
 		combo.append("<option value='sum'>Sum</option>");
 	}
