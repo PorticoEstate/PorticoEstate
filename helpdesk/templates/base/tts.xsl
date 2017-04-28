@@ -115,7 +115,7 @@
 									<xsl:variable name="select_priority_name">
 										<xsl:value-of select="select_priority_name"/>
 									</xsl:variable>
-									<select name="{$select_priority_name}" title="{$lang_priority_statustext}">
+									<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-1-2" >
 										<xsl:apply-templates select="priority_list/options"/>
 									</select>
 								</div>
@@ -125,7 +125,7 @@
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
 
-								<select id="status_id" name="values[status]">
+								<select id="status_id" name="values[status]" class="pure-input-1-2" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -154,7 +154,7 @@
 							<xsl:value-of select="php:function('lang', 'subject')"/>
 						</label>
 
-						<input type="text" name="values[subject]" value="{value_subject}" size="60" >
+						<input type="text" name="values[subject]" value="{value_subject}" size="60"  class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 							</xsl:attribute>
@@ -174,7 +174,7 @@
 							<xsl:value-of select="php:function('lang', 'Details')"/>
 						</label>
 
-						<textarea cols="60" rows="10" name="values[details]" >
+						<textarea cols="60" rows="10" name="values[details]"  class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 							</xsl:attribute>
@@ -209,7 +209,7 @@
 							<br/>
 							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100" class="pure-input-1-2" >
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
 						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
@@ -417,7 +417,7 @@
 									<xsl:variable name="select_priority_name">
 										<xsl:value-of select="select_priority_name"/>
 									</xsl:variable>
-									<select name="{$select_priority_name}" class="forms" title="{$lang_priority_statustext}" onMouseover="window.status='{$lang_priority_statustext}'; return true;" onMouseout="window.status='';return true;">
+									<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-1-2" >
 										<xsl:apply-templates select="priority_list/options"/>
 									</select>
 								</div>
@@ -426,7 +426,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<select id="status_id" name="values[status]" class="forms">
+								<select id="status_id" name="values[status]" class="pure-input-1-2" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -548,7 +548,7 @@
 							<br/>
 							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100">
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100" class="pure-input-1-2" >
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
 					</div>
