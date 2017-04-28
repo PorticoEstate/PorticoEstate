@@ -57,9 +57,9 @@
 			return $values;
 		}
 
-		public function read_to_export($id)
+		public function read_to_export($id, $data = array())
 		{			
-			$values =  $this->so->read_to_export($id);
+			$values =  $this->so->read_to_export($id, $data);
 			
 			return $values;
 		}
