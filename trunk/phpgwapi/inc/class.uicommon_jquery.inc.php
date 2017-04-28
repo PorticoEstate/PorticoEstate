@@ -64,8 +64,6 @@
 				self::add_javascript('phpgwapi', $yui, 'common.js');
 			}
 
-			self::add_javascript('phpgwapi', "jquery", 'common.js');
-
 			$this->url_prefix = str_replace('_', '.', get_class($this));
 
 			$this->dateFormat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
@@ -77,6 +75,7 @@
 
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('contextMenu');
+			self::add_javascript('phpgwapi', "jquery", 'common.js');
 
 			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
 			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
