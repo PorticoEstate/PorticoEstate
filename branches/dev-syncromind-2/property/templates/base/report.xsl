@@ -75,16 +75,19 @@
 		</xsl:when>
 	</xsl:choose>
 	<script type="text/javascript">
-		var jsonB = <xsl:value-of select="report_definition"/>;
+		var jsonB = {};
+		<xsl:if test="report_definition != ''">
+			jsonB = <xsl:value-of select="report_definition"/>;
+		</xsl:if>		
 	</script>
 	
 	<style type="text/css">
-	.content_upload_download {
-		position: relative; 
-		overflow: auto; 
-		max-height: 50vh; 
-		width: 100%;	
-	}
+		.content_columns {
+			position: relative; 
+			overflow: auto; 
+			max-height: 50vh; 
+			width: 100%;	
+		}
 	</style>
 	<div id="document_edit_tabview">
 		
@@ -95,7 +98,7 @@
 			<div id="tab-content">					
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>						
 				<div id="report">
-					<input type="hidden" name="report_id" value="{report_id}"/>
+					<input type="hidden" id="report_id"  name="report_id" value="{report_id}"/>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'report name')" />
@@ -114,41 +117,62 @@
 								<xsl:value-of select="php:function('lang', 'get columns')" />
 							</xsl:attribute>
 						</input>										
-					</div>	
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Choose columns')" />
-						</label>
-						<div id="container_columns" class="content_upload_download"></div>			
 					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Group by')" />
-						</label>
-						<div id="container_groups" class="pure-custom"></div>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Sort by')" />
-						</label>
-						<div id="container_order" class="pure-custom"></div>
-					</div>	
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Count / Sum')" />
-						</label>
-						<div id="container_aggregates" class="pure-custom"></div>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Preview')" />
-						</label>
-						<input type="button" class="pure-button pure-button-primary" name="btn_preview" id="btn_preview">
-							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'preview')" />
-							</xsl:attribute>
-						</input>
-					</div>											
+					
+					<div id="responsiveTabsGroups">
+						<ul>
+							<li><a href="#tab-columns"><xsl:value-of select="php:function('lang', 'Columns')"/></a></li>
+							<li><a href="#tab-group"><xsl:value-of select="php:function('lang', 'Group by')"/></a></li>
+							<li><a href="#tab-sort"><xsl:value-of select="php:function('lang', 'Sort by')"/></a></li>
+							<li><a href="#tab-count-sum"><xsl:value-of select="php:function('lang', 'Count / Sum')"/></a></li>
+							<li><a href="#tab-preview"><xsl:value-of select="php:function('lang', 'Preview')"/></a></li>
+						</ul>
+						<div id="tab-columns">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Choose')" />
+								</label>
+								<div id="container_columns" class="content_columns"></div>			
+							</div>									
+						</div>
+						<div id="tab-group">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Choose')" />
+								</label>
+								<div id="container_groups" class="pure-custom"></div>
+							</div>					
+						</div>
+						<div id="tab-sort">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Choose')" />
+								</label>
+								<div id="container_order" class="pure-custom"></div>
+							</div>				
+						</div>
+						<div id="tab-count-sum">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Choose')" />
+								</label>
+								<div id="container_aggregates" class="pure-custom"></div>
+							</div>		
+						</div>	
+						<div id="tab-preview">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Show')" />
+								</label>
+								<input type="button" class="pure-button pure-button-primary" name="btn_preview" id="btn_preview">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'preview')" />
+									</xsl:attribute>
+								</input>
+							</div>
+							<div id="container_preview" class="content_columns"></div>				
+						</div>					
+					</div>							
 				</div>
 			</div>
 			<div class="proplist-col">
@@ -171,6 +195,12 @@
 			</div>	
 		</form>
 	</div>
+	<script>
+		
+		$('#responsiveTabsGroups').responsiveTabs({
+			startCollapsed: 'accordion'
+		});
+	</script>
 </xsl:template>
 
 <xsl:template match="edit_dataset">
