@@ -268,17 +268,23 @@
 			return $query_columns;
 		}
 		
-		function read_to_export ( $id )
+		function read_to_export ( $id, $data = array() )
 		{
 			$id = (int)$id;
-			
-			$definition = $this->read_single($id);
-			$dataset = $this->read_single_dataset($definition['dataset_id']);
-			
-			$jsonB = json_decode($definition['report_definition'], true);
-			
+
+			if (count($data))
+			{
+				$dataset = $this->read_single_dataset($id);
+				$jsonB = $data;
+			} 
+			else {
+				$definition = $this->read_single($id);
+				$dataset = $this->read_single_dataset($definition['dataset_id']);				
+				$jsonB = json_decode($definition['report_definition'], true);
+			}
+
 			$query_columns = $this->build_sum_of_colums($jsonB['group']);
-				
+	
 			$columns = implode(',', $jsonB['group']);
 			$agregates = array();
 			foreach ($jsonB['aggregate'] as $c => $v)
@@ -295,7 +301,12 @@
 			//$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
 			$sql = "SELECT ".$query_columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ROLLUP (".$columns.')'.$order;
 
-			$this->db->query($sql, __LINE__, __FILE__);
+			if (count($data))
+			{
+				$this->db->limit_query($sql, 0, __LINE__, __FILE__, 20);
+			} else {
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
 
 			$resultado = array_merge(array_values($jsonB['group']), array_values($jsonB['txt_aggregate']));
 			
@@ -469,16 +480,16 @@
 
 			$this->db->transaction_begin();
 			
-			$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
-			$this->db->query("DELETE FROM fm_view_dataset_report WHERE dataset_id ='{$id}'", __LINE__, __FILE__);
+			//$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_view_dataset_report WHERE id ='{$id}'", __LINE__, __FILE__);
 
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('dataset has been deleted'));
+				$receipt['message'][] = array('msg' => lang('report has been deleted'));
 			}
 			else
 			{
-				$receipt['error'][] = array('msg' => lang('dataset has not been deleted'));
+				$receipt['error'][] = array('msg' => lang('report has not been deleted'));
 			}
 			
 			return $receipt;
