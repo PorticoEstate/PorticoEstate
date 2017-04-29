@@ -110,7 +110,7 @@
 					}
 					else
 					{
-						$this->simple = true;	
+						$this->simple = true;
 					}
 					break;
 				}
@@ -1255,8 +1255,8 @@
 
 			//-----------from--------
 			// build body
-			$body = '';
-			$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
+
+			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
 			$body .= lang('Date Opened') . ': ' . $entry_date . "\n";
 			$body .= lang('Category') . ': ' . $this->get_category_name($ticket['cat_id']) . "\n";
@@ -1288,12 +1288,12 @@
 				$body .= lang('Group') . ': ' . $group_name . "\n";
 			}
 
+			$body .= lang('Opened By') . ': ' . $ticket['user_name'] . "\n\n";
+
 			if ($timestampclosed)
 			{
 				$body .= lang('Date Closed') . ': ' . $timestampclosed . "\n\n";
 			}
-
-			$body .= lang('Opened By') . ': ' . $ticket['user_name'] . "\n\n";
 			$body = nl2br($body);
 
 			$i = 1;
@@ -1332,15 +1332,28 @@ HTML;
 			$body.= "<table class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
 			$subject .= "::{$i}";
 
-
-		//	$body .= lang('First Note Added') . ":\n";
-
-		//	$body .= stripslashes(strip_tags($ticket['details'])) . "\n\n";
-
 			if ($get_message)
 			{
 				return array('subject' => $subject, 'body' => $body);
 			}
+
+			$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+
+			$html = <<<HTML
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style TYPE="text/css">
+			<!--{$css}-->
+		</style>
+	</head>
+	<body>
+		{$body}
+	</body>
+</html>
+HTML;
+
 
 			$members = array();
 
@@ -1461,7 +1474,7 @@ HTML;
 				{
 					try
 					{
-						$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc, $current_user_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
+						$rc = $this->send->msg('email', $to, $subject, $html, '', $cc, $bcc, $current_user_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
 					}
 					catch (phpmailerException $e)
 					{
@@ -1821,7 +1834,7 @@ HTML;
 		}
 
 		/**
-		 * 
+		 *
 		 * @param type $ecodimb
 		 * @param type $amount
 		 * @param type $order_id
@@ -1996,7 +2009,7 @@ HTML;
 		}
 
 		/**
-		 * 
+		 *
 		 * @param array $supervisors
 		 * @param int $order_id
 		 * @return array
@@ -2112,7 +2125,7 @@ HTML;
 						'approved_time'	 => $GLOBALS['phpgw']->common->show_date($approvals[0]['action_performed'], $dateformat),
 						'is_user'	=> $supervisor_id == $this->account ? true : false
 					);
-				
+
 					unset($prefs);
 				}
 			}

@@ -245,9 +245,7 @@
 							document.write("<form><input type=button "
 							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
 					</script>
-
-
-					{$ticket['subject']}<br/><br/>
+					<H2>{$ticket['subject']}</H2>
 					{$ticket['body']}
 				</body>
 			</html>
