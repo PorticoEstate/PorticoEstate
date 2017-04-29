@@ -920,10 +920,17 @@
 
 			$data_attribute = $this->custom->prepare_for_db('phpgw_helpdesk_tickets', $values_attribute);
 
-			if (isset($data_attribute['value_set']))
+			if (!empty($data_attribute['value_set']))
 			{
+				$this->db->query("SELECT * FROM phpgw_helpdesk_tickets WHERE id='$id'", __LINE__, __FILE__);
+				$this->db->next_record();
 				foreach ($data_attribute['value_set'] as $input_name => $value)
 				{
+					$old_values = $this->db->f($input_name);
+					if($value == $old_values)
+					{
+						continue;
+					}
 					$this->fields_updated[] = $input_name;
 					$value_set[$input_name] = $value;
 				}
@@ -936,6 +943,7 @@
 
 			if (isset($this->fields_updated) && $this->fields_updated && $simple)
 			{
+				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
 				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
 				$this->db->transaction_commit();
 				return $receipt;
@@ -1054,13 +1062,15 @@
 
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 			}
+//			_debug_array($this->fields_updated);die();
+			if (isset($this->fields_updated) && $this->fields_updated)
+			{
+				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+			}
 
 			$this->db->transaction_commit();
 
-			if (isset($this->fields_updated) && $this->fields_updated)
-			{
-				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
-			}
 			return $receipt;
 		}
 
