@@ -209,7 +209,7 @@
 							<br/>
 							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100" class="pure-input-1-2" >
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-1-2" >
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
 						<input type="hidden" id="pasted_image_is_blank" name="pasted_image_is_blank" value="1"></input>
@@ -548,7 +548,7 @@
 							<br/>
 							<xsl:text>Ctrl + V</xsl:text>
 						</label>
-						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="100" class="pure-input-1-2" >
+						<canvas title="Copy image data into clipboard and press Ctrl+V" style="border:1px solid grey;" id="my_canvas" width="100" height="10" class="pure-input-1-2" >
 						</canvas>
 						<input type="hidden" id="pasted_image" name="pasted_image"></input>
 					</div>
