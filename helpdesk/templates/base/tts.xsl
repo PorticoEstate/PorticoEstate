@@ -263,6 +263,14 @@
 		//	var initialSelection = <xsl:value-of select="resources_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang',  'Name', 'Address')"/>
 
+		function open_print_view()
+		{
+			var oArgs = {menuaction:'helpdesk.uitts._print',id: $('#id').val()};
+			var strURL = phpGWLink('index.php', oArgs);
+			var win = window.open(strURL, '_blank');
+			win.focus();
+		}
+
 
 	</script>
 	<dl>
@@ -669,6 +677,11 @@
 			<input type="button" class="pure-button pure-button-primary" name="done" value="{$lang_done}" onClick="document.cancel_form.submit();">
 				<xsl:attribute name="title">
 					<xsl:value-of select="php:function('lang', 'Back to the ticket list')"/>
+				</xsl:attribute>
+			</input>
+			<input type="button" class="pure-button pure-button-primary" name="print_view" onClick="open_print_view();">
+				<xsl:attribute name="value">
+					<xsl:value-of select="php:function('lang', 'print view')"/>
 				</xsl:attribute>
 			</input>
 		</div>
