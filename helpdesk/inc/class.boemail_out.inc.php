@@ -138,7 +138,7 @@
 			$cc ='';
 			$bcc = '';
 			$from_email = $config['from_email'];
-			$from_name = '';
+			$from_name = $config['from_email'];
 			foreach ($ids as $recipient_id)
 			{
 				$recipient = $sogeneric->read_single(array('id' => $recipient_id));
