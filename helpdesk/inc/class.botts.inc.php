@@ -773,7 +773,7 @@
 			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
 
-			$ticket	= $this->so->read_single($id);
+			$ticket	= $this->read_single($id);
 
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
@@ -813,37 +813,48 @@
 			//-----------from--------
 			// build body
 			$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
-			$body .= lang('Date Opened').': '.$entry_date."\n";
-			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
+			$body .= "<table>";
+			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
+			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
 
-			if($ticket['tenant_id'])
-			{
-				$tenant_data=$this->bocommon->read_single_tenant($ticket['tenant_id']);
-				$body .= lang('Tenant').': '. $tenant_data['first_name'] . ' ' .$tenant_data['last_name'] ."\n";
-
-				if($tenant_data['contact_phone'])
-				{
-					$body .= lang('Contact phone').': '. $tenant_data['contact_phone'] ."\n";
-
-				}
-			}
-			$body .= lang('Assigned To').': '.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."\n";
+			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
 			if(empty($this->config->config_data['disable_priority']))
 			{
-				$body .= lang('Priority').': '.$ticket['priority']."\n";
+				$body .= '<tr><td>'. lang('Priority').'</td><td>:&nbsp;'.$ticket['priority']."</td></tr>";
 			}
 
 			if(empty($this->config->config_data['tts_disable_groupassign_on_add']))
 			{
-				$body .= lang('Group').': '. $group_name ."\n";
+				$body .= '<tr><td>'. lang('Group').'</td><td>:&nbsp;'. $group_name ."</td></tr>";
 			}
 
-			$body .= lang('Opened By').': '. $ticket['user_name'] ."\n\n";
+			$body .= '<tr><td>'. lang('Opened By').'</td><td>:&nbsp;'. $ticket['user_name'] ."</td></tr>";
 			if($timestampclosed)
 			{
-				$body .= lang('Date Closed').': '.$timestampclosed."\n\n";
+				$body .= '<tr><td>'. lang('Date Closed').'</td><td>:&nbsp;'.$timestampclosed."</td></tr>";
 			}
-			$body = nl2br($body);
+
+			if(!empty($ticket['attributes']))
+			{
+				$custom		= createObject('property.custom_fields');
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				foreach ($ticket['attributes'] as $attribute)
+				{
+					$custom_value = $custom->get_translated_value(array(
+								'value' => $attribute['value'],
+								'attrib_id' => $attribute['id'],
+								'datatype' => $attribute['datatype'],
+								'get_single_function' => $attribute['get_single_function'],
+								'get_single_function_input' => $attribute['get_single_function_input']
+								),
+								$location_id);
+					$body .= '<tr><td>'. $attribute['input_text'].'</td><td>:&nbsp;'.$custom_value."</td></tr>";
+				}
+			}
+
+			$body .= '</table>';
+
 
 			if($get_message)
 			{
