@@ -348,11 +348,10 @@ HTML;
 					<title>{$ticket_html['subject']}</title>
 					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
 				</head>
-				<body>
 					<script type="text/javascript">
-							document.write("<form><input type=button "
-							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
+					document.onload = window.print();
 					</script>
+				<body>
 					<H2>{$ticket_html['subject']}</H2>
 					{$ticket_html['body']}
 					{$files}
