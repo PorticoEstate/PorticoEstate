@@ -115,7 +115,7 @@
 								<xsl:variable name="select_priority_name">
 									<xsl:value-of select="select_priority_name"/>
 								</xsl:variable>
-								<select name="{$select_priority_name}">
+								<select name="{$select_priority_name}" class="pure-input-1-2" >
 									<xsl:apply-templates select="priority_list/options"/>
 								</select>
 							</div>
@@ -124,7 +124,7 @@
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
 								
-								<select id="status_id" name="values[status]">
+								<select id="status_id" name="values[status]" class="pure-input-1-2" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -442,7 +442,7 @@
 									<xsl:value-of select="$lang_make_relation"/>
 								</a>
 							</label>
-							<select name="make_relation" id="make_relation">
+							<select name="make_relation" id="make_relation" class="pure-input-1-2" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_make_relation"/>
 								</xsl:attribute>
@@ -534,7 +534,7 @@
 						<xsl:variable name="select_priority_name">
 							<xsl:value-of select="select_priority_name"/>
 						</xsl:variable>
-						<select name="{$select_priority_name}" title="{$lang_priority_statustext}">
+						<select name="{$select_priority_name}" title="{$lang_priority_statustext}" class="pure-input-1-2" >
 							<xsl:if test="simple ='1'">
 								<xsl:attribute name="disabled">
 									<xsl:text>disabled</xsl:text>
@@ -549,7 +549,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								<select id="status_id" name="values[status]">
+								<select id="status_id" name="values[status]" class="pure-input-1-2" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
 									</xsl:attribute>
@@ -862,7 +862,7 @@
 											<xsl:value-of select="$lang_building_part"/>
 										</label>
 												
-										<select name="values[building_part]">
+										<select name="values[building_part]" class="pure-input-1-2" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$lang_building_part"/>
 											</xsl:attribute>
@@ -884,7 +884,7 @@
 												<label>
 													<xsl:value-of select="php:function('lang', 'branch')"/>
 												</label>
-												<select name="values[branch_id]">
+												<select name="values[branch_id]" class="pure-input-1-2" >
 													<xsl:attribute name="title">
 														<xsl:value-of select="php:function('lang', 'select branch')"/>
 													</xsl:attribute>
@@ -903,7 +903,7 @@
 										<label>
 											<xsl:value-of select="$lang_order_dim1"/>
 										</label>
-										<select name="values[order_dim1]">
+										<select name="values[order_dim1]" class="pure-input-1-2" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'order_dim1')"/>
 											</xsl:attribute>
@@ -927,7 +927,7 @@
 											<label>
 												<xsl:value-of select="$lang_tax_code"/>
 											</label>
-											<select name="values[tax_code]">
+											<select name="values[tax_code]" class="pure-input-1-2" >
 												<xsl:attribute name="title">
 													<xsl:value-of select="$lang_tax_code"/>
 												</xsl:attribute>

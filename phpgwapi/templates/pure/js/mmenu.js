@@ -128,6 +128,21 @@ $(document).ready(function ()
 		});
 	});
 
+	$(window).resize(function ()
+	{
+
+		$('.pure-form-aligned').each(function (i, obj)
+		{
+			$(this).removeClass('pure-form-aligned').addClass('pure-form-stacked');
+		});
+		$('.pure-input-1-2').each(function (i, obj)
+		{
+			$(this).removeClass('pure-input-1-2').addClass('pure-input-1');
+		});
+
+	})
+	.resize();//trigger the resize event on page load.
+
 });
 
 function update_bookmark_menu(bookmark_candidate)
@@ -148,44 +163,4 @@ function update_bookmark_menu(bookmark_candidate)
 		}
 	});
 }
-
-/*
- var arURLParts = strBaseURL.split('?');
- var comboBase = arURLParts[0] + 'phpgwapi/inc/yui-combo-master/combo.php?';
-
- YUI_config = {
- //Don't combine the files
- combine: true,
- //Ignore things that are already loaded (in this process)
- ignoreRegistered: false,
- //Set the base path
- comboBase: comboBase,
- base: '',
- //And the root
- root: '',
- //Require your deps
- require: [ ]
- };
-
-
- YUI({
- classNamePrefix: 'pure'
- }).use(
- 'gallery-sm-menu',
- function(Y) {
- Y.on("domready", function () {
- var horizontalMenu = new Y.Menu(
- {
- container         : '#horizontal-menu',
- sourceNode        : '#std-menu-items',
- orientation       : 'horizontal',
- hideOnOutsideClick: false,
- hideOnClick       : false
- }
- );
- horizontalMenu.render();
- horizontalMenu.show();
- });
- });
- */
 
