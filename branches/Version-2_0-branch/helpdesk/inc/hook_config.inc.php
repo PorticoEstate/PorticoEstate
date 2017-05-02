@@ -26,6 +26,35 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	*/
 
+	/**
+	 * Get HTML listbox with workorder reopen status that are to be set when invoice is processed
+	 *
+	 * @param $config
+	 * @return string HTML checkboxes to be placed in a table
+	 */
+	function reopen_status( $config )
+	{
+		$status_entries = execMethod('helpdesk.botts.get_status_list');
+
+		$status_assigned = isset($config['reopen_status']) ? $config['reopen_status'] : array();
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
+		{
+			$selected = '';
+			if ($status_assigned == $status['id'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
 
 	/**
 	 * Get HTML checkbox with groups that are candidates for simplified tts interface

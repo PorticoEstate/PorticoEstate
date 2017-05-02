@@ -25,7 +25,7 @@
 	<xsl:variable name="select_name">
 		<xsl:value-of select="select_name"/>
 	</xsl:variable>
-	<select name="{$select_name}" data-validation="write_period_num" id="period_num" class="forms" title="{$lang_cat_statustext}">
+	<select name="{$select_name}" data-validation="write_period_num" id="period_num" title="{$lang_cat_statustext}" class="pure-input-1-2">
 		<!--xsl:attribute name="data-validation">
 			<xsl:text>required</xsl:text>
 		</xsl:attribute-->

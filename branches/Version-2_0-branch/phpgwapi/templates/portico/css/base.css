@@ -57,6 +57,7 @@ H1 A , /* bookmarks - depricated? */
 H1 A:visited ,
 H1 A:hover {
 	color: #C30 !important;
+
 }
 
 H2 {
@@ -139,7 +140,8 @@ LI {
 
 #navigation {
 	padding: 5px 5px 7px 3em;
-	background-color: #A4C2C2;
+/*	background-color: #A4C2C2;*/
+	background-color: rgba(224, 224, 224, 1);
 	border-top: 1px solid #FFF;
 	border-bottom: 1px solid #FFF;
 	text-align:		right;
@@ -416,7 +418,8 @@ SPAN.expander {
 
 .ui-layout-north {
 	border-bottom: none;
-	background-color: #677;
+	background-color: rgba(21, 123, 175, 1);
+	/*background-color: #677;*/
 }
 
 .ui-layout-west {
@@ -524,7 +527,8 @@ SPAN.expander {
 	padding-right:	1px;
 }
 .button-bar {
-    background-color: #a4c2c2;
+  /*  background-color: #a4c2c2;*/
+	background-color: rgba(224, 224, 224, 1);
     border-bottom: 1px solid #fff;
     border-top: 1px solid #fff;
     padding: 5px 5px 7px 3em;

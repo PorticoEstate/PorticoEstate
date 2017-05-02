@@ -194,7 +194,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'project type')"/>
 						</label>
-						<select name="values[project_type_id]">
+						<select name="values[project_type_id]" class="pure-input-1-2">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'project type')"/>
 							</xsl:attribute>
@@ -341,7 +341,7 @@
 								<label for="name">
 									<xsl:value-of select="lang_power_meter"/>
 								</label>
-								<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12" onMouseout="window.status='';return true;">
+								<input type="text" name="values[power_meter]" value="{value_power_meter}" size="12" class="pure-input-1-2">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_power_meter_statustext"/>
 									</xsl:attribute>
@@ -813,7 +813,7 @@
 								<xsl:variable name="lang_branch_statustext">
 									<xsl:value-of select="lang_branch_statustext"/>
 								</xsl:variable>
-								<select name="values[branch][]" class="forms" multiple="multiple" title="{$lang_branch_statustext}">
+								<select name="values[branch][]" multiple="multiple" title="{$lang_branch_statustext}" class="pure-input-1-2">
 									<xsl:apply-templates select="branch_list"/>
 								</select>
 							</div>
@@ -821,7 +821,7 @@
 								<label for="name">
 									<xsl:value-of select="lang_other_branch"/>
 								</label>
-								<input type="text" name="values[other_branch]" value="{value_other_branch}">
+								<input type="text" name="values[other_branch]" value="{value_other_branch}" class="pure-input-1-2">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_other_branch_statustext"/>
 									</xsl:attribute>
@@ -834,7 +834,7 @@
 								<xsl:variable name="lang_key_fetch_statustext">
 									<xsl:value-of select="lang_key_fetch_statustext"/>
 								</xsl:variable>
-								<select name="values[key_fetch]" class="forms" title="{$lang_key_fetch_statustext}">
+								<select name="values[key_fetch]" title="{$lang_key_fetch_statustext}" class="pure-input-1-2">
 									<option value="">
 										<xsl:value-of select="lang_no_key_fetch"/>
 									</option>
@@ -848,7 +848,7 @@
 								<xsl:variable name="lang_key_deliver_statustext">
 									<xsl:value-of select="lang_key_deliver_statustext"/>
 								</xsl:variable>
-								<select name="values[key_deliver]" class="forms" onMouseover="window.status='{$lang_key_deliver_statustext}'; return true;" onMouseout="window.status='';return true;">
+								<select name="values[key_deliver]" class="pure-input-1-2">
 									<option value="">
 										<xsl:value-of select="lang_no_key_deliver"/>
 									</option>
@@ -862,7 +862,7 @@
 								<xsl:variable name="lang_key_responsible_statustext">
 									<xsl:value-of select="lang_key_responsible_statustext"/>
 								</xsl:variable>
-								<select name="values[key_responsible]" class="forms" onMouseover="window.status='{$lang_key_responsible_statustext}'; return true;" onMouseout="window.status='';return true;">
+								<select name="values[key_responsible]" class="pure-input-1-2">
 									<option value="">
 										<xsl:value-of select="lang_no_key_responsible"/>
 									</option>
