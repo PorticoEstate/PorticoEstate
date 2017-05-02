@@ -246,6 +246,7 @@
 
 				if($login)
 				{
+					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend'));
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
 
