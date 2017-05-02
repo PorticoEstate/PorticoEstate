@@ -1226,7 +1226,7 @@
 			$log_recipients = array();
 			$this->send = CreateObject('phpgwapi.send');
 
-			$ticket = $this->so->read_single($id);
+			$ticket = $this->read_single($id);
 
 			$address_element = $this->get_address_element($ticket['location_code']);
 
@@ -1256,45 +1256,75 @@
 			//-----------from--------
 			// build body
 
+			$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
+
+			if($request_scheme == 'https')
+			{
+				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+			}
 			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
-			$body .= lang('Date Opened') . ': ' . $entry_date . "\n";
-			$body .= lang('Category') . ': ' . $this->get_category_name($ticket['cat_id']) . "\n";
-//			$body .= lang('Subject').': '. $ticket['subject'] ."\n";
-			$body .= lang('Location') . ': ' . $ticket['location_code'] . "\n";
-			$body .= lang('Address') . ': ' . $ticket['address'] . "\n";
+
+			$body .= "<table>";
+			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
+			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
+			$body .= '<tr><td>'. lang('Location') . '</td><td>:&nbsp;' . $ticket['location_code'] ."</td></tr>";
+			$body .= '<tr><td>'. lang('Address') . '</td><td>:&nbsp;' . $ticket['address'] ."</td></tr>";
 			if (isset($address_element) AND is_array($address_element))
 			{
 				foreach ($address_element as $address_entry)
 				{
-					$body .= $address_entry['text'] . ': ' . $address_entry['value'] . "\n";
+					$body .= '<tr><td>'. $address_entry['text'] . '</td><td>:&nbsp;' . $address_entry['value'] ."</td></tr>";
 				}
 			}
 
 			if ($ticket['tenant_id'])
 			{
 				$tenant_data = $this->bocommon->read_single_tenant($ticket['tenant_id']);
-				$body .= lang('Tenant') . ': ' . $tenant_data['first_name'] . ' ' . $tenant_data['last_name'] . "\n";
+				$body .= '<tr><td>'. lang('Tenant') . '</td><td>:&nbsp;' . $tenant_data['first_name'] . ' ' . $tenant_data['last_name'] ."</td></tr>";
 
 				if ($tenant_data['contact_phone'])
 				{
-					$body .= lang('Contact phone') . ': ' . $tenant_data['contact_phone'] . "\n";
+					$body .= '<tr><td>'. lang('Contact phone') . '</td><td>:&nbsp;' . $tenant_data['contact_phone'] ."</td></tr>";
 				}
 			}
-			$body .= lang('Assigned To') . ': ' . $GLOBALS['phpgw']->accounts->id2name($ticket['assignedto']) . "\n";
-			$body .= lang('Priority') . ': ' . $ticket['priority'] . "\n";
+			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
+			if(empty($this->config->config_data['disable_priority']))
+			{
+				$body .= '<tr><td>'. lang('Priority').'</td><td>:&nbsp;'.$ticket['priority']."</td></tr>";
+			}
 			if ($group_name)
 			{
-				$body .= lang('Group') . ': ' . $group_name . "\n";
+				$body .= '<tr><td>'. lang('Group') . '</td><td>:&nbsp;' . $group_name  ."</td></tr>";
 			}
 
-			$body .= lang('Opened By') . ': ' . $ticket['user_name'] . "\n\n";
+			$body .= '<tr><td>'. lang('Opened By') . '</td><td>:&nbsp;' . $ticket['user_name'] ."</td></tr>";
 
 			if ($timestampclosed)
 			{
-				$body .= lang('Date Closed') . ': ' . $timestampclosed . "\n\n";
+				$body .= '<tr><td>'. lang('Date Closed') . '</td><td>:&nbsp;' . $timestampclosed  ."</td></tr>";
 			}
-			$body = nl2br($body);
+
+			if(!empty($ticket['attributes']))
+			{
+				$custom		= createObject('property.custom_fields');
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+
+				foreach ($ticket['attributes'] as $attribute)
+				{
+					$custom_value = $custom->get_translated_value(array(
+								'value' => $attribute['value'],
+								'attrib_id' => $attribute['id'],
+								'datatype' => $attribute['datatype'],
+								'get_single_function' => $attribute['get_single_function'],
+								'get_single_function_input' => $attribute['get_single_function_input']
+								),
+								$location_id);
+					$body .= '<tr><td>'. $attribute['input_text'].'</td><td>:&nbsp;'.$custom_value."</td></tr>";
+				}
+			}
+
+			$body .= '</table>';
 
 			$i = 1;
 			$lang_date = lang('date');
@@ -1329,7 +1359,7 @@ HTML;
 				$_note =  stripslashes($value['new_value']);
 				$table_content .= "<tr><td>{$i}</td><td>{$_date}</td><td>{$value['owner']}</td><td>{$_note}</td></tr>";
 			}
-			$body.= "<table class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
+			$body.= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
 			$subject .= "::{$i}";
 
 			if ($get_message)
@@ -1340,12 +1370,11 @@ HTML;
 			$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
 
 			$html = <<<HTML
-<!DOCTYPE HTML>
 <html>
 	<head>
 		<meta charset="utf-8">
 		<style TYPE="text/css">
-			<!--{$css}-->
+			{$css}
 		</style>
 	</head>
 	<body>
