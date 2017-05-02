@@ -601,7 +601,7 @@
 					$input_name_entity[] = $location['location'][$i]['extra'][0]['input_name'];
 					$location['location'][$i]['extra'][0]['input_type'] = 'text';
 					$location['location'][$i]['extra'][0]['size'] = 30;
-					$location['location'][$i]['extra'][0]['size'] = 'pure-u-3-5';
+					$location['location'][$i]['extra'][0]['class'] = 'pure-u-3-5';
 					$location['location'][$i]['extra'][0]['lookup_function_call'] = 'lookup_entity_' . $entity['id'] . '()';
 					$location['location'][$i]['extra'][0]['is_entity'] = true;
 
