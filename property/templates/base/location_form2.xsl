@@ -60,7 +60,7 @@
 					<div>
 						<xsl:if test="input_type != 'hidden'">
 							<xsl:attribute name="class">
-								<xsl:text>pure-u-3-5</xsl:text>
+								<xsl:text>pure-u-3-4</xsl:text>
 							</xsl:attribute>
 						</xsl:if>
 						<xsl:if test="class != ''">

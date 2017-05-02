@@ -139,9 +139,9 @@ $(document).ready(function ()
 		{
 			$(this).removeClass('pure-input-1-2').addClass('pure-input-1');
 		});
-		$('.pure-u-3-5').each(function (i, obj)
+		$('.pure-u-3-4').each(function (i, obj)
 		{
-			$(this).removeClass('pure-u-3-5').addClass('pure-u-5-6');
+			$(this).removeClass('pure-u-3-4').addClass('pure-u-5-6');
 		});
 
 	})
