@@ -1320,7 +1320,11 @@
 								'get_single_function_input' => $attribute['get_single_function_input']
 								),
 								$location_id);
-					$body .= '<tr><td>'. $attribute['input_text'].'</td><td>:&nbsp;'.$custom_value."</td></tr>";
+
+					if($custom_value)
+					{
+						$body .= '<tr><td>'. $attribute['input_text'].'</td><td>:&nbsp;'.$custom_value."</td></tr>";
+					}
 				}
 			}
 
