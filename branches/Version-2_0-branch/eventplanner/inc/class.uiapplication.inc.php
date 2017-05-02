@@ -298,8 +298,8 @@
 			);
 
 			$dates_def = array(
-				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
-				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'from_', 'label' => lang('From'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'customer_name', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
@@ -368,7 +368,8 @@
 				'data' => json_encode(array()),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(1,'asc'))),
 				)
 			);
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
