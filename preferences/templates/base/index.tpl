@@ -1,5 +1,5 @@
 <!-- BEGIN list -->
-<div id="preferences-index">
+<div id="preferences-index" class="content">
 	<div id="tab-content">
 	{tabs}
 		<div id="user">

@@ -114,9 +114,10 @@
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
-			$allrows		= isset($data['allrows'])?$data['allrows']:'';
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
+			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
+			$allrows		= $results == -1 ? true : false;
 			$dry_run		= isset($data['dry_run']) ? $data['dry_run'] : '';
 			$new			= isset($data['new']) ? $data['new'] : '';
 			$location_code	= isset($data['location_code']) ? $data['location_code'] : '';
@@ -347,7 +348,7 @@
 
 				if(!$allrows)
 				{
-					$this->db2->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__);
+					$this->db2->limit_query($sql . $ordermethod,$start,__LINE__,__FILE__, $results);
 				}
 				else
 				{
@@ -899,16 +900,37 @@
 				$_history_id = $this->db->get_last_insert_id('phpgw_history_log', 'history_id');
 				$this->db->query("UPDATE phpgw_history_log SET publish = 1 WHERE history_id = $_history_id", __LINE__, __FILE__);
 				unset($_history_id);
+
+				$check_old_custom = (int)trim($old_status, 'C');
+				$this->db->query("SELECT * from phpgw_helpdesk_status WHERE id = {$check_old_custom}", __LINE__, __FILE__);
+				$this->db->next_record();
+				$old_closed = $this->db->f('closed');
+				if ($old_status == 'X' || $old_closed)
+				{
+					$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+					$new_status = !empty($config['reopen_status']) ? $config['reopen_status'] : '0';
+					$this->fields_updated[] = 'status';
+					$this->historylog->add('R', $id, $new_status, $old_status);
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET status='{$new_status}' WHERE id= {$id}", __LINE__, __FILE__);
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 1 WHERE id = {$id}", __LINE__, __FILE__);
+				}
 			}
 
 			$value_set = array();
 
 			$data_attribute = $this->custom->prepare_for_db('phpgw_helpdesk_tickets', $values_attribute);
 
-			if (isset($data_attribute['value_set']))
+			if (!empty($data_attribute['value_set']))
 			{
+				$this->db->query("SELECT * FROM phpgw_helpdesk_tickets WHERE id='$id'", __LINE__, __FILE__);
+				$this->db->next_record();
 				foreach ($data_attribute['value_set'] as $input_name => $value)
 				{
+					$old_values = $this->db->f($input_name);
+					if($value == $old_values)
+					{
+						continue;
+					}
 					$this->fields_updated[] = $input_name;
 					$value_set[$input_name] = $value;
 				}
@@ -921,6 +943,7 @@
 
 			if (isset($this->fields_updated) && $this->fields_updated && $simple)
 			{
+				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
 				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
 				$this->db->transaction_commit();
 				return $receipt;
@@ -980,6 +1003,7 @@
 
 				if (($this->db->f('closed') || $ticket['status'] == 'X') && ($old_status != 'X' && !$old_closed))
 				{
+					$this->db->query("UPDATE phpgw_helpdesk_tickets SET priority = 0 WHERE id = {$id}", __LINE__, __FILE__);
 					$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
 					// at controller
 					if (isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
@@ -1038,13 +1062,15 @@
 
 				$this->db->query("UPDATE phpgw_helpdesk_tickets SET $value_set WHERE id={$id}", __LINE__, __FILE__);
 			}
+//			_debug_array($this->fields_updated);die();
+			if (isset($this->fields_updated) && $this->fields_updated)
+			{
+				$this->db->query("DELETE FROM phpgw_helpdesk_views WHERE id={$id} AND account_id !=" . (int) $this->account, __LINE__, __FILE__);
+				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
+			}
 
 			$this->db->transaction_commit();
 
-			if (isset($this->fields_updated) && $this->fields_updated)
-			{
-				$receipt['message'][] = array('msg' => lang('Ticket has been updated'));
-			}
 			return $receipt;
 		}
 

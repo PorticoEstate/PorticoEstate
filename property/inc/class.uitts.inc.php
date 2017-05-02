@@ -230,12 +230,26 @@
 			$id = phpgw::get_var('id', 'int');
 
 			$ticket = $this->bo->mail_ticket($id, $fields_updated = true, $receipt = array(), $location_code = '', $get_message = true);
+			$lang_print = lang('print');
 
-			$html = "<html><head><title>{$ticket['subject']}</title></head>";
-			$html .= "<body>";
-			$html .= $ticket['subject'] . '</br></br>';
-			$html .= nl2br($ticket['body']);
-			$html .= "</body></html>";
+			$html = <<<HTML
+
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>{$ticket['subject']}</title>
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
+				</head>
+				<body>
+					<script type="text/javascript">
+							document.write("<form><input type=button "
+							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
+					</script>
+					<H2>{$ticket['subject']}</H2>
+					{$ticket['body']}
+				</body>
+			</html>
+HTML;
 
 			echo $html;
 		}
@@ -1624,7 +1638,7 @@
 
 
 
-			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true));
+			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true, 'class' => 'pure-input-1-2'));
 
 			$_cat_list = array();
 			if($this->simple && isset($fmttssimple_categories) && $fmttssimple_categories[1])
@@ -2830,7 +2844,7 @@
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true));
+				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true, 'class' => 'pure-input-1-2'));
 
 			$_ticket_cat_found = false;
 			if (isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))

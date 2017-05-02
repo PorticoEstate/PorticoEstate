@@ -773,9 +773,7 @@
 			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
 
-			$ticket	= $this->so->read_single($id);
-
-			$address_element = $this->get_address_element($ticket['location_code']);
+			$ticket	= $this->read_single($id);
 
 			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
 			$entry_date = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
@@ -813,80 +811,110 @@
 
 			//-----------from--------
 			// build body
-			$body  = '';
-			$body .= '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
-			$body .= lang('Date Opened').': '.$entry_date."\n";
-			$body .= lang('Category').': '. $this->get_category_name($ticket['cat_id']) ."\n";
-//			$body .= lang('Subject').': '. $ticket['subject'] ."\n";
-			$body .= lang('Location').': '. $ticket['location_code'] ."\n";
-			$body .= lang('Address').': '. $ticket['address'] ."\n";
-			if (isset($address_element) AND is_array($address_element))
+			$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
+			$body .= "<table>";
+			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
+			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
+
+			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
+			if(empty($this->config->config_data['disable_priority']))
 			{
-				foreach($address_element as $address_entry)
-				{
-					$body .= $address_entry['text'].': '. $address_entry['value'] ."\n";
-				}
+				$body .= '<tr><td>'. lang('Priority').'</td><td>:&nbsp;'.$ticket['priority']."</td></tr>";
 			}
 
-			if($ticket['tenant_id'])
+			if(empty($this->config->config_data['tts_disable_groupassign_on_add']))
 			{
-				$tenant_data=$this->bocommon->read_single_tenant($ticket['tenant_id']);
-				$body .= lang('Tenant').': '. $tenant_data['first_name'] . ' ' .$tenant_data['last_name'] ."\n";
-
-				if($tenant_data['contact_phone'])
-				{
-					$body .= lang('Contact phone').': '. $tenant_data['contact_phone'] ."\n";
-
-				}
-			}
-			$body .= lang('Assigned To').': '.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."\n";
-			$body .= lang('Priority').': '.$ticket['priority']."\n";
-			if($group_name)
-			{
-				$body .= lang('Group').': '. $group_name ."\n";
-			}
-			$body .= lang('Opened By').': '. $ticket['user_name'] ."\n\n";
-			if($get_message)
-			{
-				$body .= lang('First Note Added').":\n";
-				$body .= stripslashes(strip_tags($ticket['details']))."\n\n";
+				$body .= '<tr><td>'. lang('Group').'</td><td>:&nbsp;'. $group_name ."</td></tr>";
 			}
 
-			/**************************************************************\
-			 * Display additional notes                                     *
-			 \**************************************************************/
-			if($fields_updated)
-			{
-				$i=1;
-
-				$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
-
-				foreach($history_array as $value)
-				{
-					if($get_message)
-					{
-						$body .= lang('Date') . ': '.$GLOBALS['phpgw']->common->show_date($value['datetime'])."\n";
-						$body .= lang('User') . ': '.$value['owner']."\n";
-						$body .=lang('Note').': '. nl2br(stripslashes($value['new_value']))."\n\n";
-					}
-					$i++;
-				}
-				$subject.= "-" .$i;
-			}
-			/**************************************************************\
-			 * Display record history                                       *
-			 \**************************************************************/
-
+			$body .= '<tr><td>'. lang('Opened By').'</td><td>:&nbsp;'. $ticket['user_name'] ."</td></tr>";
 			if($timestampclosed)
 			{
-				$body .= lang('Date Closed').': '.$timestampclosed."\n\n";
+				$body .= '<tr><td>'. lang('Date Closed').'</td><td>:&nbsp;'.$timestampclosed."</td></tr>";
 			}
 
+			if(!empty($ticket['attributes']))
+			{
+				$custom		= createObject('property.custom_fields');
+				$location_id = $GLOBALS['phpgw']->locations->get_id('helpdesk', '.ticket');
+
+				foreach ($ticket['attributes'] as $attribute)
+				{
+					$custom_value = $custom->get_translated_value(array(
+								'value' => $attribute['value'],
+								'attrib_id' => $attribute['id'],
+								'datatype' => $attribute['datatype'],
+								'get_single_function' => $attribute['get_single_function'],
+								'get_single_function_input' => $attribute['get_single_function_input']
+								),
+								$location_id);
+					$body .= '<tr><td>'. $attribute['input_text'].'</td><td>:&nbsp;'.$custom_value."</td></tr>";
+				}
+			}
+
+			$body .= '</table>';
+
+
+			if($get_message)
+			{
+				$i = 1;
+				$lang_date = lang('date');
+				$lang_user = lang('user');
+				$lang_note = lang('note');
+				$table_content = <<<HTML
+				<thead>
+					<tr>
+						<th>
+							#
+						</th>
+						<th>
+							{$lang_date}
+						</th>
+						<th>
+							{$lang_user}
+						</th>
+						<th>
+							{$lang_note}
+						</th>
+					</tr>
+				</thead>
+HTML;
+				$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$ticket['user_name']}</td><td>{$ticket['details']}</td></tr>";
+
+				$history_array = $this->historylog->return_array(array(), array('C'), 'history_id', 'DESC', $id);
+
+				foreach ($history_array as $value)
+				{
+					$i++;
+					$_date =  $GLOBALS['phpgw']->common->show_date($value['datetime']);
+					$_note =  stripslashes($value['new_value']);
+					$table_content .= "<tr><td>{$i}</td><td>{$_date}</td><td>{$value['owner']}</td><td>{$_note}</td></tr>";
+				}
+				$body.= "<table class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
+
+				$subject .= "::{$i}";
+			}
 
 			if($get_message)
 			{
 				return array('subject' => $subject, 'body' => $body);
 			}
+			$css = file_get_contents(PHPGW_SERVER_ROOT . "/phpgwapi/templates/pure/css/pure-min.css");
+
+			$html = <<<HTML
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style TYPE="text/css">
+			<!--{$css}-->
+		</style>
+	</head>
+	<body>
+		{$body}
+	</body>
+</html>
+HTML;
 
 			$members = array();
 
@@ -1009,13 +1037,12 @@
 			if($toarray)
 			{
 				$to = implode(';',$toarray);
-				$body = nl2br($body);
 
 				if (isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server'])
 				{
 					try
 					{
-						$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc,$current_user_address,$GLOBALS['phpgw_info']['user']['fullname'],'html');
+						$rc = $this->send->msg('email', $to, $subject, $html, '', $cc, $bcc,$current_user_address,$GLOBALS['phpgw_info']['user']['fullname'],'html');
 					}
 					catch (phpmailerException $e)
 					{

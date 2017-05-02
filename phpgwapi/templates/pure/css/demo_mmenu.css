@@ -59,7 +59,7 @@ nav:not(.mm-menu)
 .header,
 .footer
 {
-	background: #677;
+	background: rgba(21, 123, 175, 1);
 	font-size: 16px;
 	font-weight: bold;
 	color: #fff;
@@ -73,6 +73,12 @@ nav:not(.mm-menu)
 	padding: 0 50px;
 }
 
+.header select
+{
+	color: black;
+	font-weight: normal;
+	font-size: 12px;
+}
 .header.mm-fixed-top
 {
 	position: fixed;
@@ -114,10 +120,16 @@ nav:not(.mm-menu)
 
 .content
 {
-	padding: 15px 0px 50px 0px;
+	padding: 20px 0px 50px 0px;
 }
 
 div.dt-buttons {
     float: none !important;
     text-align: left;
+}
+div.error, div.warn div.msg_good{
+    padding: 20px;
+}
+.msg_good{
+    padding: 20px;
 }

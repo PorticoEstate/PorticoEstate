@@ -7,7 +7,7 @@
 		<xsl:variable name="status_name">
 			<xsl:value-of select="status_name"/>
 		</xsl:variable>
-		<select name="{$status_name}" class="forms" title="{$lang_status_statustext}">
+		<select name="{$status_name}" title="{$lang_status_statustext}" class="pure-input-1-2">
 		<xsl:if test="status_required='1'">
 			<xsl:attribute name="data-validation">
 				<xsl:text>required</xsl:text>
