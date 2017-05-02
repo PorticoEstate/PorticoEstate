@@ -811,7 +811,15 @@
 
 			//-----------from--------
 			// build body
-			$body = '<a href ="http://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'id' => $id)).'">' . lang('Ticket').' #' .$id .'</a>'."\n";
+			$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
+
+			if($request_scheme == 'https')
+			{
+				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+			}
+			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
+					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
+
 			$body .= "<table>";
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
 			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
@@ -890,8 +898,7 @@ HTML;
 					$_note =  stripslashes($value['new_value']);
 					$table_content .= "<tr><td>{$i}</td><td>{$_date}</td><td>{$value['owner']}</td><td>{$_note}</td></tr>";
 				}
-				$body.= "<table class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
-
+				$body.= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
 				$subject .= "::{$i}";
 			}
 
