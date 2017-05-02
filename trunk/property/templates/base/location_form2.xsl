@@ -27,11 +27,11 @@
 							<xsl:text>pure-u-1-6</xsl:text>
 						</xsl:attribute>
 					</xsl:if>
-						<xsl:if test="class != ''">
-							<xsl:attribute name="class">
-								<xsl:value-of select="class"/>
-							</xsl:attribute>
-						</xsl:if>
+					<xsl:if test="class != ''">
+						<xsl:attribute name="class">
+							<xsl:value-of select="class"/>
+						</xsl:attribute>
+					</xsl:if>
 					<input size="{size}" type="{input_type}" id="{input_name}" name="{input_name}" value="{value}" onClick="{lookup_function_call}">
 						<xsl:if test="input_type != 'hidden'">
 							<xsl:attribute name="class">
@@ -74,6 +74,11 @@
 									<xsl:text>pure-input-1</xsl:text>
 								</xsl:attribute>
 							</xsl:if>
+							<xsl:if test="is_entity=1">
+								<xsl:attribute name="class">
+									<xsl:text>pure-input-2-3</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
 							<xsl:if test="readonly=1">
 								<xsl:attribute name="readonly">
 									<xsl:text>readonly</xsl:text>
@@ -85,14 +90,17 @@
 						</input>
 						<xsl:choose>
 							<xsl:when test="is_entity=1">
-								<input type="checkbox" name="clear_{input_name}_box" onClick="blank_entity_values()">
+								<a href="javascript:blank_entity_values();">
+									<xsl:value-of select="php:function('lang', 'delete')"/>
+								</a>
+								<!--input type="checkbox" name="clear_{input_name}_box" onClick="blank_entity_values();">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'delete')"/>
 									</xsl:attribute>
 									<xsl:attribute name="readonly">
 										<xsl:text>readonly</xsl:text>
 									</xsl:attribute>
-								</input>
+								</input-->
 							</xsl:when>
 						</xsl:choose>
 					</div>
