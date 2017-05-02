@@ -141,6 +141,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
+					'sorted_by'	=> array('key' => 3, 'dir' => 'asc'),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
 				)
