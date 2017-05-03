@@ -27,7 +27,7 @@
 	* @subpackage communication
  	* @version $Id$
 	*/
-	
+
 
 	$GLOBALS['phpgw_info'] = array();
 
@@ -123,7 +123,9 @@
 	}
 	else
 	{
-		$request_xml = implode("\r\n", file('php://input'));
+	//	$request_xml = implode("\r\n", file('php://input'));
+
+		$request_xml =  file_get_contents('php://input');
 	}
 
 	if(!$_domain_info)
@@ -132,7 +134,7 @@
 		xmlrpc_error(1001,'not a valid domain');
 	}
 
-	if ( isset($headers['Authorization']) 
+	if ( isset($headers['Authorization'])
 		&& preg_match('/Basic/', $headers['Authorization']) )
 	{
 		$tmp = $headers['Authorization'];
@@ -148,6 +150,7 @@
 			// Find out what method they are calling
 			// This function is odd, you *NEED* to assign the results
 			// to a value, or $method is never returned.  (jengo)
+			$method = null;
 			$null = xmlrpc_decode_request($request_xml, $method);
 
 			$GLOBALS['phpgw']->session->xmlrpc_method_called = $method;
@@ -286,7 +289,7 @@
 	* Get XMLRPC methods
 	*
 	* @param string $method
-	* @return array 
+	* @return array
 	*/
 	function xmlrpc_describe_methods($method)
 	{
@@ -307,25 +310,27 @@
 	// and kp3 instead of using HTTP_AUTH features.
 	// Would be a nice workaround for librarys that don't support it, as its
 	// not in the XML-RPC spec.
-	
+
 	/**
 	* XMLRPC call wrapper
 	*
 	* @param string $method_name
 	* @param array $parameters
 	* @return unknown
-	*/ 
+	*/
 	function xmlrpc_call_wrapper($method_name, $parameters)
 	{
 		$a = explode('.',$method_name);
 
+		$function_name = (string) $a['2'];
+
 		if (count($parameters) == 0)
 		{
-			$return = $GLOBALS['obj']->$a[2]();
+			$return = $GLOBALS['obj']->$function_name();
 		}
 		else if (count($parameters) == 1)
 		{
-			$return = $GLOBALS['obj']->$a[2]($parameters[0]);
+			$return = $GLOBALS['obj']->$function_name($parameters[0]);
 		}
 		else
 		{
@@ -333,7 +338,7 @@
 			{
 				$p[] = '$parameters[' . $i . ']';
 			}
-			eval('$return = $GLOBALS[\'obj\']->$a[2](' . implode(',',$p) . ');');
+			eval('$return = $GLOBALS[\'obj\']->$function_name(' . implode(',',$p) . ');');
 		}
 
 		// This needs to be expanded and more fully tested
@@ -348,8 +353,8 @@
 	}
 
 	// The following are common functions used ONLY by XML-RPC
-	
-	
+
+
 	/**
 	* XMLRPC login
 	*
