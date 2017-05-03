@@ -512,8 +512,8 @@
 						$location['location'][$i]['name'] = lang('Contact phone');
 						$location['location'][$i]['input_name'] = 'contact_phone';
 						$input_name[] = $location['location'][$i]['input_name'];
-						$location['location'][$i]['size'] = 12;
-						$location['location'][$i]['class'] = 'pure-u-1-2';
+						$location['location'][$i]['size'] = 30;
+						$location['location'][$i]['class'] = 'pure-u-1';
 						$location['location'][$i]['lookup_function_call'] = '';//$lookup_functions[$m]['name'];
 						$insert_record['extra']['contact_phone'] = 'contact_phone';
 						$location['location'][$i]['value'] = (isset($data['values']['contact_phone']) ? $data['values']['contact_phone'] : '');
