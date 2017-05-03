@@ -1523,13 +1523,16 @@
 						}
 					}
 
-					foreach ( $accounts[$grantor] as $grantors )
+					if(isset($accounts[$grantor]) && is_array($accounts[$grantor]))
 					{
-						if ( !isset($grants['accounts'][$grantors]) )
+						foreach ( $accounts[$grantor] as $grantors )
 						{
-							$grants['accounts'][$grantors] = 0;
+							if ( !isset($grants['accounts'][$grantors]) )
+							{
+								$grants['accounts'][$grantors] = 0;
+							}
+							$grants['accounts'][$grantors] |= $rights;
 						}
-						$grants['accounts'][$grantors] |= $rights;
 					}
 				}
 			}
