@@ -931,4 +931,3 @@
 		//$code .= "\$client->setDebug(\$debug);\n";
 		return $code;
 	}
-?>
