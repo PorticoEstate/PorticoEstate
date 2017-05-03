@@ -56,7 +56,7 @@
 
 		/**
 		 * Prepare custom attributes for ui
-		 * 
+		 *
 		 * @param array $values    values and definitions of custom attributes
 		 * @param ????  $appname   ????
 		 * @param ????  $location  ????
@@ -64,7 +64,7 @@
 		 *
 		 * @return array values and definitions of custom attributes prepared for ui
 		 */
-		public function prepare( $values, $appname, $location, $view_only = '' )
+		public function prepare( $values, $appname, $location, $view_only = false )
 		{
 			$cache_custom_lookup = array();
 
@@ -108,7 +108,7 @@
 					}
 
 
-					if ($attributes['datatype'] == 'D')
+					if ($attributes['datatype'] == 'D' && !$view_only)
 					{
 						$clear_functions[$m]['name'] = "clear_{$attributes['name']}()";
 						$confirm_msg = lang('delete') . '?';
@@ -121,7 +121,7 @@
 JS;
 						$m++;
 					}
-					else if ($attributes['datatype'] == 'DT')
+					else if ($attributes['datatype'] == 'DT' && !$view_only)
 					{
 						$clear_functions[$m]['name'] = "clear_{$attributes['name']}()";
 						$confirm_msg = lang('delete') . '?';
@@ -168,23 +168,26 @@ JS;
 					}
 
 					$insert_record_values[] = $attributes['name'];
-					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.addressbook',
-						'column' => $attributes['name'],
-						'clear_state'=> 1));
-
-					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
-
-					$clear_functions[$m]['name'] = "clear_{$attributes['name']}()";
-					$confirm_msg = lang('delete') . '?';
-					$clear_functions[$m]['action'] = <<<JS
-					if(confirm("{$confirm_msg}"))
+					if(!$view_only)
 					{
-						parent.getElementsByName('{$attributes['name']}')[0].value = '';
-						parent.getElementsByName('{$attributes['name']}_name')[0].value = '';
-					}
+						$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.addressbook',
+							'column' => $attributes['name'],
+							'clear_state'=> 1));
+
+						$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+						$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+
+						$clear_functions[$m]['name'] = "clear_{$attributes['name']}()";
+						$confirm_msg = lang('delete') . '?';
+						$clear_functions[$m]['action'] = <<<JS
+						if(confirm("{$confirm_msg}"))
+						{
+							parent.getElementsByName('{$attributes['name']}')[0].value = '';
+							parent.getElementsByName('{$attributes['name']}_name')[0].value = '';
+						}
 JS;
-					$m++;
+						$m++;
+					}
 				}
 				else if ($attributes['datatype'] == 'ABO')
 				{
@@ -212,12 +215,15 @@ JS;
 					}
 
 					$insert_record_values[] = $attributes['name'];
-					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.organisation',
-						'column' => $attributes['name']));
+					if(!$view_only)
+					{
+						$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.organisation',
+							'column' => $attributes['name']));
 
-					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
-					$m++;
+						$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+						$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$m++;
+					}
 				}
 				else if ($attributes['datatype'] == 'VENDOR')
 				{
@@ -237,12 +243,15 @@ JS;
 					}
 
 					$insert_record_values[] = $attributes['name'];
-					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.vendor',
-						'column' => $attributes['name']));
+					if(!$view_only)
+					{
+						$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.vendor',
+							'column' => $attributes['name']));
 
-					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
-					$m++;
+						$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+						$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$m++;
+					}
 				}
 				else if ($attributes['datatype'] == 'custom1') // select
 				{
@@ -279,16 +288,19 @@ JS;
 					}
 
 					$insert_record_values[] = $attributes['name'];
-					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array(
-						'menuaction' => 'property.uilookup.custom',
-						'column' => $attributes['name'],
-						'get_list_function' => $attributes['get_list_function'],
-						'get_list_function_input' => urlencode(serialize($attributes['get_list_function_input']))
-					));
+					if(!$view_only)
+					{
+						$lookup_link = $GLOBALS['phpgw']->link('/index.php', array(
+							'menuaction' => 'property.uilookup.custom',
+							'column' => $attributes['name'],
+							'get_list_function' => $attributes['get_list_function'],
+							'get_list_function_input' => urlencode(serialize($attributes['get_list_function_input']))
+						));
 
-					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
-					$m++;
+						$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+						$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$m++;
+					}
 				}
 				else if ($attributes['datatype'] == 'custom3') //autocomplete
 				{
@@ -307,23 +319,23 @@ JS;
 
 					$insert_record_values[] = $attributes['name'];
 
-					$_append_url = '';
-					if (isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))
-					{
-						$_append_url = '&' . http_build_query($attributes['get_list_function_input']);
-					}
-
-					$_autocomplete = <<<JS
-
-						var oArgs = {menuaction:'{$attributes['get_list_function']}'};
-						var strURL = phpGWLink('index.php', oArgs, true);
-						strURL += '{$_append_url}';
-
-					JqueryPortico.autocompleteHelper(strURL, '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
-
-JS;
 					if (!$view_only)
 					{
+						$_append_url = '';
+						if (isset($attributes['get_list_function_input']) && is_array($attributes['get_list_function_input']))
+						{
+							$_append_url = '&' . http_build_query($attributes['get_list_function_input']);
+						}
+						$_autocomplete = <<<JS
+
+							var oArgs = {menuaction:'{$attributes['get_list_function']}'};
+							var strURL = phpGWLink('index.php', oArgs, true);
+							strURL += '{$_append_url}';
+
+						JqueryPortico.autocompleteHelper(strURL, '{$attributes['name']}_name', '{$attributes['name']}_id', '{$attributes['name']}_container');
+
+JS;
+
 						$GLOBALS['phpgw']->js->add_code('', $_autocomplete);
 					}
 				}
@@ -336,12 +348,15 @@ JS;
 					}
 
 					$insert_record_values[] = $attributes['name'];
-					$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.phpgw_user',
-						'column' => $attributes['name'],'clear_state'=> 1));
+					if (!$view_only)
+					{
+						$lookup_link = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilookup.phpgw_user',
+							'column' => $attributes['name'],'clear_state'=> 1));
 
-					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-					$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
-					$m++;
+						$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
+						$lookup_functions[$m]['action'] = 'TINY.box.show({iframe:"' . $lookup_link . '", boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$m++;
+					}
 				}
 				else if ($attributes['datatype'] == 'R' || $attributes['datatype'] == 'CH' || $attributes['datatype'] == 'LB')
 				{
@@ -416,22 +431,24 @@ JS;
 					}
 
 					$insert_record_values[] = $attributes['name'];
+					if (!$view_only)
+					{
+						$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
 
-					$lookup_functions[$m]['name'] = 'lookup_' . $attributes['name'] . '()';
-
-					$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',lookup:1,"
-						. "location:'{$location}',"
-						. "attrib_id:'{$attributes['id']}'";
-					$lookup_functions[$m]['action'] .= isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';
-					$lookup_functions[$m]['action'] .= isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';
-					$lookup_functions[$m]['action'] .= "};\n";
-					$lookup_functions[$m]['action'] .= "if(document.form.{$attributes['name']}.value)\n";
-					$lookup_functions[$m]['action'] .= "{\n";
-					$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
-					$lookup_functions[$m]['action'] .= "}\n";
-					$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
-					$lookup_functions[$m]['action'] .= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
-					$m++;
+						$lookup_functions[$m]['action'] = "var oArgs = {menuaction:'{$this->_appname}.uievent.edit',lookup:1,"
+							. "location:'{$location}',"
+							. "attrib_id:'{$attributes['id']}'";
+						$lookup_functions[$m]['action'] .= isset($attributes['item_id']) && $attributes['item_id'] ? ",item_id:{$attributes['item_id']}" : '';
+						$lookup_functions[$m]['action'] .= isset($attributes['value']) && $attributes['value'] ? ",id:{$attributes['value']}" : '';
+						$lookup_functions[$m]['action'] .= "};\n";
+						$lookup_functions[$m]['action'] .= "if(document.form.{$attributes['name']}.value)\n";
+						$lookup_functions[$m]['action'] .= "{\n";
+						$lookup_functions[$m]['action'] .= "oArgs['id'] = document.form.{$attributes['name']}.value;";
+						$lookup_functions[$m]['action'] .= "}\n";
+						$lookup_functions[$m]['action'] .= "var strURL = phpGWLink('index.php', oArgs);\n";
+						$lookup_functions[$m]['action'] .= 'TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});';
+						$m++;
+					}
 				}
 				else if (isset($entity['attributes'][$i]) && $entity['attributes'][$i]['datatype'] != 'I' && $entity['attributes'][$i]['value'])
 				{
@@ -824,7 +841,7 @@ JS;
 		}
 
 		/**
-		 * 
+		 *
 		 * @param integer $location_id
 		 * @param string $entity_table
 		 * @param string $criteria_id - if specified to datatypes
