@@ -66,7 +66,7 @@ validate_submit = function ()
 		return;
 	}
 	var id = $("#application_id").val();
-
+	document.getElementById('summary').value = CKEDITOR.instances['summary'].getData();
 	if (id > 0)
 	{
 		document.form.submit();

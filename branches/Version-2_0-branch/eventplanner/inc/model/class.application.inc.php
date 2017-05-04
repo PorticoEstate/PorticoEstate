@@ -179,7 +179,7 @@
 					'sortable' => false,
 					),
 			 	'summary' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'string',
+					'type' => 'html',
 					'label' => 'summary',
 					'sortable' => false,
 					),
