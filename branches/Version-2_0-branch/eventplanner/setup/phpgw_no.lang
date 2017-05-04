@@ -122,3 +122,4 @@ days	eventplanner	no	dager
 hours	eventplanner	no	Timer
 there is a minimum interval of %1 hours	eventplanner	no	Det er et minimumsintervall på %1 time(r)
 summary	eventplanner	no	kortversjon programbeskrivelse
+organization number already exists for %1	eventplanner	no	Organisasjonsnummeret er allerede registrert på %1.

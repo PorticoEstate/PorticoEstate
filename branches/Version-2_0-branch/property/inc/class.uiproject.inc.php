@@ -1822,8 +1822,8 @@ JS;
 				array('key' => 'vendor', 'label' => lang('vendor'), 'sortable' => false),
 				array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'className' => 'right',
 					'formatter' => 'JqueryPortico.FormatterAmount2'),
-				array('key' => 'approved_amount', 'label' => lang('approved amount'), 'sortable' => false,
-					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
+//				array('key' => 'approved_amount', 'label' => lang('approved amount'), 'sortable' => false,
+//					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
 				array('key' => 'period', 'label' => lang('period'), 'sortable' => true),
 				array('key' => 'periodization', 'label' => lang('periodization'), 'sortable' => false),
 				array('key' => 'periodization_start', 'label' => lang('periodization start'),
@@ -2319,9 +2319,20 @@ JS;
 
 			foreach ($invoices as $entry)
 			{
+
+				if(isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2)
+				{
+					$voucher_id = $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'];
+				}
+				else
+				{
+					$voucher_id = $entry['external_voucher_id'];
+				}
+
+
 				$values[] = array
 					(
-					'voucher_id' => $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_id' => $voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'workorder_id' => $entry['workorder_id'],
 					'status' => $entry['status'],

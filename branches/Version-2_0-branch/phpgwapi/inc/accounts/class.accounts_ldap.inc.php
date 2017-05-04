@@ -307,7 +307,7 @@
 		* @param integer $offset Offset from start position (-1 == no limit)
 		* @return array|boolean List with all accounts|groups or false
 		*/
-		public function get_list($_type = 'both', $start = -1, $sort = '', $order = '', $query = '', $offset = -1)
+		public function get_list($_type = 'both', $start = -1, $sort = '', $order = '', $query = '', $offset = -1, $filter = array())
 		{
 			//echo "accounts_ldap:get_list($_type, $start, $sort, $order, $query, $offset) called<br>";
 			$query = strtolower($query);
