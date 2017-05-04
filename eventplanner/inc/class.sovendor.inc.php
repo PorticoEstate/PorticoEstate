@@ -115,4 +115,17 @@
 			return	$this->db->transaction_commit();
 		}
 
+		function check_duplicate_organization($organization_number = false)
+		{
+			if(!$organization_number)
+			{
+				return false;
+			}
+
+			$query = $this->db->db_addslashes($organization_number);
+			$sql = "SELECT name FROM eventplanner_vendor WHERE organization_number = '{$query}'";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();	
+			return $this->db->f('name', true);
+		}
 	}
