@@ -48,6 +48,7 @@
 		protected $skip_email = false;
 		protected $export;
 		protected $skip_update_voucher_id = false;
+		protected $order_id;
 
 		function __construct()
 		{
@@ -129,6 +130,7 @@
 						else
 						{
 							$this->db->transaction_commit();
+							phpgwapi_cache::system_clear('property', "budget_order_{$this->order_id}");
 						}
 					}
 					else
@@ -368,6 +370,7 @@
 				{
 					$buffer[$i]['project_id'] = $this->soXport->get_project($_order_id);
 					$order_id = $_order_id;
+					$this->order_id = $order_id;
 				}
 
 				$buffer[$i]['external_voucher_id'] = $_data['KEY']; // => 1400050146
@@ -519,7 +522,7 @@
 				try
 				{
 					$bilagsnr = $this->import_end_file($buffer);
-					
+
 					if($this->config->config_data['export']['auto_receive_order'])
 					{
 						$received_amount = $this->get_total_received((int)$order_id);
@@ -620,7 +623,7 @@
 					throw new Exception("{$order_type} not supported");
 					break;
 			}
-			
+
 			$this->db->query($sql, __LINE__, __FILE__);
 			if ($this->db->next_record())
 			{
