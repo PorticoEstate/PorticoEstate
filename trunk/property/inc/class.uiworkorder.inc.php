@@ -1834,6 +1834,7 @@
 
 				if ($config->config_data['invoicehandler'] == 2)
 				{
+					$voucher_id = $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'];
 					if ($entry['voucher_id'] > 0)
 					{
 						$link_data_invoice2['voucher_id'] = $entry['voucher_id'];
@@ -1849,24 +1850,27 @@
 				else
 				{
 					$_disable_link = true;
-					if ($entry['voucher_id'] > 0)
-					{
-						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
-						$link_data_invoice1['query'] = $entry['voucher_id'];
-						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
-					}
-					else
-					{
-						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
-						$link_data_invoice1['paid'] = 'true';
-						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
-					}
+					$voucher_id = $entry['external_voucher_id'];
+
+//					if ($entry['voucher_id'] > 0)
+//					{
+//						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
+//						$link_data_invoice1['query'] = $entry['voucher_id'];
+//						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+//					}
+//					else
+//					{
+//						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
+//						$link_data_invoice1['paid'] = 'true';
+//						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+//					}
 				}
+				
 				$link_voucher_id = "<a href='" . $url . "'>" . $voucher_out_id . "</a>";
 
 				$content_invoice[] = array
-					(
-					'voucher_id' => ($_disable_link) ? $entry['voucher_id'] : $link_voucher_id,
+				(
+					'voucher_id' => ($_disable_link) ? $voucher_id : $link_voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'status' => $entry['status'],
 					'period' => $entry['period'],
@@ -1972,12 +1976,12 @@
 					'sortable' => true,
 					'className' => 'right',
 					'value_footer' => number_format($amount, 2, $this->decimal_separator, '.')),
-				array(
-					'key' => 'approved_amount',
-					'label' => lang('approved amount'),
-					'sortable' => true,
-					'className' => 'right',
-					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
+//				array(
+//					'key' => 'approved_amount',
+//					'label' => lang('approved amount'),
+//					'sortable' => true,
+//					'className' => 'right',
+//					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key' => 'period',
 					'label' => lang('period'),
