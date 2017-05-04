@@ -20,7 +20,9 @@
 		<label>
 			<xsl:value-of select="php:function('lang', 'program description')"/>
 		</label>
-		<xsl:value-of select="application/summary"/>
+		<div class="pure-custom">
+			<xsl:value-of disable-output-escaping="yes" select="application/summary"/>
+		</div>
 	</div>
 	<div class="pure-control-group">
 		<label>

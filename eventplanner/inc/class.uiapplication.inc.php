@@ -431,6 +431,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
+			self::rich_text_editor('summary');
 			self::add_javascript($this->currentapp, 'portico', 'application.edit.js');
 			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}
