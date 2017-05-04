@@ -87,6 +87,18 @@
 									<xsl:call-template name="user_id_select"/>
 								</div>
 							</xsl:if>
+						<div class="pure-control-group">
+							<xsl:variable name="lang_reverse">
+								<xsl:value-of select="php:function('lang', 'reverse')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_reverse"/>
+							</label>
+							<input type="hidden" id="reverse_id" name="values[reverse_id]"  value="{value_reverse_id}"/>
+							<input type="text" id="reverse_name" name="values[reverse_name]" value="{value_reverse_name}" class="pure-input-1-2">
+							</input>
+							<div id="reverse_container"/>
+						</div>
 							<!--xsl:call-template name="contact_form"/-->
 							<!--div class="pure-control-group">
 								<label>

@@ -51,7 +51,8 @@
 				'columns'			=> true,
 				'update_data'		=> true,
 				'upload_clip'		=> true,
-				'view_image'		=> true
+				'view_image'		=> true,
+				'get_reverse_assignee'=>true
 			);
 
 		/**
@@ -177,6 +178,33 @@
 			{
 				$this->lang_app_name = lang('helpdesk');
 			}
+		}
+
+		/**
+		 * called as ajax from edit form
+		 *
+		 * @param string  $query
+		 *
+		 * @return array
+		 */
+		public function get_reverse_assignee()
+		{
+			$query = phpgw::get_var('query');
+
+			$filter = array('active' => 1);
+
+			$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,'ASC', 'account_lastname',  $query, false, $filter);
+
+			$values = array();
+
+			foreach ($account_list as $account)
+			{
+				$values[] = array(
+					'id' => $account->id,
+					'name' => $account->__toString()
+				);
+			}
+			return array('ResultSet' => array('Result' => $values));
 		}
 
 		function get_params()

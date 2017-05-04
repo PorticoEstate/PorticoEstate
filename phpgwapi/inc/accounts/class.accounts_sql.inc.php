@@ -437,7 +437,7 @@
 		 * @return array list of accounts that match criteria
 		 */
 		public function get_list($_type='both', $start = -1, $sort = '',
-								$order = '', $query = '', $offset = -1)
+								$order = '', $query = '', $offset = -1, $filter = array())
 		{
 			// For XML-RPC
 /*			if (is_array($_type))
@@ -468,26 +468,30 @@
 			}
 
 			$whereclause = '';
+
+			$where = 'WHERE';
+
+			if($filter['active'] == 1)
+			{
+				$whereclause = "{$where} account_status = 'A'";
+				$where = 'AND';
+			}
+
 			switch($_type)
 			{
 				case 'accounts':
-					$whereclause = "WHERE account_type = 'u'";
+					$whereclause .= " {$where} account_type = 'u'";
+					$where = 'AND';
 					break;
 				case 'groups':
-					$whereclause = "WHERE account_type = 'g'";
+					$whereclause .= " {$where} account_type = 'g'";
+					$where = 'AND';
 					break;
 			}
 
 			if ($query)
 			{
-				if ($whereclause)
-				{
-					$whereclause .= ' AND (';
-				}
-				else
-				{
-					$whereclause = ' WHERE (';
-				}
+				$whereclause .= " {$where} (";
 
 				if(ctype_digit($query))
 				{
