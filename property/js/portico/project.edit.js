@@ -107,7 +107,7 @@ this.local_DrawCallback2 = function ()
 			i : 0;
 	};
 
-	var columns = ["4", "5"];
+	var columns = ["4"];
 
 	columns.forEach(function (col)
 	{

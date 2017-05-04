@@ -215,7 +215,7 @@
 		 * @return array list of accounts that match criteria
 		 */
 		abstract public function get_list($_type='both', $start = -1, $sort = '',
-											$order = '', $query = '', $offset = -1);
+											$order = '', $query = '', $offset = -1, $filter = array());
 
 		/**
 		 * Convert an account login id to an account id

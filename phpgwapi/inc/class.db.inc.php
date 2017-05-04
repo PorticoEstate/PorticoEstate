@@ -281,7 +281,7 @@
 		*/
 		function get_offset($sql = '', $offset, $num_rows = 0)
 		{
-			$offset		= (int)$offset;
+			$offset		=  $offset < 0 ? 0 : (int)$offset;
 			$num_rows	= (int)$num_rows;
 
 			if ($num_rows == 0)

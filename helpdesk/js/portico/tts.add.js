@@ -263,3 +263,7 @@ $(document).ready(function ()
 	}
 
 });
+
+var oArgs = {menuaction: 'helpdesk.uitts.get_reverse_assignee'};
+var strURL = phpGWLink('index.php', oArgs, true);
+JqueryPortico.autocompleteHelper(strURL, 'reverse_name', 'reverse_id', 'reverse_container');

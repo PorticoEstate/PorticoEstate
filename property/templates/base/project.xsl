@@ -390,7 +390,7 @@
 							<xsl:value-of select="php:function('lang', 'external project')"/>
 						</label>
 						<input type="hidden" id="external_project_id" name="values[external_project_id]"  value="{value_external_project_id}"/>
-						<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}"/>
+						<input type="text" id="external_project_name" name="values[external_project_name]" value="{value_external_project_name}" class="pure-input-1-2"/>
 						<div id="external_project_container"/>
 					</div>
 
@@ -411,7 +411,7 @@
 						<xsl:if test="mode='edit'">
 							<input type="hidden" id="ecodimb" name="values[ecodimb]"  value="{ecodimb_data/value_ecodimb}"/>
 						</xsl:if>
-						<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}">
+						<input type="text" id="ecodimb_name" name="values[ecodimb_name]" value="{ecodimb_data/value_ecodimb} {ecodimb_data/value_ecodimb_descr}" class="pure-input-1-2">
 							<xsl:choose>
 								<xsl:when test="mode='edit'">
 									<xsl:attribute name="data-validation">
@@ -439,7 +439,7 @@
 								<xsl:value-of select="$lang_budget_account"/>
 							</label>
 							<input type="hidden" id="b_account_group" name="values[b_account_group]"  value="{b_account_group_data/value_b_account_id}"/>
-							<input type="text" id="b_account_group_name" name="values[b_account_group_name]" value="{b_account_group_data/value_b_account_name}">
+							<input type="text" id="b_account_group_name" name="values[b_account_group_name]" value="{b_account_group_data/value_b_account_name}" class="pure-input-1-2">
 								<xsl:choose>
 									<xsl:when test="mode='edit'">
 										<xsl:attribute name="data-validation">
@@ -469,7 +469,7 @@
 								<xsl:value-of select="$lang_budget_account"/>
 							</label>
 							<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
-							<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}">
+							<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}" class="pure-input-1-2">
 								<xsl:choose>
 									<xsl:when test="mode='edit'">
 										<xsl:attribute name="data-validation">
