@@ -545,7 +545,7 @@
 		function read_additional_notes($id)
 		{
 			$additional_notes = array();
-			$history_array = $this->historylog->return_array(array(),array('C'),'','',$id);
+			$history_array = $this->historylog->return_array(array(),array('C'),'history_timestamp','ASC',$id);
 
 			$i=2;
 			foreach ($history_array as $value)
@@ -775,18 +775,16 @@
 
 			$ticket	= $this->read_single($id);
 
-			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
-			$entry_date = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
-
 			if($ticket['status']=='X')
 			{
 				$history_values = $this->historylog->return_array(array(),array('X'),'history_timestamp','DESC',$id);
-				$timestampclosed = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime'],$this->dateformat);
+				$timestampclosed = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime']);
 			}
 
-			$history_2 = $this->historylog->return_array(array('C','O'),array(),'','',$id);
-			$m=count($history_2)-1;
-			$ticket['status']=$history_2[$m]['status'];
+			$history_values = $this->historylog->return_array(array(),array('O'),'history_timestamp','DESC',$id);
+			$entry_date = $GLOBALS['phpgw']->common->show_date($history_values[0]['datetime']);
+
+			$status_text = $this->get_status_text();
 
 			$group_name= $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 
@@ -822,6 +820,7 @@
 
 			$body .= "<table>";
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
+			$body .= '<tr><td>'. lang('status').'</td><td>:&nbsp;'.$status_text[$ticket['status']]."</td></tr>";
 			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
 
 			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
@@ -889,14 +888,12 @@
 HTML;
 				$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$ticket['user_name']}</td><td>{$ticket['details']}</td></tr>";
 
-				$history_array = $this->historylog->return_array(array(), array('C'), 'history_id', 'DESC', $id);
 
-				foreach ($history_array as $value)
+				$additional_notes = $this->read_additional_notes($id);
+
+				foreach ($additional_notes as $value)
 				{
-					$i++;
-					$_date =  $GLOBALS['phpgw']->common->show_date($value['datetime']);
-					$_note =  stripslashes($value['new_value']);
-					$table_content .= "<tr><td>{$i}</td><td>{$_date}</td><td>{$value['owner']}</td><td>{$_note}</td></tr>";
+					$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>";
 				}
 				$body.= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
 				$subject .= "::{$i}";
@@ -969,6 +966,15 @@ HTML;
 				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
 				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1)
 				{
+					/**
+					 * Calculate email from username
+					 */
+					if(!$prefs['email'])
+					{
+						$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+						$account_lid = $GLOBALS['phpgw']->accounts->get($account_id)->lid;
+						$prefs['email'] = "{$account_lid}@{$email_domain}";
+					}
 					if ($validator->check_email_address($prefs['email']))
 					{
 						// Email address is technically valid
