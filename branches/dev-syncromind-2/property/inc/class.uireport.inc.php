@@ -694,7 +694,7 @@
 			$html_table .= '<thead><tr>';
 			foreach ($columns as $col)
 			{
-				$_check = '<input type="checkbox" id="c_'. $col['name'] .'" value="'. $col['name'] .'" onchange="build_check_groups(\''. $col['name'] .'\')"/>';
+				$_check = '<input type="checkbox" id="c_'. $col['name'] .'" value="'. $col['name'] .'" onchange="build_check_groups(\''. $col['name'] .'\', \''. $col['type'] .'\')"/>';
 				$html_table .= "<th align='center'>". $_check." ".$col['name'] ."</th>";
 			}
 			$html_table .= '</tr></thead>';
