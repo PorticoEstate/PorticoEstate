@@ -82,16 +82,16 @@
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
-							array(
-								'type' => 'autocomplete',
-								'name' => 'application',
-								'app' => $this->currentapp,
-								'ui' => 'application',
-								'function' => 'get_list',
-								'label_attr' => 'title',
-								'text' => lang('application') . ':',
-								'requestGenerator' => 'requestWithApplicationFilter'
-							),
+//							array(
+//								'type' => 'autocomplete',
+//								'name' => 'application',
+//								'app' => $this->currentapp,
+//								'ui' => 'application',
+//								'function' => 'get_list',
+//								'label_attr' => 'title',
+//								'text' => lang('application') . ':',
+//								'requestGenerator' => 'requestWithApplicationFilter'
+//							),
 							array(
 								'type' => 'checkbox',
 								'name' => 'filter_active',
