@@ -30,7 +30,7 @@ $(document).ready(function ()
 			
 			$('#container_columns').html(result.preview_dataset);
 			
-			build_check_columns(result.columns);
+			//build_check_columns(result.columns);
 			if (jsonB !== '')
 			{
 				set_values();
@@ -182,18 +182,25 @@ function build_check_columns(data)
 	});	
 }
 
-function build_check_groups(name)
+function build_check_groups(name, type)
 {
 	if ($("#c_" + name).is(":checked")) 
 	{
-		var el_1 = '<span style="display:block;"><input type="radio" name="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
-		var el_2 = '<span style="display:block;"><input type="radio" name="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_1 = '<span style="display:block;"><input type="radio" name="group_by" id="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_2 = '<span style="display:block;"><input type="radio" name="order_by" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
 		$('#container_groups').append(el_1);
 		$('#container_order').append(el_2);
+		
+		var combo = build_list_aggregates(name, type);
+		var text = build_text_aggregates(name);
+		var check = build_check_aggregates(name);
+		var el_1 = '<span style="display:table-row;">'+ check + combo + text + '</span>';
+		$('#container_aggregates').append(el_1);
 	} 
 	else {
 		$("#g_" + name).parent().remove();
 		$("#o_" + name).parent().remove();
+		$("#txt_" + name).parent().parent().remove();
 	}
 }
 
