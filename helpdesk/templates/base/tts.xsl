@@ -87,18 +87,18 @@
 									<xsl:call-template name="user_id_select"/>
 								</div>
 							</xsl:if>
-						<div class="pure-control-group">
-							<xsl:variable name="lang_reverse">
-								<xsl:value-of select="php:function('lang', 'reverse')"/>
-							</xsl:variable>
-							<label>
-								<xsl:value-of select="$lang_reverse"/>
-							</label>
-							<input type="hidden" id="reverse_id" name="values[reverse_id]"  value="{value_reverse_id}"/>
-							<input type="text" id="reverse_name" name="values[reverse_name]" value="{value_reverse_name}" class="pure-input-1-2">
-							</input>
-							<div id="reverse_container"/>
-						</div>
+							<div class="pure-control-group">
+								<xsl:variable name="lang_reverse">
+									<xsl:value-of select="php:function('lang', 'reverse')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_reverse"/>
+								</label>
+								<input type="hidden" id="reverse_id" name="values[reverse_id]"  value="{value_reverse_id}"/>
+								<input type="text" id="reverse_name" name="values[reverse_name]" value="{value_reverse_name}" class="pure-input-1-2">
+								</input>
+								<div id="reverse_container"/>
+							</div>
 							<!--xsl:call-template name="contact_form"/-->
 							<!--div class="pure-control-group">
 								<label>
@@ -262,9 +262,9 @@
 
 		function response_lookup()
 		{
-			var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
-			var strURL = phpGWLink('index.php', oArgs);
-			TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+		var strURL = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 
 		var my_groups = <xsl:value-of select="my_groups"/>;
@@ -277,10 +277,10 @@
 
 		function open_print_view()
 		{
-			var oArgs = {menuaction:'helpdesk.uitts._print',id: $('#id').val()};
-			var strURL = phpGWLink('index.php', oArgs);
-			var win = window.open(strURL, '_blank');
-			win.focus();
+		var oArgs = {menuaction:'helpdesk.uitts._print',id: $('#id').val()};
+		var strURL = phpGWLink('index.php', oArgs);
+		var win = window.open(strURL, '_blank');
+		win.focus();
 		}
 
 
@@ -315,7 +315,12 @@
 						</input>
 						<input type="hidden" id="id" name="id" value="{id}">
 						</input>
-
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'owned by')"/>
+						</label>
+						<xsl:value-of select="value_owned_by"/>
 					</div>
 					<xsl:for-each select="value_origin">
 						<div class="pure-control-group">
