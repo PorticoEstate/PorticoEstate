@@ -834,7 +834,18 @@
 				$body .= '<tr><td>'. lang('Group').'</td><td>:&nbsp;'. $group_name ."</td></tr>";
 			}
 
-			$body .= '<tr><td>'. lang('Opened By').'</td><td>:&nbsp;'. $ticket['user_name'] ."</td></tr>";
+			if($ticket['reverse_id'])
+			{
+				$user_name = $ticket['reverse_name'];
+				$body .= '<tr><td>'. lang('Owned By').'</td><td>:&nbsp;'. $ticket['user_name'] ."</td></tr>";
+			}
+			else
+			{
+				$user_name = $ticket['user_name'];
+			}
+
+			$body .= '<tr><td>'. lang('Opened By').'</td><td>:&nbsp;'. $user_name ."</td></tr>";
+
 			if($timestampclosed)
 			{
 				$body .= '<tr><td>'. lang('Date Closed').'</td><td>:&nbsp;'.$timestampclosed."</td></tr>";
@@ -886,7 +897,8 @@
 					</tr>
 				</thead>
 HTML;
-				$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$ticket['user_name']}</td><td>{$ticket['details']}</td></tr>";
+
+				$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$user_name}</td><td>{$ticket['details']}</td></tr>";
 
 
 				$additional_notes = $this->read_additional_notes($id);
@@ -937,7 +949,8 @@ HTML;
 			if( (isset($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'])
 					&& ($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'] == 1)
 				)
-				|| ($this->config->config_data['ownernotification'] && $ticket['user_id']))
+				|| ($this->config->config_data['ownernotification'] && $ticket['user_id'])
+				|| $ticket['reverse_id'])
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
@@ -964,7 +977,7 @@ HTML;
 			foreach($members as $account_id => $account_name)
 			{
 				$prefs = $this->bocommon->create_preferences('helpdesk',$account_id);
-				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1)
+				if(!isset($prefs['tts_notify_me'])	|| $prefs['tts_notify_me'] == 1 || $ticket['reverse_id'])
 				{
 					/**
 					 * Calculate email from username

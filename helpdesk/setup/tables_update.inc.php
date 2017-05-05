@@ -217,3 +217,24 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+	/**
+	* Update helpdesk version from 0.9.18.004 to 0.9.18.005
+	*/
+	$test[] = '0.9.18.004';
+
+	function helpdesk_upgrade0_9_18_004()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_helpdesk_tickets', 'reverse_id', array(
+			'type' => 'int',
+			'precision' => '4',
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.005';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
