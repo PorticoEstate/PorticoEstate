@@ -1801,7 +1801,7 @@ JS;
 					'value_id' => '', //not from historytable
 					'value_count' => 1,
 					'value_date' => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
-					'value_user' => $ticket['user_name'],
+					'value_user' => $ticket['reverse_id']? $ticket['reverse_name'] : $ticket['user_name'],
 					'value_note' => $ticket['details'],
 					'value_publish' => $ticket['publish_note']
 				)
@@ -1839,7 +1839,8 @@ JS;
 				'data' => json_encode($additional_notes),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0,'asc')))
 				)
 			);
 
@@ -2030,6 +2031,7 @@ JS;
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
+				'value_owned_by'		=> $ticket['user_name'],
 				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),

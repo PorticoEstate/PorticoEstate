@@ -266,7 +266,7 @@
 				{
 					if($value)
 					{
-						$filtermethod .= "{$or} phpgw_helpdesk_tickets.status = '{$value}'";					
+						$filtermethod .= "{$or} phpgw_helpdesk_tickets.status = '{$value}'";
 						$or = ' OR';
 					}
 				}
@@ -508,9 +508,10 @@
 
 			if ($this->db->next_record())
 			{
-				$ticket['assignedto']		= $this->db->f('assignedto');
-				$ticket['user_id']			= $this->db->f('user_id');
-				$ticket['group_id']			= $this->db->f('group_id');
+				$ticket['assignedto']		= (int)$this->db->f('assignedto');
+				$ticket['user_id']			= (int)$this->db->f('user_id');
+				$ticket['group_id']			= (int)$this->db->f('group_id');
+				$ticket['reverse_id']		= (int)$this->db->f('reverse_id');
 				$ticket['status']			= $this->db->f('status');
 				$ticket['cat_id']			= $this->db->f('cat_id');
 				$ticket['subject']			= $this->db->f('subject', true);
@@ -541,9 +542,12 @@
 				$ticket['billable_hours']	= $this->db->f('billable_hours');
 				$ticket['modified_date'] = $this->db->f('modified_date');
 
-				$user_id=(int)$this->db->f('user_id');
+				if($ticket['reverse_id'])
+				{
+					$ticket['reverse_name']	= $GLOBALS['phpgw']->accounts->get($ticket['reverse_id'])->__toString();
+				}
 
-				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($user_id)->__toString();
+				$ticket['user_name']	= $GLOBALS['phpgw']->accounts->get($ticket['user_id'])->__toString();
 				if ($ticket['assignedto'] > 0)
 				{
 					$ticket['assignedto_name']	= $GLOBALS['phpgw']->accounts->get($ticket['assignedto'])->__toString();
@@ -554,7 +558,7 @@
 					$ticket['attributes'] = $values['attributes'];
 					foreach ($ticket['attributes'] as &$attr)
 					{
-						$attr['value'] = $this->db->f($attr['column_name']);
+						$attr['value'] = $this->db->f($attr['column_name'], true);
 					}
 				}
 			}
@@ -594,8 +598,15 @@
 				}
 			}
 
+			if(!empty($ticket['reverse_id']))
+			{
+				$ticket['assignedto'] = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+			$ticket['user_id']	= !empty($ticket['reverse_id']) ? $ticket['reverse_id'] : $GLOBALS['phpgw_info']['user']['account_id'];
+
 			$value_set['priority'] = isset($ticket['priority']) ? $ticket['priority'] : 0;
-			$value_set['user_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+			$value_set['user_id'] =  $ticket['user_id'];
+			$value_set['reverse_id'] = $GLOBALS['phpgw_info']['user']['account_id']; //The originator for the reversed ticket
 			$value_set['assignedto'] = $ticket['assignedto'];
 			$value_set['group_id'] = $ticket['group_id'];
 			$value_set['subject'] = $this->db->db_addslashes($ticket['subject']);
@@ -1133,7 +1144,7 @@
 				throw new Exception("phpgwapi_locations::get_id ('helpdesk', '.ticket') returned 0");
 			}
 
-			$this->db->transaction_begin();	
+			$this->db->transaction_begin();
 
 			$this->db->query("DELETE FROM fm_action_pending WHERE location_id = {$location_id} AND item_id = {$id}",__LINE__,__FILE__);
 			$this->db->query("DELETE FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id}",__LINE__,__FILE__);
