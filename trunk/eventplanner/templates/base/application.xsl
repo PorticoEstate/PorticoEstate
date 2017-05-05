@@ -228,6 +228,12 @@
 									<xsl:value-of select="php:function('lang', 'program description')"/>
 								</label>
 								<textarea cols="47" rows="7" name="description" class="pure-input-1-2" >
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'program description')"/>
+									</xsl:attribute>
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'might be published')"/>
 									</xsl:attribute>
@@ -250,7 +256,7 @@
 												</th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody id="application_tbody_types">
 											<xsl:for-each select="application_type_list">
 												<tr>
 													<td>
@@ -268,7 +274,11 @@
 										</tbody>
 									</table>
 								</div>
-
+								<input type="text" data-validation="application_types" size="1" style="visibility: hidden;">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'program type')"/>
+									</xsl:attribute>
+								</input>
 							</div>
 
 							<div class="pure-control-group">
@@ -392,6 +402,12 @@
 									<xsl:value-of select="php:function('lang', 'case officer')"/>
 								</label>
 								<select id="case_officer_id" name="case_officer_id">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'case officer')"/>
+									</xsl:attribute>
 									<xsl:apply-templates select="list_case_officer/options"/>
 								</select>
 							</div>
