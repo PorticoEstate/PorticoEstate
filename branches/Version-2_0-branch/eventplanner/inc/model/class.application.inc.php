@@ -179,6 +179,7 @@
 					'type' => 'string',
 					'label' => 'application description',
 					'sortable' => false,
+					'required' => true,
 					),
 			 	'summary' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'html',
@@ -234,7 +235,9 @@
 					),
 				'types' => array(
 					'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-					'type' => 'int', 'required' => true,
+					'type' => 'int',
+					'label' => 'program type',
+					'required' => true,
 					'manytomany' => array(
 						'table' => 'eventplanner_application_type_relation',
 						'key' => 'application_id',

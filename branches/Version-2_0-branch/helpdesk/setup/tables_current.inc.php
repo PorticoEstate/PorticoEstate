@@ -35,6 +35,7 @@
 				'priority' => array('type' => 'int','precision' => '2','nullable' => False),
 				'user_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'assignedto' => array('type' => 'int','precision' => '4','nullable' => True),
+				'reverse_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'subject' => array('type' => 'varchar','precision' => '255','nullable' => True),
 				'cat_id' => array('type' => 'int','precision' => '4','nullable' => True),
 				'billable_hours' => array('type' => 'decimal','precision' => '8','scale' => '2','nullable' => True),

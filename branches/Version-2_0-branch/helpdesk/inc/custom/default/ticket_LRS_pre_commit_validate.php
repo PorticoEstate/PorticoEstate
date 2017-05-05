@@ -37,6 +37,12 @@
 			{
 				return;
 			}
+
+			if(!empty($data['reverse_id']))
+			{
+				return true;
+			}
+
 			$org_unit = (int)$values_attribute['1']['value'];
 			$sql = "SELECT arbeidssted FROM fm_org_unit WHERE id = {$org_unit}";
 			$this->db->query($sql);
