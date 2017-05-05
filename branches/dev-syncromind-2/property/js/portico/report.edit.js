@@ -186,8 +186,8 @@ function build_check_groups(name)
 {
 	if ($("#c_" + name).is(":checked")) 
 	{
-		var el_1 = '<span style="display:block;"><input onclick="return false;" onkeydown="return false;" type="checkbox" name="group['+ name +']" id="g_'+ name +'" value="'+ name +'" checked/>' + name + '</span>';
-		var el_2 = '<span style="display:block;"><input type="checkbox" name="order['+ name +']" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_1 = '<span style="display:block;"><input type="radio" name="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_2 = '<span style="display:block;"><input type="radio" name="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
 		$('#container_groups').append(el_1);
 		$('#container_order').append(el_2);
 	} 
