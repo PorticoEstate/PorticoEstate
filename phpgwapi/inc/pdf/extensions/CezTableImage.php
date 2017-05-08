@@ -40,7 +40,7 @@ class pdf extends pdf_ {
 	/**
 	 * @param Cezpdf $ezpdf current cezpdf object
 	 */
-	function __construct($p,$o = 'portrait',$t = 'none', $op = array()){
+	function __construct($p='a4',$o = 'portrait',$t = 'none', $op = array()){
 		parent::__construct($p, $o,$t,$op);
         $this->allowedTags .= '|showimage:.*?';
 	}
