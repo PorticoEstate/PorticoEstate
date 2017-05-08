@@ -284,7 +284,7 @@
 			$offset		=  $offset < 0 ? 0 : (int)$offset;
 			$num_rows	= (int)$num_rows;
 
-			if ($num_rows == 0)
+			if ($num_rows <= 0)
 			{
 				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 				$num_rows = isset($maxmatches) && $maxmatches ? (int)$maxmatches : 15;
