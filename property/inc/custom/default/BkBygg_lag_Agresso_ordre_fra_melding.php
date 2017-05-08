@@ -143,6 +143,11 @@
 				$dim3 = 9;
 			}
 
+			if($dim3 == 9999)
+			{
+				$dim3 = 9;
+			}
+
 			$dim6 = 9;
 
 			if ($_ticket['order_dim1'])
