@@ -153,7 +153,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-					'sorted_by'	=> array('key' => 6, 'dir' => 'asc'),
+					'sorted_by'	=> array('key' => $this->currentapp == 'eventplanner' ? 6 : 3, 'dir' => 'asc'),
 					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
