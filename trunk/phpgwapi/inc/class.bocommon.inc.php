@@ -52,12 +52,13 @@
 			$order = phpgw::get_var('order');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
+			$sort = $columns[$order[0]['column']]['data'];
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $query ? $query : $search['value'],
-				'sort' => $columns[$order[0]['column']]['data'],
+				'sort' => false,
 				'dir' => $order[0]['dir'],
 				'allrows' => phpgw::get_var('length', 'int') == -1,
 			);
@@ -67,6 +68,11 @@
 				if (!empty($_REQUEST["filter_$field"]))
 				{
 					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
+				}
+
+				if($field == $order)
+				{
+					$params['sort'] = $field;
 				}
 			}
 
