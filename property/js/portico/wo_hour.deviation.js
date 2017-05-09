@@ -7,13 +7,13 @@ var intVal = function (i)
 		i : 0;
 };
 
-this.local_DrawCallback1 = function (oTable)
+this.local_DrawCallback0 = function (container)
 {
-	var api = oTable.api();
+	var api = $("#" + container).dataTable().api();
 
-	for (i = 0; i < columns.length; i++)
+	for (i = 0; i < columns0.length; i++)
 	{
-		if (columns[i]['data'] === 'amount')
+		if (columns0[i]['data'] === 'amount')
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pageTotal = data.length ?

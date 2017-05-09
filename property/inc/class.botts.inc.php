@@ -1959,7 +1959,8 @@ HTML;
 				 */
 				if(isset($fullmakter[0]))
 				{
-					if($amount > 5000 && $amount <= 100000)
+//					if($amount > 5000 && $amount <= 100000)
+					if($amount > 50000 && $amount <= 100000)
 					{
 						$supervisor_lid = strtolower($fullmakter[0]['inntil100k']);
 					}
