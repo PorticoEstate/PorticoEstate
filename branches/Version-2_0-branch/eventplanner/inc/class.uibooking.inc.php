@@ -160,7 +160,12 @@
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
-				phpgw::no_access();
+				$message = '';
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$message = lang('you need to log in to access this page.');
+				}
+				phpgw::no_access(false, $message);
 			}
 
 			if (!empty($values['object']))

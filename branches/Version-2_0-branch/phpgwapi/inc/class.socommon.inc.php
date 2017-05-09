@@ -414,7 +414,8 @@
 			{
 				if($acl_condition && !$acl_test)
 				{
-					phpgw::no_access();
+					$message = lang('do you represent the owner of this entry?');
+					phpgw::no_access(false, $message);
 				}
 
 				foreach ($this->fields as $field => $params)

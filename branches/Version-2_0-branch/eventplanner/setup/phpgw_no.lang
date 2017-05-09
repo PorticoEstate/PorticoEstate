@@ -123,3 +123,5 @@ hours	eventplanner	no	Timer
 there is a minimum interval of %1 hours	eventplanner	no	Det er et minimumsintervall på %1 time(r)
 summary	eventplanner	no	kortversjon programbeskrivelse
 organization number already exists for %1	eventplanner	no	Organisasjonsnummeret er allerede registrert på %1.
+you need to log in to access this page.	eventplanner	no	Du må logge deg på for å få tilgang til denne siden.
+do you represent the owner of this entry?	eventplanner	no	Representerer du eieren av denne posten?
