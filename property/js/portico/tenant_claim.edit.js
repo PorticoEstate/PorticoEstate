@@ -12,16 +12,16 @@ var intVal = function (i)
 };
 
 
-this.local_DrawCallback1 = function (oTable)
+this.local_DrawCallback0 = function (container)
 {
-	var api = oTable.api();
+	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 //	var columns = ["6"];
 //	$(api.column(5).footer()).html("<div align=\"right\">Sum</div>");
 
-	for (i = 0; i < columns.length; i++)
+	for (i = 0; i < columns0.length; i++)
 	{
-		if (columns[i]['data'] === 'budget')
+		if (columns0[i]['data'] === 'budget' || columns0[i]['data'] === 'actual_cost')
 		{
 			data = api.column(i, {page: 'current'}).data();
 			pageTotal = data.length ?
@@ -30,7 +30,7 @@ this.local_DrawCallback1 = function (oTable)
 					return intVal(a) + intVal(b);
 				}) : 0;
 
-			$(api.column(i).footer()).html("<div align=\"right\">" + pageTotal + "</div>");
+			$(api.column(i).footer()).html("<div align=\"right\">" + $.number(pageTotal, 0, ',', '.') + "</div>");
 		}
 	}
 

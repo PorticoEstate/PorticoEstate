@@ -2203,6 +2203,12 @@ HTML;
 
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 
+
+				//temporary
+				$test_user = $this->acl->check('.ticket.order', 16, 'property');
+
+				$need_approval = $need_approval && $test_user ? true : false;
+
 				// approval
 			}
 

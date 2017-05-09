@@ -19,9 +19,9 @@ var setSuma = function (api, i)
 	$(api.column(i).footer()).html("<div align=\"right\">" + amount + "</div>");
 };
 
-this.local_DrawCallback3 = function (oTable)
+this.local_DrawCallback2 = function (container)
 {
-	var api = oTable2.api();
+	var api = $("#" + container).dataTable().api();
 
 	for (i = 0; i < columns2.length; i++)
 	{
