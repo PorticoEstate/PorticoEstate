@@ -489,7 +489,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			}
 			try
 			{
-				window['local_DrawCallback' + num](oTable);
+				window['local_DrawCallback' + num](container);
 			}
 			catch (err)
 			{
