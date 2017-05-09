@@ -11,9 +11,9 @@ var intVal = function (i)
 		i : 0;
 };
 
-this.local_DrawCallback1 = function (oTable)
+this.local_DrawCallback1 = function (container)
 {
-	var oTable = $('#datatable-container_0').dataTable();
+	var oTable = $("#" + container).dataTable();
 //            var api = oTable.api(); 
 //            api.columns('.sorting').order('asc');
 	oTable.fnSort([[2, 'asc']]);

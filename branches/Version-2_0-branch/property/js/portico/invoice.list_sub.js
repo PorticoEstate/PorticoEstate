@@ -1,6 +1,7 @@
-this.local_DrawCallback1 = function ()
+this.local_DrawCallback0 = function (container)
 {
-	var api = oTable0.api();
+	var api = $("#" + container).dataTable().api();
+
 	var data = api.ajax.json();
 
 	for (i = 0; i < columns0.length; i++)
