@@ -528,9 +528,9 @@
 			}
 			$bofelles = rental_bofellesdata::get_instance();
 
-			$parties = rental_soparty::get_instance()->get();
-			$result_count = rental_soparty::get_instance()->get_count();
-			$updated_parties;
+			$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array());
+			$result_count = rental_soparty::get_instance()->get_count('', '', array());
+			$updated_parties = array();
 
 			$updated_parties[] = "Total number of parties: {$result_count}";
 
