@@ -1918,6 +1918,12 @@ HTML;
 				{
 					$values['assignedto'] = $this->account;
 				}
+
+				if (!empty($values['approval']) && !empty($this->bo->config->config_data['ticket_approval_status']))
+				{
+					$values['status'] = $this->bo->config->config_data['ticket_approval_status'];
+				}
+
 				/*
 				  if(isset($values_attribute) && is_array($values_attribute))
 				  {
@@ -2227,6 +2233,7 @@ HTML;
 			}
 
 			$_budget_amount = $this->_get_budget_amount($id);
+			$sosubstitute = CreateObject('property.sosubstitute');
 
 			if (isset($values['approval']) && $values['approval'] && $this->bo->config->config_data['workorder_approval'])
 			{
@@ -2258,8 +2265,16 @@ HTML;
 					'deadline' => ''
 				);
 				$bcc = '';//$coordinator_email;
+
 				foreach ($values['approval'] as $_account_id => $_address)
 				{
+					$substitute = $sosubstitute->get_substitute($_account_id);
+
+					if($substitute)
+					{
+						$_account_id = $substitute;
+					}
+
 					$prefs = $this->bocommon->create_preferences('property', $_account_id);
 					if (!empty($prefs['email']))
 					{
@@ -2287,7 +2302,7 @@ HTML;
 						phpgwapi_cache::message_set($exc->getMessage(),'error');
 					}
 				}
-				
+			
 			}
 	
 			if (!empty($values['do_approve']) && is_array($values['do_approve']))
@@ -2303,18 +2318,45 @@ HTML;
 					'deadline' => ''
 				);
 
+//				foreach ($values['do_approve'] as $_account_id => $_dummy)
+//				{
+//					$action_params['responsible'] = $_account_id;
+//					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+//					{
+//						execMethod('property.sopending_action.set_pending_action', $action_params);
+//					}
+//					execMethod('property.sopending_action.close_pending_action', $action_params);
+//					$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+//				}
+
+////
 				foreach ($values['do_approve'] as $_account_id => $_dummy)
 				{
-					$action_params['responsible'] = $_account_id;
-					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					$users_for_substitute = $sosubstitute->get_users_for_substitute($_account_id);
+
+					$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+					$take_responsibility_for = array($_account_id);
+					foreach ($approvals as $approval)
 					{
-						execMethod('property.sopending_action.set_pending_action', $action_params);
+						if(in_array($approval['responsible'],$users_for_substitute))
+						{
+							$take_responsibility_for[] = $approval['responsible'];
+						}
 					}
-					execMethod('property.sopending_action.close_pending_action', $action_params);
-					$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+					foreach ($take_responsibility_for as $__account_id)
+					{
+						$action_params['responsible'] = $__account_id;
+						if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+						{
+							execMethod('property.sopending_action.set_pending_action', $action_params);
+						}
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+						$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($__account_id)->__toString() . "::{$_budget_amount}");
+					}
+					unset($action_params['responsible']);
 				}
 			}
-
 
 			// end approval
 			// -------- end order section
