@@ -168,7 +168,7 @@
 			return $values;
 		}
 		
-		public function get_columns($id)
+		public function get_view_columns($id)
 		{
 			$dataset = $this->read_single_dataset($id);
 			
@@ -193,7 +193,7 @@
 			return $values;
 		}
 		
-		function get_columns_data ( $id )
+		function get_view_content ( $id )
 		{
 			$id = (int)$id;
 
@@ -282,24 +282,16 @@
 				$dataset = $this->read_single_dataset($definition['dataset_id']);				
 				$jsonB = json_decode($definition['report_definition'], true);
 			}
-
-			$query_columns = $this->build_sum_of_colums($jsonB['group']);
 	
-			$columns = implode(',', $jsonB['group']);
-			$agregates = array();
-			foreach ($jsonB['aggregate'] as $c => $v)
-			{
-				$agregates[] = $jsonB['cbo_aggregate'][$v]."(".$v.") AS ".$jsonB['txt_aggregate'][$v];
-			}
-			$func_agregates = implode(',', $agregates);
+			$columns = implode(',', $jsonB['columns']);
+			
 			$order = '';
-			if (count($jsonB['order']))
+			if (count($jsonB['group']))
 			{
-				$order = ' ORDER BY '.implode(',', $jsonB['order']);
+				$order = ' ORDER BY '.implode(',', $jsonB['group']);
 			}
 			
-			//$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
-			$sql = "SELECT ".$query_columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ROLLUP (".$columns.')'.$order;
+			$sql = "SELECT ".$columns." FROM ".$dataset['view_name']." ".$order;
 
 			if (count($data))
 			{
@@ -308,7 +300,7 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			$resultado = array_merge(array_values($jsonB['group']), array_values($jsonB['txt_aggregate']));
+			$resultado = array_values($jsonB['columns']);
 			
 			$values = array();
 			while ($this->db->next_record())
