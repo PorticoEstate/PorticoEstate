@@ -46,8 +46,7 @@
 			'edit_dataset' => true,
 			'save_dataset' => true,
 			'delete_dataset' => true,
-			'get_columns' => true,
-			'get_columns_data' => true,
+			'get_column_preview' => true,
 			'preview' => true,
 			'download' => true
 		);
@@ -355,6 +354,7 @@
 			$report_name = phpgw::get_var('report_name');
 			$dataset_id = phpgw::get_var('dataset_id');
 			
+			$columns = phpgw::get_var('columns');
 			$group = phpgw::get_var('group');
 			$order = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
@@ -375,7 +375,7 @@
 			
 			if (!count($group))
 			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a columns !'));
+				$this->receipt['error'][] = array('msg' => lang('Please select a group !'));
 			}
 
 			if (!count($aggregate))
@@ -384,6 +384,7 @@
 			}
 			
 			$values['report_name'] = $report_name;
+			$values['report_definition']['columns'] = $columns;
 			$values['report_definition']['group'] = $group;
 			$values['report_definition']['order'] = $order;
 			$values['report_definition']['aggregate'] = $aggregate;
@@ -400,7 +401,7 @@
 			{
 				return $this->edit();
 			}
-			print_r($_REQUEST); die;
+
 			/*
 			 * Overrides with incoming data from POST
 			 */
@@ -675,20 +676,11 @@
 			return $this->jquery_results($result_data);
 		}
 		
-		public function get_columns()
+		public function get_column_preview()
 		{
 			$dataset_id = phpgw::get_var('dataset_id');
 
-			$columns = $this->bo->get_columns($dataset_id);
-			
-			return $columns;
-		}
-		
-		public function get_columns_data()
-		{
-			$dataset_id = phpgw::get_var('dataset_id');
-
-			$columns = $this->get_columns();
+			$columns = $this->bo->get_view_columns($dataset_id);
 			
 			$html_table = '<table class="pure-table pure-table-bordered">';
 			$html_table .= '<thead><tr>';
@@ -699,7 +691,7 @@
 			}
 			$html_table .= '</tr></thead>';
 
-			$data = $this->bo->get_columns_data($dataset_id);
+			$data = $this->bo->get_view_content($dataset_id);
 			
 			foreach ($data as $row)
 			{
@@ -707,7 +699,7 @@
 			}
 			$html_table .= '</table>';
 			
-			return array('columns'=>$columns, 'preview_dataset'=>$html_table);
+			return array('columns_preview' => $html_table);
 		}
 		
 		public function preview()
@@ -715,6 +707,7 @@
 			$values = phpgw::get_var('values');
 			$dataset_id = phpgw::get_var('dataset_id');
 			
+			$data['columns'] = $values['columns'];
 			$data['group'] = $values['group'];
 			$data['order'] = $values['order'];
 			$data['aggregate'] = $values['aggregate'];
