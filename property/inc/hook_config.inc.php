@@ -249,6 +249,34 @@ HTML;
 	}
 
 	/**
+	 * Get HTML listbox with ticket order status that are to be set when asking for approval
+	 *
+	 * @param $config
+	 * @return string HTML checkboxes to be placed in a table
+	 */
+	function ticket_approval_status( $config )
+	{
+		$status_assigned = isset($config['ticket_approval_status']) ? $config['ticket_approval_status'] : '';
+		$status_entries = execMethod('property.botts.get_status_list', $status_assigned);
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
+		{
+			$selected = '';
+			if (1 == $status['selected'])
+			{
+				$selected = ' selected = "selected"';
+			}
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+
+		return $out;
+	}
+
+	/**
 	 * Get HTML listbox with workorder status that are to be set when asking for approval
 	 *
 	 * @param $config
