@@ -4,7 +4,7 @@ $(document).ready(function ()
 	
 	$('#btn_get_columns').click( function()
 	{
-		var oArgs = {menuaction: 'property.uireport.get_columns_data'};
+		var oArgs = {menuaction: 'property.uireport.get_column_preview'};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var data = {"dataset_id": $('#cbo_dataset_id').val()};
 
@@ -28,7 +28,7 @@ $(document).ready(function ()
 			$('#container_order').empty();
 			$('#container_aggregates').empty();
 			
-			$('#container_columns').html(result.preview_dataset);
+			$('#container_columns').html(result.columns_preview);
 			
 			//build_check_columns(result.columns);
 			if (jsonB !== '')
@@ -53,11 +53,20 @@ $(document).ready(function ()
 		
 		var values = {};
 
+		values['columns'] = {};
 		values['group'] = {};
 		values['order'] = {};
 		values['aggregate'] = {};
 		values['cbo_aggregate'] = {};
 		//values['txt_aggregate'] = {};
+		
+		$('input[name^="columns"]').each(function() {
+
+			if ($(this).is(":checked"))
+			{
+				values['columns'][$(this).val()] = $(this).val();
+			}
+		});
 		
 		var invalid_groups = true;
 		$('input[name^="group"]').each(function() {
@@ -71,7 +80,7 @@ $(document).ready(function ()
 				
 		if (invalid_groups)
 		{
-			alert('Choose columns');
+			alert('Choose group');
 			$('#responsiveTabsGroups').responsiveTabs('activate', 0);
 			return;
 		}
@@ -140,10 +149,15 @@ $(document).ready(function ()
 
 function set_values()
 {
-	$.each(jsonB.group, function(key, value) 
+	$.each(jsonB.columns, function(key, value) 
 	{
 		$("#c_" + key).prop('checked', true);
 		$("#c_" + key).change();
+	});
+	
+	$.each(jsonB.group, function(key, value) 
+	{
+		$("#g_" + key).prop('checked', true);
 	});	
 	
 	$.each(jsonB.order, function(key, value) 
