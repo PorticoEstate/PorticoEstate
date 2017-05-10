@@ -123,6 +123,14 @@
 				</td>
 			</tr>
 			<tr>
+				<td>{lang_ticket_status_on_approval}:</td>
+				<td>
+					<select name="newsettings[ticket_approval_status]">
+						{hook_ticket_approval_status}
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td>{lang_approval_amount_limit}:</td>
 				<td>
 					<input name="newsettings[approval_amount_limit]" value="{value_approval_amount_limit}">
