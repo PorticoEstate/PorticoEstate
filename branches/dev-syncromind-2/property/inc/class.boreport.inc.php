@@ -78,16 +78,16 @@
 			return $values;
 		}
 		
-		function get_columns($id)
+		function get_view_columns($id)
 		{
-			$values = $this->so->get_columns($id);
+			$values = $this->so->get_view_columns($id);
 
 			return $values;
 		}
 
-		function get_columns_data($id)
+		function get_view_content($id)
 		{
-			$values = $this->so->get_columns_data($id);
+			$values = $this->so->get_view_content($id);
 
 			return $values;
 		}
