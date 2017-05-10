@@ -57,7 +57,7 @@ $(document).ready(function ()
 		values['order'] = {};
 		values['aggregate'] = {};
 		values['cbo_aggregate'] = {};
-		values['txt_aggregate'] = {};
+		//values['txt_aggregate'] = {};
 		
 		var invalid_groups = true;
 		$('input[name^="group"]').each(function() {
@@ -86,8 +86,8 @@ $(document).ready(function ()
 	  
 	    var name = '';
 		var invalid_aggregate = true;
-		var invalid_aggregate_alias = false;
-		var msg = '';
+		//var invalid_aggregate_alias = false;
+		//var msg = '';
 		$('input[name^="aggregate"]').each(function() {
 
 			if ($(this).is(":checked"))
@@ -96,15 +96,15 @@ $(document).ready(function ()
 				values['aggregate'][name] = name;
 				invalid_aggregate = false;
 				
-				if ($('#txt_' + name).val() == '')
+				/*if ($('#txt_' + name).val() == '')
 				{
 					msg = 'Enter alias for "' + name + '"';
 					invalid_aggregate_alias = true;
 					return;
-				}
+				}*/
 				
 				values['cbo_aggregate'][name] = $('#cbo_' + name).val();
-				values['txt_aggregate'][name] = $('#txt_' + name).val();
+				//values['txt_aggregate'][name] = $('#txt_' + name).val();
 			}
 		});
 		
@@ -115,12 +115,12 @@ $(document).ready(function ()
 			return;
 		}
 		
-		if (invalid_aggregate_alias)
+		/*if (invalid_aggregate_alias)
 		{
 			$('#responsiveTabsGroups').responsiveTabs('activate', 3);
 			alert(msg);			
 			return;
-		}
+		}*/
 		
 		var data = {"values": values, "dataset_id": $('#cbo_dataset_id').val()};
 		$('.processing').show();
@@ -161,11 +161,6 @@ function set_values()
 	{
 		$("#cbo_" + key).val(value);
 	});
-	
-	$.each(jsonB.txt_aggregate, function(key, value) 
-	{
-		$("#txt_" + key).val(value);
-	});
 }
 
 function build_check_columns(data)
@@ -175,9 +170,9 @@ function build_check_columns(data)
 		//$('#container_columns').append('<span style="margin-right:12px;"><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
 
 		var combo = build_list_aggregates(object.name, object.type);
-		var text = build_text_aggregates(object.name);
+		//var text = build_text_aggregates(object.name);
 		var check = build_check_aggregates(object.name);
-		var el_1 = '<span style="display:table-row;">'+ check + combo + text + '</span>';
+		var el_1 = '<span style="display:table-row;">'+ check + combo + '</span>';
 		$('#container_aggregates').append(el_1);			
 	});	
 }
@@ -186,21 +181,21 @@ function build_check_groups(name, type)
 {
 	if ($("#c_" + name).is(":checked")) 
 	{
-		var el_1 = '<span style="display:block;"><input type="radio" name="group_by" id="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
-		var el_2 = '<span style="display:block;"><input type="radio" name="order_by" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_1 = '<span style="display:block;"><input type="radio" name="group['+ name +']" id="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_2 = '<span style="display:block;"><input type="radio" name="order['+ name +']" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
 		$('#container_groups').append(el_1);
 		$('#container_order').append(el_2);
 		
 		var combo = build_list_aggregates(name, type);
-		var text = build_text_aggregates(name);
+		//var text = build_text_aggregates(name);
 		var check = build_check_aggregates(name);
-		var el_1 = '<span style="display:table-row;">'+ check + combo + text + '</span>';
+		var el_1 = '<span style="display:table-row;">'+ check + combo + '</span>';
 		$('#container_aggregates').append(el_1);
 	} 
 	else {
 		$("#g_" + name).parent().remove();
 		$("#o_" + name).parent().remove();
-		$("#txt_" + name).parent().parent().remove();
+		//$("#txt_" + name).parent().parent().remove();
 	}
 }
 
@@ -232,9 +227,7 @@ function enabled_disabled_aggregates(name)
 	if ($("#a_" + name).is(":checked")) 
 	{
 		$("#cbo_" + name).prop('disabled', false);
-		$("#txt_" + name).prop('disabled', false);
 	} else {
-		$("#cbo_" + name).prop('disabled', true);
-		$("#txt_" + name).prop('disabled', true);		
+		$("#cbo_" + name).prop('disabled', true);		
 	}
 }
