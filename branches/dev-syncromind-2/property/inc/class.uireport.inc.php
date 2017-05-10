@@ -359,7 +359,7 @@
 			$order = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
-			$txt_aggregate = phpgw::get_var('txt_aggregate');
+			//$txt_aggregate = phpgw::get_var('txt_aggregate');
 
 			$values['id'] = $report_id;
 
@@ -388,7 +388,7 @@
 			$values['report_definition']['order'] = $order;
 			$values['report_definition']['aggregate'] = $aggregate;
 			$values['report_definition']['cbo_aggregate'] = $cbo_aggregate;
-			$values['report_definition']['txt_aggregate'] = $txt_aggregate;
+			//$values['report_definition']['txt_aggregate'] = $txt_aggregate;
 			$values['dataset_id'] = $dataset_id;
 
 			return $values;
@@ -400,7 +400,7 @@
 			{
 				return $this->edit();
 			}
-			
+			print_r($_REQUEST); die;
 			/*
 			 * Overrides with incoming data from POST
 			 */
@@ -694,8 +694,8 @@
 			$html_table .= '<thead><tr>';
 			foreach ($columns as $col)
 			{
-				$_check = '<input type="checkbox" id="c_'. $col['name'] .'" value="'. $col['name'] .'" onchange="build_check_groups(\''. $col['name'] .'\', \''. $col['type'] .'\')"/>';
-				$html_table .= "<th align='center'>". $_check." ".$col['name'] ."</th>";
+				$_check = '<input type="checkbox" id="c_'.$col['name'].'" name="columns['.$col['name'].']" value="'.$col['name'].'" onchange="build_check_groups(\''. $col['name'] .'\', \''. $col['type'] .'\')"/>';
+				$html_table .= "<th align='center'>".$_check." ".$col['name']."</th>";
 			}
 			$html_table .= '</tr></thead>';
 
