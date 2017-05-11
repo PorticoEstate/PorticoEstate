@@ -713,8 +713,7 @@
 			$data['group'] = $values['group'];
 			$data['order'] = $values['order'];
 			$data['aggregate'] = $values['aggregate'];
-			$data['cbo_aggregate'] = $values['cbo_aggregate'];
-			$data['txt_aggregate'] = $values['txt_aggregate'];		
+			$data['cbo_aggregate'] = $values['cbo_aggregate'];		
 
 			$list = $this->bo->read_to_export($dataset_id, $data);
 			
