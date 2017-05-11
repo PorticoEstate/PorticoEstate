@@ -355,11 +355,13 @@
 			$dataset_id = phpgw::get_var('dataset_id');
 			
 			$columns = phpgw::get_var('columns');
-			$group = phpgw::get_var('group');
-			$order = phpgw::get_var('order');
+			$group_by = phpgw::get_var('group');
+			$order_by = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
-			//$txt_aggregate = phpgw::get_var('txt_aggregate');
+	
+			$group = array($group_by => $group_by);
+			$order = array($order_by => $order_by);
 
 			$values['id'] = $report_id;
 
