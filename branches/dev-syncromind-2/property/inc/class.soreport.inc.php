@@ -283,15 +283,12 @@
 				$jsonB = json_decode($definition['report_definition'], true);
 			}
 	
-			$columns = implode(',', $jsonB['columns']);
+			$string_columns = implode(',', $jsonB['columns']);
 			
-			$order = '';
-			if (count($jsonB['group']))
-			{
-				$order = ' ORDER BY '.implode(',', $jsonB['group']);
-			}
+			$group = implode(',', $jsonB['group']);
+			$order = ' ORDER BY '.$group;
 			
-			$sql = "SELECT ".$columns." FROM ".$dataset['view_name']." ".$order;
+			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$order;
 
 			if (count($data))
 			{
@@ -300,20 +297,98 @@
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
 
-			$resultado = array_values($jsonB['columns']);
-			
+			$columns = array_values($jsonB['columns']);
+			array_unshift($columns, "");
+			$functions = $jsonB['cbo_aggregate'];
+		
 			$values = array();
+			$array_sum = array();
+			$array_count = array();
+			
 			while ($this->db->next_record())
 			{
 				$value = array();
-				foreach ($resultado as $column)
+				foreach ($columns as $column)
 				{
 					$value[$column] = $this->db->f($column);
 				}
-				$values[] = $value;
+				
+				foreach ($functions as $k => $v)
+				{
+					if ($v == 'sum')
+					{
+						$array_sum[$this->db->f($group)][$k][] = $this->db->f($k);
+					}
+					if ($v == 'count')
+					{
+						$array_count[$this->db->f($group)][$k][] = $this->db->f($k);
+					}
+				}
+				
+				$values[$this->db->f($group)][] = $value;				
+			}
+							
+			$result = $this->_generate_total_sum($values, $array_sum, $array_count);
+			
+			return $result;
+		}
+		
+		private function _generate_total_sum($values, $array_sum, $array_count)
+		{		
+			$result = array();
+			$array_operations = array();
+			
+			foreach ($values as $k => $group)
+			{
+				$columns = array_keys($group[0]);
+				
+				$operations = array();
+				$empty = array();
+				foreach ($columns as $columm)
+				{
+					$empty[$columm] = $operations[$columm] = '';
+					
+					if (is_array($array_sum[$k][$columm]))
+					{
+						$operations[$columm] = array_sum($array_sum[$k][$columm]);
+					}
+					if (is_array($array_count[$k][$columm]))
+					{
+						$operations[$columm] = count($array_count[$k][$columm]);
+					}
+					if ($columm == '')
+					{
+						$operations[$columm] = lang('Total');
+					}					
+				}	
+				
+				$array_operations[] = $operations;
+				$group[] =  $operations;
+				$group[] =  $empty;
+				
+				$result = array_merge($result, $group);
+			}	
+			
+			$grand_total = array();
+			$columns = array_keys($array_operations[0]);
+			foreach ($array_operations as $value)
+			{
+				foreach ($columns as $columm)
+				{
+					if ($columm == '')
+					{
+						$grand_total[$columm] = lang('Grand Total');
+					}  
+					else 
+					{ 
+						$grand_total[$columm] = ($grand_total[$columm] + $value[$columm]) ? ($grand_total[$columm] + $value[$columm]) : '';
+					}
+				}				
 			}
 			
-			return $values;
+			$result[] = $grand_total;
+			
+			return $result;
 		}
 		
 		function read_single_dataset ( $id, $values = array() )
