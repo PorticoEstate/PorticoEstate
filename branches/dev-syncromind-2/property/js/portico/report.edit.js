@@ -69,7 +69,7 @@ $(document).ready(function ()
 		});
 		
 		var invalid_groups = true;
-		$('input[name^="group"]').each(function() {
+		$('input[name="group"]').each(function() {
 
 			if ($(this).is(":checked"))
 			{
@@ -81,11 +81,11 @@ $(document).ready(function ()
 		if (invalid_groups)
 		{
 			alert('Choose group');
-			$('#responsiveTabsGroups').responsiveTabs('activate', 0);
+			$('#responsiveTabsGroups').responsiveTabs('activate', 1);
 			return;
 		}
 		
-		$('input[name^="order"]').each(function() {
+		$('input[name="order"]').each(function() {
 
 			if ($(this).is(":checked"))
 			{
@@ -195,8 +195,8 @@ function build_check_groups(name, type)
 {
 	if ($("#c_" + name).is(":checked")) 
 	{
-		var el_1 = '<span style="display:block;"><input type="radio" name="group['+ name +']" id="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
-		var el_2 = '<span style="display:block;"><input type="radio" name="order['+ name +']" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_1 = '<span style="display:block;"><input type="radio" name="group" id="g_'+ name +'" value="'+ name +'"/>' + name + '</span>';
+		var el_2 = '<span style="display:block;"><input type="radio" name="order" id="o_'+ name +'" value="'+ name +'"/>' + name + '</span>';
 		$('#container_groups').append(el_1);
 		$('#container_order').append(el_2);
 		
@@ -209,7 +209,7 @@ function build_check_groups(name, type)
 	else {
 		$("#g_" + name).parent().remove();
 		$("#o_" + name).parent().remove();
-		//$("#txt_" + name).parent().parent().remove();
+		$("#cbo_" + name).parent().parent().remove();
 	}
 }
 
