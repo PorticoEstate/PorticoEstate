@@ -164,6 +164,15 @@
 
 				$valid_users = array_unique($valid_users);
 
+				$my_membership = $accounts->membership();
+
+				foreach ($my_membership as $group_id => $info)
+				{
+					$members = $accounts->member($group_id);
+					$valid_users = array_merge($valid_users, array_keys($members));
+				}
+				$valid_users = array_unique($valid_users);
+
 				$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,$dir, $order,  $query);
 				foreach($account_list as  $user)
 				{
@@ -291,6 +300,10 @@
 				$valid_users = array();
 				foreach($available_apps as $_app => $dummy)
 				{
+					if($_app == 'admin')
+					{
+						continue;
+					}
 					if($GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, $_app))
 					{
 						$valid_users	= array_merge($valid_users, $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, $_app));
@@ -299,10 +312,12 @@
 
 				$valid_users = array_unique($valid_users);
 
+				$admin_groups	= $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'admin');
+
 				$allusers = $GLOBALS['phpgw']->accounts->get_list('groups', -1,$this->sort, $this->order, $this->query);
 				foreach($allusers as  $user)
 				{
-					if(!in_array($user->id, $valid_users))
+					if(!in_array($user->id, $valid_users) || in_array($user->id, $admin_groups))
 					{
 						unset($allusers[$user->id]);
 					}
@@ -982,6 +997,15 @@
 				return array('error' => 'error');
 			}
 
+			/**
+			 * Go away
+			 */
+			$test_admins = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'admin');
+			if(in_array($group_id, $test_admins) && !$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+					return array('error' => 'error');
+			}
+
 			$acl = createObject('phpgwapi.acl', $group_id);
 			$is_admin_group = $acl->check('run', phpgwapi_acl::READ, 'admin');
 			$current_user = $GLOBALS['phpgw_info']['user']['account_id'];
@@ -998,6 +1022,7 @@
 					$GLOBALS['phpgw']->accounts->delete_account4group($user_id, $group_id);
 					//Delete cached menu for members of group
 					phpgwapi_cache::user_clear('phpgwapi', 'menu', $user_id);
+					$GLOBALS['phpgw']->acl->clear_user_cache($user_id);
 				}
 				return array('message' => 'OK');
 			}
@@ -1032,6 +1057,7 @@
 					$GLOBALS['phpgw']->accounts->delete_account4group($entry['account_id'], $group_id);
 					//Delete cached menu for members of group
 					phpgwapi_cache::user_clear('phpgwapi', 'menu', $entry['account_id']);
+					$GLOBALS['phpgw']->acl->clear_user_cache($entry['account_id']);
 				}
 				return array('message' => 'OK');
 			}
@@ -1049,6 +1075,15 @@
 				return array('error' => 'error');
 			}
 
+			/**
+			 * Do not get to elevate to admin rights
+			 */
+			$test_admins = $GLOBALS['phpgw']->acl->get_ids_for_location('run', phpgwapi_acl::READ, 'admin');
+			if(in_array($group_id, $test_admins) && !$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+			{
+					return array('error' => 'error');
+			}
+
 			if($group_id && isset($_POST['account_user']))
 			{
 				foreach ($account_user as $user_id)
@@ -1056,6 +1091,7 @@
 					$GLOBALS['phpgw']->accounts->add_user2group($user_id, $group_id);
 					//Delete cached menu for members of group
 					phpgwapi_cache::user_clear('phpgwapi', 'menu', $user_id);
+					$GLOBALS['phpgw']->acl->clear_user_cache($user_id);
 				}
 				return array('message' => 'OK');
 			}
