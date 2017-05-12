@@ -777,7 +777,7 @@
 			$this->soap = $soap;
 			//fromdate -> innparam for uthenting av delta - timestamp
 			$whereclause_date = "";
-			if ($parameters['fromdate'])
+			if (isset($parameters['fromdate']) && $parameters['fromdate'])
 			{
 				$from_date = (int)$parameters['fromdate'];
 				$whereclause_date = "AND last_change_date > {$from_date}";
