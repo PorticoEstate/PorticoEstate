@@ -992,7 +992,20 @@
 					$log_cost = $reservation['cost'];
 					$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
 
-					$log[] = $reservation['id'] . ';' . $reservation['reservation_type'] . ';' . $log_order_id . ';' . $log_customer_name . ' - ' . $log_customer_nr . ';' . $log_varelinjer_med_dato . ';' . $log_buidling . ';' . $log_cost;
+					$line_field = array();
+
+					$line_field[] = "\"{$reservation['id']}\"";
+					$line_field[] = "\"{$reservation['reservation_type']}\"";
+					$line_field[] = "\"{$log_order_id}\"";
+					$line_field[] = "\"{$log_customer_name}\"";
+					$line_field[] = "\"{$log_customer_nr}\"";
+					$line_field[] = "\"{$log_varelinjer_med_dato}\"";
+					$line_field[] = "\"{$log_buidling}\"";
+					$line_field[] = "\"{$log_cost}\"";
+
+					$log[] = implode(';',  $line_field);
+
+//					$log[] = $reservation['id'] . ';' . $reservation['reservation_type'] . ';' . $log_order_id . ';' . $log_customer_name . ' - ' . $log_customer_nr . ';' . $log_varelinjer_med_dato . ';' . $log_buidling . ';' . $log_cost;
 				}
 				else
 				{
@@ -1108,7 +1121,7 @@
 				$file_format_linebreak = "\n";
 			}
 
-			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode("\n", $log),
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode(PHP_EOL, $log),
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
@@ -1360,7 +1373,7 @@
 				$file_format_linebreak = "\n";
 			}
 
-			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode("\n", $log),
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode(PHP_EOL, $log),
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
