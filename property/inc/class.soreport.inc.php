@@ -168,7 +168,7 @@
 			return $values;
 		}
 		
-		public function get_columns($id)
+		public function get_view_columns($id)
 		{
 			$dataset = $this->read_single_dataset($id);
 			
@@ -193,39 +193,33 @@
 			return $values;
 		}
 		
-		function read_to_export ( $id )
+		function get_view_content ( $id )
 		{
 			$id = (int)$id;
+
+			$dataset = $this->read_single_dataset($id);
 			
-			$definition = $this->read_single($id);
-			$dataset = $this->read_single_dataset($definition['dataset_id']);
-			
-			$jsonB = json_decode($definition['report_definition'], true);
-			
-			$columns = implode(',', $jsonB['group']);
-			$agregates = array();
-			foreach ($jsonB['aggregate'] as $c => $v)
-			{
-				$agregates[] = $jsonB['cbo_aggregate'][$v]."(".$v.") AS ".$jsonB['txt_aggregate'][$v];
-			}
-			$func_agregates = implode(',', $agregates);
-			$order = '';
-			if (count($jsonB['order']))
-			{
-				$order = ' ORDER BY '.implode(',', $jsonB['order']);
-			}
-			
-			$sql = "SELECT ".$columns.",".$func_agregates." FROM ".$dataset['view_name']." GROUP BY ".$columns.$order;
-			
+			$sql = "SELECT column_name, data_type
+				FROM   information_schema.columns
+				WHERE  table_name = '".$dataset['view_name']."'
+				ORDER  BY ordinal_position";
 			$this->db->query($sql, __LINE__, __FILE__);
 
-			$resultado = array_merge(array_values($jsonB['group']), array_values($jsonB['txt_aggregate']));
+			$columns = array();
+			
+			while ($this->db->next_record())
+			{
+				$columns[] = $this->db->f('column_name');
+			}
+			
+			$sql = "SELECT * FROM ".$dataset['view_name'];
+			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 20);
 			
 			$values = array();
 			while ($this->db->next_record())
 			{
 				$value = array();
-				foreach ($resultado as $column)
+				foreach ($columns as $column)
 				{
 					$value[$column] = $this->db->f($column);
 				}
@@ -233,6 +227,129 @@
 			}
 			
 			return $values;
+		}
+		
+		function read_to_export ( $id, $data = array() )
+		{
+			$id = (int)$id;
+
+			if (count($data))
+			{
+				$dataset = $this->read_single_dataset($id);
+				$jsonB = $data;
+			} 
+			else {
+				$definition = $this->read_single($id);
+				$dataset = $this->read_single_dataset($definition['dataset_id']);				
+				$jsonB = json_decode($definition['report_definition'], true);
+			}
+	
+			$string_columns = implode(',', $jsonB['columns']);
+			
+			$group = implode(',', $jsonB['group']);
+			$order = 'ORDER BY '.$group.' ASC';
+			
+			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$order;
+
+			if (count($data))
+			{
+				$this->db->limit_query($sql, 0, __LINE__, __FILE__, 20);
+			} else {
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			$columns = array_values($jsonB['columns']);
+			array_unshift($columns, "");
+			$functions = $jsonB['cbo_aggregate'];
+		
+			$values = array();
+			$array_sum = array();
+			$array_count = array();
+			
+			while ($this->db->next_record())
+			{
+				$value = array();
+				foreach ($columns as $column)
+				{
+					$value[$column] = $this->db->f($column);
+				}
+				
+				foreach ($functions as $k => $v)
+				{
+					if ($v == 'sum')
+					{
+						$array_sum[$this->db->f($group)][$k][] = $this->db->f($k);
+					}
+					if ($v == 'count')
+					{
+						$array_count[$this->db->f($group)][$k][] = $this->db->f($k);
+					}
+				}
+				
+				$values[$this->db->f($group)][] = $value;				
+			}
+							
+			$result = $this->_generate_total_sum($values, $array_sum, $array_count);
+			
+			return $result;
+		}
+		
+		private function _generate_total_sum($values, $array_sum, $array_count)
+		{		
+			$result = array();
+			$array_operations = array();
+			
+			foreach ($values as $k => $group)
+			{
+				$columns = array_keys($group[0]);
+				
+				$operations = array();
+				$empty = array();
+				foreach ($columns as $columm)
+				{
+					$empty[$columm] = $operations[$columm] = '';
+					
+					if (is_array($array_sum[$k][$columm]))
+					{
+						$operations[$columm] = array_sum($array_sum[$k][$columm]);
+					}
+					if (is_array($array_count[$k][$columm]))
+					{
+						$operations[$columm] = count($array_count[$k][$columm]);
+					}
+					if ($columm == '')
+					{
+						$operations[$columm] = lang('Total');
+					}					
+				}	
+				
+				$array_operations[] = $operations;
+				$group[] =  $operations;
+				$group[] =  $empty;
+				
+				$result = array_merge($result, $group);
+			}	
+			
+			$grand_total = array();
+			$columns = array_keys($array_operations[0]);
+			foreach ($array_operations as $value)
+			{
+				foreach ($columns as $columm)
+				{
+					if ($columm == '')
+					{
+						$grand_total[$columm] = lang('Grand Total');
+					}  
+					else 
+					{ 
+						$grand_total[$columm] = ($grand_total[$columm] + $value[$columm]) ? ($grand_total[$columm] + $value[$columm]) : '';
+					}
+				}				
+			}
+			
+			$result[] = $grand_total;
+			
+			return $result;
 		}
 		
 		function read_single_dataset ( $id, $values = array() )
@@ -391,16 +508,16 @@
 
 			$this->db->transaction_begin();
 			
-			$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
-			$this->db->query("DELETE FROM fm_view_dataset_report WHERE dataset_id ='{$id}'", __LINE__, __FILE__);
+			//$this->db->query("DELETE FROM fm_view_dataset WHERE id ='{$id}'", __LINE__, __FILE__);
+			$this->db->query("DELETE FROM fm_view_dataset_report WHERE id ='{$id}'", __LINE__, __FILE__);
 
 			if ($this->db->transaction_commit())
 			{
-				$receipt['message'][] = array('msg' => lang('dataset has been deleted'));
+				$receipt['message'][] = array('msg' => lang('report has been deleted'));
 			}
 			else
 			{
-				$receipt['error'][] = array('msg' => lang('dataset has not been deleted'));
+				$receipt['error'][] = array('msg' => lang('report has not been deleted'));
 			}
 			
 			return $receipt;
