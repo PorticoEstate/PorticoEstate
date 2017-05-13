@@ -116,7 +116,8 @@
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('lang', 'get columns')" />
 							</xsl:attribute>
-						</input>										
+						</input>
+						<img src="{image_loader}" class="processing" align="absmiddle"></img>									
 					</div>
 					
 					<div id="responsiveTabsGroups">
@@ -169,6 +170,7 @@
 										<xsl:value-of select="php:function('lang', 'preview')" />
 									</xsl:attribute>
 								</input>
+								<img src="{image_loader}" class="processing-preview" align="absmiddle"></img>
 							</div>
 							<div id="container_preview" class="content_columns"></div>				
 						</div>					
