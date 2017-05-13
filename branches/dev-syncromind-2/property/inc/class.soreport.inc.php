@@ -229,45 +229,6 @@
 			return $values;
 		}
 		
-		function build_sum_of_colums($columns)
-		{
-			$columns_a = array_values($columns);
-			
-			if (count($columns_a) == 1)
-			{
-				return "CASE 
-						WHEN ".$columns_a[0]." is null THEN '".lang('grand total')."'
-							ELSE ".$columns_a[0]."::character varying
-							END AS ".$columns_a[0];
-			}
-
-			$first = 0;
-			$last_a = count($columns_a) -1;
-			
-			$columns_b = $columns_a;
-			unset($columns_b[$last_a]);
-			
-			$last_b = count($columns_b) -1;
-			
-			$query_columns = implode(',', $columns_b);			
-				
-			foreach ($columns_b as $c => $v)
-			{
-				if ($c == $first)
-				{
-					$query_columns .= ", CASE WHEN ".$columns_b[$first]." is null THEN '".lang('grand total')."'";
-				} 
-				else {
-					$query_columns .= " WHEN ".$columns_b[$c]." is null THEN concat (".$columns_b[$c-1]."::character varying, ' ".lang('total')."')";	
-				}		
-			}
-			
-			$query_columns .= " WHEN ".$columns_a[$last_a]." is null THEN concat (".$columns_b[$last_b]."::character varying, ' ".lang('total')."')";				
-			$query_columns .= " ELSE ".$columns_a[$last_a]."::character varying END AS ".$columns_a[$last_a];		
-			
-			return $query_columns;
-		}
-		
 		function read_to_export ( $id, $data = array() )
 		{
 			$id = (int)$id;
@@ -286,7 +247,7 @@
 			$string_columns = implode(',', $jsonB['columns']);
 			
 			$group = implode(',', $jsonB['group']);
-			$order = ' ORDER BY '.$group;
+			$order = 'ORDER BY '.$group.' ASC';
 			
 			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$order;
 
