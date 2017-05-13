@@ -46,7 +46,8 @@
 			'edit_dataset' => true,
 			'save_dataset' => true,
 			'delete_dataset' => true,
-			'get_columns' => true,
+			'get_column_preview' => true,
+			'preview' => true,
 			'download' => true
 		);
 
@@ -337,6 +338,7 @@
 				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
@@ -353,11 +355,20 @@
 			$report_name = phpgw::get_var('report_name');
 			$dataset_id = phpgw::get_var('dataset_id');
 			
-			$group = phpgw::get_var('group');
-			$order = phpgw::get_var('order');
+			$_columns = phpgw::get_var('columns');
+			$group_by = phpgw::get_var('group');
+			$order_by = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
-			$txt_aggregate = phpgw::get_var('txt_aggregate');
+	
+			$group = array($group_by => $group_by);
+			$order = array($order_by => $order_by);
+			
+			$columns = array();
+			foreach ($_columns as $column)
+			{
+				$columns[] = $column;
+			}
 
 			$values['id'] = $report_id;
 
@@ -373,7 +384,7 @@
 			
 			if (!count($group))
 			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a columns !'));
+				$this->receipt['error'][] = array('msg' => lang('Please select a group !'));
 			}
 
 			if (!count($aggregate))
@@ -382,11 +393,12 @@
 			}
 			
 			$values['report_name'] = $report_name;
+			$values['report_definition']['columns'] = $columns;
 			$values['report_definition']['group'] = $group;
 			$values['report_definition']['order'] = $order;
 			$values['report_definition']['aggregate'] = $aggregate;
 			$values['report_definition']['cbo_aggregate'] = $cbo_aggregate;
-			$values['report_definition']['txt_aggregate'] = $txt_aggregate;
+			//$values['report_definition']['txt_aggregate'] = $txt_aggregate;
 			$values['dataset_id'] = $dataset_id;
 
 			return $values;
@@ -398,7 +410,7 @@
 			{
 				return $this->edit();
 			}
-			
+
 			/*
 			 * Overrides with incoming data from POST
 			 */
@@ -673,13 +685,61 @@
 			return $this->jquery_results($result_data);
 		}
 		
-		public function get_columns()
+		public function get_column_preview()
 		{
 			$dataset_id = phpgw::get_var('dataset_id');
 
-			$columns = $this->bo->get_columns($dataset_id);
+			$columns = $this->bo->get_view_columns($dataset_id);
 			
-			return $columns;
+			$html_table = '<table class="pure-table pure-table-bordered">';
+			$html_table .= '<thead><tr>';
+			foreach ($columns as $col)
+			{
+				$_check = '<input type="checkbox" id="c_'.$col['name'].'" name="columns['.$col['name'].']" value="'.$col['name'].'" onchange="build_check_groups(\''. $col['name'] .'\', \''. $col['type'] .'\')"/>';
+				$html_table .= "<th align='center'>".$_check." ".$col['name']."</th>";
+			}
+			$html_table .= '</tr></thead>';
+
+			$data = $this->bo->get_view_content($dataset_id);
+			
+			foreach ($data as $row)
+			{
+				$html_table .= "<tr><td>" . implode('</td><td>', $row) . '</td></tr>';
+			}
+			$html_table .= '</table>';
+			
+			return array('columns_preview' => $html_table);
+		}
+		
+		public function preview()
+		{
+			$values = phpgw::get_var('values');
+			$dataset_id = phpgw::get_var('dataset_id');
+			
+			$data['columns'] = $values['columns'];
+			$data['group'] = $values['group'];
+			$data['order'] = $values['order'];
+			$data['aggregate'] = $values['aggregate'];
+			$data['cbo_aggregate'] = $values['cbo_aggregate'];		
+
+			$list = $this->bo->read_to_export($dataset_id, $data);
+			
+			$html_table = '<table class="pure-table pure-table-bordered">';
+			$html_table .= '<thead><tr>';
+			foreach ($list[0] as $c => $v)
+			{				
+				$html_table .= "<th align='center'>".$c."</th>";
+			}
+			$html_table .= '</tr></thead>';
+			
+			foreach ($list as $row)
+			{
+				$html_table .= "<tr><td>" . implode('</td><td>', $row) . '</td></tr>';
+			}
+			$html_table .= '</table>';
+			
+			return $html_table;
+			
 		}
 		
 	}
