@@ -338,6 +338,7 @@
 				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security', 'file'))
 			);
 
@@ -354,7 +355,7 @@
 			$report_name = phpgw::get_var('report_name');
 			$dataset_id = phpgw::get_var('dataset_id');
 			
-			$columns = phpgw::get_var('columns');
+			$_columns = phpgw::get_var('columns');
 			$group_by = phpgw::get_var('group');
 			$order_by = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
@@ -362,6 +363,12 @@
 	
 			$group = array($group_by => $group_by);
 			$order = array($order_by => $order_by);
+			
+			$columns = array();
+			foreach ($_columns as $column)
+			{
+				$columns[] = $column;
+			}
 
 			$values['id'] = $report_id;
 
