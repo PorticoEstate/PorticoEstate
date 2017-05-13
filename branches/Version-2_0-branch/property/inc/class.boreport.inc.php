@@ -57,9 +57,9 @@
 			return $values;
 		}
 
-		public function read_to_export($id)
+		public function read_to_export($id, $data = array())
 		{			
-			$values =  $this->so->read_to_export($id);
+			$values =  $this->so->read_to_export($id, $data);
 			
 			return $values;
 		}
@@ -78,13 +78,20 @@
 			return $values;
 		}
 		
-		function get_columns($id)
+		function get_view_columns($id)
 		{
-			$values = $this->so->get_columns($id);
+			$values = $this->so->get_view_columns($id);
 
 			return $values;
 		}
 
+		function get_view_content($id)
+		{
+			$values = $this->so->get_view_content($id);
+
+			return $values;
+		}
+		
 		function read_single_dataset( $dataset_id = '' )
 		{
 			$dataset = $this->so->read_single_dataset($dataset_id);
