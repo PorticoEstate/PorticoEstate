@@ -1,6 +1,7 @@
 $(document).ready(function ()
 {
-	//$('.processing').hide();
+	$('.processing').hide();
+	$('.processing-preview').hide();
 	
 	$('#btn_get_columns').click( function()
 	{
@@ -20,7 +21,7 @@ $(document).ready(function ()
 			dataType: 'json',
 			data: data
 		}).always(function () {
-			//$('.processing').hide();
+			$('.processing').hide();
 		}).done(function (result) {
 			//console.log(result);
 			$('#container_columns').empty();
@@ -30,7 +31,6 @@ $(document).ready(function ()
 			
 			$('#container_columns').html(result.columns_preview);
 			
-			//build_check_columns(result.columns);
 			if (jsonB !== '')
 			{
 				set_values();
@@ -58,7 +58,6 @@ $(document).ready(function ()
 		values['order'] = {};
 		values['aggregate'] = {};
 		values['cbo_aggregate'] = {};
-		//values['txt_aggregate'] = {};
 		
 		$('input[name^="columns"]').each(function() {
 
@@ -95,8 +94,7 @@ $(document).ready(function ()
 	  
 	    var name = '';
 		var invalid_aggregate = true;
-		//var invalid_aggregate_alias = false;
-		//var msg = '';
+
 		$('input[name^="aggregate"]').each(function() {
 
 			if ($(this).is(":checked"))
@@ -105,15 +103,7 @@ $(document).ready(function ()
 				values['aggregate'][name] = name;
 				invalid_aggregate = false;
 				
-				/*if ($('#txt_' + name).val() == '')
-				{
-					msg = 'Enter alias for "' + name + '"';
-					invalid_aggregate_alias = true;
-					return;
-				}*/
-				
 				values['cbo_aggregate'][name] = $('#cbo_' + name).val();
-				//values['txt_aggregate'][name] = $('#txt_' + name).val();
 			}
 		});
 		
@@ -124,22 +114,15 @@ $(document).ready(function ()
 			return;
 		}
 		
-		/*if (invalid_aggregate_alias)
-		{
-			$('#responsiveTabsGroups').responsiveTabs('activate', 3);
-			alert(msg);			
-			return;
-		}*/
-		
 		var data = {"values": values, "dataset_id": $('#cbo_dataset_id').val()};
-		$('.processing').show();
+		$('.processing-preview').show();
 		$.ajax({
 			type: 'GET',
 			url: requestUrl,
 			dataType: 'json',
 			data: data
 		}).always(function () {
-			//$('.processing').hide();
+			$('.processing-preview').hide();
 		}).done(function (result) {
 			$('#container_preview').html(result);
 		});		
@@ -151,8 +134,8 @@ function set_values()
 {
 	$.each(jsonB.columns, function(key, value) 
 	{
-		$("#c_" + key).prop('checked', true);
-		$("#c_" + key).change();
+		$("#c_" + value).prop('checked', true);
+		$("#c_" + value).change();
 	});
 	
 	$.each(jsonB.group, function(key, value) 
@@ -181,8 +164,6 @@ function build_check_columns(data)
 {
 	$.each(data, function(key, object) 
 	{
-		//$('#container_columns').append('<span style="margin-right:12px;"><input type="checkbox" id="c_'+ object.name +'" value="'+ object.name +'" onchange="build_check_groups(\''+ object.name +'\')"/> ' + object.name + '</span>');
-
 		var combo = build_list_aggregates(object.name, object.type);
 		//var text = build_text_aggregates(object.name);
 		var check = build_check_aggregates(object.name);
