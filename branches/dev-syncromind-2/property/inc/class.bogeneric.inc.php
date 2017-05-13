@@ -383,24 +383,51 @@
 				}
 			}
 			$params['custom_filter'] = $custom_filter;
+			$params['disable_id_search'] = phpgw::get_var('disable_id_search', 'bool');
 			$values = $this->read($params);
-/*
-			foreach ($values as &$entry)
+			$include = phpgw::get_var('include');
+
+			if($include)
 			{
-				if ($entry['parent_id'])
+				foreach ($values as &$entry)
 				{
-					$entry['name'] = "[{$entry['name']}] ::  {$entry['parent_id']}";
+					if ($entry[$include])
+					{
+						$entry['name'] = "{$entry[$include]} {$entry['name']}";
+					}
 				}
 			}
-*/
+
 			return array('ResultSet' => array('Result' => $values));
 		}
 
 
 		public function get_single_name( $data = array() )
 		{
+			$include = !empty($data['include']) ? $data['include'] : false;
+			$attributes = array();
+			if($include)
+			{
+				$attributes[] = array('column_name' => $include);
+			}
+
 			$this->get_location_info($data['type']);
-			$values = $this->so->read_single(array('id' => $data['id']));
+			$values = $this->so->read_single(array('id' => $data['id']), array('attributes' => $attributes));
+			if($include)
+			{
+				if (!empty($values['attributes']))
+				{
+					foreach ($values['attributes'] as $entry)
+					{
+						if($entry['column_name'] == $include && $entry['value'])
+						{
+							$values['name'] = "{$entry['value']} {$values['name']}";
+							break;
+						}
+					}
+				}
+			}
+
 //			$values['path'] = $values['name'];
 //			if ($values['parent_id'])
 //			{

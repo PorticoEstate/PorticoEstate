@@ -150,6 +150,11 @@
 					$dim3 = 9;
 				}
 
+				if($dim3 == 9999)
+				{
+					$dim3 = 9;
+				}
+
 				$address_element = execMethod('property.botts.get_address_element', $location_code);
 				$_address = array();
 				foreach ($address_element as $entry)

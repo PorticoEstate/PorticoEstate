@@ -230,12 +230,26 @@
 			$id = phpgw::get_var('id', 'int');
 
 			$ticket = $this->bo->mail_ticket($id, $fields_updated = true, $receipt = array(), $location_code = '', $get_message = true);
+			$lang_print = lang('print');
 
-			$html = "<html><head><title>{$ticket['subject']}</title></head>";
-			$html .= "<body>";
-			$html .= $ticket['subject'] . '</br></br>';
-			$html .= nl2br($ticket['body']);
-			$html .= "</body></html>";
+			$html = <<<HTML
+
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>{$ticket['subject']}</title>
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
+				</head>
+				<body>
+					<script type="text/javascript">
+							document.write("<form><input type=button "
+							+"value=\"{$lang_print}\" onClick=\"window.print();\"></form>");
+					</script>
+					<H2>{$ticket['subject']}</H2>
+					{$ticket['body']}
+				</body>
+			</html>
+HTML;
 
 			echo $html;
 		}
@@ -1624,7 +1638,7 @@
 
 
 
-			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true));
+			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',	'use_acl' => $this->_category_acl, 'required' => true, 'class' => 'pure-input-1-2'));
 
 			$_cat_list = array();
 			if($this->simple && isset($fmttssimple_categories) && $fmttssimple_categories[1])
@@ -1904,6 +1918,12 @@
 				{
 					$values['assignedto'] = $this->account;
 				}
+
+				if (!empty($values['approval']) && !empty($this->bo->config->config_data['ticket_approval_status']))
+				{
+					$values['status'] = $this->bo->config->config_data['ticket_approval_status'];
+				}
+
 				/*
 				  if(isset($values_attribute) && is_array($values_attribute))
 				  {
@@ -2189,6 +2209,12 @@
 
 				$need_approval = isset($this->bo->config->config_data['workorder_approval']) ? $this->bo->config->config_data['workorder_approval'] : '';
 
+
+				//temporary
+				$test_user = $this->acl->check('.ticket.order', 16, 'property');
+
+				$need_approval = $need_approval && $test_user ? true : false;
+
 				// approval
 			}
 
@@ -2207,6 +2233,7 @@
 			}
 
 			$_budget_amount = $this->_get_budget_amount($id);
+			$sosubstitute = CreateObject('property.sosubstitute');
 
 			if (isset($values['approval']) && $values['approval'] && $this->bo->config->config_data['workorder_approval'])
 			{
@@ -2238,8 +2265,16 @@
 					'deadline' => ''
 				);
 				$bcc = '';//$coordinator_email;
+
 				foreach ($values['approval'] as $_account_id => $_address)
 				{
+					$substitute = $sosubstitute->get_substitute($_account_id);
+
+					if($substitute)
+					{
+						$_account_id = $substitute;
+					}
+
 					$prefs = $this->bocommon->create_preferences('property', $_account_id);
 					if (!empty($prefs['email']))
 					{
@@ -2267,7 +2302,7 @@
 						phpgwapi_cache::message_set($exc->getMessage(),'error');
 					}
 				}
-				
+			
 			}
 	
 			if (!empty($values['do_approve']) && is_array($values['do_approve']))
@@ -2283,18 +2318,45 @@
 					'deadline' => ''
 				);
 
+//				foreach ($values['do_approve'] as $_account_id => $_dummy)
+//				{
+//					$action_params['responsible'] = $_account_id;
+//					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+//					{
+//						execMethod('property.sopending_action.set_pending_action', $action_params);
+//					}
+//					execMethod('property.sopending_action.close_pending_action', $action_params);
+//					$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+//				}
+
+////
 				foreach ($values['do_approve'] as $_account_id => $_dummy)
 				{
-					$action_params['responsible'] = $_account_id;
-					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					$users_for_substitute = $sosubstitute->get_users_for_substitute($_account_id);
+
+					$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+					$take_responsibility_for = array($_account_id);
+					foreach ($approvals as $approval)
 					{
-						execMethod('property.sopending_action.set_pending_action', $action_params);
+						if(in_array($approval['responsible'],$users_for_substitute))
+						{
+							$take_responsibility_for[] = $approval['responsible'];
+						}
 					}
-					execMethod('property.sopending_action.close_pending_action', $action_params);
-					$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+					foreach ($take_responsibility_for as $__account_id)
+					{
+						$action_params['responsible'] = $__account_id;
+						if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+						{
+							execMethod('property.sopending_action.set_pending_action', $action_params);
+						}
+						execMethod('property.sopending_action.close_pending_action', $action_params);
+						$historylog->add('AA', $id, $GLOBALS['phpgw']->accounts->get($__account_id)->__toString() . "::{$_budget_amount}");
+					}
+					unset($action_params['responsible']);
 				}
 			}
-
 
 			// end approval
 			// -------- end order section
@@ -2830,7 +2892,7 @@
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true));
+				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true, 'class' => 'pure-input-1-2'));
 
 			$_ticket_cat_found = false;
 			if (isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))

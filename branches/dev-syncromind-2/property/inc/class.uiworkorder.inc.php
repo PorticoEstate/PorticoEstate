@@ -913,9 +913,14 @@
 				}
 
 				$_budget_amount = $this->bo->get_budget_amount($id);
+				$sosubstitute = CreateObject('property.sosubstitute');
 
 				if (isset($values['approval']) && $values['approval'] && $config->config_data['workorder_approval'])
 				{
+					if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
+					{
+						$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
+					}
 
 					$coordinator_name = $GLOBALS['phpgw_info']['user']['fullname'];
 					$coordinator_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
@@ -955,6 +960,13 @@
 
 								if(!$approvals)
 								{
+									$substitute = $sosubstitute->get_substitute($_account_id);
+									
+									if($substitute)
+									{
+										$_account_id = $substitute;
+									}
+
 									$_budget_amount = $this->bo->get_accumulated_budget_amount($values['project_id']);
 
 									$pending_action->set_pending_action($action_params_approved);
@@ -1022,61 +1034,65 @@
 							$message = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $approval_menuaction,
 							'id' => $id), false, true) . '">' . lang('Workorder %1 needs approval', $id) . '</a>';
 							$_orders = array($id);
-							break;
-					}
 
-					if (empty($GLOBALS['phpgw_info']['server']['smtp_server']))
-					{
-						$receipt['error'][] = array('msg' => lang('SMTP server is not set! (admin section)'));
-					}
-
-
-					$action_params = array(
-						'appname' => 'property',
-						'location' => '.project.workorder',
-						'id' => $id,
-						'responsible' => '',
-						'responsible_type' => 'user',
-						'action' => 'approval',
-						'remark' => '',
-						'deadline' => ''
-					);
-					$bcc = '';//$coordinator_email;
-					foreach ($values['approval'] as $_account_id => $_address)
-					{
-						$prefs = $this->bocommon->create_preferences('property', $_account_id);
-						if (!empty($prefs['email']))
-						{
-							$_address = $prefs['email'];
-						}
-						else
-						{
-							$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
-							$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
-						}
-
-						if($approval_level == 'order')
-						{
-							foreach ($_orders as $_order_id)
+							$action_params = array(
+								'appname' => 'property',
+								'location' => '.project.workorder',
+								'id' => $id,
+								'responsible' => '',
+								'responsible_type' => 'user',
+								'action' => 'approval',
+								'remark' => '',
+								'deadline' => ''
+							);
+							$bcc = '';//$coordinator_email;
+							foreach ($values['approval'] as $_account_id => $_address)
 							{
-								$action_params['responsible'] = $_account_id;
-								$action_params['id'] = $_order_id;
-								try
+								$substitute = $sosubstitute->get_substitute($_account_id);
+
+								/**
+								 * Alert the substitute
+								 */
+								if($substitute)
 								{
-									$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
-									execMethod('property.sopending_action.set_pending_action', $action_params);
-									$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
-									if ($rcpt)
+									$_account_id = $substitute;
+								}
+
+								$prefs = $this->bocommon->create_preferences('property', $_account_id);
+								if (!empty($prefs['email']))
+								{
+									$_address = $prefs['email'];
+								}
+								else
+								{
+									$email_domain = !empty($GLOBALS['phpgw_info']['server']['email_domain']) ? $GLOBALS['phpgw_info']['server']['email_domain'] : 'bergen.kommune.no';
+									$_address = $GLOBALS['phpgw']->accounts->id2lid($_account_id) . "@{$email_domain}";
+								}
+
+								if($approval_level == 'order')
+								{
+									foreach ($_orders as $_order_id)
 									{
-										phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+										$action_params['responsible'] = $_account_id;
+										$action_params['id'] = $_order_id;
+										try
+										{
+											$historylog->add('AP', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+											execMethod('property.sopending_action.set_pending_action', $action_params);
+											$rcpt = $GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
+											if ($rcpt)
+											{
+												phpgwapi_cache::message_set(lang('%1 is notified', $_address),'message');
+											}
+										}
+										catch (Exception $exc)
+										{
+											phpgwapi_cache::message_set($exc->getMessage(),'error');
+										}
 									}
 								}
-								catch (Exception $exc)
-								{
-									phpgwapi_cache::message_set($exc->getMessage(),'error');
-								}
 							}
-						}
+							break;
 					}
 				}
 
@@ -1095,13 +1111,29 @@
 
 					foreach ($values['do_approve'] as $_account_id => $_dummy)
 					{
-						$action_params['responsible'] = $_account_id;
-						if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+						$users_for_substitute = $sosubstitute->get_users_for_substitute($_account_id);
+
+						$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+						$take_responsibility_for = array($_account_id);
+						foreach ($approvals as $approval)
 						{
-							execMethod('property.sopending_action.set_pending_action', $action_params);
+							if(in_array($approval['responsible'],$users_for_substitute))
+							{
+								$take_responsibility_for[] = $approval['responsible'];
+							}
 						}
-						execMethod('property.sopending_action.close_pending_action', $action_params);
-						$historylog->add('OA', $id, $GLOBALS['phpgw']->accounts->get($_account_id)->__toString() . "::{$_budget_amount}");
+						foreach ($take_responsibility_for as $__account_id)
+						{
+							$action_params['responsible'] = $__account_id;
+							if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+							{
+								execMethod('property.sopending_action.set_pending_action', $action_params);
+							}
+							execMethod('property.sopending_action.close_pending_action', $action_params);
+							$historylog->add('OA', $id, $GLOBALS['phpgw']->accounts->get($__account_id)->__toString() . "::{$_budget_amount}");
+						}
+						unset($action_params['responsible']);
 					}
 				}
 
@@ -1802,6 +1834,7 @@
 
 				if ($config->config_data['invoicehandler'] == 2)
 				{
+					$voucher_id = $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'];
 					if ($entry['voucher_id'] > 0)
 					{
 						$link_data_invoice2['voucher_id'] = $entry['voucher_id'];
@@ -1817,24 +1850,27 @@
 				else
 				{
 					$_disable_link = true;
-					if ($entry['voucher_id'] > 0)
-					{
-						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
-						$link_data_invoice1['query'] = $entry['voucher_id'];
-						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
-					}
-					else
-					{
-						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
-						$link_data_invoice1['paid'] = 'true';
-						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
-					}
+					$voucher_id = $entry['external_voucher_id'];
+
+//					if ($entry['voucher_id'] > 0)
+//					{
+//						$link_data_invoice1['voucher_id'] = $entry['voucher_id'];
+//						$link_data_invoice1['query'] = $entry['voucher_id'];
+//						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+//					}
+//					else
+//					{
+//						$link_data_invoice1['voucher_id'] = abs($entry['voucher_id']);
+//						$link_data_invoice1['paid'] = 'true';
+//						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
+//					}
 				}
+				
 				$link_voucher_id = "<a href='" . $url . "'>" . $voucher_out_id . "</a>";
 
 				$content_invoice[] = array
-					(
-					'voucher_id' => ($_disable_link) ? $entry['voucher_id'] : $link_voucher_id,
+				(
+					'voucher_id' => ($_disable_link) ? $voucher_id : $link_voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'status' => $entry['status'],
 					'period' => $entry['period'],
@@ -1940,12 +1976,12 @@
 					'sortable' => true,
 					'className' => 'right',
 					'value_footer' => number_format($amount, 2, $this->decimal_separator, '.')),
-				array(
-					'key' => 'approved_amount',
-					'label' => lang('approved amount'),
-					'sortable' => true,
-					'className' => 'right',
-					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
+//				array(
+//					'key' => 'approved_amount',
+//					'label' => lang('approved amount'),
+//					'sortable' => true,
+//					'className' => 'right',
+//					'value_footer' => number_format($approved_amount, 2, $this->decimal_separator, '.')),
 				array(
 					'key' => 'period',
 					'label' => lang('period'),

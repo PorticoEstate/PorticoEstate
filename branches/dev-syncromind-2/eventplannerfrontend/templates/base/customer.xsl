@@ -50,7 +50,7 @@
 							<label>
 								<xsl:value-of select="$lang_category"/>
 							</label>
-							<select name="category_id">
+							<select name="category_id" class="pure-input-1-2" >
 								<xsl:attribute name="title">
 									<xsl:value-of select="$lang_category"/>
 								</xsl:attribute>
@@ -67,7 +67,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'name')"/>
 							</label>
-							<input type="text" name="name" value="{customer/name}">
+							<input type="text" name="name" value="{customer/name}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -88,7 +88,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'address')"/>
 							</label>
-							<input type="text" name="address_1" value="{customer/address_1}">
+							<input type="text" name="address_1" value="{customer/address_1}" class="pure-input-1-4" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -97,7 +97,7 @@
 								</xsl:attribute>
 
 							</input>
-							<input type="text" name="address_2" value="{customer/address_2}">
+							<input type="text" name="address_2" value="{customer/address_2}" class="pure-input-1-4" >
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="$lang_address_2"/>
 								</xsl:attribute>
@@ -107,7 +107,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'zip code')"/>
 							</label>
-							<input type="text" name="zip_code" value="{customer/zip_code}">
+							<input type="text" name="zip_code" value="{customer/zip_code}" class="pure-input-1-4" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -115,7 +115,7 @@
 									<xsl:value-of select="php:function('lang', 'zip code')"/>
 								</xsl:attribute>
 							</input>
-							<input type="text" name="city" value="{customer/city}">
+							<input type="text" name="city" value="{customer/city}" class="pure-input-1-4" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -128,7 +128,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'organization number')"/>
 							</label>
-							<input type="text" id="organization_number" name="organization_number" value="{customer/organization_number}">
+							<input type="text" id="organization_number" name="organization_number" value="{customer/organization_number}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>organization_number</xsl:text>
 								</xsl:attribute>
@@ -144,7 +144,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'account number')"/>
 							</label>
-							<input type="text" id="account_number" name="account_number" value="{customer/account_number}">
+							<input type="text" id="account_number" name="account_number" value="{customer/account_number}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>account_number</xsl:text>
 								</xsl:attribute>
@@ -160,7 +160,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'number of users')"/>
 							</label>
-							<input type="text" name="number_of_users" value="{customer/number_of_users}">
+							<input type="text" name="number_of_users" value="{customer/number_of_users}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>number</xsl:text>
 								</xsl:attribute>
@@ -173,7 +173,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
-							<input type="text" name="contact_name" value="{customer/contact_name}">
+							<input type="text" name="contact_name" value="{customer/contact_name}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -186,7 +186,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'email')"/>
 							</label>
-							<input type="text" name="contact_email" id="contact_email" value="{customer/contact_email}">
+							<input type="text" name="contact_email" id="contact_email" value="{customer/contact_email}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>email</xsl:text>
 								</xsl:attribute>
@@ -199,7 +199,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact phone')"/>
 							</label>
-							<input type="text" name="contact_phone" value="{customer/contact_phone}">
+							<input type="text" name="contact_phone" value="{customer/contact_phone}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -213,7 +213,7 @@
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 								<xsl:text> 2</xsl:text>
 							</label>
-							<input type="text" name="contact2_name" id="contact2_name" value="{customer/contact2_name}">
+							<input type="text" name="contact2_name" id="contact2_name" value="{customer/contact2_name}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation-optional">
 									<xsl:text>true</xsl:text>
 								</xsl:attribute>
@@ -227,7 +227,7 @@
 								<xsl:value-of select="php:function('lang', 'email')"/>
 								<xsl:text> 2</xsl:text>
 							</label>
-							<input type="text" name="contact2_email" id="contact2_email" value="{customer/contact2_email}">
+							<input type="text" name="contact2_email" id="contact2_email" value="{customer/contact2_email}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation">
 									<xsl:text>email</xsl:text>
 								</xsl:attribute>
@@ -244,7 +244,7 @@
 								<xsl:value-of select="php:function('lang', 'contact phone')"/>
 								<xsl:text> 2</xsl:text>
 							</label>
-							<input type="text" name="contact2_phone" id="contact2_phone" value="{customer/contact2_phone}">
+							<input type="text" name="contact2_phone" id="contact2_phone" value="{customer/contact2_phone}" class="pure-input-1-2" >
 								<xsl:attribute name="data-validation-depends-on">
 									<xsl:text>contact2_name</xsl:text>
 								</xsl:attribute>
@@ -260,7 +260,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'description')"/>
 							</label>
-							<textarea cols="47" rows="7" name="description">
+							<textarea cols="47" rows="7" name="description" class="pure-input-1-2" >
 								<xsl:value-of select="customer/description"/>
 							</textarea>
 						</div>
@@ -268,7 +268,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
-							<textarea cols="47" rows="7" name="remark">
+							<textarea cols="47" rows="7" name="remark" class="pure-input-1-2" >
 								<xsl:value-of select="customer/remark"/>
 							</textarea>
 						</div>
@@ -276,6 +276,16 @@
 				</div>
 				<div id="booking">
 					<fieldset>
+						<xsl:if test="booking_interval != ''">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'booking interval')"/>
+								</label>
+								<xsl:value-of select="booking_interval"/>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'hours')"/>
+							</div>
+						</xsl:if>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'booking')"/>

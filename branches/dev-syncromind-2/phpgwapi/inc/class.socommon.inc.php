@@ -160,7 +160,7 @@
 			{
 				return date($this->dateformat, strtotime($value));
 			}
-			return $value;
+			return $this->db->stripslashes($value);
 		}
 
 		/**
@@ -304,7 +304,10 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
-								$results[$id_map[$id]][$field] = array();
+								if(empty($results[$id_map[$id]][$field]))
+								{
+									$results[$id_map[$id]][$field] = array();
+								}
 								$data = array();
 								foreach ($params['manytomany']['column'] as $intOrCol => $paramsOrCol)
 								{
@@ -332,7 +335,7 @@
 							while ($this->db->next_record())
 							{
 								$id = $this->unmarshal($this->db->f($key, false), 'int');
-								if(!isset($results[$id_map[$id]][$field]))
+								if(empty($results[$id_map[$id]][$field]))
 								{
 									$results[$id_map[$id]][$field] = array();
 								}
@@ -411,7 +414,8 @@
 			{
 				if($acl_condition && !$acl_test)
 				{
-					phpgw::no_access();
+					$message = lang('do you represent the owner of this entry?');
+					phpgw::no_access(false, $message);
 				}
 
 				foreach ($this->fields as $field => $params)
@@ -498,18 +502,27 @@
 					if ($params['query'])
 					{
 						$table = $params['join'] ? $this->build_join_table_alias($field, $params) : $this->table_name;
-						$column = $params['join'] ? $params['join']['column'] : $field;
+
+						if (isset($params['multiple_join']) && $params['multiple_join'])
+						{
+							$table_column = $params['multiple_join']['column'];
+						}
+						else
+						{
+							$column = $params['join'] ? $params['join']['column'] : $field;
+							$table_column = "{$table}.{$column}";
+						}
 						if ($params['type'] == 'int')
 						{
 							if (!(int)$query)
 							{
 								continue;
 							}
-							$like_clauses[] = "{$table}.{$column} = " . (int)$query;//$this->db->db_addslashes($query);
+							$like_clauses[] = "{$table_column} = " . (int)$query;//$this->db->db_addslashes($query);
 						}
 						else
 						{
-							$like_clauses[] = "{$table}.{$column} $this->like $like_pattern";
+							$like_clauses[] = "{$table_column} $this->like $like_pattern";
 						}
 					}
 				}

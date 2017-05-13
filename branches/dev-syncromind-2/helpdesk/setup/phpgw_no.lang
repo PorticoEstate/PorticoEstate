@@ -200,3 +200,5 @@ select	helpdesk	no	Velg
 modified	helpdesk	no	Endret
 sent	helpdesk	no	Sendt
 generic	helpdesk	no	Generelt
+reverse	helpdesk	no	Revers tildeling
+owned by	helpdesk	no	Eies av

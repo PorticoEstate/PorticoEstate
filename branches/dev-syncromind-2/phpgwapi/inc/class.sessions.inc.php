@@ -607,6 +607,13 @@
 				}
 			}
 
+			$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
+
+			if($request_scheme == 'https')
+			{
+				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
+			}
+
 			if ( isset($GLOBALS['phpgw_info']['server']['enforce_ssl'])
 				&& $GLOBALS['phpgw_info']['server']['enforce_ssl'])
 			{

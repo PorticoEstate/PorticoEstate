@@ -2,10 +2,9 @@ var d;
 var vendor_id = 0;
 var amount = 0;
 
-this.local_DrawCallback4 = function ()
+this.local_DrawCallback4 = function (container)
 {
-	//console.log(oTable4);
-	var api = oTable4.api();
+	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 	var intVal = function (i)
 	{
@@ -31,10 +30,9 @@ this.local_DrawCallback4 = function ()
 	});
 
 };
-this.local_DrawCallback5 = function ()
+this.local_DrawCallback5 = function (container)
 {
-	//console.log(oTable4);
-	var api = oTable5.api();
+	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 	var intVal = function (i)
 	{

@@ -452,6 +452,7 @@
 						$location['location'][$i]['extra'][0]['readonly'] = true;
 						$input_name[] = $location['location'][$i]['extra'][0]['input_name'];
 						$location['location'][$i]['extra'][0]['size'] = 30;
+						$location['location'][$i]['extra'][0]['class'] = 'pure-u-3-4';
 						$location['location'][$i]['extra'][0]['lookup_function_call'] = $_lookup_link ? "lookup_loc{$config[$j]['location_type']}()" : '';
 						$location['location'][$i]['extra'][0]['value'] = (isset($data['values']['street_name']) ? $data['values']['street_name'] : '');
 
@@ -460,6 +461,7 @@
 						$location['location'][$i]['extra'][1]['readonly'] = true;
 						$input_name[] = $location['location'][$i]['extra'][1]['input_name'];
 						$location['location'][$i]['extra'][1]['size'] = 6;
+						$location['location'][$i]['extra'][1]['class'] = 'pure-u-1-6';
 						$location['location'][$i]['extra'][1]['lookup_function_call'] = $_lookup_link ? "lookup_loc{$config[$j]['location_type']}()" : '';
 						$location['location'][$i]['extra'][1]['value'] = (isset($data['values']['street_number']) ? $data['values']['street_number'] : '');
 						$i++;
@@ -491,6 +493,7 @@
 						$location['location'][$i]['extra'][0]['readonly'] = true;
 						$input_name[] = $location['location'][$i]['extra'][0]['input_name'];
 						$location['location'][$i]['extra'][0]['size'] = 15;
+						$location['location'][$i]['extra'][0]['class'] = 'pure-u-1-2';
 						$location['location'][$i]['extra'][0]['lookup_function_call'] = 'lookup_loc' . ($m + 1) . '()';
 						$location['location'][$i]['extra'][0]['value'] = (isset($data['values']['last_name']) ? $data['values']['last_name'] : '');
 						$location['location'][$i]['extra'][0]['statustext'] = lang('last name');
@@ -500,6 +503,7 @@
 						$location['location'][$i]['extra'][1]['readonly'] = true;
 						$input_name[] = $location['location'][$i]['extra'][1]['input_name'];
 						$location['location'][$i]['extra'][1]['size'] = 15;
+						$location['location'][$i]['extra'][1]['class'] = 'pure-u-1-2';
 						$location['location'][$i]['extra'][1]['lookup_function_call'] = 'lookup_loc' . ($m + 1) . '()';
 						$location['location'][$i]['extra'][1]['value'] = (isset($data['values']['first_name']) ? $data['values']['first_name'] : '');
 						$location['location'][$i]['extra'][1]['statustext'] = lang('first name');
@@ -508,7 +512,8 @@
 						$location['location'][$i]['name'] = lang('Contact phone');
 						$location['location'][$i]['input_name'] = 'contact_phone';
 						$input_name[] = $location['location'][$i]['input_name'];
-						$location['location'][$i]['size'] = 12;
+						$location['location'][$i]['size'] = 30;
+						$location['location'][$i]['class'] = 'pure-u-1';
 						$location['location'][$i]['lookup_function_call'] = '';//$lookup_functions[$m]['name'];
 						$insert_record['extra']['contact_phone'] = 'contact_phone';
 						$location['location'][$i]['value'] = (isset($data['values']['contact_phone']) ? $data['values']['contact_phone'] : '');
@@ -521,6 +526,7 @@
 						$input_name[] = $location['location'][$i]['input_name'];
 //						$insert_record[]									= $location['location'][$i]['input_name'];
 						$location['location'][$i]['size'] = 5;
+						$location['location'][$i]['class'] = 'pure-u-1-6';
 						$location['location'][$i]['value'] = $data['location']['value'][$config[$j]['column_name']];
 						$location['location'][$i]['lookup_function_call'] = 'lookup_loc' . $fm_location_cols[$j]['location_type'] . '()';
 						$location['location'][$i]['lookup_link'] = $_lookup_link;
@@ -580,6 +586,7 @@
 					$insert_record['extra']['entity_num_' . $entity['id']] = 'p_num';
 
 					$location['location'][$i]['size'] = 8;
+					$location['location'][$i]['class'] = 'pure-u-1-6';
 					$location['location'][$i]['lookup_function_call'] = 'lookup_entity_' . $entity['id'] . '()';
 					$location['location'][$i]['lookup_link'] = true;
 					$location['location'][$i]['name'] = $entity['name'];
@@ -594,6 +601,7 @@
 					$input_name_entity[] = $location['location'][$i]['extra'][0]['input_name'];
 					$location['location'][$i]['extra'][0]['input_type'] = 'text';
 					$location['location'][$i]['extra'][0]['size'] = 30;
+					$location['location'][$i]['extra'][0]['class'] = 'pure-u-3-4';
 					$location['location'][$i]['extra'][0]['lookup_function_call'] = 'lookup_entity_' . $entity['id'] . '()';
 					$location['location'][$i]['extra'][0]['is_entity'] = true;
 

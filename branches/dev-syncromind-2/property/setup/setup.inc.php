@@ -11,7 +11,7 @@
 	 * @version $Id$
 	*/
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.711';
+	$setup_info['property']['version']		= '0.9.17.712';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -153,6 +153,7 @@
 		'fm_ecodimb',
 		'fm_ecodimb_role',
 		'fm_ecodimb_role_user',
+		'fm_ecodimb_role_user_substitute',
 		'fm_ecodimd',
 		'fm_ecologg',
 		'fm_ecomva',
@@ -238,7 +239,8 @@
 		'addgroup'				=> 'property.hook_helper.clear_userlist',
 		'deletegroup'			=> 'property.hook_helper.clear_userlist',
 		'editgroup'				=> 'property.hook_helper.clear_userlist',
-		'registration'			=> 'property.hook_helper.add_location_contact'
+		'registration'			=> 'property.hook_helper.add_location_contact',
+		'after_navbar'			=> 'property.hook_helper.after_navbar',
 	);
 
 	/* Dependencies for this app to work */

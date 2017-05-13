@@ -45,6 +45,7 @@
 			'index' => true,
 			'query' => true,
 			'edit' => true,
+			'substitute' => true
 		);
 
 		function __construct()

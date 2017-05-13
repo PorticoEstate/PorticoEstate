@@ -489,7 +489,7 @@ JqueryPortico.inlineTableHelper = function (container, ajax_url, columns, option
 			}
 			try
 			{
-				window['local_DrawCallback' + num](oTable);
+				window['local_DrawCallback' + num](container);
 			}
 			catch (err)
 			{
@@ -758,8 +758,22 @@ JqueryPortico.lightboxlogin = function ()
 	var oArgs = {lightbox: 1};
 	var strURL = phpGWLink('login.php', oArgs);
 	var width =  $(window).width() * 0.80;
-	TINY.box.show({iframe: strURL, boxid: 'frameless', width: width, height: 400, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: false, close: false, closejs: false});
+	TINY.box.show({
+		iframe: strURL,
+		boxid: 'frameless',
+		width: width,
+		height: 400,
+		fixed: false,
+		maskid: 'darkmask',
+		maskopacity: 40,
+		mask: true,
+		animate: false,
+		close: false,
+		closejs: false
+	});
 };
+
+
 
 JqueryPortico.showlightbox_history = function (sUrl)
 {

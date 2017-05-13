@@ -127,7 +127,12 @@
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
-				phpgw::no_access();
+				$message = '';
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$message = lang('you need to log in to access this page.');
+				}
+				phpgw::no_access(false, $message);
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -153,6 +158,7 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
+					'sorted_by'	=> array('key' => $this->currentapp == 'eventplanner' ? 6 : 3, 'dir' => 'asc'),
 					'new_item' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.add")),
 					'editor_action' => '',
 					'field' => parent::_get_fields()
@@ -298,8 +304,8 @@
 			);
 
 			$dates_def = array(
-				array('key' => 'id', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
-				array('key' => 'from_', 'label' => lang('From'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true,'formatter' => 'JqueryPortico.formatLink'),
+				array('key' => 'from_', 'label' => lang('From'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'to_', 'label' => lang('To'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'customer_name', 'label' => lang('who'), 'sortable' => true, 'resizeable' => true),
@@ -368,7 +374,8 @@
 				'data' => json_encode(array()),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(1,'asc'))),
 				)
 			);
 			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
@@ -418,7 +425,8 @@
 					'select_name' => 'category_id',
 					'selected'	=> $application->category_id ? $application->category_id : $default_category,
 					'use_acl' => $this->_category_acl,
-					'required' => true)),
+					'required' => true,
+					'class'=>'pure-input-1-2')),
 				'status_list' => array('options' => $this->get_status_options($application->status)),
 				'application_type_list' => $application_type_list,
 				'wardrobe_list'	=>  array('options' => $wardrobe_list),
@@ -428,6 +436,7 @@
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
+			self::rich_text_editor('summary');
 			self::add_javascript($this->currentapp, 'portico', 'application.edit.js');
 			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
 		}

@@ -66,7 +66,7 @@ validate_submit = function ()
 		return;
 	}
 	var id = $("#application_id").val();
-
+	document.getElementById('summary').value = CKEDITOR.instances['summary'].getData();
 	if (id > 0)
 	{
 		document.form.submit();
@@ -438,3 +438,34 @@ this.onActionsClick = function (action)
 			);
 	}
 };
+
+	$.formUtils.addValidator({
+		name: 'application_types',
+		validatorFunction: function (value, $el, config, language, $form)
+		{
+			var n = 0;
+			$('#application_tbody_types input').each(function ()
+			{
+				if($(this).prop("checked"))
+				{
+					n++;
+				}
+			});
+			var v = (n > 0) ? true : false;
+
+			if(v === false)
+			{
+				$('#application_tbody_types').css("background-color", "#f2dede");
+				$('#application_tbody_types').css("border", "#b94a48 1px solid");
+			}
+			else
+			{
+				$('#application_tbody_types').css("background-color", "white");
+				$('#application_tbody_types').css("border", "black");
+			}
+
+			return v;
+		},
+		errorMessage: 'Type is required',
+		errorMessageKey: 'application_types'
+	});

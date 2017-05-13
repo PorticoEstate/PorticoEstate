@@ -131,6 +131,8 @@
 				$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
 			}
 
+			$values[$id_name] = phpgw::clean_value($_POST['values'][$id_name]);
+
 			$values_attribute = phpgw::get_var('values_attribute');
 
 			if (!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
@@ -181,7 +183,7 @@
 					}
 				}
 			}
-
+/*
 			$insert_record_attributes = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", $this->location_info['acl_app']);
 
 			if (is_array($insert_record_attributes))
@@ -197,7 +199,7 @@
 					}
 				}
 			}
-
+*/
 			/*
 			 * Extra data from custom fields
 			 */
@@ -975,12 +977,12 @@
 
 			if ($id)
 			{
-				$data = $this->bo->read_single(array('id' => $id));
+				$data = $this->bo->read_single(array('id' => $id,'view' => true));
 				$action = 'edit';
 			}
 			else
 			{
-				$data = $this->bo->read_single();
+				$data = $this->bo->read_single(array('view' => true));
 				$action = 'add';
 			}
 

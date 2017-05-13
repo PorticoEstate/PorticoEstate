@@ -1044,6 +1044,10 @@ JS;
 							'deadline' => ''
 						);
 
+						/**
+						 * For now - handled by uiworkorder.
+						 * consider remove - beware of the substitute logic...see uiworkorder
+						 */
 						if (isset($values['mail_address']) && is_array($values['mail_address']))
 						{
 							foreach ($values['mail_address'] as $_account_id => $_address)
@@ -1818,8 +1822,8 @@ JS;
 				array('key' => 'vendor', 'label' => lang('vendor'), 'sortable' => false),
 				array('key' => 'amount', 'label' => lang('amount'), 'sortable' => true, 'className' => 'right',
 					'formatter' => 'JqueryPortico.FormatterAmount2'),
-				array('key' => 'approved_amount', 'label' => lang('approved amount'), 'sortable' => false,
-					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
+//				array('key' => 'approved_amount', 'label' => lang('approved amount'), 'sortable' => false,
+//					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount2'),
 				array('key' => 'period', 'label' => lang('period'), 'sortable' => true),
 				array('key' => 'periodization', 'label' => lang('periodization'), 'sortable' => false),
 				array('key' => 'periodization_start', 'label' => lang('periodization start'),
@@ -2139,7 +2143,8 @@ JS;
 				'lang_no_cat' => lang('Select category'),
 				'value_cat_id' => isset($values['cat_id']) ? $values['cat_id'] : '',
 				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-					'selected' => $values['cat_id'], 'required' => isset($config->config_data['project_optional_category']) && $config->config_data['project_optional_category'] ? false : true)),
+					'selected' => $values['cat_id'], 'required' => isset($config->config_data['project_optional_category']) && $config->config_data['project_optional_category'] ? false : true,
+					'class'=>'pure-input-1-2')),
 				'lang_workorder_id' => lang('Workorder ID'),
 				'lang_sum' => lang('Sum'),
 				'value_remainder' => $value_remainder,
@@ -2314,9 +2319,20 @@ JS;
 
 			foreach ($invoices as $entry)
 			{
+
+				if(isset($config->config_data['invoicehandler']) && $config->config_data['invoicehandler'] == 2)
+				{
+					$voucher_id = $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'];
+				}
+				else
+				{
+					$voucher_id = $entry['external_voucher_id'];
+				}
+
+
 				$values[] = array
 					(
-					'voucher_id' => $entry['transfer_time'] ? -1 * $entry['voucher_id'] : $entry['voucher_id'],
+					'voucher_id' => $voucher_id,
 					'voucher_out_id' => $entry['voucher_out_id'],
 					'workorder_id' => $entry['workorder_id'],
 					'status' => $entry['status'],

@@ -1804,20 +1804,39 @@
 
 			if ($this->db->f('approved'))
 			{
+				$sosubstitute = CreateObject('property.sosubstitute');
+				$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
+				$take_responsibility_for = array($this->account);
+
 				$action_params = array
 					(
 					'appname' => 'property',
 					'location' => '.ticket',
 					'id' => $id,
-					'responsible' => $this->account,
 					'responsible_type' => 'user',
 					'action' => 'approval',
 					'remark' => '',
 					'deadline' => ''
 				);
 
-				execMethod('property.sopending_action.close_pending_action', $action_params);
+				$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+
+				foreach ($approvals as $approval)
+				{
+					if(in_array($approval['responsible'],$users_for_substitute))
+					{
+						$take_responsibility_for[] = $approval['responsible'];
+					}
+				}
+
+				foreach ($take_responsibility_for as $__account_id)
+				{
+					$action_params['responsible'] = $__account_id;
+					execMethod('property.sopending_action.close_pending_action', $action_params);
+				}
+
 				unset($action_params);
+
 			}
 			/*
 			 * Sigurd: Consider remove

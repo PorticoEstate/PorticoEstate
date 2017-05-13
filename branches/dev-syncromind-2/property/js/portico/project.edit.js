@@ -67,9 +67,9 @@ var project_link = function (key, oData)
 	}
 };
 
-this.local_DrawCallback1 = function ()
+this.local_DrawCallback1 = function (container)
 {
-	var api = oTable1.api();
+	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 	var intVal = function (i)
 	{
@@ -95,9 +95,9 @@ this.local_DrawCallback1 = function ()
 	});
 }
 
-this.local_DrawCallback2 = function ()
+this.local_DrawCallback2 = function (container)
 {
-	var api = oTable2.api();
+	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 	var intVal = function (i)
 	{
@@ -107,7 +107,7 @@ this.local_DrawCallback2 = function ()
 			i : 0;
 	};
 
-	var columns = ["4", "5"];
+	var columns = ["4"];
 
 	columns.forEach(function (col)
 	{

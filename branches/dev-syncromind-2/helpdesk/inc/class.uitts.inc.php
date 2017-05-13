@@ -51,7 +51,8 @@
 				'columns'			=> true,
 				'update_data'		=> true,
 				'upload_clip'		=> true,
-				'view_image'		=> true
+				'view_image'		=> true,
+				'get_reverse_assignee'=>true
 			);
 
 		/**
@@ -180,10 +181,33 @@
 		}
 
 		/**
-		 * Fetch data from $this->bo based on parametres
+		 * called as ajax from edit form
+		 *
+		 * @param string  $query
+		 *
 		 * @return array
 		 */
-		public function query()
+		public function get_reverse_assignee()
+		{
+			$query = phpgw::get_var('query');
+
+			$filter = array('active' => 1);
+
+			$account_list = $GLOBALS['phpgw']->accounts->get_list('accounts', -1,'ASC', 'account_lastname',  $query, false, $filter);
+
+			$values = array();
+
+			foreach ($account_list as $account)
+			{
+				$values[] = array(
+					'id' => $account->id,
+					'name' => $account->__toString()
+				);
+			}
+			return array('ResultSet' => array('Result' => $values));
+		}
+
+		function get_params()
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -207,7 +231,7 @@
 				'vendor_id' => $this->bo->vendor_id,
 				'district_id' => $this->bo->district_id,
 				'part_of_town_id' => $this->bo->part_of_town_id,
-				'allrows' => $this->bo->allrows,
+				//'allrows' => $this->bo->allrows,
 				'start_date' => $this->bo->start_date,
 				'end_date' => $this->bo->end_date,
 				'location_code' => $this->bo->location_code,
@@ -217,7 +241,19 @@
 				'ecodimb' => $this->bo->ecodimb,
 				'branch_id' => phpgw::get_var('branch_id'),
 				'order_dim1' => phpgw::get_var('order_dim1'),
+				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
 			);
+
+			return $params;
+		}
+
+		/**
+		 * Fetch data from $this->bo based on parametres
+		 * @return array
+		 */
+		public function query()
+		{
+			$params = $this->get_params();
 
 			$values = $this->bo->read($params);
 
@@ -266,23 +302,90 @@
 
 		function _print()
 		{
-			if(!$this->acl_read)
+			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction'=> 'helpdesk.uilocation.stop', 'perm'=> 1, 'acl_location'=> $this->acl_location));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
+					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 
 			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
-			$id 	= phpgw::get_var('id', 'int');
+			$id = phpgw::get_var('id', 'int');
 
-			$ticket = $this->bo->mail_ticket($id, $fields_updated=true, $receipt = array(),$location_code='', $get_message = true);
+			$ticket_html = $this->bo->mail_ticket($id, $fields_updated = true, $receipt = array(), $location_code = '', $get_message = true);
 
-			$html = "<html><head><title>{$ticket['subject']}</title></head>";
-			$html .= "<body>";
-			$html .= $ticket['subject'] . '</br></br>';
-			$html .= nl2br($ticket['body']);
-			$html .= "</body></html>";
+			$ticket = $this->bo->read_single($id);
+
+			$content_files = array();
+
+			$lang_files = lang('files');
+
+			$files = '';
+			if($ticket['files'])
+			{
+				$files = <<<HTML
+
+				<br/>
+				<table class='pure-table pure-table-bordered pure-table-striped'>
+					<thead>
+							<tr>
+								<th>
+									#
+								</th>
+								<th>
+									{$lang_files}
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+HTML;
+
+				$i=1;
+				foreach ($ticket['files'] as $_entry)
+				{
+					$files .= <<<HTML
+
+					<tr>
+						<td>
+							{$i}
+						</td>
+						<td>
+							{$_entry['name']}
+						</td>
+					</tr>
+HTML;
+					$i++;
+				}
+				$files .= <<<HTML
+
+					</tbody>
+				</table>
+
+HTML;
+
+			}
+
+			$lang_print = lang('print');
+
+			$html = <<<HTML
+
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>{$ticket_html['subject']}</title>
+					<link href="{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/pure/css/pure-min.css" type="text/css" rel="StyleSheet">
+				</head>
+					<script type="text/javascript">
+					document.onload = window.print();
+					</script>
+				<body>
+					<H2>{$ticket_html['subject']}</H2>
+					{$ticket_html['body']}
+					{$files}
+				</body>
+			</html>
+HTML;
 
 			echo $html;
 		}
@@ -1327,7 +1430,7 @@ JS;
 				'lang_part_of_town' => lang('Part of town'),
 				'lang_no_part_of_town' => lang('No part of town'),
 				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true)),
+					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2')),
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
 				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
@@ -1698,7 +1801,7 @@ JS;
 					'value_id' => '', //not from historytable
 					'value_count' => 1,
 					'value_date' => $GLOBALS['phpgw']->common->show_date($ticket['timestamp']),
-					'value_user' => $ticket['user_name'],
+					'value_user' => $ticket['reverse_id']? $ticket['reverse_name'] : $ticket['user_name'],
 					'value_note' => $ticket['details'],
 					'value_publish' => $ticket['publish_note']
 				)
@@ -1736,7 +1839,8 @@ JS;
 				'data' => json_encode($additional_notes),
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(0,'asc')))
 				)
 			);
 
@@ -1848,7 +1952,7 @@ JS;
 //_debug_array($supervisor_email);die();
 			$msgbox_data = $this->bocommon->msgbox_data($receipt);
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true));
+				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
 
 			$_ticket_cat_found = false;
 			if (isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))
@@ -1927,6 +2031,7 @@ JS;
 				'lang_user_statustext' => lang('Select the user the selection belongs to. To do not use a user select NO USER'),
 				'select_user_name' => 'values[assignedto]',
 				'value_assignedto_id' => $ticket['assignedto'],
+				'value_owned_by'		=> $ticket['user_name'],
 				'user_list' => $this->_get_user_list($ticket['assignedto']),
 				'lang_no_group' => lang('No group'),
 				'group_list' => $this->bo->get_group_list($ticket['group_id']),

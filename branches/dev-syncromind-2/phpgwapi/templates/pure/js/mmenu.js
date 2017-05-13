@@ -128,6 +128,44 @@ $(document).ready(function ()
 		});
 	});
 
+	$(window).resize(function ()
+	{
+		var width = $(window).width();
+		if (width < 620)
+		{
+			$('.pure-form-aligned').each(function (i, obj)
+			{
+				$(this).removeClass('pure-form-aligned').addClass('pure-form-stacked');
+			});
+			$('.pure-input-1-2').each(function (i, obj)
+			{
+				$(this).removeClass('pure-input-1-2').addClass('pure-input-1');
+			});
+			$('.pure-u-3-4').each(function (i, obj)
+			{
+				$(this).removeClass('pure-u-3-4').addClass('pure-u-5-6');
+			});
+		}
+//		else if (resized == true && width > 620)
+//		{
+//			$('.pure-form-stacked').each(function (i, obj)
+//			{
+//				$(this).removeClass('pure-form-stacked').addClass('pure-form-aligned');
+//			});
+//			$('.pure-input-1').each(function (i, obj)
+//			{
+//				$(this).removeClass('pure-input-1').addClass('pure-input-1-2');
+//			});
+//			$('.pure-u-5-6').each(function (i, obj)
+//			{
+//				$(this).removeClass('pure-u-5-6').addClass('pure-u-3-4');
+//			});
+//			resized = false;
+//
+//		}
+
+	}).resize();//trigger the resize event on page load.
+
 });
 
 function update_bookmark_menu(bookmark_candidate)
@@ -148,44 +186,4 @@ function update_bookmark_menu(bookmark_candidate)
 		}
 	});
 }
-
-/*
- var arURLParts = strBaseURL.split('?');
- var comboBase = arURLParts[0] + 'phpgwapi/inc/yui-combo-master/combo.php?';
-
- YUI_config = {
- //Don't combine the files
- combine: true,
- //Ignore things that are already loaded (in this process)
- ignoreRegistered: false,
- //Set the base path
- comboBase: comboBase,
- base: '',
- //And the root
- root: '',
- //Require your deps
- require: [ ]
- };
-
-
- YUI({
- classNamePrefix: 'pure'
- }).use(
- 'gallery-sm-menu',
- function(Y) {
- Y.on("domready", function () {
- var horizontalMenu = new Y.Menu(
- {
- container         : '#horizontal-menu',
- sourceNode        : '#std-menu-items',
- orientation       : 'horizontal',
- hideOnOutsideClick: false,
- hideOnClick       : false
- }
- );
- horizontalMenu.render();
- horizontalMenu.show();
- });
- });
- */
 

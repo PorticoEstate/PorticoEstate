@@ -100,6 +100,8 @@
 
 		var $persistent = false;
 		var $delayPointer = false;
+
+		var $error_message = '';
 		/**
 		* Constructor
 		* @param string $query query to be executed (optional)
@@ -171,6 +173,10 @@
 
 		}
 
+		public function get_error_message( )
+		{
+			return $this->error_message;
+		}
 		/**
 		* Backward compatibility for get current connection id
 		* @return bool true
@@ -275,10 +281,10 @@
 		*/
 		function get_offset($sql = '', $offset, $num_rows = 0)
 		{
-			$offset		= (int)$offset;
+			$offset		=  $offset < 0 ? 0 : (int)$offset;
 			$num_rows	= (int)$num_rows;
 
-			if ($num_rows == 0)
+			if ($num_rows <= 0)
 			{
 				$maxmatches = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 				$num_rows = isset($maxmatches) && $maxmatches ? (int)$maxmatches : 15;

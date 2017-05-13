@@ -1,7 +1,7 @@
 
-this.local_DrawCallback2 = function ()
+this.local_DrawCallback2 = function (container)
 {
-	var api = oTable2.api();
+	var api = $("#" + container).dataTable().api();
 	// Remove the formatting to get integer data for summation
 	var intVal = function (i)
 	{

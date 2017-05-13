@@ -85,7 +85,12 @@
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
-				phpgw::no_access();
+				$message = '';
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$message = lang('you need to log in to access this page.');
+				}
+				phpgw::no_access(false, $message);
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
@@ -252,12 +257,15 @@
 				)
 			);
 
+			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+			$booking_interval = !empty($config['booking_interval']) ? $config['booking_interval'] : null;
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.save")),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uicustomer.index",)),
 				'customer' => $customer,
 				'category_list' => array('options' => $this->get_category_options( $customer->category_id )),
+				'booking_interval' => $booking_interval,
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab

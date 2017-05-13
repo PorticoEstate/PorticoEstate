@@ -7,7 +7,7 @@
 		<xsl:variable name="select_group_name">
 			<xsl:value-of select="select_group_name"/>
 		</xsl:variable>
-		<select name="{$select_group_name}" id="group_id" class="forms" title="{$lang_group_statustext}">
+		<select name="{$select_group_name}" id="group_id" title="{$lang_group_statustext}" class="pure-input-1-2" >
 			<option value="">
 				<xsl:value-of select="lang_no_group"/>
 			</option>

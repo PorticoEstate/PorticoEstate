@@ -223,7 +223,7 @@
 			$appname = isset($data['appname']) && $data['appname'] ? $data['appname'] : '';
 			$location = isset($data['location']) && $data['location'] ? $data['location'] : '';
 			$item_id = isset($data['id']) && $data['id'] ? $data['id'] : '';//possible bigint
-			$responsible = (int)$data['responsible'];
+			$responsible = $data['responsible'];
 			$responsible_type = isset($data['responsible_type']) && $data['responsible_type'] ? $data['responsible_type'] : 'user';
 			$action = isset($data['action']) && $data['action'] ? $this->db->db_addslashes($data['action']) : '';
 			$deadline = isset($data['deadline']) && $data['deadline'] ? (int)$data['deadline'] : 0;
@@ -249,9 +249,13 @@
 			$ret = array();
 			$condition = " WHERE num = '{$action}' AND location_id = {$location_id}";
 
-			if ($responsible)
+			if (is_array($responsible))
 			{
-				$condition .= " AND responsible = {$responsible}";
+				$condition .= ' AND responsible IN(' . implode(', ', $responsible) . ')';
+			}
+			else if ((int)$responsible)
+			{
+				$condition .= " AND responsible = ". (int)$responsible;
 			}
 
 			if ($item_id)
@@ -303,7 +307,7 @@
 				$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 			}
 
-			$ret = $this->db->resultSet;
+			$ret = (array)$this->db->resultSet;
 
 			$interlink = CreateObject('property.interlink');
 

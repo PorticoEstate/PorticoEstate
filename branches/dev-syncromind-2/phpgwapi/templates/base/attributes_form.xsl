@@ -130,7 +130,7 @@
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:when test="datatype='LB'">
-						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}">
+						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -270,7 +270,7 @@
 							<xsl:value-of select="name"/>
 							<xsl:text>();</xsl:text>
 						</xsl:variable>
-						<input type="text" id="{name}" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+						<input type="hidden" id="{name}" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -284,7 +284,7 @@
 								</xsl:when>
 							</xsl:choose>
 						</input>
-						<input size="30" type="text" id="{$vendor_name}" name="{$vendor_name}" value="{vendor_name}" onClick="{$lookup_function}" readonly="readonly">
+						<input size="30" type="text" id="{$vendor_name}" name="{$vendor_name}" value="{vendor_name}" onClick="{$lookup_function}" readonly="readonly" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -295,7 +295,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='custom1'">
-						<select name="values_attribute[{id}][value]">
+						<select name="values_attribute[{id}][value]" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -340,7 +340,7 @@
 							<xsl:value-of select="name"/>
 							<xsl:text>();</xsl:text>
 						</xsl:variable>
-						<input type="text" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+						<input type="hidden" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -354,7 +354,7 @@
 								</xsl:when>
 							</xsl:choose>
 						</input>
-						<input size="30" type="text" name="{$custom_name}" value="{custom_name}" onClick="{$lookup_function}" readonly="readonly">
+						<input size="30" type="text" name="{$custom_name}" value="{custom_name}" onClick="{$lookup_function}" readonly="readonly" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -418,7 +418,7 @@
 							<xsl:value-of select="name"/>
 							<xsl:text>();</xsl:text>
 						</xsl:variable>
-						<input type="text" id="{name}" name="{name}" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
+						<input type="hidden" id="{name}" name="values_attribute[{id}][value]" value="{value}" onClick="{$lookup_function}" readonly="readonly" size="6">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -432,7 +432,7 @@
 								</xsl:when>
 							</xsl:choose>
 						</input>
-						<input size="30" type="text" id="{$user_name}" name="{$user_name}" value="{user_name}" onClick="{$lookup_function}" readonly="readonly">
+						<input size="30" type="text" id="{$user_name}" name="{$user_name}" value="{user_name}" onClick="{$lookup_function}" readonly="readonly" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -529,7 +529,7 @@
 						</table>
 					</xsl:when>
 					<xsl:when test="datatype='T'">
-						<textarea id="id_{name}"  name="values_attribute[{id}][value]">
+						<textarea id="id_{name}"  name="values_attribute[{id}][value]" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -707,7 +707,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='email'">
-						<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
+						<input data-validation="email" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -723,7 +723,7 @@
 						</input>
 					</xsl:when>
 					<xsl:otherwise>
-						<input id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
+						<input id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">

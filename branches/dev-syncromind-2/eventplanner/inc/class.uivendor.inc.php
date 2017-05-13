@@ -86,7 +86,12 @@
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
-				phpgw::no_access();
+				$message = '';
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$message = lang('you need to log in to access this page.');
+				}
+				phpgw::no_access(false, $message);
 			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')

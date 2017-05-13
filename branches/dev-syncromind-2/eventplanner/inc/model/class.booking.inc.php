@@ -108,7 +108,7 @@
 				),
 				'from_' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
-					'query' => true,
+					'query' => false,
 					'label' => 'from',
 					'public' => true,
 					'join' => array(
@@ -120,7 +120,7 @@
 				),
 				'to_' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
-					'query' => true,
+					'query' => false,
 					'label' => 'to',
 					'public' => true,
 					'join' => array(
@@ -132,7 +132,7 @@
 				),
 				'active' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
-					'query' => true,
+					'query' => false,
 					'label' => 'active',
 					'public' => true,
 					'join' => array(

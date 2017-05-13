@@ -1,6 +1,6 @@
-this.local_DrawCallback2 = function (oTable)
+this.local_DrawCallback0 = function (container)
 {
-	var api = oTable.api();
+	var api = $("#" + container).dataTable().api();
 	var data = api.ajax.json();
 
 	$('#value_sum_calculation').html($.number(data.table_sum.value_sum_calculation, 2, ',', '.'));
