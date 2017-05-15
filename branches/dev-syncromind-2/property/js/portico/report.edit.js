@@ -30,6 +30,7 @@ $(document).ready(function ()
 			$('#container_aggregates').empty();
 			
 			$('#container_columns').html(result.columns_preview);
+			$('#responsiveTabsGroups').responsiveTabs('activate', 0);
 			
 			if (jsonB !== '')
 			{
