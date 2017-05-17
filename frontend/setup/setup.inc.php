@@ -36,11 +36,6 @@
 		'versions' => array('0.1.0')
 	);
 
-	$setup_info['frontend']['depends'][] = array(
-		'appname' => 'messenger',
-		'versions' => array('0.9.17.500')
-	);
-
 	/* The hooks this app includes, needed for hooks registration */
 	$setup_info['frontend']['hooks'] = array
 		(
