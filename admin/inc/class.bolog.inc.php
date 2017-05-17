@@ -33,6 +33,12 @@
 			
 			$_records = array();
 			$records = $this->so->list_log($account_id, $start, $order, $sort);
+			if ( !isset($GLOBALS['phpgw']->log)
+				|| !is_object($GLOBALS['phpgw']->log) )
+			{
+				$GLOBALS['phpgw']->log = createObject('phpgwapi.log');
+			}
+			$log =& $GLOBALS['phpgw']->log;
 			foreach ( $records as $record )
 			{
 				// build and pass the format by hand as we want to show the seconds
@@ -46,13 +52,13 @@
 					$record['log_account_lid'] = $t[0];
 				}
 				
-				$record['log_severity'] = lang($GLOBALS['phpgw']->log->get_level_name($record['log_severity']));
+				$level_name = $log->get_level_name($record['log_severity']);
 
 				$_records[] = array(
 					'log_date'    		=> $record['log_date'],
 					'log_account_lid'   => $record['log_account_lid'],
 					'log_app'         	=> $record['log_app'],
-					'log_severity'      => $record['log_severity'],
+					'log_severity'      => lang($level_name),
 					'log_file' 			=> $record['log_file'],
 					'log_line'  		=> $record['log_line'],     
 					'log_msg'  			=> $record['log_msg']  
