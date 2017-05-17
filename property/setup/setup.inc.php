@@ -11,7 +11,7 @@
 	 * @version $Id$
 	*/
 	$setup_info['property']['name']			= 'property';
-	$setup_info['property']['version']		= '0.9.17.712';
+	$setup_info['property']['version']		= '0.9.17.713';
 	$setup_info['property']['app_order']	= 8;
 	$setup_info['property']['enable']		= 1;
 	$setup_info['property']['app_group']	= 'office';
@@ -68,6 +68,7 @@
 
 
 	$setup_info['property']['tables'] = array(
+		'fm_district',
 		'fm_part_of_town',
 		'fm_gab_location',
 		'fm_streetaddress',
@@ -75,7 +76,6 @@
 		'fm_tenant_category',
 		'fm_vendor',
 		'fm_vendor_category',
-		'fm_district',
 		'fm_locations',
 		'fm_location1_category',
 		'fm_location1',

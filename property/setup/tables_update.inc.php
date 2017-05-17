@@ -9545,3 +9545,22 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.712 to 0.9.17.713
+	*
+	*/
+	$test[] = '0.9.17.712';
+
+	function property_upgrade0_9_17_712()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_part_of_town', 'name', array('type' => 'varchar', 'precision' => '150', 'nullable' => false));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.713';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
