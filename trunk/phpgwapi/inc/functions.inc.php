@@ -421,6 +421,33 @@ _debug_array($error_line);
 	 */
 	function phpgw_handle_exception($e)
 	{
+		if ( !isset($GLOBALS['phpgw']->log)
+			|| !is_object($GLOBALS['phpgw']->log) )
+		{
+			$GLOBALS['phpgw']->log = createObject('phpgwapi.log');
+		}
+		$log =& $GLOBALS['phpgw']->log;
+
+//		$log_args = array
+//		(
+//			'file'	=> $e->getfile(),
+//			'line'	=> $e->getline(),
+//			'text'	=>  "Uncaught Exception:\n". $e->getMessage() . "\n" . $e->getTraceAsString(),
+//			'severity' => 'F'
+//		);
+
+		if ($GLOBALS['phpgw']->db->get_transaction())
+		{
+			$GLOBALS['phpgw']->db->transaction_abort();
+		}
+
+//		$log->fatal($log_args);
+
+		$log->error(array(
+			'text'	=> "<b>Uncaught Exception:</b>\n". $e->getMessage() . "\n" . $e->getTraceAsString(),
+			'line'	=> $e->getline(),
+			'file'	=> $e->getfile()
+		));
 		$help = 'Please contact your administrator for assistance';
 
 		if (!ini_get('display_errors'))
@@ -428,6 +455,7 @@ _debug_array($error_line);
 			echo <<<HTML
 				<h1>Uncaught Exception</h1>
 				<p>{$help}</p>
+				<p>Error is logged</p>
 HTML;
 			exit;
 		}
@@ -438,6 +466,7 @@ HTML;
 		echo <<<HTML
 			<h1>Uncaught Exception: {$msg}</h1>
 			<p>{$help}</p>
+			<p>Error is logged</p>
 			<h2>Backtrace:</h2>
 			<pre>
 {$trace}
