@@ -126,6 +126,7 @@
 							<li><a href="#tab-group"><xsl:value-of select="php:function('lang', 'Group by')"/></a></li>
 							<li><a href="#tab-sort"><xsl:value-of select="php:function('lang', 'Sort by')"/></a></li>
 							<li><a href="#tab-count-sum"><xsl:value-of select="php:function('lang', 'Count / Sum')"/></a></li>
+							<li><a href="#tab-criteria"><xsl:value-of select="php:function('lang', 'Criteria')"/></a></li>
 							<li><a href="#tab-preview"><xsl:value-of select="php:function('lang', 'Preview')"/></a></li>
 						</ul>
 						<div id="tab-columns">
@@ -159,7 +160,15 @@
 								</label>
 								<div id="container_aggregates" class="pure-custom"></div>
 							</div>		
-						</div>	
+						</div>
+						<div id="tab-criteria">
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'Choose')" />
+								</label>
+								<div id="container_criteria" class="pure-custom"></div>
+							</div>		
+						</div>
 						<div id="tab-preview">
 							<div class="pure-control-group">
 								<label>
