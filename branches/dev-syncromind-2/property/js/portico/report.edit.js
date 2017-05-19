@@ -215,7 +215,7 @@ function build_list_aggregates(name, type)
 	return "<span style='display:table-cell;'><select disabled='true' id='cbo_" + name + "' name='cbo_aggregate["+ name +"]'>" + $(combo).html() + "</select></span>";
 }
 
-function build_list_columns()
+function build_list_columns(n)
 {
 	var combo_restricted_value = $("<select></select>");
 	combo_restricted_value.append("<option value=''>........</option>");
@@ -227,39 +227,55 @@ function build_list_columns()
 		}
 	});
 	
-	return "<span style='display:table-cell;'><select name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
+	return "<span style='display:table-cell;'><select id='cbo_restricted_value_"+ n +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
 }
 
 function get_content_criteria()
 {
 	$('#container_criteria').empty();
-	
-	var operator = ['=', '!=', '<', '<=', '>', '>=', 'BETWEEN', 'LIKE', 'NOT LIKE', 'ILIKE', 'NOT ILIKE', 'IN', 'NOT IN', 'NOT BETWEEN', 'IS NULL', 'IS NOT NULL']
+
 	var combo_operator = $("<select></select>");
 	combo_operator.append("<option value=''></option>");
-	$.each(operator, function(key, value) 
+	$.each(operators, function(key, value) 
 	{
-		combo_operator.append("<option value='"+ value +"'>"+ value +"</option>");
+		combo_operator.append("<option value='"+ key +"'>"+ value +"</option>");
 	});
 	
-	var el_1 = build_list_columns();
-	var el_2 = "<span style='display:table-cell;'><select name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
-	var el_3 = "<span style='display:table-cell;'><input type='text' name='txt_value[]'></input>";
+	var combo_conector = $("<select></select>");
+	combo_conector.append("<option value=''></option>");
+	combo_conector.append("<option value='and'>AND</option>");
+	combo_conector.append("<option value='or'>OR</option>");
+	
+	var el_1 = "";
+	var el_2 = "";
+	var el_3 = "";
+	var el_4 = "";
+	var el_5 = "";
 	var row = '';
 	
 	row = '<span style="display:table-row;">\n\
 				<span style="display:table-cell;">Restricted value</span>\n\
 				<span style="display:table-cell;">Operator</span>\n\
 				<span style="display:table-cell;">Value</span>\n\
+				<span style="display:table-cell;">Conector</span>\n\
+				<span style="display:table-cell;">Value</span>\n\
 		</span>';
 	$('#container_criteria').append(row);
 			
+	var i = 0;
 	$('input[name^="columns"]').each(function() 
 	{
 		if ($(this).is(":checked"))
 		{
-			row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 +'</span>';
+			el_1 = build_list_columns(i);
+			el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ i +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
+			el_3 = "<span style='display:table-cell;'><input id='txt_value1_"+ i +"' disabled='true' type='text' name='txt_value1[]'></input></span>";
+			el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ i +"' disabled='true' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
+			el_5 = "<span style='display:table-cell;'><input id='txt_value2_"+ i +"' disabled='true' type='text' name='txt_value2[]'></input></span>";
+	
+			row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 +'</span>';
 			$('#container_criteria').append(row);
+			i ++;
 		}
 	});
 }
