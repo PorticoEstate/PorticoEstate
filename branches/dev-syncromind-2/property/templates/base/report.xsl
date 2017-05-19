@@ -78,6 +78,10 @@
 		var jsonB = {};
 		<xsl:if test="report_definition != ''">
 			jsonB = <xsl:value-of select="report_definition"/>;
+		</xsl:if>
+		var operators = {};
+		<xsl:if test="operators != ''">
+			operators = <xsl:value-of select="operators"/>;
 		</xsl:if>		
 	</script>
 	
