@@ -47,6 +47,7 @@
 			'save_dataset' => true,
 			'delete_dataset' => true,
 			'get_column_preview' => true,
+			'get_operators' => true,
 			'preview' => true,
 			'download' => true
 		);
@@ -59,6 +60,24 @@
 			$this->bo = CreateObject('property.boreport', true);
 			$this->bocommon = & $this->bo->bocommon;
 			$this->acl = & $GLOBALS['phpgw']->acl;			
+			$this->operators = array(
+				'equal' => '=', 
+				'different' => '!=', 
+				'less' => '<', 
+				'less_equal' => '<=', 
+				'higher' => '>', 
+				'higher_equal' => '>=', 
+				'between' => 'BETWEEN', 
+				'like' => 'LIKE', 
+				'not_like' => 'NOT LIKE', 
+				'ilike' => 'ILIKE', 
+				'not_ilike' => 'NOT ILIKE', 
+				'in' => 'IN', 
+				'not_in' => 'NOT IN', 
+				'not_between' => 'NOT BETWEEN', 
+				'is_null' => 'IS NULL', 
+				'is_not_null' => 'IS NOT NULL'
+			);
 		}
 
 		public function download()
@@ -334,6 +353,7 @@
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
 				'datasets' => array('options' => $list),
 				'report_definition' => $values['report_definition'],
+				'operators' => json_encode($this->operators),
 				'report_id' => $values['id'],
 				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -360,7 +380,7 @@
 			$order_by = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
-	
+
 			$group = array($group_by => $group_by);
 			$order = array($order_by => $order_by);
 			
@@ -742,4 +762,27 @@
 			
 		}
 		
+		public function get_operators()
+		{
+			$operators = array(
+				'equal' => '=', 
+				'different' => '!=', 
+				'less' => '<', 
+				'less_equal' => '<=', 
+				'higher' => '>', 
+				'higher_equal' => '>=', 
+				'between' => 'BETWEEN', 
+				'like' => 'LIKE', 
+				'not_like' => 'NOT LIKE', 
+				'ilike' => 'ILIKE', 
+				'not_ilike' => 'NOT ILIKE', 
+				'in' => 'IN', 
+				'not_in' => 'NOT IN', 
+				'not_between' => 'NOT BETWEEN', 
+				'is_null' => 'IS NULL', 
+				'is_not_null' => 'IS NOT NULL'
+			);
+			
+			return $operators;
+		}
 	}
