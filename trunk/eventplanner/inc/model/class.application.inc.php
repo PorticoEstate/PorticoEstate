@@ -139,7 +139,7 @@
 					'type' => 'int',
 					'label' => 'category',
 					'history' => true),
-				'num_granted_events' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+				'num_granted_events' => array('action'=> 0,
 					'type' => 'int',
 					'label' => 'number of granted events',
 					'history' => true
@@ -181,10 +181,11 @@
 					'sortable' => false,
 					'required' => true,
 					),
-			 	'summary' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+			 	'summary' => array('action'=> 0,
 					'type' => 'html',
 					'label' => 'summary',
 					'sortable' => false,
+					'query' => true,
 					),
 			 	'remark' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',
@@ -358,6 +359,11 @@
 			if($currentapp == 'eventplanner')
 			{
 				$backend_fields = array(
+					'num_granted_events' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'label' => 'number of granted events',
+						'history' => true
+					),
 					'case_officer_id' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 						'type' => 'int',
 						'required' => true,
@@ -386,6 +392,11 @@
 						'label' => 'status',
 						'history' => true
 						),
+					'summary' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'html',
+						'label' => 'summary',
+						'sortable' => false,
+					),
 					'comments' => array(
 						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 						'type' => 'string',
