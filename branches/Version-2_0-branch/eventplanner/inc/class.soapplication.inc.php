@@ -160,7 +160,7 @@
 			{
 				$new_value = $object->$field;
 				$old_value = $original[$field];
-				if (!empty($params['history']) && ($new_value != $old_value))
+				if (!empty($params['history']) && ($new_value != $old_value) && ($params['action'] & PHPGW_ACL_EDIT))
 				{
 					$label = !empty($params['label']) ? lang($params['label']) : $field;
 					switch ($field)
