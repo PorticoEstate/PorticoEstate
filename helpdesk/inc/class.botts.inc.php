@@ -702,7 +702,7 @@
 			if ((isset($data['send_mail']) && $data['send_mail']) || (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'])
 			)
 			{
-				$receipt_mail = $this->mail_ticket($receipt['id'], false, $receipt, $data['location_code'], false, isset($data['send_mail']) && $data['send_mail'] ? true : false);
+				$receipt_mail = $this->mail_ticket($receipt['id'], false, $receipt, false, isset($data['send_mail']) && $data['send_mail'] ? true : false);
 			}
 
 			reset($custom_functions);
@@ -768,7 +768,7 @@
 			return $address_element;
 		}
 
-		function mail_ticket($id, $fields_updated, $receipt = array(),$location_code='', $get_message = false)
+		function mail_ticket($id, $fields_updated, $receipt = array(), $get_message = false)
 		{
 			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
@@ -789,7 +789,7 @@
 			$group_name= $GLOBALS['phpgw']->accounts->id2name($ticket['group_id']);
 
 			// build subject
-			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $location_code .' ' .$this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
+			$subject = '['.lang('Ticket').' #'.$id.'] : ' . $this->get_category_name($ticket['cat_id']) . '; ' .$ticket['subject'];
 
 			$prefs_user = $this->bocommon->create_preferences('helpdesk',$ticket['user_id']);
 
@@ -815,12 +815,22 @@
 			{
 				$GLOBALS['phpgw_info']['server']['enforce_ssl'] = true;
 			}
+
+			$link_text = lang('Ticket') . ' #' . $id ;
+
+			$messages_sendt = $this->historylog->return_array(array(),array('M'),'history_timestamp','DESC',$id);
+
+			if(!$get_message && !empty($this->config->config_data['update_message']) && $messages_sendt)
+			{
+				$link_text = "<H2>{$this->config->config_data['update_message']}</H2>";
+			}
+
 			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
-					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>' . "\n";
+					'id' => $id), false, true) . '">' . $link_text . '</a>' . "\n";
 
 			$body .= "<table>";
 			$body .= '<tr><td>'. lang('Date Opened').'</td><td>:&nbsp;'.$entry_date."</td></tr>";
-			$body .= '<tr><td>'. lang('status').'</td><td>:&nbsp;'.$status_text[$ticket['status']]."</td></tr>";
+			$body .= '<tr><td>'. lang('status').'</td><td>:&nbsp;<b>'.$status_text[$ticket['status']]."</b></td></tr>";
 			$body .= '<tr><td>'. lang('Category').'</td><td>:&nbsp;'. $this->get_category_name($ticket['cat_id']) ."</td></tr>";
 
 			$body .= '<tr><td>'. lang('Assigned To').'</td><td>:&nbsp;'.$GLOBALS['phpgw']->accounts->id2name($ticket['assignedto'])."</td></tr>";
