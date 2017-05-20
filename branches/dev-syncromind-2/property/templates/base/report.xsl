@@ -83,6 +83,7 @@
 		<xsl:if test="operators != ''">
 			operators = <xsl:value-of select="operators"/>;
 		</xsl:if>		
+		var columns = {};
 	</script>
 	
 	<style type="text/css">
@@ -167,9 +168,11 @@
 						</div>
 						<div id="tab-criteria">
 							<div class="pure-control-group">
-								<label>
-									<xsl:value-of select="php:function('lang', 'Choose')" />
-								</label>
+								<input type="button" class="pure-button pure-button-primary" name="btn_add_restricted_value" id="btn_add_restricted_value">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'add')" />
+									</xsl:attribute>
+								</input>								
 								<div id="container_criteria" class="pure-custom"></div>
 							</div>		
 						</div>
