@@ -33,6 +33,17 @@ $(document).ready(function ()
 			$('#container_columns').html(result.columns_preview);
 			$('#responsiveTabsGroups').responsiveTabs('activate', 0);
 			
+			columns = result.columns;
+			
+			var row = '<span style="display:table-row;">\n\
+						<span style="display:table-cell;">Restricted value</span>\n\
+						<span style="display:table-cell;">Operator</span>\n\
+						<span style="display:table-cell;">Value</span>\n\
+						<span style="display:table-cell;">Conector</span>\n\
+						<span style="display:table-cell;">Value</span>\n\
+				</span>';
+			$('#container_criteria').append(row);
+		
 			if (jsonB !== '')
 			{
 				set_values();
@@ -130,7 +141,44 @@ $(document).ready(function ()
 		});		
 	});
 	
+	$('#btn_add_restricted_value').click( function()
+	{
+		var combo_operator = $("<select></select>");
+		combo_operator.append("<option value=''></option>");
+		$.each(operators, function(key, value) 
+		{
+			combo_operator.append("<option value='"+ key +"'>"+ value +"</option>");
+		});
+
+		var combo_conector = $("<select></select>");
+		combo_conector.append("<option value=''></option>");
+		combo_conector.append("<option value='and'>AND</option>");
+		combo_conector.append("<option value='or'>OR</option>");
+
+		var combo_restricted_value = $("<select></select>");
+		combo_restricted_value.append("<option value=''></option>");
+		$.each(columns, function(key, value) 
+		{
+			combo_restricted_value.append("<option value='"+ value.name +"'>"+ value.name +"</option>");
+		});
+
+		var el_1 = "<span style='display:table-cell;'><select name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
+		var el_2 = "<span style='display:table-cell;'><select name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
+		var el_3 = "<span style='display:table-cell;'><input type='text' name='txt_value1[]'></input></span>";
+		var el_4 = "<span style='display:table-cell;'><select name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
+		var el_5 = "<span style='display:table-cell;'><input type='text' name='txt_value2[]'></input></span>";
+		var el_6 = "<span style='display:table-cell;'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
+
+		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 + el_6 +'</span>';
+		$('#container_criteria').append(row);
+
+	});
 });
+
+function delete_restricted_value (e)
+{
+	$(e).parent().parent().remove();
+}
 
 function set_values()
 {
@@ -162,17 +210,6 @@ function set_values()
 	});
 }
 
-/*function build_check_columns(data)
-{
-	$.each(data, function(key, object) 
-	{
-		var combo = build_list_aggregates(object.name, object.type);
-		var check = build_check_aggregates(object.name);
-		var el_1 = '<span style="display:table-row;">'+ check + combo + '</span>';
-		$('#container_aggregates').append(el_1);			
-	});	
-}*/
-
 function build_check_groups(name, type)
 {
 	if ($("#c_" + name).is(":checked")) 
@@ -191,10 +228,7 @@ function build_check_groups(name, type)
 		$("#g_" + name).parent().remove();
 		$("#o_" + name).parent().remove();
 		$("#cbo_" + name).parent().parent().remove();
-	}
-	
-	get_content_criteria(name);
-	
+	}	
 }
 
 function build_check_aggregates(name)
@@ -213,71 +247,6 @@ function build_list_aggregates(name, type)
 	}
 	
 	return "<span style='display:table-cell;'><select disabled='true' id='cbo_" + name + "' name='cbo_aggregate["+ name +"]'>" + $(combo).html() + "</select></span>";
-}
-
-function build_list_columns(n)
-{
-	var combo_restricted_value = $("<select></select>");
-	combo_restricted_value.append("<option value=''>........</option>");
-	$('input[name^="columns"]').each(function() 
-	{
-		if ($(this).is(":checked"))
-		{
-			combo_restricted_value.append("<option value='"+ $(this).val() +"'>"+ $(this).val() +"</option>");
-		}
-	});
-	
-	return "<span style='display:table-cell;'><select id='cbo_restricted_value_"+ n +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
-}
-
-function get_content_criteria()
-{
-	$('#container_criteria').empty();
-
-	var combo_operator = $("<select></select>");
-	combo_operator.append("<option value=''></option>");
-	$.each(operators, function(key, value) 
-	{
-		combo_operator.append("<option value='"+ key +"'>"+ value +"</option>");
-	});
-	
-	var combo_conector = $("<select></select>");
-	combo_conector.append("<option value=''></option>");
-	combo_conector.append("<option value='and'>AND</option>");
-	combo_conector.append("<option value='or'>OR</option>");
-	
-	var el_1 = "";
-	var el_2 = "";
-	var el_3 = "";
-	var el_4 = "";
-	var el_5 = "";
-	var row = '';
-	
-	row = '<span style="display:table-row;">\n\
-				<span style="display:table-cell;">Restricted value</span>\n\
-				<span style="display:table-cell;">Operator</span>\n\
-				<span style="display:table-cell;">Value</span>\n\
-				<span style="display:table-cell;">Conector</span>\n\
-				<span style="display:table-cell;">Value</span>\n\
-		</span>';
-	$('#container_criteria').append(row);
-			
-	var i = 0;
-	$('input[name^="columns"]').each(function() 
-	{
-		if ($(this).is(":checked"))
-		{
-			el_1 = build_list_columns(i);
-			el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ i +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
-			el_3 = "<span style='display:table-cell;'><input id='txt_value1_"+ i +"' disabled='true' type='text' name='txt_value1[]'></input></span>";
-			el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ i +"' disabled='true' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
-			el_5 = "<span style='display:table-cell;'><input id='txt_value2_"+ i +"' disabled='true' type='text' name='txt_value2[]'></input></span>";
-	
-			row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 +'</span>';
-			$('#container_criteria').append(row);
-			i ++;
-		}
-	});
 }
 
 function enabled_disabled_aggregates(name)
