@@ -20,6 +20,10 @@
 			<td><input name="newsettings[app_name]" value="{value_app_name}"></td>
 		</tr>
 		<tr>
+			<td>{lang_update_message}: </td>
+			<td><input name="newsettings[update_message]" value="{value_update_message}"></td>
+		</tr>
+		<tr>
 			<td>{lang_from_email}: <br>
 			<td><input name="newsettings[from_email]" value="{value_from_email}"></td>
 		</tr>
