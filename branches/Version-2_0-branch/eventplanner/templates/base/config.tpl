@@ -20,6 +20,18 @@
 				<input type="number" name="newsettings[booking_interval]" value="{value_booking_interval}">
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_vendor_receipt_text}:</td>
+			<td>
+				<textarea  name="newsettings[vendor_receipt_text]">{value_vendor_receipt_text}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>{lang_customer_receipt_text}:</td>
+			<td>
+				<textarea  name="newsettings[customer_receipt_text]">{value_customer_receipt_text}</textarea>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->
