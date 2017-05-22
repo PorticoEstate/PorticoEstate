@@ -223,19 +223,19 @@
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'organization number'
-					),
-					'max_events' => array(
-						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
-						'type' => 'int',
-						'required' => true,
-						'query' => false,
-						'label' => 'maximum number of events',
 					)
 			);
 
 			if($currentapp == 'eventplanner')
 			{
 				$backend_fields = array(
+					'max_events' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'required' => true,
+						'query' => false,
+						'label' => 'maximum number of events',
+					),
 					'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 						'type' => 'int',
 						'history'	=> true
