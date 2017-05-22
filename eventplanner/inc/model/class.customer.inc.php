@@ -223,6 +223,12 @@
 					'query' => true,
 					'sf_validator' => createObject('booking.sfValidatorNorwegianOrganizationNumber', array(), array('invalid' => '%field% is invalid')),
 					'label' => 'organization number'
+					),
+					'max_events' => array(
+						'action'=> 0,
+						'type' => 'int',
+						'query' => false,
+						'label' => 'maximum number of events',
 					)
 			);
 
