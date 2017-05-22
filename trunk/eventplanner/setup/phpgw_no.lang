@@ -132,3 +132,4 @@ when	eventplanner	no	Når
 where	eventplanner	no	Hvor
 vendor receipt text	eventplanner	no	utøvernotat ved kvittering
 customer receipt text	eventplanner	no	Mottakerstednotat ved kvittering
+receipt subject	eventplanner	no	Kvitteringsoverskrift
