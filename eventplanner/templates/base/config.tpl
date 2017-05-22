@@ -21,6 +21,12 @@
 			</td>
 		</tr>
 		<tr>
+			<td>{lang_receipt_subject}:</td>
+			<td>
+				<input type="text" name="newsettings[receipt_subject]" value="{value_receipt_subject}">
+			</td>
+		</tr>
+		<tr>
 			<td>{lang_vendor_receipt_text}:</td>
 			<td>
 				<textarea  name="newsettings[vendor_receipt_text]">{value_vendor_receipt_text}</textarea>
