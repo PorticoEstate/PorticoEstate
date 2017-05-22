@@ -94,6 +94,7 @@
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 //			_debug_array($booking);
 
+			$customer_name	=$booking->customer_name;
 			$customer_contact_name = $booking->customer_contact_name;
 			$customer_contact_email = $booking->customer_contact_email;
 			$customer_contact_phone = $booking->customer_contact_phone;
@@ -107,17 +108,17 @@
 			$calendar = createObject('eventplanner.bocalendar')->read_single($calendar_id, true, $relaxe_acl = true);
 			$application = createObject('eventplanner.boapplication')->read_single($calendar->application_id, true, $relaxe_acl = true);
 //			_debug_array($application);
+//			_debug_array($application);
 
-
+			$vendor_name = $application->vendor_name;
 			$vendor_contact_name = $application->contact_name;
 			$vendor_contact_email = $application->contact_email;
 			$vendor_contact_phone = $application->contact_phone;
 			$vendor_receipt_text = !empty($config['vendor_receipt_text']) ? $config['vendor_receipt_text'] : null;
 			$customer_receipt_text = !empty($config['customer_receipt_text']) ? $config['customer_receipt_text'] : null;
 
+			$subject = !empty($config['receipt_subject']) ? $config['receipt_subject'] : $event_title;
 			$event_title = $application->title;
-
-			$subject = $event_title;
 
 			$send = CreateObject('phpgwapi.send');
 
@@ -165,6 +166,13 @@ HTML;
 							<b>{$lang_vendor}</b>
 						</td>
 						<td>
+							{$vendor_name}
+						</td>
+					</tr>
+					<tr>
+						<td>
+						</td>
+						<td>
 							{$vendor_contact_name}
 						</td>
 					</tr>
@@ -192,6 +200,13 @@ HTML;
 					<tr>
 						<td>
 							<b>{$lang_customer}</b>
+						</td>
+						<td>
+							{$customer_name}
+						</td>
+					</tr>
+					<tr>
+						<td>
 						</td>
 						<td>
 							{$customer_contact_name}
@@ -254,7 +269,8 @@ HTML;
 </html>
 HTML;
 
-			/**
+//echo $content; die();
+		/**
 			 * Vendor
 			 */
 			$cc = $customer_contact_email;
