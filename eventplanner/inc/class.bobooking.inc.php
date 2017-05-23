@@ -237,10 +237,9 @@ HTML;
 			if($vendor_receipt_text)
 			{
 
-				$lang_vendor_note = lang('vendor note');
+			//	$lang_vendor_note = lang('vendor note');
 				$body .= <<<HTML
-				<h4>{$lang_vendor_note}</h4>
-				<pre>{$vendor_receipt_text}</pre>
+				{$vendor_receipt_text}
 HTML;
 
 			}
@@ -249,10 +248,9 @@ HTML;
 			if($customer_receipt_text)
 			{
 
-				$lang_customer_note = lang('customer note');
+			//	$lang_customer_note = lang('customer note');
 				$body .= <<<HTML
-				<h4>{$lang_customer_note}</h4>
-				<pre>{$customer_receipt_text}</pre>
+				{$customer_receipt_text}
 HTML;
 
 			}
