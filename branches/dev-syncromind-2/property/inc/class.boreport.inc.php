@@ -40,6 +40,7 @@
 		{
 			$this->so = CreateObject('property.soreport');
 			$this->bocommon = CreateObject('property.bocommon');
+			$this->operators = $this->so->operators;
 		}
 
 		function read_single( $id = '' )
