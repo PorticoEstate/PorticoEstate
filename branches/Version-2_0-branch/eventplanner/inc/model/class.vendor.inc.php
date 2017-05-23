@@ -267,7 +267,7 @@
 		protected function doValidate( $entity, &$errors )
 		{
 			$organization_number = $entity->organization_number;
-			$duplicate_name = eventplanner_sovendor::get_instance()->check_duplicate_organization($organization_number);
+			$duplicate_name = eventplanner_sovendor::get_instance()->check_duplicate_organization($organization_number, $entity->get_id());
 			if ($duplicate_name)
 			{
 				$errors['organization_number'] = lang('organization number already exists for %1', $duplicate_name);
