@@ -37,6 +37,34 @@
 			$this->left_join = & $this->db->left_join;
 			$this->like = & $this->db->like;		
 			$this->total_records = 0;
+					
+			$this->operators_equal = array(
+				'equal' => '=', 
+				'not_equal' => '!=', 
+				'less' => '<', 
+				'less_equal' => '<=', 
+				'greater' => '>', 
+				'greater_equal' => '>='
+			);
+			$this->operators_between = array(
+				'between' => 'BETWEEN',
+				'not_between' => 'NOT BETWEEN'
+			);
+			$this->operators_like = array(
+				'like' => 'LIKE', 
+				'not_like' => 'NOT LIKE', 
+				'ilike' => 'ILIKE', 
+				'not_ilike' => 'NOT ILIKE'
+			);
+			$this->operators_in = array(
+				'in' => 'IN', 
+				'not_in' => 'NOT IN'
+			);
+			$this->operators_null = array(
+				'is_null' => 'IS NULL', 
+				'is_not_null' => 'IS NOT NULL'
+			);
+			$this->operators = array_merge($this->operators_equal, $this->operators_between, $this->operators_like, $this->operators_in, $this->operators_null);
 		}
 
 		function read_single ( $id, $values = array() )
@@ -229,6 +257,33 @@
 			return $values;
 		}
 		
+		private function _build_conditions($criteria)
+		{
+			$where = array();
+			foreach ($criteria as $param)
+			{
+				switch (true) {
+					case (array_key_exists($param['operator'], $this->operators_equal)):
+						$where[] =  $param['field']." ".$this->operators[$param['operator']]." ".$param['value1'];
+						break;
+					case (array_key_exists($param['operator'], $this->operators_between)):
+						$where[] =  $param['field']." ".$this->operators[$param['operator']]." ".$param['value1']." AND ".$param['value2'];
+						break;
+					case (array_key_exists($param['operator'], $this->operators_like)):
+						$where[] =  $param['field']." ".$this->operators[$param['operator']]." '%".$param['value1']."%'";
+						break;
+					case (array_key_exists($param['operator'], $this->operators_null)):
+						$where[] =  $param['field']." ".$this->operators[$param['operator']];
+						break;
+					case (array_key_exists($param['operator'], $this->operators_in)):
+						$where[] =  $param['field']." ".$this->operators[$param['operator']]." (".$param['value1'].")";
+						break;
+				}				
+			}
+			
+			return $where;
+		}
+		
 		function read_to_export ( $id, $data = array() )
 		{
 			$id = (int)$id;
@@ -237,19 +292,25 @@
 			{
 				$dataset = $this->read_single_dataset($id);
 				$jsonB = $data;
-			} 
+			}
 			else {
 				$definition = $this->read_single($id);
 				$dataset = $this->read_single_dataset($definition['dataset_id']);				
 				$jsonB = json_decode($definition['report_definition'], true);
 			}
-	
+
 			$string_columns = implode(',', $jsonB['columns']);
 			
 			$group = implode(',', $jsonB['group']);
 			$order = 'ORDER BY '.$group.' ASC';
+			$cond = $this->_build_conditions($jsonB['criteria']);
 			
-			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$order;
+			if ($cond)
+			{
+				$where = 'WHERE '.implode(' AND ', $cond);
+			}
+			
+			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$order;
 
 			if (count($data))
 			{
