@@ -290,12 +290,6 @@
 
 		protected function doValidate( $entity, &$errors )
 		{
-			$params = array();
-			$params['filters']['active'] = 1;
-			$params['filters']['customer_id'] = $entity->customer_id;
-
-			$bookings = eventplanner_sobooking::get_instance()->read($params);
-
 			$orig_customer_id = 0;
 			if ($entity->get_id())
 			{
@@ -319,18 +313,27 @@
 
 				$customer = createObject('eventplanner.bocustomer')->read_single($entity->customer_id);
 				$max_events = (int)$customer->max_events;
+
+				$params = array();
+				$params['filters']['active'] = 1;
+				$params['filters']['customer_id'] = $entity->customer_id;
+				$bookings = eventplanner_sobooking::get_instance()->read($params);
+
+				$calendar_id = $entity->calendar_id;
+				$calendar = createObject('eventplanner.bocalendar')->read_single($calendar_id, true, $relaxe_acl = true);
+
 				foreach ($bookings['results'] as $booking)
 				{
 					$booking_year = date('Y', $booking['from_']);
 
-					if ($booking_year != date('Y', $entity->from_))
+					if ($booking_year != date('Y', $calendar->from_))
 					{
 						continue;
 					}
 					$test_total_tecords ++;
 				}
 
-				if ($entity->customer_id || $entity->process_update) // update
+				if ($entity->get_id() || $entity->process_update) // update
 				{
 				}
 				else // new entry

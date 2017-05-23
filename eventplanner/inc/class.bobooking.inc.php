@@ -100,12 +100,11 @@
 			$customer_contact_phone = $booking->customer_contact_phone;
 			$location = $booking->location;
 
-			$from_ = $GLOBALS['phpgw']->common->show_date($booking->from_);
-			$to_ = $GLOBALS['phpgw']->common->show_date($booking->to_);
-
-
 			$calendar_id = $booking->calendar_id;
 			$calendar = createObject('eventplanner.bocalendar')->read_single($calendar_id, true, $relaxe_acl = true);
+			$from_ = $GLOBALS['phpgw']->common->show_date($calendar->from_);
+			$to_ = $GLOBALS['phpgw']->common->show_date($calendar->to_);
+
 			$application = createObject('eventplanner.boapplication')->read_single($calendar->application_id, true, $relaxe_acl = true);
 //			_debug_array($application);
 //			_debug_array($application);
@@ -286,7 +285,9 @@ HTML;
 				phpgwapi_cache::message_set($e->getMessage(), 'error');
 			}
 
-			return$rcpt;
+			phpgwapi_cache::message_set("Email: $to_email, $cc", 'message');
+
+			return $rcpt;
 		}
 
 		public function read( $params )
