@@ -26,3 +26,25 @@
 	// Insert start values for billing sequential numbers
 	$oProc->query("INSERT INTO bb_billing_sequential_number_generator ( name, value ) VALUES ( 'internal', 1 ), ( 'external', 1 )");
 
+	$GLOBALS['phpgw']->locations->add('.office', 'office', 'booking');
+	$GLOBALS['phpgw']->locations->add('.office.user', 'office/user relation', 'booking', false, 'bb_office_user');
+	$GLOBALS['phpgw']->db = clone($GLOBALS['phpgw_setup']->oProc->m_odb);
+
+	$attrib = array
+		(
+		'appname' => 'booking',
+		'location' => '.office.user',
+		'column_name' => 'account_id',
+		'input_text' => 'User',
+		'statustext' => 'System user',
+		'search' => true,
+		'list' => true,
+		'column_info' => array
+			(
+			'type' => 'user',
+			'nullable' => 'False',
+			'custom' => 1
+		)
+	);
+
+	$GLOBALS['phpgw']->custom_fields->add($attrib, 'bb_office_user');
