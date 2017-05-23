@@ -60,24 +60,7 @@
 			$this->bo = CreateObject('property.boreport', true);
 			$this->bocommon = & $this->bo->bocommon;
 			$this->acl = & $GLOBALS['phpgw']->acl;			
-			$this->operators = array(
-				'equal' => '=', 
-				'different' => '!=', 
-				'less' => '<', 
-				'less_equal' => '<=', 
-				'higher' => '>', 
-				'higher_equal' => '>=', 
-				'between' => 'BETWEEN', 
-				'like' => 'LIKE', 
-				'not_like' => 'NOT LIKE', 
-				'ilike' => 'ILIKE', 
-				'not_ilike' => 'NOT ILIKE', 
-				'in' => 'IN', 
-				'not_in' => 'NOT IN', 
-				'not_between' => 'NOT BETWEEN', 
-				'is_null' => 'IS NULL', 
-				'is_not_null' => 'IS NOT NULL'
-			);
+			$this->operators = $this->bo->operators;
 		}
 
 		public function download()
@@ -380,7 +363,22 @@
 			$order_by = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
-
+			
+			$restricted_values = phpgw::get_var('cbo_restricted_value');
+			$operators = phpgw::get_var('cbo_operator');
+			$values_1 = phpgw::get_var('txt_value1');
+			$conector = phpgw::get_var('cbo_conector');
+			$values_2 = phpgw::get_var('txt_value2');
+			
+			$criteria = array();
+			foreach ($restricted_values as $k => $field) 
+			{
+				if ($field && $operators[$k])
+				{
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>$values_1[$k], 'conector'=>$conector[$k], 'value2'=>$values_2[$k]);
+				}
+			}
+			
 			$group = array($group_by => $group_by);
 			$order = array($order_by => $order_by);
 			
@@ -418,6 +416,7 @@
 			$values['report_definition']['order'] = $order;
 			$values['report_definition']['aggregate'] = $aggregate;
 			$values['report_definition']['cbo_aggregate'] = $cbo_aggregate;
+			$values['report_definition']['criteria'] = $criteria;
 			//$values['report_definition']['txt_aggregate'] = $txt_aggregate;
 			$values['dataset_id'] = $dataset_id;
 
@@ -728,7 +727,7 @@
 			}
 			$html_table .= '</table>';
 			
-			return array('columns_preview' => $html_table);
+			return array('columns_preview' => $html_table, 'columns' => $columns);
 		}
 		
 		public function preview()
@@ -742,6 +741,22 @@
 			$data['aggregate'] = $values['aggregate'];
 			$data['cbo_aggregate'] = $values['cbo_aggregate'];		
 
+			$restricted_values = $values['cbo_restricted_value'];
+			$operators = $values['cbo_operator'];
+			$values_1 = $values['txt_value1'];
+			$conector = $values['cbo_conector'];
+			$values_2 = $values['txt_value2'];
+			
+			$criteria = array();
+			foreach ($restricted_values as $k => $field) 
+			{
+				if ($field && $operators[$k])
+				{
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>$values_1[$k], 'conector'=>$conector[$k], 'value2'=>$values_2[$k]);
+				}
+			}
+			$data['criteria'] = $criteria;
+			
 			$list = $this->bo->read_to_export($dataset_id, $data);
 			
 			$html_table = '<table class="pure-table pure-table-bordered">';
