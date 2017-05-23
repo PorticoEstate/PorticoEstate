@@ -43,6 +43,7 @@ $(document).ready(function ()
 						<span style="display:table-cell;">Value</span>\n\
 				</span>';
 			$('#container_criteria').append(row);
+			n = 0;
 		
 			if (jsonB !== '')
 			{
@@ -71,6 +72,11 @@ $(document).ready(function ()
 		values['order'] = {};
 		values['aggregate'] = {};
 		values['cbo_aggregate'] = {};
+		values['cbo_restricted_value'] = {};
+		values['cbo_operator'] = {};
+		values['txt_value1'] = {};
+		values['cbo_conector'] = {};
+		values['txt_value2'] = {};
 		
 		$('input[name^="columns"]').each(function() {
 
@@ -126,6 +132,41 @@ $(document).ready(function ()
 			alert('Choose COUNT/SUM option');			
 			return;
 		}
+				
+		var count = 0;
+		$('.cbo_restricted_value').each(function() 
+		{
+			values['cbo_restricted_value'][count] = $(this).val();
+			count ++;			
+		});
+		
+		count = 0;
+		$('.cbo_operator').each(function() 
+		{
+			values['cbo_operator'][count] = $(this).val();
+			count ++;			
+		});
+		
+		count = 0;
+		$('input[name^="txt_value1"]').each(function() 
+		{
+			values['txt_value1'][count] = $(this).val();
+			count ++;
+		});
+		
+		count = 0;
+		$('.cbo_conector').each(function() 
+		{
+			values['cbo_conector'][count] = $(this).val();
+			count ++;			
+		});
+		
+		count = 0;
+		$('input[name^="txt_value2"]').each(function() 
+		{
+			values['txt_value2'][count] = $(this).val();
+			count ++;
+		});
 		
 		var data = {"values": values, "dataset_id": $('#cbo_dataset_id').val()};
 		$('.processing-preview').show();
@@ -162,18 +203,21 @@ $(document).ready(function ()
 			combo_restricted_value.append("<option value='"+ value.name +"'>"+ value.name +"</option>");
 		});
 
-		var el_1 = "<span style='display:table-cell;'><select name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
-		var el_2 = "<span style='display:table-cell;'><select name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
-		var el_3 = "<span style='display:table-cell;'><input type='text' name='txt_value1[]'></input></span>";
-		var el_4 = "<span style='display:table-cell;'><select name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
-		var el_5 = "<span style='display:table-cell;'><input type='text' name='txt_value2[]'></input></span>";
+		var el_1 = "<span style='display:table-cell;'><select class='cbo_restricted_value' id='cbo_restricted_value_"+ n +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
+		var el_2 = "<span style='display:table-cell;'><select class='cbo_operator' id='cbo_operator_"+ n +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
+		var el_3 = "<span style='display:table-cell;'><input type='text' id='txt_value1_"+ n +"' name='txt_value1[]'></input></span>";
+		var el_4 = "<span style='display:table-cell;'><select class='cbo_conector' id='cbo_conector_"+ n +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
+		var el_5 = "<span style='display:table-cell;'><input type='text' id='txt_value2_"+ n +"' name='txt_value2[]'></input></span>";
 		var el_6 = "<span style='display:table-cell;'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
 
 		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 + el_6 +'</span>';
+		n ++;
 		$('#container_criteria').append(row);
 
 	});
 });
+
+ var n = 0;
 
 function delete_restricted_value (e)
 {
@@ -208,6 +252,18 @@ function set_values()
 	{
 		$("#cbo_" + key).val(value);
 	});
+	
+	$.each(jsonB.criteria, function(key, value) 
+	{
+		$('#btn_add_restricted_value').click();
+		
+		$("#cbo_restricted_value_" + key).val(value.field);
+		$("#cbo_operator_" + key).val(value.operator);
+		$("#txt_value1_" + key).val(value.value1);
+		$("#cbo_conector_" + key).val(value.conector);
+		$("#txt_value2_" + key).val(value.value2);
+	});
+	
 }
 
 function build_check_groups(name, type)
