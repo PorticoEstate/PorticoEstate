@@ -115,7 +115,7 @@
 			return	$this->db->transaction_commit();
 		}
 
-		function check_duplicate_organization($organization_number = false)
+		function check_duplicate_organization($organization_number = false, $vendor_id = 0)
 		{
 			if(!$organization_number)
 			{
@@ -124,6 +124,11 @@
 
 			$query = $this->db->db_addslashes($organization_number);
 			$sql = "SELECT name FROM eventplanner_vendor WHERE organization_number = '{$query}'";
+			if($vendor_id)
+			{
+				$sql .= ' AND id !=' . (int)$vendor_id;
+			}
+
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();	
 			return $this->db->f('name', true);
