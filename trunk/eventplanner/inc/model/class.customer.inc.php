@@ -251,8 +251,8 @@
 						'type' => 'string',
 						'manytomany' => array(
 							'input_field' => 'comment_input',
-							'table' => 'eventplanner_vendor_comment',
-							'key' => 'vendor_id',
+							'table' => 'eventplanner_customer_comment',
+							'key' => 'customer_id',
 							'column' => array('time', 'author', 'comment', 'type'),
 							'order' => array('sort' => 'time', 'dir' => 'ASC')
 						)),
