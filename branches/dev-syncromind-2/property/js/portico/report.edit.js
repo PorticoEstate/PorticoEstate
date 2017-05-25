@@ -133,40 +133,27 @@ $(document).ready(function ()
 			return;
 		}
 				
-		var count = 0;
-		$('.cbo_restricted_value').each(function() 
+		var idx = 0;
+		var size = 0;
+		$('.criteria').each(function() 
 		{
-			values['cbo_restricted_value'][count] = $(this).val();
-			count ++;			
+			idx = $(this).val();
+			if ($('#cbo_restricted_value_' + idx).val())
+			{
+				values['cbo_restricted_value'][idx] = $('#cbo_restricted_value_' + idx).val();
+				values['cbo_operator'][idx] = $('#cbo_operator_' + idx).val();
+				values['txt_value1'][idx] = $('#txt_value1_' + idx).val();
+				values['cbo_conector'][idx] = $('#cbo_conector_' + idx).val();
+				values['txt_value2'][idx] = $('#txt_value2_' + idx).val();
+				size ++;
+			}
 		});
 		
-		count = 0;
-		$('.cbo_operator').each(function() 
+		if (size && !validate_criteria(values))
 		{
-			values['cbo_operator'][count] = $(this).val();
-			count ++;			
-		});
-		
-		count = 0;
-		$('input[name^="txt_value1"]').each(function() 
-		{
-			values['txt_value1'][count] = $(this).val();
-			count ++;
-		});
-		
-		count = 0;
-		$('.cbo_conector').each(function() 
-		{
-			values['cbo_conector'][count] = $(this).val();
-			count ++;			
-		});
-		
-		count = 0;
-		$('input[name^="txt_value2"]').each(function() 
-		{
-			values['txt_value2'][count] = $(this).val();
-			count ++;
-		});
+			$('#responsiveTabsGroups').responsiveTabs('activate', 4);
+			return;
+		}
 		
 		var data = {"values": values, "dataset_id": $('#cbo_dataset_id').val()};
 		$('.processing-preview').show();
@@ -203,12 +190,12 @@ $(document).ready(function ()
 			combo_restricted_value.append("<option value='"+ value.name +"'>"+ value.name +"</option>");
 		});
 
-		var el_1 = "<span style='display:table-cell;'><select class='cbo_restricted_value' id='cbo_restricted_value_"+ n +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
-		var el_2 = "<span style='display:table-cell;'><select class='cbo_operator' id='cbo_operator_"+ n +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
+		var el_1 = "<span style='display:table-cell;'><select id='cbo_restricted_value_"+ n +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
+		var el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ n +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
 		var el_3 = "<span style='display:table-cell;'><input type='text' id='txt_value1_"+ n +"' name='txt_value1[]'></input></span>";
-		var el_4 = "<span style='display:table-cell;'><select class='cbo_conector' id='cbo_conector_"+ n +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
+		var el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ n +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
 		var el_5 = "<span style='display:table-cell;'><input type='text' id='txt_value2_"+ n +"' name='txt_value2[]'></input></span>";
-		var el_6 = "<span style='display:table-cell;'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
+		var el_6 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ n +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
 
 		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 + el_6 +'</span>';
 		n ++;
@@ -222,6 +209,73 @@ $(document).ready(function ()
 function delete_restricted_value (e)
 {
 	$(e).parent().parent().remove();
+}
+
+function in_array_object (key_operator, array_object)
+{
+	var result = false;
+	$.each(array_object, function(key, value) 
+	{
+		if (key == key_operator)
+		{
+			result = true;
+			return;
+		}
+	});
+	
+	return result; 
+}
+
+function validate_criteria (values)
+{
+	var result = true;
+	$.each(values.cbo_restricted_value, function(key, value) 
+	{
+		if (values.cbo_operator[key] == "")
+		{
+			result = false;
+			alert('Select an operator for: ' + value);
+			$("#cbo_operator_" + key).focus();
+			return;
+		}
+	});
+	
+	if (!result)
+	{
+		return result;
+	}
+	
+	$.each(values.cbo_operator, function(key, value) 
+	{
+		switch (true)
+		{
+			case (in_array_object(value, operators_between)):
+				if ($("#txt_value1_" + key).val() == '')
+				{
+					result = false;
+					alert('Enter a value for ' + values.cbo_restricted_value[key]);
+					$("#txt_value1_" + key).focus();
+				}
+				if ($("#txt_value2_" + key).val() == '')
+				{
+					result = false;
+					alert('Enter a second value for: ' + values.cbo_restricted_value[key]);
+					$("#txt_value2_" + key).focus();
+				}
+				break;
+			case (in_array_object(value, operators_null)):
+				break;
+			default: 
+				if ($("#txt_value1_" + key).val() == '')
+				{
+					result = false;
+					alert('Enter a value for: ' + values.cbo_restricted_value[key]);
+					$("#txt_value1_" + key).focus();
+				}
+		}		
+	});
+	
+	return result;
 }
 
 function set_values()
