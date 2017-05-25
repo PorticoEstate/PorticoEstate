@@ -82,7 +82,29 @@
 		var operators = {};
 		<xsl:if test="operators != ''">
 			operators = <xsl:value-of select="operators"/>;
-		</xsl:if>		
+		</xsl:if>
+		
+		var operators_equal = {};
+		<xsl:if test="operators_equal != ''">
+			operators_equal = <xsl:value-of select="operators_equal"/>;
+		</xsl:if>
+		var operators_between = {};
+		<xsl:if test="operators_between != ''">
+			operators_between = <xsl:value-of select="operators_between"/>;
+		</xsl:if>
+		var operators_like = {};
+		<xsl:if test="operators_like != ''">
+			operators_like = <xsl:value-of select="operators_like"/>;
+		</xsl:if>
+		var operators_in = {};
+		<xsl:if test="operators_in != ''">
+			operators_in = <xsl:value-of select="operators_in"/>;
+		</xsl:if>
+		var operators_null = {};
+		<xsl:if test="operators_null != ''">
+			operators_null = <xsl:value-of select="operators_null"/>;
+		</xsl:if>
+		
 		var columns = {};
 	</script>
 	
