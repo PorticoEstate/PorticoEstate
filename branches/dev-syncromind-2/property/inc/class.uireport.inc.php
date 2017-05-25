@@ -61,6 +61,12 @@
 			$this->bocommon = & $this->bo->bocommon;
 			$this->acl = & $GLOBALS['phpgw']->acl;			
 			$this->operators = $this->bo->operators;
+			
+			$this->operators_equal = $this->bo->operators_equal;
+			$this->operators_between = $this->bo->operators_between;
+			$this->operators_like = $this->bo->operators_like;
+			$this->operators_in = $this->bo->operators_in;
+			$this->operators_null = $this->bo->operators_null;				
 		}
 
 		public function download()
@@ -337,6 +343,13 @@
 				'datasets' => array('options' => $list),
 				'report_definition' => $values['report_definition'],
 				'operators' => json_encode($this->operators),
+				
+				'operators_equal' => json_encode($this->operators_equal),
+				'operators_between' => json_encode($this->operators_between),
+				'operators_like' => json_encode($this->operators_like),
+				'operators_in' => json_encode($this->operators_in),
+				'operators_null' => json_encode($this->operators_null),		
+				
 				'report_id' => $values['id'],
 				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
