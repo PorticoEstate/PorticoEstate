@@ -94,7 +94,9 @@
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 //			_debug_array($booking);
 
-			$customer_name	=$booking->customer_name;
+			$customer = createObject('eventplanner.bocustomer')->read_single($booking->customer_id, true, $relaxe_acl = true);
+			$customer_name	=$customer->name;
+
 			$customer_contact_name = $booking->customer_contact_name;
 			$customer_contact_email = $booking->customer_contact_email;
 			$customer_contact_phone = $booking->customer_contact_phone;
