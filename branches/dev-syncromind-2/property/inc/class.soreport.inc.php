@@ -257,28 +257,115 @@
 			return $values;
 		}
 		
-		private function _build_conditions($criteria)
+		private function _is_date( $str ) {
+			try {
+				$dt = new DateTime( trim($str) );
+			}
+			catch( Exception $e ) {
+				return false;
+			}
+			$month = $dt->format('m');
+			$day = $dt->format('d');
+			$year = $dt->format('Y');
+			if( checkdate($month, $day, $year) ) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		private function _build_conditions_equal($param, $type)
+		{		
+			$result = '';
+			
+			switch ($type) 
+			{
+				case 'character varying':
+				case 'text':
+					$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+					if ($param['conector'] && $param['value2'] != '')
+					{
+						$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value2']."'";
+					}
+					break;
+				case 'integer':
+				case 'smallint':
+				case 'numeric':
+					if (is_numeric($param['value1']))
+					{
+						$result = $param['field']." ".$this->operators[$param['operator']]." ".$param['value1'];
+						if ($param['conector'] && is_numeric(['value2']))
+						{
+							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." ".$param['value2'];
+						}
+					}
+					break;
+				case 'date':
+				case 'timestamp without time zone':
+					if ($this->_is_date($param['value1']))
+					{
+						$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+						if ($param['conector'] && $this->_is_date($param['value2']))
+						{
+							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+						}
+					}
+			}				
+		
+			return $result;
+		}
+		
+		private function _build_conditions($criteria, $id)
 		{
+			$columns = $this->get_view_columns($id);
+			$_columns = array();
+			foreach ($columns as $column)
+			{
+				$_columns[$column['name']] = $column['type'];
+			}
+			
 			$where = array();
 			foreach ($criteria as $param)
 			{
-				switch (true) {
+				switch (true) 
+				{
 					case (array_key_exists($param['operator'], $this->operators_equal)):
-						$where[] =  $param['field']." ".$this->operators[$param['operator']]." ".$param['value1'];
+						$result =  $this->_build_conditions_equal($param, $_columns[$param['field']]);
 						break;
 					case (array_key_exists($param['operator'], $this->operators_between)):
-						$where[] =  $param['field']." ".$this->operators[$param['operator']]." ".$param['value1']." AND ".$param['value2'];
+						if ($param['value1'] != '' && $param['value2'] != '')
+						{
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '".$param['value1']."' AND '".$param['value2']."'";
+						}
 						break;
 					case (array_key_exists($param['operator'], $this->operators_like)):
-						$where[] =  $param['field']." ".$this->operators[$param['operator']]." '%".$param['value1']."%'";
+						if ($param['value1'] != '')
+						{
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value1']."%'";
+							if ($param['conector'] && $param['value2'] != '')
+							{
+								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value2']."%'";
+							}							
+						}
 						break;
 					case (array_key_exists($param['operator'], $this->operators_null)):
-						$where[] =  $param['field']." ".$this->operators[$param['operator']];
+						$result =  $param['field']." ".$this->operators[$param['operator']];
 						break;
 					case (array_key_exists($param['operator'], $this->operators_in)):
-						$where[] =  $param['field']." ".$this->operators[$param['operator']]." (".$param['value1'].")";
+						if ($param['value1'] != '')
+						{
+							$values = array_map('trim', explode(',', $param['value1']));
+							$_string = "'".implode("','", $values)."'";
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." (".$_string.")";
+						}
 						break;
-				}				
+				}		
+				
+				if ($result)
+				{
+					$where[] = $result;
+				}
 			}
 			
 			return $where;
@@ -303,7 +390,7 @@
 			
 			$group = implode(',', $jsonB['group']);
 			$order = 'ORDER BY '.$group.' ASC';
-			$cond = $this->_build_conditions($jsonB['criteria']);
+			$cond = $this->_build_conditions($jsonB['criteria'], $id);
 			
 			if ($cond)
 			{
