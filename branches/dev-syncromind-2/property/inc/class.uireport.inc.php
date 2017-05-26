@@ -388,7 +388,7 @@
 			{
 				if ($field && $operators[$k])
 				{
-					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>$values_1[$k], 'conector'=>$conector[$k], 'value2'=>$values_2[$k]);
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k], 'value2'=>trim($values_2[$k]));
 				}
 			}
 			
@@ -765,7 +765,7 @@
 			{
 				if ($field && $operators[$k])
 				{
-					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>$values_1[$k], 'conector'=>$conector[$k], 'value2'=>$values_2[$k]);
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k], 'value2'=>trim($values_2[$k]));
 				}
 			}
 			$data['criteria'] = $criteria;
