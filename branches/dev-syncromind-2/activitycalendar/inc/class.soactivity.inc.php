@@ -807,7 +807,8 @@
 				);
 			}
 
-			foreach ($activities as &$activity)
+			$result = array();
+			foreach ($activities as $activity)
 			{
 				if ($activity['group_id'] && !$activity['group_id'] == '' && !$activity['group_id'] == 0)
 				{
@@ -825,9 +826,11 @@
 				$activity['arena_info'] = $this->get_all_arena_info($activity['arena'], $activity['internal_arena']);
 				$activity['internal_arena_info'] = $this->get_internal_arena_info($activity['internal_arena']);
 				$activity['contact_person'] = $this->get_contact_person($activity['organization_id'], $activity['group_id'], $activity['contact_person_1']);
+				$result[] = $activity;
+
 			}
 //_debug_array($activities);
-			return $activities;
+			return $result;
 		}
 
 		function get_contact_person( $org_id, $group_id, $cont_pers )

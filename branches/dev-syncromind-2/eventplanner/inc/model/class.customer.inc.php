@@ -225,9 +225,8 @@
 					'label' => 'organization number'
 					),
 					'max_events' => array(
-						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'action'=> 0,
 						'type' => 'int',
-						'required' => true,
 						'query' => false,
 						'label' => 'maximum number of events',
 					)
@@ -236,6 +235,13 @@
 			if($currentapp == 'eventplanner')
 			{
 				$backend_fields = array(
+					'max_events' => array(
+						'action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+						'type' => 'int',
+						'required' => true,
+						'query' => false,
+						'label' => 'maximum number of events',
+					),
 					'active' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 						'type' => 'int',
 						'history'	=> true
@@ -245,8 +251,8 @@
 						'type' => 'string',
 						'manytomany' => array(
 							'input_field' => 'comment_input',
-							'table' => 'eventplanner_vendor_comment',
-							'key' => 'vendor_id',
+							'table' => 'eventplanner_customer_comment',
+							'key' => 'customer_id',
 							'column' => array('time', 'author', 'comment', 'type'),
 							'order' => array('sort' => 'time', 'dir' => 'ASC')
 						)),

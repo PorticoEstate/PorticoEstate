@@ -70,7 +70,7 @@
 					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
 				}
 
-				if($field == $order)
+				if($field == $sort && $_params['sortable'])
 				{
 					$params['sort'] = $field;
 				}

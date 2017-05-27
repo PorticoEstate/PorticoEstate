@@ -313,7 +313,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 			$id = phpgw::get_var('id', 'int');
 
-			$ticket_html = $this->bo->mail_ticket($id, $fields_updated = true, $receipt = array(), $location_code = '', $get_message = true);
+			$ticket_html = $this->bo->mail_ticket($id, $fields_updated = true, $receipt = array(), $get_message = true);
 
 			$ticket = $this->bo->read_single($id);
 
@@ -1688,7 +1688,7 @@ JS;
 					)
 				)
 				{
-					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, '', false, isset($values['send_mail']) && $values['send_mail'] ? true : false);
+					$receipt = $this->bo->mail_ticket($id, $this->bo->fields_updated, $receipt, false, isset($values['send_mail']) && $values['send_mail'] ? true : false);
 				}
 
 				//--------- files

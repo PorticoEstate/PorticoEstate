@@ -11,14 +11,24 @@
 	 * @version $Id$
 	*/
 	$phpgw_baseline = array(
-		'fm_part_of_town' => array(
+		'fm_district' => array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' => '2', 'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
-				'district_id' => array('type' => 'int', 'precision' => '2', 'nullable' => True)
+				'id' => array('type' => 'int', 'precision' => '2', 'nullable' => False),
+				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
+		'fm_part_of_town' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => '2', 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+				'district_id' => array('type' => 'int', 'precision' => '2', 'nullable' => false)
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_district' => array('district_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),
@@ -108,16 +118,6 @@
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'descr' => array('type' => 'varchar', 'precision' => '255', 'nullable' => False)
-			),
-			'pk' => array('id'),
-			'fk' => array(),
-			'ix' => array(),
-			'uc' => array()
-		),
-		'fm_district' => array(
-			'fd' => array(
-				'id' => array('type' => 'int', 'precision' => '2', 'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

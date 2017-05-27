@@ -125,3 +125,11 @@ summary	eventplanner	no	kortversjon programbeskrivelse
 organization number already exists for %1	eventplanner	no	Organisasjonsnummeret er allerede registrert på %1.
 you need to log in to access this page.	eventplanner	no	Du må logge deg på for å få tilgang til denne siden.
 do you represent the owner of this entry?	eventplanner	no	Representerer du eieren av denne posten?
+contact info	eventplanner	no	Kontaktinformasjon
+vendor note	eventplanner	no	Generelt for utøver
+customer note	eventplanner	no	Generelt for Mottakersted
+when	eventplanner	no	Når
+where	eventplanner	no	Hvor
+vendor receipt text	eventplanner	no	utøvernotat ved kvittering
+customer receipt text	eventplanner	no	Mottakerstednotat ved kvittering
+receipt subject	eventplanner	no	Kvitteringsoverskrift

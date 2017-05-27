@@ -88,6 +88,7 @@
 
 		function get_level_name($level)
 		{
+			$level = trim($level);
 			return $this->log_level_names[$level];
 		}
 
@@ -297,7 +298,7 @@
 				else
 				{
 					echo $message;
-					$call_footer = true;
+					$call_footer = false;
 				}
 		//		phpgwapi_cache::message_set($message, 'error');
 

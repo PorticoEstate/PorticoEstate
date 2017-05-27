@@ -1060,10 +1060,25 @@
 //                    echo $b['id']."\tfrom: ".substr($b['from_'],11,19)." to: ".substr($b['to_'],11,19)."\n";
 //                    echo $e['id']."\tfrom: ".substr($e['from_'],11,19)." to: ".substr($e['to_'],11,19)." ".$e['name']."\n";
 
-					if ((($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
+					if (
+						(
+						($b['from_'] >= $e['from_'] && $b['from_'] < $e['to_']) ||
 						($b['to_'] > $e['from_'] && $b['to_'] <= $e['to_']) ||
-						($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])) && (array_intersect($b['resources'], $e['resources']) != array()))
+						($b['from_'] <= $e['from_'] && $b['to_'] >= $e['to_'])
+						)
+						&&
+						(array_intersect($b['resources'], $e['resources']) != array()))
 					{
+						$test_intersect = array_intersect($e['resources'], $b['resources']);
+
+						$resources_to_keep = array_diff($b['resources'], $test_intersect);
+						if($resources_to_keep)
+						{
+							$tmp =  $b;
+							$tmp['resources'] = $resources_to_keep;
+							$last[] = $tmp;
+						}
+
 //                        echo "##$i\n";
 						$keep = false;
 						$e['conflicts'][] = $b;
