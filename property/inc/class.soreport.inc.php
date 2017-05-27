@@ -37,6 +37,34 @@
 			$this->left_join = & $this->db->left_join;
 			$this->like = & $this->db->like;		
 			$this->total_records = 0;
+					
+			$this->operators_equal = array(
+				'equal' => '=', 
+				'not_equal' => '!=', 
+				'less' => '<', 
+				'less_equal' => '<=', 
+				'greater' => '>', 
+				'greater_equal' => '>='
+			);
+			$this->operators_between = array(
+				'between' => 'BETWEEN',
+				'not_between' => 'NOT BETWEEN'
+			);
+			$this->operators_like = array(
+				'like' => 'LIKE', 
+				'not_like' => 'NOT LIKE', 
+				'ilike' => 'ILIKE', 
+				'not_ilike' => 'NOT ILIKE'
+			);
+			$this->operators_in = array(
+				'in' => 'IN', 
+				'not_in' => 'NOT IN'
+			);
+			$this->operators_null = array(
+				'is_null' => 'IS NULL', 
+				'is_not_null' => 'IS NOT NULL'
+			);
+			$this->operators = array_merge($this->operators_equal, $this->operators_between, $this->operators_like, $this->operators_in, $this->operators_null);
 		}
 
 		function read_single ( $id, $values = array() )
@@ -229,6 +257,120 @@
 			return $values;
 		}
 		
+		private function _is_date( $str ) {
+			try {
+				$dt = new DateTime( trim($str) );
+			}
+			catch( Exception $e ) {
+				return false;
+			}
+			$month = $dt->format('m');
+			$day = $dt->format('d');
+			$year = $dt->format('Y');
+			if( checkdate($month, $day, $year) ) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		private function _build_conditions_equal($param, $type)
+		{		
+			$result = '';
+			
+			switch ($type) 
+			{
+				case 'character varying':
+				case 'text':
+					$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+					if ($param['conector'] && $param['value2'] != '')
+					{
+						$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value2']."'";
+					}
+					break;
+				case 'integer':
+				case 'smallint':
+				case 'numeric':
+					if (is_numeric($param['value1']))
+					{
+						$result = $param['field']." ".$this->operators[$param['operator']]." ".$param['value1'];
+						if ($param['conector'] && is_numeric(['value2']))
+						{
+							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." ".$param['value2'];
+						}
+					}
+					break;
+				case 'date':
+				case 'timestamp without time zone':
+					if ($this->_is_date($param['value1']))
+					{
+						$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+						if ($param['conector'] && $this->_is_date($param['value2']))
+						{
+							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+						}
+					}
+			}				
+		
+			return $result;
+		}
+		
+		private function _build_conditions($criteria, $id)
+		{
+			$columns = $this->get_view_columns($id);
+			$_columns = array();
+			foreach ($columns as $column)
+			{
+				$_columns[$column['name']] = $column['type'];
+			}
+			
+			$where = array();
+			foreach ($criteria as $param)
+			{
+				switch (true) 
+				{
+					case (array_key_exists($param['operator'], $this->operators_equal)):
+						$result =  $this->_build_conditions_equal($param, $_columns[$param['field']]);
+						break;
+					case (array_key_exists($param['operator'], $this->operators_between)):
+						if ($param['value1'] != '' && $param['value2'] != '')
+						{
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '".$param['value1']."' AND '".$param['value2']."'";
+						}
+						break;
+					case (array_key_exists($param['operator'], $this->operators_like)):
+						if ($param['value1'] != '')
+						{
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value1']."%'";
+							if ($param['conector'] && $param['value2'] != '')
+							{
+								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value2']."%'";
+							}							
+						}
+						break;
+					case (array_key_exists($param['operator'], $this->operators_null)):
+						$result =  $param['field']." ".$this->operators[$param['operator']];
+						break;
+					case (array_key_exists($param['operator'], $this->operators_in)):
+						if ($param['value1'] != '')
+						{
+							$values = array_map('trim', explode(',', $param['value1']));
+							$_string = "'".implode("','", $values)."'";
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." (".$_string.")";
+						}
+						break;
+				}		
+				
+				if ($result)
+				{
+					$where[] = $result;
+				}
+			}
+			
+			return $where;
+		}
+		
 		function read_to_export ( $id, $data = array() )
 		{
 			$id = (int)$id;
@@ -237,19 +379,25 @@
 			{
 				$dataset = $this->read_single_dataset($id);
 				$jsonB = $data;
-			} 
+			}
 			else {
 				$definition = $this->read_single($id);
 				$dataset = $this->read_single_dataset($definition['dataset_id']);				
 				$jsonB = json_decode($definition['report_definition'], true);
 			}
-	
+
 			$string_columns = implode(',', $jsonB['columns']);
 			
 			$group = implode(',', $jsonB['group']);
 			$order = 'ORDER BY '.$group.' ASC';
+			$cond = $this->_build_conditions($jsonB['criteria'], $id);
 			
-			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$order;
+			if ($cond)
+			{
+				$where = 'WHERE '.implode(' AND ', $cond);
+			}
+			
+			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$order;
 
 			if (count($data))
 			{

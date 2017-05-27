@@ -47,6 +47,7 @@
 			'save_dataset' => true,
 			'delete_dataset' => true,
 			'get_column_preview' => true,
+			'get_operators' => true,
 			'preview' => true,
 			'download' => true
 		);
@@ -59,6 +60,13 @@
 			$this->bo = CreateObject('property.boreport', true);
 			$this->bocommon = & $this->bo->bocommon;
 			$this->acl = & $GLOBALS['phpgw']->acl;			
+			$this->operators = $this->bo->operators;
+			
+			$this->operators_equal = $this->bo->operators_equal;
+			$this->operators_between = $this->bo->operators_between;
+			$this->operators_like = $this->bo->operators_like;
+			$this->operators_in = $this->bo->operators_in;
+			$this->operators_null = $this->bo->operators_null;				
 		}
 
 		public function download()
@@ -334,6 +342,14 @@
 				'cancel_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uireport.index')),
 				'datasets' => array('options' => $list),
 				'report_definition' => $values['report_definition'],
+				'operators' => json_encode($this->operators),
+				
+				'operators_equal' => json_encode($this->operators_equal),
+				'operators_between' => json_encode($this->operators_between),
+				'operators_like' => json_encode($this->operators_like),
+				'operators_in' => json_encode($this->operators_in),
+				'operators_null' => json_encode($this->operators_null),		
+				
 				'report_id' => $values['id'],
 				'report_name' => $values['report_name'],
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
@@ -360,7 +376,22 @@
 			$order_by = phpgw::get_var('order');
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
-	
+			
+			$restricted_values = phpgw::get_var('cbo_restricted_value');
+			$operators = phpgw::get_var('cbo_operator');
+			$values_1 = phpgw::get_var('txt_value1');
+			$conector = phpgw::get_var('cbo_conector');
+			$values_2 = phpgw::get_var('txt_value2');
+			
+			$criteria = array();
+			foreach ($restricted_values as $k => $field) 
+			{
+				if ($field && $operators[$k])
+				{
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k], 'value2'=>trim($values_2[$k]));
+				}
+			}
+			
 			$group = array($group_by => $group_by);
 			$order = array($order_by => $order_by);
 			
@@ -398,6 +429,7 @@
 			$values['report_definition']['order'] = $order;
 			$values['report_definition']['aggregate'] = $aggregate;
 			$values['report_definition']['cbo_aggregate'] = $cbo_aggregate;
+			$values['report_definition']['criteria'] = $criteria;
 			//$values['report_definition']['txt_aggregate'] = $txt_aggregate;
 			$values['dataset_id'] = $dataset_id;
 
@@ -708,7 +740,7 @@
 			}
 			$html_table .= '</table>';
 			
-			return array('columns_preview' => $html_table);
+			return array('columns_preview' => $html_table, 'columns' => $columns);
 		}
 		
 		public function preview()
@@ -722,6 +754,22 @@
 			$data['aggregate'] = $values['aggregate'];
 			$data['cbo_aggregate'] = $values['cbo_aggregate'];		
 
+			$restricted_values = $values['cbo_restricted_value'];
+			$operators = $values['cbo_operator'];
+			$values_1 = $values['txt_value1'];
+			$conector = $values['cbo_conector'];
+			$values_2 = $values['txt_value2'];
+			
+			$criteria = array();
+			foreach ($restricted_values as $k => $field) 
+			{
+				if ($field && $operators[$k])
+				{
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k], 'value2'=>trim($values_2[$k]));
+				}
+			}
+			$data['criteria'] = $criteria;
+			
 			$list = $this->bo->read_to_export($dataset_id, $data);
 			
 			$html_table = '<table class="pure-table pure-table-bordered">';
@@ -742,4 +790,27 @@
 			
 		}
 		
+		public function get_operators()
+		{
+			$operators = array(
+				'equal' => '=', 
+				'different' => '!=', 
+				'less' => '<', 
+				'less_equal' => '<=', 
+				'higher' => '>', 
+				'higher_equal' => '>=', 
+				'between' => 'BETWEEN', 
+				'like' => 'LIKE', 
+				'not_like' => 'NOT LIKE', 
+				'ilike' => 'ILIKE', 
+				'not_ilike' => 'NOT ILIKE', 
+				'in' => 'IN', 
+				'not_in' => 'NOT IN', 
+				'not_between' => 'NOT BETWEEN', 
+				'is_null' => 'IS NULL', 
+				'is_not_null' => 'IS NOT NULL'
+			);
+			
+			return $operators;
+		}
 	}
