@@ -78,7 +78,34 @@
 		var jsonB = {};
 		<xsl:if test="report_definition != ''">
 			jsonB = <xsl:value-of select="report_definition"/>;
-		</xsl:if>		
+		</xsl:if>
+		var operators = {};
+		<xsl:if test="operators != ''">
+			operators = <xsl:value-of select="operators"/>;
+		</xsl:if>
+		
+		var operators_equal = {};
+		<xsl:if test="operators_equal != ''">
+			operators_equal = <xsl:value-of select="operators_equal"/>;
+		</xsl:if>
+		var operators_between = {};
+		<xsl:if test="operators_between != ''">
+			operators_between = <xsl:value-of select="operators_between"/>;
+		</xsl:if>
+		var operators_like = {};
+		<xsl:if test="operators_like != ''">
+			operators_like = <xsl:value-of select="operators_like"/>;
+		</xsl:if>
+		var operators_in = {};
+		<xsl:if test="operators_in != ''">
+			operators_in = <xsl:value-of select="operators_in"/>;
+		</xsl:if>
+		var operators_null = {};
+		<xsl:if test="operators_null != ''">
+			operators_null = <xsl:value-of select="operators_null"/>;
+		</xsl:if>
+		
+		var columns = {};
 	</script>
 	
 	<style type="text/css">
@@ -126,6 +153,7 @@
 							<li><a href="#tab-group"><xsl:value-of select="php:function('lang', 'Group by')"/></a></li>
 							<li><a href="#tab-sort"><xsl:value-of select="php:function('lang', 'Sort by')"/></a></li>
 							<li><a href="#tab-count-sum"><xsl:value-of select="php:function('lang', 'Count / Sum')"/></a></li>
+							<li><a href="#tab-criteria"><xsl:value-of select="php:function('lang', 'Criteria')"/></a></li>
 							<li><a href="#tab-preview"><xsl:value-of select="php:function('lang', 'Preview')"/></a></li>
 						</ul>
 						<div id="tab-columns">
@@ -159,7 +187,17 @@
 								</label>
 								<div id="container_aggregates" class="pure-custom"></div>
 							</div>		
-						</div>	
+						</div>
+						<div id="tab-criteria">
+							<div class="pure-control-group">
+								<input type="button" class="pure-button pure-button-primary" name="btn_add_restricted_value" id="btn_add_restricted_value">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'add')" />
+									</xsl:attribute>
+								</input>								
+								<div id="container_criteria" class="pure-custom"></div>
+							</div>		
+						</div>
 						<div id="tab-preview">
 							<div class="pure-control-group">
 								<label>
