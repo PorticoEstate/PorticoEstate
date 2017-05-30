@@ -793,6 +793,11 @@
 			$data['criteria'] = $criteria;
 			
 			$list = $this->bo->read_to_export($dataset_id, $data);
+			
+			if (!count($list))
+			{
+				return lang('No records');
+			}
 		
 			$html_table = '<table class="pure-table pure-table-bordered">';
 			$html_table .= '<thead><tr>';
