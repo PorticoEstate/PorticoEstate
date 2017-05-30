@@ -174,7 +174,7 @@
 								<xsl:value-of select="php:function('lang', 'resource')" />
 							</label>
 						</li>
-						<!--li>
+						<li>
 							<label>
 								<input type="checkbox" name="search_type[]" value="organization"/>
 								<xsl:value-of select="php:function('lang', 'organization')" />
@@ -185,7 +185,7 @@
 								<input type="checkbox" name="search_type[]" value="event"/>
 								<xsl:value-of select="php:function('lang', 'event')" />
 							</label>
-						</li-->
+						</li>
 					</ul>
 				</div>
 				

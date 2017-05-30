@@ -61,7 +61,7 @@
 		public function get_top_level()
 		{
 
-			$sql = "SELECT name, id FROM bb_activity WHERE parent_id = 0 OR parent_id IS NULL";
+			$sql = "SELECT name, id, active FROM bb_activity WHERE parent_id = 0 OR parent_id IS NULL";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$values = array();
@@ -71,6 +71,7 @@
 				$values[] = array(
 					'id' => $this->db->f('id'),
 					'name' => $this->db->f('name', true),
+					'active' => $this->db->f('active'),
 				);
 			}
 			return $values;
