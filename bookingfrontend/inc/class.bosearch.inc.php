@@ -228,9 +228,9 @@
 					$event['name'] = $event['building_name'] . ' / ' . $event['description'];
 					$event['type'] = "Event";
 					$date = date('Y-m-d', strtotime($event['from_']));
-					$event_res = $this->soresource->read(array('filters' => array('id' => $event['resources'][0])));
+		//			$event_res = $this->soresource->read(array('filters' => array('id' => $event['resources'][0])));
 					$event['link'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $event_res['results'][0]['building_id'], 'date' => $date));
+						'id' => $event['building_id'], 'date' => $date));
 				}
 			}
 
