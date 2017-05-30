@@ -67,6 +67,10 @@
 			$filter_tree = array();
 			foreach ($activities as $activity)
 			{
+				if(!$activity['active'])
+				{
+					continue;
+				}
 				$top_levels[] = array(
 					'id' => $activity['id'],
 					'location' => "resource_{$activity['id']}",
@@ -185,7 +189,7 @@
 //			_debug_array($activity_criteria);
 //			_debug_array($criteria);
 //			die();
-			if ($searchterm || $building_id || $activity_criteria || $filter_part_of_town || phpgw::get_var('filter_top_level', 'string') || phpgw::get_var('filter_search_type'))
+			if ($searchterm || $building_id || $activity_criteria || $filter_part_of_town || phpgw::get_var('filter_top_level', 'string') || (phpgw::get_var('filter_search_type') && $searchterm))
 			{
 				$data = array(
 					'results' => $this->bo->search($searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria)

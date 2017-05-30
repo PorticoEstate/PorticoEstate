@@ -72,7 +72,7 @@
 			$values = $this->so->get_top_level();
 			if ($selected)
 			{
-				foreach ($values as $entry)
+				foreach ($values as &$entry)
 				{
 					$entry['selected'] = $entry['id'] == $selected ? 1 : 0;
 				}
