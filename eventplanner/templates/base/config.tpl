@@ -21,6 +21,12 @@
 			</td>
 		</tr>
 		<tr>
+			<td>{lang_receipt_blind_copy}:</td>
+			<td>
+				<input type="text" name="newsettings[receipt_blind_copy]" value="{value_receipt_blind_copy}">
+			</td>
+		</tr>
+		<tr>
 			<td>{lang_receipt_subject}:</td>
 			<td>
 				<input type="text" name="newsettings[receipt_subject]" value="{value_receipt_subject}">
