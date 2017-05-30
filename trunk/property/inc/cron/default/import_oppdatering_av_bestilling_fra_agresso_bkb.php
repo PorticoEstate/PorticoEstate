@@ -144,8 +144,8 @@
 			$server = $this->config->config_data['common']['host'];
 			$user = $this->config->config_data['common']['user'];
 			$password = $this->config->config_data['common']['password'];
-			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir'], '/');
-			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
+			$directory_remote = rtrim($this->config->config_data['import']['remote_basedir_project'], '/');
+			$directory_local = rtrim($this->config->config_data['import']['local_path_project'], '/');
 
 			try
 			{
