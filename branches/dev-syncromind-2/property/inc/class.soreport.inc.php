@@ -453,8 +453,11 @@
 				
 				$values[$this->db->f($group)][] = $value;				
 			}
-							
-			$result = $this->_generate_total_sum($values, $array_sum, $array_count);
+			
+			if (count($values))
+			{
+				$result = $this->_generate_total_sum($values, $array_sum, $array_count);
+			}
 			
 			return $result;
 		}
