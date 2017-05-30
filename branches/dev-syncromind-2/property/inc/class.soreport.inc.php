@@ -287,6 +287,7 @@
 					if ($param['conector'] && $param['value2'] != '')
 					{
 						$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value2']."'";
+						$result = '('.$result.')';
 					}
 					break;
 				case 'integer':
@@ -298,6 +299,7 @@
 						if ($param['conector'] && is_numeric(['value2']))
 						{
 							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." ".$param['value2'];
+							$result = '('.$result.')';
 						}
 					}
 					break;
@@ -309,6 +311,7 @@
 						if ($param['conector'] && $this->_is_date($param['value2']))
 						{
 							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
+							$result = '('.$result.')';
 						}
 					}
 			}				
@@ -346,6 +349,7 @@
 							if ($param['conector'] && $param['value2'] != '')
 							{
 								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value2']."%'";
+								$result = '('.$result.')';
 							}							
 						}
 						break;
@@ -358,6 +362,13 @@
 							$values = array_map('trim', explode(',', $param['value1']));
 							$_string = "'".implode("','", $values)."'";
 							$result =  $param['field']."::text ".$this->operators[$param['operator']]." (".$_string.")";
+							if ($param['conector'] && $param['value2'] != '')
+							{
+								$values_2 = array_map('trim', explode(',', $param['value2']));
+								$_string_2 = "'".implode("','", $values_2)."'";								
+								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." (".$_string_2.")";
+								$result = '('.$result.')';
+							}
 						}
 						break;
 				}		
@@ -389,7 +400,13 @@
 			$string_columns = implode(',', $jsonB['columns']);
 			
 			$group = implode(',', $jsonB['group']);
-			$order = 'ORDER BY '.$group.' ASC';
+			$order = implode(',', $jsonB['order']);
+			$ordering = 'ORDER BY '.$group.' ASC';
+			if (($group != $order) && $order != '')
+			{
+				$ordering = $ordering.', '.$order.' ASC';
+			}
+		
 			$cond = $this->_build_conditions($jsonB['criteria'], $id);
 			
 			if ($cond)
@@ -397,7 +414,7 @@
 				$where = 'WHERE '.implode(' AND ', $cond);
 			}
 			
-			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$order;
+			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$ordering;
 
 			if (count($data))
 			{
