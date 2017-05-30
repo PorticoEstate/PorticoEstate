@@ -333,7 +333,27 @@
 			$active_tab = 'report';
 			
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-
+			
+			$lang = array(
+				'select_one_column' => lang('Select at least one column'),
+				'select_group' => lang('Select a group'),
+				'select_count_sum' => lang('Select at least one count/sum operation'),
+				'select_operator' => lang('Select an operator for:'),
+				'enter_value' => lang('Enter a value for:'),
+				'enter_second_value' => lang('Enter a second value for:'),
+				
+				'choose_dataset' => lang('choose dataset'),
+				'and' => lang('AND'),
+				'or' => lang('OR'),
+				'count' => lang('COUNT'),
+				'sum' => lang('SUM'),
+				
+				'restricted_value' => lang('Restricted value'),
+				'operator' => lang('Operator'),
+				'value' => lang('Value'),
+				'conector' => lang('Conector')
+			);
+			
 			$data = array
 			(
 				'datatable_def' => array(),
@@ -349,6 +369,8 @@
 				'operators_like' => json_encode($this->operators_like),
 				'operators_in' => json_encode($this->operators_in),
 				'operators_null' => json_encode($this->operators_null),		
+				
+				'lang' => json_encode($lang),
 				
 				'report_id' => $values['id'],
 				'report_name' => $values['report_name'],
@@ -771,7 +793,7 @@
 			$data['criteria'] = $criteria;
 			
 			$list = $this->bo->read_to_export($dataset_id, $data);
-			
+		
 			$html_table = '<table class="pure-table pure-table-bordered">';
 			$html_table .= '<thead><tr>';
 			foreach ($list[0] as $c => $v)
