@@ -339,7 +339,7 @@
 					case (array_key_exists($param['operator'], $this->operators_between)):
 						if ($param['value1'] != '' && $param['value2'] != '')
 						{
-							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '".$param['value1']."' AND '".$param['value2']."'";
+							$result =  '('.$param['field']."::text ".$this->operators[$param['operator']]." '".$param['value1']."' AND '".$param['value2']."')";
 						}
 						break;
 					case (array_key_exists($param['operator'], $this->operators_like)):
