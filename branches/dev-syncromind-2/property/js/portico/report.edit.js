@@ -36,14 +36,15 @@ $(document).ready(function ()
 			columns = result.columns;
 			
 			var row = '<span style="display:table-row;">\n\
-						<span style="display:table-cell;">Restricted value</span>\n\
-						<span style="display:table-cell;">Operator</span>\n\
-						<span style="display:table-cell;">Value</span>\n\
-						<span style="display:table-cell;">Conector</span>\n\
-						<span style="display:table-cell;">Value</span>\n\
+						<span style="display:table-cell;">'+ lang['restricted_value'] +'</span>\n\
+						<span style="display:table-cell;">'+ lang['operator'] +'</span>\n\
+						<span style="display:table-cell;">'+ lang['value'] +'</span>\n\
+						<span style="display:table-cell;">'+ lang['conector'] +'</span>\n\
+						<span style="display:table-cell;">'+ lang['value'] +'</span>\n\
 				</span>';
 			$('#container_criteria').append(row);
-			n = 0;
+			
+			order_criteria = 0;
 		
 			if (jsonB !== '')
 			{
@@ -61,7 +62,7 @@ $(document).ready(function ()
 
 		if ($('#cbo_dataset_id').val() == '')
 		{
-			alert('choose dataset');
+			alert(lang['choose_dataset']);
 			return;
 		}
 		
@@ -98,7 +99,7 @@ $(document).ready(function ()
 				
 		if (invalid_groups)
 		{
-			alert('Choose group');
+			alert(lang['select_group']);
 			$('#responsiveTabsGroups').responsiveTabs('activate', 1);
 			return;
 		}
@@ -129,27 +130,25 @@ $(document).ready(function ()
 		if (invalid_aggregate)
 		{
 			$('#responsiveTabsGroups').responsiveTabs('activate', 3);
-			alert('Choose COUNT/SUM option');			
+			alert(lang['select_count_sum']);			
 			return;
 		}
 				
-		var idx = 0;
-		var size = 0;
+		var order = 0;
 		$('.criteria').each(function() 
 		{
-			idx = $(this).val();
-			if ($('#cbo_restricted_value_' + idx).val())
+			order = $(this).val();
+			if ($('#cbo_restricted_value_' + order).val())
 			{
-				values['cbo_restricted_value'][idx] = $('#cbo_restricted_value_' + idx).val();
-				values['cbo_operator'][idx] = $('#cbo_operator_' + idx).val();
-				values['txt_value1'][idx] = $('#txt_value1_' + idx).val();
-				values['cbo_conector'][idx] = $('#cbo_conector_' + idx).val();
-				values['txt_value2'][idx] = $('#txt_value2_' + idx).val();
-				size ++;
+				values['cbo_restricted_value'][order] = $('#cbo_restricted_value_' + order).val();
+				values['cbo_operator'][order] = $('#cbo_operator_' + order).val();
+				values['txt_value1'][order] = $('#txt_value1_' + order).val();
+				values['cbo_conector'][order] = $('#cbo_conector_' + order).val();
+				values['txt_value2'][order] = $('#txt_value2_' + order).val();
 			}
 		});
 		
-		if (size && !validate_criteria(values))
+		if (!validate_criteria())
 		{
 			$('#responsiveTabsGroups').responsiveTabs('activate', 4);
 			return;
@@ -180,8 +179,8 @@ $(document).ready(function ()
 
 		var combo_conector = $("<select></select>");
 		combo_conector.append("<option value=''></option>");
-		combo_conector.append("<option value='and'>AND</option>");
-		combo_conector.append("<option value='or'>OR</option>");
+		combo_conector.append("<option value='and'>"+ lang['and'] +"</option>");
+		combo_conector.append("<option value='or'>"+ lang['or'] +"</option>");
 
 		var combo_restricted_value = $("<select></select>");
 		combo_restricted_value.append("<option value=''></option>");
@@ -190,21 +189,21 @@ $(document).ready(function ()
 			combo_restricted_value.append("<option value='"+ value.name +"'>"+ value.name +"</option>");
 		});
 
-		var el_1 = "<span style='display:table-cell;'><select id='cbo_restricted_value_"+ n +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
-		var el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ n +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
-		var el_3 = "<span style='display:table-cell;'><input type='text' id='txt_value1_"+ n +"' name='txt_value1[]'></input></span>";
-		var el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ n +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
-		var el_5 = "<span style='display:table-cell;'><input type='text' id='txt_value2_"+ n +"' name='txt_value2[]'></input></span>";
-		var el_6 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ n +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
+		var el_1 = "<span style='display:table-cell;'><select id='cbo_restricted_value_"+ order_criteria +"' name='cbo_restricted_value[]'>" + $(combo_restricted_value).html() + "</select></span>";
+		var el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ order_criteria +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
+		var el_3 = "<span style='display:table-cell;'><input type='text' id='txt_value1_"+ order_criteria +"' name='txt_value1[]'></input></span>";
+		var el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ order_criteria +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
+		var el_5 = "<span style='display:table-cell;'><input type='text' id='txt_value2_"+ order_criteria +"' name='txt_value2[]'></input></span>";
+		var el_6 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ order_criteria +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
 
 		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 + el_6 +'</span>';
-		n ++;
+		order_criteria ++;
 		$('#container_criteria').append(row);
 
 	});
 });
 
- var n = 0;
+ var order_criteria = 0;
 
 function delete_restricted_value (e)
 {
@@ -226,55 +225,62 @@ function in_array_object (key_operator, array_object)
 	return result; 
 }
 
-function validate_criteria (values)
+function validate_criteria ()
 {
 	var result = true;
-	$.each(values.cbo_restricted_value, function(key, value) 
+	var order = "";
+	var field = "";
+	var operator = "";
+
+	$('.criteria').each(function() 
 	{
-		if (values.cbo_operator[key] == "")
+		order = $(this).val();
+		field = $("#cbo_restricted_value_" + order).val();
+		operator = $("#cbo_operator_" + order).val();
+
+		if (field == "")
+		{
+			return true;
+		}
+
+		if (field && operator == "")
 		{
 			result = false;
-			alert('Select an operator for: ' + value);
-			$("#cbo_operator_" + key).focus();
-			return;
+			alert(lang['select_operator'] + ' ' + field);
+			$("#cbo_operator_" + order).focus();
+
+			return false;
 		}
-	});
-	
-	if (!result)
-	{
-		return result;
-	}
-	
-	$.each(values.cbo_operator, function(key, value) 
-	{
+
 		switch (true)
 		{
-			case (in_array_object(value, operators_between)):
-				if ($("#txt_value1_" + key).val() == '')
+			case (in_array_object(operator, operators_between)):
+				if ($("#txt_value2_" + order).val() == "")
 				{
 					result = false;
-					alert('Enter a value for ' + values.cbo_restricted_value[key]);
-					$("#txt_value1_" + key).focus();
+					alert(lang['enter_second_value'] + ' ' + field);					
+					$("#txt_value2_" + order).focus();					
 				}
-				if ($("#txt_value2_" + key).val() == '')
+				if ($("#txt_value1_" + order).val() == "")
 				{
 					result = false;
-					alert('Enter a second value for: ' + values.cbo_restricted_value[key]);
-					$("#txt_value2_" + key).focus();
+					alert(lang['enter_value'] + ' ' + field);
+					$("#txt_value1_" + order).focus();
 				}
+				$("#cbo_conector_" + order).val('and');
 				break;
-			case (in_array_object(value, operators_null)):
+			case (in_array_object(operator, operators_null)):
 				break;
 			default: 
-				if ($("#txt_value1_" + key).val() == '')
+				if ($("#txt_value1_" + order).val() == "")
 				{
 					result = false;
-					alert('Enter a value for: ' + values.cbo_restricted_value[key]);
-					$("#txt_value1_" + key).focus();
+					alert(lang['enter_value'] + ' ' + field);
+					$("#txt_value1_" + order).focus();
 				}
-		}		
+		}	
 	});
-	
+
 	return result;
 }
 
@@ -350,10 +356,10 @@ function build_check_aggregates(name)
 function build_list_aggregates(name, type)
 {
     var combo = $("<select></select>");  
-	combo.append("<option value='count'>Count</option>");
+	combo.append("<option value='count'>"+ lang['count'] +"</option>");
 	if (type == 'integer' || type == 'numeric')
 	{
-		combo.append("<option value='sum'>Sum</option>");
+		combo.append("<option value='sum'>"+ lang['sum'] +"</option>");
 	}
 	
 	return "<span style='display:table-cell;'><select disabled='true' id='cbo_" + name + "' name='cbo_aggregate["+ name +"]'>" + $(combo).html() + "</select></span>";
