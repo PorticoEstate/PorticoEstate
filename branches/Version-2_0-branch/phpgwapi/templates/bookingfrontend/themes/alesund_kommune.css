@@ -22,17 +22,14 @@ h2,
 h3,
 h4,
 h5,
-h6,
-label {
+h6
+{
     color: #2d6d8f;
 	letter-spacing: 0.1em;
     font-weight: normal;
    /* text-transform: uppercase;*/
 }
 
-.pure-g [class*="pure-u"] {
-	font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
-}
 .pure-g [class*="pure-u"] {
 	font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
 }
