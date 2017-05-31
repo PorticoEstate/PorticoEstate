@@ -3541,7 +3541,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'install_id'");
 		$GLOBALS['phpgw_setup']->oProc->next_record();
 		$GLOBALS['phpgw_info']['server']['install_id'] = $GLOBALS['phpgw_setup']->oProc->f('config_value');
-		$GLOBALS['phpgw_setup']->oProc->query("SELECT account_id FROM phpgw_accounts WHERE account_id = 7 AND account_type = 'u' AND account_status = 'A'");
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT account_id FROM phpgw_accounts WHERE account_type = 'u' AND account_status = 'A'");
 
 		$users = array();
 		while ($GLOBALS['phpgw_setup']->oProc->next_record())
