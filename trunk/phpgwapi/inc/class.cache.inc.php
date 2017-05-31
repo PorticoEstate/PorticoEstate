@@ -38,6 +38,22 @@
 	class phpgwapi_cache
 	{
 		/**
+		 * Decide whether to use database for caching - or not
+		 *
+		 * @param string $module the module name the data belongs to
+		 * @param string $id the internal module id for the data
+		 * @return bool use database
+		 */
+		protected static function _use_database($module, $id)
+		{
+			$use_database = array(
+				'controller' => array('location_bookmark' => true),
+				'phpgwapi' => array('bookmark_menu' => true)
+				);
+			return !!$use_database[$module][$id];
+		}
+
+		/**
 		 * Clear stored data from shared memory
 		 *
 		 * @param string $key the data identifier
@@ -312,7 +328,7 @@
 		 */
 		public static function user_clear($module, $id, $uid)
 		{
-			$db = false;
+			$db = self::_use_database($module, $id);
 			if($db)
 			{
 				return self::_user_clear_db($module, $id, $uid);
@@ -333,7 +349,7 @@
 		 */
 		public static function user_get($module, $id, $uid, $bypass = true, $compress = false)
 		{
-			$db = false;
+			$db = self::_use_database($module, $id);
 			if($db)
 			{
 				return self::_user_get_db($module, $id, $uid, $bypass, $compress);
@@ -355,7 +371,7 @@
 		 */
 		public static function user_set($module, $id, $value, $uid, $bypass = true, $compress = false)
 		{
-			$db = false;
+			$db = self::_use_database($module, $id);
 			if($db)
 			{
 				return self::_user_set_db($module, $id, $value, $uid, $bypass, $compress);
@@ -498,7 +514,7 @@
 		 * @param int $uid the user id to the data is stored for
 		 * @return mixed the data from user cache
 		 */
-		protected static function _user_get($module, $id, $uid, $bypass = true, $compress = false)
+		static function _user_get($module, $id, $uid, $bypass = true, $compress = false)
 		{
 			$uid = (int) $uid;
 			$module = $module . '_' . $uid;
