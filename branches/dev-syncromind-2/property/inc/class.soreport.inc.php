@@ -46,10 +46,6 @@
 				'greater' => '>', 
 				'greater_equal' => '>='
 			);
-			$this->operators_between = array(
-				'between' => 'BETWEEN',
-				'not_between' => 'NOT BETWEEN'
-			);
 			$this->operators_like = array(
 				'like' => 'LIKE', 
 				'not_like' => 'NOT LIKE', 
@@ -64,7 +60,7 @@
 				'is_null' => 'IS NULL', 
 				'is_not_null' => 'IS NOT NULL'
 			);
-			$this->operators = array_merge($this->operators_equal, $this->operators_between, $this->operators_like, $this->operators_in, $this->operators_null);
+			$this->operators = array_merge($this->operators_equal, $this->operators_like, $this->operators_in, $this->operators_null);
 		}
 
 		function read_single ( $id, $values = array() )
@@ -284,11 +280,6 @@
 				case 'character varying':
 				case 'text':
 					$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
-					if ($param['conector'] && $param['value2'] != '')
-					{
-						$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value2']."'";
-						$result = '('.$result.')';
-					}
 					break;
 				case 'integer':
 				case 'smallint':
@@ -296,11 +287,6 @@
 					if (is_numeric($param['value1']))
 					{
 						$result = $param['field']." ".$this->operators[$param['operator']]." ".$param['value1'];
-						if ($param['conector'] && is_numeric(['value2']))
-						{
-							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." ".$param['value2'];
-							$result = '('.$result.')';
-						}
 					}
 					break;
 				case 'date':
@@ -308,11 +294,6 @@
 					if ($this->_is_date($param['value1']))
 					{
 						$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
-						if ($param['conector'] && $this->_is_date($param['value2']))
-						{
-							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
-							$result = '('.$result.')';
-						}
 					}
 			}				
 		
@@ -328,6 +309,7 @@
 				$_columns[$column['name']] = $column['type'];
 			}
 			
+			$n = 1;
 			$where = array();
 			foreach ($criteria as $param)
 			{
@@ -336,21 +318,10 @@
 					case (array_key_exists($param['operator'], $this->operators_equal)):
 						$result =  $this->_build_conditions_equal($param, $_columns[$param['field']]);
 						break;
-					case (array_key_exists($param['operator'], $this->operators_between)):
-						if ($param['value1'] != '' && $param['value2'] != '')
-						{
-							$result =  '('.$param['field']."::text ".$this->operators[$param['operator']]." '".$param['value1']."' AND '".$param['value2']."')";
-						}
-						break;
 					case (array_key_exists($param['operator'], $this->operators_like)):
 						if ($param['value1'] != '')
 						{
-							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value1']."%'";
-							if ($param['conector'] && $param['value2'] != '')
-							{
-								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value2']."%'";
-								$result = '('.$result.')';
-							}							
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value1']."%'";							
 						}
 						break;
 					case (array_key_exists($param['operator'], $this->operators_null)):
@@ -362,21 +333,15 @@
 							$values = array_map('trim', explode(',', $param['value1']));
 							$_string = "'".implode("','", $values)."'";
 							$result =  $param['field']."::text ".$this->operators[$param['operator']]." (".$_string.")";
-							if ($param['conector'] && $param['value2'] != '')
-							{
-								$values_2 = array_map('trim', explode(',', $param['value2']));
-								$_string_2 = "'".implode("','", $values_2)."'";								
-								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." (".$_string_2.")";
-								$result = '('.$result.')';
-							}
 						}
 						break;
-				}		
+				}
 				
 				if ($result)
 				{
-					$where[] = $result;
+					$where[] = $result." ".$param['conector'];				
 				}
+				$n++;
 			}
 			
 			return $where;
@@ -411,11 +376,11 @@
 			
 			if ($cond)
 			{
-				$where = 'WHERE '.implode(' AND ', $cond);
+				$where = 'WHERE '.implode(' ', $cond);
 			}
 			
 			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$ordering;
-
+echo $sql; die;
 			if (count($data))
 			{
 				$this->db->limit_query($sql, 0, __LINE__, __FILE__, 20);
