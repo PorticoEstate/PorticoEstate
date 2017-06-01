@@ -380,7 +380,7 @@
 			}
 			
 			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$ordering;
-echo $sql; die;
+
 			if (count($data))
 			{
 				$this->db->limit_query($sql, 0, __LINE__, __FILE__, 20);
