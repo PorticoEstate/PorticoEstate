@@ -88,10 +88,6 @@
 		<xsl:if test="operators_equal != ''">
 			operators_equal = <xsl:value-of select="operators_equal"/>;
 		</xsl:if>
-		var operators_between = {};
-		<xsl:if test="operators_between != ''">
-			operators_between = <xsl:value-of select="operators_between"/>;
-		</xsl:if>
 		var operators_like = {};
 		<xsl:if test="operators_like != ''">
 			operators_like = <xsl:value-of select="operators_like"/>;
@@ -318,23 +314,6 @@
 				
 				switch (true)
 				{
-					case (in_array_object(operator, operators_between)):
-						if ($("#txt_value2_" + order).val() == "")
-						{
-							result = {
-								element : $("#txt_value2_" + order),
-								message : lang['enter_second_value'] + ' ' + field
-							  }							
-						}
-						if ($("#txt_value1_" + order).val() == "")
-						{
-							result = {
-								element : $("#txt_value1_" + order),
-								message : lang['enter_value'] + ' ' + field
-							  }
-						}
-						$("#cbo_conector_" + order).val('and');
-						break;
 					case (in_array_object(operator, operators_null)):
 						break;
 					default: 
