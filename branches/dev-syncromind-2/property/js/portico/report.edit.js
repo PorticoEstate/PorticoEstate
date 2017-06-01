@@ -40,7 +40,6 @@ $(document).ready(function ()
 						<span style="display:table-cell;">'+ lang['operator'] +'</span>\n\
 						<span style="display:table-cell;">'+ lang['value'] +'</span>\n\
 						<span style="display:table-cell;">'+ lang['conector'] +'</span>\n\
-						<span style="display:table-cell;">'+ lang['value'] +'</span>\n\
 				</span>';
 			$('#container_criteria').append(row);
 			
@@ -77,7 +76,6 @@ $(document).ready(function ()
 		values['cbo_operator'] = {};
 		values['txt_value1'] = {};
 		values['cbo_conector'] = {};
-		values['txt_value2'] = {};
 		
 		$('input[name^="columns"]').each(function() {
 
@@ -144,7 +142,6 @@ $(document).ready(function ()
 				values['cbo_operator'][order] = $('#cbo_operator_' + order).val();
 				values['txt_value1'][order] = $('#txt_value1_' + order).val();
 				values['cbo_conector'][order] = $('#cbo_conector_' + order).val();
-				values['txt_value2'][order] = $('#txt_value2_' + order).val();
 			}
 		});
 		
@@ -193,10 +190,9 @@ $(document).ready(function ()
 		var el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ order_criteria +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
 		var el_3 = "<span style='display:table-cell;'><input type='text' id='txt_value1_"+ order_criteria +"' name='txt_value1[]'></input></span>";
 		var el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ order_criteria +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
-		var el_5 = "<span style='display:table-cell;'><input type='text' id='txt_value2_"+ order_criteria +"' name='txt_value2[]'></input></span>";
-		var el_6 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ order_criteria +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
+		var el_5 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ order_criteria +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
 
-		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 + el_6 +'</span>';
+		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 +'</span>';
 		order_criteria ++;
 		$('#container_criteria').append(row);
 
@@ -254,21 +250,6 @@ function validate_criteria ()
 
 		switch (true)
 		{
-			case (in_array_object(operator, operators_between)):
-				if ($("#txt_value2_" + order).val() == "")
-				{
-					result = false;
-					alert(lang['enter_second_value'] + ' ' + field);					
-					$("#txt_value2_" + order).focus();					
-				}
-				if ($("#txt_value1_" + order).val() == "")
-				{
-					result = false;
-					alert(lang['enter_value'] + ' ' + field);
-					$("#txt_value1_" + order).focus();
-				}
-				$("#cbo_conector_" + order).val('and');
-				break;
 			case (in_array_object(operator, operators_null)):
 				break;
 			default: 
@@ -321,7 +302,6 @@ function set_values()
 		$("#cbo_operator_" + key).val(value.operator);
 		$("#txt_value1_" + key).val(value.value1);
 		$("#cbo_conector_" + key).val(value.conector);
-		$("#txt_value2_" + key).val(value.value2);
 	});
 	
 }
