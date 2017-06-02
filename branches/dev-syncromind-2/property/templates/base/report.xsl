@@ -350,12 +350,12 @@
 						return result;
 					}
 					
-					result = validate_group();
+					/*result = validate_group();
 					if (!jQuery.isEmptyObject(result))
 					{
 						$('#responsiveTabsGroups').responsiveTabs('activate', 1);
 						return result;
-					}
+					}*/
 					
 					result = validate_aggregate();
 					if (!jQuery.isEmptyObject(result))
