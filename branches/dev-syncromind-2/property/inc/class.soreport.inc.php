@@ -364,14 +364,23 @@
 
 			$string_columns = implode(',', $jsonB['columns']);
 			
+			$array_order = array();
 			$group = implode(',', $jsonB['group']);
-			$order = implode(',', $jsonB['order']);
-			$ordering = 'ORDER BY '.$group.' ASC';
-			if (($group != $order) && $order != '')
+			if ($group)
 			{
-				$ordering = $ordering.', '.$order.' ASC';
+				$array_order[] = $group.' ASC';
 			}
-		
+			$order = implode(',', $jsonB['order']);
+			if ($order)
+			{
+				$array_order[] = $order.' ASC';
+			}
+			
+			if (count($array_order))
+			{
+				$ordering = 'ORDER BY '.implode(', ', array_unique($array_order));
+			}
+	
 			$cond = $this->_build_conditions($jsonB['criteria'], $id);
 			
 			if ($cond)
@@ -398,6 +407,8 @@
 			
 			while ($this->db->next_record())
 			{
+				$_group = ($group) ? $this->db->f($group) : 'grupo';
+				
 				$value = array();
 				foreach ($columns as $column)
 				{
@@ -408,17 +419,17 @@
 				{
 					if ($v == 'sum')
 					{
-						$array_sum[$this->db->f($group)][$k][] = $this->db->f($k);
+						$array_sum[$_group][$k][] = $this->db->f($k);
 					}
 					if ($v == 'count')
 					{
-						$array_count[$this->db->f($group)][$k][] = $this->db->f($k);
+						$array_count[$_group][$k][] = $this->db->f($k);
 					}
 				}
 				
-				$values[$this->db->f($group)][] = $value;				
+				$values[$_group][] = $value;				
 			}
-			
+
 			if (count($values))
 			{
 				$result = $this->_generate_total_sum($values, $array_sum, $array_count);
