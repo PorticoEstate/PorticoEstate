@@ -85,22 +85,22 @@ $(document).ready(function ()
 			}
 		});
 		
-		var invalid_groups = true;
+		//var invalid_groups = true;
 		$('input[name="group"]').each(function() {
 
 			if ($(this).is(":checked"))
 			{
 				values['group'][$(this).val()] = $(this).val();
-				invalid_groups = false;
+				//invalid_groups = false;
 			}
 		});
 				
-		if (invalid_groups)
+		/*if (invalid_groups)
 		{
 			alert(lang['select_group']);
 			$('#responsiveTabsGroups').responsiveTabs('activate', 1);
 			return;
-		}
+		}*/
 		
 		$('input[name="order"]').each(function() {
 
