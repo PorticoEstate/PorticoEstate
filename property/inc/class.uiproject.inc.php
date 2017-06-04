@@ -1883,11 +1883,12 @@ JS;
 
 			$history_def = array
 				(
-				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => true),
-				array('key' => 'value_user', 'label' => lang('User'), 'Action' => true),
-				array('key' => 'value_action', 'label' => lang('action'), 'sortable' => true),
-				array('key' => 'value_old_value', 'label' => lang('old value'), 'sortable' => true),
-				array('key' => 'value_new_value', 'label' => lang('new value'), 'sortable' => true)
+				array('key' => '#',	'label' => '#',	'sortable' =>true),
+				array('key' => 'value_date', 'label' => lang('Date'), 'sortable' => false),
+				array('key' => 'value_user', 'label' => lang('User'), 'sortable' => false),
+				array('key' => 'value_action', 'label' => lang('action'), 'sortable' => false),
+				array('key' => 'value_old_value', 'label' => lang('old value'), 'sortable' => false),
+				array('key' => 'value_new_value', 'label' => lang('new value'), 'sortable' => false)
 			);
 
 			$datatable_def[] = array

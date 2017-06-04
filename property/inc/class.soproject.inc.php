@@ -38,6 +38,7 @@
 		var $total_records = 0;
 		private $global_lock = false;
 		private $vendor_list = array();
+		protected $historylog;
 
 		function __construct()
 		{
@@ -57,6 +58,8 @@
 			$this->grants = $this->acl->get_grants2('property', '.project');
 			$this->config = CreateObject('phpgwapi.config', 'property');
 			$this->config->read();
+			$this->historylog = CreateObject('property.historylog', 'project');
+
 		}
 
 		function select_status_list()
@@ -2694,6 +2697,9 @@
 
 		private function transfer_budget( $id, $budget, $year )
 		{
+
+			$historylog = & $this->historylog;
+
 			$this->db->transaction_begin();
 
 			$id = (int)$id;
@@ -2762,6 +2768,8 @@
 				}
 
 				$this->update_budget($id, $year, $periodization_id, $new_budget, true, 'update', true);
+				$historylog->add('B', $id, $new_budget);
+				$historylog->add('RM', $id, 'Budsjett oppdatert via masseoppdatering');
 			}
 			else if ($project_type_id == 1 || $project_type_id == 4)//operation or maintenance
 			{
@@ -2769,6 +2777,10 @@
 				{
 					$this->db->query("UPDATE fm_project_budget SET active = 0 WHERE project_id = {$id}", __LINE__, __FILE__); // previous
 					$this->update_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], true, 'update', true);
+
+					$historylog->add('B', $id, (int)$budget['budget_amount']);
+					$historylog->add('RM', $id, 'Budsjett oppdatert via masseoppdatering');
+
 				}
 			}
 
