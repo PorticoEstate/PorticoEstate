@@ -37,8 +37,8 @@
 
 		var $total_records = 0;
 		protected $global_lock = false;
-
-		function __construct()
+		protected $historylog;
+					function __construct()
 		{
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon = CreateObject('property.bocommon');
@@ -51,6 +51,7 @@
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->acl->set_account_id($this->account);
 			$this->grants = $this->acl->get_grants2('property', '.project');
+			$this->historylog = CreateObject('property.historylog', 'workorder');
 		}
 
 		function next_id()
@@ -1203,7 +1204,7 @@
 		function add( $workorder )
 		{
 			$receipt = array();
-			$historylog = CreateObject('property.historylog', 'workorder');
+			$historylog = & $this->historylog;
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 			$workorder['billable_hours'] = (float)str_replace(',', '.', $workorder['billable_hours']);
@@ -1404,7 +1405,7 @@
 		{
 			$config	= CreateObject('phpgwapi.config','property');
 			$config->read_repository();
-			$historylog = CreateObject('property.historylog', 'workorder');
+			$historylog = & $this->historylog;
 			$workorder['descr'] = $this->db->db_addslashes($workorder['descr']);
 			$workorder['title'] = $this->db->db_addslashes($workorder['title']);
 			$workorder['billable_hours'] = (float)str_replace(',', '.', $workorder['billable_hours']);
@@ -1859,7 +1860,7 @@
 			if ($orders && is_array($orders))
 			{
 				$lang_closed = lang('closed');
-				$historylog_workorder = CreateObject('property.historylog', 'workorder');
+				$historylog_workorder = & $this->historylog;
 
 				foreach ($orders as $id)
 				{
@@ -1907,7 +1908,7 @@
 
 			$lang_reopen = lang('Re-opened');
 
-			$historylog_workorder = CreateObject('property.historylog', 'workorder');
+			$historylog_workorder = & $this->historylog;
 
 			foreach ($orders as $id)
 			{
@@ -2700,6 +2701,8 @@
 		 * */
 		public function transfer_budget( $id, $budget, $year )
 		{
+			$historylog = & $this->historylog;
+
 			if ($this->db->get_transaction())
 			{
 				$this->global_lock = true;
@@ -2731,12 +2734,15 @@
 
 			phpgwapi_cache::system_clear('property', "budget_order_{$id}");
 
+			$updated_budget = false;
 			if ($continuous)
 			{
 				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id} AND year = {$latest_year}", __LINE__, __FILE__);
 				if ($budget['budget_amount'])
 				{
 					$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], (int)$budget['budget_amount'], (int)$budget['budget_amount'], $action = 'update', true);
+					$historylog->add('B', $id, (int)$budget['budget_amount']);
+					$updated_budget = true;
 				}
 			}
 			else if ($project_type_id == 1)//operation
@@ -2756,6 +2762,8 @@
 				$transferred = $this->_update_order_budget($id, $latest_year, $periodization_id, $paid_last_year, $paid_last_year, $paid_last_year, $action = 'update', $activate = 0);
 
 				$this->_update_order_budget($id, $year, $periodization_id, (int)$budget['budget_amount'], (int)$budget['budget_amount'], (int)$budget['budget_amount'], $action = 'update', true);
+				$historylog->add('B', $id, (int)$budget['budget_amount']);
+				$updated_budget = true;
 
 				$this->db->query("UPDATE fm_workorder_budget SET active = 0 WHERE order_id = {$id} AND year = {$latest_year}", __LINE__, __FILE__);
 
@@ -2819,8 +2827,15 @@
 				}
 
 				$this->_update_order_budget($id, $year, $periodization_id, $new_budget, $new_budget, $new_budget, $action = 'update', true);
+				$historylog->add('B', $id, (int)$new_budget);
+				$updated_budget = true;
 			}
 //die();
+			if($updated_budget)
+			{
+				$historylog->add('RM', $id, 'Budsjett oppdatert via masseoppdatering');
+			}
+
 			if (!$this->global_lock)
 			{
 				$this->db->transaction_commit();
@@ -3021,7 +3036,7 @@
 			$order_id = $data['order_id'];
 			$status = $data['status'];
 
-			$historylog = CreateObject('property.historylog', 'workorder');
+			$historylog = & $this->historylog;
 
 			$this->db->query("SELECT status FROM fm_workorder WHERE id = {$order_id}", __LINE__, __FILE__);
 			$this->db->next_record();

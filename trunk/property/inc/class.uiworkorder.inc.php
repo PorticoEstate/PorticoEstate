@@ -1718,14 +1718,19 @@
 			$history_def = array
 				(
 				array(
+					'key' => '#',
+					'label' => '#',
+					'sortable' =>true,
+					'resizeable' => true),
+				array(
 					'key' => 'value_date',
 					'label' => lang('Date'),
-					'sortable' => true,
+					'sortable' =>false,
 					'resizeable' => true),
 				array(
 					'key' => 'value_user',
 					'label' => lang('User'),
-					'Action' => true,
+					'sortable' =>false,
 					'resizeable' => true),
 				array(
 					'key' => 'value_action',
@@ -1735,12 +1740,12 @@
 				array(
 					'key' => 'value_old_value',
 					'label' => lang('old value'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true),
 				array(
 					'key' => 'value_new_value',
 					'label' => lang('New Value'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true)
 			);
 
