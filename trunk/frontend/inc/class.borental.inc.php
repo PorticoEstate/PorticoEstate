@@ -124,7 +124,7 @@
 				}
 				else
 				{
-					$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array(
+					$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array(
 						'email' => $row));
 					$parties = array_keys($parties);
 				}
