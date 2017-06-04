@@ -1647,6 +1647,15 @@
 				'required' => true
 			));
 
+			$b_account_list = execMethod('property.bogeneric.get_list', array(
+						'type' => 'budget_account', 'selected' => $values['b_account_id'] ? $values['b_account_id'] : $project['b_account_id'], 'add_empty' => true, 'filter' => array('active' => 1)));
+
+			foreach ($b_account_list as &$entry)
+			{
+				$entry['name'] = "{$entry['id']} {$entry['name']}";
+			}
+			unset($entry);
+
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 				(
 				'ecodimb' => $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'],
@@ -1718,14 +1727,19 @@
 			$history_def = array
 				(
 				array(
+					'key' => '#',
+					'label' => '#',
+					'sortable' =>true,
+					'resizeable' => true),
+				array(
 					'key' => 'value_date',
 					'label' => lang('Date'),
-					'sortable' => true,
+					'sortable' =>false,
 					'resizeable' => true),
 				array(
 					'key' => 'value_user',
 					'label' => lang('User'),
-					'Action' => true,
+					'sortable' =>false,
 					'resizeable' => true),
 				array(
 					'key' => 'value_action',
@@ -1735,12 +1749,12 @@
 				array(
 					'key' => 'value_old_value',
 					'label' => lang('old value'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true),
 				array(
 					'key' => 'value_new_value',
 					'label' => lang('New Value'),
-					'sortable' => true,
+					'sortable' => false,
 					'resizeable' => true)
 			);
 
@@ -2486,6 +2500,8 @@
 					'menuaction' => 'property.uiproject.edit')),
 				'b_group_data' => $b_group_data,
 				'b_account_data' => $b_account_data,
+				'b_account_as_listbox' => $GLOBALS['phpgw_info']['user']['preferences']['property']['b_account_as_listbox'],
+				'b_account_list'	=> array('options' => $b_account_list),
 				'value_start_date' => $values['start_date'],
 				'value_end_date' => $values['end_date'],
 				'value_tender_deadline' => $values['tender_deadline'],
