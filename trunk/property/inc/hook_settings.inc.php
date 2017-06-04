@@ -260,6 +260,8 @@
 
 	create_select_box('Default project status', 'project_status', $_status_project, 'The default status for your projects');
 	create_select_box('Default workorder status', 'workorder_status', $_status_workorder, 'The default status for your workorders');
+	create_select_box('Budget account as listbox', 'b_account_as_listbox', $yes_and_no, 'The input type for budget account');
+
 	create_select_box('Default project categories', 'project_category', $_categories_project, 'The default category for your projects and workorders');
 	create_select_box('Default district-filter', 'default_district', $_districts, 'Your default district-filter ');
 
