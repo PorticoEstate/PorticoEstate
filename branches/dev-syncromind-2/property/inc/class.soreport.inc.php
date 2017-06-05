@@ -407,7 +407,7 @@
 			
 			while ($this->db->next_record())
 			{
-				$_group = ($group) ? $this->db->f($group) : 'grupo';
+				$_group = ($group) ? $this->db->f($group) : 'any_group';
 				
 				$value = array();
 				foreach ($columns as $column)
@@ -468,7 +468,10 @@
 				}	
 				
 				$array_operations[] = $operations;
-				$group[] =  $operations;
+				if ($k != 'any_group')
+				{
+					$group[] =  $operations;
+				}
 				$group[] =  $empty;
 				
 				$result = array_merge($result, $group);
