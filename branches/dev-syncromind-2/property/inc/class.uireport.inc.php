@@ -350,7 +350,9 @@
 				'restricted_value' => lang('Restricted value'),
 				'operator' => lang('Operator'),
 				'value' => lang('Value'),
-				'conector' => lang('Conector')
+				'conector' => lang('Conector'),
+				'uselect' => lang('Unselect'),
+				'delete' => lang('Delete')
 			);
 			
 			$data = array
@@ -447,7 +449,8 @@
 			
 			$criteria = $this->_validate_criteria();
 			
-			$group = array($group_by => $group_by);
+			$group = ($group_by) ? array($group_by => $group_by) : array();
+
 			$order = array($order_by => $order_by);
 			
 			$columns = array();
@@ -466,11 +469,6 @@
 			if (!$dataset_id)
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select dataset name !'));
-			}
-			
-			if (!count($group))
-			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a group !'));
 			}
 
 			if (!count($aggregate))
