@@ -43,6 +43,9 @@ $(document).ready(function ()
 				</span>';
 			$('#container_criteria').append(row);
 			
+			var el = '<span style="display:block;"><input type="checkbox" onchange="unselect_group()" id="unselect" value="1"/><b>'+ lang['uselect'] +'</b></span>';
+			$('#container_groups').append(el);		
+			
 			order_criteria = 0;
 		
 			if (jsonB !== '')
@@ -190,7 +193,7 @@ $(document).ready(function ()
 		var el_2 = "<span style='display:table-cell;'><select id='cbo_operator_"+ order_criteria +"' name='cbo_operator[]'>" + $(combo_operator).html() + "</select></span>";
 		var el_3 = "<span style='display:table-cell;'><input type='text' id='txt_value1_"+ order_criteria +"' name='txt_value1[]'></input></span>";
 		var el_4 = "<span style='display:table-cell;'><select id='cbo_conector_"+ order_criteria +"' name='cbo_conector[]'>" + $(combo_conector).html() + "</select></span>";
-		var el_5 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ order_criteria +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='Delete'></input></span>";
+		var el_5 = "<span style='display:table-cell;'><input type='hidden' class='criteria' value='"+ order_criteria +"'><input type='button' class='pure-button pure-button-primary' onclick='delete_restricted_value(this)' name='btn_del' value='"+ lang['delete'] +"'></input></span>";
 
 		var row = '<span style="display:table-row;">'+ el_1 + el_2 + el_3 + el_4 + el_5 +'</span>';
 		order_criteria ++;
@@ -204,6 +207,21 @@ $(document).ready(function ()
 function delete_restricted_value (e)
 {
 	$(e).parent().parent().remove();
+}
+
+function unselect_group ()
+{
+	if ($("#unselect").is(":checked")) 
+	{
+		$('input[name="group"]').each(function() {
+			$(this).prop('checked', false);
+			$(this).prop('disabled', true);
+		});
+	} else {
+		$('input[name="group"]').each(function() {			
+			$(this).prop('disabled', false);
+		});		
+	}
 }
 
 function in_array_object (key_operator, array_object)
