@@ -595,12 +595,12 @@
 				$where = 'AND';
 			}
 
-			if ($filter_year && $filter_year != 'all')
-			{
-				$filter_year = (int)$filter_year;
-				$filtermethod .= " $where (fm_project_budget.year={$filter_year} OR fm_project_buffer_budget.year={$filter_year})";
-				$where = 'AND';
-			}
+//			if ($filter_year && $filter_year != 'all')
+//			{
+//				$filter_year = (int)$filter_year;
+//				$filtermethod .= " $where (fm_project_budget.year={$filter_year} OR fm_project_buffer_budget.year={$filter_year})";
+//				$where = 'AND';
+//			}
 
 			$querymethod = '';
 			if ($query)
@@ -631,9 +631,18 @@
 						$_querymethod = array();
 						foreach ($criteria as $field_info)
 						{
-							if ($field_info['type'] == int)
+							if ($field_info['type'] == 'int')
 							{
-								$_query = (int)$query;
+								if($field_info['matchtype'] == 'like')
+								{
+									$_query = $query;
+									$_querymethod[] = " cast({$field_info['field']} as text) {$matchtypes[$field_info['matchtype']]} {$field_info['front']}{$_query}{$field_info['back']}";
+									continue;
+								}
+								else
+								{
+									$_query = (int)$query;
+								}
 							}
 							else
 							{
@@ -802,7 +811,7 @@
 						{
 							if ($year && $entry['year'] == $year)
 							{
-								if ($entry['active'])
+//								if ($entry['active'])
 								{
 									$project['combined_cost'] += $entry['sum_orders'];
 									$project['budget'] += $entry['budget'];
@@ -815,7 +824,7 @@
 							}
 							else if (!$year)
 							{
-								if ($entry['active'])
+//								if ($entry['active'])
 								{
 									$project['combined_cost'] += $entry['sum_orders'];
 									$project['budget'] += $entry['budget'];
