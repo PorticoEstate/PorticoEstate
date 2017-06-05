@@ -394,9 +394,9 @@
 				(
 				'field' => 'fm_project.id',
 				'type' => 'int',
-				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'matchtype' => 'like',
+				'front' => "'",
+				'back' => "%'",
 			);
 			$criteria[3] = array
 				(
