@@ -1721,13 +1721,20 @@ JS;
 			$total_records += $generic_document->total_records;
 			foreach ($documents2 as $item) 
 			{
+				$title = '';
+				if($item['path'])
+				{
+					$temp = json_decode($item['path']);
+					$title = implode('<br/>', $temp);
+				}
+
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
 				$values[] =  array(
 					'id'=> $item['id'],
 					'type'=> 'generic',
 					'document_name' => $document_name,
-					'title'=> $item['title'],
-					'document_date'	=> $item['document_date'] // fixme
+					'title'=> $title,
+					'document_date'	=> $item['created']
 					);
 			}
 			
