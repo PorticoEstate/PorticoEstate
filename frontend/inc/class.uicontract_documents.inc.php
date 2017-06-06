@@ -123,7 +123,7 @@
 
 			$config = CreateObject('phpgwapi.config', 'frontend');
 			$config->read();
-			//$doc_types = isset($config->config_data['document_frontend_cat']) && $config->config_data['document_frontend_cat'] ? $config->config_data['document_frontend_cat'] : array();	
+			//$doc_types = isset($config->config_data['document_frontend_cat']) && $config->config_data['document_frontend_cat'] ? $config->config_data['document_frontend_cat'] : array();
 			$doc_types = array('type' => 1);
 
 			$allrows = true;
@@ -137,11 +137,10 @@
 				{
 					if ($doc_type)
 					{
-						$document_list = array_merge($document_list, $sodocument->get($start_index, $num_of_objects, 'id', true, $search_for, $search_type, $filters));
+						$document_list = array_merge($document_list, $sodocument->get(0, 0, 'id', true, '', '', $filters));
 					}
 
-					$total_records = $total_records + $sodocument->get_count($search_for, $search_type, $filters);
-					;
+					$total_records = $total_records + $sodocument->get_count('', '', $filters);
 				}
 			}
 
