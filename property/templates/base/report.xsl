@@ -88,10 +88,6 @@
 		<xsl:if test="operators_equal != ''">
 			operators_equal = <xsl:value-of select="operators_equal"/>;
 		</xsl:if>
-		var operators_between = {};
-		<xsl:if test="operators_between != ''">
-			operators_between = <xsl:value-of select="operators_between"/>;
-		</xsl:if>
 		var operators_like = {};
 		<xsl:if test="operators_like != ''">
 			operators_like = <xsl:value-of select="operators_like"/>;
@@ -103,6 +99,11 @@
 		var operators_null = {};
 		<xsl:if test="operators_null != ''">
 			operators_null = <xsl:value-of select="operators_null"/>;
+		</xsl:if>
+		
+		var lang = {};
+		<xsl:if test="lang != ''">
+			lang = <xsl:value-of select="lang"/>;
 		</xsl:if>
 		
 		var columns = {};
@@ -240,6 +241,141 @@
 		$('#responsiveTabsGroups').responsiveTabs({
 			startCollapsed: 'accordion'
 		});
+		
+		function  validate_group ()
+		{
+			if ($('input[name="group"]:checked').length == 0) 
+			{
+				return {
+				  element : $('input[name="group"]'),
+				  message : lang['select_group']
+				}
+			} 
+			else {
+				return {};
+			}		
+		}
+		
+		function  validate_column ()
+		{
+			if ($('input[name^="columns"]:checked').length == 0) 
+			{
+				return {
+				  element : $('input[name^="columns"]'),
+				  message : lang['select_one_column']
+				}
+			} 
+			else {
+				return {};
+			}		
+		}
+		
+		function  validate_aggregate ()
+		{
+			if ($('input[name^="aggregate"]:checked').length == 0) 
+			{
+				return {
+				  element : $('input[name^="aggregate"]'),
+				  message : lang['select_count_sum']
+				}
+			} 
+			else {
+				return {};
+			}		
+		}
+		
+		function validate_criteria_2 ()
+		{
+			var result = {};
+			var order = "";
+			var field = "";
+			var operator = "";
+			
+			$('.criteria').each(function() 
+			{
+				order = $(this).val();
+				field = $("#cbo_restricted_value_" + order).val();
+				operator = $("#cbo_operator_" + order).val();
+				
+				if (field == "")
+				{
+					return true;
+				}
+				
+				if (field &#38;&#38; operator == "")
+				{
+					result = {
+						element : $("#cbo_operator_" + order),
+						message : lang['select_operator'] + ' ' + field
+					  }
+					  
+					return false;
+				}
+				
+				switch (true)
+				{
+					case (in_array_object(operator, operators_null)):
+						break;
+					default: 
+						if ($("#txt_value1_" + order).val() == "")
+						{
+							result = {
+								element : $("#txt_value1_" + order),
+								message : lang['enter_value'] + ' ' + field
+							  }
+						}
+				}	
+
+			});
+
+			return result;
+		}
+
+		$(document).ready(function () 
+		{
+			$.validate({
+				lang: 'en', // (supported languages are fr, de, se, sv, en, pt, no)
+				modules : "location,date,security,file",
+				form: '#form',
+				validateOnBlur : false,
+				scrollToTopOnError : false,
+				errorMessagePosition : 'top',
+				scrollToTopOnError: true,		
+				onValidate : function($form) 
+				{					
+					var result = validate_column();
+					if (!jQuery.isEmptyObject(result))
+					{
+						$('#responsiveTabsGroups').responsiveTabs('activate', 0);
+						return result;
+					}
+					
+					/*result = validate_group();
+					if (!jQuery.isEmptyObject(result))
+					{
+						$('#responsiveTabsGroups').responsiveTabs('activate', 1);
+						return result;
+					}*/
+					
+					result = validate_aggregate();
+					if (!jQuery.isEmptyObject(result))
+					{
+						$('#responsiveTabsGroups').responsiveTabs('activate', 3);
+						return result;
+					}
+					
+					result = validate_criteria_2();
+					if (!jQuery.isEmptyObject(result))
+					{
+						$('#responsiveTabsGroups').responsiveTabs('activate', 4);
+						return result;
+					}
+					
+					return true;
+				}
+			});
+		});
+	
 	</script>
 </xsl:template>
 

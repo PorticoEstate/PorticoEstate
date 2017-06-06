@@ -46,10 +46,6 @@
 				'greater' => '>', 
 				'greater_equal' => '>='
 			);
-			$this->operators_between = array(
-				'between' => 'BETWEEN',
-				'not_between' => 'NOT BETWEEN'
-			);
 			$this->operators_like = array(
 				'like' => 'LIKE', 
 				'not_like' => 'NOT LIKE', 
@@ -64,7 +60,7 @@
 				'is_null' => 'IS NULL', 
 				'is_not_null' => 'IS NOT NULL'
 			);
-			$this->operators = array_merge($this->operators_equal, $this->operators_between, $this->operators_like, $this->operators_in, $this->operators_null);
+			$this->operators = array_merge($this->operators_equal, $this->operators_like, $this->operators_in, $this->operators_null);
 		}
 
 		function read_single ( $id, $values = array() )
@@ -284,10 +280,6 @@
 				case 'character varying':
 				case 'text':
 					$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
-					if ($param['conector'] && $param['value2'] != '')
-					{
-						$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value2']."'";
-					}
 					break;
 				case 'integer':
 				case 'smallint':
@@ -295,10 +287,6 @@
 					if (is_numeric($param['value1']))
 					{
 						$result = $param['field']." ".$this->operators[$param['operator']]." ".$param['value1'];
-						if ($param['conector'] && is_numeric(['value2']))
-						{
-							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." ".$param['value2'];
-						}
 					}
 					break;
 				case 'date':
@@ -306,10 +294,6 @@
 					if ($this->_is_date($param['value1']))
 					{
 						$result = $param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
-						if ($param['conector'] && $this->_is_date($param['value2']))
-						{
-							$result .= " ".$param['conector']." ".$param['field']." ".$this->operators[$param['operator']]." '".$param['value1']."'";
-						}
 					}
 			}				
 		
@@ -325,6 +309,7 @@
 				$_columns[$column['name']] = $column['type'];
 			}
 			
+			$n = 1;
 			$where = array();
 			foreach ($criteria as $param)
 			{
@@ -333,20 +318,10 @@
 					case (array_key_exists($param['operator'], $this->operators_equal)):
 						$result =  $this->_build_conditions_equal($param, $_columns[$param['field']]);
 						break;
-					case (array_key_exists($param['operator'], $this->operators_between)):
-						if ($param['value1'] != '' && $param['value2'] != '')
-						{
-							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '".$param['value1']."' AND '".$param['value2']."'";
-						}
-						break;
 					case (array_key_exists($param['operator'], $this->operators_like)):
 						if ($param['value1'] != '')
 						{
-							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value1']."%'";
-							if ($param['conector'] && $param['value2'] != '')
-							{
-								$result .= " ".$param['conector']." ".$param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value2']."%'";
-							}							
+							$result =  $param['field']."::text ".$this->operators[$param['operator']]." '%".$param['value1']."%'";							
 						}
 						break;
 					case (array_key_exists($param['operator'], $this->operators_null)):
@@ -360,12 +335,13 @@
 							$result =  $param['field']."::text ".$this->operators[$param['operator']]." (".$_string.")";
 						}
 						break;
-				}		
+				}
 				
 				if ($result)
 				{
-					$where[] = $result;
+					$where[] = $result." ".$param['conector'];				
 				}
+				$n++;
 			}
 			
 			return $where;
@@ -388,16 +364,31 @@
 
 			$string_columns = implode(',', $jsonB['columns']);
 			
+			$array_order = array();
 			$group = implode(',', $jsonB['group']);
-			$order = 'ORDER BY '.$group.' ASC';
+			if ($group)
+			{
+				$array_order[] = $group.' ASC';
+			}
+			$order = implode(',', $jsonB['order']);
+			if ($order)
+			{
+				$array_order[] = $order.' ASC';
+			}
+			
+			if (count($array_order))
+			{
+				$ordering = 'ORDER BY '.implode(', ', array_unique($array_order));
+			}
+	
 			$cond = $this->_build_conditions($jsonB['criteria'], $id);
 			
 			if ($cond)
 			{
-				$where = 'WHERE '.implode(' AND ', $cond);
+				$where = 'WHERE '.implode(' ', $cond);
 			}
 			
-			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$order;
+			$sql = "SELECT ".$string_columns." FROM ".$dataset['view_name']." ".$where." ".$ordering;
 
 			if (count($data))
 			{
@@ -416,6 +407,8 @@
 			
 			while ($this->db->next_record())
 			{
+				$_group = ($group) ? $this->db->f($group) : 'any_group';
+				
 				$value = array();
 				foreach ($columns as $column)
 				{
@@ -426,18 +419,21 @@
 				{
 					if ($v == 'sum')
 					{
-						$array_sum[$this->db->f($group)][$k][] = $this->db->f($k);
+						$array_sum[$_group][$k][] = $this->db->f($k);
 					}
 					if ($v == 'count')
 					{
-						$array_count[$this->db->f($group)][$k][] = $this->db->f($k);
+						$array_count[$_group][$k][] = $this->db->f($k);
 					}
 				}
 				
-				$values[$this->db->f($group)][] = $value;				
+				$values[$_group][] = $value;				
 			}
-							
-			$result = $this->_generate_total_sum($values, $array_sum, $array_count);
+
+			if (count($values))
+			{
+				$result = $this->_generate_total_sum($values, $array_sum, $array_count);
+			}
 			
 			return $result;
 		}
@@ -472,7 +468,10 @@
 				}	
 				
 				$array_operations[] = $operations;
-				$group[] =  $operations;
+				if ($k != 'any_group')
+				{
+					$group[] =  $operations;
+				}
 				$group[] =  $empty;
 				
 				$result = array_merge($result, $group);
