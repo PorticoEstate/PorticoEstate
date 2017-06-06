@@ -126,7 +126,7 @@
 						phpgwapi_cache::session_set('frontend', $this->contract_state_identifier, $this->contract_state);
 						$change_contract = false;
 						//Get more details on contract parties
-						$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array(
+						$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array(
 							'contract_id' => $this->contract_state['contract']->get_id()));
 						$party_array = array();
 						foreach ($parties as $party)
@@ -134,7 +134,7 @@
 							$party_array[] = $party->serialize();
 						}
 
-						$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+						$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
 							'contract_id' => $this->contract_state['contract']->get_id()));
 						$composite_array = array();
 						foreach ($composites as $composite)
@@ -150,7 +150,7 @@
 
 			if (!isset($party_array) && isset($this->contract_state['contract']))
 			{
-				$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array(
+				$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $this->contract_state['contract']->get_id()));
 				$party_array = array();
 				foreach ($parties as $party)
@@ -161,7 +161,7 @@
 
 			if (!isset($composite_array) && isset($this->contract_state['contract']))
 			{
-				$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+				$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
 					'contract_id' => $this->contract_state['contract']->get_id()));
 				$composite_array = array();
 				foreach ($composites as $composite)
@@ -217,7 +217,7 @@
 				return $values[$org_unit];
 			}
 
-			$parties = rental_soparty::get_instance()->get(null, null, null, null, null, null, array(
+			$parties = rental_soparty::get_instance()->get(0, 0, '', false, '', '', array(
 				'org_unit_id' => $org_unit));
 
 			$types = rental_socontract::get_instance()->get_fields_of_responsibility();
@@ -233,13 +233,13 @@
 			foreach ($parties as $party)
 			{
 				//... get the contracts
-				$contracts = rental_socontract::get_instance()->get(null, null, null, null, null, null, array(
+				$contracts = rental_socontract::get_instance()->get(0, 0, '', false, '', '', array(
 					'party_id' => $party->get_id()));
 				//... and for each contract connected to this contract part
 				foreach ($contracts as $id => $contract)
 				{
 					//... get the composites
-					$composites = rental_socomposite::get_instance()->get(null, null, null, null, null, null, array(
+					$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
 						'contract_id' => $contracts[$id]->get_id()));
 
 					//...and for each composite in the contract in which this contract part is connected

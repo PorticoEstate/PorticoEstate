@@ -394,9 +394,9 @@
 				(
 				'field' => 'fm_project.id',
 				'type' => 'int',
-				'matchtype' => 'exact',
-				'front' => '',
-				'back' => ''
+				'matchtype' => 'like',
+				'front' => "'",
+				'back' => "%'",
 			);
 			$criteria[3] = array
 				(
@@ -868,6 +868,7 @@
 					$record_history[$i]['value_new_value'] = '';
 				}
 
+				$record_history[$i]['#'] = $i +1;
 				$i++;
 			}
 

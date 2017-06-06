@@ -226,7 +226,7 @@
 	
 			if ( $values['id'] )
 			{
-				$user = $GLOBALS['phpgw']->accounts->get($values['id']);
+				$user = $GLOBALS['phpgw']->accounts->get($values['id'], $use_cache = false);
 			}
 			else
 			{

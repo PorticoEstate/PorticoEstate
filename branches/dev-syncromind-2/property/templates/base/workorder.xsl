@@ -699,25 +699,52 @@
 						<label>
 							<xsl:value-of select="$lang_budget_account"/>
 						</label>
-						<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
-						<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}" class="pure-input-1-2">
-							<xsl:choose>
-								<xsl:when test="mode='edit'">
-									<xsl:attribute name="data-validation">
-										<xsl:text>required</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-error-msg">
+						<xsl:choose>
+							<xsl:when test="b_account_as_listbox = 1">
+								<select name="values[b_account_id]" class="pure-input-1-2">
+									<xsl:attribute name="title">
 										<xsl:value-of select="$lang_budget_account"/>
 									</xsl:attribute>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:attribute name="disabled">
-										<xsl:text>disabled</xsl:text>
-									</xsl:attribute>
-								</xsl:otherwise>
-							</xsl:choose>
-						</input>
-						<div id="b_account_container"/>
+									<xsl:choose>
+										<xsl:when test="mode='edit'">
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-error-msg">
+												<xsl:value-of select="$lang_budget_account"/>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+									<xsl:apply-templates select="b_account_list/options"/>
+								</select>
+							</xsl:when>
+							<xsl:otherwise>
+								<input type="hidden" id="b_account_id" name="values[b_account_id]"  value="{b_account_data/value_b_account_id}"/>
+								<input type="text" id="b_account_name" name="values[b_account_name]" value="{b_account_data/value_b_account_id} {b_account_data/value_b_account_name}" class="pure-input-1-2">
+									<xsl:choose>
+										<xsl:when test="mode='edit'">
+											<xsl:attribute name="data-validation">
+												<xsl:text>required</xsl:text>
+											</xsl:attribute>
+											<xsl:attribute name="data-validation-error-msg">
+												<xsl:value-of select="$lang_budget_account"/>
+											</xsl:attribute>
+										</xsl:when>
+										<xsl:otherwise>
+											<xsl:attribute name="disabled">
+												<xsl:text>disabled</xsl:text>
+											</xsl:attribute>
+										</xsl:otherwise>
+									</xsl:choose>
+								</input>
+								<div id="b_account_container"/>
+							</xsl:otherwise>
+						</xsl:choose>
 					</div>
 					<xsl:if test="enable_unspsc = 1">
 						<div class="pure-control-group">

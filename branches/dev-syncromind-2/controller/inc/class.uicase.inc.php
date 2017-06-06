@@ -655,9 +655,7 @@
 			$location_id = $GLOBALS['phpgw']->locations->get_id("controller", ".checklist");
 
 			$ticket = array
-				(
-				'origin_id' => $location_id,
-				'origin_item_id' => $check_list_id,
+			(
 				'location_code' => $location_code,
 				'cat_id' => $message_cat_id,
 				'priority' => $priority, //valgfri (1-3)
@@ -669,14 +667,24 @@
 			$botts = CreateObject('property.botts', true);
 			$message_ticket_id = $botts->add_ticket($ticket);
 			$location_id_ticket = $GLOBALS['phpgw']->locations->get_id('property', '.ticket');
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
 
+			$interlink_data = array
+				(
+				'location1_id' => $location_id,
+				'location1_item_id' => $check_list_id,
+				'location2_id' => $location_id_ticket,
+				'location2_item_id' => $message_ticket_id,
+				'account_id' => $user_id
+			);
+
+			execMethod('property.interlink.add', $interlink_data);
 
 //---Sigurd: start register component to ticket
 			$component_id = $check_list->get_component_id();
 
 			if ($component_id > 0)
 			{
-				$user_id = $GLOBALS['phpgw_info']['user']['id'];
 				$component_location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 

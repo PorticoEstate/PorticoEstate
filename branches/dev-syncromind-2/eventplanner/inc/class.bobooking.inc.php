@@ -273,10 +273,10 @@ HTML;
 			 * Vendor
 			 */
 			$cc = $customer_contact_email;
-			$bcc = '';
+			$bcc = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : '';
 			$to_email = $vendor_contact_email;
-			$from_email = $customer_contact_email;
-			$from_name = $customer_contact_name;
+			$from_email = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : $customer_contact_email;
+			$from_name = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : $customer_contact_name;
 
 			try
 			{

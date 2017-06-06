@@ -3520,3 +3520,55 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+
+	/**
+	* Use database for user cache
+	* @return string the new version number
+	*/
+
+	$test[] = '0.9.17.555';
+	function phpgwapi_upgrade0_9_17_555()
+	{
+		phpgw::import_class('phpgwapi.cache');
+		$GLOBALS['phpgw']->db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'temp_dir'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$GLOBALS['phpgw_info']['server']['temp_dir'] = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT config_value FROM phpgw_config WHERE config_app = 'phpgwapi' AND config_name = 'install_id'");
+		$GLOBALS['phpgw_setup']->oProc->next_record();
+		$GLOBALS['phpgw_info']['server']['install_id'] = $GLOBALS['phpgw_setup']->oProc->f('config_value');
+		$GLOBALS['phpgw_setup']->oProc->query("SELECT account_id FROM phpgw_accounts WHERE account_type = 'u' AND account_status = 'A'");
+
+		$users = array();
+		while ($GLOBALS['phpgw_setup']->oProc->next_record())
+		{
+			$users[] = $GLOBALS['phpgw_setup']->oProc->f('account_id');
+		}
+
+		foreach ($users as $user_id)
+		{
+			//from file
+			if($bookmarks = phpgwapi_cache::_user_get('controller', "location_bookmark", $user_id))
+			{
+				//to database
+				phpgwapi_cache::user_set('controller', "location_bookmark", $bookmarks, $user_id);
+			}
+
+			//from file
+			if($bookmarks = phpgwapi_cache::_user_get('phpgwapi', "bookmark_menu", $user_id))
+			{
+				//to database
+				phpgwapi_cache::user_set('phpgwapi', "bookmark_menu", $bookmarks, $user_id);
+			}
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.556';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
