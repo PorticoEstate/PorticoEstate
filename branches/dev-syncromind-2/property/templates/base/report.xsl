@@ -290,18 +290,29 @@
 			var order = "";
 			var field = "";
 			var operator = "";
-			
+			var text = "";
+			var conector = "";
+
+			var values = {};
+			values['cbo_restricted_value'] = {};
+			values['cbo_operator'] = {};
+			values['txt_value1'] = {};
+			values['cbo_conector'] = {};
+
+			var length = 0;
 			$('.criteria').each(function() 
 			{
 				order = $(this).val();
 				field = $("#cbo_restricted_value_" + order).val();
 				operator = $("#cbo_operator_" + order).val();
-				
+				text = $("#txt_value1_" + order).val();
+				conector = $("#cbo_conector_" + order).val();
+
 				if (field == "")
 				{
 					return true;
 				}
-				
+
 				if (field &#38;&#38; operator == "")
 				{
 					result = {
@@ -311,7 +322,7 @@
 					  
 					return false;
 				}
-				
+
 				switch (true)
 				{
 					case (in_array_object(operator, operators_null)):
@@ -324,8 +335,38 @@
 								message : lang['enter_value'] + ' ' + field
 							  }
 						}
-				}	
+				}
 
+				if (jQuery.isEmptyObject(result))
+				{
+					values['cbo_restricted_value'][order] = field;
+					values['cbo_operator'][order] = operator;
+					values['txt_value1'][order] = text;
+					values['cbo_conector'][order] = conector;		
+					length++;
+				}
+			});
+
+			if (!jQuery.isEmptyObject(result))
+			{
+				return result;				
+			}
+
+			var n = 0;
+			$.each(values.cbo_restricted_value, function(key, value) 
+			{
+				if (n &#60; (length - 1))
+				{
+					if ($("#cbo_conector_" + key).val() == '')
+					{
+						result = {
+							element : $("#cbo_conector_" + key),
+							message : lang['select_conector'] + ' ' + values.cbo_restricted_value[key]
+						  }
+						return false;				
+					}
+				}
+				n++;
 			});
 
 			return result;
@@ -349,13 +390,6 @@
 						$('#responsiveTabsGroups').responsiveTabs('activate', 0);
 						return result;
 					}
-					
-					/*result = validate_group();
-					if (!jQuery.isEmptyObject(result))
-					{
-						$('#responsiveTabsGroups').responsiveTabs('activate', 1);
-						return result;
-					}*/
 					
 					result = validate_aggregate();
 					if (!jQuery.isEmptyObject(result))
