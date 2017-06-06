@@ -43,7 +43,6 @@
 			$this->operators = $this->so->operators;
 			
 			$this->operators_equal = $this->so->operators_equal;
-			$this->operators_between = $this->so->operators_between;
 			$this->operators_like = $this->so->operators_like;
 			$this->operators_in = $this->so->operators_in;
 			$this->operators_null = $this->so->operators_null;			

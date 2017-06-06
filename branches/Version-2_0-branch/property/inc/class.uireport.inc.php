@@ -63,7 +63,6 @@
 			$this->operators = $this->bo->operators;
 			
 			$this->operators_equal = $this->bo->operators_equal;
-			$this->operators_between = $this->bo->operators_between;
 			$this->operators_like = $this->bo->operators_like;
 			$this->operators_in = $this->bo->operators_in;
 			$this->operators_null = $this->bo->operators_null;				
@@ -333,7 +332,29 @@
 			$active_tab = 'report';
 			
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
-
+			
+			$lang = array(
+				'select_one_column' => lang('Select at least one column'),
+				'select_group' => lang('Select a group'),
+				'select_count_sum' => lang('Select at least one count/sum operation'),
+				'select_operator' => lang('Select an operator for:'),
+				'enter_value' => lang('Enter a value for:'),
+				'enter_second_value' => lang('Enter a second value for:'),
+				
+				'choose_dataset' => lang('choose dataset'),
+				'and' => lang('AND'),
+				'or' => lang('OR'),
+				'count' => lang('COUNT'),
+				'sum' => lang('SUM'),
+				
+				'restricted_value' => lang('Restricted value'),
+				'operator' => lang('Operator'),
+				'value' => lang('Value'),
+				'conector' => lang('Conector'),
+				'uselect' => lang('Unselect'),
+				'delete' => lang('Delete')
+			);
+			
 			$data = array
 			(
 				'datatable_def' => array(),
@@ -345,10 +366,11 @@
 				'operators' => json_encode($this->operators),
 				
 				'operators_equal' => json_encode($this->operators_equal),
-				'operators_between' => json_encode($this->operators_between),
 				'operators_like' => json_encode($this->operators_like),
 				'operators_in' => json_encode($this->operators_in),
 				'operators_null' => json_encode($this->operators_null),		
+				
+				'lang' => json_encode($lang),
 				
 				'report_id' => $values['id'],
 				'report_name' => $values['report_name'],
@@ -365,6 +387,54 @@
 			self::render_template_xsl(array('report'), array('edit' => $data));
 		}
 		
+		private function _validate_criteria ()
+		{
+			$values = phpgw::get_var('values');
+
+			if ($values)
+			{
+				$restricted_values = $values['cbo_restricted_value'];
+				$operators = $values['cbo_operator'];
+				$values_1 = $values['txt_value1'];
+				$conector = $values['cbo_conector'];
+			}
+			else {
+				$restricted_values = phpgw::get_var('cbo_restricted_value');
+				$operators = phpgw::get_var('cbo_operator');
+				$values_1 = phpgw::get_var('txt_value1');
+				$conector = phpgw::get_var('cbo_conector');
+			}
+			
+			$criteria = array();
+			foreach ($restricted_values as $k => $field) 
+			{
+				if ($field && $operators[$k])
+				{
+					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k]);
+				}
+			}			
+			
+			$n = 0;
+			$result = array();
+			$last = count($criteria) - 1;
+			foreach ($criteria as $item)
+			{
+				if ($n == $last)
+				{
+					$item['conector'] = '';
+					$result[] = $item;
+				}
+				else if ($item['conector'] != '')
+				{
+					$result[] = $item;
+				}
+				
+				$n++;
+			}
+			
+			return $result;
+		}
+		
 		private function _populate( $data = array() )
 		{
 			$report_id = phpgw::get_var('report_id');
@@ -377,22 +447,10 @@
 			$aggregate = phpgw::get_var('aggregate');
 			$cbo_aggregate = phpgw::get_var('cbo_aggregate');
 			
-			$restricted_values = phpgw::get_var('cbo_restricted_value');
-			$operators = phpgw::get_var('cbo_operator');
-			$values_1 = phpgw::get_var('txt_value1');
-			$conector = phpgw::get_var('cbo_conector');
-			$values_2 = phpgw::get_var('txt_value2');
+			$criteria = $this->_validate_criteria();
 			
-			$criteria = array();
-			foreach ($restricted_values as $k => $field) 
-			{
-				if ($field && $operators[$k])
-				{
-					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k], 'value2'=>trim($values_2[$k]));
-				}
-			}
-			
-			$group = array($group_by => $group_by);
+			$group = ($group_by) ? array($group_by => $group_by) : array();
+
 			$order = array($order_by => $order_by);
 			
 			$columns = array();
@@ -411,11 +469,6 @@
 			if (!$dataset_id)
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select dataset name !'));
-			}
-			
-			if (!count($group))
-			{
-				$this->receipt['error'][] = array('msg' => lang('Please select a group !'));
 			}
 
 			if (!count($aggregate))
@@ -754,24 +807,17 @@
 			$data['aggregate'] = $values['aggregate'];
 			$data['cbo_aggregate'] = $values['cbo_aggregate'];		
 
-			$restricted_values = $values['cbo_restricted_value'];
-			$operators = $values['cbo_operator'];
-			$values_1 = $values['txt_value1'];
-			$conector = $values['cbo_conector'];
-			$values_2 = $values['txt_value2'];
+			$criteria = $this->_validate_criteria();
 			
-			$criteria = array();
-			foreach ($restricted_values as $k => $field) 
-			{
-				if ($field && $operators[$k])
-				{
-					$criteria[] = array('field'=>$field, 'operator'=>$operators[$k], 'value1'=>trim($values_1[$k]), 'conector'=>$conector[$k], 'value2'=>trim($values_2[$k]));
-				}
-			}
 			$data['criteria'] = $criteria;
 			
 			$list = $this->bo->read_to_export($dataset_id, $data);
 			
+			if (!count($list))
+			{
+				return lang('No records');
+			}
+		
 			$html_table = '<table class="pure-table pure-table-bordered">';
 			$html_table .= '<thead><tr>';
 			foreach ($list[0] as $c => $v)
@@ -790,7 +836,7 @@
 			
 		}
 		
-		public function get_operators()
+		/*public function get_operators()
 		{
 			$operators = array(
 				'equal' => '=', 
@@ -812,5 +858,5 @@
 			);
 			
 			return $operators;
-		}
+		}*/
 	}
