@@ -2108,3 +2108,22 @@ canceled	property	no	Kansellert
 substitute	property	no	Vikar
 set substitute	property	no	Sett vikar
 circle reference	property	no	Sirkelreferanse
+reports	property	no	Rapporter
+report generator	property	no	Rapportgenerator
+datasets	property	no	Datasett
+dataset	property	no	Datasett
+dataset name	property	no	Navn på datasett
+group by	property	no	Gruppering
+sort by	property	no	Sortering
+count / sum	property	no	Telling og Summering
+criteria	property	no	Kriterier
+operator	property	no	Operator
+restricted value	property	no	Felt for avgrensing
+conector	property	no	Koblingstype
+report name	property	no	Navn på rapport
+choose	property	no	Velg
+unselect	property	no	Nullstill
+get columns	property	no	Hent kolonner
+and	property	no	Og
+or	property	no	Eller
+show	property	no	Vis
