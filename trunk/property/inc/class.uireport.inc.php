@@ -339,7 +339,7 @@
 				'select_count_sum' => lang('Select at least one count/sum operation'),
 				'select_operator' => lang('Select an operator for:'),
 				'enter_value' => lang('Enter a value for:'),
-				'enter_second_value' => lang('Enter a second value for:'),
+				'select_conector' => lang('Select an conector for:'),
 				
 				'choose_dataset' => lang('choose dataset'),
 				'and' => lang('AND'),

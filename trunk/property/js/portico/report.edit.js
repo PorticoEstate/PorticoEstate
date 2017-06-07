@@ -245,13 +245,24 @@ function validate_criteria ()
 	var order = "";
 	var field = "";
 	var operator = "";
-
+	var text = "";
+	var conector = "";
+	
+	var values = {};
+	values['cbo_restricted_value'] = {};
+	values['cbo_operator'] = {};
+	values['txt_value1'] = {};
+	values['cbo_conector'] = {};
+		
+	var length = 0;
 	$('.criteria').each(function() 
 	{
 		order = $(this).val();
 		field = $("#cbo_restricted_value_" + order).val();
 		operator = $("#cbo_operator_" + order).val();
-
+		text = $("#txt_value1_" + order).val();
+		conector = $("#cbo_conector_" + order).val();
+		
 		if (field == "")
 		{
 			return true;
@@ -261,8 +272,6 @@ function validate_criteria ()
 		{
 			result = false;
 			alert(lang['select_operator'] + ' ' + field);
-			$("#cbo_operator_" + order).focus();
-
 			return false;
 		}
 
@@ -271,15 +280,43 @@ function validate_criteria ()
 			case (in_array_object(operator, operators_null)):
 				break;
 			default: 
-				if ($("#txt_value1_" + order).val() == "")
+				if (text == "")
 				{
 					result = false;
 					alert(lang['enter_value'] + ' ' + field);
-					$("#txt_value1_" + order).focus();
-				}
-		}	
+				} 
+		}
+		
+		if (result)
+		{
+			values['cbo_restricted_value'][order] = field;
+			values['cbo_operator'][order] = operator;
+			values['txt_value1'][order] = text;
+			values['cbo_conector'][order] = conector;		
+			length++;
+		}
 	});
 
+	if (result == false)
+	{
+		return false;				
+	}
+		
+	var n = 0;
+	$.each(values.cbo_restricted_value, function(key, value) 
+	{
+		if (n < (length - 1))
+		{
+			if ($("#cbo_conector_" + key).val() == '')
+			{
+				result = false;
+				alert(lang['select_conector'] + ' ' + values.cbo_restricted_value[key]);
+				return false;				
+			}
+		}
+		n++;
+	});
+	
 	return result;
 }
 
