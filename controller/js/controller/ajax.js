@@ -33,6 +33,12 @@ $(document).ready(function ()
 
 		return false;
 	});
+	
+	$("#popupBox").click(function ()
+	{
+		$("#popupBox").hide();
+		$("#curtain").hide();
+	});
 
 
 	/* ================================  CONTROL LOCATION ================================== */
