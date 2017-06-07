@@ -131,7 +131,7 @@
 				$querymethod .= " OR metadata->>'path' ilike '%{$query}%')";
 			}
 			
-			$sql = "SELECT DISTINCT a.file_id, a.* FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
+			$sql = "SELECT DISTINCT a.file_id, a.*, metadata->>'path' as path FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
 	
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
@@ -166,7 +166,8 @@
 						'name' => $this->db->f('name'),
 						'link_directory' => $this->db->f('link_directory', true),
 						'link_name' => $this->db->f('link_name', true),
-						'version' => $this->db->f('version')
+						'version' => $this->db->f('version'),
+						'path'	=>  $this->db->f('path'),
 					);
 				}
 			}
