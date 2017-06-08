@@ -91,10 +91,12 @@
 
 			if ($location_id)
 			{
-				$joinmethod .= " {$this->join} phpgw_vfs_file_relation c ON ( a.file_id = c.file_id )";
 				$filtermethod .= " AND c.location_id = {$location_id}";
 			} 
-			
+			$joinmethod .= " {$this->left_join} phpgw_vfs_file_relation c ON ( a.file_id = c.file_id )";
+			$joinmethod .= " {$this->left_join} fm_entity_category ON ( c.location_id = fm_entity_category.location_id )";
+
+
 			if($location_item_id)
 			{
 				$filtermethod .= " AND c.location_item_id = {$location_item_id}";
@@ -128,7 +130,8 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND (a.name $this->like '%{$query}%'";
-				$querymethod .= " OR metadata->>'path' ilike '%{$query}%')";
+				$querymethod .= " OR metadata->>'path' ilike '%{$query}%'";
+				$querymethod .= " OR fm_entity_category.name ilike '%{$query}%')";
 			}
 			
 			$sql = "SELECT DISTINCT a.file_id, a.*, metadata->>'path' as path FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
@@ -148,12 +151,14 @@
 					$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
 				}
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
-
+				$ids = array();
 				while ($this->db->next_record())
 				{
+					$id = $this->db->f('file_id');
+					$ids[] = $id;
 					$values[] = array
 						(
-						'id' => $this->db->f('file_id'),
+						'id' => $id,
 						'owner_id' => $this->db->f('owner_id'),
 						'createdby_id' => $this->db->f('createdby_id'),
 						'modifiedby_id' => $this->db->f('modifiedby_id'),
@@ -169,6 +174,24 @@
 						'version' => $this->db->f('version'),
 						'path'	=>  $this->db->f('path'),
 					);
+				}
+
+				$locations= array();
+				if($ids)
+				{
+					$sql = "SELECT file_id, fm_entity_category.name as location_name"
+						. " FROM fm_entity_category {$this->join} phpgw_vfs_file_relation ON fm_entity_category.location_id = phpgw_vfs_file_relation.location_id"
+						. " WHERE file_id IN (" . implode(',', $ids) . ')';
+					$this->db->query($sql, __LINE__, __FILE__);
+					while ($this->db->next_record())
+					{
+						$locations[$this->db->f('file_id')][] = $this->db->f('location_name');
+					}
+
+					foreach ($values as & $entry)
+					{
+						$entry['location_names'] = array_unique((array)$locations[$entry['id']]);
+					}
 				}
 			}
 

@@ -1725,7 +1725,7 @@ JS;
 				if($item['path'])
 				{
 					$temp = json_decode($item['path']);
-					$title = implode('<br/>', $temp);
+					$title = implode('<br/>', array_merge($item['location_names'],$temp));
 				}
 
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
@@ -2163,7 +2163,7 @@ JS;
 					$documents_def = array(
 						array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
 						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => true, 'resizeable' => true),
-						array('key' => 'title', 'label' => lang('title'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'title', 'label' => 'Info', 'sortable' => true, 'resizeable' => true),
 						array('key' => 'document_date', 'label' => lang('date'), 'sortable' => true, 'resizeable' => true),
 					);
 
