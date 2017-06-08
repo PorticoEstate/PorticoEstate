@@ -715,7 +715,7 @@
 
 			foreach ($voucher as $line)
 			{
-				$this->bilag_update_overf($line);
+				//$this->bilag_update_overf($line);
 
 				if ($line['pmwrkord_code'])
 				{
