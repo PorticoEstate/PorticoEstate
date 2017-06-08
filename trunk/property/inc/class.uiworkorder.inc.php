@@ -957,7 +957,7 @@
 
 								$approvals = $pending_action->get_pending_action($action_params_approved);
 
-
+								//Not approved
 								if(!$approvals)
 								{
 									$substitute = $sosubstitute->get_substitute($_account_id);
@@ -1002,6 +1002,22 @@
 										phpgwapi_cache::message_set($exc->getMessage(),'error');
 									}
 
+									//add request for order as well
+									$action_params = array(
+										'appname' => 'property',
+										'location' => '.project.workorder',
+										'id' => $id,
+										'responsible' => $_account_id,
+										'responsible_type' => 'user',
+										'action' => 'approval',
+										'remark' => '',
+										'deadline' => ''
+									);
+
+									if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+									{
+										execMethod('property.sopending_action.set_pending_action', $action_params);
+									}
 								}
 								else // implicite approved
 								{
