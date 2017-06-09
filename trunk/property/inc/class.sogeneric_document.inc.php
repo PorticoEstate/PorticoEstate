@@ -86,7 +86,7 @@
 
 			if ($cat_id)
 			{
-				$filtermethod .= " AND b.metadata @> '{\"cat_id\":\"{$cat_id}\"}'";
+				$filtermethod .= " AND b.metadata->>'cat_id' = '{$cat_id}'";
 			} 
 
 			if ($location_id)
@@ -362,15 +362,24 @@
 		public function update( $data = array(), $file_id)
 		{
 			$receipt = array();
-			$value_set = array
-			(
-				'metadata' => json_encode($data)
-			);
 
-			$value_set = $this->db->validate_update($value_set);
+			$this->db->transaction_begin();
+
+			if($data)
+			{
+				foreach ($data as $key => $value)
+				{
+					$value = $this->db->db_addslashes($value);
+					$sql = "UPDATE phpgw_vfs_filedata SET metadata=jsonb_set(metadata, '{{$key}}', '\"{$value}\"', true)"
+						. " WHERE file_id = {$file_id}";
+
+					$this->db->query($sql, __LINE__, __FILE__);
+
+				}
+			}
 			
-			$result = $this->db->query("UPDATE phpgw_vfs_filedata SET $value_set WHERE file_id = {$file_id}", __LINE__, __FILE__);
-			
+			$result = $this->db->transaction_commit();
+
 			if ($result)
 			{
 				$receipt['message'] = lang('filedata has been edited');
