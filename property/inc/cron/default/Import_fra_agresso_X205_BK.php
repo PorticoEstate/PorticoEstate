@@ -263,20 +263,40 @@
 			$buffer = array();
 			$bilagsnr = false;
 
-			$xmlparse = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('UTF-8');
-			$var_result = $xmlparse->parseFile($file);
+			$xml = new SimpleXMLElement(file_get_contents( $file ));
+
+			$_data = array(
+				'KEY' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/KEY'),
+				'ATTACHMENT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/ATTACHMENT'),
+				'AMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/AMOUNT'),
+				'CLIENT.CODE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CLIENT.CODE'),
+				'CURRENCY.CURRENCYID' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/CURRENCY.CURRENCYID'),
+				'EXCHANGERATE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/EXCHANGERATE'),
+				'INVOICEDATE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/INVOICEDATE'),
+				'LOCALAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALAMOUNT'),
+				'LOCALVATAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/LOCALVATAMOUNT'),
+				'MATURITY' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/MATURITY'),
+				'PAYAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PAYAMOUNT'),
+				'POSTATUSUPDATED' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/POSTATUSUPDATED'),
+				'PURCHASEORDERNO' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/PURCHASEORDERNO'),
+				'SUPPLIERBANKGIRO' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERBANKGIRO'),
+				'SUPPLIER.CODE' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIER.CODE'),
+				'SUPPLIERREF' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/SUPPLIERREF'),
+				'VATAMOUNT' => $xml->xpath('//INVOICES/INVOICE/INVOICEHEADER/VATAMOUNT')
+			);
+
+			foreach ($_data as $key => & $__data)
+			{
+				$__data = (string) $__data[0];
+			}
 
 			set_time_limit(300);
 
-			if (isset($var_result['INVOICES']) && is_array($var_result['INVOICES']))
+			if (!empty($_data['KEY']))
 			{
 				$regtid = date($this->datetimeformat);
 
 				$i = 0;
-				$_data = $var_result['INVOICES'][0]['INVOICE'][0]['INVOICEHEADER'][0];
-
-
 				if(!empty($_data['ATTACHMENT']))
 				{
 					$attachment = base64_decode($_data['ATTACHMENT']);
