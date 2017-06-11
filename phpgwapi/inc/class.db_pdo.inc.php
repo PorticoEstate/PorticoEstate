@@ -121,9 +121,10 @@
 			switch ( $this->Type )
 			{
 				case 'postgres':
+					$this->Port = $this->Port ? $this->Port : 5432;
 					try
 					{
-						$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
+						$this->db = new PDO("pgsql:dbname={$this->Database};host={$this->Host};port={$this->Port}", $this->User, $this->Password, array(PDO::ATTR_PERSISTENT => $this->persistent));
 					}
 					catch(PDOException $e){}
 					break;

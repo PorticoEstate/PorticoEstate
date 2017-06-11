@@ -122,6 +122,7 @@
 			//$attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
 			$preview = phpgw::get_var('preview');
 			$with_components = phpgw::get_var('with_components_check');
+			$doc_cat_id =  phpgw::get_var('doc_cat_id');
 
 			/* if ($_FILES['file']['tmp_name'])
 			  {
@@ -135,6 +136,11 @@
 			if (!$location_code)
 			{
 				$receipt['error'][] = array('msg' => lang('Choose Location'));
+				return $receipt;
+			}
+			if (!$doc_cat_id)
+			{
+				$receipt['error'][] = array('msg' => lang('category'));
 				return $receipt;
 			}
 
@@ -867,6 +873,7 @@ HTML;
 				'category_filter' => array('options' => $category_filter),
 				'district_filter' => array('options' => $district_filter),
 				'part_of_town_filter' => array('options' => $part_of_town_filter),
+				'document_category'	=> array('options' => $this->_get_document_categories() ),
 				'template_list' => array('options' => $category_list),
 				'profile_list' => array('options' => $profile_list),
 				'multi_upload_action' => $multi_upload_action,
@@ -1009,4 +1016,22 @@ HTML;
 
 			return $values;
 		}
+
+		private function _get_document_categories( $selected = 0 )
+		{
+			$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
+			$cats->supress_info = true;
+			$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => $selected,
+				'globals' => true, 'use_acl' => $this->_category_acl));
+			$default_value = array('cat_id' => '', 'name' => lang('no category'));
+			array_unshift($categories['cat_list'], $default_value);
+
+			foreach ($categories['cat_list'] as & $_category)
+			{
+				$_category['id'] = $_category['cat_id'];
+			}
+
+			return $categories['cat_list'];
+		}
+
 	}

@@ -27,18 +27,20 @@
 	 * @version $Id: class.sogeneric_document.inc.php 14913 2016-04-27 12:27:37Z sigurdne $
 	 */
 
-	class property_sogeneric_document 
+	class property_sogeneric_document
 	{
+		protected
+			$perform_update_relation_path = false;
 
 		function __construct()
 		{
 			$this->vfs = CreateObject('phpgwapi.vfs');
 			$this->vfs->fakebase = '/property';
-			
+
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
 			$this->left_join = & $this->db->left_join;
-			$this->like = & $this->db->like;		
+			$this->like = & $this->db->like;
 			$this->total_records = 0;
 		}
 
@@ -80,22 +82,21 @@
 			{
 				$ordermethod = ' ORDER BY a.file_id ASC';
 			}
-			
+
 			$filtermethod = "WHERE a.mime_type != 'Directory' AND a.mime_type != 'journal' AND a.mime_type != 'journal-deleted'";
 			$joinmethod .= " {$this->left_join} phpgw_vfs_filedata b ON ( a.file_id = b.file_id )";
 
 			if ($cat_id)
 			{
-				$filtermethod .= " AND b.metadata @> '{\"cat_id\":\"{$cat_id}\"}'";
-			} 
+				$filtermethod .= " AND b.metadata->>'cat_id' = '{$cat_id}'";
+			}
 
 			if ($location_id)
 			{
 				$filtermethod .= " AND c.location_id = {$location_id}";
-			} 
-			$joinmethod .= " {$this->left_join} phpgw_vfs_file_relation c ON ( a.file_id = c.file_id )";
-			$joinmethod .= " {$this->left_join} fm_entity_category ON ( c.location_id = fm_entity_category.location_id )";
+			}
 
+			$joinmethod .= " {$this->left_join} phpgw_vfs_file_relation c ON ( a.file_id = c.file_id )";
 
 			if($location_item_id)
 			{
@@ -106,7 +107,7 @@
 			{
 				$filtermethod .= " AND a.createdby_id = {$user_id}";
 			}
-			
+
 			if ($mime_type)
 			{
 				$filtermethod .= " AND a.mime_type = '{$mime_type}'";
@@ -130,12 +131,11 @@
 			{
 				$query = $this->db->db_addslashes($query);
 				$querymethod = " AND (a.name $this->like '%{$query}%'";
-				$querymethod .= " OR metadata->>'path' ilike '%{$query}%'";
-				$querymethod .= " OR fm_entity_category.name ilike '%{$query}%')";
+				$querymethod .= " OR metadata->>'path' ilike '%{$query}%')";
 			}
-			
+
 			$sql = "SELECT DISTINCT a.file_id, a.*, metadata->>'path' as path FROM phpgw_vfs a " ." {$joinmethod} "." {$filtermethod} "." {$querymethod} ";
-	
+
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
@@ -176,29 +176,19 @@
 					);
 				}
 
-				$locations= array();
-				if($ids)
+				if($this->perform_update_relation_path && $ids)
 				{
-					$sql = "SELECT file_id, fm_entity_category.name as location_name"
-						. " FROM fm_entity_category {$this->join} phpgw_vfs_file_relation ON fm_entity_category.location_id = phpgw_vfs_file_relation.location_id"
-						. " WHERE file_id IN (" . implode(',', $ids) . ')';
-					$this->db->query($sql, __LINE__, __FILE__);
-					while ($this->db->next_record())
+					foreach ($ids as $file_id)
 					{
-						$locations[$this->db->f('file_id')][] = $this->db->f('location_name');
-					}
-
-					foreach ($values as & $entry)
-					{
-						$entry['location_names'] = array_unique((array)$locations[$entry['id']]);
+						$this->update_relation_path($file_id);
 					}
 				}
 			}
 
 			return $values;
 		}
-		
-		public function get_file_relations($file_id, $location_id = null) 
+
+		public function get_file_relations($file_id, $location_id = null)
 		{
 			if ($location_id)
 			{
@@ -206,7 +196,7 @@
 			} else {
 				$filtermethod = "WHERE file_id = {$file_id}";
 			}
-			
+
 			$sql = "SELECT * FROM phpgw_vfs_file_relation " ." {$filtermethod} ";
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -220,11 +210,11 @@
 					'location_item_id' => $this->db->f('location_item_id')
 				);
 			}
-			
+
 			return $values;
 		}
-		
-		public function get_file_relations_componentes($data) 
+
+		public function get_file_relations_componentes($data)
 		{
 			$start = isset($data['start']) && $data['start'] ? $data['start'] : 0;
 			$results = isset($data['results']) && $data['results'] ? $data['results'] : 0;
@@ -232,19 +222,19 @@
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
 			$allrows = isset($data['allrows']) ? $data['allrows'] : '';
 			$entity_group_id = isset($data['entity_group_id']) ? $data['entity_group_id'] : '';
-			
+
 			if ($location_id)
 			{
 				$filtermethod = "WHERE a.location_id = {$location_id} AND a.file_id = {$file_id}";
 			} else {
 				$filtermethod = "WHERE a.file_id = {$file_id}";
 			}
-			
+
 			if ($entity_group_id)
 			{
 				$filtermethod .= " AND c.entity_group_id = {$entity_group_id}";
 			}
-			
+
 			$sql = "SELECT a.file_id, b.type, b.id, b.location_id, b.location_code, b.json_representation, c.name AS category_name, c.entity_id, c.entity_group_id "
 					. "FROM phpgw_vfs_file_relation a INNER JOIN fm_bim_item b ON a.location_id = b.location_id AND a.location_item_id = b.id "
 					. "INNER JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";
@@ -270,7 +260,7 @@
 					'location_id' => $this->db->f('location_id'),
 					'category_name' => $this->db->f('category_name')
 				);
-					
+
 				$jsondata = json_decode($this->db->f('json_representation', true), true);
 				foreach ($jsondata as $k => $v)
 				{
@@ -278,33 +268,34 @@
 				}
 				$i++;
 			}
-						
+
 			$sql2 = "SELECT count(*) as cnt "
 					. "FROM phpgw_vfs_file_relation a INNER JOIN fm_bim_item b ON a.location_id = b.location_id AND a.location_item_id = b.id "
-					. "INNER JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";			
+					. "INNER JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";
 			$this->db->query($sql2, __LINE__, __FILE__);
 
 			$this->db->next_record();
 			$this->total_records_componentes = $this->db->f('cnt');
-			
+
 			return $values;
 		}
-		
+
 		function save_file_relations( $add, $delete, $location_id, $file_id )
 		{
 			$this->db->transaction_begin();
-			
+
 			if (count($delete))
 			{
 				foreach($delete as $item)
 				{
 					$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE location_item_id = {$item} AND file_id = {$file_id} AND location_id = {$location_id}", __LINE__, __FILE__);
+					$this->update_relation_path($file_id, true, $location_id);
 				}
 			}
-						
+
 			$date_format = phpgwapi_datetime::date_array(date('Y-m-d'));
 			$date = mktime(2, 0, 0, $date_format['month'], $date_format['day'], $date_format['year']);
-				
+
 			if (count($add))
 			{
 				foreach($add as $item)
@@ -319,13 +310,15 @@
 						'entry_date' => $date,
 						'start_date' => $date,
 						'end_date' => $date
-					);				
+					);
 
 					$this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
-						. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);				
+						. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+
+					$this->update_relation_path($file_id);
 				}
 			}
-			
+
 			if ($this->db->transaction_commit())
 			{
 				return true;
@@ -335,8 +328,8 @@
 				return false;
 			}
 		}
-		
-		
+
+
 		public function add( $data = array(), $file_id )
 		{
 			$receipt = array();
@@ -352,35 +345,121 @@
 			if ($result)
 			{
 				$receipt['message'] = lang('filedata has been saved');
-			} 
+			}
 			else {
 				$receipt['error'] = lang('filedata has not been saved');
 			}
 			return $receipt;
 		}
-		
+
 		public function update( $data = array(), $file_id)
 		{
 			$receipt = array();
-			$value_set = array
-			(
-				'metadata' => json_encode($data)
-			);
 
-			$value_set = $this->db->validate_update($value_set);
-			
-			$result = $this->db->query("UPDATE phpgw_vfs_filedata SET $value_set WHERE file_id = {$file_id}", __LINE__, __FILE__);
-			
+			$this->db->transaction_begin();
+
+			if($data)
+			{
+				foreach ($data as $key => $value)
+				{
+					$value = $this->db->db_addslashes($value);
+					$sql = "UPDATE phpgw_vfs_filedata SET metadata=jsonb_set(metadata, '{{$key}}', '\"{$value}\"', true)"
+						. " WHERE file_id = {$file_id}";
+
+					$this->db->query($sql, __LINE__, __FILE__);
+
+				}
+			}
+
+			$result = $this->db->transaction_commit();
+
 			if ($result)
 			{
 				$receipt['message'] = lang('filedata has been edited');
-			} 
-			else {
+			}
+			else
+			{
 				$receipt['error'] = lang('filedata has not been edited');
 			}
 			return $receipt;
 		}
-		
+
+		/**
+		 *
+		 * @param type $file_id
+		 * @param type $delete
+		 * @return bool
+		 */
+		public function update_relation_path( $file_id, $delete = false , $location_id = 0)
+		{
+			$ok = true; // ok if it don't choke
+
+			$sql = "SELECT metadata FROM phpgw_vfs_filedata WHERE file_id =" . (int)$file_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$_metadata = $this->db->f('metadata', true);
+			$metadata = (array)json_decode($_metadata, true);
+
+			if($delete && $location_id)
+			{
+				$sql = "SELECT fm_entity_category.name as location_name"
+					. " FROM fm_entity_category WHERE location_id =" . (int)$location_id;
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$location_name = $this->db->f('location_name');
+
+				if(in_array($location_name, $metadata['path']))
+				{
+					$key = (int)array_search($location_name, $metadata['path']);
+					unset($metadata['path'][$key]);
+				}
+				unset($location_name);
+			}
+
+			$location_names = array();
+
+			$sql = "SELECT DISTINCT fm_entity_category.name as location_name"
+				. " FROM fm_entity_category {$this->join} phpgw_vfs_file_relation ON fm_entity_category.location_id = phpgw_vfs_file_relation.location_id"
+				. " WHERE file_id =" . (int)$file_id
+				. " ORDER BY fm_entity_category.name DESC";
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$location_names[] = $this->db->f('location_name', true);
+			}
+
+			if($location_names)
+			{
+				foreach ($location_names as $location_name)
+				{
+					if(!empty($metadata['path']) && is_array($metadata['path']) && !in_array($location_name, $metadata['path']))
+					{
+						array_unshift($metadata['path'], $location_name);
+					}
+				}
+
+				sort($metadata['path']);
+			}
+
+			if($metadata)
+			{
+				if(!isset($metadata['path']))
+				{
+					$metadata['path'] = array();
+				}
+
+				$value_set = array
+				(
+					'metadata' => json_encode($metadata),
+				);
+				$value_set = $this->db->validate_update($value_set);
+
+				//Still ok?
+				$ok = $this->db->query("UPDATE phpgw_vfs_filedata SET {$value_set}  WHERE file_id='{$file_id}'", __LINE__, __FILE__);
+			}
+			return $ok;
+		}
+
 		public function read_single( $id )
 		{
 			$id = (int)$id;
@@ -394,9 +473,9 @@
 				$values['metadata'] = $this->db->f('metadata');
 			}
 
-			return $values['metadata'];			
+			return $values['metadata'];
 		}
-		
+
 		public function delete( $file_id )
 		{
 			$file_info = $this->vfs->get_info($file_id);
@@ -405,24 +484,24 @@
 			if ($file)
 			{
 				$this->db->transaction_begin();
-				
+
 				$this->db->query("DELETE FROM phpgw_vfs_file_relation WHERE file_id = {$file_id}", __LINE__, __FILE__);
 				$this->db->query("DELETE FROM phpgw_vfs_filedata WHERE file_id = {$file_id}", __LINE__, __FILE__);
-								
+
 				$result = $this->delete_file($file);
-				
+
 				if ($result)
 				{
 					$this->db->transaction_commit();
 					$receipt = lang('file deleted') . ' : ' . $file_info['name'];
-				} else {					
+				} else {
 					$receipt = lang('failed to delete file') . ' : ' . $file_info['name'];
 				}
 			}
-			
+
 			return $receipt;
 		}
-		
+
 		function delete_file( $file )
 		{
 			$result = false;
@@ -445,8 +524,8 @@
 
 				$this->vfs->override_acl = 0;
 			}
-			
+
 			return $result;
 		}
-		
+
 	}
