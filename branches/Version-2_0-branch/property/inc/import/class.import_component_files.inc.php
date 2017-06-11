@@ -4,11 +4,27 @@
 	{
 
 		private $receipt = array();
+		protected
+			$alc,
+			$db,
+			$sogeneric_document,
+			$fakebase,
+			$path_upload_dir,
+			$location_code,
+			$location_item_id,
+			$attrib_name_componentID,
+			$doc_cat_id,
+			$last_files_added,
+			$list_component_id,
+			$paths_from_file,
+			$paths_empty;
 
 		public function __construct()
 		{
 			$this->acl = & $GLOBALS['phpgw']->acl;
 			$this->db = & $GLOBALS['phpgw']->db;
+			$this->sogeneric_document = CreateObject('property.sogeneric_document');
+
 
 			$this->fakebase = '/temp_files_components';
 			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
@@ -17,6 +33,7 @@
 			$this->location_code = phpgw::get_var('location_code');
 			$this->location_item_id = phpgw::get_var('location_item_id');
 			$this->attrib_name_componentID = phpgw::get_var('attribute_name_component_id');
+			$this->doc_cat_id =  phpgw::get_var('doc_cat_id');
 
 			$this->last_files_added = array();
 			$this->list_component_id = array();
@@ -938,6 +955,7 @@
 			$metadata['report_date'] = phpgwapi_datetime::date_to_timestamp(date('Y-m-d'));
 			$metadata['title'] = $file_data['name'];
 			$metadata['descr'] = $file_data['desription'];
+			$metadata['cat_id'] = $this->doc_cat_id;
 			$metadata['path'] = $paths;
 
 			$values_insert = array
@@ -968,8 +986,13 @@
 				'end_date' => $date
 			);
 
-			return $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
+			$ok = $this->db->query("INSERT INTO phpgw_vfs_file_relation (" . implode(',', array_keys($values_insert)) . ') VALUES ('
 					. $this->db->validate_insert(array_values($values_insert)) . ')', __LINE__, __FILE__);
+
+			if($ok)
+			{
+				return $this->sogeneric_document->update_relation_path($file_id);
+			}
 		}
 
 		protected function _getexceldata( $path, $get_identificator = false )
