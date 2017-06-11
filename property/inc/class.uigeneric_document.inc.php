@@ -408,11 +408,12 @@
 				{
 					$values = (array) $this->bo->read_single($id);
 					$paths = array();
-					foreach ($values['path'] as $path){
-						$paths[] = array('value' => $path);
+					foreach ($values['path'] as $path)
+					{
+						$paths[] = $path;
 					}
 					$values['report_date'] = ($values['report_date']) ? date($this->dateFormat, $values['report_date']) : '';
-					$values['paths'] = $paths;
+					$values['paths'] = implode('<br/>',$paths);
 				}
 				$values['id'] = $id;
 			}
@@ -431,7 +432,7 @@
 				$related_def = array
 					(
 					array('key' => 'id', 'label' => lang('id'), 'sortable' => false, 'resizeable' => true),
-					array('key' => 'name', 'label' => lang('Benevnelse'), 'sortable' => false, 'resizeable' => true),
+					array('key' => 'name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
 					array('key' => 'category', 'label' => lang('Category'), 'sortable' => false, 'resizeable' => true),
 					array('key' => 'relate', 'label' => lang('related'), 'sortable' => false, 'resizeable' => true),
 				);
@@ -700,7 +701,8 @@
 			$only_related = phpgw::get_var('only_related', 'boolean');
 			$all_types = phpgw::get_var('all_types', 'boolean');
 			$entity_group_id = phpgw::get_var('entity_group_id');
-						
+
+			$name_field = 'tfm_nr';
 			$entity_list = $this->soadmin_entity->read(array('allrows' => true));
 			$e_list = array();
 			foreach($entity_list as $entity)
@@ -723,7 +725,7 @@
 				{
 					$values[] = array(
 						'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $item['location_id'], 'id' => $item['id'])).'">'.$item['id'].'</a>',
-						'name' => $item['benevnelse'],
+						'name' => $item[$name_field],
 						'category' => $e_list[$item['entity_id']].'::'.$item['category_name'],
 						'relate' => '<input value="'.$item['id'].'_'.$item['location_id'].'" class="components mychecks" type="checkbox" checked="checked"><input type="hidden" class="components_related" value="'.$item['id'].'_'.$item['location_id'].'">',
 					);
@@ -774,7 +776,7 @@
 
 				$values[] = array(
 					'id' => '<a href="'.self::link(array('menuaction' => 'property.uientity.view', 'location_id' => $location_id, 'id' => $item['id'])).'">'.$item['id'].'</a>',
-					'name' => $item['benevnelse'],
+					'name' => $item[$name_field],
 					'category' => $e_list[$item['entity_id']].'::'.$category['name'],
 					'relate' => '<input value="'.$item['id'].'" class="components mychecks" type="checkbox" '.$checked.'>'.$hidden,
 				);

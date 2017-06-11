@@ -1724,8 +1724,8 @@ JS;
 				$title = '';
 				if($item['path'])
 				{
-					$temp = json_decode($item['path']);
-					$title = implode('<br/>', array_merge($item['location_names'],$temp));
+					$temp = (array)json_decode($item['path']);
+					$title = implode('<br/>', $temp);
 				}
 
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
