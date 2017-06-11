@@ -226,7 +226,9 @@
 			if ($location_id)
 			{
 				$filtermethod = "WHERE a.location_id = {$location_id} AND a.file_id = {$file_id}";
-			} else {
+			}
+			else
+			{
 				$filtermethod = "WHERE a.file_id = {$file_id}";
 			}
 
@@ -235,7 +237,7 @@
 				$filtermethod .= " AND c.entity_group_id = {$entity_group_id}";
 			}
 
-			$sql = "SELECT a.file_id, b.type, b.id, b.location_id, b.location_code, b.json_representation, c.name AS category_name, c.entity_id, c.entity_group_id "
+			$sql = "SELECT DISTINCT a.file_id, b.type, b.id, b.location_id, b.location_code, b.json_representation, c.name AS category_name, c.entity_id, c.entity_group_id "
 					. "FROM phpgw_vfs_file_relation a INNER JOIN fm_bim_item b ON a.location_id = b.location_id AND a.location_item_id = b.id "
 					. "INNER JOIN fm_entity_category c ON b.location_id = c.location_id" ." {$filtermethod} ";
 
