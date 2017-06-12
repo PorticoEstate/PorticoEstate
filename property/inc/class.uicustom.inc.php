@@ -94,6 +94,16 @@
 			$this->acl_edit = $this->acl->check('.custom', PHPGW_ACL_EDIT, $this->currentapp);
 			$this->acl_delete = $this->acl->check('.custom', PHPGW_ACL_DELETE, $this->currentapp);
 			$this->xsl_rootdir = PHPGW_SERVER_ROOT . "/property/templates/base";
+			$this->config	= CreateObject('phpgwapi.config',$this->currentapp);
+			$this->config->read();
+			if (!empty($this->config->config_data['app_name']))
+			{
+				$this->lang_app_name = $this->config->config_data['app_name'];
+			}
+			else
+			{
+				$this->lang_app_name = lang($this->currentapp);
+			}
 		}
 
 		function index()
@@ -117,7 +127,7 @@
 			$appname = lang('custom');
 			$function_msg = lang('list custom');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ' - ' . $appname . ': ' . $function_msg;
 
 			$data = array(
 				'datatable_name' => $appname,
@@ -490,7 +500,7 @@
 			$appname = lang('custom');
 			$function_msg = lang('delete custom');
 
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->currentapp) . ' - ' . $appname . ': ' . $function_msg;
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
@@ -505,7 +515,7 @@
 
 			$custom = $this->bo->read_single($custom_id);
 
-			$appname = lang($this->currentapp);
+			$appname = $this->lang_app_name;
 			$function_msg = $custom['name'];
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = $appname . ': ' . $function_msg;
