@@ -24,7 +24,7 @@
 	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
 	 * @package property
 	 * @subpackage custom
-	 * @version $Id: class.uicustom.inc.php 14987 2016-05-09 13:02:55Z sigurdne $
+	 * @version $Id: class.uicustom.inc.php 15977 2016-11-09 13:56:30Z sigurdne $
 	 */
 	/**
 	 * Description
@@ -34,8 +34,9 @@
 
 	class helpdesk_uicustom extends property_uicustom
 	{
-		function __construct()
+		public function __construct()
 		{
+			$GLOBALS['phpgw']->translation->add_app('property');
 			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'helpdesk::report';
 		}
