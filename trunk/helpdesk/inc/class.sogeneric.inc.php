@@ -228,7 +228,7 @@
 						),
 						'edit_msg' => lang('edit'),
 						'add_msg' => lang('add'),
-						'name' => lang('recipient set'),
+						'name' => lang('admin recipient set'),
 						'acl_app' => 'helpdesk',
 						'system_location' => '.email_out.recipient_set',
 						'acl_location' => '.email_out',

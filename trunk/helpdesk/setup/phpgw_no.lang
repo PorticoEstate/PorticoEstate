@@ -193,7 +193,7 @@ content	helpdesk	no	Innhold
 select all	helpdesk	no	Velg alle
 planned	helpdesk	no	Planlagt
 email template	helpdesk	no	Standardtekster
-recipient set	helpdesk	no	mottaker sett
+admin recipient set	helpdesk	no	Admin mottakerlister
 list	helpdesk	no	List
 recipient list	helpdesk	no	Mottaker liste
 select	helpdesk	no	Velg
@@ -202,7 +202,9 @@ sent	helpdesk	no	Sendt
 generic	helpdesk	no	Generelt
 reverse	helpdesk	no	Revers tildeling
 owned by	helpdesk	no	Eies av
-update message	helpdesk	no	Oppdateringsmelding
+new message	helpdesk	no	Svarmelding ved ny sak
+update message	helpdesk	no	Svarmelding ved oppdatert sak
+close message	helpdesk	no	Svarmelding ved avlsuttet sak
 list %1	helpdesk	no	List %1
 public	helpdesk	no	synlig for alle
 open edit in new window	helpdesk	no	Editer i nytt vindu

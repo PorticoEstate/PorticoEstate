@@ -662,7 +662,8 @@
 					(
 						'id'	=> $this->db->f('id'),
 						'name'	=> $this->db->f('name', true),
-						'color'	=> $this->db->f('color')
+						'color'	=> $this->db->f('color'),
+						'closed'=> $this->db->f('color'),
 					);
 			}
 			return $status;
