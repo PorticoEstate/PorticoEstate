@@ -174,7 +174,7 @@
 								'type' => 'email_template', 'admin' => true))
 						),
 						'recipient_set' => array(
-							'text' => lang('recipient set'),
+							'text' => lang('admin recipient set'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uigeneric.index',
 								'type' => 'email_recipient_set', 'admin' => true))
 						),
