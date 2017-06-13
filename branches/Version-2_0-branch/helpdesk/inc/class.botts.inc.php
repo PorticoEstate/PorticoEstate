@@ -127,6 +127,11 @@
 				'id' => 'assignedto',
 				'name' => lang('assigned to')
 			);
+			$columns['category'] = array
+				(
+				'id' => 'category',
+				'name' => lang('category')
+			);
 
 			$columns['billable_hours'] = array(
 				'id' => 'billable_hours',
@@ -211,7 +216,7 @@
 			return $this->bocommon->select_list($selected,$filters);
 		}
 
-		function get_status_list($selected)
+		function get_status_list($selected = '')
 		{
 			$status = $this->_get_status_list();
 			return $this->bocommon->select_list($selected,$status);
@@ -770,6 +775,12 @@
 
 		function mail_ticket($id, $fields_updated, $receipt = array(), $get_message = false)
 		{
+			//No message on assignment
+			if(!$get_message && is_array($fields_updated) && count($fields_updated) == 1 && in_array('assignedto', $fields_updated))
+			{
+				return;
+			}
+
 			$log_recipients = array();
 			$this->send			= CreateObject('phpgwapi.send');
 
@@ -819,11 +830,39 @@
 			$link_text = lang('Ticket') . ' #' . $id ;
 
 			$messages_sendt = $this->historylog->return_array(array(),array('M'),'history_timestamp','DESC',$id);
+			$additional_notes = $this->read_additional_notes($id);
+			$num_updates = count($additional_notes) +1;
 
+			//New message
+			if(!$get_message && !empty($this->config->config_data['new_message']))
+			{
+				$link_text = "<H2>{$this->config->config_data['new_message']}</H2>";
+				$link_text = nl2br(str_replace(array('__ID__'), array($id, $num_updates), $link_text));
+			}
+
+			// Normal update message
 			if(!$get_message && !empty($this->config->config_data['update_message']) && $messages_sendt)
 			{
 				$link_text = "<H2>{$this->config->config_data['update_message']}</H2>";
+				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
 			}
+
+			$status_closed = array('X' => true);
+			$custom_status	= $this->so->get_custom_status();
+			foreach($custom_status as $custom)
+			{
+				$status_closed["C{$custom['id']}"] = !!$custom['closed'];
+			}
+
+
+			//Message when ticket is closed
+			if(!$get_message && !empty($this->config->config_data['close_message']) && $status_closed[$ticket['status']])
+			{
+				$link_text = "<H4>{$this->config->config_data['close_message']}</H4>";
+				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
+			}
+
+			//message when closed;
 
 			$body = '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
 					'id' => $id), false, true) . '">' . $link_text . '</a>' . "\n";
@@ -909,9 +948,6 @@
 HTML;
 
 				$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$user_name}</td><td>{$ticket['details']}</td></tr>";
-
-
-				$additional_notes = $this->read_additional_notes($id);
 
 				foreach ($additional_notes as $value)
 				{

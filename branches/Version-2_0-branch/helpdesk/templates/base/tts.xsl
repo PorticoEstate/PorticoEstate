@@ -20,6 +20,13 @@
 		<xsl:value-of select="lookup_functions"/>
 		var my_groups = <xsl:value-of select="my_groups"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !')"/>;
+
+		function response_lookup()
+		{
+			var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+			var strURL = phpGWLink('index.php', oArgs);
+		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+		}
 	</script>
 
 	<dl>
@@ -182,11 +189,25 @@
 						</input>
 					</div>
 					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'Details')"/>
-						</label>
+						<xsl:choose>
+							<xsl:when test="simple !='1'">
+								<label>
+									<a href="javascript:response_lookup()">
+										<xsl:attribute name="title">
+											<xsl:value-of select="php:function('lang', 'standard text')"/>
+										</xsl:attribute>
+										<xsl:value-of select="php:function('lang', 'standard text')"/>
+									</a>
+								</label>
+							</xsl:when>
+							<xsl:otherwise>
+								<label>
+									<xsl:value-of select="php:function('lang', 'new note')"/>
+								</label>
+							</xsl:otherwise>
+						</xsl:choose>
 
-						<textarea cols="60" rows="10" name="values[details]"  class="pure-input-1-2" >
+						<textarea cols="60" rows="10" name="values[details]" id="new_note" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
 							</xsl:attribute>

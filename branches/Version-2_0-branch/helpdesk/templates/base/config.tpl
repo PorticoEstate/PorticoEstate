@@ -20,9 +20,18 @@
 			<td><input name="newsettings[app_name]" value="{value_app_name}"></td>
 		</tr>
 		<tr>
-			<td>{lang_update_message}: </td>
+			<td>{lang_new_message}:</br> '__ID__' </td>
+			<td><input name="newsettings[new_message]" value="{value_new_message}"></td>
+		</tr>
+		<tr>
+			<td>{lang_update_message}:</br> '__ID__', '__#__' </td>
 			<td><input name="newsettings[update_message]" value="{value_update_message}"></td>
 		</tr>
+		<tr>
+			<td>{lang_close_message}:</br> '__ID__', '__#__'</td>
+			<td><input name="newsettings[close_message]" value="{value_close_message}"></td>
+		</tr>
+
 		<tr>
 			<td>{lang_from_email}: <br>
 			<td><input name="newsettings[from_email]" value="{value_from_email}"></td>
