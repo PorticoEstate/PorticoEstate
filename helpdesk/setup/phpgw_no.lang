@@ -204,7 +204,7 @@ reverse	helpdesk	no	Revers tildeling
 owned by	helpdesk	no	Eies av
 new message	helpdesk	no	Svarmelding ved ny sak
 update message	helpdesk	no	Svarmelding ved oppdatert sak
-close message	helpdesk	no	Svarmelding ved avlsuttet sak
+close message	helpdesk	no	Svarmelding ved avsluttet sak
 list %1	helpdesk	no	List %1
 public	helpdesk	no	synlig for alle
 open edit in new window	helpdesk	no	Editer i nytt vindu
