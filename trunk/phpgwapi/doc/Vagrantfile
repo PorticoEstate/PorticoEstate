@@ -1,12 +1,31 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-# Sigurd: This file will create a virtualbox instance of ubuntu server 16.04 LTS,
+# Guidelines: This file will create a virtualbox instance of ubuntu server 16.04 LTS,
 # complete with postgresql, apache, php and xdebug.
 # The user 'portico' has password 'portico' - and is member of sudoers.
 # Roles/Passwd in posgresql: portico/portico, vagrant/vagrant
 # Portmapping: 80 -> 8080, 20 -> 2222 and 5432 -> 5433
-# Usage: $ vagrant up
+# Usage:
+#   $ vagrant up
 # Docs: https://www.vagrantup.com/
+# Download and install netbeans from https://netbeans.org/downloads/
+# Log into the virtual machine with user/passwd: portico/portico
+# create a ssh key pair as described: http://savannah.gnu.org/maintenance/SshAccess/
+# - or use what you already have
+# register your key at https://savannah.gnu.org/my/admin/editsshkeys.php
+# Request access to the project at https://savannah.nongnu.org/projects/fmsystem/
+# Navigate to /var/www/html/portico
+# check out the code as
+#   $ svn co svn+ssh://<username>@svn.savannah.nongnu.org/fmsystem/trunk .
+# create your database in postgresql:
+#   $ createdb portico_<YYYYMMDD>
+# restore database from backup (place the file in the vagrant catalog om the host, and pick it up in /vagrant in the VM):
+# By default, Vagrant will share your project directory (the directory with the Vagrantfile) to /vagrant.
+#   $ gunzip -c filename.gz | psql dbname
+# configure netbeans with php application from remote server (sftp at 127.0.0.1, port 2222)
+# navigate you browser to http://127.0.0.1:8080/portico/
+#
+#
 #
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -112,6 +131,9 @@ EOF
     sudo apt install -y whois
     sudo useradd -p `mkpasswd "portico"` -d /home/"portico" -m -g users -s /bin/bash "portico"
     sudo echo 'portico  ALL=(ALL:ALL) ALL' >> /etc/sudoers
+
+	sudo mkdir /var/www/html/portico
+	sudo chown portico.users /var/www/html/portico
 
     sudo apt-get upgrade -y
   
