@@ -184,8 +184,12 @@
 
 			$booking_id = $customer_report->booking_id ? $customer_report->booking_id : phpgw::get_var('booking_id', 'int');
 			$booking = createObject('eventplanner.bobooking')->read_single($booking_id);
+			$calendar_id = $booking->calendar_id;
+			$calendar = createObject('eventplanner.bocalendar')->read_single($calendar_id, true, $relaxe_acl = true);
 
-			$application = createObject('eventplanner.boapplication')->read_single($booking->application_id);
+			$application = createObject('eventplanner.boapplication')->read_single($calendar->application_id, true, $relaxe_acl = true);
+			$application->summary = '';
+			$application->remark = '';
 			$application_type_list = execMethod('eventplanner.bogeneric.get_list', array('type' => 'application_type'));
 			$types = (array)$application->types;
 			if($types)
