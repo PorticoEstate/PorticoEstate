@@ -38,7 +38,7 @@
 		protected $field_of_responsibility_name;
 		protected $permission_array;
 
-		public function __construct( $id )
+		public function __construct( $id = 0)
 		{
 			$this->id = (int)$id;
 		}
