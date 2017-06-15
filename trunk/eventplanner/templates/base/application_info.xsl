@@ -16,20 +16,25 @@
 		<xsl:value-of select="application/title"/>
 	</div>
 
-	<div class="pure-control-group">
-		<label>
-			<xsl:value-of select="php:function('lang', 'program description')"/>
-		</label>
-		<div class="pure-custom">
-			<xsl:value-of disable-output-escaping="yes" select="application/summary"/>
+	<xsl:if test="application/summary != ''">
+
+		<div class="pure-control-group">
+			<label>
+				<xsl:value-of select="php:function('lang', 'program description')"/>
+			</label>
+			<div class="pure-custom">
+				<xsl:value-of disable-output-escaping="yes" select="application/summary"/>
+			</div>
 		</div>
-	</div>
-	<div class="pure-control-group">
-		<label>
-			<xsl:value-of select="php:function('lang', 'remark')"/>
-		</label>
-		<xsl:value-of select="application/remark"/>
-	</div>
+	</xsl:if>
+	<xsl:if test="application/remark != ''">
+		<div class="pure-control-group">
+			<label>
+				<xsl:value-of select="php:function('lang', 'remark')"/>
+			</label>
+			<xsl:value-of select="application/remark"/>
+		</div>
+	</xsl:if>
 
 	<div class="pure-control-group">
 		<label>
