@@ -40,9 +40,7 @@ onAddClick_Alarm = function (type)
 			data: {day: day, hour: hour, minute: minute, user_list: user, type: type, id: id},
 			success: function (data)
 			{
-				obj = JSON.parse(data);
-				var newstr = obj.replace("&amp;", "&", "gi");
-				JqueryPortico.updateinlineTableHelper(oTable0, newstr);
+				JqueryPortico.updateinlineTableHelper('datatable-container_0');
 			}
 		});
 	}
