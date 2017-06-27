@@ -546,6 +546,9 @@
 					if($this->config->config_data['export']['auto_receive_order'])
 					{
 						$received_amount = $this->get_total_received((int)$order_id);
+
+						$received_amount = $received_amount * 0.8; //shave off 25 % tax from the top.
+
 						$order_type = $this->bocommon->socommon->get_order_type($order_id);
 
 						switch ($order_type)
