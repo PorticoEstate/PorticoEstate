@@ -501,8 +501,16 @@
 				{
 					$query = $this->db->db_addslashes($query);
 
-					$whereclause .= "account_firstname $this->like '%$query%' OR account_lastname $this->like "
-						. "'%$query%' OR account_lid $this->like '%$query%')";
+					if(strpos($query, ',' ))
+					{
+						$whereclause .= "account_lastname || ', ' || account_firstname $this->like '$query%')";
+					}
+					else
+					{
+						$whereclause .= "account_firstname $this->like '%$query%' OR account_lastname $this->like "
+							. "'%$query%' OR account_lid $this->like '%$query%')";
+					}
+
 				}
 			}
 
