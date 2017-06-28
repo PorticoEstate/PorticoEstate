@@ -199,6 +199,12 @@
 				$this->bocommon->fm_cache('sql_document_' . $entity_id, $sql);
 
 				$this->uicols = $this->bocommon->uicols;
+
+				$this->uicols['input_type'][] = 'text';
+				$this->uicols['name'][] = 'doc_type';
+				$this->uicols['descr'][] = lang('category');
+				$this->uicols['statustext'][] = lang('category');
+
 				$cols_return = $this->bocommon->cols_return;
 				$type_id = $this->bocommon->type_id;
 				$this->cols_extra = $this->bocommon->cols_extra;
@@ -388,7 +394,7 @@
 					. " $this->like '%$query%')";
 			}
 
-			$sql = "SELECT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
+			$sql = "SELECT DISTINCT fm_document.*, phpgw_categories.cat_name as category FROM fm_document"
 				. " $this->join phpgw_categories on fm_document.category = phpgw_categories.cat_id"
 				. " $filtermethod $querymethod";
 
