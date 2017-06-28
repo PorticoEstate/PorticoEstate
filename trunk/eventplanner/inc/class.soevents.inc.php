@@ -61,11 +61,14 @@
 			//nothing;
 		}
 
-		public function get_date_end( $application_id )
+		public function get_dates( $application_id )
 		{
-			$sql = "SELECT max(to_) as date_end FROM eventplanner_calendar WHERE application_id = " . (int) $application_id;
+			$sql = "SELECT min(from_) as date_start, max(to_) as date_end  FROM eventplanner_calendar WHERE application_id = " . (int) $application_id;
 			$this->db->query($sql,__LINE__,__FILE__);
 			$this->db->next_record();
-			return $this->db->f('date_end');
+			return array(
+				'date_start' => $this->db->f('date_start'),
+				'date_end' => $this->db->f('date_end')
+			);
 		}
 	}
