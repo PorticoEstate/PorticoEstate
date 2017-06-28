@@ -356,16 +356,19 @@
 		{
 			$id = (int)$id;
 
+
 			if (count($data))
 			{
 				$dataset = $this->read_single_dataset($id);
 				$jsonB = $data;
+				$dataset_id = $id;
 			}
 			else
 			{
 				$definition = $this->read_single($id);
 				$dataset = $this->read_single_dataset($definition['dataset_id']);
 				$jsonB = json_decode($definition['report_definition'], true);
+				$dataset_id = (int)$definition['dataset_id'];
 			}
 
 			$string_columns = implode(',', $jsonB['columns']);
@@ -387,7 +390,7 @@
 				$ordering = 'ORDER BY ' . implode(', ', array_unique($array_order));
 			}
 
-			$cond = $this->_build_conditions($jsonB['criteria'], $id);
+			$cond = $this->_build_conditions($jsonB['criteria'], $dataset_id);
 
 			if ($cond)
 			{
