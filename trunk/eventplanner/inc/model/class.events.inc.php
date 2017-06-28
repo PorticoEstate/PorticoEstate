@@ -51,4 +51,65 @@
 		{
 			return new eventplanner_events();
 		}
+		public static function get_fields($debug = true)
+		{
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			$fields = array(
+				'id' => array('action'=> PHPGW_ACL_READ,
+					'type' => 'int',
+					'label' => 'id',
+					'sortable'=> true,
+					'formatter' => 'JqueryPortico.formatLink',
+					'public' => true,
+					),
+			 	'title' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'label' => 'title',
+					'sortable' => false,
+					'query' => true,
+					'public' => true,
+					),
+				'contact_email' => array(
+					'action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'string',
+					'required' => true,
+					'query' => true,
+					'sf_validator' => createObject('booking.sfValidatorEmail', array(), array('invalid' => '%field% is invalid')),
+					'label' => 'contact email',
+					'history' => true,
+					),
+				'vendor_name' => array('action'=>  PHPGW_ACL_READ,
+					'type' => 'string',
+					'query' => true,
+					'label' => 'vendor',
+					'join' => array(
+						'table' => 'eventplanner_vendor',
+						'fkey' => 'vendor_id',
+						'key' => 'id',
+						'column' => 'name'
+						)
+					),
+				'date_start' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'date',
+					'label'	=> 'date start',
+					'sortable' => true,
+					'history' => true
+					),
+				'date_end' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'date',
+					'label'	=> 'date end',
+					'history' => true
+					),
+				'number_of_units' => array('action'=> PHPGW_ACL_READ | PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label'	=> 'number of units',
+					'required' => true,
+					'history' => true
+					)
+			);
+
+			return $fields;
+		}
+
 	}
