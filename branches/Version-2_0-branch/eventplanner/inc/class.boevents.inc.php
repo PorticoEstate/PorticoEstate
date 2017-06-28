@@ -89,11 +89,13 @@
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			foreach ($values['results'] as &$entry)
 			{
+				$date_end =  eventplanner_soevents::get_instance()->get_date_end($entry['id']);
+
 				$entry['status'] = $status_text[$entry['status']];
 				$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
 				$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
 				$entry['date_start'] = $GLOBALS['phpgw']->common->show_date($entry['date_start'], $dateformat);
-				$entry['date_end'] = $GLOBALS['phpgw']->common->show_date($entry['date_end'], $dateformat);
+				$entry['date_end'] = $GLOBALS['phpgw']->common->show_date($date_end, $dateformat);
 				$entry['case_officer_id'] = $entry['case_officer_id'] ? $GLOBALS['phpgw']->accounts->get($entry['case_officer_id'])->__toString() : '';
 			}
 			return $values;
