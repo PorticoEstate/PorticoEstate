@@ -173,7 +173,7 @@
 
 							if (!is_null($export_result['export']['data_log']))
 							{
-								$export_log .= $export_result['export']['data_log'];
+								$export_log .= PHP_EOL . $export_result['export']['data_log'];
 							}
 							else
 							{
@@ -188,7 +188,7 @@
 					$export_data[$export_type] = $this->combine_export_result_data($export_results[$export_type]);
 				}
 
-				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp\n";
+				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp";
 				$log .= $export_log;
 //				$export_log = $log;
 				$export_log = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $log);
