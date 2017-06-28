@@ -1121,7 +1121,7 @@
 				$file_format_linebreak = "\n";
 			}
 
-			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode(PHP_EOL, $log),
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode("\r\n", $log),
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
@@ -1373,7 +1373,7 @@
 				$file_format_linebreak = "\n";
 			}
 
-			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode(PHP_EOL, $log),
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode("\r\n", $log),
 				'info' => $export_info, 'header_count' => $header_count);
 		}
 
