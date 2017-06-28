@@ -51,10 +51,6 @@
 			$this->bo = createObject('eventplanner.boevents');
 			$this->cats = & $this->bo->cats;
 			$this->fields = eventplanner_events::get_fields();
-			unset($this->fields['modified']);
-			unset($this->fields['created']);
-			unset($this->fields['contact_email']);
-			unset($this->fields['case_officer_name']);
 			$this->permissions = eventplanner_events::get_instance()->get_permission_array();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			self::set_active_menu("{$this->currentapp}::events");

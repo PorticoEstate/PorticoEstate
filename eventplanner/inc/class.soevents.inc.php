@@ -60,4 +60,12 @@
 		{
 			//nothing;
 		}
+
+		public function get_date_end( $application_id )
+		{
+			$sql = "SELECT max(to_) as date_end FROM eventplanner_calendar WHERE application_id = " . (int) $application_id;
+			$this->db->query($sql,__LINE__,__FILE__);
+			$this->db->next_record();
+			return $this->db->f('date_end');
+		}
 	}
