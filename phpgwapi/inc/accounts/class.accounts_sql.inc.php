@@ -503,7 +503,8 @@
 
 					if(strpos($query, ',' ))
 					{
-						$whereclause .= "account_lastname || ', ' || account_firstname $this->like '$query%')";
+						$whereclause .= "account_lastname || ', ' || account_firstname $this->like '$query%'"
+							. " OR account_lastname || ',' || account_firstname $this->like '$query%')";
 					}
 					else
 					{
