@@ -190,7 +190,8 @@
 
 				$log = "Reservasjon_Id;Reservasjon_Type;Ordrenr;Kunde navn - Nummer;Varelinjer med dato;Bygg;Beløp\n";
 				$log .= $export_log;
-				$export_log = $log;
+//				$export_log = $log;
+				$export_log = iconv("UTF-8", "ISO-8859-1//TRANSLIT", $log);
 
 				if ($do_generate_files === false)
 				{
