@@ -489,10 +489,13 @@ HTML;
 						{
 							var selector = tab.selector;
 							var active_tab = selector.replace("#", '');
-
-							if (typeof set_tab === "function")
+							try
 							{
 								set_tab(active_tab);
+							}
+							catch (err)
+							{
+								//nothing
 							}
 						}
 					}
