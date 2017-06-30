@@ -149,7 +149,7 @@
 						<xsl:value-of select="value_remark"/>
 					</textarea>
 				</div>
-					
+
 				<div class="pure-g">
 					<xsl:variable name="lang_save">
 						<xsl:value-of select="php:function('lang', 'save')"/>
@@ -274,7 +274,7 @@
 						<xsl:value-of select="value_remark"/>
 					</textarea>
 				</div>
-					
+
 				<div class="pure-g">
 					<xsl:variable name="lang_save">
 						<xsl:value-of select="php:function('lang', 'save')"/>
@@ -309,20 +309,19 @@
 
 <!-- add / edit -->
 <xsl:template xmlns:php="http://php.net/xsl" match="edit">
-	<xsl:choose>
-		<xsl:when test="mode = 'edit'">
-			<script type="text/javascript">
-				var location_id = '<xsl:value-of select="value_location_id"/>';
-				var item_id = '<xsl:value-of select="value_id"/>';
-
-				function set_tab(active_tab)
-				{
-				document.form.active_tab.value = active_tab;
-				}
+	<script type="text/javascript">
+		var location_id = '<xsl:value-of select="value_location_id"/>';
+		var item_id = '<xsl:value-of select="value_id"/>';
+		function set_tab(active_tab)
+		{
+			document.form.active_tab.value = active_tab;
+		}
+		<xsl:choose>
+			<xsl:when test="mode = 'edit'">
 				<xsl:value-of select="lookup_functions"/>
-			</script>
-		</xsl:when>
-	</xsl:choose>
+			</xsl:when>
+		</xsl:choose>
+	</script>
 
 	<div id="entity_edit_tabview">
 		<dl>
@@ -480,7 +479,7 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</table>
-				
+
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<xsl:choose>
@@ -610,7 +609,7 @@
 								<input type="text" name="repeat_interval" id="repeat_interval" value="0" size="2">
 								</input>
 							</div>
-								
+
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'controle time')" />
@@ -643,7 +642,7 @@
 								</xsl:if>
 							</xsl:for-each>
 						</div>
-										
+
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'checklist')" />
@@ -693,13 +692,13 @@
 						</xsl:call-template>
 					</div>
 				</xsl:if>
-					
+
 				<xsl:choose>
 					<xsl:when test="attributes_group!=''">
 						<xsl:call-template name="attributes_values"/>
 					</xsl:when>
 				</xsl:choose>
-					
+
 				<xsl:choose>
 					<xsl:when test="files!='' or  fileupload = 1 and value_id!=''">
 						<div id="files">
@@ -750,7 +749,7 @@
 									<xsl:apply-templates select="doc_type_filter/options"/>
 								</select>
 							</div>
-									
+
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_7'">
 									<xsl:call-template name="table_setup">
@@ -839,7 +838,7 @@
 				<xsl:when test="mode = 'edit'">
 					<xsl:call-template name="table_apply">
 						<xsl:with-param	name="lean" select="lean"/>
-						<xsl:with-param	name="cat_list" select="cat_list"/>				
+						<xsl:with-param	name="cat_list" select="cat_list"/>
 					</xsl:call-template>
 				</xsl:when>
 				<xsl:otherwise>
@@ -1052,5 +1051,5 @@
 
 <xsl:template name="controller_integration">
 	<xsl:param name="controller" />
-		
+
 </xsl:template>
