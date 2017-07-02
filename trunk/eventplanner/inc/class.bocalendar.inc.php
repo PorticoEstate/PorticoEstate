@@ -174,7 +174,217 @@
 				$_ids = $ids;
 			}
 
-			return eventplanner_socalendar::get_instance()->update_active_status($_ids, $action);
+			$ret = eventplanner_socalendar::get_instance()->update_active_status($_ids, $action);
+
+			if($ret && $action == 'disconnect')
+			{
+				$this->send_disconnect_email($_ids);
+			}
+
+			return $ret;
+		}
+
+		function send_disconnect_email($ids)
+		{
+			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+			$sobooking = createObject('eventplanner.sobooking');
+			foreach ($ids as $calendar_id)
+			{
+				$booking_id = $sobooking->get_booking_id_from_calendar( $calendar_id );
+				$booking = $sobooking->read_single($booking_id, true);
+
+				$customer = createObject('eventplanner.bocustomer')->read_single($booking->customer_id, true, $relaxe_acl = true);
+				$customer_name	=$customer->name;
+
+				$customer_contact_name = $booking->customer_contact_name;
+				$customer_contact_email = $booking->customer_contact_email;
+				$customer_contact_phone = $booking->customer_contact_phone;
+				$location = $booking->location;
+
+				$calendar = createObject('eventplanner.bocalendar')->read_single($calendar_id, true, $relaxe_acl = true);
+				$from_ = $GLOBALS['phpgw']->common->show_date($calendar->from_);
+				$to_ = $GLOBALS['phpgw']->common->show_date($calendar->to_);
+
+				$application = createObject('eventplanner.boapplication')->read_single($calendar->application_id, true, $relaxe_acl = true);
+	//			_debug_array($application);
+	//			_debug_array($application);
+
+				$vendor_name = $application->vendor_name;
+				$vendor_contact_name = $application->contact_name;
+				$vendor_contact_email = $application->contact_email;
+				$vendor_contact_phone = $application->contact_phone;
+
+				$subject = !empty($config['canceled_subject']) ? $config['canceled_subject'] : $event_title;
+				$event_title = $application->title;
+
+				$send = CreateObject('phpgwapi.send');
+
+				$lang_when = lang('when');
+				$lang_where = lang('where');
+
+				$body  = <<<HTML
+					<h2>{$event_title}</h2>
+					<table>
+						<tr>
+							<td>
+								{$lang_when}:
+							</td>
+							<td>
+								{$from_} - {$to_}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{$lang_where}:
+							</td>
+							<td>
+								{$location}
+							</td>
+						</tr>
+					</table>
+HTML;
+
+				$lang_vendor = lang('vendor');
+				$lang_customer = lang('customer');
+				$lang_contact_info = lang('contact info');
+
+				$body .= <<<HTML
+				<table border='1' class='pure-table pure-table-bordered pure-table-striped'>
+					<thead>
+						<tr>
+							<th colspan="2" align = "left">
+								{$lang_contact_info}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<b>{$lang_vendor}</b>
+							</td>
+							<td>
+								{$vendor_name}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								{$vendor_contact_name}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								{$vendor_contact_email}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								{$vendor_contact_phone}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<b>{$lang_customer}</b>
+							</td>
+							<td>
+								{$customer_name}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								{$customer_contact_name}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								{$customer_contact_email}
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td>
+								{$customer_contact_phone}
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+HTML;
+
+				$vendor_receipt_text = !empty($config['vendor_canceled_text']) ? $config['vendor_canceled_text'] : null;
+
+				if($vendor_receipt_text)
+				{
+
+				//	$lang_vendor_note = lang('vendor note');
+					$body .= <<<HTML
+					{$vendor_receipt_text}
+HTML;
+
+				}
+				$customer_receipt_text = !empty($config['customer_canceled_text']) ? $config['customer_canceled_text'] : null;
+
+				if($customer_receipt_text)
+				{
+
+				//	$lang_customer_note = lang('customer note');
+					$body .= <<<HTML
+					{$customer_receipt_text}
+HTML;
+
+				}
+
+				$content = <<<HTML
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		{$body}
+	</body>
+</html>
+HTML;
+
+//echo $content; die();
+		/**
+			 * Vendor
+			 */
+				$cc = $customer_contact_email;
+				$bcc = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : '';
+				$to_email = $vendor_contact_email;
+				$from_email = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : $customer_contact_email;
+				$from_name = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : $customer_contact_name;
+
+				try
+				{
+					$rcpt = $send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html');
+				}
+				catch (phpmailerException $e)
+				{
+					phpgwapi_cache::message_set($e->getMessage(), 'error');
+				}
+
+				phpgwapi_cache::message_set("Email: $to_email, $cc", 'message');
+			
+			}
 		}
 
 		public function update_schedule( $id, $from_ )
