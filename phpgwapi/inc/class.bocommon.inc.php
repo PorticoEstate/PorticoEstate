@@ -180,4 +180,42 @@
 				}
 			}
 		}
+
+		function select_multi_list( $selected = array(), $list )
+		{
+			if (isset($list) && is_array($list) && isset($selected) && is_array($selected))
+			{
+				foreach ($list as & $entry)
+				{
+					$entry['selected'] = in_array( $entry['id'], $selected) ? 1 : 0;
+				}
+			}
+			return $list;
+		}
+
+		function msgbox_data( $receipt )
+		{
+			$msgbox_data_error = array();
+			$msgbox_data_message = array();
+			if (isset($receipt['error']) && is_array($receipt['error']))
+			{
+				foreach ($receipt['error'] as $dummy => $error)
+				{
+					$msgbox_data_error[$error['msg']] = false;
+				}
+			}
+
+			if (isset($receipt['message']) && is_array($receipt['message']))
+			{
+				foreach ($receipt['message'] as $dummy => $message)
+				{
+					$msgbox_data_message[$message['msg']] = true;
+				}
+			}
+
+			$msgbox_data = array_merge($msgbox_data_error, $msgbox_data_message);
+
+			return $msgbox_data;
+		}
+
 	}

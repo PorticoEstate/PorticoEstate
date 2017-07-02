@@ -86,12 +86,33 @@
 
 			$values =  eventplanner_sovendor_report::get_instance()->read($params);
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$custom = createObject('property.custom_fields');
+			$custom_fields = (array)$custom->find('eventplanner', $this->acl_location, 0, '', '', '', true, false);
+			$selected = (array)$GLOBALS['phpgw_info']['user']['preferences']['eventplanner']['vendor_report_columns'];
+			$location_id	= $GLOBALS['phpgw']->locations->get_id('eventplanner', $this->acl_location);
+
 			foreach ($values['results'] as &$entry)
 			{
 				$entry['created'] = $GLOBALS['phpgw']->common->show_date($entry['created']);
 				$entry['modified'] = $GLOBALS['phpgw']->common->show_date($entry['modified']);
 				$entry['date_start'] = $GLOBALS['phpgw']->common->show_date($entry['date_start'], $dateformat);
 				$entry['date_end'] = $GLOBALS['phpgw']->common->show_date($entry['date_end'], $dateformat);
+
+				foreach ($custom_fields as $custom_field)
+				{
+					if( in_array( $custom_field['id'], $selected)  ||  $custom_field['list'])
+					{
+						$entry[$custom_field['name']] = $custom->get_translated_value(
+							array(
+								'value' => $entry['json_representation'][$custom_field['name']],
+								'datatype' => $custom_field['datatype'],
+								'attrib_id' => $custom_field['id']
+							),
+							$location_id
+						);
+					}
+				}
 			}
 			return $values;
 		}
@@ -109,4 +130,21 @@
 
 			return $values;
 		}
+
+		function column_list( $selected = '', $allrows = '' )
+		{
+			if (!$selected)
+			{
+				$selected = (array)$GLOBALS['phpgw_info']['user']['preferences']['eventplanner']['vendor_report_columns'];
+			}
+			$filter = array('list' => ''); // translates to "list IS NULL"
+			$columns = createObject('phpgwapi.custom_fields')->find('eventplanner', $this->acl_location, 0, '', '', '', true, false, $filter);
+			foreach ($columns as &$column)
+			{
+				$column['name'] = $column['descr'] ? $column['descr'] : $column['input_text'];
+			}
+			$column_list = $this->select_multi_list($selected, $columns);
+			return $column_list;
+		}
+
 	}
