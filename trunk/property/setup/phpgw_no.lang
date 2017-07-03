@@ -1022,7 +1022,7 @@ list entity custom function	property	no	List egendefinerte funskjoner for entite
 list entity type	property	no	List entitet-type
 list entrance	property	no	list inngang
 list equipment	property	no	list utstyr
-list gab	property	no	List gruneEiendom
+list gab	property	no	List grunneiendom
 list gab detail	property	no	List grunneiendomsdetaljer
 list hours	property	no	List timer
 list investment	property	no	List investeringer
