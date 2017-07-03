@@ -2144,7 +2144,6 @@
 				{
 					foreach ($values['attributes'] as &$attr)
 					{
-//						$attr['value'] = $xml->getElementsByTagName($attr['column_name'])->item(0)->nodeValue;
 						$attr['value'] = $this->db->stripslashes($jsondata[$attr['column_name']]);
 					}
 				}
