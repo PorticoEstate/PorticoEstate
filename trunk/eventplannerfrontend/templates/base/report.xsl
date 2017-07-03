@@ -60,7 +60,7 @@
 					</xsl:call-template>
 					<div class="pure-control-group">
 						<xsl:variable name="lang_from">
-							<xsl:value-of select="php:function('lang', 'from')"/>
+							<xsl:value-of select="php:function('lang', 'datetime event')"/>
 						</xsl:variable>
 						<label>
 							<xsl:value-of select="$lang_from"/>
@@ -68,12 +68,12 @@
 						<xsl:value-of select="php:function('show_date', number(booking/from_), $date_format)"/>
 					</div>
 
-					<div class="pure-control-group">
+					<!--div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'to')"/>
 						</label>
 						<xsl:value-of select="php:function('show_date', number(booking/to_), $date_format)"/>
-					</div>
+					</div-->
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'customer')"/>
