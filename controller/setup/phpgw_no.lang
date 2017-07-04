@@ -207,7 +207,7 @@ phone	controller	no	Telefon
 postal_code_place	controller	no	Postnummer/-sted
 previous	controller	no	Forrige
 propertyident	controller	no	G.nr. / B.nr. / F.nr. / S.nr.
-property_id	controller	no	BKB Identifikator
+property_id	controller	no	BKB identifikator
 property	controller	no	Eiendom
 quarterly	controller	no	Kvartalvis
 recurrence	controller	no	Gjentakelse
@@ -337,8 +337,8 @@ Choose_component_category	controller	no	Velg utstyrskategori
 component_category_internal	controller	no	Internt utstyrsregister
 component_category_ifc	controller	no	IFC
 invert_checkboxes	controller	no	Inverter merking
-ControlId	controller	no	Kontroll ID
-Bim_id	controller	no	Utstyr ID
+ControlId	controller	no	Kontroll-id
+Bim_id	controller	no	Utstyrs-id
 Bim_name	controller	no	Utstyrsnavn
 Bim_type	controller	no	Utstyrstype
 GUID	controller	no	GUID
@@ -386,10 +386,10 @@ status components	controller	no	Status komponenter
 controle time	common	no	Kontrolltid
 service time	common	no	Servicetid
 total time	common	no	Totaltid
-request ical event	controller	no	Send MøteInnkalling
+request ical event	controller	no	Send møteinnkalling
 summary	common	no	Sammendrag
 components	controller	no	Komponenter
-report type	controller	no	RapportType
+report type	controller	no	Rapporttype
 lang_control_mandatory_location	controller	no	Påkrevd lokasjonsvalg
 Control types	controller	no	Kontrolltyper
 location	controller	no	Lokasjon

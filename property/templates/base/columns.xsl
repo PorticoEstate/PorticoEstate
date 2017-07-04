@@ -51,7 +51,7 @@
 		<div class="pure-control-group">
 			<label for="column{$id}"  class="pure-checkbox">
 			<input id="column{$id}" name="values[columns][]" value="{$id}" type="checkbox">
-				<xsl:if test="selected">
+				<xsl:if test="selected = 1 or selected = 'selected'">
 					<xsl:attribute name="checked">
 						<xsl:text>checked</xsl:text>
 					</xsl:attribute>

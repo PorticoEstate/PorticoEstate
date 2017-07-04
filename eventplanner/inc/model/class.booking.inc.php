@@ -129,7 +129,7 @@
 						'key' => 'id',
 						'column' => 'to_'
 					)
-				),
+				),/*
 				'active' => array('action' => PHPGW_ACL_READ,
 					'type' => 'string',
 					'query' => false,
@@ -141,7 +141,7 @@
 						'key' => 'id',
 						'column' => 'active'
 					)
-				),
+				),*/
 				'completed' => array('action' => PHPGW_ACL_EDIT,
 					'type' => 'int',
 					'history' => true

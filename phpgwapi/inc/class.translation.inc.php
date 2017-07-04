@@ -242,19 +242,19 @@
 				$ret = "!{$key}";	// save key if we dont find a translation
 				//don't look for it again
 				$this->lang[$app_name][$key] = $ret;
-			}
 
-			if ($this->collect_missing)
-			{
-				$lookup_key = $GLOBALS['phpgw']->db->db_addslashes($lookup_key);
-				$sql = "SELECT message_id FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '{$lookup_key}'"
-					. " AND app_name = '##{$app_name}##'";
-				
-				$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+				if ($this->collect_missing)
+				{
+					$lookup_key = $GLOBALS['phpgw']->db->db_addslashes($lookup_key);
+					$sql = "SELECT message_id FROM phpgw_lang WHERE lang = '{$userlang}' AND message_id = '{$lookup_key}'"
+						. " AND app_name = '##{$app_name}##'";
 
-				if( !$GLOBALS['phpgw']->db->next_record() )
-				{	
-					$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','##{$app_name}##','$userlang','missing')",__LINE__,__FILE__);
+					$GLOBALS['phpgw']->db->query($sql,__LINE__,__FILE__);
+
+					if( !$GLOBALS['phpgw']->db->next_record() )
+					{
+						$GLOBALS['phpgw']->db->query("INSERT INTO phpgw_lang (message_id,app_name,lang,content) VALUES('{$lookup_key}','##{$app_name}##','$userlang','missing')",__LINE__,__FILE__);
+					}
 				}
 			}
 

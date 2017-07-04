@@ -376,14 +376,6 @@
 
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'summary')"/>
-								</label>
-								<textarea cols="47" rows="7"  id="summary"  name="summary" class="pure-input-1-2" >
-									<xsl:value-of disable-output-escaping="yes" select="application/summary"/>
-								</textarea>
-							</div>
-							<div class="pure-control-group">
-								<label>
 									<xsl:value-of select="php:function('lang', 'remark')"/>
 								</label>
 								<textarea cols="47" rows="7" name="remark" class="pure-input-1-2" >
