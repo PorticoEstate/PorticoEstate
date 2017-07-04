@@ -644,7 +644,7 @@
 			$offices = $this->so_activity->select_district_list();
 			$districts = $this->so_activity->get_districts();
 			$buildings = $this->so_arena->get_buildings();
-			$arenas = $this->so_arena->get(null, null, 'arena.arena_name', true, null, null, null);
+			$arenas = $this->so_arena->get(0, 0, 'arena.arena_name', true, '', '', array());
 
 			$category_options = array();
 			foreach ($categories as $c)
@@ -722,9 +722,9 @@
 				if (!isset($id) || $id == '')
 				{
 					//select activity to edit
-					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
+					$activities = $this->so_activity->get(0, 0, 'title', true, '', '', array(
 						'activity_state' => 3));
-					$organizations = $this->so_organization->get(null, null, 'org.name', true, null, null, array(
+					$organizations = $this->so_organization->get(0, 0, 'org.name', true, '', '', array(
 						'edit_from_frontend' => 'yes'));
 					$organization_options = Array();
 					foreach ($organizations as $o)
@@ -747,7 +747,7 @@
 				if (!isset($secret_param) || $secret_param == '')
 				{
 					//select activity to edit
-					$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
+					$activities = $this->so_activity->get(0, 0, 'title', true, '', '', array(
 						'activity_state' => 3));
 
 					self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
@@ -768,7 +768,7 @@
 					}
 					else
 					{
-						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
+						$activities = $this->so_activity->get(0, 0, 'title', true, '', '', array(
 							'activity_state' => 3));
 
 						self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
@@ -784,7 +784,7 @@
 					if ($activity->get_secret() != phpgw::get_var('secret', 'GET'))
 					{
 						//select activity to edit
-						$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
+						$activities = $this->so_activity->get(0, 0, 'title', true, '', '', array(
 							'activity_state' => 3));
 
 						self::add_javascript('activitycalendarfrontend', 'activitycalendarfrontend', 'activity_edit_step_1.js');
@@ -1290,7 +1290,7 @@
 
 					$ajaxUrl = $c->config_data['AJAXURL'];
 					$organization = $this->so_organization->get_single($org_id);
-					$person_arr = $this->so_contact->get(null, null, null, null, null, null, array(
+					$person_arr = $this->so_contact->get(0, 0, '', false, '', '',  array(
 						'organization_id' => $org_id));
 					foreach ($person_arr as $p)
 					{
@@ -1372,7 +1372,7 @@
 				else
 				{
 					$group = $this->so_group->get_single($group_id);
-					$person_arr = $this->so_contact->get(null, null, null, null, null, null, array(
+					$person_arr = $this->so_contact->get(0, 0, '', false, '', '', array(
 						'group_id' => $group_id));
 					foreach ($person_arr as $p)
 					{
@@ -1403,7 +1403,7 @@
 			$returnHTML = "<option value='0'>Ingen aktivitet valgt</option>";
 			if ($org_id)
 			{
-				$activities = $this->so_activity->get(null, null, 'title', true, null, null, array(
+				$activities = $this->so_activity->get(0, 0, 'title', true, '', '', array(
 					'activity_state' => 3, 'activity_org' => $org_id));
 				foreach ($activities as $act)
 				{
