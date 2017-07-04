@@ -498,7 +498,7 @@
 			}
 			else
 			{
-				$groups = $this->so_group->get();
+				$groups = $this->so_group->get(0, 0, '', false, '', '', array());
 			}
 
 			if ($activity->get_new_org())
@@ -717,12 +717,12 @@ JS;
 
 			$length = phpgw::get_var('length', 'int');
 			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			$num_of_objects = $length == -1 ? null : $user_rows_per_page;
+			$num_of_objects = $length == -1 ? 0 : $user_rows_per_page;
 
 			$export = phpgw::get_var('export', 'bool');
 			if ($export)
 			{
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			//Retrieve the type of query and perform type specific logic
@@ -733,7 +733,7 @@ JS;
 			if (isset($email_param))
 			{
 				$email = true;
-				$num_of_objects = null;
+				$num_of_objects = 0;
 			}
 
 			$uid = $GLOBALS['phpgw_info']['user']['account_id'];
