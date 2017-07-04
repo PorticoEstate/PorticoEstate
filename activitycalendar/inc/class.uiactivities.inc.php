@@ -897,7 +897,7 @@ JS;
 						if ($new_group)
 						{
 							//transfer group to booking
-							$group_array = $this->so_group->get(null, null, null, null, null, null, array(
+							$group_array = $this->so_group->get(0, 0, '', false, '', '', array(
 								'group_id' => $activity->get_group_id(), 'new_groups' => 'true'));
 							if (count($group_array) > 0)
 							{
