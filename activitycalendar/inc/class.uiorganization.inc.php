@@ -94,7 +94,7 @@
 			$so_org = activitycalendar_soorganization::get_instance();
 			$so_activity = activitycalendar_soactivity::get_instance();
 			//$so_contact	 = activitycalendar_socontactperson::get_instance();
-			$org_array = $so_org->get(null, null, null, null, null, null, array('id' => $id,
+			$org_array = $so_org->get(0, 0, '', false, '', '', array('id' => $id,
 				'changed_orgs' => 'true'));
 			if (count($org_array) > 0)
 			{
