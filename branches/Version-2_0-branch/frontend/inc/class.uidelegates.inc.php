@@ -247,9 +247,9 @@
 		public function remove_delegate()
 		{
 			$account_id = phpgw::get_var('account_id');
-			$owner_id = phpgw::get_var('owner_id');
+			$owner_id = (int)phpgw::get_var('owner_id');
 
-			frontend_bofrontend::remove_delegate($account_id, $owner_id);
+			frontend_bofrontend::remove_delegate($account_id, $owner_id, 0);
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'frontend.uidelegates.index'));
 		}
 	}
