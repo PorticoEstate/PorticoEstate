@@ -35,6 +35,7 @@
 	{
 
 		public $public_functions = array(
+			'columns' => true,
 			'add' => true,
 			'index' => true,
 			'query' => true,
@@ -60,6 +61,8 @@
 			$this->custom_fields = eventplanner_vendor_report::get_instance()->get_custom_fields();
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			self::set_active_menu("{$this->currentapp}::vendor_report");
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
+			$this->acl_location = eventplanner_vendor_report::acl_location;
 		}
 
 
@@ -79,6 +82,77 @@
 			return $combos;
 
 		}
+
+		function columns()
+		{
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw']->xslttpl->add_file(array('columns'), PHPGW_SERVER_ROOT."/property/templates/base");
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$values = phpgw::get_var('values');
+			$receipt = array();
+
+			if (isset($values['save']) && $values['save'])
+			{
+				$GLOBALS['phpgw']->preferences->account_id = $this->account;
+				$GLOBALS['phpgw']->preferences->read();
+				$GLOBALS['phpgw']->preferences->add('eventplanner', 'vendor_report_columns', (array)$values['columns'], 'user');
+				$GLOBALS['phpgw']->preferences->save_repository();
+
+				$receipt['message'][] = array('msg' => lang('columns is updated'));
+			}
+
+			$function_msg = lang('Select Column');
+
+			$link_data = array
+				(
+				'menuaction' => "{$this->currentapp}.uivendor_report.columns",
+			);
+
+			$msgbox_data = $this->bo->msgbox_data($receipt);
+//			self::message_set($receipt);
+
+			$data = array
+				(
+				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
+				'column_list' => $this->bo->column_list($values['columns'], $allrows = true),
+				'function_msg' => $function_msg,
+				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
+				'lang_columns' => lang('columns'),
+				'lang_none' => lang('None'),
+				'lang_save' => lang('save'),
+			);
+
+			$GLOBALS['phpgw_info']['flags']['app_header'] = $function_msg;
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('columns' => $data));
+		}
+
+
+		function _get_fields()
+		{
+			$fields = parent::_get_fields();
+			$custom_fields = (array)createObject('phpgwapi.custom_fields')->find('eventplanner', $this->acl_location, 0, '', '', '', true, false, $filter);
+			$selected = (array)$GLOBALS['phpgw_info']['user']['preferences']['eventplanner']['vendor_report_columns'];
+
+			foreach ($custom_fields as $custom_field)
+			{
+				if( in_array( $custom_field['id'], $selected)  ||  $custom_field['list'])
+				{
+					$fields[] = array(
+						'key' => $custom_field['name'],
+						'label' =>  $custom_field['input_text'],
+						'sortable' => true,
+						'hidden' => false,
+					);
+				}
+			}
+
+			return $fields;
+
+		}
+
 		public function index()
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
@@ -109,9 +183,9 @@
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,
-	//				'new_item' => self::link(array('menuaction' => 'eventplanner.uivendor_report.add')),
+					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'{$this->currentapp}.uivendor_report.columns'}, {closeAction:'reload'})"),
 					'editor_action' => '',
-					'field' => parent::_get_fields()
+					'field' => self::_get_fields()
 				)
 			);
 

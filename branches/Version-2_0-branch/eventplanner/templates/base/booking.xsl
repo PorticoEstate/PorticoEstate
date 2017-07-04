@@ -199,7 +199,7 @@
 									<xsl:value-of select="$lang_customer"/>
 								</xsl:attribute>
 							</input>
-							<input type="text" id="customer_name" name="customer_name" value="{booking/customer_name}">
+							<input type="text" id="customer_name" name="customer_name" value="{booking/customer_name}" class="pure-input-1-2">
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="$lang_customer"/>
 								</xsl:attribute>
@@ -218,7 +218,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
-							<input type="text" id="customer_contact_name"  name="customer_contact_name" value="{booking/customer_contact_name}">
+							<input type="text" id="customer_contact_name"  name="customer_contact_name" value="{booking/customer_contact_name}" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -231,7 +231,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'email')"/>
 							</label>
-							<input type="text" id="customer_contact_email" name="customer_contact_email"  value="{booking/customer_contact_email}">
+							<input type="text" id="customer_contact_email" name="customer_contact_email"  value="{booking/customer_contact_email}" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>email</xsl:text>
 								</xsl:attribute>
@@ -252,7 +252,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact phone')"/>
 							</label>
-							<input type="text" id="customer_contact_phone"  name="customer_contact_phone" value="{booking/customer_contact_phone}">
+							<input type="text" id="customer_contact_phone"  name="customer_contact_phone" value="{booking/customer_contact_phone}" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -268,7 +268,7 @@
 						<legend>
 							<xsl:value-of select="php:function('lang', 'booking')"/>
 						</legend>
-
+<!--
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'active')"/>
@@ -289,7 +289,7 @@
 								</xsl:if>
 							</input>
 						</div>
-
+-->
 						<div class="pure-control-group">
 							<xsl:variable name="lang_from">
 								<xsl:value-of select="php:function('lang', 'from')"/>
@@ -327,9 +327,9 @@
 						
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'location')"/>
+								<xsl:value-of select="php:function('lang', 'address')"/>
 							</label>
-							<textarea cols="47" rows="7" id="location" name="location">
+							<textarea cols="47" rows="7" id="location" name="location" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -348,7 +348,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'comment')"/>
 							</label>
-							<textarea cols="47" rows="7" name="comment">
+							<textarea cols="47" rows="7" name="comment" class="pure-input-1-2">
 								<xsl:value-of select="booking/comment"/>
 							</textarea>
 						</div>

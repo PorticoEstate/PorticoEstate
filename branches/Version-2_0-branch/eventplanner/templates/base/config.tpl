@@ -44,6 +44,24 @@
 				<textarea  name="newsettings[customer_receipt_text]">{value_customer_receipt_text}</textarea>
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_canceled_subject}:</td>
+			<td>
+				<input type="text" name="newsettings[canceled_subject]" value="{value_canceled_subject}">
+			</td>
+		</tr>
+		<tr>
+			<td>{lang_vendor_canceled_text}:</td>
+			<td>
+				<textarea  name="newsettings[vendor_canceled_text]">{value_vendor_canceled_text}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>{lang_customer_canceled_text}:</td>
+			<td>
+				<textarea  name="newsettings[customer_canceled_text]">{value_customer_canceled_text}</textarea>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

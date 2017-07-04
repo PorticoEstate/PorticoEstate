@@ -199,7 +199,7 @@
 									<xsl:value-of select="$lang_customer"/>
 								</xsl:attribute>
 							</input>
-							<input type="text" id="customer_name" name="customer_name" value="{booking/customer_name}">
+							<input type="text" id="customer_name" name="customer_name" value="{booking/customer_name}" class="pure-input-1-2">
 								<xsl:attribute name="placeholder">
 									<xsl:value-of select="$lang_customer"/>
 								</xsl:attribute>
@@ -218,7 +218,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact name')"/>
 							</label>
-							<input type="text" id="customer_contact_name"  name="customer_contact_name" value="{booking/customer_contact_name}">
+							<input type="text" id="customer_contact_name"  name="customer_contact_name" value="{booking/customer_contact_name}" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -231,7 +231,7 @@
 							<label>
 								<xsl:value-of select="php:function('lang', 'email')"/>
 							</label>
-							<input type="text" id="customer_contact_email" name="customer_contact_email"  value="{booking/customer_contact_email}">
+							<input type="text" id="customer_contact_email" name="customer_contact_email"  value="{booking/customer_contact_email}" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>email</xsl:text>
 								</xsl:attribute>
@@ -239,20 +239,12 @@
 									<xsl:value-of select="php:function('lang', 'email')"/>
 								</xsl:attribute>
 							</input>
-							<xsl:choose>
-								<xsl:when test="valid_email = 1">
-									<xsl:text> </xsl:text>
-									<a href="{link_create_user}">
-										<xsl:value-of select="php:function('lang', 'create_user_based_on_email_link')"/>
-									</a>
-								</xsl:when>
-							</xsl:choose>
 						</div>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'contact phone')"/>
 							</label>
-							<input type="text" id="customer_contact_phone"  name="customer_contact_phone" value="{booking/customer_contact_phone}">
+							<input type="text" id="customer_contact_phone"  name="customer_contact_phone" value="{booking/customer_contact_phone}" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
@@ -270,46 +262,13 @@
 						</legend>
 
 						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'active')"/>
-							</label>
-							<input type="checkbox" name="active" id="active" value="1" readonly="readonly">
-								<xsl:if test="calendar/active = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'completed')"/>
-							</label>
-							<input type="checkbox" name="completed" id="completed" value="1">
-								<xsl:if test="calendar/completed = 1">
-									<xsl:attribute name="checked" value="checked"/>
-								</xsl:if>
-							</input>
-						</div>
-
-						<div class="pure-control-group">
 							<xsl:variable name="lang_from">
 								<xsl:value-of select="php:function('lang', 'from')"/>
 							</xsl:variable>
 							<label>
 								<xsl:value-of select="$lang_from"/>
 							</label>
-							<input type="text" id="from_" name="from_" size="16" readonly="readonly">
-								<xsl:if test="calendar/from_ != 0 and calendar/from_ != ''">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('show_date', number(calendar/from_), $date_format)"/>
-									</xsl:attribute>
-								</xsl:if>
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
-									<xsl:value-of select="$lang_from"/>
-								</xsl:attribute>
-							</input>
+							<xsl:value-of select="php:function('show_date', number(calendar/from_), $date_format)"/>
 						</div>
 						<div class="pure-control-group">
 							<label>
@@ -317,59 +276,18 @@
 							</label>
 							<xsl:value-of select="application/timespan"/>
 						</div>
-
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'to')"/>
-							</label>
-							<xsl:value-of select="php:function('show_date', number(calendar/to_), $date_format)"/>
-						</div>
 						
 						<div class="pure-control-group">
 							<label>
-								<xsl:value-of select="php:function('lang', 'location')"/>
+								<xsl:value-of select="php:function('lang', 'address')"/>
 							</label>
-							<textarea cols="47" rows="7" id="location" name="location">
+							<textarea cols="47" rows="7" id="location" name="location" class="pure-input-1-2">
 								<xsl:attribute name="data-validation">
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:value-of select="booking/location"/>
 							</textarea>
 						</div>
-						<!--div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'remark')"/>
-							</label>
-							<textarea cols="47" rows="7" name="remark">
-								<xsl:value-of select="booking/remark"/>
-							</textarea>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'comment')"/>
-							</label>
-							<textarea cols="47" rows="7" name="comment">
-								<xsl:value-of select="booking/comment"/>
-							</textarea>
-						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'history')"/>
-							</label>
-							<div class="pure-custom">
-								<xsl:for-each select="datatable_def">
-									<xsl:if test="container = 'datatable-container_0'">
-										<xsl:call-template name="table_setup">
-											<xsl:with-param name="container" select ='container'/>
-											<xsl:with-param name="requestUrl" select ='requestUrl'/>
-											<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-											<xsl:with-param name="data" select ='data'/>
-											<xsl:with-param name="config" select ='config'/>
-										</xsl:call-template>
-									</xsl:if>
-								</xsl:for-each>
-							</div>
-						</div-->
 					</fieldset>
 				</div>
 				<div id="reports">

@@ -71,7 +71,7 @@ depth	eventplanner	no	Dybde
 wardrobe	eventplanner	no	Kryss av for behov for utøvergarderobe
 audience limit	eventplanner	no	Maksimum antall publikum
 raider	eventplanner	no	Andre raiderønsker – (valgfri)
-vendor report	eventplanner	no	Utøverrapport
+vendor report	eventplanner	no	Tilbakemelding fra utøver
 calendar	eventplanner	no	Kalender
 from	eventplanner	no	Fra
 event start	eventplanner	no	Ønsket arrangement dato/tid
@@ -79,12 +79,12 @@ select event start	eventplanner	no	Klikk på og velg ønsket måned, dato og klo
 select all	eventplanner	no	Velg alle
 enable	eventplanner	no	Aktiver
 disable	eventplanner	no	Deaktiver
-reports	eventplanner	no	Rapporter
+reports	eventplanner	no	Tilbakemeldinger
 location	eventplanner	no	Lokalisering
 who	eventplanner	no	Hvem
 note	eventplanner	no	Merknad
 customer	eventplanner	no	Mottakersted
-customer report	eventplanner	no	Rapport fra mottakersted
+customer report	eventplanner	no	Tilbakemelding fra mottakersted
 organization number	eventplanner	no	Organisasjonsnummer
 program type	eventplanner	no	Programtype
 program title	eventplanner	no	Programtittel
@@ -100,7 +100,7 @@ maximum of granted events are reached	eventplanner	no	Maksimalt antall arrangeme
 did not validate	eventplanner	no	Feil med datasettet
 date is outside the scope	eventplanner	no	Dato ligger utenfor tillat tidsrom
 can not delete booking with customer	eventplanner	no	Kan ikke slette booking som er koplet med mottakersted
-report	eventplanner	no	Rapport
+report	eventplanner	no	Tilbakemelding
 events	eventplanner	no	Arrangementer
 event	eventplanner	no	Arrangement
 please enter a valid organization number	eventplanner	no	Angi et gyldig organisasjonsnummer
@@ -133,3 +133,4 @@ where	eventplanner	no	Hvor
 vendor receipt text	eventplanner	no	utøvernotat ved kvittering
 customer receipt text	eventplanner	no	Mottakerstednotat ved kvittering
 receipt subject	eventplanner	no	Kvitteringsoverskrift
+datetime event	eventplanner	no	Dato/tid for arrangement
