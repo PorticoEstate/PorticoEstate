@@ -328,17 +328,16 @@
 		 */
 		public static function remove_delegate( int $account_id, int $owner_id, int $org_unit_id )
 		{
-			if (!isset($owner_id))
+			if (empty($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
 
 			// The location
 			$location_id = $GLOBALS['phpgw']->locations->get_id('frontend', '.');
-			;
 
 			// If a specific organisational unit
-			if (isset($org_unit_id))
+			if ($org_unit_id)
 			{
 				$sql = "DELETE FROM phpgw_account_delegates WHERE account_id = {$account_id} AND data = '{$org_unit_id}' AND location_id = {$location_id}";
 			}
