@@ -141,7 +141,7 @@ add this invoice	property	no	Legg til denne fakturaen
 add this vendor to this activity	property	no	Legg til denne leverandøren til denne aktiviteten
 add ticket	property	no	Legg til melding
 add to project	property	no	Legg til eksisterende prosjekt
-add workorder	property	no	Legg til Bestilling
+add workorder	property	no	Legg til bestilling
 admin async services	property	no	Administrer planlagte oppgaver
 admin custom functions	property	no	Administrer tilpassede funksjoner
 admin entity	property	no	Administrer entitet
@@ -224,7 +224,7 @@ a unique code for this activity	property	no	En unik kode fo denne aktiviteten
 authorities demands	property	no	Myndighetskrav
 auto tax	property	no	Auto MVA
 b_account	property	no	Kostnadsart
-back to admin	property	no	Tilbake til Admin
+back to admin	property	no	Tilbake til admin
 back to calculation	property	no	Tilbake til kalkulasjon
 back to entity	property	no	Returner til entitet
 back to investment list	property	no	Tilbake til liste over investeringer
@@ -386,10 +386,10 @@ continuous	property	no	Løpende
 contract	property	no	Kontrakt
 line	property	no	Linje
 sheet	property	no	Ark
-choose file	property	no	Velg Fil
-choose sheet	property	no	Velg Ark
+choose file	property	no	Velg fil
+choose sheet	property	no	Velg ark
 choose start line	property	no	Velg startlinje
-choose columns	property	no	Velg Kolonner
+choose columns	property	no	Velg kolonner
 table	property	no	Tabell
 condition survey import	property	no	Import av tilstandsanalyse
 periodization	property	no	Periodisering
@@ -447,9 +447,9 @@ datatype type not chosen!	property	no	datatype er ikke valgt
 date closed	property	no	dato avsluttet
 date opened	property	no	Startet
 date search	property	no	Datosøk
-date from	property	no	Fra Dato
+date from	property	no	Fra dato
 date to	property	no	Til Dato
-alter date	property	no	Endre Dato
+alter date	property	no	Endre dato
 datetime	property	no	dato-tid
 day	property	no	dag
 day of week (0-6, 0=sun)	property	no	Ukedag (0-6, 0=søndag)
@@ -506,7 +506,7 @@ delete the deviation	property	no	Slett avvik
 delete the entity	property	no	Slett entitet
 delete the entrance	property	no	slett inngang
 delete the entry	property	no	slett post
-delete the gab	property	no	Slett Grunneiendom
+delete the gab	property	no	Slett grunneiendom
 delete the item	property	no	Slett post
 delete the last index	property	no	Slett siste index
 delete the location	property	no	Slett lokalisering
@@ -560,11 +560,11 @@ dim a is missing	property	no	Dim A mangler
 dima is missing from sub invoice in:	property	no	Dim A mangler fra underbilag i :
 dim b	property	no	Ansvarssted
 dimb	property	no	Ansvarssted
-dimb roles	property	no	Roller Ansvarssted
-dimb role user	property	no	Bruker/Rolle/Ansvarssted
+dimb roles	property	no	Roller ansvarssted
+dimb role user	property	no	Bruker/rolle/ansvarssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	Ansvarssted ikke valgt
-Please select dimb!	property	no	Angi Ansvarssted
+Please select dimb!	property	no	Angi ansvarssted
 dim d	property	no	Dim 6
 dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
@@ -734,7 +734,7 @@ enter equipment id	property	no	Angi utstyrs-id
 enter invoice number	property	no	Angi bilagsnummer
 enter kid nr	property	no	Angi KID nr
 enter other branch if not found in the list	property	no	Angi andre fag, om det ikke finnes i listen
-enter project name	property	no	Angi Prosjekt navn
+enter project name	property	no	Angi prosjektnavn
 enter quantity of unit	property	no	Angi mengde
 enter request title	property	no	Angi beskrivende navn for tiltak
 enter the attribute id	property	no	Angi attributt-id
@@ -858,7 +858,7 @@ fraction::divisor	property	no	Brøk::nevner
 from	property	no	Fra
 from date	property	no	Fra dato
 funding	property	no	Finansiering
-gaards nr	property	no	GårdsNr.
+gaards nr	property	no	Gårdsnr.
 gab	property	no	Grunneiendom
 gabnr	property	no	Grunneiendom
 gallery	property	no	Bildearkiv
@@ -1034,9 +1034,9 @@ list obligations	property	no	Oversikt regnskap
 list paid invoice	property	no	List betalte bilag
 list pricebook	property	no	List prisbok
 list pricebook per vendor	property	no	List prisbok pr leverandør
-list project	property	no	List Prosjekt
+list project	property	no	List prosjekt
 list property	property	no	List eiendom
-list request	property	no	List Behov
+list request	property	no	List behov
 list standard description	property	no	List standard beskrivelse
 list status	property	no	List status
 list street	property	no	List gate
@@ -1097,9 +1097,9 @@ method has been edited	property	no	Metode er endret
 method id	property	no	Metode-id
 migrate to alternative db	property	no	Migrer til alternativ database
 mine tickets	property	no	Mine meldinger
-mine orders	property	no	Mine Bestillinger
-mine projects	property	no	Mine Prosjekter
-mine vouchers	property	no	Mine Bilag
+mine orders	property	no	Mine bestillinger
+mine projects	property	no	Mine prosjekter
+mine vouchers	property	no	Mine bilag
 minor	property	no	Liten
 minor consequences	property	no	Små konsekvenser
 minute	property	no	Minutt
@@ -1136,7 +1136,7 @@ new_ticket	common	no	Ny melding
 new value	property	no	Ny verdi
 new value for multiple choice	property	no	Ny verdi for flervalg
 new values	property	no	Nye verdier
-new record	property	no	Ny Post
+new record	property	no	Ny post
 next run	property	no	Neste kjøring
 no access	property	no	Ingen tilgang
 no account	property	no	Ingen konto
@@ -1263,7 +1263,7 @@ please choose a file	property	no	Velg en fil
 please either select generate id or type a equipment id !	property	no	enten velg GENERER-id eller angi et utstyrs-id
 please enter a apartment id !	property	no	Angi leilighets-id
 please enter a building id !	property	no	Angi bygg-id
-please enter a invoice num!	property	no	Angi Fakturanummer
+please enter a invoice num!	property	no	Angi fakturanummer
 please enter a description!	property	no	Angi en beskrivelse!
 please enter a entrance id !	property	no	Angi inngangs-id
 please enter a index !	property	no	Angi en indeks
@@ -1276,10 +1276,9 @@ please - enter an amount!	property	no	Angi et beløp!
 please enter a new index for calkulating next value(s)!	property	no	Angi en ny index for beregning av neste verdi(er)!
 please enter an integer !	property	no	Angi heltall
 please enter an integer for order!	property	no	Angi heltall for bestillingsnr
-Please - enter a invoice number	property	no	Angi FakturaNr
 please enter a project name !	property	no	Angi prosjekt navn
 please enter a property id !	property	no	Angi eiendoms-id
-please enter a request title !	property	no	Angi tittel for Behov
+please enter a request title !	property	no	Angi tittel for behov
 please enter a sql query !	property	no	Angi en sql-spørring
 please enter a value for either material cost, labour cost or both !	property	no	Angi enten material kostnader, arbeidskostnader eller begge
 please enter a workorder title !	property	no	Angi en bestillings tittel
@@ -1403,7 +1402,7 @@ repeat	property	no	Serie
 repeat type	property	no	Type serie
 repeat day	property	no	Gjenta dag
 request	property	no	Behov
-set the status of the request	property	no	Sett status for Behovet
+set the status of the request	property	no	Sett status for behovet
 reset approval	property	no	Nullstill
 project.request	property	no	Behov
 request attributes	property	no	Behov::attributter
@@ -1435,7 +1434,7 @@ reponse template	property	no	SMS::mal for standardtekster
 responsible	property	no	Ansvarlig
 responsibility	property	no	Ansvar
 responsible matrix	property	no	Ansvarsmatrise
-responsibility role	property	no	Rolle for Ansvarsmatrise
+responsibility role	property	no	Rolle for ansvarsmatrise
 responsible unit	property	no	Ansvarlig enhet
 result	property	no	Resultat
 return back to the list	property	no	Returner til oversikt
@@ -1476,7 +1475,7 @@ save the part of town and return back to the list	property	no	Lagre bydel og ret
 save the project	property	no	Lagre prosjekt
 save the property	property	no	Lagre eiendom
 save the rental agreement and return back to the list	property	no	Lagre utleieavtale og returner til oversikten
-save the request	property	no	Lagre Behov
+save the request	property	no	Lagre behov
 save the service agreement and return back to the list	property	no	Lagre serviceavtale og returner til oversikten
 save the standard	property	no	Lagre standard
 save the status	property	no	Lagre status
@@ -1485,7 +1484,7 @@ save the voucher	property	no	Lagre bilag
 save the workorder	property	no	Lagre bestilling
 save this workorder as a template for later use	property	no	Lagre denne bestillingen som mal for senere bruk
 save values and exit	property	no	Lagre verdier og gå til liste
-save new	property	no	Lagre og Ny
+save new	property	no	Lagre og ny
 scale	property	no	Scale
 schedule	property	no	Planlegge (tid)
 scheduled events	property	no	Planlagte oppgaver
@@ -1496,7 +1495,7 @@ search by feste. to show all entries, empty all fields and press the submit butt
 search by gaards nr. to show all entries, empty all fields and press the submit button again	property	no	Søk etter gårdsnr.
 search by location_code. to show all entries, empty all fields and press the submit button again	property	no	Søk etter lokaliseringskode
 search by property	property	no	Søk ved eiendom
-search by seksjon. to show all entries, empty all fields and press the submit button again	property	no	Søk etter Seksjon
+search by seksjon. to show all entries, empty all fields and press the submit button again	property	no	Søk etter seksjon
 search criteria	property	no	Søkekriterie
 search for history at this location	property	no	Søk etter historikk for denne lokaliseringen
 search for investment entries	property	no	Søk etter investeringsposter
@@ -1525,7 +1524,7 @@ select a tenant	property	no	Velg en leietaker
 select branch	property	no	Velg fag
 select b-responsible	property	no	Velg anviser
 select building part	property	no	Velg bygningsdel
-select category	property	no	Velg Kategori
+select category	property	no	Velg kategori
 select chapter	property	no	Velg kapittel
 select column	property	no	Velg kolonne
 select conversion	property	no	Velg filter
@@ -1541,7 +1540,7 @@ select file to roll back	property	no	Velg fil for tilbakerulling
 select file to upload	property	no	Velg fil for opplasting
 select files	property	no	Velg filer
 select grouping	property	no	Velg gruppering
-select invoice type	property	no	Velg Art
+select invoice type	property	no	Velg art
 select key responsible	property	no	Velg nøkkelansvarlig
 select location level	property	no	Velg lokaliseringsnivå
 select nullable	property	no	Velg nullable
@@ -1756,7 +1755,7 @@ sum of calculation	property	no	Sum kalkulasjon
 sum tax	property	no	Sum mva
 sum workorder	property	no	Sum bestilling
 supervisor	property	no	Attestant
-sync account-contact	common	no	Synkroniser Brukerer og Kontakter
+sync account-contact	common	no	Synkroniser brukere og kontakter
 table could not be added	property	no	Tabell kunne ikke legges til i databasen
 table has not been saved	property	no	Tabell er ikke lagret
 table name	property	no	Tabellnavn
@@ -1775,7 +1774,7 @@ tenant claim categories	property	no	Leietaker kategorier klager
 tenant claim is not issued for project in voucher %1	property	no	Krav mot leietaker er ikke registert for prosjekt i bilag %1
 tenant global categories	property	no	Leietaker globale kategorier
 tenant_id	property	no	Leietaker-id
-tenant is not defined, claim not issued	property	no	Leietaker er ikke definert - Krav ikke lagret
+tenant is not defined, claim not issued	property	no	Leietaker er ikke definert - krav ikke lagret
 tenant phone	property	no	Leietaker tlf
 tender chapter	property	no	Beskrivelse kapittel
 termination date	property	no	Oppsigelse dato
@@ -1812,8 +1811,8 @@ this attribute turn up as disabled in the form	property	no	Denne attributten vis
 this building id does not exist!	property	no	Denne bygnings-id eksisterer ikke
 this building_id id does not exist!	property	no	Denne bygnings-id eksisterer ikke
 this building is already registered!	property	no	denne bygningen er allrerede registert
-this dim a is not valid:	property	no	DIMA er ikke gyldig:
-this dim d is not valid:	property	no	Denne Dim 6 er ikke gyldig:
+this dim a is not valid:	property	no	Dim A er ikke gyldig:
+this dim d is not valid:	property	no	Denne dim 6 er ikke gyldig:
 dim d is mandatory	property	no	Dim 6 er obligatorisk
 this entrance id does not exist!	property	no	Denne inngang-id eksisterer ikke
 this entrance_id id does not exist!	property	no	Denne bygnings-id eksisterer ikke
@@ -1902,9 +1901,9 @@ view edit the prize for this activity	property	no	Vis/oppdater pris for denne ak
 view entrance	property	no	Vis inngang
 view equipment	property	no	Vis utstyr
 view error log	common	no	Vis feilmeldings log
-view gab	property	no	Vis GrunnEiendom
-view gab detail	property	no	Vis GrunnEiendom-detaljer
-view gab-info	property	no	Vis GrunnEiendom
+view gab	property	no	Vis grunneiendom
+view gab detail	property	no	Vis grunneiendom-detaljer
+view gab-info	property	no	Vis grunneiendom
 view information about the document	property	no	Vis informasjon om dokumentet
 view investment	property	no	Vis investering
 view map	property	no	Vis kart
@@ -1944,7 +1943,7 @@ view this entity	property	no	Vis denne entiteten
 view ticket detail	property	no	Vis meldingsdetalj
 view workorder	property	no	Vis bestilling
 voucher	property	no	Bilag
-voucher date	property	no	BilagsDato
+voucher date	property	no	Bilagsdato
 voucher id	property	no	Bilagsnr.
 voucher id already taken	property	no	Bilagsnummer er allerede brukt
 voucher is updated	property	no	Bilag er oppdatert
@@ -1967,7 +1966,7 @@ where	property	no	Hvor
 where to deliver the key	property	no	Nøkler leveres
 where to fetch the key	property	no	Nøkler hentes
 where to pick up the key	property	no	Nøkler hentes
-which entity type is to show up in location forms	property	no	Hvilke Entitet-type skal vises i lokaliseringsskjema
+which entity type is to show up in location forms	property	no	Hvilke entitet-type skal vises i lokaliseringsskjema
 work:____________	property	no	Arbeid:____________
 workorder	property	no	Bestilling
 workorder %1 has been edited	property	no	Bestilling %1 er oppdatert
@@ -1989,7 +1988,7 @@ write off period	property	no	Avskrivningsperiode
 year	property	no	År
 yearly	property	no	Årlig
 you are not approved for this task	property	no	Du mangler rettigheter for denne oppgaven
-you are not approved for this dimb: %1	property	no	Du mangler rettigheter for dette Ansvarsstedet: %1
+you are not approved for this dimb: %1	property	no	Du mangler rettigheter for dette ansvarsstedet: %1
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
 you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet
@@ -2011,8 +2010,8 @@ closed date	property	no	Avsluttet dato
 cost categories	property	no	Kostnadskategori
 negative value for budget	property	no	Negativ verdi for kostnadsestimat
 no symptoms	property	no	Ingen avvik
-not a valid category	property	no	Ugyldig Kategori
-not a valid budget account	property	no	Ugyldig Kostnadsart
+not a valid category	property	no	Ugyldig kategori
+not a valid budget account	property	no	Ugyldig kostnadsart
 minor symptoms	property	no	Ikke vesentlig avvik
 medium symptoms	property	no	Vesentlig avvik
 serious symptoms	property	no	Stort eller vesentlig avvik
@@ -2050,8 +2049,8 @@ inspection on completion	property	no	Ferdigbefaring
 end date delay	property	no	Forsinket utførelse
 tender delay	property	no	Forsinket tilbud
 enable bulk	common	no	Aktiver bulk
-enable controller	common	no	Aktiver Kontroll
-entity group	common	no	RegisterGruppe
+enable controller	common	no	Aktiver kontroll
+entity group	common	no	Registergruppe
 modified on	common	no	Oppdatert
 property type	property	no	Type
 hjemmel	common	no	Hjemmel

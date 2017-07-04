@@ -1,4 +1,4 @@
-address book	common	no	Addresse Bok
+address book	common	no	Addressebok
 addressbook	common	no	Addressebook
 birthday	addressbook	no	Fødselsdag
 city	addressbook	no	By
@@ -9,7 +9,7 @@ home phone	addressbook	no	Hjemme telefon
 last name	addressbook	no	Etternavn
 mobile	addressbook	no	Mobil
 notes	addressbook	no	Annet
-other number	addressbook	no	Annet Nummer
+other number	addressbook	no	Annet nummer
 pager	addressbook	no	Personsøker
 state	addressbook	no	Stat
 street	addressbook	no	Gate
