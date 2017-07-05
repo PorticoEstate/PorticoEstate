@@ -58,3 +58,12 @@ function downloadAgresso(oArgs)
 
 	window.open(requestUrl, '_self');
 }
+
+function PartyMassSync(conf)
+{
+	if (!confirm(confirm_msg_mass_sync))
+	{
+		return false;
+	}
+
+}
