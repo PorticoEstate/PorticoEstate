@@ -150,3 +150,8 @@ all	eventplannerfrontend	no	Alle
 back to the ticket list	eventplannerfrontend	no	Tilbake til oversikten
 completed	eventplannerfrontend	no	fullført
 type	eventplannerfrontend	no	Type
+receipt blind copy	eventplannerfrontend	no	Blindkopi av kvittering til
+canceled subject	eventplannerfrontend	no	Overskrift ved kansellering
+vendor canceled text	eventplannerfrontend	no	Tekst til utøver ved kansellering
+customer canceled text	eventplannerfrontend	no	Tekst til mottakersted ved kansellering
+default application category	eventplannerfrontend	no	Standard søknadskategori
