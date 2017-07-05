@@ -130,7 +130,7 @@
 			$menus['navigation']['item'] = array
             (
 				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'bim.uiitem.index')),
-                'text'	=> lang('BIM_Items'),
+                'text'	=> lang('BIM Items'),
                 'image'	=> array('bim', 'custom'),
                 'children'	=> array_merge(array
                 (
