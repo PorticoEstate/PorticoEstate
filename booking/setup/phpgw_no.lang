@@ -679,3 +679,30 @@ organzations_ids_description	booking	no	Her kan du legge inn en komma separert l
 organzations_ids	booking	no	Organisasjons IDer
 cost history	booking	no	Prishistorikk
 extra info	booking	no	Tileggsinformasjon
+add group	booking	no	Legg til gruppe
+agegroups	booking	no	Aldersgruppee
+booking edit	booking	no	Endre booking
+booking new	booking	no	Ny booking
+building_name	booking	no	Bygningsnavn
+custom field groups	booking	no	Gruppe av tilpassede felt
+end date	booking	no	Slutt dato
+entity %1 has been saved	booking	no	Post %1 er lagret
+entity %1 has been updated	booking	no	Post %1 er oppdatert
+minute	booking	no	Minutt
+please enter a building	booking	no	Velg en bygning
+please enter a building name	booking	no	Angi et bygningsnavn
+please enter a contact name	booking	no	Angi en kontakt
+please enter a description	booking	no	Angi en beskrivelse
+please enter a organization	booking	no	Angi en organisasjon
+please enter a start date	booking	no	Angi en startdato
+please enter a valid end date	booking	no	Angi en gyldig sluttdato
+please enter a valid from date	booking	no	Angi en gyldig startdato
+please enter an end date	booking	no	Angi en sluttdato
+please enter an valid end date	booking	no	Angi en gyldig dato
+please select a customer type	booking	no	Velg en kundetype
+please select a group	booking	no	Velg en gruppe
+please select a season	booking	no	Velg en sesong
+please select an activity	booking	no	Velg en aktivitet
+select date	booking	no	Velg dato
+start date	booking	no	Start dato
+toggle show inactive	booking	no	Veklse på å vise inaktive

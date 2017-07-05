@@ -393,3 +393,4 @@ report type	controller	no	Rapporttype
 lang_control_mandatory_location	controller	no	Påkrevd lokasjonsvalg
 Control types	controller	no	Kontrolltyper
 location	controller	no	Lokasjon
+document types	controller	no	Dokumenttyper

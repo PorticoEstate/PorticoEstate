@@ -391,3 +391,9 @@ You can't extend the event, for that contact administrator	bookingfrontend	no	Du
 You can't change resources to the event, for that contact administrator	bookingfrontend	no	Du kan ikke forandre på ressurser, for det må du kontakte administrator
 Cancelation of booking from	bookingfrontend	no	Avbestilling fra
 Deleted on	bookingfrontend	no	Avbestilling i
+entity %1 has been saved	bookingfrontend	no	Post %1 er lagret
+entity %1 has been updated	bookingfrontend	no	Post %1 er oppdatert
+minute	bookingfrontend	no	Minutt
+please enter a building name	bookingfrontend	no	Angi et bygningsnavn
+please select an activity	bookingfrontend	no	Velg en aktivitet
+select date	bookingfrontend	no	Velg dato

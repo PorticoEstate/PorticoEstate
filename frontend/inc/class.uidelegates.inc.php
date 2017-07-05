@@ -184,7 +184,7 @@
 			$delegateLimit = $config->config_data['delegate_limit'];
 			if (!is_numeric($delegateLimit))
 				$delegateLimit = 3;
-			$error_message = lang('max_x_delegates', $delegateLimit);
+			$error_message = lang('max %1 delegates', $delegateLimit);
 
 			//$msglog = phpgwapi_cache::session_get('frontend','msgbox');
 			phpgwapi_cache::session_clear('frontend', 'msgbox');
