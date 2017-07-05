@@ -1210,6 +1210,12 @@ JS;
 					)),
 					'parameters' => json_encode($parameters)
 				);
+
+				if($sync_job == 'org_unit')
+				{
+					//not really columns - but a placeholder for mass-sync.
+					$data['datatable']['columns'] = array('name' => 'Sync', 'onclick' => "PartyMassSync({type:'{$type}'})");
+				}
 			}
 
 			$alertMessage_deleteParty = '"Du er i ferd med å slette en kontraktspart.\n\n Operasjonen kan ikke angres.\n\n Vil du gjøre dette?";';
@@ -1217,6 +1223,7 @@ JS;
 
 			$jscode = <<<JS
 
+				var confirm_msg_mass_sync = $alertMessage_syncParty
 				var confirm_msg_sync = $alertMessage_syncParty
 				var confirm_msg_delete = $alertMessage_deleteParty
 
