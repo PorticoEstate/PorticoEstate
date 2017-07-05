@@ -667,3 +667,16 @@ planned	rental	no	Planlagt
 email template	rental	no	Standardtekster
 expired	rental	no	Utgått
 positive one time	rental	no	Positive engangsbeløp
+add type	rental	no	Legg til type
+add unit	rental	no	legg til enhet
+contact phone	rental	no	Kontakttelefon
+data has been saved	rental	no	Data er lagret
+document has been added	rental	no	Dokument er lagt til
+edit unit	rental	no	Endre enhet
+entity %1 has been updated	rental	no	Post %1 er oppdatert
+event	rental	no	Hendelse
+export contacts	rental	no	Eksporter kontakter
+has been added	rental	no	rr lagt til
+has been removed	rental	no	er fjernet
+select date	rental	no	Velg dato
+select file to upload	rental	no	Velg fil for opplasting

@@ -208,3 +208,10 @@ close message	helpdesk	no	Svarmelding ved avsluttet sak
 list %1	helpdesk	no	List %1
 public	helpdesk	no	synlig for alle
 open edit in new window	helpdesk	no	Editer i nytt vindu
+columns is updated	helpdesk	no	Kolonner er oppdatert
+select column	helpdesk	no	Velg kolonne
+target	helpdesk	no	Mål
+ticket attributes	helpdesk	no	Meldingsattributter
+ticket categories	helpdesk	no	Meldingskategorier
+ticket status	helpdesk	no	Meldingsstatus
+url	helpdesk	no	Url

@@ -2126,3 +2126,96 @@ get columns	property	no	Hent kolonner
 and	property	no	Og
 or	property	no	Eller
 show	property	no	Vis
+access not permitted	property	no	Ingen tilgang
+activate	property	no	aktiver
+add new document	property	no	Legg til nytt dokument
+add report	property	no	Legg til rapport
+all types	property	no	Alle typer
+amount to transfer	property	no	Beløp for overføring
+app	property	no	App
+budget for selected year	property	no	Budsjett for valgt år
+budget info	property	no	Budsjett informasjon
+budget year	property	no	Budsjettår
+building part has been updated	property	no	Bygningsdel er oppdatert
+check to attach file	property	no	Merk av for å legge ved fil
+check to delete year	property	no	Merk av for å slette år
+choose dataset	property	no	Velg datasett
+claim_id	property	no	Krav-id
+click this button to start the export	property	no	Klikk for å starte eksporten
+click to delete file	property	no	Klikk for å slette fil
+click to select dimb	property	no	Klikk for å velge ansvarssted
+click to select external project	property	no	Klikk for å velge eksternt prosjekt
+condition survey categories	property	no	Kategorier for tilstandsanalyse
+condition survey status	property	no	Status for tilstandsanalyse
+convert to eav	property	no	Konverter til EAV
+created	property	no	Opprettet
+custom config	property	no	Tilpasset konfigurasjon
+delete imported records	property	no	Slett importerte verdier
+delete the ticket	property	no	Slett melding
+download jasperreport %1 definition	property	no	Last ned jasperreport %1 definisjonen
+edit serie	property	no	Endre serie
+edit the jasper entry	property	no	Endre jasper oppføringen
+enter a remark to add to the history of the order	property	no	Skriv en merknad som blir lagt til historikken
+enter a value for:	property	no	Angi en verdi for:
+filetype	property	no	Filtype
+format	property	no	Format
+gab info	property	no	Matrikkel informasjon
+generic document	property	no	Generisk dokument
+grand total	property	no	Totalsum
+has been deleted	property	no	Er slettet
+leave the record untouched and return to the list	property	no	La posten være urørt, og returnere til listen
+list contacts	property	no	List kontakter
+list pictures	property	no	List bilder
+list report definitions	property	no	List rapportdefinisjon
+location contact	property	no	Lokasjonskontakt
+location has been updated	property	no	Lokasjon er oppdatert
+mandatory actual cost	property	no	Obligatorisk faktis kostnad
+mandatory project group	property	no	Obligatorisk prosjektgruppe
+mine documents	property	no	Mine dokumenter
+mine tasks	property	no	Mine oppgaver
+mobile	property	no	Mobil
+no filetype	property	no	Filtype ikke valgt
+number of reports	property	no	Antall rapporter
+open vendor in new window	property	no	Åpne leverandør i nytt vindu
+parent	property	no	Forelder
+path	property	no	Sti
+please - enter a invoice num!	property	no	Angi et bilagsnummer
+please - enter an integer for order!	property	no	Angi et heltall for bestiling
+please - select write off period or enter new number of period !	property	no	Velg avskrivningsperiode, og antall perioder
+please enter a category !	property	no	Angi en kategori
+please enter a description !	property	no	Angi en beskrivelse
+please enter a multiplier !	property	no	Angi en multiplikator
+please enter a status !	property	no	Angi en status
+print the ticket	property	no	Skriv ut melding
+project attributes	property	no	Prosjektatributter
+project status	property	no	Prosjektstatus
+projekt	property	no	Prosjekt
+reporting	property	no	Rapportering
+request categories	property	no	Behovskategorier
+response template	property	no	Respons mal
+s_agreement	property	no	Serviceavtale
+save the record and return to the list	property	no	Lagre posten og returner til listen
+select a group	property	no	Velg en gruppe
+select an conector for:	property	no	Velg en kobling for:
+select an operator for:	property	no	Velg en operator for:
+select at least one column	property	no	Velg minst en kolonne
+select at least one count/sum operation	property	no	Velg minst en telle/sum operasjon
+select sub category	property	no	Velg underkategori
+select the estimated start date for the project	property	no	Angi estimert startdato for prosjektet
+select the priority the selection belongs to	property	no	Angi prioritering
+select type	property	no	Velg type
+send this workorder to vendor	property	no	Send denne ordren til leverandør
+set responsible unit	property	no	Angi ansvarlig enhet
+size	property	no	Størrelse
+status filter	property	no	Status filter
+status new	property	no	Status ny
+street	property	no	Gate
+target	property	no	Mål
+target project	property	no	Mål-prosjekt
+tenant category	property	no	Leietakerkategori
+ticket attributes	property	no	Meldingsattributter
+ticket config	property	no	Meldingskonfigurasjon
+ticket priority	property	no	Meldingsprioritet
+ticket status	property	no	Meldingsstatus
+vendor category	property	no	Leverandør kategori
+workorder recalculate actual cost	property	no	Rekalkuler faktisk kostnad for bestillinger

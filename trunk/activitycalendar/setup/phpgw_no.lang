@@ -437,3 +437,7 @@ contact_person_2_name	activitycalendar	no	Kontaktperson 2
 contact_person_2_phone	activitycalendar	no	Kontaktperson 2 tlf
 contact_person_2_mail	activitycalendar	no	Kontaktperson 2 epost
 reject	activitycalendar	no	Avvis organisasjon
+description	activitycalendar	no	Beskrivelse
+e-post	activitycalendar	no	E-post
+list %1	activitycalendar	no	list %1
+select date	activitycalendar	no	Velg dato
