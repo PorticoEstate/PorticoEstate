@@ -171,7 +171,6 @@
 					$load = array(
 						"js/{$_jquery_core}{$_type}",
 						"jqTree/tree.jquery",
-						"jqTree/tree.cookie",
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/jquery/jqTree/jqtree.css");
 					break;

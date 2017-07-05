@@ -134,3 +134,19 @@ vendor receipt text	eventplanner	no	utøvernotat ved kvittering
 customer receipt text	eventplanner	no	Mottakerstednotat ved kvittering
 receipt subject	eventplanner	no	Kvitteringsoverskrift
 datetime event	eventplanner	no	Dato/tid for arrangement
+add type	eventplanner	no	Legg til type
+application category	eventplanner	no	Søknadskategori
+application type	eventplanner	no	Søknadstype
+back to the ticket list	eventplanner	no	Tilbake til oversikten
+completed	eventplanner	no	fullført
+custom field groups	eventplanner	no	Gruppe av tilpassede felt
+customer category	eventplanner	no	Tilpasset kategory
+minute	eventplanner	no	Minutt
+select date	eventplanner	no	Velg dato
+type	eventplanner	no	Type
+vendor category	eventplanner	no	Leverandør kategori
+add type	eventplannerfrontend	no	Legg til type
+all	eventplannerfrontend	no	Alle
+back to the ticket list	eventplannerfrontend	no	Tilbake til oversikten
+completed	eventplannerfrontend	no	fullført
+type	eventplannerfrontend	no	Type

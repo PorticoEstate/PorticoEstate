@@ -132,3 +132,6 @@ message_empty	frontend	no	Meldingen kan ikke være tom
 upload_userdoc	frontend	no	Last opp brukerveiledning
 filename	frontend	no	Filnavn
 contracts	frontend	no	Kontrakt
+max %1 delegates	frontend	no	Maximum %1 delegerte
+monthly	frontend	no	Månedlig
+remark	frontend	no	Merknad

@@ -40,3 +40,59 @@ home screen message	admin	no	Melding på hjemmeskjerm
 title	admin	no	Overskrift
 important message	admin	no	Viktig informasjon
 enabled	admin	no	Aktiv
+(to install new applications use<br><a href=setup/" target="setup">setup</a> [manage applications] !!!)"	admin	no	(For å installere nye moduler, bruk<br><a href=setup/" target="setup">setup</a> [manage applications] !!!)"
+add a category	admin	no	Legg til kategori
+add a section	admin	no	Legg til seksjon
+add a subcategory	admin	no	Legg til undekategori
+admins	admin	no	Admins
+appearance	admin	no	Utseende
+attribute	admin	no	Atributt
+attributes	admin	no	Atributter
+attributes for this config section	admin	no	Atributter for denne konfigurasjonsseksjonen
+category list	admin	no	Kategoriliste
+check ip address of all sessions	admin	no	Kontroller IP-adresse for sesjoner
+close window	admin	no	Lukk vindu
+collect missing translations	admin	no	Finn manglende oversettinger
+config	admin	no	Konfigurasjon
+delete all log records	admin	no	Slett alle poster fra loggen
+delete this category	admin	no	Slett kategorien
+edit the config	admin	no	Endre konfigurasjon
+edit this category	admin	no	Endre kategorien
+email domain	admin	no	Email domene
+enter the background color for the login page	admin	no	Angi bakgrunnsfarge for innloggingssiden
+enter the background color for the site title	admin	no	Angi bakgrunnsfarge for nettstedstittelen
+enter the file name of your logo	admin	no	Angi filnavnet for logo
+enter the file name of your logo at login	admin	no	Angi filnavnet for logo for pålogging
+enter the search string. to show all entries, empty this field and press the submit button again	admin	no	Angi søkestreng. For a vise alle poster, tøm dette feltet og klikk på knappen igjen.
+enter the title for your site	admin	no	Angi tittel for nettstedet
+enter the title of your logo	admin	no	Angi tittel for logoen
+enter the url where your logo should link to	admin	no	Angi url for logo
+enter your smtp server password	admin	no	Angi ditt SMTP passord
+enter your smtp server user	admin	no	Angi ditt SMTP-server brukernavn
+fatal	admin	no	Fatal
+first page	admin	no	Første side
+installed applications	admin	no	Innstallerte moduler
+language	admin	no	Språk
+line	admin	no	Linje
+list section	admin	no	List seksjon
+log message	admin	no	Loggmelding
+login screen	admin	no	Innlogging
+main screen	admin	no	Hovedside
+main screen message	admin	no	Melding på hovedside
+module	admin	no	Modul
+section	admin	no	seksjon
+security	admin	no	Sikkerhet
+severity	admin	no	Alvorlighetsgrad
+smtp server port number	admin	no	SMTP server port nummer
+smtp server timeout	admin	no	smtp server timeout
+smtp settings	admin	no	SMTP configurasjon
+smtpdebug	admin	no	smtpdebug
+smtpsecure	admin	no	smtpsecure
+submit the search string	admin	no	Send søketekst
+support email address	admin	no	Epost brukerstøtte
+total records: %1	admin	no	Antall poster: %1
+use cookies to pass sessionid	admin	no	Bruk cookier til å håndtere sesjoner
+use smtp auth	admin	no	Bruk smtp autentisering
+users	admin	no	Brukere
+view the config	admin	no	Vis konfigurasjon
+warn	admin	no	Varsel

@@ -69,7 +69,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Adresse')"/>
+							<xsl:value-of select="php:function('lang', 'address')"/>
 						</label>
 						<input type="text" name="address" id="address" value="{address}"/>						
 					</div>
@@ -82,7 +82,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Beskrivelse')"/>
+							<xsl:value-of select="php:function('lang', 'description')"/>
 						</label>							
 						<textarea rows="10" cols="100" id="org_description" name="org_description">
 							<xsl:value-of select="description"/>
@@ -209,7 +209,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Adresse')"/>
+							<xsl:value-of select="php:function('lang', 'address')"/>
 						</label>
 						<xsl:value-of select="address"/>					
 					</div>
@@ -222,7 +222,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Beskrivelse')"/>
+							<xsl:value-of select="php:function('lang', 'description')"/>
 						</label>							
 						<xsl:value-of select="description"/>						
 					</div>

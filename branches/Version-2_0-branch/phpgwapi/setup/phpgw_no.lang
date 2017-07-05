@@ -185,3 +185,33 @@ week day	common	no	Ukedag
 upload file	common	no	Last opp fil
 upload multiple files	common	no	Last opp flere filer
 upload files	common	no	Last opp filer
+(filtered from _max_ total entries)	common	no	(filtrert fra _max_ poster)
+bim	common	no	Bim
+categories	common	no	Kategorier
+char	common	no	Char
+custom autocomplete::integer	common	no	Tilpasset autocomplete::ingeter
+custom functions	common	no	Tilpassede funksjoner
+custom listbox	common	no	Tilpasset listboks
+custom menu items	common	no	Tilpassede menyer
+datetime	common	no	Dato/tid
+do you really want to delete this entry	common	no	Vil du slette denne posten
+edit custom fields	common	no	Endre tilpassede felter
+edit type	common	no	Endre type
+float	common	no	Flyttall
+home screen message	common	no	Melding på hjemmeside
+hour	common	no	Time
+integer	common	no	Heltall
+link	common	no	Link
+listbox	common	no	Nedtrekksliste
+memo	common	no	Notat
+muliple checkbox	common	no	Merkebokser
+muliple radio	common	no	Flervalgs radio
+my preferences	common	no	Mine innstillinger
+organisation	common	no	Organsisasjon
+select the category the data belong to. to do not use a category select no category	common	no	Velg kategorien posten tilhører. For ikke å bruke kategori, velg ingen kategori
+sms	common	no	SMS
+unable to load jquery script '%1' when attempting to load widget: '%2'	common	no	Ikke i stand til å laste  jquery script '%1' på forsøk på å laste widget: '%2'
+varchar	common	no	Varchar
+vendor	common	no	Leverandør
+remark	home	no	Merknad
+about %1	about	no	Om %1
