@@ -676,7 +676,9 @@ edit unit	rental	no	Endre enhet
 entity %1 has been updated	rental	no	Post %1 er oppdatert
 event	rental	no	Hendelse
 export contacts	rental	no	Eksporter kontakter
-has been added	rental	no	rr lagt til
+has been added	rental	no	er lagt til
 has been removed	rental	no	er fjernet
 select date	rental	no	Velg dato
 select file to upload	rental	no	Velg fil for opplasting
+synchronized: %1	rental	no	Synkronisert: %1
+syncronize all	rental	no	Synkroniser alle

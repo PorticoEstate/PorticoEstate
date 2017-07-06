@@ -9,9 +9,9 @@ function onSyncronize_party(action)
 
 	JqueryPortico.execute_ajax(action, function (result)
 	{
-		document.getElementById("message").innerHTML = result;
+		document.getElementById("message").innerHTML = result.message;
 		oTable.fnDraw();
-	});
+	}, '', "POST", "JSON");
 }
 
 function onDelete_party(requestUrl)
@@ -65,5 +65,16 @@ function PartyMassSync(conf)
 	{
 		return false;
 	}
+
+	document.getElementById("message").innerHTML = 'Processing...';
+
+	var oArgs = {menuaction: 'rental.uiparty.syncronize_party', multisync: 1};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	JqueryPortico.execute_ajax(requestUrl, function (result)
+	{
+		document.getElementById("message").innerHTML = result.message;
+		oTable.fnDraw();
+	}, '', "POST", "JSON");
 
 }
