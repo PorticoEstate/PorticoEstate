@@ -37,7 +37,7 @@
 		protected $option_value;
 		protected $control_item_id;
 
-		public function __construct( $option_value, $control_item_id )
+		public function __construct( $option_value = 0, $control_item_id = 0 )
 		{
 			$this->option_value = $option_value;
 			$this->control_item_id = $control_item_id;
