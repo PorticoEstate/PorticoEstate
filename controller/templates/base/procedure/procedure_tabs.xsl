@@ -3,11 +3,6 @@
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div id="procedure_tabview">
-			<div class="identifier-header">
-			<h1>
-				<xsl:value-of select="php:function('lang', 'Procedure')" />
-			</h1>
-			</div>
 			<xsl:value-of disable-output-escaping="yes" select="tabs" />
 			 
 		<div id ='procedure'>

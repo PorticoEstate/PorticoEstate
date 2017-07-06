@@ -2219,3 +2219,4 @@ ticket priority	property	no	Meldingsprioritet
 ticket status	property	no	Meldingsstatus
 vendor category	property	no	Leverandør kategori
 workorder recalculate actual cost	property	no	Rekalkuler faktisk kostnad for bestillinger
+none selected	property	no	Ingen valgt

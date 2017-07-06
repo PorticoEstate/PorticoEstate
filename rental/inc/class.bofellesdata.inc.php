@@ -168,7 +168,7 @@
 			return false;
 		}
 
-		public function result_unit_exist( $result_unit, $level )
+		public function result_unit_exist( $result_unit, $level = 0)
 		{
 			$this->log(__class__, __function__);
 
@@ -212,7 +212,7 @@
 			return false;
 		}
 
-		public function org_unit_exist( $org_unit_id, $level )
+		public function org_unit_exist( $org_unit_id, $level = 0)
 		{
 			$this->log(__class__, __function__);
 
