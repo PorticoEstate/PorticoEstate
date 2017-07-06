@@ -470,13 +470,13 @@
 				$activity->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
 				$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
 				$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
-				$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
+				$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation'), 'bool'));
 				$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
 				$activity->set_contact_person_2_address($this->unmarshal($this->db->f('contact_person_2_address'), 'string'));
 				$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
-				$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
-				$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
-				$activity->set_new_group($this->unmarshal($this->db->f('new_group', 'bool')));
+				$activity->set_frontend($this->unmarshal($this->db->f('frontend'), 'bool'));
+				$activity->set_new_org($this->unmarshal($this->db->f('new_org'), 'bool'));
+				$activity->set_new_group($this->unmarshal($this->db->f('new_group'), 'bool'));
 
 				if ($activity->get_group_id() && $activity->get_group_id() > 0)
 				{
@@ -693,7 +693,9 @@
 		function get_targets()
 		{
 			$targets = array();
-			$sql = "SELECT * FROM bb_agegroup where active=1 ORDER BY sort";
+			$sql = "SELECT * FROM bb_agegroup"
+				. " WHERE active=1 AND activity_id = 1"
+				. " ORDER BY sort";
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
 			{
@@ -1496,12 +1498,12 @@
 				$activity->set_internal_arena($this->unmarshal($this->db->f('internal_arena'), 'string'));
 				$activity->set_time($this->unmarshal($this->db->f('time'), 'string'));
 				$activity->set_last_change_date($this->unmarshal($this->db->f('last_change_date'), 'int'));
-				$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation', 'bool')));
+				$activity->set_special_adaptation($this->unmarshal($this->db->f('special_adaptation'), 'bool'));
 				$activity->set_secret($this->unmarshal($this->db->f('secret'), 'string'));
 				$activity->set_contact_person_2_address($this->unmarshal($this->db->f('contact_person_2_address'), 'string'));
 				$activity->set_contact_person_2_zip($this->unmarshal($this->db->f('contact_person_2_zip'), 'string'));
-				$activity->set_frontend($this->unmarshal($this->db->f('frontend', 'bool')));
-				$activity->set_new_org($this->unmarshal($this->db->f('new_org', 'bool')));
+				$activity->set_frontend($this->unmarshal($this->db->f('frontend'), 'bool'));
+				$activity->set_new_org($this->unmarshal($this->db->f('new_org'), 'bool'));
 
 				$activities[] = $activity;
 			}
