@@ -882,7 +882,7 @@ HTML;
 			);
 
 			self::add_javascript('property', 'portico', 'import_components.js');
-			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('Importer ');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . '::' . lang('import components');
 
 			self::render_template_xsl(array('import_components', 'multi_upload_file', 'datatable_inline'), $data);
 		}
