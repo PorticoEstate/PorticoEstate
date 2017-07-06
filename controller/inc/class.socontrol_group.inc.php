@@ -138,7 +138,7 @@
 			$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 			$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
 
-			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+			$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 			$control_group->set_control_area_name($category[0]['name']);
 
 			$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
@@ -343,7 +343,7 @@
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
 
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control_group->set_control_area_name($category[0]['name']);
 
 				$control_group->set_component_location_id($this->unmarshal($this->db->f('component_location_id'), 'int'));
@@ -384,7 +384,7 @@
 				$control_group->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$control_group->set_procedure_name($this->unmarshal($this->db->f('procedure_title', true), 'string'));
 				$control_group->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$control_group->set_control_area_name($category[0]['name']);
 				$control_group->set_building_part_id($this->unmarshal($this->db->f('building_part_id'), 'string'));
 				$control_group->set_building_part_descr($this->unmarshal($this->db->f('building_part_descr', true), 'string'));
@@ -417,7 +417,7 @@
 			while ($this->db->next_record())
 			{
 				$control_area = $this->unmarshal($this->db->f('control_area_id'), 'int');
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 
 				$control_area_array[] = array($control_area => $category[0]['name']);
 			}

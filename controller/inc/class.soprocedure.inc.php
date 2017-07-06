@@ -166,9 +166,9 @@
 					$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 					$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 					$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
+					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 
-					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 					$procedure->set_control_area_name($category[0]['name']);
 
 					//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
@@ -217,8 +217,8 @@
 					$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 					$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 					$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
-					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 					$procedure->set_control_area_name($category[0]['name']);
 				}
 
@@ -424,7 +424,7 @@
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
 				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$procedure->set_control_area_name($category_name = $category[0]['name']);
 
 				$results[] = $procedure->toArray();
@@ -553,9 +553,9 @@
 				$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
-				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id', 'int')));
-				//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name', 'string')));
-				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id', 'int')));
+				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
+				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$procedure->set_control_area_name($category[0]['name']);
 			}
 
