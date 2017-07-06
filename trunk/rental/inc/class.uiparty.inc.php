@@ -98,14 +98,10 @@
 		 */
 		public function query()
 		{
-			if ($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] > 0)
-			{
-				$user_rows_per_page = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
-			}
-			else
-			{
-				$user_rows_per_page = 10;
-			}
+			$length = phpgw::get_var('length', 'int');
+
+			$user_rows_per_page = $length > 0 ? $length : $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
+			$num_of_objects = $length == -1 ? 0 : $user_rows_per_page;
 
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
@@ -113,7 +109,6 @@
 			$columns = phpgw::get_var('columns');
 
 			$start_index = phpgw::get_var('start', 'int', 'REQUEST', 0);
-			$num_of_objects = (phpgw::get_var('length', 'int') <= 0) ? $user_rows_per_page : phpgw::get_var('length', 'int');
 			$sort_field = ($columns[$order[0]['column']]['data']) ? $columns[$order[0]['column']]['data'] : 'identifier';
 			$sort_ascending = ($order[0]['dir'] == 'desc') ? false : true;
 			// Form variables
@@ -264,6 +259,45 @@
 
 			return $this->jquery_results($result_data);
 		}
+
+		private function get_sync_candidates()
+		{
+			$config_data = CreateObject('phpgwapi.config', 'rental')->read();
+			$filters = array('sync' => 'sync_parties_org_unit', 'party_type' => 'all', 'active' => 'all');
+			if( !$config_data['use_fellesdata'])
+			{
+				return array();
+			}
+
+			$bofelles = rental_bofellesdata::get_instance();
+			$result_objects = rental_soparty::get_instance()->get(0, 0, '', true, '', 'all', $filters);
+			$candidates = array();
+			foreach ($result_objects as $party)
+			{
+				if (isset($party))
+				{
+					$sync_data = $party->get_sync_data();
+					$unit_name_and_id = $bofelles->org_unit_exist($sync_data['org_enhet_id']);
+
+					if (isset($unit_name_and_id) && $unit_name_and_id)
+					{
+						$unit_id = $unit_name_and_id['UNIT_ID'];
+						$unit_name = $unit_name_and_id['UNIT_NAME'];
+
+						if (isset($unit_id) && is_numeric($unit_id))
+						{
+							$candidates[] = array(
+								'party_id' => $party->get_id(),
+								'org_unit_id' => $unit_id
+							);
+						}
+					}
+				}
+			}
+
+			return $candidates;
+		}
+
 		/*
 		 * One time job for updating the parties with no org_enhet_id.
 		 * The org_enhet_id will be set according to the suggestions given in
@@ -400,7 +434,7 @@
 							$actions[] = '<a href="' . $url2 . '">' . lang('frontend_access') . '</a>';
 
 							$url3 = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party',
-									'org_enhet_id' => $value['org_enhet_id'], 'party_id' => $value['id'])));
+									'org_enhet_id' => $value['org_enhet_id'], 'party_id' => $value['id'], 'phpgw_return_as' => 'json')));
 							$actions[] = '<a onclick="onSyncronize_party(\'' . $url3 . '\')">' . lang('syncronize_party') . '</a>';
 						}
 					}
@@ -1214,7 +1248,7 @@ JS;
 				if($sync_job == 'org_unit')
 				{
 					//not really columns - but a placeholder for mass-sync.
-					$data['datatable']['columns'] = array('name' => 'Sync', 'onclick' => "PartyMassSync({type:'{$type}'})");
+					$data['datatable']['columns'] = array('name' => lang('syncronize all'), 'onclick' => "PartyMassSync({type:'{$type}'})");
 				}
 			}
 
@@ -1239,21 +1273,38 @@ JS;
 		{
 			if (($this->isExecutiveOfficer() || $this->isAdministrator()))
 			{
-				$party_id = phpgw::get_var('party_id');
-				$org_unit_id = phpgw::get_var('org_enhet_id');
-
-				if (isset($party_id) && $party_id > 0 && isset($org_unit_id) && $org_unit_id > 0)
+				$config_data = CreateObject('phpgwapi.config', 'rental')->read();
+				if (empty($config_data['use_fellesdata']))
 				{
-					$config = CreateObject('phpgwapi.config', 'rental');
-					$config->read();
+					return;
+				}
+				$bofelles = rental_bofellesdata::get_instance();
 
-					$use_fellesdata = $config->config_data['use_fellesdata'];
-					if (!$use_fellesdata)
+
+				$multisync = phpgw::get_var('multisync', 'bool');
+
+				if($multisync)
+				{
+					$candidates = $this->get_sync_candidates();
+				}
+				else
+				{
+					$candidates = array();
+					$candidates[] = array(
+						'party_id' => phpgw::get_var('party_id', 'int'),
+						'org_unit_id' => phpgw::get_var('org_enhet_id', 'int')
+					);
+				}
+				$i = 0;
+				foreach ($candidates as $candidate)
+				{
+					if(!$candidate['party_id'] > 0 && !$candidate['org_unit_id'] > 0)
 					{
-						return;
+						continue;
 					}
 
-					$bofelles = rental_bofellesdata::get_instance();
+					$party_id = $candidate['party_id'];
+					$org_unit_id = $candidate['org_unit_id'];
 
 					$org_unit_with_leader = $bofelles->get_result_unit_with_leader($org_unit_id);
 					$org_department = $bofelles->get_department_for_org_unit($org_unit_id);
@@ -1282,8 +1333,15 @@ JS;
 
 					rental_soparty::get_instance()->store($party);
 
-					$party = rental_soparty::get_instance()->get_single($party_id);
+			//		echo  json_encode( array('message'=> lang('party %1 is updated', $party_id)));
+					$i++;
 				}
+
+				return array('message'=> lang('synchronized: %1',  $i));
+			}
+			else
+			{
+				return array('message'=> lang('no access'));
 			}
 		}
 

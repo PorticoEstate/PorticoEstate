@@ -747,8 +747,16 @@
 				<xsl:choose>
 					<xsl:when test="columns">
 						button_def.push({
-						text: "<xsl:value-of select="php:function('lang', 'columns')"/>",
-						titleAttr: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+						<xsl:choose>
+							<xsl:when test="columns/name">
+								text: "<xsl:value-of select="columns/name"/>",
+								titleAttr: "<xsl:value-of select="columns/name"/>",
+							</xsl:when>
+							<xsl:otherwise>
+								text: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+								titleAttr: "<xsl:value-of select="php:function('lang', 'columns')"/>",
+							</xsl:otherwise>
+						</xsl:choose>
 						className: 'download',
 						action: function (e, dt, node, config) {
 							<xsl:value-of select="columns/onclick"/>;
