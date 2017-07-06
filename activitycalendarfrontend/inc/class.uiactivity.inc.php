@@ -245,7 +245,7 @@
 			{
 				$get_org_from_local = false;
 				$new_org_group = false;
-				$new_org = phpgw::get_var('new_organization');
+				$new_org = phpgw::get_var('new_organization', 'bool', 'POST', false);
 				if ($new_org != null && $new_org == 'yes')
 				{
 					$get_org_from_local = true;
