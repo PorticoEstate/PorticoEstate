@@ -1960,8 +1960,7 @@
 		{
 			if (!$this->acl_read)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uilocation.stop',
-					'perm' => 1, 'acl_location' => $this->acl_location));
+				phpgw::no_access();
 			}
 
 			$from = phpgw::get_var('from');
@@ -2039,8 +2038,20 @@
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php', $link_history_data);
 					}
 				}
-			}
+				$location = $this->acl_location . '.detail';
+				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
 
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if (isset($group['attributes']))
+					{
+						$attributes[] = $group;
+					}
+				}
+				unset($attributes_groups);
+				unset($s_agreement['attributes']);
+			}
 
 			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
 			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
@@ -2147,7 +2158,7 @@
 				'lang_cancel' => lang('cancel'),
 				'lang_cancel_statustext' => lang('Leave the service agreement untouched and return back to the list'),
 				'lang_dateformat' => lang(strtolower($dateformat)),
-				'attributes_view' => $values['attributes'],
+				'attributes_group' => $attributes,
 				'lang_agreement' => lang('Agreement'),
 				'agreement_name' => $s_agreement['name'],
 				'table_add' => $table_add,
@@ -2477,6 +2488,23 @@
 				)
 			);
 
+			if (isset($values['attributes']) && is_array($values['attributes']))
+			{
+
+				$location = $this->acl_location;
+				$attributes_groups = $this->bo->get_attribute_groups($location, $values['attributes']);
+
+				$attributes = array();
+				foreach ($attributes_groups as $group)
+				{
+					if (isset($group['attributes']))
+					{
+						$attributes[] = $group;
+					}
+				}
+				unset($attributes_groups);
+				unset($values['attributes']);
+			}
 
 			$data = array
 				(
@@ -2510,7 +2538,8 @@
 				'member_of_name' => 'member_id',
 				'member_of_list' => $member_of_data['cat_list'],
 				'lang_dateformat' => lang(strtolower($dateformat)),
-				'attributes_view' => $s_agreement['attributes'],
+//				'attributes_view' => $s_agreement['attributes'],
+				'attributes_group' => $attributes,
 				'dateformat' => $dateformat,
 				'lang_start_date' => lang('start date'),
 				'value_start_date' => $s_agreement['start_date'],
