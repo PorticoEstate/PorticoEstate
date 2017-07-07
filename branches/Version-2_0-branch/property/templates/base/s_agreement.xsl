@@ -1053,14 +1053,14 @@
 							</div>
 						</xsl:when>
 					</xsl:choose>
-					<xsl:choose>
-						<xsl:when test="attributes_view != ''">
-							<div class="pure-control-group">
-                                                                                            
-								<xsl:apply-templates select="attributes_view"/>
-							</div>
-						</xsl:when>
-					</xsl:choose>
+				<xsl:choose>
+					<xsl:when test="attributes_group != ''">
+						<div clas="pure-control-group">
+							<br></br>
+                             <xsl:call-template name="attributes_values"/>
+						</div>
+					</xsl:when>
+				</xsl:choose>
 					<xsl:choose>
 						<xsl:when test="member_of_list != ''">
 							<div class="pure-control-group">
@@ -1262,11 +1262,11 @@
 					<xsl:value-of select="value_cost"/>
 				</div>
 				<xsl:choose>
-					<xsl:when test="attributes_view != ''">
+					<xsl:when test="attributes_group != ''">
 						<div clas="pure-control-group">
 							<br></br>
-							<xsl:apply-templates select="attributes_view"/>
-                                                                
+							<!--xsl:apply-templates select="attributes_view"/-->
+                             <xsl:call-template name="attributes_values"/>     
 						</div>
 					</xsl:when>
 				</xsl:choose>
