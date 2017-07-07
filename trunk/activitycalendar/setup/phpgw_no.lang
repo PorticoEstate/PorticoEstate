@@ -441,3 +441,4 @@ description	activitycalendar	no	Beskrivelse
 e-post	activitycalendar	no	E-post
 list %1	activitycalendar	no	list %1
 select date	activitycalendar	no	Velg dato
+select arena: internal or external	activitycalendar	no	Arena (kommunal eller ekstern) må fylles ut!

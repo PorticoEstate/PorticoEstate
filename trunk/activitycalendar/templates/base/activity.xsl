@@ -109,11 +109,8 @@
 						</label>
 						<select id="internal_arena_id" name="internal_arena_id" onchange="javascript: check_internal();">
 							<xsl:attribute name="data-validation">
-								<xsl:text>required</xsl:text>
+								<xsl:text>arena</xsl:text>
 							</xsl:attribute>
-							<xsl:attribute name="data-validation-error-msg">
-								<xsl:value-of select="php:function('lang', 'Arena må fylles ut!')"/>
-							</xsl:attribute>							
 							<xsl:apply-templates select="list_building_options/options"/>
 						</select>											
 					</div>
@@ -122,6 +119,9 @@
 							<xsl:value-of select="php:function('lang', 'external_arena')"/>
 						</label>
 						<select id="arena_id" name="arena_id" style="width: 300px;" onchange="javascript: check_external();">
+							<xsl:attribute name="data-validation">
+								<xsl:text>arena</xsl:text>
+							</xsl:attribute>
 							<xsl:apply-templates select="list_arena_external_options/options"/>
 						</select>											
 					</div>
@@ -254,6 +254,8 @@
 		</form>
 	</div>
 	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'select arena: internal or external')"/>;
+
 		$("[name='target[]']:eq(0)")
 		.valAttr('','validate_checkbox_group')
 		.valAttr('qty','min1')
