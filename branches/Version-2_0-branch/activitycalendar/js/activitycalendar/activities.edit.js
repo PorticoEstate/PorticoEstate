@@ -61,4 +61,23 @@ function check_external()
 $(document).ready(function ()
 {
 	get_available_groups();
+
+	$.formUtils.addValidator({
+		name: 'arena',
+		validatorFunction: function (value, $el, config, languaje, $form)
+		{
+			//check_for_budget is defined in xsl-template
+			var v = false;
+			var internal_arena = $('#internal_arena_id').val();
+			var arena = $('#arena_id').val();
+			if ((internal_arena != "" || arena != ""))
+			{
+				v = true;
+			}
+			return v;
+		},
+		errorMessage: lang['select arena: internal or external'],
+		errorMessageKey: ''
+	});
+
 });
