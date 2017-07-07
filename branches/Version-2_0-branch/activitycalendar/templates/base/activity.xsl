@@ -28,7 +28,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'title')"/>
 						</label>
-						<input type="text" name="title" id="title" value="{value_title}">
+						<input type="text" name="title" id="title" value="{value_title}" class="pure-input-1-2" >
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -49,7 +49,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'state')"/>
 						</label>
-						<select id="state" name="state">
+						<select id="state" name="state" class="pure-input-1-2" >
 							<xsl:apply-templates select="list_state_options/options"/>
 						</select>						
 					</div>
@@ -57,7 +57,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'category')"/>
 						</label>
-						<select id="category" name="category">
+						<select id="category" name="category" class="pure-input-1-2" >
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -107,7 +107,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'building')"/>
 						</label>
-						<select id="internal_arena_id" name="internal_arena_id" onchange="javascript: check_internal();">
+						<select id="internal_arena_id" name="internal_arena_id" onchange="javascript: check_internal();" class="pure-input-1-2" >
 							<xsl:attribute name="data-validation">
 								<xsl:text>arena</xsl:text>
 							</xsl:attribute>
@@ -118,7 +118,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'external_arena')"/>
 						</label>
-						<select id="arena_id" name="arena_id" style="width: 300px;" onchange="javascript: check_external();">
+						<select id="arena_id" name="arena_id" onchange="javascript: check_external();" class="pure-input-1-2" >
 							<xsl:attribute name="data-validation">
 								<xsl:text>arena</xsl:text>
 							</xsl:attribute>
@@ -129,7 +129,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'time')"/>
 						</label>
-						<input type="text" name="time" id="time" value="{value_time}" >
+						<input type="text" name="time" id="time" value="{value_time}"  class="pure-input-1-2" >
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -142,7 +142,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'office')"/>
 						</label>
-						<select id="office" name="office">
+						<select id="office" name="office" class="pure-input-1-2" >
 							<xsl:attribute name="data-validation">
 								<xsl:text>required</xsl:text>
 							</xsl:attribute>
@@ -161,7 +161,7 @@
 						</label>
 						<div class="pure-custom">
 							<div>
-								<select id="organization_id" name="organization_id" onchange="javascript:get_available_groups();">
+								<select id="organization_id" name="organization_id" onchange="javascript:get_available_groups();" class="pure-input-1-2" >
 									<xsl:attribute name="data-validation">
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
@@ -193,7 +193,7 @@
 							</xsl:if>		
 							<xsl:if test="new_group = 0">
 								<div id="div_group_id">
-									<select name="group_id" id="group_id">
+									<select name="group_id" id="group_id" class="pure-input-1-2" >
 										<option value="">Ingen gruppe valgt</option>
 									</select>
 								</div>
@@ -233,14 +233,16 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_2_address')"/>
 						</label>
-						<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="{contact_person_2_address}"/>
+						<input type="text" name="contact_person_2_address" id="contact_person_2_address" value="{contact_person_2_address}" class="pure-input-1-2" >
+						</input>
 						<div id="contact_person_2_address_container"></div>									
 					</div>
 					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'contact_person_2_zip')"/>
 						</label>
-						<input type="text" name="contact_person_2_zip" id="contact_person_2_zip" value="{contact_person_2_zip}"/>
+						<input type="text" name="contact_person_2_zip" id="contact_person_2_zip" value="{contact_person_2_zip}" class="pure-input-1-2" >
+						</input>
 					</div>				
 				</div>
 			</div>
