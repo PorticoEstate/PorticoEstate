@@ -1277,7 +1277,16 @@ function populateSelect_activityCalendar(url, container, attr)
 		{
 			var option = document.createElement('option');
 			option.text = value.name;
-			option.setAttribute('value', value.name);
+
+			if(typeof(value.id) !=='undefined')
+			{
+				option.setAttribute('value', value.id);
+			}
+			else
+			{
+				option.setAttribute('value', value.name);
+			}
+
 			select.appendChild(option);
 		});
 		if (r.length > 0)

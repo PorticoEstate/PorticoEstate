@@ -1058,7 +1058,7 @@ JS;
 			}
 		}
 
-		function send_email_to_selection( $activities )
+		function send_email_to_selection( $activities, $skip_redirect = false )
 		{
 			$c = createobject('phpgwapi.config', 'activitycalendarfrontend');
 			$c->read();
@@ -1134,8 +1134,11 @@ JS;
 				}
 			}
 
-			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index',
+			if(!$skip_redirect)
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'activitycalendar.uiactivities.index',
 				'message' => 'E-post sendt'));
+			}
 		}
 
 		public function send_mail()
