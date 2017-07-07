@@ -696,7 +696,7 @@
 
 			if (isset($_POST['step_1']))
 			{ //change_request
-				$activity_id = phpgw::get_var('activity_id');
+				$activity_id = phpgw::get_var('activity_id', 'int');
 				$activity = $this->so_activity->get_single($activity_id);
 				$org = $this->so_organization->get_single($activity->get_organization_id());
 
@@ -705,7 +705,7 @@
 				//$activity->set_state(2);
 				//if($this->so_activity->store($activity))
 				//{
-				$this->send_email_to_selection(array($activity));
+				$this->send_email_to_selection(array($activity), $skip_redirect = true);
 				$message = lang('update_request_sent', $activity->get_title(), $org->get_name());
 				return self::render_template_xsl('activity_edit_step_1', array
 						(
@@ -1400,24 +1400,23 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$org_id = phpgw::get_var('orgid');
-			$returnHTML = "<option value='0'>Ingen aktivitet valgt</option>";
+			$activity_ret = array();
+			$activity_ret[] = array('id'=> 0, 'name' => 'Ingen aktivitet valgt');
 			if ($org_id)
 			{
 				$activities = $this->so_activity->get(0, 0, 'title', true, '', '', array(
 					'activity_state' => 3, 'activity_org' => $org_id));
 				foreach ($activities as $act)
 				{
-					if (isset($act))
+					if (!empty($act))
 					{
-						//$res_g = $group->serialize();
-						$activity_html[] = "<option value='" . $act->get_id() . "'>" . $act->get_title() . "</option>";
+						$activity_ret[] = array(
+							'id'=>  $act->get_id(),
+							'name' => $act->get_title()
+						);
 					}
 				}
-				$html = implode(' ', $activity_html);
-				$returnHTML = $returnHTML . ' ' . $html;
 			}
-
-
-			return $returnHTML;
+			return array('ResultSet' => array('Result' => $activity_ret));
 		}
 	}
