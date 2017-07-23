@@ -80,7 +80,8 @@
 				$bcc = '';
 				$subject = "Status er endret for melding tilknyttet prosjekt {$project_info['id']}";
 				$body = "<H2>{$subject}</H2>";
-				$body .= "</br><a href='http://{$GLOBALS['phpgw_info']['server']['hostname']}{$project_info['link']}'>{$subject} - klikk her for å oppdatere status for prosjektet</a>";
+			//	$body .= "</br><a href='http://{$GLOBALS['phpgw_info']['server']['hostname']}{$project_info['link']}'>{$subject} - klikk her for å oppdatere status for prosjektet</a>";
+				$body .= "</br><a href='{$project_info['link']}'>{$subject} - klikk her for å oppdatere status for prosjektet</a>";
 
 				try
 				{
