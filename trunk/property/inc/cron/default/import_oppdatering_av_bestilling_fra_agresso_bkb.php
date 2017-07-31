@@ -59,7 +59,7 @@
 		{
 			$this->get_files();
 
-			$dirname = $this->config->config_data['import']['local_path'];
+			$dirname = $this->config->config_data['import']['local_path_project'];
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
