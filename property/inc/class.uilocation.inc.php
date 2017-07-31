@@ -1021,7 +1021,7 @@ JS;
 				}
 				else
 				{
-					$function_msg = $uicols['descr'][($type_id)];
+					$function_msg = $uicols['descr'][($type_id+1)];
 				}
 			}
 
