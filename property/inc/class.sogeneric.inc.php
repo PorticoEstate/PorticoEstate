@@ -534,7 +534,7 @@
 							array
 								(
 								'name' => 'contact_email',
-								'descr' => lang('contact_email'),
+								'descr' => lang('contact email'),
 								'type' => 'varchar',
 								'sortable' => true,
 							),

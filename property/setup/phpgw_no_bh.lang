@@ -974,7 +974,7 @@ override fraction	property	no	Overstyrt-faktor
 Override fraction	property	no	Overstyringsfaktor
 Override fraction of common costs	property	no	Overstyringsfaktor for felleskostnader
 overview	property	no	oversikt
-owner	property	no	eier
+owner	property	no	Eier
 Owner type	property	no	Eiertype
 Paid	property	no	Betalt
 Part of town	property	no	Bydel
@@ -1356,7 +1356,7 @@ Set the status of the ticket	property	no	sett status for meldingen
 Shared use	property	no	Delt bruk
 shift down	property	no	Skift ned
 shift up	property	no	Skift opp
-Show all	property	no	vis alle
+Show all	property	no	Vis alle
 Show calculated cost	property	no	Vis sum
 Show calculated cost on the printview	property	no	Vis sum på utskrift
 Show details	property	no	Vis detaljer

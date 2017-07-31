@@ -111,7 +111,7 @@ save	common	no	Lagre
 search	common	no	Søk
 september	common	no	September
 session has been killed	common	no	Session har blitt avsluttet
-show all	common	no	vis alle
+show all	common	no	Vis alle
 showing %1	common	no	showing %1
 showing %1 - %2 of %3	common	no	showing %1 - %2 of %3
 showing items	common	no	Viser
@@ -215,3 +215,4 @@ varchar	common	no	Varchar
 vendor	common	no	Leverandør
 remark	home	no	Merknad
 about %1	about	no	Om %1
+group	common	no	Gruppe

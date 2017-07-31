@@ -348,6 +348,8 @@ JS;
 
 			$code = "var inputFilters = " . json_encode($inputFilters);
 
+			$lang_search = lang('search');
+
 			$code .= <<<JS
 				
 				function initCompleteDatatable(oSettings, json, oTable) 
@@ -355,7 +357,7 @@ JS;
 					$('#datatable-container_filter').empty();
 					$.each(inputFilters, function(i, val)
 					{
-						$('#datatable-container_filter').append('<input type="text" placeholder="Search '+val+'" id="'+i+'" />');
+						$('#datatable-container_filter').append('<input type="text" placeholder="{$lang_search} '+val+'" id="'+i+'" />');
 					});
 
 					{$set_location_code}
@@ -449,6 +451,12 @@ JS;
 				'className' => array('', '', '', '', '', '', '', '', '', '', '')
 			);
 
+			$lang_yes_no = array(
+				'yes' => lang('yes'),
+				'no' => lang('no'),
+				'' => lang('no'),
+			);
+
 			$values = array();
 			$j = 0;
 			if (isset($gab_list) && is_array($gab_list))
@@ -476,6 +484,10 @@ JS;
 						{
 							$value_seksjons_nr = substr($gab['gab_id'], 17, 3);
 							$value = $value_seksjons_nr;
+						}
+						else if ($uicols['name'][$i] == 'owner')
+						{
+							$value = $lang_yes_no[$gab[$uicols['name'][$i]]];
 						}
 						else
 						{
