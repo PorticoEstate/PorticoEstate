@@ -361,7 +361,7 @@ column could not be added	property	no	Kolonne kunne ikke legges til
 column description	property	no	Beskrivelse av kolonne
 column name	property	no	Kolonnenavn
 column name not entered!	property	no	Manglende kolonnenavn
-columns	common	no	kolonner
+columns	common	no	Kolonner
 columns is updated	property	no	Kolonner er oppdatert
 common costs	property	no	Fellsekostnader
 communication descriptions manager	property	no	Kommunikasjonsbeskrivelse
@@ -406,10 +406,10 @@ check to delete	property	no	Merk for å slette
 check all	common	no	Merk alle
 contact	property	no	Kontakt
 contact email	property	no	Epost
-contact phone	property	no	kontakt telefon
+contact phone	property	no	Kontakttelefon
 contacts	common	no	Kontakter
-content	property	no	innhold
-contractual obligations	property	no	regnskap
+content	property	no	Innhold
+contractual obligations	property	no	Regnskap
 contracts	property	no	Kontrakter
 contract sum	property	no	Kontraktsum
 conversion	property	no	format
@@ -441,7 +441,7 @@ custom functions	property	no	Egendefinert funksjoner
 custom functions for the entity category	property	no	Egendefinert funksjoner for entitet-kategori
 custom queries	property	no	Egendefinerte spørringer
 daily	property	no	Daglig
-data	property	no	data
+data	property	no	Data
 datatype	property	no	datatype
 datatype type not chosen!	property	no	datatype er ikke valgt
 date closed	property	no	dato avsluttet
@@ -682,7 +682,7 @@ enable history for this attribute	property	no	Aktiver historikk for denne attrib
 enable link from location detail	property	no	Aktiver link fra detaljer for areal
 enables help message for this attribute	property	no	Hjelpetekst for denne attributten
 enable start project from this category	property	no	Aktiviser mulighet for å starte prosjekt herfra
-end	property	no	slutt
+end	property	no	Slutt
 end date	property	no	sluttdato
 enter additional remarks to the description - if any	property	no	gi en merknad - om noen
 enter a descr for the custom function	property	no	Angi en beskrivelse av egendefinert funksjon
@@ -1196,7 +1196,7 @@ obligation	property	no	Forpliktet
 of	property	no	av
 on behalf of assigned	property	no	På vegne av tildelt
 on behalf of assigned - vacation mode	property	no	På vegne av tildelt - feriemodus
-old value	property	no	opprinnelig verdi
+old value	property	no	Opprinnelig verdi
 only private	property	no	Bare privat
 open	property	no	Åpen
 open date	property	no	Startet dato
@@ -1224,7 +1224,7 @@ other branch	property	no	Andre fag
 override fraction	property	no	Overstyrt faktor
 override fraction of common costs	property	no	Overstyringsfaktor for felleskostnader
 overview	property	no	Oversikt
-owner	property	no	eier
+owner	property	no	Eier
 owner attributes	property	no	Eier attributter
 owner categories	property	no	Eier kategorier
 owner type	property	no	Eiertype
@@ -1853,7 +1853,7 @@ transfer	property	no	Overfør
 transfer time	property	no	Overført
 true	property	no	True
 tts	property	no	Melding
-type	property	no	type
+type	property	no	Type
 type invoice ii	property	no	Type
 type of changes	property	no	Type av endring
 uncheck to debug the result	property	no	Ta vekk avkryssning for debugging
@@ -2220,3 +2220,5 @@ ticket status	property	no	Meldingsstatus
 vendor category	property	no	Leverandør kategori
 workorder recalculate actual cost	property	no	Rekalkuler faktisk kostnad for bestillinger
 none selected	property	no	Ingen valgt
+direction	property	no	Retning
+directory	property	no	Katalog
