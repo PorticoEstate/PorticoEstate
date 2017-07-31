@@ -10,6 +10,7 @@
 </xsl:template>
 
 <xsl:template match="table" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<style type="text/css">
 		#box { width: 200px; height: 5px; background: blue; }
 		select { width: 200px; }

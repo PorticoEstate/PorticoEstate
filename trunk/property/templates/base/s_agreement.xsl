@@ -1,5 +1,6 @@
   <!-- $Id$ -->
 <xsl:template match="data">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:choose>
 		<xsl:when test="add">
 			<xsl:apply-templates select="add"/>
