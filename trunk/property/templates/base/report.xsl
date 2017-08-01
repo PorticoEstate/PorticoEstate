@@ -1,6 +1,5 @@
 
 <xsl:template match="data">
-	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:choose>
 		<xsl:when test="edit">
 			<xsl:apply-templates select="edit"/>

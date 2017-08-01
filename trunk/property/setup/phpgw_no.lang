@@ -2222,3 +2222,6 @@ workorder recalculate actual cost	property	no	Rekalkuler faktisk kostnad for bes
 none selected	property	no	Ingen valgt
 direction	property	no	Retning
 directory	property	no	Katalog
+select template	property	no	Velg mal
+select parent	property	no	Velg forelder
+attribute groups	property	no	Attributtgrupper
