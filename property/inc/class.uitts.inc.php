@@ -1708,6 +1708,7 @@ HTML;
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			self::add_jquery_translation($data);
 			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
 			//	$GLOBALS['phpgw']->xslttpl->pp();
@@ -3109,6 +3110,7 @@ HTML;
 			$appname = lang('helpdesk');
 			$function_msg = lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
+			self::add_jquery_translation($data);
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
 		}
 

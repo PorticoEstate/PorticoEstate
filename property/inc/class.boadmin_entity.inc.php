@@ -595,9 +595,9 @@
 			return $this->so->get_path($entity_id, $node);
 		}
 
-		function read_category_tree2( $entity_id, $table )
+		function read_category_tree2( $entity_id )
 		{
-			return $this->so->read_category_tree2($entity_id, $table);
+			return $this->so->read_category_tree2($entity_id);
 		}
 
 		function get_children2( $entity_id, $parent, $level, $reset = false, $table )

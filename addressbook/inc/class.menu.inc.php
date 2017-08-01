@@ -95,7 +95,7 @@
 
 					array
 					(
-						'text'	=> 'Notes Types Manager',
+						'text'	=> $GLOBALS['phpgw']->translation->translate('Notes Types Manager', array(), true),
 						'url'	=>  $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uicatalog_contact_note_type.view') )
 					),
 

@@ -10,7 +10,6 @@
 			<xsl:apply-templates select="view"/>
 		</xsl:when>
 	</xsl:choose>
-	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 
 <!-- add -->
@@ -230,6 +229,7 @@
 
 <!-- view -->
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<style type="text/css">
 		#floating-box {
 		position: relative;
