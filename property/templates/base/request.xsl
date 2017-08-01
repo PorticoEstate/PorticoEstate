@@ -481,7 +481,7 @@
 							<label class="requirement-action-label">
 								<xsl:value-of select="php:function('lang', 'cost operation')"/>
 							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_operation]" value="{value_amount_operation}">
+							<input type="text" data-validation="number" data-validation-allowing="float" id="amount_operation" name="values[amount_operation]" value="{value_amount_operation}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_budget_statustext"/>
 								</xsl:attribute>
@@ -495,7 +495,7 @@
 							<label class="requirement-action-label">
 								<xsl:value-of select="php:function('lang', 'cost investment')"/>
 							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" name="values[amount_investment]" value="{value_amount_investment}">
+							<input type="text" data-validation="number" data-validation-allowing="float" id="amount_investment" name="values[amount_investment]" value="{value_amount_investment}">
 								<xsl:attribute name="title">
 									<xsl:value-of select="lang_budget_statustext"/>
 								</xsl:attribute>
