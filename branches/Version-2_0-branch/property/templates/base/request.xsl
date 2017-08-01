@@ -3,9 +3,11 @@
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
+		<xsl:call-template name="jquery_phpgw_i18n"/>
 			<xsl:apply-templates select="edit"/>
 		</xsl:when>
 		<xsl:when test="view">
+		<xsl:call-template name="jquery_phpgw_i18n"/>
 			<xsl:apply-templates select="view"/>
 		</xsl:when>
 		<xsl:when test="priority_form">

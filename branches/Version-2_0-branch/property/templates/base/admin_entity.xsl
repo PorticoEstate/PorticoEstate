@@ -3,6 +3,7 @@
 <xsl:template match="data">
 	<xsl:choose>
 		<xsl:when test="edit">
+			<xsl:call-template name="jquery_phpgw_i18n"/>
 			<xsl:apply-templates select="edit"/>
 		</xsl:when>
 		<xsl:when test="list_attribute">

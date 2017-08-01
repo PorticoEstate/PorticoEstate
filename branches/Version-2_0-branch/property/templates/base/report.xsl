@@ -11,7 +11,6 @@
 			<xsl:apply-templates select="lists"/>
 		</xsl:otherwise>
 	</xsl:choose>
-	<xsl:call-template name="jquery_phpgw_i18n"/>
 </xsl:template>
 	
 <xsl:template match="lists">

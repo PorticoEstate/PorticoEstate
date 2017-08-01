@@ -149,6 +149,7 @@
 
 			self::add_javascript('property', 'portico', 'substitute.index.js');
 
+			self::add_jquery_translation($data);
 			$GLOBALS['phpgw']->xslttpl->add_file(array('substitute', 'datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('table' => $data));
 		}
