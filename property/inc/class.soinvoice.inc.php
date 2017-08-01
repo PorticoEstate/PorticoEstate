@@ -1963,7 +1963,7 @@
 			$values = array();
 			while ($this->db->next_record())
 			{
-				$periode = $this->db->f('periode');
+				$periode = (int)$this->db->f('periode');
 				$values[] = array
 					(
 					'id' => $periode,
