@@ -2225,3 +2225,5 @@ directory	property	no	Katalog
 select template	property	no	Velg mal
 select parent	property	no	Velg forelder
 attribute groups	property	no	Attributtgrupper
+sms text	property	no	SMS-tekst
+character left	property	no	Resterende tegn
