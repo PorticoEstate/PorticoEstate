@@ -37,7 +37,7 @@
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån er " . lang($application['status']) . '</p>';
 				if ($application['comment'] != '')
 				{
-					$body .= '<p>Kommentar fra saksbehandler:<br />' . $application['comment'] . '</p>';
+					$body .= '<p>Kommentar fra saksbehandler:<br />' . nl2br($application['comment']) . '</p>';
 				}
 				$body .= "<pre>" . $config->config_data['application_mail_pending'] . "</pre>";
 				$body .= '<p><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></p>';
@@ -80,7 +80,7 @@
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån er " . lang($application['status']) . '</p>';
 				if ($application['comment'] != '')
 				{
-					$body .= "<p>Kommentar fra saksbehandler:<br />" . $application['comment'] . "</p>";
+					$body .= "<p>Kommentar fra saksbehandler:<br />" . nl2br($application['comment']) . "</p>";
 				}
 				$body .= '<pre>' . $config->config_data['application_mail_accepted'] . '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></pre>';
 				if ($adates)
@@ -128,7 +128,7 @@
 				$body = "<p>Din søknad i " . $config->config_data['application_mail_systemname'] . " om leie/lån er " . lang($application['status']) . '</p>';
 				if ($application['comment'] != '')
 				{
-					$body .= '<p>Kommentar fra saksbehandler:<br />' . $application['comment'] . '</p>';
+					$body .= '<p>Kommentar fra saksbehandler:<br />' . nl2br($application['comment']) . '</p>';
 				}
 				$body .= '<pre>' . $config->config_data['application_mail_rejected'] . ' <a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></pre>';
 			}
@@ -136,7 +136,7 @@
 			{
 				$subject = $config->config_data['application_comment_mail_subject'];
 				$body = "<pre><p>" . $config->config_data['application_comment_added_mail'] . "</p>";
-				$body .= '<p>Kommentar fra saksbehandler:<br />' . $application['comment'] . '</p></pre>';
+				$body .= '<p>Kommentar fra saksbehandler:<br />' . nl2br($application['comment']) . '</p></pre>';
 				$body .= '<p><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . ': søknad #' . $application['id'] . '</a></p>';
 			}
 			$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";

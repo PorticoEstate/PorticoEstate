@@ -1196,6 +1196,15 @@
 
 			$application['description'] = html_entity_decode(nl2br($application['description']));
 			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
+
+			if(!empty($application['comments']))
+			{
+				foreach ($application['comments'] as  &$comments)
+				{
+					$comments['comment'] = html_entity_decode(nl2br($comments['comment']));
+				}
+			}
+
 			self::render_template_xsl('application', array('application' => $application,
 				'audience' => $audience, 'agegroups' => $agegroups,
 				'num_associations' => $num_associations, 'assoc' => $from, 'collision' => $collision_dates,

@@ -139,7 +139,7 @@
 							<xsl:otherwise>
 								<dd>
 									<div style="width: 80%;">
-										<xsl:value-of select="comment"/>
+										<xsl:value-of select="comment" disable-output-escaping="yes"/>
 									</div>
 								</dd>
 							</xsl:otherwise>

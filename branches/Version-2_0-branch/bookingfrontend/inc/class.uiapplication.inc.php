@@ -125,6 +125,14 @@
 			$application['description'] = html_entity_decode(nl2br($application['description']));
 			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
 
+			if(!empty($application['comments']))
+			{
+				foreach ($application['comments'] as  &$comments)
+				{
+					$comments['comment'] = html_entity_decode(nl2br($comments['comment']));
+				}
+			}
+
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);

@@ -294,7 +294,7 @@
 			}
 			else if ($type == 'string')
 			{
-				return htmlspecialchars_decode(stripslashes(str_replace(array('&#40&#59;', '&#41&#59;'), array('(', ')'), $value)),ENT_QUOTES);
+				return html_entity_decode(stripslashes(str_replace(array('&#40&#59;', '&#41&#59;'), array('(', ')'), $value)),ENT_QUOTES);
 			}
 
 			//Sanity check
