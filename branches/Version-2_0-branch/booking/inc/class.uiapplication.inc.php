@@ -271,7 +271,8 @@
 									),
 									array(
 										'id' => 'NEW',
-										'name' => lang('NEW')
+										'name' => lang('NEW'),
+										'selected' => 1
 									),
 									array(
 										'id' => 'PENDING',

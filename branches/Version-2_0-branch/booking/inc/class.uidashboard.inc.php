@@ -92,7 +92,8 @@
 								'list' => array(
 									array(
 										'id' => '',
-										'name' => lang('All')
+										'name' => lang('All'),
+										'selected' => 1
 									),
 									array(
 										'id' => 'NEW',
