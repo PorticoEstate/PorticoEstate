@@ -140,7 +140,9 @@
 										</xsl:when>
 										<xsl:otherwise>
 											<span>
-												<xsl:value-of select="comment"/>
+												<!--xsl:value-of select="comment"/-->
+												<xsl:value-of select="comment" disable-output-escaping="yes"/>
+
 											</span>
 										</xsl:otherwise>
 									</xsl:choose>
