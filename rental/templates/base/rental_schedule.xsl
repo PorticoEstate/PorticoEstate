@@ -50,7 +50,7 @@
 						<thead>
 							<tr>
 								<th>Name</th>
-								<th>!item</th>
+								<th>item</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -71,29 +71,20 @@
 														<xsl:value-of select="id"/>
 													</xsl:variable>
 													<xsl:choose>
-														<xsl:when test="id = 'NEW'">
+														<xsl:when test="selected = 'selected'">
+															<option value="{$id}" selected="selected">
+																<xsl:value-of select="name"/>
+															</option>
+														</xsl:when>
+														<xsl:when test="selected = '1'">
 															<option value="{$id}" selected="selected">
 																<xsl:value-of select="name"/>
 															</option>
 														</xsl:when>
 														<xsl:otherwise>
-															<xsl:choose>
-																<xsl:when test="selected = 'selected'">
-																	<option value="{$id}" selected="selected">
-																		<xsl:value-of select="name"/>
-																	</option>
-																</xsl:when>
-																<xsl:when test="selected = '1'">
-																	<option value="{$id}" selected="selected">
-																		<xsl:value-of select="name"/>
-																	</option>
-																</xsl:when>
-																<xsl:otherwise>
-																	<option value="{$id}">
-																		<xsl:value-of select="name"/>
-																	</option>
-																</xsl:otherwise>
-															</xsl:choose>
+															<option value="{$id}">
+																<xsl:value-of select="name"/>
+															</option>
 														</xsl:otherwise>
 													</xsl:choose>
 												</xsl:for-each>
