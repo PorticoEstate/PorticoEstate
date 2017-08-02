@@ -228,48 +228,39 @@
 										</script>
 								</xsl:when>
 								<xsl:when test="type = 'filter'">
-										<xsl:variable name="name">
-											<xsl:value-of select="name"/>
-										</xsl:variable>
-										<script type="text/javascript">
-											filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
-										</script>
-										<select id="{$name}" name="{$name}" class="pure-u-24-24">
-												<xsl:attribute name="title">
-													<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
-												</xsl:attribute>
-											<xsl:for-each select="list">
-												<xsl:variable name="id">
-													<xsl:value-of select="id"/>
-												</xsl:variable>
-												<xsl:choose>
-													<xsl:when test="id = 'NEW'">
-														<option value="{$id}" selected="selected">
-															<xsl:value-of select="name"/>
-														</option>
-													</xsl:when>
-													<xsl:otherwise>
-														<xsl:choose>
-															<xsl:when test="selected = 'selected'">
-																<option value="{$id}" selected="selected">
-																	<xsl:value-of select="name"/>
-																</option>
-															</xsl:when>
-															<xsl:when test="selected = '1'">
-																<option value="{$id}" selected="selected">
-																	<xsl:value-of select="name"/>
-																</option>
-															</xsl:when>
-															<xsl:otherwise>
-																<option value="{$id}">
-																	<xsl:value-of select="name"/>
-																</option>
-															</xsl:otherwise>
-														</xsl:choose>
-													</xsl:otherwise>
-												</xsl:choose>
-											</xsl:for-each>
-										</select>
+									<xsl:variable name="name">
+										<xsl:value-of select="name"/>
+									</xsl:variable>
+									<script type="text/javascript">
+										filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
+									</script>
+									<select id="{$name}" name="{$name}" class="pure-u-24-24">
+										<xsl:attribute name="title">
+											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
+										</xsl:attribute>
+										<xsl:for-each select="list">
+											<xsl:variable name="id">
+												<xsl:value-of select="id"/>
+											</xsl:variable>
+											<xsl:choose>
+												<xsl:when test="selected = 'selected'">
+													<option value="{$id}" selected="selected">
+														<xsl:value-of select="name"/>
+													</option>
+												</xsl:when>
+												<xsl:when test="selected = '1'">
+													<option value="{$id}" selected="selected">
+														<xsl:value-of select="name"/>
+													</option>
+												</xsl:when>
+												<xsl:otherwise>
+													<option value="{$id}">
+														<xsl:value-of select="name"/>
+													</option>
+												</xsl:otherwise>
+											</xsl:choose>
+										</xsl:for-each>
+									</select>
 								</xsl:when>
 								<xsl:when test="type = 'link'">
 									<label>
