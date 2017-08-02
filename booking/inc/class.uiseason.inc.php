@@ -219,6 +219,18 @@
 			{
 				array_set_default($_POST, 'resources', array());
 				$season = array_merge($season, extract_values($_POST, $this->fields));
+
+				switch ($season['status'])
+				{
+				//	case 'PLANNING':
+					case 'ARCHIVED':
+						$season['active'] = 0;
+						break;
+					default:
+						$season['active'] = 1;
+						break;
+				}
+
 				$season['from_'] = ($season['from_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['from_'])) : $season['from_'];
 				$season['to_'] = ($season['to_']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($season['to_'])) : $season['to_'];
 				$errors = $this->bo->validate($season);
