@@ -122,6 +122,9 @@
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
 			$application['resource_ids'] = $resource_ids;
+			$application['description'] = html_entity_decode(nl2br($application['description']));
+			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
+
 			$agegroups = $this->agegroup_bo->fetch_age_groups($top_level_activity);
 			$agegroups = $agegroups['results'];
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);

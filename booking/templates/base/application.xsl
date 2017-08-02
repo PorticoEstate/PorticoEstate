@@ -199,10 +199,10 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'Description')" />
+									<xsl:value-of select="php:function('lang', 'Information about the event')" />
 								</label>
 								<span>
-									<xsl:value-of select="application/description"/>
+									<xsl:value-of disable-output-escaping="yes" select="application/description"/>
 								</span>
 							</div>
 							<div class="pure-control-group">
@@ -211,7 +211,7 @@
 										<xsl:value-of select="php:function('lang', 'Extra info')" />
 									</h4>
 								</label>
-								<xsl:value-of select="application/equipment"/>
+								<xsl:value-of disable-output-escaping="yes" select="application/equipment"/>
 							</div>
 						</div>
 
