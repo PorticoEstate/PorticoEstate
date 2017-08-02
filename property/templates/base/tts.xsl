@@ -676,17 +676,21 @@
 								</input>
 							</div>
 							<div class="pure-control-group">
+								<xsl:variable name="lang_sms_text">
+									<xsl:value-of select="php:function('lang', 'sms text')"/>
+								</xsl:variable>
+
 								<label>
 									<a href="javascript:response_lookup()">
 										<xsl:attribute name="title">
-											<xsl:value-of select="php:function('lang', 'response')"/>
+											<xsl:value-of select="$lang_sms_text"/>
 										</xsl:attribute>
-										<xsl:value-of select="php:function('lang', 'response')"/>
+											<xsl:value-of select="$lang_sms_text"/>
 									</a>
 								</label>
 								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
 									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'response')"/>
+										<xsl:value-of select="$lang_sms_text"/>
 									</xsl:attribute>
 								</textarea>
 							</div>

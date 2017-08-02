@@ -706,3 +706,5 @@ please select an activity	booking	no	Velg en aktivitet
 select date	booking	no	Velg dato
 start date	booking	no	Start dato
 toggle show inactive	booking	no	Veklse på å vise inaktive
+season edit	booking	no	Endre sesong
+season show	booking	no	Vis sesong
