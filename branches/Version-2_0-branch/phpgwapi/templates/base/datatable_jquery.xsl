@@ -140,8 +140,8 @@
 									</input>
 								</xsl:when>
 								<xsl:when test="type = 'autocomplete'">
-										<div class="auto pure-u-24-24">
-											<input id="filter_{name}_name" name="{name}_name" type="text">
+										<!--div class="auto pure-u-24-24"-->
+											<input id="filter_{name}_name" name="{name}_name" type="text" class="pure-u-24-24">
 												<xsl:attribute name="value">
 													<xsl:value-of select="../../../filters/*[local-name() = $filter_key_name]"/>
 												</xsl:attribute>
@@ -155,7 +155,7 @@
 												</xsl:attribute>
 											</input>
 											<div id="filter_{name}_container"/>
-										</div>
+										<!--/div-->
 										<script type="text/javascript">
 											$(document).ready(function() {
 											var app = "<xsl:value-of select="app"/>";
