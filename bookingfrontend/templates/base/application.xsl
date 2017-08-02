@@ -193,11 +193,11 @@
 						<xsl:value-of select="application/activity_name"/>
 					</dd>
 					<dt>
-						<xsl:value-of select="php:function('lang', 'Description')" />
+						<xsl:value-of select="php:function('lang', 'Information about the event')" />
 					</dt>
 					<dd>
 						<div style="width: 80%;">
-							<xsl:value-of select="application/description"/>
+							<xsl:value-of disable-output-escaping="yes" select="application/description"/>
 						</div>
 					</dd>
 				</dl>

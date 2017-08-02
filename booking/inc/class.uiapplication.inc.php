@@ -1194,7 +1194,8 @@
 			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
 
-
+			$application['description'] = html_entity_decode(nl2br($application['description']));
+			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
 			self::render_template_xsl('application', array('application' => $application,
 				'audience' => $audience, 'agegroups' => $agegroups,
 				'num_associations' => $num_associations, 'assoc' => $from, 'collision' => $collision_dates,
