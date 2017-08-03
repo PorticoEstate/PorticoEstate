@@ -62,6 +62,9 @@ thead
 	color: #f00;
 }
 
+select.error, input.error {
+	margin: 0;
+}
 .msg
 {
 	color: #f00;

@@ -843,7 +843,7 @@ JS;
 				'no_link' => false, // disable lookup links for location type less than type_id
 				'tenant' => false,
 				'lookup_type' => $lookup_type,
-				'required_level' => 3
+				'required_level' => 2
 			));
 
 			$link_data = array
