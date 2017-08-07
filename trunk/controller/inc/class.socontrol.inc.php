@@ -304,7 +304,7 @@
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
 
-			if ($role_id)
+			if ($role_id > 0)
 			{
 				$sql .= "AND c.responsibility_id = $role_id ";
 			}
@@ -381,9 +381,10 @@
 				$repeat_type = (int)$repeat_type;
 				$sql .= "AND c.repeat_type = $repeat_type ";
 			}
-			if ($role_id)
+			$role_id = (int)$role_id;
+
+			if ($role_id > 1)
 			{
-				$role_id = (int)$role_id;
 				$sql .= "AND c.responsibility_id = $role_id ";
 			}
 
