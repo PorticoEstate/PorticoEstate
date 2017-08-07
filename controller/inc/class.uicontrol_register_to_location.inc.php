@@ -239,7 +239,7 @@
 				'orderable' => false,
 				'formatter' => false,
 				'visible' => true,
-				'class' => ''
+				'className' => 'center'
 			);
 
 			$columndef[] = array
@@ -249,37 +249,40 @@
 				'orderable' => false,
 				'formatter' => false,
 				'visible' => true,
-				'class' => ''
+				'className' => 'center'
 			);
 
 			$count_fields = count($uicols['name']);
 
 			for ($i = 0; $i < $count_fields; $i++)
 			{
-				switch ($uicols['datatype'][$i])
-				{
-					case 'link':
-						$formatter = 'link';
-						break;
-					default:
-						$formatter = $uicols['formatter'][$i];
-				}
-
 				if ($uicols['name'][$i])
 				{
 					if ($uicols['input_type'][$i] == 'hidden')
 					{
 						continue;
 					}
-					$columndef[] = array
-						(
+
+					$params = array(
 						'data' => $uicols['name'][$i],
 						'title' => $uicols['descr'][$i],
 						'orderable' => !!$uicols['sortable'][$i],
-						'formatter' => $formatter,
 						'visible' => $uicols['input_type'][$i] == 'hidden' ? false : true,
-						'class' => $uicols['classname'][$i],
+						'className' => 'left',
 					);
+
+					switch ($uicols['datatype'][$i])
+					{
+						case 'link':
+				//			$params['formatter'] = 'JqueryPortico.formatLinkGeneric';
+							break;
+						case 'loc1':
+				//			$params['formatter'] = 'JqueryPortico.searchLink';
+							break;
+						default:
+					}
+
+					$columndef[] = $params;
 				}
 			}
 

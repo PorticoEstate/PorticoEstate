@@ -762,6 +762,8 @@ JS;
 				'lookup_tenant' => $data['lookup_tenant'],
 				'filter_role_on_contact' => $data['filter_role_on_contact'],
 				'role_id' => $data['role_id'],
+				'control_registered' => $data['control_registered'],
+				'control_id' => $data['control_id'],
 				'filter' => $this->filter,
 				'cat_id' => $this->cat_id,
 				'type_id' => ($data['type_id']) ? $data['type_id'] : $this->type_id,
