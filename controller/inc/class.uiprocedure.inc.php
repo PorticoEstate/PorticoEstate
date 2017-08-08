@@ -184,7 +184,7 @@
 
 		public function edit()
 		{
-			$procedure_id = phpgw::get_var('id');
+			$procedure_id = phpgw::get_var('id', 'int');
 			if (isset($procedure_id) && $procedure_id > 0)
 			{
 				$procedure = $this->so->get_single($procedure_id);
@@ -275,19 +275,20 @@
 						'id' => $procedure_id));
 				}
 
+				//Sigurd 20170808: we are keeping the old one as reference as is, and creating a new one for future checklists
 				$old_procedure = $this->so->get_single($procedure_id);
 				if (isset($procedure)) // Edit procedure
 				{
-					$revision = (int)$procedure->get_revision_no();
-					if ($revision && is_numeric($revision))
-					{
-						$revision++;
-						$procedure->set_revision_no($revision);
-					}
-					else
-					{
-						$procedure->set_revision_no(2);
-					}
+//					$revision = (int)$procedure->get_revision_no();
+//					if ($revision && is_numeric($revision))
+//					{
+//						$revision++;
+//						$procedure->set_revision_no($revision);
+//					}
+//					else
+//					{
+//						$procedure->set_revision_no(2);
+//					}
 
 					$description_txt = phpgw::get_var('description', 'html');
 					$description_txt = str_replace("&nbsp;", " ", $description_txt);
@@ -295,25 +296,65 @@
 					$purpose_txt = str_replace("&nbsp;", " ", $purpose_txt);
 					$reference_txt = phpgw::get_var('reference', 'html');
 					$reference_txt = str_replace("&nbsp;", " ", $reference_txt);
-					$procedure->set_title(phpgw::get_var('title'));
-					$procedure->set_purpose($purpose_txt);
-					$procedure->set_responsibility(phpgw::get_var('responsibility'));
-					$procedure->set_description($description_txt);
-					$procedure->set_reference($reference_txt);
-					$procedure->set_attachment(phpgw::get_var('attachment'));
-					$procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
-					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
-					$procedure->set_control_area_id(phpgw::get_var('control_area'));
+//					$procedure->set_title(phpgw::get_var('title'));
+//					$procedure->set_purpose($purpose_txt);
+//					$procedure->set_responsibility(phpgw::get_var('responsibility'));
+//					$procedure->set_description($description_txt);
+//					$procedure->set_reference($reference_txt);
+//					$procedure->set_attachment(phpgw::get_var('attachment'));
+//					$procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
+//					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
+//					$procedure->set_control_area_id(phpgw::get_var('control_area'));
+//
+//					if (isset($procedure_id) && $procedure_id > 0)
+//					{
+//						$proc_id = $procedure_id;
+//						$old_procedure->set_id(null);
+//						$old_procedure->set_end_date(time());
+//						$old_procedure->set_procedure_id($proc_id);
+//						if ($this->so->add($old_procedure)) //add old revision of procedure to history
+//						{
+//							if ($this->so->store($procedure))
+//							{
+//								$message = lang('messages_saved_form');
+//							}
+//							else
+//							{
+//								$error = lang('messages_form_error');
+//							}
+//						}
+//					}
+
+					$new_procedure = new controller_procedure();
+					$revision = (int)$procedure->get_revision_no();
+					if ($revision && is_numeric($revision))
+					{
+						$revision++;
+						$new_procedure->set_revision_no($revision);
+					}
+					else
+					{
+						$new_procedure->set_revision_no(2);
+					}
+					$new_procedure->set_title(phpgw::get_var('title'));
+					$new_procedure->set_purpose($purpose_txt);
+					$new_procedure->set_responsibility(phpgw::get_var('responsibility'));
+					$new_procedure->set_description($description_txt);
+					$new_procedure->set_reference($reference_txt);
+					$new_procedure->set_attachment(phpgw::get_var('attachment'));
+					$new_procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
+					$new_procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
+					$new_procedure->set_revision_date(time());
+					$new_procedure->set_control_area_id(phpgw::get_var('control_area'));
 
 					if (isset($procedure_id) && $procedure_id > 0)
 					{
-						$proc_id = $procedure_id;
-						$old_procedure->set_id(null);
-						$old_procedure->set_end_date(time());
-						$old_procedure->set_procedure_id($proc_id);
-						if ($this->so->add($old_procedure)) //add old revision of procedure to history
+						if ($proc_id = $this->so->add($new_procedure)) //add the revised prosedure as new
 						{
-							if ($this->so->store($procedure))
+							$old_procedure->set_end_date(time());
+							$old_procedure->set_revision_date(time());
+							$old_procedure->set_procedure_id($proc_id);
+							if ($this->so->store($old_procedure)) //add revision of the old procedure to history
 							{
 								$message = lang('messages_saved_form');
 							}
@@ -590,14 +631,16 @@
 
 		public function view_procedures_for_control()
 		{
-			$control_id = phpgw::get_var('control_id');
-			$location_code = phpgw::get_var('location_code');
+
+			$check_list_id = phpgw::get_var('check_list_id', 'int');
+			$control_id = phpgw::get_var('control_id', 'int');
+			$location_code = phpgw::get_var('location_code', 'string');
 
 			$control = $this->so_control->get_single($control_id);
 
 			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
 
-			$control_procedure = $this->so->get_single_with_documents($control->get_procedure_id(), "return_array");
+			$control_procedure = $this->so->get_single_with_documents($control->get_procedure_id(),$check_list_id, "return_array");
 
 			$control_groups = $this->so_control_group_list->get_control_groups_by_control($control_id);
 
@@ -605,7 +648,7 @@
 
 			foreach ($control_groups as $control_group)
 			{
-				$group_procedure = $this->so->get_single($control_group->get_procedure_id());
+				$group_procedure = $this->so->get_single_no_documents($control_group->get_procedure_id(), $check_list_id );
 				if (isset($group_procedure))
 				{
 					$group_procedures_array[] = array("control_group" => $control_group->toArray(),
