@@ -190,15 +190,71 @@
 			return $procedure;
 		}
 
-		function get_single_with_documents( $id, $return_type = "return_object" )
+		function get_procedure_version( $procedure_id, $valid_version_date)
 		{
-			$id = (int)$id;
+			$sql = "SELECT id, procedure_id, start_date, end_date FROM controller_procedure"
+				. " WHERE id = {$procedure_id}";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$new_version_id = (int)$this->db->f('procedure_id');
+			$start_date = (int)$this->db->f('start_date');
+			$end_date = (int)$this->db->f('end_date');
+
+			if( $valid_version_date > $start_date && ($valid_version_date < $end_date || !$end_date))
+			{
+				$ret = $procedure_id;
+			}
+			else if($new_version_id && $valid_version_date > $end_date)
+			{
+				$ret = $this->get_procedure_version($new_version_id, $valid_version_date);
+			}
+			else
+			{
+				$ret = $procedure_id;
+			}
+
+			return $ret;
+
+		}
+
+
+		function get_valid_version_date($check_list_id)
+		{
+			$sql = "SELECT completed_date FROM controller_check_list"
+				. " {$this->join} controller_control ON controller_control.id = controller_check_list.control_id"
+				. " WHERE controller_check_list.id= " . (int) $check_list_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$completed_date = $this->db->f('completed_date');
+			$valid_version_date = $completed_date ? $completed_date : time();
+
+			return $valid_version_date;
+
+		}
+
+		function get_single_no_documents($procedure_id, $check_list_id )
+		{
+			$valid_version_date = $this->get_valid_version_date($check_list_id);
+
+			$procedure_id = $this->get_procedure_version((int)$procedure_id, $valid_version_date);
+
+			return $this->get_single($procedure_id);
+		}
+
+		function get_single_with_documents($procedure_id, $check_list_id, $return_type = "return_object" )
+		{
+			$valid_version_date = $this->get_valid_version_date($check_list_id);
+
+			$procedure_id = $this->get_procedure_version((int)$procedure_id, $valid_version_date);
 
 			$counter = 0;
 			$documents = null;
 
-			$joins .= " {$this->left_join} controller_document ON (p.id = controller_document.procedure_id)";
-			$sql = "SELECT p.*, controller_document.id AS document_id, controller_document.title AS document_title, controller_document.description as document_description FROM controller_procedure p {$joins} WHERE p.id = " . $id;
+			$sql = "SELECT p.*, controller_document.id AS document_id, controller_document.title AS document_title,"
+				. " controller_document.description as document_description FROM controller_procedure p"
+				. " {$this->left_join} controller_document ON (p.id = controller_document.procedure_id)"
+				. " WHERE p.id = {$procedure_id}";
 			//var_dump($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
 			while ($this->db->next_record())
@@ -270,6 +326,7 @@
 			$cat_id = (int)$control_area_id;
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
 			$cat_path = $cats->get_path($cat_id);
+			$cat_filter = array(-1);
 			foreach ($cat_path as $_category)
 			{
 				$cat_filter[] = $_category['id'];
@@ -277,9 +334,25 @@
 
 			$filter_control_area = "controller_procedure.control_area_id IN (" . implode(',', $cat_filter) . ')';
 
+			$procedure_ids = array(-1);
+
+			$sql = "SELECT procedure_id FROM controller_procedure"
+				. " WHERE procedure_id IS NOT NULL";
+			$this->db->query($sql);
+
+			while ($this->db->next_record())
+			{
+				$procedure_ids[] = $this->db->f('procedure_id');
+
+			}
+			$filter_procedure = "AND controller_procedure.id NOT IN (" . implode(',', $procedure_ids) . ')';
+
 			$results = array();
 
-			$sql = "SELECT * FROM controller_procedure WHERE {$filter_control_area} AND end_date IS NULL ORDER BY title ASC";
+			$sql = "SELECT * FROM controller_procedure"
+				. " WHERE {$filter_control_area}"
+				. " AND (end_date IS NULL OR procedure_id IS NOT NULL)"
+				. " {$filter_procedure} ORDER BY title ASC";
 			$this->db->query($sql);
 
 			while ($this->db->next_record())
