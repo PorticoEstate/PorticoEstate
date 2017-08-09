@@ -37,6 +37,7 @@
 	{
 
 		protected static $so;
+		private $other_revisions = array(-1);
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -474,12 +475,46 @@
 			return $results;
 		}
 
-		function get_old_revisions( $id )
+
+
+		private function _get_other_revisions( $procedure_id, $direction = 'up')
+		{
+			$procedure_id = (int) $procedure_id;
+
+			if($direction == 'up') //older
+			{
+				$sql = "SELECT id AS other_version_id FROM controller_procedure"
+				. " WHERE procedure_id = {$procedure_id}";
+			}
+			else // newer
+			{
+				$sql = "SELECT procedure_id AS other_version_id FROM controller_procedure"
+				. " WHERE id = {$procedure_id}";
+			}
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$other_version_id = (int)$this->db->f('other_version_id');
+			$this->other_revisions[] = $other_version_id;
+
+			if($other_version_id)
+			{
+				$this->_get_other_revisions($other_version_id, $direction);
+			}
+		}
+
+
+		function get_other_revisions( $id )
 		{
 			$id = (int)$id;
+
+			$this->_get_other_revisions( $id, 'up');
+			$this->_get_other_revisions( $id, 'down');
+
+			$revision_filter = 'id IN(' . implode(',', $this->other_revisions) . ')';
+
 			$results = array();
 
-			$sql = "SELECT p.* FROM controller_procedure p WHERE procedure_id = {$id} ORDER BY end_date DESC";
+			$sql = "SELECT p.* FROM controller_procedure p WHERE {$revision_filter} ORDER BY end_date ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			while ($this->db->next_record())

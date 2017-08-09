@@ -197,9 +197,6 @@
 
 			if (isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
-				//var_dump($_POST);
-				//var_dump(strtotime(phpgw::get_var('start_date')));
-				//die;
 				if (!$this->add && !$this->edit)
 				{
 					phpgwapi_cache::message_set('No access', 'error');
@@ -223,9 +220,9 @@
 					$procedure->set_description($description_txt);
 					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
-					$procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
-					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
-					$procedure->set_revision_date(strtotime(phpgw::get_var('revision_date')));
+					$procedure->set_start_date(phpgw::get_var('start_date', 'date'));
+					$procedure->set_end_date(phpgw::get_var('end_date', 'date'));
+					$procedure->set_revision_date(phpgw::get_var('revision_date', 'date'));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
 
 					$revision = (int)$procedure->get_revision_no();
@@ -279,16 +276,6 @@
 				$old_procedure = $this->so->get_single($procedure_id);
 				if (isset($procedure)) // Edit procedure
 				{
-//					$revision = (int)$procedure->get_revision_no();
-//					if ($revision && is_numeric($revision))
-//					{
-//						$revision++;
-//						$procedure->set_revision_no($revision);
-//					}
-//					else
-//					{
-//						$procedure->set_revision_no(2);
-//					}
 
 					$description_txt = phpgw::get_var('description', 'html');
 					$description_txt = str_replace("&nbsp;", " ", $description_txt);
@@ -296,34 +283,6 @@
 					$purpose_txt = str_replace("&nbsp;", " ", $purpose_txt);
 					$reference_txt = phpgw::get_var('reference', 'html');
 					$reference_txt = str_replace("&nbsp;", " ", $reference_txt);
-//					$procedure->set_title(phpgw::get_var('title'));
-//					$procedure->set_purpose($purpose_txt);
-//					$procedure->set_responsibility(phpgw::get_var('responsibility'));
-//					$procedure->set_description($description_txt);
-//					$procedure->set_reference($reference_txt);
-//					$procedure->set_attachment(phpgw::get_var('attachment'));
-//					$procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
-//					$procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
-//					$procedure->set_control_area_id(phpgw::get_var('control_area'));
-//
-//					if (isset($procedure_id) && $procedure_id > 0)
-//					{
-//						$proc_id = $procedure_id;
-//						$old_procedure->set_id(null);
-//						$old_procedure->set_end_date(time());
-//						$old_procedure->set_procedure_id($proc_id);
-//						if ($this->so->add($old_procedure)) //add old revision of procedure to history
-//						{
-//							if ($this->so->store($procedure))
-//							{
-//								$message = lang('messages_saved_form');
-//							}
-//							else
-//							{
-//								$error = lang('messages_form_error');
-//							}
-//						}
-//					}
 
 					$new_procedure = new controller_procedure();
 					$revision = (int)$procedure->get_revision_no();
@@ -342,17 +301,27 @@
 					$new_procedure->set_description($description_txt);
 					$new_procedure->set_reference($reference_txt);
 					$new_procedure->set_attachment(phpgw::get_var('attachment'));
-					$new_procedure->set_start_date(strtotime(phpgw::get_var('start_date')));
-					$new_procedure->set_end_date(strtotime(phpgw::get_var('end_date')));
-					$new_procedure->set_revision_date(time());
+
+					$start_date = phpgw::get_var('start_date', 'date');
+					$start_date = $start_date ? $start_date : time();
+					$new_procedure->set_start_date($start_date);
+
+					$new_procedure->set_end_date(phpgw::get_var('end_date', 'date'));
+
+					$revision_date = phpgw::get_var('revision_date', 'date');
+					$revision_date = $revision_date ? $revision_date : time();
+					$new_procedure->set_revision_date($revision_date);
+
 					$new_procedure->set_control_area_id(phpgw::get_var('control_area'));
 
 					if (isset($procedure_id) && $procedure_id > 0)
 					{
+						$this->so->transaction_begin();
 						if ($proc_id = $this->so->add($new_procedure)) //add the revised prosedure as new
 						{
-							$old_procedure->set_end_date(time());
-							$old_procedure->set_revision_date(time());
+							$old_end_date = $start_date ? $start_date : time();
+							$old_procedure->set_end_date($old_end_date);
+							$old_procedure->set_revision_date($revision_date);
 							$old_procedure->set_procedure_id($proc_id);
 							if ($this->so->store($old_procedure)) //add revision of the old procedure to history
 							{
@@ -360,9 +329,11 @@
 							}
 							else
 							{
+								$this->so->transaction_abort();
 								$error = lang('messages_form_error');
 							}
 						}
+						$this->so->transaction_commit();
 					}
 
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
@@ -584,14 +555,15 @@
 				}
 				$procedure_array = $procedure->toArray();
 
-				if (!$view_revision)
+//				if (!$view_revision)
 				{
 					$table_header[] = array('header' => lang('Procedure revision'));
 					$table_header[] = array('header' => lang('Procedure title'));
 					$table_header[] = array('header' => lang('Procedure start date'));
 					$table_header[] = array('header' => lang('Procedure end date'));
 
-					$revised_procedures = $this->so->get_old_revisions($procedure->get_id());
+					$revised_procedures = $this->so->get_other_revisions($procedure->get_id());
+					$table_values = array();
 					foreach ($revised_procedures as $rev)
 					{
 						$rev['link'] = self::link(array('menuaction' => 'controller.uiprocedure.view',
