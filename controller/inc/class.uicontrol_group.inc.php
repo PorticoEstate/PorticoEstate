@@ -196,6 +196,9 @@
 
 		public function edit()
 		{
+	//		phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));
+			self::add_javascript('controller', 'controller', 'ajax.js');
+
 			$tabs = array
 				(
 				'control_group' => array('label' => lang('Control_group'), 'link' => '#control_group'),
@@ -230,7 +233,7 @@
 				{
 					$control_group->set_group_name(phpgw::get_var('group_name'));
 					$control_group->set_procedure_id(phpgw::get_var('procedure'));
-					$control_group->set_control_area_id(phpgw::get_var('control_area'));
+					$control_group->set_control_area_id(phpgw::get_var('control_area_id'));
 					$control_group->set_building_part_id(phpgw::get_var('building_part'));
 					$control_group->set_component_location_id($component_location_id);
 
@@ -340,8 +343,9 @@
 				}
 				// END as categories
 
-				$procedure_array = $this->so_procedure->get_procedures(0, 0, 'title', 'ASC', null, null, array(
-					'control_areas' => $control_group->get_control_area_id()));
+//				$procedure_array = $this->so_procedure->get_procedures(0, 0, 'title', 'ASC', null, null, array(
+//					'control_areas' => $control_group->get_control_area_id()));
+				$procedure_array = $this->so_procedure->get_procedures_by_control_area($control_group->get_control_area_id());
 
 				if ($this->flash_msgs)
 				{
@@ -355,17 +359,18 @@
 					{
 						$procedure_options[] = array
 							(
-							'id' => $procedure->get_id(),
-							'name' => $procedure->get_title(),
-							'selected' => 'yes'
+							'id' => $procedure['id'],
+							'name' => $procedure['title'],
+							'selected' => 1
 						);
 					}
 					else
 					{
 						$procedure_options[] = array
 							(
-							'id' => $procedure->get_id(),
-							'name' => $procedure->get_title()
+							'id' => $procedure['id'],
+							'name' => $procedure['title'],
+							'selected' => 0
 						);
 					}
 				}
@@ -464,8 +469,11 @@
 				}
 				// END as categories
 
-				$procedure_array = $this->so_procedure->get_procedures(0, 0, 'title', 'ASC', null, null, array(
-					'control_areas' => $control_group->get_control_area_id()));
+//				$procedure_array = $this->so_procedure->get_procedures(0, 0, 'title', 'ASC', null, null, array(
+//					'control_areas' => $control_group->get_control_area_id()));
+				
+				$procedure_array = $this->so_procedure->get_procedures_by_control_area($control_group->get_control_area_id());
+
 
 				if ($this->flash_msgs)
 				{
@@ -478,9 +486,9 @@
 				{
 					$procedure_options[] = array
 						(
-						'id' => $procedure->get_id(),
-						'name' => $procedure->get_title(),
-						'selected' => $procedure->get_id() == $control_group->get_procedure_id() ? 1 : 0
+						'id' => $procedure['id'],
+						'name' => $procedure['title'],
+						'selected' => $procedure['id'] == $control_group->get_procedure_id() ? 1 : 0
 					);
 				}
 				array_unshift($procedure_options, array('id' => '', 'name' => lang('select value')));
