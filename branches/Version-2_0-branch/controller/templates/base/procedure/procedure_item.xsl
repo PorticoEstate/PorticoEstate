@@ -206,7 +206,6 @@
 				<xsl:when test="values != ''">
 					<table class="pure-table">
 						<thead>
-
 							<xsl:call-template name="table_header_history"/>
 						</thead>
 						<tbody>

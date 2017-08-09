@@ -1200,10 +1200,12 @@
 
 				$control_item = $this->so_control_item->get_single($control_item_id);
 
-				$saved_groups_with_items_array[] = array("control_group" => $control_group->toArray(),
-					"control_items" => $saved_control_items);
+				$saved_groups_with_items_array[] = array(
+					'control_group' => $control_group->toArray(),
+					'control_items' => $saved_control_items
+					);
 			}
-
+	
 			$data = array
 				(
 				'saved_groups_with_items_array' => $saved_groups_with_items_array,
