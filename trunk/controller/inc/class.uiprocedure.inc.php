@@ -144,6 +144,11 @@
 							'sortable' => false
 						),
 						array(
+							'key' => 'revision_no',
+							'label' => lang('Procedure revision'),
+							'sortable' => true
+						),
+						array(
 							'key' => 'revision_date',
 							'label' => lang('Procedure revision date'),
 							'sortable' => true
