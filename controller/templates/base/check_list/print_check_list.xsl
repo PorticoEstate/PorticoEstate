@@ -54,11 +54,9 @@
 							<br/>
 							<xsl:value-of select="what_to_do" disable-output-escaping="yes"/>
 							<br/>
-							<br/>
 							<i>Utførelsesbeskrivelse</i>
 							<br/>
 							<xsl:value-of select="how_to_do" disable-output-escaping="yes"/>
-							<br/>
 						</li>
 					</xsl:for-each>
 				</ul>
@@ -75,14 +73,14 @@
 		}
 
 		@media print {
-			li {page-break-inside: avoid;}
-			h1, h2, h3, h4, h5 {
-			page-break-after: avoid;
-			}
+		li {page-break-inside: avoid;}
+		h1, h2, h3, h4, h5 {
+		page-break-after: avoid;
+		}
 
-			table, figure {
-			page-break-inside: avoid;
-			}
+		table, figure {
+		page-break-inside: avoid;
+		}
 		}
 
 
@@ -93,10 +91,10 @@
 		}
 		@media print
 		{
-			.btn
-			{
-				display: none !important;
-			}
+		.btn
+		{
+		display: none !important;
+		}
 		}
 
 		.btn{
