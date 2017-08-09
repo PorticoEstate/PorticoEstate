@@ -599,15 +599,16 @@
 				}
 			}
 
+			$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
+
 			if($external || $GLOBALS['phpgw_info']['server']['webserver_url'] == '/')
 			{
 				if(substr($url, 0, 4) != 'http')
 				{
-					$url = "http://{$GLOBALS['phpgw_info']['server']['hostname']}{$url}";
+					$url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}{$url}";
 				}
 			}
 
-			$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
 
 			if($request_scheme == 'https')
 			{

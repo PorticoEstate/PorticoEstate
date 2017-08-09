@@ -443,6 +443,11 @@ XSLT;
 
 			$html = preg_replace('/<!DOCTYPE([^>])+>/', '', $html);
 
+			if($stripped_htm)
+			{
+				$html = "<!DOCTYPE html>" . $html;
+			}
+
 			return $html;
 		}
 

@@ -101,6 +101,8 @@
 		<a id="view_procedures">
 			<xsl:attribute name="value">
 				<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
+				<xsl:text>&amp;check_list_id=</xsl:text>
+				<xsl:value-of select="check_list/id"/>
 				<xsl:text>&amp;control_id=</xsl:text>
 				<xsl:value-of select="control/id"/>
 				<xsl:text>&amp;location_code=</xsl:text>
