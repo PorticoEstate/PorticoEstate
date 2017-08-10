@@ -2227,3 +2227,4 @@ select parent	property	no	Velg forelder
 attribute groups	property	no	Attributtgrupper
 sms text	property	no	SMS-tekst
 character left	property	no	Resterende tegn
+delivery address	property	no	Leveringsadresse

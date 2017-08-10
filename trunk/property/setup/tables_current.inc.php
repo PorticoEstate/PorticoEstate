@@ -14,7 +14,8 @@
 		'fm_district' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '2', 'nullable' => False),
-				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True)
+				'descr' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+				'delivery_address' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -25,7 +26,8 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => '2', 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
-				'district_id' => array('type' => 'int', 'precision' => '2', 'nullable' => false)
+				'district_id' => array('type' => 'int', 'precision' => '2', 'nullable' => false),
+				'delivery_address' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array('fm_district' => array('district_id' => 'id')),
@@ -199,6 +201,7 @@
 					'nullable' => True, 'default' => '0.00'),
 				'area_usable' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => True, 'default' => '0.00'),
+				'delivery_address' => array('type' => 'text', 'nullable' => True),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
 			),
@@ -231,6 +234,7 @@
 					'nullable' => True, 'default' => '0.00'),
 				'area_usable' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
 					'nullable' => True, 'default' => '0.00'),
+				'delivery_address' => array('type' => 'text', 'nullable' => True),
 				'exp_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
 				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
@@ -607,6 +611,7 @@
  				'order_sent' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received_amount' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True, 'default' => '0.00'),
+				'delivery_address' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -1173,6 +1178,7 @@
 				'order_received_amount' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True, 'default' => '0.00'),
 				'mail_recipients' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
+				'delivery_address' => array('type' => 'text', 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),
@@ -1768,7 +1774,8 @@
 				'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => True),
 				'inherit_location' => array('type' => 'int', 'precision' => 2, 'nullable' => True,
 					'default' => 1),
-				'periodization_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true)
+				'periodization_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				'delivery_address' => array('type' => 'text', 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'fk' => array(),

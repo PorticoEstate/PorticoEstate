@@ -2139,6 +2139,7 @@ JS;
 				'lang_remark_statustext' => lang('Enter a remark to add to the history of the project'),
 				'lang_remark' => lang('remark'),
 				'value_remark' => isset($values['remark']) ? $values['remark'] : '',
+				'value_delivery_address' => !empty($values['delivery_address']) ? $values['delivery_address'] : '',
 				'lang_done_statustext' => lang('Back to the list'),
 				'lang_save_statustext' => lang('Save the project'),
 				'lang_no_cat' => lang('Select category'),
