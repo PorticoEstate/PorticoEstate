@@ -2162,4 +2162,40 @@
 			return $values;
 		}
 
+		function get_delivery_address($loc1 = '')
+		{
+			$loc1 = $this->db->db_addslashes($loc1);
+			$sql = "SELECT delivery_address FROM fm_location1 WHERE loc1 = '$loc1'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$delivery_address = $this->db->f('delivery_address', true);
+
+			if($delivery_address)
+			{
+				return $delivery_address;
+			}
+
+			$sql = "SELECT fm_part_of_town.delivery_address FROM fm_location1"
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)"
+				. "WHERE loc1 = '$loc1'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$delivery_address = $this->db->f('delivery_address', true);
+
+			if($delivery_address)
+			{
+				return $delivery_address;
+			}
+
+			$sql = "SELECT fm_district.delivery_address FROM fm_location1 "
+				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)"
+				. " {$this->join} fm_district ON (fm_part_of_town.district_id = fm_district.id)"			
+				. " WHERE loc1 = '$loc1'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$delivery_address = $this->db->f('delivery_address', true);
+
+			return $delivery_address;
+
+		}
 	}
