@@ -199,6 +199,12 @@
 				$procedure = new controller_procedure();
 			}
 
+			if ($procedure->get_procedure_id())
+			{
+				phpgwapi_cache::message_set(lang('Do not edit archived version' ), 'error');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
+					'id' => $procedure_id));
+			}
 
 			if (isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
@@ -596,7 +602,10 @@
 					'table_header' => $table_header,
 				);
 
-				if ($procedure->get_end_date())
+				/*
+				 * This is not the latest version
+				 */
+				if ($procedure->get_procedure_id())
 				{
 					$data['inactive'] = true;
 				}
