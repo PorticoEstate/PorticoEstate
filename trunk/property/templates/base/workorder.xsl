@@ -311,6 +311,18 @@
 						</xsl:when>
 					</xsl:choose>
 					<div class="pure-control-group">
+						<label for="delivery_address">
+							<xsl:value-of select="php:function('lang', 'delivery address')"/>
+						</label>
+						<textarea  class="pure-input-1-2" rows="6" id="delivery_address" name="values[delivery_address]">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'delivery address')"/>
+							</xsl:attribute>
+							<xsl:value-of select="value_delivery_address"/>
+						</textarea>
+					</div>
+
+					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="lang_coordinator"/>
 						</label>

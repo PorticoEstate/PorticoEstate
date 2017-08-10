@@ -659,3 +659,30 @@ function populateTableChkApproval(ecodimb)
 		}
 	});
 }
+
+on_loc1_updated = function ()
+{
+	if(	$("#delivery_address").val() )
+	{
+		return;
+	}
+
+	var loc1 = $("#loc1").val();
+
+	var oArgs = {menuaction: 'property.uilocation.get_delivery_address', loc1: loc1};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				$("#delivery_address").val(data.delivery_address);
+
+			}
+		}
+	});
+};

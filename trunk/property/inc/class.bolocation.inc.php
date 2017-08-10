@@ -1172,4 +1172,10 @@ JS;
 			return array('ResultSet' => array('Result' => $values));
 
 		}
+
+		function get_delivery_address($loc1 = '')
+		{
+			return $this->so->get_delivery_address($loc1);
+		}
+
 	}

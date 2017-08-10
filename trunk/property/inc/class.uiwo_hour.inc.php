@@ -2002,7 +2002,12 @@ HTML;
 			$location_code = isset($common_data['workorder']['location_code']) && $common_data['workorder']['location_code'] ? $common_data['workorder']['location_code'] : $project['location_code'];
 
 			$delivery_address = lang('delivery address') . ':';
-			if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
+
+			if($common_data['workorder']['delivery_address'])
+			{
+				$delivery_address .= "\n{$common_data['workorder']['delivery_address']}";
+			}
+			else if (isset($this->config->config_data['delivery_address']) && $this->config->config_data['delivery_address'])
 			{
 				$delivery_address .= "\n{$this->config->config_data['delivery_address']}";
 			}
