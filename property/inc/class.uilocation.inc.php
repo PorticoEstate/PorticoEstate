@@ -1006,6 +1006,13 @@ JS;
 
 				parent.JqueryPortico.onPopupClose("close");
 
+				try
+				{
+					parent.on_loc1_updated();
+				}
+				catch(err)
+				{}
+
 			});
 
 	});
