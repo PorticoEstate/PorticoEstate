@@ -1621,8 +1621,9 @@
 			else
 			{
 				$location_template_type = 'view';
+				$_location_data = !empty($project['location_data']) ? $project['location_data'] : '';
 				$location_data = $bolocation->initiate_ui_location(array(
-					'values' => (isset($project['location_data']) ? $project['location_data'] : ''),
+					'values' => $_location_data,
 					'type_id' => (isset($project['location_data']['location_code']) ? count(explode('-', $project['location_data']['location_code'])) : ''),
 					'no_link' => false, // disable lookup links for location type less than type_id
 					'tenant' => (isset($project['location_data']['tenant_id']) ? $project['location_data']['tenant_id'] : ''),
@@ -2483,6 +2484,12 @@
 				)
 			);
 
+			$delivery_address	= $values['delivery_address'] ? $values['delivery_address'] : $project['delivery_address'];
+
+			if(!$delivery_address && !empty($_location_data['loc1']))
+			{
+				$delivery_address = CreateObject('property.solocation')->get_delivery_address($_location_data['loc1']);
+			}
 
 			$data = array(
 				'datatable_def' => $datatable_def,
@@ -2658,7 +2665,7 @@
 				'value_order_sent'	=> !!$values['order_sent'],
 				'value_order_received'	=> $values['order_received'] ? $GLOBALS['phpgw']->common->show_date($values['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount' => (int) $values['order_received_amount'],
-				'value_delivery_address'	=> $values['delivery_address'] ? $values['delivery_address'] : $project['delivery_address']
+				'value_delivery_address'	=> $delivery_address
 			);
 
 			$appname = lang('Workorder');

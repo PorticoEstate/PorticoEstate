@@ -2047,6 +2047,13 @@ JS;
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
 			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'general');
 
+			$delivery_address = $values['delivery_address'];
+
+			if(!$delivery_address && !empty($values['location_data']['loc1']))
+			{
+				$delivery_address = CreateObject('property.solocation')->get_delivery_address($values['location_data']['loc1']);
+			}
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
@@ -2139,7 +2146,7 @@ JS;
 				'lang_remark_statustext' => lang('Enter a remark to add to the history of the project'),
 				'lang_remark' => lang('remark'),
 				'value_remark' => isset($values['remark']) ? $values['remark'] : '',
-				'value_delivery_address' => !empty($values['delivery_address']) ? $values['delivery_address'] : '',
+				'value_delivery_address' => $delivery_address,
 				'lang_done_statustext' => lang('Back to the list'),
 				'lang_save_statustext' => lang('Save the project'),
 				'lang_no_cat' => lang('Select category'),
