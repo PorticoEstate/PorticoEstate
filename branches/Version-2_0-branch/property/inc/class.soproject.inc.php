@@ -889,8 +889,7 @@
 			$project = array();
 			if ($this->db->next_record())
 			{
-				$project = array
-					(
+				$project = array(
 					'id' => $project_id,
 					'project_id' => $this->db->f('id'),//consider this one
 					'project_type_id' => $this->db->f('project_type_id'),
@@ -924,7 +923,8 @@
 					'b_account_id' => $this->db->f('b_account_id'),
 					'contact_id' => $this->db->f('contact_id'),
 					'inherit_location' => $this->db->f('inherit_location'),
-					'periodization_id' => $this->db->f('periodization_id')
+					'periodization_id' => $this->db->f('periodization_id'),
+					'delivery_address' => $this->db->f('delivery_address', true),
 				);
 
 				if (isset($values['attributes']) && is_array($values['attributes']))
@@ -1044,7 +1044,7 @@
 			{
 				$query_order_id = (int) $query;
 				$query = $this->db->db_addslashes($query);
-				
+
 				$filtermethod .= " AND (fm_workorder.id = '{$query_order_id}' OR fm_vendor.org_name {$this->like} '%$query%')";
 			}
 
@@ -1068,7 +1068,7 @@
 				. " {$this->join} fm_workorder_budget ON fm_workorder.id = fm_workorder_budget.order_id"
 				. " {$this->left_join} fm_vendor ON fm_vendor.id = fm_workorder.vendor_id"
 				. " WHERE project_id={$project_id} {$filter_year}{$filtermethod}", __LINE__, __FILE__);
-				
+
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
 
@@ -1158,7 +1158,7 @@
 				else
 				{
 					$_diff_start = abs($entry['budget']) > 0 ? $entry['budget'] : $entry['combined_cost'];
-					$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];				
+					$entry['diff'] = $_diff_start - $entry['obligation'] - $entry['actual_cost'];
 				}
 			}
 
@@ -1285,12 +1285,13 @@
 				$project['contact_id'],
 				$project['inherit_location'],
 				$project['budget_periodization'],
+				$project['delivery_address'],
 			);
 
 			$values = $this->db->validate_insert($values);
 
 			$this->db->query("INSERT INTO fm_project (id,project_type_id,external_project_id,name,access,category,entry_date,start_date,end_date,coordinator,status,"
-				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,contact_id,inherit_location,periodization_id $cols) "
+				. "descr,budget,reserve,location_code,address,key_deliver,key_fetch,other_branch,key_responsible,user_id,ecodimb,account_group,b_account_id,contact_id,inherit_location,periodization_id,delivery_address $cols) "
 				. "VALUES ($values $vals )", __LINE__, __FILE__);
 
 			/**
@@ -1472,6 +1473,7 @@
 				'b_account_id' => $project['b_account_id'],
 				'contact_id' => $project['contact_id'],
 				'inherit_location' => $project['inherit_location'],
+				'delivery_address' => $project['delivery_address'],
 			);
 
 			if (isset($project['budget_periodization']) && $project['budget_periodization'])

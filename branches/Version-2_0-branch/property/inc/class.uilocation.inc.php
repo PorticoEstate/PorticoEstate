@@ -68,7 +68,8 @@
 			'summary' => true,
 			'columns' => true,
 			'update_location' => true,
-			'responsiblility_role' => true
+			'responsiblility_role' => true,
+			'get_delivery_address'	=> true
 		);
 
 		function __construct()
@@ -1005,6 +1006,13 @@ JS;
 				$function_exchange_values .=<<<JS
 
 				parent.JqueryPortico.onPopupClose("close");
+
+				try
+				{
+					parent.on_loc1_updated();
+				}
+				catch(err)
+				{}
 
 			});
 
@@ -2890,5 +2898,17 @@ JS;
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			//print_r($data); die;
 			self::render_template_xsl('datatable_jquery', $data);
+		}
+
+		function get_delivery_address()
+		{
+			$loc1 = phpgw::get_var('loc1');
+
+			$delivery_address = $this->bo->get_delivery_address($loc1);
+			
+			return array(
+				'delivery_address' => $delivery_address
+			);
+
 		}
 	}

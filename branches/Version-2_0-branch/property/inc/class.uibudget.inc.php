@@ -952,10 +952,10 @@
 						'obligation_ex' => $entry['obligation'],
 						'obligation' => number_format($entry['obligation'], 0, ',', ' '),
 						'link_obligation' => urldecode($GLOBALS['phpgw']->link('/index.php', array(
-								'menuaction' => 'property.uiworkorder.index', 'filter' => 'all', 'paid' => 1,
+								'menuaction' => 'property.uiworkorder.index', 'filter' => 'all',// 'paid' => 1,
 								'district_id' => $entry['district_id'], 'b_group' => $entry['grouping'],
 								'b_account' => $entry['b_account'],
-								'start_date' => $start_date, 'end_date' => $end_date, 'ecodimb' => $entry['ecodimb'],
+								'filter_start_date' => $start_date, 'filter_end_date' => $end_date, 'ecodimb' => $entry['ecodimb'],
 								'status_id' => 'all', 'obligation' => true))),
 						'actual_cost_ex' => $entry['actual_cost'],
 						'actual_cost_period' => number_format($entry['actual_cost_period'], 0, ',', ' '),
