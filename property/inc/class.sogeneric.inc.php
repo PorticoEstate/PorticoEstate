@@ -64,18 +64,20 @@
 						(
 						'table' => 'fm_part_of_town',
 						'id' => array('name' => 'id', 'type' => 'int', 'descr' => lang('id')),
-						'fields' => array
-							(
-							array
-								(
+						'fields' => array(
+							array(
 								'name' => 'name',
 								'descr' => lang('name'),
 								'type' => 'varchar',
 								'nullable' => false,
 								'size' => 20
 							),
-							array
-								(
+							array(
+								'name' => 'delivery_address',
+								'descr' => lang('delivery address'),
+								'type' => 'text'
+							),
+							array(
 								'name' => 'district_id',
 								'descr' => lang('district'),
 								'type' => 'select',
@@ -574,13 +576,16 @@
 						(
 						'table' => 'fm_district',
 						'id' => array('name' => 'id', 'type' => 'int'),
-						'fields' => array
-							(
-							array
-								(
+						'fields' => array(
+							array(
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'varchar'
+							),
+							array(
+								'name' => 'delivery_address',
+								'descr' => lang('delivery address'),
+								'type' => 'text'
 							)
 						),
 						'edit_msg' => lang('edit'),

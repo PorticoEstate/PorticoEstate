@@ -1009,7 +1009,8 @@
 					'order_dim1' => $this->db->f('order_dim1'),
 					'order_sent' => $this->db->f('order_sent'),
 					'order_received' => $this->db->f('order_received'),
-					'order_received_amount' => $this->db->f('order_received_amount')
+					'order_received_amount' => $this->db->f('order_received_amount'),
+					'delivery_address' => $this->db->f('delivery_address', true),
 					);
 
 				$sql = "SELECT periodization_id,"
@@ -1318,7 +1319,8 @@
 				$workorder['service_id'],
 				$workorder['building_part'],
 				$workorder['order_dim1'],
-				isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : ''
+				isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
+				$workorder['delivery_address']
 			);
 
 			$values = $this->db->validate_insert($values);
@@ -1327,7 +1329,7 @@
 				. "tender_received,inspection_on_completion,status,"
 				. "descr,budget,combined_cost,account_id,rig_addition,addition,key_deliver,key_fetch,vendor_id,charge_tenant,"
 				. "user_id,ecodimb,category,billable_hours,contract_sum,approved,continuous,fictive_periodization,"
-				. "contract_id, tax_code, unspsc_code, service_id,building_part, order_dim1, mail_recipients  $cols) "
+				. "contract_id, tax_code, unspsc_code, service_id,building_part, order_dim1, mail_recipients, delivery_address $cols) "
 				. "VALUES ( {$values} {$vals})", __LINE__, __FILE__);
 
 			$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$id},'workorder')");
@@ -1488,6 +1490,7 @@
 				'building_part' => $workorder['building_part'],
 				'order_dim1' => $workorder['order_dim1'],
 				'mail_recipients' => isset($workorder['vendor_email']) && is_array($workorder['vendor_email']) ? implode(',', $workorder['vendor_email']) : '',
+				'delivery_address'	=> $this->db->db_addslashes($workorder['delivery_address'])
 			);
 
 			if(isset($config->config_data['enable_order_service_id']) && $config->config_data['enable_order_service_id'])

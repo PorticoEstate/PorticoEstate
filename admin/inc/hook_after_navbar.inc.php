@@ -58,14 +58,14 @@
 						$_current[$app_name] = True;
 						if($app_name == 'phpgwapi')
 						{
-							$api_str = lang('The API is current') . '::OK';
+							$api_str = '<li>' . lang('The API is current') . ': OK</li>';
 						}
 					}
 					else
 					{
 						if($app_name == 'phpgwapi')
 						{
-							$api_str = lang('The API requires an upgrade');
+							$api_str = '<li>' . lang('The API requires an upgrade') . '</li>';
 							$require_upgrade = true;
 						}
 					}
@@ -78,8 +78,8 @@
 			}
 			if(!isset($_current[$GLOBALS['phpgw_info']['flags']['currentapp']]))
 			{
-				$app_str  = '<br>' . lang('This application requires an upgrade') . ": {$GLOBALS['phpgw_info']['flags']['currentapp']}\n";
-				$app_str .= '<br>' . lang('Please run setup to become current') . '.' . "\n";
+				$app_str  = '<li>' . lang('This application requires an upgrade') . ": {$GLOBALS['phpgw_info']['flags']['currentapp']}</li>";
+//				$app_str .= '<br>' . lang('Please run setup to become current') . '.' . "\n";
 				$require_upgrade = true;
 			}
 			else
@@ -89,10 +89,10 @@
 		
 			if($require_upgrade)
 			{
-				echo '<div class="error">';
+				echo '<div class="error"><ul>';
 				echo $api_str;
 				echo $app_str;
-				echo '</div>';
+				echo '</ul></div>';
 			}
 		}
 	}

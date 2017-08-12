@@ -9564,3 +9564,87 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+	/**
+	* Update property version from 0.9.17.713 to 0.9.17.714
+	*
+	*/
+	$test[] = '0.9.17.713';
+
+	function property_upgrade0_9_17_713()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query('DELETE FROM fm_cache');
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_district', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_part_of_town', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location1', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location1_history', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_project', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'delivery_address', array(
+			'type' => 'text', 'nullable' => True));
+
+
+		$cust = array
+		(
+			'datatype'		=> 'T',
+			'precision_'	=> '',
+			'scale'			=> '',
+			'default_value'	=> '',
+			'nullable'		=> 'True',
+			'custom'		=> 1
+		);
+
+		$cust_fields = array();
+
+		$cust_fields[] = array
+		(
+			'name' => 'delivery_address',
+			'descr' => 'delivery address',
+			'statustext' => 'delivery address',
+			'cust'	=> $cust
+		);
+
+		$db = & $GLOBALS['phpgw_setup']->oProc->m_odb;
+
+		foreach($cust_fields as & $field)
+		{
+
+			$field['cust']['location_id'] = $GLOBALS['phpgw']->locations->get_id('property', ".location.1");
+			$db->query("SELECT max(id) as id FROM phpgw_cust_attribute WHERE location_id = {$field['cust']['location_id']}");
+			$db->next_record();
+			$id = (int)$db->f('id');
+			$db->query("SELECT max(attrib_sort) as attrib_sort FROM phpgw_cust_attribute WHERE group_id = 0 AND location_id = {$field['cust']['location_id']}");
+			$db->next_record();
+
+			$field['cust']['id']			= $id + 1;
+			$field['cust']['attrib_sort']	= (int)$db->f('attrib_sort') + 1;
+			$field['cust']['column_name']	= $field['name'];
+			$field['cust']['input_text']	= $field['descr'];
+			$field['cust']['statustext']	= $field['statustext'];
+
+			$sql = 'INSERT INTO phpgw_cust_attribute(' . implode(',', array_keys($field['cust'])) . ') '
+				 . ' VALUES (' . $db->validate_insert($field['cust']) . ')';
+			$db->query($sql, __LINE__, __FILE__);
+		}
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.714';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

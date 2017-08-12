@@ -132,7 +132,7 @@ $(document).ready(function ()
 		validatorFunction: function (value, $el, config, languaje, $form)
 		{
 			var validatet_category = $('#validatet_category').val();
-			if(validatet_category ==1)
+			if (validatet_category == 1)
 			{
 				return true;
 			}
@@ -247,7 +247,6 @@ $(document).ready(function ()
 		});
 	}
 
-
 });
 
 function addSubEntry()
@@ -291,11 +290,11 @@ function check_and_submit_valid_session()
 this.validate_form = function ()
 {
 	conf = {
-	//	modules: 'date, security, file',
+		//	modules: 'date, security, file',
 		validateOnBlur: false,
 		scrollToTopOnError: true,
 		errorMessagePosition: 'top'
-	//	language: validateLanguage
+			//	language: validateLanguage
 	};
 
 	return $('form').isValid(false, conf);
@@ -397,3 +396,30 @@ oArgs = {menuaction: 'property.uiworkorder.get_b_account'};
 strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
 
+
+on_loc1_updated = function ()
+{
+	if(	$("#delivery_address").val() )
+	{
+		return;
+	}
+
+	var loc1 = $("#loc1").val();
+
+	var oArgs = {menuaction: 'property.uilocation.get_delivery_address', loc1: loc1};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				$("#delivery_address").val(data.delivery_address);
+
+			}
+		}
+	});
+};
