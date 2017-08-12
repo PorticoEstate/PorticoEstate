@@ -426,10 +426,17 @@
 						'b_group' => $this->b_group,
 						'paid' => $this->paid,
 						'obligation' => $this->obligation,
+						'ecodimb'	=> $this->ecodimb,
 						'phpgw_return_as' => 'json'
 					)),
 					'download' => self::link(array(
 						'menuaction' => 'property.uiworkorder.download',
+						'start_date' => $start_date,
+						'end_date' => $end_date,
+						'b_group' => $this->b_group,
+						'paid' => $this->paid,
+						'obligation' => $this->obligation,
+						'ecodimb'	=> $this->ecodimb,
 						'export' => true,
 						'allrows' => true
 					)),

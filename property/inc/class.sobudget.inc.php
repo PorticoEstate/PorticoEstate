@@ -695,7 +695,7 @@
 			$sum_obligation_cost = 0;
 			$obligations = array();
 			$sum_hits = 0;
-
+			$obligation_orders = array();//for testing
 			$sum_hits = count($_temp_paid_info);
 			$_periods = array();
 			foreach ($_temp_paid_info as $order_id => &$order_info)
@@ -715,6 +715,12 @@
 
 						$_taxfactor = 1 + ($_taxcode[(int)$order_info['mva']] / 100);
 						$_actual_cost = round($budget['actual_cost'] / $_taxfactor);
+
+						//for testing
+						if($budget['sum_oblications'])
+						{
+							$obligation_orders[] = $order_id;
+						}
 
 						$sum_actual_cost += $_actual_cost;
 						if ((int)$budget['actual_period'] == (int)$filter_period)
@@ -740,7 +746,7 @@
 					}
 				}
 			}
-
+//_debug_array(array_unique($obligation_orders));
 //_debug_array($_periods);
 //			_debug_array($obligations);
 			//----------- ad hoc order
