@@ -421,6 +421,7 @@
 				'datatable' => array(
 					'source' => self::link(array(
 						'menuaction' => 'property.uiworkorder.index',
+						'district_id' => $this->district_id,
 						'start_date' => $start_date,
 						'end_date' => $end_date,
 						'b_group' => $this->b_group,
