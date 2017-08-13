@@ -3,7 +3,7 @@ var oArgs = {menuaction: 'property.uigeneric.index', type: 'dimb', type_id:0};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'ecodimb_name', 'ecodimb_id', 'ecodimb_container', 'descr');
 
-composites = new Array();
+var composites = new Array();
 
 $(document).ready(function ()
 {
@@ -25,6 +25,44 @@ $(document).ready(function ()
 		errorMessage: lang['Name or company is required'],
 		errorMessageKey: ''
 	});
+
+
+	validate_submit = function ()
+	{
+		var active_tab = $("#active_tab").val();
+		conf = {
+			//	modules: 'date, security, file',
+			validateOnBlur: false,
+			scrollToTopOnError: true,
+			errorMessagePosition: 'top'
+				//	language: validateLanguage
+		};
+
+		var test = $('form').isValid(false, conf);
+		if (!test)
+		{
+			return;
+		}
+		var id = $("#application_id").val();
+
+		if (id > 0)
+		{
+			document.form.submit();
+			return;
+		}
+
+		if (active_tab === 'application')
+		{
+			$('#tab-content').responsiveTabs('activate', 1);
+			$("#save_button_bottom").val(lang['save']);
+			$("#active_tab").val('party');
+		}
+		else
+		{
+			document.form.submit();
+		}
+	};
+
 });
 
 function set_tab(tab)
@@ -42,7 +80,7 @@ function reserveComposite (data, button)
 	var composite_id = schedule.rental['data']['id'];
 
 	var params = {application_id: application_id, composite_id: composite_id};
-	
+
 	$.post(url, params, function(m)
 	{
 		button.disabled = false;
@@ -56,7 +94,7 @@ function removeComposite (data, button)
 {
 	button.disabled = true;
 	data = JSON.parse(data);
-	
+
 	var url = data['url'];
 	var application_id = $('#application_id').val();
 	var composite_id = composites.rental['data']['id'];
@@ -84,7 +122,7 @@ renderComposites = function (container)
 	var r = "";
 
 	createTableSchedule(container, composites.datasourceUrl, columns, r, classTable, '', false, "composites.createToolbar");
-}
+};
 
 composites.createToolbar = function ()
 {
@@ -93,7 +131,7 @@ composites.createToolbar = function ()
 	container.setAttribute('id', 'composites_toolbar');
 	container.classList.add('schedule_toolbar');
 	var id = "$('.rentalCompositesTable .trselected').data('id')";
-	
+
 	$.each(toolbar, function(i, v)
 	{
 		var name = v['name'];
@@ -184,13 +222,13 @@ composites.createToolbar = function ()
 		else if (callFunction)
 		{
 			button.addEventListener('click', function(event){
-				event.preventDefault()
+				event.preventDefault();
 				self[callFunction['name']](callFunction['args'], this);
 			});
 		}
 
 		container.appendChild(button);
-	})
+	});
 
 	return container;
-}
+};

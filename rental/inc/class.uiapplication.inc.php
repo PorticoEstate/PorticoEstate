@@ -49,25 +49,21 @@
 		protected
 			$fields,
 			$composite_types,
-			$payment_methods;
+			$payment_methods,
+			$acl_location;
 		private $bo;
 
 		public function __construct()
 		{
 			parent::__construct();
-			self::set_active_menu('rental::application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('application');
 			$this->bo = createObject('rental.boapplication');
-			$this->acl = & $GLOBALS['phpgw']->acl;
-			$this->acl_location = $this->bo->acl_location;
-			$this->acl_read = $this->acl->check($this->acl_location, PHPGW_ACL_READ, 'rental');
-			$this->acl_add = $this->acl->check($this->acl_location, PHPGW_ACL_ADD, 'rental');
-			$this->acl_edit = $this->acl->check($this->acl_location, PHPGW_ACL_EDIT, 'rental');
-			$this->acl_delete = $this->acl->check($this->acl_location, PHPGW_ACL_DELETE, 'rental');
-			$this->acl_manage = $this->acl->check($this->acl_location, PHPGW_ACL_PRIVATE, 'rental'); // manage
+			$this->permissions = rental_application::get_instance()->get_permission_array();
 			$this->composite_types = rental_application::get_composite_types();
 			$this->payment_methods = rental_application::get_payment_methods();
 			$this->fields = rental_application::get_fields();
+			$this->acl_location = rental_application::acl_location;
+			self::set_active_menu('rental::application');
 		}
 
 		private function get_composite_type_options( $selected = 0 )
@@ -254,7 +250,7 @@
 		{
 			$active_tab = !empty($values['active_tab']) ? $values['active_tab'] : phpgw::get_var('active_tab', 'string', 'REQUEST', 'application');
 			$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
-			if (!$this->acl_add)
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				phpgw::no_access();
 			}
@@ -269,7 +265,7 @@
 				$application = $this->bo->read_single($application_id);
 			}
 
-			if (!$this->acl_edit)
+			if (empty($this->permissions[PHPGW_ACL_EDIT]))
 			{
 				$step = 1;
 			}
@@ -610,7 +606,7 @@
 
 		public function add()
 		{
-			if (!$this->acl_add)
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				phpgw::no_access();
 			}
@@ -620,7 +616,7 @@
 
 		public function save()
 		{
-			if (!$this->acl_add)
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				phpgw::no_access();
 			}
