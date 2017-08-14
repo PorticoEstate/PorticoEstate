@@ -480,7 +480,9 @@
 				$bookmark_locations = array_keys($bookmarks);
 			}
 
-			if ($location_code = phpgw::get_var('location_code'))
+			$location_code = phpgw::get_var('location_code', 'string');
+
+			if ($location_code && $location_code != 'all')
 			{
 				$bookmark_locations[] = $location_code;
 			}
@@ -496,7 +498,7 @@
 					$locations_list[] = array
 						(
 						'id' => $location['location_code'],
-						'name' => $location['loc_name'],
+						'name' => "{$location['location_code']} - {$location['loc_name']}",
 						'selected' => $location_code == $location['location_code'] ? 1 : 0
 					);
 				}
@@ -515,6 +517,12 @@
 					$locations_location_code[$key] = $row['location_code'];
 				}
 				array_multisort($locations_location_code, SORT_ASC, $locations_list);
+
+				array_unshift($locations_list, array(
+						'id' => 'all',
+						'name' => lang('all'),
+						'selected' => $location_code == 'all' ? 1 : 0
+				));
 			}
 
 
@@ -538,9 +546,12 @@
 				{
 					$curr_location_code = $location['location_code'];
 
-					if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+					if($location_code != 'all')
 					{
-						continue;
+						if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+						{
+							continue;
+						}
 					}
 
 					$cl_criteria = new controller_check_list();
@@ -603,7 +614,7 @@
 					// Loops through controls in controls_for_location_array and populates aggregate open cases pr month array.
 					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
 
-					$year_calendar_agg = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
+					$year_calendar_agg = new year_calendar_agg($control, $year, $curr_location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
 					$components_with_calendar_array[] = array("component" => $component->toArray(),
 						"calendar_array" => $calendar_array);
@@ -616,9 +627,12 @@
 				{
 					$curr_location_code = $location['location_code'];
 
-					if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+					if($location_code != 'all')
 					{
-						continue;
+						if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+						{
+							continue;
+						}
 					}
 
 					$repeat_type = $control->get_repeat_type();
@@ -756,7 +770,9 @@
 				$bookmark_locations = array_keys($bookmarks);
 			}
 
-			if ($location_code = phpgw::get_var('location_code'))
+			$location_code = phpgw::get_var('location_code', 'string');
+
+			if ($location_code && $location_code != 'all')
 			{
 				$bookmark_locations[] = $location_code;
 			}
@@ -771,7 +787,7 @@
 					$locations_list[] = array
 						(
 						'id' => $location['location_code'],
-						'name' => $location['loc_name'],
+						'name' => "{$location['location_code']} - {$location['loc_name']}",
 						'selected' => $location_code == $location['location_code'] ? 1 : 0
 					);
 				}
@@ -789,6 +805,12 @@
 					$locations_location_code[$key] = $row['location_code'];
 				}
 				array_multisort($locations_location_code, SORT_ASC, $locations_list);
+
+				array_unshift($locations_list, array(
+						'id' => 'all',
+						'name' => lang('all'),
+						'selected' => $location_code == 'all' ? 1 : 0
+				));
 			}
 
 			// Validates year. If year is not set, current year is chosen
@@ -809,9 +831,12 @@
 			{
 				$curr_location_code = $location['location_code'];
 
-				if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+				if($location_code != 'all')
 				{
-					continue;
+					if (!$bookmark_locations || !in_array($curr_location_code, $bookmark_locations))
+					{
+						continue;
+					}
 				}
 
 				$repeat_type = $control->get_repeat_type();
@@ -1043,7 +1068,7 @@
 
 			foreach ($my_locations as $location)
 			{
-				if ($location['location_code'] != $current_location_code)
+				if ($location['location_code'] != $current_location_code && $current_location_code != 'all')
 				{
 					$my_washed_locations[] = $location;
 				}
