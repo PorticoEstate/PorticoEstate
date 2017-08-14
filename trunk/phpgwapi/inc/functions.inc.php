@@ -737,9 +737,12 @@ HTML;
 		}
 	}
 
-	if(isset($GLOBALS['phpgw_info']['server']['enforce_ssl']) && !(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) )
+	$request_scheme = empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off' ? 'http' : 'https';
+
+	if(isset($GLOBALS['phpgw_info']['server']['enforce_ssl']) && $request_scheme != 'https' )
 	{
-		Header('Location: https://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw_info']['server']['webserver_url'] . $_SERVER['REQUEST_URI']);
+//		Header('Location: https://' . $GLOBALS['phpgw_info']['server']['hostname'] . $GLOBALS['phpgw_info']['server']['webserver_url'] . $_SERVER['REQUEST_URI']);
+		Header("Location: https://{$GLOBALS['phpgw_info']['server']['hostname']}{$_SERVER['REQUEST_URI']}");
 		exit;
 	}
 
