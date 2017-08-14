@@ -40,6 +40,7 @@
 		public $results = 0;
 		public $allrows = false;
 		public $debug = false;
+		public $b_account;
 
 		/**
 		 *
@@ -276,12 +277,22 @@
 			$start_date = $this->bocommon->date_to_timestamp($start_date);
 			$end_date = $this->bocommon->date_to_timestamp($end_date);
 
-			$invoice = $this->so->read_consume(array('start' => $this->start, 'query' => $this->query,
-				'sort' => $this->sort, 'order' => $this->order,
-				'user_lid' => $this->user_lid, 'cat_id' => $this->cat_id,
-				'start_date' => $start_date, 'end_date' => $end_date, 'vendor_id' => $vendor_id,
-				'loc1' => $loc1, 'workorder_id' => $workorder_id, 'b_account_class' => $b_account_class,
-				'district_id' => $district_id, 'b_account' => $this->b_account, 'ecodimb' => $ecodimb));
+			$invoice = $this->so->read_consume(array(
+				'start' => $this->start,
+				'query' => $this->query,
+				'sort' => $this->sort,
+				'order' => $this->order,
+				'user_lid' => $this->user_lid,
+				'cat_id' => $this->cat_id,
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'vendor_id' => $vendor_id,
+				'loc1' => $loc1,
+				'workorder_id' => $workorder_id,
+				'b_account_class' => $b_account_class,
+				'district_id' => $district_id,
+				'b_account' => $this->b_account,
+				'ecodimb' => $ecodimb));
 
 			$this->total_records = $this->so->total_records;
 
