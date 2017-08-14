@@ -14,7 +14,9 @@
 			<h3>Periode: <xsl:value-of select="current_year"/></h3>
 			
 				<div id="choose-my-location" class="select-box">
-					<label>Velg en lokasjon</label>
+					<label>
+						<xsl:value-of select="php:function('lang', 'choose a location')" />
+					</label>
 					  <form action="#">
 						<input type="hidden" name="period_type" value="view_year_for_locations" />
 						<input type="hidden" name="year">
@@ -32,19 +34,13 @@
 								<xsl:value-of select="$serie_id"/>
 							</xsl:attribute>
 						</input>
-
 						<select id="choose-my-location" class="select-location">
 						  <option>Velg bygg</option>
 						  <xsl:for-each select="locations_list">
-							<option>
+							<option value="{id}">
 							  <xsl:if test="selected = 1">
 								<xsl:attribute name="selected">selected</xsl:attribute>
 							  </xsl:if>
-							  <xsl:attribute name="value">
-								<xsl:value-of select="id"/>
-							  </xsl:attribute>
-								<xsl:value-of select="id"/>
-								<xsl:text> - </xsl:text>
 								<xsl:value-of disable-output-escaping="yes" select="name"/>
 							</option>
 						  </xsl:for-each>
