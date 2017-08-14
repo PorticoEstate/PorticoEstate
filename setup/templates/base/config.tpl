@@ -43,7 +43,18 @@
     <td><input name="newsettings[hostname]" value="{value_hostname}"></td>
    </tr>
 
-   <tr class="row_off">
+
+	<tr class="row_off">
+    <td>{lang_enforce_ssl}:</td>
+    <td>
+     <select name="newsettings[enforce_ssl]">
+      <option value="">{lang_No}</option>
+      <option value="1"{selected_enforce_ssl_1}>{lang_Yes}</option>
+     </select>
+    </td>
+   </tr>
+
+   <tr class="row_on">
      <td>{lang_cookie_domain_for_sessions_-_if_unsure_leave_empty}</td>
 	 <td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
 <!--
@@ -55,12 +66,12 @@
 -->
    </tr>
 
-   <tr class="row_on">
+   <tr class="row_off">
     <td>{lang_Enter_your_default_FTP_server}:</td>
     <td><input name="newsettings[default_ftp_server]" value="{value_default_ftp_server}"></td>
    </tr>
 
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_Attempt_to_use_correct_mimetype_for_FTP_instead_of_default_'application/octet-stream'}:</td>
     <td>
      <select name="newsettings[ftp_use_mime]">
@@ -70,7 +81,7 @@
     </td>
    </tr>
 
-   <tr class="row_on">
+   <tr class="row_off">
     <td>{lang_Datetime_port}.<br>{lang_If_using_port_13,_please_set_firewall_rules_appropriately_before_submitting_this_page}.({lang_Host}: time-a.nist.gov {lang_Port}: 13)</td>
     <td>
       <select name="newsettings[daytime_port]">
@@ -81,12 +92,12 @@
     </td>
    </tr>
 
-   <tr class="row_off">
+   <tr class="row_on">
     <td>{lang_Enter_your_HTTP_proxy_server}:</td>
     <td><input name="newsettings[httpproxy_server]" value="{value_httpproxy_server}"></td>
    </tr>
 
-   <tr class="row_on">
+   <tr class="row_off">
     <td>{lang_Enter_your_HTTP_proxy_server_port}:</td>
     <td><input name="newsettings[httpproxy_port]" value="{value_httpproxy_port}"></td>
    </tr>
@@ -101,7 +112,7 @@
     <td><input type="password" name="newsettings[site_password]" value="{value_site_password}"></td>
    </tr>
  -->
-  <tr class="row_off">
+  <tr class="row_on">
     <td colspan="2">&nbsp;</td>
    </tr>
 

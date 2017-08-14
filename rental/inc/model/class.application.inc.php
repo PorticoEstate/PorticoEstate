@@ -29,15 +29,16 @@
 
 	phpgw::import_class('rental.boapplication');
 
-	include_class('rental', 'model', 'inc/model/');
+	include_class('phpgwapi', 'model', 'inc/model/');
 
-	class rental_application extends rental_model
+	class rental_application extends phpgwapi_model
 	{
 
 		const STATUS_REGISTERED = 1;
 		const STATUS_PENDING = 2;
 		const STATUS_REJECTED = 3;
 		const STATUS_APPROVED = 4;
+		const acl_location = '.application';
 
 		protected
 			$id,
@@ -78,6 +79,16 @@
 		public function __construct( int $id = null )
 		{
 			parent::__construct((int)$id);
+		}
+
+		/**
+		 * Implementing classes must return an instance of itself.
+		 *
+		 * @return the class instance.
+		 */
+		public static function get_instance()
+		{
+			return new rental_application();
 		}
 
 		public static function get_composite_types()

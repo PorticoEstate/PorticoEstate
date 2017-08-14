@@ -26,21 +26,21 @@
 	   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 */
 
+	phpgw::import_class('phpgwapi.bocommon');
 	phpgw::import_class('rental.soapplication');
 
 	include_class('rental', 'application', 'inc/model/');
 
-	class  rental_boapplication
+	class  rental_boapplication extends phpgwapi_bocommon
 	{
 		protected static
 			$bo,
 			$fields;
 
-		public 	$acl_location = '.application';
-
 		public function __construct()
 		{
 			$this->fields = rental_application::get_fields();
+			$this->acl_location = rental_application::acl_location;
 		}
 
 		/**
@@ -59,47 +59,9 @@
 
 		public function store($object)
 		{
-			$criteria = array(
-				'appname' => 'rental',
-				'location' => $this->bo->acl_location,
-				'allrows' => true
-			);
-
-			$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria);
-
-			foreach ($custom_functions as $entry)
-			{
-				// prevent path traversal
-				if (preg_match('/\.\./', $entry['file_name']))
-				{
-					continue;
-				}
-
-				$file = PHPGW_SERVER_ROOT . "/rental/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ($entry['active'] && is_file($file) && !$entry['client_side'])
-				{
-					require $file;
-				}
-			}
-
+			$this->store_pre_commit($object);
 			$ret = rental_soapplication::get_instance()->store($object);
-
-			reset($custom_functions);
-
-			foreach ($custom_functions as $entry)
-			{
-				// prevent path traversal
-				if (preg_match('/\.\./', $entry['file_name']))
-				{
-					continue;
-				}
-
-				$file = PHPGW_SERVER_ROOT . "/rental/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
-				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
-				{
-					require $file;
-				}
-			}
+			$this->store_post_commit($object);
 			return $ret;
 		}
 
@@ -124,29 +86,7 @@
 
 		public function build_default_read_params()
 		{
-			$fields = $this->fields;
-
-			$search = phpgw::get_var('search');
-			$order = phpgw::get_var('order');
-			$draw = phpgw::get_var('draw', 'int');
-			$columns = phpgw::get_var('columns');
-
-			$params = array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
-				'sort' => $columns[$order[0]['column']]['data'],
-				'dir' => $order[0]['dir'],
-				'allrows' => phpgw::get_var('length', 'int') == -1,
-			);
-
-			foreach ($fields as $field => $_params)
-			{
-				if (!empty($_REQUEST["filter_$field"]))
-				{
-					$params['filters'][$field] = phpgw::get_var("filter_$field", $_params['type']);
-				}
-			}
+			$params = parent::build_default_read_params();
 			if (phpgw::get_var('composite_id'))
 			{
 				$params['filters']['composite_id'] = phpgw::get_var('composite_id');

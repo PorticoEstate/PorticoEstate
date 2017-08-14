@@ -28,7 +28,7 @@
 		</xsl:variable>
 
 		<script type="text/javascript">
-			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required')"/>;
+			var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save')"/>;
 		</script>
 		<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 			<div id="tab-content">
@@ -538,12 +538,17 @@
 						</fieldset>
 					</div>
 				</xsl:if>
-
 			</div>
-			<div class="proplist-col">
-				<input type="submit" class="pure-button pure-button-primary" name="save">
+			<div id="submit_group_bottom" class="proplist-col">
+				<xsl:variable name="lang_save">
+					<xsl:value-of select="php:function('lang', 'next')"/>
+				</xsl:variable>
+				<input type="button" class="pure-button pure-button-primary" name="save" id="save_button_bottom" onClick="validate_submit();">
 					<xsl:attribute name="value">
-						<xsl:value-of select="php:function('lang', 'save')"/>
+						<xsl:value-of select="$lang_save"/>
+					</xsl:attribute>
+					<xsl:attribute name="title">
+						<xsl:value-of select="$lang_save"/>
 					</xsl:attribute>
 				</input>
 				<xsl:variable name="cancel_url">
