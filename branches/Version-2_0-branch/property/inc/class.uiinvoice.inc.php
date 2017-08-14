@@ -160,7 +160,7 @@
 			$district_id = phpgw::get_var('district_id', 'int');
 			$b_account_class = phpgw::get_var('b_account_class', 'int');
 			$b_account = phpgw::get_var('b_account', 'int');
-			$b_account_class = $b_account_class ? $b_account_class : substr($b_account, 0, 2);
+	//		$b_account_class = $b_account_class ? $b_account_class : substr($b_account, 0, 2);
 			$ecodimb = phpgw::get_var('ecodimb');
 
 			$values_combo_box[0] = $this->bo->select_category('', $this->cat_id);
@@ -2078,7 +2078,7 @@ JS;
 			$district_id = phpgw::get_var('district_id', 'int');
 			$b_account_class = phpgw::get_var('b_account_class', 'int');
 			$b_account = phpgw::get_var('b_account', 'int');
-			$b_account_class = $b_account_class ? $b_account_class : substr($b_account, 0, 2);
+//			$b_account_class = $b_account_class ? $b_account_class : substr($b_account, 0, 2);
 			$ecodimb = phpgw::get_var('ecodimb');
 			$draw = phpgw::get_var('draw', 'int');
 
@@ -2356,7 +2356,7 @@ JS;
 			$b_account_class = phpgw::get_var('b_account_class', 'int');
 			$b_account = phpgw::get_var('b_account', 'int');
 
-			$b_account_class = $b_account_class ? $b_account_class : substr($b_account, 0, 2);
+		//	$b_account_class = $b_account_class ? $b_account_class : substr($b_account, 0, 2);
 			$ecodimb = phpgw::get_var('ecodimb');
 
 			//-- ubica focus del menu derecho
@@ -2417,6 +2417,7 @@ JS;
 						'district_id' => $district_id,
 						'ecodimb' => $ecodimb,
 						'b_account_class' => $b_account_class,
+						'b_account'	=> $b_account,
 						'phpgw_return_as' => 'json'
 					)),
 					'allrows' => true,

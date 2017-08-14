@@ -125,8 +125,9 @@
 		 */
 		public function store_pre_commit( &$object )
 		{
+			$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$criteria = array(
-				'appname' => 'eventplanner',
+				'appname' => $appname,
 				'location' => $this->acl_location,
 				'pre_commit' => true,
 				'allrows' => true
@@ -142,7 +143,7 @@
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/eventplanner/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['pre_commit'])
 				{
 					require $file;
@@ -156,8 +157,9 @@
 		 */
 		public function store_post_commit( &$object )
 		{
+			$appname = $GLOBALS['phpgw_info']['flags']['currentapp'];
 			$criteria = array(
-				'appname' => 'eventplanner',
+				'appname' => $appname,
 				'location' => $this->acl_location,
 				'allrows' => true
 			);
@@ -173,7 +175,7 @@
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/eventplanner/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/{$appname}/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 				if ($entry['active'] && is_file($file) && !$entry['client_side'] && !$entry['pre_commit'])
 				{
 					require $file;

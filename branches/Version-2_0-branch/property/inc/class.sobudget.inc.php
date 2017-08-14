@@ -644,7 +644,7 @@
 				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
 			}
 
-			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,project_id,"
+			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,fm_workorder.project_id,"
 				. " fm_b_account.{$b_account_field} AS b_account, district_id, fm_project.ecodimb"
 				. " FROM fm_workorder"
 				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
@@ -682,6 +682,42 @@
 					'b_account' => $this->db->f('b_account'),
 				);
 			}
+
+			//In case of missing budget
+
+			$filtermethod_payment = "WHERE periode >= $start_periode AND periode <= $end_periode";
+			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,fm_workorder.project_id,"
+				. " fm_b_account.{$b_account_field} AS b_account, district_id, fm_project.ecodimb"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " {$this->join} fm_ecobilagoverf ON fm_ecobilagoverf.pmwrkord_code = fm_workorder.id"
+				. " {$this->join} fm_b_account ON fm_workorder.account_id = fm_b_account.id"
+				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
+				. " {$_join_district}"
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
+				. " {$filtermethod_payment}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " ORDER BY fm_workorder.id ASC";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$_id = $this->db->f('id');
+				$district_id = $filter_district_id ? (int)$this->db->f('district_id') : 0;
+
+				$projects[$this->db->f('project_id')] = 0;
+				$projects2[$_id] = $this->db->f('project_id');
+
+				$_temp_paid_info[$_id] = array
+					(
+					'actual_cost' => 0,
+					'mva' => (int)$this->db->f('mva'),
+					'district_id' => $district_id,
+					'ecodimb' => (int)$this->db->f('ecodimb'),
+					'b_account' => $this->db->f('b_account'),
+				);
+			}
+
+
 			ksort($projects);
 //_debug_array(count($projects2));
 //_debug_array($projects2);
@@ -717,7 +753,7 @@
 						$_actual_cost = round($budget['actual_cost'] / $_taxfactor);
 
 						//for testing
-						if($budget['sum_oblications'])
+						if($budget['actual_cost'])
 						{
 							$obligation_orders[] = $order_id;
 						}
