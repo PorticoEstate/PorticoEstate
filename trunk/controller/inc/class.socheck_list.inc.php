@@ -61,7 +61,7 @@
 		public function get_single( $check_list_id )
 		{
 			$check_list_id = (int)$check_list_id;
-			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date,assigned_to, billable_hours, ";
+			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, original_deadline, planned_date,assigned_to, billable_hours, ";
 			$sql .= "completed_date, location_code, component_id, num_open_cases, num_pending_cases, location_id, ci.id as ci_id, control_item_id,serie_id ";
 			$sql .= "FROM controller_check_list cl ";
 			$sql .= "LEFT JOIN controller_check_item as ci ON cl.id = ci.check_list_id ";
@@ -75,6 +75,7 @@
 			$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 			$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 			$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+			$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 			$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 			$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 			$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
@@ -108,7 +109,7 @@
 		public function get_single_with_check_items( $check_list_id, $status, $type )
 		{
 			$check_list_id = (int)$check_list_id;
-			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, planned_date, completed_date,assigned_to, num_open_cases, location_code, num_pending_cases, ";
+			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.control_id, cl.comment as cl_comment, deadline, original_deadline, planned_date, completed_date,assigned_to, num_open_cases, location_code, num_pending_cases, ";
 			$sql .= "ci.id as ci_id, control_item_id, check_list_id, cl.serie_id";
 			$sql .= "coi.title as coi_title, coi.required as coi_required, ";
 			$sql .= "coi.what_to_do as coi_what_to_do, coi.how_to_do as coi_how_to_do, coi.control_group_id as coi_control_group_id, coi.type ";
@@ -144,6 +145,7 @@
 					$check_list->set_control_id($this->unmarshal($this->db->f('control_id'), 'int'));
 					$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 					$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+					$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 					$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 					$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 					$check_list->set_location_code($this->unmarshal($this->db->f('location_code', true), 'string'));
@@ -195,7 +197,7 @@
 		{
 			$control_id = (int)$control_id;
 
-			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, assigned_to, ";
+			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, original_deadline, planned_date, assigned_to, ";
 			$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases ";
 			$sql .= "ci.id as ci_id, control_item_id, check_list_id, cl.serie_id";
 			$sql .= "FROM controller_check_list cl, controller_check_item ci ";
@@ -221,6 +223,7 @@
 					$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 					$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 					$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+					$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 					$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 					$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 					$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -286,6 +289,7 @@
 				$check_list->set_status($this->unmarshal($this->db->f('status'), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('comment'), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+				$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -320,7 +324,7 @@
 				$component_filter = " AND component_id = {$component_id} AND location_id = {$location_id} ";
 			}
 
-			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, assigned_to,";
+			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, original_deadline, planned_date, assigned_to,";
 			$sql .= "completed_date, component_id, location_code, num_open_cases, num_pending_cases, cl.serie_id ";
 			$sql .= "FROM controller_check_list cl ";
 			$sql .= "WHERE cl.control_id = {$control_id} ";
@@ -346,6 +350,7 @@
 					$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 					$check_list->set_comment($this->unmarshal($this->db->f('cl_comment'), 'string'));
 					$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+					$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 					$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 					$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 					$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -424,7 +429,7 @@
 		function get_check_lists_for_location( $location_code, $from_date_ts, $to_date_ts, $repeat_type_expr = null )
 		{
 			$sql = "SELECT c.id as c_id, ";
-			$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
+			$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, original_deadline, planned_date, completed_date, assigned_to, ";
 			$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases, cl.serie_id ";
 			$sql .= "FROM controller_control c ";
 			$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
@@ -462,6 +467,7 @@
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+				$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_component_id($this->unmarshal($this->db->f('cl_component_id'), 'int'));
@@ -531,7 +537,7 @@
 			$component_id = (int)$component_id;
 
 			$sql = "SELECT c.id as c_id, ";
-			$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
+			$sql .= "cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, original_deadline, planned_date, completed_date, assigned_to, ";
 			$sql .= "cl.component_id, cl.location_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases, cl.serie_id ";
 			$sql .= "FROM controller_control c ";
 			$sql .= "LEFT JOIN controller_check_list cl on cl.control_id = c.id ";
@@ -570,6 +576,7 @@
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+				$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_component_id($this->unmarshal($this->db->f('component_id'), 'int'));
@@ -608,7 +615,7 @@
 		{
 			$control_id = (int)$control_id;
 
-			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, assigned_to, ";
+			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, original_deadline, planned_date, completed_date, assigned_to, ";
 			$sql .= "cl.component_id as cl_component_id, cl.location_code as cl_location_code, num_open_cases, num_pending_cases, cl.serie_id ";
 			$sql .= "FROM controller_check_list cl ";
 			$sql .= "LEFT JOIN controller_control c on cl.control_id = c.id ";
@@ -634,6 +641,7 @@
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+				$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_component_id($this->unmarshal($this->db->f('cl_component_id'), 'int'));
@@ -666,7 +674,7 @@
 			$component_id = (int)$component_id;
 			$user_id = (int)$user_id;
 
-			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, planned_date, completed_date, cl.assigned_to, ";
+			$sql = "SELECT cl.id as cl_id, cl.status as cl_status, cl.comment as cl_comment, deadline, original_deadline, planned_date, completed_date, cl.assigned_to, ";
 			$sql .= "cl.component_id as cl_component_id, cl.location_id as cl_location_id,"
 				. " cl.location_code as cl_location_code, num_open_cases, num_pending_cases ,cl.serie_id, cl.billable_hours, cs.repeat_type ";
 			$sql .= "FROM controller_check_list cl ";
@@ -697,6 +705,7 @@
 				$check_list->set_status($this->unmarshal($this->db->f('cl_status'), 'int'));
 				$check_list->set_comment($this->unmarshal($this->db->f('cl_comment', true), 'string'));
 				$check_list->set_deadline($this->unmarshal($this->db->f('deadline'), 'int'));
+				$check_list->set_original_deadline($this->unmarshal($this->db->f('original_deadline'), 'int'));
 				$check_list->set_planned_date($this->unmarshal($this->db->f('planned_date'), 'int'));
 				$check_list->set_completed_date($this->unmarshal($this->db->f('completed_date'), 'int'));
 				$check_list->set_component_id($this->unmarshal($this->db->f('cl_component_id'), 'int'));
@@ -814,6 +823,7 @@
 				'control_id',
 				'comment',
 				'deadline',
+				'original_deadline',
 				'planned_date',
 				'completed_date',
 				'component_id',
@@ -830,6 +840,7 @@
 				$this->marshal($check_list->get_control_id(), 'int'),
 				$this->marshal($check_list->get_comment(), 'string'),
 				$this->marshal($check_list->get_deadline(), 'int'),
+				$this->marshal($check_list->get_original_deadline(), 'int'),
 				$this->marshal($check_list->get_planned_date(), 'int'),
 				$this->marshal($check_list->get_completed_date(), 'int'),
 				$this->marshal($check_list->get_component_id(), 'int'),
@@ -901,6 +912,7 @@
 				'status = ' . $check_list->get_status(),
 				'comment = ' . $this->marshal($check_list->get_comment(), 'string'),
 				'deadline = ' . $this->marshal($check_list->get_deadline(), 'int'),
+				'original_deadline = ' . $this->marshal($check_list->get_original_deadline(), 'int'),
 				'planned_date = ' . $this->marshal($check_list->get_planned_date(), 'int'),
 				'completed_date = ' . $this->marshal($check_list->get_completed_date(), 'int'),
 				'location_code = ' . $this->marshal($check_list->get_location_code(), 'string'),
