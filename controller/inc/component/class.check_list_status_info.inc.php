@@ -37,6 +37,7 @@
 		private $status_text;
 		private $deadline_date_ts;
 		private $deadline_date_txt;
+		private $original_deadline_date_ts;
 		private $info_text;
 		private $location_code;
 		private $component_id;
@@ -100,6 +101,16 @@
 		public function get_deadline_date_ts()
 		{
 			return $this->deadline_date_ts;
+		}
+		
+		public function set_original_deadline_date_ts( $original_deadline_date_ts )
+		{
+			$this->original_deadline_date_ts = $original_deadline_date_ts;
+		}
+
+		public function get_original_deadline_date_ts()
+		{
+			return $this->original_deadline_date_ts;
 		}
 
 		public function set_deadline_date_txt( $deadline_date_txt )
@@ -211,6 +222,7 @@
 				'status_text' => $this->get_status_text(),
 				'deadline_date_ts' => $this->get_deadline_date_ts(),
 				'deadline_date_txt' => $this->get_deadline_date_txt(),
+				'original_deadline_date_ts' => $this->get_original_deadline_date_ts(),
 				'info_text' => $this->get_info_text(),
 				'location_code' => $this->get_location_code(),
 				'location_id' => $this->get_location_id(),

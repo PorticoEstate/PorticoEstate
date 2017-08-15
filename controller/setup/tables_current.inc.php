@@ -67,6 +67,7 @@
 				'status' => array('type' => 'int','precision' => '2','nullable' => false),
 				'comment' => array('type' => 'text', 'nullable' => True),
 				'deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'original_deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'planned_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'completed_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'component_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
