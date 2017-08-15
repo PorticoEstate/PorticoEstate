@@ -63,9 +63,9 @@
 	}
 	else
 	{
-		die('Your phpGroupWare install is incomplete, please try to '
-			. '<a href="http://download.phpgroupware.org/now"'
-			. ' target="_blank">download phpGroupWare</a> and try again');
+		die('Your system install is incomplete, please try to '
+			. '<a href="http://savannah.nongnu.org/projects/fmsystem/"'
+			. ' target="_blank">download Portico Estate</a> and try again');
 	}
 
 	// Make sure we have an install id - I don't like this, but it works :( skwashd mar2008
