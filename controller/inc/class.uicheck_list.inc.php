@@ -219,6 +219,7 @@
 				$type = phpgw::get_var('type');
 				$control_id = phpgw::get_var('control_id');
 				$deadline_ts = phpgw::get_var('deadline_ts');
+				$original_deadline_date_ts = phpgw::get_var('deadline_ts');
 				$deadline_current = phpgw::get_var('deadline_current', 'bool');
 				$serie_id = phpgw::get_var('serie_id', 'int');
 
@@ -245,6 +246,7 @@
 				$check_list = new controller_check_list();
 				$check_list->set_control_id($control_id);
 				$check_list->set_deadline($deadline_ts);
+				$check_list->set_original_deadline($original_deadline_date_ts);
 			}
 			else
 			{
@@ -678,6 +680,7 @@
 			$status = (int)phpgw::get_var('status');
 			$type = phpgw::get_var('type');
 			$deadline_date = phpgw::get_var('deadline_date', 'string');
+			$original_deadline_date_ts = phpgw::get_var('original_deadline_date', 'int');
 			$planned_date = phpgw::get_var('planned_date', 'string');
 			$completed_date = phpgw::get_var('completed_date', 'string');
 			$comment = phpgw::get_var('comment', 'string');
@@ -685,6 +688,7 @@
 			$billable_hours = phpgw::get_var('billable_hours', 'float');
 
 			$deadline_date_ts = date_converter::date_to_timestamp($deadline_date);
+			//$original_deadline_date_ts = date_converter::date_to_timestamp($original_deadline_date);
 
 			$error = false;
 
@@ -749,6 +753,7 @@
 
 			$check_list->set_comment($comment);
 			$check_list->set_deadline($deadline_date_ts);
+			$check_list->set_original_deadline($original_deadline_date_ts);
 			$check_list->set_planned_date($planned_date_ts);
 			$check_list->set_completed_date($completed_date_ts);
 
@@ -854,7 +859,7 @@
 
 					$_serie_id = $check_list->get_serie_id();
 					$text_description = str_replace('&amp;', '&', "Serie#{$_serie_id}::Mobilefrontend:\\n{$link_mobilefrontend}\\n\\nSerie#{$_serie_id}::Backend:\\n{$link_backend}");
-
+/*
 					if ($from_address && $to_address)
 					{
 						$this->sendIcalEvent($from_name, $from_address, $to_name, $to_address, $startTime, $endTime, $subject, $html_description, $text_description, $location);
@@ -863,7 +868,7 @@
 					{
 						phpgwapi_cache::message_set("Mangler epostadresse til avsender eller addresat - eller begge", 'error');
 					}
-				}
+*/				}
 
 				if ($check_list_id > 0)
 				{

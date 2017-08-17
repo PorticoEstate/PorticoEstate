@@ -753,10 +753,10 @@
 						$_actual_cost = round($budget['actual_cost'] / $_taxfactor);
 
 						//for testing
-						if($budget['actual_cost'])
-						{
-							$obligation_orders[] = $order_id;
-						}
+//						if($budget['actual_cost'] && $order_info['b_account'] == '6610')
+//						{
+//							$obligation_orders[$order_id] += $_actual_cost;
+//						}
 
 						$sum_actual_cost += $_actual_cost;
 						if ((int)$budget['actual_period'] == (int)$filter_period)
@@ -782,7 +782,7 @@
 					}
 				}
 			}
-//_debug_array(array_unique($obligation_orders));
+//_debug_array($obligation_orders);
 //_debug_array($_periods);
 //			_debug_array($obligations);
 			//----------- ad hoc order

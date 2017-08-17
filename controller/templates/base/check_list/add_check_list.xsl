@@ -103,9 +103,14 @@
 							</div>
 						</xsl:if>
 						<label>Fristdato</label>
-						<input type="text" id="deadline_date" name="deadline_date" class="date" readonly="readonly" >
+						<input type="text" id="deadline_date" name="deadline_date" class="date" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
+							</xsl:attribute>
+						</input>
+						<input type="hidden" id="original_deadline_date" name="original_deadline_date" >
+							<xsl:attribute name="value">
+								<xsl:value-of select="check_list/deadline"/>
 							</xsl:attribute>
 						</input>
 					</div>

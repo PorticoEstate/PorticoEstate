@@ -103,6 +103,7 @@
 			$check_list_status_info->set_control_id($this->check_list->get_control_id());
 			$check_list_status_info->set_deadline_date_txt(date($dateformat, $this->check_list->get_deadline()));
 			$check_list_status_info->set_deadline_date_ts($this->check_list->get_deadline());
+			$check_list_status_info->set_original_deadline_date_ts($this->check_list->get_original_deadline());
 			$check_list_status_info->set_type($this->type);
 
 			$check_list_status_info->set_assigned_to($this->check_list->get_assigned_to());
