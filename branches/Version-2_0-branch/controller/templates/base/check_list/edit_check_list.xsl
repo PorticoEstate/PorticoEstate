@@ -57,6 +57,11 @@
 			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/></xsl:attribute>
 				  </xsl:if>
 			    </input>
+				<input type="hidden" id="original_deadline_date" name="original_deadline_date" >
+					<xsl:attribute name="value">
+						<xsl:value-of select="check_list/original_deadline"/>
+					</xsl:attribute>
+				</input>
 			</div>
 			<div class="row">
 				<label>Planlagt dato</label>

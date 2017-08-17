@@ -2,7 +2,7 @@
 	/**
 	 * phpGroupWare - controller: a part of a Facilities Management System.
 	 *
-	 * @author Erink Holm-Larsen <erik.holm-larsen@bouvet.no>
+	 * @author Erik Holm-Larsen <erik.holm-larsen@bouvet.no>
 	 * @author Torstein Vadla <torstein.vadla@bouvet.no>
 	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
@@ -47,6 +47,7 @@
 		protected $status;
 		protected $comment;
 		protected $deadline;
+		protected $original_deadline;
 		protected $start_date;
 		protected $end_date;
 		protected $planned_date;
@@ -168,6 +169,16 @@
 		public function get_deadline()
 		{
 			return $this->deadline;
+		}
+		
+		public function set_original_deadline( $original_deadline )
+		{
+			$this->original_deadline = $original_deadline;
+		}
+
+		public function get_original_deadline()
+		{
+			return $this->original_deadline;
 		}
 
 		public function set_check_item_array( $check_item_array )
@@ -340,6 +351,7 @@
 				'status' => $this->get_status(),
 				'comment' => $this->get_comment(),
 				'deadline' => $this->get_deadline(),
+				'original_deadline' => $this->get_original_deadline(),
 				'planned_date' => $this->get_planned_date(),
 				'completed_date' => $this->get_completed_date(),
 				'start_date' => $this->get_start_date(),
