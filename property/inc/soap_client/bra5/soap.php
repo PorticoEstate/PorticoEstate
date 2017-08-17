@@ -171,10 +171,40 @@
 
 	if ($fileid)
 	{
-		$bra5ServiceGet = new Bra5ServiceGet();
-
-		if ($bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($secKey, $fileid)))
+		$get_chunked = true;
+		if($get_chunked)
 		{
+			$Bra5ServiceFile = new Bra5ServiceFile();
+
+			$_fileid = $Bra5ServiceFile->fileTransferRequestChunkedInit(new Bra5StructFileTransferRequestChunkedInit($secKey, $fileid))->fileTransferRequestChunkedInitResult->fileTransferRequestChunkedInitResult;
+
+			// Offset er posisjon i fila
+			$offset = 0;
+			$base64string = "";
+			$fp = fopen("php://temp", 'w');
+
+			// kjører løkke til tekstverdien vi får i retur er null
+			while (($base64string = $Bra5ServiceFile->fileTransferRequestChunk(new Bra5StructFileTransferRequestChunk($secKey, $_fileid, $offset))->fileTransferRequestChunkResult->fileTransferRequestChunkResult) != null)
+			{
+				fputs($fp, base64_decode($base64string));
+				// Oppdaterer offset til filens foreløpige lengde
+				$offset += strlen($base64string);
+			}
+			// Avslutter nedlasting
+			$Bra5ServiceFile->fileTransferRequestChunkedEnd(new Bra5StructFileTransferRequestChunkedEnd($secKey, $_fileid));
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header("{$fileid}.pdf", 'application/pdf');
+
+			// Read what we have written.
+			rewind($fp);
+			echo stream_get_contents($fp);
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+		else if (!$get_chunked)
+		{
+			$bra5ServiceGet = new Bra5ServiceGet();
+			$bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($secKey, $fileid));
 			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
 			$file = base64_decode($file_result->getFileAsByteArrayResult);
 			/*
@@ -194,6 +224,7 @@
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 	}
+
 	$bra5ServiceSearch = new Bra5ServiceSearch();
 	/*
 	  if($bra5ServiceSearch->searchDocument(new Bra5StructSearchDocument($secKey,$baseclassname,$classname,$_where,$_maxhits = 2)))
