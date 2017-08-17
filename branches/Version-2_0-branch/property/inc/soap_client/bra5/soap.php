@@ -186,9 +186,10 @@
 			// kjører løkke til tekstverdien vi får i retur er null
 			while (($base64string = $Bra5ServiceFile->fileTransferRequestChunk(new Bra5StructFileTransferRequestChunk($secKey, $_fileid, $offset))->fileTransferRequestChunkResult->fileTransferRequestChunkResult) != null)
 			{
-				fputs($fp, base64_decode($base64string));
+				$decoded_string =  base64_decode($base64string);
+				fputs($fp, $decoded_string);
 				// Oppdaterer offset til filens foreløpige lengde
-				$offset += strlen($base64string);
+				$offset += strlen($decoded_string);
 			}
 			// Avslutter nedlasting
 			$Bra5ServiceFile->fileTransferRequestChunkedEnd(new Bra5StructFileTransferRequestChunkedEnd($secKey, $_fileid));
