@@ -135,6 +135,9 @@
     <td><b>{lang_dbhost}</b><br><input type="text" name="settings[{db_domain}][db_host]" value="{db_host}"></td><td>{lang_dbhostdescr}</td>
   </tr>
   <tr>
+    <td><b>{lang_dbport}</b><br><input type="text" name="settings[{db_domain}][db_port]" value="{db_port}"></td><td>{lang_dbportdescr}</td>
+  </tr>
+  <tr>
     <td><b>{lang_dbname}</b><br><input type="text" name="settings[{db_domain}][db_name]" value="{db_name}"></td><td>{lang_dbnamedescr}</td>
   </tr>
   <tr>

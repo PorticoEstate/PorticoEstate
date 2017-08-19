@@ -105,7 +105,7 @@
 			$db = createObject('phpgwapi.db', null, null, true);
 
 			$db->Host = $GLOBALS['phpgw_domain']['default']['db_host'];
-			$db->Port = '5432';
+			$db->Port = $GLOBALS['phpgw_domain']['default']['db_port'];//'5432';
 			$db->Type = 'postgres';
 			$db->Database = 'breg';
 			$db->User = $GLOBALS['phpgw_domain']['default']['db_user'];

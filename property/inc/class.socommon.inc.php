@@ -59,6 +59,7 @@
 				if (isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$this->db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
+					$this->db->Port = $GLOBALS['phpgw_info']['server']['db_port'];
 					$this->db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
 					$this->db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
 					$this->db->User = $GLOBALS['phpgw_info']['server']['db_user'];
@@ -74,6 +75,7 @@
 					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
 					$phpgw_domain = $GLOBALS['phpgw_domain'];
 					$this->db->Host = $phpgw_domain[$ConfigDomain]['db_host'];
+					$this->db->Port = $phpgw_domain[$ConfigDomain]['db_port'];
 					$this->db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 					$this->db->User = $phpgw_domain[$ConfigDomain]['db_user'];
 					$this->db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];
@@ -420,6 +422,7 @@
 				if (isset($GLOBALS['phpgw_info']['server']['db_name']) && $GLOBALS['phpgw_info']['server']['db_name'])
 				{
 					$db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
+					$db->Port = $GLOBALS['phpgw_info']['server']['db_port'];
 					$db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
 					$db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
 					$db->User = $GLOBALS['phpgw_info']['server']['db_user'];
@@ -435,6 +438,7 @@
 					$phpgw_domain = $GLOBALS['phpgw_domain'];
 					$GLOBALS['phpgw_info']['user']['domain'] = $ConfigDomain;
 					$db->Host = $phpgw_domain[$ConfigDomain]['db_host'];
+					$db->Port = $phpgw_domain[$ConfigDomain]['db_port'];
 					$db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 					$db->User = $phpgw_domain[$ConfigDomain]['db_user'];
 					$db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];

@@ -37,6 +37,7 @@
 			if( isset($GLOBALS['phpgw_info']['server']['db_name']) && strlen($GLOBALS['phpgw_info']['server']['db_name']) )
 			{
 				$temp_db->Host = $GLOBALS['phpgw_info']['server']['db_host'];
+				$temp_db->Port = $GLOBALS['phpgw_info']['server']['db_port'];
 				$temp_db->Type = $GLOBALS['phpgw_info']['server']['db_type'];
 				$temp_db->Database = $GLOBALS['phpgw_info']['server']['db_name'];
 				$temp_db->User = $GLOBALS['phpgw_info']['server']['db_user'];
@@ -48,6 +49,7 @@
 				$phpgw_domain = $GLOBALS['phpgw_domain'];	
 
 				$temp_db->Host     = $phpgw_domain[$ConfigDomain]['db_host'];
+				$temp_db->Port     = $phpgw_domain[$ConfigDomain]['db_port'];
 				$temp_db->Database = $phpgw_domain[$ConfigDomain]['db_name'];
 				$temp_db->User     = $phpgw_domain[$ConfigDomain]['db_user'];
 				$temp_db->Password = $phpgw_domain[$ConfigDomain]['db_pass'];

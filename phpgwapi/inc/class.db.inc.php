@@ -122,6 +122,7 @@
 
 			$this->Database		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_name']);
 			$this->Host			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_host']);
+			$this->Port			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_port']);
 			$this->User			= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_user']);
 			$this->Password		= $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_pass']);
 
