@@ -35,18 +35,21 @@
 			$crypto = createObject('phpgwapi.crypto',array($_key, $_iv));
 
 			$db_host = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_host']);
+			$db_port=  $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_port']);
 			$db_name = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_name']);
 			$this->db_user = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_user']);
 			$this->db_pass = $crypto->decrypt($GLOBALS['phpgw_info']['server']['db_pass']);
 			$this->connection_string = "";
 
-			if ($GLOBALS['phpgw_info']['server']['db_type'] == "postgres") 
+			if ($GLOBALS['phpgw_info']['server']['db_type'] == "postgres")
 			{
-				$this->connection_string = "jdbc:postgresql://".$db_host.":5432/".$db_name;
+				$db_port = $db_port ? $db_port : '5432';
+				$this->connection_string = "jdbc:postgresql://{$db_host}:{$db_port}/{$db_name}";
 			} 
 			elseif ($GLOBALS['phpgw_info']['server']['db_type'] == "mysql") 
 			{
-				$this->connection_string = "jdbc:mysql://".$db_host.":3306/".$db_name;
+				$db_port = $db_port ? $db_port : '3306';
+				$this->connection_string = "jdbc:mysql://{$db_host}:{$db_port}/{$db_name}";
 			}
 		}
 

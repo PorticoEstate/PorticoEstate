@@ -160,6 +160,7 @@
 					(
 					'domain' => $domain,
 					'db_host' => $entry['db_host'],
+					'db_port' => $entry['db_port'],
 					'db_name' => $entry['db_name'],
 					'db_type' => $entry['db_type'],
 					'lang_select_migrate_text' => $lang_select_migrate_text,
@@ -181,6 +182,7 @@
 				)),
 				'lang_domain' => lang('domain'),
 				'lang_db_host' => lang('db_host'),
+				'lang_db_port' => lang('db_port'),
 				'lang_db_name' => lang('db_name'),
 				'lang_db_type' => lang('db_type'),
 				'lang_select' => (isset($this->acl_edit) ? lang('select') : ''),

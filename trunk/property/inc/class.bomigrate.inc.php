@@ -129,6 +129,7 @@
 					$this->oProc->m_odb = CreateObject('phpgwapi.db');//$GLOBALS['phpgw']->db;
 					$this->oProc->m_odb->Type = $GLOBALS['phpgw_domain'][$domain]['db_type'];
 					$this->oProc->m_odb->Host = $GLOBALS['phpgw_domain'][$domain]['db_host'];
+					$this->oProc->m_odb->Port = $GLOBALS['phpgw_domain'][$domain]['db_port'];
 					$this->oProc->m_odb->Database = $GLOBALS['phpgw_domain'][$domain]['db_name'];
 					$this->oProc->m_odb->User = $GLOBALS['phpgw_domain'][$domain]['db_user'];
 					$this->oProc->m_odb->Password = $GLOBALS['phpgw_domain'][$domain]['db_pass'];
