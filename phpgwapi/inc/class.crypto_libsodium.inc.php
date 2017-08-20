@@ -28,12 +28,11 @@
 		{
 			$key = $vars[0];
 
-			if ($GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' && extension_loaded('libsodium') && !$this->enabled)
+			if ($GLOBALS['phpgw_info']['server']['enable_crypto'] == 'libsodium' && extension_loaded('sodium') && !$this->enabled)
 			{
 				$this->enabled = true;
 
-				$keysize = \Sodium\CRYPTO_SECRETBOX_KEYBYTES;
-
+				$keysize = SODIUM_CRYPTO_SECRETBOX_KEYBYTES;
 				/* Hack Key to be the correct size */
 				$x = strlen($key);
 
@@ -48,7 +47,7 @@
 		{
 			if ($this->enabled)
 			{
-				\Sodium\memzero($this->key);
+				sodium_memzero($this->key);
 			}
 		}
 
@@ -201,18 +200,18 @@
 		 */
 		function safeEncrypt( $message, $key )
 		{
-			$nonce = \Sodium\randombytes_buf(
-				\Sodium\CRYPTO_SECRETBOX_NONCEBYTES
+			$nonce = random_bytes(
+				SODIUM_CRYPTO_SECRETBOX_NONCEBYTES
 			);
 
 			$cipher = base64_encode(
 				$nonce .
-				\Sodium\crypto_secretbox(
+				sodium_crypto_secretbox(
 					$message, $nonce, $key
 				)
 			);
-			\Sodium\memzero($message);
-			\Sodium\memzero($key);
+			sodium_memzero($message);
+			sodium_memzero($key);
 			return $cipher;
 		}
 
@@ -231,22 +230,23 @@
 				return false;
 //				throw new \Exception('Scream bloody murder, the encoding failed');
 			}
-			if (mb_strlen($decoded, '8bit') < (\Sodium\CRYPTO_SECRETBOX_NONCEBYTES + \Sodium\CRYPTO_SECRETBOX_MACBYTES))
+			if (mb_strlen($decoded, '8bit') < (SODIUM_CRYPTO_SECRETBOX_NONCEBYTES + SODIUM_CRYPTO_SECRETBOX_MACBYTES))
 			{
+				return $encrypted;
 //				throw new \Exception('Scream bloody murder, the message was truncated');
 			}
-			$nonce = mb_substr($decoded, 0, \Sodium\CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
-			$ciphertext = mb_substr($decoded, \Sodium\CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+			$nonce = mb_substr($decoded, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+			$ciphertext = mb_substr($decoded, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
 
-			$plain = \Sodium\crypto_secretbox_open(
+			$plain = sodium_crypto_secretbox_open(
 				$ciphertext, $nonce, $key
 			);
 			if ($plain === false)
 			{
 //				throw new \Exception('Scream bloody murder, the message was tampered with in transit');
 			}
-			\Sodium\memzero($ciphertext);
-			\Sodium\memzero($key);
+			sodium_memzero($ciphertext);
+			sodium_memzero($key);
 			return $plain;
 		}
 	}
