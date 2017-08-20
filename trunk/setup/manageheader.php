@@ -475,7 +475,7 @@ HTML;
 			if(extension_loaded('libsodium') || extension_loaded('sodium'))
 			{
 				$supported_crypto_type[] = 'libsodium';
-				$detected .= '<li>' . lang('You appear to have enabled support for libsodium %1', \Sodium\version_string()) . "</li>\n";
+				$detected .= '<li>' . lang('You appear to have enabled support for libsodium %1', SODIUM_LIBRARY_VERSION) . "</li>\n";
 			}
 			else
 			{
