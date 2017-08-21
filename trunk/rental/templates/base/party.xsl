@@ -53,6 +53,13 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'customer id')"/>
+							</label>
+							<input type="text" name="customer_id" value="{value_customer_id}">
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'firstname')"/>
 							</label>
 							<input type="text" id="firstname" name="firstname" value="{value_firstname}">
