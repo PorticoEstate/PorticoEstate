@@ -314,6 +314,8 @@
 				'function' => "set_tab('first_tab')"
 			);
 
+			$application->public_type = $application->non_public == 1 ? lang('application public type non public') : lang('application public type public');
+
 			$data = array(
 				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.save")),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.index",)),

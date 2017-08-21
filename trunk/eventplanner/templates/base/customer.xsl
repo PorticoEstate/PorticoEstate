@@ -286,6 +286,16 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'want offer for non public')"/>
+							</label>
+							<input type="checkbox" name="grant_non_public" id="grant_non_public" value="1">
+								<xsl:if test="customer/grant_non_public = 1">
+									<xsl:attribute name="checked" value="checked"/>
+								</xsl:if>
+							</input>
+						</div>
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'remark')"/>
 							</label>
 							<textarea cols="47" rows="7" name="remark">
