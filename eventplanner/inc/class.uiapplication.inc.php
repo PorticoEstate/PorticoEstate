@@ -362,6 +362,19 @@
 				)
 			);
 
+		$list_public_types = array(
+			array(
+				'id' => 0,
+				'name' => lang('application public type public'),
+				'selected' => $application->non_public == 0 ? 1 : 0
+				),
+			array('id' => 1,
+				'name' => lang('application public type non public'),
+				'selected' => $application->non_public == 1 ? 1 : 0
+				),
+
+		);
+
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicalendar.query_relaxed",
@@ -421,6 +434,7 @@
 				'application' => $application,
 				'new_vendor_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.add")),
 				'list_case_officer' => array('options' => $case_officer_options),
+				'list_public_types'	=> array('options' => $list_public_types),
 				'cat_select' => $this->cats->formatted_xslt_list(array(
 					'select_name' => 'category_id',
 					'selected'	=> $application->category_id ? $application->category_id : $default_category,

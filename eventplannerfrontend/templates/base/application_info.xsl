@@ -78,11 +78,18 @@
 				</tbody>
 			</table>
 		</div>
+
 		<div class="pure-control-group">
 			<label>
 				<xsl:value-of select="php:function('lang', 'event timespan')"/>
 			</label>
 			<xsl:value-of select="application/timespan"/>
+		</div>
+		<div class="pure-control-group">
+			<label>
+				<xsl:value-of select="php:function('lang', 'application public type')"/>
+			</label>
+			<xsl:value-of select="application/public_type"/>
 		</div>
 
 	</div>
