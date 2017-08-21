@@ -270,6 +270,7 @@
 			{
 				$columns[] = 'party.id AS party_id';
 				$columns[] = 'party.identifier';
+				$columns[] = 'party.customer_id';
 				$columns[] = 'party.first_name';
 				$columns[] = 'party.last_name';
 				$columns[] = 'party.comment';
@@ -356,6 +357,7 @@
 
 			$values = array(
 				'identifier = ' . $this->marshal($party->get_identifier(), 'string'),
+				'customer_id = ' . $this->marshal($party->get_customer_id(), 'int'),
 				'first_name = ' . $this->marshal($party->get_first_name(), 'string'),
 				'last_name =  ' . $this->marshal($party->get_last_name(), 'string'),
 				'title = ' . $this->marshal($party->get_title(), 'string'),
@@ -423,6 +425,7 @@
 				$party->set_last_name($this->unmarshal($this->db->f('last_name'), 'string'));
 				$party->set_location_id($this->unmarshal($this->db->f('org_location_id'), 'int'));
 				$party->set_identifier($this->unmarshal($this->db->f('identifier'), 'string'));
+				$party->set_customer_id($this->unmarshal($this->db->f('customer_id'), 'int'));
 				$party->set_mobile_phone($this->unmarshal($this->db->f('mobile_phone'), 'string'));
 				$party->set_place($this->unmarshal($this->db->f('place'), 'string'));
 				$party->set_postal_code($this->unmarshal($this->db->f('postal_code'), 'string'));
