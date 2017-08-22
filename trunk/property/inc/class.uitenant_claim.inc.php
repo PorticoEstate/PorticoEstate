@@ -181,6 +181,8 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 
+			$location1_info = CreateObject('property.soadmin_location')->read_single(1);
+
 			$data = array(
 				'datatable_name' => $appname,
 				'form' => array(
@@ -219,7 +221,7 @@
 						),
 						array(
 							'key' => 'loc1_name',
-							'label' => lang('loc1_name'),
+							'label' => $location1_info['name'],
 							'sortable' => FALSE
 						),
 						array(
