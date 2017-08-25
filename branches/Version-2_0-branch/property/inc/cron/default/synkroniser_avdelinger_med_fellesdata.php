@@ -58,6 +58,7 @@
 			 * prosjekt
 			 * tjeneste
 			 */
+//			$fellesdata->update_customer_id();
 			$fellesdata->update_vendor();
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
@@ -73,6 +74,9 @@
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/tjeneste?id=88010
 
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/kundeinfo?organisasjonsnummer="998391407"
+
+
 			if ($this->debug)
 			{
 				_debug_array($fellesdata->unit_ids);
@@ -357,6 +361,50 @@
 			}
 
 			$db->transaction_commit();
+		}
+
+		function update_customer_id(  )
+		{
+			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/kundeinfo?organisasjonsnummer="998391407"
+			$sql = "SELECT id, identifier FROM rental_party"
+				. " WHERE (customer_id = 0 OR customer_id IS NULL)"
+				. " AND (length(identifier) = 9 OR length(identifier) = 11)";
+
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+
+			$parties = array();
+			while ($GLOBALS['phpgw']->db->next_record())
+			{
+				$parties[] = array(
+					'id'	=> $GLOBALS['phpgw']->db->f('id'),
+					'identifier'	=> $GLOBALS['phpgw']->db->f('identifier')
+				);
+			}
+
+			foreach ($parties as $party)
+			{
+		//		$this->soap_url= 'http://tjenester.usrv.ubergenkom.no/api/agresso'; //test url
+				$url = "{$this->soap_url}/kundeinfo?organisasjonsnummer='{$party['identifier']}'";
+				$values = array();
+				try
+				{
+					$values = $this->check_external_register($url);
+				}
+				catch (Exception $exc)
+				{
+					echo $exc->getTraceAsString();
+				}
+
+				if(!empty($values[0]['kundenr']))
+				{
+					$customer_id = (int)$values[0]['kundenr'];
+					$sql = "UPDATE rental_party"
+						. " SET customer_id = {$customer_id}"
+						. " WHERE id = " . (int)$party['id'];
+					_debug_array($sql);
+					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+				}
+			}
 		}
 
 		/*
@@ -700,8 +748,12 @@ SQL;
 
 		public function check_external_register($url)
 		{
-			$username = $this->soap_username; //'portico';
-			$password = $this->soap_password; //'BgPor790gfol';
+			$username = $this->soap_username;
+			$password = $this->soap_password;
+
+			/*Test server*/
+//			$username = 'portico';
+//			$password = 'BgPor790gfol';
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);

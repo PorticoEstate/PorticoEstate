@@ -273,6 +273,15 @@
 							</div>
 
 							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'application public type')"/>
+								</label>
+								<select id="non_public" name="non_public" class="pure-input-1-2" >
+									<xsl:apply-templates select="list_public_types/options"/>
+								</select>
+							</div>
+
+							<div class="pure-control-group">
 								<xsl:variable name="lang_date_start">
 									<xsl:value-of select="php:function('lang', 'date start')"/>
 								</xsl:variable>

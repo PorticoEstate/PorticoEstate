@@ -572,7 +572,9 @@ be loaded as a database for you to use.
 
   	Usually this is set to localhost - but don't assume.
 
-  $GLOBALS['phpgw_info']['server']['db_name'] = Database name.
+$GLOBALS['phpgw_info']['server']['db_port'] = Database port.
+
+$GLOBALS['phpgw_info']['server']['db_name'] = Database name.
 
   $GLOBALS['phpgw_info']['server']['db_user'] = User name.
 
@@ -690,7 +692,7 @@ Without a specific translation in the lang table, the above code will print:
 
 If the current user speaks Italian, the string returned will be:
 
-  il contatore è 42<br />
+  il contatore Ã¨ 42<br />
 
 
 The lang function
@@ -834,7 +836,7 @@ To subscribe, go to http://support.phpgroupware.org/lists
 
 9.4 Copyrights and Trademarks
 
-Copyright © Free Software Foundarion. Permission is granted to copy, distribute
+Copyright Â© Free Software Foundarion. Permission is granted to copy, distribute
 and/or modify this document under the terms of the GNU Free Documentation
 License, Version 1.1 or any later version published by the Free Software
 Foundation.
@@ -846,7 +848,7 @@ Thanks to Joesph Engo for starting phpGroupWare (at the time called webdistro).
 Thanks to all the developers and users who contribute to making phpGroupWare
 such a success.
 The most recent version of this document can be found at docs.phpgroupware.org
-Copyright © 2000-2004 Free_Software_Foundation_Inc, distributed under the terms
+Copyright Â© 2000-2004 Free_Software_Foundation_Inc, distributed under the terms
 of the GNU_Free_Documentation_License
 Source: $Source$
 Version: $Revision: 15562 $

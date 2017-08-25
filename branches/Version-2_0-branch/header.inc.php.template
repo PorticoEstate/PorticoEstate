@@ -276,6 +276,7 @@ HTML;
 	$GLOBALS['phpgw_domain']['{DB_DOMAIN}'] = array
 	(
 		'db_host' => '{DB_HOST}',
+		'db_port' => '{DB_PORT}',
 		'db_name' => '{DB_NAME}',
 		'db_user' => '{DB_USER}',
 		'db_pass' => '{DB_PASS}',

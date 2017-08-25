@@ -472,10 +472,10 @@ HTML;
 			}
 
 			$supported_crypto_type = array();
-			if(extension_loaded('libsodium') || function_exists('\Sodium\version_string()'))
+			if(extension_loaded('libsodium') || extension_loaded('sodium'))
 			{
 				$supported_crypto_type[] = 'libsodium';
-				$detected .= '<li>' . lang('You appear to have enabled support for libsodium %1', \Sodium\version_string()) . "</li>\n";
+				$detected .= '<li>' . lang('You appear to have enabled support for libsodium %1', SODIUM_LIBRARY_VERSION) . "</li>\n";
 			}
 			else
 			{
@@ -560,6 +560,7 @@ HTML;
 						$setup_tpl->set_var('lang_delete',lang('Delete'));
 						$setup_tpl->set_var('db_domain',$key);
 						$setup_tpl->set_var('db_host',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_host']));
+						$setup_tpl->set_var('db_port',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_port']));
 						$setup_tpl->set_var('db_name',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_name']));
 						$setup_tpl->set_var('db_user',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_user']));
 						$setup_tpl->set_var('db_pass',$GLOBALS['phpgw']->crypto->decrypt($GLOBALS['phpgw_domain'][$key]['db_pass']));
@@ -639,6 +640,7 @@ HTML;
 				$setup_tpl->set_var('lang_delete',lang('Delete'));
 				$setup_tpl->set_var('db_domain','default');
 				$setup_tpl->set_var('db_host','localhost');
+				$setup_tpl->set_var('db_port','');
 				$setup_tpl->set_var('db_name','phpgroupware');
 				$setup_tpl->set_var('db_user','phpgroupware');
 				$setup_tpl->set_var('db_pass','your_password');
@@ -840,6 +842,8 @@ HTML;
 			$setup_tpl->set_var('lang_forgotten_password',lang('url forgotten password'));
 			$setup_tpl->set_var('lang_dbhost',lang('DB Host'));
 			$setup_tpl->set_var('lang_dbhostdescr',lang('Hostname/IP of database server'));
+			$setup_tpl->set_var('lang_dbport',lang('DB port'));
+			$setup_tpl->set_var('lang_dbportdescr',lang('If empty, default will be used'));
 			$setup_tpl->set_var('lang_dbname',lang('DB Name'));
 			$setup_tpl->set_var('lang_dbnamedescr',lang('Name of database'));
 			$setup_tpl->set_var('lang_dbuser',lang('DB User'));

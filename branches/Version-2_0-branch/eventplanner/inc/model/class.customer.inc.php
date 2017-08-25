@@ -64,6 +64,7 @@
 			$max_events,
 			$account_number,
 			$description,
+			$grant_non_public,
 			$remark,
 			$comments,
 			$comment;
@@ -159,6 +160,12 @@
 					'label' => 'description',
 					'sortable' => false,
 					'required' => true
+					),
+			 	'grant_non_public' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'int',
+					'label' => 'want offer for non public',
+					'sortable' => false,
+					'required' => false
 					),
 			 	'remark' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'string',

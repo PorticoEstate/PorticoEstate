@@ -7,13 +7,13 @@ function onNew_contract()
 
 function formatterArea(key, oData)
 {
-	var amount = $.number(oData[key], decimalPlaces, decimalSeparator, thousandsSeparator) + ' ' + area_suffix;
+	var amount = $.number(oData[key], decimalPlaces, decimalSeparator, thousandsSeparator);
 	return amount;
 }
 
 function formatterPrice(key, oData)
 {
-	var amount = $.number(oData[key], decimalPlaces, decimalSeparator, thousandsSeparator) + ' ' + currency_suffix;
+	var amount = $.number(oData[key], decimalPlaces, decimalSeparator, thousandsSeparator);
 	return amount;
 }
 
