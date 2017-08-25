@@ -947,11 +947,11 @@
 				</thead>
 HTML;
 
-				$table_content .= "<tr><td>{$i}</td><td>{$entry_date}</td><td>{$user_name}</td><td>{$ticket['details']}</td></tr>";
+				$table_content .= "<tr><td style='vertical-align:top'>{$i}</td><td style='vertical-align:top'>{$entry_date}</td><td style='vertical-align:top'>{$user_name}</td><td style='white-space: pre-line'>{$ticket['details']}</td></tr>";
 
 				foreach ($additional_notes as $value)
 				{
-					$table_content .= "<tr><td>{$value['value_count']}</td><td>{$value['value_date']}</td><td>{$value['value_user']}</td><td>{$value['value_note']}</td></tr>";
+					$table_content .= "<tr><td style='vertical-align:top'>{$value['value_count']}</td><td style='vertical-align:top'>{$value['value_date']}</td><td style='vertical-align:top'>{$value['value_user']}</td><td style='white-space: pre-line'>{$value['value_note']}</td></tr>";
 				}
 				$body.= "<table border='1' class='pure-table pure-table-bordered pure-table-striped'>{$table_content}</table>";
 				$subject .= "::{$i}";
