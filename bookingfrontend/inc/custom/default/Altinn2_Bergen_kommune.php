@@ -147,7 +147,7 @@
 				}
 
 				$org_option .= <<<HTML
-				<option value='{$org['id']}'{$selected}>{$org['name']}</option>
+				<option value='{$org['id']}' {$selected}>{$org['name']}</option>
 
 HTML;
 			}
@@ -174,7 +174,7 @@ HTML;
 			}
 
 			$html = <<<HTML
-			﻿<!DOCTYPE html>
+<!DOCTYPE html>
 			<html>
 				<head>
 					<title>Velg organisasjon</title>

@@ -372,3 +372,27 @@
 		}
 		return $GLOBALS['setup_info']['eventplanner']['currentver'];
 	}
+
+	$test[] = '0.9.18.009';
+	function eventplanner_upgrade0_9_18_009()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_customer', 'grant_non_public', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('eventplanner_application', 'non_public', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['eventplanner']['currentver'] = '0.9.18.010';
+		}
+		return $GLOBALS['setup_info']['eventplanner']['currentver'];
+	}

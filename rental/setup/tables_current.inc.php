@@ -219,6 +219,7 @@
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
 				'identifier' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'customer_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'first_name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'last_name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'comment' => array('type' => 'text'),

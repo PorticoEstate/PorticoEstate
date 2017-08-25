@@ -1168,7 +1168,7 @@
 						),
 						array(
 							'key' => 'total_price',
-							'label' => lang('total_price'),
+							'label' => lang('total_price') . " ({$this->currency_suffix})",
 							'className' => 'right',
 							'sortable' => false,
 							'hidden' => false,
@@ -1176,7 +1176,7 @@
 						),
 						array(
 							'key' => 'rented_area',
-							'label' => lang('area'),
+							'label' => lang('area') . " ({$this->area_suffix})",
 							'className' => 'right',
 							'sortable' => false,
 							'hidden' => false,

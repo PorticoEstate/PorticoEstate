@@ -913,6 +913,7 @@ JS;
 				'party_id' => $party_id,
 				'value_name' => $party->get_name(),
 				'value_identifier' => $party->get_identifier(),
+				'value_customer_id' => $party->get_customer_id(),
 				'value_firstname' => $party->get_first_name(),
 				'value_lastname' => $party->get_last_name(),
 				'value_job_title' => $party->get_title(),
@@ -975,6 +976,7 @@ JS;
 			{
 				// ... set all parameters
 				$party->set_identifier(phpgw::get_var('identifier'));
+				$party->set_customer_id(phpgw::get_var('customer_id', 'int'));
 				$party->set_first_name(phpgw::get_var('firstname'));
 				$party->set_last_name(phpgw::get_var('lastname'));
 				$party->set_title(phpgw::get_var('title'));

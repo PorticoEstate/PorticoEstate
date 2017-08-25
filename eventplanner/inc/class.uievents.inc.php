@@ -242,6 +242,8 @@
 
 			$category = $this->cats->return_single($application->category_id);
 
+			$application->public_type = $application->non_public == 1 ? lang('application public type non public') : lang('application public type public');
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uievents.index",)),

@@ -12,6 +12,7 @@
 
 		public static $so;
 		protected $id;
+		protected $customer_id;
 		protected $identifier;
 		protected $first_name;
 		protected $last_name;
@@ -108,9 +109,24 @@
 			return $this->id;
 		}
 
+		public function set_customer_id( $customer_id )
+		{
+			$this->customer_id = $customer_id;
+		}
+
+		public function get_customer_id()
+		{
+			return $this->customer_id;
+		}
+
 		public function set_identifier( $identifier )
 		{
 			$this->identifier = $identifier;
+		}
+
+		public function get_identifier()
+		{
+			return $this->identifier;
 		}
 
 		public function get_org_enhet_id()
@@ -151,11 +167,6 @@
 		public function add_sync_problem( $sync_problem )
 		{
 			$this->sync_problems[] = $sync_problem;
-		}
-
-		public function get_identifier()
-		{
-			return $this->identifier;
 		}
 
 		public function set_first_name( $first_name )
@@ -443,6 +454,7 @@
 			return array(
 				'id' => $this->id,
 				'name' => $this->get_name(),
+				'customer_id' => $this->customer_id,
 				'identifier' => $this->identifier,
 				'firstname' => $this->first_name,
 				'lastname' => $this->last_name,

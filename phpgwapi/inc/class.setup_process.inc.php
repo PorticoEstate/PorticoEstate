@@ -54,6 +54,7 @@
 			$GLOBALS['phpgw_setup']->oProc = createObject('phpgwapi.schema_proc',$phpgw_domain[$ConfigDomain]['db_type']);
 			$GLOBALS['phpgw_setup']->oProc->m_odb           = $GLOBALS['phpgw_setup']->db;
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Host     = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_host']);
+			$GLOBALS['phpgw_setup']->oProc->m_odb->Port     = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_port']);
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Database = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_name']);
 			$GLOBALS['phpgw_setup']->oProc->m_odb->User     = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_user']);
 			$GLOBALS['phpgw_setup']->oProc->m_odb->Password = $crypto->decrypt($phpgw_domain[$ConfigDomain]['db_pass']);

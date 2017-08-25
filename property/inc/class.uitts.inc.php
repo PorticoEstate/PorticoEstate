@@ -3427,6 +3427,8 @@ HTML;
 			$pdf->ezText($contact_email, 14);
 			$pdf->ezText($contact_phone, 14);
 			$pdf->ezSetDy(-20);
+			$pdf->ezText("Av hensyn til våre ansatte og leietakere ber vi om at kontakt på bygget blir kontaktet minst 1 dag i forkant av oppdrag.", 14);
+			$pdf->ezSetDy(-20);
 
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
 			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);

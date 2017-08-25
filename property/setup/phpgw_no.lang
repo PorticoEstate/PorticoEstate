@@ -246,7 +246,7 @@ buffer	property	no	Buffer
 bulk update status	property	no	Masseoppdatering av status
 branch	property	no	Fag
 b - responsible	property	no	Anviser
-bruks nr	property	no	bruks nr
+bruks nr	property	no	Bruksnr.
 budget	property	no	Budsjett
 budget account	property	no	Kostnadsart
 budget account group	property	no	Kontogruppe
@@ -683,7 +683,7 @@ enable link from location detail	property	no	Aktiver link fra detaljer for areal
 enables help message for this attribute	property	no	Hjelpetekst for denne attributten
 enable start project from this category	property	no	Aktiviser mulighet for å starte prosjekt herfra
 end	property	no	Slutt
-end date	property	no	sluttdato
+end date	property	no	Sluttdato
 enter additional remarks to the description - if any	property	no	gi en merknad - om noen
 enter a descr for the custom function	property	no	Angi en beskrivelse av egendefinert funksjon
 enter a description for prerequisitions for this activity - if any	property	no	gi en beskrivelse av nødvendige grunnlagsarbeid - om noen - for denne aktiviteten
@@ -1363,7 +1363,7 @@ project info	property	no	Prosjekt info.
 Project is closed	property	no	Prosjektet er avsluttet.
 project name	property	no	Prosjekt navn
 .project.request	property	no	Behov
-project start date	property	no	prosjekt startdato
+project start date	property	no	Prosjekt-startdato
 .project.workorder	property	no	Bestilling
 propagate	property	no	Propager
 property	common	no	Eiendom
@@ -1425,7 +1425,7 @@ request title	property	no	Tiltakstittel
 request description	property	no	Tilstandbeskrivelse
 requirement	property	no	Behov/pålegg
 resend workorder	property	no	Send ordre på nytt
-reserve	property	no	reserve
+reserve	property	no	Reserve
 reserve remainder	property	no	Rest av reserve
 reset	property	no	Tilbakestill
 residential environment	property	no	Bo-miljø
