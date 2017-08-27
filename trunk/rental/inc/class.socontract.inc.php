@@ -356,7 +356,7 @@
 			{
 				// columns to retrieve
 				$columns[] = 'contract.id AS contract_id, contract.notify_on_expire, contract.notified_time';
-				$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,override_adjustment_start,contract.publish_comment';
+				$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.customer_order_id, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,override_adjustment_start,contract.publish_comment';
 				$columns[] = 'party.id AS party_id';
 				$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id';
 				$columns[] = 'c_t.is_payer';
@@ -424,7 +424,8 @@
 				$contract->set_last_updated($this->unmarshal($this->db->f('last_updated'), 'int'));
 				$contract->set_service_id($this->unmarshal($this->db->f('service_id'), 'string'));
 				$contract->set_responsibility_id($this->unmarshal($this->db->f('responsibility_id'), 'string'));
-				$contract->set_reference($this->unmarshal($this->db->f('reference'), 'string'));
+				$contract->set_reference($this->unmarshal($this->db->f('reference',true), 'string'));
+				$contract->set_customer_order_id($this->unmarshal($this->db->f('customer_order_id'), 'int'));
 				$contract->set_invoice_header($this->unmarshal($this->db->f('invoice_header',true), 'string'));
 				$contract->set_account_in($this->unmarshal($this->db->f('account_in'), 'string'));
 				$contract->set_account_out($this->unmarshal($this->db->f('account_out'), 'string'));
@@ -619,6 +620,7 @@
 			$values[] = "billing_start = " . $this->marshal($contract->get_billing_start_date(), 'int');
 			$values[] = "billing_end = " . $this->marshal($contract->get_billing_end_date(), 'int');
 			$values[] = "reference = " . $this->marshal($contract->get_reference(), 'string');
+			$values[] = "customer_order_id = " . $this->marshal($contract->get_customer_order_id(), 'int');
 
 			// FORM COLUMN 2
 			$values[] = "service_id = " . $this->marshal($contract->get_service_id(), 'string');
@@ -803,6 +805,9 @@
 			$cols[] = 'invoice_header';
 			$values[] = $this->marshal($contract->get_reference(), 'string');
 			$values[] = $this->marshal($contract->get_invoice_header(), 'string');
+
+			$cols[] = 'customer_order_id';
+			$values[] = $this->marshal($contract->get_customer_order_id(), 'int');
 
 			$cols[] = 'account_in';
 			$cols[] = 'account_out';
