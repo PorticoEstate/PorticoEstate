@@ -155,6 +155,7 @@
 				'service_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true), //Tjeneste
 				'responsibility_id' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true), //Ansvar
 				'reference' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
+				'customer_order_id' => array('type' => 'int', 'precision' => '4', 'nullable' => true),
 				'invoice_header' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'account_in' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
 				'account_out' => array('type' => 'varchar', 'precision' => '255', 'nullable' => true),
