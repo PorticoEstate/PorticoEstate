@@ -59,6 +59,7 @@
 		protected $service_id;
 		protected $responsibility_id;
 		protected $reference;
+		protected $customer_order_id;
 		protected $invoice_header;
 		protected $account_in;
 		protected $account_out;
@@ -159,6 +160,15 @@
 			return $this->old_contract_id;
 		}
 
+		public function set_customer_order_id( $customer_order_id )
+		{
+			$this->customer_order_id = $customer_order_id;
+		}
+
+		public function get_customer_order_id()
+		{
+			return $this->customer_order_id;
+		}
 		public function get_payer_id()
 		{
 			return $this->payer_id;
@@ -938,6 +948,7 @@
 				'party' => $this->get_party_name(),
 				'department' => $this->get_party_department(),
 				'old_contract_id' => $this->get_old_contract_id(),
+				'customer_order_id' => $this->get_customer_order_id(),
 				//'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format.' h:i:s A', $this->get_last_edited_by_current_user()): '',
 				'last_edited_by_current_user' => $this->get_last_edited_by_current_user() ? date($date_format, $this->get_last_edited_by_current_user()) : '',
 				'payer_id' => $this->get_payer_id(),
@@ -1187,7 +1198,7 @@
 		 * Fetch responsibility candidates on the form array(array('id' => 1, 'name' => 'some text', 'selected' => 1|0))
 		 * @return array
 		 */
-		public function get_responsibility_arr( $selected )
+		public function get_responsibility_arr( $selected = 0 )
 		{
 			if ($responsibility_arr = execMethod('rental.bogeneric.get_list', array('type' => 'responsibility_unit',
 				'selected' => $selected)))

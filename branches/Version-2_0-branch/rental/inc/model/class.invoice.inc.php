@@ -32,6 +32,7 @@
 		protected $billing_title;
 		protected $serial_number;
 		protected $reference;
+		protected $customer_order_id;
 		public static $so;
 
 		public function __construct( int $id, int $billing_id, int $contract_id, int $timestamp_created, int $timestamp_start, int $timestamp_end, float $total_sum, float $total_area, string $header, string $account_in, string $account_out, string $service_id, string $responsibility_id )
@@ -310,6 +311,16 @@
 		public function set_reference( $reference )
 		{
 			$this->reference = $reference;
+		}
+
+		public function get_customer_order_id()
+		{
+			return $this->customer_order_id;
+		}
+
+		public function set_customer_order_id( $customer_order_id )
+		{
+			$this->customer_order_id = $customer_order_id;
 		}
 
 		public function get_billing_title()

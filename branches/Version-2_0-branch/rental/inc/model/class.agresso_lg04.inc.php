@@ -160,7 +160,7 @@
 					$data['article_code'] = $price_item->get_agresso_id();
 					$price_item_data[] = $data;
 				}
-				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference());
+				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id());
 				$invoice->set_serial_number($serial_number);
 				$serial_number++;
 			}
@@ -292,9 +292,10 @@
 
 					$this->orders[] = $this->$get_order_excel(
 						$start_date, $end_date, $billing_start_date, $billing_end_date, $invoice->get_header(), $invoice->get_party()->get_identifier(), $party_name, $serialized_party['address'], $party_full_name, $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $invoice->get_reference(), $price_item_counter, $invoice->get_account_in(), //ny
-	  $invoice->get_responsibility_id(), //ny
-	  $contract_type_label, //ny
-	  $contract_id //ny
+						$invoice->get_responsibility_id(), //ny
+						$contract_type_label, //ny
+						$contract_id, //ny
+						$invoice->get_customer_order_id()
 					);
 					$price_item_counter++;
 				}
@@ -305,7 +306,7 @@
 		 * Builds one single order of the Agresso file.
 		 * 
 		 */
-		protected function get_order( $header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref )
+		protected function get_order( $header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id )
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -489,7 +490,7 @@
 		 * 
 		 */
 		protected function get_order_excel_bk(
-		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id )
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id )
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -501,6 +502,7 @@
 				'contract_id' => $contract_id,
 				'account' => $account,
 				'client_ref' => $client_ref,
+				'customer order id' => $customer_order_id,
 				'header' => utf8_decode($header),
 				'bill_year' => $bill_year,
 				'bill_month' => $bill_month,
@@ -530,7 +532,7 @@
 		}
 
 		protected function get_order_excel_nlsh(
-		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id )
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id )
 		{
 		
 			$article_price = $this->prizebook[$product_item['article_code']];
