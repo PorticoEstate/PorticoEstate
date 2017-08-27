@@ -684,3 +684,4 @@ select file to upload	rental	no	Velg fil for opplasting
 synchronized: %1	rental	no	Synkronisert: %1
 syncronize all	rental	no	Synkroniser alle
 customer id	rental	no	Kundenummer
+customer order id	rental	no	Kundens ordrenr.

@@ -1399,6 +1399,7 @@ JS;
 				$contract->set_service_id(phpgw::get_var('service_id'));
 				$contract->set_responsibility_id(phpgw::get_var('responsibility_id'));
 				$contract->set_reference(phpgw::get_var('reference'));
+				$contract->set_customer_order_id(phpgw::get_var('customer_order_id', 'int'));
 				$contract->set_invoice_header(phpgw::get_var('invoice_header'));
 				$contract->set_account_in(phpgw::get_var('account_in'));
 
@@ -1769,6 +1770,7 @@ JS;
 				'value_billing_start' => $billing_start_date,
 				'value_billing_end' => $billing_end_date,
 				'value_reference' => $contract->get_reference(),
+				'value_customer_order_id' => $contract->get_customer_order_id(),
 				'value_responsibility_id' => $cur_responsibility_id,
 				'value_service' => $contract->get_service_id(),
 				'value_account_in' => $account_in,
@@ -2289,6 +2291,7 @@ JS;
 				'value_billing_start' => $billing_start_date,
 				'value_billing_end' => $billing_end_date,
 				'value_reference' => $contract->get_reference(),
+				'value_customer_order_id' => $contract->get_customer_order_id(),
 				'list_responsibility' => array('options' => $responsibility_options),
 				'value_responsibility_id' => $cur_responsibility_id,
 				'value_service' => $contract->get_service_id(),

@@ -159,6 +159,12 @@
 							</label>
 							<input type="text" name="reference" value="{value_reference}"></input>
 						</div>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'customer order id')"/>
+							</label>
+							<input type="number" step="1" name="customer_order_id" value="{value_customer_order_id}"></input>
+						</div>
 					</div>
 					<div class="pure-u-1 pure-u-lg-1-2">
 						<div class="pure-control-group">
