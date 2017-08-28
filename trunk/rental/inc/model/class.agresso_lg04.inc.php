@@ -389,7 +389,7 @@
 				. sprintf("%2s", '')  // 	84		terms_id
 				. sprintf("%12s", '') // 	85		tekx1
 				. sprintf("%-12s", $party_id)  // 	86		tekst2					DATA
-				. sprintf("%12s", '') // 	87		tekst3
+				. sprintf("%12s", $customer_order_id ? $customer_order_id : '') // 	87		tekst3
 				. sprintf("%12s", '') // 	88		text4
 				. '42'  // 	89		trans_type				DATA
 				. sprintf("%70s", '') //	90-92	just white space..
