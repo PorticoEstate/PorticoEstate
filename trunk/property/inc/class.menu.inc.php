@@ -464,6 +464,30 @@
 					);
 				}
 
+				$location_exception_children = array
+				(
+					'severity' => array
+						(
+						'text' => lang('severity'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception_severity'))
+					),
+					'category' => array
+						(
+						'text' => lang('category'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception_category')),
+						'children' => array(
+							'category_text' => array
+							(
+								'text' => lang('text'),
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+									'type' => 'location_exception_category_text'))
+							)
+						)
+					)
+				);
+
 				$admin_children_location = array
 					(
 					'street' => array
@@ -511,6 +535,14 @@
 						'text' => lang('location contact'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'location_contact'))
+					),
+					'location_exception' => array
+						(
+						'text' => lang('location exception'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception')),
+						'children' => $location_exception_children
+
 					)
 				);
 

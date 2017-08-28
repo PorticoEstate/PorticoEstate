@@ -135,7 +135,7 @@
 
 			$filter = array('list' => ''); // translates to "list IS NULL"
 			$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
-			
+
 			$columns = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', '', '', true, false, $filter);
 			$column_list = $this->bocommon->select_multi_list($selected, $columns);
 
@@ -151,13 +151,19 @@
 			}
 			$values = $this->so->read($data);
 
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
 			foreach ($values as &$entry)
 			{
 				foreach ($this->location_info['fields'] as $field)
 				{
 					if (isset($entry[$field['name']]) && $entry[$field['name']])
 					{
-						if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'] == 'get_user')
+						if($field['type'] == 'date')
+						{
+							$entry[$field['name']] = $GLOBALS['phpgw']->common->show_date($entry[$field['name']], $dateformat);
+						}
+						else if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'] == 'get_user')
 						{
 							$entry[$field['name']] = $GLOBALS['phpgw']->accounts->get($entry[$field['name']])->__toString();
 						}

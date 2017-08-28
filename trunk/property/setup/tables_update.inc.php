@@ -9648,3 +9648,82 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.714 to 0.9.17.715
+	*
+	*/
+	$test[] = '0.9.17.714';
+
+	function property_upgrade0_9_17_714()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_location_exception_severity',  array(
+			'fd' => array(
+				'id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'fm_location_exception_category',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 255, 'nullable' => False),
+				'parent_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
+				),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'fm_location_exception_category_text',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'category_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'content' => array('type' => 'text', 'nullable' => True),
+				),
+			'pk' => array('id'),
+			'fk' => array('fm_location_exception_category' => array('category_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+		'fm_location_exception',  array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'location_code' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'severity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'category_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'descr' => array('type' => 'text', 'nullable' => True),
+				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
+				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'reference' => array('type' => 'text', 'nullable' => True),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'modified_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False)
+			),
+			'pk' => array('id'),
+			'fk' => array('fm_location_exception_severity' => array('severity_id' => 'id'),
+				'fm_location_exception_category' => array('category_id' => 'id')),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		$GLOBALS['phpgw']->locations->add('.location.exception', 'location exception', 'property');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.715';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

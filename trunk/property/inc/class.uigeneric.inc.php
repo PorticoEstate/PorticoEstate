@@ -124,6 +124,9 @@
 					case 'html':
 						$value_type = 'html';
 						break;
+					case 'date':
+						$value_type = 'date';
+						break;
 					default:
 						$value_type = 'string';
 						break;
@@ -600,19 +603,22 @@
 			{
 				foreach ($this->location_info['fields'] as $field)
 				{
-				switch ($field['type'])
-				{
-					case 'integer':
-					case 'int':
-						$value_type = 'int';
-						break;
-					case 'html':
-						$value_type = 'html';
-						break;
-					default:
-						$value_type = 'string';
-						break;
-				}
+					switch ($field['type'])
+					{
+						case 'integer':
+						case 'int':
+							$value_type = 'int';
+							break;
+						case 'html':
+							$value_type = 'html';
+							break;
+						case 'date':
+							$value_type = 'date';
+							break;
+						default:
+							$value_type = 'string';
+							break;
+					}
 					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
 				}
 
@@ -687,6 +693,13 @@
 				{
 					self::rich_text_editor($field['name']);
 				}
+				else if($field['type'] == 'date')
+				{
+					$GLOBALS['phpgw']->jqcal->add_listener($field['name']);
+					$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+					$field['value'] = $GLOBALS['phpgw']->common->show_date($field['value'], $dateformat);
+				}
+
 				if (isset($field['values_def']))
 				{
 					if ($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
