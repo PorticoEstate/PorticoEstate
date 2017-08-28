@@ -68,6 +68,7 @@
 			$custom_filter = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
 			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
+			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -214,6 +215,11 @@
 
 			$this->uicols = $uicols;
 
+			if($dry_run)
+			{
+				return array();
+			}
+
 			if ($order)
 			{
 				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
@@ -353,7 +359,7 @@
 
 		public function get_name( $data )
 		{
-			if (isset($data['type']) && $data['type'] && ! $this->location_info)
+			if (isset($data['type']) && $data['type'])
 			{
 				$this->get_location_info($data['type']);
 			}

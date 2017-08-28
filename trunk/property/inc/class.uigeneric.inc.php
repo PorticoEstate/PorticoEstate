@@ -408,7 +408,7 @@
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			$this->bo->read();
+			$this->bo->read(array('dry_run' => true));
 			$uicols = $this->bo->uicols;
 
 			$count_uicols_name = count($uicols['name']);
