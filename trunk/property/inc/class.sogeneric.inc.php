@@ -2535,7 +2535,7 @@
 									'valueset' => false,
 									'method' => 'property.bogeneric.get_list',
 									'get_single_value' => 'property.sogeneric.get_name',
-									'method_input' => array('type' => 'location_exception_category', 'selected' => '##category_id##')
+									'method_input' => array('type' => 'location_exception_category', 'selected' => '##category_id##', 'role' => 'parent')
 								)
 							)
 						),
