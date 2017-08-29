@@ -2936,6 +2936,7 @@
 				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
 				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
 				'reference' => array('type' => 'text', 'nullable' => True),
+				'alert_vendor' => array('type' => 'int', 'precision' => 2, 'nullable' => true),
 				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'entry_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'modified_date' => array('type' => 'int', 'precision' => 4, 'nullable' => False)

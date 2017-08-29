@@ -901,20 +901,16 @@
 					'image' => array('property', 'responsibility_role')
 				);
 
-				/* 				if ( $acl->check('.location', 16, 'property') )
-				  {
-				  $children['type'] = array
-				  (
-				  'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
-				  'text'	=> lang('Location type')
-				  );
-				  $children['config'] = array
-				  (
-				  'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config')),
-				  'text'	=> lang('Config')
-				  );
-				  }
-				 */
+				$children['location_exception'] = array
+					(
+						'text' => lang('location exception'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception',
+							'menu_selection' => 'property::location::location_exception')),
+
+					);
+
+
 				$menus['navigation']['location'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',

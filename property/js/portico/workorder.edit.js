@@ -660,7 +660,7 @@ function populateTableChkApproval(ecodimb)
 	});
 }
 
-on_loc1_updated = function ()
+on_location_updated = function ()
 {
 	if(	$("#delivery_address").val() )
 	{

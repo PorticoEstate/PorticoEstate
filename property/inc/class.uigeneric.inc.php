@@ -99,6 +99,13 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$this->appname = $appname;
 			}
+
+			$_menu_selection = phpgw::get_var('menu_selection');
+			//Override
+			if($_menu_selection)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = $_menu_selection;
+			}
 		}
 		/*
 		 * Overrides with incoming data from POST
