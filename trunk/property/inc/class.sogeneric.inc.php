@@ -2517,8 +2517,8 @@
 						(
 							array
 							(
-								'name' => 'name',
-								'descr' => lang('name'),
+								'name' => 'content',
+								'descr' => lang('content'),
 								'type' => 'varchar',
 								'nullable' => false
 							),
@@ -2567,7 +2567,7 @@
 								'name' => 'descr',
 								'descr' => lang('descr'),
 								'type' => 'text',
-								'nullable' => false
+								'nullable' => true
 							),
 							array
 							(
@@ -2621,7 +2621,13 @@
 									'get_single_value' => 'property.sogeneric.get_name',
 									'method_input' => array('role' => 'parent', 'type' => 'location_exception_category', 'selected' => '##category_id##')
 								)
-							)
+							),
+							array
+								(
+								'name' => 'alert_vendor',
+								'descr' => lang('alert vendor'),
+								'type' => 'checkbox'
+							),
 						),
 						'edit_msg' => lang('edit'),
 						'add_msg' => lang('add'),

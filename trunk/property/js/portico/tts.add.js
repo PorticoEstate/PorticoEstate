@@ -77,3 +77,38 @@ $.formUtils.addValidator({
 	errorMessageKey: ''
 });
 
+on_location_updated = function (location_code)
+{
+	location_code = location_code || $("#loc1").val();
+
+	var oArgs = {menuaction: 'property.uilocation.get_location_exception', location_code: location_code};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			$("#message").html('');
+
+			if (data != null)
+			{
+				var htmlString = '';
+				var exceptions = data.location_exception;
+				$.each(exceptions, function (k, v)
+				{
+					htmlString += "<div class=\"msg_good\">";
+					htmlString += v.severity + ": " + v.category_text;
+					if(v.location_descr)
+					{
+						htmlString += "<br/>" + v.location_descr;
+					}
+					htmlString += '</div>';
+
+				});
+				$("#message").html(htmlString);
+			}
+		}
+	});
+};

@@ -69,7 +69,7 @@ var FormatterCenter = function (key, oData)
 
 this.confirm_session = function (action)
 {
-	if (action === 'save' || action === 'apply'  || action === 'send_order')
+	if (action === 'save' || action === 'apply' || action === 'send_order')
 	{
 		conf = {
 			modules: 'date, security, file',
@@ -243,7 +243,7 @@ this.fileuploader = function ()
 		{
 			refresh_files()
 		}
-	});	
+	});
 };
 
 this.refresh_files = function ()
@@ -358,7 +358,7 @@ function receive_order(order_id)
 
 var ecodimb_selection = "";
 
-$(window).on('load', function()
+$(window).on('load', function ()
 {
 	ecodimb = $('#ecodimb').val();
 	if (ecodimb)
@@ -490,7 +490,7 @@ $(document).ready(function ()
 		return;
 	}
 	//var width = 200;
-	var width =  $("#submitbox").width();
+	var width = $("#submitbox").width();
 	$("#submitbox").css({
 		position: 'absolute',
 		right: '10px',
@@ -542,4 +542,45 @@ $(document).ready(function ()
 			;
 		});
 	}
+
+	on_location_updated = function (location_code)
+	{
+		location_code = location_code || $("#loc1").val();
+
+		var oArgs = {menuaction: 'property.uilocation.get_location_exception', location_code: location_code};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				$("#message").html('');
+
+				if (data != null)
+				{
+					var htmlString = '';
+					var exceptions = data.location_exception;
+					$.each(exceptions, function (k, v)
+					{
+						htmlString += "<div class=\"msg_good\">";
+						htmlString += v.severity + ": " + v.category_text;
+						if (v.location_descr)
+						{
+							htmlString += "<br/>" + v.location_descr;
+						}
+						htmlString += '</div>';
+
+					});
+					$("#message").html(htmlString);
+				}
+			}
+		});
+	};
+
+
+	on_location_updated(location_code);
+
 });
+

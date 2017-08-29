@@ -3428,8 +3428,27 @@ HTML;
 			$pdf->ezText($contact_phone, 14);
 			$pdf->ezSetDy(-20);
 			$pdf->ezText("Av hensyn til våre ansatte og leietakere ber vi om at kontakt på bygget blir kontaktet minst 1 dag i forkant av oppdrag.", 14);
-			$pdf->ezSetDy(-20);
 
+			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor = true);
+
+			if($location_exceptions)
+			{
+				$pdf->ezSetDy(-20);
+				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+				$pdf->ezText(lang('important information'), 14);
+				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			}
+
+			foreach ($location_exceptions as $location_exception)
+			{
+				$pdf->ezText($location_exception['category_text'], 14);
+
+				if($location_exception['location_descr'])
+				{
+					$pdf->ezText($location_exception['location_descr'], 14);
+				}
+			}
+			$pdf->ezSetDy(-20);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
 			$pdf->ezText("Faktura må merkes med ordrenummer: {$ticket['order_id']} og ressursnr.:{$ressursnr}", 14);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
@@ -3625,6 +3644,23 @@ HTML;
 				'<b>',
 				'</b>'
 					), $order_email_template));
+
+			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor = true);
+
+			if($location_exceptions)
+			{
+				$body .= "<br/><br/><b>" . lang('important information') . '</b>';
+			}
+			foreach ($location_exceptions as $location_exception)
+			{
+				$body .= "<br/>" . $location_exception['category_text'] . '<br/>';
+
+				if($location_exception['location_descr'])
+				{
+					$body .= $location_exception['location_descr'] . '<br/>';
+				}
+			}
+
 
 			$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title></head>";
 
