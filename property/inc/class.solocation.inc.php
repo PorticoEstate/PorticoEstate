@@ -2227,6 +2227,12 @@
 					. " WHERE location_code = '{$_location_code}'"
 					. " AND start_date < $now AND (end_date IS NULL  OR end_date = 0 OR end_date > $now)";
 
+
+				if($alert_vendor)
+				{
+					$sql .= ' AND alert_vendor = 1';
+				}
+
 				$this->db->query($sql, __LINE__, __FILE__);
 
 				while($this->db->next_record())
