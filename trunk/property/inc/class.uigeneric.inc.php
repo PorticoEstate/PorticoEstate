@@ -57,7 +57,8 @@
 			'download' => true,
 			'columns' => true,
 			'attrib_history' => true,
-			'edit_field' => true
+			'edit_field' => true,
+			'get_list'	=> true
 		);
 
 		function __construct()
@@ -106,6 +107,18 @@
 			{
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = $_menu_selection;
 			}
+		}
+
+		function get_list( )
+		{
+			$params = array(
+				'type'		=> phpgw::get_var('type'),
+				'selected'	=>  phpgw::get_var('selected'),
+				'mapping'	=>  phpgw::get_var('mapping'),
+				'filter'	=>  phpgw::get_var('filter'),
+			);
+
+			return $this->bo->get_list($params);
 		}
 		/*
 		 * Overrides with incoming data from POST
@@ -251,6 +264,7 @@
 					}
 					else if (isset($field['values_def']['method']))
 					{
+						$method_input = array();
 						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
 							if (preg_match('/^##/', $_argument_value))
@@ -707,6 +721,11 @@
 					$field['value'] = $GLOBALS['phpgw']->common->show_date($field['value'], $dateformat);
 				}
 
+				if(!empty($field['js_file']))
+				{
+					self::add_javascript($this->appname, 'portico', $field['js_file']);
+				}
+
 				if (isset($field['values_def']))
 				{
 					if ($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
@@ -719,7 +738,7 @@
 					}
 					else if (isset($field['values_def']['method']))
 					{
-
+						$method_input = array();
 						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
 							if (preg_match('/^##/', $_argument_value))
@@ -727,6 +746,20 @@
 								$_argument_value_name = trim($_argument_value, '#');
 								$_argument_value = $values[$_argument_value_name];
 							}
+
+							if($_argument == 'filter' && is_array($_argument_value))
+							{
+								foreach ($_argument_value as $key => &$value)
+								{
+									if (preg_match('/^##/', $value))
+									{
+										$_argument_value_name = trim($value, '#');
+										$value = $values[$_argument_value_name] ? $values[$_argument_value_name] : -1;
+									}
+								}
+
+							}
+
 							if (preg_match('/^\$this->/', $_argument_value))
 							{
 								$_argument_value_name = ltrim($_argument_value, '$this->');

@@ -273,7 +273,7 @@
 
 				foreach ($this->location_info['fields'] as $field)
 				{
-					if ($field['type'] == 'varchar')
+					if ($field['type'] == 'varchar' || $field['type'] == 'text' || $field['type'] == 'location')
 					{
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
@@ -359,12 +359,22 @@
 
 		public function get_name( $data )
 		{
+			$mapping = array();
+			if (isset($data['mapping']) && $data['mapping'])
+			{
+				$mapping = $data['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
+
 			if (isset($data['type']) && $data['type'])
 			{
 				$this->get_location_info($data['type']);
 			}
 			$values = $this->read_single($data);
-			return isset($values['name']) ? $values['name'] : $values['descr'];
+			return isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['descr'];
 		}
 
 		function read_single( $data, $values = array() )
@@ -478,12 +488,23 @@
 
 			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
 
+
+			$mapping = array();
+			if (isset($data['mapping']) && $data['mapping'])
+			{
+				$mapping = $data['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
+
 			$i = 0;
 			while ($this->_db->next_record())
 			{
 				$_extra = $this->_db->f($id_in_name, true);
 				$id = $this->_db->f('id');
-				if (!$name = $this->_db->f('name', true))
+				if (!$name = $this->_db->f($mapping['name'], true))
 				{
 					$name = $this->_db->f('descr', true);
 				}

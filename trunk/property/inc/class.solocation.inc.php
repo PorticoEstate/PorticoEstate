@@ -2223,7 +2223,7 @@
 					. " FROM fm_location_exception"
 					. " {$this->join} fm_location_exception_severity ON fm_location_exception.severity_id = fm_location_exception_severity.id"
 					. " {$this->join} fm_location_exception_category ON fm_location_exception.category_id = fm_location_exception_category.id"
-					. " {$this->left_join} fm_location_exception_category_text ON fm_location_exception_category.id = fm_location_exception_category_text.category_id"
+					. " {$this->left_join} fm_location_exception_category_text ON fm_location_exception.category_text_id = fm_location_exception_category_text.id"
 					. " WHERE location_code = '{$_location_code}'"
 					. " AND start_date < $now AND (end_date IS NULL  OR end_date = 0 OR end_date > $now)";
 
