@@ -2932,6 +2932,7 @@
 				'location_code' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'severity_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
 				'category_id' => array('type' => 'int', 'precision' => 4, 'nullable' => False),
+				'category_text_id' => array('type' => 'int', 'precision' => 4, 'nullable' => true),
 				'descr' => array('type' => 'text', 'nullable' => True),
 				'start_date' => array('type' => 'int', 'precision' => 8, 'nullable' => False),
 				'end_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),

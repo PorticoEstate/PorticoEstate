@@ -2622,6 +2622,26 @@
 									'method_input' => array('role' => 'parent', 'type' => 'location_exception_category', 'selected' => '##category_id##')
 								)
 							),
+//							array
+//							(
+//								'name' => 'category_text_id',
+//								'descr' => lang('category content'),
+//								'type' => 'select',
+//								'nullable' => true,
+//								'filter' => false,
+//								'sortable' => true,
+//								'values_def' => array
+//								(
+//									'valueset' => false,
+//									'method' => 'property.bogeneric.get_list',
+//									'get_single_value' => 'property.sogeneric.get_name',
+//									'method_input' => array(
+//										'type' => 'location_exception_category_text',
+//										'selected' => '##category_text_id##',
+////									//	'filter'	=> array('category_id' => '##category_id##')
+//										)
+//								)
+//							),
 							array
 								(
 								'name' => 'alert_vendor',

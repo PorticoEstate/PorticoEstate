@@ -9729,7 +9729,7 @@
 	}
 
 	/**
-	* Update property version from 0.9.17.714 to 0.9.17.715
+	* Update property version from 0.9.17.715 to 0.9.17.716
 	*
 	*/
 	$test[] = '0.9.17.715';
@@ -9747,4 +9747,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
-	
+
+	/**
+	* Update property version from 0.9.17.716 to 0.9.17.717
+	*
+	*/
+	$test[] = '0.9.17.716';
+
+	function property_upgrade0_9_17_716()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location_exception', 'category_text_id', array(
+			'type' => 'int', 'precision' => 4, 'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.717';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
