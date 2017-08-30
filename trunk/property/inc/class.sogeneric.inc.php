@@ -2655,7 +2655,7 @@
 						'add_msg' => lang('add'),
 						'name' => lang('severity category text'),
 						'acl_app' => 'property',
-						'acl_location' => '.admin',
+						'acl_location' => '.location',
 						'menu_selection' => 'admin::property::location::location_exception::category::category_text',
 						'default' => array
 						(
