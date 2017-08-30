@@ -165,7 +165,7 @@
 
 
 									<xsl:when test="type='integer' or type='int'">
-										<input data-validation="number" type="text" name="values[{name}]" value="{value}" size="{size}">
+										<input data-validation="number" type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -179,7 +179,7 @@
 										</input>
 									</xsl:when>
 									<xsl:when test="type='numeric'">
-										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" name="values[{name}]" value="{value}" size="{size}">
+										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -195,14 +195,14 @@
 									<xsl:when test="type='checkbox'">
 										<xsl:choose>
 											<xsl:when test="value = 1">
-												<input type="checkbox" name="values[{name}]" value="1" checked="checked">
+												<input type="checkbox" id="{name}" name="values[{name}]" value="1" checked="checked">
 													<xsl:attribute name="title">
 														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
 												</input>
 											</xsl:when>
 											<xsl:otherwise>
-												<input type="checkbox" name="values[{name}]" value="1">
+												<input type="checkbox" id="{name}" name="values[{name}]" value="1">
 													<xsl:attribute name="title">
 														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
@@ -211,7 +211,7 @@
 										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="type='select'">
-										<select name="values[{name}]" class="pure-input-1-2" >
+										<select id="{name}" name="values[{name}]" class="pure-input-1-2" >
 											<xsl:choose>
 												<xsl:when test="nullable!='1'">
 													<xsl:attribute name="data-validation">
@@ -233,7 +233,7 @@
 										</select>
 									</xsl:when>
 									<xsl:when test="type='multiple_select'">
-										<select name="values[{name}][]" multiple="multiple" class="pure-input-1-2" >
+										<select id="{name}" name="values[{name}][]" multiple="multiple" class="pure-input-1-2" >
 											<xsl:choose>
 												<xsl:when test="nullable!='1'">
 													<xsl:attribute name="data-validation">
