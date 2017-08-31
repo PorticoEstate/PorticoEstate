@@ -49,6 +49,7 @@
 				array('id' => 'name', 'name' => lang('name')),
 				array('id' => 'address', 'name' => lang('address')),
 				array('id' => 'identifier', 'name' => lang('identifier')),
+				array('id' => 'customer_id', 'name' => lang('customer id') . ' (Agresso)'),
 				array('id' => 'reskontro', 'name' => lang('reskontro')),
 				array('id' => 'result_unit_number', 'name' => lang('result_unit_number')),
 			);
@@ -489,6 +490,13 @@
 						array(
 							'key' => 'identifier',
 							'label' => lang('identifier'),
+							'className' => '',
+							'sortable' => true,
+							'hidden' => false
+						),
+						array(
+							'key' => 'customer_id',
+							'label' => lang('customer id') . ' (Agresso)',
 							'className' => '',
 							'sortable' => true,
 							'hidden' => false
