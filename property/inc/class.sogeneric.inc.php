@@ -2446,6 +2446,227 @@
 
 					break;
 
+				case 'location_exception_severity':
+					$info = array
+						(
+						'table' => 'fm_location_exception_severity',
+						'id' => array('name' => 'id', 'type' => 'int', 'descr' => lang('id')),
+						'fields' => array
+							(
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('severity'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::location::location_exception::severity'
+					);
+					break;
+				case 'location_exception_category':
+					$info = array
+						(
+						'table' => 'fm_location_exception_category',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+						(
+							array(
+								'name' => 'parent_id',
+								'descr' => lang('parent'),
+								'type' => 'select',
+								'sortable' => true,
+								'nullable' => true,
+								'filter' => false,
+								'role' => 'parent',
+								'values_def' => array
+								(
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'method_input' => array('type' => 'location_exception_category', 'role' => 'parent', 'selected' => '##parent_id##')
+								)
+							),
+							array
+							(
+								'name' => 'name',
+								'descr' => lang('name'),
+								'type' => 'varchar',
+								'nullable' => false
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('severity category'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::location::location_exception::category'
+					);
+					break;
+
+				case 'location_exception_category_text':
+					$info = array
+						(
+						'table' => 'fm_location_exception_category_text',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+						(
+							array
+							(
+								'name' => 'content',
+								'descr' => lang('content'),
+								'type' => 'varchar',
+								'nullable' => false
+							),
+							array
+							(
+								'name' => 'category_id',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array
+								(
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
+									'method_input' => array('type' => 'location_exception_category', 'selected' => '##category_id##', 'role' => 'parent')
+								)
+							)
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('severity category text'),
+						'acl_app' => 'property',
+						'acl_location' => '.admin',
+						'menu_selection' => 'admin::property::location::location_exception::category::category_text'
+					);
+					break;
+
+				case 'location_exception':
+					$info = array
+						(
+						'table' => 'fm_location_exception',
+						'id' => array('name' => 'id', 'type' => 'auto'),
+						'fields' => array
+						(
+							array
+							(
+								'name' => 'location_code',
+								'descr' => lang('location'),
+								'type' => 'location',
+								'nullable' => false
+							),
+							array
+							(
+								'name' => 'descr',
+								'descr' => lang('descr'),
+								'type' => 'text',
+								'nullable' => true
+							),
+							array
+							(
+								'name' => 'start_date',
+								'descr' => lang('start date'),
+								'type' => 'date',
+								'nullable' => false
+							),
+							array
+							(
+								'name' => 'end_date',
+								'descr' => lang('end date'),
+								'type' => 'date',
+								'nullable' => true
+							),
+							array
+							(
+								'name' => 'reference',
+								'descr' => lang('reference'),
+								'type' => 'text',
+								'nullable' => true
+							),
+							array
+							(
+								'name' => 'severity_id',
+								'descr' => lang('severity'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
+								'values_def' => array
+								(
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
+									'method_input' => array('type' => 'location_exception_severity', 'selected' => '##severity_id##')
+								)
+							),
+							array
+							(
+								'name' => 'category_id',
+								'descr' => lang('category'),
+								'type' => 'select',
+								'nullable' => false,
+								'filter' => true,
+								'sortable' => true,
+								'role' => 'parent',
+								'values_def' => array
+								(
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
+									'method_input' => array('role' => 'parent', 'type' => 'location_exception_category', 'selected' => '##category_id##')
+								)
+							),
+							array
+							(
+								'name' => 'category_text_id',
+								'descr' => lang('category content'),
+								'type' => 'select',
+								'nullable' => true,
+								'filter' => false,
+								'sortable' => true,
+								'js_file'	=> 'location_exception_category_text.edit.js',
+								'values_def' => array
+								(
+									'valueset' => false,
+									'method' => 'property.bogeneric.get_list',
+									'get_single_value' => 'property.sogeneric.get_name',
+									'method_input' => array(
+										'type' => 'location_exception_category_text',
+										'selected' => '##category_text_id##',
+										'mapping' => array('name' => 'content'),
+										'filter'	=> array('category_id' => '##category_id##'),
+										)
+								)
+							),
+							array
+								(
+								'name' => 'alert_vendor',
+								'descr' => lang('alert vendor'),
+								'type' => 'checkbox'
+							),
+						),
+						'edit_msg' => lang('edit'),
+						'add_msg' => lang('add'),
+						'name' => lang('severity category text'),
+						'acl_app' => 'property',
+						'acl_location' => '.location',
+						'menu_selection' => 'admin::property::location::location_exception::category::category_text',
+						'default' => array
+						(
+							'user_id' => array('add' => '$this->account'),
+							'entry_date' => array('add' => 'time()'),
+							'modified_date' => array('add' => 'time()', 'edit' => 'time()'),
+						),
+					);
+					break;
+
 // START CONTROLLER TABLES
 				case 'controller_check_item_status':
 					$info = array

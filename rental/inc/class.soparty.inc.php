@@ -120,6 +120,9 @@
 					case "result_unit_number":
 						$like_clauses[] = "party.result_unit_number $this->like $like_pattern";
 						break;
+					case "customer_id":
+						$like_clauses[] = "party.customer_id  = " . (int)$search_for;
+						break;
 					case "all":
 						$like_clauses[] = "party.first_name $this->like $like_pattern";
 						$like_clauses[] = "party.last_name $this->like $like_pattern";
@@ -131,6 +134,7 @@
 						$like_clauses[] = "party.identifier $this->like $like_pattern";
 						$like_clauses[] = "party.comment $this->like $like_pattern";
 						$like_clauses[] = "party.reskontro $this->like $like_pattern";
+						$like_clauses[] = "party.customer_id  = " . (int)$search_for;
 						break;
 				}
 

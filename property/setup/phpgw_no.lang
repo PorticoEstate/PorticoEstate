@@ -2228,3 +2228,11 @@ attribute groups	property	no	Attributtgrupper
 sms text	property	no	SMS-tekst
 character left	property	no	Resterende tegn
 delivery address	property	no	Leveringsadresse
+severity	property	no	Alvorlighetsgrad
+location exception	property	no	OBS varsel
+severity category	property	no	Kategori for alvorlighetsgrad
+severity category text	property	no	Tekster for kategori for alvorlighetsgrad
+reference	property	no	Referanse
+alert vendor	property	no	Varsle leverandør
+important information	property	no	Viktig informasjon
+category content	property	no	Tekster for kategori

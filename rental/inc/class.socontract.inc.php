@@ -122,6 +122,9 @@
 						$like_clauses[] = "party.last_name $this->like $like_pattern";
 						$like_clauses[] = "party.company_name $this->like $like_pattern";
 						break;
+					case "customer_id":
+						$like_clauses[] = "party.customer_id  = " . (int)$search_for;
+						break;
 					case "composite":
 						$like_clauses[] = "composite.name $this->like $like_pattern";
 						break;
@@ -132,7 +135,6 @@
 						$like_clauses[] = "r_u.location_code like '{$search_for}%'";
 						break;
 					case "all":
-
 						$like_clauses[] = "contract.old_contract_id $this->like $like_pattern";
 						$like_clauses[] = "contract.comment $this->like $like_pattern";
 						$like_clauses[] = "party.first_name $this->like $like_pattern";
@@ -140,6 +142,7 @@
 						$like_clauses[] = "party.company_name $this->like $like_pattern";
 						$like_clauses[] = "composite.name $this->like $like_pattern";
 						$like_clauses[] = "r_u.location_code $this->like $like_pattern";
+						$like_clauses[] = "party.customer_id  = " . (int)$search_for;
 						break;
 				}
 

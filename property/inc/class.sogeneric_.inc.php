@@ -68,6 +68,7 @@
 			$custom_filter = isset($data['custom_filter']) && $data['custom_filter'] ? $data['custom_filter'] : array();
 			$filter = isset($data['filter']) && $data['filter'] ? $data['filter'] : array();
 			$results = isset($data['results']) ? (int)$data['results'] : 0;
+			$dry_run = isset($data['dry_run']) ? $data['dry_run'] : '';
 
 			$values = array();
 			if (!isset($this->location_info['table']) || !$table = $this->location_info['table'])
@@ -100,6 +101,25 @@
 					if (isset($filter[$field['name']]) && $filter[$field['name']] && $field['type'] == 'multiple_select')
 					{
 						$_filter_array[] = "{$field['name']} {$this->_like} '%,{$filter[$field['name']]},%'";
+					}
+					else if (!empty($filter[$field['name']]) && (isset($field['values_def']['method_input']['role']) && $field['values_def']['method_input']['role'] == 'parent'))
+					{
+
+						$field_object = clone($this);
+						$field_object->get_location_info($field['values_def']['method_input']['type'], 0);
+						$this->table = $field_object->location_info['table'];
+						$children = $this->get_children2(array(), $filter[$field['name']], 0, true );
+							
+						$_children = array($filter[$field['name']]);
+						if($children)
+						{
+							foreach ($children as $_child)
+							{
+								$_children[] = $_child['id'];
+							}
+						}
+						$_filter_array[] = "{$field['name']} IN (" . implode(',', $_children ) . ')';
+
 					}
 					else if (isset($filter[$field['name']]) && $filter[$field['name']])
 					{
@@ -214,6 +234,11 @@
 
 			$this->uicols = $uicols;
 
+			if($dry_run)
+			{
+				return array();
+			}
+
 			if ($order)
 			{
 				$ordermethod = " ORDER BY {$table}.{$order} {$sort}";
@@ -267,7 +292,7 @@
 
 				foreach ($this->location_info['fields'] as $field)
 				{
-					if ($field['type'] == 'varchar')
+					if ($field['type'] == 'varchar' || $field['type'] == 'text' || $field['type'] == 'location')
 					{
 						$querymethod .= " OR {$table}.{$field['name']} $this->_like '%$query%'";
 					}
@@ -353,12 +378,22 @@
 
 		public function get_name( $data )
 		{
-			if (isset($data['type']) && $data['type'] && ! $this->location_info)
+			$mapping = array();
+			if (isset($data['mapping']) && $data['mapping'])
+			{
+				$mapping = $data['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
+
+			if (isset($data['type']) && $data['type'])
 			{
 				$this->get_location_info($data['type']);
 			}
 			$values = $this->read_single($data);
-			return isset($values['name']) ? $values['name'] : $values['descr'];
+			return isset($values[$mapping['name']]) ? $values[$mapping['name']] : $values['descr'];
 		}
 
 		function read_single( $data, $values = array() )
@@ -472,12 +507,23 @@
 
 			$return_fields = isset($data['fields']) && $data['fields'] && is_array($data['fields']) ? $data['fields'] : array();
 
+
+			$mapping = array();
+			if (isset($data['mapping']) && $data['mapping'])
+			{
+				$mapping = $data['mapping'];
+			}
+			else
+			{
+				$mapping = array('name' => 'name');
+			}
+
 			$i = 0;
 			while ($this->_db->next_record())
 			{
 				$_extra = $this->_db->f($id_in_name, true);
 				$id = $this->_db->f('id');
-				if (!$name = $this->_db->f('name', true))
+				if (!$name = $this->_db->f($mapping['name'], true))
 				{
 					$name = $this->_db->f('descr', true);
 				}
@@ -1077,7 +1123,7 @@
 			{
 				return array();
 			}
-			$this->table = $table;
+	//		$this->table = $table;
 
 			if (isset($this->location_info['mapping']) && $this->location_info['mapping'])
 			{

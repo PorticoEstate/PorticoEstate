@@ -20,7 +20,6 @@
 		var my_groups = <xsl:value-of select="my_groups"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Please select a person or a group to handle the ticket !')"/>;
 	</script>
-
 	<dl>
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
@@ -36,6 +35,9 @@
 	<form class="pure-form pure-form-aligned"  ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+
+			<div id="message" class='message'/>
+
 			<div id="add">
 				<fieldset>
 					<xsl:for-each select="value_origin">
@@ -312,6 +314,7 @@
 	<form class="pure-form pure-form-aligned" ENCTYPE="multipart/form-data" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+			<div id="message" class='message'/>
 			<div id="floating-box">
 				<div id="submitbox">
 					<table width="200px">

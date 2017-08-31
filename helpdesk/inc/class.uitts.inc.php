@@ -1065,7 +1065,7 @@ JS;
 				$file = '/tmp/' . uniqid() . '.png';
 				if (file_put_contents($file, $data))
 				{
-					$to_file = "{$bofiles->fakebase}/{$id}/" .  str_replace(' ', '_', $_ticket['subject']) . '_' . ( (int)count($_ticket['files']) +1 ) . '.png';
+					$to_file = "{$bofiles->fakebase}/{$id}/" .  str_replace(array(' ', '/', '?'), array('_', '_', ''), $_ticket['subject']) . '_' . ( (int)count($_ticket['files']) +1 ) . '.png';
 					$bofiles->create_document_dir("{$id}");
 					$bofiles->vfs->override_acl = 1;
 
@@ -1280,7 +1280,7 @@ JS;
 						$file = '/tmp/' . uniqid() . '.png';
 						if (file_put_contents($file, $data))
 						{
-							$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(' ', '_', $values['subject']) . '.png';
+							$to_file = "{$bofiles->fakebase}/{$receipt['id']}/" .  str_replace(array(' ', '/', '?'), array('_', '_', ''), $values['subject']) . '.png';
 							$bofiles->create_document_dir("{$receipt['id']}");
 							$bofiles->vfs->override_acl = 1;
 

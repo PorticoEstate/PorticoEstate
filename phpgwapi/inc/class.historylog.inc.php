@@ -46,7 +46,7 @@
 				. "location_id=" . $this->location_id ,__LINE__,__FILE__);
 		}
 
-		function add($status,$record_id,$new_value,$old_value)
+		function add($status,$record_id,$new_value,$old_value = '')
 		{
 			if ($new_value != $old_value)
 			{

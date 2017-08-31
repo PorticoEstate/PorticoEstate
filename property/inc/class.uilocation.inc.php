@@ -69,7 +69,8 @@
 			'columns' => true,
 			'update_location' => true,
 			'responsiblility_role' => true,
-			'get_delivery_address'	=> true
+			'get_delivery_address'	=> true,
+			'get_location_exception'=> true,
 		);
 
 		function __construct()
@@ -1009,7 +1010,7 @@ JS;
 
 				try
 				{
-					parent.on_loc1_updated();
+					parent.on_location_updated(aData["location_code"]);
 				}
 				catch(err)
 				{}
@@ -2908,6 +2909,18 @@ JS;
 			
 			return array(
 				'delivery_address' => $delivery_address
+			);
+
+		}
+
+		function get_location_exception( )
+		{
+			$location_code = phpgw::get_var('location_code', 'string');
+
+			$location_exception = $this->bo->get_location_exception($location_code);
+
+			return array(
+				'location_exception' => $location_exception
 			);
 
 		}

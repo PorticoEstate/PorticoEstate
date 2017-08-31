@@ -57,7 +57,8 @@
 			'download' => true,
 			'columns' => true,
 			'attrib_history' => true,
-			'edit_field' => true
+			'edit_field' => true,
+			'get_list'	=> true
 		);
 
 		function __construct()
@@ -99,6 +100,25 @@
 				$GLOBALS['phpgw_info']['flags']['menu_selection'] = str_replace('property', $appname, $GLOBALS['phpgw_info']['flags']['menu_selection']);
 				$this->appname = $appname;
 			}
+
+			$_menu_selection = phpgw::get_var('menu_selection');
+			//Override
+			if($_menu_selection)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = $_menu_selection;
+			}
+		}
+
+		function get_list( )
+		{
+			$params = array(
+				'type'		=> phpgw::get_var('type'),
+				'selected'	=>  phpgw::get_var('selected'),
+				'mapping'	=>  phpgw::get_var('mapping'),
+				'filter'	=>  phpgw::get_var('filter'),
+			);
+
+			return $this->bo->get_list($params);
 		}
 		/*
 		 * Overrides with incoming data from POST
@@ -123,6 +143,9 @@
 						break;
 					case 'html':
 						$value_type = 'html';
+						break;
+					case 'date':
+						$value_type = 'date';
 						break;
 					default:
 						$value_type = 'string';
@@ -241,6 +264,7 @@
 					}
 					else if (isset($field['values_def']['method']))
 					{
+						$method_input = array();
 						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
 							if (preg_match('/^##/', $_argument_value))
@@ -405,7 +429,7 @@
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
 
-			$this->bo->read();
+			$this->bo->read(array('dry_run' => true));
 			$uicols = $this->bo->uicols;
 
 			$count_uicols_name = count($uicols['name']);
@@ -600,19 +624,22 @@
 			{
 				foreach ($this->location_info['fields'] as $field)
 				{
-				switch ($field['type'])
-				{
-					case 'integer':
-					case 'int':
-						$value_type = 'int';
-						break;
-					case 'html':
-						$value_type = 'html';
-						break;
-					default:
-						$value_type = 'string';
-						break;
-				}
+					switch ($field['type'])
+					{
+						case 'integer':
+						case 'int':
+							$value_type = 'int';
+							break;
+						case 'html':
+							$value_type = 'html';
+							break;
+						case 'date':
+							$value_type = 'date';
+							break;
+						default:
+							$value_type = 'string';
+							break;
+					}
 					$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
 				}
 
@@ -687,6 +714,18 @@
 				{
 					self::rich_text_editor($field['name']);
 				}
+				else if($field['type'] == 'date')
+				{
+					$GLOBALS['phpgw']->jqcal->add_listener($field['name']);
+					$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+					$field['value'] = $GLOBALS['phpgw']->common->show_date($field['value'], $dateformat);
+				}
+
+				if(!empty($field['js_file']))
+				{
+					self::add_javascript($this->appname, 'portico', $field['js_file']);
+				}
+
 				if (isset($field['values_def']))
 				{
 					if ($field['values_def']['valueset'] && is_array($field['values_def']['valueset']))
@@ -699,7 +738,7 @@
 					}
 					else if (isset($field['values_def']['method']))
 					{
-
+						$method_input = array();
 						foreach ($field['values_def']['method_input'] as $_argument => $_argument_value)
 						{
 							if (preg_match('/^##/', $_argument_value))
@@ -707,6 +746,20 @@
 								$_argument_value_name = trim($_argument_value, '#');
 								$_argument_value = $values[$_argument_value_name];
 							}
+
+							if($_argument == 'filter' && is_array($_argument_value))
+							{
+								foreach ($_argument_value as $key => &$value)
+								{
+									if (preg_match('/^##/', $value))
+									{
+										$_argument_value_name = trim($value, '#');
+										$value = $values[$_argument_value_name] ? $values[$_argument_value_name] : -1;
+									}
+								}
+
+							}
+
 							if (preg_match('/^\$this->/', $_argument_value))
 							{
 								$_argument_value_name = ltrim($_argument_value, '$this->');

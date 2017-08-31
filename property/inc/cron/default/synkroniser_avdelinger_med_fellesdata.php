@@ -58,7 +58,7 @@
 			 * prosjekt
 			 * tjeneste
 			 */
-//			$fellesdata->update_customer_id();
+			$fellesdata->update_customer_id();
 			$fellesdata->update_vendor();
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
@@ -401,7 +401,7 @@
 					$sql = "UPDATE rental_party"
 						. " SET customer_id = {$customer_id}"
 						. " WHERE id = " . (int)$party['id'];
-					_debug_array($sql);
+		//			_debug_array($sql);
 					$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
 				}
 			}

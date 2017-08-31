@@ -90,6 +90,8 @@
 
 	$GLOBALS['phpgw']->locations->add('.report', 'Generic report', 'property', $allow_grant = true);
 
+	$GLOBALS['phpgw']->locations->add('.location.exception', 'location exception', 'property');
+
 	$GLOBALS['phpgw_setup']->oProc->query("DELETE from phpgw_config WHERE config_app='property'");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_config (config_app, config_name, config_value) VALUES ('property','meter_table', 'fm_entity_1_1')");
 

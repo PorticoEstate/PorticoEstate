@@ -1178,4 +1178,9 @@ JS;
 			return $this->so->get_delivery_address($loc1);
 		}
 
+		function get_location_exception($location_code = '' )
+		{
+			return $this->so->get_location_exception($location_code, $alert_vendor = false);
+		}
+
 	}
