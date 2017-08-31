@@ -688,7 +688,7 @@
 										<xsl:attribute name="title">
 											<xsl:value-of select="$lang_sms_text"/>
 										</xsl:attribute>
-											<xsl:value-of select="$lang_sms_text"/>
+										<xsl:value-of select="$lang_sms_text"/>
 									</a>
 								</label>
 								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
@@ -760,6 +760,24 @@
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'on behalf of assigned - vacation mode')"/>
 											</xsl:attribute>
+										</input>
+									</div>
+									<div class="pure-control-group">
+										<xsl:variable name="lang_continuous">
+											<xsl:value-of select="php:function('lang', 'continuous')"/>
+										</xsl:variable>
+										<label for="name">
+											<xsl:value-of select="$lang_continuous"/>
+										</label>
+										<input type="checkbox" name="values[continuous]" value="1">
+											<xsl:attribute name="title">
+												<xsl:value-of select="$lang_continuous"/>
+											</xsl:attribute>
+											<xsl:if test="value_continuous = '1'">
+												<xsl:attribute name="checked">
+													<xsl:text>checked</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
 										</input>
 									</div>
 									<div class="pure-control-group">
@@ -1334,7 +1352,7 @@
 	<xsl:if test="simple !='1'">
 
 		<hr noshade="noshade" width="100%" align="center" size="1"/>
-		 <div class="pure-g">
+		<div class="pure-g">
 			<xsl:choose>
 				<xsl:when test="request_link != ''">
 					<xsl:variable name="request_link">

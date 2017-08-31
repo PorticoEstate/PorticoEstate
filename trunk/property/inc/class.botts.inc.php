@@ -288,6 +288,13 @@
 					'id' => 'b_account_id',
 					'name' => lang('budget account')
 				);
+
+				$columns['continuous'] = array
+					(
+					'id' => 'continuous',
+					'name' => lang('continuous')
+				);
+
 			}
 
 			$columns['ecodimb'] = array

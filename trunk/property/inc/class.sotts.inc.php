@@ -588,6 +588,7 @@
 				'tax_code' => 'fm_tts_tickets.tax_code',
 				'unspsc_code' => 'fm_tts_tickets.unspsc_code',
 				'b_account_id' => 'fm_tts_tickets.b_account_id',
+				'continuous' => 'fm_tts_tickets.continuous',
 			);
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
@@ -781,6 +782,7 @@
 						'tax_code' => $this->db->f('tax_code'),
 						'unspsc_code' => $this->db->f('unspsc_code'),
 						'b_account_id' => $this->db->f('b_account_id'),
+						'continuous' => $this->db->f('continuous'),
 					);
 
 					foreach ($custom_cols as $custom_col)
@@ -868,6 +870,7 @@
 				$ticket['finnish_date2'] = $this->db->f('finnish_date2');
 				$ticket['contact_id'] = $this->db->f('contact_id');
 				$ticket['order_id'] = $this->db->f('order_id');
+				$ticket['continuous'] = $this->db->f('continuous');
 				$ticket['vendor_id'] = $this->db->f('vendor_id');
 				$ticket['contract_id'] = $this->db->f('contract_id',true);
 				$ticket['service_id'] = $this->db->f('service_id',true);
@@ -1735,6 +1738,7 @@
 				$value_set['ecodimb'] = $ticket['ecodimb'];
 				$value_set['branch_id'] = $ticket['branch_id'];
 				$value_set['tax_code'] = $ticket['tax_code'];
+				$value_set['continuous'] = $ticket['continuous'];
 
 				if(isset($ticket['vendor_email']) && is_array($ticket['vendor_email']))
 				{
