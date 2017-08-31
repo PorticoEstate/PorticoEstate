@@ -102,6 +102,25 @@
 					{
 						$_filter_array[] = "{$field['name']} {$this->_like} '%,{$filter[$field['name']]},%'";
 					}
+					else if (!empty($filter[$field['name']]) && (isset($field['values_def']['method_input']['role']) && $field['values_def']['method_input']['role'] == 'parent'))
+					{
+
+						$field_object = clone($this);
+						$field_object->get_location_info($field['values_def']['method_input']['type'], 0);
+						$this->table = $field_object->location_info['table'];
+						$children = $this->get_children2(array(), $filter[$field['name']], 0, true );
+							
+						$_children = array($filter[$field['name']]);
+						if($children)
+						{
+							foreach ($children as $_child)
+							{
+								$_children[] = $_child['id'];
+							}
+						}
+						$_filter_array[] = "{$field['name']} IN (" . implode(',', $_children ) . ')';
+
+					}
 					else if (isset($filter[$field['name']]) && $filter[$field['name']])
 					{
 						$_filter_array[] = "{$field['name']} = '{$filter[$field['name']]}'";
@@ -1104,7 +1123,7 @@
 			{
 				return array();
 			}
-			$this->table = $table;
+	//		$this->table = $table;
 
 			if (isset($this->location_info['mapping']) && $this->location_info['mapping'])
 			{
