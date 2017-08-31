@@ -113,12 +113,12 @@
 								</label>
 								<xsl:choose>
 									<xsl:when test="type='text' or type='html'">
-										<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}">
+										<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}" class="pure-input-1-2" >
 											<xsl:value-of select="value"/>
 										</textarea>
 									</xsl:when>
 									<xsl:when test="type='varchar'">
-										<input type="text" name="values[{name}]" value="{value}" size="{size}">
+										<input type="text" name="values[{name}]" value="{value}" size="{size}" class="pure-input-1-2" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -131,8 +131,41 @@
 											</xsl:choose>
 										</input>
 									</xsl:when>
+									<xsl:when test="type='date'">
+										<input type="text" id="{name}"  name="values[{name}]" value="{value}" size="12" maxlength="12" readonly="readonly">
+											<xsl:attribute name="title">
+												<xsl:value-of select="$descr"/>
+											</xsl:attribute>
+											<xsl:choose>
+												<xsl:when test="nullable!='1'">
+													<xsl:attribute name="data-validation">
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+									</xsl:when>
+
+									<xsl:when test="type='location'">
+										<input type="hidden" id="location_code" name="values[{name}]" value="{value}" />
+										<input type="text"  id="location_name" name="location_name" value="{value}" class="pure-input-1-2" >
+											<xsl:attribute name="title">
+												<xsl:value-of select="$descr"/>
+											</xsl:attribute>
+											<xsl:choose>
+												<xsl:when test="nullable!='1'">
+													<xsl:attribute name="data-validation">
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
+										</input>
+										<div id="location_container"/>
+									</xsl:when>
+
+
 									<xsl:when test="type='integer' or type='int'">
-										<input data-validation="number" type="text" name="values[{name}]" value="{value}" size="{size}">
+										<input data-validation="number" type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -146,7 +179,7 @@
 										</input>
 									</xsl:when>
 									<xsl:when test="type='numeric'">
-										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" name="values[{name}]" value="{value}" size="{size}">
+										<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." type="text" id="{name}" name="values[{name}]" value="{value}" size="{size}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
@@ -162,14 +195,14 @@
 									<xsl:when test="type='checkbox'">
 										<xsl:choose>
 											<xsl:when test="value = 1">
-												<input type="checkbox" name="values[{name}]" value="1" checked="checked">
+												<input type="checkbox" id="{name}" name="values[{name}]" value="1" checked="checked">
 													<xsl:attribute name="title">
 														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
 												</input>
 											</xsl:when>
 											<xsl:otherwise>
-												<input type="checkbox" name="values[{name}]" value="1">
+												<input type="checkbox" id="{name}" name="values[{name}]" value="1">
 													<xsl:attribute name="title">
 														<xsl:value-of select="$descr"/>
 													</xsl:attribute>
@@ -178,7 +211,7 @@
 										</xsl:choose>
 									</xsl:when>
 									<xsl:when test="type='select'">
-										<select name="values[{name}]">
+										<select id="{name}" name="values[{name}]" class="pure-input-1-2" >
 											<xsl:choose>
 												<xsl:when test="nullable!='1'">
 													<xsl:attribute name="data-validation">
@@ -200,7 +233,7 @@
 										</select>
 									</xsl:when>
 									<xsl:when test="type='multiple_select'">
-										<select name="values[{name}][]" multiple="multiple">
+										<select id="{name}" name="values[{name}][]" multiple="multiple" class="pure-input-1-2" >
 											<xsl:choose>
 												<xsl:when test="nullable!='1'">
 													<xsl:attribute name="data-validation">
@@ -219,7 +252,7 @@
 										</select>
 									</xsl:when>
 									<xsl:when test="type='link'">
-										<input type="text" name="values[{name}]" value="{value}" size="30">
+										<input type="text" name="values[{name}]" value="{value}" size="30" class="pure-input-1-2" >
 											<xsl:choose>
 												<xsl:when test="disabled!=''">
 													<xsl:attribute name="disabled">
@@ -274,4 +307,10 @@
 		<form name="cancel_form" id="cancel_form" action="{$cancel_url}" method="post">
 		</form>
 	</div>
+	<script type="text/javascript">
+		var oArgs = {menuaction: 'property.bolocation.get_locations'};
+		var strURL = phpGWLink('index.php', oArgs, true);
+		JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'location_container');
+	</script>
+
 </xsl:template>

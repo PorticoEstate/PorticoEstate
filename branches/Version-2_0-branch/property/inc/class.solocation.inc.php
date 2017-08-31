@@ -2189,7 +2189,7 @@
 
 			$sql = "SELECT fm_district.delivery_address FROM fm_location1 "
 				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id)"
-				. " {$this->join} fm_district ON (fm_part_of_town.district_id = fm_district.id)"			
+				. " {$this->join} fm_district ON (fm_part_of_town.district_id = fm_district.id)"
 				. " WHERE loc1 = '$loc1'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
@@ -2197,5 +2197,56 @@
 
 			return $delivery_address;
 
+		}
+
+		function get_location_exception($location_code = '', $alert_vendor = false)
+		{
+
+			if(!$location_code)
+			{
+				return array();
+			}
+
+			$location_arr = explode('-', $location_code);
+			$exceptions = array();
+			$now = time();
+			$_location_arr = array();
+			foreach ($location_arr as $loc)
+			{
+				$_location_arr[] = $this->db->db_addslashes($loc);
+
+				$_location_code = implode('-', $_location_arr);
+
+				$sql = "SELECT DISTINCT fm_location_exception_severity.name AS severity,"
+					. " fm_location_exception_category.name AS category,"
+					. " content AS category_text, descr as location_descr, alert_vendor"
+					. " FROM fm_location_exception"
+					. " {$this->join} fm_location_exception_severity ON fm_location_exception.severity_id = fm_location_exception_severity.id"
+					. " {$this->join} fm_location_exception_category ON fm_location_exception.category_id = fm_location_exception_category.id"
+					. " {$this->left_join} fm_location_exception_category_text ON fm_location_exception.category_text_id = fm_location_exception_category_text.id"
+					. " WHERE location_code = '{$_location_code}'"
+					. " AND start_date < $now AND (end_date IS NULL  OR end_date = 0 OR end_date > $now)";
+
+
+				if($alert_vendor)
+				{
+					$sql .= ' AND alert_vendor = 1';
+				}
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				while($this->db->next_record())
+				{
+					$exceptions[] = array(
+						'severity'			=> $this->db->f('severity', true),
+						'category'			=> $this->db->f('category', true),
+						'category_text'		=> $this->db->f('category_text', true),
+						'location_descr'	=> $this->db->f('location_descr', true),
+						'alert_vendor'		=> $this->db->f('alert_vendor'),
+					);
+				}
+			}
+
+			return $exceptions;
 		}
 	}

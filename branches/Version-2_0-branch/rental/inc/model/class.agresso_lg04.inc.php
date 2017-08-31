@@ -295,7 +295,8 @@
 						$invoice->get_responsibility_id(), //ny
 						$contract_type_label, //ny
 						$contract_id, //ny
-						$invoice->get_customer_order_id()
+						$invoice->get_customer_order_id(),
+						$serialized_party['customer_id']
 					);
 					$price_item_counter++;
 				}
@@ -490,7 +491,7 @@
 		 * 
 		 */
 		protected function get_order_excel_bk(
-		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id )
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id, $customer_id )
 		{
 
 			//$order_id = $order_id + 39500000;
@@ -501,6 +502,7 @@
 			$order = array(
 				'contract_id' => $contract_id,
 				'account' => $account,
+				'customer id' => $customer_id,
 				'client_ref' => $client_ref,
 				'customer order id' => $customer_order_id,
 				'header' => utf8_decode($header),
@@ -532,7 +534,7 @@
 		}
 
 		protected function get_order_excel_nlsh(
-		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id )
+		$start_date, $end_date, $billing_start_date, $billing_end_date, $header, $party_id, $party_name, $party_address, $party_full_name, $order_id, $bill_year, $bill_month, $account_out, $product_item, $responsibility, $service, $building, $project, $text, $client_ref, $counter, $account_in, $responsibility_id, $contract_type_label, $contract_id, $customer_order_id, $customer_id )
 		{
 		
 			$article_price = $this->prizebook[$product_item['article_code']];

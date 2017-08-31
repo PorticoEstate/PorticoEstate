@@ -464,6 +464,30 @@
 					);
 				}
 
+				$location_exception_children = array
+				(
+					'severity' => array
+						(
+						'text' => lang('severity'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception_severity'))
+					),
+					'category' => array
+						(
+						'text' => lang('category'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception_category')),
+						'children' => array(
+							'category_text' => array
+							(
+								'text' => lang('text'),
+								'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+									'type' => 'location_exception_category_text'))
+							)
+						)
+					)
+				);
+
 				$admin_children_location = array
 					(
 					'street' => array
@@ -511,6 +535,14 @@
 						'text' => lang('location contact'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'location_contact'))
+					),
+					'location_exception' => array
+						(
+						'text' => lang('location exception'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception')),
+						'children' => $location_exception_children
+
 					)
 				);
 
@@ -869,20 +901,16 @@
 					'image' => array('property', 'responsibility_role')
 				);
 
-				/* 				if ( $acl->check('.location', 16, 'property') )
-				  {
-				  $children['type'] = array
-				  (
-				  'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.index')),
-				  'text'	=> lang('Location type')
-				  );
-				  $children['config'] = array
-				  (
-				  'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'property.uiadmin_location.config')),
-				  'text'	=> lang('Config')
-				  );
-				  }
-				 */
+				$children['location_exception'] = array
+					(
+						'text' => lang('location exception'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location_exception',
+							'menu_selection' => 'property::location::location_exception')),
+
+					);
+
+
 				$menus['navigation']['location'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.index',
