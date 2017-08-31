@@ -3097,6 +3097,7 @@ HTML;
 				'value_order_received'	=> $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount' => (int) $ticket['order_received_amount'],
 				'value_extra_mail_address' => $value_extra_mail_address,
+				'value_continuous'	=> $ticket['continuous']
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
