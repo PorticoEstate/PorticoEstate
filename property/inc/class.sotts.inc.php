@@ -518,8 +518,9 @@
 
 				if (ctype_digit($query))
 				{
-					$querymethod .= " OR fm_tts_tickets.order_id =" . (int)$query
-						. " OR fm_tts_tickets.id =" . (int)$query . ')';
+					$querymethod .= " OR cast(fm_tts_tickets.order_id as text) {$this->like} '$query%'";
+			//		$querymethod .= " OR fm_tts_tickets.order_id =" . (int)$query;
+					$querymethod .= " OR fm_tts_tickets.id =" . (int)$query . ')';
 				}
 				else
 				{
