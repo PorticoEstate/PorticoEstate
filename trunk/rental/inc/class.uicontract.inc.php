@@ -109,6 +109,7 @@
 				array('id' => 'all', 'name' => lang('all')),
 				array('id' => 'id', 'name' => lang('contract_id')),
 				array('id' => 'party_name', 'name' => lang('party_name')),
+				array('id' => 'customer_id', 'name' => lang('customer id') . ' (Agresso)'),
 				array('id' => 'composite', 'name' => lang('composite_name')),
 				array('id' => 'composite_address', 'name' => lang('composite_address')),
 				array('id' => 'location_code', 'name' => lang('object_number'))
