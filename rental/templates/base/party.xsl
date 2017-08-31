@@ -374,6 +374,13 @@
 						</div>
 						<div class="pure-control-group">
 							<label>
+								<xsl:value-of select="php:function('lang', 'customer id')"/>
+							</label>
+							<xsl:value-of select="value_customer_id"/>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
 								<xsl:value-of select="php:function('lang', 'firstname')"/>
 							</label>
 							<xsl:value-of select="value_firstname"/>
