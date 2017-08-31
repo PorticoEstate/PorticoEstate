@@ -167,9 +167,9 @@
 						{
 							$entry[$field['name']] = $GLOBALS['phpgw']->accounts->get($entry[$field['name']])->__toString();
 						}
-						else if (isset($field['role']) && $field['role'] == 'parent')
+						else if (isset($field['role']) && $field['role'] == 'parent' && !empty($field['values_def']['method_input']['type']))
 						{
-							$path = $this->so->get_path(array('type' => $this->type, 'id' => $entry[$field['name']]));
+							$path = $this->so->get_path(array('type' => $field['values_def']['method_input']['type'], 'id' => $entry[$field['name']]));
 							$entry[$field['name']] = implode(' > ', $path);
 						}
 						else if (isset($field['values_def']['get_single_value']) && $field['values_def']['get_single_value'])
