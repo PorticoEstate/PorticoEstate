@@ -460,6 +460,14 @@
 				</td>
 			</tr>
 			<tr>
+				<td>{lang_TTS_order_contact_at_location}.</td>
+				<td>
+					<select name="newsettings[contact_at_location]">
+						{hook_list_contact_at_location}
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td>{lang_send_response_TTS}.</td>
 				<td>
 					<select name="newsettings[tts_send_response]">

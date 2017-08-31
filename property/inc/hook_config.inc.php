@@ -466,6 +466,32 @@ HTML;
 	}
 
 	/**
+	 * Get HTML options with roles for responsibilities that should be listed in a listbox
+	 *
+	 * @param $config
+	 * @return string HTML options to be placed in a select
+	 */
+	function list_contact_at_location( $config )
+	{
+		$assigned = isset($config['contact_at_location']) ? $config['contact_at_location'] : 0;
+
+		$entries = execMethod('property.bogeneric.get_list', array('type' => 'responsibility_role',
+			'selected' => $assigned));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($entries as $entry)
+		{
+			$selected = $entry['selected'] ? ' selected = "selected"' : '';
+
+			$out .= <<<HTML
+			<option value='{$entry['id']}'{$selected}>{$entry['name']}</option>
+HTML;
+		}
+		return $out;
+	}
+
+
+	/**
 	 * Get HTML checkbox with filter buildingpart
 	 *
 	 * @param $config

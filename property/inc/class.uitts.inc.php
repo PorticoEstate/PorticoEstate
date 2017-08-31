@@ -3612,6 +3612,22 @@ HTML;
 			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 
+			if (!empty($this->bo->config->config_data['contact_at_location']))
+			{
+				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
+
+				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
+					'cat_id' => $ticket['cat_id']));
+
+				if($_responsible)
+				{
+					$prefs					= $this->bocommon->create_preferences('property', $_responsible);
+					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
+					$_responsible_email		= $prefs['email'];
+					$_responsible_cellphone	= $prefs['cellphone'];
+				}
+			}
+
 			$body = nl2br(str_replace(array
 				(
 				'__vendor_name__',
