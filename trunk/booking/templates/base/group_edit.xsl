@@ -60,6 +60,12 @@
 							<xsl:value-of select="php:function('lang', 'Activity')" />
 						</label>
 						<select name="activity_id" id="field_activity">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+							<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please select an activity')" />
+							</xsl:attribute>
 							<option value="">
 								<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 							</option>

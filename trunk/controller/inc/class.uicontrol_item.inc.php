@@ -422,7 +422,7 @@
 			$search_for = $params['query'];
 
 			$start_index = $params['start'];
-			$num_of_objects = $params['results'] > 0 ? $params['results'] : null;
+			$num_of_objects = $params['results'] > 0 ? $params['results'] : 0;
 			$sort_field = $params['order'];
 
 			$search_type = '';
