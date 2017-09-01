@@ -24,17 +24,17 @@
 									<xsl:value-of select="php:function('lang', 'Activity')" />
 								</label>
 								<select name="activity_id" id="field_activity" class="pure-u-1 pure-u-sm-1-2 pure-u-lg-1-3">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Please select an activity')" />
+									</xsl:attribute>
 									<option value="">
 										<xsl:value-of select="php:function('lang', '-- select an activity --')" />
 									</option>
 									<xsl:for-each select="activities">
 										<option>
-											<xsl:attribute name="data-validation">
-												<xsl:text>required</xsl:text>
-											</xsl:attribute>
-											<xsl:attribute name="data-validation-error-msg">
-												<xsl:value-of select="php:function('lang', 'Please select an activity')" />
-											</xsl:attribute>
 											<xsl:if test="../event/activity_id = id">
 												<xsl:attribute name="selected">selected</xsl:attribute>
 											</xsl:if>

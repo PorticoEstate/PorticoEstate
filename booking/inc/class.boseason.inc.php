@@ -42,7 +42,7 @@
 			return $parent_roles;
 		}
 
-		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
+		protected function get_object_role_permissions( $forObject, $defaultPermissions )
 		{
 			return array_merge(
 				array

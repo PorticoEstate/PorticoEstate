@@ -174,20 +174,26 @@
 				$_ids = $ids;
 			}
 
+			if($action == 'disconnect' && $_ids)
+			{
+				$mail_info = $this->create_disconnect_email($_ids);
+			}
+
 			$ret = eventplanner_socalendar::get_instance()->update_active_status($_ids, $action);
 
 			if($ret && $action == 'disconnect')
 			{
-				$this->send_disconnect_email($_ids);
+				$this->send_disconnect_email($mail_info);
 			}
 
 			return $ret;
 		}
 
-		function send_disconnect_email($ids)
+		function create_disconnect_email($ids)
 		{
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 			$sobooking = createObject('eventplanner.sobooking');
+			$mail_info = array();
 			foreach ($ids as $calendar_id)
 			{
 				$booking_id = $sobooking->get_booking_id_from_calendar( $calendar_id );
@@ -216,8 +222,6 @@
 
 				$subject = !empty($config['canceled_subject']) ? $config['canceled_subject'] : $event_title;
 				$event_title = $application->title;
-
-				$send = CreateObject('phpgwapi.send');
 
 				$lang_when = lang('when');
 				$lang_where = lang('where');
@@ -373,9 +377,31 @@ HTML;
 				$from_email = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : $customer_contact_email;
 				$from_name = !empty($config['receipt_blind_copy']) ? $config['receipt_blind_copy'] : $customer_contact_name;
 
+				$mail_info[] =  array(
+					'to_email' => $to_email,
+					'subject' => $subject,
+					'content' => stripslashes($content),
+					'cc'		=> $cc,
+					'bcc' => $bcc,
+					'from_email' => $from_email,
+					'from_name' => $from_name,
+				);
+
+			
+			}
+
+			return $mail_info;
+		}
+
+
+		private function send_disconnect_email($mail_info)
+		{
+			$send = CreateObject('phpgwapi.send');
+			foreach ($mail_info as $entry)
+			{
 				try
 				{
-					$rcpt = $send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html');
+					$rcpt = $send->msg('email', $entry['to_email'], $entry['subject'], $entry['content'], '', $entry['cc'], $entry['bcc'], $entry['from_email'], $entry['from_name'], 'html');
 				}
 				catch (phpmailerException $e)
 				{
@@ -383,7 +409,6 @@ HTML;
 				}
 
 				phpgwapi_cache::message_set("Email: $to_email, $cc", 'message');
-			
 			}
 		}
 

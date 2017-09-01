@@ -41,7 +41,7 @@
 		/**
 		 * @see bocommon_authorized
 		 */
-		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
+		protected function get_object_role_permissions( $forObject, $defaultPermissions )
 		{
 			if ($this->current_app() == 'booking')
 			{

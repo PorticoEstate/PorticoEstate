@@ -226,7 +226,7 @@
 			return is_null($for_object) ? $this->collection_role_permissions() : $this->object_role_permissions($for_object);
 		}
 
-		public function object_role_permissions( array $forObject )
+		public function object_role_permissions( $forObject )
 		{
 			return $this->get_object_role_permissions($forObject, $this->defaultObjectPermissions);
 		}
@@ -264,7 +264,7 @@
 		// 	return true;
 		// }
 
-		protected abstract function get_object_role_permissions( array $forObject, $defaultPermissions );
+		protected abstract function get_object_role_permissions( $forObject, $defaultPermissions );
 
 		protected abstract function get_collection_role_permissions( $defaultPermissions );
 
