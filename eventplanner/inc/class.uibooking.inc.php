@@ -248,7 +248,7 @@
 			$datatable_def[] = array(
 				'container' => 'datatable-container_1',
 				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uivendor_report.query",
-					'filter_booking_id' => $id,
+					'filter_booking_id' => $id ? $id : -1,
 					'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $vendor_report_def,
 				'data' => json_encode($vendor_report),
@@ -278,7 +278,7 @@
 			$datatable_def[] = array(
 				'container' => 'datatable-container_2',
 				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicustomer_report.query",
-					'filter_booking_id' => $id,
+					'filter_booking_id' => $id ? $id : -1,
 					'phpgw_return_as' => 'json'))),
 				'ColumnDefs' => $customer_report_def,
 				'data' => json_encode($customer_report),

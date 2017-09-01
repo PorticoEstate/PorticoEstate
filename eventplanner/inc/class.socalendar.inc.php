@@ -158,6 +158,21 @@
 					break;
 
 				case 'disconnect':
+					$sql = "SELECT id AS booking_id FROM eventplanner_booking WHERE calendar_id IN(". implode(',', $ids) . ')';
+					$this->db->query($sql,__LINE__,__FILE__);
+					$bookings = array();
+					while ($this->db->next_record())
+					{
+						$bookings[] = $this->db->f('booking_id');
+					}
+
+					$sql = "DELETE FROM eventplanner_booking_comment WHERE booking_id IN(". implode(',', $bookings) . ')';
+					$this->db->query($sql,__LINE__,__FILE__);
+					$sql = "DELETE FROM eventplanner_booking_customer_report WHERE booking_id IN(". implode(',', $bookings) . ')';
+					$this->db->query($sql,__LINE__,__FILE__);
+					$sql = "DELETE FROM eventplanner_booking_vendor_report WHERE booking_id IN(". implode(',', $bookings) . ')';
+					$this->db->query($sql,__LINE__,__FILE__);
+
 					$sql = "DELETE FROM eventplanner_booking WHERE calendar_id IN(". implode(',', $ids) . ')';
 					return $this->db->query($sql,__LINE__,__FILE__);
 

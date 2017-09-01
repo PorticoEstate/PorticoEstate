@@ -3097,6 +3097,7 @@ HTML;
 				'value_order_received'	=> $ticket['order_received'] ? $GLOBALS['phpgw']->common->show_date($ticket['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount' => (int) $ticket['order_received_amount'],
 				'value_extra_mail_address' => $value_extra_mail_address,
+				'value_continuous'	=> $ticket['continuous']
 			);
 
 			phpgwapi_jquery::load_widget('numberformat');
@@ -3610,6 +3611,22 @@ HTML;
 			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
 			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
+
+			if (!empty($this->bo->config->config_data['contact_at_location']))
+			{
+				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
+
+				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
+					'cat_id' => $ticket['cat_id']));
+
+				if($_responsible)
+				{
+					$prefs					= $this->bocommon->create_preferences('property', $_responsible);
+					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
+					$_responsible_email		= $prefs['email'];
+					$_responsible_cellphone	= $prefs['cellphone'];
+				}
+			}
 
 			$body = nl2br(str_replace(array
 				(

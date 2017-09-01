@@ -4,7 +4,7 @@
 	class booking_bopermission_resource extends booking_bopermission
 	{
 
-		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
+		protected function get_object_role_permissions( $forObject, $defaultPermissions )
 		{
 			$role_permissions = parent::get_object_role_permissions($forObject, $defaultPermissions);
 			$role_permissions['parent_role_permissions']['object']['parent_role_permissions']['building'] = array

@@ -10,7 +10,7 @@
 			$this->so = CreateObject('booking.soaccount_code_set');
 		}
 
-		protected function get_object_role_permissions( array $forObject, $defaultPermissions )
+		protected function get_object_role_permissions( $forObject, $defaultPermissions )
 		{
 			return array_merge(
 				array
