@@ -156,14 +156,21 @@
 						}
 						break;
 					case 'ticket':
-						$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$voucher['order_id']}'", __LINE__, __FILE__);
+						$this->db->query("SELECT id, continuous FROM fm_tts_tickets WHERE order_id= '{$voucher['order_id']}'", __LINE__, __FILE__);
 						$this->db->next_record();
 						$ticket_id = $this->db->f('id');
-						$ticket = array(
-							'status' => 'C8' //Avsluttet og fakturert (C)
-						);
 
-						$ok = $sotts->update_status($ticket, $ticket_id);
+						if($this->db->f('continuous'))
+						{
+							$ok = true;
+						}
+						else
+						{
+							$ticket = array(
+									'status' => 'C8' //Avsluttet og fakturert (C)
+								);
+							$ok = $sotts->update_status($ticket, $ticket_id);
+						}
 						break;
 					default:
 						throw new Exception('Order type not supported');

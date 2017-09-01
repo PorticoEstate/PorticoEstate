@@ -392,9 +392,14 @@
 		{
 			$from = "'" . $booking['from_'] . "'";
 			$to = "'" . $booking['to_'] . "'";
-			$gid = $booking['group_id'];
-			$season_id = $booking['season_id'];
+			$gid = (int)$booking['group_id'];
+			$season_id = (int)$booking['season_id'];
 			$resources = implode(",", $booking['resources']);
+
+			if(empty($booking['resources']))
+			{
+				return false;
+			}
 
 			$sql = "SELECT bb.id,bbr.resource_id FROM bb_booking bb,bb_booking_resource bbr WHERE bb.from_ = ($from) AND bb.to_ = ($to) AND bb.group_id = ($gid) AND bb.season_id = ($season_id) AND bb.id = bbr.booking_id AND EXISTS (SELECT 1 FROM bb_booking_resource bbr2 WHERE  bbr2.resource_id IN ($resources) AND bbr2.resource_id = bbr.resource_id)";
 
@@ -476,9 +481,14 @@
 
 			$from = "'" . $booking['from_'] . "'";
 			$to = "'" . $booking['to_'] . "'";
-			$org_id = $booking['organization_id'];
-			$season_id = $booking['season_id'];
+			$org_id = (int)$booking['organization_id'];
+			$season_id = (int)$booking['season_id'];
 			$resources = implode(",", $booking['resources']);
+
+			if(empty($booking['resources']))
+			{
+				return True;
+			}
 
 			$sql = "SELECT id FROM bb_allocation ba2 WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = ($org_id) AND ba2.season_id = ($season_id) AND EXISTS ( SELECT 1 FROM bb_allocation  a,bb_allocation_resource b WHERE a.id = b.allocation_id AND b.resource_id IN ($resources))";
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);

@@ -9767,3 +9767,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.717 to 0.9.17.718
+	*
+	*/
+	$test[] = '0.9.17.717';
+
+	function property_upgrade0_9_17_717()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'continuous', array(
+			'type' => 'int', 'precision' => 2, 'nullable' => true));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.718';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

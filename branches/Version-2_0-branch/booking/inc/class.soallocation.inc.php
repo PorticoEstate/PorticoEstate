@@ -254,9 +254,14 @@
 
 			$from = "'" . $allocation['from_'] . "'";
 			$to = "'" . $allocation['to_'] . "'";
-			$org_id = $allocation['organization_id'];
+			$org_id = (int)$allocation['organization_id'];
 			$season_id = $allocation['season_id'];
 			$resources = implode(",", $allocation['resources']);
+
+			if(empty($allocation['resources']))
+			{
+				return false;
+			}
 
 			$sql = "SELECT id FROM bb_allocation ba2 JOIN bb_allocation_resource bar2 ON (ba2.id = bar2.allocation_id) WHERE ba2.from_ = ($from) AND ba2.to_ = ($to) AND ba2.organization_id = ($org_id) AND ba2.season_id = ($season_id) AND  bar2.resource_id IN ($resources)";
 
