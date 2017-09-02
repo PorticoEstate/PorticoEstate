@@ -1006,15 +1006,15 @@ JS;
 
 				$function_exchange_values .=<<<JS
 
-				parent.JqueryPortico.onPopupClose("close");
-
 				try
 				{
-					parent.on_location_updated(aData["location_code"]);
+			//		parent.on_location_updated(aData["location_code"]);
+					window.parent.on_location_updated(aData["location_code"]);
 				}
 				catch(err)
 				{}
 
+				parent.JqueryPortico.onPopupClose("close");
 			});
 
 	});

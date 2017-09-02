@@ -2614,7 +2614,6 @@
 								'nullable' => false,
 								'filter' => true,
 								'sortable' => true,
-								'role' => 'parent',
 								'values_def' => array
 								(
 									'valueset' => false,
