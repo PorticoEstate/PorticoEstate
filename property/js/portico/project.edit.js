@@ -397,7 +397,7 @@ strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
 
 
-on_location_updated = function ()
+window.on_location_updated = function ()
 {
 	if(	$("#delivery_address").val() )
 	{

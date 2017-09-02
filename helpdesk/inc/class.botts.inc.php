@@ -773,7 +773,7 @@
 			return $address_element;
 		}
 
-		function mail_ticket($id, $fields_updated, $receipt = array(), $get_message = false)
+		function mail_ticket($id, $fields_updated, $receipt = array(), $get_message = false, $send_mail = false)
 		{
 			//No message on assignment
 			if(!$get_message && is_array($fields_updated) && count($fields_updated) == 1 && in_array('assignedto', $fields_updated))
@@ -996,7 +996,7 @@ HTML;
 					&& ($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'] == 1)
 				)
 				|| ($this->config->config_data['ownernotification'] && $ticket['user_id'])
-				|| $ticket['reverse_id'])
+				|| ($ticket['user_id'] && $send_mail))
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);
