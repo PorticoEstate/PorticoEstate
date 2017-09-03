@@ -251,11 +251,21 @@ class data_cleaner
 			//XXX external references begin with http(s) isnt'it ? what should I do if it's not external ?? like href="/tata"
 			// Just try to save a <a href="titi.org"> my site </a>
 			// you get a <a href="/phpgw/redirect.php?go=titi.org"> my site </a>
-			// Save a second time and you will get :
-			// <a href="/phpgw/redirect.php?go=/phpgw/redirect.php?go=titi.org"> my site </a>
-			// ....
 			$data = preg_replace_callback('/href\s*=\s*([\\\]?["\']?)((?(1)[^\1]*?|[^\s]+))(?(1)\1|)/i',
-				create_function('$m', 'return \'href="\' . (strlen($m[2]) && $m[2]{0} == \'#\' ? $m[2] : $GLOBALS[\'phpgw\']->safe_redirect(urldecode($m[2]))) . \'"\';'),
+//				create_function('$m', 'return \'href="\' . (strlen($m[2]) && $m[2]{0} == \'#\' ? $m[2] : $GLOBALS[\'phpgw\']->safe_redirect(urldecode($m[2]))) . \'"\';'),
+				function ($m)
+				{
+					if(preg_match('/redirect.php\?go=/i', $m[2]))
+					{
+						$url = $m[2];
+					}
+					else
+					{
+						$url = strlen($m[2]) && $m[2]{0} == '#' ? $m[2] : $GLOBALS['phpgw']->safe_redirect(urldecode($m[2]));
+					}
+					$ret = 'href="'. $url .'"';
+					return $ret;
+				},
 				$data);
 		}
 		return $data;
