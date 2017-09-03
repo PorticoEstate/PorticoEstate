@@ -59,7 +59,24 @@
 			// Bookings found
 			else
 			{
-				$next = array_filter(array_merge(array_map('get_from', $bookings), array_map('get_to', $bookings)), create_function('$a', "return \$a > '$t';"));
+				/**
+				 * create_function will be deprecated from PHP 7.2
+				 */
+//				$next = array_filter(array_merge(array_map('get_from', $bookings), array_map('get_to', $bookings)), create_function('$a', "return \$a > '$t';"));
+				$next = array();
+				$next_candidates = array_merge(array_map('get_from', $bookings), array_map('get_to', $bookings));
+
+				if($next_candidates)
+				{
+					foreach ($next_candidates as $next_candidate)
+					{
+						if($next_candidate > $t)
+						{
+							$next[] = $next_candidate;
+						}
+					}
+				}
+
 				if (!$next)
 				{
 					break;
