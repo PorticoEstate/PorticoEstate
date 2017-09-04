@@ -1622,7 +1622,6 @@ HTML;
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
-
 			$membership = $GLOBALS['phpgw']->accounts->membership($this->account);
 			$my_groups = array();
 			foreach ($membership as $group_id => $group)
@@ -2183,6 +2182,7 @@ HTML;
 
 			if ($access_order)
 			{
+				$GLOBALS['phpgw']->jqcal->add_listener('order_deadline');
 
 				$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
@@ -3018,6 +3018,7 @@ HTML;
 				'value_origin' => $ticket['origin'],
 				'value_target' => $ticket['target'],
 				'value_finnish_date' => $ticket['finnish_date'],
+				'value_order_deadline' => $ticket['order_deadline'],
 				'link_entity' => $link_entity,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data2' => $location_data,
@@ -3385,6 +3386,11 @@ HTML;
 				array('col1' => lang('vendor') . ":\n{$ticket['vendor_name']}", 'col2' => $delivery_address),
 				array('col1' => $from, 'col2' => $invoice_address)
 			);
+
+			if($ticket['order_deadline'])
+			{
+				$data[] = array('col1' => lang('deadline'), 'col2' =>"<b>{$ticket['order_deadline']}</b>");
+			}
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings' => 0,
 				'shaded' => 0, 'xPos' => 0,
@@ -3759,6 +3765,17 @@ HTML;
 			$body .= "</td>";
 
 			$body .= "<td valign='top'>" .  lang('invoice address') . "<br/>{$this->bo->config->config_data['invoice_address']}</td>";
+
+			if($ticket['order_deadline'])
+			{
+				$body .= "<tr><td>";
+				$body .=  lang('deadline');
+				$body .= "</td>";
+				$body .= "<td>";
+				$body .=  "<b>{$ticket['order_deadline']}</b>";
+				$body .= "</td></tr>";
+			}
+
 			$body .= "</tr></table><br/>";
 
 
