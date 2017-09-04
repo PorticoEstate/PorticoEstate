@@ -1622,7 +1622,6 @@ HTML;
 				$GLOBALS['phpgw']->jqcal->add_listener('values_finnish_date');
 			}
 
-
 			$membership = $GLOBALS['phpgw']->accounts->membership($this->account);
 			$my_groups = array();
 			foreach ($membership as $group_id => $group)
@@ -2183,6 +2182,7 @@ HTML;
 
 			if ($access_order)
 			{
+				$GLOBALS['phpgw']->jqcal->add_listener('order_deadline');
 
 				$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
@@ -3018,6 +3018,7 @@ HTML;
 				'value_origin' => $ticket['origin'],
 				'value_target' => $ticket['target'],
 				'value_finnish_date' => $ticket['finnish_date'],
+				'value_order_deadline' => $ticket['order_deadline'],
 				'link_entity' => $link_entity,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data2' => $location_data,
@@ -3317,8 +3318,10 @@ HTML;
 
 			$data = array
 				(
-				array('col1' => "{$this->bo->config->config_data['org_name']}\n\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
-					'col2' => lang('Order'), 'col3' => lang('order id') . "\n\n{$ticket['order_id']}")
+				array(
+					'col1' => "{$this->bo->config->config_data['org_name']}\n\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
+					'col2' => lang('Order'),
+					'col3' => lang('order id') . "\n\n{$ticket['order_id']}")
 			);
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => '', 'col3' => ''), '', array(
@@ -3384,6 +3387,11 @@ HTML;
 				array('col1' => $from, 'col2' => $invoice_address)
 			);
 
+			if($ticket['order_deadline'])
+			{
+				$data[] = array('col1' => lang('deadline'), 'col2' =>"<b>{$ticket['order_deadline']}</b>");
+			}
+
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings' => 0,
 				'shaded' => 0, 'xPos' => 0,
 				'xOrientation' => 'right', 'width' => 500, 'gridlines' => EZ_GRIDLINE_ALL,
@@ -3421,14 +3429,76 @@ HTML;
 
 			$pdf->ezText($ticket['order_descr'], 14);
 			$pdf->ezSetDy(-20);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
-			$pdf->ezText('Kontakt på bygget:', 14);
-			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
-			$pdf->ezText($contact_name, 14);
-			$pdf->ezText($contact_email, 14);
-			$pdf->ezText($contact_phone, 14);
-			$pdf->ezSetDy(-20);
-			$pdf->ezText("Av hensyn til våre ansatte og leietakere ber vi om at kontakt på bygget blir kontaktet minst 1 dag i forkant av oppdrag.", 14);
+
+			$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
+
+			if (!empty($this->bo->config->config_data['contact_at_location']))
+			{
+				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
+
+				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
+					'cat_id' => $ticket['cat_id']));
+
+				if($_responsible)
+				{
+					$prefs					= $this->bocommon->create_preferences('property', $_responsible);
+					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
+					$_responsible_email		= $prefs['email'];
+					$_responsible_cellphone	= $prefs['cellphone'];
+					if($contact_email)
+					{
+						$contact_name2 = $_responsible_name;
+						$contact_email2 = $_responsible_email;
+						$contact_phone2 = $_responsible_cellphone;
+						$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_2'];
+					}
+					else
+					{
+						$contact_name = $_responsible_name;
+						$contact_email = $_responsible_email;
+						$contact_phone = $_responsible_cellphone;
+					}
+				}
+			}
+
+			$contact_block = str_replace(array
+				(
+				'__user_name__',
+				'__user_phone__',
+				'__user_email__',
+				'__contact_name__',
+				'__contact_email__',
+				'__contact_phone__',
+				'__contact_name2__',
+				'__contact_email2__',
+				'__contact_phone2__',
+				'__order_id__',
+				'[b]',
+				'[/b]'
+					), array
+				(
+				$user_name,
+				$user_phone,
+				$user_email,
+				$contact_name,
+				$contact_email,
+				$contact_phone,
+				$contact_name2,
+				$contact_email2,
+				$contact_phone2,
+				$order_id,
+				'<b>',
+				'</b>'
+					), $order_contact_block_template);
+
+//			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+//			$pdf->ezText('Kontakt på bygget:', 14);
+//			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+//			$pdf->ezText($contact_name, 14);
+//			$pdf->ezText($contact_email, 14);
+//			$pdf->ezText($contact_phone, 14);
+//			$pdf->ezSetDy(-20);
+			$pdf->ezText($contact_block, 14);
 
 			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor = true);
 
@@ -3551,6 +3621,9 @@ HTML;
 			$contact_name = '';
 			$contact_email = '';
 			$contact_phone = '';
+			$contact_name2  = '';
+			$contact_email2 = '';
+			$contact_phone3 = '';
 
 			if (isset($this->bo->config->config_data['org_name']))
 			{
@@ -3611,6 +3684,7 @@ HTML;
 			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
 			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
+			$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
 			if (!empty($this->bo->config->config_data['contact_at_location']))
 			{
@@ -3625,10 +3699,87 @@ HTML;
 					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email		= $prefs['email'];
 					$_responsible_cellphone	= $prefs['cellphone'];
+					if($contact_email  && ($contact_data['value_contact_email'] != $_responsible_email))
+					{
+						$contact_name2 = $_responsible_name;
+						$contact_email2 = "<a href='mailto:{$_responsible_email}'>{$_responsible_email}</a>";
+						$contact_phone2 = $_responsible_cellphone;
+						$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_2'];
+					}
+					else
+					{
+						$contact_name = $_responsible_name;
+						$contact_email = "<a href='mailto:{$_responsible_email}'>{$_responsible_email}</a>";
+						$contact_phone = $_responsible_cellphone;
+					}
 				}
 			}
 
-			$body = nl2br(str_replace(array
+			$contact_block = nl2br(str_replace(array
+				(
+				'__user_name__',
+				'__user_phone__',
+				'__user_email__',
+				'__contact_name__',
+				'__contact_email__',
+				'__contact_phone__',
+				'__contact_name2__',
+				'__contact_email2__',
+				'__contact_phone2__',
+				'__order_id__',
+				'[b]',
+				'[/b]'
+					), array
+				(
+				$user_name,
+				$user_phone,
+				$user_email,
+				$contact_name,
+				$contact_email,
+				$contact_phone,
+				$contact_name2,
+				$contact_email2,
+				$contact_phone2,
+				$order_id,
+				'<b>',
+				'</b>'
+					), $order_contact_block_template));
+
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$date = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
+
+
+			$body = "<table><tr>";
+			$body .= "<td valign='top'>{$organisation}<br/>Org.nr: {$this->bo->config->config_data['org_unit_id']}</td>";
+			$body .= "<td valign='top'>" .  lang('order id') . "<br/><b>{$ticket['order_id']}</b></td>";
+			$body .= "<tr>";
+			$body .= "<td valign='top'>" .  lang('vendor') . "<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
+			$body .= "<td>" .  lang('delivery address') . "<br/>{$location}</td>";
+			$body .= "</tr>";
+			$body .= "<tr>";
+			$body .= "<td valign='top'>";
+			$body .=  lang('date') . ":{$date}<br/>";
+			$body .=  lang('dimb') . ": {$ticket['ecodimb']}<br/>";
+			$body .=  lang('from') . ": {$user_name}<br/>{$user_phone}<br/>{$user_email}<br/>";
+			$body .= "</td>";
+
+			$body .= "<td valign='top'>" .  lang('invoice address') . "<br/>{$this->bo->config->config_data['invoice_address']}</td>";
+
+			if($ticket['order_deadline'])
+			{
+				$body .= "<tr><td>";
+				$body .=  lang('deadline');
+				$body .= "</td>";
+				$body .= "<td>";
+				$body .=  "<b>{$ticket['order_deadline']}</b>";
+				$body .= "</td></tr>";
+			}
+
+			$body .= "</tr></table><br/>";
+
+
+			$body .= nl2br(str_replace(array
 				(
 				'__vendor_name__',
 				'__organisation__',
@@ -3638,6 +3789,7 @@ HTML;
 				'__ressursnr__',
 				'__location__',
 				'__order_description__',
+				'__contact_block__',
 				'__contact_name__',
 				'__contact_email__',
 				'__contact_phone__',
@@ -3654,6 +3806,7 @@ HTML;
 				$ressursnr,
 				$location,
 				$order_description,
+				$contact_block,
 				$contact_name,
 				$contact_email,
 				$contact_phone,
@@ -3679,13 +3832,87 @@ HTML;
 			}
 
 
-			$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title></head>";
+			$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title>";
+			$html .= '	<style>
 
+			table, th, td {
+				border: 1px solid black;
+				border-collapse: collapse;
+			}
+		html {
+		font-family: arial;
+		}
+		@page {
+		size: A4;
+		}
+
+		@media print {
+		li {page-break-inside: avoid;}
+		h1, h2, h3, h4, h5 {
+		page-break-after: avoid;
+		}
+
+		table, figure {
+		page-break-inside: avoid;
+		}
+		}
+
+
+		@page:left{
+		@bottom-left {
+		content: "Page " counter(page) " of " counter(pages);
+		}
+		}
+		@media print
+		{
+		.btn
+		{
+		display: none !important;
+		}
+		}
+
+		.btn{
+		background: none repeat scroll 0 0 #2647A0;
+		color: #FFFFFF;
+		display: inline-block;
+		margin-right: 5px;
+		padding: 5px 10px;
+		text-decoration: none;
+		border: 1px solid #173073;
+		cursor: pointer;
+		}
+
+		ul{
+		list-style: none outside none;
+		}
+
+		li{
+		list-style: none outside none;
+		}
+
+		li.list_item ol li{
+		list-style: decimal;
+		}
+
+		ul.groups li {
+		padding: 3px 0;
+		}
+
+		ul.groups li.odd{
+		background: none repeat scroll 0 0 #DBE7F5;
+		}
+
+		ul.groups h3 {
+		font-size: 18px;
+		margin: 0 0 5px;
+		}
+
+	</style></head>';
 			$body .='</br>';
 			$body .='</br>';
 			$body .= '<a href ="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 					'id' => $id), false, true) . '">' . lang('Ticket') . ' #' . $id . '</a>';
-			$html .= "<body>{$body}</body></html>";
+			$html .= "<body><div style='width: 800px;'>{$body}</div></body></html>";
 
 
 			if ($preview)

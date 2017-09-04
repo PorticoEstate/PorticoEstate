@@ -628,6 +628,14 @@
 				$contact['value_contact_tel'] = $contact_data[0]['tel_work'];
 
 				unset($contacts);
+
+				if(!$contact['value_contact_email'])
+				{
+					$user_id = createObject('property.soresponsible')->get_contact_user_id( $data['contact_id'] );
+					$prefs					= $this->create_preferences('property', $user_id);
+					$contact['value_contact_email']		= $prefs['email'];
+					$contact['value_contact_tel']	= $prefs['cellphone'];
+				}
 			}
 
 			$contact['field'] = $field;
