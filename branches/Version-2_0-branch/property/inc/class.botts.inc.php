@@ -704,7 +704,8 @@
 					$ticket['delay'] = round(($ticket['finnish_date2'] - $ticket['finnish_date']) / (24 * 3600));
 					$ticket['finnish_date'] = $ticket['finnish_date2'];
 				}
-				$ticket['finnish_date'] = (isset($ticket['finnish_date']) && $ticket['finnish_date'] ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'], $this->dateformat) : '');
+				$ticket['finnish_date'] = !empty($ticket['finnish_date']) ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'], $this->dateformat) : '';
+				$ticket['order_deadline'] = !empty($ticket['order_deadline'])  ? $GLOBALS['phpgw']->common->show_date($ticket['order_deadline'], $this->dateformat) : '';
 
 				/*
 				  if ($ticket['status'] == 'X')
@@ -781,6 +782,10 @@
 			if ($ticket['finnish_date'])
 			{
 				$ticket['finnish_date'] = $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'], $this->dateformat);
+			}
+			if ($ticket['order_deadline'])
+			{
+				$ticket['order_deadline'] = $GLOBALS['phpgw']->common->show_date($ticket['order_deadline'], $this->dateformat);
 			}
 
 			if ($ticket['location_code'])
