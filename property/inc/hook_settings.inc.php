@@ -343,11 +343,7 @@
 	$default .= "\n" . '[b]Beskrivelse av oppdraget:[/b]';
 	$default .= "\n" . '__order_description__';
 	$default .= "\n";
-	$default .= "\n" . '[b]Kontakt på bygget:[/b]';
-	$default .= "\n";
-	$default .= "\n" . '__contact_name__';
-	$default .= "\n" . '__contact_email__';
-	$default .= "\n" . '__contact_phone__';
+	$default .= "\n" . '__contact_block__';
 	$default .= "\n";
 	$default .= "\n" . '[b]Faktura må merkes med ordrenummer: __order_id__ og ressursnr.: __ressursnr__[/b]';
 	$default .= "\n";
@@ -358,3 +354,26 @@
 	$default .= "\n" . '__organisation__';
 
 	create_text_area('order email', 'order_email_template', 10, 60, '', $default);
+
+
+	$default_block_1 = '';
+	$default_block_1 .= "\n" . '[b]Kontakt på bygget:[/b]';
+	$default_block_1 .= "\n" . 'Av hensyn til våre ansatte og leietakere ber vi om at kontakt på bygget blir kontaktet minst 1 dag i forkant av oppdrag:';
+	$default_block_1 .= "\n" . '__contact_name__';
+	$default_block_1 .= "\n" . '__contact_email__';
+	$default_block_1 .= "\n" . '__contact_phone__';
+
+	create_text_area('contact block 1', 'order_contact_block_1', 10, 60, '', $default_block_1);
+
+
+	$default_block_2 = '';
+	$default_block_2 .= "\n" . '[b]Kontakt på bygget:[/b]';
+	$default_block_2 .= "\n" . 'Av hensyn til våre ansatte og leietakere ber vi om at Vedlikeholdsteknikere';
+	$default_block_2 .= "\n" . '__contact_name__: __contact_email__ / __contact_phone__, ';
+	$default_block_2 .= "\n" . 'alternativt Driftskooordinator';
+	$default_block_2 .= "\n" . '__contact_name2__: __contact_email2__ / __contact_phone2__';
+	$default_block_2 .= "\n" . 'blir kontaktet minst 1 dag i forkant av oppdrag';
+
+
+
+	create_text_area('contact block 2', 'order_contact_block_2', 10, 60, '', $default_block_2);
