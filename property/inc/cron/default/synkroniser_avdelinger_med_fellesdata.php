@@ -583,6 +583,8 @@ SQL;
 				echo $exc->getTraceAsString();
 			}
 
+			$GLOBALS['phpgw']->db->transaction_begin();
+
 			$sql = 'INSERT INTO fm_vendor_temp (id, status, navn, adresse, postnummer, sted, organisasjonsnr, bankkontonr, aktiv)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
@@ -744,6 +746,7 @@ SQL;
 				. " org_nr = fm_vendor_temp.organisasjonsnr"
 				. " FROM fm_vendor_temp WHERE fm_vendor.id = fm_vendor_temp.id", __LINE__, __FILE__);
 
+			$GLOBALS['phpgw']->db->transaction_commit();
 		}
 
 		public function check_external_register($url)
