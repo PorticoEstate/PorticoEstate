@@ -56,9 +56,9 @@
 			return self::$so;
 		}
 
-		public function _get_cols_and_joins( $filters = array() )
+		public function _get_cols_and_joins( $query = '', $filters = array() )
 		{
-			$cols_joins = parent::_get_cols_and_joins($filters);
+			$cols_joins = parent::_get_cols_and_joins($query, $filters);
 
 			$cols = $cols_joins[0];
 			$joins = $cols_joins[1];
