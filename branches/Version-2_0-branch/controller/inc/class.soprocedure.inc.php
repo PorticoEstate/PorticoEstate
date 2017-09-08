@@ -514,6 +514,7 @@
 
 			$results = array();
 
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$sql = "SELECT p.* FROM controller_procedure p WHERE {$revision_filter} ORDER BY end_date ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -526,11 +527,14 @@
 				$procedure->set_description($this->unmarshal($this->db->f('description', true), 'string'));
 				$procedure->set_reference($this->unmarshal($this->db->f('reference', true), 'string'));
 				$procedure->set_attachment($this->unmarshal($this->db->f('attachment', true), 'string'));
-				$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('start_date'), 'int')));
-				$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('end_date'), 'int')));
+				$procedure->set_start_date($GLOBALS['phpgw']->common->show_date($this->unmarshal($this->db->f('start_date'), 'int'), $dateformat));
+			//	$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('start_date'), 'int')));
+			//	$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('end_date'), 'int')));
+				$procedure->set_end_date($GLOBALS['phpgw']->common->show_date($this->unmarshal($this->db->f('end_date'), 'int'), $dateformat));
 				$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
-				$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
+			//	$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->unmarshal($this->db->f('revision_date'), 'int')));
+				$procedure->set_revision_date($GLOBALS['phpgw']->common->show_date($this->unmarshal($this->db->f('revision_date'), 'int'), $dateformat));
 				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$procedure->set_control_area_name($category_name = $category[0]['name']);
