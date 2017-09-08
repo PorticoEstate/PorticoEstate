@@ -57,6 +57,7 @@
 			'print_procedure' => true
 		);
 
+		protected $dateformat;
 		public function __construct()
 		{
 			parent::__construct();
@@ -76,6 +77,7 @@
 			$config = CreateObject('phpgwapi.config', 'controller');
 			$config->read();
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
+			$this->dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 //			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
@@ -443,8 +445,8 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('revision_date');
 
-				$end_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date() ? $procedure->get_end_date() : '');
-				$revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date() ? $procedure->get_revision_date() : '');
+				$end_date = $GLOBALS['phpgw']->common->show_date($procedure->get_end_date(), $dateformat);
+				$revision_date = $GLOBALS['phpgw']->common->show_date($procedure->get_revision_date(), $dateformat);
 
 
 				$data = array
@@ -452,7 +454,7 @@
 					'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'procedure', 'procedure_tabview'),
 					'view' => "view_procedure",
 					'value_id' => !empty($procedure) ? $procedure->get_id() : 0,
-					'start_date' => date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date() ? $procedure->get_start_date() : time()),
+					'start_date' => $GLOBALS['phpgw']->common->show_date($procedure->get_start_date() ? $procedure->get_start_date() : time(), $dateformat),
 					'end_date' => $end_date ? $end_date : '',
 					'revision_date' => $revision_date ? $revision_date : '',
 					'editable' => true,
@@ -539,8 +541,8 @@
 
 				if ($procedure->get_start_date() && $procedure->get_start_date() != null)
 				{
-					//$procedure_start_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date());
-					$procedure->set_start_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_start_date()));
+					//$procedure_start_date = date($this->dateformat, $procedure->get_start_date());
+					$procedure->set_start_date(date($this->dateformat, $procedure->get_start_date()));
 				}
 				else
 				{
@@ -548,8 +550,8 @@
 				}
 				if ($procedure->get_end_date() && $procedure->get_end_date() != null)
 				{
-					//$procedure_end_date	= date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date());
-					$procedure->set_end_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_end_date()));
+					//$procedure_end_date	= date($this->dateformat, $procedure->get_end_date());
+					$procedure->set_end_date(date($this->dateformat, $procedure->get_end_date()));
 				}
 				else
 				{
@@ -557,8 +559,8 @@
 				}
 				if ($procedure->get_revision_date() && $procedure->get_revision_date() != null)
 				{
-					//$procedure_revision_date = date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date());
-					$procedure->set_revision_date(date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $procedure->get_revision_date()));
+					//$procedure_revision_date = date($this->dateformat, $procedure->get_revision_date());
+					$procedure->set_revision_date(date($this->dateformat, $procedure->get_revision_date()));
 				}
 				else
 				{
@@ -674,7 +676,7 @@
 				'location' => $location_array,
 				'control' => $control->toArray(),
 				'procedure' => $procedure->toArray(),
-				'dateformat' => $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']
+				'dateformat' => $this->dateformat
 			);
 			//var_dump($procedure->toArray());
 
