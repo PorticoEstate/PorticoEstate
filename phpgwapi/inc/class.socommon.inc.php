@@ -215,7 +215,7 @@
 			$filters = isset($params['filters']) && $params['filters'] ? $params['filters'] : array();
 			$relaxe_acl = isset($params['relaxe_acl']) && $params['relaxe_acl'] ? $params['relaxe_acl'] : false;
 			$this->relaxe_acl = $relaxe_acl;
-			$cols_joins = $this->_get_cols_and_joins($filters);
+			$cols_joins = $this->_get_cols_and_joins($query, $filters);
 			$cols = join(',', $cols_joins[0]);
 			$joins = join(' ', $cols_joins[1]);
 			$condition = $this->_get_conditions($query, $filters);
@@ -638,7 +638,7 @@
 			return "{$params['join']['table']}_{$params['join']['column']}_{$field}";
 		}
 
-		public function _get_cols_and_joins( $filters = array() )
+		public function _get_cols_and_joins( $query = '', $filters = array() )
 		{
 			$cols = array();
 			$joins = array();
@@ -655,7 +655,7 @@
 				}
 				else if (isset($params['join']) && $params['join'])
 				{
-					if ($params['join_type'] == 'manytomany' && !isset($filters[$field]) && !$filters[$field])
+					if ($params['join_type'] == 'manytomany' && ( empty($filters[$field]) && empty($query) ) )
 					{
 						continue;
 					}

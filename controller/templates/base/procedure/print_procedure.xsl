@@ -42,7 +42,6 @@
 					<h4>
 						<xsl:value-of select="php:function('lang','Procedure end date')" />
 					</h4>
-					<xsl:value-of select="procedure/end_date" />
 					<xsl:variable name="enddate">
 						<xsl:value-of select="procedure/end_date" />
 					</xsl:variable>
