@@ -259,6 +259,10 @@ class data_cleaner
 					{
 						$url = $m[2];
 					}
+					else if(preg_match('/^mailto:/i', $m[2]))
+					{
+						$url = $m[2];
+					}
 					else
 					{
 						$url = strlen($m[2]) && $m[2]{0} == '#' ? $m[2] : $GLOBALS['phpgw']->safe_redirect(urldecode($m[2]));
