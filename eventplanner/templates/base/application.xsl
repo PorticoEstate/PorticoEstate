@@ -722,6 +722,31 @@
 							</div>
 						</fieldset>
 					</div>
+
+					<div id='files'>
+												<script type="text/javascript">
+													var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+												</script>
+
+						<fieldset>
+							<legend>
+								<xsl:value-of select="php:function('lang', 'CV')"/>
+							</legend>
+												<xsl:call-template name="file_upload"/>
+						</fieldset>
+
+						<fieldset>
+							<legend>
+								<xsl:value-of select="php:function('lang', 'documents')"/>
+							</legend>
+												<xsl:call-template name="file_upload"/>
+
+						</fieldset>
+						
+					
+
+					</div>
+
 					<div id='calendar'>
 						<fieldset>
 
