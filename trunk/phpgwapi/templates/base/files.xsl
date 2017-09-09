@@ -12,11 +12,13 @@
 
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
+	<xsl:param name="section" />
+	
 	<div class="pure-control-group">
 		<xsl:choose>
 			<xsl:when test="multiple_uploader!=''">
 				<label>
-					<a href="javascript:fileuploader()">
+					<a href="javascript:fileuploader('{$section}')">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
 						</xsl:attribute>

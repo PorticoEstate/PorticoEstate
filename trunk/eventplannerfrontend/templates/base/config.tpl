@@ -123,6 +123,10 @@
 			</td>
 			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
 		</tr>
+		<tr>
+			<td>{lang_uploader_filetypes}: jpg,gif,png</td>
+			<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

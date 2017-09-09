@@ -162,9 +162,15 @@
 
 			$max_file_size_in_bytes = 2147483647; // 2GB in bytes
 
-			$config = CreateObject('phpgwapi.config', 'property');
-			$config->read();
-			$uploader_filetypes = isset($config->config_data['uploader_filetypes']) ? $config->config_data['uploader_filetypes'] : 'jpg,gif,png';
+			$currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+
+			$config = CreateObject('phpgwapi.config', $currentapp)->read();
+			if(empty($config['uploader_filetypes']))
+			{
+				$config = CreateObject('phpgwapi.config', 'property')->read();
+			}
+
+			$uploader_filetypes = isset($config['uploader_filetypes']) ? $config['uploader_filetypes'] : 'jpg,gif,png';
 
 			//$extension_whitelist = array("jpg", "gif", "png");	// Allowed file extensions
 			$extension_whitelist = explode(',', $uploader_filetypes);
@@ -327,6 +333,12 @@
 					}
 					else
 					{
+						$thumbfile = "{$this->bofiles->rootdir}/{$this->bofiles->fakebase}/{$this->options['base_dir']}/{$file_name}.thumb";
+
+						if(is_file($thumbfile))
+						{
+							unlink($thumbfile);
+						}
 						//phpgwapi_cache::message_set(lang('file deleted') . ' :' . $file, 'message');
 						$success = true;
 					}

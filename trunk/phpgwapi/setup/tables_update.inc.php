@@ -3572,3 +3572,18 @@
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
 	}
+
+	$test[] = '0.9.17.556';
+	function phpgwapi_upgrade0_9_17_556()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_access_log','sessionid',array('type' => 'char', 'precision' => 64, 'nullable' => False));
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_access_log','loginid',array('type' => 'varchar', 'precision' => 100, 'nullable' => False));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.557';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+
+	}

@@ -470,22 +470,25 @@ $.formUtils.addValidator({
 	errorMessageKey: 'application_types'
 });
 
-this.fileuploader = function ()
+this.fileuploader = function (section)
 {
+	multi_upload_parans.section = section;
 	var sUrl = phpGWLink('index.php', multi_upload_parans);
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
 		{
-			refresh_files()
+			refresh_files(section)
 		}
 	});
 };
 
-this.refresh_files = function ()
+this.refresh_files = function (section)
 {
-	base_java_url['action'] = 'get_files';
-	var oArgs = base_java_url;
-	var strURL = phpGWLink('index.php', oArgs, true);
-	JqueryPortico.updateinlineTableHelper(oTable2, strURL);
+	var container = 'datatable-container_3';;
+	if(section === 'cv')
+	{
+		container = 'datatable-container_2';
+	}
+	JqueryPortico.updateinlineTableHelper(container);
 };
