@@ -7,24 +7,16 @@ JqueryPortico.autocompleteHelper(strURL, 'vendor_name', 'vendor_id', 'vendor_con
 
 $(window).on('load', function ()
 {
-	vendor_id = $('#vendor_id').val();
-	if (vendor_id)
+	$("#vendor_id").change(function ()
 	{
-		vendor_id_selection = vendor_id;
-	}
-	$("#vendor_name").on("autocompleteselect", function (event, ui)
-	{
-		var vendor_id = ui.item.value;
-		if (vendor_id != vendor_id_selection)
-		{
-			populateVendorContact(vendor_id);
-		}
+		populateVendorContact();
 	});
+
 });
 
-function populateVendorContact(vendor_id)
+function populateVendorContact()
 {
-	vendor_id = vendor_id || $('#vendor_id').val();
+	var vendor_id = $('#vendor_id').val();
 
 	if (!vendor_id)
 	{
@@ -428,4 +420,59 @@ this.onActionsClick = function (action)
 			}, data, "POST", "json"
 			);
 	}
+};
+
+
+$.formUtils.addValidator({
+	name: 'application_types',
+	validatorFunction: function (value, $el, config, language, $form)
+	{
+		var n = 0;
+		$('#application_tbody_types input').each(function ()
+		{
+			if ($(this).prop("checked"))
+			{
+				n++;
+			}
+		});
+		var v = (n > 0) ? true : false;
+
+		if (v === false)
+		{
+			$('#application_tbody_types').css("background-color", "#f2dede");
+			$('#application_tbody_types').css("border", "#b94a48 1px solid");
+		}
+		else
+		{
+			$('#application_tbody_types').css("background-color", "white");
+			$('#application_tbody_types').css("border", "black");
+		}
+
+		return v;
+	},
+	errorMessage: 'Type is required',
+	errorMessageKey: 'application_types'
+});
+
+this.fileuploader = function (section)
+{
+	multi_upload_parans.section = section;
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+		close: true,
+		closejs: function ()
+		{
+			refresh_files(section)
+		}
+	});
+};
+
+this.refresh_files = function (section)
+{
+	var container = 'datatable-container_3';;
+	if(section === 'cv')
+	{
+		container = 'datatable-container_2';
+	}
+	JqueryPortico.updateinlineTableHelper(container);
 };

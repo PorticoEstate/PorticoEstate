@@ -43,7 +43,9 @@
 			'edit' => true,
 			'save' => true,
 			'handle_multi_upload_file' => true,
-			'build_multi_upload_file' => true
+			'build_multi_upload_file' => true,
+			'get_files'				=> true,
+			'view_file'				=> true
 		);
 
 		protected
@@ -129,9 +131,11 @@
 		{
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
+
 				$message = '';
 				if($this->currentapp == 'eventplannerfrontend')
 				{
+					$GLOBALS['phpgw']->redirect_link('login.php', array('after' => 'eventplannerfrontend.uiapplication.index'));
 					$message = lang('you need to log in to access this page.');
 				}
 				phpgw::no_access(false, $message);
@@ -144,7 +148,15 @@
 
 			phpgwapi_jquery::load_widget('autocomplete');
 
-			$function_msg = lang('application');
+			if($this->currentapp == 'eventplanner')
+			{
+				$function_msg = lang('application');
+			}
+			else
+			{
+				$function_msg = lang('my applications');
+			}
+
 
 			$data = array(
 				'datatable_name' => $function_msg,
@@ -167,11 +179,14 @@
 				)
 			);
 
-			$filters = $this->_get_filters();
-
-			foreach ($filters as $filter)
+			if($this->currentapp == 'eventplanner')
 			{
-				array_unshift($data['form']['toolbar']['item'], $filter);
+				$filters = $this->_get_filters();
+
+				foreach ($filters as $filter)
+				{
+					array_unshift($data['form']['toolbar']['item'], $filter);
+				}
 			}
 
 			$parameters = array(
@@ -183,17 +198,6 @@
 				)
 			);
 
-/*			$data['datatable']['actions'][] = array
-				(
-				'my_name' => 'view',
-				'text' => lang('show'),
-				'action' => self::link( array
-					(
-					'menuaction' => "{$this->currentapp}.uiapplication.view"
-				)),
-				'parameters' => json_encode($parameters)
-			);
-*/
 			$data['datatable']['actions'][] = array
 				(
 				'my_name' => 'edit',
@@ -211,9 +215,18 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
-		/*
-		 * Edit the price item with the id given in the http variable 'id'
-		 */
+		public function add()
+		{
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$GLOBALS['phpgw']->redirect_link('login.php', array('after' => 'eventplannerfrontend.uiapplication.add'));
+				}
+			}
+
+			$this->edit();
+		}
 
 		public function edit( $values = array(), $mode = 'edit' )
 		{
@@ -249,6 +262,8 @@
 
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 			$default_category = !empty($config['default_application_category']) ? $config['default_application_category'] : null;
+
+			$application_files_text = !empty($config['application_files_text']) ? $config['application_files_text'] : null;
 
 			$tabs = array();
 			$tabs['first_tab'] = array(
@@ -432,14 +447,68 @@
 				$wardrobe['selected'] = $wardrobe['id'] == $application->wardrobe ? 1: 0;
 			}
 
-//			_debug_array($application_type_list);
-//			_debug_array($application->types);
-//			die();
+			$file_def = array
+			(
+				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,'resizeable' => true),
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_2',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.get_files",
+					'id' => $id,
+					'section' => 'cv',
+					'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $file_def,
+				'data' => json_encode(array()),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$file_def[] = array('key' => 'picture', 'label' => '', 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture');
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_3',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.get_files",
+					'id' => $id,
+					'section' => 'documents',
+					'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $file_def,
+				'data' => json_encode(array()),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+
+			$vendor_list = array();
+
+			if($this->currentapp == 'eventplannerfrontend')
+			{
+				$vendors = createObject('eventplanner.bovendor')->read(array());
+				foreach($vendors['results'] as $vendor)
+				{
+					$vendor_list[] = array(
+						'id' => $vendor['id'],
+						'name' => $vendor['name'],
+						'selected' => $vendor['id'] ==  $application->vendor_id ? 1 : 0,
+					);
+				}
+
+				array_unshift($vendor_list, array('id' => '', 'name' => lang('select')));
+			}
+
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.save")),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uiapplication.index",)),
 				'application' => $application,
+				'vendor_list'	=> array('options' => $vendor_list),
 				'new_vendor_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.add")),
 				'list_case_officer' => array('options' => $case_officer_options),
 				'list_public_types'	=> array('options' => $list_public_types),
@@ -455,9 +524,9 @@
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab,
-				'multi_upload_parans' => "{menuaction:'property.uitts.build_multi_upload_file', id:'{$id}'}",
+				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uiapplication.build_multi_upload_file', id:'{$id}'}",
 				'multiple_uploader' => true,
-
+				'application_files_text' => $application_files_text
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
@@ -466,15 +535,95 @@
 			self::render_template_xsl(array('application', 'datatable_inline', 'files'), array($mode => $data));
 		}
 
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
+
+			if (empty($this->permissions[PHPGW_ACL_READ]))
+			{
+				return array();
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => "{$this->currentapp}.uiapplication.view_file",
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'string' => "/eventplanner/application/{$id}/$section",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$content_files = array();
+
+			$z = 0;
+			foreach ($files as $_entry)
+			{
+
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => "{$this->currentapp}.uiapplication.view_file",
+							'file_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . urlencode($_entry['name'])
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+
 		public function handle_multi_upload_file()
 		{
-			$id = phpgw::get_var('id');
+			if (empty($this->permissions[PHPGW_ACL_ADD]))
+			{
+				phpgw::no_access();
+			}
+
+			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
+			$id = phpgw::get_var('id', 'int');
 
 			phpgw::import_class('property.multiuploader');
 
-			$options['base_dir'] = 'fmticket/'.$id;
-			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
-			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file', 'id' => $id)));
+			$options['fakebase'] = "/eventplanner";
+			$options['base_dir'] = "application/{$id}/{$section}";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/eventplanner/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "{$this->currentapp}.uiapplication.handle_multi_upload_file", 'id' => $id, 'section' => $section)));
 			$upload_handler = new property_multiuploader($options, false);
 
 			switch ($_SERVER['REQUEST_METHOD']) {
@@ -504,11 +653,13 @@
 		{
 			phpgwapi_jquery::init_multi_upload_file();
 			$id = phpgw::get_var('id', 'int');
+			$section = phpgw::get_var('section', 'string', 'REQUEST', 'documents');
 
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 
-			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file', 'id' => $id));
+			$multi_upload_action = self::link(array('menuaction' => "{$this->currentapp}.uiapplication.handle_multi_upload_file", 'id' => $id, 'section' => $section));
 
 			$data = array
 				(
@@ -518,7 +669,7 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
-		
+
 		public function save()
 		{
 			parent::save();

@@ -104,7 +104,7 @@
 						"js/{$_jquery_core}{$_type}",
 						'datetimepicker' => array(
 							"js/jquery.datetimepicker.full{$_type}",
-							"i18n/DateTimePicker-i18n"
+		//					"i18n/DateTimePicker-i18n"
 						)
 					);
 					$GLOBALS['phpgw']->css->add_external_file("phpgwapi/js/datetimepicker/css/jquery.datetimepicker.min.css");
