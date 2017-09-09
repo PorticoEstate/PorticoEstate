@@ -42,6 +42,8 @@
 			'view' => true,
 			'edit' => true,
 			'save' => true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true
 		);
 
 		protected
@@ -259,6 +261,12 @@
 				'link' => '#demands',
 				'function' => "set_tab('demands')"
 			);
+			$tabs['files'] = array(
+				'label' => lang('files'),
+				'link' => '#files',
+				'function' => "set_tab('files')",
+				'disable'	=> $id ? false : true
+			);
 			$tabs['calendar'] = array(
 				'label' => lang('calendar'),
 				'link' => '#calendar',
@@ -446,15 +454,70 @@
 				'wardrobe_list'	=>  array('options' => $wardrobe_list),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
-				'value_active_tab' => $active_tab
+				'value_active_tab' => $active_tab,
+				'multi_upload_parans' => "{menuaction:'property.uitts.build_multi_upload_file', id:'{$id}'}",
+				'multiple_uploader' => true,
+
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor('summary');
 			self::add_javascript($this->currentapp, 'portico', 'application.edit.js');
-			self::render_template_xsl(array('application', 'datatable_inline'), array($mode => $data));
+			self::render_template_xsl(array('application', 'datatable_inline', 'files'), array($mode => $data));
 		}
 
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['base_dir'] = 'fmticket/'.$id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uitts.handle_multi_upload_file', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
+		}
 		
 		public function save()
 		{
