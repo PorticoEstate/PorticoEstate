@@ -62,4 +62,3 @@ if(class_exists('XSLTProcessor')) {
 	}	
 }
 else die('<p style="color:red;">Your WebHosting not support correctly the XSL Transformation in PHP5! Needed PHP-XSL Library ...</p>');
-?>

@@ -31,4 +31,3 @@ define('ODT2XHTML_PUB', ' :: converted by Odt2Xhtml in PHP5 :: http://odt2xhtml.
 /*** NOT TOUCH ***/
 define('ODT2XHTML_DEBUG',0);
 define('ODT2XHTML_PHPCLI',0);	// to use with PHP CLI *** USE WITH PRECAUTION, @ YOURS RISKS ***
-?>
