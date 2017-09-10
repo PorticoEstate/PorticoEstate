@@ -526,7 +526,15 @@ JS;
 			$( 'textarea#{$target}' ).ckeditor(
 				{
 					uiColor: '#9AB8F3',
-					language: '{$userlang}'
+					language: '{$userlang}',
+					extraAllowedContent: [
+						'div(*){*}[*]',
+						'h1(*){*}[*]',
+						'h2(*){*}[*]',
+						'h3(*){*}[*]',
+						'h4(*){*}[*]',
+						'h5(*){*}[*]'
+						].join("; ")
 				}
 			);
 		} );
