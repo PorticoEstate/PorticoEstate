@@ -527,6 +527,7 @@ JS;
 				{
 					uiColor: '#9AB8F3',
 					language: '{$userlang}',
+					resize_dir: 'both',
 					extraAllowedContent: [
 						'div(*){*}[*]',
 						'h1(*){*}[*]',
