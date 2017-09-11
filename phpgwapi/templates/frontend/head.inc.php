@@ -54,7 +54,6 @@ JS;
 		phpgwapi_cache::message_set($message, 'error');
 	}
 
-
 	$stylesheets = array();
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/pure-extension.css";
@@ -74,6 +73,11 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/frontend/css/frontend.css";
 //	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.css";
 	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
+
+	if (!preg_match('/Firefox/i', $_SERVER['HTTP_USER_AGENT']))
+	{
+		$stylesheets[] = "/phpgwapi/templates/frontend/css/ie.css";
+	}
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
