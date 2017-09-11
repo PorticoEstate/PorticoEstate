@@ -11,6 +11,14 @@
 
 <!-- add / edit  -->
 <xsl:template xmlns:php="http://php.net/xsl" match="view">
+
+	<style type="text/css">
+		.content {
+		padding: 3em;
+		}
+	</style>
+
+
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>

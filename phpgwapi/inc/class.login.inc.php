@@ -71,16 +71,15 @@
 				$GLOBALS['phpgw_info']['login_right_message'] = '';
 			}
 
-			if(!phpgw::get_var('after','raw', 'COOKIE'))
+			if(!phpgw::get_var('after','string', 'COOKIE'))
 			{
-				$after = phpgw::get_var('after', 'string');
-				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'raw'),$cookietime=0);
+				$after = phpgw::get_var('after', 'bool');
+				$GLOBALS['phpgw']->session->phpgw_setcookie('after',phpgw::get_var('after', 'string'),$cookietime=0);
 			}
 			else
 			{
 				$after = true;
 			}
-
 
 			if (isset($_REQUEST['skip_remote']) && $_REQUEST['skip_remote']) // In case a user failed logged in via SSO - get another try
 			{
@@ -413,7 +412,7 @@
 
 		function redirect_after($frontend = '')
 		{
-			$redirect = json_decode(phpgw::get_var('after','raw', 'COOKIE'),true);
+			$redirect = phpgw::get_var('after','string', 'COOKIE');
 		//	_debug_array($_COOKIE);
 		//	_debug_array($after);
 		//	die();
@@ -433,6 +432,10 @@
 
 				$GLOBALS['phpgw']->session->phpgw_setcookie('after', false, 0);
 				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", $redirect_data);
+			}
+			else if ($redirect)
+			{
+				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", array('menuaction' => $redirect));
 			}
 			else
 			{

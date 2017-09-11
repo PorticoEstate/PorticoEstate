@@ -62,6 +62,17 @@
 				<textarea  name="newsettings[customer_canceled_text]">{value_customer_canceled_text}</textarea>
 			</td>
 		</tr>
+		<tr>
+			<td>{lang_application_files_text}:</td>
+			<td>
+				<textarea  name="newsettings[application_files_text]">{value_application_files_text}</textarea>
+			</td>
+		</tr>
+
+		<tr>
+			<td>{lang_uploader_filetypes}: jpg,gif,png</td>
+			<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

@@ -554,12 +554,14 @@ class odt2xhtml
 	
 	/*** replace content ***/
 	private function _replace_content($info) {
+		$callback = false;
 		switch($info) {
 			case 'analyze_attribute' :
 				$this->exec=1;
-				$this->search = '/="(.*?)"/es';
+				$this->search = '/="(.*?)"/s';
 				$this->replace = "odt2xhtml::_analyze_attribute('$1')";
 				$this->subject = $this->content;
+				$callback = true;
 			break;
 			case 'header' :
 				$this->exec=1;
@@ -569,21 +571,24 @@ class odt2xhtml
 			break;
 			case 'img_odt' :
 				$this->exec=1;
-				$this->search = '#xlink:href="Pictures/([.a-zA-Z_0-9]*)"#es';
+				$this->search = '#xlink:href="Pictures/([.a-zA-Z_0-9]*)"#s';
 				$this->replace = "odt2xhtml::_make_image('$1')";
 				$this->subject = $this->content;
+				$callback = true;
 			break;
 			case 'img_sxw' :
 				$this->exec=1;
-				$this->search = '!xlink:href="\#Pictures/([.a-zA-Z_0-9]*)"!es';
+				$this->search = '!xlink:href="\#Pictures/([.a-zA-Z_0-9]*)"!s';
 				$this->replace = "odt2xhtml::_make_image('$1')";
 				$this->subject = $this->content;
+				$callback = true;
 			break;
 			case 'link_css' :
 				$this->exec=1;
-				$this->search = '/<style type="text\/css">(.*)<\/style>/es';
+				$this->search = '/<style type="text\/css">(.*)<\/style>/s';
 				$this->replace = "odt2xhtml::_modify_css()";
 				$this->subject = $this->file['tmp'];
+				$callback = true;
 			break;
 			case 'open_element_xml4odt' :
 				$this->buffer = '<office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0">';
@@ -599,13 +604,25 @@ class odt2xhtml
 			break;
 			case 'title' :
 				$this->exec=1;
-				$this->search = '/<head>/es';
-				$this->replace = "odt2xhtml::_modify_title()";
+				$this->search = '/<head>/s';
+				$this->replace = "odt2xhtml::_modify_title";
 				$this->subject = $this->file['tmp'];
+				$callback = true;
 			break;
 		}
 		
-		if(!empty($this->exec)) $this->buffer = preg_replace($this->search,$this->replace,$this->subject);
+		if(!empty($this->exec))
+		{
+			if($callback)
+			{
+				$this->buffer = preg_replace_callback($this->search,$this->replace,$this->subject);
+			}
+			else
+			{
+				$this->buffer = preg_replace($this->search,$this->replace,$this->subject);
+				
+			}
+		}
 		
 		return $this->buffer;
 		
@@ -733,4 +750,3 @@ class odt2xhtml
 	}
 
 }
-?>

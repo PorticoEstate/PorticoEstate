@@ -12,30 +12,32 @@
 
 <!-- New template-->
 <xsl:template xmlns:php="http://php.net/xsl" name="file_upload">
+	<xsl:param name="section" />
+	
 	<div class="pure-control-group">
-		<label>
-			<xsl:value-of select="php:function('lang', 'upload files')"/>
-		</label>
-		<input type="file" name="file" size="40" class="pure-input-1-2" >
-			<xsl:attribute name="title">
-				<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
-			</xsl:attribute>
-		</input>
-	</div>
-	<xsl:choose>
-		<xsl:when test="multiple_uploader!=''">
-			<div class="pure-control-group">
+		<xsl:choose>
+			<xsl:when test="multiple_uploader!=''">
 				<label>
-					<a href="javascript:fileuploader()">
+					<a href="javascript:fileuploader('{$section}')">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
 						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
 					</a>
 				</label>
-			</div>
-		</xsl:when>
-	</xsl:choose>
+			</xsl:when>
+			<xsl:otherwise>
+				<label>
+					<xsl:value-of select="php:function('lang', 'upload files')"/>
+				</label>
+				<input type="file" name="file" size="40" class="pure-input-1-2" >
+					<xsl:attribute name="title">
+						<xsl:value-of select="php:function('lang', 'Select file to upload')"/>
+					</xsl:attribute>
+				</input>
+			</xsl:otherwise>
+		</xsl:choose>
+	</div>
 </xsl:template>
 
 <!-- New template-->

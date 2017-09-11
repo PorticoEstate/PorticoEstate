@@ -183,8 +183,14 @@ next	common	no	Neste
 week	common	no	Uke
 week day	common	no	Ukedag
 upload file	common	no	Last opp fil
-upload multiple files	common	no	Last opp flere filer
+upload multiple files	common	no	Last opp filer
 upload files	common	no	Last opp filer
+delete file	common	no	Slett fil
+add files	common	no	Legg til filer
+start upload	common	no	Start opplasting
+cancel upload	common	no	Stopp opplasting
+invalid file extension	common	no	Ugyldig filtype
+number files	common	no	Antall filer
 (filtered from _max_ total entries)	common	no	(filtrert fra _max_ poster)
 bim	common	no	Bim
 categories	common	no	Kategorier

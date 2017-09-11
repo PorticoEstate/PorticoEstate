@@ -52,19 +52,6 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'next')"/>
 							</xsl:variable>
-							<!--xsl:choose>
-								<xsl:when test="application/id > 0">
-									<xsl:variable name="lang_save">
-										<xsl:value-of select="php:function('lang', 'save')"/>
-									</xsl:variable>
-								</xsl:when>
-								<xsl:otherwise>
-									<xsl:variable name="lang_save">
-										<xsl:value-of select="php:function('lang', 'next')"/>
-									</xsl:variable>
-								</xsl:otherwise>
-							</xsl:choose-->
-
 							<table width="200px">
 								<tbody>
 									<tr>
@@ -111,6 +98,35 @@
 								</label>
 								<xsl:call-template name="categories"/>
 							</div>
+
+
+							<div class="pure-control-group">
+								<xsl:variable name="lang_vendor">
+									<xsl:value-of select="php:function('lang', 'vendor name')"/>
+								</xsl:variable>
+								<label>
+									<xsl:value-of select="$lang_vendor"/>
+								</label>
+
+
+								<select id="vendor_id" name="vendor_id" class="pure-input-1-2" >
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="$lang_vendor"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="vendor_list/options"/>
+								</select>
+
+								<xsl:text> </xsl:text>
+								<a href="{new_vendor_url}" target="_blank">
+									<xsl:value-of select="php:function('lang', 'new')"/>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="php:function('lang', 'vendor')"/>
+								</a>
+							</div>
+<!--
 							<div class="pure-control-group">
 								<xsl:variable name="lang_vendor">
 									<xsl:value-of select="php:function('lang', 'vendor name')"/>
@@ -137,15 +153,16 @@
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 								</input>
-								<!--
+							
+								
 								<xsl:text> </xsl:text>
 								<a href="{new_vendor_url}" target="_blank">
 									<xsl:value-of select="php:function('lang', 'new')"/>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'vendor')"/>
-								</a>-->
+								</a>
 								<div id="vendor_container"/>
-							</div>
+							</div>	-->
 							<div class="pure-control-group">
 								<label>
 									<xsl:value-of select="php:function('lang', 'contact name')"/>
@@ -251,7 +268,7 @@
 												</th>
 											</tr>
 										</thead>
-										<tbody>
+										<tbody id="application_tbody_types">
 											<xsl:for-each select="application_type_list">
 												<tr>
 													<td>
@@ -269,7 +286,11 @@
 										</tbody>
 									</table>
 								</div>
-
+								<input type="text" data-validation="application_types" size="1" style="visibility: hidden;">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'program type')"/>
+									</xsl:attribute>
+								</input>
 							</div>
 
 							<div class="pure-control-group">
@@ -619,6 +640,66 @@
 							</div>
 						</fieldset>
 					</div>
+					<div id='files'>
+						<script type="text/javascript">
+							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+						</script>
+						<xsl:value-of disable-output-escaping="yes" select="application_files_text"/>
+						<fieldset>
+							<legend>
+								<xsl:text>Curriculum vitae</xsl:text>
+							</legend>
+							<xsl:call-template name="file_upload">
+								<xsl:with-param name="section">cv</xsl:with-param>
+							</xsl:call-template>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'files')"/>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_2'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend>
+								<xsl:value-of select="php:function('lang', 'documents')"/>
+							</legend>
+							<xsl:call-template name="file_upload">
+								<xsl:with-param name="section">documents</xsl:with-param>
+							</xsl:call-template>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'files')"/>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_3'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+
 					<div id='calendar'>
 						<fieldset>
 
