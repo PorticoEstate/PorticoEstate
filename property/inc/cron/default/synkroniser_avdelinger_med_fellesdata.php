@@ -58,7 +58,10 @@
 			 * prosjekt
 			 * tjeneste
 			 */
-			$fellesdata->update_customer_id();
+			if (isset($GLOBALS['phpgw_info']['user']['apps']['rental']))
+			{
+				$fellesdata->update_customer_id();
+			}
 			$fellesdata->update_vendor();
 	//		$fellesdata->update_agresso_prosjekt(); //for mange treff
 	//		$fellesdata->update_art();				//for mange treff
