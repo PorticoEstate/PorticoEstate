@@ -66,6 +66,7 @@
 HTML;
 			$GLOBALS['phpgw']->common->phpgw_exit(True);
 		}
+		ExecMethod('phpgwapi.menu.clear');
 	}
 
 	$GLOBALS['phpgw_info']['flags']['currentapp'] = 'eventplannerfrontend';

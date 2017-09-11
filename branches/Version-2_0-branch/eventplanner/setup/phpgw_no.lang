@@ -159,4 +159,5 @@ want offer for non public	eventplanner	no	 Ønsker å motta nærtilbud
 application public type	eventplanner	no	 Nær/Bredde-tilbud
 application public type non public	eventplanner	no	Nærtilbud (et arrangement der kun noen få brukere/beboere på en institusjon kan delta, f.eks. et skrivekurs, malekurs)
 application public type public	eventplanner	no	 Breddetilbud (et arrangement der alle brukere/beboere på en institusjon kan delta)
-
+my applications	eventplanner	no	Mine søknader
+new application	eventplanner	no	Ny søknad

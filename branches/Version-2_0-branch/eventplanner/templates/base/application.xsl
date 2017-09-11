@@ -722,6 +722,75 @@
 							</div>
 						</fieldset>
 					</div>
+
+					<div id='files'>
+						<script type="text/javascript">
+							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+						</script>
+						<xsl:value-of disable-output-escaping="yes" select="application_files_text"/>
+						<fieldset>
+							<legend>
+								<xsl:text>Curriculum vitae</xsl:text>
+							</legend>
+							<xsl:call-template name="file_upload">
+								<xsl:with-param name="section">cv</xsl:with-param>
+							</xsl:call-template>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'files')"/>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_2'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
+
+
+
+						</fieldset>
+
+						<fieldset>
+							<legend>
+								<xsl:value-of select="php:function('lang', 'documents')"/>
+							</legend>
+							<xsl:call-template name="file_upload">
+								<xsl:with-param name="section">documents</xsl:with-param>
+							</xsl:call-template>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'files')"/>
+								</label>
+								<div class="pure-custom">
+									<xsl:for-each select="datatable_def">
+										<xsl:if test="container = 'datatable-container_3'">
+											<xsl:call-template name="table_setup">
+												<xsl:with-param name="container" select ='container'/>
+												<xsl:with-param name="requestUrl" select ='requestUrl'/>
+												<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+												<xsl:with-param name="data" select ='data'/>
+												<xsl:with-param name="config" select ='config'/>
+											</xsl:call-template>
+										</xsl:if>
+									</xsl:for-each>
+								</div>
+							</div>
+
+						</fieldset>
+						
+					
+
+					</div>
+
 					<div id='calendar'>
 						<fieldset>
 

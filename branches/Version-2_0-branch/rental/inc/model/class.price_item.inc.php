@@ -131,7 +131,7 @@
 
 		public function set_price( $price )
 		{
-			$this->price = $price;
+			$this->price = (float)$price;
 		}
 
 		/**

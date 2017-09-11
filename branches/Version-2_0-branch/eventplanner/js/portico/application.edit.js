@@ -439,33 +439,56 @@ this.onActionsClick = function (action)
 	}
 };
 
-	$.formUtils.addValidator({
-		name: 'application_types',
-		validatorFunction: function (value, $el, config, language, $form)
+$.formUtils.addValidator({
+	name: 'application_types',
+	validatorFunction: function (value, $el, config, language, $form)
+	{
+		var n = 0;
+		$('#application_tbody_types input').each(function ()
 		{
-			var n = 0;
-			$('#application_tbody_types input').each(function ()
+			if ($(this).prop("checked"))
 			{
-				if($(this).prop("checked"))
-				{
-					n++;
-				}
-			});
-			var v = (n > 0) ? true : false;
-
-			if(v === false)
-			{
-				$('#application_tbody_types').css("background-color", "#f2dede");
-				$('#application_tbody_types').css("border", "#b94a48 1px solid");
+				n++;
 			}
-			else
-			{
-				$('#application_tbody_types').css("background-color", "white");
-				$('#application_tbody_types').css("border", "black");
-			}
+		});
+		var v = (n > 0) ? true : false;
 
-			return v;
-		},
-		errorMessage: 'Type is required',
-		errorMessageKey: 'application_types'
+		if (v === false)
+		{
+			$('#application_tbody_types').css("background-color", "#f2dede");
+			$('#application_tbody_types').css("border", "#b94a48 1px solid");
+		}
+		else
+		{
+			$('#application_tbody_types').css("background-color", "white");
+			$('#application_tbody_types').css("border", "black");
+		}
+
+		return v;
+	},
+	errorMessage: 'Type is required',
+	errorMessageKey: 'application_types'
+});
+
+this.fileuploader = function (section)
+{
+	multi_upload_parans.section = section;
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+		close: true,
+		closejs: function ()
+		{
+			refresh_files(section)
+		}
 	});
+};
+
+this.refresh_files = function (section)
+{
+	var container = 'datatable-container_3';;
+	if(section === 'cv')
+	{
+		container = 'datatable-container_2';
+	}
+	JqueryPortico.updateinlineTableHelper(container);
+};
