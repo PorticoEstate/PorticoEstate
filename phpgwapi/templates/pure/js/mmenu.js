@@ -27,13 +27,13 @@ $(function ()
 					'title',
 					'close'
 				]
-			},
-			{
-				position: 'bottom',
-				content: [
-					'<a href="' + HomeUrl + '">Home</a>'
-				]
-			}
+			}			
+//			,{
+//				position: 'bottom',
+//				content: [
+//					'<a href="' + HomeUrl + '">Home</a>'
+//				]
+//			}
 		]
 	});
 

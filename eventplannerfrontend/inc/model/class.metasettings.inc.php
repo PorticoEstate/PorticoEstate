@@ -78,6 +78,10 @@
 				'frontpage_text' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'html',
 					'history'	=> false
+					),
+				'application_condition' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'html',
+					'history'	=> false
 					)
 			);
 			return $fields;
