@@ -2358,11 +2358,10 @@
 
 			$selected_cat = $values['cat_id'] ? $values['cat_id'] : $project['cat_id'];
 			$validatet_category = '';
-
 			$cat_sub = array();
 			foreach ($_cat_sub as $entry)
 			{
-				if ($entry['active'] == 2 && !$entry['id'] == $selected_cat)//hidden
+				if ($entry['active'] == 2 && $entry['id'] != $selected_cat)//hidden
 				{
 					continue;
 				}
