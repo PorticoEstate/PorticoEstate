@@ -76,9 +76,17 @@ validate_submit = function ()
 	if (active_tab === 'first_tab')
 	{
 		$('#tab-content').responsiveTabs('activate', 1);
-		$("#save_button").val(lang['save']);
-		$("#save_button_bottom").val(lang['save']);
+		$("#save_button").val(lang['next']);
+		$("#save_button_bottom").val(lang['next']);
 		$("#active_tab").val('demands');
+	}
+	else if (active_tab === 'demands')
+	{
+		$('#tab-content').responsiveTabs('activate', 2);
+		$("#save_button").val(lang['next']);
+		$("#save_button_bottom").val(lang['next']);
+		$("#active_tab").val('files');
+		document.form.submit();
 	}
 	else
 	{
@@ -203,6 +211,21 @@ check_button_names = function ()
 		$("#submit_group_bottom").hide();
 	}
 	else if (tab === 'first_tab')
+	{
+		if (id > 0)
+		{
+			$("#save_button").val(lang['save']);
+			$("#save_button_bottom").val(lang['save']);
+		}
+		else
+		{
+			$("#save_button").val(lang['next']);
+			$("#save_button_bottom").val(lang['next']);
+		}
+		$("#floating-box").show();
+		$("#submit_group_bottom").show();
+	}
+	else if (tab === 'demands')
 	{
 		if (id > 0)
 		{
