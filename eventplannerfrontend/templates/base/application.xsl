@@ -79,6 +79,7 @@
 					</div>
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
+					<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
 						<fieldset>
 							<legend>
 								<xsl:value-of select="php:function('lang', 'application')"/>
@@ -246,6 +247,9 @@
 									<xsl:value-of select="php:function('lang', 'program description')"/>
 								</label>
 								<textarea cols="47" rows="7" name="description" class="pure-input-1-2" >
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'might be published')"/>
 									</xsl:attribute>
@@ -644,7 +648,7 @@
 						<script type="text/javascript">
 							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 						</script>
-						<xsl:value-of disable-output-escaping="yes" select="application_files_text"/>
+						<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
 						<fieldset>
 							<legend>
 								<xsl:text>Curriculum vitae</xsl:text>

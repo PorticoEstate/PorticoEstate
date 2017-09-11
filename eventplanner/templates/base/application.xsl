@@ -92,6 +92,7 @@
 					</div>
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
+						<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
 						<fieldset>
 							<legend>
 								<xsl:value-of select="php:function('lang', 'application')"/>
@@ -727,7 +728,7 @@
 						<script type="text/javascript">
 							var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 						</script>
-						<xsl:value-of disable-output-escaping="yes" select="application_files_text"/>
+						<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
 						<fieldset>
 							<legend>
 								<xsl:text>Curriculum vitae</xsl:text>

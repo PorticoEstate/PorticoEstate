@@ -56,6 +56,16 @@
 							</textarea>
 						</div>
 					</div>
+					<div class="pure-control-group">
+						<label for="application_condition">
+							<xsl:value-of select="php:function('lang', 'application condition')"/>
+						</label>
+						<div class="pure-custom">
+							<textarea id="application_condition" class="full-width" name="application_condition">
+								<xsl:value-of disable-output-escaping="yes" select="config_data/application_condition"/>
+							</textarea>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-buttons">
