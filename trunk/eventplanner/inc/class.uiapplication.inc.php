@@ -263,8 +263,9 @@
 			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
 			$default_category = !empty($config['default_application_category']) ? $config['default_application_category'] : null;
 
-			$application_files_text = !empty($config['application_files_text']) ? $config['application_files_text'] : null;
+			$config_frontend = CreateObject('phpgwapi.config', 'eventplannerfrontend')->read();
 
+			$application_condition = !empty($config_frontend['application_condition']) ? $config_frontend['application_condition'] : null;
 			$tabs = array();
 			$tabs['first_tab'] = array(
 				'label' => lang('application'),
@@ -526,7 +527,7 @@
 				'value_active_tab' => $active_tab,
 				'multi_upload_parans' => "{menuaction:'{$this->currentapp}.uiapplication.build_multi_upload_file', id:'{$id}'}",
 				'multiple_uploader' => true,
-				'application_files_text' => $application_files_text
+				'application_condition' => $application_condition
 			);
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security', 'file'));
 			phpgwapi_jquery::load_widget('autocomplete');
