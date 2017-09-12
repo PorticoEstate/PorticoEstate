@@ -117,7 +117,7 @@
 							array(
 								'type' =>  $this->currentapp == 'eventplanner' ? 'checkbox' : 'hidden',
 								'name' => 'filter_active',
-								'text' => lang('showall'),
+								'text' => $this->currentapp == 'eventplanner' ? lang('showall') : '',
 								'value' =>  1,
 								'checked'=> 1,
 							)

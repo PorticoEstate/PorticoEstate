@@ -416,6 +416,8 @@
 		//	_debug_array($_COOKIE);
 		//	_debug_array($after);
 		//	die();
+			$GLOBALS['phpgw']->session->phpgw_setcookie('after', false, 0);
+
 			if ( is_array($redirect) && count($redirect) )
 			{
 				foreach($redirect as $key => $value)
@@ -430,10 +432,12 @@
 					$redirect_data['kp3'] = phpgw::get_var('kp3', 'string', 'GET');
 				}
 
-				$GLOBALS['phpgw']->session->phpgw_setcookie('after', false, 0);
 				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", $redirect_data);
 			}
-			else if ($redirect)
+
+			$redirect_arr = explode('.',$redirect);
+
+			if (count($redirect_arr) == 3 && isset($GLOBALS['phpgw_info']['user']['apps'][$redirect_arr[0]]))
 			{
 				$GLOBALS['phpgw']->redirect_link("{$frontend}/index.php", array('menuaction' => $redirect));
 			}
