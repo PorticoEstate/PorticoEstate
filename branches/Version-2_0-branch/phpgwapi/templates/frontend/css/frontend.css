@@ -1,4 +1,10 @@
+.ui-datepicker-month {
+    color: black;
+}
 
+.ui-datepicker-year {
+    color: black;
+}
 
 nav:not(.mm-menu)
 {
