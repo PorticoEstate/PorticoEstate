@@ -145,6 +145,7 @@
 			 * $_SESSION['orgs'] is set in eventplannerfrontend_external_user::get_user_org_id()
 			 */
 
+			$orgs = array();
 			if(!empty($_SESSION['orgs']) && is_array($_SESSION['orgs']))
 			{
 				$orgs = phpgw::get_var('orgs', 'string', 'SESSION');
