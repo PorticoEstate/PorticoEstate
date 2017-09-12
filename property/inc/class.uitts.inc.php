@@ -3629,6 +3629,10 @@ HTML;
 			{
 				$organisation = $this->bo->config->config_data['org_name'];
 			}
+			if (isset($this->bo->config->config_data['department']))
+			{
+				$department = $this->bo->config->config_data['department'];
+			}
 
 			$on_behalf_of_assigned = phpgw::get_var('on_behalf_of_assigned', 'bool');
 			if ($on_behalf_of_assigned && isset($ticket['assignedto_name']))
@@ -3648,16 +3652,16 @@ HTML;
 				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
 			}
 			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
-			$location = lang('Address') . ": {$ticket['address']}<br>";
+			$location = $ticket['address'];
 
 			$address_element = $this->bo->get_address_element($ticket['location_code']);
 
 			foreach ($address_element as $address_entry)
 			{
-				$location .= "{$address_entry['text']}: {$address_entry['value']} <br>";
+				$location .= " <br/>{$address_entry['text']}: {$address_entry['value']}";
 			}
 
-			$location = rtrim($location, '<br>');
+	//		$location = rtrim($location, '<br/>');
 
 			$order_description = $ticket['order_descr'];
 
@@ -3750,36 +3754,37 @@ HTML;
 			$date = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
 
 
-			$body = "<table><tr>";
-			$body .= "<td valign='top'>{$organisation}<br/>Org.nr: {$this->bo->config->config_data['org_unit_id']}</td>";
-			$body .= "<td valign='top'>" .  lang('order id') . "<br/><b>{$ticket['order_id']}</b></td>";
-			$body .= "<tr>";
-			$body .= "<td valign='top'>" .  lang('vendor') . "<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
-			$body .= "<td>" .  lang('delivery address') . "<br/>{$location}</td>";
+			$lang_order = lang('order');
+			$lang_from = lang('from');
+			$body = "<table style='width: 800px;'><tr>";
+			$body .= "<td valign='top'>{$lang_order}: {$order_id}</td>";
+			$body .= "<td valign='top'>" . lang('date') . ":{$date}</td>";
 			$body .= "</tr>";
 			$body .= "<tr>";
-			$body .= "<td valign='top'>";
-			$body .=  lang('date') . ":{$date}<br/>";
-			$body .=  lang('dimb') . ": {$ticket['ecodimb']}<br/>";
-			$body .=  lang('from') . ": {$user_name}<br/>{$user_phone}<br/>{$user_email}<br/>";
-			$body .= "</td>";
+			$body .= "<td valign='top'>{$lang_from}: {$organisation}<br/>"
+					. "{$department}<br/>"
+					. "Org.nr: {$this->bo->config->config_data['org_unit_id']}"
+					. "</td>";
+			$body .= "<td valign='top'>v/Saksbehandler: {$user_name}<br/>"
+					. "Ressursnr.: {$ressursnr}<br/>"
+					. "</td>";
+			$body .= "</tr>";
+			$body .= "<tr>";
+			$body .= "<td colspan=2>" .  lang('delivery address') . "<br/>{$location}</td>";
+			$body .= "</tr>";
+			$body .= "<tr>";
+			$body .= "<td valign='top'>" .  lang('to') . ":<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
+			$body .= "<td valign='top'>" .  lang('invoice address') . ":<br/>{$this->bo->config->config_data['invoice_address']}</td>";
 
-			$body .= "<td valign='top'>" .  lang('invoice address') . "<br/>{$this->bo->config->config_data['invoice_address']}</td>";
+			$body .= "</tr></table>";
 
 			if($ticket['order_deadline'])
 			{
-				$body .= "<tr><td>";
-				$body .=  lang('deadline');
-				$body .= "</td>";
-				$body .= "<td>";
-				$body .=  "<b>{$ticket['order_deadline']}</b>";
-				$body .= "</td></tr>";
+				$body .= "<br/><br/><b>" . lang('deadline') . '</b>';
+				$body .= "<br/>" . $ticket['order_deadline'];
 			}
 
-			$body .= "</tr></table><br/>";
-
-
-			$body .= nl2br(str_replace(array
+			$body .= '<br/>'. nl2br(str_replace(array
 				(
 				'__vendor_name__',
 				'__organisation__',
