@@ -1,8 +1,11 @@
-#organsation_select
-{
-	position: absolute;
-    z-index: 10;
-    background: white;
-	top: 0;
-	right: 0
+#organsation_select{
+    background: #DF0101;
+    position:fixed;
+    padding-top:0.5em;
+    padding-right:0.5em;
+    z-index:100;
+}
+
+#organsation_select > form > label{
+ color:white
 }

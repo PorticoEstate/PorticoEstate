@@ -657,16 +657,26 @@
 					}
 					else
 					{
-						if ($criteria[0]['type'] == int)
+						if ($criteria[0]['type'] == 'int')
 						{
 							$_query = (int)$query;
+
+							if($criteria[0]['matchtype'] == 'like')
+							{
+								// as text
+								$querymethod = "{$where} cast({$criteria[0]['field']} as text) {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
+							}
+							else
+							{
+								$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
+							}
 						}
 						else
 						{
 							$_query = $query;
+							$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
 						}
 
-						$querymethod = "{$where} {$criteria[0]['field']} {$matchtypes[$criteria[0]['matchtype']]} {$criteria[0]['front']}{$_query}{$criteria[0]['back']}";
 					}
 				}
 			}
