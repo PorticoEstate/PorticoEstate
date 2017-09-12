@@ -709,6 +709,7 @@
 
 					while ($this->db->next_record())
 					{
+						$_column_name = $this->db->f('column_name');
 						switch ($this->db->f('datatype'))
 						{
 							case 'V':
@@ -716,7 +717,7 @@
 							case 'T':
 								if (!$criteria_id)
 								{
-									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' {$this->like} '%{$query}%'";
+									$_querymethod[] = "json_representation->>'{$_column_name}' {$this->like} '%{$query}%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -724,7 +725,7 @@
 								if (!$criteria_id)
 								{
 									// from filter
-									$_querymethod[] = "$entity_table." . $this->db->f('column_name') . " {$this->like} '%,{$query},%'";
+//									$_querymethod[] = "$entity_table.{$_column_name} {$this->like} '%,{$query},%'";
 									$__querymethod = array(); // remove block
 									// from text-search
 									$_filter_choise = "WHERE (phpgw_cust_choice.location_id =" . (int)$this->db->f('location_id')
@@ -734,7 +735,7 @@
 									$this->db2->query("SELECT phpgw_cust_choice.id FROM phpgw_cust_choice {$_filter_choise}", __LINE__, __FILE__);
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' {$this->like} '%,{$query},%'";
+										$_querymethod[] = "json_representation->>'{$_column_name}' {$this->like} '%,{$query},%'";
 									}
 								}
 								break;
@@ -750,7 +751,7 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+										$_querymethod[] = "(NULLIF(json_representation->>'{$_column_name}', '')::integer IS NOT NULL AND CAST( json_representation->>'{$_column_name}' AS integer) = " .(int)$this->db2->f('id') . ')';
 									}
 									$__querymethod = array(); // remove block
 								}
@@ -759,7 +760,7 @@
 								if (ctype_digit($query) && !$criteria_id)
 								{
 //									$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$query;
-									$_querymethod[] = "CAST(json_representation->>'". $this->db->f('column_name') . "'AS text)  {$this->like} '" .(int)$query . "%'";
+									$_querymethod[] = "CAST(json_representation->>'{$_column_name}'AS text)  {$this->like} '" .(int)$query . "%'";
 									$__querymethod = array(); // remove block
 								}
 								break;
@@ -768,9 +769,11 @@
 								{
 									$this->db2->query("SELECT id FROM fm_vendor WHERE fm_vendor.org_name {$this->like} '%{$query}%'", __LINE__, __FILE__);
 									$__filter_choise = array();
+									$_column_name = $this->db->f('column_name');
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+//										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+										$_querymethod[] = "(NULLIF(json_representation->>'{$_column_name}', '')::integer IS NOT NULL AND CAST( json_representation->>'{$_column_name}' AS integer) = " .(int)$this->db2->f('id') . ')';
 									}
 
 									$__querymethod = array(); // remove block
@@ -783,7 +786,8 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+//										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+										$_querymethod[] = "(NULLIF(json_representation->>'{$_column_name}', '')::integer IS NOT NULL AND CAST( json_representation->>'{$_column_name}' AS integer) = " .(int)$this->db2->f('id') . ')';
 									}
 
 									$__querymethod = array(); // remove block
@@ -796,7 +800,8 @@
 									$__filter_choise = array();
 									while ($this->db2->next_record())
 									{
-										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+//										$_querymethod[] = "CAST( json_representation->>'". $this->db->f('column_name') ."' AS integer) = " .(int)$this->db2->f('id');
+										$_querymethod[] = "(NULLIF(json_representation->>'{$_column_name}', '')::integer IS NOT NULL AND CAST( json_representation->>'{$_column_name}' AS integer) = " .(int)$this->db2->f('id') . ')';
 									}
 									$__querymethod = array(); // remove block
 								}
@@ -804,7 +809,7 @@
 							default:
 								if (!$criteria_id)
 								{
-									$_querymethod[] = "json_representation->>'". $this->db->f('column_name') ."' = '{$query}'";
+									$_querymethod[] = "json_representation->>'{$_column_name}' = '{$query}'";
 									$__querymethod = array(); // remove block
 								}
 						}
