@@ -480,7 +480,7 @@ $.formUtils.addValidator({
 this.fileuploader = function (section)
 {
 	multi_upload_parans.section = section;
-	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	var sUrl = phpGWLink('eventplannerfrontend/', multi_upload_parans);
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()

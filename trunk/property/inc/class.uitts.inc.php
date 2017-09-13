@@ -3652,7 +3652,9 @@ HTML;
 				$user_name = $GLOBALS['phpgw_info']['user']['fullname'];
 			}
 			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
-			$location = $ticket['address'];
+//			$location = $ticket['address'];
+
+			$location = createObject('property.solocation')->get_location_address($ticket['location_code']);
 
 			$address_element = $this->bo->get_address_element($ticket['location_code']);
 
@@ -3719,7 +3721,13 @@ HTML;
 				}
 			}
 
-			$contact_block = nl2br(str_replace(array
+			function nl2br2($string)
+			{
+				$string = str_replace(array("\r\n", "\r", "\n"), "<br />", $string);
+				return $string;
+			}
+			
+			$contact_block = nl2br2(str_replace(array
 				(
 				'__user_name__',
 				'__user_phone__',
