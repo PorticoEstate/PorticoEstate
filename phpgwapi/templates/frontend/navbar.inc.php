@@ -81,7 +81,7 @@ HTML;
 		{
 			$item['text'] = "<b>[ {$item['text']} ]</b>";
 		}
-
+///		_debug_array($GLOBALS);die();
 		$link_class = $current_class ? "class=\"{$current_class}\"" : '';
 
 		$out = <<<HTML

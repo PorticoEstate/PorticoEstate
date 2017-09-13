@@ -71,7 +71,6 @@ JS;
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 //	$stylesheets[] = "/{$app}/css/frontend.css";
 	$stylesheets[] = "/phpgwapi/templates/frontend/css/frontend.css";
-//	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.css";
 	$stylesheets[] = "/phpgwapi/js/jquery/mmenu/core/css/jquery.mmenu.all.css";
 
 	if (!preg_match('/Firefox/i', $_SERVER['HTTP_USER_AGENT']))
@@ -98,7 +97,7 @@ JS;
 
 	$javascripts = array();
 	$javascripts[] = "/phpgwapi/js/jquery/mmenu/core/js/jquery.mmenu.min.all.js";
-	$javascripts[] = "/phpgwapi/templates/pure/js/mmenu.js";
+	$javascripts[] = "/phpgwapi/templates/frontend/js/mmenu.js";
 
 
 	//FIXME: To consider...
@@ -176,6 +175,12 @@ JS;
 	$site_url	= $GLOBALS['phpgw']->link("/{$app}/", array());
 	$home_text		= lang('home');
 	$manual_text = lang('manual');
+
+
+	if(preg_match('/home.php$/i', $_SERVER['SCRIPT_NAME']))
+	{
+		$home_text	= '';
+	}
 
 	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
