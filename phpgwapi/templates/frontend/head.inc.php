@@ -173,16 +173,66 @@ JS;
 	$test = $GLOBALS['phpgw']->common->get_on_events();
     $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
     $test = str_replace("\n}\n","\n})\n",$test);
+	$site_url	= $GLOBALS['phpgw']->link("/{$app}/", array());
+	$home_text		= lang('home');
+	$manual_text = lang('manual');
+
+	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
+
+	if($user && isset($_SESSION['phpgw_session']['session_flags']) && $_SESSION['phpgw_session']['session_flags'] == 'N')
+	{
+		$login_text = $user->__toString() . ' :: ' . lang('Logout');
+		$login_url = 'logout.php';
+	}
+	else
+	{
+		$login_text_org = '';
+		$login_text = lang('Login');
+		$login_url = 'logout.php?login=1&after='. $_GET['menuaction'];
+		$login_parameter = !empty($config_frontend['login_parameter']) ? $config_frontend['login_parameter'] : '';
+		$custom_login_url = !empty($config_frontend['custom_login_url']) ? $config_frontend['custom_login_url'] : '';
+		if($login_parameter)
+		{
+			$login_parameter = ltrim($login_parameter, '&');
+			$login_url .= "&{$login_parameter}";
+		}
+		if($custom_login_url)
+		{
+			$login_url = $custom_login_url;
+		}
+	}
+
+$header = <<<HTML
+		<div class="home-menu custom-menu-wrapper">
+			<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+				<a href="{$site_url}" class="pure-menu-heading">{$site_title}</a>
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item pure-menu-selected"><a href="{$site_url}" class="pure-menu-link">{$home_text}</a></li>
+					<li class="pure-menu-item pure-menu-selected"><a href="{$manual}" class="pure-menu-link">{$manual_text}</a></li>
+					<li class="pure-menu-item pure-menu-selected"><a href="{$login_url}" class="pure-menu-link">{$login_text}</a></li>
+				</ul>
+			</div>
+		</div>
+HTML;
+
+	if( !empty( $GLOBALS['phpgw_info']['flags']['noframework'] ))
+	{
+		$header = '';
+	}
 
 	$tpl_vars = array
 	(
+		'header'		=> $header,
+		'login_text_org' =>	$login_text_org,
+		'login_text'	=> $login_text,
+		'login_url'		=> $login_url,
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
 		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
-		'home_text'		=> lang('home'),
+		'home_text'		=> $home_text,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
-		'site_url'	=> $GLOBALS['phpgw']->link("/{$app}/", array()),
+		'site_url'	=> $site_url,
 		'webserver_url'	=> $webserver_url,
         'win_on_events'	=> $test,
 		'metainfo_author' => $author,
@@ -196,7 +246,7 @@ JS;
 	if ($manual !== null) 
 	{
 
-		$tpl_vars['manual_text'] = lang('manual');
+		$tpl_vars['manual_text'] = $manual_text;
 		$tpl_vars['manual_url'] = $manual;
 	}
 	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
