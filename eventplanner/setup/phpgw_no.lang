@@ -161,3 +161,4 @@ application public type non public	eventplanner	no	Nærtilbud (et arrangement de
 application public type public	eventplanner	no	 Breddetilbud (et arrangement der alle brukere/beboere på en institusjon kan delta)
 my applications	eventplanner	no	Mine søknader
 new application	eventplanner	no	Ny søknad
+new vendor	eventplanner	no	Ny utøver

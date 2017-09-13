@@ -108,16 +108,21 @@
 					'text' => lang('vendor'),
 					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uivendor.index")),
 					'image' => array('vendor', 'navbar'),
-				),
-				'application' => array(
-					'text' => lang('my applications'),
-					'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => 'eventplannerfrontend.uiapplication.index')),
 					'children'	=> array(
+						'new_vendor' => array(
+						'text' => lang('new vendor'),
+						'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => 'eventplannerfrontend.uivendor.add'))
+						),
 						'new_application' => array(
 						'text' => lang('new application'),
 						'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => 'eventplannerfrontend.uiapplication.add'))
-						)
-					)
+						),
+						'application' => array(
+							'text' => lang('my applications'),
+							'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => 'eventplannerfrontend.uiapplication.index')),
+							)
+						),
+
 				),
 				'customer' => array(
 					'text' => lang('customer'),
@@ -129,22 +134,7 @@
 					'url' => $GLOBALS['phpgw']->link('/registration/main.php', array()),
 					'image' => array('user', 'navbar'),
 				)
-				/*				'booking' => array(
-					'text' => lang('booking'),
-					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uibooking.index")),
-					'image' => array('customer', 'navbar'),
-				),
-				'vendor_report' => array(
-					'text' => lang('vendor report'),
-					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uivendor_report.index")),
-					'image' => array('vendor_report', 'navbar'),
-				),
-				'customer_report' => array(
-					'text' => lang('customer report'),
-					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uicustomer_report.index")),
-					'image' => array('customer_report', 'navbar'),
-				)*/
-			);
+		);
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}
