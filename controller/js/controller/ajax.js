@@ -715,6 +715,15 @@ $(document).ready(function ()
 		$(thisForm).find("input[name=role]").val(role);
 		$(thisForm).submit();
 	});
+	
+	$("#filter-ctrl_status").change(function ()
+	{
+		var ctrl_status = $(this).val();
+		var thisForm = $(this).closest("form");
+
+		$(thisForm).find("input[name=current_ctrl_status]").val(ctrl_status);
+		$(thisForm).submit();
+	});
 
 	// SHOW INFO BOX: Fetches info about a check list on hover image icon
 	$('a.view_info_box').bind('contextmenu', function ()
