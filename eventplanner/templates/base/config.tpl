@@ -15,6 +15,14 @@
 			</td>
 		</tr>
 		<tr>
+			<td>{lang_default_vendor_category}:</td>
+			<td>
+				<select name="newsettings[default_vendor_category]">
+					{hook_default_vendor_category}
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td>{lang_booking_interval}:</td>
 			<td>
 				<input type="number" name="newsettings[booking_interval]" value="{value_booking_interval}">

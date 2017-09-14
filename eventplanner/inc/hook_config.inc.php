@@ -42,3 +42,22 @@
 		return $cat_select;
 	}
 
+	function default_vendor_category( $config )
+	{
+		$selected = isset($config['default_vendor_category']) ? $config['default_vendor_category'] : null;
+
+		$status_entries = execMethod('eventplanner.bogeneric.get_list', array('type' => 'vendor_category',
+			'selected' => $selected));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
+		{
+			$selected = $status['selected'] ? ' selected = "selected"' : '';
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+		return $out;
+	}
+

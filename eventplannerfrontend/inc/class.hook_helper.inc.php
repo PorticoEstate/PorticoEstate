@@ -124,8 +124,21 @@
 			{
 				return;
 			}
-			$session_org_id = phpgw::get_var('session_org_id','int' , 'POST');
-			if($session_org_id)
+
+			$orgs = array();
+			if(!empty($_SESSION['orgs']) && is_array($_SESSION['orgs']))
+			{
+				$orgs = phpgw::get_var('orgs', 'string', 'SESSION');
+			}
+
+			$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+
+			function get_ids_from_array($org)
+			{
+				return $org['id'];
+			}
+
+			if($session_org_id && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
 			{
 				try
 				{
@@ -133,22 +146,20 @@
 				}
 				catch (sfValidatorError $e)
 				{
-					$_SESSION['org_id'] = '';
+					$_SESSION['org_id'] = -1;
 				}
 			}
-			else if ($_POST['session_org_id'])
+			else if ($_GET['session_org_id'])
 			{
-				$_SESSION['org_id'] = '';
+				$_SESSION['org_id'] = -1;
 			}
 
 			/**
 			 * $_SESSION['orgs'] is set in eventplannerfrontend_external_user::get_user_org_id()
 			 */
 
-			$orgs = array();
 			if(!empty($_SESSION['orgs']) && is_array($_SESSION['orgs']))
 			{
-				$orgs = phpgw::get_var('orgs', 'string', 'SESSION');
 				$org_id = phpgw::get_var('org_id','int' , 'SESSION');
 			}
 			else
@@ -183,18 +194,22 @@ HTML;
 							'menuaction' => phpgw::get_var('menuaction')
 						)
 					);
+					$base = '/eventplannerfrontend/';
+					$oArgs = '{menuaction:"' . phpgw::get_var('menuaction') .'"}';
 				}
 				else
 				{
 					$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/home.php');
+					$base = '/eventplannerfrontend/home.php';
+					$oArgs = '{}';
 				}
 
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML
 				
-					<label for="org_id">Velg Organisasjon:</label>
-					<select name="session_org_id" id="org_id" onChange="this.form.submit();">
+					<label for="session_org_id">Velg Organisasjon:</label>
+					<select name="session_org_id" id="session_org_id">
 						{$org_option}
 					</select>
 				
@@ -204,13 +219,32 @@ HTML;
 			$html = <<<HTML
 
 			<div id="organsation_select">
-				<form action="{$action}" method="POST">
-					$org_select
-				</form>
+				$org_select
 			</div>
 HTML;
 
+
 			echo $html;
+
+
+			$js = <<<JS
+	<script type="text/javascript">
+		$(document).ready(function ()
+		{
+
+			$("#session_org_id").change(function ()
+			{
+				var session_org_id = $(this).val();
+				var oArgs = {$oArgs};
+				oArgs.session_org_id = session_org_id;
+				var requestUrl = phpGWLink('{$base}', oArgs);
+				window.open(requestUrl, "_self");
+			});
+		});
+	</script>
+JS;
+			echo $js;
+
 		}
 
 		/**
