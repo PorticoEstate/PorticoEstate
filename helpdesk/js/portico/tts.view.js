@@ -253,7 +253,7 @@ $(document).ready(function ()
 							this.paste_createImage(source);
 						}
 					}
-					e.preventDefault();
+				//	e.preventDefault();
 				}
 				else
 				{

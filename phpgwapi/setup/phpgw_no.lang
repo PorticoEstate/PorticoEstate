@@ -60,7 +60,7 @@ group public	common	no	Gruppe Public
 groups	common	no	Grupper
 help	common	no	Hjelp
 high	common	no	Høy
-home	common	no	Hjemme
+home	common	no	Hjem
 it has been more then %1 days since you changed your password	common	no	Det er mer enn %1 dager siden du har endet ditt passord
 january	common	no	Januar
 july	common	no	Juli
@@ -222,3 +222,4 @@ vendor	common	no	Leverandør
 remark	home	no	Merknad
 about %1	about	no	Om %1
 group	common	no	Gruppe
+smtp server is not set! (admin section)	common	no	SMTP serveren er ikke konfigurert (admin seksjonen)

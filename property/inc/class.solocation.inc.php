@@ -2199,6 +2199,46 @@
 
 		}
 
+		function get_location_address($location_code = '')
+		{
+			$locaction_code = $this->db->db_addslashes($location_code);
+
+			$location_arr = explode('-', $location_code);
+			$current_level = count($location_arr);
+
+
+			$sql = "SELECT location_type AS location_level FROM fm_location_config WHERE column_name = 'street_id'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$location_level = $this->db->f('location_level');
+
+			if($location_level > $current_level)
+			{
+				$sql = "SELECT loc{$current_level}_name AS address FROM fm_location{$current_level} WHERE location_code = '{$location_code}'";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$address = $this->db->f('address', true);
+				return $address;
+			}
+
+			$search_location_arr = array();
+
+			for ($i = 0; $i < $location_level; $i++)
+			{
+				$search_location_arr[] = $location_arr[$i];
+			}
+
+			$search_location_code = implode('-', $search_location_arr);
+
+			$sql = "SELECT fm_streetaddress.descr || ' ' || fm_location{$location_level}.street_number AS address FROM fm_location{$location_level}"
+			. " {$this->join} fm_streetaddress ON fm_location{$location_level}.street_id = fm_streetaddress.id"
+			. " WHERE location_code = '{$search_location_code}'";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$address = $this->db->f('address', true);
+			return $address;
+		}
+
 		function get_location_exception($location_code = '', $alert_vendor = false)
 		{
 

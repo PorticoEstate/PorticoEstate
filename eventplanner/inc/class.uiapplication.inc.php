@@ -129,6 +129,7 @@
 		}
 		public function index()
 		{
+			self::set_active_menu("{$this->currentapp}::vendor::application");
 			if (empty($this->permissions[PHPGW_ACL_READ]))
 			{
 
@@ -217,6 +218,7 @@
 
 		public function add()
 		{
+			self::set_active_menu("{$this->currentapp}::vendor::new_application");
 			if (empty($this->permissions[PHPGW_ACL_ADD]))
 			{
 				if($this->currentapp == 'eventplannerfrontend')

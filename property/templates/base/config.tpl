@@ -17,6 +17,10 @@
 				<td><input name="newsettings[org_name]" value="{value_org_name}"></td>
 			</tr>
 			<tr>
+				<td>{lang_department}:</td>
+				<td><input name="newsettings[department]" value="{value_department}"></td>
+			</tr>
+			<tr>
 				<td>{lang_org_unit_id}:</td>
 				<td><input name="newsettings[org_unit_id]" value="{value_org_unit_id}"></td>
 			</tr>

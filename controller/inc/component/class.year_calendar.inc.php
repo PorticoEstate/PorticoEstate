@@ -93,7 +93,7 @@
 			}
 		}
 
-		public function build_calendar( $check_lists_array )
+		public function build_calendar( $check_lists_array, $ctrl_status = NULL )
 		{
 			foreach ($check_lists_array as $check_list)
 			{
@@ -115,11 +115,12 @@
 					$this->calendar_array[$month_nr]["info"] = $check_list_status_info->serialize();
 				}
 			}
-//			_debug_array($this->calendar_array);
+			//_debug_array($this->calendar_array);
 			/*Insert code to remove controls with changed due-date from array*/
 			$m_cnt = 0;
 			$not_done_due_date;
 			$new_calendar_array = array();
+			$new_calendar_array2 = array();
 			$found = false;
 			$moved_control_dates = NULL;
 			foreach ($this->calendar_array as $cal)
@@ -140,7 +141,7 @@
 					$m_cnt++;
 					if(is_array($cal2))
 					{
-						if($cal2['info']['status'] == 'CONTROL_NOT_DONE')
+						if($cal2['info']['status'] == 'CONTROL_NOT_DONE' || $cal2['info']['status'] == 'CONTROL_REGISTERED')
 						{
 							if(in_array($cal2['info']['deadline_date_ts'], $moved_control_dates))
 							{
@@ -162,6 +163,51 @@
 					}
 				}
 				$this->calendar_array = $new_calendar_array;
+			}
+			$m_cnt2 = 0;
+			if(isset($ctrl_status))
+			{
+				if ($ctrl_status == "ALLE")
+				{
+					//do nothing
+				}
+				else
+				{
+					foreach ($this->calendar_array as $cal3)
+					{
+						$m_cnt2++;
+						if(is_array($cal3))
+						{
+							if($ctrl_status == 'CONTROL_NOT_DONE')
+							{
+								if($cal3['info']['status'] == $ctrl_status || $cal3['info']['status'] == 'CONTROL_NOT_DONE_WITH_PLANNED_DATE')
+								{
+									$new_calendar_array2[$m_cnt2] = $cal3;
+								}
+								else
+								{
+									$new_calendar_array2[$m_cnt2] = NULL;
+								}
+							}
+							else
+							{
+								if($cal3['info']['status'] == $ctrl_status)
+								{
+									$new_calendar_array2[$m_cnt2] = $cal3;
+								}
+								else
+								{
+									$new_calendar_array2[$m_cnt2] = NULL;
+								}
+							}
+						}
+						else
+						{
+							$new_calendar_array2[$m_cnt2] = NULL;
+						}
+					}
+					$this->calendar_array = $new_calendar_array2;
+				}
 			}
 			return $this->calendar_array;
 		}
