@@ -42,6 +42,11 @@
         <xsl:value-of select="current_repeat_type"/>
       </xsl:attribute>
     </input>
+	<input type="hidden" name="current_ctrl_status">
+      <xsl:attribute name="value">
+        <xsl:value-of select="current_ctrl_status"/>
+      </xsl:attribute>
+    </input>
     <input type="hidden" name="role">
       <xsl:attribute name="value">
         <xsl:value-of select="current_role"/>
@@ -84,6 +89,29 @@
             <xsl:otherwise>
               <option value="{id}">
                 <xsl:value-of disable-output-escaping="yes" select="value"/>
+              </option>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </select>
+    </div>
+	<div class="filter">
+      <label>Filtrer på status</label>
+      <select id="filter-ctrl_status" name="ctrl_status">
+        <option value="ALLE">Velg status</option>
+        <xsl:for-each select="ctrl_status_array">
+			<xsl:variable name="status_value">
+				<xsl:value-of select="value"/>
+          </xsl:variable>
+          <xsl:choose>
+            <xsl:when test="id = //current_ctrl_status">
+              <option value="{id}" selected="selected">
+                <xsl:value-of disable-output-escaping="yes" select="php:function('lang', $status_value)"/>
+              </option>
+            </xsl:when>
+            <xsl:otherwise>
+              <option value="{id}">
+                <xsl:value-of disable-output-escaping="yes" select="php:function('lang', $status_value)"/>
               </option>
             </xsl:otherwise>
           </xsl:choose>

@@ -393,6 +393,13 @@ report type	controller	no	Rapporttype
 lang_control_mandatory_location	controller	no	Påkrevd lokasjonsvalg
 Control types	controller	no	Kontrolltyper
 location	controller	no	Lokasjon
+CONTROL_REGISTERED	controller	no	Kontroll satt opp
+CONTROL_PLANNED	controller	no	Kontroll har planlagt dato
+CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS	controller	no	Kontroll gjennomført uten åpne saker etter frist
+CONTROL_DONE_IN_TIME_WITHOUT_ERRORS	controller	no	Kontroll gjennomført uten åpne saker før frist
+CONTROL_DONE_WITH_ERRORS	controller	no	Kontroll gjennomført med åpne saker
+CONTROL_NOT_DONE	controller	no	Kontroll ikke gjennomført
+CONTROL_CANCELED	controller	no	Kontroll kansellert
 document types	controller	no	Dokumenttyper
 Do not edit archived version	controller	no	Du kan ikke endre arkiverte versjoner
 choose a location	controller	no	Velg en lokasjon
