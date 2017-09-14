@@ -176,7 +176,7 @@
 		public function add()
 		{
 			self::set_active_menu("{$this->currentapp}::vendor::new_vendor");
-			parent::add();	
+			parent::add();
 		}
 
 		/*
@@ -231,7 +231,7 @@
 				array('key' => 'author', 'label' => lang('User'), 'sortable' => true, 'resizeable' => true),
 				array('key' => 'comment', 'label' => lang('Note'), 'sortable' => true, 'resizeable' => true)
 			);
- 
+
 			$datatable_def[] = array(
 				'container' => 'datatable-container_0',
 				'requestUrl' => "''",
@@ -277,12 +277,16 @@
 				)
 			);
 
+			$config = CreateObject('phpgwapi.config', 'eventplanner')->read();
+			$default_category = !empty($config['default_vendor_category']) ? $config['default_vendor_category'] : null;
+
+			$vendor->organization_number = $vendor->organization_number ? $vendor->organization_number :  phpgw::get_var('org_id','int' , 'SESSION');
 			$data = array(
 				'datatable_def' => $datatable_def,
 				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.save")),
 				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uivendor.index",)),
 				'vendor' => $vendor,
-				'category_list' => array('options' => $this->get_category_options( $vendor->category_id )),
+				'category_list' => array('options' => $this->get_category_options( $vendor->category_id ? $vendor->category_id : $default_category )),
 				'mode' => $mode,
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'value_active_tab' => $active_tab
@@ -292,7 +296,7 @@
 			self::add_javascript($this->currentapp, 'portico', 'vendor.edit.js');
 			self::render_template_xsl(array('vendor', 'datatable_inline'), array($mode => $data));
 		}
-		
+
 		/*
 		 * Get the vendor with the id given in the http variable 'id'
 		 */

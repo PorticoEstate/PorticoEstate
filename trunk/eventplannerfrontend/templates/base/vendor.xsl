@@ -72,7 +72,7 @@
 									<xsl:text>required</xsl:text>
 								</xsl:attribute>
 								<xsl:attribute name="placeholder">
-									<xsl:value-of select="php:function('lang', 'name')"/>
+									<xsl:value-of select="php:function('lang', 'vendor name')"/>
 								</xsl:attribute>
 							</input>
 						</div>

@@ -199,44 +199,44 @@ check_button_names = function ()
 
 	if (tab === 'calendar')
 	{
-		$("#floating-box").hide();
+//		$("#floating-box").hide();
 		$("#submit_group_bottom").hide();
 	}
 	else if (tab === 'first_tab')
 	{
 		if (id > 0)
 		{
-			$("#save_button").val(lang['save']);
+	//		$("#save_button").val(lang['save']);
 			$("#save_button_bottom").val(lang['save']);
 		}
 		else
 		{
-			$("#save_button").val(lang['next']);
+	//		$("#save_button").val(lang['next']);
 			$("#save_button_bottom").val(lang['next']);
 		}
-		$("#floating-box").show();
+//		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
 	else if (tab === 'demands')
 	{
 		if (id > 0)
 		{
-			$("#save_button").val(lang['save']);
+//			$("#save_button").val(lang['save']);
 			$("#save_button_bottom").val(lang['save']);
 		}
 		else
 		{
-			$("#save_button").val(lang['next']);
+//			$("#save_button").val(lang['next']);
 			$("#save_button_bottom").val(lang['next']);
 		}
-		$("#floating-box").show();
+//		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
 	else
 	{
-		$("#save_button").val(lang['save']);
+//		$("#save_button").val(lang['save']);
 		$("#save_button_bottom").val(lang['save']);
-		$("#floating-box").show();
+//		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
 };
