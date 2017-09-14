@@ -3654,7 +3654,7 @@ HTML;
 			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 //			$location = $ticket['address'];
 
-			$location = createObject('property.solocation')->get_location_address($ticket['location_code']);
+			$location = createObject('property.solocation')->get_location_address($ticket['location_code'])  . '<br/>';
 
 			$address_element = $this->bo->get_address_element($ticket['location_code']);
 
@@ -3721,42 +3721,61 @@ HTML;
 				}
 			}
 
+			$contact_phone = str_replace(' ', '', $contact_phone);
+			$contact_phone2 = str_replace(' ', '', $contact_phone2);
+
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
+			{
+				$contact_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2,  $matches ) )
+			{
+				$contact_phone2 = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
+
 			function nl2br2($string)
 			{
 				$string = str_replace(array("\r\n", "\r", "\n"), "<br />", $string);
 				return $string;
 			}
 			
-			$contact_block = nl2br2(str_replace(array
-				(
-				'__user_name__',
-				'__user_phone__',
-				'__user_email__',
-				'__contact_name__',
-				'__contact_email__',
-				'__contact_phone__',
-				'__contact_name2__',
-				'__contact_email2__',
-				'__contact_phone2__',
-				'__order_id__',
-				'[b]',
-				'[/b]'
-					), array
-				(
-				$user_name,
-				$user_phone,
-				$user_email,
-				$contact_name,
-				$contact_email,
-				$contact_phone,
-				$contact_name2,
-				$contact_email2,
-				$contact_phone2,
-				$order_id,
-				'<b>',
-				'</b>'
-					), $order_contact_block_template));
-
+			if($contact_name)
+			{
+				$contact_block = '<br/>' . nl2br2(str_replace(array
+					(
+					'__user_name__',
+					'__user_phone__',
+					'__user_email__',
+					'__contact_name__',
+					'__contact_email__',
+					'__contact_phone__',
+					'__contact_name2__',
+					'__contact_email2__',
+					'__contact_phone2__',
+					'__order_id__',
+					'[b]',
+					'[/b]'
+						), array
+					(
+					$user_name,
+					$user_phone,
+					$user_email,
+					$contact_name,
+					$contact_email,
+					$contact_phone,
+					$contact_name2,
+					$contact_email2,
+					$contact_phone2,
+					$order_id,
+					'<b>',
+					'</b>'
+						), $order_contact_block_template));
+				$contact_block .= '<br/>';
+			}
+			else
+			{
+				$contact_block = '';
+			}
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 			$date = $GLOBALS['phpgw']->common->show_date(time(), $dateformat);
@@ -3765,7 +3784,7 @@ HTML;
 			$lang_order = lang('order');
 			$lang_from = lang('from');
 			$body = "<table style='width: 800px;'><tr>";
-			$body .= "<td valign='top'>{$lang_order}: {$order_id}</td>";
+			$body .= "<td valign='top'>{$lang_order}: <b>{$order_id}</b><br/>&nbsp;</td>";
 			$body .= "<td valign='top'>" . lang('date') . ":{$date}</td>";
 			$body .= "</tr>";
 			$body .= "<tr>";
@@ -3773,12 +3792,12 @@ HTML;
 					. "{$department}<br/>"
 					. "Org.nr: {$this->bo->config->config_data['org_unit_id']}"
 					. "</td>";
-			$body .= "<td valign='top'>v/Saksbehandler: {$user_name}<br/>"
+			$body .= "<td valign='top'>v/saksbehandler: {$user_name}<br/>"
 					. "Ressursnr.: {$ressursnr}<br/>"
 					. "</td>";
 			$body .= "</tr>";
 			$body .= "<tr>";
-			$body .= "<td colspan=2>" .  lang('delivery address') . "<br/>{$location}</td>";
+			$body .= "<td colspan=2>" .  lang('delivery address') . ":<br/>{$location}</td>";
 			$body .= "</tr>";
 			$body .= "<tr>";
 			$body .= "<td valign='top'>" .  lang('to') . ":<br/>" . $this->_get_vendor_name($ticket['vendor_id']) . "</td>";
@@ -3786,10 +3805,13 @@ HTML;
 
 			$body .= "</tr></table>";
 
+
+			$deadline_block = '';
+
 			if($ticket['order_deadline'])
 			{
-				$body .= "<br/><br/><b>" . lang('deadline') . '</b>';
-				$body .= "<br/>" . $ticket['order_deadline'];
+				$deadline_block .= "<br/><b>" . lang('deadline') . '</b>';
+				$deadline_block .= "<br/>" . $ticket['order_deadline'];
 			}
 
 			$body .= '<br/>'. nl2br(str_replace(array
@@ -3802,6 +3824,7 @@ HTML;
 				'__ressursnr__',
 				'__location__',
 				'__order_description__',
+				'__deadline_block__',
 				'__contact_block__',
 				'__contact_name__',
 				'__contact_email__',
@@ -3819,6 +3842,7 @@ HTML;
 				$ressursnr,
 				$location,
 				$order_description,
+				$deadline_block,
 				$contact_block,
 				$contact_name,
 				$contact_email,
@@ -4127,8 +4151,20 @@ HTML;
 			}
 
 			$coordinator_email = "{$coordinator_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
+
+			$validator = CreateObject('phpgwapi.EmailAddressValidator');
+
+			if ($validator->check_email_address($GLOBALS['phpgw_info']['user']['preferences']['property']['email']))
+			{
+				$bcc = '';
+				phpgwapi_cache::message_set(lang('please update <a href="%1">your email address here</a>', $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=>'property','type'=> 'user') )),'error' );
+			}
+			else
+			{
+				$bcc = $coordinator_email;
+			}
+
 			$cc = '';
-			$bcc = $coordinator_email;
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id' => $ticket['contact_id'],
 				'field' => 'contact',
