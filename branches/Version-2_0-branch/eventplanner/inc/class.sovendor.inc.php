@@ -54,6 +54,63 @@
 			return self::$so;
 		}
 
+		function get_acl_condition( )
+		{
+			$clause = '';
+
+			if(!$this->relaxe_acl && ($this->use_acl && $this->currentapp && $this->acl_location))
+			{
+				$paranthesis = false;
+
+				$grants = $this->acl->get_grants2($this->currentapp, $this->acl_location);
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
+				{
+					foreach($grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$clause .= "({$this->table_name}.owner_id IN(" . implode(',', $public_user_list) . ")";
+					$paranthesis = true;
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					if(!$paranthesis)
+					{
+						$clause .='(';
+					}
+					$clause .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
+
+					$paranthesis = true;
+				}
+
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+					$where = $clause ? 'OR' : 'AND';
+					$org_id = phpgw::get_var('org_id','string' , 'SESSION', -1);
+					$clause .= " {$where} eventplanner_vendor.organization_number = '{$org_id}'";
+				}
+
+				if($paranthesis)
+				{
+					$clause .=')';
+				}
+			}
+
+			return $clause;
+
+		}
 
 		protected function populate( array $data )
 		{

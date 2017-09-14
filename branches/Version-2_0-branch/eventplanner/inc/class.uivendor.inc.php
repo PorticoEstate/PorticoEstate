@@ -173,6 +173,12 @@
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
+		public function add()
+		{
+			self::set_active_menu("{$this->currentapp}::vendor::new_vendor");
+			parent::add();	
+		}
+
 		/*
 		 * Edit the price item with the id given in the http variable 'id'
 		 */

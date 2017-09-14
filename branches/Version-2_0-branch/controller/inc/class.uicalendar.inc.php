@@ -266,7 +266,10 @@
 			$role = phpgw::get_var('role', 'int');
 
 			$repeat_type = phpgw::get_var('repeat_type');
-
+			
+			//show only controls that are not done
+			$selected_ctrl_status = phpgw::get_var('current_ctrl_status');
+			
 			// Validates year. If year is not set, current year is chosen
 			$year = $this->validate_year($year);
 
@@ -348,7 +351,7 @@
 					if ($control->get_repeat_type() == controller_control::REPEAT_TYPE_MONTH | $control->get_repeat_type() == controller_control::REPEAT_TYPE_YEAR)
 					{
 						$year_calendar = new year_calendar($control, $year, null, $location_code, "location");
-						$calendar_array = $year_calendar->build_calendar($control->get_check_lists_array());
+						$calendar_array = $year_calendar->build_calendar($control->get_check_lists_array(), $selected_ctrl_status);
 
 						$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
 					}
@@ -422,6 +425,17 @@
 					array('id' => "2", 'value' => "Måned"),
 					array('id' => "3", 'value' => "År")
 				);
+				
+				$ctrl_status_array = array(
+					array('id' => "CONTROL_REGISTERED", 'value' => "CONTROL_REGISTERED"),
+					array('id' => "CONTROL_PLANNED", 'value' => "CONTROL_PLANNED"),
+					array('id' => "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS", 'value' => "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS"),
+					array('id' => "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS", 'value' => "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS"),
+					array('id' => "CONTROL_DONE_WITH_ERRORS", 'value' => "CONTROL_DONE_WITH_ERRORS"),
+					array('id' => "CONTROL_NOT_DONE", 'value' => "CONTROL_NOT_DONE"),
+					//array('id' => "CONTROL_NOT_DONE_WITH_PLANNED_DATE", 'value' => "CONTROL_NOT_DONE_WITH_PLANNED_DATE"),
+					array('id' => "CONTROL_CANCELED", 'value' => "CONTROL_CANCELED")
+				);
 
 				$data = array
 					(
@@ -434,9 +448,11 @@
 					'location_level' => $level,
 					'roles_array' => $roles_array,
 					'repeat_type_array' => $repeat_type_array,
+					'ctrl_status_array' => $ctrl_status_array,
 					'current_year' => $year,
 					'current_role' => $role,
-					'current_repeat_type' => $repeat_type
+					'current_repeat_type' => $repeat_type,
+					'current_ctrl_status' => $selected_ctrl_status
 				);
 
 				phpgwapi_jquery::load_widget('autocomplete');

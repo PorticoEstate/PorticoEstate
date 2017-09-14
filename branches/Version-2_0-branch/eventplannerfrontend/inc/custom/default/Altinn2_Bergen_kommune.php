@@ -125,8 +125,8 @@
 
 			if ($this->debug)
 			{
-				$orgs[] = array('id' => '964338531', 'name' => 'Bergen kommune');
-				$_org_id = 964338531;
+				$orgs[] = array('id' => '994239929', 'name' => 'Bergen kommune');
+				$_org_id = 994239929;
 			}
 			$_SESSION['orgs'] = $orgs;
 			$_SESSION['org_id'] = $_org_id; // one of them..
