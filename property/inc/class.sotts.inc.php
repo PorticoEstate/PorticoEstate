@@ -590,6 +590,7 @@
 				'b_account_id' => 'fm_tts_tickets.b_account_id',
 				'continuous' => 'fm_tts_tickets.continuous',
 				'order_deadline' => 'fm_tts_tickets.order_deadline',
+				'order_deadline2' => 'fm_tts_tickets.order_deadline2',
 			);
 
 			$custom_cols = $this->custom->find('property', '.ticket', 0, '', 'ASC', 'attrib_sort', true, true);
@@ -785,6 +786,7 @@
 						'b_account_id' => $this->db->f('b_account_id'),
 						'continuous' => $this->db->f('continuous'),
 						'order_deadline' => $this->db->f('order_deadline'),
+						'order_deadline2' => $this->db->f('order_deadline2'),
 					);
 
 					foreach ($custom_cols as $custom_col)
@@ -874,6 +876,7 @@
 				$ticket['order_id'] = $this->db->f('order_id');
 				$ticket['continuous'] = $this->db->f('continuous');
 				$ticket['order_deadline'] = $this->db->f('order_deadline');
+				$ticket['order_deadline2'] = $this->db->f('order_deadline2');
 				$ticket['vendor_id'] = $this->db->f('vendor_id');
 				$ticket['contract_id'] = $this->db->f('contract_id',true);
 				$ticket['service_id'] = $this->db->f('service_id',true);
@@ -1746,6 +1749,10 @@
 				if(!empty($ticket['order_deadline']))
 				{
 					$value_set['order_deadline'] = phpgwapi_datetime::date_to_timestamp($ticket['order_deadline']);
+				}
+				if(!empty($ticket['order_deadline2']))
+				{
+					$value_set['order_deadline2'] = phpgwapi_datetime::date_to_timestamp($ticket['order_deadline2']);
 				}
 
 				if(isset($ticket['vendor_email']) && is_array($ticket['vendor_email']))

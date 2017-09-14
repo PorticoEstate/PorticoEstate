@@ -987,12 +987,40 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'deadline')"/>
 										</label>
+										<table class="pure-table pure-u-md-1-2">
+											<thead>
+												<tr>
+													<th>
+														<xsl:value-of select="php:function('lang', 'deadline for start')"/>
+													</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'deadline for execution')"/>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
 
-										<input type="text" id="order_deadline" name="values[order_deadline]" size="10" value="{value_order_deadline}" readonly="readonly">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'order deadline')"/>
-											</xsl:attribute>
-										</input>
+														<input type="text" id="order_deadline" name="values[order_deadline]" size="10" value="{value_order_deadline}" readonly="readonly">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'deadline for start')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+
+														<input type="text" id="order_deadline2" name="values[order_deadline2]" size="10" value="{value_order_deadline2}" readonly="readonly">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'deadline for execution')"/>
+															</xsl:attribute>
+														</input>
+
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
 									</div>
 
 									<div class="pure-control-group">

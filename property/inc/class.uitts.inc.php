@@ -2183,6 +2183,7 @@ HTML;
 			if ($access_order)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('order_deadline');
+				$GLOBALS['phpgw']->jqcal->add_listener('order_deadline2');
 
 				$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
@@ -3019,6 +3020,7 @@ HTML;
 				'value_target' => $ticket['target'],
 				'value_finnish_date' => $ticket['finnish_date'],
 				'value_order_deadline' => $ticket['order_deadline'],
+				'value_order_deadline2' => $ticket['order_deadline2'],
 				'link_entity' => $link_entity,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data2' => $location_data,
@@ -3389,7 +3391,11 @@ HTML;
 
 			if($ticket['order_deadline'])
 			{
-				$data[] = array('col1' => lang('deadline'), 'col2' =>"<b>{$ticket['order_deadline']}</b>");
+				$data[] = array('col1' => lang('deadline for start'), 'col2' =>"<b>{$ticket['order_deadline']}</b>");
+			}
+			if($ticket['order_deadline2'])
+			{
+				$data[] = array('col1' => lang('deadline for execution'), 'col2' =>"<b>{$ticket['order_deadline2']}</b>");
 			}
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings' => 0,
@@ -3721,9 +3727,14 @@ HTML;
 				}
 			}
 
+			$user_phone = str_replace(' ', '', $user_phone);
 			$contact_phone = str_replace(' ', '', $contact_phone);
 			$contact_phone2 = str_replace(' ', '', $contact_phone2);
 
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone,  $matches ) )
+			{
+				$user_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
 			{
 				$contact_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
@@ -3810,8 +3821,17 @@ HTML;
 
 			if($ticket['order_deadline'])
 			{
-				$deadline_block .= "<br/><b>" . lang('deadline') . '</b>';
+				$deadline_block .= "<br/><b>" . lang('deadline for start') . '</b>';
 				$deadline_block .= "<br/>" . $ticket['order_deadline'];
+			}
+			if($ticket['order_deadline2'])
+			{
+				if($ticket['order_deadline'])
+				{
+					$deadline_block .= "<br/>";
+				}
+				$deadline_block .= "<br/><b>" . lang('deadline for execution') . '</b>';
+				$deadline_block .= "<br/>" . $ticket['order_deadline2'];
 			}
 
 			$body .= '<br/>'. nl2br(str_replace(array
