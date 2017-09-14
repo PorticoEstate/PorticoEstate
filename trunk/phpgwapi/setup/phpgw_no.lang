@@ -222,3 +222,4 @@ vendor	common	no	Leverandør
 remark	home	no	Merknad
 about %1	about	no	Om %1
 group	common	no	Gruppe
+smtp server is not set! (admin section)	common	no	SMTP serveren er ikke konfigurert (admin seksjonen)
