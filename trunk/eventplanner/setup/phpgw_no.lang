@@ -166,3 +166,4 @@ default vendor category	eventplanner	no	Default utøverkategori
 default application category	eventplanner	no	Default søknadskategori
 vendor name	eventplanner	no	Artistnavn/utøver/gruppe
 sum	eventplanner	no	Sum
+active application year	eventplanner	no	Aktivt søknadsår

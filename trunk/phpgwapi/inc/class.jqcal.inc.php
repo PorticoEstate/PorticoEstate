@@ -36,7 +36,7 @@
 			$this->lang_select_date      = lang('select date');
 		}
 
-		function add_listener($name, $type = 'date', $value = '')
+		function add_listener($name, $type = 'date', $value = '', $config = array())
 		{
 			switch($type)
 			{
@@ -54,7 +54,7 @@
 					$_type = 'date';
 			}
 
-			$this->_input_modern($name, $_type);
+			$this->_input_modern($name, $_type, $config);
 			return "<input id='{$name}' type='text' value='{$value}' size='10' name='{$name}'/>";
 		}
 
@@ -64,8 +64,26 @@
 		* @access private
 		* @param string $name the element ID
 		*/
-		function _input_modern($id, $type)
+		function _input_modern($id, $type, $config = array())
 		{
+			$date_range_arr = array();
+			$date_range = '';
+
+			if(!empty($config['min_date']))
+			{
+				$date_range_arr[] = "minDate:new Date({$config['min_date']})";
+			}
+
+			if(!empty($config['max_date']))
+			{
+				$date_range_arr[] = "maxDate:new Date({$config['max_date']})";
+			}
+
+			if($date_range_arr)
+			{
+				$date_range = ',' . implode(',', $date_range_arr);
+			}
+
 			$js = <<<JS
 			$(function() {
 				$( "#{$id}" ).{$type}picker({ 
@@ -78,6 +96,9 @@
 					buttonImage: "{$this->img_cal}",
 					buttonText: "{$this->lang_select_date}",
 					buttonImageOnly: true
+					{$date_range}
+					//new Date(2018, 1 -1, 1),//Date(year, month, day, hours, minutes, seconds, milliseconds)
+					//new Date(2018, 12 -1, 31)
 				}).keyup(function(e) {
 					if(e.keyCode == 8 || e.keyCode == 46) {
 						$.datepicker._clearDate(this);
