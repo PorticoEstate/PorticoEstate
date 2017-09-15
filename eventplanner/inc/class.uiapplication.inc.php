@@ -417,8 +417,19 @@
 					array('order' => json_encode(array(1,'asc'))),
 				)
 			);
-			$GLOBALS['phpgw']->jqcal->add_listener('date_start');
-			$GLOBALS['phpgw']->jqcal->add_listener('date_end');
+
+			$config_calendar = array();
+			$active_year = !empty($config['active_year']) ? $config['active_year'] : null;
+			if($active_year)
+			{
+				$config_calendar = array(
+					'min_date' => "{$active_year}, 1 -1, 1",
+					'max_date' => "{$active_year}, 12 -1, 31"
+				);
+			}
+
+			$GLOBALS['phpgw']->jqcal->add_listener('date_start', 'date', '', $config_calendar);
+			$GLOBALS['phpgw']->jqcal->add_listener('date_end', 'date', '', $config_calendar);
 			$GLOBALS['phpgw']->jqcal2->add_listener('from_', 'datetime', $application->date_start, array(
 					'min_date' => date('Y/m/d', $application->date_start),
 					'max_date' => date('Y/m/d', $application->date_end)

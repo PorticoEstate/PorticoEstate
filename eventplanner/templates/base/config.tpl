@@ -29,6 +29,10 @@
 			</td>
 		</tr>
 		<tr>
+			<td>{lang_active_application_year}</td>
+			<td><input type="number" name="newsettings[active_year]" value="{value_active_year}"></td>
+		</tr>
+		<tr>
 			<td>{lang_receipt_blind_copy}:</td>
 			<td>
 				<input type="text" name="newsettings[receipt_blind_copy]" value="{value_receipt_blind_copy}">
