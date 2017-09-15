@@ -1745,6 +1745,8 @@
 				$value_set['branch_id'] = $ticket['branch_id'];
 				$value_set['tax_code'] = $ticket['tax_code'];
 				$value_set['continuous'] = $ticket['continuous'];
+				$value_set['order_deadline'] = $ticket['order_deadline'];// delete value if empty
+				$value_set['order_deadline2'] = $ticket['order_deadline2'];// delete value if empty
 
 				if(!empty($ticket['order_deadline']))
 				{
