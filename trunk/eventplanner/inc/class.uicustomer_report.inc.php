@@ -188,11 +188,14 @@
 				)
 			);
 
-			$filters = $this->_get_filters();
-
-			foreach ($filters as $filter)
+			if($this->currentapp == 'eventplanner')
 			{
-				array_unshift($data['form']['toolbar']['item'], $filter);
+				$filters = $this->_get_filters();
+
+				foreach ($filters as $filter)
+				{
+					array_unshift($data['form']['toolbar']['item'], $filter);
+				}
 			}
 
 			$parameters = array(
@@ -331,7 +334,7 @@
 			self::render_template_xsl(array('report','application_info', 'datatable_inline', 'attributes_form'), array($mode => $data));
 		}
 
-		
+
 		public function save()
 		{
 			parent::save();
