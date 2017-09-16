@@ -542,7 +542,9 @@
 										<thead>
 											<tr>
 												<th></th>
-												<th>Minutt</th>
+												<th>
+													<xsl:value-of select="php:function('lang', 'minute')"/>
+												</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -551,12 +553,15 @@
 													<xsl:value-of select="php:function('lang', 'rig up min before')"/>
 												</td>
 												<td>
-													<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{application/rig_up_min_before}" size="3">
+													<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{application/rig_up_min_before}" size="5">
 														<xsl:attribute name="data-validation">
 															<xsl:text>number</xsl:text>
 														</xsl:attribute>
-														<xsl:attribute name="data-validation-optional">
-															<xsl:text>true</xsl:text>
+														<xsl:attribute name="data-validation-error-msg">
+															<xsl:value-of select="php:function('lang', 'rig up min before')"/>
+														</xsl:attribute>
+														<xsl:attribute name="placeholder">
+															<xsl:value-of select="php:function('lang', 'integer')"/>
 														</xsl:attribute>
 													</input>
 												</td>
@@ -566,12 +571,15 @@
 													<xsl:value-of select="php:function('lang', 'rig down min after')"/>
 												</td>
 												<td>
-													<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{application/rig_down_min_after}" size="3">
+													<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{application/rig_down_min_after}" size="5">
 														<xsl:attribute name="data-validation">
 															<xsl:text>number</xsl:text>
 														</xsl:attribute>
-														<xsl:attribute name="data-validation-optional">
-															<xsl:text>true</xsl:text>
+														<xsl:attribute name="data-validation-error-msg">
+															<xsl:value-of select="php:function('lang', 'rig down min after')"/>
+														</xsl:attribute>
+														<xsl:attribute name="placeholder">
+															<xsl:value-of select="php:function('lang', 'integer')"/>
 														</xsl:attribute>
 													</input>
 												</td>

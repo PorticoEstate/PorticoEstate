@@ -126,7 +126,7 @@
 				),
 				'customer' => array(
 					'text' => lang('customer'),
-					'url' =>  phpgwapi_uicommon_jquery::link(  array('menuaction' => "eventplannerfrontend.uicustomer.index")),
+					'url' =>  phpgwapi_uicommon_jquery::link( array('menuaction' => "eventplannerfrontend.uicustomer.index")),
 					'image' => array('customer', 'navbar'),
 				),
 				'new_user' => array(
@@ -135,6 +135,19 @@
 					'image' => array('user', 'navbar'),
 				)
 		);
+
+			if ($GLOBALS['phpgw']->acl->check('.booking', PHPGW_ACL_READ, 'eventplannerfrontend'))
+			{
+				$menus['navigation']['customer']['children'] = array(
+						'booking' => array(
+							'text' => lang('my bookings'),
+							'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => "eventplannerfrontend.uibooking.index")),
+							'image' => array('customer', 'navbar'),
+						)
+					);
+
+			}
+
 			$GLOBALS['phpgw_info']['flags']['currentapp'] = $incoming_app;
 			return $menus;
 		}
