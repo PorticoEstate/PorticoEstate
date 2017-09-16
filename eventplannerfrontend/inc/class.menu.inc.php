@@ -145,6 +145,18 @@
 							'image' => array('customer', 'navbar'),
 						)
 					);
+				$menus['navigation']['customer']['children'] = array(
+						'booking' => array(
+							'text' => lang('my bookings'),
+							'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => "eventplannerfrontend.uibooking.index")),
+							'image' => array('customer', 'navbar'),
+						)
+					);
+				$menus['navigation']['customer']['children']['customer_report'] = array(
+							'text' => lang('My customer report'),
+							'url' => phpgwapi_uicommon_jquery::link( array('menuaction' => "eventplannerfrontend.uicustomer_report.index")),
+							'image' => array('customer_report', 'navbar'),
+					);
 
 			}
 
