@@ -291,6 +291,8 @@
 			$id = (int) $id;
 			$db = $this->db;
 			$db->transaction_begin();
+			$table_name = $this->table_name . '_cost';
+			$sql = "DELETE FROM $table_name WHERE allocation_id = ($id)";
 			$table_name = $this->table_name . '_resource';
 			$sql = "DELETE FROM $table_name WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
