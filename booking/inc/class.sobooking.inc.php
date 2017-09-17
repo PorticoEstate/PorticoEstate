@@ -467,6 +467,8 @@
 		{
 			$db = $this->db;
 			$db->transaction_begin();
+			$sql = "DELETE FROM bb_allocation_cost WHERE allocation_id = ($id)";
+			$db->query($sql, __LINE__, __FILE__);
 			$sql = "DELETE FROM bb_allocation_resource WHERE allocation_id = ($id)";
 			$db->query($sql, __LINE__, __FILE__);
 			$sql = "DELETE FROM bb_allocation WHERE id = ($id)";
