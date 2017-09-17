@@ -9827,3 +9827,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.720 to 0.9.17.721
+	*
+	*/
+	$test[] = '0.9.17.720';
+
+	function property_upgrade0_9_17_720()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AlterColumn('fm_request', 'title', array('type' => 'text',
+			'nullable' => True));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.721';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

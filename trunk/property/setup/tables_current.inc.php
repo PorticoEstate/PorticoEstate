@@ -951,7 +951,7 @@
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'condition_survey_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
-				'title' => array('type' => 'varchar', 'precision' => '100', 'nullable' => True),
+				'title' => array('type' => 'text', 'nullable' => True),
 				'project_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'p_num' => array('type' => 'varchar', 'precision' => '15', 'nullable' => True),
 				'p_entity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
