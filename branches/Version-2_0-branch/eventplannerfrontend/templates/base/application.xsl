@@ -44,6 +44,7 @@
 			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
 					<xsl:value-of disable-output-escaping="yes" select="tabs"/>
+					<!--
 					<div id="floating-box">
 						<div id="submitbox">
 							<xsl:variable name="lang_cancel">
@@ -77,6 +78,7 @@
 							</table>
 						</div>
 					</div>
+					-->
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
 					<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
@@ -154,8 +156,8 @@
 										<xsl:text>required</xsl:text>
 									</xsl:attribute>
 								</input>
-							
-								
+
+
 								<xsl:text> </xsl:text>
 								<a href="{new_vendor_url}" target="_blank">
 									<xsl:value-of select="php:function('lang', 'new')"/>
@@ -218,6 +220,12 @@
 									<xsl:value-of select="php:function('lang', 'other participants')"/>
 								</label>
 								<textarea cols="47" rows="7" name="other_participants" class="pure-input-1-2" >
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'other participants')"/>
+									</xsl:attribute>
 									<xsl:value-of select="application/other_participants"/>
 								</textarea>
 							</div>
@@ -302,6 +310,12 @@
 									<xsl:value-of select="php:function('lang', 'application public type')"/>
 								</label>
 								<select id="non_public" name="non_public" class="pure-input-1-2" >
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'application public type')"/>
+									</xsl:attribute>
 									<xsl:apply-templates select="list_public_types/options"/>
 								</select>
 							</div>
@@ -417,7 +431,7 @@
 								</textarea>
 							</div>
 						</fieldset>
-						
+
 					</div>
 					<div id="demands">
 						<fieldset>
@@ -429,31 +443,56 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'size of stage')"/>
 								</label>
-								<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}" size="2">
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'width')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation">
-										<xsl:text>number</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-								<xsl:text> X </xsl:text>
-								<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}" size="2">
-									<xsl:attribute name="data-validation">
-										<xsl:text>number</xsl:text>
-									</xsl:attribute>
-									<xsl:attribute name="title">
-										<xsl:value-of select="php:function('lang', 'depth')"/>
-									</xsl:attribute>
-									<xsl:attribute name="data-validation-optional">
-										<xsl:text>true</xsl:text>
-									</xsl:attribute>
-								</input>
-								<xsl:text> M </xsl:text>
-								<input id="stage_size" type="text" disabled="disabled" size="3"/>
+								<div class="pure-custom">
+									<table class="pure-table" border="0" cellspacing="2" cellpadding="2">
+										<thead>
+											<tr>
+												<th>
+													<xsl:value-of select="php:function('lang', 'width')"/>
+												</th>
+												<th>
+													<xsl:value-of select="php:function('lang', 'depth')"/>
+												</th>
+												<th>
+													<xsl:value-of select="php:function('lang', 'sum')"/>
+												</th>
+											</tr>
+										</thead>
+										<tbody id="application_stage_size">
+											<tr>
+												<td>
+													<input type="text" id="stage_width" name="stage_width" value="{application/stage_width}" size="2">
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'width')"/>
+														</xsl:attribute>
+														<xsl:attribute name="data-validation">
+															<xsl:text>number</xsl:text>
+														</xsl:attribute>
+														<xsl:attribute name="data-validation-optional">
+															<xsl:text>true</xsl:text>
+														</xsl:attribute>
+													</input>
+												</td>
+												<td>
+													<input type="text" id="stage_depth" name="stage_depth" value="{application/stage_depth}" size="2">
+														<xsl:attribute name="data-validation">
+															<xsl:text>number</xsl:text>
+														</xsl:attribute>
+														<xsl:attribute name="title">
+															<xsl:value-of select="php:function('lang', 'depth')"/>
+														</xsl:attribute>
+														<xsl:attribute name="data-validation-optional">
+															<xsl:text>true</xsl:text>
+														</xsl:attribute>
+													</input>
+												</td>
+												<td>
+													<input id="stage_size" type="text" disabled="disabled" size="3"/>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</div>
 							<div class="pure-control-group">
 								<label>
@@ -503,7 +542,9 @@
 										<thead>
 											<tr>
 												<th></th>
-												<th>Minutt</th>
+												<th>
+													<xsl:value-of select="php:function('lang', 'minute')"/>
+												</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -512,12 +553,15 @@
 													<xsl:value-of select="php:function('lang', 'rig up min before')"/>
 												</td>
 												<td>
-													<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{application/rig_up_min_before}" size="3">
+													<input type="text" id="rig_up_min_before" name="rig_up_min_before" value="{application/rig_up_min_before}" size="5">
 														<xsl:attribute name="data-validation">
 															<xsl:text>number</xsl:text>
 														</xsl:attribute>
-														<xsl:attribute name="data-validation-optional">
-															<xsl:text>true</xsl:text>
+														<xsl:attribute name="data-validation-error-msg">
+															<xsl:value-of select="php:function('lang', 'rig up min before')"/>
+														</xsl:attribute>
+														<xsl:attribute name="placeholder">
+															<xsl:value-of select="php:function('lang', 'integer')"/>
 														</xsl:attribute>
 													</input>
 												</td>
@@ -527,12 +571,15 @@
 													<xsl:value-of select="php:function('lang', 'rig down min after')"/>
 												</td>
 												<td>
-													<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{application/rig_down_min_after}" size="3">
+													<input type="text" id="rig_down_min_after" name="rig_down_min_after" value="{application/rig_down_min_after}" size="5">
 														<xsl:attribute name="data-validation">
 															<xsl:text>number</xsl:text>
 														</xsl:attribute>
-														<xsl:attribute name="data-validation-optional">
-															<xsl:text>true</xsl:text>
+														<xsl:attribute name="data-validation-error-msg">
+															<xsl:value-of select="php:function('lang', 'rig down min after')"/>
+														</xsl:attribute>
+														<xsl:attribute name="placeholder">
+															<xsl:value-of select="php:function('lang', 'integer')"/>
 														</xsl:attribute>
 													</input>
 												</td>
@@ -617,7 +664,7 @@
 
 											</tr>
 											<tr>
-												<td>Anna utstyr (prosjektor, lerret mm)</td>
+												<td>Annet utstyr (prosjektor, lerret mm)</td>
 												<td>
 												</td>
 												<td>
@@ -651,7 +698,7 @@
 						<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
 						<fieldset>
 							<legend>
-								<xsl:text>Curriculum vitae</xsl:text>
+								<xsl:text>CV</xsl:text>
 							</legend>
 							<xsl:call-template name="file_upload">
 								<xsl:with-param name="section">cv</xsl:with-param>
@@ -678,7 +725,7 @@
 						</fieldset>
 						<fieldset>
 							<legend>
-								<xsl:value-of select="php:function('lang', 'documents')"/>
+								<xsl:value-of select="php:function('lang', 'program description')"/>
 							</legend>
 							<xsl:call-template name="file_upload">
 								<xsl:with-param name="section">documents</xsl:with-param>

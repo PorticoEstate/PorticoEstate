@@ -10,10 +10,26 @@
 			parent::__construct();
 		}
 
+		public function index( )
+		{
+			if (empty($this->permissions[PHPGW_ACL_READ]))
+			{
+				phpgw::no_access();
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+				return $this->query();
+			}
+
+			self::set_active_menu("{$this->currentapp}::customer::booking");
+			parent::index();
+		}
+
 		public function query()
 		{
 			$params = $this->bo->build_default_read_params();
-			$params['filters']['status'] = eventplanner_application::STATUS_APPROVED;
+	//		$params['filters']['status'] = eventplanner_application::STATUS_APPROVED;
 			$values = $this->bo->read($params);
 			array_walk($values["results"], array($this, "_add_links"), "eventplannerfrontend.uibooking.edit");
 

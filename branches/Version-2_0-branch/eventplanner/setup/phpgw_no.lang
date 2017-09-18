@@ -45,7 +45,7 @@ labour support	eventplanner	no	Opprigging/nedrigging
 rig up min before	eventplanner	no	Antatt oppriggingstid
 rig down min after	eventplanner	no	Antatt nedriggingstid
 technical support	eventplanner	no	Teknisk støtte
-charge per unit	eventplanner	no	Betaling pr forestilling/kurs/omvisning
+charge per unit	eventplanner	no	Betaling pr arrangement
 event timespan	eventplanner	no	Programvarighet (minutter)
 number of units	eventplanner	no	Antall arrangement
 integer	eventplanner	no	Heltall
@@ -70,7 +70,7 @@ width	eventplanner	no	Bredde
 depth	eventplanner	no	Dybde
 wardrobe	eventplanner	no	Kryss av for behov for utøvergarderobe
 audience limit	eventplanner	no	Maksimum antall publikum
-raider	eventplanner	no	Andre raiderønsker – (valgfri)
+raider	eventplanner	no	Andre ønsker
 vendor report	eventplanner	no	Tilbakemelding fra utøver
 calendar	eventplanner	no	Kalender
 from	eventplanner	no	Fra
@@ -141,7 +141,7 @@ back to the ticket list	eventplanner	no	Tilbake til oversikten
 completed	eventplanner	no	fullført
 custom field groups	eventplanner	no	Gruppe av tilpassede felt
 customer category	eventplanner	no	Tilpasset kategory
-minute	eventplanner	no	Minutt
+minute	eventplanner	no	Minutter
 select date	eventplanner	no	Velg dato
 type	eventplanner	no	Type
 vendor category	eventplanner	no	Leverandør kategori
@@ -162,3 +162,10 @@ application public type public	eventplanner	no	 Breddetilbud (et arrangement der
 my applications	eventplanner	no	Mine søknader
 new application	eventplanner	no	Ny søknad
 new vendor	eventplanner	no	Ny utøver
+default vendor category	eventplanner	no	Default utøverkategori
+default application category	eventplanner	no	Default søknadskategori
+vendor name	eventplanner	no	Artistnavn/utøver/gruppe
+sum	eventplanner	no	Sum
+active application year	eventplanner	no	Aktivt søknadsår
+my bookings	eventplanner	no	Mine bookinger
+My customer report	eventplanner	no	Mine tilbakemeldinger

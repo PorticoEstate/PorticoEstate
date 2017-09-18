@@ -1193,9 +1193,13 @@
 			return $this->db->f('descr', true);
 		}
 
-		function get_vendor_contract ( $vendor_id )
+		function get_vendor_contract ( $vendor_id = 0)
 		{
 			$vendor_id = (int)$vendor_id;
+			if(!$vendor_id)
+			{
+				return array();
+			}
 			$this->db->query("SELECT contract_id, name FROM fm_agreement WHERE status = 'active' AND contract_id IS NOT NULL AND vendor_id = {$vendor_id}", __LINE__, __FILE__);
 			$values = array();
 			while ($this->db->next_record())

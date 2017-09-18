@@ -2183,6 +2183,7 @@ HTML;
 			if ($access_order)
 			{
 				$GLOBALS['phpgw']->jqcal->add_listener('order_deadline');
+				$GLOBALS['phpgw']->jqcal->add_listener('order_deadline2');
 
 				$b_account_data = $this->bocommon->initiate_ui_budget_account_lookup(array
 					(
@@ -3019,6 +3020,7 @@ HTML;
 				'value_target' => $ticket['target'],
 				'value_finnish_date' => $ticket['finnish_date'],
 				'value_order_deadline' => $ticket['order_deadline'],
+				'value_order_deadline2' => $ticket['order_deadline2'],
 				'link_entity' => $link_entity,
 				'msgbox_data' => $GLOBALS['phpgw']->common->msgbox($msgbox_data),
 				'location_data2' => $location_data,
@@ -3389,7 +3391,11 @@ HTML;
 
 			if($ticket['order_deadline'])
 			{
-				$data[] = array('col1' => lang('deadline'), 'col2' =>"<b>{$ticket['order_deadline']}</b>");
+				$data[] = array('col1' => lang('deadline for start'), 'col2' =>"<b>{$ticket['order_deadline']}</b>");
+			}
+			if($ticket['order_deadline2'])
+			{
+				$data[] = array('col1' => lang('deadline for execution'), 'col2' =>"<b>{$ticket['order_deadline2']}</b>");
 			}
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings' => 0,
@@ -3721,9 +3727,14 @@ HTML;
 				}
 			}
 
+			$user_phone = str_replace(' ', '', $user_phone);
 			$contact_phone = str_replace(' ', '', $contact_phone);
 			$contact_phone2 = str_replace(' ', '', $contact_phone2);
 
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone,  $matches ) )
+			{
+				$user_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
 			{
 				$contact_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
@@ -3792,7 +3803,7 @@ HTML;
 					. "{$department}<br/>"
 					. "Org.nr: {$this->bo->config->config_data['org_unit_id']}"
 					. "</td>";
-			$body .= "<td valign='top'>v/saksbehandler: {$user_name}<br/>"
+			$body .= "<td valign='top'>Saksbehandler: {$user_name}<br/>"
 					. "Ressursnr.: {$ressursnr}<br/>"
 					. "</td>";
 			$body .= "</tr>";
@@ -3808,10 +3819,55 @@ HTML;
 
 			$deadline_block = '';
 
+			if($ticket['order_deadline'] || $ticket['order_deadline2'])
+			{
+				$deadline_block .= "<br/><table id='order_deadline'><tr>";
+			}
+
 			if($ticket['order_deadline'])
 			{
-				$deadline_block .= "<br/><b>" . lang('deadline') . '</b>';
-				$deadline_block .= "<br/>" . $ticket['order_deadline'];
+				$deadline_block .= "<td><b>" . lang('deadline for start') . '</b></td>';
+			}
+			if($ticket['order_deadline2'])
+			{
+				$deadline_block .= "<td><b>" . lang('deadline for execution') . '</b></td></tr>';
+			}
+			else
+			{
+				$deadline_block .= '</tr>';
+			}
+			if($ticket['order_deadline'])
+			{
+				$deadline_block .= "<tr><td>" . $ticket['order_deadline'] . "</td>";
+			}
+			if($ticket['order_deadline2'])
+			{
+				$deadline_block .= "<td>" . $ticket['order_deadline2'] . "</td>";
+			}
+			else
+			{
+				$deadline_block .= '</tr>';
+			}
+			if($deadline_block)
+			{
+				$deadline_block .= "</tr></table>";
+			}
+
+			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor = true);
+
+			$important_imformation = '';
+			if($location_exceptions)
+			{
+				$important_imformation .= "<b>" . lang('important information') . '</b>';
+			}
+			foreach ($location_exceptions as $location_exception)
+			{
+				$important_imformation .= "<br/>" . $location_exception['category_text'];
+
+				if($location_exception['location_descr'])
+				{
+					$important_imformation .= "<br/>" . $location_exception['location_descr'];
+				}
 			}
 
 			$body .= '<br/>'. nl2br(str_replace(array
@@ -3825,6 +3881,7 @@ HTML;
 				'__location__',
 				'__order_description__',
 				'__deadline_block__',
+				'__important_imformation__',
 				'__contact_block__',
 				'__contact_name__',
 				'__contact_email__',
@@ -3843,6 +3900,7 @@ HTML;
 				$location,
 				$order_description,
 				$deadline_block,
+				$important_imformation,
 				$contact_block,
 				$contact_name,
 				$contact_email,
@@ -3852,21 +3910,6 @@ HTML;
 				'</b>'
 					), $order_email_template));
 
-			$location_exceptions = createObject('property.solocation')->get_location_exception($ticket['location_code'], $alert_vendor = true);
-
-			if($location_exceptions)
-			{
-				$body .= "<br/><br/><b>" . lang('important information') . '</b>';
-			}
-			foreach ($location_exceptions as $location_exception)
-			{
-				$body .= "<br/>" . $location_exception['category_text'] . '<br/>';
-
-				if($location_exception['location_descr'])
-				{
-					$body .= $location_exception['location_descr'] . '<br/>';
-				}
-			}
 
 
 			$html = "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"><title>{$subject}</title>";
@@ -3883,6 +3926,14 @@ HTML;
 		size: A4;
 		}
 
+		#order_deadline{
+			width: 800px;
+			border:0px solid transparent;
+		}
+
+		#order_deadline td{
+			border:0px solid transparent;
+		}
 		@media print {
 		li {page-break-inside: avoid;}
 		h1, h2, h3, h4, h5 {
