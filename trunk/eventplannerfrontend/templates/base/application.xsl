@@ -39,7 +39,7 @@
 			</xsl:variable>
 
 			<script type="text/javascript">
-				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save')"/>;
+				var lang = <xsl:value-of select="php:function('js_lang', 'Name or company is required', 'next', 'save', 'send')"/>;
 			</script>
 			<form id="form" name="form" method="post" action="{$form_action}" class="pure-form pure-form-aligned">
 				<div id="tab-content">
