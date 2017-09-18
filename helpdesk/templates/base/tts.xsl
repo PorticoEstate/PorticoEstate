@@ -23,8 +23,8 @@
 
 		function response_lookup()
 		{
-			var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
-			var strURL = phpGWLink('index.php', oArgs);
+		var oArgs = {menuaction:'helpdesk.uilookup.response_template',type:'response_template'};
+		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
 	</script>
@@ -343,6 +343,20 @@
 						</label>
 						<xsl:value-of select="value_owned_by"/>
 					</div>
+					<xsl:if test="forward_user ='1'">
+						<div class="pure-control-group">
+							<xsl:variable name="lang_forward">
+								<xsl:value-of select="php:function('lang', 'forward')"/>
+							</xsl:variable>
+							<label>
+								<xsl:value-of select="$lang_forward"/>
+							</label>
+							<input type="hidden" id="forward_user_id" name="values[forward_user_id]"  value="{value_forward_user}"/>
+							<input type="text" id="forward_user_name" name="values[forward_user_name]" value="{value_forward_user_name}" class="pure-input-1-2">
+							</input>
+							<div id="forward_user_container"/>
+						</div>
+					</xsl:if>
 					<xsl:for-each select="value_origin">
 						<div class="pure-control-group">
 							<label>

@@ -789,7 +789,7 @@
 			$old_order_cat_id = $this->db->f('order_cat_id');
 			$old_building_part = $this->db->f('building_part', true);
 			$old_order_dim1 = (int)$this->db->f('order_dim1');
-
+			$old_user_id = $this->db->f('user_id');
 
 			if ($oldcat_id == 0)
 			{
@@ -838,6 +838,7 @@
 			 * * C% - Status change
 			 * * L - Location changed
 			 * * M - Mail sent to vendor
+			 * * FW - Forwarded
 			 */
 
 			if (!$simple)
@@ -1060,6 +1061,14 @@
 				$receipt['message'][] = array('msg' => lang('billable hours has been updated'));
 			}
 
+			if (!empty($ticket['forward_user_id']) &&  $old_user_id != $ticket['forward_user_id'] && $oldassigned ==  $this->account)
+			{
+				$forward_user_id = (int) $ticket['forward_user_id'];
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET user_id = {$forward_user_id}"
+					. " WHERE id='{$id}'", __LINE__, __FILE__);
+				$this->historylog->add('FW', $id, $forward_user_id, $old_user_id);
+				$receipt['message'][] = array('msg' => lang('ticket is forwarded'));
+			}
 
 			$value_set = array();
 

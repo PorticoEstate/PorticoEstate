@@ -2085,8 +2085,9 @@ JS;
 						'type' => 'tax', 'selected' => $ticket['tax_code'], 'order' => 'id',
 						'id_in_name' => 'num'))),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'forward_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false
 			);
-
+ 
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');
