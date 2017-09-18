@@ -267,6 +267,7 @@
 				'SC' => lang('Status changed'),
 				'M' => lang('Sent by email to'),
 				'AC'=> lang('actual cost changed'),
+				'FW'=> lang('ticket is forwarded'),
 			);
 
 			$custom_status	= $this->so->get_custom_status();
@@ -600,6 +601,7 @@
 				case 'IF': $type = lang('Initial finnish date'); break;
 				case 'L': $type = lang('Location changed'); break;
 				case 'AC': $type = lang('actual cost changed'); break;
+				case 'FW': $type = lang('ticket is forwarded'); break;
 				case 'M':
 					$type = lang('Sent by email to');
 					$this->order_sent_adress = $value['new_value']; // in case we want to resend the order as an reminder
@@ -645,6 +647,11 @@
 				{
 					$record_history[$i]['value_new_value']	= $this->get_category_name($value['new_value']);
 					$record_history[$i]['value_old_value']	= $this->get_category_name($value['old_value']);
+				}
+				else if ($value['status'] == 'FW')
+				{
+					$record_history[$i]['value_new_value']	= $GLOBALS['phpgw']->accounts->get($value['new_value'])->__toString();
+					$record_history[$i]['value_old_value']	= $GLOBALS['phpgw']->accounts->get($value['old_value'])->__toString();
 				}
 				else if (($value['status'] == 'F') || ($value['status'] =='IF'))
 				{
