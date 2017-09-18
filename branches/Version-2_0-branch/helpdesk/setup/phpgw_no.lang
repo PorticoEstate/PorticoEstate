@@ -215,3 +215,5 @@ ticket attributes	helpdesk	no	Meldingsattributter
 ticket categories	helpdesk	no	Meldingskategorier
 ticket status	helpdesk	no	Meldingsstatus
 url	helpdesk	no	Url
+forward	helpdesk	no	Videresend
+ticket is forwarded	helpdesk	no	Melding er videresendt
