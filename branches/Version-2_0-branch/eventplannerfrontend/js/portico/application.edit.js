@@ -206,8 +206,8 @@ check_button_names = function ()
 	{
 		if (id > 0)
 		{
-	//		$("#save_button").val(lang['save']);
-			$("#save_button_bottom").val(lang['save']);
+	//		$("#save_button").val(lang['send']);
+			$("#save_button_bottom").val(lang['send']);
 		}
 		else
 		{
@@ -221,8 +221,8 @@ check_button_names = function ()
 	{
 		if (id > 0)
 		{
-//			$("#save_button").val(lang['save']);
-			$("#save_button_bottom").val(lang['save']);
+//			$("#save_button").val(lang['send']);
+			$("#save_button_bottom").val(lang['send']);
 		}
 		else
 		{
@@ -234,8 +234,8 @@ check_button_names = function ()
 	}
 	else
 	{
-//		$("#save_button").val(lang['save']);
-		$("#save_button_bottom").val(lang['save']);
+//		$("#save_button").val(lang['send']);
+		$("#save_button_bottom").val(lang['send']);
 //		$("#floating-box").show();
 		$("#submit_group_bottom").show();
 	}
