@@ -20,12 +20,14 @@
 		'nonavbar'               => True
 	);
 
+	$session_name = 'eventplannerfrontendsession';
+	$GLOBALS['phpgw_info']['flags']['session_name'] = $session_name;
+
 	/**
 	* Include phpgroupware header
 	*/
 	include_once('../header.inc.php');
 
-	$session_name = 'eventplannerfrontendsession';
 	$sessionid = phpgw::get_var($session_name);
 
 	$verified = $GLOBALS['phpgw']->session->verify();

@@ -55,6 +55,15 @@
 			return self::$so;
 		}
 
+		function _get_conditions( $query, $filters )
+		{
+			$clauses = parent::_get_conditions($query, $filters);
+
+			$clauses .= ' AND customer_id IS NOT NULL';
+
+			return $clauses;
+
+		}
 		function get_acl_condition( )
 		{
 			if($this->relaxe_acl)

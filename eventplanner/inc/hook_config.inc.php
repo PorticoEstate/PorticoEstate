@@ -42,3 +42,66 @@
 		return $cat_select;
 	}
 
+	function default_vendor_category( $config )
+	{
+		$selected = isset($config['default_vendor_category']) ? $config['default_vendor_category'] : null;
+
+		$status_entries = execMethod('eventplanner.bogeneric.get_list', array('type' => 'vendor_category',
+			'selected' => $selected));
+
+		$out = '<option value="">' . lang('none selected') . '</option>' . "\n";
+		foreach ($status_entries as $status)
+		{
+			$selected = $status['selected'] ? ' selected = "selected"' : '';
+
+			$out .= <<<HTML
+			<option value='{$status['id']}'{$selected}>{$status['name']}</option>
+HTML;
+		}
+		return $out;
+	}
+
+	function vendor_receipt_text_editor( $config )
+	{
+		phpgw::import_class('phpgwapi.jquery');
+		if (empty($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			|| $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] != 'ckeditor')
+		{
+			return;
+		}
+		phpgwapi_jquery::init_ckeditor('vendor_receipt_text');
+	}
+
+	function customer_receipt_text_editor( $config )
+	{
+		phpgw::import_class('phpgwapi.jquery');
+		if (empty($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			|| $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] != 'ckeditor')
+		{
+			return;
+		}
+		phpgwapi_jquery::init_ckeditor('customer_receipt_text');
+	}
+
+	function vendor_canceled_text_editor( $config )
+	{
+		phpgw::import_class('phpgwapi.jquery');
+		if (empty($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			|| $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] != 'ckeditor')
+		{
+			return;
+		}
+		phpgwapi_jquery::init_ckeditor('vendor_canceled_text');
+	}
+
+	function customer_canceled_text_editor( $config )
+	{
+		phpgw::import_class('phpgwapi.jquery');
+		if (empty($GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'])
+			|| $GLOBALS['phpgw_info']['user']['preferences']['common']['rteditor'] != 'ckeditor')
+		{
+			return;
+		}
+		phpgwapi_jquery::init_ckeditor('customer_canceled_text');
+	}
+

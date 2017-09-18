@@ -987,43 +987,88 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'deadline')"/>
 										</label>
+										<table class="pure-table pure-u-md-1-2">
+											<thead>
+												<tr>
+													<th>
+														<xsl:value-of select="php:function('lang', 'deadline for start')"/>
+													</th>
+													<th>
+														<xsl:value-of select="php:function('lang', 'deadline for execution')"/>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
 
-										<input type="text" id="order_deadline" name="values[order_deadline]" size="10" value="{value_order_deadline}" readonly="readonly">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'order deadline')"/>
-											</xsl:attribute>
-										</input>
+														<input type="text" id="order_deadline" name="values[order_deadline]" size="10" value="{value_order_deadline}" readonly="readonly">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'deadline for start')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+
+														<input type="text" id="order_deadline2" name="values[order_deadline2]" size="10" value="{value_order_deadline2}" readonly="readonly">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'deadline for execution')"/>
+															</xsl:attribute>
+														</input>
+
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
 									</div>
 
 									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
-										</label>
-										<input class="pure-input-1-2" id="field_budget" type="text" name="values[budget]">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
-											</xsl:attribute>
-										</input>
-										<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 										<xsl:variable name="lang_period">
 											<xsl:value-of select="php:function('lang', 'period')"/>
 										</xsl:variable>
+										<label>
+											<xsl:value-of select="php:function('lang', 'cost estimate')"/>
+										</label>
+										<table class="pure-table pure-u-md-1-2">
+											<thead>
+												<tr>
+													<th>
+														<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+														<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
+													</th>
+													<th>
+														<xsl:value-of select='$lang_period'/>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
 
-										<select name="values[budget_period]">
-											<xsl:attribute name="title">
-												<xsl:value-of select='$lang_period'/>
-											</xsl:attribute>
-											<xsl:apply-templates select="year_list/options"/>
-										</select>
-
-										<xsl:text> </xsl:text> [ <xsl:value-of select='$lang_period'/> ]
+														<input  id="field_budget" type="text" name="values[budget]">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<select name="values[budget_period]" style="width: 14em;">
+															<xsl:attribute name="title">
+																<xsl:value-of select='$lang_period'/>
+															</xsl:attribute>
+															<xsl:apply-templates select="year_list/options"/>
+														</select>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'budget')"/>
 										</label>
-
-										<div class = 'pure-u-md-1-3'>
+										<div class = 'pure-u-md-1-2'>
 											<!--div  id="paging_4"> </div>
 											<div class="pure-table" id="datatable-container_4"/-->
 											<xsl:for-each select="datatable_def">
@@ -1042,38 +1087,53 @@
 										</div>
 									</div>
 
-
-
-
 									<div class="pure-control-group">
-										<label>
-											<xsl:value-of select="php:function('lang', 'payment')"/>
-										</label>
-										<input type="text" name="values[actual_cost]">
-											<xsl:attribute name="title">
-												<xsl:value-of select="php:function('lang', 'Enter actual cost')"/>
-											</xsl:attribute>
-										</input>
-										<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 										<xsl:variable name="lang_period">
 											<xsl:value-of select="php:function('lang', 'period')"/>
 										</xsl:variable>
+										<label>
+											<xsl:value-of select="php:function('lang', 'payment')"/>
+										</label>
+										<table class="pure-table pure-u-md-1-2">
+											<thead>
+												<tr>
+													<th>
+														<xsl:value-of select="php:function('lang', 'Enter actual cost')"/>
+														<xsl:text> </xsl:text> [ <xsl:value-of select="currency"/> ]
 
-										<select name="values[actual_cost_period]" class="pure-input-1-2">
-											<xsl:attribute name="title">
-												<xsl:value-of select='$lang_period'/>
-											</xsl:attribute>
-											<xsl:apply-templates select="period_list/options"/>
-										</select>
-
-										<xsl:text> </xsl:text> [ <xsl:value-of select='$lang_period'/> ]
+													</th>
+													<th>
+														<xsl:value-of select='$lang_period'/>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<input type="text" name="values[actual_cost]">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'Enter actual cost')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+													<td>
+														<select name="values[actual_cost_period]" style="width: 14em;">
+															<xsl:attribute name="title">
+																<xsl:value-of select='$lang_period'/>
+															</xsl:attribute>
+															<xsl:apply-templates select="period_list/options"/>
+														</select>
+													</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 									<div class="pure-control-group">
 										<label>
 											<xsl:value-of select="php:function('lang', 'actual cost')"/>
 										</label>
 												
-										<div class = 'pure-u-md-1-3'>
+										<div class = 'pure-u-md-1-2'>
 											<!--div  id="paging_4"> </div>
 											<div class="pure-table" id="datatable-container_4"/-->
 											<xsl:for-each select="datatable_def">
@@ -1107,51 +1167,53 @@
 											<xsl:value-of select="php:function('lang', 'send order')"/>
 										</label>
 										<table class="pure-table pure-u-md-1-2">
-											<tr>
-												<td valign = 'top'>
-													<select name="values[send_order_format]">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'format')"/>
-														</xsl:attribute>
-														<option value="html">
-															<xsl:text>HTML</xsl:text>
-														</option>
-														<option value="pdf">
-															<xsl:text>PDF</xsl:text>
-														</option>
-													</select>
-												</td>
-												<td>
-													<!--div id="paging_3"/>
-													<div class="pure-table" id="datatable-container_3"/-->
-													<xsl:for-each select="datatable_def">
-														<xsl:if test="container = 'datatable-container_3'">
-															<xsl:call-template name="table_setup">
-																<xsl:with-param name="container" select ='container'/>
-																<xsl:with-param name="requestUrl" select ='requestUrl'/>
-																<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-																<xsl:with-param name="data" select ='data'/>
-																<xsl:with-param name="tabletools" select ='tabletools' />
-																<xsl:with-param name="config" select ='config'/>
-															</xsl:call-template>
-														</xsl:if>
-													</xsl:for-each>
-												</td>
-											</tr>
-											<tr>
-												<td valign="top">
-													<label>
-														<xsl:value-of select="php:function('lang', 'extra mail address')"/>
-													</label>
-												</td>
-												<td>
-													<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
-														<xsl:attribute name="title">
-															<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
-														</xsl:attribute>
-													</input>
-												</td>
-											</tr>
+											<thead>
+												<tr>
+													<th>
+														<select name="values[send_order_format]">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'format')"/>
+															</xsl:attribute>
+															<option value="html">
+																<xsl:text>HTML</xsl:text>
+															</option>
+															<option value="pdf">
+																<xsl:text>PDF</xsl:text>
+															</option>
+														</select>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>
+														<xsl:for-each select="datatable_def">
+															<xsl:if test="container = 'datatable-container_3'">
+																<xsl:call-template name="table_setup">
+																	<xsl:with-param name="container" select ='container'/>
+																	<xsl:with-param name="requestUrl" select ='requestUrl'/>
+																	<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+																	<xsl:with-param name="data" select ='data'/>
+																	<xsl:with-param name="tabletools" select ='tabletools' />
+																	<xsl:with-param name="config" select ='config'/>
+																</xsl:call-template>
+															</xsl:if>
+														</xsl:for-each>
+													</td>
+												</tr>
+												<tr>
+													<td>
+														<label>
+															<xsl:value-of select="php:function('lang', 'extra mail address')"/>
+														</label>
+														<input type="text" name="values[vendor_email][]" value="{value_extra_mail_address}">
+															<xsl:attribute name="title">
+																<xsl:value-of select="php:function('lang', 'The order will also be sent to this one')"/>
+															</xsl:attribute>
+														</input>
+													</td>
+												</tr>
+											</tbody>
 										</table>
 
 									</div>

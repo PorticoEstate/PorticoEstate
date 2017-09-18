@@ -706,6 +706,7 @@
 				}
 				$ticket['finnish_date'] = !empty($ticket['finnish_date']) ? $GLOBALS['phpgw']->common->show_date($ticket['finnish_date'], $this->dateformat) : '';
 				$ticket['order_deadline'] = !empty($ticket['order_deadline'])  ? $GLOBALS['phpgw']->common->show_date($ticket['order_deadline'], $this->dateformat) : '';
+				$ticket['order_deadline2'] = !empty($ticket['order_deadline2'])  ? $GLOBALS['phpgw']->common->show_date($ticket['order_deadline2'], $this->dateformat) : '';
 
 				/*
 				  if ($ticket['status'] == 'X')
@@ -786,6 +787,10 @@
 			if ($ticket['order_deadline'])
 			{
 				$ticket['order_deadline'] = $GLOBALS['phpgw']->common->show_date($ticket['order_deadline'], $this->dateformat);
+			}
+			if ($ticket['order_deadline2'])
+			{
+				$ticket['order_deadline2'] = $GLOBALS['phpgw']->common->show_date($ticket['order_deadline2'], $this->dateformat);
 			}
 
 			if ($ticket['location_code'])
