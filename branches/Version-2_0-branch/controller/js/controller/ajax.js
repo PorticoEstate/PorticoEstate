@@ -130,6 +130,53 @@ $(document).ready(function ()
 			}
 		});
 	});
+	
+	// FETCHES RELATED CONTROL ITEMS WHEN CONTROL AREA IS CHOSEN
+	$("#toolbar select#control_areas").change(function ()
+	{
+		var control_area_id = $(this).val();
+		var oArgs = {menuaction: 'controller.uicontrol_group.get_control_groups_by_control_area'};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$("#hidden_control_area_id").val(control_area_id);
+		var control_group_id_init = $("#hidden_control_group_id").val();
+		if(control_area_id == '')
+			control_area_id = 'all';
+		var htmlString = "";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: requestUrl + "&control_area_id=" + control_area_id,
+			success: function (data)
+			{
+				if (data != null)
+				{
+					htmlString = "<option>Velg kontrollgruppe</option>"
+					var obj = JSON.parse(data);
+
+					$.each(obj, function (i)
+					{
+
+						var selected = '';
+						if (obj[i].id == control_group_id_init)
+						{
+							selected = ' selected';
+						}
+						htmlString += "<option value='" + obj[i].id + "'" + selected + ">" + obj[i].group_name + "</option>";
+					});
+
+					$("#control_groups").html(htmlString);
+				}
+				else
+				{
+					htmlString += "<option>Ingen kontrollgruppe</option>"
+					$("#control_groups").html(htmlString);
+					$("#hidden_control_group_id").val(-1); //reset
+				}
+			}
+		});
+	});
 
 
 	/* ================================  COMPONENT ================================== */

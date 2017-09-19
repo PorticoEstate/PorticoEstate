@@ -120,14 +120,14 @@
 					'toolbar' => array(
 						'item' => array(
 							array('type' => 'filter',
-								'name' => 'control_groups',
-								'text' => lang('Control_group') . ':',
-								'list' => $this->so_control_group->get_control_group_select_array(),
-							),
-							array('type' => 'filter',
 								'name' => 'control_areas',
 								'text' => lang('Control_area'),
 								'list' => $control_areas_array2,
+							),
+							array('type' => 'filter',
+								'name' => 'control_groups',
+								'text' => lang('Control_group') . ':',
+								'list' => $this->so_control_group->get_control_group_select_array(),
 							)
 						)
 					)
@@ -192,7 +192,8 @@
 				)),
 				'parameters' => json_encode($parameters)
 			);
-
+			
+			self::add_javascript('controller', 'controller', 'ajax.js');
 			self::render_template_xsl(array('datatable_jquery'), $data);
 		}
 
