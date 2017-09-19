@@ -108,7 +108,11 @@
 					throw new Exception("Ordrenummer '{$values['order_id']}' er utenfor serien:<br/>" . __FILE__ . '<br/>linje:' . __LINE__);
 				}
 
-				if($this->ordered_amount)
+				if(empty($this->values['continuous']))
+				{
+					$quantity = 1; // closing the order
+				}
+				else if($this->ordered_amount)
 				{
 					$quantity = $received_amount/$this->ordered_amount;
 				}
