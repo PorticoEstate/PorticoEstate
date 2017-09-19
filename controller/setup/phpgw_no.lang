@@ -293,7 +293,7 @@ Procedure start date	controller	no	Startdato
 Procedure end date	controller	no	Sluttdato
 Procedure valid from date	controller	no	Gyldig fra
 New control item	controller	no	Nytt kontrollpunkt
-Control item title	controller	no	Tittel
+Control item title	controller	no	Kontrollpunkt
 Control_group	controller	no	Kontrollgruppe
 Control group	controller	no	Kontrollgruppe
 Control_groups	controller	no	Kontrollgrupper
