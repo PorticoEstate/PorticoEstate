@@ -426,12 +426,14 @@
 				}
 
 				$update_voucher = false;
+				$receive_order_performed = false;
 				$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
 				$this->db->query($sql, __LINE__, __FILE__);
 				if ($this->db->next_record())
 				{
 					$this->skip_update_voucher_id = true;
 					$update_voucher = true;
+					$receive_order_performed = true;
 					$bilagsnr = $this->db->f('bilagsnr');
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
 					$this->receipt['message'][] = array('msg' => "Oppdatert med nye data i arbeidsregister: ordre = {$_order_id}, bilag = {$_data['KEY']}");
@@ -443,6 +445,7 @@
 				{
 					$this->skip_update_voucher_id = true;
 					$update_voucher = true;
+					$receive_order_performed = true;
 					$bilagsnr = $this->db->f('bilagsnr');
 
 					$buffer[$i]['bilagsnr'] = $bilagsnr;
@@ -543,7 +546,7 @@
 				{
 					$bilagsnr = $this->import_end_file($buffer);
 
-					if($this->config->config_data['export']['auto_receive_order'])
+					if(!$receive_order_performed && $this->config->config_data['export']['auto_receive_order'])
 					{
 						$received_amount = $this->get_total_received((int)$order_id);
 
