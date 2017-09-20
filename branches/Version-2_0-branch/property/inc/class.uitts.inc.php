@@ -3318,42 +3318,38 @@ HTML;
 
 			$pdf->ezStartPageNumbers(500, 28, 6, 'right', '{PAGENUM} ' . lang('of') . ' {TOTALPAGENUM}', 1);
 
-			$data = array
-				(
-				array(
-					'col1' => "{$this->bo->config->config_data['org_name']}\n\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
-					'col2' => lang('Order'),
-					'col3' => lang('order id') . "\n\n{$ticket['order_id']}")
-			);
+			$organisation = '';
+			$contact_name = '';
+			$contact_email = '';
+			$contact_phone = '';
+			$contact_name2  = '';
+			$contact_email2 = '';
+			$contact_phone3 = '';
 
-			$pdf->ezTable($data, array('col1' => '', 'col2' => '', 'col3' => ''), '', array(
-				'showHeadings' => 0, 'shaded' => 0, 'xPos' => 0,
+			if (isset($this->bo->config->config_data['org_name']))
+			{
+				$organisation = $this->bo->config->config_data['org_name'];
+			}
+			if (isset($this->bo->config->config_data['department']))
+			{
+				$department = $this->bo->config->config_data['department'];
+			}
+
+			$data = array(
+				array(
+					'col1' => lang('order id') . " <b>{$ticket['order_id']}</b>",
+					'col2' => lang('date') . ": {$date}"
+			));
+
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array('showHeadings' => 0,
+				'shaded' => 0, 'xPos' => 0,
 				'xOrientation' => 'right', 'width' => 500, 'gridlines' => EZ_GRIDLINE_ALL,
 				'cols' => array
 					(
-					'col1' => array('justification' => 'right', 'width' => 200, 'justification' => 'left'),
-					'col2' => array('justification' => 'right', 'width' => 100, 'justification' => 'center'),
-					'col3' => array('justification' => 'right', 'width' => 200),
+					'col1' => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
+					'col2' => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
 				)
 			));
-
-
-			$delivery_address = lang('delivery address') . ':';
-			if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
-			{
-				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
-			}
-			else
-			{
-				$location_code = $ticket['location_data']['location_code'];
-				$address_element = execMethod('property.botts.get_address_element', $location_code);
-				foreach ($address_element as $entry)
-				{
-					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
-				}
-			}
-
-			$invoice_address = lang('invoice address') . ":\n{$this->bo->config->config_data['invoice_address']}";
 
 			$GLOBALS['phpgw']->preferences->set_account_id($common_data['workorder']['user_id'], true);
 
@@ -3370,12 +3366,64 @@ HTML;
 				$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
 			}
 
-			$from = lang('date') . ": {$date}\n";
-			$from .= lang('dimb') . ": {$ticket['ecodimb']}\n";
-			$from .= lang('from') . ":\n   {$from_name}";
-			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
-			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
+			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
+			$data = array(
+				array(
+					'col1' => "{$organisation}\n{$department}\nOrg.nr: {$this->bo->config->config_data['org_unit_id']}",
+					'col2' => "Saksbehandler: {$from_name}\nRessursnr.: {$ressursnr}"
+				),
+			);
 
+			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), '', array(
+				'showHeadings' => 0, 'shaded' => 0, 'xPos' => 0,
+				'xOrientation' => 'right', 'width' => 500, 'gridlines' => EZ_GRIDLINE_ALL,
+				'cols' => array
+					(
+					'col1' => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
+					'col2' => array('justification' => 'right', 'width' => 250, 'justification' => 'left'),
+				)
+			));
+
+
+			$delivery_address = lang('delivery address') . ':';
+			if (isset($this->bo->config->config_data['delivery_address']) && $this->bo->config->config_data['delivery_address'])
+			{
+				$delivery_address .= "\n{$this->bo->config->config_data['delivery_address']}";
+			}
+			else
+			{
+				$delivery_address .= "\n" . createObject('property.solocation')->get_location_address($ticket['location_code'])."\n";
+				$location_code = $ticket['location_data']['location_code'];
+				$address_element = execMethod('property.botts.get_address_element', $location_code);
+				foreach ($address_element as $entry)
+				{
+					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
+				}
+			}
+
+			$data = array
+				(
+				array('col1' => $delivery_address)
+			);
+
+			$pdf->ezTable($data, array('col1' => ''), '', array('showHeadings' => 0,
+				'shaded' => 0, 'xPos' => 0,
+				'xOrientation' => 'right', 'width' => 500, 'gridlines' => EZ_GRIDLINE_ALL,
+				'cols' => array
+					(
+					'col1' => array('justification' => 'right', 'width' => 500, 'justification' => 'left'),
+				)
+			));
+
+			$invoice_address = lang('invoice address') . ":\n{$this->bo->config->config_data['invoice_address']}";
+
+
+//			$from = lang('date') . ": {$date}\n";
+//			$from .= lang('dimb') . ": {$ticket['ecodimb']}\n";
+//			$from .= lang('from') . ":\n   {$from_name}";
+//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
+//			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
+//
 
 
 			if (isset($ticket['vendor_id']) && $ticket['vendor_id'])
@@ -3385,8 +3433,7 @@ HTML;
 
 			$data = array
 				(
-				array('col1' => lang('vendor') . ":\n{$ticket['vendor_name']}", 'col2' => $delivery_address),
-				array('col1' => $from, 'col2' => $invoice_address)
+				array('col1' => lang('to') . ":\n{$ticket['vendor_name']}", 'col2' => $invoice_address),
 			);
 
 			if($ticket['order_deadline'])
@@ -3412,7 +3459,6 @@ HTML;
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
 			$pdf->ezText(lang('descr') . ':', 20);
 			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
-			$ressursnr = $GLOBALS['phpgw_info']['user']['preferences']['property']['ressursnr'];
 
 			$contact_data = $this->bocommon->initiate_ui_contact_lookup(array(
 				'contact_id' => $ticket['contact_id'],
@@ -3436,6 +3482,9 @@ HTML;
 			$pdf->ezText($ticket['order_descr'], 14);
 			$pdf->ezSetDy(-20);
 
+			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
+			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
+			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
 			$order_contact_block_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_contact_block_1'];
 
 			if (!empty($this->bo->config->config_data['contact_at_location']))
@@ -3467,35 +3516,59 @@ HTML;
 				}
 			}
 
-			$contact_block = str_replace(array
-				(
-				'__user_name__',
-				'__user_phone__',
-				'__user_email__',
-				'__contact_name__',
-				'__contact_email__',
-				'__contact_phone__',
-				'__contact_name2__',
-				'__contact_email2__',
-				'__contact_phone2__',
-				'__order_id__',
-				'[b]',
-				'[/b]'
-					), array
-				(
-				$user_name,
-				$user_phone,
-				$user_email,
-				$contact_name,
-				$contact_email,
-				$contact_phone,
-				$contact_name2,
-				$contact_email2,
-				$contact_phone2,
-				$order_id,
-				'<b>',
-				'</b>'
-					), $order_contact_block_template);
+			$user_phone = str_replace(' ', '', $user_phone);
+			$contact_phone = str_replace(' ', '', $contact_phone);
+			$contact_phone2 = str_replace(' ', '', $contact_phone2);
+
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone,  $matches ) )
+			{
+				$user_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
+			{
+				$contact_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
+			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2,  $matches ) )
+			{
+				$contact_phone2 = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+			}
+
+			if($contact_name)
+			{
+				$contact_block = str_replace(array
+					(
+					'__user_name__',
+					'__user_phone__',
+					'__user_email__',
+					'__contact_name__',
+					'__contact_email__',
+					'__contact_phone__',
+					'__contact_name2__',
+					'__contact_email2__',
+					'__contact_phone2__',
+					'__order_id__',
+					'[b]',
+					'[/b]'
+						), array
+					(
+					$user_name,
+					$user_phone,
+					$user_email,
+					$contact_name,
+					$contact_email,
+					$contact_phone,
+					$contact_name2,
+					$contact_email2,
+					$contact_phone2,
+					$order_id,
+					'<b>',
+					'</b>'
+						), $order_contact_block_template);
+			}
+			else
+			{
+				$contact_block = '';
+			}
 
 //			$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
 //			$pdf->ezText('Kontakt på bygget:', 14);
