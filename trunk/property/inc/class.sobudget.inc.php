@@ -638,10 +638,10 @@
 			}
 
 			$this->db->query('SELECT id, percent FROM fm_ecomva', __LINE__, __FILE__);
-			$_taxcode = array(0 => 0);
+			$tax_codes = array(0 => 0);
 			while ($this->db->next_record())
 			{
-				$_taxcode[$this->db->f('id')] = $this->db->f('percent');
+				$tax_codes[$this->db->f('id')] = $this->db->f('percent');
 			}
 
 			$sql = "SELECT DISTINCT fm_workorder.id AS id, fm_location1.mva,fm_workorder.project_id,"
@@ -749,8 +749,7 @@
 							break;
 						}
 
-						$_taxfactor = 1 + ($_taxcode[(int)$order_info['mva']] / 100);
-						$_actual_cost = round($budget['actual_cost'] / $_taxfactor);
+						$_actual_cost = round($budget['actual_cost']);
 
 						//for testing
 //						if($budget['actual_cost'] && $order_info['b_account'] == '6610')

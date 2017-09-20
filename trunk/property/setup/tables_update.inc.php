@@ -9847,3 +9847,54 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.721 to 0.9.17.722
+	*
+	*/
+	$test[] = '0.9.17.721';
+
+	function property_upgrade0_9_17_721()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		$GLOBALS['phpgw_setup']->oProc->query("DROP VIEW fm_orders_paid_or_pending_view");
+
+		$sql = 'CREATE OR REPLACE VIEW public.fm_orders_paid_or_pending_view AS
+			SELECT orders_paid_or_pending.order_id,
+			   orders_paid_or_pending.periode,
+			   orders_paid_or_pending.amount,
+			   orders_paid_or_pending.periodization,
+			   orders_paid_or_pending.periodization_start,
+			   orders_paid_or_pending.mvakode
+			  FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id,
+					   fm_ecobilagoverf.periode,
+					   sum(fm_ecobilagoverf.godkjentbelop) AS amount,
+					   fm_ecobilagoverf.periodization,
+					   fm_ecobilagoverf.periodization_start,
+					   fm_ecobilagoverf.mvakode
+					  FROM fm_ecobilagoverf
+					 GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start,fm_ecobilagoverf.mvakode
+				   UNION ALL
+					SELECT fm_ecobilag.pmwrkord_code AS order_id,
+					   fm_ecobilag.periode,
+					   sum(fm_ecobilag.godkjentbelop) AS amount,
+					   fm_ecobilag.periodization,
+					   fm_ecobilag.periodization_start,
+					   fm_ecobilag.mvakode
+					  FROM fm_ecobilag
+					 GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start, fm_ecobilag.mvakode) orders_paid_or_pending
+			 ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.722';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	
