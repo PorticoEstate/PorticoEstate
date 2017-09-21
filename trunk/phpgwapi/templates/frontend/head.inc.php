@@ -207,13 +207,21 @@ JS;
 		}
 	}
 
+
 $header = <<<HTML
 		<div class="home-menu custom-menu-wrapper">
 			<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
 				<a href="{$site_url}" class="pure-menu-heading">{$site_title}</a>
 				<ul class="pure-menu-list">
 					<li class="pure-menu-item pure-menu-selected"><a href="{$site_url}" class="pure-menu-link">{$home_text}</a></li>
+HTML;
+	if (!empty($manual)) 
+	{
+		$header .= <<<HTML
 					<li class="pure-menu-item pure-menu-selected"><a href="{$manual}" class="pure-menu-link">{$manual_text}</a></li>
+HTML;
+	}
+		$header .= <<<HTML
 					<li class="pure-menu-item pure-menu-selected"><a href="{$login_url}" class="pure-menu-link">{$login_text}</a></li>
 				</ul>
 			</div>
@@ -248,12 +256,7 @@ HTML;
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
-	if ($manual !== null) 
-	{
 
-		$tpl_vars['manual_text'] = $manual_text;
-		$tpl_vars['manual_url'] = $manual;
-	}
 	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 
 	if($user && isset($_SESSION['phpgw_session']['session_flags']) && $_SESSION['phpgw_session']['session_flags'] == 'N')

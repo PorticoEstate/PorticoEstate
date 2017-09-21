@@ -3522,15 +3522,15 @@ HTML;
 
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone,  $matches ) )
 			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
 			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2,  $matches ) )
 			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 
 			if($contact_name)
@@ -3806,15 +3806,15 @@ HTML;
 
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $user_phone,  $matches ) )
 			{
-				$user_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+				$user_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone,  $matches ) )
 			{
-				$contact_phone = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+				$contact_phone = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 			if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $contact_phone2,  $matches ) )
 			{
-				$contact_phone2 = "{$matches[1]} $matches[2] $matches[2] $matches[4]";
+				$contact_phone2 = "{$matches[1]} $matches[2] $matches[3] $matches[4]";
 			}
 
 			function nl2br2($string)
@@ -4278,7 +4278,7 @@ HTML;
 
 			$validator = CreateObject('phpgwapi.EmailAddressValidator');
 
-			if ($validator->check_email_address($GLOBALS['phpgw_info']['user']['preferences']['property']['email']))
+			if (!$validator->check_email_address($GLOBALS['phpgw_info']['user']['preferences']['property']['email']))
 			{
 				$bcc = '';
 				phpgwapi_cache::message_set(lang('please update <a href="%1">your email address here</a>', $GLOBALS['phpgw']->link('/preferences/preferences.php', array('appname'=>'property','type'=> 'user') )),'error' );
