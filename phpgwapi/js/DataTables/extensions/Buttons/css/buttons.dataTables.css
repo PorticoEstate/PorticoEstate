@@ -292,7 +292,7 @@ div.dt-button-background {
 
 @media screen and (max-width: 640px) {
   div.dt-buttons {
-    float: none !important;
-    text-align: center;
+/*    float: none !important;*/
+  /*  text-align: left;*/
   }
 }

@@ -674,12 +674,13 @@
 						});
 					</xsl:when>
 				</xsl:choose>
-               button_def.push({
+ /*              button_def.push({
 					extend:    'csvHtml5',
 					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
 					fieldSeparator: ';',
 					bom:true
 				});
+*/
 				<xsl:choose>
 					<xsl:when test="download">
 						button_def.push({

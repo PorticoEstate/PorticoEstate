@@ -49,13 +49,13 @@
 					</div>
 				</xsl:when>
 			</xsl:choose>
-			<a onClick="{field}_contact_clear('{field}');">
-				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'clear contact')"/>
-				</xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'delete')"/>
-			</a>
 		</div>
+		<a onClick="{field}_contact_clear('{field}');">
+			<xsl:attribute name="title">
+				<xsl:value-of select="php:function('lang', 'clear contact')"/>
+			</xsl:attribute>
+			<xsl:value-of select="php:function('lang', 'delete')"/>
+		</a>
 		<!--input type="checkbox" id="{field}_clear_contact" name="clear_contact" value="0" onClick="{field}_contact_clear('{field}');" readonly="readonly">
 			<xsl:attribute name="title">
 				<xsl:value-of select="php:function('lang', 'clear contact')"/>
