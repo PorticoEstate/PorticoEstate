@@ -183,6 +183,8 @@
 				'equipment_remark' => array('type' => 'text', 'nullable' => true),
 				'raider' => array('type' => 'text', 'nullable' => true),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
+				'agreement_1' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
+				'agreement_2' => array('type' => 'int', 'precision' => '2', 'nullable' => true),
 			),
 			'pk' => array('id'),
 			'fk' => array(

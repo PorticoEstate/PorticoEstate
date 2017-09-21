@@ -92,7 +92,73 @@
 					</div>
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
-						<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
+						<fieldset>
+							<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'publishing')"/>
+								</label>
+								<table id="user_agreement_publishing" class="pure-table pure-custom pure-input-1-2" border="0" cellspacing="2" cellpadding="2">
+									<tr>
+										<td colspan = "2">
+											<xsl:value-of disable-output-escaping="yes" select="user_agreement_text_1"/>
+										</td>
+									</tr>
+									<tr>
+										<th style="text-align:left">
+											<xsl:value-of select="php:function('lang', 'yes')"/>
+										</th>
+										<th style="text-align:left">
+											<xsl:value-of select="php:function('lang', 'no')"/>
+										</th>
+									</tr>
+									<tr>
+										<td>
+											<input type="radio" disabled="disabled">
+												<xsl:if test="application/agreement_1 = 1">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+										<td>
+											<input type="radio" disabled="disabled">
+												<xsl:if test="application/agreement_1 = 2">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'user agreement')"/>
+								</label>
+								<table id="user_agreement_table" class="pure-table pure-custom pure-input-1-2" border="0" cellspacing="2" cellpadding="2">
+									<tr>
+										<td>
+											<xsl:value-of disable-output-escaping="yes" select="user_agreement_text_2"/>
+										</td>
+									</tr>
+									<tr>
+										<th style="text-align:left" class="pure-input-1-2">
+											<xsl:value-of select="php:function('lang', 'yes')"/>
+										</th>
+									</tr>
+									<tr>
+										<td style="text-align:left">
+											<input type="checkbox" disabled="disabled">
+												<xsl:if test="application/agreement_2 = 1">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</table>
+							</div>
+
+						</fieldset>
 						<fieldset>
 							<legend>
 								<xsl:value-of select="php:function('lang', 'application')"/>
