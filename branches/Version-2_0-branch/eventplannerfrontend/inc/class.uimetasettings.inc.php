@@ -97,6 +97,8 @@
 			$meta['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			self::rich_text_editor('field_frontpage_text');
 			self::rich_text_editor('application_condition');
+			self::rich_text_editor('user_agreement_text_1');
+			self::rich_text_editor('user_agreement_text_2');
 
 			self::render_template_xsl('metasettings', array('config_data' => $config->config_data,
 				'meta' => $meta));

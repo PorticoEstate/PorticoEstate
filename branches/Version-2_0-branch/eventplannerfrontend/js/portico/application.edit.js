@@ -147,7 +147,7 @@ $(document).ready(function ()
 		"background - color": '#FFF',
 		display: "block"
 	});
-
+/*
 	var offset = $("#submitbox").offset();
 	var topPadding = 180;
 
@@ -189,7 +189,7 @@ $(document).ready(function ()
 			;
 		});
 	}
-
+*/
 });
 
 check_button_names = function ()
@@ -476,6 +476,70 @@ $.formUtils.addValidator({
 	errorMessage: 'Type is required',
 	errorMessageKey: 'application_types'
 });
+$.formUtils.addValidator({
+	name: 'publishing',
+	validatorFunction: function (value, $el, config, language, $form)
+	{
+		var n = 0;
+		$('#user_agreement_publishing input').each(function ()
+		{
+			if ($(this).prop("checked"))
+			{
+				n++;
+			}
+		});
+		var v = (n > 0) ? true : false;
+
+		if (v === false)
+		{
+			$('#user_agreement_publishing').css("background-color", "#f2dede");
+			$('#user_agreement_publishing').css("border", "#b94a48 1px solid");
+		}
+		else
+		{
+			$('#user_agreement_publishing').css("background-color", "white");
+			$('#user_agreement_publishing').css("border", "black");
+		}
+
+		return v;
+	},
+	errorMessage: 'User agreement publishing is required',
+	errorMessageKey: 'user_agreement_1'
+});
+
+$.formUtils.addValidator({
+	name: 'user_agreement_2',
+	validatorFunction: function (value, $el, config, language, $form)
+	{
+		var n = 0;
+		$('#user_agreement_table input').each(function ()
+		{
+			if ($(this).prop("checked"))
+			{
+				n++;
+			}
+		});
+		var v = (n > 0) ? true : false;
+
+		if (v === false)
+		{
+			$('#user_agreement_table').css("background-color", "#f2dede");
+			$('#user_agreement_table').css("border", "#b94a48 1px solid");
+		}
+		else
+		{
+			$('#user_agreement_table').css("background-color", "white");
+			$('#user_agreement_table').css("border", "black");
+		}
+
+		return v;
+	},
+	errorMessage: 'User agreement is required',
+	errorMessageKey: 'user_agreement_2'
+});
+
+
+
 
 this.fileuploader = function (section)
 {

@@ -252,9 +252,15 @@ class data_cleaner
 			// Just try to save a <a href="titi.org"> my site </a>
 			// you get a <a href="/phpgw/redirect.php?go=titi.org"> my site </a>
 			$data = preg_replace_callback('/href\s*=\s*([\\\]?["\']?)((?(1)[^\1]*?|[^\s]+))(?(1)\1|)/i',
-//				create_function('$m', 'return \'href="\' . (strlen($m[2]) && $m[2]{0} == \'#\' ? $m[2] : $GLOBALS[\'phpgw\']->safe_redirect(urldecode($m[2]))) . \'"\';'),
 				function ($m)
 				{
+					$url = $m[2];
+
+					/**
+					 * Taken care of by HTMLPurifier
+					 */
+
+				/*
 					if(preg_match('/redirect.php\?go=/i', $m[2]))
 					{
 						$url = $m[2];
@@ -267,6 +273,7 @@ class data_cleaner
 					{
 						$url = strlen($m[2]) && $m[2]{0} == '#' ? $m[2] : $GLOBALS['phpgw']->safe_redirect(urldecode($m[2]));
 					}
+				*/
 					$ret = 'href="'. $url .'"';
 					return $ret;
 				},

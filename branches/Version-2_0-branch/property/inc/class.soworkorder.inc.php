@@ -1990,6 +1990,14 @@
 				return $cached_info;
 			}
 
+
+			$sql = "SELECT id, percent FROM fm_ecomva";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$tax_codes = array();
+			while ($this->db->next_record())
+			{
+				$tax_codes[$this->db->f('id')] = $this->db->f('percent');
+			}
 			$closed_period = array();
 			$active_period = array();
 
@@ -2051,7 +2059,7 @@
 				}
 			}
 
-			$sql = "SELECT periode, amount AS actual_cost, periodization, periodization_start"
+			$sql = "SELECT periode, amount AS actual_cost, periodization, periodization_start, mvakode AS tax_code"
 				. " FROM fm_workorder {$this->join} fm_orders_paid_or_pending_view ON fm_workorder.id = fm_orders_paid_or_pending_view.order_id"
 				. " WHERE order_id = '{$order_id}' ORDER BY periode ASC";
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -2061,12 +2069,20 @@
 			while ($this->db->next_record())
 			{
 				$_periode = $this->db->f('periode');
+				$_tax_code = $this->db->f('tax_code');
+				$_actual_cost = $this->db->f('actual_cost');
+
+				if($_tax_code && !empty($tax_codes[$_tax_code]))
+				{
+					$_actual_cost = $_actual_cost / (1 + ($tax_codes[$_tax_code] / 100));
+				}
+
 				$periode = $_periode ? $_periode : 'dummy';
 
 				//strange...
 				if ($periode == 'dummy')
 				{
-					$orders_paid_or_pending_temp[date('Ym')]['actual_cost'] += $this->db->f('actual_cost');
+					$orders_paid_or_pending_temp[date('Ym')]['actual_cost'] += $_actual_cost;
 					$orders_paid_or_pending_temp[date('Ym')]['periode'] = date('Ym');
 					$orders_paid_or_pending_temp[date('Ym')]['periodization'] = $this->db->f('periodization');
 					$orders_paid_or_pending_temp[date('Ym')]['periodization_start'] = $this->db->f('periodization_start');
@@ -2079,7 +2095,7 @@
 						'periodization' => (int)$this->db->f('periodization'),
 						'periodization_start' => $this->db->f('periodization_start'),
 					);
-					$orders_paid_or_pending_temp[$periode]['actual_cost'] += $this->db->f('actual_cost');
+					$orders_paid_or_pending_temp[$periode]['actual_cost'] += $_actual_cost;
 				}
 			}
 //	_debug_array($orders_paid_or_pending_temp);die();
