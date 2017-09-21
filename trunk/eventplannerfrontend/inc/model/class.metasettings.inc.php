@@ -82,6 +82,14 @@
 				'application_condition' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
 					'type' => 'html',
 					'history'	=> false
+					),
+				'user_agreement_text_1' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'html',
+					'history'	=> false
+					),
+				'user_agreement_text_2' => array('action'=> PHPGW_ACL_ADD | PHPGW_ACL_EDIT,
+					'type' => 'html',
+					'history'	=> false
 					)
 			);
 			return $fields;
