@@ -81,7 +81,81 @@
 					-->
 					<input type="hidden" id="active_tab" name="active_tab" value="{value_active_tab}"/>
 					<div id="first_tab">
-					<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
+						<fieldset>
+							<xsl:value-of disable-output-escaping="yes" select="application_condition"/>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'publishing')"/>
+								</label>
+								<table id="user_agreement_publishing" class="pure-table pure-custom pure-input-1-2" border="0" cellspacing="2" cellpadding="2">
+									<tr>
+										<td colspan = "2">
+											<xsl:value-of disable-output-escaping="yes" select="user_agreement_text_1"/>
+										</td>
+									</tr>
+									<tr>
+										<th style="text-align:left">
+											<xsl:value-of select="php:function('lang', 'yes')"/>
+										</th>
+										<th style="text-align:left">
+											<xsl:value-of select="php:function('lang', 'no')"/>
+										</th>
+									</tr>
+									<tr>
+										<td>
+											<input type="radio" name="agreement_1" id="agreement_1_1" value="1">
+												<xsl:if test="application/agreement_1 = 1">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+										<td>
+											<input type="radio" name="agreement_1" id="agreement_1_2" value="2">
+												<xsl:if test="application/agreement_1 = 2">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</table>
+								<input type="text" data-validation="publishing" size="1" style="visibility: hidden;">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'publishing')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'user agreement')"/>
+								</label>
+								<table id="user_agreement_table" class="pure-table pure-custom pure-input-1-2" border="0" cellspacing="2" cellpadding="2">
+									<tr>
+										<td>
+											<xsl:value-of disable-output-escaping="yes" select="user_agreement_text_2"/>
+										</td>
+									</tr>
+									<tr>
+										<th style="text-align:left" class="pure-input-1-2">
+											<xsl:value-of select="php:function('lang', 'yes')"/>
+										</th>
+									</tr>
+									<tr>
+										<td style="text-align:left">
+											<input type="checkbox" name="agreement_2" id="agreement_2" value="1">
+												<xsl:if test="application/agreement_2 = 1">
+													<xsl:attribute name="checked" value="checked"/>
+												</xsl:if>
+											</input>
+										</td>
+									</tr>
+								</table>
+								<input type="text" data-validation="user_agreement_2" size="1" style="visibility: hidden;">
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'user agreement')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+						</fieldset>
 						<fieldset>
 							<legend>
 								<xsl:value-of select="php:function('lang', 'application')"/>
@@ -444,7 +518,7 @@
 									<xsl:value-of select="php:function('lang', 'size of stage')"/>
 								</label>
 								<div class="pure-custom">
-									<table class="pure-table" border="0" cellspacing="2" cellpadding="2">
+									<table class="pure-table pure-input-1-2" border="0" cellspacing="2" cellpadding="2">
 										<thead>
 											<tr>
 												<th>
@@ -498,7 +572,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'stage requirement')"/>
 								</label>
-								<textarea cols="47" rows="7" name="stage_requirement">
+								<textarea cols="47" rows="7" name="stage_requirement" class="pure-input-1-2">
 									<xsl:value-of select="application/stage_requirement"/>
 								</textarea>
 							</div>
@@ -538,7 +612,7 @@
 								<label>
 								</label>
 								<div class="pure-custom">
-									<table class="pure-table pure-table-bordered" border="0" cellspacing="2" cellpadding="2">
+									<table class="pure-table pure-table-bordered pure-input-1-2" border="0" cellspacing="2" cellpadding="2">
 										<thead>
 											<tr>
 												<th></th>
@@ -685,7 +759,7 @@
 							<div class="pure-control-group">
 								<label>
 								</label>
-								<textarea cols="47" rows="7" name="raider">
+								<textarea cols="47" rows="7" name="raider" class="pure-input-1-2">
 									<xsl:value-of select="application/raider"/>
 								</textarea>
 							</div>

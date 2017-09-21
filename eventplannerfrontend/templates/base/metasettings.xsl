@@ -9,7 +9,7 @@
 						<label for="field_metatag_author">
 							<xsl:value-of select="php:function('lang', 'Author')"/>
 						</label>
-						<input id="field_metatag_author" name="metatag_author" type="text" size="50">
+						<input id="field_metatag_author" name="metatag_author" type="text" size="50" class="pure-input-1-2">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/metatag_author"/>
 							</xsl:attribute>
@@ -19,7 +19,7 @@
 						<label for="field_metatag_robots">
 							<xsl:value-of select="php:function('lang', 'Robots')"/>
 						</label>
-						<input id="field_metatag_robots" name="metatag_robots" type="text" size="50">
+						<input id="field_metatag_robots" name="metatag_robots" type="text" size="50" class="pure-input-1-2">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/metatag_robots"/>
 							</xsl:attribute>
@@ -29,7 +29,7 @@
 						<label for="field_metatag_keywords">
 							<xsl:value-of select="php:function('lang', 'keywords')"/>
 						</label>
-						<input id="field_metatag_keywords" name="metatag_keywords" type="text" size="50">
+						<input id="field_metatag_keywords" name="metatag_keywords" type="text" size="50" class="pure-input-1-2">
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/metatag_keywords"/>
 							</xsl:attribute>
@@ -39,11 +39,9 @@
 						<label for="field_metatag_description">
 							<xsl:value-of select="php:function('lang', 'description')"/>
 						</label>
-						<div class="pure-custom">
-							<textarea id="field_metatag_description" class="full-width" name="metatag_description">
-								<xsl:value-of select="config_data/metatag_description"/>
-							</textarea>
-						</div>
+						<textarea id="field_metatag_description" name="metatag_description" rows="10" class="pure-custom pure-input-1-2">
+							<xsl:value-of select="config_data/metatag_description"/>
+						</textarea>
 					</div>
 
 					<div class="pure-control-group">
@@ -51,7 +49,7 @@
 							<xsl:value-of select="php:function('lang', 'Frontpage text')"/>
 						</label>
 						<div class="pure-custom">
-							<textarea id="field_frontpage_text" class="full-width" name="frontpage_text">
+							<textarea id="field_frontpage_text"  class="pure-input-1-2" name="frontpage_text">
 								<xsl:value-of disable-output-escaping="yes" select="config_data/frontpage_text"/>
 							</textarea>
 						</div>
@@ -66,6 +64,31 @@
 							</textarea>
 						</div>
 					</div>
+					<div class="pure-control-group">
+						<label for="user_agreement_text_1">
+							<xsl:value-of select="php:function('lang', 'user agreement 1')"/>
+						</label>
+						<div class="pure-custom">
+							<textarea id="user_agreement_text_1" class="full-width" name="user_agreement_text_1">
+								<xsl:value-of disable-output-escaping="yes" select="config_data/user_agreement_text_1"/>
+							</textarea>
+						</div>
+					</div>
+					<div class="pure-control-group">
+						<label for="user_agreement_text_2">
+							<xsl:value-of select="php:function('lang', 'user agreement 2')"/>
+						</label>
+						<div class="pure-custom">
+							<textarea id="user_agreement_text_2" class="full-width" name="user_agreement_text_2">
+								<xsl:value-of disable-output-escaping="yes" select="config_data/user_agreement_text_2"/>
+							</textarea>
+						</div>
+					</div>
+
+
+
+
+
 				</div>
 			</div>
 			<div class="form-buttons">
