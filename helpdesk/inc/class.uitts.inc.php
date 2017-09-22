@@ -217,7 +217,7 @@
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'results' => $export ? -1 : phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
 				'sort' => $order[0]['dir'],
@@ -231,7 +231,6 @@
 				'vendor_id' => $this->bo->vendor_id,
 				'district_id' => $this->bo->district_id,
 				'part_of_town_id' => $this->bo->part_of_town_id,
-				//'allrows' => $this->bo->allrows,
 				'start_date' => $this->bo->start_date,
 				'end_date' => $this->bo->end_date,
 				'location_code' => $this->bo->location_code,
@@ -392,11 +391,9 @@ HTML;
 
 		function download()
 		{
-			$start_date 	= urldecode($this->start_date);
-			$end_date 	= urldecode($this->end_date);
+			$params = $this->get_params();
 
-			$this->bo->allrows = true;
-			$list = $this->bo->read($start_date,$end_date,'', $download = true);
+			$list = $this->bo->read($params);
 
 			$custom_status	= $this->bo->get_custom_status();
 
@@ -449,7 +446,7 @@ HTML;
 			$descr = array();
 			foreach($name as $_entry)
 			{
-				//				$descr[] = str_replace('_', ' ', $_entry);
+//				$descr[] = str_replace('_', ' ', $_entry);
 				$descr[] = lang(str_replace('_', ' ', $_entry));
 			}
 
