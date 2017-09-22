@@ -39,6 +39,7 @@
 			$this->acl_location = eventplanner_vendor_report::acl_location;
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'eventplanner', $this->acl_location);
 			$this->cats->supress_info = true;
+			$this->use_acl = true;
 		}
 
 		/**
@@ -55,6 +56,80 @@
 			return self::$so;
 		}
 
+		function get_acl_condition( )
+		{
+			$clause = '';
+
+			if(!$this->relaxe_acl && ($this->use_acl && $this->currentapp && $this->acl_location))
+			{
+				$paranthesis = false;
+
+				$grants = $this->acl->get_grants2($this->currentapp, $this->acl_location);
+				$public_user_list = array();
+				if (is_array($grants['accounts']) && $grants['accounts'])
+				{
+					foreach($grants['accounts'] as $user => $_right)
+					{
+						$public_user_list[] = $user;
+					}
+					unset($user);
+					reset($public_user_list);
+					$clause .= "({$this->table_name}.owner_id IN(" . implode(',', $public_user_list) . ")";
+					$paranthesis = true;
+				}
+
+				$public_group_list = array();
+				if (is_array($grants['groups']) && $grants['groups'])
+				{
+					foreach($grants['groups'] as $user => $_right)
+					{
+						$public_group_list[] = $user;
+					}
+					unset($user);
+					reset($public_group_list);
+					$where = $public_user_list ? 'OR' : 'AND';
+					if(!$paranthesis)
+					{
+						$clause .='(';
+					}
+					$clause .= " $where phpgw_group_map.group_id IN(" . implode(',', $public_group_list) . ")";
+
+					$paranthesis = true;
+				}
+
+				if($this->currentapp == 'eventplannerfrontend')
+				{
+
+					$org_id = $this->db->db_addslashes(phpgw::get_var('org_id','string' , 'SESSION', -1));
+
+
+					$sql = "SELECT eventplanner_booking.id as booking_id"
+						. " FROM eventplanner_booking"
+						. " JOIN eventplanner_calendar ON eventplanner_booking.calendar_id = eventplanner_calendar.id"
+						. " JOIN eventplanner_application ON eventplanner_calendar.application_id = eventplanner_application.id"
+						. " JOIN eventplanner_vendor ON eventplanner_application.vendor_id = eventplanner_vendor.id"
+						. " WHERE organization_number = '{$org_id}'";
+
+						$bookings = array(-1);
+						$this->db->query($sql);
+						while ($this->db->next_record())
+						{
+							$bookings[] = $this->db->f('booking_id');
+						}
+
+					$where = $clause ? 'OR' : 'AND';
+					$clause .= " {$where} eventplanner_booking_vendor_report.booking_id IN (" . implode(',', $bookings) . ')';
+				}
+
+				if($paranthesis)
+				{
+					$clause .=')';
+				}
+			}
+
+			return $clause;
+
+		}
 
 		protected function populate( array $data )
 		{
