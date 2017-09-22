@@ -177,10 +177,12 @@
 				'link' => '#first_tab',
 				'function' => "set_tab('first_tab')"
 			);
+
 			$tabs['reports'] = array(
 				'label' => lang('reports'),
 				'link' => '#reports',
-				'function' => "set_tab('reports')"
+				'function' => "set_tab('reports')",
+				'disable'	=> $booking->customer_id ? false : true
 			);
 
 			$bocommon = CreateObject('property.bocommon');
