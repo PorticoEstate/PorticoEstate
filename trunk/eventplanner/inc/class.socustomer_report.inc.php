@@ -39,6 +39,7 @@
 			$this->acl_location = eventplanner_customer_report::acl_location;
 			$this->cats = CreateObject('phpgwapi.categories', -1, 'eventplanner', $this->acl_location);
 			$this->cats->supress_info = true;
+			$this->use_acl = true;
 		}
 
 		/**
@@ -55,6 +56,37 @@
 			return self::$so;
 		}
 
+		function get_acl_condition( )
+		{
+			$acl_condition = parent::get_acl_condition();
+
+			if($this->relaxe_acl)
+			{
+				return $acl_condition;
+			}
+
+			$sql = "SELECT object_id, permission FROM eventplanner_permission WHERE subject_id = {$this->account}";
+			$this->db->query($sql,__LINE__,__FILE__);
+			$object_ids = array(-1);
+			while ($this->db->next_record())
+			{
+				$permission = $this->db->f('permission');
+				if($permission & PHPGW_ACL_READ)
+				{
+					$object_ids[] = $this->db->f('object_id');
+				}
+			}
+
+			if($acl_condition)
+			{
+				return '(' . $acl_condition . ' OR eventplanner_booking_customer_report.id IN (' . implode(',', $object_ids) . '))';
+			}
+			else
+			{
+				return 'eventplanner_booking_customer_report.id IN (' . implode(',', $object_ids) . ')';
+			}
+
+		}
 
 		protected function populate( array $data )
 		{
