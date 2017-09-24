@@ -24,6 +24,10 @@
 			<td><input name="newsettings[new_message]" value="{value_new_message}"></td>
 		</tr>
 		<tr>
+			<td>{lang_set_user_message}:</br> '__ID__' </td>
+			<td><input name="newsettings[set_user_message]" value="{value_set_user_message}"></td>
+		</tr>
+		<tr>
 			<td>{lang_update_message}:</br> '__ID__', '__#__' </td>
 			<td><input name="newsettings[update_message]" value="{value_update_message}"></td>
 		</tr>
