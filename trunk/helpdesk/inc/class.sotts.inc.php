@@ -598,11 +598,11 @@
 				}
 			}
 
-			if(!empty($ticket['reverse_id']))
+			if(!empty($ticket['set_user_id']))
 			{
 				$ticket['assignedto'] = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
-			$ticket['user_id']	= !empty($ticket['reverse_id']) ? $ticket['reverse_id'] : $GLOBALS['phpgw_info']['user']['account_id'];
+			$ticket['user_id']	= !empty($ticket['set_user_id']) ? $ticket['set_user_id'] : $GLOBALS['phpgw_info']['user']['account_id'];
 
 			$value_set['priority'] = isset($ticket['priority']) ? $ticket['priority'] : 0;
 			$value_set['user_id'] =  $ticket['user_id'];
@@ -1061,12 +1061,12 @@
 				$receipt['message'][] = array('msg' => lang('billable hours has been updated'));
 			}
 
-			if (!empty($ticket['forward_user_id']) &&  $old_user_id != $ticket['forward_user_id'] && $oldassigned ==  $this->account)
+			if (!empty($ticket['set_user_id']) &&  $old_user_id != $ticket['set_user_id'] && $oldassigned ==  $this->account)
 			{
-				$forward_user_id = (int) $ticket['forward_user_id'];
-				$this->db->query("UPDATE phpgw_helpdesk_tickets SET user_id = {$forward_user_id}"
+				$set_user_id = (int) $ticket['set_user_id'];
+				$this->db->query("UPDATE phpgw_helpdesk_tickets SET user_id = {$set_user_id}"
 					. " WHERE id='{$id}'", __LINE__, __FILE__);
-				$this->historylog->add('FW', $id, $forward_user_id, $old_user_id);
+				$this->historylog->add('FW', $id, $set_user_id, $old_user_id);
 				$receipt['message'][] = array('msg' => lang('ticket is forwarded'));
 			}
 

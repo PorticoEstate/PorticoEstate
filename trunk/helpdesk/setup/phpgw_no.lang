@@ -203,6 +203,7 @@ generic	helpdesk	no	Generelt
 reverse	helpdesk	no	Revers tildeling
 owned by	helpdesk	no	Eies av
 new message	helpdesk	no	Svarmelding ved ny sak
+set user message	helpdesk	no	Svarmelding ved ny eier av sak ved reverstildeling
 update message	helpdesk	no	Svarmelding ved oppdatert sak
 close message	helpdesk	no	Svarmelding ved avsluttet sak
 list %1	helpdesk	no	List %1

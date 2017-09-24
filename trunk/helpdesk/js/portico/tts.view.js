@@ -330,4 +330,4 @@ $(document).ready(function ()
 
 var oArgs = {menuaction: 'helpdesk.uitts.get_reverse_assignee'};
 var strURL = phpGWLink('index.php', oArgs, true);
-JqueryPortico.autocompleteHelper(strURL, 'forward_user_name', 'forward_user_id', 'forward_user_container');
+JqueryPortico.autocompleteHelper(strURL, 'set_user_name', 'set_user_id', 'set_user_container');
