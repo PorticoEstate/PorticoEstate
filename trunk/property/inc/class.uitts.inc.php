@@ -3686,6 +3686,7 @@ HTML;
 				$id = phpgw::get_var('id'); // in case of bigint
 				$show_cost = phpgw::get_var('show_cost', 'bool');
 			}
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'] = 'firstname';
 
 			if (!$show_cost)
 			{
@@ -3765,7 +3766,7 @@ HTML;
 			}
 
 			$order_id = $ticket['order_id'];
-
+//account_display
 			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
 			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
@@ -3932,15 +3933,17 @@ HTML;
 			if($location_exceptions)
 			{
 				$important_imformation .= "<b>" . lang('important information') . '</b>';
-			}
-			foreach ($location_exceptions as $location_exception)
-			{
-				$important_imformation .= "<br/>" . $location_exception['category_text'];
-
-				if($location_exception['location_descr'])
+				$important_imformation_arr = array();
+				foreach ($location_exceptions as $location_exception)
 				{
-					$important_imformation .= "<br/>" . $location_exception['location_descr'];
+					$important_imformation_arr[] = $location_exception['category_text'];
+
+					if($location_exception['location_descr'])
+					{
+						$important_imformation_arr[] = $location_exception['location_descr'];
+					}
 				}
+				$important_imformation .= "\n" . implode("\n", $important_imformation_arr);
 			}
 
 			$body .= '<br/>'. nl2br(str_replace(array
