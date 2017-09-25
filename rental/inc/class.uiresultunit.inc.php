@@ -358,7 +358,7 @@
 				}
 			}
 
-			$success = frontend_bofrontend::add_delegate($account_id, null, $org_unit_id, $org_name);
+			$success = frontend_bofrontend::add_delegate($account_id, 0, $org_unit_id, $org_name);
 			$ret = 0;
 			if ($success)
 			{
