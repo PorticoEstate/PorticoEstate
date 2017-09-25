@@ -260,7 +260,7 @@
 		public static function add_delegate( int $account_id, int $owner_id, $org_unit_id, $org_name )
 		{
 			// The owner id is th current user if not set
-			if (!isset($owner_id))
+			if (empty($owner_id))
 			{
 				$owner_id = $GLOBALS['phpgw_info']['user']['account_id'];
 			}
