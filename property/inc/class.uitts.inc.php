@@ -3492,7 +3492,9 @@ HTML;
 				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
 
 				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
-					'cat_id' => $ticket['cat_id']));
+					'cat_id' => $ticket['cat_id'],
+					'role_id' => $contact_at_location
+					));
 
 				if($_responsible)
 				{
@@ -3500,7 +3502,7 @@ HTML;
 					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email		= $prefs['email'];
 					$_responsible_cellphone	= $prefs['cellphone'];
-					if($contact_email)
+					if($contact_email  && ($contact_data['value_contact_email'] != $_responsible_email))
 					{
 						$contact_name2 = $_responsible_name;
 						$contact_email2 = $_responsible_email;
@@ -3777,7 +3779,9 @@ HTML;
 				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
 
 				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
-					'cat_id' => $ticket['cat_id']));
+					'cat_id' => $ticket['cat_id'],
+					'role_id' => $contact_at_location)
+					);
 
 				if($_responsible)
 				{
