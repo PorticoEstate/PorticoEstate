@@ -3499,6 +3499,7 @@ HTML;
 				if($_responsible)
 				{
 					$prefs					= $this->bocommon->create_preferences('property', $_responsible);
+					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'] = 'firstname';
 					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email		= $prefs['email'];
 					$_responsible_cellphone	= $prefs['cellphone'];
@@ -3786,6 +3787,7 @@ HTML;
 				if($_responsible)
 				{
 					$prefs					= $this->bocommon->create_preferences('property', $_responsible);
+					$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'] = 'firstname';
 					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email		= $prefs['email'];
 					$_responsible_cellphone	= $prefs['cellphone'];
