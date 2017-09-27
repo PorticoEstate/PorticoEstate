@@ -865,12 +865,29 @@
 
 					if ($sub_query_tenant)
 					{
-						$sub_query = "OR fm_tenant.last_name $this->like '%$query%' OR fm_tenant.first_name $this->like '%$query%' OR fm_tenant.contact_phone $this->like '%$query%'";
+						if(strpos($query, ' '))
+						{
+							$query_arr = explode(' ', $query);
+							$sub_query = " OR to_tsvector(fm_tenant.first_name || ' ' || fm_tenant.last_name ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
+							$sub_query .= " OR to_tsvector(fm_tenant.last_name || ' ' || fm_tenant.first_name ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
+						}
+						else
+						{
+							$sub_query = "OR fm_tenant.last_name $this->like '%$query%' OR fm_tenant.first_name $this->like '%$query%' OR fm_tenant.contact_phone $this->like '%$query%'";
+						}
 					}
 
 					if ($sub_query_street)
 					{
-						$sub_query .= "OR fm_streetaddress.descr $this->like '%$query%'";
+						if(strpos($query, ' '))
+						{
+							$query_arr = explode(' ', $query);
+							$sub_query .= " OR to_tsvector(fm_streetaddress.descr || ' ' || street_number ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
+						}
+						else
+						{
+							$sub_query .= " OR fm_streetaddress.descr $this->like '%$query%'";
+						}
 					}
 
 					$query_name = '';
