@@ -605,7 +605,8 @@
 			{
 				if(substr($url, 0, 4) != 'http')
 				{
-					$url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}{$url}";
+					$server_port = phpgw::get_var('SERVER_PORT', 'int','SERVER');
+					$url = "{$request_scheme}://{$GLOBALS['phpgw_info']['server']['hostname']}:{$server_port}{$url}";
 				}
 			}
 

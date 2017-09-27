@@ -908,11 +908,17 @@
 				return 0;
 			}
 
+			if(!empty($data['role_id']))
+			{
+				$role_filter = ' AND fm_responsibility_role.id =' . (int) $data['role_id'];
+			}
+
 			$sql = "SELECT contact_id FROM fm_responsibility_contact"
 				. " {$this->join} fm_responsibility_role ON fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id"
 				. " {$this->join} fm_responsibility ON fm_responsibility_role.responsibility_id = fm_responsibility.id"
 				. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
 				. ' WHERE cat_id =' . (int)$data['cat_id']
+				."{$role_filter}"
 				. ' AND active = 1 AND active_from < ' . time() . ' AND (active_to > ' . time() . ' OR active_to = 0) AND expired_on IS NULL'
 				. " {$item_filter}";
 

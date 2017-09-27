@@ -801,7 +801,9 @@
 						$rights |= $values['rights'];
 						//stop looking when found
 						if ($rights & $required)
-						return $rights;
+						{
+							return $rights;
+						}
 					}
 				}
 			}
@@ -820,13 +822,23 @@
 		*/
 		public function check($location, $required, $appname = '')
 		{
+			static $cache_user_rights = array();
+
+			if(isset($cache_user_rights[$this->_account_id][$appname][$location][$required]))
+			{
+				return 	$cache_user_rights[$this->_account_id][$appname][$location][$required];
+			}
+
 			$rights = $this->check_rights($location, $required, $appname, -1, 0);
 			$mask = $this->check_rights($location, $required, $appname, -1, 1);
 
-			if ( $mask > 0 && $rights > 0 )
+			if ( $mask && $rights  )
 			{
 				$rights = false;
 			}
+
+			$cache_user_rights[$this->_account_id][$appname][$location][$required] = $rights;
+
 			return $rights;
 		}
 

@@ -101,10 +101,10 @@
 								<label>
 									<xsl:value-of select="$lang_reverse"/>
 								</label>
-								<input type="hidden" id="reverse_id" name="values[reverse_id]"  value="{value_reverse_id}"/>
-								<input type="text" id="reverse_name" name="values[reverse_name]" value="{value_reverse_name}" class="pure-input-1-2">
+								<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
+								<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
 								</input>
-								<div id="reverse_container"/>
+								<div id="set_user_container"/>
 							</div>
 							<!--xsl:call-template name="contact_form"/-->
 							<!--div class="pure-control-group">
@@ -343,7 +343,7 @@
 						</label>
 						<xsl:value-of select="value_owned_by"/>
 					</div>
-					<xsl:if test="forward_user ='1'">
+					<xsl:if test="set_user ='1'">
 						<div class="pure-control-group">
 							<xsl:variable name="lang_forward">
 								<xsl:value-of select="php:function('lang', 'forward')"/>
@@ -351,10 +351,10 @@
 							<label>
 								<xsl:value-of select="$lang_forward"/>
 							</label>
-							<input type="hidden" id="forward_user_id" name="values[forward_user_id]"  value="{value_forward_user}"/>
-							<input type="text" id="forward_user_name" name="values[forward_user_name]" value="{value_forward_user_name}" class="pure-input-1-2">
+							<input type="hidden" id="set_user_id" name="values[set_user_id]"  value="{value_set_user}"/>
+							<input type="text" id="set_user_name" name="values[set_user_name]" value="{value_set_user_name}" class="pure-input-1-2">
 							</input>
-							<div id="forward_user_container"/>
+							<div id="set_user_container"/>
 						</div>
 					</xsl:if>
 					<xsl:for-each select="value_origin">
