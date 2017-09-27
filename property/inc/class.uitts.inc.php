@@ -3492,7 +3492,9 @@ HTML;
 				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
 
 				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
-					'cat_id' => $ticket['cat_id']));
+					'cat_id' => $ticket['cat_id'],
+					'role_id' => $contact_at_location
+					));
 
 				if($_responsible)
 				{
@@ -3500,7 +3502,7 @@ HTML;
 					$_responsible_name		= $GLOBALS['phpgw']->accounts->get($_responsible)->__toString();
 					$_responsible_email		= $prefs['email'];
 					$_responsible_cellphone	= $prefs['cellphone'];
-					if($contact_email)
+					if($contact_email  && ($contact_data['value_contact_email'] != $_responsible_email))
 					{
 						$contact_name2 = $_responsible_name;
 						$contact_email2 = $_responsible_email;
@@ -3686,6 +3688,7 @@ HTML;
 				$id = phpgw::get_var('id'); // in case of bigint
 				$show_cost = phpgw::get_var('show_cost', 'bool');
 			}
+			$GLOBALS['phpgw_info']['user']['preferences']['common']['account_display'] = 'firstname';
 
 			if (!$show_cost)
 			{
@@ -3765,7 +3768,7 @@ HTML;
 			}
 
 			$order_id = $ticket['order_id'];
-
+//account_display
 			$user_phone = $GLOBALS['phpgw_info']['user']['preferences']['property']['cellphone'];
 			$user_email = $GLOBALS['phpgw_info']['user']['preferences']['property']['email'];
 			$order_email_template = $GLOBALS['phpgw_info']['user']['preferences']['property']['order_email_template'];
@@ -3776,7 +3779,9 @@ HTML;
 				$contact_at_location = $this->bo->config->config_data['contact_at_location'];
 
 				$_responsible = execMethod('property.boresponsible.get_responsible', array('location'=> explode('-', $ticket['location_code']),
-					'cat_id' => $ticket['cat_id']));
+					'cat_id' => $ticket['cat_id'],
+					'role_id' => $contact_at_location)
+					);
 
 				if($_responsible)
 				{
@@ -3932,15 +3937,17 @@ HTML;
 			if($location_exceptions)
 			{
 				$important_imformation .= "<b>" . lang('important information') . '</b>';
-			}
-			foreach ($location_exceptions as $location_exception)
-			{
-				$important_imformation .= "<br/>" . $location_exception['category_text'];
-
-				if($location_exception['location_descr'])
+				$important_imformation_arr = array();
+				foreach ($location_exceptions as $location_exception)
 				{
-					$important_imformation .= "<br/>" . $location_exception['location_descr'];
+					$important_imformation_arr[] = $location_exception['category_text'];
+
+					if($location_exception['location_descr'])
+					{
+						$important_imformation_arr[] = $location_exception['location_descr'];
+					}
 				}
+				$important_imformation .= "\n" . implode("\n", $important_imformation_arr);
 			}
 
 			$body .= '<br/>'. nl2br(str_replace(array

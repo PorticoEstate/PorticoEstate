@@ -1228,7 +1228,7 @@
 											<xsl:apply-templates select="status_list/options"/>
 										</select>
 									</div>
-									<div class="pure-control-group">
+									<!--div class="pure-control-group">
 										<label for="name">
 											<xsl:value-of select="php:function('lang', 'order received')"/>
 										</label>
@@ -1260,7 +1260,7 @@
 											</table>
 										</div>
 										<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
-									</div>
+									</div-->
 
 									<div class="pure-control-group">
 										<div class="pure-custom">

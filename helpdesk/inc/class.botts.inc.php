@@ -844,11 +844,19 @@
 			if(!$get_message && !empty($this->config->config_data['new_message']))
 			{
 				$link_text = "<H2>{$this->config->config_data['new_message']}</H2>";
-				$link_text = nl2br(str_replace(array('__ID__'), array($id, $num_updates), $link_text));
+				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
+			}
+
+			$set_user_id = false;
+			if(!$get_message && !empty($this->config->config_data['set_user_message']) && $_POST['values']['set_user_id'])
+			{
+				$set_user_id = (int) $_POST['values']['set_user_id'];
+				$link_text = "<H2>{$this->config->config_data['set_user_message']}</H2>";
+				$link_text = nl2br(str_replace(array('__ID__'), array($id), $link_text));
 			}
 
 			// Normal update message
-			if(!$get_message && !empty($this->config->config_data['update_message']) && $messages_sendt)
+			if(!$get_message && !empty($this->config->config_data['update_message']) && $messages_sendt && !$set_user_id)
 			{
 				$link_text = "<H2>{$this->config->config_data['update_message']}</H2>";
 				$link_text = nl2br(str_replace(array('__ID__', '__#__'), array($id, $num_updates), $link_text));
@@ -1003,7 +1011,9 @@ HTML;
 					&& ($GLOBALS['phpgw']->preferences->data['helpdesk']['tts_notify_me'] == 1)
 				)
 				|| ($this->config->config_data['ownernotification'] && $ticket['user_id'])
-				|| ($ticket['user_id'] && $send_mail))
+				|| ($ticket['user_id'] && $send_mail)
+				|| ($set_user_id)
+				)
 			{
 				// add owner to recipients
 				$members[$ticket['user_id']] = $GLOBALS['phpgw']->accounts->id2name($ticket['user_id']);

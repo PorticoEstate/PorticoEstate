@@ -4,13 +4,14 @@
 # complete with postgresql, apache, php and xdebug.
 # The user 'portico' has password 'portico' - and is member of sudoers.
 # Roles/Passwd in posgresql: portico/portico, vagrant/vagrant
-# Portmapping: 80 -> 8080, 20 -> 2222 and 5432 -> 5433
+# Portmapping: 80 -> 8080, 22 -> 2222 and 5432 -> 5433
 # Usage:
 #   $ vagrant up
 # Docs: https://www.vagrantup.com/
 # Download and install netbeans from https://netbeans.org/downloads/
 # Log into the virtual machine with user/passwd: portico/portico
-# create a ssh key pair as described: http://savannah.gnu.org/maintenance/SshAccess/
+# $ ssh portico@localhost -p 2222
+# If you need to commit code to the svn server: create a ssh key pair as described: http://savannah.gnu.org/maintenance/SshAccess/
 # - or use what you already have
 # register your key at https://savannah.gnu.org/my/admin/editsshkeys.php
 # Request access to the project at https://savannah.nongnu.org/projects/fmsystem/
@@ -22,9 +23,27 @@
 # restore database from backup (place the file in the vagrant catalog om the host, and pick it up in /vagrant in the VM):
 # By default, Vagrant will share your project directory (the directory with the Vagrantfile) to /vagrant.
 #   $ gunzip -c filename.gz | psql dbname
-# configure netbeans with php application from remote server (sftp at 127.0.0.1, port 2222)
-# navigate you browser to http://127.0.0.1:8080/portico/
 #
+# configure netbeans with php application from remote server (sftp at 127.0.0.1, port 2222)
+# navigate you browser to http://127.0.0.1:8080/portico/setup/
+# #
+# You need a section in the header.inc.php as follow:
+#
+#	$GLOBALS['phpgw_domain']['default'] = array
+#	(
+#		'db_host' => 'localhost',
+#		'db_name' => 'portico',
+#		'db_user' => 'portico',
+#		'db_pass' => 'portico',
+#		'db_port' => '5432',
+#		'db_type' => 'postgres',
+#		'db_abstraction' => 'pdo',
+#		'config_passwd' => 'portico'
+#	);
+#
+#
+# Then - log into "Setup/Config Admin Login" (password: portico)
+# And "Edit Current Configuration" to reflect your host.
 #
 #
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
