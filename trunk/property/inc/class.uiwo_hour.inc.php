@@ -2042,6 +2042,15 @@ HTML;
 				array('col1' => $from, 'col2' => $invoice_address)
 			);
 
+			if($common_data['workorder']['start_date'])
+			{
+				$data[] = array('col1' => lang('deadline for start'), 'col2' =>"<b>{$common_data['workorder']['start_date']}</b>");
+			}
+			if($common_data['workorder']['end_date'])
+			{
+				$data[] = array('col1' => lang('deadline for execution'), 'col2' =>"<b>{$common_data['workorder']['end_date']}</b>");
+			}
+
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), ''
 				, array('showHeadings' => 0, 'shaded' => 0, 'xPos' => 0,
 				'xOrientation' => 'right', 'width' => 500, 'gridlines' => EZ_GRIDLINE_ALL,
