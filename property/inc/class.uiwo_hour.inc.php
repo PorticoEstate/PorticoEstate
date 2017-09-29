@@ -2018,6 +2018,18 @@ HTML;
 				{
 					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
 				}
+
+				if(!empty($project['location_data']['last_name']))
+				{
+					$lang_tenant = lang('tenant');
+					$delivery_address .= "\n{$lang_tenant}: {$project['location_data']['first_name']} {$project['location_data']['last_name']}";
+				}
+				if(!empty($project['contact_phone']))
+				{
+					$lang_contact_phone = lang('Contact phone');
+					$delivery_address .= "\n{$lang_contact_phone}: {$project['contact_phone']}";
+				}
+
 			}
 
 			$formatted_gab_id = $this->get_gab_id($location_code);
