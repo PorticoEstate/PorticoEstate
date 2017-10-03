@@ -397,12 +397,6 @@
 			}
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-//				$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
-//				$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-//				$_POST['repeat_until'] = date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
-//				$_POST['from_'] = phpgw::get_var('from_','string', 'POST');
-//				$_POST['to_'] = phpgw::get_var('to_','string', 'POST');
-//				$_POST['repeat_until'] = phpgw::get_var('repeat_until','string', 'POST');
 
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
@@ -411,10 +405,8 @@
 					$this->add_cost_history($booking, phpgw::get_var('cost_comment'), phpgw::get_var('cost', 'float'));
 				}
 
-//				$timestamp = strtotime($booking['from_']);
 				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['from_']);
 				$booking['from_'] = date("Y-m-d H:i:s", $timestamp);
-//				$timestamp = strtotime($booking['to_']);
 				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['to_']);
 				$booking['to_'] = date("Y-m-d H:i:s", $timestamp);
 
@@ -437,18 +429,6 @@
 				$this->agegroup_bo->extract_form_data($booking);
 
 				$errors = $this->bo->validate($booking);
-
-#				if (strtotime($_POST['from_']) < $today[0])
-#				{
-#					if($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')
-#					{					
-#						$errors['booking'] = lang('Can not repeat from a date in the past');
-#					}
-#					else
-#					{
-#						$errors['booking'] = lang('Can not create a booking in the past');
-#					}
-#				} 
 
 				if (!$booking['season_id'] && $_POST['outseason'] == 'on')
 				{
@@ -641,8 +621,8 @@
 			$active_tab = 'generic';
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['to_']));
 
 			$booking['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$booking['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',

@@ -23,6 +23,7 @@
 	(
 		'phpgw_access_log',
 		'phpgw_accounts',
+		'phpgw_accounts_data',
 		'phpgw_account_delegates',
 		'phpgw_acl',
 		'phpgw_applications',

@@ -106,6 +106,12 @@
 			#The string replace is a workaround for a problem at Bergen Kommune
 			$booking['from_'] = str_replace('%3A', ':', phpgw::get_var('from_', 'string', 'GET'));
 			$booking['to_'] = str_replace('%3A', ':', phpgw::get_var('to_', 'string', 'GET'));
+			foreach ($booking['from_'] as $k => $v)
+			{
+				$booking['from_'][$k] = pretty_timestamp($booking['from_'][$k]);
+				$booking['to_'][$k] = pretty_timestamp($booking['to_'][$k]);
+			}
+
 			$time_from = explode(" ", phpgw::get_var('from_', 'string', 'GET'));
 			$time_to = explode(" ", phpgw::get_var('to_', 'string', 'GET'));
 
@@ -116,12 +122,16 @@
 			if ($allocation_id)
 			{
 				$allocation = $this->allocation_bo->read_single($allocation_id);
+				$boapplication = CreateObject('booking.boapplication');
+				$application = $boapplication->read_single($allocation['application_id']);
+				$activity_id = $application['activity_id'];
 				$season = $this->season_bo->read_single($allocation['season_id']);
 				$building = $this->building_bo->read_single($season['building_id']);
 				$booking['season_id'] = $season['id'];
 				$booking['building_id'] = $building['id'];
 				$booking['building_name'] = $building['name'];
 				$booking['allocation_id'] = $allocation_id;
+				$booking['application_id'] = $allocation['application_id'];
 				array_set_default($booking, 'resources', array(phpgw::get_var('resource')));
 			}
 			else
@@ -130,16 +140,23 @@
 			}
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$_POST['repeat_until'] = ($_POST['repeat_until']) ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : "";
 
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
+
+				$booking['application_id'] = $allocation['application_id'];
+
+				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['from_']);
+				$booking['from_'] = date("Y-m-d H:i:s", $timestamp);
+				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['to_']);
+				$booking['to_'] = date("Y-m-d H:i:s", $timestamp);
+
 				if (strlen($_POST['from_']) < 6)
 				{
-					$date_from = array($time_from[0], phpgw::get_var('from_'));
+					$date_from = array($time_from[0], $_POST['from_']);
 					$booking['from_'] = join(" ", $date_from);
 					$_POST['from_'] = join(" ", $date_from);
-					$date_to = array($time_to[0], phpgw::get_var('to_'));
+					$date_to = array($time_to[0], $_POST['to_']);
 					$booking['to_'] = join(" ", $date_to);
 					$_POST['to_'] = join(" ", $date_to);
 				}
@@ -158,17 +175,6 @@
 				$errors = $this->bo->validate($booking);
 
 
-#				if (strtotime($_POST['from_']) < $today[0])
-#				{
-#					if($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on')
-#					{					
-#						$errors['booking'] = lang('Can not repeat from a date in the past');
-#					}
-#					else
-#					{
-#						$errors['booking'] = lang('Can not create a booking in the past');
-#					}
-#				} 
 				if (!$season['id'] && $_POST['outseason'] == 'on')
 				{
 					$errors['booking'] = lang('This booking is not connected to a season');
@@ -189,29 +195,30 @@
 				{
 					if ($_POST['recurring'] == 'on')
 					{
-						$repeat_until = strtotime($_POST['repeat_until']) + 60 * 60 * 24;
+						$repeat_until = phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']) + 60 * 60 * 24;
 					}
 					else
 					{
 						$repeat_until = strtotime($season['to_']) + 60 * 60 * 24;
-						$_POST['repeat_until'] = $season['to_'];
+						$_POST['repeat_until'] = pretty_timestamp($season['to_']);
 					}
 
-					$max_dato = strtotime($_POST['to_']); // highest date from input
+					$max_dato = phpgwapi_datetime::date_to_timestamp($_POST['to_']); // highest date from input
 					$interval = $_POST['field_interval'] * 60 * 60 * 24 * 7; // weeks in seconds
 					$i = 0;
 					// calculating valid and invalid dates from the first booking's to-date to the repeat_until date is reached
 					// the form from step 1 should validate and if we encounter any errors they are caused by double bookings.
 					while (($max_dato + ($interval * $i)) <= $repeat_until)
 					{
-						$fromdate = date('Y-m-d H:i', strtotime($_POST['from_']) + ($interval * $i));
-						$todate = date('Y-m-d H:i', strtotime($_POST['to_']) + ($interval * $i));
+						$fromdate = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($_POST['from_']) + ($interval * $i));
+						$todate = date('Y-m-d H:i', phpgwapi_datetime::date_to_timestamp($_POST['to_']) + ($interval * $i));
 						$booking['from_'] = $fromdate;
 						$booking['to_'] = $todate;
 						$fromdate = pretty_timestamp($fromdate);
 						$todate = pretty_timestamp($todate);
 
 						$err = $this->bo->validate($booking);
+
 						if ($err)
 						{
 							$invalid_dates[$i]['from_'] = $fromdate;
@@ -245,6 +252,8 @@
 			{
 				$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', -1);
 			}
+			$booking['activity_id'] = $activity_id;
+
 			$activity_path = $this->activity_bo->get_path($activity_id);
 			$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
 
@@ -270,12 +279,12 @@
 				$res_names[] = array('id' => $res['id'], 'name' => $res['name']);
 			}
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'time');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
-
 			$booking['from_'] = pretty_timestamp($booking['from_']);
 			$booking['to_'] = pretty_timestamp($booking['to_']);
+
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['to_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'booking_form');
@@ -517,13 +526,14 @@
 					'active' => 1)));
 			$groups = $groups['results'];
 
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime');
+			$booking['from_'] = pretty_timestamp($booking['from_']);
+			$booking['to_'] = pretty_timestamp($booking['to_']);
+
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['from_']));
+			$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', phpgwapi_datetime::date_to_timestamp($booking['to_']));
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('field_repeat_until', 'date');
 
-			$booking['from_'] = pretty_timestamp($booking['from_']);
-			$booking['to_'] = pretty_timestamp($booking['to_']);
 
 			foreach ($bookings['results'] as &$b)
 			{
@@ -798,14 +808,17 @@
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
+			$id = phpgw::get_var('id', 'int');
 
 			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
-
-				$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
+				$booking = $this->bo->read_single($id);
 				$errors = array();
 				if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
+					$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+					$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+					$_POST['repeat_until'] = isset($_POST['repeat_until']) && $_POST['repeat_until'] ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : false;
 
 					$from = $_POST['from_'];
 					$to = $_POST['to_'];
@@ -857,16 +870,14 @@
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 
 				$this->flash_form_errors($errors);
-				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
-						'id' => $allocation['building_id']));
+				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
+						'id' => $booking['building_id']));
 
 				self::rich_text_editor('field-message');
 				self::render_template_xsl('booking_cancel', array('booking' => $booking));
 			}
 			else
 			{
-
-				$id = phpgw::get_var('id', 'int');
 				$outseason = phpgw::get_var('outseason', 'string');
 				$recurring = phpgw::get_var('recurring', 'string');
 				$repeat_until = phpgw::get_var('repeat_until', 'string');
@@ -911,7 +922,7 @@
 				{
 					$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 					$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-					$_POST['repeat_until'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+					$_POST['repeat_until'] = isset($_POST['repeat_until']) && $_POST['repeat_until'] ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : false;
 
 					$from_date = $_POST['from_'];
 					$to_date = $_POST['to_'];

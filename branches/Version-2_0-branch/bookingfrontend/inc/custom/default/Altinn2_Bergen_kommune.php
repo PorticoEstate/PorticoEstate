@@ -121,6 +121,17 @@
 			$stage = phpgw::get_var('stage');
 			$org_id = phpgw::get_var('org_id');
 
+			if ($this->debug)
+			{
+				$orgs[] = array
+					(
+					'id' => 994239929,
+					'name' => 'Bølleball',
+				);
+				$orgs_validate[] = 994239929;
+				$fodsels_nr = 1;
+			}
+
 			if ($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
 			{
 				try
