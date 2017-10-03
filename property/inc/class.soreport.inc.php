@@ -423,7 +423,7 @@
 				$value = array();
 				foreach ($columns as $column)
 				{
-					$value[$column] = $this->db->f($column);
+					$value[$column] = $this->db->f($column,true);
 				}
 
 				foreach ($functions as $k => $v)
@@ -523,8 +523,8 @@
 				$values = array
 					(
 					'id' => $this->db->f('id'),
-					'view_name' => $this->db->f('view_name'),
-					'dataset_name' => $this->db->f('dataset_name')
+					'view_name' => $this->db->f('view_name',true),
+					'dataset_name' => $this->db->f('dataset_name',true)
 				);
 			}
 
@@ -588,8 +588,8 @@
 				$values[] = array
 					(
 					'id' => $this->db->f('id'),
-					'view_name' => $this->db->f('view_name'),
-					'dataset_name' => $this->db->f('dataset_name'),
+					'view_name' => $this->db->f('view_name',true),
+					'dataset_name' => $this->db->f('dataset_name',true),
 					'n_reports' => $this->db->f('n_reports')
 				);
 			}
@@ -603,7 +603,7 @@
 			$values_insert = array
 				(
 				'dataset_id' => $data['dataset_id'],
-				'report_name' => $data['report_name'],
+				'report_name' => $this->db->db_addslashes($data['report_name']),
 				'report_definition' => json_encode($data['report_definition']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
@@ -634,7 +634,7 @@
 			$value_set = array
 				(
 				'dataset_id' => $data['dataset_id'],
-				'report_name' => $data['report_name'],
+				'report_name' => $this->db->db_addslashes($data['report_name']),
 				'report_definition' => json_encode($data['report_definition']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
@@ -644,7 +644,7 @@
 
 			$this->db->transaction_begin();
 
-			$this->db->query("UPDATE fm_view_dataset_report SET {$value_set} WHERE id='" . $data['id'] . "'", __LINE__, __FILE__);
+			$this->db->query("UPDATE fm_view_dataset_report SET {$value_set} WHERE id='" . (int)$data['id'] . "'", __LINE__, __FILE__);
 
 			$receipt['id'] = $data['id'];
 			if ($this->db->transaction_commit())
@@ -686,7 +686,7 @@
 			$receipt = array();
 			$values_insert = array
 				(
-				'view_name' => $data['view_name'],
+				'view_name' => $this->db->db_addslashes($data['view_name']),
 				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()
@@ -716,7 +716,7 @@
 
 			$value_set = array
 				(
-				'view_name' => $data['view_name'],
+				'view_name' => $this->db->db_addslashes($data['view_name']),
 				'dataset_name' => $this->db->db_addslashes($data['dataset_name']),
 				'owner_id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'entry_date' => time()

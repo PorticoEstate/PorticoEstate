@@ -2018,6 +2018,18 @@ HTML;
 				{
 					$delivery_address .= "\n{$entry['text']}: {$entry['value']}";
 				}
+
+				if(!empty($project['location_data']['last_name']))
+				{
+					$lang_tenant = lang('tenant');
+					$delivery_address .= "\n{$lang_tenant}: {$project['location_data']['first_name']} {$project['location_data']['last_name']}";
+				}
+				if(!empty($project['contact_phone']))
+				{
+					$lang_contact_phone = lang('Contact phone');
+					$delivery_address .= "\n{$lang_contact_phone}: {$project['contact_phone']}";
+				}
+
 			}
 
 			$formatted_gab_id = $this->get_gab_id($location_code);
@@ -2041,6 +2053,15 @@ HTML;
 					'col2' => $delivery_address),
 				array('col1' => $from, 'col2' => $invoice_address)
 			);
+
+			if($common_data['workorder']['start_date'])
+			{
+				$data[] = array('col1' => lang('deadline for start'), 'col2' =>"<b>{$common_data['workorder']['start_date']}</b>");
+			}
+			if($common_data['workorder']['end_date'])
+			{
+				$data[] = array('col1' => lang('deadline for execution'), 'col2' =>"<b>{$common_data['workorder']['end_date']}</b>");
+			}
 
 			$pdf->ezTable($data, array('col1' => '', 'col2' => ''), ''
 				, array('showHeadings' => 0, 'shaded' => 0, 'xPos' => 0,

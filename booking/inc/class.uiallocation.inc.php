@@ -468,13 +468,18 @@
 			{
 				if($dateformat == 'Y-m-d' && $_SERVER['REQUEST_METHOD'] == 'GET')
 				{
-					$allocation['from_'] = date("{$GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']} H:i",strtotime($dateTimeFrom));
+					$_dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+					$allocation['from_'] = date("{$_dateformat} H:i",strtotime($dateTimeFrom));
 					$_timeFrom = strtotime($dateTimeFrom);
+					$allocation['to_'] = date("{$_dateformat} H:i",strtotime($dateTimeTo));
+					$_timeTo = strtotime($dateTimeTo);
 				}
 				else
 				{
 					$allocation['from_'] = $dateTimeFrom;
 					$_timeFrom = phpgwapi_datetime::date_to_timestamp($dateTimeFrom);
+					$allocation['to_'] = $dateTimeTo;
+					$_timeTo = phpgwapi_datetime::date_to_timestamp($dateTimeTo);
 				}
 				if ($_SERVER['REQUEST_METHOD'] == 'POST' && $errors)
 				{
@@ -485,7 +490,7 @@
 				}
 
 				$GLOBALS['phpgw']->jqcal2->add_listener('field_from', 'datetime', $_timeFrom);
-				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'time', $_timeTo);
+				$GLOBALS['phpgw']->jqcal2->add_listener('field_to', 'datetime', $_timeTo);
 
 				self::render_template_xsl('allocation_new', array('allocation' => $allocation,
 					'step' => $step,

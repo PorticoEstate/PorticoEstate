@@ -463,6 +463,7 @@
 			$file_def = array
 			(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,'resizeable' => true),
+				array('key' => 'picture', 'label' => '', 'sortable' => false,'resizeable' => false, 'formatter' => 'JqueryPortico.showPicture')
 			);
 
 			$datatable_def[] = array
@@ -479,9 +480,6 @@
 					array('disablePagination' => true)
 				)
 			);
-
-			$file_def[] = array('key' => 'picture', 'label' => '', 'sortable' => false,
-					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture');
 
 			$datatable_def[] = array
 				(
