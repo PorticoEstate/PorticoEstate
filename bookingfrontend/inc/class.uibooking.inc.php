@@ -131,6 +131,7 @@
 				$booking['building_id'] = $building['id'];
 				$booking['building_name'] = $building['name'];
 				$booking['allocation_id'] = $allocation_id;
+				$booking['application_id'] = $allocation['application_id'];
 				array_set_default($booking, 'resources', array(phpgw::get_var('resource')));
 			}
 			else
@@ -142,6 +143,8 @@
 
 				$today = getdate();
 				$booking = extract_values($_POST, $this->fields);
+
+				$booking['application_id'] = $allocation['application_id'];
 
 				$timestamp = phpgwapi_datetime::date_to_timestamp($booking['from_']);
 				$booking['from_'] = date("Y-m-d H:i:s", $timestamp);
@@ -805,14 +808,17 @@
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
+			$id = phpgw::get_var('id', 'int');
 
 			if ($config->config_data['user_can_delete_bookings'] != 'yes')
 			{
-
-				$booking = $this->bo->read_single(phpgw::get_var('id', 'int'));
+				$booking = $this->bo->read_single($id);
 				$errors = array();
 				if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				{
+					$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
+					$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
+					$_POST['repeat_until'] = isset($_POST['repeat_until']) && $_POST['repeat_until'] ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : false;
 
 					$from = $_POST['from_'];
 					$to = $_POST['to_'];
@@ -872,8 +878,6 @@
 			}
 			else
 			{
-
-				$id = phpgw::get_var('id', 'int');
 				$outseason = phpgw::get_var('outseason', 'string');
 				$recurring = phpgw::get_var('recurring', 'string');
 				$repeat_until = phpgw::get_var('repeat_until', 'string');
@@ -918,7 +922,7 @@
 				{
 					$_POST['from_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['from_']));
 					$_POST['to_'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['to_']));
-					$_POST['repeat_until'] = date("Y-m-d H:i:s", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until']));
+					$_POST['repeat_until'] = isset($_POST['repeat_until']) && $_POST['repeat_until'] ? date("Y-m-d", phpgwapi_datetime::date_to_timestamp($_POST['repeat_until'])) : false;
 
 					$from_date = $_POST['from_'];
 					$to_date = $_POST['to_'];
