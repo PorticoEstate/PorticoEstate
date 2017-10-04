@@ -158,6 +158,9 @@
 	create_select_box('Rich text (WYSIWYG) editor', 'rteditor', $rteditors,
 		'Which editor would you like to use for editing html and other rich content?');
 
+	create_check_box('CSV download button','csv_download',
+		'Do you want av CSV download button for main tables?');
+
 	create_check_box('Show helpmessages by default','show_help',
 		'Should this help messages shown up always, when you enter the preferences or only on request.');
 
