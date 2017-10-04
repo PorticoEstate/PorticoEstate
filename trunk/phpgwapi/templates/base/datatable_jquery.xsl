@@ -674,13 +674,16 @@
 						});
 					</xsl:when>
 				</xsl:choose>
- /*              button_def.push({
-					extend:    'csvHtml5',
-					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
-					fieldSeparator: ';',
-					bom:true
-				});
-*/
+				var csv_download = JqueryPortico.i18n.csv_download();
+				if(csv_download.show_button == 1)
+				{
+					button_def.push({
+					  extend:    'csvHtml5',
+					  titleAttr: csv_download.title,
+					  fieldSeparator: ';',
+					  bom:true
+				  });
+				}
 				<xsl:choose>
 					<xsl:when test="download">
 						button_def.push({

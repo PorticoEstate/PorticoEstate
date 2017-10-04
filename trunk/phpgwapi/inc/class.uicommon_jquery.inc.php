@@ -380,7 +380,13 @@
 					)),
 				),
 				'lengthmenu' => array('_' => json_encode($lengthmenu)),
-				'lengthmenu_allrows' => array('_' => json_encode(array(-1, lang('all'))))
+				'lengthmenu_allrows' => array('_' => json_encode(array(-1, lang('all')))),
+				'csv_download' => array('_' => json_encode(array(
+						'show_button' => !!$GLOBALS['phpgw_info']['user']['preferences']['common']['csv_download'],
+						'title'			=> lang('download visible data')
+						)
+					))
+
 			);
 //			_debug_array($data['jquery_phpgw_i18n']);die();
 		}
