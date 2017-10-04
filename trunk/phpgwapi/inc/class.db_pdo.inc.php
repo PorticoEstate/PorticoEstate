@@ -289,6 +289,7 @@
 					break;
 				default:
 					$type = $this->Type;
+					$port = $this->Port ? $this->Port : '';
 					break;
 			}
 
