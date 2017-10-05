@@ -753,7 +753,7 @@
 						$this->receipt['error'][] = array('msg' => lang('Please enter value for attribute %1', $attribute['input_text']));
 					}
 
-					if ($attribute['datatype'] == 'I' && isset($attribute['value']) && $attribute['value'] && !ctype_digit($attribute['value']))
+					if ($attribute['datatype'] == 'I' && isset($attribute['value']) && $attribute['value'] && !is_int((int)($attribute['value'])))
 					{
 						$this->receipt['error'][] = array('msg' => lang('Please enter integer for attribute %1', $attribute['input_text']));
 					}
