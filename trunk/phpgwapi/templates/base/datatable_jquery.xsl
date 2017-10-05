@@ -235,6 +235,11 @@
 										filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 									</script>
 									<select id="{$name}" name="{$name}" class="pure-u-24-24">
+										<xsl:if test="multiple">
+											<xsl:attribute name="multiple">
+												<xsl:text>true</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 										<xsl:attribute name="title">
 											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 										</xsl:attribute>
@@ -1303,11 +1308,26 @@
 
 		<xsl:for-each select="//form/toolbar/item">
 			<xsl:if test="type = 'filter'">
-				$('select#<xsl:value-of select="name"/>').change( function()
-				{
-				<xsl:value-of select="extra"/>
-				filterData('<xsl:value-of select="name"/>', $(this).val());
-				});
+				<xsl:choose>
+					<xsl:when test="multiple">
+						$('select#<xsl:value-of select="name"/>').change( function()
+						{
+							var search = [];
+							$.each($('select#<xsl:value-of select="name"/> option:selected'), function(){
+								  search.push($(this).val());
+							});
+							<xsl:value-of select="extra"/>
+							filterData('<xsl:value-of select="name"/>', search);
+						});
+					</xsl:when>
+					<xsl:otherwise>
+						$('select#<xsl:value-of select="name"/>').change( function()
+						{
+						<xsl:value-of select="extra"/>
+						filterData('<xsl:value-of select="name"/>', $(this).val());
+						});
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:if>
 			<xsl:if test="type = 'date-picker'">
 				var previous_<xsl:value-of select="id"/>;
