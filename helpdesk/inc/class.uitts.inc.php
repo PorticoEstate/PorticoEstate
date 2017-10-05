@@ -739,7 +739,9 @@ HTML;
 					'selected'	=> ((int)$this->user_id < 0  || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
 
 				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
-				$combos[] = array('type' => 'filter',
+				$combos[] = array(
+					'type' => 'filter',
+//					'multiple'	=> true,
 					'name' => 'user_id',
 					'extra' => '',
 					'text' => lang('assigned to'),
