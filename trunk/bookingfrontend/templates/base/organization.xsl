@@ -94,6 +94,10 @@
 		</h3>
 		<div id="groups_container"/>
 
+		<a href="{organization/new_group_link}">
+			<xsl:value-of select="php:function('lang', 'new group')" />
+		</a>
+
 		<h3>
 			<xsl:value-of select="php:function('lang', 'Used buildings')" />
 		</h3>
