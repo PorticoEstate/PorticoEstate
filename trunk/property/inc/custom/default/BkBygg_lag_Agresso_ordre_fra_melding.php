@@ -187,7 +187,7 @@
 				'dim1' => $_ticket['ecodimb'],				// Ansvar
 				'dim2' => $_ticket['service_id'] ? $_ticket['service_id'] : 9, // Tjeneste liste 30 stk, default 9
 				'dim3' => $dim3,							// Objekt: eiendom + bygg: 6 siffer
-				'dim4' => $_ticket['contract_id'],			// Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
+				'dim4' => $_ticket['contract_id'] == '-1' ? '' : $_ticket['contract_id'], // Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
 				'dim5' => $_ticket['external_project_id'],	// Prosjekt
 				'dim6' => $dim6,							// Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
 				'vendor_id' => $_ticket['vendor_id'],
