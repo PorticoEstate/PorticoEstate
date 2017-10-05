@@ -51,6 +51,7 @@
 
 		function pre_run( $data = array() )
 		{
+			$this->cron = !empty($data['cron']) ? true : false;
 			if (isset($data['enabled']) && $data['enabled'] == 1)
 			{
 				$confirm = true;
@@ -82,7 +83,7 @@
 					$this->confirm($execute = false);
 				}
 			}
-			else
+			else if (!$this->cron)
 			{
 				$this->confirm($execute = false);
 			}

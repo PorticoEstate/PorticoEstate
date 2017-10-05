@@ -436,6 +436,7 @@
 								echo "--data: ";
 								print_r($job['data']);
 								echo "\n";
+								$job['data']['cron'] = true;
 							}
 							ExecMethod($job['method'],$job['data']);
 
