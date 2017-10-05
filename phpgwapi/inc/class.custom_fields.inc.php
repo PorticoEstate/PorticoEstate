@@ -489,6 +489,10 @@
 						$attrib['value'] = $attrib['value'][0];
 						break;
 
+					case 'I':
+						$attrib['value'] = (int)$attrib['value'];
+						break;
+
 					case 'N':
 						$attrib['value'] = str_replace(',', '.', $attrib['value']);
 						break;
