@@ -612,6 +612,7 @@
 				'order_received' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_received_amount' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2', 'nullable' => True, 'default' => '0.00'),
 				'delivery_address' => array('type' => 'text', 'nullable' => True),
+				'file_attachments' => array('type' => 'varchar', 'precision' => 255, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

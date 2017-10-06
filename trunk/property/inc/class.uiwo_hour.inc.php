@@ -3468,6 +3468,16 @@ HTML;
 
 			$dir = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/pdf_files";
 			$attachments = array();
+			if (isset($workorder['file_attachments']) && is_array($workorder['file_attachments']))
+			{
+				$attachments = CreateObject('property.bofiles')->get_attachments($workorder['file_attachments']);
+				$_attachment_log = array();
+				foreach ($attachments as $_attachment)
+				{
+					$_attachment_log[] = $_attachment['name'];
+				}
+				$attachment_log = ' ' . lang('attachments') . ' : ' . implode(', ', $_attachment_log);
+			}
 
 			//save the file
 			if (!file_exists($dir))
