@@ -349,8 +349,10 @@
 			if($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " $where subject $this->like '%$query%'";
+				$querymethod = " $where ( phpgw_helpdesk_tickets.id = " . (int) $query;
 
+				$query = $this->db->db_addslashes($query);
+				$querymethod .= " OR subject $this->like '%$query%')";
 			}
 
 			$sql = "SELECT DISTINCT phpgw_helpdesk_tickets.* , phpgw_helpdesk_views.id as view {$result_order_field} FROM phpgw_helpdesk_tickets"
