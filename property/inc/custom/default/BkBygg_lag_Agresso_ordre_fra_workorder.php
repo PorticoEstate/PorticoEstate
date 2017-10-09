@@ -291,7 +291,7 @@
 					'dim1' => $dim1, // Ansvar
 					'dim2' => $tjeneste, // Tjeneste liste 30 stk, default 9
 					'dim3' => $dim3, // Objekt: eiendom + bygg: 6 siffer
-					'dim4' => $workorder['contract_id'], // Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
+					'dim4' => $workorder['contract_id'] == '-1' ? '' : $workorder['contract_id'], // Kontrakt - frivillig / 9, 7 tegn - alfanumerisk
 					'dim5' => $project['external_project_id'], // Prosjekt
 					'dim6' => $dim6, // Aktivitet - frivillig: bygningsdel, 3 siffer + bokstavkode
 					'vendor_id' => $workorder['vendor_id'],

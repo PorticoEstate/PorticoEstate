@@ -1013,6 +1013,9 @@
 					'delivery_address' => $this->db->f('delivery_address', true),
 					);
 
+				$file_attachments = trim($this->db->f('file_attachments'), ',');
+				$workorder['file_attachments'] = $workorder ? explode(',', $file_attachments) : array();
+
 				$sql = "SELECT periodization_id,"
 					. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
 					. " sum(fm_workorder_budget.contract_sum) AS contract_sum"
@@ -1535,6 +1538,16 @@
 				}
 
 				$value_set['address'] = $address;
+			}
+
+			if(isset($workorder['file_attach']) && is_array($workorder['file_attach']))
+			{
+				$file_attachments = array();
+				foreach ($workorder['file_attach'] as $_temp)
+				{
+					$file_attachments[] = (int)$_temp;
+				}
+				$value_set['file_attachments'] = implode(',', $file_attachments);
 			}
 
 			$value_set = $this->db->validate_update($value_set);

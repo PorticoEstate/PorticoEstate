@@ -1819,8 +1819,9 @@
 					'key' => 'delete_file',
 					'label' => lang('Delete file'),
 					'sortable' => false,
-					'resizeable' => true)
-			);
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.FormatterCenter'
+			));
 
 			$datatable_def[] = array
 				(
@@ -2493,6 +2494,79 @@
 				)
 			);
 
+			$attach_file_def = array
+				(
+				array(
+					'key' => 'file_name',
+					'label' => lang('Filename'),
+					'sortable' => false,
+					'resizeable' => true
+					),
+				array(
+					'key' => 'attach_file',
+					'label' => lang('attach file'),
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.FormatterCenter')
+			);
+			$file_attachments = isset($values['file_attachments']) && is_array($values['file_attachments']) ? $values['file_attachments'] : array();
+
+			$content_attachments = array();
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$lang_view_file = lang('click to view file');
+			$lang_select_file = lang('Check to attach file');
+			$lang_workorder = lang('workorder');
+			foreach ($values['files'] as $_entry)
+			{
+				$_checked = '';
+				if (in_array($_entry['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+
+				$content_attachments[] = array(
+					'file_name' => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$lang_workorder}::${_entry['name']}</a>",
+					'attach_file' => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
+				);
+			}
+			unset($_entry);
+
+			$project_link_file_data = array
+				(
+				'menuaction' => 'property.uiproject.view_file',
+				'id' => $project['project_id']
+			);
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $project_link_file_data);
+
+			$files = $boproject->get_files($project['project_id']);
+			$lang_project = lang('project');
+
+			foreach ($files as $_entry)
+			{
+
+				$_checked = '';
+				if (in_array($_entry['file_id'], $file_attachments))
+				{
+					$_checked = 'checked="checked"';
+				}
+				$content_attachments[] = array(
+					'file_name' => "<a href='{$link_view_file}&amp;file_id={$_entry['file_id']}' target='_blank' title='{$lang_view_file}'>{$lang_project}::${_entry['name']}</a>",
+					'attach_file' => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
+				);
+			}
+			
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_8',
+				'requestUrl' => "''",
+				'ColumnDefs' => $attach_file_def,
+				'data' => json_encode($content_attachments),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
 			$delivery_address	= $values['delivery_address'] ? $values['delivery_address'] : $project['delivery_address'];
 
 			if(!$delivery_address && !empty($_location_data['loc1']))
@@ -3142,9 +3216,19 @@
 				'delete' => $data));
 		}
 
-		public function get_vendor_contract($vendor_id = 0, $selected = '')
+		public function get_vendor_contract($vendor_id = 0, $selected = 0)
 		{
-			return $this->bocommon->get_vendor_contract($vendor_id, $selected);
+			$contract_list = $this->bocommon->get_vendor_contract($vendor_id, $selected);
+
+			array_unshift($contract_list, array('id' => -1, 'name' => lang('outside contract')));
+			if($selected)
+			{
+				foreach ($contract_list as &$contract)
+				{
+					$contract['selected'] = $selected == $contract['id'] ? 1 : 0;
+				}
+			}
+			return $contract_list;
 		}
 
 		/**
