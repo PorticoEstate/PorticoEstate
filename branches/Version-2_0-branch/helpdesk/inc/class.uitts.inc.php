@@ -738,8 +738,10 @@ HTML;
 					'name' => lang('my assigned tickets'),
 					'selected'	=> ((int)$this->user_id < 0  || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
 
-				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
-				$combos[] = array('type' => 'filter',
+//				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
+				$combos[] = array(
+					'type' => 'filter',
+					'multiple'	=> true,
 					'name' => 'user_id',
 					'extra' => '',
 					'text' => lang('assigned to'),
@@ -819,6 +821,7 @@ HTML;
 					var api = oTable.api();
 					api.ajax.reload();
 			}, {$refreshinterval} );
+//			$("#user_id").material_select();
 JS;
 
 				$GLOBALS['phpgw']->js->add_code('', $js, true);
@@ -828,6 +831,7 @@ JS;
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
+//			self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);

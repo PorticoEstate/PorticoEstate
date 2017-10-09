@@ -1782,7 +1782,6 @@
 				if(isset($ticket['file_attach']) && is_array($ticket['file_attach']))
 				{
 					$file_attachments = array();
-					$validator = CreateObject('phpgwapi.EmailAddressValidator');
 					foreach ($ticket['file_attach'] as $_temp)
 					{
 						$file_attachments[] = (int)$_temp;

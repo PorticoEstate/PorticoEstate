@@ -663,7 +663,7 @@
 						</xsl:choose>
 					</xsl:when>
 					<xsl:when test="datatype='I'">
-						<input data-validation="number" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
+						<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">

@@ -235,6 +235,11 @@
 										filter_selects['<xsl:value-of select="text"/>'] = '<xsl:value-of select="$name"/>';
 									</script>
 									<select id="{$name}" name="{$name}" class="pure-u-24-24">
+										<xsl:if test="multiple">
+											<xsl:attribute name="multiple">
+												<xsl:text>true</xsl:text>
+											</xsl:attribute>
+										</xsl:if>
 										<xsl:attribute name="title">
 											<xsl:value-of select="phpgw:conditional(not(text), '', text)"/>
 										</xsl:attribute>
@@ -674,13 +679,16 @@
 						});
 					</xsl:when>
 				</xsl:choose>
- /*              button_def.push({
-					extend:    'csvHtml5',
-					titleAttr: "<xsl:value-of select="php:function('lang', 'download visible data')"/>",
-					fieldSeparator: ';',
-					bom:true
-				});
-*/
+				var csv_download = JqueryPortico.i18n.csv_download();
+				if(csv_download.show_button == 1)
+				{
+					button_def.push({
+					  extend:    'csvHtml5',
+					  titleAttr: csv_download.title,
+					  fieldSeparator: ';',
+					  bom:true
+				  });
+				}
 				<xsl:choose>
 					<xsl:when test="download">
 						button_def.push({
@@ -1071,7 +1079,7 @@
 					var temp = {};
 					temp[menuaction] = {}
 					oControls.each(function() {
-						if ( $(this).attr('name') && $(this).val() != null)
+						if ( $(this).attr('name') && $(this).val() != null && $(this).val().constructor != Array)
 						{
 							sValue[ $(this).attr('name') ] = $(this).val().replace('"', '"');
 							temp[ $(this).attr('name') ] = $(this).val().replace('"', '"');
@@ -1148,8 +1156,10 @@
 //					console.log(oControls);
 					oControls.each(function()
 					{
-//						if ( $(this).attr('name') )
-						if ( $(this).attr('name') && $(this).val() != null)
+						var test = $(this).val();
+						console.log(test);
+						console.log(test.constructor);
+						if ( $(this).attr('name') && test != null && test.constructor !== Array)
 						{
 							value = $(this).val().replace('"', '"');
 							aoData[ $(this).attr('name') ] = value;
@@ -1300,11 +1310,26 @@
 
 		<xsl:for-each select="//form/toolbar/item">
 			<xsl:if test="type = 'filter'">
-				$('select#<xsl:value-of select="name"/>').change( function()
-				{
-				<xsl:value-of select="extra"/>
-				filterData('<xsl:value-of select="name"/>', $(this).val());
-				});
+				<xsl:choose>
+					<xsl:when test="multiple">
+						$('select#<xsl:value-of select="name"/>').change( function()
+						{
+							var search = [];
+							$.each($('select#<xsl:value-of select="name"/> option:selected'), function(){
+								  search.push($(this).val());
+							});
+							<xsl:value-of select="extra"/>
+							filterData('<xsl:value-of select="name"/>', search);
+						});
+					</xsl:when>
+					<xsl:otherwise>
+						$('select#<xsl:value-of select="name"/>').change( function()
+						{
+						<xsl:value-of select="extra"/>
+						filterData('<xsl:value-of select="name"/>', $(this).val());
+						});
+					</xsl:otherwise>
+				</xsl:choose>
 			</xsl:if>
 			<xsl:if test="type = 'date-picker'">
 				var previous_<xsl:value-of select="id"/>;

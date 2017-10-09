@@ -9897,4 +9897,28 @@
 		}
 	}
 
-	
+	/**
+	* Update property version from 0.9.17.722 to 0.9.17.723
+	*
+	*/
+	$test[] = '0.9.17.722';
+
+	function property_upgrade0_9_17_722()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_workorder', 'file_attachments', array(
+			'type' => 'varchar',
+			'precision' => 255,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.723';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+
