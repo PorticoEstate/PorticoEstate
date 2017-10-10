@@ -675,6 +675,13 @@
 				$ecodimb = isset($data['ecodimb']) ? $data['ecodimb'] : '';
 			}
 
+			$this->db->query('SELECT id, percent FROM fm_ecomva', __LINE__, __FILE__);
+			$tax_codes = array(0 => 0);
+			while ($this->db->next_record())
+			{
+				$tax_codes[$this->db->f('id')] = $this->db->f('percent');
+			}
+
 			$where = 'AND';
 
 			if ($b_account_class)
@@ -738,56 +745,151 @@
 			$start_periode = date('Ym', $start_date);
 			$end_periode = date('Ym', $end_date);
 
-			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
+			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume, mvakode as tax_code {$select_account_class}"
 				. " FROM  fm_ecobilagoverf {$this->join} fm_location1 ON (fm_ecobilagoverf.loc1 = fm_location1.loc1) "
 				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id) "
 				. " {$this->join} fm_b_account ON (fm_ecobilagoverf.spbudact_code = fm_b_account.id) "
 				. " WHERE (periode >='{$start_periode}' AND periode <= '{$end_periode}' {$filtermethod})"
-				. " GROUP BY district_id,periode $group_account_class"
+				. " GROUP BY district_id,periode,mvakode $group_account_class"
 				. " ORDER BY periode";
 			//echo $sql;
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();
 
-			$consume = array();
+			$_consume = array();
 
 			while ($this->db->next_record())
 			{
-				$consume[] = array
-					(
-					'consume' => round($this->db->f('consume')),
-					'period' => $this->db->f('periode'),
-					'district_id' => $this->db->f('district_id'),
-					'account_class' => $b_account_class ? $b_account_class : $this->db->f('b_account_class'),
+				$consume = $this->db->f('consume');
+				$period = (int)$this->db->f('periode');
+				$district_id = (int)$this->db->f('district_id');
+				$account_class = $b_account_class ? $b_account_class : $this->db->f('b_account_class');
+				$tax_code	= (int)$this->db->f('tax_code');
+				$refund = $consume - ($consume / (1 + ($tax_codes[$tax_code] / 100)));
+
+				$_consume[$tax_code][] = array(
+					'consume' => $consume,
+					'refund'	=> $refund,
+					'period' => $period,
+					'district_id' => $district_id,
+					'account_class' => $account_class,
+					);
+			}
+
+			$map = array();
+			foreach ($_consume as $_tax_code => $entry)
+			{
+				$account_class = $entry[0]['account_class'];
+				$district_id = $entry[0]['district_id'];
+				$period = $entry[0]['period'];
+				$_consume = 0;
+				$_refund = 0;
+
+				foreach ($entry as $values)
+				{
+					if($account_class != $values['account_class'] && $account_class != $values['district_id'] && $account_class != $values['period'] )
+					{
+						continue;
+					}
+					$_consume += $values['consume'];
+					$_refund += $values['refund'];
+				}
+
+				$map["{$entry[0]['account_class']}_{$entry[0]['district_id']}_{$entry[0]['period']}"] = array(
+					'consume' => round($_consume),
+					'refund' => round($_refund),
+					'period' => $entry[0]['period'],
+					'district_id' => $entry[0]['district_id'],
+					'account_class' => $entry[0]['account_class'],
 					'paid' => 'x'
 				);
 			}
 
-			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume {$select_account_class}"
+			$__consume = array();
+			foreach ($map as $key => $value)
+			{
+				$__consume[] = $value;
+			}
+
+			$sql = "SELECT district_id,periode,sum(godkjentbelop) as consume, mvakode as tax_code {$select_account_class}"
 				. " FROM  fm_ecobilag {$this->join} fm_location1 ON (fm_ecobilag.loc1 = fm_location1.loc1) "
 				. " {$this->join} fm_part_of_town ON (fm_location1.part_of_town_id = fm_part_of_town.id) "
 				. " {$this->join} fm_b_account ON (fm_ecobilag.spbudact_code = fm_b_account.id) "
 				. " WHERE (1=1 {$filtermethod})"
-				. " GROUP BY district_id,periode $group_account_class"
+				. " GROUP BY district_id,periode,mvakode $group_account_class"
 				. " ORDER BY periode";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records += $this->db->num_rows();
 
+			$_consume = array();
+
 			while ($this->db->next_record())
 			{
-				$consume[] = array
-					(
-					'consume' => round($this->db->f('consume')),
-					'period' => $this->db->f('periode'),
-					'district_id' => $this->db->f('district_id'),
-					'account_class' => $b_account_class ? $b_account_class : $this->db->f('b_account_class'),
+				$consume = $this->db->f('consume');
+				$period = (int)$this->db->f('periode');
+				$district_id = (int)$this->db->f('district_id');
+				$account_class = $b_account_class ? $b_account_class : $this->db->f('b_account_class');
+				$tax_code	= (int)$this->db->f('tax_code');
+				$refund = $consume - ($consume / (1 + ($tax_codes[$tax_code] / 100)));
+
+				$_consume[$tax_code][] = array(
+					'consume' => $consume,
+					'refund'	=> $refund,
+					'period' => $period,
+					'district_id' => $district_id,
+					'account_class' => $account_class,
+					);
+			}
+
+			$map = array();
+			foreach ($_consume as $_tax_code => $entry)
+			{
+				$account_class = $entry[0]['account_class'];
+				$district_id = $entry[0]['district_id'];
+				$period = $entry[0]['period'];
+				$_consume = 0;
+				$_refund = 0;
+
+				foreach ($entry as $values)
+				{
+					if($account_class != $values['account_class'] && $account_class != $values['district_id'] && $account_class != $values['period'] )
+					{
+						continue;
+					}
+					$_consume += $values['consume'];
+					$_refund += $values['refund'];
+				}
+
+				$map["{$entry[0]['account_class']}_{$entry[0]['district_id']}_{$entry[0]['period']}"] = array(
+					'consume' => round($_consume),
+					'refund' => round($_refund),
+					'period' => $entry[0]['period'],
+					'district_id' => $entry[0]['district_id'],
+					'account_class' => $entry[0]['account_class'],
 					'paid' => ''
 				);
 			}
 
-			return $consume;
+			foreach ($map as $key => $value)
+			{
+				$__consume[] = $value;
+			}
+
+//			while ($this->db->next_record())
+//			{
+//				$consume[] = array
+//					(
+//					'consume' => round($this->db->f('consume')),
+//					'period' => $this->db->f('periode'),
+//					'district_id' => $this->db->f('district_id'),
+//					'account_class' => $b_account_class ? $b_account_class : $this->db->f('b_account_class'),
+//					'paid' => ''
+//				);
+//			}
+//
+			return $__consume;
 		}
 
 		function check_for_updates( $values )

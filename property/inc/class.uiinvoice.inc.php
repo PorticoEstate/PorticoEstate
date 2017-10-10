@@ -2487,14 +2487,14 @@ JS;
 
 			$uicols = array
 				(
-				'input_type' => array('varchar', 'varchar', 'varchar', 'link', 'varchar'),
-				'type' => array('text', 'text', 'text', 'url', 'text'),
-				'col_name' => array('district_id', 'period', 'account_class', 'consume', 'paid'),
-				'name' => array('district_id', 'period', 'account_class', 'consume', 'paid'),
-				'formatter' => array('', '', '', 'formatLinkIndexInvoice', ''),
+				'input_type' => array('varchar', 'varchar', 'varchar', 'link', 'varchar', 'varchar'),
+				'type' => array('text', 'text', 'text', 'url', 'text', 'text'),
+				'col_name' => array('district_id', 'period', 'account_class', 'consume','refund', 'paid'),
+				'name' => array('district_id', 'period', 'account_class', 'consume','refund', 'paid'),
+				'formatter' => array('', '', '', 'formatLinkIndexInvoice', '', ''),
 				'descr' => array(lang('District'), lang('Period'), lang('Budget account'),
-					lang('Consume'), lang('paid')),
-				'className' => array('center', 'center', 'center', 'right', 'center')
+					lang('Consume'),lang('refund'), lang('paid')),
+				'className' => array('center', 'center', 'center', 'right', 'right', 'center')
 			);
 
 			$count_uicols_name = count($uicols['name']);
