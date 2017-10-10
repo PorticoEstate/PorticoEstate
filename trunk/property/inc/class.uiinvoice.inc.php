@@ -2097,9 +2097,11 @@ JS;
 			$content = $this->bo->read_consume($start_date, $end_date, $vendor_id, $loc1, $workorder_id, $b_account_class, $district_id, $ecodimb);
 
 			$sum = 0;
+			$sum_refund = 0;
 			foreach ($content as &$entry)
 			{
 				$sum = $sum + $entry['consume'];
+				$sum_refund = $sum_refund + $entry['refund'];
 				$entry['link_voucher'] = urldecode($GLOBALS['phpgw']->link('/index.php', array
 						(
 						'menuaction' => 'property.uiinvoice.index',
@@ -2112,12 +2114,14 @@ JS;
 						)
 				));
 				$entry['consume'] = number_format($entry['consume'], 0, ',', ' ');
+				$entry['refund'] = number_format($entry['refund'], 0, ',', ' ');
 			}
 
 			$result_data = array('results' => $content);
 			$result_data['total_records'] = count($content);
 			$result_data['draw'] = $draw;
 			$result_data['sum'] = number_format($sum, 0, ',', ' ');
+			$result_data['sum_refund'] = number_format($sum_refund, 0, ',', ' ');
 
 			return $this->jquery_results($result_data);
 		}
