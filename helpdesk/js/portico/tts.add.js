@@ -87,7 +87,7 @@ upload_canvas = function ()
 	var image_data = canvas.toDataURL('image/png');
 	$('#pasted_image').val(image_data);
 	$('#pasted_image_is_blank').val(0);
-	confirm_session('apply');
+//	confirm_session('apply');
 }
 
 $(document).ready(function ()
@@ -189,7 +189,7 @@ $(document).ready(function ()
 							this.paste_createImage(source);
 						}
 					}
-					e.preventDefault();
+		//			e.preventDefault();
 				}
 				else
 				{

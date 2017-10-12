@@ -665,33 +665,26 @@
 					<div class="pure-control-group">
 						<label>
 							<a href="javascript:notify_contact_lookup()" title="{$lang_contact_statustext}">
-								<xsl:value-of select="php:function('lang', 'contact')"/>
+								<xsl:value-of select="php:function('lang', 'add')"/>
 							</a>
 						</label>
 						<input type="hidden" id="notify_contact" name="notify_contact" value="">
 						</input>
 						<input type="hidden" name="notify_contact_name" value="" onClick="notify_contact_lookup();" readonly="readonly"/>
-					</div>
-					<div class="pure-control-group">
-						<label>
-							<xsl:value-of select="php:function('lang', 'notify')"/>
-						</label>
-
-						<!--div id="paging_5"> </div>
-						<div class="pure-table" id="datatable-container_5"/>
-						<div id="datatable-buttons_5"/-->
-						<xsl:for-each select="datatable_def">
-							<xsl:if test="container = 'datatable-container_6'">
-								<xsl:call-template name="table_setup">
-									<xsl:with-param name="container" select ='container'/>
-									<xsl:with-param name="requestUrl" select ='requestUrl'/>
-									<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-									<xsl:with-param name="data" select ='data'/>
-									<xsl:with-param name="tabletools" select ='tabletools'/>
-									<xsl:with-param name="config" select ='config'/>
-								</xsl:call-template>
-							</xsl:if>
-						</xsl:for-each>
+						<div class="pure-u-md-1-2" >
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_6'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="tabletools" select ='tabletools'/>
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
 					</div>
 				</fieldset>
 			</div>
@@ -717,10 +710,10 @@
 			<input type="hidden" id="save" name="values[save]" value=""/>
 			<input type="button" class="pure-button pure-button-primary" name="save" onClick="confirm_session('save');">
 				<xsl:attribute name="value">
-					<xsl:value-of select="php:function('lang', 'save')"/>
+					<xsl:value-of select="php:function('lang', 'send')"/>
 				</xsl:attribute>
 				<xsl:attribute name="title">
-					<xsl:value-of select="php:function('lang', 'save the ticket')"/>
+					<xsl:value-of select="php:function('lang', 'send')"/>
 				</xsl:attribute>
 			</input>
 			<xsl:variable name="lang_done">
@@ -804,7 +797,7 @@
 						<xsl:variable name="name">
 							<xsl:value-of select="name"/>
 						</xsl:variable>
-						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$name}" onMouseout="window.status='';return true;">
+						<input type="submit" class="pure-button pure-button-primary" name="location" value="{$name}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_start_statustext"/>
 							</xsl:attribute>
