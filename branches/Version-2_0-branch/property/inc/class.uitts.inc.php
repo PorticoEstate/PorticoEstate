@@ -722,7 +722,49 @@ HTML;
 				'list' => $values_combo_box[3]
 			);
 
+			$values_combo_box[1] = $this->bocommon->select_district_list('filter', $this->district_id);
+			$default_value = array('id' => '', 'name' => lang('no district'));
+			array_unshift($values_combo_box[1], $default_value);
+			$link = self::link(array(
+					'menuaction' => 'property.uilocation.get_part_of_town',
+					'district_id' => $this->district_id,
+					'part_of_town_id' => $this->part_of_town_id,
+					'phpgw_return_as' => 'json'
+			));
+
+			$code = '
+				var link = "' . $link . '";
+				var data = {"district_id": $(this).val()};
+				execute_ajax(link,
+					function(result){
+						var $el = $("#part_of_town_id");
+						$el.empty();
+						$.each(result, function(key, value) {
+						  $el.append($("<option></option>").attr("value", value.id).text(value.name));
+						});
+					}, data, "GET", "json"
+				);
+				';
+
+			$combos[] = array('type' => 'filter',
+				'name' => 'district_id',
+				'extra' => $code,
+				'text' => lang('district'),
+				'list' => $values_combo_box[1]
+			);
+
+			$values_combo_box[2] = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
+			$default_value = array('id' => '', 'name' => lang('no part of town'));
+			array_unshift($values_combo_box[2], $default_value);
+			$combos[] = array('type' => 'filter',
+				'name' => 'part_of_town_id',
+				'extra' => '',
+				'text' => lang('part of town'),
+				'list' => $values_combo_box[2]
+			);
+
 			$values_combo_box[5] = array(); //reported by
+
 			if(!$this->simple)
 			{
 				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
@@ -741,47 +783,6 @@ HTML;
 					'extra' => '',
 					'text' => lang('category'),
 					'list' => $_categories
-				);
-
-				$values_combo_box[1] = $this->bocommon->select_district_list('filter', $this->district_id);
-				$default_value = array('id' => '', 'name' => lang('no district'));
-				array_unshift($values_combo_box[1], $default_value);
-				$link = self::link(array(
-						'menuaction' => 'property.uilocation.get_part_of_town',
-						'district_id' => $this->district_id,
-						'part_of_town_id' => $this->part_of_town_id,
-						'phpgw_return_as' => 'json'
-				));
-
-				$code = '
-					var link = "' . $link . '";
-					var data = {"district_id": $(this).val()};
-					execute_ajax(link,
-						function(result){
-							var $el = $("#part_of_town_id");
-							$el.empty();
-							$.each(result, function(key, value) {
-							  $el.append($("<option></option>").attr("value", value.id).text(value.name));
-							});
-						}, data, "GET", "json"
-					);
-					';
-
-				$combos[] = array('type' => 'filter',
-					'name' => 'district_id',
-					'extra' => $code,
-					'text' => lang('district'),
-					'list' => $values_combo_box[1]
-				);
-
-				$values_combo_box[2] = $this->bocommon->select_part_of_town('filter', $this->part_of_town_id, $this->district_id);
-				$default_value = array('id' => '', 'name' => lang('no part of town'));
-				array_unshift($values_combo_box[2], $default_value);
-				$combos[] = array('type' => 'filter',
-					'name' => 'part_of_town_id',
-					'extra' => '',
-					'text' => lang('part of town'),
-					'list' => $values_combo_box[2]
 				);
 
 				$values_combo_box[4] = $this->_get_user_list($this->user_id);

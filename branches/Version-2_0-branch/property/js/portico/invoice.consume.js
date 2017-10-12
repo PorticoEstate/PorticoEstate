@@ -19,6 +19,12 @@ addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTable)
 					nCells[i].innerHTML = data.sum;
 				}
 				break;
+			case 'refund':
+				if (typeof (nCells[i]) !== 'undefined')
+				{
+					nCells[i].innerHTML = data.sum_refund;
+				}
+				break;
 		}
 	}
 };
