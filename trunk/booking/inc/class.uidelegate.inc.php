@@ -6,7 +6,7 @@
 
 //	phpgw::import_class('phpgwapi.uicommon_jquery');
 
-	class booking_uigroup extends booking_uicommon
+	class booking_uidelegate extends booking_uicommon
 	{
 
 		public $public_functions = array
@@ -22,9 +22,9 @@
 		public function __construct()
 		{
 			parent::__construct();
-			$this->bo = CreateObject('booking.bogroup');
+			$this->bo = CreateObject('booking.bodelegate');
 			$this->activity_bo = CreateObject('booking.boactivity');
-			self::set_active_menu('booking::organizations::groups');
+			self::set_active_menu('booking::organizations::delegates');
 
 			$this->module = "booking";
 		}
@@ -87,7 +87,7 @@
 			}
 			else
 			{
-				$ui = 'group';
+				$ui = 'delegate';
 				$this->apply_inline_params($params);
 			}
 
@@ -134,7 +134,7 @@
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => $this->module . '.uigroup.index',
+					'source' => self::link(array('menuaction' => $this->module . '.uidelegate.index',
 						'phpgw_return_as' => 'json')),
 					'field' => array(
 						array(
@@ -143,23 +143,15 @@
 						),
 						array(
 							'key' => 'name',
-							'label' => lang('Group'),
+							'label' => lang('delegate'),
 							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
-							'key' => 'shortname',
-							'label' => lang('Group shortname'),
-						),
-						array(
-							'key' => 'primary_contact_name',
-							'label' => lang('Primary contact'),
-						),
-						array(
-							'key' => 'primary_contact_phone',
+							'key' => 'phone',
 							'label' => lang('Phone'),
 						),
 						array(
-							'key' => 'primary_contact_email',
+							'key' => 'email',
 							'label' => lang('Email'),
 						),
 						array(
@@ -174,40 +166,24 @@
 				)
 			);
 			$data['datatable']['actions'][] = array();
-			$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uigroup.edit'));
+			$data['datatable']['new_item'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit'));
 
 			self::render_template_xsl('datatable_jquery', $data);
 		}
 
 		public function query()
 		{
-			$groups = $this->bo->read();
+			$delegates = $this->bo->read();
 
-			array_walk($groups["results"], array($this, "_add_links"), $this->module . ".uigroup.show");
-			foreach ($groups["results"] as &$group)
+			$lang_yes = lang('yes');
+			$lang_no = lang('no');
+
+			array_walk($delegates["results"], array($this, "_add_links"), $this->module . ".uidelegate.show");
+			foreach ($delegates["results"] as &$delegate)
 			{
-
-				$contact = (isset($group['contacts']) && isset($group['contacts'][0])) ? $group['contacts'][0] : null;
-				$contact2 = (isset($group['contacts']) && isset($group['contacts'][1])) ? $group['contacts'][1] : null;
-
-				if ($contact)
-				{
-					$group += array(
-						"primary_contact_name" => ($contact["name"]) ? $contact["name"] : '',
-						"primary_contact_phone" => ($contact["phone"]) ? $contact["phone"] : '',
-						"primary_contact_email" => ($contact["email"]) ? $contact["email"] : '',
-					);
-				}
-				if ($contact2)
-				{
-					$group += array(
-						"secondary_contact_name" => ($contact2["name"]) ? $contact2["name"] : '',
-						"secondary_contact_phone" => ($contact2["phone"]) ? $contact2["phone"] : '',
-						"secondary_contact_email" => ($contact2["email"]) ? $contact2["email"] : '',
-					);
-				}
+				$delegate['active'] = $delegate['active'] == 1 ? $lang_yes : $lang_no;
 			}
-			$results = $this->jquery_results($groups);
+			$results = $this->jquery_results($delegates);
 
 			if (is_array($parent_entity = $this->get_parent_if_inline()))
 			{
@@ -227,60 +203,59 @@
 
 			if ($id)
 			{
-				$group = $this->bo->read_single($id);
-				$group['id'] = $id;
-				$group['organization_link'] = $this->link_to('show', array('ui' => 'organization',
-					'id' => $group['organization_id']));
+				$delegate = $this->bo->read_single($id);
+				$delegate['id'] = $id;
+				$delegate['organization_link'] = $this->link_to('show', array('ui' => 'organization',
+					'id' => $delegate['organization_id']));
 
-				$group['cancel_link'] = $this->link_to('show', array('id' => $id));
+				$delegate['cancel_link'] = $this->link_to('show', array('id' => $id));
 
 				if ($this->is_inline())
 				{
-					$group['cancel_link'] = $this->link_to_parent();
+					$delegate['cancel_link'] = $this->link_to_parent();
 				}
 			}
 			else
 			{
-				$group = array();
-				$group['cancel_link'] = $this->link_to('index', array('ui' => 'organization'));
+				$delegate = array();
+				$delegate['cancel_link'] = $this->link_to('index', array('ui' => 'organization'));
 
+				$organization_id = phpgw::get_var('organization_id', 'int');
 				if($organization_id)
 				{
-					$group['organization_id'] = $organization_id;
+					$delegate['organization_id'] = $organization_id;
 					$organization = CreateObject('booking.boorganization')->read_single($organization_id);
-					$group['organization_name'] = $organization['name'];
+					$delegate['organization_name'] = $organization['name'];
 				}
 
 				if ($this->is_inline())
 				{
-					$group['organization_link'] = $this->link_to_parent();
-					$group['cancel_link'] = $this->link_to_parent();
-					$this->apply_inline_params($group);
+					$delegate['organization_link'] = $this->link_to_parent();
+					$delegate['cancel_link'] = $this->link_to_parent();
+					$this->apply_inline_params($delegate);
 				}
 			}
 
-			$group['organizations_link'] = $this->link_to('index', array('ui' => 'organization'));
+			$delegate['organizations_link'] = $this->link_to('index', array('ui' => 'organization'));
 
 			$errors = array();
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			{
-				$group = array_merge($group, extract_values($_POST, array(
+				$delegate = array_merge($delegate, extract_values($_POST, array(
 					'name' => 'string',
-					'shortname' => 'string',
+					'ssn' => 'string',
+					'email' => 'string',
+					'phone' => 'string',
 					'organization_id' => 'string',
 					'organization_name' => 'string',
-					'description' => 'html',
-					'contacts' => 'string',
 					'active' => 'int',
-					'activity_id' => 'int',
-					'show_in_portal' => 'int',
 				)));
-				if (!isset($group["active"]))
+				if (!isset($delegate["active"]))
 				{
-					$group['active'] = '1';
+					$delegate['active'] = '1';
 				}
 
-				$errors = $this->bo->validate($group);
+				$errors = $this->bo->validate($delegate);
 				if (strlen($_POST['name']) > 50)
 				{
 					$errors['name'] = lang('Lengt of name is to long, max 50 characters long');
@@ -291,13 +266,24 @@
 				}
 				if (!$errors)
 				{
-					if ($id)
+					if (empty($delegate['ssn']))
 					{
-						$receipt = $this->bo->update($group);
+						$_delegate = $this->bo->read_single($id);
+						$delegate['ssn'] = $_delegate['ssn'];
 					}
 					else
 					{
-						$receipt = $this->bo->add($group);
+						$hash = sha1($delegate['ssn']);
+						$delegate['ssn'] =  '{SHA1}' . base64_encode($hash);
+					}
+
+					if ($id)
+					{
+						$receipt = $this->bo->update($delegate);
+					}
+					else
+					{
+						$receipt = $this->bo->add($delegate);
 					}
 
 					$this->redirect_to_parent_if_inline();
@@ -308,12 +294,9 @@
 
 			if (is_array($parent_entity = $this->get_parent_if_inline()))
 			{
-				$group[$this->get_current_parent_type() . '_id'] = $parent_entity['id'];
-				$group[$this->get_current_parent_type() . '_name'] = $parent_entity['name'];
+				$delegate[$this->get_current_parent_type() . '_id'] = $parent_entity['id'];
+				$delegate[$this->get_current_parent_type() . '_name'] = $parent_entity['name'];
 			}
-
-			$activities = $this->activity_bo->fetch_activities();
-			$activities = $activities['results'];
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor('field_description');
@@ -322,41 +305,42 @@
 			$tab_text = ($id) ? 'Group Edit' : 'Group New';
 			if (id)
 			{
-				$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#group_edit');
+				$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#delegate_edit');
 			}
 			$active_tab = 'generic';
-			$group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
-			$group['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
+			$delegate['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$delegate['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
-			self::render_template_xsl('group_edit', array('group' => $group, 'module' => $this->module,
-				'activities' => $activities));
+			$delegate['ssn'] = '';//secret
+
+			self::render_template_xsl('delegate_edit', array('delegate' => $delegate, 'module' => $this->module));
 		}
 
 		public function show()
 		{
-			$group = $this->bo->read_single(phpgw::get_var('id', 'int'));
-			$group['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
-			$group['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
-					'id' => $group['organization_id']));
-			$group['edit_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit',
-					'id' => $group['id']));
-			$group['cancel_link'] = self::link(array('menuaction' => $this->module . '.uigroup.index'));
+			$delegate = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$delegate['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
+			$delegate['organization_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
+					'id' => $delegate['organization_id']));
+			$delegate['edit_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit',
+					'id' => $delegate['id']));
+			$delegate['cancel_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.index'));
 
 			$data = array(
-				'group' => $group
+				'delegate' => $delegate
 			);
 			$loggedin = (int)true; // FIXME: Some sort of authentication!
-			$edit_self_link = self::link(array('menuaction' => 'bookingfrontend.uigroup.edit',
-					'id' => $group['id']));
+			$edit_self_link = self::link(array('menuaction' => 'bookingfrontend.uidelegate.edit',
+					'id' => $delegate['id']));
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Group'), 'link' => '#group');
+			$tabs['generic'] = array('label' => lang('delegate'), 'link' => '#delegate');
 			$active_tab = 'generic';
 
-			$group['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$delegate['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			self::render_template_xsl('group', array('group' => $group, 'loggedin' => $loggedin,
+			self::render_template_xsl('delegate', array('delegate' => $delegate, 'loggedin' => $loggedin,
 				'edit_self_link' => $edit_self_link));
 		}
 	}

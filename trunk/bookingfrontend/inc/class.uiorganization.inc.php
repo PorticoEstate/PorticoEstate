@@ -68,6 +68,8 @@
 			$organization['logoff_link'] = 'logoff.php' . $auth_forward;
 			$organization['new_group_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit',
 					'organization_id' => $organization['id']));
+			$organization['new_delegate_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit',
+					'organization_id' => $organization['id']));
 			if ($bouser->is_organization_admin($organization['id']))
 				$organization['logged_on'] = true;
 

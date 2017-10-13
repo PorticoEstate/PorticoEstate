@@ -709,3 +709,9 @@ toggle show inactive	booking	no	Veklse på å vise inaktive
 season edit	booking	no	Endre sesong
 season show	booking	no	Vis sesong
 application edit	booking	no	Rediger søknad
+delegates	booking	no	Delegater
+delegate	booking	no	Delegert til
+new delegate	booking	no	Ny delegert
+please enter a delegate	booking	no	Angi navn på delegert til
+please enter an email	booking	no	Angi en epost
+ssn is invalid	booking	no	Fødselsnummeret er ikke gyldig

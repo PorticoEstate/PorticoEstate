@@ -126,14 +126,42 @@
 			}
 
 			$sql = "SELECT DISTINCT orgnr FROM breg.personcurrent WHERE fodselsnr ='{$fodselsnr}'";
+
+			$orgs_validate = array();
 			$results = array();
 			$db->query($sql, __LINE__, __FILE__);
 			while ($db->next_record())
 			{
+				$organization_number = $db->f('orgnr', true);
 				$results[] = array
 				(
-					'orgnr' => $db->f('orgnr', true)
+					'orgnr' => $organization_number
 				);
+				$orgs_validate[] = $organization_number;
+			}
+
+			$hash = sha1($fodselsnr);
+			$ssn =  '{SHA1}' . base64_encode($hash);
+
+			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"
+				. " FROM bb_delegate"
+				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
+				. " WHERE bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
+
+			while($this->db->next_record())
+			{
+				$organization_number = $this->db->f('organization_number');
+				if(in_array($organization_number, $orgs_validate))
+				{
+					continue;
+				}
+				$results[] = array
+				(
+					'orgnr' => $organization_number
+				);
+
+				$orgs_validate[] = $organization_number;
+
 			}
 
 		//Testvalues

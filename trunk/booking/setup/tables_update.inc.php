@@ -3588,3 +3588,38 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+
+	/**
+	 * Update booking version from 0.2.27 to 0.2.28
+	 *
+	 */
+	$test[] = '0.2.27';
+	function booking_upgrade0_2_27()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_delegate', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'active' => array('type' => 'int', 'nullable' => False, 'precision' => 2, 'default' => 1),
+					'organization_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'name' => array('type' => 'varchar', 'precision' => '150', 'nullable' => False),
+					'email' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+					'ssn' => array('type' => 'varchar', 'precision' => '115', 'nullable' => True),
+					'phone' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
+			),
+				'pk' => array('id'),
+				'fk' => array('bb_organization' => array('organization_id' => 'id')),
+				'ix' => array(),
+				'uc' => array('organization_id', 'ssn')
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.28';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

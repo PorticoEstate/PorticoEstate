@@ -99,6 +99,15 @@
 		</a>
 
 		<h3>
+			<xsl:value-of select="php:function('lang', 'delegates')" />
+		</h3>
+		<div id="delegates_container"/>
+
+		<a href="{organization/new_delegate_link}">
+			<xsl:value-of select="php:function('lang', 'new delegate')" />
+		</a>
+
+		<h3>
 			<xsl:value-of select="php:function('lang', 'Used buildings')" />
 		</h3>
 		<div id="buildings_used_by_container"/>
@@ -106,10 +115,11 @@
 
 	<script type="text/javascript">
 		var organization_id = <xsl:value-of select="organization/id"/>;
-		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2')"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
 	
 		<![CDATA[
                 var groupURL = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
+                var delegateURL = 'index.php?menuaction=bookingfrontend.uidelegate.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&filter_active=-1&';
                 var buildingURL = 'index.php?menuaction=bookingfrontend.uibuilding.find_buildings_used_by&sort=name&organization_id=' + organization_id + '&phpgw_return_as=json&';
                 ]]>
                 
@@ -122,9 +132,18 @@
 		{key: 'primary_contact_name', label: lang['Contact 1']},
 		{key: 'secondary_contact_name', label: lang['Contact 2']}
 		];
+
+		var colDefsDelegate = [
+		{key: 'name', label: lang['Name'], formatter: genericLink},
+		{key: 'email', label: lang['email']},
+		{key: 'phone', label: lang['phone']},
+		{key: 'active', label: lang['active']}
+		];
+
 		var colDefsBuilding = [{key: 'name', label: lang['Name'], formatter: genericLink}];
                 
 		createTable('groups_container', groupURL, colDefsGroup);
+		createTable('delegates_container', delegateURL, colDefsDelegate);
 		createTable('buildings_used_by_container', buildingURL, colDefsBuilding, rBuilding);
 			
 	</script>
