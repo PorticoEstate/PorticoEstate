@@ -87,7 +87,11 @@
 
 			if (!isset($_SESSION['showall']))
 			{
-				if (!isset($filters['application_id']))
+				if(!empty($filters['active']) && $filters['active'] == "-1")
+				{
+					unset($filters['active']);
+				}
+				else if (!isset($filters['application_id']))
 				{
 					$filters['active'] = "1";
 				}
@@ -130,7 +134,11 @@
 
 			if (!isset($_SESSION['showall']))
 			{
-				if (!isset($params['filters']['application_id']))
+				if(!empty($params['filters']['active']) && $params['filters']['active'] == "-1")
+				{
+					unset($params['filters']['active']);
+				}
+				else if (!isset($params['filters']['application_id']))
 				{
 					$params['filters']['active'] = "1";
 				}

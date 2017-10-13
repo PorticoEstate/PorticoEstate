@@ -323,6 +323,8 @@
 					'id' => $organization['id']));
 			$organization['new_group_link'] = self::link(array('menuaction' => $this->module . '.uigroup.edit',
 					'organization_id' => $organization['id']));
+			$organization['new_delegate_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit',
+					'organization_id' => $organization['id']));
 			$organization['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$this->install_customer_identifier_ui($organization);
