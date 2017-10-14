@@ -244,8 +244,11 @@
 				$group = array();
 				$group['cancel_link'] = $this->link_to('index', array('ui' => 'organization'));
 
+				$organization_id = phpgw::get_var('organization_id', 'int');
 				if($organization_id)
 				{
+					$group['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
+						'id' => $organization_id));
 					$group['organization_id'] = $organization_id;
 					$organization = CreateObject('booking.boorganization')->read_single($organization_id);
 					$group['organization_name'] = $organization['name'];
