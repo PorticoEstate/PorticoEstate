@@ -223,6 +223,8 @@
 				$organization_id = phpgw::get_var('organization_id', 'int');
 				if($organization_id)
 				{
+					$delegate['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.show',
+						'id' => $organization_id));
 					$delegate['organization_id'] = $organization_id;
 					$organization = CreateObject('booking.boorganization')->read_single($organization_id);
 					$delegate['organization_name'] = $organization['name'];
@@ -302,7 +304,7 @@
 			self::rich_text_editor('field_description');
 
 			$tabs = array();
-			$tab_text = ($id) ? 'Group Edit' : 'Group New';
+			$tab_text = ($id) ? 'Delegate Edit' : 'Delegate New';
 			if (id)
 			{
 				$tabs['generic'] = array('label' => lang($tab_text), 'link' => '#delegate_edit');
