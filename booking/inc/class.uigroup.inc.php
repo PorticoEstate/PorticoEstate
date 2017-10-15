@@ -121,7 +121,10 @@
 				return $this->query();
 			}
 
+			$lang_groups = lang('groups');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$lang_groups}";
 			$data = array(
+				'datatable_name'	=> $lang_groups,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
