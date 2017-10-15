@@ -121,7 +121,11 @@
 				return $this->query();
 			}
 
+			$lang_delegate = lang('delegate');
+			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('booking') . "::{$lang_delegate}";
+
 			$data = array(
+				'datatable_name'	=> $lang_delegate,
 				'form' => array(
 					'toolbar' => array(
 						'item' => array(
