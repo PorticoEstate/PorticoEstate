@@ -28,7 +28,7 @@
 					<dl class="form-col">
 						<dt>
 							<label for="field_name">
-								<xsl:value-of select="php:function('lang', 'delegate')" />
+								<xsl:value-of select="php:function('lang', 'name')" />
 							</label>
 						</dt>
 						<dd>

@@ -716,3 +716,4 @@ please enter a delegate	booking	no	Angi navn på delegert til
 please enter an email	booking	no	Angi en epost
 ssn is invalid	booking	no	Fødselsnummeret er ikke gyldig
 edit delegate	booking	no	Endre delegert til
+duplicate ssn	booking	no	Duplikat av f.nr for samme organisasjon
