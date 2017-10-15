@@ -28,24 +28,6 @@
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 		}
 
-		function get_metainfo( $id )
-		{
-			$this->db->limit_query("SELECT bb_delegate.first_name || ' ' || last_name AS name"
-				. " bb_organization.name AS organization, bb_organization.district,"
-				. " bb_organization.city, bb_delegate.description"
-				. " FROM bb_delegate, bb_organization AS bb_organization"
-				. " WHERE bb_delegate.organization_id=bb_organization.id AND bb_delegate.id=" . intval($id), 0, __LINE__, __FILE__, 1);
-			if (!$this->db->next_record())
-			{
-				return False;
-			}
-			return array('name' => $this->db->f('name', false),
-				'organization' => $this->db->f('organization', false),
-				'district' => $this->db->f('district', false),
-				'city' => $this->db->f('city', false),
-				'description' => $this->db->f('description', false));
-		}
-
 		protected function preValidate( &$entity )
 		{
 			$id = (int) $entity['id'];
@@ -78,8 +60,30 @@
 					$errors['ssn'] = lang(strtr($e->getMessage(), array('%field%' => 'ssn')));
 				}
 
+				$hash = sha1($entity['ssn']);
+				$ssn =  '{SHA1}' . base64_encode($hash);
+
+				$cnt = 0;
+				if(empty($entity['id']))
+				{
+					$sql = "SELECT count(id) AS cnt FROM bb_delegate WHERE ssn = '{$ssn}' AND organization_id = " . (int) $entity['organization_id'];
+				}
+				else
+				{
+					$id = (int) $entity['id'];
+					$sql = "SELECT count(id) AS cnt FROM bb_delegate WHERE id != {$id} AND ssn = '{$ssn}' AND organization_id = " . (int) $entity['organization_id'];
+				}
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$cnt = $this->db->f('cnt');
+				if($cnt > 0)
+				{
+					$errors['ssn'] = lang('duplicate ssn');
+				}
+
 				return;
 			}
+
 			$algo = $m[1];
 			$hash = $m[2];
 

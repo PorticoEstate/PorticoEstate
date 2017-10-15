@@ -28,7 +28,7 @@
 
 		<dl class="proplist">
 			<dt>
-				<xsl:value-of select="php:function('lang', 'delegate')" />
+				<xsl:value-of select="php:function('lang', 'name')" />
 			</dt>
 			<dd>
 				<xsl:value-of select="delegate/name"/>

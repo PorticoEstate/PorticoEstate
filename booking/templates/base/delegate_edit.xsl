@@ -20,7 +20,7 @@
 					</div>
 					<div class="pure-control-group">
 						<label for="name">
-							<xsl:value-of select="php:function('lang', 'delegate')" />
+							<xsl:value-of select="php:function('lang', 'name')" />
 						</label>
 						<input id="name" name="name" type="text" value="{delegate/name}" >
 							<xsl:attribute name="data-validation">
