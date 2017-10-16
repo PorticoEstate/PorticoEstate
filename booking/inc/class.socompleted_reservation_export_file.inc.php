@@ -52,6 +52,10 @@
 				{
 					return 'txt';
 				}
+				elseif ($config->config_data['internal_format'] == 'VISMA')
+				{
+					return 'txt';
+				}
 			}
 			elseif ($export_type === 'external')
 			{
@@ -64,6 +68,10 @@
 					return 'txt';
 				}
 				elseif ($config->config_data['external_format'] == 'KOMMFAKT')
+				{
+					return 'txt';
+				}
+				elseif ($config->config_data['external_format'] == 'VISMA')
 				{
 					return 'txt';
 				}

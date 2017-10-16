@@ -344,6 +344,10 @@
 			{
 				$export_format = 'kommfakt';
 			}
+			elseif ($config->config_data['external_format'] == 'VISMA')
+			{
+				$export_format = 'visma';
+			}
 
 			if (is_array($reservations))
 			{
@@ -371,6 +375,12 @@
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_kommfakt($external_reservations, $account_codes, $number_generator)
+						);
+					}
+					elseif ($config->config_data['external_format'] == 'VISMA')
+					{
+						return $this->build_export_result(
+								$export_format, count(array_filter($external_reservations, array($this, 'not_free'))), $this->calculate_total_cost($external_reservations), $this->format_visma($external_reservations, $account_codes, $number_generator)
 						);
 					}
 				}
@@ -424,6 +434,12 @@
 					{
 						return $this->build_export_result(
 								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_kommfakt($internal_reservations, $account_codes, $number_generator)
+						);
+					}
+					elseif ($config->config_data['internal_format'] == 'VISMA')
+					{
+						return $this->build_export_result(
+								$export_format, count(array_filter($internal_reservations, array($this, 'not_free'))), $this->calculate_total_cost($internal_reservations), $this->format_visma($internal_reservations, $account_codes, $number_generator)
 						);
 					}
 				}
@@ -545,6 +561,123 @@
 				$combined_data[] = substr($export['data'], strpos($export['data'], "\n") + 1); //Remove first line (i.e don't to repeat headers in file)
 			}
 		}
+
+		/**
+		 * Implement me
+		 * @param array $reservations
+		 * @param array $account_codes
+		 * @param type $sequential_number_generator
+		 */
+		public function format_visma( array &$reservations, array $account_codes, $sequential_number_generator )
+		{
+//			Format for overføring av fakturagrunnlag til Visma Enterprise Fakturering via fil
+//			=================================================================================
+//
+//			Fom. Fakturering 2014.1.04 er det lagt til rette for et utvidet format på FL-linjene som blant
+//			annet inneholder kontering og profil-informasjon. Dokumentasjon av dette ligger nederst i
+//			denne beskrivelsen. Innlesningsprogrammet skiller mellom de to formatene ved å sjekke
+//			på verdien av FORMAT-feltet på ST-linjen.
+//
+//
+//			POSTTYPER
+//			=========
+//
+//			ST = Startpost
+//			FL = Fakturalinje
+//			LT = Linjetekst  (er mulig å knytte fritekst til fakturalinjen)
+//			SL = Sluttpost
+//
+//			M/K
+//			M = Må angis
+//			K = Kan angis
+//
+//
+//			Type Felt    Lengde Posisjon Beskrivelse             M/K Merknader
+//			---- ------- ------ -------- ----------------------- --- ----------
+//			ST   POSTTYPE   2   001-002  Posttype                 M  Verdi 'ST'
+//			ST   REFERANSE 60   003-062  Referanse                K  ST01
+//			ST   FORMAT     1   063-063  Utvidet format           K  ST02
+//
+//			FL   POSTTYPE   2   001-002  Posttype                 M  Verdi 'FL'
+//			FL   KUNDENR   11   003-013  Kundenummer              M
+//			FL   NAVN      30   014-043  Kundens navn             K
+//			FL   ADRESSE1  30   044-073  Adresselinje 1           K
+//			FL   ADRESSE2  30   074-103  Adresselinje 2           K
+//			FL   POSTNR     4   104-107  Postnummer               K
+//			FL   BETFORM    2   108-109  Betalingstype (BG,PG)    M  MRK01
+//			FL   OPPDRGNR   3   110-112  Oppdragsgivernummer      M  MRK02
+//			FL   VARENR     4   113-116  Varenummer               M  MRK02
+//			FL   LØPENR     2   117-118  Løpenummer               M  MRK03
+//			FL   PRIS       9   119-127  Varens pris              M  MRK04
+//			FL   GRUNNLAG   9   128-136  Antall av varen          M  MRK05
+//			FL   BELØP     11   137-147  Utregnet beløp           M  MRK04
+//			FL   SAKSNR    16   148-163  Saksnr                   K
+//
+//			LT   POSTTYPE   2   001-002  Posttype                 M  Verdi 'LT'
+//			LT   KUNDENR   11   003-013  Kundenummer              M
+//			LT   OPPDRGNR   3   014-016  Oppdragsgivernummer      M
+//			LT   VARENR     4   017-020  Varenummer               M
+//			LT   LØPENR     2   021-022  Løpenummer               M
+//			LT   LINJENR    2   023-024  Linjenummer              M  MRK06
+//			LT   TEKST     50   025-074  Fritekstlinje            K
+//
+//			SL   POSTTYPE   2   001-002  Posttype                 M  Verdi 'SL'
+//			SL   ANTPOST    8   003-010  Antall poster            M  Inkl. Start/Sluttpost
+//
+//
+//			UTVIDET FORMAT PÅ FL-LINJENE
+//			============================
+//
+//			FL   POSTTYPE   2   001-002  Posttype                 M  Verdi 'FL'
+//			FL   KUNDENR   11   003-013  Kundenummer              M
+//			FL   NAVN      40   014-053  Kundens navn             K
+//			FL   ADRESSE1  40   054-093  Adresselinje 1           K
+//			FL   ADRESSE2  40   094-133  Adresselinje 2           K
+//			FL   POSTNR     4   134-137  Postnummer               K
+//			FL   BETFORM    2   138-139  Betalingstype (BG,PG)    M  MRK01
+//			FL   OPPDRGNR   3   140-142  Oppdragsgivernummer      M  MRK02
+//			FL   VARENR     4   143-146  Varenummer               M  MRK02
+//			FL   LØPENR     2   147-148  Løpenummer               M  MRK03
+//			FL   PRIS       9   149-157  Varens pris              M  MRK04
+//			FL   GRUNNLAG   9   158-166  Antall av varen          M  MRK05
+//			FL   BELØP     11   167-177  Utregnet beløp           M  MRK04
+//			FL   SAKSNR    16   178-193  Saksnr                   K
+//			FL   INTFAKT    1   194-194  Internfaktura            K  MRK07
+//			FL   KB01      12   195-206  1. konteringsverdi       K
+//			FL   KB02      12   207-218  2. konteringsverdi       K
+//			FL   KB03      12   219-230  3. konteringsverdi       K
+//			FL   KB04      12   231-242  4. konteringsverdi       K
+//			FL   KB05      12   243-254  5. konteringsverdi       K
+//			FL   KB06      12   255-266  6. konteringsverdi       K
+//			FL   KB07      12   267-278  7. konteringsverdi       K
+//			FL   KB08      12   279-290  8. konteringsverdi       K
+//			FL   KB09      12   291-302  9. konteringsverdi       K
+//			FL   KB10      12   303-314  10. konteringsverdi      K
+//			FL   MVAKODE    3   315-317  Mva-kode                 K
+//			FL   PROFIL    20   318-337  Profil                   K
+//			FL   DERESREF  40   338-377  Kontaktinformasjon       K
+//			FL   ORDREREF  20   378-397  Ordrereferanse           K
+//
+//
+//			MERKNADER
+//			=========
+//
+//			ST01  -  Teksten i dette feltet kommer ut på kvitteringslisten og kan
+//					 brukes som referanse på overføringen.
+//					 (f.eks. hvilket system/dato etc...)
+//			ST02  -  Ved bruk av nytt format, må verdien 'U' legges i feltet.
+//			MRK01 -  BG = Bankgiro, PG = Postgiro.
+//			MRK02 -  Må være opprettet i Visma Enterprise Fakturering.
+//			MRK03 -  Fortløpende nummerering hvis flere forekomster av samme vare på kunden.
+//			MRK04 -  De 2 nest siste posisjoner er desimaler, siste posisjon angir
+//					 fortegn. (f.eks. 10000- er lik 100.00-)
+//			MRK05 -  De 2 siste posisjoner er desimaler.
+//			MRK06 -  Fortløpende nummerering av fritekst. Start på 1 for hvert
+//					 fakturagrunnlag.
+//			MRK07 -  Internfaktura merkes ved verdi 1 i dette feltet.
+
+		}
+
 
 		public function format_csv( array &$reservations, array $account_codes, $sequential_number_generator )
 		{
