@@ -193,6 +193,19 @@
 		{
 			$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicontrol_group.edit'));
 		}
+		
+		/*
+		 * Method for deleting control groups
+		 */
+		public function delete_group_list()
+		{
+			$control_id = phpgw::get_var('control_id');
+			$control_group_id = phpgw::get_var('control_group_id');
+
+			$status = false; //$this->so_control_item_list->delete($control_id, $control_item_id);
+
+			return status;
+		}
 
 		public function edit()
 		{
