@@ -116,6 +116,12 @@
 							</xsl:if>
 							KOMMFAKT
 						</option>
+						<option value="VISMA">
+							<xsl:if test="config_data/external_format='VISMA'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							KOMMFAKT
+						</option>
 					</select>
 				</div>
 				<div class="pure-control-group">
@@ -182,6 +188,12 @@
 						</option>
 						<option value="KOMMFAKT">
 							<xsl:if test="config_data/internal_format='KOMMFAKT'">
+								<xsl:attribute name="selected">checked</xsl:attribute>
+							</xsl:if>
+							KOMMFAKT
+						</option>
+						<option value="VISMA">
+							<xsl:if test="config_data/internal_format='VISMA'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
 							KOMMFAKT

@@ -151,6 +151,12 @@
 							'text' => lang('Groups'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uigroup.index')),
 							'image' => array('property', 'location_tenant'),
+						),
+						'delegates' => array
+							(
+							'text' => lang('delegates'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uidelegate.index')),
+							'image' => array('property', 'location_tenant'),
 						)
 					)
 				),
