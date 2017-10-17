@@ -117,7 +117,7 @@ priority	helpdesk	no	Prioritet
 priority changed	helpdesk	no	Prioritet er endret
 percent	helpdesk	no	prosent
 project	helpdesk	no	Prosjekt
-reported by	helpdesk	no	Rapportert av
+reported by	helpdesk	no	Innmelder
 entry date	helpdesk	no	Registrert dato
 entry_date	helpdesk	no	Registrert dato
 send	helpdesk	no	Send
