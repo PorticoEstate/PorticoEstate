@@ -22,6 +22,7 @@
 
 		public function __construct()
 		{
+			$this->db = & $GLOBALS['phpgw']->db;
 			$this->set_module();
 			$this->orgnr = $this->get_user_orgnr_from_session();
 			$this->orgname = $this->get_orgname_from_db($this->get_user_orgnr_from_session());
@@ -31,7 +32,6 @@
 
 		protected function get_orgname_from_db( $orgnr )
 		{
-			$this->db = & $GLOBALS['phpgw']->db;
 			$this->db->limit_query("select name from bb_organization where organization_number ='" . $orgnr . "'", 0, __LINE__, __FILE__, 1);
 			if (!$this->db->next_record())
 			{

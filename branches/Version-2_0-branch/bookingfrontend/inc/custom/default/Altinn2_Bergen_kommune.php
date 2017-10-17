@@ -129,7 +129,34 @@
 					'name' => 'Bølleball',
 				);
 				$orgs_validate[] = 994239929;
-				$fodsels_nr = 1;
+				if(!$fodsels_nr)
+				{
+					$fodsels_nr = 1;
+				}
+			}
+
+			$hash = sha1($fodsels_nr);
+			$ssn =  '{SHA1}' . base64_encode($hash);
+
+			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"
+				. " FROM bb_delegate"
+				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
+				. " WHERE bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
+
+			while($this->db->next_record())
+			{
+				$organization_number = $this->db->f('organization_number');
+				if(in_array($organization_number, $orgs_validate))
+				{
+					continue;
+				}
+
+				$orgs[] = array(
+					'id' => $organization_number,
+					'name' => $this->db->f('organization_name', true),
+				);
+				$orgs_validate[] = $organization_number;
+
 			}
 
 			if ($stage == 2 && $fodsels_nr && in_array($org_id, $orgs_validate))
