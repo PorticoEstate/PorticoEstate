@@ -1776,36 +1776,58 @@ JS;
 				(
 				array('key' => 'workorder_id', 'label' => lang('Workorder'), 'sortable' => true,
 					'formatter' => 'formatLink', 'value_footer' => lang('Sum')),
+				array('key' => 'year', 'label' => lang('year'), 'sortable' => true),
 				array('key' => 'title', 'label' => lang('title'), 'sortable' => true),
 				array('key' => 'b_account_id', 'label' => lang('Budget account'), 'sortable' => true,
 					'className' => 'right'),
-				array('key' => 'budget', 'label' => lang('budget'), 'sortable' => false, 'className' => 'right',
+				array('key' => 'budget', 'label' => lang('budget'), 'sortable' => true, 'className' => 'right',
 					'formatter' => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'cost', 'label' => lang('cost'), 'sortable' => false, 'className' => 'right',
+				array('key' => 'cost', 'label' => lang('cost'), 'sortable' => true, 'className' => 'right',
 					'formatter' => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'addition_percentage', 'label' => '%', 'sortable' => false, 'className' => 'right'),
-				array('key' => 'obligation', 'label' => lang('sum orders'), 'sortable' => false,
+				array('key' => 'addition_percentage', 'label' => '%', 'sortable' => true, 'className' => 'right'),
+				array('key' => 'obligation', 'label' => lang('sum orders'), 'sortable' => true,
 					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'actual_cost', 'label' => lang('actual cost'), 'sortable' => false,
+				array('key' => 'actual_cost', 'label' => lang('actual cost'), 'sortable' => true,
 					'className' => 'right', 'formatter' => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'diff', 'label' => lang('difference'), 'sortable' => false, 'className' => 'right',
+				array('key' => 'diff', 'label' => lang('difference'), 'sortable' => true, 'className' => 'right',
 					'formatter' => 'JqueryPortico.FormatterAmount0'),
-				array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => false),
+				array('key' => 'vendor_name', 'label' => lang('Vendor'), 'sortable' => true),
 				array('key' => 'status', 'label' => lang('Status'), 'sortable' => true),
 				array('key' => 'send_order', 'label' => lang('send workorder'), 'sortable' => false,
 					'className' => 'center')
 			);
 
+			$order_data = $this->bo->get_orders(array(
+				'start' => 0,
+				'project_id' => $id,
+				'year' => date('Y'),
+				'order' => 'workorder_id',
+				'sort' => 'desc',
+				'results' => -1,
+				'query' => '',
+				)
+			);
+			foreach ($order_data as & $_order_entry)
+			{
+				$_order_entry['send_order'] = '';
+				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
+				{
+					$_title = implode(';', $_order_entry['mail_recipients']);
+					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
+				}
+			}
+
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_1',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
-						'project_id' => $id, 'year' => date('Y'), 'phpgw_return_as' => 'json'))),
-				'data' => json_encode(array()),
+//				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
+//						'project_id' => $id, 'year' => date('Y'), 'phpgw_return_as' => 'json'))),
+				'requestUrl' => "''",
+				'data' => json_encode($order_data),
 				'ColumnDefs' => $orders_def,
 				'config' => array(
 			//		array('disableFilter' => true),
-			//		array('disablePagination' => true)
+					array('disablePagination' => true)
 				)
 			);
 
@@ -2256,20 +2278,10 @@ JS;
 				return $this->jquery_results($result_data);
 			}
 
-			$year = phpgw::get_var('year', 'int');
-			$draw = phpgw::get_var('draw', 'int');
-			$order = phpgw::get_var('order');
-			$columns = phpgw::get_var('columns');
-			$search = phpgw::get_var('search');
-
 			$values = $this->bo->get_orders(array(
-				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'project_id' => $project_id,
-				'year' => $year,
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
-				'query' => $search['value'],
+				'year' =>phpgw::get_var('year', 'int'),
+				'results' => -1,
 				)
 			);
 			foreach ($values as & $_order_entry)
@@ -2287,7 +2299,7 @@ JS;
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $total_records;
-			$result_data['draw'] = $draw;
+			$result_data['draw'] = phpgw::get_var('draw', 'int');
 
 			return $this->jquery_results($result_data);
 		}

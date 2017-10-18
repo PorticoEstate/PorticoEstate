@@ -433,6 +433,12 @@
 					'id' => 'income',
 					'name' => lang('income'),
 					'selected' => $this->direction == 'income' ? 1 : 0
+				),
+				array
+					(
+					'id' => 'both',
+					'name' => lang('both'),
+					'selected' => $this->direction == 'both' ? 1 : 0
 				)
 			);
 			$combos[] = array

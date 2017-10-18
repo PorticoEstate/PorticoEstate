@@ -926,7 +926,7 @@
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'contract sum')"/>
 						</label>
-						<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" id="field_contract_sum" name="values[contract_sum]" value="{value_contract_sum}">
+						<input type="text" data-validation="number" data-validation-allowing="float,negative" data-validation-decimal-separator="{$decimal_separator}" id="field_contract_sum" name="values[contract_sum]" value="{value_contract_sum}">
 							<xsl:attribute name="data-validation">
 								<xsl:text>budget</xsl:text>
 							</xsl:attribute>
@@ -954,7 +954,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_budget"/>
 						</label>
-						<input type="text" data-validation="number"  data-validation-decimal-separator="{$decimal_separator}" id='field_budget' name="values[budget]" value="{value_budget}">
+						<input type="text" data-validation="number" data-validation-allowing="float,negative" data-validation-decimal-separator="{$decimal_separator}" id='field_budget' name="values[budget]" value="{value_budget}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_budget_statustext"/>
 							</xsl:attribute>
@@ -972,7 +972,7 @@
 						<label for="name">
 							<xsl:value-of select="lang_addition_rs"/>
 						</label>
-						<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[addition_rs]" value="{value_addition_rs}">
+						<input type="text" data-validation="number" data-validation-allowing="float,negative" data-validation-decimal-separator="{$decimal_separator}" name="values[addition_rs]" value="{value_addition_rs}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_addition_rs_statustext"/>
 							</xsl:attribute>
