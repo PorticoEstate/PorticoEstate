@@ -3219,8 +3219,10 @@
 		public function get_vendor_contract($vendor_id = 0, $selected = 0)
 		{
 			$contract_list = $this->bocommon->get_vendor_contract($vendor_id, $selected);
-
-			array_unshift($contract_list, array('id' => -1, 'name' => lang('outside contract')));
+			if($contract_list)
+			{
+				array_unshift($contract_list, array('id' => -1, 'name' => lang('outside contract')));
+			}
 			if($selected)
 			{
 				foreach ($contract_list as &$contract)

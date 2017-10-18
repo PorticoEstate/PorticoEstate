@@ -397,16 +397,18 @@ strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'b_account_name', 'b_account_id', 'b_account_container');
 
 
-window.on_location_updated = function ()
+window.on_location_updated = function (location_code)
 {
+	location_code = location_code || $("#loc1").val();
+
+	get_location_exception(location_code);
+
 	if(	$("#delivery_address").val() )
 	{
 		return;
 	}
 
-	var loc1 = $("#loc1").val();
-
-	var oArgs = {menuaction: 'property.uilocation.get_delivery_address', loc1: loc1};
+	var oArgs = {menuaction: 'property.uilocation.get_delivery_address', loc1: location_code};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 
 	$.ajax({
@@ -419,6 +421,41 @@ window.on_location_updated = function ()
 			{
 				$("#delivery_address").val(data.delivery_address);
 
+			}
+		}
+	});
+};
+
+window.get_location_exception = function (location_code)
+{
+
+	var oArgs = {menuaction: 'property.uilocation.get_location_exception', location_code: location_code};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: requestUrl,
+		success: function (data)
+		{
+			$("#message").html('');
+
+			if (data != null)
+			{
+				var htmlString = '';
+				var exceptions = data.location_exception;
+				$.each(exceptions, function (k, v)
+				{
+					htmlString += "<div class=\"error\">";
+					htmlString += v.severity + ": " + v.category_text;
+					if(v.location_descr)
+					{
+						htmlString += "<br/>" + v.location_descr;
+					}
+					htmlString += '</div>';
+
+				});
+				$("#message").html(htmlString);
 			}
 		}
 	});
