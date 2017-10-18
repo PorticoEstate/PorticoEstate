@@ -43,6 +43,8 @@
 			</dl>
 		</xsl:when>
 	</xsl:choose>
+	<div id="message" class='message'/>
+
 	<form ENCTYPE="multipart/form-data" method="post" id="form" name="form" action="{form_action}" class= "pure-form pure-form-aligned">
 		<xsl:variable name="decimal_separator">
 			<xsl:value-of select="decimal_separator"/>
