@@ -539,11 +539,11 @@
 
 			if ($direction == 'income')
 			{
-				$filtermethod_direction = "fm_b_account.id {$this->like} '3%'";
+				$filtermethod_direction = "AND fm_b_account.id {$this->like} '3%'";
 			}
-			else
+			else if($direction == 'expenses')
 			{
-				$filtermethod_direction = "fm_b_account.id NOT {$this->like} '3%'";
+				$filtermethod_direction = "AND fm_b_account.id NOT {$this->like} '3%'";
 			}
 
 			/* 0 => cancelled, 1 => obligation , 2 => paid */
@@ -653,7 +653,7 @@
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
 				. " {$_join_district}"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
-				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " {$filtermethod_order}{$filtermethod} {$querymethod} {$filtermethod_direction}"
 				. " ORDER BY fm_workorder.id ASC";
 
 //			_debug_array($sql);
@@ -695,7 +695,7 @@
 				. " {$this->join} fm_project ON  fm_workorder.project_id = fm_project.id"
 				. " {$_join_district}"
 				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id"
-				. " {$filtermethod_payment}{$filtermethod} {$querymethod} {$where} {$filtermethod_direction}"
+				. " {$filtermethod_payment}{$filtermethod} {$querymethod} {$filtermethod_direction}"
 				. " ORDER BY fm_workorder.id ASC";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -829,7 +829,7 @@
 				. " FROM fm_tts_tickets"
 				. " {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
 				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id $filtermethod $filtermethod2 $querymethod  {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id $filtermethod $filtermethod2 $querymethod {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
@@ -855,7 +855,7 @@
 				. " FROM fm_tts_tickets"
 				. " {$this->join} fm_b_account ON fm_tts_tickets.b_account_id = fm_b_account.id "
 				. " {$this->join} fm_location1 ON fm_tts_tickets.loc1 = fm_location1.loc1 "
-				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id {$filtermethod} {$querymethod} {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
+				. " {$this->join} fm_part_of_town ON fm_location1.part_of_town_id = fm_part_of_town.id {$filtermethod} {$querymethod} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},district_id,fm_tts_tickets.ecodimb";
 
 
 			$sql = str_replace('budget', 'actual_cost', $sql);
@@ -927,13 +927,13 @@
 			if ($details)
 			{
 				$sql = "SELECT budget_cost,b_account_id as b_account_field,district_id,ecodimb FROM fm_budget"
-					. " {$this->join} fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod {$where} {$filtermethod_direction}"
+					. " {$this->join} fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod {$filtermethod_direction}"
 					. " GROUP BY budget_cost,b_account_id,district_id,ecodimb";
 			}
 			else
 			{
 				$sql = "SELECT sum(budget_cost) as budget_cost ,fm_b_account.category as b_account_field,district_id,ecodimb FROM fm_budget"
-					. " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod  {$where} {$filtermethod_direction}"
+					. " $this->join fm_b_account ON fm_budget.b_account_id =fm_b_account.id WHERE year={$year} AND revision = '$revision' $filtermethod {$filtermethod_direction}"
 					. " GROUP BY fm_b_account.category,district_id,ecodimb";
 			}
 			//_debug_array($sql);
@@ -986,7 +986,7 @@
 				. " FROM fm_s_agreement"
 				. " {$this->join} fm_s_agreement_budget ON fm_s_agreement.id = fm_s_agreement_budget.agreement_id"
 				. " $this->join fm_b_account ON fm_s_agreement_budget.budget_account = fm_b_account.id "
-				. " WHERE $filtermethod $querymethod {$where} {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},fm_s_agreement_budget.ecodimb";
+				. " WHERE $filtermethod $querymethod {$filtermethod_direction} GROUP BY fm_b_account.{$b_account_field},fm_s_agreement_budget.ecodimb";
 
 			//_debug_array($sql);die();
 			$this->db->query($sql . $ordermethod, __LINE__, __FILE__);
@@ -1014,7 +1014,7 @@
 				. " {$this->join} fm_b_account ON fm_ecobilagoverf.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_s_agreement ON fm_ecobilagoverf.pmwrkord_code = fm_s_agreement.id"
 				. " {$this->join} fm_s_agreement_budget ON fm_s_agreement.id = fm_s_agreement_budget.agreement_id"
-				. " WHERE periode >= $start_periode AND periode <= $end_periode AND {$filtermethod} {$where} {$filtermethod_direction}"
+				. " WHERE periode >= $start_periode AND periode <= $end_periode AND {$filtermethod} {$filtermethod_direction}"
 				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb, periode";
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -1073,7 +1073,7 @@
 				. " {$this->join} fm_b_account ON fm_ecobilag.spbudact_code =fm_b_account.id"
 				. " {$this->join} fm_s_agreement ON fm_ecobilag.pmwrkord_code = fm_s_agreement.id"
 				. " {$this->join} fm_s_agreement_budget ON fm_s_agreement.id = fm_s_agreement_budget.agreement_id"
-				. " {$filtermethod} {$where} {$filtermethod_direction}"
+				. " {$filtermethod} {$filtermethod_direction}"
 				. " GROUP BY fm_b_account.{$b_account_field}, ecodimb, periode";
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);

@@ -79,7 +79,7 @@ this.local_DrawCallback1 = function (container)
 			i : 0;
 	};
 
-	var columns = ["3", "4", "6", "7", "8"];
+	var columns = ["4", "5", "7", "8", "9"];
 
 	columns.forEach(function (col)
 	{
@@ -171,7 +171,7 @@ $(document).ready(function ()
 
 	$("#order_time_span").change(function ()
 	{
-		var oArgs1 = {menuaction: 'property.uiproject.get_orders', project_id: project_id, year: $(this).val()};
+		var oArgs1 = {menuaction: 'property.uiproject.get_orders', project_id: project_id, year: $(this).val(), results: -1};
 		var requestUrl1 = phpGWLink('index.php', oArgs1, true);
 		JqueryPortico.updateinlineTableHelper(oTable1, requestUrl1);
 
