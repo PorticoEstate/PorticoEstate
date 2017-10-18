@@ -593,11 +593,21 @@
 							<xsl:value-of select="php:function('lang', 'contract')"/>
 						</label>
 						<select id="vendor_contract_id" name="values[contract_id]" class="pure-input-1-2">
-							<xsl:if test="mode != 'edit'">
-								<xsl:attribute name="disabled">
-									<xsl:text>disabled</xsl:text>
-								</xsl:attribute>
-							</xsl:if>
+							<xsl:choose>
+								<xsl:when test="mode='edit'">
+									<xsl:if test="count(contract_list/options) &gt; 0">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+									</xsl:if>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:attribute name="disabled">
+										<xsl:text>disabled</xsl:text>
+									</xsl:attribute>
+								</xsl:otherwise>
+							</xsl:choose>
+
 							<option value="">
 								<xsl:value-of select="php:function('lang', 'select')"/>
 							</option>

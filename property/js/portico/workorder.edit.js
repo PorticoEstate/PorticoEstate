@@ -213,8 +213,7 @@ this.fetch_vendor_contract = function ()
 
 					$("#vendor_contract_id").attr("data-validation", "required");
 
-					htmlString = "<option value=''>" + data.length + " kontrakter funnet</option>";
-					htmlString += "<option value='-1'>Utenfor rammeavtale</option>";
+					htmlString = "<option value=''> kontrakter funnet</option>";
 					var obj = data;
 
 					$.each(obj, function (i)
