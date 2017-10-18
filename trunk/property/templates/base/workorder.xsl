@@ -100,6 +100,8 @@
 	</xsl:choose>
 	<table cellpadding="2" cellspacing="2" align="center">
 		<div id="receipt"></div>
+		<div id="message" class='message'/>
+
 		<input type="hidden" id = "lean" name="lean" value="{lean}"/>
 		<!--
 		<xsl:choose>
