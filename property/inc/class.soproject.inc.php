@@ -1082,7 +1082,14 @@
 			$this->db->next_record();
 			$this->total_records = (int)$this->db->f('cnt');
 
-			$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
+			if($results < 0)
+			{
+				$this->db->query($sql, __LINE__, __FILE__);
+			}
+			else
+			{
+				$this->db->limit_query($sql, $start, __LINE__, __FILE__, $results);
+			}
 
 			$_orders = array();
 
@@ -1104,6 +1111,7 @@
 					'budget' => 0,
 					'obligation' => 0,
 					'actual_cost' => 0,
+					'year'	=> $year ? $year : ''
 				);
 				$_orders[] = $this->db->f('workorder_id');
 			}

@@ -521,7 +521,7 @@
 							<label for="name">
 								<xsl:value-of select="php:function('lang', 'move')"/>
 							</label>
-							<input type="text" data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" name="values[new_project_id]" value="">
+							<input type="text" data-validation="number" name="values[new_project_id]" value="">
 								<xsl:attribute name="title">
 									<xsl:value-of select="php:function('lang', 'move budget and orders to another project')"/>
 								</xsl:attribute>
@@ -540,7 +540,7 @@
 						</label>
 						<div class="pure-custom">
 							<div>
-								<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="{value_budget}">
+								<input data-validation="number" data-validation-allowing="float,negative" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[budget]" value="{value_budget}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Enter the budget')"/>
 									</xsl:attribute>
@@ -694,7 +694,7 @@
 								<label for="name">
 									<xsl:value-of select="lang_reserve"/>
 								</label>
-								<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[reserve]" value="{value_reserve}">
+								<input data-validation="number" data-validation-allowing="float,negative" data-validation-decimal-separator="{$decimal_separator}" type="text" name="values[reserve]" value="{value_reserve}">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_reserve_statustext"/>
 									</xsl:attribute>
