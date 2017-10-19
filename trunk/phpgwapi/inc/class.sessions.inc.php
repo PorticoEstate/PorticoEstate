@@ -148,13 +148,12 @@
 		{
 			$this->_db			=& $GLOBALS['phpgw']->db;
 			$use_cookies = false;
+			$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
 			{
 				$use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
-
-				$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
 
 				$this->_phpgw_set_cookie_params();
 			}
@@ -914,12 +913,11 @@
 		 */
 		public function read_session($sessionid)
 		{
-/*
 			if($sessionid)
 			{
 				session_id($sessionid);
 			}
-*/
+
 			session_start();
 
 			if(!session_id() == $sessionid)
