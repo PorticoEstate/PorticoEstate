@@ -1,10 +1,13 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	
+
 	<div class="content">
 		<xsl:if test="backend != 'true'">
 			<ul class="pathway">
 				<li>
-					<a href="index.php?menuaction=bookingfrontend.uisearch.index">
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
 						<xsl:value-of select="php:function('lang', 'Home')" />
 					</a>
 				</li>

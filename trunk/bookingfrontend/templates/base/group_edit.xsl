@@ -272,8 +272,7 @@
 		var endpoint = '<xsl:value-of select="module" />';
         <![CDATA[
             $(document).ready(function(){
-                JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: endpoint+'.uiorganization.index', phpgw_return_as: 'json'} ), 'field_organization_name', 'field_organization_id', 'organization_container');
-                //JqueryPortico.autocompleteHelper('index.php?menuaction='+endpoint+'.uiorganization.index&phpgw_return_as=json&','field_organization_name', 'field_organization_id','organization_container');
+                JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: endpoint+'.uiorganization.index'}, true ), 'field_organization_name', 'field_organization_id', 'organization_container');
             });
         ]]>
 	</script>
