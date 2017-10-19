@@ -126,7 +126,7 @@
 						<xsl:call-template name="choice"/>
 					</xsl:when>
 					<xsl:when test="datatype='LB'">
-						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}">
+						<select id="id_{name}" name="values_attribute[{id}][value]" title="{$statustext}" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
