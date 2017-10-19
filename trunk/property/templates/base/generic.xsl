@@ -114,6 +114,13 @@
 								<xsl:choose>
 									<xsl:when test="type='text' or type='html'">
 										<textarea cols="{//textareacols}" rows="{//textarearows}" name="values[{name}]" id="{name}" class="pure-input-1-2" >
+											<xsl:choose>
+												<xsl:when test="nullable!='1' or required=1">
+													<xsl:attribute name="data-validation">
+														<xsl:text>required</xsl:text>
+													</xsl:attribute>
+												</xsl:when>
+											</xsl:choose>
 											<xsl:value-of select="value"/>
 										</textarea>
 									</xsl:when>
@@ -123,7 +130,7 @@
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
 											<xsl:choose>
-												<xsl:when test="nullable!='1'">
+												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
 														<xsl:text>required</xsl:text>
 													</xsl:attribute>
@@ -137,7 +144,7 @@
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
 											<xsl:choose>
-												<xsl:when test="nullable!='1'">
+												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
 														<xsl:text>required</xsl:text>
 													</xsl:attribute>
@@ -153,7 +160,7 @@
 												<xsl:value-of select="$descr"/>
 											</xsl:attribute>
 											<xsl:choose>
-												<xsl:when test="nullable!='1'">
+												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
 														<xsl:text>required</xsl:text>
 													</xsl:attribute>
@@ -213,7 +220,7 @@
 									<xsl:when test="type='select'">
 										<select id="{name}" name="values[{name}]" class="pure-input-1-2" >
 											<xsl:choose>
-												<xsl:when test="nullable!='1'">
+												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
 														<xsl:text>required</xsl:text>
 													</xsl:attribute>
@@ -235,7 +242,7 @@
 									<xsl:when test="type='multiple_select'">
 										<select id="{name}" name="values[{name}][]" multiple="multiple" class="pure-input-1-2" >
 											<xsl:choose>
-												<xsl:when test="nullable!='1'">
+												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
 														<xsl:text>required</xsl:text>
 													</xsl:attribute>
@@ -259,7 +266,7 @@
 														<xsl:text> disabled</xsl:text>
 													</xsl:attribute>
 												</xsl:when>
-												<xsl:when test="nullable!='1'">
+												<xsl:when test="nullable!='1' or required=1">
 													<xsl:attribute name="data-validation">
 														<xsl:text>required</xsl:text>
 													</xsl:attribute>
