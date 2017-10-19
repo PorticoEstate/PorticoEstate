@@ -123,13 +123,15 @@
 								(
 								'name' => 'name',
 								'descr' => lang('name'),
-								'type' => 'varchar'
+								'type' => 'varchar',
+								'nullable' => false,
 							),
 							array
 								(
 								'name' => 'content',
 								'descr' => lang('content'),
-								'type' => 'text'
+								'type' => 'text',
+								'nullable' => false,
 							),
 							array
 								(
