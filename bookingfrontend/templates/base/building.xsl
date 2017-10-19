@@ -1,9 +1,12 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	
+
 	<div class="content">
 		<ul class="pathway">
 			<li>
-				<a href="index.php?menuaction=bookingfrontend.uisearch.index">
+				<a>
+					<xsl:attribute name="href">
+						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+					</xsl:attribute>
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</li>
@@ -14,7 +17,7 @@
 			</li>
 		</ul>
 
-		<xsl:for-each select="building">	
+		<xsl:for-each select="building">
 			<xsl:if test="deactivate_calendar=0">
 				<div>
 					<button onclick="window.location.href='{schedule_link}'">
@@ -36,7 +39,7 @@
 								</dd>
 							</dl>
 						</xsl:if>
-				
+
 						<xsl:if test="normalize-space(homepage) or normalize-space(email) or normalize-space(phone) or normalize-space(street)">
 							<h3>
 								<xsl:value-of select="php:function('lang', 'Contact information')" />
@@ -61,7 +64,7 @@
 										</a>
 									</dd>
 								</xsl:if>
-					
+
 								<xsl:if test="email and normalize-space(email)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Email')" />
@@ -72,7 +75,7 @@
 										</a>
 									</dd>
 								</xsl:if>
-					
+
 								<xsl:if test="phone and normalize-space(phone)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Telephone')" />
@@ -81,7 +84,7 @@
 										<xsl:value-of select="phone"/>
 									</dd>
 								</xsl:if>
-					
+
 								<xsl:if test="street and normalize-space(street)">
 									<dt>
 										<xsl:value-of select="php:function('lang', 'Address')" />
@@ -98,7 +101,7 @@
 								</xsl:if>
 							</dl>
 						</xsl:if>
-				
+
 						<h3>
 							<xsl:value-of select="php:function('lang', 'Bookable resources')" />
 						</h3>
@@ -144,7 +147,7 @@
 				var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
 				var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
                 ]]>
-				
+
 				var rResources = 'results';
 				var rBuilding_users = [{n: 'ResultSet'},{n: 'Result'}];
 
@@ -170,7 +173,7 @@
 				$("#googlemaplink").attr("href", linkurl);
 				}
 				});
-				
+
 			</script>
 		</xsl:for-each>
 	</div>

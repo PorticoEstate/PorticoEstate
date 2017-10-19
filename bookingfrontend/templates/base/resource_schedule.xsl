@@ -4,8 +4,11 @@
 		<xsl:for-each select="pathway">
 			<ul class="pathway">
 				<li>
-					<a href="index.php?menuaction=bookingfrontend.uisearch.index">
-						<xsl:value-of select="lang_home" />
+					<a>
+						<xsl:attribute name="href">
+							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+						</xsl:attribute>
+						<xsl:value-of select="php:function('lang', 'Home')" />
 					</a>
 				</li>
 				<li>
