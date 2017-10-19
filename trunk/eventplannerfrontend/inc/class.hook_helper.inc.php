@@ -194,13 +194,13 @@ HTML;
 							'menuaction' => phpgw::get_var('menuaction')
 						)
 					);
-					$base = '/eventplannerfrontend/';
+					$base = 'eventplannerfrontend/';
 					$oArgs = '{menuaction:"' . phpgw::get_var('menuaction') .'"}';
 				}
 				else
 				{
 					$action = $GLOBALS['phpgw']->link('/eventplannerfrontend/home.php');
-					$base = '/eventplannerfrontend/home.php';
+					$base = 'eventplannerfrontend/home.php';
 					$oArgs = '{}';
 				}
 
