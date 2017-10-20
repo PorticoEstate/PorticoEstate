@@ -22,6 +22,15 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="pure-table-odd">
+			<td>{lang_Use_cookies_to_pass_sessionid}:</td>
+			<td>
+				<select name="newsettings[usecookies]">
+					<option value="">{lang_No}</option>
+					<option value="True"{selected_usecookies_True}>{lang_Yes}</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_cookie_domain_for_sessions_-_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>

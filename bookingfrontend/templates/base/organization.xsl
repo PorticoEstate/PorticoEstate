@@ -3,7 +3,10 @@
 	<div class="content">
 		<ul class="pathway">
 			<li>
-				<a href="index.php?menuaction=bookingfrontend.uisearch.index">
+				<a>
+					<xsl:attribute name="href">
+						<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>
+					</xsl:attribute>
 					<xsl:value-of select="php:function('lang', 'Home')" />
 				</a>
 			</li>
@@ -118,10 +121,10 @@
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Activity', 'Contact 1', 'Contact 2', 'email','phone', 'active')"/>;
 	
 		<![CDATA[
-                var groupURL = 'index.php?menuaction=bookingfrontend.uigroup.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&';
-                var delegateURL = 'index.php?menuaction=bookingfrontend.uidelegate.index&sort=name&filter_organization_id=' + organization_id + '&phpgw_return_as=json&filter_active=-1&';
-                var buildingURL = 'index.php?menuaction=bookingfrontend.uibuilding.find_buildings_used_by&sort=name&organization_id=' + organization_id + '&phpgw_return_as=json&';
-                ]]>
+		var groupURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uigroup.index', sort:'name', filter_organization_id: organization_id}, true);
+		var delegateURL =  phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uidelegate.index', sort: 'name', filter_organization_id: organization_id, filter_active:'-1'},true);
+		var buildingURL = phpGWLink('bookingfrontend/index.php', {menuaction:'bookingfrontend.uibuilding.find_buildings_used_by', sort:'name', organization_id: organization_id}, true);
+		]]>
                 
 		var rBuilding = [{n: 'ResultSet'},{n: 'Result'}];
                 
