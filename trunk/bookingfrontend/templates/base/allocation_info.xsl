@@ -8,7 +8,7 @@
 		</dt>
 		<dd>
 			<a href="{allocation/building_link}">
-				<xsl:value-of select="allocation/resources[position()=1]/building_name"/>
+				<xsl:value-of select="allocation/building_name"/>
 			</a>
 			(<xsl:value-of select="allocation/resource_info"/>)
 		</dd>
