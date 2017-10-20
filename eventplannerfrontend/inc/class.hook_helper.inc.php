@@ -86,7 +86,7 @@
 			{
 				$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config['cookie_domain'];
 			}
-			
+			$GLOBALS['phpgw_info']['server']['usecookies'] = $config->config_data['usecookies'];
 		}
 
 		public function login( )
@@ -207,12 +207,12 @@ HTML;
 				$message = 'Velg organisasjon';
 
 				$org_select = <<<HTML
-				
+
 					<label for="session_org_id">Velg Organisasjon:</label>
 					<select name="session_org_id" id="session_org_id">
 						{$org_option}
 					</select>
-				
+
 HTML;
 			}
 
