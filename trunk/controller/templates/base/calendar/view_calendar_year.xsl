@@ -1,5 +1,5 @@
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
-<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="session_url"><xsl:text>&amp;</xsl:text><xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
 
 	<script>

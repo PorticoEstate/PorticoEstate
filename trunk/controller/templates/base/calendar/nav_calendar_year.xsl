@@ -5,7 +5,7 @@
 <xsl:param name="serie_id" />
 
 
-<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="session_url"><xsl:text>&amp;</xsl:text><xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <div id="calNav">
 	<a class="showPrev">
 		<xsl:attribute name="href">
