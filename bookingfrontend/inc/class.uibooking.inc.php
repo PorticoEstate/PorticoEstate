@@ -1182,7 +1182,7 @@
 			}
 			$booking['resource_info'] = join(', ', $res_names);
 			$booking['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-					'id' => $booking['resources'][0]['building_id']));
+					'id' => $booking['building_id']));
 			$booking['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id' => $booking['group']['organization_id']));
 			$booking['group_link'] = self::link(array('menuaction' => 'bookingfrontend.uigroup.show',
