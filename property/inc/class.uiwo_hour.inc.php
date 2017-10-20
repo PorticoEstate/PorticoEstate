@@ -2041,8 +2041,9 @@ HTML;
 
 			$from_name = $GLOBALS['phpgw']->accounts->get($common_data['workorder']['user_id'])->__toString();
 
+			$ecodimb = !empty($common_data['workorder']['ecodimb']) ? $common_data['workorder']['ecodimb'] : $project['ecodimb'];
 			$from = lang('date') . ": {$date}\n";
-			$from .= lang('dimb') . ": {$common_data['workorder']['ecodimb']}\n";
+			$from .= lang('dimb') . ": {$ecodimb}\n";
 			$from .= lang('from') . ":\n   {$from_name}";
 			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['email']}";
 			$from .= "\n   {$GLOBALS['phpgw']->preferences->data['property']['cellphone']}";
