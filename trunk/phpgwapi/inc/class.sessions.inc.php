@@ -148,7 +148,7 @@
 		{
 			$this->_db			=& $GLOBALS['phpgw']->db;
 			$use_cookies = false;
-			$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('evenplannerfrontend','mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
+			$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('eventplannerfrontend','mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
 			{
