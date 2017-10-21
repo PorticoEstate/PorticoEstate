@@ -1995,15 +1995,18 @@ function formatBackendScheduleDateColumn(id, name, type, conflicts)
 	conflicts = (conflicts) ? conflicts : {};
 	if (type == "booking")
 	{
-		link = 'index.php?menuaction=booking.uibooking.edit&id=' + id;
+		link = phpGWLink('index.php', {menuaction:'booking.uibooking.edit', id:id});
+//		link = 'index.php?menuaction=booking.uibooking.edit&id=' + id;
 	}
 	else if (type == "allocation")
 	{
-		link = 'index.php?menuaction=booking.uiallocation.edit&id=' + id;
+		link = phpGWLink('index.php', {menuaction:'booking.uiallocation.edit', id:id});
+//		link = 'index.php?menuaction=booking.uiallocation.edit&id=' + id;
 	}
 	else if (type == "event")
 	{
-		link = 'index.php?menuaction=booking.uievent.edit&id=' + id;
+		link = phpGWLink('index.php', {menuaction:'booking.uievent.edit', id:id});
+//		link = 'index.php?menuaction=booking.uievent.edit&id=' + id;
 	}
 	text = formatGenericLink(name, link);
 	if (type == "event" && conflicts.length > 0)
