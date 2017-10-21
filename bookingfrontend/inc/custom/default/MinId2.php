@@ -204,7 +204,14 @@
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
-			return json_decode($result, true);
-
+			$ret = json_decode($result, true);
+			if(isset($ret['orgnr']))
+			{
+				return array($ret);
+			}
+			else
+			{
+				return $ret;
+			}
 		}
 	}
