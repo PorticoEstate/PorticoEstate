@@ -210,7 +210,7 @@
 			if ($this->db->next_record())
 			{
 				$id = $this->db->f('id', false);
-				return sprintf('index.php?menuaction=bookingfrontend.uidocumentation.download&id=%s', $id);
+				return $GLOBALS['phpgw']->link('/bookingfrontend/index.php', array('menuaction' => 'bookingfrontend.uidocumentation.download', 'id'=> $id));
 			}
 			return null;
 		}
@@ -221,7 +221,7 @@
 			if ($this->db->next_record())
 			{
 				$id = $this->db->f('id', false);
-				return sprintf('index.php?menuaction=booking.uidocumentation.download&id=%s', $id);
+				return $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uidocumentation.download', 'id'=> $id));
 			}
 			return null;
 		}
