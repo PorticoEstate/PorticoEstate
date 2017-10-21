@@ -58,6 +58,14 @@
 			<td><input name="newsettings[login_parameter]" value="{value_login_parameter}"></td>
 		</tr>
 		<tr class="row_off">
+			<td>{lang_login_apikey} MinId2:</td>
+			<td><input name="newsettings[apikey]" value="{value_apikey}"></td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_login_webservicehost} MinId2:</td>
+			<td><input name="newsettings[webservicehost]" value="{value_webservicehost}"></td>
+		</tr>
+		<tr class="row_off">
 			<td>{lang_login_header_key}:</td>
 			<td><input name="newsettings[header_key]" value="{value_header_key}"></td>
 		</tr>
