@@ -187,7 +187,7 @@
 												if (filter_select != filter_selected){
 												if (filter_depends) {
 													<![CDATA[
-															JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.' + FunctionName + '&filter_'+depends+'_id='+filter_depends+'&',
+															JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&filter_'+depends+'_id='+filter_depends+'&',
 																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 												}
@@ -202,7 +202,7 @@
 												filter_depends = false;
 												if (!filter_depends) {
 															<![CDATA[
-																JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ ui + '.' + FunctionName +'&',
+																JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) +'&',
 																									'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 															]]>
 												}
@@ -215,12 +215,12 @@
 											</xsl:if>
 											if (filter_depends) {
 													<![CDATA[
-														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.' + FunctionName + '&filter_'+depends+'_id='+filter_depends+'&',
+														JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&filter_'+depends+'_id='+filter_depends+'&',
 																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 											}else{
 													<![CDATA[
-														JqueryPortico.autocompleteHelper('index.php?menuaction=' + app + '.ui'+ui+'.' + FunctionName + '&',
+														JqueryPortico.autocompleteHelper(phpGWLink('index.php', {menuaction:app + '.ui'+ui+'.' + FunctionName}) + '&',
 																							'filter_'+name+'_name', 'filter_'+name+'_id', 'filter_'+name+'_container', label_attr, show_id, requestGenerator);
 													]]>
 											}
