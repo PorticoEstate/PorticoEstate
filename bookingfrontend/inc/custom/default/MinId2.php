@@ -46,7 +46,7 @@
 
 		protected function get_user_org_id()
 		{
-			$ipdp = sha1($_SERVER['HTTP_UID']);
+			$ipdp = $_SERVER['HTTP_UID'];
 			$bregorgs = $this->get_breg_orgs($ipdp);
 			$myorgnr = array();
 			if ($bregorgs == array())
@@ -171,7 +171,7 @@
 			$apikey = !empty($this->config->config_data['apikey']) ? $this->config->config_data['apikey'] : '45090934oidtgj3Dtgijr3GrtiorthrtpiRTHSRhoRTHrthoijrtgrsSERgerthoijRDTeortigjesrgERHGeihjoietrh';
 			$webservicehost = !empty($this->config->config_data['webservicehost']) ? $this->config->config_data['webservicehost'] : '';
 
-			if(!$webservicehost && !$apikey)
+			if(!$webservicehost || !$apikey)
 			{
 				throw new Exception('Missing parametres for webservice');
 			}
