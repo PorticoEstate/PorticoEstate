@@ -109,11 +109,24 @@
 		{
 			$results = array();
 
-
 			/**
 			 * Her kaller du tjenesten som gjør spørringen mot Brønnøysund.
 			 *	$fodselsnr er som det skal være (ikke hash)
 			 */
+			$orgs = $this->get_orgs_from_external_service($fodselsnr);
+
+			if($orgs && is_array($orgs))
+			{
+				foreach ($orgs as $org)
+				{
+					$results[] = array
+					(
+						'orgnr' => $org['orgnr']
+					);
+
+					$orgs_validate[] = $org['orgnr'];
+				}
+			}
 
 			if ($this->debug)
 			{
@@ -150,5 +163,43 @@
 			}
 
 			return $results;
+		}
+
+
+		private function get_orgs_from_external_service($fodselsnr)
+		{
+			$apikey = !empty($this->config->config_data['apikey']) ? $this->config->config_data['apikey'] : '45090934oidtgj3Dtgijr3GrtiorthrtpiRTHSRhoRTHrthoijrtgrsSERgerthoijRDTeortigjesrgERHGeihjoietrh';
+			$webservicehost = !empty($this->config->config_data['webservicehost']) ? $this->config->config_data['webservicehost'] : '';
+
+			if(!$webservicehost && !$apikey)
+			{
+				throw new Exception('Missing parametres for webservice');
+			}
+
+			$post_data = array
+			(
+				'apikey'	=> $apikey,
+				'id'		=> $fodselsnr
+			);
+			foreach ( $post_data as $key => $value)
+			{
+				$post_items[] = $key . '=' . $value;
+			}
+
+			$post_string = implode ('&', $post_items);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $webservicehost);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			return json_decode($result, true);
+
 		}
 	}
