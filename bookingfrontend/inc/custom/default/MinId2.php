@@ -109,12 +109,44 @@
 		{
 			$results = array();
 
+
+			/**
+			 * Her kaller du tjenesten som gjør spørringen mot Brønnøysund.
+			 *	$fodselsnr er som det skal være (ikke hash)
+			 */
+
 			if ($this->debug)
 			{
 				$results[] = array
 				(
 					'orgnr' => 964965226
 				);
+				$orgs_validate[] = 964965226;
+
+			}
+
+			$hash = sha1($fodselsnr);
+			$ssn =  '{SHA1}' . base64_encode($hash);
+
+			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"
+				. " FROM bb_delegate"
+				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
+				. " WHERE bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
+
+			while($this->db->next_record())
+			{
+				$organization_number = $this->db->f('organization_number');
+				if(in_array($organization_number, $orgs_validate))
+				{
+					continue;
+				}
+				$results[] = array
+				(
+					'orgnr' => $organization_number
+				);
+
+				$orgs_validate[] = $organization_number;
+
 			}
 
 			return $results;
