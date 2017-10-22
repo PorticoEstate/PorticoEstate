@@ -42,11 +42,16 @@
 		public function __construct()
 		{
 			parent::__construct();
+
+			if (!empty($this->config->config_data['debug']))
+			{
+				$this->debug = true;
+			}
 		}
 
 		protected function get_user_org_id()
 		{
-			$ipdp = sha1($_SERVER['HTTP_UID']);
+			$ipdp = $_SERVER['HTTP_UID'];
 			$bregorgs = $this->get_breg_orgs($ipdp);
 			$myorgnr = array();
 			if ($bregorgs == array())
@@ -109,14 +114,104 @@
 		{
 			$results = array();
 
+			/**
+			 * Her kaller du tjenesten som gjør spørringen mot Brønnøysund.
+			 *	$fodselsnr er som det skal være (ikke hash)
+			 */
+			$orgs = $this->get_orgs_from_external_service($fodselsnr);
+
+			if($orgs && is_array($orgs))
+			{
+				foreach ($orgs as $org)
+				{
+					$results[] = array
+					(
+						'orgnr' => $org['orgnr']
+					);
+
+					$orgs_validate[] = $org['orgnr'];
+				}
+			}
+
 			if ($this->debug)
 			{
 				$results[] = array
 				(
 					'orgnr' => 964965226
 				);
+				$orgs_validate[] = 964965226;
+
+			}
+
+			$hash = sha1($fodselsnr);
+			$ssn =  '{SHA1}' . base64_encode($hash);
+
+			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"
+				. " FROM bb_delegate"
+				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
+				. " WHERE bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
+
+			while($this->db->next_record())
+			{
+				$organization_number = $this->db->f('organization_number');
+				if(in_array($organization_number, $orgs_validate))
+				{
+					continue;
+				}
+				$results[] = array
+				(
+					'orgnr' => $organization_number
+				);
+
+				$orgs_validate[] = $organization_number;
+
 			}
 
 			return $results;
+		}
+
+
+		private function get_orgs_from_external_service($fodselsnr)
+		{
+			$apikey = !empty($this->config->config_data['apikey']) ? $this->config->config_data['apikey'] : '45090934oidtgj3Dtgijr3GrtiorthrtpiRTHSRhoRTHrthoijrtgrsSERgerthoijRDTeortigjesrgERHGeihjoietrh';
+			$webservicehost = !empty($this->config->config_data['webservicehost']) ? $this->config->config_data['webservicehost'] : '';
+
+			if(!$webservicehost || !$apikey)
+			{
+				throw new Exception('Missing parametres for webservice');
+			}
+
+			$post_data = array
+			(
+				'apikey'	=> $apikey,
+				'id'		=> $fodselsnr
+			);
+			foreach ( $post_data as $key => $value)
+			{
+				$post_items[] = $key . '=' . $value;
+			}
+
+			$post_string = implode ('&', $post_items);
+
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_URL, $webservicehost);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array( 'Content-Type: application/json'));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			$ret = json_decode($result, true);
+			if(isset($ret['orgnr']))
+			{
+				return array($ret);
+			}
+			else
+			{
+				return $ret;
+			}
 		}
 	}

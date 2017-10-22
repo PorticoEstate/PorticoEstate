@@ -393,6 +393,18 @@
 				$season = $this->season_bo->read_single(phpgw::get_var('season_id','int', 'POST'));
 				$booking['organization_id'] = phpgw::get_var('organization_id','int', 'POST');
 				$booking['organization_name'] = phpgw::get_var('organization_name','string', 'POST');
+				if($application_id && empty($booking['organization_id']))
+				{
+					$application = createObject('booking.boapplication')->read_single($application_id);
+					if($organization_number = $application['customer_organization_number'])
+					{
+						$organizations = createObject('booking.soorganization')->read(array('filters' => array('organization_number' => $organization_number,
+							'active' => 1)));
+
+						$_POST['organization_id'] = $organizations['results'][0]['id'];
+						$_POST['organization_name'] = $organizations['results'][0]['name'];
+					}
+				}
 				$noallocation = True;
 			}
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')

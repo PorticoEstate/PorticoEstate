@@ -291,8 +291,7 @@ function populateTableChkResources(building_id, selection)
 
 function populateTableChkRegulations(building_id, selection, resources)
 {
-	var url = 'index.php?menuaction=booking.uidocument_view.regulations&sort=name&phpgw_return_as=json&owner[]=building::' + building_id;
-//    var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uidocument_view.regulations', sort: 'name', 'owner[]': 'building::'+building_id}, true);
+    var url = phpGWLink('bookingfrontend/', {menuaction: 'booking.uidocument_view.regulations', sort: 'name'}, true) + '&owner[]=building::' + building_id;
 	for (var r in resources)
 	{
 		url += '&owner[]=resource::' + resources[r];

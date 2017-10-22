@@ -80,6 +80,6 @@
 			{
 				$GLOBALS['phpgw_info']['server']['cookie_domain'] = $config->config_data['cookie_domain'];
 			}
-//			$GLOBALS['phpgw_info']['server']['usecookies'] = $config->config_data['usecookies'];
+			$GLOBALS['phpgw_info']['server']['usecookies'] = $config->config_data['usecookies'];
 		}
 	}

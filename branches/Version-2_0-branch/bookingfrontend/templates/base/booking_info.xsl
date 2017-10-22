@@ -14,7 +14,7 @@
 		</dt>
 		<dd>
 			<a href="{booking/building_link}">
-				<xsl:value-of select="booking/resources[position()=1]/building_name"/>
+				<xsl:value-of select="booking/building_name"/>
 			</a>
 			(<xsl:value-of select="booking/resource_info"/>)
 		</dd>

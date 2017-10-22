@@ -2,7 +2,7 @@
 <xsl:template name="calendar_filters" xmlns:php="http://php.net/xsl">
 
   <xsl:param name="view_period" />
-<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="session_url"><xsl:text>&amp;</xsl:text><xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 
   <form id="cal-filters" class="select-box" method="post">
     <xsl:choose>

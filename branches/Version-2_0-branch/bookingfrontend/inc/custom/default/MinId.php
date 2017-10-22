@@ -46,7 +46,7 @@
 
 		protected function get_user_org_id()
 		{
-			$ipdp = sha1($_SERVER['HTTP_UID']);
+			$ipdp = $_SERVER['HTTP_UID'];
 			$bregorgs = $this->get_breg_orgs($ipdp);
 			$myorgnr = array();
 			if ($bregorgs == array())
@@ -100,8 +100,9 @@
 			}
 		}
 
-		private function get_breg_orgs( $fodselsnr )
+		private function get_breg_orgs( $fodselsnr = '')
 		{
+			$hash = sha1($fodselsnr);
 			$db = createObject('phpgwapi.db', null, null, true);
 
 			$db->Host = $GLOBALS['phpgw_domain']['default']['db_host'];
@@ -125,7 +126,7 @@
 				));
 			}
 
-			$sql = "SELECT DISTINCT orgnr FROM breg.personcurrent WHERE fodselsnr ='{$fodselsnr}'";
+			$sql = "SELECT DISTINCT orgnr FROM breg.personcurrent WHERE fodselsnr ='{$hash}'";
 
 			$orgs_validate = array();
 			$results = array();
@@ -140,7 +141,6 @@
 				$orgs_validate[] = $organization_number;
 			}
 
-			$hash = sha1($fodselsnr);
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
 			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"

@@ -384,7 +384,7 @@
 			$allocation['resource'] = phpgw::get_var('resource');
 			$allocation['resource_info'] = join(', ', $res_names);
 			$allocation['building_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.show',
-					'id' => $allocation['resources'][0]['building_id']));
+					'id' => $allocation['building_id']));
 			$allocation['org_link'] = self::link(array('menuaction' => 'bookingfrontend.uiorganization.show',
 					'id' => $allocation['organization_id']));
 			$bouser = CreateObject('bookingfrontend.bouser');
