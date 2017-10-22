@@ -205,7 +205,16 @@ this.fetch_vendor_contract = function ()
 						return;
 					}
 
-					htmlString = "<option value=''>" + data.length + " kontrakter funnet</option>"
+					if(data.length > 0)
+					{
+//						$("#vendor_contract_id").attr("data-validation", "required");
+						htmlString = "<option value=''> kontrakter funnet</option>";
+					}
+					else
+					{
+						htmlString = "<option value=''> kontrakter ikke funnet</option>";
+					}
+
 					var obj = data;
 
 					$.each(obj, function (i)
