@@ -2,7 +2,7 @@
 <xsl:template match="data"  xmlns:php="http://php.net/xsl">
 <xsl:variable name="date_format"><xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" /></xsl:variable>
 <xsl:variable name="month_str">month <xsl:value-of select="current_month_nr"/> capitalized</xsl:variable>
-<xsl:variable name="session_url">&amp;<xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
+<xsl:variable name="session_url"><xsl:text>&amp;</xsl:text><xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>
 <xsl:variable name="location_code"><xsl:value-of select="location_code" /></xsl:variable>
 <xsl:variable name="serie_id"><xsl:value-of select="serie_id" /></xsl:variable>
 

@@ -1,7 +1,7 @@
 <!-- $Id: procedure_item.xsl 8485 2012-01-05 08:21:03Z erikhl $ -->
 
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<xsl:variable name="session_url">&amp;
+	<xsl:variable name="session_url"><xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
 
