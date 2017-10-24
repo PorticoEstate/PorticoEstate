@@ -2803,11 +2803,11 @@
 					{
 						$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$type], ".{$type}.{$entry['entity_id']}.{$entry['cat_id']}");
 
-						$sql = "SELECT count(id) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
+						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_id = {$location_id} AND p_location_id = {$p_location_id} AND p_id = '{$p_id}'";
 					}
 					else
 					{
-						$sql = "SELECT count(id) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 					}
 
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -2834,7 +2834,7 @@
 				}
 			}
 
-			$sql = "SELECT count(id) as hits FROM fm_tts_tickets WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
@@ -2852,7 +2852,7 @@
 				);
 			}
 
-			$sql = "SELECT count(id) as hits FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT count(*) as hits FROM fm_request WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
@@ -2870,7 +2870,7 @@
 				);
 			}
 
-			$sql = "SELECT count(id) as hits FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT count(*) as hits FROM fm_project WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
@@ -2886,7 +2886,7 @@
 				);
 			}
 
-			$sql = "SELECT count(fm_s_agreement.id) as hits FROM fm_s_agreement {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
+			$sql = "SELECT count(*) as hits FROM fm_s_agreement {$this->join} fm_s_agreement_detail ON fm_s_agreement.id = fm_s_agreement_detail.agreement_id WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$p_id}'";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
