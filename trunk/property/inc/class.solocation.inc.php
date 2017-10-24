@@ -100,11 +100,11 @@
 						$this->db->query("SELECT id as bim_type FROM fm_bim_type WHERE location_id = {$location_id}", __LINE__, __FILE__);
 						$this->db->next_record();
 						$bim_type = (int)$this->db->f('bim_type');
-						$sql = "SELECT count(*) as hits FROM fm_bim_item WHERE location_code {$condition} AND type = {$bim_type}";
+						$sql = "SELECT count(id) as hits FROM fm_bim_item WHERE location_code {$condition} AND type = {$bim_type}";
 					}
 					else
 					{
-						$sql = "SELECT count(*) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code {$condition}";
+						$sql = "SELECT count(id) as hits FROM fm_{$type}_{$entry['entity_id']}_{$entry['cat_id']} WHERE location_code {$condition}";
 					}
 
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -129,7 +129,7 @@
 				}
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_tts_tickets WHERE location_code {$condition}";
+			$sql = "SELECT count(id) as hits FROM fm_tts_tickets WHERE location_code {$condition}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
@@ -144,7 +144,7 @@
 				);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_request WHERE location_code {$condition}";
+			$sql = "SELECT count(id) as hits FROM fm_request WHERE location_code {$condition}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
@@ -159,7 +159,7 @@
 				);
 			}
 
-			$sql = "SELECT count(*) as hits FROM fm_project WHERE location_code {$condition}";
+			$sql = "SELECT count(id) as hits FROM fm_project WHERE location_code {$condition}";
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->db->next_record();
 			if ($this->db->f('hits'))
@@ -1005,7 +1005,7 @@
 
 			if (!$cache_info)
 			{
-				$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' from')), __LINE__, __FILE__);
+				$this->db->query("SELECT count(fm_location{$type_id}.location_code) AS cnt " . substr($sql, strripos($sql, ' from')), __LINE__, __FILE__);
 				$this->db->next_record();
 
 				$cache_info = array
@@ -1557,7 +1557,7 @@
 					}
 				}
 
-				$sql = "SELECT $parent_table.location_code ,count(*) as count_99  FROM $paranthesis fm_location$type_id $joinmethod where fm_location$type_id.status=2 group by $parent_table.location_code ";
+				$sql = "SELECT $parent_table.location_code ,count(fm_location{$type_id}.location_code) as count_99  FROM $paranthesis fm_location$type_id $joinmethod where fm_location$type_id.status=2 group by $parent_table.location_code ";
 				$this->db->query($sql, __LINE__, __FILE__);
 
 				while ($this->db->next_record())
@@ -1565,7 +1565,7 @@
 					$outdated[$this->db->f('location_code')]['count_99'] = $this->db->f('count_99');
 				}
 
-				$sql = "SELECT $parent_table.location_code ,count(*) as count_all  FROM $paranthesis fm_location$type_id $joinmethod group by $parent_table.location_code ";
+				$sql = "SELECT $parent_table.location_code ,count(fm_location{$type_id}.location_code) as count_all  FROM $paranthesis fm_location$type_id $joinmethod group by $parent_table.location_code ";
 				$this->db->query($sql, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
@@ -1893,7 +1893,7 @@
 
 			$table = 'fm_location' . $type_id . '_history';
 
-			$sql = "SELECT count(*) AS cnt FROM $table WHERE location_code='$location_code'";
+			$sql = "SELECT count(location_code) AS cnt FROM $table WHERE location_code='$location_code'";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
