@@ -133,16 +133,6 @@
 				}
 			}
 
-			if ($this->debug)
-			{
-				$results[] = array
-				(
-					'orgnr' => 964965226
-				);
-				$orgs_validate[] = 964965226;
-
-			}
-
 			$hash = sha1($fodselsnr);
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
@@ -165,6 +155,11 @@
 
 				$orgs_validate[] = $organization_number;
 
+			}
+			if ($this->debug)
+			{
+				_debug_array($results);
+				die();
 			}
 
 			return $results;
@@ -193,6 +188,15 @@
 
 			$post_string = implode ('&', $post_items);
 
+
+			if ($this->debug)
+			{
+				echo "POST:<br/>";
+				_debug_array($webservicehost);
+				_debug_array($post_data);
+			}
+
+
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_URL, $webservicehost);
@@ -205,6 +209,16 @@
 			curl_close($ch);
 
 			$ret = json_decode($result, true);
+
+			if ($this->debug)
+			{
+				echo "httpCode:<br/>";
+				_debug_array($httpCode);
+				echo "Returdata:<br/>";
+				_debug_array($ret);
+			}
+
+
 			if(isset($ret['orgnr']))
 			{
 				return array($ret);

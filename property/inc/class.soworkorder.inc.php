@@ -1014,7 +1014,7 @@
 					);
 
 				$file_attachments = trim($this->db->f('file_attachments'), ',');
-				$workorder['file_attachments'] = $workorder ? explode(',', $file_attachments) : array();
+				$workorder['file_attachments'] = $file_attachments ? explode(',', $file_attachments) : array();
 
 				$sql = "SELECT periodization_id,"
 					. " sum(fm_workorder_budget.budget) AS budget, sum(fm_workorder_budget.combined_cost) AS combined_cost,"
