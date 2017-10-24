@@ -1157,8 +1157,8 @@
 					oControls.each(function()
 					{
 						var test = $(this).val();
-						console.log(test);
-						console.log(test.constructor);
+//						console.log(test);
+//						console.log(test.constructor);
 						if ( $(this).attr('name') && test != null && test.constructor !== Array)
 						{
 							value = $(this).val().replace('"', '"');
