@@ -352,6 +352,16 @@
 					exit;
 				}
 
+				if ( phpgw::get_var('phpgw_return_as', 'string', 'GET') == "json" )
+				{
+					header('Content-Type: application/json');
+					echo json_encode(array(
+						'sessionid' => $GLOBALS['sessionid'],
+						'session_name'	=> session_name(),
+					));
+					exit;
+				}
+
 				if ($receipt)
 				{
 					phpgwapi_cache::message_set($receipt, 'message');
