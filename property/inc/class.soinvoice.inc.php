@@ -446,7 +446,7 @@
 				. " {$this->left_join} fm_project ON fm_workorder.project_id = fm_project.id"
 				. " {$this->join} fm_vendor ON $table.spvend_code = fm_vendor.id $filtermethod";
 
-			$this->db->query('SELECT count(*) AS cnt ' . substr($sql, strripos($sql, ' FROM')), __LINE__, __FILE__);
+			$this->db->query("SELECT count({$table}.id) AS cnt " . substr($sql, strripos($sql, ' FROM')), __LINE__, __FILE__);
 			$this->db->next_record();
 			$this->total_records = $this->db->f('cnt');
 
