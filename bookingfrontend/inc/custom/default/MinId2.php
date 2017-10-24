@@ -133,16 +133,6 @@
 				}
 			}
 
-			if ($this->debug)
-			{
-				$results[] = array
-				(
-					'orgnr' => 964965226
-				);
-				$orgs_validate[] = 964965226;
-
-			}
-
 			$hash = sha1($fodselsnr);
 			$ssn =  '{SHA1}' . base64_encode($hash);
 
@@ -165,6 +155,11 @@
 
 				$orgs_validate[] = $organization_number;
 
+			}
+			if ($this->debug)
+			{
+				_debug_array($results);
+				die();
 			}
 
 			return $results;
@@ -221,7 +216,6 @@
 				_debug_array($httpCode);
 				echo "Returdata:<br/>";
 				_debug_array($ret);
-				die();
 			}
 
 
