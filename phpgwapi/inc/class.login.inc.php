@@ -53,6 +53,27 @@
 				$_REQUEST['skip_remote']				 = true;
 			}
 
+			if ( $_POST['mode'] == 'api' )
+			{
+				$_POST['submitit'] = true;
+				$GLOBALS['phpgw_remote_user_fallback']	 = 'sql';
+				$_REQUEST['skip_remote']				 = true;
+				switch ($_POST['section'])
+				{
+					case 'activitycalendarfrontend':
+						$GLOBALS['phpgw_info']['flags']['session_name'] = 'activitycalendarfrontendsession';
+						break;
+					case 'bookingfrontend':
+						$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
+						break;
+					case 'eventplannerfrontend':
+						$GLOBALS['phpgw_info']['flags']['session_name'] = 'eventplannerfrontendsession';
+						break;
+					default://nothing
+						break;
+				}
+			}
+
 			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 
 			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
@@ -352,7 +373,7 @@
 					exit;
 				}
 
-				if ( phpgw::get_var('phpgw_return_as', 'string', 'GET') == "json" )
+				if ( phpgw::get_var('mode', 'string', 'POST') == 'api' )
 				{
 					header('Content-Type: application/json');
 					echo json_encode(array(
