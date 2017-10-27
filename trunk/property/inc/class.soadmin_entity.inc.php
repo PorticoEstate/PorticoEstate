@@ -162,7 +162,7 @@
 			if ($query)
 			{
 				$query = $this->db->db_addslashes($query);
-				$querymethod = " AND name {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%'";
+				$querymethod = " AND (name {$this->like} '%{$query}%' OR descr {$this->like} '%{$query}%')";
 			}
 			if ($enable_controller)
 			{
