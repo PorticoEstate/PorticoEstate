@@ -35,7 +35,12 @@ this.onActionsClick = function ()
 		values_tophp.push($(this).val());
 	});
 
-	document.form.template_attrib.value = values_tophp;
+	if($("#template_attrib") && values_tophp)
+	{
+
+		$("#template_attrib").val(values_tophp);
+	//	document.form.template_attrib.value = values_tophp;
+	}
 	document.form.submit();
 }
 
