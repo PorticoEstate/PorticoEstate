@@ -115,6 +115,7 @@
 			$sort			= isset($data['sort']) && $data['sort'] ? $data['sort']:'DESC';
 			$order			= isset($data['order'])?$data['order']:'';
 			$cat_id			= isset($data['cat_id']) && $data['cat_id'] ? $data['cat_id']:0;
+			$parent_cat_id	= isset($data['parent_cat_id']) && $data['parent_cat_id'] ? $data['parent_cat_id']:0;
 			$start_date		= isset($data['start_date']) && $data['start_date'] ? (int)$data['start_date'] : 0;
 			$end_date		= isset($data['end_date']) && $data['end_date'] ? (int)$data['end_date'] : 0;
 			$results		= isset($data['results']) && $data['results'] ? (int)$data['results'] : 0;
@@ -170,11 +171,25 @@
 
 			$where= 'WHERE';
 
+			if($parent_cat_id)
+			{
+				$_cats	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_sorted_array(0, false, '', '', '', false, $parent_cat_id);
+				$_filter_cat = array($parent_cat_id);
+				foreach ($_cats as $_cat)
+				{
+					$_filter_cat[] = $_cat['id'];
+
+				}
+
+				$filtermethod = ' WHERE cat_id IN (' . implode(',', $_filter_cat) . ')';
+				$where= 'AND';
+			}
+
 			$GLOBALS['phpgw']->config->read();
 
 			if(isset($GLOBALS['phpgw']->config->config_data['acl_at_tts_category']) && $GLOBALS['phpgw']->config->config_data['acl_at_tts_category'])
 			{
-				$filtermethod = " WHERE phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
+				$filtermethod .= " {$where} phpgw_helpdesk_tickets.cat_id IN (" . implode(",", $grant_category) . ")";
 				$where= 'AND';
 			}
 
@@ -1200,11 +1215,29 @@
 			}
 		}
 
-		public function get_reported_by()
+		public function get_reported_by($parent_cat_id = 0)
 		{
+			$filtermethod = '';
+
+			if($parent_cat_id)
+			{
+				$categories	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket');
+				$categories->supress_info	= true;
+				$_cats = $categories->return_sorted_array(0, false, '', '', '', false, $parent_cat_id);
+				$_filter_cat = array($parent_cat_id);
+				foreach ($_cats as $_cat)
+				{
+					$_filter_cat[] = $_cat['id'];
+			
+				}
+
+				$filtermethod = ' WHERE cat_id IN (' . implode(',', $_filter_cat) . ')';
+			}
+
 			$values = array();
 			$sql = "SELECT DISTINCT user_id as id , account_lastname, account_firstname FROM phpgw_helpdesk_tickets"
 				. " {$this->join} phpgw_accounts ON phpgw_helpdesk_tickets.user_id = phpgw_accounts.account_id"
+				. " {$filtermethod}"
 				. " ORDER BY account_lastname ASC";
 
 			$this->db->query($sql, __LINE__, __FILE__);

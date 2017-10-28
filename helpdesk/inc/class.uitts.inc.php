@@ -67,6 +67,7 @@
 		var $status;
 		var $filter;
 		var $user_filter;
+		var $parent_cat_id;
 
 		public function __construct()
 		{
@@ -101,6 +102,7 @@
 			$this->status_id			= $this->bo->status_id;
 			$this->user_id				= $this->bo->user_id;
 			$this->cat_id				= $this->bo->cat_id;
+			$this->parent_cat_id		= $this->bo->parent_cat_id;
 			$this->district_id			= $this->bo->district_id;
 			$this->allrows				= $this->bo->allrows;
 			$this->start_date			= $this->bo->start_date;
@@ -108,6 +110,10 @@
 			$this->location_code		= $this->bo->location_code;
 			$this->p_num				= $this->bo->p_num;
 
+			if($this->parent_cat_id)
+			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = "helpdesk::helpdesk_$this->parent_cat_id";
+			}
 
 			$default_interface = isset($this->bo->config->config_data['tts_default_interface']) ? $this->bo->config->config_data['tts_default_interface'] : '';
 
@@ -241,6 +247,7 @@
 				'branch_id' => phpgw::get_var('branch_id'),
 				'order_dim1' => phpgw::get_var('order_dim1'),
 				'check_date_type' => phpgw::get_var('check_date_type', 'int'),
+				'parent_cat_id'	=> $this->parent_cat_id
 			);
 
 			return $params;
@@ -287,11 +294,11 @@
 			$result_data['sum_budget'] = $this->bo->sum_budget;
 			$result_data['sum_actual_cost'] = $this->bo->sum_actual_cost;
 			$result_data['sum_difference'] = $this->bo->sum_difference;
-			$result_data['draw'] = $draw;
+			$result_data['draw'] = phpgw::get_var('draw', 'int');
 
 			$link_data = array
 				(
-				'menuaction' => 'helpdesk.uitts.view',
+				'menuaction' => 'helpdesk.uitts.view', 'parent_cat_id' => $this->parent_cat_id
 			);
 
 			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
@@ -711,16 +718,35 @@ HTML;
 
 			if(!$this->_simple)
 			{
-				$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
-					'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
-				$default_value = array('cat_id' => '', 'name' => lang('no category'));
-				array_unshift($values_combo_box[0]['cat_list'], $default_value);
-
-				$_categories = array();
-				foreach ($values_combo_box[0]['cat_list'] as $_category)
+				if($this->parent_cat_id)
 				{
-					$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
+					$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, $this->parent_cat_id);
+					$_categories = array();
+					foreach ($_cats as $_cat)
+					{
+						if($_cat['parent'] == $this->parent_cat_id)
+						{
+							if ($_cat['active'] != 2)
+							{
+								$_categories[] = $_cat;
+							}
+						}
+					}
 				}
+				else
+				{
+					$values_combo_box[0] = $this->cats->formatted_xslt_list(array('format' => 'filter',
+						'selected' => $this->cat_id, 'globals' => true, 'use_acl' => $this->_category_acl));
+
+					$_categories = array();
+					foreach ($values_combo_box[0]['cat_list'] as $_category)
+					{
+						$_categories[] = array('id' => $_category['cat_id'], 'name' => $_category['name']);
+					}
+
+				}
+
+				array_unshift($_categories, array('id' => '', 'name' => lang('no category')));
 
 				$combos[] = array('type' => 'filter',
 					'name' => 'cat_id',
@@ -840,6 +866,13 @@ JS;
 			$GLOBALS['phpgw']->jqcal->add_listener('filter_end_date');
 
 			$appname = $this->lang_app_name;
+
+			if($this->parent_cat_id)
+			{
+				$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
+				$appname = $parent_category[0]['name'];
+			}
+
 			$function_msg = lang('list ticket');
 
 			$data = array(
@@ -867,13 +900,13 @@ JS;
 					),
 				),
 				'datatable' => array(
-					'source' => self::link(array('menuaction' => 'helpdesk.uitts.index',
+					'source' => self::link(array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id,
 						'phpgw_return_as' => 'json')),
 					'download' => self::link(array('menuaction' => 'helpdesk.uitts.download',
 						'export' => true, 'allrows' => true)),
 					'allrows' => true,
 					"columns" => array('onclick' => "JqueryPortico.openPopup({menuaction:'helpdesk.uitts.columns'}, {closeAction:'reload'})"),
-					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add')),
+					'new_item' => self::link(array('menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id)),
 					'editor_action' => self::link(array('menuaction' => 'helpdesk.uitts.edit_survey_title')),
 					'field' => $this->_get_fields(),
 					'query' => phpgw::get_var('query')
@@ -902,7 +935,8 @@ JS;
 				'text' => lang('view'),
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
-					'menuaction' => 'helpdesk.uitts.view'
+					'menuaction' => 'helpdesk.uitts.view',
+					'parent_cat_id' => $this->parent_cat_id
 				)),
 				'parameters' => json_encode($parameters)
 			);
@@ -915,6 +949,7 @@ JS;
 				'action' => $GLOBALS['phpgw']->link('/index.php', array
 					(
 					'menuaction' => 'helpdesk.uitts._print',
+					'parent_cat_id' => $this->parent_cat_id
 				)),
 				'target' => '_blank',
 				'parameters' => json_encode($parameters)
@@ -933,6 +968,7 @@ JS;
 						'action' => $GLOBALS['phpgw']->link('/index.php', array
 							(
 							'menuaction' => 'helpdesk.uijasper.view',
+							'parent_cat_id' => $this->parent_cat_id,
 							'jasper_id' => $report['id'],
 						)),
 						'target' => '_blank',
@@ -1102,7 +1138,7 @@ JS;
 			$values['contact_id'] = phpgw::get_var('contact', 'int', 'POST');
 			if ((isset($values['cancel']) && $values['cancel']))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index','parent_cat_id' => $this->parent_cat_id));
 			}
 
 			$values_attribute = phpgw::get_var('values_attribute');
@@ -1302,11 +1338,11 @@ JS;
 
 					if ((isset($values['save']) && $values['save']))
 					{
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
 					}
 					else
 					{
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.view',
+						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.view', 'parent_cat_id' => $this->parent_cat_id,
 							'id' => $receipt['id'], 'tab' => 'general'));
 					}
 				}
@@ -1349,7 +1385,7 @@ JS;
 				'type' => 'form'));
 
 			$link_data = array(
-				'menuaction' => 'helpdesk.uitts.add'
+				'menuaction' => 'helpdesk.uitts.add', 'parent_cat_id' => $this->parent_cat_id
 			);
 
 			if (!isset($values['assignedto']))
@@ -1389,6 +1425,26 @@ JS;
 			$tabs['add'] = array('label' => lang('Add'), 'link' => '#add');
 			$active_tab = 'add';
 
+			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
+					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
+
+			/**overide*/
+			if($this->parent_cat_id)
+			{
+				$cat_select['cat_list'] = array();
+
+				$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, $this->parent_cat_id);
+				foreach ($_cats as $_cat)
+				{
+					$cat_select['cat_list'][] = array
+					(
+						'cat_id'	=> $_cat['id'],
+						'name'		=> $_cat['name'],
+						'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
+						'description' => $_cat['description']
+					);
+				}
+			}
 
 			$data = array(
 				'my_groups' => json_encode($my_groups),
@@ -1430,8 +1486,7 @@ JS;
 				'lang_town_statustext' => lang('Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN'),
 				'lang_part_of_town' => lang('Part of town'),
 				'lang_no_part_of_town' => lang('No part of town'),
-				'cat_select' => $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
-					'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2')),
+				'cat_select' => $cat_select,
 				'pref_send_mail' => (isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : ''),
 				'fileupload' => true,//(isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : ''),
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab)
@@ -1750,7 +1805,7 @@ JS;
 
 			if(!$ticket)
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'helpdesk.uitts.index', 'parent_cat_id' => $this->parent_cat_id));
 			}
 			if (isset($ticket['attributes']) && is_array($ticket['attributes']))
 			{
@@ -1774,6 +1829,7 @@ JS;
 
 			$form_link = array(
 				'menuaction' => 'helpdesk.uitts.view',
+				'parent_cat_id' => $this->parent_cat_id,
 				'id' => $id
 			);
 
@@ -1955,6 +2011,25 @@ JS;
 			$cat_select = $this->cats->formatted_xslt_list(array('select_name' => 'values[cat_id]',
 				'selected' => $this->cat_id, 'use_acl' => $this->_category_acl, 'required' => true,'class'=>'pure-input-1-2'));
 
+			/**overide*/
+			if($this->parent_cat_id)
+			{
+				$cat_select['cat_list'] = array();
+
+				$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, $this->parent_cat_id);
+				foreach ($_cats as $_cat)
+				{
+					$cat_select['cat_list'][] = array
+					(
+						'cat_id'	=> $_cat['id'],
+						'name'		=> $_cat['name'],
+						'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
+						'description' => $_cat['description']
+					);
+				}
+			}
+
+
 			$_ticket_cat_found = false;
 			if (isset($cat_select['cat_list']) && is_array($cat_select['cat_list']))
 			{
@@ -1984,10 +2059,6 @@ JS;
 				$cat_select['hidden_value'] = $ticket['cat_id'];
 //_debug_array($cat_select);die();
 			}
-
-
-//			$this->cats->set_appname('property','.project');
-//			$order_catetory	= $this->cats->formatted_xslt_list(array('select_name' => 'values[order_cat_id]','selected' => $ticket['order_cat_id']));
 
 
 			$membership = $GLOBALS['phpgw']->accounts->membership($this->account);
@@ -2048,7 +2119,7 @@ JS;
 				'cat_select' => $cat_select,
 				'value_category_name' => $ticket['category_name'],
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $form_link),
-				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index')),
+				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.index','parent_cat_id' => $this->parent_cat_id)),
 				'value_subject' => $ticket['subject'],
 				'value_id' => '[ #' . $id . ' ] - ',
 				'id'		=> $id,
@@ -2088,7 +2159,7 @@ JS;
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
 				'set_user' => ($ticket['user_id'] != $ticket['reverse_id'] && $ticket['assignedto'] ==  $this->account) ? true : false
 			);
- 
+
 			phpgwapi_jquery::load_widget('numberformat');
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::add_javascript('helpdesk', 'portico', 'tts.view.js');

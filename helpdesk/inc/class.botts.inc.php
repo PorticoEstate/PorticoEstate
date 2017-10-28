@@ -39,6 +39,7 @@
 		var $filter;
 		var $sort;
 		var $order;
+		var $parent_cat_id;
 		var $cat_id;
 		var $acl_location;
 		var $uicols_related = array();
@@ -80,6 +81,7 @@
 			$this->user_id = phpgw::get_var('user_id', 'int');
 			$this->reported_by = phpgw::get_var('reported_by', 'int');
 			$this->cat_id = phpgw::get_var('cat_id', 'int');
+			$this->parent_cat_id = phpgw::get_var('parent_cat_id', 'int');
 			$this->allrows = phpgw::get_var('allrows', 'bool');
 			$this->start_date = phpgw::get_var('filter_start_date', 'string');
 			$this->end_date = phpgw::get_var('filter_end_date', 'string');
@@ -1238,7 +1240,7 @@ HTML;
 
 		public function get_reported_by( $selected = 0 )
 		{
-			$values = $this->so->get_reported_by();
+			$values = $this->so->get_reported_by($this->parent_cat_id);
 
 			foreach ($values as &$entry)
 			{
