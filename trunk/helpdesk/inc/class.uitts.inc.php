@@ -870,7 +870,7 @@ JS;
 			if($this->parent_cat_id)
 			{
 				$parent_category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($this->parent_cat_id);
-				$appname = $parent_category[0]['name'];
+				$appname = !empty($parent_category[0]['name']) ? $parent_category[0]['name'] : $this->lang_app_name;
 			}
 
 			$function_msg = lang('list ticket');
@@ -2252,7 +2252,16 @@ JS;
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('user_id_select'), $xsl_rootdir);
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $this->acl_location, 'helpdesk', $this->_group_candidates);
+			if($this->parent_cat_id)
+			{
+				$acl_location = ".ticket.category.{$this->parent_cat_id}";
+			}
+			else
+			{
+				$acl_location = $this->acl_location;
+			}
+
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_PRIVATE, $acl_location, 'helpdesk', $this->_group_candidates);
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)
