@@ -66,6 +66,7 @@
 		'cat_add'		=> 'helpdesk.cat_hooks.cat_add',
 		'cat_delete'	=> 'helpdesk.cat_hooks.cat_delete',
 		'cat_edit'		=> 'helpdesk.cat_hooks.cat_edit',
+		'auto_addaccount' => 'helpdesk.hook_helper.auto_addaccount',
 		'config',
 		'home',
 	);
