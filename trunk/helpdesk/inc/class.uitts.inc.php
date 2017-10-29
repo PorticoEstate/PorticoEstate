@@ -2261,7 +2261,7 @@ JS;
 				$acl_location = $this->acl_location;
 			}
 
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_PRIVATE, $acl_location, 'helpdesk', $this->_group_candidates);
+			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, $acl_location, 'helpdesk', $this->_group_candidates);
 			$user_list = array();
 			$selected_found = false;
 			foreach ($users as $user)
