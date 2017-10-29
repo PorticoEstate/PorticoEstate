@@ -168,7 +168,7 @@
 					'account_lid' => $login
 				);
 
-				$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend'));
+				$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
 
 			//------------------Start login ntlm
 
@@ -270,7 +270,7 @@
 					(
 						'account_lid' => $login
 					);
-					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend'));
+					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
 
