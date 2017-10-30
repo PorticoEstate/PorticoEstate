@@ -600,9 +600,9 @@
 			return $this->so->read_category_tree2($entity_id);
 		}
 
-		function get_children2( $entity_id, $parent, $level, $reset = false, $table )
+		function get_children2( $entity_id, $parent, $level, $reset = false )
 		{
-			return $this->so->get_children2($entity_id, $parent, $level, $reset, $table);
+			return $this->so->get_children2($entity_id, $parent, $level, $reset);
 		}
 
 		function convert_to_eav()
