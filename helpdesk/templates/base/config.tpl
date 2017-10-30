@@ -215,6 +215,23 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_activate_autocreate_user}:</td>
+			<td>
+				<select name="newsettings[autocreate_user]">
+					<option value="" {selected_autocreate_user_}>NO</option>
+					<option value="1" {selected_autocreate_user_1}>YES</option>
+				</select>
+			</td>
+		</tr>
+		<tr class="row_off">
+			<td>{lang_autocreate_default_group}:</td>
+			<td>
+				<select name="newsettings[autocreate_default_group]">
+					{hook_autocreate_default_group}
+				</select>
+			</td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

@@ -422,6 +422,12 @@
 			$this->add_jquery_translation($data);
 			$data['webserver_url'] = $GLOBALS['phpgw_info']['server']['webserver_url'];
 
+			if (phpgw::get_var('phpgw_return_as', 'string', 'GET') == 'json' )
+			{
+				echo json_encode($data);
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			$this->add_template_file($files);

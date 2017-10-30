@@ -146,13 +146,52 @@
 
 			if ( $acl->check('.ticket',PHPGW_ACL_READ, 'helpdesk') )
 			{
-				$menus['navigation']['helpdesk'] = array
-					(
-						'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index')),
-						'text'	=> lang('inbox'),
-						'image'		=> array('helpdesk', 'helpdesk')
-					);
+				$categories	= CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket');
+				$categories->supress_info	= true;
+
+				$_cats = $categories->return_sorted_array(0, false, '', '', '', false, false);
+				$_categories = array();
+				$subs = false;
+				foreach ($_cats as $_cat)
+				{
+					if ($_cat['level'] == 0 && $_cat['active'] != 2)
+					{
+						$_categories[] = $_cat;
+					}
+					else
+					{
+						$subs = true;
+					}
+				}
+
+				if($subs)
+				{
+					$menus['navbar']['helpdesk']['url'] = $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => -1));
+
+					foreach ($_categories as $_category)
+					{
+						$menus['navigation']["helpdesk_{$_category['id']}"] = array
+							(
+								'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index', 'parent_cat_id' => $_category['id'])),
+								'text'	=> $_category['name'],
+								'image'		=> array('helpdesk', 'helpdesk')
+							);
+					}
+				}
+				else
+				{
+					$menus['navigation']['helpdesk'] = array
+						(
+							'url'	=> $GLOBALS['phpgw']->link('/index.php',array('menuaction'=> 'helpdesk.uitts.index')),
+							'text'	=> lang('inbox'),
+							'image'		=> array('helpdesk', 'helpdesk')
+						);
+
+				}
 			}
+
+
+
 			if ( $acl->check('.ticket',PHPGW_ACL_PRIVATE, 'helpdesk') ) //manage
 			{
 				$menus['navigation']['response_template'] = array

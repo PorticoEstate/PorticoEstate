@@ -53,6 +53,27 @@
 				$_REQUEST['skip_remote']				 = true;
 			}
 
+			if ( $_POST['mode'] == 'api' )
+			{
+				$_POST['submitit'] = true;
+				$GLOBALS['phpgw_remote_user_fallback']	 = 'sql';
+				$_REQUEST['skip_remote']				 = true;
+				switch ($_POST['section'])
+				{
+					case 'activitycalendarfrontend':
+						$GLOBALS['phpgw_info']['flags']['session_name'] = 'activitycalendarfrontendsession';
+						break;
+					case 'bookingfrontend':
+						$GLOBALS['phpgw_info']['flags']['session_name'] = 'bookingfrontendsession';
+						break;
+					case 'eventplannerfrontend':
+						$GLOBALS['phpgw_info']['flags']['session_name'] = 'eventplannerfrontendsession';
+						break;
+					default://nothing
+						break;
+				}
+			}
+
 			require_once dirname(realpath(__FILE__)) . '/sso/include_login.inc.php';
 
 			$lightbox			 = isset($_REQUEST['lightbox']) && $_REQUEST['lightbox'] ? true : false;
@@ -147,7 +168,7 @@
 					'account_lid' => $login
 				);
 
-				$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend'));
+				$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
 
 			//------------------Start login ntlm
 
@@ -249,7 +270,7 @@
 					(
 						'account_lid' => $login
 					);
-					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend'));
+					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
 
@@ -349,6 +370,16 @@
 					$cd_array['skip_remote'] = true;
 					$cd_array['lightbox']	 = $lightbox;
 					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
+					exit;
+				}
+
+				if ( phpgw::get_var('mode', 'string', 'POST') == 'api' )
+				{
+					header('Content-Type: application/json');
+					echo json_encode(array(
+						'sessionid' => $GLOBALS['sessionid'],
+						'session_name'	=> session_name(),
+					));
 					exit;
 				}
 
