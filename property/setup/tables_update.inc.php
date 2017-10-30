@@ -9921,4 +9921,28 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.723 to 0.9.17.724
+	*
+	*/
+	$test[] = '0.9.17.723';
 
+	function property_upgrade0_9_17_723()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_location_type', 'enable_controller', array(
+				'type' =>	'int',
+				'precision' => 2,
+				'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->query("DELETE FROM fm_cache");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.724';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
