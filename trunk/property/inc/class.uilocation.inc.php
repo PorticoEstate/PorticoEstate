@@ -48,6 +48,7 @@
 		var $type_id;
 		var $lookup;
 		var $location_code;
+		var $controller_helper;
 		var $public_functions = array
 			(
 			'query' => true,
@@ -71,6 +72,11 @@
 			'responsiblility_role' => true,
 			'get_delivery_address'	=> true,
 			'get_location_exception'=> true,
+			'get_controls_at_component' => true,
+			'get_assigned_history' => true,
+			'get_cases' => true,
+			'get_checklists'=>true,
+			'get_cases_for_checklist' => true,
 		);
 
 		function __construct()
@@ -103,6 +109,15 @@
 			$this->location_code = $this->bo->location_code;
 			$this->type = $this->bo->type;
 			$this->type_id = $this->bo->type_id;
+
+			$this->controller_helper = CreateObject('property.controller_helper', array(
+				'acl_location' => $this->acl_location,
+				'acl_read' => $this->acl_read,
+				'acl_add' => $this->acl_add,
+				'acl_edit' => $this->acl_edit,
+				'acl_delete' => $this->acl_delete,
+				'acl_manage' => $this->acl_manage
+			));
 		}
 
 		/**
@@ -2028,7 +2043,10 @@ JS;
 			}
 
 			$tabs = array();
+			$active_tab = phpgw::get_var('active_tab');
+
 			$tabs['general'] = array('label' => $location_types[($type_id - 1)]['name'], 'link' => '#general');
+			$active_tab = $active_tab ? $active_tab : 'general';
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -2042,12 +2060,21 @@ JS;
 							'entity_id' => $this->entity_id,
 							'cat_id' => $this->cat_id,
 							'attrib_id' => $attribute['id'],
-							'id' => $id,
+							'id' => $values['id'],
 							'edit' => true
 						);
 
 						$attribute['link_history'] = $GLOBALS['phpgw']->link('/index.php', $link_history_data);
 					}
+				}
+
+				$_enable_controller = !!$location_types[($type_id - 1)]['enable_controller'];
+				if ($_enable_controller && $location_code)
+				{
+					$tabs['controller'] = array('label' => lang('controller'), 'link' => '#controller',
+						'function' => "set_tab('controller')");
+					$active_tab = $active_tab ? $active_tab : 'general';
+					$GLOBALS['phpgw']->jqcal->add_listener('control_start_date');
 				}
 
 				$location = ".location.{$type_id}";
@@ -2440,6 +2467,140 @@ JS;
 					}
 				}
 // ---- END INTEGRATION -------------------------
+				if ($_enable_controller)
+				{
+					$id = (int)$values['id'];
+					$_controls = $this->get_controls_at_component($location_id, $id);
+
+					$controls_def = array
+						(
+						array('key' => 'serie_id', 'label' => 'serie', 'sortable' => false, 'resizeable' => true),
+						array('key' => 'control_id', 'label' => lang('controller'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'assigned_to_name', 'label' => lang('user'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'repeat_type', 'label' => lang('repeat type'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'repeat_interval', 'label' => lang('interval'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'controle_time', 'label' => lang('controle time'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'service_time', 'label' => lang('service time'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'total_time', 'label' => lang('total time'), 'sortable' => false,
+							'resizeable' => true),
+						array('key' => 'serie_enabled', 'label' => lang('enabled'), 'sortable' => false,
+							'resizeable' => true),
+//					array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
+						array('key' => 'location_id', 'hidden' => true),
+						array('key' => 'component_id', 'hidden' => true),
+						array('key' => 'id', 'hidden' => true),
+						array('key' => 'assigned_to', 'hidden' => true),
+					);
+					$tabletools = array
+						(
+						array(
+							'my_name' => 'add',
+							'text' => lang('add'),
+							'type' => 'custom',
+							'className' => 'add',
+							'custom_code' => "
+										add_control();"
+						),
+						array(
+							'my_name' => 'enable',
+							'text' => lang('enable'),
+							'type' => 'custom',
+							'custom_code' => "
+										onActionsClick('enable');"
+						),
+						array(
+							'my_name' => 'disable',
+							'text' => lang('disable'),
+							'type' => 'custom',
+							'custom_code' => "
+										onActionsClick('disable');"
+						),
+						array(
+							'my_name' => 'edit',
+							'text' => lang('edit'),
+							'type' => 'custom',
+							'custom_code' => "
+										onActionsClick('edit');"
+						)
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_4',
+						'requestUrl' => "''",
+						'tabletools' => $tabletools,
+						'ColumnDefs' => $controls_def,
+						'data' => json_encode($_controls),
+						'config' => array(
+							array('disableFilter' => true),
+							array('disablePagination' => true)
+						)
+					);
+
+					$_checklists = $this->get_checklists($location_id, $id, date('Y'));
+					$check_lst_time_span = $this->check_lst_time_span;
+
+					$_checklists_def = array
+						(
+						array('key' => 'id', 'label' => lang('id'), 'sortable' => false),
+						array('key' => 'control_name', 'label' => lang('name'), 'sortable' => false),
+						array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+						array('key' => 'user', 'label' => lang('user'), 'sortable' => false),
+						array('key' => 'deadline', 'label' => lang('deadline'), 'sortable' => false),
+						array('key' => 'planned_date', 'label' => lang('planned date'), 'sortable' => true),
+						array('key' => 'completed_date', 'label' => lang('completed date'), 'sortable' => false),
+						array('key' => 'num_open_cases', 'label' => lang('open_cases'), 'sortable' => false),
+						array('key' => 'num_pending_cases', 'label' => lang('pending_cases'), 'sortable' => false),
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_5',
+						'requestUrl' => "''",
+						'ColumnDefs' => $_checklists_def,
+						'data' => json_encode($_checklists),
+						'config' => array(
+							array('disableFilter' => true),
+							array('disablePagination' => true),
+							array('singleSelect' => true)
+						)
+					);
+					$_cases = $this->get_cases($location_id, $id, date('Y')); // initial search
+
+					$_case_def = array
+						(
+						array('key' => 'url', 'label' => lang('id'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'type', 'label' => lang('type'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'title', 'label' => lang('title'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'value', 'label' => lang('value'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'status', 'label' => lang('status'), 'sortable' => false, 'resizeable' => true),
+						array('key' => 'user', 'label' => lang('user'), 'sortable' => true, 'resizeable' => true),
+						array('key' => 'entry_date', 'label' => lang('entry date'), 'sortable' => false,
+							'resizeable' => true),
+					);
+
+					$datatable_def[] = array
+						(
+						'container' => 'datatable-container_6',
+						'requestUrl' => "''",
+						'ColumnDefs' => $_case_def,
+						'data' => json_encode($_cases),
+						'config' => array(
+							array('disableFilter' => true),
+					//		array('disablePagination' => true)
+						)
+					);
+				}
+
 			}
 
 			unset($values['attributes']);
@@ -2448,6 +2609,7 @@ JS;
 				(
 				'datatable_def' => $datatable_def,
 				'integration' => $integration,
+				'controller' => $_enable_controller && $location_code,
 				'roles' => $roles,
 				'edit' => ($mode == 'view') ? '' : true,
 				'lang_change_type' => lang('Change type'),
@@ -2516,7 +2678,8 @@ JS;
 				'doc_type_filter' => array('options' => $doc_type_filter),
 				'textareacols' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textareacols'] : 40,
 				'textarearows' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['textarearows'] : 6,
-				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'general'),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
+				'active_tab' => $active_tab,
 				'documents' => $documents,
 				//'file_tree' => $file_tree,
 				'lang_expand_all' => lang('expand all'),
@@ -2923,5 +3086,31 @@ JS;
 				'location_exception' => $location_exception
 			);
 
+		}
+
+		public function get_controls_at_component( $location_id = 0, $id = 0, $skip_json = false )
+		{
+			return $this->controller_helper->get_controls_at_component($location_id, $id, $skip_json);
+		}
+
+		public function get_cases( $location_id = 0, $id = 0, $year = 0 )
+		{
+			return $this->controller_helper->get_cases($location_id, $id, $year);
+		}
+
+		public function get_cases_for_checklist()
+		{
+			return $this->controller_helper->get_cases_for_checklist();
+		}
+
+		public function get_checklists( $location_id = 0, $id = 0, $year = 0 )
+		{
+			return $this->controller_helper->get_checklists($location_id, $id, $year);
+			
+		}
+
+		function get_assigned_history()
+		{
+			return $this->controller_helper->get_assigned_history();
 		}
 	}

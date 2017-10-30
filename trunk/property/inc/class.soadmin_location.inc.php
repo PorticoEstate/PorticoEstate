@@ -100,7 +100,8 @@
 					(
 					'id' => $this->db->f('id'),
 					'name' => $this->db->f('name'),
-					'descr' => $this->db->f('descr')
+					'descr' => $this->db->f('descr'),
+					'enable_controller' => $this->db->f('enable_controller')
 				);
 			}
 			return $standard;
@@ -196,7 +197,8 @@
 					'descr' => $this->db->f('descr'),
 					'list_info' => $this->db->f('list_info', true),
 					'list_address' => $this->db->f('list_address'),
-					'list_documents' => $this->db->f('list_documents')
+					'list_documents' => $this->db->f('list_documents'),
+					'enable_controller' => $this->db->f('enable_controller')
 				);
 			}
 			return $standard;
@@ -546,6 +548,7 @@
 				'list_info' => (isset($values['list_info']) ? serialize($values['list_info']) : ''),
 				'list_address' => (isset($values['list_address']) ? $values['list_address'] : ''),
 				'list_documents' => (isset($values['list_documents']) ? $values['list_documents'] : ''),
+				'enable_controller' => $values['enable_controller'],
 			);
 
 			$value_set = $this->db->validate_update($value_set);
@@ -714,7 +717,8 @@
 					'descr' => stripslashes($this->db->f('descr')),
 					'list_info' => unserialize($this->db->f('list_info')),
 					'list_address' => $this->db->f('list_address'),
-					'list_documents' => $this->db->f('list_documents')
+					'list_documents' => $this->db->f('list_documents'),
+					'enable_controller' => $this->db->f('enable_controller')
 				);
 			}
 			//_debug_array($location_type);

@@ -173,7 +173,13 @@
 							'key' => 'descr',
 							'label' => lang('Descr'),
 							'sortable' => FALSE
-						)
+						),
+						array
+							(
+							'key' => 'enable_controller',
+							'label' => lang('enable controller'),
+							'sortable' => false
+						),
 					)
 				)
 			);
@@ -466,11 +472,6 @@
 				'lang_name_standardtext' => lang('Enter a name of the standard'),
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', $link_data),
 				'done_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
-				'lang_id' => lang('standard ID'),
-				'lang_name' => lang('Name'),
-				'lang_descr' => lang('Descr'),
-				'lang_save' => lang('save'),
-				'lang_done' => lang('done'),
 				'value_id' => (isset($id) ? $id : ''),
 				'value_name' => (isset($values['name']) ? $values['name'] : ''),
 				'lang_id_standardtext' => lang('Enter the standard ID'),
@@ -478,11 +479,10 @@
 				'lang_done_standardtext' => lang('Back to the list'),
 				'lang_save_standardtext' => lang('Save the standard'),
 				'value_descr' => (isset($values['descr']) ? $values['descr'] : ''),
-				'lang_list_info' => lang('list info'),
 				'lang_select' => lang('select'),
 				'value_list_info' => $this->bo->get_list_info((isset($id) ? $id : ''), $values['list_info']),
-				'lang_location' => lang('location'),
 				'lang_list_info_statustext' => lang('Names of levels to list at this level'),
+				'value_enable_controller'=> $values['enable_controller'],
 				'value_list_address' => isset($values['list_address']) ? $values['list_address'] : '',
 				'value_list_documents' => isset($values['list_documents']) ? $values['list_documents'] : '',
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, $active_tab),
