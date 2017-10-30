@@ -26,13 +26,14 @@
 
 	phpgw::import_class('frontend.bofellesdata');
 
-	/**
-	 * Hook helper
-	 *
-	 * @package rental
-	 */
 	class frontend_hook_helper
 	{
+		private $config;
+
+		public function __construct()
+		{
+
+		}
 
 		/**
 		 * Create useraccount on login for SSO/ntlm
@@ -45,9 +46,9 @@
 
 			if (!$GLOBALS['phpgw']->accounts->exists($account_lid))
 			{
-				$config = CreateObject('phpgwapi.config', 'helpdesk')->read();
+				$this->config = CreateObject('phpgwapi.config', 'helpdesk')->read();
 
-				$autocreate_user = isset($config['autocreate_user']) && $config['autocreate_user'] ? $config['autocreate_user'] : 0;
+				$autocreate_user = isset($this->config['autocreate_user']) && $this->config['autocreate_user'] ? $this->config['autocreate_user'] : 0;
 
 				if ($autocreate_user)
 				{
@@ -55,7 +56,7 @@
 					if ($fellesdata_user)
 					{
 						// Read default assign-to-group from config
-						$default_group_id = isset($config['autocreate_default_group']) && $config['autocreate_default_group'] ? $config['autocreate_default_group'] : 0;
+						$default_group_id = isset($this->config['autocreate_default_group']) && $this->config['autocreate_default_group'] ? $this->config['autocreate_default_group'] : 0;
 						$group_lid = $GLOBALS['phpgw']->accounts->name2id($default_group_id);
 						$group_lid = $group_lid ? $group_lid : 'frontend_delegates';
 
@@ -92,18 +93,23 @@
 
 				$aclobj = & $GLOBALS['phpgw']->acl;
 				$aclobj->set_account_id($frontend_delegates, true);
-				$aclobj->add('frontend', '.', 1);
-				$aclobj->add('frontend', 'run', 1);
+//				$aclobj->add('frontend', '.', 1);
+//				$aclobj->add('frontend', 'run', 1);
+				$aclobj->add('helpdesk', '.', 1);
+				$aclobj->add('helpdesk', 'run', 1);
+
 				$aclobj->add('manual', '.', 1);
 				$aclobj->add('manual', 'run', 1);
+
 				$aclobj->add('preferences', 'changepassword', 1);
 				$aclobj->add('preferences', '.', 1);
 				$aclobj->add('preferences', 'run', 1);
+
 				$aclobj->add('helpdesk', '.ticket', 1);
 
-				$aclobj->add('frontend', '.ticket', 1);
-				$aclobj->add('frontend', '.rental.contract', 1);
-				$aclobj->add('frontend', '.rental.contract_in', 1);
+//				$aclobj->add('frontend', '.ticket', 1);
+//				$aclobj->add('frontend', '.rental.contract', 1);
+//				$aclobj->add('frontend', '.rental.contract_in', 1);
 				$aclobj->save_repository();
 			}
 			else
@@ -130,12 +136,12 @@
 						if ($fellesdata_user)
 						{
 							$email = $fellesdata_user['email'];
-							if (!empty($email))
-							{
-								$title = lang('email_create_account_title');
-								$message = lang('email_create_account_message', $fellesdata_user['firstname'], $fellesdata_user['lastname']);
-								self::send_system_message($email, $title, $message);
-							}
+//							if (!empty($email))
+//							{
+//								$title = lang('email_create_account_title');
+//								$message = lang('email_create_account_message', $fellesdata_user['firstname'], $fellesdata_user['lastname']);
+//								self::send_system_message($email, $title, $message);
+//							}
 						}
 
 						$preferences = createObject('phpgwapi.preferences', $result);
