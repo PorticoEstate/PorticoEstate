@@ -48,8 +48,18 @@
 			$this->db->query($sql);
 			$this->db->next_record();
 			$arbeidssted = (int)$this->db->f('arbeidssted');
+			$category =  CreateObject('phpgwapi.categories', -1, 'helpdesk', '.ticket')->return_single($data['cat_id']);
+			$parent_id =  (int)$category[0]['parent'];
 
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+			if($parent_id == 255)
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.1");
+			}
+			else
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".entity.6.2");
+			}
+
 
 			$sql = "SELECT json_representation->>'alias' as alias FROM fm_bim_item WHERE location_id = {$location_id}"
 			. " AND CAST(json_representation->>'arbeidssted_start' AS INTEGER) <= {$arbeidssted}"
