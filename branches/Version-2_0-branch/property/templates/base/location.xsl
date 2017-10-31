@@ -293,6 +293,7 @@ onMouseOut="nd()">
 			<xsl:value-of select="form_action"/>
 		</xsl:variable>
 		<form method="post" name="form" id="form" action="{$form_action}" class="pure-form pure-form-aligned">
+			<input type="hidden" name="active_tab" value="{active_tab}"/>
 			<div id="tab-content">
 				<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 				<div id="general">
@@ -567,6 +568,161 @@ onMouseOut="nd()">
 						</div>
 					</xsl:when>
 				</xsl:choose>
+				<xsl:if test="controller=1">
+					<div id="controller">
+						<script type="text/javascript">
+							lookup_control_responsible = function()
+							{
+							var oArgs = {menuaction:'property.uilookup.phpgw_user', column:'control_responsible', acl_app:'controller', acl_location: '.checklist', acl_required:4};
+							var requestUrl = phpGWLink('index.php', oArgs);
+							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+							}
+
+							lookup_control = function()
+							{
+							var oArgs = {menuaction:'controller.uilookup.control'};
+							var requestUrl = phpGWLink('index.php', oArgs);
+							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
+							}
+
+						</script>
+						<div id="controller_receipt"></div>
+						<fieldset>
+							<legend>
+								<xsl:value-of select="php:function('lang', 'new')" />
+							</legend>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'user')" />
+								</label>
+								<input type="text" name="control_responsible" id="control_responsible" value="" onClick="lookup_control_responsible();" readonly="readonly" size="6">
+								</input>
+								<input size="30" type="text" name="control_responsible_user_name" id="control_responsible_user_name" value="" onClick="lookup_control_responsible();" readonly="readonly">
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'controller')" />
+								</label>
+								<input type="text" name="control_id" id="control_id" value="" onClick="lookup_control();" readonly="readonly" size="6">
+								</input>
+								<input type="text" name="control_name" id="control_name" value="" onClick="lookup_control();" readonly="readonly" size="30">
+								</input>
+							</div>
+							<xsl:variable name="lang_add">
+								<xsl:value-of select="php:function('lang', 'add')"/>
+							</xsl:variable>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'start date')" />
+								</label>
+
+								<input type="text" name="control_start_date" id="control_start_date" value=""  readonly="readonly" size="10">
+								</input>
+							</div>
+							<div class="pure-control-group">
+
+								<label>
+									<xsl:value-of select="php:function('lang', 'repeat type')" />
+								</label>
+								<select id="repeat_type" name="repeat_type">
+									<option value="">
+										<xsl:value-of select="php:function('lang', 'select')"/>
+									</option>
+									<xsl:apply-templates select="repeat_types/options"/>
+								</select>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'interval')" />
+								</label>
+								<input type="text" name="repeat_interval" id="repeat_interval" value="0" size="2">
+								</input>
+							</div>
+
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'controle time')" />
+								</label>
+								<input type="text" name="controle_time" id="controle_time" value="" size="">
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label>
+									<xsl:value-of select="php:function('lang', 'service time')" />
+								</label>
+								<input type="text" name="service_time" id="service_time" value="" size="">
+								</input>
+							</div>
+						</fieldset>
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'controller')" />
+							</label>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_4'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'checklist')" />
+							</label>
+							<select id = "check_lst_time_span" name="check_lst_time_span">
+								<xsl:attribute name="title">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</xsl:attribute>
+								<option value="0">
+									<xsl:value-of select="php:function('lang', 'select')"/>
+								</option>
+								<xsl:apply-templates select="check_lst_time_span/options"/>
+							</select>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_5'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+
+						<div class="pure-control-group">
+							<label>
+								<xsl:value-of select="php:function('lang', 'cases')" />
+							</label>
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_6'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+						<xsl:call-template name="controller_integration">
+							<xsl:with-param name="controller" select ='controller'/>
+						</xsl:call-template>
+					</div>
+				</xsl:if>
 				<xsl:for-each select="integration">
 					<div id="{section}">
 						<fieldset>
@@ -815,4 +971,9 @@ onMouseOut="nd()">
 		<xsl:attribute name="title" value="description" />
 		<xsl:value-of disable-output-escaping="yes" select="name"/>
 	</option>
+</xsl:template>
+
+<xsl:template name="controller_integration">
+	<xsl:param name="controller" />
+
 </xsl:template>
