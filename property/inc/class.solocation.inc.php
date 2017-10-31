@@ -1281,8 +1281,10 @@
 			{
 				$values['attributes'] = $this->custom->find('property', '.location.' . $type_id, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
+			$cols = "fm_location{$type_id}.id";
+			$cols_return[] = 'id';
 
-			$cols = "fm_location{$type_id}.category as cat_id";
+			$cols .= ",fm_location{$type_id}.category as cat_id";
 			$cols .= ",fm_location{$type_id}_category.descr as category_name";
 			$cols_return[] = 'cat_id';
 			$cols_return[] = 'category_name';
@@ -1352,7 +1354,10 @@
 			}
 
 			//_debug_array($cols_return);
-			//_debug_array($values);
+			if(empty($values['id']))
+			{
+				$this->update_location();
+			}
 
 			$location[$location_code] = $values;
 			return $values;
