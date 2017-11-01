@@ -396,7 +396,7 @@
 			$this->add_template_file('helpers');
 		}
 
-		public function render_template_xsl( $files, $data, $xsl_rootdir = '' )
+		public function render_template_xsl( $files, $data, $xsl_rootdir = '' , $base = 'data')
 		{
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
@@ -431,7 +431,7 @@
 			$output = phpgw::get_var('output', 'string', 'REQUEST', 'html');
 			$GLOBALS['phpgw']->xslttpl->set_output($output);
 			$this->add_template_file($files);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('data' => $data));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array($base => $data));
 		}
 
 		// Add link key to a result array
