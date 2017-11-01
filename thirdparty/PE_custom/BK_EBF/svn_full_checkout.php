@@ -104,6 +104,7 @@
 	/**
 	* Some other stuff
 	*/
+	$co_modules[] = 'catch';
 	$co_modules[] = 'logistic';
 	$co_modules[] = 'helpdesk';
 	$co_modules[] = 'eventplanner';
