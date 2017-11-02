@@ -81,7 +81,7 @@
 	*/
 	$co_modules[] = array('mobilefrontend', $revision);
 	$co_modules[] = array('controller', $revision);
-	$co_modules[] = array('hrm', $revision);
+//	$co_modules[] = array('hrm', $revision);
 	$co_modules[] = array('property', $revision);
 	$co_modules[] = array('sms', $revision);
 	$co_modules[] = array('bim', $revision);
@@ -105,7 +105,7 @@
 	/**
 	* Some other stuff
 	*/
-	$co_modules[] = array('catch', $revision);
+//	$co_modules[] = array('catch', $revision);
 	$co_modules[] = array('logistic', $revision);
 	$co_modules[] = array('helpdesk', $revision);
 	$co_modules[] = array('eventplanner', $revision);
@@ -113,7 +113,7 @@
 
 
 	$pe_custom = array();
-	$pe_custom['BK_EBF'] = array
+	$pe_custom['BK_EBE'] = array
 		(
 			array('property', '')
 		);
