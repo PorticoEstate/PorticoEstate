@@ -18,10 +18,10 @@
 	// Config section
 	// ****************************************************************************
 
-	 //Example: /usr/local/bin/php -q svn_full_checkout.php user=<username>
+	 //Example: /usr/bin/php -q svn_full_checkout.php user=<username>
 
 	/**
-	* Repository where you are checking out the code.  NO trailing / - example: 'svn.savannah.gnu.org/phpgroupware'
+	* Repository where you are checking out the code.  NO trailing / - example: 'svn.savannah.nongnu.org/fmsystem'
 	*/
 
 	$repository = 'svn.savannah.nongnu.org/fmsystem';
@@ -32,10 +32,10 @@
 
 	$action = 'co';
 //	$action = 'export';
-	$revision =  '-r 17207';
+	$revision =  '';
 
 	/**
-	* Directory that you want the phpgroupware directory to go in.  NO trailing /
+	* Directory that you want the portico directory to go in.  NO trailing /
 	*/
 
 	$co_dir = '/var/www/html';
@@ -58,58 +58,65 @@
 	$release_info = 'Version-2_0-branch';
 
 	/**
-	* Modules you want to checkout, do NOT add the phpgroupware module
+	* Modules you want to checkout
 	*/
 
 	/**
 	* Base
 	*/
-	$co_modules[] = 'admin';
-	$co_modules[] = 'doc';
-	$co_modules[] = 'manual';
-	$co_modules[] = 'phpgwapi';
-	$co_modules[] = 'preferences';
-	$co_modules[] = 'setup';
-	$co_modules[] = 'xmlrpc';
-	$co_modules[] = 'soap';
-	$co_modules[] = 'registration';
-	$co_modules[] = 'addressbook';
+	$co_modules = array();
+	$co_modules[] = array('admin', $revision);
+	$co_modules[] = array('doc', $revision);
+	$co_modules[] = array('manual', $revision);
+	$co_modules[] = array('phpgwapi', $revision);
+	$co_modules[] = array('preferences', $revision);
+	$co_modules[] = array('setup', $revision);
+	$co_modules[] = array('xmlrpc', $revision);
+	$co_modules[] = array('soap', $revision);
+	$co_modules[] = array('registration', $revision);
+	$co_modules[] = array('addressbook', $revision);
 
 	/**
 	* FM
 	*/
-	$co_modules[] = 'mobilefrontend';
-	$co_modules[] = 'controller';
-	$co_modules[] = 'hrm';
-	$co_modules[] = 'property';
-	$co_modules[] = 'sms';
-	$co_modules[] = 'bim';
+	$co_modules[] = array('mobilefrontend', $revision);
+	$co_modules[] = array('controller', $revision);
+	$co_modules[] = array('hrm', $revision);
+	$co_modules[] = array('property', $revision);
+	$co_modules[] = array('sms', $revision);
+	$co_modules[] = array('bim', $revision);
 
 
 	/*
 	 * Booking
 	 */
-	$co_modules[] = 'booking';
-	$co_modules[] = 'bookingfrontend';
-	$co_modules[] = 'activitycalendar';
-	$co_modules[] = 'activitycalendarfrontend';
+	$co_modules[] = array('booking', $revision);
+	$co_modules[] = array('bookingfrontend', $revision);
+	$co_modules[] = array('activitycalendar', $revision);
+	$co_modules[] = array('activitycalendarfrontend', $revision);
 
 
 	/*
 	 * rental
 	 */
-	$co_modules[] = 'rental';
-	$co_modules[] = 'frontend';
+	$co_modules[] = array('rental', $revision);
+	$co_modules[] = array('frontend', $revision);
 
 	/**
 	* Some other stuff
 	*/
-	$co_modules[] = 'catch';
-	$co_modules[] = 'logistic';
-	$co_modules[] = 'helpdesk';
-	$co_modules[] = 'eventplanner';
-	$co_modules[] = 'eventplannerfrontend';
+	$co_modules[] = array('catch', $revision);
+	$co_modules[] = array('logistic', $revision);
+	$co_modules[] = array('helpdesk', $revision);
+	$co_modules[] = array('eventplanner', $revision);
+	$co_modules[] = array('eventplannerfrontend', $revision);
 
+
+	$pe_custom = array();
+	$pe_custom['BK_EBF'] = array
+		(
+			array('property', '')
+		);
 
 	// ****************************************************************************
 	// End config section
@@ -135,26 +142,54 @@
 		$branch = 'trunk';
 	}
 
+	$_revision = $revision ? "-r $revision" : '';
+
 	chdir($co_dir);
+
+	echo "$action {$_revision} {$repository}/{$branch}{$release} to {$co_dir}\n";
+
 	if ($cvs_anonymous)
 	{
-		system("svn {$action} {$revision} svn://{$repository}/{$branch}{$release} portico --non-recursive");
+		system("svn {$action} {$_revision} svn://{$repository}/{$branch}{$release} portico --non-recursive");
 	}
 	else
 	{
-		system("svn {$action} {$revision} svn+ssh://{$svn_login}@{$repository}/{$branch}{$release}  portico --non-recursive");
+		system("svn {$action} {$_revision} svn+ssh://{$svn_login}@{$repository}/{$branch}{$release} portico --non-recursive");
 	}
 
 	chdir($co_dir . '/portico');
 
-	foreach($co_modules as $module)
+	foreach($co_modules as $_module)
 	{
+		$module = $_module[0];
+		$_revision = !empty($_module[1]) ? "-r {$_module[1]}" : '';
+		echo "$action {$_revision} {$repository}/{$branch}{$release}/{$module} to {$co_dir}/portico\n";
 		if ($cvs_anonymous)
 		{
-			system("svn {$action} {$revision} svn://{$repository}/{$branch}{$release}/{$module}");
+			system("svn {$action} {$_revision} svn://{$repository}/{$branch}{$release}/{$module}");
 		}
 		else
 		{
-			system("svn {$action} {$revision} svn+ssh://{$svn_login}@{$repository}/{$branch}$release/{$module}");
+			system("svn {$action} {$_revision} svn+ssh://{$svn_login}@{$repository}/{$branch}$release/{$module}");
+		}
+	}
+
+	foreach($pe_custom as $section => $modules)
+	{
+		foreach ($modules as $_module)
+		{
+			$module = $_module[0];
+			$_revision = !empty($_module[1]) ? "-r {$_module[1]}" : '';
+
+			echo "export {$_revision} {$repository}/thirdparty/PE_custom/{$section}/{$module} to {$co_dir}/portico\n";
+
+			if ($cvs_anonymous)
+			{
+				system("svn export {$_revision} svn://{$repository}/thirdparty/PE_custom/{$section}/{$module} --force");
+			}
+			else
+			{
+				system("svn export {$_revision} svn+ssh://{$svn_login}@{$repository}/thirdparty/PE_custom/{$section}/{$module} --force");
+			}
 		}
 	}
