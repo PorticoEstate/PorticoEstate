@@ -887,7 +887,6 @@
 					throw new exception('soresponsible::get_responsible(): location-input needs to be an array');
 				}
 
-				$location_filter[] = ''; // when the responsibility is generic - not located to any location
 				$location_code = '';
 				$location_array = array();
 				foreach ($data['location'] as $location)
@@ -913,7 +912,7 @@
 				$role_filter = ' AND fm_responsibility_role.id =' . (int) $data['role_id'];
 			}
 
-			$sql = "SELECT contact_id FROM fm_responsibility_contact"
+			$sql = "SELECT DISTINCT contact_id FROM fm_responsibility_contact"
 				. " {$this->join} fm_responsibility_role ON fm_responsibility_contact.responsibility_role_id = fm_responsibility_role.id"
 				. " {$this->join} fm_responsibility ON fm_responsibility_role.responsibility_id = fm_responsibility.id"
 				. " {$this->join} fm_responsibility_module ON fm_responsibility.id = fm_responsibility_module.responsibility_id"
