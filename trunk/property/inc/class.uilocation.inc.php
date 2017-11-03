@@ -2547,7 +2547,7 @@ JS;
 					);
 
 					$_checklists = $this->get_checklists($location_id, $id, date('Y'));
-					$check_lst_time_span = $this->check_lst_time_span;
+					$check_lst_time_span = $this->controller_helper->get_check_lst_time_span();
 
 					$_checklists_def = array
 						(
@@ -2615,6 +2615,8 @@ JS;
 				(
 				'datatable_def' => $datatable_def,
 				'repeat_types' => array('options' => $repeat_types),
+				'location_id'	=> $location_id,
+				'item_id'		=> (int)$id,
 				'integration' => $integration,
 				'controller' => $_enable_controller && $location_code,
 				'roles' => $roles,
