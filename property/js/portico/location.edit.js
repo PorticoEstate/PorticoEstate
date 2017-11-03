@@ -90,7 +90,7 @@ this.onActionsClick = function (action)
 
 	if (ids.length > 0)
 	{
-		var data = {"ids": ids, "action": action};
+		var data = {ids: ids, action: action};
 		data.repeat_interval = $("#repeat_interval").val();
 		data.controle_time = $("#controle_time").val();
 		data.service_time = $("#service_time").val();
@@ -98,14 +98,8 @@ this.onActionsClick = function (action)
 		data.control_start_date = $("#control_start_date").val();
 		data.repeat_type = $("#repeat_type").val();
 
-		var formUrl = $("#form").attr("action");
-		var Url = parseURL(formUrl);
-		oArgs = Url.searchObject;
-		delete oArgs.click_history;
-		oArgs.menuaction = 'property.boentity.update_control_serie';
-
+		var oArgs = {menuaction: 'property.controller_helper.update_control_serie', location_id : location_id, id: item_id };
 		var requestUrl = phpGWLink('index.php', oArgs, true);
-
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -125,7 +119,7 @@ this.onActionsClick = function (action)
 		});
 
 
-		var oArgs2 = {menuaction: 'property.uientity.get_controls_at_component', type: oArgs.type, entity_id: oArgs.entity_id, cat_id: oArgs.cat_id, id: oArgs.id};
+		var oArgs2 = {menuaction: 'property.uilocation.get_controls_at_component', location_id : location_id, id: item_id};
 		var requestUrl2 = phpGWLink('index.php', oArgs2, true);
 		JqueryPortico.updateinlineTableHelper('datatable-container_4', requestUrl2);
 	}
@@ -159,11 +153,8 @@ function parseURL(url)
 
 add_control = function ()
 {
-	var formUrl = $("#form").attr("action");
-	var Url = parseURL(formUrl);
-	oArgs = Url.searchObject;
-	delete oArgs.click_history;
-	oArgs.menuaction = 'property.boentity.add_control';
+	oArgs = {location_id:location_id, id: item_id};
+	oArgs.menuaction = 'property.controller_helper.add_control';
 	oArgs.control_id = $("#control_id").val();
 	oArgs.control_responsible = $("#control_responsible").val();
 	oArgs.control_start_date = $("#control_start_date").val();
@@ -203,7 +194,7 @@ add_control = function ()
 		}
 	});
 
-	var oArgs2 = {menuaction: 'property.uientity.get_controls_at_component', type: oArgs.type, entity_id: oArgs.entity_id, cat_id: oArgs.cat_id, id: oArgs.id};
+	var oArgs2 = {menuaction: 'property.uilocation.get_controls_at_component', location_id: location_id, id: item_id};
 	var requestUrl2 = phpGWLink('index.php', oArgs2, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_4', requestUrl2);
 };
@@ -214,7 +205,7 @@ function updateCaseTable(check_list_id)
 	{
 		return;
 	}
-	var oArgs = {menuaction: 'property.uientity.get_cases_for_checklist', check_list_id: check_list_id};
+	var oArgs = {menuaction: 'property.uilocation.get_cases_for_checklist', check_list_id: check_list_id};
 	var requestUrl = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
 }
@@ -225,11 +216,11 @@ $(document).ready(function ()
 	var click_action_on_table = false;
 	$("#check_lst_time_span").change(function ()
 	{
-		var oArgs = {menuaction: 'property.uientity.get_checklists', location_id: location_id, id: item_id, year: $(this).val()};
+		var oArgs = {menuaction: 'property.uilocation.get_checklists', location_id: location_id, id: item_id, year: $(this).val()};
 		var requestUrl = phpGWLink('index.php', oArgs, true);
 		var _oTable = JqueryPortico.updateinlineTableHelper('datatable-container_5', requestUrl);
 
-		oArgs = {menuaction: 'property.uientity.get_cases', location_id: location_id, id: item_id, year: $(this).val()};
+		oArgs = {menuaction: 'property.uilocation.get_cases', location_id: location_id, id: item_id, year: $(this).val()};
 		requestUrl = phpGWLink('index.php', oArgs, true);
 		JqueryPortico.updateinlineTableHelper('datatable-container_6', requestUrl);
 
