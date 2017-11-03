@@ -2605,9 +2605,16 @@ JS;
 
 			unset($values['attributes']);
 
+			$repeat_types = array();
+//			$repeat_types[] = array('id'=> -1, 'name' => lang('day'));
+//			$repeat_types[] = array('id'=> 1, 'name' => lang('weekly'));
+			$repeat_types[] = array('id' => 2, 'name' => lang('month'));
+			$repeat_types[] = array('id' => 3, 'name' => lang('year'));
+
 			$data = array
 				(
 				'datatable_def' => $datatable_def,
+				'repeat_types' => array('options' => $repeat_types),
 				'integration' => $integration,
 				'controller' => $_enable_controller && $location_code,
 				'roles' => $roles,
