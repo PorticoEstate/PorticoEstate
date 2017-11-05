@@ -14,6 +14,8 @@
 					<xsl:value-of select="component_array/location_id"/>
 					<xsl:text>&amp;component_id=</xsl:text>
 					<xsl:value-of select="component_array/id"/>
+					<xsl:text>&amp;get_locations=</xsl:text>
+					<xsl:value-of select="get_locations"/>
 				</xsl:attribute>
 				Kontrollplan for komponent (år)
 			</a>

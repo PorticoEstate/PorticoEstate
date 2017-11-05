@@ -523,10 +523,10 @@ HTML;
 
 //			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 //
-//			if (substr($location_info['name'], 1, 6) == 'entity')
+//			if (substr($location_info['location'], 1, 6) == 'entity')
 //			{
 //				$type = 'entity';
-//				$type_info = explode('.', $location_info['name']);
+//				$type_info = explode('.', $location_info['location']);
 //				$entity_id = $type_info[2];
 //				$cat_id = $type_info[3];
 //				$component_arr = $this->so->read_single(array('entity_id' => $entity_id, 'cat_id' => $cat_id, 'id' => $id));

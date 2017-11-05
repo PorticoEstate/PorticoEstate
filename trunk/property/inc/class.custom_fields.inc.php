@@ -835,6 +835,7 @@ JS;
 						$_location_count = 0;
 					}
 				}
+				$ret[$j]['location_id'] = $location_id;
 				$j++;
 			}
 			return $ret;
