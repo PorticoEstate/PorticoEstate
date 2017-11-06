@@ -1120,19 +1120,36 @@
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
 			$component_id = $check_list->get_component_id();
+			$get_locations = false;
 
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
 
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+
+				}
+
 
 				$component = new controller_component();
 				$component->set_id($component_id);
@@ -1169,6 +1186,7 @@
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'type' => $type,
+				'get_locations'	=> $get_locations,
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'building_location_code' => $building_location_code,
