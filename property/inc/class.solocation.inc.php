@@ -1416,15 +1416,17 @@
 				}
 			}
 
-			//_debug_array($cols_return);
-			if(empty($values['id']))
-			{
-				//In case old version of property-app
-				if(isset($metadata['id']))
-				{
-					$this->update_location();
-				}
-			}
+/**
+ * Loop on add...
+ */
+//			if(empty($values['id']))
+//			{
+//				//In case old version of property-app
+//				if(isset($metadata['id']))
+//				{
+//					$this->update_location();
+//				}
+//			}
 
 			$location[$location_code] = $values;
 			return $values;
