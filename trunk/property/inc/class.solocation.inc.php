@@ -369,7 +369,7 @@
 
 			if (!$type_id)
 			{
-				return;
+				return array();
 			}
 
 			if ($order == 'undefined')
@@ -667,10 +667,24 @@
 
 			$filtermethod = '';
 			$where = 'WHERE';
-			if ($control_registered)
+			if ($control_registered && $control_id)
 			{
 				$sql .= "{$this->join} controller_control_location_list ON (fm_location{$type_id}.location_code = controller_control_location_list.location_code )";
 				$filtermethod .= " $where  controller_control_location_list.control_id = $control_id";
+				$where = 'AND';
+			}
+			else if ($control_registered)
+			{
+				$this->db->query("SELECT DISTINCT component_id as item_id"
+				. " FROM controller_control_component_list"
+			//	. " WHERE control_id = {$control_id}"
+				. " WHERE location_id = {$location_id}");
+				$items = array(-1);
+				while ($this->db->next_record())
+				{
+					$items[] =  $this->db->f('item_id');
+				}
+				$filtermethod .= " $where fm_location{$type_id}.id IN (". implode(',', $items) . ')';
 				$where = 'AND';
 			}
 

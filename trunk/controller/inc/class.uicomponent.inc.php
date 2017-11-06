@@ -79,7 +79,17 @@
 			$config->read();
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
 
-			self::set_active_menu('controller::status_components');
+			$location_id = phpgw::get_var('location_id', 'int');
+
+			if(($location_id && $this->is_location($location_id)) || phpgw::get_var('get_locations', 'bool'))
+			{
+				self::set_active_menu('controller::status_locations');
+			}
+			else
+			{
+				self::set_active_menu('controller::status_components');
+			}
+
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 
 			if (phpgw::get_var('noframework', 'bool'))
@@ -119,19 +129,34 @@
 			return $result;
 		}
 
+		private function is_location( $location_id )
+		{
+			$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+			if (substr($location_info['location'], 1, 8) == 'location')
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		private function get_location_filter()
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 
-			$location_filter = phpgwapi_cache::session_get('controller', "location_filter_{$entity_group_id}");
+			if($entity_group_id)
+			{
+				$location_filter = phpgwapi_cache::session_get('controller', "location_filter_{$entity_group_id}");
+			}
 
-			if (!$location_filter)
+			if (empty($location_filter))
 			{
 				$location_filter = array();
-				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				if (substr($location_info['location'], 1, 8) == 'location')
+				if ($this->is_location($location_id))
 				{
 					$location_types = CreateObject('property.soadmin_location')->read(array('allrows' => true));
 					foreach ($location_types as $location_type)
@@ -648,6 +673,13 @@
 //			$lookup_stray_items = false;
 			$lookup_stray_items = !!$entity_group_id;
 
+			if($location_id && $this->is_location($location_id))
+			{
+				$get_locations = true;
+			}
+
+			$location_filter_options = array();
+
 			if ($user_id < 0)
 			{
 				$user_id = $user_id * -1;
@@ -714,10 +746,11 @@
 					$_location_id = (int)$_location_filter['id'];
 					$exclude_locations[] = $_location_id;
 
-					$location_filter_options = $this->_get_location_filter_options($_location_id);
 
 					if(empty($get_locations))
 					{
+						$location_filter_options = $this->_get_location_filter_options($_location_id);
+
 						$_items = execMethod('property.soentity.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
@@ -740,6 +773,7 @@
 							'location_id' => $_location_id,
 							'district_id' => $district_id,
 							'location_code'	=> $location_code,
+							'control_registered' => !$all_items,
 							'allrows' => true,
 							'filter_item' => $filter_component ? array($filter_component) : array(),
 							)
@@ -788,7 +822,7 @@
 
 				}
 
-				if ($all_items && !$_item['has_control'])
+				if (empty($get_locations) && ($all_items && !$_item['has_control']))
 				{
 					continue;
 				}
@@ -1051,7 +1085,7 @@
 			$choose_master = false;
 			if ($all_components && count($all_components))
 			{
-				$choose_master = true;
+				$choose_master = $all_items ? true : false;
 				foreach ($all_components as $dummy => $component)
 				{
 					$data = array();
@@ -1068,20 +1102,20 @@
 							'id' => $item_id,
 							'active_tab' => 'controller'
 						);
+						$short_description = $component['short_description'];
+						$short_description .= ' [' . $component['location_name'] . ']';
 					}
 					else
 					{
 						$item_link_data = array
 							(
-							'menuaction' => 'property.uientity.edit',
+							'menuaction' => 'property.uilocation.edit',
 							'location_code' => $_location_code,
 							'active_tab' => 'controller'
 						);
-
+						$short_description = $component['location_code'];
+						$short_description .= ' [' . $component['loc1_name'] . ']';
 					}
-
-					$short_description = $component['short_description'];
-					$short_description .= "[ {$component['location_name']} ]";
 
 					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
 					$data['component_id'] = $item_id;
