@@ -172,6 +172,12 @@
 
 			//------------------Start login ntlm
 
+				$logindomain = phpgw::get_var('domain', 'string', 'GET');
+				if (strstr($login, '#') === false && $logindomain)
+				{
+					$login .= "#{$logindomain}";
+				}
+
 				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 				if (!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
@@ -263,6 +269,7 @@
 				//Reset auth object
 				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
 				$login = $GLOBALS['phpgw']->auth->get_username();
+				$login = 'hc483';
 
 				if($login)
 				{
@@ -271,6 +278,13 @@
 						'account_lid' => $login
 					);
 					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
+
+					$logindomain = phpgw::get_var('domain', 'string', 'GET');
+					if (strstr($login, '#') === false && $logindomain)
+					{
+						$login .= "#{$logindomain}";
+					}
+
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
 
