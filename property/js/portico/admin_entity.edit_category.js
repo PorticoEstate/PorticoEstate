@@ -35,11 +35,9 @@ this.onActionsClick = function ()
 		values_tophp.push($(this).val());
 	});
 
-	if($("#template_attrib") && values_tophp)
+	if(values_tophp.length > 0)
 	{
-
-		$("#template_attrib").val(values_tophp);
-	//	document.form.template_attrib.value = values_tophp;
+		document.form.template_attrib.value = values_tophp;
 	}
 	document.form.submit();
 }

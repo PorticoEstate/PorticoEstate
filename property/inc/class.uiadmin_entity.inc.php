@@ -659,6 +659,7 @@
 					}
 				}
 
+				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 				$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiadmin_entity.edit',
@@ -818,6 +819,7 @@
 					}
 				}
 
+				$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 				$message = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
 
 				phpgwapi_cache::message_set($message[0]['msgbox_text'], 'message');

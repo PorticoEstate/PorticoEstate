@@ -1708,10 +1708,7 @@ HTML;
 			phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 			$this->_insert_custom_js();
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::add_jquery_translation($data);
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form'));
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('add' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
+			self::render_template_xsl( array('tts', 'files', 'attributes_form'), $data, $xsl_rootdir = '' , 'add');
 		}
 
 		function update_data()
@@ -1822,9 +1819,6 @@ HTML;
 			{
 				$receipt = array();
 			}
-
-			$GLOBALS['phpgw']->xslttpl->add_file(array('tts', 'files', 'attributes_form',
-				'datatable_inline'));
 
 			$historylog = CreateObject('property.historylog', 'tts');
 
@@ -3115,8 +3109,8 @@ HTML;
 			$appname = lang('helpdesk');
 			$function_msg = lang('view ticket detail');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			self::add_jquery_translation($data);
-			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('view' => $data));
+			self::render_template_xsl( array('tts', 'files', 'attributes_form',
+				'datatable_inline'), $data, $xsl_rootdir = '' , 'view');
 		}
 
 		function view_file()

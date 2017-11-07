@@ -440,7 +440,7 @@
 		<xsl:value-of select="lookup_functions"/>
 		var base_java_url = <xsl:value-of select="base_java_url"/>;
 	</script>
-	
+
 	<xsl:choose>
 		<xsl:when test="msgbox_data != ''">
 			<dl>
@@ -498,13 +498,13 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'name')"/>
 						</label>
-								
+
 						<input type="text" data-validation="required" name="values[name]" value="{value_name}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="lang_name_standardtext"/>
 							</xsl:attribute>
 						</input>
-								
+
 					</div>
 					<div class="pure-control-group">
 						<label>
@@ -898,11 +898,11 @@
 										</xsl:call-template>
 									</xsl:if>
 								</xsl:for-each>
-								<input type="hidden" name="template_attrib" value=""/>
 							</div>
 						</xsl:when>
 					</xsl:choose>
 					<div class="pure-controls">
+						<input type="hidden" name="template_attrib" value=""/>
 						<input type="button" class="pure-button pure-button-primary" name="values[save]" value="{lang_save}" onClick="onActionsClick();">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'save')"/>
@@ -1247,7 +1247,7 @@
 		self.name="first_Window";
 		<xsl:value-of select="lookup_functions"/>
 	</script>
-	
+
 	<dl>
 		<xsl:choose>
 			<xsl:when test="msgbox_data != ''">
@@ -1264,7 +1264,7 @@
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
 			<div id="general">
-                                                   
+
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="lang_entity"/>

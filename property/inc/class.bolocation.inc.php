@@ -870,13 +870,14 @@ JS;
 				$location_code = $data;
 			}
 
-			$location_array = explode('-', $location_code);
-			$type_id = count($location_array);
-
-			if (!$type_id)
+			if (!$location_code)
 			{
 				return;
 			}
+
+			$location_array = explode('-', $location_code);
+			$type_id = count($location_array);
+
 
 			if (!isset($extra['noattrib']) || !$extra['noattrib'])
 			{

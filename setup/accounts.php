@@ -15,7 +15,7 @@
 		'currentapp' => 'home',
 		'noapi'      => true
 	);
-	
+
 	/**
 	 * Include setup functions
 	 */
@@ -32,7 +32,7 @@
 
 	/**
 	 * Add account
-	 * 
+	 *
 	 * @param array  $acct    Account name and other information to use
 	 * @param string $type    Account type: u = user | g = group
 	 * @param array  $groups  Groups to add account to
@@ -87,7 +87,9 @@
 				'timeformat'	=> 24,
 				'default_app'	=> '',
 				'currency'		=> '$',
-				'show_help'		=> 1
+				'show_help'		=> 0,
+				'account_display'=> 'lastname',
+				'rteditor'		=> 'ckeditor'
 			),
 
 			'addressbook' => array(),
@@ -114,7 +116,7 @@
 	/**
 	 * Validate the data for the admin user account
 	 *
-	 * @param string &$username the login id for the admin user - 
+	 * @param string &$username the login id for the admin user -
 	 * @param string $passwd    the password for the new user
 	 * @param string $passwd2   the verification password for the new user
 	 * @param string $fname     the first name of the administrator
@@ -186,7 +188,7 @@
 		$GLOBALS['phpgw_info']['server']['account_repository']		= 'sql';
 		$GLOBALS['phpgw_info']['server']['auth_type']				= 'sql';
 		$GLOBALS['phpgw_info']['server']['encryption_type']			= 'ssha';
-		$GLOBALS['phpgw_info']['server']['password_level']         = 'NONALPHA'; 
+		$GLOBALS['phpgw_info']['server']['password_level']         = 'NONALPHA';
 		$GLOBALS['phpgw_info']['server']['account_min_id']			= 1000;
 		$GLOBALS['phpgw_info']['server']['account_max_id']			= 65535;
 		$GLOBALS['phpgw_info']['server']['group_min_id']			= 500;
@@ -207,7 +209,7 @@
 		{
 			$GLOBALS['phpgw_info']['server'][$db->f('config_name', true)] = $db->f('config_value', true);
 		}
-		
+
 		$GLOBALS['phpgw'] = new phpgw;
 		$GLOBALS['phpgw']->db       =& $db;
 		$GLOBALS['phpgw']->accounts = CreateObject('phpgwapi.accounts');
@@ -230,12 +232,12 @@
 		}
 
 		$errors = validate_admin($username, $passwd, $passwd2, $fname, $lname);
-		
+
 		if(in_array($username, array('admins', 'default')))
 		{
 			$errors[] = lang('That loginid has already been taken');
 		}
-		
+
 		if ( !count($errors) )
 		{
 			$admin_acct = array
@@ -308,7 +310,7 @@
 				'location'	=> 'changepassword',
 				'rights'	=> 1
 			);
-			
+
 			$group = array('username' => 'default');
 			$defaultgroupid = add_account($group, 'g', array(), $modules);
 
@@ -324,7 +326,7 @@
 			exit;
 		}
 	}
-	
+
 	$tpl_root = $GLOBALS['phpgw_setup']->html->setup_tpl_dir('setup');
 	$setup_tpl = CreateObject('phpgwapi.Template',$tpl_root);
 	$setup_tpl->set_file(array(
@@ -357,7 +359,7 @@
 		$number_of_accounts = $db->f('cnt');
 		if ( $number_of_accounts )
 		{
-			$account_creation_notice .= "\n" 
+			$account_creation_notice .= "\n"
 				. lang('<b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>');
 		}
 	}

@@ -585,6 +585,9 @@ onMouseOut="nd()">
 							TINY.box.show({iframe:requestUrl, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 							}
 
+							var location_id = <xsl:value-of select="location_id"/>;
+							var item_id = <xsl:value-of select="item_id"/>;
+
 						</script>
 						<div id="controller_receipt"></div>
 						<fieldset>
