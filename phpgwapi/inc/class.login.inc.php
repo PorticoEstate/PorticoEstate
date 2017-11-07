@@ -269,7 +269,6 @@
 				//Reset auth object
 				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
 				$login = $GLOBALS['phpgw']->auth->get_username();
-				$login = 'hc483';
 
 				if($login)
 				{
