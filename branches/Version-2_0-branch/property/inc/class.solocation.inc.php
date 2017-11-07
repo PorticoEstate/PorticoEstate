@@ -352,10 +352,24 @@
 			$results = $data['results'] ? (int)$data['results'] : 0;
 			$control_registered = isset($data['control_registered']) ? $data['control_registered'] : '';
 			$control_id = isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
+			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
+			$filter_item = isset($data['filter_item']) && $data['filter_item'] ? (array)$data['filter_item'] : array();
+
+			if($location_id && !$type_id)
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$type_info = explode('.', $location_info['location']);
+					$type_id = $type_info[2];
+				}
+			}
+
 
 			if (!$type_id)
 			{
-				return;
+				return array();
 			}
 
 			if ($order == 'undefined')
@@ -376,7 +390,10 @@
 
 
 			$sql = $this->socommon->fm_cache('sql_' . $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact);
-			$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
+			if(empty($location_id))
+			{
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");			
+			}
 
 //			$choice_table = 'phpgw_cust_choice';
 			$attribute_table = 'phpgw_cust_attribute';
@@ -650,10 +667,24 @@
 
 			$filtermethod = '';
 			$where = 'WHERE';
-			if ($control_registered)
+			if ($control_registered && $control_id)
 			{
 				$sql .= "{$this->join} controller_control_location_list ON (fm_location{$type_id}.location_code = controller_control_location_list.location_code )";
 				$filtermethod .= " $where  controller_control_location_list.control_id = $control_id";
+				$where = 'AND';
+			}
+			else if ($control_registered)
+			{
+				$this->db->query("SELECT DISTINCT component_id as item_id"
+				. " FROM controller_control_component_list"
+			//	. " WHERE control_id = {$control_id}"
+				. " WHERE location_id = {$location_id}");
+				$items = array(-1);
+				while ($this->db->next_record())
+				{
+					$items[] =  $this->db->f('item_id');
+				}
+				$filtermethod .= " $where fm_location{$type_id}.id IN (". implode(',', $items) . ')';
 				$where = 'AND';
 			}
 
@@ -785,6 +816,11 @@
 				$where = 'AND';
 			}
 
+			if($filter_item)
+			{
+				$filtermethod .= " {$where} fm_location{$type_id}.id IN (" . implode(', ', $filter_item) . ')';
+				$where = 'AND';
+			}
 			if ($filter > 0)
 			{
 				//cramirez.r@ccfirst.com 16/09/08 	validacion is added to avoid notice
@@ -1266,6 +1302,27 @@
 
 			$location_array = explode('-', $location_code);
 			$type_id = count($location_array);
+			
+			$location_id = !empty($values['location_id']) ? (int) $values['location_id'] : null;
+
+			/**
+			 * Override
+			 */
+			if($location_id)
+			{
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$type_info = explode('.', $location_info['location']);
+					$type_id = $type_info[2];
+				}
+				$id = !empty($values['id']) ? (int) $values['id'] : null;
+				if(!$id && !$location_code)
+				{
+					$type_id = false;
+				}
+			}
 
 			if (!$type_id)
 			{
@@ -1334,7 +1391,14 @@
 			//FIXME: Make sure all locations are linked to a valid category
 			$sql .= " {$this->left_join} fm_location{$type_id}_category ON (fm_location{$type_id}.category = fm_location{$type_id}_category.id)";
 
-			$sql .= " WHERE fm_location$type_id.location_code='$location_code' ";
+			if($location_code)
+			{
+				$sql .= " WHERE fm_location$type_id.location_code='$location_code' ";
+			}
+			else
+			{
+				$sql .= " WHERE fm_location$type_id.id=" . (int) $id;
+			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
@@ -1359,17 +1423,24 @@
 						}
 					}
 				}
-			}
 
-			//_debug_array($cols_return);
-			if(empty($values['id']))
-			{
-				//In case old version of property-app
-				if(isset($metadata['id']))
+				if(!$location_code)
 				{
-					$this->update_location();
+					$location_code = $this->db->f('location_code');
 				}
 			}
+
+/**
+ * Loop on add...
+ */
+//			if(empty($values['id']))
+//			{
+//				//In case old version of property-app
+//				if(isset($metadata['id']))
+//				{
+//					$this->update_location();
+//				}
+//			}
 
 			$location[$location_code] = $values;
 			return $values;

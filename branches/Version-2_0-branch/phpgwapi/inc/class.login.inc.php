@@ -172,6 +172,12 @@
 
 			//------------------Start login ntlm
 
+				$logindomain = phpgw::get_var('domain', 'string', 'GET');
+				if (strstr($login, '#') === false && $logindomain)
+				{
+					$login .= "#{$logindomain}";
+				}
+
 				$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, $passwd);
 
 				if (!isset($GLOBALS['sessionid']) || !$GLOBALS['sessionid'])
@@ -271,6 +277,13 @@
 						'account_lid' => $login
 					);
 					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
+
+					$logindomain = phpgw::get_var('domain', 'string', 'GET');
+					if (strstr($login, '#') === false && $logindomain)
+					{
+						$login .= "#{$logindomain}";
+					}
+
 					$GLOBALS['sessionid'] = $GLOBALS['phpgw']->session->create($login, '');
 				}
 

@@ -110,6 +110,11 @@
 				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index')),
 				'image' => array('property', 'location_1'),
 			);
+			$menus['navigation']['status_locations'] = array(
+				'text' => lang('status locations'),
+				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index', 'get_locations' => true)),
+				'image' => array('property', 'location_1'),
+			);
 
 			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{

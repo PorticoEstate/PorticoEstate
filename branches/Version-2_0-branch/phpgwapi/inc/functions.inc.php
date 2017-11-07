@@ -835,6 +835,11 @@ HTML;
 //				$cd_array['lightbox'] = true;
 			}
 
+			if(!empty($_GET['domain']))
+			{
+				$cd_array['domain'] = $_GET['domain'];
+			}
+
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
 			{
 				header('Content-Type: application/json'); 

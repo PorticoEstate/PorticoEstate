@@ -122,20 +122,35 @@
 			$control_groups_with_items_array = array();
 
 			$component_id = $check_list->get_component_id();
+			$get_locations = false;
 
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+				}
 				$component = new controller_component();
 				$component->set_location_code($component_arr['location_code']);
 				$component->set_xml_short_desc($short_desc);
@@ -287,7 +302,8 @@
 				'component_array' => $component_array,
 				'control_groups_with_items_array' => $control_groups_with_items_array,
 				'type' => $type,
-				'location_code' => $location_code
+				'location_code' => $location_code,
+				'get_locations'	=> $get_locations
 			);
 
 			return $data;
@@ -330,6 +346,7 @@
 				'mandatory_location' => $mandatory_location,
 				'location_required' => $mandatory_location,
 				'cases_view' => 'add_case',
+				'get_locations'	=> $case_data['get_locations']
 			);
 
 			phpgwapi_jquery::load_widget('core');
@@ -503,8 +520,21 @@
 					$component_id = $case->get_component_id();
 					if ($component_id)
 					{
-						$short_desc = execMethod('property.soentity.get_short_description', array(
-							'location_id' => $component_location_id, 'id' => $component_id));
+						$location_info = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+
+						if (substr($location_info['location'], 1, 8) == 'location')
+						{
+							$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $component_location_id,
+								'id' => $component_id), true);
+							$location_code = $item_arr['location_code'];
+							$short_desc = execMethod('property.bolocation.get_location_name', $location_code);
+						}
+						else
+						{
+							$short_desc = execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_location_id, 'id' => $component_id));
+						}
+
 						$case->set_component_descr($short_desc);
 					}
 				}
@@ -521,20 +551,32 @@
 
 			$component_id = $check_list->get_component_id();
 
+			$get_locations = false;
+
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
-
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
-
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
-
-				//		$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+				}
 
 				$component = new controller_component();
 				$component->set_id($component_id);
@@ -553,7 +595,7 @@
 				$type = 'location';
 			}
 
-			$level = $this->location_finder->get_location_level();
+			$level = $this->location_finder->get_location_level($location_code);
 
 			$year = date("Y", $check_list->get_deadline());
 			$month = date("n", $check_list->get_deadline());
@@ -570,6 +612,7 @@
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'type' => $type,
+				'get_locations'	=> $get_locations,
 				'location_level' => $level,
 			);
 
@@ -642,8 +685,20 @@
 
 				if ($component_id = $case->get_component_id())
 				{
-					$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id,
-						'id' => $component_id));
+					$location_info = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+
+					if (substr($location_info['location'], 1, 8) == 'location')
+					{
+						$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $component_location_id,
+							'id' => $component_id), true);
+						$location_code = $item_arr['location_code'];
+						$short_desc = execMethod('property.bolocation.get_location_name', $location_code);
+					}
+					else
+					{
+						$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $component_location_id,
+							'id' => $component_id));
+					}
 					$message_details .= "Hvor: {$short_desc}\n";
 				}
 
@@ -738,20 +793,32 @@
 
 			$component_id = $check_list->get_component_id();
 
+			$get_locations = false;
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
-
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
-
-//				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+				}
 
 				$component = new controller_component();
 				$component->set_id($component_id);
@@ -789,7 +856,8 @@
 				'current_month_nr' => $month,
 				'type' => $type,
 				'building_location_code' => $building_location_code,
-				'location_level' => $level
+				'location_level' => $level,
+				'get_locations'	=> $get_locations
 			);
 
 			phpgwapi_jquery::load_widget('core');
@@ -918,21 +986,32 @@
 			$check_list_location_code = $check_list->get_location_code();
 
 			$component_id = $check_list->get_component_id();
+			$get_locations = false;
 
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
-
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
-
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
-
-//				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+				}
 
 				$component = new controller_component();
 				$component->set_id($component_id);
@@ -982,8 +1061,20 @@
 					$component_id = $case->get_component_id();
 					if ($component_id)
 					{
-						$short_desc = execMethod('property.soentity.get_short_description', array(
-							'location_id' => $component_location_id, 'id' => $component_id));
+						$location_info = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+
+						if (substr($location_info['location'], 1, 8) == 'location')
+						{
+							$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $component_location_id,
+								'id' => $component_id), true);
+							$location_code = $item_arr['location_code'];
+							$short_desc = execMethod('property.bolocation.get_location_name', $location_code);
+						}
+						else
+						{
+							$short_desc = execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_location_id, 'id' => $component_id));
+						}
 						$case->set_component_descr($short_desc);
 					}
 				}
@@ -1001,6 +1092,7 @@
 				'component_array' => $component_array,
 				'type' => $type,
 				'location_level' => $level,
+				'get_locations'	=> $get_locations,
 				//	'building_location_code' 		=> $case_location_code,
 				'current_year' => $year,
 				'current_month_nr' => $month,
@@ -1031,20 +1123,35 @@
 
 			$component_id = $check_list->get_component_id();
 
+			$get_locations = false;
+
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-//				$short_desc = execMethod('property.soentity.get_short_description', array('location_id' => $location_id, 'id' => $component_id));
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
 
+				}
 				$component = new controller_component();
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
@@ -1093,8 +1200,20 @@
 					$component_id = $case->get_component_id();
 					if ($component_id)
 					{
-						$short_desc = execMethod('property.soentity.get_short_description', array(
-							'location_id' => $component_location_id, 'id' => $component_id));
+						$location_info = $GLOBALS['phpgw']->locations->get_name($component_location_id);
+
+						if (substr($location_info['location'], 1, 8) == 'location')
+						{
+							$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $component_location_id,
+								'id' => $component_id), true);
+							$location_code = $item_arr['location_code'];
+							$short_desc = execMethod('property.bolocation.get_location_name', $location_code);
+						}
+						else
+						{
+							$short_desc = execMethod('property.soentity.get_short_description', array(
+								'location_id' => $component_location_id, 'id' => $component_id));
+						}
 						$case->set_component_descr($short_desc);
 					}
 				}
@@ -1114,6 +1233,7 @@
 				'component_array' => $component_array,
 				'type' => $type,
 				'location_level' => $level,
+				'get_locations'	=> $get_locations,
 				//	'building_location_code' 		=> $building_location_code,
 				'current_year' => $year,
 				'current_month_nr' => $month,

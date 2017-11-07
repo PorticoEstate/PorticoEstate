@@ -110,8 +110,8 @@
 		}
 
 		/**
-		 * Public function for displaying checklists  
-		 * 
+		 * Public function for displaying checklists
+		 *
 		 * @param HTTP:: phpgw_return_as
 		 * @return data array
 		 */
@@ -208,7 +208,7 @@
 
 		/**
 		 * Public function for displaying the add check list form
-		 * 
+		 *
 		 * @param HTTP:: location code, control id, date
 		 * @return data array
 		 */
@@ -268,6 +268,7 @@
 				$level = $this->location_finder->get_location_level($location_code);
 			}
 
+			$get_locations = false;
 
 			if ($type == "component")
 			{
@@ -279,28 +280,47 @@
 					$check_list->set_component_id($component_id);
 				}
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
 
-				$location_code = $component_arr['location_code'];
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$check_list->set_location_code($location_code);
-				$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
-				$level = $this->location_finder->get_location_level($location_code);
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
 
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$type_info = explode('.', $location_info['location']);
+					$level = $type_info[2];
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
+					$location_code = $component_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_array = execMethod('property.bolocation.read_single', array('location_code' => $check_list->get_location_code()));
+					$level = $this->location_finder->get_location_level($location_code);
+
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+
+				}
 
 				$component = new controller_component();
 				$component->set_id($component_id);
 				$component->set_location_id($location_id);
-				$component->set_location_code($component_arr['location_code']);
+				$component->set_location_code($location_code);
 				$component->set_xml_short_desc($short_desc);
 
 				$component_array = $component->toArray();
-				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($location_code);
 
 				$type = "component";
 			}
@@ -372,6 +392,7 @@
 				'user_list' => array('options' => $user_list_options),
 				'location_array' => $location_array,
 				'component_array' => $component_array,
+				'get_locations' => $get_locations,
 				'control' => $control,
 				'check_list' => $check_list,
 				'buildings_on_property' => $buildings_on_property,
@@ -400,8 +421,8 @@
 		}
 
 		/**
-		 * Public function for displaying the edit check list form  
-		 * 
+		 * Public function for displaying the edit check list form
+		 *
 		 * @param HTTP:: check list id
 		 * @return data array
 		 */
@@ -435,18 +456,39 @@
 			}
 
 			$component_id = $check_list->get_component_id();
+			$get_locations = false;
 
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$type_info = explode('.', $location_info['location']);
+					$level = $type_info[2];
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
+					$location_code = $component_arr['location_code'];
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+
+				}
 
 				$component = new controller_component();
 				$component->set_id($component_id);
@@ -456,7 +498,7 @@
 				$component_array = $component->toArray();
 
 				$type = 'component';
-				$building_location_code = $this->location_finder->get_building_location_code($component_arr['location_code']);
+				$building_location_code = $this->location_finder->get_building_location_code($location_code);
 			}
 			else
 			{
@@ -500,7 +542,8 @@
 				'user_list' => array('options' => $user_list_options),
 				'control' => $control,
 				'check_list' => $check_list,
-				'$buildings_on_property' => $buildings_on_property,
+				'buildings_on_property' => $buildings_on_property,
+				'get_locations' => $get_locations,
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'type' => $type,
@@ -661,8 +704,8 @@
 
 		/**
 		 * Public function for saving a check list
-		 * 
-		 * @param HTTP:: location code, control id, status etc.. (check list details) 
+		 *
+		 * @param HTTP:: location code, control id, status etc.. (check list details)
 		 * @return data array
 		 */
 		function save_check_list()
@@ -813,12 +856,29 @@
 
 					if ($check_list->get_component_id() > 0)
 					{
-						$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $check_list->get_location_id(),
-							'id' => $check_list->get_component_id()));
-						$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
-						$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+						$location_info = $GLOBALS['phpgw']->locations->get_name($check_list->get_location_id());
+
+						if (substr($location_info['location'], 1, 8) == 'location')
+						{
+							$type_info = explode('.', $location_info['location']);
+							$level = $type_info[2];
+							$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $check_list->get_location_id(),
+								'id' => $component_id), true);
+							$location_code = $item_arr['location_code'];
+							$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+							$short_desc = $location_name;
+						}
+						else
+						{
+							$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $check_list->get_location_id(),
+								'id' => $check_list->get_component_id()));
+
+							$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+
+							$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
 								'location_id' => $check_list->get_location_id(), 'id' => $check_list->get_component_id()));
-						$location = $location_name;
+						}
+
 					}
 
 					$repeat_type_array = array
@@ -959,10 +1019,10 @@
 					'document_date' => $GLOBALS['phpgw']->common->show_date($entry['document_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 				);
 			}
-		
+
 			$generic_document = CreateObject('property.sogeneric_document');
 			$params['location_id'] = $location_id;
-			$params['order'] = 'name';		
+			$params['order'] = 'name';
 			$params['allrows'] = true;
 			$generic_document_list = array();
 			foreach ($doc_types as $doc_type)
@@ -973,7 +1033,7 @@
 					$generic_document_list = array_merge($generic_document_list, $generic_document->read($params));
 				}
 			}
-			
+
 			foreach ($generic_document_list as $entry)
 			{
 				$link_file_data = array
@@ -989,8 +1049,8 @@
 					'file_name' => '<a href="' . $GLOBALS['phpgw']->link('/index.php', $link_file_data) . "\" target='_blank' title='{$lang_view}'>{$entry['name']}</a>"
 				);
 			}
-				
-			
+
+
 			return $values;
 		}
 
@@ -1060,19 +1120,36 @@
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
 			$component_id = $check_list->get_component_id();
+			$get_locations = false;
 
 			if ($component_id > 0)
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
 
-				$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
-					'id' => $component_id));
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$component_arr = execMethod('property.soentity.read_single_eav', array('location_id' => $location_id,
+						'id' => $component_id));
 
-				$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
+					$location_name = execMethod('property.bolocation.get_location_name', $component_arr['location_code']);
 
-				$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
-						'location_id' => $location_id, 'id' => $component_id));
+					$short_desc = $location_name . '::' . execMethod('property.soentity.get_short_description', array(
+							'location_id' => $location_id, 'id' => $component_id));
+
+				}
+
 
 				$component = new controller_component();
 				$component->set_id($component_id);
@@ -1109,6 +1186,7 @@
 				'location_array' => $location_array,
 				'component_array' => $component_array,
 				'type' => $type,
+				'get_locations'	=> $get_locations,
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'building_location_code' => $building_location_code,
@@ -1210,7 +1288,7 @@
 					'control_items' => $saved_control_items
 					);
 			}
-	
+
 			$data = array
 				(
 				'saved_groups_with_items_array' => $saved_groups_with_items_array,
@@ -1232,7 +1310,7 @@
 			return json_encode($check_list);
 		}
 
-		// Returns open cases for a check list as JSON 
+		// Returns open cases for a check list as JSON
 		public function get_cases_for_check_list()
 		{
 			$check_list_id = phpgw::get_var('check_list_id');
@@ -1244,7 +1322,7 @@
 
 		/**
 		 * Public function for updateing status for a check list
-		 * 
+		 *
 		 * @return json encoded array with status saved or not saved
 		 */
 		public function update_status()
@@ -1448,7 +1526,7 @@
 		}
 
 		/**
-		 * 
+		 *
 		 * @param string $from_name
 		 * @param string $from_address
 		 * @param string $to_name

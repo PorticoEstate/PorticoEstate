@@ -686,7 +686,7 @@
 
 			if ($repeat_type != null)
 			{
-				$sql .= "AND c.repeat_type = $repeat_type ";
+				$sql .= "AND cs.repeat_type = $repeat_type ";
 			}
 
 //		if($user_id)
