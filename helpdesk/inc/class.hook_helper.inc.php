@@ -64,7 +64,13 @@
 						$account_id = self::create_phpgw_account($account_lid, $fellesdata_user['firstname'], $fellesdata_user['lastname'], $password, $group_lid);
 						if ($account_id)
 						{
-							$GLOBALS['phpgw']->redirect_link('/login.php', array());
+							$cd_array = array();
+							if(!empty($_GET['domain']))
+							{
+								$cd_array['domain'] = $_GET['domain'];
+							}
+
+							$GLOBALS['phpgw']->redirect_link('/login.php', $cd_array);
 						}
 					}
 				}
