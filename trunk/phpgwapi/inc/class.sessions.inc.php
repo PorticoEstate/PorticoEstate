@@ -684,6 +684,14 @@
 				}
 			}
 
+			if($external && empty($extravars['domain']))
+			{
+				if($this->_account_domain !='default')
+				{
+					$extravars['domain'] = $this->_account_domain;
+				}
+			}
+
 			if ( is_array($extravars) ) //we have something to append
 			{
 				$url .= '?' . http_build_query($extravars, null, $term);
