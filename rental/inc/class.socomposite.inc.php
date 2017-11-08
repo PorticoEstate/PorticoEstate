@@ -414,12 +414,12 @@
 					}
 					else
 					{
-						$location = new rental_property_location($location_code, null, 1, array());
+						$location = new rental_property_location($location_code, '', 1, array());
 					}
 				}
 				catch (Exception $e)
 				{
-					$location = new rental_property_location($location_code, null, 1, array());
+					$location = new rental_property_location($location_code, '', 1, array());
 				}
 				$composite->add_unit(new rental_unit($this->unmarshal($this->db->f('unit_id', true), 'int'), $composite_id, $location));
 			}
