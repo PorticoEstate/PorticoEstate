@@ -150,6 +150,7 @@
 				$categories->supress_info	= true;
 
 				$_cats = $categories->return_sorted_array(0, false, '', '', '', false, false);
+
 				$_categories = array();
 				$subs = false;
 				foreach ($_cats as $_cat)
@@ -158,7 +159,7 @@
 					{
 						$_categories[] = $_cat;
 					}
-					else
+					else if ($_cat['level'] > 0 && $_cat['active'] != 2)
 					{
 						$subs = true;
 					}
