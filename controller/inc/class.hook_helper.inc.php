@@ -987,8 +987,19 @@ HTML;
 
 			if (!isset($component_short_desc[$location_id][$component_id]))
 			{
-				$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array(
-					'location_id' => $location_id, 'id' => $component_id));
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$component_short_desc[$location_id][$component_id] = execMethod('property.bolocation.get_location_name', $item_arr['location_code']);
+				}
+				else
+				{
+					$component_short_desc[$location_id][$component_id] = execMethod('property.soentity.get_short_description', array(
+						'location_id' => $location_id, 'id' => $component_id));
+				}
 			}
 
 			return $component_short_desc[$location_id][$component_id];
