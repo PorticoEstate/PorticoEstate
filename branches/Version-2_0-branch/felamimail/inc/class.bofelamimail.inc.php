@@ -72,8 +72,11 @@
 
 			$this->mailPreferences	= $this->bopreferences->getPreferences();
 
-			$this->icServer = $this->mailPreferences->getIncomingServer(0);
-			$this->ogServer = $this->mailPreferences->getOutgoingServer(0);
+			if(is_object($this->mailPreferences))
+			{
+				$this->icServer = $this->mailPreferences->getIncomingServer(0);
+				$this->ogServer = $this->mailPreferences->getOutgoingServer(0);
+			}
 
 			#_debug_array($this->mailPreferences);
 			$this->imapBaseDir	= '';
@@ -2290,6 +2293,10 @@
 
 		function updateAccount($_hookValues) 
 		{
+			if(!is_object($this->mailPreferences))
+			{
+				return;
+			}
 			$icServer = $this->mailPreferences->getIncomingServer(0);
 			if(is_a($icServer,'defaultimap')) {
 				$icServer->updateAccount($_hookValues);
