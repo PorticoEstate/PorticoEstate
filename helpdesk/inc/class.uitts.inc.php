@@ -838,6 +838,24 @@ HTML;
 				return $this->query();
 			}
 
+			$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, false);
+
+			$subs = false;
+			foreach ($_cats as $_cat)
+			{
+				if ($_cat['level'] > 0 && $_cat['active'] != 2)
+				{
+					$subs = true;
+				}
+			}
+
+			if($subs && $this->parent_cat_id < 0)
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . lang('choose a section from the menu');
+				self::render_template_xsl('datatable_jquery', array());
+				return;
+			}
+
 			if (!empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval']) && (int)$GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] > 0)
 			{
 				$refreshinterval = (int) $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] * 1000;
