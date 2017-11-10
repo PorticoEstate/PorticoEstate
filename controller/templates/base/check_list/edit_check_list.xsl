@@ -49,10 +49,8 @@
 			</div>
 			<div class="row">
 				<label>Skal utføres innen</label>
-				<input class="date" readonly="readonly">
-			      <xsl:attribute name="id">deadline_date</xsl:attribute>
-			      <xsl:attribute name="name">deadline_date</xsl:attribute>
-			      <xsl:attribute name="type">text</xsl:attribute>
+				<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
+				<input id="deadline_date" name="deadline_date" type="hidden">
 			      <xsl:if test="check_list/deadline != 0 or check_list/deadline != ''">
 			      	<xsl:attribute name="value"><xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/></xsl:attribute>
 				  </xsl:if>
@@ -64,6 +62,14 @@
 				</input>
 			</div>
 			<div class="row">
+				<xsl:if test="check_list/error_msg_array/planned_date != ''">
+					<xsl:variable name="error_msg">
+						<xsl:value-of select="check_list/error_msg_array/planned_date" />
+					</xsl:variable>
+					<div class='input_error_msg'>
+						<xsl:value-of select="php:function('lang', $error_msg)" />
+					</div>
+				</xsl:if>
 				<label>Planlagt dato</label>
 				<input class="date" readonly="readonly">
 			      <xsl:attribute name="id">planned_date</xsl:attribute>
@@ -75,6 +81,14 @@
 			    </input>
 		    </div>
 		    <div class="row">
+				<xsl:if test="check_list/error_msg_array/completed_date != ''">
+					<xsl:variable name="error_msg">
+						<xsl:value-of select="check_list/error_msg_array/completed_date" />
+					</xsl:variable>
+					<div class='input_error_msg'>
+						<xsl:value-of select="php:function('lang', $error_msg)" />
+					</div>
+				</xsl:if>
 				<label>Utført dato</label>
 				<input class="date" >
 			      <xsl:attribute name="id">completed_date</xsl:attribute>

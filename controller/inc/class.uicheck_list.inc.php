@@ -558,7 +558,6 @@
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
 			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('deadline_date');
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
