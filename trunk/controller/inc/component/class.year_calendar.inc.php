@@ -51,12 +51,10 @@
 			$period_end_date_ts = $this->get_start_date_year_ts($this->year + 1);
 			$repeat_type = $this->control->get_repeat_type();
 			$repeat_interval = $this->control->get_repeat_interval();
-			//$has_check_lists = 
 
 			// Generates dates for time period with specified interval
 			$date_generator = new date_generator($ctr_start_date_ts, $ctr_end_date_ts, $period_start_date_ts, $period_end_date_ts, $repeat_type, $repeat_interval);
 			$dates_array = $date_generator->get_dates();
-//			_debug_array($dates_array);
 
 			// Set status for control on each date to NOT DONE or REGISTERED
 			foreach ($dates_array as $date_ts)
@@ -119,7 +117,6 @@
 					$has_completed_date = true;
 					$month_nr_completed = date("n", $check_list_status_info->get_completed_date_ts());
 				}
-				//var_dump('planned: ' . $month_nr_planned . '-completed: ' . $month_nr_completed . '->' . $check_list_status_info->get_completed_date_ts());
 
 				$repeat_type = $check_list->get_repeat_type();
 				//		if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
@@ -142,7 +139,7 @@
 					$this->calendar_array[$month_nr]["info"] = $check_list_status_info->serialize();
 				}
 			}
-//			_debug_array($this->calendar_array);
+			
 			/*Insert code to remove controls with changed due-date from array*/
 			$m_cnt = 0;
 			$not_done_due_date;
