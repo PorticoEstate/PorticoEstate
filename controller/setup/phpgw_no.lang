@@ -378,6 +378,7 @@ error_msg_8	controller	no	Planlagtdato kan ikke være etter fristdato
 error_msg_9	controller	no	Utførtdato kan ikke være etter fristdato
 error_msg_no_controls_in_period	controller	no	Ingen kontroller for bygg i denne perioden
 error_msg_no_controls_for_component	controller	no	Ingen kontroller for komponent i denne perioden
+error_msg_control_passed_due_date	controller	no	Sjekkliste kan ikke lagres da frist er overskredet
 role at location	controller	no	Tildeling av rolle
 Register new message	controller	no	Registrer ny melding
 Show message	controller	no	Vis melding
