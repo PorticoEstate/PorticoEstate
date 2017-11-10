@@ -222,6 +222,7 @@
 				$original_deadline_date_ts = phpgw::get_var('deadline_ts');
 				$deadline_current = phpgw::get_var('deadline_current', 'bool');
 				$serie_id = phpgw::get_var('serie_id', 'int');
+				$check_list_error_array = phpgw::get_var('check_list_errors');
 
 				if ($deadline_current)
 				{
@@ -247,6 +248,7 @@
 				$check_list->set_control_id($control_id);
 				$check_list->set_deadline($deadline_ts);
 				$check_list->set_original_deadline($original_deadline_date_ts);
+				$check_list->set_error_msg_array($check_list_error_array);
 			}
 			else
 			{
@@ -433,7 +435,17 @@
 				$check_list_id = phpgw::get_var('check_list_id');
 				$check_list = $this->so->get_single($check_list_id);
 			}
-
+			
+			$current_time = time();
+			$absolute_deadline = time() + (14 * 24 * 60 * 60);
+			$check_list_locked = false;
+			if($check_list->get_deadline() < $absolute_deadline)
+			{
+				//check list was due two weeks ago, and is locked
+				$check_list_locked = true;
+			}
+//			echo 'tid: '.$current_time.'abs: '.$absolute_deadline;
+			
 			$repeat_descr = '';
 			if ($serie = $this->so_control->get_serie($check_list->get_serie_id()))
 			{
@@ -550,6 +562,7 @@
 				'current_year' => $year,
 				'current_month_nr' => $month,
 				'current_month_name' => lang("month {$month} capitalized"),
+				'check_list_locked' => $check_list_locked,
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
 				'required_actual_hours' => $required_actual_hours,
@@ -956,6 +969,7 @@
 						'type' => $type,
 						'assigned_to' => $assigned_to,
 						'status' => $status,
+						'check_list_errors' => $check_list->get_error_msg_array(),
 						//	'billable_hours' => $billable_hours
 					));
 				}
