@@ -143,10 +143,12 @@
 				}
 				else if ($this->repeat_type == 3)
 				{
-					$trail_period_start_date = mktime(0, 0, 0, date("m", $trail_period_start_date), date("d", $trail_period_start_date), date("Y", $trail_period_start_date) + $this->repeat_interval);
+					//set end date on year-control to last day of the year -> 12/31/<year>
+//					$trail_period_start_date = mktime(0, 0, 0, date("m", $trail_period_start_date), date("d", $trail_period_start_date), date("Y", $trail_period_start_date) + $this->repeat_interval);
+					$trail_period_start_date = mktime(0, 0, 0, 12, 31, date("Y", $trail_period_start_date) + $this->repeat_interval);
 				}
 			}
-
+		
 			return $trail_period_start_date;
 		}
 

@@ -97,8 +97,8 @@
 		{
 			foreach ($check_lists_array as $check_list)
 			{
-				$has_planned_date = FALSE;
-				$has_completed_date = FALSE;
+				$has_planned_date = false;
+				$has_completed_date = false;
 				if (isset($this->control_relation['serie_id']) && $check_list->get_serie_id() != $this->control_relation['serie_id'])
 				{
 					continue;
@@ -111,15 +111,15 @@
 				if($check_list_status_info->get_planned_date_ts() && $check_list_status_info->get_planned_date_ts() > 0)
 				{
 					$month_nr_planned = date("n", $check_list_status_info->get_planned_date_ts());
-					$has_planned_date = TRUE;
+					$has_planned_date = true;
 				}
 				
 				if($check_list_status_info->get_completed_date_ts() && $check_list_status_info->get_completed_date_ts() > 0)
 				{
-					$has_completed_date = TRUE;
+					$has_completed_date = true;
 					$month_nr_completed = date("n", $check_list_status_info->get_completed_date_ts());
 				}
-				var_dump('planned: ' . $month_nr_planned . '-completed: ' . $month_nr_completed . '->' . $check_list_status_info->get_completed_date_ts());
+				//var_dump('planned: ' . $month_nr_planned . '-completed: ' . $month_nr_completed . '->' . $check_list_status_info->get_completed_date_ts());
 
 				$repeat_type = $check_list->get_repeat_type();
 				//		if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
@@ -149,7 +149,7 @@
 			$new_calendar_array = array();
 			$new_calendar_array2 = array();
 			$found = false;
-			$moved_control_dates = NULL;
+			$moved_control_dates = array();
 			foreach ($this->calendar_array as $cal)
 			{
 				if(is_array($cal))
