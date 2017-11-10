@@ -398,6 +398,20 @@
 				$status = false;
 				$this->error_msg_array['deadline'] = "error_msg_1";
 			}
+			
+			//Validate PLANNED DATE against DEADLINE
+			if ($this->planned_date > $this->deadline)
+			{
+				$status = false;
+				$this->error_msg_array['planned_date'] = "error_msg_8";
+			}
+
+			//Validate COMPLETED DATE against DEADLINE
+			if ($this->completed_date > $this->deadline)
+			{
+				$status = false;
+				$this->error_msg_array['completed_date'] = "error_msg_9";
+			}
 
 			// Validate connection to COMPONENT/LOCATION
 			if (empty($this->location_code) && empty($this->component_id))

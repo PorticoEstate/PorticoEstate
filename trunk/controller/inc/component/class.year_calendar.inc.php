@@ -97,6 +97,8 @@
 		{
 			foreach ($check_lists_array as $check_list)
 			{
+				$has_planned_date = FALSE;
+				$has_completed_date = FALSE;
 				if (isset($this->control_relation['serie_id']) && $check_list->get_serie_id() != $this->control_relation['serie_id'])
 				{
 					continue;
@@ -106,16 +108,41 @@
 				$check_list_status_info = $check_list_status_manager->get_status_for_check_list();
 
 				$month_nr = date("n", $check_list_status_info->get_deadline_date_ts());
+				if($check_list_status_info->get_planned_date_ts() && $check_list_status_info->get_planned_date_ts() > 0)
+				{
+					$month_nr_planned = date("n", $check_list_status_info->get_planned_date_ts());
+					$has_planned_date = TRUE;
+				}
+				
+				if($check_list_status_info->get_completed_date_ts() && $check_list_status_info->get_completed_date_ts() > 0)
+				{
+					$has_completed_date = TRUE;
+					$month_nr_completed = date("n", $check_list_status_info->get_completed_date_ts());
+				}
+				var_dump('planned: ' . $month_nr_planned . '-completed: ' . $month_nr_completed . '->' . $check_list_status_info->get_completed_date_ts());
 
 				$repeat_type = $check_list->get_repeat_type();
 				//		if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
+				if($has_completed_date)
+				{
+					$this->calendar_array[$month_nr_completed]['repeat_type'] = $repeat_type;
+					$this->calendar_array[$month_nr_completed]["status"] = $check_list_status_info->get_status();
+					$this->calendar_array[$month_nr_completed]["info"] = $check_list_status_info->serialize();
+				}
+				else if($has_planned_date)
+				{
+					$this->calendar_array[$month_nr_planned]['repeat_type'] = $repeat_type;
+					$this->calendar_array[$month_nr_planned]["status"] = $check_list_status_info->get_status();
+					$this->calendar_array[$month_nr_planned]["info"] = $check_list_status_info->serialize();
+				}
+				else
 				{
 					$this->calendar_array[$month_nr]['repeat_type'] = $repeat_type;
 					$this->calendar_array[$month_nr]["status"] = $check_list_status_info->get_status();
 					$this->calendar_array[$month_nr]["info"] = $check_list_status_info->serialize();
 				}
 			}
-			//_debug_array($this->calendar_array);
+//			_debug_array($this->calendar_array);
 			/*Insert code to remove controls with changed due-date from array*/
 			$m_cnt = 0;
 			$not_done_due_date;
