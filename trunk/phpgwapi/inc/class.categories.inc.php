@@ -58,7 +58,7 @@
 		* @param string $type Can be 'subs', 'mains', 'appandmains', 'appandsubs', 'noglobal' or 'noglobalapp'
 		* @return string|boolean Part of SQL where clause or false
 		*/
-		function filter($type)
+		function filter($type, $cat_parent = 0)
 		{
 			
 			$filter_location = '';
@@ -79,7 +79,14 @@
 					$s = " AND cat_appname='{$this->app_name}' {$filter_location} AND cat_parent = 0";
 					 break;
 				case 'appandsubs':
-					$s = " AND cat_appname='{$this->app_name}' {$filter_location} AND cat_parent <> 0";
+					if($cat_parent)
+					{
+						$s = " AND cat_appname='{$this->app_name}' {$filter_location} AND cat_parent = " . (int) $cat_parent;
+					}
+					else
+					{
+						$s = " AND cat_appname='{$this->app_name}' {$filter_location} AND cat_parent <> 0";
+					}
 					break;
 				case 'noglobal':
 					$s = " AND cat_appname != '{$this->app_name}' {$filter_location}";
@@ -1018,19 +1025,20 @@
 		* @param $cat_id Category ID
 		* @return boolean True when the category exists otherwise false
 		*/
-		function exists($type, $cat_name = '', $cat_id = 0 )
+		function exists($type, $cat_name = '', $cat_id = 0, $cat_parent = 0 )
 		{
 			if ( is_array($type) )
 			{
 				$real_type = $type['type'];
 				$cat_id = $type['cat_id'];
+				$cat_parent = $type['cat_parent'];
 				$cat_name = $type['cat_name'];
 				$type = $real_type;
 				unset($real_type);
 			}
 			
 			$cat_id = (int) $cat_id;
-			$filter = $this->filter($type);
+			$filter = $this->filter($type, $cat_parent);
 
 			if ($cat_name)
 			{
