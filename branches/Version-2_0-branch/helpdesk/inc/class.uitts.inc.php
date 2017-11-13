@@ -3,7 +3,7 @@
 	* phpGroupWare - helpdesk: a Facilities Management System.
 	*
 	* @author Sigurd Nes <sigurdne@online.no>
-	* @copyright Copyright (C) 2003,2004,2005,2006,2007 Free Software Foundation, Inc. http://www.fsf.org/
+	* @copyright Copyright (C) 2003-2017 Free Software Foundation, Inc. http://www.fsf.org/
 	* This file is part of phpGroupWare.
 	*
 	* phpGroupWare is free software; you can redistribute it and/or modify
@@ -724,12 +724,10 @@ HTML;
 					$_categories = array();
 					foreach ($_cats as $_cat)
 					{
-						if($_cat['parent'] == $this->parent_cat_id)
+						if ($_cat['active'] != 2)
 						{
-							if ($_cat['active'] != 2)
-							{
-								$_categories[] = $_cat;
-							}
+							$_cat['name'] =  str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']);
+							$_categories[] = $_cat;
 						}
 					}
 				}
@@ -1454,13 +1452,16 @@ JS;
 				$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, $this->parent_cat_id);
 				foreach ($_cats as $_cat)
 				{
-					$cat_select['cat_list'][] = array
-					(
-						'cat_id'	=> $_cat['id'],
-						'name'		=> $_cat['name'],
-						'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
-						'description' => $_cat['description']
-					);
+					if ($_cat['active'] != 2)
+					{
+						$cat_select['cat_list'][] = array
+						(
+							'cat_id'	=> $_cat['id'],
+							'name'		=> str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']),
+							'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
+							'description' => $_cat['description']
+						);
+					}
 				}
 			}
 
@@ -2037,13 +2038,16 @@ JS;
 				$_cats = $this->cats->return_sorted_array(0, false, '', '', '', false, $this->parent_cat_id);
 				foreach ($_cats as $_cat)
 				{
-					$cat_select['cat_list'][] = array
-					(
-						'cat_id'	=> $_cat['id'],
-						'name'		=> $_cat['name'],
-						'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
-						'description' => $_cat['description']
-					);
+					if ($_cat['active'] != 2)
+					{
+						$cat_select['cat_list'][] = array
+						(
+							'cat_id'	=> $_cat['id'],
+							'name'		=> str_repeat(' . ' , (int)($_cat['level'] -1) ) . $GLOBALS['phpgw']->strip_html($_cat['name']),
+							'selected'	=> $_cat['id'] == $this->cat_id ? 'selected' : '',
+							'description' => $_cat['description']
+						);
+					}
 				}
 			}
 

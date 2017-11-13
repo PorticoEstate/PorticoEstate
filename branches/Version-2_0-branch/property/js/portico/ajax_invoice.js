@@ -152,6 +152,11 @@ $(document).ready(function ()
 		var order_id = document.getElementById("order_id").value;
 		var order_id_orig = document.getElementById("order_id_orig").value;
 
+		if (!dim_b)
+		{
+			alert('Du må velge Ansvarssted');
+			return;
+		}
 
 		if (order_id_orig == order_id)
 		{
@@ -164,12 +169,6 @@ $(document).ready(function ()
 			if (!dim_e)
 			{
 				alert('Du må velge Kategori');
-				return;
-			}
-
-			if (!dim_b)
-			{
-				alert('Du må velge Ansvarssted');
 				return;
 			}
 

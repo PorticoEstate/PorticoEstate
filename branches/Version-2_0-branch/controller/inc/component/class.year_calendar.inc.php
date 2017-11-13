@@ -51,12 +51,10 @@
 			$period_end_date_ts = $this->get_start_date_year_ts($this->year + 1);
 			$repeat_type = $this->control->get_repeat_type();
 			$repeat_interval = $this->control->get_repeat_interval();
-			//$has_check_lists = 
 
 			// Generates dates for time period with specified interval
 			$date_generator = new date_generator($ctr_start_date_ts, $ctr_end_date_ts, $period_start_date_ts, $period_end_date_ts, $repeat_type, $repeat_interval);
 			$dates_array = $date_generator->get_dates();
-//			_debug_array($dates_array);
 
 			// Set status for control on each date to NOT DONE or REGISTERED
 			foreach ($dates_array as $date_ts)
@@ -97,6 +95,8 @@
 		{
 			foreach ($check_lists_array as $check_list)
 			{
+				$has_planned_date = false;
+				$has_completed_date = false;
 				if (isset($this->control_relation['serie_id']) && $check_list->get_serie_id() != $this->control_relation['serie_id'])
 				{
 					continue;
@@ -106,23 +106,48 @@
 				$check_list_status_info = $check_list_status_manager->get_status_for_check_list();
 
 				$month_nr = date("n", $check_list_status_info->get_deadline_date_ts());
+				if($check_list_status_info->get_planned_date_ts() && $check_list_status_info->get_planned_date_ts() > 0)
+				{
+					$month_nr_planned = date("n", $check_list_status_info->get_planned_date_ts());
+					$has_planned_date = true;
+				}
+				
+				if($check_list_status_info->get_completed_date_ts() && $check_list_status_info->get_completed_date_ts() > 0)
+				{
+					$has_completed_date = true;
+					$month_nr_completed = date("n", $check_list_status_info->get_completed_date_ts());
+				}
 
 				$repeat_type = $check_list->get_repeat_type();
 				//		if( !isset($this->calendar_array[ $month_nr ]) || $repeat_type > $this->calendar_array[ $month_nr ]['repeat_type'])
+				if($has_completed_date)
+				{
+					$this->calendar_array[$month_nr_completed]['repeat_type'] = $repeat_type;
+					$this->calendar_array[$month_nr_completed]["status"] = $check_list_status_info->get_status();
+					$this->calendar_array[$month_nr_completed]["info"] = $check_list_status_info->serialize();
+				}
+				else if($has_planned_date)
+				{
+					$this->calendar_array[$month_nr_planned]['repeat_type'] = $repeat_type;
+					$this->calendar_array[$month_nr_planned]["status"] = $check_list_status_info->get_status();
+					$this->calendar_array[$month_nr_planned]["info"] = $check_list_status_info->serialize();
+				}
+				else
 				{
 					$this->calendar_array[$month_nr]['repeat_type'] = $repeat_type;
 					$this->calendar_array[$month_nr]["status"] = $check_list_status_info->get_status();
 					$this->calendar_array[$month_nr]["info"] = $check_list_status_info->serialize();
 				}
 			}
-			//_debug_array($this->calendar_array);
+			
 			/*Insert code to remove controls with changed due-date from array*/
 			$m_cnt = 0;
 			$not_done_due_date;
 			$new_calendar_array = array();
 			$new_calendar_array2 = array();
 			$found = false;
-			$moved_control_dates = NULL;
+			$moved_control_dates = array();
+			$moved_control_month = array();
 			foreach ($this->calendar_array as $cal)
 			{
 				if(is_array($cal))
@@ -130,7 +155,8 @@
 					if(isset($cal['info']['original_deadline_date_ts']) && $cal['info']['original_deadline_date_ts'] > 0)
 					{
 						$found = true;
-						$moved_control_dates[] = $cal['info']['original_deadline_date_ts'];
+//						$moved_control_dates[] = $cal['info']['original_deadline_date_ts'];
+						$moved_control_month[] = date('n', $cal['info']['original_deadline_date_ts']);
 					}
 				}
 			}
@@ -143,7 +169,8 @@
 					{
 						if($cal2['info']['status'] == 'CONTROL_NOT_DONE' || $cal2['info']['status'] == 'CONTROL_REGISTERED')
 						{
-							if(in_array($cal2['info']['deadline_date_ts'], $moved_control_dates))
+//							if(in_array($cal2['info']['deadline_date_ts'], $moved_control_dates))
+							if(in_array($m_cnt, $moved_control_month))
 							{
 								$new_calendar_array[$m_cnt] = NULL;
 							}

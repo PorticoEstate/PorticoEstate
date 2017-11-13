@@ -37,6 +37,8 @@
 		private $status_text;
 		private $deadline_date_ts;
 		private $deadline_date_txt;
+		private $planned_date_ts;
+		private $completed_date_ts;
 		private $original_deadline_date_ts;
 		private $info_text;
 		private $location_code;
@@ -121,6 +123,26 @@
 		public function get_deadline_date_txt()
 		{
 			return $this->deadline_date_txt;
+		}
+		
+		public function set_planned_date_ts( $planned_date_ts )
+		{
+			$this->planned_date_ts = $planned_date_ts;
+		}
+
+		public function get_planned_date_ts()
+		{
+			return $this->planned_date_ts;
+		}
+		
+		public function set_completed_date_ts( $completed_date_ts )
+		{
+			$this->completed_date_ts = $completed_date_ts;
+		}
+
+		public function get_completed_date_ts()
+		{
+			return $this->completed_date_ts;
 		}
 
 		public function set_info_text( $info_text )
@@ -223,6 +245,8 @@
 				'deadline_date_ts' => $this->get_deadline_date_ts(),
 				'deadline_date_txt' => $this->get_deadline_date_txt(),
 				'original_deadline_date_ts' => $this->get_original_deadline_date_ts(),
+				'planned_date_ts' => $this->get_planned_date_ts(),
+				'completed_date_ts' => $this->get_completed_date_ts(),
 				'info_text' => $this->get_info_text(),
 				'location_code' => $this->get_location_code(),
 				'location_id' => $this->get_location_id(),

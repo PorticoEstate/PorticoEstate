@@ -149,8 +149,8 @@
 
 				$cols = $document_table . '.location_code';
 				$cols_return[] = 'location_code';
-				$cols .= ", {$document_table}.category AS doc_type";
-				$cols_return[] = 'doc_type';
+				$cols .= ", count(*) AS hits";
+				$cols_return[] = 'hits';
 
 				$uicols['input_type'][] = 'text';
 				$uicols['name'][] = 'location_code';
@@ -192,7 +192,7 @@
 					'query' => $query,
 					'location_level' => 2,
 					'force_location' => true,
-					'no_address' => false,
+					'no_address' => true,
 				));
 
 
@@ -201,9 +201,9 @@
 				$this->uicols = $this->bocommon->uicols;
 
 				$this->uicols['input_type'][] = 'text';
-				$this->uicols['name'][] = 'doc_type';
-				$this->uicols['descr'][] = lang('category');
-				$this->uicols['statustext'][] = lang('category');
+				$this->uicols['name'][] = 'hits';
+				$this->uicols['descr'][] = lang('hits');
+				$this->uicols['statustext'][] = lang('hits');
 
 				$cols_return = $this->bocommon->cols_return;
 				$type_id = $this->bocommon->type_id;
@@ -221,17 +221,39 @@
 				$type_id = $this->bocommon->fm_cache('type_id_document_' . $entity_id);
 				$this->cols_extra = $this->bocommon->fm_cache('cols_extra_document_' . $entity_id);
 			}
-//_debug_array($this->uicols);
-			$groupmethod = " GROUP BY fm_document.location_code, fm_location1.loc1_name, fm_location1.category";
-
-			if ($entity_id)
-			{
-
-				$groupmethod.= " ,fm_document.p_entity_id,fm_entity_category.name,fm_document.p_num,fm_document.p_cat_id";
-			}
+//			$groupmethod = " GROUP BY fm_document.location_code, fm_location1.loc1_name, fm_location1.category";
+//
+//			if ($entity_id)
+//			{
+//
+//				$groupmethod.= " ,fm_document.p_entity_id,fm_entity_category.name,fm_document.p_num,fm_document.p_cat_id";
+//			}
 
 			//FIXME
-			$groupmethod = '';
+			$cols_group = array();
+			foreach ($cols_return as $col_return)
+			{
+				switch ($col_return)
+				{
+					case 'street_name':
+					case 'hits':
+						break;
+					case 'location_code':
+					case 'loc1':
+					case 'loc2':
+						$cols_group[]= "fm_document.{$col_return}";
+						break;
+					case 'category';
+						$cols_group[]= "fm_entity_category.name";
+						break;
+					default:
+						$cols_group[]= $col_return;
+						break;
+				}
+
+			}
+
+			$groupmethod = "GROUP BY " . implode(', ', $cols_group);
 
 			if (!$ordermethod && $order)
 			{
@@ -287,7 +309,7 @@
 
 			$sql .= " $filtermethod $querymethod $groupmethod";
 
-			//echo $sql;
+	//		echo $sql;die();
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$this->total_records = $this->db->num_rows();

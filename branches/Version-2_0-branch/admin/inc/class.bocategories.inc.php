@@ -171,6 +171,7 @@
 					$exists = $this->exists(array
 					(
 						'type'     => 'appandsubs',
+						'cat_parent' => $values['parent'],
 						'cat_name' => $values['name'],
 						'cat_id'   => $values['cat_id']
 					));

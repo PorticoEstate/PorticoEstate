@@ -238,3 +238,20 @@
 			return $GLOBALS['setup_info']['helpdesk']['currentver'];
 		}
 	}
+
+	/**
+	* Update helpdesk version from 0.9.18.005 to 0.9.18.006
+	*/
+	$test[] = '0.9.18.005';
+
+	function helpdesk_upgrade0_9_18_005()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw']->locations->add('.ticket.response_template', 'email out', 'helpdesk');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['helpdesk']['currentver'] = '0.9.18.006';
+			return $GLOBALS['setup_info']['helpdesk']['currentver'];
+		}
+	}
