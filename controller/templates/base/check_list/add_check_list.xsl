@@ -103,7 +103,8 @@
 							</div>
 						</xsl:if>
 						<label>Fristdato</label>
-						<input type="text" id="deadline_date" name="deadline_date" class="date" >
+						<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
+						<input type="hidden" id="deadline_date" name="deadline_date" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
 							</xsl:attribute>
@@ -116,6 +117,14 @@
 					</div>
 					<!-- PLANNED DATE -->
 					<div class="row">
+						<xsl:if test="check_list/error_msg_array/planned_date != ''">
+							<xsl:variable name="error_msg">
+								<xsl:value-of select="check_list/error_msg_array/planned_date" />
+							</xsl:variable>
+							<div class='input_error_msg'>
+								<xsl:value-of select="php:function('lang', $error_msg)" />
+							</div>
+						</xsl:if>
 						<label>Planlagt dato</label>
 						<input type="text" id="planned_date" name="planned_date" class="date" readonly="readonly">
 							<xsl:if test="check_list/planned_date != 0 and check_list/planned_date != ''">

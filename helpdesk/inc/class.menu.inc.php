@@ -193,7 +193,7 @@
 
 
 
-			if ( $acl->check('.ticket',PHPGW_ACL_PRIVATE, 'helpdesk') ) //manage
+			if ( $acl->check('.ticket.response_template',PHPGW_ACL_READ, 'helpdesk') ) //manage
 			{
 				$menus['navigation']['response_template'] = array
 					(
@@ -202,7 +202,10 @@
 					'text' => lang('response template'),
 					'image' => array('helpdesk', 'helpdesk')
 				);
+			}
 
+			if ( $acl->check('.email_out',PHPGW_ACL_READ, 'helpdesk') ) //manage
+			{
 				$menus['navigation']['email_out'] = array(
 					'text' => lang('email out'),
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uiemail_out.index')),

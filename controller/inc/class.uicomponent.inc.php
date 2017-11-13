@@ -142,7 +142,7 @@
 			}
 		}
 
-		private function get_location_filter()
+		private function get_location_filter($get_locations = false)
 		{
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
@@ -156,7 +156,7 @@
 			{
 				$location_filter = array();
 
-				if ($this->is_location($location_id))
+				if ($this->is_location($location_id) || $get_locations)
 				{
 					$location_types = CreateObject('property.soadmin_location')->read(array('allrows' => true));
 					foreach ($location_types as $location_type)
@@ -660,7 +660,7 @@
 			// Gets timestamp of first day in next year
 			$to_date_ts = execMethod('controller.uicalendar.get_end_date_year_ts', $year);
 
-			$location_filter = $this->get_location_filter();
+			$location_filter = $this->get_location_filter($get_locations);
 
 			foreach ($location_filter as $_location)
 			{
