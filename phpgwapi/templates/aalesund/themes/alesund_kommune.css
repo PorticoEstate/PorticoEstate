@@ -1,0 +1,513 @@
+/*
+ *
+ * Theme
+ */
+/*
+Font
+-Settes til Calibri eller PT Sans
+-Blå titler ha fargekode #2d6d8f
+-Linker skal ha fargekode #2d6d8f. De skal også (helst) være underlinjert. De må endres ved mouseover – farge endres til fargekoden #00acb8 (og evt. at underline kommer først ved mouseover).
+*/
+
+body {
+    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
+    font-size: 16px;
+}
+
+@media (min-width: 62em) {
+    .main-wrapper{
+        margin-left: auto;
+        margin-right: auto;
+        width: 1200px;    
+    }
+
+    .footer-wrapper{
+        margin-left: auto;
+        margin-right: auto;
+        width: 1200px;    
+    }
+
+    .custom-menu-screen{
+        display: none;
+    }
+}
+.home-menu {
+    background: white;
+    box-shadow: none;
+}
+
+h1,h2,h3,h4,h5,h6{   
+    color: #2d6d8f;
+    font-weight: normal;
+    font-style: normal;
+    /* text-transform: uppercase;*/
+}
+
+
+
+.pure-g [class*="pure-u"] {
+    font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+}
+
+.l-box-lrg {
+    padding: 2em;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.is-center {
+    text-align: center;
+}
+
+
+
+.home-menu .pure-menu-heading {
+    color: #2d6d8f;
+    font-weight: 400;
+    font-size: 120%;
+}
+
+.home-menu .pure-menu-selected a {
+    color: #2d6d8f;
+}
+
+.home-menu a {
+    color: #2d6d8f;
+}
+.home-menu li a:hover,
+.home-menu li a:focus {
+    background: none;
+    /*  border: none;*/
+    color: #00acb8;
+}
+
+a {
+    color: #2d6d8f;
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent none repeat scroll 0 0;
+}
+a:hover{
+    text-decoration: underline;
+
+}
+
+.custom-menu .pure-menu-link,
+.custom-menu .pure-menu-heading {
+    color: #2d6d8f;
+}
+
+.custom-menu .pure-menu-link:hover,
+.custom-menu .pure-menu-heading:hover {
+    background-color: transparent;
+}
+
+.custom-menu-top {
+    position: relative;
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+.custom-menu-brand {
+    display: block;
+    text-align: left;
+    position: relative;
+}
+
+.custom-menu-toggle {
+    width: 44px;
+    height: 44px;
+    display: block;
+    position: absolute;
+    top: 3px;
+    right: 0;
+    display: none;
+}
+
+
+.custom-menu-toggle .bar {
+    background-color: #2d6d8f;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 100px;
+    position: absolute;
+    top: 22px;
+    right: 12px;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+.custom-menu-toggle .bar:first-child {
+    -webkit-transform: translateY(-6px);
+    -moz-transform: translateY(-6px);
+    -ms-transform: translateY(-6px);
+    transform: translateY(-6px);
+}
+
+.custom-menu-toggle.x .bar {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.custom-menu-toggle.x .bar:first-child {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.custom-menu-screen {
+    /* background-color: rgba(0, 0, 0, 0.5);*/
+    background-color: white;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    -ms-transition: all 0.5s;
+    transition: all 0.5s;
+    height: 3em;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+}
+
+.custom-menu-tucked .custom-menu-screen {
+    -webkit-transform: translateY(-44px);
+    -moz-transform: translateY(-44px);
+    -ms-transform: translateY(-44px);
+    transform: translateY(-44px);
+}
+
+.float-right-top-menu {
+    float: right;
+    margin-top: 0px;
+    position: absolute;
+}
+
+.header-line {
+    background: #DFF8F5;
+    overflow: hidden;
+}
+
+.header-line .img-content {
+    float: right;
+    margin-right: 1em;
+    padding-right: 1em;
+    width: 45%;
+    min-width: 300px; 
+}
+
+.header-line .text-content {
+    margin-left: 1em;
+    padding: 1em;
+    float: left;
+    width: 45%;
+}
+
+
+
+@media (max-width: 650px){
+    .header-line .img-content {
+        width: 100%;
+        margin: 0px;
+        padding: 0px;
+    }
+
+
+    .img-content img{
+        width: 100%;
+    }
+
+    .header-line .text-content {
+        width: 100%;
+        margin: 0px;
+        padding: 1em;
+    }
+
+    .footer-center{
+        width: 100%;   
+    }
+
+
+    .footer-left{
+        width: 100%;
+        text-align: left;
+        padding-left: 2em;
+    }
+}
+
+
+@media (min-width: 650px){
+    .footer-left {
+        float: left;
+        width: 25%;
+        text-align: left;
+        padding-left: 2em;
+    }
+}
+
+@media (max-width: 62em) {   
+    .custom-menu {
+        display: block;
+    }
+
+    .custom-menu-toggle {
+        display: block;
+        display: none\9;
+    }
+
+    .custom-menu-bottom {
+        position: absolute;
+        width: 100%;
+        /* border-top: 1px solid #eee; */
+        background-color: #2d3e50\9;
+        z-index: 100;
+    }
+
+    .custom-menu-bottom .pure-menu-link {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        -moz-transform: translateX(0);
+        -ms-transform: translateX(0);
+        transform: translateX(0);
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -ms-transition: all 0.5s;
+        transition: all 0.5s;
+    }
+
+    .custom-menu-bottom.custom-menu-tucked .pure-menu-link {
+        -webkit-transform: translateX(-140px);
+        -moz-transform: translateX(-140px);
+        -ms-transform: translateX(-140px);
+        transform: translateX(-140px);
+        opacity: 0;
+        opacity: 1\9;
+    }
+
+    .pure-menu-horizontal.custom-menu-tucked {
+        z-index: -1;
+        top: 45px;
+        position: absolute;
+        overflow: hidden;
+    }
+
+
+    .footer-right{
+        display: none;
+    }
+
+}
+
+.footer{
+    background: #E7EFF1;
+    white-space: nowrap;
+    position: absolute;
+    color: black;
+
+    width: 100%;
+}
+
+.footer a{
+    color: #2D6D8F;
+}
+
+.footer a:hover{
+    color: #00acb8;
+}
+
+
+@media (min-width: 62em) {    
+    .img-logo img {
+        max-width: 75%;
+        height: auto;
+        padding-left: 0.8em;
+    }
+
+    .custom-menu{
+        width: 50%;
+    }
+
+    .costum-menu-right{
+        margin-bottom: 110px;
+        position: relative;
+    }
+
+
+    .pure-menu-list{
+        margin-right: 2em;
+    }
+
+    .costum-menu-border{
+        border-left: solid #2D6D8F 0.15em;
+    }
+
+    .pure-menu-nav a{
+        padding-right: 0.4em !important;
+        padding-left: 0.2em !important;
+    }
+    .pure-u-lg-1-2 {
+        width: 49%
+    }
+
+    .search-left-field{
+        margin-right: 1%;
+    }
+
+    .search-right-field{
+        margin-left: 1%;
+    }
+}
+
+.footer-center {
+    float: left;
+    width: 42%;
+    text-align: left;
+    padding-left: 2em;
+}
+
+.footer-right {
+    float: right;
+    width: 33%;
+    text-align: left;
+    padding-left: 2em;
+}
+
+.footer-left img{
+    width: 80%;
+    height: auto;
+}
+
+.select-box ul {
+    list-style-type: none;
+    padding: 0px;
+}
+
+.img-desc img{
+    height: 336px;
+    width: 560px;
+    padding-top: 5px;
+}
+
+.images dt{
+    margin: 0px 0px 20px 0px !important;
+    font-style: normal !important;
+
+}
+
+
+
+
+.search-searchterm, .search-building input{
+    width: 100%;
+    max-width: none !important; 
+    margin-top: 1em;
+}
+
+#field_searchterm, .search-building input{
+    /* Firefox */
+    width: -moz-calc(100% - 30px);
+    /* WebKit */
+    width: -webkit-calc(100% - 30px);
+    /* Opera */
+    width: -o-calc(100% - 30px);
+    /* Standard */
+    width: calc(100% - 30px);
+    max-width: none;
+    height: 25px;
+
+}
+
+#submit_searchterm{
+    width: 30px;
+    height: 25px;
+    background: url('http://aktivby.alesund.kommune.no/phpgwapi/templates/bookingfrontend/images/search_icon.png');
+    background-repeat: no-repeat;
+    background-color: #00ACB8;
+    background-position: center;
+    border: none;
+    display: inline;
+    position: absolute;
+}
+
+#submit_building{
+    width: 30px;
+    height: 25px;
+    background: url('http://aktivby.alesund.kommune.no/phpgwapi/templates/bookingfrontend/images/search_icon.png');
+    background-repeat: no-repeat;
+    background-color: #00ACB8;
+    background-position: center;
+    border: none;
+    display: inline;
+    position: absolute;
+    pointer-events: none;
+}
+
+
+.search-line .heading {
+    border-bottom: none !important;
+}
+
+
+.control {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 5px;;
+    cursor: pointer;
+    font-size: 18px;
+}
+.control input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+.control__indicator {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background: white;
+    border: solid 1px gray;
+}
+.control:hover input ~ .control__indicator{
+    background: #E7EFF1;
+}
+.control input:checked ~ .control__indicator {
+    background: #00ACB8;
+}
+.control__indicator:after {
+    content: '';
+    position: absolute;
+    display: none;
+}
+.control input:checked ~ .control__indicator:after {
+    display: block;
+}
+.control--checkbox .control__indicator:after {
+    left: 7px;
+    top: 3px;
+    width: 3px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+#result{
+    list-style-type: none;
+    padding-left: 0.2em;
+}
+
+
+.resource-button{
+    background-color: #00ACB8;
+    color: white;
+    border: none;
+    padding: .5em;
+    font-weight: bold;
+}
