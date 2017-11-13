@@ -147,6 +147,7 @@
 			$new_calendar_array2 = array();
 			$found = false;
 			$moved_control_dates = array();
+			$moved_control_month = array();
 			foreach ($this->calendar_array as $cal)
 			{
 				if(is_array($cal))
@@ -154,7 +155,8 @@
 					if(isset($cal['info']['original_deadline_date_ts']) && $cal['info']['original_deadline_date_ts'] > 0)
 					{
 						$found = true;
-						$moved_control_dates[] = $cal['info']['original_deadline_date_ts'];
+//						$moved_control_dates[] = $cal['info']['original_deadline_date_ts'];
+						$moved_control_month[] = date('n', $cal['info']['original_deadline_date_ts']);
 					}
 				}
 			}
@@ -167,7 +169,8 @@
 					{
 						if($cal2['info']['status'] == 'CONTROL_NOT_DONE' || $cal2['info']['status'] == 'CONTROL_REGISTERED')
 						{
-							if(in_array($cal2['info']['deadline_date_ts'], $moved_control_dates))
+//							if(in_array($cal2['info']['deadline_date_ts'], $moved_control_dates))
+							if(in_array($m_cnt, $moved_control_month))
 							{
 								$new_calendar_array[$m_cnt] = NULL;
 							}
