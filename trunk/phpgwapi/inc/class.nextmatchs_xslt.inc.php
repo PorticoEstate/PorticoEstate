@@ -127,7 +127,7 @@
 				'right_grey_img'	=> $GLOBALS['phpgw']->common->image('phpgwapi','right-grey'),
 				'last_img'			=> $GLOBALS['phpgw']->common->image('phpgwapi','last'),
 				'last_grey_img'		=> $GLOBALS['phpgw']->common->image('phpgwapi','last-grey'),
-				'all_img'			=> $GLOBALS['phpgw']->common->image('phpgwapi','down_nm'),
+				'all_img'			=> $GLOBALS['phpgw']->common->image('phpgwapi','down'),
 				'title_first'		=> lang('first page'),
 				'title_previous'	=> lang('previous page'),
 				'title_next'		=> lang('next page'),

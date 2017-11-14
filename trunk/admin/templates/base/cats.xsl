@@ -1,68 +1,66 @@
 <!-- $Id$ -->
 
 <xsl:template name="cats">
-		<xsl:choose>
-			<xsl:when test="cat_list">
-				<xsl:apply-templates select="cat_list"/>
-			</xsl:when>
-			<xsl:when test="cat_edit">
-				<xsl:apply-templates select="cat_edit"/>
-			</xsl:when>
-		</xsl:choose>
+	<xsl:choose>
+		<xsl:when test="cat_list">
+			<xsl:apply-templates select="cat_list"/>
+		</xsl:when>
+		<xsl:when test="cat_edit">
+			<xsl:apply-templates select="cat_edit"/>
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
 
 <!-- BEGIN cat_list -->
 
 <xsl:template match="cat_list">
-		<center>
-			<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered">
-				<tr>
-				<td colspan="6" width="100%">
-						<xsl:call-template name="nextmatchs"/>
-					</td>
-				</tr>
-				<tr>
-				<td colspan="6" width="100%" align="right">
-						<xsl:call-template name="search_field"/>
-					</td>
-				</tr>
-					<xsl:apply-templates select="cat_header"/>
-					<xsl:apply-templates select="cat_data"/>
-			</table>
-			<xsl:apply-templates select="cat_add"/>
-		</center>
+	<table border="0" cellspacing="2" cellpadding="2" class="pure-table pure-table-bordered">
+		<tr>
+			<td colspan="6" width="100%">
+				<xsl:call-template name="nextmatchs"/>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="6" width="100%" align="right">
+				<xsl:call-template name="search_field"/>
+			</td>
+		</tr>
+		<xsl:apply-templates select="cat_header"/>
+		<xsl:apply-templates select="cat_data"/>
+	</table>
+	<xsl:apply-templates select="cat_add"/>
 </xsl:template>
 
 <!-- BEGIN cat_header -->
 
 <xsl:template match="cat_header">
-		<xsl:variable name="sort_name" select="sort_name"/>
-		<xsl:variable name="sort_descr" select="sort_descr"/>
-		<xsl:variable name="lang_sort_statustext" select="lang_sort_statustext"/>
-		<tr class="th">
-		<td width="20%">
+	<xsl:variable name="sort_name" select="sort_name"/>
+	<xsl:variable name="sort_descr" select="sort_descr"/>
+	<xsl:variable name="lang_sort_statustext" select="lang_sort_statustext"/>
+	<tr class="th">
+		<th width="20%">
 			<a href="{$sort_name}" title="{$lang_sort_statustext}" class="th_text">
 				<xsl:value-of select="lang_name"/>
 			</a>
-		</td>
-		<td width="32%">
+		</th>
+		<th width="32%">
 			<a href="{$sort_descr}" title="{$lang_sort_statustext}" class="th_text">
 				<xsl:value-of select="lang_descr"/>
 			</a>
-		</td>
-		<td width="8%" align="center">
+		</th>
+		<th width="8%" align="center">
 			<xsl:value-of select="lang_status"/>
-		</td>
-		<td width="8%" align="center">
+		</th>
+		<th width="8%" align="center">
 			<xsl:value-of select="lang_add_sub"/>
-		</td>
-		<td width="8%" align="center">
+		</th>
+		<th width="8%" align="center">
 			<xsl:value-of select="lang_edit"/>
-		</td>
-		<td width="8%" align="center">
+		</th>
+		<th width="8%" align="center">
 			<xsl:value-of select="lang_delete"/>
-		</td>
-		</tr>
+		</th>
+	</tr>
 </xsl:template>
 
 <!-- BEGIN cat_data -->
@@ -77,27 +75,27 @@
 	<xsl:variable name="lang_delete_statustext">
 		<xsl:value-of select="lang_delete_statustext"/>
 	</xsl:variable>
-		<tr>
-			<xsl:attribute name="class">
-				<xsl:choose>
-					<xsl:when test="@class">
-						<xsl:value-of select="@class"/>
-					</xsl:when>
-					<xsl:when test="position() mod 2 = 0">
-						<xsl:text>row_off</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>row_on</xsl:text>
-					</xsl:otherwise>
-				</xsl:choose>
-				<xsl:choose>
-					<xsl:when test="status != 1">
-						<xsl:text> inactive</xsl:text>
-					</xsl:when>
-				</xsl:choose>
-			</xsl:attribute>
+	<tr>
+		<xsl:attribute name="class">
 			<xsl:choose>
-				<xsl:when test="main = 'yes'">
+				<xsl:when test="@class">
+					<xsl:value-of select="@class"/>
+				</xsl:when>
+				<xsl:when test="position() mod 2 = 0">
+					<xsl:text>row_off</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>row_on</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:choose>
+				<xsl:when test="status != 1">
+					<xsl:text> inactive</xsl:text>
+				</xsl:when>
+			</xsl:choose>
+		</xsl:attribute>
+		<xsl:choose>
+			<xsl:when test="main = 'yes'">
 				<td class="alarm">
 					<b>
 						<xsl:value-of disable-output-escaping="yes" select="name"/>
@@ -108,38 +106,38 @@
 						<xsl:value-of select="descr"/>
 					</b>
 				</td>
-				</xsl:when>
-				<xsl:otherwise>
+			</xsl:when>
+			<xsl:otherwise>
 				<td>
 					<xsl:value-of disable-output-escaping="yes" select="name"/>
 				</td>
 				<td>
 					<xsl:value-of select="descr"/>
 				</td>
-				</xsl:otherwise>
-			</xsl:choose>
+			</xsl:otherwise>
+		</xsl:choose>
 		<td align="center">
 			<xsl:value-of select="status_text"/>
 		</td>
-			<td align="center">
-				<xsl:variable name="add_sub_url" select="add_sub_url"/>
+		<td align="center">
+			<xsl:variable name="add_sub_url" select="add_sub_url"/>
 			<a href="{add_sub_url}" title="{$lang_add_sub_statustext}" class="th_text">
 				<xsl:value-of select="lang_add_sub"/>
 			</a>
-			</td>
-			<td align="center">
-				<xsl:variable name="edit_url" select="edit_url"/>
+		</td>
+		<td align="center">
+			<xsl:variable name="edit_url" select="edit_url"/>
 			<a href="{edit_url}" title="{$lang_edit_statustext}" class="th_text">
 				<xsl:value-of select="lang_edit"/>
 			</a>
-			</td>
-			<td align="center">
-				<xsl:variable name="delete_url" select="delete_url"/>
+		</td>
+		<td align="center">
+			<xsl:variable name="delete_url" select="delete_url"/>
 			<a href="{delete_url}" title="{$lang_delete_statustext}" class="th_text">
 				<xsl:value-of select="lang_delete"/>
 			</a>
-			</td>
-		</tr>
+		</td>
+	</tr>
 </xsl:template>
 
 <!-- BEGIN cat_add -->
@@ -148,32 +146,32 @@
 	<xsl:variable name="action_url">
 		<xsl:value-of select="action_url"/>
 	</xsl:variable>
-		<form method="post" action="{$action_url}">
-			<table>
-				<tr height="50" valign="bottom">
-					<td colspan="2">
+	<form method="post" action="{$action_url}">
+		<table>
+			<tr height="50" valign="bottom">
+				<td colspan="2">
 					<xsl:variable name="lang_add">
 						<xsl:value-of select="lang_add"/>
 					</xsl:variable>
-						<input type="submit" name="add" value="{$lang_add}">
-							<xsl:attribute name="title">
-								<xsl:value-of select="lang_add_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-					<td colspan="3" align="right">
+					<input type="submit" name="add" value="{$lang_add}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_add_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+				<td colspan="3" align="right">
 					<xsl:variable name="lang_done">
 						<xsl:value-of select="lang_done"/>
 					</xsl:variable>
-						<input type="submit" name="done" value="{$lang_done}">
-							<xsl:attribute name="title">
-									<xsl:value-of select="lang_done_statustext"/>
-							</xsl:attribute>
-						</input>
-					</td>
-				</tr>
-			</table>
-		</form>
+					<input type="submit" name="done" value="{$lang_done}">
+						<xsl:attribute name="title">
+							<xsl:value-of select="lang_done_statustext"/>
+						</xsl:attribute>
+					</input>
+				</td>
+			</tr>
+		</table>
+	</form>
 </xsl:template>
 
 <!-- END cat_list -->
@@ -181,8 +179,8 @@
 <!-- BEGIN cat_edit -->
 
 <xsl:template match="cat_edit" xmlns:php="http://php.net/xsl">
-		<xsl:variable name="edit_url" select="edit_url"/>
-		<form method="post" action="{$edit_url}">
+	<xsl:variable name="edit_url" select="edit_url"/>
+	<form method="post" action="{$edit_url}">
 		<table cellpadding="2" cellspacing="2" align="center">
 			<tr>
 				<td colspan="3" align="center">
@@ -261,7 +259,7 @@
 					</input>
 				</td>
 				<td>
-				<xsl:variable name="lang_apply" select="lang_apply"/>
+					<xsl:variable name="lang_apply" select="lang_apply"/>
 					<input type="submit" name="values[apply]" value="{$lang_apply}">
 						<xsl:attribute name="title">
 							<xsl:value-of select="lang_apply_statustext"/>
@@ -280,15 +278,15 @@
 				</td>
 			</tr>
 		</table>
-		</form>
+	</form>
 </xsl:template>
 
 <xsl:template match="options">
-		<option value="{id}">
-			<xsl:if test="selected != 0">
-				<xsl:attribute name="selected" value="selected"/>
-			</xsl:if>
-			<xsl:value-of disable-output-escaping="yes" select="name"/>
-		</option>
+	<option value="{id}">
+		<xsl:if test="selected != 0">
+			<xsl:attribute name="selected" value="selected"/>
+		</xsl:if>
+		<xsl:value-of disable-output-escaping="yes" select="name"/>
+	</option>
 </xsl:template>
 	
