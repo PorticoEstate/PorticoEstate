@@ -314,7 +314,7 @@
 				$filter_component = phpgw::get_var('location_id', 'int') . '_' . phpgw::get_var('component_id', 'int');
 			}
 			$data = array(
-				'datatable_name' => lang('status components'),
+				'datatable_name' =>  phpgw::get_var('get_locations', 'bool') ? lang('status locations') : lang('status components'),
 				'form' => array(
 					'action' => self::link(array('menuaction' => 'controller.uicomponent.index',
 						'get_locations' => phpgw::get_var('get_locations', 'bool'),
