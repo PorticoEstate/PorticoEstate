@@ -1597,10 +1597,10 @@
 		{
 			$next_date = $start_date;
 			$now = time();
-
 			while ($next_date < $now)
 			{
-				$interval_date = $start_date;
+				$interval_date = $next_date;
+				$return_date = $next_date;
 
 				if ($repeat_type == 0)
 				{
@@ -1627,9 +1627,12 @@
 				{
 					$next_date = mktime(0, 0, 0, date("m", $interval_date), date("d", $interval_date), date("Y", $interval_date) + $repeat_interval);
 				}
+
+//				$_next_date = date('d/m-Y', $next_date);
+
 			}
 
-			return $next_date;
+			return $return_date;
 		}
 
 		function add_controll_to_component_from_master( $master_component, $targets = array() )
