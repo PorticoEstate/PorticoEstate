@@ -109,7 +109,18 @@
 //			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, 12, date("y", $this->start_date));
 				$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $this->start_date), date("y", $this->start_date));
 //			$control_start_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
-				$control_start_date = mktime(0, 0, 0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
+				$control_start_year = date('y', $this->start_date);
+				$period_start_year = date('y', $this->period_start_date);
+				/**
+				 * In order to be able to place the deadline at the end of the year
+				 */
+				if($control_start_year == $period_start_year)
+				{
+					$control_start_year -= 1;
+				}
+
+//				$control_start_date = mktime(0, 0, 0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
+				$control_start_date = mktime(0, 0, 0, date("m", $this->start_date), $num_days_in_month, $control_start_year);
 			}
 
 			return $control_start_date;
