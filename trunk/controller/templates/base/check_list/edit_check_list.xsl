@@ -17,7 +17,7 @@
 			<form id="frm_update_check_list" action="{$action_url}" method="post">	
 			<xsl:variable name="check_list_id"><xsl:value-of select="check_list/id"/></xsl:variable>
 			<input id="check_list_id" type="hidden" name="check_list_id" value="{$check_list_id}" />
-			<xsl:if test="check_list_locked">
+			<xsl:if test="check_list_locked = '1'">
 				<div class='input_error_msg'>
 					<xsl:value-of select="php:function('lang', 'error_msg_control_passed_due_date')" />
 				</div>
@@ -148,7 +148,7 @@
 				</textarea>
 			</div>
 			
-			<xsl:if test="check_list_locked = 'true'">
+			<xsl:if test="check_list_locked != '1'">
 				<div class="form-buttons">
 					<xsl:variable name="lang_save"><xsl:value-of select="php:function('lang', 'save_check_list')" /></xsl:variable>
 					<input class="btn" type="submit" name="save_control" value="Lagre detaljer" />
