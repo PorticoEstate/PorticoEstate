@@ -26,7 +26,7 @@
 
 	phpgw::import_class('frontend.bofellesdata');
 
-	class frontend_hook_helper
+	class helpdesk_hook_helper
 	{
 		private $config;
 
