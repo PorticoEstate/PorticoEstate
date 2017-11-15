@@ -52,6 +52,15 @@
 				</select>
 			</td>
 		</tr>
+		<tr class="row_on">
+			<td>{lang_deadline_end_of_year}</td>
+			<td>
+				<select name="newsettings[deadline_end_of_year]">
+					<option value="" {selected_deadline_end_of_year_}>{lang_no}</option>
+					<option value="1" {selected_deadline_end_of_year_1}>{lang_yes}</option>
+				</select>
+			</td>
+		</tr>
 		<tr class="row_off">
 			<td>{lang_control_mandatory_location}</td>
 			<td>
