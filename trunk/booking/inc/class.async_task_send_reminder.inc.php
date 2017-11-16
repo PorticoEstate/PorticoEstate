@@ -59,7 +59,7 @@
 				{
 					try
 					{
-						$this->send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
+						$this->send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'html');
 
 						// status set to 'sent, not responded to'
 						$sql = "update bb_booking set reminder = 3 where id = " . $booking['id'];
@@ -97,7 +97,7 @@
 				$subject = 'Rapporter deltakertall';
 				try
 				{
-					$this->send->msg('email', $event['contact_email'], $subject, $body, '', '', '', $from, '', 'plain');
+					$this->send->msg('email', $event['contact_email'], $subject, $body, '', '', '', $from, '', 'html');
 
 					// status set to 'sent, not responded to'
 					$sql = "update bb_event set reminder = 3 where id = " . $event['id'];

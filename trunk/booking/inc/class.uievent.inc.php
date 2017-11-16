@@ -615,7 +615,7 @@
 			{
 				try
 				{
-					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, '', 'plain');
+					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, '', 'html');
 				}
 				catch (phpmailerException $e)
 				{
