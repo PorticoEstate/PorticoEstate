@@ -13,9 +13,19 @@
 		private $repeat_type;
 		private $repeat_interval;
 		private $calendar_array = array();
+		private $deadline_end_of_year;
 
 		public function __construct( $start_date, $end_date, $period_start_date, $period_end_date, $repeat_type, $repeat_interval )
 		{
+			static $config = array();
+
+			if(!$config)
+			{
+				$config = CreateObject('phpgwapi.config', 'controller')->read();
+			}
+
+			$this->deadline_end_of_year = empty($config['deadline_end_of_year']) ? false : true;
+
 			$this->start_date = $start_date;
 			$this->end_date = $end_date;
 			$this->period_start_date = $period_start_date;
@@ -109,7 +119,18 @@
 //			$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, 12, date("y", $this->start_date));
 				$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, date("m", $this->start_date), date("y", $this->start_date));
 //			$control_start_date = mktime(0,0,0, 12, $num_days_in_month, date("y", $this->start_date));
-				$control_start_date = mktime(0, 0, 0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
+				$control_start_year = date('y', $this->start_date);
+				$period_start_year = date('y', $this->period_start_date);
+				/**
+				 * In order to be able to place the deadline at the end of the year
+				 */
+				if($control_start_year == $period_start_year)
+				{
+					$control_start_year -= 1;
+				}
+
+//				$control_start_date = mktime(0, 0, 0, date("m", $this->start_date), $num_days_in_month, date("y", $this->start_date));
+				$control_start_date = mktime(0, 0, 0, date("m", $this->start_date), $num_days_in_month, $control_start_year);
 			}
 
 			return $control_start_date;
@@ -144,8 +165,15 @@
 				else if ($this->repeat_type == 3)
 				{
 					//set end date on year-control to last day of the year -> 12/31/<year>
-//					$trail_period_start_date = mktime(0, 0, 0, date("m", $trail_period_start_date), date("d", $trail_period_start_date), date("Y", $trail_period_start_date) + $this->repeat_interval);
-					$trail_period_start_date = mktime(0, 0, 0, 12, 31, date("Y", $trail_period_start_date) + $this->repeat_interval);
+
+					if($this->deadline_end_of_year)
+					{
+						$trail_period_start_date = mktime(0, 0, 0, 12, 31, date("Y", $trail_period_start_date) + $this->repeat_interval);
+					}
+					else
+					{
+						$trail_period_start_date = mktime(0, 0, 0, date("m", $trail_period_start_date), date("d", $trail_period_start_date), date("Y", $trail_period_start_date) + $this->repeat_interval);
+					}
 				}
 			}
 		

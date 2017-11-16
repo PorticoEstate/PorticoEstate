@@ -314,7 +314,7 @@
 				$filter_component = phpgw::get_var('location_id', 'int') . '_' . phpgw::get_var('component_id', 'int');
 			}
 			$data = array(
-				'datatable_name' => lang('status components'),
+				'datatable_name' =>  phpgw::get_var('get_locations', 'bool') ? lang('status locations') : lang('status components'),
 				'form' => array(
 					'action' => self::link(array('menuaction' => 'controller.uicomponent.index',
 						'get_locations' => phpgw::get_var('get_locations', 'bool'),
@@ -834,16 +834,17 @@
 
 				foreach ($controls_at_component as $component)
 				{
-					$_control_relation = $component->get_control_relation();
+					$control_relation = $component->get_control_relation();
 
-					if (!$_control_relation['serie_enabled'])
+					if (!$control_relation['serie_enabled'])
 					{
 						//					continue;
 					}
-					$control_id = $_control_relation['control_id'];
+					$control_id = $control_relation['control_id'];
 					$control = $so_control->get_single($control_id);
 
-					$repeat_type = $control->get_repeat_type();
+//					$repeat_type = $control->get_repeat_type();
+					$repeat_type = (int)$control_relation['repeat_type'];
 
 					//FIXME: Not currently supported
 					if ($repeat_type <= controller_control::REPEAT_TYPE_WEEK)
@@ -888,7 +889,7 @@
 						/*
 						 * start override control with data from serie
 						 */
-						$control_relation = $component->get_control_relation();
+					//	$control_relation = $component->get_control_relation();
 						if (isset($control_relation['start_date']) && $control_relation['start_date'])
 						{
 							$control->set_start_date($control_relation['start_date']);

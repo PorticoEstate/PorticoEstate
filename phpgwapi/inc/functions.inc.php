@@ -547,9 +547,12 @@ HTML;
 	else if (phpgw::get_var('domain', 'string', 'REQUEST', false))
 	{
 		// on "normal" pageview
-		if(!$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'REQUEST', false))
+		if(!$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'GET', false))
 		{
-			$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'COOKIE', false);
+			if(!$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'POST', false))
+			{
+				$GLOBALS['phpgw_info']['user']['domain'] = phpgw::get_var('domain', 'string', 'COOKIE', false);
+			}
 		}
 	}
 	else

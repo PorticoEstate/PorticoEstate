@@ -264,7 +264,7 @@
 				'start'			=> $this->start,
  				'num_records'	=> count($categories),
  				'all_records'	=> $this->bo->cats->total_records,
-				'link_data'		=> $link_data,
+				'link_data'		=> array_merge($link_data, array('query' => $this->query)),
 				'allow_all_rows'=> true,
 				'allrows'		=> $this->allrows
 			);
@@ -346,13 +346,27 @@
 			}
 			$parent = $cats[0]['parent'];
 
-			if ( $appname )
+			if($this->cat_id)
 			{
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname) . ' ' . $location?"::{$location}":'' . lang('global categories') . ': ' . ($this->cat_id?lang('edit category'):lang('add category'));
+				$function = lang('edit category');
 			}
 			else
 			{
-				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('global categories') . ': ' . (isset($function)?$function:'');
+				$function =  lang('add category');
+			}
+
+			if ( $appname )
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang($appname);
+				if($location)
+				{
+					$GLOBALS['phpgw_info']['flags']['app_header'] .= "::{$location}";
+				}
+				$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('global categories') . "::$function";
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('global categories') . "::$function";
 			}
 
 			$GLOBALS['phpgw']->xslttpl->add_file('cats');
