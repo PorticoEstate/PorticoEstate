@@ -2208,9 +2208,8 @@ HTML;
 
 
 				//temporary
-				$test_user = $this->acl->check('.ticket.order', 16, 'property');
-
-				$need_approval = $need_approval && $test_user ? true : false;
+		//		$test_user = $this->acl->check('.ticket.order', 16, 'property');
+		//		$need_approval = $need_approval && $test_user ? true : false;
 
 				// approval
 			}
