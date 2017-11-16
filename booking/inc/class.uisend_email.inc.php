@@ -126,7 +126,7 @@
 			{
 				try
 				{
-					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'plain');
+					$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'html');
 					$result['ok'][] = $contact;
 				}
 				catch (phpmailerException $e)
