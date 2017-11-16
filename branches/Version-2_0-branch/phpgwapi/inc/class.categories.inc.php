@@ -25,6 +25,7 @@
 		var $db;
 		var $total_records;
 		var $grants;
+		var $like;
 		protected $location;
 		protected $location_id;
 		/**
@@ -48,7 +49,8 @@
 			}
 
 			$this->account_id	= (int) $account_id;
-			$this->db			=& $GLOBALS['phpgw']->db;
+			$this->db			= & $GLOBALS['phpgw']->db;
+			$this->like 		= & $this->db->like;
 			$this->set_appname($app_name, $location);
 		}
 
@@ -203,7 +205,7 @@
 			$querymethod = '';
 			if ($query)
 			{
-				$querymethod = " AND (cat_name LIKE '%$query%' OR cat_description LIKE '%$query%') ";
+				$querymethod = " AND (cat_name {$this->like} '%$query%' OR cat_description {$this->like} '%$query%') ";
 			}
 
 			if($lastmod && $lastmod >= 0)
@@ -347,7 +349,7 @@
 			$querymethod = '';
 			if ($query)
 			{
-				$querymethod = " AND (cat_name LIKE '%$query%' OR cat_description LIKE '%$query%') ";
+				$querymethod = " AND (cat_name {$this->like} '%$query%' OR cat_description {$this->like} '%$query%') ";
 			}
 
 			$filter_location = '';
@@ -356,9 +358,9 @@
 				$filter_location = "AND location_id = {$this->location_id}";
 			}
 
-			$sql = "SELECT * FROM phpgw_categories WHERE (cat_appname='{$this->app_name}' {$filter_location} AND $grant_cats $global_cats) $querymethod";
+			$sql = "SELECT * FROM phpgw_categories WHERE (cat_appname='{$this->app_name}' {$filter_location} AND $grant_cats $global_cats)";
 
-			$this->db->query($sql . $parent_select . $ordermethod,__LINE__,__FILE__);
+			$this->db->query($sql . $querymethod . $parent_select . $ordermethod,__LINE__,__FILE__);
 			$total = $this->db->num_rows();
 
 			$_cats = array();

@@ -1593,6 +1593,48 @@
 			}
 		}
 
+		function get_next_start_date($start_date, $repeat_type, $repeat_interval)
+		{
+			$next_date = $start_date;
+			$now = time();
+			while ($next_date < $now)
+			{
+				$interval_date = $next_date;
+				$return_date = $next_date;
+
+				if ($repeat_type == 0)
+				{
+					$next_date = mktime(0, 0, 0, date("m", $interval_date), date("d", $interval_date) + $repeat_interval, date("Y", $interval_date));
+				}
+				else if ($repeat_type == 1)
+				{
+					$next_date = mktime(0, 0, 0, date("m", $interval_date), date("d", $interval_date) + ($repeat_interval * 7), date("Y", $interval_date));
+				}
+				else if ($repeat_type == 2)
+				{
+					$month = date("m", $interval_date) + $repeat_interval;
+					$year = date("Y", $interval_date);
+					if ($month > 12)
+					{
+						$month = $month % 12;
+						$year += 1;
+					}
+
+					$num_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+					$next_date = mktime(0, 0, 0, $month, $num_days_in_month, $year);
+				}
+				else if ($repeat_type == 3)
+				{
+					$next_date = mktime(0, 0, 0, date("m", $interval_date), date("d", $interval_date), date("Y", $interval_date) + $repeat_interval);
+				}
+
+//				$_next_date = date('d/m-Y', $next_date);
+
+			}
+
+			return $return_date;
+		}
+
 		function add_controll_to_component_from_master( $master_component, $targets = array() )
 		{
 			$master_component_arr = explode('_', $master_component);
@@ -1608,24 +1650,25 @@
 				. " {$this->db->join} controller_control_serie"
 				. " ON controller_control_serie.control_relation_id = controller_control_component_list.id"
 				. " AND controller_control_serie.control_relation_type = 'component'"
-				. " WHERE location_id = {$location_id} AND  component_id = {$component_id}";
+				. " WHERE location_id = {$location_id} AND  component_id = {$component_id} AND controller_control_serie.enabled = 1";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 
 			$series = array();
 			while ($this->db->next_record())
 			{
-				$start_date = $this->db->f('start_date');
-				if ($start_date < time())
-				{
-					$start_date = time();
-				}
+				$_start_date = $this->db->f('start_date');
+				$repeat_type = $this->db->f('repeat_type');
+				$repeat_interval = $this->db->f('repeat_interval');
+
+				$start_date = $this->get_next_start_date($_start_date, $repeat_type, $repeat_interval);
+
 				$series[] = array(
 					'control_id' => $this->db->f('control_id'),
 					'assigned_to' => $this->db->f('assigned_to'),
 					'start_date' => $start_date,
-					'repeat_type' => $this->db->f('repeat_type'),
-					'repeat_interval' => $this->db->f('repeat_interval'),
+					'repeat_type' => $repeat_type,
+					'repeat_interval' => $repeat_interval,
 					'service_time' => $this->db->f('service_time'),
 					'controle_time' => $this->db->f('controle_time'),
 					'duplicate' => true

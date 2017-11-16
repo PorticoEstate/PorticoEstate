@@ -96,3 +96,6 @@ use smtp auth	admin	no	Bruk smtp autentisering
 users	admin	no	Brukere
 view the config	admin	no	Vis konfigurasjon
 warn	admin	no	Varsel
+add category	admin	no	Legg til kategori
+edit category	admin	no	Endre kategori
+parent category	admin	no	Foreldrekategori
