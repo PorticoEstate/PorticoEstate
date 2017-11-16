@@ -142,6 +142,11 @@
 		protected $_sessionid;
 
 		/**
+		* @var string $sessionid current user session id
+		*/
+		protected $_use_cookies;
+
+		/**
 		* Constructor just loads up some defaults from cookies
 		*/
 		public function __construct()
@@ -152,7 +157,7 @@
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
 			{
-				$use_cookies = true;
+				$this->_use_cookies = true;
 				$this->_sessionid	= phpgw::get_var(session_name(), 'string', 'COOKIE');
 
 				$this->_phpgw_set_cookie_params();
@@ -164,7 +169,7 @@
 
 
 			//respect the config option for cookies
-			ini_set('session.use_cookies', $use_cookies);
+			ini_set('session.use_cookies', $this->_use_cookies);
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
@@ -1143,7 +1148,18 @@
 		{
 			if(empty($sessionid) || !$sessionid)
 			{
-				$sessionid = phpgw::get_var(session_name());
+				if($this->_use_cookies)
+				{
+					$sessionid = phpgw::get_var(session_name());
+				}
+				else if ($_GET[session_name()])
+				{
+					$sessionid = phpgw::get_var(session_name(),'string', 'GET');
+				}
+				else
+				{
+					$sessionid = phpgw::get_var(session_name(), 'string', 'POST');
+				}
 			}
 
 			if(!$sessionid)
