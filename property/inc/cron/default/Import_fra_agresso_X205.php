@@ -316,7 +316,8 @@
 					// Scan directory
 					$files = array();
 					echo "Scanning {$directory_remote}<br/>";
-					$dir = "ssh2.sftp://$sftp$directory_remote";
+			//		$dir = "ssh2.sftp://$sftp$directory_remote";
+					$dir = "ssh2.sftp://" . (int)$sftp . "$directory_remote";
 					$handle = opendir($dir);
 					while (false !== ($file = readdir($handle)))
 					{
@@ -354,8 +355,8 @@
 								$file_remote = "{$directory_remote}/{$file_name}";
 								$file_local = "{$directory_local}/{$file_name}";
 
-								$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
-								$contents = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
+								$stream = fopen("ssh2.sftp://" . (int)$sftp . "$file_remote", 'r');
+								$contents = fread($stream, filesize("ssh2.sftp://" . (int)$sftp . "$file_remote"));
 								fclose($stream);
 
 								$fp = fopen($file_local, "wb");
