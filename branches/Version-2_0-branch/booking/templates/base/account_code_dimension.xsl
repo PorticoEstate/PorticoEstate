@@ -120,7 +120,7 @@
 							<xsl:if test="config_data/external_format='VISMA'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
-							KOMMFAKT
+							VISMA
 						</option>
 					</select>
 				</div>
@@ -196,7 +196,7 @@
 							<xsl:if test="config_data/internal_format='VISMA'">
 								<xsl:attribute name="selected">checked</xsl:attribute>
 							</xsl:if>
-							KOMMFAKT
+							VISMA
 						</option>
 					</select>
 				</div>
