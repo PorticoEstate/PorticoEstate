@@ -178,6 +178,11 @@
 		*/
 		function addAccount($_hookValues) 
 		{
+			if(!$this->mailPreferences)
+			{
+				phpgwapi_cache::message_set('bofelamimail::mailPreferences not set', 'error');
+				return;
+			}
 			$icServer = $this->mailPreferences->getIncomingServer(0);
 			if(is_a($icServer,'defaultimap')) {
 				$icServer->addAccount($_hookValues);
