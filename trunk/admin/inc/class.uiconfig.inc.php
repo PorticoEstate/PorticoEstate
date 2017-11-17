@@ -59,7 +59,7 @@
 				case 'phpgwapi':
 				case '':
 					/* This keeps the admin from getting into what is a setup-only config */
-					Header('Location: ' . $_redir);
+					Header('Location: ' . str_replace('&amp;', '&', $_redir) );
 					break;
 				default:
 					$config_appname = $appname;
@@ -137,9 +137,9 @@
 
 				if(!$errors)
 				{
+//					$GLOBALS['phpgw_info']['flags']['nodisplay'] = true;
 					$GLOBALS['phpgw']->session->appsession('session_data','admin_config',-1);
-					Header('Location: ' . $_redir);
-					$GLOBALS['phpgw_info']['flags']['nodisplay'] = true;
+					Header('Location: ' . str_replace('&amp;', '&', $_redir) );
 					exit;
 				}
 			}
