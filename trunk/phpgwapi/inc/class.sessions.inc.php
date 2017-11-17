@@ -162,9 +162,13 @@
 
 				$this->_phpgw_set_cookie_params();
 			}
+			else if (!empty($_GET[session_name()]))
+			{
+				$this->_sessionid = phpgw::get_var(session_name(),'string', 'GET');
+			}
 			else
 			{
-				$this->_sessionid	= phpgw::get_var(session_name()); // GET or POST
+				$this->_sessionid = phpgw::get_var(session_name(), 'string', 'POST');
 			}
 
 
@@ -671,7 +675,7 @@
 				{
 					if ( is_array($extravars) )
 					{
-						$extravars = array_merge($extravars, $this->_get_session_vars());
+						$extravars = array_merge($this->_get_session_vars(), $extravars);
 					}
 					else
 					{
