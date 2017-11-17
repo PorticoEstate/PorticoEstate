@@ -849,6 +849,7 @@ HTML;
 
 			if($subs && (int)$this->parent_cat_id <= 0)
 			{
+				$GLOBALS['phpgw_info']['flags']['menu_selection'] = 'helpdesk::helpdesk';
 				$GLOBALS['phpgw_info']['flags']['app_header'] = $this->lang_app_name . ': ' . lang('choose a section from the menu');
 				self::render_template_xsl('datatable_jquery', array());
 				return;
