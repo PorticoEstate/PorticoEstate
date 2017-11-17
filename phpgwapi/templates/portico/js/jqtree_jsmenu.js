@@ -23,13 +23,13 @@ $(document).ready(function ()
 					while (typeof (parent.element) !== 'undefined')
 					{
 						tree.tree('openNode', parent, false);
-						//		tree.tree('addToSelection', parent);
+		//				tree.tree('addToSelection', parent);
 						parent = parent.parent;
 					}
 				}
 			}
 		});
-	}, 50);
+	}, 100);
 
 });
 //$(document).ready(function () {
