@@ -142,9 +142,14 @@
 		protected $_sessionid;
 
 		/**
-		* @var string $sessionid current user session id
+		* @var string $_sessionid current user session id
 		*/
 		protected $_use_cookies;
+
+		/**
+		* @var bool $_verified current has a verified session
+		*/
+		protected $_verified;
 
 		/**
 		* Constructor just loads up some defaults from cookies
@@ -162,9 +167,15 @@
 
 				$this->_phpgw_set_cookie_params();
 			}
+			else if (!empty($_GET[session_name()]))
+			{
+				$this->_sessionid = phpgw::get_var(session_name(),'string', 'GET');
+				ini_set("session.use_trans_sid", 1);
+			}
 			else
 			{
-				$this->_sessionid	= phpgw::get_var(session_name()); // GET or POST
+				$this->_sessionid = phpgw::get_var(session_name(), 'string', 'POST');
+				ini_set("session.use_trans_sid", 1);
 			}
 
 
@@ -345,6 +356,7 @@
 			$GLOBALS['phpgw']->auth->update_lastlogin($this->_account_id, $user_ip);
 			$GLOBALS['phpgw']->db->transaction_commit();
 
+			$this->_verified = true;
 			return $this->_sessionid;
 		}
 
@@ -671,7 +683,7 @@
 				{
 					if ( is_array($extravars) )
 					{
-						$extravars = array_merge($extravars, $this->_get_session_vars());
+						$extravars = array_merge($this->_get_session_vars(), $extravars);
 					}
 					else
 					{
@@ -1380,6 +1392,7 @@
 				}
 				return false;
 			}
+			$this->_verified = true;
 			return true;
 		}
 
@@ -1498,7 +1511,7 @@
 		{
 			return array
 			(
-				session_name()	=> $this->_sessionid,
+				session_name()	=> $this->_verified ? $this->_sessionid : null,
 				'domain'		=> $this->_account_domain
 			);
 		}
