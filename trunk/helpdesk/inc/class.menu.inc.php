@@ -242,6 +242,10 @@
 					);
 					foreach ($custom_menu_items as $item)
 					{
+						if(empty($item['local_files']))
+						{
+							$item['url'] .= '&' . get_phpgw_session_url();							
+						}
 						$menus['navigation']['report']['children'][] = $item;
 					}
 				}
