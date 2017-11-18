@@ -824,6 +824,7 @@ HTML;
 			{
 				unset($_GET['click_history']);
 				unset($_GET['sessionid']);
+				unset($_GET[session_name()]);
 				unset($_GET['kp3']);
 				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',serialize($_GET),$cookietime= time()+60);
 			}
