@@ -189,6 +189,16 @@
 					}
 					$cd_array['skip_remote'] = true;
 
+					if ($lightbox)
+					{
+						$cd_array['lightbox'] = true;
+					}
+
+					if ($logindomain)
+					{
+						$cd_array['domain'] = $logindomain;
+					}
+
 					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
 					exit;
 				}
@@ -269,6 +279,7 @@
 				//Reset auth object
 				$GLOBALS['phpgw']->auth	= createObject('phpgwapi.auth');
 				$login = $GLOBALS['phpgw']->auth->get_username();
+				$logindomain = phpgw::get_var('domain', 'string', 'GET');
 
 				if($login)
 				{
@@ -278,7 +289,6 @@
 					);
 					$GLOBALS['phpgw']->hooks->process('auto_addaccount', array('frontend', 'helpdesk'));
 
-					$logindomain = phpgw::get_var('domain', 'string', 'GET');
 					if (strstr($login, '#') === false && $logindomain)
 					{
 						$login .= "#{$logindomain}";
@@ -299,6 +309,10 @@
 					if ($lightbox)
 					{
 						$cd_array['lightbox'] = true;
+					}
+					if ($logindomain)
+					{
+						$cd_array['domain'] = $logindomain;
 					}
 
 					$GLOBALS['phpgw']->redirect_link("/{$partial_url}", $cd_array);
