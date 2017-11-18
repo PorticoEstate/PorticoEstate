@@ -824,8 +824,9 @@ HTML;
 			{
 				unset($_GET['click_history']);
 				unset($_GET['sessionid']);
+				unset($_GET[session_name()]);
 				unset($_GET['kp3']);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',serialize($_GET),$cookietime=0);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',serialize($_GET),$cookietime= time()+60);
 			}
 			$cd_array = array();
 			if ( isset($GLOBALS['phpgw']->session->cd_reason) && $GLOBALS['phpgw']->session->cd_reason )

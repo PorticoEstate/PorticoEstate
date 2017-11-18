@@ -1340,12 +1340,13 @@
 				{
 					$menus['navigation']['documentation']['children'][] = array
 						(
-						'url' => $item['url'],
+						'url' => $item['url'] .=  !empty($item['local_files']) ? '' : '&' . get_phpgw_session_url(),
 						'text' => $item['text'],
 						'target' => $item['target'] ? $item['target'] : '_blank',
 						'local_files' => $item['local_files']
 					);
 				}
+				unset($item);
 			}
 
 			if ($acl->check('.custom', PHPGW_ACL_READ, 'property'))
@@ -1386,8 +1387,14 @@
 						{
 							foreach ($custom_menu_items as $item)
 							{
+								if(empty($item['local_files']))
+								{
+									$item['url'] .= '&' . get_phpgw_session_url();
+								}
+
 								$menus['navigation']["entity_{$entry['id']}"]['children'][] = $item;
 							}
+							unset($item);
 						}
 
 						/*
