@@ -165,10 +165,12 @@
 			else if (!empty($_GET[session_name()]))
 			{
 				$this->_sessionid = phpgw::get_var(session_name(),'string', 'GET');
+				ini_set("session.use_trans_sid", 1);
 			}
 			else
 			{
 				$this->_sessionid = phpgw::get_var(session_name(), 'string', 'POST');
+				ini_set("session.use_trans_sid", 1);
 			}
 
 
