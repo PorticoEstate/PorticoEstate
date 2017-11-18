@@ -98,7 +98,7 @@
 
 			$_lag_seconds -= phpgwapi_datetime::user_timezone();
 
-//_debug_array($period_transition);			
+//_debug_array($period_transition);
 			$time = time();
 			$timestamp_at_start_month = mktime($hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y"));
 
@@ -1097,7 +1097,7 @@
 						break;
 					case 'ssh';
 						$sftp = ssh2_sftp($connection);
-						$stream = @fopen("ssh2.sftp://$sftp$remote_file", 'w');
+						$stream = @fopen("ssh2.sftp://" . (int)$sftp . "$remote_file", 'w');
 						$data_to_send = @file_get_contents($Filnavn);
 						fwrite($stream, $data_to_send);
 						$transfer_ok = @fclose($stream);
