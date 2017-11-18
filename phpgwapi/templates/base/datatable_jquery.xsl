@@ -31,8 +31,13 @@
 
 <xsl:template name="datatable">
 	<script type="text/javascript">
-			var number_of_toolbar_items = 0;
-			var filter_selects = {};
+		var show_filter_group = false;
+		<xsl:if test="form/toolbar/show_filter_group = '1'">
+			show_filter_group = true;
+		</xsl:if>
+
+		var number_of_toolbar_items = 0;
+		var filter_selects = {};
 	</script>
 	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:apply-templates select="form" />
@@ -1267,7 +1272,7 @@
 				});
 			}
 
-			if(number_of_toolbar_items < 4)
+			if(number_of_toolbar_items < 5 || show_filter_group == true)
 			{
 				$('#header1').prop("checked", true);
 			}
