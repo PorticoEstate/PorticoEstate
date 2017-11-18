@@ -896,6 +896,7 @@ JS;
 				'datatable_name' => $appname . ': ' . $function_msg,
 				'form' => array(
 					'toolbar' => array(
+						'show_filter_group' => true,
 						'item' => array(
 							array
 								(
