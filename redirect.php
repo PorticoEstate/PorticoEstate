@@ -13,8 +13,23 @@
 	*/
 
 
+	$GLOBALS['phpgw_info']['flags'] = array
+	(
+		'currentapp'	=> 'logout',
+		'noheader'		=> True,
+		'nonavbar'		=> True,
+		'noappheader'	=> True,
+		'noappfooter'	=> True,
+		'nofooter'		=> True
+	);
+
+	/**
+	* Include phpgroupware header
+	*/
+	include_once('header.inc.php');
+
 	//Get the session variables set for non cookie based sessions
-	if ( !isset($_COOKIES['sessionphpgwsessid']) || isset($_COOKIES['sessionid']) )
+	if ( !isset($_COOKIES[session_name()]) || isset($_COOKIES['sessionid']) )
 	{
 		// nothing else we can do
 		if ( !isset($_SERVER['HTTP_REFERER']) && isset($_GET['go']) )
@@ -32,21 +47,6 @@
 		}
 
 	}
-
-	$GLOBALS['phpgw_info']['flags'] = array
-	(
-		'currentapp'	=> 'home',
-		'noheader'		=> True,
-		'nonavbar'		=> True,
-		'noappheader'	=> True,
-		'noappfooter'	=> True,
-		'nofooter'		=> True
-	);
-
-	/**
-	* Include phpgroupware header
-	*/
-	include_once('header.inc.php');
 
 	if( isset($_GET['go']) )
 	{
