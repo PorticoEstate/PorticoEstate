@@ -538,9 +538,10 @@ HTML;
 	if (isset($_POST['login']))	// on login
 	{
 		$GLOBALS['login'] = $_POST['login'];
+		$_logindomain = phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
 		if (strstr($GLOBALS['login'],'#') === False)
 		{
-			$GLOBALS['login'] .= '#' . phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
+			$GLOBALS['login'] .= '#' . $_logindomain;
 		}
 		list(,$GLOBALS['phpgw_info']['user']['domain']) = explode('#',$GLOBALS['login']);
 	}

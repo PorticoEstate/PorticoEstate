@@ -38,7 +38,25 @@
 	}
 	else
 	{
-		session_name('sessionphpgwsessid');
+//		if(isset($_POST['logindomain']))
+//		{
+//			$_logindomain = phpgw::get_var('logindomain', 'string', 'POST', $GLOBALS['phpgw_info']['server']['default_domain']);
+//			$_GET['domain'] = $_logindomain;
+//		}
+//
+//		if(!$session_prefix = phpgw::get_var('domain', 'string', 'GET', false))
+//		{
+//			if(!$session_prefix = phpgw::get_var('domain', 'string', 'POST', false))
+//			{
+//				if(!$session_prefix = phpgw::get_var('domain', 'string', 'COOKIE', false))
+//				{
+//					$session_identifier = 'phpgw';
+//				}
+//			}
+//		}
+//		$session_identifier = str_replace('_', '' ,$session_prefix);
+		$session_identifier = 'phpgw';
+		session_name("session{$session_identifier}sessid");
 	}
 
 	/*
@@ -157,7 +175,7 @@
 		public function __construct()
 		{
 			$this->_db			=& $GLOBALS['phpgw']->db;
-			$use_cookies = false;
+			$this->_use_cookies = false;
 			$GLOBALS['phpgw']->hooks->process('set_cookie_domain', array('eventplannerfrontend','mobilefrontend', 'bookingfrontend', 'activitycalendarfrontend'));
 			if ( isset($GLOBALS['phpgw_info']['server']['usecookies'])
 				&& $GLOBALS['phpgw_info']['server']['usecookies'] == 'True' )
@@ -184,6 +202,11 @@
 
 			//don't rewrite URL, as we have to do it in link - why? cos it is buggy otherwise
 			ini_set('url_rewriter.tags', '');
+		}
+
+		public function get_session_id()
+		{
+			return $this->_sessionid;
 		}
 
 		/**
@@ -1160,18 +1183,7 @@
 		{
 			if(empty($sessionid) || !$sessionid)
 			{
-				if($this->_use_cookies)
-				{
-					$sessionid = phpgw::get_var(session_name());
-				}
-				else if ($_GET[session_name()])
-				{
-					$sessionid = phpgw::get_var(session_name(),'string', 'GET');
-				}
-				else
-				{
-					$sessionid = phpgw::get_var(session_name(), 'string', 'POST');
-				}
+				$sessionid = $this->get_session_id();
 			}
 
 			if(!$sessionid)

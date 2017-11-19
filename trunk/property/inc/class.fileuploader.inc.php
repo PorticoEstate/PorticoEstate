@@ -51,11 +51,12 @@
 			$upload_target = phpgw::get_var('upload_target');
 			$id = phpgw::get_var('id');
 
+			$session_name = session_name();
 			$oArgs = "{'menuaction':'$upload_target',"
 				. "'id':'$id',"
 				. "'last_loginid':'" . phpgw::get_var('last_loginid') . "',"
 				. "'last_domain':'" . phpgw::get_var('last_domain') . "',"
-				. "'sessionphpgwsessid':'" . phpgw::get_var('sessionphpgwsessid') . "',"
+				. "'{$session_name}':'" . $GLOBALS['phpgw']->session->get_session_id() . "',"
 				. "'domain':'" . phpgw::get_var('domain') . "'";
 
 			foreach ($_GET as $varname => $value)
