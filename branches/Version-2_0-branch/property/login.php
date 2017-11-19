@@ -179,7 +179,7 @@
 		include(PHPGW_SERVER_ROOT . '/setup/lang.php');
 	}
 	/* Program starts here */
-	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionphpgwsessid');
+	$GLOBALS['phpgw']->session->phpgw_setcookie(session_name());
 //	$GLOBALS['phpgw']->session->phpgw_setcookie('sessionid');
 	$GLOBALS['phpgw']->session->phpgw_setcookie('kp3');
 	$GLOBALS['phpgw']->session->phpgw_setcookie('domain');
