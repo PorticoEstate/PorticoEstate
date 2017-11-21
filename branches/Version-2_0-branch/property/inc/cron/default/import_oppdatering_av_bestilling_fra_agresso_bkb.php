@@ -410,7 +410,8 @@
 			$subject = 'Feil ved oppdatering av meldinger(bestillinger) fra Agresso';
 			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
 			$to = "Lene.Christensen@bergen.kommune.no";
-			$cc = "Sigurd.Nes@bergen.kommune.no";
+			$cc = "Erik.Holm-Larsen@bergen.kommune.no";
+			$bcc = "Sigurd.Nes@bergen.kommune.no";
 			if ($this->receipt['error'])
 			{
 				$errors = array();
@@ -421,7 +422,7 @@
 				$body = implode("<br/>", $errors);
 				try
 				{
-					$rc = $this->send->msg('email', $to, $subject, $body, '', $cc, '', $from, '', 'html');
+					$rc = $this->send->msg('email', $to, $subject, $body, '', $cc, $bcc, $from, '', 'html');
 				}
 				catch (phpmailerException $e)
 				{

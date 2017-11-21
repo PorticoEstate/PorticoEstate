@@ -70,7 +70,11 @@
 			'view_control_items' => true,
 			'get_check_list_info' => true,
 			'get_cases_for_check_list' => true,
-			'update_status' => true
+			'update_status' => true,
+			'build_multi_upload_file' => true,
+			'handle_multi_upload_file'	=> true,
+			'get_files3' => true,
+			'view_file'	=> true
 		);
 
 		function __construct()
@@ -435,14 +439,16 @@
 				$check_list_id = phpgw::get_var('check_list_id');
 				$check_list = $this->so->get_single($check_list_id);
 			}
-			
+
 			$current_time = time();
 			$absolute_deadline = time() + (14 * 24 * 60 * 60);
 			$check_list_locked = false;
 			if($check_list->get_deadline() < $absolute_deadline)
 			{
 				//check list was due two weeks ago, and is locked
-				$check_list_locked = true;
+				//FIXME - funkar inte
+				//Eksempel: frist 30/11/2017, dagens dato 20/11/2017, absolutt frist blir 4/12/2017...
+//				$check_list_locked = true;
 			}
 //			echo 'tid: '.$current_time.'abs: '.$absolute_deadline;
 			
@@ -549,6 +555,25 @@
 
 			$required_actual_hours = isset($config->config_data['required_actual_hours']) && $config->config_data['required_actual_hours'] ? $config->config_data['required_actual_hours'] : false;
 
+			$file_def = array
+			(
+				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,'resizeable' => true),
+				array('key' => 'picture', 'label' => '', 'sortable' => false,'resizeable' => false, 'formatter' => 'JqueryPortico.showPicture')
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "controller.uicheck_list.get_files3",
+					'id' => $check_list_id,	'phpgw_return_as' => 'json'))),
+				'ColumnDefs' => $file_def,
+				'data' => json_encode(array()),
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
 			$data = array
 				(
 				'user_list' => array('options' => $user_list_options),
@@ -566,7 +591,11 @@
 				'building_location_code' => $building_location_code,
 				'location_level' => $level,
 				'required_actual_hours' => $required_actual_hours,
-				'integration' => $this->_get_component_integration($location_id, $component_arr)
+				'integration' => $this->_get_component_integration($location_id, $component_arr),
+				'datatable_def'	=> $datatable_def,
+				'multiple_uploader' => true,
+				'multi_upload_parans' => "{menuaction:'controller.uicheck_list.build_multi_upload_file', id:'{$check_list_id}'}",
+
 			);
 
 			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
@@ -579,7 +608,200 @@
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'check_list/fragments/nav_control_plan',
 				'check_list/fragments/check_list_top_section', 'check_list/edit_check_list',
-				'check_list/fragments/select_buildings_on_property'), $data);
+				'check_list/fragments/select_buildings_on_property', 'files','datatable_inline'), $data);
+		}
+
+		public function view_file()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->read)
+			{
+				phpgw::no_access();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$file_id = phpgw::get_var('file_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($file_id)
+			{
+				$file_info = $bofiles->vfs->get_info($file_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 50);
+				readfile($thumbfile);
+			}
+			else if ($file_id)
+			{
+				$bofiles->get_file($file_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
+		function get_files3()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (empty($this->read))
+			{
+				return array();
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => "controller.uicheck_list.view_file",
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'string' => "/controller/check_list/{$id}",
+				'relatives' => array(RELATIVE_NONE)));
+
+			$vfs->override_acl = 0;
+
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$content_files = array();
+
+			$z = 0;
+			foreach ($files as $_entry)
+			{
+
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => "controller.uicheck_list.view_file",
+							'file_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . urlencode($_entry['name'])
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+		public function handle_multi_upload_file()
+		{
+			if (!$this->add)
+			{
+				phpgw::no_access();
+			}
+
+			$id = phpgw::get_var('id', 'int');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['fakebase'] = "/controller";
+			$options['base_dir'] = "check_list/{$id}";
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/controller/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$multi_upload_action = self::link(array('menuaction' => "controller.uicheck_list.handle_multi_upload_file", 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
 
 		/**
