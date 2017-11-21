@@ -230,6 +230,7 @@
 		 */
 		function process_users( $data )
 		{
+			$validator = CreateObject('phpgwapi.EmailAddressValidator');
 
 			$so = createobject('registration.soreg');
 			$ui = createobject('registration.uireg');
@@ -289,10 +290,18 @@ HTML;
 					unset($info['passwd']);
 					unset($info['passwd_confirm']);
 
+					if ($validator->check_email_address($reg_info['reg_lid']))
+					{
+						$to = $reg_info['reg_lid'];
+					}
+					else
+					{
+						$to = $info['email'];
+					}
+
 					try
 					{
-//						$info['email'] = 'sigurd.nes@bergen.kommune.no';
-						$rcpt = $smtp->msg('email', $info['email'], $subject, nl2br($body), '', '', '', $noreply, '', 'html');
+						$rcpt = $smtp->msg('email', $to, $subject, nl2br($body), '', '', '', $noreply, '', 'html');
 					}
 					catch (Exception $e)
 					{
@@ -301,7 +310,7 @@ HTML;
 
 					if ($rcpt)
 					{
-						phpgwapi_cache::message_set("Confirmation sent to {$info['email']}", 'message');
+						phpgwapi_cache::message_set("Confirmation sent to {$to}", 'message');
 						$so->delete_reg_info($reg_id);
 					}
 					else

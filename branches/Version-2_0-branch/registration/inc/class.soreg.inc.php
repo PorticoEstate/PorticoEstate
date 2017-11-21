@@ -71,7 +71,7 @@
 
 			if ($this->config['username_is'] == 'email')
 			{
-				$fields['email'] = $fields['loginid'];
+				$fields['email'] = $account_lid;
 			}
 
 			$this->db->query("UPDATE phpgw_reg_accounts SET reg_id='" . $this->reg_id . "', reg_dla='"
@@ -88,10 +88,10 @@
 				$body = <<<HTML
 
 	New user: {$info['n_given']} {$info['n_family']} is pending approval for {$GLOBALS['phpgw_info']['server']['system_name']}::{$GLOBALS['phpgw_info']['server']['site_title']}.
-	Click on the following link to manage pending approvals. 
-	
+	Click on the following link to manage pending approvals.
+
 	<a href='$url'>Login.</a>
-	
+
 HTML;
 				$body = nl2br($body);
 				$subject = lang('Account registration');
@@ -113,14 +113,22 @@ HTML;
 
 			if ($this->config['activate_account'] == 'immediately')
 			{
-				$url = $GLOBALS['phpgw']->link('/login.php', array('logindomain' => $GLOBALS['phpgw_info']['user']['domain']), false, true);
+				if(!empty($this->config['login_url']))
+				{
+					$url = $this->config['login_url'];
+				}
+				else
+				{
+					$url = $GLOBALS['phpgw']->link('/login.php', array('logindomain' => $GLOBALS['phpgw_info']['user']['domain']), false, true);
+				}
+
 				$body = <<<HTML
 
 	Hi {$info['n_given']} {$info['n_family']},
 
 	This is a confirmation email for your new account on {$GLOBALS['phpgw_info']['server']['system_name']}::{$GLOBALS['phpgw_info']['server']['site_title']}.
-	Click on the following link to log into your account. 
-	
+	Click on the following link to log into your account.
+
 	<a href='$url'>Login.</a>
 
 	User: {$account_lid}
@@ -128,7 +136,7 @@ HTML;
 
 	If you did not request this account, simply ignore this message.
 	{$support_email_text} {$support_email}
-	
+
 HTML;
 				$body = nl2br($body);
 			}
