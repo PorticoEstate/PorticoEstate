@@ -69,7 +69,6 @@
 					$org_units = frontend_bofellesdata::get_instance()->get_result_units($GLOBALS['phpgw_info']['user']['account_lid']);
 					//Parameter to delegate access to only a single organisational unit
 					$org_unit_id = $this->header_state['selected_org_unit'];
-					$success = true;
 
 					foreach ($org_units as $org_unit)
 					{
