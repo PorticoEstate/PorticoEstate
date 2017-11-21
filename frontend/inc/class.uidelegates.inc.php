@@ -241,7 +241,10 @@
 					return false;
 				}
 			}
-			return frontend_bofrontend::add_delegate($account_id, null, $org_unit_id, $org_name);
+
+			$owner_id = (int) $GLOBALS['phpgw_info']['user']['account_id'];
+
+			return frontend_bofrontend::add_delegate($account_id, $owner_id, $org_unit_id, $org_name);
 		}
 
 		public function remove_delegate()
