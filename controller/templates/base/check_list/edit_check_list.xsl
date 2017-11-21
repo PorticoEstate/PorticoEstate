@@ -169,7 +169,7 @@
 					<label>
 						<xsl:value-of select="php:function('lang', 'files')"/>
 					</label>
-					<div class="pure-u-md-1-2 pure-custom" >
+					<div class="pure-u pure-custom" >
 						<xsl:for-each select="datatable_def">
 							<xsl:if test="container = 'datatable-container_0'">
 								<xsl:call-template name="table_setup">
