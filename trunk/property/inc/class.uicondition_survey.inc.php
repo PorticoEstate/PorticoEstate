@@ -420,12 +420,6 @@
 		{
 			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var('id', 'int');
 
-			if (!$this->acl_add && !$this->acl_edit)
-			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uicondition_survey.view',
-					'id' => $id));
-			}
-
 			if ($mode == 'view')
 			{
 				if (!$this->acl_read)
