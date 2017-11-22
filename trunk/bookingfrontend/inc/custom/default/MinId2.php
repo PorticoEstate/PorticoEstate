@@ -156,10 +156,14 @@
 				$orgs_validate[] = $organization_number;
 
 			}
-			if ($this->debug)
+
+			$test_organization = $this->config->config_data['test_organization'];
+			if ($this->debug && $test_organization)
 			{
-				_debug_array($results);
-				die();
+				$results[] = array
+				(
+					'orgnr' => $test_organization
+				);
 			}
 
 			return $results;

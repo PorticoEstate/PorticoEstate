@@ -72,6 +72,7 @@
 
 			$location_URL = isset($this->config->config_data['soap_location']) && $this->config->config_data['soap_location'] ? $this->config->config_data['soap_location'] : "http://wsm01e-t.usrv.ubergenkom.no:8888/gateway/services/AltinnReporteesService"; #A-test
 
+			$test_organization = $this->config->config_data['test_organization'];
 			$soap_login = $this->config->config_data['soap_login'];
 			$soap_password = $this->config->config_data['soap_password'];
 
@@ -121,14 +122,14 @@
 			$stage = phpgw::get_var('stage');
 			$org_id = phpgw::get_var('org_id');
 
-			if ($this->debug)
+			if ($this->debug && $test_organization)
 			{
 				$orgs[] = array
 					(
-					'id' => 994239929,
+					'id' => $test_organization,
 					'name' => 'Bølleball',
 				);
-				$orgs_validate[] = 994239929;
+				$orgs_validate[] = $test_organization;
 				if(!$fodsels_nr)
 				{
 					$fodsels_nr = 1;
