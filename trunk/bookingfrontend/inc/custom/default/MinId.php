@@ -42,6 +42,11 @@
 		public function __construct()
 		{
 			parent::__construct();
+
+			if (!empty($this->config->config_data['debug']))
+			{
+				$this->debug = true;
+			}
 		}
 
 		protected function get_user_org_id()
