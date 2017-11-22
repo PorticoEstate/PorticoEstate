@@ -2397,7 +2397,7 @@ HTML;
 			{
 				foreach ($values['order_text'] as $_text)
 				{
-					$ticket['order_descr'] .= "\n$_text";
+					$ticket['order_descr'] .= "\n" . $GLOBALS['phpgw']->db->stripslashes($_text);
 				}
 			}
 
