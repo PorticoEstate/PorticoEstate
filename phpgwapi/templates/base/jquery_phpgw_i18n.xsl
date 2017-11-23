@@ -17,7 +17,11 @@
 							</xsl:choose>
 						</xsl:for-each>
 						return cfg;
-					}<xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/>
+					}
+					<xsl:if test="position() != last()">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+					<!--xsl:value-of select="phpgw:conditional(not(position() = last()), ',', '')"/-->
 				</xsl:for-each>
 				};
 			</script>

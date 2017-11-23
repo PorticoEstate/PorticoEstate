@@ -19,6 +19,7 @@
 		.pure-form-contentTable {display: inline-block;}
 	</style>
 
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:call-template name="msgbox"/>
 	<div class= "pure-form pure-form-aligned" id="form" name="form">
 		<input type="hidden" name="tab" value=""/>
