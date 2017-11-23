@@ -397,3 +397,4 @@ minute	bookingfrontend	no	Minutt
 please enter a building name	bookingfrontend	no	Angi et bygningsnavn
 please select an activity	bookingfrontend	no	Velg en aktivitet
 select date	bookingfrontend	no	Velg dato
+cancel event	bookingfrontend	no	Avbestill
