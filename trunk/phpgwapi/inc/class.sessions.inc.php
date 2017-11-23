@@ -706,7 +706,16 @@
 				{
 					if ( is_array($extravars) )
 					{
-						$extravars = array_merge($this->_get_session_vars(), $extravars);
+						$_session_vars = $this->_get_session_vars();
+						/*
+						 * Make sure session vars are inserted at the end of the array
+						 * easier to read...
+						 */
+						foreach ($_session_vars as $_session_key => $_session_value)
+						{
+							unset($extravars[$_session_key]);
+							$extravars[$_session_key] = $_session_value;
+						}
 					}
 					else
 					{
@@ -1523,8 +1532,8 @@
 		{
 			return array
 			(
-				session_name()	=> $this->_verified ? $this->_sessionid : null,
-				'domain'		=> $this->_account_domain
+				'domain'		=> $this->_account_domain,
+				session_name()	=> $this->_verified ? $this->_sessionid : null
 			);
 		}
 
