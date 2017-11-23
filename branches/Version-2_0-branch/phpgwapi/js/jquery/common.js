@@ -951,6 +951,17 @@ function createTable(d, u, c, r, cl, l)
 		return;
 	}
 
+	var language = null;
+	var lang_no_records = "No records found";
+	try
+	{
+		language = JqueryPortico.i18n.datatable();
+		lang_no_records = language.emptyTable;
+	}
+	catch (err)
+	{
+	}
+
 	r = (r) ? r : 'data';
 	var tableClass = (cl) ? cl : "pure-table pure-table-striped";
 
@@ -1026,7 +1037,7 @@ function createTable(d, u, c, r, cl, l)
 		{
 			tableBodyTr.innerHTML = "";
 			tableBodyTrTd.setAttribute('colspan', c.length);
-			tableBodyTrTd.innerHTML = "No records found";
+			tableBodyTrTd.innerHTML = lang_no_records;//"No records found";
 			tableBodyTr.appendChild(tableBodyTrTd);
 			tableBody.appendChild(tableBodyTr);
 		}

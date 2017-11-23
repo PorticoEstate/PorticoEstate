@@ -717,3 +717,4 @@ please enter an email	booking	no	Angi en epost
 ssn is invalid	booking	no	Fødselsnummeret er ikke gyldig
 edit delegate	booking	no	Endre delegert til
 duplicate ssn	booking	no	Duplikat av f.nr for samme organisasjon
+building show	booking	no	Vis bygning
