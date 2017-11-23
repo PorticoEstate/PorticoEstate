@@ -13,7 +13,7 @@
 		</dt>
 		<dd>
 			<a href="{event/building_link}">
-				<xsl:value-of select="event/resources[position()=1]/building_name"/>
+				<xsl:value-of select="event/building_name"/>
 			</a>
 			(<xsl:value-of select="event/resource_info"/>)
 		</dd>
