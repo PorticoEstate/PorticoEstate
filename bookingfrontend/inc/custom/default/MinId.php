@@ -42,6 +42,11 @@
 		public function __construct()
 		{
 			parent::__construct();
+
+			if (!empty($this->config->config_data['debug']))
+			{
+				$this->debug = true;
+			}
 		}
 
 		protected function get_user_org_id()
@@ -160,21 +165,18 @@
 					'orgnr' => $organization_number
 				);
 
-				$orgs_validate[] = $organization_number;
-
 			}
 
 		//Testvalues
-		/*
- 			$results[] = array
-			(
-				'orgnr' => 980016080
-			);
-			$results[] = array
-			(
-				'orgnr' => 996277267
-			);
-		*/
+			$test_organization = $this->config->config_data['test_organization'];
+			if ($this->debug && $test_organization)
+			{
+				$results[] = array
+				(
+					'orgnr' => $test_organization
+				);
+			}
+
 			return $results;
 		}
 
