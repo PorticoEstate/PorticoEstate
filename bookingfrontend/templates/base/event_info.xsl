@@ -42,4 +42,14 @@
 			</dd>
 		</xsl:if>
 	</dl>
+	<xsl:if test="event/edit_link">
+		<div class="actions">
+			<button onclick="location.href='{event/edit_link}'">
+				<xsl:value-of select="php:function('lang', 'Edit event')"/>
+			</button>
+			<button onclick="location.href='{event/cancel_link}'">
+				<xsl:value-of select="php:function('lang', 'Cancel event')"/>
+			</button>
+		</div>
+	</xsl:if>
 </xsl:template>
