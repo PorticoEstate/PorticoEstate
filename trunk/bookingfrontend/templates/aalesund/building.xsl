@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	
 	<div class="content">
 		<ul class="pathway">

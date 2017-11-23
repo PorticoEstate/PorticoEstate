@@ -1,4 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:call-template name="msgbox"/>
 	<form id="form" name="form" method="post" action="" class="pure-form pure-form-aligned">
 		<input type="hidden" name="tab" value="" />
