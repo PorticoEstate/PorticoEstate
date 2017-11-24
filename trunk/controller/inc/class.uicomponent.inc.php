@@ -318,6 +318,18 @@
 			{
 				$filter_component = phpgw::get_var('location_id', 'int') . '_' . phpgw::get_var('component_id', 'int');
 			}
+
+			$control_types = createObject('controller.socontrol')->get(0, 0, 'title', true, '', '', array());
+
+			$control_types_arr = array(array('id'=>'', 'name' => lang('select')));
+			foreach ($control_types as $control_type)
+			{
+				$control_types_arr[] = array(
+					'id'	=> $control_type->get_id(),
+					'name'	=> $control_type->get_title()
+				);
+			}
+	//		_debug_array($control_types_arr);
 			$data = array(
 				'datatable_name' =>  phpgw::get_var('get_locations', 'bool') ? lang('status locations') : lang('status components'),
 				'form' => array(
@@ -334,6 +346,12 @@
 								'list' => array(
 									array('id' => 'components', 'name' => lang('details')),
 									array('id' => 'summary', 'name' => lang('summary'))),
+								'onchange' => 'update_table();'
+							),
+							array('type' => 'filter',
+								'name' => 'control_id',
+								'text' => lang('control types'),
+								'list' => $control_types_arr,
 								'onchange' => 'update_table();'
 							),
 							array('type' => 'filter',
@@ -623,6 +641,7 @@
 		{
 			$get_locations = $this->get_locations;
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
+			$filter_control_id = phpgw::get_var('control_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$location_code = phpgw::get_var('location_code', 'string');
 			$control_area = phpgw::get_var('control_area', 'int');
@@ -697,7 +716,7 @@
 				$all_items = false;
 
 				$keep_only_assigned_to = $user_id;
-				$assigned_items = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id);
+				$assigned_items = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id, $filter_control_id);
 
 				if(empty($get_locations))
 				{
@@ -706,6 +725,7 @@
 						$_items = execMethod('property.soentity.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
+							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
 							'location_code'	=> $location_code,
 							'allrows' => true,
@@ -722,6 +742,7 @@
 						$_items = execMethod('property.solocation.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
+							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
 							'location_code'	=> $location_code,
 							'allrows' => true,
@@ -765,6 +786,7 @@
 						$_items = execMethod('property.soentity.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
+							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
 							'location_code'	=> $location_code,
 							'org_units' => $this->org_units,
@@ -801,6 +823,7 @@
 						'entity_group_id' => $entity_group_id,
 						'exclude_locations' => $exclude_locations,
 						'location_id' => $_location_id,
+						'control_id' => $filter_control_id,
 						'district_id' => $district_id,
 						'location_code'	=> $location_code,
 						'org_units' => $this->org_units,
