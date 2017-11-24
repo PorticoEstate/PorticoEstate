@@ -782,11 +782,12 @@
 			return $this->db->next_record();
 		}
 
-		public function get_assigned_control_components( $from_date, $to_date, $assigned_to = 0 )
+		public function get_assigned_control_components( $from_date, $to_date, $assigned_to = 0 , $control_id = 0)
 		{
 			$assigned_to = (int)$assigned_to;
 			$location_id = (int)$location_id;
 			$component_id = (int)$component_id;
+			$control_id = (int)$control_id;
 
 			$sql = "SELECT DISTINCT ccl.component_id, ccl.location_id";
 			$sql .= " FROM controller_control_component_list ccl , controller_control_serie cs";
@@ -797,6 +798,11 @@
 //			$sql .= " AND ((cs.start_date <= $to_date AND cs.end_date IS NULL) ";
 //			$sql .= " OR (cs.start_date <= $to_date AND cs.end_date > $from_date ))";
 			$sql .= " AND cs.start_date <= $to_date";
+
+			if($control_id)
+			{
+				$sql .= " AND ccl.control_id = {$control_id}";
+			}
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$components = array();
