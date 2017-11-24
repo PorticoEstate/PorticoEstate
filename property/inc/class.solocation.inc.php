@@ -350,6 +350,7 @@
 			$filter_role_on_contact = $data['filter_role_on_contact'] ? (int)$data['filter_role_on_contact'] : 0;
 			$role_id = $data['role_id'] ? (int)$data['role_id'] : 0;
 			$results = $data['results'] ? (int)$data['results'] : 0;
+			$check_for_control = isset($data['check_for_control']) ? $data['check_for_control'] : false;
 			$control_registered = isset($data['control_registered']) ? $data['control_registered'] : '';
 			$control_id = isset($data['control_id']) && $data['control_id'] ? $data['control_id'] : 0;
 			$location_id = isset($data['location_id']) && $data['location_id'] ? (int)$data['location_id'] : 0;
@@ -667,27 +668,37 @@
 
 			$filtermethod = '';
 			$where = 'WHERE';
-			if ($control_registered && $control_id)
+			if ($check_for_control && $control_registered && $control_id)
 			{
 				$sql .= "{$this->join} controller_control_location_list ON (fm_location{$type_id}.location_code = controller_control_location_list.location_code )";
 				$filtermethod .= " $where  controller_control_location_list.control_id = $control_id";
 				$where = 'AND';
 			}
-			else if ($control_registered)
+			else if ($check_for_control && !$control_registered)
 			{
-				$this->db->query("SELECT DISTINCT component_id as item_id"
-				. " FROM controller_control_component_list"
-			//	. " WHERE control_id = {$control_id}"
-				. " WHERE location_id = {$location_id}");
-				$items = array(-1);
+
+				$sql_without_control = "SELECT DISTINCT fm_location2.id as item_id"
+				. " FROM fm_location2 {$this->left_join} controller_control_component_list"
+				. " ON controller_control_component_list.component_id = fm_location2.id"
+					. " {$this->left_join} controller_control_serie"
+					. " ON (controller_control_component_list.id = controller_control_serie.control_relation_id"
+						. " AND controller_control_serie.control_relation_type = 'component'"
+						. " AND controller_control_component_list.location_id = {$location_id}"
+						. " AND controller_control_serie.enabled = 1)"
+				. " WHERE controller_control_component_list.location_id IS NULL";
+
+				$this->db->query($sql_without_control);
+				$items = array_merge(array(-1), $filter_item);
 				while ($this->db->next_record())
 				{
-					$items[] =  $this->db->f('item_id');
+					$items[] =  (int)$this->db->f('item_id');
 				}
+
+				$filter_item = array();
+
 				$filtermethod .= " $where fm_location{$type_id}.id IN (". implode(',', $items) . ')';
 				$where = 'AND';
 			}
-
 
 			//---------------------start custom user cols
 
@@ -1059,7 +1070,7 @@
 			{
 				return array();
 			}
-
+//			_debug_array($sql);
 			if (!$allrows)
 			{
 				$this->db->limit_query($sql . $ordermethod, $start, __LINE__, __FILE__, $results);
