@@ -821,14 +821,6 @@ HTML;
 	{
 		if (! $GLOBALS['phpgw']->session->verify())
 		{
-			if ( phpgw::get_var('menuaction', 'string', 'GET')  && phpgw::get_var('phpgw_return_as', 'string') != 'json')
-			{
-				unset($_GET['click_history']);
-				unset($_GET['sessionid']);
-				unset($_GET[session_name()]);
-				unset($_GET['kp3']);
-				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',serialize($_GET),$cookietime= time()+60);
-			}
 			$cd_array = array();
 			if ( isset($GLOBALS['phpgw']->session->cd_reason) && $GLOBALS['phpgw']->session->cd_reason )
 			{
@@ -843,6 +835,15 @@ HTML;
 			if(!empty($_GET['domain']))
 			{
 				$cd_array['domain'] = $_GET['domain'];
+			}
+
+			if ( phpgw::get_var('menuaction', 'string', 'GET')  && phpgw::get_var('phpgw_return_as', 'string') != 'json')
+			{
+				unset($_GET['click_history']);
+				unset($_GET['sessionid']);
+				unset($_GET[session_name()]);
+				unset($_GET['kp3']);
+				$GLOBALS['phpgw']->session->phpgw_setcookie('redirect',serialize($_GET),$cookietime= time()+60);
 			}
 
 			if(phpgw::get_var('phpgw_return_as', 'string') == 'json')
