@@ -713,6 +713,10 @@
 						 */
 						foreach ($_session_vars as $_session_key => $_session_value)
 						{
+							if($_session_key == 'domain' && !$_session_value)
+							{
+								continue;
+							}
 							unset($extravars[$_session_key]);
 							$extravars[$_session_key] = $_session_value;
 						}
