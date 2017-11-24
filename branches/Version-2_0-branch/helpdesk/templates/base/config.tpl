@@ -57,14 +57,14 @@
 				{lang_default}: {lang_Open}</td>
 			<td><input name="newsettings[tts_lang_open]" value="{value_tts_lang_open}"></td>
 		</tr>
-			<tr>
-				<td>{lang_reopen_status}:</td>
-				<td>
-					<select name="newsettings[reopen_status]">
-						{hook_reopen_status}
-					</select>
-				</td>
-			<tr>
+		<tr>
+			<td>{lang_reopen_status}:</td>
+			<td>
+				<select name="newsettings[reopen_status]">
+					{hook_reopen_status}
+				</select>
+			</td>
+		<tr>
 		<tr class="pure-table-odd">
 			<td >{lang_TTS_disable_assign_to_user_on_add}:</td>
 			<td>
@@ -231,6 +231,10 @@
 					{hook_autocreate_default_group}
 				</select>
 			</td>
+		</tr>
+		<tr>
+			<td>{lang_uploader_filetypes}: jpg,gif,png</td>
+			<td><input name="newsettings[uploader_filetypes]" value="{value_uploader_filetypes}"></td>
 		</tr>
 
 		<!-- END body -->
