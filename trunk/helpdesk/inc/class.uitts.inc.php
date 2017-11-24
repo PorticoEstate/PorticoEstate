@@ -52,7 +52,9 @@
 				'update_data'		=> true,
 				'upload_clip'		=> true,
 				'view_image'		=> true,
-				'get_reverse_assignee'=>true
+				'get_reverse_assignee'=>true,
+				'handle_multi_upload_file' => true,
+				'build_multi_upload_file' => true
 			);
 
 		/**
@@ -544,6 +546,60 @@ HTML;
 			{
 				return lang('delete failed');
 			}
+		}
+
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['fakebase'] = "/helpdesk";
+			$options['base_dir'] = $id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/helpdesk/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'helpdesk.uitts.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
 
 		function columns()
@@ -1613,7 +1669,7 @@ JS;
 
 			$link_file_data = array
 				(
-				'menuaction' => 'property.uitts.view_file',
+				'menuaction' => 'helpdesk.uitts.view_file',
 			);
 
 
@@ -2158,8 +2214,9 @@ JS;
 				'contact_phone' => $ticket['contact_phone'],
 				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['tts_user_mailnotification'] : '',
 				'fileupload' => true,//isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
-	//			'multiple_uploader' => true,
-				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
+				'multiple_uploader' => true,
+				'multi_upload_parans' => "{menuaction:'helpdesk.uitts.build_multi_upload_file', id:'{$id}'}",
+//				'fileuploader_action' => "{menuaction:'property.fileuploader.add',upload_target:'helpdesk.botts.addfiles',id:'{$id}'}",
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',
 				'files' => isset($ticket['files']) ? $ticket['files'] : '',
 				'lang_filename' => lang('Filename'),

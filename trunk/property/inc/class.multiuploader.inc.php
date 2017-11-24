@@ -362,7 +362,26 @@
 			return $this->generate_response($response, $print_response);
 		}
 		
-		public function generate_response($content, $print_response = true) {
+		public function generate_response($_content, $print_response = true) {
+
+			$content = array();
+			/**
+			 * Filter out thumbs as individual entries
+			 */
+
+			if(!empty($_content['files']))
+			{
+				$content['files'] = array();
+				foreach ($_content['files'] as $file)
+				{
+					if(substr($file->name, -5) == 'thumb')
+					{
+						continue;
+					}
+					$content['files'][] = $file;
+				}
+			}
+
 			$this->response = $content;
 			
 			if ($print_response) 
