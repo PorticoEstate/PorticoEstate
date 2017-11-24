@@ -232,6 +232,7 @@ update_table = function (location_code)
 
 					$("#checkall").html(components_data.checkall);
 					$("#total_records").html(components_data.total_records);
+					$("#control_text").html('type');
 					$("#sum_text").html('Sum');
 					$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
 					$("#month1").html(time_sum[1] + '/' + time_sum_actual[1]);

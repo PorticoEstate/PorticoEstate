@@ -58,6 +58,7 @@
 		private $delete;
 		private $org_units;
 		private $custom;
+		private $get_locations;
 		public $public_functions = array
 			(
 			'index' => true,
@@ -80,8 +81,13 @@
 			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
 
 			$location_id = phpgw::get_var('location_id', 'int');
+			$this->get_locations = phpgw::get_var('get_locations', 'bool');
+			if ($this->is_location($location_id))
+			{
+				$this->get_locations = true;
+			}
 
-			if(($location_id && $this->is_location($location_id)) || phpgw::get_var('get_locations', 'bool'))
+			if(($location_id && $this->is_location($location_id)) || $this->get_locations)
 			{
 				self::set_active_menu('controller::status_locations');
 			}
@@ -97,7 +103,6 @@
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
 			$this->custom = createObject('phpgwapi.custom_fields');
-
 		}
 
 		public function add_controll_from_master()
@@ -424,6 +429,7 @@
 
 		private function get_fields( $filter_component = '' )
 		{
+
 			$fields = array
 				(
 				array(
@@ -433,7 +439,12 @@
 				),
 				array(
 					'key' => 'component_url',
-					'label' => lang('component'),
+					'label' => $this->get_locations ? lang('location') : lang('component'),
+					'sortable' => true,
+				),
+				array(
+					'key' => 'control_type',
+					'label' => lang('type'),
 					'sortable' => true,
 				),
 				array(
@@ -610,7 +621,7 @@
 
 		public function query()
 		{
-			$get_locations = phpgw::get_var('get_locations', 'bool');
+			$get_locations = $this->get_locations;
 			$entity_group_id = phpgw::get_var('entity_group_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$location_code = phpgw::get_var('location_code', 'string');
@@ -774,6 +785,7 @@
 							'district_id' => $district_id,
 							'location_code'	=> $location_code,
 							'control_registered' => !$all_items,
+							'check_for_control' => true,
 							'allrows' => true,
 							'filter_item' => $filter_component ? array($filter_component) : array(),
 							)
@@ -802,6 +814,8 @@
 			}
 
 			$all_components = array();
+			$control_names = array();
+
 			$components_with_calendar_array = array();
 //			_debug_array($items);
 			foreach ($items as $_item)
@@ -842,6 +856,7 @@
 					}
 					$control_id = $control_relation['control_id'];
 					$control = $so_control->get_single($control_id);
+					$control_names[$control_id] = $control->get_title();
 
 //					$repeat_type = $control->get_repeat_type();
 					$repeat_type = (int)$control_relation['repeat_type'];
@@ -873,7 +888,7 @@
 
 						$year_calendar_agg = new year_calendar_agg($control, $year, $location_code, "VIEW_LOCATIONS_FOR_CONTROL");
 						$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
-						$components_with_calendar_array["{$location_id}_{$item_id}"][] = array(
+						$components_with_calendar_array["{$location_id}_{$item_id}_{$control_id}"][] = array(
 							"component" => $component->toArray(),
 							"calendar_array" => $calendar_array);
 					}
@@ -933,7 +948,7 @@
 							}
 						}
 
-						$components_with_calendar_array["{$location_id}_{$item_id}"][] = array(
+						$components_with_calendar_array["{$location_id}_{$item_id}_{$control_id}"][] = array(
 							"component" => $component->toArray(),
 							"calendar_array" => $calendar_array);
 					}
@@ -957,6 +972,7 @@
 			$values = array();
 			foreach ($components_with_calendar_array as $dummy => $entry)
 			{
+				$type_array = explode('_', $dummy);
 				$location_id = $entry[0]['component']['location_id'];
 				$item_id = $entry[0]['component']['id'];
 				$_location_code = $entry[0]['component']['location_code'];
@@ -984,6 +1000,7 @@
 					);
 				}
 
+				$data['control_type'] = $control_names[$type_array[2]];
 				$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id}{$entry[0]['component']['xml_short_desc']}</a>";
 				$data['component_id'] = $item_id;
 				$data['location_id'] = $location_id;
@@ -1118,6 +1135,7 @@
 						$short_description .= ' [' . $component['loc1_name'] . ']';
 					}
 
+					$data['control_type'] = '';
 					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
 					$data['component_id'] = $item_id;
 					$data['location_id'] = $location_id;
@@ -1134,6 +1152,7 @@
 				$row = array();
 				$row_sum = array();
 				$row_sum_actual = array();//billable_hours
+				$row['control_type'] = $entry['control_type'];
 				$row['component_url'] = $entry['component_url'];
 				$row['year'] = '';
 				$row['descr'] = '';
