@@ -644,6 +644,11 @@
 			$filter_control_id = phpgw::get_var('control_id', 'int');
 			$location_id = phpgw::get_var('location_id', 'int');
 			$location_code = phpgw::get_var('location_code', 'string');
+			$location_name = phpgw::get_var('location_name', 'string');
+			if(!$location_name)
+			{
+				$location_code = '';
+			}
 			$control_area = phpgw::get_var('control_area', 'int');
 			$user_id = phpgw::get_var('user_id', 'int');
 			$district_id = phpgw::get_var('district_id', 'int');
@@ -661,6 +666,11 @@
 				$location_id = $filter_component_arr[0];
 				$filter_component = $filter_component_arr[1];
 			}
+			else
+			{
+				$filter_component = array();
+			}
+
 			if ($org_unit_id = phpgw::get_var('org_unit_id', 'int'))
 			{
 				$_subs = execMethod('property.sogeneric.read_tree', array('node_id' => $org_unit_id,
@@ -804,6 +814,7 @@
 						$_items = execMethod('property.solocation.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
+							'control_id' => $filter_control_id,
 							'district_id' => $district_id,
 							'location_code'	=> $location_code,
 							'control_registered' => !$all_items,
@@ -867,7 +878,7 @@
 				{
 					continue;
 				}
-				$controls_at_component = $so_control->get_controls_at_component2($_item);
+				$controls_at_component = $so_control->get_controls_at_component2($_item, $filter_control_id);
 
 				foreach ($controls_at_component as $component)
 				{
@@ -1023,6 +1034,7 @@
 					);
 				}
 
+				$data['control_id'] = $type_array[2];
 				$data['control_type'] = $control_names[$type_array[2]];
 				$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id}{$entry[0]['component']['xml_short_desc']}</a>";
 				$data['component_id'] = $item_id;
@@ -1158,6 +1170,8 @@
 						$short_description .= ' [' . $component['loc1_name'] . ']';
 					}
 
+
+					$data['control_id'] = 0;
 					$data['control_type'] = '';
 					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
 					$data['component_id'] = $item_id;
@@ -1188,7 +1202,7 @@
 					}
 					else if ($choose_master)
 					{
-						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}\" >";
+						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}_{$entry['control_id']}\" >";
 					}
 					$row['year'] = $year;
 					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";

@@ -293,7 +293,7 @@
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$attribs = array();
-			
+
 			while ($this->db->next_record())
 			{
 				$id = $this->db->f('id');
@@ -393,7 +393,7 @@
 			$sql = $this->socommon->fm_cache('sql_' . $type_id . '_lt' . $lookup_tenant . '_l' . $lookup . '_f' . !!$filter_role_on_contact);
 			if(empty($location_id))
 			{
-				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");			
+				$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$type_id}");
 			}
 
 //			$choice_table = 'phpgw_cust_choice';
@@ -666,40 +666,75 @@
 				$sub_query_street = $this->socommon->fm_cache('sub_query_street_' . $type_id . '_' . $lookup_tenant . '_' . $lookup);
 			}
 
+			$items_with_control = array();
 			$filtermethod = '';
 			$where = 'WHERE';
-			if ($check_for_control && $control_registered && $control_id)
+			/**
+			 * From old scheme: controller.uicontrol_register_to_location.index
+			 */
+			if (!$check_for_control && $control_registered && $control_id)
 			{
 				$sql .= "{$this->join} controller_control_location_list ON (fm_location{$type_id}.location_code = controller_control_location_list.location_code )";
 				$filtermethod .= " $where  controller_control_location_list.control_id = $control_id";
 				$where = 'AND';
-			}
-			else if ($check_for_control && !$control_registered)
+			}// from new scheme controller.uicomponent.index
+			else if ($check_for_control)
 			{
-
-				$sql_without_control = "SELECT DISTINCT fm_location2.id as item_id"
-				. " FROM fm_location2 {$this->left_join} controller_control_component_list"
-				. " ON controller_control_component_list.component_id = fm_location2.id"
-					. " {$this->left_join} controller_control_serie"
+				$sql_with_control = "SELECT DISTINCT fm_location{$type_id}.id as item_id"
+				. " FROM fm_location{$type_id} {$this->join} controller_control_component_list"
+				. " ON controller_control_component_list.component_id = fm_location{$type_id}.id"
+					. " {$this->join} controller_control_serie"
 					. " ON (controller_control_component_list.id = controller_control_serie.control_relation_id"
 						. " AND controller_control_serie.control_relation_type = 'component'"
 						. " AND controller_control_component_list.location_id = {$location_id}"
-						. " AND controller_control_serie.enabled = 1)"
-				. " WHERE controller_control_component_list.location_id IS NULL";
+						. " AND controller_control_serie.enabled = 1)";
 
-				$this->db->query($sql_without_control);
-				$items = array_merge(array(-1), $filter_item);
-				while ($this->db->next_record())
+				if($control_id)
 				{
-					$items[] =  (int)$this->db->f('item_id');
+					$sql_with_control .= " WHERE control_id = {$control_id}";
 				}
 
+				$this->db->query($sql_with_control);
+				$items_with_control = array_merge(array(-1), $filter_item);
+				while ($this->db->next_record())
+				{
+					$items_with_control[] =  (int)$this->db->f('item_id');
+				}
+
+				/**
+				 * reset for later use
+				 */
 				$filter_item = array();
 
-				$filtermethod .= " $where fm_location{$type_id}.id IN (". implode(',', $items) . ')';
+				if($control_registered)
+				{
+					$filtermethod .= " $where fm_location{$type_id}.id IN (". implode(',', $items_with_control) . ')';
+
+				}
+				else
+				{
+					$sql_without_control = "SELECT DISTINCT fm_location{$type_id}.id as item_id"
+					. " FROM fm_location{$type_id} {$this->left_join} controller_control_component_list"
+					. " ON controller_control_component_list.component_id = fm_location{$type_id}.id"
+						. " {$this->left_join} controller_control_serie"
+						. " ON (controller_control_component_list.id = controller_control_serie.control_relation_id"
+							. " AND controller_control_serie.control_relation_type = 'component'"
+							. " AND controller_control_component_list.location_id = {$location_id}"
+							. " AND controller_control_serie.enabled = 1)"
+					. " WHERE controller_control_component_list.location_id IS NULL";
+
+					$this->db->query($sql_without_control);
+					$items_without_control = array();
+					while ($this->db->next_record())
+					{
+						$items_without_control[] =  (int)$this->db->f('item_id');
+					}
+
+					$filtermethod .= " $where fm_location{$type_id}.id IN (". implode(',', array_merge($items_without_control, $items_with_control)) . ')';
+				}
+
 				$where = 'AND';
 			}
-
 			//---------------------start custom user cols
 
 			$user_columns = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup]) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['location_columns_' . $type_id . !!$lookup] : array();
@@ -1116,6 +1151,15 @@
 			$this->db->set_fetch_single(false);
 
 			$values = $this->custom->translate_value($dataset, $location_id, $location_count);
+
+			if ($check_for_control)
+			{
+				foreach ($values as &$value)
+				{
+					$value['has_control'] = !!in_array($value['id'], $items_with_control);
+				}
+			}
+
 			return $values;
 		}
 
@@ -1313,7 +1357,7 @@
 
 			$location_array = explode('-', $location_code);
 			$type_id = count($location_array);
-			
+
 			$location_id = !empty($values['location_id']) ? (int) $values['location_id'] : null;
 
 			/**

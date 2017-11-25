@@ -1131,7 +1131,7 @@
 		 * @return array controls assosiated with a component
 		 * @throws Exception if missing valid input
 		 */
-		function get_controls_at_component2( $data )
+		function get_controls_at_component2( $data , $control_id = 0)
 		{
 			if (!isset($data['location_id']) || !$data['location_id'])
 			{
@@ -1140,6 +1140,13 @@
 			if (!isset($data['id']) || !$data['id'])
 			{
 				throw new Exception("controller_socontrol::get_controls_at_component - Missing component_id in input");
+			}
+
+			$control_id = (int) $control_id;
+
+			if($control_id)
+			{
+				$filter_control = "AND controller_control.id = {$control_id}";
 			}
 
 			static $users = array(); // cache result
@@ -1158,7 +1165,7 @@
 				. " FROM controller_control_component_list"
 				. " {$this->db->join} controller_control ON controller_control.id = controller_control_component_list.control_id"
 				. " {$this->db->left_join} controller_control_serie ON (controller_control_component_list.id = controller_control_serie.control_relation_id AND controller_control_serie.control_relation_type = 'component')"
-				. " WHERE location_id = {$location_id} AND component_id = {$component_id}"
+				. " WHERE location_id = {$location_id} AND component_id = {$component_id} {$filter_control}"
 				. " ORDER BY repeat_type, repeat_interval";
 //			_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -1644,19 +1651,23 @@
 		function add_controll_to_component_from_master( $master_component, $targets = array() )
 		{
 			$master_component_arr = explode('_', $master_component);
-			if (count($master_component_arr) != 2)
+			if (count($master_component_arr) != 3)
 			{
 				throw new Exception("controller_socontrol::add_controll_to_component_from_master - Missing master component");
 			}
 
 			$location_id = (int)$master_component_arr[0];
 			$component_id = (int)$master_component_arr[1];
+			$control_id = (int)$master_component_arr[2];
 
 			$sql = "SELECT * FROM controller_control_component_list"
 				. " {$this->db->join} controller_control_serie"
 				. " ON controller_control_serie.control_relation_id = controller_control_component_list.id"
 				. " AND controller_control_serie.control_relation_type = 'component'"
-				. " WHERE location_id = {$location_id} AND  component_id = {$component_id} AND controller_control_serie.enabled = 1";
+				. " WHERE location_id = {$location_id}"
+				. " AND  component_id = {$component_id}"
+				. " AND control_id = {$control_id}"
+				. " AND controller_control_serie.enabled = 1";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 

@@ -40,6 +40,15 @@ $(document).ready(function ()
 {
 	update_table();
 
+	$("#location_name").focusout(function ()
+	{
+		if($("#location_code").val() && $(this).val() == false)
+		{
+			$("#location_code").val('');
+			update_table('');
+		}
+	});
+
 	$("#location_name").on("autocompleteselect", function (event, ui)
 	{
 		var location_code = ui.item.value;
