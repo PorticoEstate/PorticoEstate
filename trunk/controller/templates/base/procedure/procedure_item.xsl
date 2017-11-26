@@ -9,7 +9,7 @@
 
 	<div class="yui-content">
 		<div id="details">
-			<form action="#" method="post">
+			<form action="#" method="post" id="form">
 				<input type="hidden" name="id" value = "{value_id}">
 				</input>
 				<dl class="proplist-col">
@@ -62,6 +62,12 @@
 						<xsl:choose>
 							<xsl:when test="editable">
 								<input type="text" id="start_date" name="start_date" size="10" value="{start_date}" readonly="readonly">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang','missing start date')" />
+									</xsl:attribute>
 								</input>
 							</xsl:when>
 							<xsl:otherwise>
