@@ -67,6 +67,11 @@
 			return $this->so->get_path($id);
 		}
 
+		public function get_children( $parent, $level = 0, $reset = false )
+		{
+			return $this->so->get_children($parent, $level, $reset);
+		}
+
 		public function get_top_level( $selected = 0 )
 		{
 			$values = $this->so->get_top_level();
