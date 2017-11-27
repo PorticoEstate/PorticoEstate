@@ -28,9 +28,16 @@
 		{
 			if ($sub_activity_id = phpgw::get_var('sub_activity_id'))
 			{
-				$activity_path = ExecMethod('booking.boactivity.get_path', $sub_activity_id);
+				
+				$boactivity = createObject('booking.boactivity');
+				$activity_path = $boactivity->get_path($sub_activity_id);
 				$top_level_activity = $activity_path ? $activity_path[0]['id'] : -1;
-				$_REQUEST['filter_activity_id'] = $top_level_activity;
+
+				$filter_activity = array($top_level_activity);
+
+				$children = $boactivity->get_children($top_level_activity);
+
+				$_REQUEST['filter_activity_id'] = array_merge($filter_activity, $children);
 			}
 			return $this->bo->populate_grid_data("bookingfrontend.uiresource.show");
 		}

@@ -1655,7 +1655,8 @@ function seasonDateColumn(data, col, date)
 	}
 	else
 	{
-		text = "free";
+		text = lang['free'] || "free";
+//		text = "free";
 		classes = "free";
 		trFunction.push(
 		{
@@ -1737,7 +1738,8 @@ function backendScheduleDateColumn(data, col, date)
 	}
 	else
 	{
-		text = "free";
+		text = lang['free'] || "free";
+//		text = "free";
 		classes = "free";
 		trFunction.push(
 		{
@@ -1795,7 +1797,7 @@ function frontendScheduleDateColumn(data, col, date)
 	}
 	else
 	{
-		text = "free";
+		text = lang['free'] || "free";
 		classes = "free";
 		trFunction.push(
 		{
@@ -1839,7 +1841,8 @@ function rentalSchedule(data, col, date)
 	}
 	else
 	{
-		text = "free";
+		text = lang['free'] || "free";
+//		text = "free";
 		classes = "free";
 	}
 
@@ -1905,7 +1908,8 @@ function rentalScheduleApplication(data, col, date)
 		}
 		else
 		{
-			text = "free";
+			text = lang['free'] || "free";
+	//		text = "free";
 			classes = "free";
 		}
 

@@ -66,7 +66,14 @@
 						<xsl:value-of select="php:function('lang', 'Location Code')" />
 					</label>
 					<input id="field_location_code" name="location_code" type="hidden" value="{building/location_code}"/>
-					<input id="field_location_code_name" name="location_code_name" type="text" value="{building/location_code}"/>
+					<input id="field_location_code_name" name="location_code_name" type="text" value="{building/location_code}">
+						<xsl:attribute name="data-validation">
+							<xsl:text>required</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="data-validation-error-msg">
+							<xsl:value-of select="php:function('lang', 'Location Code')" />
+						</xsl:attribute>
+					</input>
 				</div>
 				<div class="pure-control-group">
 					<label for="field_street">
