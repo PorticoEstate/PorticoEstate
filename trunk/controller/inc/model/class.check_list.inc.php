@@ -402,8 +402,12 @@
 			//Validate PLANNED DATE against DEADLINE
 			if ($this->planned_date > $this->deadline)
 			{
-				$status = false;
-				$this->error_msg_array['planned_date'] = "error_msg_8";
+
+			/**
+			 * Sigurd 20171127: vi må informere brukerne om at for ukentlige kontroller er søndag siste dagen i uken - og at kontrollen må utføres før fristen
+			 */
+//				$status = false;
+//				$this->error_msg_array['planned_date'] = "error_msg_8";
 			}
 
 			//Validate COMPLETED DATE against DEADLINE
