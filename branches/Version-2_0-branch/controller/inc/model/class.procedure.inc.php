@@ -265,4 +265,16 @@
 				$this->documents[$new_document_id] = $new_document;
 			}
 		}
+
+		public function validates()
+		{
+			if (!$this->get_start_date())
+			{
+//				phpgwapi_cache::message_set(lang('missing start date'), 'error');
+//				return false;
+			}
+
+			return true;
+		}
+
 	}
