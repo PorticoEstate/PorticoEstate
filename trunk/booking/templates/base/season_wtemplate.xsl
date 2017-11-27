@@ -87,6 +87,7 @@
 	</div>
 
 	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'free')"/>;
 		var season_id = <xsl:value-of select="season/id"/>;
 		var resource_ids = <xsl:value-of select="season/resources_json"/>;
 		var r = [{n: 'ResultSet'},{n: 'Result'}];
