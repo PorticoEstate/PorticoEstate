@@ -46,6 +46,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'free')"/>;
 		$(window).on('load', function() {
 		schedule.setupWeekPicker('cal_container');
 		schedule.datasourceUrl = '<xsl:value-of select="resource/datasource_url"/>';

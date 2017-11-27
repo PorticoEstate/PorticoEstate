@@ -59,6 +59,7 @@
 	<div id="dialog_schedule"></div>
 
 	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'free')"/>;
 		schedule.createDialogSchedule(300);
 		$(window).on('load', function() {
 		schedule.setupWeekPicker('cal_container');
