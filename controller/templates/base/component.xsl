@@ -296,6 +296,8 @@
 				</td>
 				<td id='total_records'>
 				</td>
+				<td id='control_text'>
+				</td>
 				<td id='sum_text'>
 				</td>
 				<td id='month0'>

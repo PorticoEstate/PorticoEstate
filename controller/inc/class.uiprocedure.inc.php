@@ -208,6 +208,8 @@
 					'id' => $procedure_id));
 			}
 
+			$error = false;
+
 			if (isset($_POST['save_procedure'])) // The user has pressed the save button
 			{
 				if (!$this->add && !$this->edit)
@@ -215,6 +217,13 @@
 					phpgwapi_cache::message_set('No access', 'error');
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.view',
 						'id' => $procedure_id));
+				}
+
+				$start_date = phpgw::get_var('start_date', 'date');
+				if (!$start_date)
+				{
+					phpgwapi_cache::message_set(lang('missing start date'), 'error');
+					$error = true;
 				}
 
 				if (isset($procedure)) // Edit procedure
@@ -233,7 +242,7 @@
 					$procedure->set_description($description_txt);
 					$procedure->set_reference($reference_txt);
 					$procedure->set_attachment(phpgw::get_var('attachment'));
-					$procedure->set_start_date(phpgw::get_var('start_date', 'date'));
+					$procedure->set_start_date($start_date);
 					$procedure->set_end_date(phpgw::get_var('end_date', 'date'));
 					$procedure->set_revision_date(phpgw::get_var('revision_date', 'date'));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
@@ -251,12 +260,24 @@
 					if (isset($procedure_id) && $procedure_id > 0)
 					{
 						$proc_id = $procedure_id;
+						$this->so->transaction_begin();
 						if ($this->so->store($procedure))
 						{
+							$revised_procedures = $this->so->get_other_revisions($procedure->get_id());
+							$old_revision_arr = end($revised_procedures);
+							if(!empty($old_revision_arr['id']))
+							{
+								$old_revision = $this->so->get_single($old_revision_arr['id']);
+								$old_revision->set_end_date($procedure->get_start_date());
+								$this->so->store($old_revision);
+
+							}
 							$message = lang('messages_saved_form');
+							$this->so->transaction_commit();
 						}
 						else
 						{
+							$this->so->transaction_abort();
 							$error = lang('messages_form_error');
 						}
 					}
@@ -445,8 +466,8 @@
 				$GLOBALS['phpgw']->jqcal->add_listener('end_date');
 				$GLOBALS['phpgw']->jqcal->add_listener('revision_date');
 
-				$end_date = $GLOBALS['phpgw']->common->show_date($procedure->get_end_date(), $dateformat);
-				$revision_date = $GLOBALS['phpgw']->common->show_date($procedure->get_revision_date(), $dateformat);
+				$end_date = $GLOBALS['phpgw']->common->show_date($procedure->get_end_date(), $this->dateformat);
+				$revision_date = $GLOBALS['phpgw']->common->show_date($procedure->get_revision_date(), $this->dateformat);
 
 
 				$data = array
@@ -454,7 +475,7 @@
 					'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'procedure', 'procedure_tabview'),
 					'view' => "view_procedure",
 					'value_id' => !empty($procedure) ? $procedure->get_id() : 0,
-					'start_date' => $GLOBALS['phpgw']->common->show_date($procedure->get_start_date() ? $procedure->get_start_date() : time(), $dateformat),
+					'start_date' => $GLOBALS['phpgw']->common->show_date($procedure->get_start_date() ? $procedure->get_start_date() : time(), $this->dateformat),
 					'end_date' => $end_date ? $end_date : '',
 					'revision_date' => $revision_date ? $revision_date : '',
 					'editable' => true,
@@ -465,6 +486,7 @@
 
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
+				phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 
 				$this->use_yui_editor(array('responsibility', 'description', 'reference'));
 
