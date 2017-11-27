@@ -409,3 +409,4 @@ Do not edit archived version	controller	no	Du kan ikke endre arkiverte versjoner
 choose a location	controller	no	Velg en lokasjon
 deadline end of year	controller	no	Frist på slutten av året for årskontroller
 missing start date	controller	no	Mangler startdato
+new revision	controller	no	Ny revisjon

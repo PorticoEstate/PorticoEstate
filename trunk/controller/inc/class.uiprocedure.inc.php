@@ -208,6 +208,8 @@
 					'id' => $procedure_id));
 			}
 
+			$edit_mode = phpgw::get_var('edit_mode');
+
 			$error = false;
 
 			if (isset($_POST['save_procedure'])) // The user has pressed the save button
@@ -482,10 +484,21 @@
 					'procedure' => $procedure_array,
 					//'control_area'				=> array('options' => $control_area_options),
 					'control_area' => array('options' => $control_areas_array2),
+					'edit_mode'	=> $edit_mode
 				);
 
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
+
+				switch ($edit_mode)
+				{
+					case 'edit_procedure':
+						$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
+						break;
+					default:
+						$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('new revision');
+						break;
+				}
 				phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 
 				$this->use_yui_editor(array('responsibility', 'description', 'reference'));
@@ -531,7 +544,12 @@
 			if (isset($_POST['edit_procedure']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
-					'id' => $procedure_id));
+					'id' => $procedure_id, 'edit_mode' => 'edit_procedure' ));
+			}
+			else if (isset($_POST['new_revison']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
+					'id' => $procedure_id, 'edit_mode' => 'new_revison' ));
 			}
 			else
 			{
