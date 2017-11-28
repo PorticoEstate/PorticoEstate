@@ -36,3 +36,15 @@
 		$config->value('anonymous_passwd', $passwd);
 		$config->save_repository();
 	}
+
+	// Sane defaults for the API
+	$values = array
+	(
+		'usecookies'			=> 'True'
+	);
+
+	foreach ( $values as $name => $val )
+	{
+		$sql = "INSERT INTO phpgw_config VALUES('bookingfrontend', '{$name}', '{$val}')";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+	}
