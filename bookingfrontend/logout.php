@@ -109,6 +109,7 @@
 		$result_redirect = '';
 		if (substr($external_logout, -1) == '=')
 		{
+			$external_logout = rtrim($external_logout, '=');
 			$result_redirect = $GLOBALS['phpgw']->link('/bookingfrontend/', $extra_vars, true);
 		}
 		$external_logout_url = "{$external_logout}{$bookingfrontend_host}{$result_redirect}";
