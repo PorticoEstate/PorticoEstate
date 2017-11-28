@@ -63,4 +63,15 @@
 	$aclobj->add('eventplannerfrontend', '.vendor_report', 1 | 2 | 4);
 	$aclobj->add('eventplannerfrontend', '.customer_report', 1 | 2 | 4);
 	$aclobj->save_repository();
-	
+
+	// Sane defaults for the API
+	$values = array
+	(
+		'usecookies'			=> 'True'
+	);
+
+	foreach ( $values as $name => $val )
+	{
+		$sql = "INSERT INTO phpgw_config VALUES('eventplannerfrontend', '{$name}', '{$val}')";
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+	}
