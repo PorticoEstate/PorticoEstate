@@ -239,6 +239,39 @@ update_table = function (location_code)
 					var time_sum = components_data.time_sum;
 					var time_sum_actual = components_data.time_sum_actual;
 
+					console.log(show_months);
+					console.log(filter_months);
+
+					if(show_months.length > 0)
+					{
+						for (i = 0; i < 13; i++)
+						{
+							$("#month" + i).hide();
+							$("#head" + i).hide();
+						}
+						for (i = 0; i < show_months.length; i++)
+						{
+							$("#month" + show_months[i]).show();
+							$("#head" + show_months[i]).show();
+						}
+						show_months = [];
+					}
+					else
+					{
+						var filter_months = data.filter_months;
+						for (i = 0; i < 13; i++)
+						{
+							$("#month" + i).hide();
+							$("#head" + i).hide();
+						}
+						for (i = 0; i < filter_months.length; i++)
+						{
+							$("#month" + filter_months[i]).show();
+							$("#head" + filter_months[i]).show();
+						}
+					}
+
+
 					$("#checkall").html(components_data.checkall);
 					$("#total_records").html(components_data.total_records);
 					$("#control_text").html('type');
@@ -257,6 +290,7 @@ update_table = function (location_code)
 					$("#month11").html(time_sum[11] + '/' + time_sum_actual[11]);
 					$("#month12").html(time_sum[12] + '/' + time_sum_actual[12]);
 				}
+
 
 				if (summary_data !== null)
 				{
