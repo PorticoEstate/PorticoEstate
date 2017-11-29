@@ -2153,7 +2153,7 @@ JS;
 					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
 					$cats->supress_info = true;
 					$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => 0,
-						'globals' => true, 'use_acl' => true));
+						'globals' => true, 'use_acl' => false));
 					$default_value = array('cat_id' => '', 'name' => lang('no document type'));
 					array_unshift($categories['cat_list'], $default_value);
 

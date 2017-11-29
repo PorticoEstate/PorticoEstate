@@ -410,3 +410,6 @@ choose a location	controller	no	Velg en lokasjon
 deadline end of year	controller	no	Frist på slutten av året for årskontroller
 missing start date	controller	no	Mangler startdato
 new revision	controller	no	Ny revisjon
+deviation	controller	no	Avvik
+save check list	controller	no	Lagre verdier
+plan	controller	no	Planlegg
