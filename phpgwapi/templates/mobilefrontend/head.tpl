@@ -31,22 +31,7 @@
 
 	</head>
 	<body>
-
-		<div class="home-menu custom-menu-wrapper">
-			<div class="pure-menu custom-menu custom-menu-top">
-				<a href="{site_url}" class="pure-menu-heading custom-menu-brand">{site_title}</a>
-				<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
-			</div>
-			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
-				<div class="custom-menu-screen"></div>
-				<ul class="pure-menu-list">
-					<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
-					<li class="pure-menu-item"><a href="{home_url}" class="pure-menu-link">{home_text}</a></li>
-					<li class="pure-menu-item"><a href="{logout_url}" class="pure-menu-link">{logout_text}</a></li>
-				</ul>
-			</div>
-		</div>
-
+		{menu}
 		<div id="content-wrapper">
 	 			<div id="app_header">{current_app_header}</div>
 

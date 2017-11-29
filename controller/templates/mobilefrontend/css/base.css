@@ -15,3 +15,31 @@ input.date {
   text-align: right;
   width: 100px;
 }
+
+#submit_ok {
+     background-color: #4CAF50; /* Green */
+ /*   border: none;
+    color: white;
+    padding: 32px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    margin: 25px;*/
+}
+#submit_deviation {
+    background-color: #f44336;
+ /*   border: none;
+    color: white;
+    padding: 32px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    margin: 25px;*/
+}
+#submit_group {
+	position: relative;
+    float: left;
+	margin-left: 150px;
+}

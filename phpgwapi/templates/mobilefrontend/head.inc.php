@@ -74,6 +74,29 @@
 	$tpl_vars['logout_text'] = lang('logout');
 	$tpl_vars['logout_url'] = $GLOBALS['phpgw']->link('/logout.php');
 
+	$menu ='';
+	if(empty($GLOBALS['phpgw_info']['flags']['noframework']))
+	{
+		$menu = <<<HTML
+		<div class="home-menu custom-menu-wrapper">
+			<div class="pure-menu custom-menu custom-menu-top">
+				<a href="{$tpl_vars['site_url']}" class="pure-menu-heading custom-menu-brand">{$tpl_vars['site_title']}</a>
+				<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
+			</div>
+			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
+				<div class="custom-menu-screen"></div>
+				<ul class="pure-menu-list">
+					<li class="pure-menu-item"><a href="{$tpl_vars['manual_url']}" class="pure-menu-link">{$tpl_vars['manual_text']}</a></li>
+					<li class="pure-menu-item"><a href="{$tpl_vars['home_url']}" class="pure-menu-link">{$tpl_vars['home_text']}</a></li>
+					<li class="pure-menu-item"><a href="{$tpl_vars['logout_url']}" class="pure-menu-link">{$tpl_vars['logout_text']}</a></li>
+				</ul>
+			</div>
+		</div>
+HTML;
+
+	}
+	$tpl_vars['menu'] = $menu;
+
 	$GLOBALS['phpgw']->template->set_var($tpl_vars);
 
 	$GLOBALS['phpgw']->template->pfp('out', 'head');
