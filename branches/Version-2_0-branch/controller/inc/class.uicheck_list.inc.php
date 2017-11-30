@@ -952,6 +952,10 @@
 					'check_list_id' => $check_list_id));
 			}
 
+			$submit_deviation = phpgw::get_var('submit_deviation', 'bool');
+			$submit_ok = phpgw::get_var('submit_ok', 'bool');
+			$save_check_list = phpgw::get_var('save_check_list', 'bool');
+
 			$control_id = phpgw::get_var('control_id', 'int');
 			$serie_id = phpgw::get_var('serie_id', 'int');
 			$status = (int)phpgw::get_var('status');
@@ -978,7 +982,12 @@
 				$planned_date_ts = $deadline_date_ts;
 			}
 
-			if ($completed_date != '')
+			if($submit_deviation)
+			{
+				$completed_date_ts = 0;
+				$status = controller_check_list::STATUS_NOT_DONE;
+			}
+			else if ($completed_date != '')
 			{
 				$completed_date_ts = phpgwapi_datetime::date_to_timestamp($completed_date);
 				$status = controller_check_list::STATUS_DONE;
@@ -988,11 +997,21 @@
 				$completed_date_ts = 0;
 			}
 
+			if($submit_ok)
+			{
+				if(empty($completed_date))
+				{
+					$completed_date_ts = time();
+				}
+				$status = controller_check_list::STATUS_DONE;
+				$assigned_to = $GLOBALS['phpgw_info']['user']['account_id'];
+			}
+
 			if ($check_list_id > 0)
 			{
 				$check_list = $this->so->get_single($check_list_id);
 
-				if ($status == controller_check_list::STATUS_DONE)
+				if ($status == controller_check_list::STATUS_DONE && !$submit_ok)
 				{
 					if (!$this->_check_for_required($check_list))
 					{
@@ -1003,7 +1022,7 @@
 			}
 			else
 			{
-				if ($status == controller_check_list::STATUS_DONE)
+				if ($status == controller_check_list::STATUS_DONE && !$submit_ok)
 				{
 					$status = controller_check_list::STATUS_NOT_DONE;
 					$completed_date_ts = 0;
@@ -1052,11 +1071,19 @@
 			{
 				$check_list->set_delta_billable_hours($billable_hours);
 			}
-			if ($status == controller_check_list::STATUS_DONE && $this->_check_for_required($check_list) && !$error)
+
+			if ($status == controller_check_list::STATUS_DONE && !$error)
+			{
+				if( $submit_ok || $this->_check_for_required($check_list))
+				{
+					$check_list->set_status($status);	
+				}
+			}
+			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
 			{
 				$check_list->set_status($status);
 			}
-			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
+			else if ($status == controller_check_list::STATUS_NOT_DONE && !$error)
 			{
 				$check_list->set_status($status);
 			}
@@ -1166,8 +1193,16 @@
 
 				if ($check_list_id > 0)
 				{
-					$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
-						'check_list_id' => $check_list_id));
+					if($submit_deviation)
+					{
+						$this->redirect(array('menuaction' => 'controller.uicase.add_case',
+							'check_list_id' => $check_list_id));
+					}
+					else
+					{
+						$this->redirect(array('menuaction' => 'controller.uicheck_list.edit_check_list',
+							'check_list_id' => $check_list_id));
+					}
 				}
 				else
 				{
