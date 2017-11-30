@@ -16,30 +16,46 @@ input.date {
   width: 100px;
 }
 
+#save_check_list
+{
+	text-align: center;
+    padding: 32px 5px;
+	margin-bottom: 10px;
+}
 #submit_ok {
-     background-color: #4CAF50; /* Green */
- /*   border: none;
-    color: white;
-    padding: 32px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 24px;
-    margin: 25px;*/
+ 	text-align: center;
+	background-color: #4CAF50; /* Green */
+    padding: 32px 5px;
+	margin-bottom: 10px;
 }
 #submit_deviation {
-    background-color: #f44336;
- /*   border: none;
-    color: white;
-    padding: 32px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 24px;
-    margin: 25px;*/
+	text-align: center;
+	background-color: #f44336;
+    padding: 32px 5px;
+ 	margin-bottom: 10px;
 }
 #submit_group {
 	position: relative;
     float: left;
 	margin-left: 150px;
+}
+ul.add-cases {
+    list-style-type: none;
+}
+
+ul.expand_list {
+    list-style-type: none;
+}
+ul.expand_list h4 {
+    cursor: pointer;
+    font-size: 1.1em;
+}
+.add-cases .expand-trigger {
+    background: none repeat scroll 0 0 #DDDDDD;
+    cursor: pointer;
+    padding: 7px 10px;
+}
+
+body {margin-left:10px;
+	  padding:0;
 }

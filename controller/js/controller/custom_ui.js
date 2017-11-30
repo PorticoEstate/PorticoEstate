@@ -2,7 +2,7 @@ $(document).ready(function ()
 {
 
 	$("ul.control_items ul:first").find("h4 img").attr("src", "controller/images/arrow_down.png");
-	$("ul.control_items ul:first").find(".expand_item").slideDown("slow");
+	$("ul.control_items ul:first").find(".expand_item").slideDown(10);
 	$("ul.control_items ul:first").addClass('active');
 
 	/* ==========================  EXPANDING/COLLAPSING WHEN TITLE IS CLICKED  ====================== */
@@ -11,13 +11,13 @@ $(document).ready(function ()
 	{
 		if ($(this).parent().parent().hasClass('active'))
 		{
-			$(this).parent().find(".expand_item").slideUp("slow");
+			$(this).parent().find(".expand_item").slideUp(10);
 			$(this).find("img").attr("src", "controller/images/arrow_right.png");
 			$(this).parent().parent().removeClass('active');
 		}
 		else
 		{
-			$(this).parent().find(".expand_item").slideDown("slow");
+			$(this).parent().find(".expand_item").slideDown(10);
 			$(this).find("img").attr("src", "controller/images/arrow_down.png");
 			$(this).parent().parent().addClass('active');
 		}
@@ -29,13 +29,13 @@ $(document).ready(function ()
 
 		if ($(parentNode).hasClass('expanded'))
 		{
-			$(parentNode).find(".expand_list").slideUp("slow");
+			$(parentNode).find(".expand_list").slideUp(10);
 			$(parentNode).find("img").first().attr("src", "controller/images/arrow_right.png");
 			$(parentNode).removeClass('expanded');
 		}
 		else
 		{
-			$(parentNode).find(".expand_list").slideDown("slow");
+			$(parentNode).find(".expand_list").slideDown(10);
 			$(parentNode).find("img").first().attr("src", "controller/images/arrow_down.png");
 			$(parentNode).addClass('expanded');
 		}

@@ -190,7 +190,7 @@
 				</div>
 				<div class = "pure-g">
 					<div class="pure-u-1-4">
-						<input class="pure-button pure-button-primary pure-input-1" type="submit" name="save_check_list">
+						<input id="save_check_list" class="pure-button pure-button-primary pure-input-1" type="submit" name="save_check_list">
 							<xsl:attribute name="value">
 								<xsl:value-of select="php:function('lang', 'plan')" />
 							</xsl:attribute>
