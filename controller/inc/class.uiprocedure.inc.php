@@ -208,6 +208,8 @@
 					'id' => $procedure_id));
 			}
 
+			$edit_mode = phpgw::get_var('edit_mode');
+
 			$error = false;
 
 			if (isset($_POST['save_procedure'])) // The user has pressed the save button
@@ -246,6 +248,8 @@
 					$procedure->set_end_date(phpgw::get_var('end_date', 'date'));
 					$procedure->set_revision_date(phpgw::get_var('revision_date', 'date'));
 					$procedure->set_control_area_id(phpgw::get_var('control_area'));
+					$procedure->set_modified_date(time());
+					$procedure->set_modified_by($GLOBALS['phpgw_info']['user']['account_id']);
 
 					$revision = (int)$procedure->get_revision_no();
 					if ($revision && is_numeric($revision) && $revision > 0)
@@ -347,6 +351,8 @@
 					$new_procedure->set_revision_date($revision_date);
 
 					$new_procedure->set_control_area_id(phpgw::get_var('control_area'));
+					$new_procedure->set_modified_date(time());
+					$new_procedure->set_modified_by($GLOBALS['phpgw_info']['user']['account_id']);
 
 					if (isset($procedure_id) && $procedure_id > 0)
 					{
@@ -482,10 +488,21 @@
 					'procedure' => $procedure_array,
 					//'control_area'				=> array('options' => $control_area_options),
 					'control_area' => array('options' => $control_areas_array2),
+					'edit_mode'	=> $edit_mode
 				);
 
 
 				$GLOBALS['phpgw_info']['flags']['app_header'] = lang('controller') . '::' . lang('Procedure');
+
+				switch ($edit_mode)
+				{
+					case 'edit_procedure':
+						$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('edit');
+						break;
+					default:
+						$GLOBALS['phpgw_info']['flags']['app_header'] .= '::' . lang('new revision');
+						break;
+				}
 				phpgwapi_jquery::formvalidator_generate(array('date', 'security','file'));
 
 				$this->use_yui_editor(array('responsibility', 'description', 'reference'));
@@ -531,7 +548,12 @@
 			if (isset($_POST['edit_procedure']))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
-					'id' => $procedure_id));
+					'id' => $procedure_id, 'edit_mode' => 'edit_procedure' ));
+			}
+			else if (isset($_POST['new_revison']))
+			{
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uiprocedure.edit',
+					'id' => $procedure_id, 'edit_mode' => 'new_revison' ));
 			}
 			else
 			{
@@ -596,11 +618,18 @@
 					$table_header[] = array('header' => lang('Procedure title'));
 					$table_header[] = array('header' => lang('Procedure start date'));
 					$table_header[] = array('header' => lang('Procedure end date'));
+					$table_header[] = array('header' => lang('Modified date'));
+					$table_header[] = array('header' => lang('Modified by'));
 
 					$revised_procedures = $this->so->get_other_revisions($procedure->get_id());
 					$table_values = array();
-					foreach ($revised_procedures as $rev)
+					foreach ($revised_procedures as &$rev)
 					{
+						if($rev['modified_by'])
+						{
+							$rev['modified_by_name'] = $GLOBALS['phpgw']->accounts->id2name($rev['modified_by']);
+						}
+						$rev['modified_date'] = $GLOBALS['phpgw']->common->show_date($rev['modified_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 						$rev['link'] = self::link(array('menuaction' => 'controller.uiprocedure.view',
 								'id' => $rev['id'], 'view_revision' => 'yes'));
 						$table_values[] = array('row' => $rev);

@@ -331,7 +331,7 @@
 		<thead>
 			<tr>
 				<xsl:for-each select="//datatable/field">
-					<th>
+					<th id = "head{id}">
 						<xsl:value-of select="label"/>
 					</th>
 				</xsl:for-each>
@@ -342,5 +342,13 @@
 	<div id="status_summary">
 		
 	</div>
+	<script type="text/javascript">
+		var show_months = [];
+		<xsl:for-each select="//datatable/months">
+			show_months.push(<xsl:value-of select="key"/>);
+		</xsl:for-each>
+
+	</script>
+
 	 
 </xsl:template>

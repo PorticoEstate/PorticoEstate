@@ -59,6 +59,7 @@
 		private $org_units;
 		private $custom;
 		private $get_locations;
+		private $user_id;
 		public $public_functions = array
 			(
 			'index' => true,
@@ -103,6 +104,9 @@
 				$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			}
 			$this->custom = createObject('phpgwapi.custom_fields');
+			$user_id = phpgw::get_var('user_id', 'string', 'REQUEST', -1);
+			$this->user_id = $user_id == 'all' ? 0 : (int) $user_id;
+
 		}
 
 		public function add_controll_from_master()
@@ -269,7 +273,7 @@
 
 			unset($_my_negative_self);
 			array_unshift($user_list, $default_value);
-			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
+			array_unshift($user_list, array('id' => 'all', 'name' => lang('select')));
 
 			// Sigurd: Start categories
 			$cats = CreateObject('phpgwapi.categories', -1, 'controller', '.control');
@@ -436,7 +440,8 @@
 				'datatable' => array(
 					'source' => self::link(array('menuaction' => 'controller.uicomponent.index',
 						'phpgw_return_as' => 'json')),
-					'field' => $this->get_fields($filter_component),
+					'field' => $this->get_fields(),
+					'months' => $this->get_months($year)
 				),
 			);
 
@@ -445,37 +450,113 @@
 			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}
 
-		private function get_fields( $filter_component = '' )
+		private function get_months( $year = '' )
+		{
+			$months = array();
+			if($year == date('Y') && $this->user_id < 0)
+			{
+				$current_month = date('n') -1;
+
+				$i = 0;
+				for ($_month = $current_month; $_month < 13; $_month++)
+				{
+					if($i > 2 )
+					{
+						break;
+					}
+
+					$months[] = array(
+						'key' => $_month,
+					);
+					$i++;
+				}
+			}
+			else
+			{
+				for ($_month = 0; $_month < 13; $_month++)
+				{
+					$months[] = array(
+						'key' => $_month,
+					);
+				}
+			}
+
+			return $months;
+		}
+		private function get_fields( $year = '' , $user_id = 0)
 		{
 
 			$fields = array
 				(
 				array(
+					'id' => 'choose',
 					'key' => 'choose',
 					'label' => '',
 					'sortable' => false,
 				),
 				array(
+					'id' => 'component_url',
 					'key' => 'component_url',
 					'label' => $this->get_locations ? lang('location') : lang('component'),
 					'sortable' => true,
 				),
 				array(
+					'id' => 'control_type',
 					'key' => 'control_type',
 					'label' => lang('type'),
 					'sortable' => true,
 				),
 				array(
+					'id' => 'year',
 					'key' => 'year',
 					'label' => lang('year'),
 					'sortable' => true,
 				),
 				array(
+					'id' => 'descr',
 					'key' => 'descr',
 					'label' => '',
 					'sortable' => true,
 				),
-				array(
+			);
+
+			if($year == date('Y') && $user_id < 0)
+			{
+				$current_month = date('n');
+
+				$i = 0;
+				for ($_month = $current_month; $_month < 13; $_month++)
+				{
+					if($i > 2 )
+					{
+						break;
+					}
+
+					$fields[] = array(
+						'id' => $i,
+						'key' => $_month,
+						'label' => lang("short_month {$_month} capitalized"),
+						'sortable' => true,
+					);
+					$i++;
+				}
+			}
+			else
+			{
+				$i = 0;
+				for ($_month = 1; $_month < 13; $_month++)
+				{
+					$fields[] = array(
+						'id' => $i,
+						'key' => $_month,
+						'label' => lang("short_month {$_month} capitalized"),
+						'sortable' => true,
+					);
+					$i++;
+				}
+			}
+
+			$old =	array(array(
 					'key' => '1',
 					'label' => lang('short_month 1 capitalized'),
 					'sortable' => true,
@@ -650,7 +731,7 @@
 				$location_code = '';
 			}
 			$control_area = phpgw::get_var('control_area', 'int');
-			$user_id = phpgw::get_var('user_id', 'int');
+			$user_id = $this->user_id;
 			$district_id = phpgw::get_var('district_id', 'int');
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
@@ -1131,7 +1212,8 @@
 				return array(
 					'components' => null,
 					'summary' => $this->get_summary($values, $user_id),
-					'location_filter' => $location_filter
+					'location_filter' => $location_filter,
+					'filter_months'	=> array()
 				);
 			}
 
@@ -1234,7 +1316,7 @@
 					$data_set[] = $row;
 				}
 			}
-			$fields = $this->get_fields($filter_component_str);
+			$fields = $this->get_fields($year, $this->user_id);
 			$class = '';
 			$tbody = '';
 			foreach ($data_set as $row_data)
@@ -1299,6 +1381,7 @@
 					}
 				}
 			}
+			unset($_month);
 			$result['time_sum_actual'][0] = $sum_year_actual;
 			$result['total_records'] = $total_records;
 			$result['location_filter'] = $location_filter;
@@ -1315,12 +1398,26 @@
 				$result['checkall'] = '';
 			}
 
+			$months = $this->get_months($year);
+
+			$filter_months = array();
+//			for ($_month = 0 ; $_month < 13; $_month++)
+//			{
+//				$filter_months[$_month] = 0;
+//			}
+
+			foreach ($months as $entry)
+			{
+				$filter_months[] = $entry['key'];
+			}
+
 			return array(
 				'components' => $result,
 				'summary' => null,
 				'location_filter' => $location_filter,
 				'location_filter_options'	=> $location_filter_options,
-				'return_location_id'		=> (int)$_location_id
+				'return_location_id'		=> (int)$_location_id,
+				'filter_months'				=> $filter_months
 			);
 		}
 

@@ -98,7 +98,9 @@
 				'procedure_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'revision_no' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 				'revision_date' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
-				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
+				'control_area_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'modified_date'	 => array('type' => 'int', 'precision' => 8,'nullable' => True),
+				'modified_by' 	=> array('type' => 'int', 'precision' => 4,'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),

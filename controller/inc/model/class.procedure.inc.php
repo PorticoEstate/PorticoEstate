@@ -49,6 +49,8 @@
 		protected $control_area_id;
 		protected $control_area_name;
 		protected $documents;
+		protected $modified_date;
+		protected $modified_by;
 
 		/**
 		 * Constructor.  Takes an optional ID.  If a procedure is created from outside
@@ -201,6 +203,25 @@
 		{
 			return $this->control_area_name;
 		}
+		public function get_modified_date()
+		{
+			return (int)$this->modified_date;
+		}
+
+		public function set_modified_date( $modified_date )
+		{
+			$this->modified_date = $modified_date;
+		}
+
+		public function get_modified_by()
+		{
+			return (int)$this->modified_by;
+		}
+
+		public function set_modified_by( $modified_by )
+		{
+			$this->modified_by = $modified_by;
+		}
 
 		/**
 		 * Get a static reference to the storage object associated with this model object
@@ -232,7 +253,9 @@
 				'procedure_id' => $this->get_procedure_id(),
 				'revision_no' => $this->get_revision_no(),
 				'revision_date' => ($this->get_revision_date()) ? date($GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'], $this->get_revision_date()) : '',
-				'control_area' => $this->get_control_area_name()
+				'control_area' => $this->get_control_area_name(),
+				'modified_date' => $this->get_modified_date(),
+				'modified_by' => $this->get_modified_by()
 			);
 		}
 

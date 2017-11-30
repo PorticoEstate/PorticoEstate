@@ -174,9 +174,9 @@
 								<xsl:value-of select="procedure/reference" disable-output-escaping="yes"/>
 							</xsl:otherwise>
 						</xsl:choose>
-					</dd>				
+					</dd>
 				</dl>
-				
+
 				<div class="form-buttons">
 					<xsl:choose>
 						<xsl:when test="editable">
@@ -184,13 +184,19 @@
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
 							<xsl:variable name="lang_revisit">
-								<xsl:value-of select="php:function('lang', 'revisit')" />
+								<xsl:value-of select="php:function('lang', 'new revision')" />
 							</xsl:variable>
 							<xsl:variable name="lang_cancel">
 								<xsl:value-of select="php:function('lang', 'cancel')" />
 							</xsl:variable>
-							<input type="submit" name="save_procedure" value="{$lang_save}" title = "{$lang_save}" />
-							<input type="submit" name="revisit_procedure" value="{$lang_revisit}" title = "{$lang_revisit}" />
+							<xsl:choose>
+								<xsl:when test="edit_mode = 'edit_procedure'">
+									<input type="submit" name="save_procedure" value="{$lang_save}" title = "{$lang_save}" />
+								</xsl:when>
+								<xsl:otherwise>
+									<input type="submit" name="revisit_procedure" value="{$lang_revisit}" title = "{$lang_revisit}" />
+								</xsl:otherwise>
+							</xsl:choose>
 							<input type="submit" name="cancel_procedure" value="{$lang_cancel}" title = "{$lang_cancel}" />
 						</xsl:when>
 						<xsl:when test="inactive">
@@ -204,6 +210,10 @@
 								<xsl:value-of select="php:function('lang', 'edit')" />
 							</xsl:variable>
 							<input type="submit" name="edit_procedure" value="{$lang_edit}" title = "{$lang_edit}" />
+							<xsl:variable name="lang_new_revison">
+								<xsl:value-of select="php:function('lang', 'new revision')" />
+							</xsl:variable>
+							<input type="submit" name="new_revison" value="{$lang_new_revison}" title = "{$lang_new_revison}" />
 						</xsl:otherwise>
 					</xsl:choose>
 				</div>
@@ -256,11 +266,17 @@
 				<td>
 					<xsl:value-of select="end_date"/>
 				</td>
+				<td>
+					<xsl:value-of select="modified_date"/>
+				</td>
+				<td>
+					<xsl:value-of select="modified_by_name"/>
+				</td>
 			</xsl:for-each>
 		</tr>
 	</xsl:for-each>
 </xsl:template>
-	
+
 <xsl:template match="options">
 	<option value="{id}">
 		<xsl:if test="selected">
