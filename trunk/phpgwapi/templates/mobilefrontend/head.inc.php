@@ -25,7 +25,7 @@
 	$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
     $stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
 
-	$stylesheets[] = "/{$app}/templates/base/css/base.css";
+//	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/base.css";
 	$stylesheets[] = "/{$app}/templates/mobilefrontend/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
