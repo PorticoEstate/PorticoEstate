@@ -266,6 +266,12 @@
 				<td>
 					<xsl:value-of select="end_date"/>
 				</td>
+				<td>
+					<xsl:value-of select="modified_date"/>
+				</td>
+				<td>
+					<xsl:value-of select="modified_by_name"/>
+				</td>
 			</xsl:for-each>
 		</tr>
 	</xsl:for-each>

@@ -73,7 +73,9 @@
 				'procedure_id',
 				'revision_no',
 				'revision_date',
-				'control_area_id'
+				'control_area_id',
+				'modified_date',
+				'modified_by'
 			);
 
 			$values = array(
@@ -88,7 +90,9 @@
 				$this->marshal($procedure->get_procedure_id(), 'int'),
 				$this->marshal($procedure->get_revision_no(), 'int'),
 				$this->marshal($procedure->get_revision_date(), 'int'),
-				$this->marshal($procedure->get_control_area_id(), 'int')
+				$this->marshal($procedure->get_control_area_id(), 'int'),
+				$this->marshal($procedure->get_modified_date(), 'int'),
+				$this->marshal($procedure->get_modified_by(), 'int'),
 			);
 
 			$result = $this->db->query('INSERT INTO controller_procedure (' . join(',', $cols) . ') VALUES (' . join(',', $values) . ')', __LINE__, __FILE__);
@@ -126,7 +130,9 @@
 				'procedure_id = ' . $this->marshal($procedure->get_procedure_id(), 'int'),
 				'revision_no = ' . $this->marshal($procedure->get_revision_no(), 'int'),
 				'revision_date = ' . $this->marshal($procedure->get_revision_date(), 'int'),
-				'control_area_id = ' . $this->marshal($procedure->get_control_area_id(), 'int')
+				'control_area_id = ' . $this->marshal($procedure->get_control_area_id(), 'int'),
+				'modified_date = ' . $this->marshal($procedure->get_modified_date(), 'int'),
+				'modified_by = ' . $this->marshal($procedure->get_modified_by(), 'int'),
 			);
 
 			$result = $this->db->query('UPDATE controller_procedure SET ' . join(',', $values) . " WHERE id=$id", __LINE__, __FILE__);
@@ -168,6 +174,8 @@
 					$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 					$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 					$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+					$procedure->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+					$procedure->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 
 					$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 					$procedure->set_control_area_name($category[0]['name']);
@@ -434,6 +442,8 @@
 				$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+				$procedure->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$procedure->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 
 				$values[] = $procedure;
 			}
@@ -467,9 +477,10 @@
 				$procedure->set_procedure_id($this->unmarshal($this->db->f('procedure_id'), 'int'));
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
+				$procedure->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$procedure->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 
 				$results[] = $procedure->toArray();
-				;
 			}
 
 			return $results;
@@ -538,9 +549,10 @@
 				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$procedure->set_control_area_name($category_name = $category[0]['name']);
+				$procedure->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$procedure->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 
 				$results[] = $procedure->toArray();
-				;
 			}
 
 			return $results;
@@ -636,7 +648,11 @@
 			}
 			else
 			{
-				$cols .= "procedure.id, procedure.title, procedure.purpose, procedure.responsibility, procedure.description, procedure.reference, procedure.attachment, procedure.start_date, procedure.end_date, procedure.procedure_id, procedure.revision_no, procedure.revision_date, procedure.control_area_id ";
+				$cols .= "procedure.id, procedure.title, procedure.purpose, procedure.responsibility,"
+					. " procedure.description, procedure.reference, procedure.attachment,"
+					. " procedure.start_date, procedure.end_date, procedure.procedure_id,"
+					. " procedure.revision_no, procedure.revision_date, procedure.control_area_id,"
+					. " procedure.modified_date, procedure.modified_by";
 			}
 			//var_dump($sort_field);
 			$dir = $ascending ? 'ASC' : 'DESC';
@@ -666,6 +682,8 @@
 				$procedure->set_revision_no($this->unmarshal($this->db->f('revision_no'), 'int'));
 				$procedure->set_revision_date($this->unmarshal($this->db->f('revision_date'), 'int'));
 				$procedure->set_control_area_id($this->unmarshal($this->db->f('control_area_id'), 'int'));
+				$procedure->set_modified_date($this->unmarshal($this->db->f('modified_date'), 'int'));
+				$procedure->set_modified_by($this->unmarshal($this->db->f('modified_by'), 'int'));
 				//$procedure->set_control_area_name($this->unmarshal($this->db->f('control_area_name'), 'string'));
 				$category = execMethod('phpgwapi.categories.return_single', $this->unmarshal($this->db->f('control_area_id'), 'int'));
 				$procedure->set_control_area_name($category[0]['name']);

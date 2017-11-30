@@ -413,3 +413,5 @@ new revision	controller	no	Ny revisjon
 deviation	controller	no	Avvik
 save check list	controller	no	Lagre verdier
 plan	controller	no	Planlegg
+modified date	controller	no	Dato siste endring
+modified by	controller	no	Endret av
