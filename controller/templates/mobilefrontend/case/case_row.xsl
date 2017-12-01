@@ -4,7 +4,7 @@
 
   <xsl:param name="control_item_type" />
   <xsl:variable name="session_url"><xsl:text>&amp;</xsl:text><xsl:value-of select="php:function('get_phpgw_session_url')" /></xsl:variable>	
-  <li class="check_item_case">
+  <fieldset>
     <xsl:choose>
       <xsl:when test="cases_array/child::node()">
         <h4>
@@ -33,7 +33,6 @@
               <!--  ==================== COL2: CASE CONTENT ===================== -->
               <div class="col_2">
                 <div class="case_info">
-
 	                 <xsl:choose>
 	                      <xsl:when test="component_descr != ''">
 			                  <div class="row">
@@ -116,7 +115,7 @@
                 </div>
                   
                 <!--  =================== UPDATE CASE FORM =================== -->
-                <form class="frm_update_case">
+                <form class="pure-form pure-form-stacked frm_update_case">
                   <xsl:attribute name="action">
                     <xsl:text>index.php?menuaction=controller.uicase.save_case</xsl:text>
                     <xsl:text>&amp;case_id=</xsl:text>
@@ -201,7 +200,7 @@
                   <!--  DESCRIPTION -->
                   <label>Beskrivelse:</label>
                   <div class="row"> 
-                    <textarea name="case_descr">
+                    <textarea name="case_descr" class="pure-input-1">
                       <xsl:value-of select="descr"/>
                     </textarea>
                   </div>
@@ -235,5 +234,5 @@
         </ul>
       </xsl:when>	
     </xsl:choose>
-  </li>
+  </fieldset>
 </xsl:template>

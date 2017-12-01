@@ -414,8 +414,8 @@
 				'integration' => $this->_get_component_integration($location_id, $component_arr)
 			);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('completed_date');
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -598,8 +598,8 @@
 
 			);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('planned_date');
-			$GLOBALS['phpgw']->jqcal->add_listener('completed_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('planned_date');
+			$GLOBALS['phpgw']->jqcal2->add_listener('completed_date');
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
@@ -1703,6 +1703,26 @@
 			{
 				$location_id = $check_list->get_location_id();
 				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+				if (substr($location_info['location'], 1, 8) == 'location')
+				{
+					$get_locations = true;
+
+					$type_info = explode('.', $location_info['location']);
+					$level = $type_info[2];
+					$item_arr = createObject('property.solocation')->read_single('', array('location_id' => $location_id,
+						'id' => $component_id), true);
+					$location_code = $item_arr['location_code'];
+					$check_list->set_location_code($location_code);
+					$location_name = execMethod('property.bolocation.get_location_name', $location_code);
+					$short_desc = $location_name;
+				}
+				else
+				{
+					$short_desc = execMethod('property.soentity.get_short_description', array(
+						'location_id' => $location_id, 'id' => $component_id));
+				}
 
 				foreach ($required_control_items as $required_control_item)
 				{
@@ -1711,14 +1731,14 @@
 					{
 						$error_message = lang('missing value for required') . "</br>";
 						$error_message .= "\"{$required_control_item['title']}\"</br>";
-						$error_message .= execMethod('property.soentity.get_short_description', array(
-							'location_id' => $location_id, 'id' => $component_id));
+						$error_message .= $short_desc;
 						$error_message .= "</br>";
 						phpgwapi_cache::message_set($error_message, 'error');
 //						echo $error_message;
 						$ok = false;
 					}
 				}
+
 			}
 			else
 			{
