@@ -35,12 +35,13 @@
 	class controller_uidocument extends phpgwapi_uicommon_jquery
 	{
 
-		private $so;
-		private $so_procedure;
-		private $read;
-		private $add;
-		private $edit;
-		private $delete;
+		private
+			$so,
+			$so_procedure,
+			$read,
+			$add,
+			$edit,
+			$delete;
 		public $public_functions = array
 			(
 			'query' => true,
@@ -60,7 +61,6 @@
 			$this->add = $GLOBALS['phpgw']->acl->check('.procedure', PHPGW_ACL_ADD, 'controller');//2
 			$this->edit = $GLOBALS['phpgw']->acl->check('.procedure', PHPGW_ACL_EDIT, 'controller');//4
 			$this->delete = $GLOBALS['phpgw']->acl->check('.procedure', PHPGW_ACL_DELETE, 'controller');//8
-//			$GLOBALS['phpgw']->css->add_external_file('controller/templates/base/css/base.css');
 		}
 
 		public function query()
