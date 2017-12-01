@@ -1297,7 +1297,7 @@
 						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}_{$entry['control_id']}\" >";
 					}
 					$row['year'] = $year;
-					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/><br/>Tidsbruk";
+					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
 				}
 				else if ($choose_master)
 				{
