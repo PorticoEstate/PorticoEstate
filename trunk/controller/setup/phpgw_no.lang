@@ -415,3 +415,4 @@ save check list	controller	no	Lagre verdier
 plan	controller	no	Planlegg
 modified date	controller	no	Dato siste endring
 modified by	controller	no	Endret av
+set status: done	controller	no	Sett status: utført

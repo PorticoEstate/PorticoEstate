@@ -188,7 +188,7 @@
 						<xsl:value-of select="check_list/comment"/>
 					</textarea>
 				</div>
-				<div class = "pure-g">
+				<div id="submit_group" class="pure-g">
 					<div class="pure-u-1-4">
 						<input id="save_check_list" class="pure-button pure-button-primary pure-input-1" type="submit" name="save_check_list">
 							<xsl:attribute name="value">
