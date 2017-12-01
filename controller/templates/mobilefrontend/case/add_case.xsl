@@ -50,12 +50,11 @@
 										<xsl:for-each select="control_items">
 											<li>
 												<h4>
-													<img src="controller/images/arrow_right.png" />
 													<span>
 														<xsl:value-of select="title"/>
 													</span>
 												</h4>
-												<form class="frm_register_case expand_item" action="{$action_url}" method="post">
+												<form class="pure-form pure-form-stacked frm_register_case" action="{$action_url}" method="post">
 													<!--input type="hidden" name="location_code"  value="" class="required" /-->
 													<input type="hidden" name="location_code"  value="" >
 														<xsl:if test="//location_required = 1">
@@ -123,10 +122,10 @@
 															</div>
 															<div>
 																<label class="comment">Beskrivelse av sak</label>
-																<textarea name="case_descr" >
+																<textarea name="case_descr" class="pure-input-1">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
-																			<xsl:text>required</xsl:text>
+																			<xsl:text>required pure-input-1</xsl:text>
 																		</xsl:attribute>
 																	</xsl:if>
 
@@ -149,10 +148,10 @@
 															</div>
 															<div class="pure-control-group">
 																<label class="comment">Registrer målingsverdi</label>
-																<input>
+																<input class="pure-input-1">
 																	<xsl:if test="required = 1">
 																		<xsl:attribute name="class" >
-																			<xsl:text>required</xsl:text>
+																			<xsl:text>required pure-input-1</xsl:text>
 																		</xsl:attribute>
 																	</xsl:if>
 
@@ -165,7 +164,7 @@
 															</div>
 															<div class="pure-control-group">
 																<label class="comment">Beskrivelse av sak</label>
-																<textarea name="case_descr">
+																<textarea name="case_descr" class="pure-input-1">
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
@@ -207,7 +206,7 @@
 															</div>
 															<div class="pure-control-group">
 																<label class="comment">Beskrivelse av sak</label>
-																<textarea name="case_descr">
+																<textarea name="case_descr" class="pure-input-1">
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>
@@ -250,7 +249,7 @@
 															</div>
 															<div class="pure-control-group">
 																<label class="comment">Beskrivelse av sak</label>
-																<textarea name="case_descr">
+																<textarea name="case_descr" class="pure-input-1">
 																	<xsl:value-of select="comment"/>
 																</textarea>
 															</div>

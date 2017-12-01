@@ -13,7 +13,7 @@
 
 input.date {
   text-align: right;
-  width: 100px;
+  width: 125px;
 }
 
 #save_check_list
@@ -58,4 +58,10 @@ ul.expand_list h4 {
 
 body {margin-left:10px;
 	  padding:0;
+}
+.frm_update_case{
+  display: none;
+}
+.frm_update_case label {
+  display: block;
 }

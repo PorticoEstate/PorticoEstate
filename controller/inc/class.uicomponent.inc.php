@@ -50,16 +50,18 @@
 	class controller_uicomponent extends phpgwapi_uicommon_jquery
 	{
 
-		private $so;
-		private $_category_acl;
-		private $read;
-		private $add;
-		private $edit;
-		private $delete;
-		private $org_units;
-		private $custom;
-		private $get_locations;
-		private $user_id;
+		private
+			$so,
+			$_category_acl,
+			$read,
+			$add,
+			$edit,
+			$delete,
+			$org_units,
+			$custom,
+			$get_locations,
+			$user_id,
+			$currentapp;
 		public $public_functions = array
 			(
 			'index' => true,
@@ -106,6 +108,7 @@
 			$this->custom = createObject('phpgwapi.custom_fields');
 			$user_id = phpgw::get_var('user_id', 'string', 'REQUEST', -1);
 			$this->user_id = $user_id == 'all' ? 0 : (int) $user_id;
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 		}
 
@@ -268,7 +271,7 @@
 			/* Unselect user if filter on component */
 			if (phpgw::get_var('component_id', 'int'))
 			{
-				$default_value['selected'] = 0;
+//				$default_value['selected'] = 0;
 			}
 
 			unset($_my_negative_self);
@@ -1117,7 +1120,14 @@
 
 				$data['control_id'] = $type_array[2];
 				$data['control_type'] = $control_names[$type_array[2]];
-				$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				if($GLOBALS['phpgw_info']['server']['template_set'] == 'mobilefrontend')
+				{
+					$data['component_url'] = "{$item_id}{$entry[0]['component']['xml_short_desc']}";
+				}
+				else
+				{
+					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id}{$entry[0]['component']['xml_short_desc']}</a>";
+				}
 				$data['component_id'] = $item_id;
 				$data['location_id'] = $location_id;
 				$data['location_code'] = $_location_code;
@@ -1287,7 +1297,7 @@
 						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}_{$entry['control_id']}\" >";
 					}
 					$row['year'] = $year;
-					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
+					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/><br/>Tidsbruk";
 				}
 				else if ($choose_master)
 				{
@@ -1532,7 +1542,7 @@
 
 			$repeat_type = $param['repeat_type'];
 			//	$responsible = '---';
-			$assigned_to = $param['info']['assigned_to'] > 0 ? $GLOBALS['phpgw']->accounts->id2lid($param['info']['assigned_to']) : '&nbsp;';
+			$assigned_to = $param['info']['assigned_to'] > 0 ? $GLOBALS['phpgw']->accounts->id2name($param['info']['assigned_to']) : '&nbsp;<br/>';
 			//	$service_time = $param['info']['service_time'] ? $param['info']['service_time'] : '&nbsp;';
 			//	$controle_time = $param['info']['controle_time'] ? $param['info']['controle_time'] : '&nbsp;';
 			$time = $param['info']['service_time'] + $param['info']['controle_time'];
