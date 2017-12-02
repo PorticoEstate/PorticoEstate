@@ -18,7 +18,7 @@
 		<xsl:choose>
 			<xsl:when test="multiple_uploader!=''">
 				<label>
-					<a href="javascript:fileuploader('{$section}')">
+					<a href="javascript:fileuploader('{$section}')" class="pure-button">
 						<xsl:attribute name="title">
 							<xsl:value-of select="php:function('lang', 'upload multiple files')"/>
 						</xsl:attribute>

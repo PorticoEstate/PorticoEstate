@@ -35,14 +35,6 @@ input.date {
 	width: 140px;
 }
 
-#submit_group {
-	position: relative;
-    float: none;
-	margin-left: 150px;
-	margin-bottom: 10px;
-
-}
-
 .case_saved
 {
 	background-color: #4CAF50; /* Green */
@@ -71,3 +63,6 @@ ul.expand_list h4 {
   display: block;
 }
 
+#check_list_details fieldset {
+  padding: 0px 40px 10px 40px;
+}
