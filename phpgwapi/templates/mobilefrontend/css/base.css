@@ -46,7 +46,9 @@ height:100%;
 	border: 1px solid red
 }
 
-
+.pure-menu-disabled, .pure-menu-heading, .pure-menu-link {
+    padding: 0 0;
+}
 .bigmenubutton
 {
 	padding: 32px 5px;
@@ -112,4 +114,23 @@ td:first-of-type, th:first-of-type {
 
 td:last-of-type, th:last-of-type {
   border-right: none;
+}
+
+fieldset {
+margin-right: 20px;
+}
+
+textarea
+{
+    height: 8em;
+}
+
+#app_header
+{
+	font-weight: bold;
+	font-size: 120%;
+}
+label
+{
+	font-weight: bold;
 }

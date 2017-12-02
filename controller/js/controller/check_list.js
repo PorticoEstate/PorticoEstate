@@ -95,7 +95,7 @@ function getWidth() {
 this.fileuploader = function ()
 {
 	var sUrl = phpGWLink('index.php', multi_upload_parans);
-	var width = Math.min(Math.floor(getWidth() * 0.95), 750);
+	var width = Math.min(Math.floor(getWidth() * 0.9), 750);
 	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: width, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
 		close: true,
 		closejs: function ()
