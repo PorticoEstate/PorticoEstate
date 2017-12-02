@@ -29,19 +29,19 @@
 
 
 		$topmenu = <<<HTML
-		<div class="pure-menu pure-menu-horizontal">
+		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 			<ul class="pure-menu-list">
 				<li class="pure-menu-heading pure-menu-link pure-menu-selected">
-					<a href="{$site_url}" class="pure-menu-link">{$GLOBALS['phpgw_info']['user']['fullname']}</a>
+					<a href="{$site_url}" class="pure-menu-link bigmenubutton">{$GLOBALS['phpgw_info']['user']['fullname']}</a>
 				</li>
 				<li class="pure-menu-item">
-					<a href="{$controller_url}" class="pure-menu-link">{$controller_text}</a>
+					<a href="{$controller_url}" class="pure-menu-link bigmenubutton">{$controller_text}</a>
 				</li>
 				<li class="pure-menu-item">
-					<a href="{$tts_url}" class="pure-menu-link">{$tts_text}</a>
+					<a href="{$tts_url}" class="pure-menu-link bigmenubutton">{$tts_text}</a>
 				</li>
 				<li class="pure-menu-item">
-					<a href="{$condition_survey_url}" class="pure-menu-link">{$condition_survey_text}</a>
+					<a href="{$condition_survey_url}" class="pure-menu-link bigmenubutton">{$condition_survey_text}</a>
 				</li>
 HTML;
 
@@ -49,7 +49,7 @@ HTML;
 		{
 			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
-					<a href="{$movein_url}" class="pure-menu-link">{$movein_text}</a>
+					<a href="{$movein_url}" class="pure-menu-link bigmenubutton">{$movein_text}</a>
 				</li>
 HTML;
 
@@ -58,7 +58,7 @@ HTML;
 		{
 			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
-					<a href="{$moveout_url}" class="pure-menu-link">{$moveout_text}</a>
+					<a href="{$moveout_url}" class="pure-menu-link bigmenubutton">{$moveout_text}</a>
 				</li>
 HTML;
 

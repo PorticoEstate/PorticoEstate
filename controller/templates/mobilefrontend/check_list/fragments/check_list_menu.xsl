@@ -11,7 +11,7 @@
 				<xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
 			</xsl:when>
 		</xsl:choose>
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -26,7 +26,7 @@
 		<xsl:if test="$active_tab = 'view_cases'">
 			<xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
 		</xsl:if>
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -43,7 +43,7 @@
 				<xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
 			</xsl:when>
 		</xsl:choose>
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_info</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -55,7 +55,7 @@
 	</li>
 	<!-- ==================  REGISTER NEW CASE  ===================== -->
 	<li class="pure-menu-item">
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.add_case</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
@@ -67,7 +67,7 @@
 	</li>
 	<!-- ==================  REGISTER NEW MESSAGE  ===================== -->
 	<li class="pure-menu-item">
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>

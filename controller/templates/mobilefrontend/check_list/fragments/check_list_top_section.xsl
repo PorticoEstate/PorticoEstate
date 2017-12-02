@@ -42,7 +42,7 @@
 						<xsl:choose>
 							<xsl:when test="check_list/status = 0">
 								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-								<input id="status_submit" type="submit" class="pure-button pure-button-primary">
+								<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('lang', 'set status: done')" />
 									</xsl:attribute>
@@ -50,7 +50,7 @@
 							</xsl:when>
 							<xsl:otherwise>
 								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
-								<input type="submit" class="pure-button pure-button-primary">
+								<input type="submit" class="pure-button pure-button-primary bigmenubutton">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('lang', 'is_executed')" />
 									</xsl:attribute>

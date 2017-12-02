@@ -192,24 +192,24 @@
 						<input class="btn" type="submit" name="save_control" value="Lagre detaljer" />
 					</div-->
 					<div id="submit_group" class="pure-g">
-						<div class="pure-u-1-4">
-							<input  id="save_check_list" class="pure-button pure-button-primary pure-input-1" type="submit" name="save_check_list">
+						<div >
+							<input  id="save_check_list" class="pure-button pure-button-primary" type="submit" name="save_check_list">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'save_check_list')" />
 								</xsl:attribute>
 							</input>
 						</div>
 						<xsl:if test = "check_list/num_open_cases = 0">
-							<div class="pure-u-1-4">
-								<input id="submit_ok" class="pure-button pure-button-primary pure-input-1" type="submit" name="submit_ok">
+							<div>
+								<input id="submit_ok" class="pure-button pure-button-primary" type="submit" name="submit_ok">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('lang', 'ok')" />
 									</xsl:attribute>
 								</input>
 							</div>
 						</xsl:if>
-						<div class="pure-u-1-4">
-							<input id="submit_deviation" class="pure-button pure-button-primary pure-input-1" type="submit" name="submit_deviation">
+						<div> <!-- class="pure-u-1-4"-->
+							<input id="submit_deviation" class="pure-button pure-button-primary" type="submit" name="submit_deviation">
 								<xsl:attribute name="value">
 									<xsl:value-of select="php:function('lang', 'deviation')" />
 								</xsl:attribute>
