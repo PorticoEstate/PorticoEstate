@@ -18,6 +18,7 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-home fa-fw" aria-hidden="true"></i>
 			Vis detaljer for sjekkliste
 		</a>
 	</li>
@@ -33,6 +34,8 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-list-ol" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			Vis saker
 		</a>
 	</li>
@@ -50,6 +53,8 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-info-circle" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			Vis info om kontroll
 		</a>
 	</li>
@@ -62,6 +67,8 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-flag" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			<xsl:value-of select="php:function('lang', 'add case')"/>
 		</a>
 	</li>
@@ -74,6 +81,8 @@
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-bolt" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			<xsl:value-of select="php:function('lang', 'add ticket')"/>
 		</a>
 	</li>

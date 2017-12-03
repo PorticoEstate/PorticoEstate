@@ -18,6 +18,8 @@
 						<xsl:value-of select="check_list/id"/>
 						<xsl:value-of select="$session_url"/>
 					</xsl:attribute>
+					<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+					<xsl:text> </xsl:text>
 					Åpne saker
 				</a>
 			</li>
@@ -32,6 +34,8 @@
 						<xsl:value-of select="check_list/id"/>
 						<xsl:value-of select="$session_url"/>
 					</xsl:attribute>
+					<i class="fa fa-check-square-o" aria-hidden="true"></i>
+					<xsl:text> </xsl:text>
 					Lukkede saker
 				</a>
 			</li>

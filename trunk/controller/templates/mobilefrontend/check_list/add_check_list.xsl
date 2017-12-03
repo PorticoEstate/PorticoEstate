@@ -173,10 +173,9 @@
 					<xsl:if test="required_actual_hours = 1">
 						<div class="pure-control-group">
 							<label>Egne Timer</label>
-							<input class="date">
+							<input class="date" type="number" step="0.01">
 								<xsl:attribute name="id">billable_hours</xsl:attribute>
 								<xsl:attribute name="name">billable_hours</xsl:attribute>
-								<xsl:attribute name="type">text</xsl:attribute>
 							</input>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="check_list/billable_hours"/>
@@ -192,21 +191,21 @@
 						</textarea>
 					</div>
 					<div id="submit_group">
-						<input id="save_check_list" class="pure-button pure-button-primary" type="submit" name="save_check_list">
-							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'plan')" />
-							</xsl:attribute>
-						</input>
-						<input id="submit_ok" class="pure-button pure-button-primary" type="submit" name="submit_ok">
-							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'ok')" />
-							</xsl:attribute>
-						</input>
-						<input id="submit_deviation" class="pure-button pure-button-primary" type="submit" name="submit_deviation">
-							<xsl:attribute name="value">
-								<xsl:value-of select="php:function('lang', 'deviation')" />
-							</xsl:attribute>
-						</input>
+						<button  id="save_check_list" class="pure-button pure-button-primary" type="submit" name="save_check_list" value="1">
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'plan')" />
+						</button>
+						<button id="submit_ok" class="pure-button pure-button-primary"  type="submit" name="submit_ok" value="1">
+							<i class="fa fa-check-square-o" aria-hidden="true"></i>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'ok')" />
+						</button>
+						<button id="submit_deviation" class="pure-button pure-button-primary" type="submit" name="submit_deviation" value="1">
+							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+							<xsl:text> </xsl:text>
+							<xsl:value-of select="php:function('lang', 'deviation')" />
+						</button>
 					</div>
 				</fieldset>
 			</form>	

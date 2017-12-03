@@ -3,7 +3,7 @@
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
-
+<!--
 	<li class="pure-menu-item pure-menu-disabled">
 		<a href="#" class="pure-menu-link bigmenubutton">Vis detaljer for sjekkliste</a>
 	</li>
@@ -23,5 +23,5 @@
 			<xsl:value-of select="php:function('lang', 'add ticket')"/>
 		</a>
 	</li>
-
+-->
 </xsl:template>
