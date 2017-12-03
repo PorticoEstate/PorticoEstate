@@ -33,6 +33,8 @@
 
 	$stylesheets[] = "/phpgwapi/templates/mobilefrontend/css/base.css";
 
+	$stylesheets[] = "/phpgwapi/templates/base/font-awesome/css/font-awesome.min.css";
+
 	foreach ( $stylesheets as $stylesheet )
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )

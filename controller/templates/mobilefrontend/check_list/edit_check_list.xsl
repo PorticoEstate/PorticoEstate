@@ -1,5 +1,6 @@
 <!-- $Id$ -->
 <xsl:template match="data" name="edit_check_list" xmlns:php="http://php.net/xsl">
+	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:variable name="date_format">
 		<xsl:value-of select="php:function('get_phpgw_info', 'user|preferences|common|dateformat')" />
 	</xsl:variable>
@@ -27,14 +28,10 @@
 						<h3>Sjekklistedetaljer::<xsl:value-of select="current_month_name"/></h3>
 					</legend>
 
-					<div class="pure-control-group">
 						<label>Antall åpne saker</label>
 						<xsl:value-of select="check_list/num_open_cases"/>
-					</div>
-					<div class="pure-control-group">
 						<label>Antall ventende saker</label>
 						<xsl:value-of select="check_list/num_pending_cases"/>
-					</div>
 					<xsl:variable name="check_list_id">
 						<xsl:value-of select="check_list/id"/>
 					</xsl:variable>
@@ -44,7 +41,6 @@
 							<xsl:value-of select="php:function('lang', 'error_msg_control_passed_due_date')" />
 						</div>
 					</xsl:if>
-					<div class="pure-control-group">
 						<label>Status</label>
 						<xsl:variable name="status">
 							<xsl:value-of select="check_list/status"/>
@@ -73,8 +69,6 @@
 								</xsl:otherwise>
 							</xsl:choose>
 						</select>
-					</div>
-					<div class="pure-control-group">
 						<label>Skal utføres innen</label>
 						<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
 						<input id="deadline_date" name="deadline_date" type="hidden">
@@ -89,8 +83,6 @@
 								<xsl:value-of select="check_list/original_deadline"/>
 							</xsl:attribute>
 						</input>
-					</div>
-					<div class="pure-control-group">
 						<xsl:if test="check_list/error_msg_array/planned_date != ''">
 							<xsl:variable name="error_msg">
 								<xsl:value-of select="check_list/error_msg_array/planned_date" />
@@ -110,8 +102,6 @@
 								</xsl:attribute>
 							</xsl:if>
 						</input>
-					</div>
-					<div class="pure-control-group">
 						<xsl:if test="check_list/error_msg_array/completed_date != ''">
 							<xsl:variable name="error_msg">
 								<xsl:value-of select="check_list/error_msg_array/completed_date" />
@@ -131,9 +121,7 @@
 								</xsl:attribute>
 							</xsl:if>
 						</input>
-					</div>
 					<!-- ASSIGNMET -->
-					<div class="pure-control-group">
 						<label>Tildelt</label>
 						<select name="assigned_to">
 							<xsl:attribute name="title">
@@ -144,31 +132,25 @@
 							</option>
 							<xsl:apply-templates select="user_list/options"/>
 						</select>
-					</div>
 					<xsl:if test="required_actual_hours = 1">
 						<div class="pure-control-group">
 							<label>Egne Timer</label>
-							<input class="date">
+							<input class="date" type="number" step="0.01">
 								<xsl:attribute name="id">billable_hours</xsl:attribute>
 								<xsl:attribute name="name">billable_hours</xsl:attribute>
-								<xsl:attribute name="type">text</xsl:attribute>
 							</input>
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="check_list/billable_hours"/>
 						</div>
 					</xsl:if>
-					<div class="pure-control-group">
 						<label>Kommentar</label>
 						<textarea class="pure-input-1">
 							<xsl:attribute name="name">comment</xsl:attribute>
 							<xsl:value-of select="check_list/comment"/>
 						</textarea>
-					</div>
-					<div class="pure-control-group">
 						<label>
 							<xsl:value-of select="php:function('lang', 'files')"/>
 						</label>
-						<div class="pure-u pure-custom" >
 							<xsl:for-each select="datatable_def">
 								<xsl:if test="container = 'datatable-container_0'">
 									<xsl:call-template name="table_setup">
@@ -181,8 +163,6 @@
 									</xsl:call-template>
 								</xsl:if>
 							</xsl:for-each>
-						</div>
-					</div>
 					<script type="text/javascript">
 						var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 					</script>
@@ -195,23 +175,23 @@
 							<input class="btn" type="submit" name="save_control" value="Lagre detaljer" />
 						</div-->
 						<div id="submit_group" class="pure-button-group" role="group">
-							<input  id="save_check_list" class="pure-button pure-button-primary" type="submit" name="save_check_list">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'save_check_list')" />
-								</xsl:attribute>
-							</input>
+							<button  id="save_check_list" class="pure-button pure-button-primary" type="submit" name="save_check_list" value="1">
+								<i class="fa fa-floppy-o" aria-hidden="true"></i>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'save')" />
+							</button>
 							<xsl:if test = "check_list/num_open_cases = 0">
-								<input id="submit_ok" class="pure-button pure-button-primary" type="submit" name="submit_ok">
-									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'ok')" />
-									</xsl:attribute>
-								</input>
+								<button id="submit_ok" class="pure-button pure-button-primary"  type="submit" name="submit_ok" value="1">
+									<i class="fa fa-check-square-o" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
+									<xsl:value-of select="php:function('lang', 'ok')" />
+								</button>
 							</xsl:if>
-							<input id="submit_deviation" class="pure-button pure-button-primary" type="submit" name="submit_deviation">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('lang', 'deviation')" />
-								</xsl:attribute>
-							</input>
+							<button id="submit_deviation" class="pure-button pure-button-primary" type="submit" name="submit_deviation" value="1">
+								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+								<xsl:text> </xsl:text>
+								<xsl:value-of select="php:function('lang', 'deviation')" />
+							</button>
 						</div>
 					</xsl:if>
 				</fieldset>
