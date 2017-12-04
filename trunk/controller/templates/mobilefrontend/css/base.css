@@ -47,6 +47,11 @@ ul.add-cases {
     list-style-type: none;
 }
 
+ul.cases li{
+    list-style-type: none;
+}
+
+
 ul.expand_list {
     list-style-type: none;
 }
@@ -118,4 +123,81 @@ td:first-of-type, th:first-of-type {
 
 td:last-of-type, th:last-of-type {
   border-right: none;
+}
+
+/* ===================================== VIEW CASES ================================ */
+
+li.check_item_case{
+    list-style-type: none;
+}
+li.check_item_case h4 {
+  margin: 5px 0;
+}
+
+li.check_item_case ul{
+  margin-bottom: 20px;
+}
+
+li.check_item_case ul li {
+  background: none repeat scroll 0 0 #E7EFF8;
+  border: 1px solid #DDDDDD;
+  clear: both;
+  margin: 10px 0 0 20px;
+  overflow: hidden;
+}
+
+li.check_item_case ul li.quick_edit_case {
+  padding: 0;
+}
+
+li.check_item_case .quick_edit_case h4 {
+  color: #000000;
+  margin: 0;
+  padding: 2px 10px;
+}
+
+li.check_item_case ul li .col_1 {
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  float: left;
+  padding: 2em 0;
+  width: 5%;
+}
+
+li.check_item_case ul li .col_2 {
+  border-left: 1px solid #DDDDDD;
+  border-right: 1px solid #DDDDDD;
+  float: left;
+  padding: 1em 2%;
+  width: 76%;
+}
+
+li.check_item_case ul li .col_3 {
+  float: left;
+  padding: 30px 0;
+  text-align: center;
+  width: 14.7333%;
+}
+
+#main_content .quick_edit_case fieldset {
+  padding: 5px;
+}
+.input_error_msg {
+  background: none repeat scroll 0 0 #FBE3E4;
+  border-bottom-right-radius: 4px;
+  color: #D12F19;
+  display: inline-block;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding: 5px;
+  text-align: center;
+  width: 90%;
+}
+
+#caseMessage a#showMessage {
+    float: right;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
 }

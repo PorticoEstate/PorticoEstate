@@ -44,6 +44,8 @@
 										<xsl:text>&amp;get_locations=</xsl:text>
 										<xsl:value-of select="get_locations"/>
 									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
 									Kontrollplan for komponent (år)
 								</a>
 							</li>
@@ -58,6 +60,8 @@
 										<xsl:text>&amp;location_code=</xsl:text>
 										<xsl:value-of select="location_array/location_code"/>
 									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
 									Kontrollplan for bygg/eiendom (år)
 								</a>
 							</li>
@@ -73,6 +77,8 @@
 										<xsl:text>&amp;location_code=</xsl:text>
 										<xsl:value-of select="location_array/location_code"/>
 									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
 									Kontrolplan for bygg/eiendom (måned)
 								</a>
 							</li>
@@ -156,7 +162,7 @@
 			<xsl:variable name="new_ticket_url">
 				<xsl:value-of select="php:function('get_phpgw_link', '/index.php', $new_ticket_params)" />
 			</xsl:variable>
-			<a class="btn" href="{$new_ticket_url}">
+			<a class="pure-button pure-button-primary" href="{$new_ticket_url}">
 				<xsl:value-of select="php:function('lang', 'Register new message')" />
 			</a>
 		</div>
