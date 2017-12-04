@@ -37,7 +37,7 @@
 			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['nonavbar'] = true;
 			//FIXME
-			$GLOBALS['phpgw']->css->add_external_file('controller/templates/mobilefrontend/css/base.css');
+		//	$GLOBALS['phpgw']->css->add_external_file('controller/templates/mobilefrontend/css/base.css');
 		}
 		/**
 		 * Public function for displaying the edit check list form
