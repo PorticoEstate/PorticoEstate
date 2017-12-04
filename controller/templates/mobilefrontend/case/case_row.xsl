@@ -7,7 +7,7 @@
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
-	<fieldset>
+	<li class="check_item_case">
 		<xsl:choose>
 			<xsl:when test="cases_array/child::node()">
 				<h4>
@@ -240,5 +240,5 @@
 				</ul>
 			</xsl:when>
 		</xsl:choose>
-	</fieldset>
+	</li>
 </xsl:template>

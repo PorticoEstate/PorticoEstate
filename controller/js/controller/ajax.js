@@ -665,7 +665,9 @@ $(document).ready(function ()
 		{
 
 			if (!$(thisForm).find("ul.cases").prev().hasClass("input_error_msg"))
+			{
 				$(thisForm).find("ul.cases").before("<div class='input_error_msg'>Vennligst velg en sak som meldingen omfatter</div>");
+			}
 
 			status = false;
 		}

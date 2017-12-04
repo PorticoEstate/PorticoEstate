@@ -21,6 +21,7 @@
 						<xsl:value-of select="get_locations"/>
 					</xsl:attribute>
 					<i class="fa fa-calendar" aria-hidden="true"></i>
+					<xsl:text> </xsl:text>
 					Kontrollplan for komponent (år)
 				</a>
 			</li>
@@ -51,6 +52,7 @@
 						<xsl:value-of select="location_array/location_code"/>
 					</xsl:attribute>
 					<i class="fa fa-calendar" aria-hidden="true"></i>
+					<xsl:text> </xsl:text>
 					Kontrolplan for bygg/eiendom (måned)
 				</a>
 			</li>
