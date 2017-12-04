@@ -3,25 +3,25 @@
 		<xsl:text>&amp;</xsl:text>
 		<xsl:value-of select="php:function('get_phpgw_session_url')" />
 	</xsl:variable>
-
+<!--
 	<li class="pure-menu-item pure-menu-disabled">
-		<a href="#" class="pure-menu-link">Vis detaljer for sjekkliste</a>
+		<a href="#" class="pure-menu-link bigmenubutton">Vis detaljer for sjekkliste</a>
 	</li>
 	<li class="pure-menu-item pure-menu-disabled">
-		<a href="#" class="pure-menu-link">Vis saker</a>
+		<a href="#" class="pure-menu-link bigmenubutton">Vis saker</a>
 	</li>
 	<li class="pure-menu-item pure-menu-disabled">
-		<a href="#" class="pure-menu-link">Vis info om kontroll</a>
+		<a href="#" class="pure-menu-link bigmenubutton">Vis info om kontroll</a>
 	</li>
 	<li class="pure-menu-item pure-menu-disabled">
-		<a href="#" class="pure-menu-link">
+		<a href="#" class="pure-menu-link bigmenubutton">
 			<xsl:value-of select="php:function('lang', 'add case')"/>
 		</a>
 	</li>
 	<li class="pure-menu-item pure-menu-disabled">
-		<a href="#" class="pure-menu-link">
+		<a href="#" class="pure-menu-link bigmenubutton">
 			<xsl:value-of select="php:function('lang', 'add ticket')"/>
 		</a>
 	</li>
-
+-->
 </xsl:template>

@@ -29,19 +29,19 @@
 
 
 		$topmenu = <<<HTML
-		<div class="pure-menu pure-menu-horizontal">
+		<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 			<ul class="pure-menu-list">
 				<li class="pure-menu-heading pure-menu-link pure-menu-selected">
-					<a href="{$site_url}" class="pure-menu-link">{$GLOBALS['phpgw_info']['user']['fullname']}</a>
+					<a href="{$site_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-home fa-fw" aria-hidden="true"></i>{$GLOBALS['phpgw_info']['user']['fullname']}</a>
 				</li>
 				<li class="pure-menu-item">
-					<a href="{$controller_url}" class="pure-menu-link">{$controller_text}</a>
+					<a href="{$controller_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-check-square-o" aria-hidden="true"></i>&nbsp;{$controller_text}</a>
 				</li>
 				<li class="pure-menu-item">
-					<a href="{$tts_url}" class="pure-menu-link">{$tts_text}</a>
+					<a href="{$tts_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-bolt" aria-hidden="true"></i>&nbsp;{$tts_text}</a>
 				</li>
 				<li class="pure-menu-item">
-					<a href="{$condition_survey_url}" class="pure-menu-link">{$condition_survey_text}</a>
+					<a href="{$condition_survey_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-thermometer-three-quarters" aria-hidden="true"></i>&nbsp;{$condition_survey_text}</a>
 				</li>
 HTML;
 
@@ -49,7 +49,7 @@ HTML;
 		{
 			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
-					<a href="{$movein_url}" class="pure-menu-link">{$movein_text}</a>
+					<a href="{$movein_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$movein_text}</a>
 				</li>
 HTML;
 
@@ -58,7 +58,7 @@ HTML;
 		{
 			$topmenu .= <<<HTML
 				<li class="pure-menu-item">
-					<a href="{$moveout_url}" class="pure-menu-link">{$moveout_text}</a>
+					<a href="{$moveout_url}" class="pure-menu-link bigmenubutton"><i class="fa fa-suitcase" aria-hidden="true"></i>&nbsp;{$moveout_text}</a>
 				</li>
 HTML;
 

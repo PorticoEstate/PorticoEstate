@@ -32,7 +32,7 @@
 		
 		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
 		<xsl:choose>
-			<xsl:when test="check_list/id != 0">
+			<xsl:when test="check_list/id != 0 and $active_tab != 'view_details'">
 				<div class="box-2 select-box">
 					<xsl:variable name="action_url">
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
@@ -42,15 +42,15 @@
 						<xsl:choose>
 							<xsl:when test="check_list/status = 0">
 								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
-								<input id="status_submit" type="submit" class="pure-button pure-button-primary">
+								<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
 									<xsl:attribute name="value">
-										<xsl:value-of select="php:function('lang', 'Status not done')" />
+										<xsl:value-of select="php:function('lang', 'set status: done')" />
 									</xsl:attribute>
 								</input>
 							</xsl:when>
 							<xsl:otherwise>
 								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
-								<input type="submit" class="pure-button pure-button-primary">
+								<input type="submit" class="pure-button pure-button-primary bigmenubutton">
 									<xsl:attribute name="value">
 										<xsl:value-of select="php:function('lang', 'is_executed')" />
 									</xsl:attribute>
