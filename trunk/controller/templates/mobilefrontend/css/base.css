@@ -18,26 +18,30 @@ input.date {
 
 #save_check_list
 {
-	text-align: center;
+/*	text-align: center;*/
 	width: 140px;
 }
 
 #submit_ok
 {
- 	text-align: center;
-	background-color: #4CAF50; /* Green */
+ /*	text-align: center;*/
+	background-color: #4CAF50; 
 	width: 140px;
 }
 
 #submit_deviation {
-	text-align: center;
+/*	text-align: center;*/
 	background-color: #f44336;
 	width: 140px;
 }
 
+.pure-button
+{
+	width: 140px;
+}
 .case_saved
 {
-	background-color: #4CAF50; /* Green */
+	background-color: #4CAF50;
 }
 ul.add-cases {
     list-style-type: none;
@@ -65,4 +69,53 @@ ul.expand_list h4 {
 
 #check_list_details fieldset {
   padding: 0px 40px 10px 40px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+html, body {
+  max-width: 100vw;
+}
+
+/*A table..*/
+#components {
+	margin: auto;
+	border-collapse: collapse;
+	overflow-x: auto;
+	display: block;
+	width: fit-content;
+	max-width: 100%;
+	box-shadow: 0 0 1px 1px rgba(0, 0, 0, .1);
+}
+
+td, th {
+  border: solid rgb(200, 200, 200) 1px;
+  padding: .5rem;
+}
+
+th {
+  text-align: left;
+  background-color: rgb(190, 220, 250);
+ /* text-transform: uppercase;*/
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: rgb(50, 50, 100) solid 2px;
+  border-top: none;
+}
+
+td {
+  white-space: nowrap;
+  border-bottom: none;
+  color: rgb(20, 20, 20);
+}
+
+td:first-of-type, th:first-of-type {
+  border-left: none;
+}
+
+td:last-of-type, th:last-of-type {
+  border-right: none;
 }
