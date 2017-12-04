@@ -1087,6 +1087,16 @@
 				"3" => lang('year')
 			);
 
+
+			if($GLOBALS['phpgw_info']['server']['template_set'] == 'mobilefrontend')
+			{
+				$url_target = '_self';
+			}
+			else
+			{
+				$url_target = '_blank';
+			}
+
 			$values = array();
 			foreach ($components_with_calendar_array as $dummy => $entry)
 			{
@@ -1126,7 +1136,7 @@
 				}
 				else
 				{
-					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id}{$entry[0]['component']['xml_short_desc']}</a>";
+					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='{$url_target}'>{$item_id}{$entry[0]['component']['xml_short_desc']}</a>";
 				}
 				$data['component_id'] = $item_id;
 				$data['location_id'] = $location_id;
@@ -1265,7 +1275,7 @@
 
 					$data['control_id'] = 0;
 					$data['control_type'] = '';
-					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='_blank'>{$item_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
+					$data['component_url'] = '<a href="' . $GLOBALS['phpgw']->link('/index.php', $item_link_data) . "\" target='{$url_target}'>{$item_id} {$location_type_name[$location_id]}</br>{$short_description}</a>";
 					$data['component_id'] = $item_id;
 					$data['location_id'] = $location_id;
 					$data['location_code'] = $_location_code;
@@ -1297,7 +1307,7 @@
 						$row['choose'] = "<input id=\"master_component\" type=\"radio\" name=\"master_component\" value = \"{$entry['location_id']}_{$entry['component_id']}_{$entry['control_id']}\" >";
 					}
 					$row['year'] = $year;
-					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/><br/>Tidsbruk";
+					$row['descr'] = "Frekvens<br/>Status<br/>Utførende<br/>Tidsbruk";
 				}
 				else if ($choose_master)
 				{
@@ -1538,7 +1548,7 @@
 					'assigned_to' => $param['info']['assigned_to']
 				);
 			}
-			$link = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"_blank\">{$img}</a>";
+			$link = "<a href=\"" . $GLOBALS['phpgw']->link('/index.php', $control_link_data) . "\" target=\"{$url_target}\">{$img}</a>";
 
 			$repeat_type = $param['repeat_type'];
 			//	$responsible = '---';

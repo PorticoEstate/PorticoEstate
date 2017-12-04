@@ -11,13 +11,14 @@
 				<xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
 			</xsl:when>
 		</xsl:choose>
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.edit_check_list</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-home fa-fw" aria-hidden="true"></i>
 			Vis detaljer for sjekkliste
 		</a>
 	</li>
@@ -26,13 +27,15 @@
 		<xsl:if test="$active_tab = 'view_cases'">
 			<xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
 		</xsl:if>
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.view_open_cases</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-list-ol" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			Vis saker
 		</a>
 	</li>
@@ -43,37 +46,43 @@
 				<xsl:attribute name="class">pure-menu-item pure-menu-selected</xsl:attribute>
 			</xsl:when>
 		</xsl:choose>
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_info</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-info-circle" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			Vis info om kontroll
 		</a>
 	</li>
 	<!-- ==================  REGISTER NEW CASE  ===================== -->
 	<li class="pure-menu-item">
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.add_case</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-flag" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			<xsl:value-of select="php:function('lang', 'add case')"/>
 		</a>
 	</li>
 	<!-- ==================  REGISTER NEW MESSAGE  ===================== -->
 	<li class="pure-menu-item">
-		<a class="pure-menu-link">
+		<a class="pure-menu-link bigmenubutton">
 			<xsl:attribute name="href">
 				<xsl:text>index.php?menuaction=controller.uicase.create_case_message</xsl:text>
 				<xsl:text>&amp;check_list_id=</xsl:text>
 				<xsl:value-of select="check_list/id"/>
 				<xsl:value-of select="$session_url"/>
 			</xsl:attribute>
+			<i class="fa fa-bolt" aria-hidden="true"></i>
+			<xsl:text> </xsl:text>
 			<xsl:value-of select="php:function('lang', 'add ticket')"/>
 		</a>
 	</li>

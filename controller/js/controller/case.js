@@ -55,10 +55,10 @@ $(document).ready(function ()
 								}
 								else
 								{
-									$(submitBnt).val('Lagre sak');
+									$(submitBnt).val('Lagre ny sak');
 								}
 
-								$(submitBnt).addClass("not_active");
+								$(submitBnt).addClass("case_saved");
 							}, 1000);
 
 							/*

@@ -224,7 +224,7 @@ JS;
 			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/', array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $orgid));
 		}
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
-		$tpl_vars['login_url'] = 'logout.php';
+		$tpl_vars['login_url'] = $GLOBALS['phpgw']->link('/bookingfrontend/logout.php', array());
 	}
 	else
 	{

@@ -78,7 +78,7 @@
 	<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 		<ul class="pure-menu-list">
 			<li class="pure-menu-item pure-menu-selected">
-				<a id="view_control_details" class="pure-menu-link">
+				<a id="view_control_details" class="pure-menu-link bigmenubutton">
 					<xsl:attribute name="value">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_details</xsl:text>
 						<xsl:text>&amp;control_id=</xsl:text>
@@ -92,7 +92,7 @@
 				</a>
 			</li>
 			<li class="pure-menu-item">
-				<a id="view_control_items" class="pure-menu-link">
+				<a id="view_control_items" class="pure-menu-link bigmenubutton">
 					<xsl:attribute name="value">
 						<xsl:text>index.php?menuaction=controller.uicheck_list.view_control_items</xsl:text>
 						<xsl:text>&amp;check_list_id=</xsl:text>
@@ -104,7 +104,7 @@
 				</a>
 			</li>
 			<li class="pure-menu-item">
-				<a id="view_procedures" class="pure-menu-link">
+				<a id="view_procedures" class="pure-menu-link bigmenubutton">
 					<xsl:attribute name="value">
 						<xsl:text>index.php?menuaction=controller.uiprocedure.view_procedures_for_control</xsl:text>
 						<xsl:text>&amp;check_list_id=</xsl:text>
