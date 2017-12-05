@@ -475,6 +475,10 @@
 				$end_date = $GLOBALS['phpgw']->common->show_date($procedure->get_end_date(), $this->dateformat);
 				$revision_date = $GLOBALS['phpgw']->common->show_date($procedure->get_revision_date(), $this->dateformat);
 
+				if(!empty($procedure_array['modified_by']))
+				{
+					$procedure_array['modified_by_name'] = $GLOBALS['phpgw']->accounts->id2name($procedure_array['modified_by']);
+				}
 
 				$data = array
 					(
@@ -645,6 +649,10 @@
 					)
 				);
 
+				if(!empty($procedure_array['modified_by']))
+				{
+					$procedure_array['modified_by_name'] = $GLOBALS['phpgw']->accounts->id2name($procedure_array['modified_by']);
+				}
 				$data = array
 					(
 					'tabs' => phpgwapi_jquery::tabview_generate($tabs, 'procedure', 'procedure_tabview'),
