@@ -189,7 +189,7 @@
 			{
 				foreach ($list as &$entry)
 				{
-					if ($entry['id'] == $selected)
+					if ($entry['id'] === $selected)
 					{
 						$entry['selected'] = 1;
 						break;
