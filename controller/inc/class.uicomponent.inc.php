@@ -314,6 +314,24 @@
 					'selected' => $_year == $year ? 1 : 0
 				);
 			}
+			$month_list = array();
+			$month_list[] = array
+				(
+				'id' => '',
+				'name' => lang('month')
+			);
+
+			$filter_month = phpgw::get_var('month', 'int');
+			$filter_month = $filter_month ? $filter_month : date('n');
+			for ($_month = 1; $_month < 13; $_month++)
+			{
+				$month_list[] = array
+					(
+					'id' => $_month,
+					'name' => $_month,
+					'selected' => $_month == $filter_month ? 1 : 0
+				);
+			}
 			$status_list = array(
 				array('id' => '', 'name' => lang('select value')),
 				array('id' => 'not_performed', 'name' => lang('status not done')),
@@ -416,6 +434,12 @@
 								'onchange' => 'update_table();'
 							),
 							array('type' => 'filter',
+								'name' => 'month',
+								'text' => lang('month'),
+								'list' => $month_list,
+								'onchange' => 'update_table();'
+							),
+							array('type' => 'filter',
 								'name' => 'status',
 								'text' => lang('status'),
 								'list' => $status_list,
@@ -444,7 +468,7 @@
 					'source' => self::link(array('menuaction' => 'controller.uicomponent.index',
 						'phpgw_return_as' => 'json')),
 					'field' => $this->get_fields(),
-					'months' => $this->get_months($year)
+					'months' => $this->get_months()
 				),
 			);
 
@@ -453,10 +477,17 @@
 			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}
 
-		private function get_months( $year = '' )
+		private function get_months( $year = '', $filter_month = 0 )
 		{
 			$months = array();
-			if($year == date('Y') && $this->user_id < 0)
+
+			if($filter_month)
+			{
+				$months[] = array(
+					'key' => $filter_month,
+				);
+			}
+			else if($year == date('Y') && $this->user_id < 0)
 			{
 				$current_month = date('n') -1;
 
@@ -486,7 +517,7 @@
 
 			return $months;
 		}
-		private function get_fields( $year = '' , $user_id = 0)
+		private function get_fields( $year = '' , $filter_month = 0, $user_id = 0)
 		{
 
 			$fields = array
@@ -523,7 +554,17 @@
 				),
 			);
 
-			if($year == date('Y') && $user_id < 0)
+			if($filter_month)
+			{
+				$fields[] = array(
+					'id' => 0,
+					'key' => $filter_month,
+					'label' => lang("short_month {$filter_month} capitalized"),
+					'sortable' => true,
+				);
+
+			}
+			else if($year == date('Y') && $user_id < 0)
 			{
 				$current_month = date('n');
 
@@ -536,7 +577,7 @@
 					}
 
 					$fields[] = array(
-						'id' => $i,
+						'id' => $_month,
 						'key' => $_month,
 						'label' => lang("short_month {$_month} capitalized"),
 						'sortable' => true,
@@ -546,16 +587,14 @@
 			}
 			else
 			{
-				$i = 0;
 				for ($_month = 1; $_month < 13; $_month++)
 				{
 					$fields[] = array(
-						'id' => $i,
+						'id' => $_month,
 						'key' => $_month,
 						'label' => lang("short_month {$_month} capitalized"),
 						'sortable' => true,
 					);
-					$i++;
 				}
 			}
 
@@ -738,6 +777,7 @@
 			$district_id = phpgw::get_var('district_id', 'int');
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
+			$filter_month = phpgw::get_var('month', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
 			$all_users = phpgw::get_var('all_users', 'bool');
 //			$user_only = phpgw::get_var('user_only', 'bool');
@@ -1315,9 +1355,11 @@
 				}
 
 				$found_at_least_one = false;
-				for ($_month = 1; $_month < 13; $_month++)
+				if($filter_month)
 				{
-					$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code']);
+					$filter_status = $filter_status ? $filter_status : 'filter_month';
+
+					$row[$filter_month] = $this->translate_calendar_info($entry[$filter_month], $year, $filter_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code']);
 					if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 					{
 						$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
@@ -1328,15 +1370,40 @@
 						$row_sum[$_month] = 0;
 						$row_sum_actual[$_month] = 0;
 					}
+
+					if (!$filter_status || $found_at_least_one)
+					{
+						$total_time[] = $row_sum;
+						$total_time_actual[] = $row_sum_actual;
+						$data_set[] = $row;
+					}
 				}
-				if (!$filter_status || $found_at_least_one)
+				else
 				{
-					$total_time[] = $row_sum;
-					$total_time_actual[] = $row_sum_actual;
-					$data_set[] = $row;
+					for ($_month = 1; $_month < 13; $_month++)
+					{
+						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code']);
+						if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+						{
+							$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
+							$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
+						}
+						else
+						{
+							$row_sum[$_month] = 0;
+							$row_sum_actual[$_month] = 0;
+						}
+					}
+					if (!$filter_status || $found_at_least_one)
+					{
+						$total_time[] = $row_sum;
+						$total_time_actual[] = $row_sum_actual;
+						$data_set[] = $row;
+					}
+
 				}
 			}
-			$fields = $this->get_fields($year, $this->user_id);
+			$fields = $this->get_fields($year, $filter_month, $this->user_id);
 			$class = '';
 			$tbody = '';
 			foreach ($data_set as $row_data)
@@ -1418,13 +1485,9 @@
 				$result['checkall'] = '';
 			}
 
-			$months = $this->get_months($year);
+			$months = $this->get_months($year, $filter_month);
 
 			$filter_months = array();
-//			for ($_month = 0 ; $_month < 13; $_month++)
-//			{
-//				$filter_months[$_month] = 0;
-//			}
 
 			foreach ($months as $entry)
 			{
@@ -1480,6 +1543,10 @@
 						default:
 							return;
 					}
+				}
+				else if ($filter_status=='filter_month' && empty ($param['status']))
+				{
+					return;
 				}
 			}
 
