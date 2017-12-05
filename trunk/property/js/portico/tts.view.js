@@ -207,7 +207,7 @@ this.fetch_vendor_contract = function ()
 
 					if(data.length > 0)
 					{
-//						$("#vendor_contract_id").attr("data-validation", "required");
+						$("#vendor_contract_id").attr("data-validation", "required");
 						htmlString = "<option value=''> kontrakter funnet</option>";
 					}
 					else
@@ -229,7 +229,6 @@ this.fetch_vendor_contract = function ()
 
 	}
 };
-
 
 this.onDOMAttrModified = function (e)
 {
@@ -347,7 +346,8 @@ function receive_order(order_id)
 				{
 					msg = 'OK';
 					$("#order_received_time").html(data['time']);
-					$("#current_received_amount").html($("#order_received_amount").val());
+					var current_received_amount = Number($("#current_received_amount").html());
+					$("#current_received_amount").html(current_received_amount + Number($("#order_received_amount").val()));
 				}
 				else
 				{

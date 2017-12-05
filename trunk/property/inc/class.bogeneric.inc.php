@@ -195,7 +195,7 @@
 				unset($data['location_info']);
 			}
 			$custom_fields = false;
-			$system_location = $this->location_info['system_location'] ? $this->location_info['system_location'] : $this->location_info['acl_location'];
+			$system_location = !empty($this->location_info['system_location']) ? $this->location_info['system_location'] : $this->location_info['acl_location'];
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
 				$custom_fields = true;
@@ -203,7 +203,7 @@
 				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
-			if (isset($data['id']) && $data['id'])
+			if (isset($data['id']) && $data['id'] || (int) $data['id'] ===0 )
 			{
 				$values = $this->so->read_single($data, $values);
 			}
@@ -223,7 +223,7 @@
 
 			if ($action == 'edit')
 			{
-				if ($data['id'] != '')
+				if ($data['id'] !== '')
 				{
 
 					$receipt = $this->so->edit($data, $values_attribute);

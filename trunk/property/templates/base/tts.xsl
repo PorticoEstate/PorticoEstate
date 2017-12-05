@@ -75,7 +75,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'Group')"/>
 								</label>
-								
+
 								<xsl:call-template name="group_select"/>
 							</div>
 							<xsl:choose>
@@ -84,7 +84,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'Assign to')"/>
 										</label>
-										
+
 										<xsl:call-template name="user_id_select"/>
 									</div>
 								</xsl:when>
@@ -109,7 +109,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'Priority')"/>
 								</label>
-							
+
 								<xsl:variable name="lang_priority_statustext">
 									<xsl:value-of select="lang_priority_statustext"/>
 								</xsl:variable>
@@ -124,7 +124,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'status')"/>
 								</label>
-								
+
 								<select id="status_id" name="values[status]" class="pure-input-1-2" >
 									<xsl:attribute name="title">
 										<xsl:value-of select="php:function('lang', 'Set the status of the ticket')"/>
@@ -153,7 +153,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'subject')"/>
 						</label>
-						
+
 						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
@@ -173,7 +173,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Details')"/>
 						</label>
-						
+
 						<textarea class="pure-input-1-2" rows="10" name="values[details]" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the details of this ticket')"/>
@@ -193,7 +193,7 @@
 								<label>
 									<xsl:value-of select="lang_upload_file"/>
 								</label>
-								
+
 								<input  class="pure-input-1-2" type="file" name="file">
 									<xsl:attribute name="title">
 										<xsl:value-of select="lang_file_statustext"/>
@@ -266,7 +266,7 @@
 		var strURL = phpGWLink('index.php', oArgs);
 		TINY.box.show({iframe:strURL, boxid:"frameless",width:750,height:450,fixed:false,maskid:"darkmask",maskopacity:40, mask:true, animate:true, close: true});
 		}
-			
+
 		function preview_html(id)
 		{
 
@@ -580,7 +580,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'finnish date')"/>
 										</label>
-									
+
 										<input type="text" id="values_finnish_date" name="values[finnish_date]" size="10" value="{value_finnish_date}" readonly="readonly">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'select the estimated date for closing the task')"/>
@@ -714,7 +714,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'make order')"/>
 										</label>
-											
+
 										<input type="checkbox" name="values[make_order]" value="True">
 											<xsl:attribute name="title">
 												<xsl:value-of select="php:function('lang', 'make order')"/>
@@ -795,6 +795,11 @@
 											<xsl:value-of select="php:function('lang', 'contract')"/>
 										</label>
 										<select id="vendor_contract_id" name="values[contract_id]" class="pure-input-1-2">
+											<xsl:if test="count(contract_list/options) &gt; 0">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+											</xsl:if>
 											<option value="">
 												<xsl:value-of select="php:function('lang', 'select')"/>
 											</option>
@@ -886,7 +891,7 @@
 										<label>
 											<xsl:value-of select="$lang_building_part"/>
 										</label>
-												
+
 										<select name="values[building_part]" class="pure-input-1-2" >
 											<xsl:attribute name="title">
 												<xsl:value-of select="$lang_building_part"/>
@@ -962,6 +967,9 @@
 												<xsl:attribute name="data-validation-error-msg">
 													<xsl:value-of select="$lang_tax_code"/>
 												</xsl:attribute>
+												<option value="">
+													<xsl:value-of select="$lang_tax_code"/>
+												</option>
 												<xsl:apply-templates select="tax_code_list/options"/>
 											</select>
 										</div>
@@ -1132,7 +1140,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'actual cost')"/>
 										</label>
-												
+
 										<div class = 'pure-u-md-1-2'>
 											<!--div  id="paging_4"> </div>
 											<div class="pure-table" id="datatable-container_4"/-->
@@ -1228,7 +1236,7 @@
 											<xsl:apply-templates select="status_list/options"/>
 										</select>
 									</div>
-									<!--div class="pure-control-group">
+									<div class="pure-control-group">
 										<label for="name">
 											<xsl:value-of select="php:function('lang', 'order received')"/>
 										</label>
@@ -1260,7 +1268,7 @@
 											</table>
 										</div>
 										<input  class="pure-custom" type="text" id="order_received_amount" size="6"/>
-									</div-->
+									</div>
 
 									<div class="pure-control-group">
 										<div class="pure-custom">
@@ -1309,7 +1317,7 @@
 										<label>
 											<xsl:value-of select="php:function('lang', 'order id')"/>
 										</label>
-												
+
 										<xsl:value-of select="value_order_id"/>
 									</div>
 									<xsl:call-template name="vendor_view"/>
@@ -1339,7 +1347,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'notify')"/>
 						</label>
-					
+
 						<!--div id="paging_5"> </div>
 						<div class="pure-table" id="datatable-container_5"/>
 						<div id="datatable-buttons_5"/-->
