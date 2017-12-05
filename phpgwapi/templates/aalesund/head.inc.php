@@ -55,7 +55,13 @@ JS;
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
         $stylesheets[] = "/{$app}/css/bookingfrontend.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
-	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/themes/alesund_kommune.css";
+	//$stylesheets[] = "/phpgwapi/templates/bookingfrontend/themes/alesund_kommune.css";
+        $stylesheets[] = "/phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
+        $stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
+        $stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
+        $stylesheets[] = "/phpgwapi/templates/aalesund/css/sample.css";
+        
+        
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
@@ -72,10 +78,22 @@ JS;
 		}
 	}
 
+      
 	$javascripts = array();
 	
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/minid.js";
-
+        
+        
+        
+        $bootstrapmainjs = "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.min.js";
+        $bootstrapjs= "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.bundle.min.js";
+        $samplejs = "/phpgwapi/templates/aalesund/js/sample.js";
+        
+        $GLOBALS['phpgw']->template->set_var( 'samplejs', $webserver_url . $samplejs );
+        $GLOBALS['phpgw']->template->set_var( 'bootstrapjs', $webserver_url . $bootstrapjs );
+        $GLOBALS['phpgw']->template->set_var( 'bootstrapmainjs', $webserver_url . $bootstrapmainjs );
+      
+        
 //FIXME: To consider...
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
