@@ -300,7 +300,7 @@
 				</td>
 				<td id='sum_text'>
 				</td>
-				<td id='month0'>
+				<td id='monthsum'>
 				</td>
 				<td id='month1'>
 				</td>

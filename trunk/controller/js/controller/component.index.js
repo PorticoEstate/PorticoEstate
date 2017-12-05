@@ -240,25 +240,25 @@ update_table = function (location_code)
 					var time_sum_actual = components_data.time_sum_actual;
 
 					console.log(show_months);
-					console.log(filter_months);
 
-					if(show_months.length > 0)
-					{
-						for (i = 0; i < 13; i++)
-						{
-							$("#month" + i).hide();
-							$("#head" + i).hide();
-						}
-						for (i = 0; i < show_months.length; i++)
-						{
-							$("#month" + show_months[i]).show();
-							$("#head" + show_months[i]).show();
-						}
-						show_months = [];
-					}
-					else
+//					if(show_months.length > 0)
+//					{
+//						for (i = 0; i < 13; i++)
+//						{
+//							$("#month" + i).hide();
+//							$("#head" + i).hide();
+//						}
+//						for (i = 0; i < show_months.length; i++)
+//						{
+//							$("#month" + show_months[i]).show();
+//							$("#head" + show_months[i]).show();
+//						}
+//						show_months = [];
+//					}
+//					else
 					{
 						var filter_months = data.filter_months;
+						console.log(filter_months);
 						for (i = 0; i < 13; i++)
 						{
 							$("#month" + i).hide();
@@ -276,7 +276,7 @@ update_table = function (location_code)
 					$("#total_records").html(components_data.total_records);
 					$("#control_text").html('type');
 					$("#sum_text").html('Sum');
-					$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
+					$("#monthsum").html(time_sum[0] + '/' + time_sum_actual[0]);
 					$("#month1").html(time_sum[1] + '/' + time_sum_actual[1]);
 					$("#month2").html(time_sum[2] + '/' + time_sum_actual[2]);
 					$("#month3").html(time_sum[3] + '/' + time_sum_actual[3]);
