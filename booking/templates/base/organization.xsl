@@ -131,6 +131,24 @@
 							<xsl:value-of select="organization/district"/>
 						</span>
 					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Documents')" />
+						</label>
+						<div class="pure-custom">
+							<div id="documents_container" class="custom-container"></div>
+							<div>
+								<a class='button'>
+									<xsl:attribute name="href">
+										<xsl:value-of select="organization/add_document_link"/>
+									</xsl:attribute>
+									<xsl:if test="organization/permission/write">
+										<xsl:value-of select="php:function('lang', 'Add Document')" />
+									</xsl:if>
+								</a>
+							</div>
+						</div>
+					</div>
 				</fieldset>
 			</div>
 		</div>
@@ -146,4 +164,16 @@
 			</xsl:attribute>
 		</input>		
 	</div>
+	<script type="text/javascript">
+		var organization_id = <xsl:value-of select="organization/id"/>;
+		var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Actions', 'Account', 'Role', 'Edit', 'Delete', 'Resource Type', 'Sort order')"/>;
+
+    <![CDATA[
+        var documentsURL     = 'index.php?menuaction=booking.uidocument_organization.index&sort=name&filter_owner_id=' + organization_id + '&phpgw_return_as=json&';
+        ]]>
+		var colDefsDocuments = [{key: 'name', label: lang['Name'], formatter: genericLink}, {key: 'category', label: lang['Category']}, {key: 'actions', label: lang['Actions'], formatter: genericLink({name: 'edit', label:lang['Edit']}, {name: 'delete', label:lang['Delete']})}];
+
+		createTable('documents_container',documentsURL,colDefsDocuments);
+	</script>
+
 </xsl:template>

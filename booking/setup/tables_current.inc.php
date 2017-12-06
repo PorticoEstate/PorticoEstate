@@ -568,6 +568,21 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_document_organization' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+				'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+				'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+				'description' => array('type' => 'text', 'nullable' => true),
+			),
+			'pk' => array('id'),
+			'fk' => array(
+				"bb_organization" => array('owner_id' => 'id'),
+			),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'bb_permission' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'nullable' => false),
