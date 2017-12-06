@@ -1,3 +1,49 @@
+attachments	common	no	Vedlegg
+add attachment	common	no	Legg til vedlegg
+booking	common	no	Booking
+bookingfrontend	common	no	Bookingfrontend
+global configuration	common	no	Global konfigurasjon
+global message	common	no	Globale beskjeder
+manage users	common	no	Administrere brukere
+manage groups	common	no	Administrere grupper
+clear cache	common	no	Slett cache (minne)
+Global Categories	common	no	Globale kategorier
+View Sessions	common	no	Vis sesjoner
+View Access Log	common	no	Vis tilgangslogger
+Find and Register all Application Hooks	common	no	Finn og register alle applikasjonskoblinger
+Asynchronous timed services	common	no	Asynkrone tidsbestemte tjenester
+list users	common	no	brukerliste
+list groups	common	no	gruppeliste
+firstname	common	no	Fornavn
+lastname	common	no	Etternavn
+description	common	no	Beskrivelse
+add sub	common	no	Legg til underkategori
+color	common	no	Farge
+apply	common	no	Aktiver
+enabled	common	no	aktiv
+no category	common	no	Ingen kategori
+inactive	common	no	Inaktiv
+inactive and hidden	common	no	Inaktiv og gjemt
+status	common	no	Status
+contact	common	no	Kontakt
+user data	common	no	Bruker data
+Application	common	no	Applikasjon
+User access	common	no	Brukertilgang
+edit user	common	no	Rediger bruker
+edit user account	common	no	Rediger bruker konto
+group data	common	no	Gruppe data
+edit group	common	no	Rediger gruppe
+group	common	no	Gruppe
+all users	common	no	Alle brukere
+members	common	no	Medlemer
+applications	common	no	Applikasjoner
+You do not have edit access to addressmaster contacts	common	no	Du har ikke tilgang til "AddresseMaster" kontakter
+Can change password	common	no	Kan bytte passord
+Anonymous User (not shown in list sessions)	common	no	Anonym bruker (vises ikke i sesjonslisten)
+expires	common	no	Utløpsdato
+Never	common	no	Aldri
+quota	common	no	Kvote
+are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache (minne)?
 : activate to sort column ascending	common	no	: sorter kolonne stigende
 : activate to sort column descending	common	no	: sorter kolonne synkende
 features	common	no	Egenskaper
