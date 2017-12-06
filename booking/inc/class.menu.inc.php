@@ -146,6 +146,12 @@
 					'image' => array('property', 'location_tenant'),
 					'children' => array
 						(
+						'documents' => array
+							(
+							'text' => lang('Documents'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uidocument_organization.index')),
+							'image' => array('property', 'documentation'),
+						),
 						'groups' => array
 							(
 							'text' => lang('Groups'),
