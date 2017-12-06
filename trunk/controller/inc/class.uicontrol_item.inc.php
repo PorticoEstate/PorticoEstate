@@ -346,7 +346,7 @@
 				$control_item->set_options_array($option_values_array);
 
 				// Add new control item option values
-				if (($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4'))
+				if (($transaction_status) & ($saved_control_item_id > 0) & ($control_item->get_type() == 'control_item_type_3' | $control_item->get_type() == 'control_item_type_4' | $control_item->get_type() == 'control_item_type_5'))
 				{
 					$control_item_options_array = $control_item->get_options_array();
 

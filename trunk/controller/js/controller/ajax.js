@@ -462,15 +462,19 @@ $(document).ready(function ()
 
 		var control_item_type = $(this).find("input[type=radio]").val();
 
-		if (control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4")
+		if (control_item_type == "control_item_type_3" | control_item_type == "control_item_type_4" | control_item_type == "control_item_type_5")
 		{
 			if (control_item_type == "control_item_type_3")
 			{
 				$("#add_control_item_option_panel").find(".type").text("Nedtrekksliste");
 			}
-			else
+			else if (control_item_type == "control_item_type_4")
 			{
 				$("#add_control_item_option_panel").find(".type").text("Radioknapper");
+			}
+			else
+			{
+				$("#add_control_item_option_panel").find(".type").text("Avkrysning");
 			}
 
 			$("#add_control_item_option_panel").slideDown(500);
