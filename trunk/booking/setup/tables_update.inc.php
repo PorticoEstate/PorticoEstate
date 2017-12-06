@@ -3623,3 +3623,38 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.28 to 0.2.29
+	 *
+	 */
+	$test[] = '0.2.28';
+	function booking_upgrade0_2_28()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_document_organization', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '255', 'nullable' => false),
+					'owner_id' => array('type' => 'int', 'precision' => '4', 'nullable' => false),
+					'category' => array('type' => 'varchar', 'precision' => '150', 'nullable' => false),
+					'description' => array('type' => 'text', 'nullable' => true),
+				),
+				'pk' => array('id'),
+				'fk' => array(
+					"bb_organization" => array('owner_id' => 'id'),
+				),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.29';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+
