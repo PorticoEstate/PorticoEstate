@@ -124,16 +124,17 @@
 					'new_item' => self::link(array('menuaction' => 'controller.uiprocedure.add')),
 					'allrows' => true,
 					'field' => array(
-						array(
-							'key' => 'id',
-							'label' => lang('ID'),
-							'sortable' => true,
-							'formatter' => 'JqueryPortico.formatLink'
-						),
+//						array(
+//							'key' => 'id',
+//							'label' => lang('ID'),
+//							'sortable' => true,
+//							'formatter' => 'JqueryPortico.formatLink'
+//						),
 						array(
 							'key' => 'title',
 							'label' => lang('Procedure title'),
-							'sortable' => true
+							'sortable' => true,
+							'formatter' => 'JqueryPortico.formatLink'
 						),
 						array(
 							'key' => 'purpose',
@@ -153,6 +154,16 @@
 						array(
 							'key' => 'revision_date',
 							'label' => lang('Procedure revision date'),
+							'sortable' => true
+						),
+						array(
+							'key' => 'modified_by_name',
+							'label' => lang('modified by'),
+							'sortable' => false
+						),
+						array(
+							'key' => 'modified_date',
+							'label' => lang('Modified date'),
 							'sortable' => true
 						),
 						array(
@@ -359,6 +370,16 @@
 						$this->so->transaction_begin();
 						if ($proc_id = $this->so->add($new_procedure)) //add the revised prosedure as new
 						{
+							$sodocuments = createObject('controller.sodocument');
+							$documents = $sodocuments->get(0, 0, '', false, '', '', array('procedure_id' => $procedure_id));
+							foreach ($documents as $document)
+							{
+								$document->set_id(0);//new
+								$document->set_type_id(1);
+								$document->set_procedure_id($proc_id);
+								$sodocuments->store($document);
+							}
+
 							$old_end_date = $start_date ? $start_date : time();
 							$old_procedure->set_end_date($old_end_date);
 							$old_procedure->set_revision_date($revision_date);
@@ -819,6 +840,15 @@
 				}
 			}
 
+			foreach ($rows as &$row)
+			{
+				if(!empty($row['modified_by']))
+				{
+					$row['modified_by_name'] = $GLOBALS['phpgw']->accounts->id2name($row['modified_by']);
+				}
+				$row['modified_date'] = $GLOBALS['phpgw']->common->show_date($row['modified_date'],$this->dateformat);
+			}
+
 			// ... add result data
 			$results = array('results' => $rows);
 
@@ -834,6 +864,7 @@
 				array_walk(
 					$results['results'], array($this, '_add_links'), "controller.uiprocedure.view");
 			}
+
 			return $this->jquery_results($results);
 		}
 
