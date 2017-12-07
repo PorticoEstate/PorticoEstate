@@ -16,20 +16,20 @@ input.date {
   width: 125px;
 }
 
-#save_check_list
+.save_check_list
 {
 /*	text-align: center;*/
 	width: 140px;
 }
 
-#submit_ok
+.submit_ok
 {
  /*	text-align: center;*/
 	background-color: #4CAF50; 
 	width: 140px;
 }
 
-#submit_deviation {
+.submit_deviation {
 /*	text-align: center;*/
 	background-color: #f44336;
 	width: 140px;
