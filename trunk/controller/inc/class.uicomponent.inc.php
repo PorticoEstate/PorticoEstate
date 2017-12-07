@@ -1355,27 +1355,33 @@
 					$row['choose'] = "<input id=\"selected_components\" class=\"mychecks\" type=\"checkbox\" name=\"selected_components[]\" value = \"{$entry['location_id']}_{$entry['component_id']}\">";
 				}
 
+				$control_link_data = null;
 				$found_at_least_one = false;
 				if($filter_month)
 				{
 					$filter_status = $filter_status ? $filter_status : 'filter_month';
 
-					$row[$filter_month] = $this->translate_calendar_info($entry[$filter_month], $year, $filter_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code']);
-					if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+					$row[$filter_month] = $this->translate_calendar_info($entry[$filter_month], $year, $filter_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'],$control_link_data);
+					if(true)// ($row[$filter_month] && (!$user_id || $entry[$filter_month]['info']['assigned_to'] == $user_id))
 					{
-						$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
-						$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
+						$row_sum[$filter_month] = (float)$entry[$filter_month]['info']['service_time'] + (float)$entry[$filter_month]['info']['controle_time'];
+						$row_sum_actual[$filter_month] = + (float)$entry[$filter_month]['info']['billable_hours'];
 					}
 					else
 					{
-						$row_sum[$_month] = 0;
-						$row_sum_actual[$_month] = 0;
+						$row_sum[$filter_month] = 0;
+						$row_sum_actual[$filter_month] = 0;
 					}
 
 					if (!$filter_status || $found_at_least_one)
 					{
 						$total_time[] = $row_sum;
 						$total_time_actual[] = $row_sum_actual;
+
+						$this->add_action_buttons($row, $filter_month, $entry[$filter_month], $control_link_data);
+
+
+
 						$data_set[] = $row;
 					}
 				}
@@ -1383,7 +1389,7 @@
 				{
 					for ($_month = 1; $_month < 13; $_month++)
 					{
-						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code']);
+						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'], $control_link_data);
 						if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 						{
 							$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
@@ -1405,6 +1411,11 @@
 				}
 			}
 			$fields = $this->get_fields($year, $filter_month, $this->user_id);
+			if($filter_month)
+			{
+				$fields[] = array('key' => 'action_button');
+			}
+
 			$class = '';
 			$tbody = '';
 			foreach ($data_set as $row_data)
@@ -1505,7 +1516,7 @@
 			);
 		}
 
-		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='' )
+		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data )
 		{
 			if (!isset($param['repeat_type']))
 			{
@@ -1644,6 +1655,48 @@
 			}
 
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
+		}
+
+		private function add_action_buttons(&$row, $_month, $param,  $control_link_data)
+		{
+
+			$control_link = json_encode($control_link_data);
+			
+			$lang_plan = lang('plan');
+			$lang_ok = lang('ok');
+			$lang_deviation = lang('deviation');
+			if ($param['status'] == 'CONTROL_REGISTERED')
+			{
+				$row['action_button'] = <<<HTML
+					<button class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" onclick = 'perform_action("save_check_list", {$control_link});'>
+						<i class="fa fa-floppy-o" aria-hidden="true"></i>
+						{$lang_plan}
+					</button>
+					<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
+						<i class="fa fa-check-square-o" aria-hidden="true"></i>
+						{$lang_ok}
+					</button>
+					<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
+						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+						{$lang_deviation}
+					</button>
+HTML;
+			}
+			else if ($param['status'] == 'CONTROL_PLANNED')
+			{
+				$row['action_button'] = <<<HTML
+					<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
+						<i class="fa fa-check-square-o" aria-hidden="true"></i>
+						{$lang_ok}
+					</button>
+					<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
+						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+						{$lang_deviation}
+					</button>
+HTML;
+
+
+			}
 		}
 
 		private function get_summary( $data, $user_id )

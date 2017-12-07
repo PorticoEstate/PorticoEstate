@@ -175,19 +175,19 @@
 							<input class="btn" type="submit" name="save_control" value="Lagre detaljer" />
 						</div-->
 						<div id="submit_group" class="pure-button-group" role="group">
-							<button  id="save_check_list" class="pure-button pure-button-primary" type="submit" name="save_check_list" value="1">
+							<button  id="save_check_list" class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" value="1">
 								<i class="fa fa-floppy-o" aria-hidden="true"></i>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</button>
 							<xsl:if test = "check_list/num_open_cases = 0">
-								<button id="submit_ok" class="pure-button pure-button-primary"  type="submit" name="submit_ok" value="1">
+								<button id="submit_ok" class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" value="1">
 									<i class="fa fa-check-square-o" aria-hidden="true"></i>
 									<xsl:text> </xsl:text>
 									<xsl:value-of select="php:function('lang', 'ok')" />
 								</button>
 							</xsl:if>
-							<button id="submit_deviation" class="pure-button pure-button-primary" type="submit" name="submit_deviation" value="1">
+							<button id="submit_deviation" class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" value="1">
 								<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
 								<xsl:text> </xsl:text>
 								<xsl:value-of select="php:function('lang', 'deviation')" />

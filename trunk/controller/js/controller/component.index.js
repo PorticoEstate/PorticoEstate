@@ -383,3 +383,58 @@ checkAll = function (myclass)
 var oArgs = {menuaction: 'property.bolocation.get_locations'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'location_container');
+
+
+
+perform_action = function(name, oArgs)
+{
+
+		if(name == 'save_check_list')
+		{
+			//nothing
+			location.assign(phpGWLink('index.php', oArgs));
+			return
+		}
+		else if (name == 'submit_ok')
+		{
+			oArgs.menuaction = 'controller.uicheck_list.save_check_list';
+			oArgs.submit_ok = 1;
+
+		}
+		else if (name == 'submit_deviation')
+		{
+			oArgs.menuaction = 'controller.uicheck_list.save_check_list';
+			oArgs.submit_deviation = 1;
+		}
+
+console.log(oArgs);
+
+		var requestUrl = phpGWLink('index.php', oArgs);
+		var confirm_msg = requestUrl;
+		var r = confirm(confirm_msg);
+		if (r !== true)
+		{
+			return false;
+		}
+
+		location.assign(phpGWLink('index.php', oArgs));
+};
+
+
+$(document).ready(function ()
+{
+	$(".save_check_list_form").on("click", function (e)
+	{
+		alert('e');
+		e.preventDefault();
+		var thisForm = $(this);
+		var requestUrl = $(thisForm).attr("action");
+		alert(requestUrl);
+	});
+
+	$(".submit_ok").on("on", function (e)
+	{
+		alert('e');
+	});
+
+});
