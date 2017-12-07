@@ -333,7 +333,8 @@
 				);
 			}
 			$status_list = array(
-				array('id' => '', 'name' => lang('select value')),
+				array('id' => 'in_queue', 'name' => lang('in queue')),
+				array('id' => 'all', 'name' => lang('All')),
 				array('id' => 'not_performed', 'name' => lang('status not done')),
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
 			);
@@ -1470,7 +1471,7 @@
 			}
 			unset($_month);
 			$result['time_sum_actual'][0] = $sum_year_actual;
-			$result['total_records'] = $total_records;
+			$result['total_records'] = count($data_set);
 			$result['location_filter'] = $location_filter;
 			if ($choose_master)
 			{
@@ -1518,13 +1519,26 @@
 
 			if ($filter_status)
 			{
+				if ($filter_status == 'in_queue')
+				{
+					switch ($param['status'])
+					{
+				//		case "CONTROL_NOT_DONE":
+						case "CONTROL_REGISTERED":
+						case "CONTROL_PLANNED":
+				//		case "CONTROL_NOT_DONE_WITH_PLANNED_DATE":
+							break;//continues
+						default:
+							return;
+					}
+				}
 				if ($filter_status == 'not_performed')
 				{
 					switch ($param['status'])
 					{
 						case "CONTROL_NOT_DONE":
-						//			case "CONTROL_REGISTERED":
-						//			case "CONTROL_PLANNED":
+			//			case "CONTROL_REGISTERED":
+			//			case "CONTROL_PLANNED":
 						case "CONTROL_NOT_DONE_WITH_PLANNED_DATE":
 							break;//continues
 						default:
