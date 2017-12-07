@@ -54,7 +54,7 @@ and open the template in the editor.
                             <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
                             <li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li>
                             <li class="nav-item active"><a class="nav-link" href="#">Brukerveiledning</a></li>
-                            <li class="nav-item active"><a class="nav-link" href="#">Logg inn</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="{login_url}">Logg inn</a></li>
                         </ul>   
                     </div>         
                 </div>
