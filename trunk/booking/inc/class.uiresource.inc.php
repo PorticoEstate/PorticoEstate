@@ -171,7 +171,7 @@
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -239,7 +239,7 @@
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);

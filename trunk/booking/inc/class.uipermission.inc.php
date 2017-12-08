@@ -296,7 +296,7 @@
 			$this->flash_form_errors($errors);
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#permission');
 			$active_tab = 'generic';
 
 			$permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -339,7 +339,7 @@
 			$this->flash_form_errors($errors);
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#permission');
 			$active_tab = 'generic';
 
 			$permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
