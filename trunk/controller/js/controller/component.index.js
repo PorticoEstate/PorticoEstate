@@ -389,35 +389,56 @@ JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'loca
 perform_action = function(name, oArgs)
 {
 
-		if(name == 'save_check_list')
-		{
-			//nothing
-			location.assign(phpGWLink('index.php', oArgs));
-			return
-		}
-		else if (name == 'submit_ok')
-		{
-			oArgs.menuaction = 'controller.uicheck_list.save_check_list';
-			oArgs.submit_ok = 1;
+	if(name === 'save_check_list')
+	{
+		//nothing
+		location.assign(phpGWLink('index.php', oArgs));
+		return;
+	}
+	else if (name === 'submit_ok')
+	{
+		oArgs.menuaction = 'controller.uicheck_list.save_check_list';
 
-		}
-		else if (name == 'submit_deviation')
-		{
-			oArgs.menuaction = 'controller.uicheck_list.save_check_list';
-			oArgs.submit_deviation = 1;
-		}
+		var confirm_msg = "Godkjenner du denne uten avvik?";
 
-console.log(oArgs);
-
-		var requestUrl = phpGWLink('index.php', oArgs);
-		var confirm_msg = requestUrl;
-		var r = confirm(confirm_msg);
-		if (r !== true)
+		if (confirm(confirm_msg) !== true)
 		{
 			return false;
 		}
 
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			data: {submit_ok: 1},
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data !== null)
+				{
+					var message = data.message;
+
+					if (data.status === 'error')
+					{
+						alert(message);
+					}
+					else
+					{
+						alert('Ok');
+						update_table();
+					}
+				}
+			}
+		});
+	}
+	else if (name === 'submit_deviation')
+	{
+		oArgs.menuaction = 'controller.uicheck_list.save_check_list';
+		oArgs.submit_deviation = 1;
 		location.assign(phpGWLink('index.php', oArgs));
+	}
+
 };
 
 
