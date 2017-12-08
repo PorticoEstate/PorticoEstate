@@ -32,6 +32,8 @@
 								<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
 								<xsl:text>&amp;year=</xsl:text>
 								<xsl:value-of select="current_year"/>
+								<xsl:text>&amp;month=</xsl:text>
+								<xsl:value-of select="current_month_nr"/>
 								<xsl:text>&amp;location_id=</xsl:text>
 								<xsl:value-of select="component_array/location_id"/>
 								<xsl:text>&amp;component_id=</xsl:text>
