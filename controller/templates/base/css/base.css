@@ -2368,3 +2368,48 @@ p.no_items_msg {
   margin: 20px 0;
   padding: 15px;
 }
+
+.save_check_list
+{
+/*	text-align: center;*/
+	width: 140px;
+}
+
+.submit_ok
+{
+ /*	text-align: center;*/
+	background-color: #4CAF50;
+	width: 140px;
+}
+
+.submit_deviation {
+/*	text-align: center;*/
+	background-color: #f44336;
+	width: 140px;
+}
+
+.pure-button
+{
+	width: 140px;
+}
+
+
+/* Can be any width and height */
+.block {
+  text-align: center;
+}
+
+/* The ghost, nudged to maintain perfect centering */
+.block:before {
+  content:'';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+/* The element to be centered, can be any width or height */
+.centered {
+  display: inline-block;
+  vertical-align: middle;
+}
