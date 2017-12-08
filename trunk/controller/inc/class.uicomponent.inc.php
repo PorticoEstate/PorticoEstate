@@ -339,11 +339,8 @@
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
 			);
 
-			$filter_component = '';
-			if (phpgw::get_var('component_id', 'int'))
-			{
-				$filter_component = phpgw::get_var('location_id', 'int') . '_' . phpgw::get_var('component_id', 'int');
-			}
+
+			$filter_component = phpgw::get_var('filter_component');
 
 			$control_types = createObject('controller.socontrol')->get(0, 0, 'title', true, '', '', array());
 
@@ -847,7 +844,17 @@
 
 			if ($user_id < 0)
 			{
+				$all_items = false;
 				$user_id = $user_id * -1;
+			}
+
+			if($all_items)
+			{
+				$user_id = 0;
+			}
+
+			if ($user_id)
+			{
 				$all_items = false;
 
 				$keep_only_assigned_to = $user_id;
@@ -1093,6 +1100,12 @@
 							{
 								foreach ($calendar_array as $_month => $_month_info)
 								{
+
+									if($filter_month &&  $_month != $filter_month)
+									{
+										continue;
+									}
+
 									if (isset($_month_info['info']['assigned_to']) && $_month_info['info']['assigned_to'] == $user_id)
 									{
 										$found_assigned_to = true;
@@ -1661,38 +1674,56 @@
 		{
 
 			$control_link = json_encode($control_link_data);
-			
+
 			$lang_plan = lang('plan');
 			$lang_ok = lang('ok');
 			$lang_deviation = lang('deviation');
 			if ($param['status'] == 'CONTROL_REGISTERED')
 			{
 				$row['action_button'] = <<<HTML
-					<button class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" onclick = 'perform_action("save_check_list", {$control_link});'>
-						<i class="fa fa-floppy-o" aria-hidden="true"></i>
-						{$lang_plan}
-					</button>
-					<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
-						<i class="fa fa-check-square-o" aria-hidden="true"></i>
-						{$lang_ok}
-					</button>
-					<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
-						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-						{$lang_deviation}
-					</button>
+			<div class="block">
+				<div class="centered">
+					<div>
+						<button class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" onclick = 'perform_action("save_check_list", {$control_link});'>
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+							{$lang_plan}
+						</button>
+					</div>
+					<div>
+						<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
+							<i class="fa fa-check-square-o" aria-hidden="true"></i>
+							{$lang_ok}
+						</button>
+					</div>
+					<div>
+						<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
+							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+							{$lang_deviation}
+						</button>
+					</div>
+				</div>
+			</div>
 HTML;
 			}
 			else if ($param['status'] == 'CONTROL_PLANNED')
 			{
 				$row['action_button'] = <<<HTML
-					<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
-						<i class="fa fa-check-square-o" aria-hidden="true"></i>
-						{$lang_ok}
-					</button>
-					<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
-						<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-						{$lang_deviation}
-					</button>
+			<div class="block">
+				<div class="centered">
+					<div>
+						<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
+							<i class="fa fa-check-square-o" aria-hidden="true"></i>
+							{$lang_ok}
+						</button>
+					</div>
+					<div>
+						<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
+							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+							{$lang_deviation}
+						</button>
+					</div>
+				</div>
+			</div>
 HTML;
 
 

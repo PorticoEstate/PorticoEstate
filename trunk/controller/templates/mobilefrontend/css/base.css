@@ -201,3 +201,24 @@ li.check_item_case ul li .col_3 {
     font-weight: bold;
     text-decoration: none;
 }
+
+
+/* Can be any width and height */
+.block {
+  text-align: center;
+}
+
+/* The ghost, nudged to maintain perfect centering */
+.block:before {
+  content:'';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em; /* Adjusts for spacing */
+}
+
+/* The element to be centered, can be any width or height */
+.centered {
+  display: inline-block;
+  vertical-align: middle;
+}

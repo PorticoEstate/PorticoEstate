@@ -184,6 +184,7 @@ HTML;
 					'menuaction' => $menuaction,
 					'location_id' => $location_id,
 					'component_id' => $id,
+					'filter_component' => "{$location_id}_{$id}"
 				);
 
 				$entry['title_text'] = $entry['title'];

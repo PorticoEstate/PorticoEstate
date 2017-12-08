@@ -440,22 +440,3 @@ perform_action = function(name, oArgs)
 	}
 
 };
-
-
-$(document).ready(function ()
-{
-	$(".save_check_list_form").on("click", function (e)
-	{
-		alert('e');
-		e.preventDefault();
-		var thisForm = $(this);
-		var requestUrl = $(thisForm).attr("action");
-		alert(requestUrl);
-	});
-
-	$(".submit_ok").on("on", function (e)
-	{
-		alert('e');
-	});
-
-});
