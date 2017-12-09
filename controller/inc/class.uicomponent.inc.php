@@ -414,7 +414,7 @@
 								'onclick' => 'update_table();'
 							),*/
 							array('type' => 'checkbox',
-								'name' => 'all_users',
+								'name' => 'total_hours',
 								'text' => 'Vis totale timer',
 								'value' => 1,
 								'onclick' => 'update_table();'
@@ -777,9 +777,9 @@
 			$year = phpgw::get_var('year', 'int');
 			$filter_month = phpgw::get_var('month', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
-			$all_users = phpgw::get_var('all_users', 'bool');
+			$total_hours = phpgw::get_var('total_hours', 'bool');
 //			$user_only = phpgw::get_var('user_only', 'bool');
-			$user_only = $all_users ? false : true;
+			$user_only = $total_hours ? false : true;
 			$filter_status = phpgw::get_var('status', 'string');
 			$report_type = phpgw::get_var('report_type', 'string');
 			if ($filter_component_str = phpgw::get_var('filter_component', 'string'))
@@ -847,8 +847,12 @@
 				$all_items = false;
 				$user_id = $user_id * -1;
 			}
+			if ($user_id)
+			{
+				$keep_only_assigned_to = $user_id;
+			}
 
-			if($all_items)
+			if($all_items || $total_hours)
 			{
 				$user_id = 0;
 			}
@@ -858,12 +862,16 @@
 				$all_items = false;
 
 				$keep_only_assigned_to = $user_id;
-				$assigned_items = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id, $filter_control_id);
+				$assigned_items = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $user_id, $filter_control_id);
 
 				if(empty($get_locations))
 				{
 					foreach ($assigned_items as $_location_id => $item_list)
 					{
+						if ($location_id > 0 && $_location_id != $location_id)
+						{
+							continue;
+						}
 						$_items = execMethod('property.soentity.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
@@ -909,7 +917,7 @@
 			}
 			else
 			{
-				$exclude_locations = array();
+				$exclude_locations_for_stray_items = array();
 
 				foreach ($location_filter as $_location_filter)
 				{
@@ -918,7 +926,7 @@
 						continue;
 					}
 					$_location_id = (int)$_location_filter['id'];
-					$exclude_locations[] = $_location_id;
+					$exclude_locations_for_stray_items[] = $_location_id;
 
 
 					if(empty($get_locations))
@@ -964,7 +972,7 @@
 				{
 					$_items = execMethod('property.soentity.read_entity_group', array(
 						'entity_group_id' => $entity_group_id,
-						'exclude_locations' => $exclude_locations,
+						'exclude_locations' => $exclude_locations_for_stray_items,
 						'location_id' => $_location_id,
 						'control_id' => $filter_control_id,
 						'district_id' => $district_id,
@@ -1004,8 +1012,9 @@
 
 				if (empty($get_locations) && ($all_items && !$_item['has_control']))
 				{
-					continue;
+		//			continue;
 				}
+
 				if (!$_item['id'])
 				{
 					continue;
@@ -1278,7 +1287,7 @@
 
 			if ($report_type == 'summary')
 			{
-				if($all_users)
+				if($total_hours)
 				{
 					$user_id = 0;
 				}
@@ -1386,7 +1395,7 @@
 						$row_sum_actual[$filter_month] = 0;
 					}
 
-					if (!$filter_status || $found_at_least_one)
+					if (!$filter_status == 'all' || $found_at_least_one)
 					{
 						$total_time[] = $row_sum;
 						$total_time_actual[] = $row_sum_actual;
@@ -1403,7 +1412,8 @@
 					for ($_month = 1; $_month < 13; $_month++)
 					{
 						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'], $control_link_data);
-						if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+					//	if($total_hours)// || $keep_only_assigned_to == $entry[$_month]['info']['assigned_to'])//
+						if($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 						{
 							$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
 							$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
@@ -1414,7 +1424,7 @@
 							$row_sum_actual[$_month] = 0;
 						}
 					}
-					if (!$filter_status || $found_at_least_one)
+					if ($filter_status == 'all' || $found_at_least_one)
 					{
 						$total_time[] = $row_sum;
 						$total_time_actual[] = $row_sum_actual;
@@ -1536,9 +1546,14 @@
 				return '';
 			}
 
+			$time = $param['info']['service_time'] + $param['info']['controle_time'];
+			$time = $time ? $time : '&nbsp;';
+			$billable_hours = (float)$param['info']['billable_hours'];
+			$time .= " / {$billable_hours}";
+
 			if ($keep_only_assigned_to && $keep_only_assigned_to != $param['info']['assigned_to'])
 			{
-				return '';
+				return "<br/><br/><br/><pre>{$time}</pre>";
 			}
 
 			if ($filter_status)
@@ -1660,12 +1675,13 @@
 			$assigned_to = $param['info']['assigned_to'] > 0 ? $GLOBALS['phpgw']->accounts->id2name($param['info']['assigned_to']) : '&nbsp;<br/>';
 			//	$service_time = $param['info']['service_time'] ? $param['info']['service_time'] : '&nbsp;';
 			//	$controle_time = $param['info']['controle_time'] ? $param['info']['controle_time'] : '&nbsp;';
-			$time = $param['info']['service_time'] + $param['info']['controle_time'];
-			$time = $time ? $time : '&nbsp;';
-			$billable_hours = (float)$param['info']['billable_hours'];
-			{
-				$time .= " / {$billable_hours}";
-			}
+
+//			$time = $param['info']['service_time'] + $param['info']['controle_time'];
+//			$time = $time ? $time : '&nbsp;';
+//			$billable_hours = (float)$param['info']['billable_hours'];
+//			{
+//				$time .= " / {$billable_hours}";
+//			}
 
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
 		}
