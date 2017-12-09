@@ -269,3 +269,11 @@ remark	home	no	Merknad
 about %1	about	no	Om %1
 group	common	no	Gruppe
 smtp server is not set! (admin section)	common	no	SMTP serveren er ikke konfigurert (admin seksjonen)
+set permission	common	no	sett rettighet
+right	common	no	Rettighet
+mask	common	no	Maskering
+result	common	no	Resultat
+manage	common	no	Administrer
+read	common	no	Les
+select a location!	common	no	Velg en lokasjon
+no location	common	no	Ingen lokasjon
