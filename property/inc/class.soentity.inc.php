@@ -867,8 +867,11 @@
 
 			if ($check_for_control && !$control_registered)
 			{
-				$filtermethod .= " $where (control_id = $control_id OR control_id IS NULL)";
-				$where = 'AND';
+				if($control_id)
+				{
+					$filtermethod .= " $where (control_id = $control_id OR control_id IS NULL)";
+					$where = 'AND';
+				}
 				$sql .= "{$this->left_join} {$join_control}";
 
 				$sql_custom_field .= ',count(control_id) AS has_control';
