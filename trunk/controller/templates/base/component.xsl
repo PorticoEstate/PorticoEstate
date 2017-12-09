@@ -128,7 +128,6 @@
 				<xsl:for-each select="item">
 					<tr>
 						<td>
-
 							<label>
 								<xsl:attribute name="for">
 									<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>

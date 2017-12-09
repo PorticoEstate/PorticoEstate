@@ -79,60 +79,60 @@ update_table = function (location_code)
 	var report_type = $("#report_type").val();
 	var user_id = $("#user_id").val();
 	var custom_frontend = $("[name='custom_frontend']").val();
-	var hide_all_users = false;
+	var hide_total_hours = false;
 
 	if (custom_frontend == 1)
 	{
-		$("#user_id").hide();
-		$("[for='user_id']").hide();
+		$("#user_id").parent().hide();
+		$("[for='user_id']").parent().hide();
 	}
 //console.log(user_id);
 	if (user_id < 0 || custom_frontend == 1)
 	{
-		$("#entity_group_id").hide();
-		$("[for='entity_group_id']").hide();
-		$("#location_id").hide();
-		$("[for='location_id']").hide();
-		$("[name='all_items']").hide();
-		$("[for='all_items']").hide();
-		$("#org_unit_id").hide();
-		$("[for='org_unit_id']").hide();
-		$("[name='all_users']").hide();
-		$("[for='all_users']").hide();
-		hide_all_users = true;
+		$("#entity_group_id").parent().hide();
+		$("[for='entity_group_id']").parent().hide();
+		$("#location_id").parent().hide();
+		$("[for='location_id']").parent().hide();
+		$("[name='all_items']").parent().hide();
+		$("[for='all_items']").parent().hide();
+		$("#org_unit_id").parent().hide();
+		$("[for='org_unit_id']").parent().hide();
+		$("[name='total_hours']").parent().hide();
+		$("[for='total_hours']").parent().hide();
+		hide_total_hours = true;
 	}
 	else
 	{
-		$("#entity_group_id").show();
-		$("[for='entity_group_id']").show();
-		$("#location_id").show();
-		$("[for='location_id']").show();
-		$("[name='all_items']").show();
-		$("[for='all_items']").show();
-		$("#org_unit_id").show();
-		$("[for='org_unit_id']").show();
-		$("[name='all_users']").show();
-		$("[for='all_users']").show();
+		$("#entity_group_id").parent().show();
+		$("[for='entity_group_id']").parent().show();
+		$("#location_id").parent().show();
+		$("[for='location_id']").parent().show();
+		$("[name='all_items']").parent().show();
+		$("[for='all_items']").parent().show();
+		$("#org_unit_id").parent().show();
+		$("[for='org_unit_id']").parent().show();
+		$("[name='total_hours']").parent().show();
+		$("[for='total_hours']").parent().show();
 	}
 
-	if (report_type != 'summary' && hide_all_users == false)
+	if (report_type != 'summary' && hide_total_hours == false)
 	{
-		$("[name='all_users']").show();
-		$("[for='all_users']").show();
+		$("[name='total_hours']").parent().show();
+		$("[for='total_hours']").parent().show();
 	}
 
 	if (user_id == '')
 	{
-		$("[name='all_users']").hide();
-		$("[for='all_users']").hide();
+		$("[name='total_hours']").parent().hide();
+		$("[for='total_hours']").parent().hide();
 	}
 
 	if (report_type == 'summary')
 	{
-		$("[name='all_items']").hide();
-		$("[for='all_items']").hide();
-		$("[name='status']").hide();
-		$("[for='status']").hide();
+		$("[name='all_items']").parent().hide();
+		$("[for='all_items']").parent().hide();
+		$("[name='status']").parent().hide();
+		$("[for='status']").parent().hide();
 	}
 
 	var requestUrl = $("#queryForm").attr("action");
