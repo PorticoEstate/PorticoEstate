@@ -451,7 +451,7 @@
 //				$check_list_locked = true;
 			}
 //			echo 'tid: '.$current_time.'abs: '.$absolute_deadline;
-			
+
 			$repeat_descr = '';
 			if ($serie = $this->so_control->get_serie($check_list->get_serie_id()))
 			{
@@ -1107,7 +1107,7 @@
 			{
 				if( $submit_ok || $this->_check_for_required($check_list))
 				{
-					$check_list->set_status($status);	
+					$check_list->set_status($status);
 				}
 			}
 			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
@@ -1707,14 +1707,14 @@
 
 		}
 
+
 		/**
-		 * Check for required items on all groups and for all components registered to the location.
+		 * Get required items on all groups and for all components registered to the location.
 		 * @param object $check_list
-		 * @return bool
-		 * */
-		private function _check_for_required( $check_list )
+		 * @return array
+		 */
+		private function _get_required_control_items( $check_list )
 		{
-			$ok = true;
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
@@ -1736,9 +1736,21 @@
 					}
 				}
 			}
+			return $required_control_items;
+		}
+
+		/**
+		 * Check for required items on all groups and for all components registered to the location.
+		 * @param object $check_list
+		 * @return bool
+		 * */
+		private function _check_for_required( $check_list )
+		{
+			$ok = true;
+
+			$required_control_items = $this->_get_required_control_items($check_list);
 
 			$components_at_location = array();
-			$control_groups_with_items_array = array();
 
 			$component_id = $check_list->get_component_id();
 
