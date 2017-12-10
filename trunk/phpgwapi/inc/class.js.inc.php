@@ -291,7 +291,14 @@ HTML;
 		*/
 		public function validate_file($package, $file, $app='phpgwapi')
 		{
-			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$package/$file.js"))
+			$template_set = $GLOBALS['phpgw_info']['server']['template_set'];
+
+			if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$template_set/$file.js"))
+			{
+				$this->files[$app][$package][$file] = True;
+				return True;
+			}
+			else if(is_readable(PHPGW_INCLUDE_ROOT . "/$app/js/$package/$file.js"))
 			{
 				$this->files[$app][$package][$file] = True;
 				return True;
