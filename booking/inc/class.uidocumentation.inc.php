@@ -167,7 +167,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'document.js');
+			self::add_javascript('booking', 'base', 'document.js');
 
 			$this->add_default_display_data($document);
 
@@ -200,7 +200,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'document.js');
+			self::add_javascript('booking', 'base', 'document.js');
 			$this->flash_form_errors($errors);
 			$this->add_default_display_data($document);
 

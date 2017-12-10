@@ -146,7 +146,7 @@
 			parent::__construct();
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
 
-			self::add_javascript('booking', 'booking', 'common');
+			self::add_javascript('booking', 'base', 'common');
 
 			$this->ui_session_key = $this->current_app() . '_uicommon';
 			//$this->restore_flash_msgs();

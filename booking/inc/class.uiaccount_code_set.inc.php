@@ -66,8 +66,8 @@
 			$config = CreateObject('phpgwapi.config', 'booking');
 			$config->read();
 
-			self::add_javascript('booking', 'booking', 'account_code_set.js');
-//			self::add_javascript('booking', 'booking', 'datatable.js');
+			self::add_javascript('booking', 'base', 'account_code_set.js');
+//			self::add_javascript('booking', 'base', 'datatable.js');
 			$data = array(
 				'form' => array(
 					'toolbar' => array(

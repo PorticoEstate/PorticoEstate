@@ -64,7 +64,7 @@
 				return $this->query();
 			}
 
-			self::add_javascript('booking', 'booking', 'datatable.js');
+			self::add_javascript('booking', 'base', 'datatable.js');
 
 			$data = array(
 				'form' => array(

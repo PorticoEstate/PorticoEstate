@@ -557,7 +557,7 @@
 				$this->flash_form_errors($errors);
 			}
 
-			self::add_javascript('booking', 'booking', 'event.js');
+			self::add_javascript('booking', 'base', 'event.js');
 			array_set_default($event, 'resources', array());
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
@@ -995,7 +995,7 @@
 			phpgwapi_jquery::load_widget('datepicker');
 
 
-			self::add_javascript('booking', 'booking', 'event.js');
+			self::add_javascript('booking', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
 					'id' => $event['application_id']));
