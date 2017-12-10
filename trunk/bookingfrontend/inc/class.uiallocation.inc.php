@@ -310,7 +310,7 @@
 					}
 				}
 				$this->flash_form_errors($errors);
-//				self::add_javascript('booking', 'booking', 'allocation.js');
+//				self::add_javascript('booking', 'base', 'allocation.js');
 
 				$allocation['resources_json'] = json_encode(array_map('intval', $allocation['resources']));
 #				$allocation['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uiallocation.show', 'id' => $allocation['id']));

@@ -805,11 +805,11 @@
 				$active_tab = 'generic';
 				$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-				self::add_javascript('booking', 'booking', 'application.js');
+				self::add_javascript('booking', 'base', 'application.js');
 			}
 			else
 			{
-				self::add_javascript('bookingfrontend', 'bookingfrontend', 'application.js');
+				self::add_javascript('bookingfrontend', 'base', 'application.js');
 			}
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
@@ -910,12 +910,12 @@
 				$tabs = array();
 				$tabs['generic'] = array('label' => lang('Application Edit'), 'link' => '#application_edit');
 				$active_tab = 'generic';
-				self::add_javascript('booking', 'booking', 'application.js');
+				self::add_javascript('booking', 'base', 'application.js');
 				$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			}
 			else
 			{
-				self::add_javascript('bookingfrontend', 'bookingfrontend', 'application.js');
+				self::add_javascript('bookingfrontend', 'base', 'application.js');
 			}
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',

@@ -143,7 +143,7 @@
 			}
 
 			$date = substr($event['from_'], 0, 10);
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'event.js');
+			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
 					'id' => $event['building_id'], 'date' => $date));
@@ -252,7 +252,7 @@
 			}
 			$this->flash_form_errors($errors);
 			$date = substr($event['from_'], 0, 10);
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'event.js');
+			self::add_javascript('bookingfrontend', 'base', 'event.js');
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',
 					'id' => $event['building_id'], 'date' => $date));

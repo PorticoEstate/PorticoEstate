@@ -168,7 +168,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'permission_root.js');
+			self::add_javascript('booking', 'base', 'permission_root.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$this->add_default_display_data($permission);
@@ -204,7 +204,7 @@
 		// 		}
 		// 	}
 		// 	
-		// 	self::add_javascript('booking', 'booking', 'permission_root.js');
+		// 	self::add_javascript('booking', 'base', 'permission_root.js');
 		// 	
 		// 	$this->add_default_display_data($permission);
 		// 	

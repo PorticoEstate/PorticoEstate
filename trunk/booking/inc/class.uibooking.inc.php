@@ -53,7 +53,7 @@
 			{
 				return $this->query();
 			}
-			self::add_javascript('booking', 'booking', 'allocation_list.js');
+			self::add_javascript('booking', 'base', 'allocation_list.js');
 
 			phpgwapi_jquery::load_widget('autocomplete');
 			$data = array(
@@ -585,7 +585,7 @@
 			}
 			$this->flash_form_errors($errors);
 			unset($errors['cost']);
-			self::add_javascript('booking', 'booking', 'booking.js');
+			self::add_javascript('booking', 'base', 'booking.js');
 
 			if (phpgw::get_var('resource') == 'null')
 			{
@@ -766,7 +766,7 @@
 			$booking['to_'] = pretty_timestamp($booking['to_']);
 
 			$this->flash_form_errors($errors);
-			self::add_javascript('booking', 'booking', 'booking.js');
+			self::add_javascript('booking', 'base', 'booking.js');
 			$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 			$booking['cancel_link'] = self::link(array('menuaction' => 'booking.uibooking.show',
 					'id' => $booking['id']));
@@ -923,7 +923,7 @@
 
 			$this->flash_form_errors($errors);
 			phpgwapi_jquery::load_widget('autocomplete');
-			self::add_javascript('booking', 'booking', 'booking.js');
+			self::add_javascript('booking', 'base', 'booking.js');
 
 			$booking['from_'] = pretty_timestamp($booking['from_']);
 			$booking['to_'] = pretty_timestamp($booking['to_']);

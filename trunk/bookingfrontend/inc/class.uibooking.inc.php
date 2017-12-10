@@ -245,7 +245,7 @@
 			}
 
 			$this->flash_form_errors($errors);
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
+			self::add_javascript('bookingfrontend', 'base', 'booking.js');
 			array_set_default($booking, 'resources', array());
 
 			if (!$activity_id)
@@ -501,7 +501,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking.js');
+			self::add_javascript('bookingfrontend', 'base', 'booking.js');
 			if ($step < 2)
 			{
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
@@ -671,7 +671,7 @@
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];
 
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'booking_massupdate.js');
+			self::add_javascript('bookingfrontend', 'base', 'booking_massupdate.js');
 
 			phpgwapi_jquery::formvalidator_generate(array('location', 'date', 'security',
 				'file'), 'booking_form');
@@ -1114,7 +1114,7 @@
 				$booking['from_'] = pretty_timestamp($booking['from_']);
 				$booking['to_'] = pretty_timestamp($booking['to_']);
 
-//				self::add_javascript('booking', 'booking', 'booking.js');
+//				self::add_javascript('booking', 'base', 'booking.js');
 				$booking['resources_json'] = json_encode(array_map('intval', $booking['resources']));
 #				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibooking.show', 'id' => $booking['id']));
 				$booking['cancel_link'] = self::link(array('menuaction' => 'bookingfrontend.uibuilding.schedule',

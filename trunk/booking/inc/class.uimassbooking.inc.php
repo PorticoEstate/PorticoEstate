@@ -134,7 +134,7 @@
 
 			$building['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			self::add_javascript('booking', 'booking', 'schedule.js');
+			self::add_javascript('booking', 'base', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
 			self::render_template_xsl('massbooking_schedule', array('building' => $building,
 				'backend' => $backend));
