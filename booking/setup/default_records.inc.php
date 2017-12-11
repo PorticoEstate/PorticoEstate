@@ -220,3 +220,41 @@
 	}
 
 	$GLOBALS['phpgw_setup']->oProc->query("SELECT setval('seq_bb_targetaudience', COALESCE((SELECT MAX(id)+1 FROM bb_targetaudience), 1), false)", __LINE__, __FILE__);
+
+// Default groups and users
+	$GLOBALS['phpgw']->accounts = createObject('phpgwapi.accounts');
+	$GLOBALS['phpgw']->acl = CreateObject('phpgwapi.acl');
+	$GLOBALS['phpgw']->acl->enable_inheritance = true;
+
+
+	$modules = array(
+		'booking',
+		'manual',
+		'preferences',
+		'property'
+	);
+
+	$aclobj = & $GLOBALS['phpgw']->acl;
+
+	if (!$GLOBALS['phpgw']->accounts->exists('booking_group'))
+	{
+		$account = new phpgwapi_group();
+		$account->lid = 'booking_group';
+		$account->firstname = 'Booking';
+		$account->lastname = 'Group';
+		$rental_group = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
+	}
+	else
+	{
+		$rental_group = $GLOBALS['phpgw']->accounts->name2id('booking_group');
+	}
+
+	$aclobj->set_account_id($rental_group, true);
+	$aclobj->add('booking', '.office', 7);
+	$aclobj->add('booking', 'run', 1);
+	$aclobj->add('property', '.', 1);
+	$aclobj->add('property', 'run', 1);
+	$aclobj->add('preferences', 'changepassword', 1);
+	$aclobj->add('preferences', '.', 1);
+	$aclobj->add('preferences', 'run', 1);
+	$aclobj->save_repository();
