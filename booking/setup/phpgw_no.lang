@@ -77,9 +77,10 @@ document name	booking	no	Dokumentnavn
 documents	booking	no	Dokumenter
 drawing	booking	no	Tegning
 edit	booking	no	Rediger
-edit agegroup group	booking	no	Rediger aldersgruppe
+add agegroup	booking	no	Ny aldersgruppe
+edit agegroup	booking	no	Rediger aldersgruppe
 edit allocation	booking	no	Rediger tildeling
-edit Audience group	booking	no	Rediger målgruppe
+edit audience group	booking	no	Rediger målgruppe
 edit booking	booking	no	Rediger interntildeling
 edit event	booking	no	Rediger arrangement
 edit organization	booking	no	Rediger organisasjon
