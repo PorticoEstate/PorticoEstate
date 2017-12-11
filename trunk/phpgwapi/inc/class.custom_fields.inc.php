@@ -378,14 +378,14 @@
 					. " WHERE location_id ='{$values['location_id']}'";
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
-				$values['id']	= $this->_db->f('current_id') + 1;		
+				$values['id']	= (int)$this->_db->f('current_id') + 1;		
 
 				$sql = 'SELECT MAX(attrib_sort) AS max_sort'
 					. ' FROM phpgw_cust_attribute '
 					. " WHERE location_id ='{$values['location_id']}' AND group_id = {$values['group_id']}";
 				$this->_db->query($sql, __LINE__, __FILE__);
 				$this->_db->next_record();
-				$values['attrib_sort']	= $this->_db->f('max_sort') + 1;
+				$values['attrib_sort']	= (int)$this->_db->f('max_sort') + 1;
 			
 				$cols = implode(', ', array_keys($values));
 				$vals = $this->_db->validate_insert($values);
