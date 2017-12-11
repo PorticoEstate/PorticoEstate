@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('booking.uicommon');
+	phpgw::import_class('booking.uidocument_organization');
 
 	class booking_uiorganization extends booking_uicommon
 	{
@@ -326,6 +327,7 @@
 			$organization['new_delegate_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit',
 					'organization_id' => $organization['id']));
 			$organization['cancel_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
+			$organization['add_document_link'] = booking_uidocument::generate_inline_link('organization', $organization['id'], 'add');
 			$organization['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			$this->install_customer_identifier_ui($organization);
 			self::render_template_xsl('organization', array('organization' => $organization));

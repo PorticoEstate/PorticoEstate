@@ -451,7 +451,7 @@
 //				$check_list_locked = true;
 			}
 //			echo 'tid: '.$current_time.'abs: '.$absolute_deadline;
-			
+
 			$repeat_descr = '';
 			if ($serie = $this->so_control->get_serie($check_list->get_serie_id()))
 			{
@@ -968,8 +968,17 @@
 			$assigned_to = phpgw::get_var('assigned_to', 'int');
 			$billable_hours = phpgw::get_var('billable_hours', 'float');
 
+
+			//From direct url
+			$deadline_ts = phpgw::get_var('deadline_ts', 'int');
+
+			//From datefield in edit form
 			$deadline_date_ts = date_converter::date_to_timestamp($deadline_date);
-			//$original_deadline_date_ts = date_converter::date_to_timestamp($original_deadline_date);
+
+			if(!$deadline_date_ts)
+			{
+				$deadline_date_ts = $deadline_ts;
+			}
 
 			$error = false;
 
@@ -1011,6 +1020,23 @@
 			{
 				$check_list = $this->so->get_single($check_list_id);
 
+				if(!$planned_date_ts)
+				{
+					$planned_date_ts = $check_list->get_planned_date();
+				}
+				if(!$original_deadline_date_ts)
+				{
+					$original_deadline_date_ts = $check_list->get_original_deadline();
+				}
+				if(!$deadline_date_ts)
+				{
+					$deadline_date_ts = $check_list->get_deadline();
+				}
+				if(!$comment)
+				{
+					$comment = $check_list->get_comment();
+				}
+
 				if ($status == controller_check_list::STATUS_DONE && !$submit_ok)
 				{
 					if (!$this->_check_for_required($check_list))
@@ -1022,6 +1048,11 @@
 			}
 			else
 			{
+				if(!$original_deadline_date_ts)
+				{
+					$original_deadline_date_ts = $deadline_date_ts;
+				}
+
 				if ($status == controller_check_list::STATUS_DONE && !$submit_ok)
 				{
 					$status = controller_check_list::STATUS_NOT_DONE;
@@ -1076,7 +1107,7 @@
 			{
 				if( $submit_ok || $this->_check_for_required($check_list))
 				{
-					$check_list->set_status($status);	
+					$check_list->set_status($status);
 				}
 			}
 			else if ($status == controller_check_list::STATUS_CANCELED && !$error)
@@ -1193,7 +1224,11 @@
 
 				if ($check_list_id > 0)
 				{
-					if($submit_deviation)
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return json_encode(array("status" => 'ok', 'message' => lang('Ok')));
+					}
+					else if($submit_deviation)
 					{
 						$this->redirect(array('menuaction' => 'controller.uicase.add_case',
 							'check_list_id' => $check_list_id));
@@ -1206,12 +1241,20 @@
 				}
 				else
 				{
+					if (phpgw::get_var('phpgw_return_as') == 'json')
+					{
+						return json_encode(array("status" => 'error', 'message' => lang('Error')));
+					}
 					$this->edit_check_list($check_list);
 				}
 			}
 			else
 			{
-				if ($check_list->get_id() > 0)
+				if (phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					return json_encode(array("status" => 'error', 'message' => lang('Error')));
+				}
+				else if ($check_list->get_id() > 0)
 				{
 					$this->edit_check_list($check_list);
 				}
@@ -1664,14 +1707,14 @@
 
 		}
 
+
 		/**
-		 * Check for required items on all groups and for all components registered to the location.
+		 * Get required items on all groups and for all components registered to the location.
 		 * @param object $check_list
-		 * @return bool
-		 * */
-		private function _check_for_required( $check_list )
+		 * @return array
+		 */
+		private function _get_required_control_items( $check_list )
 		{
-			$ok = true;
 			$control = $this->so_control->get_single($check_list->get_control_id());
 
 			$saved_control_groups = $this->so_control_group_list->get_control_groups_by_control($control->get_id());
@@ -1693,9 +1736,21 @@
 					}
 				}
 			}
+			return $required_control_items;
+		}
+
+		/**
+		 * Check for required items on all groups and for all components registered to the location.
+		 * @param object $check_list
+		 * @return bool
+		 * */
+		private function _check_for_required( $check_list )
+		{
+			$ok = true;
+
+			$required_control_items = $this->_get_required_control_items($check_list);
 
 			$components_at_location = array();
-			$control_groups_with_items_array = array();
 
 			$component_id = $check_list->get_component_id();
 

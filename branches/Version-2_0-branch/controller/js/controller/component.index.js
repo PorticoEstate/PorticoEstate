@@ -79,60 +79,60 @@ update_table = function (location_code)
 	var report_type = $("#report_type").val();
 	var user_id = $("#user_id").val();
 	var custom_frontend = $("[name='custom_frontend']").val();
-	var hide_all_users = false;
+	var hide_total_hours = false;
 
 	if (custom_frontend == 1)
 	{
-		$("#user_id").hide();
-		$("[for='user_id']").hide();
+		$("#user_id").parent().hide();
+		$("[for='user_id']").parent().hide();
 	}
 //console.log(user_id);
 	if (user_id < 0 || custom_frontend == 1)
 	{
-		$("#entity_group_id").hide();
-		$("[for='entity_group_id']").hide();
-		$("#location_id").hide();
-		$("[for='location_id']").hide();
-		$("[name='all_items']").hide();
-		$("[for='all_items']").hide();
-		$("#org_unit_id").hide();
-		$("[for='org_unit_id']").hide();
-		$("[name='all_users']").hide();
-		$("[for='all_users']").hide();
-		hide_all_users = true;
+		$("#entity_group_id").parent().hide();
+		$("[for='entity_group_id']").parent().hide();
+		$("#location_id").parent().hide();
+		$("[for='location_id']").parent().hide();
+		$("[name='all_items']").parent().hide();
+		$("[for='all_items']").parent().hide();
+		$("#org_unit_id").parent().hide();
+		$("[for='org_unit_id']").parent().hide();
+		$("[name='total_hours']").parent().hide();
+		$("[for='total_hours']").parent().hide();
+		hide_total_hours = true;
 	}
 	else
 	{
-		$("#entity_group_id").show();
-		$("[for='entity_group_id']").show();
-		$("#location_id").show();
-		$("[for='location_id']").show();
-		$("[name='all_items']").show();
-		$("[for='all_items']").show();
-		$("#org_unit_id").show();
-		$("[for='org_unit_id']").show();
-		$("[name='all_users']").show();
-		$("[for='all_users']").show();
+		$("#entity_group_id").parent().show();
+		$("[for='entity_group_id']").parent().show();
+		$("#location_id").parent().show();
+		$("[for='location_id']").parent().show();
+		$("[name='all_items']").parent().show();
+		$("[for='all_items']").parent().show();
+		$("#org_unit_id").parent().show();
+		$("[for='org_unit_id']").parent().show();
+		$("[name='total_hours']").parent().show();
+		$("[for='total_hours']").parent().show();
 	}
 
-	if (report_type != 'summary' && hide_all_users == false)
+	if (report_type != 'summary' && hide_total_hours == false)
 	{
-		$("[name='all_users']").show();
-		$("[for='all_users']").show();
+		$("[name='total_hours']").parent().show();
+		$("[for='total_hours']").parent().show();
 	}
 
 	if (user_id == '')
 	{
-		$("[name='all_users']").hide();
-		$("[for='all_users']").hide();
+		$("[name='total_hours']").parent().hide();
+		$("[for='total_hours']").parent().hide();
 	}
 
 	if (report_type == 'summary')
 	{
-		$("[name='all_items']").hide();
-		$("[for='all_items']").hide();
-		$("[name='status']").hide();
-		$("[for='status']").hide();
+		$("[name='all_items']").parent().hide();
+		$("[for='all_items']").parent().hide();
+		$("[name='status']").parent().hide();
+		$("[for='status']").parent().hide();
 	}
 
 	var requestUrl = $("#queryForm").attr("action");
@@ -240,25 +240,25 @@ update_table = function (location_code)
 					var time_sum_actual = components_data.time_sum_actual;
 
 					console.log(show_months);
-					console.log(filter_months);
 
-					if(show_months.length > 0)
-					{
-						for (i = 0; i < 13; i++)
-						{
-							$("#month" + i).hide();
-							$("#head" + i).hide();
-						}
-						for (i = 0; i < show_months.length; i++)
-						{
-							$("#month" + show_months[i]).show();
-							$("#head" + show_months[i]).show();
-						}
-						show_months = [];
-					}
-					else
+//					if(show_months.length > 0)
+//					{
+//						for (i = 0; i < 13; i++)
+//						{
+//							$("#month" + i).hide();
+//							$("#head" + i).hide();
+//						}
+//						for (i = 0; i < show_months.length; i++)
+//						{
+//							$("#month" + show_months[i]).show();
+//							$("#head" + show_months[i]).show();
+//						}
+//						show_months = [];
+//					}
+//					else
 					{
 						var filter_months = data.filter_months;
+						console.log(filter_months);
 						for (i = 0; i < 13; i++)
 						{
 							$("#month" + i).hide();
@@ -276,7 +276,7 @@ update_table = function (location_code)
 					$("#total_records").html(components_data.total_records);
 					$("#control_text").html('type');
 					$("#sum_text").html('Sum');
-					$("#month0").html(time_sum[0] + '/' + time_sum_actual[0]);
+					$("#monthsum").html(time_sum[0] + '/' + time_sum_actual[0]);
 					$("#month1").html(time_sum[1] + '/' + time_sum_actual[1]);
 					$("#month2").html(time_sum[2] + '/' + time_sum_actual[2]);
 					$("#month3").html(time_sum[3] + '/' + time_sum_actual[3]);
@@ -383,3 +383,60 @@ checkAll = function (myclass)
 var oArgs = {menuaction: 'property.bolocation.get_locations'};
 var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'location_container');
+
+
+
+perform_action = function(name, oArgs)
+{
+
+	if(name === 'save_check_list')
+	{
+		//nothing
+		location.assign(phpGWLink('index.php', oArgs));
+		return;
+	}
+	else if (name === 'submit_ok')
+	{
+		oArgs.menuaction = 'controller.uicheck_list.save_check_list';
+
+		var confirm_msg = "Godkjenner du denne uten avvik?";
+
+		if (confirm(confirm_msg) !== true)
+		{
+			return false;
+		}
+
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+
+		$.ajax({
+			type: 'POST',
+			data: {submit_ok: 1},
+			dataType: 'json',
+			url: requestUrl,
+			success: function (data)
+			{
+				if (data !== null)
+				{
+					var message = data.message;
+
+					if (data.status === 'error')
+					{
+						alert(message);
+					}
+					else
+					{
+						alert('Ok');
+						update_table();
+					}
+				}
+			}
+		});
+	}
+	else if (name === 'submit_deviation')
+	{
+		oArgs.menuaction = 'controller.uicheck_list.save_check_list';
+		oArgs.submit_deviation = 1;
+		location.assign(phpGWLink('index.php', oArgs));
+	}
+
+};

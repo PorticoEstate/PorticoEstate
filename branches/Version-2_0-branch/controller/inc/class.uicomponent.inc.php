@@ -314,17 +314,33 @@
 					'selected' => $_year == $year ? 1 : 0
 				);
 			}
+			$month_list = array();
+			$month_list[] = array
+				(
+				'id' => '',
+				'name' => lang('month')
+			);
+
+			$filter_month = phpgw::get_var('month', 'int');
+			$filter_month = $filter_month ? $filter_month : date('n');
+			for ($_month = 1; $_month < 13; $_month++)
+			{
+				$month_list[] = array
+					(
+					'id' => $_month,
+					'name' => $_month,
+					'selected' => $_month == $filter_month ? 1 : 0
+				);
+			}
 			$status_list = array(
-				array('id' => '', 'name' => lang('select value')),
+				array('id' => 'in_queue', 'name' => lang('in queue')),
+				array('id' => 'all', 'name' => lang('All')),
 				array('id' => 'not_performed', 'name' => lang('status not done')),
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
 			);
 
-			$filter_component = '';
-			if (phpgw::get_var('component_id', 'int'))
-			{
-				$filter_component = phpgw::get_var('location_id', 'int') . '_' . phpgw::get_var('component_id', 'int');
-			}
+
+			$filter_component = phpgw::get_var('filter_component');
 
 			$control_types = createObject('controller.socontrol')->get(0, 0, 'title', true, '', '', array());
 
@@ -398,7 +414,7 @@
 								'onclick' => 'update_table();'
 							),*/
 							array('type' => 'checkbox',
-								'name' => 'all_users',
+								'name' => 'total_hours',
 								'text' => 'Vis totale timer',
 								'value' => 1,
 								'onclick' => 'update_table();'
@@ -413,6 +429,12 @@
 								'name' => 'year',
 								'text' => lang('year'),
 								'list' => $year_list,
+								'onchange' => 'update_table();'
+							),
+							array('type' => 'filter',
+								'name' => 'month',
+								'text' => lang('month'),
+								'list' => $month_list,
 								'onchange' => 'update_table();'
 							),
 							array('type' => 'filter',
@@ -444,7 +466,7 @@
 					'source' => self::link(array('menuaction' => 'controller.uicomponent.index',
 						'phpgw_return_as' => 'json')),
 					'field' => $this->get_fields(),
-					'months' => $this->get_months($year)
+					'months' => $this->get_months()
 				),
 			);
 
@@ -453,10 +475,17 @@
 			self::render_template_xsl(array('component', 'calendar/icon_color_map'), $data);
 		}
 
-		private function get_months( $year = '' )
+		private function get_months( $year = '', $filter_month = 0 )
 		{
 			$months = array();
-			if($year == date('Y') && $this->user_id < 0)
+
+			if($filter_month)
+			{
+				$months[] = array(
+					'key' => $filter_month,
+				);
+			}
+			else if($year == date('Y') && $this->user_id < 0)
 			{
 				$current_month = date('n') -1;
 
@@ -486,7 +515,7 @@
 
 			return $months;
 		}
-		private function get_fields( $year = '' , $user_id = 0)
+		private function get_fields( $year = '' , $filter_month = 0, $user_id = 0)
 		{
 
 			$fields = array
@@ -523,7 +552,17 @@
 				),
 			);
 
-			if($year == date('Y') && $user_id < 0)
+			if($filter_month)
+			{
+				$fields[] = array(
+					'id' => 0,
+					'key' => $filter_month,
+					'label' => lang("short_month {$filter_month} capitalized"),
+					'sortable' => true,
+				);
+
+			}
+			else if($year == date('Y') && $user_id < 0)
 			{
 				$current_month = date('n');
 
@@ -536,7 +575,7 @@
 					}
 
 					$fields[] = array(
-						'id' => $i,
+						'id' => $_month,
 						'key' => $_month,
 						'label' => lang("short_month {$_month} capitalized"),
 						'sortable' => true,
@@ -546,16 +585,14 @@
 			}
 			else
 			{
-				$i = 0;
 				for ($_month = 1; $_month < 13; $_month++)
 				{
 					$fields[] = array(
-						'id' => $i,
+						'id' => $_month,
 						'key' => $_month,
 						'label' => lang("short_month {$_month} capitalized"),
 						'sortable' => true,
 					);
-					$i++;
 				}
 			}
 
@@ -738,10 +775,11 @@
 			$district_id = phpgw::get_var('district_id', 'int');
 			$query = phpgw::get_var('query', 'string');
 			$year = phpgw::get_var('year', 'int');
+			$filter_month = phpgw::get_var('month', 'int');
 			$all_items = phpgw::get_var('all_items', 'bool');
-			$all_users = phpgw::get_var('all_users', 'bool');
+			$total_hours = phpgw::get_var('total_hours', 'bool');
 //			$user_only = phpgw::get_var('user_only', 'bool');
-			$user_only = $all_users ? false : true;
+			$user_only = $total_hours ? false : true;
 			$filter_status = phpgw::get_var('status', 'string');
 			$report_type = phpgw::get_var('report_type', 'string');
 			if ($filter_component_str = phpgw::get_var('filter_component', 'string'))
@@ -806,16 +844,34 @@
 
 			if ($user_id < 0)
 			{
+				$all_items = false;
 				$user_id = $user_id * -1;
+			}
+			if ($user_id)
+			{
+				$keep_only_assigned_to = $user_id;
+			}
+
+			if($all_items || $total_hours)
+			{
+				$user_id = 0;
+			}
+
+			if ($user_id)
+			{
 				$all_items = false;
 
 				$keep_only_assigned_to = $user_id;
-				$assigned_items = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $assigned_to = $user_id, $filter_control_id);
+				$assigned_items = $so_control->get_assigned_control_components($from_date_ts, $to_date_ts, $user_id, $filter_control_id);
 
 				if(empty($get_locations))
 				{
 					foreach ($assigned_items as $_location_id => $item_list)
 					{
+						if ($location_id > 0 && $_location_id != $location_id)
+						{
+							continue;
+						}
 						$_items = execMethod('property.soentity.read', array(
 							'filter_entity_group' => $entity_group_id,
 							'location_id' => $_location_id,
@@ -861,7 +917,7 @@
 			}
 			else
 			{
-				$exclude_locations = array();
+				$exclude_locations_for_stray_items = array();
 
 				foreach ($location_filter as $_location_filter)
 				{
@@ -870,7 +926,7 @@
 						continue;
 					}
 					$_location_id = (int)$_location_filter['id'];
-					$exclude_locations[] = $_location_id;
+					$exclude_locations_for_stray_items[] = $_location_id;
 
 
 					if(empty($get_locations))
@@ -916,7 +972,7 @@
 				{
 					$_items = execMethod('property.soentity.read_entity_group', array(
 						'entity_group_id' => $entity_group_id,
-						'exclude_locations' => $exclude_locations,
+						'exclude_locations' => $exclude_locations_for_stray_items,
 						'location_id' => $_location_id,
 						'control_id' => $filter_control_id,
 						'district_id' => $district_id,
@@ -956,8 +1012,9 @@
 
 				if (empty($get_locations) && ($all_items && !$_item['has_control']))
 				{
-					continue;
+		//			continue;
 				}
+
 				if (!$_item['id'])
 				{
 					continue;
@@ -1052,6 +1109,12 @@
 							{
 								foreach ($calendar_array as $_month => $_month_info)
 								{
+
+									if($filter_month &&  $_month != $filter_month)
+									{
+										continue;
+									}
+
 									if (isset($_month_info['info']['assigned_to']) && $_month_info['info']['assigned_to'] == $user_id)
 									{
 										$found_assigned_to = true;
@@ -1224,7 +1287,7 @@
 
 			if ($report_type == 'summary')
 			{
-				if($all_users)
+				if($total_hours)
 				{
 					$user_id = 0;
 				}
@@ -1314,29 +1377,68 @@
 					$row['choose'] = "<input id=\"selected_components\" class=\"mychecks\" type=\"checkbox\" name=\"selected_components[]\" value = \"{$entry['location_id']}_{$entry['component_id']}\">";
 				}
 
+				$control_link_data = null;
 				$found_at_least_one = false;
-				for ($_month = 1; $_month < 13; $_month++)
+				if($filter_month)
 				{
-					$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code']);
-					if(true)// ($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+					$filter_status = $filter_status ? $filter_status : 'filter_month';
+
+					$row[$filter_month] = $this->translate_calendar_info($entry[$filter_month], $year, $filter_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'],$control_link_data);
+					if(true)// ($row[$filter_month] && (!$user_id || $entry[$filter_month]['info']['assigned_to'] == $user_id))
 					{
-						$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
-						$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
+						$row_sum[$filter_month] = (float)$entry[$filter_month]['info']['service_time'] + (float)$entry[$filter_month]['info']['controle_time'];
+						$row_sum_actual[$filter_month] = + (float)$entry[$filter_month]['info']['billable_hours'];
 					}
 					else
 					{
-						$row_sum[$_month] = 0;
-						$row_sum_actual[$_month] = 0;
+						$row_sum[$filter_month] = 0;
+						$row_sum_actual[$filter_month] = 0;
+					}
+
+					if (!$filter_status == 'all' || $found_at_least_one)
+					{
+						$total_time[] = $row_sum;
+						$total_time_actual[] = $row_sum_actual;
+
+						$this->add_action_buttons($row, $filter_month, $entry[$filter_month], $control_link_data);
+
+
+
+						$data_set[] = $row;
 					}
 				}
-				if (!$filter_status || $found_at_least_one)
+				else
 				{
-					$total_time[] = $row_sum;
-					$total_time_actual[] = $row_sum_actual;
-					$data_set[] = $row;
+					for ($_month = 1; $_month < 13; $_month++)
+					{
+						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'], $control_link_data);
+					//	if($total_hours)// || $keep_only_assigned_to == $entry[$_month]['info']['assigned_to'])//
+						if($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+						{
+							$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
+							$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
+						}
+						else
+						{
+							$row_sum[$_month] = 0;
+							$row_sum_actual[$_month] = 0;
+						}
+					}
+					if ($filter_status == 'all' || $found_at_least_one)
+					{
+						$total_time[] = $row_sum;
+						$total_time_actual[] = $row_sum_actual;
+						$data_set[] = $row;
+					}
+
 				}
 			}
-			$fields = $this->get_fields($year, $this->user_id);
+			$fields = $this->get_fields($year, $filter_month, $this->user_id);
+			if($filter_month)
+			{
+				$fields[] = array('key' => 'action_button');
+			}
+
 			$class = '';
 			$tbody = '';
 			foreach ($data_set as $row_data)
@@ -1403,7 +1505,7 @@
 			}
 			unset($_month);
 			$result['time_sum_actual'][0] = $sum_year_actual;
-			$result['total_records'] = $total_records;
+			$result['total_records'] = count($data_set);
 			$result['location_filter'] = $location_filter;
 			if ($choose_master)
 			{
@@ -1418,13 +1520,9 @@
 				$result['checkall'] = '';
 			}
 
-			$months = $this->get_months($year);
+			$months = $this->get_months($year, $filter_month);
 
 			$filter_months = array();
-//			for ($_month = 0 ; $_month < 13; $_month++)
-//			{
-//				$filter_months[$_month] = 0;
-//			}
 
 			foreach ($months as $entry)
 			{
@@ -1441,27 +1539,45 @@
 			);
 		}
 
-		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='' )
+		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data )
 		{
 			if (!isset($param['repeat_type']))
 			{
 				return '';
 			}
 
+			$time = $param['info']['service_time'] + $param['info']['controle_time'];
+			$time = $time ? $time : '&nbsp;';
+			$billable_hours = (float)$param['info']['billable_hours'];
+			$time .= " / {$billable_hours}";
+
 			if ($keep_only_assigned_to && $keep_only_assigned_to != $param['info']['assigned_to'])
 			{
-				return '';
+				return "<br/><br/><br/><pre>{$time}</pre>";
 			}
 
 			if ($filter_status)
 			{
+				if ($filter_status == 'in_queue')
+				{
+					switch ($param['status'])
+					{
+				//		case "CONTROL_NOT_DONE":
+						case "CONTROL_REGISTERED":
+						case "CONTROL_PLANNED":
+				//		case "CONTROL_NOT_DONE_WITH_PLANNED_DATE":
+							break;//continues
+						default:
+							return;
+					}
+				}
 				if ($filter_status == 'not_performed')
 				{
 					switch ($param['status'])
 					{
 						case "CONTROL_NOT_DONE":
-						//			case "CONTROL_REGISTERED":
-						//			case "CONTROL_PLANNED":
+			//			case "CONTROL_REGISTERED":
+			//			case "CONTROL_PLANNED":
 						case "CONTROL_NOT_DONE_WITH_PLANNED_DATE":
 							break;//continues
 						default:
@@ -1480,6 +1596,10 @@
 						default:
 							return;
 					}
+				}
+				else if ($filter_status=='filter_month' && empty ($param['status']))
+				{
+					return;
 				}
 			}
 
@@ -1555,14 +1675,75 @@
 			$assigned_to = $param['info']['assigned_to'] > 0 ? $GLOBALS['phpgw']->accounts->id2name($param['info']['assigned_to']) : '&nbsp;<br/>';
 			//	$service_time = $param['info']['service_time'] ? $param['info']['service_time'] : '&nbsp;';
 			//	$controle_time = $param['info']['controle_time'] ? $param['info']['controle_time'] : '&nbsp;';
-			$time = $param['info']['service_time'] + $param['info']['controle_time'];
-			$time = $time ? $time : '&nbsp;';
-			$billable_hours = (float)$param['info']['billable_hours'];
-			{
-				$time .= " / {$billable_hours}";
-			}
+
+//			$time = $param['info']['service_time'] + $param['info']['controle_time'];
+//			$time = $time ? $time : '&nbsp;';
+//			$billable_hours = (float)$param['info']['billable_hours'];
+//			{
+//				$time .= " / {$billable_hours}";
+//			}
 
 			return "{$repeat_type}<br/>{$link}<br/>{$assigned_to}<br/>{$time}";
+		}
+
+		private function add_action_buttons(&$row, $_month, $param,  $control_link_data)
+		{
+
+			$control_link = json_encode($control_link_data);
+
+			$lang_plan = lang('plan');
+			$lang_ok = lang('ok');
+			$lang_deviation = lang('deviation');
+			if ($param['status'] == 'CONTROL_REGISTERED')
+			{
+				$row['action_button'] = <<<HTML
+			<div class="block">
+				<div class="centered">
+					<div>
+						<button class="save_check_list pure-button pure-button-primary" type="submit" name="save_check_list" onclick = 'perform_action("save_check_list", {$control_link});'>
+							<i class="fa fa-floppy-o" aria-hidden="true"></i>
+							{$lang_plan}
+						</button>
+					</div>
+					<div>
+						<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
+							<i class="fa fa-check-square-o" aria-hidden="true"></i>
+							{$lang_ok}
+						</button>
+					</div>
+					<div>
+						<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
+							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+							{$lang_deviation}
+						</button>
+					</div>
+				</div>
+			</div>
+HTML;
+			}
+			else if ($param['status'] == 'CONTROL_PLANNED')
+			{
+				$row['action_button'] = <<<HTML
+			<div class="block">
+				<div class="centered">
+					<div>
+						<button class="submit_ok pure-button pure-button-primary"  type="submit" name="submit_ok" onclick = 'perform_action("submit_ok", {$control_link});'>
+							<i class="fa fa-check-square-o" aria-hidden="true"></i>
+							{$lang_ok}
+						</button>
+					</div>
+					<div>
+						<button class="submit_deviation pure-button pure-button-primary" type="submit" name="submit_deviation" onclick = 'perform_action("submit_deviation", {$control_link});'>
+							<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+							{$lang_deviation}
+						</button>
+					</div>
+				</div>
+			</div>
+HTML;
+
+
+			}
 		}
 
 		private function get_summary( $data, $user_id )

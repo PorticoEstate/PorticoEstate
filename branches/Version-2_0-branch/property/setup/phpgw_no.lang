@@ -1690,7 +1690,6 @@ service agreement categories	property	no	Serviceavtale kategorier
 service agreement item attributes	property	no	Attributter for serviceavtaler - detaljer
 set grants	property	no	Sett tillatelser
 set new status	property	no	Sett ny status
-set permission	property	no	sett rettighet
 set tax	property	no	Angi MVA
 set tax during import	property	no	Registrer mva ifm import
 set the status of the ticket	property	no	Sett status for meldingen

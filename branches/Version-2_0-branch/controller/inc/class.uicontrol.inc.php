@@ -923,7 +923,7 @@
 
 			// YUI variables for paging and sorting
 			$start_index = $params['start'];
-			$num_of_objects = $params['results'] > 0 ? $params['results'] : null;
+			$num_of_objects = $params['results'] > 0 ? $params['results'] : 0;
 			$sort_field = $params['order'];
 
 			if (!$sort_field)

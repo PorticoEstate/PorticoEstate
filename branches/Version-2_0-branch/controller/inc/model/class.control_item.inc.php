@@ -33,8 +33,14 @@
 	{
 
 		public static $so;
-		public $type_array = array("control_item_type_1", "control_item_type_2", "control_item_type_3",
-			"control_item_type_4");
+		public $type_array = array(
+			"control_item_type_1", // Comment
+			"control_item_type_2", // Measurement
+			"control_item_type_3", // Listbox
+			"control_item_type_4", // Radiobuttons
+			"control_item_type_5", // Checkbox
+			);
+
 		protected $id;
 		protected $title;
 		protected $required;

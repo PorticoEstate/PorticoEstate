@@ -108,6 +108,23 @@
 						</xsl:choose>
 					</dd>
 					<dt>
+						<label for="modified_by">
+							<xsl:value-of select="php:function('lang','modified by')" />
+						</label>
+					</dt>
+					<dd>
+							<xsl:value-of select="procedure/modified_by_name" />
+					</dd>
+					<dt>
+						<label for="modified_date">
+							<xsl:value-of select="php:function('lang','Modified date')" />
+						</label>
+					</dt>
+					<dd>
+						<xsl:value-of select="php:function('date', $date_format, number(procedure/modified_date))"/>
+					</dd>
+
+					<dt>
 						<label for="purpose">
 							<xsl:value-of select="php:function('lang','Procedure purpose')" />
 						</label>

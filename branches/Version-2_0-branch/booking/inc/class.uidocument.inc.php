@@ -310,7 +310,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'document.js');
+			self::add_javascript('booking', 'base', 'document.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$this->add_default_display_data($document);
@@ -359,7 +359,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'document.js');
+			self::add_javascript('booking', 'base', 'document.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$this->add_default_display_data($document);
