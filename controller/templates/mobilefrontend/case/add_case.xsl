@@ -260,6 +260,39 @@
 																<input type="submit" class="pure-button pure-button-primary" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
 
 															</xsl:when>
+															<xsl:when test="type = 'control_item_type_5'">
+
+																<input name="type" type="hidden" value="control_item_type_5" />
+																<input name="status" type="hidden" value="1" />
+
+																<div class="pure-control-group">
+																	<label class="pure-checkbox">Velg verdi fra lister</label>
+																	<xsl:for-each select="options_array">
+																		<input name="option_value" value="option_value" type="checkbox">
+																			<xsl:if test="required = 1">
+																				<xsl:attribute name="class" >
+																					<xsl:text>required</xsl:text>
+																				</xsl:attribute>
+																			</xsl:if>
+																		</input>
+																		<xsl:value-of select="option_value"/>
+
+																	</xsl:for-each>
+																</div>
+																<div class="pure-control-group">
+																	<label class="comment">
+																		<xsl:value-of select="php:function('lang', 'comment')" />
+																	</label>
+																	<textarea name="case_descr" class="pure-input-1">
+																		<xsl:value-of select="comment"/>
+																	</textarea>
+																</div>
+																<xsl:variable name="lang_save">
+																	<xsl:value-of select="php:function('lang', 'register_error')" />
+																</xsl:variable>
+																<input type="submit" class="pure-button pure-button-primary" name="save_control" value="Lagre sak/måling" title="{$lang_save}" />
+
+															</xsl:when>
 														</xsl:choose>
 													</form>
 												</li>

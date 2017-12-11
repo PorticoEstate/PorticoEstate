@@ -154,13 +154,21 @@
 				$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
 			}
 
-			$values[$id_name] = phpgw::clean_value($_POST['values'][$id_name]);
+			$values[$id_name] = phpgw::clean_value($_POST[$id_name]);
 
 			$values_attribute = phpgw::get_var('values_attribute');
 
-			if (!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
+//			if (!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
+//			{
+//				$this->receipt['error'][] = array('msg' => lang('missing value for %1', lang('id')));
+//			}
+
+			if ($this->location_info['id']['type'] != 'auto')
 			{
-				$this->receipt['error'][] = array('msg' => lang('missing value for %1', lang('id')));
+				if (empty($values[$id_name]) && $values[$id_name] !== '0')
+				{
+					$this->receipt['error'][] = array('msg' => lang('missing value for %1', lang('id')));
+				}
 			}
 
 			if ($values[$id_name] && $this->location_info['id']['type'] == 'int' && !ctype_digit($values[$id_name]))
@@ -601,12 +609,12 @@
 				return;
 			}
 
-			$id = isset($values['id']) && $values['id'] ? $values['id'] : phpgw::get_var($this->location_info['id']['name']);
+			$id = isset($values['id']) && ($values['id'] || $values['id'] === '0') ? $values['id'] : phpgw::get_var($this->location_info['id']['name']);
 			$values_attribute = phpgw::get_var('values_attribute');
 
 			$GLOBALS['phpgw_info']['apps']['manual']['section'] = 'general.edit.' . $this->type;
 
-			if ($id)
+			if ($id || $id === '0' )
 			{
 				$values = $this->bo->read_single(array('id' => $id));
 				$function_msg = $this->location_info['edit_msg'];
@@ -1028,7 +1036,7 @@
 
 			$values = phpgw::get_var('values');
 
-			if ($id)
+			if ($id || (int)$id === 0)
 			{
 				$data = $this->bo->read_single(array('id' => $id,'view' => true));
 				$action = 'edit';

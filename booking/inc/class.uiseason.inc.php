@@ -185,7 +185,7 @@
 			$season['to_'] = pretty_timestamp($season['to_']);
 
 			$this->flash_form_errors($errors);
-			self::add_javascript('booking', 'booking', 'season.js');
+			self::add_javascript('booking', 'base', 'season.js');
 
 			array_set_default($season, 'resources', array());
 			$season['resources_json'] = json_encode(array_map('intval', $season['resources']));
@@ -248,7 +248,7 @@
 				}
 			}
 			$this->flash_form_errors($errors);
-			self::add_javascript('booking', 'booking', 'season.js');
+			self::add_javascript('booking', 'base', 'season.js');
 
 			$season['from_'] = pretty_timestamp($season['from_']);
 			$season['to_'] = pretty_timestamp($season['to_']);
@@ -411,8 +411,8 @@
 
 			$season['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 
-			self::add_javascript('booking', 'booking', 'schedule.js');
-			//self::add_javascript('booking', 'booking', 'season.wtemplate.js');
+			self::add_javascript('booking', 'base', 'schedule.js');
+			//self::add_javascript('booking', 'base', 'season.wtemplate.js');
 			phpgwapi_jquery::load_widget("datepicker");
 			self::render_template_xsl('season_wtemplate', array('season' => $season));
 		}
@@ -528,7 +528,7 @@
 JS;
 			$GLOBALS['phpgw']->js->add_code('', $jscode);
 
-			self::add_javascript('booking', 'booking', 'season.wtemplate.js');
+			self::add_javascript('booking', 'base', 'season.wtemplate.js');
 
 			self::render_template('season_wtemplate_allocation', array('season' => $season));
 		}

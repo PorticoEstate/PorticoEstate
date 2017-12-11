@@ -39,6 +39,8 @@
 										<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicomponent.index' )" />
 										<xsl:text>&amp;year=</xsl:text>
 										<xsl:value-of select="current_year"/>
+										<xsl:text>&amp;month=</xsl:text>
+										<xsl:value-of select="current_month_nr"/>
 										<xsl:text>&amp;location_id=</xsl:text>
 										<xsl:value-of select="component_array/location_id"/>
 										<xsl:text>&amp;component_id=</xsl:text>
@@ -46,6 +48,8 @@
 										<xsl:text>&amp;get_locations=</xsl:text>
 										<xsl:value-of select="get_locations"/>
 									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
 									Kontrollplan for komponent (år)
 								</a>
 							</li>
@@ -60,6 +64,8 @@
 										<xsl:text>&amp;location_code=</xsl:text>
 										<xsl:value-of select="location_array/location_code"/>
 									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
 									Kontrollplan for bygg/eiendom (år)
 								</a>
 							</li>
@@ -75,6 +81,8 @@
 										<xsl:text>&amp;location_code=</xsl:text>
 										<xsl:value-of select="location_array/location_code"/>
 									</xsl:attribute>
+									<i class="fa fa-calendar" aria-hidden="true"></i>
+									<xsl:text> </xsl:text>
 									Kontrolplan for bygg/eiendom (måned)
 								</a>
 							</li>
@@ -97,7 +105,7 @@
 						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicase.send_case_message')" />
 					</xsl:variable>
 
-					<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post">
+					<form ENCTYPE="multipart/form-data" id="frmRegCaseMessage" action="{$action_url}" method="post" class="pure-form pure-form-stacked">
 						<input>
 							<xsl:attribute name="name">check_list_id</xsl:attribute>
 							<xsl:attribute name="type">hidden</xsl:attribute>
@@ -121,16 +129,14 @@
 						</input>
 
 						<!-- === TITLE === -->
-						<div class="row">
-							<label>Tittel på melding:</label>
-							<input name="message_title" type="text" class="required" />
-						</div>
+						
+						<label>Tittel på melding:</label>
+						<input name="message_title" type="text" class="pure-input-1 required" required="required"/>
 
 						<!-- === CATEGORY === -->
-						<div class="row">
 							<label>Kategori:</label>
-							<select name="message_cat_id" class="required">
-								<option value="0">Velg kategori</option>
+							<select name="message_cat_id" class="required" required="required">
+								<option value="">Velg kategori</option>
 								<xsl:for-each select="categories/cat_list">
 									<xsl:variable name="cat_id">
 										<xsl:value-of select="./cat_id"/>
@@ -140,15 +146,12 @@
 									</option>
 								</xsl:for-each>
 							</select>
-						</div>
 						<!-- === UPLOAD FILE === -->
-						<div class="row">
 							<label>Filvedlegg:</label>
 							<input type="file" id="file" name="file" >
 								<xsl:attribute name="accept">image/*</xsl:attribute>
 								<xsl:attribute name="capture">camera</xsl:attribute>
 							</input>
-						</div>
 
 						<h3>Velg hvilke saker meldingen gjelder</h3>
 						<ul class="cases">
@@ -202,7 +205,7 @@
 							<xsl:variable name="lang_save">
 								<xsl:value-of select="php:function('lang', 'save')" />
 							</xsl:variable>
-							<input class="btn" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
+							<input class="pure-button pure-button-primary" type="submit" name="save_control" value="Send melding" title="{$lang_save}" />
 						</div>
 					</form>
 				</xsl:when>

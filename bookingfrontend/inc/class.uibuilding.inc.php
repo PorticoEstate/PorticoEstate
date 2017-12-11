@@ -338,7 +338,7 @@
 				$building['date'] = phpgw::get_var('date', 'string', 'GET');
 			}
 
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
+			self::add_javascript('bookingfrontend', 'base', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
 
 			$building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
@@ -366,7 +366,7 @@
 				$building['date'] = phpgw::get_var('date', 'string', 'GET');
 			}
 			$building['deactivate_application'] = 1;
-			self::add_javascript('bookingfrontend', 'bookingfrontend', 'schedule.js');
+			self::add_javascript('bookingfrontend', 'base', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
 			$building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');
 			self::render_template_xsl('building_schedule', array('building' => $building,

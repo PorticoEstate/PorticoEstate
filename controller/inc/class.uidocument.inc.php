@@ -83,7 +83,7 @@
 			$search_for = $params['query'];
 
 			$start_index = $params['start'];
-			$num_of_objects = $params['results'] > 0 ? $params['results'] : null;
+			$num_of_objects = $params['results'] > 0 ? $params['results'] : 0;
 			$sort_field = $params['order'];
 
 			$ctrl_area = phpgw::get_var('control_areas');
@@ -250,7 +250,9 @@
 				//Create a document object
 				$document = new controller_document();
 				$document->set_title(phpgw::get_var('document_title'));
-				$document->set_name($_FILES["file_path"]["name"]);
+
+				$file_name = @str_replace(' ', '_', $_FILES['file_path']['name']);
+				$document->set_name($file_name);
 				$document->set_type_id(phpgw::get_var('document_type'));
 				$desc = phpgw::get_var('document_description', 'html');
 				$desc = str_replace("&nbsp;", " ", $desc);
@@ -263,7 +265,7 @@
 				// Move file from temporary storage to vfs
 				$result = $this->so->write_document_to_vfs
 					(
-					$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $_FILES["file_path"]["name"]
+					$document_properties['document_type'], $_FILES["file_path"]["tmp_name"], $document_properties['id'], $file_name
 				);
 
 				if ($result)
@@ -279,13 +281,15 @@
 					}
 					else
 					{
+						phpgwapi_cache::message_set('feil ved opplasting', 'error');
 						// Handle failure on storing document
 						$this->redirect($document, $document_properties, '', '');
 					}
 				}
 				else
 				{
-						$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show',
+					phpgwapi_cache::message_set('feil ved opplasting', 'error');
+					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uidocument.show',
 							'procedure_id' => $procedure->get_id(),
 							'tab' => 'documents'));
 					//Handle vfs failure to store document
@@ -306,8 +310,11 @@
 			$document = $this->so->get_single($document_id);
 			$document_properties = $this->get_type_and_id($document);
 
+			$mime_magic = createObject('phpgwapi.mime_magic');
+			$mime = $mime_magic->filename2mime($document->get_name());
+
 			header("Content-Disposition: attachment; filename={$document->get_name()}");
-			header("Content-Type: $file_type");
+			header("Content-Type: {$mime}");
 			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
 
 			echo $this->so->read_document_from_vfs

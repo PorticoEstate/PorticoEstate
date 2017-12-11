@@ -127,7 +127,7 @@
 			$GLOBALS['phpgw']->jqcal2->add_listener('filter_to');
 			phpgwapi_jquery::load_widget('datepicker');
 
-			self::add_javascript('booking', 'booking', 'completed_reservation.js');
+			self::add_javascript('booking', 'base', 'completed_reservation.js');
 
 			$data = array(
 				'datatable_name' => lang('booking') . ': ' . lang('Completed'),

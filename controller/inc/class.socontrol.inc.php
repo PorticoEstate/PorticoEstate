@@ -789,19 +789,33 @@
 			$component_id = (int)$component_id;
 			$control_id = (int)$control_id;
 
-			$sql = "SELECT DISTINCT ccl.component_id, ccl.location_id";
-			$sql .= " FROM controller_control_component_list ccl , controller_control_serie cs";
-			$sql .= " WHERE ccl.id = cs.control_relation_id";
-			$sql .= " AND cs.control_relation_type = 'component'";
-			$sql .= " AND cs.assigned_to = {$assigned_to}";
-			$sql .= " AND cs.enabled = 1";
-//			$sql .= " AND ((cs.start_date <= $to_date AND cs.end_date IS NULL) ";
-//			$sql .= " OR (cs.start_date <= $to_date AND cs.end_date > $from_date ))";
-			$sql .= " AND cs.start_date <= $to_date";
+//			$sql = "SELECT DISTINCT ccl.component_id, ccl.location_id";
+//			$sql .= " FROM controller_control_component_list ccl , controller_control_serie cs";
+//			$sql .= " WHERE ccl.id = cs.control_relation_id";
+//			$sql .= " AND cs.control_relation_type = 'component'";
+//			$sql .= " AND cs.assigned_to = {$assigned_to}";
+//			$sql .= " AND cs.enabled = 1";
+////			$sql .= " AND ((cs.start_date <= $to_date AND cs.end_date IS NULL) ";
+////			$sql .= " OR (cs.start_date <= $to_date AND cs.end_date > $from_date ))";
+//			$sql .= " AND cs.start_date <= $to_date";
+//
+//			if($control_id)
+//			{
+//				$sql .= " AND ccl.control_id = {$control_id}";
+//			}
+//
+
+			$sql = "SELECT  distinct controller_control_component_list.component_id, controller_control_component_list.location_id"
+				. " FROM controller_control_component_list"
+				. " {$this->left_join} controller_control_serie ON (controller_control_component_list.id = controller_control_serie.control_relation_id)"
+				. " {$this->left_join} controller_check_list ON controller_control_serie.id = controller_check_list.serie_id"
+				. " WHERE controller_control_serie.control_relation_type = 'component'"
+				. " AND (controller_control_serie.assigned_to = {$assigned_to}  OR controller_check_list.assigned_to = {$assigned_to})"
+				. " AND controller_control_serie.enabled = 1 AND controller_control_serie.start_date <= {$to_date}";
 
 			if($control_id)
 			{
-				$sql .= " AND ccl.control_id = {$control_id}";
+				$sql .= " AND controller_control_component_list.control_id = {$control_id}";
 			}
 
 			$this->db->query($sql, __LINE__, __FILE__);

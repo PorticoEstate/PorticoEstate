@@ -128,7 +128,6 @@
 				<xsl:for-each select="item">
 					<tr>
 						<td>
-
 							<label>
 								<xsl:attribute name="for">
 									<xsl:value-of select="phpgw:conditional(not(name), '', name)"/>
@@ -300,7 +299,7 @@
 				</td>
 				<td id='sum_text'>
 				</td>
-				<td id='month0'>
+				<td id='monthsum'>
 				</td>
 				<td id='month1'>
 				</td>

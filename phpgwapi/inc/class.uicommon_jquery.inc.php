@@ -252,6 +252,15 @@
 			$GLOBALS['phpgw']->css->add_external_file($path);
 		}
 
+
+		/**
+		 *
+		 * @param type $app
+		 * @param type $pkg will always look within template set, then fallback to $pkg
+		 * @param type $name name of the javascript file to include
+		 * @return type
+		 */
+
 		public function add_javascript( $app, $pkg, $name )
 		{
 			return $GLOBALS['phpgw']->js->validate_file($pkg, str_replace('.js', '', $name), $app);

@@ -317,7 +317,7 @@
 					'building_id' => $building['id'],
 					'phpgw_return_as' => 'json',
 			));
-			self::add_javascript('booking', 'booking', 'schedule.js');
+			self::add_javascript('booking', 'base', 'schedule.js');
 			phpgwapi_jquery::load_widget("datepicker");
 
 			$building['picker_img'] = $GLOBALS['phpgw']->common->image('phpgwapi', 'cal');

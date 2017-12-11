@@ -282,7 +282,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'permission.js');
+			self::add_javascript('booking', 'base', 'permission.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$this->add_default_display_data($permission);
@@ -296,7 +296,7 @@
 			$this->flash_form_errors($errors);
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#permission');
 			$active_tab = 'generic';
 
 			$permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -331,7 +331,7 @@
 				}
 			}
 
-			self::add_javascript('booking', 'booking', 'permission.js');
+			self::add_javascript('booking', 'base', 'permission.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			$this->add_default_display_data($permission);
@@ -339,7 +339,7 @@
 			$this->flash_form_errors($errors);
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#permission');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#permission');
 			$active_tab = 'generic';
 
 			$permission['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);

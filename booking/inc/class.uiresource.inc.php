@@ -163,7 +163,7 @@
 				$resource['type'] = 'Location';
 			}
 			$this->flash_form_errors($errors);
-			self::add_javascript('booking', 'booking', 'resource_new.js');
+			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 
 			self::rich_text_editor('field_description');
@@ -171,7 +171,7 @@
 			$resource['types'] = $this->resource_types();
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -230,7 +230,7 @@
 			}
 
 			$this->flash_form_errors($errors);
-			self::add_javascript('booking', 'booking', 'resource_new.js');
+			self::add_javascript('booking', 'base', 'resource_new.js');
 			phpgwapi_jquery::load_widget('autocomplete');
 			self::rich_text_editor('field_description');
 			$activity_data = $this->activity_bo->fetch_activities();
@@ -239,7 +239,7 @@
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Permission Edit'), 'link' => '#resource');
+			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -433,7 +433,7 @@
 				'datatable_def' => self::get_building_datatable_def($id),
 				'resource' => $resource
 			);
-			self::add_javascript('booking', 'booking', 'resource_new.js'); // to render custom fields
+			self::add_javascript('booking', 'base', 'resource_new.js'); // to render custom fields
 			self::render_template_xsl(array('resource', 'datatable_inline'), $data);
 		}
 
@@ -476,7 +476,7 @@
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show',
 					'id' => $resource['id']));
 
-			self::add_javascript('booking', 'booking', 'schedule.js');
+			self::add_javascript('booking', 'base', 'schedule.js');
 
 			phpgwapi_jquery::load_widget("datepicker");
 

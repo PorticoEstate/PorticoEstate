@@ -122,7 +122,7 @@
 				phpgwapi_cache::message_set($error, 'error');
 			}
 
-			self::add_javascript('booking', 'booking', 'report.js');
+			self::add_javascript('booking', 'base', 'report.js');
 			array_set_default($report, 'resources', array());
 			$report['resources_json'] = json_encode(array_map('intval', $report['resources']));
 			$report['cancel_link'] = self::link(array('menuaction' => 'booking.uireports.index'));
