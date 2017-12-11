@@ -167,7 +167,7 @@
 			$audience['cancel_link'] = self::link(array('menuaction' => 'booking.uiaudience.index'));
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Audience Add'), 'link' => '#audience_add');
+			$tabs['generic'] = array('label' => lang('new audience group'), 'link' => '#audience_add');
 			$active_tab = 'generic';
 
 //                      $data = array();
@@ -203,7 +203,7 @@
 			$this->flash_form_errors($errors);
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Audience Edit'), 'link' => '#audience_edit');
+			$tabs['generic'] = array('label' => lang('edit audience group'), 'link' => '#audience_edit');
 			$active_tab = 'generic';
 
 			$audience['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
