@@ -43,6 +43,7 @@
 					}
 					else
 					{
+						$msglog['error'][] = array('msg' => lang('user_not_found_in_PE'));
 						if ($use_fellesdata)
 						{
 							$fellesdata_user = frontend_bofellesdata::get_instance()->get_user($username);
