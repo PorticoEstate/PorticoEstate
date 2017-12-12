@@ -314,6 +314,29 @@
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$order = array();
 
+			$kem = 'bergen';
+			if($kem == 'bergen') //Bergen
+			{
+				$batch_id = "BKBPE{$this->date_str}";
+				$client = 'BY'; // For Bergen Kommune
+				$confirm_date = $this->date_str;
+				$pay_method = 'IP';
+				$responsible ='BKBPE';
+				$responsible2 ='BKBPE';
+				$terms_id = '';
+				$voucher_type = 'FU';
+			}
+			else if($kem == 'nlsh')
+			{
+				$batch_id = "PE{$this->date_str}";// må avklares
+				$client = '14';
+				$confirm_date = '';
+				$pay_method = 'BG';
+				$responsible ='BKBPE';// må avklares
+				$responsible2 ='BKBPE';// må avklares
+				$terms_id = '14';
+				$voucher_type = 'FU'; // må avklares
+			}
 
 			$order[] = // Header line
 				'1'  //  1		accept_flag
@@ -332,10 +355,10 @@
 				. sprintf("%2s", '')  // 	17		att_6_id
 				. sprintf("%2s", '')  // 	18		att_7_id
 				. sprintf("%35s", '') // 	19		bank_account
-				. sprintf("%-12s", "BKBPE{$this->date_str}")  // 	20		batch_id				DATA
-				. 'BY'  // 	21		client					DATA
+				. sprintf("%-12s", $batch_id)  // 	20		batch_id				DATA
+				. $client  // 	21		client					DATA
 				. sprintf("%2s", '')  // 	22		client_ref
-				. sprintf("%-17s", "{$this->date_str}")   // 	23		confirm_date			DATA
+				. sprintf("%-17s", "{$confirm_date}")   // 	23		confirm_date			DATA
 				. sprintf("%1s", '')  // 	24		control
 				. sprintf("%17s", '') //	25		just white space..
 				. 'NOK'  // 	26		currency				DATA
@@ -371,7 +394,7 @@
 				. sprintf("%-17s", '') // 	64		order_date
 				. sprintf("%09.9s", $serial_number) // 	65		order_id				DATA
 				. 'FS'  // 	66		order_type				DATA
-				. 'IP'  // 	67		pay_method				DATA
+				. $pay_method  // 	67		pay_method				DATA
 				//	(68)
 				. sprintf("%02s", '')
 				. sprintf("%04.4s", $bill_year)
@@ -379,15 +402,15 @@
 				. sprintf("%30s", '') // 	70		place
 				. sprintf("%40s", '') // 	71		province
 				. sprintf("%12s", '') //	72		just white space..
-				. sprintf("%-8s", 'BKBPE')   // 	73		responsible				DATA
-				. sprintf("%-8s", 'BKBPE')   // 	74		responsible2			DATA
+				. sprintf("%-8s", $responsible)   // 	73		responsible				DATA
+				. sprintf("%-8s", $responsible2)   // 	74		responsible2			DATA
 				. sprintf("%8s", '')  //	75		just white space..
 				. sprintf("%-08s", '') // 	76		sequence_ref
 				. sprintf("%80s", '') //	77-78	just white space..
 				. 'N'  // 	79		status					DATA
 				. sprintf("%4s", '')  //	80-82	just white space..
 				. sprintf("%08s", '') // 	83		template_id
-				. sprintf("%2s", '')  // 	84		terms_id
+				. sprintf("%2s", $terms_id)  // 	84		terms_id
 				. sprintf("%12s", '') // 	85		tekx1
 				. sprintf("%-12s", $party_id)  // 	86		tekst2					DATA
 				. sprintf("%12s", $customer_order_id ? $customer_order_id : '') // 	87		tekst3
@@ -395,7 +418,7 @@
 				. '42'  // 	89		trans_type				DATA
 				. sprintf("%70s", '') //	90-92	just white space..
 				. sprintf("%09s", '') // 	93		voucher_ref
-				. 'FU'  // 	94		voucher_type			DATA
+				. $voucher_type  // 	94		voucher_type			DATA
 				. sprintf("%4s", '')  //	95		just white space..
 				. sprintf("%15s", '') // 	96		zip_code
 			;
@@ -413,8 +436,8 @@
 					. sprintf("%-35.35s", utf8_decode($item['article_description']))  // 	10	art_descr		DATA
 					. sprintf("%-15.15s", $item['article_code']) // 	11		article					DATA
 					. sprintf("%49s", '')   //	12-19	just white space..
-					. sprintf("%-12s", "BKBPE{$this->date_str}") // 	20		batch_id				DATA
-					. 'BY' // 	21		client					DATA
+					. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
+					. $client // 	21		client					DATA
 					. sprintf("%20s", '')   //	22-24	just white space..
 					. sprintf("%017s", '')   // 	25		cur_amount
 					. sprintf("%464s", '')   //	26-34	just white space..
@@ -466,7 +489,7 @@
 				$order[] = // Text line
 					'0' . //	1
 					sprintf("%345s", '')   //	2-19	just white space..		DATA
-					. sprintf("%-12s", "BKBPE{$this->date_str}") // 	20		batch_id				DATA
+					. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
 					. 'BY' // 	21		client					DATA
 					. sprintf("%692s", '')   //	22-53	just white space..
 					. sprintf("%04.4s", $item_counter)   // 	54		line_no					DATA
