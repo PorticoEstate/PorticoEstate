@@ -143,7 +143,7 @@
 			else if (isset($_POST['remove']))
 			{
 				$account_id = phpgw::get_var('account_id');
-				$result = frontend_bofrontend::remove_delegate($account_id, null, null);
+				$result = frontend_bofrontend::remove_delegate($account_id, 0, 0);
 				if ($result)
 				{
 					$msglog['message'][] = array('msg' => lang('remove_delegate_successful'));
@@ -158,7 +158,7 @@
 				$account_id = phpgw::get_var('account_id');
 				//Parameter to delegate access to only a single organisational unit
 				$org_unit_id = $this->header_state['selected_org_unit'];
-				$result = frontend_bofrontend::remove_delegate($account_id, null, $org_unit_id);
+				$result = frontend_bofrontend::remove_delegate($account_id, 0, $org_unit_id);
 				if ($result)
 				{
 					$msglog['message'][] = array('msg' => lang('remove_delegate_successful'));
