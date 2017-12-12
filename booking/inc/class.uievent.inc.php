@@ -639,7 +639,7 @@
 			$config->read();
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Event Edit'), 'link' => '#event_edit');
+			$tabs['generic'] = array('label' => lang('edit event'), 'link' => '#event_edit');
 			$active_tab = 'generic';
 
 			$external_site_address = isset($config->config_data['external_site_address']) && $config->config_data['external_site_address'] ? $config->config_data['external_site_address'] : $GLOBALS['phpgw_info']['server']['webserver_url'];

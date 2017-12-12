@@ -154,7 +154,7 @@
 			array_set_default($agegroup, 'sort', '0');
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Agegroup New'), 'link' => '#agegroup_add');
+			$tabs['generic'] = array('label' => lang('add agegroup'), 'link' => '#agegroup_add');
 			$active_tab = 'generic';
 
 			$agegroup['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
@@ -190,7 +190,7 @@
 			$this->flash_form_errors($errors);
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Age Group Edit'), 'link' => '#agegroup_edit');
+			$tabs['generic'] = array('label' => lang('edit agegroup'), 'link' => '#agegroup_edit');
 			$active_tab = 'generic';
 
 			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);

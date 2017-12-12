@@ -749,7 +749,7 @@
 
 			$this->query("SELECT max(id) as maximum FROM $table $where",__LINE__,__FILE__);
 			$this->next_record();
-			$next_id = $this->f('maximum')+1;
+			$next_id = (int)$this->f('maximum')+1;
 			return $next_id;
 		}
 
