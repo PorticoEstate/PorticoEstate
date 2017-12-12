@@ -1224,6 +1224,12 @@
 
 				if ($check_list_id > 0)
 				{
+					if($submit_ok)
+					{
+						$check_list->set_id($check_list_id);
+						$this->_set_required_control_items($check_list);
+					}
+
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
 						return json_encode(array("status" => 'ok', 'message' => lang('Ok')));
@@ -1737,6 +1743,114 @@
 				}
 			}
 			return $required_control_items;
+		}
+
+		private function _set_required_control_items( $check_list )
+		{
+			$required_control_items = $this->_get_required_control_items($check_list);
+			$component_id = $check_list->get_component_id();
+
+			if ($component_id > 0)
+			{
+				$location_id = $check_list->get_location_id();
+				$component_id = $check_list->get_component_id();
+				$location_info = $GLOBALS['phpgw']->locations->get_name($location_id);
+
+
+				foreach ($required_control_items as $required_control_item)
+				{
+					$_ok = $this->so_case->get_cases_by_component($location_id, $component_id, $required_control_item['id'], $check_list->get_id());
+					if (!$_ok)
+					{
+						$this->_save_required_case($check_list, $required_control_item);
+					}
+				}
+
+			}
+			
+		}
+
+		private function _save_required_case($check_list, $control_item)
+		{
+			if (!$this->add && !$this->edit)
+			{
+				return json_encode(array("status" => "not_saved"));
+			}
+
+			$check_list_id = $check_list->get_id();
+			$control_item_id = $control_item['id'];
+			$case_descr = phpgw::get_var('case_descr');
+			$type = $control_item['type'];
+			$status = controller_check_list::STATUS_DONE;
+			$location_code = $check_list->get_location_code();
+			$component_location_id = $check_list->get_location_id();
+			$component_id = $check_list->get_component_id();
+
+			$control_id = $check_list->get_control_id();
+
+			$control = $this->so_control->get_single($control_id);
+
+			$check_item = $this->so_check_item->get_check_item_by_check_list_and_control_item($check_list_id, $control_item_id);
+
+			// Makes a check item if there isn't already made one
+			if ($check_item == null)
+			{
+				$new_check_item = new controller_check_item();
+				$new_check_item->set_check_list_id($check_list_id);
+				$new_check_item->set_control_item_id($control_item_id);
+
+				$saved_check_item_id = $this->so_check_item->store($new_check_item);
+				$check_item = $this->so_check_item->get_single($saved_check_item_id);
+			}
+
+			$todays_date_ts = mktime(0, 0, 0, date("m"), date("d"), date("Y"));
+
+			$user_id = $GLOBALS['phpgw_info']['user']['id'];
+
+			$case = new controller_check_item_case();
+			$case->set_check_item_id($check_item->get_id());
+			$case->set_descr($case_descr);
+			$case->set_user_id($user_id);
+			$case->set_entry_date($todays_date_ts);
+			$case->set_modified_date($todays_date_ts);
+			$case->set_modified_by($user_id);
+			$case->set_status($status);
+			$case->set_location_code($location_code);
+			$case->set_component_location_id($component_location_id);
+			$case->set_component_id($component_id);
+
+			$option = (array)end($control_item['options_array']);
+			$option_value = $option['option_value'];
+
+			// Saves selected value from  or measurement
+			if ($type == 'control_item_type_2')
+			{
+				$measurement = 'Dummy values';
+				$case->set_measurement($measurement);
+			}
+			else if ($type == 'control_item_type_3')
+			{
+				$case->set_measurement($option_value);
+			}
+			else if ($type == 'control_item_type_4')
+			{
+				$case->set_measurement($option_value);
+			}
+			else if ($type == 'control_item_type_5')
+			{
+				$case->set_measurement($option_value);
+			}
+
+			$case_id = CreateObject('controller.socase')->store($case);
+
+			if ($case_id > 0)
+			{
+				return json_encode(array("status" => "saved"));
+			}
+			else
+			{
+				return json_encode(array("status" => "not_saved"));
+			}
 		}
 
 		/**
