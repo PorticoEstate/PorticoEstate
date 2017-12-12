@@ -27,11 +27,16 @@
 					<legend>
 						<h3>Sjekklistedetaljer::<xsl:value-of select="current_month_name"/></h3>
 					</legend>
-
-						<label>Antall åpne saker</label>
-						<xsl:value-of select="check_list/num_open_cases"/>
-						<label>Antall ventende saker</label>
-						<xsl:value-of select="check_list/num_pending_cases"/>
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-md-1-2">
+							<label>Antall åpne saker</label>
+							<xsl:value-of select="check_list/num_open_cases"/>
+						</div>
+						<div class="pure-u-1 pure-u-md-1-2">
+							<label>Antall ventende saker</label>
+							<xsl:value-of select="check_list/num_pending_cases"/>
+						</div>
+					</div>
 					<xsl:variable name="check_list_id">
 						<xsl:value-of select="check_list/id"/>
 					</xsl:variable>
@@ -41,97 +46,105 @@
 							<xsl:value-of select="php:function('lang', 'error_msg_control_passed_due_date')" />
 						</div>
 					</xsl:if>
-						<label>Status</label>
-						<xsl:variable name="status">
-							<xsl:value-of select="check_list/status"/>
-						</xsl:variable>
-						<select id="status" name="status">
-							<xsl:choose>
-								<xsl:when test="check_list/status = 0">
-									<option value="1">Utført</option>
-									<option value="0" SELECTED="SELECTED">Ikke utført</option>
-									<option value="3">Kansellert</option>
-								</xsl:when>
-								<xsl:when test="check_list/status = 1">
-									<option value="1" SELECTED="SELECTED">Utført</option>
-									<option value="0">Ikke utført</option>
-									<option value="3">Kansellert</option>
-								</xsl:when>
-								<xsl:when test="check_list/status = 3">
-									<option value="3" SELECTED="SELECTED">Kansellert</option>
-									<option value="0">Ikke utført</option>
-									<option value="1">Utført</option>
-								</xsl:when>
-								<xsl:otherwise>
-									<option value="0" SELECTED="SELECTED">Ikke utført</option>
-									<option value="1">Utført</option>
-									<option value="3">Kansellert</option>
-								</xsl:otherwise>
-							</xsl:choose>
-						</select>
-						<label>Skal utføres innen</label>
-						<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
-						<input id="deadline_date" name="deadline_date" type="hidden">
-							<xsl:if test="check_list/deadline != 0 or check_list/deadline != ''">
+					<label>Status</label>
+					<xsl:variable name="status">
+						<xsl:value-of select="check_list/status"/>
+					</xsl:variable>
+					<select id="status" name="status" class="pure-input-1">
+						<xsl:choose>
+							<xsl:when test="check_list/status = 0">
+								<option value="1">Utført</option>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
+								<option value="3">Kansellert</option>
+							</xsl:when>
+							<xsl:when test="check_list/status = 1">
+								<option value="1" SELECTED="SELECTED">Utført</option>
+								<option value="0">Ikke utført</option>
+								<option value="3">Kansellert</option>
+							</xsl:when>
+							<xsl:when test="check_list/status = 3">
+								<option value="3" SELECTED="SELECTED">Kansellert</option>
+								<option value="0">Ikke utført</option>
+								<option value="1">Utført</option>
+							</xsl:when>
+							<xsl:otherwise>
+								<option value="0" SELECTED="SELECTED">Ikke utført</option>
+								<option value="1">Utført</option>
+								<option value="3">Kansellert</option>
+							</xsl:otherwise>
+						</xsl:choose>
+					</select>
+					<div class="pure-g">
+						<div class="pure-u-1 pure-u-md-1-3">
+							<label>Skal utføres innen</label>
+							<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
+							<input id="deadline_date" name="deadline_date" type="hidden">
+								<xsl:if test="check_list/deadline != 0 or check_list/deadline != ''">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+							<input type="hidden" id="original_deadline_date" name="original_deadline_date" >
 								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('date', $date_format, number(check_list/deadline))"/>
+									<xsl:value-of select="check_list/original_deadline"/>
 								</xsl:attribute>
+							</input>
+						</div>
+						<div class="pure-u-1 pure-u-md-1-3">
+							<xsl:if test="check_list/error_msg_array/planned_date != ''">
+								<xsl:variable name="error_msg">
+									<xsl:value-of select="check_list/error_msg_array/planned_date" />
+								</xsl:variable>
+								<div class='input_error_msg'>
+									<xsl:value-of select="php:function('lang', $error_msg)" />
+								</div>
 							</xsl:if>
-						</input>
-						<input type="hidden" id="original_deadline_date" name="original_deadline_date" >
-							<xsl:attribute name="value">
-								<xsl:value-of select="check_list/original_deadline"/>
-							</xsl:attribute>
-						</input>
-						<xsl:if test="check_list/error_msg_array/planned_date != ''">
-							<xsl:variable name="error_msg">
-								<xsl:value-of select="check_list/error_msg_array/planned_date" />
-							</xsl:variable>
-							<div class='input_error_msg'>
-								<xsl:value-of select="php:function('lang', $error_msg)" />
-							</div>
-						</xsl:if>
-						<label>Planlagt dato</label>
-						<input class="date" readonly="readonly">
-							<xsl:attribute name="id">planned_date</xsl:attribute>
-							<xsl:attribute name="name">planned_date</xsl:attribute>
-							<xsl:attribute name="type">text</xsl:attribute>
-							<xsl:if test="check_list/planned_date != 0 and check_list/planned_date != ''">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/>
-								</xsl:attribute>
+							<label>Planlagt dato</label>
+							<input class="date" readonly="readonly">
+								<xsl:attribute name="id">planned_date</xsl:attribute>
+								<xsl:attribute name="name">planned_date</xsl:attribute>
+								<xsl:attribute name="type">text</xsl:attribute>
+								<xsl:if test="check_list/planned_date != 0 and check_list/planned_date != ''">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $date_format, number(check_list/planned_date))"/>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+						</div>
+						<div class="pure-u-1 pure-u-md-1-3">
+							<xsl:if test="check_list/error_msg_array/completed_date != ''">
+								<xsl:variable name="error_msg">
+									<xsl:value-of select="check_list/error_msg_array/completed_date" />
+								</xsl:variable>
+								<div class='input_error_msg'>
+									<xsl:value-of select="php:function('lang', $error_msg)" />
+								</div>
 							</xsl:if>
-						</input>
-						<xsl:if test="check_list/error_msg_array/completed_date != ''">
-							<xsl:variable name="error_msg">
-								<xsl:value-of select="check_list/error_msg_array/completed_date" />
-							</xsl:variable>
-							<div class='input_error_msg'>
-								<xsl:value-of select="php:function('lang', $error_msg)" />
-							</div>
-						</xsl:if>
-						<label>Utført dato</label>
-						<input class="date" >
-							<xsl:attribute name="id">completed_date</xsl:attribute>
-							<xsl:attribute name="name">completed_date</xsl:attribute>
-							<xsl:attribute name="type">text</xsl:attribute>
-							<xsl:if test="check_list/completed_date != 0 and check_list/completed_date != ''">
-								<xsl:attribute name="value">
-									<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
-								</xsl:attribute>
-							</xsl:if>
-						</input>
+							<label>Utført dato</label>
+							<input class="date" >
+								<xsl:attribute name="id">completed_date</xsl:attribute>
+								<xsl:attribute name="name">completed_date</xsl:attribute>
+								<xsl:attribute name="type">text</xsl:attribute>
+								<xsl:if test="check_list/completed_date != 0 and check_list/completed_date != ''">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('date', $date_format, number(check_list/completed_date))"/>
+									</xsl:attribute>
+								</xsl:if>
+							</input>
+						</div>
+					</div>
 					<!-- ASSIGNMET -->
-						<label>Tildelt</label>
-						<select name="assigned_to">
-							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</xsl:attribute>
-							<option value="0">
-								<xsl:value-of select="php:function('lang', 'select')"/>
-							</option>
-							<xsl:apply-templates select="user_list/options"/>
-						</select>
+					<label>Tildelt</label>
+					<select name="assigned_to" class="pure-input-1">
+						<xsl:attribute name="title">
+							<xsl:value-of select="php:function('lang', 'select')"/>
+						</xsl:attribute>
+						<option value="0">
+							<xsl:value-of select="php:function('lang', 'select')"/>
+						</option>
+						<xsl:apply-templates select="user_list/options"/>
+					</select>
 					<xsl:if test="required_actual_hours = 1">
 						<div class="pure-control-group">
 							<label>Egne Timer</label>
@@ -143,26 +156,26 @@
 							<xsl:value-of select="check_list/billable_hours"/>
 						</div>
 					</xsl:if>
-						<label>Kommentar</label>
-						<textarea class="pure-input-1">
-							<xsl:attribute name="name">comment</xsl:attribute>
-							<xsl:value-of select="check_list/comment"/>
-						</textarea>
-						<label>
-							<xsl:value-of select="php:function('lang', 'files')"/>
-						</label>
-							<xsl:for-each select="datatable_def">
-								<xsl:if test="container = 'datatable-container_0'">
-									<xsl:call-template name="table_setup">
-										<xsl:with-param name="container" select ='container'/>
-										<xsl:with-param name="requestUrl" select ='requestUrl'/>
-										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
-										<xsl:with-param name="data" select ='data'/>
-										<xsl:with-param name="tabletools" select ='tabletools' />
-										<xsl:with-param name="config" select ='config'/>
-									</xsl:call-template>
-								</xsl:if>
-							</xsl:for-each>
+					<label>Kommentar</label>
+					<textarea class="pure-input-1">
+						<xsl:attribute name="name">comment</xsl:attribute>
+						<xsl:value-of select="check_list/comment"/>
+					</textarea>
+					<label>
+						<xsl:value-of select="php:function('lang', 'files')"/>
+					</label>
+					<xsl:for-each select="datatable_def">
+						<xsl:if test="container = 'datatable-container_0'">
+							<xsl:call-template name="table_setup">
+								<xsl:with-param name="container" select ='container'/>
+								<xsl:with-param name="requestUrl" select ='requestUrl'/>
+								<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+								<xsl:with-param name="data" select ='data'/>
+								<xsl:with-param name="tabletools" select ='tabletools' />
+								<xsl:with-param name="config" select ='config'/>
+							</xsl:call-template>
+						</xsl:if>
+					</xsl:for-each>
 					<script type="text/javascript">
 						var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
 					</script>
