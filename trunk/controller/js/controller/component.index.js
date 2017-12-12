@@ -1,3 +1,6 @@
+var billable_hours = 0;
+var global_args;
+
 /**
  * Detect if browsertab is active - and update when revisit
  */
@@ -20,7 +23,6 @@ var vis = (function ()
 	return function (c)
 	{
 		if (c)
-
 			document.addEventListener(eventKey, c);
 		return !document[stateKey];
 	}
@@ -42,7 +44,7 @@ $(document).ready(function ()
 
 	$("#location_name").focusout(function ()
 	{
-		if($("#location_code").val() && $(this).val() == false)
+		if ($("#location_code").val() && $(this).val() == false)
 		{
 			$("#location_code").val('');
 			update_table('');
@@ -69,7 +71,7 @@ deselect_component = function ()
 };
 update_table = function (location_code)
 {
-	if(typeof(location_code) == 'undefined')
+	if (typeof (location_code) == 'undefined')
 	{
 		location_code = $("#location_code").val();
 	}
@@ -136,7 +138,7 @@ update_table = function (location_code)
 	}
 
 	var requestUrl = $("#queryForm").attr("action");
-	requestUrl += '&phpgw_return_as=json' + "&" + $("#queryForm").serialize() + "&location_code=" + location_code ;
+	requestUrl += '&phpgw_return_as=json' + "&" + $("#queryForm").serialize() + "&location_code=" + location_code;
 
 	$.ajax({
 		type: 'POST',
@@ -385,32 +387,54 @@ var strURL = phpGWLink('index.php', oArgs, true);
 JqueryPortico.autocompleteHelper(strURL, 'location_name', 'location_code', 'location_container');
 
 
-
-perform_action = function(name, oArgs)
+$(document).ready(function ()
 {
 
-	if(name === 'save_check_list')
+	var dialog, form;
+
+	function get_billable_hours()
 	{
-		//nothing
-		location.assign(phpGWLink('index.php', oArgs));
-		return;
+		var valid = true;
+		$("#billable_hours").removeClass("ui-state-error");
+		billable_hours = $("#billable_hours").val();
+		dialog.dialog("close");
+		submit_ok();
+		return valid;
 	}
-	else if (name === 'submit_ok')
-	{
-		oArgs.menuaction = 'controller.uicheck_list.save_check_list';
 
-		var confirm_msg = "Godkjenner du denne uten avvik?";
-
-		if (confirm(confirm_msg) !== true)
+	dialog = $("#dialog-form").dialog({
+		autoOpen: false,
+		height: 300,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Ok": get_billable_hours,
+			Cancel: function ()
+			{
+				dialog.dialog("close");
+			}
+		},
+		close: function ()
 		{
-			return false;
+			form[ 0 ].reset();
+			$("#billable_hours").removeClass("ui-state-error");
 		}
+	});
 
-		var requestUrl = phpGWLink('index.php', oArgs, true);
+	form = dialog.find("form").on("submit", function (event)
+	{
+		event.preventDefault();
+		get_billable_hours();
+	});
 
+
+	submit_ok = function ()
+	{
+		global_args.menuaction = 'controller.uicheck_list.save_check_list';
+		var requestUrl = phpGWLink('index.php', global_args, true);
 		$.ajax({
 			type: 'POST',
-			data: {submit_ok: 1},
+			data: {submit_ok: 1, billable_hours: billable_hours},
 			dataType: 'json',
 			url: requestUrl,
 			success: function (data)
@@ -431,12 +455,28 @@ perform_action = function(name, oArgs)
 				}
 			}
 		});
-	}
-	else if (name === 'submit_deviation')
-	{
-		oArgs.menuaction = 'controller.uicheck_list.save_check_list';
-		oArgs.submit_deviation = 1;
-		location.assign(phpGWLink('index.php', oArgs));
-	}
+	};
 
-};
+	perform_action = function (name, oArgs)
+	{
+		if (name === 'save_check_list')
+		{
+			//nothing
+			location.assign(phpGWLink('index.php', oArgs));
+			return;
+		}
+		else if (name === 'submit_ok')
+		{
+			global_args = oArgs;
+
+			dialog.dialog("open");
+		}
+		else if (name === 'submit_deviation')
+		{
+			oArgs.menuaction = 'controller.uicheck_list.save_check_list';
+			oArgs.submit_deviation = 1;
+			location.assign(phpGWLink('index.php', oArgs));
+		}
+
+	};
+});

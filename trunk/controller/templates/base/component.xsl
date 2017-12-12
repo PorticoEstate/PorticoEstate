@@ -349,5 +349,21 @@
 
 	</script>
 
+	<div id="dialog-form" title="Egne timer">
+		<p>Godkjenner du denne uten avvik?</p>
+		<form>
+			<fieldset>
+				<div class="pure-control-group">
+					<label>Egne Timer</label>
+					<input class="pure-input-1" type="number" step="0.01" required="required">
+						<xsl:attribute name="id">billable_hours</xsl:attribute>
+						<xsl:attribute name="name">billable_hours</xsl:attribute>
+					</input>
+				</div>
+				<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+				</input>
+			</fieldset>
+		</form>
+	</div>
 	 
 </xsl:template>
