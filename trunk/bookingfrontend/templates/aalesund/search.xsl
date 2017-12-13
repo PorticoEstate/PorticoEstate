@@ -8,7 +8,7 @@
         <xsl:value-of select="php:function('lang', 'scroll to top')" />
     </a>
     
-    <div class="container-fluid">
+    <div class="container-fluid main-container">
 
         <section class="bg-light text-center">
             <div class="container-fluid">
@@ -63,7 +63,7 @@
                 
           
     <div class="container-fluid advance-search">
-        <div class="container">
+        <div class="container advance-search-padding">
             <div class="search-container">
                 <div class="input-group">
                 
@@ -184,19 +184,24 @@
                         </ul>
                     </div>
                 </div>  
-            </div>   
+            </div>  
+            
         </div> 
+        <div class="container" style="padding-bottom: 2px">
+            <div id = "total_records_top"></div> 
+        </div>   
+        
     </div>                      
                 
                                                   
     <!-- GAMMEL KODE  -->                                                               
                                                                                      
-                                                                                    
+                                                                                 
     <div class="container-fluid result">                                                                                                         
                                                                                                                          
         <div class="container">                                                                                                                                             
             
-           <!--  <div id = "total_records_top"></div> -->
+            
             <div id="result"></div>
         </div>
     </div>
