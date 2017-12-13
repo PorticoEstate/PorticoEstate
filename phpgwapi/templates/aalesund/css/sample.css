@@ -1,3 +1,4 @@
+html,body { height:100%; }
 body {
     font-family: Raleway,Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif !important;
     font-size: 16px;
@@ -13,6 +14,7 @@ body {
   padding-top: 10rem;
   padding-bottom: 10rem; 
   border-radius: 0;
+  margin-bottom: 0;
 }
 
 
@@ -74,7 +76,10 @@ body {
     display: none;
     background-color: #bad3e2;
     padding-top: 35px;
-    padding-bottom: 7%;
+}
+
+.advance-search-padding{
+    padding-bottom: 6%;
 }
 
 .advance-search ul{
@@ -192,6 +197,8 @@ dl.proplist{
 .application-group{
     margin-top: 2em;
     margin-bottom: 2em;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
 }
 
 .application-group .heading{
@@ -200,4 +207,12 @@ dl.proplist{
 
 .no-padding-left{
     padding: 0 !important;
+}
+
+.application-background{
+    background-color: white;
+}
+
+.main-container{
+    padding-top: 2em;
 }
