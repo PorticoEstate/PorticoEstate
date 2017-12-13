@@ -319,7 +319,7 @@ function populateTableResources(url, container, colDefs)
 	}
 	else
 	{
-		createTable(container, url, colDefs, 'results');
+		createTable(container, url, colDefs, 'results', 'table table-hover table-borderless');
 	}
 }
 
@@ -331,7 +331,7 @@ function populateTableRegulations(url, container, colDefs)
 	}
 	else
 	{
-		createTable(container, url, colDefs);
+		createTable(container, url, colDefs, '', 'table table-hover table-borderless');
 	}
 
 }
