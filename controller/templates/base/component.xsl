@@ -352,17 +352,19 @@
 	<div id="dialog-form" title="Egne timer">
 		<p>Godkjenner du denne uten avvik?</p>
 		<form>
-			<fieldset>
-				<div class="pure-control-group">
-					<label>Egne Timer</label>
-					<input class="pure-input-1" type="number" step="0.01" required="required">
-						<xsl:attribute name="id">billable_hours</xsl:attribute>
-						<xsl:attribute name="name">billable_hours</xsl:attribute>
-					</input>
-				</div>
+			<!--<fieldset>-->
+				<xsl:if test="//required_actual_hours = '1'">
+					<div class="pure-control-group">
+						<label>Egne Timer</label>
+						<input class="pure-input-1" type="number" step="0.01" min="1" required='required'>
+							<xsl:attribute name="id">billable_hours</xsl:attribute>
+							<xsl:attribute name="name">billable_hours</xsl:attribute>
+						</input>
+					</div>
+				</xsl:if>
 				<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
 				</input>
-			</fieldset>
+			<!--</fieldset>-->
 		</form>
 	</div>
 	 

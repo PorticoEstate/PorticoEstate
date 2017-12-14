@@ -61,7 +61,8 @@
 			$custom,
 			$get_locations,
 			$user_id,
-			$currentapp;
+			$currentapp,
+			$config;
 		public $public_functions = array
 			(
 			'index' => true,
@@ -79,9 +80,8 @@
 			$this->manage = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller');//16
 //			$this->so					 = CreateObject('controller.socontrol');
 
-			$config = CreateObject('phpgwapi.config', 'controller');
-			$config->read();
-			$this->_category_acl = isset($config->config_data['acl_at_control_area']) && $config->config_data['acl_at_control_area'] == 1 ? true : false;
+			$this->config = CreateObject('phpgwapi.config', 'controller')->read();
+			$this->_category_acl = isset($this->config['acl_at_control_area']) && $this->config['acl_at_control_area'] == 1 ? true : false;
 
 			$location_id = phpgw::get_var('location_id', 'int');
 			$this->get_locations = phpgw::get_var('get_locations', 'bool');
@@ -335,6 +335,7 @@
 			$status_list = array(
 				array('id' => 'in_queue', 'name' => lang('in queue')),
 				array('id' => 'all', 'name' => lang('All')),
+				array('id' => 'performed', 'name' => lang('status done')),
 				array('id' => 'not_performed', 'name' => lang('status not done')),
 				array('id' => 'done_with_open_deviation', 'name' => lang('done with open deviation')),
 			);
@@ -352,8 +353,10 @@
 					'name'	=> $control_type->get_title()
 				);
 			}
+
 	//		_debug_array($control_types_arr);
 			$data = array(
+				'required_actual_hours' => !empty($this->config['required_actual_hours']) ? true : false,
 				'datatable_name' =>  phpgw::get_var('get_locations', 'bool') ? lang('status locations') : lang('status components'),
 				'form' => array(
 					'action' => self::link(array('menuaction' => 'controller.uicomponent.index',
@@ -1571,7 +1574,20 @@
 							return;
 					}
 				}
-				if ($filter_status == 'not_performed')
+				else if ($filter_status == 'performed')
+				{
+					switch ($param['status'])
+					{
+						case "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS":
+						case "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS":
+						case "CONTROL_DONE_WITH_ERRORS":
+						case "CONTROL_CANCELED":
+							break;//continues
+						default:
+							return;
+					}
+				}
+				else if ($filter_status == 'not_performed')
 				{
 					switch ($param['status'])
 					{
