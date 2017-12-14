@@ -404,7 +404,7 @@ $(document).ready(function ()
 
 	dialog = $("#dialog-form").dialog({
 		autoOpen: false,
-		height: 300,
+		height: 250,
 		width: 350,
 		modal: true,
 		buttons: {
@@ -442,16 +442,8 @@ $(document).ready(function ()
 				if (data !== null)
 				{
 					var message = data.message;
-
-					if (data.status === 'error')
-					{
-						alert(message);
-					}
-					else
-					{
-						alert('Ok');
-						update_table();
-					}
+					alert(message);
+					update_table();
 				}
 			}
 		});

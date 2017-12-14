@@ -1095,7 +1095,11 @@
 
 			if ($status == controller_check_list::STATUS_DONE && $required_actual_hours && $check_list->get_billable_hours() == 0 && !$billable_hours)
 			{
-				phpgwapi_cache::message_set(lang("Please enter billable hours"), 'error');
+				$error_message = lang("Please enter billable hours");
+				if (phpgw::get_var('phpgw_return_as') != 'json')
+				{
+					phpgwapi_cache::message_set($error_message, 'error');
+				}
 				$error = true;
 			}
 			else
@@ -1232,7 +1236,7 @@
 
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
-						return json_encode(array("status" => 'ok', 'message' => lang('Ok')));
+						return array("status" => 'ok', 'message' => lang('Ok'));
 					}
 					else if($submit_deviation)
 					{
@@ -1249,7 +1253,7 @@
 				{
 					if (phpgw::get_var('phpgw_return_as') == 'json')
 					{
-						return json_encode(array("status" => 'error', 'message' => lang('Error')));
+						return array('status' => 'error', 'message' => $error_message ? $error_message : lang('Error'));
 					}
 					$this->edit_check_list($check_list);
 				}
@@ -1258,7 +1262,7 @@
 			{
 				if (phpgw::get_var('phpgw_return_as') == 'json')
 				{
-					return json_encode(array("status" => 'error', 'message' => lang('Error')));
+					return array('status' => 'error', 'message' => $error_message ? $error_message : lang('Error'));
 				}
 				else if ($check_list->get_id() > 0)
 				{
