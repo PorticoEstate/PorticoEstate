@@ -148,7 +148,7 @@
 					<xsl:if test="required_actual_hours = 1">
 						<div class="pure-control-group">
 							<label>Egne Timer</label>
-							<input class="date" type="number" step="0.01">
+							<input type="number" step="0.01"  class="pure-input-1" required="required">
 								<xsl:attribute name="id">billable_hours</xsl:attribute>
 								<xsl:attribute name="name">billable_hours</xsl:attribute>
 							</input>
