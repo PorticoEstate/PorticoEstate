@@ -29,8 +29,28 @@
       
              
         <div id="building_container" class="search-container main-search">
-            <div class="form-group">
-                <input id="field_building_name" name="building_name" class="form-control form-control-lg text-center" type="text">
+           <div class="form-group">
+               
+               
+               <div class="input-group">
+                
+                    <input id="field_searchterm"  class="form-control form-control-lg text-center" name="searchterm" type="text">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="searchterm"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="placeholder">
+                            <xsl:text> Søk i fritekst</xsl:text>
+                        </xsl:attribute>
+                    </input>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search-button" type="submit">
+                            <i class="icon ion-search text-primary"/>
+                        </button>
+                    </span>
+
+  
+                </div>
+            <!--     <input id="field_building_name" name="building_name" class="form-control form-control-lg text-center" type="text">
                     <xsl:attribute name="value">
                         <xsl:value-of select="building_name"/>
                     </xsl:attribute>
@@ -43,10 +63,10 @@
                     <xsl:attribute name="value">
                         <xsl:value-of select="building_id"/>
                     </xsl:attribute>
-                </input>
+                </input> -->
                     
-            </div>
-        </div>
+            </div> 
+        </div> 
         
     </div> 
 
@@ -55,35 +75,15 @@
     <div class="container text-center text-primary">  
         <h5>Avansert søk</h5>
         <div class="iconwrapper">
-        <button type="button" id="adv-search-toggler" class="btn btn-circle">
-            <i class="ion-chevron-down"/>
-        </button>
+            <button type="button" id="adv-search-toggler" class="btn btn-circle">
+                <i class="ion-chevron-down"/>
+            </button>
         </div>
     </div>                                 
                 
           
     <div class="container-fluid advance-search">
         <div class="container advance-search-padding">
-            <div class="search-container">
-                <div class="input-group">
-                
-                    <input id="field_searchterm"  class="form-control" name="searchterm" type="text">
-                        <xsl:attribute name="value">
-                            <xsl:value-of select="searchterm"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="placeholder">
-                            <xsl:text> Søk i fritekst</xsl:text>
-                        </xsl:attribute>
-                    </input>
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <i class="icon ion-search text-primary"/>
-                        </button>
-                    </span>
-
-  
-                </div>
-            </div>
             <div class="row">
                 <div class="col-lg-4">
                     <div class="pure-u-1 select-box">
