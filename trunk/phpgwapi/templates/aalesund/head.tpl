@@ -37,9 +37,7 @@ and open the template in the editor.
 
     </head>
     <body class="bg-light">
-        <div class="jumbotron text-center text-white">
-
-            <nav class="navbar navbar-expand-md fixed-top navbar-dark">
+        <nav class="navbar navbar-expand-md fixed-top navbar-dark">
 
                 <div class="container">
                     <button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
@@ -60,6 +58,9 @@ and open the template in the editor.
                 </div>
 
             </nav>
+        <div class="jumbotron text-center text-white">
+
+            
             
             <div class="container header-text">          
                 <a href="{site_url}"><p>AKTIV KOMMUNE</p>
