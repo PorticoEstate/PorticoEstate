@@ -943,7 +943,7 @@ HTML;
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
 				$_access = false;
-				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'admin' && $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['userid']))
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'admin' && $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']))
 				{
 					$_access = true;
 				}

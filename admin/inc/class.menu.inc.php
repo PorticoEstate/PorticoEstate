@@ -73,7 +73,7 @@
 							'location_id' => $GLOBALS['phpgw']->locations->get_id('admin', 'vfs_filedata')
 						)
 					)
-				);	
+				);
 
 				$menus['admin']['file_attribs']	= array
 				(
@@ -113,8 +113,8 @@
 								array('menuaction' => 'admin.uiaccounts.global_message'))
 				);
 			}
-                        
-                        if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
+
+			if ( $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin'))
 			{
 				$menus['admin']['home_screen_message'] = array
 				(
