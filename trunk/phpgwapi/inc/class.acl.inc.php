@@ -1172,11 +1172,13 @@
 			$rights = 0;
 			$apps = array();
 
-			$sql = 'SELECT phpgw_applications.app_name, phpgw_acl.acl_rights FROM phpgw_acl'
+			$sql = 'SELECT DISTINCT phpgw_applications.app_name, phpgw_acl.acl_rights FROM phpgw_acl'
 				. " {$this->_join} phpgw_locations ON phpgw_acl.location_id = phpgw_locations.location_id"
 				. " {$this->_join} phpgw_applications ON phpgw_locations.app_id = phpgw_applications.app_id"
+				. " {$this->_left_join}  phpgw_group_map ON (phpgw_acl.acl_account = phpgw_group_map.group_id)"
 				. " WHERE phpgw_locations.name = '{$location}'"
-					. " AND acl_account = {$account_id}";
+				. " AND (acl_account = {$account_id} OR account_id = {$account_id})";
+
 			$this->_db->query($sql, __LINE__, __FILE__);
 
 			while ($this->_db->next_record())

@@ -242,16 +242,41 @@
 		$account->lid = 'booking_group';
 		$account->firstname = 'Booking';
 		$account->lastname = 'Group';
-		$rental_group = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
+		$booking_group = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
 	}
 	else
 	{
-		$rental_group = $GLOBALS['phpgw']->accounts->name2id('booking_group');
+		$booking_group = $GLOBALS['phpgw']->accounts->name2id('booking_group');
 	}
 
-	$aclobj->set_account_id($rental_group, true);
+	$aclobj->set_account_id($booking_group, true);
 	$aclobj->add('booking', '.office', 7);
 	$aclobj->add('booking', 'run', 1);
+	$aclobj->add('property', '.', 1);
+	$aclobj->add('property', 'run', 1);
+	$aclobj->add('preferences', 'changepassword', 1);
+	$aclobj->add('preferences', '.', 1);
+	$aclobj->add('preferences', 'run', 1);
+	$aclobj->save_repository();
+
+	if (!$GLOBALS['phpgw']->accounts->exists('booking_admin'))
+	{
+		$account = new phpgwapi_group();
+		$account->lid = 'booking_admin';
+		$account->firstname = 'Booking Admin';
+		$account->lastname = 'Group';
+		$booking_admin = $GLOBALS['phpgw']->accounts->create($account, array(), array(), $modules);
+	}
+	else
+	{
+		$booking_admin = $GLOBALS['phpgw']->accounts->name2id('booking_admin');
+	}
+
+	$aclobj->set_account_id($booking_admin, true);
+	$aclobj->add('booking', 'admin', 15);
+	$aclobj->add('booking', '.office', 15);
+	$aclobj->add('booking', 'run', 1);
+	$aclobj->add('property', 'admin', 15);
 	$aclobj->add('property', '.', 1);
 	$aclobj->add('property', 'run', 1);
 	$aclobj->add('preferences', 'changepassword', 1);
