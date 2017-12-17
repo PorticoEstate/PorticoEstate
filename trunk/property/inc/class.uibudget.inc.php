@@ -1502,7 +1502,7 @@
 				'allrows' => $this->allrows
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
+			self::add_javascript('property', 'overlib', 'overlib.js');
 
 			$data = array
 				(
