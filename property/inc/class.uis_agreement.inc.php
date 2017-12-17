@@ -1089,9 +1089,8 @@
 				'id' => $id
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
-
+			self::add_javascript('property', 'overlib', 'overlib.js');
+			self::add_javascript('property', 'core', 'check.js');
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
 			{
@@ -1761,8 +1760,8 @@
 				'entity_data' => $values['p']
 			));
 
-			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
+			self::add_javascript('property', 'overlib', 'overlib.js');
+			self::add_javascript('property', 'core', 'check.js');
 
 
 			if (isset($values['attributes']) && is_array($values['attributes']))
@@ -2053,8 +2052,8 @@
 				unset($s_agreement['attributes']);
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
+			self::add_javascript('property', 'overlib', 'overlib.js');
+			self::add_javascript('property', 'core', 'check.js');
 
 			$parameters = array
 				(

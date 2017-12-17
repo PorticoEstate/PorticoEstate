@@ -641,7 +641,7 @@
 					array('disablePagination' => true)
 				)
 			);
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
+			self::add_javascript('property', 'core', 'check.js');
 
 			$data = array
 				(
@@ -1168,8 +1168,8 @@
 				$record_limit = $this->bo->total_records;
 			}
 
-			$GLOBALS['phpgw']->js->validate_file('overlib', 'overlib', 'property');
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
+			self::add_javascript('property', 'overlib', 'overlib.js');
+			self::add_javascript('property', 'core', 'check.js');
 
 			if (isset($agreement['attributes']) && is_array($agreement['attributes']))
 			{
@@ -1812,7 +1812,7 @@
 				)
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
+			self::add_javascript('property', 'core', 'check.js');
 
 			$data = array
 				(
@@ -1920,7 +1920,7 @@
 			$content = $list['content'];
 			$table_header = $list['table_header'];
 
-			$GLOBALS['phpgw']->js->validate_file('core', 'check', 'property');
+			self::add_javascript('property', 'core', 'check.js');
 
 			//---datatable1 settings---------------------------------------------------
 			//Prepare array for $datavalues[0]
