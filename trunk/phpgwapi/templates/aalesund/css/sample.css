@@ -46,9 +46,27 @@ body {
 }
 
 .navbar-nav a:hover{
-    border-bottom: 2px solid white;
-    font-size: 105%;
+    background-color: #1f52a8;
 }
+
+.navbar-nav a{
+    padding: 2.5em;
+}
+
+.navbar-brand{
+    padding: 2em;
+}
+
+.nav-link{
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.navbar{
+    background-color: #123c84; 
+    padding: 0;
+}
+
 
 .btn-circle {
     width: 50px;
@@ -74,7 +92,6 @@ body {
 
 .advance-search{
     display: none;
-    background-color: #bad3e2;
     padding-top: 35px;
 }
 
@@ -221,4 +238,8 @@ dl.proplist{
 
 .main-container{
     padding-top: 2em;
+}
+
+.no-border{
+    border: none;
 }

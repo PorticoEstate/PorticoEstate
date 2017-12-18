@@ -36,17 +36,17 @@ and open the template in the editor.
         </script>
 
     </head>
-    <body class="bg-light">
-        <nav class="navbar navbar-expand-md fixed-top navbar-dark">
+    <body class="">
+        <nav class="navbar navbar-expand-md navbar-dark">
 
                 <div class="container">
                     <button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>  
-                    <a class="navbar-brand" href="#">
-                        <!-- Legg inn navbar logo om ønskelig-->
+                    <a class="navbar-brand" href="{site_url}">
+                        Ålesund Kommune
                     </a>
-                    <div class="collapse navbar-collapse" id="Navbar">
+                    <div class="collapse navbar-collapse text-center" id="Navbar">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active"><a class="nav-link" href="{site_url}">Hjem</a></li>
                             <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
@@ -58,14 +58,4 @@ and open the template in the editor.
                 </div>
 
             </nav>
-        <div class="jumbotron text-center text-white">
 
-            
-            
-            <div class="container header-text">          
-                <a href="{site_url}"><p>AKTIV KOMMUNE</p>
-                    <h2>Ålesund</h2></a>
-            </div>
-
-
-        </div>
