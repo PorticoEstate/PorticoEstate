@@ -7,10 +7,16 @@
     <a href="#" class="scrollup">
         <xsl:value-of select="php:function('lang', 'scroll to top')" />
     </a>
-    
+    <div class="jumbotron text-center">
+
+            <div class="container header-text">          
+                <a href="{site_url}"><p>AKTIV KOMMUNE</p>
+                    <h2>Ålesund</h2></a>
+            </div>
+    </div>
     <div class="container-fluid main-container">
 
-        <section class="bg-light text-center">
+        <section class="text-center">
             <div class="container-fluid">
                 <p class="lead">Søk etter anlegg eller ressurs som du ønsker å reservere</p>
                 <p>Bruk søkefeltene under, eller trykk avansert søk for filtrering</p>
@@ -43,7 +49,8 @@
                         </xsl:attribute>
                     </input>
                     <span class="input-group-btn">
-                        <button class="btn btn-default search-button" type="submit">
+
+                        <button class="btn btn-default search-button" id="submit_searchterm" type="submit">
                             <i class="icon ion-search text-primary"/>
                         </button>
                     </span>
@@ -82,7 +89,7 @@
     </div>                                 
                 
           
-    <div class="container-fluid advance-search">
+    <div class="container-fluid advance-search bg-light">
         <div class="container advance-search-padding">
             <div class="row">
                 <div class="col-lg-4">
