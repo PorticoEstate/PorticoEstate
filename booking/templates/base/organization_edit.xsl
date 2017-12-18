@@ -39,7 +39,9 @@
 						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
 							<div class="pure-control-group">
 								<label for="field_name">
+                                                                    <h4>
 									<xsl:value-of select="php:function('lang', 'Organization')" />
+                                                                    </h4>
 								</label>
 								<xsl:if test="currentapp = 'booking'">
 									<input id="inputs" name="name" type="text" class="pure-u-1">
@@ -93,17 +95,6 @@
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
-								<label for="field_customer_number">
-									<xsl:value-of select="php:function('lang', 'Customer number')" />
-								</label>
-								<xsl:if test="currentapp = 'booking'">
-									<input name="customer_number" type="text" id="field_customer_number" value="{organization/customer_number}" class="pure-u-1"/>
-								</xsl:if>
-								<xsl:if test="currentapp != 'booking'">
-									<input name="customer_number" type="text" id="field_customer_number" readonly="true" value="{organization/customer_number}" class="pure-u-1"/>
-								</xsl:if>
-							</div>
-							<div class="pure-control-group">
 								<label for="field_homepage">
 									<xsl:value-of select="php:function('lang', 'Homepage')" />
 								</label>
@@ -133,6 +124,7 @@
 									</xsl:attribute>
 								</input>
 							</div>
+                                                        
 						</div>
 						<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-3 pure-u-lg-1-4">
 							<div class="pure-control-group">
@@ -149,6 +141,17 @@
 										<xsl:value-of select="php:function('lang', 'Internal Customer')"/>
 									</label>
 									<xsl:copy-of select="phpgw:option_checkbox(organization/customer_internal, 'customer_internal')"/>
+								</xsl:if>
+							</div>
+                                                        <div class="pure-control-group">
+								<label for="field_customer_number">
+									<xsl:value-of select="php:function('lang', 'Customer number')" />
+								</label>
+								<xsl:if test="currentapp = 'booking'">
+									<input name="customer_number" type="text" id="field_customer_number" value="{organization/customer_number}" class="pure-u-1"/>
+								</xsl:if>
+								<xsl:if test="currentapp != 'booking'">
+									<input name="customer_number" type="text" id="field_customer_number" readonly="true" value="{organization/customer_number}" class="pure-u-1"/>
 								</xsl:if>
 							</div>
 							<div class="pure-control-group">
