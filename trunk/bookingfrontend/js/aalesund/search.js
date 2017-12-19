@@ -18,21 +18,6 @@ $(document).ready(function ()
 		autoOpen: false
 	});
 
-	$(window).scroll(function () {
-        if ($(this).scrollTop() > 100) {
-            $('.scrollup').fadeIn();
-        } else {
-            $('.scrollup').fadeOut();
-        }
-    });
-
-    $('.scrollup').click(function () {
-        $("html, body").animate({
-            scrollTop: 0
-        }, 600);
-        return false;
-    });
-
 	update_autocompleteHelper = function ()
 	{
 		oArgs = {
@@ -56,24 +41,28 @@ $(document).ready(function ()
 			update_search(selected_criteria, true);
 		}
 	});
+        
+        $("#update-search-result").on('click',function(){
+            update_search(selected_criteria, true);
+        });
 
-	$("#search_type :checkbox").on('click', function ()
-	{
-		update_search(selected_criteria, true);
-
-	});
-	$("#top_level :checkbox").on('click', function ()
-	{
-		update_search(selected_criteria, true);
-
-	});
-
-	$("#part_of_town :checkbox").on('click', function ()
-	{
-		selected_building_id = null;
-		update_search(selected_criteria);
-
-	});
+	// $("#search_type :checkbox").on('click', function ()
+	// {
+	//	update_search(selected_criteria, true);
+        //
+	// });
+	// $("#top_level :checkbox").on('click', function ()
+	// {
+	//	update_search(selected_criteria, true);
+        //
+	// });
+        //
+	// $("#part_of_town :checkbox").on('click', function ()
+	// {
+	// 	selected_building_id = null;
+	//	update_search(selected_criteria);
+        //
+	// });
 	//initate autocomplete;
 	update_autocompleteHelper();
 
