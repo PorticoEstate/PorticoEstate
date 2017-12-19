@@ -71,7 +71,9 @@
                         <xsl:value-of select="building_id"/>
                     </xsl:attribute>
                 </input> -->
-                    
+      
+                         <p id="adv-search-toggler" class="adv-search-button text-right text-primary">Avansert søk</p>
+           
             </div> 
         </div> 
         
@@ -79,17 +81,10 @@
 
   
    
-    <div class="container text-center text-primary">  
-        <h5>Avansert søk</h5>
-        <div class="iconwrapper">
-            <button type="button" id="adv-search-toggler" class="btn btn-circle">
-                <i class="ion-chevron-down"/>
-            </button>
-        </div>
-    </div>                                 
+                                  
                 
           
-    <div class="container-fluid advance-search bg-light">
+    <div id="advance-search-container" class="container-fluid advance-search bg-light">
         <div class="container advance-search-padding">
             <div class="row">
                 <div class="col-lg-4">
@@ -192,23 +187,21 @@
                     </div>
                 </div>  
             </div>  
-            
+          
+            <button id="update-search-result" class="btn btn-primary">Oppdater resultat</button>
+         
         </div> 
-        <div class="container" style="padding-bottom: 2px">
-            <div id = "total_records_top"></div> 
-        </div>   
+         
         
-    </div>                      
-                
-                                                  
-    <!-- GAMMEL KODE  -->                                                               
-                                                                                     
+    </div>                                                                                             
                                                                                  
     <div class="container-fluid result">                                                                                                         
                                                                                                                          
         <div class="container">                                                                                                                                             
             
-            
+            <div class="container" style="margin-top: 5px">
+            <div id = "total_records_top"></div> 
+        </div>  
             <div id="result"></div>
         </div>
     </div>
