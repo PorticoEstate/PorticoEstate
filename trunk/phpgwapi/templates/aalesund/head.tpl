@@ -15,10 +15,10 @@ and open the template in the editor.
         <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
         <!-- BEGIN javascript -->
-     
+        <script type="text/javascript" src="{javascript_uri}"></script>
         <!-- END javascript -->
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
-
+        {css}
 
         <script type="text/javascript">
             <!--
