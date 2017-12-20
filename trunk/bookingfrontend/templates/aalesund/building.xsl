@@ -25,7 +25,7 @@
            
             <xsl:if test="deactivate_calendar=0">
                 <div>
-                    <button class="btn btn-default btn-md" onclick="window.location.href='{schedule_link}'">
+                    <button class="btn btn-main btn-md" onclick="window.location.href='{schedule_link}'">
                         <xsl:value-of select="php:function('lang', 'Building schedule')" />
                     </button>
                     - Søk ledig tid/informasjon om hva som skjer
@@ -57,7 +57,7 @@
                             </h3>
                             <xsl:if test="deactivate_sendmessage=0">
                                 <div>
-                                    <button class="resource-button" onclick="window.location.href='{message_link}'">
+                                    <button class="btn btn-main" onclick="window.location.href='{message_link}'">
                                         <xsl:value-of select="php:function('lang', 'Send message')" />
                                     </button>
                                     - Meldig til saksbehandler for bygg
@@ -177,9 +177,9 @@
                 paginatorTableBuilding_users.limit = 10;
                 createPaginatorTable('building_users_container', paginatorTableBuilding_users);
 
-                createTable('resources_container', resourcesURL, colDefsResources, rResources);
-                createTable('documents_container', documentURL, colDefsDocument);
-                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, '', paginatorTableBuilding_users);
+                createTable('resources_container', resourcesURL, colDefsResources, rResources, 'table table-hover');
+                createTable('documents_container', documentURL, colDefsDocument, '', 'table table-hover');
+                createTable('building_users_container', building_usersURL, colDefsBuilding_users, rBuilding_users, 'table table-hover', paginatorTableBuilding_users);
 
                 $(window).on('load', function(){
                 // Load image
