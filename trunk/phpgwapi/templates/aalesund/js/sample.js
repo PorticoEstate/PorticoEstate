@@ -12,8 +12,8 @@ $(function toogleAdvSearch() {
         $('.advance-search').toggle("slide", {direction: "up"}, 800);
 
         if (check === 0) {
-            check = 1; 
-            $('html, body').animate({scrollTop: $("#adv-search-toggler").offset().top }, 800);
+            check = 1;
+            $('html, body').animate({scrollTop: $("#adv-search-toggler").offset().top}, 800);
         } else {
             check = 0;
             $('html, body').animate({scrollTop: '0px'}, 800);
@@ -21,5 +21,20 @@ $(function toogleAdvSearch() {
     });
 });
 
+$(function checkView() {
 
+$(window).scroll(function() {
+    var top_of_element = $("#advance-search-container").offset().top;
+    var bottom_of_element = $("#advance-search-container").offset().top + $("#advance-search-container").outerHeight();
+    var bottom_of_screen = $(window).scrollTop() + window.innerHeight;
+    var top_of_screen = $(window).scrollTop();
 
+    if((bottom_of_screen > top_of_element) && (top_of_screen < bottom_of_element)){
+        $("#update-search-result").show();
+    }
+    else {
+        $("#update-search-result").hide();
+    }
+});
+
+});

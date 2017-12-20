@@ -107,6 +107,16 @@ body {
     background-color: #428bca;
 }
 
+@media screen and (max-width: 560px) {
+    #update-search-result {
+        position: fixed;
+        bottom: 30px;
+        right: 30px; 
+        z-index: 10;
+    }
+}
+
+
 .advance-search-padding{
     padding-bottom: 4%;
 }
@@ -270,4 +280,14 @@ dl.proplist{
 
 .no-border{
     border: none;
+}
+
+.table th{
+    border-top: none;
+}
+
+.btn-main{
+    color: #fff;
+    background-color: #428bca;
+    border-color: #007bff;
 }
