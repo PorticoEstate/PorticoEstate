@@ -23,13 +23,14 @@
 		</xsl:for-each>
 
 		<div>
-			<button onclick="window.location.href='{resource/schedule_link}'">
+			<button class="btn btn-main btn-md" onclick="window.location.href='{resource/schedule_link}'">
 				<xsl:value-of select="php:function('lang', 'Resource schedule')" />
 			</button>
 			- Søk ledig tid/informasjon om hva som skjer
 		</div>
-		<div class="pure-g">
-			<div class="pure-u-1 pure-u-md-1-2">
+		<div class="row details-wrapper">    
+                    
+                <div class="col-lg-7">
 				<dl class="proplist-col main">
 					<xsl:if test="resource/description and normalize-space(resource/description)">
 						<dt>
@@ -62,12 +63,12 @@
 			</div>
 			<input type= "hidden" id="field_activity_id" value="{resource/activity_id}"/>
 
-			<div class="pure-u-1 pure-u-lg-1-2">
-				<dl class="proplist-col images">
+			<div class="col-lg-5">
+				<dl class="images">
 					<div id="images_container">
 					</div>
 				</dl>
-				<dl class="proplist-col images map">
+				<dl class="images map">
 					<!--div id="images_container"></div-->
 					<xsl:if test="resource/building/street and normalize-space(resource/building/street)">
 						<div class="gmap-container">
@@ -95,7 +96,7 @@
 
 		var colDefsDocumentsResource = [{key: 'name', label: lang['Name'], formatter: genericLink}];
 
-		createTable('documents_container', documentsResourceURL, colDefsDocumentsResource);
+		createTable('documents_container', documentsResourceURL, colDefsDocumentsResource, '', 'table table-hover');
 		$(window).on('load', function(){
 		JqueryPortico.booking.inlineImages('images_container', documentsResourceImagesURL);
 

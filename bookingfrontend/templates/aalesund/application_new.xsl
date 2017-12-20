@@ -571,7 +571,7 @@
 
                     <div class="col-lg-12" style="margin-top: 2em">
                     
-                        <input type="submit" class="btn btn-default">
+                        <input type="submit" class="btn btn-main">
                             <xsl:attribute name="value">
                                 <xsl:value-of select="php:function('lang', 'Send')"/>
                             </xsl:attribute>
