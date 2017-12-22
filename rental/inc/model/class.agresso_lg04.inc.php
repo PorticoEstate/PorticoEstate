@@ -160,7 +160,7 @@
 					$data['article_code'] = $price_item->get_agresso_id();
 					$price_item_data[] = $data;
 				}
-				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id());
+				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id());
 				$invoice->set_serial_number($serial_number);
 				$serial_number++;
 			}
@@ -307,9 +307,10 @@
 		 * Builds one single order of the Agresso file.
 		 * 
 		 */
-		protected function get_order( $header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id )
+		protected function get_order( $header, $party, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id )
 		{
 
+			$party_id = $party->get_identifier();
 			//$order_id = $order_id + 39500000;
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$order = array();
@@ -325,6 +326,7 @@
 				$responsible2 ='BKBPE';
 				$terms_id = '';
 				$voucher_type = 'FU';
+				$apar_id = '';
 			}
 			else if($kem == 'nlsh')
 			{
@@ -336,6 +338,7 @@
 				$responsible2 ='BKBPE';// må avklares
 				$terms_id = '14';
 				$voucher_type = 'FU'; // må avklares
+				$apar_id = $party->get_customer_id();//kundenr fra agresso
 			}
 
 			$order[] = // Header line
@@ -598,6 +601,7 @@
 				'Ansvar' => $responsibility_id, //FIXME
 //				'Ansvar2'				 => 'BKBPE',//FIXME
 				'Party' => $party_id,
+				'customer id' => $customer_id,
 				'name' => $party_name,
 				'address' => $party_address,
 				'Leieboer' => $party_full_name,
