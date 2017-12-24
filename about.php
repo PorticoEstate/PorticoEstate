@@ -101,7 +101,10 @@
 								$infos = '';
 								while (@list($user,$domain) = $emails)
 								{
-									if (isset($infos) && $infos) $infos .= '<br />';
+									if (isset($infos) && $infos)
+									{
+										$infos .= '<br />';
+									}
 									$name = $names ? array_shift($names) : $user;
 									$infos .= "<a href=\"mailto:$user at $domain\" onClick=\"document.location='mailto:$user'+'@'+'$domain'; return false;\">$name</a>";
 									array_shift($emails); array_shift($emails);
@@ -154,4 +157,3 @@
 	$GLOBALS['phpgw']->common->phpgw_header(true);
 	$GLOBALS['phpgw']->template->pparse('out','phpgw_about');
 	$GLOBALS['phpgw']->common->phpgw_footer();
-?>
