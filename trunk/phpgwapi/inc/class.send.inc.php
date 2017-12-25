@@ -11,6 +11,7 @@
 	* @version $Id$
 	*/
 
+	use PHPMailer\PHPMailer\Exception;
 	/**
 	* SMTP mailer
 	* 
@@ -75,13 +76,15 @@
 			unset($from);
 			if ( count($from_array) == 2 )
 			{
-				$mail->From = trim($from_array[1],'>');
-				$mail->FromName = $from_array[0];
+				$mail->setFrom( trim( $from_array[1],'>' ), $from_array[0]);
+//				$mail->From = trim($from_array[1],'>');
+//				$mail->FromName = $from_array[0];
 			}
 			else
 			{
-				$mail->From = $from_array[0];
-				$mail->FromName = $sender;
+				$mail->setFrom($from_array[0], $sender );
+//				$mail->From = $from_array[0];
+//				$mail->FromName = $sender;
 			}
 			$delimiter = ';';
 			$to = explode($delimiter, $to);
@@ -141,6 +144,11 @@
 			$mail->IsSMTP();
 			$mail->Subject = $subject;
 			$mail->Body    = $body;
+			/**
+			 * Implement me...
+			 */
+//			$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
 			$mail->addCustomHeader('X-Mailer: fmsystem (http://www.fmsystem.no)');
 			if($receive_notification)
 			{
@@ -210,9 +218,9 @@
 			#$mail->SMTPDebug = 10;
 			try
 			{
-				$mail->Send();
+				$mail->send();
 			}
-			catch (phpmailerException $e)
+			catch (Exception $e)
 			{
 				$this->errorInfo = $mail->ErrorInfo;
 				throw $e;

@@ -12,8 +12,14 @@
 	/**
 	* @see phpmailer
 	*/
-//	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/class.phpmailer.php';
-	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/PHPMailerAutoload.php';
+//	require_once PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/PHPMailerAutoload.php';
+
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception;
+
+	require PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/src/Exception.php';
+	require PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/src/PHPMailer.php';
+	require PHPGW_INCLUDE_ROOT . '/phpgwapi/inc/phpmailer/src/SMTP.php';
 	
 	/**
 	* Send email messages via SMTP
