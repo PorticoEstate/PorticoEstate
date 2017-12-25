@@ -362,7 +362,8 @@
 			if($GLOBALS['phpgw_info']['server']['show_domain_selectbox'] && $last_loginid !== '')
 			{
 				reset($GLOBALS['phpgw_domain']);
-				list($default_domain) = each($GLOBALS['phpgw_domain']);
+				$_phpgw_domains = array_keys($GLOBALS['phpgw_domain']);
+				$default_domain = $_phpgw_domains[0];
 
 				if ($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']) && !$GLOBALS['phpgw_info']['server']['show_domain_selectbox'])
 				{
