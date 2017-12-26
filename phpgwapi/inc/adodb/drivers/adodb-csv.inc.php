@@ -1,6 +1,6 @@
 <?php
 /*
-@version   v5.20.9  21-Dec-2016
+@version   v5.21.0-dev  ??-???-2016
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license. 
@@ -37,10 +37,6 @@ class ADODB_csv extends ADOConnection {
 	var $replaceQuote = "''"; // string to use to replace quotes
 	var $hasTransactions = false;
 	var $_errorNo = false;
-	
-	function __construct()
-	{		
-	}
 	
 	function _insertid()
 	{
@@ -193,10 +189,6 @@ class ADODB_csv extends ADOConnection {
 } // class
 
 class ADORecordset_csv extends ADORecordset {
-	function __construct($id,$mode=false)
-	{
-		parent::__construct($id,$mode);
-	}
 	
 	function _close()
 	{
