@@ -244,9 +244,12 @@ class MDStatus extends PSI_Plugin
             }
         }
         $sup = $this->xml->addChild("Supported_Types");
-        foreach ($this->_result['supported_types'] as $type) {
-            $typ = $sup->addChild("Type");
-            $typ->addAttribute("Name", $type);
+        if(isset($this->_result['supported_types']) && is_array($this->_result['supported_types']))
+        {
+		    foreach ($this->_result['supported_types'] as $type) {
+		        $typ = $sup->addChild("Type");
+		        $typ->addAttribute("Name", $type);
+		    }
         }
         if (isset($this->_result['devices'])) foreach ($this->_result['devices'] as $key=>$device) {
             if (!in_array($key, $hideRaids, true)) {
