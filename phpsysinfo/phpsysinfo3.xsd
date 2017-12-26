@@ -10,8 +10,6 @@
     	<attribute name="tempFormat" type="string" use="required"></attribute>
     	<attribute name="byteFormat" type="string" use="required"></attribute>
     	<attribute name="refresh" type="unsignedInt" use="required"></attribute>
-    	<attribute name="showPickListTemplate" type="boolean" use="required"></attribute>
-    	<attribute name="showPickListLang" type="boolean" use="required"></attribute>
     	<attribute name="threshold" type="unsignedInt" use="optional"></attribute>
     </complexType>
 
@@ -33,6 +31,7 @@
     	<attribute name="CPULoad" type="integer" use="optional"></attribute>
     	<attribute name="SysLang" type="string" use="optional"></attribute>
     	<attribute name="CodePage" type="string" use="optional"></attribute>
+        <attribute name="Processes" type="string" use="optional"></attribute>
     </complexType>
 
     <complexType name="NetDevice">
@@ -41,6 +40,7 @@
     	<attribute name="TxBytes" type="integer" use="required"></attribute>
     	<attribute name="Err" type="integer" use="required"></attribute>
     	<attribute name="Drops" type="integer" use="required"></attribute>
+        <attribute name="Info" type="string" use="optional"></attribute>
     </complexType>
 
 
@@ -89,7 +89,19 @@
 
     <complexType name="SCSI">
     	<sequence>
-    		<element name="SCSI" type="tns:SCSI" minOccurs="0" maxOccurs="unbounded"></element>
+            <element name="SCSI" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+        </sequence>
+    </complexType>
+
+    <complexType name="TB">
+        <sequence>
+            <element name="TB" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
+        </sequence>
+    </complexType>
+
+    <complexType name="I2C">
+        <sequence>
+            <element name="I2C" type="tns:HWDevice" minOccurs="0" maxOccurs="unbounded"></element>
     	</sequence>
     </complexType>
 
@@ -143,6 +155,7 @@
     			</restriction>
     		</simpleType>
     	</attribute>
+        <attribute name="Virtualization" type="string" use="optional"></attribute>
     	<attribute name="Bogomips" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
@@ -160,12 +173,15 @@
     </complexType>
 
     <complexType name="Hardware">
+        <attribute name="Name" type="string" use="optional"></attribute>
     	<sequence>
-    		<element name="PCI" type="tns:PCI" minOccurs="1" maxOccurs="1"></element>
-    		<element name="USB" type="tns:USB" minOccurs="1" maxOccurs="1"></element>
-    		<element name="IDE" type="tns:IDE" minOccurs="1" maxOccurs="1"></element>
-    		<element name="SCSI" type="tns:SCSI" minOccurs="1" maxOccurs="1"></element>
-    		<element name="CPU" type="tns:CPU" minOccurs="1" maxOccurs="1"></element>
+            <element name="PCI" type="tns:PCI" minOccurs="0" maxOccurs="1"></element>
+            <element name="USB" type="tns:USB" minOccurs="0" maxOccurs="1"></element>
+            <element name="IDE" type="tns:IDE" minOccurs="0" maxOccurs="1"></element>
+            <element name="SCSI" type="tns:SCSI" minOccurs="0" maxOccurs="1"></element>
+            <element name="TB" type="tns:TB" minOccurs="0" maxOccurs="1"></element>
+            <element name="I2C" type="tns:I2C" minOccurs="0" maxOccurs="1"></element>
+            <element name="CPU" type="tns:CPU" minOccurs="0" maxOccurs="1"></element>
     	</sequence>
     </complexType>
 
@@ -240,28 +256,28 @@
     			</restriction>
     		</simpleType>
     	</attribute>
-    	<attribute name="Buffers" use="optional">
+        <attribute name="Cached" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
     				<minInclusive value="0"></minInclusive>
     			</restriction>
     		</simpleType>
     	</attribute>
-    	<attribute name="BuffersPercent" use="optional">
+        <attribute name="CachedPercent" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
     				<minInclusive value="0"></minInclusive>
     			</restriction>
     		</simpleType>
     	</attribute>
-    	<attribute name="Cached" use="optional">
+        <attribute name="Buffers" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
     				<minInclusive value="0"></minInclusive>
     			</restriction>
     		</simpleType>
     	</attribute>
-    	<attribute name="CachedPercent" use="optional">
+        <attribute name="BuffersPercent" use="optional">
     		<simpleType>
     			<restriction base="unsignedLong">
     				<minInclusive value="0"></minInclusive>
@@ -414,7 +430,7 @@
     	<attribute name="Name" type="string" use="required"></attribute>
     	<attribute name="Model" type="string" use="required"></attribute>
     	<attribute name="Mode" type="string" use="required"></attribute>
-    	<attribute name="StartTime" type="string" use="required"></attribute>
+        <attribute name="StartTime" type="string" use="optional"></attribute>
     	<attribute name="Status" type="string" use="required"></attribute>
     	<attribute name="Temperature" type="unsignedLong" use="optional"></attribute>
     	<attribute name="OutagesCount" type="unsignedLong" use="optional"></attribute>

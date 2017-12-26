@@ -8,7 +8,7 @@
  * @package   PSI
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id$
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -22,7 +22,7 @@ error_reporting(E_ALL | E_STRICT);
  *
  * @return void
  */
-function __autoload($class_name)
+function psi_autoload($class_name)
 {
     //$class_name = str_replace('-', '', $class_name);
 
@@ -48,11 +48,13 @@ function __autoload($class_name)
         }
     }
     
-    $error = Error::singleton();
+    $error = PSI_Error::singleton();
     
-    $error->addError("_autoload(\"".$class_name."\")", "autoloading of class file (class.".$class_name.".inc.php) failed!");
+    $error->addError("psi_autoload(\"".$class_name."\")", "autoloading of class file (class.".$class_name.".inc.php) failed!");
     $error->errorsAsXML();
 }
+
+spl_autoload_register('psi_autoload');
 
 /**
  * sets a user-defined error handler function
@@ -66,8 +68,10 @@ function __autoload($class_name)
  */
 function errorHandlerPsi($level, $message, $file, $line)
 {
-    $error = Error::singleton();
+    $error = PSI_Error::singleton();
+    if (PSI_DEBUG || ($level !== 2) || !(preg_match("/^[^:]*: open_basedir /", $message) || preg_match("/^fopen\(/", $message) || preg_match("/^is_readable\(/", $message) || preg_match("/^file_exists\(/", $message))) { // disable open_basedir, fopen, is_readable and file_exists warnings
     $error->addPhpError("errorHandlerPsi : ", "Level : ".$level." Message : ".$message." File : ".$file." Line : ".$line);
+    }
 }
 
 set_error_handler('errorHandlerPsi');
