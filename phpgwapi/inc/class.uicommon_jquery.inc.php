@@ -77,24 +77,24 @@
 			phpgwapi_jquery::load_widget('contextMenu');
 			self::add_javascript('phpgwapi', "jquery", 'common.js');
 
-			self::add_javascript('phpgwapi', 'DataTables', 'media/js/jquery.dataTables.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Responsive/js/dataTables.responsive.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'DataTables/js/jquery.dataTables.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Responsive/js/dataTables.responsive.js');
 			//Buttons
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/dataTables.buttons.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.colVis.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.flash.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Buttons/js/buttons.html5.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/dataTables.buttons.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.colVis.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.flash.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Buttons/js/buttons.html5.js');
 			self::add_javascript('phpgwapi', 'jszip', 'jszip.min.js');
-			self::add_javascript('phpgwapi', 'DataTables', 'extensions/Select/js/dataTables.select.min.js');
-//			self::add_javascript('phpgwapi', 'DataTables', 'extensions/ColReorder/js/dataTables.ColReorder.min.js');
+			self::add_javascript('phpgwapi', 'DataTables', 'Select/js/dataTables.select.min.js');
+//			self::add_javascript('phpgwapi', 'DataTables', 'ColReorder/js/dataTables.ColReorder.min.js');
 
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 
 
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/media/css/jquery.dataTables.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Responsive/css/dataTables.responsive.css');
-			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/extensions/Buttons/css/buttons.dataTables.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Responsive/css/dataTables.responsive.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/DataTables/Buttons/css/buttons.dataTables.css');
 
 			//pop up script
 			self::add_javascript('phpgwapi', 'tinybox2', 'packed.js');
