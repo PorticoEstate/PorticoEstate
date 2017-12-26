@@ -8,7 +8,7 @@
  * @package   PSI_Sensor
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.mbmon.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -19,7 +19,7 @@
  * @package   PSI_Sensor
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -33,12 +33,12 @@ class MBMon extends Sensors
     private $_lines = array();
 
     /**
-     * fill the private content var through tcp or file access
+     * fill the private content var through tcp, command or data access
      */
     public function __construct()
     {
         parent::__construct();
-        switch (strtolower(PSI_SENSOR_ACCESS)) {
+        switch (defined('PSI_SENSOR_MBMON_ACCESS')?strtolower(PSI_SENSOR_MBMON_ACCESS):'command') {
         case 'tcp':
             $fp = fsockopen("localhost", 411, $errno, $errstr, 5);
             if ($fp) {
@@ -55,8 +55,13 @@ class MBMon extends Sensors
             CommonFunctions::executeProgram('mbmon', '-c 1 -r', $lines, PSI_DEBUG);
             $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
             break;
+        case 'data':
+            if (CommonFunctions::rfts(APP_ROOT.'/data/mbmon.txt', $lines)) {
+                $this->_lines = preg_split("/\n/", $lines, -1, PREG_SPLIT_NO_EMPTY);
+            }
+            break;
         default:
-            $this->error->addConfigError('__construct()', 'PSI_SENSOR_ACCESS');
+            $this->error->addConfigError('__construct()', 'PSI_SENSOR_MBMON_ACCESS');
             break;
         }
     }
@@ -73,7 +78,7 @@ class MBMon extends Sensors
                 if ($data[2] <> '0') {
                     $dev = new SensorDevice();
                     $dev->setName($data[1]);
-                    $dev->setMax(70);
+//                    $dev->setMax(70);
                     if ($data[2] < 250) {
                         $dev->setValue($data[2]);
                     }
@@ -96,7 +101,7 @@ class MBMon extends Sensors
                     $dev = new SensorDevice();
                     $dev->setName($data[1]);
                     $dev->setValue($data[2]);
-                    $dev->setMax(3000);
+//                    $dev->setMax(3000);
                     $this->mbinfo->setMbFan($dev);
                 }
             }

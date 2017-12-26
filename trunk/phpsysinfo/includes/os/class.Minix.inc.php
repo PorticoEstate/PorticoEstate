@@ -8,7 +8,7 @@
  * @package   PSI Minix OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.Minix.inc.php 687 2012-09-06 20:54:49Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -20,7 +20,7 @@
  * @package   PSI Minix OS class
  * @author    Mieczyslaw Nalewaj <namiltd@users.sourceforge.net>
  * @copyright 2012 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -50,8 +50,8 @@ class Minix extends OS
     {
         if (count($this->_dmesg) === 0) {
             if (CommonFunctions::rfts('/var/log/messages', $buf)) {
-                    $parts = preg_split("/kernel: APIC/", $buf, -1, PREG_SPLIT_NO_EMPTY);
-//                    $parts = preg_split("/ syslogd: restart\n/", $buf, -1, PREG_SPLIT_NO_EMPTY);
+                    $blocks = preg_replace("/\s(kernel: MINIX \d+\.\d+\.\d+\.)/", '<BLOCK>$1', $buf);
+                    $parts = preg_split("/<BLOCK>/", $blocks, -1, PREG_SPLIT_NO_EMPTY);
                     $this->_dmesg = preg_split("/\n/", $parts[count($parts) - 1], -1, PREG_SPLIT_NO_EMPTY);
             }
         }
@@ -62,7 +62,7 @@ class Minix extends OS
     /**
      * get the cpu information
      *
-     * @return array
+     * @return void
      */
     protected function _cpuinfo()
     {
@@ -92,9 +92,9 @@ class Minix extends OS
                             $_s = $arrBuff[1];
                             break;
                         case 'flags':
-                            if (preg_match("/ vmx/",$arrBuff[1])) {
+                            if (preg_match("/ vmx/", $arrBuff[1])) {
                                 $dev->setVirt("vmx");
-                            } elseif (preg_match("/ svm/",$arrBuff[1])) {
+                            } elseif (preg_match("/ svm/", $arrBuff[1])) {
                                 $dev->setVirt("svm");
                             }
                         break;
@@ -129,6 +129,7 @@ class Minix extends OS
     {
         if (CommonFunctions::rfts('/proc/pci', $strBuf, 0, 4096, false)) {
             $arrLines = preg_split("/\n/", $strBuf, -1, PREG_SPLIT_NO_EMPTY);
+            $arrResults = array();
             foreach ($arrLines as $strLine) {
                $arrParams = preg_split('/\s+/', trim($strLine), 4);
                if (count($arrParams) == 4)
@@ -144,7 +145,7 @@ class Minix extends OS
                $this->sys->setPciDevices($dev);
            }
         }
-        if ( !(isset($arrResults) && is_array($arrResults)) && is_array($results = Parser::lspci())) {
+        if (!(isset($arrResults) && is_array($arrResults)) && ($results = Parser::lspci())) {
            /* if access error: chmod 4755 /usr/bin/lspci */
            foreach ($results as $dev) {
               $this->sys->setPciDevices($dev);
@@ -159,12 +160,13 @@ class Minix extends OS
      */
     private function _kernel()
     {
+        if (CommonFunctions::executeProgram('uname', '-rvm', $ret)) {
         foreach ($this->readdmesg() as $line) {
-          if (preg_match('/kernel: MINIX (.*) \((.*)\)/', $line, $ar_buf)) {
+                if (preg_match('/kernel: MINIX (\d+\.\d+\.\d+)\. \((.+)\)/', $line, $ar_buf)) {
                 $branch = $ar_buf[2];
+                    break;
           }
         }
-        if (CommonFunctions::executeProgram('uname', '-rvm', $ret)) {
             if (isset($branch))
                $this->sys->setKernel($ret.' ('.$branch.')');
             else
@@ -225,20 +227,6 @@ class Minix extends OS
     }
 
     /**
-     * Number of Users
-     *
-     * @return void
-     */
-    private function _users()
-    {
-        if (CommonFunctions::executeProgram('uptime', '', $buf)) {
-            if (preg_match("/, (.*) users, load averages: (.*), (.*), (.*)$/", $buf, $ar_buf)) {
-                $this->sys->setUsers($ar_buf[1]);
-            }
-        }
-    }
-
-    /**
      * Virtual Host Name
      *
      * @return void
@@ -257,23 +245,6 @@ class Minix extends OS
         }
     }
 
-    /**
-     * IP of the Virtual Host Name
-     *
-     *  @return void
-     */
-    private function _ip()
-    {
-        if (PSI_USE_VHOST === true) {
-            $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-        } else {
-            if (!($result = getenv('SERVER_ADDR'))) {
-                $this->sys->setIp(gethostbyname($this->sys->getHostname()));
-            } else {
-                $this->sys->setIp($result);
-            }
-        }
-    }
 
     /**
      *  Physical memory information and Swap Space information
@@ -284,7 +255,7 @@ class Minix extends OS
     {
         if (CommonFunctions::rfts('/proc/meminfo', $bufr, 1, 4096, false)) {
             $ar_buf = preg_split('/\s+/', trim($bufr));
-            if (count($ar_buf) >= 5 ) {
+            if (count($ar_buf) >= 5) {
                     $this->sys->setMemTotal($ar_buf[0]*$ar_buf[1]);
                     $this->sys->setMemFree($ar_buf[0]*$ar_buf[2]);
                     $this->sys->setMemCache($ar_buf[0]*$ar_buf[4]);
@@ -329,6 +300,35 @@ class Minix extends OS
     }
 
     /**
+     * Processes
+     *
+     * @return void
+     */
+    protected function _processes()
+    {
+        if (CommonFunctions::executeProgram('ps', 'alx', $bufr, PSI_DEBUG)) {
+            $lines = preg_split("/\n/", $bufr, -1, PREG_SPLIT_NO_EMPTY);
+            $processes['*'] = 0;
+            foreach ($lines as $line) {
+                if (preg_match("/^\s(\w)\s/", $line, $ar_buf)) {
+                    $processes['*']++;
+                    $state = $ar_buf[1];
+                    if ($state == 'W') $state = 'D'; //linux format
+                    elseif ($state == 'D') $state = 'd'; //invalid
+                    if (isset($processes[$state])) {
+                        $processes[$state]++;
+                    } else {
+                        $processes[$state] = 1;
+                    }
+                }
+            }
+            if ($processes['*'] > 0) {
+                $this->sys->setProcesses($processes);
+            }
+        }
+    }
+
+    /**
      * get the information
      *
      * @return Void
@@ -336,17 +336,27 @@ class Minix extends OS
     public function build()
     {
         $this->error->addError("WARN", "The Minix version of phpSysInfo is a work in progress, some things currently don't work");
-        $this->_hostname();
-        $this->_ip();
+        if (!defined('PSI_ONLY') || PSI_ONLY==='vitals') {
         $this->_distro();
+            $this->_hostname();
         $this->_kernel();
         $this->_uptime();
         $this->_users();
         $this->_loadavg();
+            $this->_processes();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='hardware') {
         $this->_pci();
         $this->_cpuinfo();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='network') {
+            $this->_network();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='memory') {
         $this->_memory();
+        }
+        if (!defined('PSI_ONLY') || PSI_ONLY==='filesystem') {
         $this->_filesystems();
-        $this->_network();
+        }
     }
 }

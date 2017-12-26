@@ -39,13 +39,19 @@ function updatenotifier_populate(xml) {
         //UpdateNotifier_table.fnAddData([security]);
 
         html  = "  <tr>\n";
-        html += "    <td>" + packages + " " + genlang(3, true, "UpdateNotifier") + "</td>\n";
+        html += "    <td>" + packages + " " + genlang(3, false, "UpdateNotifier") + "</td>\n";
         html += "  </tr>\n";
         html += "  <tr>\n";
-        html += "    <td>" + security + " " + genlang(4, true, "UpdateNotifier") + "</td>\n";
+        html += "    <td>" + security + " " + genlang(4, false, "UpdateNotifier") + "</td>\n";
         html += "  </tr>\n";
 
-        $("#Plugin_UpdateNotifier tbody").append(html);
+        $("#Plugin_UpdateNotifier tbody").empty().append(html);
+
+        if ((packages == 0) && (security == 0)) {
+            $("#UpdateNotifierTable-info").html(genlang(5, false, "UpdateNotifier"));
+        } else {
+            $("#UpdateNotifierTable-info").html(genlang(2, false, "UpdateNotifier"));
+        }
 
         UpdateNotifier_show = true;
     });
@@ -60,7 +66,7 @@ function updatenotifier_buildTable() {
     html += "<table id=\"Plugin_UpdateNotifierTable\" style=\"border-spacing:0;\">\n";
     html += "  <thead>\n";
     html += "    <tr>\n";
-    html += "      <th>" + genlang(2, true, "UpdateNotifier") + "</th>\n";
+    html += "      <th id=\"UpdateNotifierTable-info\">" + genlang(2, false, "UpdateNotifier") + "</th>\n";
     html += "    </tr>\n";
     html += "  </thead>\n";
     html += "  <tbody>\n";
@@ -75,6 +81,7 @@ function updatenotifier_buildTable() {
  * load the xml via ajax
  */
 function updatenotifier_request() {
+    $("#Reload_UpdateNotifierTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=UpdateNotifier",
         dataType: "xml",
@@ -93,9 +100,14 @@ function updatenotifier_request() {
 }
 
 $(document).ready(function() {
-    $("#footer").before(buildBlock("UpdateNotifier", 1, false));
+    $("#footer").before(buildBlock("UpdateNotifier", 1, true));
     $("#Plugin_UpdateNotifier").css("width", "451px");
 
     updatenotifier_buildTable();
     updatenotifier_request();
+
+    $("#Reload_UpdateNotifierTable").click(function updatenotifier_reload(id) {
+        updatenotifier_request();
+        $(this).attr("title", datetime());
+    });
 });
