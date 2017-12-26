@@ -242,8 +242,4 @@ class ADODB_mssql_n extends ADODB_mssql {
 
 class ADORecordset_mssql_n extends ADORecordset_mssql {
 	var $databaseType = "mssql_n";
-	function __construct($id,$mode=false)
-	{
-		parent::__construct($id,$mode);
-	}
 }
