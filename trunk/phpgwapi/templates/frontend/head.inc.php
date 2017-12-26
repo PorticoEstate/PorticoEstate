@@ -67,7 +67,8 @@ JS;
 		$stylesheets[] = "/phpgwapi/templates/pure/css/grids-responsive-min.css";
 	}
 
-	$stylesheets[] = "/phpgwapi/js/DataTables/extensions/Responsive/css/responsive.dataTables.min.css";
+	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
+	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
 //	$stylesheets[] = "/{$app}/css/frontend.css";
 	$stylesheets[] = "/phpgwapi/templates/frontend/css/frontend.css";
