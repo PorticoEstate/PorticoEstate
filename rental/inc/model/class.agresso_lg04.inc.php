@@ -10,6 +10,7 @@
 		protected $date_str;
 		protected $orders;
 		protected $prizebook;
+		protected $batch_id;
 
 		public function __construct( $billing_job )
 		{
@@ -85,6 +86,8 @@
 		 */
 		protected function run()
 		{
+			$this->batch_id = execMethod('property.socommon.increment_id', 'Ecobatchid');
+
 			$this->orders = array();
 			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
@@ -318,6 +321,9 @@
 			$kem = 'bergen';
 			if($kem == 'bergen') //Bergen
 			{
+				$att_1_id = '';
+				$dim_value_1 = $account;
+				$dim_1 = $responsibility;
 				$batch_id = "BKBPE{$this->date_str}";
 				$client = 'BY'; // For Bergen Kommune
 				$confirm_date = $this->date_str;
@@ -330,7 +336,11 @@
 			}
 			else if($kem == 'nlsh')
 			{
-				$batch_id = "PE{$this->date_str}";// må avklares
+				$att_1_id = 'DR';
+				$dim_value_1 = ''; //endre til k.sted?
+				$dim_1 = $responsibility; //k.sted
+			//	$batch_id = "PE{$this->date_str}";// må avklares
+				$batch_id =  'PU' . sprintf("%010s",$this->batch_id);
 				$client = '14';
 				$confirm_date = '';
 				$pay_method = 'BG';
@@ -350,7 +360,7 @@
 				. sprintf("%08s", '') //  8		apar_id
 				. sprintf("%30s", '') //  9		apar_name
 				. sprintf("%50s", '') //	10-11	just white space..
-				. sprintf("%2s", '')  // 	12		att_1_id
+				. sprintf("%2s", $att_1_id)  // 	12		att_1_id
 				. sprintf("%2s", '')  // 	13		att_2_id
 				. sprintf("%2s", '')  // 	14		att_3_id
 				. sprintf("%2s", '')  // 	15		att_4_id
@@ -374,7 +384,7 @@
 				. sprintf("%8s", '')  // 	33		deliv_method
 				. sprintf("%8s", '')  // 	34		deliv_terms
 				. sprintf("%52s", '') //	35-41	just white space..
-				. sprintf("%-12.12s", $account)  // 	42		dim_value_1				DATA
+				. sprintf("%-12.12s", $dim_value_1)  // 	42		dim_value_1				DATA
 				. sprintf("%12s", '') // 	43		dim_value_2
 				. sprintf("%12s", '') // 	44		dim_value_3
 				. sprintf("%12s", '') // 	45		dim_value_4
@@ -444,7 +454,7 @@
 					. sprintf("%20s", '')   //	22-24	just white space..
 					. sprintf("%017s", '')   // 	25		cur_amount
 					. sprintf("%464s", '')   //	26-34	just white space..
-					. sprintf("%-8.8s", $responsibility)   // 	35		dim_1					DATA
+					. sprintf("%-8.8s", $dim_1)   // 	35		dim_1					DATA
 					. sprintf("%-8.8s", $service) // 	36		dim_2					DATA
 					. sprintf("%8s", '') // 	37		dim_3
 					. sprintf("%8s", '') // 	38		dim_4
