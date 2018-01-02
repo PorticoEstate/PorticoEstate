@@ -1087,7 +1087,7 @@
 			if (is_array($this->variableNames))
 			{
 				reset($this->variableNames);
-				while(list($key, $value) = each($this->variableNames))
+				foreach($this->variableNames as $key => $value)
 				{
 					if ($value == 'registered')
 					{

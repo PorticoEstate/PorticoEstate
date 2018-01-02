@@ -533,7 +533,9 @@ HTML;
 		exit;
 	}
 	reset($GLOBALS['phpgw_domain']);
-	list($GLOBALS['phpgw_info']['server']['default_domain']) = each($GLOBALS['phpgw_domain']);
+
+	$_phpgw_domains = array_keys($GLOBALS['phpgw_domain']);
+	$GLOBALS['phpgw_info']['server']['default_domain'] = $_phpgw_domains[0];
 
 	if (isset($_POST['login']))	// on login
 	{
@@ -913,17 +915,20 @@ HTML;
 		$GLOBALS['phpgw']->preferences->verify_basic_settings();
 
 		/********* Optional classes, which can be disabled for performance increases *********/
-		while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
+		if(is_array($GLOBALS['phpgw_info']['flags']))
 		{
-			if (preg_match('/enable_/', $phpgw_class_name[0]))
+			foreach ($GLOBALS['phpgw_info']['flags'] as $phpgw_class_name => $dummy)
 			{
-				$enable_class = str_replace('enable_', '', $phpgw_class_name[0]);
-				$enable_class = str_replace('_class', '', $enable_class);
-				$GLOBALS['phpgw']->$enable_class = createObject("phpgwapi.{$enable_class}");
+				if (preg_match('/enable_/', $phpgw_class_name))
+				{
+					$enable_class = str_replace('enable_', '', $phpgw_class_name);
+					$enable_class = str_replace('_class', '', $enable_class);
+					$GLOBALS['phpgw']->$enable_class = createObject("phpgwapi.{$enable_class}");
+				}				
 			}
+			unset($enable_class);
+			reset($GLOBALS['phpgw_info']['flags']);
 		}
-		unset($enable_class);
-		reset($GLOBALS['phpgw_info']['flags']);
 
 		/*************************************************************************\
 		* These lines load up the templates class                                 *
@@ -943,7 +948,7 @@ HTML;
 			if (!$GLOBALS['phpgw']->acl->check('run', PHPGW_ACL_READ, $GLOBALS['phpgw_info']['flags']['currentapp']))
 			{
 				$_access = false;
-				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'admin' && $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['userid']))
+				if ($GLOBALS['phpgw_info']['flags']['currentapp'] == 'admin' && $GLOBALS['phpgw']->acl->get_app_list_for_id('admin', phpgwapi_acl::ADD, $GLOBALS['phpgw_info']['user']['account_id']))
 				{
 					$_access = true;
 				}

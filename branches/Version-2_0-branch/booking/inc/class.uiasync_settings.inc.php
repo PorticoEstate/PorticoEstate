@@ -36,7 +36,7 @@
 			}
 
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Async Settings'), 'link' => '#async_settings');
+			$tabs['generic'] = array('label' => lang('Asynchronous Tasks'), 'link' => '#async_settings');
 			$active_tab = 'generic';
 
 

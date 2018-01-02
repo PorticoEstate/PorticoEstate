@@ -27,6 +27,11 @@ h6,
 label {
     color: #34495e;
 }
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
 
 .pure-img-responsive {
     max-width: 100%;

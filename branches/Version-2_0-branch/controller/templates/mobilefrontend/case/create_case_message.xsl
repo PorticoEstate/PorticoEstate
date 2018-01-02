@@ -129,29 +129,29 @@
 						</input>
 
 						<!-- === TITLE === -->
-						
+
 						<label>Tittel på melding:</label>
-						<input name="message_title" type="text" class="pure-input-1 required" required="required"/>
+						<input name="message_title" type="text" class="pure-input-1-2 required" required="required"/>
 
 						<!-- === CATEGORY === -->
-							<label>Kategori:</label>
-							<select name="message_cat_id" class="required" required="required">
-								<option value="">Velg kategori</option>
-								<xsl:for-each select="categories/cat_list">
-									<xsl:variable name="cat_id">
-										<xsl:value-of select="./cat_id"/>
-									</xsl:variable>
-									<option value="{$cat_id}">
-										<xsl:value-of select="./name"/>
-									</option>
-								</xsl:for-each>
-							</select>
+						<label>Kategori:</label>
+						<select name="message_cat_id" class="pure-input-1-2 required" required="required">
+							<option value="">Velg kategori</option>
+							<xsl:for-each select="categories/cat_list">
+								<xsl:variable name="cat_id">
+									<xsl:value-of select="./cat_id"/>
+								</xsl:variable>
+								<option value="{$cat_id}">
+									<xsl:value-of select="./name"/>
+								</option>
+							</xsl:for-each>
+						</select>
 						<!-- === UPLOAD FILE === -->
-							<label>Filvedlegg:</label>
-							<input type="file" id="file" name="file" >
-								<xsl:attribute name="accept">image/*</xsl:attribute>
-								<xsl:attribute name="capture">camera</xsl:attribute>
-							</input>
+						<label>Filvedlegg:</label>
+						<input type="file" id="file" name="file" >
+							<xsl:attribute name="accept">image/*</xsl:attribute>
+							<xsl:attribute name="capture">camera</xsl:attribute>
+						</input>
 
 						<h3>Velg hvilke saker meldingen gjelder</h3>
 						<ul class="cases">

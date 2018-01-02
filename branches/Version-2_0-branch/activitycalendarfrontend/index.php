@@ -76,17 +76,20 @@ HTML;
 	$GLOBALS['phpgw']->preferences->verify_basic_settings();
 
 	/*	 * ******* Optional classes, which can be disabled for performance increases ******** */
-	while ($phpgw_class_name = each($GLOBALS['phpgw_info']['flags']))
+	if(is_array($GLOBALS['phpgw_info']['flags']))
 	{
-		if (preg_match('/enable_/', $phpgw_class_name[0]))
+		foreach ($GLOBALS['phpgw_info']['flags'] as $phpgw_class_name => $dummy)
 		{
-			$enable_class = str_replace('enable_', '', $phpgw_class_name[0]);
-			$enable_class = str_replace('_class', '', $enable_class);
-			$GLOBALS['phpgw']->$enable_class = createObject("phpgwapi.{$enable_class}");
+			if (preg_match('/enable_/', $phpgw_class_name))
+			{
+				$enable_class = str_replace('enable_', '', $phpgw_class_name);
+				$enable_class = str_replace('_class', '', $enable_class);
+				$GLOBALS['phpgw']->$enable_class = createObject("phpgwapi.{$enable_class}");
+			}
 		}
+		unset($enable_class);
+		reset($GLOBALS['phpgw_info']['flags']);
 	}
-	unset($enable_class);
-	reset($GLOBALS['phpgw_info']['flags']);
 
 	/*	 * ***********************************************************************\
 	 * These lines load up the templates class                                 *

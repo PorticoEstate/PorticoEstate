@@ -754,7 +754,7 @@
 					'date', 'security', 'file'))
 			);
 
-			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit', 'property');
+			self::add_javascript('property', 'portico', 'admin_entity.edit.js');
 			$appname = lang('entity');
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang($this->type_app[$this->type]) . ' - ' . $appname . ': ' . $function_msg;
@@ -1031,7 +1031,7 @@
 			phpgwapi_jquery::load_widget('core');
 			phpgwapi_jquery::load_widget('numberformat');
 
-			$GLOBALS['phpgw']->js->validate_file('portico', 'admin_entity.edit_category', 'property');
+			self::add_javascript('property', 'portico', 'admin_entity.edit_category.js');
 
 			self::render_template_xsl(array('admin_entity', 'datatable_inline', 'nextmatchs'), array(
 				'edit' => $data));

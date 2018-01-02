@@ -1,6 +1,6 @@
 <?php
 /*
-@version   v5.20.9  21-Dec-2016
+@version   v5.21.0-dev  ??-???-2016
 @copyright (c) 2000-2013 John Lim (jlim#natsoft.com). All rights reserved.
 @copyright (c) 2014      Damien Regad, Mark Newnham and the ADOdb community
   Released under both BSD license and Lesser GPL library license. 
@@ -51,11 +51,6 @@ class ADODB_mysql extends ADOConnection {
 	var $nameQuote = '`';		/// string to use to quote identifiers and names
 	var $compat323 = false; 		// true if compat with mysql 3.23
 	
-	function __construct()
-	{			
-		if (defined('ADODB_EXTENSION')) $this->rsPrefix .= 'ext_';
-	}
-
 
   // SetCharSet - switch the client encoding
   function SetCharSet($charset_name)
@@ -794,8 +789,6 @@ class ADORecordSet_mysql extends ADORecordSet{
 	
 	function MoveNext()
 	{
-		//return adodb_movenext($this);
-		//if (defined('ADODB_EXTENSION')) return adodb_movenext($this);
 		if (@$this->fields = mysql_fetch_array($this->_queryID,$this->fetchMode)) {
 			$this->_updatefields();
 			$this->_currentRow += 1;
@@ -870,17 +863,13 @@ class ADORecordSet_mysql extends ADORecordSet{
 			if (!empty($fieldobj->primary_key)) return 'R';
 			else return 'I';
 		
-		default: return 'N';
+		default: return ADODB_DEFAULT_METATYPE;
 		}
 	}
 
 }
 
 class ADORecordSet_ext_mysql extends ADORecordSet_mysql {	
-	function __construct($queryID,$mode=false)
-		{
-		parent::__construct($queryID,$mode);
-	}
 	
 	function MoveNext()
 	{

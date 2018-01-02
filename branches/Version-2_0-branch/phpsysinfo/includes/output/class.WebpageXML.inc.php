@@ -8,7 +8,7 @@
  * @package   PSI_XML
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id$
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -19,7 +19,7 @@
  * @package   PSI_XML
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -31,13 +31,6 @@ class WebpageXML extends Output implements PSI_Interface_Output
      * @var XML
      */
     private $_xml;
-    
-    /**
-     * only plugin xml
-     *
-     * @var boolean
-     */
-    private $_pluginRequest = false;
     
     /**
      * complete xml
@@ -60,21 +53,21 @@ class WebpageXML extends Output implements PSI_Interface_Output
      */
     private function _prepare()
     {
-        if (!$this->_pluginRequest) {
+        if ($this->_pluginName === null) {
             // Figure out which OS we are running on, and detect support
             if (!file_exists(APP_ROOT.'/includes/os/class.'.PSI_OS.'.inc.php')) {
                 $this->error->addError("file_exists(class.".PSI_OS.".inc.php)", PSI_OS." is not currently supported");
             }
             
-            // check if there is a valid sensor configuration in config.php
+            // check if there is a valid sensor configuration in phpsysinfo.ini
             $foundsp = array();
-            if ( defined('PSI_SENSOR_PROGRAM') && is_string(PSI_SENSOR_PROGRAM) ) {
+            if (defined('PSI_SENSOR_PROGRAM') && is_string(PSI_SENSOR_PROGRAM)) {
                 if (preg_match(ARRAY_EXP, PSI_SENSOR_PROGRAM)) {
                     $sensorprograms = eval(strtolower(PSI_SENSOR_PROGRAM));
                 } else {
                     $sensorprograms = array(strtolower(PSI_SENSOR_PROGRAM));
                 }
-                foreach($sensorprograms as $sensorprogram) {
+                foreach ($sensorprograms as $sensorprogram) {
                     if (!file_exists(APP_ROOT.'/includes/mb/class.'.$sensorprogram.'.inc.php')) {
                         $this->error->addError("file_exists(class.".htmlspecialchars($sensorprogram).".inc.php)", "specified sensor program is not supported");
                     } else {
@@ -86,50 +79,43 @@ class WebpageXML extends Output implements PSI_Interface_Output
             /**
              * motherboard information
              *
-             * @var serialized array
+             * @var string serialized array
              */
             define('PSI_MBINFO', serialize($foundsp));
             
-            // check if there is a valid hddtemp configuration in config.php
-            $found = false;
-            if (PSI_HDD_TEMP !== false) {
-                $found = true;
-            }
-            /**
-             * hddtemp information available or not
-             *
-             * @var boolean
-             */
-            define('PSI_HDDTEMP', $found);
-            
-            // check if there is a valid ups configuration in config.php
-            $found = false;
-            if (PSI_UPS_PROGRAM !== false) {
-                if (!file_exists(APP_ROOT.'/includes/ups/class.'.strtolower(PSI_UPS_PROGRAM).'.inc.php')) {
-                    $found = false;
-                    $this->error->addError("file_exists(class.".htmlspecialchars(strtolower(PSI_UPS_PROGRAM)).".inc.php)", "specified UPS program is not supported");
+            // check if there is a valid ups configuration in phpsysinfo.ini
+            $foundup = array();
+            if (defined('PSI_UPS_PROGRAM') && is_string(PSI_UPS_PROGRAM)) {
+                if (preg_match(ARRAY_EXP, PSI_UPS_PROGRAM)) {
+                    $upsprograms = eval(strtolower(PSI_UPS_PROGRAM));
                 } else {
-                    $found = true;
+                    $upsprograms = array(strtolower(PSI_UPS_PROGRAM));
+            }
+                foreach ($upsprograms as $upsprogram) {
+                    if (!file_exists(APP_ROOT.'/includes/ups/class.'.$upsprogram.'.inc.php')) {
+                        $this->error->addError("file_exists(class.".htmlspecialchars($upsprogram).".inc.php)", "specified UPS program is not supported");
+                } else {
+                        $foundup[] = $upsprogram;
+                    }
                 }
             }
             /**
-             * ups information available or not
+             * ups information
              *
-             * @var boolean
+             * @var string serialized array
              */
-            define('PSI_UPSINFO', $found);
+            define('PSI_UPSINFO', serialize($foundup));
             
             // if there are errors stop executing the script until they are fixed
             if ($this->error->errorsExist()) {
                 $this->error->errorsAsXML();
             }
-        }
         
         // Create the XML
-        if ($this->_pluginRequest) {
-            $this->_xml = new XML(false, $this->_pluginName);
-        } else {
             $this->_xml = new XML($this->_completeXML);
+        } else {
+            // Create the XML
+            $this->_xml = new XML(false, $this->_pluginName);
         }
     }
     
@@ -175,7 +161,6 @@ class WebpageXML extends Output implements PSI_Interface_Output
         if ($plugin) {
             if (in_array(strtolower($plugin), CommonFunctions::getPlugins())) {
                 $this->_pluginName = $plugin;
-                $this->_pluginRequest = true;
             }
         }
         $this->_prepare();
