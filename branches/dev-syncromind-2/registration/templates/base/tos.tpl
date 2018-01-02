@@ -1,1 +1,0 @@
-<p>{extra_text}

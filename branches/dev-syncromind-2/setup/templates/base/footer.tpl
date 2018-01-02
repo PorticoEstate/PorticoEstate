@@ -1,3 +1,0 @@
-<!-- footer.tpl -->
-</body>
-</html>
