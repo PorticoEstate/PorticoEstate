@@ -30,7 +30,7 @@
 	 * Description
 	 * @package property
 	 */
-	
+
 	if (!class_exists("lag_agresso_ordre_fra_workorder"))
 	{
 		class lag_agresso_ordre_fra_workorder
