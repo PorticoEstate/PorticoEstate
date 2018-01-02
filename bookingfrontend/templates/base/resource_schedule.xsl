@@ -3,7 +3,7 @@
 	<div class="content">
 		<xsl:for-each select="pathway">
 			<ul class="pathway">
-				<li>
+				<li>yrdy
 					<a>
 						<xsl:attribute name="href">
 							<xsl:value-of select="php:function('get_phpgw_link', '/bookingfrontend/index.php', 'menuaction:bookingfrontend.uisearch.index')"/>

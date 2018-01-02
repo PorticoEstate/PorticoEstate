@@ -402,7 +402,13 @@
 
 			$GLOBALS['phpgw']->xslttpl->add_file(array('sms'));
 
-			$max_length = 160;
+			/**
+			 * Text messages exceeding 160 characters will be split up into a maximum of 6 SMS messages,
+			 * each of 134 characters. Thus, the maximum length is 6*134=804 characters.
+			 * This is done automatically by the SMS Gateway.
+			 * Text messages of more than 804 characters will be truncated.
+			 */
+			$max_length = 804;
 
 			if (is_array($values))
 			{

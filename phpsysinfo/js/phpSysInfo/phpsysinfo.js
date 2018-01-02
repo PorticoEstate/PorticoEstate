@@ -25,7 +25,18 @@
 
 "use strict";
 
-var langxml = [], langcounter = 1, filesystemTable, cookie_language = "", cookie_template = "", plugin_liste = [], langarr = [];
+var langxml = [], langcounter = 1, filesystemTable, current_language = "", plugin_liste = [], blocks = [], langarr = [],
+     showCPUListExpanded, showCPUInfoExpanded, showNetworkInfosExpanded, showMemoryInfosExpanded, showNetworkActiveSpeed, showCPULoadCompact, oldnetwork = [];
+
+/**
+ * Fix PNG loading on IE6 or below
+ */
+function PNGload(png) {
+    if (typeof(png.ifixpng)==='function') { //IE6 PNG fix
+        png.ifixpng('./gfx/blank.gif');
+    }
+}
+
 /**
  * generate a cookie, if not exist, and add an entry to it<br><br>
  * inspired by <a href="http://www.quirksmode.org/js/cookies.html">http://www.quirksmode.org/js/cookies.html</a>
@@ -37,9 +48,13 @@ function createCookie(name, value, days) {
     var date = new Date(), expires = "";
     if (days) {
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        if (typeof(date.toUTCString)==="function") {
+            expires = "; expires=" + date.toUTCString();
+        } else {
+            //deprecated
         expires = "; expires=" + date.toGMTString();
     }
-    else {
+    } else {
         expires = "";
     }
     document.cookie = name + "=" + value + expires + "; path=/";
@@ -55,7 +70,7 @@ function readCookie(name) {
     var nameEQ = "", ca = [], c = '', i = 0;
     nameEQ = name + "=";
     ca = document.cookie.split(';');
-    for (i = 0; i < ca.length; i += 1) {
+    for (i = 0; i < ca.length; i++) {
         c = ca[i];
         while (c.charAt(0) === ' ') {
             c = c.substring(1, c.length);
@@ -102,27 +117,24 @@ function switchStyle(template) {
             this.setAttribute('href', './templates/' + template + ".css");
         }
     });
-    createCookie('template', template, 365);
 }
 
 /**
  * load the given translation an translate the entire page<br><br>retrieving the translation is done through a
  * ajax call
  * @private
- * @param {String} lang language for which the translation should be loaded
  * @param {String} plugin if plugin is given, the plugin translation file will be read instead of the main translation file
- * @param {String} plugname internal plugin name
+ * @param {String} langarrId internal plugin name
  * @return {jQuery} translation jQuery-Object
  */
-function getLanguage(lang, plugin, plugname) {
+function getLanguage(plugin, langarrId) {
     var getLangUrl = "";
-    if (lang) {
-        getLangUrl = 'language/language.php?lang=' + cookie_language;
+    if (current_language) {
+        getLangUrl = 'language/language.php?lang=' + current_language;
         if (plugin) {
             getLangUrl += "&plugin=" + plugin;
         }
-    }
-    else {
+    } else {
         getLangUrl = 'language/language.php';
         if (plugin) {
             getLangUrl += "?plugin=" + plugin;
@@ -133,44 +145,23 @@ function getLanguage(lang, plugin, plugname) {
         type: 'GET',
         dataType: 'xml',
         timeout: 100000,
-        async: false,
         error: function error() {
-            $.jGrowl("Error loading language!");
+            $.jGrowl("Error loading language - " + getLangUrl);
         },
         success: function buildblocks(xml) {
             var idexp;
-            langxml[plugname] = xml;
-            if (langarr[plugname] === undefined) {
-                langarr.push(plugname);
-                langarr[plugname] = [];
+            langxml[langarrId] = xml;
+            if (langarr[langarrId] === undefined) {
+                langarr.push(langarrId);
+                langarr[langarrId] = [];
             }
-            $("expression", langxml[plugname]).each(function langstore(id) {
+            $("expression", langxml[langarrId]).each(function langstore(id) {
                 idexp = $("expression", xml).get(id);
-                langarr[plugname][this.getAttribute('id')] = $("exp", idexp).text().toString();
+                langarr[langarrId][this.getAttribute('id')] = $("exp", idexp).text().toString().replace(/\//g, "/<wbr>");
             });
+            changeSpanLanguage(plugin);
         }
     });
-}
-
-/**
- * internal function to get a given translation out of the translation file
- * @param {Number} langId id of the translation expression
- * @param {String} [plugin] name of the plugin
- * @return {String} translation string
- */
-function getTranslationString(langId, plugin) {
-    var plugname = cookie_language + "_";
-    if (plugin === undefined) {
-        plugname += "phpSysInfo";
-    }
-    else {
-        plugname += plugin;
-    }
-    if (langxml[plugname] === undefined) {
-        langxml.push(plugname);
-        getLanguage(cookie_language, plugin, plugname);
-    }
-    return langarr[plugname][langId.toString()];
 }
 
 /**
@@ -181,22 +172,23 @@ function getTranslationString(langId, plugin) {
  * @return {String} string which contains generated span tag for translation string
  */
 function genlang(id, generate, plugin) {
-    var html = "", idString = "", plugname = "";
+    var html = "", idString = "", plugname = "",
+        langarrId = current_language + "_";
+
     if (plugin === undefined) {
         plugname = "";
-    }
-    else {
+        langarrId += "phpSysInfo";
+    } else {
         plugname = plugin.toLowerCase();
+        langarrId += plugname;
     }
     if (id < 100) {
         if (id < 10) {
             idString = "00" + id.toString();
-        }
-        else {
+        } else {
             idString = "0" + id.toString();
         }
-    }
-    else {
+    } else {
         idString = id.toString();
     }
     if (plugin) {
@@ -204,36 +196,82 @@ function genlang(id, generate, plugin) {
     }
     if (generate) {
         html += "<span id=\"lang_" + idString + "-" + langcounter.toString() + "\">";
-        langcounter += 1;
-    }
-    else {
+        langcounter++;
+    } else {
         html += "<span id=\"lang_" + idString + "\">";
     }
-    html += getTranslationString(idString, plugin) + "</span>";
+    if ((langxml[langarrId] !== undefined)
+        && (langarr[langarrId] !== undefined)) {
+        html += langarr[langarrId][idString];
+    }    
+
+    html += "</span>";
+
     return html;
 }
 
 /**
  * translates all expressions based on the translation xml file<br>
- * translation expressions must be in the format &lt;span id="lang???"&gt;&lt;/span&gt;, where ??? is
+ * translation expressions must be in the format &lt;span id="lang_???"&gt;&lt;/span&gt;, where ??? is
  * the number of the translated expression in the xml file<br><br>if a translated expression is not found in the xml
  * file nothing would be translated, so the initial value which is inside the span tag is displayed
  * @param {String} [plugin] name of the plugin
  */
 function changeLanguage(plugin) {
-    var langId = "", langStr = "";
+    var langarrId = current_language + "_";
+
+    if (plugin === undefined) {
+        langarrId += "phpSysInfo";
+    } else {
+        langarrId += plugin;
+    }
+
+    if (langxml[langarrId] !== undefined) {
+        changeSpanLanguage(plugin)
+    } else {
+        langxml.push(langarrId);
+        getLanguage(plugin, langarrId);
+    }
+}
+
+function changeSpanLanguage(plugin) {
+    var langId = "", langStr = "", plugId = "",
+        langarrId = current_language + "_";
+
+    if (plugin === undefined) {
+        langarrId += "phpSysInfo";
     $('span[id*=lang_]').each(function translate(i) {
         langId = this.getAttribute('id').substring(5);
         if (langId.indexOf('-') !== -1) {
             langId = langId.substring(0, langId.indexOf('-')); //remove the unique identifier
         }
-        langStr = getTranslationString(langId, plugin);
+            if (langId.indexOf('plugin_') !== 0) { //does not begin with plugin_
+                langStr = langarr[langarrId][langId];
         if (langStr !== undefined) {
             if (langStr.length > 0) {
                 this.innerHTML = langStr;
             }
         }
+            }
+            $("#loader").hide();
+            $("#output").fadeIn("slow"); //show if any language loaded
     });
+    } else {
+        langarrId += plugin;
+        $('span[id*=lang_plugin_'+plugin.toLowerCase()+'_]').each(function translate(i) {
+            langId = this.getAttribute('id').substring(5);
+            if (langId.indexOf('-') !== -1) {
+                langId = langId.substring(0, langId.indexOf('-')); //remove the unique identifier
+            }
+            langStr = langarr[langarrId][langId];
+            if (langStr !== undefined) {
+                if (langStr.length > 0) {
+                    this.innerHTML = langStr;
+                }
+            }
+        });
+        $('#panel_'+plugin).show(); //show plugin if any language loaded
+    }
 }
 
 /**
@@ -246,9 +284,9 @@ function filesystemtable() {
     html += "          <thead>\n";
     html += "            <tr>\n";
     html += "              <th>" + genlang(31, false) + "</th>\n";
-    html += "              <th>" + genlang(34, false) + "</th>\n";
+    html += "              <th>" + genlang(34, true) + "</th>\n";
     html += "              <th>" + genlang(32, false) + "</th>\n";
-    html += "              <th>" + genlang(33, false) + "</th>\n";
+    html += "              <th>" + genlang(33, true) + "</th>\n";
     html += "              <th class=\"right\">" + genlang(35, true) + "</th>\n";
     html += "              <th class=\"right\">" + genlang(36, true) + "</th>\n";
     html += "              <th class=\"right\">" + genlang(37, true) + "</th>\n";
@@ -314,11 +352,13 @@ function filesystemtable() {
 function populateErrors(xml) {
     var values = false;
     $("Errors Error", xml).each(function getError(id) {
-        $("#errorlist").append("<b>" + $(this).attr("Function") + "</b><br/><br/><pre>" + $(this).text() + "</pre><hr>");
+//        $("#errorlist").append("<b>" + $(this).attr("Function") + "</b><br/><br/><pre>" + $(this).text() + "</pre><hr>");
+        $("#errorlist").append("<b>" + $(this).attr("Function") + "</b><br/><br/><pre>" + $(this).attr("Message") + "</pre><hr>");
         values = true;
     });
     if (values) {
         $("#warn").css("display", "inline");
+        $("#loadwarn").css("display", "inline");
     }
 }
 
@@ -328,30 +368,10 @@ function populateErrors(xml) {
  */
 function displayPage(xml) {
     var versioni = "";
-    if (cookie_template !== null) {
-        $("#template").val(cookie_template);
-    }
-    if (cookie_language !== null) {
-        $("#lang").val(cookie_language);
-    }
-    $("#loader").hide();
-    $("#container").fadeIn("slow");
+//    $("#loader").hide();
+//    $("#output").fadeIn("slow");
     versioni = $("Generation", xml).attr("version").toString();
     $("#version").html(versioni);
-    
-    $("Options", xml).each(function getOptions(id) {
-        var showPickListLang = "", showPickListTemplate = "";
-        showPickListLang = $(this).attr("showPickListLang");
-        showPickListTemplate = $(this).attr("showPickListTemplate");
-        if (showPickListTemplate === 'false') {
-            $('#template').hide();
-            $('span[id=lang_044]').hide();
-        }
-        if (showPickListLang === 'false') {
-            $('#lang').hide();
-            $('span[id=lang_045]').hide();
-        }
-    });
 }
 
 /**
@@ -383,12 +403,10 @@ function formatUptime(sec) {
 function formatHertz(mhertz) {
     if (mhertz && mhertz < 1000) {
         return mhertz.toString() + "&nbsp;" + genlang(92, true);
-    }
-    else {
+    } else {
         if (mhertz && mhertz >= 1000) {
             return round(mhertz / 1000, 2) + "&nbsp;" + genlang(93, true);
-        }
-        else {
+        } else {
             return "";
         }
     }
@@ -398,7 +416,7 @@ function formatHertz(mhertz) {
  * format the byte values into a user friendly value with the corespondenting unit expression<br>support is included
  * for binary and decimal output<br>user can specify a constant format for all byte outputs or the output is formated
  * automatically so that every value can be read in a user friendly way
- * @param {Number} bytes value that should be converted in the corespondenting format, which is specified in the config.php
+ * @param {Number} bytes value that should be converted in the corespondenting format, which is specified in the phpsysinfo.ini
  * @param {jQuery} xml phpSysInfo-XML
  * @return {String} string of the converted bytes with the translated unit expression
  */
@@ -458,28 +476,23 @@ function formatBytes(bytes, xml) {
         if (bytes > Math.pow(1000, 5)) {
             show += round(bytes / Math.pow(1000, 5), 2);
             show += "&nbsp;" + genlang(91, true);
-        }
-        else {
+        } else {
             if (bytes > Math.pow(1000, 4)) {
                 show += round(bytes / Math.pow(1000, 4), 2);
                 show += "&nbsp;" + genlang(85, true);
-            }
-            else {
+            } else {
                 if (bytes > Math.pow(1000, 3)) {
                     show += round(bytes / Math.pow(1000, 3), 2);
                     show += "&nbsp;" + genlang(41, true);
-                }
-                else {
+                } else {
                     if (bytes > Math.pow(1000, 2)) {
                         show += round(bytes / Math.pow(1000, 2), 2);
                         show += "&nbsp;" + genlang(40, true);
-                    }
-                    else {
+                    } else {
                         if (bytes > Math.pow(1000, 1)) {
                         show += round(bytes / Math.pow(1000, 1), 2);
                         show += "&nbsp;" + genlang(39, true);
-                    }
-                        else {
+                        } else {
                                 show += bytes;
                                 show += "&nbsp;" + genlang(96, true);
                         }
@@ -492,31 +505,59 @@ function formatBytes(bytes, xml) {
         if (bytes > Math.pow(1024, 5)) {
             show += round(bytes / Math.pow(1024, 5), 2);
             show += "&nbsp;" + genlang(90, true);
-        }
-        else {
+        } else {
             if (bytes > Math.pow(1024, 4)) {
                 show += round(bytes / Math.pow(1024, 4), 2);
                 show += "&nbsp;" + genlang(86, true);
-            }
-            else {
+            } else {
                 if (bytes > Math.pow(1024, 3)) {
                     show += round(bytes / Math.pow(1024, 3), 2);
                     show += "&nbsp;" + genlang(87, true);
-                }
-                else {
+                } else {
                     if (bytes > Math.pow(1024, 2)) {
                         show += round(bytes / Math.pow(1024, 2), 2);
                         show += "&nbsp;" + genlang(88, true);
-                    }
-                    else {
+                    } else {
                         if (bytes > Math.pow(1024, 1)) {
                         show += round(bytes / Math.pow(1024, 1), 2);
                         show += "&nbsp;" + genlang(89, true);
-                    }
-                        else {
+                        } else {
                             show += bytes;
                             show += "&nbsp;" + genlang(96, true);
                         }
+                    }
+                }
+            }
+        }
+    }
+    return show;
+}
+
+function formatBPS(bps) {
+    var show = "";
+
+    if (bps > Math.pow(1000, 5)) {
+        show += round(bps / Math.pow(1000, 5), 2);
+        show += String.fromCharCode(160) + 'Pb/s';
+    } else {
+        if (bps > Math.pow(1000, 4)) {
+            show += round(bps / Math.pow(1000, 4), 2);
+            show += String.fromCharCode(160) + 'Tb/s';
+        } else {
+            if (bps > Math.pow(1000, 3)) {
+                show += round(bps / Math.pow(1000, 3), 2);
+                show += String.fromCharCode(160) + 'Gb/s';
+            } else {
+                if (bps > Math.pow(1000, 2)) {
+                    show += round(bps / Math.pow(1000, 2), 2);
+                    show += String.fromCharCode(160) + 'Mb/s';
+                } else {
+                    if (bps > Math.pow(1000, 1)) {
+                        show += round(bps / Math.pow(1000, 1), 2);
+                        show += String.fromCharCode(160) + 'Kb/s';
+                    } else {
+                            show += bps;
+                            show += String.fromCharCode(160) + 'b/s';
                     }
                 }
             }
@@ -541,8 +582,7 @@ function formatTemp(degreeC, xml) {
     degree = parseFloat(degreeC);
     if (isNaN(degreeC)) {
         return "---";
-    }
-    else {
+    } else {
         switch (tempFormat) {
         case "f":
             return round((((9 * degree) / 5) + 32), 1) + "&nbsp;" + genlang(61, true);
@@ -573,9 +613,31 @@ function createBar(size, barclass) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshVitals(xml) {
-    var hostname = "", ip = "", kernel = "", distro = "", icon = "", uptime = "", users = 0, loadavg = "";
+    var hostname = "", ip = "";
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('vitals', blocks) < 0))) {
+        $("#vitals").remove();
+        $("Vitals", xml).each(function getVitals(id) {
+            hostname = $(this).attr("Hostname");
+            ip = $(this).attr("IPAddr");
+            document.title = "System information: " + hostname + " (" + ip + ")";
+            $("#s_hostname_title").html(hostname);
+            $("#s_ip_title").html(ip);
+        });
+        return;
+    }
+
+    var kernel = "", distro = "", icon = "", uptime = "", users = 0, loadavg = "";
+    var processes = 0, prunning = 0, psleeping = 0, pstopped = 0, pzombie = 0, pwaiting = 0, pother = 0;
     var syslang = "", codepage = "";
-    var lastboot = 0, timestamp = Number(new Date());
+    var lastboot = 0;
+    var timestamp = parseInt($("Generation", xml).attr("timestamp"), 10)*1000; //server time
+    var not_first = false;
+    var datetimeFormat = "";
+    if (isNaN(timestamp)) timestamp = Number(new Date()); //client time
+
+    $("Options", xml).each(function getDatetimeFormat(id) {
+        datetimeFormat = $(this).attr("datetimeFormat");
+    });
 
     $("Vitals", xml).each(function getVitals(id) {
         hostname = $(this).attr("Hostname");
@@ -594,6 +656,7 @@ function refreshVitals(xml) {
             syslang = $(this).attr("SysLang");
             document.getElementById("s_syslang_tr").style.display='';
         }
+
         if ($(this).attr("CodePage") !== undefined) {
             codepage = $(this).attr("CodePage");
             if ($(this).attr("SysLang") !== undefined) {
@@ -602,22 +665,82 @@ function refreshVitals(xml) {
                 document.getElementById("s_codepage_tr2").style.display='';
             }
         }
+
+        //processes
+        if ($(this).attr("Processes") !== undefined) {
+            processes = parseInt($(this).attr("Processes"), 10);
+            if ((($(this).attr("CodePage") !== undefined) && ($(this).attr("SysLang") == undefined)) ||
+                (($(this).attr("CodePage") == undefined) && ($(this).attr("SysLang") !== undefined))) {
+                document.getElementById("s_processes_tr1").style.display='';
+            } else {
+                document.getElementById("s_processes_tr2").style.display='';
+            }
+        }
+        if ($(this).attr("ProcessesRunning") !== undefined) {
+            prunning = parseInt($(this).attr("ProcessesRunning"), 10);
+        }
+        if ($(this).attr("ProcessesSleeping") !== undefined) {
+            psleeping = parseInt($(this).attr("ProcessesSleeping"), 10);
+        }
+        if ($(this).attr("ProcessesStopped") !== undefined) {
+            pstopped = parseInt($(this).attr("ProcessesStopped"), 10);
+        }
+        if ($(this).attr("ProcessesZombie") !== undefined) {
+            pzombie = parseInt($(this).attr("ProcessesZombie"), 10);
+        }
+        if ($(this).attr("ProcessesWaiting") !== undefined) {
+            pwaiting = parseInt($(this).attr("ProcessesWaiting"), 10);
+        }
+        if ($(this).attr("ProcessesOther") !== undefined) {
+            pother = parseInt($(this).attr("ProcessesOther"), 10);
+        }
+
         document.title = "System information: " + hostname + " (" + ip + ")";
         $("#s_hostname_title").html(hostname);
         $("#s_ip_title").html(ip);
         $("#s_hostname").html(hostname);
         $("#s_ip").html(ip);
         $("#s_kernel").html(kernel);
-        $("#s_distro").html("<img src='./gfx/images/" + icon + "' alt='Icon' height='16' width='16' style='vertical-align:middle;' />&nbsp;" + distro);
+        $("#s_distro").html("<img src='./gfx/images/" + icon + "' alt='Icon' title='' style='width:16px;height:16px;vertical-align:middle;' onload='PNGload($(this));' />&nbsp;" + distro); //onload IE6 PNG fix
         $("#s_uptime").html(uptime);
-        $("#s_lastboot").html(lastboot.toGMTString()); //toGMTString() or toLocaleString()
+        if ((datetimeFormat !== undefined) && (datetimeFormat.toLowerCase() === "locale")) {
+            $("#s_lastboot").html(lastboot.toLocaleString());
+        } else {
+            if (typeof(lastboot.toUTCString)==="function") {
+                $("#s_lastboot").html(lastboot.toUTCString());
+            } else {
+                //deprecated
+                $("#s_lastboot").html(lastboot.toGMTString());
+            }
+        }
         $("#s_users").html(users);
         $("#s_loadavg").html(loadavg);
         $("#s_syslang").html(syslang);
         $("#s_codepage_1").html(codepage);
         $("#s_codepage_2").html(codepage);
+        $("#s_processes_1").html(processes);
+        $("#s_processes_2").html(processes);
+        if (prunning || psleeping || pstopped || pzombie || pwaiting || pother) {
+            $("#s_processes_1").append(" (");
+            $("#s_processes_2").append(" (");
+            var typelist = {running:111,sleeping:112,stopped:113,zombie:114,waiting:115,other:116};
+            for (var proc_type in typelist) {
+                if (eval("p" + proc_type)) {
+                    if (not_first) {
+                        $("#s_processes_1").append(", ");
+                        $("#s_processes_2").append(", ");
+                    }
+                    $("#s_processes_1").append(eval("p" + proc_type) + "&nbsp;" + genlang(typelist[proc_type], true));
+                    $("#s_processes_2").append(eval("p" + proc_type) + "&nbsp;" + genlang(typelist[proc_type], true));
+                    not_first = true;
+                }
+            }
+            $("#s_processes_1").append(") ");
+            $("#s_processes_2").append(") ");
+        }
     });
 }
+
 
 /**
  * build the cpu information as table rows
@@ -630,7 +753,7 @@ function fillCpu(xml, tree, rootposition, collapsed) {
     var cpucount = 0, html = "";
     $("Hardware CPU CpuCore", xml).each(function getCpuCore(cpuCoreId) {
         var model = "", speed = 0, bus = 0, cache = 0, bogo = 0, temp = 0, load = 0, speedmax = 0, speedmin = 0, cpucoreposition = 0, virt = "";
-        cpucount += 1;
+        cpucount++;
         model = $(this).attr("Model");
         speed = parseInt($(this).attr("CpuSpeed"), 10);
         speedmax = parseInt($(this).attr("CpuSpeedMax"), 10);
@@ -642,44 +765,52 @@ function fillCpu(xml, tree, rootposition, collapsed) {
         bogo = parseInt($(this).attr("Bogomips"), 10);
         load = parseInt($(this).attr("Load"), 10);
         
-        html += "<tr><td colspan=\"2\">" + model + "</td></tr>\n";
+        if (!showCPUListExpanded) {
+            collapsed.push(rootposition);
+        }
+        if (!isNaN(load) && showCPULoadCompact) {
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + model + "</span></td><td>" + createBar(load) + "</td></tr>\n";
+        } else {
+            html += "<tr><td colspan=\"2\"><span class=\"treespan\">" + model + "</span></td></tr>\n";
+        }
         cpucoreposition = tree.push(rootposition);
+        if (!showCPUInfoExpanded) {
         collapsed.push(cpucoreposition);
+        }
         if (!isNaN(speed)) {
-        html += "<tr><td style=\"width:50%\">" + genlang(13, true) + ":</td><td>" + formatHertz(speed) + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(13, true) + ":</span></td><td>" + formatHertz(speed) + "</td></tr>\n";
         tree.push(cpucoreposition);
         }
         if (!isNaN(speedmax)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(100, true) + ":</td><td>" + formatHertz(speedmax) + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(100, true) + ":</span></td><td>" + formatHertz(speedmax) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
         if (!isNaN(speedmin)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(101, true) + ":</td><td>" + formatHertz(speedmin) + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(101, true) + ":</span></td><td>" + formatHertz(speedmin) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
-//        collapsed.push(cpucoreposition);
         if (!isNaN(cache)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(15, true) + ":</td><td>" + formatBytes(cache) + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(15, true) + ":</span></td><td>" + formatBytes(cache) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
         if (virt != undefined) {
-            html += "<tr><td style=\"width:50%\">" + genlang(94, true) + ":</td><td>" + virt + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(94, true) + ":</span></td><td>" + virt + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
         if (!isNaN(bus)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(14, true) + ":</td><td>" + formatHertz(bus) + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(14, true) + ":</span></td><td>" + formatHertz(bus) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
         if (!isNaN(bogo)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(16, true) + ":</td><td>" + bogo.toString() + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(16, true) + ":</span></td><td>" + bogo.toString() + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
         if (!isNaN(temp)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(51, true) + ":</td><td>" + formatTemp(temp, xml) + "</td></tr>\n";
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(51, true) + ":</span></td><td>" + formatTemp(temp, xml) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
-        if (!isNaN(load)) {
-            html += "<tr><td style=\"width:50%\">" + genlang(9, true) + ":</td><td>" + createBar(load) + "</td></tr>\n";
+        if (!isNaN(load) && !showCPULoadCompact) {
+            html += "<tr><td style=\"width:68%\"><span class=\"treespan\">" + genlang(9, true) + ":</span></td><td>" + createBar(load) + "</td></tr>\n";
             tree.push(cpucoreposition);
         }
     });
@@ -688,6 +819,14 @@ function fillCpu(xml, tree, rootposition, collapsed) {
         tree.push(rootposition);
     }
     return html;
+}
+
+function countCpu(xml) {
+    var cpucount = 0;
+    $("Hardware CPU CpuCore", xml).each(function getCpuCore(cpuCoreId) {
+        cpucount++;
+    });
+    return cpucount;
 }
 
 /**
@@ -701,20 +840,28 @@ function fillHWDevice(xml, type, tree, rootposition) {
     var devicecount = 0, html = "";
     $("Hardware " + type + " Device", xml).each(function getPciDevice(deviceId) {
         var name = "", count = 0;
-        devicecount += 1;
+        devicecount++;
         name = $(this).attr("Name");
         count = parseInt($(this).attr("Count"), 10);
         if (!isNaN(count) && count > 1) {
             name = "(" + count + "x) " + name;
         }
-        html += "<tr><td colspan=\"2\">" + name + "</td></tr>\n";
+        html += "<tr><td colspan=\"2\"><span class=\"treespan\">" + name + "</span></td></tr>\n";
         tree.push(rootposition);
     });
     if (devicecount === 0) {
-        html += "<tr><td colspan=\"2\">" + genlang(42, true) + "</td></tr>\n";
+        html += "<tr><td colspan=\"2\"><span class=\"treespan\">" + genlang(42, true) + "</span></td></tr>\n";
         tree.push(rootposition);
     }
     return html;
+}
+
+function countHWDevice(xml, type) {
+    var devicecount = 0;
+    $("Hardware " + type + " Device", xml).each(function getPciDevice(deviceId) {
+        devicecount++;
+    });
+    return devicecount;
 }
 
 /**
@@ -722,34 +869,40 @@ function fillHWDevice(xml, type, tree, rootposition) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshHardware(xml) {
-    var html = "", tree = [], closed = [], index = 0;
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('hardware', blocks) < 0))) {
+        $("#hardware").remove();
+        return;
+    }
+
+    var html = "", tree = [], closed = [], index = 0, machine = "";
     $("#hardware").empty();
     html += "<h2>" + genlang(10, false) + "</h2>\n";
     html += "  <table id=\"HardwareTree\" class=\"tablemain\" style=\"width:100%;\">\n";
     html += "   <tbody class=\"tree\">\n";
     
-    html += "    <tr><td colspan=\"2\"><b>" + genlang(11, false) + "</b></td></tr>\n";
-    html += fillCpu(xml, tree, tree.push(0), closed);
+    $("Hardware", xml).each(function getMachine(id) {
+        machine = $(this).attr("Name");
+    });
+    if ((machine !== undefined) && (machine != "")) {
+        html += "    <tr><td colspan=\"2\"><span class=\"treespanbold\">" + genlang(107, false) + "</span></td></tr>\n";
+        html += "<tr><td colspan=\"2\"><span class=\"treespan\">" + machine + "</span></td></tr>\n";
+        tree.push(tree.push(0));
+    }
     
-    html += "    <tr><td colspan=\"2\"><b>" + genlang(17, false) + "</b></td></tr>\n";
+    if (countCpu(xml)) {
+        html += "    <tr><td colspan=\"2\"><span class=\"treespanbold\">" + genlang(11, false) + "</span></td></tr>\n";
+        html += fillCpu(xml, tree, tree.push(0), closed);
+    }
+    
+    var typelist = {PCI:17,IDE:18,SCSI:19,USB:20,TB:117,I2C:118};
+    for (var dev_type in typelist) {
+        if (countHWDevice(xml, dev_type)) {
+            html += "    <tr><td colspan=\"2\"><span class=\"treespanbold\">" + genlang(typelist[dev_type], false) + "</span></td></tr>\n";
     index = tree.push(0);
     closed.push(index);
-    html += fillHWDevice(xml, 'PCI', tree, index);
-    
-    html += "    <tr><td colspan=\"2\"><b>" + genlang(18, false) + "</b></td></tr>\n";
-    index = tree.push(0);
-    closed.push(index);
-    html += fillHWDevice(xml, 'IDE', tree, index);
-    
-    html += "    <tr><td colspan=\"2\"><b>" + genlang(19, false) + "</b></td></tr>\n";
-    index = tree.push(0);
-    closed.push(index);
-    html += fillHWDevice(xml, 'SCSI', tree, index);
-    
-    html += "    <tr><td colspan=\"2\"><b>" + genlang(20, false) + "</b></td></tr>\n";
-    index = tree.push(0);
-    closed.push(index);
-    html += fillHWDevice(xml, 'USB', tree, index);
+            html += fillHWDevice(xml, dev_type, tree, index);
+        }
+    }
     
     html += "   </tbody>\n";
     html += "  </table>\n";
@@ -777,7 +930,13 @@ function refreshHardware(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshNetwork(xml) {
-    var tree = [], closed = [], html0= "", html1= "" ,html = "", isinfo = false;
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('network', blocks) < 0))) {
+        $("#network").remove();
+        return;
+    }
+
+    var tree = [], closed = [], html0= "", html1= "" ,html = "", isinfo = false, preoldnetwork = [], timestamp;
+
     $("#network").empty();
 
     html0 += "<h2>" + genlang(21, false) + "</h2>\n";
@@ -791,24 +950,56 @@ function refreshNetwork(xml) {
     html1 += "    </tr>\n";
     html1 += "   </thead>\n";
 
+    if (showNetworkActiveSpeed) {
+        $("Generation", xml).each(function getTimestamp(id) {
+            timestamp = $(this).attr("timestamp");
+        });
+    }
+
     $("Network NetDevice", xml).each(function getDevice(id) {
-        var name = "", rx = 0, tx = 0, er = 0, dr = 0, info = "", networkindex = 0;
+        var name = "", rx = 0, tx = 0, er = 0, dr = 0, info = "", networkindex = 0, i = 0, htmlrx = '', htmltx = '';
         name = $(this).attr("Name");
         rx = parseInt($(this).attr("RxBytes"), 10);
         tx = parseInt($(this).attr("TxBytes"), 10);
         er = parseInt($(this).attr("Err"), 10);
         dr = parseInt($(this).attr("Drops"), 10);
-        html +="<tr><td>" + name + "</td><td class=\"right\">" + formatBytes(rx, xml) + "</td><td class=\"right\">" + formatBytes(tx, xml) + "</td><td class=\"right\">" + er.toString() + "/" + dr.toString() + "</td></tr>";
+
+        if (showNetworkActiveSpeed && ($.inArray(name, oldnetwork) >= 0)) {
+            var diff, difftime;
+            if (((diff = rx - oldnetwork[name]["rx"]) > 0) && ((difftime = timestamp - oldnetwork[name]["timestamp"]) > 0)) {
+                if (showNetworkActiveSpeed == 2) {
+                    htmlrx ="<br><i>("+formatBPS(round(8*diff/difftime, 2))+")</i>";
+                } else {
+                    htmlrx ="<br><i>("+formatBytes(round(diff/difftime, 2), xml)+"/s)</i>";
+                }
+            }
+            if (((diff = tx - oldnetwork[name]["tx"]) > 0) && (difftime > 0)) {
+                if (showNetworkActiveSpeed == 2) {
+                    htmltx ="<br><i>("+formatBPS(round(8*diff/difftime, 2))+")</i>";
+                } else {
+                    htmltx ="<br><i>("+formatBytes(round(diff/difftime, 2), xml)+"/s)</i>";
+                }
+            }
+        }
+
+        html +="<tr><td><span class=\"treespan\">" + name + "</span></td><td class=\"right\">" + formatBytes(rx, xml) + htmlrx + "</td><td class=\"right\">" + formatBytes(tx, xml) + htmltx +"</td><td class=\"right\">" + er.toString() + "/<wbr>" + dr.toString() + "</td></tr>";
 
         networkindex = tree.push(0);
 
+        if (showNetworkActiveSpeed) {
+            preoldnetwork.pushIfNotExist(name);
+            preoldnetwork[name] = {timestamp:timestamp, rx:rx, tx:tx};
+        }
+
         info = $(this).attr("Info");
         if ( (info !== undefined) && (info != "") ) {
-           var i =0, infos = info.split(";");
+            var i = 0, infos = info.replace(/:/g, "<wbr>:").split(";"); /* split long addresses */
            isinfo = true;
            for(i = 0; i < infos.length; i++){
-              html +="<tr><td>" + infos[i] + "</td><td></td><td></td><td></td></tr>";
+                html +="<tr><td><span class=\"treespan\">" + infos[i] + "</span></td><td></td><td></td><td></td></tr>";
               tree.push(networkindex);
+            }
+            if (!showNetworkInfosExpanded) {
               closed.push(networkindex);
             }
         }
@@ -839,6 +1030,14 @@ function refreshNetwork(xml) {
         highlight: false,
         state: false
     });
+
+    if (showNetworkActiveSpeed) {
+        while (oldnetwork.length > 0) {
+            delete oldnetwork[oldnetwork.length-1]; //remove last object
+            oldnetwork.pop(); //remove last object reference from array
+        }
+        oldnetwork = preoldnetwork;
+    }
 }
 
 /**
@@ -846,6 +1045,11 @@ function refreshNetwork(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshMemory(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('memory', blocks) < 0))) {
+        $("#memory").remove();
+        return;
+    }
+
     var html = "", tree = [], closed = [];
     
     $("#memory").empty();
@@ -868,7 +1072,7 @@ function refreshMemory(xml) {
         used = parseInt($(this).attr("Used"), 10);
         total = parseInt($(this).attr("Total"), 10);
         percent = parseInt($(this).attr("Percent"), 10);
-        html += "<tr><td style=\"width:200px;\">" + genlang(28, false) + "</td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
+        html += "<tr><td style=\"width:200px;\"><span class=\"treespan\">" + genlang(28, false) + "</span></td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
         memoryindex = tree.push(0);
         
         $("Memory Details", xml).each(function getMemorydetails(id) {
@@ -880,19 +1084,21 @@ function refreshMemory(xml) {
             cached = parseInt($(this).attr("Cached"), 10);
             cachedp = parseInt($(this).attr("CachedPercent"), 10);
             if (!isNaN(app)) {
-                html += "<tr><td style=\"width:184px;\">" + genlang(64, false) + "</td><td style=\"width:285px;\">" + createBar(appp) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td><td class=\"right\" style=\"width:100px\">" + formatBytes(app, xml) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td></tr>";
-                tree.push(memoryindex);
-            }
-            if (!isNaN(buff)) {
-                html += "<tr><td style=\"width:184px;\">" + genlang(65, false) + "</td><td style=\"width:285px\">" + createBar(buffp) + "</td><td class=\"rigth\" style=\"width:100px;\">&nbsp;</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(buff, xml) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td></tr>";
+                html += "<tr><td style=\"width:184px;\"><span class=\"treespan\">" + genlang(64, false) + "</span></td><td style=\"width:285px;\">" + createBar(appp) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td><td class=\"right\" style=\"width:100px\">" + formatBytes(app, xml) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td></tr>";
                 tree.push(memoryindex);
             }
             if (!isNaN(cached)) {
-                html += "<tr><td style=\"width:184px;\">" + genlang(66, false) + "</td><td style=\"width:285px;\">" + createBar(cachedp) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(cached, xml) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td></tr>";
+                html += "<tr><td style=\"width:184px;\"><span class=\"treespan\">" + genlang(66, false) + "</span></td><td style=\"width:285px;\">" + createBar(cachedp) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(cached, xml) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td></tr>";
+                tree.push(memoryindex);
+            }
+            if (!isNaN(buff)) {
+                html += "<tr><td style=\"width:184px;\"><span class=\"treespan\">" + genlang(65, false) + "</span></td><td style=\"width:285px\">" + createBar(buffp) + "</td><td class=\"rigth\" style=\"width:100px;\">&nbsp;</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(buff, xml) + "</td><td class=\"right\" style=\"width:100px;\">&nbsp;</td></tr>";
                 tree.push(memoryindex);
             }
             if (!isNaN(app) || !isNaN(buff) || !isNaN(cached)) {
+                if (!showMemoryInfosExpanded) {
                 closed.push(memoryindex);
+            }
             }
         });
     });
@@ -902,12 +1108,14 @@ function refreshMemory(xml) {
         used = parseInt($(this).attr("Used"), 10);
         total = parseInt($(this).attr("Total"), 10);
         percent = parseInt($(this).attr("Percent"), 10);
-        html += "<tr><td style=\"width:200px;\">" + genlang(29, false) + "</td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
+        html += "<tr><td style=\"width:200px;\"><span class=\"treespan\">" + genlang(29, false) + "</span></td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
         swapindex = tree.push(0);
         
         $("Memory Swap Mount", xml).each(function getDevices(id) {
             var free = 0, total = 0, used = 0, percent = 0, mpoint = "", mpid = 0;
+            if (!showMemoryInfosExpanded) {
             closed.push(swapindex);
+            }
             free = parseInt($(this).attr("Free"), 10);
             used = parseInt($(this).attr("Used"), 10);
             total = parseInt($(this).attr("Total"), 10);
@@ -919,7 +1127,7 @@ function refreshMemory(xml) {
                 mpoint = mpid;
             }
             
-            html += "<tr><td style=\"width:184px;\">" + mpoint + "</td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
+            html += "<tr><td style=\"width:184px;\"><span class=\"treespan\">" + mpoint + "</span></td><td style=\"width:285px;\">" + createBar(percent) + "</td><td class=\"right\" style=\"width:100px\">" + formatBytes(free, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(used, xml) + "</td><td class=\"right\" style=\"width:100px;\">" + formatBytes(total, xml) + "</td></tr>";
             tree.push(swapindex);
         });
     });
@@ -953,6 +1161,11 @@ function refreshMemory(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshFilesystems(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('filesystem', blocks) < 0))) {
+        $("#filesystem").remove();
+        return;
+    }
+
     var total_usage = 0, total_used = 0, total_free = 0, total_size = 0, threshold = 0;
     
     filesystemTable.fnClearTable();
@@ -965,7 +1178,7 @@ function refreshFilesystems(xml) {
         var mpoint = "", mpid = 0, type = "", name = "", free = 0, used = 0, size = 0, percent = 0, options = "", inodes = 0, inodes_text = "", options_text = "";
         mpid = parseInt($(this).attr("MountPointID"), 10);
         type = $(this).attr("FSType");
-        name = $(this).attr("Name");
+        name = $(this).attr("Name").replace(/;/g, ";<wbr>"); /* split long name */
         free = parseInt($(this).attr("Free"), 10);
         used = parseInt($(this).attr("Used"), 10);
         size = parseInt($(this).attr("Total"), 10);
@@ -995,7 +1208,11 @@ function refreshFilesystems(xml) {
         total_usage = round((total_used / total_size) * 100, 2);
     });
     
+    if (!isNaN(threshold) && (total_usage >= threshold)) {
+        $("#s_fs_total").html(createBar(total_usage, "barwarn"));
+    } else {
     $("#s_fs_total").html(createBar(total_usage));
+    }
     $("#s_fs_tfree").html(formatBytes(total_free, xml));
     $("#s_fs_tused").html(formatBytes(total_used, xml));
     $("#s_fs_tsize").html(formatBytes(total_size, xml));
@@ -1009,23 +1226,30 @@ function refreshFilesystems(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshTemp(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('temperature', blocks) < 0))) {
+        $("#temperature").remove();
+        return;
+    }
+
     var values = false;
-    $("#tempTable tbody").empty();
+    $("#temperatureTable tbody").empty();
     $("MBInfo Temperature Item", xml).each(function getTemperatures(id) {
-        var label = "", value = "", limit = 0, _limit = "";
+        var label = "", value = "", limit = 0, _limit = "", event = "";
         label = $(this).attr("Label");
-        value = $(this).attr("Value").replace(/\+/g, "");
-        limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
+        value = $(this).attr("Value");
+        limit = parseFloat($(this).attr("Max"));
         if (isFinite(limit))
             _limit = formatTemp(limit, xml);
-        $("#tempTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + _limit + "</td></tr>");
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/>";
+        $("#temperatureTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + formatTemp(value, xml) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
     if (values) {
-        $("#temp").show();
-    }
-    else {
-        $("#temp").remove();
+        $("#temperature").show();
+    } else {
+        $("#temperature").hide();
     }
 }
 
@@ -1036,10 +1260,15 @@ function refreshTemp(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshVoltage(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('voltage', blocks) < 0))) {
+        $("#voltage").remove();
+        return;
+    }
+
     var values = false;
     $("#voltageTable tbody").empty();
     $("MBInfo Voltage Item", xml).each(function getVoltages(id) {
-        var label = "", value = 0, max = 0, min = 0, _min = "", _max = "";
+        var label = "", value = 0, max = 0, min = 0, _min = "", _max = "", event = "";
         label = $(this).attr("Label");
         value = parseFloat($(this).attr("Value"));
         max = parseFloat($(this).attr("Max"));
@@ -1048,14 +1277,16 @@ function refreshVoltage(xml) {
         min = parseFloat($(this).attr("Min"));
         if (isFinite(min))
             _min = round(min, 2) + "&nbsp;" + genlang(62, true);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/>";
         $("#voltageTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(62, true) + "</td><td class=\"right\">" + _min + "</td><td class=\"right\">" + _max + "</td></tr>");
         values = true;
     });
     if (values) {
         $("#voltage").show();
-    }
-    else {
-        $("#voltage").remove();
+    } else {
+        $("#voltage").hide();
     }
 }
 
@@ -1065,24 +1296,31 @@ function refreshVoltage(xml) {
  * entire table will be removed to avoid HTML warnings
  * @param {jQuery} xml phpSysInfo-XML
  */
-function refreshFan(xml) {
+function refreshFans(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('fans', blocks) < 0))) {
+        $("#fans").remove();
+        return;
+    }
+
     var values = false;
-    $("#fanTable tbody").empty();
+    $("#fansTable tbody").empty();
     $("MBInfo Fans Item", xml).each(function getFans(id) {
-        var label = "", value = 0, min = 0, _min = "";
+        var label = "", value = 0, min = 0, _min = "", event = "";
         label = $(this).attr("Label");
         value = parseFloat($(this).attr("Value"));
         min = parseFloat($(this).attr("Min"));
         if (isFinite(min))
             _min = round(min,0) + "&nbsp;" + genlang(63, true);
-        $("#fanTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value,0) + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + _min + "</td></tr>");
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/>";
+        $("#fansTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value,0) + "&nbsp;" + genlang(63, true) + "</td><td class=\"right\">" + _min + "</td></tr>");
         values = true;
     });
     if (values) {
-        $("#fan").show();
-    }
-    else {
-        $("#fan").remove();
+        $("#fans").show();
+    } else {
+        $("#fans").hide();
     }
 }
 
@@ -1093,25 +1331,104 @@ function refreshFan(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshPower(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('power', blocks) < 0))) {
+        $("#power").remove();
+        return;
+    }
+
     var values = false;
     $("#powerTable tbody").empty();
     $("MBInfo Power Item", xml).each(function getPowers(id) {
-        var label = "", value = "", limit = 0, _limit = "";
+        var label = "", value = "", limit = 0, _limit = "", event = "";
         label = $(this).attr("Label");
-        value = $(this).attr("Value").replace(/\+/g, "");
-        limit = ($(this).attr("Max") !== undefined) ? parseFloat($(this).attr("Max").replace(/\+/g, "")) : 'NaN';
+        value = $(this).attr("Value");
+        limit = parseFloat($(this).attr("Max"));
         if (isFinite(limit))
             _limit = round(limit, 2) + "&nbsp;" + genlang(103, true);
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/>";
         $("#powerTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(103, true) + "</td><td class=\"right\">" + _limit + "</td></tr>");
         values = true;
     });
     if (values) {
         $("#power").show();
-    }
-    else {
-        $("#power").remove();
+    } else {
+        $("#power").hide();
     }
 }
+
+/**
+ * (re)fill the current block with the values from the given xml<br><br>
+ * build the current information into a separate block, if there is no current information available the
+ * entire table will be removed to avoid HTML warnings
+ * @param {jQuery} xml phpSysInfo-XML
+ */
+function refreshCurrent(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('current', blocks) < 0))) {
+        $("#current").remove();
+        return;
+    }
+
+    var values = false;
+    $("#currentTable tbody").empty();
+    $("MBInfo Current Item", xml).each(function getCurrents(id) {
+        var label = "", value = "", min = 0, max = 0, _min = "", _max = "", event = "";
+        label = $(this).attr("Label");
+        value = $(this).attr("Value");
+
+        max = parseFloat($(this).attr("Max"));
+        if (isFinite(max))
+            _max = round(max, 2) + "&nbsp;" + genlang(106, true);
+        min = parseFloat($(this).attr("Min"));
+        if (isFinite(min))
+            _min = round(min, 2) + "&nbsp;" + genlang(106, true);
+
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/>";
+        $("#currentTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + round(value, 2) + "&nbsp;" + genlang(106, true) + "</td><td class=\"right\">" + _min + "</td><td class=\"right\">" + _max + "</td></tr>");
+        values = true;
+    });
+    if (values) {
+        $("#current").show();
+    } else {
+        $("#current").hide();
+    }
+}
+
+/**
+ * (re)fill the other block with the values from the given xml<br><br>
+ * build the other information into a separate block, if there is no other information available the
+ * entire table will be removed to avoid HTML warnings
+ * @param {jQuery} xml phpSysInfo-XML
+ */
+function refreshOther(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('other', blocks) < 0))) {
+        $("#other").remove();
+        return;
+    }
+
+    var values = false;
+    $("#otherTable tbody").empty();
+    $("MBInfo Other Item", xml).each(function getOthers(id) {
+        var label = "", value = "", event = "";
+        label = $(this).attr("Label");
+        value = $(this).attr("Value");
+
+        event = $(this).attr("Event");
+        if (event !== undefined)
+            label += " <img style=\"vertical-align: middle; width:16px;\" src=\"./gfx/attention.gif\" alt=\"!\" title=\""+event+"\"/>";
+        $("#otherTable tbody").append("<tr><td>" + label + "</td><td class=\"right\">" + value + "</td></tr>");
+        values = true;
+    });
+    if (values) {
+        $("#other").show();
+    } else {
+        $("#other").hide();
+    }
+}
+
 /**
  * (re)fill the ups block with the values from the given xml<br><br>
  * build the ups information into a separate block, if there is no ups information available the
@@ -1119,6 +1436,11 @@ function refreshPower(xml) {
  * @param {jQuery} xml phpSysInfo-XML
  */
 function refreshUps(xml) {
+    if ((blocks.length <= 0) || ((blocks[0] !== "true") && ($.inArray('ups', blocks) < 0))) {
+        $("#ups").remove();
+        return;
+    }
+
     var add_apcupsd_cgi_links = ($("[ApcupsdCgiLinks='1']", xml).length > 0);
     var html = "", tree = [], closed = [], index = 0, values = false;
     html += "<h2>" + genlang(68, false) + "</h2>\n";
@@ -1127,7 +1449,7 @@ function refreshUps(xml) {
     
     $("#ups").empty();
     $("UPSInfo UPS", xml).each(function getUps(id) {
-        var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", load_percent = "", battery_date = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
+        var name = "", model = "", mode = "", start_time = "", upsstatus = "", temperature = "", outages_count = "", last_outage = "", last_outage_finish = "", line_voltage = "", line_frequency = "", load_percent = "", battery_date = "", battery_voltage = "", battery_charge_percent = "", time_left_minutes = "";
         name = $(this).attr("Name");
         model = $(this).attr("Model");
         mode = $(this).attr("Mode");
@@ -1139,58 +1461,73 @@ function refreshUps(xml) {
         last_outage = $(this).attr("LastOutage");
         last_outage_finish = $(this).attr("LastOutageFinish");
         line_voltage = $(this).attr("LineVoltage");
+        line_frequency = $(this).attr("LineFrequency");
         load_percent = parseInt($(this).attr("LoadPercent"), 10);
         battery_date = $(this).attr("BatteryDate");
         battery_voltage = $(this).attr("BatteryVoltage");
         battery_charge_percent = parseInt($(this).attr("BatteryChargePercent"), 10);
         time_left_minutes = $(this).attr("TimeLeftMinutes");
         
-        html += "<tr><td colspan=\"2\"><strong>" + name + " (" + mode + ")</strong></td></tr>\n";
+        if (mode !== undefined) {
+            html += "<tr><td colspan=\"2\"><span class=\"treespanbold\">" + name + " (" + mode + ")</span></td></tr>\n";
+        } else {
+            html += "<tr><td colspan=\"2\"><span class=\"treespanbold\">" + name + "</span></td></tr>\n";
+        }
         index = tree.push(0);
-        html += "<tr><td style=\"width:160px\">" + genlang(70, false) + "</td><td>" + model + "</td></tr>\n";
+        if (model !== undefined) {
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(70, true) + "</span></td><td>" + model + "</td></tr>\n";
         tree.push(index);
-        html += "<tr><td style=\"width:160px\">" + genlang(72, false) + "</td><td>" + start_time + "</td></tr>\n";
+        }
+        if (start_time !== undefined) {
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(72, true) + "</span></td><td>" + start_time + "</td></tr>\n";
         tree.push(index);
-        html += "<tr><td style=\"width:160px\">" + genlang(73, false) + "</td><td>" + upsstatus + "</td></tr>\n";
+        }
+        if (upsstatus !== undefined) {
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(73, true) + "</span></td><td>" + upsstatus + "</td></tr>\n";
         tree.push(index);
+        }
         if (temperature !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(84, false) + "</td><td>" + temperature + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(84, true) + "</span></td><td>" + temperature + "</td></tr>\n";
             tree.push(index);
         }
         if (outages_count !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(74, false) + "</td><td>" + outages_count + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(74, true) + "</span></td><td>" + outages_count + "</td></tr>\n";
             tree.push(index);
         }
         if (last_outage !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(75, false) + "</td><td>" + last_outage + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(75, true) + "</span></td><td>" + last_outage + "</td></tr>\n";
             tree.push(index);
         }
         if (last_outage_finish !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(76, false) + "</td><td>" + last_outage_finish + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(76, true) + "</span></td><td>" + last_outage_finish + "</td></tr>\n";
             tree.push(index);
         }
         if (line_voltage !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(77, false) + "</td><td>" + line_voltage + "&nbsp;" + genlang(82, true) + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(77, true) + "</span></td><td>" + line_voltage + "&nbsp;" + genlang(82, true) + "</td></tr>\n";
+            tree.push(index);
+        }
+        if (line_frequency !== undefined) {
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(108, true) + "</span></td><td>" + line_frequency + "&nbsp;" + genlang(109, true) + "</td></tr>\n";
             tree.push(index);
         }
         if (!isNaN(load_percent)) {
-            html += "<tr><td style=\"width:160px\">" + genlang(78, false) + "</td><td>" + createBar(load_percent) + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(78, true) + "</span></td><td>" + createBar(load_percent) + "</td></tr>\n";
             tree.push(index);
         }
         if (battery_date !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(104, false) + "</td><td>" + battery_date + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(104, true) + "</span></td><td>" + battery_date + "</td></tr>\n";
             tree.push(index);
         }
         if (battery_voltage !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(79, false) + "</td><td>" + battery_voltage + "&nbsp;" + genlang(82, true) + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(79, true) + "</span></td><td>" + battery_voltage + "&nbsp;" + genlang(82, true) + "</td></tr>\n";
             tree.push(index);
         }
         if (!isNaN(battery_charge_percent)) {
-            html += "<tr><td style=\"width:160px\">" + genlang(80, false) + "</td><td>" + createBar(battery_charge_percent) + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(80, true) + "</span></td><td>" + createBar(battery_charge_percent) + "</td></tr>\n";
             tree.push(index);
         }
         if (time_left_minutes !== undefined) {
-            html += "<tr><td style=\"width:160px\">" + genlang(81, false) + "</td><td>" + time_left_minutes + "&nbsp;" + genlang(83, false) + "</td></tr>\n";
+            html += "<tr><td style=\"width:160px\"><span class=\"treespan\">" + genlang(81, true) + "</span></td><td>" + time_left_minutes + "&nbsp;" + genlang(83, true) + "</td></tr>\n";
             tree.push(index);
         }
 		values=true;
@@ -1198,7 +1535,7 @@ function refreshUps(xml) {
     html += "          </tbody>\n";
     html += "        </table>\n";
     if (add_apcupsd_cgi_links){
-        html += " (<a href='/cgi-bin/apcupsd/multimon.cgi' target='apcupsdcgi'>" + genlang(99, false) + "</a>)\n";
+        html += " (<a title='details' href='/cgi-bin/apcupsd/multimon.cgi' target='apcupsdcgi'>" + genlang(99, false) + "</a>)\n";
     }
     
     $("#ups").append(html);
@@ -1220,33 +1557,59 @@ function refreshUps(xml) {
             state: false
         });
         $("#ups").show();
-    }
-    else {
-        $("#ups").remove();
+    } else {
+        $("#ups").hide();
     }
 }
 
 /**
- * reload the page, this means all values are refreshed, except the plugins
+ * reload the page, this means all values are refreshed
  */
-function reload() {
+function reload(initiate) {
     $.ajax({
         url: 'xml.php',
         dataType: 'xml',
         error: function error() {
+            if ((typeof(initiate) === 'boolean') && (initiate === true)) {
+                $.jGrowl("Error loading XML document!", {
+                    sticky: true
+                });
+            } else {
             $.jGrowl("Error loading XML document!");
+            }
         },
         success: function buildblocks(xml) {
+            if ((typeof(initiate) === 'boolean') && (initiate === true)) {
+                populateErrors(xml);
+            }
+
             refreshVitals(xml);
-            refreshNetwork(xml);
             refreshHardware(xml);
             refreshMemory(xml);
             refreshFilesystems(xml);
+            refreshNetwork(xml);
             refreshVoltage(xml);
-            refreshFan(xml);
+            refreshCurrent(xml);
             refreshTemp(xml);
+            refreshFans(xml);
             refreshPower(xml);
+            refreshOther(xml);
             refreshUps(xml);
+            changeLanguage();
+
+            if ((typeof(initiate) === 'boolean') && (initiate === true)) {
+                displayPage(xml);
+                settimer(xml);
+            } else {
+                for (var i = 0; i < plugin_liste.length; i++) {
+                    try {
+                        //dynamic call
+                        window[plugin_liste[i].toLowerCase() + '_request']();
+                    }
+                    catch (err) {
+                    }
+                }
+            }
             
             $('.stripeMe tr:nth-child(even)').addClass('even');
             langcounter = 1;
@@ -1269,65 +1632,96 @@ function settimer(xml) {
     });
 }
 
-cookie_language = readCookie("language");
-cookie_template = readCookie("template");
-
-if (cookie_template) {
-    switchStyle(cookie_template);
-}
-
 $(document).ready(function buildpage() {
-    filesystemtable();
-    
-    $.ajax({
-        url: 'xml.php',
-        dataType: 'xml',
-        error: function error() {
-            $.jGrowl("Error loading XML document!", {
-                sticky: true
-            });
-        },
-        success: function buildblocks(xml) {
-            populateErrors(xml);
+    var i = 0, cookie_template = null, cookie_language = null, blocktmp = "";
             
-            refreshVitals(xml);
-            refreshHardware(xml);
-            refreshNetwork(xml);
-            refreshMemory(xml);
-            refreshFilesystems(xml);
-            refreshTemp(xml);
-            refreshVoltage(xml);
-            refreshFan(xml);
-            refreshPower(xml);
-            refreshUps(xml);
+    showCPUListExpanded = $("#showCPUListExpanded").val().toString()==="true";
+    showCPUInfoExpanded = $("#showCPUInfoExpanded").val().toString()==="true";
+    showNetworkInfosExpanded = $("#showNetworkInfosExpanded").val().toString()==="true";
+    showMemoryInfosExpanded = $("#showMemoryInfosExpanded").val().toString()==="true";
+    showCPULoadCompact = $("#showCPULoadCompact").val().toString()==="true";
+    switch ($("#showNetworkActiveSpeed").val().toString()) {
+        case "bps":  showNetworkActiveSpeed = 2;
+                      break;
+        case "true": showNetworkActiveSpeed = 1;
+                      break;
+        default:     showNetworkActiveSpeed = 0;
+    }
             
-            changeLanguage();
-            displayPage(xml);
-            settimer(xml);
-            
-            $('.stripeMe tr:nth-child(even)').addClass('even');
-            langcounter = 1;
+    blocktmp = $("#blocks").val().toString();
+    if (blocktmp.length >0 ){
+        if (blocktmp === "true") {
+            blocks[0] = "true";
+        } else {
+            blocks = blocktmp.split(',');
+            var j = 2;
+            for (i = 0; i < blocks.length; i++) {
+                if ($("#"+blocks[i]).length > 0) {
+                    $("#output").children().eq(j).before($("#"+blocks[i]));
+                    j++;
+                }
         }
-    });
     
-    $("#errors").nyroModal();
+        }
+    }
     
-    $("#lang").change(function changeLang() {
-        var language = "", i = 0;
-        language = $("#lang").val().toString();
-        createCookie('language', language, 365);
-        cookie_language = readCookie('language');
+    if ($("#language option").length < 2) {
+        current_language = $("#language").val().toString();
+/*
         changeLanguage();
-        for (i = 0; i < plugin_liste.length; i += 1) {
+        for (i = 0; i < plugin_liste.length; i++) {
+            changeLanguage(plugin_liste[i]);
+        }
+*/
+    } else {
+        cookie_language = readCookie("psi_language");
+        if (cookie_language !== null) {
+            current_language = cookie_language;
+            $("#language").val(current_language);
+        } else {
+            current_language = $("#language").val().toString();
+        }
+/*
+        changeLanguage();
+        for (i = 0; i < plugin_liste.length; i++) {
+            changeLanguage(plugin_liste[i]);
+        }
+*/
+        $('#language').show();
+        $('span[id=lang_045]').show();
+        $("#language").change(function changeLang() {
+            var i = 0;
+            current_language = $("#language").val().toString();
+            createCookie('psi_language', current_language, 365);
+        changeLanguage();
+            for (i = 0; i < plugin_liste.length; i++) {
             changeLanguage(plugin_liste[i]);
         }
         return false;
     });
-    
+    }
+    if ($("#template option").length < 2) {
+        switchStyle($("#template").val().toString());
+    } else {
+        cookie_template = readCookie("psi_template");
+        if (cookie_template !== null) {
+            $("#template").val(cookie_template);
+        }
+        switchStyle($("#template").val().toString());
+        $('#template').show();
+        $('span[id=lang_044]').show();
     $("#template").change(function changeTemplate() {
         switchStyle($("#template").val().toString());
+            createCookie('psi_template', $("#template").val().toString(), 365);
         return false;
     });
+    }
+
+    filesystemtable();
+
+    reload(true);
+
+    $("#errors").nyroModal();
 });
 
 jQuery.fn.dataTableExt.oSort['span-string-asc'] = function sortStringAsc(a, b) {
@@ -1368,11 +1762,13 @@ jQuery.fn.dataTableExt.oSort['span-number-desc'] = function sortNumberDesc(a, b)
 function buildBlock(plugin, translationid, reload) {
     var block = "", reloadpic = "";
     if (reload) {
-        reloadpic = "<img id=\"Reload_" + plugin + "Table\" src=\"./gfx/reload.png\" alt=\"reload\" title=\"reload\" style=\"vertical-align:middle;float:right;cursor:pointer;border:0px;\" />&nbsp;";
+        reloadpic = "<img id=\"Reload_" + plugin + "Table\" src=\"./gfx/reload.gif\" alt=\"reload\" title=\"reload\" style=\"vertical-align:middle;float:right;cursor:pointer;border:0px;width:16px\" />&nbsp;";
     }
-    block += "      <div id=\"Plugin_" + plugin + "\" class=\"plugin\" style=\"display:none;\">\n";
+    block += "<div id=\"panel_" + plugin + "\" style=\"display:none;\">\n";
+    block += "<div id=\"Plugin_" + plugin + "\" class=\"plugin\" style=\"display:none;\">\n";
     block += "<h2>" + reloadpic + genlang(translationid, false, plugin) + "</h2>\n";
-    block += "      </div>\n";
+    block += "</div>\n";
+    block += "</div>\n";
     return block;
 }
 
@@ -1381,7 +1777,7 @@ function buildBlock(plugin, translationid, reload) {
  * @param {String} plugin name of the plugin  that should be translated
  */
 function plugin_translate(plugin) {
-    plugin_liste.push(plugin);
+    plugin_liste.pushIfNotExist(plugin);
     changeLanguage(plugin);
 }
 
@@ -1407,6 +1803,16 @@ function datetime() {
     
     return days + "." + months + "." + years + " - " + hours + ":" + minutes;
 }
+
+Array.prototype.pushIfNotExist = function(val) {
+    if (typeof(val) == 'undefined' || val == '') {
+        return;
+    }
+    val = $.trim(val);
+    if ($.inArray(val, this) == -1) {
+        this.push(val);
+    }
+};
 
 /**
  * insert dynamically a js script file into the website

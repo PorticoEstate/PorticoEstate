@@ -163,7 +163,7 @@
 				}
 				$historylog->add('RM', $id, "Varemottak: {$received_amount} overført til agresso");
 				$now = time();
-				$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now}, order_received_amount = order_received_amount + {$received_amount} WHERE id = {$id}");
+				$GLOBALS['phpgw']->db->query("UPDATE {$table} SET order_received = {$now}, order_received_amount = {$received_amount} WHERE id = {$id}");
 			}
 		}
 	}
@@ -249,7 +249,7 @@
 		}
 	}
 
-	if (!empty($id) && !empty($acl_location) && isset($transfer_action) && $transfer_action == 'receive_order')
+	if (isset($id) && $id && isset($acl_location) && $acl_location && isset($transfer_action) && $transfer_action = 'receive_order')
 	{
 		$exporter_varemottak = new lag_agresso_varemottak($acl_location, $id);
 		$result = $exporter_varemottak->transfer($id, $received_amount);

@@ -2200,7 +2200,7 @@
 			'fk' => array(),
 			'ix' => array(),
 			'uc' => array()
-		),
+		),/*
 		'fm_entity_1_1' => array(
 			'fd' => array(
 				'id' => array('type' => 'auto', 'precision' => '4', 'nullable' => False),
@@ -2352,7 +2352,7 @@
 			'fk' => array(),
 			'ix' => array('location_code'),
 			'uc' => array()
-		),
+		),*/
 		'fm_custom' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),

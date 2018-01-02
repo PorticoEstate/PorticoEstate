@@ -39,9 +39,9 @@ function snmppinfo_buildTable(xml) {
     html += "  <table id=\"Plugin_SNMPPInfoTable\" class=\"tablemain\" style=\"width:100%;\">\n";
     html += "   <thead>\n";
     html += "    <tr>\n";
-    html += "     <th>" + genlang(3, false, "SNMPPInfo") + "</th>\n";
-    html += "     <th style=\"width:120px;\">" + genlang(4, false, "SNMPPInfo") + "</th>\n";
-    html += "     <th style=\"width:80px;\">" + genlang(5, false, "SNMPPInfo") + "</th>\n";
+    html += "     <th>" + genlang(2, false, "SNMPPInfo") + "</th>\n";
+    html += "     <th style=\"width:120px;\">" + genlang(3, false, "SNMPPInfo") + "</th>\n";
+    html += "     <th style=\"width:80px;\">" + genlang(4, false, "SNMPPInfo") + "</th>\n";
     html += "    </tr>\n";
     html += "   </thead>\n";
     html += "   <tbody class=\"tree\">\n";
@@ -65,18 +65,18 @@ function snmppinfo_buildTable(xml) {
             units = level+" / 100";
         } else if (level==-3) {
             percent = 100;
-            units = genlang(6, false, "SNMPPInfo")
+            units = genlang(5, false, "SNMPPInfo")
         } else {
             percent = 0;
-            units = genlang(7, false, "SNMPPInfo")
+            units = genlang(6, false, "SNMPPInfo")
         }
 
         if (device!=lastdev) {
-            html += "    <tr><td><strong>" + device + " (" + name + ") </strong></td></tr>\n";
+            html += "    <tr><td><span class=\"treespanbold\">" + device + " (" + name + ") </span></td></tr>\n";
             index = tree.push(0);
             lastdev = device;
         }
-        html += "    <tr><td>" + desc + "</td><td>" + createBar(percent) +"</td><td>" + units +"</td></tr>\n";
+        html += "    <tr><td><span class=\"treespan\">" + desc + "</span></td><td>" + createBar(percent) +"</td><td>" + units +"</td></tr>\n";
 
         tree.push(index);
         snmppinfo_show = true;
@@ -109,6 +109,7 @@ function snmppinfo_buildTable(xml) {
  * load the xml via ajax
  */
 function snmppinfo_request() {
+    $("#Reload_SNMPPInfoTable").attr("title", "reload");
     $.ajax({
         url: "xml.php?plugin=SNMPPInfo",
         dataType: "xml",
@@ -134,6 +135,6 @@ $(document).ready(function snmppinfo_buildpage() {
 
     $("#Reload_SNMPPInfoTable").click(function snmppinfo_reload(id) {
         snmppinfo_request();
-        $("#Reload_SNMPPInfoTable").attr("title",datetime());
+        $(this).attr("title", datetime());
     });
 });

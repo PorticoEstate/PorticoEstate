@@ -8,7 +8,7 @@
  * @package   PSI_Plugin_Quotas
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.quotas.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -17,14 +17,14 @@
  * display all quotas in a sortable table with the current values which are determined by
  * calling the "repquota" command line utility, another way is to provide
  * a file with the output of the repquota utility, so there is no need to run a execute by the
- * webserver, the format of the command is written down in the quota.config.php file, where also
+ * webserver, the format of the command is written down in the phpsysinfo.ini file, where also
  * the method of getting the information is configured
  *
  * @category  PHP
  * @package   PSI_Plugin_Quotas
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */

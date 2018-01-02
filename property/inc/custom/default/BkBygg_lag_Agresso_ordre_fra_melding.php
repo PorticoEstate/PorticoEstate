@@ -44,7 +44,7 @@
 		var $debug = true;
 		function __construct()
 		{
-			
+
 		}
 
 		public function transfer( $id )
@@ -150,21 +150,6 @@
 
 			$dim6 = 9;
 
-			//Override from order
-			$tax_code = $_ticket['tax_code'] ? $_ticket['tax_code'] : 0;
-			switch ($tax_code)
-			{
-				case '0':
-					$tax_code = '6A';
-					break;
-				case '75':
-					$tax_code = '60';
-					break;
-				default:
-					$tax_code = '6A';
-					break;
-			}
-
 			if ($_ticket['order_dim1'])
 			{
 				$sogeneric = CreateObject('property.sogeneric', 'order_dim1');
@@ -209,7 +194,7 @@
 				'vendor_name' => $vendor['name'],
 				'vendor_address' => mb_substr($vendor['address'], 0, 50),
 				'order_id' => $_ticket['order_id'],
-				'tax_code' => $tax_code,
+				'tax_code' => $_ticket['tax_code'],
 				'buyer' => $buyer,
 				'lines' => array(
 					array(
@@ -219,7 +204,7 @@
 					)
 				)
 			);
-	
+
 			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array(
 				'order_id' => $_ticket['order_id'],
 				'voucher_type' => $voucher_type

@@ -8,23 +8,23 @@
  * @package   PSI_Plugin_MDStatus
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   SVN: $Id: class.mdstatus.inc.php 661 2012-08-27 11:26:39Z namiltd $
  * @link      http://phpsysinfo.sourceforge.net
  */
  /**
- * mdstat Plugin, which displays a snapshot of the kernel's RAID/md state
+ * mdstatus Plugin, which displays a snapshot of the kernel's RAID/md state
  * a simple view which shows supported types and RAID-Devices which are determined by
  * parsing the "/proc/mdstat" file, another way is to provide
  * a file with the output of the /proc/mdstat file, so there is no need to run a execute by the
- * webserver, the format of the command is written down in the mdstat.config.php file, where also
+ * webserver, the format of the command is written down in the phpsysinfo.ini file, where also
  * the method of getting the information is configured
  *
  * @category  PHP
  * @package   PSI_Plugin_MDStatus
  * @author    Michael Cramer <BigMichi1@users.sourceforge.net>
  * @copyright 2009 phpSysInfo
- * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License
+ * @license   http://opensource.org/licenses/gpl-2.0.php GNU General Public License version 2, or (at your option) any later version
  * @version   Release: 3.0
  * @link      http://phpsysinfo.sourceforge.net
  */
@@ -78,7 +78,7 @@ class MDStatus extends PSI_Plugin
      */
     public function execute()
     {
-        if ( empty($this->_filecontent)) {
+        if (empty($this->_filecontent)) {
             return;
         }
         // get the supported types
@@ -93,7 +93,7 @@ class MDStatus extends PSI_Plugin
             }
         }
         // get disks
-        if (preg_match("/^read_ahead/", $this->_filecontent[2])) {
+        if (preg_match("/^read_ahead/", $this->_filecontent[1])) {
             $count = 2;
         } else {
             $count = 1;
@@ -106,6 +106,8 @@ class MDStatus extends PSI_Plugin
                 $details = preg_split('/ /', $parts[1]);
                 if (!strstr($details[0], 'inactive')) {
                     $this->_result['devices'][$dev]['level'] = $details[1];
+                } else {
+                    $this->_result['devices'][$dev]['level'] = "none";
                 }
                 $this->_result['devices'][$dev]['status'] = $details[0];
                 for ($i = 2, $cnt_details = count($details); $i < $cnt_details; $i++) {
@@ -117,7 +119,7 @@ class MDStatus extends PSI_Plugin
                             $replace = array("", "");
                             $this->_result['devices'][$dev]['partitions'][$partition[1]]['status'] = str_replace($search, $replace, trim($partition[5]));
                         } else {
-                            $this->_result['devices'][$dev]['partitions'][$partition[1]]['status'] = " ";
+                            $this->_result['devices'][$dev]['partitions'][$partition[1]]['status'] = "ok";
                         }
                     }
                 }
@@ -138,13 +140,65 @@ class MDStatus extends PSI_Plugin
                 } else {
                     $this->_result['devices'][$dev]['algorithm'] = -1;
                 }
-                if (preg_match('/(\[[0-9]?\/[0-9]\])/', $optionline, $res)) {
-                    $slashpos = strpos($res[0], '/');
-                    $this->_result['devices'][$dev]['registered'] = substr($res[0], 1, $slashpos - 1);
-                    $this->_result['devices'][$dev]['active'] = substr($res[0], $slashpos + 1, strlen($res[0]) - $slashpos - 2);
+                if (preg_match('/\[([0-9]+)\/([0-9]+)\]/', $optionline, $res)) {
+                    $this->_result['devices'][$dev]['registered'] = $res[1];
+                    $this->_result['devices'][$dev]['active'] = $res[2];
                 } else {
                     $this->_result['devices'][$dev]['registered'] = -1;
                     $this->_result['devices'][$dev]['active'] = -1;
+                }
+                if (isset($this->_result['devices'][$dev]['partitions'])) {
+                    asort($this->_result['devices'][$dev]['partitions']);
+                }
+                if (($this->_result['devices'][$dev]['registered']<24) && preg_match('/\[([_U]+)\]/', $optionline, $res) && (($reslen=strlen($res[1])) > 0)) {
+                    $notsparecount = 0;
+                    foreach ($this->_result['devices'][$dev]['partitions'] as $diskkey=>$disk) {
+                        if ($this->_result['devices'][$dev]['partitions'][$diskkey]['status']!=="S") {
+                            $notsparecount++;
+                        }
+                    }
+                    if ($notsparecount == $reslen) {
+                        $partnr = 0;
+                        foreach ($this->_result['devices'][$dev]['partitions'] as $diskkey=>$disk) {
+                            if ($this->_result['devices'][$dev]['partitions'][$diskkey]['status']!=="S") {
+                                if (($res[1][$partnr]=='_') && ($this->_result['devices'][$dev]['partitions'][$diskkey]['status']=="ok")) {
+                                    $this->_result['devices'][$dev]['partitions'][$diskkey]['status']="W";
+                                }
+                                $partnr++;
+                            }
+                        }
+                    } elseif ($reslen-$notsparecount == 1) {
+                        $partnr = 0;
+                        foreach ($this->_result['devices'][$dev]['partitions'] as $diskkey=>$disk) {
+                            if ($this->_result['devices'][$dev]['partitions'][$diskkey]['status']!=="S") {
+                                if ($res[1][$partnr]=='_') {
+                                    $this->_result['devices'][$dev]['partitions']["none"]['raid_index']=$this->_result['devices'][$dev]['partitions'][$diskkey]['raid_index']-1;
+                                    $this->_result['devices'][$dev]['partitions']["none"]['status']="E";
+                                }
+                                $partnr++;
+                            }
+                        }
+                        if ($res[1][$partnr]=='_') {
+                            $this->_result['devices'][$dev]['partitions']["none"]['raid_index']=$this->_result['devices'][$dev]['partitions'][$diskkey]['raid_index']+1;
+                            $this->_result['devices'][$dev]['partitions']["none"]['status']="E";
+                        }
+                        asort($this->_result['devices'][$dev]['partitions']);
+                        foreach ($this->_result['devices'][$dev]['partitions'] as $diskkey=>$disk) {
+                            if ($diskkey=="none") {
+                                $this->_result['devices'][$dev]['partitions'][$diskkey]['raid_index']="unknown";
+                            }
+                        }
+                    } else {
+                        foreach ($this->_result['devices'][$dev]['partitions'] as $diskkey=>$disk) {
+                            if ($this->_result['devices'][$dev]['partitions'][$diskkey]['status']=="ok") {
+                                $this->_result['devices'][$dev]['partitions'][$diskkey]['status']="W";
+                            }
+                        }
+                        for ($partnr=0; $partnr<$reslen-$notsparecount; $partnr++) {
+                                $this->_result['devices'][$dev]['partitions']["none".$partnr]['raid_index']="unknown";
+                                $this->_result['devices'][$dev]['partitions']["none".$partnr]['status']="E";
+                        }
+                    }
                 }
                 if (preg_match(('/([a-z]+)( *)=( *)([0-9\.]+)%/'), $this->_filecontent[$count + 1], $res) || (preg_match(('/([a-z]+)( *)=( *)([0-9\.]+)/'), $optionline, $res))) {
                     list($this->_result['devices'][$dev]['action']['name'], $this->_result['devices'][$dev]['action']['percent']) = preg_split("/=/", str_replace("%", "", $res[0]));
@@ -155,11 +209,6 @@ class MDStatus extends PSI_Plugin
                         $this->_result['devices'][$dev]['action']['finish_time'] = -1;
                         $this->_result['devices'][$dev]['action']['finish_unit'] = -1;
                     }
-                } else {
-                    $this->_result['devices'][$dev]['action']['name'] = -1;
-                    $this->_result['devices'][$dev]['action']['percent'] = -1;
-                    $this->_result['devices'][$dev]['action']['finish_time'] = -1;
-                    $this->_result['devices'][$dev]['action']['finish_unit'] = -1;
                 }
             } else {
                 $count++;
@@ -179,19 +228,31 @@ class MDStatus extends PSI_Plugin
     /**
      * generates the XML content for the plugin
      *
-     * @return SimpleXMLObject entire XML content for the plugin
+     * @return SimpleXMLElement entire XML content for the plugin
      */
     public function xml()
     {
-        if ( empty($this->_result)) {
+        if (empty($this->_result)) {
             return $this->xml->getSimpleXmlElement();
         }
-        $sup = $this->xml->addChild("Supported_Types");
-        foreach ($this->_result['supported_types'] as $type) {
-            $typ = $sup->addChild("Type");
-            $typ->addAttribute("Name", $type);
+        $hideRaids = array();
+        if (defined('PSI_PLUGIN_MDSTATUS_HIDE_RAID_DEVICES') && is_string(PSI_PLUGIN_MDSTATUS_HIDE_RAID_DEVICES)) {
+            if (preg_match(ARRAY_EXP, PSI_PLUGIN_MDSTATUS_HIDE_RAID_DEVICES)) {
+                $hideRaids = eval(PSI_PLUGIN_MDSTATUS_HIDE_RAID_DEVICES);
+            } else {
+                $hideRaids = array(PSI_PLUGIN_MDSTATUS_HIDE_RAID_DEVICES);
+            }
         }
-        foreach ($this->_result['devices'] as $key=>$device) {
+        $sup = $this->xml->addChild("Supported_Types");
+        if(isset($this->_result['supported_types']) && is_array($this->_result['supported_types']))
+        {
+		    foreach ($this->_result['supported_types'] as $type) {
+		        $typ = $sup->addChild("Type");
+		        $typ->addAttribute("Name", $type);
+		    }
+        }
+        if (isset($this->_result['devices'])) foreach ($this->_result['devices'] as $key=>$device) {
+            if (!in_array($key, $hideRaids, true)) {
             $dev = $this->xml->addChild("Raid");
             $dev->addAttribute("Device_Name", $key);
             $dev->addAttribute("Level", $device["level"]);
@@ -201,11 +262,13 @@ class MDStatus extends PSI_Plugin
             $dev->addAttribute("Algorithm", $device["algorithm"]);
             $dev->addAttribute("Disks_Registered", $device["registered"]);
             $dev->addAttribute("Disks_Active", $device["active"]);
+                if (isset($device['action'])) {
             $action = $dev->addChild("Action");
             $action->addAttribute("Percent", $device['action']['percent']);
             $action->addAttribute("Name", $device['action']['name']);
             $action->addAttribute("Time_To_Finish", $device['action']['finish_time']);
             $action->addAttribute("Time_Unit", $device['action']['finish_unit']);
+                }
             $disks = $dev->addChild("Disks");
             foreach ($device['partitions'] as $diskkey=>$disk) {
                 $disktemp = $disks->addChild("Disk");
@@ -213,6 +276,7 @@ class MDStatus extends PSI_Plugin
                 $disktemp->addAttribute("Status", $disk['status']);
                 $disktemp->addAttribute("Index", $disk['raid_index']);
             }
+        }
         }
         if ($this->_result['unused_devs'] !== - 1) {
             $unDev = $this->xml->addChild("Unused_Devices");

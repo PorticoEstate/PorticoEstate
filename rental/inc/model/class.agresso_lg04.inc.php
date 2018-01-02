@@ -10,6 +10,7 @@
 		protected $date_str;
 		protected $orders;
 		protected $prizebook;
+		protected $batch_id;
 
 		public function __construct( $billing_job )
 		{
@@ -85,6 +86,8 @@
 		 */
 		protected function run()
 		{
+			$this->batch_id = execMethod('property.socommon.increment_id', 'Ecobatchid');
+
 			$this->orders = array();
 			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
@@ -160,7 +163,7 @@
 					$data['article_code'] = $price_item->get_agresso_id();
 					$price_item_data[] = $data;
 				}
-				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party()->get_identifier(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id());
+				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id());
 				$invoice->set_serial_number($serial_number);
 				$serial_number++;
 			}
@@ -307,9 +310,10 @@
 		 * Builds one single order of the Agresso file.
 		 * 
 		 */
-		protected function get_order( $header, $party_id, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id )
+		protected function get_order( $header, $party, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id )
 		{
 
+			$party_id = $party->get_identifier();
 			//$order_id = $order_id + 39500000;
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$order = array();
@@ -317,6 +321,9 @@
 			$kem = 'bergen';
 			if($kem == 'bergen') //Bergen
 			{
+				$att_1_id = '';
+				$dim_value_1 = $account;
+				$dim_1 = $responsibility;
 				$batch_id = "BKBPE{$this->date_str}";
 				$client = 'BY'; // For Bergen Kommune
 				$confirm_date = $this->date_str;
@@ -325,10 +332,15 @@
 				$responsible2 ='BKBPE';
 				$terms_id = '';
 				$voucher_type = 'FU';
+				$apar_id = '';
 			}
 			else if($kem == 'nlsh')
 			{
-				$batch_id = "PE{$this->date_str}";// må avklares
+				$att_1_id = 'DR';
+				$dim_value_1 = ''; //endre til k.sted?
+				$dim_1 = $responsibility; //k.sted
+			//	$batch_id = "PE{$this->date_str}";// må avklares
+				$batch_id =  'PU' . sprintf("%010s",$this->batch_id);
 				$client = '14';
 				$confirm_date = '';
 				$pay_method = 'BG';
@@ -336,6 +348,7 @@
 				$responsible2 ='BKBPE';// må avklares
 				$terms_id = '14';
 				$voucher_type = 'FU'; // må avklares
+				$apar_id = $party->get_customer_id();//kundenr fra agresso
 			}
 
 			$order[] = // Header line
@@ -347,7 +360,7 @@
 				. sprintf("%08s", '') //  8		apar_id
 				. sprintf("%30s", '') //  9		apar_name
 				. sprintf("%50s", '') //	10-11	just white space..
-				. sprintf("%2s", '')  // 	12		att_1_id
+				. sprintf("%2s", $att_1_id)  // 	12		att_1_id
 				. sprintf("%2s", '')  // 	13		att_2_id
 				. sprintf("%2s", '')  // 	14		att_3_id
 				. sprintf("%2s", '')  // 	15		att_4_id
@@ -371,7 +384,7 @@
 				. sprintf("%8s", '')  // 	33		deliv_method
 				. sprintf("%8s", '')  // 	34		deliv_terms
 				. sprintf("%52s", '') //	35-41	just white space..
-				. sprintf("%-12.12s", $account)  // 	42		dim_value_1				DATA
+				. sprintf("%-12.12s", $dim_value_1)  // 	42		dim_value_1				DATA
 				. sprintf("%12s", '') // 	43		dim_value_2
 				. sprintf("%12s", '') // 	44		dim_value_3
 				. sprintf("%12s", '') // 	45		dim_value_4
@@ -441,7 +454,7 @@
 					. sprintf("%20s", '')   //	22-24	just white space..
 					. sprintf("%017s", '')   // 	25		cur_amount
 					. sprintf("%464s", '')   //	26-34	just white space..
-					. sprintf("%-8.8s", $responsibility)   // 	35		dim_1					DATA
+					. sprintf("%-8.8s", $dim_1)   // 	35		dim_1					DATA
 					. sprintf("%-8.8s", $service) // 	36		dim_2					DATA
 					. sprintf("%8s", '') // 	37		dim_3
 					. sprintf("%8s", '') // 	38		dim_4
@@ -598,6 +611,7 @@
 				'Ansvar' => $responsibility_id, //FIXME
 //				'Ansvar2'				 => 'BKBPE',//FIXME
 				'Party' => $party_id,
+				'customer id' => $customer_id,
 				'name' => $party_name,
 				'address' => $party_address,
 				'Leieboer' => $party_full_name,

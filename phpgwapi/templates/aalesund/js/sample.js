@@ -5,18 +5,36 @@
  */
 
 
-$('#adv-search-toggler').click(function () {
-    $('.advance-search').toggle("slide", {direction: "up"}, 800);
-    $("i", this).toggleClass("ion-chevron-down ion-chevron-up");
-    
-    if($("i", this).hasClass("ion-chevron-up")){
-        $('html, body').animate({
-            scrollTop: $(".advance-search").offset().top
-        }, 800);
+$(function toogleAdvSearch() {
 
-    } else if($("i", this).hasClass("ion-chevron-down")){
-        $('html, body').animate({scrollTop: '0px'}, 800);  
+    var check = 0;
+    $('#adv-search-toggler').click(function () {
+        $('.advance-search').toggle("slide", {direction: "up"}, 800);
+
+        if (check === 0) {
+            check = 1;
+            $('html, body').animate({scrollTop: $("#adv-search-toggler").offset().top}, 800);
+        } else {
+            check = 0;
+            $('html, body').animate({scrollTop: '0px'}, 800);
+        }
+    });
+});
+
+$(function checkView() {
+
+$(window).scroll(function() {
+    var top_of_element = $("#advance-search-container").offset().top;
+    var bottom_of_element = $("#advance-search-container").offset().top + $("#advance-search-container").outerHeight();
+    var bottom_of_screen = $(window).scrollTop() + window.innerHeight;
+    var top_of_screen = $(window).scrollTop();
+
+    if((bottom_of_screen > top_of_element) && (top_of_screen < bottom_of_element)){
+        $("#update-search-result").show();
+    }
+    else {
+        $("#update-search-result").hide();
     }
 });
 
-
+});

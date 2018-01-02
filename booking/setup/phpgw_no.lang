@@ -21,6 +21,8 @@ add boundary	booking	no	Legg til rammetid
 add comment	booking	no	Legg til kommentar
 add document	booking	no	Legg til dokument
 add new event	booking	no	Legg til arrangement
+event settings	booking	no	Innstillinger for arrangement
+application event settings	booking	no	interntildeling/tildeling e-post oppsett for søknad
 add permission	booking	no	Legg til rettighet
 edit permission	booking	no	Endre til rettighet
 admin 1	booking	no	Bookingansvarlig 1

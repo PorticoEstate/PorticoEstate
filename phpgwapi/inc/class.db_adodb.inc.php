@@ -244,7 +244,7 @@
 				return '';
 			}
 
-			if ( !$this->adodb || $this->adodb->IsConnected() )
+			if ( empty( $this->adodb ) || !$this->adodb->IsConnected() )
 			{
 				$this->connect();
 			}
@@ -288,7 +288,7 @@
 		*/
 		public function query($sql, $line = '', $file = '',$exec = false, $fetch_single = false)
 		{
-			if ( !$this->adodb || $this->adodb->IsConnected() )
+			if ( empty( $this->adodb ) || !$this->adodb->IsConnected() )
 			{
 				$this->connect();
 			}
@@ -343,7 +343,7 @@
 				$num_rows = $GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'];
 			}
 			
-			if ( !$this->adodb || $this->adodb->IsConnected() )
+			if ( empty( $this->adodb ) || !$this->adodb->IsConnected() )
 			{
 				$this->connect();
 			}
@@ -781,7 +781,7 @@
 			$this->adodb = newADOConnection($GLOBALS['phpgw_info']['server']['db_type']);
 			$this->adodb->NConnect($this->Host, $adminname, $adminpasswd);
 			
-			if ( !$this->adodb || $this->adodb->IsConnected() )
+			if ( empty( $this->adodb ) || !$this->adodb->IsConnected() )
 			{
 				echo 'Connection FAILED<br />';
 				return False;

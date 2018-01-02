@@ -7,10 +7,16 @@
     <a href="#" class="scrollup">
         <xsl:value-of select="php:function('lang', 'scroll to top')" />
     </a>
-    
-    <div class="container-fluid">
+    <div class="jumbotron text-center">
 
-        <section class="bg-light text-center">
+            <div class="container header-text">          
+                <a href="{site_url}"><p>AKTIV KOMMUNE</p>
+                    <h2>Ålesund</h2></a>
+            </div>
+    </div>
+    <div class="container-fluid main-container">
+
+        <section class="text-center">
             <div class="container-fluid">
                 <p class="lead">Søk etter anlegg eller ressurs som du ønsker å reservere</p>
                 <p>Bruk søkefeltene under, eller trykk avansert søk for filtrering</p>
@@ -29,8 +35,29 @@
       
              
         <div id="building_container" class="search-container main-search">
-            <div class="form-group">
-                <input id="field_building_name" name="building_name" class="form-control form-control-lg text-center" type="text">
+           <div class="form-group">
+               
+               
+               <div class="input-group">
+                
+                    <input id="field_searchterm"  class="form-control form-control-lg text-center" name="searchterm" type="text">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="searchterm"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="placeholder">
+                            <xsl:text> Søk i fritekst</xsl:text>
+                        </xsl:attribute>
+                    </input>
+                    <span class="input-group-btn">
+
+                        <button class="btn btn-default search-button" id="submit_searchterm" type="submit">
+                            <i class="icon ion-search text-primary"/>
+                        </button>
+                    </span>
+
+  
+                </div>
+            <!--     <input id="field_building_name" name="building_name" class="form-control form-control-lg text-center" type="text">
                     <xsl:attribute name="value">
                         <xsl:value-of select="building_name"/>
                     </xsl:attribute>
@@ -43,47 +70,22 @@
                     <xsl:attribute name="value">
                         <xsl:value-of select="building_id"/>
                     </xsl:attribute>
-                </input>
-                    
-            </div>
-        </div>
+                </input> -->
+      
+                         <p id="adv-search-toggler" class="adv-search-button text-right text-primary">Avansert søk</p>
+           
+            </div> 
+        </div> 
         
     </div> 
 
   
    
-    <div class="container text-center text-primary">  
-        <h5>Avansert søk</h5>
-        <div class="iconwrapper">
-        <button type="button" id="adv-search-toggler" class="btn btn-circle">
-            <i class="ion-chevron-down"/>
-        </button>
-        </div>
-    </div>                                 
+                                  
                 
           
-    <div class="container-fluid advance-search">
-        <div class="container">
-            <div class="search-container">
-                <div class="input-group">
-                
-                    <input id="field_searchterm"  class="form-control" name="searchterm" type="text">
-                        <xsl:attribute name="value">
-                            <xsl:value-of select="searchterm"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="placeholder">
-                            <xsl:text> Søk i fritekst</xsl:text>
-                        </xsl:attribute>
-                    </input>
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <i class="icon ion-search text-primary"/>
-                        </button>
-                    </span>
-
-  
-                </div>
-            </div>
+    <div id="advance-search-container" class="container-fluid advance-search bg-light">
+        <div class="container advance-search-padding">
             <div class="row">
                 <div class="col-lg-4">
                     <div class="pure-u-1 select-box">
@@ -184,19 +186,22 @@
                         </ul>
                     </div>
                 </div>  
-            </div>   
+            </div>  
+          
+            <button id="update-search-result" class="btn btn-primary">Oppdater resultat</button>
+         
         </div> 
-    </div>                      
-                
-                                                  
-    <!-- GAMMEL KODE  -->                                                               
-                                                                                     
-                                                                                    
+         
+        
+    </div>                                                                                             
+                                                                                 
     <div class="container-fluid result">                                                                                                         
                                                                                                                          
         <div class="container">                                                                                                                                             
             
-           <!--  <div id = "total_records_top"></div> -->
+            <div class="container" style="margin-top: 5px">
+            <div id = "total_records_top"></div> 
+        </div>  
             <div id="result"></div>
         </div>
     </div>

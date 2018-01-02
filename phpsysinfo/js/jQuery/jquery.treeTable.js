@@ -1,6 +1,6 @@
 /* 
 Copyright: Paul Hanlon
-
+version 2009-06-22+statefix+spanfix+altfix
 Released under the MIT/BSD licence which means you can do anything you want 
 with it, as long as you keep this copyright notice on the page 
 */
@@ -15,17 +15,17 @@ with it, as long as you keep this copyright notice on the page
 	  },
     buildText = function(parno, preStr){//Recursively build up the text for the images that make it work
       var mp=mapa[parno], ro=0, pre="", pref, img;
-      for (var y=0,yl=mp.length;y<yl;y++){
+      if (mp!==undefined) for (var y=0,yl=mp.length;y<yl;y++){
         ro = mp[y];
         if (mapa[ro]){//It's a parent as well. Build it's string and move on to it's children
           pre=(y==yl-1)? opts.blankImg: opts.vertLineImg;
           img=(y==yl-1)? opts.lastOpenImg: opts.openImg;
-          mapb[ro-1] = preStr + '<img src="'+img+'" class="parimg" id="'+tid+ro+'">';
-          pref = preStr + '<img src="'+pre+'" class="preimg">';
+          mapb[ro-1] = preStr + '<span class="treeimg"><img src="'+img+'" alt="" class="parimg" id="'+tid+ro+'"></span>';
+          pref = preStr + '<span class="treeimg"><img src="'+pre+'" alt="" class="preimg"></span>';
           arguments.callee(ro, pref);
         }else{//it's a child
           img = (y==yl-1)? opts.lastLeafImg: opts.leafImg;//It's the last child, It's child will have a blank field behind it
-          mapb[ro-1] = preStr + '<img src="'+img+'" class="ttimage" id="'+tid+ro+'">';
+          mapb[ro-1] = preStr + '<span class="treeimg"><img src="'+img+'" alt="" class="ttimage" id="'+tid+ro+'"></span>';
         }
       }
     },
@@ -73,6 +73,14 @@ with it, as long as you keep this copyright notice on the page
         for(i in o) r.push(o[i]);
           return r;
 	  };
+
+	var imgtmp = new Image(); //path normalize for ie6
+	imgtmp.src = opts.lastOpenImg;
+	opts.lastOpenImg = imgtmp.src;
+	
+	imgtmp.src = opts.lastShutImg;
+	opts.lastShutImg = imgtmp.src;
+	
     for (var x=0,xl=map.length; x<xl;x++){//From map of parents, get map of kids
       num = map[x];
       if (!mapa[num]){
@@ -84,14 +92,18 @@ with it, as long as you keep this copyright notice on the page
     jq("tbody tr", this).each(function(i){//Inject the images into the column to make it work
       jq(this).children("td").eq(opts.column).prepend(mapb[i]);
     });
-		collarr = cget(tid);
+    if(opts.state) collarr = cget(tid);
+    if (!collarr.length){
 		if(opts.collapse.constructor == Array) {
 			collarr=collarr.concat(opts.collapse);
+            if ((collarr.length) && (opts.state)){
+                 cset(tid,collarr);
+            }
+        }
 		}
 		if (collarr.length){
-			cset(tid,collarr);
 	    for (var y=0,yl=collarr.length;y<yl;y++){
-	      collapseKids(collarr[y],($("#"+collarr[y]+ " .parimg").attr("src")==opts.lastOpenImg));
+            collapseKids(collarr[y], $("#"+tid+collarr[y]+ ".parimg").attr("src")==opts.lastOpenImg);
 	    }
 		}
     stripe();
