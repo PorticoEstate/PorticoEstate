@@ -1,0 +1,86 @@
+
+/* CSS for newlayout */
+
+
+#wrapper{
+background-color: #fff;
+width: 100%;
+textalign: left;
+margin: 0 auto;
+padding: 0 0px 40px;
+}
+
+#header{
+overflow: hidden;
+line-height: 1;
+width: 100%;
+background-image: none !important;
+height: 40px !important;
+}
+
+.clearBoth {
+	clear: both;
+}
+.messages {
+	font-size: 15px;
+}
+.messages table {
+	display: inline;
+	position: absolute;
+}
+
+body {
+    text-align: left;
+}
+
+body{
+color: #575757;
+width:100%;
+height:100%;
+/*background: #fff;*/
+/*url('../images/newlayout/bodyBg.gif') repeat-x;text-align: left;width:100%;*/
+}
+
+.required
+{
+	border: 1px solid red
+}
+
+.pure-menu-disabled, .pure-menu-heading, .pure-menu-link {
+    padding: 0 0;
+}
+.bigmenubutton
+{
+	padding: 32px 5px;
+	border: 1px solid #E7E1DA;
+}
+
+.pure-button
+{
+	padding: 32px 10px;
+}
+
+body {
+	margin-left:5px;
+	margin-right:5px;
+	padding:0;
+}
+
+fieldset {
+margin-right: 20px;
+}
+
+textarea
+{
+    height: 8em;
+}
+
+#app_header
+{
+	font-weight: bold;
+	font-size: 120%;
+}
+label
+{
+	font-weight: bold;
+}

@@ -1,0 +1,206 @@
+<?php
+
+	class import_conversion
+	{
+
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+		protected $debug = true;
+
+		public function __construct()
+		{
+			set_time_limit(10000); //Set the time limit for this request
+			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->solocation = CreateObject('property.solocation');
+		}
+
+		public function add( $data )
+		{
+			$location_code = $this->decode($data[0]);
+			if (!$location_code)
+			{
+				$this->errors[] = "Mangler objekt, hopper over: {$data[1]}";
+				return false;
+			}
+
+			$location_arr = explode('-', $location_code);
+			$_test_floor = "{$location_arr[0]}-{$location_arr[1]}-{$location_arr[2]}";
+			$_test_zone = "{$location_arr[0]}-{$location_arr[1]}-{$location_arr[2]}-{$location_arr[3]}";
+
+			$ok = true;
+			if (!$this->solocation->check_location($_test_floor))
+			{
+				$_ok = $this->add_location(array('location_code' => $_test_floor, 'name' => "etasje {{$location_arr[2]}}",
+					'area' => 0));
+				$ok = $_ok ? $_ok : false;
+			}
+
+			if (!$this->solocation->check_location($_test_zone))
+			{
+				$_ok = $this->add_location(array('location_code' => $_test_zone, 'name' => "sone {{$location_arr[3]}}",
+					'area' => 0));
+				$ok = $_ok && $ok ? $_ok : false;
+			}
+
+			if (!$this->solocation->check_location($location_code))
+			{
+				$_ok = $this->add_location(array('location_code' => $location_code, 'name' => $this->decode($data[6]),
+					'area' => $this->decode($data[7])));
+				$ok = $_ok && $ok ? $_ok : false;
+			}
+			else
+			{
+				$this->warnings[] = "location_code finnes fra før: {$location_code}, oppdaterer";
+				$_ok = $this->update_location(array('location_code' => $location_code, 'name' => $this->decode($data[6]),
+					'area' => $this->decode($data[7])));
+				$ok = $_ok && $ok ? $_ok : false;
+			}
+
+			return $ok;
+		}
+
+		protected function add_location( $data )
+		{
+			$debug = $this->debug;
+			$error = false;
+			$ok = true;
+			$value_set = array();
+
+			$location_arr = explode('-', $data['location_code']);
+			$type_id = count($location_arr);
+
+			$formatting = array
+				(
+				'%04s',
+				'%02s',
+				'%02s',
+				'%02s',
+				'%03s'
+			);
+
+			$value_set['location_code'] = $data['location_code'];
+			foreach ($location_arr as $_key => $_loc)
+			{
+				$i = $_key + 1;
+				$value_set["loc{$i}"] = sprintf($formatting[$_key], $location_arr[$_key]);
+			}
+
+			$value_set["loc{$type_id}_name"] = $this->db->db_addslashes($data['name']);
+			$value_set['category'] = 1;
+			$value_set['user_id'] = $this->account;
+			$value_set['entry_date'] = time();
+			$value_set['area_net'] = $data['area'] ? str_replace(',', '.', $data['area']) : 0;
+			$value_set['merknader'] = 'Opprettet fra tegning: ' . date('d/m/Y');
+
+			$cols = implode(',', array_keys($value_set));
+			$values = $this->db->validate_insert(array_values($value_set));
+
+			$table = "fm_location{$type_id}";
+
+			$sql = "INSERT INTO {$table} ({$cols}) VALUES ({$values})";
+
+			$sql2 = "INSERT INTO fm_locations (level, location_code) VALUES ({$type_id}, '{$data['location_code']}')";
+
+			if ($debug)
+			{
+				_debug_array($sql);
+			}
+			else
+			{
+				$_ok = $this->db->query($sql, __LINE__, __FILE__);
+				$ok = $_ok ? $_ok : false;
+				$_ok = $this->db->query($sql2, __LINE__, __FILE__);
+				$ok = $_ok ? $_ok : false;
+			}
+
+			if (!$error && $ok)
+			{
+				$this->messages[] = "Successfully imported location: {$data['location_code']}";
+			}
+			else
+			{
+				$this->errors[] = "Error importing location: {$data['location_code']}";
+			}
+			return $ok;
+		}
+
+		protected function update_location( $data )
+		{
+			$debug = $this->debug;
+			$ok = false;
+			$value_set = array();
+
+			$location_arr = explode('-', $data['location_code']);
+			$type_id = count($location_arr);
+			$table = "fm_location{$type_id}";
+
+			$value_set["loc{$type_id}_name"] = $this->db->db_addslashes($data['name']);
+			$value_set['area_net'] = $data['area'] ? str_replace(',', '.', $data['area']) : 0;
+
+			$this->db->query("SELECT merknader FROM {$table} WHERE location_code = '{$data['location_code']}'", __LINE__, __FILE__);
+			$this->db->next_record();
+
+			$merknader = $this->db->f('merknader', true);
+
+			$value_set['merknader'] = '';
+			if ($merknader)
+			{
+				$value_set['merknader'] = "{$merknader}\n";
+			}
+			$value_set['merknader'] .= "Oppdatert fra tegning: " . date('d/m/Y');
+
+			$value_set = $this->db->validate_update($value_set);
+			$sql = "UPDATE {$table} SET {$value_set} WHERE location_code = '{$data['location_code']}'";
+
+			if ($debug)
+			{
+				_debug_array($sql);
+				$ok = true;
+			}
+			else
+			{
+				$ok = $this->db->query($sql, __LINE__, __FILE__);
+			}
+
+			if ($ok)
+			{
+				$this->messages[] = "Successfully updated location: {$data['location_code']}";
+			}
+			else
+			{
+				$this->errors[] = "Error update location: {$data['location_code']}";
+			}
+			return $ok;
+		}
+
+		/**
+		 * Convert from the locale encoding to UTF-8 encoding and escape single quotes
+		 * 
+		 * @param string $value The value to convert
+		 * @return string
+		 */
+		protected function decode( $value )
+		{
+			$converted = $value;// mb_convert_encoding($value, 'UTF-8');
+			if ($this->is_null(trim($converted)))
+			{
+				return null;
+			}
+			return stripslashes($converted);
+		}
+
+		/**
+		 * Test a value for null according to several formats that can exist in the export.
+		 * Returns true if the value is null according to these rules, false otherwise.
+		 * 
+		 * @param string $value The value to test
+		 * @return bool
+		 */
+		protected function is_null( $value )
+		{
+			return ((trim($value) == "") || ($data == "<NULL>") || ($data == "''"));
+		}
+	}

@@ -1,0 +1,48 @@
+div.bimObject {
+	margin:10px;
+	font-size:14px;
+}
+
+div.bimObject h1, div.bimObject h2 {
+	clear:both;
+}
+div.bimObject h1 {
+	font-size:1.5em;
+}
+div.bimObject h2 {
+	font-size:1.3em;
+}
+div.bimObject dl {
+	width:500px;
+}
+div.bimObject dl dt {
+	clear:both;
+	width:33%;
+	float:left;
+	text-align:right;
+}
+div.bimObject dl dd {
+	width:66%;
+	float:left;
+	margin:0 0 0.5em 0.25em;
+}
+
+div.showModels {
+	width:100%;
+	/*padding:20px;*/
+}
+div.showModels table {
+	width:100%;
+}
+div.showModels #modelsLoader  {
+	 text-align:center;
+    margin-top:0px;
+    margin-bottom:0px;
+    padding:0px;
+
+}
+div.showModels .guid {
+	color:blue;
+	text-decoration:underline;
+}
+

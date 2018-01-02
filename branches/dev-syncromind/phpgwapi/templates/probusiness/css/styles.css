@@ -1,0 +1,667 @@
+/*
+	phpGroupWare probusiness Template Style Sheet
+	(c) Copyright 2003,2004 Free Software Foundation Inc
+	Originally written by Daniel Briegert
+	Currently Maintained by Daniel Briegert
+ */
+
+/* Tags */
+a.th,a.th_text
+{
+	font-weight: bold;
+}
+.small_text
+{
+	font-size: 80%;
+}
+
+.header_text
+{
+	font-size: 110%;
+	font-weight: bold;
+}
+
+.th_text,.app_header,.th
+{
+	font-weight: bold;
+}
+
+
+.navbar,.th,.app_header
+{
+	background-color: #808080;
+}
+
+a, a:visited, a:link 
+{
+	color: #000570; 
+	text-decoration: none;
+}
+
+a:active, a:hover 
+{
+	color: #000ace;
+	text-decoration: underline;
+}
+
+html, body
+{
+	background-color: #ece9d8;
+	margin:0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt; 
+	color:#303030;
+}
+
+img											/* for all image */
+{
+	border: 0px;
+}
+
+input, select, textarea 					/* for IE & netscape */
+{
+	color: #000000; 
+	background-color: #eeeeee;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 9pt;
+}
+
+input[type="text"], input[type="submit"], input[type="button"], input[type="reset"] /* work only with mozilla & netscape */
+{
+	-moz-border-radius: 5px;
+	border: 2px solid #808080; 
+	border-radius: 5px;
+}
+
+input.must, textarea.must
+{
+	border: 2px solid #dd5959;
+}
+
+td.must
+{
+	font-style: italic;
+	color: #630909;
+}
+
+td.holiday
+{
+	color: red;
+}
+
+textarea									/* for IE & netscape */
+{
+	-moz-border-radius: 5px;
+	border: 2px solid #808080; 
+	border-radius: 5px;
+}
+
+input:hover, input:focus, select:hover, textarea:hover, textarea:focus	/* work only with mozilla & netscape */
+{
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.row_on, .row_on input, .row_on textarea
+{
+	background-color: #eeeeee;
+}
+
+.row_off, .row_off input, .row_off textarea
+{
+	background-color: #dfdfdf;
+}
+
+table								/* only font style for ALL tables */
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+
+table.padding td					/* table with padding - basic table alternative */
+{
+	padding-left:7px;
+	padding-right:7px;
+}
+
+ /* 
+ * basic table for a basic module structure
+ */
+ 
+ table.basic { width: 95% }		/* standard table */
+ table.basic thead				/* table head style */
+ {
+	font-weight: bold;
+	font-size: 10pt;
+	color: #212020;
+	background-color: #cccccc;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	text-align:center;
+}
+ table.basic_noCollapse				/* table with no collapse */
+{
+ 	width:95%;
+	border-spacing:0; 
+	border-collapse: collapse;
+}
+table.basic_with_background-color		/* table border color */
+ {
+	width: 95%;
+	background-color:#ffffff;
+}
+
+.cellcolor TD { background-color: #ECE9D8; padding:6px; margin: 6px; } /* to make table cell background-color invisible */
+
+/* defaulttable style */
+ table.defaulttable 
+ { 
+	background-color:#ECE9D8; 
+	padding:0px; 
+	margin:2px; 
+	border:0px solid; 
+ }
+ 
+ .basicListHeader 
+ { 
+	border-bottom-color:#FFFFFF; 
+	border-bottom-width:3px; 
+	border-bottom-style:solid; 
+	text-align: center;
+ }
+
+ table.defaulttable thead.basicListHeader td 
+ { 
+ 	background-color: #ece9d8; 
+ 	border-bottom-color:#FFFFFF; 
+ 	border-bottom-width:3px; 
+ 	border-bottom-style:solid; 
+ 	text-align: center;
+ }
+
+ table.defaulttable td.interaction 
+ { 
+ 	text-align: center;
+ }
+
+/* Used by tabs */
+th.activetab
+{
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	background-color: #FFFFFF;
+	border-color: #808080;
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+	border-style: solid;
+	border-width: 1px 1px 0px 1px;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap; 
+}
+
+th.inactivetab
+{
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	background-color:#CCCCCC;
+	border: 1px solid #808080;
+	border-radius-topleft: 10px;
+	border-radius-topright: 10px;
+	color:#006699;
+	height: 20px;
+	padding: 0px 5px 0px 5px;
+	white-space: nowrap;
+}
+
+th.tablast
+{
+	border-width: 0px 0px 1px 0px;
+	border-style: solid;
+	border-color: #000000;
+	width: 100%;
+}
+
+/* nextmatch values */
+ .bg_color1
+{
+	background-color: #eeeeee;
+	color: #000000;
+}
+
+ .bg_color1#nowrap { white-space:nowrap }
+
+ .bg_color2
+{
+	background-color: #dfdfdf;
+	color: #000000;
+}
+
+ .bg_color2#nowrap { white-space:nowrap }
+
+ .bg_view { background-color:#ffffff; padding:3px }
+ .bg_view#nowrap { white-space:nowrap }
+
+
+/* global header */
+ h1
+ {
+  font-weight:bold;
+  font-size:10pt;
+  text-align:left;
+  /* Netscape inherit bug */
+  font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+  color: #212020;
+  background-color: #cccccc;
+ }
+ 
+ .head_background  /* old style */
+ { 
+	background-color: #cccccc;
+ }
+ 
+ .header 
+ { 
+	font-weight: bold;
+	font-size: 10pt;
+	color: #212020;
+	background-color: #cccccc;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+ }
+ 
+
+/* classes */
+
+ .noCollapse
+{
+	border-spacing:0; 
+	border-collapse: collapse;
+}
+
+ .showLikeTextarea
+  { 
+    background-color: #FFFFFF; 
+    padding: 3px; 
+    border: 2px solid #808080;
+    height: 240px;
+    text-align: left;
+    vertical-align: top;
+  } 
+
+.calender_font 
+{ 
+	font-size: 10px;
+	font-family: "Verdana", "Arial", "Helvetica", "sans-serif";
+}
+.calender 
+{ 
+	width: 50%; 
+	border:1px solid #cccccc; 
+	margin:0px; 
+	padding:0px; 
+	border-spacing: 0px; 
+}
+
+.projects_box
+{
+	background-color:transparent;
+	/* position:relative; */
+	top: 15px; 
+	left: 200px;
+	z-index: 2;
+	display: none;
+
+	position: absolute;
+	color:black;
+	background-color:#DBD6CB;
+	text-decoration:none;
+	width:450px;
+	border-top:2px solid #837c6b;
+	border-right:2px solid #e4d9c0;
+	border-bottom:2px solid #e4d9c0;
+	border-left:2px solid #837c6b;
+}
+.projects_box a 
+{
+	text-decoration:none;
+	display:block;
+	padding:5px;
+}
+
+.projects_box visited
+{
+	text-decoration:none;
+	background-color:transparent;
+	display:none;
+}
+
+.projects_box a:hover 
+{
+	position: absolute;
+	display:none;
+	color:#f6e4c1;
+	background-color:#DBD6CB;
+	text-decoration:none;
+	width:450px;
+	border-top:2px solid #837c6b;
+	border-right:2px solid #e4d9c0;
+	border-bottom:2px solid #e4d9c0;
+	border-left:2px solid #837c6b;
+}
+
+.projects_box a:active 
+{
+	color:#f6e4c1;
+}
+
+.projects_box a .info 
+{
+	display:none;
+}
+
+.projects_box a:hover .info 
+{
+	color:black; 
+	background:#DBD6CB;
+	font:8pt courier,sans-serif;
+	display:none;
+	padding:5px;
+	text-align:justify;
+}
+
+TD.calendar_day { height: 75px; width: 14%; vertical-align: top }
+
+.calendarMonth_header { height: 75px; vertical-align: top }
+
+/*
+ * set global text-align
+ */
+.right {text-align: right }
+.center { text-align: center }
+.left { text-align: left }
+.top { vertical-align: top }
+.bottom { vertical-align: bottom }
+.middle { vertical-align: middle }
+.no_wrap { white-space:nowrap }
+ 
+/*------------------------------------------------------*/
+
+
+
+
+
+
+
+/*------------------------------------------------------*/
+/* begin old css style */
+/*------------------------------------------------------*/
+ 
+/*
+ *set default table
+ */
+
+ table.defaulttable #3 { width: 3% }
+ table.defaulttable #5 { width: 5% }
+ table.defaulttable #50 { width: 50%; margin-left: auto; margin-right: auto; border: 0px; }
+ table.defaulttable #100 { width: 100%; margin-left: auto; margin-right: auto }
+
+
+ table.defaulttable #head { border-bottom-color:#FFFFFF; border-bottom-width:3px; border-bottom-style:solid; text-align: center}
+ table.defaulttable td { padding-left: 7px; padding-right: 7px; background-color: #FFFFFF; }
+
+ 
+ table.defaulttable #transparent { background-color:#ece9d8; margin:5px }
+ table.defaulttable #head_background { background-color: #cccccc }
+ table.defaulttable #bg_color1 { background-color:#eeeeee }
+ table.defaulttable #bg_color2 { background-color:#dfdfdf }
+ table.defaulttable #addressbookIndex { width: 95%; border: 0px; border-spacing: 1px; padding: 2px }
+ DIV.workaround1 td { background-color:#eeeeee }
+ 
+ 
+/* 
+ * API
+ */
+TABLE.workframe { width: 100%; border-collapse: collapse; margin: 0px; border: 1px solid #DACACA}
+TD.APINavBar { padding: 0px; width: 70px; vertical-align: top; height: 100% }
+TABLE.APINavBar { margin: 0px; border-collapse: collapse; text-align: center; border: 1px solid #FFFFFF }
+TABLE.APINavBar A { color: #DACACA }
+TABLE.APINavBar A:hover 
+{ 
+	color: #FFFFFF;
+	text-decoration: none;
+}
+TABLE.APINavBar TD#logo { border-bottom: 2px solid #FFFFFF }
+TABLE.APINavBar TD.modBg {background-color: #808080; padding-top: 2px; padding-bottom: 9px}
+TABLE.APINavBar TD.modBg IMG           { border: 1px solid #808080 }
+TABLE.APINavBar TD.modBg IMG:hover  { border: 1px solid #DACACA }
+TABLE.APINavBar TD.modBg A.selectedNavLink IMG { border: 1px solid #DACACA }
+TABLE.APINavBar TD.modBg A.selectedNavLink SPAN {color: #FFFFFF }
+TABLE.APINavBar IFRAME { height: 650px; width: 250px; }
+
+P.current_app_header { font-variant: small-caps; font-weight: bold }
+
+TABLE.footer { width: 100%; font-size: 12px }
+TABLE.footer TD#user_info { text-align: right }
+TABLE.footer TD#powered_by { text-align: center }
+
+
+/*
+ * begin addressbook tab style 
+ */
+ 
+ .tablink { color:#000000 }
+ input.button_style, input.button_style 
+ {
+	color: #555555;
+	margin-left: 1px;
+	margin-right: 1px;
+
+	background-color: #dddddd;
+	border:1px #888888 solid;
+        border-bottom-width: 0px;
+	padding: 1px;
+ }
+
+input.button_style_sel, input.button_style_sel 
+ {
+	color: #555555;
+	margin-left: 1px;
+	margin-right: 1px;
+
+	/*background-color: #e5e5e5;*/
+	border:1px #888888 solid;
+        border-bottom-width: 0px;
+	padding: 1px;
+ }
+
+input:hover.button_style, input:hover.button_style 
+ {
+	background-color: #eeeeee;
+	color: #36c36c;
+ }
+
+input:active.button_style, input:active.button_style 
+ {
+	background-color: #eeeeee;
+	color: #9ac9ac;
+ }
+ /* 
+  *end addressbook tab style 
+  */
+ 
+ /*
+  * javascript tabs [tts]
+  */
+  
+TABLE.tabletab {  border: 0px solid #FFFFFF;  border-collapse: collapse; margin: 0px; font-size: 14px; font-family: Arial, Helvetica, sans-serif;}
+TABLE.tabletab TH { border: 0px; height: 19px; padding: 0px }
+TABLE.tabletab TH.activetab TABLE { border-collapse: collapse; margin: 0px; }
+TABLE.tabletab TH.activetab TABLE TD { background-image: url(../images/tabs-bg1.png); background-repeat: repeat-x; padding: 0px;  }
+TABLE.tabletab TH.activetab TABLE TD#starttab { background-image: url(../images/tabs-start1.png); width: 3px; }
+TABLE.tabletab TH.activetab TABLE TD#tweentab_l {background-image: url(../images/tabs_sep_ac_l.png); width: 4px; }
+TABLE.tabletab TH.activetab TABLE TD#tweentab_r {background-image: url(../images/tabs_sep_ac_r.png); width: 4px; }
+
+TABLE.tabletab TH.inactivetab TABLE { border-collapse: collapse; margin: 0px; }
+TABLE.tabletab TH.inactivetab TABLE TD { background-image: url(../images/tabs-bg0.png); background-repeat: repeat-x; padding: 0px; }
+TABLE.tabletab TH.inactivetab TABLE TD#starttab { background-image: url(../images/tabs-start0.png); width: 3px; }
+TABLE.tabletab TH.inactivetab TABLE TD#tweentab_l {background-image: url(../images/tabs_sep_inac_l.png); width: 4px; }
+TABLE.tabletab TH.inactivetab TABLE TD#tweentab_r {background-image: url(../images/tabs_sep_inac_r.png); width: 4px; }
+
+div.activetab
+ {
+  color:#000000;
+  display:inline;
+ }
+
+div.inactivetab
+ {
+  color:#000063;
+  display:none;
+ }
+  
+  /*
+   * Sidebox menu style
+   */
+ 
+ .horbar	{
+	color: #212020;
+	background-color: #ECE9D8;
+	border: 1px solid #FFFFFF;
+}
+
+.horbaritem	{
+	float: left;
+	white-space: nowrap;
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.horbaritem a	{
+	display: block;
+	text-decoration: none;
+}
+
+.horbaritem a:link	{
+	color: #000000;
+}
+
+.horbaritem a:visited	{
+	color: #000000;
+}
+
+.horbaritem a:hover	{
+	color: #ffffff;
+	background-color: #808080;
+}
+
+.horbaritem a:active	{
+	color: #ff0000;
+}
+
+.verbar	{
+	color: black;
+	background-color: #dcdad5;
+	border: 2px outset #cecac1;
+}
+
+.submenu	{
+	position: absolute;
+	left: 0;
+	top: 0;
+	visibility: hidden;
+}
+
+.subframe	{
+	position: relative;
+	display: block;
+	background-color: #dcdad5;
+	border: 2px solid #cecac1;
+}
+
+.item	{
+	position: relative;
+	text-align: left;
+	white-space: nowrap;
+	font-family: luxi sans, verdana, geneva, arial, helvetica, sans-serif;
+	font-size: 14px;
+}
+
+.item a	{
+	position: relative;
+	display: block;
+	text-decoration: none;
+}
+
+.item a:link	{
+	color: #000000;
+}
+
+.item a:visited	{
+	color: #000000;
+}
+
+.item a:hover	{
+	color: #ffffff;
+	background-color: #808080;
+}
+
+.item a:active	{
+	color: #ff0000;
+}
+
+.item .fwdarr	{
+	position: absolute;
+	top: 5px;
+/*	right: 4px; */
+	right: 7px;
+}
+
+TR.passed
+{
+	background-color: #d5d7d7;
+}
+
+TR.notpassed
+{
+	background-color: #bd6767;
+}
+
+ol.source
+{
+	background-color: #ccc;
+	border: 1px solid #ccc;
+	height: 300px;
+	list-style-type: decimal;
+	overflow: auto;
+	padding-left: 4em;
+}
+
+ol.source li
+{
+	background-color: #fff;
+	border-bottom: #eee;
+	display: list-item;
+	font-family: monospace;
+	list-style-type: decimal;
+	white-space: pre;
+}
+
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}
+
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+}
+

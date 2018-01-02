@@ -1,0 +1,539 @@
+about %1	common	es	Acerca de %1
+access	common	es	Acceso
+access not permitted	common	es	Acceso no permitido
+account has been created	common	es	La cuenta ha sido creada
+account has been deleted	common	es	La cuenta ha sido borrada
+account has been updated	common	es	La cuenta ha sido actualizada
+acl	common	es	ACL
+action	common	es	Acción
+active	common	es	Activo
+add	common	es	Agregar
+add %1 category for	common	es	Agregar %1 categoría para
+add category	common	es	Agregar categoría
+add sub	common	es	Agregar sub
+addressbook	common	es	Libreta de direcciones
+admin	common	es	Admin
+administration	common	es	Administración
+afghanistan	common	es	AFGHANISTAN
+albania	common	es	ALBANIA
+algeria	common	es	ALGERIA
+all	common	es	Todo
+american samoa	common	es	AMERICAN SAMOA
+andorra	common	es	ANDORRA
+angola	common	es	ANGOLA
+anguilla	common	es	ANGUILLA
+antarctica	common	es	ANTARCTICA
+antigua and barbuda	common	es	ANTIGUA AND BARBUDA
+apply	common	es	Aplicar
+april	common	es	Abril
+are you sure you want to delete this entry ?	common	es	¿Está seguro que desea eliminar esta entrada?
+argentina	common	es	ARGENTINA
+armenia	common	es	ARMENIA
+aruba	common	es	ARUBA
+august	common	es	Agosto
+australia	common	es	AUSTRALIA
+austria	common	es	AUSTRIA
+author	common	es	Autor
+autosave default category	common	es	Autograbar Predeterminada Categoría
+azerbaijan	common	es	AZERBAIJAN
+back	common	es	Atrás
+bad login or password	common	es	Nombre de usuario o contraseña equivocado
+bahamas	common	es	BAHAMAS
+bahrain	common	es	BAHRAIN
+bangladesh	common	es	BANGLADESH
+barbados	common	es	BARBADOS
+belarus	common	es	BELARUS
+belgium	common	es	BELGIUM
+belize	common	es	BELIZE
+benin	common	es	BENIN
+bermuda	common	es	BERMUDA
+bhutan	common	es	BHUTAN
+blocked, too many attempts	common	es	Demasiados intentos; cuenta bloqueada
+bolivia	common	es	BOLIVIA
+bosnia and herzegovina	common	es	BOSNIA AND HERZEGOVINA
+botswana	common	es	BOTSWANA
+bouvet island	common	es	BOUVET ISLAND
+brazil	common	es	BRAZIL
+british indian ocean territory	common	es	BRITISH INDIAN OCEAN TERRITORY
+brunei darussalam	common	es	BRUNEI DARUSSALAM
+bulgaria	common	es	BULGARIA
+burkina faso	common	es	BURKINA FASO
+burundi	common	es	BURUNDI
+cambodia	common	es	CAMBODIA
+cameroon	common	es	CAMEROON
+canada	common	es	CANADA
+cancel	common	es	Cancelar
+cape verde	common	es	CAPE VERDE
+categories	common	es	Categorías
+categories for	common	es	categorías para
+category	common	es	Categoria
+category %1 has been added !	common	es	Se ha añadido la categoría %1
+category %1 has been updated !	common	es	Se ha actualizado la categoría %1
+cayman islands	common	es	CAYMAN ISLANDS
+central african republic	common	es	CENTRAL AFRICAN REPUBLIC
+chad	common	es	CHAD
+change	common	es	Cambiar
+charset	common	es	utf-8
+chile	common	es	CHILE
+china	common	es	CHINA
+choose the category	common	es	Escoja la categoría
+choose the parent category	common	es	Escoja la categoría padre
+christmas island	common	es	CHRISTMAS ISLAND
+clear	common	es	Limpiar
+clear form	common	es	Vaciar formulario
+close	common	es	Cerrar
+cocos (keeling) islands	common	es	COCOS (KEELING) ISLANDS
+colombia	common	es	COLOMBIA
+comoros	common	es	COMOROS
+congo	common	es	CONGO
+congo, the democratic republic of the	common	es	CONGO, THE DEMOCRATIC REPUBLIC OF THE
+cook islands	common	es	COOK ISLANDS
+copy	common	es	Copiar
+costa rica	common	es	COSTA RICA
+cote d ivoire	common	es	COTE D IVOIRE
+create	common	es	Crear
+created by	common	es	Creado por
+croatia	common	es	CROATIA
+cuba	common	es	CUBA
+currency	common	es	Moneda
+current	common	es	Current
+current users	common	es	Usuarios actuales
+cyprus	common	es	CYPRUS
+czech republic	common	es	CZECH REPUBLIC
+date	common	es	Fecha
+date due	common	es	Fecha límite
+december	common	es	Diciembre
+default category	common	es	Categoría por defecto
+delete	common	es	Borrar
+denmark	common	es	DENMARK
+description	common	es	Descripción
+detail	common	es	Detalle
+details	common	es	Detalles
+disabled	common	es	Deshabilitado
+display monday first	common	es	Mostrar primero el lunes
+display sunday first	common	es	Mostrar primero el domingo
+djibouti	common	es	DJIBOUTI
+do you also want to delete all subcategories ?	common	es	¿Desea también eliminar todas las subcategorías?
+domain	common	es	Dominio
+domain name for mail-address, eg. "%1"	common	es	Nombre de dominio para la dirección de correo, por ej. "%1"
+domestic	common	es	Doméstico
+dominica	common	es	DOMINICA
+dominican republic	common	es	DOMINICAN REPUBLIC
+done	common	es	Hecho
+drag to move	common	es	Arrastrar para mover
+e-mail	common	es	Correo electrónico
+east timor	common	es	EAST TIMOR
+ecuador	common	es	ECUADOR
+edit	common	es	Editar
+edit %1 category for	common	es	Edit %1 category for
+edit categories	common	es	Editar categorías
+edit category	common	es	Editar categoría
+egypt	common	es	EGYPT
+el salvador	common	es	EL SALVADOR
+email	common	es	Correo electrónico
+email-address of the user, eg. "%1"	common	es	Dirección de correo del usuario, por ej. "%1"
+enabled	common	es	Habilitado
+end date	common	es	Fecha de finalización
+end time	common	es	Tiempo de finalización
+entry has been deleted sucessfully	common	es	Entrada eliminada correctamente
+entry updated sucessfully	common	es	Entrada actualizada correctamente
+equatorial guinea	common	es	EQUATORIAL GUINEA
+eritrea	common	es	ERITREA
+error	common	es	Error
+error creating %1 %2 directory	common	es	Error al crear el directorio %1 %2
+error deleting %1 %2 directory	common	es	Error al borrar el directorio %1 %2
+error renaming %1 %2 directory	common	es	Error al renombrar el directorio %1 %2
+estonia	common	es	ESTONIA
+ethiopia	common	es	ETHIOPIA
+falkland islands (malvinas)	common	es	FALKLAND ISLANDS (MALVINAS)
+faroe islands	common	es	FAROE ISLANDS
+fax number	common	es	Número de fax
+february	common	es	Febrero
+fields	common	es	Campos
+fiji	common	es	FIJI
+files	common	es	Archivos
+filter	common	es	Filtro
+finland	common	es	FINLAND
+first name	common	es	Nombre
+first name of the user, eg. "%1"	common	es	nombre del usuario, por ej. "%1"
+first page	common	es	Página inicial
+firstname	common	es	Nombre
+fixme!	common	es	¡ARRÉGLAME!
+force selectbox	common	es	Forzar SelectBox
+france	common	es	FRANCE
+french guiana	common	es	FRENCH GUIANA
+french polynesia	common	es	FRENCH POLYNESIA
+french southern territories	common	es	FRENCH SOUTHERN TERRITORIES
+friday	common	es	Viernes
+ftp	common	es	FTP
+fullname	common	es	Nombre completo
+gabon	common	es	GABON
+gambia	common	es	GAMBIA
+general menu	common	es	Menú general
+georgia	common	es	GEORGIA
+germany	common	es	GERMANY
+ghana	common	es	GHANA
+gibraltar	common	es	GIBRALTAR
+global	common	es	Global
+global public	common	es	Públic global
+go today	common	es	Ir hoy
+grant access	common	es	Permitir acceso
+greece	common	es	GREECE
+greenland	common	es	GREENLAND
+grenada	common	es	GRENADA
+group	common	es	Grupo
+group access	common	es	Acceso al grupo
+group has been added	common	es	Grupo añadido
+group has been deleted	common	es	Grupo borrado
+group has been updated	common	es	Grupo actualizado
+group name	common	es	nombre del grupo
+group public	common	es	Público del grupo
+groups	common	es	Grupos
+groups with permission for %1	common	es	Grupos con permisos para %1
+groups without permission for %1	common	es	Grupos sin permisos para %1
+guadeloupe	common	es	GUADELOUPE
+guam	common	es	GUAM
+guatemala	common	es	GUATEMALA
+guinea	common	es	GUINEA
+guinea-bissau	common	es	GUINEA-BISSAU
+guyana	common	es	GUYANA
+haiti	common	es	HAITI
+heard island and mcdonald islands	common	es	HEARD ISLAND AND MCDONALD ISLANDS
+help	common	es	Ayuda
+high	common	es	Alto
+highest	common	es	El más alto
+holy see (vatican city state)	common	es	HOLY SEE (VATICAN CITY STATE)
+home	common	es	Inicio
+honduras	common	es	HONDURAS
+hong kong	common	es	HONG KONG
+hungary	common	es	HUNGARY
+iceland	common	es	ICELAND
+india	common	es	INDIA
+indonesia	common	es	INDONESIA
+international	common	es	International
+invalid ip address	common	es	Dirección IP Inválida
+invalid password	common	es	Contraseña incorrecta
+iran, islamic republic of	common	es	IRAN, ISLAMIC REPUBLIC OF
+iraq	common	es	IRAQ
+ireland	common	es	IRELAND
+israel	common	es	ISRAEL
+it has been more then %1 days since you changed your password	common	es	Han pasado más de %1 días desde que cambió su contraseña
+it is recommended that you run setup to upgrade your tables to the current version	common	es	Se recomienda que ejecute el programa de instalaci´no para actualizar sus tablas a la versión actual.
+italy	common	es	ITALY
+jamaica	common	es	JAMAICA
+january	common	es	Enero
+japan	common	es	JAPAN
+jordan	common	es	JORDAN
+july	common	es	Julio
+june	common	es	Junio
+kazakstan	common	es	KAZAKSTAN
+kenya	common	es	KENYA
+keywords	common	es	Palabras clave
+kiribati	common	es	KIRIBATI
+korea, democratic peoples republic of	common	es	KOREA, DEMOCRATIC PEOPLES REPUBLIC OF
+korea, republic of	common	es	KOREA, REPUBLIC OF
+kuwait	common	es	KUWAIT
+kyrgyzstan	common	es	KYRGYZSTAN
+language	common	es	Idioma
+lao peoples democratic republic	common	es	LAO PEOPLES DEMOCRATIC REPUBLIC
+last name	common	es	Apellido
+last name of the user, eg. "%1"	common	es	apellido del usuario, por ej. "%1"
+last page	common	es	Última página
+lastname	common	es	Apellido
+latvia	common	es	LATVIA
+lebanon	common	es	LEBANON
+lesotho	common	es	LESOTHO
+liberia	common	es	LIBERIA
+libyan arab jamahiriya	common	es	LIBYAN ARAB JAMAHIRIYA
+license	about	es	Licencia
+liechtenstein	common	es	LIECHTENSTEIN
+list	common	es	Lista
+lithuania	common	es	LITHUANIA
+local	common	es	Local
+login	common	es	Nombre de usuario
+loginid	common	es	ID de usuario
+logout	common	es	Cerrar sesión
+low	common	es	Bajo
+lowest	common	es	El más bajo
+luxembourg	common	es	LUXEMBOURG
+macau	common	es	MACAU
+macedonia, the former yugoslav republic of	common	es	MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF
+madagascar	common	es	MADAGASCAR
+mail domain, eg. "%1"	common	es	dominio del correo, por ej. "%1"
+main category	common	es	Categoría principal
+main screen	common	es	Pantalla principal
+maintainer	about	es	Mantenedor
+malawi	common	es	MALAWI
+malaysia	common	es	MALAYSIA
+maldives	common	es	MALDIVES
+mali	common	es	MALI
+malta	common	es	MALTA
+manual	common	es	Manual
+march	common	es	Marzo
+marshall islands	common	es	MARSHALL ISLANDS
+martinique	common	es	MARTINIQUE
+mauritania	common	es	MAURITANIA
+mauritius	common	es	MAURITIUS
+may	common	es	May
+mayotte	common	es	MAYOTTE
+medium	common	es	Medio
+menu	common	es	Menú
+message	common	es	Mensaje
+mexico	common	es	MEXICO
+micronesia, federated states of	common	es	MICRONESIA, FEDERATED STATES OF
+moldova, republic of	common	es	MOLDOVA, REPUBLIC OF
+monaco	common	es	MONACO
+monday	common	es	Monday
+mongolia	common	es	MONGOLIA
+montserrat	common	es	MONTSERRAT
+morocco	common	es	MOROCCO
+mozambique	common	es	MOZAMBIQUE
+myanmar	common	es	MYANMAR
+name	common	es	Nombre
+name of the user, eg. "%1"	common	es	nombre del usuario, por ej. "%1"
+namibia	common	es	NAMIBIA
+nauru	common	es	NAURU
+nepal	common	es	NEPAL
+netherlands	common	es	NETHERLANDS
+netherlands antilles	common	es	NETHERLANDS ANTILLES
+never	common	es	Nunca
+new caledonia	common	es	NEW CALEDONIA
+new entry added sucessfully	common	es	Entrada nueva añadida correctamente
+new main category	common	es	Categoría principal nueva
+new value	common	es	Nuevo valor
+new zealand	common	es	NEW ZEALAND
+next	common	es	Siguiente
+next month (hold for menu)	common	es	Mes siguiente (mantener pulsado para menú)
+next page	common	es	Next page
+next year (hold for menu)	common	es	Año próximo (mantener pulsado para menú)
+nicaragua	common	es	NICARAGUA
+niger	common	es	NIGER
+nigeria	common	es	NIGERIA
+niue	common	es	NIUE
+no	common	es	No
+no entries found, try again ...	common	es	no se han encontrado entradas; vuelva a intentarlo...
+no history for this record	common	es	No hay historia para este registro
+no subject	common	es	Sin sujeto
+none	common	es	Ninguno
+norfolk island	common	es	NORFOLK ISLAND
+normal	common	es	Normal
+northern mariana islands	common	es	NORTHERN MARIANA ISLANDS
+norway	common	es	NORWAY
+not assigned	common	es	Sin asignar
+note	common	es	Nota
+notes	common	es	Notas
+notify window	common	es	Ventana de notificación
+november	common	es	Noviembre
+october	common	es	Octubre
+ok	common	es	OK
+old value	common	es	Valor antiguo
+oman	common	es	OMAN
+on *nix systems please type: %1	common	es	En sistemas *nix escriba: %1
+only private	common	es	Sólo privado
+only yours	common	es	Sólo el suyo
+open notify window	common	es	Abrir la ventana de notificación
+open popup window	common	es	Abrir nueva ventana del navegador
+original	common	es	Original
+other	common	es	Otro
+overview	common	es	Vista general
+owner	common	es	Propietario
+pakistan	common	es	PAKISTAN
+palau	common	es	PALAU
+palestinian territory, occupied	common	es	PALESTINIAN TERRITORY, OCCUPIED
+panama	common	es	PANAMA
+papua new guinea	common	es	PAPUA NEW GUINEA
+paraguay	common	es	PARAGUAY
+parcel	common	es	Parcel
+parent category	common	es	Categoría padre
+password	common	es	Contraseña
+password could not be changed	common	es	La contraseña no ha podido ser cambiada
+password has been updated	common	es	Contraseña actualizada
+pattern for search in addressbook	common	es	Patrón para búsqueda en la libreta de direcciones
+pattern for search in calendar	common	es	Patrón para la búsqueda en el calendario
+pattern for search in projects	common	es	Patrón para la búsqueda en los proyectos
+permissions to the files/users directory	common	es	permisos para el directorio de archivos/usuarios
+personal	common	es	Personal
+peru	common	es	PERU
+philippines	common	es	PHILIPPINES
+phone number	common	es	número de teléfono
+pitcairn	common	es	PITCAIRN
+please %1 by hand	common	es	Por favor, %1 a mano
+please enter a name	common	es	Por favor, introduzca un nombre
+please run setup to become current	common	es	Ejecute el programa de configuración para ser el actual
+please select	common	es	Por favor, seleccione
+please set your global preferences	common	es	Por favor, configure sus preferencias globales
+please set your preferences for this application	common	es	Por favor, configure sus preferencias para esta aplicación
+please wait...	common	es	Espere, por favor...
+poland	common	es	POLAND
+portugal	common	es	PORTUGAL
+postal	common	es	Postal
+powered by phpgroupware version %1	common	es	Motor proporcionado por <a href="http://www.phpgroupware.org">phpGroupWare</a>, versión %1
+preferences	common	es	Preferencias
+prev. month (hold for menu)	common	es	Mes anterior (mantener pulsado para menú)
+prev. year (hold for menu)	common	es	Año anterior (mantener pulsado para menú)
+previous page	common	es	Página anterior
+print	common	es	Imprimir
+priority	common	es	Prioridad
+private	common	es	Privado
+project	common	es	Proyecto
+public	common	es	público
+puerto rico	common	es	PUERTO RICO
+qatar	common	es	QATAR
+read	common	es	Leer
+read this list of methods.	common	es	Leer esta lista de métodos.
+register_globals = %1	common	en	register_globals = %1
+register_globals_off	common	es	Esta aplicación ha sido probada para funcionar con register_globals = off en su php.ini.  Esta aplicación debería funcionar con la mayoría de servidores PHP 4.1.0+.  Si percibe algún problema, por favor, infórmenos de él en nuestro seguidor de fallos en <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
+register_globals_on	common	es	El funcionamiento de esta aplicación no ha sido comprobado para una configuración con register_globals = off en su php.ini.  Esta aplicación requiere que register_globals = on esté configurado en su php.ini.  Para más información acerca del problema potencial de usar register_globals = on, visite <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  Si observa cualquier tipo de problema, rogamos nos informe de él en nuestro seguidor de fallos en <a href="https://savannah.gnu.org/bugs/?group=phpgroupware" target="_blank">savannah.gnu.org</a>.
+reject	common	es	Rechazar
+rename	common	es	Cambiar nombre
+returns a full list of accounts on the system.  warning: this is return can be quite large	common	es	Devuelve una lista completa de las cuentas en el sistema.  Peligro: esta lista puede ser bastante grande
+returns an array of todo items	common	es	Devuelve un array de tareas pendientes
+returns struct of users application access	common	es	Devuelve un struct del acceso de usuarios a aplicaciones
+reunion	common	es	REUNION
+romania	common	es	ROMANIA
+russian federation	common	es	RUSSIAN FEDERATION
+rwanda	common	es	RWANDA
+saint helena	common	es	SAINT HELENA
+saint kitts and nevis	common	es	SAINT KITTS AND NEVIS
+saint lucia	common	es	SAINT LUCIA
+saint pierre and miquelon	common	es	SAINT PIERRE AND MIQUELON
+saint vincent and the grenadines	common	es	SAINT VINCENT AND THE GRENADINES
+samoa	common	es	SAMOA
+san marino	common	es	SAN MARINO
+sao tome and principe	common	es	SAO TOME AND PRINCIPE
+saturday	common	es	Sábado
+saudi arabia	common	es	SAUDI ARABIA
+save	common	es	Grabar
+search	common	es	Buscar
+section	common	es	Sección
+select	common	es	Seleccionar
+select category	common	es	Seleccionar categoría
+select date	common	es	Seleccionar fecha
+select group	common	es	Seleccionar grupo
+select one	common	es	Seleccionar uno
+select user	common	es	Seleccionar usuario
+send	common	es	Enviar
+senegal	common	es	SENEGAL
+september	common	es	Septiembre
+server %1 has been added	common	es	Se ha añadido el servidor %1
+server name	common	es	Nombre del servidor
+session has been killed	common	es	La sesión ha sido matada
+setup	common	es	Configuración
+seychelles	common	es	SEYCHELLES
+show all	common	es	mostrar todo
+showing %1	common	es	mostrando %1
+showing %1 - %2 of %3	common	es	mostrando %1 - %2 de %3
+sierra leone	common	es	SIERRA LEONE
+singapore	common	es	SINGAPORE
+slovakia	common	es	SLOVAKIA
+slovenia	common	es	SLOVENIA
+solomon islands	common	es	SOLOMON ISLANDS
+somalia	common	es	SOMALIA
+sorry, your login has expired	login	es	Su sesión ha expirado
+south africa	common	es	SOUTH AFRICA
+south georgia and the south sandwich islands	common	es	SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS
+spain	common	es	SPAIN
+sri lanka	common	es	SRI LANKA
+start date	common	es	Fecha de inicio
+start time	common	es	Hora de inicio
+status	common	es	Estado
+subject	common	es	Sujeto
+submit	common	es	Enviar
+substitutions and their meanings:	common	es	Substitutions and their meanings:
+sudan	common	es	SUDAN
+sunday	common	es	Domingo
+suriname	common	es	SURINAME
+svalbard and jan mayen	common	es	SVALBARD AND JAN MAYEN
+swaziland	common	es	SWAZILAND
+sweden	common	es	SWEDEN
+switzerland	common	es	SWITZERLAND
+syrian arab republic	common	es	SYRIAN ARAB REPUBLIC
+taiwan, province of china	common	es	TAIWAN, PROVINCE OF CHINA
+tajikistan	common	es	TAJIKISTAN
+tanzania, united republic of	common	es	TANZANIA, UNITED REPUBLIC OF
+thailand	common	es	THAILAND
+the api is current	common	es	La API se encuentra actualmente
+the api requires an upgrade	common	es	La API requiere una actualización
+the following applications require upgrades	common	es	Las siguientes aplicaciones requieren ser actualizadas
+the mail server returned	common	es	El servidor de correo ha devuelto
+this application is current	common	es	Esta aplicación se encuentra actualmente
+this application requires an upgrade	common	es	Esta aplicación requiere una actualización
+this name has been used already	common	es	Este nombre de usuario ya está en uso
+thursday	common	es	Miércoles
+time	common	es	Hora
+time zone	common	es	Zona horaria
+time zone offset	common	es	Offset de la zona horaria
+title	common	es	Título
+to correct this error for the future you will need to properly set the	common	es	Para corregir este error en el futuro, necesita configurar correctamente la
+to go back to the msg list, click <a href= %1 >here</a>	common	es	Para ir atrás en la lista de mensajes, haga clic <a href="%1">aquí</a>
+today	common	es	Hoy
+todays date, eg. "%1"	common	es	fecha de hoy, por ej. "%1"
+toggle first day of week	common	es	Cambiar primer día de la semana
+togo	common	es	TOGO
+tokelau	common	es	TOKELAU
+tonga	common	es	TONGA
+total	common	es	Total
+trinidad and tobago	common	es	TRINIDAD AND TOBAGO
+tuesday	common	es	Martes
+tunisia	common	es	TUNISIA
+turkey	common	es	TURKEY
+turkmenistan	common	es	TURKMENISTAN
+turks and caicos islands	common	es	TURKS AND CAICOS ISLANDS
+tuvalu	common	es	TUVALU
+uganda	common	es	UGANDA
+ukraine	common	es	UKRAINE
+united arab emirates	common	es	UNITED ARAB EMIRATES
+united kingdom	common	es	UNITED KINGDOM
+united states	common	es	UNITED STATES
+united states minor outlying islands	common	es	UNITED STATES MINOR OUTLYING ISLANDS
+unknown	common	es	Desconocido
+update	common	es	Actualización
+url	common	es	URL
+uruguay	common	es	URUGUAY
+use button to search for	common	es	utilice el botón para buscar
+use button to search for address	common	es	utilice el botón para buscar una dirección
+use button to search for calendarevent	common	es	utilice el botón para buscar un evento en el calendario
+use button to search for project	common	es	utilice el botón para buscar un proyecto
+user	common	es	Usuario
+user accounts	common	es	Cuentas de usuario
+user groups	common	es	grupos de usuario
+username	common	es	Nombre de usuario
+users	common	es	usuarios
+users choice	common	es	Los usuarios eligen
+uzbekistan	common	es	UZBEKISTAN
+vanuatu	common	es	VANUATU
+venezuela	common	es	VENEZUELA
+version	common	es	Versión
+viet nam	common	es	VIET NAM
+view	common	es	Ver
+virgin islands, british	common	es	VIRGIN ISLANDS, BRITISH
+virgin islands, u.s.	common	es	VIRGIN ISLANDS, U.S.
+wallis and futuna	common	es	WALLIS AND FUTUNA
+wednesday	common	es	Miércoles
+welcome	common	es	Bienvenido
+western sahara	common	es	WESTERN SAHARA
+which groups	common	es	Qué grupos
+wk	common	es	wk
+written by:	common	es	Escrito por:
+year	common	es	Año
+yemen	common	es	YEMEN
+yes	common	es	Sí
+you are required to change your password during your first login	common	es	Se requiere que cambie su contraseña la primera vez que inicie sesión
+you are running a newer version of phpgroupware than your database is setup for	common	es	Está ejecutando una versión más moderna de phpGroupWare que la que hay configurada en su base de datos.
+you have been successfully logged out	login	es	Se ha cerrado su sesión correctamente
+you have not entered a title	common	es	No ha introducido ningún título
+you have not entered a valid date	common	es	No ha introducido una fecha válida
+you have not entered a valid time of day	common	es	No ha introducido una hora del día válida
+you have not entered participants	common	es	No ha introducido participantes
+you have selected an invalid date	common	es	Ha seleccionado una fecha no válida
+you have selected an invalid main category	common	es	Ha seleccionado una categoría principal no válida
+you have successfully logged out	common	es	Sesión cerrada correctamente
+your message could <b>not</b> be sent!<br />	common	es	¡Su mensaje <b>no</b> ha podido ser enviado!<br />
+your message has been sent	common	es	Su mensaje ha sido enviado
+your search returned %1 matchs	common	es	su búsqueda ha encontrado %1 coincidencias
+your search returned 1 match	common	es	su búsqueda ha encontrado 1 coincidencia
+your session could not be verified.	login	es	Su sesión no ha podido ser verificada.
+your settings have been updated	common	es	Sus preferencias han sido actualizadas
+yugoslavia	common	es	YUGOSLAVIA
+zambia	common	es	ZAMBIA
+zimbabwe	common	es	ZIMBABWE

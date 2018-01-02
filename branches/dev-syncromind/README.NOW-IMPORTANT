@@ -1,0 +1,26 @@
+phpGroupWare makes all reasonable attempts to deliver secure code in our
+releases.  At the same time, as a system administrator you should take
+some steps to protect your server.
+
+We have prepared some documentation that you should read before going
+any further.
+
+I know you just want to read the "short cut" section in the INSTALL doc,
+and start playing.  You can do that, but you do so at you own risk.
+
+Documents to read (in order):
+* doc/SECURITY
+* doc/phpgw-apache.conf
+* doc/php-configuration.txt
+* doc/install/index.html
+
+If you have any questions regarding the documents please email 
+phpgroupware-users at gnu.org, if you wish to help write documents
+phpgroupware-docteam at gnu.org
+
+Please enjoy using phpGroupWare, but be vigilant, as we are.
+
+Cheers
+
+phpGroupWare Development Crew
+$Id: README.NOW-IMPORTANT 15575 2004-12-30 10:46:22Z skwashd $

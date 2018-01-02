@@ -1,0 +1,370 @@
+(account deletion in sql only)	setup	tr	 (hesap slime sadece SQLde)
+00 (disable)	setup	tr 00(kullanım dışı/ önerilen)
+13 (ntp)	setup	tr	(ntp)
+80 (http)	setup	tr	80 (http)
+actions	setup	tr	olylar
+add a domain	setup	tr	bir domain(alan)	ekle
+add auto-created users to this group ('default' will be attempted if this is empty.)	setup	tr	bu guruba otamatik oluşturulmuş kullanıcılar ekle	(bu boş olduğunda default çalıştırılacak) 
+additional settings	setup	tr	ek ayarlar
+admin first name	setup	tr	admin isimi 
+admin last name	setup	tr	admin soyisimi 
+admin password	setup	tr	admin şifresi 
+admin password to header manager	setup	tr	 ana yöneticiye admin şifresi 
+admin username	setup	tr	admin kullanıcı ismi 
+admins	setup	tr adminler	
+after retrieving the file, put it into place as the header.inc.php.  then, click "continue".	setup	tr	dosyayı düzelt ve header.inc.php olarak yerine koy. Sonra continueyu tıkla 
+all core tables and the admin and preferences applications	setup	tr	bütün merkezi masalar, admin ve uygulamalar üstünlükleri(tercihleri)
+all users	setup	tr bütün kullanıcılar
+analysis	setup	tr analiz 
+app details	setup	tr	App detayları
+app install/remove/upgrade	setup	tr	App kurmak/silmek /yükseltmek
+app process	setup	tr	App işlemi
+application	setup	tr	Uygulama
+application data	setup	tr	Uygulama verisi 
+application list	setup	tr	Uygulama  listesi
+application management	setup tr	Uygulama yönetimi
+application name and status	setup	
+application name and status information	setup tr	Uygulama adı ve durum bilgisi	
+application title	setup tr	uygulama başlığı
+are you sure you want to delete your existing tables and data?	setup	tr	var olan tabloları ve datayı silmek istediğinden emin misin?
+are you sure?	setup	tr	EMİN MİSİN?
+at your request, this script is going to attempt to create the database and assign the db user rights to it	setup	tr isteğinize gore ,bu yazı sizin için database oluşturmayı deneyecek ve bunun için db kulanıcı haklarını verir
+at your request, this script is going to attempt to install the core tables and the admin and preferences applications for you setup	tr	isteğinize gore ,bu yazı sizin için merkezi masaları,admini ve üstünlükler uygulamalarını kurmayı deneyecek
+at your request, this script is going to attempt to upgrade your old applications to the current versions	setup	tr	isteğinize gore ,bu yazı eski uygulamalarınızı güncel versiyonlara yükseltmeyi deneyecek
+at your request, this script is going to attempt to upgrade your old tables to the new format	setup	tr	isteğinize gore ,bu yazı eski masalarını(tablolarını) yeni formata yükseltmeyi deneyecek
+at your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format	setup	tr	isteğinize gore ,bu yazı var olan masaları (tabloları) silmenin kötü olayını alacak ve onları yeni formatta yeniden oluşturacak 
+at your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data	setup	tr	isteğinize gore,bu yazı bütün applerinin kaldırılmasının kötü olaylarını alacak, ki bu var olan tablolarını(masalarını)ve verilerini siler
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	setup	tr	FTP için kullanım dışı 'application/octet-stream'in yerine doğru mimetype (mimik tipini) kullanmayı dene
+authentication / accounts	setup	tr	Gerçekleştirme / hesaplar
+auto create account records for authenticated users	setup	tr	gerçekleştirilmiş kullanıcılar için otomatik hesap kayıtları oluşturma
+auto-created user accounts expire	setup tr	otomatik oluşturulmuş kullanıcı hesabı süresinin dolması
+automatically detect domain from hostname setup	 tr	sunucu adından otomatik olarak domain tespiti
+available version	setup	tr	mevcut veraiyon
+backupwarn	setup	tr	but we <u>highly recommend backing up</u> your tables in case the script causes damage to your data.<br><strong>These automated scripts can easily destroy your data.</strong><br><em>Please backup before going any further!</em>
+because an application it depends upon was upgraded	setup	tr	çünkü yükseltilmiş bir uygulamayla bağlı
+because it depends upon	setup	tr	çünkü ile bağlı
+because it is not a user application, or access is controlled via acl	setup	tr	çünlü o bir kullanıcı uygulaması değil, ya da erişim acl aracılığıyla kontrol edilmemiş
+because it requires manual table installation, <br>or the table definition was incorrect	 setup tr	çünkü elle yapılan tablo kurulumu gerktirmektedir, <br> ya da o tablo tanımı doğru değildi 
+because it was manually disabled	setup tr	çünkü elle yapılması engellenmiş
+because of a failed upgrade or install	setup tr	başarısız yükseltme ya da kurulumdan
+because of a failed upgrade, or the database is newer than the installed version of this app	setup	tr	başarısız yükseltmeden, ya databasein hiçbir zaman bu appın versiyonundan kurulmamış olması
+because the enable flag for this app is set to 0, or is undefined	setup	tr	çünkü kullanılabilen bayrak bu app için 0 olarak ayarlandı
+bottom	setup	tr	alt
+cancel	setup	tr	iptal 
+cannot create the header.inc.php due to file permission restrictions.<br> instead you can %1 the file.	setup	tr	dosya izni sınırlandırıldığından header.inc.php oluşturulamıyor.<br> onun yerine %1ini oluşturabilirsin
+charset	setup	tr	ISO-8859-1
+check ip address of all sessions	setup	tr	bütün oturumların ip adreslerini check et click <a href="index.php">here</a> to return to setup.	setup	tr	setupa(ayarlara) dönmek için <a href="index.php">here</a> tıkla.
+click here	setup	tr	buraya tıkla
+completed	setup	tr	tamamlandı
+configuration 	setup	tr	biçim
+configuration completed	setup	tr	biçim tamamlandı
+configuration password	setup	tr	biçim şifresi
+configure now	 setup	tr	şimdi biçimlendir continue	setup	tr	devam et 
+could not open header.inc.php for writing! Setup tr	header.inc.php yazmak için açılamıyor!
+country selection	setup	tr	Ülke seçimi
+create	setup	tr	oluştur
+create database	setup	tr	Database oluştur
+create demo accounts	setup	tr	gösteri hesapları oluştur
+create one now	setup	tr	şimdi bir tane oluştur
+create your header.inc.php	setup	tr	kendi header.inc.php ni oluştur
+created	setup	tr	oluşturuldu
+creating tables	setup	tr	oluşturma tabloları(masaları)
+current version	setup	tr	güncel versiyon
+currently installed languages: %1 <br>	setup tr	şu anda kurulmuş diller: %1 <br>
+datetime port.<br>if using port 13, please set firewall rules appropriately before submitting this page.<br>(port: 13 / host: 129.6.15.28)	setup	tr	tarih zaman portu. <br> eğer port 13 kullanılırsa bu sayfayı öne sürmeden once firewall kurallarını uygunşekilde ayarlayınız.<br>(Port: 13 / Host: 129.6.15.28)
+db host	setup	tr	DB sunucusu
+db name	setup	tr	DB ismi
+db password	setup	tr	DB şifresi
+db root password	setup	tr	DB ana şifre
+db root username	setup	tr	DB ana kullanıcı adı
+db type	setup	tr	DB türü
+db user	setup	tr	DB kullanıcısı
+default file system space per user/group ?	setup	tr	kullanım dışı dosya system boşluğu her kullanıcı/gurup oranında ?
+delete	setup	tr	sil
+all my tables and data	setup	tr	bütün tablolarımı ve datalarımı sil.
+delete all old languages and install new ones	setup	tr	bütün eski dilleri sil ve yanilerini kur
+deleting tables	setup	tr	tabloları silme
+demo server setup	setup	tr	gösteri sunucusu ayarı
+deny access	setup	tr	yoksayma erişimi
+deny all users access to grant other users access to their entries ?	setup	tr	bütün kullanıcıların, daha büyük kullanıcıların giriş erişimşerine,erişmelerini yoksay?
+dependency failure	setup	tr	bağımlılık hatası
+deregistered	setup	tr	kayıt edilmiş
+details for admin account	setup	tr	admin hesabı için detaylar
+developers' table schema toy	setup	tr	geliştiricilerin tablo şema oyuncağı
+did not find any valid db support!	Setup tr	herhangi bir geçerli db desteği bulunamadı!
+do you want persistent connections (higher performance, but consumes more resources)	setup	tr	sürekli bağlantı ister misiniz(yüksek performans,ama daha fazla kaynak tüketir)
+do you want to manage homedirectory and loginshell attributes?	setup	tr	ev yöneticisini ve  loginshell  özelliklerini yönetmek ister misiniz?
+domain	setup	tr	alan
+domain select box on login	setup	tr	login üzerinde alan seçme kutusu
+dont touch my data	setup	tr	verime dokunma
+download	setup	tr	Download(indirmek)
+edit current configuration	setup	tr	güncel biçimi düzelt
+edit your existing header.inc.php	setup tr	var olan header.inc.php ını düzelt
+edit your header.inc.php	setup	tr	header.inc.php ını düzült
+enable debug messages	setup	tr	debug mesajlarını olanaklı kıl
+enable mcrypt	 setup	tr	Mcrypt olanaklı kıl
+enter some random text for app session encryption	setup	tr	app oturumu encryptionu için biraz rast gele yazı gir
+enter some random text for app_session <br>encryption (requires mcrypt)	setup  tr	app_session <br>encryption (mcrypt gerektiren)için biraz rast gele yazı gir
+enter the full path for temporary files.<br>examples: /tmp, c:\temp setup  tr	geçici dosyalar için tüm yolu giriniz.<br>Examples: /tmp, C:\TEMP
+enter the full path for users and group files.<br>examples: /files, e:\files 	setup tr	gurup dosyaları ve kullanıcılar için tüm yolu giriniz.<br>Examples: /files, E:\FILES
+enter the hostname of the machine on which this server is running	setup	tr	serverın üzerinde çalıştığı makinanın sunucu adını gir
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	setup	tr	phpGroupWare's URL nin konumunu gir.<br>Example: http://www.domain.com/phpgroupware &nbsp; veya &nbsp; /phpgroupware<br><b>No trailing slash</b>
+enter the site password for peer servers setup	tr	eş serverlar için site şifresini gir
+enter the site username for peer servers setup	tr	eş serverlar için site kullanıcı adını gir 
+enter the title for your site	setup	tr	siteniz için başlığınızı giriniz
+enter your default ftp server	setup	tr	default ftp	serverI gir
+enter your http proxy server	setup	tr	HTTP vekil serverını gir
+enter your http proxy server port	setup tr	HTTP vekil serverın portunu gir
+export has been completed!  you will need to set the user passwords manually.	setup	tr	ihracat tamamlandı! Kullanıcı şifresini elle değiştirmen gerekecek.
+export phpgroupware accounts from sql to ldap	setup	tr	SQLden LDAPe phpGroupWare hesaplarını ihraç et
+export sql users to ldap	setup	tr	LDAPe SQL kullanıcılarını ihraç et
+file	setup	tr	dosya
+file type, size, version, etc.	setup	tr	dosya türü,boyut,versiyon,vs.
+for a new install, select import.  to convert existing sql accounts to ldap, select export	 setup tr	yeni kurulum için ithalatı seç. Var olan SQL hesaplarını LDAPa dönüştürmek için ihracı seç
+force selectbox	setup	tr	SelectboxI zorla
+found existing configuration file. loading settings from the file...	setup	tr	var olan biçim dosyasını bul. Bu dosyadan ayarlar yükleniyor...
+go back	setup	tr	geri git
+go to	setup	tr	git
+grant access	setup	tr	erişimi onaylamak
+has a version mismatch	setup	tr	bir versiyon uyuşmazlığı bulunmakta
+hooks deregistered	setup	tr	kancalar kaydedildi
+hooks registered	setup	tr kancalar kayıtlı host information	setup	tr	sunucu bilgisi
+hostname/ip of database server	setup database serverının sunucu adı/IP
+however, the application is otherwise installed	setup	tr	bununla birlikte, uygulama farklı şekilde indirilir
+however, the application may still work	setup tr	bununla birlikte, bu uygulama hala çalışıyor olabilir
+if no acl records for user or any group the user is a member of	setup	tr	eğer olmayan ACL kayıtları kullanıcı ya da herhagi bir gurup kullanıcısı için ın üyesiyse
+if the application has no defined tables, selecting upgrade should remedy the problem setup tr	eğer uygulamanın belirlenmiş tabloları yoksa, upgradeyi seçmek problemidüzeltmelidir
+if using ldap	 setup tr	eğer LDAP kullanmak
+if using ldap, do you want to manage homedirectory and loginshell attributes? Setup tr	LDAP kullanılırsa, homedirectory ve loginshellin özelliklerini yönetmek ister misin?
+if you did not receive any errors, your applications have been	setup	tr	 herhangi bir hata almadıysan, uygulamaların olmuştur
+if you did not receive any errors, your tables have been	setup	tr	herhangi bir hata almadıysan, tabloların olmuştur
+if you running this the first time, don't forget to manualy %1 !!!	setup	tr	bunu ilk kez çalıştırıyorsan,elle yapılacak olan %1I unutma!!!
+image type selection order	setup	tr	görüntü türü seçimi sırası
+import accounts from ldap to the phpgroupware accounts table (for a new install using sql accounts)	setup tr	LDAPdan phpGroupWare hesaplar tablosuna hesapları ithal et(yeni sql hesaplarının kullanımının kurulumu için)
+import has been completed!	setup	tr	ithalat tamamlandı!
+import ldap users/groups	setup	tr	LDAP kullanıcılar/ guruplar I ithal et
+importing old settings into the new format....	setup	tr	eski ayarları yeni formata ithal etme....
+include root (this should be the same as server root unless you know what you are doing)	setup	tr	kökü içeriyor (ne yaptığını bilmiyorsan bu server köküyle aynı olmalıdır)
+insanity	setup	tr	delilik
+install	setup	tr	kur
+install all	setup	tr	hepsini kur
+install applications	setup	tr	uygulamaları kur
+install language	setup	tr	dili kure
+installed	setup	tr	kuruldu
+invalid ip address	setup	tr	geçersiz IP adresi
+invalid password	setup	tr	geçersiz şifre
+is broken	setup	tr	kırıldı
+is disabled	setup	tr	kullanım dışı yapıldı
+ldap account import/export	setup tr	ldap hesabı ithal/ihraç
+ldap accounts configuration setup tr	LDAP hesapları biçimi
+ldap accounts context setup tr	LDAP hesapları tarzı
+ldap config	setup tr	LDAP Config
+ldap default homedirectory prefix (e.g. /home for /home/username)	setup tr	LDAP eksik homedirectory önek(örnegin /home for /home/username)
+ldap default shell (e.g. /bin/bash)	setup tr	eksik LDAP kabuğu(örneğin /bin/bash)
+ldap encryption type	setup tr	LDAP enkripsiyon türü
+ldap export users setup tr	LDAP ihraç kullanıcıları
+ldap groups context	setup tr	LDAP gurupları tarzı
+ldap host	setup tr	LDAP sunucusu
+ldap import users	setup	tr	LDAP ithal kullanıcıları
+ldap modify	setup	tr	LDAP şkeillendirme
+ldap root password setup tr	LDAP kök şifre
+ldap rootdn	setup	tr	LDAP rootdn
+limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1) setup tr	izleyen adresleri veya networkleri ayarlara erişmelerini sınırla(örnegin 10.1.1,127.0.0.1)
+logout	setup	tr	Oturumu kapat
+makesure	setup	tr	hesap izninin ayarlandığından ve databasein oluşturulduğundan emin ol
+manage applications	setup	tr	uygulamaları yönet
+manage languages	setup tr	dilleri yönet
+maximum account id (e.g. 65535 or 1000000) setup tr	Maximum hesap id (örneğin 65535 ya da 1000000)
+may be broken setup	tr	kırılabilir
+mcrypt algorithm (default tripledes)	setup tr	Mcrypt algoritması (eksik TRIPLEDES)
+mcrypt initialization vector	setup tr	Mcrypt başlama vektörü
+crypt mode (default cbc)	setup	tr	Mcrypt modu (eksik CBC)
+mcrypt settings (requires mcrypt php extension)	setup	tr	Mcrypt ayarları ( mcrypt PHP uzantısı gerktiriyor)
+mcrypt version	setup	tr	MCrypt versiyonu
+minimum account id (e.g. 500 or 100, etc.) setup tr	Minimum hesap id (örneğin 500 veya 100, vs.)
+modifications have been completed!	setup	tr	Değişiklikler tamamlandı!
+modify	setup	tr	Değiştir
+modify an existing ldap account store for use with phpgroupware (for a new install using ldap accounts)	setup	tr	Varolan LDAP kayıt stoğunu phpGroupWare ile kullanmak için değiştir (LDAP hesaplarını kullanarak yeni bir yükleme için)
+multi-language support setup	setup	tr	Çoklu dil desteği kurulumu
+mysqlinstr	setup	tr	Yeni bir veritananı oluşturmak için talimatlar MySQL:<br>Login to mysql -<br><i>[user@server user]# mysql -u root -p</i><br>Boş bir veritabanı oluştur ve kullanıcılara hak ver -<br><i>mysql> phpgroupware veritabanını oluştur;</i><br><i>mysql> phpgroupware de herkese hak ver.* to phpgroupware@localhost identified by 'password';</i>
+name of database	setup	tr	veritabanın adı
+name of db user phpgroupware uses to connect	setup	tr	Veritabanı kullanıcısının ismi bağlanmak için phpGroupWare kullanır
+never	setup	tr	Hiç
+new	setup	tr	Yeni
+no	setup	tr	Hayır
+no algorithms available	setup	tr	herhangi bir algoritma mevcut değil
+no microsoft sql server support found. disabling	setup	tr	Herhangi bir Microsoft SQL Server desteği bulunamadı. Kapatılıyor
+no modes available	setup	tr	herhangi bir mod mevcut değil
+no mysql support found. disabling	setup	tr	MySQL desteği bulunamadı. Kapatılıyor
+no oracle-db support found. disabling	setup	tr	Oracle veritabanı desteği bulunamadı. Kapatılıyor.
+no postgres-db support found. disabling	setup	tr	Postgres veritabanı desteği bulunamadı. Kapatılıyor
+no xml support found. disabling	setup	tr	XML desteği bulunamadı
+not complete	setup	tr	tamamlanmadı
+not completed	setup	tr	Tamamlanmadı
+not ready for this stage yet	setup	tr	Bu bölüm için henüz hazır değil
+note: this option will only work if show domain select box is off.	setup	tr	Dikkat: Bu seçenek sadece görünen etki alanının seçim kutusu kapalıysa çalışır.
+note: you will be able to customize this later	setup	tr	Dikkat: Bu seçeneği daha sonra özelleştirebilirsiniz
+now guessing better values for defaults...	setup	tr	Varsayılanlar için en iyi değerleri tahmin ediyor
+ok	setup	tr	TAMAM
+once the database is setup correctly	setup	tr	Veritabanını bir kereye mahsus düzgün kurun
+one month	setup	tr	bir ay
+one week	setup	tr	bir hafta
+only add languages that are not in the database already	setup	tr	Sadece veritabanında bulunmayan dilleri ekle
+only add new phrases	setup	tr	Sedece yeni sözcükler ekle
+or	setup	tr	veya
+or http://webdav.domain.com (webdav)	setup	tr	veya http://webdav.domain.com (WebDAV)
+or we can attempt to create the database for you:	setup	tr	Veya biz sizing için veritabanını oluşturma girişiminde bulunabiliriz:
+password needed for configuration	setup	tr	Konfigurasyon için şifre gerekli
+password of db user	setup	tr	Veritabanı kullanıcısının şifresi
+passwords did not match, please re-enter	setup	tr	Şifreler uyuşmadı lütfen tekrar girin
+path information	setup	tr	Yol bilgisi
+path to user and group files has to be outside of the webservers document-root!!!	setup	tr	Kullnıcı ve grup dosyaları yolu web sunucuları döküman kökünün dışında olmak zorundadır!!!
+persistent connections	setup	tr	Sürekli bağlantılar
+pgsqlinstr	setup	tr	Veritabanı oluşturmak için talimatlar PostgreSQL:<br>Start the postmaster<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>Boş bir veritabanı oluştur -<br><i>[user@server user]# createdb phpgroupware</i>
+phpgroupware administration manual	setup	tr	phpGroupWare yönetim rehberi
+please check for sql scripts within the application's directory	setup	tr	lütfen uygulama dizinini sql scriptleri için kontrol et
+please check read/write permissions on directories, or back up and use another option.	setup	tr	Lütfen klasörlerdeki okuma yazma izinlerini control edin veya yedekleyip başka bir seçenek kullanın.
+please configure phpgroupware for your environment	setup	tr	Lütfen phpGroupWareI kendi ortamın için düzenle
+please consult the %1.	setup	tr	Lütfen %1 e başvurun.
+please install	setup	tr	Lütfen yükleyin
+please login	setup	tr	Lütfen oturum açın
+please login to phpgroupware and run the admin application for additional site configuration	setup	tr	Lütfen phpgroupwarea bağlanın ve ekstra bölge konfigürasyonu için yönetici uygulamasını çalıştırın
+please wait...	setup	tr	Lütfen Bekleyin...
+possible reasons	setup	tr	Muhtemel Sebepler
+possible solutions	setup	tr	Muhtemel Çözümler
+post-install dependency failure	setup	tr	Hataya bağlı olan yükleme sonrası 
+potential problem	setup	tr	Potansiyel hata
+preferences	setup	tr	Özellikler
+problem resolution	setup	tr	Problem çözümü
+process	setup	tr	İşlem
+re-check my database	setup	tr	Veritabanını tekrar kontrol et
+re-check my installation	setup	tr	Yüklemeni tekrar control et
+re-enter password	setup	tr	Şifreni tekrar gir
+read translations from	setup	tr	den çevirileri oku
+really uninstall all applications	setup	tr	Gerçekten bütün uygulamaları kaldır
+recommended: filesystem	setup	tr	Tavsiye edilen: Dosya sistemi
+registered	setup	tr	kayıtlı
+remove	setup	tr	Kaldır
+remove all	setup	tr	Tümünü Kaldır
+requires reinstall or manual repair	setup	tr	Tekrar yükleme veya elle onarın gerekir
+requires upgrade	setup	tr	Yükseltme ihtiyacı duyar
+resolve	setup	tr	Karar ver
+sample configuration not found. using built in defaults	setup	tr	Örnek konfigürasyon bulunamadı. Varsayılanları kullanarak
+save	setup	tr	Kaydet
+save this text as contents of your header.inc.php	setup	tr	Bu yazıyı senin  header.inc.phpnin içeriği gibi kaydet
+select an app, enter a target version, then submit to process to that version.<br>if you do not enter a version, only the baseline tables will be installed for the app.<br><blink>this will drop all of the apps' tables first!</blink>	setup	tr	Bir uygulama seç, hedef versiyona gir, sonar bu versiyonda işlem yapmayı kabul et.<br>Eğer bir sürüm girmezseniz, sadece referans alınan tablolar yüklenecektir.<br><blink>BU İLK OLARAK BÜTÜN UYGULAMALARIN TABLOLARINI BIRAKACAKTIR!</blink>
+select the default applications to which your users will have access	setup	tr	Kullanıcıların erişimlerinin olacağı varsayılasn uygulamaları seç
+select the desired action(s) from the available choices	setup	tr	Mevcut seçeneklerden istenilen olayları seç
+select to download file	setup	tr	Dosyayı indirmek için seç
+select where you want to store/retrieve file contents	setup	tr	Dosyanın içeriğini kaydetmek istediğin yeri seç
+select where you want to store/retrieve filesystem information	setup	tr	Dosya sistemi bilgisini kaydetmek istediğin yeri seç
+select where you want to store/retrieve user accounts	setup	tr	Kullanıcı hesaplarını kaydetmek istediğin yeri seç
+select which group(s) will be exported (group membership will be maintained)	setup	tr	Hangi grupların gönderileceğini seç (grup üyeliği devam edecek)
+select which group(s) will be imported (group membership will be maintained)	setup	tr	Hangi grupların alınacağını seç (grup üyeliği devam edecek)
+select which group(s) will be modified (group membership will be maintained)	setup	tr	Hangi grupların değiştirileceğini seç (grup üyeliği devam edecek)
+select which languages you would like to use	setup	tr	Kullanmak istediğin dilleri seç
+select which method of upgrade you would like to do	setup	tr	Bir yükseltme metodu seç
+select which type of authentication you are using	setup	tr	Kullandığın yetki tipini seç
+select which user(s) will also have admin privileges	setup	tr	Hangi kullanıcıların yönetici ayrıcalıklarına sahip olacağını seç
+select which user(s) will be exported	setup	tr	Hangi kullanıcıların gönderileceğini seç
+select which user(s) will be imported	setup	tr	Hangi kullanıcıların alınacağını seç
+select which user(s) will be modified	setup	tr	Hangi kullanıcıların değiştirileceğini seç
+select which user(s) will have admin privileges	setup	tr	Hangi kullanıcıların yönetici ayrıcalıklarına sahip olacağını seç
+select your old version	setup	tr	Eski versiyonu seç
+selectbox	setup	tr	Seçim kutusu
+server root	setup	tr	Sunucu kökü
+sessions type	setup	tr	Oturumların tipi
+set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.	setup	tr	&lt; 2.4 versiyonları için bunu eski ye ayarla, aksi takdirde kullandığın mevcut mcrypt versiyonu. 
+settings	setup	tr	Ayarlar
+setup	setup	tr	Kurulum
+setup demo accounts in ldap	setup	tr	LDAP daki demo hesapları kur
+setup the database	setup	tr	Veritabanını kur
+show 'powered by' logo on	setup	tr	'powered by' logosunu göster
+some or all of its tables are missing	setup	tr	Tabloların hepsi yada birkaçı kayıp
+status	setup	tr	Durum
+step 1 - simple application management	setup	tr	Adım 1  Basit uygulşama yönetimi
+step 2 - configuration	setup	tr	Adım 2 - Konfigürasyon
+step 3 - language management	setup	tr	Adım 3  Dil Yönetimi
+step 4 - advanced application management	setup	tr	Adım 4  Gelişmiş Uygulama Yönetimi
+table change messages	setup	tr	Tablo Mesajları Değiştirir
+tables dropped	setup	tr	Tablolar çıkartıldı
+tables installed, unless there are errors printed above	setup	tr	Tablolar yüklendi, eğer yukarıda yazılı hatalar yoksa
+tables upgraded	setup	tr	tablolar güncellenditables upgraded
+target version	setup	tr	Hedef Versiyon
+text entry	setup	tr	Metin Girişi
+the db_type in defaults (%1) is not supported on this server. using first supported type.	setup	tr	(%1) db_type varsayılan olarak bu sunucuda desteklenmiyor.  Desteklenen ilk veritabanı tipini kullan.
+the file	setup	tr	dosya
+the table definition was correct, and the tables were installed	setup	tr	Tablo tanımı doğruydu ve tablolar yüklendi
+the tables	setup	tr	tablolar
+there was a problem trying to connect to your ldap server. <br>please check your ldap server configuration	setup	tr	LDAP sunucusuna bağlanırken bir problem oluştu. <br>lütfen LDAP sunucu konfigürasyonunu control edin
+this has to be outside the webservers document-root!!!	setup	tr	Bu web sunucusu döküman kökünün dışında olmak zorunda!!!
+this program will help you upgrade or install different languages for phpgroupware	setup	tr	Bu program size phpGroupWare için farklı diller yüklemenizde veya var olan dilleri güncellemenizde yardım edecektir
+this section will help you export users and groups from phpgroupware's account tables into your ldap tree	setup	tr	Bu bölüm size kullanıcı ve grupları phpGroupWare hesap tablosundan LDAP ağaç yapısına taşımanıza yardım eder
+this section will help you import users and groups from your ldap tree into phpgroupware's account tables	setup	tr	Bu bölüm size kullanıcı ve grupları phpGroupWare LDAP ağaç yapısından LDAP hesap tablosuna taşımanıza yardım eder
+this section will help you setup your ldap accounts for use with phpgroupware	setup	tr	Bu bölüm size LDAP hesaplarının phpgroupware ile kullanılmasının düzenlenmesinde yardımcı olur
+this should be around 32 bytes in length.<br>note: the default has been randomly generated.	setup	tr	Bu yaklaşık 32 byte uzunluğunda olabilir.<br>Dikkat: Varsayılan rastgele oluşturuldu.
+this stage is completed<br>	setup	tr	Bu bölüm tamamlandı<br>
+this will create 1 admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!this will delete all existing accounts!!!</b><br>	setup	tr	Bu bir yönetici 3 te demo hesap oluşturacaktır.<br>kullanıcı adı/şifreler: demo/guest, demo2/guest and demo3/guest.<br><b>!!!BU VAROLAN BÜTÜN HESAPLARI SİLECEKTİR!!!</b><br>
+to a version it does not know about	setup	tr	bu versiyon tanınmıyor
+to setup 1 admin account and 3 demo accounts.<br><b>this will delete all existing accounts</b>	setup	tr	Bir yönetici hesabı 3 demo hesabı oluşturmak için.<br><b>Bu varolan bütün hesapları silecektir</b>
+top	setup	tr	zirve
+translations added	setup	tr	Çeviriler Eklendi
+translations removed	setup	tr	Çeviriler Kaldırıldı
+translations upgraded	setup	tr	Çeviriler Güncellendi
+try to configure your php to support one of the above mentioned dbms, or install phpgroupware by hand.	setup	tr	Phpni yukarıda bahsedilen DBMSlerden birini desteklemek için konfigüre etmeyi dene veya phpGroupWareyi elle yükle.
+two weeks	setup	tr	iki hafta
+uninstall	setup	tr	kaldırma
+uninstall all applications	setup	tr	Bütün Uygulamaları Kaldır
+uninstalled	setup	tr	kaldırıldı
+upgrade	setup	tr	Güncelleme
+upgrade all	setup	tr	Hepsini Güncelle
+upgraded	setup	tr	güncellendi
+upgrading tables	setup	tr	Güncelleme Tabloları
+use cookies to pass sessionid	setup	tr	Oturum id lerini atlamak için çerezleri kullan
+use pure html compliant code (not fully working yet)	setup	tr	Saf HTML kodlarını kullan (henüz tam olarak çalışmıyor)
+users choice	setup	tr	Kullanıcıların Seçimi
+version mismatch	setup	tr	Versiyon Uyuşmazlığı
+view	setup	tr	Görünüm
+warning!	setup	tr	Uyarı!
+we can proceed	setup	tr	İlerleyebiliriz
+we will automatically update your tables/records to %1	setup	tr	Tablolarını ve kayılarını otomatik olarak güncelleyeceğiz %1 e
+what type of sessions management do you want to use (php4 session management may perform better)?	setup	tr	Hangi tip oturum yönetimini kullanmak istersin(PHP4 oturum yönetimi daha iyi işlem yapabilir.
+which database type do you want to use with phpgroupware?	setup	tr	phpGroupWare ile hangi tip veritabanını kullanmak istersin?
+would you like phpgroupware to cache the phpgw info array ?	setup	tr	phpGroupWarein phpgw içerik dizini yakalamasını istermisin ?
+would you like phpgroupware to check for a new version<br>when admins login ?	setup	tr	Yöneticiler oturum açtıklarında phpGroupWare in yeni bir versiyonu control etmesini ister misiniz ?
+would you like to show each application's upgrade status ?	setup	tr	Herbir uygulamanın güncellik durumunun görünmesini ister misiniz ?
+write config	setup	tr	Yapılandırmayı yaz
+yes	setup	tr	Evet
+you appear to be running a pre-beta version of phpgroupware.<br>these versions are no longer supported, and there is no upgrade path for them in setup.<br> you may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.	setup	tr	phpGroupWare in pre-beta versiyonu ile çalışıyor olarak görünüyorsunuz.<br>Bu versiyonlar artık desteklenmiyor ve kurulumda bu versiyonlar için herhangi bir güncelleme yolu yok.<br> İlk olarak 0.9.10 a güncellemek isteyebilirsin(pre-beta güncellemeleri desteklemek için en son versiyon) <br>ve daha sonra mecut versiyon ile buradan güncellemeleri yap.
+you appear to be running version %1 of phpgroupware	setup	tr	phpGroupWare  in %1 versiyonu ile çalışıyor olarak görünüyorsunuz
+you appear to be using php earlier than 4.1.0. phpgroupware now requires 4.1.0 or later	setup	tr	PHPnin 4.1.0. versiyonundan daha eski bir versiyon kullanıyorsunuz, phpgroupware 4.1.0. veya daha yüksek bir versiyon gerektiriyor
+you appear to be using php3. disabling php4 sessions support	setup	tr	PHP3 kullanıyor olarak görünüyorsunuz. PHP4 oturum desteği kapanıyor
+you appear to be using php4. enabling php4 sessions support	setup	tr	PHP4 kullanıyor olarak görünüyorsunuz. PHP4 oturum desteği açılıyor
+you appear to have microsoft sql server support enabled	setup	tr	Microsoft SQL Server desteği varolarak gözüküyor
+you appear to have mysql support enabled	setup	tr	MySQL desteği var var olarak görünüyor
+you appear to have oracle support enabled	setup	tr	Oracle desteği varolarak görünüyor
+you appear to have oracle v8 (oci) support enabled	setup	tr	Oracle V8 (OCI)desteği varolarak görünüyor
+you appear to have postgres-db support enabled	setup	tr	Postgres-DB desteği varolarak görünüyor
+you appear to have xml support enabled	setup	tr	XML desteği varolarak görünüyor
+you are ready for this stage, but this stage is not yet written.<br>	setup	tr	Bu bölüm için hazırsınız, ancak bu bölüm henüz yazılı değil.<br>
+you didn't enter a config password for domain %1	setup	tr	Etki alanı %1 için bir yapılandırma şifresi girmediniz
+you didn't enter a header admin password	setup	tr	Başlık yönetici şifresi girmediniz
+you do not have any languages installed. please install one now <br>	setup	tr	Yüklenmiş herhangi bir dil yok. Lütfen şimdi bir tane yükleyin <br>
+you have not created your header.inc.php yet!<br> you can create it now.	setup	tr	Henüz .inc.php başlığını oluşturmadınız!<br> Şimdi oluşturabilirsiniz.
+you have successfully logged out	setup	tr	Başarılı bir şekilde oturumu kapattınız
+you must enter a username for the admin	setup	tr	Yönetici için bir kullanıcı adı girmelisiniz
+you should either uninstall and then reinstall it, or attempt manual repairs	setup	tr	kaldırıp tekrar yükleyebilir veya elle onarım girişiminde bulunabilirsiniz
+you're using an old configuration file format...	setup	tr	Eski konfigürasyon dosya formatı kullanıyorsunuz...
+you're using an old header.inc.php version...	setup	tr	Eski header.inc.php versiyonunu kullanıyorsunuz...
+your applications are current	setup	tr	Uygulamalarınız mevcut
+your database does not exist	setup	tr	Veritabanınız mevcut değil
+your database is not working!	setup	tr	Veritabanınız çalışmıyor!
+your database is working, but you dont have any applications installed	setup	tr	Veritabanınız çalışıyor ancak yüklü herhangi bir uygulamanız yok
+your header admin password is not set. please set it now!	setup	tr	Başlık yönetici şifreniz ayarlanmamış. Lütfen şimdi ayarlayın!
+your header.inc.php needs upgrading.	setup	tr	header.inc.php Güncellenmesi gerekiyor.
+your header.inc.php needs upgrading.<br><blink><b class="msg">warning!</b></blink><br><b>make backups!</b>	setup	tr	header.inc.php Güncellenmesi gerekiyor.<br><blink><b class="msg">DİKKAT!</b></blink><br><b>YEDEK AL!</b>
+your tables are current	setup	tr	Tablolarınız mevcut
+your tables may be altered and you may lose data	setup	tr	Tablolarınız değiştirildi ve data kaybedebilirsiniz.
+your tables will be dropped and you will lose data	setup	tr	Tablolarınız kaldırılacak ve bütün verilerinizi kaybedeceksiniz !!
+
+

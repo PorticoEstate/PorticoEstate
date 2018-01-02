@@ -1,0 +1,128 @@
+body, div, input, p, select, textarea
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+}
+
+body
+{
+	background-color: #ccc;
+	margin: 0;
+	padding: 0;
+}
+
+a
+{
+	text-decoration: none;
+	color: #369;
+}
+
+a:hover
+{
+	color: #c00;
+}
+a:active
+{
+	color: #f00;
+}
+
+img
+{
+	border: 0px;
+}
+
+label, input[type=text], input[type=password], input[type=checkbox], input[type=radio], select, textarea
+{
+	display: block;
+	float: left;
+	margin-bottom: 8px;
+}
+
+input[type=text], input[type=password], select
+{
+	width: 250px;
+}
+
+label
+{
+	text-align: right;
+	width: 150px;
+	padding-right: 10px;
+	font-weight: bold;
+}
+
+br
+{
+	clear: left;
+}
+
+thead
+{
+	background-color: #d3dce3;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button_group
+{
+	text-align: center;
+}
+
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}
+
+#navbar
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#navbar li
+{
+	background: #999 url(../images/nonav.png) no-repeat scroll top right;
+	display: block;
+	font-size: 9px;
+	font-weight: bold;
+	height: 15px;
+	overflow: hidden;
+	margin: 0;
+	padding: 7px 0 0 0;
+	width: 154px;
+	white-space: nowrap;
+}
+
+#navbar li a
+{
+	color: #fff;
+	padding: 3px 0 0 15px;
+}
+
+#navbar li:hover
+{
+	background-image: url(../images/nonav-over.png);
+}
+
+ol.source
+{
+	background-color: #ccc;
+	border: 1px solid #ccc;
+	height: 300px;
+	list-style-type: decimal;
+	overflow: auto;
+	padding-left: 4em;
+}
+
+ol.source li
+{
+	background-color: #fff;
+	border-bottom: #eee;
+	display: list-item;
+	font-family: monospace;
+	list-style-type: decimal;
+	white-space: pre;
+}

@@ -1,0 +1,1701 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wholeModelOutput>
+    <buildingStoreys>
+        <buildingStorey ifcObjectType="ifcbuildingstorey">
+            <attributes>
+                <description>Kellergeschoss</description>
+                <elevation>-3.2</elevation>
+                <guid>0h$ksovXH3Jeg0w$H7aaaf</guid>
+                <longName>KG</longName>
+                <name>A.-1</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <spatialDecomposition>
+                <buildings>
+                    <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+                </buildings>
+                <project>3KFKb0sfrDJwSHalGIQFZT</project>
+                <site>28hfXoRX9EMhvGvGhmaaad</site>
+            </spatialDecomposition>
+        </buildingStorey>
+        <buildingStorey ifcObjectType="ifcbuildingstorey">
+            <attributes>
+                <elevation>0.0</elevation>
+                <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                <longName>EG</longName>
+                <name>A.0</name>
+            </attributes>
+            <baseQuantities>
+                <GrossHeight>3.2</GrossHeight>
+                <NetHeight>3.0</NetHeight>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <EntranceLevel>IFCBOOLEAN(.T.)</EntranceLevel>
+                    <AboveGround>IFCLOGICAL(.T.)</AboveGround>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildings>
+                    <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+                </buildings>
+                <project>3KFKb0sfrDJwSHalGIQFZT</project>
+                <site>28hfXoRX9EMhvGvGhmaaad</site>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H724af</guid>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                    <guid>0h$ksovXH3Je2d9dH7s8af</guid>
+                    <guid>0h$ksovXH3Jeg02dH7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </buildingStorey>
+        <buildingStorey ifcObjectType="ifcbuildingstorey">
+            <attributes>
+                <elevation>3.2</elevation>
+                <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                <longName>1.OG</longName>
+                <name>A.+1</name>
+            </attributes>
+            <baseQuantities>
+                <GrossHeight>3.2</GrossHeight>
+                <NetHeight>3.0</NetHeight>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <spatialDecomposition>
+                <buildings>
+                    <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+                </buildings>
+                <project>3KFKb0sfrDJwSHalGIQFZT</project>
+                <site>28hfXoRX9EMhvGvGhmaaad</site>
+                <spaces>
+                    <guid>0h$ksovXH2xeg02dH7s8af</guid>
+                    <guid>0h$kk5vXHc56g02dH7s8af</guid>
+                    <guid>0h$kk5vvG2xeg02dH7s8af</guid>
+                    <guid>0h$kk5vvG2xeg6vdH7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </buildingStorey>
+    </buildingStoreys>
+    <buildings>
+        <building ifcObjectType="ifcbuilding">
+            <attributes>
+                <description>Building object for testing Basic FM Handover</description>
+                <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+                <longName>FM Test Building A</longName>
+                <name>01.1.A</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <IsLandmarked>IFCLOGICAL(.F.)</IsLandmarked>
+                    <YearOfConstruction>IFCLABEL('2002')</YearOfConstruction>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7aaaf</guid>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+                <project>3KFKb0sfrDJwSHalGIQFZT</project>
+                <site>28hfXoRX9EMhvGvGhmaaad</site>
+            </spatialDecomposition>
+        </building>
+    </buildings>
+    <coverings>
+        <covering ifcObjectType="ifccovering">
+            <attributes>
+                <description>Flooring-001 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jeg02dHdf8af</guid>
+                <name>FB-1:EG.004</name>
+                <predefinedCoveringType>FLOORING</predefinedCoveringType>
+            </attributes>
+            <baseQuantities>
+                <NetArea>16.66</NetArea>
+                <GrossArea>16.66</GrossArea>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_CoveringCommon">
+                    <Reference>IFCLABEL('FB-1')</Reference>
+                </propertySet>
+            </properties>
+            <materials>
+                <material type="layerSet">
+                    <name>Slate on flooting floor</name>
+                    <layerset>
+                        <layer>
+                            <name>Slate</name>
+                            <thickness>0.03</thickness>
+                        </layer>
+                        <layer>
+                            <name>Flooting floor</name>
+                            <thickness>0.07</thickness>
+                        </layer>
+                    </layerset>
+                </material>
+            </materials>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg02dH7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </covering>
+        <covering ifcObjectType="ifccovering">
+            <attributes>
+                <description>Ceiling-002 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jegs2dHdf8af</guid>
+                <name>UD-1:EG.004</name>
+                <predefinedCoveringType>CEILING</predefinedCoveringType>
+            </attributes>
+            <baseQuantities>
+                <NetArea>25.16</NetArea>
+                <GrossArea>25.16</GrossArea>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_CoveringCommon">
+                    <Reference>IFCLABEL('UD-1')</Reference>
+                </propertySet>
+            </properties>
+            <materials>
+                <material type="layerSet">
+                    <name>Suspended ceiling gypsum panels</name>
+                    <layerset>
+                        <layer>
+                            <name>Slate</name>
+                            <thickness>0.1</thickness>
+                        </layer>
+                    </layerset>
+                </material>
+            </materials>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </covering>
+        <covering ifcObjectType="ifccovering">
+            <attributes>
+                <description>Ceiling-003 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jegsd3Hdf8af</guid>
+                <name>UD-1a:EG.004</name>
+                <predefinedCoveringType>CEILING</predefinedCoveringType>
+            </attributes>
+            <baseQuantities>
+                <NetArea>2.72</NetArea>
+                <GrossArea>2.72</GrossArea>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_CoveringCommon">
+                    <Reference>IFCLABEL('UD-1')</Reference>
+                </propertySet>
+            </properties>
+            <materials>
+                <material type="layerSet">
+                    <name>Suspended ceiling gypsum panels</name>
+                    <layerset>
+                        <layer>
+                            <name>Slate</name>
+                            <thickness>0.1</thickness>
+                        </layer>
+                    </layerset>
+                </material>
+            </materials>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </covering>
+    </coverings>
+    <doors>
+        <door ifcObjectType="ifcdoor">
+            <attributes>
+                <description>Door-001 for testing Basic FM Handover</description>
+                <guid>2cs23eea03hgs3eLZsghoF</guid>
+                <name>AT-1.EG.004</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_DoorCommon">
+                    <IsExternal>IFCLOGICAL(.T.)</IsExternal>
+                    <FireRating>IFCLABEL('T90')</FireRating>
+                    <FireResistence>IFCLABEL('T60')</FireResistence>
+                    <Reference>IFCLABEL('AT-1')</Reference>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg02dH7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+            <doorStyle ifcObjectType="ifcdoorstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sq7brEif5ojF_S9$NM</guid>
+                    <name>single right swing door - internal</name>
+                    <operationType>SINGLE_SWING_RIGHT</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcdoorliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                    </propertySet>
+                    <propertySet type="ifcdoorpanelproperties">
+                        <Panelposition>2</Panelposition>
+                        <Paneldepth>0.05</Paneldepth>
+                        <Paneloperation>1</Paneloperation>
+                        <Panelwidth>1.0</Panelwidth>
+                    </propertySet>
+                </properties>
+            </doorStyle>
+        </door>
+        <door ifcObjectType="ifcdoor">
+            <attributes>
+                <guid>2cs23eea03h3g3eLZsghoF</guid>
+                <name>IT-1.EG.004</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_DoorCommon">
+                    <IsExternal>IFCLOGICAL(.F.)</IsExternal>
+                    <FireResistence>IFCLABEL('T30')</FireResistence>
+                    <Reference>IFCLABEL('IT-1')</Reference>
+                    <GlazingAreaFraction>IFCPOSITIVERATIOMEASURE(0.6)</GlazingAreaFraction>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg02dH7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+            <doorStyle ifcObjectType="ifcdoorstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sq7brEif5ojF_S4gNM</guid>
+                    <name>single left swing door - internal</name>
+                    <operationType>SINGLE_SWING_LEFT</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcdoorliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                    </propertySet>
+                    <propertySet type="ifcdoorpanelproperties">
+                        <Panelposition>2</Panelposition>
+                        <Paneldepth>0.05</Paneldepth>
+                        <Paneloperation>1</Paneloperation>
+                        <Panelwidth>1.0</Panelwidth>
+                    </propertySet>
+                </properties>
+            </doorStyle>
+        </door>
+        <door ifcObjectType="ifcdoor">
+            <attributes>
+                <guid>2cs23eea03h3g387ZsghoF</guid>
+                <name>IT-2.EG.002</name>
+            </attributes>
+            <baseQuantities>
+                <Area>2.25</Area>
+                <Height>2.25</Height>
+                <Width>1.0</Width>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_DoorCommon">
+                    <IsExternal>IFCLOGICAL(.F.)</IsExternal>
+                    <FireResistence>IFCLABEL('T30')</FireResistence>
+                    <Reference>IFCLABEL('IT-2')</Reference>
+                    <GlazingAreaFraction>IFCPOSITIVERATIOMEASURE(0.2)</GlazingAreaFraction>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                    <type>ifcspace</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>Internal</internalOrExternalBoundary>
+                </boundary>
+                <boundary>
+                    <guid>0h$ksovXH3Jeg0w$H724af</guid>
+                    <type>ifcspace</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>Internal</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <doorStyle ifcObjectType="ifcdoorstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sq7bdWif5ojF_S4gNM</guid>
+                    <name>double swing door - internal</name>
+                    <operationType>DOUBLE_DOOR_DOUBLE_SWING</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcdoorliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                    </propertySet>
+                    <propertySet type="ifcdoorpanelproperties">
+                        <Panelposition>1</Panelposition>
+                        <Paneldepth>0.05</Paneldepth>
+                        <Paneloperation>1</Paneloperation>
+                        <Panelwidth>0.5</Panelwidth>
+                    </propertySet>
+                    <propertySet type="ifcdoorpanelproperties">
+                        <Panelposition>3</Panelposition>
+                        <Paneldepth>0.05</Paneldepth>
+                        <Paneloperation>1</Paneloperation>
+                        <Panelwidth>0.5</Panelwidth>
+                    </propertySet>
+                </properties>
+            </doorStyle>
+        </door>
+        <door ifcObjectType="ifcdoor">
+            <attributes>
+                <guid>2cs23eea03h3g3sDZsghoF</guid>
+                <name>IT-2.EG.002</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_DoorCommon">
+                    <IsExternal>IFCLOGICAL(.T.)</IsExternal>
+                    <FireResistence>IFCLABEL('T30')</FireResistence>
+                    <Reference>IFCLABEL('AT-2')</Reference>
+                    <GlazingAreaFraction>IFCPOSITIVERATIOMEASURE(0.8)</GlazingAreaFraction>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>0h$kk5vXHc56g02dH7s8af</guid>
+                    <type>ifcspace</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <doorStyle ifcObjectType="ifcdoorstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sq7bdwif5ojF_S4gNM</guid>
+                    <name>double swing door - external</name>
+                    <operationType>DOUBLE_DOOR_DOUBLE_SWING</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcdoorliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                    </propertySet>
+                    <propertySet type="ifcdoorpanelproperties">
+                        <Panelposition>1</Panelposition>
+                        <Paneldepth>0.05</Paneldepth>
+                        <Paneloperation>1</Paneloperation>
+                        <Panelwidth>0.5</Panelwidth>
+                    </propertySet>
+                    <propertySet type="ifcdoorpanelproperties">
+                        <Panelposition>3</Panelposition>
+                        <Paneldepth>0.05</Paneldepth>
+                        <Paneloperation>1</Paneloperation>
+                        <Panelwidth>0.5</Panelwidth>
+                    </propertySet>
+                </properties>
+            </doorStyle>
+        </door>
+    </doors>
+    <furnishingElements>
+        <furnishingElement ifcObjectType="ifcfurnishingelement">
+            <attributes>
+                <description>Kitchenette-001 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jeg0dd2dsfaf</guid>
+                <name>Kitchenette:EG.002</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_FurnitureTypeCommon">
+                    <NominalDepth>IFCLENGTHMEASURE(0.6)</NominalDepth>
+                    <NominalLength>IFCLENGTHMEASURE(5.6)</NominalLength>
+                    <NominalHeight>IFCLENGTHMEASURE(0.7)</NominalHeight>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </furnishingElement>
+        <furnishingElement ifcObjectType="ifcfurnishingelement">
+            <attributes>
+                <description>Cupboard-001 for testing Basic FM Handover</description>
+                <guid>0h$ksovsQ3Jeg0dd2dsfaf</guid>
+                <name>Cupboard(1):EG.002</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_FurnitureTypeCommon">
+                    <NominalDepth>IFCLENGTHMEASURE(0.6)</NominalDepth>
+                    <NominalLength>IFCLENGTHMEASURE(0.6)</NominalLength>
+                    <NominalHeight>IFCLENGTHMEASURE(2.5)</NominalHeight>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </furnishingElement>
+        <furnishingElement ifcObjectType="ifcfurnishingelement">
+            <attributes>
+                <description>Cupboard-002 for testing Basic FM Handover</description>
+                <guid>0h$ksovsQ3Jerfdd2dsfaf</guid>
+                <name>Cupboard(2):EG.002</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_FurnitureTypeCommon">
+                    <NominalDepth>IFCLENGTHMEASURE(0.6)</NominalDepth>
+                    <NominalLength>IFCLENGTHMEASURE(0.6)</NominalLength>
+                    <NominalHeight>IFCLENGTHMEASURE(2.5)</NominalHeight>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </furnishingElement>
+    </furnishingElements>
+    <modelInformation>
+        <author>Thomas Liebich</author>
+        <authorization>reference file created for the Basic FM Handover View</authorization>
+        <changeDate>2011-01-27T09:54:39</changeDate>
+        <description>ViewDefinition [CoordinationView, FMHandOverView]</description>
+        <nativeSchema>IFC2X3</nativeSchema>
+        <organization>AEC3</organization>
+        <originatingSystem>IFC text editor</originatingSystem>
+        <preProcessor>IFC text editor</preProcessor>
+    </modelInformation>
+    <project ifcObjectType="ifcproject">
+        <attributes>
+            <guid>3KFKb0sfrDJwSHalGIQFZT</guid>
+            <longName>FM Architectural Handover</longName>
+            <name>FM-A-01</name>
+        </attributes>
+        <ownerHistory>
+            <changeAction>ADDED</changeAction>
+            <creationDate>1179073813</creationDate>
+            <owningApplication>
+                <applicationDeveloper>
+                    <name>AEC3</name>
+                </applicationDeveloper>
+                <applicationFullName>IFC text editor</applicationFullName>
+                <applicationIdentifier>IFCtext</applicationIdentifier>
+                <version>Version 1</version>
+            </owningApplication>
+            <owningUser>
+                <organization>
+                    <name>AEC3</name>
+                </organization>
+                <person>
+                    <familyName>Liebich</familyName>
+                    <givenName>Thomas</givenName>
+                </person>
+            </owningUser>
+        </ownerHistory>
+        <decomposition>
+            <buildings>
+                <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+            </buildings>
+            <site>28hfXoRX9EMhvGvGhmaaad</site>
+        </decomposition>
+        <units>
+            <LENGTHUNIT>METRE</LENGTHUNIT>
+            <PLANEANGLEUNIT>DEGREE</PLANEANGLEUNIT>
+            <AREAUNIT>SQUARE_METRE</AREAUNIT>
+            <VOLUMEUNIT>CUBIC_METRE</VOLUMEUNIT>
+        </units>
+    </project>
+    <site ifcObjectType="ifcsite">
+        <attributes>
+            <description>Site object for testing Basic FM Handover</description>
+            <elevation>249.0</elevation>
+            <guid>28hfXoRX9EMhvGvGhmaaad</guid>
+            <latitude>50;58;33;110400</latitude>
+            <longName>FM Test Site</longName>
+            <longtitude>11;20;32;161199</longtitude>
+            <name>01.1</name>
+        </attributes>
+        <ownerHistory>
+            <changeAction>ADDED</changeAction>
+            <creationDate>1179073813</creationDate>
+            <owningApplication>
+                <applicationDeveloper>
+                    <name>AEC3</name>
+                </applicationDeveloper>
+                <applicationFullName>IFC text editor</applicationFullName>
+                <applicationIdentifier>IFCtext</applicationIdentifier>
+                <version>Version 1</version>
+            </owningApplication>
+            <owningUser>
+                <organization>
+                    <name>AEC3</name>
+                </organization>
+                <person>
+                    <familyName>Liebich</familyName>
+                    <givenName>Thomas</givenName>
+                </person>
+            </owningUser>
+        </ownerHistory>
+        <spatialDecomposition>
+            <buildings>
+                <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+            </buildings>
+            <project>3KFKb0sfrDJwSHalGIQFZT</project>
+        </spatialDecomposition>
+        <address ifcAddressType="ifcpostaladdress">
+            <addressLines>Albrecht-DÃ¼rer-Strasse 18</addressLines>
+            <country>Deutschland</country>
+            <postalCode>99423</postalCode>
+            <town>Weimar</town>
+        </address>
+    </site>
+    <spaces>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-001 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jeg0w$H724af</guid>
+                <internalExternal>INTERNAL</internalExternal>
+                <longName>Main function room</longName>
+                <name>EG.001</name>
+            </attributes>
+            <baseQuantities>
+                <GrossCeilingArea>125.44</GrossCeilingArea>
+                <NetCeilingArea>125.4</NetCeilingArea>
+                <NetWallArea>130.3</NetWallArea>
+                <NetFloorArea>125.4</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossWallArea>135.6</GrossWallArea>
+                <GrossPerimeter>45.2</GrossPerimeter>
+                <GrossFloorArea>125.44</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>1.5</itemKey>
+                    <itemName>SpeiserÃ¤ume</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Paint')</WallCovering>
+                    <FloorCovering>IFCLABEL('Parquet')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>2cs23eea03h3g387ZsghoF</guid>
+                    <type>ifcdoor</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>Internal</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <spatialContainer>
+                <element>
+                    <item>
+                        <guid>0h$ksovXH3JhAgppHdsfaf</guid>
+                        <type>ifcflowterminal</type>
+                        <name>Spk-01:EG.001</name>
+                        <description>Sprinkler-001 object for testing basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovXH3JhpappHdsfaf</guid>
+                        <type>ifcflowterminal</type>
+                        <name>Spk-02:EG.001</name>
+                        <description>Sprinkler-002 object for testing basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovXH3JhAgpmndsfaf</guid>
+                        <type>ifcflowterminal</type>
+                        <name>Spk-03:EG.001</name>
+                        <description>Sprinkler-003 object for testing basic FM Handover</description>
+                    </item>
+                </element>
+            </spatialContainer>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-002 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Preparation room</longName>
+                <name>EG.002</name>
+            </attributes>
+            <baseQuantities>
+                <NetFloorArea>32.64</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossPerimeter>23.2</GrossPerimeter>
+                <GrossFloorArea>32.64</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>3.8</itemKey>
+                    <itemName>KÃ¼chen</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Paint')</WallCovering>
+                    <FloorCovering>IFCLABEL('Tiles')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>2cs23eea03h3g387ZsghoF</guid>
+                    <type>ifcdoor</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>Internal</internalOrExternalBoundary>
+                </boundary>
+                <boundary>
+                    <guid>2cs23eea036s33eLZsghoF</guid>
+                    <type>ifcwindow</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+                <boundary>
+                    <guid>2cs23eea03hs33eLZsghoF</guid>
+                    <type>ifcwindow</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <spatialContainer>
+                <covering>
+                    <item>
+                        <guid>0h$ksovXH3Jegs2dHdf8af</guid>
+                        <type>IfcCovering</type>
+                        <name>UD-1:EG.004</name>
+                        <description>Ceiling-002 object for testing Basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovXH3Jegsd3Hdf8af</guid>
+                        <type>IfcCovering</type>
+                        <name>UD-1a:EG.004</name>
+                        <description>Ceiling-003 object for testing Basic FM Handover</description>
+                    </item>
+                </covering>
+                <element>
+                    <item>
+                        <guid>0h$ksovXH3Jeg0dd2dsfaf</guid>
+                        <type>ifcfurnishingelement</type>
+                        <name>Kitchenette:EG.002</name>
+                        <description>Kitchenette-001 object for testing Basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovsQ3Jeg0dd2dsfaf</guid>
+                        <type>ifcfurnishingelement</type>
+                        <name>Cupboard(1):EG.002</name>
+                        <description>Cupboard-001 for testing Basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovsQ3Jerfdd2dsfaf</guid>
+                        <type>ifcfurnishingelement</type>
+                        <name>Cupboard(2):EG.002</name>
+                        <description>Cupboard-002 for testing Basic FM Handover</description>
+                    </item>
+                </element>
+            </spatialContainer>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-003 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Je2d9dH7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Hall</longName>
+                <name>EG.003</name>
+            </attributes>
+            <baseQuantities>
+                <NetFloorArea>15.84</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossPerimeter>16.2</GrossPerimeter>
+                <GrossFloorArea>15.84</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>7</itemKey>
+                    <itemName>sonstige NutzflÃ¤chen</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Paint')</WallCovering>
+                    <FloorCovering>IFCLABEL('Tiles')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-004 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH3Jeg02dH7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Vestibule</longName>
+                <name>EG.004</name>
+            </attributes>
+            <baseQuantities>
+                <NetFloorArea>15.84</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossPerimeter>16.2</GrossPerimeter>
+                <GrossFloorArea>15.84</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>7</itemKey>
+                    <itemName>sonstige NutzflÃ¤chen</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Paint')</WallCovering>
+                    <FloorCovering>IFCLABEL('Slate')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <spatialContainer>
+                <covering>
+                    <item>
+                        <guid>0h$ksovXH3Jeg02dHdf8af</guid>
+                        <type>IfcCovering</type>
+                        <name>FB-1:EG.004</name>
+                        <description>Flooring-001 object for testing Basic FM Handover</description>
+                    </item>
+                </covering>
+                <doorsWindows>
+                    <item>
+                        <guid>2cs23eea03hgs3eLZsghoF</guid>
+                        <type>IfcDoor</type>
+                        <name>AT-1.EG.004</name>
+                        <description>Door-001 for testing Basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>2cs23eea03h3g3eLZsghoF</guid>
+                        <type>IfcDoor</type>
+                        <name>IT-1.EG.004</name>
+                    </item>
+                </doorsWindows>
+                <element>
+                    <item>
+                        <guid>0h$ksovXH3Jeg0dpHdsfaf</guid>
+                        <type>ifcflowcontroller</type>
+                        <name>Switch-01:EG.004</name>
+                        <description>Switch-001 object for testing basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovXH3Jeg0dpHdw4af</guid>
+                        <type>ifcflowcontroller</type>
+                        <name>Switch-02:EG.004</name>
+                        <description>Switch-002 object for testing basic FM Handover</description>
+                    </item>
+                    <item>
+                        <guid>0h$ksovXH3JeggppHdsfaf</guid>
+                        <type>ifcflowterminal</type>
+                        <name>Light-01:EG.004</name>
+                        <description>Lighting-001 object for testing basic FM Handover</description>
+                    </item>
+                </element>
+            </spatialContainer>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-005 object for testing Basic FM Handover</description>
+                <guid>0h$ksovXH2xeg02dH7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Terrace</longName>
+                <name>OG1.001</name>
+            </attributes>
+            <baseQuantities>
+                <NetFloorArea>71.4</NetFloorArea>
+                <GrossPerimeter>34.4</GrossPerimeter>
+                <GrossFloorArea>71.4</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>1</itemKey>
+                    <itemName>Wohnen und Aufenthalt</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <Reference>IFCLABEL('R-005')</Reference>
+                    <FloorCovering>IFCLABEL('Granite')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-006 object for testing Basic FM Handover</description>
+                <guid>0h$kk5vXHc56g02dH7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Meeting room</longName>
+                <name>OG1.002</name>
+            </attributes>
+            <baseQuantities>
+                <GrossCeilingArea>83.28</GrossCeilingArea>
+                <NetCeilingArea>83.28</NetCeilingArea>
+                <NetWallArea>123.58</NetWallArea>
+                <NetFloorArea>83.28</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossWallArea>135.6</GrossWallArea>
+                <GrossPerimeter>45.2</GrossPerimeter>
+                <GrossFloorArea>83.28</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>1</itemKey>
+                    <itemName>Wohnen und Aufenthalt</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Paint')</WallCovering>
+                    <Reference>IFCLABEL('R-006')</Reference>
+                    <FloorCovering>IFCLABEL('Parquet')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>2cs23eea03h3g3sDZsghoF</guid>
+                    <type>ifcdoor</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+                <boundary>
+                    <guid>2cs23eejw3hs33eLZsghoF</guid>
+                    <type>ifcwindow</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-007 object for testing Basic FM Handover</description>
+                <guid>0h$kk5vvG2xeg02dH7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Kitchen</longName>
+                <name>OG1.003</name>
+            </attributes>
+            <baseQuantities>
+                <GrossCeilingArea>16.5</GrossCeilingArea>
+                <NetCeilingArea>16.5</NetCeilingArea>
+                <NetWallArea>48.14</NetWallArea>
+                <NetFloorArea>16.5</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossWallArea>49.8</GrossWallArea>
+                <GrossPerimeter>16.6</GrossPerimeter>
+                <GrossFloorArea>16.5</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>1</itemKey>
+                    <itemName>Wohnen und Aufenthalt</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Paint')</WallCovering>
+                    <Reference>IFCLABEL('R-007')</Reference>
+                    <FloorCovering>IFCLABEL('Tiles')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+        </space>
+        <space ifcObjectType="ifcspace">
+            <attributes>
+                <description>Space-008 object for testing Basic FM Handover</description>
+                <guid>0h$kk5vvG2xeg6vdH7s8af</guid>
+                <internalExternal>NOTDEFINED</internalExternal>
+                <longName>Toilette</longName>
+                <name>OG1.004</name>
+            </attributes>
+            <baseQuantities>
+                <GrossCeilingArea>15.84</GrossCeilingArea>
+                <NetCeilingArea>15.84</NetCeilingArea>
+                <NetWallArea>46.98</NetWallArea>
+                <NetFloorArea>15.84</NetFloorArea>
+                <FinishCeilingHeight>2.9</FinishCeilingHeight>
+                <GrossWallArea>48.6</GrossWallArea>
+                <GrossPerimeter>16.2</GrossPerimeter>
+                <GrossFloorArea>15.84</GrossFloorArea>
+            </baseQuantities>
+            <classification>
+                <item>
+                    <itemKey>7</itemKey>
+                    <itemName>sonstige NutzflÃ¤chen</itemName>
+                    <systemName>DIN277-2</systemName>
+                    <systemEdition>2005</systemEdition>
+                </item>
+            </classification>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <CeilingCovering>IFCLABEL('Paint')</CeilingCovering>
+                    <WallCovering>IFCLABEL('Tiles')</WallCovering>
+                    <Reference>IFCLABEL('R-008')</Reference>
+                    <FloorCovering>IFCLABEL('Tiles')</FloorCovering>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+        </space>
+    </spaces>
+    <windows>
+        <window ifcObjectType="ifcwindow">
+            <attributes>
+                <description>Window-002 for testing Basic FM Handover</description>
+                <guid>2cs23eea03hs33eLZsghoF</guid>
+                <name>AF-2.EG.002</name>
+            </attributes>
+            <baseQuantities>
+                <Area>3.0</Area>
+                <Height>2.0</Height>
+                <Width>1.5</Width>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_WindowCommon">
+                    <IsExternal>IFCLOGICAL(.T.)</IsExternal>
+                    <FireResistence>IFCLABEL('F30')</FireResistence>
+                    <Reference>IFCLABEL('AF-1')</Reference>
+                    <GlazingAreaFraction>IFCPOSITIVERATIOMEASURE(0.8)</GlazingAreaFraction>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                    <type>ifcspace</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <windowStyle ifcObjectType="ifcwindowstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sq7brEif5ojF_gf$NM</guid>
+                    <name>tilt and turn two panel window - external</name>
+                    <operationType>DOUBLE_PANEL_HORIZONTAL</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcwindowliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                        <Transomthickness>0.05</Transomthickness>
+                        <Firsttransomoffset>0.5</Firsttransomoffset>
+                    </propertySet>
+                    <propertySet type="ifcwindowpanelproperties">
+                        <Operationtype>SIDEHUNGLEFTHAND</Operationtype>
+                        <Panelposition>LEFT</Panelposition>
+                        <Framedepth>0.05</Framedepth>
+                        <Framethickness>0.05</Framethickness>
+                    </propertySet>
+                    <propertySet type="ifcwindowpanelproperties">
+                        <Operationtype>TILTANDTURNRIGHTHAND</Operationtype>
+                        <Panelposition>RIGHT</Panelposition>
+                        <Framedepth>0.05</Framedepth>
+                        <Framethickness>0.05</Framethickness>
+                    </propertySet>
+                </properties>
+            </windowStyle>
+        </window>
+        <window ifcObjectType="ifcwindow">
+            <attributes>
+                <description>Window-002 for testing Basic FM Handover</description>
+                <guid>2cs23eea036s33eLZsghoF</guid>
+                <name>AF-2.EG.002</name>
+            </attributes>
+            <baseQuantities>
+                <Area>3.0</Area>
+                <Height>2.0</Height>
+                <Width>1.5</Width>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_WindowCommon">
+                    <IsExternal>IFCLOGICAL(.T.)</IsExternal>
+                    <FireResistence>IFCLABEL('F30')</FireResistence>
+                    <Reference>IFCLABEL('AF-1')</Reference>
+                    <GlazingAreaFraction>IFCPOSITIVERATIOMEASURE(0.8)</GlazingAreaFraction>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                    <type>ifcspace</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <windowStyle ifcObjectType="ifcwindowstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sq7brEif5ojF_gf$NM</guid>
+                    <name>tilt and turn two panel window - external</name>
+                    <operationType>DOUBLE_PANEL_HORIZONTAL</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcwindowliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                        <Transomthickness>0.05</Transomthickness>
+                        <Firsttransomoffset>0.5</Firsttransomoffset>
+                    </propertySet>
+                    <propertySet type="ifcwindowpanelproperties">
+                        <Operationtype>SIDEHUNGLEFTHAND</Operationtype>
+                        <Panelposition>LEFT</Panelposition>
+                        <Framedepth>0.05</Framedepth>
+                        <Framethickness>0.05</Framethickness>
+                    </propertySet>
+                    <propertySet type="ifcwindowpanelproperties">
+                        <Operationtype>TILTANDTURNRIGHTHAND</Operationtype>
+                        <Panelposition>RIGHT</Panelposition>
+                        <Framedepth>0.05</Framedepth>
+                        <Framethickness>0.05</Framethickness>
+                    </propertySet>
+                </properties>
+            </windowStyle>
+        </window>
+        <window ifcObjectType="ifcwindow">
+            <attributes>
+                <guid>2cs23eejw3hs33eLZsghoF</guid>
+                <name>AF-1.OG1.002</name>
+            </attributes>
+            <baseQuantities>
+                <Area>3.0</Area>
+                <Height>1.0</Height>
+                <Width>3.0</Width>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Pset_WindowCommon">
+                    <IsExternal>IFCLOGICAL(.T.)</IsExternal>
+                    <FireResistence>IFCLABEL('F30')</FireResistence>
+                    <Reference>IFCLABEL('AF-2')</Reference>
+                    <GlazingAreaFraction>IFCPOSITIVERATIOMEASURE(0.8)</GlazingAreaFraction>
+                </propertySet>
+            </properties>
+            <spaceBoundary>
+                <boundary>
+                    <guid>0h$kk5vXHc56g02dH7s8af</guid>
+                    <type>ifcspace</type>
+                    <physicalOrVirtualBoundary>Physical</physicalOrVirtualBoundary>
+                    <internalOrExternalBoundary>External</internalOrExternalBoundary>
+                </boundary>
+            </spaceBoundary>
+            <spatialDecomposition>
+                <buildingStoreys>
+                    <guid>0h$ksovXH3Jee5w$H7yFJf</guid>
+                </buildingStoreys>
+            </spatialDecomposition>
+            <windowStyle ifcObjectType="ifcwindowstyle">
+                <attributes>
+                    <constructionType>NOTDEFINED</constructionType>
+                    <guid>3Yq2sj3brEif5ojF_gf$NM</guid>
+                    <name>fixed glazing window</name>
+                    <operationType>SINGLE_PANEL</operationType>
+                </attributes>
+                <properties>
+                    <propertySet type="ifcwindowliningproperties">
+                        <Liningdepth>0.2</Liningdepth>
+                        <Liningthickness>0.05</Liningthickness>
+                    </propertySet>
+                    <propertySet type="ifcwindowpanelproperties">
+                        <Operationtype>REMOVABLECASEMENT</Operationtype>
+                        <Panelposition>MIDDLE</Panelposition>
+                        <Framedepth>0.05</Framedepth>
+                        <Framethickness>0.05</Framethickness>
+                    </propertySet>
+                </properties>
+            </windowStyle>
+        </window>
+    </windows>
+</wholeModelOutput>

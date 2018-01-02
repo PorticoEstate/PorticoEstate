@@ -1,0 +1,11 @@
+contact_BKB	frontend	no	Kontakt
+email_create_account_title	frontend	no	BKBygg systemtilgang
+email_create_account_message	frontend	no	Systemmelding fra Nordlandssykehuset til %1 %2:<br/>Det er opprettet en tilgang for deg i Nordlandssykehuset<br/><br/>Du får tilgang til systemet via kommunens intranett.<br/>Under verktøy i høyre kolonne, velg Nordlandssykehuset.<br/>Brukerveiledning finner du i systemet, ved å velge "Hjelp" i toppmenyen.<br/>Har du spørsmål send en e-post til Nordlandssykehuset brukerstøtte.<br/>
+email_remove_delegate_title	frontend	no	BKBygg systemtilgang
+email_remove_delegate_message	frontend	no	Systemmelding fra Nordlandssykehuset til %1 %2:<br/>Din tilgang til Nordlandssykehuset på vegne av %3 %4 er slettet.<br/>Har du spørsmål send en e-post til Nordlandssykehuset brukerstøtte.<br/>
+email_add_delegate_title	frontend	no	BKBygg systemtilgang
+email_add_delegate_message	frontend	no	Systemmelding fra Nordlandssykehust til %1 %2:<br/>%3 %4 har gitt deg tilgang til Nordlandssykehust for følgende resultatenhet:<br/>%5<br/><br/>Du får tilgang til systemet via kommunens intranett.<br/>Under verktøy i høyre kolonne, velg Nordlandssykehuset.<br/>Brukerveiledning finner du i systemet, ved å velge "Hjelp" i toppmenyen.<br/>Har du spørsmål send en e-post til Nordlandssykehuset brukerstøtte.<br/>
+send_contract_message	frontend	no	Send melding til Nordlandssykehuset angående kontrakten
+total_area_internal	frontend	no	Totalt areal
+total_price_internal	frontend	no	Total pris
+folder	frontend	no	Informasjon

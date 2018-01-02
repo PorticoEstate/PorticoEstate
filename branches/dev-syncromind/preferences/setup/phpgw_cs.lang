@@ -1,0 +1,28 @@
+change your password	preferences	cs	Změnit vaše heslo
+change your profile	preferences	cs	Změnit profil
+change your settings	preferences	cs	Změnit nastavení
+date format	preferences	cs	Formát datumu
+default application	preferences	cs	Implicitní aplikace
+default sorting order	preferences	cs	Implicitní třídění
+email signature	preferences	cs	E-Mail Podpis
+enter your new password	preferences	cs	Vložte vaše heslo
+language	preferences	cs	Jazyk
+max matchs per page	preferences	cs	Počet záznamů na stránku
+note: this feature does *not* change your email password. this will need to be done manually.	preferences	cs	Poznámka: Tímto *nezměníte* vaše heslo pro E-mail. To je třeba udělat ručně
+please, select a new theme	preferences	cs	Prosím vyberte nové barevné téma
+re-enter your password	preferences	cs	Opakujte vaše heslo
+select different theme	preferences	cs	Změnit barevné téma
+show birthday reminders on main screen	preferences	cs	Ukázat připomenutí narozenin na hlavní obrazovce
+show current users on navigation bar	preferences	cs	Ukázat počet současných uživatelů na navigačním řádku
+show high priority events on main screen	preferences	cs	Ukázat události s vysokou prioritou na hlavní obrazovce
+show new messages on main screen	preferences	cs	Ukázat nové zprávy na hlavní obrazovce
+show text on navigation icons	preferences	cs	Ukázat text na navigačních ikonách
+the two passwords are not the same	preferences	cs	Hesla nejsou shodná
+this server is located in the %1 timezone	preferences	cs	Tento server je v %1 časové zóně
+time format	preferences	cs	Formát času
+time zone offset	preferences	cs	Časová zóna (rozdíl)
+weekday starts on	preferences	cs	Týden začíná v 
+work day ends on	preferences	cs	Pracovní dny končí v
+work day starts on	preferences	cs	Pracovní dny začínají v
+you must enter a password	preferences	cs	Musíte vložit heslo
+your current theme is: %1	preferences	cs	Vaše barevné téma je: <b>%1</b>

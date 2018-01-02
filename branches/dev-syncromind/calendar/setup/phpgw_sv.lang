@@ -1,0 +1,310 @@
+%1 %2 in %3	calendar	sv	%1 %2 i %3
+%1 matches found	calendar	sv	%1 träffar
+%1 records imported	calendar	sv	%1 poster importerade
+%1 records read (not yet imported, you may go back and uncheck test import)	calendar	sv	%1 poster lästa (ej importerade än, du kan gå tillbaka och bocka av Test Import)
+(for weekly)	calendar	sv	(för veckovis)
+(i/v)cal	calendar	sv	(i/v)Cal
+1 match found	calendar	sv	1 träff
+a	calendar	sv	a
+accept	calendar	sv	Godkänn
+accepted	calendar	sv	Godkänd
+action that caused the notify: added, canceled, accepted, rejected, ...	calendar	sv	Händelse som orsakade noten: Lagt till, avbruten, godkänd, avböjd, ...
+add a single entry by passing the fields.	calendar	sv	Lägg till en enstaka sak genom att hoppa över fälten.
+add alarm	calendar	sv	Lägg till Alarm
+add contact	calendar	sv	Lägg till kontakt
+added	calendar	sv	Sparad
+address book	calendar	sv	Adressbok
+alarm	calendar	sv	alarm
+alarm for %1 at %2 in %3	calendar	sv	Alarm för %1 på %2 i %3
+alarm management	calendar	sv	Alarm inställningar
+alarm-management	calendar	sv	Alarm--inställning
+alarms	calendar	sv	Alarm
+all	calendar	sv	Alla
+all day	calendar	sv	Hela dagen
+are you sure you want to delete this country ?	calendar	sv	Är du säker på att du vill radera landet?
+are you sure you want to delete this holiday ?	calendar	sv	Ar du säker på att du vill radera den helgdagen?
+are you sure\nyou want to\ndelete these alarms?	calendar	sv	Ar du säker\n att du vill\nradera dessa alarm?
+are you sure\nyou want to\ndelete this entry ?	calendar	sv	Är du säker på att\ndu vill\nta bort denna?
+are you sure\nyou want to\ndelete this entry ?\n\nthis will delete\nthis entry for all users.	calendar	sv	Är du säker\natt du vill\ntabort denna post?\n\nDetta tar bort den\nför alla användare.
+are you sure\nyou want to\ndelete this single occurence ?\n\nthis will delete\nthis entry for all users.	calendar	sv	Är du säker\natt du vill\nradera denna engångshändelse?\n\nDetta kommer att radera\ndenna händelse för alla användare.
+before the event	calendar	sv	före händelsen
+brief description	calendar	sv	Kort beskrivning
+business	calendar	sv	Arbete
+calendar	common	sv	kalender
+calendar - [iv]cal importer	calendar	sv	Kalender - [iv]Cal Import
+calendar - add	calendar	sv	Kalender - Lägg till
+calendar - edit	calendar	sv	Kalender - Ändra
+calendar event	calendar	sv	Kalenderhändelse
+calendar holiday management	admin	sv	Kalender helgdagsinställning
+calendar preferences	calendar	sv	Kalender förinställningar
+calendar settings	admin	sv	Kalender inställningar
+calendar-fieldname	calendar	sv	Kalender-fält
+canceled	calendar	sv	Avbruten
+change all events for $params['old_owner'] to $params['new_owner'].	calendar	sv	Ändra alla händelser för $params['old_owner'] till $params['new_owner'].
+change status	calendar	sv	Ändra status
+click %1here%2 to return to the calendar.	calendar	sv	Klicka %1här%2 för att åtevända till kalendern.
+configuration	calendar	sv	Konfiguration
+countries	calendar	sv	Länder
+country	calendar	sv	Land
+csv-fieldname	calendar	sv	CSV-fältnamn
+csv-filename	calendar	sv	CSV-filnamn
+custom fields	calendar	sv	Inställt fält
+custom fields and sorting	common	sv	Inställda fält och sortering
+daily	calendar	sv	Daglig
+daily matrix view	calendar	sv	Daglig matris vy
+days	calendar	sv	dagar
+days repeated	calendar	sv	dagar repeterade
+dayview	calendar	sv	Dagvy
+default appointment length (in minutes)	calendar	sv	standard möteslängd (i minuter)
+default calendar filter	calendar	sv	Standard kalenderfilter
+default calendar view	calendar	sv	Standard kalendervy
+default length of newly created events. the length is in minutes, eg. 60 for 1 hour.	calendar	sv	Standard längd för nyskapade händelser. Längden är i minuter dvs 60 för en timme.
+defines the size in minutes of the lines in the day view.	calendar	sv	Definierar längden i minuter för linjerna i dagvyn.
+delete a single entry by passing the id.	calendar	sv	Radera en enstaka händelse genom att ange id.
+delete an entire users calendar.	calendar	sv	Radera hela användarens kalender.
+delete selected contacts	calendar	sv	Radera de valda kontakterna.
+delete series	calendar	sv	Radera serier
+delete single	calendar	sv	Radera enstaka
+deleted	calendar	sv	Raderad
+description	calendar	sv	BESKRIVNING
+display interval in day view	calendar	sv	Visa intervall i dagvyn
+display mini calendars when printing	calendar	sv	Visa minikalender vid utskrift
+display status of events	calendar	sv	Visa status på händelser
+displays your default calendar view on the startpage (page you get when you enter phpgroupware or click on the homepage icon)?	calendar	sv	Visa din standard kalendervy på startsidan (sidan som du ser när du startar phpGroupWare eller när du klickat på hem-ikonen)?
+do you want to be notified about new or changed appointments? you be notified about changes you make yourself.<br />you can limit the notifications to certain changes only. each item includes all the notification listed above it. all modifications include changes of title, description, participants, but no participant responses. if the owner of an event requested any notifcations, he will always get the participant responses like acceptions and rejections too.	calendar	sv	Vill du bli påmind om nya eller ändrade möten? Du kommer att bli påmind om ändringar du själv har gjort.<br />Du kan begränsa påminnelserna till endast vissa ändringar. Varje (item) innehåller alla påminnelser som är listade ovanför den. Alla ändringar innehåller förändring i rubrik, beskrivning, deltagare, men inte deltagarnas svar. Om ägaren av en händelse begärt någon påminnelse, kommer denne att få deltagarnas svar, även bekräftelse eller nekande.
+do you want to receive a regulary summary of your appointsments via email?<br />the summary is sent to your standard email-address on the morning of that day or on monday for weekly summarys.<br />it is only sent when you have any appointments on that day or week.	calendar	sv	Vill du få en regelbunden sammandrag av dina möten via epost?<br />Sammandraget sänds till din standard epost-adress på morgonen den dagen eller på måndagen för veckovisa sammandrag.<br />Det sänds bara ut om du har något möte den dagen eller veckan.
+do you wish to autoload calendar holidays files dynamically?	admin	sv	Vill ladda ner kalenderns helgdags-filer dynamiskt?
+download	calendar	sv	Ladda ner
+duration	calendar	sv	Varaktighet
+edit series	calendar	sv	Ändra serier
+edit single	calendar	sv	Ändra enstaka
+email reminder	calendar	sv	Epost-påminnelse
+end date/time	calendar	sv	Slut Datum/tid
+enddate	calendar	sv	Slutdatum
+ends	calendar	sv	slut
+enter output filename: ( .vcs appended )	calendar	sv	Fyll i filnamn: (.vcs läggs till)
+event details follow	calendar	sv	Detaljer för händelser kommer
+exceptions	calendar	sv	Undantag
+export	calendar	sv	Exportera
+export a list of entries in ical format.	calendar	sv	Exportera lista på händelser i iCal-format
+extended	calendar	sv	Detaljerad
+extended updates always include the complete event-details. ical's can be imported by certain other calendar-applications.	calendar	sv	Detaljerade uppdateringar innehåller alltid kompletta händelsebeskrivningar. iCal:s kan importeras av vissa andra kalender-moduler.
+external participants	calendar	sv	Utomstående deltagare
+failed sending message to '%1' #%2 subject='%3', sender='%4' !!!	calendar	sv	Det gick inte att sända meddelande till '%1'#%2 subject='%3', sender='%4' !!!
+fieldseparator	calendar	sv	Fält-avdelare
+firstname of person to notify	calendar	sv	Förnamn på person som ska kontaktas
+format of event updates	calendar	sv	Format på händelseuppdatering
+fr	calendar	sv	Fr
+free/busy	calendar	sv	Ledig/Upptagen
+frequency	calendar	sv	Hur ofta
+fri	calendar	sv	Fre
+full description	calendar	sv	Full beskrivning
+fullname of person to notify	calendar	sv	Hela namnet på personen som ska kontaktas
+generate printer-friendly version	calendar	sv	Skapa utskriftsvänlig version
+global categories	calendar	sv	Global kategori
+global public and group public	calendar	sv	Globalt publikt och Grupp publikt
+global public only	calendar	sv	Endast Globalt publikt
+go!	calendar	sv	Kör!
+grant calendar access	common	sv	Tillåt tillgång till kalender
+group planner	calendar	sv	Grupp-planerare
+group public only	calendar	sv	Endast grupp publikt
+here is your requested alarm.	calendar	sv	Här kommer din påminnelse.
+high priority	calendar	sv	hög prioritet
+holiday	calendar	sv	Helgdag
+holiday management	calendar	sv	Helgdagar Inställning
+holiday-management	calendar	sv	Helgdagsinställning
+holidays	calendar	sv	Helgdagar
+hours	calendar	sv	timmar
+i participate	calendar	sv	Jag deltar
+ical / rfc2445	calendar	sv	iCal / rfc2445
+if checked holidays falling on a weekend, are taken on the monday after.	calendar	sv	Om markerade helgdagar infaller på veckoslut utfaller det på måndagen efter.
+ignore conflict	calendar	sv	Ignorera konflikt
+import	calendar	sv	Import
+import csv-file into calendar	calendar	sv	Importera CSV-fil till kalendern
+interval	calendar	sv	Intervall
+intervals in day view	calendar	sv	Intervall i dagvyn
+intervals per day in planner view	calendar	sv	Intervall per dag i planeringsvyn
+invalid entry id.	calendar	sv	Felaktigt id.
+last	calendar	sv	sista
+lastname of person to notify	calendar	sv	Efternamn på personen att kontakta
+length shown<br />(emtpy for full length)	calendar	sv	Visad längd<br />(tom för full längd)
+length<br />(<= 255)	calendar	sv	Längd<br />(<=255)
+load [iv]cal	calendar	sv	Läs in [iv]Cal
+location	calendar	sv	Plats
+location to autoload from	admin	sv	Plats att ladda ner automatiskt från
+matrixview	calendar	sv	Matrisvy
+minutes	calendar	sv	minuter
+mo	calendar	sv	Må
+modified	calendar	sv	Modifierad
+modify list of external participants	calendar	sv	Ändra lista på utomstående deltagare
+mon	calendar	sv	Mån
+month	calendar	sv	Månad
+monthly	calendar	sv	Månadsvis
+monthly (by date)	calendar	sv	Månatligt (efter datum)
+monthly (by day)	calendar	sv	Månatligt (efter dag)
+monthview	calendar	sv	Månadsvy
+new entry	calendar	sv	Ny Post
+new name must not exist and not be empty!!!	calendar	sv	Nytt namn får inte finnas tidigare och får inte vara tomt!!!
+no matches found	calendar	sv	Inga träffar
+no matches found.	calendar	sv	Ingen träff hittad.
+no response	calendar	sv	Inget svar
+notification messages for added events	calendar	sv	Påminnelsemeddelande för sparad händelse
+notification messages for canceled events	calendar	sv	Påminnelsemeddelande för inställd händelse
+notification messages for modified events	calendar	sv	Påminnelsemeddelande för ändrad händelse
+notification messages for your alarms	calendar	sv	Påminnelsemeddelande för dina alarm
+notification messages for your responses	calendar	sv	Påminnelsemeddelande för de svarsmeddelanden du fått
+number of intervals per day in planner view	calendar	sv	Antal intervall per dag i planeringsvyn
+number of months	calendar	sv	Antal månader
+number of records to read (<=200)	calendar	sv	Antal poster att läsa (<=200)
+observance rule	calendar	sv	Övervakningsregel
+occurence	calendar	sv	Förekomst
+old startdate	calendar	sv	Gammalt startdatum
+olddate	calendar	sv	Gammalt datum
+on %1 %2 %3 your meeting request for %4	calendar	sv	Den %1 %2 %3 din begäran om möte med %4
+on all changes	calendar	sv	för alla ändringar
+on all modification, but responses	calendar	sv	för alla ändringar, utom svar
+on any time change too	calendar	sv	för alla tidsändringar också
+on invitation / cancelation only	calendar	sv	för inbjudningar/avböjanden endast
+on participant responses too	calendar	sv	för deltagares svar endast
+on time change of more than 4 hours too	calendar	sv	för tidsändringar på mer än 4 timmar också
+order	calendar	sv	Order
+overlap holiday	calendar	sv	överlappande helg
+participant	calendar	sv	Deltagare
+participants	calendar	sv	Deltagare
+participates	calendar	sv	Deltar
+people holiday	calendar	sv	folklig helgdag
+permission denied	calendar	sv	Behörighet nekad
+planner	calendar	sv	Planeringskalender
+planner by category	calendar	sv	Planeringskalender för kategori
+planner by user	calendar	sv	Planeringskalender för deltagare
+please confirm,accept,reject or examine changes in the corresponding entry in your calendar	calendar	sv	Ange bekräfta, neka eller undersök ändringar i motsvarande händelse i din kalender
+preselected group for entering the planner	calendar	sv	Förvald grupp för tillträde till planeringskalender
+print calendars in black & white	calendar	sv	Skriv ut kalender i svart/vitt
+print the mini calendars	calendar	sv	Skriv ut mini-kalender
+printer friendly	calendar	sv	Utskriftsvänlig
+privat	calendar	sv	Privat
+private and global public	calendar	sv	Privat och globalt publikt
+private and group public	calendar	sv	Privat och Grupp publikt
+private only	calendar	sv	Endast privat
+re-edit event	calendar	sv	Ändra händelse igen
+read a list of entries.	calendar	sv	Se lista på ändringar
+read a single entry by passing the id and fieldlist.	calendar	sv	Se enskild ändring genom att ange id och fältlista.
+read this list of methods.	calendar	sv	Läs lista på metoder.
+receive email updates	calendar	sv	Ta emot epost-uppdateringar
+receive extra information in event mails	calendar	sv	Ta emot extra information i händelse-brev
+receive summary of appointments	calendar	sv	Ta emot sammandrag av möten
+recurring event	calendar	sv	återkommande händelse
+refresh	calendar	sv	Uppdatera
+reinstate	calendar	sv	Återinsätt
+rejected	calendar	sv	Nekad
+repeat day	calendar	sv	Repetera dag
+repeat end date	calendar	sv	Repetera slutdatum
+repeat type	calendar	sv	Repetera type
+repeating event information	calendar	sv	Repetera händelse information
+repetition	calendar	sv	Repetition
+repetitiondetails (or empty)	calendar	sv	Detaljer för repition (eller tomt)
+reset	calendar	sv	Återställ
+rule	calendar	sv	Regel
+sa	calendar	sv	Lö
+sat	calendar	sv	Lör
+scheduling conflict	calendar	sv	Kalenderkonflikt
+search results	calendar	sv	Sök resultat
+selected contacts (%1)	calendar	sv	Markerade kontakter (%1)
+send updates via email	common	sv	Skicka uppdateringar med epost
+send/receive updates via email	calendar	sv	Skicka/ta emot uppdateringar med epost
+set a year only for one-time / non-regular holidays.	calendar	sv	Ange år bara för tillfälliga (ej normala) helgdagar.
+set new events to private	calendar	sv	Ange alla nya händelser som privata
+should invitations you rejected still be shown in your calendar ?<br />you can only accept them later (eg. when your scheduling conflict is removed), if they are still shown in your calendar!	calendar	sv	Ska inbjudningar som du nekat fortfarande visas i din kalender ?<br />Du kan bara acceptera dem senare, (dvs om en konflikt tas bort), om de fortfarande visas i din kalender!
+should new events created as private by default ?	calendar	sv	Ska nya händelser skapas som privata vara normalinställning?
+should the mini calendars by printed / displayed in the printer friendly views ?	calendar	sv	Ska minikalendern skrivas ut/visas i den utskriftsvänliga vyn?
+should the printer friendly view be in black & white or in color (as in normal view)?	calendar	sv	Ska den utskriftsvänliga vyn vara i svart/vitt eller i färg(som i den normala vyn)?
+should the status of the event-participants (accept, reject, ...) be shown in brakets after each participants name ?	calendar	sv	Ska status visas på händelse-deltagare (bekräfta, neka, ...) inom parentes efter varje deltagares namn?
+show day view on main screen	calendar	sv	visa dagvyn på huvudsidan
+show default view on main screen	calendar	sv	Visa normalvyn på huvudsidan
+show high priority events on main screen	calendar	sv	Visa högprioritets händelser på huvudskärmen
+show invitations you rejected	calendar	sv	Visa inbjudningar du nekat
+single event	calendar	sv	enstaka händelse
+sorry, the owner has just deleted this event	calendar	sv	Ägaren har tyvärr just raderat denna händelse
+sorry, this event does not exist	calendar	sv	Den här händelsen existerar tyvärr inte
+sorry, this event does not have exceptions defined	calendar	sv	Den här händelsen har tyvärr inga undantag definierade
+sort by	calendar	sv	Sortera efter
+specifies the the number of intervals shown in the planner view.	calendar	sv	Ange antal intervall som ska visas i plaeringsvyn.
+start date/time	calendar	sv	Start Datum/Tid
+start- and enddates	calendar	sv	Start- och sluttid
+startdate	calendar	sv	Startdatum
+startrecord	calendar	sv	Startpost
+su	calendar	sv	Sö
+submit to repository	calendar	sv	Lägg till databasen
+sun	calendar	sv	Sön
+tentative	calendar	sv	Provisorisk
+test import (show importable records <u>only</u> in browser)	calendar	sv	Testimport (visa importerbara poster <u>bara</u>i webläsaren)
+text	calendar	sv	Text
+th	calendar	sv	To
+the following conflicts with the suggested time:<ul>%1</ul>	calendar	sv	Följande kommer i konflikt med den föreslagna tiden:<ul>%1</ul>
+the user %1 is not participating in this event!	calendar	sv	%1 deltar inte i denna händelse!
+there was an error trying to connect to your news server.<br />please contact your admin to check the news servername, username or password.	calendar	sv	Ett fel uppstod vid uppkopplingen till din nyhetsserver.<br />Kontakta administratören för att ta reda på vilken server som ska användas och eventuellt användarnamn och lösenord.
+this day is shown as first day in the week or month view.	calendar	sv	Denna dag visas som första dag i vecko eller månadsvyn.
+this defines the end of your dayview. events after this time, are shown below the dayview.	calendar	sv	Detta anger slutet på din dagvy. Händelser efter denna tid visas nedan i dagvyn.
+this defines the start of your dayview. events before this time, are shown above the dayview.<br />this time is also used as a default starttime for new events.	calendar	sv	Detta anger start på dagvyn. Händelser före denna tid vissa ovan i dagvyn.<br />Denna tid används även som normal starttid för nya händelser.
+this group that is preselected when you enter the planner. you can change it in the planner anytime you want.	calendar	sv	Denna grupp är förvald när du använder planeringskalendern. Du kan ändra det i planeringskalendern när du vill.
+this is mostly caused by a not or wrongly configured smtp server. notify your administrator.	calendar	sv	Detta beror oftast på att man inte har angett SMTP-server eller ingen SMTP-server. Kontakta din administratör.
+this message is sent for canceled or deleted events.	calendar	sv	Detta meddelande sänds vid inställa eller raderade händelser.
+this message is sent for modified or moved events.	calendar	sv	Detta meddelande sänds vid ändrade eller flyttade händelser.
+this message is sent to every participant of events you own, who has requested notifcations about new events.<br />you can use certain variables which get substituted with the data of the event. the first line is the subject of the email.	calendar	sv	Detta meddelande sänds till alla deltagare som begärt påminnelse i de nya händelser som du äger/skapat.<br />Du kan ange vissa variabler som läggs in i händelsernas data. Första raden är rubriken på epost-meddelandet.
+this message is sent when you accept, tentative accept or reject an event.	calendar	sv	Detta meddelande sänds när du accepterar, accepterar jakande eller nekar en händelse.
+this message is sent when you set an alarm for a certain event. include all information you might need.	calendar	sv	Detta meddelande sänds när du har angett ett alarm för en särskild händelse. Lägg till den information som du kan tänkas behöva.
+this month	calendar	sv	Denna månaden
+this week	calendar	sv	Denna veckan
+this year	calendar	sv	Detta år
+thu	calendar	sv	Tor
+title	calendar	sv	RUBRIK
+title of the event	calendar	sv	Rubrik på händelse
+title-row	calendar	sv	Rubrikrad
+to-firstname	calendar	sv	Till-förnamn
+to-fullname	calendar	sv	Till-namn
+to-lastname	calendar	sv	Till-efternamn
+today	calendar	sv	I dag
+translation	calendar	sv	Översättning
+tu	calendar	sv	Ti
+tue	calendar	sv	Tis
+update a single entry by passing the fields.	calendar	sv	Uppdatera en enstaka ifyllning genom att passera det fältet
+updated	calendar	sv	Uppdaterad
+use end date	calendar	sv	Använd slutdatum
+view this entry	calendar	sv	Visa denna post
+we	calendar	sv	On
+wed	calendar	sv	Ons
+week	calendar	sv	Vecka
+weekday starts on	calendar	sv	Första veckodag är
+weekly	calendar	sv	Veckovis
+weekview	calendar	sv	Veckovy
+when creating new events default set to private	calendar	sv	Vid skapande av ny händelse ange som privat
+which events do you want to see when you enter the calendar.	calendar	sv	Vilka händelser du vill se när du startar kalendern.
+which of calendar view do you want to see, when you start calendar ?	calendar	sv	Vilken kalendervy vill du se när du startar kalendern?
+work day ends on	calendar	sv	Arbetsdagen slutar
+work day starts on	calendar	sv	Arbetsdagen börjar
+workdayends	calendar	sv	arbetsdagsslut
+year	calendar	sv	År
+yearly	calendar	sv	Årligen
+yearview	calendar	sv	Årsvy
+you can either set a year or a occurence, not both !!!	calendar	sv	Du kan antingen ange ett år eller en förekomst, inte båda !!!
+you can only set a year or a occurence !!!	calendar	sv	Du kan bara ange ett år eller en förekomst !!!
+you do not have permission to add alarms to this event !!!	calendar	sv	Du har inte behörighet att lägga till ett alarm för denna händelse !!!
+you do not have permission to delete this alarm !!!	calendar	sv	Du har inte behörighet att radera detta alarm !!!
+you do not have permission to enable/disable this alarm !!!	calendar	sv	Du har inte behörighet att aktivera/deaktivera detta alarm !!!
+you do not have permission to read this record!	calendar	sv	Du har inte behörighet att läsa denna post!
+you have %1 high priority events on your calendar today.	common	sv	Du har %1 högprioritets händelse i din kalender i dag.
+you have 1 high priority event on your calendar today.	common	sv	Du har 1 högprioritets händelse i din kalender i dag.
+you have a meeting scheduled for %1	calendar	sv	Du har ett möte inplanerat till %1
+you have not entered a title	calendar	sv	Du har inte angett någon rubrik
+you have not entered a valid date	calendar	sv	Du har inte angett något gilitgt datum
+you have not entered a valid time of day	calendar	sv	Du har inte angett någon giltig tidpunkt
+you have not entered a\nbrief description	calendar	sv	Du har inte skrivit\nen beskrivning.
+you have not entered a\nvalid time of day.	calendar	sv	Du har inte angivit\nen giltig tid.
+you have not entered participants	calendar	sv	Du har inte angett några deltagare
+you must enter one or more search keywords	calendar	sv	Du måste skriva in ett eller flera sökord
+you must select a [iv]cal. (*.[iv]cs)	calendar	sv	Du måste välja en [iv]Cal. (*.[iv]cs)
+you need to set either a day or a occurence !!!	calendar	sv	Du måste ange antingen dag eller förekomst !!!
+your meeting scheduled for %1 has been canceled	calendar	sv	Ditt möte %1 har blivit inställt
+your meeting that had been scheduled for %1 has been rescheduled to %2	calendar	sv	Ditt möte planerat till %1 har blivit flyttat till %2
+your suggested time of <b> %1 - %2 </b> conflicts with the following existing calendar entries:	calendar	sv	Din föreslagna tid av <B> %1 - %2 </B> är i konflikt med de följande kalender entries:
+

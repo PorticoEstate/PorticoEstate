@@ -1,0 +1,8 @@
+autoreply	sms	no	Autosvar
+config	sms	no	Konfigurasjon
+custom	sms	no	Tilpasset
+daemon manual refresh	sms	no	Manuell oppdatering
+inbox	sms	no	Innbox
+log	sms	no	Logg
+outbox	sms	no	Utbox
+polls	sms	no	Avstemninger

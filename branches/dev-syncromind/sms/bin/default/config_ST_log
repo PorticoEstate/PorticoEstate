@@ -1,0 +1,40 @@
+<?php
+	/**
+	 * phpGroupWare - sms: A SMS Gateway
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package sms
+	 * @subpackage sms
+	 * @version $Id: config_VASK 18297 2007-10-03 13:34:09Z sigurdne $
+	 */
+	/**
+	 * Description
+	 * @package sms
+	 * Config values for SMS-command "ST" - (Strøing) "sanding the ice" in Norwegian - as example - as it is configured at BBB 
+	 * This file is for redirecting from log items to the subject of the log 
+	 */
+//	$agreement = array(48089,48329);
+	$agreement = array(86850);
+	foreach ($agreement as $agreement_id)
+	{
+		$sql = "SELECT id from fm_s_agreement_detail WHERE agreement_id = $agreement_id AND location_code ilike '" . $param . "%'";
+		$this->db->query($sql, __LINE__, __FILE__);
+		$this->db->next_record();
+		if ($this->db->f('id'))
+		{
+			break;
+		}
+		else
+		{
+			$agreement_id = 0;
+		}
+	}
+
+	$link_data = array
+		(
+		'menuaction' => 'property.uis_agreement.view',
+		'id' => $agreement_id
+	);

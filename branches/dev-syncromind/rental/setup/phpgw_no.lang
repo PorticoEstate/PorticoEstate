@@ -1,0 +1,687 @@
+day	rental	no	Dag
+hour	rental	no	Time
+1-6 characters	rental	no	1-6 tegn
+6 characters	rental	no	6 tegn
+account_in	rental	no	Art/konto inntektsside
+account_in_not_numeric	rental	no	Art/konto inntektsside må være et tall
+account_number	rental	no	Kontonummer
+account_out	rental	no	Art/konto utgiftsside
+account_out_not_numeric	rental	no	Art/konto utgiftsside må være et tall
+active_party	rental	no	Kontraktspart er aktiv
+active_plural	rental	no	Aktive
+active_single	rental	no	Aktiv
+active	rental	no	Aktiv
+add_area	rental	no	Legg til areal
+added_areas	rental	no	Inkludert areal
+add	rental	no	Legg til
+address	rental	no	Adresse
+adjust_price	rental	no	Juster pris
+adjustment	rental	no	Regulering
+adjustable	rental	no	Regulerbar
+adjustment_interval	rental	no	Reguleringsintervall
+adjustment_is_executed	rental	no	Reguleringen er utført
+adjustment_is_not_executed	rental	no	Reguleringen er ikke utført
+adjustment_list	rental	no	Reguleringer
+adjustment_list_out_of_date	rental	no	Det er kjørt en nyere regulering for samme utvalg av kontrakter
+adjustment_share	rental	no	Reguleringsandel
+adjustment_type	rental	no	Reguleringstype
+adjustment_year	rental	no	Sist regulert
+adjustment_date	rental	no	Reguleringsdato
+adjustment_type_KPI	rental	no	KPI
+adjustment_type_deflator	rental	no	Kommunal deflator
+advance	rental	no	Forskudd
+agresso_id	rental	no	Agresso-ID
+agresso_gl07	rental	no	Agresso GL07 - hovedbokstall
+agresso_lg04	rental	no	Agresso LG04 - salgsordrer
+add_location	rental	no	Legg enhet til leieobjektet
+address1	rental	no	Adresse 1
+address2	rental	no	Adresse 2
+all	rental	no	Alle
+alle	rental	no	Alle
+all_locations	rental	no	Enheter fra eiendomsregisteret
+and	rental	no	og
+annually	rental	no	Årlig
+area_gros	rental	no	Bruttoareal
+area_net	rental	no	Nettoareal
+area_not_found	rental	no	Kunne ikke finne detaljer om arealet
+area	rental	no	Areal
+area decimal places	rental	no	Antall desimaler for arealer
+area suffix	rental	no	Areal suffix
+area_max	rental	no	Max areal
+audience	rental	no	Målgrupper
+availability	rental	no	Status
+availability_date	rental	no	Dato
+available_areas	rental	no	Tilgjenglig areal
+available_at	rental	no	Ledig på dato
+available_composites	rental	no	Ledige leieobjekt
+available_composites	rental	no	Tilgjengelige leieobjekter
+composites	rental	no	Leieobjekt
+available_from	rental	no	Tilgjengelig fra
+available_parties	rental	no	Tilgjengelige kontraktsparter
+available_price_items	rental	no	Tilgjengelige priselementer
+available?	rental	no	Kan leies ut?
+available	rental	no	Tilgjengelig
+available ?	rental	no	Tilgjengelig
+available_for_pick	rental	no	tilgjengelig
+back	rental	no	Tilbake
+bank_guarantee	rental	no	Bankgaranti
+Billing date	rental	no	Fakturadato
+billing time limit	rental	no	Faktura - tidsgrense
+billing_external	rental	no	Ekstern
+billing_internal	rental	no	Intern
+billing_start	rental	no	Fakturastart
+billing_end	rental	no	Fakturastopp
+billing_term	rental	no	Termin
+billing_terms	rental	no	Terminer
+billing_unit	rental	no	Ansvar-/tjenestested	
+billing_removed_KF_contract	rental	no	Fjernet KF-kontrakt med id
+billing_removed_contract_part_1	rental	no	Fjernet kontrakt
+billing_removed_contract_part_2	rental	no	med total pris lik 0 kroner
+billing_removed_external_contract	rental	no	Kontrakt med ansvarsområde eksternleie må ha kontrakttype
+bill	rental	no	Faktura
+bill2	rental	no	Fakturér
+btn_add	rental	no	Deleger tilgang til bruker
+btn_search	rental	no	Finn bruker
+building	rental	no	Bygg
+calculations_internal_investment	rental	no	Beregningsgrunnlag internleie/investeringer
+calculate_price_apiece	rental	no	Pris regnes per stk.
+calculate_price_per_area	rental	no	Pris regnes ut fra areal
+calendar_months	rental	no	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
+calendar_weekdays	rental	no	["Sø","Ma","Ti","On","To","Fr","Lø"]
+cancel	rental	no	Avbryt
+category config move in	rental	no	Kategori for innflyttingsmeldinger
+category config move out	rental	no	Kategori for utflyttingsmeldinger
+close	rental	no	Lukk
+clear	rental	no	Nullstill
+closing_due_date	rental	no	Nær opsjonsfrist
+CSV	rental	no	CSV
+comment	rental	no	Kommentar
+comments	rental	no	Kommentarer
+Commit	rental	no	Avslutt
+Commited	rental	no	Avsluttet
+company	rental	no	Foretak
+company_name	rental	no	Foretak
+composite_name	rental	no	Navn på leieobjekt
+composite_address	rental	no	Adresse på leieobjekt
+composite	rental	no	Leieobjekt
+composite_back	rental	no	Leieobjektsliste
+composite_has_contract	rental	no	Leieobjekt med aktive kontrakter
+composite_has_no_contract	rental	no	Leieobjekt uten aktive kontrakter
+composite standard	rental	no	Leieobjekt standard
+factor	common	no	Faktor
+contract	rental	no	Kontrakt
+contract_back	rental	no	Kontraktsliste
+contract_id	rental	no	Kontraktsnummer
+contract_not_adjustable	rental	no	Kontrakten er ikke regulerbar
+contract_number	rental	no	Kontraktnummer
+contract_warning	rental	no	Advarsler
+contracts_containing_this_composite	rental	no	Kontrakter knyttet til dette leieobjektet
+contracts	rental	no	Kontrakter
+contracts_under_dismissal	rental	no	Kontrakter under avslutning
+contract_under_dismissal	rental	no	Under avslutning
+contract_notifications	rental	no	Kontraktens varsler
+contract_notification_status	rental	no	Status
+contracts_for_regulation	rental	no	Regulering med tilhørende kontrakter
+contract_regulation_back	rental	no	Regulering
+contracts_removed	rental	no	Kontrakter som er fjernet fra fakturakjøringen
+contracts_with_one_time	rental	no	Kontrakter med engangsbeløp
+contracts_in_cycle	rental	no	Kontrakter som følger vanlig fakturasyklus
+contracts_out_of_cycle	rental	no	Kontrakter som avviker fra vanlig faktureringssyklus
+contracts_not_billed_before	rental	no	Kontrakter som ikke er fakturert tidligere
+contract_status	rental	no	Status
+contract_type_eksternleie	rental	no	Eksternleie
+contract_type_eksternleie_feste	rental	no	Feste (1520)
+contract_type_eksternleie_leilighet	rental	no	Leilighet (1530)
+contract_type_eksternleie_annen	rental	no	Annen (1510)
+contract_type_innleie	rental	no	Innleie
+contract_type_internleie	rental	no	Internleie
+contract_type_internleie_egne	rental	no	Egne
+contract_type_internleie_innleie	rental	no	Innleie
+contract_type_internleie_investeringskontrakt	rental	no	Investeringskontrakt
+contract_type_internleie_KF	rental	no	KF
+contract_type_internleie_andre	rental	no	Andre
+contract_type_investeringskontrakt	rental	no	Investeringskontrakt
+contract_type	rental	no	Kontrakttype
+contract_type_id	rental	no	Kontrakttype
+contract_types	rental	no	Kontrakttyper
+contract_type_internleie_1	rental	no	Utført internleieregulering av kontrakter som reguleres hvert år
+contract_type_internleie_2	rental	no	Utført internleieregulering av kontrakter som reguleres hvert annet år
+contract_type_internleie_10	rental	no	Utført internleieregulering av kontrakter som reguleres hvert tiende år
+contract_type_innleie_1	rental	no	Utført innleieregulering av kontrakter som reguleres hvert år
+contract_type_innleie_2	rental	no	Utført innleieregulering av kontrakter som reguleres hvert annet år
+contract_type_innleie_10	rental	no	Utført innleieregulering av kontrakter som reguleres hvert tiende år
+contract_type_eksternleie_1	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert år
+contract_type_eksternleie_2	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert annet år
+contract_type_eksternleie_10	rental	no	Utført eksternleieregulering av kontrakter som reguleres hvert tiende år
+contracts_closing_due_date	rental	no	Kontrakter nær opsjonsfrist
+contract_future_info	rental 	no	Fremtidig kontraktsinformasjon
+Could not find specified billing job.	rental	no	Kunne ikke finne spesifisert fakturering.
+count decimal places	rental	no	Antall desimaler for opptelling
+count	rental	no	Antall
+count_suffix	rental	no	stk
+count_suffix	rental	no	stk
+create_billing	rental	no	Opprett fakturakjøring
+create_shortcut	rental	no	Ny snarvei
+create_contract_contract_type_eksternleie	rental	no	Opprett eksternleiekontrakt
+create_contract_contract_type_innleie	rental	no	Opprett innleiekontrakt
+create_contract_contract_type_internleie	rental	no	Opprett internleiekontrakt
+create_user_based_on_email_link	rental	no	Opprett bruker basert på e-post
+create user based on email group	rental	no	Velg gruppe nye brukere blir innmeldt i
+cs15_export	rental	no	Kundefil
+currency decimal places	rental	no	Antall desimaler for valuta
+currency prefix	rental	no	Valuta prefix
+currency suffix	rental	no	Valuta suffix
+currency_thousands_separator	rental	no	.
+custom_address	rental	no	overstyrt
+dashboard_title	rental	no	Forside - Min arbeidsoversikt
+DATATABLE_MSG_EMPTY	rental	no	Ingen data
+DATATABLE_MSG_ERROR	rental	no	Datafeil
+DATATABLE_MSG_LOADING	rental	no	Laster data
+date_end	rental	no	Gjelder til
+date	rental	no	Dato
+date_start	rental	no	Gjelder fra
+decimal separator	rental	no	Skilletegn for desimaler
+delegates	rental	no	Delegering
+delegate_removed	rental	no	Delegaten ble fjernet.
+delegation_error	rental	no	Feil under delegering
+delegation_successful	rental	no	Velykket delegering
+delete	rental	no	Slett
+department	rental	no	Avdeling
+deposit	rental	no	Depositum
+description	rental	no	Beskrivelse
+details	rental	no	Detaljer
+document_type	rental	no	Dokumenttype
+document_name	rental	no	Dokumentnavn
+document_title	rental	no	Dokumenttittel
+documents	rental	no	Dokumenter
+Download Agresso import file	rental	no	Last ned Agresso-importfil (CS15)
+Download as %1	rental	no	Last tabellen i %1-format
+Download export	rental	no	Last ned eksporten
+do_not_exist	rental	no	Eksisterer ikke
+due_date	rental	no	Opsjonsfrist
+economy	rental	no	Økonomi
+edit_contract	rental	no	Redigér kontrakt
+edit	rental	no	Redigér
+elements_pr_page	rental	no	elementer per side
+elements	rental	no	Elementer
+email	rental	no	E-post
+email_create_user_based_on_email_title	rental	no	Tilgang til Portico Estate
+email_create_user_based_on_email_message	rental	no	Hei %1 %2:<br/>Det er opprettet en tilgang for deg i Portico Estate<br/><br/>Brukernavnet er e-posten din<br/>Passordet er %3<br/><br/>Systemet kan nås på adressen %4
+ended	rental	no	Avsluttet
+entity config move out	rental	no	Entitet for utflytting
+entity config move in	rental	no	Entitet for innflytting
+error_create_user_based_on_email	rental 	no	En feil oppstod under opprettelse av bruker
+error_create_user_based_on_email_account_exist	rental	no	En konto med denne e-posten som brukernavn eksisterer allerede
+error_create_user_based_on_email_not_valid_address	rental	no	Kan ikke opprette kontoen pga av e-postadressen ikke er gyldig
+error_no_contract_or_party	rental	no	Ingen kontrakt eller kontraktspart å utføre handlingen på
+events	rental	no	Hendelser
+every_second_week	rental	no	Hver 14. dag
+Excel	rental	no	Excel
+execute_adjustments	rental	no	Utfør reguleringer
+executive_officer	rental	no	Saksbehandler
+executive_officer_for	rental	no	Saksbehandler for
+export	rental	no	Eksport
+export_contracts	rental	no	Eksporter kontrakter
+export_contract_price_items	rental	no	Eksporter priselementer på kontrakter
+Export failed.	rental	no	Eksporten feilet.
+Export format	rental	no	Format
+Export generated.	rental	no	Eksporten ble generert.
+export_to	rental	no	Eksporter
+external	rental	no	Eksterne kontraktsparter
+facilit_import	rental	no	Import fra Facilit
+failed_removing_delegate	rental	no	Det oppstod en feil under sletting av delegaten.
+fax	rental	no	Faks
+fellesdata_not_in_use	rental	no	Fellesdata er ikke i bruk
+field_of_responsibility	rental	no	Ansvarsområde
+filters 	rental	no	Filtre
+Finish	rental	no	Avslutt
+fire_drawings	rental	no	Branntegninger
+firstname	rental	no	Fornavn
+first	rental	no	Første
+first_half	rental	no	1. halvår
+first_quarter	rental	no	1. kvartal
+fixed	rental	no	Tidsbestemt
+floor	rental	no	Etasje
+fourth_quarter	rental	no	4. kvartal
+f_new_contract	rental	no	Opprett kontrakt
+f_new_party	rental	no	Ny kontraktspart
+f_new_price_item	rental	no	Nytt priselement
+f_new_rc	rental	no	Nytt leieobjekt
+from	rental	no	Fra
+from email setting	rental	no	E-post adresse systemmeldinger (Fra)
+frontpage_was_reset	rental	no	Oppsettet på forsiden ble nullstilt
+frontpage_reset_setup	rental	no	Nullstill oppsett
+frontend_access	rental	no	Gå til frontend som valgt leietaker
+f_select_columns	rental	no	Velg kolonner
+furnish_type	rental 	no	Møbleringsstatus
+furnish_type_not_specified	rental 	no	Ikke spesifisert
+furnish_type_furnished	rental 	no	Møblert
+furnish_type_partly_furnished	rental 	no	Delvis møblert
+furnish_type_not_furnished	rental 	no	Ikke møblert
+gab	rental	no	GAB
+gab_id	rental	no	GAB
+Generate export	rental	no	Generér eksport
+Generate cs15	rental	no	Generér kundefil
+get_sync_data	rental	no	Hent data fra fellesdata
+half-year	rental	no	Halvårig
+hidden	rental	no	Skjult
+hidden_for_pick	rental	no	skjult
+has_custom_address	rental	no	Er adressen overstyrt?
+house_number	rental	no	Husnummer
+http address for external users	rental	no	HTTP adresse for eksterne brukere
+id	rental	no	ID
+Identifier	rental	no	Identifikator
+import_log_messages	rental	no	Import log
+import_reset	rental	no	Nullstill importstatus
+in_operation	rental	no	I drift
+inactive_party	rental	no	Kontraktspart er inaktiv
+inactive	rental	no	Inaktiv
+included_units	rental	no	Leieobjektets enheter
+internal	rental	no	Interne kontraktsparter
+interval	rental	no	Intervall
+Invalid location code for the building.	rental	no	Ugyldig objektnummer for bygg.
+invoice	rental	no	Faktura
+invoice_run	rental	no	Fakturakjøring
+invoice_menu	rental	no	Faktura
+invoice_header	rental	no	Fakturaoverskrift
+is_active	rental	no	Aktiv
+is_area	rental	no	Areal
+is_payer	rental	no	Fakturamottaker
+is_inactive	rental	no	Inaktiv
+is_adjustable	rental	no	Indeksreguleres
+is_executed	rental	no	Utført
+is_one_time	rental	no	Engangsbeløp
+is_standard	rental	no	Standard priselement
+job_title	rental	no	Stillingstittel
+land_title	rental	no	Gnr/Bnr
+lacking_username	rental	no	Brukernavn må fylles ut
+last_edited_by_current_user	rental	no	Din siste endring
+lastname	rental	no	Etternavn
+last	rental	no	Siste
+last_updated	rental	no	Sist oppdatert
+level	rental	no	Nivå
+link	rental	no	Lenke
+location_code	rental	no	Enhetsnummer
+location_id	rental	no	Intern organisasjonstilknytning
+log_in_to_add_notfications	rental	no	Det er bare mulig å legge til varlser i redigeringsmodus.
+make_pdf	rental	no	Lag PDF for utskrift
+manual_adjust_price_item	rental	no	Manuell regulering av priselement
+manual_adjust_price_item_select	rental	no	Velg priselement
+manual_adjustment	rental	no	Manuell regulering
+marked_as	rental	no	og er merket
+max_area	rental	no	Areal
+message	rental	no	Melding
+messages_agresso_id_length	rental	no	Agresso-ID må inneholde 9 tall eller bokstaver
+messages_fontpage_not_saved	rental	no	Oppsettet ble ikke lagret
+messages_fontpage_saved	rental	no	Oppsettet ble lagret
+messages_form_error	rental	no	Skjemaet inneholder en feil.
+messages_general	rental	no	Feil i feltet
+messages_isint	rental	no	Feltet må inneholde et heltall
+messages_isnumeric	rental	no	Feltet må inneholde et tall
+messages_new_composite	rental	no	Leieobjektet er opprettet
+messages_new_contract	rental	no	Ny kontrakt lagt til
+messages_new_contract_copied	rental	no	Ny kontrakt lagt til basert på kontrakt
+messages_new_contract_from_composite	rental	no	Ny kontrakt lagt til basert på leieobjekt
+messages_new_party	rental	no	Kontraktspart er opprettet
+messages_not_valid_date	rental	no	Må være en gyldig dato
+messages_number_out_of_range	rental	no	Tallet er over eller under tillatte verdier
+messages_required_field	rental	no	Dette feltet er påkrevd
+messages_right_click_to_add	rental	no	Høyreklikk for å legge til
+messages_saved_form	rental	no	Informasjonen ble lagret.
+messages_string_too_long	rental	no	Teksten er for lang
+Missing account in.	rental	no	Inngående konto mangler.
+Missing account out.	rental	no	Utgående konto mangler.
+Missing billing information.	rental	no	Ufullstendig konteringsinformasjon for kontrakt med id %1. Dette må rettes for å kunne fakturere kontrakten.
+Missing contract party.	rental	no	Kontraktspart mangler.
+Missing payer id.	rental	no	Mangler fakturamottaker.
+Missing project id.	rental	no	Prosjektnummer mangler.
+Missing responsibility id.	rental	no	Ansvar mangler.
+Missing service id.	rental	no	Tjeneste mangler.
+Missing system setting for project id.	rental	no	Systeminnstilling for prosjektnummer mangler.
+Missing system setting for responsibility id for the current user.	rental	no	Systeminnstilling for ansvar mangler.
+missing_agresso_id	rental	no	Agresso Id må fylles ut
+mobile_phone	rental	no	Mobiltelefon
+month 1	rental	no	januar
+month 2	rental	no	februar
+month 3	rental	no	mars
+month 4	rental	no	april
+month 5	rental	no	mai
+month 6	rental	no	juni
+month 7	rental	no	juli
+month 8	rental	no	august
+month 9	rental	no	september
+month 10	rental	no	oktober
+month 11	rental	no	november
+month 12	rental	no	desember
+month 0 capitalized	rental	no	Ikke tilgjengelig
+month 1 capitalized	rental	no	Januar
+month 2 capitalized	rental	no	Februar
+month 3 capitalized	rental	no	Mars
+month 4 capitalized	rental	no	April
+month 5 capitalized	rental	no	Mai
+month 6 capitalized	rental	no	Juni
+month 7 capitalized	rental	no	Juli
+month 8 capitalized	rental	no	August
+month 9 capitalized	rental	no	September
+month 10 capitalized	rental	no	Oktober
+month 11 capitalized	rental	no	November
+month 12 capitalized	rental	no	Desember
+monthly	rental	no	Månedlig
+month	rental	no	Måned
+name	rental	no	Navn
+never	rental	no	Aldri
+new_notification	rental	no	Nytt varsel
+new_billing	rental	no	Ny fakturering
+new_adjustment	rental	no	Ny regulering
+new_price	rental	no	Ny pris
+next	rental	no	Neste
+no	rental	no	Nei
+none	rental	no	Ingen
+nobody	rental	no	Ingen
+No billing jobs found	rental	no	Ingen faktureringer funnet
+no_contracts_found	rental	no	Ingen kontrakter passet til søkekriteriene
+No contracts were selected.	rental	no	Du må velge minst én kontrakt for å faktuere.
+no_hits	rental	no	Ingen treff
+No invoices were found	rental	no	Ingen fakturaer funnet
+no_name_composite	rental	no	Leieobjekt uten navn (løpenummer: %1)
+no_party_location	rental	no	Ingen intern organisasjonstilhørighet
+no_value	rental	no	Ingen
+not_available	rental	no	Ikke tilgjengelig
+notification_status	rental	no	Varsel
+notifications	rental	no	Varsler
+notification_optgroup_groups	rental	no	Grupper
+notification_optgroup_users	rental	no	Brukere
+not_started	rental	no	Ikke startet
+not_available_nor_hidden	rental	no	tilgjengelig eller skjult
+object_number	rental	no	Objektnummer
+objno_name_address	rental	no	Objektnummer/navn/adresse
+occupied	rental	no	Opptatt
+of_total	rental	no	av totalt
+ok	rental	no	Ok
+old_contract_id	rental	no	Gammelt kontraktsnummer
+ODS	rental	no	ODS
+One or more price items are missing Agresso ids.	rental	no	Ett eller flere priselementer mangler Agresso-id.
+One or more price items have an invalid Agresso id. Id must consist of one capital letter and three digits.	rental	no	Ett eller flere priselementer har en ugyldig Agresso-id. Iden må bestå av én stor bokstav og tre tall.
+only_one_time	rental	no	Status
+only_one_time_yes	rental	no	Avviker fra vanlig faktureringssyklus, kun engangsbeløp
+only_one_time_no	rental	no	Følger vanlig fakturasyklus
+open_and_exported_exist	rental	no	En fakturakjøring som ikke er avsluttet med eksportert til Agresso-format eksisterer for dette ansvarsområdet. Denne må enten slettes eller avsluttes før denne fakturakjøringen kan eksportes.
+organization	rental	no	Organisasjon
+organisation_number	rental	no	Organisasjonsnummer
+organisation_or_ssn_number	rental	no	Org./fødselsnr
+orphan_units	rental	no	Ubrukte arealer
+or	rental	no	eller
+org_enhet_id	rental	no	Organisasjonsenhet
+org_unit_name	rental	no	Navn på tilsvarende enhet i Fellesdata
+org_unit_exist	rental	no	Eksisterer
+other_guarantee	rental	no	Annen garanti
+others	rental	no	Annet
+other operations	rental	no	Andre operasjoner
+out_of_operation	rental	no	Ikke i drift
+overridden_address	rental	no	Overstyrt adresse
+override	rental	no	Fakturer fra
+panels	rental	no	Vinduer
+part_of_contract	rental	no	Inngår i kontrakt av typen
+parties	rental	no	Kontraktsparter
+party_name	rental	no	Navn til kontraktspart
+party	rental	no	Kontraktspart
+party_back	rental	no	Kontraktspartliste
+party_location	rental	no	Intern organisasjonstilhørighet
+party_type	rental	no	Type kontraktspart
+payer_id	rental	no	Fakturamottaker
+percent	rental	no	Prosent
+period	rental	no	Periode
+permission_denied_edit_contract	rental	no	Du mangler rettigheter for å legge til å editere kontrakten
+permission_denied_new_contract	rental	no	Du mangler rettigheter for å legge til å opprette nye kontrakter
+permission_denied_view_contract	rental	no	Du mangler rettigheter for å legge til å se kontrakten
+permission_denied_add_document	rental	no	Du mangler rettigheter for å legge til et dokumenent
+phone	rental	no	Telefon
+postal_code_place	rental	no	Postnummer/-sted
+post_code	rental	no	Postnummer
+post_place	rental	no	Sted
+postal_code	rental	no	Postnummer
+place	rental	no	Sted
+previous	rental	no	Forrige
+price_item	rental	no	Priselement
+price_item_id	rental	no	Priselement ID
+price_item_type_apiece	rental	no	Stk.
+price_item_type_area	rental	no	Areal
+price_item_inactive	rental	no	Inaktiv
+price_item_active	rental	no	Aktiv
+price_item_adjustable	rental	no	Ja
+price_item_not_adjustable	rental	no	Nei
+price_list	rental	no	Prisbok
+price_per_unit	rental	no	Pris pr kvm
+price	rental	no	Pris
+price_element_in_use	rental	no	Priselementet er i bruk på en aktiv kontrakt
+project_id	rental	no	Prosjektnummer
+Project id can not be more than 6 characters.	rental	no	Prosjektnummer kan ikke være mer enn seks tegn.
+propertyident	rental	no	G.nr. / B.nr. / F.nr. / S.nr.
+property_id	rental	no	BKB Identifikator
+property	rental	no	Eiendom
+publish_comment	rental	no	Kommentar vises i frontend
+quarterly	rental	no	Kvartalvis
+rc	rental	no	Leieobjekter
+recurrence	rental	no	Gjentakelse
+reference	rental	no	Deres ref
+regulation	rental	no	Regulering
+regulation_back	rental	no	Reguleringsliste
+related_delegates	rental	no	Delegater
+remove	rental	no	Fjern
+remove_from_workbench	rental	no	Fjern fra mitt skrivebord
+remove_from_all_workbenches	rental	no	Fjern fra alle skrivebord
+remove_location	rental	no	Fjern enhet fra leieobjektet
+rental_composite	rental	no	Leieobjekt
+Rental	rental	no	Leie
+rented_area	rental	no	Utleid areal
+rented_area_not_numeric	rental	no	Areal må være et tall
+reports	rental	no	Rapporter
+reset_price_item	rental	no	Hent verdier fra prisboken
+reset	rental	no	Nullstill
+reskontro	rental	no	Reskontro
+responsibility	rental	no	Ansvar
+responsibility_id	rental	no	Ansvar
+Responsibility id must be 6 characters.	rental	no	Ansvar må være seks tegn.
+responsibility_id_not_numeric	rental	no	Ansvar må være et tall
+result_unit_back	rental	no	Resultatsliste
+result_unit	rental	no	Resultatsenhet
+result_unit_number	rental	no	Resultatsenhet
+Run	rental	no	Kjørt
+run by	rental	no	Utført av
+room	rental	no	Rom
+running	rental	no	Løpende
+save	rental	no	Lagre
+save_setup	rental	no	Lagre oppsett på forsiden
+search_for	rental	no	Søk etter
+search_options	rental	no	Søkevalg
+search option	rental	no	Søkevalg
+search	rental	no	Søk
+search_where	rental	no	i
+second_half	rental	no	2. halvår
+second_quarter	rental	no	2. kvartal
+section	rental	no	Seksjon
+security	rental	no	Sikkerhet
+security_amount	rental	no	Sikkerhetsbeløp
+security_amount_not_numeric	rental	no	Sikkerhetsbeløp må være et tall
+select_all_options	rental	no	&lt;Alle$gt;
+select_date	rental	no	Velg dato
+select_date_valid_year	rental	no	Vennligst velg et gyldig år
+selected_composites	rental	no	Valgte leieobjekter
+selected_parties	rental	no	Valgte kontraktsparter
+selected_price_items	rental	no	Valgte priselementer
+serial	rental	no	Løpenummer
+serial start	rental	no	Start - ordrenummerserie
+serial stop	rental	no	Slutt - ordrenummerserie
+service	rental	no	Tjeneste
+service_id	rental	no	Tjeneste
+Service id must be 5 characters.	rental	no	Tjeneste må være fem tegn.
+service_id_not_numeric	rental	no	Tjeneste må være et tall
+service_exist	rental	no	Eksisterer
+set_payer	rental	no	Sett som fakturamottaker
+shortcuts	rental	no	Snarveier
+show_affected_contracts	rental	no	Vis kontrakter relatert til reguleringen
+show_move_in_reports	rental	no	Vis jasperreport for innflyttingsmelding
+show_move_out_reports	rental	no	Vis jasperreport for utflyttingsmelding
+show_in_out_move_reports	rental	no	Vis jasperreports for inn- og utflyttingsmeldinger
+showing_composite	rental	no	Leieobjekt
+showing_contract	rental	no	Kontrakt
+showing	rental	no	Viser priselement
+show	rental	no	Vis
+shows_from	rental	no	Viser fra
+ssn	rental	no	Fødselsnummer
+started	rental	no	Startet
+status_before	rental	no	før
+status_date	rental	no	den
+status_unknown	rental	no	Ukjent status
+status	rental	no	Status
+Success	rental	no	Suksess
+success_create_user_based_on_email	rental	no	En brukerkonto ble opprettet og en e-post ble sendt til brukeren
+sum	rental	no	Sum
+sync	rental	no	Synkroniser
+sync_identifier	rental	no	Kun identifikator
+sync_menu	rental	no	Synkronisering
+sync_message	rental	no	Melding
+sync_org_unit	rental	no	Eksisterende kobling
+sync_resp_and_service	rental	no	Ansvar
+sync_res_units	rental	no	Gammelt resultatenhetsnummer
+sync_parties	rental	no	Synkronisér kontraktsparter mot Fellesdata
+sync_parties_service_and_responsibiity	rental	no	Synkronisering: Ansvar (Kontrakt)
+sync_parties_result_unit_number	rental	no	Synkronisering: Resultatenhetsnummer (Kontraktspart)
+sync_parties_identifier	rental	no	Synkronisering: Identifikator
+sync_parties_fellesdata_id	rental	no	Synkronisering: Organisasjonsidentifikator
+sync_org_name_fellesdata	rental	no	Foretak i Fellesdata
+sync_org_email_fellesdata	rental	no	Epost i Fellesdata
+sync_org_unit_leader_fellesdata	rental	no	Enhetsleder i Fellesdata
+sync_org_department_fellesdata	rental	no	Avdeling i Fellesdata 
+syncronize_party	rental	no	Synkroniser kontraktspart
+System setting for project id can not be more than 6 characters.	rental	no	Systeminnstilling for prosjektnummer kan ikke være mer enn seks tegn.
+System setting for responsibility id for the current user must be 6 characters.	rental	no	Systeminnstilling for ansvar må være seks tegn.
+target_me	rental	no	Meg selv
+target_none	rental	no	Ingen
+terminated_contract	rental	no	Under opphør
+terminated_contracts	rental	no	Opphørte kontrakter
+the period has been billed before.	rental	no	Denne kontrakttypen med denne faktureringsterminen har allerede blitt fakturert for denne perioden.
+thousands separator	rental	no	Skilletegn for tusen
+third_quarter	rental	no	3. kvartal
+t_functions	rental	no	Funksjoner
+title	rental	no	Tittel
+t_new_composite	rental	no	Opprett nytt leieobjekt
+t_new_contract	rental	no	Ny kontrakt
+t_new_party	rental	no	Opprett ny kontraktspart
+t_new_price_item	rental	no	Opprett nytt priselement
+to	rental	no	Til
+to_the_top	rental	no	Til toppen
+Total sum	rental	no	Totalt beløp
+total_price	rental	no	Total pris
+total_price_current_year	rental	no	Pris i budsjettperiode
+type	rental	no	Type
+under_dismissal	rental	no	Under oppsigelse
+under_planning	rental	no	Under planlegging
+units	rental	no	Enheter
+unit_id	rental	no	Enhetsid
+unit_name	rental	no	Enhetsnavn
+unit_leader_name	rental	no	Navn enhetsleder
+unit_leader	rental	no	Enhetsleder
+unit_no_of_delegates	rental	no	Antall delegater
+update	rental	no	Oppdatér
+upload	rental	no	Last opp
+url	rental	no	Nettsted
+Unable to get a location code for the building.	rental	no	Klarte ikke å hente objektnummer for bygget.
+unit_leader	rental	no	Enhetsleder
+unit_leader2	rental	no	Leder avdeling/enhet
+username	rental	no	Brukernavn
+user_or_group	rental	no	Bruker/Gruppe
+vacant	rental	no	Ledig
+view_contract	rental	no	Vis kontrakt
+unable_to_connect_to_database	rental	no	Problemer med å koble til databasen.
+unknown_user	rental	no	Personen finnes ikke.
+user_found_in_Fellesdata	rental	no	Personen finnes i Fellesdata.
+user_not_in_fellesdata	rental	no	Personen finnes ikke i Fellesdata.
+user_found_in_PE	rental	no	Personen er bruker av dette systemet.
+warning_billing_date_between	rental	no	Fakturastart må være innenfor kontraktens datoer!
+warning_billing_end_date_between	rental	no	Fakturastopp må være innenfor kontraktens datoer!
+warning_due_date_between	rental	no	Opsjonsfrist må være innenfor kontraktens datoer!
+warning_lacking_start_date	rental	no	Kontrakten mangler start-dato!
+warning_price_item_date_between	rental	no	Priselementets datoer må være innenfor kontraktens datoer!
+weekly	rental	no	Ukentlig
+working_on	rental	no	Kontrakter under arbeid
+year	rental	no	År
+yes	rental	no	Ja
+your_notifications	rental	no	Dine varsler
+Download Excel export	rental	no	Last ned eksportfil i Excel-format
+free_of_charge	rental	no	Vederlagsfritt
+extra_adjustment	rental	no	Ekstra regulering
+free_of_charge	rental	no	Vederlagsfritt
+select	rental	no	Velg
+district	rental	no	Område
+list %1	rental	no	Alle %1
+new	rental	no	Ny
+download excel export bk	rental	no	Last ned Excel-eksport BK
+serial_number	rental	no	Serienummer
+Name or company is required	rental	no	Navn på person ELLER navn på foretak er obligatorisk
+simulation	rental	no	Simulering
+credits	rental	no	Kreditering
+override adjustment start	rental	no	Overstyr sist regulert
+application	rental	no	søknad
+dimb	rental	no	Ansvarssted
+payment method	rental	no	Betalingsmetode
+what	rental	no	Hva
+cleaning	rental	no	Rengjøring
+assignment	rental	no	Tildeling
+assign_start	rental	no	Tildelt fra
+assign_end	rental	no	Tildelt til
+registered	rental	no	Registrert
+pending	rental	no	Under behandling
+rejected	rental	no	Avvist
+approved	rental	no	Godkjent
+location	rental	no	Lokalisering
+custom price factor	rental	no	Prisfaktor
+standard	rental	no	Standard
+composite type	rental	no	Leieobjekt type
+type	rental	no	Type
+custom price	rental	no	Taksering
+price type	rental	no	Pristype
+schedule	rental	no	Kalender
+moveout	rental	no	Utflytting
+movein	rental	no	Innflytting
+custom fields	rental	no	Egendefinerte felt
+custom field groups	rental	no	Grupper for egendefinerte felt
+report	rental	no	Rapport
+basis data 	rental	no	Grunnlagsdata
+created	rental	no	Registrert
+modified	rental	no	Endret
+picture	rental	no	Bilde
+delete file	rental	no	Slett fil
+user	rental	no	Bruker
+note	rental	no	Merknad
+report is already recorded for %1	rental	no	Rapport finnes allerede for %1
+email out	rental	no	Epost ut
+recipient	rental	no	Mottaker
+recipients	rental	no	Mottakere
+candidates	rental	no	Kandidater
+send email	rental	no	Send epost
+remark	rental	no	Merknad
+subject	rental	no	Overskrift
+content	rental	no	Innhold
+select all	rental	no	Velg alle
+planned	rental	no	Planlagt
+email template	rental	no	Standardtekster
+expired	rental	no	Utgått
+positive one time	rental	no	Positive engangsbeløp
+add type	rental	no	Legg til type
+add unit	rental	no	legg til enhet
+contact phone	rental	no	Kontakttelefon
+data has been saved	rental	no	Data er lagret
+document has been added	rental	no	Dokument er lagt til
+edit unit	rental	no	Endre enhet
+entity %1 has been updated	rental	no	Post %1 er oppdatert
+event	rental	no	Hendelse
+export contacts	rental	no	Eksporter kontakter
+has been added	rental	no	er lagt til
+has been removed	rental	no	er fjernet
+select date	rental	no	Velg dato
+select file to upload	rental	no	Velg fil for opplasting
+synchronized: %1	rental	no	Synkronisert: %1
+syncronize all	rental	no	Synkroniser alle
+customer id	rental	no	Kundenummer
+customer order id	rental	no	Kundens ordrenr.

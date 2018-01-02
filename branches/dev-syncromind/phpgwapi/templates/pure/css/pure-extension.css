@@ -1,0 +1,343 @@
+/*!
+Pure v0.5.0
+Copyright 2014 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+https://github.com/yui/pure/blob/master/LICENSE.md
+*/
+
+/* Aligned Forms */
+
+.pure-form-aligned .pure-custom {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.loading {
+	background: url("../images/loader.gif") center center no-repeat;;
+	width: 16px;
+	height: 16px;
+	display:inline-block;
+	margin-left: 10px;
+	vertical-align:middle;
+	visibility:hidden;
+}
+
+.custom-message {
+	display:inline-block;
+	vertical-align:middle;
+}
+
+.custom-container {
+	display:inline-block;
+	vertical-align: top;
+}
+
+.custom-label {
+	font-weight: bold;
+}
+
+.booking-container .pure-control-group > label {
+	font-weight: bold;
+}
+
+.p0{padding-left: 0px !important;padding-top: 0px !important;padding-bottom: 0px !important;}
+
+.pure-form.pure-form-aligned label h4{margin: 0.66em 0;}
+.pure-g [class*="pure-u"] {padding: 10px 15px;box-sizing: border-box;}
+.pure-g [class*="pure-u"] .pure-g [class*="pure-u"],
+.pure-control-group [class*="pure-u"] {padding: 0px;box-sizing: border-box;}
+
+fieldset .heading legend h3 {margin-bottom: 0.4em;}
+fieldset h4 {margin-bottom: 0;}
+.pure-control-group dd {margin: 0px;}
+.pure-form input.input50 {width: 50px;}
+
+
+input[class*="pure-u"],
+textarea[class*="pure-u"],
+select[class*="pure-u"] {box-sizing: border-box;padding: 0.5em 0.6em !important;}
+/*
+textarea
+{
+	width: 235px;
+	height: 150px;
+}
+*/
+input[type="checkbox"],
+input[type="radio"] {margin-right: 2px;}
+
+.pure-table th {background: #e0e0e0 none repeat scroll 0 0;}
+.pure-table thead th{text-align: center;}
+.pure-table tbody th{border-top: 1px solid #cbcbcb;text-align: right;font-weight: bold;color: #000;}
+
+#schedule_container {color: #000;}
+#schedule_container .pure-table thead th {line-height: 1.4;}
+p.conflicts {margin: 0;color: #000;}
+#schedule_container .cellInfo:hover {background-image: url("../images/info.png");background-position: 100% 0;background-repeat: no-repeat;cursor: pointer;}
+#schedule_container .free:hover {cursor: pointer;}
+#schedule_overlay {background-color: #fff;border: 1px solid #000;height: auto;left: 0;margin: auto;padding: 20px;position: absolute;right: 0;width: 400px;z-index: 9;}
+#schedule_overlay img {bottom: 0;display: block;left: 0;margin: auto;position: absolute;right: 0;top: 0;}
+#content_overlay {display: block;height: 100%;left: 0;position: fixed;top: 0;width: 100%;}
+
+.date-container {position: relative;}
+        
+#dates-container .date-container .pure-control-group input.datetime,
+#dates-container .date-container .pure-control-group input.time {
+    display: inline-block;
+}
+
+.date-container .close-btn {
+    background: transparent url("../../../../phpgwapi/js/yui3/assets/skins/sam/sprite.png") no-repeat scroll 0 -300px;
+    border: medium none;
+    color: white;
+    cursor: pointer;
+    height: 15px;
+    position: absolute;
+    right: 0;
+    text-decoration: none;
+    top: 0;
+    width: 25px;
+}
+
+/*ul.ui-autocomplete {
+    background-color: #fff;
+    border: 1px solid;
+    list-style: outside none none;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: default;
+}
+.ui-autocomplete li.ui-menu-item:hover {
+    background: #426fd9 none repeat scroll 0 0;
+    color: #fff;
+}
+.ui-autocomplete li.ui-menu-item {
+    padding: 2px 10px;
+}*/
+
+
+ul.pathway {
+    font-size: 110%;
+    font-weight: bolder;
+    margin: 1em 0;
+}
+ul.pathway li a {
+    color: #000;
+    text-decoration: none;
+}
+ul.pathway li a:hover {
+    color: #008;
+}
+ul.pathway li {
+    background: rgba(0, 0, 0, 0) url("../images/pathwaysep.png") no-repeat scroll 0 50%;
+    display: inline;
+    padding-left: 16px;
+}
+ul.pathway li:first-child {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    padding-left: 0;
+}
+
+/*SCHEDULE COLORS*/
+#schedule_container .color1 {
+    background-color: #ccccff;
+}
+#schedule_container .color2 {
+    background-color: #ccffcc;
+}
+#schedule_container .color3 {
+    background-color: #ffcccc;
+}
+#schedule_container .color4 {
+    background-color: #ffffbb;
+}
+#schedule_container .color5 {
+    background-color: #bbffff;
+}
+#schedule_container .color6 {
+    background-color: #ffbbff;
+}
+#schedule_container .color7 {
+    background-color: #de6d6d;
+}
+#schedule_container .color8 {
+    background-color: #f0f0f0;
+}
+#schedule_container .color9 {
+    background-color: #6495ed;
+}
+#schedule_container .color10 {
+    background-color: #90ee90;
+}
+#schedule_container .color11 {
+    background-color: #eee8aa;
+}
+#schedule_container .color12 {
+    background-color: #afeeee;
+}
+#schedule_container .color13 {
+    background-color: #ffb6c1;
+}
+#schedule_container .color14 {
+    background-color: #f0e68c;
+}
+#schedule_container .color15 {
+    background-color: #66cdaa;
+}
+#schedule_container .color16 {
+    background-color: #ffe4c4;
+}
+#schedule_container .color17 {
+    background-color: #ffa500;
+}
+#schedule_container .color18 {
+    background-color: #bdb76b;
+}
+#schedule_container .color19 {
+    background-color: #32cd32;
+}
+#schedule_container .color20 {
+    background-color: #ffe4b5;
+}
+#schedule_container .color21 {
+    background-color: #ff4040;
+}
+#schedule_container .color22 {
+    background-color: #ee3b3b;
+}
+#schedule_container .color23 {
+    background-color: #cd3333;
+}
+#schedule_container .color24 {
+    background-color: #8b2323;
+}
+#schedule_container .color25 {
+    background-color: #deb887;
+}
+#schedule_container .color26 {
+    background-color: #ffd39b;
+}
+#schedule_container .color27 {
+    background-color: #eec591;
+}
+#schedule_container .color28 {
+    background-color: #5f9ea0;
+}
+#schedule_container .color29 {
+    background-color: #98f5ff;
+}
+#schedule_container .color30 {
+    background-color: #8ee5ee;
+}
+#schedule_container .color31 {
+    background-color: #53868b;
+}
+#schedule_container .color32 {
+    background-color: #66cd00;
+}
+#schedule_container .color33 {
+    background-color: #458b00;
+}
+#schedule_container .color34 {
+    background-color: #d2691e;
+}
+#schedule_container .color35 {
+    background-color: #ff7f24;
+}
+#schedule_container .color36 {
+    background-color: #8b4513;
+}
+#schedule_container .color37 {
+    background-color: #ff7256;
+}
+#schedule_container .color38 {
+    background-color: #ffb90f;
+}
+#schedule_container .color39 {
+    background-color: #cd950c;
+}
+#schedule_container .color40 {
+    background-color: #8fbc8f;
+}
+#schedule_container .color41 {
+    background-color: #8b0000;
+}
+#schedule_container .color42 {
+    background-color: #c1ffc1;
+}
+#schedule_container .color43 {
+    background-color: #b4eeb4;
+}
+#schedule_container .color44 {
+    background-color: #9bcd9b;
+}
+#schedule_container .color45 {
+    background-color: #698b69;
+}
+#schedule_container .color46 {
+    background-color: #433d8b;
+}
+#schedule_container .color47 {
+    background-color: #ee1289;
+}
+#schedule_container .color48 {
+    background-color: #cd1076;
+}
+#schedule_container .color49 {
+    background-color: #8b0a50;
+}
+#schedule_container .color50 {
+    background-color: #ccc;
+}
+#schedule_container .color51 {
+    background-color: #ddd;
+}
+#schedule_container .color52 {
+    background-color: #eee;
+}
+#schedule_container .color53 {
+    background-color: #333;
+}
+#schedule_container .color54 {
+    background-color: #444;
+}
+#schedule_container .color55 {
+    background-color: #555;
+}
+#schedule_container .color56 {
+    background-color: #666;
+}
+#schedule_container .color57 {
+    background-color: #777;
+}
+#schedule_container .color58 {
+    background-color: #888;
+}
+#schedule_container .color59 {
+    background-color: #999;
+}
+#schedule_container .color60 {
+    background-color: #aaa;
+}
+
+.list-left {padding-left: 20px;text-align: left;margin-top: 0px;}
+
+button.pure-button {margin-right: 5px;}
+a.pure-button {text-decoration: none;}
+.pure-button {margin-right: 5px;margin-top: 5px;text-shadow: none;box-shadow: none;display: inline-block;vertical-align: top;}
+
+div.allocation-list {border: 1px solid #555;height: 10em;max-width: 30em;overflow: auto;padding: 0.4em;width: 100%;}
+
+button.ui-button {box-shadow: none;text-shadow: none;}
+
+ul#audience {list-style: none;padding-left: 10px;}
+/* AUTOCOMPLETE */
+.ui-widget.ui-autocomplete {max-height: 224px;overflow-x: hidden;overflow-y: auto;}
+
+
+.pure-form input[type="text"][disabled], .pure-form input[type="password"][disabled], .pure-form input[type="email"][disabled], .pure-form input[type="url"][disabled], .pure-form input[type="date"][disabled], .pure-form input[type="month"][disabled], .pure-form input[type="time"][disabled], .pure-form input[type="datetime"][disabled], .pure-form input[type="datetime-local"][disabled], .pure-form input[type="week"][disabled], .pure-form input[type="number"][disabled], .pure-form input[type="search"][disabled], .pure-form input[type="tel"][disabled], .pure-form input[type="color"][disabled], .pure-form select[disabled], .pure-form textarea[disabled]
+{
+	color: #050000;
+}

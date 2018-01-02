@@ -1,0 +1,163 @@
+
+body {
+    margin:0;
+    padding:0;
+    border:0;
+    height:100%;
+}
+
+div.mainContainer {
+    width:740px;
+    color:#06c;
+    position:relative;
+    background-color:#fff;
+    font-family:Arial;
+    font-size:10pt;
+    padding-top:0px;
+    margin:0 auto;
+}
+.clearDiv {
+    clear:both;
+}
+
+div.formBody {
+}
+
+div.formBody div.info{
+    padding-bottom:10px;
+}
+
+div.formBody h2{
+    
+}
+
+div.formBody div.row {
+    position:relative;
+    width:100%;
+    margin-bottom:1px;
+}
+div.formBody div.label {
+    float:left;
+    position:relative;
+    z-index:1;
+    padding:4px 2px 4px 0;
+    text-align:right;
+    width:19%;
+}
+div.formBody div.row div.column1Backing {
+    position:absolute;
+    top:0;
+    z-index:0;
+    left:0;
+    background-color:#C3D9FF;
+    width:19%;
+    height:100%;
+}
+div.formBody div.row div.column2Backing {
+    position:absolute;
+    top:0;
+    z-index:0;
+    left:49.7%;
+    width:19%;
+    background-color:#C3D9FF;
+    height:100%;
+}
+div.formBody div.value {
+    float:left;
+    position:relative;
+    background-color:#e0ecff;
+    padding:4px 2px 4px 0;
+    width:30%;
+}
+
+div.formBody div.value div.innerValue{
+    margin-left:5px;
+    position:relative;
+    margin-left:5px;
+}
+
+
+div.formBody div.value input {
+    position:relative;
+    margin-left:5px;
+    z-index:1;
+}
+
+div.formBody div.value div.innerValue input{
+    margin-left:0;
+}
+
+div.validator {
+    display:block;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    padding:0;
+    background-image:url(images/red_gradient.png);
+    background-repeat:repeat-x;
+    background-position:0 0;
+    /*filter:alpha(opacity=40);
+    -moz-opacity:.40;
+    opacity:.40;*/
+}
+
+div.indicator {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    background-image:url(images/green_gradient.png);
+    background-repeat:repeat-x;
+    background-position:0 0;
+}
+
+div.validator span.validator,
+div.indicator span.indicator {
+    position:absolute;
+    right:10px;
+    margin-top:7px;
+}
+
+span.validator{
+    background-image:url(images/exclamation_small.png);
+    background-repeat:no-repeat;
+    background-position:center center;
+    padding-left:17px;
+}
+
+span.indicator{
+    background-image:url(images/checkmark_small.png);
+    background-repeat:no-repeat;
+    background-position:center 0;
+    padding-left:17px;
+}
+
+div.buttonRow {
+    background-color:#e0ecff;
+    text-align:right;
+    padding:5px 5px;
+    margin-right:8px;
+}
+
+div.buttonRow .button {
+    background-image:url(images/blue_gradient.png);
+    background-repeat:repeat-x;
+    xcolor:#06c;
+    border:1px solid #C3D9FF;
+    padding:3px 5px;
+}
+
+input.valid,
+select.valid{
+    border:2px solid #0f0;
+}
+
+input.invalid,
+select.invalid{
+    border:2px solid #f00;
+}

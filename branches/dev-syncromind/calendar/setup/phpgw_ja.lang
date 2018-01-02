@@ -1,0 +1,345 @@
+%1 %2 in %3	calendar	ja	%3 第%1 %2曜日
+%1 matches found	calendar	ja	%1件見つかりました。
+%1 records imported	calendar	ja	%1件インポートしました。
+%1 records read (not yet imported, you may go back and uncheck test import)	calendar	ja	%1件読み込みました（インポートは完了していません。前画面に戻り、テストインポートのチェックをはずして実行してください。）
+(for weekly)	calendar	ja	(毎週時)
+(i/v)cal	calendar	ja	[iv]Cal形式ファイル
+1 match found	calendar	ja	１件見つかりました。
+a	calendar	ja	
+accept	calendar	ja	承諾
+accepted	calendar	ja	承諾済み
+action that caused the notify: added, canceled, accepted, rejected, ...	calendar	ja	通知要因アクション：追加、キャンセル、承諾、拒否、．．．
+add a single entry by passing the fields.	calendar	ja	このフィールドを通して、エントリを追加
+add alarm	calendar	ja	アラーム追加
+add contact	calendar	ja	連絡先追加
+added	calendar	ja	追加済み
+address book	calendar	ja	アドレス帳
+alarm	calendar	ja	アラーム
+alarm for %1 at %2 in %3	common	ja	%1(%2 - %3)に対するアラームです
+alarm management	calendar	ja	アラーム管理
+alarm-management	calendar	ja	アラーム管理
+alarms	calendar	ja	アラーム
+all day	calendar	ja	終日
+am	calendar	ja	午前
+are you sure you want to delete this country ?	calendar	ja	この国の休日を削除してもよろしいですか？
+are you sure you want to delete this holiday ?	calendar	ja	この休日を削除してもよろしいですか？
+are you sure\nyou want to\ndelete these alarms?	calendar	ja	このアラームを\n削除してもよろしいですか？
+are you sure\nyou want to\ndelete this entry ?	calendar	ja	この項目を\n削除してもよろしいですか？
+are you sure\nyou want to\ndelete this entry ?\n\nthis will delete\nthis entry for all users.	calendar	ja	削除してもよろしいですか？\n（全てのユーザに影響します）
+are you sure\nyou want to\ndelete this single occurence ?\n\nthis will delete\nthis entry for all users.	calendar	ja	削除してもよろしいですか？\n（全てのユーザに影響します）
+back	calendar	ja	戻る
+bassed on webcalendar by <a href="http://www.radix.net/~cknudsen" target="_blank">craig knudsen</a>.<p><b>more information</b> about the calendar and the current development-status can be found on the <a href="http://docs.phpgroupware.org/wiki/calendar" target="_blank">calendar page in our wiki</a> or <a href="http://docs.phpgroupware.org/wiki/calendarfaqs" target="_blank">calendar faqs</a>.	about	ja	Webcalendar（作者：<a href="http://www.radix.net/~cknudsen" target="_blank">Craig Knudsen</a>）ベースのスケジュール管理アプリケーション<p>詳しくは、カレンダー及びカレンダー開発状況について書かれている<a href="http://docs.phpgroupware.org/wiki/calendar" target="_blank">Wikiカレンダーページ</a>または<a href="http://docs.phpgroupware.org/wiki/calendarFAQs" target="_blank">カレンダーFAQs</a>を参考にしてください。
+before the event	calendar	ja	前にイベント通知
+brief description	calendar	ja	件名
+business	calendar	ja	ビジネス
+calendar	common	ja	カレンダー
+calendar - [iv]cal importer	calendar	ja	[iv]Calendar インポート
+calendar - add	calendar	ja	カレンダー - 追加
+calendar - edit	calendar	ja	カレンダー - 編集
+calendar event	common	ja	カレンダーイベント
+calendar holiday management	admin	ja	休日管理
+calendar preferences	common	ja	プレファレンス
+calendar settings	admin	ja	カレンダー設定
+calendar-fieldname	calendar	ja	カレンダー−フィールド名
+canceled	calendar	ja	キャンセル済み
+change all events for $params['old_owner'] to $params['new_owner'].	calendar	ja	全てのイベントを$params['old_owner'] から$params['new_owner']に変更する
+change status	calendar	ja	ステータス変更
+click %1here%2 to return to the calendar.	calendar	ja	%1カレンダーに戻る%2
+configuration	calendar	ja	サイト環境設定
+countries	calendar	ja	国一覧
+country	calendar	ja	国
+csv-fieldname	calendar	ja	CSVフィールド名
+csv-filename	calendar	ja	CSVファイル名
+custom fields	calendar	ja	カスタムフィールド
+custom fields and sorting	common	ja	カスタムフィールド＆並び替え設定
+daily	calendar	ja	日単位
+daily matrix view	calendar	ja	日程表示
+date	calendar	ja	日付
+day	calendar	ja	日
+days	common	ja	日
+days repeated	calendar	ja	曜日
+dayview	calendar	ja	日表示
+default appointment length (in minutes)	calendar	ja	デフォルト・スケジュール間隔（分）
+default calendar filter	calendar	ja	カレンダーの初期選択
+default calendar view	calendar	ja	カレンダーの初期表示
+default length of newly created events. the length is in minutes, eg. 60 for 1 hour.	calendar	ja	イベント新規作成時におけるデフォルトのスケジュール間隔です。スケジュールの間隔は、分単位で指定します。
+default saturday color	calendar	ja	土曜日のセル色
+default sunday color	calendar	ja	日曜日のセル色
+defines the size in minutes of the lines in the day view.	calendar	ja	日表示における間隔を分単位で指定します。
+delete a single entry by passing the id.	calendar	ja	IDを通して、エントリを削除
+delete an entire users calendar.	calendar	ja	全ユーザーのカレンダーを削除
+delete selected contacts	calendar	ja	選択済みの連絡先を削除
+delete series	calendar	ja	連続削除
+delete single	calendar	ja	単独削除
+deleted	calendar	ja	削除
+description	calendar	ja	説明
+disable	calendar	ja	無効にする
+display interval in day view	calendar	ja	日表示時の時間間隔
+display mini calendars when printing	calendar	ja	印刷用の時、小カレンダを表示
+display status of events	calendar	ja	イベント状況表示
+displays your default calendar view on the startpage (page you get when you enter phpgroupware or click on the homepage icon)?	calendar	ja	デフォルトの表示タイプでカレンダーをホーム画面に表示します。
+do you want to be notified about new or changed appointments? you be notified about changes you make yourself.<br />you can limit the notifications to certain changes only. each item includes all the notification listed above it. all modifications include changes of title, description, participants, but no participant responses. if the owner of an event requested any notifcations, he will always get the participant responses like acceptions and rejections too.	calendar	ja	新規スケジュールやスケジュールに対する変更に関して、メールによる通知を受信するかを選択します。あなた自身が行った変更に関して通知されます。<br />通知の対象となるイベント変更項目を指定することで、通知を制限することが出来ます。各項目は、その上に配置されている通知を含んでいますので、下になるにつれて通知が増えることになります。<br />「内容が修正された場合(返答は除く)」に関しては、タイトル・説明・参加者等の変更が含まれていますが、参加者の返答は除外されます。イベントの所有者が通知を要求した場合、所有者は承諾、拒否等の返答を参加者から取得することが出来る様になります。
+do you want to receive a regulary summary of your appointsments via email?<br />the summary is sent to your standard email-address on the morning of that day or on monday for weekly summarys.<br />it is only sent when you have any appointments on that day or week.	calendar	ja	
+do you wish to autoload calendar holidays files dynamically?	admin	ja	休日ファイルを自動ロードする
+download	calendar	ja	ダウンロード
+duration	calendar	ja	継続時間
+edit series	calendar	ja	連続編集
+edit single	calendar	ja	単独編集
+email notification	calendar	ja	メール通知
+email reminder	calendar	ja	メールによるアラーム通報
+enable	calendar	ja	有効にする
+end date/time	calendar	ja	終了日時
+enddate	calendar	ja	終了日
+ends	calendar	ja	終了日
+enter output filename: ( .vcs appended )	calendar	ja	出力ファイル名：（.vcsが末尾に付加されます）
+enter the cell color for saturday on weekend. the head of color input data must be sharp(#).	calendar	ja	土曜日のセル色を指定します。色(RGB)データの先頭は、「#」でなけれななりません。空欄の場合は、デフォルトのセル色が使用されます。
+enter the cell color for sunday on weekend. the head of color input data must be sharp(#).	calendar	ja	日曜日のセル色を指定します。色(RGB)データの先頭は、「#」でなけれななりません。空欄の場合は、デフォルトのセル色が使用されます。
+event cell color	calendar	ja	イベントのセル色
+event details follow	calendar	ja	イベント詳細フロー
+exceptions	calendar	ja	例外
+export	calendar	ja	エクスポート
+export a list of entries in ical format.	calendar	ja	エントリ一覧をiCalendar形式でエクスポート
+extended	calendar	ja	拡張フォーマット
+extended updates always include the complete event-details. ical's can be imported by certain other calendar-applications.	calendar	ja	拡張フォーマットは、常にイベントの詳細を含んだ内容が通知されます。iCal'sは、他のスケジュール管理ソフト（Outlook等）にインポートすることができます。
+external participants	calendar	ja	外部参加者
+failed sending message to '%1' #%2 subject='%3', sender='%4' !!!	calendar	ja	%4から%1（ユーザーID：%2）へのメール（件名：%3）の送信に失敗しました。
+fieldseparator	calendar	ja	フィールド区切り文字
+filter	calendar	ja	フィルタ
+firstname of person to notify	calendar	ja	通知する人の姓
+format of event updates	calendar	ja	イベント更新フォーマット
+fr	calendar	ja	金
+free/busy	calendar	ja	時間表
+frequency	calendar	ja	間隔
+fri	common	ja	金
+full description	calendar	ja	詳細
+fullname of person to notify	calendar	ja	通知する人のフルネーム
+generate printer-friendly version	calendar	ja	印刷用
+global categories	calendar	ja	グローバルカテゴリ
+global public and group public	calendar	ja	パブリックと所属グループ
+global public only	calendar	ja	パブリック
+go!	calendar	ja	Go!
+grant calendar access	common	ja	利用許可設定
+group planner	calendar	ja	プランナー
+group public only	calendar	ja	所属グループ
+has been canceled	calendar	ja	キャンセルされました
+has been rescheduled to	calendar	ja	再スケジューリングされました
+here is your requested alarm.	common	ja	アラームによるスケジュールのお知らせです。
+high priority	calendar	ja	高優先
+holiday	calendar	ja	休日
+holiday management	calendar	ja	休日管理
+holiday-management	calendar	ja	休日管理
+holidays	calendar	ja	休日一覧
+hours	calendar	ja	時間
+i participate	calendar	ja	自分も参加者
+ical / rfc2445	calendar	ja	iCal / rfc2445
+if checked holidays falling on a weekend, are taken on the monday after.	calendar	ja	週末に休日が重なる場合、翌月曜日を振り替え休日にする場合にチェックを入れます。
+ignore conflict	calendar	ja	無視
+import	calendar	ja	インポート
+import csv-file into calendar	calendar	ja	カレンダーにCSVファイルをインポート
+interval	calendar	ja	間隔
+intervals in day view	calendar	ja	日表示の間隔
+intervals per day in planner view	calendar	ja	プランナー表示の１日あたりの間隔
+invalid entry id.	calendar	ja	不正なエントリIDです
+it chooses whether the input field for cell colors is displayed at the time of edit of an event.	calendar	ja	イベントの追加及び編集時に、セル色設定用の入力フィールドを表示するかどうかを選択します。
+last	calendar	ja	最終
+lastname of person to notify	calendar	ja	通知する人の名
+length shown<br />(emtpy for full length)	calendar	ja	入力フィールド表示文字数<br />（空欄の場合は最大長）
+length<br />(<= 255)	calendar	ja	入力フィールド最大文字数<br />（255バイト以下）
+load [iv]cal	calendar	ja	[iv]Calデータをインポート
+location	calendar	ja	場所
+location to autoload from	admin	ja	自動ロード元
+matrixview	calendar	ja	日程表示
+minutes	calendar	ja	分
+mo	calendar	ja	月
+modified	calendar	ja	修正済み
+modify list of external participants	calendar	ja	外部参加者リスト修正
+mon	common	ja	月
+month	calendar	ja	月
+monthly	calendar	ja	月単位
+monthly (by date)	calendar	ja	月単位(日)
+monthly (by day)	calendar	ja	月単位(曜日)
+monthlybydate	calendar	ja	月単位(日)
+monthlybyday	calendar	ja	月単位(曜日)
+monthview	calendar	ja	月表示
+never	calendar	ja	行わない
+new entry	calendar	ja	項目追加
+new name must not exist and not be empty!!!	calendar	ja	既に存在している名前ではいけませんし、名前は空欄でもいけません
+no matches found	calendar	ja	見つかりません
+no matches found.	calendar	ja	見つかりません。
+no matchs found	calendar	ja	見つかりません。
+no response	calendar	ja	返答なし
+notification messages for added events	calendar	ja	追加イベント用通知メッセージ
+notification messages for canceled events	calendar	ja	キャンセルイベント用通知メッセージ
+notification messages for modified events	calendar	ja	修正イベント用通知メッセージ
+notification messages for your alarms	calendar	ja	アラーム用通知メッセージ
+notification messages for your responses	calendar	ja	応答用通知メッセージ
+number of intervals per day in planner view	calendar	ja	プランナー表示における１日毎の間隔
+number of months	calendar	ja	表示する月数
+number of records to read (<=200)	calendar	ja	読込みレコード件数（200件以内）
+observance rule	calendar	ja	休日のルールを適用
+occurence	calendar	ja	曜日指定
+old startdate	calendar	ja	変更前の開始日
+olddate	calendar	ja	変更前の日
+on %1 %2 %3 your meeting request for %4	common	ja	%4のスケジュールに対する%2の返答：%3（返答日 %1）
+on all changes	calendar	ja	%4のスケジュールに対する%2の返答：%3（返答日 %1）
+on all modification, but responses	calendar	ja	内容が修正された場合(返答は除く)
+on any time change too	calendar	ja	時間が変更された場合
+on invitation / cancelation only	calendar	ja	招待時またはキャンセル時のみ
+on participant responses too	calendar	ja	参加者の返答も含む場合
+on time change of more than 4 hours too	calendar	ja	4時間以上の日時訂正時も含む
+order	calendar	ja	順序
+overlap holiday	calendar	ja	振替休日
+participant	calendar	ja	参加者
+participants	calendar	ja	参加者
+participates	calendar	ja	も参加
+people holiday	calendar	ja	国民の休日
+permission denied	calendar	ja	権限がありません
+planner	calendar	ja	プランナー
+planner by category	calendar	ja	カテゴリごとのプランナー
+planner by user	calendar	ja	ユーザーごとのプランナー
+please confirm,accept,reject or examine changes in the corresponding entry in your calendar	calendar	ja	
+pm	calendar	ja	午後
+powerful calendar with meeting request system and acl security.	about	ja	スケジュール管理アプリケーション<br />イベント通知＆ACLセキュリティ機能装備
+preselected group for entering the planner	calendar	ja	プランナー表示時の初期選択グループ
+print calendars in black & white	calendar	ja	印刷用の時、白黒表示にする
+print the mini calendars	calendar	ja	ミニカレンダーを印刷
+printer friendly	calendar	ja	印刷用へ
+private and global public	calendar	ja	プライベートと共有
+private and group public	calendar	ja	プライベートと所属グループ
+private only	calendar	ja	プライベートのみ
+re-edit event	calendar	ja	再編集
+read a list of entries.	calendar	ja	エントリ一覧を閲覧
+read a single entry by passing the id and fieldlist.	calendar	ja	このIDとフィールドリストを通して、エントリを読み込む
+read this list of methods.	calendar	ja	メソッドのリストを閲覧
+receive email updates	calendar	ja	メール更新情報の受信
+receive extra information in event mails	calendar	ja	イベント通知用メールで特別な情報を受け取る
+receive summary of appointments	calendar	ja	
+recurring event	calendar	ja	繰り返しイベント
+refresh	calendar	ja	再表示
+reinstate	calendar	ja	元に戻す
+reject	calendar	ja	拒否
+rejected	calendar	ja	拒否済み
+repeat day	calendar	ja	曜日の繰返し
+repeat end date	calendar	ja	繰返しの終了日
+repeat type	calendar	ja	タイプ
+repeating event information	calendar	ja	繰返しイベント
+repetition	calendar	ja	繰返し
+repetitiondetails (or empty)	calendar	ja	繰返しの詳細（または未設定）
+repitition	calendar	ja	繰返し
+reset	calendar	ja	再入力
+rule	calendar	ja	ルール
+sa	calendar	ja	土
+sat	common	ja	土
+scheduling conflict	calendar	ja	予定を確認
+search results	calendar	ja	検索結果
+select country for including holidays	calendar	ja	休日データ選択
+selected contacts (%1)	calendar	ja	選択済み連絡先（%1）
+send updates via email	common	ja	更新情報を送る
+send/receive updates via email	calendar	ja	更新情報を電子メールで受取る
+set a year only for one-time / non-regular holidays.	calendar	ja	年に関しては、１日限りまたは規則的ではない休日の場合にのみ設定します。
+set new events to private	calendar	ja	新しいイベントをプライベート用に設定
+should invitations you rejected still be shown in your calendar ?<br />you can only accept them later (eg. when your scheduling conflict is removed), if they are still shown in your calendar!	calendar	ja	参加要請を拒否したイベントを自身のカレンダーに表示するかどうかを指定します。<br />カレンダーに表示している場合は、後で（重なっていたスケジュールがなくなった時等）拒否していた参加要請を承諾することができます。
+should new events created as private by default ?	calendar	ja	デフォルトでプライベート用としてイベントを作成するかどうかを選択します。
+should the mini calendars by printed / displayed in the printer friendly views ?	calendar	ja	印刷表示画面でミニカレンダーを表示するかどうかを選択します。
+should the printer friendly view be in black & white or in color (as in normal view)?	calendar	ja	印刷表示画面を白黒モードで表示するかどうかを選択します。
+should the status of the event-participants (accept, reject, ...) be shown in brakets after each participants name ?	calendar	ja	イベント参加者のステータス（承諾、拒否等）を各参加者名の後ろに表示するかどうかを選択します
+show day view on main screen	calendar	ja	今日の予定をメイン画面に表示
+show default view on main screen	calendar	ja	初期表示をメイン画面に表示
+show high priority events on main screen	calendar	ja	優先度が高いイベントをメイン画面に表示
+show invitations you rejected	calendar	ja	参加要請を拒否したイベントの表示
+single event	calendar	ja	１つのイベント
+sorry, the owner has just deleted this event	calendar	ja	所有者がこのイベントを削除しました
+sorry, this event does not exist	calendar	ja	このイベントは存在しません
+sorry, this event does not have exceptions defined	calendar	ja	定義された例外がこのイベントにはありません
+sort by	calendar	ja	並び替え
+specifies the the number of intervals shown in the planner view.	calendar	ja	プランナー画面に表示される間隔の数を指定します。
+start date/time	calendar	ja	開始日時
+start- and enddates	calendar	ja	開始日 - 終了日
+startdate	calendar	ja	開始日付
+startrecord	calendar	ja	開始レコード
+su	calendar	ja	日
+submit to repository	calendar	ja	転送
+substitutions and their meanings:	calendar	ja	定義済み変数名とその意味：
+sun	common	ja	日
+tentative	calendar	ja	仮承諾
+test import (show importable records <u>only</u> in browser)	calendar	ja	テストインポート（インポートしたレコードをブラウザに表示するだけです。）
+text	calendar	ja	テキスト
+th	calendar	ja	木
+the cell of an event is colored	calendar	ja	イベントに個別のセル色を設定する
+the following conflicts with the suggested time:<ul>%1</ul>	calendar	ja	次の提案時間：<ul>%1</ul>が競合しています
+the following conflicts with the suggested time:<ul>x</ul>	calendar	ja	The following conflicts with the suggested time:<ul>%1</ul>
+the user %1 is not participating in this event!	calendar	ja	ユーザー %1 は、このイベントに参加していません
+there was an error trying to connect to your news server.<br />please contact your admin to check the news servername, username or password.	calendar	ja	ニュースサーバーへの接続時にエラーがありました。<br />ニュースサーバー名、ユーザー名、パスワードを確認するように管理者に連絡してください。
+this day is shown as first day in the week or month view.	calendar	ja	週表示または月表示における週初めの曜日を指定します。
+this defines the end of your dayview. events after this time, are shown below the dayview.	calendar	ja	日表示の終了時刻を指定します。この時刻を過ぎたイベントは、日表示の下部に表示されます。
+this defines the start of your dayview. events before this time, are shown above the dayview.<br />this time is also used as a default starttime for new events.	calendar	ja	日表示の開始時刻を指定します。この時刻前のイベントは、日表示の上部に表示されます。<br />この時刻は、新規イベント作成時のデフォルトの開始時刻としても利用されます。
+this group that is preselected when you enter the planner. you can change it in the planner anytime you want.	calendar	ja	プランナー画面に表示時に、事前に選択されるグループを指定します。プランナー画面では、いつでもグループを変更することができます。
+this is mostly caused by a not or wrongly configured smtp server. notify your administrator.	calendar	ja	大抵はSMTPサーバーの設定が正しくない場合に起こります。サーバー管理者に通知してください。
+this message is sent for canceled or deleted events.	calendar	ja	このメッセージは、イベントのキャンセル時またはイベント削除時に送信されます。
+this message is sent for modified or moved events.	calendar	ja	このメッセージは、イベント変更時またはイベント移動時に送信されます。
+this message is sent to every participant of events you own, who has requested notifcations about new events.<br />you can use certain variables which get substituted with the data of the event. the first line is the subject of the email.	calendar	ja	このメッセージは、新しいイベントに関する通知を必要としているあなたが所有するイベントの参加者に送信されます。<br />定義済みの変数($$変数名$$）をイベントのデータとして代用することができます。先頭行は、メールの件名を指定します。
+this message is sent when you accept, tentative accept or reject an event.	calendar	ja	このメッセージは、イベント承諾時、イベント仮承諾時またはイベント拒否時に送信されます。
+this message is sent when you set an alarm for a certain event. include all information you might need.	calendar	ja	このメッセージは、イベントに対するアラームをセットした時に送信されます。必要となる全ての情報を含んでいます。
+this month	calendar	ja	今月
+this week	calendar	ja	今週
+this year	calendar	ja	今年
+thu	common	ja	木
+title	calendar	ja	タイトル
+title of the event	calendar	ja	イベントのタイトル
+title-row	calendar	ja	タイトル行
+to-firstname	calendar	ja	To-姓
+to-fullname	calendar	ja	To-フルネーム
+to-lastname	calendar	ja	To-名
+today	calendar	ja	今日
+translation	calendar	ja	翻訳
+tu	calendar	ja	火
+tue	common	ja	火
+update a single entry by passing the fields.	calendar	ja	フィールドを通して、エントリを更新
+updated	calendar	ja	更新済み
+use end date	calendar	ja	終了日指定
+user	calendar	ja	ユーザ
+view this entry	common	ja	エントリーを表示します
+we	calendar	ja	水
+wed	common	ja	水
+week	calendar	ja	週
+weekday starts on	calendar	ja	週の初め
+weekly	calendar	ja	週単位
+weekview	calendar	ja	週表示
+when creating new events default set to private	calendar	ja	プライベート用とする（新規作成時）
+which events do you want to see when you enter the calendar.	calendar	ja	カレンダーを使用する際に、デフォルトで表示したいデータ種別を選択します。
+which of calendar view do you want to see, when you start calendar ?	calendar	ja	カレンダー実行時にデフォルトで表示するカレンダータイプを選択します。
+work day ends on	calendar	ja	就業時間（終了）
+work day starts on	calendar	ja	就業時間（開始）
+workdayends	calendar	ja	就業終了時間
+x matches found	calendar	ja	%1 件見つかりました。
+year	calendar	ja	年
+yearly	calendar	ja	年単位
+yearview	calendar	ja	年表示
+you can either set a year or a occurence, not both !!!	calendar	ja	年と曜日指定に関しては、どちらか一方のみを設定します。両方同時に設定することはできません。
+you can only set a year or a occurence !!!	calendar	ja	年と曜日指定に関しては、どちらか一方のみを設定します。
+you do not have permission to add alarms to this event !!!	calendar	ja	このイベントにアラームを追加する権限がありません
+you do not have permission to delete this alarm !!!	calendar	ja	このアラームを削除する権限がありません
+you do not have permission to edit this appointment!	calendar	ja	このスケジュールの編集権限がありません
+you do not have permission to enable/disable this alarm !!!	calendar	ja	このアラームのステータス（有効 / 無効）を変更する権限がありません
+you do not have permission to read this record!	calendar	ja	このレコードの読み取り権限がありません
+you have %1 high priority events on your calendar today.	common	ja	本日のカレンダーに優先度の高い予定が %1 件あります。
+you have 1 high priority event on your calendar today.	common	ja	本日のカレンダーに優先度の高い予定が１件あります。
+you have a meeting scheduled for	calendar	ja	
+you have a meeting scheduled for %1	common	ja	スケジュール（%1）が予約されました
+you have not entered a brief description	calendar	ja	概要を入力してください。
+you have not entered a title	calendar	ja	タイトルを入力して下さい
+you have not entered a valid date	calendar	ja	日付が正しくありません
+you have not entered a valid time of day	calendar	ja	正しい日時が指定されていません
+you have not entered a\nbrief description	calendar	ja	概要を入力してください。
+you have not entered a\nvalid time of day.	calendar	ja	時刻が誤っています。
+you have not entered participants	calendar	ja	参加者が指定されていません
+you have x high priority events on your calendar today.	common	ja	優先度の高い予定が %1 つあります。
+you must enter one or more search keywords	calendar	ja	検索キーワードを入力して下さい。
+you must select a [iv]cal. (*.[iv]cs)	calendar	ja	[iv]Calendar形式ファイル（*.[iv]cs）を選択してください
+you need to set either a day or a occurence !!!	calendar	ja	日と曜日指定に関しては、どちらか一方のみを設定する必要があります。
+your meeting scheduled for	calendar	ja	
+your meeting scheduled for %1 has been canceled	common	ja	予約されたスケジュール（%1）がキャンセルされました
+your meeting that had been scheduled for	calendar	ja	
+your meeting that had been scheduled for %1 has been rescheduled to %2	common	ja	スケジュール（%1）が%2に予定変更されました
+your suggested time of <b> %1 - %2 </b> conflicts with the following existing calendar entries:	calendar	ja	予定時間 <b>%1 - %2</b>が次の登録済みのカレンダーエントリと競合しています
+your suggested time of <b> x - x </b> conflicts with the following existing calendar entries:	calendar	ja	<B> %1 - %2 </B> には、別の予定があります。

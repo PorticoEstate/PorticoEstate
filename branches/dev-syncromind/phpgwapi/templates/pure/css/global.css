@@ -1,0 +1,48 @@
+/*
+	Error Related CSS
+*/
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
+.msg
+{
+	background-color: #FFA500;
+	border: 1px solid #f00;
+	color: #f00;
+	text-align: center;
+}
+
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+	font-weight: bold;
+	text-align: center;
+}
+
+.warn
+{
+	background-color: #ff8;
+	border: 1px solid #fc0;
+	color: #fc0;
+}
+
+div.error, div.warn
+{
+	font-weight: bold;
+	padding: 2px;
+	text-align: center;
+}
+
+.ui-datepicker-month
+{
+	color: black;
+}
+.ui-datepicker-year
+{
+	color: black;
+}

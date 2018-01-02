@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="./styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="./styles/print.css" media="print" />
+		<title>phpGroupWare - Suggested PHP Configuration</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="./pics/logo.png" alt="phpGW logo" />
+				Suggested PHP Configuration
+			</div>
+			<div id="top">
+				<img src="./pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="./">Configuration Documentation</a></div>
+			</div>
+			<div id="content">
+				<h1>Suggested PHP Configuration</h1>
+				<p>
+					This is a suggested php.ini config for running phpGroupWare 0.9.16 on php4. It 
+					is roughly in the order of the paramters in you php.ini file. These recommendations
+					are based on feedback from users and developers.
+				</p>
+				<h2>Resources</h2>
+				<pre>max_execution_time = 90</pre>
+				<p>
+					This allows for encoding/decoding large file attachments on slower machines and
+					other complex functions.
+				</p>
+				<p>
+				<pre>memory_limit = 20M</pre>
+				<p>
+					At least this value should help with more complex operations.
+				</p>
+				<h2>Errors</h2>
+				<pre>error_reporting = E_ALL &amp; ~E_NOTICE</pre>
+				<p>
+					Having this set to E_ALL, will cause all types of problems if left to
+					display on the screen.  E_NOTICE are non-fatal errors such as undefined
+					variable etc.  Having this set to E_ALL only will dramatically increase
+					the size of your log files if you log errors.
+				</p>
+				<pre>display_errors = Off</pre>
+				<p>
+					This can cause header output problems if left on.  They are better stored in your
+					log file and that way you have a record of any problems.
+				</p>
+				<pre>log_errors = On</pre>
+				<p>
+					See above.
+				</p>
+				<h2>Databases</h2>
+				<p>
+					<i>Replace [rdbms] with the data module you are using</i>
+				</p>
+				<pre>[dbms].allow_persistent = Of</pre>
+				<p>
+					Only turn this option on if you want to use persistent databse
+					connections.  Generally persistent connections are only of benefit
+					if you are using a highly tuned apache install with a small user base.
+				</p>
+				<h2>File Uploads</h2>
+				<pre>file_uploads = On</pre>
+				<p>
+					If you want to use email, filemanager, infolog or any apps that upload files 
+					this must be set to on.
+				</p>
+				<pre>upload_max_filesize = 5M</pre>
+				<p>
+					At least this.  This will allow for larger email attachments and
+					phpwebhosting files.  Use filesize * 4 = memory_limit to allow for
+					base64 encodes.
+				</p>
+				<h2>PHP4 Sessions</h2>
+				<pre>session.save_path = /tmp</pre>
+				<p>
+					Your httpd must be able to read and write to this directory, if you
+					intend to use php4 sessions.
+				</p>
+				<pre>session.gc_maxlifetime = 7200</pre>
+				<p>
+					Set this to what you want to be your session time out limit.  It is in
+					second so set it to 3600 if you want it to one hour.  The default is
+					1440 or 24mins, which is generally too short.
+				</pre>
+				<h2>Globals</h2>
+				<pre>register_globals = Off</pre>
+				<p>
+					The system should work with this set to Off. If
+					you find this caused problems, please log them on
+					<a href="http://savannah.nongnu.org/bugs/?group=fmsystem">savannah</a>.
+				</p>
+				<h2>Directories</h2>
+				<pre>open_basedir = "/path/to/phpgroupware:/path/to/phpgw-vfs:/path/to/temp"</pre>
+				<p>
+					This directive will prevent phpGroupWare from accessing any files outside
+					of the directories specified.  AFAIK all symlinks are resolved.
+				</p>
+				<p>
+					For more information please refer to the <a href="http://php.net">PHP
+					website</a>.
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/php-configuration.html">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision: 15578 $<br />
+				<b>Last Modified:</b> $Date: 2004-12-30 22:15:08 +1100 (Thu, 30 Dec 2004) $ by $Author: skwashd $
+			</div>
+		</div>
+	</body>
+</html>

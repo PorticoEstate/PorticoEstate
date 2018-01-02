@@ -1,0 +1,539 @@
+about %1	common	ca	Sobre %1
+access	common	ca	Accés
+access not permitted	common	ca	Accés no permes
+account has been created	common	ca	Compte creat
+account has been deleted	common	ca	Compte esborrat
+account has been updated	common	ca	Compte actualitzat
+acl	common	ca	ACL
+action	common	ca	Acció
+active	common	ca	Actiu
+add	common	ca	Afegir
+add %1 category for	common	ca	Afegir %1 categoría per
+add category	common	ca	Afegir categoría
+add sub	common	ca	Afegir sub
+addressbook	common	ca	Llista d'adreces
+admin	common	ca	Administrador
+administration	common	ca	Administració
+afghanistan	common	ca	AFGANISTAN
+albania	common	ca	ALBANIA
+algeria	common	ca	ALGERIA
+all	common	ca	Tot
+american samoa	common	ca	SAMOA AMERICANA
+andorra	common	ca	ANDORRA
+angola	common	ca	ANGOLA
+anguilla	common	ca	ANGUILLA
+antarctica	common	ca	ANTARCTICA
+antigua and barbuda	common	ca	ANTIGUA I BARBUDA
+apply	common	ca	Aplicar
+april	common	ca	Abril
+are you sure you want to delete this entry ?	common	ca	Està segur que vol eliminar aquesta entrada ?
+argentina	common	ca	ARGENTINA
+armenia	common	ca	ARMENIA
+aruba	common	ca	ARUBA
+august	common	ca	Agost
+australia	common	ca	AUSTRALIA
+austria	common	ca	AUSTRIA
+author	common	ca	Autor
+autosave default category	common	ca	Guardar automàticament categoria per defecte
+azerbaijan	common	ca	AZERBAIJAN
+back	common	ca	Tornar
+bad login or password	common	ca	Usuari o clau incorrecte
+bahamas	common	ca	BAHAMAS
+bahrain	common	ca	BAHRAIN
+bangladesh	common	ca	BANGLADESH
+barbados	common	ca	BARBADOS
+belarus	common	ca	BELARUS
+belgium	common	ca	BELGICA
+belize	common	ca	BELIZE
+benin	common	ca	BENIN
+bermuda	common	ca	BERMUDA
+bhutan	common	ca	BHUTAN
+blocked, too many attempts	common	ca	Bloquejat, massa intents seguits
+bolivia	common	ca	BOLIVIA
+bosnia and herzegovina	common	ca	BOSNIA I HERZEGOVINA
+botswana	common	ca	BOTSWANA
+bouvet island	common	ca	ILLA BOUVET
+brazil	common	ca	BRASIL
+british indian ocean territory	common	ca	TERRITORI OCEÀNIC BRITANIC
+brunei darussalam	common	ca	BRUNEI DARUSSALAM
+bulgaria	common	ca	BULGARIA
+burkina faso	common	ca	BURKINA FASO
+burundi	common	ca	BURUNDI
+cambodia	common	ca	CAMBODJA
+cameroon	common	ca	CAMERUN
+canada	common	ca	CANADA
+cancel	common	ca	Cancel·lar
+cape verde	common	ca	CAP VERD
+categories	common	ca	Categories
+categories for	common	ca	Categories per
+category	common	ca	Categoría
+category %1 has been added !	common	ca	Categoría %1 afegida !
+category %1 has been updated !	common	ca	Categoría %1 actualitzada !
+cayman islands	common	ca	ILLES CAIMÀ
+central african republic	common	ca	CENTRAL AFRICAN REPUBLIC
+chad	common	ca	XAD
+change	common	ca	Canvi
+charset	common	ca	utf-8
+chile	common	ca	XILE
+china	common	ca	XINA
+choose the category	common	ca	Esculli categoría
+choose the parent category	common	ca	Esculli categoría pare
+christmas island	common	ca	ILLA CHRISTMAS
+clear	common	ca	Netejar
+clear form	common	ca	Netejar Formulari
+close	common	ca	Tancar
+cocos (keeling) islands	common	ca	ILLES COCOS (KEELING)
+colombia	common	ca	COLOMBIA
+comoros	common	ca	COMOROS
+congo	common	ca	CONGO
+congo, the democratic republic of the	common	ca	CONGO, REPUBLICA DEMOCRATICA DEL
+cook islands	common	ca	ILLES COOK
+copy	common	ca	Copiar
+costa rica	common	ca	COSTA RICA
+cote d ivoire	common	ca	COSTA D'IVORI
+create	common	ca	Crear
+created by	common	ca	Creat Per
+croatia	common	ca	CROACIA
+cuba	common	ca	CUBA
+currency	common	ca	Moneda
+current	common	ca	Actual
+current users	common	ca	Usuaris actuals
+cyprus	common	ca	XIPRE
+czech republic	common	ca	REPÚBLICA XECA
+date	common	ca	Data
+date due	common	ca	Date Due
+december	common	ca	Desembre
+default category	common	ca	Categoría per defecte
+delete	common	ca	Esborrar
+denmark	common	ca	DIANAMARCA
+description	common	ca	Descripció
+detail	common	ca	Detall
+details	common	ca	Detalls
+disabled	common	ca	Desactivat
+display monday first	common	ca	Mostrar el Dilluns primer
+display sunday first	common	ca	Mostrar el Diumenge primer
+djibouti	common	ca	DJIBOUTI
+do you also want to delete all subcategories ?	common	ca	També vol eliminar totes les subcategories ?
+domain	common	ca	Domini
+domain name for mail-address, eg. "%1"	common	ca	domain name for mail-address, eg. "%1"
+domestic	common	ca	Domestic
+dominica	common	ca	DOMINICA
+dominican republic	common	ca	REPUBLICA DOMINICANA
+done	common	ca	Fet
+drag to move	common	ca	Arrastrar per moure
+e-mail	common	ca	E-Mail
+east timor	common	ca	TIMOR ORIENTAL
+ecuador	common	ca	ECUADOR
+edit	common	ca	Editar
+edit %1 category for	common	ca	Editar %1 categoría per
+edit categories	common	ca	Editar categories
+edit category	common	ca	Editar categoría
+egypt	common	ca	EGIPTE
+el salvador	common	ca	EL SALVADOR
+email	common	ca	E-Mail
+email-address of the user, eg. "%1"	common	ca	adreça d'email del usuari, pe. "%1"
+enabled	common	ca	Activat
+end date	common	ca	Data de finalització
+end time	common	ca	Temps de finalització
+entry has been deleted sucessfully	common	ca	L'entrada s'ha esborrat correctament
+entry updated sucessfully	common	ca	Entrada actualitzada correctament
+equatorial guinea	common	ca	GUINEA EQUATORIAL
+eritrea	common	ca	ERITREA
+error	common	ca	Error
+error creating %1 %2 directory	common	ca	Error creant %1 %2 directori
+error deleting %1 %2 directory	common	ca	Error deleting %1 %2 directory
+error renaming %1 %2 directory	common	ca	Error renaming %1 %2 directory
+estonia	common	ca	ESTONIA
+ethiopia	common	ca	ETIOPIA
+falkland islands (malvinas)	common	ca	ILLES FALKLAND (MALVINAS)
+faroe islands	common	ca	ILLES FAROE
+fax number	common	ca	número de fax
+february	common	ca	Febrer
+fields	common	ca	Camps
+fiji	common	ca	FIJI
+files	common	ca	Arxius
+filter	common	ca	Filtre
+finland	common	ca	FINLANDIA
+first name	common	ca	Nom
+first name of the user, eg. "%1"	common	ca	nom de l'usuari, pe. "%1"
+first page	common	ca	Pàgina inicial
+firstname	common	ca	Nom
+fixme!	common	ca	REPARA'M!
+force selectbox	common	ca	Forçar SelectBox
+france	common	ca	FRANÇA
+french guiana	common	ca	FRENCH GUIANA
+french polynesia	common	ca	POLINÈSIA FRANCESA
+french southern territories	common	ca	TERRITORIS FRANCESOS DEL SUD
+friday	common	ca	Divendres
+ftp	common	ca	FTP
+fullname	common	ca	Nom Complet
+gabon	common	ca	GABON
+gambia	common	ca	GAMBIA
+general menu	common	ca	Menú General
+georgia	common	ca	GEORGIA
+germany	common	ca	ALEMANYA
+ghana	common	ca	GHANA
+gibraltar	common	ca	GIBRALTAR
+global	common	ca	Global
+global public	common	ca	Públic Global
+go today	common	ca	Anar a Avui
+grant access	common	ca	Donar accés
+greece	common	ca	GRECIA
+greenland	common	ca	GREENLAND
+grenada	common	ca	GRENADA
+group	common	ca	Grup
+group access	common	ca	Accés de Grup
+group has been added	common	ca	Grup afegit
+group has been deleted	common	ca	Grup esborrat
+group has been updated	common	ca	Grup actualitzat
+group name	common	ca	nom del grup
+group public	common	ca	Group Public
+groups	common	ca	Grups
+groups with permission for %1	common	ca	Grups amb permís per a %1
+groups without permission for %1	common	ca	Grups amb permís per a %1
+guadeloupe	common	ca	GUADELOUPE
+guam	common	ca	GUAM
+guatemala	common	ca	GUATEMALA
+guinea	common	ca	GUINEA
+guinea-bissau	common	ca	GUINEA-BISSAU
+guyana	common	ca	GUYANA
+haiti	common	ca	HAITI
+heard island and mcdonald islands	common	ca	ILLA HEARD I ILLES MCDONALD
+help	common	ca	Ajuda
+high	common	ca	Alt
+highest	common	ca	El més alt
+holy see (vatican city state)	common	ca	CIUTAT DEL VATICÀ
+home	common	ca	Inici
+honduras	common	ca	HONDURAS
+hong kong	common	ca	HONG KONG
+hungary	common	ca	HONGRIA
+iceland	common	ca	ICELAND
+india	common	ca	INDIA
+indonesia	common	ca	INDONESIA
+international	common	ca	Internacional
+invalid ip address	common	ca	Adreça IP invàlida
+invalid password	common	ca	Clau invàlida
+iran, islamic republic of	common	ca	IRAN, REPUBLICA ISLAMICA D'
+iraq	common	ca	IRAQ
+ireland	common	ca	IRLANDA
+israel	common	ca	ISRAEL
+it has been more then %1 days since you changed your password	common	ca	Fà més de %1 que ha canviat la seva clau
+it is recommended that you run setup to upgrade your tables to the current version	common	ca	Es recomana que executi "setup" per actualitzar les seves taules a la versió actual.
+italy	common	ca	ITALIA
+jamaica	common	ca	JAMAICA
+january	common	ca	Gener
+japan	common	ca	JAPÓ
+jordan	common	ca	JORDANIA
+july	common	ca	Juliol
+june	common	ca	Juny
+kazakstan	common	ca	KAZAKSTAN
+kenya	common	ca	KENYA
+keywords	common	ca	Paraules clau
+kiribati	common	ca	KIRIBATI
+korea, democratic peoples republic of	common	ca	KOREA, REPÚBLICA DEMOCRÀTICA DE
+korea, republic of	common	ca	KOREA, REPÚBLICA DE
+kuwait	common	ca	KUWAIT
+kyrgyzstan	common	ca	KYRGYZSTAN
+language	common	ca	Idioma
+lao peoples democratic republic	common	ca	LAO, REPÚBLICA DEMOCRÀTICA DE
+last name	common	ca	Cognom
+last name of the user, eg. "%1"	common	ca	cognom de l'usuari, pe. "%1"
+last page	common	ca	Última pàgina
+lastname	common	ca	Cognom
+latvia	common	ca	LETONIA
+lebanon	common	ca	LEBANON
+lesotho	common	ca	LESOTHO
+liberia	common	ca	LIBERIA
+libyan arab jamahiriya	common	ca	LIBYAN ARAB JAMAHIRIYA
+license	about	ca	License
+liechtenstein	common	ca	LIECHTENSTEIN
+list	common	ca	Llista
+lithuania	common	ca	LITUANIA
+local	common	ca	Local
+login	common	ca	Usuari
+loginid	common	ca	ID d'usuari
+logout	common	ca	Tancar sessió
+low	common	ca	Baix
+lowest	common	ca	El més baix
+luxembourg	common	ca	LUXEMBURG
+macau	common	ca	MACAU
+macedonia, the former yugoslav republic of	common	ca	MACEDONIA, REPÚBLICA IUGOSLAVA DE
+madagascar	common	ca	MADAGASCAR
+mail domain, eg. "%1"	common	ca	domini de correu, pe. "%1"
+main category	common	ca	Categoría principal
+main screen	common	ca	Pantalla principal
+maintainer	about	ca	Maintainer
+malawi	common	ca	MALAWI
+malaysia	common	ca	MALAYSIA
+maldives	common	ca	MALDIVES
+mali	common	ca	MALI
+malta	common	ca	MALTA
+manual	common	ca	Manual
+march	common	ca	Març
+marshall islands	common	ca	ILLES MARSHALL
+martinique	common	ca	MARTINIQUE
+mauritania	common	ca	MAURITANIA
+mauritius	common	ca	MAURITIUS
+may	common	ca	Maig
+mayotte	common	ca	MAYOTTE
+medium	common	ca	Mig
+menu	common	ca	Menú
+message	common	ca	Missatge
+mexico	common	ca	MEXICO
+micronesia, federated states of	common	ca	MICRONESIA, ESTATS FEDERALS DE
+moldova, republic of	common	ca	MOLDOVA, REPÚBLICA DE
+monaco	common	ca	MONACO
+monday	common	ca	Dilluns
+mongolia	common	ca	MONGOLIA
+montserrat	common	ca	MONTSERRAT
+morocco	common	ca	MARROC
+mozambique	common	ca	MOZAMBIQUE
+myanmar	common	ca	MYANMAR
+name	common	ca	Nom
+name of the user, eg. "%1"	common	ca	nomde l'usuari, pe. "%1"
+namibia	common	ca	NAMIBIA
+nauru	common	ca	NAURU
+nepal	common	ca	NEPAL
+netherlands	common	ca	NETHERLANDS
+netherlands antilles	common	ca	NETHERLANDS ANTILLES
+never	common	ca	Mai
+new caledonia	common	ca	NEW CALEDONIA
+new entry added sucessfully	common	ca	Nova entrada afegida correctament
+new main category	common	ca	Nova categoría principal
+new value	common	ca	Nou valor
+new zealand	common	ca	NOVA ZELANDA
+next	common	ca	Següent
+next month (hold for menu)	common	ca	Proper mes (hold for menu)
+next page	common	ca	Propera pàgina
+next year (hold for menu)	common	ca	Proper any (hold for menu)
+nicaragua	common	ca	NICARAGUA
+niger	common	ca	NIGER
+nigeria	common	ca	NIGERIA
+niue	common	ca	NIUE
+no	common	ca	No
+no entries found, try again ...	common	ca	entrades no trobades, torni a provar ...
+no history for this record	common	ca	No hi ha història per aquest registre
+no subject	common	ca	Sense títol
+none	common	ca	Cap
+norfolk island	common	ca	ILLA NORFOLK
+normal	common	ca	Normal
+northern mariana islands	common	ca	ILLES MARIANES DEL NORD
+norway	common	ca	NORWAY
+not assigned	common	ca	no assignat
+note	common	ca	Nota
+notes	common	ca	Notes
+notify window	common	ca	Finestra de Notificació
+november	common	ca	Novembre
+october	common	ca	Octubre
+ok	common	ca	OK
+old value	common	ca	Valor antic
+oman	common	ca	OMAN
+on *nix systems please type: %1	common	ca	En sistemes *nix, teclegi si us plau: %1
+only private	common	ca	només privat
+only yours	common	ca	només vosté
+open notify window	common	ca	Obrir finestra de notificació
+open popup window	common	ca	Obrir finestra emergent
+original	common	ca	Original
+other	common	ca	Altres
+overview	common	ca	Overview
+owner	common	ca	Propietari
+pakistan	common	ca	PAKISTAN
+palau	common	ca	PALAU
+palestinian territory, occupied	common	ca	TERRITORI PALESTÍ OCUPAT
+panama	common	ca	PANAMA
+papua new guinea	common	ca	PAPUA NOVA GUINEA
+paraguay	common	ca	PARAGUAY
+parcel	common	ca	Parcel
+parent category	common	ca	Categoría pare
+password	common	ca	Clau
+password could not be changed	common	ca	La clau no es pot canviar
+password has been updated	common	ca	Clau canviada
+pattern for search in addressbook	common	ca	Patró de cerca en la Llista d'adreces
+pattern for search in calendar	common	ca	Patró de cerca en Calendari
+pattern for search in projects	common	ca	Patró de cerca en Projectes
+permissions to the files/users directory	common	ca	permissions to the files/users directory
+personal	common	ca	Personal
+peru	common	ca	PERU
+philippines	common	ca	FILIPINES
+phone number	common	ca	telèfon
+pitcairn	common	ca	PITCAIRN
+please %1 by hand	common	ca	Si us plau %1 manualment
+please enter a name	common	ca	Si us plau, introdueixi un nom !
+please run setup to become current	common	ca	Please run setup to become current
+please select	common	ca	Esculli
+please set your global preferences	common	ca	Configuri les seves preferències globals !
+please set your preferences for this application	common	ca	Configuri les seves preferències per aquesta aplicació !
+please wait...	common	ca	Esperi...
+poland	common	ca	POLONIA
+portugal	common	ca	PORTUGAL
+postal	common	ca	Postal
+powered by phpgroupware version %1	common	ca	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
+preferences	common	ca	Preferències
+prev. month (hold for menu)	common	ca	Mes anterior (hold for menu)
+prev. year (hold for menu)	common	ca	Any anterior (hold for menu)
+previous page	common	ca	Pàgina anterior
+print	common	ca	Imprimir
+priority	common	ca	Prioritat
+private	common	ca	Privat
+project	common	ca	Projecte
+public	common	ca	public
+puerto rico	common	ca	PUERTO RICO
+qatar	common	ca	QATAR
+read	common	ca	Llegir
+read this list of methods.	common	ca	Llegir la llista de mètodes.
+register_globals = %1	common	en	ca	
+register_globals_off	common	ca	This application has been tested to work with register_globals = off in your php.ini.  This application should work with most PHP 4.1.0+ servers.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+register_globals_on	common	ca	This application has not been tested to work with register_globals = off in your php.ini.  This application requires register_globals = on to be set in your php.ini.  For more information regarding the potential problem of using register_globals = on, see <a href="http://www.php.net/manual/en/security.registerglobals.php" target="_blank">php.net</a>.  If you experience any problems, please report them on our bug tracker at <a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">savannah.gnu.org</a>.
+reject	common	ca	Refusar
+rename	common	ca	Renombrar
+returns a full list of accounts on the system.  warning: this is return can be quite large	common	ca	Retorna una llista completa dels comptes del sistema. Precaució: Pot ser bastant llarg
+returns an array of todo items	common	ca	Retorna un array d'elements a fer
+returns struct of users application access	common	ca	Retorna la estructura d'accessos dels usuaris
+reunion	common	ca	REUNION
+romania	common	ca	RUMANIA
+russian federation	common	ca	FEDERACIÓ RUSA
+rwanda	common	ca	RUANDA
+saint helena	common	ca	SANTA HELENA
+saint kitts and nevis	common	ca	SAINT KITTS AND NEVIS
+saint lucia	common	ca	SANTA LUCIA
+saint pierre and miquelon	common	ca	SANT PERE I MIQUEL
+saint vincent and the grenadines	common	ca	SAINT VINCENT AND THE GRENADINES
+samoa	common	ca	SAMOA
+san marino	common	ca	SAN MARINO
+sao tome and principe	common	ca	SAO TOME AND PRINCIPE
+saturday	common	ca	Dissabte
+saudi arabia	common	ca	ARABIA SAUDI
+save	common	ca	Guardar
+search	common	ca	Cercar
+section	common	ca	Secció
+select	common	ca	Selecionar
+select category	common	ca	Seleccionar Categoria
+select date	common	ca	Seleccionar data
+select group	common	ca	Seleccionar grup
+select one	common	ca	Seleccionar un
+select user	common	ca	Seleccionar usuari
+send	common	ca	Enviar
+senegal	common	ca	SENEGAL
+september	common	ca	Setembre
+server %1 has been added	common	ca	Servidor %1 afegit
+server name	common	ca	Nom del Servidor
+session has been killed	common	ca	Sessió matada
+setup	common	ca	Configuració
+seychelles	common	ca	SEYCHELLES
+show all	common	ca	mostrar tot
+showing %1	common	ca	mostrar %1
+showing %1 - %2 of %3	common	ca	mostrant %1 - %2 de %3
+sierra leone	common	ca	SIERRA LEONE
+singapore	common	ca	SINGAPORE
+slovakia	common	ca	ESLOVAQUIA
+slovenia	common	ca	ESLOVENIA
+solomon islands	common	ca	ILLES SALOMÓ
+somalia	common	ca	SOMALIA
+sorry, your login has expired	login	ca	Ho sentim, el seu usuari ha expirat
+south africa	common	ca	SOUTH AFRICA
+south georgia and the south sandwich islands	common	ca	GEORGIA DEL SUD I LES ILLES SANDWICH DEL SUD
+spain	common	ca	ESPANYA
+sri lanka	common	ca	SRI LANKA
+start date	common	ca	Data d'inici
+start time	common	ca	Hora d'inici
+status	common	ca	Status
+subject	common	ca	Assumpte
+submit	common	ca	Enviar
+substitutions and their meanings:	common	ca	Substitutions and their meanings:
+sudan	common	ca	SUDAN
+sunday	common	ca	Diumenge
+suriname	common	ca	SURINAME
+svalbard and jan mayen	common	ca	SVALBARD AND JAN MAYEN
+swaziland	common	ca	SWAZILAND
+sweden	common	ca	SUÈCIA
+switzerland	common	ca	SUISSA
+syrian arab republic	common	ca	REPÚBLICA ÀRAB DE SIRIA
+taiwan, province of china	common	ca	TAIWAN, PROVINCIA DE XINA
+tajikistan	common	ca	TAJIKISTAN
+tanzania, united republic of	common	ca	TANZANIA, REPÚBLICA DE
+thailand	common	ca	TAILANDIA
+the api is current	common	ca	La API és actual
+the api requires an upgrade	common	ca	La API requereix una actualització
+the following applications require upgrades	common	ca	Les següents aplicacions necessiten actualitzacions
+the mail server returned	common	ca	El sevidor de correu ha retornat
+this application is current	common	ca	Aquesta aplicació està actualitzada
+this application requires an upgrade	common	ca	Aquesa aplicació necessita una actualització
+this name has been used already	common	ca	Aquest nom ja es troba en ús !
+thursday	common	ca	Dijous
+time	common	ca	Hora
+time zone	common	ca	Zona Horària
+time zone offset	common	ca	Desplaçament horari
+title	common	ca	Títol
+to correct this error for the future you will need to properly set the	common	ca	Per corretgir aquest error en el futur ha de configurar correctament el
+to go back to the msg list, click <a href= %1 >here</a>	common	ca	Per tornar a la llista de missatges, clic <a href="%1">aqui</a>
+today	common	ca	Avui
+todays date, eg. "%1"	common	ca	data d'avui, pe. "%1"
+toggle first day of week	common	ca	Toggle first day of week
+togo	common	ca	TOGO
+tokelau	common	ca	TOKELAU
+tonga	common	ca	TONGA
+total	common	ca	Total
+trinidad and tobago	common	ca	TRINIDAD AND TOBAGO
+tuesday	common	ca	Dimarts
+tunisia	common	ca	TUNISIA
+turkey	common	ca	TURQUIA
+turkmenistan	common	ca	TURKMENISTAN
+turks and caicos islands	common	ca	TURKS AND CAICOS ISLANDS
+tuvalu	common	ca	TUVALU
+uganda	common	ca	UGANDA
+ukraine	common	ca	UCRAINA
+united arab emirates	common	ca	EMIRATS ÀRABS UNITS
+united kingdom	common	ca	REGNE UNIT
+united states	common	ca	ESTATS UNITS
+united states minor outlying islands	common	ca	UNITED STATES MINOR OUTLYING ISLANDS
+unknown	common	ca	Desconegut
+update	common	ca	Actualitzar
+url	common	ca	URL
+uruguay	common	ca	URUGUAY
+use button to search for	common	ca	utilitzi el Botó per buscar per
+use button to search for address	common	ca	utilitzi el Botó per buscar per Adreça
+use button to search for calendarevent	common	ca	utilitzi el Botó per buscar per Event del Calendari
+use button to search for project	common	ca	utilitzi el Botó per buscar per Projecte
+user	common	ca	Usuari
+user accounts	common	ca	comptes d'usuari
+user groups	common	ca	grups d'ususari
+username	common	ca	Nom d'usuari
+users	common	ca	usuaris
+users choice	common	ca	Elecció d'Usuaris
+uzbekistan	common	ca	UZBEKISTAN
+vanuatu	common	ca	VANUATU
+venezuela	common	ca	VENEZUELA
+version	common	ca	Versió
+viet nam	common	ca	VIETNAM
+view	common	ca	Veure
+virgin islands, british	common	ca	ILLES VERGES, ANGLESES
+virgin islands, u.s.	common	ca	ILLES VERGES, U.S.
+wallis and futuna	common	ca	WALLIS AND FUTUNA
+wednesday	common	ca	Dimecres
+welcome	common	ca	Benvinguts
+western sahara	common	ca	SAHARA OCCIDENTAL
+which groups	common	ca	Quins grups
+wk	common	ca	wk
+written by:	common	ca	Escrit per:
+year	common	ca	Any
+yemen	common	ca	IEMEN
+yes	common	ca	Sí
+you are required to change your password during your first login	common	ca	És necessari que canvii la seva clau el primer cop que accedeixi
+you are running a newer version of phpgroupware than your database is setup for	common	ca	Està executant una versió més nova de phpGroupWare que la que suporta la seva base de dades.
+you have been successfully logged out	login	ca	La seva sessió s'ha tancat correctament
+you have not entered a title	common	ca	No ha introduit un títol
+you have not entered a valid date	common	ca	No ha introduit una data vàlida
+you have not entered a valid time of day	common	ca	No ha introduit una hora vàlida
+you have not entered participants	common	ca	No ha afegit participants
+you have selected an invalid date	common	ca	Ha seleccionat una data invàlida !
+you have selected an invalid main category	common	ca	Ha seleccionat una categoría invàlida !
+you have successfully logged out	common	ca	La seva sessió s'ha tancat correctament
+your message could <b>not</b> be sent!<br />	common	ca	El vostre missatge <b>no</b> s'ha enviat!<br />
+your message has been sent	common	ca	El seu missatge s'ha enviat
+your search returned %1 matchs	common	ca	la seva cerca ha retornat %1 coincidències
+your search returned 1 match	common	ca	la seva cerca ha retornat 1 coincidència
+your session could not be verified.	login	ca	La seva sessió no por ser verificada.
+your settings have been updated	common	ca	Les seves preferències s'han actualitzat
+yugoslavia	common	ca	IUGOSLAVIA
+zambia	common	ca	ZAMBIA
+zimbabwe	common	ca	ZIMBABWE

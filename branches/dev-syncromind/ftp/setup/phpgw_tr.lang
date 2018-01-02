@@ -1,0 +1,35 @@
+are you sure you want to delete %1 ?	ftp	tr	%1 - Silmek istediğinizden emin misiniz?
+attempt to create a directory with empty name	ftp	tr	 İsimsiz bir dizin oluşturmayı dene.
+cancel	ftp	tr	İptal
+cd	ftp	tr	cd
+connect	ftp	tr	Bağlan
+create new directory	ftp	tr	Yeni bir dizin oluştur
+delete	ftp	tr	sil
+dir	ftp	tr	DIR
+failed to connect to %1 with user %2 and password %3	ftp	tr	%2 kullanıcı adı ve %3 şifresi ile %1 alanına bağlantı gerçekleştirilemedi.
+failed to create directory %1	ftp	tr	%1 - dizin oluşturma gerçekleştirilemedi
+failed to delete %1	ftp	tr	%1 - silme işlemi gerçekleştirilemedi.
+failed to rename %1 to %2	ftp	tr	 %1 : %2 - İsim değişikliği gerçekleştirilemedi.
+failed to upload %1	ftp	tr	%1 - yükleme gerçekleştirilemedi
+ftp client	ftp	tr	Ftp İstemci
+ftp hostname	ftp	tr	FTP alan adı
+ftp server	ftp	tr	Ftp Sunucusu
+home	ftp	tr	Ev
+log into ftp server	ftp	tr	FTP Sunucusu Günlüğü
+logout/relogin	ftp	tr	Giriş / Çıkış 
+password	ftp	tr	Şifre
+permissions	ftp	tr	İzinler
+rename	ftp	tr	İsim değişikliği
+rename file	ftp	tr	Dosyanın ismini değiştir.
+rename from	ftp	tr	Rename from
+rename to	ftp	tr	Rename to
+renamed %1 to %2	ftp	tr	 %1 : %2 - İsim değişikliği
+save	ftp	tr	Kaydet
+save to filemanager	ftp	tr	Dosya Yöneticisine Kaydet
+size	ftp	tr	Boyut
+successfully created directory %1	ftp	tr	%1 - Dizin başarıyla oluşturuldu.
+successfully deleted %1	ftp	tr	%1 - Başarıyla silindi
+successfully uploaded %1	ftp	tr	%1 - Başarıyla güncellendi
+upload	ftp	tr	Yükle
+username	ftp	tr	Kullanıcı Adı
+view	ftp	tr	Görüntüle

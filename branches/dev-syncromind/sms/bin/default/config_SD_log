@@ -1,0 +1,26 @@
+<?php
+	/**
+	 * phpGroupWare - sms: A SMS Gateway
+	 *
+	 * @author Sigurd Nes <sigurdne@online.no>
+	 * @copyright Copyright (C) 2003-2005 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+	 * @internal Development of this application was funded by http://www.bergen.kommune.no/bbb_/ekstern/
+	 * @package sms
+	 * @subpackage sms
+	 * @version $Id: config_VASK 18297 2007-10-03 13:34:09Z sigurdne $
+	 */
+	/**
+	 * Description
+	 * @package sms
+	 * Config values for SMS-command "SD" - short for "noxious animal in Norwegian" - as example - as it is configured at BBB 
+	 * This file is for redirecting from log items to the subject of the log 
+	 */
+	$agreement_id = '31793';
+
+	$link_data = array
+		(
+		'menuaction' => 'property.uis_agreement.view',
+		'id' => $agreement_id
+	);
+

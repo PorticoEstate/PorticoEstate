@@ -1,0 +1,1667 @@
+%1 Buildings has been updated to not active of %2 already not active	property	en	%1 Buildings has been updated to not active of %2 already not active
+%1 Entrances has been updated to not active of %2 already not active	property	en	%1 Entrances has been updated to not active of %2 already not active
+%1 entries is added!	property	en	%1 entries is added!
+%1 entries is updated!	property	en	%1 entries is updated!
+%1 Properties has been updated to not active of %2 already not active	property	en	%1 Properties has been updated to not active of %2 already not active
+abstract	property	en	Abstract
+access	property	en	access
+Access error	property	en	Access error
+acl_locastion is missing	property	en	acl_locastion is missing
+Acquisition date	property	en	Acquisition date
+Action	property	en	Action
+Active	property	en	Active
+Activities	property	en	Activities
+Activity	property	en	Activity
+Activity code	property	en	Activity code
+Activity has been edited	property	en	Activity has been edited
+Activity has been saved	property	en	Activity has been saved
+Activity ID	property	en	Activity ID
+Activity Num	property	en	Activity Num
+actor	property	en	actor
+Actual cost	property	en	Actual cost
+Add	property	en	Add
+add a apartment	property	en	add a apartment
+add a budget account	property	en	add a budget account
+add a building	property	en	add a building
+add a category	property	en	add a category
+add a claim	property	en	add a claim
+add a custom query	property	en	add a custom query
+add a custom_function	property	en	add a custom_function
+add a deviation	property	en	add a deviation
+add a document	property	en	add a document
+add a entity	property	en	add a entity
+add a entrance	property	en	add a entrance
+add a equipment	property	en	add a equipment
+add a gab	property	en	add a gab
+add a hour	property	en	add a hour
+add a hour to this template	property	en	add a hour to this template
+add a location	property	en	add a location
+add a meter	property	en	add a meter
+add a method	property	en	add a method
+add a owner	property	en	add a owner
+add a part of town	property	en	add a part of town
+add a project	property	en	add a project
+add a property	property	en	add a property
+add a rental agreement	property	en	add a rental agreement
+add a report	property	en	add a report
+add a request	property	en	add a request
+add a service agreement	property	en	add a service agreement
+add a standard	property	en	add a standard
+add a template	property	en	add a template
+add a tenant	property	en	add a tenant
+add a ticket	property	en	add a ticket
+add a workorder	property	en	add a workorder
+Add a workorder to this project	property	en	Add a workorder to this project
+add activity	property	en	add activity
+add agreement	property	en	add agreement
+add agreement group	property	en	add agreement group
+Add alarm	property	en	Add alarm
+Add alarm for selected user	property	en	Add alarm for selected user
+add an activity	property	en	add an activity
+add an actor	property	en	add an actor
+add an agreement	property	en	add an agreement
+add an alarm	property	en	add an alarm
+add an attrib	property	en	add an attrib
+add an investment	property	en	add an investment
+add an invoice	property	en	add an invoice
+add an item to the details	property	en	add an item to the details
+add another	property	en	add another
+add apartment	property	en	add apartment
+add attribute	property	en	add attribute
+add budget account	property	en	add budget account
+add building	property	en	add building
+add category	property	en	add category
+add common	property	en	add common
+Add custom	property	en	Add custom
+add custom function	property	en	add custom function
+add detail	property	en	add detail
+add deviation	property	en	add deviation
+Add document	property	en	Add document
+add entity	property	en	add entity
+add entrance	property	en	add entrance
+add equipment	property	en	add equipment
+Add first value for this prizing	property	en	Add first value for this prizing
+Add from prizebook	property	en	Add from prizebook
+Add from template	property	en	Add from template
+add gab	property	en	Add gab
+Add hour	property	en	Add hour
+add investment	property	en	add investment
+Add invoice	property	en	Add invoice
+add items from a predefined template	property	en	add items from a predefined template
+add items from this vendors prizebook	property	en	add items from this vendors prizebook
+add location	property	en	add location
+add meter	property	en	add meter
+add method	property	en	add method
+Add new comments	property	en	Add new comments
+Add Project	property	en	Add Project
+add property	property	en	add property
+add report	property	en	add report
+Add request	property	en	Add request
+add request for this project	property	en	Add request for this project
+add selected request to project	property	en	add selected request to project
+add service	property	en	add service
+Add single custom line	property	en	Add single custom line
+add space	property	en	add space
+add standard	property	en	add standard
+add status	property	en	add status
+Add template	property	en	Add template
+Add the selected items	property	en	Add the selected items
+Add this invoice	property	en	Add this invoice
+Add this vendor to this activity	property	en	Add this vendor to this activity
+add ticket	property	en	add ticket
+Add workorder	property	en	Add workorder
+added	property	en	added
+Additional notes	property	en	Additional notes
+Address	property	en	Address
+addressbook	property	en	addressbook
+Adds a new project - then a new workorder	property	en	Adds a new project - then a new workorder
+Adds a new workorder to an existing project	property	en	Adds a new workorder to an existing project
+Adds this workorders calculation as a template for later use	property	en	Adds this workorders calculation as a template for later use
+Admin entity	property	en	Admin entity
+Admin Location	property	en	Admin Location
+aesthetics	property	en	aesthetics
+again	property	en	again
+Agreement	property	en	Agreement
+Agreement code	property	en	Agreement code
+Agreement group	property	en	Agreement group
+Agreement group code	property	en	Agreement group code
+Agreement group has been edited	property	en	Agreement group has been edited
+Agreement group has been saved	property	en	Agreement group has been saved
+Agreement group ID	property	en	Agreement group ID
+Agreement has been edited	property	en	Agreement has been edited
+Agreement has been saved	property	en	Agreement has been saved
+Agreement ID	property	en	Agreement ID
+agreement_id	property	en	agreement_id
+Alarm	property	en	Alarm
+alarm id	property	en	alarm id
+All	property	en	All
+All users	property	en	All users
+altered	property	en	altered
+Altered by	property	en	Altered by
+Altering ColumnName OR Datatype  - deletes your data in this Column	property	en	Altering ColumnName OR Datatype  - deletes your data in this Column
+Alternative - link instead of uploading a file	property	en	Alternative - link instead of uploading a file
+Amount	property	en	Amount
+amount not entered!	property	en	amount not entered!
+Amount of the invoice	property	en	Amount of the invoice
+An unique code for this activity	property	en	An unique code for this activity
+Apartment	property	en	Apartment
+Apartment has been edited	property	en	Apartment has been edited
+Apartment has been saved	property	en	Apartment has been saved
+apartment id	property	en	apartment id
+apply	property	en	apply
+apply the values	property	en	Apply the values
+Approval from	property	en	Approval from
+Approval from is updated	property	en	Approval from is updated
+Archive	property	en	Archive
+Art	property	en	Art
+Ask for approval	property	en	Ask for approval
+Assign to	property	en	Assign to
+Assigned from	property	en	Assigned from
+Assigned To	property	en	Assigned To
+async	property	en	async
+async method	property	en	async method
+async method has been saved	property	en	async method has been saved
+at location %1	property	en	at location %1
+Attribute	property	en	Attribute
+Attribute has been edited	property	en	Attribute has been edited
+Attribute has been saved	property	en	Attribute has been saved
+Attribute has NOT been deleted	property	en	Attribute has NOT been deleted
+Attribute has NOT been edited	property	en	Attribute has NOT been edited
+Attribute has NOT been saved	property	en	Attribute has NOT been saved
+Attribute ID	property	en	Attribute ID
+Attributes	property	en	Attributes
+attributes for the attrib	property	en	attributes for the attrib
+attributes for the entity category	property	en	attributes for the entity category
+attributes for the location type	property	en	attributes for the location type
+attributes for the standard	property	en	attributes for the standard
+authorities demands	property	en	authorities demands
+Auto TAX	property	en	Auto TAX
+B - responsible	property	en	B - responsible
+Back to Admin	property	en	Back to Admin
+Back to calculation	property	en	Back to calculation
+back to entity	property	en	back to entity
+Back to investment list	property	en	Back to investment list
+Back to list	property	en	Back to list
+Back to the list	property	en	Back to the list
+Back to the ticket list	property	en	Back to the ticket list
+Back to the workorder list	property	en	Back to the workorder list
+Base	property	en	Base
+Base description	property	en	Base description
+bilagsnr	property	en	bilagsnr
+Bill per unit	property	en	Bill per unit
+Billable hours changed	property	en	Billable hours changed
+Billable rate changed	property	en	Billable rate changed
+branch	property	en	branch
+bruks nr	property	en	bruks nr
+Budget	property	en	Budget
+Budget account	property	en	Budget account
+Budget account is missing:	property	en	Budget account is missing:
+Budget changed	property	en	Budget changed
+Budget code is missing from sub invoice in :	property	en	Budget code is missing from sub invoice in :
+budget cost	property	en	budget cost
+Budget Responsible	property	en	Budget Responsible
+Building	property	en	Building
+Building common	property	en	Building common
+Building has been edited	property	en	Building has been edited
+Building has been saved	property	en	Building has been saved
+building id	property	en	building id
+Building part	property	en	Building part
+building_part	property	en	building_part
+But Your message could not be sent by mail!	property	en	But Your message could not be sent by mail!
+calculate	property	en	calculate
+calculate the workorder	property	en	calculate the workorder
+calculate this workorder	property	en	calculate this workorder
+Calculate Workorder	property	en	Calculate Workorder
+Calculate workorder by adding items from vendors prizebook or adding general hours	property	en	Calculate workorder by adding items from vendors prizebook or adding general hours
+Calculation	property	en	Calculation
+Cancel	property	en	Cancel
+cancel the import	property	en	cancel the import
+Categories	property	en	Categories
+categories for the entity type	property	en	categories for the entity type
+categories for the location type	property	en	categories for the location type
+Category	property	en	Category
+Category changed	property	en	Category changed
+category has been edited	property	en	category has been edited
+category has been saved	property	en	category has been saved
+Category has NOT been saved	property	en	Category has NOT been saved
+category id	property	en	category ID
+Change type	property	en	Change type
+Chapter	property	en	Chapter
+char	property	en	char
+Character	property	en	Character
+Charge tenant	property	en	Charge tenant
+check acivate custom function	property	en	check acivate custom function
+Check this to have the output to screen before import (recommended)	property	en	Check this to have the output to screen before import (recommended)
+Check this to notify your supervisor by email	property	en	Check this to notify your supervisor by email
+Check this to send a mail to your supervisor for approval	property	en	Check this to send a mail to your supervisor for approval
+check to delete file	property	en	Check to delete file
+check to delete this request from this project	property	en	Check to delete this request from this project
+check to inherit from this location	property	en	check to inherit from this location
+check to reset the query	property	en	check to reset the query
+check to show this attribue in lookup forms	property	en	check to show this attribue in lookup forms
+check to show this attribute in entity list	property	en	check to show this attribute in entity list
+check to show this attribute in list	property	en	check to show this attribute in list
+check to show this attribute in location list	property	en	check to show this attribute in location list
+check to show this custom function in location list	property	en	check to show this custom function in location list
+Check to update the email-address for this vendor	property	en	Check to update the email-address for this vendor
+Choice	property	en	Choice
+Choose a category	property	en	Choose a category
+Choose an ID	property	en	Choose an ID
+Choose charge tenant if the tenant i to pay for this project	property	en	Choose charge tenant if the tenant i to pay for this project
+Choose columns	property	en	Choose columns
+Choose Copy Hour to copy this hour to a new hour	property	en	Choose Copy Hour to copy this hour to a new hour
+Choose Copy Project to copy this project to a new project	property	en	Choose Copy Project to copy this project to a new project
+Choose Copy request to copy this request to a new request	property	en	Choose Copy request to copy this request to a new request
+Choose Copy Workorder to copy this workorder to a new workorder	property	en	Choose Copy Workorder to copy this workorder to a new workorder
+Choose Generate ID to automaticly assign new ID based on type-prefix	property	en	Choose Generate ID to automaticly assign new ID based on type-prefix
+Choose the end date for the next period	property	en	Choose the end date for the next period
+Choose the start date for the next period	property	en	Choose the start date for the next period
+Choose to send mailnotification	property	en	Choose to send mailnotification
+chose if this column is nullable	property	en	Chose if this column is nullable
+Claim	property	en	Claim
+claim id	property	en	claim id
+Close	property	en	Close
+Close order	property	en	Close order
+Close this window	property	en	Close this window
+Closed	property	en	Closed
+Code	property	en	Code
+column %1 could not be moved	property	en	column %1 could not be moved
+column %1 has been moved	property	en	column %1 has been moved
+column could not be added	property	en	column could not be added
+Column description	property	en	Column description
+column name	property	en	Column name
+column name not entered!	property	en	Column name not entered!
+columns	property	en	columns
+columns is updated	property	en	columns is updated
+common costs	property	en	common costs
+Condidtion degree	property	en	Condidtion degree
+config	property	en	Config
+Configuration	property	en	Configuration
+Consequence	property	en	Consequence
+consequential damage	property	en	consequential damage
+consume	property	en	consume
+Contact	property	en	Contact
+Contact Phone	property	en	Contact Phone
+content	property	en	content
+Conversion	property	en	Conversion
+Coordinator	property	en	Coordinator
+Coordinator changed	property	en	Coordinator changed
+Copy hour ?	property	en	Copy hour ?
+Copy project ?	property	en	Copy project ?
+Copy request ?	property	en	Copy request ?
+Copy workorder ?	property	en	Copy workorder ?
+Correct error	property	en	Correct error
+Cost	property	en	Cost
+Cost (incl tax):	property	en	Cost (incl tax):
+Cost per unit	property	en	Cost per unit
+could not find any location to save to!	property	en	Could not find any location to save to!
+Count	property	en	Count
+Custom	property	en	Custom
+custom function	property	en	custom function
+custom function file not chosen!	property	en	custom function file not chosen!
+Custom function has been edited	property	en	Custom function has been edited
+Custom function has NOT been saved	property	en	Custom function has NOT been saved
+Custom function ID	property	en	Custom function ID
+Custom functions	property	en	Custom functions
+custom functions for the entity category	property	en	custom functions for the entity category
+Custom queries	property	en	Custom queries
+Customer	property	en	Customer
+custom_functions	property	en	custom_functions
+Data	property	en	Data
+Datatype	property	en	Datatype
+Datatype type not chosen!	property	en	Datatype type not chosen!
+Date	property	en	Date
+Date Closed	property	en	Date Closed
+Date Opened	property	en	Date Opened
+Date search	property	en	Date search
+Datetime	property	en	Datetime
+Day	property	en	Day
+Day of week (0-6, 0=Sun)	property	en	Day of week (0-6, 0=Sun)
+Days	property	en	Days
+Deadline	property	en	Deadline
+Debug	property	en	Debug
+Debug output in browser	property	en	Debug output in browser
+Decimal	property	en	Decimal
+default	property	en	default
+default vendor category	property	en	default vendor category
+default vendor category is updated	property	en	default vendor category is updated
+delay	property	en	delay
+delete	property	en	Delete
+Delete a single entry by passing the id.	property	en	Delete a single entry by passing the id.
+delete activity	property	en	delete activity
+Delete agreement and all the activities associated with it!	property	en	Delete agreement and all the activities associated with it!
+Delete agreement group and all the activities associated with it!	property	en	Delete agreement group and all the activities associated with it!
+delete apartment	property	en	delete apartment
+delete async method	property	en	delete async method
+delete budget account	property	en	delete budget account
+delete building	property	en	delete building
+delete claim	property	en	delete claim
+Delete column	property	en	Delete column
+delete custom	property	en	delete custom
+delete document	property	en	delete document
+delete entity	property	en	delete entity
+delete entity type	property	en	delete entity type
+delete entrance	property	en	delete entrance
+delete equipment	property	en	delete equipment
+delete file	property	en	Delete file
+delete gab at:	property	en	delete gab at:
+delete investment history element	property	en	delete investment history element
+Delete last entry	property	en	Delete last entry
+delete last index	property	en	delete last index
+delete location	property	en	delete location
+delete location standard	property	en	delete location standard
+delete meter	property	en	delete meter
+delete owner	property	en	delete owner
+delete part of town	property	en	delete part of town
+delete prize-index	property	en	delete prize-index
+delete project	property	en	delete project
+delete property	property	en	delete property
+delete report	property	en	delete report
+delete request	property	en	delete request
+delete template	property	en	delete template
+delete tenant	property	en	delete tenant
+delete the actor	property	en	delete the actor
+delete the agreement	property	en	delete the agreement
+delete the apartment	property	en	delete the apartment
+delete the attrib	property	en	delete the attrib
+delete the budget account	property	en	delete the budget account
+delete the building	property	en	delete the building
+delete the category	property	en	delete the category
+delete the claim	property	en	delete the claim
+delete the custom_function	property	en	delete the custom_function
+delete the deviation	property	en	delete the deviation
+delete the entity	property	en	delete the entity
+delete the entrance	property	en	delete the entrance
+Delete the entry	property	en	Delete the entry
+delete the equipment	property	en	delete the equipment
+delete the gab	property	en	delete the gab
+delete the item	property	en	delete the item
+delete the last index	property	en	delete the last index
+delete the location	property	en	delete the location
+delete the meter	property	en	delete the meter
+delete the method	property	en	delete the method
+delete the owner	property	en	delete the owner
+delete the part of town	property	en	delete the part of town
+delete the project	property	en	delete the project
+delete the property	property	en	delete the property
+delete the request	property	en	delete the request
+delete the r_agreement	property	en	delete the r_agreement
+delete the standard	property	en	delete the standard
+delete the s_agreement	property	en	delete the s_agreement
+delete the template	property	en	delete the template
+delete the tenant	property	en	delete the tenant
+delete the voucher	property	en	delete the voucher
+delete the workorder	property	en	delete the workorder
+delete this activity	property	en	delete this activity
+Delete this agreement	property	en	Delete this agreement
+Delete this agreement group	property	en	Delete this agreement group
+Delete this column from the output	property	en	Delete this column from the output
+delete this document	property	en	delete this document
+Delete this entry	property	en	Delete this entry
+delete this equipment	property	en	delete this equipment
+delete this gab	property	en	delete this gab
+delete this hour	property	en	delete this hour
+delete this item	property	en	delete this item
+delete this project	property	en	delete this project
+delete this report	property	en	delete this report
+delete this request	property	en	delete this request
+Delete this value from the list of multiple choice	property	en	Delete this value from the list of multiple choice
+delete this vendor from this activity	property	en	delete this vendor from this activity
+delete this workorder	property	en	delete this workorder
+delete ticket	property	en	delete ticket
+Delete value	property	en	Delete value
+delete vendor activity	property	en	delete vendor activity
+delete voucher	property	en	delete voucher
+delete workorder	property	en	delete workorder
+Descr	property	en	Descr
+Description	property	en	Description
+Details	property	en	Details
+deviation	property	en	deviation
+deviation has been added	property	en	deviation has been added
+deviation has been edited	property	en	deviation has been edited
+deviation ID	property	en	deviation ID
+Dim A	property	en	Dim A
+Dim A is missing	property	en	Dim A is missing
+Dim B	property	en	Dim B
+Dim D	property	en	Dim D
+Dima is missing from sub invoice in:	property	en	Dima is missing from sub invoice in:
+directory created	property	en	directory created
+Disable	property	en	Disable
+disabled	property	en	disabled
+District	property	en	District
+district_id	property	en	district_id
+Do not add this invoice	property	en	Do not add this invoice
+Do not import this invoice	property	en	Do not import this invoice
+do you really want to delete this entry	property	en	do you really want to delete this entry
+Do you really want to update the categories	property	en	Do you really want to update the categories
+Do you really want to update the categories again	property	en	Do you really want to update the categories again
+Doc type	property	en	Doc type
+document	property	en	document
+document %1 has been edited	property	en	document %1 has been edited
+document %1 has been saved	property	en	document %1 has been saved
+document date	property	en	document date
+document ID	property	en	document ID
+Document name	property	en	Document name
+Documentation	property	en	Documentation
+Documentation for locations	property	en	Documentation for locations
+documents	property	en	documents
+done	property	en	Cancel
+down	property	en	down
+download table to your browser	property	en	Download table to your browser
+download	property	en	Download
+DRAFT	property	en	DRAFT
+E-Mail	property	en	E-Mail
+Edit	property	en	Edit
+edit activity	property	en	edit activity
+edit agreement	property	en	edit agreement
+edit agreement group	property	en	edit agreement group
+edit apartment	property	en	edit apartment
+edit attribute	property	en	edit attribute
+edit budget account	property	en	edit budget account
+edit building	property	en	edit building
+edit category	property	en	edit category
+edit custom function	property	en	edit custom function
+edit deviation	property	en	edit deviation
+Edit document	property	en	Edit document
+edit entity	property	en	edit entity
+edit entrance	property	en	edit entrance
+edit equipment	property	en	edit equipment
+edit gab	property	en	Edit gab
+Edit hour	property	en	Edit hour
+Edit ID	property	en	Edit ID
+edit info	property	en	edit info
+edit information about the document	property	en	edit information about the document
+edit information about the gab	property	en	edit information about the gab
+edit location	property	en	edit location
+edit location config for	property	en	edit location config for
+edit meter	property	en	edit meter
+edit method	property	en	edit method
+Edit period	property	en	Edit period
+edit pricing	property	en	edit pricing
+Edit priority key	property	en	Edit priority key
+Edit Project	property	en	Edit Project
+edit property	property	en	edit property
+edit report	property	en	edit report
+Edit request	property	en	Edit request
+edit standard	property	en	edit standard
+edit status	property	en	edit status
+Edit template	property	en	Edit template
+edit the actor	property	en	edit the actor
+edit the agreement	property	en	edit the agreement
+edit the agreement_group	property	en	edit the agreement_group
+edit the alarm	property	en	edit the alarm
+edit the apartment	property	en	edit the apartment
+edit the attrib	property	en	edit the attrib
+edit the budget account	property	en	edit the budget account
+edit the building	property	en	edit the building
+edit the category	property	en	edit the category
+edit the claim	property	en	edit the claim
+edit the column relation	property	en	edit the column relation
+edit the custom_function	property	en	edit the custom_function
+edit the deviation	property	en	edit the deviation
+edit the entity	property	en	edit the entity
+edit the entrance	property	en	edit the entrance
+edit the equipment	property	en	edit the equipment
+edit the gab	property	en	edit the gab
+edit the location	property	en	edit the location
+edit the meter	property	en	edit the meter
+edit the method	property	en	edit the method
+edit the owner	property	en	edit the owner
+edit the part of town	property	en	edit the part of town
+edit the pricebook	property	en	edit the pricebook
+edit the project	property	en	edit the project
+edit the property	property	en	edit the property
+edit the report	property	en	edit the report
+edit the request	property	en	edit the request
+edit the r_agreement	property	en	edit the r_agreement
+edit the standard	property	en	edit the standard
+edit the s_agreement	property	en	edit the s_agreement
+edit the template	property	en	edit the template
+edit the tenant	property	en	edit the tenant
+edit the workorder	property	en	edit the workorder
+edit this activity	property	en	edit this activity
+Edit this entry	property	en	Edit this entry
+Edit this entry equipment	property	en	Edit this entry equipment
+Edit this entry project	property	en	Edit this entry project
+edit this entry report	property	en	Edit this entry report
+Edit this entry request	property	en	Edit this entry request
+Edit this entry workorder	property	en	Edit this entry workorder
+Edit this meter	property	en	Edit this meter
+Edit Workorder	property	en	Edit Workorder
+edit/customise this hour	property	en	edit/customise this hour
+Email	property	en	Email
+Enables help message for this attribute	property	en	Enables help message for this attribute
+Enable	property	en	Enable
+Enable file upload	property	en	Enable file upload
+Enable history for this attribute	property	en	Enable history for this attribute
+Enable link from location detail	property	en	Enable link from location detail
+Enable start project from this category	property	en	Enable start project from this category
+Enabled	property	en	Enabled
+end	property	en	end
+End date	property	en	End date
+Enter a descr for the custom function	property	en	Enter a descr for the custom function
+Enter a description for prerequisitions for this activity - if any	property	en	Enter a description for prerequisitions for this activity - if any
+Enter a description of the deviation	property	en	Enter a description of the deviation
+Enter a description of the document	property	en	Enter a description of the document
+Enter a description of the equipment	property	en	Enter a description of the equipment
+Enter a description of the project	property	en	Enter a description of the project
+Enter a description of the request	property	en	Enter a description of the request
+Enter a description of the standard	property	en	Enter a description of the standard
+Enter a description of the status	property	en	Enter a description of the status
+Enter a description the attribute	property	en	Enter a description the attribute
+Enter a description the budget account	property	en	Enter a description the budget account
+enter a description the category	property	en	Enter a description the category
+Enter a description the method	property	en	Enter a description the method
+Enter a description the standard	property	en	Enter a description the standard
+Enter a meter ID !	property	en	Enter a meter ID !
+Enter a name for the query	property	en	Enter a name for the query
+Enter a name for this part of town	property	en	Enter a name for this part of town
+Enter a name of the standard	property	en	Enter a name of the standard
+Enter a new grouping for this activity if not found in the list	property	en	Enter a new grouping for this activity if not found in the list
+Enter a new index	property	en	Enter a new index
+Enter a new writeoff period if it is NOT in the list	property	en	Enter a new writeoff period if it is NOT in the list
+Enter a remark - if any	property	en	Enter a remark - if any
+Enter a remark for this claim	property	en	Enter a remark for this claim
+enter a remark for this entity	property	en	Enter a remark for this entity
+enter a remark for this owner	property	en	Enter a remark for this owner
+Enter a short description of the workorder	property	en	Enter a short description of the workorder
+Enter a short description of this template	property	en	Enter a short description of this template
+Enter a sql query	property	en	Enter a sql query
+Enter a standard prefix for the id	property	en	Enter a standard prefix for the id
+Enter a standard prefix for the id of the equipments	property	en	Enter a standard prefix for the id of the equipments
+enter a statustext for the inputfield in forms	property	en	Enter a statustext for the inputfield in forms
+Enter a value for the labour cost	property	en	Enter a value for the labour cost
+Enter a value for the material cost	property	en	Enter a value for the material cost
+enter additional remarks to the description - if any	property	en	Enter additional remarks to the description - if any
+Enter any persentage addition per unit	property	en	Enter any persentage addition per unit
+enter any remark for this location	property	en	enter any remark for this location
+Enter any remarks regarding this apartment	property	en	Enter any remarks regarding this apartment
+Enter any remarks regarding this building	property	en	Enter any remarks regarding this building
+Enter any remarks regarding this entrance	property	en	Enter any remarks regarding this entrance
+enter any remarks regarding this location	property	en	Enter any remarks regarding this location
+Enter any round sum addition per order	property	en	Enter any round sum addition per order
+Enter apartment ID	property	en	Enter apartment ID
+Enter Building ID	property	en	Enter Building ID
+Enter document Name	property	en	Enter document Name
+Enter document title	property	en	Enter document title
+Enter document version	property	en	Enter document version
+Enter entrance ID	property	en	Enter entrance ID
+Enter equipment ID	property	en	Enter equipment ID
+Enter Invoice Number	property	en	Enter Invoice Number
+Enter Kid nr	property	en	Enter Kid nr
+enter location id	property	en	Enter location ID
+Enter other branch if not found in the list	property	en	Enter other branch if not found in the list
+Enter Project Name	property	en	Enter Project Name
+Enter quantity of unit	property	en	Enter quantity of unit
+enter report id	property	en	Enter report ID
+enter report title	property	en	Enter Report Title
+Enter request Title	property	en	Enter request Title
+enter the abstract of the report	property	en	Enter the abstract of the report
+Enter the attribute ID	property	en	Enter the attribute ID
+Enter the attribute value for this entity	property	en	Enter the attribute value for this entity
+Enter the budget	property	en	Enter the budget
+Enter the budget account	property	en	Enter the budget account
+enter the category id	property	en	Enter the category ID
+Enter the cost per unit	property	en	Enter the cost per unit
+Enter the date for this reading	property	en	Enter the date for this reading
+enter the default value	property	en	enter the default value
+Enter the description	property	en	Enter the description
+Enter the description for this activity	property	en	Enter the description for this activity
+Enter the description for this template	property	en	Enter the description for this template
+Enter the details of this ticket	property	en	Enter the details of this ticket
+Enter the email-address for this user	property	en	Enter the email-address for this user
+Enter the expected longevity in years	property	en	Enter the expected longevity in years
+Enter the floor	property	en	Enter the floor
+Enter the floor ID	property	en	Enter the floor ID
+Enter the general address	property	en	Enter the general address
+enter the input name for records	property	en	enter the input name for records
+enter the input text for records	property	en	enter the input text for records
+Enter the invoice date	property	en	Enter the invoice date
+Enter the meter ID	property	en	Enter the meter ID
+Enter the method ID	property	en	Enter the method ID
+enter the name for the column	property	en	enter the name for the column
+enter the name for this location	property	en	enter the name for this location
+Enter the name of the apartment	property	en	Enter the name of the apartment
+Enter the name of the building	property	en	Enter the name of the building
+Enter the name of the entrance	property	en	Enter the name of the entrance
+enter the name of the location	property	en	Enter the name of the location
+Enter the name of the meter	property	en	Enter the name of the meter
+Enter the name of the property	property	en	Enter the name of the property
+enter the name of the tenant	property	en	Enter the name of the tenant
+Enter the name the template	property	en	Enter the name the template
+Enter the payment date or the payment delay	property	en	Enter the payment date or the payment delay
+Enter the power meter	property	en	Enter the power meter
+Enter the Property ID	property	en	Enter the Property ID
+Enter the purchase cost	property	en	Enter the purchase cost
+enter the record length	property	en	enter the record length
+Enter the reserve	property	en	Enter the reserve
+enter the scale if type is decimal	property	en	enter the scale if type is decimal
+Enter the search string. To show all entries, empty this field and press the SUBMIT button again	property	en	Enter the search string. To show all entries, empty this field and press the SUBMIT button again
+Enter the standard ID	property	en	Enter the standard ID
+Enter the status ID	property	en	Enter the status ID
+Enter the street number	property	en	Enter the street number
+Enter the subject of this ticket	property	en	Enter the subject of this ticket
+Enter the total cost of this activity - if not to be calculated from unit-cost	property	en	Enter the total cost of this activity - if not to be calculated from unit-cost
+enter the Workorder ID to search by workorder - at any date	property	en	enter the Workorder ID to search by workorder - at any date
+Enter Workorder title	property	en	Enter Workorder title
+entity	property	en	entity
+entity has been added	property	en	entity has been added
+entity has been edited	property	en	entity has been edited
+entity has NOT been edited	property	en	entity has NOT been edited
+Entity has NOT been saved	property	en	Entity has NOT been saved
+entity id	property	en	Entity ID
+Entity name	property	en	Entity name
+Entity not chosen	property	en	Entity not chosen
+entity num	property	en	entity num
+Entity Type	property	en	Entity Type
+Entity type not chosen!	property	en	Entity type not chosen!
+entity type not chosen!	property	en	entity type not chosen!
+Entrance	property	en	Entrance
+Entrance has been edited	property	en	Entrance has been edited
+Entrance has been saved	property	en	Entrance has been saved
+entrance id	property	en	entrance id
+Entry Date	property	en	Entry Date
+Equipment	property	en	Equipment
+equipment %1 has been edited	property	en	equipment %1 has been edited
+Equipment %1 has been saved	property	en	Equipment %1 has been saved
+equipment ID	property	en	equipment ID
+Equipment type	property	en	Equipment type
+equipment_id	property	en	equipment ID
+Event	property	en	Event
+Events	property	en	Events
+exp date	property	en	exp date
+Export date	property	en	Export date
+Export invoice	property	en	Export invoice
+Export to file	property	en	Export to file
+Failed to copy file !	property	en	Failed to copy file !
+failed to create directory	property	en	failed to create directory
+failed to delete file	property	en	failed to delete file
+failed to upload file !	property	en	Failed to upload file !
+false	property	en	False
+female	property	en	female
+feste nr	property	en	Feste nr
+Fetch the history for this item	property	en	Fetch the history for this item
+File	property	en	File
+file deleted	property	en	file deleted
+filename	property	en	Filename
+files	property	en	files
+finnish date	property	en	finnish date
+First entry is added!	property	en	First entry is added!
+first name	property	en	first name
+First Note Added	property	en	First Note Added
+Firstname	property	en	Firstname
+Floor	property	en	Floor
+Floor common	property	en	Floor common
+Floor ID	property	en	Floor ID
+Force year for period	property	en	Force year for period
+fraction	property	en	fraction
+From	property	en	From
+from date	property	en	from date
+Funding	property	en	Funding
+gaards nr	property	en	gaards nr
+gab	property	en	gab
+gab %1 has been added	property	en	gab %1 has been added
+gab %1 has been edited	property	en	gab %1 has been edited
+gab %1 has been updated	property	en	gab %1 has been updated
+gabnr	property	en	gabnr
+General Address	property	en	General Address
+General Info	property	en	General Info
+Generate a project from this request	property	en	Generate a project from this request
+Generate ID ?	property	en	Generate ID ?
+Generate order	property	en	Generate order
+Generate project	property	en	Generate project
+Generate Request	property	en	Generate Request
+Group	property	en	Group
+grouping	property	en	grouping
+Groups	property	en	Groups
+Help	property	en	Help
+Helpdesk	property	en	Helpdesk
+help message	property	en	help message
+Highest	property	en	Highest
+History	property	en	History
+History not allowed for this datatype	property	en	History not allowed for this datatype
+history of this attribute	property	en	history of this attribute
+Hour	property	en	Hour
+hour %1 has been deleted	property	en	hour %1 has been deleted
+hour %1 has been edited	property	en	hour %1 has been edited
+hour %1 is added!	property	en	hour %1 is added!
+Hour ID	property	en	Hour ID
+ID	property	en	ID
+ID is updated	property	en	ID is updated
+ID not entered!	property	en	ID not entered!
+If files can be uploaded for this category	property	en	If files can be uploaded for this category
+If this entity type is to be linked to a location	property	en	If this entity type is to be linked to a location
+If this entity type is to be linked to documents	property	en	If this entity type is to be linked to documents
+If this entity type is to be tracket in ticket list	property	en	If this entity type is to be tracket in ticket list
+If this entity type is to look up tenants	property	en	If this entity type is to look up tenants
+Import	property	en	Import
+Import from CSV	property	en	Import from CSV
+Import invoice	property	en	Import invoice
+Import this invoice	property	en	Import this invoice
+Importance	property	en	Importance
+include in location form	property	en	include in location form
+Include in search	property	en	Include in search
+Include the workorder to this claim	property	en	Include the workorder to this claim
+include this entity	property	en	include this entity
+index	property	en	index
+Index count	property	en	Index count
+Index date	property	en	Index date
+index_count	property	en	index_count
+indoor climate	property	en	indoor climate
+Initial Category	property	en	Initial Category
+Initial Coordinator	property	en	Initial Coordinator
+Initial Status	property	en	Initial Status
+Initial value	property	en	Initial value
+Initials	property	en	Initials
+Input data for the nethod	property	en	Input data for the nethod
+input name not entered!	property	en	Input name not entered!
+input text	property	en	input text
+input text not entered!	property	en	Input text not entered!
+inputdata for the method	property	en	inputdata for the method
+input_name	property	en	input_name
+insert the date for the acquisition	property	en	insert the date for the acquisition
+insert the date for the initial value	property	en	insert the date for the initial value
+insert the value at the start-date as a positive amount	property	en	insert the value at the start-date as a positive amount
+Integer	property	en	Integer
+Investment	property	en	Investment
+Investment added !	property	en	Investment added !
+investment history	property	en	investment history
+investment id	property	en	investment id
+Investment ID:	property	en	Investment ID:
+Investment value	property	en	Investment value
+Invoice	property	en	Invoice
+invoice date	property	en	invoice date
+Invoice Id	property	en	Invoice Id
+Invoice is NOT added!	property	en	Invoice is NOT added!
+Invoice Number	property	en	Invoice Number
+Invoice transferred	property	en	Invoice transferred
+invoice line text	property	en	Invoice line text
+is registered	property	en	is registered
+Is there a demand from the authorities to correct this condition?	property	en	Is there a demand from the authorities to correct this condition?
+Janitor	property	en	Janitor
+key deliver location	property	en	key deliver location
+key fetch location	property	en	key fetch location
+key responsible	property	en	key responsible
+KID nr	property	en	KID nr
+click this button to add a invoice	property	en	click this button to add a invoice
+click this button to start the import	property	en	click this button to start the import
+click this link to edit the period	property	en	click this link to edit the period
+click this link to enter the list of sub-invoices	property	en	click this link to enter the list of sub-invoices
+click this link to select	property	en	click this link to select
+click this link to select apartment	property	en	click this link to select apartment
+click this link to select budget account	property	en	click this link to select budget account
+click this link to select building	property	en	click this link to select building
+click this link to select customer	property	en	click this link to select customer
+click this link to select entrance	property	en	click this link to select entrance
+click this link to select equipment	property	en	click this link to select equipment
+click this link to select owner from the addressbook	property	en	click this link to select owner from the addressbook
+click this link to select property	property	en	click this link to select property
+click this link to select tenant	property	en	click this link to select tenant
+click this link to select vendor	property	en	click this link to select vendor
+click this link to view the remark	property	en	click this link to view the remark
+click this to generate a request with this information	property	en	click this to generate a request with this information
+click this to generate an order with this information	property	en	click this to generate an order with this information
+click this to start a report	property	en	click this to start a report
+click to view file	property	en	click to view file
+kommune nr	property	en	kommune nr
+KreditNota	property	en	KreditNota
+Labour cost	property	en	Labour cost
+Large	property	en	Large
+Last index	property	en	Last index
+last name	property	en	last name
+Lastname	property	en	Lastname
+Leave the actor untouched and return back to the list	property	en	Leave the actor untouched and return back to the list
+Leave the agreement untouched and return back to the list	property	en	Leave the agreement untouched and return back to the list
+Leave the claim untouched and return back to the list	property	en	Leave the claim untouched and return back to the list
+Leave the custom untouched and return back to the list	property	en	Leave the custom untouched and return back to the list
+leave the owner untouched and return back to the list	property	en	Leave the owner untouched and return back to the list
+Leave the part of town untouched and return back to the list	property	en	Leave the part of town untouched and return back to the list
+Leave the rental agreement untouched and return back to the list	property	en	Leave the rental agreement untouched and return back to the list
+Leave the service agreement untouched and return back to the list	property	en	Leave the service agreement untouched and return back to the list
+leave the tenant untouched and return back to the list	property	en	Leave the tenant untouched and return back to the list
+Let this entity show up in location form	property	en	Let this entity show up in location form
+Link	property	en	Link
+Link from location	property	en	Link from location
+link to the origin for this project	property	en	Link to the origin for this project
+link to the origin for this report	property	en	Link to the origin for this report
+link to the origin for this request	property	en	Link to the origin for this request
+link to the project originatet from this request	property	en	Link to the project originatet from this request
+link to the project originatet from this ticket	property	en	Link to the project originatet from this ticket
+link to the report originatet from this ticket	property	en	Link to the report originatet from this ticket
+link to the request for this project	property	en	Link to the request for this project
+link to the request originatet from this ticket	property	en	Link to the request originatet from this ticket
+link to the ticket for this project	property	en	Link to the ticket for this project
+list	property	en	list
+list activities per agreement	property	en	list activities per agreement
+list activities per agreement_group	property	en	list activities per agreement_group
+list agreement	property	en	list agreement
+list agreement group	property	en	list agreement group
+list apartment	property	en	list apartment
+list async method	property	en	list async method
+list attribute	property	en	list attribute
+list budget account	property	en	list budget account
+list building	property	en	list building
+list config	property	en	list config
+list consume	property	en	list consume
+list custom function	property	en	list custom function
+list deviation	property	en	list deviation
+list document	property	en	list document
+list entity attribute	property	en	list entity attribute
+list entity custom function	property	en	list entity custom function
+list entity type	property	en	list entity type
+list entrance	property	en	list entrance
+list equipment	property	en	list equipment
+list gab	property	en	list gab
+list gab detail	property	en	list gab detail
+list hours	property	en	list hours
+list investment	property	en	list investment
+list invoice	property	en	list invoice
+list location	property	en	list location
+list location attribute	property	en	list location attribute
+list location standard	property	en	list location standard
+list meter	property	en	list meter
+list paid invoice	property	en	list paid invoice
+list pricebook	property	en	list pricebook
+list pricebook per vendor	property	en	list pricebook per vendor
+list Project	property	en	list Project
+list property	property	en	list property
+list report	property	en	list report
+list request	property	en	list request
+list standard description	property	en	list standard description
+list status	property	en	list status
+list street	property	en	list street
+list template	property	en	list template
+list tenant	property	en	list tenant
+list ticket	property	en	list ticket
+list vendors	property	en	list vendors
+list vendors per activity	property	en	list vendors per activity
+list voucher	property	en	list voucher
+list workorder	property	en	list workorder
+ListBox	property	en	ListBox
+Location	property	en	Location
+location %1 has been edited	property	en	Location %1 has been edited
+location %1 has been saved	property	en	Location %1 has been saved
+Location code	property	en	Location code
+location config	property	en	Location Config
+location form	property	en	location form
+location id	property	en	location ID
+location level	property	en	location level
+location not chosen!	property	en	location not chosen!
+Location type	property	en	Location type
+location type not chosen!	property	en	Location type not chosen!
+Location type not chosen!	property	en	Location type not chosen!
+Longevity	property	en	Longevity
+lookup	property	en	lookup
+lookup tenant	property	en	lookup tenant
+Lowest	property	en	Lowest
+Mailing method is not chosen! (admin section)	property	en	Mailing method is not chosen! (admin section)
+male	property	en	male
+Manage	property	en	Manage
+Manager	property	en	Manager
+Map	property	en	Map
+Mark as DRAFT	property	en	Mark as DRAFT
+Mark the tender as DRAFT	property	en	Mark the tender as DRAFT
+mask	property	en	mask
+Material cost	property	en	Material cost
+Materials:__________	property	en	Materials:__________
+Medium	property	en	Medium
+Medium Consequences	property	en	Medium Consequences
+member of	property	en	member of
+memo	property	en	Memo
+Meter	property	en	Meter
+Meter %1 has been edited	property	en	Meter %1 has been edited
+Meter %1 has been saved	property	en	Meter %1 has been saved
+meter id	property	en	meter id
+Meter type	property	en	Meter type
+Method	property	en	Method
+method has been edited	property	en	method has been edited
+method id	property	en	method id
+Minor	property	en	Minor
+Minor Consequences	property	en	Minor Consequences
+minute	property	en	minute
+Minutes before the event	property	en	Minutes before the event
+month	property	en	month
+Multiple Checkbox	property	en	Multiple Checkbox
+Multiple radio	property	en	Multiple radio
+m_cost	property	en	m_cost
+Name	property	en	Name
+Name not entered!	property	en	Name not entered!
+Narrow the search by dates	property	en	Narrow the search by dates
+needs approval	property	en	needs approval
+New	property	en	New
+New grouping	property	en	New grouping
+New index	property	en	New index
+New Note	property	en	New Note
+New value	property	en	New value
+New value for multiple choice	property	en	New value for multiple choice
+New values	property	en	New values
+Next run	property	en	Next run
+no	property	en	no
+No access	property	en	No access
+No account	property	en	No account
+No additional notes	property	en	No additional notes
+No branch	property	en	No branch
+no category	property	en	no category
+No Change type	property	en	No Change type
+No conversion type could be located.	property	en	No conversion type could be located.
+No custom function	property	en	No custom function
+No datatype	property	en	No datatype
+No Dim B	property	en	No Dim B
+No Dim D	property	en	No Dim D
+no district	property	en	no district
+no document type	property	en	no document type
+No entity type	property	en	No entity type
+No equipment type	property	en	No equipment type
+No file selected	property	en	No file selected
+No granting group	property	en	No granting group
+No group	property	en	No group
+No history	property	en	No history
+No history for this record	property	en	No history for this record
+no hour category	property	en	no hour category
+No janitor	property	en	No janitor
+No location	property	en	No location
+No mailaddress is selected	property	en	No mailaddress is selected
+no member	property	en	no member
+no method	property	en	no method
+No part of town	property	en	No part of town
+No status	property	en	No status
+No supervisor	property	en	No supervisor
+No type	property	en	No type
+No user	property	en	No user
+No user selected	property	en	No user selected
+no vendor	property	en	no vendor
+No workorder budget	property	en	No workorder budget
+None	property	en	None
+None Consequences	property	en	None Consequences
+Note	property	en	Note
+Nothing to do!	property	en	Nothing to do!
+Notify	property	en	Notify
+NS3420	property	en	NS3420
+ns3420 description	property	en	ns3420 description
+nullable	property	en	Nullable
+nullable not chosen!	property	en	Nullable not chosen!
+Nullable not chosen!	property	en	Nullable not chosen!
+Num	property	en	Num
+number	property	en	number
+of	property	en	of
+Open	property	en	Open
+Open Date	property	en	Open Date
+Opened	property	en	Opened
+Opened By	property	en	Opened By
+open edit in new window	property	en	Open Edit in new Window
+open view in new window	property	en	Open View in new Window
+Order	property	en	Order
+Order # that initiated the invoice	property	en	Order # that initiated the invoice
+Order ID	property	en	Order ID
+origin	property	en	origin
+Other branch	property	en	Other branch
+override fraction	property	en	override fraction
+Override fraction of common costs	property	en	Override fraction of common costs
+overview	property	en	overview
+owner	property	en	owner
+owner %1 has been edited	property	en	owner %1 has been edited
+owner %1 has been saved	property	en	owner %1 has been saved
+owner id	property	en	Owner ID
+Owner type	property	en	Owner type
+Paid	property	en	Paid
+Part of town	property	en	Part of town
+Part of town id	property	en	Part of town id
+Payment Date	property	en	Payment Date
+Per Agreement	property	en	Per Agreement
+Per Cent	property	en	Per Cent
+Per Vendor	property	en	Per Vendor
+Percentage addition	property	en	Percentage addition
+Period	property	en	Period
+permission	property	en	permission
+Permissions	property	en	Permissions
+permissions are updated!	property	en	permissions are updated!
+Phone	property	en	Phone
+plain	property	en	plain
+Pleace select a location - or an equipment !	property	en	Pleace select a location - or an equipment !
+Please - enter an amount!	property	en	Please - enter an amount!
+Please - select a file to import from !	property	en	Please - select a file to import from !
+Please - select a import format !	property	en	Please - select a import format !
+Please - select a vendor!	property	en	Please - select a vendor!
+Please - select budget responsible!	property	en	Please - select budget responsible!
+Please select a budget reponsible!	property	en	Please select a budget reponsible!
+Please - select either payment date or number of days from invoice date !	property	en	Please - select either payment date or number of days from invoice date !
+Please - select type invoice!	property	en	Please - select type invoice!
+Please - select type order!	property	en	Please - select type order!
+Please - select Vendor!	property	en	Please - select Vendor!
+Please choose a conversion type	property	en	Please choose a conversion type
+Please choose a conversion type from the list	property	en	Please choose a conversion type from the list
+please choose a file	property	en	Please choose a file
+Please either select GENERATE ID or type a Equipment ID !	property	en	Please either select GENERATE ID or type a Equipment ID !
+Please enter a Apartment ID !	property	en	Please enter a Apartment ID !
+Please enter a Building ID !	property	en	Please enter a Building ID !
+Please enter a description!	property	en	Please enter a description!
+Please enter a Entrance ID !	property	en	Please enter a Entrance ID !
+Please enter a index !	property	en	Please enter a index !
+please enter a name !	property	en	Please enter a name !
+Please enter a new index for calculating next value(s)!	property	en	Please enter a new index for calculating next value(s)!
+Please enter a project NAME !	property	en	Please enter a project NAME !
+Please enter a Property ID !	property	en	Please enter a Property ID !
+Please enter a request TITLE !	property	en	Please enter a request TITLE !
+Please enter a sql query !	property	en	Please enter a sql query !
+Please enter a value for either material cost, labour cost or both !	property	en	Please enter a value for either material cost, labour cost or both !
+Please enter a workorder title !	property	en	Please enter a workorder title !
+Please enter an activity code !	property	en	Please enter an activity code !
+Please enter an agreement code !	property	en	Please enter an agreement code !
+Please enter an agreement group code !	property	en	Please enter an agreement group code !
+please enter an integer !	property	en	Please enter an integer !
+Please enter an integer for order!	property	en	Please enter an integer for order!
+please enter precision !	property	en	Please enter Precision !
+please enter precision as integer !	property	en	Please enter precision as integer !
+please enter scale as integer !	property	en	Please enter scale as integer !
+Please give som details !	property	en	Please give som details !
+Please select a branch !	property	en	Please select a branch !
+Please select a budget account !	property	en	Please select a budget account !
+Please select a Building ID !	property	en	Please select a Building ID !
+Please select a category !	property	en	Please select a category !
+please select a contact !	property	en	Please select a contact !
+Please select a coordinator !	property	en	Please select a coordinator !
+Please select a date !	property	en	Please select a date !
+Please select a district !	property	en	Please select a district !
+Please select a Entrance ID !	property	en	Please select a Entrance ID !
+please select a file to upload !	property	en	Please select a file to upload !
+Please select a location !	property	en	Please select a location !
+please select a location %1 id !	property	en	Please select a location %1 ID !
+Please select a location - or an entity!	property	en	Please select a location - or an entity!
+Please select a period for write off !	property	en	Please select a period for write off !
+Please select a person or a group to handle the ticket !	property	en	Please select a person or a group to handle the ticket !
+Please select a person to handle the ticket !	property	en	Please select a person to handle the ticket !
+Please select a Property ID !	property	en	Please select a Property ID !
+Please select a status !	property	en	Please select a status !
+Please select a type !	property	en	Please select a type !
+Please select a valid project !	property	en	Please select a valid project !
+Please select a workorder !	property	en	Please select a workorder !
+Please select an agreement !	property	en	Please select an agreement !
+Please select an agreement_group !	property	en	Please select an agreement_group !
+Please select change type	property	en	Please select change type
+Please select entity type !	property	en	Please select entity type !
+Please select equipment type !	property	en	Please select equipment type !
+please select report type !	property	en	Please select report type !
+Please select type	property	en	Please select type
+Please set a new index !	property	en	Please set a new index !
+Please set an initial value!	property	en	Please set an initial value!
+Please type a subject for this ticket !	property	en	Please type a subject for this ticket !
+Popup Calendar	property	en	Popup Calendar
+Post	property	en	Post
+Power meter	property	en	Power meter
+precision	property	en	Precision
+preferences	property	en	preferences
+prefix	property	en	prefix
+presumed finnish date	property	en	presumed finnish date
+Pricebook	property	en	Pricebook
+Print view	property	en	Print view
+Priority	property	en	Priority
+Priority changed	property	en	Priority changed
+Priority key	property	en	Priority key
+priority keys has been updated	property	en	priority keys has been updated
+private	property	en	private
+prizing	property	en	prizing
+Probability	property	en	Probability
+Project	property	en	Project
+Project budget	property	en	Project budget
+project %1 has been edited	property	en	project %1 has been edited
+project %1 has been saved	property	en	project %1 has been saved
+project coordinator	property	en	Project coordinator
+Project end date	property	en	Project end date
+Project ID	property	en	Project ID
+Project name	property	en	Project name
+Project start date	property	en	Project start date
+propagate	property	en	propagate
+property	common	en	Facilities Management
+Property has been edited	property	en	Property has been edited
+Property has been saved	property	en	Property has been saved
+property id	property	en	property id
+Property Name	property	en	Property Name
+Purchase cost	property	en	Purchase cost
+Quantity	property	en	Quantity
+Re-assigned	property	en	Re-assigned
+Re-opened	property	en	Re-opened
+Read	property	en	Read
+Read a list of entries.	property	en	Read a list of entries.
+Read a single entry by passing the id and fieldlist.	property	en	Read a single entry by passing the id and fieldlist.
+Read this list of methods.	property	en	Read this list of methods.
+Record	property	en	Record
+related info	property	en	related info
+Remark	property	en	Remark
+Reminder	property	en	Reminder
+Rental	property	en	Rental
+Rental agreement	property	en	Rental agreement
+rental type	property	en	rental type
+report	property	en	Report
+report %1 has been edited	property	en	report %1 has been edited
+report %1 has been saved	property	en	report %1 has been saved
+report id	property	en	report ID
+repost !	property	en	Repost !
+Request	property	en	Request
+request %1 has already been added to project %2	property	en	request %1 has already been added to project %2
+request %1 has been added	property	en	request %1 has been added
+request %1 has been deleted from project %2	property	en	Request %1 has been deleted from project %2
+request %1 has been edited	property	en	request %1 has been edited
+request %1 has been saved	property	en	request %1 has been saved
+Request budget	property	en	Request budget
+Request descr	property	en	Request descr
+request end date	property	en	request end date
+request entry date	property	en	Request entry date
+request ID	property	en	request ID
+request start date	property	en	request start date
+request title	property	en	Request title
+Requirement	property	en	Requirement
+reserve	property	en	reserve
+reserve remainder	property	en	reserve remainder
+residential environment	property	en	residential environment
+Responsible	property	en	Responsible
+result	property	en	result
+return back to the list	property	en	return back to the list
+Rig addition	property	en	Rig addition
+right	property	en	right
+Roll back	property	en	Roll back
+Rollback invoice	property	en	Rollback invoice
+Run Now	property	en	Run Now
+Run the method now	property	en	Run the method now
+safety	property	en	safety
+save	property	en	save
+Save as template	property	en	Save as template
+Save the actor and return back to the list	property	en	Save the actor and return back to the list
+Save the agreement and return back to the list	property	en	Save the agreement and return back to the list
+Save the apartment	property	en	Save the apartment
+Save the attribute	property	en	Save the attribute
+Save the budget account	property	en	Save the budget account
+Save the building	property	en	Save the building
+save the category	property	en	Save the category
+Save the claim and return back to the list	property	en	Save the claim and return back to the list
+Save the custom and return back to the list	property	en	Save the custom and return back to the list
+Save the custom function	property	en	Save the custom function
+Save the deviation	property	en	Save the deviation
+Save the document	property	en	Save the document
+Save the entity	property	en	Save the entity
+Save the entrance	property	en	Save the entrance
+Save the equipment	property	en	Save the equipment
+save the gab	property	en	Save the gab
+Save the investment	property	en	Save the investment
+save the location	property	en	Save the location
+Save the meter	property	en	Save the meter
+Save the method	property	en	Save the method
+save the owner and return back to the list	property	en	Save the owner and return back to the list
+Save the part of town and return back to the list	property	en	Save the part of town and return back to the list
+Save the project	property	en	Save the project
+Save the property	property	en	Save the property
+Save the rental agreement and return back to the list	property	en	Save the rental agreement and return back to the list
+save the report	property	en	Save the report
+Save the request	property	en	Save the request
+Save the service agreement and return back to the list	property	en	Save the service agreement and return back to the list
+Save the standard	property	en	Save the standard
+Save the status	property	en	Save the status
+save the tenant and return back to the list	property	en	Save the tenant and return back to the list
+Save the ticket	property	en	Save the ticket
+Save the voucher	property	en	Save the voucher
+Save the workorder	property	en	Save the workorder
+Save this workorder as a template for later use	property	en	Save this workorder as a template for later use
+scale	property	en	scale
+Schedule	property	en	Schedule
+schedule the method	property	en	schedule the method
+score	property	en	score
+search	property	en	search
+search by bruk. to show all entries, empty all fields and press the submit button again	property	en	search by bruk. To show all entries, empty all fields and press the SUBMIT button again
+search by feste. to show all entries, empty all fields and press the submit button again	property	en	search by feste. To show all entries, empty all fields and press the SUBMIT button again
+search by gaards nr. to show all entries, empty all fields and press the submit button again	property	en	search by gaards nr. To show all entries, empty all fields and press the SUBMIT button again
+search by location_code. To show all entries, empty all fields and press the SUBMIT button again	property	en	search by location_code. To show all entries, empty all fields and press the SUBMIT button again
+Search by property	property	en	Search by property
+search by property_id. to show all entries, empty all fields and press the submit button again	property	en	search by property_id. To show all entries, empty all fields and press the SUBMIT button again
+search by seksjon. to show all entries, empty all fields and press the submit button again	property	en	search by seksjon. To show all entries, empty all fields and press the SUBMIT button again
+search for history at this location	property	en	search for history at this location
+Search for investment entries	property	en	Search for investment entries
+Search for paid invoices	property	en	Search for paid invoices
+Search for voucher id	property	en	Search for voucher id
+seksjons nr	property	en	Seksjons nr
+Select	property	en	Select
+Select a actor type	property	en	Select a actor type
+Select a agreement type	property	en	Select a agreement type
+Select a custom function	property	en	Select a custom function
+Select a datatype	property	en	Select a datatype
+Select a entity type	property	en	Select a entity type
+select a location	property	en	select a location
+select a location!	property	en	select a location!
+Select a rental agreement type	property	en	Select a rental agreement type
+Select a service agreement type	property	en	Select a service agreement type
+Select a standard-code from the norwegian standard	property	en	Select a standard-code from the norwegian standard
+select a tenant	property	en	Select a tenant
+select agreement	property	en	select agreement
+Select agreement group	property	en	Select agreement group
+select agreement_group	property	en	select agreement_group
+Select All	property	en	Select All
+Select B-Responsible	property	en	Select B-Responsible
+Select branch	property	en	Select branch
+Select building part	property	en	Select building part
+Select category	property	en	Select category
+Select chapter	property	en	Select chapter
+Select Column	property	en	Select Column
+Select conversion	property	en	Select conversion
+Select coordinator	property	en	Select coordinator
+Select date	property	en	Select date
+Select date for the file to roll back	property	en	Select date for the file to roll back
+Select date the document was created	property	en	Select date the document was created
+Select default vendor category	property	en	Select default vendor category
+select either a location or an entity	property	en	select either a location or an entity
+select either a location or an equipment	property	en	select either a location or an equipment
+Select email	property	en	Select email
+Select file to roll back	property	en	Select file to roll back
+select file to upload	property	en	Select file to upload
+Select grouping	property	en	Select grouping
+Select Invoice Type	property	en	Select Invoice Type
+Select key responsible	property	en	Select key responsible
+select location level	property	en	select location level
+select nullable	property	en	Select nullable
+select owner	property	en	Select owner
+Select per button !	property	en	Select per button !
+Select rental type	property	en	Select rental type
+select request	property	en	Select request
+Select responsible	property	en	Select responsible
+Select status	property	en	Select status
+Select submodule	property	en	Select submodule
+Select the account class the selection belongs to	property	en	Select the account class the selection belongs to.
+Select the agreement group this activity belongs to.	property	en	Select the agreement group this activity belongs to.
+Select the agreement the pricebook belongs to. To do not use a category select NO CATEGORY	property	en	Select the agreement the pricebook belongs to. To do not use a category select NO CATEGORY
+Select the agreement this activity belongs to.	property	en	Select the agreement this activity belongs to.
+Select the agreement_group the pricebook belongs to. To do not use a category select NO CATEGORY	property	en	Select the agreement_group the pricebook belongs to. To do not use a category select NO CATEGORY
+Select the appropriate condition degree	property	en	Select the appropriate condition degree
+Select the appropriate consequence by breakdown of this component for this theme	property	en	Select the appropriate consequence by breakdown of this component for this theme
+Select the appropriate propability for worsening of the condition	property	en	Select the appropriate propability for worsening of the condition
+select the appropriate tax code	property	en	select the appropriate tax code
+Select the branch for this activity.	property	en	Select the branch for this activity.
+Select the branch for this document	property	en	Select the branch for this document
+Select the branches for this project	property	en	Select the branches for this project
+Select the branches for this request	property	en	Select the branches for this request
+Select the budget responsible	property	en	Select the budget responsible
+Select the building part for this activity.	property	en	Select the building part for this activity.
+Select the category the actor belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the actor belongs to. To do not use a category select NO CATEGORY
+Select the category the agreement belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the agreement belongs to. To do not use a category select NO CATEGORY
+Select the category the alarm belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the alarm belongs to. To do not use a category select NO CATEGORY
+Select the category the apartment belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the apartment belongs to. To do not use a category select NO CATEGORY
+Select the category the building belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the building belongs to. To do not use a category select NO CATEGORY
+Select the category the claim belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the claim belongs to. To do not use a category select NO CATEGORY
+Select the category the custom belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the custom belongs to. To do not use a category select NO CATEGORY
+Select the category the document belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the document belongs to. To do not use a category select NO CATEGORY
+Select the category the entrance belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the entrance belongs to. To do not use a category select NO CATEGORY
+Select the category the equipment belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the equipment belongs to. To do not use a category select NO CATEGORY
+Select the category the investment belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the investment belongs to. To do not use a category select NO CATEGORY
+select the category the location belongs to. to do not use a category select no category	property	en	Select the category the location belongs to. To do not use a category select NO CATEGORY
+Select the category the meter belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the meter belongs to. To do not use a category select NO CATEGORY
+select the category the owner belongs to. to do not use a category select no category	property	en	Select the category the owner belongs to. To do not use a category select NO CATEGORY
+Select the category the permissions belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the permissions belongs to. To do not use a category select NO CATEGORY
+Select the category the pricebook belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the pricebook belongs to. To do not use a category select NO CATEGORY
+Select the category the project belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the project belongs to. To do not use a category select NO CATEGORY
+Select the category the property belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the property belongs to. To do not use a category select NO CATEGORY
+select the category the report belongs to. to do not use a category select no category	property	en	Select the category the report belongs to. To do not use a category select NO CATEGORY
+Select the category the request belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the request belongs to. To do not use a category select NO CATEGORY
+Select the category the r_agreement belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the r_agreement belongs to. To do not use a category select NO CATEGORY
+Select the category the s_agreement belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the s_agreement belongs to. To do not use a category select NO CATEGORY
+select the category the tenant belongs to. to do not use a category select no category	property	en	Select the category the tenant belongs to. To do not use a category select NO CATEGORY
+Select the category the ticket belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the ticket belongs to. To do not use a category select NO CATEGORY
+Select the category the workorder belongs to. To do not use a category select NO CATEGORY	property	en	Select the category the workorder belongs to. To do not use a category select NO CATEGORY
+Select the category. To do not use a category select NO CATEGORY	property	en	Select the category. To do not use a category select NO CATEGORY
+Select the chapter (for tender) for this activity.	property	en	Select the chapter (for tender) for this activity.
+Select the coordinator the document belongs to. To do not use a category select NO USER	property	en	Select the coordinator the document belongs to. To do not use a category select NO USER
+Select the coordinator the project belongs to. To do not use a category select NO USER	property	en	Select the coordinator the project belongs to. To do not use a category select NO USER
+Select the coordinator the request belongs to. To do not use a category select NO USER	property	en	Select the coordinator the request belongs to. To do not use a category select NO USER
+Select the customer by clicking this link	property	en	Select the customer by clicking this link
+Select the date for the first value	property	en	Select the date for the first value
+Select the date for the update	property	en	Select the date for the update
+Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B	property	en	Select the Dim B for this invoice. To do not use Dim B -  select NO DIM B
+Select the Dim D for this activity. To do not use Dim D -  select NO DIM D	property	en	Select the Dim D for this activity. To do not use Dim D -  select NO DIM D
+Select the district the part of town belongs to.	property	en	Select the district the part of town belongs to.
+Select the district the selection belongs to. To do not use a district select NO DISTRICT	property	en	Select the district the selection belongs to. To do not use a district select NO DISTRICT
+Select the document type the document belongs to.	property	en	Select the document type the document belongs to.
+Select the equipment type the document belongs to. To do not use a type select NO equipment type	property	en	Select the equipment type the document belongs to. To do not use a type select NO equipment type
+Select the estimated end date for the agreement	property	en	Select the estimated end date for the agreement
+Select the estimated end date for the Project	property	en	Select the estimated end date for the Project
+Select the estimated end date for the request	property	en	Select the estimated end date for the request
+Select the estimated termination date	property	en	Select the estimated termination date
+Select the file to import from	property	en	Select the file to import from
+Select the filter. To show all entries select SHOW ALL	property	en	Select the filter. To show all entries select SHOW ALL
+Select the granting group. To do not use a granting group select NO GRANTING GROUP	property	en	Select the granting group. To do not use a granting group select NO GRANTING GROUP
+Select the grouping for this activity.	property	en	Select the grouping for this activity.
+Select the janitor responsible for this invoice. To do not use janitor -  select NO JANITOR	property	en	Select the janitor responsible for this invoice. To do not use janitor -  select NO JANITOR
+Select the key responsible for this project	property	en	Select the key responsible for this project
+select the level for this information	property	en	Select the level for this information
+Select the method for this times service	property	en	Select the method for this times service
+select the owner	property	en	Select the owner
+select the owner type. to show all entries select show all	property	en	Select the owner type. To show all entries select SHOW ALL
+Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN	property	en	Select the part of town the building belongs to. To do not use a part of town -  select NO PART OF TOWN
+Select the part of town the investment belongs to. To do not use a part of town -  select NO PART OF TOWN	property	en	Select the part of town the investment belongs to. To do not use a part of town -  select NO PART OF TOWN
+Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN	property	en	Select the part of town the property belongs to. To do not use a part of town -  select NO PART OF TOWN
+Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN	property	en	Select the part of town the selection belongs to. To do not use a part of town select NO PART OF TOWN
+Select the priority the selection belongs to.	property	en	Select the priority the selection belongs to.
+Select the property by clicking this link	property	en	Select the property by clicking this link
+Select the status the agreement belongs to. To do not use a category select NO STATUS	property	en	Select the status the agreement belongs to. To do not use a category select NO STATUS
+Select the status the agreement group belongs to. To do not use a category select NO STATUS	property	en	Select the status the agreement group belongs to. To do not use a category select NO STATUS
+Select the status the document belongs to. To do not use a category select NO STATUS	property	en	Select the status the document belongs to. To do not use a category select NO STATUS
+Select the status. To do not use a status select NO STATUS	property	en	Select the status. To do not use a status select NO STATUS
+Select the street name	property	en	Select the street name
+Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR	property	en	Select the supervisor responsible for this invoice. To do not use supervisor -  select NO SUPERVISOR
+Select the template-chapter	property	en	Select the template-chapter
+Select the tolerance for this activity.	property	en	Select the tolerance for this activity.
+Select the type  invoice. To do not use type -  select NO TYPE	property	en	Select the type  invoice. To do not use type -  select NO TYPE
+Select the type of conversion:	property	en	Select the type of conversion:
+Select the type of value	property	en	Select the type of value
+Select the unit for this activity.	property	en	Select the unit for this activity.
+Select the user the alarm belongs to.	property	en	Select the user the alarm belongs to.
+Select the user the document belongs to. To do not use a category select NO USER	property	en	Select the user the document belongs to. To do not use a category select NO USER
+Select the user the project belongs to. To do not use a category select NO USER	property	en	Select the user the project belongs to. To do not use a category select NO USER
+Select the user the request belongs to. To do not use a category select NO USER	property	en	Select the user the request belongs to. To do not use a category select NO USER
+Select the user the selection belongs to. To do not use a user select NO USER	property	en	Select the user the selection belongs to. To do not use a user select NO USER
+Select the user the template belongs to. To do not use a category select NO USER	property	en	Select the user the template belongs to. To do not use a category select NO USER
+Select the user the workorder belongs to. To do not use a category select NO USER	property	en	Select the user the workorder belongs to. To do not use a category select NO USER
+Select the user to edit email	property	en	Select the user to edit email
+Select the user. To do not use a category select NO USER	property	en	Select the user. To do not use a category select NO USER
+Select the users supervisor	property	en	Select the users supervisor
+Select the vendor by clicking the button	property	en	Select the vendor by clicking the button
+Select the vendor by clicking this button	property	en	Select the vendor by clicking this button
+Select the vendor by clicking this link	property	en	Select the vendor by clicking this link
+Select the vendor the agreement belongs to.	property	en	Select the vendor the agreement belongs to.
+Select the vendor the r_agreement belongs to.	property	en	Select the vendor the r_agreement belongs to.
+Select the vendor the s_agreement belongs to.	property	en	Select the vendor the s_agreement belongs to.
+Select the workorder hour category	property	en	Select the workorder hour category
+Select this budget account	property	en	Select this budget account
+Select this contact	property	en	Select this contact
+Select this dates	property	en	Select this dates
+Select this ns3420 - code	property	en	Select this ns3420 - code
+Select this street	property	en	Select this street
+Select this template to view the details	property	en	Select this template to view the details
+select this tenant	property	en	Select this tenant
+Select this vendor	property	en	Select this vendor
+Select tolerance	property	en	Select tolerance
+Select Unit	property	en	Select Unit
+Select user	property	en	Select user
+Select where to deliver the key	property	en	Select where to deliver the key
+Select where to fetch the key	property	en	Select where to fetch the key
+select year	property	en	select year
+Send e-mail	property	en	Send e-mail
+Send Order	property	en	Send Order
+Send the following SMS-message to %1 to update status for this order:	property	en	Send the following SMS-message to %1 to update status for this order:
+Send this order by email	property	en	Send this order by email
+Sendt by email to	property	en	Sendt by email to
+Serious	property	en	Serious
+Serious Consequences	property	en	Serious Consequences
+Service	property	en	Service
+service agreement	property	en	service agreement
+set grants	property	en	set grants
+set permission	property	en	set permission
+Set tax	property	en	Set tax
+Set the status of the ticket	property	en	Set the status of the ticket
+Shared use	property	en	Shared use
+shift down	property	en	shift down
+shift up	property	en	shift up
+Show all	property	en	Show all
+Show calculated cost	property	en	Show calculated cost
+Show calculated cost on the printview	property	en	Show calculated cost on the printview
+Show details	property	en	Show details
+show in list	property	en	show in list
+show in lookup forms	property	en	show in lookup forms
+Small	property	en	Small
+Sort the tickets by their ID	property	en	Sort the tickets by their ID
+Sort the tickets by their priority	property	en	Sort the tickets by their priority
+sorting	property	en	sorting
+space	property	en	space
+sql	property	en	sql
+Standard	property	en	Standard
+standard description	property	en	standard description
+standard has been edited	property	en	standard has been edited
+standard has been saved	property	en	standard has been saved
+Standard has NOT been edited	property	en	Standard has NOT been edited
+standard id	property	en	standard id
+Standard prefix	property	en	Standard prefix
+start	property	en	start
+Start date	property	en	Start date
+Start project	property	en	Start project
+start report	property	en	Start Report
+start this entity	property	en	start this entity
+Start this entity from	property	en	Start this entity from
+Started	property	en	Started
+Status	property	en	Status
+Status changed	property	en	Status changed
+Status for the entity category	property	en	Status for the entity category
+status has been added	property	en	status has been added
+Status has been edited	property	en	Status has been edited
+Status has NOT been saved	property	en	Status has NOT been saved
+status code	property	en	Status code
+status ID	property	en	status ID
+statustext	property	en	Statustext
+statustext not entered!	property	en	Statustext not entered!
+Street	property	en	Street
+Street name	property	en	Street name
+Street number	property	en	Street number
+Subject	property	en	Subject
+Subject changed	property	en	Subject changed
+Subject has been updated	property	en	Subject has been updated
+submit	property	en	submit
+Submit the search string	property	en	Submit the search string
+Sum	property	en	Sum
+Sum calculation	property	en	Sum calculation
+Sum deviation	property	en	Sum deviation
+Sum of calculation	property	en	Sum of calculation
+Sum tax	property	en	Sum tax
+Sum workorder	property	en	Sum workorder
+Summary	property	en	Summary
+Supervisor	property	en	Supervisor
+table %1 has been saved	property	en	table %1 has been saved
+table could not be added	property	en	table could not be added
+table has not been saved	property	en	Table has NOT been saved
+table name	property	en	Table Name
+Tax code	property	en	Tax code
+template	property	en	template
+template %1 is added	property	en	template %1 is added
+Template ID	property	en	Template ID
+Tenant	property	en	Tenant
+tenant %1 has been edited	property	en	tenant %1 has been edited
+tenant %1 has been saved	property	en	tenant %1 has been saved
+Tenant claim	property	en	Tenant claim
+tenant id	property	en	tenant id
+Tenant phone	property	en	Tenant phone
+termination date	property	en	termination date
+test cron	property	en	test cron
+Text	property	en	Text
+That Vendor ID is not valid !	property	en	That Vendor ID is not valid !
+The address to which this order will be sendt	property	en	The address to which this order will be sendt
+The apartment is private. If the apartment should be public, uncheck this box	property	en	The apartment is private. If the apartment should be public, uncheck this box
+The apartment is public. If the apartment should be private, check this box	property	en	The apartment is public. If the apartment should be private, check this box
+The building is private. If the building should be public, uncheck this box	property	en	The building is private. If the building should be public, uncheck this box
+The building is public. If the building should be private, check this box	property	en	The building is public. If the building should be private, check this box
+The entrance is private. If the entrance should be public, uncheck this box	property	en	The entrance is private. If the entrance should be public, uncheck this box
+The entrance is public. If the entrance should be private, check this box	property	en	The entrance is public. If the entrance should be private, check this box
+The file is already imported !	property	en	The file is already imported !
+the file is empty or removed!	property	en	The file is empty or removed!
+the location is private. if the location should be public, uncheck this box	property	en	The location is private. If the location should be public, uncheck this box
+the location is public. if the location should be private, check this box	property	en	The location is public. If the location should be private, check this box
+The mail server returned	property	en	The mail server returned
+the number of %1 hour is added!	property	en	the number of %1 hour is added!
+the project has not been saved	property	en	the project has not been saved
+The property is private. If the property should be public, uncheck this box	property	en	The property is private. If the property should be public, uncheck this box
+The property is public. If the property should be private, check this box	property	en	The property is public. If the property should be private, check this box
+The recipient did not get the email:	property	en	The recipient did not get the email:
+The total amount to claim	property	en	The total amount to claim
+the workorder has not been saved	property	en	the workorder has not been saved
+This account is not valid:	property	en	This account is not valid:
+This activity code is already registered!	property	en	This activity code is already registered!
+This agreement code is already registered!	property	en	This agreement code is already registered!
+This agreement group code is already registered!	property	en	This agreement group code is already registered!
+This apartment ID does not exist!	property	en	This apartment ID does not exist!
+This apartment is already registered!	property	en	This apartment is already registered!
+This attribute turn up as disabled in the form	property	en	This attribute turn up as disabled in the form
+This Building ID does not exist!	property	en	This Building ID does not exist!
+This building is already registered!	property	en	This building is already registered!
+This Dim A is not valid:	property	en	This Dim A is not valid:
+This Dim D is not valid:	property	en	This Dim D is not valid:
+This Entrance ID does not exist!	property	en	This Entrance ID does not exist!
+This entrance is already registered!	property	en	This entrance is already registered!
+This Equipment ID already exists!	property	en	This Equipment ID already exists!
+This equipment ID does not exist!	property	en	This equipment ID does not exist!
+This file already exists !	property	en	This file already exists !
+this location id does not exist!	property	en	This location ID does not exist!
+this location is already registered!	property	en	This location is already registered!
+this location parent id does not exist!	property	en	This location parent ID does not exist!
+This meter id is already registered!	property	en	This meter id is already registered!
+This property ID does not exist!	property	en	This property ID does not exist!
+this report id already exists!	property	en	This report ID already exists!
+this report id does not exist!	property	en	This report ID does not exist!
+This user has not defined an email address !	property	en	This user has not defined an email address !
+This Vendor is already registered for this activity	property	en	This Vendor is already registered for this activity
+Ticket	property	en	Ticket
+Ticket has been saved	property	en	Ticket has been saved
+Ticket has been updated	property	en	Ticket has been updated
+Ticket ID	property	en	Ticket ID
+Time	property	en	Time
+time created	property	en	time created
+Times	property	en	Times
+timing	property	en	timing
+Title	property	en	Title
+To	property	en	To
+To alter the priority key	property	en	To alter the priority key
+to date	property	en	to date
+tolerance	property	en	tolerance
+Total	property	en	Total
+Total Cost	property	en	Total Cost
+Total records	property	en	Total records
+Total sum	property	en	Total sum
+tracking	property	en	tracking
+Transfer	property	en	Transfer
+true	property	en	True
+type	property	en	type
+Type invoice II	property	en	Type invoice II
+Type of changes	property	en	Type of changes
+Uncheck to debug the result	property	en	Uncheck to debug the result
+Unit	property	en	Unit
+up	property	en	up
+Update	property	en	Update
+Update a single entry by passing the fields.	property	en	Update a single entry by passing the fields.
+Update email	property	en	Update email
+Update file	property	en	Update file
+update project	property	en	Update project
+update selected investments	property	en	update selected investments
+update subject	property	en	update subject
+Update the category to not active based on if there is only nonactive apartments	property	en	Update the category to not active based on if there is only nonactive apartments
+Update the not active category for locations	property	en	Update the not active category for locations
+upload file	property	en	Upload file
+User	property	en	User
+User contact info	property	en	User contact info
+user gratification	property	en	user gratification
+Username / Group	property	en	Username / Group
+Users	property	en	Users
+Users email is updated	property	en	Users email is updated
+Users phone is updated	property	en	Users phone is updated
+Value	property	en	Value
+values	property	en	values
+varchar	property	en	varchar
+Vendor	property	en	Vendor
+Vendor has been added	property	en	Vendor has been added
+Vendor ID	property	en	Vendor ID
+Vendor Name	property	en	Vendor Name
+Version	property	en	Version
+view	property	en	view
+view apartment	property	en	view apartment
+view building	property	en	view building
+view document	property	en	view document
+view documents for this location/entity	property	en	view documents for this location/entity
+view documents for this location/equipment	property	en	view documents for this location/equipment
+view edit the prize for this activity	property	en	view edit the prize for this activity
+view entrance	property	en	view entrance
+view equipment	property	en	view equipment
+view gab	property	en	View gab
+view gab detail	property	en	view gab detail
+View gab-info	property	en	View gab-info
+view information about the document	property	en	view information about the document
+view information about the gab	property	en	view information about the gab
+view investment	property	en	view investment
+view location	property	en	view location
+View map	property	en	View map
+View meter	property	en	View meter
+view or edit prizing history of this element	property	en	view or edit prizing history of this element
+View Project	property	en	View Project
+view property	property	en	view property
+view report	property	en	view report
+View request	property	en	View request
+view template detail	property	en	view template detail
+View tender	property	en	View tender
+view the apartment	property	en	view the apartment
+view the attrib	property	en	view the attrib
+view the budget account	property	en	view the budget account
+view the building	property	en	view the building
+view the category	property	en	view the category
+view the claim	property	en	view the claim
+View the complete workorder	property	en	View the complete workorder
+View the complete workorder as a tender for bidding	property	en	View the complete workorder as a tender for bidding
+view the document	property	en	view the document
+view the entity	property	en	view the entity
+view the entrance	property	en	view the entrance
+view the equipment	property	en	view the equipment
+view the gab	property	en	view the gab
+view the location	property	en	view the location
+view the meter	property	en	view the meter
+view the method	property	en	view the method
+view the owner	property	en	view the owner
+view the part of town	property	en	view the part of town
+view the project	property	en	view the project
+view the property	property	en	view the property
+view the report	property	en	view the report
+view the request	property	en	view the request
+view the standard	property	en	view the standard
+view the template	property	en	view the template
+view the tenant	property	en	view the tenant
+view the ticket	property	en	view the ticket
+view the vendor(s) for this activity	property	en	view the vendor(s) for this activity
+view the workorder	property	en	view the workorder
+view ticket detail	property	en	view ticket detail
+View Workorder	property	en	View Workorder
+View/Edit the history	property	en	View/Edit the history
+voucher	property	en	voucher
+Voucher Date	property	en	Voucher Date
+Voucher ID	property	en	Voucher ID
+Voucher is updated	property	en	Voucher is updated
+voucher is updated:	property	en	voucher is updated:
+voucher period is updated	property	en	voucher period is updated
+Weight for prioritising	property	en	Weight for prioritising
+What is the current status of this document ?	property	en	What is the current status of this document ?
+What is the current status of this equipment ?	property	en	What is the current status of this equipment ?
+What is the current status of this project ?	property	en	What is the current status of this project ?
+what is the current status of this report ?	property	en	What is the current status of this report ?
+What is the current status of this request ?	property	en	What is the current status of this request ?
+What is the current status of this workorder ?	property	en	What is the current status of this workorder ?
+Where to deliver the key	property	en	Where to deliver the key
+Where to fetch the key	property	en	Where to fetch the key
+Where to pick up the key	property	en	Where to pick up the key
+Which entity type is to show up in location forms	property	en	Which entity type is to show up in location forms
+work:____________	property	en	work:____________
+Workorder	property	en	Workorder
+workorder %1 has been edited	property	en	workorder %1 has been edited
+workorder %1 has been saved	property	en	workorder %1 has been saved
+Workorder end date	property	en	Workorder end date
+workorder entry date	property	en	Workorder entry date
+Workorder ID	property	en	Workorder ID
+Workorder %1 is sent by email to %2	property	en	Workorder %1 is sent by email to %2
+Workorder start date	property	en	Workorder start date
+workorder status	property	en	Workorder status
+Workorder template	property	en	Workorder template
+Workorder title	property	en	Workorder title
+workorder user	property	en	Workorder User
+Write off	property	en	Write off
+Write off period	property	en	Write off period
+w_cost	property	en	w_cost
+Year	property	en	Year
+yes	property	en	yes
+You have entered an invalid end date !	property	en	You have entered an invalid end date !
+You have entered an invalid start date !	property	en	You have entered an invalid start date !
+You have no edit right for this project	property	en	You have no edit right for this project
+You have to select a budget responsible for this invoice in order to add the invoice	property	en	You have to select a budget responsible for this invoice in order to add the invoice
+You have to select a budget responsible for this invoice in order to make the import	property	en	You have to select a budget responsible for this invoice in order to make the import
+You have to select the Conversion for this import	property	en	You have to select the Conversion for this import
+You have to select type of invoice	property	en	You have to select type of invoice
+Your message could not be sent by mail!	property	en	Your message could not be sent by mail!
+Your message could not be sent!	property	en	Your message could not be sent!
+.project	property	en	Project
+.project.workorder	property	en	Workorder
+.project.request	property	en	Request
+.tenant_claim	property	en	Tenant claim
+.ticket	property	en	Ticket

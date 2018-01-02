@@ -1,0 +1,42 @@
+access changed	todo	tr	Yol değişti
+add main project	todo	tr	ana proje ekle
+add sub project	todo	tr	Alt proje ekle
+adds or edits a todo item	todo	tr	Bir yapılacak öğesi ekler veya düzenler
+are you sure you want to delete this entry	todo	tr	Bu girdiyi silem istediğinden emin misin ?
+assigned to	todo	tr	Birisine ata
+category changed	todo	tr	Kategori değişti
+completed	todo	tr	tamamlandı
+deletes a todo item	todo	tr	Bir yapılacak öğesini siler
+description can not exceed 8000 characters in length	todo	tr	Tanımlama 8000 karakteri geçemez !
+description changed	todo	tr	Tanımlama değişti
+do you also want to delete all sub projects ?	todo	tr	Tüm alt projeleri de silmek ister misin ?
+edit main project	todo	tr	Ana projeyi düzenle
+edit sub project	todo	tr	Alt projeyi düzenle
+end date changed	todo	tr	Bitiş tarihi değişti
+ending date can not be before start date	todo	tr	Bitiş tarihi başlangıç tarihinden erken olamaz !
+entry added	todo	tr	Giriş eklendi
+high	todo	tr	Yüksek
+low	todo	tr	Düşük
+nobody	todo	tr	Hiç kimse
+normal	todo	tr	Normal
+or: days from startdate:	todo	tr	veya: başlangıç tarihinin günleri:
+or: select for today:	todo	tr	veya: bugün için seç:
+parent changed	todo	tr	Parent değişti
+parent project	todo	tr	Parent Proje
+please enter a title	todo	tr	Lütfen bir başlık girin !
+returns a the total number of records in the database, must call list_todos first	todo	tr	Veritabanındaki toplam kayıt sayısını döndürür, önce list_todos gelmeli
+show todo items on main screen	todo	tr	ToDo öğelerini ana ekranda göster
+start date changed	todo	tr	Başlangıç tarihi değişti
+status changed	todo	tr	Durum değişti
+title changed	todo	tr	Başlık değişti
+to do list	common	tr	Yapılacaklar listesi
+todo	common	tr	Yapılacaklar listesi
+todo list	common	tr	Yapılacaklar listesi
+todo preferences	todo	tr	Yapılacakların tercihleri
+urgency	todo	tr	Aciliyet
+urgency changed	todo	tr	Aciliyet değişti
+view matrix of actual month	todo	tr	Ayı matris şeklinde gör
+view todo item	todo	tr	Yapılacak öğeyi gör
+you can only enter numbers for days from now	todo	tr	Şuanki tarihten itibaren günler için sadece sayı girebilirsin !
+you have entered an ending invalid date	todo	tr	Geçersiz bir bitiş tarihi girdiniz !
+you have entered an starting invalid date	todo	tr	Geçersiz bir başlangıç tarihi girdiniz !

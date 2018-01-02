@@ -1,0 +1,396 @@
+%1 status - %2	setup	no	%1 status - %2
+(account deletion in sql only)	setup	no	(account deletion in SQL Only)
+00 (disable)	setup	no	00 (disable / recomended)
+13 (ntp)	setup	no	13 (ntp)
+80 (http)	setup	no	80 (http)
+<b>!!!this will delete all existing accounts!!!</b><br>	setup	no	<b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>
+<b>note:</b> you must have cookies enabled to use setup and header admin!	setup	no	<b>NOTE:</b> You must have cookies enabled to use setup and header admin!
+<br><b>this will delete all existing accounts.</b>	setup	no	<br><b>This will delete all existing accounts.</b>
+<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>	setup	no	<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>
+actions	setup	no	Actions
+add a domain	setup	no	Add a domain
+add auto-created users to this group ('default' will be attempted if this is empty.)	setup	no	Add auto-created users to this group ('Default' will be attempted if this is empty.)
+additional settings	setup	no	Additional settings
+admin first name	setup	no	Admin first name
+admin last name	setup	no	Admin last name
+admin password	setup	no	Admin password
+admin password to header manager	setup	no	Admin password to header manager
+admin username	setup	no	Admin username
+admins	setup	no	Admins
+after retrieving the file, put it into place as the header.inc.php.  then, click "continue".	setup	no	After retrieving the file, put it into place as the header.inc.php.  Then, click "continue".
+all core tables and the admin and preferences applications	setup	no	all core tables and the admin and preferences applications
+all users	setup	no	All Users
+analysis	setup	no	Analysis
+app details	setup	no	App details
+app install/remove/upgrade	setup	no	App install/remove/upgrade
+app process	setup	no	App process
+app upgrade	setup	no	App upgrade
+application	setup	no	application
+application data	setup	no	Application Data
+application list	setup	no	Application List
+application management	setup	no	Application Management
+application name and status	setup	no	Application Name and Status
+application name and status information	setup	no	Application Name and Status Information
+application title	setup	no	Application Title
+applications	setup	no	applications
+are you sure you want to delete your existing tables and data?	setup	no	Are you sure you want to delete your existing tables and data?
+are you sure?	setup	no	ARE YOU SURE?
+at your request, this script is going to attempt to create the database and assign the db user rights to it	setup	no	At your request, this script is going to attempt to create the database and assign the db user rights to it
+at your request, this script is going to attempt to install the core tables and the admin and preferences applications for you	setup	no	At your request, this script is going to attempt to install the core tables and the admin and preferences applications for you.
+at your request, this script is going to attempt to upgrade your old applications to the current versions	setup	no	At your request, this script is going to attempt to upgrade your old applications to the current versions
+at your request, this script is going to attempt to upgrade your old tables to the new format	setup	no	At your request, this script is going to attempt to upgrade your old tables to the new format
+at your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format	setup	no	At your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format
+at your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data	setup	no	At your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	setup	no	Attempt to use correct mimetype for FTP instead of default 'application/octet-stream'
+authentication / accounts	setup	no	Authentication / Accounts
+auto create account records for authenticated users	setup	no	Auto create account records for authenticated users
+auto-created user accounts expire	setup	no	Auto-created user accounts expire
+automatically detect domain from hostname	setup	no	Automatically detect domain from hostname
+available version	setup	no	Available Version
+backupwarn	setup	no	but we <u>highly recommend backing up</u> your tables in case the script causes damage to your data.<br><strong>These automated scripts can easily destroy your data.</strong><br><em>Please backup before going any further!</em>
+because an application it depends upon was upgraded	setup	no	because an application it depends upon was upgraded
+because it depends upon	setup	no	because it depends upon
+because it is not a user application, or access is controlled via acl	setup	no	because it is not a user application, or access is controlled via acl
+because it requires manual table installation, <br>or the table definition was incorrect	setup	no	because it requires manual table installation, <br>or the table definition was incorrect
+because it was manually disabled	setup	no	because it was manually disabled
+because of a failed upgrade or install	setup	no	because of a failed upgrade or install
+because of a failed upgrade, or the database is newer than the installed version of this app	setup	no	because of a failed upgrade, or the database is newer than the installed version of this app
+because the enable flag for this app is set to 0, or is undefined	setup	no	because the enable flag for this app is set to 0, or is undefined
+bottom	setup	no	bottom
+bulk upgrade management	setup	no	Bulk Upgrade Management
+cancel	setup	no	Cancel
+cannot create the header.inc.php due to file permission restrictions.<br> instead you can %1 the file.	setup	no	Cannot create the header.inc.php due to file permission restrictions.<br> Instead you can %1 the file.
+charset	setup	no	utf-8
+check ip address of all sessions	setup	no	check ip address of all sessions
+click <a href="index.php">here</a> to return to setup.	setup	no	Click <a href="index.php">here</a> to return to setup.
+click here	setup	no	Click Here
+completed	setup	no	Completed
+configuration	setup	no	Configuration
+configuration completed	setup	no	Configuration completed
+configuration password	setup	no	Configuration Password
+configure now	setup	no	Configure Now
+continue	setup	no	Continue
+could not open header.inc.php for writing!	setup	no	Could not open header.inc.php for writing!
+country selection	setup	no	Country Selection
+create	setup	no	Create
+create accounts	no	Create Accounts
+create database	setup	no	Create Database
+create demo accounts	setup	no	Create demo accounts
+create one now	setup	no	Create one now
+create your header.inc.php	setup	no	Create your header.inc.php
+created	setup	no	created
+creating tables	setup	no	Creating Tables
+current version	setup	no	Current Version
+currently installed languages: %1 <br>	setup	no	Currently installed languages: %1 <br>
+datetime port.<br>if using port 13, please set firewall rules appropriately before submitting this page.<br>(port: 13 / host: 129.6.15.28)	setup	no	Datetime port.<br>If using port 13, please set firewall rules appropriately before submitting this page.<br>(Port: 13 / Host: 129.6.15.28)
+db host	setup	no	DB Host
+db name	setup	no	DB Name
+db password	setup	no	DB Password
+db root password	setup	no	DB root password
+db root username	setup	no	DB root username
+db type	setup	no	DB Type
+db user	setup	no	DB User
+default file system space per user/group ?	setup	no	Default file system space per user/group ?
+delete	setup	no	Delete
+delete all my tables and data	setup	no	Delete all my tables and data
+delete all old languages and install new ones	setup	no	Delete all old languages and install new ones
+deleting tables	setup	no	Deleting Tables
+demo server setup	setup	no	Demo Server Setup
+deny access	setup	no	Deny Access
+deny all users access to grant other users access to their entries ?	setup	no	Deny all users access to grant other users access to their entries ?
+dependency failure	setup	no	Dependency Failure
+deregistered	setup	no	deregistered
+details for admin account	setup	no	Details for Admin account
+developers' table schema toy	setup	no	Developers' Table Schema Toy
+did not find any valid db support!	setup	no	Did not find any valid DB support!
+do you want persistent connections (higher performance, but consumes more resources)	setup	no	Do you want persistent connections (higher performance, but consumes more resources)
+do you want to manage homedirectory and loginshell attributes?	setup	no	Do you want to manage homedirectory and loginshell attributes?
+domain	setup	no	Domain
+domain select box on login	setup	no	Domain select box on login
+domains	setup	no	domains
+dont touch my data	setup	no	Dont touch my data
+download	setup	no	Download
+edit current configuration	setup	no	Edit Current Configuration
+edit your existing header.inc.php	setup	no	Edit your existing header.inc.php
+edit your header.inc.php	setup	no	Edit your header.inc.php
+Enable custom error handle for heavy debugging	setup	no	Enable custom error handle for heavy debugging
+enable debug messages	setup	no	enable debug messages
+enable mcrypt	setup	no	Enable MCrypt
+enter some random text for app session encryption	setup	no	Enter some random text for app session encryption
+enter some random text for app_session <br>encryption (requires mcrypt)	setup	no	Enter some random text for app_session <br>encryption (requires mcrypt)
+enter the full path for temporary files.<br>examples: /tmp, c:\temp	setup	no	Enter the full path for temporary files.<br>Examples: /tmp, C:\TEMP
+enter the full path for users and group files.<br>examples: /files, e:\files	setup	no	Enter the full path for users and group files.<br>Examples: /files, E:\FILES
+enter the hostname of the machine on which this server is running	setup	no	Enter the hostname of the machine on which this server is running
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	setup	no	Enter the location of phpGroupWare's URL.<br>Example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>No trailing slash</b>
+enter the site password for peer servers	setup	no	Enter the site password for peer servers
+enter the site username for peer servers	setup	no	Enter the site username for peer servers
+enter the title for your site	setup	no	Enter the title for your site
+enter your default ftp server	setup	no	Enter your default FTP server
+enter your http proxy server	setup	no	Enter your HTTP proxy server
+enter your http proxy server port	setup	no	Enter your HTTP proxy server port
+export has been completed!  you will need to set the user passwords manually.	setup	no	Export has been completed!  You will need to set the user passwords manually.
+export phpgroupware accounts from sql to ldap	setup	no	Export phpGroupWare accounts from SQL to LDAP
+export sql users to ldap	setup	no	Export SQL users to LDAP
+failed to modify: 	setup	no	failed to modify: 
+failed to modify: %1	setup	no	failed to modify: %1
+file	setup	no	FILE
+file type, size, version, etc.	setup	no	file type, size, version, etc.
+for a new install, select import.  to convert existing sql accounts to ldap, select export	setup	no	For a new install, select import.  To convert existing SQL accounts to LDAP, select export
+force selectbox	setup	no	Force Selectbox
+found existing configuration file. loading settings from the file...	setup	no	Found existing configuration file. Loading settings from the file...
+go back	setup	no	Go back
+go to	setup	no	Go to
+grant access	setup	no	Grant Access
+has a version mismatch	setup	no	has a version mismatch
+hooks deregistered	setup	no	hooks deregistered
+hooks registered	setup	no	hooks registered
+host information	setup	no	Host information
+hostname/ip of database server	setup	no	Hostname/IP of database server
+however, the application is otherwise installed	setup	no	However, the application is otherwise installed
+however, the application may still work	setup	no	However, the application may still work
+if no acl records for user or any group the user is a member of	setup	no	If no ACL records for user or any group the user is a member of
+if the application has no defined tables, selecting upgrade should remedy the problem	setup	no	If the application has no defined tables, selecting upgrade should remedy the problem
+if using ldap	setup	no	If using LDAP
+if using ldap, do you want to manage homedirectory and loginshell attributes?	setup	no	If using LDAP, do you want to manage homedirectory and loginshell attributes?
+if you did not receive any errors, your applications have been	setup	no	If you did not receive any errors, your applications have been
+if you did not receive any errors, your tables have been	setup	no	If you did not receive any errors, your tables have been
+if you running this the first time, don't forget to manualy %1 !!!	setup	no	If you running this the first time, don't forget to manualy %1 !!!
+ignoring %1 for domain "%2"	setup	no	ignoring %1 for domain "%2"
+image type selection order	setup	no	Image type selection order
+import accounts from ldap to the phpgroupware accounts table (for a new install using sql accounts)	setup	no	Import accounts from LDAP to the phpGroupWare accounts table (for a new install using SQL accounts)
+import has been completed!	setup	no	Import has been completed!
+import ldap users/groups	setup	no	Import LDAP users/groups
+importing old settings into the new format....	setup	no	Importing old settings into the new format....
+include root (this should be the same as server root unless you know what you are doing)	setup	no	Include Root (this should be the same as Server Root unless you know what you are doing)
+insanity	setup	no	Insanity
+install	setup	no	Install
+install all	setup	no	Install All
+install applications	setup	no	Install Applications
+install language	setup	no	Install Language
+installed	setup	no	installed
+invalid ip address	setup	no	Invalid IP address
+invalid password	setup	no	Invalid password
+is broken	setup	no	is broken
+is disabled	setup	no	is disabled
+ldap account import/export	setup	no	LDAP account import/export
+ldap accounts configuration	setup	no	LDAP Accounts Configuration
+ldap accounts context	setup	no	LDAP accounts context
+ldap config	setup	no	LDAP Config
+ldap default homedirectory prefix (e.g. /home for /home/username)	setup	no	LDAP Default homedirectory prefix (e.g. /home for /home/username)
+ldap default shell (e.g. /bin/bash)	setup	no	LDAP Default shell (e.g. /bin/bash)
+ldap encryption type	setup	no	LDAP encryption type
+ldap export users	setup	no	LDAP export users
+ldap groups context	setup	no	LDAP groups context
+ldap host	setup	no	LDAP host
+ldap import users	setup	no	LDAP import users
+ldap modify	setup	no	LDAP Modify
+ldap root password	setup	no	LDAP root password
+ldap rootdn	setup	no	LDAP rootdn
+limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)	setup	no	Limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)
+logout	setup	no	Logout
+makesure	setup	no	Make sure that your database is created and the account permissions are set
+manage applications	setup	no	Manage Applications
+manage languages	setup	no	Manage Languages
+maximum account id (e.g. 65535 or 1000000)	setup	no	Maximum account id (e.g. 65535 or 1000000)
+may be broken	setup	no	may be broken
+mcrypt algorithm (default tripledes)	setup	no	Mcrypt algorithm (default TRIPLEDES)
+mcrypt initialization vector	setup	no	MCrypt initialization vector
+mcrypt mode (default cbc)	setup	no	Mcrypt mode (default CBC)
+mcrypt settings (requires mcrypt php extension)	setup	no	Mcrypt Settings (requires mcrypt PHP extension)
+mcrypt version	setup	no	MCrypt version
+minimum account id (e.g. 500 or 100, etc.)	setup	no	Minimum account id (e.g. 500 or 100, etc.)
+modifications have been completed!	setup	no	Modifications have been completed!
+modify	setup	no	Modify
+modify an existing ldap account store for use with phpgroupware (for a new install using ldap accounts)	setup	no	Modify an existing LDAP account store for use with phpGroupWare (for a new install using LDAP accounts)
+multi-language support setup	setup	no	Multi-Language support setup
+mysqlinstr %1	setup	no	Instructions for creating the database in MySQL:<br>Login to mysql -<br><i>[user@server user]# mysql -u root -p</i><br>Create the empty database and grant user permissions -<br><i>mysql> create database %1;</i><br><i>mysql> grant all on %1.* to phpgroupware@localhost identified by 'password';</i>
+name of database	setup	no	Name of database
+name of db user phpgroupware uses to connect	setup	no	Name of db user phpGroupWare uses to connect
+never	setup	no	never
+new	setup	no	New
+no	setup	no	No
+no algorithms available	setup	no	no algorithms available
+no imap support found. disabling imap email access	setup	no	No IMAP support found. Disabling IMAP email access
+no microsoft sql server support found. disabling	setup	no	No Microsoft SQL Server support found. Disabling
+no modes available	setup	no	no modes available
+no mysql support found. disabling	setup	no	No MySQL support found. Disabling
+no odbc/sapdb support found. disabling	setup	no	No ODBC/SAPDB support found. Disabling
+no oracle-db support found. disabling	setup	no	No Oracle-DB support found. Disabling
+no postgres-db support found. disabling	setup	no	No Postgres-DB support found. Disabling
+no xsl support found.	setup	no	No XSL support found.
+not complete	setup	no	not complete
+not completed	setup	no	Not Completed
+not ready for this stage yet	setup	no	Not ready for this stage yet
+note: this option will only work if show domain select box is off.	setup	no	Note: This option will only work if show domain select box is off.
+note: you will be able to customize this later	setup	no	Note: You will be able to customize this later
+now guessing better values for defaults...	setup	no	Now guessing better values for defaults...
+ok	setup	no	OK
+once the database is setup correctly	setup	no	Once the database is setup correctly
+one month	setup	no	one month
+one week	setup	no	one week
+only add languages that are not in the database already	setup	no	Only add languages that are not in the database already
+only add new phrases	setup	no	Only add new phrases
+or	setup	no	or
+or http://webdav.domain.com (webdav)	setup	no	or http://webdav.domain.com (WebDAV)
+or we can attempt to create the database for you:	setup	no	Or we can attempt to create the database for you:
+password needed for configuration	setup	no	Password needed for configuration
+password of db user	setup	no	Password of db user
+passwords did not match, please re-enter	setup	no	Passwords did not match, please re-enter
+path information	setup	no	Path information
+path to user and group files has to be outside of the webservers document-root!!!	setup	no	Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!
+persistent connections	setup	no	Persistent connections
+pgsqlinstr %1	setup	no	Instructions for creating the database in PostgreSQL:<br>Start the postmaster<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>Create the empty database -<br><i>[user@server user]# createdb %1</i>
+phpgroupware administration manual	setup	no	phpGroupWare Administration Manual
+please check for sql scripts within the application's directory	setup	no	Please check for sql scripts within the application's directory
+please check read/write permissions on directories, or back up and use another option.	setup	no	Please check read/write permissions on directories, or back up and use another option.
+please configure phpgroupware for your environment	setup	no	Please configure phpGroupWare for your environment
+please consult the %1.	setup	no	Please consult the %1.
+please install	setup	no	Please install
+please login	setup	no	Please login
+please login to phpgroupware and run the admin application for additional site configuration	setup	no	Please login to phpgroupware and run the admin application for additional site configuration
+please wait...	setup	no	Please Wait...
+possible reasons	setup	no	Possible Reasons
+possible solutions	setup	no	Possible Solutions
+post-install dependency failure	setup	no	Post-install Dependency Failure
+potential problem	setup	no	Potential Problem
+preferences	setup	no	Preferences
+problem resolution	setup	no	Problem resolution
+process	setup	no	Process
+processing upgrade for %1	setup	no	processing upgrade for %1
+re-check my database	setup	no	Re-Check my database
+re-check my installation	setup	no	Re-Check My Installation
+re-enter password	setup	no	Re-enter password
+read translations from	setup	no	Read translations from
+really uninstall all applications	setup	no	REALLY Uninstall all applications
+recommended: filesystem	setup	no	Recommended: Filesystem
+register globals = %1	setup	no	register globals = %1
+registered	setup	no	registered
+register_globals_	setup	no	register_globals_
+remove	setup	no	Remove
+remove all	setup	no	Remove All
+requires reinstall or manual repair	setup	no	Requires reinstall or manual repair
+requires upgrade	setup	no	Requires upgrade
+resolve	setup	no	Resolve
+run	setup	no	run
+sample configuration not found. using built in defaults	setup	no	Sample configuration not found. using built in defaults
+save	setup	no	Save
+save this text as contents of your header.inc.php	setup	no	Save this text as contents of your header.inc.php
+select an app, enter a target version, then submit to process to that version.<br>if you do not enter a version, only the baseline tables will be installed for the app.<br><blink>this will drop all of the apps' tables first!</blink>	setup	no	Select an app, enter a target version, then submit to process to that version.<br>If you do not enter a version, only the baseline tables will be installed for the app.<br><blink>THIS WILL DROP ALL OF THE APPS' TABLES FIRST!</blink>
+select the default applications to which your users will have access	setup	no	Select the default applications to which your users will have access
+select the desired action(s) from the available choices	setup	no	Select the desired action(s) from the available choices
+select to download file	setup	no	Select to download file
+select where you want to store/retrieve file contents	setup	no	Select where you want to store/retrieve file contents
+select where you want to store/retrieve filesystem information	setup	no	Select where you want to store/retrieve filesystem information
+select where you want to store/retrieve user accounts	setup	no	Select where you want to store/retrieve user accounts
+select which group(s) will be exported (group membership will be maintained)	setup	no	Select which group(s) will be exported (group membership will be maintained)
+select which group(s) will be imported (group membership will be maintained)	setup	no	Select which group(s) will be imported (group membership will be maintained)
+select which group(s) will be modified (group membership will be maintained)	setup	no	Select which group(s) will be modified (group membership will be maintained)
+select which languages you would like to use	setup	no	Select which languages you would like to use
+select which method of upgrade you would like to do	setup	no	Select which method of upgrade you would like to do
+select which type of authentication you are using	setup	no	Select which type of authentication you are using
+select which user(s) will also have admin privileges	setup	no	Select which user(s) will also have admin privileges
+select which user(s) will be exported	setup	no	Select which user(s) will be exported
+select which user(s) will be imported	setup	no	Select which user(s) will be imported
+select which user(s) will be modified	setup	no	Select which user(s) will be modified
+select which user(s) will have admin privileges	setup	no	Select which user(s) will have admin privileges
+select your old version	setup	no	Select your old version
+selectbox	setup	no	Selectbox
+server root	setup	no	Server Root
+sessions type	setup	no	Sessions Type
+set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.	setup	no	Set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.
+settings	setup	no	Settings
+setup	setup	no	Setup
+setup demo accounts in ldap	setup	no	Setup demo accounts in LDAP
+setup the database	setup	no	Setup the database
+show 'powered by' logo on	setup	no	Show 'powered by' logo on
+some or all of its tables are missing	setup	no	Some or all of its tables are missing
+status	setup	no	Status
+step 1 - simple application management	setup	no	Step 1 - Simple Application Management
+step 2 - configuration	setup	no	Step 2 - Configuration
+step 3 - language management	setup	no	Step 3 - Language Management
+step 4 - advanced application management	setup	no	Step 4 - Advanced Application Management
+table change messages	setup	no	Table Change Messages
+tables dropped	setup	no	tables dropped
+tables installed, unless there are errors printed above	setup	no	tables installed, unless there are errors printed above
+tables upgraded	setup	no	tables upgraded
+target version	setup	no	Target Version
+text entry	setup	no	Text Entry
+the db_type in defaults (%1) is not supported on this server. using first supported type.	setup	no	The db_type in defaults (%1) is not supported on this server. using first supported type.
+the file	setup	no	the file
+the table definition was correct, and the tables were installed	setup	no	The table definition was correct, and the tables were installed
+the tables	setup	no	the tables
+there was a problem trying to connect to your ldap server. <br>	setup	no	There was a problem trying to connect to your LDAP server. <br>
+there was a problem trying to connect to your ldap server. <br>please check your ldap server configuration	setup	no	There was a problem trying to connect to your LDAP server. <br>please check your LDAP server configuration
+this has to be outside the webservers document-root!!!	setup	no	This has to be outside the webservers document-root!!!
+this program will help you upgrade or install different languages for phpgroupware	setup	no	This program will help you upgrade or install different languages for phpGroupWare
+this section will help you export users and groups from phpgroupware's account tables into your ldap tree	setup	no	This section will help you export users and groups from phpGroupWare's account tables into your LDAP tree
+this section will help you import users and groups from your ldap tree into phpgroupware's account tables	setup	no	This section will help you import users and groups from your LDAP tree into phpGroupWare's account tables
+this section will help you setup your ldap accounts for use with phpgroupware	setup	no	This section will help you setup your LDAP accounts for use with phpGroupWare
+this should be around 32 bytes in length.<br>note: the default has been randomly generated.	setup	no	This should be around 32 bytes in length.<br>Note: The default has been randomly generated.
+this stage is completed<br>	setup	no	This stage is completed<br>
+this will create 1 admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!this will delete all existing accounts!!!</b><br>	setup	no	This will create 1 admin account and 3 demo accounts<br>The username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>
+this will create an admin account and (optionally) 3 demo accounts.<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br>	setup	no	This will create an admin account and (optionally) 3 demo accounts.<br>The username/passwords are: demo/guest, demo2/guest and demo3/guest.<br>
+to a version it does not know about	setup	no	to a version it does not know about
+to setup 1 admin account and 3 demo accounts.<br><b>this will delete all existing accounts</b>	setup	no	to setup 1 admin account and 3 demo accounts.<br><b>This will delete all existing accounts</b>
+to setup an admin account and (optionally) 3 demo accounts.	setup	no	to setup an admin account and (optionally) 3 demo accounts.
+top	setup	no	top
+translations added	setup	no	Translations Added
+translations removed	setup	no	Translations Removed
+translations upgraded	setup	no	Translations Upgraded
+try to configure your php to support one of the above mentioned dbms, or install phpgroupware by hand.	setup	no	Try to configure your php to support one of the above mentioned DBMS, or install phpGroupWare by hand.
+two weeks	setup	no	two weeks
+uninstall	setup	no	uninstall
+uninstall all applications	setup	no	Uninstall all applications
+uninstalled	setup	no	uninstalled
+upgrade	setup	no	Upgrade
+upgrade all	setup	no	Upgrade All
+upgraded	setup	no	upgraded
+upgrading tables	setup	no	Upgrading Tables
+use cookies to pass sessionid	setup	no	Use cookies to pass sessionid
+use pure html compliant code (not fully working yet)	setup	no	Use pure HTML compliant code (not fully working yet)
+users choice	setup	no	Users Choice
+version mismatch	setup	no	Version Mismatch
+view	setup	no	View
+warning!	setup	no	Warning!
+warning: all your passwords (database, phpgroupware admin,...)<br> will be shown in plain text after you log in for header administration.	setup	no	Warning: All your passwords (database, phpGroupWare admin,...)<br> will be shown in plain text after you log in for header administration.
+we can proceed	setup	no	We can proceed
+we will automatically update your tables/records to %1	setup	no	We will automatically update your tables/records to %1
+what type of sessions management do you want to use (php session management usually performs better)?	setup	no	What type of sessions management do you want to use (PHP session management usually performs better)?
+which database type do you want to use with phpgroupware?	setup	no	Which database type do you want to use with phpGroupWare?
+would you like phpgroupware to cache the phpgw info array ?	setup	no	Would you like phpGroupWare to cache the phpgw info array ?
+would you like phpgroupware to check for a new version<br>when admins login ?	setup	no	Would you like phpGroupWare to check for a new version<br>when admins login ?
+would you like to show each application's upgrade status ?	setup	no	Would you like to show each application's upgrade status ?
+write config	setup	no	Write config
+yes	setup	no	Yes
+you appear to be running a pre-beta version of phpgroupware.<br>these versions are no longer supported, and there is no upgrade path for them in setup.<br> you may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.	setup	no	You appear to be running a pre-beta version of phpGroupWare.<br>These versions are no longer supported, and there is no upgrade path for them in setup.<br> You may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.
+you appear to be running version %1 of phpgroupware	setup	no	You appear to be running version %1 of phpGroupWare
+you appear to be using php %1+	setup	no	You appear to be using PHP %1+
+you appear to be using php %1, phpgroupware requires version 5.2.0 or later	setup	no	You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later
+you appear to have imap support enabled	setup	no	You appear to have IMAP support enabled
+you appear to have microsoft sql server support enabled	setup	no	You appear to have Microsoft SQL Server support enabled
+you appear to have mysql support enabled	setup	no	You appear to have MySQL support enabled
+you appear to have odbc/sapdb support enabled	setup	no	You appear to have ODBC/SAPDB support enabled
+you appear to have oracle support enabled	setup	no	You appear to have Oracle support enabled
+you appear to have oracle v8 (oci) support enabled	setup	no	You appear to have Oracle V8 (OCI) support enabled
+you appear to have postgres-db support enabled	setup	no	You appear to have Postgres-DB support enabled
+you appear to have xml/xslt support enabled	setup	no	You appear to have XML/XSLT support enabled
+you are ready for this stage, but this stage is not yet written.<br>	setup	no	You are ready for this stage, but this stage is not yet written.<br>
+you didn't enter a config password for domain %1	setup	no	You didn't enter a config password for domain %1
+you didn't enter a header admin password	setup	no	You didn't enter a header admin password
+you do not have any languages installed. please install one now <br>	setup	no	You do not have any languages installed. Please install one now <br>
+you have not created your header.inc.php yet!<br> you can create it now.	setup	no	You have not created your header.inc.php yet!<br> You can create it now.
+you have successfully logged out	setup	no	You have successfully logged out
+you must enter a username for the admin	setup	no	You must enter a username for the admin
+you should either uninstall and then reinstall it, or attempt manual repairs	setup	no	You should either uninstall and then reinstall it, or attempt manual repairs
+you're using an old configuration file format...	setup	no	You're using an old configuration file format...
+you're using an old header.inc.php version...	setup	no	You're using an old header.inc.php version...
+your applications are current	setup	no	Your applications are current
+your database does not exist	setup	no	Your database does not exist
+your database is not working!	setup	no	Your Database is not working!
+your database is working, but you dont have any applications installed	setup	no	Your database is working, but you dont have any applications installed
+your header admin password is not set. please set it now!	setup	no	Your header admin password is NOT set. Please set it now!
+your header.inc.php needs upgrading.	setup	no	Your header.inc.php needs upgrading.
+<p class="msg">your header.inc.php needs upgrading.<br>warning! make backups!</p>	setup	no	<p class="msg">Your header.inc.php needs upgrading.<br>WARNING! MAKE BACKUPS!</p>
+your tables are current	setup	no	Your tables are current
+your tables may be altered and you may lose data	setup	no	Your tables may be altered and you may lose data.
+your tables will be dropped and you will lose data	setup	no	Your tables will be dropped and you will lose data !!

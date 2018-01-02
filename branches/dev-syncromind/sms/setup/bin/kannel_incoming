@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# change this if your kannel's incoming path in other directory
+# NOT /usr/local/cache or /usr/local/cache/smsd, ITS /usr/local
+KANNEL_PATH="/usr/local"
+
+KANNEL_FILE=`mktemp -q $KANNEL_PATH/cache/smsd/ERR.in.XXXXXX`
+
+touch $KANNEL_FILE
+chmod 666 $KANNEL_FILE
+
+# exec = /usr/local/bin/kannel_incoming %t %q %a
+# $1 : %t
+# $2 : %q
+# $3 : %a
+echo -e "$1\n$2" > $KANNEL_FILE
+echo $3 >> $KANNEL_FILE

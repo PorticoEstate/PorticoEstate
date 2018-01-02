@@ -1,0 +1,671 @@
+<refentry id="{@id}">
+ <refnamediv>
+  <refname>Installation Guide</refname>
+  <refpurpose>This is a short description of the FM-system &mdash; and how to implement it
+   &mdash; as it is implemented at BBB.</refpurpose>
+ </refnamediv>
+ <refsynopsisdiv>
+  <author>
+   Sigurd Nes
+   <authorblurb>
+    {@link mailto:sigurdne@online.no sigurdne@online.no}
+   </authorblurb>
+  </author>
+ </refsynopsisdiv>
+ {@toc}
+ <refsect1 id="{@id intro}">
+  <title>Intro</title>
+  <para>
+   Both Linux and Windows NT/2000/XP will do. Linux is preferred due to aspects
+   as less expensive and friendlier regarding tuning, safety and reliability.
+  </para>
+  <para>
+   The production server is here based on Linux Mandrake 10.0 while the
+   development server is on a laptop with dualboot Linux/Windows XP.
+  </para>
+  <para>
+   PhpGroupWare runs on MySQL, PostgreSQL and Microsoft SQL Server (tested
+   &mdash; and working ok). If one wants to utilize foreign keys &mdash; one has
+   to consider not using MySQL &mdash; although this feature is promised in the
+   next version (version 4.x). PhpGroupWare also claims to be running on Oracle
+   and Sybase.
+  </para>
+  <para>
+   In this case the databaseserver is a Microsoft SQL Server v7.0 located on a
+   dedicated databaseserver.
+  </para>
+  </refsect1>
+
+  <refsect1 id="{@id mail_server}">
+   <title>Mail server</title>
+   <para>
+    On Windows platform &mdash; one is bound to send mail via a valid smtp
+    server &mdash; while on Linux one has also the choice of using the native
+    <quote>sendmail</quote>
+    for distributing
+    <quote>workorders</quote>
+    and<quote>trouble tickets</quote>.   
+     </para>
+     <para>
+      Not required: a guide to create: a server that is (1) a SMTP server that
+      can receive e-mail for localhost and virtual domain hosts that you have
+      setup and send (relay) e-mail from any remote host from which users have
+      authenticated through POP or IMAP, (2) a POP server, (3) an IMAP server:
+      <ulink url="http://www.lifewithqmail.org/">http://www.lifewithqmail.org/</ulink>
+   </para>
+  </refsect1>
+
+
+
+  <refsect1 id="{@id phpgw_inst}">
+   <title>PhpGroupWare - basic installation</title>
+   <para>
+    The latest version of PhpGroupware is available at
+    <ulink url="http://w.phpgroupware.org/">http://w.phpgroupware.org</ulink>
+   </para>
+   <para>
+    This is a short description how to install the PhpGroupware &mdash; with no
+    integration with BOEI. First of all - create a database on the
+    database-server.
+   </para>
+   <refsect2 id="{@id phpgw_win}">
+    <title>Windows</title>
+    <para>
+     - Decompress the files to a location beneath C:\Inetpub\wwwroot\
+    </para>
+    <para>
+     - Add read and execute rights for I_USR_
+    </para>
+   </refsect2>
+   <refsect2 id="{@id phpgw_linux}">
+    <title>Linux</title>
+    <para>
+     Decompress the files to a location beneath your
+     <quote>DocumentRoot</quote>
+     (from /usr/local/apache/conf/httpd.conf)
+    </para>
+    <para>
+     Change the owner to your user running the server:
+    </para>
+   </refsect2>
+   <refsect2 id="{@id phpgw_common}">
+    <title>common</title>
+    <para>
+     - Point the browser to
+     <ulink url="http://your.domain.com/phpgroupware/setup/">http://your.domain.com/phpgroupware/setup/</ulink>
+    </para>
+    <para>
+     - Supply the setup-form with appropriate values &mdash; download the
+     <quote>header.inc.php</quote>
+     to the phpgroupware- directory.
+    </para>
+    <warning>
+     <para>
+      The database-
+      <quote>user</quote>
+      and
+      <quote>password</quote>
+      used to access the database is stored in plain text in the header.inc.php.
+     </para>
+    </warning>
+    <para>
+     - Point the browser to
+     <ulink url="http://your.domain.com/phpgroupware/setup/">http://your.domain.com/phpgroupware/setup/</ulink>
+     and log in to
+     <quote>Setup/Config Admin Login</quote>
+     with the
+     <quote>Configuration Password</quote>
+     supplied in the previous step.
+    </para>
+    <para>
+     - Click the button
+     <quote>install</quote>
+     all applications
+    </para>
+    <para>
+     - Click the button
+     <quote>Edit Current Configuration</quote>
+     &mdash; and fill inn appropriate values &mdash; and &mdash;
+     <quote>submit</quote>
+    </para>
+    <para>
+     - Click the link to setup admin
+    </para>
+    <para>
+     - Add your language
+    </para>
+    <para>
+     - Click the button
+     <quote>Manage Application</quote>
+     &mdash; and select (minimum) :
+    </para>
+    <itemizedlist>
+     <listitem>
+      <para>
+       addressbook
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       admin
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       calendar
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       email (or felamimail)
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       preferences
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       property
+      </para>
+     </listitem>
+    </itemizedlist>
+    <para>
+     - logout &mdash; and point your browser to
+     http://your.domain.com/phpgroupware/ - and log in with the admin account
+     and go to the
+     <quote>admin</quote>
+     define groups and users &mdash; and to enable the applications for these
+     groups/users. One has to define a set of global and user-specific
+     preferences &mdash; these are located in the
+     <quote>admin</quote>
+     and
+     <quote>preferences</quote> section.
+    </para>
+   </refsect2>
+  <refsect2 id="{@id phpgw_boei}">
+   <title>PhpGroupWare - integration with BOEI</title>
+   <para>
+    All property and tenant information is owned and maintained by BOEI - an
+    external database. Since PhpGroupWare is not allowed to write back to BOEI
+    &mdash; data is collected and updated from tables in BOEI and written to
+    tables in PhpGroupWare by means of stored procedures and scheduled jobs. The
+    creation of views and procedures are done by executing scripts on the
+    database server. The scheduling of the jobs has to be manually defined on
+    database server.
+   </para>
+   <para>
+    If both databases reside on the server &mdash; the tables can be accessed
+    directly within the procedures &mdash; as opposed to when the databases
+    resides on different servers &mdash; it is necessary call up the tables as
+    views - and then operate on them.
+   </para>
+   <para>
+    Adding records is straight forward querying: left join the master-table
+    &mdash; and check for NULL in the slave-table.
+   </para>
+   <para>
+    Updating records demands programming due to fact that MSSQL does not allow
+    update-query as one would normally do in MsAccess.
+   </para>
+   <para>
+    The problem can be solved by tagging records during update &mdash; and
+    asking for one row at the time that are not tagged (or at least not tagged
+    this time)
+   </para>
+   <example>
+
+    <title>Procedure to keep track of the tenants (MSSQL).</title>
+
+     <programlisting>
+<![CDATA[
+CREATE PROCEDURE oppdater_leietaker_pr_leieobjekt
+AS
+DECLARE @t char(4), @u char(3), @i int, @leietaker char(20), @update_date smalldatetime , @formaal int, @gateadresse int, @etasje char(6)
+SET ROWCOUNT 1
+BEGIN
+ SELECT @i = count(*) from boei_leieobjekt
+ SELECT @update_date =CONVERT (int , GETDATE() , 106)
+END
+WHILE @i &gt; 1
+BEGIN
+ SELECT @t = objekt_id, @u = leie_id, @leietaker=Leietaker_ID, @formaal=formaal_id , 
+ @gateadresse=gateadresse_id, @etasje= etasje FROM boei_leieobjekt where (updated &lt; @update_date or updated is NULL)
+ SELECT @leietaker=Leietaker_ID FROM dbo.v_Leieobjekt where objekt_id=@t and leie_id=@u
+ UPDATE boei_leieobjekt
+ SET Leietaker_ID = @leietaker, formaal_id=@formaal, etasje= @etasje, gateadresse_id=@gateadresse,updated = @update_date
+ WHERE objekt_id = @t
+ AND leie_id=@u
+ SELECT @i = @i - 1 
+END
+]]>
+     </programlisting>
+
+   </example>
+  </refsect2>
+  </refsect1>
+
+
+
+  <refsect1 id="{@id os_linux}">
+   <title>Install Linux operative system</title>
+   <para>
+    Download the images needed from Linux from
+    <ulink url="http://www.mandrakelinux.com/">http://www.mandrakelinux.com/</ulink>
+    or some other distributor and burn the CDs and boot into the installation
+    process &mdash; which is pretty self explanatory.
+   </para>
+   <para>
+    Do not install a database-server (PostgreSQL or MySQL) or Web-server
+    (Apache) unless you intend to. The Web-server is very much needed &mdash;
+    but there is some performance to gain from compiling as most as possible
+    into the httpd executable in addition to assuring the PHP databasesupport
+    for
+    <quote>MSSQL</quote>.</para>
+ </refsect1>
+
+   <refsect1 id="{@id windows_version}">
+    <title>Web-server with PHP-support; Windows version</title>
+    <para>
+     The implementation is tested on both
+     <quote>Apache</quote>
+     and
+     <quote>Internet Information Services</quote>
+     (IIS)
+    </para>
+    <para>
+     If the platform is of some brand of windows &mdash; the obvious choice is
+     the bundled IIS. For best performance &mdash; make sure that the version is
+     later than 5.x.
+    </para>
+    <para>
+     Alternatively &mdash; the apache 2.x is reported to be a good alternative
+     (used as part of the developement server).
+    </para>
+    <para>
+     Download the latest Php interpreter from
+     <ulink url="http://www.php.net/">http://www.php.net</ulink>
+     &mdash; and install it as described in the
+     <quote>install.txt</quote>
+     . Choose the CGI-mode &mdash; even though there is a performance penalty.
+    </para>
+    <para>
+     If one intends to use MSSQL database server &mdash; one has to enable the
+     <quote>extension = php_mssql.dll</quote>
+     in the extension part of
+     <quote>php.ini</quote>
+     &mdash; and copy the
+     <quote>NTWDBLIB.DLL</quote>
+     (bundled) SQL server Client Library and place it in the systems path.
+    </para>
+    <para>
+     To enable the imap support (to enable the built-in web-mail facility in
+     PhpGroupWare) &mdash; enable
+     <quote>extension = php_imap.dll</quote>
+     in php.ini
+    </para>
+   </refsect1>
+   <refsect1 id="{@id linux_version}">
+    <title>Web-server with PHP-support; Linux version</title>
+    <refsect2 id="{@id tuning}">
+     <title>Tuning &mdash; caching</title>
+     <para>
+      The Linux version
+      <footnote>
+       <para>
+        Turck MMCache is availlable for both windows and *nix
+       </para>
+      </footnote>
+      has the free opportunity to utilize a php-accelerator which saves
+      compilation time by caching. Every time a PHP script is accessed, the PHP
+      engine must open the script file and read, parse, and compile the file
+      contents into a compiled form. With scripts often including other scripts,
+      this work can become a significant part of the overall time to deliver a
+      page. The Accelerator caches the compiled scripts in shared memory for
+      later reuse.
+     </para>
+    </refsect2>
+    <refsect2 id="{@id compression}">
+     <title>Tuning &mdash; compression</title>
+     <para>
+      there is techinques to deliver dynamically compressed content 'on the fly'
+      to any browser or user-agent that is capable of receiving it &mdash; and
+      thereby saves bandwidth. Typically compression ratio for text is about 90
+      %.
+     </para>
+     <para>
+      mod_gzip is an addon module for apache 1.3.x , while mod_deflate is the
+      equivalent built in module for apache2
+     </para>
+    </refsect2>
+    <refsect2 id="{@id linux_mssql}">
+     <title>Installation of web-server on Linux with mssql support</title>
+     <para>
+      FreeTDS is a set of libraries for Unix and Linux that allows your programs
+      to natively talk to Microsoft SQL Server and Sybase databases and have to
+      be kompiled into php if one intend to connect to either MSSQL or Sybase.
+      Further &mdash; you need the c-client library to enable IMAP-support.
+     </para>
+     <para>
+      Download the software to a directory at your choice (my choice is
+      /opt/web):
+     </para>
+     <para>
+      The latest freetds package from
+      <ulink url="http://www.freetds.org/">http://www.freetds.org</ulink>
+      ,
+     </para>
+     <para>
+      Apache from
+      <ulink url="http://www.apache.org/dist/httpd/">http://www.apache.org/dist/httpd/</ulink>
+      (apache_1.3.x or httpd-2.x)
+     </para>
+     <para>
+      PHP from
+      <ulink url="http://www.php.net/downloads.php">http://www.php.net/downloads.php</ulink>
+     </para>
+     <para>
+      C-client library from
+      <ulink url="ftp://ftp.cac.washington.edu/imap/">ftp://ftp.cac.washington.edu/imap/</ulink>
+     </para>
+     <para>
+      Php_accelerator from
+      <ulink url="http://www.php-accelerator.co.uk/download.php">http://www.php-accelerator.co.uk/download.php</ulink>
+     </para>
+     <para>
+      Support for xlt:
+     </para>
+     <para>
+      XSLT support in PHP relies on the Sablotron XSLT processor, which in turn
+      relies on the expat XML parser, so not only do you have to install both of
+      those packages, but you need to install them in the right order to satisfy
+      the dependencies.
+     </para>
+     <para>
+      expat from
+      <ulink url="http://sourceforge.net/projects/expat">http://sourceforge.net/projects/expat</ulink>
+     </para>
+     <para>
+      Sablot-0.98.tar.gz from
+      <ulink url="http://www.gingerall.cz/charlie/ga/xml/download.xml">http://www.gingerall.cz/charlie/ga/xml/download.xml</ulink>
+     </para>
+     <para>
+      Decompress the packages (the versions are probably altered);
+     </para>
+<screen>
+<![CDATA[  
+$ tar xfz expat-1.95.7.tar.gz
+$ tar xfz Sablot-1.0.1.tar.gz
+$ gunzip -c freetds-stable.tgz | tar xf -
+$ gunzip -c httpd-2.0.52.tar.gz | tar xf -
+$ bunzip2 -c php-4.3.9.tar.bz2 | tar xvf -
+$ gunzip -c imap-2002d.tar.Z| tar xf -
+$ gunzip -c php_accelerator-1.3.3r2_php-4.3.0_linux_i686-glibc2.1.3.tgz | tar xf -
+]]>
+</screen>
+     <para>
+      Build and install the packages (Apache 2):
+     </para>
+     <note>
+      <para>
+       have a look into
+       <quote>imap-2002d/Makefile</quote>
+       for details for configuring your system with imap support
+      </para>
+     </note>
+<screen>
+<![CDATA[
+$ cd expat-1.95.5
+$ ./configure
+$ make
+$ make install
+$ cd ../Sablot-1.0.1
+$ make
+$ make install
+$ cd ../freetds-0.61.2
+$ ./configure --prefix=/usr/local/freetds --with-tdsver=7.0 --enable-msdblib\
+--enable-dbmfix --with-gnu-ld --enable-shared --enable-static
+$ gmake
+$ gmake install
+$ cd ../imap-2002d
+$ make <build type> SSLTYPE=unix
+$ ln -s c-client include
+$ mkdir lib
+$ cd lib
+$ ln -s ../c-client/c-client.a libc-client.a
+$ cd ..
+$ cd ../httpd-2.0.52
+$ ./configure --enable-so --enable-deflate --enable-headers
+$ make
+$ make install
+$ cd ../php-4.3.9
+$ export LDFLAGS=-lstdc++
+$ ./configure --with-imap=../imap-2002d --with-sybase-ct=/usr/local/freetds\
+ --with-apxs2=/usr/local/apache2/bin/apxs --enable-mail --enable-xslt\
+ --with-xslt-sablot --with-zlib --with-pspell --with-jpeg-dir=/usr/lib\
+ --with-png-dir=/usr --with-freetype-dir=/usr/lib --with-gd --enable-ftp
+$ make
+$ make install
+$ cp php.ini-dist /usr/local/lib/php.ini
+]]>
+</screen>
+     <para>
+      alternatively Apache 1.3.x:
+     </para>
+<screen>
+<![CDATA[
+$ gunzip -c apache_1.3.29.tar.gz | tar xf -
+$ cd apache_1.3.29
+./configure
+]]>
+</screen>
+     <para>
+      (ignore the warnings at this stage)
+     </para>
+<screen>
+<![CDATA[
+$ cd ../php-4.3.9
+$ export LDFLAGS=-lstdc++
+$ ./configure --disable-cgi --with-imap=../imap-2002d
+--with-sybase-ct=/usr/local/freetds --with-apache=../apache_1.3.29\
+--with-mysql=no --with-pgsql --enable-mail --enable-xslt --with-xslt-sablot
+$ make
+$ make install
+$ cp php.ini-dist /usr/local/lib/php.ini
+$ cd ../apache_1.3.29
+$ export LDFLAGS=-lstdc++
+$ ./configure --prefix=/usr/local/apache\
+--activate-module=src/modules/php4/libphp4.a --enable-module=so
+$ make
+$ make install
+
+]]>
+</screen>
+     <para>
+      Edit your httpd.conf or srm.conf file and add:
+     </para>
+<screen>
+<![CDATA[  
+AddType application/x-httpd-php .php
+]]>
+</screen>
+     <para></para>
+     <para>
+      Alter the
+      <quote>User</quote>
+      and
+      <quote>Group</quote>
+      in httpd.conf to
+      <quote>apache</quote>
+     </para>
+     <refsect3 id="{@id php_cache}">
+      <title>php-cache general</title>
+      <para>
+       There is sereval possibilities for adding caching capabilities to php
+      </para>
+      <itemizedlist>
+       <listitem>
+        <para>
+         APC, the Alternative PHP Cache(
+         <ulink url="http://apc.communityconnect.com/about.html">http://apc.communityconnect.com/about.html</ulink>
+         ) - Open Source
+        </para>
+       </listitem>
+       <listitem>
+        <para>
+         The ionCube PHP Accelerator(
+         <ulink url="http://www.php-accelerator.co.uk">http://www.php-accelerator.co.uk</ulink>
+         ) - not open source but it is free
+        </para>
+       </listitem>
+       <listitem>
+        <para>
+         The Zend Optimizer(
+         <ulink url="http://www.zend.com/store/products/zend-optimizer.php">http://www.zend.com/store/products/zend-optimizer.php</ulink>
+         ) - commerical product
+        </para>
+       </listitem>
+       <listitem>
+        <para>
+         Turck MMcache(
+         <ulink url="http://sourceforge.net/projects/turck-mmcache/">http://sourceforge.net/projects/turck-mmcache/</ulink>
+         ) - open source
+        </para>
+       </listitem>
+      </itemizedlist>
+      <para>
+       At the moment of this writing I recommend the
+       <quote>Turck MMcache</quote>
+      </para>
+      </refsect3>
+      <refsect3 id="{@id alt_1}">
+       <title>Add php-cache - alternative 1</title>
+<screen>
+<![CDATA[
+$ cd ../ php_accelerator-1.3.3r2_php-4.3.0_linux_i686-glibc2.1.3
+$ cp php_accelerator_1.3.3r2.so so /usr/local/lib /php_accelerator_1.3.3r2.so
+$ cd ..
+]]>
+</screen>
+       <para>
+        Add the following line to your php.ini file, e.g. near the extensions
+        section. Set the correct path to where you installed the accelerator
+        library.
+       </para>
+<programlisting>
+<![CDATA[
+; PHP Accelerator extension
+zend_extension="/usr/local/lib/php_accelerator_1.3.3r2.so"
+phpa = on
+phpa.tweaks = on
+phpa.cache_dir = /tmp
+phpa.file_perms = 400
+phpa.shm_size = 16
+phpa.shm_key = 0xc0deb00
+phpa.shm_perms = 664
+phpa.shm_release_at_exit = on
+phpa.shm_logging = on
+phpa.shm_stats_check_period = 5m
+phpa.shm_ttl = 36h
+phpa.shm_max_processes = 512
+phpa.cache_file_prune_period = 36h
+]]>
+</programlisting>
+      </refsect3>
+      <refsect3 id="{@id alt_2}">
+       <title>Add php-cache - alternative 2</title>
+       <para>
+        Download the Latest Turck MMcache versions from
+        <ulink url="http://sourceforge.net/project/showfiles.php?group_id=69426">sourceforge</ulink>
+       </para>
+<screen>
+<![CDATA[
+$ tar xfz turck-mmcache-2.4.6.tar.gz
+]]>
+</screen>
+       <para>
+        follow the instructions in
+        <quote>readme</quote>
+       </para>
+     </refsect3>
+     <refsect3 id="{@id add_compr}">
+      <title>Adding compression</title>
+      <para>
+       for Apache2 - read the documentataion for mod_deflate at
+       <ulink url="http://httpd.apache.org/docs-2.0/mod/mod_deflate.html">http://httpd.apache.org/docs-2.0/mod/mod_deflate.html</ulink>
+      </para>
+      <para>
+       for apache 1.3.x: (mod_gzip)
+      </para>
+      <para>
+       Dowbload mod_gzip.so.gz from
+       <ulink url="http://sourceforge.net/projects/mod-gzip/">http://sourceforge.net/projects/mod-gzip/</ulink>
+      </para>
+<screen>
+<![CDATA[
+ $ gunzip mod_gzip.so.gz
+ $ cp mod_gzip.so /usr/local/apache/libexec/
+]]>
+</screen>
+      <para>
+       Edit your httpd.conf or srm.conf file and add:
+      </para>
+<programlisting>
+<![CDATA[
+LoadModule gzip_module libexec/mod_gzip.so
+<IfModule mod_gzip.c>
+mod_gzip_on Yes
+mod_gzip_can_negotiate Yes
+mod_gzip_static_suffix .gz
+AddEncoding gzip .gz
+mod_gzip_update_static No
+mod_gzip_command_version '/mod_gzip_status'
+mod_gzip_temp_dir /tmp
+mod_gzip_keep_workfiles No
+mod_gzip_minimum_file_size 500
+mod_gzip_maximum_file_size 500000
+mod_gzip_maximum_inmem_size 60000
+mod_gzip_min_http 1000
+mod_gzip_handle_methods GET POST
+mod_gzip_item_exclude reqheader "User-agent: Mozilla/4.0[678]"
+mod_gzip_item_include file \.html$
+mod_gzip_item_exclude file \.js$
+mod_gzip_item_exclude file \.css$
+mod_gzip_item_include file \.pl$
+mod_gzip_item_include handler ^cgi-script$
+mod_gzip_item_include mime ^text/html$
+mod_gzip_item_include mime ^text/plain$
+mod_gzip_item_include mime ^httpd/unix-directory$
+mod_gzip_item_include file \.php$
+mod_gzip_item_include mime ^application/x-httpd-php
+mod_gzip_item_exclude mime ^image/
+mod_gzip_dechunk Yes
+mod_gzip_add_header_count Yes
+mod_gzip_send_vary Yes
+</IfModule>
+]]>
+</programlisting>
+      <para>
+       That should be it ! Fire up the web-server with:
+      </para>
+<screen>
+<![CDATA[
+$ /usr/local/apache2/bin/apachectl start</para>
+]]>
+</screen>
+      <para>
+       To shut down:
+      </para>
+<screen>
+<![CDATA[
+$ /usr/local/apache2/bin/apachectl stop
+]]>
+</screen>
+     </refsect3>
+    </refsect2>
+   </refsect1>
+ 
+
+
+</refentry>

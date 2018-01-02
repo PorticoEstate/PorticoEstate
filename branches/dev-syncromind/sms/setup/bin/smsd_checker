@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Q: why using smsd_start ?
+# A: coz smsd tend to kill it self, frustated by some unhandled string format :p
+
+# Gnokii smsd path
+# NOT /usr/local/cache or /usr/local/cache/smsd, but /usr/local
+SMSD_PATH="/usr/local"
+
+while true
+do
+    killall smsd >/dev/null 2>&1
+    sleep 3
+    $SMSD_PATH/sbin/smsd -m file -c $SMSD_PATH/cache/smsd -u $SMSD_PATH/bin/smsd_incoming \
+    -f $SMSD_PATH/cache/logs/smsd_logs >/dev/null 2>&1 &
+    sleep 16m
+done

@@ -1,0 +1,281 @@
+attachments	common	no	Vedlegg
+add attachment	common	no	Legg til vedlegg
+booking	common	no	Booking
+bookingfrontend	common	no	Bookingfrontend
+global configuration	common	no	Global konfigurasjon
+global message	common	no	Globale beskjeder
+manage users	common	no	Administrere brukere
+manage groups	common	no	Administrere grupper
+clear cache	common	no	Slett cache (minne)
+Global Categories	common	no	Globale kategorier
+View Sessions	common	no	Vis sesjoner
+View Access Log	common	no	Vis tilgangslogger
+Find and Register all Application Hooks	common	no	Finn og register alle applikasjonskoblinger
+Asynchronous timed services	common	no	Asynkrone tidsbestemte tjenester
+list users	common	no	brukerliste
+list groups	common	no	gruppeliste
+firstname	common	no	Fornavn
+lastname	common	no	Etternavn
+description	common	no	Beskrivelse
+add sub	common	no	Legg til underkategori
+color	common	no	Farge
+apply	common	no	Aktiver
+enabled	common	no	aktiv
+no category	common	no	Ingen kategori
+inactive	common	no	Inaktiv
+inactive and hidden	common	no	Inaktiv og gjemt
+status	common	no	Status
+contact	common	no	Kontakt
+user data	common	no	Bruker data
+Application	common	no	Applikasjon
+User access	common	no	Brukertilgang
+edit user	common	no	Rediger bruker
+edit user account	common	no	Rediger bruker konto
+group data	common	no	Gruppe data
+edit group	common	no	Rediger gruppe
+group	common	no	Gruppe
+all users	common	no	Alle brukere
+members	common	no	Medlemer
+applications	common	no	Applikasjoner
+You do not have edit access to addressmaster contacts	common	no	Du har ikke tilgang til "AddresseMaster" kontakter
+Can change password	common	no	Kan bytte passord
+Anonymous User (not shown in list sessions)	common	no	Anonym bruker (vises ikke i sesjonslisten)
+expires	common	no	Utløpsdato
+Never	common	no	Aldri
+quota	common	no	Kvote
+are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache (minne)?
+: activate to sort column ascending	common	no	: sorter kolonne stigende
+: activate to sort column descending	common	no	: sorter kolonne synkende
+features	common	no	Egenskaper
+select none	common	no	Velg ingen
+bookmarks	common	no	Snarveier
+bookmark added	common	no	Snarvei er lagret
+bookmark deleted	common	no	Snarvei er slettet
+access	common	no	Access
+access type	common	no	Access type
+account has been created	common	no	Bruker har blitt opprettet
+account has been deleted	common	no	Bruker har blitt slettet
+account has been updated	common	no	Bruker har blitt oppdatert
+add	common	no	Legg til
+admin	common	no	Admin
+administration	common	no	Administrasjon
+april	common	no	April
+are you sure you want to delete this entry ?	common	no	Er du sikker du vil slette denne posten ?
+august	common	no	August
+cancel	common	no	Avbryt
+change	common	no	Endre
+charset	common	no	utf-8
+clear	common	no	Clear
+clear form	common	no	Tøm skjema
+configure access permissions	common	no	Tilgangskontroll
+configuration	common	no	Konfigurasjon
+copy	common	no	Kopier
+create	common	no	Lag
+created by	common	no	Laget av
+current users	common	no	Current brukere
+date	common	no	Dato
+december	common	no	Desember
+delete	common	no	Slett
+domain	common	no	Database
+domain name for mail-address, eg. %1	common	no	Domene-navnet for E-Postadressen, %1
+done	common	no	Avbryt
+e-mail	common	no	E-Post
+email-address of the user, eg. %1	common	no	E-Postadressen til brukeren, %1
+edit	common	no	Editer
+email	common	no	E-Post
+entry has been deleted sucessfully	common	no	Entry har blitt slettet
+entry updated sucessfully	common	no	Entry er oppdatert
+error	common	no	Feil
+exit	common	no	Avslutt
+february	common	no	Februar
+files	common	no	Filer
+filter	common	no	Filter
+filtered from _MAX_ total entries	common	no	filtrert fra totalt _MAX_ poster
+first name	common	no	Fornavn
+first name of the user, eg. %1	common	no	Fornavnet til brukeren, %1
+first	common	no	Første
+friday	common	no	Fredag
+frontend	common	no	Frontend
+ftp	common	no	FTP
+global public	common	no	Global Public
+group access	common	no	Gruppe Access
+group has been added	common	no	Gruppe har blitt lagt til
+group has been deleted	common	no	Gruppe har blitt slettet
+group has been updated	common	no	Gruppe har blitt oppdatert
+group public	common	no	Gruppe Public
+groups	common	no	Grupper
+help	common	no	Hjelp
+high	common	no	Høy
+home	common	no	Hjem
+it has been more then %1 days since you changed your password	common	no	Det er mer enn %1 dager siden du har endet ditt passord
+january	common	no	Januar
+july	common	no	Juli
+june	common	no	Juni
+last name	common	no	Etternavn
+last name of the user, eg. %1	common	no	Etternavn til bruker, %1
+last page	common	no	siste side
+last	common	no	Siste
+Loading...	common	no	Laster...
+login	common	no	Login
+logout	common	no	Logg ut
+low	common	no	Lav
+march	common	no	Mars
+may	common	no	Mai
+medium	common	no	Medium
+monday	common	no	Mandag
+name	common	no	Navn
+name of the user, eg. %1	common	no	Fullt navn på bruker, %1
+new entry added sucessfully	common	no	Ny entry er lagt til
+next page	common	no	neste side
+next	common	no	Neste
+no	common	no	Nei
+No matching records found	common	no	Ingen poster funnet som passer med søket
+none	common	no	Ikke angitt
+No data available in table	common	no	Ingen data i tabell
+normal	common	no	Normal
+november	common	no	November
+october	common	no	Oktober
+of total	common	no	Av totalt
+of	common	no	av
+ok	common	no	OK
+only yours	common	no	kun dine
+page prepared in %1 seconds.	common	no	Side produsert på %1 sekunder
+password	common	no	Passord
+password has been updated	common	no	Passord har blitt oppdatert
+powered by phpgroupware version %1	common	no	Powered by <a href="http://www.phpgroupware.org">phpGroupWare</a> version %1
+preferences	common	no	Innstillinger
+previous page	common	no	Forrige side
+prev	common	no	Forrige
+print	common	no	Utskrift
+priority	common	no	Prioritet
+private	common	no	Privat
+Processing...	common	no	Prosesserer...
+rename	common	no	Endre navn
+rental	common	no	Leie
+saturday	common	no	Lørdag
+save	common	no	Lagre
+search	common	no	Søk
+september	common	no	September
+session has been killed	common	no	Session har blitt avsluttet
+show all	common	no	Vis alle
+showing %1	common	no	showing %1
+showing %1 - %2 of %3	common	no	showing %1 - %2 of %3
+showing items	common	no	Viser
+shows from	common	no	Viser fra
+Showing _START_ to _END_ of _TOTAL_ entries	common	no	Viser _START_ til _END_ av _TOTAL_ poster
+Showing 0 to 0 of 0 entries	common	no	Viser 0 til 0 av 0 poster
+Show _MENU_ entries	common	no	Vis _MENU_ poster
+site configuration	common	no	Konfigurasjon av moduler
+sorry, there was a problem processing your request.	common	no	Beklager, der var problemer ved din forespørsel.
+submit	common	no	Submit
+sunday	common	no	Søndag
+thursday	common	no	Torsdag
+the api is current	common	no	API er oppdatert
+the api requires an upgrade	common	no	API må oppdateres
+this application is current	common	no	Denne modulen er oppdatert
+this application requires an upgrade	common	no	Denne modulen må oppdateres
+time	common	no	Tid
+to	common	no	til
+total	common	no	Total
+tuesday	common	no	Tirsdag
+updated	common	no	Oppdatert
+view	common	no	Vis
+wednesday	common	no	Onsdag
+which groups	common	no	hvilke grupper
+yes	common	no	Ja
+you have 1 new message!	common	no	Du har 1 ny melding!
+you have %1 new messages!	common	no	Du har %1 nye meldinger!
+your message has been sent	common	no	Din melding har blitt sent
+your search returned 1 match	common	no	ditt søk gav 1 treff
+your search returned %1 matchs	common	no	ditt søk gav %1 treff
+your settings have been updated	common	no	Dine innstillinger har blitt oppdatert
+bad login or password	common	no	Ugyldig login eller passord
+login	login	no	Login
+password	login	no	Passord
+sorry, your login has expired	login	no	Beklager, din bruker er utgått
+sorry, your session has expired	login	no	Beklager, sesjonen din er utløpt
+todays date, eg. %1	common	no	Dagens dato, %1
+use cookies	login	no	use cookies
+username	common	no	Brukernavn
+new user	login	no	Ny bruker
+forgotten password	login	no	Glemt passord eller brukernavn
+use a valid username and password to gain access to %1	login	no	Angi et gyldig brukernavn og passord for få tilgang til %1
+version	common	no	versjon
+you have been successfully logged out	login	no	Du har nå logget ut
+Info: you have changed domain from "%1" to "%2"	login	no	Informasjon: Du har endret domene fra "%1" til "%2"
+Password must be at least 8 characters long, not %1	common	no	Passord må være minst på 8 tegn, du forsøker med %1
+Password must contain at least 2 upper case characters	common	no	Passord må inneholde minst 2 store bosktaver
+Password must contain at least 2 lower case characters	common	no	Passord må inneholde minst 2 små bosktaver
+Password must contain at least 1 number	common	no	Passord må inneholde minst 1 tall
+Password must contain at least 1 non alphanumeric character	common	no	Passord må inneholde minst 1 spesialtegn
+The passwords don't match	common	no	Passordene er ikke like
+browser not supported	common	no	Nettleseren ser ikke ut til å støtte HTML5
+outdated browser: %1	common	no	Utdatert nettleser: %1
+custom fields	common	no	Egendefinerte felt
+descr	common	no	beskrivelse
+datatype	common	no	Datatype
+sorting	common	no	Sortering
+up	common	no	opp
+down	common	no	ned
+no access	common	no	Ingen Tilgang
+toolbar	common	no	Verktøy
+collection	common	no	Samling..
+item	common	no	Valg
+download visible data	common	no	last ned innholdet i synlig tabell til excel
+download data	common	no	last ned alt filtrert innholdet til excel
+previous week	common	no	Forrige uke
+next week	common	no	Neste uke
+next	common	no	Neste
+week	common	no	Uke
+week day	common	no	Ukedag
+upload file	common	no	Last opp fil
+upload multiple files	common	no	Last opp filer
+upload files	common	no	Last opp filer
+delete file	common	no	Slett fil
+add files	common	no	Legg til filer
+start upload	common	no	Start opplasting
+cancel upload	common	no	Stopp opplasting
+invalid file extension	common	no	Ugyldig filtype
+number files	common	no	Antall filer
+(filtered from _max_ total entries)	common	no	(filtrert fra _max_ poster)
+bim	common	no	Bim
+categories	common	no	Kategorier
+char	common	no	Char
+custom autocomplete::integer	common	no	Tilpasset autocomplete::ingeter
+custom functions	common	no	Tilpassede funksjoner
+custom listbox	common	no	Tilpasset listboks
+custom menu items	common	no	Tilpassede menyer
+datetime	common	no	Dato/tid
+do you really want to delete this entry	common	no	Vil du slette denne posten
+edit custom fields	common	no	Endre tilpassede felter
+edit type	common	no	Endre type
+float	common	no	Flyttall
+home screen message	common	no	Melding på hjemmeside
+hour	common	no	Time
+integer	common	no	Heltall
+link	common	no	Link
+listbox	common	no	Nedtrekksliste
+memo	common	no	Notat
+muliple checkbox	common	no	Merkebokser
+muliple radio	common	no	Flervalgs radio
+my preferences	common	no	Mine innstillinger
+organisation	common	no	Organsisasjon
+select the category the data belong to. to do not use a category select no category	common	no	Velg kategorien posten tilhører. For ikke å bruke kategori, velg ingen kategori
+sms	common	no	SMS
+unable to load jquery script '%1' when attempting to load widget: '%2'	common	no	Ikke i stand til å laste  jquery script '%1' på forsøk på å laste widget: '%2'
+varchar	common	no	Varchar
+vendor	common	no	Leverandør
+remark	home	no	Merknad
+about %1	about	no	Om %1
+group	common	no	Gruppe
+smtp server is not set! (admin section)	common	no	SMTP serveren er ikke konfigurert (admin seksjonen)
+set permission	common	no	Definer rettigheter
+right	common	no	Rettighet
+mask	common	no	Maskering
+result	common	no	Resultat
+manage	common	no	Administrer
+read	common	no	Les
+select a location!	common	no	Velg en lokasjon
+no location	common	no	Ingen lokasjon
+enable inheritance	common	no	Aktiver arving
+users	common	no	Brukere

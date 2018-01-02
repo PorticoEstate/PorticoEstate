@@ -1,0 +1,4 @@
+XC	xcvbxcvbxcvb	0	0	0	0	0
+XC	ggggggggggggggg	8	8	0	0	0
+XC	fff	4	2	0	0	0
+XC	ggggggggggggggg	8	8	0	0	0

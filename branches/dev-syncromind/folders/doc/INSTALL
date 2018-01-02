@@ -1,0 +1,43 @@
+###################################
+#                                 #
+#   Folders Installation Guide    #
+#                                 #
+###################################
+
+
+
+
+Adding Files, Directories and Icons:
+------------------------------------
+
+As with any normal phpGW application, the Folders View has the recommended directory structure. It is downloadable at
+
+http://www.probusiness.de/projekte/phpgroupware/
+
+as a compressed zipped file (Tar Ball) containing the necessary files and directories. When expanded/ unzipped under the phpGW root directory, the tarball will expand appropriately. Unzip the zip archive to the root of your installation.
+
+
+Process for Installation of folders application in Phpgroupware:
+----------------------------------------------------------------
+
+Following are the steps, which are involved in installing folders application:
+
+- The user should have access to Admin and Setup applications.
+
+- Go to Setup Login screen of phpGroupWare.
+
+- Click on "Managed Applications" button for installing a new application.
+
+- Check on Install checkbox for Installation of "Folders" application.
+
+- Now login to the phpgroupware.
+
+- Clicking on "Applications" link in Admin section.
+
+- Click on "User Accounts" link in Admin section for user level access to folders application.
+
+- Click on "Edit" button to edit the particular user account.
+
+- Check the folders checkbox and click on "Save" button for granting permissions to the user for accessing the folders application.
+
+- Note that the folders application only is supported by the probusiness template set at the moment (28. Oct 2003).

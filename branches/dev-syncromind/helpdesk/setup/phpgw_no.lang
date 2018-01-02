@@ -1,0 +1,223 @@
+%1 group	helpdesk	no	%1 gruppe
+(filtered from _max_ total entries)	helpdesk	no	(filtrert fra _max_ totalt antall)
+address	helpdesk	no	Adresse
+active	helpdesk	no	Aktiv
+enable	helpdesk	no	Aktiver
+all	helpdesk	no	Alle
+enter the details of this ticket	helpdesk	no	Angi detajlbeskrivelse av melding
+please give som details !	helpdesk	no	Angi detaljer
+set the status of the ticket	helpdesk	no	Angi status for meldingen
+open	helpdesk	no	Åpen
+of	helpdesk	no	av
+of total	helpdesk	no	av I alt
+cancel	helpdesk	no	Avbryt
+closed	helpdesk	no	Avsluttet
+processing...	helpdesk	no	Behandler data
+descr	helpdesk	no	Beskrivelse
+bookmarks	helpdesk	no	Bokmerker
+user	helpdesk	no	Innmelder
+part of town	helpdesk	no	Bydel
+building part	helpdesk	no	Bygningsdel
+date	helpdesk	no	Dato
+date opened	helpdesk	no	Dato startet
+disable	helpdesk	no	Deaktivert
+details	helpdesk	no	Detaljer
+edit	helpdesk	no	Editer
+modified date	helpdesk	no	Endret dato
+email	helpdesk	no	Epost
+email-address of the user, eg. %1	helpdesk	no	Epost adressen til brukeren, f.eks. %1
+last name	helpdesk	no	Etternavn
+actual cost changed	helpdesk	no	Faktisk kostnad er endret
+error	helpdesk	no	Feil
+finnish date	helpdesk	no	Ferdigdato
+file	helpdesk	no	Fil
+files	helpdesk	no	Filer
+filename	helpdesk	no	Filnavn
+filter	helpdesk	no	Filter
+float	helpdesk	no	Flyttall
+first name	helpdesk	no	Fornavn
+prev	helpdesk	no	Forrige
+old value	helpdesk	no	Forrige verdi
+first	helpdesk	no	Første
+first note added	helpdesk	no	Første notat
+from	helpdesk	no	Fra
+general	helpdesk	no	Generell
+notify	helpdesk	no	Kopi til
+re-opened	helpdesk	no	Gjenåpnet
+group	helpdesk	no	Gruppe
+action	helpdesk	no	Handling
+helpdesk	common	no	Helpdesk
+integer	helpdesk	no	Heltall
+event	helpdesk	no	Hendelse
+history	helpdesk	no	Historikk
+help	helpdesk	no	Hjelp
+home	helpdesk	no	Hjem
+id	helpdesk	no	Id
+no part of town	helpdesk	no	Ingen bydel
+no data	helpdesk	no	Ingen data
+no data available in table	helpdesk	no	Ingen data i tabellen
+no group	helpdesk	no	Ingen gruppe
+no category	helpdesk	no	Ingen kategori
+no matching records found	helpdesk	no	Ingen treff
+preferences	helpdesk	no	Innstillinger
+yes	helpdesk	no	Ja
+char	helpdesk	no	Karakter
+directory created	helpdesk	no	Katalog er opprettet
+category	helpdesk	no	Kategori
+category changed	helpdesk	no	Kategori er endret
+click to view file	helpdesk	no	Klikk for å vise fil
+click this link to select	helpdesk	no	Klikk på lenken for å velge
+columns	helpdesk	no	Kolonner
+contact	helpdesk	no	Kontakt
+contact phone	helpdesk	no	Kontakttelefon
+save	helpdesk	no	Lagre
+submit	helpdesk	no	Lagre
+save the ticket	helpdesk	no	Lagre meldingen
+save the entry and return to list	helpdesk	no	Lagre posten og returnere til oversikten
+download	helpdesk	no	Last ned
+upload file	helpdesk	no	Last opp fil
+upload multiple files	helpdesk	no	Last opp mange filer
+loading...	helpdesk	no	Laster
+add	helpdesk	no	Legg til
+add ticket	helpdesk	no	Legg til melding
+add new comments	helpdesk	no	Legg til ny kommentar
+paste image data	helpdesk	no	Lim inn bildedata
+login	helpdesk	no	Logg in
+logout	helpdesk	no	Logg ut
+location	helpdesk	no	Lokasjon
+member	helpdesk	no	Medlem
+ticket %1 has been saved	helpdesk	no	Melding %1 er lagret
+ticket %1 has been deleted	helpdesk	no	Melding %1 er slettet
+my submitted tickets	helpdesk	no	Meldinger startet av meg
+check to attach file	helpdesk	no	Merk for å legge ved fil
+check to delete file	helpdesk	no	Merk for å slette fil
+note	helpdesk	no	Notat
+method	helpdesk	no	Metode
+my assigned tickets	helpdesk	no	Mine tildelte meldinger
+failed to upload file !	helpdesk	no	Opplasting av fil feilet
+tax code	helpdesk	no	MVA-kode
+name	helpdesk	no	Navn
+no	helpdesk	no	Nei
+next	helpdesk	no	Neste
+memo	helpdesk	no	Notat
+new	helpdesk	no	Ny
+new note	helpdesk	no	Nytt notat
+new value	helpdesk	no	Ny verdi
+ok	helpdesk	no	OK
+about	helpdesk	no	Om
+update subject	helpdesk	no	Oppdater emne
+failed to create directory	helpdesk	no	Opplasting av fil feilet
+organisation	helpdesk	no	Organisasjon
+subject	helpdesk	no	Emne
+subject changed	helpdesk	no	Emne er endret
+password	helpdesk	no	Passord
+item	helpdesk	no	Post
+print view	helpdesk	no	Print visning
+priority	helpdesk	no	Prioritet
+priority changed	helpdesk	no	Prioritet er endret
+percent	helpdesk	no	prosent
+project	helpdesk	no	Prosjekt
+reported by	helpdesk	no	Innmelder
+entry date	helpdesk	no	Registrert dato
+entry_date	helpdesk	no	Registrert dato
+send	helpdesk	no	Send
+choose to send mailnotification	helpdesk	no	Send epost
+send e-mail	helpdesk	no	Send epost
+sent by email to	helpdesk	no	sendt med epost til
+last	helpdesk	no	Siste
+enter the subject of this ticket	helpdesk	no	Angi emne
+print	helpdesk	no	Skriv ut
+print the ticket	helpdesk	no	Skriv ut melding
+delete	helpdesk	no	Slett
+delete file	helpdesk	no	Slett fil
+delete the ticket	helpdesk	no	Slett meldingen
+sms	helpdesk	no	SMS
+search	helpdesk	no	Søk
+: activate to sort column ascending	helpdesk	no	Sorter stigende
+: activate to sort column descending	helpdesk	no	Sorter synkende
+opened	helpdesk	no	Startet
+opened by	helpdesk	no	Startet av
+status	helpdesk	no	Status
+status changed	helpdesk	no	Status er endret
+highest	helpdesk	no	Høyest
+lowest	helpdesk	no	Lavest
+support	helpdesk	no	Support
+take over	helpdesk	no	Ta over
+take over the assignment for this ticket	helpdesk	no	Ta over ansvaret for denne meldingen
+to	helpdesk	no	Til
+back to the ticket list	helpdesk	no	Tilbake til oversikten
+assign to	helpdesk	no	Tildel til
+assigned to	helpdesk	no	Tildelt til
+done	helpdesk	no	Avbryt
+select all	helpdesk	no	Velg alle
+select the user the selection belongs to. to do not use a user select no user	helpdesk	no	Velg bruker
+select user	helpdesk	no	Velg bruker
+select the part of town the building belongs to. to do not use a part of town -  select no part of town	helpdesk	no	Velg bydel
+select date	helpdesk	no	Velg dato
+please select a person or a group to handle the ticket !	helpdesk	no	Velg enten person eller gruppe
+select the estimated date for closing the task	helpdesk	no	Velg estimert ferdigdato
+select file to upload	helpdesk	no	Velg fil for opplasting
+select none	helpdesk	no	Velg ingen
+please select a category !	helpdesk	no	Velg kategori
+select the category the data belong to. to do not use a category select no category	helpdesk	no	Velg kategori.
+select the priority the selection belongs to	helpdesk	no	Velg prioritet
+select the priority the selection belongs to.	helpdesk	no	Velg prioritet
+version	helpdesk	no	Versjon
+re-assigned	helpdesk	no	Videresendt
+re-assigned group	helpdesk	no	Videresendt gruppe
+do you really want to delete this ticket	helpdesk	no	Vil du virkelig slette meldingen
+view	helpdesk	no	Vis
+view ticket detail	helpdesk	no	Vis detaljer
+view statustext	helpdesk	no	Vis melding
+list ticket	helpdesk	no	List meldinger
+billable hours	helpdesk	no	Egne timer
+change to	helpdesk	no	Endre til
+do you really want to change the status to %1	helpdesk	no	Vil du virkelig endre status til %1
+do you really want to change the priority to %1	helpdesk	no	Vil du virkelig endre prioritet til %1
+please enter a title!	helpdesk	no	Angi et emne
+ticket has been updated	helpdesk	no	Melding er oppdatert
+picture	helpdesk	no	Bilde
+response template	helpdesk	no	Standardtekster
+inbox	helpdesk	no	Innboks
+standard text	helpdesk	no	Standardtekst
+custom menu items	helpdesk	no	Tilpassede menyer
+reports	helpdesk	no	Rapporter
+email out	helpdesk	no	Epost ut
+recipient	helpdesk	no	Mottaker
+recipients	helpdesk	no	Mottakere
+candidates	helpdesk	no	Kandidater
+send email	helpdesk	no	Send epost
+remark	helpdesk	no	Merknad
+subject	helpdesk	no	Overskrift
+content	helpdesk	no	Innhold
+select all	helpdesk	no	Velg alle
+planned	helpdesk	no	Planlagt
+email template	helpdesk	no	Standardtekster
+admin recipient set	helpdesk	no	Admin mottakerlister
+list	helpdesk	no	List
+recipient list	helpdesk	no	Mottaker liste
+select	helpdesk	no	Velg
+modified	helpdesk	no	Endret
+sent	helpdesk	no	Sendt
+generic	helpdesk	no	Generelt
+reverse	helpdesk	no	Revers tildeling
+owned by	helpdesk	no	Eies av
+new message	helpdesk	no	Svarmelding ved ny sak
+set user message	helpdesk	no	Svarmelding ved ny eier av sak ved reverstildeling
+update message	helpdesk	no	Svarmelding ved oppdatert sak
+close message	helpdesk	no	Svarmelding ved avsluttet sak
+list %1	helpdesk	no	List %1
+public	helpdesk	no	synlig for alle
+open edit in new window	helpdesk	no	Editer i nytt vindu
+columns is updated	helpdesk	no	Kolonner er oppdatert
+select column	helpdesk	no	Velg kolonne
+target	helpdesk	no	Mål
+ticket attributes	helpdesk	no	Meldingsattributter
+ticket categories	helpdesk	no	Meldingskategorier
+ticket status	helpdesk	no	Meldingsstatus
+url	helpdesk	no	Url
+forward	helpdesk	no	Videresend
+ticket is forwarded	helpdesk	no	Melding er videresendt
+email_create_account_title	helpdesk	no	LRS systemtilgang
+email_create_account_message	helpdesk	no	Systemmelding fra LRS til %1 %2:<br/>Det er opprettet en tilgang for deg i LRS<br/><br/>Du får tilgang til systemet via kommunens intranett.<br/>Under verktøy i høyre kolonne, velg fra LRS listen.<br/>Brukerveiledning finner du i systemet, ved å velge "Hjelp" i toppmenyen.<br/>Har du spørsmål send en e-post til LRS brukerstøtte.<br/>
+choose a section from the menu	helpdesk	no	Velg en avdeling fra menyen
