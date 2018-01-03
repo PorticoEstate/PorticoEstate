@@ -31,6 +31,7 @@
 	*/
 
 	$action = 'co';
+	$action = 'up';
 //	$action = 'export';
 	$revision =  '';
 
@@ -155,7 +156,11 @@
 
 	echo "$action {$_revision} {$repository}/{$branch}{$release} to {$co_dir}\n";
 
-	if ($cvs_anonymous)
+	if($action == 'up')
+	{
+		system("svn up portico");
+	}
+	else if ($cvs_anonymous)
 	{
 		system("svn {$action} {$_revision} svn://{$repository}/{$branch}{$release} portico --non-recursive");
 	}
@@ -166,18 +171,21 @@
 
 	chdir($co_dir . '/portico');
 
-	foreach($co_modules as $_module)
+	if($action != 'up')
 	{
-		$module = $_module[0];
-		$_revision = !empty($_module[1]) ? "-r {$_module[1]}" : '';
-		echo "$action {$_revision} {$repository}/{$branch}{$release}/{$module} to {$co_dir}/portico\n";
-		if ($cvs_anonymous)
+		foreach($co_modules as $_module)
 		{
-			system("svn {$action} {$_revision} svn://{$repository}/{$branch}{$release}/{$module}");
-		}
-		else
-		{
-			system("svn {$action} {$_revision} svn+ssh://{$svn_login}@{$repository}/{$branch}$release/{$module}");
+			$module = $_module[0];
+			$_revision = !empty($_module[1]) ? "-r {$_module[1]}" : '';
+			echo "$action {$_revision} {$repository}/{$branch}{$release}/{$module} to {$co_dir}/portico\n";
+			if ($cvs_anonymous)
+			{
+				system("svn {$action} {$_revision} svn://{$repository}/{$branch}{$release}/{$module}");
+			}
+			else
+			{
+				system("svn {$action} {$_revision} svn+ssh://{$svn_login}@{$repository}/{$branch}$release/{$module}");
+			}
 		}
 	}
 
