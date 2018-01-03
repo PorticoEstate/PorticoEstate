@@ -113,6 +113,10 @@
 
 
 	$pe_custom = array();
+	$pe_custom['BK_COMMON'] = array
+		(
+			array('property', '')
+		);
 	$pe_custom['BK_EBE'] = array
 		(
 			array('property', '')

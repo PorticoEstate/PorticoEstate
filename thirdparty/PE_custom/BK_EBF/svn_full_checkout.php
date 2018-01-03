@@ -90,29 +90,36 @@
 	/*
 	 * Booking
 	 */
-	$co_modules[] = array('booking', $revision);
-	$co_modules[] = array('bookingfrontend', $revision);
-	$co_modules[] = array('activitycalendar', $revision);
-	$co_modules[] = array('activitycalendarfrontend', $revision);
+//	$co_modules[] = array('booking', $revision);
+//	$co_modules[] = array('bookingfrontend', $revision);
+//	$co_modules[] = array('activitycalendar', $revision);
+//	$co_modules[] = array('activitycalendarfrontend', $revision);
 
 
 	/*
 	 * rental
 	 */
-	$co_modules[] = array('rental', $revision);
-	$co_modules[] = array('frontend', $revision);
+//	$co_modules[] = array('rental', $revision);
+//	$co_modules[] = array('frontend', $revision);
 
 	/**
 	* Some other stuff
 	*/
+
+	$co_modules[] = array('felamimail', $revision);
+	$co_modules[] = array('emailadmin', $revision);
 	$co_modules[] = array('catch', $revision);
-	$co_modules[] = array('logistic', $revision);
-	$co_modules[] = array('helpdesk', $revision);
-	$co_modules[] = array('eventplanner', $revision);
-	$co_modules[] = array('eventplannerfrontend', $revision);
+//	$co_modules[] = array('logistic', $revision);
+//	$co_modules[] = array('helpdesk', $revision);
+//	$co_modules[] = array('eventplanner', $revision);
+//	$co_modules[] = array('eventplannerfrontend', $revision);
 
 
 	$pe_custom = array();
+	$pe_custom['BK_COMMON'] = array
+		(
+			array('property', '')
+		);
 	$pe_custom['BK_EBF'] = array
 		(
 			array('property', '')
