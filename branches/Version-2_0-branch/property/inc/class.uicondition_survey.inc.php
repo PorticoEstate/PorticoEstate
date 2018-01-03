@@ -475,13 +475,20 @@
 				$values['location_data'] = execMethod('property.solocation.read_single', $values['location_code']);
 			}
 
+			$this->config = CreateObject('phpgwapi.config', 'property');
+			$this->config->read();
+			
+			$survey_location_level = empty($this->config->config_data['survey_location_level']) ? 2 : (int)$this->config->config_data['survey_location_level'];
+
 			$categories = $this->_get_categories($values['cat_id']);
 
 			$bolocation = CreateObject('property.bolocation');
+
+
 			$location_data = $bolocation->initiate_ui_location(array
 				(
 				'values' => $values['location_data'],
-				'type_id' => 2,
+				'type_id' => $survey_location_level,
 				'required_level' => 1,
 				'no_link' => $_no_link, // disable lookup links for location type less than type_id
 				'lookup_type' => $mode == 'edit' ? 'form2' : 'view2',
@@ -578,9 +585,6 @@
 					array('disablePagination' => true)
 				)
 			);
-
-			$this->config = CreateObject('phpgwapi.config', 'property');
-			$this->config->read();
 
 			$data = array
 				(

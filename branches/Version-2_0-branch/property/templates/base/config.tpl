@@ -685,6 +685,14 @@
 					</table>
 				</td>
 			</tr>
+			<tr>
+				<td>{lang_condition_survey_location_level}:</td>
+				<td>
+					<select name="newsettings[survey_location_level]">
+						{hook_list_location_level_otions_survey}
+					</select>
+				</td>
+			</tr>
 
 			<tr>
 				<td>{lang_condition_survey_import_category}:</td>
