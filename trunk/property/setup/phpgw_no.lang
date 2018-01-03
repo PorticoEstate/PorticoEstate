@@ -2243,3 +2243,5 @@ deadline for execution	property	no	Frist for ferdigstillelse
 outside contract	property	no	Utenfor rammeavtale
 refund	property	no	Refusjon
 both	property	no	Begge
+condition survey location level	property	no	Tilstandsanalyse lokasjonsnivå
+condition survey import category	property	no	Tilstandsanalyse importkategori
