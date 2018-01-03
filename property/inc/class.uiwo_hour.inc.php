@@ -1263,7 +1263,7 @@
 				'from_phone' => $GLOBALS['phpgw']->preferences->data['property']['cellphone'],
 				'lang_district' => lang('District'),
 				'district' => $project['location_data']['district_id'],
-				'ressursnr' => isset($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) ? $GLOBALS['phpgw']->preferences->data['property']['ressursnr'] : '',
+				'ressursnr' => isset($GLOBALS['phpgw']->preferences->data['property']['ressursnr']) ? 'Brukes ikke for denne ordren' : '',
 				'lang_to' => lang('To'),
 				'to_name' => $workorder['vendor_name'],
 				'lang_title' => lang('Title'),
