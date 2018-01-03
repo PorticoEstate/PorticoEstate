@@ -90,7 +90,7 @@
 			}
 //			_debug_array($bui_result);
 
-			if (in_array('organization', $types))
+//			if (in_array('organization', $types))
 			{
 				$org_result = $this->soorganization->read(array("query" => $searchterm, "sort" => "name",
 					"dir" => "asc", "filters" => array("active" => "1")));
