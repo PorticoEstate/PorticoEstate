@@ -568,14 +568,14 @@ Booking application settings	booking	no	Booking søknads oppsett.
 Booking email settings	booking	no	Booking epost oppsett.
 System name	booking	no	System navn
 Subject	booking	no	Tema
-Mail text for application created	booking	no	Epost tekst for søknad opprettet.
-Mail text for application pending	booking	no	Epost tekst for søknad under behandling.
-Mail text for application accepted	booking	no	Epost tekst for søknad akseptert.
-Mail text for application rejected	booking	no	Epost tekst for søknad avist.
+Mail text for application created	booking	no	E-post tekst for søknad opprettet.
+Mail text for application pending	booking	no	E-post tekst for søknad under behandling.
+Mail text for application accepted	booking	no	E-post tekst for søknad akseptert.
+Mail text for application rejected	booking	no	E-post tekst for søknad avslått.
 notify on accepted	booking	no	Send kvittering til ansvarlig ved akseptert.
 Signature	booking	no	Signatur
 Tilsynsvakt name	booking	no	Navn på tilsynsvakt
-Tilsynsvakt email	booking	no	Epostt tilsynsvakt
+Tilsynsvakt email	booking	no	E-post tilsynsvakt
 Tilsynsvakt telephone	booking	no	Telefon tilsynsvakt
 Metadata	common	no	Metadata
 Author	booking	no	Forfatter

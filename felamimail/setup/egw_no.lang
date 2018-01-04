@@ -279,7 +279,7 @@ signature	felamimail	no	Signatur
 simply click the target-folder	felamimail	no	Klikk på målmappe
 site configuration	felamimail	no	sidekonfigurasjon
 size	felamimail	no	Størrelse
-size of editor window	felamimail	no	Størrelse på editeringsvindu
+size of editor window	felamimail	no	Størrelse på redigeringsvindu
 size(...->0)	felamimail	no	Størrelse (...->0)
 size(0->...)	felamimail	no	Størrelse (0->...)
 small view	felamimail	no	liten visning
