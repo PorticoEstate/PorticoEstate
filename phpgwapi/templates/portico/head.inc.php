@@ -45,6 +45,15 @@
 
 
 	$stylesheets = array();
+        // added aalesund stylesheet 
+        $stylesheets[] = "/phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
+        $stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
+        $stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
+
+        // // // // // // // // // //
+  
+        
+        
 //	$stylesheets[] = "/phpgwapi/js/materialize/css/materialize.min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
@@ -55,7 +64,11 @@
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/phpgwapi/templates/base/css/base.css";
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
-	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
+        
+        
+	
+        
+        if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
 		$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
