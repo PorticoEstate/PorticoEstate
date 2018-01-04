@@ -84,12 +84,14 @@ JS;
 	
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/minid.js";
         
-        
+        $logoimg = "/phpgwapi/templates/aalesund/img/Logoforslag_lilla.png";
         
         $bootstrapmainjs = "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.min.js";
         $bootstrapjs= "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.bundle.min.js";
         $samplejs = "/phpgwapi/templates/aalesund/js/sample.js";
         
+        
+        $GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
         $GLOBALS['phpgw']->template->set_var( 'samplejs', $webserver_url . $samplejs );
         $GLOBALS['phpgw']->template->set_var( 'bootstrapjs', $webserver_url . $bootstrapjs );
         $GLOBALS['phpgw']->template->set_var( 'bootstrapmainjs', $webserver_url . $bootstrapmainjs );
