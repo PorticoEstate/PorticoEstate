@@ -133,11 +133,11 @@ Vagrant.configure("2") do |config|
 
     # fix permissions
     echo "-------------------- fixing listen_addresses on postgresql.conf"
-    sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/9,5/main/postgresql.conf
+    sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/9.5/main/postgresql.conf
     echo "-------------------- fixing postgres pg_hba.conf file"
     # replace the ipv4 host line with the above line
   
-    sudo cat >> /etc/postgresql/9,5/main/pg_hba.conf <<EOF
+    sudo cat >> /etc/postgresql/9.5/main/pg_hba.conf <<EOF
     # Accept all IPv4 connections - FOR DEVELOPMENT ONLY!!!
     host    all         all         0.0.0.0/0             md5
 EOF
