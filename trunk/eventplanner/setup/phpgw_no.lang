@@ -1,14 +1,14 @@
 eventplanner	common	no	Turneplanlegger
 Add	eventplanner	no	Legg til
 Delete	eventplanner	no	Slett
-Edit	eventplanner	no	Editer
+Edit	eventplanner	no	Rediger
 View	eventplanner	no	Vis
 apply	eventplanner	no	Mellomlagre
 list	eventplanner	no	Liste
 general	eventplanner	no	Generell
 dates	eventplanner	no	Datoer
 event dates	eventplanner	no	Arrangement-dato
-custom attributes	eventplanner	no	Egendefinerte attributter
+custom attributes	eventplanner	no	Egendefinerte egenskaper
 no category	eventplanner	no	Kategori ikke valgt
 time created	eventplanner	no	Tidsstempel
 inline tables	eventplanner	no	Tabeller

@@ -46,9 +46,9 @@ add a section	admin	no	Legg til seksjon
 add a subcategory	admin	no	Legg til undekategori
 admins	admin	no	Admins
 appearance	admin	no	Utseende
-attribute	admin	no	Atributt
-attributes	admin	no	Atributter
-attributes for this config section	admin	no	Atributter for denne konfigurasjonsseksjonen
+attribute	admin	no	Egenskap
+attributes	admin	no	Egenskaper
+attributes for this config section	admin	no	Egenskaper for denne konfigurasjonsseksjonen
 category list	admin	no	Kategoriliste
 check ip address of all sessions	admin	no	Kontroller IP-adresse for sesjoner
 close window	admin	no	Lukk vindu
@@ -58,7 +58,7 @@ delete all log records	admin	no	Slett alle poster fra loggen
 delete this category	admin	no	Slett kategorien
 edit the config	admin	no	Endre konfigurasjon
 edit this category	admin	no	Endre kategorien
-email domain	admin	no	Email domene
+email domain	admin	no	E-post domene
 enter the background color for the login page	admin	no	Angi bakgrunnsfarge for innloggingssiden
 enter the background color for the site title	admin	no	Angi bakgrunnsfarge for nettstedstittelen
 enter the file name of your logo	admin	no	Angi filnavnet for logo
@@ -89,7 +89,7 @@ smtp settings	admin	no	SMTP configurasjon
 smtpdebug	admin	no	smtpdebug
 smtpsecure	admin	no	smtpsecure
 submit the search string	admin	no	Send søketekst
-support email address	admin	no	Epost brukerstøtte
+support email address	admin	no	E-post brukerstøtte
 total records: %1	admin	no	Antall poster: %1
 use cookies to pass sessionid	admin	no	Bruk cookier til å håndtere sesjoner
 use smtp auth	admin	no	Bruk smtp autentisering
