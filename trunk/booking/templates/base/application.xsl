@@ -19,7 +19,6 @@
 		.pure-form-contentTable {display: inline-block;}
 	</style>
 
-	<xsl:call-template name="jquery_phpgw_i18n"/>
 	<xsl:call-template name="msgbox"/>
 	<div class= "pure-form pure-form-aligned" id="form" name="form">
 		<input type="hidden" name="tab" value=""/>
@@ -28,7 +27,7 @@
 			<div id="application" class="booking-container">
 				<fieldset>
 					<div class="pure-g">
-						<div class="pure-u-1">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<h1>
 								<xsl:value-of select="application/id"/>
 							</h1>
@@ -106,7 +105,7 @@
 										<br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span>
 								</div>
 							</xsl:if>
-							<form method="POST">
+<!--							<form method="POST">
 								<div class="pure-control-group">
 									<label for="comment">
 										<xsl:value-of select="php:function('lang', 'Add a comment')" />
@@ -118,48 +117,57 @@
 									<label>&nbsp;</label>
 									<input type="submit" value="{php:function('lang', 'Add comment')}" />
 								</div>
-							</form>
+							</form>-->
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
 								</legend>
 							</div>
+                                                        <table class="historyTable">
+                                                            <tr>
+                                                                <th><xsl:value-of select="php:function('lang', 'Time')" /></th>
+                                                                <th><xsl:value-of select="php:function('lang', 'Comment')" /></th>
+                                                            </tr>
+                                                            
 							<xsl:for-each select="application/comments[author]">
-								<div class="pure-control-group">
-									<label>
+								
+                                                                    <tr>
+									<td>
 										<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
-									</label>
+                                                                        </td>
 									<xsl:choose>
 										<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
-											<span>
+											<td>
 												<xsl:value-of select="comment" disable-output-escaping="yes"/>
-											</span>
+											</td>
 										</xsl:when>
 										<xsl:otherwise>
-											<span>
-												<!--xsl:value-of select="comment"/-->
-												<xsl:value-of select="comment" disable-output-escaping="yes"/>
-
-											</span>
+											<td>
+												<xsl:value-of select="comment"/>
+											</td>
 										</xsl:otherwise>
 									</xsl:choose>
-								</div>
+                                                                    </tr>
+                                                   
+                                                                
 							</xsl:for-each>
+                                                       
+                                                        </table>
 						</div>
 					</div>
 
 					<div class="pure-g">
-						<div class="pure-u-1">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>1.1 <xsl:value-of select="php:function('lang', 'attachments')" /></h3>
 								</legend>
 							</div>
-							<div id="attachments_container"/>
+							<div id="attachments_container"/><br/>
 							<form method="POST" enctype='multipart/form-data' id='file_form'>
 								<input name="name" id='field_name' type='file' >
 									<xsl:attribute name='title'>
@@ -178,7 +186,7 @@
 										<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt , pdf, odt, ods</xsl:text>
 									</xsl:attribute>
 								</input>
-								<br/>
+								<br/><br/>
 								<input type="submit" value="{php:function('lang', 'Add attachment')}" />
 							</form>
 
@@ -186,7 +194,7 @@
 					</div>
 
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>2. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
@@ -202,10 +210,10 @@
 							</div>
 							<div class="pure-control-group">
 								<label>
-									<xsl:value-of select="php:function('lang', 'Information about the event')" />
+									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<span>
-									<xsl:value-of disable-output-escaping="yes" select="application/description"/>
+									<xsl:value-of select="application/description"/>
 								</span>
 							</div>
 							<div class="pure-control-group">
@@ -214,11 +222,11 @@
 										<xsl:value-of select="php:function('lang', 'Extra info')" />
 									</h4>
 								</label>
-								<xsl:value-of disable-output-escaping="yes" select="application/equipment"/>
+								<xsl:value-of select="application/equipment"/>
 							</div>
 						</div>
 
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>3. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
@@ -241,7 +249,7 @@
 								<div id="resources_container" class="pure-form-contentTable"></div>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>4. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
@@ -297,13 +305,10 @@
 										allocationParams[<xsl:value-of select="id"/>] = <xsl:value-of select="allocation_params"/>;
 										bookingParams[<xsl:value-of select="id"/>] = <xsl:value-of select="booking_params"/>;
 										eventParams[<xsl:value-of select="id"/>] = <xsl:value-of select="event_params"/>;
-										var allocationaddURL = phpGWLink('index.php', {menuaction:'booking.uiallocation.add'});
-										var bookingaddURL = phpGWLink('index.php', {menuaction:'booking.uibooking.add'});
-										var eventaddURL = phpGWLink('index.php', {menuaction:'booking.uievent.add'});
 									</script>
 									<div class="pure-control-group">
 										<label>&nbsp;</label>
-										<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl(allocationaddURL, allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl(bookingaddURL, eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl(eventaddURL, eventParams[{id}]);">
+										<select name="create" onchange="if(this.selectedIndex==1) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uiallocation.add', allocationParams[{id}]); if(this.selectedIndex==2) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uibooking.add', eventParams[{id}]); if(this.selectedIndex==3) JqueryPortico.booking.postToUrl('index.php?menuaction=booking.uievent.add', eventParams[{id}]);">
 											<xsl:if test="not(../case_officer/is_current_user)">
 												<xsl:attribute name="disabled">disabled</xsl:attribute>
 											</xsl:if>
@@ -332,7 +337,7 @@
 								</xsl:if>
 							</xsl:for-each>
 						</div>
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>5. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
@@ -395,7 +400,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="pure-u-1  pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>6. <xsl:value-of select="php:function('lang', 'Contact information')" /></h3>
@@ -426,7 +431,7 @@
 								</span>
 							</div>
 						</div>
-						<div class="pure-u-1  pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></h3>
@@ -437,21 +442,23 @@
 									<label>
 										<xsl:value-of select="php:function('lang', 'organization number')" />
 									</label>
-									<br/>
+									<span>
 									<xsl:value-of select="application/customer_organization_number"/>
+                                                                        </span>
 								</xsl:if>
 								<xsl:if test="application/customer_identifier_type = 'ssn'">
 									<label>
 										<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
 									</label>
-									<br/>
+									<span>
 									<xsl:value-of select="application/customer_ssn"/>
+                                                                        </span>
 								</xsl:if>
 							</div>
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></h3>
@@ -474,7 +481,7 @@
 					</div>
 					<xsl:if test="not(frontend)">
 						<div class="pure-g">
-							<div class="pure-u-1">
+							<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 								<div class="heading">
 									<legend>
 										<h3>
@@ -490,7 +497,7 @@
 					</xsl:if>
 					<xsl:if test="application/edit_link">
 						<div class="pure-g">
-							<div class="pure-u-1">
+							<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 								<div class="heading">
 									<legend>
 										<h3>
@@ -498,6 +505,19 @@
 										</h3>
 									</legend>
 								</div>
+                                                                <form method="POST">
+								<div class="pure-control-group">
+									<label for="comment">
+										<xsl:value-of select="php:function('lang', 'Add a comment')" />
+									</label>
+									<textarea name="comment" id="comment" style="width: 60%; height: 7em"></textarea>
+									<br/>
+								</div>
+								<div class="pure-control-group">
+									<label>&nbsp;</label>
+									<input type="submit" value="{php:function('lang', 'Add comment')}" />
+								</div>
+                                                                </form><br/>
 								<div class="pure-control-group">
 									<xsl:if test="application/case_officer/is_current_user">
 										<form method="POST" style="display:inline">
