@@ -549,7 +549,7 @@
 
 
 			<tr>
-				<td>{lang_lang_request_coordinator}:</td>
+				<td>{lang_request_coordinator_text}:</td>
 				<td><input name="newsettings[lang_request_coordinator]" value="{value_lang_request_coordinator}"></td>
 			</tr>
 
