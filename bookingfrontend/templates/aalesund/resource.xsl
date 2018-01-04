@@ -81,6 +81,26 @@
 				</dl>
 			</div>
 		</div>
+                
+                <div class="modal fade" id="mediaModal" role="dialog">
+                <div class="modal-dialog modal-xl">
+                    <!-- Content of modal -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">x</button>
+                            <h4 class="modal-title" id="mediaTitle"></h4>
+                        </div>
+                        <div class="modal-body" id="fullSizeImage">
+
+                
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Avslutt</button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+                
 	</div>
 	<script type="text/javascript">
 		var resource_id = <xsl:value-of select="resource/id"/>;
