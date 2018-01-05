@@ -1,0 +1,23 @@
+(optional: set domain for user/client login, required: set this servername for server login)	xmlrpc	tr	(isteğe bağlı: kullanıcı/istemci girişi için etki alanını düzenle, gerekli: sunucu girişi için bu server adını düzenle)
+addressbook test	xmlrpc	tr	Adres defteri tesi
+App	xmlrpc	tr	Uygulama
+apps	xmlrpc	tr	Uygulamalar
+assigned kp3	xmlrpc	tr	kp3 olarak atanmış
+assigned sessionid	xmlrpc	tr	Atanmış olan sessionid
+bogus request	xmlrpc	tr	Sahte istek
+calendar test	xmlrpc	tr	Takvim testi
+configure using admin - peer servers	xmlrpc	tr	Yöneticiyi kullanarak peer sunucuların ayarını yap
+introspection	xmlrpc	tr	Murakabe
+meerkat browser	xmlrpc	tr	Meerkat Tarayıcı
+methods	xmlrpc	tr	Yöntemler
+note: listapps and listusers are disabled by default in xml_functions.php	xmlrpc	tr	NOT: listelenen uygulamalar ve kullanıcılar varsayılan olarak xml_functions.php dosyasında inaktif yapılmıştır
+phpgroupware xml-rpc/soap client<->server and server<->server test (soap pending...)	xmlrpc	tr	phpGroupWare XML-RPC/SOAP İstemci<->Sunucu ve Sunucu<->Sunucu Test (SOAP pending...)
+phpgw client/server test	xmlrpc	tr	phpgw istemci/sunucu test
+phpgw server test	xmlrpc	tr	phpgw suncu test
+select target server	xmlrpc	tr	Hedef sunucuyu seç
+server<->server	xmlrpc	tr	Sunucu<->Sunucu
+servername/domain	xmlrpc	tr	Sunucuadı/Etki alanı
+simple client	xmlrpc	tr	Basit İstemci
+system	xmlrpc	tr	Sistem
+test suite	xmlrpc	tr	Test Takımı
+xmlrpc test	common	tr	XMLRPC Test

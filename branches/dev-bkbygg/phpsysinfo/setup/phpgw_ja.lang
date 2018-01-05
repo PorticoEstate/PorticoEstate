@@ -1,0 +1,47 @@
+cache size	phpsysinfo	ja	キャッシュサイズ
+cannonical hostname	phpsysinfo	ja	ホスト名
+capacity	phpsysinfo	ja	容量
+chip mhz	phpsysinfo	ja	クロック周波数
+created by	phpsysinfo	ja	作成者
+current users	phpsysinfo	ja	ログインユーザ数
+days	phpsysinfo	ja	日
+device	phpsysinfo	ja	デバイス
+disk swap	phpsysinfo	ja	ディスクスワップ
+err/drop	phpsysinfo	ja	エラー/ドロップ
+free	phpsysinfo	ja	空き容量
+hardware information	phpsysinfo	ja	ハードウエア情報
+hours	phpsysinfo	ja	時間
+ide devices	phpsysinfo	ja	IDEデバイス
+kernel version	phpsysinfo	ja	カーネルバージョン
+language	phpsysinfo	ja	言語
+listening ip	phpsysinfo	ja	IPアドレス
+load averages	phpsysinfo	ja	ロードアベレージ（CPU稼働率）
+memory usage	phpsysinfo	ja	メモリ情報
+minutes	phpsysinfo	ja	分
+model	phpsysinfo	ja	CPUモデル
+mount	phpsysinfo	ja	マウント
+mounted filesystems	phpsysinfo	ja	マウント済ファイルシステム一覧
+network usage	phpsysinfo	ja	ネットワーク情報
+none	phpsysinfo	ja	なし
+partition	phpsysinfo	ja	パーティション
+pci devices	phpsysinfo	ja	PCIデバイス
+percent capacity	phpsysinfo	ja	使用率
+phpsysinfo	common	ja	システム情報
+phpsysinfo theme selection	phpsysinfo	ja	PHPシステム情報 テーマ設定
+physical memory	phpsysinfo	ja	物理メモリ
+processors	phpsysinfo	ja	プロセッサ数
+received	phpsysinfo	ja	受信サイズ
+scsi devices	phpsysinfo	ja	SCSIデバイス
+sent	phpsysinfo	ja	送信サイズ
+size	phpsysinfo	ja	サイズ
+submit	phpsysinfo	ja	実行
+system bogomips	phpsysinfo	ja	システムBogoMips値
+system information	common	ja	システム情報
+system vital	phpsysinfo	ja	システム動作状況
+template	phpsysinfo	ja	テンプレート
+theme	phpsysinfo	ja	テーマ
+totals	phpsysinfo	ja	合計
+type	phpsysinfo	ja	タイプ
+uptime	phpsysinfo	ja	稼働時間
+used	phpsysinfo	ja	使用容量
+view system information	admin	ja	システム情報の表示

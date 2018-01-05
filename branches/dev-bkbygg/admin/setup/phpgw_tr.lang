@@ -1,0 +1,342 @@
+%1 - %2 of %3 user accounts	admin	tr	%1 ve %2 %3'ün  kullanıcı hesapları
+%1 not found or not executable !!!	admin	tr	%1 bulunamadı ya da çalıştırılamıyor !!!
+(stored password will not be shown here)	admin	tr	(DEpolanmış şifre burada gösterilmeyecektir.)
+(to install new applications use<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)	admin	tr	(Bu linkli kullanarak yeni uygulamayı kur<br><a href="setup/" target="setup">Kur</a> [Yönetim Uygulamaları] !!!)
+accesslog and bruteforce defense	admin	tr	AccessLog ve BruteForce savunmada
+account active	admin	tr	Hesap aktif
+account has been created	common	tr	Hesap oluşturuldu
+account has been deleted	common	tr	Hesap silindi
+account has been updated	common	tr	hesap güncellendi
+account list	admin	tr	Hesap Listesi
+account permissions	admin	tr	Hesap İzinleri
+account preferences	admin	tr	Hesap Tercihleri
+acl manager	admin	tr	ACL Yöneticisi
+acl rights	admin	tr	ACL Hakları
+action	admin	tr	Hareket
+add a new account.	admin	tr	Yeni bir hesap ekle.
+add account	admin	tr	Hesap Ekle
+add application	admin	tr	Uygulama Ekle
+add auto-created users to this group ('default' will be attempted if this is empty.)	admin	tr	Bu gruba otomatik oluşturulmuş kullanıcıları ekle( Eğer boş ise 'Varsayılan' olarak denenecek.)
+add global category	admin	tr	Genel Kategori Ekle
+add global category for %1	admin	tr	%1 için genel kategori ekle
+add group	admin	tr	Grup Ekle
+add new account	admin	tr	Yeni hesap ekle
+add new application	admin	tr	Yeni uygulama ekle
+add peer server	admin	tr	Eş Sunucu Ekle
+add sub-category	admin	tr	Alt Kategori Ekle
+add to addressbook	admin	tr	Adres defterine ekle
+addressbook entry	admin	tr	Adres defteri girişi
+admin email	admin	tr	Yönetici E-Postası
+admin email addresses (comma-separated) to be notified about the blocking (empty for no notify)	admin	tr	Yönetici e-posta adresleri (virgül ayıracı ile) bloklama hakkında bildirilmiş olmalıdır(bildirilmemiş için boş)
+admin name	admin	tr	Yönetici Adı
+administration	admin	tr	Yönetim
+admins	admin	tr	Yöneticiler
+after how many unsuccessful attempts to login, an account should be blocked (default 3) ?	admin	tr	Bir hesabı bloklamak için kaç başarısız giriş deyenimi olmalıdır?(varsayılan 3) ?
+after how many unsuccessful attempts to login, an ip should be blocked (default 3) ?	admin	tr	Bir ip'yi bloklamak için kaç başarısız giriş deyenimi olmalıdır?(varsayılan 3) ?
+all records and account information will be lost!	admin	tr	Tüm kayıtlar ve hesaplar kayıp için bilgilendirilecek!
+all users	admin	tr	Tüm kullanıcılar
+allow anonymous access to this app	admin	tr	Bu uygulama için tanımlanmamış erişimlere izin ver.
+anonymous user	admin	tr	Tanımlanmamış kullanıcı
+anonymous user (not shown in list sessions)	admin	tr	Tanımlanmamış Kullanıcı (Oturum listelerinde görüntülenemeyecek)
+appearance	admin	tr	Görünüm
+application	admin	tr	Uygulama
+application name	admin	tr	Uygulama adı
+application title	admin	tr	Uygulama başlığı
+applications	admin	tr	Uygulamalar
+applications list	admin	tr	Uygulama listesi
+are you sure you want to delete the application %1 ?	admin	tr	%1 uygulamasını silmek istediğinizden emin misiniz?
+are you sure you want to delete this account ?	admin	tr	Bu hesabı silmek istediğinizden emin misiniz?
+are you sure you want to delete this category ?	common	tr	Bu kategoriyi silmek istediğinizden emin misiniz?
+are you sure you want to delete this group ?	admin	tr	Bu grubu silmek istediğinizden emin misiniz?
+are you sure you want to delete this server?	admin	tr	Bu sunucuyu silmek istediğinizden emin misiniz?
+are you sure you want to kill this session ?	admin	tr	Bu oturumu kapatmak istediğinizden emin misiniz?
+async services last executed	admin	tr	Zaman uyumsuz servisler son kez çalıştırıldı.
+asynchronous timed services	admin	tr	Zaman uyumsuz zamanlama servisleri
+asyncservices not yet installed or other error (%1) !!!	admin	tr	Zaman uyumsuz servisler henüz yüklenemedi ya dda bazı hatalar oluştu (%1) !!!
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	admin	tr	Varsayılan 'application/octet-stream' yerine FTP için doğru mime tipi kullanılmaya çalışıldı.
+authentication / accounts	admin	tr	Kimlik Denetimi / Hesaplar
+auto create account records for authenticated users	admin	tr	Kimliği denetlenmiş kullanıcılar için otomatik hesap oluşturma
+bi-dir passthrough	admin	tr	bi-dir şifresi yoluyla
+bi-directional	admin	tr	bi-directional
+bottom	admin	tr	aşağıda
+calculate next run	admin	tr	Sonraki işlemi hesapla
+can change password	admin	tr	Şifreyi değiştirebilirsiniz
+cancel testjob!	admin	tr	TestJob İptal!
+categories list	admin	tr	Kategori Listesi
+category list	admin	tr	Kategori listesi
+change acl rights	admin	tr	ACL Haklarını değiştir
+change config settings	admin	tr	Biçimsel ayarları değiştir
+change main screen message	admin	tr	Ana ekran mesajlarını değiştir
+check ip address of all sessions	admin	tr	Tüm oturumların ip adreslerini test et
+check items to <b>%1</b> to %2 for %3	admin	tr	%3 için <b>%1</b> ve %2 öğelerini test et
+country selection	admin	tr	Ülke Seçimi
+create group	admin	tr	Grup Oluşturma
+crontab only (recomended)	admin	tr	crontab only (tavsiye edilir)
+data	admin	tr	Veri
+day	admin	tr	Gün
+day of week<br>(0-6, 0=sun)	admin	tr	Haftanın günleri<br>(0-6, 0=Pazar)
+debug	admin	tr	Hata ayıklama
+default	admin	tr	Varsayılan
+default file system space per user	admin	tr	Her kullanıcı için varsayılan sistem boşluğu dosyası
+default file system space per user/group ?	admin	tr	Her kullanıcı ya da her grup için varsayılan sistem boşluğu dosyası
+delete account	admin	tr	Hesabı sil
+delete all log records	admin	tr	Tüm günlük kayıtlarını sil
+delete all log records for	admin	tr	Tüm günlük kayıtlarını sil
+delete all records	admin	tr	Tüm kayıtları sil
+delete application	admin	tr	Uygulamayı sil
+delete category	admin	tr	Kategoriyi sil
+delete group	admin	tr	Grubu sil
+delete peer server	admin	tr	Eş sunucuyu sil
+deny access to access log	admin	tr	Günlük kayıtlara erişimi engelle
+deny access to application registery	admin	tr	Uygulama sicillerine erişimi engelle
+deny access to applications	admin	tr	Uygulamalara erişimi engelle
+deny access to asynchronous timed services	admin	tr	Zaman uyumsuz zamanlama servislerine erişimi engelle
+deny access to current sessions	admin	tr	Şu anki oturumlara erişimi engelle
+deny access to error log	admin	tr	Hata kayıtlarına erişimi engelle
+deny access to global categories	admin	tr	Genel kategorilere erişimi engelle
+deny access to groups	admin	tr	Gruplara erişimi engelle
+deny access to mainscreen message	admin	tr	Ana ekran mesajlarına erişimi engelle
+deny access to peer servers	admin	tr	Eş sunuculara erişimi engelle
+deny access to phpinfo	admin	tr	phpinfo'ya erişimi engelle
+deny access to site configuration	admin	tr	Sitenin yapısal özelliklerine erişimi engelle
+deny access to user accounts	admin	tr	Kullanıcı hesaplarına erişimi engelle
+deny all users access to grant other users access to their entries ?	admin	tr	Tüm kullanıcılara diğer kullanıcıların girişleri için izin verilsin mi?
+description can not exceed 255 characters in length !	admin	tr	Açıklama 255 karakter uzunluğunu aşamaz!
+disable "auto completion" of the login form	admin	tr	Giriş formundaki "otomatik tamamlama" bölümünü seçilmez kıl.
+disabled (not recomended)	admin	tr	Seçilmez (tavsiye edilmez)
+display	admin	tr	Görüntüle
+do you also want to delete all global subcategories ?	admin	tr	Tüm kategorileri alt kategorileri ile birlikte silmek istiyor musunuz?
+edit account	admin	tr	Hesabı düzenle
+edit application	admin	tr	Uygulamayı düzenle
+edit entry	admin	tr	Girişi düzenle
+edit global category	admin	tr	Genel kategorileri düzenle
+edit global category for %1	admin	tr	%1 için genel kategorileri düzenle
+edit group	admin	tr	Grubu Düzenle
+edit login screen message	admin	tr	Giriş sayfası iletisini düzenle
+edit main screen message	admin	tr	Ana ekran iletisini düzenle
+edit peer server	admin	tr	Eş sunucuyu düzenle
+edit table format	admin	tr	Tablo biçimini düzenle
+edit user account	admin	tr	Kullanıcı hesaplarını düzenle
+edit quota	admin	tr	Kotayı düzenle
+enable debug-messages	admin	tr	Hata ayıklama iletilerini seçilebilir kıl
+enabled - hidden from navbar	admin	tr	Navigasyon çubuğunun gizli özelliğini seçilebilir kıl.
+enter some random text for app_session <br>encryption (requires mcrypt)	admin	tr	Uygulama oturumları için birkaç rastgele metin gir <br>Şifreleme (mcrypt gerekli)
+enter the background color for the login page	admin	tr	Giriş ekranı için arka alan rengi gir
+enter the background color for the site title	admin	tr	Sİte başlığı için arka alan rengi gir
+enter the file name of your logo	admin	tr	Logon için dosya adı gir
+enter the full path for temporary files.<br>examples: /tmp, c:\temp	admin	tr	Geçici dosyaların için yol belirle.<br>Örneğin: /tmp, C:\TEMP
+enter the full path for users and group files.<br>examples: /files, e:\files	admin	tr	Kullanıcı ve grup dosyaları için yol belirleyin.<br>Örneğin: /files, E:\FILES
+enter the hostname of the machine on which this server is running	admin	tr	Uygulamanın çalıştığı sunucu için bir isim girin
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	admin	tr	EphpGroupWare URL'sini girin.<br>Örneğin: http://www.domain.com/phpgroupware &nbsp; ya da &nbsp; /phpgroupware<br><b>Yarık izlenemiyor</b>
+enter the site password for peer servers	admin	tr	Eş sunucu için site şifresini girin
+enter the site username for peer servers	admin	tr	Eş sunucu için site kullanıcı adını girin
+enter the title for your site	admin	tr	Site için başlık girin
+enter the title of your logo	admin	tr	Logonuz için başlık girin
+enter the url where your logo should link to	admin	tr	Logonuza vermek istediğiniz linki girin
+enter your default ftp server	admin	tr	Varsayılan FTP sunucunuzu girin
+enter your http proxy server	admin	tr	HTTP proxy sunucunuzu girin
+enter your http proxy server port	admin	tr	HTTP proxy sunucunuzu portunu girin
+error canceling timer, maybe there's none set !!!	admin	tr	ptal edilirken hatalar oluştu, belkide ayarlama yapılamamaktadır!!!
+error setting timer, wrong syntax or maybe there's one already running !!!	admin	tr	Ayarlama yapılırken hatalar oluştu, yanlış söz dizimi ya da belkide çalışmakta!!!
+error: %1 not found or other error !!!	admin	tr	Hata: %1 bulunamadı ya da  başka bir hata oluştu!!!
+expires	admin	tr	Zaman aşımı
+fallback (after each pageview)	admin	tr	geri düş (herhangi bir sayfa görünümünden sonra)
+fatal	admin	tr	Üzücü
+file	admin	tr	Dosya
+file space	admin	tr	Dosya boşluğu
+file space must be an integer	admin	tr	Dosya boşluğu tam sayı olmalıdır.
+find and register all application hooks	admin	tr	Tüm uygulama çengellerini bu ve kaydet
+for	admin	tr	için
+for the times above	admin	tr	for the times above
+for the times below (empty values count as '*', all empty = every minute)	admin	tr	for the times below (empty values count as '*', all empty = every minute)
+force selectbox	admin	tr	Seçim kutusunu zorla
+global categories	admin	tr	Genel Kategoriler
+group ?	admin	tr	Grup mu?
+group has been added	common	tr	Grup eklendi
+group has been deleted	common	tr	Grup silindi
+group has been updated	common	tr	Grup güncellendi
+group list	admin	tr	Grup Listesi
+group manager	admin	tr	grup Yöneticisi
+group name	admin	tr	Grup Adı
+hide php information	admin	tr	php bilgilerini gizle
+home directory	admin	tr	Ana Dizin
+host information	admin	tr	Host bilgileri
+hour<br>(0-23)	admin	tr	Saat<br>(0-23)
+how many days should entries stay in the access log, before they get deleted (default 90) ?	admin	tr	Silinmeden önce günlük dosyaları kaç gün kullanılmalı (varsayılan 90) ?
+how many minutes should an account or ip be blocked (default 30) ?	admin	tr	Bir ip'nin ya da hesabın bloklanması için kaç dakika geçmeli (varsayıla 30) ?
+idle	admin	tr	haraketsiz
+if no acl records for user or any group the user is a member of	admin	tr	Eğer bir kullanıcı ya da grup için ACL kayıdı yok ise bu kullanıcı grubun üyesidir.
+if using ldap, do you want to manage homedirectory and loginshell attributes?	admin	tr	Eğer LDAP kullanıyorsan, ana dizinin yönetimini ve kullanıcı kabuklarının özelliklerini görmeyi isteyebilirsiniz, istiyor musunuz?
+inbound	admin	tr	gelen
+info	admin	tr	bilgi
+install crontab	admin	tr	crontab kur
+installed applications	common	tr	Uygulamalar kuruldu
+installed crontab	admin	tr	crontab kuruldu
+interface	admin	tr	Arayüz
+ip	admin	tr	IP
+jobs	admin	tr	şler
+kill	admin	tr	Öldür
+kill session	admin	tr	Oturumu kapat
+last %1 logins	admin	tr	Son %1 girişler
+last %1 logins for %2	admin	tr	%2 için son %1 girş
+last login	admin	tr	son giriş
+last login from	admin	tr	son giriş
+last time read	admin	tr	Son kez okuma
+ldap accounts context	admin	tr	LDAP hesap özellikleri
+ldap default homedirectory prefix (e.g. /home for /home/username)	admin	tr	LDAP Varsayılan Anadizinleri (Örneğin /home için /home/username)
+ldap default shell (e.g. /bin/bash)	admin	tr	LDAP Varsayılan kabukları (Örneğin /bin/bash)
+ldap encryption type	admin	tr	LDAP şifreleme tipi
+ldap groups context	admin	tr	LDAP grup özellikleri
+ldap host	admin	tr	LDAP host
+ldap root password	admin	tr	LDAP kök şifresi
+ldap rootdn	admin	tr	LDAP rootdn
+line	admin	tr	Satır
+list config settings	admin	tr	Yapısal ayarları listele
+list current sessions	admin	tr	Şu anki oturumları listele
+list of current users	admin	tr	Şu anki kullanıcıları listesi
+log message	admin	tr	Günlük kayıt iletisi
+login history	admin	tr	Sisteme Giriş Tarihi
+login message	admin	tr	Sisteme Giriş İletisi
+login screen	admin	tr	Sisteme Giriş Ekranı
+login shell	admin	tr	Sisteme Giriş Kabuğu
+login time	admin	tr	Sisteme Giriş Zamanı
+loginid	admin	tr	Sisteme Giriş ID'si
+main screen message	admin	tr	Ana ekran iletisi
+manager	admin	tr	Yönetici
+maximum account id (e.g. 65535 or 1000000)	admin	tr	En fazla hesap id'si (Örneğin 65535 ya da 1000000)
+maximum entries in click path history	admin	tr	En fazla giriş yapılan bölüm
+message has been updated	admin	tr	leti güncellendi
+method	admin	tr	Metod
+minimum account id (e.g. 500 or 100, etc.)	admin	tr	En az hesap id'si (Örneğin 500 ya da 100)
+minute	admin	tr	Dakika
+mode	admin	tr	Kip
+module	admin	tr	Birim
+month	admin	tr	Ay
+new group name	admin	tr	Yeni grup adı
+new password [ leave blank for no change ]	admin	tr	Yeni şifre [ değişiklik olmazsa bo bırak ]
+next run	admin	tr	Sonrakini çalıştır
+no algorithms available	admin	tr	Geçerli algoritma yok
+no error log records exist for this user	admin	tr	Bu kullanıcı için hata kayıt dosyası yok
+no jobs in the database !!!	admin	tr	Veri tabanında işlem yok!!!
+no login history exists for this user	admin	tr	Bu kullanıcı için sisteme giriş tarihi bulunamadı
+no matches found	admin	tr	karşılığı bulunamadı
+no modes available	admin	tr	geçerli kip yok
+note: ssl available only if php is compiled with curl support	admin	tr	Not: PHP bükülme desteği ile kurulduysa sadece SSL geçerlidir.
+outbound	admin	tr	giden
+passthrough	admin	tr	şifre yoluyla
+path information	admin	tr	Yol bilgisi
+peer server list	admin	tr	Eş sunucu listesi
+peer servers	admin	tr	Eş sunucular
+percent of users that logged out	admin	tr	Sistemden ayrılan kullanıcıların yüzdesi
+percent this user has logged out	admin	tr	Bu kullanıcının sistemden ayrılış yüzdesi
+permissions	admin	tr	zinler
+permissions this group has	admin	tr	Bu grubun izinleri
+phpinfo	admin	tr	PHP bilgisi
+please enter a name	admin	tr	Lütfen isim giriniz
+please enter a name for that server !	admin	tr	Sunucu için isim giriniz!
+please run setup to become current	admin	tr	Lütfen çalışmakta olan sistemi şu anki sistem yap
+please select	admin	tr	Lütfen seçin
+preferences	admin	tr	Tercihler
+re-enter password	admin	tr	Şifreyi tekrarlayın
+read this list of methods.	admin	tr	Yöntemlerin listesini oku.
+register application hooks	admin	tr	Uygulama çengellerini kaydet
+remove	admin	tr	sil
+remove all users from this group	admin	tr	Bu gruptaki tüm kullanıcıları sil
+return to view account	admin	tr	Hesap görüntülemeye geri dön
+run asynchronous services	admin	tr	Zaman uyumsuz servisleri çalıştır
+search accounts	admin	tr	Hesapları ara
+search categories	admin	tr	Kategorileri ara
+search groups	admin	tr	grupları ara
+search peer servers	admin	tr	Eş sunucuların ara
+security	admin	tr	Güvenlik
+select addressmasters	admin	tr	Adres yapıcıyı seç
+select group managers	admin	tr	Grup Yöneticilerini Seç
+select permissions this group will have	admin	tr	Bu grubun sahip olacağı izinleri seç
+select users for inclusion	admin	tr	Dahil etmek için kullanıcıları seç
+select where you want to store/retrieve filesystem information	admin	tr	Dosya yapısı bilgilerinin tutulduğu/erişildiği yeri seçin.
+select where you want to store/retrieve user accounts	admin	tr	Kullanıcı hesplarının tutulduğu/erişildiği yeri seçin.
+select which location this app should appear on the navbar, lowest (left) to highest (right)	admin	tr	Hangi lokasyonlarla bu uygulamanın navigasyon çubuğunda görüleceğini seçin, En alçak (sol)  en yüksek (sağ)
+selectbox	admin	tr	Seçim kutusu
+server %1 has been updated	admin	tr	Sunucu %1 güncellendi
+server list	admin	tr	Sunucu Listesi
+server password	admin	tr	Sunucu Şifresi
+server type(mode)	admin	tr	Sunucu Tipi(kip)
+server url	admin	tr	Sunucu URL'si
+server username	admin	tr	Sunucu Kullanıcı Adı
+set preference values.	admin	tr	Tercih değerlerini belirle.
+severity	admin	tr	Önem
+show 'powered by' logo on	admin	tr	Logonun üzerinde '___ tarafından desteknenmiştir' yazısını göster.
+show access log	admin	tr	Günlük kayıt dosyalarına erişimi göster
+show current action	admin	tr	Varsayılan işlemleri göster
+show error log	admin	tr	Hata kayıtlarını göster
+show phpinfo()	admin	tr	phpinfo()'yu göster
+show session ip address	admin	tr	IP adresleri otumunu göster
+site	admin	tr	Site
+site configuration	admin	tr	Site biçimi
+soap	admin	tr	SOAP
+sorry, that group name has already been taken.	admin	tr	Üzgünüm, bu grup ismi daha önceden alınmıştır.
+sorry, the above users are still a member of the group %1	admin	tr	Üzgünüm %1 grubundaki bir kullanıcı hala bu kullanıcıların üzerinde
+ssl	admin	tr	ssl
+standard	admin	tr	standart
+start testjob!	admin	tr	TestJob'ı Başlat!
+submit changes	admin	tr	Değişiklikleri Bildir
+template selection	admin	tr	şablon Sçeimi
+text entry	admin	tr	Metin Girişi
+that application name already exists.	admin	tr	Bu uygulama daha önceden kullanılmaktadır.
+that application order must be a number.	admin	tr	Bu uygulama bir sayı sipariş etmek zorundadır
+that loginid has already been taken	admin	tr	Bu giriş id'si daha önceden kullanılmaktadır
+that name has been used already	admin	tr	Bu isim daha önceden kullanılmaktadır
+that server name has been used already !	admin	tr	Bu sunucu adı daha önceden kullanılmaktadır!
+the api is current	admin	tr	API şu anda kullanılmaktadır
+the api requires an upgrade	admin	tr	Bu API güncellemeye ihtiyaç duymaktadır.
+the login and password can not be the same	admin	tr	Bu giriş ve şifre birbiri ile eş olmalıdır
+the loginid can not be more then 8 characters	admin	tr	giriş Id si 8 karakterden uzun olamaz
+the testjob sends you a mail everytime it is called.	admin	tr	şlemler iptal edildiğinde TestJob tarafından e-posta gönderilecektir.
+the two passwords are not the same	admin	tr	Bu iki şifre birbiri ile eş olmalıdır
+they must be removed before you can continue	admin	tr	Devam etmeden önce onları silmelisiniz
+this account has no contact entry yet	admin	tr	Bu hesaba henüz iletişim kurulacak kişi girilmedi
+this account have not contact	admin	tr	Bu hesabın iletişim kurulacak bilgisi yok
+this application is current	admin	tr	Bu uygulama çalışmakta olan uygulamadır
+this application requires an upgrade	admin	tr	Bu uygulama güncellemeye ihtiyaç duymaktadır.
+this category is currently being used by applications as a parent category	admin	tr	Bu kategorinin uygulamaları bir üst kategori tarafından belirlenecektir.
+time	admin	tr	Zaman
+timeout for application session data in seconds (default 86400 = 1 day)	admin	tr	Uygulamaların zaman aşımı için gereken saniye (varsayılan 86400 = 1 gün)
+timeout for sessions in seconds (default 14400 = 4 hours)	admin	tr	Oturumların zamana aşımı için gereken saniye(varsayılan 14400 = 4 saat)
+times	admin	tr	kez
+top	admin	tr	Üst
+total records	admin	tr	Toplam kayıtlar
+trust level	admin	tr	Güvenilir kademe
+trust relationship	admin	tr	Güvenilir İlişki
+under windows you can only use the fallback mode at the moment. fallback means the jobs get only checked after each page-view !!!	admin	tr	Şu anda pencerelerin altında sadece fallback modunu kullanabilirsiniz. Fallback herhangi bir pencerenin görünümünden sonra kontrol eder !!!
+use cookies to pass sessionid	admin	tr	Oturum id'si şifreleri için cookieleri kullan
+use pure html compliant code (not fully working yet)	admin	tr	Katıksız HTML uyumlu kod kullan 
+use theme	admin	tr	Tema kullan
+user accounts	admin	tr	Kullanıcı hesapları
+user data	admin	tr	Kullanıcı Verisi
+user groups	admin	tr	Kullanıcı grupları
+userdata	admin	tr	kullanıcıverisi
+users choice	admin	tr	Kullanıcıların seçimi
+view access log	admin	tr	erişim kayıtlarını görüntüle
+view account	admin	tr	Hesapları görüntüle
+view category	admin	tr	Kategorileri görüntüle
+view error log	admin	tr	Hata kayıtlarını görüntüle
+view sessions	admin	tr	Oturumları görüntüle
+view user account	admin	tr	Kullanıcı hesaplarını görüntüle
+warn	admin	tr	uyarmak
+who would you like to transfer all records owned by the deleted user to?	admin	tr	Kim TÜM kayıtları taşımak istiyor?
+would you like phpgroupware to cache the phpgw info array ?	admin	tr	Would you like phpGroupWare to cache the phpgw info array ?
+would you like phpgroupware to check for a new version<br>when admins login ?	admin	tr	Yönetici sisteme girdiğinde<br>yeni bir sürümü phpGroupWare'den kontrol etmek ister misiniz?
+would you like to automaticaly load new langfiles (at login-time) ?	admin	tr	Yeni dil dosyalarının otomatik olarak yüklenmesini ister misiniz(sisteme girildiğinde) ?
+would you like to show each application's upgrade status ?	admin	tr	Diğer uygulamaların güncelleme durumlarının gösterilmesini ister misiniz?
+xml-rpc	admin	tr	XML-RPC
+you have entered an invalid expiration date	admin	tr	Geçerli olmayan bir son kullanma tarihi girdiniz
+you have not edit access to addressmaster records	admin	tr	addressmaster'in kayıtlarını değiştiremezsiniz
+you have not the addressmaster record	admin	tr	addressmaster kaydınız bulunmamaktadır.
+you must add at least 1 permission or group to this account	admin	tr	En az 1 izin eklemelisiniz ya da bu hesabı bir gruba atamalısınız.
+you must enter a group name.	admin	tr	Bir grup ismi girmelisiniz.
+you must enter a loginid	admin	tr	Bir giriş Id si girmelisiniz
+you must enter an application name and title.	admin	tr	Bir uygulama adı ve başlığı girmelisiniz.
+you must enter an application name.	admin	tr	Bir uygulama adı girmelisiniz.
+you must enter an application title.	admin	tr	Bir uygulama başlığı girmelisiniz.
+you must select a file type	admin	tr	Bir dosya tipi seçmelisiniz
+you will need to remove the subcategories before you can delete this category	admin	tr	Bu kategoriyi silmeden önce alt kategorilerini silmeniz gerekmektedir!

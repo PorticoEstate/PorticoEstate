@@ -1,0 +1,42 @@
+access changed	todo	fr	L'accès a changé
+add main project	todo	fr	Ajouter un projet principal
+add sub project	todo	fr	Ajouter un sous-projet
+adds or edits a todo item	todo	fr	Ajoute ou modifie un objet Afaire
+are you sure you want to delete this entry	todo	fr	Etes-vous sûr de vouloir effacer cette entrée ?
+assigned to	todo	fr	Assigné à
+category changed	todo	fr	Catégorie changée
+completed	todo	fr	Completé
+deletes a todo item	todo	fr	Efface un objet Afaire
+description can not exceed 8000 characters in length	todo	fr	La description ne peut pas dépasser 8000 caractères de long !
+description changed	todo	fr	Description changée
+do you also want to delete all sub projects ?	todo	fr	Voulez-vous aussi effacer tous les sous-projets ?
+edit main project	todo	fr	Modifier le projet principal
+edit sub project	todo	fr	Modifier le sous-projet
+end date changed	todo	fr	Date de fin changée
+ending date can not be before start date	todo	fr	La date de fin ne peut pas être avant la date de début !
+entry added	todo	fr	Entrée ajoutée
+high	todo	fr	Haut
+low	todo	fr	Bas
+nobody	todo	fr	Personne
+normal	todo	fr	Normal
+or: days from startdate:	todo	fr	ou: jours depuis la date de départ:
+or: select for today:	todo	fr	ou: sélectionner pour aujourd'hui:
+parent changed	todo	fr	Parent modifié
+parent project	todo	fr	Projet parent
+please enter a title	todo	fr	SVP entrez un titre !
+returns a the total number of records in the database, must call list_todos first	todo	fr	Retourne le nombre total d'enregistrements dans la base de données, doit appeler liste_Afaire d'abord
+show todo items on main screen	todo	fr	Montrer les objets ToDo sur l'écran principal
+start date changed	todo	fr	Date de départ changée
+status changed	todo	fr	Statut changé
+title changed	todo	fr	Titre changé
+to do list	common	fr	Liste de A faire
+todo	common	fr	A faire
+todo list	common	fr	Liste de A faire
+todo preferences	todo	fr	Préférences ToDo
+urgency	todo	fr	Urgence
+urgency changed	todo	fr	Niveau d'urgence changé
+view matrix of actual month	todo	fr	Voir la matrice du mois actuel
+view todo item	todo	fr	Voir l'objet ToDo
+you can only enter numbers for days from now	todo	fr	Vous pouvez seulement entrer des nombres pour les jours depuis maintenant !
+you have entered an ending invalid date	todo	fr	Vous avez entré une date de fin invalide !
+you have entered an starting invalid date	todo	fr	Vous avez entré une date de démarrage invalide !

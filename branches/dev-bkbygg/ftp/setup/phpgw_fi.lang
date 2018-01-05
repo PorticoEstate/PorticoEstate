@@ -1,0 +1,29 @@
+are you sure you want to delete %1 ?	ftp	fi	Haluatko poistaa kohteen %1 ?
+attempt to create a directory with empty name	ftp	fi	Yritys luoda nimetön kansio
+cancel	ftp	fi	peruuta
+cd	ftp	fi	cd
+connect	ftp	fi	Yhdistä
+create new directory	ftp	fi	Tee uusi kansio
+delete	ftp	fi	poista
+failed to connect to %1 with user %2 and password %3	ftp	fi	Kohteeseen %1 yhdistäminen epäonnistui (käyttäjä %2, salasana %3)
+failed to create directory %1	ftp	fi	Kansion %1 tekeminen epäonnistui
+failed to delete %1	ftp	fi	Kohteen %1 poistaminen epäonnistui
+failed to rename %1 to %2	ftp	fi	Kohteen %1 nimen vaihto %2:ksi epäonnistui
+failed to upload %1	ftp	fi	Kohteen %1 siirtäminen epäonnistui
+ftp client	ftp	fi	Ftp -asiakas
+ftp server	ftp	fi	Ftp -palvelin
+home	ftp	fi	Koti
+logout/relogin	ftp	fi	poistu/kirjaudu uudelleen
+password	ftp	fi	Salasana
+rename	ftp	fi	nimeä uudelleen %1
+rename from	ftp	fi	Vanha nimi
+rename to	ftp	fi	uusi nimi
+renamed	%1 to %2	ftp	fi	Kohde %1 on nyt %2
+save	ftp	fi	tallenna
+save to filemanager	ftp	fi	tallenna tiedostonhallintaan
+successfully created directory %1	ftp	fi	Luotiin kohde %1
+successfully deleted %1	ftp	fi	Kohde %1 poistettu
+successfully uploaded %1	ftp	fi	Kohde %1 siirretty
+upload	ftp	fi	siirrä
+username	ftp	fi	Käyttäjätunnus
+view	ftp	fi	näytä

@@ -1,0 +1,24 @@
+address book	common	no	Addressebok
+addressbook	common	no	Addressebook
+birthday	addressbook	no	Fødselsdag
+city	addressbook	no	By
+e-mail	addressbook	no	E-Post
+fax	addressbook	no	Telefaks
+first name	addressbook	no	Fornavn
+home phone	addressbook	no	Hjemme telefon
+last name	addressbook	no	Etternavn
+mobile	addressbook	no	Mobil
+notes	addressbook	no	Annet
+other number	addressbook	no	Annet nummer
+pager	addressbook	no	Personsøker
+state	addressbook	no	Stat
+street	addressbook	no	Gate
+today is %1's birthday!	common	no	I dag har %1 fødselsdag!
+tomorrow is %1's birthday.	common	no	I morgen er det %1's fødselsdag.
+work phone	addressbook	no	Arbeids telefon
+zip code	addressbook	no	Postnummer
+communication types manager	common	no	Kommunikasjonstyper
+communication descriptions manager	common	no	Kommunikasjonstypebeskrivelse
+location manager	common	no	Lokasjonstyper
+Notes Types Manager	common	no	Notattyper
+custom fields on org-person	common	no	Egentilpassede felt for org-person

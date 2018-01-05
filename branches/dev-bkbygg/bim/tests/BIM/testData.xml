@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<wholeModelOutput>
+	<project ifcObjectType="ifcproject">
+        <attributes>
+            <guid>3KFKb0sfrDJwSHalGIQFZT</guid>
+            <longName>FM Architectural Handover</longName>
+            <name>FM-A-01</name>
+        </attributes>
+        <ownerHistory>
+            <changeAction>ADDED</changeAction>
+            <creationDate>1179073813</creationDate>
+            <owningApplication>
+                <applicationDeveloper>
+                    <name>AEC3</name>
+                </applicationDeveloper>
+                <applicationFullName>IFC text editor</applicationFullName>
+                <applicationIdentifier>IFCtext</applicationIdentifier>
+                <version>Version 1</version>
+            </owningApplication>
+            <owningUser>
+                <organization>
+                    <name>AEC3</name>
+                </organization>
+                <person>
+                    <familyName>Liebich</familyName>
+                    <givenName>Thomas</givenName>
+                </person>
+            </owningUser>
+        </ownerHistory>
+        <decomposition>
+            <buildings>
+                <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+            </buildings>
+            <site>28hfXoRX9EMhvGvGhmaaad</site>
+        </decomposition>
+        <units>
+            <entry>
+                <key>Volume</key>
+                <value>CUBIC_METRE</value>
+            </entry>
+            <entry>
+                <key>Length</key>
+                <value>METRE</value>
+            </entry>
+            <entry>
+                <key>Area</key>
+                <value>SQUARE_METRE</value>
+            </entry>
+        </units>
+    </project>
+    <buildingStoreys>
+        <buildingStorey ifcObjectType="ifcbuildingstorey">
+            <attributes>
+                <description>Kellergeschoss</description>
+                <elevation>-3.2</elevation>
+                <guid>0h$ksovXH3Jeg0w$H7aaaf</guid>
+                <longName>KG</longName>
+                <name>A.-1</name>
+            </attributes>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <spatialDecomposition>
+                <buildings>
+                    <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+                </buildings>
+                <project>3KFKb0sfrDJwSHalGIQFZT</project>
+                <site>28hfXoRX9EMhvGvGhmaaad</site>
+            </spatialDecomposition>
+        </buildingStorey>
+        <buildingStorey ifcObjectType="ifcbuildingstorey">
+            <attributes>
+                <elevation>0.0</elevation>
+                <guid>0h$ksovXH3Jeg0w$H7yFJf</guid>
+                <longName>EG</longName>
+                <name>A.0</name>
+            </attributes>
+            <baseQuantities>
+                <quantity>
+                    <name>GrossHeight</name>
+                    <value>3.2</value>
+                </quantity>
+                <quantity>
+                    <name>NetHeight</name>
+                    <value>3.0</value>
+                </quantity>
+            </baseQuantities>
+            <ownerHistory>
+                <changeAction>ADDED</changeAction>
+                <creationDate>1179073813</creationDate>
+                <owningApplication>
+                    <applicationDeveloper>
+                        <name>AEC3</name>
+                    </applicationDeveloper>
+                    <applicationFullName>IFC text editor</applicationFullName>
+                    <applicationIdentifier>IFCtext</applicationIdentifier>
+                    <version>Version 1</version>
+                </owningApplication>
+                <owningUser>
+                    <organization>
+                        <name>AEC3</name>
+                    </organization>
+                    <person>
+                        <familyName>Liebich</familyName>
+                        <givenName>Thomas</givenName>
+                    </person>
+                </owningUser>
+            </ownerHistory>
+            <properties>
+                <propertySet name="Common property">
+                    <property>
+                        <name>EntranceLevel</name>
+                        <value>IFCBOOLEAN(.T.)</value>
+                    </property>
+                    <property>
+                        <name>AboveGround</name>
+                        <value>IFCLOGICAL(.T.)</value>
+                    </property>
+                </propertySet>
+            </properties>
+            <spatialDecomposition>
+                <buildings>
+                    <guid>28hfXoRX9EMhvGvGhmaaae</guid>
+                </buildings>
+                <project>3KFKb0sfrDJwSHalGIQFZT</project>
+                <site>28hfXoRX9EMhvGvGhmaaad</site>
+                <spaces>
+                    <guid>0h$ksovXH3Jeg0w$H724af</guid>
+                    <guid>0h$ksovXH3Jeg0w$H7s8af</guid>
+                    <guid>0h$ksovXH3Je2d9dH7s8af</guid>
+                    <guid>0h$ksovXH3Jeg02dH7s8af</guid>
+                </spaces>
+            </spatialDecomposition>
+        </buildingStorey>
+	</buildingStoreys>
+</wholeModelOutput>
+		

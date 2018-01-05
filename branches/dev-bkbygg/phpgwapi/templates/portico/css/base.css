@@ -1,0 +1,547 @@
+/* Global Styles */
+
+BODY {
+	/*font-family: Lucida Grande, Lucida Sans, Arial, Helvetica, sans-serif;*/
+	/*font-size: 100%;*/
+	color: #000;
+	/*background-color: #677;*/
+	margin: 0;
+	padding: 0;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 12px;
+	background-color: #f9f9f9;
+
+}
+
+A {
+	color: #00D;
+	text-decoration: none;
+}
+A:visited {
+	color: #60C;
+}
+A:hover {
+	color: #00F;
+	text-decoration: underline;
+}
+A:visited:hover {
+	color: #80E;
+}
+
+/* bookmarks - depricated? */
+A.bm ,
+A.bm:visited
+A.bm:hover {
+	color: #000;
+	text-decoration: none;
+	font-size: inherit;
+}
+
+TD {
+	vertical-align: top;
+}
+
+P {
+	line-height: 1.5em;
+	margin: 0.75em 0 0.5em;
+}
+
+H1 {
+	color: #C30;
+	/*	font: 1.65em Georgia, "Times New Roman", Times, serif;*/
+	font-weight: normal;
+	letter-spacing: 0.1em;
+	margin: 0 0 0.75em;
+}
+H1 A , /* bookmarks - depricated? */
+H1 A:visited ,
+H1 A:hover {
+	color: #C30 !important;
+
+}
+
+H2 {
+	/*	font: 1.3em Georgia, "Times New Roman", Times, serif;*/
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: #566F6F;
+	border-bottom:  1px dotted #566F6F;
+	padding: 1em 0 3px;
+	margin: 0.5em 0 0.75em;
+}
+H2 A , /* bookmarks - depricated? */
+H2 A:visited ,
+H2 A:hover {
+	color: #566F6F !important;
+}
+
+H3 {
+	font-size: 1.2em;
+	font-weight: bold;
+	font-style: italic;
+	padding-top: 1em;
+	margin: 0.5em 0 0.75em;
+}
+
+H4 {
+	font-size: 1.1em;
+	font-weight: bold;
+	padding-top: 0.5em;
+	margin: 0.5em 0 1em;
+}
+
+BLOCKQUOTE {
+	margin: 1em 0 1em 3em;
+}
+TT { /* used for inline code references */
+	font-size: 1.1em;
+	font-weight: bold;
+}
+PRE { /* used for code blocks */
+	font-size: 1.1em;
+	font-weight: normal;
+	margin: 1em 0;
+	padding: 5px 7px 7px;
+	border: 1px solid #CCC;
+	background-color: #F6F6F6;
+}
+PRE I { /* code comment */
+	color: #666;
+	font-style: italic;
+}
+
+STRONG {
+	font-weight: bold;
+	color: #B30;
+}
+
+UL, OL {
+	margin-top: 0.5ex;
+	margin-bottom: 1ex;
+	margin-left: 2em;
+	padding: 0;
+}
+LI {
+	line-height: 1.35em;
+	padding: 0.75ex 0;
+	margin: 0;
+}
+
+/* ID Styles */
+
+#logo {
+	/*	font: 2em Georgia, "Times New Roman", Times, serif;*/
+	color: #FFF;
+	letter-spacing: 1px;
+	font-weight: bold;
+	padding: 0.5em 15px 2px;
+}
+
+#navigation {
+	padding: 5px 5px 7px 3em;
+/*	background-color: #A4C2C2;*/
+	background-color: rgba(224, 224, 224, 1);
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #FFF;
+	text-align:		right;
+}
+#navigation A {
+	color: #255;
+	font-size: 0.85em;
+	font-weight: bold;
+	text-decoration: none;
+	letter-spacing: 1px;
+	margin-right: 1em;
+}
+#navigation A:hover {
+	color: #033;
+	text-decoration: none;
+}
+#navigation A.current ,
+#navigation A.current:hover {
+	color: #C30;
+}
+
+#nav2 {
+	padding: 5px 5px 7px 3em;
+	background-color: #a4c2c2;
+	border-bottom: 1px solid #fff;
+}
+#nav2 A {
+	color: #04E;
+	font-size: 0.85em;
+	font-weight: bold;
+	text-decoration: none;
+	letter-spacing: 1px;
+	margin-right: 1em;
+}
+#nav2 A:hover {
+	color: #00E;
+	text-decoration: none;
+}
+#nav2 A.current ,
+#nav2 A.current:hover {
+	color: #C30;
+}
+
+#iframeInstructions {
+	font-size: 1.1em;
+	background: #eee;
+	padding: 4px 2em 6px;
+}
+IFRAME {
+	border-top: 1px solid #777;
+	background-color: #FFF;
+}
+
+TR.main {
+	background-color: #fff;
+}
+
+TD.content {
+	padding: 1em 2em 3em;
+}
+
+TD.sidebarLeft {
+	background-color: #a4c2c2;
+}
+TD.sidebarLeft P {
+	/*	font: 1em Georgia, "Times New Roman", Times, serif;*/
+	color: #366;
+	line-height: 1.5em;
+	padding: 20px;
+	margin: 0;
+}
+
+TD.sidebarRight {
+	padding: 1em;
+	padding-left: 0;
+}
+DIV.bookmarks {
+	background-color: #a4c2c2;
+	padding: 0.5em;
+}
+.bookmarks UL {
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	margin-left: 2em;
+	list-style-type: square;
+	/*
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	*/
+}
+.bookmarks LI {
+	font-size: 0.9em;
+	text-transform: uppercase;
+	padding-top: 0.25em;
+	padding-bottom: 0.25em;
+}
+
+/* Generic Classes */
+
+.bold		{ font-weight: bold; }
+.notBold	{ font-weight: normal; }
+.italic		{ font-style: italic; }
+.notItalic	{ font-style: normal; }
+
+.noMargin		{ margin: 0; }
+.noTopMargin	{ margin-top: 0; }
+.noBottomMargin	{ margin-bottom: 0; }
+
+.noPadding	{ padding: 0; }
+
+.white		{ color: #FFF; }
+.grey		{ color: #777; }
+.red		{ color: #F00; }
+
+
+/*
+*	STYLES FOR: documentation and tips pages
+*
+*	Created with ThemeRoller...
+*	http://ui.jquery.com/themeroller/?bgColorDefault=e0e0e0&bgTextureDefault=02_glass.png&bgImgOpacityDefault=80&borderColorDefault=cccccc&fcDefault=444444&iconColorDefault=888888&bgColorHover=d8d8d8&bgTextureHover=02_glass.png&bgImgOpacityHover=90&borderColorHover=888888&fcHover=111111&iconColorHover=222222&bgColorActive=8ab9ff&bgTextureActive=02_glass.png&bgImgOpacityActive=50&borderColorActive=2694e8&fcActive=000000&iconColorActive=ffffff&bgColorContent=f3f3f3&fcContent=362b36&ffDefault=Lucida%20Grande,%20Lucida%20Sans,%20Arial,%20sans-serif&fwDefault=normal&fsDefault=1.2&fsDefaultUnit=em#bgColorDefault=d6d6d6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=80&borderColorDefault=bbbbbb&fcDefault=000000&iconColorDefault=444444&bgColorHover=eeeeee&bgTextureHover=02_glass.png&bgImgOpacityHover=90&borderColorHover=cccccc&fcHover=000066&iconColorHover=000066&bgColorActive=80ade5&bgTextureActive=04_highlight_hard.png&bgImgOpacityActive=100&borderColorActive=266cc0&fcActive=000000&iconColorActive=ffffff&bgColorContent=D1E6FC&bgTextureContent=10_dots_medium.png&bgImgOpacityContent=90&borderColorContent=bbbbbb&fcContent=000000&iconColorContent=222222&ffDefault=Lucida+Grande%2C+Lucida+Sans%2C+Arial%2C+sans-serif&fwDefault=normal&fsDefault=1&fsDefaultUnit=em
+*/
+
+
+
+TABLE.TOC {
+	border: 1px solid #BBB;
+	border-collapse: collapse;
+	margin: 1em 0;
+}
+.TOC TR.rTitle TD{
+	font-size:		0.95em;
+	font-weight:	bold;
+	letter-spacing:	1px;
+	padding-top:	4px;
+	padding-bottom:	5px;
+	background:		#99B5B5;
+	color:			#FFF
+}
+.TOC TR.r0 {
+	background:	#FFF;
+}
+.TOC TR.r0 {
+	background:	#EEE;
+}
+.TOC TD {
+	padding: 2px 10px 4px;
+	white-space: nowrap;
+	border-left: 1px solid #BBB;
+}
+
+
+H5 {
+	font-size: 1em;
+	font-weight: normal;
+	line-height: 1em;
+	padding: 1em 0 5px;
+	margin: 1em 0 1em;
+	border-bottom: 1px dotted #CCC;
+}
+H5.withNext {
+	border-bottom: none;
+	padding-bottom: 0;
+	margin-bottom: -1em;
+}
+H5 A.bm {
+	font-weight: bold;
+	color:#C30;
+}
+H5 EM {
+	font-style: normal;
+	font-size: 0.9em;
+	float: right;
+	margin-top: -1.4em;
+}
+
+#navigation {
+	border-bottom: 0;
+}
+
+UL, OL {
+}
+LI {
+	padding-top: 2px;
+	padding-bottom: 3px;
+}
+
+
+/*
+ *	TABLE OF CONTENTS (West-pane)
+ */
+.ui-layout-west .ui-layout-content {
+	padding: 1ex 0.5em 2em 22px; /* need left-padding for +/- buttons */
+}
+UL#TOC {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+#TOC LI {
+	padding: 2px 0;
+}
+#TOC A {
+	color: #000;
+	display: block;
+	padding: 1px 0 2px 3px;
+}
+#TOC A:visited {
+	color: #000;
+}
+#TOC A:hover {
+	color: #000;
+	background-color: #FEC;
+	text-decoration: none;
+}
+#TOC LI UL {
+	list-style: none;
+	margin: 0;
+	margin-left: 1em;
+	padding: 0.25em 0;
+}
+#TOC LI UL LI {
+	font-size: 0.9em;
+	padding: 1px 0;
+}
+#TOC LI UL LI A {
+	padding-top: 0px;
+	padding-bottom: 1px;
+}
+
+#TOC .tocBtn {
+	float:			left;
+	margin-left:	-17px; /* move button into left-margin */
+	margin-top:		2px;
+	width:			16px;
+	height:			16px;
+	cursor:			pointer;
+}
+
+
+H2 {
+	margin-bottom: 0;
+}
+DIV.collapsible {
+	padding: 0.75em 3px 3px;
+	border: 1px solid #FFF; /* same as page-color */
+	border-top: none;
+	position: relative;
+}
+DIV.highlightCollapsible {
+	border: 1px dotted #566F6F; /* same as H2 border-bottom */
+	border-top: none;
+}
+DIV.highlightCollapsible ,
+DIV.highlightCollapsible PRE {
+	background-color: #F2F6F4;
+}
+DIV.collapsible H4 {
+	margin-top: 0 !important; /* div has padding-top */
+}
+
+SPAN.expander {
+	float:		right;
+	margin-top:	3px;
+	width:		16px;
+	height:		16px;
+	cursor:		pointer;
+}
+
+
+/*
+ *	LAYOUT PANE FORMATTING
+ */
+
+.ui-layout-north {
+	border-bottom: none;
+	background-color: rgba(21, 123, 175, 1);
+	/*background-color: #677;*/
+}
+
+.ui-layout-west {
+	background-color: #F9F9F9;
+	border:			1px solid #677;
+	border-left:	0;
+	overflow: auto;
+}
+
+.ui-layout-center {
+	background-color: #FFF;
+	border: 1px solid #677;
+	padding: 15px 2em 3em;
+	overflow: auto;
+}
+
+/* inner divs inside Outer East/West panes */
+.layouheader {
+	background: #eee;
+	border-bottom: 1px solid #677;
+	font-weight: bold;
+	text-align: center;
+	padding: 2px 0 4px;
+	position: relative;
+	overflow: hidden;
+}
+
+
+/*
+*	LAYOUT RESIZERS & TOGGLERS
+*/
+
+.ui-layout-resizer-sliding {
+	opacity: 0.1;
+	filter: alpha(opacity=10);
+	background-color: #999;
+}
+.ui-layout-resizer-sliding:hover {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+
+/* north-pane is not resizable*/
+/*
+.ui-layout-resizer-north-dragging ,
+.ui-layout-resizer-north:hover		{ background: url(/lib/img/resizable-n.gif) repeat-x center; }
+.ui-layout-resizer-south-dragging ,
+.ui-layout-resizer-south:hover		{ background: url(/lib/img/resizable-s.gif) repeat-x center; }
+
+.ui-layout-resizer-west-dragging ,
+.ui-layout-resizer-west-open:hover	{ background: url(/lib/img/resizable-w.gif) repeat-y center; }
+.ui-layout-resizer-east-dragging ,
+.ui-layout-resizer-east-open:hover	{ background: url(/lib/img/resizable-e.gif) repeat-y center; }
+*/
+/* IE6 * HACK - always show resizer graphics because IE6 cannot understand elem:hover */
+/** html .ui-layout-resizer-north		{ background: url(../lib/img/resizable-n.gif) repeat-x center !important; } */
+/*
+* html .ui-layout-resizer-south		{ background: url(/lib/img/resizable-s.gif) repeat-x center  !important; }
+* html .ui-layout-resizer-west-open	{ background: url(/lib/img/resizable-w.gif) repeat-y center  !important; }
+* html .ui-layout-resizer-east-open	{ background: url(/lib/img/resizable-e.gif) repeat-y center  !important; }
+*/
+/*
+*	SIMPLE TOGGLER BUTTONS
+*/
+/*
+.ui-layout-toggler-north-open ,
+.ui-layout-toggler-south-closed { background: url(/lib/img/toggle-up.gif) no-repeat center bottom; }
+.ui-layout-toggler-north-closed ,
+.ui-layout-toggler-south-open   { background: url(/lib/img/toggle-dn.gif) no-repeat center top; }
+.ui-layout-toggler-east-closed ,
+.ui-layout-toggler-west-open    { background: url(/lib/img/toggle-lt.gif) no-repeat center right; }
+*/
+/*.ui-layout-toggler-west-closed , SEE west-closed BELOW */
+/*
+.ui-layout-toggler-east-open    { background: url(/lib/img/toggle-rt.gif) no-repeat center left; }
+*/
+/* 'CONTENTS' TOC TOGGLER BUTTON */
+.ui-layout-resizer-west-closed {
+	background-color:	#DDD;
+	border-top:			1px solid #677;
+	border-bottom:		1px solid #677;
+	border-left:		1px solid #677;
+}
+.ui-layout-resizer-west-closed:hover {
+	background-color: #E6E6E6;
+}
+.ui-layout-resizer-west-closed:hover .content {
+	color: #C30;
+}
+.ui-layout-toggler-west-closed {
+	background-color:	#EEE;
+	border-top:			1px solid #FFF;
+	border-left:		1px solid #FFF;
+	border-bottom:		1px solid #677;
+}
+.ui-layout-toggler-west-closed:hover {
+	background-color: #F6F6F6;
+}
+.ui-layout-toggler-west-closed .content {
+	color:			#033;
+	font-size:		12px !important;
+	font-weight:	bold;
+	text-transform:	uppercase;
+	text-align:		center;
+	padding-right:	1px;
+}
+.button-bar {
+  /*  background-color: #a4c2c2;*/
+	background-color: rgba(224, 224, 224, 1);
+    border-bottom: 1px solid #fff;
+    border-top: 1px solid #fff;
+    padding: 5px 5px 7px 3em;
+	font-weight:	bold;
+	text-align:		center;
+}
+
+.historyTable th:first-child{
+    width: 20%;
+}
+
+.historyTable{
+    border-collapse:separate; 
+    border-spacing:1.2em;
+    text-align: left;
+}

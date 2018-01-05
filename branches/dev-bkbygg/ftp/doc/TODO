@@ -1,0 +1,7 @@
+- Backing up a directory isn't working properly
+- Add chmod function
+- Remove fields for Windows FTP servers (group, owner, permissions)
+- Error checking.  If you try to delete a file and get denied, it should be a little nicer.
+- Code reformating and serious cleanup needed
+- Template blocks
+- Add option to allow LDAP to translate gid/uid to names for local FTP connections

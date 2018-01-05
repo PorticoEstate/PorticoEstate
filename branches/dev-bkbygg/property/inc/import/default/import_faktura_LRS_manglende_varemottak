@@ -1,0 +1,478 @@
+<?php
+
+	class import_conversion
+	{
+
+		protected $db;
+		public $messages = array();
+		public $warnings = array();
+		public $errors = array();
+		public $debug = false;
+
+		protected $period;
+		protected $year;
+		protected $month;
+		protected $date;
+		protected $mvakode = 0;
+		protected $kildeid = 1;
+		protected $splitt = 0;
+		protected $soXport;
+		protected $invoice;
+		protected $default_kostra_id = 9999; //dummy
+		protected $skip_import = false;
+		protected $skip_email = false;
+		protected $export;
+		protected $skip_update_voucher_id = false;
+
+		public $filename_template;
+
+		public function __construct( $location_id, $debug = false, $get_template = false )
+		{
+			/*
+			 * The purpose is to get to the fields definition
+			 */
+			if ($get_template)
+			{
+				$this->filename_template = "Import av manglende faktura " . date(Ym);// 201401"
+				return;
+			}
+			set_time_limit(10000); //Set the time limit for this request
+			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
+			$this->db = & $GLOBALS['phpgw']->db;
+			$this->join = $this->db->join;
+
+			$this->soXport = CreateObject('property.soXport');
+			$this->invoice = CreateObject('property.soinvoice');
+			$this->responsible = CreateObject('property.soresponsible');
+			$this->bocommon = CreateObject('property.bocommon');
+
+			$this->dateformat = $this->db->date_format();
+			$this->datetimeformat = $this->db->datetime_format();
+			$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+		}
+
+		public function add( $data )
+		{
+//			static $linje = 1;
+//			_debug_array("Innkommende {$linje}");
+//			_debug_array($data);
+//			$linje ++;
+
+			$type = $data[0];
+			$bilagsnr = $data[1];
+			$bilagsdato = $data[2];
+			$periode = $data[3];
+			$art = (string)$data[4];
+			$mva_kode = $data[5];
+			$amount = round($data[6] / (-1.25), 2);
+			$fakturanr = $data[7];
+			$order_id = $data[8];
+
+			if ($art != '2327010')
+			{
+			_debug_array('Hopper over');
+			_debug_array($data);
+				return true;
+			}
+			$this->db->query("SELECT vendor_id FROM fm_workorder WHERE id = $order_id", __LINE__, __FILE__);
+			$this->db->next_record();
+			$vendor_id = $this->db->f('vendor_id');
+
+			$_data = array(
+				'KEY'=> $bilagsnr,
+				'AMOUNT'=> $amount,
+				'CURRENCY.CURRENCYID'=> 'NOK',
+				'INVOICEDATE'	=> '20170207',
+				'MATURITY'		=> '20170306',
+				'PURCHASEORDERNO'=> $order_id,
+				'SUPPLIERREF'	=> $fakturanr,
+				'SUPPLIER.CODE'	=> $vendor_id,
+				'art'	=> $art
+
+			);
+
+			$error = false;
+
+			if (!$amount)
+			{
+				$this->warnings[] = "Linje mangler Beløp, hopper over: {$bilagsnr}";
+				return true;
+			}
+			if (!$order_id)
+			{
+				$this->warnings[] = "Linje mangler bestillingsnummer, hopper over: {$bilagsnr}";
+				return true;
+			}
+
+			if (!execMethod('property.soXport.check_order', $order_id))
+			{
+				$this->errors[] = "Ikke gyldig bestillingsnummer: {$order_id}";
+				return false;
+			}
+
+			$this->import($_data);
+
+			return true;
+		}
+
+		protected function import( $_data )
+		{
+			$this->skip_update_voucher_id = false;
+			$this->skip_import = false;
+
+			$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilag WHERE external_voucher_id = '{$_data['KEY']}'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				_debug_array('Finnest frå før:' .$_data['KEY']);
+				_debug_array($_data);
+				$this->skip_update_voucher_id = true;
+				$this->skip_import = true;
+			}
+
+			$sql = "SELECT bilagsnr, bilagsnr_ut FROM fm_ecobilagoverf WHERE external_voucher_id = '{$_data['KEY']}'";
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				_debug_array('Finnest frå før:' .$_data['KEY']);
+				_debug_array($_data);
+				$this->skip_update_voucher_id = true;
+				$this->skip_import = true;
+			}
+
+			if(!$this->skip_import)
+			{
+				_debug_array('Nye data');
+				_debug_array($_data);
+			}
+			
+			$buffer = array();
+			$bilagsnr = false;
+
+			set_time_limit(300);
+
+			$regtid = date($this->datetimeformat);
+
+			$i = 0;
+
+			$_data['ARRIVAL']; // => 2009.05.28
+			$_data['CLIENT.CODE']; // => 14
+			$_data['EXCHANGERATE']; // => 1
+			$_data['LOCALAMOUNT']; // => 312500
+			$_data['LOCALVATAMOUNT']; // => 62500
+			$_data['PAYAMOUNT']; // => 0
+			$_data['POSTATUSUPDATED']; // => 0
+			$_data['PURCHASEORDERSTATUS.CODE']; // => WaitForMatch
+			$_data['SUPPLIER.BANKGIRO']; // => 70580621110
+			$_data['VATAMOUNT']; // => 62500
+
+			$bilagsnr_ut = isset($_data['VOUCHERID']) ? $_data['VOUCHERID'] : ''; // FIXME: innkommende bilagsnummer?
+
+			$fakturanr = $_data['SUPPLIERREF'];
+			$fakturadato = date($this->dateformat, strtotime(str_replace('.', '-', $_data['INVOICEDATE'])));
+			$forfallsdato = date($this->dateformat, strtotime(str_replace('.', '-', $_data['MATURITY'])));
+			$periode = '';
+			$belop = $_data['AMOUNT'];
+
+			if (!abs($belop) > 0)
+			{
+				$this->receipt['message'][] = array('msg' => "Beløpet er 0 for Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+				$belop = (float)0.0001; // imported as 0.00
+			}
+
+			if ($belop < 0)
+			{
+				$buffer[$i]['artid'] = 2;
+			}
+			else
+			{
+				$buffer[$i]['artid'] = 1;
+			}
+
+			$kidnr = $_data['KIDNO'];
+			$_order_id = $_data['PURCHASEORDERNO'];
+			$merknad = '';
+			$line_text = '';
+
+			$order_info = $this->get_order_info($_order_id); // henter default verdier selv om  $_order_id ikke er gyldig.
+
+			$buffer[$i]['project_id'] = $this->soXport->get_project($_order_id);
+			$order_id = $_order_id;
+
+			$buffer[$i]['external_voucher_id'] = $_data['KEY']; // => 1400050146
+			$buffer[$i]['pmwrkord_code'] = $order_id;
+			$buffer[$i]['fakturanr'] = $fakturanr;
+			$buffer[$i]['periode'] = $periode;
+			$buffer[$i]['forfallsdato'] = $forfallsdato;
+			$buffer[$i]['fakturadato'] = $fakturadato;
+			$buffer[$i]['belop'] = $belop;
+			$buffer[$i]['currency'] = $_data['CURRENCY.CURRENCYID'];
+			$buffer[$i]['godkjentbelop'] = $belop;
+
+			$buffer[$i]['kidnr'] = $kidnr;
+			$buffer[$i]['bilagsnr_ut'] = $bilagsnr_ut;
+			$buffer[$i]['referanse'] = "ordre: {$order_id}";
+
+			$buffer[$i]['dima'] = $order_info['dima'];
+			$buffer[$i]['dimb'] = $order_info['dimb'];
+			$buffer[$i]['dime'] = $order_info['dime'];
+			$buffer[$i]['loc1'] = $order_info['loc1'];
+			$buffer[$i]['line_text'] = $order_info['title'];
+
+			$buffer[$i]['mvakode'] = $order_info['tax_code'];
+
+			if ($buffer[$i]['loc1'] && !$buffer[$i]['mvakode'])
+			{
+				$mvakode = $this->soXport->auto_tax($buffer[$i]['loc1']);
+
+				if ($mvakode)
+				{
+					$buffer[$i]['mvakode'] = $mvakode;
+				}
+			}
+
+			$update_voucher = false;
+
+			$vendor_id = $_data['SUPPLIER.CODE'];
+
+			$sql = 'SELECT id FROM fm_vendor WHERE id = ' . (int)$vendor_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			if (!$_data['SUPPLIER.CODE'])
+			{
+				$this->receipt['error'][] = array('msg' => "LeverandørId ikke angitt for faktura: {$_data['SCANNINGNO']}");
+				$this->skip_import = true;
+			}
+			else if (!$this->db->next_record())
+			{
+				$this->receipt['error'][] = array('msg' => "Importeres ikke: Ikke gyldig LeverandørId: {$_data['SUPPLIER.CODE']}, Skanningreferanse: {$_data['SCANNINGNO']}, FakturaNr: {$fakturanr}, fil: {$file}");
+				$this->skip_import = true;
+			}
+			else if ($order_info['vendor_id'] != $vendor_id)
+			{
+				$this->receipt['message'][] = array('msg' => 'Ikke samsvar med leverandør på bestilling og mottatt faktura');
+			}
+
+			$buffer[$i]['kostra_id'] = $order_info['service_id'];
+
+			$buffer[$i]['merknad'] = $merknad;
+			$buffer[$i]['splitt'] = $this->splitt;
+			$buffer[$i]['kildeid'] = $this->kildeid;
+			$buffer[$i]['spbudact_code'] = $order_info['spbudact_code'];
+			$buffer[$i]['typeid'] = isset($invoice_common['type']) && $invoice_common['type'] ? $invoice_common['type'] : 1;
+			$buffer[$i]['regtid'] = $regtid;
+
+			$buffer[$i]['spvend_code'] = $vendor_id;
+
+			if (isset($order_info['janitor']) && $order_info['janitor'])
+			{
+				$buffer[$i]['oppsynsmannid'] = $order_info['janitor'];
+			}
+
+			if (isset($order_info['supervisor']) && $order_info['supervisor'])
+			{
+				$buffer[$i]['saksbehandlerid'] = $order_info['supervisor'];
+			}
+
+			if (isset($order_info['budget_responsible']) && $order_info['budget_responsible'])
+			{
+				$buffer[$i]['budsjettansvarligid'] = $order_info['budget_responsible'];
+			}
+
+
+//_debug_array($buffer);
+//_debug_array($this->receipt);
+//_debug_array($order_info['toarray']);
+
+
+			{
+				if (!$bilagsnr)
+				{
+					$bilagsnr = $this->invoice->next_bilagsnr();
+
+					foreach ($buffer as &$entry)
+					{
+						$entry['bilagsnr'] = $bilagsnr;
+					}
+				}
+
+				$GLOBALS['phpgw']->db->Exception_On_Error = true;
+
+				try
+				{
+					if(!$this->skip_import)
+					{
+						$bilagsnr = $this->import_end_file($buffer);
+					}
+
+					if ($this->config->config_data['export']['auto_receive_order'])
+					{
+						$received_amount = $this->get_total_received((int)$order_id);
+						$order_type = $this->bocommon->socommon->get_order_type($order_id);
+
+						switch ($order_type)
+						{
+							case 'workorder':
+								$received = createObject('property.boworkorder')->receive_order((int)$order_id, $received_amount);
+								break;
+							case 'ticket':
+								$received = createObject('property.botts')->receive_order((int)$order_id, $received_amount);
+								break;
+							default:
+								throw new Exception('Order type not supported');
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						$GLOBALS['phpgw']->log->error(array(
+							'text' => 'import_fra_agresso_X205::import() : error when trying to execute import_end_file(): %1',
+							'p1' => $e->getMessage(),
+							'p2' => '',
+							'line' => __LINE__,
+							'file' => __FILE__
+						));
+						$this->receipt['error'][] = array('msg' => $e->getMessage());
+					}
+					return false;
+				}
+
+				$GLOBALS['phpgw']->db->Exception_On_Error = false;
+				return $bilagsnr;
+			}
+		}
+
+		function get_total_received( $order_id )
+		{
+			$amount = 0;
+			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilag WHERE pmwrkord_code = {$order_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$amount += (float)$this->db->f('amount');
+			$sql = "SELECT sum(godkjentbelop) AS amount FROM fm_ecobilagoverf WHERE pmwrkord_code = {$order_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$amount += (float)$this->db->f('amount');
+			return $amount;
+		}
+
+		function get_order_info( $order_id = 0 )
+		{
+			$order_id = (int)$order_id;
+
+			$this->db->query("SELECT type FROM fm_orders WHERE id = $order_id", __LINE__, __FILE__);
+			$this->db->next_record();
+			$order_type = $this->db->f('type');
+
+			$order_info = array();
+			$toarray = array();
+
+			switch ($order_type)
+			{
+				case 'ticket':
+					$sql = "SELECT fm_tts_tickets.location_code,"
+						. " fm_tts_tickets.vendor_id,"
+						. " fm_tts_tickets.b_account_id as account_id,"
+						. " fm_tts_tickets.ecodimb,"
+						. " fm_tts_tickets.service_id,"
+						. " fm_tts_tickets.tax_code,"
+						. " fm_tts_tickets.cat_id as category,"
+						. " fm_tts_tickets.ordered_by as user_id,"
+						. " fm_tts_tickets.subject as title"
+						. " FROM fm_tts_tickets"
+						. " WHERE fm_tts_tickets.order_id = {$order_id}";
+
+					break;
+				case 'workorder':
+					$sql = "SELECT fm_workorder.location_code,"
+						. " fm_workorder.vendor_id,"
+						. " fm_workorder.account_id,"
+						. " fm_project.ecodimb as project_ecodimb,"
+						. " fm_workorder.ecodimb,"
+						. " fm_workorder.category,"
+						. " fm_workorder.user_id,"
+						. " fm_workorder.service_id,"
+						. " fm_workorder.tax_code,"
+						. " fm_workorder.title"
+						. " FROM fm_workorder {$this->join} fm_project ON fm_workorder.project_id = fm_project.id"
+						. " WHERE fm_workorder.id = {$order_id}";
+					break;
+
+				default:
+					throw new Exception("{$order_type} not supported");
+					break;
+			}
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			if ($this->db->next_record())
+			{
+				$order_info['order_exist'] = true;
+			}
+			if ($this->db->f('location_code'))
+			{
+				$parts = explode('-', $this->db->f('location_code'));
+				$order_info['dima'] = implode('', $parts);
+				$order_info['loc1'] = $parts[0];
+			}
+
+			$order_info['vendor_id'] = $this->db->f('vendor_id');
+			$order_info['spbudact_code'] = $this->db->f('account_id');
+			$ecodimb = $this->db->f('ecodimb');
+			$order_info['dimb'] = $ecodimb ? $ecodimb : $this->db->f('project_ecodimb');
+			$order_info['dime'] = $this->db->f('category');
+			$order_info['title'] = $this->db->f('title', true);
+			$order_info['service_id'] = $this->db->f('service_id');
+			$order_info['tax_code'] = $this->db->f('tax_code');
+
+			$janitor_user_id = $this->db->f('user_id');
+			$order_info['janitor'] = $GLOBALS['phpgw']->accounts->get($janitor_user_id)->lid;
+			$supervisor_user_id = $this->invoice->get_default_dimb_role_user(2, $order_info['dimb']);
+			if ($supervisor_user_id)
+			{
+				$order_info['supervisor'] = $GLOBALS['phpgw']->accounts->get($supervisor_user_id)->lid;
+			}
+
+			$budget_responsible_user_id = $this->invoice->get_default_dimb_role_user(3, $order_info['dimb']);
+			if ($budget_responsible_user_id)
+			{
+				$order_info['budget_responsible'] = $GLOBALS['phpgw']->accounts->get($budget_responsible_user_id)->lid;
+			}
+
+			if (!$order_info['budget_responsible'])
+			{
+				$order_info['budget_responsible'] = isset($this->config->config_data['import']['budget_responsible']) && $this->config->config_data['import']['budget_responsible'] ? $this->config->config_data['import']['budget_responsible'] : 'karhal';
+			}
+
+			$order_info['toarray'] = $toarray;
+			return $order_info;
+		}
+
+		function import_end_file( $buffer )
+		{
+			try
+			{
+				$num = $this->soXport->add($buffer, $this->skip_update_voucher_id);
+			}
+			catch (Exception $e)
+			{
+				throw $e;
+			}
+
+			if ($this->debug)
+			{
+				_debug_array("import_end_file() ");
+				echo 'buffer: ';
+				_debug_array($buffer);
+				_debug_array("num: {$num}");
+			}
+
+			if ($num > 0)
+			{
+				$this->receipt['message'][] = array('msg' => "Importert {$num} poster til bilag {$buffer[0]['bilagsnr']}, KEY: {$buffer[0]['external_voucher_id']}");
+				return $buffer[0]['bilagsnr'];
+			}
+			return false;
+		}
+	}

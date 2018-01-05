@@ -1,0 +1,262 @@
+.priority1
+{
+	background-color: #dababa !important;
+}
+
+.priority2
+{
+	background-color: #dadada !important;
+}
+
+.priority3
+{
+
+}
+/*
+body, div, input, p, select, textarea
+{
+	font-family: "Liberation Sans", Verdana, sans-serif;
+	font-size: 1em;
+}*/
+/*
+a
+{
+	text-decoration: none;
+}
+
+a:hover, a:active
+{
+	text-decoration: underline;
+}
+*/
+img
+{
+	border: 0px;
+}
+/*
+textarea
+{
+	white-space: normal;
+}*/
+
+thead
+{
+	background-color: #d3dce3;
+	font-weight: bold;
+	text-align: center;
+}
+
+.button_group
+{
+	text-align: center;
+}
+
+.link_group
+{
+	text-align: center;
+}
+.error
+{
+	background-color: #fcc;
+	border: 1px solid #f00;
+	color: #f00;
+}
+
+select.error, input.error {
+	margin: 0;
+}
+.msg
+{
+	color: #f00;
+	font-weight: bold;
+	text-align: center;
+}
+
+.msg_good
+{
+	background-color:  #99FF66;
+	border: 1px solid #00CC00;
+	font-weight: bold;
+	text-align: center;
+}
+ol.source
+{
+	background-color: #ccc;
+	border: 1px solid #ccc;
+	height: 300px;
+	list-style-type: decimal;
+	overflow: auto;
+	padding-left: 4em;
+}
+
+ol.source li
+{
+	background-color: #fff;
+	border-bottom: 1px dashed #eee;
+	display: list-item;
+	font-family: monospace;
+	list-style-type: decimal;
+	white-space: pre;
+}
+
+
+
+TD {
+	vertical-align: top;
+}
+
+P {
+	line-height: 1.5em;
+	margin: 0.75em 0 0.5em;
+}
+
+H1 {
+	color: #C30;
+	/*	font: 1.65em Georgia, "Times New Roman", Times, serif;*/
+	font-weight: normal;
+	letter-spacing: 0.1em;
+	margin: 0 0 0.75em;
+}
+H1 A , /* bookmarks - depricated? */
+H1 A:visited ,
+H1 A:hover {
+	color: #C30 !important;
+}
+
+H2 {
+	/*	font: 1.3em Georgia, "Times New Roman", Times, serif;*/
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: #566F6F;
+	border-bottom:  1px dotted #566F6F;
+	padding: 1em 0 3px;
+	margin: 0.5em 0 0.75em;
+}
+
+H3 {
+	font-size: 1.2em;
+	font-weight: bold;
+	font-style: italic;
+	padding-top: 1em;
+	margin: 0.5em 0 0.75em;
+}
+
+H4 {
+	font-size: 1.1em;
+	font-weight: bold;
+	padding-top: 0.5em;
+	margin: 0.5em 0 1em;
+}
+
+BLOCKQUOTE {
+	margin: 1em 0 1em 3em;
+}
+TT { /* used for inline code references */
+	font-size: 1.1em;
+	font-weight: bold;
+}
+PRE { /* used for code blocks */
+	font-size: 1.1em;
+	font-weight: normal;
+	margin: 1em 0;
+	padding: 5px 7px 7px;
+	border: 1px solid #CCC;
+	background-color: #F6F6F6;
+}
+PRE I { /* code comment */
+	color: #666;
+	font-style: italic;
+}
+
+STRONG {
+	font-weight: bold;
+	color: #B30;
+}
+
+UL, OL {
+	margin-top: 0.5ex;
+	margin-bottom: 1ex;
+	margin-left: 2em;
+	padding: 0;
+}
+LI {
+	line-height: 1.35em;
+	padding: 0.75ex 0;
+	margin: 0;
+}
+
+/* ID Styles */
+
+#logo {
+	/*	font: 2em Georgia, "Times New Roman", Times, serif;*/
+	color: #FFF;
+	letter-spacing: 1px;
+	font-weight: bold;
+	padding: 0.5em 15px 2px;
+}
+
+
+
+.bold		{ font-weight: bold; }
+.notBold	{ font-weight: normal; }
+.italic		{ font-style: italic; }
+.notItalic	{ font-style: normal; }
+
+.noMargin		{ margin: 0; }
+.noTopMargin	{ margin-top: 0; }
+.noBottomMargin	{ margin-bottom: 0; }
+
+.noPadding	{ padding: 0; }
+
+.white		{ color: #FFF; }
+.grey		{ color: #777; }
+.red		{ color: #F00; }
+
+
+/*
+*	STYLES FOR: documentation and tips pages
+*
+*
+*/
+
+
+body {
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 12px;
+	background-color: #f9f9f9;
+}
+
+
+
+
+H5 {
+	font-size: 1em;
+	font-weight: normal;
+	line-height: 1em;
+	padding: 1em 0 5px;
+	margin: 1em 0 1em;
+	border-bottom: 1px dotted #CCC;
+}
+H5.withNext {
+	border-bottom: none;
+	padding-bottom: 0;
+	margin-bottom: -1em;
+}
+H5 A.bm {
+	font-weight: bold;
+	color:#C30;
+}
+H5 EM {
+	font-style: normal;
+	font-size: 0.9em;
+	float: right;
+	margin-top: -1.4em;
+}
+.home_portal_controls
+{
+	float: right;
+	text-align: right;
+	padding: 0px 0px 0px 0px;
+	width: 15px;
+}

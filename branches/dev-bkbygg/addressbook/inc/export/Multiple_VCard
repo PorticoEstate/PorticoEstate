@@ -1,0 +1,184 @@
+<?php
+/*
+  This file defines a set of functions and an associative array.
+  The key of the array corresponds to a header in the source
+  export file and the value of the array item will be used in
+  the creation of the output file.
+
+  The array need not be in any order and any fields not defined will
+  not be transferred.  If the val='+', the value will be appended to
+  the previous field and any text after the '+' will be appended 
+  before the value.  For example, the following would add a comma and
+  a space between LastName and FirstName and store it in FullName:
+
+ 	array("LastName" => "FullName","FirstName" => "+, ");
+
+  Also start with a '#' symbol and a comma separated list will be
+  turned into a number of the same entries.
+*/
+	class export_conv
+	{
+		var $currentrecord = array(); /* used for buffering to allow uid lines to go first */
+		var $id;
+		/* list of all id's */
+		var $ids = array();
+		var $type = 'vcard';
+
+		/* This will store the contacts and vcard objects */
+		var $contacts = '';
+		var $vcard = '';
+		/* This will be filled by the vcard object */
+		var $export = array();
+
+		/* This will store the contacts and vcard objects */
+		var $contacts = '';
+		var $vcard = '';
+
+		/* Read full list of user's contacts only to get id's for each */
+		function export_start_file($buffer,$ncat_id='')
+		{
+			/* Setup the contact and vcard objects, and the export fields var */
+			$this->contacts = CreateObject('phpgwapi.contacts');
+			$this->vcard = CreateObject('phpgwapi.vcard');
+			$this->export = $this->vcard->export;
+
+			$this->id=-1;
+
+			$fields = array('person_id');
+			if ($ncat_id)
+			{
+				$criteria = $this->contacts->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id'], PHPGW_CONTACTS_ALL, $ncat_id);
+				$tmp_person = $this->contacts->get_persons($fields, '', '', '', '', '', $criteria);
+			}
+			else
+			{
+				$criteria = $this->contacts->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id'], PHPGW_CONTACTS_ALL);
+				$tmp_person = $this->contacts->get_persons($fields, '', '', '', '', '', $criteria);
+			}
+
+			if(is_array($tmp_person))
+			{
+				foreach($tmp_person as $data)
+				{
+					$this->ids[] = $data['person_id'];
+				}
+			}
+
+
+			/*
+			   $ids is now an array of all id's for this user, e.g. $ids[0] = 21, etc...
+			   $buffer is still empty
+			*/
+			return $buffer;
+		}
+
+		/* Read each entry */
+		function export_start_record($buffer)
+		{
+			$this->id++;
+			//$top = $this->contacts->read_single_entry($this->ids[$this->id],$this->qfields);
+			$fieldlist = $this->contacts->person_complete_data($this->ids[$this->id]);
+
+			if(is_array($fieldlist['locations']))
+			{
+				foreach($fieldlist['locations'] as $key => $values)
+				{
+					if($values['type']=='work')
+					{
+						$type_work = $key;
+					}
+					elseif($values['type']=='home')
+					{
+						$type_home = $key;
+					}
+				}
+			}
+
+			$fields['first_name']            = $fieldlist['first_name'];
+			$fields['last_name']             = $fieldlist['last_name'];
+			$fields['middle_name']           = $fieldlist['middle_name'];
+
+			$fields['full_name']             = $fields['first_name'] . ' ';
+			$fields['full_name']            .= ($fields['middle_name'] != '') ? $fields['middle_name'] . ' ' : '';
+			$fields['full_name']            .= $fields['last_name'];
+			
+			$fields['prefix']                = $fieldlist['prefix'];
+			$fields['suffix']                = $fieldlist['suffix'];
+			$fields['sound']                 = $fieldlist['sound'];
+			$fields['birthday']              = $fieldlist['birthday'];
+			//$fields['note']                = $fieldlist[''];
+			//$fields['tz']                  = $fieldlist['locations'][$type_work][''];
+			//$fields['geo']                 = $fieldlist[''];
+			$fields['pubkey']                = $fieldlist['pubkey'];
+			$fields['org_name']              = $fieldlist['org_name'];
+			$fields['org_unit']              = $fieldlist['department'];
+			$fields['title']                 = $fieldlist['title'];
+			$fields['adr_one_type']          = 'WORK';
+			$fields['adr_two_type']          = 'HOME';
+			//$fields['tel_prefer']          = $fieldlist[''];
+			$fields['email_type']            = 'INTERNET';
+			$fields['email_home_type']       = 'INTERNET';
+			$fields['adr_one_street']        = $fieldlist['locations'][$type_work]['add1'];
+			$fields['adr_one_ext']           = $fieldlist['locations'][$type_work]['add2'];
+			$fields['adr_one_locality']      = $fieldlist['locations'][$type_work]['city'];
+			$fields['adr_one_region']        = $fieldlist['locations'][$type_work]['state'];
+			$fields['adr_one_postalcode']    = $fieldlist['locations'][$type_work]['postal_code'];
+			$fields['adr_one_countryname']   = $fieldlist['locations'][$type_work]['country'];
+			//$fields['address2']            = $fieldlist['locations'][$type_work]['add2'];
+			//$fields['label']               = $fieldlist['locations'][$type_work]['add1'].' '.$fieldlist['locations'][$type_work]['add2'];;
+			$fields['adr_two_street']        = $fieldlist['locations'][$type_home]['add1'];
+			$fields['adr_two_ext']           = $fieldlist['locations'][$type_home]['add2'];
+			$fields['adr_two_locality']      = $fieldlist['locations'][$type_home]['city'];
+			$fields['adr_two_region']        = $fieldlist['locations'][$type_home]['state'];
+			$fields['adr_two_postalcode']    = $fieldlist['locations'][$type_home]['postal_code'];
+			$fields['adr_two_countryname']   = $fieldlist['locations'][$type_home]['country'];
+			$fields['tel_work']              = $fieldlist['comm_media']['work phone'];
+			$fields['tel_home']              = $fieldlist['comm_media']['home phone'];
+			$fields['tel_voice']             = $fieldlist['comm_media']['voice phone'];
+			$fields['tel_work_fax']          = $fieldlist['comm_media']['work fax'];
+			$fields['tel_home_fax']          = $fieldlist['comm_media']['home fax'];
+			$fields['tel_msg']               = $fieldlist['comm_media']['msg phone'];
+			$fields['tel_cell']              = $fieldlist['comm_media']['mobile (cell) phone'];
+			$fields['tel_pager']             = $fieldlist['comm_media']['pager'];
+			$fields['tel_bbs']               = $fieldlist['comm_media']['bbs'];
+			$fields['tel_modem']             = $fieldlist['comm_media']['modem'];
+			$fields['tel_car']               = $fieldlist['comm_media']['car phone'];
+			$fields['tel_isdn']              = $fieldlist['comm_media']['isdn'];
+			$fields['tel_video']             = $fieldlist['comm_media']['video'];
+			$fields['email']                 = $fieldlist['comm_media']['work email'];
+			$fields['email_home']            = $fieldlist['comm_media']['home email'];
+			$fields['url']                   = $fieldlist['comm_media']['website'];
+			$this->currentrecord = $fields;
+			return $buffer;
+		}
+
+		/*
+		   Read each attribute, populate buffer
+		   name/value are the fields from the export array in the vcard class
+		*/
+		function export_new_attrib($buffer,$name,$value)
+		{
+			if ($this->export[$name] && ($value != '') )
+			{
+				$buffer[$this->id][$this->export[$name]] = $value;
+				/* echo '<br />'.$this->id.' - '.$this->export[$name].': '.$buffer[$this->id][$this->export[$name]]; */
+			}
+			return $buffer;
+		}
+
+		function export_end_record($buffer)
+		{
+			return $buffer;
+		}
+
+		function export_end_file($buffer)
+		{
+			reset($this->ids);
+			for ($i=0;$i<count($this->ids);$i++)
+			{
+				$vcards .= $this->vcard->out($buffer[$i]);
+			}
+			$buffer = $vcards;
+			return $buffer;
+		}
+	}

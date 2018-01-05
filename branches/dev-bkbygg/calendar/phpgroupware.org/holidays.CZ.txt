@@ -1,0 +1,11 @@
+CZ	Velikonoce	0	4	3	1	0
+CZ	Svátek práce	1	5	0	0	0
+CZ	Osvobození	8	5	0	0	0
+CZ	Den slovanských vìrozvìstù	5	7	0	0	0
+CZ	Upálení mistra Jana Husa	6	7	0	0	0
+CZ	Den Èeské státnosti	28	9	0	0	0
+CZ	Den vzniku samostatného Èeskoslovenska	28	10	0	0	0
+CZ	Den boje za svobodu a demokracii	17	11	0	0	0
+CZ	©tìdrý den	24	12	0	0	0
+CZ	První svátek vánoèní	25	12	0	0	0
+CZ	Druhý svátek vánoèní	26	12	0	0	0

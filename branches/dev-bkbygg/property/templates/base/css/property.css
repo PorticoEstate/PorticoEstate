@@ -1,0 +1,44 @@
+
+#paging a {
+	color: #0000de;
+}
+
+/* using for hidden the first column in datatable */
+.hide_field
+{
+	overflow:hidden;
+	display:none;
+}
+
+/* use for combo box */
+span.yui-menu-button  {
+    outline: none;
+}
+/* use for combo box filter */
+span.yui-menu-button em {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 6em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
+/* use for combo box PERIOD in INVOICE */
+span.yui-menu-button en {
+    font-style: normal;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+	width: 1.2em;  /*  Restrict the width of the label to 10em. */
+	overflow: hidden; /* Hide the overflow if the text label exceeds 10em in width. */
+	text-overflow: ellipsis; /* IE and Safari support the ability to add ellipsis when the text label exceeds 10em in width.*/
+}
+
+.rightClasss {white-space:nowrap; text-align: right!important;}
+.centerClasss {text-align: center!important;}
+
+.required {
+	border: 1px solid red
+}
+

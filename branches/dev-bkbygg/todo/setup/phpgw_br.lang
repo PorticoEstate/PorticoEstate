@@ -1,0 +1,15 @@
+access type	todo	br	Tipo de accesso
+clear form	todo	br	Limpar Formulario
+completed	todo	br	completo
+created by	todo	br	Creado por
+date due	todo	br	Data due
+last updated	todo	br	Ultima Modificao
+status	todo	br	Estado
+todo	common	br	a fazer
+todo list	common	br	Agenda
+to do list	common	br	Agenda
+todo list - add	todo	br	Agenda - adicionar
+todo list - edit	todo	br	Agenda - editar
+urgency	todo	br	Urgencia
+which groups	todo	br	Quais Grupos
+you have entered an invailed date	todo	br	Voce digitou uma data invalida

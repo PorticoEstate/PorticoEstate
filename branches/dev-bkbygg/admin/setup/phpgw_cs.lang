@@ -1,0 +1,39 @@
+account active	admin	cs	Aktivní účet
+active	admin	cs	Aktivní
+all records and account information will be lost!	admin	cs	Všechny záznamy a informace o účtu budou ztraceny!
+anonymous user	admin	cs	Anonymní uživatel
+are you sure you want to delete this account ?	admin	cs	Jste si jist, že chcte vymazat tento účet ?
+are you sure you want to delete this group ?	admin	cs	Jste si jist, že chcete vymazat tuto skupinu ?
+are you sure you want to kill this session ?	admin	cs	Jste si jist, že chcete zrušit tuto relaci ?
+create group	admin	cs	Vytvořit skupinu
+disabled	admin	cs	Zakázaný
+display	admin	cs	Zobraz
+group name	admin	cs	Jméno skupiny
+idle	admin	cs	Čekající
+ip	admin	cs	IP - adresa
+kill	admin	cs	Zrušit
+last time read	admin	cs	Posledně přečteno
+last %1 logins	admin	cs	Posledních %1 přihlášení
+list of current users	admin	cs	Seznam současných uživatelů
+login time	admin	cs	Čas přihlášení
+loginid	admin	cs	Uživatelské jméno
+manager	admin	cs	Správce
+new group name	admin	cs	Nové jméno skupiny
+new password [ leave blank for no change ]	admin	cs	Nové heslo [ Pokud je nechcete měnit, ponechte prázdné ]
+percent of users that logged out	admin	cs	Procento uživatelů, kteří se odhlásili
+permissions	admin	cs	Povolení
+re-enter password	admin	cs	Opakuj heslo
+select users for inclusion	admin	cs	Vyberte uživatele, kteří budou přidáni
+site	admin	cs	Síť
+sorry, the follow users are still a member of the group %1	admin	cs	Je mi líto, tito uživatelé jsou stále členy skupiny %1
+that loginid has already been taken	admin	cs	Toto uživatelské jméno již bylo použito
+the login and password can not be the same	admin	cs	Heslo a uživatelské jméno nemůže být stejné
+the two passwords are not the same	admin	cs	Zadaná hesla nejsou stejná
+they must be removed before you can continue	admin	cs	Musí být odebráni než budete moci pokračovat
+total records	admin	cs	Celkem záznamů
+user accounts	admin	cs	Uživatelské účty
+user groups	admin	cs	Uživatelské skupiny
+view access log	admin	cs	Ukaž záznam přístupů
+view sessions	admin	cs	Ukaž relace
+you must enter a password	admin	cs	Musíte zadat heslo
+you must select a file type	admin	cs	Musíte vybrat druh souboru

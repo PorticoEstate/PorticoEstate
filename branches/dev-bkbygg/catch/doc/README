@@ -1,0 +1,22 @@
+Some information on how to make it work.
+
+* Install trough setup
+* Grant Admin access to the application
+* Within the admin section of the application - grant the admin user (or group) access to the submodules
+* The "entity" 1 is reserved for user/device configuration
+* Start defining your shemas at "entity" 2 - installed as "Shema type 1"
+* Config pickup-path and where to import the data in admin->catch->config
+* Config valid devices as users at catch->Users and devices
+* copy the property/inc/cron/default/catch_ppc to the cron-directory for your domain if other than "default"
+* The import prosess kan run as cron job or from within the property-admin-section:
+ 1) as cron (modify to your environment):
+   /usr/local/bin/php -q /_path_to_phpgroupware_/property/inc/cron/cron.php <domain> catch_ppc
+   
+   IMPORTANT!!  - the cron job has to be run by the apache user in order to organise attachments
+   
+ 2) from admin->property->admin async services:
+ 	add a function:
+ 	  name: property.custom_functions.index
+ 	  data: function=catch_ppc
+ 	  descr: Import data to the catch module
+ 	Once the record is saved - you can do a right click and a "run now"

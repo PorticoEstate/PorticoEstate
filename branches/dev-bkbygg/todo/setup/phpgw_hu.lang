@@ -1,0 +1,19 @@
+access type	todo	hu	Elérés típusa
+addsub	todo	hu	Al-teendő
+are you sure you want to delete this entry	todo	hu	Biztosan törölni akarja ezt a bejegyzést?
+clear form	todo	hu	Törlés
+completed	todo	hu	kész
+created by	todo	hu	Illetékes
+date due	todo	hu	Esedékesség dátuma
+days datedue	todo	hu	Hátralévő napok
+last updated	todo	hu	Utolsó módosítás
+project description	todo	hu	Projekt leírás
+status	todo	hu	Státusz
+todo	common	hu	Tevékenység
+todo list	common	hu	Tennivalók listája
+to do list	common	hu	Tennivalók listája
+todo list - add	todo	hu	Tennivalók listája - Hozzáadás
+todo list - edit	todo	hu	Tennivalók listája - Módosítás
+urgency	todo	hu	Sürgősség
+which groups	todo	hu	Ezeknek a csoportoknak
+you have entered an invailed date	todo	hu	Helytelen dátum

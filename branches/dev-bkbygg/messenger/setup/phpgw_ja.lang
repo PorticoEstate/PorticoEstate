@@ -1,0 +1,26 @@
+compose	messenger	ja	作成
+compose global message	admin	ja	共通メッセージ
+compose global message	messenger	ja	共通メッセージ
+compose message	messenger	ja	作成
+delete selected	messenger	ja	選択メッセージを削除
+forward	messenger	ja	転送
+forward a message	messenger	ja	転送
+forwarded	messenger	ja	転送済み
+global message	messenger	ja	共通メッセージ
+inbox	messenger	ja	Inbox
+i can't find the username %1 on the system	messenger	ja	ユーザ %1 がありません
+message from	messenger	ja	送信者
+messenger	common	ja	メッセンジャー
+new	messenger	ja	新規
+read message	messenger	ja	読む
+replied	messenger	ja	返信済み
+reply	messenger	ja	返信
+reply to a message	messenger	ja	返信
+send	messenger	ja	送信
+send message to	messenger	ja	送信先
+you didn't enter anything for the message	messenger	ja	メッセージを入力して下さい
+you have %1 new messages	common	ja	%1 つのメッセージがあります
+you have %1 new message	common	ja	%1 つのメッセージがあります
+you have no messages	messenger	ja	メッセージがありません
+you must enter a subject	messenger	ja	件名を入力して下さい
+you must enter the username this message is for	messenger	ja	送信先のユーザを入力して下さい

@@ -1,0 +1,498 @@
+<?php
+
+	/***
+	This is going to be different than the other export functions.
+	It will ignore the output file name.
+	It will output the fields selected for display in the addressbook app prior to hitting the export button
+	(instead of a static list)
+	It will use the filters selected in the addressbook app prior to hitting the export button
+	(instead of a static set)
+	It will use the cat filter selected in the addressbook app prior to hitting the export button unless
+	cats are selected in the export screen -- Currently not a multiple cat selector so will ignore for now
+	It will also ignore the download checkbox and download it anyway :)
+	***/
+
+	// FIXME: the unzip/zip system should be replaced with a php class (maybe pclzip.  There was also a php file manager that included zip handling somewhere)
+	
+	// FIXME: the current way we extract to a tmp dir will cause a problem with multiple users trying to
+	// export at the same time.  Maybe we need to add a time stamp to the tmp file name.  Maybe we should
+	// also delete all tmp files that have existed for more than a few hours
+	
+	class export_conv
+	{
+
+		function do_it($both_types='',$sub_cats='')
+		{
+			$this->bo = CreateObject('addressbook.boaddressbook');
+			//$this->contacts = CreateObject('addressbook.boaddressbook');
+			
+			$export_vars = $GLOBALS['phpgw']->session->appsession('export_vars','addressbook');
+			//echo "<pre>Export_vars: "; print_r($export_vars); echo "</pre> \n";
+			
+			$filename1 = 'sample.sxc';
+			$filename2 = 'content.xml';
+			$tempdir1 = 'sample';
+			$tempdir2 = $tempdir1 . date("Y-m-d-G:i:s");
+			$startpointer = 0;
+			$endpointer = 0;
+			$newcontents = '';
+			$cols = 0;
+			$rows = 0;
+			
+			//echo "<pre>here2  $both_types $sub_cats</pre>";
+			
+			//unzip it to the temp dir
+			//rm -rf ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir . '*';
+			system('find ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/ -mtime +1 -name "' . $tempdir1 . '*" -exec rm -rf {} \;', $null);
+			//echo 'find ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/ -mtime +1 -name "' . $tempdir1 . '*" -exec rm -rf {} \;';
+			//echo '/usr/bin/unzip -o addressbook/inc/export/'. $filename1 .' -d ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir2 . ' &> /dev/null';
+			system('/usr/bin/unzip -o addressbook/inc/export/'. $filename1 .' -d ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir2 . ' &> /dev/null', $null);
+			
+			// get the data
+			//echo "<pre></pre> \n";
+			$get_data_function = $export_vars['get_data_function'];
+			$fields = $export_vars['fields'];
+			$this->limit = $export_vars['limit'];
+			$this->start = $export_vars['start'];
+			$this->order = $export_vars['order'];
+			$this->sort = $export_vars['sort'];
+			$criteria = $export_vars['criteria'];
+			$fields_comms = $export_vars['fields_comms'];
+			$category_filter = $export_vars['category_filter'];
+			
+			// let's do some contact cleanup on my system while we're here
+			$contacts = CreateObject('phpgwapi.contacts');
+			/*
+			echo 'Deleting these people: ';
+			$GLOBALS['phpgw']->db2 = $GLOBALS['phpgw']->db;
+			$GLOBALS['phpgw']->db2->query('SELECT * FROM phpgw_contact_person LEFT JOIN phpgw_ttrack_jobs AS one ON one.company_id=phpgw_contact_person.person_id LEFT JOIN phpgw_ttrack_jobs AS two ON two.contact_id=phpgw_contact_person.person_id WHERE one.job_id IS NULL AND two.job_id IS NULL');
+			while ( $GLOBALS['phpgw']->db2->next_record() )
+			{
+				
+				$contact_id = $GLOBALS['phpgw']->db2->f('person_id');
+				echo $contact_id . ' ';
+				//echo $this->bo->search_contact_type_id($this->bo->get_type_contact($contact_id));
+				$this->bo->delete($contact_id,'Persons');
+			}
+			echo "<pre>";echo "</pre> \n";
+			echo 'Deleting these orgs: ';
+			$GLOBALS['phpgw']->db2->query('SELECT * FROM phpgw_contact_org LEFT JOIN phpgw_ttrack_jobs ON phpgw_ttrack_jobs.company_id=phpgw_contact_org.org_id WHERE job_id IS NULL');
+  			while ($GLOBALS['phpgw']->db2->next_record())
+			{
+				$contact_id = $GLOBALS['phpgw']->db2->f('org_id');
+				//check that no persons link to this org before deleting
+				//echo $contact_id . ' ';
+				if ( ! $this->bo->get_person_orgs_data($contact_id) )
+				{
+					echo $contact_id . ' ';
+					//echo $this->bo->search_contact_type_id($this->bo->get_type_contact($contact_id));
+					$contacts->delete($contact_id,'Organizations');
+				}
+			
+			}
+			echo "<pre>";print_r($this->bo->get_person_orgs_data($contact_id));echo "</pre> \n";
+			echo 'here3';
+			*/
+			
+			if( $sub_cats )
+			{
+				// somehow we have to add the category as a field, get the sub-cat category names,
+				// add them into $enties, and sort by them
+				//echo "<pre>Criteria: ";print_r($criteria);echo"</pre> \n";
+				$categories = CreateObject('phpgwapi.categories');
+				//echo "<pre>category_filter: ";print_r($category_filter);echo"</pre> \n";
+				//echo "<pre>Sub_cats: ";print_r($contacts->get_sub_cats($category_filter));echo"</pre> \n";
+				$subcats = $contacts->get_sub_cats($category_filter);
+				$fields[] = 'cat_id';
+				//echo "<pre>Sub_cats: ";print_r($contacts->get_categories($contacts->get_sub_cats($category_filter)));echo"</pre> \n";
+				//echo "<pre>Sub_cats: ";print_r($categories->return_single($contacts->get_sub_cats($category_filter)));echo"</pre> \n";
+			}
+			
+			if( $both_types )
+			{
+				// somehow we have to get the field prefs for the other section, add them
+				if( $get_data_function != 'get_persons' )
+				{
+					$columns_to_display = $this->bo->get_columns_to_display($this->bo->tab_main_persons);
+					$get_data_function2 = 'get_persons';
+				}
+				else
+				{
+					$columns_to_display = $this->bo->get_columns_to_display($this->bo->tab_main_organizations);
+					//echo "<pre>columns_to_display:  "; print_r($columns_to_display); echo "</pre>";
+					$get_data_function2 = 'get_orgs';
+				}
+				$comms_array = $columns_to_display['comm_types']?$columns_to_display['comm_types']:array();
+				//echo "<pre>comms_array:  "; print_r($comms_array); echo "</pre>";
+				unset($columns_to_display['comm_types']);
+				//$columns_to_display?$columns_to_display:array();
+				if(is_array($columns_to_display))
+				{
+					$fields2 = array_keys($columns_to_display);
+					$fields_comms2 = array_keys($comms_array);
+				}
+				//$entries2 = $this->bo->$get_data_function($fields2, '', $this->start, $this->order, $this->sort, '', $criteria);
+				// now we have to merge the arrays
+			}
+			//$fields['preferred_org'] = 'preferred_org';
+			//$fields['org_id'] = 'org_id';
+			//$fields['person_id'] = 'person_id';
+			//$fields['my_preferred'] = 'my_preferred';
+			//echo "<pre>fields  "; print_r($fields); echo "</pre>";
+			//echo "<pre>fields_comms  "; print_r($fields_comms); echo "</pre>";
+			//echo "<pre>fields2  "; print_r($fields2); echo "</pre>";
+			//echo "<pre>fields_comms2  "; print_r($fields_comms2); echo "</pre>";
+			
+			//echo "<pre>Getting contacts data (This could take a while)</pre> \n";
+			//$entries = $this->bo->$get_data_function($fields, 13, $this->start, $this->order, $this->sort, '', $criteria);
+			//$entries = $this->bo->$get_data_function($fields, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
+			$entries = $this->bo->$get_data_function($fields, '', $this->start, $this->order, $this->sort, '', $criteria);
+			//echo "<pre>" . count($entries) . " entries: "; print_r($entries); echo "</pre> \n";
+			//echo "<pre>" . count($entries) . " entries: "; print_r(array_keys($entries)); echo "</pre> \n";
+			//echo "<pre>criteria: "; print_r($criteria); echo "</pre> \n";
+			unset($fields['owner']);
+			unset($fields['contact_id']);
+			
+			if (!is_array($entries))
+			{
+				$entries=array();
+			}
+			
+
+			if( count($fields_comms)>0 )
+			{
+				//$test = $this->bo->get_comm_contact_data(array_keys($entries), $fields_comms);
+				$test = $this->bo->get_comm_contact_data(array_keys($entries), $fields_comms);
+				//echo "<pre>get_comm_contact_data: "; print_r($test); echo "</pre> \n";;
+			}
+			// need to get org info
+			//getting entire list doesn't work since criteria should be met by first entries selection
+			//echo $get_data_function2;
+			//$entries2 = $this->bo->$get_data_function2($fields2, $this->limit, $this->start, $this->order, $this->sort, '', $criteria);
+			//echo "<pre>organizations_info: "; print_r($entries2 ); echo "</pre> \n";
+			
+			//if( count($fields_comms2)>0 )
+			//{
+				//array_merge($test,$this->bo->get_comm_contact_data(array_keys($entries), $fields_comms2));
+				//echo "<pre>get_comm_contact_data: "; print_r($test); echo "</pre> \n";;
+			//}
+			if(count($fields_comms)>0 || count($fields2)>0 || count($fields_comms2)>0)
+			{
+				//echo "<pre>Getting contacts comm data (This could take a while as well)</pre> \n";
+				//$entries_comms = $this->bo->get_comm_contact_data($contacts, $fields_comms);
+				foreach($entries as $entry)
+				//for ($i=0; $i<count($entries); $i++)
+				{
+					//echo "<pre>entry: "; print_r($entry); echo "</pre> \n";;
+					// merge in the fields_comms data
+					$entries[$entry['contact_id']] = array_merge($entries[$entry['contact_id']],$test[$entry['contact_id']]);
+					//$contact[0] = $entries[$i]['contact_id'];
+					//echo $entry['contact_id'] . ' ';
+					//$entries[$entry['contact_id']][] = $test[$entry['contact_id']];
+					//for ($j=0; $j<count($fields_comms); $j++)
+					//{
+						//$fields_comm[0] = $fields_comms[$j];
+						//echo $j . ' '.$fields_comms[$j];
+						//$test = $this->bo->get_comm_contact_data(array_keys($entries), $fields_comm);
+						//$entries[$i][$fields_comms[$j]] = $test[0]['comm_data'];
+						//echo "<pre>get_comm_contact_data: "; print_r($test); echo "</pre> \n";;
+					//}
+					
+					//$contact[0] = $entries[$i]['contact_id'];
+					// get the link to the person's organization
+					//echo 'here1' . ' ';
+					$crap = $contacts->get_organizations_by_person($entry['contact_id']);
+					//echo "<pre>get_organizations_by_person: "; print_r($crap[0]['my_org_id']); echo "</pre> \n";;
+					$entries[$entry['contact_id']]['my_org_id'] = $crap[0]['my_org_id'];
+					//echo 'here2' . ' ';
+					//echo "<pre>get_organizations_info: "; print_r($this->bo->$get_data_function2($fields2, $this->limit, $this->start, $this->order, $this->sort, '', $criteria)); echo "</pre> \n";
+					if($crap[0]['my_org_id'] && is_array($fields2))
+					{
+						//echo "<pre>get_organizations_info: "; print_r($fields2); echo "</pre> \n";
+						$crap2 = array_values($this->bo->$get_data_function2($fields2, '', '', '', '', array('contact_id'=>$crap[0]['my_org_id'])));
+						//echo "<pre>get_organizations_info: "; print_r($this->bo->get_principal_organizations_data($crap[0]['my_org_id'])); echo "</pre> \n";
+						//echo "<pre>get_organizations_info: "; print_r($crap2); echo "</pre> \n";
+						//echo "<pre>get_organizations_info: "; var_dump($crap2); echo "</pre> \n";
+						//echo "<pre>get_organizations_info: "; print_r(array_values($crap2)); echo "</pre> \n";
+						//if ($crap[0]['my_org_id'] = 15)
+						//{
+							//echo "<pre>get_organizations_info: "; print_r($crap2); echo "</pre> \n";
+						//}
+						if( is_array($crap2) )
+						{
+							$entries[$entry['contact_id']] = array_merge($entries[$entry['contact_id']],$crap2[0]);
+						}
+					}
+					// merge in the fields_comms2 data
+					$crap = $this->bo->get_comm_contact_data($entries[$entry['contact_id']]['my_org_id'], $fields_comm2);
+					//$entries[$entry['contact_id']][] = $crap[$entries[$entry['contact_id']]['my_org_id']];
+					$entries[$entry['contact_id']] = array_merge($entries[$entry['contact_id']],$crap[$entries[$entry['contact_id']]['my_org_id']]);
+					//for ($j=0; $j<count($fields2); $j++)
+					//{
+						//$fields2[0] = $fields2[$j];
+						//$test = $this->bo->get_comm_contact_data($entries[$i]['contact_id'], $fields_comm);
+						
+						//$entries[$i][$fields_comms[$j]] = $test[0]['comm_data'];
+						//echo "<pre>get_comm_contact_data: "; print_r($test); echo "</pre> \n";;
+					//}
+					//for ($j=0; $j<count($fields_comms2); $j++)
+					//{
+						//$fields_comm2[0] = $fields_comms2[$j];
+						//$test = $this->bo->get_comm_contact_data($entries[$i]['contact_id'], $fields_comm2);
+						//echo "<pre>get_comm_contact_data: "; print_r($test); echo "</pre> \n";;
+						//$entries[$i][$fields_comms2[$j]] = $test[0]['comm_data'];
+						//echo "<pre>get_comm_contact_data: "; print_r($test); echo "</pre> \n";;
+					//}
+					if($entry['cat_id'])
+					{
+						//echo "<pre>cat_info: "; print_r($entry['cat_id']); echo "</pre> \n";
+						//$cats = $GLOBALS['phpgw']->categories->return_sorted_array(0,False,'','','',!$type);
+						$cats = explode(',',$entry['cat_id']);
+						//echo "<pre>cat_info: "; print_r($cats); echo "</pre> \n";
+						//$c = 0;
+						$catname = '';
+						// get category names
+						if( ! is_array($subcats) )
+						{
+							$subcats = array();
+						}
+						while (list($key,$contactscat) = each($cats))
+						{
+							if ($contactscat && in_array(intval($contactscat),$subcats))
+							{
+								//$catinfo = $this->cat->return_single(intval($contactscat));
+								//$catinfo = $categories->return_single(intval($contactscat));
+								//$catname .= $catinfo[0]['name'] . '; ';
+								//$GLOBALS['phpgw']->categories->id2name($key);
+								$catname .= $categories->id2name(intval($contactscat)) . '; ';
+							}
+							//$c++;
+						}
+						//echo "<pre>cat_info: "; print_r($catname); echo "</pre> \n";
+						//$entries[$entry['contact_id']]['cat_id'] = explode(',',$cats);
+						$entries[$entry['contact_id']]['cat_id'] = $catname;
+						//$fields['cat_id'] = count($fcat_id) > 1 ? ','.implode(',',$fcat_id).',' : $fcat_id[0];
+					}
+				}
+			}
+			
+			$fields = array_merge($fields, $fields_comms);
+			$fields2 = array_merge($fields2, $fields_comms2);
+			//echo "<pre>fields: "; print_r($fields); echo "</pre> \n";
+			//echo "<pre>fields2: "; print_r($fields2); echo "</pre> \n";
+
+			//echo "<pre>entries_comms: "; print_r($entries_comms); echo "</pre> \n";
+			//echo "<pre>entries: "; print_r($entries); echo "</pre> \n";
+			
+			$cols = count($fields) + count($fields2);
+			$rows = count($entries);
+			//echo "cols: " . $cols . " \n";
+			
+			//open the xml file and edit it
+			// get contents of a file into a string
+			//echo "<pre>Reading OpenOffice file</pre> \n";
+			$file = $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir2 . '/' . $filename2;
+			$f = fopen ($file, "r+b");
+			$contents = fread ($f, filesize ($file));
+			rewind($f);
+			//substr ( string string, int start [, int length])
+			//strpos ( string haystack, string needle [, int offset])
+			
+			/*
+			<table:table table:name="Table1" table:style-name="Table1">
+<table:table-column table:style-name="Table1.A"/>
+			
+			*/
+
+			//echo $contents;
+			//print_r($contents);
+			//echo "<pre>Merging data into OpenOffice file</pre> \n";
+			$endpointer = strpos( $contents, '<table:table' );
+			$newcontents = substr( $contents, $startpointer, $endpointer - $startpointer);
+			//echo $endpointer . ' ' . $startpointer . ' ';
+			//echo "<pre>newcontents: "; print_r($newcontents); echo "</pre> \n";
+			$startpointer = $endpointer;
+			$endpointer = strpos( $contents, '>Header<', $startpointer ) + 1 ;
+			$newcontents .= substr( $contents, $startpointer, $endpointer - $startpointer);
+			$startpointer = $endpointer;
+			// skip template text
+			$endpointer = strpos( $contents, '<', $startpointer );
+			$startpointer = $endpointer;
+			// add new text
+			if( $fields[0] )
+			{
+				$newcontents .= utf8_encode(htmlentities($fields[0]));
+			}
+			elseif( $fields2[0] )
+			{
+				$newcontents .= utf8_encode(htmlentities($fields2[0]));
+			}
+			else
+			{
+				$newcontents .= 'no header';
+			}
+			//$newcontents .= '>';
+			// add more columns
+			for($i=1; $i<$cols; $i++)
+			{
+				$newcontents .= '</text:p>' . "\n";
+				$newcontents .= '</table:table-cell>' . "\n";
+				$newcontents .= '<table:table-cell>' . "\n";
+				$newcontents .= '<text:p>' . "\n";
+				//$newcontents .= 'Field name ' . $i;
+				if( $i < count($fields) )
+				{
+					$newcontents .= utf8_encode(htmlentities($fields[$i]));
+				}
+				elseif( $i < (count($fields) + count($fields2)) )
+				{
+					$newcontents .= utf8_encode(htmlentities($fields2[$i-count($fields)]));
+					//$newcontents .= $this->get_comm_value($myid, $column[key])
+				}
+				else
+				{
+					$newcontents .= 'no header'; // shouldn't ever be called
+				}
+			}
+			
+			$endpointer = strpos( $contents, '>Data<', $startpointer ) + 1 ;
+			$newcontents .= substr( $contents, $startpointer, $endpointer - $startpointer );
+			$startpointer = $endpointer;
+			// skip template text
+			$endpointer = strpos( $contents, '<', $startpointer );
+			$startpointer = $endpointer;
+			// add new text
+			$process = array_shift($entries);
+			//print_r($process);
+			//$newcontents .= 'Data: Row ' . '0' . ' Column ' . '0';
+			if( $fields[0] && $rows > 0 )
+			{
+				$newcontents .= utf8_encode(htmlentities($process[$fields[0]]));
+			}
+			elseif( $fields2[0] && $rows > 0 )
+			{
+				$newcontents .= utf8_encode(htmlentities($process[$fields2[0]]));
+			}
+			else
+			{
+				$newcontents .= 'no data';
+			}
+			//$newcontents .= 'Data: Row 0 Column 0';
+			//$newcontents .= '>';
+			// add more columns
+			for($i=1; $i<$cols; $i++)
+			{
+				$newcontents .= '</text:p>' . "\n";
+				$newcontents .= '</table:table-cell>' . "\n";
+				$newcontents .= '<table:table-cell>' . "\n";
+				$newcontents .= '<text:p>' . "\n";
+				//$newcontents .= 'Data: Row ' . '0' . ' Column ' . $i;
+				if( $i < count($fields) )
+				{
+					$newcontents .= utf8_encode(htmlentities($process[$fields[$i]]));
+					//$newcontents .= $entries[0][$fields[$i]];
+				}
+				elseif( $i < (count($fields)+count($fields2)) )
+				{
+					$newcontents .= utf8_encode(htmlentities($process[$fields2[$i-count($fields)]]));
+					//$newcontents .= $entries[0][$fields2[$i-count($fields)]];
+					//echo $i-count($fields) . $fields_comms[$i-count($fields)];
+				}
+				else
+				{
+					$newcontents .= 'no data';
+				}
+			}
+			// add extra rows of columns
+			//$newcontents .= '</text:p>';
+			//$newcontents .= '</table:table-cell>';
+			//$newcontents .= '</table:table-row>';
+			for($r=1; $r<$rows; $r++)
+			{
+				$newcontents .= '</text:p>' . "\n";
+				$newcontents .= '</table:table-cell>' . "\n";
+				$newcontents .= '</table:table-row>' . "\n";
+				$newcontents .= '<table:table-row>' . "\n";
+				$process = array_shift($entries);
+				for($i=0; $i<$cols; $i++)
+				{
+					$newcontents .= '<table:table-cell>' . "\n";
+					$newcontents .= '<text:p>' . "\n";
+					//$newcontents .= 'Data: Row ' . $r . ' Column ' . $i;
+					if( $i < count($fields) )
+					{
+						$newcontents .= utf8_encode(htmlentities($process[$fields[$i]]));
+						//$newcontents .= $entries[$r][$fields[$i]];
+					}
+					elseif( $i < (count($fields)+count($fields2)) )
+					{
+						//$newcontents .= $entries[$r][$fields2[$i-count($fields)]];
+						$newcontents .= utf8_encode(htmlentities($process[$fields2[$i-count($fields)]]));
+					}
+					else
+					{
+						$newcontents .= 'no data'; // shouldn't get used
+					}
+					if( $i != ($cols-1) ) // don't add this last time through
+					{
+						$newcontents .= '</text:p>' . "\n";
+						$newcontents .= '</table:table-cell>' . "\n";
+					}
+				}
+			}
+			// skip the last </text:p></table:table-cell>
+			//$endpointer = strpos( $contents, '</table:table-row>', $startpointer );
+			//$startpointer = $endpointer;
+			// add the rest of the file
+			$newcontents .= substr( $contents, $startpointer );
+			
+			// empty file and write in new contents
+			//echo "<pre>Writing data into OpenOffice file</pre> \n";
+			rewind($f);
+			fwrite($f,$newcontents);
+			fflush($f);
+			ftruncate($f, ftell($f));
+			/*
+			from http://ca3.php.net/manual/en/function.fopen.php
+			To overwrite a file with a new content without deleting it, and without changing the owner or access rights, it's best to not use:
+			$file = fopen($filename, 'r+b); // binary update mode
+			...
+			ftruncate($file, 0);
+			fwrite($file, $my_stuff);
+			...
+			fclose($file);
+			but instead the faster one:
+			$file = fopen($filename, 'r+b); // binary update mode
+			...
+			rewind($file);
+			fwrite($file, $my_stuff);
+			fflush($file);
+			ftruncate($file, ftell($file));
+			...
+			fclose($file);
+			The reason is that truncating a file at size 0 forces the OS to deallocate all storage clusters used by the file, before you write your content which will be reallocated on disk.
+			The second code simply overwrites the existing content where it is already located on disk, and truncates any remaining bytes that may exist (if the new content is shorter than the old content). The "r+b" mode allows access for both read and write: the file can be kept opened after reading it and before rewriting the modified content.
+			It's particularly useful for files that are accessed often or have a size larger than a few kilobytes, as it saves lots of system I/O, and also limits the filesystem fragmentation if the updated file is quite large.
+			And this method also works if the file is locked exclusively once opened (but I would rather recommend using another empty file for locking purpose, opened with "a+" access mode, in "/var/lock/yourapp/*" or other fast filesystems where filelocks are easily monitored and where the webserver running PHP is allowed to create and update lock files, and not forgetting to close the lock file after closing the content file).
+			*/
+			
+			fclose ($f);
+			
+			// clean up my ab tables
+			//select * from phpgw_contact LEFT JOIN phpgw_ttrack_jobs ON phpgw_contact.contact_id=phpgw_ttrack_jobs.company_id WHERE phpgw_ttrack_jobs.company_id IS NULL;
+			
+			//zip it up again
+			//echo "<pre></pre>";
+			//echo $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir2;
+			chdir($GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir2);
+			//echo '/usr/bin/zip -r ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $filename1 . ' *' . ' &> /dev/null';
+			system('/usr/bin/zip -r ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $filename1 . ' *' . ' &> /dev/null', $null );
+			//system('/usr/bin/unzip -o addressbook/inc/export/'. $filename1 .' -d ' . $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $tempdir2 . ' &> /dev/null', $null);
+			
+			//echo "<pre>Export_vars: "; print_r($export_vars); echo "</pre> \n";
+			//return $buffer;
+			return $GLOBALS['phpgw_info']['server']['temp_dir'] . '/' . $filename1;
+		}
+
+		
+	}

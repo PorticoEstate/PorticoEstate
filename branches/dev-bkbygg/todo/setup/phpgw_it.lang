@@ -1,0 +1,58 @@
+access changed	todo	it	Accesso modificato
+add main project	todo	it	Aggiungi progetto principale
+add sub	todo	it	Aggiungi Sub
+add sub project	todo	it	Aggiungi sottoprogetto
+adds or edits a todo item	todo	it	Aggiunge o modifica elemento lista
+addsub	todo	it	AggiungiSub
+are you sure you want to delete this entry	todo	it	Sei sicuro di voler cancellare quasta nota ?
+assigned to	todo	it	Assegnato a
+category changed	todo	it	Catagoria modificata
+completed	todo	it	completato
+date due	todo	it	Data Consegna
+days datedue	todo	it	Giorni alla consegna
+deletes a todo item	todo	it	Cancella un elemento lista
+description can not exceed 8000 characters in length	todo	it	La descizione non può essere più lunga di 8000 caratteri!
+description changed	todo	it	Descrizione modificata
+do you also want to delete all sub projects ?	todo	it	Vuoi cancellare anche i sottoprogetti?
+edit main project	todo	it	Modifica progetto principale
+edit sub project	todo	it	Modifica subprogetto
+end date	todo	it	Data finale
+end date changed	todo	it	Data fine modificata
+ending date can not be before start date	todo	it	La data di fine non può precedere la data iniziale
+entry added	todo	it	Elemento Aggiunto
+grant todo access	common	it	Permetti accesso al DaFare
+high	todo	it	Alta
+last updated	todo	it	Ultimo Aggiornamento
+low	todo	it	Bassa
+nobody	todo	it	Nessuno
+normal	todo	it	Normale
+or: days from startdate:	todo	it	oppure: giorni dalla data d'inizio:
+or: select for today:	todo	it	oppure: seleziona per oggi:
+parent changed	todo	it	Progetto Genitore cambiato
+parent project	todo	it	progetto genitore
+please enter a title	todo	it	Inserire un titolo!
+project description	todo	it	Descrizione Progetto
+returns a the total number of records in the database, must call list_todos first	todo	it	
+show todo items on main screen	todo	it	Mostra ToDo List nella maschera iniziale
+start date	todo	it	Data Inizio
+start date changed	todo	it	Data d'inizio modificata
+status changed	todo	it	Statu modificato
+sub	todo	it	sotto
+subproject description	todo	it	Descrizione Sotto-progetto
+title changed	todo	it	Titolo Modificato
+to do list	common	it	Lista Da-Fare
+todo	common	it	da-fare
+todo list	common	it	Lista Da-Fare
+todo list - add	todo	it	Lista da-fare - aggiungi
+todo list - add sub-project	todo	it	Lista DaFare - aggiungi sotto-progetto
+todo list - edit	todo	it	Lista da-fare - modifica
+todo preferences	todo	it	Preferenze ToDo
+urgency	todo	it	Priorità
+urgency changed	todo	it	Priorità modificata
+view matrix of actual month	todo	it	Visualizza la matrice del mese attuale
+view todo item	todo	it	V isualizza elemento todo
+you can only enter numbers for days from now	todo	it	E' possibile solo inserire numero di giorni da oggi!
+you have entered an ending invalid date	todo	it	E' stata inserita una data finale non valida!
+you have entered an invailed date	todo	it	hai inserito una data non valida
+you have entered an starting invalid date	todo	it	E' stata inserita una data iniziale non valida!
+

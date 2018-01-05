@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<link rel="stylesheet" type="text/css" href="./styles/screen.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="./styles/print.css" media="print" />
+		<title>phpGroupWare - Suggested Apache Config File</title>
+	</head>
+	<body>
+		<div>
+			<div id="printheader">
+				<img src="./pics/logo.png" alt="phpGW logo" />
+				Suggested Apache Config File
+			</div>
+			<div id="top">
+				<img src="./pics/logo.png" 
+					alt="phpGroupWare" />
+				<div id="sitename"><a href="./">Configuration Documentation</a></div>
+			</div>
+			<div id="content">
+				<h1>Suggested Apache Config File</h1>
+				<p>
+					# phpGroupWare suggested apache config file<br />
+					# Written by Dave Hall<br />
+					# Copyright &copy; 2004 Free Software Foundation Inc<br />
+					# License <a href="http://www.gnu.org/copyleft/gpl.html">GNU GPL</a><br />
+					#</br>
+					# See <a href="./php-configuration.html">the php configuration doc</a>
+					and <a href="http://php.net">php.net</a> for more information </br>
+					# regarding these configuration options<br />
+				</p>
+				<p>
+					# Copy this file to /etc/apache (or where your apache config files are)<br />
+					# Add the following to your virtual host section of Apache<br />
+					# for the vhost phpgw is running on<br />
+					#<br />
+					# Like so:<br />
+				</p>
+<pre>
+#	<VirtualHost <$ip>:[<$port>]>
+#	#Normal VirtualHost info here
+#		Include /etc/apache/phpgw-apache-config.conf
+#		Options -Indexes
+#	</VirtualHost>
+#
+
+<IfModule mod_php5.c>
+	# This bit is not needed here if you have changed your php.ini
+	# as recommened in php-configuration.txt
+	php_admin_flag display_errors off
+	php_admin_flag file_uploads on
+	php_admin_flag log_errors on
+	php_admin_flag register_globals off
+	php_admin_value max_execution_time 90
+	php_admin_value memory_limit 20M
+	php_admin_value open_basedir "<$path/to/phpgroupware>:<$/path/to/phpgw_vfs>:<$temp>"
+	php_admin_value session.save_path <$temp>
+	php_admin_value upload_max_filesize 5M
+</IfModule>
+
+<Files ~ "\.inc*">
+	Order allow,deny
+	Deny from all
+</Files>
+
+# NOTE: Replace the <$something> with the values that suit your setup.
+				</pre>
+				<p>
+					<b>NOTE: </b>It is best to use the <a href="phpgw-apache.conf">text version</a>
+					of this document, rather than copying and pasting.
+				</p>
+			</div>
+			<div id="footer">
+				The most recent version of this document can be found 
+				at <a href="http://docs.phpgroupware.org/html/install/">docs.phpgroupware.org</a><br />
+				Copyright &copy; 2000-2004 <a href="http://www.fsf.org" target="_blank">Free Software 
+				Foundation Inc</a>,
+				distributed under the terms of the <a href="http://www.gnu.org/copyleft/fdl.html" 
+				target="_blank">GNU Free Documentation License</a><br />
+				<b>Source:</b> $Source$<br />
+				<b>Version:</b> $Revision$<br />
+				<b>Last Modified:</b> $Date$ by $Name$
+			</div>
+		</div>
+	</body>
+</html>
+
+
+

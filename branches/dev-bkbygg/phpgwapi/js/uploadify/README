@@ -1,0 +1,7 @@
+In case of NTLM -autentication: 
+
+You need to write to a NON-NTLM-server.
+the 'crossdomain.xml' has to be copied to the root of the server you want to write to.
+
+http://www.adobe.com/devnet/articles/crossdomain_policy_file_spec.html
+http://kb2.adobe.com/cps/142/tn_14213.html

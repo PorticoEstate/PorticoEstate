@@ -1,0 +1,151 @@
+1 message has been deleted	email	fi	1 viesti poistettu
+1 message has been moved to	email	fi	1 viesti siirretty kansioon
+account	email	fi	tunnus
+add to addressbook	email	fi	Lisää osoitekirjaan
+and	email	fi	ja
+arrival date	email	fi	Saapumispäivä
+as	email	fi	as
+attach file	email	fi	Liitä tiedosto
+attach signature	email	fi	Liitä signauture
+attachment	email	fi	Liite
+bcc	email	fi	bcc
+cc	email	fi	CC
+choose to rename	email	fi	valitse vaihtaaksesi nimen
+compose	email	fi	Kirjoita
+compose new	common	fi	Uusi viesti
+contains	email	fi	Sisältää
+could not open this mailbox	email	fi	En voinut avata postilaatikkoa
+create (expert)	email	fi	uusi (expert)
+create a folder email	fi	uusi kansio
+custom email settings	email	fi	omat email asetukset
+default sorting order	email	fi	Esitysjärjestys
+default:	common	fi	oletus:
+delete (expert)	email	fi	Poista (expert)
+delete a folder	email	fi	Poista kansio
+delete account	common	fi	Poista tunnus
+deleted messages (trash) folder	email	fi	Poistettujen viestien (Roskakori) kansio
+deleted messages go to trash	email	fi	Siirrä poistetut Roskakoriin
+discard	email	fi	Hylkää
+does not contain	email	fi	Ei sisällä
+e-mail folders	common	fi	E-mail Kansiot
+e-mail preferences	common	fi	E-Mail asetukset
+email account name	email	fi	Tunnuksen nimi
+email address	email	fi	E-Mail osoite
+email date	email	fi	E-Mail Päiväys
+email filters	email	fi	E-Mail Suodattimet
+email password	email	fi	E-Mail salasana
+email preferences	email	fi	E-Mail Asetukset
+email signature	email	fi	E-Mail signature
+email type	common	fi	E-Mail Tyyppi
+enable this email account	common	fi	Käytä tätä tunnusta
+enable utf-7 encoded folder names	email	fi	Käytä utf-7 muotoisia kansioiden nimiä
+enter your default mail domain ( From: user@domain )	admin	fi	Anna oletustoimialue ( Lähettäjä: minä@toimialue )
+enter your pop	admin	fi	Anna POP
+enter your smtp server hostname or ip address	admin	fi	Anna SMTP -palvelimen nimi tai IP-osoite
+enter your smtp server port	admin	fi	Anna SMTP -palvelimen portti
+error moving messages to	email	fi	Virhe siirrettäessä viestejä kansioon
+error: unknown message data	email	fi	Virhe: Viestin sisältöä ei tunnistettu
+extra e-mail account	common	fi	Lisä E-Mail tunnus
+extra e-mail accounts	common	fi	Lisä E-Mail tunnukset
+fewer actions	email	fi	Vähemmän toimintoja
+fewer choices	email	fi	Vähemmän valintoja
+file into	email	fi	Arkistoi kansioon
+file	email	fi	Tiedosto (arkistoi?)
+folder maintenance	email	fi	Kansioiden hallinta
+folder name	email	fi	Kansion nimi
+folder size	email	fi	Kansion koko
+folder	email	fi	Kansio
+folders	email	fi	Kansiot
+for these items, fill only what is different from you default e-mail preferences	common	fi	Anna vain päätunnuksestasi eroavat tiedot
+forward	email	fi	Eteenpäin
+from	email	fi	Lähettäjä
+if applicable	email	fi	Jos soveltuu
+if fileto then select destination folder	email	fi	arkistoidaan kansioon
+if messages match	email	en	Jos viestit vastaavat
+image	email	fi	Kuva
+imap mail server hostname or ip address	admin	fi	IMAP -palvelimen nimi tai osoite
+imap server type	common	fi	IMAP -palvelimen tyyppi
+keep	email	fi	Säilytä
+keywords	email	fi	Avainsanat
+layout 1	common	fi	Ulkoasu 1
+layout 2	common	fi	Ulkoasu 2
+lines	email	fi	Riviä
+long names	email	fi	pitkät nimet
+mail folder(uw-maildir)	email	fi	Postikansio (uw-maildir)
+mail server login type	admin	fi	Postipalvelimelle kirjautumisen tapa
+mail server type	email	fi	Postipalvelimen tyyppi
+mail server	email	fi	Postipalvelin
+mail settings	admin	fi	Asetukset
+manage accounts	email	fi	Tunnusten hallinta
+manage folders	email	fi	Kansioiden hallinta
+message list layout	common	fi	Viestiluettelon ulkoasu
+messages have been moved to	email	fi	viestiä siirretty kansioon
+messages	email	fi	Viestit
+more actions	email	fi	Enemmän toimintoja
+more choices	email	fi	Enemmän valintoja
+move selected messages into	email	fi	Siirrä valitut viestit kansioon
+move this message into	email	fi	Siirrä tämä viesti kansioon
+new message	email	fi	Uusi viesti
+new	email	fi	Uusi
+newest	common	fi	uusin
+no error returned from server	email	fi	Palvelin ei palauttanut virheitä
+no next message	email	fi	ei seuraavaa viestiä
+no previous message	email	fi	ei edellistä viestiä
+non-standard	email	fi	Epästandardi
+number	common	fi	Numero
+oldest	common	fi	vanhin
+or enter text	email	en	tai anna teksti
+or	common	fi	tai
+please fill in everything you need	email	fi	Anna tarvittavat tiedot
+please select a folder to rename	email	fi	Valitse uudelleen nimettävä kansio
+please select a message first	email	fi	Valitse ensin viesti
+please type a folder name in the text box	email	fi	Anna kansion nimi sille varattuun kenttään
+previous	email	fi	Edellinen
+raw message	email	fi	muotoilematon viesti
+redirect	email	fi	Lähetä edelleen
+reject	email	fi	Hylkää
+rename (expert)	email	fi	Vaihda nimi (expert)
+rename a folder	email	fi	Vaihda kansion nimi
+reply all	email	fi	Vastaa kaikille
+reply	email	fi	 Vastaa
+replyto	email	fi	Vastausosoite
+reset	email	fi	Nollaus
+result	email	fi	tulos
+search this folder	email	fi	etsi tästä kansiosta
+section	email	fi	Osio
+select your mail server type	admin	fi	Valitse postipalvelimen tyyppi
+send deleted messages to the trash	email	fi	Siirrä poistetut viestit roskakoriin
+send	email	fi	Lähetä
+sent messages folder	common	fi	Lähetettyjen viestien kansio
+sent messages saved in &quot;sent&quot; folder	common	fi	Lähetetyt viestit tallennettu &quot;lähetetyt&quot; kansioon
+short names	email	fi	lyhyet nimet
+show new messages on main screen	email	fi	Näytä uudet viestit päänäytöllä
+show sender's email address with name	email	fi	Näytä lähettäjän nimi ja osoite
+size	email	fi	Koko
+somebody	email	fi	joku
+sort by	email	fi	Lajittele
+stop if matched	email	fi	Pysähdy jos löytyy
+switch accounts	email	fi	Vaihda tunnusta
+switch current folder to	common	fi	Vaihda kansioksi
+then take this actions	email	fi	Ja tee sitten
+there was an error trying to connect to your mail server.<br />please, check your username and password, or contact your admin.	email	fi	Yhteydenotossa tapahtui virhe.<br />Tarkista käyttäjätunnus ja salasana tai ota tarvittaessa yhteys ylläpitoon.
+this data not supplied.	email	fi	Tietoa ei annettu
+this folder is empty	email	fi	Kansio on tyhjä
+to	email	fi	Kenelle
+total messages	email	fi	Viestejä yhteensä
+undisclosed recipients	email	fi	Nimeämättömät vastaanottajat
+undisclosed sender	email	fi	Nimeämätön lähettäjä
+unknown action	email	fi	Tuntematon toiminto
+unknown error	email	fi	Tuntematon virhe
+use custom settings	email	fi	Käytä omia asetuksia
+view as html	email	fi	Näytä HTML -muodossa
+view formatted	email	fi	Näytä muotoiltuna
+view headers	email	fi	Näytä otsikkotiedot
+view unformatted	email	fi	Näytä muotoilemattomana
+%1 messages have been deleted	email	fi	%1 viestiä poistettu
+you have 1 new message!	common	fi	Sinulle on yksi uusi viesti!
+you have messages!	common	fi	Sinulle on viestejä!
+you have no new messages	common	fi	Ei uusia viestejä
+you have %1 new messages!	common	fi	Sinulle on %1 uutta viestiä!
+your full name	common	fi	Koko nimesi
+your message has been sent	common	fi	Viesti lähetetty

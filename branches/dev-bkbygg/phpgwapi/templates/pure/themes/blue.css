@@ -1,0 +1,90 @@
+body {
+	background-color: #fff;
+	color: #666;
+}
+body *
+{
+	text-shadow: none;
+}
+a, a:link, a:active, a:visited, a:hover
+{
+	color: #333;
+}
+
+.header,
+.footer
+{
+	background: #3968c6;
+	color: #fff;
+}
+
+/* Tabs container */
+.r-tabs {
+	background-color: #999999;
+	border-top: 1px solid #999999;
+	border-right: 1px solid #999999;
+	border-left: 1px solid #999999;
+	border-bottom: 4px solid #999999;
+
+}
+
+/* Tab element */
+.r-tabs .r-tabs-nav .r-tabs-tab {
+
+	background-color: #999999;
+}
+
+/* Tab anchor */
+.r-tabs .r-tabs-nav .r-tabs-anchor {
+	color: #fff;
+}
+
+/* Disabled tab */
+.r-tabs .r-tabs-nav .r-tabs-state-disabled {
+	opacity: 0.5;
+}
+
+/* Active state tab anchor */
+.r-tabs .r-tabs-nav .r-tabs-state-active .r-tabs-anchor {
+	color: #999999;
+	background-color: white;
+}
+
+/* Tab panel */
+.r-tabs .r-tabs-panel {
+	background-color: white;
+
+	border-bottom: 4px solid white;
+}
+
+/* Accordion anchor */
+.r-tabs .r-tabs-accordion-title .r-tabs-anchor {
+
+	background-color: #999999;
+	color: #fff;
+}
+
+/* Active accordion anchor */
+.r-tabs .r-tabs-accordion-title.r-tabs-state-active .r-tabs-anchor {
+	background-color: #fff;
+	color: #999999;
+	text-shadow: none;
+}
+
+/* Disabled accordion button */
+.r-tabs .r-tabs-accordion-title.r-tabs-state-disabled {
+	opacity: 0.5;
+}
+
+/* Buttons */
+button {
+	color: #fff;
+}
+
+/* Info bar */
+.info {
+	color: #999999;
+	border: 2px solid #00ab94;
+	background-color: #fff;
+} 
+

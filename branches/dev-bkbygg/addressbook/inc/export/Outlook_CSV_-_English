@@ -1,0 +1,213 @@
+<?php
+// This file defines a set of functions and an associative array.
+// The key of the array corresponds to a header in the source
+// export file and the value of the array item will be used in
+// the creation of the output file.
+//
+// An exported Outlook file looks like this:
+//
+// Title<tab>First Name<tab>Middle Name<tab>Last Name<tab>...
+// <tab>Patrick<tab><tab>Walsh<tab>...
+//
+// Where the first line explains each optional field.  This is what
+// will be looked up in the key.
+//
+// The array need not be in any order and any fields not defined will
+// not be transferred.  If the val='+', the value will be appended to
+// the previous field and any text after the '+' will be appended 
+// before the value.  For example, the following would add a comma and
+// a space between LastName and FirstName and store it in FullName:
+//
+//	array("LastName" => "FullName","FirstName" => "+, ");
+//
+// Also start with a '#' symbol and a comma separated list will be
+// turned into a number of the same entries.
+
+	class export_conv
+	{
+		var $currentrecord = array(); //used for buffering to allow uid lines to go first
+		var $id;
+		var $type = 'csv';
+
+		var $export = array(
+			'title'			=> 'Title',
+			'first_name'		=> 'First Name',
+			'middle_name'		=> 'Middle Name',
+			'last_name'		=> 'Last Name',
+			'suffix'		=> 'Suffix',
+			'org_name'		=> 'Company',
+			'department'		=> 'Department',
+			'work_add1'		=> 'Business Street',
+			'work_add2'		=> 'Business Street 2',
+			'work_add3'		=> 'Business Street 3',
+			'work_city'		=> 'Business City',
+			'work_state'		=> 'Business State',
+			'work_postal_code'	=> 'Business Postal Code',
+			'work_country'		=> 'Business Country',
+			'home_add1'		=> 'Home Street',
+			'home_city'		=> 'Home City',
+			'home_state'		=> 'Home State',
+			'home_postal_code'	=> 'Home Postal Code',
+			'home_country'		=> 'Home Country',
+			'tel_fax'		=> 'Business Fax',
+			'tel_work'		=> 'Business Phone',
+			'tel_msg'		=> "Assistant's Phone",
+			'tel_car'		=> 'Car Phone',
+			'tel_isdn'		=> 'ISDN',
+			'tel_home'		=> 'Home Phone',
+			'tel_cell'		=> 'Mobile Phone',
+			'tel_pager'		=> 'Pager',
+			'ophone'		=> 'Business Phone 2',
+			'bday'			=> 'Birthday',
+			'email'			=> 'E-mail Address',
+			'email_home'		=> 'E-mail Address 2',
+			'url'			=> 'Web Page',
+			'note'			=> 'Notes'
+		);
+
+		// This will store the contacts object
+		var $contacts = '';
+
+		function export_start_file($buffer,$ncat_id='')
+		{
+			$this->contacts = CreateObject('phpgwapi.contacts');
+
+			$this->id=-1;
+			$fields = array('person_id');
+
+			if ($ncat_id)
+			{
+				$criteria = $this->contacts->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id'], PHPGW_CONTACTS_ALL, $ncat_id);
+				$tmp_person = $this->contacts->get_persons($fields, '', '', '', '', '', $criteria);
+			}
+			else
+			{
+				$criteria = $this->contacts->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id'], PHPGW_CONTACTS_ALL);
+				$tmp_person = $this->contacts->get_persons($fields, '', '', '', '', '', $criteria);
+			}
+
+			if(is_array($tmp_person))
+			{
+				foreach($tmp_person as $data)
+				{
+					$this->ids[] = $data['person_id'];
+				}
+			}
+
+			// $ids is now an array of all id's for this user, e.g. $ids[0] = 21, etc...
+			// $buffer is still empty
+			return $buffer;
+		}
+
+		// Read each entry
+		function export_start_record($buffer)
+		{
+			$this->id++;
+
+			$top = $this->contacts->person_complete_data($this->ids[$this->id]);
+			
+			if(is_array($top['locations']))
+			{
+				foreach($top['locations'] as $key => $values)
+				{
+					if($values['type']=='work')
+					{
+						$work_type = $key;
+					}
+					elseif($values['type']=='home')
+					{
+						$home_type = $key;
+					}
+				}
+			}
+
+			if(is_array($top['notes']))
+			{
+				$note_id = key($top['notes']);
+			}
+
+
+
+			$record['title'] 		= $top['title'];
+			$record['first_name'] 		= $top['first_name'];
+			$record['middle_name'] 		= $top['middle_name'];
+			$record['last_name'] 		= $top['last_name'];
+			$record['suffix'] 		= $top['suffix'];
+			$record['org_name'] 		= $top['org_name'];
+			$record['department'] 		= $top['department'];
+			$record['work_add1'] 		= $top['locations'][$work_type]['add1'];
+			$record['work_add2'] 		= $top['locations'][$work_type]['add2'];
+			$record['work_add3'] 		= $top['locations'][$work_type]['add3'];
+			$record['work_city'] 		= $top['locations'][$work_type]['city'];
+			$record['work_state'] 		= $top['locations'][$work_type]['state'];
+			$record['work_postal_code']	= $top['locations'][$work_type]['postal_code'];
+			$record['work_country'] 	= $top['locations'][$work_type]['country'];
+			$record['home_add1'] 		= $top['locations'][$home_type]['add1'];
+			$record['home_city'] 		= $top['locations'][$home_type]['city'];
+			$record['home_state'] 		= $top['locations'][$home_type]['state'];
+			$record['home_postal_code'] 	= $top['locations'][$home_type]['postal_code'];
+			$record['home_country'] 	= $top['locations'][$home_type]['country'];
+			$record['tel_fax'] 		= $top['comm_media']['work fax'];
+			$record['tel_work'] 		= $top['comm_media']['work phone'];
+			$record['tel_msg'] 		= $top['comm_media']['msg phone'];
+			$record['tel_car'] 		= $top['comm_media']['car phone'];
+			$record['tel_isdn'] 		= $top['comm_media']['isdn'];
+			$record['tel_home'] 		= $top['comm_media']['home phone'];
+			$record['tel_cell'] 		= $top['comm_media']['mobile (cell) phone'];
+			$record['tel_pager'] 		= $top['comm_media']['pager'];
+			$record['ophone'] 		= $top['comm_media']['voice phone'];
+			$record['bday'] 		= $top['comm_media']['birthday'];
+			$record['email'] 		= $top['comm_media']['work email'];
+			$record['email_home'] 		= $top['comm_media']['home email'];
+			$record['url'] 			= $top['comm_media']['website'];
+			$record['note'] 		= $top['notes'][$note_id]['text'];
+
+			$this->currentrecord = $record;
+			return $buffer;
+		}
+
+		// Read each attribute, populate buffer
+		// name/value are the fields from the export array above
+		function export_new_attrib($buffer,$name,$value)
+		{
+			if ($this->export[$name])
+			{
+				$buffer[$this->id][$this->export[$name]] = $value;
+				//echo '<br />'.$this->id.' - '.$this->export[$name].': '.$buffer[$this->id][$this->export[$name]];
+			}
+			return $buffer;
+		}
+
+		// Tack on some extra values
+		function export_end_record($buffer)
+		{
+			return $buffer;
+		}
+
+		function export_end_file($buffer)
+		{
+			// Build the header for the file (field list)
+			reset($this->export);
+			while (list($name,$value)=each($this->export))
+			{
+				$entries .= $value . ',';
+			}
+			$entries = substr($entries,0,-1);
+			$entries .= "\r\n";
+
+			// Now add all the data
+			reset($this->ids);
+			for ($i=0;$i<count($this->ids);$i++)
+			{
+				reset($this->export);
+				while (list($name,$value)=each($this->export))
+				{
+					$entries .= '"'.$buffer[$i][$value] . '",';
+				}
+				$entries = substr($entries,0,-1);
+				$entries .= "\r\n";
+			}
+			$buffer = $entries;
+			return $buffer;
+		}
+	}

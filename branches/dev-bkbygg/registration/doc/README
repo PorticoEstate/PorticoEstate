@@ -1,0 +1,36 @@
+These are quick and simple instructions on how to install and use this app.  The more in depth
+ones will follow soon.
+
+First, use setup3 to create your tables.
+
+Next, you will need to create an anonymous account.  Do this by
+creating a normal user account with just permissions to the
+registration app.
+
+Create a group called 'users', this will be the default group that all
+users belong to.  So, you can give and take permissions to an entire
+group, instead of every single user.
+
+In main.php, there is a config section towards the top.
+	$domain         - Which domain to use out of the header.inc.php file, most will use default
+	$template_set   - Template set to use, this allows site to create there own layout
+
+Login as admin user, go to the Administration menu, click on the
+Site Configuration link for the registration application. Insert the
+anonymous user and password.
+
+You can customize what input the user is asked to enter by logging in as
+an admin user, and going to Administration-&gt;Registration-&gt;Manage Fields.
+You don't need any fields, but you will need an 'email' field if you wish
+to use the Lost Password functions.
+
+Make sure phpgwapi.send is properly configured, i.e. the database
+contains something like:
+
+INSERT INTO phpgw_config VALUES ('phpgwapi','smtp_server','localhost');
+INSERT INTO phpgw_config VALUES ('phpgwapi','smtp_port','25');
+
+The URI's you can use for linking:
+
+Registration: <a href="http://yoursite.com/registration/" target="_NEW">http://yoursite.com/registration/</a>
+Password Retrieval: <a href="http://yoursite.com/registration/main.php?menuaction=registration.boreg.lostpw1" target="_NEW">http://yoursite.com/registration/main.php?menuaction=registration.boreg.lostpw1</a>
