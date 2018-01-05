@@ -12,28 +12,28 @@
 		<tbody>
 			<!-- END header -->
 			<!-- BEGIN body -->
-			<tr class="pure-table-odd">
-				<td>{lang_Would_you_like_phpGroupWare_to_check_for_a_new_version_when_admins_login_?}:</td>
+			<!--tr class="pure-table-odd">
+				<td>{lang_Would_you_like_to_check_for_a_new_version_when_admins_login}?:</td>
 				<td>
 					<select name="newsettings[checkfornewversion]">
 						<option value="">{lang_No}</option>
 						<option value="True"{selected_checkfornewversion_True}>{lang_Yes}</option>
 					</select>
 				</td>
-			</tr>
+			</tr-->
 
 			<tr>
-				<td>{lang_Timeout_for_sessions_in_seconds_(default_14400_=_4_hours)}:</td>
+				<td>{lang_Timeout_for_sessions_in_seconds} (default 14400 = 4 hours):</td>
 				<td><input size="8" name="newsettings[sessions_timeout]" value="{value_sessions_timeout}"></td>
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_Timeout_for_application_session_data_in_seconds_(default_86400_=_1_day)}:</td>
+				<td>{lang_Timeout_for_application_session_data_in_seconds} (default 86400 = 1 day):</td>
 				<td><input size="8" name="newsettings[sessions_app_timeout]" value="{value_sessions_app_timeout}"></td>
 			</tr>
 
 			<tr>
-				<td>{lang_Would_you_like_to_show_each_application's_upgrade_status_?}:</td><td>
+				<td>{lang_Would_you_like_to_show_each_applications_upgrade_status}?:</td><td>
 					<select name="newsettings[checkappversions]">
 						<option value="">{lang_No}</option>
 						<option value="Admin"{selected_checkappversions_Admin}>{lang_Admins}</option>
@@ -43,7 +43,7 @@
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_Would_you_like_phpGroupWare_to_cache_the_phpgw_info_array_?}:</td>
+				<td>{lang_Would_you_like_phpGroupWare_to_cache_the_phpgw_info_array}?:</td>
 				<td>
 					<select name="newsettings[cache_phpgw_info]">
 						<option value="">{lang_No}</option>
@@ -58,7 +58,7 @@
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_Would_you_like_to_automaticaly_load_new_langfiles_(at_login-time)_?}:</td>
+				<td>{lang_Would_you_like_to_automaticaly_load_new_langfiles_at_login_time}?:</td>
 				<td>
 					<select name="newsettings[disable_autoload_langfiles]">
 						<option value="">{lang_Yes}</option>
@@ -68,7 +68,7 @@
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_Would_you_like_phpGroupWare_to_cache_data_in_shared_memory_?}:</td>
+				<td>{lang_Would_you_like_phpGroupWare_to_cache_data_in_shared_memory}?:</td>
 				<td>
 					<select name="newsettings[shm_enable]">
 						<option value="">{lang_No}</option>
@@ -82,7 +82,7 @@
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_SMTP_server_hostname_(or_IP_address)}:</td>
+				<td>{lang_SMTP_server_hostname_or_IP_address}:</td>
 				<td><input name="newsettings[smtp_server]" value="{value_smtp_server}" /></td>
 			</tr>
 
@@ -214,7 +214,7 @@
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_Deny_all_users_access_to_grant_other_users_access_to_their_entries_?}:</td>
+				<td>{lang_Deny_all_users_access_to_grant_other_users_access_to_their_entries}?:</td>
 				<td>
 					<select name="newsettings[deny_user_grants_access]">
 						<option value="">{lang_No}</option>
@@ -224,42 +224,42 @@
 			</tr>
 
 			<tr>
-				<td>{lang_How_many_days_should_entries_stay_in_the_access_log,_before_they_get_deleted_(default_90)_?}:</td>
+				<td>{lang_How_many_days_should_entries_stay_in_the_access_log_before_they_get_deleted}? (default 90):</td>
 				<td>
 					<input name="newsettings[max_access_log_age]" value="{value_max_access_log_age}" size="5">
 				</td>
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_After_how_many_unsuccessful_attempts_to_login,_an_account_should_be_blocked_(default_3)_?}:</td>
+				<td>{lang_After_how_many_unsuccessful_attempts_to_login_an_account_should_be_blocked}? (default 3):</td>
 				<td>
 					<input name="newsettings[num_unsuccessful_id]" value="{value_num_unsuccessful_id}" size="5">
 				</td>
 			</tr>
 
 			<tr>
-				<td>{lang_After_how_many_unsuccessful_attempts_to_login,_an_IP_should_be_blocked_(default_3)_?}:</td>
+				<td>{lang_After_how_many_unsuccessful_attempts_to_login_an_IP_should_be_blocked}? (default 3):</td>
 				<td>
 					<input name="newsettings[num_unsuccessful_ip]" value="{value_num_unsuccessful_ip}" size="5">
 				</td>
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_How_many_minutes_should_an_account_or_IP_be_blocked_(default_30)_?}:</td>
+				<td>{lang_How_many_minutes_should_an_account_or_IP_be_blocked}? (default 30):</td>
 				<td>
 					<input name="newsettings[block_time]" value="{value_block_time}" size="5">
 				</td>
 			</tr>
 
 			<tr>
-				<td>{lang_Admin_email_addresses_(comma-separated)_to_be_notified_about_the_blocking_(empty_for_no_notify)}:</td>
+				<td>{lang_comma_separated_admin_email_addresses_to_be_notified_about_the_blocking}:</td>
 				<td>
 					<input name="newsettings[admin_mails]" value="{value_admin_mails}" size="40">
 				</td>
 			</tr>
 
 			<tr class="pure-table-odd">
-				<td>{lang_Disable_"auto_completion"_of_the_login_form_}:</td>
+				<td>{lang_Disable_auto_completion_of_the_login_form_}:</td>
 				<td>
 					<select name="newsettings[autocomplete_login]">
 						<option value="">{lang_No}</option>
