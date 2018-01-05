@@ -2245,3 +2245,151 @@ refund	property	no	Refusjon
 both	property	no	Begge
 condition survey location level	property	no	Tilstandsanalyse lokasjonsnivå
 condition survey import category	property	no	Tilstandsanalyse importkategori
+show overdue projects on main screen	property	no	Vis prosjekter over tiden på hovedskjermen
+link to projects you are assigned to	property	no	Knytt til prosjekter du er tildelt
+show open tenant claims on main screen	property	no	Vis åpne leietaker krav på hovedskjermen
+link to claims you are assigned to	property	no	Knytt til krav du er tildelt
+the default group to assign a ticket in helpdesk-submodule	property	no	Standardgruppen for å tildele en billett i helpdesk-submodule
+budget account as listbox	property	no	Budsjettkonto som listeboks
+the input type for budget account	property	no	Input typen for budsjettkonto
+default unspsc code	property	no	Standard unspsc kode
+contact block 1	property	no	Kontakt blokk 1
+contact block 2	property	no	Kontakt blokk 2
+check missing project budget	property	no	Sjekk manglende prosjekt budsjett
+request condition_type	property	no	Forespør betingelsestype
+pending action type	property	no	Venter på handlingstype
+use acl for document types. (not implementet) 	property	no	Bruk acl for dokumenttyper . (Ikke implementert)
+org unit id	property	no	Organsisasjonsnummer
+order footer header	property	no	Overskrift for bestillings-avslutnings-tekst
+order footer	property	no	bestillings-avslutnings-tekst
+order logo	property	no	Logo på bestilling
+order logo width	property	no	Bredde for logo på bestilling
+SMS client order notice	property	no	SMS-varsling til kunde
+none selected	property	no	Ingen valgt
+dimb responsible 1	property	no	kostnadsstedsansvarlig 1
+dimb responsible 2	property	no	kostnadsstedsansvarlig 2
+invoicehandler	property	no	Fakturahåndterer
+invoice acl	property	no	Kontroll av fakturarettigheter
+project status on approval	property	no	Prosjektstatus ved godkjenning
+project status on last order closed	property	no	Prosjektstatus ved siste ordre lukket
+workorder status on approval	property	no	Arbeidsordre status ved godkjenning
+ticket status on approval	property	no	Meldingsstatus ved godkjenning
+approval amount limit	property	no	Godkjenningsgrense
+approval level	property	no	Godkjenningsnivå
+workorder status on ordered	property	no	Arbeidsordre status ved bestilling
+request status on project hookup	property	no	Behovsstatus ved prosjektoppkobling
+request status on ticket hookup	property	no	Behovsstatus ved meldingsoppkobling
+workorder status that are to be set when invoice is processed	property	no	Arbeidsordre status som skal settes når fakturaen er behandlet
+workorder reopen status that are to be set when invoice is processed	property	no	Arbeidsordre gjenåpne-status som skal settes når fakturaen er behandlet
+require building part at workorder	property	no	Krever bygningsdel på arbeidsordre
+require vendor at workorder	property	no	Krever leverandør på arbeidsordre
+delay operation workorder end date	property	no	Utsett sluttdato for driftsarbeidsordre
+last day in year	property	no	siste dag i året
+enable unspsc kode	property	no	Aktiver unspsc kode
+enable order service id	property	no	Aktiver dimensjonen tjeneste i bestilling
+default municipal number	property	no	Standard kommunenummer
+tax	property	no	MVA
+enter the location of files url	property	no	Skriv inn adressen til filene (url)
+path to external files for use with location	property	no	Sti til eksterne filer for bruk med plassering
+on windows use	property	no	På Windows bruk
+max recursive level at external files	property	no	Maks rekursivt nivå på eksterne filer
+filter at level at external files	property	no	Filter på nivå ved eksterne filer
+enter map url 	property	no	Skriv inn kart url
+enter gab location level	property	no	Skriv inn matrikkel-lokasjonsnivå
+default value is	property	no	Standardverdi er
+enter gab url	property	no	Skriv inn matrikkel url
+gab url paramtres	property	no	Matrikkel url parametre
+suppress old tenant	property	no	Deaktiver leietaker
+show billable hours	property	no	Vis egne timer
+open translates to	property	no	Åpen oversetter til
+tts assign group candidates	property	no	Tts tildele gruppekandidater
+tts disable assign to user on add	property	no	Tts deaktivere tilordne til bruker på legg til
+tts simplified group	property	no	Tts forenklet gruppe
+tts simplified categories	property	no	Tts forenklet kategorier
+mail notification	property	no	E-post varsling
+owner notification project	property	no	Prosjekteier varsles
+owner notification tts	property	no	Eier varsling tts
+assigned notification tts	property	no	Tildelt varsling tts
+group notification tts	property	no	Gruppe varsling tts
+tts file upload	property	no	Tts filopplasting
+mandatory title tts	property	no	Obligatorisk tittel for meldinger (tts)
+tts finnish date	property	no	Tts ferdig dato
+tts order contact at location	property	no	Tts bestille kontakt på stedet
+send response tts	property	no	Sende svar tts
+project suppress meter	property	no	Prosjekt: deaktiver måler
+project suppress coordination	property	no	Prosjekt: deaktiver koordinering
+project optional category	property	no	Prosjekt: valgfri kategori
+request show dates	property	no	Behov: vis datoer
+request location level	property	no	Behov: lokasjonsnivå
+request coordinator text	property	no	Behov: koordinatortekst
+meter table	property	no	Målertabell
+receive workorder status by sms	property	no	Motta arbeidsordre status via SMS
+use acl for accessing location based information	property	no	Bruk acl for å få tilgang til plasseringbasert informasjon
+bypass acl for accessing tickets	property	no	Bypass acl for å få tilgang til meldinger
+bypass acl for accessing entities	property	no	Bypass acl for å få tilgang til generiske entiteter
+use acl for helpdesk categories	property	no	Bruk acl for meldingskategorier
+use location at workorder	property	no	Bruk lokasjon på arbeidsordre
+budget at project level	property	no	Budsjett på prosjektnivå
+common budget account at project level	property	no	Felles budsjettkonto på prosjektnivå
+update project budget from order	property	no	Oppdater prosjektbudsjett fra ordre
+disallow multiple condition types at demands	property	no	Ikke tillat flere tilstandstyper på behov
+list location level	property	no	List lokasjonsnivå
+ntlm alternative host	property	no	Alternativ serverhost ved ntlm (filopplasting)
+uploader filetypes	property	no	Opplastingsfiltyper
+filter buildingpart	property	no	Filter for bygningsdel
+condition survey import category	property	no	Importkategori for tilstandsanalyse
+initial status that are to be set when condition survey are imported	property	no	Innledende status som skal settes når tilstandsanalysen blir importert
+hidden status that are to be set when condition survey are imported	property	no	Skjulte statuser som skal settes når tilstandsanalyse blir importert
+obsolete status that are to be set for old records when condition survey are imported	property	no	Foreldet status som skal settes for gamle poster når tilstandsundersøkelsen blir importert
+NO	property	no	NEI
+YES	property	no	JA
+None	property	no	Ingen
+location_id	property	no	Lokasjons ID
+entity	property	no	Entitet
+short description	property	no	Kort beskrivelse
+do you really want to convert to eav	property	no	Er du sikker på at du vil konvertere til eav?
+appname	property	no	modulnavn
+add attribute	property	no	Legg til egenskap
+column name	property	no	Kolonnenavn
+input text	property	no	Ledetekst
+statustext	property	no	Statustekst
+no group	property	no	Ingen gruppe
+no datatype	property	no	Ingen datatype
+precision	property	no	Presisjon
+scale	property	no	Scale
+nullable	property	no	Nullverdier
+select nullable	property	no	Velg nullverdi
+show in list	property	no	Vis i liste
+include in search	property	no	Inkluder i søk
+true	property	no	Sant
+false	property	no	Falsk
+history	property	no	Historie
+help	property	no	Hjelp
+do you really want to recalculate all actual cost for all workorders	property	no	Vil du omregne alle faktiske kostnader for alle arbeidsordre?
+custom function	property	no	Egendefinerte funksjoner
+list custom function	property	no	Liste over egendefinerte funksjoner
+pre commit	property	no	Før lagring til databasen
+client side	property	no	Klientside
+location	property	no	Lokasjon
+list custom attribute	property	no	Liste over egendefinerte egenskaper
+client-side	property	no	Klientside
+default ticket categories	property	no	Default meldingskategori
+default assign to tts	property	no	Default tildele til, meldinger
+default group tts	property	no	Default gruppe for meldinger
+dimb role	property	no	DimB Rolle
+process code	property	no	Årsakskode
+add timer	property	no	Legg til tidsplan
+migrate	property	no	Migrer
+list available domains	property	no	Liste over domener
+db_host	property	no	Db_server
+db_name	property	no	Db_navn
+db_type	property	no	Db_type
+distribute	property	no	Distribuer
+distribute year	property	no	Distribuerings år
+settings	property	no	Innstillinger
+ask for workorder approval by email	property	no	Be om betillingsgodkjenning via e-post
+ask for project approval by email	property	no	Be om prosjektgodkjenning via e-post
+TTS default interface	property	no	TTS default interface
+FM settings	property	no	Innstillinger for eiendomsforvaltning
+pending action type	property	no	Handlingstyper
+comma separated email addresses to be notified about tenant claim	property	no	Kommmaseparert liste over hvem som skal ha e-post om leietakerkrav

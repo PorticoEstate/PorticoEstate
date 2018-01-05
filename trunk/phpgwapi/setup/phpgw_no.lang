@@ -279,3 +279,10 @@ select a location!	common	no	Velg en lokasjon
 no location	common	no	Ingen lokasjon
 enable inheritance	common	no	Aktiver arving
 users	common	no	Brukere
+maximum entries in click path history	common	no	Maksimum oppføringer i klikkveiledning
+debugoutput	common	no	Debugoutput
+add section	common	no	Legg til seksjon
+showing	common	no	Viser
+color selector	common	no	Fargevelger
+select all	common	no	Velg alle
+hidden	common	no	Gjemt
