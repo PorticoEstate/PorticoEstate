@@ -482,7 +482,7 @@
 			</tr>
 
 			<tr>
-				<td>{lang_Ask_for_workorder_approval_by_e-mail}.</td>
+				<td>{lang_Ask_for_workorder_approval_by_email}.</td>
 				<td>
 					<select name="newsettings[workorder_approval]">
 						<option value="" {selected_workorder_approval_}>NO</option>
@@ -492,7 +492,7 @@
 			</tr>
 
 			<tr>
-				<td>{lang_Ask_for_project_approval_by_e-mail}.</td>
+				<td>{lang_Ask_for_project_approval_by_email}.</td>
 				<td>
 					<select name="newsettings[project_approval]">
 						<option value="" {selected_project_approval_}>NO</option>
@@ -558,7 +558,7 @@
 				<td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
 			</tr>
 			<tr>
-				<td>{lang_email_addresses_(comma-separated)_to_be_notified_about_tenant_claim_(empty_for_no_notify)}:</td>
+				<td>{lang_comma_separated_email_addresses_to_be_notified_about_tenant_claim}:</td>
 				<td>
 					<input name="newsettings[tenant_claim_notify_mails]" value="{value_tenant_claim_notify_mails}" size="40">
 				</td>
