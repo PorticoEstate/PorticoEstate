@@ -19,6 +19,7 @@ add a comment	booking	no	Legg til en kommentar
 add another date	booking	no	Legg til dato
 add boundary	booking	no	Legg til rammetid
 add comment	booking	no	Legg til kommentar
+comment	booking	no	Kommentar
 add document	booking	no	Legg til dokument
 add new event	booking	no	Legg til arrangement
 event settings	booking	no	Innstillinger for arrangement
