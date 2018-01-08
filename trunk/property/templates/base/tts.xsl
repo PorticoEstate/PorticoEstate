@@ -691,7 +691,7 @@
 										<xsl:value-of select="$lang_sms_text"/>
 									</a>
 								</label>
-								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
+								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(804);" onKeyDown="javascript: SmsCountKeyDown(804);" wrap="virtual">
 									<xsl:attribute name="title">
 										<xsl:value-of select="$lang_sms_text"/>
 									</xsl:attribute>
@@ -701,7 +701,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'character left')"/>
 								</label>
-								<input type="text" readonly="readonly" size="3" maxlength="3" name="charNumberLeftOutput" id="charNumberLeftOutput" value="160">
+								<input type="text" readonly="readonly" size="3" maxlength="3" name="charNumberLeftOutput" id="charNumberLeftOutput" value="804">
 								</input>
 							</div>
 						</xsl:when>
