@@ -2930,6 +2930,7 @@ HTML;
 			$year = date('Y') - 1;
 			$limit = $year + 4;
 
+			$year_list = array();
 			while ($year < $limit)
 			{
 				$year_list[] = array
@@ -2999,7 +3000,7 @@ HTML;
 				'value_unspsc_code_name' => $this->_get_unspsc_code_name($unspsc_code),
 				'value_budget' => $ticket['budget'],
 				'value_actual_cost' => $ticket['actual_cost'],
-				'year_list' => array('options' => $this->bocommon->select_list($ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : date('Y'), $year_list)),
+				'year_list' => array('options' => $this->bocommon->select_list((int)$ticket['actual_cost_year'] ? $ticket['actual_cost_year'] : (int)date('Y'), $year_list)),
 				'period_list' => array('options' => execMethod('property.boinvoice.period_list', date('Ym'))),
 				'need_approval' => $need_approval,
 				'contact_data' => $contact_data,
