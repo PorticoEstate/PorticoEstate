@@ -535,3 +535,13 @@ SPAN.expander {
 	font-weight:	bold;
 	text-align:		center;
 }
+
+.historyTable th:first-child{
+    width: 20%;
+}
+
+.historyTable{
+    border-collapse:separate; 
+    border-spacing:1.2em;
+    text-align: left;
+}

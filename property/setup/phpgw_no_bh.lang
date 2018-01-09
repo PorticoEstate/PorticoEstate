@@ -159,16 +159,16 @@ async	property	no	async
 async method	property	no	async metode
 async method has been saved	property	no	async metode er lagret
 Attribute	property	no	Verdier
-Attribute has been edited	property	no	Attributt er rettet
-Attribute has been saved	property	no	Attributt er lagret
-Attribute has NOT been deleted	property	no	Attributt er IKKE slettet
-Attribute has NOT been edited	property	no	Attributt er IKKE endret
-Attribute has NOT been saved	property	no	Attributt er IKKE lagret
-Attribute ID	property	no	Attributt ID
-Attributes	property	no	Attributter
-attributes for the attrib	property	no	Verdier for atributter
-attributes for the entity category	property	no	Attributter for entitet-kategori
-attributes for the location type	property	no	Attributter for lokaliserings type
+Attribute has been edited	property	no	Egenskap er rettet
+Attribute has been saved	property	no	Egenskap er lagret
+Attribute has NOT been deleted	property	no	Egenskap er IKKE slettet
+Attribute has NOT been edited	property	no	Egenskap er IKKE endret
+Attribute has NOT been saved	property	no	Egenskap er IKKE lagret
+Attribute ID	property	no	Egenskap ID
+Attributes	property	no	Egenskaper
+attributes for the attrib	property	no	Verdier for egenskaper
+attributes for the entity category	property	no	Egenskaper for entitet-kategori
+attributes for the location type	property	no	Egenskaper for lokaliserings type
 attributes for the standard	property	no	verdier for standard
 A unique code for this activity	property	no	En unik kode fo denne aktiviteten
 authorities demands	property	no	Offentlige pålegg
@@ -237,10 +237,10 @@ Check to delete file	property	no	Merk for å slette fil
 Check to delete this request from this project	property	no	Merk for a slette dette tiltaket fra dette reklamasjonssaket
 check to inherit from this location	property	no	Merk av for å arve fra denne lokalisering
 check to reset the query	property	no	Merk av for å nulle spørring
-check to show this attribue in lookup forms	property	no	Merk av for å vise denne attributten i loaliseringsskjema
-check to show this attribute in entity list	property	no	Merk av for å vise denne attributten i oversikt
-check to show this attribute in list	property	no	Merk av for å vise denne attributten i oversikt
-check to show this attribute in location list	property	no	Merk av for å vise denne attributten i oversikt
+check to show this attribue in lookup forms	property	no	Merk av for å vise denne egenskapen i loaliseringsskjema
+check to show this attribute in entity list	property	no	Merk av for å vise denne egenskapen i oversikt
+check to show this attribute in list	property	no	Merk av for å vise denne egenskapen i oversikt
+check to show this attribute in location list	property	no	Merk av for å vise denne egenskapen i oversikt
 Check to update the email-address for this vendor	property	no	kryss av for å oppdatere adressa til denne levedrandøren
 Choice	property	no	Valg
 Choose a category	property	no	Velg en kategori
@@ -367,7 +367,7 @@ delete template	property	no	slett mal
 delete the actor	property	no	Slett aktør
 delete the agreement	property	no	Slett avtale
 delete the apartment	property	no	slett leilighet
-delete the attrib	property	no	slett attributt
+delete the attrib	property	no	slett egenskap
 delete the budget account	property	no	Slett budsjettkonto
 delete the building	property	no	slett bygning
 delete the category	property	no	Slett kategori
@@ -456,7 +456,7 @@ edit activity	property	no	rette aktivitet
 edit agreement	property	no	rette avtale
 edit agreement group	property	no	Rette avtale gruppe
 edit apartment	property	no	rette leilighet
-edit attribute	property	no	endre attributt
+edit attribute	property	no	endre egenskap
 edit budget account	property	no	Rette budsjettkonto
 edit building	property	no	rette bygning
 edit category	property	no	Rette kategori
@@ -489,7 +489,7 @@ edit the agreement	property	no	rette avtale
 edit the agreement_group	property	no	Rette avtalegruppe
 edit the alarm	property	no	Rette alarm
 edit the apartment	property	no	rette leilighet
-edit the attrib	property	no	rette attributt
+edit the attrib	property	no	rette egenskap
 edit the budget account	property	no	Rette budsjettkonto
 edit the building	property	no	rette bygning
 edit the category	property	no	Rette kategorien
@@ -528,8 +528,8 @@ E-Mail	property	no	E-Post
 Enable	property	no	Aktiver
 Enabled	property	no	Aktiv
 Enable file upload	property	no	Aktiver opplasting av filer
-Enables help message for this attribute	property	no	Hjelpetekst for denne attributten
-Enable history for this attribute	property	no	Aktiver historikk for denne attributten
+Enables help message for this attribute	property	no	Hjelpetekst for denne egenskapen
+Enable history for this attribute	property	no	Aktiver historikk for denne egenskapen
 Enable link from location detail	property	no	Aktiver link fra detaljer for areal
 Enable start project from this category	property	no	Aktiviser mulighet for å starte reklamasjonssak herfra
 end	property	no	slutt
@@ -545,7 +545,7 @@ Enter a description of the project	property	no	gi en beskrivelse av reklamasjons
 Enter a description of the request	property	no	gi en beskrivelse av anmodningen
 Enter a description of the standard	property	no	gi en beskrivelse av standarden
 Enter a description of the status	property	no	Angi en beskrivelse av statusen
-Enter a description the attribute	property	no	gi en beskrivelse av attributten
+Enter a description the attribute	property	no	gi en beskrivelse av egenskapen
 Enter a description the budget account	property	no	Angi en beskrivelse av budsjettkontoen
 Enter a description the category	property	no	Angi en beskrivelse av kategorien
 Enter a description the method	property	no	Angi en beskrivelse av metoden
@@ -586,8 +586,8 @@ Enter other branch if not found in the list	property	no	Angi andre fag om det ik
 Enter Project Name	property	no	Angi Reklamasjonssak navn
 Enter quantity of unit	property	no	angi mengde
 Enter request Title	property	no	angi tittel for anmodning
-Enter the attribute ID	property	no	angi attributt ID
-Enter the attribute value for this entity	property	no	angi attributt verdi for denne posten
+Enter the attribute ID	property	no	angi egenskap ID
+Enter the attribute value for this entity	property	no	angi egenskap verdi for denne posten
 Enter the budget	property	no	Angi budsjett
 Enter the budget account	property	no	Angi budsjettkonto
 Enter the category ID	property	no	Angi kategori ID
@@ -709,7 +709,7 @@ help message	property	no	hjelpetekst
 Highest	property	no	Høyest
 History	property	no	Historikk
 History not allowed for this datatype	property	no	Historikk er ikke tilgjengelig for denne datatypen
-history of this attribute	property	no	Historie for denne attributten
+history of this attribute	property	no	Historie for denne egenskapen
 hour	property	no	Time
 Hour	property	no	Time
 hour %1 has been deleted	property	no	post %1 er slettet
@@ -820,7 +820,7 @@ list agreement	property	no	list avtale
 list agreement group	property	no	List avtalegruppe
 list apartment	property	no	list leilighet
 list async method	property	no	List async-metode
-list attribute	property	no	List attributter
+list attribute	property	no	List egenskaper
 ListBox	property	no	ListBox
 list budget account	property	no	list budsjett konto
 list building	property	no	list bygning
@@ -829,7 +829,7 @@ list consume	property	no	list forbruk
 list custom function	property	no	List egendefinerte funksjoner
 list deviation	property	no	List avvik
 list document	property	no	list dokumenter
-list entity attribute	property	no	List entitet-attributter
+list entity attribute	property	no	List entitet-egenskaper
 list entity custom function	property	no	List egendefinerte funskjoner for entiteter
 list entity type	property	no	List entitet-type
 list entrance	property	no	list inngang
@@ -839,7 +839,7 @@ list gab detail	property	no	List GAB-detaljer
 list hours	property	no	List timer
 list investment	property	no	List investeringer
 list invoice	property	no	List bilag
-list location attribute	property	no	List lokaliserings attributter
+list location attribute	property	no	List lokaliserings egenskaper
 list location standard	property	no	List lokaliserings standard
 list meter	property	no	List måler
 list paid invoice	property	no	List betalte bilag
@@ -1132,7 +1132,7 @@ Save as template	property	no	lagre som mal
 Save the actor and return back to the list	property	no	Lagre aktøren og returner til oversikten
 Save the agreement and return back to the list	property	no	Lagre avtalen og returner til oversikten
 Save the apartment	property	no	lagre leilighet
-Save the attribute	property	no	lagre attributt
+Save the attribute	property	no	lagre egenskap
 Save the budget account	property	no	Lagre budsjettkotntoen
 Save the building	property	no	lagre bygning
 Save the category	property	no	Lagre kategorien
@@ -1450,7 +1450,7 @@ This agreement code is already registered!	property	no	denne avtalekoden er allr
 This agreement group code is already registered!	property	no	Denne avtale-gruppe-koden er allerede registert!
 This apartment_id ID does not exist!	property	no	Denne leilighet ID eksisterer ikke
 This apartment is already registered!	property	no	denne leiligheten er allrerede registert
-This attribute turn up as disabled in the form	property	no	Denne attributten vises som inaktivt i skjemaet
+This attribute turn up as disabled in the form	property	no	Denne egenskapen vises som inaktivt i skjemaet
 This Building ID does not exist!	property	no	Denne bygnings ID eksisterer ikke
 This building_id ID does not exist!	property	no	Denne bygnings ID eksisterer ikke
 This building is already registered!	property	no	denne bygningen er allrerede registert
@@ -1552,7 +1552,7 @@ View request	property	no	vis anmodning
 view template detail	property	no	vis mal-detaljer
 View tender	property	no	Vis anbud
 view the apartment	property	no	vis leilighet
-view the attrib	property	no	vis attributt
+view the attrib	property	no	vis egenskap
 view the budget account	property	no	Vis budsjettkonto
 view the building	property	no	vis bygning
 view the category	property	no	Vis kategorien
@@ -1614,7 +1614,7 @@ Year	property	no	År
 yes	property	no	Ja
 You have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 You have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
-You have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette reklamasjonssaket
+You have no edit right for this project	property	no	Du har ikke redigeringsrettigheter for dette reklamasjonssaket
 You have to select a budget responsible for this invoice in order to add the invoice	property	no	Du må velge en budsjettansvarlig for å kunne legge til en faktura
 You have to select a budget responsible for this invoice in order to make the import	property	no	Du må velge en budsjettansvarlig for å importere
 You have to select the Conversion for this import	property	no	Du må velge importformat

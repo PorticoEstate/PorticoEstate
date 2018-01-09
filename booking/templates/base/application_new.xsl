@@ -78,7 +78,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="pure-u-1 pure-u-md-14-24 pure-u-lg-10-24">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
 								<legend>
@@ -143,7 +143,7 @@
 					</div>
 				</div>
 				<div class="pure-g">
-					<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
 								<legend>
@@ -194,7 +194,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
 								<legend>
@@ -304,7 +304,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
 								<legend>
@@ -345,7 +345,7 @@
 					</div>
 				</div>
 				<div class="pure-g">
-					<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
 								<legend>
@@ -422,7 +422,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="pure-control-group">
 								<div class="heading">
@@ -450,7 +450,7 @@
 							</div>
 						</fieldset>
 					</div>
-					<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+					<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 						<fieldset>
 							<div class="heading">
 								<legend>

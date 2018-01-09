@@ -253,7 +253,7 @@ possible reasons	setup	no	Possible Reasons
 possible solutions	setup	no	Possible Solutions
 post-install dependency failure	setup	no	Post-install Dependency Failure
 potential problem	setup	no	Potential Problem
-preferences	setup	no	Preferences
+preferences	setup	no	Innstillinger
 problem resolution	setup	no	Problem resolution
 process	setup	no	Process
 processing upgrade for %1	setup	no	processing upgrade for %1
