@@ -387,6 +387,7 @@
 						'sortAscending' => $sort_asc,
 						'sortDescending' => $sort_desc
 					)),
+					'select' => json_encode(array('rows' => array('0'=> '','_'=> '%d ' . lang('rows selected'))))
 				),
 				'lengthmenu' => array('_' => json_encode($lengthmenu)),
 				'lengthmenu_allrows' => array('_' => json_encode(array(-1, lang('all')))),

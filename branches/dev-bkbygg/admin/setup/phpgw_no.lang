@@ -137,3 +137,4 @@ method	admin	no	Metode
 data	admin	no	Data
 settings	admin	no	Innstillinger
 color selector	admin	no	Farge velger
+would you like to check for a new version when admins login	admin	no	Vil du sjekke om det finnes ny versjon når administratorer logger inn
