@@ -19,6 +19,7 @@ add a comment	booking	no	Legg til en kommentar
 add another date	booking	no	Legg til dato
 add boundary	booking	no	Legg til rammetid
 add comment	booking	no	Legg til kommentar
+comment	booking	no	Kommentar
 add document	booking	no	Legg til dokument
 add new event	booking	no	Legg til arrangement
 event settings	booking	no	Innstillinger for arrangement
@@ -568,14 +569,14 @@ Booking application settings	booking	no	Booking søknads oppsett.
 Booking email settings	booking	no	Booking epost oppsett.
 System name	booking	no	System navn
 Subject	booking	no	Tema
-Mail text for application created	booking	no	Epost tekst for søknad opprettet.
-Mail text for application pending	booking	no	Epost tekst for søknad under behandling.
-Mail text for application accepted	booking	no	Epost tekst for søknad akseptert.
-Mail text for application rejected	booking	no	Epost tekst for søknad avist.
+Mail text for application created	booking	no	E-post tekst for søknad opprettet.
+Mail text for application pending	booking	no	E-post tekst for søknad under behandling.
+Mail text for application accepted	booking	no	E-post tekst for søknad akseptert.
+Mail text for application rejected	booking	no	E-post tekst for søknad avslått.
 notify on accepted	booking	no	Send kvittering til ansvarlig ved akseptert.
 Signature	booking	no	Signatur
 Tilsynsvakt name	booking	no	Navn på tilsynsvakt
-Tilsynsvakt email	booking	no	Epostt tilsynsvakt
+Tilsynsvakt email	booking	no	E-post tilsynsvakt
 Tilsynsvakt telephone	booking	no	Telefon tilsynsvakt
 Metadata	common	no	Metadata
 Author	booking	no	Forfatter
@@ -678,3 +679,41 @@ duplicate ssn	booking	no	Duplikat av f.nr for samme organisasjon
 building show	booking	no	Vis bygning
 free	booking	no	Ledig
 document new	booking	no	Nytt dokument
+example	booking	no	Eksempel
+booking settings	booking	no	Booking innstillinger
+support email address	booking	no	Brukerstøtte e-post adresse
+external host address	booking	no	Ekstern verts adresse
+custom email sender	booking	no	Tilpasset e-post sender
+logopath frontend	booking	no	Sti til logo for frontend
+image maxheight	booking	no	Makshøyde for bilder
+image maxwidth	booking	no	Maksbredde for bilder
+case_officer	booking	no	Saksbehandler
+allocation new	booking	no	Ny tildeling
+event new	booking	no	Nytt arrangement
+edit	booking	no	Endre
+Delete	booking	no	Slett
+season new	booking	no	Ny sesong
+report participants	booking	no	Deltaker rapport
+report freetime	booking	no	Ledig tid rapport
+report new	booking	no	Ny rapport
+participants per agegroupe	booking	no	Deltaker per aldersguppe
+start time	booking	no	Starttid
+end time	booking	no	Slutttid
+variables	booking	no	Variabler
+horizontal	booking	no	Horisontal
+vertical	booking	no	Vertikal
+permission add	booking	no	Legg til tilatelse
+activity new	booking	no	Ny aktivitet
+account new	booking	no	Ny konteringsstreng
+external account	booking	no	Ekstern konto
+external customer output format	booking	no	Ekstern kunde output format
+external file linebreak	booking	no	Tegn for linjeskift
+export agresso	booking	no	Agresso eksport
+export method	booking	no	Eksport metode
+export path	booking	no	Eksport sti
+ftp host	booking	no	Ftp vert
+ftp basedir	booking	no	Ftp initiell katalog ved pålogging
+ftp user	booking	no	Ftp bruker
+ftp password	booking	no	Ftp passord
+last id	booking	no	Siste ID
+do not edit!	booking	no	Ikke endre!

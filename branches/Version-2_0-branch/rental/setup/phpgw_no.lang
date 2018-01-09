@@ -431,7 +431,7 @@ party_type	rental	no	Type kontraktspart
 payer_id	rental	no	Fakturamottaker
 percent	rental	no	Prosent
 period	rental	no	Periode
-permission_denied_edit_contract	rental	no	Du mangler rettigheter for å legge til å editere kontrakten
+permission_denied_edit_contract	rental	no	Du mangler rettigheter for å legge til å redigere kontrakten
 permission_denied_new_contract	rental	no	Du mangler rettigheter for å legge til å opprette nye kontrakter
 permission_denied_view_contract	rental	no	Du mangler rettigheter for å legge til å se kontrakten
 permission_denied_add_document	rental	no	Du mangler rettigheter for å legge til et dokumenent

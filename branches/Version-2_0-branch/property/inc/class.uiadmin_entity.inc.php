@@ -2345,7 +2345,7 @@
 			$data = array
 				(
 				'delete_url' => $GLOBALS['phpgw']->link('/index.php', $link_data),
-				'lang_confirm_msg' => lang('do you really want to convert to eav'),
+				'lang_confirm_msg' => lang('do you really want to convert to eav?'),
 				'lang_delete' => lang('yes'),
 				'lang_cancel' => lang('no')
 			);

@@ -22,7 +22,7 @@ date	helpdesk	no	Dato
 date opened	helpdesk	no	Dato startet
 disable	helpdesk	no	Deaktivert
 details	helpdesk	no	Detaljer
-edit	helpdesk	no	Editer
+edit	helpdesk	no	Rediger
 modified date	helpdesk	no	Endret dato
 email	helpdesk	no	Epost
 email-address of the user, eg. %1	helpdesk	no	Epost adressen til brukeren, f.eks. %1
@@ -208,11 +208,11 @@ update message	helpdesk	no	Svarmelding ved oppdatert sak
 close message	helpdesk	no	Svarmelding ved avsluttet sak
 list %1	helpdesk	no	List %1
 public	helpdesk	no	synlig for alle
-open edit in new window	helpdesk	no	Editer i nytt vindu
+open edit in new window	helpdesk	no	Rediger i nytt vindu
 columns is updated	helpdesk	no	Kolonner er oppdatert
 select column	helpdesk	no	Velg kolonne
 target	helpdesk	no	Mål
-ticket attributes	helpdesk	no	Meldingsattributter
+ticket attributes	helpdesk	no	Meldingsegenskaper
 ticket categories	helpdesk	no	Meldingskategorier
 ticket status	helpdesk	no	Meldingsstatus
 url	helpdesk	no	Url

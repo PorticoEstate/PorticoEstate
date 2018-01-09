@@ -683,7 +683,7 @@
 					),
 					'request_condition' => array
 						(
-						'text' => lang('Request condition_type'),
+						'text' => lang('Request condition type'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'r_condition_type'))
 					),

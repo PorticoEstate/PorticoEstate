@@ -38,7 +38,7 @@
 			</td>
 		</tr>
 		<tr class="row_on">
-			<td>{lang_cookie_domain_for_sessions_-_if_Same_as_framework_leave_empty}</td>
+			<td>{lang_cookie_domain_for_sessions} - {lang_if_Same_as_framework_leave_empty}</td>
 			<td><input name="newsettings[cookie_domain]" value="{value_cookie_domain}"></td>
 		</tr>
 		<tr class="row_off">
@@ -124,13 +124,13 @@
 		</tr>
 		<tr class="row_off">
 			<td>{lang_url_to_external_logout}:
-				<br/> Redirect is computed if url ends with '='
+				<br/> {lang_Redirect_is_computed_if_url_ends_with} '='
 			</td>
 			<td><input name="newsettings[external_logout]" value="{value_external_logout}"></td>
 		</tr>
 		<tr class="row_off">
 			<td>{lang_bookingfrontend_host}:
-				<br/> Needed for the return from the external_logout
+				<br/> {lang_Needed_for_the_return_from_the_external_logout}
 			</td>
 			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
 		</tr>

@@ -36,7 +36,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>1. <xsl:value-of select="php:function('lang', 'Why?')" /></h3>
@@ -109,7 +109,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>2. <xsl:value-of select="php:function('lang', 'Where?')" /></h3>
@@ -158,7 +158,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>3. <xsl:value-of select="php:function('lang', 'When?')" /></h3>
@@ -255,7 +255,7 @@
 								</a>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>4. <xsl:value-of select="php:function('lang', 'Who?')" /></h3>
@@ -354,7 +354,7 @@
 						</div>
 					</div>
 					<div class="pure-g">
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -410,7 +410,7 @@
 								</input>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="heading">
 								<legend>
 									<h3>
@@ -422,7 +422,7 @@
 								<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 							</div>
 						</div>
-						<div class="pure-u-1 pure-u-md-1 pure-u-lg-1-3">
+						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="pure-g">
 								<div class="pure-control-group pure-u-1 pure-u-md-1-2 pure-u-lg-1">
 									<div class="heading">
