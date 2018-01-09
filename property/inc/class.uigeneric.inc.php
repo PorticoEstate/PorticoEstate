@@ -128,10 +128,19 @@
 		{
 			$id_name = $this->location_info['id']['name'];
 
-			$id = phpgw::get_var($id_name);
+//			$id = phpgw::get_var($id_name);
+			$id = $_POST[$id_name];
 
-	//		$values = phpgw::get_var('values');
 			$values = array();
+
+			if($id || $id === '0')
+			{
+				$values[$id_name] = $id;
+			}
+			else
+			{
+				$values[$id_name] = phpgw::clean_value($_POST['values'][$id_name]);
+			}
 
 			foreach ($this->location_info['fields'] as $field)
 			{
@@ -154,14 +163,7 @@
 				$values[$field['name']] = phpgw::clean_value($_POST['values'][$field['name']],$value_type);
 			}
 
-			$values[$id_name] = phpgw::clean_value($_POST[$id_name]);
-
 			$values_attribute = phpgw::get_var('values_attribute');
-
-//			if (!$id && !$values[$id_name] && $this->location_info['id']['type'] != 'auto')
-//			{
-//				$this->receipt['error'][] = array('msg' => lang('missing value for %1', lang('id')));
-//			}
 
 			if ($this->location_info['id']['type'] != 'auto')
 			{
@@ -177,7 +179,7 @@
 				unset($values[$id_name]);
 			}
 
-			if ($values[$id_name])
+			if ($values[$id_name] || $values[$id_name] === '0')
 			{
 				$data[$id_name] = $values[$id_name];
 			}
@@ -214,23 +216,6 @@
 					}
 				}
 			}
-/*
-			$insert_record_attributes = $GLOBALS['phpgw']->session->appsession("insert_record_values{$this->acl_location}", $this->location_info['acl_app']);
-
-			if (is_array($insert_record_attributes))
-			{
-				foreach ($insert_record_attributes as $attribute)
-				{
-					foreach ($values_attribute as &$attr)
-					{
-						if ($attr['name'] == $attribute)
-						{
-							$attr['value'] = phpgw::get_var($attribute, 'string', 'POST');
-						}
-					}
-				}
-			}
-*/
 			/*
 			 * Extra data from custom fields
 			 */
@@ -1032,11 +1017,16 @@
 				return $this->edit();
 			}
 
-			$id = phpgw::get_var($this->location_info['id']['name']);
+			$id = $_POST[$this->location_info['id']['name']];
+
+			if($id !== '0')
+			{
+				$id = phpgw::clean_value($id);
+			}
 
 			$values = phpgw::get_var('values');
 
-			if ($id || (int)$id === 0)
+			if ($id || $id === '0')
 			{
 				$data = $this->bo->read_single(array('id' => $id,'view' => true));
 				$action = 'edit';
