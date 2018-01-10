@@ -350,7 +350,8 @@
 		function save_item( $values, $values_attribute = '' )
 		{
 
-			while (is_array($values['location']) && list(, $value) = each($values['location']))
+			//while (is_array($values['location']) && list(, $value) = each($values['location']))
+                        foreach($values['location'] as $value)
 			{
 				if ($value)
 				{
