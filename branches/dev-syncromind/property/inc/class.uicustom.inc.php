@@ -393,8 +393,11 @@
 				array('key' => 'link_down', 'label' => lang('Down'), 'sortable' => FALSE, 'hidden' => TRUE)
 			);
 			//formatLink formatCheck
-			while (is_array($custom['cols']) && list(, $entry) = each($custom['cols']))
-			{
+			//while (is_array($custom['cols']) && list(, $entry) = each($custom['cols']))
+                        if (is_array($custom['cols']))
+                        {
+                            foreach($custom['cols'] as $entry)
+                            {
 				$cols[] = array(
 					'id' => $entry['id'],
 					'name' => $entry['name'],
@@ -407,7 +410,8 @@
 						'resort' => 'down', 'cols_id' => $entry['id'], 'custom_id' => $custom_id)),
 					'delete' => $entry['id'],
 				);
-			}
+                            }
+                        }
 
 			$datatable_def[] = array
 				(
