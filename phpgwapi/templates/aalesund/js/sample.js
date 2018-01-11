@@ -31,6 +31,13 @@ function openModal(param){
     $('#fullSizeImage').append('<img src="'+ src +'" />');
 }
 
+$(function toogleAdvSearch() {
+    if (!document.getElementById("main-page")) {
+        $(".header-container").css("border-bottom", "1.5px solid #89266a");
+        $(".header-container").css("margin-bottom", "2em");
+    }
+});
+
 
 //$(function checkView() {
 //
