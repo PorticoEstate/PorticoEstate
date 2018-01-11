@@ -174,21 +174,24 @@
 			$categories = $this->so->write_off_period_list();
 
 			//while (is_array($categories) && list(, $category) = each($categories))
-                        foreach($categories as $category)
-			{
-				$sel_category = '';
-				if ($category['period'] == $selected)
-				{
-					$sel_category = 'selected';
-				}
+                        if (is_array($categories))
+                        {
+                            foreach($categories as $category)
+                            {
+                                    $sel_category = '';
+                                    if ($category['period'] == $selected)
+                                    {
+                                            $sel_category = 'selected';
+                                    }
 
-				$category_list[] = array
-					(
-					'id' => $category['period'],
-					'name' => $category['period'],
-					'selected' => $sel_category
-				);
-			}
+                                    $category_list[] = array
+                                            (
+                                            'id' => $category['period'],
+                                            'name' => $category['period'],
+                                            'selected' => $sel_category
+                                    );
+                            }
+                        }
 
 			for ($i = 0; $i < count($category_list); $i++)
 			{
@@ -204,13 +207,16 @@
 		function save_investment( $values )
 		{
 			//while (is_array($values['location']) && list(, $value) = each($values['location']))
-                        foreach($values['location'] as $value)
-			{
-				if ($value)
-				{
-					$location[] = $value;
-				}
-			}
+                        if (is_array($values['location']))
+                        {
+                            foreach($values['location'] as $value)
+                            {
+                                    if ($value)
+                                    {
+                                            $location[] = $value;
+                                    }
+                            }
+                        }
 
 			$values['location_code'] = implode("-", $location);
 
