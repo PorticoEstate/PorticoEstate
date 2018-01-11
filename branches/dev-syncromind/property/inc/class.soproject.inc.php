@@ -1220,22 +1220,28 @@
 			$receipt = array();
 			$historylog = CreateObject('property.historylog', 'project');
 
-			while (is_array($project['location']) && list($input_name, $value) = each($project['location']))
-			{
+                        if (is_array($project['location']))
+                        {
+                            foreach($project['location'] as $input_name => $value)
+                            {
 				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
+                            }
 			}
 
-			while (is_array($project['extra']) && list($input_name, $value) = each($project['extra']))
-			{
+                        if (is_array($project['extra']))
+                        {
+                            foreach($project['extra'] as $input_name => $value)
+                            {
 				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
+                            }
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute);
@@ -1506,15 +1512,21 @@
 				$value_set = array_merge($value_set, $data_attribute['value_set']);
 			}
 
-			while (is_array($project['location']) && list($input_name, $value) = each($project['location']))
-			{
-				$value_set[$input_name] = $value;
-			}
-
-			while (is_array($project['extra']) && list($input_name, $value) = each($project['extra']))
-			{
-				$value_set[$input_name] = $value;
-			}
+			if (is_array($project['location']))
+                        {
+                            foreach($project['location'] as $input_name => $value)
+                            {
+                                    $value_set[$input_name] = $value;
+                            }
+                        }
+			
+                        if (is_array($project['extra']))
+                        {
+                            foreach($project['extra'] as $input_name => $value)
+                            {
+                                    $value_set[$input_name] = $value;
+                            }
+                        }
 
 			$value_set = $this->db->validate_update($value_set);
 
