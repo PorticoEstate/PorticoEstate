@@ -717,3 +717,4 @@ ftp user	booking	no	Ftp bruker
 ftp password	booking	no	Ftp passord
 last id	booking	no	Siste ID
 do not edit!	booking	no	Ikke endre!
+approve	booking	no	Godkjenn
