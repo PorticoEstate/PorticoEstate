@@ -22,7 +22,9 @@
                     <!-- Steg 1 -->
                     <div class="col-lg-12 application-group bg-light">
                                     
-                        <div class="heading">1. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'Why?')" />
+                        </div>
                         
                         <div class="form-group">
                             <label for="field_activity">
@@ -100,7 +102,9 @@
                     <!-- Steg 2-->
                     <div class="col-lg-12 application-group bg-light">
                     
-                        <div class="heading">2. <xsl:value-of select="php:function('lang', 'How many?')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'How many?')" />
+                        </div>
                         <xsl:if test="config/application_howmany">
                             <p>
                                 <xsl:value-of select="config/application_howmany"/>
@@ -171,7 +175,9 @@
                     <div class="col-lg-12 application-group bg-light">
                     
                   
-                        <div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'Where?')" />
+                        </div>
                         <xsl:if test="config/application_where">
                             <p>
                                 <xsl:value-of select="config/application_where"/>
@@ -234,120 +240,111 @@
                     <!-- Steg 4-->
                 
                     <div class="col-lg-12 application-group bg-light">
-                
-                        <div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
-                        <xsl:if test="config/application_when">
-                            <p>
-                                <xsl:value-of select="config/application_when"/>
-                            </p>
-                        </xsl:if>
-                        <div class="form-group">
-                            <input type="hidden" class="form-control col-lg-4 col-md-7 col-sm-12" data-validation="application_dates">
-                                <xsl:attribute name="data-validation-error-msg">
-                                    <xsl:value-of select="php:function('lang', 'Invalid date')" />
-                                </xsl:attribute>
-                            </input>
-                            <xsl:for-each select="application/dates">
-                                <xsl:variable name="index" select="position()-2" />
-                                <xsl:choose>
-                                    <xsl:when test="position() > 1">
-                                        <div class="date-container">
-                                            <a href="javascript:void(0);" class="close-btn btnclose">
-                                                <xsl:value-of select="php:function('lang', 'remove date')" />
-                                            </a>
-                                            
-                                            <label for="start_date_{$index}">
-                                                <xsl:value-of select="php:function('lang', 'From')" />
-                                            </label>
-                                 
-                                            <input class="newaddedpicker form-control col-lg-4 col-md-7 col-sm-12" id="start_date_{$index}" type="text" name="from_[]">
-                                                <xsl:attribute name="value">
-                                                    <xsl:value-of select="from_" />
-                                                </xsl:attribute>
-                                                <xsl:attribute name="readonly">
-                                                    <xsl:text>readonly</xsl:text>
-                                                </xsl:attribute>
-                                            </input>
-                                          
-                                        
-                                            <label for="end_date_{$index}">
-                                                <xsl:value-of select="php:function('lang', 'To')" />
-                                            </label>
-                                          
-                                      
-                                            <input class="newaddedpicker form-control col-lg-4 col-md-7 col-sm-12" id="end_date_{$index}" type="text" name="to_[]">
-                                                <xsl:attribute name="value">
-                                                    <xsl:value-of select="to_"/>
-                                                </xsl:attribute>
-                                                <xsl:attribute name="readonly">
-                                                    <xsl:text>readonly</xsl:text>
-                                                </xsl:attribute>
-                                            </input>
-                                           
-                                        </div>
-                                    </xsl:when>
-                                    
-                                    
-                                    <xsl:otherwise>
-                                        <div class="form-group">
-                                            
-                                            <a href="javascript:void(0);" class="">
-                                                <xsl:value-of select="php:function('lang', 'remove date')" />
-                                            </a>
-                                            
-                                            <br/>
-                                           
-                                        
-                                            <div class="form-group col-lg-4 col-md-7 col-sm-12 no-padding-left">   
-                                                <label for="start_date">
-                                                    <xsl:value-of select="php:function('lang', 'From')" />
-                                                </label>
-                                                
-                                                
-                                            
-                                        
-                                                <input class="form-control" id="start_date" type="text" name="from_[]">
-                                                    <xsl:attribute name="value">
-                                                        <xsl:value-of select="from_" />
-                                                    </xsl:attribute>
-                                                    <xsl:attribute name="readonly">
-                                                        <xsl:text>readonly</xsl:text>
-                                                    </xsl:attribute>
-                                                </input>
+                            <div class="heading"> <xsl:value-of select="php:function('lang', 'When?')" /></div>
+                            <xsl:if test="config/application_when">
+                                <p><xsl:value-of select="config/application_when"/></p>
+                            </xsl:if>
+                            
+                            <div class="form-group" id="dates-container">
+                                <input type="hidden" class="form-control" data-validation="application_dates">
+                                    <xsl:attribute name="data-validation-error-msg">
+                                        <xsl:value-of select="php:function('lang', 'Invalid date')" />
+                                    </xsl:attribute>
+                                </input>
+                                <input type="hidden" id="date_format" />
+                                <xsl:for-each select="application/dates">
+                                    <xsl:variable name="index" select="position()-2"/>
+                                    <xsl:choose>
+                                        <xsl:when test="position() > 1">
+                                            <div class="date-container">
+                                                <a href="javascript:void(0);" class="btnclose">
+                                                    <xsl:value-of select="php:function('lang', 'Remove date')" />
+                                                </a>
+                                                <div class="form-group">
+                                                    <label for="start_date_{$index}">
+                                                        <xsl:value-of select="php:function('lang', 'From')" />
+                                                    </label>
+                                                    <input class="newaddedpicker datetime form-control" id="start_date_{$index}" type="text" name="from_[]">
+                                                        <xsl:attribute name="value">
+                                                            <xsl:value-of select="from_" />
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="readonly">
+                                                            <xsl:text>readonly</xsl:text>
+                                                        </xsl:attribute>
+                                                    </input>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="end_date_{$index}">
+                                                        <xsl:value-of select="php:function('lang', 'To')" />
+                                                    </label>
+                                                    <xsl:if test="activity/error_msg_array/end_date != ''">
+                                                        <xsl:variable name="error_msg">
+                                                            <xsl:value-of select="activity/error_msg_array/end_date" />
+                                                        </xsl:variable>
+                                                        <div class='input_error_msg'>
+                                                            <xsl:value-of select="php:function('lang', $error_msg)" />
+                                                        </div>
+                                                    </xsl:if>
+                                                    <input class="newaddedpicker datetime form-control" id="end_date_{$index}" type="text" name="to_[]">
+                                                        <xsl:attribute name="value">
+                                                            <xsl:value-of select="to_"/>
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="readonly">
+                                                            <xsl:text>readonly</xsl:text>
+                                                        </xsl:attribute>
+                                                    </input>
+                                                </div>
                                             </div>
-                                            
-                                            <div class="form-group col-lg-4 col-md-7 col-sm-12 no-padding-left">     
-                                                <label for="end_date">
-                                                    <xsl:value-of select="php:function('lang', 'To')" />
-                                                </label>
-                                        
-                                    
-                                                <input class="form-control" id="end_date" type="text" name="to_[]">
-                                                    <xsl:attribute name="value">
-                                                        <xsl:value-of select="to_"/>
-                                                    </xsl:attribute>
-                                                    <xsl:attribute name="readonly">
-                                                        <xsl:text>readonly</xsl:text>
-                                                    </xsl:attribute>
-
-                                                </input>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <div class="date-container">
+                                                <a href="javascript:void(0);" class="btnclose">
+                                                    <xsl:value-of select="php:function('lang', 'Remove date')" />
+                                                </a>
+                                                <div class="form-group">
+                                                    <label for="start_date">
+                                                        <xsl:value-of select="php:function('lang', 'From')" />
+                                                    </label>
+                                                    <input class="datetime form-control" id="start_date" type="text" name="from_[]">
+                                                        <xsl:attribute name="value">
+                                                            <xsl:value-of select="from_"/>
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="readonly">
+                                                            <xsl:text>readonly</xsl:text>
+                                                        </xsl:attribute>
+                                                    </input>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="end_date">
+                                                        <xsl:value-of select="php:function('lang', 'To')" />
+                                                    </label>
+                                                    <xsl:if test="activity/error_msg_array/end_date != ''">
+                                                        <xsl:variable name="error_msg">
+                                                            <xsl:value-of select="activity/error_msg_array/end_date" />
+                                                        </xsl:variable>
+                                                        <div class='input_error_msg'>
+                                                            <xsl:value-of select="php:function('lang', $error_msg)" />
+                                                        </div>
+                                                    </xsl:if>
+                                                    <input class="datetime form-control" id="end_date" type="text" name="to_[]">
+                                                        <xsl:attribute name="value">
+                                                            <xsl:value-of select="to_"/>
+                                                        </xsl:attribute>
+                                                        <xsl:attribute name="readonly">
+                                                            <xsl:text>readonly</xsl:text>
+                                                        </xsl:attribute>
+                                                    </input>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!--div id="dtBox"></div-->
-                                    </xsl:otherwise>
-                                    
-                                    
-                                    
-                                </xsl:choose>
-                            </xsl:for-each>
-                        </div>
-                    
-                        <a href="javascript:void(0);" id="add-date-link">
-                            <xsl:value-of select="php:function('lang', 'Add another date')" />
-                        </a>
-                       
-              
-                
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:for-each>
+                            </div>
+                            <div class="pure-control-group">
+                                <a href="javascript:void(0);" id="add-date-link">
+                                    <xsl:value-of select="php:function('lang', 'Add another date')" />
+                                </a>
+                            </div>
                     </div>
                 
                 
@@ -356,7 +353,9 @@
                 
                     <div class="col-lg-12 application-group bg-light">
    
-                        <div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'Who?')" />
+                        </div>
                         <xsl:if test="config/application_who">
                             <p>
                                 <xsl:value-of select="config/application_who"/>
@@ -402,7 +401,9 @@
                 
                     <div class="col-lg-12 application-group bg-light">
                     
-                        <div class="heading">6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'Contact information')" />
+                        </div>
                         <xsl:if test="config/application_contact_information">
                             <p>
                                 <xsl:value-of select="config/application_contact_information"/>
@@ -491,7 +492,9 @@
                 
                     <div class="col-lg-12 application-group bg-light">
 
-                        <div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" />
+                        </div>
                         <xsl:if test="config/application_responsible_applicant">
                             <p>
                                 <xsl:value-of select="config/application_responsible_applicant"/>
@@ -511,7 +514,9 @@
                 
                     <div class="col-lg-12 application-group bg-light">
               
-                        <div class="heading">8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'Terms and conditions')" />
+                        </div>
                         <input type="hidden" data-validation="regulations_documents">
                             <xsl:attribute name="data-validation-error-msg">
                                 <xsl:value-of select="php:function('lang', 'You must accept to follow all terms and conditions of lease first')" />
@@ -537,7 +542,9 @@
                 
                     <div class="col-lg-12 application-group bg-light">
                         
-                        <div class="heading">9. <xsl:value-of select="php:function('lang', 'Attachment')" /></div>
+                        <div class="heading">
+                            <xsl:value-of select="php:function('lang', 'Attachment')" />
+                        </div>
 
                     
                         <label for="field_name">
