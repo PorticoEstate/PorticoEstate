@@ -18,6 +18,7 @@ and open the template in the editor.
         <script type="text/javascript" src="{javascript_uri}"></script>
         <!-- END javascript -->
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+       
         {css}
 
         <script type="text/javascript">
@@ -41,7 +42,7 @@ and open the template in the editor.
     <body class="">
         <nav class="navbar navbar-expand-md">
 
-                <div class="container">
+                <div class="container header-container">
                     <button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>  
