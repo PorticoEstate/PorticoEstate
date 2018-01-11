@@ -306,26 +306,29 @@
 			$categories = $this->so->select_category_list();
 
 			//while (is_array($categories) && list(, $category) = each($categories))
-                        foreach($categories as $category)
-			{
-				if ($category['id'] == $selected)
-				{
-					$category_list[] = array
-						(
-						'cat_id' => $category['id'],
-						'name' => $category['name'],
-						'selected' => 'selected'
-					);
-				}
-				else
-				{
-					$category_list[] = array
-						(
-						'cat_id' => $category['id'],
-						'name' => $category['name'],
-					);
-				}
-			}
+                        if (is_array($categories))
+                        {
+                            foreach($categories as $category)
+                            {
+                                    if ($category['id'] == $selected)
+                                    {
+                                            $category_list[] = array
+                                                    (
+                                                    'cat_id' => $category['id'],
+                                                    'name' => $category['name'],
+                                                    'selected' => 'selected'
+                                            );
+                                    }
+                                    else
+                                    {
+                                            $category_list[] = array
+                                                    (
+                                                    'cat_id' => $category['id'],
+                                                    'name' => $category['name'],
+                                            );
+                                    }
+                            }
+                        }
 			return $category_list;
 		}
 
