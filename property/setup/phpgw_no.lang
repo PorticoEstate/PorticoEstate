@@ -2394,3 +2394,4 @@ FM settings	property	no	Innstillinger for eiendomsforvaltning
 pending action type	property	no	Handlingstyper
 comma separated email addresses to be notified about tenant claim	property	no	Kommmaseparert liste over hvem som skal ha e-post om leietakerkrav
 record has been saved	property	no	Posten er lagret
+invoice remark	property	no	Fakturanotat

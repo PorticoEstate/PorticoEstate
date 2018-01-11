@@ -897,6 +897,7 @@
 				$ticket['entry_date'] = $this->db->f('entry_date');
 				$ticket['modified_date'] = $this->db->f('modified_date');
 				$ticket['order_sent'] = $this->db->f('order_sent');
+				$ticket['invoice_remark'] = $this->db->f('invoice_remark', true);
 				$ticket['order_received'] = $this->db->f('order_received');
 				$ticket['order_received_amount'] = $this->db->f('order_received_amount');
 				$mail_recipients = trim($this->db->f('mail_recipients'), ',');
@@ -1291,7 +1292,7 @@
 			$old_order_cat_id = $this->db->f('order_cat_id');
 			$old_building_part = $this->db->f('building_part', true);
 			$old_order_dim1 = (int)$this->db->f('order_dim1');
-
+			$order_sent = $this->db->f('order_sent');
 
 			if ($oldcat_id == 0)
 			{
@@ -1625,6 +1626,8 @@
 				{
 					$this->db->query("UPDATE fm_tts_tickets SET order_id = {$order_id}, ordered_by = {$this->account} WHERE id={$id}", __LINE__, __FILE__);
 					$this->db->query("INSERT INTO fm_orders (id,type) VALUES ({$order_id},'ticket')");
+
+					$ticket['invoice_remark'] = $ticket['subject'];
 				}
 			}
 
@@ -1747,6 +1750,11 @@
 				$value_set['continuous'] = $ticket['continuous'];
 				$value_set['order_deadline'] = $ticket['order_deadline'];// delete value if empty
 				$value_set['order_deadline2'] = $ticket['order_deadline2'];// delete value if empty
+
+				if(!empty($ticket['invoice_remark']) && !$order_sent)
+				{
+					$value_set['invoice_remark'] = $this->db->db_addslashes($ticket['invoice_remark']);
+				}
 
 				if(!empty($ticket['order_deadline']))
 				{

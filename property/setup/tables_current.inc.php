@@ -1184,6 +1184,7 @@
 				'continuous' => array('type' => 'int', 'precision' => 2, 'nullable' => True),
 				'order_deadline' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
 				'order_deadline2' => array('type' => 'int', 'precision' => 8, 'nullable' => True),
+				'invoice_remark' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
