@@ -304,20 +304,23 @@
 
 			$j = 0;
 			//while (is_array($branch_entries) && list(, $branch) = each($branch_entries))
-                        foreach($branch_entries as $branch)
-			{
-				$branch_list[$j]['id'] = $branch['id'];
-				$branch_list[$j]['name'] = $branch['name'];
+                        if (is_array($branch_entries))
+                        {
+                            foreach($branch_entries as $branch)
+                            {
+                                    $branch_list[$j]['id'] = $branch['id'];
+                                    $branch_list[$j]['name'] = $branch['name'];
 
-				for ($i = 0; $i < count($selected); $i++)
-				{
-					if ($selected[$i]['branch_id'] == $branch['id'])
-					{
-						$branch_list[$j]['selected'] = 'selected';
-					}
-				}
-				$j++;
-			}
+                                    for ($i = 0; $i < count($selected); $i++)
+                                    {
+                                            if ($selected[$i]['branch_id'] == $branch['id'])
+                                            {
+                                                    $branch_list[$j]['selected'] = 'selected';
+                                            }
+                                    }
+                                    $j++;
+                            }
+                        }
 
 			/* 	for ($i=0;$i<count($branch_list);$i++)
 			  {
