@@ -712,13 +712,16 @@ JS;
 		function save( $values, $values_attribute, $action = '', $entity_id, $cat_id )
 		{
 			//while (is_array($values['location']) && list(, $value) = each($values['location']))
-                        foreach($values['location'] as $value)
-			{
+                        if (is_array($values['location']))
+                        {
+                            foreach($values['location'] as $value)
+                            {
 				if ($value)
 				{
 					$location[] = $value;
 				}
-			}
+                            }
+                        }
 
 			$values['location_code'] = (isset($location) ? implode("-", $location) : '');
 
