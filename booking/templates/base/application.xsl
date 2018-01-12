@@ -105,7 +105,7 @@
 										<br />Melding fra saksbehandler ligger under historikk, deretter vises kopi av din søknad.<br /> Skal du gi en melding til saksbehandler skriver du denne inn i feltet under "Legg til en kommentar"</span>
 								</div>
 							</xsl:if>
-<!--							<form method="POST">
+							<!--							<form method="POST">
 								<div class="pure-control-group">
 									<label for="comment">
 										<xsl:value-of select="php:function('lang', 'Add a comment')" />
@@ -127,36 +127,40 @@
 									<h3>1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></h3>
 								</legend>
 							</div>
-                                                        <table class="historyTable">
-                                                            <tr>
-                                                                <th><xsl:value-of select="php:function('lang', 'Time')" /></th>
-                                                                <th><xsl:value-of select="php:function('lang', 'Comment')" /></th>
-                                                            </tr>
+							<table class="historyTable">
+								<tr>
+									<th>
+										<xsl:value-of select="php:function('lang', 'Time')" />
+									</th>
+									<th>
+										<xsl:value-of select="php:function('lang', 'Comment')" />
+									</th>
+								</tr>
                                                             
-							<xsl:for-each select="application/comments[author]">
+								<xsl:for-each select="application/comments[author]">
 								
-                                                                    <tr>
-									<td>
-										<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
-                                                                        </td>
-									<xsl:choose>
-										<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
-											<td>
-												<xsl:value-of select="comment" disable-output-escaping="yes"/>
-											</td>
-										</xsl:when>
-										<xsl:otherwise>
-											<td>
-												<xsl:value-of select="comment"/>
-											</td>
-										</xsl:otherwise>
-									</xsl:choose>
-                                                                    </tr>
+									<tr>
+										<td>
+											<xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
+										</td>
+										<xsl:choose>
+											<xsl:when test='contains(comment,"bookingfrontend.uidocument_building.download")'>
+												<td>
+													<xsl:value-of select="comment" disable-output-escaping="yes"/>
+												</td>
+											</xsl:when>
+											<xsl:otherwise>
+												<td>
+													<xsl:value-of select="comment" disable-output-escaping="yes"/>
+												</td>
+											</xsl:otherwise>
+										</xsl:choose>
+									</tr>
                                                    
                                                                 
-							</xsl:for-each>
+								</xsl:for-each>
                                                        
-                                                        </table>
+							</table>
 						</div>
 					</div>
 
@@ -167,7 +171,8 @@
 									<h3>1.1 <xsl:value-of select="php:function('lang', 'attachments')" /></h3>
 								</legend>
 							</div>
-							<div id="attachments_container"/><br/>
+							<div id="attachments_container"/>
+							<br/>
 							<form method="POST" enctype='multipart/form-data' id='file_form'>
 								<input name="name" id='field_name' type='file' >
 									<xsl:attribute name='title'>
@@ -186,7 +191,8 @@
 										<xsl:text>Max 2M:: jpg, png, gif, xls, xlsx, doc, docx, txt , pdf, odt, ods</xsl:text>
 									</xsl:attribute>
 								</input>
-								<br/><br/>
+								<br/>
+								<br/>
 								<input type="submit" value="{php:function('lang', 'Add attachment')}" />
 							</form>
 
@@ -443,16 +449,16 @@
 										<xsl:value-of select="php:function('lang', 'organization number')" />
 									</label>
 									<span>
-									<xsl:value-of select="application/customer_organization_number"/>
-                                                                        </span>
+										<xsl:value-of select="application/customer_organization_number"/>
+									</span>
 								</xsl:if>
 								<xsl:if test="application/customer_identifier_type = 'ssn'">
 									<label>
 										<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
 									</label>
 									<span>
-									<xsl:value-of select="application/customer_ssn"/>
-                                                                        </span>
+										<xsl:value-of select="application/customer_ssn"/>
+									</span>
 								</xsl:if>
 							</div>
 						</div>
@@ -505,19 +511,20 @@
 										</h3>
 									</legend>
 								</div>
-                                                                <form method="POST">
-								<div class="pure-control-group">
-									<label for="comment">
-										<xsl:value-of select="php:function('lang', 'Add a comment')" />
-									</label>
-									<textarea name="comment" id="comment" style="width: 60%; height: 7em"></textarea>
-									<br/>
-								</div>
-								<div class="pure-control-group">
-									<label>&nbsp;</label>
-									<input type="submit" value="{php:function('lang', 'Add comment')}" />
-								</div>
-                                                                </form><br/>
+								<form method="POST">
+									<div class="pure-control-group">
+										<label for="comment">
+											<xsl:value-of select="php:function('lang', 'Add a comment')" />
+										</label>
+										<textarea name="comment" id="comment" style="width: 60%; height: 7em"></textarea>
+										<br/>
+									</div>
+									<div class="pure-control-group">
+										<label>&nbsp;</label>
+										<input type="submit" value="{php:function('lang', 'Add comment')}" />
+									</div>
+								</form>
+								<br/>
 								<div class="pure-control-group">
 									<xsl:if test="application/case_officer/is_current_user">
 										<form method="POST" style="display:inline">

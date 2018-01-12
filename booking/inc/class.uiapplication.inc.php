@@ -1193,7 +1193,7 @@
 			self::check_date_availability($application);
 			$application['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 			phpgwapi_jquery::formvalidator_generate(array('file'), 'file_form');
-
+			self::rich_text_editor('comment');
 			$application['description'] = html_entity_decode(nl2br($application['description']));
 			$application['equipment'] = html_entity_decode(nl2br($application['equipment']));
 
