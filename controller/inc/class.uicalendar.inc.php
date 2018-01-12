@@ -57,13 +57,18 @@
 		private $so_check_list;
 		private $so_check_item;
 		private $location_finder;
+		var $type_id;
+		private $bo;
+		private $bocommon;
 		public $public_functions = array
 			(
 			'view_calendar_for_month' => true,
 			'view_calendar_for_year' => true,
+			'view_calendar_for_year2' => true,
 			'view_calendar_year_for_locations' => true,
 			'view_calendar_month_for_locations' => true,
-			'update_bookmark' => true
+			'update_bookmark' => true,
+			'query' => true
 		);
 
 		public function __construct()
@@ -76,6 +81,10 @@
 			$delete = $GLOBALS['phpgw']->acl->check('.control', PHPGW_ACL_DELETE, 'controller'); //8
 
 			$manage = $GLOBALS['phpgw']->acl->check('.control', 16, 'controller'); //16
+			
+			$this->bo = CreateObject('property.bolocation', true);
+			$this->bocommon = & $this->bo->bocommon;
+			$this->type_id = $this->bo->type_id;
 
 			$this->so = CreateObject('controller.socheck_list');
 			$this->so_control = CreateObject('controller.socontrol');
@@ -474,6 +483,300 @@
 
 				self::render_template_xsl('calendar/calendar_year_no_loc', $data);
 			}
+		}
+		
+		public function view_calendar_for_year2($location_array = null, $year = null)
+		{
+			//$location_array = phpgw::get_var('location_array');
+			//_debug_array($location_array['data']);
+//			if(!empty($location_array))
+//			{
+//				_debug_array($location_array['data']);
+////				foreach ($location_array as $loc_no => $currval)
+////				{
+////					var_dump($loc_no);
+////				}
+//			}
+//			
+			$location_code = phpgw::get_var('location_code');
+			if($year == null)
+				$year = phpgw::get_var('year');
+			$role = phpgw::get_var('role', 'int');
+
+			$repeat_type = phpgw::get_var('repeat_type');
+			
+			//show only controls that are not done
+			$selected_ctrl_status = phpgw::get_var('current_ctrl_status');
+			
+			// Validates year. If year is not set, current year is chosen
+			$year = $this->validate_year($year);
+
+			// Validates repeat type.
+			$repeat_type = $this->validate_repeat_type($repeat_type);
+
+			// Validates role.
+//			$role = $this->validate_role($role);
+			// Gets timestamp of first day in year
+			$from_date_ts = $this->get_start_date_year_ts($year);
+
+			// Gets timestamp of first day in next year
+			$to_date_ts = $this->get_end_date_year_ts($year);
+
+			// Array that will be populated with controls and calendar objects that will be sent to view
+			$controls_calendar_array = array();
+
+			// Validates location_code. If not set, first location among assigned locations
+			$location_code = $this->validate_location_code($location_code);
+
+//			if ($location_code != null && $location_code != "")
+//			{
+			if(is_array($location_array))
+			{
+				$locations_with_control = array();
+				foreach ($location_array as $loc_code =>&$curr_pos)
+				{
+					$curr_pos['location_code'] = $loc_code;
+					//_debug_array($curr_pos);
+				}
+				
+				foreach ($location_array as $curr_loc)
+				{
+					//$curr = array();
+					//$curr['location_code'] = $curr_loc['location_code'];
+					//$curr['controls_calendar_array'] = $curr_loc['controls_calendar_array'];
+					if(is_array($curr_loc['controls_calendar_array']) && !empty($curr_loc['controls_calendar_array']))
+					{
+						$locations_with_control[] = $curr_loc;
+					}
+				}
+				//_debug_array($locations_with_control);
+				
+				$heading_array = year_calendar::get_heading_array();
+//				_debug_array($heading_array);
+
+				$roles_array = $this->so_control->get_roles();
+
+				$repeat_type_array = array(
+					array('id' => "0", 'value' => "Dag"),
+					array('id' => "1", 'value' => "Uke"),
+					array('id' => "2", 'value' => "Måned"),
+					array('id' => "3", 'value' => "År")
+				);
+				
+				$ctrl_status_array = array(
+					array('id' => "CONTROL_REGISTERED", 'value' => "CONTROL_REGISTERED"),
+					array('id' => "CONTROL_PLANNED", 'value' => "CONTROL_PLANNED"),
+					array('id' => "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS", 'value' => "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS"),
+					array('id' => "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS", 'value' => "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS"),
+					array('id' => "CONTROL_DONE_WITH_ERRORS", 'value' => "CONTROL_DONE_WITH_ERRORS"),
+					array('id' => "CONTROL_NOT_DONE", 'value' => "CONTROL_NOT_DONE"),
+					//array('id' => "CONTROL_NOT_DONE_WITH_PLANNED_DATE", 'value' => "CONTROL_NOT_DONE_WITH_PLANNED_DATE"),
+					array('id' => "CONTROL_CANCELED", 'value' => "CONTROL_CANCELED")
+				);
+				
+				$GLOBALS['phpgw']->translation->add_app('property');
+
+				$district_list = $this->bocommon->select_district_list('filter', $this->district_id);
+
+				$part_of_town_list = execMethod('property.bogeneric.get_list', array('type' => 'part_of_town',
+					'selected' => $part_of_town_id));
+				$location_type_list = execMethod('property.soadmin_location.select_location_type');
+
+				array_unshift($district_list, array('id' => '', 'name' => lang('select')));
+				array_unshift($part_of_town_list, array('id' => '', 'name' => lang('select')));
+				array_unshift($location_type_list, array('id' => '', 'name' => lang('select')));
+
+
+				$data = array
+					(
+					'heading_array' => $heading_array,
+					'location_calendar_array' => $locations_with_control,
+					'roles_array' => $roles_array,
+					'repeat_type_array' => $repeat_type_array,
+					'ctrl_status_array' => $ctrl_status_array,
+					'current_year' => $year,
+					'multiple_locations' => 'yes',
+					'filter_form' => array
+						(
+						'district_list' => array('options' => $district_list),
+						'part_of_town_list' => array('options' => $part_of_town_list),
+						'location_type_list' => array('options' => $location_type_list),
+					),
+					'update_action' => self::link(array('menuaction' => 'controller.uicalendar.query'))
+				);
+
+				phpgwapi_jquery::load_widget('autocomplete');
+				self::add_javascript('controller', 'controller', 'ajax.js');
+				self::add_javascript('controller', 'controller', 'ajax_calendar_for_locations.js');
+
+				self::render_template_xsl(array('calendar/view_calendar_aggregated', 'calendar/check_list_status_manager',
+					'calendar/icon_color_map', 'calendar/nav_calendar_year',
+					'calendar/calendar_filters'), $data);
+			}
+			else
+			{
+				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
+				$receipt = array();
+
+				if (phpgw::get_var('phpgw_return_as') == 'json')
+				{
+					return $this->query();
+				}
+
+				$msgbox_data = array();
+				if (phpgw::get_var('phpgw_return_as') != 'json' && $receipt = phpgwapi_cache::session_get('phpgwapi', 'phpgw_messages'))
+				{
+					phpgwapi_cache::session_clear('phpgwapi', 'phpgw_messages');
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox_data($receipt);
+					$msgbox_data = $GLOBALS['phpgw']->common->msgbox($msgbox_data);
+				}
+
+				$GLOBALS['phpgw']->translation->add_app('property');
+
+				$district_list = $this->bocommon->select_district_list('filter', $this->district_id);
+
+				$part_of_town_list = execMethod('property.bogeneric.get_list', array('type' => 'part_of_town',
+					'selected' => $part_of_town_id));
+				$location_type_list = execMethod('property.soadmin_location.select_location_type');
+
+				array_unshift($district_list, array('id' => '', 'name' => lang('select')));
+				array_unshift($part_of_town_list, array('id' => '', 'name' => lang('select')));
+				array_unshift($location_type_list, array('id' => '', 'name' => lang('select')));
+
+
+				$data = array
+					(
+					'msgbox_data' => $msgbox_data,
+					'filter_form' => array
+						(
+						'district_list' => array('options' => $district_list),
+						'part_of_town_list' => array('options' => $part_of_town_list),
+						'location_type_list' => array('options' => $location_type_list),
+					),
+					'update_action' => self::link(array('menuaction' => 'controller.uicalendar.query'))
+				);
+
+				self::add_javascript('controller', 'controller', 'ajax_calendar_for_locations.js');
+
+				self::render_template_xsl(array('calendar/view_calendar_aggregated'), $data);
+			}
+		}
+		
+		public function get_location_calendar_for_year($location_code, $year = null)
+		{
+			$role = phpgw::get_var('role', 'int');
+			$repeat_type = phpgw::get_var('repeat_type');
+			
+			//show only controls that are not done
+			$selected_ctrl_status = phpgw::get_var('current_ctrl_status');
+			
+			// Validates year. If year is not set, current year is chosen
+			$year = $this->validate_year($year);
+
+			// Validates repeat type.
+			$repeat_type = $this->validate_repeat_type($repeat_type);
+
+			// Gets timestamp of first day in year
+			$from_date_ts = $this->get_start_date_year_ts($year);
+
+			// Gets timestamp of first day in next year
+			$to_date_ts = $this->get_end_date_year_ts($year);
+
+			// Array that will be populated with controls and calendar objects that will be sent to view
+			$controls_calendar_array = array();
+
+			// Validates location_code. If not set, first location among assigned locations
+			$location_code = $this->validate_location_code($location_code);
+
+			$level = $this->location_finder->get_location_level($location_code);
+
+			$user_role = true;
+
+			// Fetches buildings on property
+			$buildings_on_property = $this->location_finder->get_buildings_on_property($user_role, $location_code, $level);
+
+			// Fetches all controls for the location within time period
+			$controls_for_location_array = $this->so_control->get_controls_by_location($location_code, $from_date_ts, $to_date_ts, $repeat_type, "return_object", $role);
+
+			// Loops through controls with repeat type day or week
+			// and populates array that contains aggregated open cases pr month.
+			foreach ($controls_for_location_array as $control)
+			{
+				if ($control->get_repeat_type() == controller_control::REPEAT_TYPE_DAY | $control->get_repeat_type() == controller_control::REPEAT_TYPE_WEEK)
+				{
+					$cl_criteria = new controller_check_list();
+					$cl_criteria->set_control_id($control->get_id());
+					$cl_criteria->set_location_code($location_code);
+
+					$from_month = $this->get_start_month_for_control($control);
+					$to_month = $this->get_end_month_for_control($control);
+
+					// Loops through controls and populates aggregate open cases pr month array.
+					$agg_open_cases_pr_month_array = $this->build_agg_open_cases_pr_month_array($cl_criteria, $year, $from_month, $to_month);
+
+					$year_calendar_agg = new year_calendar_agg($control, $year, $location_code, "VIEW_CONTROLS_FOR_LOCATION");
+					$calendar_array = $year_calendar_agg->build_calendar($agg_open_cases_pr_month_array);
+
+					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+				}
+			}
+
+			$repeat_type_expr = ">=2";
+			// Fetches control ids with check lists for specified time period
+			$control_id_with_check_list_array = $this->so->get_check_lists_for_location($location_code, $from_date_ts, $to_date_ts, $repeat_type_expr);
+
+			// Loops through all controls for location and populates controls with check lists
+			$controls_for_location_array = $this->populate_controls_with_check_lists($controls_for_location_array, $control_id_with_check_list_array);
+
+			foreach ($controls_for_location_array as $control)
+			{
+				if ($control->get_repeat_type() == controller_control::REPEAT_TYPE_MONTH | $control->get_repeat_type() == controller_control::REPEAT_TYPE_YEAR)
+				{
+					$year_calendar = new year_calendar($control, $year, null, $location_code, "location");
+					$calendar_array = $year_calendar->build_calendar($control->get_check_lists_array(), $selected_ctrl_status);
+
+					$controls_calendar_array[] = array("control" => $control->toArray(), "calendar_array" => $calendar_array);
+				}
+			}
+
+			$location_array = execMethod('property.bolocation.read_single', array('location_code' => $location_code));
+
+			// Gets array of locations assigned to current user
+			$my_locations = $this->get_my_assigned_locations($location_code);
+
+			$heading_array = year_calendar::get_heading_array();
+
+			$roles_array = $this->so_control->get_roles();
+
+			$repeat_type_array = array(
+				array('id' => "0", 'value' => "Dag"),
+				array('id' => "1", 'value' => "Uke"),
+				array('id' => "2", 'value' => "Måned"),
+				array('id' => "3", 'value' => "År")
+			);
+
+			$ctrl_status_array = array(
+				array('id' => "CONTROL_REGISTERED", 'value' => "CONTROL_REGISTERED"),
+				array('id' => "CONTROL_PLANNED", 'value' => "CONTROL_PLANNED"),
+				array('id' => "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS", 'value' => "CONTROL_DONE_OVER_TIME_WITHOUT_ERRORS"),
+				array('id' => "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS", 'value' => "CONTROL_DONE_IN_TIME_WITHOUT_ERRORS"),
+				array('id' => "CONTROL_DONE_WITH_ERRORS", 'value' => "CONTROL_DONE_WITH_ERRORS"),
+				array('id' => "CONTROL_NOT_DONE", 'value' => "CONTROL_NOT_DONE"),
+				//array('id' => "CONTROL_NOT_DONE_WITH_PLANNED_DATE", 'value' => "CONTROL_NOT_DONE_WITH_PLANNED_DATE"),
+				array('id' => "CONTROL_CANCELED", 'value' => "CONTROL_CANCELED")
+			);
+
+			$data = array
+				(
+				'heading_array' => $heading_array,
+				'controls_calendar_array' => $controls_calendar_array,
+				'roles_array' => $roles_array,
+				'repeat_type_array' => $repeat_type_array,
+				'ctrl_status_array' => $ctrl_status_array,
+				'current_year' => $year
+			);
+
+			return $data;
 		}
 
 		public function view_calendar_year_for_locations()
@@ -1163,7 +1466,64 @@
 
 		public function query()
 		{
+			$year = date('Y');
+			$from_date_ts = mktime(0, 0, 0, 1, 1, $year);
+			$to_date_ts = mktime(0, 0, 0, 1, 1, $year+1);
+			$loc_array = array();
+			$loc_checklist_array = array();
+
+			$params = array(
+				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
+				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
+				'order' => $columns[$order[0]['column']]['data'],
+				'sort' => $order[0]['dir'],
+				'allrows' => true,
+				'district_id' => phpgw::get_var('district_id', 'int'),
+				'cat_id' => phpgw::get_var('cat_id', 'int'),
+				'status' => phpgw::get_var('status'),
+				'part_of_town_id' => phpgw::get_var('part_of_town_id', 'int'),
+				'location_code' => phpgw::get_var('location_code'),
+				'type_id' => phpgw::get_var('location_level', 'int', 'REQUEST', 1)
+			);
+
+			$values = $this->bo->read($params);
+
+			foreach ($values as &$entry)
+			{
+				$loc_array[] = $entry['location_code'];
+			}
 			
+			foreach ($loc_array as $curr_loc)
+			{
+				//get checklists for found locations
+				$loc_checklist_array[$curr_loc] = $this->get_location_calendar_for_year($curr_loc, $year);
+				$loc_checklist_array[$curr_loc]['loc_name'] = $this->bo->get_location_name($curr_loc);
+				
+			}
+			
+			foreach ($loc_checklist_array as &$curr_loc_checklist)
+			{
+				if(empty($curr_loc_checklist['controls_calendar_array']))
+				{
+					$curr_loc_checklist = [];
+				}
+			}
+//			_debug_array($loc_checklist_array);
+		//die();
+			
+			$result_data = array
+				(
+				'results' => $loc_checklist_array
+			);
+			
+			$this->view_calendar_for_year2($loc_checklist_array, $year);
+			
+			//$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'controller.uicalendar.view_calendar_for_year2', 'location_array' => $loc_checklist_array));
+			
+			
+
+			//return $this->jquery_results($result_data);
+			//return $this->jquery_results($loc_checklist_array);
 		}
 
 		public function update_bookmark()
