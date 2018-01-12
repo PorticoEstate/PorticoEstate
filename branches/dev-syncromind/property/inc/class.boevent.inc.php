@@ -1031,11 +1031,12 @@
 			$event['start']['mday'] = date('d', $event['start_date']);
 			$event['start']['year'] = date('Y', $event['start_date']);
 
-			if (isset($event['repeat_exception']))
+			if (is_array($event['repeat_exception']) && $inserted == false)
 			{
 				//$event_time = mktime($event['start']['hour'],$event['start']['min'],0,intval(substr($date,4,2)),intval(substr($date,6,2)),intval(substr($date,0,4))) - phpgwapi_datetime::user_timezone();
 				$event_time = mktime($event['start']['hour'], $event['start']['min'], 0, intval(substr($date, 4, 2)), intval(substr($date, 6, 2)), intval(substr($date, 0, 4)));
-				while ($inserted == false && list($key, $exception_time) = each($event['repeat_exception']))
+                                //while ($inserted == false && list($key, $exception_time) = each($event['repeat_exception']))                                       
+                                foreach($event['repeat_exception'] as $key => $exception_time)
 				{
 					if ($this->debug)
 					{
