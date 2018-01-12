@@ -975,7 +975,7 @@
 			if (isset($history_set) AND is_array($history_set))
 			{
 				$historylog = CreateObject('property.historylog', 's_agreement');
-				while (list($attrib_id, $new_value) = each($history_set))
+                                foreach($history_set as $attrib_id => $new_value)
 				{
 					$historylog->add('SO', $values['s_agreement_id'], $new_value, false, $attrib_id, false, $id);
 				}
@@ -1115,10 +1115,13 @@
 			//_debug_array($values_attribute);
 			$table = 'fm_s_agreement_detail';
 
-			while (is_array($values['extra']) && list($column, $value) = each($values['extra']))
-			{
+                        if (is_array($values['extra']))
+                        {
+                            foreach($values['extra'] as $column => $value)
+                            {
 				$value_set[$column] = $value;
-			}
+                            }
+                        }
 
 			if (isset($values_attribute) AND is_array($values_attribute))
 			{
