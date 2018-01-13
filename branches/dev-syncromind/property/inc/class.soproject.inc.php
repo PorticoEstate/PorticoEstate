@@ -1342,9 +1342,10 @@
 
 			if (count($project['branch']) != 0)
 			{
-				while ($branch = each($project['branch']))
+				//while ($branch = each($project['branch']))
+                                foreach($project['branch'] as $key => $value)
 				{
-					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ({$id},{$branch[1]})", __LINE__, __FILE__);
+					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ({$id},{$value})", __LINE__, __FILE__);
 				}
 			}
 
@@ -1773,9 +1774,10 @@
 
 			if (count($project['branch']) != 0)
 			{
-				while ($branch = each($project['branch']))
+				//while ($branch = each($project['branch']))
+                                foreach($project['branch'] as $key => $value)
 				{
-					$this->db->query("INSERT INTO fm_projectbranch (project_id,branch_id) VALUES ({$project['id']}, {$branch[1]})", __LINE__, __FILE__);
+					$this->db->query("INSERT INTO fm_projectbranch (project_id,branch_id) VALUES ({$project['id']}, {$value})", __LINE__, __FILE__);
 				}
 			}
 
