@@ -226,9 +226,10 @@ HTML;
 			));
 			$this->template->set_block('_personal_info', 'form');
 
-			if ($missing_fields)
+			if (is_array($missing_fields))
 			{
-				while (list(, $field) = each($missing_fields))
+				//while (list(, $field) = each($missing_fields))
+                                foreach ($missing_fields as $key => $field)
 				{
 					$missing[$field] = True;
 					$this->template->set_var('missing_' . $field, '<font color="#CC0000">*</font>');
@@ -237,7 +238,8 @@ HTML;
 
 			if (is_array($r_reg))
 			{
-				while (list($name, $value) = each($r_reg))
+				//while (list($name, $value) = each($r_reg))
+                                foreach ($r_reg as $name => $value)
 				{
 					$post_values[$name] = $value;
 					$this->template->set_var('value_' . $name, $value);
@@ -246,7 +248,8 @@ HTML;
 
 			if (is_array($o_reg))
 			{
-				while (list($name, $value) = each($o_reg))
+				//while (list($name, $value) = each($o_reg))
+                                foreach ($o_reg as $name => $value)
 				{
 					$post_values[$name] = $value;
 					$this->template->set_var('value_' . $name, $value);
