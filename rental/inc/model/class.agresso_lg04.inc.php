@@ -86,8 +86,6 @@
 		 */
 		protected function run()
 		{
-			$this->batch_id = execMethod('property.socommon.increment_id', 'Ecobatchid');
-
 			$this->orders = array();
 			$decimal_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['decimal_separator'] : ',';
 			$thousands_separator = isset($GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator']) ? $GLOBALS['phpgw_info']['user']['preferences']['rental']['thousands_separator'] : '.';
@@ -100,6 +98,7 @@
 			$config->read();
 			$serial_config_start = $config->config_data['serial_start'];
 			$serial_config_stop = $config->config_data['serial_stop'];
+			$organization = empty($config->config_data['organization']) ? 'bergen' : $config->config_data['organization'];
 
 
 			if (isset($serial_config_start) && is_numeric($serial_config_start) &&
@@ -163,7 +162,7 @@
 					$data['article_code'] = $price_item->get_agresso_id();
 					$price_item_data[] = $data;
 				}
-				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id());
+				$this->orders[] = $this->get_order($invoice->get_header(), $invoice->get_party(), $invoice->get_id(), $this->billing_job->get_year(), $this->billing_job->get_month(), $invoice->get_account_out(), $price_item_data, $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), $composite_name, $serial_number, $invoice->get_reference(), $invoice->get_customer_order_id(), $organization);
 				$invoice->set_serial_number($serial_number);
 				$serial_number++;
 			}
@@ -310,7 +309,7 @@
 		 * Builds one single order of the Agresso file.
 		 * 
 		 */
-		protected function get_order( $header, $party, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id )
+		protected function get_order( $header, $party, $order_id, $bill_year, $bill_month, $account, $product_items, $responsibility, $service, $building, $project, $text, $serial_number, $client_ref, $customer_order_id, $organization )
 		{
 
 			$party_id = $party->get_identifier();
@@ -318,8 +317,7 @@
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			$order = array();
 
-			$kem = 'bergen';
-			if($kem == 'bergen') //Bergen
+			if(!$organization || $organization == 'bergen') //Bergen kommune
 			{
 				$att_1_id = '';
 				$dim_value_1 = $account;
@@ -334,18 +332,17 @@
 				$voucher_type = 'FU';
 				$apar_id = '';
 			}
-			else if($kem == 'nlsh')
+			else if($organization == 'nlsh')
 			{
 				$att_1_id = 'DR';
 				$dim_value_1 = ''; //endre til k.sted?
 				$dim_1 = $responsibility; //k.sted
-			//	$batch_id = "PE{$this->date_str}";// må avklares
-				$batch_id =  'PU' . sprintf("%010s",$this->batch_id);
+				$batch_id =  'PU' . sprintf("%010s",$this->billing_job->get_id());
 				$client = '14';
 				$confirm_date = '';
 				$pay_method = 'BG';
-				$responsible ='BKBPE';// må avklares
-				$responsible2 ='BKBPE';// må avklares
+				$responsible ='ATT-ANSV';// må avklares
+				$responsible2 ='SELGER';// må avklares
 				$terms_id = '14';
 				$voucher_type = 'FU'; // må avklares
 				$apar_id = $party->get_customer_id();//kundenr fra agresso
@@ -357,7 +354,7 @@
 				. sprintf("%20s", '') //  3		accountable
 				. sprintf("%160s", '') //  4		address
 				. sprintf("%20s", '') //	5-7		just white space..
-				. sprintf("%08s", '') //  8		apar_id
+				. sprintf("%08s", $apar_id) //  8		apar_id
 				. sprintf("%30s", '') //  9		apar_name
 				. sprintf("%50s", '') //	10-11	just white space..
 				. sprintf("%2s", $att_1_id)  // 	12		att_1_id
@@ -369,7 +366,7 @@
 				. sprintf("%2s", '')  // 	18		att_7_id
 				. sprintf("%35s", '') // 	19		bank_account
 				. sprintf("%-12s", $batch_id)  // 	20		batch_id				DATA
-				. $client  // 	21		client					DATA
+				. sprintf("%2s", $client)  // 	21		client					DATA
 				. sprintf("%2s", '')  // 	22		client_ref
 				. sprintf("%-17s", "{$confirm_date}")   // 	23		confirm_date			DATA
 				. sprintf("%1s", '')  // 	24		control
@@ -450,7 +447,7 @@
 					. sprintf("%-15.15s", $item['article_code']) // 	11		article					DATA
 					. sprintf("%49s", '')   //	12-19	just white space..
 					. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
-					. $client // 	21		client					DATA
+					. sprintf("%2s", $client) // 	21		client					DATA
 					. sprintf("%20s", '')   //	22-24	just white space..
 					. sprintf("%017s", '')   // 	25		cur_amount
 					. sprintf("%464s", '')   //	26-34	just white space..
@@ -503,7 +500,7 @@
 					'0' . //	1
 					sprintf("%345s", '')   //	2-19	just white space..		DATA
 					. sprintf("%-12s", $batch_id) // 	20		batch_id				DATA
-					. 'BY' // 	21		client					DATA
+					. sprintf("%2s", $client) // 	21		client					DATA
 					. sprintf("%692s", '')   //	22-53	just white space..
 					. sprintf("%04.4s", $item_counter)   // 	54		line_no					DATA
 					. sprintf("%469s", '')   //	55-64	just white space..
