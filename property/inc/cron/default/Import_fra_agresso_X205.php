@@ -267,7 +267,7 @@
 						{
 							$rc = $this->send->msg('email', $prefs['email'], $subject, stripslashes($body), '', '', '', $from, '', 'html');
 						}
-						catch (phpmailerException $e)
+						catch (Exception $e)
 						{
 							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
@@ -590,7 +590,7 @@
 								$this->receipt['message'][] = array('msg' => "epost sendt til {$to}");
 							}
 						}
-						catch (phpmailerException $e)
+						catch (Exception $e)
 						{
 							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}
@@ -681,7 +681,7 @@
 						{
 							$rc = $this->send->msg('email', $to, $subject, stripslashes($body), '', $cc, $bcc, $from, '', 'html');
 						}
-						catch (phpmailerException $e)
+						catch (Exception $e)
 						{
 							$this->receipt['error'][] = array('msg' => $e->getMessage());
 						}

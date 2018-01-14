@@ -87,7 +87,7 @@
 				{
 					$rcpt = $GLOBALS['phpgw']->send->msg('email', $_to, $subject, stripslashes($body), '', $cc, $bcc, $from_email, $from_name, 'html', '');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					$receipt['error'][] = array('msg' => $e->getMessage());
 				}

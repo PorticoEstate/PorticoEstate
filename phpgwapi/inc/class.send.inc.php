@@ -60,12 +60,22 @@
 				}
 			}
 
+			$ret = false;
 			switch( $service )
 			{
 				case 'email':
-					return $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary, $attachments, $receive_notification);
-					break;
+					try
+					{
+						$ret = $this->send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary, $attachments, $receive_notification);
+					}
+					catch (Exception $e)
+					{
+						throw $e;
+						return false;
+					}
+				break;
 			}
+			return $ret;
 		}
 
 		function send_email($to, $subject, $body, $msgtype, $cc, $bcc, $from, $sender, $content_type, $boundary,$attachments, $receive_notification)
@@ -89,18 +99,26 @@
 			$delimiter = ';';
 			$to = explode($delimiter, $to);
 			
-			foreach ($to as $entry)
+			try
 			{
-				$entry = str_replace(array('[',']'),array('<','>'),$entry);
-				$to_array = explode('<', $entry);
-				if ( count($to_array) == 2 )
+				foreach ($to as $entry)
 				{
-					$mail->AddAddress(trim($to_array[1],'>'), $to_array[0]);
+					$entry = str_replace(array('[',']'),array('<','>'),$entry);
+					$to_array = explode('<', $entry);
+					if ( count($to_array) == 2 )
+					{
+						$mail->AddAddress(trim($to_array[1],'>'), $to_array[0]);
+					}
+					else
+					{
+						$mail->AddAddress($to_array[0]);
+					}
 				}
-				else
-				{
-					$mail->AddAddress($to_array[0]);
-				}
+			}
+			catch (Exception $e)
+			{
+				throw $e;
+				return false;
 			}
 
 			if($cc)

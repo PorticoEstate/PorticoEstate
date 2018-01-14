@@ -616,7 +616,7 @@
 			{
 				$GLOBALS['phpgw']->send->msg('email', $_address, $subject, stripslashes($message), '', $cc, $bcc, $coordinator_email, $coordinator_name, 'html');
 			}
-			catch (phpmailerException $e)
+			catch (Exception $e)
 			{
 				$receipt['error'][] = array('msg' => $e->getMessage());
 				$GLOBALS['phpgw']->log->error(array(

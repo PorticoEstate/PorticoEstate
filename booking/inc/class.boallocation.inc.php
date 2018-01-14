@@ -81,7 +81,7 @@
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
@@ -166,7 +166,7 @@
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}

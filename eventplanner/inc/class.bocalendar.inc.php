@@ -403,7 +403,7 @@ HTML;
 				{
 					$rcpt = $send->msg('email', $entry['to_email'], $entry['subject'], $entry['content'], '', $entry['cc'], $entry['bcc'], $entry['from_email'], $entry['from_name'], 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 				}

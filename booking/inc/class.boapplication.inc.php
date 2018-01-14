@@ -115,7 +115,7 @@
 							{
 								$send->msg('email', $bemail, $bsubject, $bbody, '', '', '', $from, '', 'html');
 							}
-							catch (phpmailerException $e)
+							catch (Exception $e)
 							{
 								// TODO: Inform user if something goes wrong
 							}
@@ -145,7 +145,7 @@
 			{
 				$send->msg('email', $application['contact_email'], $subject, $body, '', '', '', $from, '', 'html');
 			}
-			catch (phpmailerException $e)
+			catch (Exception $e)
 			{
 				// TODO: Inform user if something goes wrong
 			}
@@ -157,7 +157,9 @@
 		function send_admin_notification( $application, $message = null )
 		{
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
-				return;
+			{
+//				return;
+			}
 			$send = CreateObject('phpgwapi.send');
 
 			$config = CreateObject('phpgwapi.config', 'booking');
@@ -173,9 +175,13 @@
 			$mailadresses = explode("\n", $mailadresses);
 
 			if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && isset($config->config_data['external_site_address']))
+			{
 				$link = $external_site_address . $GLOBALS['phpgw_info']['server']['webserver_url'] . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+			}
 			else
+			{
 				$link = $external_site_address . '/index.php?menuaction=booking.uiapplication.show&id=' . $application['id'];
+			}
 
 			$activity = $this->activity_bo->read_single($application['activity_id']);
 
@@ -203,7 +209,7 @@
 				{
 					$send->msg('email', $adr, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}

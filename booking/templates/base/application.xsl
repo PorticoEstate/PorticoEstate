@@ -219,7 +219,7 @@
 									<xsl:value-of select="php:function('lang', 'Description')" />
 								</label>
 								<span>
-									<xsl:value-of select="application/description"/>
+									<xsl:value-of select="application/description" disable-output-escaping="yes"/>
 								</span>
 							</div>
 							<div class="pure-control-group">
@@ -228,7 +228,7 @@
 										<xsl:value-of select="php:function('lang', 'Extra info')" />
 									</h4>
 								</label>
-								<xsl:value-of select="application/equipment"/>
+								<xsl:value-of select="application/equipment" disable-output-escaping="yes"/>
 							</div>
 						</div>
 
