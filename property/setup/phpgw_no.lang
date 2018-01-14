@@ -1899,7 +1899,6 @@ view/edit the history	property	no	Vis/oppdater historikk
 view edit the prize for this activity	property	no	Vis/oppdater pris for denne aktiviteten
 view entrance	property	no	Vis inngang
 view equipment	property	no	Vis utstyr
-view error log	common	no	Vis feilmeldings log
 view gab	property	no	Vis grunneiendom
 view gab detail	property	no	Vis grunneiendom-detaljer
 view gab-info	property	no	Vis grunneiendom
