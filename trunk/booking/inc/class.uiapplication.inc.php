@@ -618,11 +618,11 @@
 				if ($_POST['contact_email'] != $_POST['contact_email2'])
 				{
 					$errors['email'] = lang('The e-mail addresses you entered do not match');
-					$application['contact_email2'] = $_POST['contact_email2'];
+					$application['contact_email2'] = phpgw::get_var('contact_email2', 'string', 'POST');
 				}
 				else
 				{
-					$application['contact_email2'] = $_POST['contact_email2'];
+					$application['contact_email2'] = phpgw::get_var('contact_email2', 'string', 'POST');
 				}
 
 				foreach ($application['agegroups'] as $ag)
@@ -845,7 +845,7 @@
 				array_set_default($_POST, 'accepted_documents', array());
 
 				$application = array_merge($application, extract_values($_POST, $this->fields));
-				$application['message'] = $_POST['comment'];
+				$application['message'] = phpgw::get_var('comment', 'string', 'POST');
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
 
@@ -1041,15 +1041,15 @@
 				}
 				elseif ($_POST['comment'])
 				{
-					$application['comment'] = $_POST['comment'];
-					$this->add_comment($application, $_POST['comment']);
+					$application['comment'] = phpgw::get_var('comment', 'string', 'POST');
+					$this->add_comment($application, $application['comment']);
 					$update = true;
 					$notify = true;
 				}
 				elseif ($_POST['status'])
 				{
 					$this->check_application_assigned_to_current_user($application);
-					$application['status'] = $_POST['status'];
+					$application['status'] = phpgw::get_var('status', 'string', 'POST');
 
 					if ($application['status'] == 'REJECTED')
 					{
