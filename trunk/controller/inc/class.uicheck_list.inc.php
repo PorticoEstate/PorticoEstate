@@ -2125,7 +2125,7 @@ HTML;
 			{
 				$mail->Send();
 			}
-			catch (phpmailerException $e)
+			catch (Exception $e)
 			{
 				phpgwapi_cache::message_set($e->getMessage(), 'error');
 			}
@@ -2139,7 +2139,7 @@ HTML;
 				{
 					$rc = $send->msg('email', $to_address, $subject, $message, $msgtype = 'Ical', $cc = '', $bcc = '', $from_address, $from_name, 'html', $mime_boundary);//, array($attachment));
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 				}

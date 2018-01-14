@@ -65,7 +65,7 @@
 						$sql = "update bb_booking set reminder = 3 where id = " . $booking['id'];
 						$this->db->query($sql);
 					}
-					catch (phpmailerException $e)
+					catch (Exception $e)
 					{
 						// do nothing. nowhere to log or display error messages
 					}
@@ -103,7 +103,7 @@
 					$sql = "update bb_event set reminder = 3 where id = " . $event['id'];
 					$this->db->query($sql);
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					// do nothing. nowhere to log or display error messages
 				}

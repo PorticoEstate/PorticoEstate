@@ -1271,7 +1271,7 @@ JS;
 				{
 					$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					if ($e)
 					{
@@ -1334,7 +1334,7 @@ JS;
 				{
 					$GLOBALS['phpgw']->send->msg('email', $mailtoAddress, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					if ($e)
 					{
