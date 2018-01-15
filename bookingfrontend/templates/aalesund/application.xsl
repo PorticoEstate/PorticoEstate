@@ -133,7 +133,7 @@
                     
                     <div class="col-lg-12 application-group bg-light">
                   <div class="col-lg-12">
-                        <div class="heading">1. <xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></div>
+                        <div class="heading"><xsl:value-of select="php:function('lang', 'History and comments (%1)', count(application/comments/author))" /></div>
                         <xsl:for-each select="application/comments[author]">
                           
                             <xsl:value-of select="php:function('pretty_timestamp', time)"/>: <xsl:value-of select="author"/>
@@ -197,7 +197,7 @@
                     
                     <div class="col-lg-12 application-group bg-light">
                         
-                        <div class="heading">2. <xsl:value-of select="php:function('lang', 'Why?')" /></div>
+                        <div class="heading"><xsl:value-of select="php:function('lang', 'Why?')" /></div>
 
                         <xsl:value-of select="php:function('lang', 'Activity')" />
                     
@@ -221,7 +221,7 @@
                         
                     <!-- Steg 3 -->
                     <div class="col-lg-12 application-group bg-light">
-                        <div class="heading">3. <xsl:value-of select="php:function('lang', 'Where?')" /></div>
+                        <div class="heading"><xsl:value-of select="php:function('lang', 'Where?')" /></div>
                         <xsl:value-of select="php:function('lang', 'Building')" />
                       
                         <xsl:value-of select="application/building_name"/>
@@ -242,7 +242,7 @@
                     <!-- Steg 4 -->
                     <div class="col-lg-12 application-group bg-light">
                    
-                        <div class="heading">4. <xsl:value-of select="php:function('lang', 'When?')" /></div>
+                        <div class="heading"><xsl:value-of select="php:function('lang', 'When?')" /></div>
                         <script type="text/javascript">
                             var allocationParams = {};
                             var bookingParams = {};
@@ -300,7 +300,7 @@
                     <!-- Steg 5 -->
                     <div class="col-lg-12 application-group bg-light">
              
-                        <div class="heading">5. <xsl:value-of select="php:function('lang', 'Who?')" /></div>
+                        <div class="heading"><xsl:value-of select="php:function('lang', 'Who?')" /></div>
                    
                         <xsl:value-of select="php:function('lang', 'Target audience')" />
                           
@@ -357,7 +357,7 @@
                         <!-- Steg 6 -->
                     <div class="col-lg-12 application-group bg-light">
                         <dl class="form-col">
-                            <div class="heading">6. <xsl:value-of select="php:function('lang', 'Contact information')" /></div>
+                            <div class="heading"><xsl:value-of select="php:function('lang', 'Contact information')" /></div>
                             <dt>
                                 <label for="field_contact_name">
                                     <xsl:value-of select="php:function('lang', 'Name')" />
@@ -388,7 +388,7 @@
                     <!-- Steg 7 -->
                     <div class="col-lg-12 application-group bg-light">
                         <dl class="form-col">
-                            <div class="heading">7. <xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
+                            <div class="heading"><xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" /></div>
                             <xsl:if test="application/customer_identifier_type = 'organization_number'">
                                 <dt>
                                     <label for="field_organization_number">
@@ -416,7 +416,7 @@
                     <div class="col-lg-12 application-group bg-light">
                        
                                 <div class="heading">
-                                    <br />8. <xsl:value-of select="php:function('lang', 'Terms and conditions')" />
+                                    <br /><xsl:value-of select="php:function('lang', 'Terms and conditions')" />
                                 </div>
                                 <xsl:if test="config/application_terms">
                                     <p>

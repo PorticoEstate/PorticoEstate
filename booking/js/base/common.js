@@ -35,9 +35,8 @@ JqueryPortico.booking.inlineImages = function (container, url)
 				var captionEl = dlImage.appendChild(document.createElement('dt'));
 				imgEl.setAttribute('src', v.src.replace(/&amp;/gi, '&'));
                                 imgEl.setAttribute('onClick', 'openModal(this)');
-				captionEl.appendChild(document.createTextNode(v.description));
+                                captionEl.appendChild(document.createTextNode(v.description));
 				container.appendChild(dlImage);
-
 			});
 		}
 	});

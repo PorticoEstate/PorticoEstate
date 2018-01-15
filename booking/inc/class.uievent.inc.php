@@ -617,7 +617,7 @@
 				{
 					$send->msg('email', $receiver, $subject, $body, '', '', '', $from, '', 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					// TODO: Inform user if something goes wrong
 				}
@@ -966,7 +966,8 @@
 						}
 					}
 					$receipt = $this->bo->update($event);
-					$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+				//	$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+					$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
 				}
 			}
 
@@ -999,7 +1000,7 @@
 			$event['resources_json'] = json_encode(array_map('intval', $event['resources']));
 			$event['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
 					'id' => $event['application_id']));
-			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uievent.index'));
+			$event['cancel_link'] = self::link(array('menuaction' => 'booking.uiapplication.index'));
 			$event['editable'] = true;
 			$activities = $this->activity_bo->fetch_activities();
 			$activities = $activities['results'];

@@ -7,14 +7,17 @@
     <a href="#" class="scrollup">
         <xsl:value-of select="php:function('lang', 'scroll to top')" />
     </a>
-    <div class="jumbotron text-center">
+    <div class="jumbotron">
 
-            <div class="container header-text">          
-                <a href="{site_url}"><p>AKTIV KOMMUNE</p>
-                    <h2>Ålesund</h2></a>
+            <div class="header-text">          
+                <a href="{site_url}">
+                    <p class="header-style-m">Din portal til</p>
+                    <p class="header-style-l">AKTIVITETER OG LOKALER</p>
+                    <p class="header-style-m">Nært deg.</p>
+                </a>
             </div>
     </div>
-    <div class="container-fluid main-container">
+    <div class="container-fluid main-container" id="main-page">
 
         <section class="text-center">
             <div class="container-fluid">
@@ -51,7 +54,7 @@
                     <span class="input-group-btn">
 
                         <button class="btn btn-default search-button" id="submit_searchterm" type="submit">
-                            <i class="icon ion-search text-primary"/>
+                            <i class="icon ion-search"/>
                         </button>
                     </span>
 
@@ -72,7 +75,7 @@
                     </xsl:attribute>
                 </input> -->
       
-                         <p id="adv-search-toggler" class="adv-search-button text-right text-primary">Avansert søk</p>
+                         <p id="adv-search-toggler" class="adv-search-button text-right">Avansert søk</p>
            
             </div> 
         </div> 
@@ -188,7 +191,9 @@
                 </div>  
             </div>  
           
-            <button id="update-search-result" class="btn btn-primary">Oppdater resultat</button>
+            <button id="update-search-result" class="btn btn-main">
+                <xsl:value-of select="php:function('lang', 'Update results')" />
+            </button>
          
         </div> 
          

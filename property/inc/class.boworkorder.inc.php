@@ -1001,7 +1001,7 @@ HTML;
 				{
 					$ok = $GLOBALS['phpgw']->send->msg('email', $to, $subject, $body, false, $cc, $bcc, $from_email, $from_name, 'html');
 				}
-				catch (phpmailerException $e)
+				catch (Exception $e)
 				{
 					phpgwapi_cache::message_set($e->getMessage(), 'error');
 				}
