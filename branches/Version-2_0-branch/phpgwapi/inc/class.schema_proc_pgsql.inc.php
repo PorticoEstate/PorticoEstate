@@ -480,7 +480,7 @@
 					$f_temp_primary = explode(', ',$f_temp[2]);
 					$f_temp_foreign = explode(', ',$f_temp[5]);
 
-					$keystr = '';
+					$keystr = array();
 					for ($i=0;$i<count($f_temp_primary);$i++)
 					{
 						$keystr[] = "'" . $f_temp_primary[$i] . "' => '" . $f_temp_foreign[$i] . "'";

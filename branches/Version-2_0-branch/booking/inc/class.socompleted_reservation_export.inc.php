@@ -676,6 +676,198 @@
 //					 fakturagrunnlag.
 //			MRK07 -  Internfaktura merkes ved verdi 1 i dette feltet.
 
+
+			$export_info = array();
+			$output = array();
+
+			$log = array();
+
+			$date = str_pad(date('Ymd'), 17, ' ', STR_PAD_LEFT);
+
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+
+
+
+			$stored_header = array();
+			$line_no = 0;
+			$header_count = 0;
+			$log_order_id = '';
+			$log_customer_name = '';
+			$log_customer_nr = '';
+			$log_buidling = '';
+
+			$internal = false;
+
+			$ant_post = 0;
+			$linjenr = 1;
+			$lopenr = 1;
+
+			foreach ($reservations as &$reservation)
+			{
+				if ($this->get_cost_value($reservation['cost']) <= 0)
+				{
+					continue; //Don't export costless rows
+				}
+
+				if (!empty($reservation['organization_id']))
+				{
+					$org = $this->organization_bo->read_single($reservation['organization_id']);
+					$reservation['organization_name'] = $org['name'];
+				}
+				else
+				{
+					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					if (!empty($data['id']))
+					{
+						$reservation['organization_name'] = $data['name'];
+					}
+					else
+					{
+						if ($reservation['reservation_type'] == 'event')
+						{
+							$data = $this->event_bo->read_single($reservation['reservation_id']);
+							$reservation['organization_name'] = $data['contact_name'];
+#						} elseif ($reservation['reservation_type'] == 'booking') {
+#							$data = $this->booking_bo->read_single($reservation['reservation_id']);
+#							error_log('b'.$data['id']." ".$data['group_id']);
+#						} else {
+#							$data = $this->allocation_bo->read_single($reservation['reservation_id']);
+#							error_log('a'.$data['id']." ".$data['organization_id']);
+						}
+					}
+				}
+
+				$type = $reservation['customer_type'];
+
+				$order_id = $sequential_number_generator->increment()->get_current();
+				$export_info[] = $this->create_export_item_info($reservation, $order_id);
+				$header_count += 1;
+				$stored_header['kundenr'] = $kundenr;
+
+				$kundenr = str_pad(substr($this->get_customer_identifier_value_for($reservation), 0, 11), 11, '0', STR_PAD_LEFT);
+
+
+				if (strlen($this->get_customer_identifier_value_for($reservation)) > 9)
+				{
+					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
+				}
+				else
+				{
+					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
+				}
+
+				//Startpost ST
+				$startpost = $this->get_visma_ST_row_template();
+				$startpost['posttype'] = 'ST';
+				$startpost['referanse'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 60), 60, ' ');
+#				$startpost['referanse'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['invoice_instruction']), 0, 60), 60, ' ');
+				//Fakturalinje FL
+				$fakturalinje = $this->get_visma_FL_row_template();
+				$fakturalinje['posttype'] = 'FL';
+				$fakturalinje['kundenr'] = $kundenr;
+				$fakturalinje['navn'] = $name;
+#				$fakturalinje['adresse1'] = ;
+#				$fakturalinje['adresse2'] = ;
+#				$fakturalinje['postnr'] = ;
+				$fakturalinje['betform'] = 'BG';
+				$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+				$fakturalinje['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+				$fakturalinje['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
+				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
+				$fakturalinje['grunnlag'] = '000000001';
+				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
+#				$fakturalinje['saksnr'] = ;
+				//Linjetekst LT
+				$linjetekst = $this->get_visma_LT_row_template();
+				$linjetekst['posttype'] = 'LT';
+				$linjetekst['kundenr'] = $kundenr;
+				$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+				$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+				$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
+				$linjetekst['linjenr'] = $linjenr;
+				$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
+				$ant_post += 3;
+
+				//Sluttpost SL
+				$sluttpost = $this->get_visma_SL_row_template();
+				$sluttpost['posttype'] = 'SL';
+				$sluttpost['antpost'] = str_pad(intval($ant_post) + 1, 8, '0', STR_PAD_LEFT);
+				$ant_post = 0;
+
+
+				$log_order_id = $order_id;
+
+				if (!empty($reservation['organization_id']))
+				{
+					$org = $this->organization_bo->read_single($reservation['organization_id']);
+					$log_customer_name = $org['name'];
+				}
+				else
+				{
+					$data = $this->event_so->get_org($reservation['customer_organization_number']);
+					if (!empty($data['id']))
+					{
+						$log_customer_name = $data['name'];
+					}
+					else
+					{
+						if ($reservation['reservation_type'] == 'event')
+						{
+							$data = $this->event_bo->read_single($reservation['reservation_id']);
+							$log_customer_name = $data['contact_name'];
+#						} elseif ($reservation['reservation_type'] == 'booking') {
+#							$data = $this->booking_bo->read_single($reservation['reservation_id']);
+#							error_log('b'.$data['id']." ".$data['group_id']);
+#						} else {
+#							$data = $this->allocation_bo->read_single($reservation['reservation_id']);
+#							error_log('a'.$data['id']." ".$data['organization_id']);
+						}
+					}
+				}
+
+				$log_customer_nr = $this->get_customer_identifier_value_for($reservation);
+				$log_buidling = $reservation['building_name'];
+				$log_cost = $reservation['cost'];
+				$log_varelinjer_med_dato = $reservation['article_description'] . ' - ' . $reservation['description'];
+
+				$line_field = array();
+
+				$line_field[] = "\"{$reservation['id']}\"";
+				$line_field[] = "\"{$reservation['reservation_type']}\"";
+				$line_field[] = "\"{$log_order_id}\"";
+				$line_field[] = "\"{$log_customer_name}\"";
+				$line_field[] = "\"{$log_customer_nr}\"";
+				$line_field[] = "\"{$log_varelinjer_med_dato}\"";
+				$line_field[] = "\"{$log_buidling}\"";
+				$line_field[] = "\"{$log_cost}\"";
+
+				$log[] = implode(';',  $line_field);
+
+		//		$log[] = $reservation['id'] . ';' . $reservation['reservation_type'] . ';' . $log_order_id . ';' . $log_customer_name . ' - ' . $log_customer_nr . ';' . $log_varelinjer_med_dato . ';' . $log_buidling . ';' . $log_cost;
+
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $startpost));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $fakturalinje));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
+				$output[] = implode('', str_replace(array("\n", "\r"), '', $sluttpost));
+			}
+
+			if (count($export_info) == 0)
+			{
+				return null;
+			}
+			if ($config->config_data['external_format_linebreak'] == 'Windows')
+			{
+				$file_format_linebreak = "\r\n";
+			}
+			else
+			{
+				$file_format_linebreak = "\n";
+			}
+
+			return array('data' => implode($file_format_linebreak, $output), 'data_log' => implode(PHP_EOL, $log),
+				'info' => $export_info, 'header_count' => $header_count);
+
 		}
 
 
@@ -752,7 +944,7 @@
 					$item['dim_4'] = str_pad(substr($account_codes['dim_4'], 0, 8), 8, ' ');
 				}
 
-				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt 
+				//Kan være aktuelt å levere prosjektnr knyttet mot en booking, valgfritt
 				if (isset($config->config_data['dim_5']))
 				{
 					$item['dim_5'] = str_pad(strtoupper(substr($account_codes['project_number'], 0, 12)), 12, ' ');
@@ -1530,11 +1722,22 @@
 				return $row_template;
 			}
 
-			$row_template = array('posttype' => str_repeat(' ', 2), 'kundenr' => str_repeat(' ', 11),
-				'navn' => str_repeat(' ', 30), 'adresse1' => str_repeat(' ', 30), 'adresse2' => str_repeat(' ', 30),
-				'postnr' => str_repeat(' ', 4), 'betform' => str_repeat(' ', 2), 'oppdrgnr' => str_repeat(' ', 3),
-				'varenr' => str_repeat(' ', 4), 'lopenr' => str_repeat(' ', 2), 'pris' => str_repeat(' ', 9),
-				'grunnlag' => str_repeat(' ', 9), 'belop' => str_repeat(' ', 11), 'saksnr' => str_repeat(' ', 16));
+			$row_template = array(
+				'posttype' => str_repeat(' ', 2),
+				'kundenr' => str_repeat(' ', 11),
+				'navn' => str_repeat(' ', 30),
+				'adresse1' => str_repeat(' ', 30),
+				'adresse2' => str_repeat(' ', 30),
+				'postnr' => str_repeat(' ', 4),
+				'betform' => str_repeat(' ', 2),
+				'oppdrgnr' => str_repeat(' ', 3),
+				'varenr' => str_repeat(' ', 4),
+				'lopenr' => str_repeat(' ', 2),
+				'pris' => str_repeat(' ', 9),
+				'grunnlag' => str_repeat(' ', 9),
+				'belop' => str_repeat(' ', 11),
+				'saksnr' => str_repeat(' ', 16)
+			);
 			return $row_template;
 		}
 
@@ -1546,9 +1749,14 @@
 				return $row_template;
 			}
 
-			$row_template = array('posttype' => str_repeat(' ', 2), 'kundenr' => str_repeat(' ', 11),
-				'oppdrgnr' => str_repeat(' ', 3), 'varenr' => str_repeat(' ', 4), 'lopenr' => str_repeat(' ', 2),
-				'linjenr' => str_repeat(' ', 2), 'tekst' => str_repeat(' ', 50));
+			$row_template = array(
+				'posttype' => str_repeat(' ', 2),
+				'kundenr' => str_repeat(' ', 11),
+				'oppdrgnr' => str_repeat(' ', 3),
+				'varenr' => str_repeat(' ', 4),
+				'lopenr' => str_repeat(' ', 2),
+				'linjenr' => str_repeat(' ', 2),
+				'tekst' => str_repeat(' ', 50));
 			return $row_template;
 		}
 
@@ -1561,6 +1769,149 @@
 			}
 
 			$row_template = array('posttype' => str_repeat(' ', 2), 'antpost' => str_repeat(' ', 8));
+			return $row_template;
+		}
+
+		protected function get_visma_ST_row_template()
+		{
+			static $row_template = false;
+			if ($row_template)
+			{
+				return $row_template;
+			}
+
+//			Type Felt    Lengde Posisjon Beskrivelse             M/K Merknader
+//			---- ------- ------ -------- ----------------------- --- ----------
+//			ST   POSTTYPE   2   001-002  Posttype                 M  Verdi 'ST'
+//			ST   REFERANSE 60   003-062  Referanse                K  ST01
+//			ST   FORMAT     1   063-063  Utvidet format           K  ST02
+
+			$row_template = array(
+				'posttype' => 'ST',
+				'referanse' => str_repeat(' ', 60),
+				'format' => 'U'
+			);
+			return $row_template;
+		}
+
+		protected function get_visma_FL_row_template()
+		{
+			static $row_template = false;
+			if ($row_template)
+			{
+				return $row_template;
+			}
+
+//			UTVIDET FORMAT PÅ FL-LINJENE
+//			============================
+//
+//			FL   POSTTYPE   2   001-002  Posttype                 M  Verdi 'FL'
+//			FL   KUNDENR   11   003-013  Kundenummer              M
+//			FL   NAVN      40   014-053  Kundens navn             K
+//			FL   ADRESSE1  40   054-093  Adresselinje 1           K
+//			FL   ADRESSE2  40   094-133  Adresselinje 2           K
+//			FL   POSTNR     4   134-137  Postnummer               K
+//			FL   BETFORM    2   138-139  Betalingstype (BG,PG)    M  MRK01
+//			FL   OPPDRGNR   3   140-142  Oppdragsgivernummer      M  MRK02
+//			FL   VARENR     4   143-146  Varenummer               M  MRK02
+//			FL   LØPENR     2   147-148  Løpenummer               M  MRK03
+//			FL   PRIS       9   149-157  Varens pris              M  MRK04
+//			FL   GRUNNLAG   9   158-166  Antall av varen          M  MRK05
+//			FL   BELØP     11   167-177  Utregnet beløp           M  MRK04
+//			FL   SAKSNR    16   178-193  Saksnr                   K
+//			FL   INTFAKT    1   194-194  Internfaktura            K  MRK07
+//			FL   KB01      12   195-206  1. konteringsverdi       K
+//			FL   KB02      12   207-218  2. konteringsverdi       K
+//			FL   KB03      12   219-230  3. konteringsverdi       K
+//			FL   KB04      12   231-242  4. konteringsverdi       K
+//			FL   KB05      12   243-254  5. konteringsverdi       K
+//			FL   KB06      12   255-266  6. konteringsverdi       K
+//			FL   KB07      12   267-278  7. konteringsverdi       K
+//			FL   KB08      12   279-290  8. konteringsverdi       K
+//			FL   KB09      12   291-302  9. konteringsverdi       K
+//			FL   KB10      12   303-314  10. konteringsverdi      K
+//			FL   MVAKODE    3   315-317  Mva-kode                 K
+//			FL   PROFIL    20   318-337  Profil                   K
+//			FL   DERESREF  40   338-377  Kontaktinformasjon       K
+//			FL   ORDREREF  20   378-397  Ordrereferanse           K
+
+			$row_template = array(
+				'posttype' => 'FL',
+				'kundenr' => str_repeat(' ', 11),
+				'navn' => str_repeat(' ', 40),
+				'adresse1' => str_repeat(' ', 40),
+				'adresse2' => str_repeat(' ', 40),
+				'postnr' => str_repeat(' ', 4),
+				'betform' => str_repeat(' ', 2),
+				'oppdrgnr' => str_repeat(' ', 3),
+				'varenr' => str_repeat(' ', 4),
+				'lopenr' => str_repeat(' ', 2),
+				'pris' => str_repeat(' ', 9),
+				'grunnlag' => str_repeat(' ', 9),
+				'belop' => str_repeat(' ', 11),
+				'saksnr' => str_repeat(' ', 16),
+				'intfakt' => str_repeat(' ', 1),
+				'kb01' => str_repeat(' ', 12),
+				'kb02' => str_repeat(' ', 12),
+				'kb03' => str_repeat(' ', 12),
+				'kb04' => str_repeat(' ', 12),
+				'kb05' => str_repeat(' ', 12),
+				'kb06' => str_repeat(' ', 12),
+				'kb07' => str_repeat(' ', 12),
+				'kb08' => str_repeat(' ', 12),
+				'kb09' => str_repeat(' ', 12),
+				'kb10' => str_repeat(' ', 12),
+				'mvakode' => str_repeat(' ', 3),
+				'profil' => str_repeat(' ', 20),
+				'deresref' => str_repeat(' ', 40),
+				'ordreref' => str_repeat(' ', 20),
+			);
+			return $row_template;
+		}
+
+		protected function get_visma_LT_row_template()
+		{
+			static $row_template = false;
+			if ($row_template)
+			{
+				return $row_template;
+			}
+
+//			LT   POSTTYPE   2   001-002  Posttype                 M  Verdi 'LT'
+//			LT   KUNDENR   11   003-013  Kundenummer              M
+//			LT   OPPDRGNR   3   014-016  Oppdragsgivernummer      M
+//			LT   VARENR     4   017-020  Varenummer               M
+//			LT   LØPENR     2   021-022  Løpenummer               M
+//			LT   LINJENR    2   023-024  Linjenummer              M  MRK06
+//			LT   TEKST     50   025-074  Fritekstlinje            K
+
+			$row_template = array(
+				'posttype' => 'LT',
+				'kundenr' => str_repeat(' ', 11),
+				'oppdrgnr' => str_repeat(' ', 3),
+				'varenr' => str_repeat(' ', 4),
+				'lopenr' => str_repeat(' ', 2),
+				'linjenr' => str_repeat(' ', 2),
+				'tekst' => str_repeat(' ', 50)
+			);
+			return $row_template;
+		}
+
+		protected function get_visma_SL_row_template()
+		{
+			static $row_template = false;
+			if ($row_template)
+			{
+				return $row_template;
+			}
+//			SL   POSTTYPE   2   001-002  Posttype                 M  Verdi 'SL'
+//			SL   ANTPOST    8   003-010  Antall poster            M  Inkl. Start/Sluttpost
+
+			$row_template = array(
+				'posttype' => 'SL',
+				'antpost' => str_repeat(' ', 8)
+			);
+
 			return $row_template;
 		}
 	}
