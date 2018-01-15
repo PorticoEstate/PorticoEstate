@@ -341,8 +341,8 @@
 				$client = '14';
 				$confirm_date = '';
 				$pay_method = 'BG';
-				$responsible ='ATT-ANSV';// må avklares
-				$responsible2 ='SELGER';// må avklares
+				$responsible ='NLSH';
+				$responsible2 ='NLSH';
 				$terms_id = '14';
 				$voucher_type = 'FU'; // må avklares
 				$apar_id = $party->get_customer_id();//kundenr fra agresso
