@@ -704,7 +704,7 @@
 					{
 						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'html');
 					}
-					catch (phpmailerException $e)
+					catch (Exception $e)
 					{
 
 					}

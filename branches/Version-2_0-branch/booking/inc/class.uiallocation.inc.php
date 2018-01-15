@@ -558,7 +558,7 @@
 					{
 						$send->msg('email', $contact['email'], $subject, $body, '', '', '', $from, '', 'html');
 					}
-					catch (phpmailerException $e)
+					catch (Exception $e)
 					{
 
 					}
@@ -575,7 +575,7 @@
 			$allocation['building_name'] = $allocation['building']['name'];
 			$errors = array();
 			$tabs = array();
-			$tabs['generic'] = array('label' => lang('Allocations Edit'), 'link' => '#allocations_edit');
+			$tabs['generic'] = array('label' => lang('edit allocation'), 'link' => '#allocations_edit');
 			$active_tab = 'generic';
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')

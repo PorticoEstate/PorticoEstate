@@ -2989,6 +2989,7 @@ HTML;
 				'enable_order_service_id' => $enable_order_service_id,
 				'value_order_id' => $ticket['order_id'],
 				'value_order_descr' => $ticket['order_descr'],
+				'value_invoice_remark' => $ticket['invoice_remark'],
 				'vendor_data' => $vendor_data,
 				'b_account_data' => $b_account_data,
 				'ecodimb_data' => $ecodimb_data,

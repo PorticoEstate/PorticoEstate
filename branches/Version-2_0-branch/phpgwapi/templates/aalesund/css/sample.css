@@ -11,8 +11,8 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  padding-top: 5%;
-  padding-bottom: 5%; 
+  padding-top: 3%;
+  padding-bottom: 3%; 
   border-radius: 0;
   margin-bottom: 0;
 }
@@ -47,8 +47,9 @@ a:hover{
 }
 
 .header-text{
-    font-family: Lucida Console;
-    font-size: 35pt;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .header-text a{
@@ -60,11 +61,11 @@ a:hover{
 }
 
 .navbar-nav a:hover{
-    background-color: whitesmoke;
+    background-color: #f8f9fa;
 }
 
 .navbar-nav a{
-    padding: 2.4em;
+    padding: 2.8em;
     color: black;
 }
 
@@ -111,7 +112,6 @@ a:hover{
 
 #update-search-result{
     margin-top: 1.5em;
-    background-color: #428bca;
 }
 
 /*@media screen and (max-width: 560px) {
@@ -128,10 +128,16 @@ a:hover{
     padding-bottom: 4%;
 }
 
+
+
 .search-button{
     border-right: 2px solid #26348B;
     border-top: 2px solid #26348B;
     border-bottom: 2px solid #26348B;
+}
+
+.search-button i{
+    color: #26348B;
 }
 
 .adv-search-button:hover{
@@ -142,6 +148,7 @@ a:hover{
     margin-top: .5em;
     display: inline-block;
     float: right;
+    color: #26348B;
 }
 
 
@@ -157,6 +164,10 @@ a:hover{
 
 .card{
     margin-top: 30px;
+    border: none;
+    -webkit-box-shadow: 6px 9px 12px -2px rgba(173,173,173,1);
+    -moz-box-shadow: 6px 9px 12px -2px rgba(173,173,173,1);
+    box-shadow: 6px 9px 12px -2px rgba(173,173,173,1);
 }
 
 .input-group{
@@ -196,6 +207,11 @@ dl.proplist{
     border: 2px solid #26348B;
 }
 
+.main-search input:hover{
+/*    background-color: rgb(221,221,211);*/
+    background-color: #f8f9fa;
+}
+
 .control {
     display: block;
     position: relative;
@@ -203,8 +219,8 @@ dl.proplist{
     margin-bottom: 5px;;
     cursor: pointer;
     font-size: 18px;
-    
 }
+
 .control input {
     position: absolute;
     z-index: -1;
@@ -212,6 +228,7 @@ dl.proplist{
 }
 .control__indicator {
     position: absolute;
+    border-radius: .15rem;
     top: 2px;
     left: 0;
     height: 20px;
@@ -235,11 +252,11 @@ dl.proplist{
     display: block;
 }
 .control--checkbox .control__indicator:after {
-    left: 7px;
-    top: 3px;
-    width: 3px;
-    height: 8px;
-    border: solid #428bca;;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 11px;
+    border: solid #26348B;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
@@ -270,7 +287,7 @@ dl.proplist{
 }
 
 .application-group .heading{
-    border-bottom: 2px solid #428bca;
+    border-bottom: 2px solid #26348B;
 }
 
 .no-padding-left{
@@ -295,7 +312,7 @@ dl.proplist{
 
 .btn-main{
     color: #fff;
-    background-color: #428bca;
+    background-color: #26348B;
     border-color: #007bff;
 }
 
@@ -316,5 +333,21 @@ dl.proplist{
 }
 
 .navbar-brand{
-    padding: 0;
+    padding-top: 0;
+    padding-bottom: 1rem;
+}
+
+.header-style-m{
+    font-family: Raleway;
+    font-size: 20pt;
+}
+
+.header-style-l{
+    font-family: Raleway;
+    font-size: 35pt;
+    font-weight: bold;
+}
+
+.card dt{
+    display: none;
 }

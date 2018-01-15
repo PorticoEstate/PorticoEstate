@@ -9946,3 +9946,26 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.724 to 0.9.17.725
+	*
+	*/
+	$test[] = '0.9.17.724';
+
+	function property_upgrade0_9_17_724()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'invoice_remark', array(
+				'type' =>	'text',
+				'nullable' => true
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.725';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}

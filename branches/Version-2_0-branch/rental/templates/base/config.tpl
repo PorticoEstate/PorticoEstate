@@ -15,6 +15,16 @@
 			<tr>
 				<td colspan="2">&nbsp;<b>{lang_rental}</b></td>
 			</tr>
+
+			<tr>
+				<td>{lang_organization_for_billing_config}, (default: Bergen):</td>
+				<td>
+					<select name="newsettings[organization]">
+						<option value="" {selected_organization_}>Bergen kommune</option>
+						<option value="nlsh" {selected_organization_NLSH}>NLSH</option>
+					</select>
+				</td>
+			</tr>
 			<tr>
 				<td>{lang_area_suffix}:</td>
 				<td><input name="newsettings[area_suffix]" value="{value_area_suffix}"></td>

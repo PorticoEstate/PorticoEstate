@@ -209,7 +209,7 @@
 
 		public function edit()
 		{
-	//		phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));
+	//		phpgwapi_jquery::formvalidator_generate(array('location','date', 'security', 'file'));	a
 			self::add_javascript('controller', 'controller', 'ajax.js');
 
 			$tabs = array

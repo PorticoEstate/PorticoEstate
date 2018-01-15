@@ -29,7 +29,7 @@
 
 			if (!$types)
 			{
-				$types = array('building', 'resource');//default
+				$types = array('building', 'resource', 'organization');//default
 			}
 
 			if ($type = phpgw::get_var('type', 'string', 'REQUEST', null))
@@ -67,7 +67,7 @@
 				$_filter_building['id'] = $building_id;
 			}
 
-//			if(in_array('building', $types))
+			if(in_array('building', $types))
 			{
 
 				$bui_result = $this->sobuilding->read(array("query" => $searchterm, "sort" => "name",
@@ -90,7 +90,7 @@
 			}
 //			_debug_array($bui_result);
 
-//			if (in_array('organization', $types))
+			if (in_array('organization', $types))
 			{
 				$org_result = $this->soorganization->read(array("query" => $searchterm, "sort" => "name",
 					"dir" => "asc", "filters" => array("active" => "1")));
@@ -107,7 +107,7 @@
 				}
 			}
 
-//			if(in_array('resource', $types))
+			if(in_array('resource', $types))
 			{
 				$_filter_resource = array("active" => "1");
 
