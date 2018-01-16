@@ -37,7 +37,7 @@
 	<td colspan="2">&nbsp;<b>Other Options</b></td>
 </tr>
 <tr class="row_on">
-	<td colspan="2"><a href="../index.php">Return to phpGroupWare</a></td>
+	<td colspan="2"><a href="../index.php">Return to Portico Estate</a></td>
 </tr>
 <tr class="row_on">
 	<td colspan="2">&nbsp;</td>

@@ -589,7 +589,7 @@
 			$setup_tpl->set_var('lang_status_img',$completed);
 			$setup_tpl->set_var('lang_status_alt','completed');
 			$btn_manage_lang = $GLOBALS['phpgw_setup']->html->make_frm_btn_simple(
-				lang('This stage is completed<br />') . lang('Currently installed languages: %1 <br />',$langs_list),
+				lang('This stage is completed') . '<br/>' .  lang('Currently installed languages: %1',$langs_list) . ' <br/>',
 				'POST','lang.php',
 				'submit',lang('Manage Languages'),
 				'');
@@ -614,7 +614,7 @@
 			$setup_tpl->set_var('apps_status_img',$completed);
 			$setup_tpl->set_var('apps_status_alt',lang('completed'));
 			$btn_manage_apps = $GLOBALS['phpgw_setup']->html->make_frm_btn_simple(
-				lang('This stage is completed<br />'),
+				lang('This stage is completed')  . '<br/>',
 				'','applications.php',
 				'submit',lang('Manage Applications'),
 				'');

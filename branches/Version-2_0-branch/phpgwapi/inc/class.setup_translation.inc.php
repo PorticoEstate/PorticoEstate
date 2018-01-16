@@ -30,6 +30,9 @@
 		public function __construct()
 		{
 			$ConfigLang = phpgw::get_var('ConfigLang', 'string', 'POST');
+
+			$ConfigLang = $ConfigLang ? $ConfigLang : $GLOBALS['phpgw_info']['server']['default_lang'];
+
 			$this->set_userlang($ConfigLang);
 
 			$fn = PHPGW_SERVER_ROOT . "/setup/lang/phpgw_{$this->userlang}.lang";
@@ -158,6 +161,11 @@
 			if($force_en && !@in_array('en',$langs))
 			{
 				$langs[] = 'en';
+			}
+
+			if(!empty($GLOBALS['phpgw_info']['server']['default_lang']) && $force_en && !@in_array($GLOBALS['phpgw_info']['server']['default_lang'],$langs))
+			{
+				$langs[] = $GLOBALS['phpgw_info']['server']['default_lang'];
 			}
 
 			if($DEBUG)
