@@ -415,6 +415,14 @@ HTML;
 
 				$metadata = $this->db->metadata($this->table);
 
+				/**
+				 * Remove id-column from fm_location-tables
+				 */
+				if(!empty($metadata['location_code']) && $metadata['loc1']->primary_key  && !$metadata['id']->primary_key)
+				{
+					unset($metadata['id']);
+				}
+
 				foreach ($metadata as $field => $info)
 				{
 					$_fields[$field] = true;
