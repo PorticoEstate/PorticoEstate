@@ -57,22 +57,30 @@
 
 	function dump_array($arr)
 	{
-		while(is_array($arr) && (list($key,$val) = each($arr)))
-		{
+		//while(is_array($arr) && (list($key,$val) = each($arr)))
+                if (is_array($arr))
+                {
+                    foreach($arr as $key => $val)
+                    {
 			$ret .= ($ret ? ',' : '(') . "'$key' => '$val'\n";
-		}
+                    }
+                }
 		return $ret.')';
 	}
 
 	function index($value,$arr)
 	{
-		while(is_array($arr) && (list($key,$val) = each($arr)))
-		{
+		//while(is_array($arr) && (list($key,$val) = each($arr)))
+                if (is_array($arr))
+                {
+                    foreach($arr as $key => $val)
+                    {
 			if($value == $val)
 			{
 				return $key;
 			}
-		}
+                    }
+                }
 		return False;
 	}
 
@@ -123,10 +131,14 @@
 
 			$config = CreateObject('phpgwapi.config','addressbook');
 			$config->read();
-			while(list($name,$descr) = @each($config->config_data['custom_fields']))
-			{
+			//while(list($name,$descr) = @each($config->config_data['custom_fields']))
+                        if (is_array($config->config_data['custom_fields']))
+                        {
+                            foreach($config->config_data['custom_fields'] as $name => $descr)
+                            {
 				$addr_names[$name] = $descr;
-			}
+                            }
+                        }
 			unset($config);
 
 			foreach($addr_names as $field => $name)
@@ -290,15 +302,21 @@
 				$log .= "\t</tr><tr><td>".($start+$anz)."</td>\n";
 
 				reset($addr_fields); $values = array();
-				while(list($csv_idx,$addr) = each($addr_fields))
-				{
+				//while(list($csv_idx,$addr) = each($addr_fields))
+                                if (is_array($addr_fields))
+                                {
+                                    foreach($addr_fields as $csv_idx => $addr)
+                                    {
 					//echo "<p>$csv: $addr".($_POST['trans'][$csv] ? ': '.$_POST['trans'][$csv] : '')."</p>";
 					$val = $fields[$csv_idx];
 					if(isset($_POST['trans'][$csv_idx]))
 					{
 						$trans_csv = $_POST['trans'][$csv_idx];
-						while(list($pattern,$replace) = each($trans_csv))
-						{
+						//while(list($pattern,$replace) = each($trans_csv))
+                                                if (is_array($trans_csv))
+                                                {
+                                                    foreach($trans_csv as $pattern => $replace)
+                                                    {
 							if(preg_match("/$pattern/",$val))
 							{
 								// echo "<p>csv_idx='$csv_idx',info='$addr',trans_csv=".dump_array($trans_csv).",ereg_replace('$pattern','$replace','$val') = ";
@@ -332,7 +350,8 @@
 									break; 
 								}
 							}
-						}
+                                                    }
+                                                }
 					}
 					//$values[$addr] = $val;
 					if(in_array($addr, $comm_fields))
@@ -352,7 +371,8 @@
 					}
 
 					$log .= "\t\t<td>$val</td>\n";
-				}
+                                    }
+                                }
 				$fields_to_add['categories'] = array($cat_id);
 				$fields_to_add['access'] = $access;
 				$fields_to_add['owner'] = $owner;
