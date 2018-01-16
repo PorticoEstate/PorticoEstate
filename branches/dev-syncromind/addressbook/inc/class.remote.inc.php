@@ -94,7 +94,8 @@
 			{
 				if(is_array($value))
 				{
-					while(list($x,$y) = @each($value))
+					//while(list($x,$y) = @each($value))
+                                        foreach($value as $x => $y)
 					{
 						/* Fill a new output array, but do not include things like array( 0 => mail) */
 						if(isset($this->servers[$this->serverid]['attrs']) &&
@@ -117,7 +118,8 @@
 		{
 			if(is_array($in))
 			{
-				while(list($key,$value) = each($in))
+				//while(list($key,$value) = each($in))
+                                foreach($in as $key => $value)
 				{
 					$out[] = array(
 						'fn'       => $value['cn'][0],
