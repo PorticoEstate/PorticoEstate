@@ -2235,7 +2235,7 @@ alert vendor	property	no	Varsle leverandør
 important information	property	no	Viktig informasjon
 category content	property	no	Tekster for kategori
 order deadline	property	no	Frist for utførelse
-please update <a href="%1">your email address here</a>	property	no	Venligst oppdatert din <a href="%1">epost-adresse her</a>
+please update <a href="%1">your email address here</a>	property	no	Vennligst oppdatert din <a href="%1">epost-adresse her</a>
 clear contact	property	no	Fjern kontakperson
 deadline for start	property	no	Frist for oppstart
 deadline for execution	property	no	Frist for ferdigstillelse
