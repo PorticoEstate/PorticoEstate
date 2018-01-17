@@ -177,3 +177,5 @@
 	create_check_box('activate nowrap in YUI-tables','yui_table_nowrap',
 			'activate nowrap in YUI-tables');
 
+	create_select_box('Tabel export format', 'export_format', array('excel' => 'Excel',
+		'csv' => 'CSV', 'ods' => 'ODS'), 'Choose which format to export from the system for tables');
