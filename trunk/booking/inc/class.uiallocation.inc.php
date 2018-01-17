@@ -783,6 +783,8 @@
 					'resource' => $allocation['resource']));
 			$allocation['edit_link'] = self::link(array('menuaction' => 'booking.uiallocation.edit',
 					'id' => $allocation['id']));
+			$allocation['application_link'] = self::link(array('menuaction' => 'booking.uiapplication.show',
+					'id' => $allocation['application_id']));
 
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('Allocations'), 'link' => '#allocations');
