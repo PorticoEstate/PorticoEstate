@@ -394,3 +394,4 @@ your header.inc.php needs upgrading.	setup	en	Your header.inc.php needs upgradin
 your tables are current	setup	en	Your tables are current
 your tables may be altered and you may lose data	setup	en	Your tables may be altered and you may lose data.
 your tables will be dropped and you will lose data	setup	en	Your tables will be dropped and you will lose data !!
+version	setup	no	version

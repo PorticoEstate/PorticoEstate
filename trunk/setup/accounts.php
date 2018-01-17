@@ -89,7 +89,8 @@
 				'currency'		=> '$',
 				'show_help'		=> 0,
 				'account_display'=> 'lastname',
-				'rteditor'		=> 'ckeditor'
+				'rteditor'		=> 'ckeditor',
+				'export_format'		=> 'excel',
 			),
 
 			'addressbook' => array(),
