@@ -211,7 +211,7 @@
 				'order_id' => $_ticket['order_id'],
 				'tax_code' => $tax_code,
 				'buyer' => $buyer,
-				'invoice_remark' => $_ticket['invoice_remark'],
+				'invoice_remark' => mb_substr($_ticket['invoice_remark'], 0, 120),
 				'lines' => array(
 					array(
 						'unspsc_code' => $_ticket['unspsc_code'] ? $_ticket['unspsc_code'] : 'UN-72000000',
