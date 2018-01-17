@@ -1586,7 +1586,7 @@
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
-			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['property']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['property']['export_format'] : 'csv';
+			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] : 'csv';
 
 			switch ($export_format)
 			{
