@@ -355,27 +355,3 @@ dl.extrawidth select {
     font-size: 110%;
 
 }
-
-.table-event-color{
-    background-color: #e24646 !important;
-}
-
-.table-allocation-color{
-    background-color: #ff6d6d !important;
-}
-
-.table-closed-color{
-    background-color: #e8e8e8 !important;
-}
-
-.table-free-color{
-    background-color: #73d67a !important;
-}
-
-.table-booking-color{
-    background-color: #f79999 !important;
-}
-
-#schedule_container a{
-    color: #000;
-}
