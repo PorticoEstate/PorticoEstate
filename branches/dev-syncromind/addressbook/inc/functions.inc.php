@@ -24,15 +24,19 @@
 		{
 			$select .= '<option value="">' . lang('Please Select') . '</option>'."\n";
 		}
-		while (list($key,$val) = each($list))
-		{
+		//while (list($key,$val) = each($list))
+                if (is_array($list))
+                {
+                    foreach($list as $key => $val)
+                    {
 			$select .= '<option value="' . $key . '"';
 			if ($key == $id && $id != '')
 			{
 				$select .= ' selected';
 			}
 			$select .= '>' . $val . '</option>'."\n";
-		}
+                    }
+                }
 
 		$select .= '</select>'."\n";
 		$select .= '<noscript><input type="submit" name="' . $name . '_select" value="True"></noscript>' . "\n";
@@ -135,8 +139,11 @@
 		$i = 0; $j = 0;
 		$fields = array();
 		@reset($GLOBALS['phpgw_info']['user']['preferences']['addressbook']);
-		while (list($col,$descr) = @each($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
-		{
+		//while (list($col,$descr) = @each($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
+                if (is_array($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
+                {
+                    foreach($GLOBALS['phpgw_info']['user']['preferences']['addressbook'] as $col => $descr)
+                    {
 			if ( substr($col,0,6) == 'extra_' )
 			{
 				$fields[$j]['name'] = preg_replace('/extra_/','',$col);
@@ -155,7 +162,8 @@
 				}
 			}
 			$i++;
-		}
+                    }
+                }
 		@reset($fields);
 		return $fields;
 	}
