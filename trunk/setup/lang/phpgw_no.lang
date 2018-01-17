@@ -235,7 +235,7 @@ or http://webdav.domain.com (webdav)	setup	no	or http://webdav.domain.com (WebDA
 or we can attempt to create the database for you:	setup	no	Eller vi kan prøve å opprette databasen for deg:
 password needed for configuration	setup	no	Passord for configurasjon
 password of db user	setup	no	Passord of db bruker
-passwords did not match, please re-enter	setup	no	Passordene var ikke like, venligst prøv på nytt
+passwords did not match, please re-enter	setup	no	Passordene var ikke like, vennligst prøv på nytt
 path information	setup	no	Path information
 path to user and group files has to be outside of the webservers document-root!!!	setup	no	Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!
 persistent connections	setup	no	Persistent connections
@@ -243,7 +243,7 @@ pgsqlinstr %1	setup	no	Instructions for creating the database in PostgreSQL:<br>
 phpgroupware administration manual	setup	no	phpGroupWare Administration Manual
 please check for sql scripts within the application's directory	setup	no	Please check for sql scripts within the application's directory
 please check read/write permissions on directories, or back up and use another option.	setup	no	Please check read/write permissions on directories, or back up and use another option.
-please configure phpgroupware for your environment	setup	no	Venligst konfigurer systemet til ditt miljø
+please configure phpgroupware for your environment	setup	no	Vennligst konfigurer systemet til ditt miljø
 please consult the %1.	setup	no	Please consult the %1.
 please install	setup	no	Please install
 please login	setup	no	Please login
