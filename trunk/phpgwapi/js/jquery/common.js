@@ -1722,7 +1722,9 @@ function backendScheduleDateColumn(data, col, date)
 		var id = data[k]['id'];
 		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
 		var type = data[k]['type'];
-		var colorCell = formatScheduleCellDateColumn(name, type);
+		text = name;
+		
+		var color = tableColorSelector(type, text);
 
 		var conflicts = new Array();
 
@@ -1734,13 +1736,13 @@ function backendScheduleDateColumn(data, col, date)
 			}
 		}
 		text = formatBackendScheduleDateColumn(id, name, type, conflicts);
-		classes = colorCell + " " + type;
+		classes = color + " " + type;
 	}
 	else
 	{
 		text = lang['free'] || "free";
 //		text = "free";
-		classes = "free";
+		classes = "table-free-color free";
 		trFunction.push(
 		{
 			event: 'click',
@@ -1775,15 +1777,18 @@ function frontendScheduleDateColumn(data, col, date)
 	{
 		var name = (data[k]['shortname']) ? formatScheduleShorten(data[k]['shortname'], 9) : formatScheduleShorten(data[k]['name'], 9);
 		var type = data[k]['type'];
-		var colorCell = formatScheduleCellDateColumn(name, type);
+		text = name;
+		
+		var color = tableColorSelector(type, text);
+		//var colorCell = formatScheduleCellDateColumn(name, type);
 
 		if (data[k]['is_public'] == 0)
 		{
 			name = formatScheduleShorten('Privat arr.', 9);
 		}
 
-		text = name;
-		classes = "cellInfo " + colorCell + " " + type;
+		
+		classes = "cellInfo " + color + " " + type;
 		trFunction.push(
 		{
 			event: 'click',
@@ -1794,11 +1799,11 @@ function frontendScheduleDateColumn(data, col, date)
 			}
 		}
 		);
-	}
+	} 
 	else
 	{
 		text = lang['free'] || "free";
-		classes = "free";
+		classes = "table-free-color free";
 		trFunction.push(
 		{
 			event: 'click',
@@ -2136,3 +2141,19 @@ parseISO8601 = function (string)
 		date.setMinutes(d[10]);
 	return date;
 };
+
+function tableColorSelector(type, text){
+	var color = "";
+		
+	if(type === "event"){
+		color = "table-event-color";
+	} if(type === "allocation"){
+		color = "table-allocation-color";
+	} if(type === "booking"){
+		color = "table-booking-color";
+	} if(text === lang['closed'] || text === "closed" || text === "Stengt"){
+		color = "table-closed-color";
+	}
+	
+	return color;
+}

@@ -23,6 +23,13 @@ body {
     }
 }
 
+@media screen and (max-width: 560px) {
+    .header-container{
+        border-bottom: 1.5px solid #89266a
+    }
+}
+
+
 a{
     color: #26348B;
 }
@@ -350,4 +357,24 @@ dl.proplist{
 
 .card dt{
     display: none;
+}
+
+.table-event-color{
+    background-color: #e24646 !important;
+}
+
+.table-allocation-color{
+    background-color: #ff6d6d !important;
+}
+
+.table-closed-color{
+    background-color: #e8e8e8 !important;
+}
+
+.table-free-color{
+    background-color: #73d67a !important;
+}
+
+.table-booking-color{
+    background-color: #f79999 !important;
 }

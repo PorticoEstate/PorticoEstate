@@ -40,10 +40,10 @@ and open the template in the editor.
 
     </head>
     <body class="">
-        <nav class="navbar navbar-expand-md">
+        <nav class="navbar navbar-expand-md navbar-light bg-faded">
 
                 <div class="container header-container">
-                    <button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
+                    <button class="navbar-toggler navbar-toggler-right active" type="button" data-toggle="collapse" data-target="#Navbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>  
                     <a class="navbar-brand" href="{site_url}">
