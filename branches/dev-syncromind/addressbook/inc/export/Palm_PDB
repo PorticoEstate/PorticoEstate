@@ -187,10 +187,14 @@
 				$j = $i + 1;
 				reset($this->export);
 				$entries .= "#" . $j . ":" . $buffer[$i]['n_given'] . $buffer[$i]['n_family'] . "\r\n";
-				while (list($name,$value)=each($this->export))
-				{
+				//while (list($name,$value)=each($this->export))
+                                if (is_array($this->export))
+                                {
+                                    foreach($this->export as $name => $value)
+                                    {
 					$entries .= $value . ":\t" . $buffer[$i][$value] . "\n";
-				}
+                                    }
+                                }
 				$entries .= "\r\n";
 			}
 
