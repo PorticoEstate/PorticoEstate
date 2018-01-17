@@ -3,22 +3,22 @@
 00 (disable)	setup	no	00 (disable / recomended)
 13 (ntp)	setup	no	13 (ntp)
 80 (http)	setup	no	80 (http)
-<b>!!!this will delete all existing accounts!!!</b><br>	setup	no	<b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>
+<b>!!!this will delete all existing accounts!!!</b><br>	setup	no	<b>!!!DETTE VIL SLETTE ALLE EKSISTERENDE BRUKERE!!!</b><br>
 <b>note:</b> you must have cookies enabled to use setup and header admin!	setup	no	<b>NB:</b> Du må ha aktivert bruk av cookies for å bruke setup og header admin!
-<br><b>this will delete all existing accounts.</b>	setup	no	<br><b>This will delete all existing accounts.</b>
+<br><b>this will delete all existing accounts.</b>	setup	no	<br><b>Dette vil slette alle eksisterende brukere.</b>
 <p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>	setup	no	<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>
 actions	setup	no	Actions
 add a domain	setup	no	Add a domain
 add auto-created users to this group ('default' will be attempted if this is empty.)	setup	no	Add auto-created users to this group ('Default' will be attempted if this is empty.)
 additional settings	setup	no	Additional settings
-admin first name	setup	no	Admin first name
-admin last name	setup	no	Admin last name
-admin password	setup	no	Admin password
+admin first name	setup	no	Admin fornavn
+admin last name	setup	no	Admin etternavn
+admin password	setup	no	Admin passord
 admin password to header manager	setup	no	Admin password to header manager
-admin username	setup	no	Admin username
+admin username	setup	no	Admin brukernavn
 admins	setup	no	Admins
 after retrieving the file, put it into place as the header.inc.php.  then, click "continue".	setup	no	After retrieving the file, put it into place as the header.inc.php.  Then, click "continue".
-all core tables and the admin and preferences applications	setup	no	all core tables and the admin and preferences applications
+all core tables and the admin and preferences applications	setup	no	alle fellestabeller, og modulene Admin og Innstillinger
 all users	setup	no	All Users
 analysis	setup	no	Analysis
 app details	setup	no	App details
@@ -36,11 +36,11 @@ applications	setup	no	applications
 are you sure you want to delete your existing tables and data?	setup	no	Er du sikker på at du vil slette alle dine tabeller og data?
 are you sure?	setup	no	ER DU SIKKER?
 at your request, this script is going to attempt to create the database and assign the db user rights to it	setup	no	At your request, this script is going to attempt to create the database and assign the db user rights to it
-at your request, this script is going to attempt to install the core tables and the admin and preferences applications for you	setup	no	At your request, this script is going to attempt to install the core tables and the admin and preferences applications for you.
+at your request, this script is going to attempt to install the core tables and the admin and preferences applications for you	setup	no	Forsøker å installere fellestabeller og modulene Admin og Innstillinger.
 at your request, this script is going to attempt to upgrade your old applications to the current versions	setup	no	At your request, this script is going to attempt to upgrade your old applications to the current versions
 at your request, this script is going to attempt to upgrade your old tables to the new format	setup	no	At your request, this script is going to attempt to upgrade your old tables to the new format
 at your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format	setup	no	At your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format
-at your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data	setup	no	At your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data
+at your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data	setup	no	På din kommando vil dette skriptet utføre den onde handlingen å avinstallere alle dine moduler, noe som sletter alle tabeller og data
 attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	setup	no	Attempt to use correct mimetype for FTP instead of default 'application/octet-stream'
 authentication / accounts	setup	no	Authentication / Accounts
 auto create account records for authenticated users	setup	no	Auto create account records for authenticated users
@@ -58,7 +58,7 @@ because of a failed upgrade, or the database is newer than the installed version
 because the enable flag for this app is set to 0, or is undefined	setup	no	because the enable flag for this app is set to 0, or is undefined
 bottom	setup	no	bottom
 bulk upgrade management	setup	no	Bulk Upgrade Management
-cancel	setup	no	Cancel
+cancel	setup	no	Avbryt
 cannot create the header.inc.php due to file permission restrictions.<br> instead you can %1 the file.	setup	no	Cannot create the header.inc.php due to file permission restrictions.<br> Instead you can %1 the file.
 charset	setup	no	utf-8
 check ip address of all sessions	setup	no	check ip address of all sessions
@@ -66,9 +66,9 @@ click <a href="index.php">here</a> to return to setup.	setup	no	Click <a href="i
 click here	setup	no	Click Here
 completed	setup	no	Completed
 configuration	setup	no	Configuration
-configuration completed	setup	no	Configurasjonen er utført
+configuration completed	setup	no	Konfigurasjonen er utført
 configuration password	setup	no	Configuration Password
-configure now	setup	no	Configure Now
+configure now	setup	no	Konfigurer nå
 continue	setup	no	Continue
 could not open header.inc.php for writing!	setup	no	Could not open header.inc.php for writing!
 country selection	setup	no	Country Selection
@@ -94,7 +94,7 @@ default file system space per user/group ?	setup	no	Default file system space pe
 delete	setup	no	Delete
 delete all my tables and data	setup	no	Delete all my tables and data
 delete all old languages and install new ones	setup	no	Slett alle gamle språkinnstillinger - og installer nye
-deleting tables	setup	no	Deleting Tables
+deleting tables	setup	no	Sletter tabeller
 demo server setup	setup	no	Demo Server Setup
 deny access	setup	no	Deny Access
 deny all users access to grant other users access to their entries ?	setup	no	Deny all users access to grant other users access to their entries ?
@@ -152,8 +152,8 @@ if no acl records for user or any group the user is a member of	setup	no	If no A
 if the application has no defined tables, selecting upgrade should remedy the problem	setup	no	If the application has no defined tables, selecting upgrade should remedy the problem
 if using ldap	setup	no	If using LDAP
 if using ldap, do you want to manage homedirectory and loginshell attributes?	setup	no	If using LDAP, do you want to manage homedirectory and loginshell attributes?
-if you did not receive any errors, your applications have been	setup	no	If you did not receive any errors, your applications have been
-if you did not receive any errors, your tables have been	setup	no	If you did not receive any errors, your tables have been
+if you did not receive any errors, your applications have been	setup	no	Dersom du ikke fikk noen feilmeldinger, er alle dine moduler
+if you did not receive any errors, your tables have been	setup	no	Dersom du ikke fikk noen feilmeldinger, er dine tabeller
 if you running this the first time, don't forget to manualy %1 !!!	setup	no	If you running this the first time, don't forget to manualy %1 !!!
 ignoring %1 for domain "%2"	setup	no	ignorerer %1 for domain "%2"
 image type selection order	setup	no	Image type selection order
@@ -243,7 +243,7 @@ pgsqlinstr %1	setup	no	Instructions for creating the database in PostgreSQL:<br>
 phpgroupware administration manual	setup	no	phpGroupWare Administration Manual
 please check for sql scripts within the application's directory	setup	no	Please check for sql scripts within the application's directory
 please check read/write permissions on directories, or back up and use another option.	setup	no	Please check read/write permissions on directories, or back up and use another option.
-please configure phpgroupware for your environment	setup	no	Please configure phpGroupWare for your environment
+please configure phpgroupware for your environment	setup	no	Venligst konfigurer systemet til ditt miljø
 please consult the %1.	setup	no	Please consult the %1.
 please install	setup	no	Please install
 please login	setup	no	Please login
@@ -257,11 +257,11 @@ preferences	setup	no	Innstillinger
 problem resolution	setup	no	Problem resolution
 process	setup	no	Process
 processing upgrade for %1	setup	no	processing upgrade for %1
-re-check my database	setup	no	Re-Check my database
-re-check my installation	setup	no	Re-Check My Installation
-re-enter password	setup	no	Re-enter password
+re-check my database	setup	no	Kontroller databasen
+re-check my installation	setup	no	Kontroller installasjonen
+re-enter password	setup	no	Skriv passordet på nytt
 read translations from	setup	no	Read translations from
-really uninstall all applications	setup	no	REALLY Uninstall all applications
+really uninstall all applications	setup	no	VIRKELIG avinstallere alle moduler
 recommended: filesystem	setup	no	Recommended: Filesystem
 register globals = %1	setup	no	register globals = %1
 registered	setup	no	registered
@@ -302,7 +302,7 @@ settings	setup	no	Settings
 setup	setup	no	Setup
 setup demo accounts in ldap	setup	no	Setup demo accounts in LDAP
 Setup an Admininstrator account	setup	no	Definer en administrator
-and optional demo accounts.	setup	no	og demobrukere
+and optional demo accounts.	setup	no	og eventuelt demobrukere
 setup the database	setup	no	Setup the database
 show 'powered by' logo on	setup	no	Show 'powered by' logo on
 some or all of its tables are missing	setup	no	Noen eller alle tabeller mangler
@@ -311,7 +311,7 @@ step 1 - simple application management	setup	no	Steg 1 - Enkel modul-administras
 step 2 - configuration	setup	no	Steg 2 - konfigurasjon
 step 3 - language management	setup	no	Steg 3 - Språk-administrasjon
 step 4 - advanced application management	setup	no	Steg 4 - Avansert modul-administrasjon
-table change messages	setup	no	Table Change Messages
+table change messages	setup	no	Meldinger ved endring av tabeller
 tables dropped	setup	no	tabeller droppet
 tables installed, unless there are errors printed above	setup	no	tabelles er opprettet, dersom det ikke er skrevet ut feilmeldinger ovenfor
 tables upgraded	setup	no	tabeller oppdatert
@@ -389,7 +389,7 @@ you're using an old header.inc.php version...	setup	no	You're using an old heade
 your applications are current	setup	no	Modulene er av siste versjon
 your database does not exist	setup	no	Databasen finnes ikke
 your database is not working!	setup	no	Databasen fungerer ikke!
-your database is working, but you dont have any applications installed	setup	no	Your database is working, but you dont have any applications installed
+your database is working, but you dont have any applications installed	setup	no	Databasen fungerer, men ingen moduler er installert
 your header admin password is not set. please set it now!	setup	no	Your header admin password is NOT set. Please set it now!
 your header.inc.php needs upgrading.	setup	no	Your header.inc.php needs upgrading.
 <p class="msg">your header.inc.php needs upgrading.<br>warning! make backups!</p>	setup	no	<p class="msg">Your header.inc.php needs upgrading.<br>WARNING! MAKE BACKUPS!</p>
@@ -402,3 +402,12 @@ Current Version	setup	no	Installert versjon
 Available Version	setup	no	Tigljengelig versjon
 Available to install	setup	no	Tigljengelig for installasjon
 Resolve	setup	no	Løs problem
+version	setup	no	versjon
+This will create an admininstrator account	setup	no	Dette vil definere en systemadministrator
+Details for admininstrator account	setup	no	Detaljer om systemadministratoren
+Password must be at least 8 characters long, not %1	setup	no	Passord må være minst på 8 tegn, du forsøker med %1
+Password must contain at least 2 upper case characters	setup	no	Passord må inneholde minst 2 store bosktaver
+Password must contain at least 2 lower case characters	setup	no	Passord må inneholde minst 2 små bosktaver
+Password must contain at least 1 number	setup	no	Passord må inneholde minst 1 tall
+Password must contain at least 1 non alphanumeric character	setup	no	Passord må inneholde minst 1 spesialtegn
+Done	setup	no	Utført
