@@ -27,7 +27,8 @@
 
 		$preferences = createObject('phpgwapi.preferences');
 		$preferences->set_account_id($bookingguest);
-		$preferences->add('common', 'template_set', 'bookingfrontend');
+	//	$preferences->add('common', 'template_set', 'bookingfrontend');
+		$preferences->add('common', 'template_set', 'aalesund');
 		$preferences->save_repository(true, $GLOBALS['type']);
 
 		$config = CreateObject('phpgwapi.config', 'bookingfrontend');
