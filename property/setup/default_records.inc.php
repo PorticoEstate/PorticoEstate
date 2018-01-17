@@ -28,7 +28,7 @@
 	function p_setup_translate( $key )
 	{
 		$lang = $GLOBALS['phpgw_info']['server']['default_lang'] == 'no' ? 'no' : 'en' ;
-		
+
 		static $translations = array();
 		if(!$translations)
 		{
@@ -77,7 +77,7 @@
 				'male'	=>	'Mann',
 				'female'	=>	'Kvinne',
 				'organization'	=>	'Organisasjon',
-				'SOMETHING'	=>	'Konfigurer meg',
+				'SOMETHING'	=>	'Kategori 1',
 				'not active'	=>	'Utgått',
 				'Owner category'	=> 'Eierkategori',
 				'Admin location'	=> 'Administrer lokasjon'
@@ -291,16 +291,16 @@
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_streetaddress (id, descr) VALUES (1, 'street name 1')");
 
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark) VALUES ('5000-01-01', '5000', '01', '01', 'entrance name1', 1087745654, 1, 6, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark) VALUES ('5000-01-02', '5000', '01', '02', 'entrance name2', 1087745654, 1, 6, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark) VALUES ('5000-01-03', '5000', '01', '03', 'entrance name3', 1087745654, 1, 6, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, entry_date, category, street_id, street_number, user_id, status, remark) VALUES ('5000-01-01', '5000', '01', '01', 'entrance name1', 1087745654, 1, 1, '1A', 6, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, entry_date, category, street_id, street_number, user_id, status, remark) VALUES ('5000-01-02', '5000', '01', '02', 'entrance name2', 1087745654, 1, 1, '1B', 6, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location3 (location_code, loc1, loc2, loc3, loc3_name, entry_date, category, street_id, street_number, user_id, status, remark) VALUES ('5000-01-03', '5000', '01', '03', 'entrance name3', 1087745654, 1, 1, '2A', 6, 1, NULL)");
 
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark) VALUES ('5000-01-01-001', '5000', '01', '01', '001', 'apartment name1', 1087745753, 1, 1, '1A', 6, 1, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark) VALUES ('5000-01-01-002', '5000', '01', '01', '002', 'apartment name2', 1087745753, 1, 1, '1B', 6, 2, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark) VALUES ('5000-01-02-001', '5000', '01', '02', '001', 'apartment name3', 1087745753, 1, 1, '2A', 6, 3, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark) VALUES ('5000-01-02-002', '5000', '01', '02', '002', 'apartment name4', 1087745753, 1, 1, '2B', 6, 4, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark) VALUES ('5000-01-03-001', '5000', '01', '03', '001', 'apartment name5', 1087745753, 1, 1, '3A', 6, 5, 1, NULL)");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark) VALUES ('5000-01-03-002', '5000', '01', '03', '002', 'apartment name6', 1087745753, 1, 1, '3B', 6, 6, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, user_id, tenant_id, status, remark) VALUES ('5000-01-01-001', '5000', '01', '01', '001', 'apartment name1', 1087745753, 1, 6, 1, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, user_id, tenant_id, status, remark) VALUES ('5000-01-01-002', '5000', '01', '01', '002', 'apartment name2', 1087745753, 1, 6, 2, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, user_id, tenant_id, status, remark) VALUES ('5000-01-02-001', '5000', '01', '02', '001', 'apartment name3', 1087745753, 1, 6, 3, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, user_id, tenant_id, status, remark) VALUES ('5000-01-02-002', '5000', '01', '02', '002', 'apartment name4', 1087745753, 1, 6, 4, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, user_id, tenant_id, status, remark) VALUES ('5000-01-03-001', '5000', '01', '03', '001', 'apartment name5', 1087745753, 1, 6, 5, 1, NULL)");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location4 (location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, user_id, tenant_id, status, remark) VALUES ('5000-01-03-002', '5000', '01', '03', '002', 'apartment name6', 1087745753, 1, 6, 6, 1, NULL)");
 
 #
 # fm_branch
@@ -437,7 +437,7 @@
 #
 
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_config (location_type, column_name, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) VALUES (4, 'tenant_id', NULL, 1, 1, NULL, 0, 'fm_tenant', 'id', 'int', 4, NULL, NULL, 'True')");
-	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_config (location_type, column_name, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) VALUES (4, 'street_id', NULL, 1, 1, NULL, 1, 'fm_streetaddress', 'id', 'int', 4, NULL, NULL, 'True')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_config (location_type, column_name, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) VALUES (3, 'street_id', NULL, 1, 1, NULL, 1, 'fm_streetaddress', 'id', 'int', 4, NULL, NULL, 'True')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_config (location_type, column_name, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) VALUES (1, 'owner_id', NULL, NULL, 1, 1, NULL, 'fm_owner', 'id', 'int', 4, NULL, NULL, 'True')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_location_config (location_type, column_name, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) VALUES (1, 'part_of_town_id', NULL, NULL, 1, NULL, NULL, 'fm_part_of_town', 'id', 'int', 4, NULL, NULL, 'True')");
 
