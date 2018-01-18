@@ -358,7 +358,7 @@
 						</table>
 					</xsl:when>
 					<xsl:when test="datatype='T'">
-						<xsl:value-of select="value"/>
+						<xsl:value-of disable-output-escaping="yes" select="value"/>
 					</xsl:when>
 					<xsl:when test="datatype='pwd'">
 						<input type="password" name="values_attribute[{id}][value]" size="30">

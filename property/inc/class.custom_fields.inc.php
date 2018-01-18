@@ -156,6 +156,10 @@ JS;
 						}
 					}
 				}
+				else if ($attributes['datatype'] == 'T' && $view_only)
+				{
+					$attributes['value'] = nl2br($attributes['value']);
+				}
 				else if ($attributes['datatype'] == 'AB')
 				{
 					if ($attributes['value'])

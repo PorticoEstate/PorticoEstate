@@ -1728,7 +1728,7 @@
 			if ($id)
 			{
 				$values = $this->bo->read_single(array('entity_id' => $this->entity_id, 'cat_id' => $this->cat_id,
-					'id' => $id));
+					'id' => $id, 'view' => $mode=='view'));
 			}
 			else
 			{
