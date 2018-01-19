@@ -7,7 +7,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/php:7.1.5-browsers
+      - image: circleci/php:7.1-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -26,12 +26,26 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: composer install -n --prefer-dist
+      - run:
+        name: Composer install
+        command:
+          composer install -n --prefer-dist
 
       - save_cache:
           paths:
             - ./vendor
           key: v1-dependencies-{{ checksum "composer.json" }}
+
+      - run:
+          name: Download chromedriver
+          command:
+            curl -O https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
+
+      - run:
+          name: Start chromedriver
+          command:
+            ./chromedriver --port=4444 --url-base=/wd/hub
+          background: true
 
       # run tests!
       - run: ./vendor/bin/codecept run
