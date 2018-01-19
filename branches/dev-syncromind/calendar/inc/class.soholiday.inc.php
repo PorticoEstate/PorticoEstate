@@ -121,7 +121,8 @@
 			elseif(is_array($locales))
 			{
 				$find = '';
-				while(list($key,$value) = each($locales))
+				//while(list($key,$value) = each($locales))
+                                foreach($locales as $key => $value)
 				{
 					if($find)
 					{
