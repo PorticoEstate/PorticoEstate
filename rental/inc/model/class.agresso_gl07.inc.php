@@ -5,17 +5,49 @@
 	class rental_agresso_gl07 implements rental_exportable
 	{
 
-		protected $billing_job;
-		protected $date_str;
-		protected $lines;
+		protected static $bo;
+		protected $billing_job,
+			$date_str,
+			$lines,
+			$responsibility_id_strlen,
+			$service_id_strlen,
+			$project_id_strlen;
 
-		public function __construct( $billing_job )
+		public function __construct( $billing_job = null)
 		{
-			$this->billing_job = $billing_job;
-			$this->date_str = date('Ymd', $billing_job->get_timestamp_stop());
-			$this->lines = null;
+			if($billing_job)
+			{
+				$this->billing_job = $billing_job;
+				$this->date_str = date('Ymd', $billing_job->get_timestamp_stop());
+				$this->lines = null;
+			}
+
+			$config = CreateObject('phpgwapi.config', 'rental')->read();
+			$organization = empty($config['organization']) ? 'bergen' : $config['organization'];
+
+			if($organization == 'bergen')
+			{
+				$this->responsibility_id_strlen = 6;
+				$this->service_id_strlen = 5;
+				$this->project_id_strlen = 6;
+			}
+			else//nlsh
+			{
+				$this->responsibility_id_strlen = 4;
+				$this->service_id_strlen = 4;
+				$this->project_id_strlen = null;
+			}
+
 		}
 
+		public static function get_instance()
+		{
+			if (self::$bo == null)
+			{
+				self::$bo = new rental_agresso_gl07();
+			}
+			return self::$bo;
+		}
 		/**
 		 * @see rental_exportable
 		 */
@@ -26,7 +58,7 @@
 
 		/**
 		 * Returns the file contents as a string.
-		 * 
+		 *
 		 * @see rental_exportable
 		 */
 		public function get_contents()
@@ -82,18 +114,18 @@
 			{
 				$missing_billing_info[] = 'Missing responsibility id.';
 			}
-			else if (strlen($responsibility_id_out) != 6)
+			else if (strlen($responsibility_id_out) != $this->responsibility_id_strlen)
 			{
-				$missing_billing_info[] = 'Responsibility id must be 6 characters.';
+				$missing_billing_info[] = "Responsibility id must be {$this->responsibility_id_strlen} characters.";
 			}
 			$service_id = $contract->get_service_id();
 			if ($service_id == null || $service_id == '')
 			{
 				$missing_billing_info[] = 'Missing service id.';
 			}
-			else if (strlen($service_id) != 5)
+			else if (strlen($service_id) != $this->service_id_strlen)
 			{
-				$missing_billing_info[] = 'Service id must be 5 characters.';
+				$missing_billing_info[] = "Service id must be {$this->service_id_strlen} characters.";
 			}
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($contract->get_id());
@@ -105,15 +137,20 @@
 			{
 				$missing_billing_info[] = 'Invalid location code for the building.';
 			}
-			$project_id_out = $contract->get_project_id();
-			if ($project_id_out == null || $project_id_out == '')
+
+			if($this->project_id_strlen)
 			{
-				$missing_billing_info[] = 'Missing project id.';
+				$project_id_out = $contract->get_project_id();
+				if ($project_id_out == null || $project_id_out == '')
+				{
+					$missing_billing_info[] = 'Missing project id.';
+				}
+				else if (strlen($project_id_out) > $this->project_id_strlen)
+				{
+					$missing_billing_info[] = "Project id can not be more than {$this->project_id_strlen} characters.";
+				}
 			}
-			else if (strlen($project_id_out) > 6)
-			{
-				$missing_billing_info[] = 'Project id can not be more than 6 characters.';
-			}
+
 			$price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 				'contract_id' => $contract->get_id()));
 			foreach ($price_items as $price_item) // Runs through all items
@@ -321,7 +358,7 @@
 				'name' => $party_name,
 				'amount' => $this->get_formatted_amount_excel($amount),
 				'article description' => utf8_decode($product_item['article_description']),
-				'article_code' => $product_item['article_code'],
+				'article_code' => $part_no, //$product_item['article_code'],
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
 				'responsibility' => $responsibility,

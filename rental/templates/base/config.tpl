@@ -21,7 +21,7 @@
 				<td>
 					<select name="newsettings[organization]">
 						<option value="" {selected_organization_}>Bergen kommune</option>
-						<option value="nlsh" {selected_organization_NLSH}>NLSH</option>
+						<option value="nlsh" {selected_organization_nlsh}>NLSH</option>
 					</select>
 				</td>
 			</tr>
