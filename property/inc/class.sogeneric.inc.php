@@ -334,7 +334,7 @@
 							),
 							'edit_msg' => lang('edit'),
 							'add_msg' => lang('add'),
-							'name' => '',
+							'name' => lang('category'),
 							'acl_app' => 'property',
 							'acl_location' => '.admin',
 							'menu_selection' => "admin::property::location::location::category_{$type_id}"
