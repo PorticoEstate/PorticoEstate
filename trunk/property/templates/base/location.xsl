@@ -307,7 +307,13 @@ onMouseOut="nd()">
 									<xsl:variable name="lang_change_type_statustext">
 										<xsl:value-of select="lang_change_type_statustext"/>
 									</xsl:variable>
-									<select name="change_type" class="forms" onMouseover="window.status='{$lang_change_type_statustext}'; return true;" onMouseout="window.status='';return true;">
+									<select name="change_type" class="forms" title="{$lang_change_type_statustext}">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_change_type_statustext"/>
+										</xsl:attribute>
 										<option value="">
 											<xsl:value-of select="lang_no_change_type"/>
 										</option>
@@ -331,21 +337,17 @@ onMouseOut="nd()">
 								</label>
 								<xsl:choose>
 									<xsl:when test="datatype ='text'">
-										<textarea cols="60" rows="4" name="{input_name}" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
+										<textarea cols="60" rows="4" name="{input_name}">
+											<xsl:attribute name="title">
 												<xsl:value-of select="statustext"/>
-												<xsl:text>'; return true;</xsl:text>
 											</xsl:attribute>
 											<xsl:value-of select="value"/>
 										</textarea>
 									</xsl:when>
 									<xsl:when test="datatype ='date'">
-										<input type="text" name="{input_name}" value="{value}" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10" onMouseout="window.status='';return true;">
-											<xsl:attribute name="onMouseover">
-												<xsl:text>window.status='</xsl:text>
+										<input type="text" name="{input_name}" value="{value}" onFocus="{//dateformat_validate}" onKeyUp="{//onKeyUp}" onBlur="{//onBlur}" size="12" maxlength="10">
+											<xsl:attribute name="title">
 												<xsl:value-of select="descr"/>
-												<xsl:text>'; return true;</xsl:text>
 											</xsl:attribute>
 										</input>
 										<xsl:text>[</xsl:text>
@@ -353,10 +355,18 @@ onMouseOut="nd()">
 										<xsl:text>]</xsl:text>
 									</xsl:when>
 									<xsl:otherwise>
-										<input type="text" name="{input_name}" value="{value}" size="{size}" onMouseout="window.status='';return true;">
+										<input type="text" name="{input_name}" value="{value}" size="{size}">
 											<xsl:attribute name="title">
 												<xsl:value-of select="statustext"/>
 											</xsl:attribute>
+											<xsl:if test="required = 1">
+												<xsl:attribute name="data-validation">
+													<xsl:text>required</xsl:text>
+												</xsl:attribute>
+												<xsl:attribute name="data-validation-error-msg">
+													<xsl:value-of select="input_text"/>
+												</xsl:attribute>
+											</xsl:if>
 										</input>
 									</xsl:otherwise>
 								</xsl:choose>
@@ -374,7 +384,21 @@ onMouseOut="nd()">
 									<label>
 										<xsl:value-of select="lang_part_of_town"/>
 									</label>
-									<xsl:call-template name="select_part_of_town"/>
+									<xsl:variable name="lang_town_statustext">
+										<xsl:value-of select="lang_town_statustext"/>
+									</xsl:variable>
+									<select name="part_of_town_id" title="{$lang_town_statustext}">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="lang_no_part_of_town"/>
+										</xsl:attribute>
+										<option value="">
+											<xsl:value-of select="lang_no_part_of_town"/>
+										</option>
+										<xsl:apply-templates select="part_of_town_list"/>
+									</select>
 								</div>
 							</xsl:when>
 						</xsl:choose>
@@ -387,7 +411,13 @@ onMouseOut="nd()">
 									<xsl:variable name="lang_owner_statustext">
 										<xsl:value-of select="lang_owner_statustext"/>
 									</xsl:variable>
-									<select name="owner_id" class="forms" onMouseover="window.status='{$lang_owner_statustext}'; return true;" onMouseout="window.status='';return true;">
+									<select name="owner_id" class="forms" title="{$lang_owner_statustext}">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="$lang_owner_statustext"/>
+										</xsl:attribute>
 										<option value="">
 											<xsl:value-of select="lang_select_owner"/>
 										</option>
@@ -400,23 +430,19 @@ onMouseOut="nd()">
 							<xsl:when test="edit_street = 1">
 								<div class="pure-control-group">
 									<label>
-										<a href="javascript:street_lookup()" onMouseover="window.status='{lang_select_street_help}';return true;" onMouseout="window.status='';return true;">
+										<a href="javascript:street_lookup()" title="{lang_select_street_help}">
 											<xsl:value-of select="lang_street"/>
 										</a>
 									</label>
 									<input type="hidden" name="street_id" value="{value_street_id}"/>
 									<input size="30" type="text" name="street_name" value="{value_street_name}" onClick="street_lookup();" readonly="readonly">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_select_street_help"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 									<input size="4" type="text" name="street_number" value="{value_street_number}">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_street_num_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 								</div>
@@ -426,16 +452,14 @@ onMouseOut="nd()">
 							<xsl:when test="edit_tenant = 1">
 								<div class="pure-control-group">
 									<label>
-										<a href="javascript:tenant_lookup()" onMouseover="window.status='{lang_tenant_statustext}';return true;" onMouseout="window.status='';return true;">
+										<a href="javascript:tenant_lookup()" title="{lang_tenant_statustext}">
 											<xsl:value-of select="lang_tenant"/>
 										</a>
 									</label>
 									<input type="hidden" name="tenant_id" value="{value_tenant_id}"/>
 									<input size="{size_last_name}" type="text" name="last_name" value="{value_last_name}" onClick="tenant_lookup();" readonly="readonly">
-										<xsl:attribute name="onMouseover">
-											<xsl:text>window.status='</xsl:text>
+										<xsl:attribute name="title">
 											<xsl:value-of select="lang_tenant_statustext"/>
-											<xsl:text>'; return true;</xsl:text>
 										</xsl:attribute>
 									</input>
 									<input size="{size_first_name}" type="text" name="first_name" value="{value_first_name}" onClick="tenant_lookup();" readonly="readonly">
