@@ -229,10 +229,13 @@
 
 			$list = $this->query();
 
-			while (is_array($list[0]) && list($name_entry, ) = each($list[0]))
-			{
+                        if (is_array($list[0]))
+                        {
+                            foreach($list[0] as $name_entry => $value)
+                            {
 				$name[] = $name_entry;
-			}
+                            }
+                        }
 
 			$descr = $name;
 

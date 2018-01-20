@@ -537,14 +537,17 @@
 			{
 				$location = explode('-', $gab_insert[$i]['location_code']);
 
-				while (is_array($location) && list($input_name, $value) = each($location))
-				{
-					if ($value)
-					{
-						$col[] = 'loc' . ($input_name + 1);
-						$val[] = $value;
-					}
-				}
+                                if (is_array($location))
+                                {
+                                    foreach($location as $input_name => $value)
+                                    {
+                                            if ($value)
+                                            {
+                                                    $col[] = 'loc' . ($input_name + 1);
+                                                    $val[] = $value;
+                                            }
+                                    }
+                                }
 
 				if ($col)
 				{

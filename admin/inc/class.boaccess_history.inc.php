@@ -21,8 +21,11 @@
 		function list_history($account_id,$start,$order,$sort)
 		{
 			$records = $this->so->list_history($account_id,$start,$order,$sort);
-			while (is_array($records) && list(,$record) = each($records))
-			{
+			//while (is_array($records) && list(,$record) = each($records))
+                        if (is_array($records))
+                        {
+                            foreach($records as $key => $record)
+                            {
 				if ($record['li'] && $record['lo'])
 				{
 					$total = ($record['lo'] - $record['li']);
@@ -69,7 +72,8 @@
 					'sessionid'  => $record['sessionid'],     
 					'total'      => $total
 				);
-			}
+                            }
+                        }
 			return $_records;
 		}
 

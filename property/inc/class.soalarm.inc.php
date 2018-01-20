@@ -53,10 +53,13 @@
 				{
 					$method_data = array();
 					$data_set = unserialize($this->db->f('data'));
-					while (is_array($data_set) && list($key, $value) = each($data_set))
-					{
-						$method_data[] = $key . '=' . $value;
-					}
+                                        if (is_array($data_set))
+                                        {
+                                            foreach($data_set as $key => $value)
+                                            {
+                                                    $method_data[] = $key . '=' . $value;
+                                            }
+                                        }
 
 					$method_data = @implode(',', $method_data);
 				}

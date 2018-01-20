@@ -50,9 +50,12 @@
 				'location' => 'loc1'
 			);
 
-			reset($fields);
-			while (list (, $field_info) = each($fields))
-			{
+			//reset($fields);
+			//while (list (, $field_info) = each($fields))
+                        if (is_array($fields))
+                        {
+                            foreach($fields as $key => $field_info)
+                            {
 				$orig_name = $field_info['field_name'];
 				unset($changed);
 
@@ -130,11 +133,15 @@
 					}
 					$this->so->insert_field($field_info);
 				}
-			}
+                            }
+                        }
 
-			reset($current_fields);
-			while (list (, $field_info) = each($current_fields))
-			{
+			//reset($current_fields);
+			//while (list (, $field_info) = each($current_fields))
+                        if (is_array($current_fields))
+                        {
+                            foreach($current_fields as $key => $field_info)
+                            {
 				if (!is_array($fields[$field_info['field_name']]))
 				{
 					if ($this->debug)
@@ -143,7 +150,8 @@
 					}
 					$this->so->remove_field($field_info);
 				}
-			}
+                            }
+                        }
 		}
 
 		function get_field_list()
@@ -180,9 +188,12 @@
 			}
 
 			$fields = $this->fields;
-			reset($fields);
-			while (list ($num, $field_info) = each($fields))
-			{
+			//reset($fields);
+			//while (list ($num, $field_info) = each($fields))
+                        if (is_array($fields))
+                        {
+                            foreach($fields as $num => $field_info)
+                            {
 				$name = $field_info['field_name'];
 				if ($post_vars[$name . '_remove'])
 				{
@@ -206,7 +217,8 @@
 
 					$this->fields[$post_vars[$name . '_name']] = $updated_field_info;
 				}
-			}
+                            }
+                        }
 
 			$rv = $this->save_fields($this->fields);
 
@@ -215,14 +227,18 @@
 
 		function get_next_field_order( $fields )
 		{
-			reset($fields);
-			while (list (, $field_info) = each($fields))
-			{
+			//reset($fields);
+			//while (list (, $field_info) = each($fields))
+                        if (is_array($fields))
+                        {
+                            foreach ($fields as $key => $field_info)        
+                            {
 				if ($field_info['field_order'] > $max)
 				{
 					$max = $field_info['field_order'];
 				}
-			}
+                            }
+                        }
 
 			return ($max + 1);
 		}

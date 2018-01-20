@@ -94,10 +94,14 @@
 
 			$conf->read();
 			reset($newsettings);
-			while(list($key,$val) = each($newsettings))
-			{
+			//while(list($key,$val) = each($newsettings))
+                        if (is_array($newsettings))
+                        {
+                            foreach($newsettings as $key => $val)
+                            {
 				$conf->value($key, $val);
-			}
+                            }
+                        }
 			$conf->save_repository();
 			return True;
 		}

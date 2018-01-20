@@ -1681,14 +1681,18 @@ class calendar_boicalendar
 		}
 
 		reset($this->parameter);
-		while(list($key,$param_array) = each($this->parameter))
-		{
+		//while(list($key,$param_array) = each($this->parameter))
+                if (is_array($this->parameter))
+                {
+                    foreach($this->parameter as $key => $param_array)
+                    {
 			if(isset($param_array['properties'][$property]) && $param_array['properties'][$property])
 			{
 				$param[] = $key;
 				$this->debug('Property : '.$property.' = Parameter : '.$key);
 			}
-		}
+                    }
+                }
 		reset($param);
 		$cached_returns[$property] = $param;
 		return $param;
@@ -1705,13 +1709,17 @@ class calendar_boicalendar
 		}
 
 		reset($this->property);
-		while(list($key,$param_array) = each($this->property))
-		{
+		//while(list($key,$param_array) = each($this->property))
+                if (is_array($this->property))
+                {
+                    foreach($this->property as $key => $param_array)
+                    {
 			if(isset($param_array[$ical_type]) && $param_array[$ical_type])
 			{
 				$prop[] = $key;
 			}
-		}
+                    }
+                }
 		reset($prop);
 		$cached_returns[$ical_type] = $prop;
 		return $prop;
@@ -1941,19 +1949,27 @@ class calendar_boicalendar
 
 		if($property == 'exdate')
 		{
-			while(list($key,$value) = each($event))
-			{
+			//while(list($key,$value) = each($event))
+                        if (is_array($event))
+                        {
+                            foreach($event as $key => $value)
+                            {
 				$exdates[] = $this->switch_date($value);
-			}
+                            }
+                        }
 			return ':'.implode($exdates,',');
 		}
 		else
 			if($property == 'rdate')
 			{
-				while(list($key,$value) = each($event))
-				{
+				//while(list($key,$value) = each($event))
+                                if (is_array($event))
+                                {
+                                    foreach($event as $key => $value)
+                                    {
 					$rdates[] = $this->switch_date($value);
-				}
+                                    }
+                                }
 				return ':'.implode($rdates,',');
 			}
 			else
@@ -3486,19 +3502,27 @@ class calendar_boicalendar
 			// Handle alarm import end
 
 			@reset($datetime_vars);
-			while(list($e_datevar,$i_datevar) = each($datetime_vars))
-			{
+			//while(list($e_datevar,$i_datevar) = each($datetime_vars))
+                        if (is_array($datetime_vars))
+                        {
+                            foreach($datetime_vars as $e_datevar => $i_datevar)
+                            {
 				if(isset($ical['event'][$i][$i_datevar]))
 				{
 					$temp_time = $so_event->maketime($ical['event'][$i][$i_datevar]) + phpgwapi_datetime::user_timezone();
 					@reset($date_array);
-					while(list($key,$var) = each($date_array))
-					{
+					//while(list($key,$var) = each($date_array))
+                                        if (is_array($date_array))
+                                        {
+                                            foreach($date_array as $key => $var)
+                                            {
 						$event[$e_datevar][$var] = intval(date($key,$temp_time));
-					}
+                                            }
+                                        }
 					$so_event->set_date($e_datevar,$event[$e_datevar]['year'],$event[$e_datevar]['month'],$event[$e_datevar]['mday'],$event[$e_datevar]['hour'],$event[$e_datevar]['min'] + $offset_mins, $event[$e_datevar]['sec']);
 				}
-			}
+                            }
+                        }
 
 			// If a Timestamp is given from the sync module add it to the event
 			if ($timestamp > 0)
@@ -3524,8 +3548,9 @@ class calendar_boicalendar
 
 				@reset($ical_cats);
 				$cat_id_nums = array();
-				while(list($key,$cat) = each($ical_cats))
-				{
+				//while(list($key,$cat) = each($ical_cats))
+                                foreach($ical_cats as $key => $cat)
+                                {
 					if(!$cats->exists('appandmains',$cat))
 					{
 						$cats->add(
@@ -3542,7 +3567,7 @@ class calendar_boicalendar
 					//							echo 'Category Name : '.$cat.' : Category ID :'.$temp_id."<br />\n";
 					//							$cat_id_nums[] = $temp_id;
 					$cat_id_nums[] = $cats->name2id($cat);
-				}
+                                }
 				@reset($cat_id_nums);
 				if(count($cat_id_nums) > 1)
 				{
@@ -3740,7 +3765,8 @@ class calendar_boicalendar
 								MCAL_M_SATURDAY	=> 'SA'
 								);
 						@reset($week_days);
-						while(list($key,$val) = each($week_days))
+						//while(list($key,$val) = each($week_days))
+                                                foreach($week_days as $key => $val)
 						{
 							if(strpos(' '.$ical['event'][$i]['rrule'][$r]['byday'],$val))
 							{
@@ -3760,7 +3786,8 @@ class calendar_boicalendar
 								MCAL_M_SATURDAY	=> 'SA'
 								);
 						@reset($week_days);
-						while(list($key,$val) = each($week_days))
+						//while(list($key,$val) = each($week_days))
+                                                foreach($week_days as $key => $val)
 						{
 							if(strpos(' '.$ical['event'][$i]['rrule'][$r]['wkst'],$val))
 							{
@@ -4237,8 +4264,9 @@ class calendar_boicalendar
 				$rdate = (isset($event['recur_date'])?$event['recur_date']:'');
 				if(is_array($rdate))
 				{
-					@reset($rdate);
-					while(list($key,$recur_datetime) = each($rdate))
+					//@reset($rdate);
+					//while(list($key,$recur_datetime) = each($rdate))
+                                        foreach($rdate as $key => $recur_datetime)
 					{ 	
 						$recur_datetime = explode ("/", $recur_datetime);
 						$recur_datetime['0'] = mktime(date('H',$recur_datetime['0']),date('i',$recur_datetime['0']) - $offset,0,date('m',$recur_datetime['0']),date('d',$recur_datetime['0']),date('Y',$recur_datetime['0']));

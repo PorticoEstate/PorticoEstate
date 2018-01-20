@@ -91,8 +91,11 @@
 			{
 				$p->set_var('submit_extra',' width="5%"');
 				$cnt =0;
-				while (list(,$value) = each($locales))
-				{
+				//while (list(,$value) = each($locales))
+                                if (is_array($locales))
+                                {
+                                    foreach($locales as $key => $value)
+                                    {
 //					$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_color);
 					$tr_color = $cnt % 2 ? 'row_on' : 'row_off';
 					if (! $value)  $value  = '&nbsp;';
@@ -108,7 +111,8 @@
 					$p->set_var($var);
 					$p->parse('rows','row',True);
 					$cnt++;
-				}
+                                    }
+                                }
 			}
 
 			$var = Array(
@@ -293,7 +297,8 @@
 				99	=> lang('Last')
 			);
 			$out = '';
-			while(list($key,$value) = each($occur))
+			//while(list($key,$value) = each($occur))
+                        foreach($occur as $key => $value)
 			{
 				$out .= '<option value="'.$key.'"'.(isset($holiday['occurence']) && $holiday['occurence']==$key?' selected':'').'>'.$value.'</option>'."\n";
 			}
@@ -463,10 +468,14 @@
 				$browser->content_header('holidays.'.$locale,'text/text');
 				unset($browser);
 
-				while (list(,$holiday) = @each($holidays))
-				{
+				//while (list(,$holiday) = @each($holidays))
+                                if (is_array($holidays))
+                                {
+                                    foreach($holidays as $key => $holiday)
+                                    {
 					echo "$locale\t$holiday[name]\t$holiday[day]\t$holiday[month]\t$holiday[occurence]\t$holiday[dow]\t$holiday[observance_rule]\n";
-				}
+                                    }
+                                }
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}
 			elseif($this->debug)

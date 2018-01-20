@@ -225,9 +225,13 @@
 
 			$new_index = str_replace(",", ".", $values['new_index']);
 
-			while ($entry = @each($values['update']))
-			{
-				$n = $entry[0];
+			//while ($entry = @each($values['update']))
+                        if (is_array($values['update']))
+                        {
+                            foreach($values['update'] as $key => $value)
+                            {
+				//$n = $entry[0];
+                                $n = $key;
 
 				if (!$values['old_total_cost'][$n])
 				{
@@ -265,7 +269,8 @@
 					'new_index' => $new_index,
 					'new_date' => $date,
 				);
-			}
+                            }
+                        }
 			//_debug_array($update);
 
 			if ($update)

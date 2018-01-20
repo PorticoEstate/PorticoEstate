@@ -665,7 +665,8 @@
 		{
 			$history_array = $this->historylog->return_array(array('O'), array(), '', '', $id);
 			$i = 0;
-			while (is_array($history_array) && list(, $value) = each($history_array))
+			//while (is_array($history_array) && list(, $value) = each($history_array))
+                        foreach($history_array as $value)
 			{
 
 				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
@@ -765,7 +766,8 @@
 
 		function save( $request, $action = '', $values_attribute = array() )
 		{
-			while (is_array($request['location']) && list(, $value) = each($request['location']))
+			//while (is_array($request['location']) && list(, $value) = each($request['location']))
+                        foreach($request['location'] as $value)
 			{
 				if ($value)
 				{

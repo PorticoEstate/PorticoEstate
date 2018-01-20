@@ -1125,7 +1125,7 @@
 		{
 			if ((!isset($data['location_code']) || !$data['location_code']) && isset($data['location']) && is_array($data['location']))
 			{
-				while (is_array($data['location']) && list(, $value) = each($data['location']))
+                                foreach($data['location'] as $value)
 				{
 					if ($value)
 					{

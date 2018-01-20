@@ -168,30 +168,26 @@
 
 			$gab_list = $this->bo->read($params);
 
-			$i = 0;
-
-			while (is_array($gab_list) && list(, $gab) = each($gab_list))
+			foreach($gab_list as $key => $gab)
 			{
-				$value_gaards_nr = substr($gab['gab_id'], 4, 5);
-				$value_bruks_nr = substr($gab['gab_id'], 9, 4);
-				$value_feste_nr = substr($gab['gab_id'], 13, 4);
-				$value_seksjons_nr = substr($gab['gab_id'], 17, 3);
+                            $value_gaards_nr = substr($gab['gab_id'], 4, 5);
+                            $value_bruks_nr = substr($gab['gab_id'], 9, 4);
+                            $value_feste_nr = substr($gab['gab_id'], 13, 4);
+                            $value_seksjons_nr = substr($gab['gab_id'], 17, 3);
 
-				$content[] = array
-					(
-					'owner' => lang($gab['owner']),
-					'hits' => $gab['hits'],
-					'address' => $gab['address'],
-					'gaards_nr' => $value_gaards_nr,
-					'bruks_nr' => $value_bruks_nr,
-					'feste_nr' => $value_feste_nr,
-					'seksjons_nr' => $value_seksjons_nr,
-					'location_code' => $gab['location_code'],
-				);
-
-				$i++;
+                            $content[] = array
+                                    (
+                                    'owner' => lang($gab['owner']),
+                                    'hits' => $gab['hits'],
+                                    'address' => $gab['address'],
+                                    'gaards_nr' => $value_gaards_nr,
+                                    'bruks_nr' => $value_bruks_nr,
+                                    'feste_nr' => $value_feste_nr,
+                                    'seksjons_nr' => $value_seksjons_nr,
+                                    'location_code' => $gab['location_code'],
+                            );
 			}
-
+                        
 			//_debug_array($content);
 			$table_header['name'] = array('owner', 'hits', 'address', 'gaards_nr', 'bruks_nr',
 				'feste_nr', 'seksjons_nr', 'location_code');

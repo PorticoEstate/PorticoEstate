@@ -28,8 +28,11 @@
 			$algos = @mcrypt_list_algorithms();
 			$found = False;
 
-			while (list ($key, $value) = each ($algos))
-			{
+			//while (list ($key, $value) = each ($algos))
+                        if (is_array($algos))
+                        {
+                            foreach($algos as $key => $value)
+                            {
 				$found = True;
 				/* Only show each once - seems this is a problem in some installs */
 				if(!in_array($value,$listed))
@@ -47,7 +50,8 @@
 					$out .= '<option value="' . $value . '"' . $selected . '>' . $descr . '</option>' . "\n";
 					$listed[] = $value;
 				}
-			}
+                            }
+                        }
 			if(!$found)
 			{
 				/* Something is wrong with their mcrypt install or php.ini */
@@ -73,8 +77,11 @@
 			$modes = @mcrypt_list_modes();
 			$found = False;
 
-			while (list ($key, $value) = each ($modes))
-			{
+			//while (list ($key, $value) = each ($modes))
+                        if (is_array($modes))
+                        {
+                            foreach($modes as $key => $value)
+                            {
 				$found = True;
 				/* Only show each once - seems this is a problem in some installs */
 				if(!in_array($value,$listed))
@@ -92,7 +99,8 @@
 					$out .= '<option value="' . $value . '"' . $selected . '>' . $descr . '</option>' . "\n";
 					$listed[] = $value;
 				}
-			}
+                            }
+                        }
 			if(!$found)
 			{
 				/* Something is wrong with their mcrypt install or php.ini */
