@@ -135,7 +135,8 @@
 		$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 		$apps = $GLOBALS['phpgw_info']['user']['apps'];
 		$apps['phpgwapi'] = true;	// check the api too
-		while(list($app, $data) = each($apps))
+		//while(list($app, $data) = each($apps))
+                foreach($apps as $app => $data)
 		{
 			$fname = PHPGW_SERVER_ROOT . "/$app/setup/phpgw_$lang.lang";
 
@@ -164,10 +165,14 @@
 
 		$GLOBALS['phpgw_setup']->detection->check_lang(false);	// get installed langs
 		$langs = $GLOBALS['phpgw_info']['setup']['installed_langs'];
-		while(list($lang) = @each($langs))
-		{
+		//while(list($lang) = @each($langs))
+                if (is_array($langs))
+                {
+                    foreach($langs as $lang => $value)
+                    {
 			$langs[$lang] = $lang;
-		}
+                    }
+                }
 		$_POST['submit'] = true;
 		$_POST['lang_selected'] = $langs;
 		$_POST['upgrademethod'] = 'dumpold';

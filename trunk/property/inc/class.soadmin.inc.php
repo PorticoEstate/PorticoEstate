@@ -52,18 +52,21 @@
 
 		function set_initials( $initials )
 		{
-			while (is_array($initials) && list($account_id, $value) = each($initials))
-			{
-				$this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ", __LINE__, __FILE__);
-				if ($value)
-				{
-					if (!$this->get_initials($account_id))
-					{
-						$account_lid = $GLOBALS['phpgw']->accounts->id2lid($account_id);
-						$this->db->query("INSERT INTO fm_ecouser (id,lid,initials) VALUES ($account_id,'$account_lid','$value' )", __LINE__, __FILE__);
-					}
-				}
-			}
+                        if (is_array($initials))
+                        {
+                            foreach($initials as $account_id => $value)
+                            {
+                                    $this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ", __LINE__, __FILE__);
+                                    if ($value)
+                                    {
+                                            if (!$this->get_initials($account_id))
+                                            {
+                                                    $account_lid = $GLOBALS['phpgw']->accounts->id2lid($account_id);
+                                                    $this->db->query("INSERT INTO fm_ecouser (id,lid,initials) VALUES ($account_id,'$account_lid','$value' )", __LINE__, __FILE__);
+                                            }
+                                    }
+                            }
+                        }
 		}
 
 		function read_fm_id()

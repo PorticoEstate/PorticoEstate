@@ -130,7 +130,8 @@
 			{
 				// locations[loc_id][type] is work or home
 				// loc_id is not  interested here, but the type is important!
-				while ( list($loc_id, $loc_data) = each($fieldlist['locations']) )
+				//while ( list($loc_id, $loc_data) = each($fieldlist['locations']) )
+                                foreach($fieldlist['locations'] as $loc_id => $loc_data)
 				{
 					$loc_type_id = $this->contacts->search_location_type($loc_data['type']);
 					switch($loc_type_id)
@@ -219,7 +220,8 @@
 				$myexport = $this->vcard->export;
 				// check that each $fields exists in the export array and
 				// set a new array to equal the translation and original value
-				while( list($name,$value) = each($fields) )
+				//while( list($name,$value) = each($fields) )
+                                foreach($fields as $name => $value)
 				{
 					if ($myexport[$name] && ($value != "") )
 					{

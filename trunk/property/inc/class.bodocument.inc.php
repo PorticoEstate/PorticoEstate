@@ -338,9 +338,9 @@
 		{
 			$history_array = $this->historylog->return_array(array('O'), array(), '', '', $id);
 			$i = 0;
-			while (is_array($history_array) && list(, $value) = each($history_array))
+			//while (is_array($history_array) && list(, $value) = each($history_array))
+                        foreach($history_array as $value)
 			{
-
 				$record_history[$i]['value_date'] = $GLOBALS['phpgw']->common->show_date($value['datetime']);
 				$record_history[$i]['value_user'] = $value['owner'];
 

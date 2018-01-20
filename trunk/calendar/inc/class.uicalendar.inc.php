@@ -705,9 +705,12 @@
 			{
 				// allow me (who I am logged in as) to set up an alarm
 				// if I am a participant, but not the owner
-				reset($event['participants']);
-				while (list($user,$short_status) = each($event['participants']))
-				{
+				//reset($event['participants']);
+				//while (list($user,$short_status) = each($event['participants']))
+                                if (is_array($event['participants']))
+                                {
+                                    foreach($event['participants'] as $user => $short_status)
+                                    {
 					if ($GLOBALS['phpgw_info']['user']['account_id'] == $user)
 					{
 						$var = array(
@@ -719,7 +722,8 @@
 						$p->set_var($var);
 						echo $p->fp('out','form_button');
 					}
-				}
+                                    }
+                                }
 			}
 
 			$var = array(
@@ -1689,15 +1693,19 @@
 			{
 				// event needs to show up in rows of all participants that are also owners
 				//
-				reset($this->planner_group_members);
-				while(list($user_name,$id) = each($this->planner_group_members))
-				{
+				//reset($this->planner_group_members);
+				//while(list($user_name,$id) = each($this->planner_group_members))
+                                if (is_array($this->planner_group_members))
+                                {
+                                    foreach($this->planner_group_members as $user_name => $id)
+                                    {
 					$status = (isset($event['participants'][$id])?$event['participants'][$id]:'');
 					if ($status && $status != 'R')
 					{
 						$this->planner_update_row($user_name,$user_name,$event,$cat,$start_cell,$end_cell);
 					}
-				}
+                                    }
+                                }
 			}
 		}
 
@@ -1709,9 +1717,12 @@
 			{
 				// add empty rows for users that do not participante in any event
 				//
-				reset($this->planner_group_members);
-				while(list($user_name,$id) = each($this->planner_group_members))
-				{
+				//reset($this->planner_group_members);
+				//while(list($user_name,$id) = each($this->planner_group_members))
+                                if (is_array($this->planner_group_members))
+                                {
+                                    foreach($this->planner_group_members as $user_name => $id)
+                                    {
 					$k  = $user_name.'_1';
 					$ka = '.nr_'.$k;
 					if (!isset($rows[$k]))
@@ -1721,7 +1732,8 @@
 						$rows[$k]['._name'] = ' nowrap';
 						$rows[$ka] = 0;
 					}
-				}
+                                    }
+                                }
 			}
 
 			// fill the remaining cols
@@ -2912,10 +2924,13 @@ HTML;
 					$id_array[0] = $ids;
 				}
 			}
-			@reset($id_array);
+			//@reset($id_array);
 			$ret_val = array();
-			while(list($index,$id) = each($id_array))
-			{
+			//while(list($index,$id) = each($id_array))
+                        if (is_array($id_array))
+                        {
+                            foreach($id_array as $index => $id)
+                            {
 				if (!isset($cats[$id]))
 				{
 					$cat_arr = $this->cat->return_single( $id );
@@ -2923,7 +2938,8 @@ HTML;
 					$cats[$id]['color'] = strstr($cats[$id]['description'],'#');
 				}
 				$ret_val[] = $cats[$id];
-			}
+                            }
+                        }
 			return $ret_val;
 		}
 
@@ -3650,7 +3666,8 @@ HTML;
 				NO_RESPONSE	=> lang('No Response')
 			);
 			$str = '';
-			while(list($param,$text) = each($response_choices))
+			//while(list($param,$text) = each($response_choices))
+                        foreach($response_choices as $param => $text)
 			{
 				$var = array(
 					'action_url_button'	=> $this->page('set_action',array('cal_id'=>$cal_id,'action'=>$param)),
@@ -4336,8 +4353,11 @@ HTML;
 
 			// create list of currently selected contacts
 			//
-			while(list($id,$contact) = each($participant))
-			{
+			//while(list($id,$contact) = each($participant))
+                        if (is_array($participant))
+                        {
+                            foreach($participant as $id => $contact)
+                            {
 				$p->set_var('hidden_delete_name','participant[]');
 				$p->set_var('hidden_delete_value',$id);
 				$p->set_var('ckbox_delete_name','delete[]');
@@ -4345,7 +4365,8 @@ HTML;
 				$p->set_var('ckbox_delete_participant',$contact['name']);
 				$p->parse('V_partlist','B_partlist',True);
 				$total_contacts++;
-			}
+                            }
+                        }
 
 			if ($total_contacts == 0)
 			{

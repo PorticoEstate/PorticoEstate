@@ -704,16 +704,20 @@ class calendar_socalendar_ extends calendar_socalendar__
 		
 		$this->stream->query('DELETE FROM phpgw_cal_user WHERE cal_id='.$event['id'],__LINE__,__FILE__);
 
-		@reset($event['participants']);
-		while (list($key,$value) = @each($event['participants']))
-		{
+		//@reset($event['participants']);
+		//while (list($key,$value) = @each($event['participants']))
+                if (is_array($event['participants']))
+                {
+                    foreach($event['participants'] as $key => $value)
+                    {
 			if(intval($key) == $event['owner'])
 			{
 				$value = 'A';
 			}
 			$this->stream->query('INSERT INTO phpgw_cal_user(cal_id,cal_login,cal_status,cal_type) '
 				. 'VALUES('.$event['id'].','.intval($key).",'".$value."','".$type."')",__LINE__,__FILE__);
-		}
+                    }
+                }
 
 		if($event['recur_type'] != MCAL_RECUR_NONE)
 		{

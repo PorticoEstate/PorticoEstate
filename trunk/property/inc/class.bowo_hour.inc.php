@@ -154,7 +154,7 @@
 			$tolerances[1]['id'] = 2;
 			$tolerances[2]['id'] = 3;
 
-			while (is_array($tolerances) && list(, $tolerance_entry) = each($tolerances))
+                        foreach($tolerances as $tolerance_entry)
 			{
 				$sel_tolerance_entry = '';
 				if ($tolerance_entry['id'] == $selected)
@@ -193,22 +193,25 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array('building_part_select'));
 
 			$building_parts = $this->so->get_building_part_list();
+                        
+                        if (is_array($building_parts))
+                        {
+                            foreach($building_parts as $building_part_entry)
+                            {
+                                    $sel_building_part_entry = '';
+                                    if ($building_part_entry['id'] == $selected)
+                                    {
+                                            $sel_building_part_entry = 'selected';
+                                    }
 
-			while (is_array($building_parts) && list(, $building_part_entry) = each($building_parts))
-			{
-				$sel_building_part_entry = '';
-				if ($building_part_entry['id'] == $selected)
-				{
-					$sel_building_part_entry = 'selected';
-				}
-
-				$building_part_list[] = array
-					(
-					'id' => $building_part_entry['id'],
-					'name' => '[ ' . $building_part_entry['id'] . ' ] ' . $building_part_entry['name'],
-					'selected' => $sel_building_part_entry
-				);
-			}
+                                    $building_part_list[] = array
+                                            (
+                                            'id' => $building_part_entry['id'],
+                                            'name' => '[ ' . $building_part_entry['id'] . ' ] ' . $building_part_entry['name'],
+                                            'selected' => $sel_building_part_entry
+                                    );
+                            }
+                        }
 
 			for ($i = 0; $i < count($building_part_list); $i++)
 			{

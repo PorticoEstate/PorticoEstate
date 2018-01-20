@@ -411,10 +411,14 @@
 			{
 				$method = $this->bo->read_single($id);
 				$data_set = unserialize($method['data']);
-				while (is_array($data_set) && list($key, $value) = each($data_set))
-				{
+				//while (is_array($data_set) && list($key, $value) = each($data_set))
+                                if (is_array($data_set))
+                                {
+                                    foreach($data_set as $key => $value)
+                                    {
 					$method_data[] = $key . '=' . $value;
-				}
+                                    }
+                                }
 
 				$method_data = @implode(',', $method_data);
 				$function_msg = lang('edit method');

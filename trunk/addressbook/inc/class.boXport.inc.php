@@ -207,14 +207,18 @@
 					}
 					elseif ($name && $value)
 					{
-						reset($contacts->import);
-						while ( list($fname,$fvalue) = each($contacts->import) )
-						{
+						//reset($contacts->import);
+						//while ( list($fname,$fvalue) = each($contacts->import) )
+                                                if (is_array($contacts->import))
+                                                {
+                                                    foreach($contacts->import as $fname => $fvalue)
+                                                    {
 							if ( strstr(strtolower($name), $contacts->import[$fname]) )
 							{
 								$buffer = $contacts->import_new_attrib($buffer,$name,$value);
 							}
-						}
+                                                    }
+                                                }
 					}
 				}
 			}
@@ -239,15 +243,19 @@
 			{
 				// Read in user custom fields, if any
 				$customfields = array();
-				while (list($col,$descr) = @each($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
-				{
-				if ( substr($col,0,6) == 'extra_' )
+				//while (list($col,$descr) = @each($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
+                                if (is_array($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
+                                {
+                                    foreach($GLOBALS['phpgw_info']['user']['preferences']['addressbook'] as $col => $descr)
+                                    {
+                                        if ( substr($col,0,6) == 'extra_' )
 					{
 						$field = preg_replace('/extra_/','',$col);
 							$field = preg_replace('/ /','_',$field);
 						$customfields[$field] = ucfirst($field);
 					}
-				}
+                                    }
+                                }
 
 				if (!empty($cat_id))
 				{
@@ -261,10 +269,14 @@
 				for ($i=0;$i<count($contacts->ids);$i++)
 				{
 					$buffer = $contacts->export_start_record($buffer);
-					while( list($name,$value) = each($contacts->currentrecord) )
-					{
+					//while( list($name,$value) = each($contacts->currentrecord) )
+                                        if (is_array($contacts->currentrecord))
+                                        {
+                                            foreach($contacts->currentrecord as $name => $value)
+                                            {
 						$buffer = $contacts->export_new_attrib($buffer,$name,$value);
-					}
+                                            }
+                                        }
 					$buffer = $contacts->export_end_record($buffer);
 				}
 
