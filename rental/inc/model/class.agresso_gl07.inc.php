@@ -54,21 +54,6 @@
 
 		public function get_missing_billing_info( $contract )
 		{
-
-			//FIXME: Might have to check for this one...
-			/*
-			  static $responsibility_arr = array();
-			  static $responsibility_check = array();
-			  if(!$responsibility_arr)
-			  {
-			  $responsibility_arr = execMethod('rental.bogeneric.get_list',array('type' => 'responsibility_unit'));
-			  foreach ($responsibility_arr as $responsibility_entry)
-			  {
-			  $responsibility_check[$responsibility_entry['id']] = true;
-			  }
-			  }
-			 */
-
 			$missing_billing_info = array();
 
 			$payer_id = $contract->get_payer_id();
@@ -76,7 +61,6 @@
 			{
 				$missing_billing_info[] = 'Missing payer id.';
 			}
-
 
 			$contract_parties = $contract->get_parties();
 			if ($contract_parties == null || count($contract_parties) < 1)
@@ -93,15 +77,6 @@
 			{
 				$missing_billing_info[] = 'Missing account out.';
 			}
-			/* $responsibility_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'];
-			  if($responsibility_id_in == null || $responsibility_id_in == '')
-			  {
-			  $missing_billing_info[] = 'Missing system setting for responsibility id for the current user.';
-			  }
-			  else if(strlen($responsibility_id_in) != 6)
-			  {
-			  $missing_billing_info[] = 'System setting for responsibility id for the current user must be 6 characters.';
-			  } */
 			$responsibility_id_out = $contract->get_responsibility_id();
 			if ($responsibility_id_out == null || $responsibility_id_out == '')
 			{
@@ -130,15 +105,6 @@
 			{
 				$missing_billing_info[] = 'Invalid location code for the building.';
 			}
-			/* $project_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'];
-			  if($project_id_in == null || $project_id_in == '')
-			  {
-			  $missing_billing_info[] = 'Missing system setting for project id.';
-			  }
-			  else if(strlen($project_id_in) > 6)
-			  {
-			  $missing_billing_info[] = 'System setting for project id can not be more than 6 characters.';
-			  } */
 			$project_id_out = $contract->get_project_id();
 			if ($project_id_out == null || $project_id_out == '')
 			{
