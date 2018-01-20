@@ -1802,7 +1802,7 @@ JS;
 
 			$type_id = $this->type_id;
 
-			if ($location_code)
+			if (!$type_id && $location_code)
 			{
 				$type_id = count($location);
 			}
@@ -1842,6 +1842,7 @@ JS;
 			if ($values['error_id'])
 			{
 				$error_id = $values['error_id'];
+				unset($location_code);
 			}
 
 			if (!$error_id && $location_code)
@@ -1892,6 +1893,7 @@ JS;
 				(
 				'values' => $_values,
 				'type_id' => ($type_id - 1),
+				'required_level' => ($type_id - 1),
 				'no_link' => ($type_id), // disable lookup links for location type less than type_id
 				'tenant' => false,
 				'lookup_type' => $lookup_type
@@ -1930,6 +1932,8 @@ JS;
 			$additional_fields[$j]['name'] = 'loc' . $type_id;
 			$additional_fields[$j]['value'] = isset($values[$additional_fields[$j]['input_name']]) ? $values[$additional_fields[$j]['input_name']] : '';
 			$additional_fields[$j]['class'] = 'th_text';
+			$additional_fields[$j]['required'] = true;
+
 			$insert_record['extra'][] = $additional_fields[$j]['input_name'];
 
 			$j++;
@@ -1940,6 +1944,7 @@ JS;
 			$additional_fields[$j]['name'] = 'loc' . $type_id . '_name';
 			$additional_fields[$j]['value'] = isset($values[$additional_fields[$j]['input_name']]) ? $values[$additional_fields[$j]['input_name']] : '';
 			$additional_fields[$j]['size'] = $additional_fields[$j]['value'] ? strlen($additional_fields[$j]['value']) + 5 : 30;
+			$additional_fields[$j]['required'] = true;
 			$insert_record['extra'][] = $additional_fields[$j]['input_name'];
 			$j++;
 
@@ -2754,6 +2759,12 @@ JS;
 						phpgwapi_cache::message_set($e->getMessage(), 'error');
 					}
 				}
+				$GLOBALS['phpgw']->session->appsession('insert_record', 'property', '');
+				if ($location_code)
+				{
+					self::message_set($this->receipt);
+					self::redirect(array('menuaction' => 'property.uilocation.edit', 'location_code' => $location_code));
+				}
 			}
 			else
 			{
@@ -2765,22 +2776,17 @@ JS;
 					$values['attributes'] = $this->bo->find_attribute(".location.{$this->type_id}");
 					$values = $this->bo->prepare_attribute($values, ".location.{$this->type_id}");
 
-					/* restore date from posting */
-					$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
-					if (isset($insert_record['extra']) && is_array($insert_record['extra']))
+				}
+				/* restore date from posting */
+				$insert_record = $GLOBALS['phpgw']->session->appsession('insert_record', 'property');
+				if (isset($insert_record['extra']) && is_array($insert_record['extra']))
+				{
+					for ($i = 0; $i < count($insert_record['extra']); $i++)
 					{
-						for ($i = 0; $i < count($insert_record['extra']); $i++)
-						{
-							$values[$insert_record['extra'][$i]] = phpgw::get_var($insert_record['extra'][$i], 'string', 'POST');
-						}
+						$values[$insert_record['extra'][$i]] = phpgw::get_var($insert_record['extra'][$i], 'string', 'POST');
 					}
 				}
-			}
-			$GLOBALS['phpgw']->session->appsession('insert_record', 'property', '');
-			if ($location_code)
-			{
-				self::message_set($this->receipt);
-				self::redirect(array('menuaction' => 'property.uilocation.edit', 'location_code' => $location_code));
+				$values['error_id'] = $result['values']['error_id'];
 			}
 			$this->edit($values);
 		}
