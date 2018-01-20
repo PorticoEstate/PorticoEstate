@@ -1,0 +1,10 @@
+# Require apache2.conf to set to  AllowOverride All for directory default set to AllowOverride None
+# and mod rewrite to be ON
+# sudo a2enmod rewrite
+# Redirect all to /portico/ folder
+DirectoryIndex index.php
+RewriteEngine on
+RewriteRule ^(index\.php)?$ portico/index.php$1 [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ portico/$1 [L]
