@@ -44,7 +44,7 @@
 		var $debug = true;
 		function __construct()
 		{
-			
+
 		}
 
 		public function transfer( $id )
@@ -211,6 +211,7 @@
 				'order_id' => $_ticket['order_id'],
 				'tax_code' => $tax_code,
 				'buyer' => $buyer,
+				'invoice_remark' => mb_substr($_ticket['invoice_remark'], 0, 120),
 				'lines' => array(
 					array(
 						'unspsc_code' => $_ticket['unspsc_code'] ? $_ticket['unspsc_code'] : 'UN-72000000',
@@ -219,7 +220,7 @@
 					)
 				)
 			);
-	
+
 			$exporter_ordre = new BkBygg_exporter_data_til_Agresso(array(
 				'order_id' => $_ticket['order_id'],
 				'voucher_type' => $voucher_type

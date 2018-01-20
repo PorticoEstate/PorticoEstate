@@ -132,28 +132,52 @@
                 </div>    
                     
                 <div class="col-lg-5">
-                                    <dl class="images">
-                    <div id="images_container">
+                    <dl class="images">
+                        <div id="images_container">
                                                     
                                                     
-                    </div>
-                </dl>
-                <dl class="images map">
-                    <!--div id="images_container"></div-->
-                    <xsl:if test="street and normalize-space(street)">
-                        <div class="gmap-container">
-                            <iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src=""></iframe>
                         </div>
-                        <small>
-                            <a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a>
-                        </small>
-                    </xsl:if>
-                </dl>
+                    </dl>
+                    <dl class="images map">
+                        <!--div id="images_container"></div-->
+                        <xsl:if test="street and normalize-space(street)">
+                            <div class="gmap-container">
+                                <iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src=""></iframe>
+                            </div>
+                            <small>
+                                <a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a>
+                            </small>
+                        </xsl:if>
+                    </dl>
 
                 </div>
-            </div>   
+            </div>  
+            
+             
+            <div class="modal fade" id="mediaModal" role="dialog">
+                <div class="modal-dialog modal-xl">
+                    <!-- Content of modal -->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">x</button>
+                            <h4 class="modal-title" id="mediaTitle"></h4>
+                        </div>
+                        <div class="modal-body" id="fullSizeImage">
+
+                
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Avslutt</button>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+             
+             
+              
+                
                     
-                    <script type="text/javascript">
+            <script type="text/javascript">
                 var building_id = <xsl:value-of select="id"/>;
                 var lang = <xsl:value-of select="php:function('js_lang', 'Name', 'Category', 'Activity', 'Resource Type')"/>;
                 var address = '<xsl:value-of select="street"/>, <xsl:value-of select="zip_code"/>, <xsl:value-of select="city"/>';
@@ -194,7 +218,8 @@
 				
             </script>
         </xsl:for-each>
-         
+        
+        
             
     </div>
 </xsl:template>

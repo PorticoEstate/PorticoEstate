@@ -115,6 +115,7 @@
 				$btn_logout = '<a href="index.php?FormLogout=' . $logoutfrom . '" class="link">' . lang('Logout').'</a>';
 			}
 
+			$GLOBALS['setup_tpl']->set_var('lang_version', lang('version'));
 			$GLOBALS['setup_tpl']->set_var('lang_setup', lang('setup'));
 			$GLOBALS['setup_tpl']->set_var('page_title',$title);
 			if ($configdomain == '')
@@ -125,7 +126,10 @@
 			{
 				$GLOBALS['setup_tpl']->set_var('configdomain',' - ' . lang('Domain') . ': ' . $configdomain);
 			}
-			$GLOBALS['setup_tpl']->set_var('pgw_ver',@$GLOBALS['phpgw_info']['server']['versions']['phpgwapi']);
+
+			$version = isset($GLOBALS['phpgw_info']['server']['versions']['system']) ? $GLOBALS['phpgw_info']['server']['versions']['system'] : $GLOBALS['phpgw_info']['server']['versions']['phpgwapi'];
+
+			$GLOBALS['setup_tpl']->set_var('pgw_ver',$version);
 			$GLOBALS['setup_tpl']->set_var('logoutbutton',$btn_logout);
 			$GLOBALS['setup_tpl']->pparse('out','T_head');
 			/* $setup_tpl->set_var('T_head',''); */

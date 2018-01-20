@@ -81,7 +81,7 @@ domain name for mail-address, eg. %1	common	no	Domene-navnet for E-Postadressen,
 done	common	no	Avbryt
 e-mail	common	no	E-Post
 email-address of the user, eg. %1	common	no	E-Postadressen til brukeren, %1
-edit	common	no	Editer
+edit	common	no	Rediger
 email	common	no	E-Post
 entry has been deleted sucessfully	common	no	Entry har blitt slettet
 entry updated sucessfully	common	no	Entry er oppdatert
@@ -279,3 +279,12 @@ select a location!	common	no	Velg en lokasjon
 no location	common	no	Ingen lokasjon
 enable inheritance	common	no	Aktiver arving
 users	common	no	Brukere
+maximum entries in click path history	common	no	Maksimum oppføringer i klikkveiledning
+debugoutput	common	no	Debugoutput
+add section	common	no	Legg til seksjon
+showing	common	no	Viser
+color selector	common	no	Fargevelger
+select all	common	no	Velg alle
+hidden	common	no	Gjemt
+rows selected	common	no	rader er valgt
+field has been updated	common	no	Feltet er oppdatert

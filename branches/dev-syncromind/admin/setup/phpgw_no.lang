@@ -8,6 +8,8 @@ are you sure you want to kill this session ?	admin	no	Er du sikker på at du vil
 create group	admin	no	Lag Gruppe
 delete message	admin	no	Slett Melding
 disabled	admin	no	Deaktivert
+disabled (not recomended)	admin	no	Deaktivert (ikke anbefalt)
+fallback (after each pageview)	admin	no	Fallback (etter hver sidevisning)
 display	admin	no	Vis
 global message	admin	no	Global Melding
 group name	admin	no	Gruppenavn
@@ -40,15 +42,15 @@ home screen message	admin	no	Melding på hjemmeskjerm
 title	admin	no	Overskrift
 important message	admin	no	Viktig informasjon
 enabled	admin	no	Aktiv
-(to install new applications use<br><a href=setup/" target="setup">setup</a> [manage applications] !!!)"	admin	no	(For å installere nye moduler, bruk<br><a href=setup/" target="setup">setup</a> [manage applications] !!!)"
+(To install new applications use<br><a href="setup/" target="setup">Setup</a> [Manage Applications] !!!)	admin	no	(For å installere nye moduler, bruk<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)
 add a category	admin	no	Legg til kategori
 add a section	admin	no	Legg til seksjon
 add a subcategory	admin	no	Legg til undekategori
 admins	admin	no	Admins
 appearance	admin	no	Utseende
-attribute	admin	no	Atributt
-attributes	admin	no	Atributter
-attributes for this config section	admin	no	Atributter for denne konfigurasjonsseksjonen
+attribute	admin	no	Egenskap
+attributes	admin	no	Egenskaper
+attributes for this config section	admin	no	Egenskaper for denne konfigurasjonsseksjonen
 category list	admin	no	Kategoriliste
 check ip address of all sessions	admin	no	Kontroller IP-adresse for sesjoner
 close window	admin	no	Lukk vindu
@@ -58,7 +60,7 @@ delete all log records	admin	no	Slett alle poster fra loggen
 delete this category	admin	no	Slett kategorien
 edit the config	admin	no	Endre konfigurasjon
 edit this category	admin	no	Endre kategorien
-email domain	admin	no	Email domene
+email domain	admin	no	E-post domene
 enter the background color for the login page	admin	no	Angi bakgrunnsfarge for innloggingssiden
 enter the background color for the site title	admin	no	Angi bakgrunnsfarge for nettstedstittelen
 enter the file name of your logo	admin	no	Angi filnavnet for logo
@@ -89,7 +91,7 @@ smtp settings	admin	no	SMTP configurasjon
 smtpdebug	admin	no	smtpdebug
 smtpsecure	admin	no	smtpsecure
 submit the search string	admin	no	Send søketekst
-support email address	admin	no	Epost brukerstøtte
+support email address	admin	no	E-post brukerstøtte
 total records: %1	admin	no	Antall poster: %1
 use cookies to pass sessionid	admin	no	Bruk cookier til å håndtere sesjoner
 use smtp auth	admin	no	Bruk smtp autentisering
@@ -99,3 +101,42 @@ warn	admin	no	Varsel
 add category	admin	no	Legg til kategori
 edit category	admin	no	Endre kategori
 parent category	admin	no	Foreldrekategori
+add user	admin	no	Legg til bruker
+add user account	admin	no	Legg til brukerkonto
+Account aktiv	admin	no	Konto aktiv
+action	admin	no	Handling
+file	admin	no	Fil
+info	admin	no	Informasjon
+notice	admin	no
+hooks updated	admin	no	Applikasjonskoblinger er oppdatert
+the new hooks should be available to all users	admin	no	Nye applikasjonskoblinger er tilgjengelig for alle brukere
+async services last executed	admin	no	Asynkrone servicer ble sist utført
+run asynchronous services	admin	no	Kjør asynkrone servicer
+asyncservices not yet installed or other error (%1) !!!	admin	no	Asynkrone servicer er ikke installert, eller annen feil (%1) !!!
+crontab only (recomended)	admin	no	Bare crontab (anbefalt)
+installed crontab	admin	no	Installert crontab
+install crontab	admin	no	Installer crontab
+for the times below (empty values count as '*', all empty = every minute)	admin	no	For de tidene under (tomme verdier teller som '*', hvis alle er tom = hvert minutt)
+year	admin	no	År
+month	admin	no	Måned
+day of week (0-6, 0=sun)	admin	no	Ukedag (0-6, 0=Søn)
+hour	admin	no	Time
+minute	admin	no	Minutt
+calculate next run	admin	no	Kalkuler neste kjøring
+enable debug-messages	admin	no	Aktiver feilsøkingsmeldinger
+cancel testjob!	admin	no	Kanseller testjobb!
+start testjob!	admin	no	Start testjobb!
+for the times above	admin	no	For tidene over
+the testjob sends you a mail everytime it is called 	admin	no	Testjobben sender deg en e-post hver gang den blir kjørt
+jobs	admin	no	Jobber
+next run	admin	no	Neste kjøring
+times	admin	no	Tider
+update	admin	no	Oppdater
+manual run	admin	no	Manuell kjøring
+method	admin	no	Metode
+data	admin	no	Data
+settings	admin	no	Innstillinger
+color selector	admin	no	Farge velger
+would you like to check for a new version when admins login	admin	no	Vil du sjekke om det finnes ny versjon når administratorer logger inn
+view error log	common	no	Vis feilmeldingslogg
+please set a site name in admin &gt; siteconfig	common	no	Vennligst angi tittelen for systemet i Administrasjon &gt; Admin &gt; Global konfigurasjon

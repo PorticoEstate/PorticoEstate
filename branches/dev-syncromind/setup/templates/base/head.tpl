@@ -220,7 +220,7 @@
 			}
 		-->
 		</style>
-		<title>phpGroupWare {lang_setup} {page_title}</title>
+		<title>Portico Estate {lang_setup} {page_title}</title>
 	</head>
 
 	<body>
@@ -228,7 +228,7 @@
 		<table width="100%" border="0" cellspacing="0" cellpadding="2">
 		<tr class="banner">
 		<td align="left">
-		&nbsp;phpGroupWare version {pgw_ver} {lang_setup} {configdomain}
+		&nbsp;Portico Estate {lang_version} {pgw_ver} {lang_setup} {configdomain}
 		</td>
 		<td align="right">{logoutbutton}</td>
 		</tr>

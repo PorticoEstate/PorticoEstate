@@ -154,7 +154,7 @@
 							<xsl:value-of select="php:function('lang', 'subject')"/>
 						</label>
 
-						<input type="text" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
+						<input type="text" id="subject" name="values[subject]" value="{value_subject}" class="pure-input-1-2" >
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'Enter the subject of this ticket')"/>
 							</xsl:attribute>
@@ -371,7 +371,7 @@
 							<xsl:text> </xsl:text>
 							<xsl:value-of select="value_id"/>
 						</label>
-						<input class="pure-input-1-2" type="text" name="values[subject]" value="{value_subject}">
+						<input class="pure-input-1-2" type="text" id="subject" name="values[subject]" value="{value_subject}">
 							<xsl:attribute name="title">
 								<xsl:value-of select="php:function('lang', 'update subject')"/>
 							</xsl:attribute>
@@ -691,7 +691,7 @@
 										<xsl:value-of select="$lang_sms_text"/>
 									</a>
 								</label>
-								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(160);" onKeyDown="javascript: SmsCountKeyDown(160);" wrap="virtual">
+								<textarea class="pure-input-1-2" rows="{textarearows}" id="response_text" name="values[response_text]" onKeyUp="javascript: SmsCountKeyUp(804);" onKeyDown="javascript: SmsCountKeyDown(804);" wrap="virtual">
 									<xsl:attribute name="title">
 										<xsl:value-of select="$lang_sms_text"/>
 									</xsl:attribute>
@@ -701,7 +701,7 @@
 								<label>
 									<xsl:value-of select="php:function('lang', 'character left')"/>
 								</label>
-								<input type="text" readonly="readonly" size="3" maxlength="3" name="charNumberLeftOutput" id="charNumberLeftOutput" value="160">
+								<input type="text" readonly="readonly" size="3" maxlength="3" name="charNumberLeftOutput" id="charNumberLeftOutput" value="804">
 								</input>
 							</div>
 						</xsl:when>
@@ -990,6 +990,25 @@
 											</xsl:attribute>
 											<xsl:value-of select="value_order_descr"/>
 										</textarea>
+									</div>
+									<div class="pure-control-group">
+										<label>
+											<xsl:value-of select="php:function('lang', 'invoice remark')"/>
+										</label>
+										<xsl:choose>
+											<xsl:when test="value_order_sent != 1">
+												<textarea class="pure-input-1-2" rows="{textarearows}" id="invoice_remark" name="values[invoice_remark]" wrap="virtual">
+													<xsl:attribute name="title">
+														<xsl:value-of select="php:function('lang', 'invoice remark')"/>
+													</xsl:attribute>
+													<xsl:value-of select="value_invoice_remark"/>
+												</textarea>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:value-of select="value_invoice_remark"/>
+
+											</xsl:otherwise>
+										</xsl:choose>
 									</div>
 									<div class="pure-control-group">
 										<label>

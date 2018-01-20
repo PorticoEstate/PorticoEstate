@@ -1534,7 +1534,7 @@ HTML;
 					{
 						$rc = $this->send->msg('email', $to, $subject, $html, '', $cc, $bcc, $current_user_address, $GLOBALS['phpgw_info']['user']['fullname'], 'html');
 					}
-					catch (phpmailerException $e)
+					catch (Exception $e)
 					{
 						$receipt['error'][] = array('msg' => $e->getMessage());
 					}

@@ -399,3 +399,34 @@ please select an activity	bookingfrontend	no	Velg en aktivitet
 select date	bookingfrontend	no	Velg dato
 cancel event	bookingfrontend	no	Avbestill
 free	bookingfrontend	no	Ledig
+bookingfrontend settings	bookingfrontend	no	Bookingfrontend innstillinger
+site title	bookingfrontend	no	Tittel på siden
+footer info	bookingfrontend	no	Footer informasjon
+remote authentication	bookingfrontend	no	Ekstern autentisering
+select method	bookingfrontend	no	Velg metode
+use cookies to pass sessionid	bookingfrontend	no	Bruk cookie til å håndtere sesjoner
+cookie domain for sessions	bookingfrontend	no	Cookiedomene for sesjoner
+if same as framework leave empty	bookingfrontend	no	la stå tomt dersom det er det samme som for rammeverket
+anonymous user	bookingfrontend	no	Anonym bruker
+anonymous password	bookingfrontend	no	Anonymt passord
+custom login url	bookingfrontend	no	Egendefinert logg inn url
+custom login url parameter	bookingfrontend	no	Egendefinert logg inn url parametre
+login apikey	bookingfrontend	no	login apikey
+login webservicehost	bookingfrontend	no	login webservicehost
+login header key	bookingfrontend	no	Innloggingsoverskrift:
+login header regular expression	bookingfrontend	no	Innloggingsoverskrift vanlig uttrykk
+login soap client location	bookingfrontend	no	login soap klient location
+login soap client uri	bookingfrontend	no	login soap klient uri
+login soap client proxy host	bookingfrontend	no	login soap klient proxyserver
+login soap client proxy port	bookingfrontend	no	login soap klient proxyport
+login soap client encoding	bookingfrontend	no	login soap klient tegnsett
+login soap client login	bookingfrontend	no	login soap klient login
+login soap client password	bookingfrontend	no	login soap klient passord
+login soap client wsdl	bookingfrontend	no	login soap klient wsdl
+test organization	bookingfrontend	no	Test organisasjon
+google tracker id	bookingfrontend	no	Goggle sporer id
+url to external logout	bookingfrontend	no	Url for ekstern logg ut
+Redirect is computed if url ends with	bookingfrontend	no	Omdirigering blir kalkulert hvis url slutter med
+bookingfrontend host	bookingfrontend	no	Bookingfrontend vert
+Needed for the return from the external logout	bookingfrontend	no	Nødvendig for retur fra ekstern logg ut
+metadata settings	bookingfrontend	no	Metadata innstillinger

@@ -610,7 +610,7 @@
 
 			foreach ($data as $input_name => $value)
 			{
-				if (isset($value) && $value)
+				if (isset($value) && ($value || $value === '0'))
 				{
 					$cols[] = $input_name;
 					$vals[] = $this->_db->db_addslashes(html_entity_decode($value));

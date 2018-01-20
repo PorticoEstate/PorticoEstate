@@ -149,7 +149,7 @@ admin location	property	no	Administrer lokalisering
 aesthetics	property	no	Estetikk
 again	property	no	igjen
 agreement	property	no	Avtale
-agreement attributes	property	no	Avtale attributter
+agreement attributes	property	no	Avtale egenskaper
 agreement code	property	no	Avtale kode
 agreement group	property	no	Avtale gruppe
 agreement group code	property	no	Avtale gruppe kode
@@ -207,18 +207,18 @@ at the disposal	property	no	Til disposisjon
 attach file	property	no	Legg til som vedlegg
 attachments	property	no	Vedlegg
 attribute	property	no	Verdier
-list entity attribute group	property	no	List attributtgrupper
-attribute group	property	no	Attributt grupper
-attribute has been edited	property	no	Attributt er rettet
-attribute has been saved	property	no	Attributt er lagret
-attribute has not been deleted	property	no	Attributt er IKKE slettet
-attribute has not been edited	property	no	Attributt er IKKE endret
-attribute has not been saved	property	no	Attributt er IKKE lagret
-attribute id	property	no	Attributt-id
-attributes	property	no	Attributter
-attributes for the attrib	property	no	Verdier for atributter
-attributes for the entity category	property	no	Attributter for entitet-kategori
-attributes for the location type	property	no	Attributter for lokaliserings type
+list entity attribute group	property	no	List egenskapgrupper
+attribute group	property	no	Egenskap grupper
+attribute has been edited	property	no	Egenskap er rettet
+attribute has been saved	property	no	Egenskap er lagret
+attribute has not been deleted	property	no	Egenskap er IKKE slettet
+attribute has not been edited	property	no	Egenskap er IKKE endret
+attribute has not been saved	property	no	Egenskap er IKKE lagret
+attribute id	property	no	Egenskap-id
+attributes	property	no	Egenskaper
+attributes for the attrib	property	no	Verdier for egenskaper
+attributes for the entity category	property	no	Egenskaper for entitet-kategori
+attributes for the location type	property	no	Egenskaper for lokaliserings type
 attributes for the standard	property	no	verdier for standard
 a unique code for this activity	property	no	En unik kode fo denne aktiviteten
 authorities demands	property	no	Myndighetskrav
@@ -303,10 +303,10 @@ check to delete this request from this project	property	no	Merk for a slette det
 check to inherit from this location	property	no	Merk av for å arve fra denne lokalisering
 Check to publish text at frontend	property	no	Merk av for å publisere i frontend
 check to reset the query	property	no	Merk av for å nulle spørring
-check to show this attribue in lookup forms	property	no	Merk av for å vise denne attributten i loaliseringsskjema
-check to show this attribute in entity list	property	no	Merk av for å vise denne attributten i oversikt
-check to show this attribute in list	property	no	Merk av for å vise denne attributten i oversikt
-check to show this attribute in location list	property	no	Merk av for å vise denne attributten i oversikt
+check to show this attribue in lookup forms	property	no	Merk av for å vise denne egenskapen i loaliseringsskjema
+check to show this attribute in entity list	property	no	Merk av for å vise denne egenskapen i oversikt
+check to show this attribute in list	property	no	Merk av for å vise denne egenskapen i oversikt
+check to show this attribute in location list	property	no	Merk av for å vise denne egenskapen i oversikt
 check to update the email-address for this vendor	property	no	kryss av for å oppdatere adressa til denne leverandøren
 Check to activate period	property	no	Merk for å aktivere periode
 Check to close period	property	no	Merk for å avslutte periode
@@ -496,7 +496,7 @@ delete template	property	no	slett mal
 delete the actor	property	no	Slett aktør
 delete the agreement	property	no	Slett avtale
 delete the apartment	property	no	slett leilighet
-delete the attrib	property	no	slett attributt
+delete the attrib	property	no	slett egenskap
 delete the budget account	property	no	Slett kostnadsart
 delete the building	property	no	slett bygning
 delete the category	property	no	Slett kategori
@@ -602,7 +602,7 @@ edit activity	property	no	Endre aktivitet
 edit agreement	property	no	Endre avtale
 edit agreement group	property	no	Rette avtale gruppe
 edit apartment	property	no	Endre leilighet
-edit attribute	property	no	Endre attributt
+edit attribute	property	no	Endre egenskap
 edit budget account	property	no	Rette kostnadsart
 edit building	property	no	Endre bygning
 edit categories	property	no	Endre kategorier
@@ -640,7 +640,7 @@ edit the agreement	property	no	Endre avtale
 edit the agreement_group	property	no	Endre avtalegruppe
 edit the alarm	property	no	Endre alarm
 edit the apartment	property	no	Endre leilighet
-edit the attrib	property	no	Endre attributt
+edit the attrib	property	no	Endre egenskap
 edit the budget account	property	no	Endre kostnadsart
 edit the building	property	no	Endre bygning
 edit the category	property	no	Endre kategorien
@@ -678,9 +678,9 @@ email-address of the user, eg. %1	property	no	E-post adresse for bruker, %1
 enable	property	no	Aktiver
 enabled	property	no	Aktiv
 enable file upload	property	no	Aktiver opplasting av filer
-enable history for this attribute	property	no	Aktiver historikk for denne attributten
+enable history for this attribute	property	no	Aktiver historikk for denne egenskapen
 enable link from location detail	property	no	Aktiver link fra detaljer for areal
-enables help message for this attribute	property	no	Hjelpetekst for denne attributten
+enables help message for this attribute	property	no	Hjelpetekst for denne egenskapen
 enable start project from this category	property	no	Aktiviser mulighet for å starte prosjekt herfra
 end	property	no	Slutt
 end date	property	no	Sluttdato
@@ -694,7 +694,7 @@ enter a description of the project	property	no	Gi en beskrivelse av prosjektet
 enter a description of the request	property	no	Gi en beskrivelse av tilstanden
 enter a description of the standard	property	no	Gi en beskrivelse av standarden
 enter a description of the status	property	no	Angi en beskrivelse av statusen
-enter a description the attribute	property	no	Gi en beskrivelse av attributten
+enter a description the attribute	property	no	Gi en beskrivelse av egenskapen
 enter a description the budget account	property	no	Angi en beskrivelse av kostnadsarten
 enter a description the category	property	no	Angi en beskrivelse av kategorien
 enter a description the method	property	no	Angi en beskrivelse av metoden
@@ -737,8 +737,8 @@ enter other branch if not found in the list	property	no	Angi andre fag, om det i
 enter project name	property	no	Angi prosjektnavn
 enter quantity of unit	property	no	Angi mengde
 enter request title	property	no	Angi beskrivende navn for tiltak
-enter the attribute id	property	no	Angi attributt-id
-enter the attribute value for this entity	property	no	Angi attributt verdi for denne posten
+enter the attribute id	property	no	Angi egenskap-id
+enter the attribute value for this entity	property	no	Angi egenskap verdi for denne posten
 enter the billable hour for the task	property	no	Angi egne timer for oppgaven
 enter the budget	property	no	Angi budsjett
 enter the budget account	property	no	Angi kostnadsart
@@ -884,7 +884,7 @@ help message	property	no	Hjelpetekst
 highest	property	no	Høyest
 history	property	no	Historikk
 history not allowed for this datatype	property	no	Historikk er ikke tilgjengelig for denne datatypen
-history of this attribute	property	no	Historie for denne attributten
+history of this attribute	property	no	Historie for denne egenskapen
 hits	property	no	Treff
 hour	property	no	Time
 hour %1 has been deleted	property	no	Post %1 er slettet
@@ -1004,7 +1004,7 @@ list agreement group	property	no	List avtalegruppe
 list alarm	property	no	Oversikt alarm
 list apartment	property	no	List leilighet
 list async method	property	no	List async-metode
-list attribute	property	no	List attributter
+list attribute	property	no	List egenskaper
 listbox	property	no	Listbox
 list budget	property	no	Oversikt budsjett
 list budget account	property	no	list kostnadsart
@@ -1017,7 +1017,7 @@ list custom function	property	no	List egendefinerte funksjoner
 list deviation	property	no	List avvik
 list document	property	no	list dokumenter
 list documents	property	no	Oversikt dokument
-list entity attribute	property	no	List entitets-attributter
+list entity attribute	property	no	List entitets-egenskaper
 list entity custom function	property	no	List egendefinerte funskjoner for entiteter
 list entity type	property	no	List entitet-type
 list entrance	property	no	list inngang
@@ -1027,7 +1027,7 @@ list gab detail	property	no	List grunneiendomsdetaljer
 list hours	property	no	List timer
 list investment	property	no	List investeringer
 list invoice	property	no	List bilag
-list location attribute	property	no	List lokaliserings attributter
+list location attribute	property	no	List lokaliserings egenskaper
 list location standard	property	no	List lokaliserings standard
 list meter	property	no	List måler
 list obligations	property	no	Oversikt regnskap
@@ -1225,7 +1225,7 @@ override fraction	property	no	Overstyrt faktor
 override fraction of common costs	property	no	Overstyringsfaktor for felleskostnader
 overview	property	no	Oversikt
 owner	property	no	Eier
-owner attributes	property	no	Eier attributter
+owner attributes	property	no	Eier egenskaper
 owner categories	property	no	Eier kategorier
 owner type	property	no	Eiertype
 paid	property	no	Betalt
@@ -1393,9 +1393,9 @@ remainder	property	no	Rest
 reminder	property	no	Påminning
 rental	property	no	Utleie
 rental agreement	property	no	Utleieavtale
-rental agreement attributes	property	no	Leieavtale-attributter
+rental agreement attributes	property	no	Leieavtale-egenskaper
 rental agreement categories	property	no	Leieavtale-kategorier
-rental agreement item attributes	property	no	Attributter for utleie - detaljer
+rental agreement item attributes	property	no	Egenskaper for utleie - detaljer
 rental type	property	no	Utleietype
 re-opened	property	no	Gjenåpnet
 repeat	property	no	Serie
@@ -1405,7 +1405,7 @@ request	property	no	Behov
 set the status of the request	property	no	Sett status for behovet
 reset approval	property	no	Nullstill
 project.request	property	no	Behov
-request attributes	property	no	Behov::attributter
+request attributes	property	no	Behov egenskaper
 request an email receipt	property	no	Be om kvittering
 request a confirmation email when your email is opened by the recipient	property	no	Be om epost som kvittering når mottaker åpner eposten.
 request %1 has been edited	property	no	Behov %1 er oppdatert
@@ -1452,7 +1452,7 @@ save as template	property	no	lagre som mal
 save the actor and return back to the list	property	no	Lagre aktøren og returner til oversikten
 save the agreement and return back to the list	property	no	Lagre avtalen og returner til oversikten
 save the apartment	property	no	Lagre leilighet
-save the attribute	property	no	Lagre attributt
+save the attribute	property	no	Lagre egenskap
 save the budget account	property	no	Lagre budsjettkotntoen
 save the building	property	no	lagre bygning
 save the category	property	no	Lagre kategorien
@@ -1685,9 +1685,9 @@ serious	property	no	Kraftig
 serious consequences	property	no	Store konsekvenser
 service	property	no	Tjeneste
 service agreement	property	no	Serviceavtale
-service agreement attributes	property	no	Serviceavtale attributter
+service agreement attributes	property	no	Serviceavtale egenskaper
 service agreement categories	property	no	Serviceavtale kategorier
-service agreement item attributes	property	no	Attributter for serviceavtaler - detaljer
+service agreement item attributes	property	no	Egenskaper for serviceavtaler - detaljer
 set grants	property	no	Sett tillatelser
 set new status	property	no	Sett ny status
 set tax	property	no	Angi MVA
@@ -1765,7 +1765,7 @@ template	property	no	Mal
 template %1 is added	property	no	Mal %1 er lagt til
 template id	property	no	Mal-id
 tenant	property	no	Leietaker
-tenant attributes	property	no	Leietaker attributter
+tenant attributes	property	no	Leietaker egenskaper
 tenant categories	property	no	Leietaker kategorier
 .tenant_claim	property	no	Leietaker krav
 tenant claim	property	no	Leietaker krav
@@ -1806,7 +1806,7 @@ this agreement code is already registered!	property	no	Denne avtalekoden er allr
 this agreement group code is already registered!	property	no	Denne avtale-gruppe-koden er allerede registert!
 this apartment_id id does not exist!	property	no	Denne leilighet-id eksisterer ikke
 this apartment is already registered!	property	no	Denne leiligheten er allrerede registert
-this attribute turn up as disabled in the form	property	no	Denne attributten vises som inaktivt i skjemaet
+this attribute turn up as disabled in the form	property	no	Denne egenskapen vises som inaktivt i skjemaet
 this building id does not exist!	property	no	Denne bygnings-id eksisterer ikke
 this building_id id does not exist!	property	no	Denne bygnings-id eksisterer ikke
 this building is already registered!	property	no	denne bygningen er allrerede registert
@@ -1881,7 +1881,7 @@ value	property	no	Verdi
 values	property	no	Verdier
 varchar	property	no	varchar
 vendor	property	no	Leverandør
-vendor attributes	property	no	Leverandør attributter
+vendor attributes	property	no	Leverandør egenskaper
 vendor categories	property	no	Leverandør kategorier
 vendor global categories	property	no	Globale leverandør kategorier
 vendor has been added	property	no	Leverandør er lagt til
@@ -1899,7 +1899,6 @@ view/edit the history	property	no	Vis/oppdater historikk
 view edit the prize for this activity	property	no	Vis/oppdater pris for denne aktiviteten
 view entrance	property	no	Vis inngang
 view equipment	property	no	Vis utstyr
-view error log	common	no	Vis feilmeldings log
 view gab	property	no	Vis grunneiendom
 view gab detail	property	no	Vis grunneiendom-detaljer
 view gab-info	property	no	Vis grunneiendom
@@ -1914,7 +1913,7 @@ view request	property	no	Vis behov
 view template detail	property	no	Vis mal-detaljer
 view tender	property	no	Vis beskrivelse
 view the apartment	property	no	Vis leilighet
-view the attrib	property	no	Vis attributt
+view the attrib	property	no	Vis egenskap
 view the budget account	property	no	Vis kostnadsart
 view the building	property	no	Vis bygning
 view the category	property	no	Vis kategorien
@@ -1990,7 +1989,7 @@ you are not approved for this task	property	no	Du mangler rettigheter for denne 
 you are not approved for this dimb: %1	property	no	Du mangler rettigheter for dette ansvarsstedet: %1
 you have entered an invalid end date !	property	no	Du har angitt en ugyldig slutt dato
 you have entered an invalid start date !	property	no	Du har angitt en ugyldig start dato
-you have no edit right for this project	property	no	Du har ikke editeringsrettigheter for dette prosjektet
+you have no edit right for this project	property	no	Du har ikke redigeringsrettigheter for dette prosjektet
 you do not have permission to approve this order	property	no	Du har ikke rettighteter for a godkjenne bestillingen
 you have to select a budget responsible for this invoice in order to add the invoice	property	no	Du må velge en anviser for å kunne legge til en faktura
 you have to select a budget responsible for this invoice in order to make the import	property	no	Du må velge en anviser for å importere
@@ -2053,7 +2052,7 @@ entity group	common	no	Registergruppe
 modified on	common	no	Oppdatert
 property type	property	no	Type
 hjemmel	common	no	Hjemmel
-record has been edited	common	no	Data er editert
+record has been edited	common	no	Data er redigert
 external project	property	no	Eksternt prosjekt
 unspsc code	common	no	UNSPSC-kode
 order received	property	no	Varemottak
@@ -2093,14 +2092,14 @@ compressed	property	no	Komprimert
 file name	property	no	Filnavn
 row	property	no	Rad
 download preview components	property	no	Last ned forhåndsvisning av komponenter
-new attributes	property	no	Nye attributter
+new attributes	property	no	Nye egenskaper
 new categories	property	no	Nye kategorier
 save profile	property	no	Lagre profil
-columns and attributes	property	no	Kolonner og attributter
-attribute name for component id	property	no	Attributtnavn for komponent id
+columns and attributes	property	no	Kolonner og egenskaper
+attribute name for component id	property	no	Egenskapnavn for komponent id
 category template	property	no	Kategori mal
 profile	property	no	Profil
-new attribute	property	no	Ny attributt
+new attribute	property	no	Ny egenskap
 report	property	no	Rapport
 canceled	property	no	Kansellert
 substitute	property	no	Vikar
@@ -2168,7 +2167,7 @@ list pictures	property	no	List bilder
 list report definitions	property	no	List rapportdefinisjon
 location contact	property	no	Lokasjonskontakt
 location has been updated	property	no	Lokasjon er oppdatert
-mandatory actual cost	property	no	Obligatorisk faktis kostnad
+mandatory actual cost	property	no	Obligatorisk faktisk kostnad
 mandatory project group	property	no	Obligatorisk prosjektgruppe
 mine documents	property	no	Mine dokumenter
 mine tasks	property	no	Mine oppgaver
@@ -2186,7 +2185,7 @@ please enter a description !	property	no	Angi en beskrivelse
 please enter a multiplier !	property	no	Angi en multiplikator
 please enter a status !	property	no	Angi en status
 print the ticket	property	no	Skriv ut melding
-project attributes	property	no	Prosjektatributter
+project attributes	property	no	Prosjektegenskaper
 project status	property	no	Prosjektstatus
 projekt	property	no	Prosjekt
 reporting	property	no	Rapportering
@@ -2212,7 +2211,7 @@ street	property	no	Gate
 target	property	no	Mål
 target project	property	no	Mål-prosjekt
 tenant category	property	no	Leietakerkategori
-ticket attributes	property	no	Meldingsattributter
+ticket attributes	property	no	Meldingsegenskaper
 ticket config	property	no	Meldingskonfigurasjon
 ticket priority	property	no	Meldingsprioritet
 ticket status	property	no	Meldingsstatus
@@ -2223,7 +2222,7 @@ direction	property	no	Retning
 directory	property	no	Katalog
 select template	property	no	Velg mal
 select parent	property	no	Velg forelder
-attribute groups	property	no	Attributtgrupper
+attribute groups	property	no	Egenskapgrupper
 sms text	property	no	SMS-tekst
 character left	property	no	Resterende tegn
 delivery address	property	no	Leveringsadresse
@@ -2236,10 +2235,163 @@ alert vendor	property	no	Varsle leverandør
 important information	property	no	Viktig informasjon
 category content	property	no	Tekster for kategori
 order deadline	property	no	Frist for utførelse
-please update <a href="%1">your email address here</a>	property	no	Venligst oppdatert din <a href="%1">epost-adresse her</a>
+please update <a href="%1">your email address here</a>	property	no	Vennligst oppdatert din <a href="%1">epost-adresse her</a>
 clear contact	property	no	Fjern kontakperson
 deadline for start	property	no	Frist for oppstart
 deadline for execution	property	no	Frist for ferdigstillelse
 outside contract	property	no	Utenfor rammeavtale
 refund	property	no	Refusjon
 both	property	no	Begge
+condition survey location level	property	no	Tilstandsanalyse lokasjonsnivå
+condition survey import category	property	no	Tilstandsanalyse importkategori
+show overdue projects on main screen	property	no	Vis prosjekter over tiden på hovedskjermen
+link to projects you are assigned to	property	no	Knytt til prosjekter du er tildelt
+show open tenant claims on main screen	property	no	Vis åpne leietaker krav på hovedskjermen
+link to claims you are assigned to	property	no	Knytt til krav du er tildelt
+the default group to assign a ticket in helpdesk-submodule	property	no	Standardgruppen for å tildele en billett i helpdesk-submodule
+budget account as listbox	property	no	Budsjettkonto som listeboks
+the input type for budget account	property	no	Input typen for budsjettkonto
+default unspsc code	property	no	Standard unspsc kode
+contact block 1	property	no	Kontakt blokk 1
+contact block 2	property	no	Kontakt blokk 2
+check missing project budget	property	no	Sjekk manglende prosjekt budsjett
+request condition_type	property	no	Forespør betingelsestype
+pending action type	property	no	Venter på handlingstype
+use acl for document types. (not implementet) 	property	no	Bruk acl for dokumenttyper . (Ikke implementert)
+org unit id	property	no	Organsisasjonsnummer
+order footer header	property	no	Overskrift for bestillings-avslutnings-tekst
+order footer	property	no	bestillings-avslutnings-tekst
+order logo	property	no	Logo på bestilling
+order logo width	property	no	Bredde for logo på bestilling
+SMS client order notice	property	no	SMS-varsling til kunde
+none selected	property	no	Ingen valgt
+dimb responsible 1	property	no	kostnadsstedsansvarlig 1
+dimb responsible 2	property	no	kostnadsstedsansvarlig 2
+invoicehandler	property	no	Fakturahåndterer
+invoice acl	property	no	Kontroll av fakturarettigheter
+project status on approval	property	no	Prosjektstatus ved godkjenning
+project status on last order closed	property	no	Prosjektstatus ved siste ordre lukket
+workorder status on approval	property	no	Arbeidsordre status ved godkjenning
+ticket status on approval	property	no	Meldingsstatus ved godkjenning
+approval amount limit	property	no	Godkjenningsgrense
+approval level	property	no	Godkjenningsnivå
+workorder status on ordered	property	no	Arbeidsordre status ved bestilling
+request status on project hookup	property	no	Behovsstatus ved prosjektoppkobling
+request status on ticket hookup	property	no	Behovsstatus ved meldingsoppkobling
+workorder status that are to be set when invoice is processed	property	no	Arbeidsordre status som skal settes når fakturaen er behandlet
+workorder reopen status that are to be set when invoice is processed	property	no	Arbeidsordre gjenåpne-status som skal settes når fakturaen er behandlet
+require building part at workorder	property	no	Krever bygningsdel på arbeidsordre
+require vendor at workorder	property	no	Krever leverandør på arbeidsordre
+delay operation workorder end date	property	no	Utsett sluttdato for driftsarbeidsordre
+last day in year	property	no	siste dag i året
+enable unspsc kode	property	no	Aktiver unspsc kode
+enable order service id	property	no	Aktiver dimensjonen tjeneste i bestilling
+default municipal number	property	no	Standard kommunenummer
+tax	property	no	MVA
+enter the location of files url	property	no	Skriv inn adressen til filene (url)
+path to external files for use with location	property	no	Sti til eksterne filer for bruk med plassering
+on windows use	property	no	På Windows bruk
+max recursive level at external files	property	no	Maks rekursivt nivå på eksterne filer
+filter at level at external files	property	no	Filter på nivå ved eksterne filer
+enter map url 	property	no	Skriv inn kart url
+enter gab location level	property	no	Skriv inn matrikkel-lokasjonsnivå
+default value is	property	no	Standardverdi er
+enter gab url	property	no	Skriv inn matrikkel url
+gab url paramtres	property	no	Matrikkel url parametre
+suppress old tenant	property	no	Deaktiver leietaker
+show billable hours	property	no	Vis egne timer
+open translates to	property	no	Åpen oversetter til
+tts assign group candidates	property	no	Tts tildele gruppekandidater
+tts disable assign to user on add	property	no	Tts deaktivere tilordne til bruker på legg til
+tts simplified group	property	no	Tts forenklet gruppe
+tts simplified categories	property	no	Tts forenklet kategorier
+mail notification	property	no	E-post varsling
+owner notification project	property	no	Prosjekteier varsles
+owner notification tts	property	no	Eier varsling tts
+assigned notification tts	property	no	Tildelt varsling tts
+group notification tts	property	no	Gruppe varsling tts
+tts file upload	property	no	Tts filopplasting
+mandatory title tts	property	no	Obligatorisk tittel for meldinger (tts)
+tts finnish date	property	no	Tts ferdig dato
+tts order contact at location	property	no	Tts bestille kontakt på stedet
+send response tts	property	no	Sende svar tts
+project suppress meter	property	no	Prosjekt: deaktiver måler
+project suppress coordination	property	no	Prosjekt: deaktiver koordinering
+project optional category	property	no	Prosjekt: valgfri kategori
+request show dates	property	no	Behov: vis datoer
+request location level	property	no	Behov: lokasjonsnivå
+request coordinator text	property	no	Behov: koordinatortekst
+meter table	property	no	Målertabell
+receive workorder status by sms	property	no	Motta arbeidsordre status via SMS
+use acl for accessing location based information	property	no	Bruk acl for å få tilgang til plasseringbasert informasjon
+bypass acl for accessing tickets	property	no	Bypass acl for å få tilgang til meldinger
+bypass acl for accessing entities	property	no	Bypass acl for å få tilgang til generiske entiteter
+use acl for helpdesk categories	property	no	Bruk acl for meldingskategorier
+use location at workorder	property	no	Bruk lokasjon på arbeidsordre
+budget at project level	property	no	Budsjett på prosjektnivå
+common budget account at project level	property	no	Felles budsjettkonto på prosjektnivå
+update project budget from order	property	no	Oppdater prosjektbudsjett fra ordre
+disallow multiple condition types at demands	property	no	Ikke tillat flere tilstandstyper på behov
+list location level	property	no	List lokasjonsnivå
+ntlm alternative host	property	no	Alternativ serverhost ved ntlm (filopplasting)
+uploader filetypes	property	no	Opplastingsfiltyper
+filter buildingpart	property	no	Filter for bygningsdel
+condition survey import category	property	no	Importkategori for tilstandsanalyse
+initial status that are to be set when condition survey are imported	property	no	Innledende status som skal settes når tilstandsanalysen blir importert
+hidden status that are to be set when condition survey are imported	property	no	Skjulte statuser som skal settes når tilstandsanalyse blir importert
+obsolete status that are to be set for old records when condition survey are imported	property	no	Foreldet status som skal settes for gamle poster når tilstandsundersøkelsen blir importert
+NO	property	no	NEI
+YES	property	no	JA
+None	property	no	Ingen
+location_id	property	no	Lokasjons ID
+entity	property	no	Entitet
+short description	property	no	Kort beskrivelse
+do you really want to convert to eav	property	no	Er du sikker på at du vil konvertere til eav?
+appname	property	no	modulnavn
+add attribute	property	no	Legg til egenskap
+column name	property	no	Kolonnenavn
+input text	property	no	Ledetekst
+statustext	property	no	Statustekst
+no group	property	no	Ingen gruppe
+no datatype	property	no	Ingen datatype
+precision	property	no	Presisjon
+scale	property	no	Scale
+nullable	property	no	Nullverdier
+select nullable	property	no	Velg nullverdi
+show in list	property	no	Vis i liste
+include in search	property	no	Inkluder i søk
+true	property	no	Sant
+false	property	no	Falsk
+history	property	no	Historie
+help	property	no	Hjelp
+do you really want to recalculate all actual cost for all workorders	property	no	Vil du omregne alle faktiske kostnader for alle arbeidsordre?
+custom function	property	no	Egendefinerte funksjoner
+list custom function	property	no	Liste over egendefinerte funksjoner
+pre commit	property	no	Før lagring til databasen
+client side	property	no	Klientside
+location	property	no	Lokasjon
+list custom attribute	property	no	Liste over egendefinerte egenskaper
+client-side	property	no	Klientside
+default ticket categories	property	no	Default meldingskategori
+default assign to tts	property	no	Default tildele til, meldinger
+default group tts	property	no	Default gruppe for meldinger
+dimb role	property	no	DimB Rolle
+process code	property	no	Årsakskode
+add timer	property	no	Legg til tidsplan
+migrate	property	no	Migrer
+list available domains	property	no	Liste over domener
+db_host	property	no	Db_server
+db_name	property	no	Db_navn
+db_type	property	no	Db_type
+distribute	property	no	Distribuer
+distribute year	property	no	Distribuerings år
+settings	property	no	Innstillinger
+ask for workorder approval by email	property	no	Be om betillingsgodkjenning via e-post
+ask for project approval by email	property	no	Be om prosjektgodkjenning via e-post
+TTS default interface	property	no	TTS default interface
+FM settings	property	no	Innstillinger for eiendomsforvaltning
+pending action type	property	no	Handlingstyper
+comma separated email addresses to be notified about tenant claim	property	no	Kommmaseparert liste over hvem som skal ha e-post om leietakerkrav
+record has been saved	property	no	Posten er lagret
+invoice remark	property	no	Fakturanotat
+please select a part of town	property	no	Vennligst velg bydel

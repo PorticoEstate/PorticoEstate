@@ -18,6 +18,7 @@ and open the template in the editor.
         <script type="text/javascript" src="{javascript_uri}"></script>
         <!-- END javascript -->
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Raleway" />
+       
         {css}
 
         <script type="text/javascript">
@@ -39,20 +40,20 @@ and open the template in the editor.
 
     </head>
     <body class="">
-        <nav class="navbar navbar-expand-md navbar-dark">
+        <nav class="navbar navbar-expand-md">
 
-                <div class="container">
+                <div class="container header-container">
                     <button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
                         <span class="navbar-toggler-icon"></span>
                     </button>  
                     <a class="navbar-brand" href="{site_url}">
-                        Ålesund Kommune
+                        <img src="{logoimg}" alt="Logo" style="height: 100px;">
                     </a>
                     <div class="collapse navbar-collapse text-center" id="Navbar">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item active"><a class="nav-link" href="{site_url}">Hjem</a></li>
-                            <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
-                            <li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li>
+   <!--                         <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
+                            <li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li> -->
                             <li class="nav-item active"><a class="nav-link" href="{manual_url}">{manual_text}</a></li>
                             <li class="nav-item active"><a id="login" class="nav-link" href="{login_url}">{login_text}</a><span id="change"></span></li>
                         </ul>   

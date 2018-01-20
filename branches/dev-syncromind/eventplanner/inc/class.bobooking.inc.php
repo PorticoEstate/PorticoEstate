@@ -282,7 +282,7 @@ HTML;
 			{
 				$rcpt = $send->msg('email', $to_email, $subject, stripslashes($content), '', $cc, $bcc, $from_email, $from_name, 'html');
 			}
-			catch (phpmailerException $e)
+			catch (Exception $e)
 			{
 				phpgwapi_cache::message_set($e->getMessage(), 'error');
 			}

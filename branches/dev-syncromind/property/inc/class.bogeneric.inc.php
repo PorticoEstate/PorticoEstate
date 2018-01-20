@@ -203,7 +203,7 @@
 				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 
-			if (isset($data['id']) && $data['id'] || (int) $data['id'] ===0 )
+			if (isset($data['id']) && $data['id'] || (string)$data['id'] ==='0' )
 			{
 				$values = $this->so->read_single($data, $values);
 			}
