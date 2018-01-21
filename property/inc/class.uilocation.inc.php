@@ -77,6 +77,7 @@
 			'get_cases' => true,
 			'get_checklists'=>true,
 			'get_cases_for_checklist' => true,
+			'get_location_data' => true,
 		);
 
 		function __construct()
@@ -2847,6 +2848,27 @@ JS;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('delete' => $data));
 		}
 
+		function get_location_data()
+		{
+			if (!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+			$location_code = phpgw::get_var('location_code');
+
+			if ($location_code)
+			{
+				$values = $this->bo->read_single($location_code, array('noattrib' => true));
+				$part_of_town_id = $values['part_of_town_id'];
+
+				$part_of_town = createObject('property.bogeneric')->read_single(array('id' => $part_of_town_id ,'location_info' => array('type' => 'part_of_town')));
+				$values['part_of_town_name'] = $part_of_town['name'];
+
+			}
+
+			
+			return $values;
+		}
 		function view()
 		{
 			if (!$this->acl_read)

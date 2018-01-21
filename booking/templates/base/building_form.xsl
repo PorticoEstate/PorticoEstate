@@ -33,6 +33,18 @@
 					</input>
 				</div>
 				<div class="pure-control-group">
+					<label for="field_street">
+						<xsl:value-of select="php:function('lang', 'Street')"/>
+					</label>
+					<input id="field_street" name="street" type="text" value="{building/street}" class="pure-input-1-2" />
+				</div>
+				<div class="pure-control-group">
+					<label for="field_district">
+						<xsl:value-of select="php:function('lang', 'District')"/>
+					</label>
+					<input type="text" name="district" id="field_district" value="{building/district}" class="pure-input-1-2" />
+				</div>
+				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Activity')" />
 					</label>
@@ -77,12 +89,7 @@
 					<input id="field_homepage" name="homepage" type="text" value="{building/homepage}" class="pure-input-1-2" >
 					</input>
 				</div>
-				<div class="pure-control-group">
-					<label for="field_street">
-						<xsl:value-of select="php:function('lang', 'Street')"/>
-					</label>
-					<input id="field_street" name="street" type="text" value="{building/street}" class="pure-input-1-2" />
-				</div>
+
 				<div class="pure-control-group">
 					<label for="field_zip_code">
 						<xsl:value-of select="php:function('lang', 'Zip code')"/>
@@ -95,12 +102,7 @@
 					</label>
 					<input type="text" name="city" id="field_city" value="{building/city}" class="pure-input-1-2" />
 				</div>
-				<div class="pure-control-group">
-					<label for="field_district">
-						<xsl:value-of select="php:function('lang', 'District')"/>
-					</label>
-					<input type="text" name="district" id="field_district" value="{building/district}" class="pure-input-1-2" />
-				</div>
+
 				<xsl:if test="not(new_form)">
 					<div class="pure-control-group">
 						<label for="field_active">
@@ -283,10 +285,4 @@
 			</input>
 		</div>
 	</form>
-	<script type="text/javascript">
-		<![CDATA[
-        JqueryPortico.autocompleteHelper('index.php?menuaction=booking.uibuilding.properties&phpgw_return_as=json&',
-                                     	'field_location_code_name', 'field_location_code', 'location_code_container');
-		]]>
-	</script>
 </xsl:template>
