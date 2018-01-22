@@ -16,7 +16,6 @@
 		{
 		}
 
-		// tests
 		public function testSomeFeature()
 		{
 			$this->assertEquals(4, 4);
