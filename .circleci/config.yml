@@ -5,47 +5,19 @@
 version: 2
 jobs:
   build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/php:7.1-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mysql:9.4
+    machine:
+      - image: circleci/classic:latest
 
     working_directory: ~/repo
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "composer.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
       - run:
-        name: Composer install
-        command:
-          composer install -n --prefer-dist
-
-      - save_cache:
-          paths:
-            - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
-
+        name: Install Docker Compose
+        command: |
+          curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+          chmod +x ~/docker-compose
+          sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - run:
-          name: Download chromedriver
-          command:
-            curl -O https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
-
-      - run:
-          name: Start chromedriver
-          command:
-            ./chromedriver --port=4444 --url-base=/wd/hub
-          background: true
-
-      # run tests!
-      - run: ./vendor/bin/codecept run
+        name: Run tests
+        command: docker-compose up --abort-on-container-exit
