@@ -8,7 +8,7 @@ actor: AcceptanceTester
 modules:
     enabled:
         - Db:
-            dsn: 'pgsql:host=localhost;dbname=porticotest'
+            dsn: 'pgsql:host=postgres;dbname=porticotest'
             user: 'portico'
             password: 'porticotest'
             dump: 'tests/_data/portico-test.sql'
@@ -17,7 +17,7 @@ modules:
             reconnect: false
             populator: 'psql -h $host -U $user $dbname < $dump'
         - WebDriver:
-            # host: selenium-chrome
-            url: http://localhost/portico
+            host: selenium-chrome
+            url: http://web/portico
             browser: chrome
         - \Helper\Acceptance
