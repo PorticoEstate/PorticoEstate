@@ -387,29 +387,37 @@ class uiaddressbook
 
 		$total_records = $this->bo->total;
 		$cols='';
-		while ($column = @each($columns_to_display))
+		//while ($column = @each($columns_to_display))
+                if (is_array($columns_to_display))
 		{
-			$showcol = $this->bo->display_name($column[0]);
+                    foreach($columns_to_display as $key => $value)
+                    {
+			$showcol = $this->bo->display_name($key);
 
-			if (!$showcol) { $showcol = $column[1]; }
+			if (!$showcol) { $showcol = $value; }
 			$cols .= '<td>';
 			$cols .= $GLOBALS['phpgw']->nextmatchs->show_sort_order($this->sort,
-					$column[0],$this->order,"/index.php",$showcol,
+					$key,$this->order,"/index.php",$showcol,
 					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id.'&nonavbar='.$this->nonavbar);
 			$cols .= '</td>';
 			$cols .= "\n";
 		}
+                }
 		//FIXME: NEeed to determine how are we going to handle comm types translations
-		while ($column = @each($comms_array))
+		//while ($column = @each($comms_array))
+                if (is_array($comms_array))
 		{
-			$showcol = $column[0]; 
+                    foreach($comms_array as $key => $value)
+                    {
+			$showcol = $key; 
 			$cols .= '<td>';
 			$cols .= $GLOBALS['phpgw']->nextmatchs->show_sort_order($this->sort,
-					$column[0],$this->order,"/index.php",$showcol,
+					$key,$this->order,"/index.php",$showcol,
 					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id .'&nonavbar='.$this->nonavbar);
 			$cols .= '</td>';
 			$cols .= "\n";
 		}
+                }
 
 		/* set basic vars and parse the header */
 		//$this->template->set_var('principal_tab',$this->get_principal_tabs($this->section));

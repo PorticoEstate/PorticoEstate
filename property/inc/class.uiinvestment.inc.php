@@ -177,7 +177,9 @@
 			$GLOBALS['phpgw']->jqcal->add_listener('start_date');
 			$counter = $sum_initial_value = $sum_value = 0;
 
-			while (is_array($investment_list) && list(, $investment) = each($investment_list))
+                        if (is_array($investment_list))
+                        {
+                            foreach($investment_list as $investment)
 			{
 				$link_history = $check = "";
 				if ($this->admin_invoice)
@@ -216,6 +218,7 @@
 				);
 				$counter++;
 			}
+                        }
 
 			if ($export)
 			{

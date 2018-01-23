@@ -67,12 +67,14 @@
 			$q = phpgw::get_var('query', 'string', 'REQUEST', null);
 			$type_id = count(explode('-', $q));
 			$so = CreateObject('property.solocation');
-			$ret = $so->read(array('type_id' => $type_id, 'location_code' => $q));
+			$ret = $so->read(array('type_id' => $type_id, 'query' => $q));
 			foreach ($ret as &$r)
 			{
 				$name = array();
 				for ($i = 1; $i <= $type_id; $i++)
+				{
 					$name[] = $r['loc' . $i . '_name'];
+				}
 				$r['name'] = $r['location_code'] . ' (' . join(', ', $name) . ')';
 				$r['id'] = $r['location_code'];
 			}
@@ -216,6 +218,7 @@
 			$building['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
+			self::add_javascript('booking', 'base', 'building.add.js');
 			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data,
 				'new_form' => true));
 		}
@@ -272,6 +275,7 @@
 			$building['validator'] = phpgwapi_jquery::formvalidator_generate(array('location',
 					'date', 'security', 'file'));
 
+			self::add_javascript('booking', 'base', 'building.add.js');
 			self::render_template_xsl('building_form', array('building' => $building, 'activitydata' => $activity_data));
 		}
 

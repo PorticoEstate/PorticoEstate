@@ -45,7 +45,10 @@
 		{
 			$i=0;
 
-			while(list($key,$value) = each($_menuData))
+			//while(list($key,$value) = each($_menuData))
+                        if (is_array($_menuData))
+                        {
+                            foreach($_menuData as $key => $value)
 			{
 				if (!empty($value['extradata']))
 				{
@@ -58,6 +61,7 @@
 				$this->section_item($link,lang($value['description']),$this->rowColor[($i % 2)]);
 				$i++;
 			}
+                        }
 
 			$this->t->set_var('th_bg',$GLOBALS['phpgw_info']['theme']['th_bg']);
 

@@ -52,7 +52,9 @@
 
 		function set_initials( $initials )
 		{
-			while (is_array($initials) && list($account_id, $value) = each($initials))
+                        if (is_array($initials))
+                        {
+                            foreach($initials as $account_id => $value)
 			{
 				$this->db->query("UPDATE fm_ecouser set initials= '$value' WHERE id=$account_id ", __LINE__, __FILE__);
 				if ($value)
@@ -64,6 +66,7 @@
 					}
 				}
 			}
+		}
 		}
 
 		function read_fm_id()

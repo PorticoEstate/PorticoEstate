@@ -122,10 +122,14 @@
 		{
 			// Build the header for the file (field list)
 			reset($this->export);
-			while (list($name,$value)=each($this->export))
+			//while (list($name,$value)=each($this->export))
+                        if (is_array($this->export))
+                        {
+                            foreach($this->export as $name => $value)
 			{
 				$entries .= $value . ',';
 			}
+                        }
 			$entries = substr($entries,0,-1);
 			$entries .= "\r\n";
 
@@ -134,10 +138,14 @@
 			for ($i=0;$i<count($this->ids);$i++)
 			{
 				reset($this->export);
-				while (list($name,$value)=each($this->export))
+				//while (list($name,$value)=each($this->export))
+                                if (is_array($this->export))
+                                {
+                                    foreach($this->export as $name => $value)
 				{
 					$entries .= $buffer[$i][$value] . ',';
 				}
+                                }
 				$entries = substr($entries,0,-1);
 				$entries .= "\r\n";
 			}

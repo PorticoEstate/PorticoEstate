@@ -378,9 +378,17 @@ class calendar_html
 			$names   = explode(',',$names);
 		}
 
-		while (list($n,$val) = each($options))
+		//while (list($n,$val) = each($options))
+                if (is_array($options))
+                {
+                    foreach($options as $n => $val)
+                    {
 			if ($val != '' && $names[$n] != '')
+                        {
 				$html .= ' '.$names[$n].'="'.$val.'"';
+                        }
+                    }
+                }
 
 		return $html;
 	}

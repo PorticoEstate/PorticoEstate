@@ -9,7 +9,7 @@ $(document).ready(function ()
 	});
 
 
-	JqueryPortico.autocompleteHelper('bookingfrontend/?menuaction=bookingfrontend.uibuilding.index&phpgw_return_as=json&',
+	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', {menuaction: 'bookingfrontend.uibuilding.index'}, true),
 		'field_building_name', 'field_building_id', 'building_container');
 
 	$("#field_activity").change(function ()

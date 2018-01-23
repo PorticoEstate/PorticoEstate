@@ -91,7 +91,10 @@
 				/* Load hook file with functions to validate each config (one/none/all) */
 				$GLOBALS['phpgw']->hooks->single('config_validate',$appname);
 
-				while (list($key,$config) = each($_POST['newsettings']))
+				//while (list($key,$config) = each($_POST['newsettings']))
+                                if (is_array($_POST['newsettings']))
+                                {
+                                    foreach($_POST['newsettings'] as $key => $config)
 				{
 					if ($config || $config === '0')
 					{
@@ -122,6 +125,7 @@
 						}
 					}
 				}
+                                }
 				if(isset($GLOBALS['phpgw_info']['server']['found_validation_hook']) && $GLOBALS['phpgw_info']['server']['found_validation_hook'] && function_exists('final_validation'))
 				{
 					final_validation($newsettings);

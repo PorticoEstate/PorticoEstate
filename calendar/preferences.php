@@ -198,7 +198,8 @@
 	);
 	
 	$str = '<select name="interval">';
-	while(list($key,$value) = each($var))
+	//while(list($key,$value) = each($var))
+        foreach($var as $key => $value)
 	{
 		$str .= '<option value="'.$key.'"'.$selected[$key].'>'.$value.'</option>';
 	}

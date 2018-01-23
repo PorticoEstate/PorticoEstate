@@ -502,12 +502,14 @@
 
 			//_debug_array($hoved_bilag_temp);
 
-			if ($hoved_bilag_temp)
+			if (is_array($hoved_bilag_temp))
 			{
 				$i = 0;
-				while (each($hoved_bilag_temp))
+				//while (each($hoved_bilag_temp))
+                                foreach($hoved_bilag_temp as $key => $value)
 				{
-					$bilagsnr = $hoved_bilag_temp[$i]['bilagsnr'];
+					//$bilagsnr = $hoved_bilag_temp[$i]['bilagsnr'];
+                                        $bilagsnr = $value['bilagsnr'];
 
 					$sql = "SELECT fm_ecobilag.*,fm_ecouser.initials as saksbehandler FROM fm_ecobilag $this->join fm_ecouser on fm_ecobilag.budsjettansvarligid=fm_ecouser.lid WHERE bilagsnr='{$bilagsnr}'";
 					$this->db->query($sql, __LINE__, __FILE__);
@@ -520,7 +522,8 @@
 					$hoved_bilag[$i]['typeid'] = $this->db->f('typeid');
 					$hoved_bilag[$i]['kildeid'] = $this->db->f('kildeid');
 					$hoved_bilag[$i]['pmwrkord_code'] = $this->db->f('pmwrkord_code');
-					$hoved_bilag[$i]['belop'] = $hoved_bilag_temp[$i]['belop'];
+					//$hoved_bilag[$i]['belop'] = $hoved_bilag_temp[$i]['belop'];
+                                        $hoved_bilag[$i]['belop'] = $value['belop'];
 					$hoved_bilag[$i]['fakturadato'] = $this->db->f('fakturadato');
 					$hoved_bilag[$i]['periode'] = $this->db->f('periode');
 					$hoved_bilag[$i]['forfallsdato'] = $this->db->f('forfallsdato');

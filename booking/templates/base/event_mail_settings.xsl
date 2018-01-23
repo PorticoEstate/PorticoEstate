@@ -17,7 +17,7 @@
 						<label for="field_event_change_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Event Change Subject')"/>
 						</label>
-						<input id="field_event_change_mail_subject" name="event_change_mail_subject" type="text" size="50">
+						<input id="field_event_change_mail_subject" name="event_change_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/event_change_mail_subject"/>
 							</xsl:attribute>
@@ -27,7 +27,7 @@
 						<label for="field_event_change_mail">
 							<xsl:value-of select="php:function('lang', 'Mail for event change')"/>
 						</label>
-						<textarea id="field_event_change_mail" class="full-width settings" name="event_change_mail" type="text">
+						<textarea id="field_event_change_mail" class="pure-input-1-2" name="event_change_mail" type="text">
 							<xsl:value-of select="config_data/event_change_mail"/>
 						</textarea>
 					</div>
@@ -35,7 +35,7 @@
 						<label for="field_event_conflict_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Event Conflict Subject')"/>
 						</label>
-						<input id="field_event_conflict_mail_subject" name="event_conflict_mail_subject" type="text" size="50">
+						<input id="field_event_conflict_mail_subject" name="event_conflict_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/event_conflict_mail_subject"/>
 							</xsl:attribute>
@@ -45,7 +45,7 @@
 						<label for="field_event_mail_conflict_contact_active_collision">
 							<xsl:value-of select="php:function('lang', 'Mail text to conflicting event contact when collision')"/>
 						</label>
-						<textarea id="field_event_mail_conflict_contact_active_collision" class="full-width settings" name="event_mail_conflict_contact_active_collision" type="text">
+						<textarea id="field_event_mail_conflict_contact_active_collision" class="pure-input-1-2" name="event_mail_conflict_contact_active_collision" type="text">
 							<xsl:value-of select="config_data/event_mail_conflict_contact_active_collision"/>
 						</textarea>
 					</div>
@@ -53,7 +53,7 @@
 						<label for="field_event_mail_building_subject">
 							<xsl:value-of select="php:function('lang', 'Event message to building Subject')"/>
 						</label>
-						<input id="field_event_mail_building_subject" name="event_mail_building_subject" type="text" size="50">
+						<input id="field_event_mail_building_subject" name="event_mail_building_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/event_mail_building_subject"/>
 							</xsl:attribute>
@@ -63,7 +63,7 @@
 						<label for="field_event_mail_building">
 							<xsl:value-of select="php:function('lang', 'Mail text to building contact')"/>
 						</label>
-						<textarea id="field_event_mail_building" class="full-width settings" name="event_mail_building" type="text">
+						<textarea id="field_event_mail_building" class="pure-input-1-2" name="event_mail_building" type="text">
 							<xsl:value-of select="config_data/event_mail_building"/>
 						</textarea>
 					</div>
@@ -71,7 +71,7 @@
 						<label for="field_event_canceled_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Event Canceled Subject')"/>
 						</label>
-						<input id="field_event_canceled_mail_subject" name="event_canceled_mail_subject" type="text" size="50">
+						<input id="field_event_canceled_mail_subject" name="event_canceled_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/event_canceled_mail_subject"/>
 							</xsl:attribute>
@@ -81,7 +81,7 @@
 						<label for="field_event_canceled_mail">
 							<xsl:value-of select="php:function('lang', 'Mail for event canceled')"/>
 						</label>
-						<textarea id="field_event_canceled_mail" class="full-width settings" name="event_canceled_mail" type="text">
+						<textarea id="field_event_canceled_mail" class="pure-input-1-2" name="event_canceled_mail" type="text">
 							<xsl:value-of select="config_data/event_canceled_mail"/>
 						</textarea>
 					</div>
@@ -89,7 +89,7 @@
 						<label for="field_event_edited_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Event Edited Subject')"/>
 						</label>
-						<input id="field_event_edited_mail_subject" name="event_edited_mail_subject" type="text" size="50">
+						<input id="field_event_edited_mail_subject" name="event_edited_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/event_edited_mail_subject"/>
 							</xsl:attribute>
@@ -99,7 +99,7 @@
 						<label for="field_event_edited_mail">
 							<xsl:value-of select="php:function('lang', 'Mail for event edited')"/>
 						</label>
-						<textarea id="field_event_edited_mail" class="full-width settings" name="event_edited_mail" type="text">
+						<textarea id="field_event_edited_mail" class="pure-input-1-2" name="event_edited_mail" type="text">
 							<xsl:value-of select="config_data/event_edited_mail"/>
 						</textarea>
 					</div>
@@ -116,7 +116,7 @@
 						<label for="field_booking_canceled_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Booking Canceled Subject')"/>
 						</label>
-						<input id="field_booking_canceled_mail_subject" name="booking_canceled_mail_subject" type="text" size="50">
+						<input id="field_booking_canceled_mail_subject" name="booking_canceled_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/booking_canceled_mail_subject"/>
 							</xsl:attribute>
@@ -126,7 +126,7 @@
 						<label for="field_booking_canceled_mail">
 							<xsl:value-of select="php:function('lang', 'Mail for booking canceled')"/>
 						</label>
-						<textarea id="field_booking_canceled_mail" class="full-width settings" name="booking_canceled_mail" type="text">
+						<textarea id="field_booking_canceled_mail" class="pure-input-1-2" name="booking_canceled_mail" type="text">
 							<xsl:value-of select="config_data/booking_canceled_mail"/>
 						</textarea>
 					</div>
@@ -134,7 +134,7 @@
 						<label for="field_allocation_canceled_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Allocation Canceled Subject')"/>
 						</label>
-						<input id="field_allocation_canceled_mail_subject" name="allocation_canceled_mail_subject" type="text" size="50">
+						<input id="field_allocation_canceled_mail_subject" name="allocation_canceled_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/allocation_canceled_mail_subject"/>
 							</xsl:attribute>
@@ -144,7 +144,7 @@
 						<label for="field_allocation_canceled_mail">
 							<xsl:value-of select="php:function('lang', 'Mail for allocation canceled')"/>
 						</label>
-						<textarea id="field_allocation_canceled_mail" class="full-width settings" name="allocation_canceled_mail" type="text">
+						<textarea id="field_allocation_canceled_mail" class="pure-input-1-2" name="allocation_canceled_mail" type="text">
 							<xsl:value-of select="config_data/allocation_canceled_mail"/>
 						</textarea>
 					</div>

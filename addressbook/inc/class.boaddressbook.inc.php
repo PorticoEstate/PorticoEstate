@@ -771,7 +771,10 @@
 			if (is_array($prefs))
 			{
 				/* _debug_array($prefs);exit; */
-				while (list($pref,$x) = each($qfields))
+				//while (list($pref,$x) = each($qfields))
+                                if (is_array($qfields))
+                                {
+                                    foreach($qfields as $pref => $x)
 				{
 					/* echo '<br />checking: ' . $pref . '=' . $prefs[$pref]; */
 					if ($prefs[$pref] == 'on')
@@ -783,6 +786,7 @@
 						$GLOBALS['phpgw']->preferences->delete('addressbook',$pref);
 					}
 				}
+			}
 			}
 
 			if(is_array($other))

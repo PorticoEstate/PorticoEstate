@@ -852,7 +852,10 @@
 			//_debug_array($values);
 			$values['new_index'] = $this->floatval($values['new_index']);
 			$this->db->transaction_begin();
-			while (is_array($values['select']) && list(, $activity_id) = each($values['select']))
+
+                        if (is_array($values['select']))
+                        {
+                            foreach($values['select'] as $activity_id)
 			{
 
 				if ($values['id'][$activity_id] > 0)
@@ -866,6 +869,7 @@
 					$receipt['message'][] = array('msg' => lang('Activity %1 has been updated for index', $activity_id));
 				}
 			}
+                        }
 
 			$this->db->transaction_commit();
 

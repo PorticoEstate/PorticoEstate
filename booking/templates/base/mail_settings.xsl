@@ -17,7 +17,7 @@
 						<label for="field_application_mail_systemname">
 							<xsl:value-of select="php:function('lang', 'System name')"/>
 						</label>
-						<input id="field_application_mail_systemname" name="application_mail_systemname" type="text" size="50">
+						<input id="field_application_mail_systemname" name="application_mail_systemname" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_mail_systemname"/>
 							</xsl:attribute>
@@ -27,7 +27,7 @@
 						<label for="field_application_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Subject')"/>
 						</label>
-						<input id="field_application_mail_subject" name="application_mail_subject" type="text" size="50">
+						<input id="field_application_mail_subject" name="application_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_mail_subject"/>
 							</xsl:attribute>
@@ -37,7 +37,7 @@
 						<label for="field_application_mail_created">
 							<xsl:value-of select="php:function('lang', 'Mail text for application created')"/>
 						</label>
-						<textarea id="field_application_mail_created" class="full-width settings" name="application_mail_created" type="text">
+						<textarea id="field_application_mail_created" class="pure-input-1-2" name="application_mail_created" type="text">
 							<xsl:value-of select="config_data/application_mail_created"/>
 						</textarea>
 					</div>
@@ -45,7 +45,7 @@
 						<label for="field_application_mail_pending">
 							<xsl:value-of select="php:function('lang', 'Mail text for application pending')"/>
 						</label>
-						<textarea id="field_application_mail_pending" class="full-width settings" name="application_mail_pending" type="text">
+						<textarea id="field_application_mail_pending" class="pure-input-1-2" name="application_mail_pending" type="text">
 							<xsl:value-of select="config_data/application_mail_pending"/>
 						</textarea>
 					</div>
@@ -53,7 +53,7 @@
 						<label for="field_application_mail_accepted">
 							<xsl:value-of select="php:function('lang', 'Mail text for application accepted')"/>
 						</label>
-						<textarea id="field_application_mail_accepted" class="full-width settings" name="application_mail_accepted" type="text">
+						<textarea id="field_application_mail_accepted" class="pure-input-1-2" name="application_mail_accepted" type="text">
 							<xsl:value-of select="config_data/application_mail_accepted"/>
 						</textarea>
 					</div>
@@ -62,7 +62,7 @@
 							<xsl:value-of select="php:function('lang', 'notify on accepted')"/>
 						</label>
 						<input  name="application_notify_on_accepted" type="hidden" value = "0"/>
-						<input id="field_application_notify_on_accepted" class="full-width settings" name="application_notify_on_accepted" type="checkbox" value = "1">
+						<input id="field_application_notify_on_accepted" class="pure-input-1-2" name="application_notify_on_accepted" type="checkbox" value = "1">
 							<xsl:if test="config_data/application_notify_on_accepted = '1'">
 								<xsl:attribute name="checked">
 									<xsl:text>checked</xsl:text>
@@ -77,7 +77,7 @@
 						<label for="field_application_mail_rejected">
 							<xsl:value-of select="php:function('lang', 'Mail text for application rejected')"/>
 						</label>
-						<textarea id="field_application_mail_rejected" class="full-width settings" name="application_mail_rejected" type="text">
+						<textarea id="field_application_mail_rejected" class="pure-input-1-2" name="application_mail_rejected" type="text">
 							<xsl:value-of select="config_data/application_mail_rejected"/>
 						</textarea>
 					</div>
@@ -85,7 +85,7 @@
 						<label for="field_application_mail_signature">
 							<xsl:value-of select="php:function('lang', 'Signature')"/>
 						</label>
-						<input id="field_application_mail_signature" name="application_mail_signature" type="text" size="50">
+						<input id="field_application_mail_signature" name="application_mail_signature" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_mail_signature"/>
 							</xsl:attribute>
@@ -114,7 +114,7 @@
 						<label for="field_application_comment_mail_subject">
 							<xsl:value-of select="php:function('lang', 'Subject')"/>
 						</label>
-						<input id="field_application_comment_mail_subject" name="application_comment_mail_subject" type="text" size="50">
+						<input id="field_application_comment_mail_subject" name="application_comment_mail_subject" type="text" size="50" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/application_comment_mail_subject"/>
 							</xsl:attribute>
@@ -124,7 +124,7 @@
 						<label for="field_application_comment_added_mail">
 							<xsl:value-of select="php:function('lang', 'Mail text for comment added')"/>
 						</label>
-						<textarea id="field_application_comment_added_mail" class="full-width settings" name="application_comment_added_mail" type="text">
+						<textarea id="field_application_comment_added_mail" class="pure-input-1-2" name="application_comment_added_mail" type="text">
 							<xsl:value-of select="config_data/application_comment_added_mail"/>
 						</textarea>
 					</div>

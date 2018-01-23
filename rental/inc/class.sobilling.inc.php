@@ -247,7 +247,8 @@
 				switch ($export_format)
 				{
 					case 'agresso_gl07':
-						$info = rental_agresso_gl07::get_missing_billing_info($contract);
+						//needs internal configuration, hence the object
+						$info = rental_agresso_gl07::get_instance()->get_missing_billing_info($contract);
 						break;
 					case 'agresso_lg04':
 						$info = rental_agresso_lg04::get_missing_billing_info($contract);

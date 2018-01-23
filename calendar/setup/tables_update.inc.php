@@ -896,8 +896,9 @@
 
 		$GLOBALS['phpgw_setup']->oProc->AlterColumn('phpgw_cal','category',array('type' => 'varchar', 'precision' => 30,'nullable' => True));
 
-		@reset($calendar_data);
-		while($calendar_data && list($cal_id,$category) = each($calendar_data))
+		//@reset($calendar_data);
+		//while($calendar_data && list($cal_id,$category) = each($calendar_data))
+                foreach($calendar_data as $cal_id => $category)
 		{
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE phpgw_cal SET category='".$category."' WHERE cal_id=".$cal_id,__LINE__,__FILE__);		
 		}

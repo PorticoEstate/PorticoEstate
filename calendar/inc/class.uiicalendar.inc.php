@@ -39,8 +39,9 @@
 //			echo 'VAL = '._debug_array($val,False)."<br />\n";
 			if(is_array($val))
 			{
-				@reset($val);
-				while(list($key,$value) = each($val))
+				//@reset($val);
+				//while(list($key,$value) = each($val))
+                                foreach($val as $key => $value)
 				{
 					if(is_array($key))
 					{

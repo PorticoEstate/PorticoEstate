@@ -1580,7 +1580,10 @@
 		function edit( $location, $values_attribute = array(), $type_id = '' )
 		{
 			$receipt = array();
-			while (is_array($location) && list($input_name, $value) = each($location))
+
+                        if (is_array($location))
+                        {                        
+                            foreach($location as $input_name => $value)
 			{
 				if ($value)
 				{
@@ -1591,6 +1594,7 @@
 					$value_set[$input_name] = $this->db->db_addslashes($value);
 				}
 			}
+                        }
 
 			if (isset($values_attribute) AND is_array($values_attribute))
 			{

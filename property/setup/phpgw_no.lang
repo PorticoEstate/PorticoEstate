@@ -2395,3 +2395,5 @@ comma separated email addresses to be notified about tenant claim	property	no	Ko
 record has been saved	property	no	Posten er lagret
 invoice remark	property	no	Fakturanotat
 please select a part of town	property	no	Vennligst velg bydel
+location %1 has been saved	property	no	Lokasjon %1 er lagret
+location %1 has been edited	property	no	Lokasjon %1 er endret

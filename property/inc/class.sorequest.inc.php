@@ -74,10 +74,13 @@
 		function update_priority_key( $values )
 		{
 
-			while (is_array($values['priority_key']) && list($id, $priority_key) = each($values['priority_key']))
+                        if (is_array($values['priority_key']))
+                        {
+                            foreach($values['priority_key'] as $id => $priority_key)
 			{
 				$this->_db->query("UPDATE fm_request_condition_type SET priority_key = $priority_key WHERE id = $id", __LINE__, __FILE__);
 			}
+                        }
 
 			$this->update_score();
 
@@ -1196,14 +1199,20 @@
 				'recommended_year' => (int)$request['recommended_year'],
 			);
 
-			while (is_array($request['location']) && list($input_name, $value) = each($request['location']))
+			if (is_array($request['location']))
+                        {
+                            foreach($request['location'] as $input_name => $value)
 			{
 				$value_set[$input_name] = $value;
 			}
+			}
 
-			while (is_array($request['extra']) && list($input_name, $value) = each($request['extra']))
+			if (is_array($request['extra']))
+                        {
+                            foreach($request['extra'] as $input_name => $value)
 			{
 				$value_set[$input_name] = $value;
+			}
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute, $request['id']);

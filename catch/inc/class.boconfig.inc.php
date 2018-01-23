@@ -255,7 +255,10 @@
 
 			$categories= $this->so->select_category_list();
 
-			while (is_array($categories) && list(,$category) = each($categories))
+			//while (is_array($categories) && list(,$category) = each($categories))
+                        if (is_array($categories))
+                        {
+                            foreach($categories as $key => $category)
 			{
 				$sel_category = '';
 				if ($category['id']==$selected)
@@ -270,6 +273,7 @@
 					'selected'	=> $sel_category
 				);
 			}
+                        }
 
 			for ($i=0;$i<count($category_list);$i++)
 			{

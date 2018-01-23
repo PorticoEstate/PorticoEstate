@@ -154,7 +154,7 @@
 			$tolerances[1]['id'] = 2;
 			$tolerances[2]['id'] = 3;
 
-			while (is_array($tolerances) && list(, $tolerance_entry) = each($tolerances))
+                        foreach($tolerances as $tolerance_entry)
 			{
 				$sel_tolerance_entry = '';
 				if ($tolerance_entry['id'] == $selected)
@@ -194,7 +194,9 @@
 
 			$building_parts = $this->so->get_building_part_list();
 
-			while (is_array($building_parts) && list(, $building_part_entry) = each($building_parts))
+                        if (is_array($building_parts))
+                        {
+                            foreach($building_parts as $building_part_entry)
 			{
 				$sel_building_part_entry = '';
 				if ($building_part_entry['id'] == $selected)
@@ -209,6 +211,7 @@
 					'selected' => $sel_building_part_entry
 				);
 			}
+                        }
 
 			for ($i = 0; $i < count($building_part_list); $i++)
 			{

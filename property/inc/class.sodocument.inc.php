@@ -490,7 +490,9 @@
 				$document['link'] = str_replace('\\', '/', $document['link']);
 			}
 
-			while (is_array($document['location']) && list($input_name, $value) = each($document['location']))
+                        if (is_array($document['location']))
+                        {
+                            foreach($document['location'] as $input_name => $value)
 			{
 				if ($value)
 				{
@@ -498,8 +500,11 @@
 					$vals[] = $value;
 				}
 			}
+                        }
 
-			while (is_array($document['extra']) && list($input_name, $value) = each($document['extra']))
+                        if (is_array($document['extra']))
+                        {
+                            foreach($document['extra'] as $input_name => $value)
 			{
 				if ($value)
 				{
@@ -507,6 +512,7 @@
 					$vals[] = $value;
 				}
 			}
+                        }
 
 			if ($cols)
 			{

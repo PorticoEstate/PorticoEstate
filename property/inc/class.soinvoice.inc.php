@@ -935,11 +935,15 @@
 			$receipt = array();
 			$GLOBALS['phpgw']->db->transaction_begin();
 
-			while ($entry = each($values['counter']))
+			//while ($entry = each($values['counter']))
+                        if (is_array($values['counter']))
+                        {
+                            foreach($values['counter'] as $key => $value)
 			{
 				$local_error = false;
 
-				$n = $entry[0];
+				//$n = $entry[0];
+                                $n = $key;
 
 				//_debug_array($entry);
 				$id = (int)$values['id'][$n];
@@ -1072,6 +1076,7 @@
 					$receipt['message'][] = array('msg' => lang('Voucher is updated '));
 				}
 			}
+                        }
 
 			if ($update_status)
 			{
