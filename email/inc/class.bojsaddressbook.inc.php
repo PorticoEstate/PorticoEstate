@@ -124,8 +124,11 @@
 		function parse_contactquery($contactquery)
 		{
 			$notfirsttime=False;
-			while(list($k,$v)=each($contactquery))
-			{
+			//while(list($k,$v)=each($contactquery))
+                        if (is_array($contactquery))
+                        {
+                            foreach($contactquery as $k => $v)
+                            {
 				switch($k)
 				{
 					case 'filter':
@@ -197,7 +200,8 @@
 						}
 							
 				}//end switch
-			}//end while
+                            }//end while
+                        }
 //			print "<br /> built query";
 //			print_r($this->contactquery);
 		}//end function
@@ -274,10 +278,14 @@
 		{
 			if($this->get_destboxes())
 			{
-				while(list($name,$list)=each($this->destboxes))
-				{
+				//while(list($name,$list)=each($this->destboxes))
+                                if (is_array($this->destboxes))
+                                {
+                                    foreach($this->destboxes as $name => $list)
+                                    {
 					$this->forget_destbox($name);
-				}
+                                    }
+                                }
 				$this->set_destboxes($this->destboxes);
 			}
 		}
@@ -304,17 +312,21 @@
 		//	print_r($saveddestboxes);
 			$found=false;
 			//We iterate into each box
-			while(list($ak,$li)=each($aryboxes))
-			{
+			//while(list($ak,$li)=each($aryboxes))
+                        if (is_array($aryboxes))
+                        {
+                            foreach($aryboxes as $ak => $li)
+                            {
 //				print $ak." ".$li."<br />";
 //				print_r($li);
 //				print "<br />";
 				//We make shure this box has an array in it
-				if($aryboxes[$ak])
+				if(is_array($aryboxes[$ak]))
 				{
 					//We iterate into the incoming box to search
 					//for its values in the cache
-					while(list($numary,$ary)=each($aryboxes[$ak]))
+					//while(list($numary,$ary)=each($aryboxes[$ak]))
+                                        foreach($aryboxes[$ak] as $numary => $ary)
 					{
 //						print "<br /> Iterating aryboxes $numary";	
 //						print_r($ary);
@@ -324,7 +336,8 @@
 						{
 							//Well, we found that we have this destboxed cached so
 							//now we will iterate through that
-							while(list($numarysave,$arysave)=each($saveddestboxes[$ak]))
+							//while(list($numarysave,$arysave)=each($saveddestboxes[$ak]))
+                                                        foreach($saveddestboxes[$ak] as $numarysave => $arysave)
 							{
 								//We will try and get each addressbook key
 								//out of the cached destbox
@@ -351,8 +364,11 @@
 						//try and evade this search when i find it in the cache, 
 						//it all goes borken
 						//We iterate into the query cache
-						while(list($num,$record)=each($this->result))
-						{
+						//while(list($num,$record)=each($this->result))
+                                                if (is_array($this->result))
+                                                {
+                                                    foreach($this->result as $num => $record)
+                                                    {
 //							print "<br /> Iterating results $id   ---> $name <br />$record[id]---> $record[email]";
 							//Found what we are looking for
 							if($id == $record["id"])
@@ -365,7 +381,8 @@
 								$retboxes[$ak][$id]['name']= $name;
 								
 							}
-						}
+                                                    }
+                                                }
 						reset($this->result);
 						$found=false;
 					}
@@ -378,7 +395,8 @@
 					//Delete the destboxes that need deletion
 					$aryboxes[$ak]=$saveddestboxes[$ak];
 				}
-			}
+                            }
+                        }
 //			print "<br />modified<br />";
 //				print_r($aryboxes);
 				reset($aryboxes);

@@ -414,8 +414,11 @@
 		}
 		unset($prefs['']);
 		//echo "array:<pre>"; print_r($array); echo "</pre>\n";
-		while (is_array($array) && list($var,$value) = each($array))
-		{
+		//while (is_array($array) && list($var,$value) = each($array))
+                if (is_array($array))
+                {
+                    foreach($array as $var => $value)
+                    {
 			if (isset($value) && $value != '' && $value != '**NULL**')
 			{
 				if (is_array($value))
@@ -437,7 +440,8 @@
 			{
 				unset($prefs[$var]);
 			}
-		}
+                    }
+                }
 		//echo "prefix='$prefix', prefs=<pre>"; print_r($repository[$_appname]); echo "</pre>\n";
 
 		// the following hook can be used to verify the prefs 
