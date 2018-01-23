@@ -211,7 +211,7 @@
 					$get_order_excel = 'get_order_excel_bk';
 					break;
 				case 'nlsh':
-					$get_order_excel = 'get_order_excel_bk';//'get_order_excel_nlsh';
+					$get_order_excel = 'get_order_excel_nlsh';
 					break;
 
 				default:
@@ -239,7 +239,7 @@
 				// The income side
 				foreach ($price_items as $price_item) // Runs through all items
 				{
-					$this->lines[] = $this->$get_order_excel($invoice->get_account_in(), $responsibility_in, $invoice->get_service_id(), $building_location_code, $project_id_in, $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+					$this->lines[] = $this->$get_order_excel($invoice, $responsibility_in, $building_location_code, $project_id_in, $price_item, $description);
 				}
 				// The receiver's outlay side
 			//	$this->lines[] = $this->$get_order_excel($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
@@ -339,9 +339,16 @@
 		 * Builds one single order of the excel file.
 		 *
 		 */
-		protected function get_order_excel_bk( $account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month )
+		protected function get_order_excel_bk( $invoice, $responsibility, $building, $project, $price_item, $description )
 		{
-
+			$account = $invoice->get_account_in();
+			$service = $invoice->get_service_id();
+			$contract_id = $invoice->get_contract_id();
+			$part_no = $price_item->get_agresso_id();
+			$amount = -1.0 * $price_item->get_total_price();
+			$bill_year = $this->billing_job->get_year();
+			$bill_month = $this->billing_job->get_month();
+	//		$this->billing_job->get_month()
 			//$order_id = $order_id + 39500000;
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			//$order = array();
@@ -350,6 +357,48 @@
 			$order = array(
 				'contract_id' => $contract_id,
 				'account' => $account,
+				'client_ref' => $client_ref,
+				'header' => utf8_decode($header),
+				'bill_year' => $bill_year,
+				'bill_month' => $bill_month,
+				'building' => $building,
+				'name' => $party_name,
+				'amount' => $this->get_formatted_amount_excel($amount),
+				'article description' => utf8_decode($product_item['article_description']),
+				'article_code' => $part_no, //$product_item['article_code'],
+				'batch_id' => "BKBPE{$this->date_str}",
+				'client' => 'BY',
+				'responsibility' => $responsibility,
+				'service' => $service,
+				'project' => $project,
+				'part_no' => $part_no,
+				'counter' => ++$item_counter,
+				'batch_id' => "BKBPE{$this->date_str}",
+				'client' => 'BY',
+				'item_counter' => $item_counter,
+				'text' => utf8_decode($description)
+			);
+
+			return str_replace(array("\n", "\r"), '', $order);
+		}
+
+		protected function get_order_excel_nlsh( $invoice, $responsibility, $building, $project, $price_item, $description )
+		{
+			$account = $invoice->get_account_in();
+			$account_out = $invoice->get_account_out();
+			$service = $invoice->get_service_id();
+			$contract_id = $invoice->get_contract_id();
+			$part_no = $price_item->get_agresso_id();
+			$amount = -1.0 * $price_item->get_total_price();
+			$bill_year = $this->billing_job->get_year();
+			$bill_month = $this->billing_job->get_month();
+			$responsibility = $invoice->get_responsibility_id();
+
+			$item_counter = $counter;
+			$order = array(
+				'contract_id' => $contract_id,
+				'account_in' => $account,
+				'account_out' => $account_out,
 				'client_ref' => $client_ref,
 				'header' => utf8_decode($header),
 				'bill_year' => $bill_year,
