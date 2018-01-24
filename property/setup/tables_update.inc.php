@@ -9972,3 +9972,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.725 to 0.9.17.726
+	*
+	*/
+	$test[] = '0.9.17.725';
+
+	function property_upgrade0_9_17_725()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.admin_booking', 'Administrer booking', 'property');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.726';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

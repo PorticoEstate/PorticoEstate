@@ -2397,3 +2397,5 @@ invoice remark	property	no	Fakturanotat
 please select a part of town	property	no	Vennligst velg bydel
 location %1 has been saved	property	no	Lokasjon %1 er lagret
 location %1 has been edited	property	no	Lokasjon %1 er endret
+update the locations	property	no	Oppdater lokasjoner
+do you really want to update the locations	property	no	Vil du oppdatere lokasjoner

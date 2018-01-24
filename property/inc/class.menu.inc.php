@@ -80,7 +80,11 @@
 			$soadmin_location = CreateObject('property.soadmin_location');
 			$locations = $soadmin_location->select_location_type();
 
-			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
+			$sysadmin = $GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin');
+			$local_admin = $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property');
+			$admin_booking = $GLOBALS['phpgw']->acl->check('.admin_booking', phpgwapi_acl::ADD, 'property');
+
+			if ($sysadmin || $local_admin)
 			{
 				if (is_array($entity_list) && count($entity_list))
 				{
@@ -278,22 +282,6 @@
 					),
 				);
 
-				$admin_children_owner = array
-					(
-					'owner_cats' => array
-						(
-						'text' => lang('Owner Categories'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'owner_cats'))
-					),
-					'owner_attribs' => array
-						(
-						'text' => lang('Owner Attributes'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
-							'appname' => 'property', 'location' => '.owner', 'menu_selection' => 'admin::property::owner::owner_attribs'))
-					)
-				);
-
 
 				$admin_children_accounting = array
 					(
@@ -487,66 +475,111 @@
 						)
 					)
 				);
+			}
 
-				$admin_children_location = array
+			if ($sysadmin || $local_admin || $admin_booking)
+			{
+				foreach ($locations as $location)
+				{
+					$admin_children_location_children["attribute_loc_{$location['id']}"] = array
+						(
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.list_attribute',
+							'type_id' => $location['id'])),
+						'text' => $location['name'] . ' ' . lang('attributes'),
+					);
+					$admin_children_location_children["category_{$location['id']}"] = array
+						(
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location', 'type_id' => $location['id'])),
+						'text' => $location['name'] . ' ' . lang('categories'),
+					);
+				}
+				$admin_children_owner = array
 					(
-					'street' => array
+					'owner_cats' => array
 						(
-						'text' => lang('Street'),
+						'text' => lang('Owner Categories'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'street'))
+							'type' => 'owner_cats'))
 					),
-					'district' => array
+					'owner_attribs' => array
 						(
-						'text' => lang('District'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'district'))
-					),
-					'district' => array
-						(
-						'text' => lang('District'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'district'))
-					),
-					'town' => array
-						(
-						'text' => lang('Part of town'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'part_of_town'))
-					),
-					'location' => array
-						(
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
-						'text' => lang('Location type'),
-						'children' => $admin_children_location_children
-					),
-					'config' => array
-						(
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.config')),
-						'text' => lang('Config')
-					),
-					'update_location' => array
-						(
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
-						'text' => lang('update location')
-					),
-					'location_contact' => array
-						(
-						'text' => lang('location contact'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'location_contact'))
-					),
-					'location_exception' => array
-						(
-						'text' => lang('location exception'),
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-							'type' => 'location_exception')),
-						'children' => $location_exception_children
-
+						'text' => lang('Owner Attributes'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.ui_custom.list_attribute',
+							'appname' => 'property', 'location' => '.owner', 'menu_selection' => 'admin::property::owner::owner_attribs'))
 					)
 				);
 
-				$menus['admin'] = array
+			}
+
+			if ($sysadmin || $local_admin || $admin_booking	)
+			{
+					$admin_children_location = array
+						(
+						'street' => array
+							(
+							'text' => lang('Street'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'street'))
+						),
+						'district' => array
+							(
+							'text' => lang('District'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'district'))
+						),
+						'district' => array
+							(
+							'text' => lang('District'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'district'))
+						),
+						'town' => array
+							(
+							'text' => lang('Part of town'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'part_of_town'))
+						),
+						'location' => array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
+							'text' => lang('Location type'),
+							'children' => $admin_children_location_children
+						),						
+						'update_location' => array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
+							'text' => lang('update location')
+						)
+					);
+				}
+
+
+				if ($sysadmin || $local_admin)
+				{
+
+					$admin_children_location['location_contact'] = array
+							(
+							'text' => lang('location contact'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'location_contact'))
+						);
+					$admin_children_location['location_exception'] = array
+							(
+							'text' => lang('location exception'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'location_exception')),
+							'children' => $location_exception_children
+
+						);
+
+					$admin_children_location['config'] = array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.config')),
+							'text' => lang('Config')
+						);
+
+					$menus['admin'] = array
 					(
 					'index' => array
 						(
@@ -819,6 +852,31 @@
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 							'type' => 'pending_action_type'))
 					)
+				);
+			}
+			else if($admin_booking)
+			{
+					$menus['admin'] = array
+					(
+					'import' => array
+						(
+						'text' => lang('Generic import'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiimport.index'))
+					),
+					'location' => array
+						(
+						'text' => lang('Admin Location'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
+						'image' => array('property', 'location'),
+						'children' => $admin_children_location
+					),
+					'owner' => array
+						(
+						'text' => lang('Owner'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'owner', 'admin' => true)),
+						'children' => $admin_children_owner
+					),
 				);
 			}
 

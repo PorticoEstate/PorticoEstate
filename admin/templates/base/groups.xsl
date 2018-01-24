@@ -91,11 +91,11 @@
 <xsl:template match="group_add">
 	<div>
 		<xsl:if test="add_access = 1">
-			<a href="{add_url}">
+			<a href="{add_url}" class="pure-button pure-button-primary">
 				<xsl:value-of select="lang_add" />
 			</a>
 		</xsl:if>
-		<a href="{done_url}">
+		<a href="{done_url}" class="pure-button pure-button-primary">
 			<xsl:value-of select="lang_done" />
 		</a>
 	</div>
@@ -215,8 +215,8 @@
 				</div>
 			</div>
 			<div class="button_group">
-				<input type="submit" name="save" value="{lang_save}" />
-				<input type="submit" name="cancel" value="{lang_cancel}" />
+				<input type="submit" name="save" value="{lang_save}"  class="pure-button pure-button-primary"/>
+				<input type="submit" name="cancel" value="{lang_cancel}" class="pure-button pure-button-primary" />
 			</div>
 		</form>
 	</div>

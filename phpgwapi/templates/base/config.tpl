@@ -80,7 +80,7 @@
 
    <tr bgcolor="{row_on}">
     <td>{lang_Enter_the_site_username_for_peer_servers}.</td>
-    <td><input name="newsettings[site_username]" value="{value_site_username}"></td>
+    <td><input name="newsettings[site_username]" value="{value_site_username}" autocomplete="off"></td>
    </tr>
 
    <tr bgcolor="{row_off}">
