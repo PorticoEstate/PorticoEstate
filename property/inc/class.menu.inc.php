@@ -476,8 +476,24 @@
 					)
 				);
 			}
-			else if( $admin_booking)
+
+			if ($sysadmin || $local_admin || $admin_booking)
 			{
+				foreach ($locations as $location)
+				{
+					$admin_children_location_children["attribute_loc_{$location['id']}"] = array
+						(
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.list_attribute',
+							'type_id' => $location['id'])),
+						'text' => $location['name'] . ' ' . lang('attributes'),
+					);
+					$admin_children_location_children["category_{$location['id']}"] = array
+						(
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+							'type' => 'location', 'type_id' => $location['id'])),
+						'text' => $location['name'] . ' ' . lang('categories'),
+					);
+				}
 				$admin_children_owner = array
 					(
 					'owner_cats' => array
@@ -529,30 +545,11 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
 							'text' => lang('Location type'),
 							'children' => $admin_children_location_children
-						),
-						'config' => array
-							(
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.config')),
-							'text' => lang('Config')
-						),
+						),						
 						'update_location' => array
 							(
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
 							'text' => lang('update location')
-						),
-						'location_contact' => array
-							(
-							'text' => lang('location contact'),
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-								'type' => 'location_contact'))
-						),
-						'location_exception' => array
-							(
-							'text' => lang('location exception'),
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-								'type' => 'location_exception')),
-							'children' => $location_exception_children
-
 						)
 					);
 				}
@@ -560,6 +557,28 @@
 
 				if ($sysadmin || $local_admin)
 				{
+
+					$admin_children_location['location_contact'] = array
+							(
+							'text' => lang('location contact'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'location_contact'))
+						);
+					$admin_children_location['location_exception'] = array
+							(
+							'text' => lang('location exception'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'location_exception')),
+							'children' => $location_exception_children
+
+						);
+
+					$admin_children_location['config'] = array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.config')),
+							'text' => lang('Config')
+						);
+
 					$menus['admin'] = array
 					(
 					'index' => array

@@ -1604,6 +1604,11 @@
 				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
 			);
 
+			if(!$account_id)
+			{
+				 $user_data['expires'] = -1;
+			}
+
 			$data = array
 			(
 				'page_title'			=> $account_id ? lang('edit user') : lang('add user'),
