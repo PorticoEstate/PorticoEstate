@@ -80,7 +80,8 @@
 				'SOMETHING'	=>	'Kategori 1',
 				'not active'	=>	'Utgått',
 				'Owner category'	=> 'Eierkategori',
-				'Admin location'	=> 'Administrer lokasjon'
+				'Admin location'	=> 'Administrer lokasjon',
+				'Admin booking'	=> 'Administrer booking'
 			);
 		}
 
@@ -167,6 +168,9 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.owner', '{$translation}',1,1,'fm_owner')");
 	$translation = p_setup_translate('Vendor');
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_locations (app_id, name, descr, allow_grant, allow_c_attrib,c_attrib_table) VALUES ({$app_id}, '.vendor', '{$translation}',1,1,'fm_vendor')");
+
+	$translation = p_setup_translate('Admin booking');
+	$GLOBALS['phpgw']->locations->add('.admin_booking', $translation, 'property');
 
 	$GLOBALS['phpgw']->locations->add('.jasper', 'JasperReport', 'property', $allow_grant = true);
 

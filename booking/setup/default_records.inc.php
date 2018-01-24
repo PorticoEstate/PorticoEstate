@@ -273,12 +273,15 @@
 	}
 
 	$aclobj->set_account_id($booking_admin, true);
+	$aclobj->add('booking', 'run', 1);
 	$aclobj->add('booking', 'admin', 15);
 	$aclobj->add('booking', '.office', 15);
-	$aclobj->add('booking', 'run', 1);
-	$aclobj->add('property', 'admin', 15);
-	$aclobj->add('property', '.', 1);
+	$aclobj->add('property', '.admin', 15);
+//	$aclobj->add('property', '.', 1);
 	$aclobj->add('property', 'run', 1);
+	$aclobj->add('property', '.admin_booking', 1);
+	$aclobj->add('property', '.location', 15);
+	$aclobj->add('property', '.owner', 15);
 	$aclobj->add('preferences', 'changepassword', 1);
 	$aclobj->add('preferences', '.', 1);
 	$aclobj->add('preferences', 'run', 1);
