@@ -1633,7 +1633,7 @@
 				'lang_shell'			=> $lang_shell,
 				'homedirectory'			=> $homedirectory,
 				'loginshell'			=> $loginshell,
-				'account_enabled'		=> (int) $user_data['enabled'],
+				'account_enabled'		=> !$account_id ? 1 : (int) $user_data['enabled'],
 				'account_firstname'		=> $user_data['firstname'],
 				'account_lastname'		=> $user_data['lastname'],
 				'account_passwd'		=> '',
