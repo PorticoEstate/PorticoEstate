@@ -1002,7 +1002,7 @@
 					// array_extra_accounts[X]['acctnum'] : integer
 					// array_extra_accounts[X]['status'] string = "enabled" | "disabled" | "empty"
 					//while(list($key,$value) = each($this->unprocessed_prefs['email']['ex_accounts']))
-					while(list($key,$value) = each($this->unprocessed_prefs['email']['ex_accounts']))
+					foreach($this->unprocessed_prefs['email']['ex_accounts'] as $key => $value)
 					{
 						if ($this->debug_logins > 1) { $this->dbug->out('mail_msg.begin_request('.__LINE__.'): inside loop: for each $this->unprocessed_prefs[email][ex_accounts] ; $key: ['.serialize($key).'] $value DUMP:', $value); } 
 						// if we are here at all then this array item must have some data defined
@@ -5008,9 +5008,10 @@ HTML;
 			}
 			
 			$finding = False;
-			@reset($haystack);
+			//@reset($haystack);
 			$i = 0;
-			while(list($key,$value) = each($haystack))
+			//while(list($key,$value) = each($haystack))
+			foreach($haystack as $key => $value)
 			{
 				//if ((string)$value == (string)$needle)
 				if ((string)$haystack[$key] == (string)$needle)

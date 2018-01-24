@@ -305,12 +305,16 @@
 			arsort($field_list);
 		}
 		$return_array = Array();
-		@reset($field_list);
+		//@reset($field_list);
 		$i = 1;
-		while(list($key,$value) = each($field_list))
+		//while(list($key,$value) = each($field_list))
+		if (is_array($field_list))
 		{
-			$return_array[] = $key;
-			echo '('.$i++.') Field: <b>'.$value."</b>\t\tMsg Num: <b>".$key."</b><br />\n";
+			foreach($field_list as $key => $value)
+			{
+				$return_array[] = $key;
+				echo '('.$i++.') Field: <b>'.$value."</b>\t\tMsg Num: <b>".$key."</b><br />\n";
+			}
 		}
 		@reset($return_array);
 		return $return_array;
