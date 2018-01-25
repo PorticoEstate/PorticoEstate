@@ -322,7 +322,7 @@
 					  'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'admin.uicategories.index', 'appname' => 'property', 'location' => '.invoice.dimb', 'global_cats' => 'true', 'menu_selection' => 'admin::property::accounting::dimb_roles') )
 					  ),
 					 */
-					
+
 					  'dimb_role'	=> array
 					  (
 					  'text'	=> lang('dimb roles'),
@@ -481,12 +481,16 @@
 			{
 				foreach ($locations as $location)
 				{
-					$admin_children_location_children["attribute_loc_{$location['id']}"] = array
-						(
-						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.list_attribute',
-							'type_id' => $location['id'])),
-						'text' => $location['name'] . ' ' . lang('attributes'),
-					);
+					if ($sysadmin || $local_admin)
+					{
+						$admin_children_location_children["attribute_loc_{$location['id']}"] = array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.list_attribute',
+								'type_id' => $location['id'])),
+							'text' => $location['name'] . ' ' . lang('attributes'),
+						);
+					}
+
 					$admin_children_location_children["category_{$location['id']}"] = array
 						(
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
@@ -545,19 +549,18 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiadmin_location.index')),
 							'text' => lang('Location type'),
 							'children' => $admin_children_location_children
-						),						
-						'update_location' => array
-							(
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
-							'text' => lang('update location')
 						)
 					);
 				}
 
-
 				if ($sysadmin || $local_admin)
 				{
 
+					$admin_children_location['update_location'] = array
+							(
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.update_location')),
+							'text' => lang('update location')
+						);
 					$admin_children_location['location_contact'] = array
 							(
 							'text' => lang('location contact'),

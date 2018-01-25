@@ -81,7 +81,8 @@
 				'not active'	=>	'Utgått',
 				'Owner category'	=> 'Eierkategori',
 				'Admin location'	=> 'Administrer lokasjon',
-				'Admin booking'	=> 'Administrer booking'
+				'Admin booking'	=> 'Administrer booking',
+				'Building number'	=> 'Bygningsnummer'
 			);
 		}
 
@@ -805,6 +806,9 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_choice (location_id, attrib_id, id, value) VALUES ($location_id, 11, 2, 'Not OK')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 18, 'street_id', 'street_id', 'street_id', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 19, 'street_number', 'street_number', 'street_number', 'I', NULL, NULL, NULL, 4, NULL, NULL, 'True', NULL)");
+	$translation = p_setup_translate('Building number');
+
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 20, 'building_number', '{$translation}', '{$translation}', 'I', NULL, NULL, NULL, 8, NULL, NULL, 'True', 1)");
 
 	$location_id = $GLOBALS['phpgw']->locations->get_id('property', '.location.3');
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_cust_attribute (location_id, id, column_name, input_text, statustext, datatype, list, attrib_sort, size, precision_, scale, default_value, nullable,custom) VALUES ($location_id, 12, 'status', 'Status', 'Status', 'LB', NULL, 1, NULL, NULL, NULL, NULL, 'True', 1)");
