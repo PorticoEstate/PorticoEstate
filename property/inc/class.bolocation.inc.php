@@ -187,7 +187,19 @@
 
 			$columns = $this->so->get_column_list($location_id);
 			$columns = array_merge($columns, $this->get_column_list());
-			return $this->bocommon->select_multi_list($selected, $columns);
+			
+			$values = array();
+
+			foreach ($columns as $column)
+			{
+				$values[] = array
+				(
+					'id' => $column['id'],
+					'name' => $column['input_text'],
+					'selected' => in_array($column['id'], $selected),
+				);
+			}
+			return $values;
 		}
 
 		function get_column_list()
