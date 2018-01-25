@@ -116,11 +116,16 @@
 			# parse flag
 			$t->set_block("frmhandle", "flag", "flags");
  			$t->set_var('lang_check_flags',lang('Check Flags for type of mails'));
-			while (list($name, $value) = each($this->flags_array)) {
-				$t->set_var("flg_name", $name);
-				$t->set_var("flg_value", $value);
-				$t->parse("flags", "flag", True);
-			}	
+			//while (list($name, $value) = each($this->flags_array))
+			if (is_array($this->flags_array))
+			{
+				foreach($this->flags_array as $name => $value)
+				{
+					$t->set_var("flg_name", $name);
+					$t->set_var("flg_value", $value);
+					$t->parse("flags", "flag", True);
+				}
+			}
 
 			# parse month_on
 			$t->set_block("frmhandle", "month_on", "months_on");
@@ -130,17 +135,22 @@
  			$t->set_var('lang_return_mails_during',lang('Return mails during this time period'));
  			$t->set_var('lang_search_button',lang('search'));
  			$t->set_var('lang_clear_form_button',lang('clear form'));
-			while (list($name, $value) = each($this->month_array)) {
-				$t->set_var("month_value", $name);
-				$t->set_var("month_option", $value);
-				if ($todays_date["month"] == $name) {
-					$t->set_var("selected", "SELECTED");
-				} else {
-					$t->set_var("selected", "");
+			//while (list($name, $value) = each($this->month_array))
+			if (is_array($this->month_array))
+			{
+				foreach($this->month_array as $name => $value)
+				{
+					$t->set_var("month_value", $name);
+					$t->set_var("month_option", $value);
+					if ($todays_date["month"] == $name) {
+						$t->set_var("selected", "SELECTED");
+					} else {
+						$t->set_var("selected", "");
+					}
+					$t->parse("months_on", "month_on", True);
 				}
-				$t->parse("months_on", "month_on", True);
 			}
-			reset($this->month_array);
+			//reset($this->month_array);
 
 			# parse day_on
 			$t->set_block("frmhandle", "day_on", "days_on");
@@ -170,17 +180,22 @@
 
 			# parse month_before
 			$t->set_block("frmhandle", "month_before", "months_before");
-			while (list($name, $value) = each($this->month_array)) {
-				$t->set_var("month_value", $name);
-				$t->set_var("month_option", $value);
-				if ($week_date["month"] == $name) {
-					$t->set_var("selected", "SELECTED");
-				} else {
-					$t->set_var("selected", "");
+			//while (list($name, $value) = each($this->month_array))
+			if (is_array($this->month_array))
+			{
+				foreach($this->month_array as $name => $value)
+				{
+					$t->set_var("month_value", $name);
+					$t->set_var("month_option", $value);
+					if ($week_date["month"] == $name) {
+						$t->set_var("selected", "SELECTED");
+					} else {
+						$t->set_var("selected", "");
+					}
+					$t->parse("months_before", "month_before", True);
 				}
-				$t->parse("months_before", "month_before", True);
 			}
-			reset($this->month_array);
+			//reset($this->month_array);
 
 			# parse day_before
 			$t->set_block("frmhandle", "day_before", "days_before");
@@ -210,17 +225,22 @@
 
 			# parse month_after
 			$t->set_block("frmhandle", "month_after", "months_after");
-			while (list($name, $value) = each($this->month_array)) {
-				$t->set_var("month_value", $name);
-				$t->set_var("month_option", $value);
-				if ($month_date["month"] == $name) {
-					$t->set_var("selected", "SELECTED");
-				} else {
-					$t->set_var("selected", "");
+			//while (list($name, $value) = each($this->month_array))
+			if (is_array($this->month_array))
+			{
+				foreach($this->month_array as $name => $value)
+				{
+					$t->set_var("month_value", $name);
+					$t->set_var("month_option", $value);
+					if ($month_date["month"] == $name) {
+						$t->set_var("selected", "SELECTED");
+					} else {
+						$t->set_var("selected", "");
+					}
+					$t->parse("months_after", "month_after", True);
 				}
-				$t->parse("months_after", "month_after", True);
 			}
-			reset($this->month_array);
+			//reset($this->month_array);
 			
 			# parse day_after
 			$t->set_block("frmhandle", "day_after", "days_after");
@@ -317,7 +337,8 @@
 				$search_vars['str']['CC'] = trim(phpgw::get_var('search_cc'));
 				$search_vars['str']['BCC'] = trim(phpgw::get_var('search_bcc'));
 				$search_vars['str']['KEYWORD'] = trim(phpgw::get_var('search_keyword'));
-				while (list($name, $value) = each($search_vars['str']))
+				//while (list($name, $value) = each($search_vars['str']))
+				foreach($search_vars['str'] as $name => $value)
 				{
 					if ($value != '')
 					{
@@ -327,15 +348,19 @@
 				}
 
 				# Process the flags
-				while (list($name, $value) = each($this->flags_array))
+				//while (list($name, $value) = each($this->flags_array))
+				if (is_array($this->flags_array))
 				{
-					if (phpgw::get_var($name) == "on")
+					foreach($this->flags_array as $name => $value)
 					{
-						$temp = explode('_', $name);
-						$imap_search_str .= strtoupper($temp[1]).' ';
+						if (phpgw::get_var($name) == "on")
+						{
+							$temp = explode('_', $name);
+							$imap_search_str .= strtoupper($temp[1]).' ';
+						}
 					}
 				}
-				reset($this->flags_array);
+				//($this->flags_array);
 		
 				# Process dates
 				if (phpgw::get_var('date_on') == "on")

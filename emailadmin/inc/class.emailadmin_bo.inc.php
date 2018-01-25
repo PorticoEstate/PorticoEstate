@@ -282,14 +282,18 @@
 					
 					$string = imap_8bit($_string);
 					$stringParts = explode("=\r\n",$string);
-					while(list($key,$value) = each($stringParts))
+					//while(list($key,$value) = each($stringParts))
+					if (is_array($stringParts))
 					{
-						if(!empty($retString)) $retString .= " ";
-						$value = str_replace(" ","_",$value);
-						// imap_8bit does not convert "?"
-						// it does not need, but it should
-						$value = str_replace("?","=3F",$value);
-						$retString .= "=?".strtoupper($this->displayCharset)."?Q?" . $value. "?=";
+						foreach($stringParts as $key => $value)
+						{
+							if(!empty($retString)) $retString .= " ";
+							$value = str_replace(" ","_",$value);
+							// imap_8bit does not convert "?"
+							// it does not need, but it should
+							$value = str_replace("?","=3F",$value);
+							$retString .= "=?".strtoupper($this->displayCharset)."?Q?" . $value. "?=";
+						}
 					}
 					#exit;
 					return $retString;
