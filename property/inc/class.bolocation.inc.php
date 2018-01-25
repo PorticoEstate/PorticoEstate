@@ -1164,7 +1164,6 @@ JS;
 		public function get_locations(  )
 		{
 			$location_code = phpgw::get_var('query');
-			$_level = count(explode('-', $location_code)) + 1;
 
 			$values = $this->so->get_locations($location_code);
 			if($values)

@@ -2304,13 +2304,21 @@
 			else
 			{
 				$query = $this->db->db_addslashes($location_arr[0]);
-				$filtermethod = "WHERE loc{$level}_name {$this->like} '%{$query}%'";
+				$filtermethod = "WHERE name {$this->like} '%{$query}%'";
 			}
+
+//			$metadata = $this->db->metadata("fm_location{$level}");
+//
+//			if(!$metadata)
+//			{
+//				return array();
+//			}
 
 			$values = array();
 			if ($location_code)
 			{
-				$sql = "SELECT loc{$level}_name as name, location_code FROM fm_location{$level} {$filtermethod}"
+	//			$sql = "SELECT loc{$level}_name as name, location_code FROM fm_location{$level} {$filtermethod}"
+				$sql = "SELECT name, location_code FROM fm_locations {$filtermethod}"
 				. " ORDER BY location_code";
 				$this->db->limit_query($sql, 0, __LINE__, __FILE__);
 				while ($this->db->next_record())
