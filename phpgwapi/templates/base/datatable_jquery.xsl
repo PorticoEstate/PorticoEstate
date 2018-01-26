@@ -1187,7 +1187,7 @@
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 							if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
 							{
-								$('td', nRow).addClass('priority' + aData['priority']);
+								$(nRow).addClass('priority' + aData['priority']);
 							}
 							//In case the row is folded as result of responsive behaviour
 							$('td', nRow).parents('tr').addClass('context-menu');
