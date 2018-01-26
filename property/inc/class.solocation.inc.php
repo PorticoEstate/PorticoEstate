@@ -1582,7 +1582,7 @@
 			$receipt = array();
 
                         if (is_array($location))
-                        {                        
+                        {
                             foreach($location as $input_name => $value)
 			{
 				if ($value)
@@ -2293,33 +2293,49 @@
 		public function get_locations( $location_code )
 		{
 			$location_arr = explode('-', $location_code);
-			$level = count($location_arr) +1;
+			$current_level = count($location_arr);
+			$next_level = $current_level + 1;
 
-			$filtermethod = '';
-
+			$filtermethod1 = '';
+			$filtermethod2 = '';
 			if(ctype_digit($location_arr[0]))
 			{
-				$filtermethod = "WHERE location_code {$this->like} '{$location_code}%'";
+				$filtermethod1 = "WHERE location_code {$this->like} '{$location_code}%'";
+				$filtermethod2 = $filtermethod1;
 			}
 			else
 			{
 				$query = $this->db->db_addslashes($location_arr[0]);
-				$filtermethod = "WHERE name {$this->like} '%{$query}%'";
+				$filtermethod1 = "WHERE loc{$level}_name {$this->like} '%{$query}%'";
+				$filtermethod2 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%'";
 			}
 
-//			$metadata = $this->db->metadata("fm_location{$level}");
-//
-//			if(!$metadata)
-//			{
-//				return array();
-//			}
+			$metadata1 = $this->db->metadata("fm_location{$current_level}");
+
+			if(!$metadata1)
+			{
+				return array();
+			}
+
+
+			$sql = "SELECT location_code, loc{$current_level}_name AS name"
+				. " FROM fm_location{$current_level} {$filtermethod1}";
+
+
+			$metadata2 = $this->db->metadata("fm_location{$next_level}");
+
+			if($metadata2)
+			{
+				$sql .= " UNION"
+					. " SELECT location_code, loc{$next_level}_name AS name"
+					. " FROM fm_location{$next_level} {$filtermethod2}";
+			}
+
+			$sql .= " ORDER BY location_code";
 
 			$values = array();
 			if ($location_code)
 			{
-	//			$sql = "SELECT loc{$level}_name as name, location_code FROM fm_location{$level} {$filtermethod}"
-				$sql = "SELECT name, location_code FROM fm_locations {$filtermethod}"
-				. " ORDER BY location_code";
 				$this->db->limit_query($sql, 0, __LINE__, __FILE__);
 				while ($this->db->next_record())
 				{
