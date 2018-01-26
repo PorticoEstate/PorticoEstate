@@ -258,7 +258,8 @@
 						}
 
 						// Now make them a member of this group in phpgw.
-						while ( list($key,$members) = @each($thismembers))
+						//while ( list($key,$members) = @each($thismembers))
+						foreach($thismembers as $key => $members)
 						{
 							if ($key == 'count')
 							{
@@ -266,8 +267,9 @@
 							}
 							/* echo '<br />members: ' . $members; */
 							$tmpid = 0;
-							@reset($account_info);
-							while(list($x,$y) = each($account_info))
+							//@reset($account_info);
+							//while(list($x,$y) = each($account_info))
+							foreach($account_info as $x => $y)
 							{
 								/* echo '<br />checking: '.$y['account_lid']; */
 								if ($members == $y['account_lid'])
@@ -296,20 +298,28 @@
 								$pref = CreateObject('phpgwapi.preferences',$tmpid);
 								$pref->set_account_id(intval($tmpid));
 								$pref->read();
-								@reset($_POST['s_apps']);
-								while (list($key,$app) = each($_POST['s_apps']))
+								//@reset($_POST['s_apps']);
+								//while (list($key,$app) = each($_POST['s_apps']))
+								if (is_array($_POST['s_apps']))
 								{
-									$GLOBALS['phpgw']->hooks->single('add_def_pref',$app);
+									foreach($_POST['s_apps'] as $key => $app)
+									{
+										$GLOBALS['phpgw']->hooks->single('add_def_pref',$app);
+									}
 								}
 								$pref->save_repository();
 							}
 						}
 						/* Now give this group some rights */
 						$GLOBALS['phpgw']->acl->set_account_id($thisacctid);
-						@reset($_POST['s_apps']);
-						while (list($key,$app) = each($_POST['s_apps']))
+						//@reset($_POST['s_apps']);
+						//while (list($key,$app) = each($_POST['s_apps']))
+						if (is_array($_POST['s_apps']))
 						{
-							$GLOBALS['phpgw']->acl->add($app,'run',1);
+							foreach($_POST['s_apps'] as $key => $app)
+							{
+								$GLOBALS['phpgw']->acl->add($app,'run',1);
+							}
 						}
 						$GLOBALS['phpgw']->acl->add('preferences','changepassword', 1);
 						$GLOBALS['phpgw']->acl->save_repository();
@@ -469,16 +479,18 @@
 	$setup_tpl->set_block('ldap','footer','footer');
 
 	$user_list = '';
-	while (list($key,$account) = each($account_info))
+	//while (list($key,$account) = each($account_info))
+	foreach($account_info as $key => $account)
 	{
 		$user_list .= '<option value="' . $account['id'] . '">'
 			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
 			. '</option>';
 	}
 
-	@reset($account_info);
+	//@reset($account_info);
 	$admin_list = '';
-	while (list($key,$account) = each($account_info))
+	//while (list($key,$account) = each($account_info))
+	foreach($account_info as $key => $account)
 	{
 		$admin_list .= '<option value="' . $account['lid'] . '">'
 			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
@@ -486,7 +498,8 @@
 	}
 
 	$group_list = '';
-	while (list($key,$group) = each($group_info))
+	//while (list($key,$group) = each($group_info))
+	foreach($group_info as $key => $group)
 	{
 		$group_list .= '<option value="' . $group['id'] . '">'
 			. $group['lid']
@@ -494,22 +507,26 @@
 	}
 
 	$app_list = '';
-	while(list($appname,$apptitle) = each($apps))
+	//while(list($appname,$apptitle) = each($apps))
+	if (is_array($apps))
 	{
-		if($appname == 'admin' ||
-			$appname == 'skel' ||
-			$appname == 'backup' ||
-			$appname == 'netsaint' ||
-			$appname == 'developer_tools' ||
-			$appname == 'phpsysinfo' ||
-			$appname == 'eldaptir' ||
-			$appname == 'qmailldap')
+		foreach($apps as $appname => $apptitle)
 		{
-			$app_list .= '<option value="' . $appname . '">' . $apptitle . '</option>';
-		}
-		else
-		{
-			$app_list .= '<option value="' . $appname . '" selected>' . $apptitle . '</option>';
+			if($appname == 'admin' ||
+				$appname == 'skel' ||
+				$appname == 'backup' ||
+				$appname == 'netsaint' ||
+				$appname == 'developer_tools' ||
+				$appname == 'phpsysinfo' ||
+				$appname == 'eldaptir' ||
+				$appname == 'qmailldap')
+			{
+				$app_list .= '<option value="' . $appname . '">' . $apptitle . '</option>';
+			}
+			else
+			{
+				$app_list .= '<option value="' . $appname . '" selected>' . $apptitle . '</option>';
+			}
 		}
 	}
 

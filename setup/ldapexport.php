@@ -128,7 +128,8 @@
 	}
 
 	$newaccount = array();
-	while(list($key,$data) = @each($account_info))
+	//while(list($key,$data) = @each($account_info))
+	foreach($account_info as $key => $data)
 	{
 		$tmp = $data['id'];
 		$newaccount[$tmp] = $data;
@@ -299,16 +300,18 @@
 	$setup_tpl->set_block('ldap','footer','footer');
 
 	$user_list = '';
-	while(list($key,$account) = @each($account_info))
+	//while(list($key,$account) = @each($account_info))
+	foreach($account_info as $key => $account)
 	{
 		$user_list .= '<option value="' . $account['id'] . '">'
 			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
 			. '</option>';
 	}
 
-	@reset($account_info);
+	//@reset($account_info);
 	$admin_list = '';
-	while(list($key,$account) = @each($account_info))
+	//while(list($key,$account) = @each($account_info))
+	foreach($account_info as $key => $account)
 	{
 		$admin_list .= '<option value="' . $account['id'] . '">'
 			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
@@ -316,11 +319,15 @@
 	}
 
 	$group_list = '';
-	while(list($key,$group) = @each($group_info))
+	//while(list($key,$group) = @each($group_info))
+	if (is_array($group_info))
 	{
-		$group_list .= '<option value="' . $group['id'] . '">'
-			. $group['lid']
-			. '</option>';
+		foreach($group_info as $key => $group)
+		{
+			$group_list .= '<option value="' . $group['id'] . '">'
+				. $group['lid']
+				. '</option>';
+		}
 	}
 
 	$setup_tpl->set_var('action_url','ldapexport.php');
