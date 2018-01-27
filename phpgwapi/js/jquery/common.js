@@ -160,7 +160,7 @@ JqueryPortico.searchLink = function (key, oData)
 	var name = oData[key];
 	var link = oData['query_location'][key];
 
-	return '<a id="' + link + '" onclick="searchData(this.id);">' + name + '</a>';
+	return '<a href="#" id="' + link + '" onclick="searchData(this.id);">' + name + '</a>';
 };
 
 JqueryPortico.formatCheck = function (key, oData)
