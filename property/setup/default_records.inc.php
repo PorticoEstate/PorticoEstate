@@ -747,10 +747,10 @@
 			. implode(',', $pk) . "','"
 			. implode(',', $ix) . "')");
 
-		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' . "' WHERE id = '1'");
-		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:2:{i:1;s:1:"1";i:2;s:1:"2";}' . "' WHERE id = '2'");
-		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:3:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";}' . "' WHERE id = '3'");
-		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = '" . 'a:1:{i:1;s:1:"1";}' . "' WHERE id = '4'");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = 'a:1:{i:1;s:1:\"1\";}' WHERE id = 1");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = 'a:2:{i:1;s:1:\"1\";i:2;s:1:\"2\";}', list_address = 1 WHERE id = 2");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = 'a:3:{i:1;s:1:\"1\";i:2;s:1:\"2\";i:3;s:1:\"3\";}', list_address = 1 WHERE id = 3");
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_location_type set list_info = 'a:1:{i:1;s:1:\"1\";}', list_address = 1  WHERE id = 4");
 
 		$location_id = $GLOBALS['phpgw']->locations->get_id('property', ".location.{$location_type}");
 

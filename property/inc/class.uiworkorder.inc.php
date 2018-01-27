@@ -730,6 +730,16 @@
 					'msg' => lang('Please select a valid project !'));
 			}
 
+			if (empty($values['ecodimb']))
+			{
+				$values['ecodimb'] = $project['ecodimb'];
+				if(!$values['ecodimb'])
+				{
+					$this->receipt['error'][] = array('msg' => lang('Please select dimb!'));
+					$error_id = true;
+				}
+			}
+
 			if (!$values['status'])
 			{
 				$this->receipt['error'][] = array(
