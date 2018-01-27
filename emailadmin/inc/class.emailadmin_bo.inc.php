@@ -391,7 +391,9 @@
 			{
 				if (is_array($profileData) && count($profileData)) {	// if we have a profile use that
 					reset($profileData);
-					list($found,$data) = each($profileData);
+					//list($found,$data) = each($profileData);
+					$found = key($profileData);
+					$data = current($profileData);
 					$this->profileID = $_profileID = $data['profileID'];
 				} elseif ($GLOBALS['phpgw_info']['server']['smtp_server']) { // create a default profile, from the data in the api config
 					$this->profileID = $_profileID = $this->soemailadmin->addProfile(array(

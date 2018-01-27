@@ -41,7 +41,7 @@
 			{
 				//@reset($val);
 				//while(list($key,$value) = each($val))
-                                foreach($val as $key => $value)
+                foreach($val as $key => $value)
 				{
 					if(is_array($key))
 					{
@@ -56,7 +56,7 @@
 						if($x_pre && $key == 'name')
 						{
 							$x_key = $x_pre.$value;
-							list($key,$value) = each($val);
+							//list($key,$value) = each($val);
 							$key=$x_key;
 						}
 						if($this->bo->parameter[$key]['type'] == 'function')

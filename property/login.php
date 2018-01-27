@@ -451,7 +451,8 @@
 	if($GLOBALS['phpgw_info']['server']['show_domain_selectbox'] && $last_loginid !== '')
 	{
 		reset($GLOBALS['phpgw_domain']);
-		list($default_domain) = each($GLOBALS['phpgw_domain']);
+		//list($default_domain) = each($GLOBALS['phpgw_domain']);
+		$default_domain = key($GLOBALS['phpgw_domain']);
 
 		if($_COOKIE['last_domain'] != $default_domain && !empty($_COOKIE['last_domain']))
 		{

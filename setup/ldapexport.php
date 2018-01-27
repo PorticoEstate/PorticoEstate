@@ -300,22 +300,23 @@
 	$setup_tpl->set_block('ldap','footer','footer');
 
 	$user_list = '';
-	//while(list($key,$account) = @each($account_info))
-	foreach($account_info as $key => $account)
-	{
-		$user_list .= '<option value="' . $account['id'] . '">'
-			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
-			. '</option>';
-	}
-
-	//@reset($account_info);
 	$admin_list = '';
-	//while(list($key,$account) = @each($account_info))
-	foreach($account_info as $key => $account)
+	
+	if (is_array($account_info))
 	{
-		$admin_list .= '<option value="' . $account['id'] . '">'
-			. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
-			. '</option>';
+		foreach($account_info as $key => $account)
+		{
+			$user_list .= '<option value="' . $account['id'] . '">'
+				. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
+				. '</option>';
+		}
+
+		foreach($account_info as $key => $account)
+		{
+			$admin_list .= '<option value="' . $account['id'] . '">'
+				. $common->display_fullname($account['lid'],$account['firstname'],$account['lastname'])
+				. '</option>';
+		}
 	}
 
 	$group_list = '';

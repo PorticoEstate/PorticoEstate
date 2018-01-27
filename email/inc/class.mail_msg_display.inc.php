@@ -325,9 +325,10 @@ class mail_msg extends mail_msg_wrappers
 
 		if ($this->get_arg_value('newsmode'))
 		{
-			while($pref = each($GLOBALS['phpgw_info']['user']['preferences']['nntp']))
+			//while($pref = each($GLOBALS['phpgw_info']['user']['preferences']['nntp']))
+			foreach($GLOBALS['phpgw_info']['user']['preferences']['nntp'] as $key => $value)
 			{
-				$GLOBALS['phpgw']->db->query('SELECT name FROM newsgroups WHERE con='.$pref[0]);
+				$GLOBALS['phpgw']->db->query('SELECT name FROM newsgroups WHERE con='.$key);
 				while($GLOBALS['phpgw']->db->next_record())
 				{
 					$item_tags = $item_tags .'<option value="' . urlencode($GLOBALS['phpgw']->db->f('name')) . '">' . $GLOBALS['phpgw']->db->f('name')

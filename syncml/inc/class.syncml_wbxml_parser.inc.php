@@ -261,9 +261,10 @@
 
 		function read_uint8()
 		{
-			$h = each($this->raw_data);
+			//$h = each($this->raw_data);
+			$h = current($this->raw_data);
 
-			return $h === FALSE ? NULL : $h['value'];
+			return $h === FALSE ? NULL : $h;
 		}
 
 		function read_mb_uint32()
@@ -272,7 +273,10 @@
 
 			do
 			{
-				list(, $x) = each($this->raw_data);
+				//list(, $x) = each($this->raw_data);
+				$x = current($this->raw_data);
+				next($this->raw_data);
+				
 				$y <<= 7;
 				$y |= $x & 0x7F;
 			} while($x & 0x80);
