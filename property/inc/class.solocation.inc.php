@@ -2305,8 +2305,10 @@
 			}
 			else
 			{
+				$current_level = 1;
+				$next_level = 2;
 				$query = $this->db->db_addslashes($location_arr[0]);
-				$filtermethod1 = "WHERE loc{$level}_name {$this->like} '%{$query}%'";
+				$filtermethod1 = "WHERE loc{$current_level}_name {$this->like} '%{$query}%'";
 				$filtermethod2 = "WHERE loc{$next_level}_name {$this->like} '%{$query}%'";
 			}
 
