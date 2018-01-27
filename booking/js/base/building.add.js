@@ -40,7 +40,10 @@ function populate_location_data(location_code)
 			{
 //				console.log(data);
 
-				$('#field_building_name').val(data["loc" + level + "_name"]);
+				if(!$('#field_building_name').val())
+				{
+					$('#field_building_name').val(data["loc" + level + "_name"]);
+				}
 				var address = '';
 
 				if (typeof (data['street_name']) !== 'undefined')
@@ -48,9 +51,11 @@ function populate_location_data(location_code)
 					address = data['street_name'] + ' ' + data['street_number'];
 				}
 
-				$("#field_street").val(address);
+				if(!$("#field_street").val())
+				{
+					$("#field_street").val(address);
+				}
 				$("#field_district").val(data['part_of_town_name']);
-
 			}
 		}
 	});
