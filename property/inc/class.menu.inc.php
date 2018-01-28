@@ -520,18 +520,6 @@
 			{
 					$admin_children_location = array
 						(
-						'street' => array
-							(
-							'text' => lang('Street'),
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-								'type' => 'street'))
-						),
-						'district' => array
-							(
-							'text' => lang('District'),
-							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
-								'type' => 'district'))
-						),
 						'district' => array
 							(
 							'text' => lang('District'),
@@ -543,6 +531,12 @@
 							'text' => lang('Part of town'),
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
 								'type' => 'part_of_town'))
+						),
+						'street' => array
+							(
+							'text' => lang('Street'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uigeneric.index',
+								'type' => 'street'))
 						),
 						'location' => array
 							(
