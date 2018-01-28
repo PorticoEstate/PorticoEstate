@@ -11,13 +11,13 @@
 # Download and install netbeans from https://netbeans.org/downloads/
 # Log into the virtual machine with user/passwd: portico/portico
 # $ ssh portico@localhost -p 2222
-# If you need to commit code to the svn server: create a ssh key pair as described: http://savannah.gnu.org/maintenance/SshAccess/
+# If you need to commit code to the git server: you may create and register a ssh key pair as described: https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux
 # - or use what you already have
-# register your key at https://savannah.gnu.org/my/admin/editsshkeys.php
-# Request access to the project at https://savannah.nongnu.org/projects/fmsystem/
 # Navigate to /var/www/html/portico
-# check out the code as
-#   $ svn co svn+ssh://<username>@svn.savannah.nongnu.org/fmsystem/trunk .
+# check out the code as svn:
+#   $ svn co https://github.com/PorticoEstate/PorticoEstate.git/trunk .
+# alternatively use git as described https://help.github.com/articles/cloning-a-repository/
+#   $ git clone https://github.com/PorticoEstate/PorticoEstate.git .
 # create your database in postgresql:
 #   $ createdb portico_<YYYYMMDD>
 # restore database from backup (place the file in the vagrant catalog om the host, and pick it up in /vagrant in the VM):
