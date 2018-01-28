@@ -67,6 +67,11 @@
 				$_filter_building['id'] = $building_id;
 			}
 
+			if(!empty($_filter_building['id']))
+			{
+				unset($_filter_building['part_of_town_id']);
+			}
+
 			if(in_array('building', $types))
 			{
 
@@ -90,7 +95,7 @@
 			}
 //			_debug_array($bui_result);
 
-			if (in_array('organization', $types))
+			if (! $_filter_building && in_array('organization', $types))
 			{
 				$org_result = $this->soorganization->read(array("query" => $searchterm, "sort" => "name",
 					"dir" => "asc", "filters" => array("active" => "1")));

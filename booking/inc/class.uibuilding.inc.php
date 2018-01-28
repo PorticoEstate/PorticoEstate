@@ -146,6 +146,10 @@
 							'label' => lang('Postal City'),
 						),
 						array(
+							'key' => 'location_code',
+							'label' => lang('location code'),
+						),
+						array(
 							'key' => 'district',
 							'label' => lang('District'),
 						),

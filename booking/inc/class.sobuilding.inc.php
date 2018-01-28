@@ -28,11 +28,16 @@
 				'activity_id' => array('type' => 'int', 'required' => false),
 				'part_of_town_id' => array('type' => 'string',
 					'required' => false,
-					'join' => array(
-						'table' => 'fm_location1',
-						'fkey' => 'location_code',
-						'key' => 'location_code',
-						'column' => 'location_code'
+//					'join' => array(
+//						'table' => 'fm_location1',
+//						'fkey' => 'location_code',
+//						'key' => 'location_code',
+//						'column' => 'location_code'
+//					),
+					'multiple_join' => array(
+						'statement' => ' JOIN fm_locations ON fm_locations.location_code = bb_building.location_code'
+						. ' JOIN fm_location1 ON fm_location1.loc1 = fm_locations.loc1',
+						'column' => 'fm_location1.part_of_town_id'
 					)),
 				'street' => array('type' => 'string', 'query' => true),
 				'zip_code' => array('type' => 'string'),
