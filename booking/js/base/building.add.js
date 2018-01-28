@@ -39,14 +39,24 @@ function populate_location_data(location_code)
 			if (data != null)
 			{
 //				console.log(data);
+				var r = false;
 
 				if(!$('#field_building_name').val())
 				{
 					$('#field_building_name').val(data["loc" + level + "_name"]);
 				}
-				var address = '';
+				else
+				{
+					r = confirm("Oppdatere navnet fra lokasjonen?");
+					if (r == true)
+					{
+						$('#field_building_name').val(data["loc" + level + "_name"]);
+					}
 
-				if (typeof (data['street_name']) !== 'undefined')
+				}
+				var address = false;
+
+				if (typeof (data['street_name']) !== 'undefined' && data['street_name'].length > 0)
 				{
 					address = data['street_name'] + ' ' + data['street_number'];
 				}
@@ -54,6 +64,14 @@ function populate_location_data(location_code)
 				if(!$("#field_street").val())
 				{
 					$("#field_street").val(address);
+				}
+				else if(address.length > 0)
+				{
+					r = confirm('Oppdatere adressen til: "' + address + '" ?');
+					if (r == true)
+					{
+						$("#field_street").val(address);
+					}
 				}
 				$("#field_district").val(data['part_of_town_name']);
 			}

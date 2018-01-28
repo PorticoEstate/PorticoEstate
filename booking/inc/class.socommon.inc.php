@@ -128,7 +128,7 @@
 
 				foreach ($this->fields as $field => $params)
 				{
-					if (isset($params['join']) && $params['join'])
+					if (!empty($params['join']) || !empty( $params['multiple_join']))
 					{
 						continue;
 					}
@@ -189,6 +189,11 @@
 					$join_table_alias = $this->build_join_table_alias($field, $params);
 					$cols[] = "{$join_table_alias}.{$params['join']['column']} AS {$field}";
 					$joins[] = "LEFT JOIN {$params['join']['table']} AS {$join_table_alias} ON({$join_table_alias}.{$params['join']['key']}={$this->table_name}.{$params['join']['fkey']})";
+				}
+				else if (isset($params['multiple_join']) && $params['multiple_join'])
+				{
+					$joins[] = " {$params['multiple_join']['statement']}";
+					$cols[] = "{$params['multiple_join']['column']} AS {$field}";
 				}
 				else
 				{
@@ -404,7 +409,7 @@
 			return $row;
 		}
 
-		function _get_conditions( $query, $filters )
+		function _get_conditions_old( $query, $filters )
 		{
 			$clauses = array('1=1');
 			if ($query)
@@ -477,6 +482,104 @@
 					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
 				}
 			}
+			return join(' AND ', $clauses);
+		}
+		function _get_conditions( $query, $filters )
+		{
+			$clauses = array('1=1');
+			if ($query)
+			{
+				$like_pattern = "'%" . $this->db->db_addslashes($query) . "%'";
+				$like_clauses = array();
+				foreach ($this->fields as $field => $params)
+				{
+					if ($params['query'])
+					{
+						$table = $params['join'] ? $this->build_join_table_alias($field, $params) : $this->table_name;
+
+						if (isset($params['multiple_join']) && $params['multiple_join'])
+						{
+							$table_column = $params['multiple_join']['column'];
+						}
+						else
+						{
+							$column = $params['join'] ? $params['join']['column'] : $field;
+							$table_column = "{$table}.{$column}";
+						}
+						if ($params['type'] == 'int')
+						{
+							if (!(int)$query)
+							{
+								continue;
+							}
+							$like_clauses[] = "{$table_column} = " . (int)$query;//$this->db->db_addslashes($query);
+						}
+						else
+						{
+							$like_clauses[] = "{$table_column} $this->like $like_pattern";
+						}
+					}
+				}
+				if (count($like_clauses))
+				{
+					$clauses[] = '(' . join(' OR ', $like_clauses) . ')';
+				}
+			}
+			foreach ($filters as $key => $val)
+			{
+				if ($this->fields[$key])
+				{
+					$table = $this->fields[$key]['join'] ? $this->build_join_table_alias($key, $this->fields[$key]) : $this->table_name;
+					if (isset($this->fields[$key]['multiple_join']) && $this->fields[$key]['multiple_join'])
+					{
+						$table_column = $this->fields[$key]['multiple_join']['column'];
+					}
+					else if($this->fields[$key]['join'])
+					{
+						$column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;
+						$table_column = "{$table}.{$column}";
+					}
+					else
+					{
+						$table_column = "{$table}.{$key}";
+					}
+
+					if (is_array($val) && count($val) == 0)
+					{
+						$clauses[] = '1=0';
+					}
+					else if (is_array($val))
+					{
+						$vals = array();
+						foreach ($val as $v)
+						{
+							$vals[] = $this->_marshal($v, $this->fields[$key]['type']);
+						}
+						$clauses[] = "({$table_column} IN (" . join(',', $vals) . '))';
+					}
+					else if ($val == null)
+					{
+						$clauses[] = "{$table_column} IS " . $this->db_null;
+					}
+					else
+					{
+				//		$_column = $this->fields[$key]['join'] ? $this->fields[$key]['join']['column'] : $key;
+						$clauses[] = "{$table_column}=" . $this->_marshal($val, $this->fields[$key]['type']);
+					}
+				}
+				else if ($key == 'where')
+				{
+					//Includes a custom where-clause as a filter. Also replaces %%table%%
+					//tokens with actual table_name in the clause.
+					$where_clauses = (array)$val;
+					if (count($where_clauses) == 0)
+					{
+						continue;
+					}
+					$clauses[] = strtr(join((array)$val, ' AND '), array('%%table%%' => $this->table_name));
+				}
+			}
+
 			return join(' AND ', $clauses);
 		}
 
