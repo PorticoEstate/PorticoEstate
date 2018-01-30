@@ -28,7 +28,8 @@
 
 		function split_stock_and_extras( $fields )
 		{
-			while (list($field, $value) = @each($fields))
+			//while (list($field, $value) = @each($fields))
+			foreach($fields as $field => $value)
 			{
 				/* Depending on how the array was built, this is needed. */
 				if (gettype($value) == 'integer')
@@ -213,15 +214,17 @@
 
 				if ($ldap_fields[$i]['uidnumber'][0])
 				{
-					reset($filterfields);
-					while (list($col, $filt) = each($filterfields))
+					//reset($filterfields);
+					//while (list($col, $filt) = each($filterfields))
+					foreach($filterfields as $col => $filt)
 					{
 						if ($col == 'phpgwcontactcatid')
 						{
 							$colarray = explode(',', $ldap_fields[$i][$col][0]);
 							if ($colarray[1])
 							{
-								while (list($key, $val) = each($colarray))
+								//while (list($key, $val) = each($colarray))
+								foreach($colarray as $key => $val)
 								{
 									if ($DEBUG)
 									{
