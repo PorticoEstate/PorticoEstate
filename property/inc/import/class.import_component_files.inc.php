@@ -25,10 +25,19 @@
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->sogeneric_document = CreateObject('property.sogeneric_document');
 
+			$config = CreateObject('phpgwapi.config', 'property')->read();
 
-			$this->fakebase = '/temp_files_components';
-			$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
-//			$this->path_upload_dir = '/data/portico/temp_files_components/';
+			if(!empty($config['temp_files_components']))
+			{
+				$temp_files_components = trim($config['temp_files_components'], '/');
+				$this->fakebase = "/{$temp_files_components}";
+				$this->path_upload_dir = "/$temp_files_components/";
+			}
+			else
+			{
+				$this->fakebase = '/temp_files_components';
+				$this->path_upload_dir = $GLOBALS['phpgw_info']['server']['files_dir'] . $this->fakebase . '/';
+			}
 
 			$this->location_code = phpgw::get_var('location_code');
 			$this->location_item_id = phpgw::get_var('location_item_id');
