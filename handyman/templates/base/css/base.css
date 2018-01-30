@@ -1,0 +1,456 @@
+#invoice_details { float: left; width: 30%; }
+#list_navigation { float: left; width: 30%; }
+#user_messages { float: right; width: 40%;}
+#contract_lists {width: 100%; float: left; background-color: #EFEFEF; border: 1px solid #ABABAB; padding-left: 1em; margin-top: 1em;}
+form#invoice_run {margin: 2em;}
+form#invoice_run th { 
+	background-color: #CDCDCD;
+	padding: 5px;
+	border: 1px solid #ABABAB;
+	font-weight: bolder;
+}
+
+div#contract_lists td {
+	margin:0;
+	padding:4px 10px;
+}
+form#invoice_run td { 
+	border: 1px solid #CDCDCD;
+}
+
+
+div#invoice_details dt{
+	float:left;
+	font-weight: bolder;
+	margin-right: 1em;
+}
+
+div#invoice_details dd{
+
+}
+
+div.content {
+	margin: 2em;	
+}
+
+.hd {
+	margin-bottom: 0;
+	text-align: center;
+}
+
+.hd img {
+	vertical-align: middle;
+}
+
+fieldset {
+	margin-top: 0.5em;	
+}
+
+legend {
+	font-weight: bolder;
+	margin-bottom: 0.2em;	
+}
+
+label {
+	margin-left: 0.3em;
+	margin-right: 0,3em;
+	font-style: normal;
+	font-size: 13px;
+}
+
+#content {
+    margin: 2em 1em;
+}
+.clr { clear: both;}
+
+#dashboard {padding: 1em;}
+#dashborad_column_1 { float:left; width:50%;}
+#dashboard_column_2 { margin-left:50%; width:50%;}
+
+#inactive {
+	background-color: #ff5555;
+	width: 10em;
+	padding: 1em;
+	border: 0.2em dotted #000000;
+	letter-spacing: 2px;
+}
+#active {
+	background-color: #ffffff;
+	width: 10em;
+	padding: 1em;
+	border: 0em dotted #000000;
+	letter-spacing: 2px;
+}
+
+#inactivate-button {
+	border: 1px solid #000000;
+	margin-top: 1em;
+	padding: 0.1em;
+	background-color: #ffffff;
+}
+
+#activate-button {
+	border: 1px solid #000000;
+	margin-top: 1em;
+	padding: 0.1em;
+	background-color: #ffffff;
+}
+
+ul.pathway {
+    font-weight: bolder;
+    margin: 1em 0;
+    font-size: 110%;
+}
+ul.pathway li a { color: #000; text-decoration: none;}
+ul.pathway li a:hover { color: #008; }
+ul.pathway li { 
+    display: inline;
+    background: url(../images/pathwaysep.png) no-repeat 0% 50%;
+    padding-left: 16px;
+}
+ul.pathway li:first-child { background: none; padding-left: 0;}
+
+dl.form, dl.form-col {
+    margin: 1em 1em 1em 0;
+}
+
+dl.form dt, dl.form-col dt {
+    font-style: italic;
+    font-weight: bolder;
+    margin: .5em 0 .1em 0;
+    color: #002;
+}
+dl.form dd textarea,
+dl.form-col dd textarea {
+    width: 15em;
+    height: 6em;
+}
+dl.form dd textarea.full-width,
+dl.form-col dd textarea.full-width {
+    width: 33em;
+    height: 10em;
+}
+dl.form dd input[type="text"],  dl.form dd .autocomplete,
+dl.form-col dd input[type="text"],  dl.form-col dd .autocomplete {
+    width: 15em;
+}
+dl.form dd .autocomplete,
+dl.form-col dd .autocomplete {
+    padding-bottom: 2em;
+}
+
+dl.form dt.heading, dl.form-col dt.heading {
+    color: #448;
+    font-weight: normal;
+    font-size: 110%;
+    margin-top: 1.4em;
+    margin-bottom: .6em;
+    border-bottom: 1px solid #aaa;
+}
+
+dl.proplist,
+dl.proplist-col {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+dl.proplist dt,
+dl.proplist-col dt { 
+    font-style: italic; 
+    font-weight: bolder; 
+    font-size: 90%; 
+    margin: .8em 0 .1em 0;
+}
+
+dl.proplist-col,
+dl.form-col {
+    width: 40em;
+    float: left;
+}
+
+div.identifier-header {
+	padding-left: 2em;
+	margin-bottom: 1em;	
+}
+
+div.identifier-header label {
+	font-weight: bold;
+}
+
+.form-buttons {
+    clear: both;
+    padding-top: 2em;
+}
+.form-buttons button {
+    margin-right: .5em;
+}
+.form-buttons .cancel {
+    margin-left: .6em;
+}
+
+.date-picker .container,
+.datetime-picker .container { 
+    display:none; 
+    position:absolute; z-index:1;
+}
+#toolbar {
+    width: 100%;
+    background-color: #eee;
+    border: 1px solid #bbb;
+    margin-bottom: 0em;
+    padding: .3em;
+}
+
+#datatableToolbar {
+	background-color: white;
+    margin-bottom: 0em;
+    padding: .3em;
+}
+
+table.datatableToolbar {
+	padding: .3em;
+}
+
+
+#rental_user_error {
+    width: 100%;
+    background-color: #eee;
+    border: 0px none #bbb;
+    margin-bottom: 0em;
+    padding-left: .3em;
+    color: red;
+    font-size: larger;
+}
+
+#rental_user_message {
+    width: 100%;
+    background-color: #eee;
+    border: 0px none #bbb;
+    margin-bottom: 0em;
+    padding-left: .3em;
+    color: green;
+    font-size: larger;
+}
+
+.toolbarelement {
+	vertical-align:middle;
+}
+td.toolbarlabel {
+	width: 10em;
+	font-weight: bold;	
+}
+td.toolbarcol {
+	padding-left: 1em;
+}
+
+div.calendarButtons {
+	vertical-align:middle;
+	background-color: grey;
+}
+
+label.toolbar_element_label {
+	padding-left: .25em;
+	padding-right: .50em;
+	vertical-align: middle;
+}
+#toolbar input[type="text"] {
+    font-size: 120%;
+    margin: auto .25em;
+}
+
+dl.proplist dd.address,
+dl.proplist-col dd.address {
+    white-space: pre;
+}
+#week-selector { margin: 1em 0;}
+#week-selector li { display: inline; padding-right: .5em;}
+
+#schedule_container tr td { border-top: 1px solid #ccc; background: white; white-space: nowrap; }
+#schedule_container tbody tr th:first-child { background: #eee; }
+#schedule_container tr.time td { border-top: 1px solid #444;}
+#schedule_container .color1 { background: #ccf;}
+#schedule_container .color2 { background: #cfc;}
+#schedule_container .color3 { background: #fcc;}
+#schedule_container .color4 { background: #ffb;}
+#schedule_container .color5 { background: #bff;}
+#schedule_container .color6 { background: #fbf;}
+
+#boundary-table td, #boundary-table th { 
+    padding: .1em .2em;
+}
+
+.date-container {
+    margin-bottom: .8em;
+    white-space: nowrap;
+}
+
+.date-container .close-btn {
+    display: block;
+    float: right;
+    border: none;
+    text-decoration: none;
+    width: 25px;
+    height: 15px;
+    cursor: pointer;
+    color: white;
+}
+
+div.allocation-list
+{
+    width: 30em;
+    height: 10em;
+    border: 1px solid #555;
+    padding: .4em;
+    overflow: auto;
+}
+
+.showit {
+	visibility: visible;
+}
+.hideit {
+	visibility: hidden;
+}
+.datatable{
+	margin-left: 20px;
+	margin-top: 10px;
+}
+
+/* Styles for this the column selector */
+#dt-columnselector {width:45em;margin:0 auto;}
+#dt-options {margin-left:5px;}
+#dt-dlg {visibility:hidden;border:1px solid #808080;background-color:#E3E3E3;}
+#dt-dlg .hd {font-weight:bold;padding:1em;background:none;background-color:#E3E3E3;border-bottom:0;}
+#dt-dlg .ft {text-align:right;padding:.5em;background-color:#E3E3E3;}
+#dt-dlg .bd {height:15em;margin:0 1em;overflow:auto;border:1px solid black;background-color:white;}
+#dt-dlg .dt-dlg-pickercol {clear:both;padding:.5em 1em 3em;border-bottom:1px solid gray;}
+#dt-dlg .dt-dlg-pickerkey {float:left;}
+#dt-dlg .dt-dlg-pickerbtns {float:right;}
+/* Container workarounds for Mac Gecko scrollbar issues */
+.yui-panel-container.hide-scrollbars #dt-dlg .bd {
+    /* Hide scrollbars by default for Gecko on OS X */
+    overflow: hidden;
+}
+.yui-panel-container.show-scrollbars #dt-dlg .bd {
+    /* Show scrollbars for Gecko on OS X when the Panel is visible  */
+    overflow: auto;
+}
+#dt-dlg_c .underlay {overflow:hidden;}
+.inprogress {position:absolute;} /* transitional progressive enhancement state */
+
+dl.rental-description {
+	width: 70%;
+}
+dl.rental-description dt, dl.rental-description-edit {
+	width: 100%;
+	float:left;
+	font-weight:bold;
+}
+dl.rental-description dd {
+	width: 100%;
+	border: 1px solid #ccc;
+	float: left;
+	background-color: white;
+	height: 100px;
+	overflow-y: scroll;
+}
+dl.rental-description-edit textarea {
+	width: 100%;
+	height: 100px;
+	border: 1px solid #ccc;
+	float: left;
+}
+
+input#place {
+	width:60%;
+}
+
+input#address_1 {
+	width: 60%;
+	float:left;
+}
+
+input#house_number {
+	width: 20%;
+	float: left;
+}
+
+input.postcode {
+	width: 50px;
+	float: left;
+}
+
+.yui-navset {
+	clear: both;
+	margin-left: 2em;
+	margin-right: 2em;
+}
+
+h1 img, li img {
+	vertical-align: middle;
+}
+
+fieldset h3 {
+	display:block;
+	float:left;
+	line-height:1.3em;
+	margin:0;
+	width:120px;
+}
+
+/* Set up common form styles.  TODO: needs refinement. */
+legend, label, input, select {
+	margin:0 13px 0px 0px;
+}
+
+label {
+	line-height:1.5em;
+}
+
+
+
+fieldset {
+	border-bottom:0px solid #ccc;
+	padding:5px 0px 5px 10px;
+}
+
+h1 em {
+	font-style:italic;
+}
+
+div.info, div.error, div.warning {
+	font-weight: normal;
+	margin:10px;
+	padding:5px;
+	font-size:1.1em;
+	text-align: left;
+}
+p.message {
+	margin: 5px;
+}
+.info {
+	background-color:#CCFFCC;
+	border:1px solid #00FF00;
+	color:black;
+}
+.warning {
+	background-color: #FEEFB3;
+	border:1px solid #9F6000;
+	color:#9F6000;
+}
+.yui-calendar td.calcell {
+	border:0px !important;
+}
+.yui-skin-sam .yui-dt TABLE TH{
+	border: none !important;
+}
+.yui-skin-sam .yui-dt TABLE TD{
+	border: none !important;
+}
+
+.datatable_container {
+	margin-left: 1em;
+	margin-top: 1em;
+}
+
+.paginator {
+	margin-left: 1em !important;
+}
