@@ -409,7 +409,7 @@
 			}
 			else
 			{
-				$id = "'{$data['id']}'";
+				$id = "'" . $this->_db->db_addslashes($data['id']) . "'";
 			}
 
 			$sql = "SELECT * FROM $table WHERE {$this->location_info['id']['name']} = {$id}";
