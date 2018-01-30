@@ -1,4 +1,4 @@
-account active	admin	no	Account aktiv
+account active	admin	no	Bruker er aktiv
 active	admin	no	Aktiv
 all records and account information will be lost!	admin	no	All historie og brukerinformasjon vil gå tapt!
 anonymous user	admin	no	Anonym bruker
@@ -20,7 +20,7 @@ last time read	admin	no	Lest siste gang
 last %1 logins	admin	no	Siste %1 logins
 list of current users	admin	no	liste over brukere
 login time	admin	no	Login Tid
-loginid	admin	no	LoginID
+loginid	admin	no	Brukernavn
 manager	admin	no	Manager
 message	admin	no	Melding
 new group name	admin	no	Nytt gruppenavn
@@ -103,7 +103,6 @@ edit category	admin	no	Endre kategori
 parent category	admin	no	Foreldrekategori
 add user	admin	no	Legg til bruker
 add user account	admin	no	Legg til brukerkonto
-Account aktiv	admin	no	Konto aktiv
 action	admin	no	Handling
 file	admin	no	Fil
 info	admin	no	Informasjon

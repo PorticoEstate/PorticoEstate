@@ -961,7 +961,8 @@
 			);
 			foreach ($copy as $f)
 			{
-				$event[] = array($f, htmlentities(html_entity_decode($application[$f])), ENT_QUOTES | ENT_SUBSTITUTE);
+//				$event[] = array($f, htmlentities(html_entity_decode($application[$f])), ENT_QUOTES | ENT_SUBSTITUTE);
+				$event[] = array($f, html_entity_decode($application[$f]));
 			}
 			foreach ($application['agegroups'] as $ag)
 			{
@@ -976,7 +977,7 @@
 			{
 				$event[] = array('resources[]', $r);
 			}
-			return json_encode($event);
+			return json_encode($event, JSON_HEX_QUOT);
 		}
 
 		protected function extract_display_in_dashboard_value()

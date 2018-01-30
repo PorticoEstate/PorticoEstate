@@ -5,7 +5,7 @@ abstract class xml_model implements JsonSerializable
 {
     public function to_xml(SimpleXMLElement &$xml, string $name)
     {
-        $data = $this->convert_into_array();
+        $data = $this->to_array();
         $xml_data = $xml->addChild("$name");
         foreach ($data as $key => $value) {
             if (is_array($value) || is_object($value)) {

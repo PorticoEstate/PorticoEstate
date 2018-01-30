@@ -107,7 +107,7 @@
 			</tr>
 			<tr>
 				<td>{lang_Enter_your_SMTP_server_user}:</td>
-				<td><input name="newsettings[smtpUser]" value="{value_smtpUser}"></td>
+				<td><input name="newsettings[smtpUser]" value="{value_smtpUser}" autocomplete="off"></td>
 			</tr>
 			<tr class="pure-table-odd">
 				<td>{lang_Enter_your_SMTP_server_password}:</td>

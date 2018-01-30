@@ -78,7 +78,10 @@
 			{
 				$select .= '<option value="">' . lang('Please Select') . '</option>'."\n";
 			}
-			while (list($val,$key) = each($list))
+			//while (list($val,$key) = each($list))
+                        if (is_array($list))
+                        {
+                            foreach($list as $val => $key)
 			{
 				$select .= '<option value="' . $key . '"';
 				if ($key == $id && $id != '')
@@ -87,6 +90,7 @@
 				}
 				$select .= '>' . lang($val) . '</option>'."\n";
 			}
+                        }
 
 			$select .= '</select>'."\n";
 
@@ -147,7 +151,10 @@
 			$GLOBALS['phpgw']->template->set_var('lang_edit',lang('Edit'));
 			$GLOBALS['phpgw']->template->set_var('lang_delete',lang('Delete'));
 
-			while(list($key,$server) = @each($servers))
+			//while(list($key,$server) = @each($servers))
+                        if (is_array($servers))
+                        {
+                            foreach($servers as $key => $server)
 			{
 				$tr_color = $this->nextmatchs->alternate_row_class($tr_color);
 				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
@@ -167,6 +174,7 @@
 				$GLOBALS['phpgw']->template->set_var('lang_delete_entry',lang('Delete'));
 				$GLOBALS['phpgw']->template->parse('list','server_list',True);
 			}
+                        }
 
 			$GLOBALS['phpgw']->template->parse('out','server_list_t',True);
 			$GLOBALS['phpgw']->template->p('out');

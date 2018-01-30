@@ -133,7 +133,8 @@
 
 				if (isset($user_list) && is_array($user_list))
 				{
-					while (is_array($user_list) && list(, $user) = each($user_list))
+					//while (is_array($user_list) && list(, $user) = each($user_list))
+                                        foreach($user_list as $user)
 					{
 						$processed[] = $user['account_id'];
 						$users[] = array
@@ -173,7 +174,8 @@
 
 				if (isset($group_list) && is_array($group_list))
 				{
-					while (is_array($group_list) && list(, $group) = each($group_list))
+					//while (is_array($group_list) && list(, $group) = each($group_list))
+                                        foreach($group_list as $group)
 					{
 						$processed[] = $group['account_id'];
 						$groups[] = array

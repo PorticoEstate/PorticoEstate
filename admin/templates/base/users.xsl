@@ -96,10 +96,10 @@
 		<div class="btngrp">
 			<xsl:choose>
 				<xsl:when test="add_access = 1">
-					<a href="{url_add}"><xsl:value-of select="lang_add" /></a>
+					<a href="{url_add}" class="pure-button pure-button-primary"><xsl:value-of select="lang_add" /></a>
 				</xsl:when>
 			</xsl:choose>
-			<a href="{url_done}"><xsl:value-of select="lang_done" /></a>
+			<a href="{url_done}" class="pure-button pure-button-primary"><xsl:value-of select="lang_done" /></a>
 		</div>
 	</xsl:template>
 
@@ -149,11 +149,9 @@
 			<xsl:if test="msgbox_data != ''">
 				<xsl:call-template name="msgbox"/>
 			</xsl:if>
-
-			<div class="yui-navset" id="account_edit_tabview">
+			<form method="post" action="{edit_url}">
+				<div class="yui-navset" id="account_edit_tabview">
 				<xsl:value-of disable-output-escaping="yes" select="tabs" />
-
-				<form method="post" action="{edit_url}">
 					<div class="yui-content">
 						<div id="user">
 							<input type="hidden" name="values[id]" value="{account_id}" />
@@ -266,8 +264,8 @@
 						<input type="submit" name="save" value="{lang_save}"/>
 						<input type="submit" name="cancel" value="{lang_cancel}"/>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 	</xsl:template>
 

@@ -2817,7 +2817,10 @@ JS;
 				$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
 				$content = array();
-				while (is_array($values) && list(, $entry) = each($values))
+				//while (is_array($values) && list(, $entry) = each($values))
+                                if (is_array($values))
+                                {
+                                    foreach($values as $entry)
 				{
 					$content[] = array
 						(
@@ -2827,6 +2830,7 @@ JS;
 						'time_created' => $GLOBALS['phpgw']->common->show_date($entry['datetime'], "{$dateformat} G:i:s")
 					);
 				}
+                                }
 
 				$draw = phpgw::get_var('draw', 'int');
 				$allrows = phpgw::get_var('length', 'int') == -1;

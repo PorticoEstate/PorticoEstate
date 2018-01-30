@@ -140,11 +140,15 @@
 		function import_end_record($buffer)
 		{
 			$buffer[$this->id]='';
-			while ( list($name, $value) = each($this->currentrecord))
+			//while ( list($name, $value) = each($this->currentrecord))
+                        if (is_array($this->currentrecord))
+                        {
+                            foreach($this->currentrecord as $name => $value)
 			{
 				$buffer[$this->id][$name] = $value;
 				//echo '<br>'.$name.' => '.$value;
 			}
+                        }
 			return $buffer;
 		}
 
@@ -154,11 +158,15 @@
 			//echo '<br>'; 
 			for ($i=1;$i<=count($buffer);$i++)
 			{
-				while ( list($name,$value) = @each($buffer[$i]) )
+				//while ( list($name,$value) = @each($buffer[$i]) )
+                                if (is_array($buffer[$i]))
+                                {
+                                    foreach($buffer[$i] as $name => $value)
 				{
 					//echo '<br>'.$i.': '.$name.' => '.$value;
 					$entry[$i][$name] = $value;
 				}
+                                }
 				$entry[$i]['email_type']      = 'INTERNET';
 				$entry[$i]['email_home_type'] = 'INTERNET';
 				$entry[$i]['adr_one_type']    = 'intl';

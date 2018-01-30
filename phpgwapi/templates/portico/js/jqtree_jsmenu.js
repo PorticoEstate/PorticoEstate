@@ -6,7 +6,7 @@ $(document).ready(function ()
 		tree.tree({
 			data: treemenu_data,
 			autoEscape: false,
-			dragAndDrop: true,
+			dragAndDrop: false,
 			autoOpen: false,
 			saveState: true,
 			useContextMenu: false,

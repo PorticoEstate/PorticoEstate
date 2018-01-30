@@ -1885,7 +1885,7 @@ JS;
 			{
 				$contract_type_options[] = array(
 					'id' => '',
-					'name' => lang('Ingen type'),
+					'name' => lang('select'),
 					'selected' => 0
 				);
 			}

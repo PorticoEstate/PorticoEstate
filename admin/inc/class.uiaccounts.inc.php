@@ -1604,6 +1604,11 @@
 				'apps'	=> array('label' => lang('applications'), 'link' => '#apps')
 			);
 
+			if(!$account_id)
+			{
+				 $user_data['expires'] = -1;
+			}
+
 			$data = array
 			(
 				'page_title'			=> $account_id ? lang('edit user') : lang('add user'),
@@ -1633,7 +1638,7 @@
 				'lang_shell'			=> $lang_shell,
 				'homedirectory'			=> $homedirectory,
 				'loginshell'			=> $loginshell,
-				'account_enabled'		=> (int) $user_data['enabled'],
+				'account_enabled'		=> !$account_id ? 1 : (int) $user_data['enabled'],
 				'account_firstname'		=> $user_data['firstname'],
 				'account_lastname'		=> $user_data['lastname'],
 				'account_passwd'		=> '',

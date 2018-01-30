@@ -190,7 +190,10 @@
 			//_debug_array($values);
 
 			$receipt = array();
-			while (is_array($values['location']) && list($input_name, $value) = each($values['location']))
+			
+                        if (is_array($document['location']))
+                        {
+                            foreach($document['location'] as $input_name => $value)
 			{
 				if ($value)
 				{
@@ -198,14 +201,18 @@
 					$vals[] = $value;
 				}
 			}
+			}
 
-			while (is_array($values['extra']) && list($input_name, $value) = each($values['extra']))
+                        if (is_array($document['extra']))
+                        {
+                            foreach($document['extra'] as $input_name => $value)
 			{
 				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
+			}
 			}
 
 			if ($cols)

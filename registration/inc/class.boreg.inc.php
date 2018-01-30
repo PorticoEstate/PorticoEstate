@@ -234,13 +234,17 @@
 				{
 					if ($post_value)
 					{
-						while (list (, $value) = each($values))
+						//while (list (, $value) = each($values))
+                                                if (is_array($values))
+                                                {
+                                                    foreach ($values as $key => $value)
 						{
 							if ($value == $post_value)
 							{
 								$ok = 1;
 							}
 						}
+                                                }
 
 						if (!$ok)
 						{

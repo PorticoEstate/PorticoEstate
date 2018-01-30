@@ -1220,7 +1220,9 @@
 			$receipt = array();
 			$historylog = CreateObject('property.historylog', 'project');
 
-			while (is_array($project['location']) && list($input_name, $value) = each($project['location']))
+                        if (is_array($project['location']))
+                        {
+                            foreach($project['location'] as $input_name => $value)
 			{
 				if ($value)
 				{
@@ -1228,14 +1230,18 @@
 					$vals[] = $value;
 				}
 			}
+			}
 
-			while (is_array($project['extra']) && list($input_name, $value) = each($project['extra']))
+                        if (is_array($project['extra']))
+                        {
+                            foreach($project['extra'] as $input_name => $value)
 			{
 				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
+			}
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute);
@@ -1336,9 +1342,10 @@
 
 			if (count($project['branch']) != 0)
 			{
-				while ($branch = each($project['branch']))
+				//while ($branch = each($project['branch']))
+                                foreach($project['branch'] as $key => $value)
 				{
-					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ({$id},{$branch[1]})", __LINE__, __FILE__);
+					$this->db->query("insert into fm_projectbranch (project_id,branch_id) values ({$id},{$value})", __LINE__, __FILE__);
 				}
 			}
 
@@ -1506,15 +1513,21 @@
 				$value_set = array_merge($value_set, $data_attribute['value_set']);
 			}
 
-			while (is_array($project['location']) && list($input_name, $value) = each($project['location']))
+			if (is_array($project['location']))
+                        {
+                            foreach($project['location'] as $input_name => $value)
 			{
 				$value_set[$input_name] = $value;
 			}
+                        }
 
-			while (is_array($project['extra']) && list($input_name, $value) = each($project['extra']))
+                        if (is_array($project['extra']))
+                        {
+                            foreach($project['extra'] as $input_name => $value)
 			{
 				$value_set[$input_name] = $value;
 			}
+                        }
 
 			$value_set = $this->db->validate_update($value_set);
 
@@ -1761,9 +1774,10 @@
 
 			if (count($project['branch']) != 0)
 			{
-				while ($branch = each($project['branch']))
+				//while ($branch = each($project['branch']))
+                                foreach($project['branch'] as $key => $value)
 				{
-					$this->db->query("INSERT INTO fm_projectbranch (project_id,branch_id) VALUES ({$project['id']}, {$branch[1]})", __LINE__, __FILE__);
+					$this->db->query("INSERT INTO fm_projectbranch (project_id,branch_id) VALUES ({$project['id']}, {$value})", __LINE__, __FILE__);
 				}
 			}
 

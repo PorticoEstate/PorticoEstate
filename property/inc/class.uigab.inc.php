@@ -168,9 +168,7 @@
 
 			$gab_list = $this->bo->read($params);
 
-			$i = 0;
-
-			while (is_array($gab_list) && list(, $gab) = each($gab_list))
+			foreach($gab_list as $key => $gab)
 			{
 				$value_gaards_nr = substr($gab['gab_id'], 4, 5);
 				$value_bruks_nr = substr($gab['gab_id'], 9, 4);
@@ -188,8 +186,6 @@
 					'seksjons_nr' => $value_seksjons_nr,
 					'location_code' => $gab['location_code'],
 				);
-
-				$i++;
 			}
 
 			//_debug_array($content);

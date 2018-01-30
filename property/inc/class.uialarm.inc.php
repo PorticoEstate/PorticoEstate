@@ -392,11 +392,15 @@
 
 //            echo '<pre>'; print_r($list); echo '</pre>';
 
-			while (is_array($list) && list($id, $alarm) = each($list))
+			//while (is_array($list) && list($id, $alarm) = each($list))
+                        if (is_array($list))
+                        {
+                            foreach($list as $id => $alarm)
 			{
 				if (is_array($alarm['times']))
 				{
-					while (is_array($alarm['times']) && list($key, $value) = each($alarm['times']))
+					//while (is_array($alarm['times']) && list($key, $value) = each($alarm['times']))
+                                        foreach($alarm['times'] as $key => $value)
 					{
 						$times .=$key . ' => ' . $value . ' ';
 					}
@@ -408,7 +412,8 @@
 
 				if (is_array($alarm['data']))
 				{
-					while (is_array($alarm['data']) && list($key, $value) = each($alarm['data']))
+					//while (is_array($alarm['data']) && list($key, $value) = each($alarm['data']))
+                                        foreach($alarm['data'] as $key => $value)
 					{
 						if ($key == 'owner')
 						{
@@ -449,6 +454,7 @@
 				unset($lang_edit_statustext);
 				unset($text_edit);
 			}
+                        }
 
 			$result_data = array('results' => $content);
 

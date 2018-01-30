@@ -52,11 +52,15 @@ class calendar_holiday
 		}
 		if($phpgw_info['server']['auto_load_holidays'] == True)
 		{
-			while(list($key,$value) = each($this->users))
+			//while(list($key,$value) = each($this->users))
+                        if (is_array($this->users))
+                        {
+                            foreach($this->users as $key => $value)
 			{
 				$this->is_network_load_needed($value);
 			}
 		}
+	}
 	}
 
 	function is_network_load_needed($locale)
@@ -242,7 +246,10 @@ class calendar_holiday
 		$sql = 'SELECT * FROM phpgw_cal_holidays WHERE locale in (';
 		$find_it = '';
 		reset($this->users);
-		while(list($key,$value) = each($this->users))
+		//while(list($key,$value) = each($this->users))
+                if (is_array($this->users))
+                {
+                    foreach($this->users as $key => $value)
 		{
 			if($find_it)
 			{
@@ -250,6 +257,7 @@ class calendar_holiday
 			}
 			$find_it .= "'".$value."'";
 		}
+                }
 		$sql .= $find_it.')';
 
 		return $sql;

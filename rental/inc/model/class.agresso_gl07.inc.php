@@ -5,17 +5,49 @@
 	class rental_agresso_gl07 implements rental_exportable
 	{
 
-		protected $billing_job;
-		protected $date_str;
-		protected $lines;
+		protected static $bo;
+		protected $billing_job,
+			$date_str,
+			$lines,
+			$responsibility_id_strlen,
+			$service_id_strlen,
+			$project_id_strlen;
 
-		public function __construct( $billing_job )
+		public function __construct( $billing_job = null)
+		{
+			if($billing_job)
 		{
 			$this->billing_job = $billing_job;
 			$this->date_str = date('Ymd', $billing_job->get_timestamp_stop());
 			$this->lines = null;
 		}
 
+			$config = CreateObject('phpgwapi.config', 'rental')->read();
+			$organization = empty($config['organization']) ? 'bergen' : $config['organization'];
+
+			if($organization == 'bergen')
+			{
+				$this->responsibility_id_strlen = 6;
+				$this->service_id_strlen = 5;
+				$this->project_id_strlen = 6;
+			}
+			else//nlsh
+			{
+				$this->responsibility_id_strlen = 4;
+				$this->service_id_strlen = 4;
+				$this->project_id_strlen = null;
+			}
+
+		}
+
+		public static function get_instance()
+		{
+			if (self::$bo == null)
+			{
+				self::$bo = new rental_agresso_gl07();
+			}
+			return self::$bo;
+		}
 		/**
 		 * @see rental_exportable
 		 */
@@ -54,21 +86,6 @@
 
 		public function get_missing_billing_info( $contract )
 		{
-
-			//FIXME: Might have to check for this one...
-			/*
-			  static $responsibility_arr = array();
-			  static $responsibility_check = array();
-			  if(!$responsibility_arr)
-			  {
-			  $responsibility_arr = execMethod('rental.bogeneric.get_list',array('type' => 'responsibility_unit'));
-			  foreach ($responsibility_arr as $responsibility_entry)
-			  {
-			  $responsibility_check[$responsibility_entry['id']] = true;
-			  }
-			  }
-			 */
-
 			$missing_billing_info = array();
 
 			$payer_id = $contract->get_payer_id();
@@ -76,7 +93,6 @@
 			{
 				$missing_billing_info[] = 'Missing payer id.';
 			}
-
 
 			$contract_parties = $contract->get_parties();
 			if ($contract_parties == null || count($contract_parties) < 1)
@@ -93,32 +109,23 @@
 			{
 				$missing_billing_info[] = 'Missing account out.';
 			}
-			/* $responsibility_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['responsibility'];
-			  if($responsibility_id_in == null || $responsibility_id_in == '')
-			  {
-			  $missing_billing_info[] = 'Missing system setting for responsibility id for the current user.';
-			  }
-			  else if(strlen($responsibility_id_in) != 6)
-			  {
-			  $missing_billing_info[] = 'System setting for responsibility id for the current user must be 6 characters.';
-			  } */
 			$responsibility_id_out = $contract->get_responsibility_id();
 			if ($responsibility_id_out == null || $responsibility_id_out == '')
 			{
 				$missing_billing_info[] = 'Missing responsibility id.';
 			}
-			else if (strlen($responsibility_id_out) != 6)
+			else if (strlen($responsibility_id_out) != $this->responsibility_id_strlen)
 			{
-				$missing_billing_info[] = 'Responsibility id must be 6 characters.';
+				$missing_billing_info[] = "Responsibility id must be {$this->responsibility_id_strlen} characters.";
 			}
 			$service_id = $contract->get_service_id();
 			if ($service_id == null || $service_id == '')
 			{
 				$missing_billing_info[] = 'Missing service id.';
 			}
-			else if (strlen($service_id) != 5)
+			else if (strlen($service_id) != $this->service_id_strlen)
 			{
-				$missing_billing_info[] = 'Service id must be 5 characters.';
+				$missing_billing_info[] = "Service id must be {$this->service_id_strlen} characters.";
 			}
 			// HACK to get the needed location code for the building
 			$building_location_code = rental_socomposite::get_instance()->get_building_location_code($contract->get_id());
@@ -130,24 +137,20 @@
 			{
 				$missing_billing_info[] = 'Invalid location code for the building.';
 			}
-			/* $project_id_in = $GLOBALS['phpgw_info']['user']['preferences']['rental']['project_id'];
-			  if($project_id_in == null || $project_id_in == '')
+
+			if($this->project_id_strlen)
 			  {
-			  $missing_billing_info[] = 'Missing system setting for project id.';
-			  }
-			  else if(strlen($project_id_in) > 6)
-			  {
-			  $missing_billing_info[] = 'System setting for project id can not be more than 6 characters.';
-			  } */
 			$project_id_out = $contract->get_project_id();
 			if ($project_id_out == null || $project_id_out == '')
 			{
 				$missing_billing_info[] = 'Missing project id.';
 			}
-			else if (strlen($project_id_out) > 6)
+				else if (strlen($project_id_out) > $this->project_id_strlen)
 			{
-				$missing_billing_info[] = 'Project id can not be more than 6 characters.';
+					$missing_billing_info[] = "Project id can not be more than {$this->project_id_strlen} characters.";
 			}
+			}
+
 			$price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(
 				'contract_id' => $contract->get_id()));
 			foreach ($price_items as $price_item) // Runs through all items
@@ -208,7 +211,7 @@
 					$get_order_excel = 'get_order_excel_bk';
 					break;
 				case 'nlsh':
-					$get_order_excel = 'get_order_excel_bk';//'get_order_excel_nlsh';
+					$get_order_excel = 'get_order_excel_nlsh';
 					break;
 
 				default:
@@ -236,7 +239,7 @@
 				// The income side
 				foreach ($price_items as $price_item) // Runs through all items
 				{
-					$this->lines[] = $this->$get_order_excel($invoice->get_account_in(), $responsibility_in, $invoice->get_service_id(), $building_location_code, $project_id_in, $price_item->get_agresso_id(), -1.0 * $price_item->get_total_price(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
+					$this->lines[] = $this->$get_order_excel($invoice, $responsibility_in, $building_location_code, $project_id_in, $price_item, $description);
 				}
 				// The receiver's outlay side
 			//	$this->lines[] = $this->$get_order_excel($invoice->get_account_out(), $invoice->get_responsibility_id(), $invoice->get_service_id(), $building_location_code, $invoice->get_project_id(), '', $invoice->get_total_sum(), $description, $invoice->get_contract_id(), $this->billing_job->get_year(), $this->billing_job->get_month());
@@ -336,9 +339,16 @@
 		 * Builds one single order of the excel file.
 		 *
 		 */
-		protected function get_order_excel_bk( $account, $responsibility, $service, $building, $project, $part_no, $amount, $description, $contract_id, $bill_year, $bill_month )
+		protected function get_order_excel_bk( $invoice, $responsibility, $building, $project, $price_item, $description )
 		{
-
+			$account = $invoice->get_account_in();
+			$service = $invoice->get_service_id();
+			$contract_id = $invoice->get_contract_id();
+			$part_no = $price_item->get_agresso_id();
+			$amount = -1.0 * $price_item->get_total_price();
+			$bill_year = $this->billing_job->get_year();
+			$bill_month = $this->billing_job->get_month();
+	//		$this->billing_job->get_month()
 			//$order_id = $order_id + 39500000;
 			// XXX: Which charsets do Agresso accept/expect? Do we need to something regarding padding and UTF-8?
 			//$order = array();
@@ -355,7 +365,49 @@
 				'name' => $party_name,
 				'amount' => $this->get_formatted_amount_excel($amount),
 				'article description' => utf8_decode($product_item['article_description']),
-				'article_code' => $product_item['article_code'],
+				'article_code' => $part_no, //$product_item['article_code'],
+				'batch_id' => "BKBPE{$this->date_str}",
+				'client' => 'BY',
+				'responsibility' => $responsibility,
+				'service' => $service,
+				'project' => $project,
+				'part_no' => $part_no,
+				'counter' => ++$item_counter,
+				'batch_id' => "BKBPE{$this->date_str}",
+				'client' => 'BY',
+				'item_counter' => $item_counter,
+				'text' => utf8_decode($description)
+			);
+
+			return str_replace(array("\n", "\r"), '', $order);
+		}
+
+		protected function get_order_excel_nlsh( $invoice, $responsibility, $building, $project, $price_item, $description )
+		{
+			$account = $invoice->get_account_in();
+			$account_out = $invoice->get_account_out();
+			$service = $invoice->get_service_id();
+			$contract_id = $invoice->get_contract_id();
+			$part_no = $price_item->get_agresso_id();
+			$amount = -1.0 * $price_item->get_total_price();
+			$bill_year = $this->billing_job->get_year();
+			$bill_month = $this->billing_job->get_month();
+			$responsibility = $invoice->get_responsibility_id();
+
+			$item_counter = $counter;
+			$order = array(
+				'contract_id' => $contract_id,
+				'account_in' => $account,
+				'account_out' => $account_out,
+				'client_ref' => $client_ref,
+				'header' => utf8_decode($header),
+				'bill_year' => $bill_year,
+				'bill_month' => $bill_month,
+				'building' => $building,
+				'name' => $party_name,
+				'amount' => $this->get_formatted_amount_excel($amount),
+				'article description' => utf8_decode($product_item['article_description']),
+				'article_code' => $part_no, //$product_item['article_code'],
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
 				'responsibility' => $responsibility,

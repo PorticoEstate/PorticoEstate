@@ -393,7 +393,10 @@
 				array('key' => 'link_down', 'label' => lang('Down'), 'sortable' => FALSE, 'hidden' => TRUE)
 			);
 			//formatLink formatCheck
-			while (is_array($custom['cols']) && list(, $entry) = each($custom['cols']))
+			//while (is_array($custom['cols']) && list(, $entry) = each($custom['cols']))
+                        if (is_array($custom['cols']))
+                        {
+                            foreach($custom['cols'] as $entry)
 			{
 				$cols[] = array(
 					'id' => $entry['id'],
@@ -408,6 +411,7 @@
 					'delete' => $entry['id'],
 				);
 			}
+                        }
 
 			$datatable_def[] = array
 				(

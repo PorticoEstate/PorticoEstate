@@ -98,6 +98,12 @@
 								<xsl:value-of select="php:function('lang', 'contract_type')"/>
 							</label>
 							<select id="contract_type" name="contract_type">
+								<xsl:attribute name="data-validation">
+									<xsl:text>required</xsl:text>
+								</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+									<xsl:value-of select="php:function('lang', 'contract_type')"/>
+								</xsl:attribute>
 								<xsl:apply-templates select="list_contract_type/options"/>
 							</select>
 						</div>

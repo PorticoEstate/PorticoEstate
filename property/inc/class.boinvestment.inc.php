@@ -173,7 +173,10 @@
 
 			$categories = $this->so->write_off_period_list();
 
-			while (is_array($categories) && list(, $category) = each($categories))
+			//while (is_array($categories) && list(, $category) = each($categories))
+                        if (is_array($categories))
+                        {
+                            foreach($categories as $category)
 			{
 				$sel_category = '';
 				if ($category['period'] == $selected)
@@ -188,6 +191,7 @@
 					'selected' => $sel_category
 				);
 			}
+                        }
 
 			for ($i = 0; $i < count($category_list); $i++)
 			{
@@ -202,13 +206,17 @@
 
 		function save_investment( $values )
 		{
-			while (is_array($values['location']) && list(, $value) = each($values['location']))
+			//while (is_array($values['location']) && list(, $value) = each($values['location']))
+                        if (is_array($values['location']))
+                        {
+                            foreach($values['location'] as $value)
 			{
 				if ($value)
 				{
 					$location[] = $value;
 				}
 			}
+                        }
 
 			$values['location_code'] = implode("-", $location);
 

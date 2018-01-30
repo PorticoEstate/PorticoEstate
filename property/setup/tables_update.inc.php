@@ -700,7 +700,9 @@
 			);
 		}
 
-		while(is_array($condition) && list(, $value) = each($condition))
+                if (is_array($condition))
+                {
+                    foreach($condition as $value)
 		{
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
 				. "VALUES ('"
@@ -775,6 +777,7 @@
 			$score = $GLOBALS['phpgw_setup']->oProc->f('score');
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET score = $score WHERE id = $id", __LINE__, __FILE__);
 		}
+                }
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_priority_key');
 
@@ -9969,3 +9972,23 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.725 to 0.9.17.726
+	*
+	*/
+	$test[] = '0.9.17.725';
+
+	function property_upgrade0_9_17_725()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.admin_booking', 'Administrer booking', 'property');
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.726';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+

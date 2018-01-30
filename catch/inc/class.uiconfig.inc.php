@@ -294,7 +294,10 @@
 
 			$config_info = $this->bo->read_attrib($type_id);
 
-			while (is_array($config_info) && list(,$entry) = each($config_info))
+			//while (is_array($config_info) && list(,$entry) = each($config_info))
+                        if (is_array($config_info))
+                        {
+                            foreach($config_info as $key => $entry)
 			{
 
 				$content[] = array
@@ -311,6 +314,7 @@
 					'lang_value_text'			=> lang('values for this config type'),
 				);
 			}
+                        }
 
 //_debug_array($content);
 
@@ -545,7 +549,10 @@
 
 			$config_info = $this->bo->read_value($type_id,$attrib_id);
 
-			while (is_array($config_info) && list(,$entry) = each($config_info))
+			//while (is_array($config_info) && list(,$entry) = each($config_info))
+                        if (is_array($config_info))
+                        {
+                            foreach($config_info as $key => $entry)
 			{
 
 				$content[] = array
@@ -564,6 +571,7 @@
 					'lang_value_text'			=> lang('value for this config type'),
 				);
 			}
+                        }
 
 //_debug_array($content);
 

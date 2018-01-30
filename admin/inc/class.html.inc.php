@@ -62,10 +62,14 @@
 			{
 				$frow = $rows[0];
 				$cnam = $this->arr_keys($frow);
-				while(list(,$fn)=each($cnam))
+				//while(list(,$fn)=each($cnam))
+                                if (is_array($cnam))
+                                {
+                                    foreach($cnam as $key => $fn)
 				{
 					$head[$fn] = array();
 				}
+			}
 			}
 
 			if ( gettype($head['_cols'])=="NULL")
@@ -109,20 +113,28 @@
 				{
 					$gkey = '';
 					reset($groupby);
-					while (list($gname,)=each($groupby))
+					//while (list($gname,)=each($groupby))
+                                        if (is_array($groupby))
+                                        {
+                                            foreach($groupby as $gname => $value)
 					{
 						$gkey .= $rows[$rno][$gname]['value'];
 					}
+                                        }
 					$rows[$rno]['#gkey'] = $gkey;
 				}
 
 				reset($printlist);
-				while(list($pc,$pcol)=each($printlist))
+				//while(list($pc,$pcol)=each($printlist))
+                                if (is_array($printlist))
+                                {
+                                    foreach($printlist as $pc => $pcol)
 				{
 					$cname = $pcol['#name'];
 					$cparms = $this->arr_merge($head[$cname],$pcol,array('bgcolor'=>'FFFFFF'),$rows[$rno][$cname]);
 					$rows[$rno][$cname] = $cparms;
 				}
+			}
 			}
 
 			// Grouping Suppression
@@ -185,7 +197,10 @@
 	//			$html .= "\t<tr $rp> <comment $gkey>\n";
 				$html .= "\t<tr $rp> \n";
 				reset($printlist);
-				while(list($pc,$pcol)=each($printlist))
+				//while(list($pc,$pcol)=each($printlist))
+                                if (is_array($printlist))
+                                {
+                                    foreach($printlist as $pc => $pcol)
 				{
 					$cname = $pcol['#name'];
 
@@ -199,6 +214,7 @@
 						$html .= "\t</tr>\n"; // \t<tr $rp>\n
 					}
 				}
+			}
 			}
 			$html .= "</table>\n";
 			$html .= "</form>";
@@ -214,7 +230,10 @@
 				return '';
 			}
 			reset($parmlist);
-			while(list($pname,$pvalue)=each($parmlist))
+			//while(list($pname,$pvalue)=each($parmlist))
+                        if (is_array($parmlist))
+                        {
+                            foreach($parmlist as $pname => $pvalue)
 			{
 				switch($pname)
 				{
@@ -236,6 +255,7 @@
 						}
 				}
 			}
+                        }
 			return $html;
 		}
 
@@ -257,10 +277,14 @@
 			$cnam = $this->arr_keys($frow);
 			if ($head == '')
 			{
-				while(list(,$fn)=each($cnam))
+				//while(list(,$fn)=each($cnam))
+                                if (is_array($cnam))
+                                {
+                                    foreach($cnam as $key => $fn)
 				{
 					$head[$fn] = array();
 				}
+			}
 			}
 
 			if (isset($_cols))
@@ -390,7 +414,10 @@
 			}
 			$html .= ">\n";
 
-			while (list(,$itm)=each($opts))
+			//while (list(,$itm)=each($opts))
+                        if (is_array($opts))
+                        {
+                            foreach($opts as $key => $itm)
 			{
 				$html .= '<option value="'.$itm.'" ';
 				if ($itm == $sel)
@@ -399,6 +426,7 @@
 				}
 				$html .= '>'.$itm."</option>\n";
 			}
+                        }
 			$html .= "</select>\n";
 			return $html;
 		}
@@ -460,7 +488,10 @@
 			// Build Title Row
 			$table = array();
 			reset($printlist);
-			while(list($pc,$pcol)=each($printlist))
+			//while(list($pc,$pcol)=each($printlist))
+                        if (is_array($printlist))
+                        {
+                            foreach($printlist as $pc => $pcol)
 			{
 				$cname = $pcol['#name'];
 				$values = $head[$cname];
@@ -473,6 +504,7 @@
 				$cparms['value']=$title;
 				$table[0][$pc] = $cparms;
 			}
+                        }
 			return $table;
 		}
 
@@ -488,7 +520,10 @@
 			$row = $table[0];
 			reset($row);
 			$intr = true;
-			while(list(,$col)=each($row))
+			//while(list(,$col)=each($row))
+                        if (is_array($row))
+                        {
+                            foreach($row as $key => $col)
 			{
 				if (!$intr)
 				{
@@ -504,6 +539,7 @@
 					$intr = false;
 				}
 			}
+                        }
 			return $html;
 		}
 
@@ -511,23 +547,31 @@
 		{
 			$out = array();
 			$test = array($a1,$a2,$a3,$a4,$a5,$a6,$a7,$a8);
-			while(list(,$val) = each($test))
+			//while(list(,$val) = each($test))
+                        if (is_array($test))
+                        {
+                            foreach($test as $key => $val)
 			{
 				if(is_array($val))
 				{
 					$out += $val;
 				}
 			}
+                        }
 			return $out;
 		}
 
 		function arr_keys($fields,$array=True)
 		{
 			@reset($fields);
-			while(list($key,$val) = @each($fields))
+			//while(list($key,$val) = @each($fields))
+                        if (is_array($fields))
+                        {
+                            foreach($fields as $key => $val)
 			{
 				$fkeys .= $key . ',';
 			}
+                        }
 			$fkeys = substr($fkeys,0,-1);
 			if($array)
 			{

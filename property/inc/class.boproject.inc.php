@@ -303,7 +303,10 @@
 			$branch_entries = $this->so->select_branch_list();
 
 			$j = 0;
-			while (is_array($branch_entries) && list(, $branch) = each($branch_entries))
+			//while (is_array($branch_entries) && list(, $branch) = each($branch_entries))
+                        if (is_array($branch_entries))
+                        {
+                            foreach($branch_entries as $branch)
 			{
 				$branch_list[$j]['id'] = $branch['id'];
 				$branch_list[$j]['name'] = $branch['name'];
@@ -317,6 +320,7 @@
 				}
 				$j++;
 			}
+                        }
 
 			/* 	for ($i=0;$i<count($branch_list);$i++)
 			  {
@@ -903,7 +907,7 @@
 		function save( $project, $action = '', $values_attribute = array() )
 		{
 			//_debug_array($project);
-			while (is_array($project['location']) && list(, $value) = each($project['location']))
+                        foreach($project['location'] as $value)
 			{
 				if ($value)
 				{

@@ -232,10 +232,13 @@
 				$orderby = "ORDER BY $_orderby $sort";
 			}
 
-			while (is_array($filter_out) && list(, $_filter) = each($filter_out))
+                        if (is_array($filter_out))
+                        {
+                            foreach($filter_out as $_filter)
 			{
 				$filtered[] = "history_status != '{$_filter}'";
 			}
+                        }
 
 			$filter = '';
 			if (isset($filtered))
@@ -253,10 +256,13 @@
 				$filter .= " AND history_detail_id = $detail_id";
 			}
 
-			while (is_array($only_show) && list(, $_filter) = each($only_show))
+                        if (is_array($only_show))
+                        {
+                            foreach($only_show as $_filter)
 			{
 				$_only_show[] = "history_status='{$_filter}'";
 			}
+                        }
 
 			$only_show_filter = '';
 			if (isset($_only_show))
