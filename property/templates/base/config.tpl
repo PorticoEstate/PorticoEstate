@@ -729,6 +729,13 @@
 					</select>
 				</td>
 			</tr>
+
+			<tr>
+				<td>{lang_path_to_temp_files_components}:</td>
+				<td>
+					<input name="newsettings[temp_files_components]" value="{value_temp_files_components}" size="40">
+				</td>
+			</tr>
 		</tbody>
 
 		<!--

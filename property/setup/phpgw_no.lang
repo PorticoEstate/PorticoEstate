@@ -2072,6 +2072,7 @@ simplified	property	no	Forenklet
 implicitly from project	property	no	Implisitt fra prosjekt
 generic import	property	no	Generisk import
 import components	property	no	Importer FDV-dokumentasjon
+path to temp files components	property	no	Temporær katalog for filimport for FDV-dokumentasjon
 relations	property	no	Koblinger
 components	property	no	Komponenter
 locations	property	no	Lokasjoner
