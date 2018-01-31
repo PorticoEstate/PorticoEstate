@@ -331,6 +331,7 @@
 				$terms_id = '';
 				$voucher_type = 'FU';
 				$apar_id = '';
+				$order_type = 'FS';
 			}
 			else if($organization == 'nlsh')
 			{
@@ -344,8 +345,9 @@
 				$responsible ='NLSH';
 				$responsible2 ='NLSH';
 				$terms_id = '14';
-				$voucher_type = 'FU'; // må avklares
+				$voucher_type = 'SO';
 				$apar_id = $party->get_customer_id();//kundenr fra agresso
+				$order_type = 'PO';
 			}
 
 			$order[] = // Header line
@@ -403,7 +405,7 @@
 				. sprintf("%-17s", '') // 	63		obs_date
 				. sprintf("%-17s", '') // 	64		order_date
 				. sprintf("%09.9s", $serial_number) // 	65		order_id				DATA
-				. 'FS'  // 	66		order_type				DATA
+				. $order_type //'FS'  // 	66		order_type				DATA
 				. $pay_method  // 	67		pay_method				DATA
 				//	(68)
 				. sprintf("%02s", '')
@@ -492,7 +494,7 @@
 					. sprintf("%50s", '')   // 	91		unit_descr
 					. sprintf("%017s", 1 * 100)  // 	92		value_1					DATA
 					. sprintf("%9s", '') //	93		just white space..
-					. 'FU' // 	94		voucher_type			DATA
+					. $voucher_type // 	94		voucher_type			DATA
 					. sprintf("%4s", '') // 	95		warehouse
 					. sprintf("%15s", '')   //	96		just white space..
 				;
@@ -512,7 +514,7 @@
 					. sprintf("%63s", '')   //	79-88	just white space..
 					. '42' // 	89		trans_type				DATA
 					. sprintf("%79s", '')   //	90-93	just white space..
-					. 'FU' // 	94		voucher_type			DATA
+					. $voucher_type // 	94		voucher_type			DATA
 					. sprintf("%19s", '')   //	95-96	just white space..
 				;
 			}
