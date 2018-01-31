@@ -11,7 +11,7 @@ services:
   postgres:
     build: ./postgres
     ports:
-      - "5434:5432"
+      - "5432:5432"
   testrunner:
     build: ./testrunner
     volumes:
