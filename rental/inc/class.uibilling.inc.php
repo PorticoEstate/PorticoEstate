@@ -1613,11 +1613,11 @@ JS;
 					{
 						$url_delete = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.delete',
 								'id' => $value['id'], 'phpgw_return_as' => 'json')));
-						$actions[] = '<a onclick="onDelete(\'' . $url_delete . '\')">' . lang('delete') . '</a>';
+						$actions[] = '<a href="#" onclick="onDelete(\'' . $url_delete . '\')">' . lang('delete') . '</a>';
 
 						$url_commit = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.commit',
 								'id' => $value['id'], 'phpgw_return_as' => 'json')));
-						$actions[] = '<a onclick="onCommit(\'' . $url_commit . '\')">' . lang('commit') . '</a>';
+						$actions[] = '<a href="#" onclick="onCommit(\'' . $url_commit . '\')">' . lang('commit') . '</a>';
 
 						$value['other_operations'] = implode(' | ', $actions);
 					}
