@@ -161,9 +161,13 @@
 				{
 					if (isset($res['buildings']) && is_array($res['buildings']))
 					{
+						$building_names = array();
 						foreach ($res['buildings'] as $_building_id)
 						{
 							$_resource_buildings[$_building_id] = true;
+							$building = $this->sobuilding->read_single($_building_id);
+							$building_names[] = $building['name'];
+							$res['building_name'] = implode('</br>', $building_names);
 						}
 					}
 					else if (isset($res['building_id']) && $res['building_id'])

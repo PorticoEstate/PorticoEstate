@@ -411,7 +411,7 @@
 						{
 							$url = html_entity_decode(self::link(array('menuaction' => 'rental.uicontract.set_payer',
 									'party_id' => $value['id'], 'contract_id' => $params[0], 'phpgw_return_as' => 'json')));
-							$actions[] = '<a onclick="setPayer(\'' . $url . '\')">' . lang('set_payer') . '</a>';
+							$actions[] = '<a href="#" onclick="setPayer(\'' . $url . '\')">' . lang('set_payer') . '</a>';
 						}
 					}
 					break;
@@ -425,18 +425,18 @@
 						{
 							$url1 = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.delete_party',
 									'id' => $value['id'], 'phpgw_return_as' => 'json')));
-							$actions[] = '<a onclick="onDelete_party(\'' . $url1 . '\')">' . lang('delete') . '</a>';
+							$actions[] = '<a href="#" onclick="onDelete_party(\'' . $url1 . '\')">' . lang('delete') . '</a>';
 						}
 
 						if (isset($value['org_enhet_id']) && $value['org_enhet_id'] != '')
 						{
 							$url2 = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index',
 									'org_enhet_id' => $value['org_enhet_id'])));
-							$actions[] = '<a href="' . $url2 . '">' . lang('frontend_access') . '</a>';
+							$actions[] = '<a href="#" href="' . $url2 . '">' . lang('frontend_access') . '</a>';
 
 							$url3 = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party',
 									'org_enhet_id' => $value['org_enhet_id'], 'party_id' => $value['id'], 'phpgw_return_as' => 'json')));
-							$actions[] = '<a onclick="onSyncronize_party(\'' . $url3 . '\')">' . lang('syncronize_party') . '</a>';
+							$actions[] = '<a href="#" onclick="onSyncronize_party(\'' . $url3 . '\')">' . lang('syncronize_party') . '</a>';
 						}
 					}
 			}
