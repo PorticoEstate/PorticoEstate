@@ -20,4 +20,5 @@ modules:
             host: %SELENIUMHOST%
             url: http://%WEBHOST%:%WEBPORT%/portico
             browser: chrome
+        - Asserts
         - \Helper\Acceptance

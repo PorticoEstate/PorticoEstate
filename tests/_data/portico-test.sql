@@ -5,8 +5,6 @@
 -- Dumped from database version 9.5.10
 -- Dumped by pg_dump version 9.6.6
 
--- Started on 2018-01-31 10:40:24 CET
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -17,7 +15,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 1 (class 3079 OID 12361)
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
@@ -25,8 +22,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 4938 (class 0 OID 0)
--- Dependencies: 1
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -36,7 +31,6 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 181 (class 1259 OID 16387)
 -- Name: seq_controller_check_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -55,7 +49,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 182 (class 1259 OID 16389)
 -- Name: controller_check_item; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -69,7 +62,6 @@ CREATE TABLE controller_check_item (
 ALTER TABLE controller_check_item OWNER TO portico;
 
 --
--- TOC entry 183 (class 1259 OID 16393)
 -- Name: seq_controller_check_item_case; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -84,7 +76,6 @@ CREATE SEQUENCE seq_controller_check_item_case
 ALTER TABLE seq_controller_check_item_case OWNER TO portico;
 
 --
--- TOC entry 184 (class 1259 OID 16395)
 -- Name: controller_check_item_case; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -109,7 +100,6 @@ CREATE TABLE controller_check_item_case (
 ALTER TABLE controller_check_item_case OWNER TO portico;
 
 --
--- TOC entry 185 (class 1259 OID 16402)
 -- Name: seq_controller_check_item_status; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -124,7 +114,6 @@ CREATE SEQUENCE seq_controller_check_item_status
 ALTER TABLE seq_controller_check_item_status OWNER TO portico;
 
 --
--- TOC entry 186 (class 1259 OID 16404)
 -- Name: controller_check_item_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -141,7 +130,6 @@ CREATE TABLE controller_check_item_status (
 ALTER TABLE controller_check_item_status OWNER TO portico;
 
 --
--- TOC entry 187 (class 1259 OID 16408)
 -- Name: seq_controller_check_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -156,7 +144,6 @@ CREATE SEQUENCE seq_controller_check_list
 ALTER TABLE seq_controller_check_list OWNER TO portico;
 
 --
--- TOC entry 188 (class 1259 OID 16410)
 -- Name: controller_check_list; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -183,7 +170,6 @@ CREATE TABLE controller_check_list (
 ALTER TABLE controller_check_list OWNER TO portico;
 
 --
--- TOC entry 189 (class 1259 OID 16417)
 -- Name: seq_controller_control; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -198,7 +184,6 @@ CREATE SEQUENCE seq_controller_control
 ALTER TABLE seq_controller_control OWNER TO portico;
 
 --
--- TOC entry 190 (class 1259 OID 16419)
 -- Name: controller_control; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -222,7 +207,6 @@ CREATE TABLE controller_control (
 ALTER TABLE controller_control OWNER TO portico;
 
 --
--- TOC entry 191 (class 1259 OID 16426)
 -- Name: seq_controller_control_component_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -237,7 +221,6 @@ CREATE SEQUENCE seq_controller_control_component_list
 ALTER TABLE seq_controller_control_component_list OWNER TO portico;
 
 --
--- TOC entry 192 (class 1259 OID 16428)
 -- Name: controller_control_component_list; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -253,7 +236,6 @@ CREATE TABLE controller_control_component_list (
 ALTER TABLE controller_control_component_list OWNER TO portico;
 
 --
--- TOC entry 193 (class 1259 OID 16432)
 -- Name: seq_controller_control_group; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -268,7 +250,6 @@ CREATE SEQUENCE seq_controller_control_group
 ALTER TABLE seq_controller_control_group OWNER TO portico;
 
 --
--- TOC entry 194 (class 1259 OID 16434)
 -- Name: controller_control_group; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -286,7 +267,6 @@ CREATE TABLE controller_control_group (
 ALTER TABLE controller_control_group OWNER TO portico;
 
 --
--- TOC entry 195 (class 1259 OID 16441)
 -- Name: seq_controller_control_group_component_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -301,7 +281,6 @@ CREATE SEQUENCE seq_controller_control_group_component_list
 ALTER TABLE seq_controller_control_group_component_list OWNER TO portico;
 
 --
--- TOC entry 196 (class 1259 OID 16443)
 -- Name: controller_control_group_component_list; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -315,7 +294,6 @@ CREATE TABLE controller_control_group_component_list (
 ALTER TABLE controller_control_group_component_list OWNER TO portico;
 
 --
--- TOC entry 197 (class 1259 OID 16447)
 -- Name: seq_controller_control_group_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -330,7 +308,6 @@ CREATE SEQUENCE seq_controller_control_group_list
 ALTER TABLE seq_controller_control_group_list OWNER TO portico;
 
 --
--- TOC entry 198 (class 1259 OID 16449)
 -- Name: controller_control_group_list; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -345,7 +322,6 @@ CREATE TABLE controller_control_group_list (
 ALTER TABLE controller_control_group_list OWNER TO portico;
 
 --
--- TOC entry 199 (class 1259 OID 16453)
 -- Name: seq_controller_control_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -360,7 +336,6 @@ CREATE SEQUENCE seq_controller_control_item
 ALTER TABLE seq_controller_control_item OWNER TO portico;
 
 --
--- TOC entry 200 (class 1259 OID 16455)
 -- Name: controller_control_item; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -379,7 +354,6 @@ CREATE TABLE controller_control_item (
 ALTER TABLE controller_control_item OWNER TO portico;
 
 --
--- TOC entry 201 (class 1259 OID 16463)
 -- Name: seq_controller_control_item_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -394,7 +368,6 @@ CREATE SEQUENCE seq_controller_control_item_list
 ALTER TABLE seq_controller_control_item_list OWNER TO portico;
 
 --
--- TOC entry 202 (class 1259 OID 16465)
 -- Name: controller_control_item_list; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -409,7 +382,6 @@ CREATE TABLE controller_control_item_list (
 ALTER TABLE controller_control_item_list OWNER TO portico;
 
 --
--- TOC entry 203 (class 1259 OID 16469)
 -- Name: seq_controller_control_item_option; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -424,7 +396,6 @@ CREATE SEQUENCE seq_controller_control_item_option
 ALTER TABLE seq_controller_control_item_option OWNER TO portico;
 
 --
--- TOC entry 204 (class 1259 OID 16471)
 -- Name: controller_control_item_option; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -438,7 +409,6 @@ CREATE TABLE controller_control_item_option (
 ALTER TABLE controller_control_item_option OWNER TO portico;
 
 --
--- TOC entry 205 (class 1259 OID 16475)
 -- Name: seq_controller_control_location_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -453,7 +423,6 @@ CREATE SEQUENCE seq_controller_control_location_list
 ALTER TABLE seq_controller_control_location_list OWNER TO portico;
 
 --
--- TOC entry 206 (class 1259 OID 16477)
 -- Name: controller_control_location_list; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -467,7 +436,6 @@ CREATE TABLE controller_control_location_list (
 ALTER TABLE controller_control_location_list OWNER TO portico;
 
 --
--- TOC entry 207 (class 1259 OID 16481)
 -- Name: seq_controller_control_serie; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -482,7 +450,6 @@ CREATE SEQUENCE seq_controller_control_serie
 ALTER TABLE seq_controller_control_serie OWNER TO portico;
 
 --
--- TOC entry 208 (class 1259 OID 16483)
 -- Name: controller_control_serie; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -503,7 +470,6 @@ CREATE TABLE controller_control_serie (
 ALTER TABLE controller_control_serie OWNER TO portico;
 
 --
--- TOC entry 209 (class 1259 OID 16490)
 -- Name: seq_controller_control_serie_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -518,7 +484,6 @@ CREATE SEQUENCE seq_controller_control_serie_history
 ALTER TABLE seq_controller_control_serie_history OWNER TO portico;
 
 --
--- TOC entry 210 (class 1259 OID 16492)
 -- Name: controller_control_serie_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -533,7 +498,6 @@ CREATE TABLE controller_control_serie_history (
 ALTER TABLE controller_control_serie_history OWNER TO portico;
 
 --
--- TOC entry 211 (class 1259 OID 16496)
 -- Name: seq_controller_document; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -548,7 +512,6 @@ CREATE SEQUENCE seq_controller_document
 ALTER TABLE seq_controller_document OWNER TO portico;
 
 --
--- TOC entry 212 (class 1259 OID 16498)
 -- Name: controller_document; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -565,7 +528,6 @@ CREATE TABLE controller_document (
 ALTER TABLE controller_document OWNER TO portico;
 
 --
--- TOC entry 213 (class 1259 OID 16505)
 -- Name: seq_controller_document_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -580,7 +542,6 @@ CREATE SEQUENCE seq_controller_document_types
 ALTER TABLE seq_controller_document_types OWNER TO portico;
 
 --
--- TOC entry 214 (class 1259 OID 16507)
 -- Name: controller_document_types; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -593,7 +554,6 @@ CREATE TABLE controller_document_types (
 ALTER TABLE controller_document_types OWNER TO portico;
 
 --
--- TOC entry 215 (class 1259 OID 16511)
 -- Name: seq_controller_procedure; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -608,7 +568,6 @@ CREATE SEQUENCE seq_controller_procedure
 ALTER TABLE seq_controller_procedure OWNER TO portico;
 
 --
--- TOC entry 216 (class 1259 OID 16513)
 -- Name: controller_procedure; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -634,7 +593,6 @@ CREATE TABLE controller_procedure (
 ALTER TABLE controller_procedure OWNER TO portico;
 
 --
--- TOC entry 217 (class 1259 OID 16520)
 -- Name: seq_fm_action_pending; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -649,7 +607,6 @@ CREATE SEQUENCE seq_fm_action_pending
 ALTER TABLE seq_fm_action_pending OWNER TO portico;
 
 --
--- TOC entry 218 (class 1259 OID 16522)
 -- Name: fm_action_pending; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -675,7 +632,6 @@ CREATE TABLE fm_action_pending (
 ALTER TABLE fm_action_pending OWNER TO portico;
 
 --
--- TOC entry 219 (class 1259 OID 16530)
 -- Name: seq_fm_action_pending_category; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -690,7 +646,6 @@ CREATE SEQUENCE seq_fm_action_pending_category
 ALTER TABLE seq_fm_action_pending_category OWNER TO portico;
 
 --
--- TOC entry 220 (class 1259 OID 16532)
 -- Name: fm_action_pending_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -705,7 +660,6 @@ CREATE TABLE fm_action_pending_category (
 ALTER TABLE fm_action_pending_category OWNER TO portico;
 
 --
--- TOC entry 221 (class 1259 OID 16539)
 -- Name: fm_activities; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -728,7 +682,6 @@ CREATE TABLE fm_activities (
 ALTER TABLE fm_activities OWNER TO portico;
 
 --
--- TOC entry 222 (class 1259 OID 16548)
 -- Name: fm_activity_price_index; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -750,7 +703,6 @@ CREATE TABLE fm_activity_price_index (
 ALTER TABLE fm_activity_price_index OWNER TO portico;
 
 --
--- TOC entry 223 (class 1259 OID 16555)
 -- Name: fm_agreement; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -774,7 +726,6 @@ CREATE TABLE fm_agreement (
 ALTER TABLE fm_agreement OWNER TO portico;
 
 --
--- TOC entry 224 (class 1259 OID 16561)
 -- Name: fm_agreement_group; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -789,7 +740,6 @@ CREATE TABLE fm_agreement_group (
 ALTER TABLE fm_agreement_group OWNER TO portico;
 
 --
--- TOC entry 225 (class 1259 OID 16564)
 -- Name: fm_agreement_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -802,7 +752,6 @@ CREATE TABLE fm_agreement_status (
 ALTER TABLE fm_agreement_status OWNER TO portico;
 
 --
--- TOC entry 226 (class 1259 OID 16567)
 -- Name: fm_async_method; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -817,7 +766,6 @@ CREATE TABLE fm_async_method (
 ALTER TABLE fm_async_method OWNER TO portico;
 
 --
--- TOC entry 227 (class 1259 OID 16573)
 -- Name: fm_authorities_demands; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -833,7 +781,6 @@ CREATE TABLE fm_authorities_demands (
 ALTER TABLE fm_authorities_demands OWNER TO portico;
 
 --
--- TOC entry 228 (class 1259 OID 16576)
 -- Name: fm_b_account; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -853,7 +800,6 @@ CREATE TABLE fm_b_account (
 ALTER TABLE fm_b_account OWNER TO portico;
 
 --
--- TOC entry 229 (class 1259 OID 16580)
 -- Name: fm_b_account_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -868,7 +814,6 @@ CREATE TABLE fm_b_account_category (
 ALTER TABLE fm_b_account_category OWNER TO portico;
 
 --
--- TOC entry 230 (class 1259 OID 16585)
 -- Name: fm_branch; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -882,7 +827,6 @@ CREATE TABLE fm_branch (
 ALTER TABLE fm_branch OWNER TO portico;
 
 --
--- TOC entry 231 (class 1259 OID 16588)
 -- Name: fm_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -905,7 +849,6 @@ CREATE TABLE fm_budget (
 ALTER TABLE fm_budget OWNER TO portico;
 
 --
--- TOC entry 232 (class 1259 OID 16595)
 -- Name: fm_budget_basis; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -929,7 +872,6 @@ CREATE TABLE fm_budget_basis (
 ALTER TABLE fm_budget_basis OWNER TO portico;
 
 --
--- TOC entry 233 (class 1259 OID 16602)
 -- Name: seq_fm_budget_cost; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -944,7 +886,6 @@ CREATE SEQUENCE seq_fm_budget_cost
 ALTER TABLE seq_fm_budget_cost OWNER TO portico;
 
 --
--- TOC entry 234 (class 1259 OID 16604)
 -- Name: fm_budget_cost; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -960,7 +901,6 @@ CREATE TABLE fm_budget_cost (
 ALTER TABLE fm_budget_cost OWNER TO portico;
 
 --
--- TOC entry 235 (class 1259 OID 16609)
 -- Name: fm_budget_period; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -978,7 +918,6 @@ CREATE TABLE fm_budget_period (
 ALTER TABLE fm_budget_period OWNER TO portico;
 
 --
--- TOC entry 236 (class 1259 OID 16616)
 -- Name: fm_building_part; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -995,7 +934,6 @@ CREATE TABLE fm_building_part (
 ALTER TABLE fm_building_part OWNER TO portico;
 
 --
--- TOC entry 237 (class 1259 OID 16619)
 -- Name: fm_cache; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1008,7 +946,6 @@ CREATE TABLE fm_cache (
 ALTER TABLE fm_cache OWNER TO portico;
 
 --
--- TOC entry 238 (class 1259 OID 16625)
 -- Name: fm_chapter; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1021,7 +958,6 @@ CREATE TABLE fm_chapter (
 ALTER TABLE fm_chapter OWNER TO portico;
 
 --
--- TOC entry 239 (class 1259 OID 16628)
 -- Name: fm_condition_survey; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1053,7 +989,6 @@ CREATE TABLE fm_condition_survey (
 ALTER TABLE fm_condition_survey OWNER TO portico;
 
 --
--- TOC entry 240 (class 1259 OID 16635)
 -- Name: seq_fm_condition_survey_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1068,7 +1003,6 @@ CREATE SEQUENCE seq_fm_condition_survey_history
 ALTER TABLE seq_fm_condition_survey_history OWNER TO portico;
 
 --
--- TOC entry 241 (class 1259 OID 16637)
 -- Name: fm_condition_survey_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1087,7 +1021,6 @@ CREATE TABLE fm_condition_survey_history (
 ALTER TABLE fm_condition_survey_history OWNER TO portico;
 
 --
--- TOC entry 242 (class 1259 OID 16645)
 -- Name: fm_condition_survey_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1104,7 +1037,6 @@ CREATE TABLE fm_condition_survey_status (
 ALTER TABLE fm_condition_survey_status OWNER TO portico;
 
 --
--- TOC entry 243 (class 1259 OID 16648)
 -- Name: seq_fm_cron_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1119,7 +1051,6 @@ CREATE SEQUENCE seq_fm_cron_log
 ALTER TABLE seq_fm_cron_log OWNER TO portico;
 
 --
--- TOC entry 244 (class 1259 OID 16650)
 -- Name: fm_cron_log; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1135,7 +1066,6 @@ CREATE TABLE fm_cron_log (
 ALTER TABLE fm_cron_log OWNER TO portico;
 
 --
--- TOC entry 245 (class 1259 OID 16658)
 -- Name: fm_custom; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1151,7 +1081,6 @@ CREATE TABLE fm_custom (
 ALTER TABLE fm_custom OWNER TO portico;
 
 --
--- TOC entry 246 (class 1259 OID 16664)
 -- Name: fm_custom_cols; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1167,7 +1096,6 @@ CREATE TABLE fm_custom_cols (
 ALTER TABLE fm_custom_cols OWNER TO portico;
 
 --
--- TOC entry 247 (class 1259 OID 16667)
 -- Name: seq_fm_custom_menu_items; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1182,7 +1110,6 @@ CREATE SEQUENCE seq_fm_custom_menu_items
 ALTER TABLE seq_fm_custom_menu_items OWNER TO portico;
 
 --
--- TOC entry 248 (class 1259 OID 16669)
 -- Name: fm_custom_menu_items; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1203,7 +1130,6 @@ CREATE TABLE fm_custom_menu_items (
 ALTER TABLE fm_custom_menu_items OWNER TO portico;
 
 --
--- TOC entry 249 (class 1259 OID 16676)
 -- Name: fm_district; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1217,7 +1143,6 @@ CREATE TABLE fm_district (
 ALTER TABLE fm_district OWNER TO portico;
 
 --
--- TOC entry 250 (class 1259 OID 16682)
 -- Name: seq_fm_document; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1232,7 +1157,6 @@ CREATE SEQUENCE seq_fm_document
 ALTER TABLE seq_fm_document OWNER TO portico;
 
 --
--- TOC entry 251 (class 1259 OID 16684)
 -- Name: fm_document; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1267,7 +1191,6 @@ CREATE TABLE fm_document (
 ALTER TABLE fm_document OWNER TO portico;
 
 --
--- TOC entry 252 (class 1259 OID 16691)
 -- Name: seq_fm_document_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1282,7 +1205,6 @@ CREATE SEQUENCE seq_fm_document_history
 ALTER TABLE seq_fm_document_history OWNER TO portico;
 
 --
--- TOC entry 253 (class 1259 OID 16693)
 -- Name: fm_document_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1301,7 +1223,6 @@ CREATE TABLE fm_document_history (
 ALTER TABLE fm_document_history OWNER TO portico;
 
 --
--- TOC entry 254 (class 1259 OID 16701)
 -- Name: seq_fm_document_relation; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1316,7 +1237,6 @@ CREATE SEQUENCE seq_fm_document_relation
 ALTER TABLE seq_fm_document_relation OWNER TO portico;
 
 --
--- TOC entry 255 (class 1259 OID 16703)
 -- Name: fm_document_relation; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1332,7 +1252,6 @@ CREATE TABLE fm_document_relation (
 ALTER TABLE fm_document_relation OWNER TO portico;
 
 --
--- TOC entry 256 (class 1259 OID 16707)
 -- Name: fm_document_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1345,7 +1264,6 @@ CREATE TABLE fm_document_status (
 ALTER TABLE fm_document_status OWNER TO portico;
 
 --
--- TOC entry 257 (class 1259 OID 16710)
 -- Name: seq_fm_eco_period_transition; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1360,7 +1278,6 @@ CREATE SEQUENCE seq_fm_eco_period_transition
 ALTER TABLE seq_fm_eco_period_transition OWNER TO portico;
 
 --
--- TOC entry 258 (class 1259 OID 16712)
 -- Name: fm_eco_period_transition; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1379,7 +1296,6 @@ CREATE TABLE fm_eco_period_transition (
 ALTER TABLE fm_eco_period_transition OWNER TO portico;
 
 --
--- TOC entry 259 (class 1259 OID 16716)
 -- Name: fm_eco_periodization; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1393,7 +1309,6 @@ CREATE TABLE fm_eco_periodization (
 ALTER TABLE fm_eco_periodization OWNER TO portico;
 
 --
--- TOC entry 260 (class 1259 OID 16720)
 -- Name: seq_fm_eco_periodization_outline; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1408,7 +1323,6 @@ CREATE SEQUENCE seq_fm_eco_periodization_outline
 ALTER TABLE seq_fm_eco_periodization_outline OWNER TO portico;
 
 --
--- TOC entry 261 (class 1259 OID 16722)
 -- Name: fm_eco_periodization_outline; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1426,7 +1340,6 @@ CREATE TABLE fm_eco_periodization_outline (
 ALTER TABLE fm_eco_periodization_outline OWNER TO portico;
 
 --
--- TOC entry 262 (class 1259 OID 16727)
 -- Name: fm_eco_service; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1440,7 +1353,6 @@ CREATE TABLE fm_eco_service (
 ALTER TABLE fm_eco_service OWNER TO portico;
 
 --
--- TOC entry 263 (class 1259 OID 16731)
 -- Name: fm_ecoart; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1453,7 +1365,6 @@ CREATE TABLE fm_ecoart (
 ALTER TABLE fm_ecoart OWNER TO portico;
 
 --
--- TOC entry 264 (class 1259 OID 16734)
 -- Name: fm_ecoavvik; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1480,7 +1391,6 @@ CREATE TABLE fm_ecoavvik (
 ALTER TABLE fm_ecoavvik OWNER TO portico;
 
 --
--- TOC entry 265 (class 1259 OID 16739)
 -- Name: seq_fm_ecobilag; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1495,7 +1405,6 @@ CREATE SEQUENCE seq_fm_ecobilag
 ALTER TABLE seq_fm_ecobilag OWNER TO portico;
 
 --
--- TOC entry 266 (class 1259 OID 16741)
 -- Name: fm_ecobilag; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1553,7 +1462,6 @@ CREATE TABLE fm_ecobilag (
 ALTER TABLE fm_ecobilag OWNER TO portico;
 
 --
--- TOC entry 267 (class 1259 OID 16750)
 -- Name: fm_ecobilag_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1566,7 +1474,6 @@ CREATE TABLE fm_ecobilag_category (
 ALTER TABLE fm_ecobilag_category OWNER TO portico;
 
 --
--- TOC entry 268 (class 1259 OID 16753)
 -- Name: fm_ecobilag_process_code; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1582,7 +1489,6 @@ CREATE TABLE fm_ecobilag_process_code (
 ALTER TABLE fm_ecobilag_process_code OWNER TO portico;
 
 --
--- TOC entry 269 (class 1259 OID 16756)
 -- Name: seq_fm_ecobilag_process_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1597,7 +1503,6 @@ CREATE SEQUENCE seq_fm_ecobilag_process_log
 ALTER TABLE seq_fm_ecobilag_process_log OWNER TO portico;
 
 --
--- TOC entry 270 (class 1259 OID 16758)
 -- Name: fm_ecobilag_process_log; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1615,7 +1520,6 @@ CREATE TABLE fm_ecobilag_process_log (
 ALTER TABLE fm_ecobilag_process_log OWNER TO portico;
 
 --
--- TOC entry 271 (class 1259 OID 16765)
 -- Name: fm_ecobilag_sum_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -1631,7 +1535,6 @@ CREATE VIEW fm_ecobilag_sum_view AS
 ALTER TABLE fm_ecobilag_sum_view OWNER TO portico;
 
 --
--- TOC entry 272 (class 1259 OID 16769)
 -- Name: fm_ecobilagkilde; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1645,7 +1548,6 @@ CREATE TABLE fm_ecobilagkilde (
 ALTER TABLE fm_ecobilagkilde OWNER TO portico;
 
 --
--- TOC entry 273 (class 1259 OID 16775)
 -- Name: fm_ecobilagoverf; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1706,7 +1608,6 @@ CREATE TABLE fm_ecobilagoverf (
 ALTER TABLE fm_ecobilagoverf OWNER TO portico;
 
 --
--- TOC entry 274 (class 1259 OID 16784)
 -- Name: fm_ecodimb; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1721,7 +1622,6 @@ CREATE TABLE fm_ecodimb (
 ALTER TABLE fm_ecodimb OWNER TO portico;
 
 --
--- TOC entry 275 (class 1259 OID 16788)
 -- Name: fm_ecodimb_role; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1734,7 +1634,6 @@ CREATE TABLE fm_ecodimb_role (
 ALTER TABLE fm_ecodimb_role OWNER TO portico;
 
 --
--- TOC entry 276 (class 1259 OID 16791)
 -- Name: seq_fm_ecodimb_role_user; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1749,7 +1648,6 @@ CREATE SEQUENCE seq_fm_ecodimb_role_user
 ALTER TABLE seq_fm_ecodimb_role_user OWNER TO portico;
 
 --
--- TOC entry 277 (class 1259 OID 16793)
 -- Name: fm_ecodimb_role_user; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1771,7 +1669,6 @@ CREATE TABLE fm_ecodimb_role_user (
 ALTER TABLE fm_ecodimb_role_user OWNER TO portico;
 
 --
--- TOC entry 278 (class 1259 OID 16799)
 -- Name: seq_fm_ecodimb_role_user_substitute; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1786,7 +1683,6 @@ CREATE SEQUENCE seq_fm_ecodimb_role_user_substitute
 ALTER TABLE seq_fm_ecodimb_role_user_substitute OWNER TO portico;
 
 --
--- TOC entry 279 (class 1259 OID 16801)
 -- Name: fm_ecodimb_role_user_substitute; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1800,7 +1696,6 @@ CREATE TABLE fm_ecodimb_role_user_substitute (
 ALTER TABLE fm_ecodimb_role_user_substitute OWNER TO portico;
 
 --
--- TOC entry 280 (class 1259 OID 16805)
 -- Name: fm_ecodimd; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1813,7 +1708,6 @@ CREATE TABLE fm_ecodimd (
 ALTER TABLE fm_ecodimd OWNER TO portico;
 
 --
--- TOC entry 281 (class 1259 OID 16808)
 -- Name: fm_ecologg; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1829,7 +1723,6 @@ CREATE TABLE fm_ecologg (
 ALTER TABLE fm_ecologg OWNER TO portico;
 
 --
--- TOC entry 282 (class 1259 OID 16812)
 -- Name: fm_ecomva; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1843,7 +1736,6 @@ CREATE TABLE fm_ecomva (
 ALTER TABLE fm_ecomva OWNER TO portico;
 
 --
--- TOC entry 283 (class 1259 OID 16815)
 -- Name: fm_ecouser; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1857,7 +1749,6 @@ CREATE TABLE fm_ecouser (
 ALTER TABLE fm_ecouser OWNER TO portico;
 
 --
--- TOC entry 284 (class 1259 OID 16818)
 -- Name: fm_entity; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1875,7 +1766,6 @@ CREATE TABLE fm_entity (
 ALTER TABLE fm_entity OWNER TO portico;
 
 --
--- TOC entry 285 (class 1259 OID 16824)
 -- Name: fm_entity_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1908,7 +1798,6 @@ CREATE TABLE fm_entity_category (
 ALTER TABLE fm_entity_category OWNER TO portico;
 
 --
--- TOC entry 286 (class 1259 OID 16830)
 -- Name: seq_fm_entity_group; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1923,7 +1812,6 @@ CREATE SEQUENCE seq_fm_entity_group
 ALTER TABLE seq_fm_entity_group OWNER TO portico;
 
 --
--- TOC entry 287 (class 1259 OID 16832)
 -- Name: fm_entity_group; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1941,7 +1829,6 @@ CREATE TABLE fm_entity_group (
 ALTER TABLE fm_entity_group OWNER TO portico;
 
 --
--- TOC entry 288 (class 1259 OID 16840)
 -- Name: seq_fm_entity_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -1956,7 +1843,6 @@ CREATE SEQUENCE seq_fm_entity_history
 ALTER TABLE seq_fm_entity_history OWNER TO portico;
 
 --
--- TOC entry 289 (class 1259 OID 16842)
 -- Name: fm_entity_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1976,7 +1862,6 @@ CREATE TABLE fm_entity_history (
 ALTER TABLE fm_entity_history OWNER TO portico;
 
 --
--- TOC entry 290 (class 1259 OID 16850)
 -- Name: fm_entity_lookup; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -1990,7 +1875,6 @@ CREATE TABLE fm_entity_lookup (
 ALTER TABLE fm_entity_lookup OWNER TO portico;
 
 --
--- TOC entry 291 (class 1259 OID 16853)
 -- Name: seq_fm_event; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2005,7 +1889,6 @@ CREATE SEQUENCE seq_fm_event
 ALTER TABLE seq_fm_event OWNER TO portico;
 
 --
--- TOC entry 292 (class 1259 OID 16855)
 -- Name: fm_event; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2032,7 +1915,6 @@ CREATE TABLE fm_event (
 ALTER TABLE fm_event OWNER TO portico;
 
 --
--- TOC entry 293 (class 1259 OID 16863)
 -- Name: fm_event_action; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2051,7 +1933,6 @@ CREATE TABLE fm_event_action (
 ALTER TABLE fm_event_action OWNER TO portico;
 
 --
--- TOC entry 294 (class 1259 OID 16869)
 -- Name: fm_event_exception; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2068,7 +1949,6 @@ CREATE TABLE fm_event_exception (
 ALTER TABLE fm_event_exception OWNER TO portico;
 
 --
--- TOC entry 295 (class 1259 OID 16875)
 -- Name: fm_event_receipt; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2085,7 +1965,6 @@ CREATE TABLE fm_event_receipt (
 ALTER TABLE fm_event_receipt OWNER TO portico;
 
 --
--- TOC entry 296 (class 1259 OID 16881)
 -- Name: fm_event_schedule; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2102,7 +1981,6 @@ CREATE TABLE fm_event_schedule (
 ALTER TABLE fm_event_schedule OWNER TO portico;
 
 --
--- TOC entry 297 (class 1259 OID 16887)
 -- Name: fm_external_project; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2117,7 +1995,6 @@ CREATE TABLE fm_external_project (
 ALTER TABLE fm_external_project OWNER TO portico;
 
 --
--- TOC entry 298 (class 1259 OID 16891)
 -- Name: fm_gab_location; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2141,7 +2018,6 @@ CREATE TABLE fm_gab_location (
 ALTER TABLE fm_gab_location OWNER TO portico;
 
 --
--- TOC entry 299 (class 1259 OID 16894)
 -- Name: seq_fm_generic_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2156,7 +2032,6 @@ CREATE SEQUENCE seq_fm_generic_history
 ALTER TABLE seq_fm_generic_history OWNER TO portico;
 
 --
--- TOC entry 300 (class 1259 OID 16896)
 -- Name: fm_generic_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2177,7 +2052,6 @@ CREATE TABLE fm_generic_history (
 ALTER TABLE fm_generic_history OWNER TO portico;
 
 --
--- TOC entry 301 (class 1259 OID 16904)
 -- Name: fm_idgenerator; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2193,7 +2067,6 @@ CREATE TABLE fm_idgenerator (
 ALTER TABLE fm_idgenerator OWNER TO portico;
 
 --
--- TOC entry 302 (class 1259 OID 16908)
 -- Name: fm_investment; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2218,7 +2091,6 @@ CREATE TABLE fm_investment (
 ALTER TABLE fm_investment OWNER TO portico;
 
 --
--- TOC entry 303 (class 1259 OID 16914)
 -- Name: fm_investment_value; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2237,7 +2109,6 @@ CREATE TABLE fm_investment_value (
 ALTER TABLE fm_investment_value OWNER TO portico;
 
 --
--- TOC entry 304 (class 1259 OID 16921)
 -- Name: seq_fm_jasper; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2252,7 +2123,6 @@ CREATE SEQUENCE seq_fm_jasper
 ALTER TABLE seq_fm_jasper OWNER TO portico;
 
 --
--- TOC entry 305 (class 1259 OID 16923)
 -- Name: fm_jasper; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2274,7 +2144,6 @@ CREATE TABLE fm_jasper (
 ALTER TABLE fm_jasper OWNER TO portico;
 
 --
--- TOC entry 306 (class 1259 OID 16930)
 -- Name: fm_jasper_format_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2286,7 +2155,6 @@ CREATE TABLE fm_jasper_format_type (
 ALTER TABLE fm_jasper_format_type OWNER TO portico;
 
 --
--- TOC entry 307 (class 1259 OID 16933)
 -- Name: seq_fm_jasper_input; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2301,7 +2169,6 @@ CREATE SEQUENCE seq_fm_jasper_input
 ALTER TABLE seq_fm_jasper_input OWNER TO portico;
 
 --
--- TOC entry 308 (class 1259 OID 16935)
 -- Name: fm_jasper_input; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2318,7 +2185,6 @@ CREATE TABLE fm_jasper_input (
 ALTER TABLE fm_jasper_input OWNER TO portico;
 
 --
--- TOC entry 309 (class 1259 OID 16939)
 -- Name: seq_fm_jasper_input_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2333,7 +2199,6 @@ CREATE SEQUENCE seq_fm_jasper_input_type
 ALTER TABLE seq_fm_jasper_input_type OWNER TO portico;
 
 --
--- TOC entry 310 (class 1259 OID 16941)
 -- Name: fm_jasper_input_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2347,7 +2212,6 @@ CREATE TABLE fm_jasper_input_type (
 ALTER TABLE fm_jasper_input_type OWNER TO portico;
 
 --
--- TOC entry 311 (class 1259 OID 16945)
 -- Name: fm_key_loc; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2361,7 +2225,6 @@ CREATE TABLE fm_key_loc (
 ALTER TABLE fm_key_loc OWNER TO portico;
 
 --
--- TOC entry 312 (class 1259 OID 16948)
 -- Name: fm_location1; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2393,7 +2256,6 @@ CREATE TABLE fm_location1 (
 ALTER TABLE fm_location1 OWNER TO portico;
 
 --
--- TOC entry 313 (class 1259 OID 16959)
 -- Name: fm_location1_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2406,7 +2268,6 @@ CREATE TABLE fm_location1_category (
 ALTER TABLE fm_location1_category OWNER TO portico;
 
 --
--- TOC entry 314 (class 1259 OID 16962)
 -- Name: fm_location1_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2439,7 +2300,6 @@ CREATE TABLE fm_location1_history (
 ALTER TABLE fm_location1_history OWNER TO portico;
 
 --
--- TOC entry 315 (class 1259 OID 16974)
 -- Name: fm_location2; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2467,7 +2327,6 @@ CREATE TABLE fm_location2 (
 ALTER TABLE fm_location2 OWNER TO portico;
 
 --
--- TOC entry 316 (class 1259 OID 16985)
 -- Name: fm_location2_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2480,7 +2339,6 @@ CREATE TABLE fm_location2_category (
 ALTER TABLE fm_location2_category OWNER TO portico;
 
 --
--- TOC entry 317 (class 1259 OID 16988)
 -- Name: fm_location2_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2509,7 +2367,6 @@ CREATE TABLE fm_location2_history (
 ALTER TABLE fm_location2_history OWNER TO portico;
 
 --
--- TOC entry 318 (class 1259 OID 17000)
 -- Name: fm_location3; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2538,7 +2395,6 @@ CREATE TABLE fm_location3 (
 ALTER TABLE fm_location3 OWNER TO portico;
 
 --
--- TOC entry 319 (class 1259 OID 17011)
 -- Name: fm_location3_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2551,7 +2407,6 @@ CREATE TABLE fm_location3_category (
 ALTER TABLE fm_location3_category OWNER TO portico;
 
 --
--- TOC entry 320 (class 1259 OID 17014)
 -- Name: fm_location3_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2581,7 +2436,6 @@ CREATE TABLE fm_location3_history (
 ALTER TABLE fm_location3_history OWNER TO portico;
 
 --
--- TOC entry 321 (class 1259 OID 17026)
 -- Name: fm_location4; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2614,7 +2468,6 @@ CREATE TABLE fm_location4 (
 ALTER TABLE fm_location4 OWNER TO portico;
 
 --
--- TOC entry 322 (class 1259 OID 17037)
 -- Name: fm_location4_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2627,7 +2480,6 @@ CREATE TABLE fm_location4_category (
 ALTER TABLE fm_location4_category OWNER TO portico;
 
 --
--- TOC entry 323 (class 1259 OID 17040)
 -- Name: fm_location4_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2661,7 +2513,6 @@ CREATE TABLE fm_location4_history (
 ALTER TABLE fm_location4_history OWNER TO portico;
 
 --
--- TOC entry 324 (class 1259 OID 17052)
 -- Name: fm_location_config; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2686,7 +2537,6 @@ CREATE TABLE fm_location_config (
 ALTER TABLE fm_location_config OWNER TO portico;
 
 --
--- TOC entry 325 (class 1259 OID 17056)
 -- Name: seq_fm_location_contact; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2701,7 +2551,6 @@ CREATE SEQUENCE seq_fm_location_contact
 ALTER TABLE seq_fm_location_contact OWNER TO portico;
 
 --
--- TOC entry 326 (class 1259 OID 17058)
 -- Name: fm_location_contact; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2718,7 +2567,6 @@ CREATE TABLE fm_location_contact (
 ALTER TABLE fm_location_contact OWNER TO portico;
 
 --
--- TOC entry 327 (class 1259 OID 17062)
 -- Name: seq_fm_location_exception; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2733,7 +2581,6 @@ CREATE SEQUENCE seq_fm_location_exception
 ALTER TABLE seq_fm_location_exception OWNER TO portico;
 
 --
--- TOC entry 328 (class 1259 OID 17064)
 -- Name: fm_location_exception; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2757,7 +2604,6 @@ CREATE TABLE fm_location_exception (
 ALTER TABLE fm_location_exception OWNER TO portico;
 
 --
--- TOC entry 329 (class 1259 OID 17071)
 -- Name: seq_fm_location_exception_category; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2772,7 +2618,6 @@ CREATE SEQUENCE seq_fm_location_exception_category
 ALTER TABLE seq_fm_location_exception_category OWNER TO portico;
 
 --
--- TOC entry 330 (class 1259 OID 17073)
 -- Name: fm_location_exception_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2786,7 +2631,6 @@ CREATE TABLE fm_location_exception_category (
 ALTER TABLE fm_location_exception_category OWNER TO portico;
 
 --
--- TOC entry 331 (class 1259 OID 17077)
 -- Name: seq_fm_location_exception_category_text; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2801,7 +2645,6 @@ CREATE SEQUENCE seq_fm_location_exception_category_text
 ALTER TABLE seq_fm_location_exception_category_text OWNER TO portico;
 
 --
--- TOC entry 332 (class 1259 OID 17079)
 -- Name: fm_location_exception_category_text; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2815,7 +2658,6 @@ CREATE TABLE fm_location_exception_category_text (
 ALTER TABLE fm_location_exception_category_text OWNER TO portico;
 
 --
--- TOC entry 333 (class 1259 OID 17086)
 -- Name: fm_location_exception_severity; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2828,7 +2670,6 @@ CREATE TABLE fm_location_exception_severity (
 ALTER TABLE fm_location_exception_severity OWNER TO portico;
 
 --
--- TOC entry 334 (class 1259 OID 17089)
 -- Name: fm_location_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2849,7 +2690,6 @@ CREATE TABLE fm_location_type (
 ALTER TABLE fm_location_type OWNER TO portico;
 
 --
--- TOC entry 335 (class 1259 OID 17095)
 -- Name: seq_fm_locations; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -2864,7 +2704,6 @@ CREATE SEQUENCE seq_fm_locations
 ALTER TABLE seq_fm_locations OWNER TO portico;
 
 --
--- TOC entry 336 (class 1259 OID 17097)
 -- Name: fm_locations; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2880,7 +2719,6 @@ CREATE TABLE fm_locations (
 ALTER TABLE fm_locations OWNER TO portico;
 
 --
--- TOC entry 337 (class 1259 OID 17104)
 -- Name: fm_ns3420; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2902,7 +2740,6 @@ CREATE TABLE fm_ns3420 (
 ALTER TABLE fm_ns3420 OWNER TO portico;
 
 --
--- TOC entry 338 (class 1259 OID 17107)
 -- Name: fm_workorder; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2974,7 +2811,6 @@ CREATE TABLE fm_workorder (
 ALTER TABLE fm_workorder OWNER TO portico;
 
 --
--- TOC entry 339 (class 1259 OID 17124)
 -- Name: fm_workorder_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -2992,7 +2828,6 @@ CREATE TABLE fm_workorder_status (
 ALTER TABLE fm_workorder_status OWNER TO portico;
 
 --
--- TOC entry 340 (class 1259 OID 17127)
 -- Name: fm_open_workorder_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -3008,7 +2843,6 @@ CREATE VIEW fm_open_workorder_view AS
 ALTER TABLE fm_open_workorder_view OWNER TO portico;
 
 --
--- TOC entry 341 (class 1259 OID 17132)
 -- Name: fm_order_dim1; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3022,7 +2856,6 @@ CREATE TABLE fm_order_dim1 (
 ALTER TABLE fm_order_dim1 OWNER TO portico;
 
 --
--- TOC entry 342 (class 1259 OID 17135)
 -- Name: seq_fm_order_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3037,7 +2870,6 @@ CREATE SEQUENCE seq_fm_order_template
 ALTER TABLE seq_fm_order_template OWNER TO portico;
 
 --
--- TOC entry 343 (class 1259 OID 17137)
 -- Name: fm_order_template; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3055,7 +2887,6 @@ CREATE TABLE fm_order_template (
 ALTER TABLE fm_order_template OWNER TO portico;
 
 --
--- TOC entry 344 (class 1259 OID 17144)
 -- Name: fm_orders; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3068,7 +2899,6 @@ CREATE TABLE fm_orders (
 ALTER TABLE fm_orders OWNER TO portico;
 
 --
--- TOC entry 345 (class 1259 OID 17148)
 -- Name: fm_orders_actual_cost_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -3082,7 +2912,6 @@ CREATE VIEW fm_orders_actual_cost_view AS
 ALTER TABLE fm_orders_actual_cost_view OWNER TO portico;
 
 --
--- TOC entry 346 (class 1259 OID 17152)
 -- Name: fm_orders_paid_or_pending_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -3116,7 +2945,6 @@ CREATE VIEW fm_orders_paid_or_pending_view AS
 ALTER TABLE fm_orders_paid_or_pending_view OWNER TO portico;
 
 --
--- TOC entry 347 (class 1259 OID 17157)
 -- Name: fm_orders_pending_cost_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -3130,7 +2958,6 @@ CREATE VIEW fm_orders_pending_cost_view AS
 ALTER TABLE fm_orders_pending_cost_view OWNER TO portico;
 
 --
--- TOC entry 348 (class 1259 OID 17161)
 -- Name: fm_org_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3149,7 +2976,6 @@ CREATE TABLE fm_org_unit (
 ALTER TABLE fm_org_unit OWNER TO portico;
 
 --
--- TOC entry 349 (class 1259 OID 17165)
 -- Name: fm_owner; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3169,7 +2995,6 @@ CREATE TABLE fm_owner (
 ALTER TABLE fm_owner OWNER TO portico;
 
 --
--- TOC entry 350 (class 1259 OID 17171)
 -- Name: fm_owner_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3182,7 +3007,6 @@ CREATE TABLE fm_owner_category (
 ALTER TABLE fm_owner_category OWNER TO portico;
 
 --
--- TOC entry 351 (class 1259 OID 17174)
 -- Name: seq_fm_part_of_town; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3197,7 +3021,6 @@ CREATE SEQUENCE seq_fm_part_of_town
 ALTER TABLE seq_fm_part_of_town OWNER TO portico;
 
 --
--- TOC entry 352 (class 1259 OID 17176)
 -- Name: fm_part_of_town; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3212,7 +3035,6 @@ CREATE TABLE fm_part_of_town (
 ALTER TABLE fm_part_of_town OWNER TO portico;
 
 --
--- TOC entry 353 (class 1259 OID 17183)
 -- Name: fm_project; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3263,7 +3085,6 @@ CREATE TABLE fm_project (
 ALTER TABLE fm_project OWNER TO portico;
 
 --
--- TOC entry 354 (class 1259 OID 17194)
 -- Name: fm_project_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3284,7 +3105,6 @@ CREATE TABLE fm_project_budget (
 ALTER TABLE fm_project_budget OWNER TO portico;
 
 --
--- TOC entry 355 (class 1259 OID 17200)
 -- Name: fm_workorder_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3305,7 +3125,6 @@ CREATE TABLE fm_workorder_budget (
 ALTER TABLE fm_workorder_budget OWNER TO portico;
 
 --
--- TOC entry 356 (class 1259 OID 17207)
 -- Name: fm_project_budget_year_from_order_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -3320,7 +3139,6 @@ CREATE VIEW fm_project_budget_year_from_order_view AS
 ALTER TABLE fm_project_budget_year_from_order_view OWNER TO portico;
 
 --
--- TOC entry 357 (class 1259 OID 17212)
 -- Name: fm_project_budget_year_view; Type: VIEW; Schema: public; Owner: portico
 --
 
@@ -3334,7 +3152,6 @@ CREATE VIEW fm_project_budget_year_view AS
 ALTER TABLE fm_project_budget_year_view OWNER TO portico;
 
 --
--- TOC entry 358 (class 1259 OID 17216)
 -- Name: seq_fm_project_buffer_budget; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3349,7 +3166,6 @@ CREATE SEQUENCE seq_fm_project_buffer_budget
 ALTER TABLE seq_fm_project_buffer_budget OWNER TO portico;
 
 --
--- TOC entry 359 (class 1259 OID 17218)
 -- Name: fm_project_buffer_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3372,7 +3188,6 @@ CREATE TABLE fm_project_buffer_budget (
 ALTER TABLE fm_project_buffer_budget OWNER TO portico;
 
 --
--- TOC entry 360 (class 1259 OID 17228)
 -- Name: seq_fm_project_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3387,7 +3202,6 @@ CREATE SEQUENCE seq_fm_project_history
 ALTER TABLE seq_fm_project_history OWNER TO portico;
 
 --
--- TOC entry 361 (class 1259 OID 17230)
 -- Name: fm_project_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3406,7 +3220,6 @@ CREATE TABLE fm_project_history (
 ALTER TABLE fm_project_history OWNER TO portico;
 
 --
--- TOC entry 362 (class 1259 OID 17238)
 -- Name: fm_project_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3421,7 +3234,6 @@ CREATE TABLE fm_project_status (
 ALTER TABLE fm_project_status OWNER TO portico;
 
 --
--- TOC entry 363 (class 1259 OID 17241)
 -- Name: fm_projectbranch; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3434,7 +3246,6 @@ CREATE TABLE fm_projectbranch (
 ALTER TABLE fm_projectbranch OWNER TO portico;
 
 --
--- TOC entry 364 (class 1259 OID 17244)
 -- Name: fm_regulations; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3453,7 +3264,6 @@ CREATE TABLE fm_regulations (
 ALTER TABLE fm_regulations OWNER TO portico;
 
 --
--- TOC entry 365 (class 1259 OID 17250)
 -- Name: fm_request; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3503,7 +3313,6 @@ CREATE TABLE fm_request (
 ALTER TABLE fm_request OWNER TO portico;
 
 --
--- TOC entry 366 (class 1259 OID 17265)
 -- Name: fm_request_condition; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3522,7 +3331,6 @@ CREATE TABLE fm_request_condition (
 ALTER TABLE fm_request_condition OWNER TO portico;
 
 --
--- TOC entry 367 (class 1259 OID 17272)
 -- Name: fm_request_condition_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3537,7 +3345,6 @@ CREATE TABLE fm_request_condition_type (
 ALTER TABLE fm_request_condition_type OWNER TO portico;
 
 --
--- TOC entry 368 (class 1259 OID 17276)
 -- Name: seq_fm_request_consume; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3552,7 +3359,6 @@ CREATE SEQUENCE seq_fm_request_consume
 ALTER TABLE seq_fm_request_consume OWNER TO portico;
 
 --
--- TOC entry 369 (class 1259 OID 17278)
 -- Name: fm_request_consume; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3570,7 +3376,6 @@ CREATE TABLE fm_request_consume (
 ALTER TABLE fm_request_consume OWNER TO portico;
 
 --
--- TOC entry 370 (class 1259 OID 17285)
 -- Name: seq_fm_request_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3585,7 +3390,6 @@ CREATE SEQUENCE seq_fm_request_history
 ALTER TABLE seq_fm_request_history OWNER TO portico;
 
 --
--- TOC entry 371 (class 1259 OID 17287)
 -- Name: fm_request_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3604,7 +3408,6 @@ CREATE TABLE fm_request_history (
 ALTER TABLE fm_request_history OWNER TO portico;
 
 --
--- TOC entry 372 (class 1259 OID 17295)
 -- Name: seq_fm_request_planning; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3619,7 +3422,6 @@ CREATE SEQUENCE seq_fm_request_planning
 ALTER TABLE seq_fm_request_planning OWNER TO portico;
 
 --
--- TOC entry 373 (class 1259 OID 17297)
 -- Name: fm_request_planning; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3637,7 +3439,6 @@ CREATE TABLE fm_request_planning (
 ALTER TABLE fm_request_planning OWNER TO portico;
 
 --
--- TOC entry 374 (class 1259 OID 17304)
 -- Name: fm_request_responsible_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3651,7 +3452,6 @@ CREATE TABLE fm_request_responsible_unit (
 ALTER TABLE fm_request_responsible_unit OWNER TO portico;
 
 --
--- TOC entry 375 (class 1259 OID 17310)
 -- Name: fm_request_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3668,7 +3468,6 @@ CREATE TABLE fm_request_status (
 ALTER TABLE fm_request_status OWNER TO portico;
 
 --
--- TOC entry 376 (class 1259 OID 17313)
 -- Name: seq_fm_response_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3683,7 +3482,6 @@ CREATE SEQUENCE seq_fm_response_template
 ALTER TABLE seq_fm_response_template OWNER TO portico;
 
 --
--- TOC entry 377 (class 1259 OID 17315)
 -- Name: fm_response_template; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3701,7 +3499,6 @@ CREATE TABLE fm_response_template (
 ALTER TABLE fm_response_template OWNER TO portico;
 
 --
--- TOC entry 378 (class 1259 OID 17322)
 -- Name: seq_fm_responsibility; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3716,7 +3513,6 @@ CREATE SEQUENCE seq_fm_responsibility
 ALTER TABLE seq_fm_responsibility OWNER TO portico;
 
 --
--- TOC entry 379 (class 1259 OID 17324)
 -- Name: fm_responsibility; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3732,7 +3528,6 @@ CREATE TABLE fm_responsibility (
 ALTER TABLE fm_responsibility OWNER TO portico;
 
 --
--- TOC entry 380 (class 1259 OID 17328)
 -- Name: seq_fm_responsibility_contact; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3747,7 +3542,6 @@ CREATE SEQUENCE seq_fm_responsibility_contact
 ALTER TABLE seq_fm_responsibility_contact OWNER TO portico;
 
 --
--- TOC entry 381 (class 1259 OID 17330)
 -- Name: fm_responsibility_contact; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3773,7 +3567,6 @@ CREATE TABLE fm_responsibility_contact (
 ALTER TABLE fm_responsibility_contact OWNER TO portico;
 
 --
--- TOC entry 382 (class 1259 OID 17339)
 -- Name: fm_responsibility_module; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3790,7 +3583,6 @@ CREATE TABLE fm_responsibility_module (
 ALTER TABLE fm_responsibility_module OWNER TO portico;
 
 --
--- TOC entry 383 (class 1259 OID 17342)
 -- Name: seq_fm_responsibility_role; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3805,7 +3597,6 @@ CREATE SEQUENCE seq_fm_responsibility_role
 ALTER TABLE seq_fm_responsibility_role OWNER TO portico;
 
 --
--- TOC entry 384 (class 1259 OID 17344)
 -- Name: fm_responsibility_role; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3825,7 +3616,6 @@ CREATE TABLE fm_responsibility_role (
 ALTER TABLE fm_responsibility_role OWNER TO portico;
 
 --
--- TOC entry 385 (class 1259 OID 17351)
 -- Name: fm_s_agreement; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3850,7 +3640,6 @@ CREATE TABLE fm_s_agreement (
 ALTER TABLE fm_s_agreement OWNER TO portico;
 
 --
--- TOC entry 386 (class 1259 OID 17358)
 -- Name: fm_s_agreement_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3871,7 +3660,6 @@ CREATE TABLE fm_s_agreement_budget (
 ALTER TABLE fm_s_agreement_budget OWNER TO portico;
 
 --
--- TOC entry 387 (class 1259 OID 17363)
 -- Name: fm_s_agreement_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3884,7 +3672,6 @@ CREATE TABLE fm_s_agreement_category (
 ALTER TABLE fm_s_agreement_category OWNER TO portico;
 
 --
--- TOC entry 388 (class 1259 OID 17367)
 -- Name: fm_s_agreement_detail; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3910,7 +3697,6 @@ CREATE TABLE fm_s_agreement_detail (
 ALTER TABLE fm_s_agreement_detail OWNER TO portico;
 
 --
--- TOC entry 389 (class 1259 OID 17377)
 -- Name: seq_fm_s_agreement_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -3925,7 +3711,6 @@ CREATE SEQUENCE seq_fm_s_agreement_history
 ALTER TABLE seq_fm_s_agreement_history OWNER TO portico;
 
 --
--- TOC entry 390 (class 1259 OID 17379)
 -- Name: fm_s_agreement_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3946,7 +3731,6 @@ CREATE TABLE fm_s_agreement_history (
 ALTER TABLE fm_s_agreement_history OWNER TO portico;
 
 --
--- TOC entry 391 (class 1259 OID 17387)
 -- Name: fm_s_agreement_pricing; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3966,7 +3750,6 @@ CREATE TABLE fm_s_agreement_pricing (
 ALTER TABLE fm_s_agreement_pricing OWNER TO portico;
 
 --
--- TOC entry 392 (class 1259 OID 17393)
 -- Name: fm_standard_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3980,7 +3763,6 @@ CREATE TABLE fm_standard_unit (
 ALTER TABLE fm_standard_unit OWNER TO portico;
 
 --
--- TOC entry 393 (class 1259 OID 17396)
 -- Name: fm_streetaddress; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -3993,7 +3775,6 @@ CREATE TABLE fm_streetaddress (
 ALTER TABLE fm_streetaddress OWNER TO portico;
 
 --
--- TOC entry 394 (class 1259 OID 17399)
 -- Name: seq_fm_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4008,7 +3789,6 @@ CREATE SEQUENCE seq_fm_template
 ALTER TABLE seq_fm_template OWNER TO portico;
 
 --
--- TOC entry 395 (class 1259 OID 17401)
 -- Name: fm_template; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4025,7 +3805,6 @@ CREATE TABLE fm_template (
 ALTER TABLE fm_template OWNER TO portico;
 
 --
--- TOC entry 396 (class 1259 OID 17405)
 -- Name: seq_fm_template_hours; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4040,7 +3819,6 @@ CREATE SEQUENCE seq_fm_template_hours
 ALTER TABLE seq_fm_template_hours OWNER TO portico;
 
 --
--- TOC entry 397 (class 1259 OID 17407)
 -- Name: fm_template_hours; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4071,7 +3849,6 @@ CREATE TABLE fm_template_hours (
 ALTER TABLE fm_template_hours OWNER TO portico;
 
 --
--- TOC entry 398 (class 1259 OID 17415)
 -- Name: fm_tenant; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4095,7 +3872,6 @@ CREATE TABLE fm_tenant (
 ALTER TABLE fm_tenant OWNER TO portico;
 
 --
--- TOC entry 399 (class 1259 OID 17422)
 -- Name: fm_tenant_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4108,7 +3884,6 @@ CREATE TABLE fm_tenant_category (
 ALTER TABLE fm_tenant_category OWNER TO portico;
 
 --
--- TOC entry 400 (class 1259 OID 17425)
 -- Name: seq_fm_tenant_claim; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4123,7 +3898,6 @@ CREATE SEQUENCE seq_fm_tenant_claim
 ALTER TABLE seq_fm_tenant_claim OWNER TO portico;
 
 --
--- TOC entry 401 (class 1259 OID 17427)
 -- Name: fm_tenant_claim; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4144,7 +3918,6 @@ CREATE TABLE fm_tenant_claim (
 ALTER TABLE fm_tenant_claim OWNER TO portico;
 
 --
--- TOC entry 402 (class 1259 OID 17435)
 -- Name: fm_tenant_claim_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4157,7 +3930,6 @@ CREATE TABLE fm_tenant_claim_category (
 ALTER TABLE fm_tenant_claim_category OWNER TO portico;
 
 --
--- TOC entry 403 (class 1259 OID 17438)
 -- Name: seq_fm_tenant_claim_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4172,7 +3944,6 @@ CREATE SEQUENCE seq_fm_tenant_claim_history
 ALTER TABLE seq_fm_tenant_claim_history OWNER TO portico;
 
 --
--- TOC entry 404 (class 1259 OID 17440)
 -- Name: fm_tenant_claim_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4191,7 +3962,6 @@ CREATE TABLE fm_tenant_claim_history (
 ALTER TABLE fm_tenant_claim_history OWNER TO portico;
 
 --
--- TOC entry 405 (class 1259 OID 17448)
 -- Name: seq_fm_tts_budget; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4206,7 +3976,6 @@ CREATE SEQUENCE seq_fm_tts_budget
 ALTER TABLE seq_fm_tts_budget OWNER TO portico;
 
 --
--- TOC entry 406 (class 1259 OID 17450)
 -- Name: fm_tts_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4224,7 +3993,6 @@ CREATE TABLE fm_tts_budget (
 ALTER TABLE fm_tts_budget OWNER TO portico;
 
 --
--- TOC entry 407 (class 1259 OID 17458)
 -- Name: seq_fm_tts_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4239,7 +4007,6 @@ CREATE SEQUENCE seq_fm_tts_history
 ALTER TABLE seq_fm_tts_history OWNER TO portico;
 
 --
--- TOC entry 408 (class 1259 OID 17460)
 -- Name: fm_tts_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4259,7 +4026,6 @@ CREATE TABLE fm_tts_history (
 ALTER TABLE fm_tts_history OWNER TO portico;
 
 --
--- TOC entry 409 (class 1259 OID 17468)
 -- Name: seq_fm_tts_payments; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4274,7 +4040,6 @@ CREATE SEQUENCE seq_fm_tts_payments
 ALTER TABLE seq_fm_tts_payments OWNER TO portico;
 
 --
--- TOC entry 410 (class 1259 OID 17470)
 -- Name: fm_tts_payments; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4292,7 +4057,6 @@ CREATE TABLE fm_tts_payments (
 ALTER TABLE fm_tts_payments OWNER TO portico;
 
 --
--- TOC entry 411 (class 1259 OID 17478)
 -- Name: fm_tts_priority; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4305,7 +4069,6 @@ CREATE TABLE fm_tts_priority (
 ALTER TABLE fm_tts_priority OWNER TO portico;
 
 --
--- TOC entry 412 (class 1259 OID 17481)
 -- Name: seq_fm_tts_status; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4320,7 +4083,6 @@ CREATE SEQUENCE seq_fm_tts_status
 ALTER TABLE seq_fm_tts_status OWNER TO portico;
 
 --
--- TOC entry 413 (class 1259 OID 17483)
 -- Name: fm_tts_status; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4340,7 +4102,6 @@ CREATE TABLE fm_tts_status (
 ALTER TABLE fm_tts_status OWNER TO portico;
 
 --
--- TOC entry 414 (class 1259 OID 17487)
 -- Name: seq_fm_tts_tickets; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4355,7 +4116,6 @@ CREATE SEQUENCE seq_fm_tts_tickets
 ALTER TABLE seq_fm_tts_tickets OWNER TO portico;
 
 --
--- TOC entry 415 (class 1259 OID 17489)
 -- Name: fm_tts_tickets; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4424,7 +4184,6 @@ CREATE TABLE fm_tts_tickets (
 ALTER TABLE fm_tts_tickets OWNER TO portico;
 
 --
--- TOC entry 416 (class 1259 OID 17498)
 -- Name: fm_tts_views; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4438,7 +4197,6 @@ CREATE TABLE fm_tts_views (
 ALTER TABLE fm_tts_views OWNER TO portico;
 
 --
--- TOC entry 417 (class 1259 OID 17501)
 -- Name: fm_unspsc_code; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4451,7 +4209,6 @@ CREATE TABLE fm_unspsc_code (
 ALTER TABLE fm_unspsc_code OWNER TO portico;
 
 --
--- TOC entry 418 (class 1259 OID 17504)
 -- Name: fm_vendor; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4473,7 +4230,6 @@ CREATE TABLE fm_vendor (
 ALTER TABLE fm_vendor OWNER TO portico;
 
 --
--- TOC entry 419 (class 1259 OID 17509)
 -- Name: fm_vendor_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4486,7 +4242,6 @@ CREATE TABLE fm_vendor_category (
 ALTER TABLE fm_vendor_category OWNER TO portico;
 
 --
--- TOC entry 420 (class 1259 OID 17512)
 -- Name: seq_fm_view_dataset; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4501,7 +4256,6 @@ CREATE SEQUENCE seq_fm_view_dataset
 ALTER TABLE seq_fm_view_dataset OWNER TO portico;
 
 --
--- TOC entry 421 (class 1259 OID 17514)
 -- Name: fm_view_dataset; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4517,7 +4271,6 @@ CREATE TABLE fm_view_dataset (
 ALTER TABLE fm_view_dataset OWNER TO portico;
 
 --
--- TOC entry 422 (class 1259 OID 17518)
 -- Name: seq_fm_view_dataset_report; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4532,7 +4285,6 @@ CREATE SEQUENCE seq_fm_view_dataset_report
 ALTER TABLE seq_fm_view_dataset_report OWNER TO portico;
 
 --
--- TOC entry 423 (class 1259 OID 17520)
 -- Name: fm_view_dataset_report; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4549,7 +4301,6 @@ CREATE TABLE fm_view_dataset_report (
 ALTER TABLE fm_view_dataset_report OWNER TO portico;
 
 --
--- TOC entry 424 (class 1259 OID 17527)
 -- Name: fm_wo_h_deviation; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4566,7 +4317,6 @@ CREATE TABLE fm_wo_h_deviation (
 ALTER TABLE fm_wo_h_deviation OWNER TO portico;
 
 --
--- TOC entry 425 (class 1259 OID 17533)
 -- Name: seq_fm_wo_hours; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4581,7 +4331,6 @@ CREATE SEQUENCE seq_fm_wo_hours
 ALTER TABLE seq_fm_wo_hours OWNER TO portico;
 
 --
--- TOC entry 426 (class 1259 OID 17535)
 -- Name: fm_wo_hours; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4614,7 +4363,6 @@ CREATE TABLE fm_wo_hours (
 ALTER TABLE fm_wo_hours OWNER TO portico;
 
 --
--- TOC entry 427 (class 1259 OID 17543)
 -- Name: fm_wo_hours_category; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4627,7 +4375,6 @@ CREATE TABLE fm_wo_hours_category (
 ALTER TABLE fm_wo_hours_category OWNER TO portico;
 
 --
--- TOC entry 428 (class 1259 OID 17546)
 -- Name: seq_fm_workorder_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4642,7 +4389,6 @@ CREATE SEQUENCE seq_fm_workorder_history
 ALTER TABLE seq_fm_workorder_history OWNER TO portico;
 
 --
--- TOC entry 429 (class 1259 OID 17548)
 -- Name: fm_workorder_history; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4661,7 +4407,6 @@ CREATE TABLE fm_workorder_history (
 ALTER TABLE fm_workorder_history OWNER TO portico;
 
 --
--- TOC entry 430 (class 1259 OID 17556)
 -- Name: phpgw_access_log; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4678,7 +4423,6 @@ CREATE TABLE phpgw_access_log (
 ALTER TABLE phpgw_access_log OWNER TO portico;
 
 --
--- TOC entry 431 (class 1259 OID 17562)
 -- Name: seq_phpgw_account_delegates; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4693,7 +4437,6 @@ CREATE SEQUENCE seq_phpgw_account_delegates
 ALTER TABLE seq_phpgw_account_delegates OWNER TO portico;
 
 --
--- TOC entry 432 (class 1259 OID 17564)
 -- Name: phpgw_account_delegates; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4713,7 +4456,6 @@ CREATE TABLE phpgw_account_delegates (
 ALTER TABLE phpgw_account_delegates OWNER TO portico;
 
 --
--- TOC entry 433 (class 1259 OID 17571)
 -- Name: seq_phpgw_accounts; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4728,7 +4470,6 @@ CREATE SEQUENCE seq_phpgw_accounts
 ALTER TABLE seq_phpgw_accounts OWNER TO portico;
 
 --
--- TOC entry 434 (class 1259 OID 17573)
 -- Name: phpgw_accounts; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4754,7 +4495,6 @@ CREATE TABLE phpgw_accounts (
 ALTER TABLE phpgw_accounts OWNER TO portico;
 
 --
--- TOC entry 435 (class 1259 OID 17582)
 -- Name: phpgw_accounts_data; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4767,7 +4507,6 @@ CREATE TABLE phpgw_accounts_data (
 ALTER TABLE phpgw_accounts_data OWNER TO portico;
 
 --
--- TOC entry 436 (class 1259 OID 17588)
 -- Name: phpgw_acl; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4785,7 +4524,6 @@ CREATE TABLE phpgw_acl (
 ALTER TABLE phpgw_acl OWNER TO portico;
 
 --
--- TOC entry 437 (class 1259 OID 17594)
 -- Name: seq_phpgw_applications; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4800,7 +4538,6 @@ CREATE SEQUENCE seq_phpgw_applications
 ALTER TABLE seq_phpgw_applications OWNER TO portico;
 
 --
--- TOC entry 438 (class 1259 OID 17596)
 -- Name: phpgw_applications; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4817,7 +4554,6 @@ CREATE TABLE phpgw_applications (
 ALTER TABLE phpgw_applications OWNER TO portico;
 
 --
--- TOC entry 439 (class 1259 OID 17604)
 -- Name: phpgw_async; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4834,7 +4570,6 @@ CREATE TABLE phpgw_async (
 ALTER TABLE phpgw_async OWNER TO portico;
 
 --
--- TOC entry 440 (class 1259 OID 17611)
 -- Name: phpgw_cache_user; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4849,7 +4584,6 @@ CREATE TABLE phpgw_cache_user (
 ALTER TABLE phpgw_cache_user OWNER TO portico;
 
 --
--- TOC entry 441 (class 1259 OID 17617)
 -- Name: seq_phpgw_categories; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4864,7 +4598,6 @@ CREATE SEQUENCE seq_phpgw_categories
 ALTER TABLE seq_phpgw_categories OWNER TO portico;
 
 --
--- TOC entry 442 (class 1259 OID 17619)
 -- Name: phpgw_categories; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4888,7 +4621,6 @@ CREATE TABLE phpgw_categories (
 ALTER TABLE phpgw_categories OWNER TO portico;
 
 --
--- TOC entry 443 (class 1259 OID 17633)
 -- Name: phpgw_config; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4902,7 +4634,6 @@ CREATE TABLE phpgw_config (
 ALTER TABLE phpgw_config OWNER TO portico;
 
 --
--- TOC entry 444 (class 1259 OID 17639)
 -- Name: phpgw_config2_attrib; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4918,7 +4649,6 @@ CREATE TABLE phpgw_config2_attrib (
 ALTER TABLE phpgw_config2_attrib OWNER TO portico;
 
 --
--- TOC entry 445 (class 1259 OID 17642)
 -- Name: phpgw_config2_choice; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4933,7 +4663,6 @@ CREATE TABLE phpgw_config2_choice (
 ALTER TABLE phpgw_config2_choice OWNER TO portico;
 
 --
--- TOC entry 446 (class 1259 OID 17645)
 -- Name: phpgw_config2_section; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4949,7 +4678,6 @@ CREATE TABLE phpgw_config2_section (
 ALTER TABLE phpgw_config2_section OWNER TO portico;
 
 --
--- TOC entry 447 (class 1259 OID 17651)
 -- Name: phpgw_config2_value; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4964,7 +4692,6 @@ CREATE TABLE phpgw_config2_value (
 ALTER TABLE phpgw_config2_value OWNER TO portico;
 
 --
--- TOC entry 448 (class 1259 OID 17657)
 -- Name: seq_phpgw_contact; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -4979,7 +4706,6 @@ CREATE SEQUENCE seq_phpgw_contact
 ALTER TABLE seq_phpgw_contact OWNER TO portico;
 
 --
--- TOC entry 449 (class 1259 OID 17659)
 -- Name: phpgw_contact; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -4995,7 +4721,6 @@ CREATE TABLE phpgw_contact (
 ALTER TABLE phpgw_contact OWNER TO portico;
 
 --
--- TOC entry 450 (class 1259 OID 17663)
 -- Name: seq_phpgw_contact_addr; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5010,7 +4735,6 @@ CREATE SEQUENCE seq_phpgw_contact_addr
 ALTER TABLE seq_phpgw_contact_addr OWNER TO portico;
 
 --
--- TOC entry 451 (class 1259 OID 17665)
 -- Name: phpgw_contact_addr; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5037,7 +4761,6 @@ CREATE TABLE phpgw_contact_addr (
 ALTER TABLE phpgw_contact_addr OWNER TO portico;
 
 --
--- TOC entry 452 (class 1259 OID 17673)
 -- Name: seq_phpgw_contact_addr_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5052,7 +4775,6 @@ CREATE SEQUENCE seq_phpgw_contact_addr_type
 ALTER TABLE seq_phpgw_contact_addr_type OWNER TO portico;
 
 --
--- TOC entry 453 (class 1259 OID 17675)
 -- Name: phpgw_contact_addr_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5065,7 +4787,6 @@ CREATE TABLE phpgw_contact_addr_type (
 ALTER TABLE phpgw_contact_addr_type OWNER TO portico;
 
 --
--- TOC entry 454 (class 1259 OID 17679)
 -- Name: seq_phpgw_contact_comm; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5080,7 +4801,6 @@ CREATE SEQUENCE seq_phpgw_contact_comm
 ALTER TABLE seq_phpgw_contact_comm OWNER TO portico;
 
 --
--- TOC entry 455 (class 1259 OID 17681)
 -- Name: phpgw_contact_comm; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5100,7 +4820,6 @@ CREATE TABLE phpgw_contact_comm (
 ALTER TABLE phpgw_contact_comm OWNER TO portico;
 
 --
--- TOC entry 456 (class 1259 OID 17686)
 -- Name: seq_phpgw_contact_comm_descr; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5115,7 +4834,6 @@ CREATE SEQUENCE seq_phpgw_contact_comm_descr
 ALTER TABLE seq_phpgw_contact_comm_descr OWNER TO portico;
 
 --
--- TOC entry 457 (class 1259 OID 17688)
 -- Name: phpgw_contact_comm_descr; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5129,7 +4847,6 @@ CREATE TABLE phpgw_contact_comm_descr (
 ALTER TABLE phpgw_contact_comm_descr OWNER TO portico;
 
 --
--- TOC entry 458 (class 1259 OID 17692)
 -- Name: seq_phpgw_contact_comm_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5144,7 +4861,6 @@ CREATE SEQUENCE seq_phpgw_contact_comm_type
 ALTER TABLE seq_phpgw_contact_comm_type OWNER TO portico;
 
 --
--- TOC entry 459 (class 1259 OID 17694)
 -- Name: phpgw_contact_comm_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5159,7 +4875,6 @@ CREATE TABLE phpgw_contact_comm_type (
 ALTER TABLE phpgw_contact_comm_type OWNER TO portico;
 
 --
--- TOC entry 460 (class 1259 OID 17698)
 -- Name: seq_phpgw_contact_note; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5174,7 +4889,6 @@ CREATE SEQUENCE seq_phpgw_contact_note
 ALTER TABLE seq_phpgw_contact_note OWNER TO portico;
 
 --
--- TOC entry 461 (class 1259 OID 17700)
 -- Name: phpgw_contact_note; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5193,7 +4907,6 @@ CREATE TABLE phpgw_contact_note (
 ALTER TABLE phpgw_contact_note OWNER TO portico;
 
 --
--- TOC entry 462 (class 1259 OID 17707)
 -- Name: seq_phpgw_contact_note_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5208,7 +4921,6 @@ CREATE SEQUENCE seq_phpgw_contact_note_type
 ALTER TABLE seq_phpgw_contact_note_type OWNER TO portico;
 
 --
--- TOC entry 463 (class 1259 OID 17709)
 -- Name: phpgw_contact_note_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5221,7 +4933,6 @@ CREATE TABLE phpgw_contact_note_type (
 ALTER TABLE phpgw_contact_note_type OWNER TO portico;
 
 --
--- TOC entry 464 (class 1259 OID 17713)
 -- Name: phpgw_contact_org; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5240,7 +4951,6 @@ CREATE TABLE phpgw_contact_org (
 ALTER TABLE phpgw_contact_org OWNER TO portico;
 
 --
--- TOC entry 465 (class 1259 OID 17717)
 -- Name: phpgw_contact_org_person; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5257,7 +4967,6 @@ CREATE TABLE phpgw_contact_org_person (
 ALTER TABLE phpgw_contact_org_person OWNER TO portico;
 
 --
--- TOC entry 466 (class 1259 OID 17721)
 -- Name: seq_phpgw_contact_others; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5272,7 +4981,6 @@ CREATE SEQUENCE seq_phpgw_contact_others
 ALTER TABLE seq_phpgw_contact_others OWNER TO portico;
 
 --
--- TOC entry 467 (class 1259 OID 17723)
 -- Name: phpgw_contact_others; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5288,7 +4996,6 @@ CREATE TABLE phpgw_contact_others (
 ALTER TABLE phpgw_contact_others OWNER TO portico;
 
 --
--- TOC entry 468 (class 1259 OID 17730)
 -- Name: phpgw_contact_person; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5316,7 +5023,6 @@ CREATE TABLE phpgw_contact_person (
 ALTER TABLE phpgw_contact_person OWNER TO portico;
 
 --
--- TOC entry 469 (class 1259 OID 17737)
 -- Name: seq_phpgw_contact_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5331,7 +5037,6 @@ CREATE SEQUENCE seq_phpgw_contact_types
 ALTER TABLE seq_phpgw_contact_types OWNER TO portico;
 
 --
--- TOC entry 470 (class 1259 OID 17739)
 -- Name: phpgw_contact_types; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5345,7 +5050,6 @@ CREATE TABLE phpgw_contact_types (
 ALTER TABLE phpgw_contact_types OWNER TO portico;
 
 --
--- TOC entry 471 (class 1259 OID 17743)
 -- Name: phpgw_cust_attribute; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5382,7 +5086,6 @@ CREATE TABLE phpgw_cust_attribute (
 ALTER TABLE phpgw_cust_attribute OWNER TO portico;
 
 --
--- TOC entry 472 (class 1259 OID 17751)
 -- Name: phpgw_cust_attribute_group; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5400,7 +5103,6 @@ CREATE TABLE phpgw_cust_attribute_group (
 ALTER TABLE phpgw_cust_attribute_group OWNER TO portico;
 
 --
--- TOC entry 473 (class 1259 OID 17757)
 -- Name: phpgw_cust_choice; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5417,7 +5119,6 @@ CREATE TABLE phpgw_cust_choice (
 ALTER TABLE phpgw_cust_choice OWNER TO portico;
 
 --
--- TOC entry 474 (class 1259 OID 17764)
 -- Name: phpgw_cust_function; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5436,7 +5137,6 @@ CREATE TABLE phpgw_cust_function (
 ALTER TABLE phpgw_cust_function OWNER TO portico;
 
 --
--- TOC entry 475 (class 1259 OID 17770)
 -- Name: phpgw_group_map; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5450,7 +5150,6 @@ CREATE TABLE phpgw_group_map (
 ALTER TABLE phpgw_group_map OWNER TO portico;
 
 --
--- TOC entry 476 (class 1259 OID 17774)
 -- Name: seq_phpgw_history_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5465,7 +5164,6 @@ CREATE SEQUENCE seq_phpgw_history_log
 ALTER TABLE seq_phpgw_history_log OWNER TO portico;
 
 --
--- TOC entry 477 (class 1259 OID 17776)
 -- Name: phpgw_history_log; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5485,7 +5183,6 @@ CREATE TABLE phpgw_history_log (
 ALTER TABLE phpgw_history_log OWNER TO portico;
 
 --
--- TOC entry 478 (class 1259 OID 17783)
 -- Name: seq_phpgw_hooks; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5500,7 +5197,6 @@ CREATE SEQUENCE seq_phpgw_hooks
 ALTER TABLE seq_phpgw_hooks OWNER TO portico;
 
 --
--- TOC entry 479 (class 1259 OID 17785)
 -- Name: phpgw_hooks; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5515,7 +5211,6 @@ CREATE TABLE phpgw_hooks (
 ALTER TABLE phpgw_hooks OWNER TO portico;
 
 --
--- TOC entry 480 (class 1259 OID 17792)
 -- Name: seq_phpgw_interlink; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5530,7 +5225,6 @@ CREATE SEQUENCE seq_phpgw_interlink
 ALTER TABLE seq_phpgw_interlink OWNER TO portico;
 
 --
--- TOC entry 481 (class 1259 OID 17794)
 -- Name: phpgw_interlink; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5551,7 +5245,6 @@ CREATE TABLE phpgw_interlink (
 ALTER TABLE phpgw_interlink OWNER TO portico;
 
 --
--- TOC entry 482 (class 1259 OID 17798)
 -- Name: seq_phpgw_interserv; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5566,7 +5259,6 @@ CREATE SEQUENCE seq_phpgw_interserv
 ALTER TABLE seq_phpgw_interserv OWNER TO portico;
 
 --
--- TOC entry 483 (class 1259 OID 17800)
 -- Name: phpgw_interserv; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5589,7 +5281,6 @@ CREATE TABLE phpgw_interserv (
 ALTER TABLE phpgw_interserv OWNER TO portico;
 
 --
--- TOC entry 484 (class 1259 OID 17808)
 -- Name: phpgw_lang; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5604,7 +5295,6 @@ CREATE TABLE phpgw_lang (
 ALTER TABLE phpgw_lang OWNER TO portico;
 
 --
--- TOC entry 485 (class 1259 OID 17815)
 -- Name: phpgw_languages; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5618,7 +5308,6 @@ CREATE TABLE phpgw_languages (
 ALTER TABLE phpgw_languages OWNER TO portico;
 
 --
--- TOC entry 486 (class 1259 OID 17819)
 -- Name: seq_phpgw_locations; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5633,7 +5322,6 @@ CREATE SEQUENCE seq_phpgw_locations
 ALTER TABLE seq_phpgw_locations OWNER TO portico;
 
 --
--- TOC entry 487 (class 1259 OID 17821)
 -- Name: phpgw_locations; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5652,7 +5340,6 @@ CREATE TABLE phpgw_locations (
 ALTER TABLE phpgw_locations OWNER TO portico;
 
 --
--- TOC entry 488 (class 1259 OID 17825)
 -- Name: seq_phpgw_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5667,7 +5354,6 @@ CREATE SEQUENCE seq_phpgw_log
 ALTER TABLE seq_phpgw_log OWNER TO portico;
 
 --
--- TOC entry 489 (class 1259 OID 17827)
 -- Name: phpgw_log; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5687,7 +5373,6 @@ CREATE TABLE phpgw_log (
 ALTER TABLE phpgw_log OWNER TO portico;
 
 --
--- TOC entry 490 (class 1259 OID 17835)
 -- Name: seq_phpgw_mail_handler; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5702,7 +5387,6 @@ CREATE SEQUENCE seq_phpgw_mail_handler
 ALTER TABLE seq_phpgw_mail_handler OWNER TO portico;
 
 --
--- TOC entry 491 (class 1259 OID 17837)
 -- Name: phpgw_mail_handler; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5719,7 +5403,6 @@ CREATE TABLE phpgw_mail_handler (
 ALTER TABLE phpgw_mail_handler OWNER TO portico;
 
 --
--- TOC entry 492 (class 1259 OID 17841)
 -- Name: phpgw_mapping; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5735,7 +5418,6 @@ CREATE TABLE phpgw_mapping (
 ALTER TABLE phpgw_mapping OWNER TO portico;
 
 --
--- TOC entry 493 (class 1259 OID 17845)
 -- Name: phpgw_nextid; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5748,7 +5430,6 @@ CREATE TABLE phpgw_nextid (
 ALTER TABLE phpgw_nextid OWNER TO portico;
 
 --
--- TOC entry 494 (class 1259 OID 17848)
 -- Name: seq_phpgw_notification; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5763,7 +5444,6 @@ CREATE SEQUENCE seq_phpgw_notification
 ALTER TABLE seq_phpgw_notification OWNER TO portico;
 
 --
--- TOC entry 495 (class 1259 OID 17850)
 -- Name: phpgw_notification; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5782,7 +5462,6 @@ CREATE TABLE phpgw_notification (
 ALTER TABLE phpgw_notification OWNER TO portico;
 
 --
--- TOC entry 496 (class 1259 OID 17854)
 -- Name: phpgw_preferences; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5796,7 +5475,6 @@ CREATE TABLE phpgw_preferences (
 ALTER TABLE phpgw_preferences OWNER TO portico;
 
 --
--- TOC entry 497 (class 1259 OID 17860)
 -- Name: phpgw_sessions; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5811,7 +5489,6 @@ CREATE TABLE phpgw_sessions (
 ALTER TABLE phpgw_sessions OWNER TO portico;
 
 --
--- TOC entry 498 (class 1259 OID 17866)
 -- Name: seq_phpgw_vfs; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5826,7 +5503,6 @@ CREATE SEQUENCE seq_phpgw_vfs
 ALTER TABLE seq_phpgw_vfs OWNER TO portico;
 
 --
--- TOC entry 499 (class 1259 OID 17868)
 -- Name: phpgw_vfs; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5856,7 +5532,6 @@ CREATE TABLE phpgw_vfs (
 ALTER TABLE phpgw_vfs OWNER TO portico;
 
 --
--- TOC entry 500 (class 1259 OID 17878)
 -- Name: seq_phpgw_vfs_file_relation; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5871,7 +5546,6 @@ CREATE SEQUENCE seq_phpgw_vfs_file_relation
 ALTER TABLE seq_phpgw_vfs_file_relation OWNER TO portico;
 
 --
--- TOC entry 501 (class 1259 OID 17880)
 -- Name: phpgw_vfs_file_relation; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5891,7 +5565,6 @@ CREATE TABLE phpgw_vfs_file_relation (
 ALTER TABLE phpgw_vfs_file_relation OWNER TO portico;
 
 --
--- TOC entry 502 (class 1259 OID 17884)
 -- Name: phpgw_vfs_filedata; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5904,7 +5577,6 @@ CREATE TABLE phpgw_vfs_filedata (
 ALTER TABLE phpgw_vfs_filedata OWNER TO portico;
 
 --
--- TOC entry 503 (class 1259 OID 17890)
 -- Name: seq_rental_adjustment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5919,7 +5591,6 @@ CREATE SEQUENCE seq_rental_adjustment
 ALTER TABLE seq_rental_adjustment OWNER TO portico;
 
 --
--- TOC entry 504 (class 1259 OID 17892)
 -- Name: rental_adjustment; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5941,7 +5612,6 @@ CREATE TABLE rental_adjustment (
 ALTER TABLE rental_adjustment OWNER TO portico;
 
 --
--- TOC entry 505 (class 1259 OID 17899)
 -- Name: seq_rental_application; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -5956,7 +5626,6 @@ CREATE SEQUENCE seq_rental_application
 ALTER TABLE seq_rental_application OWNER TO portico;
 
 --
--- TOC entry 506 (class 1259 OID 17901)
 -- Name: rental_application; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -5995,7 +5664,6 @@ CREATE TABLE rental_application (
 ALTER TABLE rental_application OWNER TO portico;
 
 --
--- TOC entry 507 (class 1259 OID 17908)
 -- Name: seq_rental_application_comment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6010,7 +5678,6 @@ CREATE SEQUENCE seq_rental_application_comment
 ALTER TABLE seq_rental_application_comment OWNER TO portico;
 
 --
--- TOC entry 508 (class 1259 OID 17910)
 -- Name: rental_application_comment; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6027,7 +5694,6 @@ CREATE TABLE rental_application_comment (
 ALTER TABLE rental_application_comment OWNER TO portico;
 
 --
--- TOC entry 509 (class 1259 OID 17918)
 -- Name: seq_rental_application_composite; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6042,7 +5708,6 @@ CREATE SEQUENCE seq_rental_application_composite
 ALTER TABLE seq_rental_application_composite OWNER TO portico;
 
 --
--- TOC entry 510 (class 1259 OID 17920)
 -- Name: rental_application_composite; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6056,7 +5721,6 @@ CREATE TABLE rental_application_composite (
 ALTER TABLE rental_application_composite OWNER TO portico;
 
 --
--- TOC entry 511 (class 1259 OID 17924)
 -- Name: seq_rental_billing; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6071,7 +5735,6 @@ CREATE SEQUENCE seq_rental_billing
 ALTER TABLE seq_rental_billing OWNER TO portico;
 
 --
--- TOC entry 512 (class 1259 OID 17926)
 -- Name: rental_billing; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6096,7 +5759,6 @@ CREATE TABLE rental_billing (
 ALTER TABLE rental_billing OWNER TO portico;
 
 --
--- TOC entry 513 (class 1259 OID 17935)
 -- Name: seq_rental_billing_info; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6111,7 +5773,6 @@ CREATE SEQUENCE seq_rental_billing_info
 ALTER TABLE seq_rental_billing_info OWNER TO portico;
 
 --
--- TOC entry 514 (class 1259 OID 17937)
 -- Name: rental_billing_info; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6129,7 +5790,6 @@ CREATE TABLE rental_billing_info (
 ALTER TABLE rental_billing_info OWNER TO portico;
 
 --
--- TOC entry 515 (class 1259 OID 17942)
 -- Name: seq_rental_billing_term; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6144,7 +5804,6 @@ CREATE SEQUENCE seq_rental_billing_term
 ALTER TABLE seq_rental_billing_term OWNER TO portico;
 
 --
--- TOC entry 516 (class 1259 OID 17944)
 -- Name: rental_billing_term; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6158,7 +5817,6 @@ CREATE TABLE rental_billing_term (
 ALTER TABLE rental_billing_term OWNER TO portico;
 
 --
--- TOC entry 517 (class 1259 OID 17948)
 -- Name: seq_rental_composite; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6173,7 +5831,6 @@ CREATE SEQUENCE seq_rental_composite
 ALTER TABLE seq_rental_composite OWNER TO portico;
 
 --
--- TOC entry 518 (class 1259 OID 17950)
 -- Name: rental_composite; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6204,7 +5861,6 @@ CREATE TABLE rental_composite (
 ALTER TABLE rental_composite OWNER TO portico;
 
 --
--- TOC entry 519 (class 1259 OID 17964)
 -- Name: rental_composite_standard; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6218,7 +5874,6 @@ CREATE TABLE rental_composite_standard (
 ALTER TABLE rental_composite_standard OWNER TO portico;
 
 --
--- TOC entry 520 (class 1259 OID 17967)
 -- Name: rental_composite_type; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6231,7 +5886,6 @@ CREATE TABLE rental_composite_type (
 ALTER TABLE rental_composite_type OWNER TO portico;
 
 --
--- TOC entry 521 (class 1259 OID 17970)
 -- Name: rental_contract; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6276,7 +5930,6 @@ CREATE TABLE rental_contract (
 ALTER TABLE rental_contract OWNER TO portico;
 
 --
--- TOC entry 522 (class 1259 OID 17979)
 -- Name: seq_rental_contract_composite; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6291,7 +5944,6 @@ CREATE SEQUENCE seq_rental_contract_composite
 ALTER TABLE seq_rental_contract_composite OWNER TO portico;
 
 --
--- TOC entry 523 (class 1259 OID 17981)
 -- Name: rental_contract_composite; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6305,7 +5957,6 @@ CREATE TABLE rental_contract_composite (
 ALTER TABLE rental_contract_composite OWNER TO portico;
 
 --
--- TOC entry 524 (class 1259 OID 17985)
 -- Name: rental_contract_last_edited; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6319,7 +5970,6 @@ CREATE TABLE rental_contract_last_edited (
 ALTER TABLE rental_contract_last_edited OWNER TO portico;
 
 --
--- TOC entry 525 (class 1259 OID 17988)
 -- Name: rental_contract_party; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6333,7 +5983,6 @@ CREATE TABLE rental_contract_party (
 ALTER TABLE rental_contract_party OWNER TO portico;
 
 --
--- TOC entry 526 (class 1259 OID 17992)
 -- Name: seq_rental_contract_price_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6348,7 +5997,6 @@ CREATE SEQUENCE seq_rental_contract_price_item
 ALTER TABLE seq_rental_contract_price_item OWNER TO portico;
 
 --
--- TOC entry 527 (class 1259 OID 17994)
 -- Name: rental_contract_price_item; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6374,7 +6022,6 @@ CREATE TABLE rental_contract_price_item (
 ALTER TABLE rental_contract_price_item OWNER TO portico;
 
 --
--- TOC entry 528 (class 1259 OID 18004)
 -- Name: seq_rental_contract_responsibility; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6389,7 +6036,6 @@ CREATE SEQUENCE seq_rental_contract_responsibility
 ALTER TABLE seq_rental_contract_responsibility OWNER TO portico;
 
 --
--- TOC entry 529 (class 1259 OID 18006)
 -- Name: rental_contract_responsibility; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6410,7 +6056,6 @@ CREATE TABLE rental_contract_responsibility (
 ALTER TABLE rental_contract_responsibility OWNER TO portico;
 
 --
--- TOC entry 530 (class 1259 OID 18013)
 -- Name: rental_contract_responsibility_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6423,7 +6068,6 @@ CREATE TABLE rental_contract_responsibility_unit (
 ALTER TABLE rental_contract_responsibility_unit OWNER TO portico;
 
 --
--- TOC entry 531 (class 1259 OID 18016)
 -- Name: seq_rental_contract_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6438,7 +6082,6 @@ CREATE SEQUENCE seq_rental_contract_types
 ALTER TABLE seq_rental_contract_types OWNER TO portico;
 
 --
--- TOC entry 532 (class 1259 OID 18018)
 -- Name: rental_contract_types; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6453,7 +6096,6 @@ CREATE TABLE rental_contract_types (
 ALTER TABLE rental_contract_types OWNER TO portico;
 
 --
--- TOC entry 533 (class 1259 OID 18025)
 -- Name: seq_rental_document; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6468,7 +6110,6 @@ CREATE SEQUENCE seq_rental_document
 ALTER TABLE seq_rental_document OWNER TO portico;
 
 --
--- TOC entry 534 (class 1259 OID 18027)
 -- Name: rental_document; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6486,7 +6127,6 @@ CREATE TABLE rental_document (
 ALTER TABLE rental_document OWNER TO portico;
 
 --
--- TOC entry 535 (class 1259 OID 18034)
 -- Name: seq_rental_document_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6501,7 +6141,6 @@ CREATE SEQUENCE seq_rental_document_types
 ALTER TABLE seq_rental_document_types OWNER TO portico;
 
 --
--- TOC entry 536 (class 1259 OID 18036)
 -- Name: rental_document_types; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6514,7 +6153,6 @@ CREATE TABLE rental_document_types (
 ALTER TABLE rental_document_types OWNER TO portico;
 
 --
--- TOC entry 537 (class 1259 OID 18040)
 -- Name: seq_rental_email_out; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6529,7 +6167,6 @@ CREATE SEQUENCE seq_rental_email_out
 ALTER TABLE seq_rental_email_out OWNER TO portico;
 
 --
--- TOC entry 538 (class 1259 OID 18042)
 -- Name: rental_email_out; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6548,7 +6185,6 @@ CREATE TABLE rental_email_out (
 ALTER TABLE rental_email_out OWNER TO portico;
 
 --
--- TOC entry 539 (class 1259 OID 18051)
 -- Name: seq_rental_email_out_party; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6563,7 +6199,6 @@ CREATE SEQUENCE seq_rental_email_out_party
 ALTER TABLE seq_rental_email_out_party OWNER TO portico;
 
 --
--- TOC entry 540 (class 1259 OID 18053)
 -- Name: rental_email_out_party; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6578,7 +6213,6 @@ CREATE TABLE rental_email_out_party (
 ALTER TABLE rental_email_out_party OWNER TO portico;
 
 --
--- TOC entry 541 (class 1259 OID 18058)
 -- Name: seq_rental_email_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6593,7 +6227,6 @@ CREATE SEQUENCE seq_rental_email_template
 ALTER TABLE seq_rental_email_template OWNER TO portico;
 
 --
--- TOC entry 542 (class 1259 OID 18060)
 -- Name: rental_email_template; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6611,7 +6244,6 @@ CREATE TABLE rental_email_template (
 ALTER TABLE rental_email_template OWNER TO portico;
 
 --
--- TOC entry 543 (class 1259 OID 18069)
 -- Name: seq_rental_invoice; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6626,7 +6258,6 @@ CREATE SEQUENCE seq_rental_invoice
 ALTER TABLE seq_rental_invoice OWNER TO portico;
 
 --
--- TOC entry 544 (class 1259 OID 18071)
 -- Name: rental_invoice; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6653,7 +6284,6 @@ CREATE TABLE rental_invoice (
 ALTER TABLE rental_invoice OWNER TO portico;
 
 --
--- TOC entry 545 (class 1259 OID 18078)
 -- Name: seq_rental_invoice_price_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6668,7 +6298,6 @@ CREATE SEQUENCE seq_rental_invoice_price_item
 ALTER TABLE seq_rental_invoice_price_item OWNER TO portico;
 
 --
--- TOC entry 546 (class 1259 OID 18080)
 -- Name: rental_invoice_price_item; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6691,7 +6320,6 @@ CREATE TABLE rental_invoice_price_item (
 ALTER TABLE rental_invoice_price_item OWNER TO portico;
 
 --
--- TOC entry 547 (class 1259 OID 18089)
 -- Name: seq_rental_location_factor; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6706,7 +6334,6 @@ CREATE SEQUENCE seq_rental_location_factor
 ALTER TABLE seq_rental_location_factor OWNER TO portico;
 
 --
--- TOC entry 548 (class 1259 OID 18091)
 -- Name: rental_location_factor; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6724,7 +6351,6 @@ CREATE TABLE rental_location_factor (
 ALTER TABLE rental_location_factor OWNER TO portico;
 
 --
--- TOC entry 549 (class 1259 OID 18099)
 -- Name: seq_rental_movein; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6739,7 +6365,6 @@ CREATE SEQUENCE seq_rental_movein
 ALTER TABLE seq_rental_movein OWNER TO portico;
 
 --
--- TOC entry 550 (class 1259 OID 18101)
 -- Name: rental_movein; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6755,7 +6380,6 @@ CREATE TABLE rental_movein (
 ALTER TABLE rental_movein OWNER TO portico;
 
 --
--- TOC entry 551 (class 1259 OID 18107)
 -- Name: seq_rental_movein_comment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6770,7 +6394,6 @@ CREATE SEQUENCE seq_rental_movein_comment
 ALTER TABLE seq_rental_movein_comment OWNER TO portico;
 
 --
--- TOC entry 552 (class 1259 OID 18109)
 -- Name: rental_movein_comment; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6787,7 +6410,6 @@ CREATE TABLE rental_movein_comment (
 ALTER TABLE rental_movein_comment OWNER TO portico;
 
 --
--- TOC entry 553 (class 1259 OID 18118)
 -- Name: seq_rental_moveout; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6802,7 +6424,6 @@ CREATE SEQUENCE seq_rental_moveout
 ALTER TABLE seq_rental_moveout OWNER TO portico;
 
 --
--- TOC entry 554 (class 1259 OID 18120)
 -- Name: rental_moveout; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6818,7 +6439,6 @@ CREATE TABLE rental_moveout (
 ALTER TABLE rental_moveout OWNER TO portico;
 
 --
--- TOC entry 555 (class 1259 OID 18126)
 -- Name: seq_rental_moveout_comment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6833,7 +6453,6 @@ CREATE SEQUENCE seq_rental_moveout_comment
 ALTER TABLE seq_rental_moveout_comment OWNER TO portico;
 
 --
--- TOC entry 556 (class 1259 OID 18128)
 -- Name: rental_moveout_comment; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6850,7 +6469,6 @@ CREATE TABLE rental_moveout_comment (
 ALTER TABLE rental_moveout_comment OWNER TO portico;
 
 --
--- TOC entry 557 (class 1259 OID 18137)
 -- Name: seq_rental_notification; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6865,7 +6483,6 @@ CREATE SEQUENCE seq_rental_notification
 ALTER TABLE seq_rental_notification OWNER TO portico;
 
 --
--- TOC entry 558 (class 1259 OID 18139)
 -- Name: rental_notification; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6885,7 +6502,6 @@ CREATE TABLE rental_notification (
 ALTER TABLE rental_notification OWNER TO portico;
 
 --
--- TOC entry 559 (class 1259 OID 18148)
 -- Name: seq_rental_notification_workbench; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6900,7 +6516,6 @@ CREATE SEQUENCE seq_rental_notification_workbench
 ALTER TABLE seq_rental_notification_workbench OWNER TO portico;
 
 --
--- TOC entry 560 (class 1259 OID 18150)
 -- Name: rental_notification_workbench; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6917,7 +6532,6 @@ CREATE TABLE rental_notification_workbench (
 ALTER TABLE rental_notification_workbench OWNER TO portico;
 
 --
--- TOC entry 561 (class 1259 OID 18157)
 -- Name: seq_rental_party; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6932,7 +6546,6 @@ CREATE SEQUENCE seq_rental_party
 ALTER TABLE seq_rental_party OWNER TO portico;
 
 --
--- TOC entry 562 (class 1259 OID 18159)
 -- Name: rental_party; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -6968,7 +6581,6 @@ CREATE TABLE rental_party (
 ALTER TABLE rental_party OWNER TO portico;
 
 --
--- TOC entry 563 (class 1259 OID 18166)
 -- Name: seq_rental_price_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -6983,7 +6595,6 @@ CREATE SEQUENCE seq_rental_price_item
 ALTER TABLE seq_rental_price_item OWNER TO portico;
 
 --
--- TOC entry 564 (class 1259 OID 18168)
 -- Name: rental_price_item; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -7004,7 +6615,6 @@ CREATE TABLE rental_price_item (
 ALTER TABLE rental_price_item OWNER TO portico;
 
 --
--- TOC entry 565 (class 1259 OID 18180)
 -- Name: seq_rental_unit; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
@@ -7019,7 +6629,6 @@ CREATE SEQUENCE seq_rental_unit
 ALTER TABLE seq_rental_unit OWNER TO portico;
 
 --
--- TOC entry 566 (class 1259 OID 18182)
 -- Name: rental_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
@@ -7033,8 +6642,6 @@ CREATE TABLE rental_unit (
 ALTER TABLE rental_unit OWNER TO portico;
 
 --
--- TOC entry 4553 (class 0 OID 16389)
--- Dependencies: 182
 -- Data for Name: controller_check_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7043,8 +6650,6 @@ COPY controller_check_item (id, control_item_id, check_list_id) FROM stdin;
 
 
 --
--- TOC entry 4555 (class 0 OID 16395)
--- Dependencies: 184
 -- Data for Name: controller_check_item_case; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7053,8 +6658,6 @@ COPY controller_check_item_case (id, check_item_id, status, measurement, locatio
 
 
 --
--- TOC entry 4557 (class 0 OID 16404)
--- Dependencies: 186
 -- Data for Name: controller_check_item_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7063,8 +6666,6 @@ COPY controller_check_item_status (id, name, open, closed, pending, sorting) FRO
 
 
 --
--- TOC entry 4559 (class 0 OID 16410)
--- Dependencies: 188
 -- Data for Name: controller_check_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7073,8 +6674,6 @@ COPY controller_check_list (id, control_id, status, comment, deadline, original_
 
 
 --
--- TOC entry 4561 (class 0 OID 16419)
--- Dependencies: 190
 -- Data for Name: controller_control; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7083,8 +6682,6 @@ COPY controller_control (id, title, description, start_date, end_date, procedure
 
 
 --
--- TOC entry 4563 (class 0 OID 16428)
--- Dependencies: 192
 -- Data for Name: controller_control_component_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7093,8 +6690,6 @@ COPY controller_control_component_list (id, control_id, location_id, component_i
 
 
 --
--- TOC entry 4565 (class 0 OID 16434)
--- Dependencies: 194
 -- Data for Name: controller_control_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7103,8 +6698,6 @@ COPY controller_control_group (id, group_name, procedure_id, control_area_id, bu
 
 
 --
--- TOC entry 4567 (class 0 OID 16443)
--- Dependencies: 196
 -- Data for Name: controller_control_group_component_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7113,8 +6706,6 @@ COPY controller_control_group_component_list (id, control_group_id, location_id)
 
 
 --
--- TOC entry 4569 (class 0 OID 16449)
--- Dependencies: 198
 -- Data for Name: controller_control_group_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7123,8 +6714,6 @@ COPY controller_control_group_list (id, control_id, control_group_id, order_nr) 
 
 
 --
--- TOC entry 4571 (class 0 OID 16455)
--- Dependencies: 200
 -- Data for Name: controller_control_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7133,8 +6722,6 @@ COPY controller_control_item (id, title, required, what_to_do, how_to_do, contro
 
 
 --
--- TOC entry 4573 (class 0 OID 16465)
--- Dependencies: 202
 -- Data for Name: controller_control_item_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7143,8 +6730,6 @@ COPY controller_control_item_list (id, control_id, control_item_id, order_nr) FR
 
 
 --
--- TOC entry 4575 (class 0 OID 16471)
--- Dependencies: 204
 -- Data for Name: controller_control_item_option; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7153,8 +6738,6 @@ COPY controller_control_item_option (id, option_value, control_item_id) FROM std
 
 
 --
--- TOC entry 4577 (class 0 OID 16477)
--- Dependencies: 206
 -- Data for Name: controller_control_location_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7163,8 +6746,6 @@ COPY controller_control_location_list (id, control_id, location_code) FROM stdin
 
 
 --
--- TOC entry 4579 (class 0 OID 16483)
--- Dependencies: 208
 -- Data for Name: controller_control_serie; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7173,8 +6754,6 @@ COPY controller_control_serie (id, control_relation_id, control_relation_type, a
 
 
 --
--- TOC entry 4581 (class 0 OID 16492)
--- Dependencies: 210
 -- Data for Name: controller_control_serie_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7183,8 +6762,6 @@ COPY controller_control_serie_history (id, serie_id, assigned_to, assigned_date)
 
 
 --
--- TOC entry 4583 (class 0 OID 16498)
--- Dependencies: 212
 -- Data for Name: controller_document; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7193,8 +6770,6 @@ COPY controller_document (id, name, procedure_id, title, description, type_id) F
 
 
 --
--- TOC entry 4585 (class 0 OID 16507)
--- Dependencies: 214
 -- Data for Name: controller_document_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7204,8 +6779,6 @@ COPY controller_document_types (id, title) FROM stdin;
 
 
 --
--- TOC entry 4587 (class 0 OID 16513)
--- Dependencies: 216
 -- Data for Name: controller_procedure; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7214,8 +6787,6 @@ COPY controller_procedure (id, title, purpose, responsibility, description, refe
 
 
 --
--- TOC entry 4589 (class 0 OID 16522)
--- Dependencies: 218
 -- Data for Name: fm_action_pending; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7224,8 +6795,6 @@ COPY fm_action_pending (id, item_id, location_id, responsible, responsible_type,
 
 
 --
--- TOC entry 4591 (class 0 OID 16532)
--- Dependencies: 220
 -- Data for Name: fm_action_pending_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7237,8 +6806,6 @@ COPY fm_action_pending_category (id, num, name, descr) FROM stdin;
 
 
 --
--- TOC entry 4592 (class 0 OID 16539)
--- Dependencies: 221
 -- Data for Name: fm_activities; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7247,8 +6814,6 @@ COPY fm_activities (id, num, base_descr, unit, ns3420, remarkreq, minperae, bill
 
 
 --
--- TOC entry 4593 (class 0 OID 16548)
--- Dependencies: 222
 -- Data for Name: fm_activity_price_index; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7257,8 +6822,6 @@ COPY fm_activity_price_index (activity_id, agreement_id, index_count, current_in
 
 
 --
--- TOC entry 4594 (class 0 OID 16555)
--- Dependencies: 223
 -- Data for Name: fm_agreement; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7267,8 +6830,6 @@ COPY fm_agreement (group_id, id, vendor_id, contract_id, name, descr, status, en
 
 
 --
--- TOC entry 4595 (class 0 OID 16561)
--- Dependencies: 224
 -- Data for Name: fm_agreement_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7277,8 +6838,6 @@ COPY fm_agreement_group (id, num, descr, status) FROM stdin;
 
 
 --
--- TOC entry 4596 (class 0 OID 16564)
--- Dependencies: 225
 -- Data for Name: fm_agreement_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7290,8 +6849,6 @@ planning	Planning
 
 
 --
--- TOC entry 4597 (class 0 OID 16567)
--- Dependencies: 226
 -- Data for Name: fm_async_method; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7300,8 +6857,6 @@ COPY fm_async_method (id, name, data, descr) FROM stdin;
 
 
 --
--- TOC entry 4598 (class 0 OID 16573)
--- Dependencies: 227
 -- Data for Name: fm_authorities_demands; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7310,8 +6865,6 @@ COPY fm_authorities_demands (id, name, user_id, entry_date, modified_date) FROM 
 
 
 --
--- TOC entry 4599 (class 0 OID 16576)
--- Dependencies: 228
 -- Data for Name: fm_b_account; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7320,8 +6873,6 @@ COPY fm_b_account (id, category, descr, mva, responsible, active, user_id, entry
 
 
 --
--- TOC entry 4600 (class 0 OID 16580)
--- Dependencies: 229
 -- Data for Name: fm_b_account_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7330,8 +6881,6 @@ COPY fm_b_account_category (id, descr, active, external_project) FROM stdin;
 
 
 --
--- TOC entry 4601 (class 0 OID 16585)
--- Dependencies: 230
 -- Data for Name: fm_branch; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7344,8 +6893,6 @@ COPY fm_branch (id, num, descr) FROM stdin;
 
 
 --
--- TOC entry 4602 (class 0 OID 16588)
--- Dependencies: 231
 -- Data for Name: fm_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7354,8 +6901,6 @@ COPY fm_budget (id, year, b_account_id, district_id, revision, access, user_id, 
 
 
 --
--- TOC entry 4603 (class 0 OID 16595)
--- Dependencies: 232
 -- Data for Name: fm_budget_basis; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7364,8 +6909,6 @@ COPY fm_budget_basis (id, year, b_group, district_id, revision, access, user_id,
 
 
 --
--- TOC entry 4605 (class 0 OID 16604)
--- Dependencies: 234
 -- Data for Name: fm_budget_cost; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7374,8 +6917,6 @@ COPY fm_budget_cost (id, year, month, b_account_id, amount) FROM stdin;
 
 
 --
--- TOC entry 4606 (class 0 OID 16609)
--- Dependencies: 235
 -- Data for Name: fm_budget_period; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7384,8 +6925,6 @@ COPY fm_budget_period (year, month, b_account_id, per_cent, user_id, entry_date,
 
 
 --
--- TOC entry 4607 (class 0 OID 16616)
--- Dependencies: 236
 -- Data for Name: fm_building_part; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7394,8 +6933,6 @@ COPY fm_building_part (id, descr, filter_1, filter_2, filter_3, filter_4) FROM s
 
 
 --
--- TOC entry 4608 (class 0 OID 16619)
--- Dependencies: 237
 -- Data for Name: fm_cache; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7431,12 +6968,16 @@ sub_query_street_4__	eNrLtDK0BgAC8wEQ
 sql_4_lt_l_f	eNp1klFrgzAUhf/KpU86hizRh2HxYawWNjqF1fcQmjiE1owksPXfVyKKMVdfYs495zv3ISZ/pS/57lyeyvcG2hu7qgu3neqz5OnZuw5/JFBooKSBki0V4jis5zfpGdlwyh+l74mQ5qKBG5gUZuW/BTh+118QjZ+3KAB81h/VUkuhriAKVoPCMzkthrfqEHop4qUbXoJ4SRwHW9H1VinSRDeaUqSJbjWRdRNF0mRKn8pjMyPUXy+1i/tep7NOjAx3SzqxTv9ybZlqmR0MCGQ5nllLEUEaq6W0XAgtjQmYWTLOZ5pnR3Dhi0OY86jAI4672z8AJmobjg==
 uicols_4___f	eNqdk0FugzAQRa9S+QQBDE0nq1bqopuqq24jBzvEKhhkTJUo4u4dY1xsUqlqF2jmf2T+G9sw2MK1h2QDRKpuMHtz6QTZMbiHq4TNrocCyElyLhTZSUjWRooGBWLE2ViZxZLGMo9lEcpx6hVr4vQUubhPTjIgdVsyI1u1L1suAgL0k4AAZRoQoMwCApTUEzy4tXsXjRg5EC76Ukcc1hya5uJRQm0JtkA63XZCm4unQOswyJpLVXkStIQymqlSeBqMf+yYNg2+8Eh2Tv+1u1f2qSYue0a9YWbo3Y79je7tlu7plu7533R2tHN5YqoKD/CAj0VyNcWaTPmu0rnmcy2m6o6A1bJS0ZA4vp9vblN3G0uEE9oPFhl0beRrY76EtTgaPwdnuMvr3+DndLtSqo/w4s2SxtLmJkBevjcRyPuUhzt8bHXDzMTza+DcZktLlzZf2sK34/gF3vQnCw==
 cols_return_4___f	eNpLtDK3qs60MrAutjKyUspMUbLOtDIEcgyNrZRy8pMTSzLz8+KT81NSQRJGQAkTsLghiGsM5xqBuCZwrjGIawrnmoC4ZkCuJURvfF5iLtC8WgDT5CQ2
+sql_1_lt_l1_f	eNptj1ELgjAUhf/KwSeNGEjUg+FTKBSmUL5fhk4R0sUcVP++JSQO97TtO+d+l43R7rCPvHuSJacSTU8PWXHdySFkm631NLdwTWjgvbAwmVO0Un1YLcZKgY/4E9LirYH0Vlzh+761DkCWpCUuxTn/BfI1CIUih11jE6euRjy3WFcHgT395EqTbEibgkOyjGfXEjqU6w86xHMUu0cmr3f8AlO5gYg=
+uicols_1__1_f	eNqVkUtqwzAQhq9SdILITks6PkE3patujSpNEoEtGWlcYoLvXj2iIodC24WYmR/x/fMQcICrB74Dps00U0/LhKwTsIerhl3n4QnYWSuFhnUa+L3QBGEPjPBCsWzrck25EeMW2AQrVWC8BTZYKUhb00ursIIGnRfocy77TAvkR2AKvXQbdBTncVwKva4j9ABscnZCR0sBxwaK9vAqPk2ix314EjT7PMr/PN7+5BE+4kWehTnV+/kIL4JzbELkiRJjHlsM+mQ2LYVmSze3tMl3kmgIXXWYAY9UzJUIA95f+2cUB/byPQyw94QIJzlaNwpKFr8ybmlb0nX9AsnTvcs=
+cols_return_1__1_f	eNpLtDKxqs60MrAutjKyUspMUbLOtDIEcgyNrZRy8pMTSzLz8+KT81NSQRJGQAkTsLghiGsM5FpCuPF5iblAJbUAqK4X2Q==
+sql_2_lt_l1_f	eNptkFELgjAQx7/K4ZNGDJQIMnwKhcIUyvdj6AwhXcxB9e0bi2R27mW73/3vx7Ex3mx3sXdN8/RQQdvjXdZcd3KI2Go9K80rJCRySWgzOPBe0CDFaG5xk+rNGjHWCvgIP4JavDRAdinP4JszWwwATuWxcFkIZQE+WRcSIOsFAeRpVk0K+RyEsuPzrOXYNV+HrVjX/E8/uNIoW9QmsCBx25PLhQtK+j9EHLGplSyPWK+3/wCmx6V9
+uicols_2__1_f	eNqlUkFugzAQ/ErlF8QGqnS59dZL1VOvyMEOsQoGgamCIv7etY0TO61UVT2gnRmDZ3ZZDnu4TEB3QJQeZlOZZZCk5PAIFwW7ckJATkoIqUmpgN4LDIUciJFnY2mW0jylRUxXhzXvUjuGQUSwohmQtq+5Ub2u6l7IyBJ1GlkiZcHyyZ9W/nLv6zW2aWheABFyqsfE3Ypz1y0hQMyt7x7IMPaDHM0SvFE6zKoVSjfB38YOrz288k8dQtiD8PJ2sPrhT4abefKT+Vuet+95nv+XB2+Q5/rEdRP/mgM+NoSvDCt1jr7mWy1c9ePlrWp00g42GjrZIPMLVUtt5BhaSIRth1p5jHfIUx9WcBze/dr+bGW/VPojGFEgL9chAXm/zsXh1W3NsR87blyYX6/fYHaD+Q0WAa7rF6sHBwo=
+cols_return_2__1_f	eNpLtDKzqs60MrAutjKyUspMUbLOtDIEcgyNrZRy8pMTSzLz8+KT81NSQRJGQAkTsLghiGsM5xqBuCZAriVENj4vMReswxQuZgQVqwUAjtAiGQ==
 \.
 
 
 --
--- TOC entry 4609 (class 0 OID 16625)
--- Dependencies: 238
 -- Data for Name: fm_chapter; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7445,8 +6986,6 @@ COPY fm_chapter (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4610 (class 0 OID 16628)
--- Dependencies: 239
 -- Data for Name: fm_condition_survey; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7455,8 +6994,6 @@ COPY fm_condition_survey (id, title, p_num, p_entity_id, p_cat_id, location_code
 
 
 --
--- TOC entry 4612 (class 0 OID 16637)
--- Dependencies: 241
 -- Data for Name: fm_condition_survey_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7465,8 +7002,6 @@ COPY fm_condition_survey_history (history_id, history_record_id, history_appname
 
 
 --
--- TOC entry 4613 (class 0 OID 16645)
--- Dependencies: 242
 -- Data for Name: fm_condition_survey_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7475,8 +7010,6 @@ COPY fm_condition_survey_status (id, descr, closed, in_progress, delivered, sort
 
 
 --
--- TOC entry 4615 (class 0 OID 16650)
--- Dependencies: 244
 -- Data for Name: fm_cron_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7485,8 +7018,6 @@ COPY fm_cron_log (id, cron, cron_date, process, message) FROM stdin;
 
 
 --
--- TOC entry 4616 (class 0 OID 16658)
--- Dependencies: 245
 -- Data for Name: fm_custom; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7496,8 +7027,6 @@ COPY fm_custom (id, name, sql_text, entry_date, user_id) FROM stdin;
 
 
 --
--- TOC entry 4617 (class 0 OID 16664)
--- Dependencies: 246
 -- Data for Name: fm_custom_cols; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7510,8 +7039,6 @@ COPY fm_custom_cols (custom_id, id, name, descr, sorting) FROM stdin;
 
 
 --
--- TOC entry 4619 (class 0 OID 16669)
--- Dependencies: 248
 -- Data for Name: fm_custom_menu_items; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7520,8 +7047,6 @@ COPY fm_custom_menu_items (id, parent_id, text, url, target, location, local_fil
 
 
 --
--- TOC entry 4620 (class 0 OID 16676)
--- Dependencies: 249
 -- Data for Name: fm_district; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7533,8 +7058,6 @@ COPY fm_district (id, descr, delivery_address) FROM stdin;
 
 
 --
--- TOC entry 4622 (class 0 OID 16684)
--- Dependencies: 251
 -- Data for Name: fm_document; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7543,8 +7066,6 @@ COPY fm_document (id, title, document_name, link, descr, version, document_date,
 
 
 --
--- TOC entry 4624 (class 0 OID 16693)
--- Dependencies: 253
 -- Data for Name: fm_document_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7553,8 +7074,6 @@ COPY fm_document_history (history_id, history_record_id, history_appname, histor
 
 
 --
--- TOC entry 4626 (class 0 OID 16703)
--- Dependencies: 255
 -- Data for Name: fm_document_relation; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7563,8 +7082,6 @@ COPY fm_document_relation (id, document_id, location_id, location_item_id, entry
 
 
 --
--- TOC entry 4627 (class 0 OID 16707)
--- Dependencies: 256
 -- Data for Name: fm_document_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7576,8 +7093,6 @@ obsolete	obsolete
 
 
 --
--- TOC entry 4629 (class 0 OID 16712)
--- Dependencies: 258
 -- Data for Name: fm_eco_period_transition; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7586,8 +7101,6 @@ COPY fm_eco_period_transition (id, month, day, hour, remark, user_id, entry_date
 
 
 --
--- TOC entry 4630 (class 0 OID 16716)
--- Dependencies: 259
 -- Data for Name: fm_eco_periodization; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7596,8 +7109,6 @@ COPY fm_eco_periodization (id, descr, active) FROM stdin;
 
 
 --
--- TOC entry 4632 (class 0 OID 16722)
--- Dependencies: 261
 -- Data for Name: fm_eco_periodization_outline; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7606,8 +7117,6 @@ COPY fm_eco_periodization_outline (id, periodization_id, month, value, dividend,
 
 
 --
--- TOC entry 4633 (class 0 OID 16727)
--- Dependencies: 262
 -- Data for Name: fm_eco_service; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7616,8 +7125,6 @@ COPY fm_eco_service (id, name, active) FROM stdin;
 
 
 --
--- TOC entry 4634 (class 0 OID 16731)
--- Dependencies: 263
 -- Data for Name: fm_ecoart; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7628,8 +7135,6 @@ COPY fm_ecoart (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4635 (class 0 OID 16734)
--- Dependencies: 264
 -- Data for Name: fm_ecoavvik; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7638,8 +7143,6 @@ COPY fm_ecoavvik (bilagsnr, belop, fakturadato, forfallsdato, artid, godkjentbel
 
 
 --
--- TOC entry 4637 (class 0 OID 16741)
--- Dependencies: 266
 -- Data for Name: fm_ecobilag; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7648,8 +7151,6 @@ COPY fm_ecobilag (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, project_id,
 
 
 --
--- TOC entry 4638 (class 0 OID 16750)
--- Dependencies: 267
 -- Data for Name: fm_ecobilag_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7663,8 +7164,6 @@ COPY fm_ecobilag_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4639 (class 0 OID 16753)
--- Dependencies: 268
 -- Data for Name: fm_ecobilag_process_code; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7673,8 +7172,6 @@ COPY fm_ecobilag_process_code (id, name, user_id, entry_date, modified_date) FRO
 
 
 --
--- TOC entry 4641 (class 0 OID 16758)
--- Dependencies: 270
 -- Data for Name: fm_ecobilag_process_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7683,8 +7180,6 @@ COPY fm_ecobilag_process_log (id, bilagsnr, process_code, process_log, user_id, 
 
 
 --
--- TOC entry 4642 (class 0 OID 16769)
--- Dependencies: 272
 -- Data for Name: fm_ecobilagkilde; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7693,8 +7188,6 @@ COPY fm_ecobilagkilde (id, name, description) FROM stdin;
 
 
 --
--- TOC entry 4643 (class 0 OID 16775)
--- Dependencies: 273
 -- Data for Name: fm_ecobilagoverf; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7703,8 +7196,6 @@ COPY fm_ecobilagoverf (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, projec
 
 
 --
--- TOC entry 4644 (class 0 OID 16784)
--- Dependencies: 274
 -- Data for Name: fm_ecodimb; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7713,8 +7204,6 @@ COPY fm_ecodimb (id, descr, org_unit_id, active) FROM stdin;
 
 
 --
--- TOC entry 4645 (class 0 OID 16788)
--- Dependencies: 275
 -- Data for Name: fm_ecodimb_role; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7726,8 +7215,6 @@ COPY fm_ecodimb_role (id, name) FROM stdin;
 
 
 --
--- TOC entry 4647 (class 0 OID 16793)
--- Dependencies: 277
 -- Data for Name: fm_ecodimb_role_user; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7736,8 +7223,6 @@ COPY fm_ecodimb_role_user (id, ecodimb, user_id, role_id, default_user, active_f
 
 
 --
--- TOC entry 4649 (class 0 OID 16801)
--- Dependencies: 279
 -- Data for Name: fm_ecodimb_role_user_substitute; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7746,8 +7231,6 @@ COPY fm_ecodimb_role_user_substitute (id, user_id, substitute_user_id) FROM stdi
 
 
 --
--- TOC entry 4650 (class 0 OID 16805)
--- Dependencies: 280
 -- Data for Name: fm_ecodimd; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7756,8 +7239,6 @@ COPY fm_ecodimd (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4651 (class 0 OID 16808)
--- Dependencies: 281
 -- Data for Name: fm_ecologg; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7766,8 +7247,6 @@ COPY fm_ecologg (batchid, ecobilagid, status, melding, tid) FROM stdin;
 
 
 --
--- TOC entry 4652 (class 0 OID 16812)
--- Dependencies: 282
 -- Data for Name: fm_ecomva; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7782,8 +7261,6 @@ COPY fm_ecomva (id, percent, descr) FROM stdin;
 
 
 --
--- TOC entry 4653 (class 0 OID 16815)
--- Dependencies: 283
 -- Data for Name: fm_ecouser; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7792,8 +7269,6 @@ COPY fm_ecouser (id, lid, initials) FROM stdin;
 
 
 --
--- TOC entry 4654 (class 0 OID 16818)
--- Dependencies: 284
 -- Data for Name: fm_entity; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7802,8 +7277,6 @@ COPY fm_entity (location_id, id, name, descr, location_form, documentation, look
 
 
 --
--- TOC entry 4655 (class 0 OID 16824)
--- Dependencies: 285
 -- Data for Name: fm_entity_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7812,8 +7285,6 @@ COPY fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup
 
 
 --
--- TOC entry 4657 (class 0 OID 16832)
--- Dependencies: 287
 -- Data for Name: fm_entity_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7822,8 +7293,6 @@ COPY fm_entity_group (id, name, descr, active, user_id, entry_date, modified_dat
 
 
 --
--- TOC entry 4659 (class 0 OID 16842)
--- Dependencies: 289
 -- Data for Name: fm_entity_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7832,8 +7301,6 @@ COPY fm_entity_history (history_id, history_record_id, history_appname, history_
 
 
 --
--- TOC entry 4660 (class 0 OID 16850)
--- Dependencies: 290
 -- Data for Name: fm_entity_lookup; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7842,8 +7309,6 @@ COPY fm_entity_lookup (entity_id, location, type) FROM stdin;
 
 
 --
--- TOC entry 4662 (class 0 OID 16855)
--- Dependencies: 292
 -- Data for Name: fm_event; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7852,8 +7317,6 @@ COPY fm_event (id, location_id, location_item_id, attrib_id, responsible_id, act
 
 
 --
--- TOC entry 4663 (class 0 OID 16863)
--- Dependencies: 293
 -- Data for Name: fm_event_action; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7862,8 +7325,6 @@ COPY fm_event_action (id, name, action, data, descr, user_id, entry_date, modifi
 
 
 --
--- TOC entry 4664 (class 0 OID 16869)
--- Dependencies: 294
 -- Data for Name: fm_event_exception; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7872,8 +7333,6 @@ COPY fm_event_exception (event_id, exception_time, descr, user_id, entry_date, m
 
 
 --
--- TOC entry 4665 (class 0 OID 16875)
--- Dependencies: 295
 -- Data for Name: fm_event_receipt; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7882,8 +7341,6 @@ COPY fm_event_receipt (event_id, receipt_time, descr, user_id, entry_date, modif
 
 
 --
--- TOC entry 4666 (class 0 OID 16881)
--- Dependencies: 296
 -- Data for Name: fm_event_schedule; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7892,8 +7349,6 @@ COPY fm_event_schedule (event_id, schedule_time, descr, user_id, entry_date, mod
 
 
 --
--- TOC entry 4667 (class 0 OID 16887)
--- Dependencies: 297
 -- Data for Name: fm_external_project; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7902,8 +7357,6 @@ COPY fm_external_project (id, name, budget, active) FROM stdin;
 
 
 --
--- TOC entry 4668 (class 0 OID 16891)
--- Dependencies: 298
 -- Data for Name: fm_gab_location; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7912,8 +7365,6 @@ COPY fm_gab_location (location_code, gab_id, user_id, entry_date, loc1, loc2, lo
 
 
 --
--- TOC entry 4670 (class 0 OID 16896)
--- Dependencies: 300
 -- Data for Name: fm_generic_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7922,8 +7373,6 @@ COPY fm_generic_history (history_id, history_record_id, history_owner, history_s
 
 
 --
--- TOC entry 4671 (class 0 OID 16904)
--- Dependencies: 301
 -- Data for Name: fm_idgenerator; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7939,8 +7388,6 @@ request	0	1000	\N	request
 
 
 --
--- TOC entry 4672 (class 0 OID 16908)
--- Dependencies: 302
 -- Data for Name: fm_investment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7949,8 +7396,6 @@ COPY fm_investment (entity_id, invest_id, entity_type, p_num, p_entity_id, p_cat
 
 
 --
--- TOC entry 4673 (class 0 OID 16914)
--- Dependencies: 303
 -- Data for Name: fm_investment_value; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7959,8 +7404,6 @@ COPY fm_investment_value (entity_id, invest_id, index_count, current_index, this
 
 
 --
--- TOC entry 4675 (class 0 OID 16923)
--- Dependencies: 305
 -- Data for Name: fm_jasper; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7969,8 +7412,6 @@ COPY fm_jasper (id, location_id, title, descr, formats, version, access, user_id
 
 
 --
--- TOC entry 4676 (class 0 OID 16930)
--- Dependencies: 306
 -- Data for Name: fm_jasper_format_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7984,8 +7425,6 @@ DOCX
 
 
 --
--- TOC entry 4678 (class 0 OID 16935)
--- Dependencies: 308
 -- Data for Name: fm_jasper_input; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -7994,8 +7433,6 @@ COPY fm_jasper_input (id, jasper_id, input_type_id, is_id, name, descr) FROM std
 
 
 --
--- TOC entry 4680 (class 0 OID 16941)
--- Dependencies: 310
 -- Data for Name: fm_jasper_input_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8012,8 +7449,6 @@ COPY fm_jasper_input_type (id, name, descr) FROM stdin;
 
 
 --
--- TOC entry 4681 (class 0 OID 16945)
--- Dependencies: 311
 -- Data for Name: fm_key_loc; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8022,8 +7457,6 @@ COPY fm_key_loc (id, num, descr) FROM stdin;
 
 
 --
--- TOC entry 4682 (class 0 OID 16948)
--- Dependencies: 312
 -- Data for Name: fm_location1; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8033,8 +7466,6 @@ COPY fm_location1 (id, location_code, loc1, loc1_name, part_of_town_id, entry_da
 
 
 --
--- TOC entry 4683 (class 0 OID 16959)
--- Dependencies: 313
 -- Data for Name: fm_location1_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8045,8 +7476,6 @@ COPY fm_location1_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4684 (class 0 OID 16962)
--- Dependencies: 314
 -- Data for Name: fm_location1_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8055,8 +7484,6 @@ COPY fm_location1_history (id, location_code, loc1, loc1_name, part_of_town_id, 
 
 
 --
--- TOC entry 4685 (class 0 OID 16974)
--- Dependencies: 315
 -- Data for Name: fm_location2; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8066,8 +7493,6 @@ COPY fm_location2 (id, location_code, loc1, loc2, loc2_name, entry_date, categor
 
 
 --
--- TOC entry 4686 (class 0 OID 16985)
--- Dependencies: 316
 -- Data for Name: fm_location2_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8078,8 +7503,6 @@ COPY fm_location2_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4687 (class 0 OID 16988)
--- Dependencies: 317
 -- Data for Name: fm_location2_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8088,8 +7511,6 @@ COPY fm_location2_history (id, location_code, loc1, loc2, loc2_name, entry_date,
 
 
 --
--- TOC entry 4688 (class 0 OID 17000)
--- Dependencies: 318
 -- Data for Name: fm_location3; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8101,8 +7522,6 @@ COPY fm_location3 (id, location_code, loc1, loc2, loc3, loc3_name, entry_date, c
 
 
 --
--- TOC entry 4689 (class 0 OID 17011)
--- Dependencies: 319
 -- Data for Name: fm_location3_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8113,8 +7532,6 @@ COPY fm_location3_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4690 (class 0 OID 17014)
--- Dependencies: 320
 -- Data for Name: fm_location3_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8123,8 +7540,6 @@ COPY fm_location3_history (id, location_code, loc1, loc2, loc3, loc3_name, entry
 
 
 --
--- TOC entry 4691 (class 0 OID 17026)
--- Dependencies: 321
 -- Data for Name: fm_location4; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8139,8 +7554,6 @@ COPY fm_location4 (id, location_code, loc1, loc2, loc3, loc4, loc4_name, entry_d
 
 
 --
--- TOC entry 4692 (class 0 OID 17037)
--- Dependencies: 322
 -- Data for Name: fm_location4_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8151,8 +7564,6 @@ COPY fm_location4_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4693 (class 0 OID 17040)
--- Dependencies: 323
 -- Data for Name: fm_location4_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8161,8 +7572,6 @@ COPY fm_location4_history (id, location_code, loc1, loc2, loc3, loc4, loc4_name,
 
 
 --
--- TOC entry 4694 (class 0 OID 17052)
--- Dependencies: 324
 -- Data for Name: fm_location_config; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8175,8 +7584,6 @@ part_of_town_id	1	\N	\N	1	\N	\N	fm_part_of_town	id	int	4	\N	\N	True
 
 
 --
--- TOC entry 4696 (class 0 OID 17058)
--- Dependencies: 326
 -- Data for Name: fm_location_contact; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8185,8 +7592,6 @@ COPY fm_location_contact (id, contact_id, location_code, user_id, entry_date, mo
 
 
 --
--- TOC entry 4698 (class 0 OID 17064)
--- Dependencies: 328
 -- Data for Name: fm_location_exception; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8195,8 +7600,6 @@ COPY fm_location_exception (id, location_code, severity_id, category_id, categor
 
 
 --
--- TOC entry 4700 (class 0 OID 17073)
--- Dependencies: 330
 -- Data for Name: fm_location_exception_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8205,8 +7608,6 @@ COPY fm_location_exception_category (id, name, parent_id) FROM stdin;
 
 
 --
--- TOC entry 4702 (class 0 OID 17079)
--- Dependencies: 332
 -- Data for Name: fm_location_exception_category_text; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8215,8 +7616,6 @@ COPY fm_location_exception_category_text (id, category_id, content) FROM stdin;
 
 
 --
--- TOC entry 4703 (class 0 OID 17086)
--- Dependencies: 333
 -- Data for Name: fm_location_exception_severity; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8225,8 +7624,6 @@ COPY fm_location_exception_severity (id, name) FROM stdin;
 
 
 --
--- TOC entry 4704 (class 0 OID 17089)
--- Dependencies: 334
 -- Data for Name: fm_location_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8239,8 +7636,6 @@ COPY fm_location_type (id, name, descr, pk, ix, uc, list_info, list_address, lis
 
 
 --
--- TOC entry 4706 (class 0 OID 17097)
--- Dependencies: 336
 -- Data for Name: fm_locations; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8260,8 +7655,6 @@ COPY fm_locations (id, level, location_code, loc1, name) FROM stdin;
 
 
 --
--- TOC entry 4707 (class 0 OID 17104)
--- Dependencies: 337
 -- Data for Name: fm_ns3420; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8272,8 +7665,6 @@ COPY fm_ns3420 (id, num, parent_id, enhet, tekst1, tekst2, tekst3, tekst4, tekst
 
 
 --
--- TOC entry 4710 (class 0 OID 17132)
--- Dependencies: 341
 -- Data for Name: fm_order_dim1; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8282,8 +7673,6 @@ COPY fm_order_dim1 (id, num, descr) FROM stdin;
 
 
 --
--- TOC entry 4712 (class 0 OID 17137)
--- Dependencies: 343
 -- Data for Name: fm_order_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8292,8 +7681,6 @@ COPY fm_order_template (id, name, content, public, user_id, entry_date, modified
 
 
 --
--- TOC entry 4713 (class 0 OID 17144)
--- Dependencies: 344
 -- Data for Name: fm_orders; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8302,8 +7689,6 @@ COPY fm_orders (id, type) FROM stdin;
 
 
 --
--- TOC entry 4714 (class 0 OID 17161)
--- Dependencies: 348
 -- Data for Name: fm_org_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8312,8 +7697,6 @@ COPY fm_org_unit (id, parent_id, name, active, created_on, created_by, modified_
 
 
 --
--- TOC entry 4715 (class 0 OID 17165)
--- Dependencies: 349
 -- Data for Name: fm_owner; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8323,8 +7706,6 @@ COPY fm_owner (id, abid, org_name, contact_name, category, member_of, remark, en
 
 
 --
--- TOC entry 4716 (class 0 OID 17171)
--- Dependencies: 350
 -- Data for Name: fm_owner_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8334,8 +7715,6 @@ COPY fm_owner_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4718 (class 0 OID 17176)
--- Dependencies: 352
 -- Data for Name: fm_part_of_town; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8345,8 +7724,6 @@ COPY fm_part_of_town (id, name, district_id, delivery_address) FROM stdin;
 
 
 --
--- TOC entry 4719 (class 0 OID 17183)
--- Dependencies: 353
 -- Data for Name: fm_project; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8355,8 +7732,6 @@ COPY fm_project (id, parent_id, project_type_id, name, user_id, access, category
 
 
 --
--- TOC entry 4720 (class 0 OID 17194)
--- Dependencies: 354
 -- Data for Name: fm_project_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8365,8 +7740,6 @@ COPY fm_project_budget (project_id, year, month, budget, order_amount, closed, a
 
 
 --
--- TOC entry 4723 (class 0 OID 17218)
--- Dependencies: 359
 -- Data for Name: fm_project_buffer_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8375,8 +7748,6 @@ COPY fm_project_buffer_budget (id, year, month, buffer_project_id, entry_date, a
 
 
 --
--- TOC entry 4725 (class 0 OID 17230)
--- Dependencies: 361
 -- Data for Name: fm_project_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8385,8 +7756,6 @@ COPY fm_project_history (history_id, history_record_id, history_appname, history
 
 
 --
--- TOC entry 4726 (class 0 OID 17238)
--- Dependencies: 362
 -- Data for Name: fm_project_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8395,8 +7764,6 @@ COPY fm_project_status (id, descr, approved, closed) FROM stdin;
 
 
 --
--- TOC entry 4727 (class 0 OID 17241)
--- Dependencies: 363
 -- Data for Name: fm_projectbranch; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8405,8 +7772,6 @@ COPY fm_projectbranch (project_id, branch_id) FROM stdin;
 
 
 --
--- TOC entry 4728 (class 0 OID 17244)
--- Dependencies: 364
 -- Data for Name: fm_regulations; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8415,8 +7780,6 @@ COPY fm_regulations (id, parent_id, name, descr, external_ref, user_id, entry_da
 
 
 --
--- TOC entry 4729 (class 0 OID 17250)
--- Dependencies: 365
 -- Data for Name: fm_request; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8425,8 +7788,6 @@ COPY fm_request (id, condition_survey_id, title, project_id, p_num, p_entity_id,
 
 
 --
--- TOC entry 4730 (class 0 OID 17265)
--- Dependencies: 366
 -- Data for Name: fm_request_condition; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8435,8 +7796,6 @@ COPY fm_request_condition (request_id, condition_type, reference, degree, probab
 
 
 --
--- TOC entry 4731 (class 0 OID 17272)
--- Dependencies: 367
 -- Data for Name: fm_request_condition_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8451,8 +7810,6 @@ COPY fm_request_condition_type (id, name, descr, priority_key) FROM stdin;
 
 
 --
--- TOC entry 4733 (class 0 OID 17278)
--- Dependencies: 369
 -- Data for Name: fm_request_consume; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8461,8 +7818,6 @@ COPY fm_request_consume (id, request_id, amount, date, user_id, entry_date, desc
 
 
 --
--- TOC entry 4735 (class 0 OID 17287)
--- Dependencies: 371
 -- Data for Name: fm_request_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8471,8 +7826,6 @@ COPY fm_request_history (history_id, history_record_id, history_appname, history
 
 
 --
--- TOC entry 4737 (class 0 OID 17297)
--- Dependencies: 373
 -- Data for Name: fm_request_planning; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8481,8 +7834,6 @@ COPY fm_request_planning (id, request_id, amount, date, user_id, entry_date, des
 
 
 --
--- TOC entry 4738 (class 0 OID 17304)
--- Dependencies: 374
 -- Data for Name: fm_request_responsible_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8491,8 +7842,6 @@ COPY fm_request_responsible_unit (id, name, descr) FROM stdin;
 
 
 --
--- TOC entry 4739 (class 0 OID 17310)
--- Dependencies: 375
 -- Data for Name: fm_request_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8504,8 +7853,6 @@ closed	avsluttet	\N	\N	\N	\N
 
 
 --
--- TOC entry 4741 (class 0 OID 17315)
--- Dependencies: 377
 -- Data for Name: fm_response_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8514,8 +7861,6 @@ COPY fm_response_template (id, name, content, public, user_id, entry_date, modif
 
 
 --
--- TOC entry 4743 (class 0 OID 17324)
--- Dependencies: 379
 -- Data for Name: fm_responsibility; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8524,8 +7869,6 @@ COPY fm_responsibility (id, name, descr, created_on, created_by) FROM stdin;
 
 
 --
--- TOC entry 4745 (class 0 OID 17330)
--- Dependencies: 381
 -- Data for Name: fm_responsibility_contact; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8534,8 +7877,6 @@ COPY fm_responsibility_contact (id, responsibility_role_id, contact_id, location
 
 
 --
--- TOC entry 4746 (class 0 OID 17339)
--- Dependencies: 382
 -- Data for Name: fm_responsibility_module; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8544,8 +7885,6 @@ COPY fm_responsibility_module (responsibility_id, location_id, cat_id, active, c
 
 
 --
--- TOC entry 4748 (class 0 OID 17344)
--- Dependencies: 384
 -- Data for Name: fm_responsibility_role; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8554,8 +7893,6 @@ COPY fm_responsibility_role (id, name, remark, location_level, responsibility_id
 
 
 --
--- TOC entry 4749 (class 0 OID 17351)
--- Dependencies: 385
 -- Data for Name: fm_s_agreement; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8564,8 +7901,6 @@ COPY fm_s_agreement (id, vendor_id, name, descr, status, category, member_of, en
 
 
 --
--- TOC entry 4750 (class 0 OID 17358)
--- Dependencies: 386
 -- Data for Name: fm_s_agreement_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8574,8 +7909,6 @@ COPY fm_s_agreement_budget (agreement_id, year, budget_account, ecodimb, categor
 
 
 --
--- TOC entry 4751 (class 0 OID 17363)
--- Dependencies: 387
 -- Data for Name: fm_s_agreement_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8584,8 +7917,6 @@ COPY fm_s_agreement_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4752 (class 0 OID 17367)
--- Dependencies: 388
 -- Data for Name: fm_s_agreement_detail; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8594,8 +7925,6 @@ COPY fm_s_agreement_detail (agreement_id, id, location_code, address, p_num, p_e
 
 
 --
--- TOC entry 4754 (class 0 OID 17379)
--- Dependencies: 390
 -- Data for Name: fm_s_agreement_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8604,8 +7933,6 @@ COPY fm_s_agreement_history (history_id, history_record_id, history_appname, his
 
 
 --
--- TOC entry 4755 (class 0 OID 17387)
--- Dependencies: 391
 -- Data for Name: fm_s_agreement_pricing; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8614,8 +7941,6 @@ COPY fm_s_agreement_pricing (agreement_id, item_id, id, current_index, this_inde
 
 
 --
--- TOC entry 4756 (class 0 OID 17393)
--- Dependencies: 392
 -- Data for Name: fm_standard_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8634,8 +7959,6 @@ COPY fm_standard_unit (id, name, descr) FROM stdin;
 
 
 --
--- TOC entry 4757 (class 0 OID 17396)
--- Dependencies: 393
 -- Data for Name: fm_streetaddress; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8645,8 +7968,6 @@ COPY fm_streetaddress (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4759 (class 0 OID 17401)
--- Dependencies: 395
 -- Data for Name: fm_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8655,8 +7976,6 @@ COPY fm_template (id, name, descr, owner, chapter_id, entry_date) FROM stdin;
 
 
 --
--- TOC entry 4761 (class 0 OID 17407)
--- Dependencies: 397
 -- Data for Name: fm_template_hours; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8665,8 +7984,6 @@ COPY fm_template_hours (id, template_id, record, owner, activity_id, activity_nu
 
 
 --
--- TOC entry 4762 (class 0 OID 17415)
--- Dependencies: 398
 -- Data for Name: fm_tenant; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8681,8 +7998,6 @@ COPY fm_tenant (id, member_of, entry_date, first_name, last_name, contact_phone,
 
 
 --
--- TOC entry 4763 (class 0 OID 17422)
--- Dependencies: 399
 -- Data for Name: fm_tenant_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8694,8 +8009,6 @@ COPY fm_tenant_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4765 (class 0 OID 17427)
--- Dependencies: 401
 -- Data for Name: fm_tenant_claim; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8704,8 +8017,6 @@ COPY fm_tenant_claim (id, project_id, tenant_id, amount, b_account_id, category,
 
 
 --
--- TOC entry 4766 (class 0 OID 17435)
--- Dependencies: 402
 -- Data for Name: fm_tenant_claim_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8714,8 +8025,6 @@ COPY fm_tenant_claim_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4768 (class 0 OID 17440)
--- Dependencies: 404
 -- Data for Name: fm_tenant_claim_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8724,8 +8033,6 @@ COPY fm_tenant_claim_history (history_id, history_record_id, history_appname, hi
 
 
 --
--- TOC entry 4770 (class 0 OID 17450)
--- Dependencies: 406
 -- Data for Name: fm_tts_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8734,18 +8041,19 @@ COPY fm_tts_budget (id, ticket_id, amount, period, remark, created_on, created_b
 
 
 --
--- TOC entry 4772 (class 0 OID 17460)
--- Dependencies: 408
 -- Data for Name: fm_tts_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
 COPY fm_tts_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp, publish) FROM stdin;
+1	1	tts	1002	O	1517584417		2018-02-02 15:13:37	\N
+2	1	tts	1002	S	Message 1 with high priority		2018-02-02 15:14:41	\N
+3	2	tts	1002	O	1517584533		2018-02-02 15:15:33	\N
+4	2	tts	1002	S	Message 2 with medium priority		2018-02-02 15:16:26	\N
+5	3	tts	1002	O	1517584650		2018-02-02 15:17:30	\N
 \.
 
 
 --
--- TOC entry 4774 (class 0 OID 17470)
--- Dependencies: 410
 -- Data for Name: fm_tts_payments; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8754,8 +8062,6 @@ COPY fm_tts_payments (id, ticket_id, amount, period, remark, created_on, created
 
 
 --
--- TOC entry 4775 (class 0 OID 17478)
--- Dependencies: 411
 -- Data for Name: fm_tts_priority; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8767,8 +8073,6 @@ COPY fm_tts_priority (id, name) FROM stdin;
 
 
 --
--- TOC entry 4777 (class 0 OID 17483)
--- Dependencies: 413
 -- Data for Name: fm_tts_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8777,28 +8081,28 @@ COPY fm_tts_status (id, name, color, closed, approved, in_progress, delivered, a
 
 
 --
--- TOC entry 4779 (class 0 OID 17489)
--- Dependencies: 415
 -- Data for Name: fm_tts_tickets; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
 COPY fm_tts_tickets (id, group_id, priority, user_id, assignedto, subject, cat_id, billable_hours, billable_rate, status, details, location_code, p_num, p_entity_id, p_cat_id, loc1, loc2, loc3, loc4, floor, address, contact_phone, contact_email, tenant_id, entry_date, finnish_date, finnish_date2, contact_id, order_id, ordered_by, vendor_id, contract_id, tax_code, external_project_id, unspsc_code, service_id, order_descr, b_account_id, ecodimb, budget, actual_cost, actual_cost_year, order_cat_id, building_part, order_dim1, publish_note, branch_id, modified_date, order_sent, order_received, order_received_amount, mail_recipients, file_attachments, delivery_address, continuous, order_deadline, order_deadline2, invoice_remark) FROM stdin;
+1	1000	1	1002	\N	Message 1 with high priority	4	\N	\N	O	Details of message 1	5000-01	\N	\N	\N	5000	01	\N	\N	\N	Location name	\N	\N	\N	1517584417	0	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0.00	\N	\N	\N	\N	1	\N	1517584481	\N	\N	0.00	\N	\N	\N	\N	\N	\N	\N
+2	1000	2	1002	\N	Message 2 with medium priority	5	\N	\N	O	Message 2	5000-01	\N	\N	\N	5000	01	\N	\N	\N	Location name	\N	\N	\N	1517584533	0	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0.00	\N	\N	\N	\N	1	\N	1517584586	\N	\N	0.00	\N	\N	\N	\N	\N	\N	\N
+3	1000	3	1002	\N	Message 3 with low priority	4	\N	\N	O	Message 3	5000-01	\N	\N	\N	5000	01	\N	\N	\N	Location name	\N	\N	\N	1517584650	0	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0.00	\N	\N	\N	\N	1	\N	1517584650	\N	\N	0.00	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
 --
--- TOC entry 4780 (class 0 OID 17498)
--- Dependencies: 416
 -- Data for Name: fm_tts_views; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
 COPY fm_tts_views (id, account_id, "time") FROM stdin;
+1	1002	1517584417
+2	1002	1517584547
+3	1002	1517584650
 \.
 
 
 --
--- TOC entry 4781 (class 0 OID 17501)
--- Dependencies: 417
 -- Data for Name: fm_unspsc_code; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8807,8 +8111,6 @@ COPY fm_unspsc_code (id, name) FROM stdin;
 
 
 --
--- TOC entry 4782 (class 0 OID 17504)
--- Dependencies: 418
 -- Data for Name: fm_vendor; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8818,8 +8120,6 @@ COPY fm_vendor (id, entry_date, org_name, email, contact_phone, klasse, member_o
 
 
 --
--- TOC entry 4783 (class 0 OID 17509)
--- Dependencies: 419
 -- Data for Name: fm_vendor_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8829,8 +8129,6 @@ COPY fm_vendor_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4785 (class 0 OID 17514)
--- Dependencies: 421
 -- Data for Name: fm_view_dataset; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8839,8 +8137,6 @@ COPY fm_view_dataset (id, view_name, dataset_name, owner_id, entry_date) FROM st
 
 
 --
--- TOC entry 4787 (class 0 OID 17520)
--- Dependencies: 423
 -- Data for Name: fm_view_dataset_report; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8849,8 +8145,6 @@ COPY fm_view_dataset_report (id, dataset_id, report_name, report_definition, own
 
 
 --
--- TOC entry 4788 (class 0 OID 17527)
--- Dependencies: 424
 -- Data for Name: fm_wo_h_deviation; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8859,8 +8153,6 @@ COPY fm_wo_h_deviation (workorder_id, hour_id, id, amount, descr, entry_date) FR
 
 
 --
--- TOC entry 4790 (class 0 OID 17535)
--- Dependencies: 426
 -- Data for Name: fm_wo_hours; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8869,8 +8161,6 @@ COPY fm_wo_hours (id, record, owner, workorder_id, activity_id, activity_num, gr
 
 
 --
--- TOC entry 4791 (class 0 OID 17543)
--- Dependencies: 427
 -- Data for Name: fm_wo_hours_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8879,8 +8169,6 @@ COPY fm_wo_hours_category (id, descr) FROM stdin;
 
 
 --
--- TOC entry 4708 (class 0 OID 17107)
--- Dependencies: 338
 -- Data for Name: fm_workorder; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8889,8 +8177,6 @@ COPY fm_workorder (id, num, project_id, user_id, access, category, chapter_id, e
 
 
 --
--- TOC entry 4721 (class 0 OID 17200)
--- Dependencies: 355
 -- Data for Name: fm_workorder_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8899,8 +8185,6 @@ COPY fm_workorder_budget (order_id, year, month, budget, contract_sum, combined_
 
 
 --
--- TOC entry 4793 (class 0 OID 17548)
--- Dependencies: 429
 -- Data for Name: fm_workorder_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8909,8 +8193,6 @@ COPY fm_workorder_history (history_id, history_record_id, history_appname, histo
 
 
 --
--- TOC entry 4709 (class 0 OID 17124)
--- Dependencies: 339
 -- Data for Name: fm_workorder_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8923,8 +8205,6 @@ closed	Closed	\N	\N	\N	\N	\N
 
 
 --
--- TOC entry 4794 (class 0 OID 17556)
--- Dependencies: 430
 -- Data for Name: phpgw_access_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -8993,12 +8273,76 @@ pa18sju96ck15ajq1hu8e07mk5                                      	sysadmin	10.0.2
 8rah5ep5652qat006mi2mb6ss3                                      	sysadmin	10.0.2.2	1516366728	0	1002
 4vodgkvmhv6nmif11aiaohjjn5                                      	sysadmin	::1	1516392399	0	1002
 jsnuv2gp6ak3uju9amp98qd0p1                                      	sysadmin	::1	1516568037	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515491600	0	1002
+bad login or password                                           	sysadmin	10.0.2.2	1515661010	0	0
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515661016	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515761058	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1516087534	0	1002
+bad login or password                                           	jp641	10.0.2.2	1516361586	0	0
+lgol7l5vfv2qdtic2i3amugn83                                      	sysadmin	10.0.2.2	1516361636	0	1002
+antevm5jinpes6anu71pve0ci2                                      	sysadmin	10.0.2.2	1516365293	0	1002
+jr492ofqtcben7gcgdc7ofpg66                                      	sysadmin	10.0.2.2	1516365301	0	1002
+ihgm6th0hjek1na57pdgk5rfq7                                      	sysadmin	10.0.2.2	1516365316	0	1002
+31ijm8icf0hh2f8fepft7m19i2                                      	sysadmin	10.0.2.2	1516365387	0	1002
+pa18sju96ck15ajq1hu8e07mk5                                      	sysadmin	10.0.2.2	1516365429	0	1002
+5v2p2utt6u4c8ku63drvqmmsr1                                      	sysadmin	10.0.2.2	1516365669	0	1002
+8rah5ep5652qat006mi2mb6ss3                                      	sysadmin	10.0.2.2	1516366728	0	1002
+4vodgkvmhv6nmif11aiaohjjn5                                      	sysadmin	::1	1516392399	0	1002
+grrn68o76lgivgjqoc03h95lg0                                      	sysadmin	::1	1516568020	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515491600	0	1002
+bad login or password                                           	sysadmin	10.0.2.2	1515661010	0	0
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515661016	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515761058	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1516087534	0	1002
+bad login or password                                           	jp641	10.0.2.2	1516361586	0	0
+lgol7l5vfv2qdtic2i3amugn83                                      	sysadmin	10.0.2.2	1516361636	0	1002
+antevm5jinpes6anu71pve0ci2                                      	sysadmin	10.0.2.2	1516365293	0	1002
+jr492ofqtcben7gcgdc7ofpg66                                      	sysadmin	10.0.2.2	1516365301	0	1002
+ihgm6th0hjek1na57pdgk5rfq7                                      	sysadmin	10.0.2.2	1516365316	0	1002
+31ijm8icf0hh2f8fepft7m19i2                                      	sysadmin	10.0.2.2	1516365387	0	1002
+pa18sju96ck15ajq1hu8e07mk5                                      	sysadmin	10.0.2.2	1516365429	0	1002
+5v2p2utt6u4c8ku63drvqmmsr1                                      	sysadmin	10.0.2.2	1516365669	0	1002
+8rah5ep5652qat006mi2mb6ss3                                      	sysadmin	10.0.2.2	1516366728	0	1002
+4vodgkvmhv6nmif11aiaohjjn5                                      	sysadmin	::1	1516392399	0	1002
+2h7tl3520askr57shr9pdnr412                                      	sysadmin	::1	1516568027	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515491600	0	1002
+bad login or password                                           	sysadmin	10.0.2.2	1515661010	0	0
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515661016	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515761058	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1516087534	0	1002
+bad login or password                                           	jp641	10.0.2.2	1516361586	0	0
+lgol7l5vfv2qdtic2i3amugn83                                      	sysadmin	10.0.2.2	1516361636	0	1002
+antevm5jinpes6anu71pve0ci2                                      	sysadmin	10.0.2.2	1516365293	0	1002
+jr492ofqtcben7gcgdc7ofpg66                                      	sysadmin	10.0.2.2	1516365301	0	1002
+ihgm6th0hjek1na57pdgk5rfq7                                      	sysadmin	10.0.2.2	1516365316	0	1002
+31ijm8icf0hh2f8fepft7m19i2                                      	sysadmin	10.0.2.2	1516365387	0	1002
+pa18sju96ck15ajq1hu8e07mk5                                      	sysadmin	10.0.2.2	1516365429	0	1002
+5v2p2utt6u4c8ku63drvqmmsr1                                      	sysadmin	10.0.2.2	1516365669	0	1002
+8rah5ep5652qat006mi2mb6ss3                                      	sysadmin	10.0.2.2	1516366728	0	1002
+4vodgkvmhv6nmif11aiaohjjn5                                      	sysadmin	::1	1516392399	0	1002
+gcsv8hrgvtkac6km2gts91h1c0                                      	sysadmin	::1	1516568033	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515491600	0	1002
+bad login or password                                           	sysadmin	10.0.2.2	1515661010	0	0
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515661016	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515761058	0	1002
+7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1516087534	0	1002
+bad login or password                                           	jp641	10.0.2.2	1516361586	0	0
+lgol7l5vfv2qdtic2i3amugn83                                      	sysadmin	10.0.2.2	1516361636	0	1002
+antevm5jinpes6anu71pve0ci2                                      	sysadmin	10.0.2.2	1516365293	0	1002
+jr492ofqtcben7gcgdc7ofpg66                                      	sysadmin	10.0.2.2	1516365301	0	1002
+ihgm6th0hjek1na57pdgk5rfq7                                      	sysadmin	10.0.2.2	1516365316	0	1002
+31ijm8icf0hh2f8fepft7m19i2                                      	sysadmin	10.0.2.2	1516365387	0	1002
+pa18sju96ck15ajq1hu8e07mk5                                      	sysadmin	10.0.2.2	1516365429	0	1002
+5v2p2utt6u4c8ku63drvqmmsr1                                      	sysadmin	10.0.2.2	1516365669	0	1002
+8rah5ep5652qat006mi2mb6ss3                                      	sysadmin	10.0.2.2	1516366728	0	1002
+4vodgkvmhv6nmif11aiaohjjn5                                      	sysadmin	::1	1516392399	0	1002
+jsnuv2gp6ak3uju9amp98qd0p1                                      	sysadmin	::1	1516568037	0	1002
+mve68hrpo5ldppgq18p25g50b7                                      	sysadmin	10.0.2.2	1517583869	0	1002
+mve68hrpo5ldppgq18p25g50b7                                      	sysadmin	10.0.2.2	1517584176	0	1002
 \.
 
 
 --
--- TOC entry 4796 (class 0 OID 17564)
--- Dependencies: 432
 -- Data for Name: phpgw_account_delegates; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9007,8 +8351,6 @@ COPY phpgw_account_delegates (delegate_id, account_id, owner_id, location_id, da
 
 
 --
--- TOC entry 4798 (class 0 OID 17573)
--- Dependencies: 434
 -- Data for Name: phpgw_accounts; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9021,13 +8363,11 @@ COPY phpgw_accounts (account_id, account_lid, account_pwd, account_firstname, ac
 1006	rental_in	{SSHA}uQ0HS43zzaXL6CUM010uvb/hFqn9Ow==	Rental	In	\N	\N	\N	\N	\N	A	-1	u	7	0
 1007	rental_out	{SSHA}u+ze+itaqkXHfb6bPdK6+v619SldwQ==	Rental	Out	\N	\N	\N	\N	\N	A	-1	u	8	0
 1008	rental_manager	{SSHA}COrtFIX65F5oNfc2Fur8wwX1xGW4sQ==	Rental	Manager	\N	\N	\N	\N	\N	A	-1	u	9	0
-1002	sysadmin	{SSHA}36GXgxF7YdWU4xUSsxHK8NlN41y2VA==	System	Administrator	\N	\N	1516568037	::1	\N	A	-1	u	3	0
+1002	sysadmin	{SSHA}36GXgxF7YdWU4xUSsxHK8NlN41y2VA==	System	Administrator	\N	\N	1517584176	10.0.2.2	\N	A	-1	u	3	0
 \.
 
 
 --
--- TOC entry 4799 (class 0 OID 17582)
--- Dependencies: 435
 -- Data for Name: phpgw_accounts_data; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9036,8 +8376,6 @@ COPY phpgw_accounts_data (account_id, account_data) FROM stdin;
 
 
 --
--- TOC entry 4800 (class 0 OID 17588)
--- Dependencies: 436
 -- Data for Name: phpgw_acl; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9758,12 +9096,726 @@ COPY phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, mod
 1005	15	-1	0	86	1515760639	-1
 1006	15	-1	0	87	1515760639	-1
 1007	15	-1	0	88	1515760639	-1
+1000	1	-1	0	5	1515488476	-1
+1002	1	-1	0	7	1515488476	-1
+1002	1	-1	0	3	1515488476	-1
+1001	31	-1	0	23	1515760717	-1
+1001	31	-1	0	31	1515760717	-1
+1001	31	-1	0	35	1515760717	-1
+1001	31	-1	0	65	1515760717	-1
+1001	31	-1	0	52	1515760717	-1
+1001	31	-1	0	101	1515760717	-1
+1001	31	-1	0	20	1515760717	-1
+1001	31	-1	0	69	1515760717	-1
+1001	31	-1	0	44	1515760717	-1
+1001	31	-1	0	37	1515760717	-1
+1001	1	-1	0	10	1515760717	-1
+1001	31	-1	0	56	1515760717	-1
+1001	31	-1	0	40	1515760717	-1
+1001	31	-1	0	53	1515760717	-1
+1001	31	-1	0	19	1515760717	-1
+1001	31	-1	0	57	1515760717	-1
+1001	31	-1	0	51	1515760717	-1
+1001	31	-1	0	92	1515760717	-1
+1001	31	-1	0	66	1515760717	-1
+1001	31	-1	0	30	1515760717	-1
+1001	31	-1	0	50	1515760717	-1
+1001	31	-1	0	33	1515760717	-1
+1001	31	-1	0	73	1515760717	-1
+1001	31	-1	0	95	1515760717	-1
+1001	31	-1	0	14	1515760717	-1
+1001	31	-1	0	46	1515760717	-1
+1001	31	-1	0	99	1515760717	-1
+1001	31	-1	0	48	1515760717	-1
+1001	31	-1	0	17	1515760717	-1
+1001	31	-1	0	28	1515760717	-1
+1001	31	-1	0	83	1515760717	-1
+1001	31	-1	0	36	1515760717	-1
+1001	31	-1	0	94	1515760717	-1
+1001	31	-1	0	15	1515760717	-1
+1001	31	-1	0	61	1515760717	-1
+1001	31	-1	0	86	1515760717	-1
+1001	31	-1	0	96	1515760717	-1
+1001	31	-1	0	13	1515760717	-1
+1001	31	-1	0	49	1515760717	-1
+1001	31	-1	0	22	1515760717	-1
+1001	31	-1	0	63	1515760717	-1
+1001	31	-1	0	87	1515760717	-1
+1001	31	-1	0	24	1515760717	-1
+1001	31	-1	0	91	1515760717	-1
+1001	31	-1	0	54	1515760717	-1
+1001	31	-1	0	98	1515760717	-1
+1001	1	-1	0	89	1515760717	-1
+1001	31	-1	0	100	1515760717	-1
+1001	1	-1	0	104	1515760717	-1
+1001	31	-1	0	47	1515760717	-1
+1001	31	-1	0	103	1515760717	-1
+1001	31	-1	0	42	1515760717	-1
+1001	31	-1	0	26	1515760717	-1
+1001	31	-1	0	11	1515760717	-1
+1001	1	-1	0	62	1515760717	-1
+1001	31	-1	0	90	1515760717	-1
+1001	31	-1	0	80	1515760717	-1
+1001	31	-1	0	18	1515760717	-1
+1001	31	-1	0	59	1515760717	-1
+1001	31	-1	0	78	1515760717	-1
+1001	31	-1	0	39	1515760717	-1
+1001	31	-1	0	16	1515760717	-1
+1001	31	-1	0	85	1515760717	-1
+1001	31	-1	0	34	1515760717	-1
+1001	31	-1	0	43	1515760717	-1
+1001	31	-1	0	82	1515760717	-1
+1001	31	-1	0	81	1515760717	-1
+1001	1	-1	0	76	1515760717	-1
+1001	31	-1	0	25	1515760717	-1
+1001	31	-1	0	32	1515760717	-1
+1001	31	-1	0	12	1515760717	-1
+1001	31	-1	0	58	1515760717	-1
+1001	31	-1	0	79	1515760717	-1
+1001	31	-1	0	41	1515760717	-1
+1001	31	-1	0	75	1515760717	-1
+1001	31	-1	0	102	1515760717	-1
+1001	31	-1	0	71	1515760717	-1
+1001	31	-1	0	29	1515760717	-1
+1001	31	-1	0	93	1515760717	-1
+1001	31	-1	0	105	1515760717	-1
+1001	31	-1	0	21	1515760717	-1
+1001	31	-1	0	72	1515760717	-1
+1001	31	-1	0	97	1515760717	-1
+1001	31	-1	0	38	1515760717	-1
+1001	31	-1	0	60	1515760717	-1
+1001	31	-1	0	74	1515760717	-1
+1001	1	-1	0	3	1515760717	-1
+1001	31	-1	0	70	1515760717	-1
+1001	31	-1	0	64	1515760717	-1
+1001	31	-1	0	45	1515760717	-1
+1001	31	-1	0	27	1515760717	-1
+1001	31	-1	0	55	1515760717	-1
+1001	31	-1	0	68	1515760717	-1
+1001	1	-1	0	67	1515760717	-1
+1001	31	-1	0	84	1515760717	-1
+1001	31	-1	0	88	1515760717	-1
+1003	1	-1	0	25	1515760639	-1
+1003	1	-1	0	32	1515760639	-1
+1003	1	-1	0	81	1515760639	-1
+1003	1	-1	0	34	1515760639	-1
+1003	1	-1	0	43	1515760639	-1
+1003	1	-1	0	82	1515760639	-1
+1003	1	-1	0	85	1515760639	-1
+1003	1	-1	0	10	1515760639	-1
+1003	1	-1	0	79	1515760639	-1
+1003	1	-1	0	58	1515760639	-1
+1003	1	-1	0	12	1515760639	-1
+1003	1	-1	0	18	1515760639	-1
+1003	1	-1	0	80	1515760639	-1
+1003	1	-1	0	26	1515760639	-1
+1003	1	-1	0	42	1515760639	-1
+1003	1	-1	0	16	1515760639	-1
+1003	1	-1	0	39	1515760639	-1
+1003	1	-1	0	59	1515760639	-1
+1003	1	-1	0	78	1515760639	-1
+1003	1	-1	0	54	1515760639	-1
+1003	1	-1	0	47	1515760639	-1
+1003	1	-1	0	61	1515760639	-1
+1003	1	-1	0	86	1515760639	-1
+1003	1	-1	0	24	1515760639	-1
+1003	1	-1	0	87	1515760639	-1
+1003	1	-1	0	22	1515760639	-1
+1003	1	-1	0	13	1515760639	-1
+1003	1	-1	0	49	1515760639	-1
+1003	1	-1	0	27	1515760639	-1
+1003	1	-1	0	48	1515760639	-1
+1003	1	-1	0	55	1515760639	-1
+1003	1	-1	0	46	1515760639	-1
+1003	1	-1	0	14	1515760639	-1
+1003	1	-1	0	45	1515760639	-1
+1003	1	-1	0	88	1515760639	-1
+1003	1	-1	0	15	1515760639	-1
+1003	1	-1	0	84	1515760639	-1
+1003	1	-1	0	36	1515760639	-1
+1003	1	-1	0	17	1515760639	-1
+1003	1	-1	0	28	1515760639	-1
+1003	1	-1	0	83	1515760639	-1
+1003	1	-1	0	30	1515760639	-1
+1003	1	-1	0	38	1515760639	-1
+1003	1	-1	0	33	1515760639	-1
+1003	1	-1	0	50	1515760639	-1
+1003	1	-1	0	60	1515760639	-1
+1003	1	-1	0	53	1515760639	-1
+1003	1	-1	0	40	1515760639	-1
+1003	1	-1	0	56	1515760639	-1
+1003	1	-1	0	51	1515760639	-1
+1003	1	-1	0	21	1515760639	-1
+1003	1	-1	0	57	1515760639	-1
+1003	1	-1	0	29	1515760639	-1
+1003	1	-1	0	19	1515760639	-1
+1003	1	-1	0	20	1515760639	-1
+1003	1	-1	0	52	1515760639	-1
+1003	1	-1	0	76	1515760639	-1
+1003	1	-1	0	31	1515760639	-1
+1003	1	-1	0	35	1515760639	-1
+1003	1	-1	0	23	1515760639	-1
+1003	1	-1	0	41	1515760639	-1
+1003	1	-1	0	7	1515760639	-1
+1003	1	-1	0	37	1515760639	-1
+1003	1	-1	0	5	1515760639	-1
+1003	1	-1	0	44	1515760639	-1
+1004	31	-1	0	87	1515760639	-1
+1004	1	-1	0	3	1515760639	-1
+1004	31	-1	0	78	1515760639	-1
+1004	31	-1	0	80	1515760639	-1
+1004	31	-1	0	81	1515760639	-1
+1004	31	-1	0	85	1515760639	-1
+1004	31	-1	0	82	1515760639	-1
+1004	31	-1	0	86	1515760639	-1
+1004	31	-1	0	84	1515760639	-1
+1004	31	-1	0	79	1515760639	-1
+1004	31	-1	0	88	1515760639	-1
+1004	31	-1	0	83	1515760639	-1
+1005	15	-1	0	86	1515760639	-1
+1006	15	-1	0	87	1515760639	-1
+1007	15	-1	0	88	1515760639	-1
+1000	1	-1	0	5	1515488476	-1
+1002	1	-1	0	7	1515488476	-1
+1002	1	-1	0	3	1515488476	-1
+1001	31	-1	0	23	1515760717	-1
+1001	31	-1	0	31	1515760717	-1
+1001	31	-1	0	35	1515760717	-1
+1001	31	-1	0	65	1515760717	-1
+1001	31	-1	0	52	1515760717	-1
+1001	31	-1	0	101	1515760717	-1
+1001	31	-1	0	20	1515760717	-1
+1001	31	-1	0	69	1515760717	-1
+1001	31	-1	0	44	1515760717	-1
+1001	31	-1	0	37	1515760717	-1
+1001	1	-1	0	10	1515760717	-1
+1001	31	-1	0	56	1515760717	-1
+1001	31	-1	0	40	1515760717	-1
+1001	31	-1	0	53	1515760717	-1
+1001	31	-1	0	19	1515760717	-1
+1001	31	-1	0	57	1515760717	-1
+1001	31	-1	0	51	1515760717	-1
+1001	31	-1	0	92	1515760717	-1
+1001	31	-1	0	66	1515760717	-1
+1001	31	-1	0	30	1515760717	-1
+1001	31	-1	0	50	1515760717	-1
+1001	31	-1	0	33	1515760717	-1
+1001	31	-1	0	73	1515760717	-1
+1001	31	-1	0	95	1515760717	-1
+1001	31	-1	0	14	1515760717	-1
+1001	31	-1	0	46	1515760717	-1
+1001	31	-1	0	99	1515760717	-1
+1001	31	-1	0	48	1515760717	-1
+1001	31	-1	0	17	1515760717	-1
+1001	31	-1	0	28	1515760717	-1
+1001	31	-1	0	83	1515760717	-1
+1001	31	-1	0	36	1515760717	-1
+1001	31	-1	0	94	1515760717	-1
+1001	31	-1	0	15	1515760717	-1
+1001	31	-1	0	61	1515760717	-1
+1001	31	-1	0	86	1515760717	-1
+1001	31	-1	0	96	1515760717	-1
+1001	31	-1	0	13	1515760717	-1
+1001	31	-1	0	49	1515760717	-1
+1001	31	-1	0	22	1515760717	-1
+1001	31	-1	0	63	1515760717	-1
+1001	31	-1	0	87	1515760717	-1
+1001	31	-1	0	24	1515760717	-1
+1001	31	-1	0	91	1515760717	-1
+1001	31	-1	0	54	1515760717	-1
+1001	31	-1	0	98	1515760717	-1
+1001	1	-1	0	89	1515760717	-1
+1001	31	-1	0	100	1515760717	-1
+1001	1	-1	0	104	1515760717	-1
+1001	31	-1	0	47	1515760717	-1
+1001	31	-1	0	103	1515760717	-1
+1001	31	-1	0	42	1515760717	-1
+1001	31	-1	0	26	1515760717	-1
+1001	31	-1	0	11	1515760717	-1
+1001	1	-1	0	62	1515760717	-1
+1001	31	-1	0	90	1515760717	-1
+1001	31	-1	0	80	1515760717	-1
+1001	31	-1	0	18	1515760717	-1
+1001	31	-1	0	59	1515760717	-1
+1001	31	-1	0	78	1515760717	-1
+1001	31	-1	0	39	1515760717	-1
+1001	31	-1	0	16	1515760717	-1
+1001	31	-1	0	85	1515760717	-1
+1001	31	-1	0	34	1515760717	-1
+1001	31	-1	0	43	1515760717	-1
+1001	31	-1	0	82	1515760717	-1
+1001	31	-1	0	81	1515760717	-1
+1001	1	-1	0	76	1515760717	-1
+1001	31	-1	0	25	1515760717	-1
+1001	31	-1	0	32	1515760717	-1
+1001	31	-1	0	12	1515760717	-1
+1001	31	-1	0	58	1515760717	-1
+1001	31	-1	0	79	1515760717	-1
+1001	31	-1	0	41	1515760717	-1
+1001	31	-1	0	75	1515760717	-1
+1001	31	-1	0	102	1515760717	-1
+1001	31	-1	0	71	1515760717	-1
+1001	31	-1	0	29	1515760717	-1
+1001	31	-1	0	93	1515760717	-1
+1001	31	-1	0	105	1515760717	-1
+1001	31	-1	0	21	1515760717	-1
+1001	31	-1	0	72	1515760717	-1
+1001	31	-1	0	97	1515760717	-1
+1001	31	-1	0	38	1515760717	-1
+1001	31	-1	0	60	1515760717	-1
+1001	31	-1	0	74	1515760717	-1
+1001	1	-1	0	3	1515760717	-1
+1001	31	-1	0	70	1515760717	-1
+1001	31	-1	0	64	1515760717	-1
+1001	31	-1	0	45	1515760717	-1
+1001	31	-1	0	27	1515760717	-1
+1001	31	-1	0	55	1515760717	-1
+1001	31	-1	0	68	1515760717	-1
+1001	1	-1	0	67	1515760717	-1
+1001	31	-1	0	84	1515760717	-1
+1001	31	-1	0	88	1515760717	-1
+1003	1	-1	0	25	1515760639	-1
+1003	1	-1	0	32	1515760639	-1
+1003	1	-1	0	81	1515760639	-1
+1003	1	-1	0	34	1515760639	-1
+1003	1	-1	0	43	1515760639	-1
+1003	1	-1	0	82	1515760639	-1
+1003	1	-1	0	85	1515760639	-1
+1003	1	-1	0	10	1515760639	-1
+1003	1	-1	0	79	1515760639	-1
+1003	1	-1	0	58	1515760639	-1
+1003	1	-1	0	12	1515760639	-1
+1003	1	-1	0	18	1515760639	-1
+1003	1	-1	0	80	1515760639	-1
+1003	1	-1	0	26	1515760639	-1
+1003	1	-1	0	42	1515760639	-1
+1003	1	-1	0	16	1515760639	-1
+1003	1	-1	0	39	1515760639	-1
+1003	1	-1	0	59	1515760639	-1
+1003	1	-1	0	78	1515760639	-1
+1003	1	-1	0	54	1515760639	-1
+1003	1	-1	0	47	1515760639	-1
+1003	1	-1	0	61	1515760639	-1
+1003	1	-1	0	86	1515760639	-1
+1003	1	-1	0	24	1515760639	-1
+1003	1	-1	0	87	1515760639	-1
+1003	1	-1	0	22	1515760639	-1
+1003	1	-1	0	13	1515760639	-1
+1003	1	-1	0	49	1515760639	-1
+1003	1	-1	0	27	1515760639	-1
+1003	1	-1	0	48	1515760639	-1
+1003	1	-1	0	55	1515760639	-1
+1003	1	-1	0	46	1515760639	-1
+1003	1	-1	0	14	1515760639	-1
+1003	1	-1	0	45	1515760639	-1
+1003	1	-1	0	88	1515760639	-1
+1003	1	-1	0	15	1515760639	-1
+1003	1	-1	0	84	1515760639	-1
+1003	1	-1	0	36	1515760639	-1
+1003	1	-1	0	17	1515760639	-1
+1003	1	-1	0	28	1515760639	-1
+1003	1	-1	0	83	1515760639	-1
+1003	1	-1	0	30	1515760639	-1
+1003	1	-1	0	38	1515760639	-1
+1003	1	-1	0	33	1515760639	-1
+1003	1	-1	0	50	1515760639	-1
+1003	1	-1	0	60	1515760639	-1
+1003	1	-1	0	53	1515760639	-1
+1003	1	-1	0	40	1515760639	-1
+1003	1	-1	0	56	1515760639	-1
+1003	1	-1	0	51	1515760639	-1
+1003	1	-1	0	21	1515760639	-1
+1003	1	-1	0	57	1515760639	-1
+1003	1	-1	0	29	1515760639	-1
+1003	1	-1	0	19	1515760639	-1
+1003	1	-1	0	20	1515760639	-1
+1003	1	-1	0	52	1515760639	-1
+1003	1	-1	0	76	1515760639	-1
+1003	1	-1	0	31	1515760639	-1
+1003	1	-1	0	35	1515760639	-1
+1003	1	-1	0	23	1515760639	-1
+1003	1	-1	0	41	1515760639	-1
+1003	1	-1	0	7	1515760639	-1
+1003	1	-1	0	37	1515760639	-1
+1003	1	-1	0	5	1515760639	-1
+1003	1	-1	0	44	1515760639	-1
+1004	31	-1	0	87	1515760639	-1
+1004	1	-1	0	3	1515760639	-1
+1004	31	-1	0	78	1515760639	-1
+1004	31	-1	0	80	1515760639	-1
+1004	31	-1	0	81	1515760639	-1
+1004	31	-1	0	85	1515760639	-1
+1004	31	-1	0	82	1515760639	-1
+1004	31	-1	0	86	1515760639	-1
+1004	31	-1	0	84	1515760639	-1
+1004	31	-1	0	79	1515760639	-1
+1004	31	-1	0	88	1515760639	-1
+1004	31	-1	0	83	1515760639	-1
+1005	15	-1	0	86	1515760639	-1
+1006	15	-1	0	87	1515760639	-1
+1007	15	-1	0	88	1515760639	-1
+1000	1	-1	0	5	1515488476	-1
+1002	1	-1	0	7	1515488476	-1
+1002	1	-1	0	3	1515488476	-1
+1001	31	-1	0	23	1515760717	-1
+1001	31	-1	0	31	1515760717	-1
+1001	31	-1	0	35	1515760717	-1
+1001	31	-1	0	65	1515760717	-1
+1001	31	-1	0	52	1515760717	-1
+1001	31	-1	0	101	1515760717	-1
+1001	31	-1	0	20	1515760717	-1
+1001	31	-1	0	69	1515760717	-1
+1001	31	-1	0	44	1515760717	-1
+1001	31	-1	0	37	1515760717	-1
+1001	1	-1	0	10	1515760717	-1
+1001	31	-1	0	56	1515760717	-1
+1001	31	-1	0	40	1515760717	-1
+1001	31	-1	0	53	1515760717	-1
+1001	31	-1	0	19	1515760717	-1
+1001	31	-1	0	57	1515760717	-1
+1001	31	-1	0	51	1515760717	-1
+1001	31	-1	0	92	1515760717	-1
+1001	31	-1	0	66	1515760717	-1
+1001	31	-1	0	30	1515760717	-1
+1001	31	-1	0	50	1515760717	-1
+1001	31	-1	0	33	1515760717	-1
+1001	31	-1	0	73	1515760717	-1
+1001	31	-1	0	95	1515760717	-1
+1001	31	-1	0	14	1515760717	-1
+1001	31	-1	0	46	1515760717	-1
+1001	31	-1	0	99	1515760717	-1
+1001	31	-1	0	48	1515760717	-1
+1001	31	-1	0	17	1515760717	-1
+1001	31	-1	0	28	1515760717	-1
+1001	31	-1	0	83	1515760717	-1
+1001	31	-1	0	36	1515760717	-1
+1001	31	-1	0	94	1515760717	-1
+1001	31	-1	0	15	1515760717	-1
+1001	31	-1	0	61	1515760717	-1
+1001	31	-1	0	86	1515760717	-1
+1001	31	-1	0	96	1515760717	-1
+1001	31	-1	0	13	1515760717	-1
+1001	31	-1	0	49	1515760717	-1
+1001	31	-1	0	22	1515760717	-1
+1001	31	-1	0	63	1515760717	-1
+1001	31	-1	0	87	1515760717	-1
+1001	31	-1	0	24	1515760717	-1
+1001	31	-1	0	91	1515760717	-1
+1001	31	-1	0	54	1515760717	-1
+1001	31	-1	0	98	1515760717	-1
+1001	1	-1	0	89	1515760717	-1
+1001	31	-1	0	100	1515760717	-1
+1001	1	-1	0	104	1515760717	-1
+1001	31	-1	0	47	1515760717	-1
+1001	31	-1	0	103	1515760717	-1
+1001	31	-1	0	42	1515760717	-1
+1001	31	-1	0	26	1515760717	-1
+1001	31	-1	0	11	1515760717	-1
+1001	1	-1	0	62	1515760717	-1
+1001	31	-1	0	90	1515760717	-1
+1001	31	-1	0	80	1515760717	-1
+1001	31	-1	0	18	1515760717	-1
+1001	31	-1	0	59	1515760717	-1
+1001	31	-1	0	78	1515760717	-1
+1001	31	-1	0	39	1515760717	-1
+1001	31	-1	0	16	1515760717	-1
+1001	31	-1	0	85	1515760717	-1
+1001	31	-1	0	34	1515760717	-1
+1001	31	-1	0	43	1515760717	-1
+1001	31	-1	0	82	1515760717	-1
+1001	31	-1	0	81	1515760717	-1
+1001	1	-1	0	76	1515760717	-1
+1001	31	-1	0	25	1515760717	-1
+1001	31	-1	0	32	1515760717	-1
+1001	31	-1	0	12	1515760717	-1
+1001	31	-1	0	58	1515760717	-1
+1001	31	-1	0	79	1515760717	-1
+1001	31	-1	0	41	1515760717	-1
+1001	31	-1	0	75	1515760717	-1
+1001	31	-1	0	102	1515760717	-1
+1001	31	-1	0	71	1515760717	-1
+1001	31	-1	0	29	1515760717	-1
+1001	31	-1	0	93	1515760717	-1
+1001	31	-1	0	105	1515760717	-1
+1001	31	-1	0	21	1515760717	-1
+1001	31	-1	0	72	1515760717	-1
+1001	31	-1	0	97	1515760717	-1
+1001	31	-1	0	38	1515760717	-1
+1001	31	-1	0	60	1515760717	-1
+1001	31	-1	0	74	1515760717	-1
+1001	1	-1	0	3	1515760717	-1
+1001	31	-1	0	70	1515760717	-1
+1001	31	-1	0	64	1515760717	-1
+1001	31	-1	0	45	1515760717	-1
+1001	31	-1	0	27	1515760717	-1
+1001	31	-1	0	55	1515760717	-1
+1001	31	-1	0	68	1515760717	-1
+1001	1	-1	0	67	1515760717	-1
+1001	31	-1	0	84	1515760717	-1
+1001	31	-1	0	88	1515760717	-1
+1003	1	-1	0	25	1515760639	-1
+1003	1	-1	0	32	1515760639	-1
+1003	1	-1	0	81	1515760639	-1
+1003	1	-1	0	34	1515760639	-1
+1003	1	-1	0	43	1515760639	-1
+1003	1	-1	0	82	1515760639	-1
+1003	1	-1	0	85	1515760639	-1
+1003	1	-1	0	10	1515760639	-1
+1003	1	-1	0	79	1515760639	-1
+1003	1	-1	0	58	1515760639	-1
+1003	1	-1	0	12	1515760639	-1
+1003	1	-1	0	18	1515760639	-1
+1003	1	-1	0	80	1515760639	-1
+1003	1	-1	0	26	1515760639	-1
+1003	1	-1	0	42	1515760639	-1
+1003	1	-1	0	16	1515760639	-1
+1003	1	-1	0	39	1515760639	-1
+1003	1	-1	0	59	1515760639	-1
+1003	1	-1	0	78	1515760639	-1
+1003	1	-1	0	54	1515760639	-1
+1003	1	-1	0	47	1515760639	-1
+1003	1	-1	0	61	1515760639	-1
+1003	1	-1	0	86	1515760639	-1
+1003	1	-1	0	24	1515760639	-1
+1003	1	-1	0	87	1515760639	-1
+1003	1	-1	0	22	1515760639	-1
+1003	1	-1	0	13	1515760639	-1
+1003	1	-1	0	49	1515760639	-1
+1003	1	-1	0	27	1515760639	-1
+1003	1	-1	0	48	1515760639	-1
+1003	1	-1	0	55	1515760639	-1
+1003	1	-1	0	46	1515760639	-1
+1003	1	-1	0	14	1515760639	-1
+1003	1	-1	0	45	1515760639	-1
+1003	1	-1	0	88	1515760639	-1
+1003	1	-1	0	15	1515760639	-1
+1003	1	-1	0	84	1515760639	-1
+1003	1	-1	0	36	1515760639	-1
+1003	1	-1	0	17	1515760639	-1
+1003	1	-1	0	28	1515760639	-1
+1003	1	-1	0	83	1515760639	-1
+1003	1	-1	0	30	1515760639	-1
+1003	1	-1	0	38	1515760639	-1
+1003	1	-1	0	33	1515760639	-1
+1003	1	-1	0	50	1515760639	-1
+1003	1	-1	0	60	1515760639	-1
+1003	1	-1	0	53	1515760639	-1
+1003	1	-1	0	40	1515760639	-1
+1003	1	-1	0	56	1515760639	-1
+1003	1	-1	0	51	1515760639	-1
+1003	1	-1	0	21	1515760639	-1
+1003	1	-1	0	57	1515760639	-1
+1003	1	-1	0	29	1515760639	-1
+1003	1	-1	0	19	1515760639	-1
+1003	1	-1	0	20	1515760639	-1
+1003	1	-1	0	52	1515760639	-1
+1003	1	-1	0	76	1515760639	-1
+1003	1	-1	0	31	1515760639	-1
+1003	1	-1	0	35	1515760639	-1
+1003	1	-1	0	23	1515760639	-1
+1003	1	-1	0	41	1515760639	-1
+1003	1	-1	0	7	1515760639	-1
+1003	1	-1	0	37	1515760639	-1
+1003	1	-1	0	5	1515760639	-1
+1003	1	-1	0	44	1515760639	-1
+1004	31	-1	0	87	1515760639	-1
+1004	1	-1	0	3	1515760639	-1
+1004	31	-1	0	78	1515760639	-1
+1004	31	-1	0	80	1515760639	-1
+1004	31	-1	0	81	1515760639	-1
+1004	31	-1	0	85	1515760639	-1
+1004	31	-1	0	82	1515760639	-1
+1004	31	-1	0	86	1515760639	-1
+1004	31	-1	0	84	1515760639	-1
+1004	31	-1	0	79	1515760639	-1
+1004	31	-1	0	88	1515760639	-1
+1004	31	-1	0	83	1515760639	-1
+1005	15	-1	0	86	1515760639	-1
+1006	15	-1	0	87	1515760639	-1
+1007	15	-1	0	88	1515760639	-1
+1000	1	-1	0	5	1515488476	-1
+1002	1	-1	0	7	1515488476	-1
+1002	1	-1	0	3	1515488476	-1
+1001	31	-1	0	23	1515760717	-1
+1001	31	-1	0	31	1515760717	-1
+1001	31	-1	0	35	1515760717	-1
+1001	31	-1	0	65	1515760717	-1
+1001	31	-1	0	52	1515760717	-1
+1001	31	-1	0	101	1515760717	-1
+1001	31	-1	0	20	1515760717	-1
+1001	31	-1	0	69	1515760717	-1
+1001	31	-1	0	44	1515760717	-1
+1001	31	-1	0	37	1515760717	-1
+1001	1	-1	0	10	1515760717	-1
+1001	31	-1	0	56	1515760717	-1
+1001	31	-1	0	40	1515760717	-1
+1001	31	-1	0	53	1515760717	-1
+1001	31	-1	0	19	1515760717	-1
+1001	31	-1	0	57	1515760717	-1
+1001	31	-1	0	51	1515760717	-1
+1001	31	-1	0	92	1515760717	-1
+1001	31	-1	0	66	1515760717	-1
+1001	31	-1	0	30	1515760717	-1
+1001	31	-1	0	50	1515760717	-1
+1001	31	-1	0	33	1515760717	-1
+1001	31	-1	0	73	1515760717	-1
+1001	31	-1	0	95	1515760717	-1
+1001	31	-1	0	14	1515760717	-1
+1001	31	-1	0	46	1515760717	-1
+1001	31	-1	0	99	1515760717	-1
+1001	31	-1	0	48	1515760717	-1
+1001	31	-1	0	17	1515760717	-1
+1001	31	-1	0	28	1515760717	-1
+1001	31	-1	0	83	1515760717	-1
+1001	31	-1	0	36	1515760717	-1
+1001	31	-1	0	94	1515760717	-1
+1001	31	-1	0	15	1515760717	-1
+1001	31	-1	0	61	1515760717	-1
+1001	31	-1	0	86	1515760717	-1
+1001	31	-1	0	96	1515760717	-1
+1001	31	-1	0	13	1515760717	-1
+1001	31	-1	0	49	1515760717	-1
+1001	31	-1	0	22	1515760717	-1
+1001	31	-1	0	63	1515760717	-1
+1001	31	-1	0	87	1515760717	-1
+1001	31	-1	0	24	1515760717	-1
+1001	31	-1	0	91	1515760717	-1
+1001	31	-1	0	54	1515760717	-1
+1001	31	-1	0	98	1515760717	-1
+1001	1	-1	0	89	1515760717	-1
+1001	31	-1	0	100	1515760717	-1
+1001	1	-1	0	104	1515760717	-1
+1001	31	-1	0	47	1515760717	-1
+1001	31	-1	0	103	1515760717	-1
+1001	31	-1	0	42	1515760717	-1
+1001	31	-1	0	26	1515760717	-1
+1001	31	-1	0	11	1515760717	-1
+1001	1	-1	0	62	1515760717	-1
+1001	31	-1	0	90	1515760717	-1
+1001	31	-1	0	80	1515760717	-1
+1001	31	-1	0	18	1515760717	-1
+1001	31	-1	0	59	1515760717	-1
+1001	31	-1	0	78	1515760717	-1
+1001	31	-1	0	39	1515760717	-1
+1001	31	-1	0	16	1515760717	-1
+1001	31	-1	0	85	1515760717	-1
+1001	31	-1	0	34	1515760717	-1
+1001	31	-1	0	43	1515760717	-1
+1001	31	-1	0	82	1515760717	-1
+1001	31	-1	0	81	1515760717	-1
+1001	1	-1	0	76	1515760717	-1
+1001	31	-1	0	25	1515760717	-1
+1001	31	-1	0	32	1515760717	-1
+1001	31	-1	0	12	1515760717	-1
+1001	31	-1	0	58	1515760717	-1
+1001	31	-1	0	79	1515760717	-1
+1001	31	-1	0	41	1515760717	-1
+1001	31	-1	0	75	1515760717	-1
+1001	31	-1	0	102	1515760717	-1
+1001	31	-1	0	71	1515760717	-1
+1001	31	-1	0	29	1515760717	-1
+1001	31	-1	0	93	1515760717	-1
+1001	31	-1	0	105	1515760717	-1
+1001	31	-1	0	21	1515760717	-1
+1001	31	-1	0	72	1515760717	-1
+1001	31	-1	0	97	1515760717	-1
+1001	31	-1	0	38	1515760717	-1
+1001	31	-1	0	60	1515760717	-1
+1001	31	-1	0	74	1515760717	-1
+1001	1	-1	0	3	1515760717	-1
+1001	31	-1	0	70	1515760717	-1
+1001	31	-1	0	64	1515760717	-1
+1001	31	-1	0	45	1515760717	-1
+1001	31	-1	0	27	1515760717	-1
+1001	31	-1	0	55	1515760717	-1
+1001	31	-1	0	68	1515760717	-1
+1001	1	-1	0	67	1515760717	-1
+1001	31	-1	0	84	1515760717	-1
+1001	31	-1	0	88	1515760717	-1
+1003	1	-1	0	25	1515760639	-1
+1003	1	-1	0	32	1515760639	-1
+1003	1	-1	0	81	1515760639	-1
+1003	1	-1	0	34	1515760639	-1
+1003	1	-1	0	43	1515760639	-1
+1003	1	-1	0	82	1515760639	-1
+1003	1	-1	0	85	1515760639	-1
+1003	1	-1	0	10	1515760639	-1
+1003	1	-1	0	79	1515760639	-1
+1003	1	-1	0	58	1515760639	-1
+1003	1	-1	0	12	1515760639	-1
+1003	1	-1	0	18	1515760639	-1
+1003	1	-1	0	80	1515760639	-1
+1003	1	-1	0	26	1515760639	-1
+1003	1	-1	0	42	1515760639	-1
+1003	1	-1	0	16	1515760639	-1
+1003	1	-1	0	39	1515760639	-1
+1003	1	-1	0	59	1515760639	-1
+1003	1	-1	0	78	1515760639	-1
+1003	1	-1	0	54	1515760639	-1
+1003	1	-1	0	47	1515760639	-1
+1003	1	-1	0	61	1515760639	-1
+1003	1	-1	0	86	1515760639	-1
+1003	1	-1	0	24	1515760639	-1
+1003	1	-1	0	87	1515760639	-1
+1003	1	-1	0	22	1515760639	-1
+1003	1	-1	0	13	1515760639	-1
+1003	1	-1	0	49	1515760639	-1
+1003	1	-1	0	27	1515760639	-1
+1003	1	-1	0	48	1515760639	-1
+1003	1	-1	0	55	1515760639	-1
+1003	1	-1	0	46	1515760639	-1
+1003	1	-1	0	14	1515760639	-1
+1003	1	-1	0	45	1515760639	-1
+1003	1	-1	0	88	1515760639	-1
+1003	1	-1	0	15	1515760639	-1
+1003	1	-1	0	84	1515760639	-1
+1003	1	-1	0	36	1515760639	-1
+1003	1	-1	0	17	1515760639	-1
+1003	1	-1	0	28	1515760639	-1
+1003	1	-1	0	83	1515760639	-1
+1003	1	-1	0	30	1515760639	-1
+1003	1	-1	0	38	1515760639	-1
+1003	1	-1	0	33	1515760639	-1
+1003	1	-1	0	50	1515760639	-1
+1003	1	-1	0	60	1515760639	-1
+1003	1	-1	0	53	1515760639	-1
+1003	1	-1	0	40	1515760639	-1
+1003	1	-1	0	56	1515760639	-1
+1003	1	-1	0	51	1515760639	-1
+1003	1	-1	0	21	1515760639	-1
+1003	1	-1	0	57	1515760639	-1
+1003	1	-1	0	29	1515760639	-1
+1003	1	-1	0	19	1515760639	-1
+1003	1	-1	0	20	1515760639	-1
+1003	1	-1	0	52	1515760639	-1
+1003	1	-1	0	76	1515760639	-1
+1003	1	-1	0	31	1515760639	-1
+1003	1	-1	0	35	1515760639	-1
+1003	1	-1	0	23	1515760639	-1
+1003	1	-1	0	41	1515760639	-1
+1003	1	-1	0	7	1515760639	-1
+1003	1	-1	0	37	1515760639	-1
+1003	1	-1	0	5	1515760639	-1
+1003	1	-1	0	44	1515760639	-1
+1004	31	-1	0	87	1515760639	-1
+1004	1	-1	0	3	1515760639	-1
+1004	31	-1	0	78	1515760639	-1
+1004	31	-1	0	80	1515760639	-1
+1004	31	-1	0	81	1515760639	-1
+1004	31	-1	0	85	1515760639	-1
+1004	31	-1	0	82	1515760639	-1
+1004	31	-1	0	86	1515760639	-1
+1004	31	-1	0	84	1515760639	-1
+1004	31	-1	0	79	1515760639	-1
+1004	31	-1	0	88	1515760639	-1
+1004	31	-1	0	83	1515760639	-1
+1005	15	-1	0	86	1515760639	-1
+1006	15	-1	0	87	1515760639	-1
+1007	15	-1	0	88	1515760639	-1
 \.
 
 
 --
--- TOC entry 4802 (class 0 OID 17596)
--- Dependencies: 438
 -- Data for Name: phpgw_applications; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9781,20 +9833,16 @@ COPY phpgw_applications (app_id, app_name, app_enabled, app_order, app_tables, a
 
 
 --
--- TOC entry 4803 (class 0 OID 17604)
--- Dependencies: 439
 -- Data for Name: phpgw_async; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
 COPY phpgw_async (id, next, times, method, data, account_id) FROM stdin;
-rental_populate_workbench_notifications	1516579200	a:1:{s:3:"day";s:3:"*/1";}	rental.sonotification.populate_workbench_notifications	a:1:{s:4:"time";i:1516579200;}	0
-rental_run_adjustments	1516579200	a:1:{s:3:"day";s:3:"*/1";}	rental.soadjustment.run_adjustments	a:1:{s:4:"time";i:1516579200;}	0
+rental_populate_workbench_notifications	1517616000	a:1:{s:3:"day";s:3:"*/1";}	rental.sonotification.populate_workbench_notifications	a:1:{s:4:"time";i:1517616000;}	0
+rental_run_adjustments	1517616000	a:1:{s:3:"day";s:3:"*/1";}	rental.soadjustment.run_adjustments	a:1:{s:4:"time";i:1517616000;}	0
 \.
 
 
 --
--- TOC entry 4804 (class 0 OID 17611)
--- Dependencies: 440
 -- Data for Name: phpgw_cache_user; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9803,8 +9851,6 @@ COPY phpgw_cache_user (item_key, user_id, cache_data, lastmodts) FROM stdin;
 
 
 --
--- TOC entry 4806 (class 0 OID 17619)
--- Dependencies: 442
 -- Data for Name: phpgw_categories; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9812,12 +9858,12 @@ COPY phpgw_categories (cat_id, cat_main, cat_parent, cat_level, cat_owner, cat_a
 1	1	0	0	-1	public	property	Picture	Picture		1515760210	30	0
 2	2	0	0	-1	public	property	Report	Report		1515760210	30	0
 3	3	0	0	-1	public	property	Instruction	Instruction		1515760210	30	0
+4	4	0	0	-1	public	property	Test category 1	Description of category 1		1517584295	26	1
+5	5	0	0	-1	public	property	Test category 2	Description of category 2		1517584335	26	1
 \.
 
 
 --
--- TOC entry 4807 (class 0 OID 17633)
--- Dependencies: 443
 -- Data for Name: phpgw_config; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9864,8 +9910,6 @@ mobilefrontend	usecookies	True
 
 
 --
--- TOC entry 4808 (class 0 OID 17639)
--- Dependencies: 444
 -- Data for Name: phpgw_config2_attrib; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9888,8 +9932,6 @@ COPY phpgw_config2_attrib (section_id, id, input_type, name, descr) FROM stdin;
 
 
 --
--- TOC entry 4809 (class 0 OID 17642)
--- Dependencies: 445
 -- Data for Name: phpgw_config2_choice; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9903,8 +9945,6 @@ COPY phpgw_config2_choice (section_id, attrib_id, id, value) FROM stdin;
 
 
 --
--- TOC entry 4810 (class 0 OID 17645)
--- Dependencies: 446
 -- Data for Name: phpgw_config2_section; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9916,8 +9956,6 @@ COPY phpgw_config2_section (id, location_id, name, descr, data) FROM stdin;
 
 
 --
--- TOC entry 4811 (class 0 OID 17651)
--- Dependencies: 447
 -- Data for Name: phpgw_config2_value; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9926,8 +9964,6 @@ COPY phpgw_config2_value (section_id, attrib_id, id, value) FROM stdin;
 
 
 --
--- TOC entry 4813 (class 0 OID 17659)
--- Dependencies: 449
 -- Data for Name: phpgw_contact; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9945,8 +9981,6 @@ COPY phpgw_contact (contact_id, owner, access, cat_id, contact_type_id) FROM std
 
 
 --
--- TOC entry 4815 (class 0 OID 17665)
--- Dependencies: 451
 -- Data for Name: phpgw_contact_addr; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9955,8 +9989,6 @@ COPY phpgw_contact_addr (contact_addr_id, contact_id, addr_type_id, add1, add2, 
 
 
 --
--- TOC entry 4817 (class 0 OID 17675)
--- Dependencies: 453
 -- Data for Name: phpgw_contact_addr_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9967,8 +9999,6 @@ COPY phpgw_contact_addr_type (addr_type_id, description) FROM stdin;
 
 
 --
--- TOC entry 4819 (class 0 OID 17681)
--- Dependencies: 455
 -- Data for Name: phpgw_contact_comm; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -9977,8 +10007,6 @@ COPY phpgw_contact_comm (comm_id, contact_id, comm_descr_id, preferred, comm_dat
 
 
 --
--- TOC entry 4821 (class 0 OID 17688)
--- Dependencies: 457
 -- Data for Name: phpgw_contact_comm_descr; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10008,8 +10036,6 @@ COPY phpgw_contact_comm_descr (comm_descr_id, comm_type_id, descr) FROM stdin;
 
 
 --
--- TOC entry 4823 (class 0 OID 17694)
--- Dependencies: 459
 -- Data for Name: phpgw_contact_comm_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10025,8 +10051,6 @@ COPY phpgw_contact_comm_type (comm_type_id, type, active, class) FROM stdin;
 
 
 --
--- TOC entry 4825 (class 0 OID 17700)
--- Dependencies: 461
 -- Data for Name: phpgw_contact_note; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10035,8 +10059,6 @@ COPY phpgw_contact_note (contact_note_id, contact_id, note_type_id, note_text, c
 
 
 --
--- TOC entry 4827 (class 0 OID 17709)
--- Dependencies: 463
 -- Data for Name: phpgw_contact_note_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10048,8 +10070,6 @@ COPY phpgw_contact_note_type (note_type_id, description) FROM stdin;
 
 
 --
--- TOC entry 4828 (class 0 OID 17713)
--- Dependencies: 464
 -- Data for Name: phpgw_contact_org; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10066,12 +10086,22 @@ COPY phpgw_contact_org (org_id, name, active, parent, created_on, created_by, mo
 1	!Default Group	Y	\N	1515488476	0	1515488476	0
 2	!Admins Group	Y	\N	1515488476	0	1515488476	0
 4	!Rental Group	Y	\N	1515760639	0	1515760639	0
+1	!Default Group	Y	\N	1515488476	0	1515488476	0
+2	!Admins Group	Y	\N	1515488476	0	1515488476	0
+4	!Rental Group	Y	\N	1515760639	0	1515760639	0
+1	!Default Group	Y	\N	1515488476	0	1515488476	0
+2	!Admins Group	Y	\N	1515488476	0	1515488476	0
+4	!Rental Group	Y	\N	1515760639	0	1515760639	0
+1	!Default Group	Y	\N	1515488476	0	1515488476	0
+2	!Admins Group	Y	\N	1515488476	0	1515488476	0
+4	!Rental Group	Y	\N	1515760639	0	1515760639	0
+1	!Default Group	Y	\N	1515488476	0	1515488476	0
+2	!Admins Group	Y	\N	1515488476	0	1515488476	0
+4	!Rental Group	Y	\N	1515760639	0	1515760639	0
 \.
 
 
 --
--- TOC entry 4829 (class 0 OID 17717)
--- Dependencies: 465
 -- Data for Name: phpgw_contact_org_person; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10080,8 +10110,6 @@ COPY phpgw_contact_org_person (org_id, person_id, addr_id, preferred, created_on
 
 
 --
--- TOC entry 4831 (class 0 OID 17723)
--- Dependencies: 467
 -- Data for Name: phpgw_contact_others; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10090,8 +10118,6 @@ COPY phpgw_contact_others (other_id, contact_id, contact_owner, other_name, othe
 
 
 --
--- TOC entry 4832 (class 0 OID 17730)
--- Dependencies: 468
 -- Data for Name: phpgw_contact_person; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10106,8 +10132,6 @@ COPY phpgw_contact_person (person_id, first_name, last_name, middle_name, prefix
 
 
 --
--- TOC entry 4834 (class 0 OID 17739)
--- Dependencies: 470
 -- Data for Name: phpgw_contact_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10118,8 +10142,6 @@ COPY phpgw_contact_types (contact_type_id, contact_type_descr, contact_type_tabl
 
 
 --
--- TOC entry 4835 (class 0 OID 17743)
--- Dependencies: 471
 -- Data for Name: phpgw_cust_attribute; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10215,8 +10237,6 @@ COPY phpgw_cust_attribute (location_id, group_id, id, column_name, input_text, s
 
 
 --
--- TOC entry 4836 (class 0 OID 17751)
--- Dependencies: 472
 -- Data for Name: phpgw_cust_attribute_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10225,8 +10245,6 @@ COPY phpgw_cust_attribute_group (location_id, id, parent_id, name, group_sort, d
 
 
 --
--- TOC entry 4837 (class 0 OID 17757)
--- Dependencies: 473
 -- Data for Name: phpgw_cust_choice; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10245,8 +10263,6 @@ COPY phpgw_cust_choice (location_id, attrib_id, id, value, title, choice_sort) F
 
 
 --
--- TOC entry 4838 (class 0 OID 17764)
--- Dependencies: 474
 -- Data for Name: phpgw_cust_function; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10255,8 +10271,6 @@ COPY phpgw_cust_function (location_id, id, descr, file_name, active, pre_commit,
 
 
 --
--- TOC entry 4839 (class 0 OID 17770)
--- Dependencies: 475
 -- Data for Name: phpgw_group_map; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10272,8 +10286,6 @@ COPY phpgw_group_map (group_id, account_id, arights) FROM stdin;
 
 
 --
--- TOC entry 4841 (class 0 OID 17776)
--- Dependencies: 477
 -- Data for Name: phpgw_history_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10282,8 +10294,6 @@ COPY phpgw_history_log (history_id, history_record_id, app_id, history_owner, hi
 
 
 --
--- TOC entry 4843 (class 0 OID 17785)
--- Dependencies: 479
 -- Data for Name: phpgw_hooks; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10356,8 +10366,6 @@ COPY phpgw_hooks (hook_id, hook_appname, hook_location, hook_filename) FROM stdi
 
 
 --
--- TOC entry 4845 (class 0 OID 17794)
--- Dependencies: 481
 -- Data for Name: phpgw_interlink; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10366,8 +10374,6 @@ COPY phpgw_interlink (interlink_id, location1_id, location1_item_id, location2_i
 
 
 --
--- TOC entry 4847 (class 0 OID 17800)
--- Dependencies: 483
 -- Data for Name: phpgw_interserv; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -10377,8 +10383,6 @@ COPY phpgw_interserv (server_id, server_name, server_host, server_url, trust_lev
 
 
 --
--- TOC entry 4848 (class 0 OID 17808)
--- Dependencies: 484
 -- Data for Name: phpgw_lang; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17435,8 +17439,6 @@ mobilefrontend	common	en	Mobile Frontend
 
 
 --
--- TOC entry 4849 (class 0 OID 17815)
--- Dependencies: 485
 -- Data for Name: phpgw_languages; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17584,8 +17586,6 @@ zu	Zulu	No
 
 
 --
--- TOC entry 4851 (class 0 OID 17821)
--- Dependencies: 487
 -- Data for Name: phpgw_locations; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17695,12 +17695,12 @@ COPY phpgw_locations (location_id, app_id, name, descr, allow_grant, allow_c_att
 104	9	run	Automatically added on install - run mobilefrontend	0	\N	\N	0
 105	9	admin	Allow app admins - mobilefrontend	0	\N	\N	0
 106	4	.admin_booking	Administrer booking	1	\N	\N	0
+107	4	.ticket.category.4	Test category 1	1	\N	\N	0
+108	4	.ticket.category.5	Test category 2	1	\N	\N	0
 \.
 
 
 --
--- TOC entry 4853 (class 0 OID 17827)
--- Dependencies: 489
 -- Data for Name: phpgw_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17712,8 +17712,6 @@ COPY phpgw_log (log_id, log_date, log_account_id, log_account_lid, log_app, log_
 
 
 --
--- TOC entry 4855 (class 0 OID 17837)
--- Dependencies: 491
 -- Data for Name: phpgw_mail_handler; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17722,8 +17720,6 @@ COPY phpgw_mail_handler (handler_id, target_email, handler, is_active, lastmod, 
 
 
 --
--- TOC entry 4856 (class 0 OID 17841)
--- Dependencies: 492
 -- Data for Name: phpgw_mapping; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17732,8 +17728,6 @@ COPY phpgw_mapping (ext_user, auth_type, status, location, account_lid) FROM std
 
 
 --
--- TOC entry 4857 (class 0 OID 17845)
--- Dependencies: 493
 -- Data for Name: phpgw_nextid; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17744,8 +17738,6 @@ COPY phpgw_nextid (id, appname) FROM stdin;
 
 
 --
--- TOC entry 4859 (class 0 OID 17850)
--- Dependencies: 495
 -- Data for Name: phpgw_notification; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17754,8 +17746,6 @@ COPY phpgw_notification (id, location_id, location_item_id, contact_id, is_activ
 
 
 --
--- TOC entry 4860 (class 0 OID 17854)
--- Dependencies: 496
 -- Data for Name: phpgw_preferences; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17768,8 +17758,6 @@ COPY phpgw_preferences (preference_owner, preference_app, preference_value) FROM
 
 
 --
--- TOC entry 4861 (class 0 OID 17860)
--- Dependencies: 497
 -- Data for Name: phpgw_sessions; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17778,8 +17766,6 @@ COPY phpgw_sessions (session_id, ip, data, lastmodts) FROM stdin;
 
 
 --
--- TOC entry 4863 (class 0 OID 17868)
--- Dependencies: 499
 -- Data for Name: phpgw_vfs; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17790,8 +17776,6 @@ COPY phpgw_vfs (file_id, owner_id, createdby_id, modifiedby_id, created, modifie
 
 
 --
--- TOC entry 4865 (class 0 OID 17880)
--- Dependencies: 501
 -- Data for Name: phpgw_vfs_file_relation; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17800,8 +17784,6 @@ COPY phpgw_vfs_file_relation (relation_id, file_id, location_id, location_item_i
 
 
 --
--- TOC entry 4866 (class 0 OID 17884)
--- Dependencies: 502
 -- Data for Name: phpgw_vfs_filedata; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17810,8 +17792,6 @@ COPY phpgw_vfs_filedata (file_id, metadata) FROM stdin;
 
 
 --
--- TOC entry 4868 (class 0 OID 17892)
--- Dependencies: 504
 -- Data for Name: rental_adjustment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17820,8 +17800,6 @@ COPY rental_adjustment (id, price_item_id, responsibility_id, adjustment_date, a
 
 
 --
--- TOC entry 4870 (class 0 OID 17901)
--- Dependencies: 506
 -- Data for Name: rental_application; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17830,8 +17808,6 @@ COPY rental_application (id, ecodimb_id, district_id, composite_type_id, cleanin
 
 
 --
--- TOC entry 4872 (class 0 OID 17910)
--- Dependencies: 508
 -- Data for Name: rental_application_comment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17840,8 +17816,6 @@ COPY rental_application_comment (id, application_id, "time", author, comment, ty
 
 
 --
--- TOC entry 4874 (class 0 OID 17920)
--- Dependencies: 510
 -- Data for Name: rental_application_composite; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17850,8 +17824,6 @@ COPY rental_application_composite (id, application_id, composite_id) FROM stdin;
 
 
 --
--- TOC entry 4876 (class 0 OID 17926)
--- Dependencies: 512
 -- Data for Name: rental_billing; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17860,8 +17832,6 @@ COPY rental_billing (id, total_sum, success, created_by, timestamp_start, timest
 
 
 --
--- TOC entry 4878 (class 0 OID 17937)
--- Dependencies: 514
 -- Data for Name: rental_billing_info; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17870,8 +17840,6 @@ COPY rental_billing_info (id, billing_id, location_id, term_id, year, month, del
 
 
 --
--- TOC entry 4880 (class 0 OID 17944)
--- Dependencies: 516
 -- Data for Name: rental_billing_term; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17884,8 +17852,6 @@ COPY rental_billing_term (id, title, months) FROM stdin;
 
 
 --
--- TOC entry 4882 (class 0 OID 17950)
--- Dependencies: 518
 -- Data for Name: rental_composite; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17894,8 +17860,6 @@ COPY rental_composite (id, name, description, is_active, status_id, address_1, a
 
 
 --
--- TOC entry 4883 (class 0 OID 17964)
--- Dependencies: 519
 -- Data for Name: rental_composite_standard; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17904,8 +17868,6 @@ COPY rental_composite_standard (id, name, factor) FROM stdin;
 
 
 --
--- TOC entry 4884 (class 0 OID 17967)
--- Dependencies: 520
 -- Data for Name: rental_composite_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17916,8 +17878,6 @@ COPY rental_composite_type (id, name) FROM stdin;
 
 
 --
--- TOC entry 4885 (class 0 OID 17970)
--- Dependencies: 521
 -- Data for Name: rental_contract; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17926,8 +17886,6 @@ COPY rental_contract (id, date_start, date_end, billing_start, billing_end, loca
 
 
 --
--- TOC entry 4887 (class 0 OID 17981)
--- Dependencies: 523
 -- Data for Name: rental_contract_composite; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17936,8 +17894,6 @@ COPY rental_contract_composite (id, contract_id, composite_id) FROM stdin;
 
 
 --
--- TOC entry 4888 (class 0 OID 17985)
--- Dependencies: 524
 -- Data for Name: rental_contract_last_edited; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17946,8 +17902,6 @@ COPY rental_contract_last_edited (contract_id, account_id, edited_on) FROM stdin
 
 
 --
--- TOC entry 4889 (class 0 OID 17988)
--- Dependencies: 525
 -- Data for Name: rental_contract_party; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17956,8 +17910,6 @@ COPY rental_contract_party (contract_id, party_id, is_payer) FROM stdin;
 
 
 --
--- TOC entry 4891 (class 0 OID 17994)
--- Dependencies: 527
 -- Data for Name: rental_contract_price_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17966,8 +17918,6 @@ COPY rental_contract_price_item (id, price_item_id, contract_id, title, area, co
 
 
 --
--- TOC entry 4893 (class 0 OID 18006)
--- Dependencies: 529
 -- Data for Name: rental_contract_responsibility; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17979,8 +17929,6 @@ COPY rental_contract_responsibility (id, location_id, title, notify_before, noti
 
 
 --
--- TOC entry 4894 (class 0 OID 18013)
--- Dependencies: 530
 -- Data for Name: rental_contract_responsibility_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -17989,8 +17937,6 @@ COPY rental_contract_responsibility_unit (id, name) FROM stdin;
 
 
 --
--- TOC entry 4896 (class 0 OID 18018)
--- Dependencies: 532
 -- Data for Name: rental_contract_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18007,8 +17953,6 @@ COPY rental_contract_types (id, label, responsibility_id, account) FROM stdin;
 
 
 --
--- TOC entry 4898 (class 0 OID 18027)
--- Dependencies: 534
 -- Data for Name: rental_document; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18017,8 +17961,6 @@ COPY rental_document (id, name, contract_id, party_id, title, description, type_
 
 
 --
--- TOC entry 4900 (class 0 OID 18036)
--- Dependencies: 536
 -- Data for Name: rental_document_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18030,8 +17972,6 @@ COPY rental_document_types (id, title) FROM stdin;
 
 
 --
--- TOC entry 4902 (class 0 OID 18042)
--- Dependencies: 538
 -- Data for Name: rental_email_out; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18040,8 +17980,6 @@ COPY rental_email_out (id, name, remark, subject, content, user_id, created, mod
 
 
 --
--- TOC entry 4904 (class 0 OID 18053)
--- Dependencies: 540
 -- Data for Name: rental_email_out_party; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18050,8 +17988,6 @@ COPY rental_email_out_party (id, email_out_id, party_id, status) FROM stdin;
 
 
 --
--- TOC entry 4906 (class 0 OID 18060)
--- Dependencies: 542
 -- Data for Name: rental_email_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18060,8 +17996,6 @@ COPY rental_email_template (id, name, content, public, user_id, entry_date, modi
 
 
 --
--- TOC entry 4908 (class 0 OID 18071)
--- Dependencies: 544
 -- Data for Name: rental_invoice; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18070,8 +18004,6 @@ COPY rental_invoice (id, contract_id, billing_id, party_id, timestamp_created, t
 
 
 --
--- TOC entry 4910 (class 0 OID 18080)
--- Dependencies: 546
 -- Data for Name: rental_invoice_price_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18080,8 +18012,6 @@ COPY rental_invoice_price_item (id, invoice_id, title, area, count, agresso_id, 
 
 
 --
--- TOC entry 4912 (class 0 OID 18091)
--- Dependencies: 548
 -- Data for Name: rental_location_factor; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18090,8 +18020,6 @@ COPY rental_location_factor (id, part_of_town_id, factor, remark, user_id, entry
 
 
 --
--- TOC entry 4914 (class 0 OID 18101)
--- Dependencies: 550
 -- Data for Name: rental_movein; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18100,8 +18028,6 @@ COPY rental_movein (id, contract_id, account_id, created, modified) FROM stdin;
 
 
 --
--- TOC entry 4916 (class 0 OID 18109)
--- Dependencies: 552
 -- Data for Name: rental_movein_comment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18110,8 +18036,6 @@ COPY rental_movein_comment (id, movein_id, "time", author, comment, type) FROM s
 
 
 --
--- TOC entry 4918 (class 0 OID 18120)
--- Dependencies: 554
 -- Data for Name: rental_moveout; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18120,8 +18044,6 @@ COPY rental_moveout (id, contract_id, account_id, created, modified) FROM stdin;
 
 
 --
--- TOC entry 4920 (class 0 OID 18128)
--- Dependencies: 556
 -- Data for Name: rental_moveout_comment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18130,8 +18052,6 @@ COPY rental_moveout_comment (id, moveout_id, "time", author, comment, type) FROM
 
 
 --
--- TOC entry 4922 (class 0 OID 18139)
--- Dependencies: 558
 -- Data for Name: rental_notification; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18140,8 +18060,6 @@ COPY rental_notification (id, location_id, account_id, contract_id, message, dat
 
 
 --
--- TOC entry 4924 (class 0 OID 18150)
--- Dependencies: 560
 -- Data for Name: rental_notification_workbench; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18150,8 +18068,6 @@ COPY rental_notification_workbench (id, account_id, date, notification_id, workb
 
 
 --
--- TOC entry 4926 (class 0 OID 18159)
--- Dependencies: 562
 -- Data for Name: rental_party; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18160,8 +18076,6 @@ COPY rental_party (id, identifier, customer_id, first_name, last_name, comment, 
 
 
 --
--- TOC entry 4928 (class 0 OID 18168)
--- Dependencies: 564
 -- Data for Name: rental_price_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18172,8 +18086,6 @@ COPY rental_price_item (id, title, agresso_id, is_area, is_inactive, is_adjustab
 
 
 --
--- TOC entry 4930 (class 0 OID 18182)
--- Dependencies: 566
 -- Data for Name: rental_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
@@ -18182,8 +18094,6 @@ COPY rental_unit (id, composite_id, location_code) FROM stdin;
 
 
 --
--- TOC entry 4939 (class 0 OID 0)
--- Dependencies: 181
 -- Name: seq_controller_check_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18191,8 +18101,6 @@ SELECT pg_catalog.setval('seq_controller_check_item', 1, false);
 
 
 --
--- TOC entry 4940 (class 0 OID 0)
--- Dependencies: 183
 -- Name: seq_controller_check_item_case; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18200,8 +18108,6 @@ SELECT pg_catalog.setval('seq_controller_check_item_case', 1, false);
 
 
 --
--- TOC entry 4941 (class 0 OID 0)
--- Dependencies: 185
 -- Name: seq_controller_check_item_status; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18209,8 +18115,6 @@ SELECT pg_catalog.setval('seq_controller_check_item_status', 1, false);
 
 
 --
--- TOC entry 4942 (class 0 OID 0)
--- Dependencies: 187
 -- Name: seq_controller_check_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18218,8 +18122,6 @@ SELECT pg_catalog.setval('seq_controller_check_list', 1, false);
 
 
 --
--- TOC entry 4943 (class 0 OID 0)
--- Dependencies: 189
 -- Name: seq_controller_control; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18227,8 +18129,6 @@ SELECT pg_catalog.setval('seq_controller_control', 1, false);
 
 
 --
--- TOC entry 4944 (class 0 OID 0)
--- Dependencies: 191
 -- Name: seq_controller_control_component_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18236,8 +18136,6 @@ SELECT pg_catalog.setval('seq_controller_control_component_list', 1, false);
 
 
 --
--- TOC entry 4945 (class 0 OID 0)
--- Dependencies: 193
 -- Name: seq_controller_control_group; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18245,8 +18143,6 @@ SELECT pg_catalog.setval('seq_controller_control_group', 1, false);
 
 
 --
--- TOC entry 4946 (class 0 OID 0)
--- Dependencies: 195
 -- Name: seq_controller_control_group_component_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18254,8 +18150,6 @@ SELECT pg_catalog.setval('seq_controller_control_group_component_list', 1, false
 
 
 --
--- TOC entry 4947 (class 0 OID 0)
--- Dependencies: 197
 -- Name: seq_controller_control_group_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18263,8 +18157,6 @@ SELECT pg_catalog.setval('seq_controller_control_group_list', 1, false);
 
 
 --
--- TOC entry 4948 (class 0 OID 0)
--- Dependencies: 199
 -- Name: seq_controller_control_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18272,8 +18164,6 @@ SELECT pg_catalog.setval('seq_controller_control_item', 1, false);
 
 
 --
--- TOC entry 4949 (class 0 OID 0)
--- Dependencies: 201
 -- Name: seq_controller_control_item_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18281,8 +18171,6 @@ SELECT pg_catalog.setval('seq_controller_control_item_list', 1, false);
 
 
 --
--- TOC entry 4950 (class 0 OID 0)
--- Dependencies: 203
 -- Name: seq_controller_control_item_option; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18290,8 +18178,6 @@ SELECT pg_catalog.setval('seq_controller_control_item_option', 1, false);
 
 
 --
--- TOC entry 4951 (class 0 OID 0)
--- Dependencies: 205
 -- Name: seq_controller_control_location_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18299,8 +18185,6 @@ SELECT pg_catalog.setval('seq_controller_control_location_list', 1, false);
 
 
 --
--- TOC entry 4952 (class 0 OID 0)
--- Dependencies: 207
 -- Name: seq_controller_control_serie; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18308,8 +18192,6 @@ SELECT pg_catalog.setval('seq_controller_control_serie', 1, false);
 
 
 --
--- TOC entry 4953 (class 0 OID 0)
--- Dependencies: 209
 -- Name: seq_controller_control_serie_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18317,8 +18199,6 @@ SELECT pg_catalog.setval('seq_controller_control_serie_history', 1, false);
 
 
 --
--- TOC entry 4954 (class 0 OID 0)
--- Dependencies: 211
 -- Name: seq_controller_document; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18326,8 +18206,6 @@ SELECT pg_catalog.setval('seq_controller_document', 1, false);
 
 
 --
--- TOC entry 4955 (class 0 OID 0)
--- Dependencies: 213
 -- Name: seq_controller_document_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18335,8 +18213,6 @@ SELECT pg_catalog.setval('seq_controller_document_types', 1, true);
 
 
 --
--- TOC entry 4956 (class 0 OID 0)
--- Dependencies: 215
 -- Name: seq_controller_procedure; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18344,8 +18220,6 @@ SELECT pg_catalog.setval('seq_controller_procedure', 1, false);
 
 
 --
--- TOC entry 4957 (class 0 OID 0)
--- Dependencies: 217
 -- Name: seq_fm_action_pending; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18353,8 +18227,6 @@ SELECT pg_catalog.setval('seq_fm_action_pending', 1, false);
 
 
 --
--- TOC entry 4958 (class 0 OID 0)
--- Dependencies: 219
 -- Name: seq_fm_action_pending_category; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18362,8 +18234,6 @@ SELECT pg_catalog.setval('seq_fm_action_pending_category', 3, true);
 
 
 --
--- TOC entry 4959 (class 0 OID 0)
--- Dependencies: 233
 -- Name: seq_fm_budget_cost; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18371,8 +18241,6 @@ SELECT pg_catalog.setval('seq_fm_budget_cost', 1, false);
 
 
 --
--- TOC entry 4960 (class 0 OID 0)
--- Dependencies: 240
 -- Name: seq_fm_condition_survey_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18380,8 +18248,6 @@ SELECT pg_catalog.setval('seq_fm_condition_survey_history', 1, false);
 
 
 --
--- TOC entry 4961 (class 0 OID 0)
--- Dependencies: 243
 -- Name: seq_fm_cron_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18389,8 +18255,6 @@ SELECT pg_catalog.setval('seq_fm_cron_log', 1, false);
 
 
 --
--- TOC entry 4962 (class 0 OID 0)
--- Dependencies: 247
 -- Name: seq_fm_custom_menu_items; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18398,8 +18262,6 @@ SELECT pg_catalog.setval('seq_fm_custom_menu_items', 1, false);
 
 
 --
--- TOC entry 4963 (class 0 OID 0)
--- Dependencies: 250
 -- Name: seq_fm_document; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18407,8 +18269,6 @@ SELECT pg_catalog.setval('seq_fm_document', 1, false);
 
 
 --
--- TOC entry 4964 (class 0 OID 0)
--- Dependencies: 252
 -- Name: seq_fm_document_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18416,8 +18276,6 @@ SELECT pg_catalog.setval('seq_fm_document_history', 1, false);
 
 
 --
--- TOC entry 4965 (class 0 OID 0)
--- Dependencies: 254
 -- Name: seq_fm_document_relation; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18425,8 +18283,6 @@ SELECT pg_catalog.setval('seq_fm_document_relation', 1, false);
 
 
 --
--- TOC entry 4966 (class 0 OID 0)
--- Dependencies: 257
 -- Name: seq_fm_eco_period_transition; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18434,8 +18290,6 @@ SELECT pg_catalog.setval('seq_fm_eco_period_transition', 1, false);
 
 
 --
--- TOC entry 4967 (class 0 OID 0)
--- Dependencies: 260
 -- Name: seq_fm_eco_periodization_outline; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18443,8 +18297,6 @@ SELECT pg_catalog.setval('seq_fm_eco_periodization_outline', 1, false);
 
 
 --
--- TOC entry 4968 (class 0 OID 0)
--- Dependencies: 265
 -- Name: seq_fm_ecobilag; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18452,8 +18304,6 @@ SELECT pg_catalog.setval('seq_fm_ecobilag', 1, false);
 
 
 --
--- TOC entry 4969 (class 0 OID 0)
--- Dependencies: 269
 -- Name: seq_fm_ecobilag_process_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18461,8 +18311,6 @@ SELECT pg_catalog.setval('seq_fm_ecobilag_process_log', 1, false);
 
 
 --
--- TOC entry 4970 (class 0 OID 0)
--- Dependencies: 276
 -- Name: seq_fm_ecodimb_role_user; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18470,8 +18318,6 @@ SELECT pg_catalog.setval('seq_fm_ecodimb_role_user', 1, false);
 
 
 --
--- TOC entry 4971 (class 0 OID 0)
--- Dependencies: 278
 -- Name: seq_fm_ecodimb_role_user_substitute; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18479,8 +18325,6 @@ SELECT pg_catalog.setval('seq_fm_ecodimb_role_user_substitute', 1, false);
 
 
 --
--- TOC entry 4972 (class 0 OID 0)
--- Dependencies: 286
 -- Name: seq_fm_entity_group; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18488,8 +18332,6 @@ SELECT pg_catalog.setval('seq_fm_entity_group', 1, false);
 
 
 --
--- TOC entry 4973 (class 0 OID 0)
--- Dependencies: 288
 -- Name: seq_fm_entity_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18497,8 +18339,6 @@ SELECT pg_catalog.setval('seq_fm_entity_history', 1, false);
 
 
 --
--- TOC entry 4974 (class 0 OID 0)
--- Dependencies: 291
 -- Name: seq_fm_event; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18506,8 +18346,6 @@ SELECT pg_catalog.setval('seq_fm_event', 1, false);
 
 
 --
--- TOC entry 4975 (class 0 OID 0)
--- Dependencies: 299
 -- Name: seq_fm_generic_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18515,8 +18353,6 @@ SELECT pg_catalog.setval('seq_fm_generic_history', 1, false);
 
 
 --
--- TOC entry 4976 (class 0 OID 0)
--- Dependencies: 304
 -- Name: seq_fm_jasper; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18524,8 +18360,6 @@ SELECT pg_catalog.setval('seq_fm_jasper', 1, false);
 
 
 --
--- TOC entry 4977 (class 0 OID 0)
--- Dependencies: 307
 -- Name: seq_fm_jasper_input; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18533,8 +18367,6 @@ SELECT pg_catalog.setval('seq_fm_jasper_input', 1, false);
 
 
 --
--- TOC entry 4978 (class 0 OID 0)
--- Dependencies: 309
 -- Name: seq_fm_jasper_input_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18542,8 +18374,6 @@ SELECT pg_catalog.setval('seq_fm_jasper_input_type', 8, true);
 
 
 --
--- TOC entry 4979 (class 0 OID 0)
--- Dependencies: 325
 -- Name: seq_fm_location_contact; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18551,8 +18381,6 @@ SELECT pg_catalog.setval('seq_fm_location_contact', 1, false);
 
 
 --
--- TOC entry 4980 (class 0 OID 0)
--- Dependencies: 327
 -- Name: seq_fm_location_exception; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18560,8 +18388,6 @@ SELECT pg_catalog.setval('seq_fm_location_exception', 1, false);
 
 
 --
--- TOC entry 4981 (class 0 OID 0)
--- Dependencies: 329
 -- Name: seq_fm_location_exception_category; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18569,8 +18395,6 @@ SELECT pg_catalog.setval('seq_fm_location_exception_category', 1, false);
 
 
 --
--- TOC entry 4982 (class 0 OID 0)
--- Dependencies: 331
 -- Name: seq_fm_location_exception_category_text; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18578,8 +18402,6 @@ SELECT pg_catalog.setval('seq_fm_location_exception_category_text', 1, false);
 
 
 --
--- TOC entry 4983 (class 0 OID 0)
--- Dependencies: 335
 -- Name: seq_fm_locations; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18587,8 +18409,6 @@ SELECT pg_catalog.setval('seq_fm_locations', 11, true);
 
 
 --
--- TOC entry 4984 (class 0 OID 0)
--- Dependencies: 342
 -- Name: seq_fm_order_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18596,8 +18416,6 @@ SELECT pg_catalog.setval('seq_fm_order_template', 1, false);
 
 
 --
--- TOC entry 4985 (class 0 OID 0)
--- Dependencies: 351
 -- Name: seq_fm_part_of_town; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18605,8 +18423,6 @@ SELECT pg_catalog.setval('seq_fm_part_of_town', 1, true);
 
 
 --
--- TOC entry 4986 (class 0 OID 0)
--- Dependencies: 358
 -- Name: seq_fm_project_buffer_budget; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18614,8 +18430,6 @@ SELECT pg_catalog.setval('seq_fm_project_buffer_budget', 1, false);
 
 
 --
--- TOC entry 4987 (class 0 OID 0)
--- Dependencies: 360
 -- Name: seq_fm_project_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18623,8 +18437,6 @@ SELECT pg_catalog.setval('seq_fm_project_history', 1, false);
 
 
 --
--- TOC entry 4988 (class 0 OID 0)
--- Dependencies: 368
 -- Name: seq_fm_request_consume; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18632,8 +18444,6 @@ SELECT pg_catalog.setval('seq_fm_request_consume', 1, false);
 
 
 --
--- TOC entry 4989 (class 0 OID 0)
--- Dependencies: 370
 -- Name: seq_fm_request_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18641,8 +18451,6 @@ SELECT pg_catalog.setval('seq_fm_request_history', 1, false);
 
 
 --
--- TOC entry 4990 (class 0 OID 0)
--- Dependencies: 372
 -- Name: seq_fm_request_planning; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18650,8 +18458,6 @@ SELECT pg_catalog.setval('seq_fm_request_planning', 1, false);
 
 
 --
--- TOC entry 4991 (class 0 OID 0)
--- Dependencies: 376
 -- Name: seq_fm_response_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18659,8 +18465,6 @@ SELECT pg_catalog.setval('seq_fm_response_template', 1, false);
 
 
 --
--- TOC entry 4992 (class 0 OID 0)
--- Dependencies: 378
 -- Name: seq_fm_responsibility; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18668,8 +18472,6 @@ SELECT pg_catalog.setval('seq_fm_responsibility', 1, false);
 
 
 --
--- TOC entry 4993 (class 0 OID 0)
--- Dependencies: 380
 -- Name: seq_fm_responsibility_contact; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18677,8 +18479,6 @@ SELECT pg_catalog.setval('seq_fm_responsibility_contact', 1, false);
 
 
 --
--- TOC entry 4994 (class 0 OID 0)
--- Dependencies: 383
 -- Name: seq_fm_responsibility_role; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18686,8 +18486,6 @@ SELECT pg_catalog.setval('seq_fm_responsibility_role', 1, false);
 
 
 --
--- TOC entry 4995 (class 0 OID 0)
--- Dependencies: 389
 -- Name: seq_fm_s_agreement_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18695,8 +18493,6 @@ SELECT pg_catalog.setval('seq_fm_s_agreement_history', 1, false);
 
 
 --
--- TOC entry 4996 (class 0 OID 0)
--- Dependencies: 394
 -- Name: seq_fm_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18704,8 +18500,6 @@ SELECT pg_catalog.setval('seq_fm_template', 1, false);
 
 
 --
--- TOC entry 4997 (class 0 OID 0)
--- Dependencies: 396
 -- Name: seq_fm_template_hours; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18713,8 +18507,6 @@ SELECT pg_catalog.setval('seq_fm_template_hours', 1, false);
 
 
 --
--- TOC entry 4998 (class 0 OID 0)
--- Dependencies: 400
 -- Name: seq_fm_tenant_claim; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18722,8 +18514,6 @@ SELECT pg_catalog.setval('seq_fm_tenant_claim', 1, false);
 
 
 --
--- TOC entry 4999 (class 0 OID 0)
--- Dependencies: 403
 -- Name: seq_fm_tenant_claim_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18731,8 +18521,6 @@ SELECT pg_catalog.setval('seq_fm_tenant_claim_history', 1, false);
 
 
 --
--- TOC entry 5000 (class 0 OID 0)
--- Dependencies: 405
 -- Name: seq_fm_tts_budget; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18740,17 +18528,13 @@ SELECT pg_catalog.setval('seq_fm_tts_budget', 1, false);
 
 
 --
--- TOC entry 5001 (class 0 OID 0)
--- Dependencies: 407
 -- Name: seq_fm_tts_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_history', 1, false);
+SELECT pg_catalog.setval('seq_fm_tts_history', 5, true);
 
 
 --
--- TOC entry 5002 (class 0 OID 0)
--- Dependencies: 409
 -- Name: seq_fm_tts_payments; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18758,8 +18542,6 @@ SELECT pg_catalog.setval('seq_fm_tts_payments', 1, false);
 
 
 --
--- TOC entry 5003 (class 0 OID 0)
--- Dependencies: 412
 -- Name: seq_fm_tts_status; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18767,17 +18549,13 @@ SELECT pg_catalog.setval('seq_fm_tts_status', 1, false);
 
 
 --
--- TOC entry 5004 (class 0 OID 0)
--- Dependencies: 414
 -- Name: seq_fm_tts_tickets; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_tickets', 1, false);
+SELECT pg_catalog.setval('seq_fm_tts_tickets', 3, true);
 
 
 --
--- TOC entry 5005 (class 0 OID 0)
--- Dependencies: 420
 -- Name: seq_fm_view_dataset; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18785,8 +18563,6 @@ SELECT pg_catalog.setval('seq_fm_view_dataset', 1, false);
 
 
 --
--- TOC entry 5006 (class 0 OID 0)
--- Dependencies: 422
 -- Name: seq_fm_view_dataset_report; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18794,8 +18570,6 @@ SELECT pg_catalog.setval('seq_fm_view_dataset_report', 1, false);
 
 
 --
--- TOC entry 5007 (class 0 OID 0)
--- Dependencies: 425
 -- Name: seq_fm_wo_hours; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18803,8 +18577,6 @@ SELECT pg_catalog.setval('seq_fm_wo_hours', 1, false);
 
 
 --
--- TOC entry 5008 (class 0 OID 0)
--- Dependencies: 428
 -- Name: seq_fm_workorder_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18812,8 +18584,6 @@ SELECT pg_catalog.setval('seq_fm_workorder_history', 1, false);
 
 
 --
--- TOC entry 5009 (class 0 OID 0)
--- Dependencies: 431
 -- Name: seq_phpgw_account_delegates; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18821,8 +18591,6 @@ SELECT pg_catalog.setval('seq_phpgw_account_delegates', 1, false);
 
 
 --
--- TOC entry 5010 (class 0 OID 0)
--- Dependencies: 433
 -- Name: seq_phpgw_accounts; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18830,8 +18598,6 @@ SELECT pg_catalog.setval('seq_phpgw_accounts', 1, false);
 
 
 --
--- TOC entry 5011 (class 0 OID 0)
--- Dependencies: 437
 -- Name: seq_phpgw_applications; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18839,17 +18605,13 @@ SELECT pg_catalog.setval('seq_phpgw_applications', 9, true);
 
 
 --
--- TOC entry 5012 (class 0 OID 0)
--- Dependencies: 441
 -- Name: seq_phpgw_categories; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_categories', 3, true);
+SELECT pg_catalog.setval('seq_phpgw_categories', 5, true);
 
 
 --
--- TOC entry 5013 (class 0 OID 0)
--- Dependencies: 448
 -- Name: seq_phpgw_contact; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18857,8 +18619,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact', 9, true);
 
 
 --
--- TOC entry 5014 (class 0 OID 0)
--- Dependencies: 450
 -- Name: seq_phpgw_contact_addr; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18866,8 +18626,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_addr', 1, false);
 
 
 --
--- TOC entry 5015 (class 0 OID 0)
--- Dependencies: 452
 -- Name: seq_phpgw_contact_addr_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18875,8 +18633,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_addr_type', 2, true);
 
 
 --
--- TOC entry 5016 (class 0 OID 0)
--- Dependencies: 454
 -- Name: seq_phpgw_contact_comm; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18884,8 +18640,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_comm', 1, false);
 
 
 --
--- TOC entry 5017 (class 0 OID 0)
--- Dependencies: 456
 -- Name: seq_phpgw_contact_comm_descr; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18893,8 +18647,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_comm_descr', 21, true);
 
 
 --
--- TOC entry 5018 (class 0 OID 0)
--- Dependencies: 458
 -- Name: seq_phpgw_contact_comm_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18902,8 +18654,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_comm_type', 7, true);
 
 
 --
--- TOC entry 5019 (class 0 OID 0)
--- Dependencies: 460
 -- Name: seq_phpgw_contact_note; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18911,8 +18661,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_note', 1, false);
 
 
 --
--- TOC entry 5020 (class 0 OID 0)
--- Dependencies: 462
 -- Name: seq_phpgw_contact_note_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18920,8 +18668,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_note_type', 3, true);
 
 
 --
--- TOC entry 5021 (class 0 OID 0)
--- Dependencies: 466
 -- Name: seq_phpgw_contact_others; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18929,8 +18675,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_others', 1, false);
 
 
 --
--- TOC entry 5022 (class 0 OID 0)
--- Dependencies: 469
 -- Name: seq_phpgw_contact_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18938,8 +18682,6 @@ SELECT pg_catalog.setval('seq_phpgw_contact_types', 2, true);
 
 
 --
--- TOC entry 5023 (class 0 OID 0)
--- Dependencies: 476
 -- Name: seq_phpgw_history_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18947,8 +18689,6 @@ SELECT pg_catalog.setval('seq_phpgw_history_log', 1, false);
 
 
 --
--- TOC entry 5024 (class 0 OID 0)
--- Dependencies: 478
 -- Name: seq_phpgw_hooks; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18956,8 +18696,6 @@ SELECT pg_catalog.setval('seq_phpgw_hooks', 100, true);
 
 
 --
--- TOC entry 5025 (class 0 OID 0)
--- Dependencies: 480
 -- Name: seq_phpgw_interlink; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18965,8 +18703,6 @@ SELECT pg_catalog.setval('seq_phpgw_interlink', 1, false);
 
 
 --
--- TOC entry 5026 (class 0 OID 0)
--- Dependencies: 482
 -- Name: seq_phpgw_interserv; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18974,17 +18710,13 @@ SELECT pg_catalog.setval('seq_phpgw_interserv', 1, true);
 
 
 --
--- TOC entry 5027 (class 0 OID 0)
--- Dependencies: 486
 -- Name: seq_phpgw_locations; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_locations', 106, true);
+SELECT pg_catalog.setval('seq_phpgw_locations', 108, true);
 
 
 --
--- TOC entry 5028 (class 0 OID 0)
--- Dependencies: 488
 -- Name: seq_phpgw_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -18992,8 +18724,6 @@ SELECT pg_catalog.setval('seq_phpgw_log', 3, true);
 
 
 --
--- TOC entry 5029 (class 0 OID 0)
--- Dependencies: 490
 -- Name: seq_phpgw_mail_handler; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19001,8 +18731,6 @@ SELECT pg_catalog.setval('seq_phpgw_mail_handler', 1, false);
 
 
 --
--- TOC entry 5030 (class 0 OID 0)
--- Dependencies: 494
 -- Name: seq_phpgw_notification; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19010,8 +18738,6 @@ SELECT pg_catalog.setval('seq_phpgw_notification', 1, false);
 
 
 --
--- TOC entry 5031 (class 0 OID 0)
--- Dependencies: 498
 -- Name: seq_phpgw_vfs; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19019,8 +18745,6 @@ SELECT pg_catalog.setval('seq_phpgw_vfs', 2, true);
 
 
 --
--- TOC entry 5032 (class 0 OID 0)
--- Dependencies: 500
 -- Name: seq_phpgw_vfs_file_relation; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19028,8 +18752,6 @@ SELECT pg_catalog.setval('seq_phpgw_vfs_file_relation', 1, false);
 
 
 --
--- TOC entry 5033 (class 0 OID 0)
--- Dependencies: 503
 -- Name: seq_rental_adjustment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19037,8 +18759,6 @@ SELECT pg_catalog.setval('seq_rental_adjustment', 1, false);
 
 
 --
--- TOC entry 5034 (class 0 OID 0)
--- Dependencies: 505
 -- Name: seq_rental_application; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19046,8 +18766,6 @@ SELECT pg_catalog.setval('seq_rental_application', 1, false);
 
 
 --
--- TOC entry 5035 (class 0 OID 0)
--- Dependencies: 507
 -- Name: seq_rental_application_comment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19055,8 +18773,6 @@ SELECT pg_catalog.setval('seq_rental_application_comment', 1, false);
 
 
 --
--- TOC entry 5036 (class 0 OID 0)
--- Dependencies: 509
 -- Name: seq_rental_application_composite; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19064,8 +18780,6 @@ SELECT pg_catalog.setval('seq_rental_application_composite', 1, false);
 
 
 --
--- TOC entry 5037 (class 0 OID 0)
--- Dependencies: 511
 -- Name: seq_rental_billing; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19073,8 +18787,6 @@ SELECT pg_catalog.setval('seq_rental_billing', 1, false);
 
 
 --
--- TOC entry 5038 (class 0 OID 0)
--- Dependencies: 513
 -- Name: seq_rental_billing_info; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19082,8 +18794,6 @@ SELECT pg_catalog.setval('seq_rental_billing_info', 1, false);
 
 
 --
--- TOC entry 5039 (class 0 OID 0)
--- Dependencies: 515
 -- Name: seq_rental_billing_term; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19091,8 +18801,6 @@ SELECT pg_catalog.setval('seq_rental_billing_term', 4, true);
 
 
 --
--- TOC entry 5040 (class 0 OID 0)
--- Dependencies: 517
 -- Name: seq_rental_composite; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19100,8 +18808,6 @@ SELECT pg_catalog.setval('seq_rental_composite', 1, false);
 
 
 --
--- TOC entry 5041 (class 0 OID 0)
--- Dependencies: 522
 -- Name: seq_rental_contract_composite; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19109,8 +18815,6 @@ SELECT pg_catalog.setval('seq_rental_contract_composite', 1, false);
 
 
 --
--- TOC entry 5042 (class 0 OID 0)
--- Dependencies: 526
 -- Name: seq_rental_contract_price_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19118,8 +18822,6 @@ SELECT pg_catalog.setval('seq_rental_contract_price_item', 1, false);
 
 
 --
--- TOC entry 5043 (class 0 OID 0)
--- Dependencies: 528
 -- Name: seq_rental_contract_responsibility; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19127,8 +18829,6 @@ SELECT pg_catalog.setval('seq_rental_contract_responsibility', 3, true);
 
 
 --
--- TOC entry 5044 (class 0 OID 0)
--- Dependencies: 531
 -- Name: seq_rental_contract_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19136,8 +18836,6 @@ SELECT pg_catalog.setval('seq_rental_contract_types', 1, false);
 
 
 --
--- TOC entry 5045 (class 0 OID 0)
--- Dependencies: 533
 -- Name: seq_rental_document; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19145,8 +18843,6 @@ SELECT pg_catalog.setval('seq_rental_document', 1, false);
 
 
 --
--- TOC entry 5046 (class 0 OID 0)
--- Dependencies: 535
 -- Name: seq_rental_document_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19154,8 +18850,6 @@ SELECT pg_catalog.setval('seq_rental_document_types', 3, true);
 
 
 --
--- TOC entry 5047 (class 0 OID 0)
--- Dependencies: 537
 -- Name: seq_rental_email_out; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19163,8 +18857,6 @@ SELECT pg_catalog.setval('seq_rental_email_out', 1, false);
 
 
 --
--- TOC entry 5048 (class 0 OID 0)
--- Dependencies: 539
 -- Name: seq_rental_email_out_party; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19172,8 +18864,6 @@ SELECT pg_catalog.setval('seq_rental_email_out_party', 1, false);
 
 
 --
--- TOC entry 5049 (class 0 OID 0)
--- Dependencies: 541
 -- Name: seq_rental_email_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19181,8 +18871,6 @@ SELECT pg_catalog.setval('seq_rental_email_template', 1, false);
 
 
 --
--- TOC entry 5050 (class 0 OID 0)
--- Dependencies: 543
 -- Name: seq_rental_invoice; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19190,8 +18878,6 @@ SELECT pg_catalog.setval('seq_rental_invoice', 1, false);
 
 
 --
--- TOC entry 5051 (class 0 OID 0)
--- Dependencies: 545
 -- Name: seq_rental_invoice_price_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19199,8 +18885,6 @@ SELECT pg_catalog.setval('seq_rental_invoice_price_item', 1, false);
 
 
 --
--- TOC entry 5052 (class 0 OID 0)
--- Dependencies: 547
 -- Name: seq_rental_location_factor; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19208,8 +18892,6 @@ SELECT pg_catalog.setval('seq_rental_location_factor', 1, false);
 
 
 --
--- TOC entry 5053 (class 0 OID 0)
--- Dependencies: 549
 -- Name: seq_rental_movein; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19217,8 +18899,6 @@ SELECT pg_catalog.setval('seq_rental_movein', 1, false);
 
 
 --
--- TOC entry 5054 (class 0 OID 0)
--- Dependencies: 551
 -- Name: seq_rental_movein_comment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19226,8 +18906,6 @@ SELECT pg_catalog.setval('seq_rental_movein_comment', 1, false);
 
 
 --
--- TOC entry 5055 (class 0 OID 0)
--- Dependencies: 553
 -- Name: seq_rental_moveout; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19235,8 +18913,6 @@ SELECT pg_catalog.setval('seq_rental_moveout', 1, false);
 
 
 --
--- TOC entry 5056 (class 0 OID 0)
--- Dependencies: 555
 -- Name: seq_rental_moveout_comment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19244,8 +18920,6 @@ SELECT pg_catalog.setval('seq_rental_moveout_comment', 1, false);
 
 
 --
--- TOC entry 5057 (class 0 OID 0)
--- Dependencies: 557
 -- Name: seq_rental_notification; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19253,8 +18927,6 @@ SELECT pg_catalog.setval('seq_rental_notification', 1, false);
 
 
 --
--- TOC entry 5058 (class 0 OID 0)
--- Dependencies: 559
 -- Name: seq_rental_notification_workbench; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19262,8 +18934,6 @@ SELECT pg_catalog.setval('seq_rental_notification_workbench', 1, false);
 
 
 --
--- TOC entry 5059 (class 0 OID 0)
--- Dependencies: 561
 -- Name: seq_rental_party; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19271,8 +18941,6 @@ SELECT pg_catalog.setval('seq_rental_party', 1, false);
 
 
 --
--- TOC entry 5060 (class 0 OID 0)
--- Dependencies: 563
 -- Name: seq_rental_price_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19280,8 +18948,6 @@ SELECT pg_catalog.setval('seq_rental_price_item', 2, true);
 
 
 --
--- TOC entry 5061 (class 0 OID 0)
--- Dependencies: 565
 -- Name: seq_rental_unit; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
@@ -19289,7 +18955,6 @@ SELECT pg_catalog.setval('seq_rental_unit', 1, false);
 
 
 --
--- TOC entry 3774 (class 2606 OID 18187)
 -- Name: controller_check_item_case controller_check_item_case_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19298,7 +18963,6 @@ ALTER TABLE ONLY controller_check_item_case
 
 
 --
--- TOC entry 3772 (class 2606 OID 18189)
 -- Name: controller_check_item controller_check_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19307,7 +18971,6 @@ ALTER TABLE ONLY controller_check_item
 
 
 --
--- TOC entry 3776 (class 2606 OID 18191)
 -- Name: controller_check_item_status controller_check_item_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19316,7 +18979,6 @@ ALTER TABLE ONLY controller_check_item_status
 
 
 --
--- TOC entry 3778 (class 2606 OID 18193)
 -- Name: controller_check_list controller_check_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19325,7 +18987,6 @@ ALTER TABLE ONLY controller_check_list
 
 
 --
--- TOC entry 3782 (class 2606 OID 18195)
 -- Name: controller_control_component_list controller_control_component_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19334,7 +18995,6 @@ ALTER TABLE ONLY controller_control_component_list
 
 
 --
--- TOC entry 3786 (class 2606 OID 18197)
 -- Name: controller_control_group_component_list controller_control_group_component_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19343,7 +19003,6 @@ ALTER TABLE ONLY controller_control_group_component_list
 
 
 --
--- TOC entry 3788 (class 2606 OID 18199)
 -- Name: controller_control_group_list controller_control_group_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19352,7 +19011,6 @@ ALTER TABLE ONLY controller_control_group_list
 
 
 --
--- TOC entry 3784 (class 2606 OID 18201)
 -- Name: controller_control_group controller_control_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19361,7 +19019,6 @@ ALTER TABLE ONLY controller_control_group
 
 
 --
--- TOC entry 3792 (class 2606 OID 18203)
 -- Name: controller_control_item_list controller_control_item_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19370,7 +19027,6 @@ ALTER TABLE ONLY controller_control_item_list
 
 
 --
--- TOC entry 3794 (class 2606 OID 18205)
 -- Name: controller_control_item_option controller_control_item_option_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19379,7 +19035,6 @@ ALTER TABLE ONLY controller_control_item_option
 
 
 --
--- TOC entry 3790 (class 2606 OID 18207)
 -- Name: controller_control_item controller_control_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19388,7 +19043,6 @@ ALTER TABLE ONLY controller_control_item
 
 
 --
--- TOC entry 3796 (class 2606 OID 18209)
 -- Name: controller_control_location_list controller_control_location_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19397,7 +19051,6 @@ ALTER TABLE ONLY controller_control_location_list
 
 
 --
--- TOC entry 3780 (class 2606 OID 18211)
 -- Name: controller_control controller_control_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19406,7 +19059,6 @@ ALTER TABLE ONLY controller_control
 
 
 --
--- TOC entry 3800 (class 2606 OID 18213)
 -- Name: controller_control_serie_history controller_control_serie_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19415,7 +19067,6 @@ ALTER TABLE ONLY controller_control_serie_history
 
 
 --
--- TOC entry 3798 (class 2606 OID 18215)
 -- Name: controller_control_serie controller_control_serie_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19424,7 +19075,6 @@ ALTER TABLE ONLY controller_control_serie
 
 
 --
--- TOC entry 3802 (class 2606 OID 18217)
 -- Name: controller_document controller_document_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19433,7 +19083,6 @@ ALTER TABLE ONLY controller_document
 
 
 --
--- TOC entry 3804 (class 2606 OID 18219)
 -- Name: controller_document_types controller_document_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19442,7 +19091,6 @@ ALTER TABLE ONLY controller_document_types
 
 
 --
--- TOC entry 3806 (class 2606 OID 18221)
 -- Name: controller_procedure controller_procedure_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19451,7 +19099,6 @@ ALTER TABLE ONLY controller_procedure
 
 
 --
--- TOC entry 3810 (class 2606 OID 18223)
 -- Name: fm_action_pending_category fm_action_pending_category_num_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19460,7 +19107,6 @@ ALTER TABLE ONLY fm_action_pending_category
 
 
 --
--- TOC entry 3812 (class 2606 OID 18225)
 -- Name: fm_action_pending_category fm_action_pending_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19469,7 +19115,6 @@ ALTER TABLE ONLY fm_action_pending_category
 
 
 --
--- TOC entry 3808 (class 2606 OID 18227)
 -- Name: fm_action_pending fm_action_pending_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19478,7 +19123,6 @@ ALTER TABLE ONLY fm_action_pending
 
 
 --
--- TOC entry 3814 (class 2606 OID 18229)
 -- Name: fm_activities fm_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19487,7 +19131,6 @@ ALTER TABLE ONLY fm_activities
 
 
 --
--- TOC entry 3816 (class 2606 OID 18231)
 -- Name: fm_activity_price_index fm_activity_price_index_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19496,7 +19139,6 @@ ALTER TABLE ONLY fm_activity_price_index
 
 
 --
--- TOC entry 3820 (class 2606 OID 18233)
 -- Name: fm_agreement_group fm_agreement_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19505,7 +19147,6 @@ ALTER TABLE ONLY fm_agreement_group
 
 
 --
--- TOC entry 3818 (class 2606 OID 18235)
 -- Name: fm_agreement fm_agreement_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19514,7 +19155,6 @@ ALTER TABLE ONLY fm_agreement
 
 
 --
--- TOC entry 3822 (class 2606 OID 18237)
 -- Name: fm_agreement_status fm_agreement_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19523,7 +19163,6 @@ ALTER TABLE ONLY fm_agreement_status
 
 
 --
--- TOC entry 3824 (class 2606 OID 18239)
 -- Name: fm_async_method fm_async_method_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19532,7 +19171,6 @@ ALTER TABLE ONLY fm_async_method
 
 
 --
--- TOC entry 3826 (class 2606 OID 18241)
 -- Name: fm_authorities_demands fm_authorities_demands_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19541,7 +19179,6 @@ ALTER TABLE ONLY fm_authorities_demands
 
 
 --
--- TOC entry 3830 (class 2606 OID 18243)
 -- Name: fm_b_account_category fm_b_account_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19550,7 +19187,6 @@ ALTER TABLE ONLY fm_b_account_category
 
 
 --
--- TOC entry 3828 (class 2606 OID 18245)
 -- Name: fm_b_account fm_b_account_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19559,7 +19195,6 @@ ALTER TABLE ONLY fm_b_account
 
 
 --
--- TOC entry 3832 (class 2606 OID 18247)
 -- Name: fm_branch fm_branch_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19568,7 +19203,6 @@ ALTER TABLE ONLY fm_branch
 
 
 --
--- TOC entry 3838 (class 2606 OID 18249)
 -- Name: fm_budget_basis fm_budget_basis_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19577,7 +19211,6 @@ ALTER TABLE ONLY fm_budget_basis
 
 
 --
--- TOC entry 3840 (class 2606 OID 18251)
 -- Name: fm_budget_basis fm_budget_basis_year_b_group_district_id_revision_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19586,7 +19219,6 @@ ALTER TABLE ONLY fm_budget_basis
 
 
 --
--- TOC entry 3842 (class 2606 OID 18253)
 -- Name: fm_budget_cost fm_budget_cost_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19595,7 +19227,6 @@ ALTER TABLE ONLY fm_budget_cost
 
 
 --
--- TOC entry 3844 (class 2606 OID 18255)
 -- Name: fm_budget_cost fm_budget_cost_year_month_b_account_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19604,7 +19235,6 @@ ALTER TABLE ONLY fm_budget_cost
 
 
 --
--- TOC entry 3846 (class 2606 OID 18257)
 -- Name: fm_budget_period fm_budget_period_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19613,7 +19243,6 @@ ALTER TABLE ONLY fm_budget_period
 
 
 --
--- TOC entry 3834 (class 2606 OID 18259)
 -- Name: fm_budget fm_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19622,7 +19251,6 @@ ALTER TABLE ONLY fm_budget
 
 
 --
--- TOC entry 3836 (class 2606 OID 18261)
 -- Name: fm_budget fm_budget_year_b_account_id_district_id_revision_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19631,7 +19259,6 @@ ALTER TABLE ONLY fm_budget
 
 
 --
--- TOC entry 3848 (class 2606 OID 18263)
 -- Name: fm_building_part fm_building_part_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19640,7 +19267,6 @@ ALTER TABLE ONLY fm_building_part
 
 
 --
--- TOC entry 3850 (class 2606 OID 18265)
 -- Name: fm_cache fm_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19649,7 +19275,6 @@ ALTER TABLE ONLY fm_cache
 
 
 --
--- TOC entry 3852 (class 2606 OID 18267)
 -- Name: fm_chapter fm_chapter_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19658,7 +19283,6 @@ ALTER TABLE ONLY fm_chapter
 
 
 --
--- TOC entry 3856 (class 2606 OID 18269)
 -- Name: fm_condition_survey_history fm_condition_survey_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19667,7 +19291,6 @@ ALTER TABLE ONLY fm_condition_survey_history
 
 
 --
--- TOC entry 3854 (class 2606 OID 18271)
 -- Name: fm_condition_survey fm_condition_survey_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19676,7 +19299,6 @@ ALTER TABLE ONLY fm_condition_survey
 
 
 --
--- TOC entry 3858 (class 2606 OID 18273)
 -- Name: fm_condition_survey_status fm_condition_survey_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19685,7 +19307,6 @@ ALTER TABLE ONLY fm_condition_survey_status
 
 
 --
--- TOC entry 3860 (class 2606 OID 18275)
 -- Name: fm_cron_log fm_cron_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19694,7 +19315,6 @@ ALTER TABLE ONLY fm_cron_log
 
 
 --
--- TOC entry 3864 (class 2606 OID 18277)
 -- Name: fm_custom_cols fm_custom_cols_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19703,7 +19323,6 @@ ALTER TABLE ONLY fm_custom_cols
 
 
 --
--- TOC entry 3866 (class 2606 OID 18279)
 -- Name: fm_custom_menu_items fm_custom_menu_items_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19712,7 +19331,6 @@ ALTER TABLE ONLY fm_custom_menu_items
 
 
 --
--- TOC entry 3862 (class 2606 OID 18281)
 -- Name: fm_custom fm_custom_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19721,7 +19339,6 @@ ALTER TABLE ONLY fm_custom
 
 
 --
--- TOC entry 3868 (class 2606 OID 18283)
 -- Name: fm_district fm_district_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19730,7 +19347,6 @@ ALTER TABLE ONLY fm_district
 
 
 --
--- TOC entry 3873 (class 2606 OID 18285)
 -- Name: fm_document_history fm_document_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19739,7 +19355,6 @@ ALTER TABLE ONLY fm_document_history
 
 
 --
--- TOC entry 3870 (class 2606 OID 18287)
 -- Name: fm_document fm_document_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19748,7 +19363,6 @@ ALTER TABLE ONLY fm_document
 
 
 --
--- TOC entry 3875 (class 2606 OID 18289)
 -- Name: fm_document_relation fm_document_relation_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19757,7 +19371,6 @@ ALTER TABLE ONLY fm_document_relation
 
 
 --
--- TOC entry 3877 (class 2606 OID 18291)
 -- Name: fm_document_status fm_document_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19766,7 +19379,6 @@ ALTER TABLE ONLY fm_document_status
 
 
 --
--- TOC entry 3879 (class 2606 OID 18293)
 -- Name: fm_eco_period_transition fm_eco_period_transition_month_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19775,7 +19387,6 @@ ALTER TABLE ONLY fm_eco_period_transition
 
 
 --
--- TOC entry 3881 (class 2606 OID 18295)
 -- Name: fm_eco_period_transition fm_eco_period_transition_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19784,7 +19395,6 @@ ALTER TABLE ONLY fm_eco_period_transition
 
 
 --
--- TOC entry 3885 (class 2606 OID 18297)
 -- Name: fm_eco_periodization_outline fm_eco_periodization_outline_periodization_id_month_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19793,7 +19403,6 @@ ALTER TABLE ONLY fm_eco_periodization_outline
 
 
 --
--- TOC entry 3887 (class 2606 OID 18299)
 -- Name: fm_eco_periodization_outline fm_eco_periodization_outline_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19802,7 +19411,6 @@ ALTER TABLE ONLY fm_eco_periodization_outline
 
 
 --
--- TOC entry 3883 (class 2606 OID 18301)
 -- Name: fm_eco_periodization fm_eco_periodization_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19811,7 +19419,6 @@ ALTER TABLE ONLY fm_eco_periodization
 
 
 --
--- TOC entry 3889 (class 2606 OID 18303)
 -- Name: fm_eco_service fm_eco_service_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19820,7 +19427,6 @@ ALTER TABLE ONLY fm_eco_service
 
 
 --
--- TOC entry 3891 (class 2606 OID 18305)
 -- Name: fm_ecoart fm_ecoart_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19829,7 +19435,6 @@ ALTER TABLE ONLY fm_ecoart
 
 
 --
--- TOC entry 3893 (class 2606 OID 18307)
 -- Name: fm_ecoavvik fm_ecoavvik_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19838,7 +19443,6 @@ ALTER TABLE ONLY fm_ecoavvik
 
 
 --
--- TOC entry 3897 (class 2606 OID 18309)
 -- Name: fm_ecobilag_category fm_ecobilag_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19847,7 +19451,6 @@ ALTER TABLE ONLY fm_ecobilag_category
 
 
 --
--- TOC entry 3895 (class 2606 OID 18311)
 -- Name: fm_ecobilag fm_ecobilag_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19856,7 +19459,6 @@ ALTER TABLE ONLY fm_ecobilag
 
 
 --
--- TOC entry 3899 (class 2606 OID 18313)
 -- Name: fm_ecobilag_process_code fm_ecobilag_process_code_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19865,7 +19467,6 @@ ALTER TABLE ONLY fm_ecobilag_process_code
 
 
 --
--- TOC entry 3901 (class 2606 OID 18315)
 -- Name: fm_ecobilag_process_log fm_ecobilag_process_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19874,7 +19475,6 @@ ALTER TABLE ONLY fm_ecobilag_process_log
 
 
 --
--- TOC entry 3903 (class 2606 OID 18317)
 -- Name: fm_ecobilagkilde fm_ecobilagkilde_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19883,7 +19483,6 @@ ALTER TABLE ONLY fm_ecobilagkilde
 
 
 --
--- TOC entry 3905 (class 2606 OID 18319)
 -- Name: fm_ecobilagoverf fm_ecobilagoverf_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19892,7 +19491,6 @@ ALTER TABLE ONLY fm_ecobilagoverf
 
 
 --
--- TOC entry 3907 (class 2606 OID 18321)
 -- Name: fm_ecodimb fm_ecodimb_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19901,7 +19499,6 @@ ALTER TABLE ONLY fm_ecodimb
 
 
 --
--- TOC entry 3909 (class 2606 OID 18323)
 -- Name: fm_ecodimb_role fm_ecodimb_role_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19910,7 +19507,6 @@ ALTER TABLE ONLY fm_ecodimb_role
 
 
 --
--- TOC entry 3911 (class 2606 OID 18325)
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19919,7 +19515,6 @@ ALTER TABLE ONLY fm_ecodimb_role_user
 
 
 --
--- TOC entry 3913 (class 2606 OID 18327)
 -- Name: fm_ecodimb_role_user_substitute fm_ecodimb_role_user_substitute_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19928,7 +19523,6 @@ ALTER TABLE ONLY fm_ecodimb_role_user_substitute
 
 
 --
--- TOC entry 3915 (class 2606 OID 18329)
 -- Name: fm_ecodimd fm_ecodimd_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19937,7 +19531,6 @@ ALTER TABLE ONLY fm_ecodimd
 
 
 --
--- TOC entry 3917 (class 2606 OID 18331)
 -- Name: fm_ecomva fm_ecomva_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19946,7 +19539,6 @@ ALTER TABLE ONLY fm_ecomva
 
 
 --
--- TOC entry 3919 (class 2606 OID 18333)
 -- Name: fm_ecouser fm_ecouser_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19955,7 +19547,6 @@ ALTER TABLE ONLY fm_ecouser
 
 
 --
--- TOC entry 3923 (class 2606 OID 18335)
 -- Name: fm_entity_category fm_entity_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19964,7 +19555,6 @@ ALTER TABLE ONLY fm_entity_category
 
 
 --
--- TOC entry 3925 (class 2606 OID 18337)
 -- Name: fm_entity_group fm_entity_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19973,7 +19563,6 @@ ALTER TABLE ONLY fm_entity_group
 
 
 --
--- TOC entry 3927 (class 2606 OID 18339)
 -- Name: fm_entity_history fm_entity_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19982,7 +19571,6 @@ ALTER TABLE ONLY fm_entity_history
 
 
 --
--- TOC entry 3929 (class 2606 OID 18341)
 -- Name: fm_entity_lookup fm_entity_lookup_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -19991,7 +19579,6 @@ ALTER TABLE ONLY fm_entity_lookup
 
 
 --
--- TOC entry 3921 (class 2606 OID 18343)
 -- Name: fm_entity fm_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20000,7 +19587,6 @@ ALTER TABLE ONLY fm_entity
 
 
 --
--- TOC entry 3935 (class 2606 OID 18345)
 -- Name: fm_event_action fm_event_action_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20009,7 +19595,6 @@ ALTER TABLE ONLY fm_event_action
 
 
 --
--- TOC entry 3937 (class 2606 OID 18347)
 -- Name: fm_event_exception fm_event_exception_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20018,7 +19603,6 @@ ALTER TABLE ONLY fm_event_exception
 
 
 --
--- TOC entry 3931 (class 2606 OID 18349)
 -- Name: fm_event fm_event_location_id_location_item_id_attrib_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20027,7 +19611,6 @@ ALTER TABLE ONLY fm_event
 
 
 --
--- TOC entry 3933 (class 2606 OID 18351)
 -- Name: fm_event fm_event_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20036,7 +19619,6 @@ ALTER TABLE ONLY fm_event
 
 
 --
--- TOC entry 3939 (class 2606 OID 18353)
 -- Name: fm_event_receipt fm_event_receipt_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20045,7 +19627,6 @@ ALTER TABLE ONLY fm_event_receipt
 
 
 --
--- TOC entry 3941 (class 2606 OID 18355)
 -- Name: fm_event_schedule fm_event_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20054,7 +19635,6 @@ ALTER TABLE ONLY fm_event_schedule
 
 
 --
--- TOC entry 3943 (class 2606 OID 18357)
 -- Name: fm_external_project fm_external_project_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20063,7 +19643,6 @@ ALTER TABLE ONLY fm_external_project
 
 
 --
--- TOC entry 3945 (class 2606 OID 18359)
 -- Name: fm_gab_location fm_gab_location_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20072,7 +19651,6 @@ ALTER TABLE ONLY fm_gab_location
 
 
 --
--- TOC entry 3948 (class 2606 OID 18361)
 -- Name: fm_generic_history fm_generic_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20081,7 +19659,6 @@ ALTER TABLE ONLY fm_generic_history
 
 
 --
--- TOC entry 3950 (class 2606 OID 18363)
 -- Name: fm_idgenerator fm_idgenerator_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20090,7 +19667,6 @@ ALTER TABLE ONLY fm_idgenerator
 
 
 --
--- TOC entry 3953 (class 2606 OID 18365)
 -- Name: fm_investment fm_investment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20099,7 +19675,6 @@ ALTER TABLE ONLY fm_investment
 
 
 --
--- TOC entry 3956 (class 2606 OID 18367)
 -- Name: fm_investment_value fm_investment_value_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20108,7 +19683,6 @@ ALTER TABLE ONLY fm_investment_value
 
 
 --
--- TOC entry 3960 (class 2606 OID 18369)
 -- Name: fm_jasper_format_type fm_jasper_format_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20117,7 +19691,6 @@ ALTER TABLE ONLY fm_jasper_format_type
 
 
 --
--- TOC entry 3962 (class 2606 OID 18371)
 -- Name: fm_jasper_input fm_jasper_input_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20126,7 +19699,6 @@ ALTER TABLE ONLY fm_jasper_input
 
 
 --
--- TOC entry 3964 (class 2606 OID 18373)
 -- Name: fm_jasper_input_type fm_jasper_input_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20135,7 +19707,6 @@ ALTER TABLE ONLY fm_jasper_input_type
 
 
 --
--- TOC entry 3958 (class 2606 OID 18375)
 -- Name: fm_jasper fm_jasper_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20144,7 +19715,6 @@ ALTER TABLE ONLY fm_jasper
 
 
 --
--- TOC entry 3966 (class 2606 OID 18377)
 -- Name: fm_key_loc fm_key_loc_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20153,7 +19723,6 @@ ALTER TABLE ONLY fm_key_loc
 
 
 --
--- TOC entry 3971 (class 2606 OID 18379)
 -- Name: fm_location1_category fm_location1_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20162,7 +19731,6 @@ ALTER TABLE ONLY fm_location1_category
 
 
 --
--- TOC entry 3968 (class 2606 OID 18381)
 -- Name: fm_location1 fm_location1_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20171,7 +19739,6 @@ ALTER TABLE ONLY fm_location1
 
 
 --
--- TOC entry 3976 (class 2606 OID 18383)
 -- Name: fm_location2_category fm_location2_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20180,7 +19747,6 @@ ALTER TABLE ONLY fm_location2_category
 
 
 --
--- TOC entry 3973 (class 2606 OID 18385)
 -- Name: fm_location2 fm_location2_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20189,7 +19755,6 @@ ALTER TABLE ONLY fm_location2
 
 
 --
--- TOC entry 3981 (class 2606 OID 18387)
 -- Name: fm_location3_category fm_location3_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20198,7 +19763,6 @@ ALTER TABLE ONLY fm_location3_category
 
 
 --
--- TOC entry 3978 (class 2606 OID 18389)
 -- Name: fm_location3 fm_location3_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20207,7 +19771,6 @@ ALTER TABLE ONLY fm_location3
 
 
 --
--- TOC entry 3986 (class 2606 OID 18391)
 -- Name: fm_location4_category fm_location4_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20216,7 +19779,6 @@ ALTER TABLE ONLY fm_location4_category
 
 
 --
--- TOC entry 3983 (class 2606 OID 18393)
 -- Name: fm_location4 fm_location4_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20225,7 +19787,6 @@ ALTER TABLE ONLY fm_location4
 
 
 --
--- TOC entry 3988 (class 2606 OID 18395)
 -- Name: fm_location_config fm_location_config_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20234,7 +19795,6 @@ ALTER TABLE ONLY fm_location_config
 
 
 --
--- TOC entry 3990 (class 2606 OID 18397)
 -- Name: fm_location_contact fm_location_contact_contact_id_location_code_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20243,7 +19803,6 @@ ALTER TABLE ONLY fm_location_contact
 
 
 --
--- TOC entry 3992 (class 2606 OID 18399)
 -- Name: fm_location_contact fm_location_contact_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20252,7 +19811,6 @@ ALTER TABLE ONLY fm_location_contact
 
 
 --
--- TOC entry 3996 (class 2606 OID 18401)
 -- Name: fm_location_exception_category fm_location_exception_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20261,7 +19819,6 @@ ALTER TABLE ONLY fm_location_exception_category
 
 
 --
--- TOC entry 3998 (class 2606 OID 18403)
 -- Name: fm_location_exception_category_text fm_location_exception_category_text_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20270,7 +19827,6 @@ ALTER TABLE ONLY fm_location_exception_category_text
 
 
 --
--- TOC entry 3994 (class 2606 OID 18405)
 -- Name: fm_location_exception fm_location_exception_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20279,7 +19835,6 @@ ALTER TABLE ONLY fm_location_exception
 
 
 --
--- TOC entry 4000 (class 2606 OID 18407)
 -- Name: fm_location_exception_severity fm_location_exception_severity_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20288,7 +19843,6 @@ ALTER TABLE ONLY fm_location_exception_severity
 
 
 --
--- TOC entry 4002 (class 2606 OID 18409)
 -- Name: fm_location_type fm_location_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20297,7 +19851,6 @@ ALTER TABLE ONLY fm_location_type
 
 
 --
--- TOC entry 4004 (class 2606 OID 18411)
 -- Name: fm_locations fm_locations_location_code_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20306,7 +19859,6 @@ ALTER TABLE ONLY fm_locations
 
 
 --
--- TOC entry 4006 (class 2606 OID 18413)
 -- Name: fm_locations fm_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20315,7 +19867,6 @@ ALTER TABLE ONLY fm_locations
 
 
 --
--- TOC entry 4008 (class 2606 OID 18415)
 -- Name: fm_ns3420 fm_ns3420_num_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20324,7 +19875,6 @@ ALTER TABLE ONLY fm_ns3420
 
 
 --
--- TOC entry 4010 (class 2606 OID 18417)
 -- Name: fm_ns3420 fm_ns3420_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20333,7 +19883,6 @@ ALTER TABLE ONLY fm_ns3420
 
 
 --
--- TOC entry 4016 (class 2606 OID 18419)
 -- Name: fm_order_dim1 fm_order_dim1_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20342,7 +19891,6 @@ ALTER TABLE ONLY fm_order_dim1
 
 
 --
--- TOC entry 4018 (class 2606 OID 18421)
 -- Name: fm_order_template fm_order_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20351,7 +19899,6 @@ ALTER TABLE ONLY fm_order_template
 
 
 --
--- TOC entry 4020 (class 2606 OID 18423)
 -- Name: fm_orders fm_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20360,7 +19907,6 @@ ALTER TABLE ONLY fm_orders
 
 
 --
--- TOC entry 4022 (class 2606 OID 18425)
 -- Name: fm_org_unit fm_org_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20369,7 +19915,6 @@ ALTER TABLE ONLY fm_org_unit
 
 
 --
--- TOC entry 4026 (class 2606 OID 18427)
 -- Name: fm_owner_category fm_owner_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20378,7 +19923,6 @@ ALTER TABLE ONLY fm_owner_category
 
 
 --
--- TOC entry 4024 (class 2606 OID 18429)
 -- Name: fm_owner fm_owner_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20387,7 +19931,6 @@ ALTER TABLE ONLY fm_owner
 
 
 --
--- TOC entry 4028 (class 2606 OID 18431)
 -- Name: fm_part_of_town fm_part_of_town_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20396,7 +19939,6 @@ ALTER TABLE ONLY fm_part_of_town
 
 
 --
--- TOC entry 4033 (class 2606 OID 18433)
 -- Name: fm_project_budget fm_project_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20405,7 +19947,6 @@ ALTER TABLE ONLY fm_project_budget
 
 
 --
--- TOC entry 4037 (class 2606 OID 18435)
 -- Name: fm_project_buffer_budget fm_project_buffer_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20414,7 +19955,6 @@ ALTER TABLE ONLY fm_project_buffer_budget
 
 
 --
--- TOC entry 4039 (class 2606 OID 18437)
 -- Name: fm_project_history fm_project_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20423,7 +19963,6 @@ ALTER TABLE ONLY fm_project_history
 
 
 --
--- TOC entry 4030 (class 2606 OID 18439)
 -- Name: fm_project fm_project_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20432,7 +19971,6 @@ ALTER TABLE ONLY fm_project
 
 
 --
--- TOC entry 4041 (class 2606 OID 18441)
 -- Name: fm_project_status fm_project_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20441,7 +19979,6 @@ ALTER TABLE ONLY fm_project_status
 
 
 --
--- TOC entry 4043 (class 2606 OID 18443)
 -- Name: fm_projectbranch fm_projectbranch_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20450,7 +19987,6 @@ ALTER TABLE ONLY fm_projectbranch
 
 
 --
--- TOC entry 4045 (class 2606 OID 18445)
 -- Name: fm_regulations fm_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20459,7 +19995,6 @@ ALTER TABLE ONLY fm_regulations
 
 
 --
--- TOC entry 4050 (class 2606 OID 18447)
 -- Name: fm_request_condition fm_request_condition_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20468,7 +20003,6 @@ ALTER TABLE ONLY fm_request_condition
 
 
 --
--- TOC entry 4052 (class 2606 OID 18449)
 -- Name: fm_request_condition_type fm_request_condition_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20477,7 +20011,6 @@ ALTER TABLE ONLY fm_request_condition_type
 
 
 --
--- TOC entry 4054 (class 2606 OID 18451)
 -- Name: fm_request_consume fm_request_consume_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20486,7 +20019,6 @@ ALTER TABLE ONLY fm_request_consume
 
 
 --
--- TOC entry 4056 (class 2606 OID 18453)
 -- Name: fm_request_history fm_request_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20495,7 +20027,6 @@ ALTER TABLE ONLY fm_request_history
 
 
 --
--- TOC entry 4047 (class 2606 OID 18455)
 -- Name: fm_request fm_request_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20504,7 +20035,6 @@ ALTER TABLE ONLY fm_request
 
 
 --
--- TOC entry 4058 (class 2606 OID 18457)
 -- Name: fm_request_planning fm_request_planning_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20513,7 +20043,6 @@ ALTER TABLE ONLY fm_request_planning
 
 
 --
--- TOC entry 4060 (class 2606 OID 18459)
 -- Name: fm_request_responsible_unit fm_request_responsible_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20522,7 +20051,6 @@ ALTER TABLE ONLY fm_request_responsible_unit
 
 
 --
--- TOC entry 4062 (class 2606 OID 18461)
 -- Name: fm_request_status fm_request_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20531,7 +20059,6 @@ ALTER TABLE ONLY fm_request_status
 
 
 --
--- TOC entry 4064 (class 2606 OID 18463)
 -- Name: fm_response_template fm_response_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20540,7 +20067,6 @@ ALTER TABLE ONLY fm_response_template
 
 
 --
--- TOC entry 4068 (class 2606 OID 18465)
 -- Name: fm_responsibility_contact fm_responsibility_contact_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20549,7 +20075,6 @@ ALTER TABLE ONLY fm_responsibility_contact
 
 
 --
--- TOC entry 4071 (class 2606 OID 18467)
 -- Name: fm_responsibility_module fm_responsibility_module_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20558,7 +20083,6 @@ ALTER TABLE ONLY fm_responsibility_module
 
 
 --
--- TOC entry 4066 (class 2606 OID 18469)
 -- Name: fm_responsibility fm_responsibility_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20567,7 +20091,6 @@ ALTER TABLE ONLY fm_responsibility
 
 
 --
--- TOC entry 4073 (class 2606 OID 18471)
 -- Name: fm_responsibility_role fm_responsibility_role_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20576,7 +20099,6 @@ ALTER TABLE ONLY fm_responsibility_role
 
 
 --
--- TOC entry 4077 (class 2606 OID 18473)
 -- Name: fm_s_agreement_budget fm_s_agreement_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20585,7 +20107,6 @@ ALTER TABLE ONLY fm_s_agreement_budget
 
 
 --
--- TOC entry 4079 (class 2606 OID 18475)
 -- Name: fm_s_agreement_category fm_s_agreement_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20594,7 +20115,6 @@ ALTER TABLE ONLY fm_s_agreement_category
 
 
 --
--- TOC entry 4081 (class 2606 OID 18477)
 -- Name: fm_s_agreement_detail fm_s_agreement_detail_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20603,7 +20123,6 @@ ALTER TABLE ONLY fm_s_agreement_detail
 
 
 --
--- TOC entry 4083 (class 2606 OID 18479)
 -- Name: fm_s_agreement_history fm_s_agreement_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20612,7 +20131,6 @@ ALTER TABLE ONLY fm_s_agreement_history
 
 
 --
--- TOC entry 4075 (class 2606 OID 18481)
 -- Name: fm_s_agreement fm_s_agreement_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20621,7 +20139,6 @@ ALTER TABLE ONLY fm_s_agreement
 
 
 --
--- TOC entry 4085 (class 2606 OID 18483)
 -- Name: fm_s_agreement_pricing fm_s_agreement_pricing_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20630,7 +20147,6 @@ ALTER TABLE ONLY fm_s_agreement_pricing
 
 
 --
--- TOC entry 4087 (class 2606 OID 18485)
 -- Name: fm_standard_unit fm_standard_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20639,7 +20155,6 @@ ALTER TABLE ONLY fm_standard_unit
 
 
 --
--- TOC entry 4089 (class 2606 OID 18487)
 -- Name: fm_streetaddress fm_streetaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20648,7 +20163,6 @@ ALTER TABLE ONLY fm_streetaddress
 
 
 --
--- TOC entry 4093 (class 2606 OID 18489)
 -- Name: fm_template_hours fm_template_hours_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20657,7 +20171,6 @@ ALTER TABLE ONLY fm_template_hours
 
 
 --
--- TOC entry 4091 (class 2606 OID 18491)
 -- Name: fm_template fm_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20666,7 +20179,6 @@ ALTER TABLE ONLY fm_template
 
 
 --
--- TOC entry 4097 (class 2606 OID 18493)
 -- Name: fm_tenant_category fm_tenant_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20675,7 +20187,6 @@ ALTER TABLE ONLY fm_tenant_category
 
 
 --
--- TOC entry 4101 (class 2606 OID 18495)
 -- Name: fm_tenant_claim_category fm_tenant_claim_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20684,7 +20195,6 @@ ALTER TABLE ONLY fm_tenant_claim_category
 
 
 --
--- TOC entry 4103 (class 2606 OID 18497)
 -- Name: fm_tenant_claim_history fm_tenant_claim_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20693,7 +20203,6 @@ ALTER TABLE ONLY fm_tenant_claim_history
 
 
 --
--- TOC entry 4099 (class 2606 OID 18499)
 -- Name: fm_tenant_claim fm_tenant_claim_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20702,7 +20211,6 @@ ALTER TABLE ONLY fm_tenant_claim
 
 
 --
--- TOC entry 4095 (class 2606 OID 18501)
 -- Name: fm_tenant fm_tenant_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20711,7 +20219,6 @@ ALTER TABLE ONLY fm_tenant
 
 
 --
--- TOC entry 4105 (class 2606 OID 18503)
 -- Name: fm_tts_budget fm_tts_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20720,7 +20227,6 @@ ALTER TABLE ONLY fm_tts_budget
 
 
 --
--- TOC entry 4107 (class 2606 OID 18505)
 -- Name: fm_tts_history fm_tts_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20729,7 +20235,6 @@ ALTER TABLE ONLY fm_tts_history
 
 
 --
--- TOC entry 4109 (class 2606 OID 18507)
 -- Name: fm_tts_payments fm_tts_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20738,7 +20243,6 @@ ALTER TABLE ONLY fm_tts_payments
 
 
 --
--- TOC entry 4111 (class 2606 OID 18509)
 -- Name: fm_tts_priority fm_tts_priority_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20747,7 +20251,6 @@ ALTER TABLE ONLY fm_tts_priority
 
 
 --
--- TOC entry 4113 (class 2606 OID 18511)
 -- Name: fm_tts_status fm_tts_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20756,7 +20259,6 @@ ALTER TABLE ONLY fm_tts_status
 
 
 --
--- TOC entry 4115 (class 2606 OID 18513)
 -- Name: fm_tts_tickets fm_tts_tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20765,7 +20267,6 @@ ALTER TABLE ONLY fm_tts_tickets
 
 
 --
--- TOC entry 4118 (class 2606 OID 18515)
 -- Name: fm_unspsc_code fm_unspsc_code_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20774,7 +20275,6 @@ ALTER TABLE ONLY fm_unspsc_code
 
 
 --
--- TOC entry 4122 (class 2606 OID 18517)
 -- Name: fm_vendor_category fm_vendor_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20783,7 +20283,6 @@ ALTER TABLE ONLY fm_vendor_category
 
 
 --
--- TOC entry 4120 (class 2606 OID 18519)
 -- Name: fm_vendor fm_vendor_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20792,7 +20291,6 @@ ALTER TABLE ONLY fm_vendor
 
 
 --
--- TOC entry 4124 (class 2606 OID 18521)
 -- Name: fm_view_dataset fm_view_dataset_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20801,7 +20299,6 @@ ALTER TABLE ONLY fm_view_dataset
 
 
 --
--- TOC entry 4126 (class 2606 OID 18523)
 -- Name: fm_view_dataset_report fm_view_dataset_report_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20810,7 +20307,6 @@ ALTER TABLE ONLY fm_view_dataset_report
 
 
 --
--- TOC entry 4128 (class 2606 OID 18525)
 -- Name: fm_wo_h_deviation fm_wo_h_deviation_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20819,7 +20315,6 @@ ALTER TABLE ONLY fm_wo_h_deviation
 
 
 --
--- TOC entry 4132 (class 2606 OID 18527)
 -- Name: fm_wo_hours_category fm_wo_hours_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20828,7 +20323,6 @@ ALTER TABLE ONLY fm_wo_hours_category
 
 
 --
--- TOC entry 4130 (class 2606 OID 18529)
 -- Name: fm_wo_hours fm_wo_hours_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20837,7 +20331,6 @@ ALTER TABLE ONLY fm_wo_hours
 
 
 --
--- TOC entry 4035 (class 2606 OID 18531)
 -- Name: fm_workorder_budget fm_workorder_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20846,7 +20339,6 @@ ALTER TABLE ONLY fm_workorder_budget
 
 
 --
--- TOC entry 4134 (class 2606 OID 18533)
 -- Name: fm_workorder_history fm_workorder_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20855,7 +20347,6 @@ ALTER TABLE ONLY fm_workorder_history
 
 
 --
--- TOC entry 4012 (class 2606 OID 18535)
 -- Name: fm_workorder fm_workorder_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20864,7 +20355,6 @@ ALTER TABLE ONLY fm_workorder
 
 
 --
--- TOC entry 4014 (class 2606 OID 18537)
 -- Name: fm_workorder_status fm_workorder_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20873,7 +20363,6 @@ ALTER TABLE ONLY fm_workorder_status
 
 
 --
--- TOC entry 4136 (class 2606 OID 18539)
 -- Name: phpgw_account_delegates phpgw_account_delegates_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20882,7 +20371,6 @@ ALTER TABLE ONLY phpgw_account_delegates
 
 
 --
--- TOC entry 4138 (class 2606 OID 18541)
 -- Name: phpgw_accounts phpgw_accounts_account_lid_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20891,7 +20379,6 @@ ALTER TABLE ONLY phpgw_accounts
 
 
 --
--- TOC entry 4142 (class 2606 OID 18543)
 -- Name: phpgw_accounts_data phpgw_accounts_data_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20900,7 +20387,6 @@ ALTER TABLE ONLY phpgw_accounts_data
 
 
 --
--- TOC entry 4140 (class 2606 OID 18545)
 -- Name: phpgw_accounts phpgw_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20909,7 +20395,6 @@ ALTER TABLE ONLY phpgw_accounts
 
 
 --
--- TOC entry 4146 (class 2606 OID 18547)
 -- Name: phpgw_applications phpgw_applications_app_name_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20918,7 +20403,6 @@ ALTER TABLE ONLY phpgw_applications
 
 
 --
--- TOC entry 4148 (class 2606 OID 18549)
 -- Name: phpgw_applications phpgw_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20927,7 +20411,6 @@ ALTER TABLE ONLY phpgw_applications
 
 
 --
--- TOC entry 4150 (class 2606 OID 18551)
 -- Name: phpgw_async phpgw_async_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20936,7 +20419,6 @@ ALTER TABLE ONLY phpgw_async
 
 
 --
--- TOC entry 4153 (class 2606 OID 18553)
 -- Name: phpgw_cache_user phpgw_cache_user_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20945,7 +20427,6 @@ ALTER TABLE ONLY phpgw_cache_user
 
 
 --
--- TOC entry 4155 (class 2606 OID 18555)
 -- Name: phpgw_categories phpgw_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20954,7 +20435,6 @@ ALTER TABLE ONLY phpgw_categories
 
 
 --
--- TOC entry 4159 (class 2606 OID 18557)
 -- Name: phpgw_config2_attrib phpgw_config2_attrib_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20963,7 +20443,6 @@ ALTER TABLE ONLY phpgw_config2_attrib
 
 
 --
--- TOC entry 4161 (class 2606 OID 18559)
 -- Name: phpgw_config2_choice phpgw_config2_choice_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20972,7 +20451,6 @@ ALTER TABLE ONLY phpgw_config2_choice
 
 
 --
--- TOC entry 4163 (class 2606 OID 18561)
 -- Name: phpgw_config2_choice phpgw_config2_choice_section_id_attrib_id_value_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20981,7 +20459,6 @@ ALTER TABLE ONLY phpgw_config2_choice
 
 
 --
--- TOC entry 4165 (class 2606 OID 18563)
 -- Name: phpgw_config2_section phpgw_config2_section_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20990,7 +20467,6 @@ ALTER TABLE ONLY phpgw_config2_section
 
 
 --
--- TOC entry 4167 (class 2606 OID 18565)
 -- Name: phpgw_config2_value phpgw_config2_value_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -20999,7 +20475,6 @@ ALTER TABLE ONLY phpgw_config2_value
 
 
 --
--- TOC entry 4157 (class 2606 OID 18567)
 -- Name: phpgw_config phpgw_config_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21008,7 +20483,6 @@ ALTER TABLE ONLY phpgw_config
 
 
 --
--- TOC entry 4176 (class 2606 OID 18569)
 -- Name: phpgw_contact_addr phpgw_contact_addr_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21017,7 +20491,6 @@ ALTER TABLE ONLY phpgw_contact_addr
 
 
 --
--- TOC entry 4179 (class 2606 OID 18571)
 -- Name: phpgw_contact_addr_type phpgw_contact_addr_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21026,7 +20499,6 @@ ALTER TABLE ONLY phpgw_contact_addr_type
 
 
 --
--- TOC entry 4189 (class 2606 OID 18573)
 -- Name: phpgw_contact_comm_descr phpgw_contact_comm_descr_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21035,7 +20507,6 @@ ALTER TABLE ONLY phpgw_contact_comm_descr
 
 
 --
--- TOC entry 4184 (class 2606 OID 18575)
 -- Name: phpgw_contact_comm phpgw_contact_comm_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21044,7 +20515,6 @@ ALTER TABLE ONLY phpgw_contact_comm
 
 
 --
--- TOC entry 4193 (class 2606 OID 18577)
 -- Name: phpgw_contact_comm_type phpgw_contact_comm_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21053,7 +20523,6 @@ ALTER TABLE ONLY phpgw_contact_comm_type
 
 
 --
--- TOC entry 4198 (class 2606 OID 18579)
 -- Name: phpgw_contact_note phpgw_contact_note_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21062,7 +20531,6 @@ ALTER TABLE ONLY phpgw_contact_note
 
 
 --
--- TOC entry 4200 (class 2606 OID 18581)
 -- Name: phpgw_contact_note_type phpgw_contact_note_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21071,7 +20539,6 @@ ALTER TABLE ONLY phpgw_contact_note_type
 
 
 --
--- TOC entry 4207 (class 2606 OID 18583)
 -- Name: phpgw_contact_org_person phpgw_contact_org_person_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21080,7 +20547,6 @@ ALTER TABLE ONLY phpgw_contact_org_person
 
 
 --
--- TOC entry 4213 (class 2606 OID 18585)
 -- Name: phpgw_contact_others phpgw_contact_others_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21089,7 +20555,6 @@ ALTER TABLE ONLY phpgw_contact_others
 
 
 --
--- TOC entry 4217 (class 2606 OID 18587)
 -- Name: phpgw_contact_person phpgw_contact_person_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21098,7 +20563,6 @@ ALTER TABLE ONLY phpgw_contact_person
 
 
 --
--- TOC entry 4172 (class 2606 OID 18589)
 -- Name: phpgw_contact phpgw_contact_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21107,7 +20571,6 @@ ALTER TABLE ONLY phpgw_contact
 
 
 --
--- TOC entry 4220 (class 2606 OID 18591)
 -- Name: phpgw_contact_types phpgw_contact_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21116,7 +20579,6 @@ ALTER TABLE ONLY phpgw_contact_types
 
 
 --
--- TOC entry 4224 (class 2606 OID 18593)
 -- Name: phpgw_cust_attribute_group phpgw_cust_attribute_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21125,7 +20587,6 @@ ALTER TABLE ONLY phpgw_cust_attribute_group
 
 
 --
--- TOC entry 4222 (class 2606 OID 18595)
 -- Name: phpgw_cust_attribute phpgw_cust_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21134,7 +20595,6 @@ ALTER TABLE ONLY phpgw_cust_attribute
 
 
 --
--- TOC entry 4226 (class 2606 OID 18597)
 -- Name: phpgw_cust_choice phpgw_cust_choice_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21143,7 +20603,6 @@ ALTER TABLE ONLY phpgw_cust_choice
 
 
 --
--- TOC entry 4228 (class 2606 OID 18599)
 -- Name: phpgw_cust_function phpgw_cust_function_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21152,7 +20611,6 @@ ALTER TABLE ONLY phpgw_cust_function
 
 
 --
--- TOC entry 4230 (class 2606 OID 18601)
 -- Name: phpgw_group_map phpgw_group_map_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21161,7 +20619,6 @@ ALTER TABLE ONLY phpgw_group_map
 
 
 --
--- TOC entry 4232 (class 2606 OID 18603)
 -- Name: phpgw_history_log phpgw_history_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21170,7 +20627,6 @@ ALTER TABLE ONLY phpgw_history_log
 
 
 --
--- TOC entry 4234 (class 2606 OID 18605)
 -- Name: phpgw_hooks phpgw_hooks_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21179,7 +20635,6 @@ ALTER TABLE ONLY phpgw_hooks
 
 
 --
--- TOC entry 4236 (class 2606 OID 18607)
 -- Name: phpgw_interlink phpgw_interlink_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21188,7 +20643,6 @@ ALTER TABLE ONLY phpgw_interlink
 
 
 --
--- TOC entry 4238 (class 2606 OID 18609)
 -- Name: phpgw_interserv phpgw_interserv_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21197,7 +20651,6 @@ ALTER TABLE ONLY phpgw_interserv
 
 
 --
--- TOC entry 4240 (class 2606 OID 18611)
 -- Name: phpgw_lang phpgw_lang_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21206,7 +20659,6 @@ ALTER TABLE ONLY phpgw_lang
 
 
 --
--- TOC entry 4242 (class 2606 OID 18613)
 -- Name: phpgw_languages phpgw_languages_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21215,7 +20667,6 @@ ALTER TABLE ONLY phpgw_languages
 
 
 --
--- TOC entry 4246 (class 2606 OID 18615)
 -- Name: phpgw_locations phpgw_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21224,7 +20675,6 @@ ALTER TABLE ONLY phpgw_locations
 
 
 --
--- TOC entry 4248 (class 2606 OID 18617)
 -- Name: phpgw_log phpgw_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21233,7 +20683,6 @@ ALTER TABLE ONLY phpgw_log
 
 
 --
--- TOC entry 4251 (class 2606 OID 18619)
 -- Name: phpgw_mail_handler phpgw_mail_handler_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21242,7 +20691,6 @@ ALTER TABLE ONLY phpgw_mail_handler
 
 
 --
--- TOC entry 4254 (class 2606 OID 18621)
 -- Name: phpgw_mapping phpgw_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21251,7 +20699,6 @@ ALTER TABLE ONLY phpgw_mapping
 
 
 --
--- TOC entry 4256 (class 2606 OID 18623)
 -- Name: phpgw_nextid phpgw_nextid_appname_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21260,7 +20707,6 @@ ALTER TABLE ONLY phpgw_nextid
 
 
 --
--- TOC entry 4258 (class 2606 OID 18625)
 -- Name: phpgw_notification phpgw_notification_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21269,7 +20715,6 @@ ALTER TABLE ONLY phpgw_notification
 
 
 --
--- TOC entry 4260 (class 2606 OID 18627)
 -- Name: phpgw_preferences phpgw_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21278,7 +20723,6 @@ ALTER TABLE ONLY phpgw_preferences
 
 
 --
--- TOC entry 4263 (class 2606 OID 18629)
 -- Name: phpgw_sessions phpgw_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21287,7 +20731,6 @@ ALTER TABLE ONLY phpgw_sessions
 
 
 --
--- TOC entry 4267 (class 2606 OID 18631)
 -- Name: phpgw_vfs_file_relation phpgw_vfs_file_relation_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21296,7 +20739,6 @@ ALTER TABLE ONLY phpgw_vfs_file_relation
 
 
 --
--- TOC entry 4269 (class 2606 OID 18633)
 -- Name: phpgw_vfs_filedata phpgw_vfs_filedata_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21305,7 +20747,6 @@ ALTER TABLE ONLY phpgw_vfs_filedata
 
 
 --
--- TOC entry 4265 (class 2606 OID 18635)
 -- Name: phpgw_vfs phpgw_vfs_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21314,7 +20755,6 @@ ALTER TABLE ONLY phpgw_vfs
 
 
 --
--- TOC entry 4271 (class 2606 OID 18637)
 -- Name: rental_adjustment rental_adjustment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21323,7 +20763,6 @@ ALTER TABLE ONLY rental_adjustment
 
 
 --
--- TOC entry 4275 (class 2606 OID 18639)
 -- Name: rental_application_comment rental_application_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21332,7 +20771,6 @@ ALTER TABLE ONLY rental_application_comment
 
 
 --
--- TOC entry 4277 (class 2606 OID 18641)
 -- Name: rental_application_composite rental_application_composite_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21341,7 +20779,6 @@ ALTER TABLE ONLY rental_application_composite
 
 
 --
--- TOC entry 4273 (class 2606 OID 18643)
 -- Name: rental_application rental_application_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21350,7 +20787,6 @@ ALTER TABLE ONLY rental_application
 
 
 --
--- TOC entry 4281 (class 2606 OID 18645)
 -- Name: rental_billing_info rental_billing_info_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21359,7 +20795,6 @@ ALTER TABLE ONLY rental_billing_info
 
 
 --
--- TOC entry 4279 (class 2606 OID 18647)
 -- Name: rental_billing rental_billing_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21368,7 +20803,6 @@ ALTER TABLE ONLY rental_billing
 
 
 --
--- TOC entry 4283 (class 2606 OID 18649)
 -- Name: rental_billing_term rental_billing_term_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21377,7 +20811,6 @@ ALTER TABLE ONLY rental_billing_term
 
 
 --
--- TOC entry 4285 (class 2606 OID 18651)
 -- Name: rental_composite rental_composite_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21386,7 +20819,6 @@ ALTER TABLE ONLY rental_composite
 
 
 --
--- TOC entry 4287 (class 2606 OID 18653)
 -- Name: rental_composite_standard rental_composite_standard_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21395,7 +20827,6 @@ ALTER TABLE ONLY rental_composite_standard
 
 
 --
--- TOC entry 4289 (class 2606 OID 18655)
 -- Name: rental_composite_type rental_composite_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21404,7 +20835,6 @@ ALTER TABLE ONLY rental_composite_type
 
 
 --
--- TOC entry 4293 (class 2606 OID 18657)
 -- Name: rental_contract_composite rental_contract_composite_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21413,7 +20843,6 @@ ALTER TABLE ONLY rental_contract_composite
 
 
 --
--- TOC entry 4295 (class 2606 OID 18659)
 -- Name: rental_contract_last_edited rental_contract_last_edited_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21422,7 +20851,6 @@ ALTER TABLE ONLY rental_contract_last_edited
 
 
 --
--- TOC entry 4297 (class 2606 OID 18661)
 -- Name: rental_contract_party rental_contract_party_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21431,7 +20859,6 @@ ALTER TABLE ONLY rental_contract_party
 
 
 --
--- TOC entry 4291 (class 2606 OID 18663)
 -- Name: rental_contract rental_contract_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21440,7 +20867,6 @@ ALTER TABLE ONLY rental_contract
 
 
 --
--- TOC entry 4299 (class 2606 OID 18665)
 -- Name: rental_contract_price_item rental_contract_price_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21449,7 +20875,6 @@ ALTER TABLE ONLY rental_contract_price_item
 
 
 --
--- TOC entry 4301 (class 2606 OID 18667)
 -- Name: rental_contract_responsibility rental_contract_responsibility_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21458,7 +20883,6 @@ ALTER TABLE ONLY rental_contract_responsibility
 
 
 --
--- TOC entry 4303 (class 2606 OID 18669)
 -- Name: rental_contract_responsibility_unit rental_contract_responsibility_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21467,7 +20891,6 @@ ALTER TABLE ONLY rental_contract_responsibility_unit
 
 
 --
--- TOC entry 4305 (class 2606 OID 18671)
 -- Name: rental_contract_types rental_contract_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21476,7 +20899,6 @@ ALTER TABLE ONLY rental_contract_types
 
 
 --
--- TOC entry 4307 (class 2606 OID 18673)
 -- Name: rental_document rental_document_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21485,7 +20907,6 @@ ALTER TABLE ONLY rental_document
 
 
 --
--- TOC entry 4309 (class 2606 OID 18675)
 -- Name: rental_document_types rental_document_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21494,7 +20915,6 @@ ALTER TABLE ONLY rental_document_types
 
 
 --
--- TOC entry 4313 (class 2606 OID 18677)
 -- Name: rental_email_out_party rental_email_out_party_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21503,7 +20923,6 @@ ALTER TABLE ONLY rental_email_out_party
 
 
 --
--- TOC entry 4311 (class 2606 OID 18679)
 -- Name: rental_email_out rental_email_out_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21512,7 +20931,6 @@ ALTER TABLE ONLY rental_email_out
 
 
 --
--- TOC entry 4315 (class 2606 OID 18681)
 -- Name: rental_email_template rental_email_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21521,7 +20939,6 @@ ALTER TABLE ONLY rental_email_template
 
 
 --
--- TOC entry 4317 (class 2606 OID 18683)
 -- Name: rental_invoice rental_invoice_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21530,7 +20947,6 @@ ALTER TABLE ONLY rental_invoice
 
 
 --
--- TOC entry 4319 (class 2606 OID 18685)
 -- Name: rental_invoice_price_item rental_invoice_price_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21539,7 +20955,6 @@ ALTER TABLE ONLY rental_invoice_price_item
 
 
 --
--- TOC entry 4321 (class 2606 OID 18687)
 -- Name: rental_location_factor rental_location_factor_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21548,7 +20963,6 @@ ALTER TABLE ONLY rental_location_factor
 
 
 --
--- TOC entry 4327 (class 2606 OID 18689)
 -- Name: rental_movein_comment rental_movein_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21557,7 +20971,6 @@ ALTER TABLE ONLY rental_movein_comment
 
 
 --
--- TOC entry 4323 (class 2606 OID 18691)
 -- Name: rental_movein rental_movein_contract_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21566,7 +20979,6 @@ ALTER TABLE ONLY rental_movein
 
 
 --
--- TOC entry 4325 (class 2606 OID 18693)
 -- Name: rental_movein rental_movein_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21575,7 +20987,6 @@ ALTER TABLE ONLY rental_movein
 
 
 --
--- TOC entry 4333 (class 2606 OID 18695)
 -- Name: rental_moveout_comment rental_moveout_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21584,7 +20995,6 @@ ALTER TABLE ONLY rental_moveout_comment
 
 
 --
--- TOC entry 4329 (class 2606 OID 18697)
 -- Name: rental_moveout rental_moveout_contract_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21593,7 +21003,6 @@ ALTER TABLE ONLY rental_moveout
 
 
 --
--- TOC entry 4331 (class 2606 OID 18699)
 -- Name: rental_moveout rental_moveout_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21602,7 +21011,6 @@ ALTER TABLE ONLY rental_moveout
 
 
 --
--- TOC entry 4335 (class 2606 OID 18701)
 -- Name: rental_notification rental_notification_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21611,7 +21019,6 @@ ALTER TABLE ONLY rental_notification
 
 
 --
--- TOC entry 4337 (class 2606 OID 18703)
 -- Name: rental_notification_workbench rental_notification_workbench_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21620,7 +21027,6 @@ ALTER TABLE ONLY rental_notification_workbench
 
 
 --
--- TOC entry 4339 (class 2606 OID 18705)
 -- Name: rental_party rental_party_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21629,7 +21035,6 @@ ALTER TABLE ONLY rental_party
 
 
 --
--- TOC entry 4341 (class 2606 OID 18707)
 -- Name: rental_price_item rental_price_item_agresso_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21638,7 +21043,6 @@ ALTER TABLE ONLY rental_price_item
 
 
 --
--- TOC entry 4343 (class 2606 OID 18709)
 -- Name: rental_price_item rental_price_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21647,7 +21051,6 @@ ALTER TABLE ONLY rental_price_item
 
 
 --
--- TOC entry 4345 (class 2606 OID 18711)
 -- Name: rental_unit rental_unit_composite_id_location_code_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21656,7 +21059,6 @@ ALTER TABLE ONLY rental_unit
 
 
 --
--- TOC entry 4347 (class 2606 OID 18713)
 -- Name: rental_unit rental_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -21665,7 +21067,6 @@ ALTER TABLE ONLY rental_unit
 
 
 --
--- TOC entry 4168 (class 1259 OID 18714)
 -- Name: access_phpgw_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21673,7 +21074,6 @@ CREATE INDEX access_phpgw_contact_idx ON phpgw_contact USING btree (access);
 
 
 --
--- TOC entry 4143 (class 1259 OID 18715)
 -- Name: acl_account_phpgw_acl_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21681,7 +21081,6 @@ CREATE INDEX acl_account_phpgw_acl_idx ON phpgw_acl USING btree (acl_account);
 
 
 --
--- TOC entry 4190 (class 1259 OID 18716)
 -- Name: active_phpgw_contact_comm_type_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21689,7 +21088,6 @@ CREATE INDEX active_phpgw_contact_comm_type_idx ON phpgw_contact_comm_type USING
 
 
 --
--- TOC entry 4201 (class 1259 OID 18717)
 -- Name: active_phpgw_contact_org_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21697,7 +21095,6 @@ CREATE INDEX active_phpgw_contact_org_idx ON phpgw_contact_org USING btree (acti
 
 
 --
--- TOC entry 4203 (class 1259 OID 18718)
 -- Name: addr_id_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21705,7 +21102,6 @@ CREATE INDEX addr_id_phpgw_contact_org_person_idx ON phpgw_contact_org_person US
 
 
 --
--- TOC entry 4173 (class 1259 OID 18719)
 -- Name: addr_type_id_phpgw_contact_addr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21713,7 +21109,6 @@ CREATE INDEX addr_type_id_phpgw_contact_addr_idx ON phpgw_contact_addr USING btr
 
 
 --
--- TOC entry 4243 (class 1259 OID 18720)
 -- Name: app_id_phpgw_locations_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21721,7 +21116,6 @@ CREATE INDEX app_id_phpgw_locations_idx ON phpgw_locations USING btree (app_id);
 
 
 --
--- TOC entry 4191 (class 1259 OID 18721)
 -- Name: class_phpgw_contact_comm_type_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21729,7 +21123,6 @@ CREATE INDEX class_phpgw_contact_comm_type_idx ON phpgw_contact_comm_type USING 
 
 
 --
--- TOC entry 4180 (class 1259 OID 18722)
 -- Name: comm_data_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21737,7 +21130,6 @@ CREATE INDEX comm_data_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree 
 
 
 --
--- TOC entry 4181 (class 1259 OID 18723)
 -- Name: comm_descr_id_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21745,7 +21137,6 @@ CREATE INDEX comm_descr_id_phpgw_contact_comm_idx ON phpgw_contact_comm USING bt
 
 
 --
--- TOC entry 4186 (class 1259 OID 18724)
 -- Name: comm_type_id_phpgw_contact_comm_descr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21753,7 +21144,6 @@ CREATE INDEX comm_type_id_phpgw_contact_comm_descr_idx ON phpgw_contact_comm_des
 
 
 --
--- TOC entry 4174 (class 1259 OID 18725)
 -- Name: contact_id_phpgw_contact_addr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21761,7 +21151,6 @@ CREATE INDEX contact_id_phpgw_contact_addr_idx ON phpgw_contact_addr USING btree
 
 
 --
--- TOC entry 4182 (class 1259 OID 18726)
 -- Name: contact_id_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21769,7 +21158,6 @@ CREATE INDEX contact_id_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree
 
 
 --
--- TOC entry 4195 (class 1259 OID 18727)
 -- Name: contact_id_phpgw_contact_note_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21777,7 +21165,6 @@ CREATE INDEX contact_id_phpgw_contact_note_idx ON phpgw_contact_note USING btree
 
 
 --
--- TOC entry 4209 (class 1259 OID 18728)
 -- Name: contact_id_phpgw_contact_others_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21785,7 +21172,6 @@ CREATE INDEX contact_id_phpgw_contact_others_idx ON phpgw_contact_others USING b
 
 
 --
--- TOC entry 4210 (class 1259 OID 18729)
 -- Name: contact_owner_phpgw_contact_others_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21793,7 +21179,6 @@ CREATE INDEX contact_owner_phpgw_contact_others_idx ON phpgw_contact_others USIN
 
 
 --
--- TOC entry 4218 (class 1259 OID 18730)
 -- Name: contact_type_descr_phpgw_contact_types_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21801,7 +21186,6 @@ CREATE INDEX contact_type_descr_phpgw_contact_types_idx ON phpgw_contact_types U
 
 
 --
--- TOC entry 4169 (class 1259 OID 18731)
 -- Name: contact_type_id_phpgw_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21809,7 +21193,6 @@ CREATE INDEX contact_type_id_phpgw_contact_idx ON phpgw_contact USING btree (con
 
 
 --
--- TOC entry 4187 (class 1259 OID 18732)
 -- Name: descr_phpgw_contact_comm_descr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21817,7 +21200,6 @@ CREATE INDEX descr_phpgw_contact_comm_descr_idx ON phpgw_contact_comm_descr USIN
 
 
 --
--- TOC entry 3951 (class 1259 OID 18733)
 -- Name: entity_id_fm_investment_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21825,7 +21207,6 @@ CREATE INDEX entity_id_fm_investment_idx ON fm_investment USING btree (entity_id
 
 
 --
--- TOC entry 4214 (class 1259 OID 18734)
 -- Name: first_name_phpgw_contact_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21833,7 +21214,6 @@ CREATE INDEX first_name_phpgw_contact_person_idx ON phpgw_contact_person USING b
 
 
 --
--- TOC entry 4249 (class 1259 OID 18735)
 -- Name: is_active_phpgw_mail_handler_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21841,7 +21221,6 @@ CREATE INDEX is_active_phpgw_mail_handler_idx ON phpgw_mail_handler USING btree 
 
 
 --
--- TOC entry 4215 (class 1259 OID 18736)
 -- Name: last_name_phpgw_contact_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21849,7 +21228,6 @@ CREATE INDEX last_name_phpgw_contact_person_idx ON phpgw_contact_person USING bt
 
 
 --
--- TOC entry 4151 (class 1259 OID 18737)
 -- Name: lastmodts_phpgw_cache_user_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21857,7 +21235,6 @@ CREATE INDEX lastmodts_phpgw_cache_user_idx ON phpgw_cache_user USING btree (las
 
 
 --
--- TOC entry 4261 (class 1259 OID 18738)
 -- Name: lastmodts_phpgw_sessions_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21865,7 +21242,6 @@ CREATE INDEX lastmodts_phpgw_sessions_idx ON phpgw_sessions USING btree (lastmod
 
 
 --
--- TOC entry 3871 (class 1259 OID 18739)
 -- Name: location_code_fm_document_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21873,7 +21249,6 @@ CREATE INDEX location_code_fm_document_idx ON fm_document USING btree (location_
 
 
 --
--- TOC entry 3946 (class 1259 OID 18740)
 -- Name: location_code_fm_gab_location_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21881,7 +21256,6 @@ CREATE INDEX location_code_fm_gab_location_idx ON fm_gab_location USING btree (l
 
 
 --
--- TOC entry 3954 (class 1259 OID 18741)
 -- Name: location_code_fm_investment_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21889,7 +21263,6 @@ CREATE INDEX location_code_fm_investment_idx ON fm_investment USING btree (locat
 
 
 --
--- TOC entry 3969 (class 1259 OID 18742)
 -- Name: location_code_fm_location1_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21897,7 +21270,6 @@ CREATE INDEX location_code_fm_location1_idx ON fm_location1 USING btree (locatio
 
 
 --
--- TOC entry 3974 (class 1259 OID 18743)
 -- Name: location_code_fm_location2_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21905,7 +21277,6 @@ CREATE INDEX location_code_fm_location2_idx ON fm_location2 USING btree (locatio
 
 
 --
--- TOC entry 3979 (class 1259 OID 18744)
 -- Name: location_code_fm_location3_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21913,7 +21284,6 @@ CREATE INDEX location_code_fm_location3_idx ON fm_location3 USING btree (locatio
 
 
 --
--- TOC entry 3984 (class 1259 OID 18745)
 -- Name: location_code_fm_location4_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21921,7 +21291,6 @@ CREATE INDEX location_code_fm_location4_idx ON fm_location4 USING btree (locatio
 
 
 --
--- TOC entry 4031 (class 1259 OID 18746)
 -- Name: location_code_fm_project_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21929,7 +21298,6 @@ CREATE INDEX location_code_fm_project_idx ON fm_project USING btree (location_co
 
 
 --
--- TOC entry 4048 (class 1259 OID 18747)
 -- Name: location_code_fm_request_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21937,7 +21305,6 @@ CREATE INDEX location_code_fm_request_idx ON fm_request USING btree (location_co
 
 
 --
--- TOC entry 4069 (class 1259 OID 18748)
 -- Name: location_code_fm_responsibility_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21945,7 +21312,6 @@ CREATE INDEX location_code_fm_responsibility_contact_idx ON fm_responsibility_co
 
 
 --
--- TOC entry 4116 (class 1259 OID 18749)
 -- Name: location_code_fm_tts_tickets_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21953,7 +21319,6 @@ CREATE INDEX location_code_fm_tts_tickets_idx ON fm_tts_tickets USING btree (loc
 
 
 --
--- TOC entry 4144 (class 1259 OID 18750)
 -- Name: location_id_phpgw_acl_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21961,7 +21326,6 @@ CREATE INDEX location_id_phpgw_acl_idx ON phpgw_acl USING btree (location_id);
 
 
 --
--- TOC entry 4244 (class 1259 OID 18751)
 -- Name: name_phpgw_locations_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21969,7 +21333,6 @@ CREATE INDEX name_phpgw_locations_idx ON phpgw_locations USING btree (name);
 
 
 --
--- TOC entry 4196 (class 1259 OID 18752)
 -- Name: note_type_id_phpgw_contact_note_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21977,7 +21340,6 @@ CREATE INDEX note_type_id_phpgw_contact_note_idx ON phpgw_contact_note USING btr
 
 
 --
--- TOC entry 4202 (class 1259 OID 18753)
 -- Name: org_id_phpgw_contact_org_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21985,7 +21347,6 @@ CREATE INDEX org_id_phpgw_contact_org_idx ON phpgw_contact_org USING btree (org_
 
 
 --
--- TOC entry 4204 (class 1259 OID 18754)
 -- Name: org_id_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -21993,7 +21354,6 @@ CREATE INDEX org_id_phpgw_contact_org_person_idx ON phpgw_contact_org_person USI
 
 
 --
--- TOC entry 4211 (class 1259 OID 18755)
 -- Name: other_name_phpgw_contact_others_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22001,7 +21361,6 @@ CREATE INDEX other_name_phpgw_contact_others_idx ON phpgw_contact_others USING b
 
 
 --
--- TOC entry 4170 (class 1259 OID 18756)
 -- Name: owner_phpgw_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22009,7 +21368,6 @@ CREATE INDEX owner_phpgw_contact_idx ON phpgw_contact USING btree (owner);
 
 
 --
--- TOC entry 4205 (class 1259 OID 18757)
 -- Name: person_id_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22017,7 +21375,6 @@ CREATE INDEX person_id_phpgw_contact_org_person_idx ON phpgw_contact_org_person 
 
 
 --
--- TOC entry 4177 (class 1259 OID 18758)
 -- Name: preferred_phpgw_contact_addr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22025,7 +21382,6 @@ CREATE INDEX preferred_phpgw_contact_addr_idx ON phpgw_contact_addr USING btree 
 
 
 --
--- TOC entry 4185 (class 1259 OID 18759)
 -- Name: preferred_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22033,7 +21389,6 @@ CREATE INDEX preferred_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree 
 
 
 --
--- TOC entry 4208 (class 1259 OID 18760)
 -- Name: preferred_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22041,7 +21396,6 @@ CREATE INDEX preferred_phpgw_contact_org_person_idx ON phpgw_contact_org_person 
 
 
 --
--- TOC entry 4252 (class 1259 OID 18761)
 -- Name: target_email_phpgw_mail_handler_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22049,7 +21403,6 @@ CREATE INDEX target_email_phpgw_mail_handler_idx ON phpgw_mail_handler USING btr
 
 
 --
--- TOC entry 4194 (class 1259 OID 18762)
 -- Name: type_phpgw_contact_comm_type_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
@@ -22057,7 +21410,6 @@ CREATE INDEX type_phpgw_contact_comm_type_idx ON phpgw_contact_comm_type USING b
 
 
 --
--- TOC entry 4348 (class 2606 OID 18763)
 -- Name: controller_check_item_case controller_check_item_case_check_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22066,7 +21418,6 @@ ALTER TABLE ONLY controller_check_item_case
 
 
 --
--- TOC entry 4349 (class 2606 OID 18768)
 -- Name: controller_control_serie_history controller_control_serie_history_serie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22075,7 +21426,6 @@ ALTER TABLE ONLY controller_control_serie_history
 
 
 --
--- TOC entry 4351 (class 2606 OID 18773)
 -- Name: controller_document controller_document_procedure_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22084,7 +21434,6 @@ ALTER TABLE ONLY controller_document
 
 
 --
--- TOC entry 4350 (class 2606 OID 18778)
 -- Name: controller_document controller_document_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22093,7 +21442,6 @@ ALTER TABLE ONLY controller_document
 
 
 --
--- TOC entry 4352 (class 2606 OID 18783)
 -- Name: fm_document_relation fm_document_relation_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22102,7 +21450,6 @@ ALTER TABLE ONLY fm_document_relation
 
 
 --
--- TOC entry 4353 (class 2606 OID 18788)
 -- Name: fm_eco_periodization_outline fm_eco_periodization_outline_periodization_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22111,7 +21458,6 @@ ALTER TABLE ONLY fm_eco_periodization_outline
 
 
 --
--- TOC entry 4354 (class 2606 OID 18793)
 -- Name: fm_ecodimb fm_ecodimb_org_unit_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22120,7 +21466,6 @@ ALTER TABLE ONLY fm_ecodimb
 
 
 --
--- TOC entry 4355 (class 2606 OID 18798)
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_ecodimb_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22129,7 +21474,6 @@ ALTER TABLE ONLY fm_ecodimb_role_user
 
 
 --
--- TOC entry 4356 (class 2606 OID 18803)
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22138,7 +21482,6 @@ ALTER TABLE ONLY fm_ecodimb_role_user
 
 
 --
--- TOC entry 4357 (class 2606 OID 18808)
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22147,7 +21490,6 @@ ALTER TABLE ONLY fm_ecodimb_role_user
 
 
 --
--- TOC entry 4359 (class 2606 OID 18813)
 -- Name: fm_jasper_input fm_jasper_input_input_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22156,7 +21498,6 @@ ALTER TABLE ONLY fm_jasper_input
 
 
 --
--- TOC entry 4358 (class 2606 OID 18818)
 -- Name: fm_jasper_input fm_jasper_input_jasper_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22165,7 +21506,6 @@ ALTER TABLE ONLY fm_jasper_input
 
 
 --
--- TOC entry 4360 (class 2606 OID 18823)
 -- Name: fm_location1 fm_location1_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22174,7 +21514,6 @@ ALTER TABLE ONLY fm_location1
 
 
 --
--- TOC entry 4362 (class 2606 OID 18828)
 -- Name: fm_location2 fm_location2_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22183,7 +21522,6 @@ ALTER TABLE ONLY fm_location2
 
 
 --
--- TOC entry 4361 (class 2606 OID 18833)
 -- Name: fm_location2 fm_location2_loc1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22192,7 +21530,6 @@ ALTER TABLE ONLY fm_location2
 
 
 --
--- TOC entry 4364 (class 2606 OID 18838)
 -- Name: fm_location3 fm_location3_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22201,7 +21538,6 @@ ALTER TABLE ONLY fm_location3
 
 
 --
--- TOC entry 4363 (class 2606 OID 18843)
 -- Name: fm_location3 fm_location3_loc1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22210,7 +21546,6 @@ ALTER TABLE ONLY fm_location3
 
 
 --
--- TOC entry 4366 (class 2606 OID 18848)
 -- Name: fm_location4 fm_location4_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22219,7 +21554,6 @@ ALTER TABLE ONLY fm_location4
 
 
 --
--- TOC entry 4365 (class 2606 OID 18853)
 -- Name: fm_location4 fm_location4_loc1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22228,7 +21562,6 @@ ALTER TABLE ONLY fm_location4
 
 
 --
--- TOC entry 4367 (class 2606 OID 18858)
 -- Name: fm_location_contact fm_location_contact_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22237,7 +21570,6 @@ ALTER TABLE ONLY fm_location_contact
 
 
 --
--- TOC entry 4368 (class 2606 OID 18863)
 -- Name: fm_location_contact fm_location_contact_location_code_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22246,7 +21578,6 @@ ALTER TABLE ONLY fm_location_contact
 
 
 --
--- TOC entry 4370 (class 2606 OID 18868)
 -- Name: fm_location_exception fm_location_exception_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22255,7 +21586,6 @@ ALTER TABLE ONLY fm_location_exception
 
 
 --
--- TOC entry 4371 (class 2606 OID 18873)
 -- Name: fm_location_exception_category_text fm_location_exception_category_text_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22264,7 +21594,6 @@ ALTER TABLE ONLY fm_location_exception_category_text
 
 
 --
--- TOC entry 4369 (class 2606 OID 18878)
 -- Name: fm_location_exception fm_location_exception_severity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22273,7 +21602,6 @@ ALTER TABLE ONLY fm_location_exception
 
 
 --
--- TOC entry 4372 (class 2606 OID 18883)
 -- Name: fm_part_of_town fm_part_of_town_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22282,7 +21610,6 @@ ALTER TABLE ONLY fm_part_of_town
 
 
 --
--- TOC entry 4373 (class 2606 OID 18888)
 -- Name: fm_project_budget fm_project_budget_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22291,7 +21618,6 @@ ALTER TABLE ONLY fm_project_budget
 
 
 --
--- TOC entry 4375 (class 2606 OID 18893)
 -- Name: fm_request_consume fm_request_consume_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22300,7 +21626,6 @@ ALTER TABLE ONLY fm_request_consume
 
 
 --
--- TOC entry 4376 (class 2606 OID 18898)
 -- Name: fm_request_planning fm_request_planning_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22309,7 +21634,6 @@ ALTER TABLE ONLY fm_request_planning
 
 
 --
--- TOC entry 4378 (class 2606 OID 18903)
 -- Name: fm_responsibility_contact fm_responsibility_contact_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22318,7 +21642,6 @@ ALTER TABLE ONLY fm_responsibility_contact
 
 
 --
--- TOC entry 4377 (class 2606 OID 18908)
 -- Name: fm_responsibility_contact fm_responsibility_contact_responsibility_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22327,7 +21650,6 @@ ALTER TABLE ONLY fm_responsibility_contact
 
 
 --
--- TOC entry 4379 (class 2606 OID 18913)
 -- Name: fm_responsibility_module fm_responsibility_module_cat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22336,7 +21658,6 @@ ALTER TABLE ONLY fm_responsibility_module
 
 
 --
--- TOC entry 4380 (class 2606 OID 18918)
 -- Name: fm_responsibility_module fm_responsibility_module_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22345,7 +21666,6 @@ ALTER TABLE ONLY fm_responsibility_module
 
 
 --
--- TOC entry 4381 (class 2606 OID 18923)
 -- Name: fm_responsibility_module fm_responsibility_module_responsibility_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22354,7 +21674,6 @@ ALTER TABLE ONLY fm_responsibility_module
 
 
 --
--- TOC entry 4382 (class 2606 OID 18928)
 -- Name: fm_responsibility_role fm_responsibility_role_responsibility_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22363,7 +21682,6 @@ ALTER TABLE ONLY fm_responsibility_role
 
 
 --
--- TOC entry 4383 (class 2606 OID 18933)
 -- Name: fm_tts_budget fm_tts_budget_ticket_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22372,7 +21690,6 @@ ALTER TABLE ONLY fm_tts_budget
 
 
 --
--- TOC entry 4384 (class 2606 OID 18938)
 -- Name: fm_tts_payments fm_tts_payments_ticket_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22381,7 +21698,6 @@ ALTER TABLE ONLY fm_tts_payments
 
 
 --
--- TOC entry 4385 (class 2606 OID 18943)
 -- Name: fm_view_dataset_report fm_view_dataset_report_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22390,7 +21706,6 @@ ALTER TABLE ONLY fm_view_dataset_report
 
 
 --
--- TOC entry 4374 (class 2606 OID 18948)
 -- Name: fm_workorder_budget fm_workorder_budget_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22399,7 +21714,6 @@ ALTER TABLE ONLY fm_workorder_budget
 
 
 --
--- TOC entry 4386 (class 2606 OID 18953)
 -- Name: phpgw_accounts_data phpgw_accounts_data_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22408,7 +21722,6 @@ ALTER TABLE ONLY phpgw_accounts_data
 
 
 --
--- TOC entry 4387 (class 2606 OID 18958)
 -- Name: phpgw_notification phpgw_notification_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22417,7 +21730,6 @@ ALTER TABLE ONLY phpgw_notification
 
 
 --
--- TOC entry 4388 (class 2606 OID 18963)
 -- Name: phpgw_vfs_file_relation phpgw_vfs_file_relation_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22426,7 +21738,6 @@ ALTER TABLE ONLY phpgw_vfs_file_relation
 
 
 --
--- TOC entry 4389 (class 2606 OID 18968)
 -- Name: phpgw_vfs_filedata phpgw_vfs_filedata_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22435,7 +21746,6 @@ ALTER TABLE ONLY phpgw_vfs_filedata
 
 
 --
--- TOC entry 4390 (class 2606 OID 18973)
 -- Name: rental_application_comment rental_application_comment_application_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22444,7 +21754,6 @@ ALTER TABLE ONLY rental_application_comment
 
 
 --
--- TOC entry 4392 (class 2606 OID 18978)
 -- Name: rental_application_composite rental_application_composite_application_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22453,7 +21762,6 @@ ALTER TABLE ONLY rental_application_composite
 
 
 --
--- TOC entry 4391 (class 2606 OID 18983)
 -- Name: rental_application_composite rental_application_composite_composite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22462,7 +21770,6 @@ ALTER TABLE ONLY rental_application_composite
 
 
 --
--- TOC entry 4394 (class 2606 OID 18988)
 -- Name: rental_billing rental_billing_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22471,7 +21778,6 @@ ALTER TABLE ONLY rental_billing
 
 
 --
--- TOC entry 4395 (class 2606 OID 18993)
 -- Name: rental_billing_info rental_billing_info_billing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22480,7 +21786,6 @@ ALTER TABLE ONLY rental_billing_info
 
 
 --
--- TOC entry 4393 (class 2606 OID 18998)
 -- Name: rental_billing rental_billing_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22489,7 +21794,6 @@ ALTER TABLE ONLY rental_billing
 
 
 --
--- TOC entry 4400 (class 2606 OID 19003)
 -- Name: rental_contract_composite rental_contract_composite_composite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22498,7 +21802,6 @@ ALTER TABLE ONLY rental_contract_composite
 
 
 --
--- TOC entry 4399 (class 2606 OID 19008)
 -- Name: rental_contract_composite rental_contract_composite_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22507,7 +21810,6 @@ ALTER TABLE ONLY rental_contract_composite
 
 
 --
--- TOC entry 4396 (class 2606 OID 19013)
 -- Name: rental_contract rental_contract_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22516,7 +21818,6 @@ ALTER TABLE ONLY rental_contract
 
 
 --
--- TOC entry 4402 (class 2606 OID 19018)
 -- Name: rental_contract_last_edited rental_contract_last_edited_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22525,7 +21826,6 @@ ALTER TABLE ONLY rental_contract_last_edited
 
 
 --
--- TOC entry 4401 (class 2606 OID 19023)
 -- Name: rental_contract_last_edited rental_contract_last_edited_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22534,7 +21834,6 @@ ALTER TABLE ONLY rental_contract_last_edited
 
 
 --
--- TOC entry 4397 (class 2606 OID 19028)
 -- Name: rental_contract rental_contract_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22543,7 +21842,6 @@ ALTER TABLE ONLY rental_contract
 
 
 --
--- TOC entry 4404 (class 2606 OID 19033)
 -- Name: rental_contract_party rental_contract_party_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22552,7 +21850,6 @@ ALTER TABLE ONLY rental_contract_party
 
 
 --
--- TOC entry 4403 (class 2606 OID 19038)
 -- Name: rental_contract_party rental_contract_party_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22561,7 +21858,6 @@ ALTER TABLE ONLY rental_contract_party
 
 
 --
--- TOC entry 4406 (class 2606 OID 19043)
 -- Name: rental_contract_price_item rental_contract_price_item_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22570,7 +21866,6 @@ ALTER TABLE ONLY rental_contract_price_item
 
 
 --
--- TOC entry 4405 (class 2606 OID 19048)
 -- Name: rental_contract_price_item rental_contract_price_item_price_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22579,7 +21874,6 @@ ALTER TABLE ONLY rental_contract_price_item
 
 
 --
--- TOC entry 4407 (class 2606 OID 19053)
 -- Name: rental_contract_responsibility rental_contract_responsibility_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22588,7 +21882,6 @@ ALTER TABLE ONLY rental_contract_responsibility
 
 
 --
--- TOC entry 4398 (class 2606 OID 19058)
 -- Name: rental_contract rental_contract_term_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22597,7 +21890,6 @@ ALTER TABLE ONLY rental_contract
 
 
 --
--- TOC entry 4408 (class 2606 OID 19063)
 -- Name: rental_contract_types rental_contract_types_responsibility_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22606,7 +21898,6 @@ ALTER TABLE ONLY rental_contract_types
 
 
 --
--- TOC entry 4409 (class 2606 OID 19068)
 -- Name: rental_document rental_document_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22615,7 +21906,6 @@ ALTER TABLE ONLY rental_document
 
 
 --
--- TOC entry 4410 (class 2606 OID 19073)
 -- Name: rental_document rental_document_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22624,7 +21914,6 @@ ALTER TABLE ONLY rental_document
 
 
 --
--- TOC entry 4411 (class 2606 OID 19078)
 -- Name: rental_document rental_document_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22633,7 +21922,6 @@ ALTER TABLE ONLY rental_document
 
 
 --
--- TOC entry 4413 (class 2606 OID 19083)
 -- Name: rental_email_out_party rental_email_out_party_email_out_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22642,7 +21930,6 @@ ALTER TABLE ONLY rental_email_out_party
 
 
 --
--- TOC entry 4412 (class 2606 OID 19088)
 -- Name: rental_email_out_party rental_email_out_party_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22651,7 +21938,6 @@ ALTER TABLE ONLY rental_email_out_party
 
 
 --
--- TOC entry 4414 (class 2606 OID 19093)
 -- Name: rental_invoice rental_invoice_billing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22660,7 +21946,6 @@ ALTER TABLE ONLY rental_invoice
 
 
 --
--- TOC entry 4415 (class 2606 OID 19098)
 -- Name: rental_invoice rental_invoice_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22669,7 +21954,6 @@ ALTER TABLE ONLY rental_invoice
 
 
 --
--- TOC entry 4416 (class 2606 OID 19103)
 -- Name: rental_invoice rental_invoice_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22678,7 +21962,6 @@ ALTER TABLE ONLY rental_invoice
 
 
 --
--- TOC entry 4417 (class 2606 OID 19108)
 -- Name: rental_invoice_price_item rental_invoice_price_item_invoice_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22687,7 +21970,6 @@ ALTER TABLE ONLY rental_invoice_price_item
 
 
 --
--- TOC entry 4418 (class 2606 OID 19113)
 -- Name: rental_location_factor rental_location_factor_part_of_town_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22696,7 +21978,6 @@ ALTER TABLE ONLY rental_location_factor
 
 
 --
--- TOC entry 4419 (class 2606 OID 19118)
 -- Name: rental_movein rental_movein_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22705,7 +21986,6 @@ ALTER TABLE ONLY rental_movein
 
 
 --
--- TOC entry 4421 (class 2606 OID 19123)
 -- Name: rental_movein_comment rental_movein_comment_movein_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22714,7 +21994,6 @@ ALTER TABLE ONLY rental_movein_comment
 
 
 --
--- TOC entry 4420 (class 2606 OID 19128)
 -- Name: rental_movein rental_movein_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22723,7 +22002,6 @@ ALTER TABLE ONLY rental_movein
 
 
 --
--- TOC entry 4422 (class 2606 OID 19133)
 -- Name: rental_moveout rental_moveout_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22732,7 +22010,6 @@ ALTER TABLE ONLY rental_moveout
 
 
 --
--- TOC entry 4424 (class 2606 OID 19138)
 -- Name: rental_moveout_comment rental_moveout_comment_moveout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22741,7 +22018,6 @@ ALTER TABLE ONLY rental_moveout_comment
 
 
 --
--- TOC entry 4423 (class 2606 OID 19143)
 -- Name: rental_moveout rental_moveout_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22750,7 +22026,6 @@ ALTER TABLE ONLY rental_moveout
 
 
 --
--- TOC entry 4425 (class 2606 OID 19148)
 -- Name: rental_notification rental_notification_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22759,7 +22034,6 @@ ALTER TABLE ONLY rental_notification
 
 
 --
--- TOC entry 4426 (class 2606 OID 19153)
 -- Name: rental_notification rental_notification_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22768,7 +22042,6 @@ ALTER TABLE ONLY rental_notification
 
 
 --
--- TOC entry 4427 (class 2606 OID 19158)
 -- Name: rental_notification rental_notification_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22777,7 +22050,6 @@ ALTER TABLE ONLY rental_notification
 
 
 --
--- TOC entry 4429 (class 2606 OID 19163)
 -- Name: rental_notification_workbench rental_notification_workbench_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22786,7 +22058,6 @@ ALTER TABLE ONLY rental_notification_workbench
 
 
 --
--- TOC entry 4428 (class 2606 OID 19168)
 -- Name: rental_notification_workbench rental_notification_workbench_notification_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22795,7 +22066,6 @@ ALTER TABLE ONLY rental_notification_workbench
 
 
 --
--- TOC entry 4430 (class 2606 OID 19173)
 -- Name: rental_unit rental_unit_composite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
@@ -22804,8 +22074,6 @@ ALTER TABLE ONLY rental_unit
 
 
 --
--- TOC entry 4937 (class 0 OID 0)
--- Dependencies: 7
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
@@ -22814,8 +22082,6 @@ REVOKE ALL ON SCHEMA public FROM postgres;
 GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
-
--- Completed on 2018-01-31 10:40:24 CET
 
 --
 -- PostgreSQL database dump complete
