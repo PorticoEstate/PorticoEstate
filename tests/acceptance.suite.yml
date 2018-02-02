@@ -17,7 +17,7 @@ modules:
             reconnect: false
             populator: 'psql -h $host -p $port -U $user $dbname < $dump'
         - WebDriver:
-            host: selenium-chrome
-            url: http://%WEBHOST%/portico
+            host: %SELENIUMHOST%
+            url: http://%WEBHOST%:%WEBPORT%/portico
             browser: chrome
         - \Helper\Acceptance
