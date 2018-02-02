@@ -2,21 +2,5 @@ version: '3'
 services:
   web:
     build: ./webserver
-    # ports:
-    #   - "8002:80"
     volumes:
       - ../../..:/var/www/html/portico
-  selenium-chrome:
-    image: selenium/standalone-chrome
-  postgres:
-    build: ./postgres
-    # ports:
-    #   - "5432:5432"
-  testrunner:
-    build: ./testrunner
-    volumes:
-      - ../../..:/var/www/html/portico
-    depends_on:
-      - "postgres"
-      - "web"
-      - "selenium-chrome"

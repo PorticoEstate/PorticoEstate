@@ -16,4 +16,4 @@ script:
   - cd phpgwapi/doc/docker
   - docker-compose pull
   - docker-compose build
-  - docker-compose up --abort-on-container-exit
+  - docker-compose -f docker-compose.yml -f docker-compose.travis.yml up --abort-on-container-exit

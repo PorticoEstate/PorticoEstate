@@ -28,11 +28,12 @@ RUN sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/apache2/php.ini && \
 COPY custom-apache.conf /etc/php/7.0/apache2/conf.d/91-app.ini
 RUN ln -s /etc/php/7.0/apache2/conf.d/91-app.ini /etc/php/7.0/cli/conf.d/91-app.ini
 
-RUN mkdir /var/www/html/portico
+RUN mkdir /var/www/html/portico /felles_ebe_portico && chown www-data /felles_ebe_portico
 
 ENV APACHE_RUN_USER www-data
 ENV APACHE_RUN_GROUP www-data
 #ENV APACHE_LOG_DIR /var/log/apache2
+
 
 EXPOSE 80
 

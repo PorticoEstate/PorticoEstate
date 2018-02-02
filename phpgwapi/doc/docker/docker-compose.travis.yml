@@ -1,0 +1,28 @@
+version: '3'
+services:
+  web:
+    depends_on:
+        - "postgres"
+
+  selenium-chrome:
+    image: selenium/standalone-chrome
+
+  postgres:
+    build: ./postgres
+
+  testrunner:
+    build: ./testrunner
+    volumes:
+      - ../../..:/var/www/html/portico
+    environment:
+      - WEBHOST=web
+      - DBHOST=postgres
+      - DBPORT=5432
+      - DBNAME=porticotest
+      - DBUSER=portico
+      - DBPASSWORD=portico
+      - DBDUMP=tests/_data/portico-test.sql
+    depends_on:
+      - "postgres"
+      - "web"
+      - "selenium-chrome"

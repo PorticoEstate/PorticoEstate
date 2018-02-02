@@ -8,16 +8,16 @@ actor: AcceptanceTester
 modules:
     enabled:
         - Db:
-            dsn: 'pgsql:host=postgres;dbname=porticotest'
-            user: 'portico'
-            password: 'porticotest'
-            dump: 'tests/_data/portico-test.sql'
+            dsn: 'pgsql:host=%DBHOST%;port=%DBPORT%;dbname=%DBNAME%'
+            user: '%DBUSER%'
+            password: '%DBPASSWORD%'
+            dump: '%DBDUMP%'
             populate: true # run populator before all tests
             cleanup: false # run populator before each test ** Remember this might cause slow tests
             reconnect: false
-            populator: 'psql -h $host -U $user $dbname < $dump'
+            populator: 'psql -h $host -p $port -U $user $dbname < $dump'
         - WebDriver:
             host: selenium-chrome
-            url: http://web/portico
+            url: http://%WEBHOST%/portico
             browser: chrome
         - \Helper\Acceptance
