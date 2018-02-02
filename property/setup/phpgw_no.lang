@@ -172,7 +172,7 @@ alternative - link instead of uploading a file	property	no	Alternativt - link is
 amount	property	no	Sum
 amount not entered!	property	no	Sum ikke angitt
 amount of the invoice	property	no	Sum for fakturaen
-an unique code for this activity	property	no	En unik kode fo denne aktiviteten
+an unique code for this activity	property	no	En unik kode for denne aktiviteten
 apartment	property	no	Leilighet
 apartment has been edited	property	no	Leilighet er rettet
 apartment has been saved	property	no	leilighet er lagret
