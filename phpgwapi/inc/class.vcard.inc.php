@@ -177,8 +177,7 @@
 			{
 				$field  = explode(';',$name);
 
-				//while (list($key,$val) = each($field))
-				foreach($field as $ke => $val)
+				while (list($key,$val) = each($field))
 				{
 					$field[$key] = strtoupper($val);
 				}
@@ -607,9 +606,10 @@
 										$prefer = explode(';',$buffer[$value]);
 										if ($prefer[1])
 										{
-											while ($pref = strtoupper(each($prefer)))
+											//while ($pref = strtoupper(each($prefer)))
+											foreach($prefer as $k  => $v)
 											{
-												$prefi[$pref] = ';PREF';
+												$prefi[strtoupper($v)] = ';PREF';
 											}
 											//echo 'PREF1';
 										}

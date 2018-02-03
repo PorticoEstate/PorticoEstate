@@ -107,8 +107,9 @@
 		}
 		else
 		{
-			$pref = @each($GLOBALS['phpgw_info']['user']['preferences']['nntp']);
-			return $pref[0];
+			//$pref = @each($GLOBALS['phpgw_info']['user']['preferences']['nntp']);
+			$key = key($GLOBALS['phpgw_info']['user']['preferences']['nntp']);
+			return $key;
 		}
 	}
 
