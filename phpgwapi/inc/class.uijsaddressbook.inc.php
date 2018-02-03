@@ -808,11 +808,13 @@
 			
 			if(is_array($selectboxes['toselectbox']) && (!$this->hideto))
 			{
-			reset($selectboxes['toselectbox']);
+					reset($selectboxes['toselectbox']);
 			
 					foreach($selectboxes['toselectbox'] as $k => $pair)
 					{
-						list($id,$value)=each($pair);
+						//list($id,$value)=each($pair);
+						$id = key($pair);
+						$value = current($pair);
 						$this->toselectbox[$id]=$value;
 						$this->template->set_var('toselvalue',$id);
 						$this->template->set_var('toselname',$value);
@@ -829,7 +831,9 @@
 			
 					foreach($selectboxes['ccselectbox'] as $k => $pair)
 					{
-						list($id,$value)=each($pair);
+						//list($id,$value)=each($pair);
+						$id = key($pair);
+						$value = current($pair);
 						$this->ccselectbox[$id]=$value;
 						$this->template->set_var('ccselvalue',$id);
 						$this->template->set_var('ccselname',$value);
@@ -846,7 +850,9 @@
 
 				foreach($selectboxes['bccselectbox'] as $k => $pair)
 				{
-					list($id,$value)=each($pair);
+					//list($id,$value)=each($pair);
+					$id = key($pair);
+					$value = current($pair);
 					$this->bccselectbox[$id]=$value;
 					$this->template->set_var('bccselvalue',$id);
 					$this->template->set_var('bccselname',$value);
@@ -996,12 +1002,16 @@
 				}
 				$this->template->set_block('userdata_t','B_addressbook_record_inner');
 				$largest=0;
-				while(list($k,$v)=each($this->field_trans))
+				//while(list($k,$v)=each($this->field_trans))
+				if (is_array($this->field_trans))
 				{
-					$actualsize=strlen(lang($v));
-					if($actualsize > $largest)
+					foreach($this->field_trans as $k => $v)
 					{
-						$largest=$actualsize;
+						$actualsize=strlen(lang($v));
+						if($actualsize > $largest)
+						{
+							$largest=$actualsize;
+						}
 					}
 				}
 				reset($data);
@@ -1040,14 +1050,16 @@
 		function ary_to_js($ary)
 		{
 			//print_r($ary);
-			reset($ary);
-			while(list($k,$v)=each($ary))
+			//reset($ary);
+			//while(list($k,$v)=each($ary))
+			foreach($ary as $k => $v)
 			{
 				if(is_array($v) && (count($v)>0))
 				{
 					$ret=$ret."var ".$k.";";
 					$ret=$ret." $k = new Array(".count($v).");";
-					while(list($ak,$av)=each($v))
+					//while(list($ak,$av)=each($v))
+					foreach($v as $ak => $av)
 					{
 						$ret=$ret.$k.'['.$ak."]=\"".$av."\";"; 
 					}

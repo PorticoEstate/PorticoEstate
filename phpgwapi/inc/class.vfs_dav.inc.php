@@ -502,8 +502,9 @@
 			$group_ok=0;
 			if (is_array ($memberships))
 			{
-				reset ($memberships);
-				while (list ($num, $group_array) = each ($memberships))
+				//reset ($memberships);
+				//while (list ($num, $group_array) = each ($memberships))
+				foreach($memberships as $num => $group_array)
 				{
 					if ($owner_id == $group_array->id)
 					{
@@ -521,8 +522,9 @@
 			/* Add privileges from the groups this user belongs to */
 			if (is_array ($memberships))
 			{
-				reset ($memberships);
-				while (list ($num, $group_array) = each ($memberships))
+				//reset ($memberships);
+				//while (list ($num, $group_array) = each ($memberships))
+				foreach($memberships as $num => $group_array)
 				{
 					$rights |= $acl->get_rights ($group_array->id);
 				}
@@ -1143,7 +1145,8 @@ $this->debug('cp : success '.$result);
 					)
 				);
 
-				while (list ($num, $entry) = each ($ls))
+				//while (list ($num, $entry) = each ($ls))
+				foreach($ls as $num => $entry)
 				{
 					$newdir = str_replace ($f->fake_full_path, "$t->fake_full_path", $entry['directory'], 1);
 					if ($this->mkdir (array(
@@ -1163,7 +1166,8 @@ $this->debug('cp : success '.$result);
 					)
 				);
 
-				while (list ($num, $entry) = each ($ls))
+				//while (list ($num, $entry) = each ($ls))
+				foreach($ls as $num => $entry)
 				{
 					if ($entry['mime_type'] == 'Directory')
 					{
@@ -1416,7 +1420,8 @@ $this->debug('cp : success '.$result);
 					)
 				);
 
-				while (list ($num, $entry) = each ($ls))
+				//while (list ($num, $entry) = each ($ls))
+				foreach($ls as $num => $entry)
 				{
 					$this->rm (array(
 							'string'	=> "$entry[directory]/$entry[name]",

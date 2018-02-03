@@ -178,15 +178,19 @@
 			{
 				$sql = ' AND((';
 
-				reset($this->meta_types);
-				while(list($num, $type) = each($this->meta_types))
+				//reset($this->meta_types);
+				//while(list($num, $type) = each($this->meta_types))
+				if (is_array($this->meta_types))
 				{
-					if($num)
+					foreach($this->meta_types as $num => $type)
 					{
-						$sql .= ' AND ';
-					}
+						if($num)
+						{
+							$sql .= ' AND ';
+						}
 
-					$sql .= "mime_type != '{$type}'";
+						$sql .= "mime_type != '{$type}'";
+					}
 				}
 				$sql .= ') OR mime_type IS NULL)';
 			}
@@ -268,7 +272,8 @@
 			$morethanone = false;
 			$modified = false;
 
-			for($i = 0; list($attribute, $value) = each($file_array); $i++)
+			//for($i = 0; list($attribute, $value) = each($file_array); $i++)
+			foreach($file_array as $attribute => $value)
 			{
 				if($attribute == 'file_id' || $attribute == 'content')
 				{
@@ -1446,7 +1451,8 @@
 					)
 				);
 
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 
@@ -1467,7 +1473,8 @@
 					)
 				);
 
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					if($entry['mime_type'] == 'Directory')
 					{
@@ -1720,7 +1727,8 @@
 					)
 				);
 
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 					if($this->mkdir(array(
@@ -1740,7 +1748,8 @@
 					)
 				);
 
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					if($entry['mime_type'] == 'Directory')
 					{
@@ -2085,7 +2094,8 @@
 					)
 				);
 
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
 
@@ -2106,7 +2116,8 @@
 					)
 				);
 
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					if($entry['mime_type'] == 'Directory')
 					{
@@ -2342,19 +2353,23 @@
 			)
 			{
 				/* We got $ls from above, before we renamed the directory */
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				if (is_array($ls))
 				{
-					$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
-					$newdir_clean = $this->clean_string(array('string' => $newdir));
+					foreach($ls as $num => $entry)
+					{
+						$newdir = preg_replace("/^" . str_replace('/', '\/', $f->fake_full_path). "/", $t->fake_full_path, $entry['directory']);
+						$newdir_clean = $this->clean_string(array('string' => $newdir));
 
-					$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET directory='{$newdir_clean}'"
-					. " WHERE file_id='{$entry[file_id]}'" . $this->extra_sql(array('query_type' => VFS_SQL_UPDATE)), __LINE__, __FILE__);
+						$query = $GLOBALS['phpgw']->db->query("UPDATE phpgw_vfs SET directory='{$newdir_clean}'"
+						. " WHERE file_id='{$entry[file_id]}'" . $this->extra_sql(array('query_type' => VFS_SQL_UPDATE)), __LINE__, __FILE__);
 
-					$this->correct_attributes(array(
-							'string'	=> "{$newdir}/{$entry[name]}",
-							'relatives'	=> array($t->mask)
-						)
-					);
+						$this->correct_attributes(array(
+								'string'	=> "{$newdir}/{$entry[name]}",
+								'relatives'	=> array($t->mask)
+							)
+						);
+					}
 				}
 			}
 
@@ -2472,7 +2487,8 @@
 				);
 
 				/* First, we cycle through the entries and delete the files */
-				while(list($num, $entry) = each($ls))
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					if($entry['mime_type'] == 'Directory')
 					{
@@ -2487,8 +2503,9 @@
 				}
 
 				/* Now we cycle through again and delete the directories */
-				reset($ls);
-				while(list($num, $entry) = each($ls))
+				//reset($ls);
+				//while(list($num, $entry) = each($ls))
+				foreach($ls as $num => $entry)
 				{
 					if($entry['mime_type'] != 'Directory')
 					{
@@ -3108,9 +3125,10 @@
 
 				/* We return an array of one array to maintain the standard */
 				$rarray = array();
-				reset($this->attributes);
-						$db2 = clone($GLOBALS['phpgw']->db);
-				while(list($num, $attribute) = each($this->attributes))
+				//reset($this->attributes);
+				$db2 = clone($GLOBALS['phpgw']->db);
+				//while(list($num, $attribute) = each($this->attributes))
+				foreach($this->attributes as $num => $attribute)
 				{
 					if($attribute == 'mime_type' && !$record[$attribute])
 					{
@@ -3281,7 +3299,8 @@
 					$rarray = array();
 				}
 
-				while(list($num, $file_array) = each($rarray))
+				//while(list($num, $file_array) = each($rarray))
+				foreach($rarray as $num => $file_array)
 				{
 					$p2 = $this->path_parts(array(
 							'string'	=> "{$file_array['directory']}/{$file_array['name']}",

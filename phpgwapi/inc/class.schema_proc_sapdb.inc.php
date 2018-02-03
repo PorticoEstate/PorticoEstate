@@ -298,8 +298,9 @@
 			{
 				$sSQL = "INSERT INTO $sDest (";
 				$i=0;
-				@reset($aTables[$sDest]['fd']);
-				while (list($name,$arraydef) = @each($aTables[$sDest]['fd']))
+				//@reset($aTables[$sDest]['fd']);
+				//while (list($name,$arraydef) = @each($aTables[$sDest]['fd']))
+				foreach($aTables[$sDest]['fd'] as $name => $arraydef)
 				{
 					if ($i > 0)
 					{
@@ -311,9 +312,10 @@
 				}
 
 				$sSQL .= ') VALUES (';
-				@reset($aTables[$sDest]['fd']);
+				//@reset($aTables[$sDest]['fd']);
 				$i=0;
-				while (list($name,$arraydef) = @each($aTables[$sDest]['fd']))
+				//while (list($name,$arraydef) = @each($aTables[$sDest]['fd']))
+				foreach($aTables[$sDest]['fd'] as $name => $arraydef)
 				{
 					if ($i > 0)
 					{

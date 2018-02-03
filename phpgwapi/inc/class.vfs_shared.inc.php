@@ -836,7 +836,8 @@
 			{
 				$size = 0;
 			}
-			while (list ($num, $file_array) = each ($ls_array))
+			//while (list ($num, $file_array) = each ($ls_array))
+			foreach($ls_array as $num => $file_array)
 			{
 				/*
 				   Make sure the file is in the directory we want, and not
@@ -1480,27 +1481,31 @@
 			/* We check for linked dirs made with make_link ().  This could be better, but it works */
 			if (!$data['nolinks'])
 			{
-				reset ($this->linked_dirs);
-				while (list ($num, $link_info) = each ($this->linked_dirs))
+				//reset ($this->linked_dirs);
+				//while (list ($num, $link_info) = each ($this->linked_dirs))
+				if (is_array($this->linked_dirs))
 				{
-//					if (ereg ("^$link_info[directory]/$link_info[name](/|$)", $rarray['fake_full_path']))
-					if(preg_match("/^" . str_replace('/', '\/', "{$link_info['directory']}/{$link_info['name']}"). "(\/|$)/", $rarray['fake_full_path']))
-
+					foreach($this->linked_dirs as $num => $link_info)
 					{
-						$rarray['real_full_path'] = preg_replace ("/^" . addcslashes($this->basedir,'/') ."/", '', $rarray['real_full_path']);
-//						$rarray['real_full_path'] = ereg_replace ("^{$link_info['directory']}/{$link_info['name']}", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
-						$rarray['real_full_path'] = preg_replace ("/^" . addcslashes("{$link_info['directory']}/{$link_info['name']}",'/') ."/", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
+	//					if (ereg ("^$link_info[directory]/$link_info[name](/|$)", $rarray['fake_full_path']))
+						if(preg_match("/^" . str_replace('/', '\/', "{$link_info['directory']}/{$link_info['name']}"). "(\/|$)/", $rarray['fake_full_path']))
 
-						$p = $this->path_parts (array(
-								'string'	=> $rarray['real_full_path'],
-								'relatives'	=> array (RELATIVE_NONE|VFS_REAL),
-								'nolinks'	=> True
-							)
-						);
+						{
+							$rarray['real_full_path'] = preg_replace ("/^" . addcslashes($this->basedir,'/') ."/", '', $rarray['real_full_path']);
+	//						$rarray['real_full_path'] = ereg_replace ("^{$link_info['directory']}/{$link_info['name']}", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
+							$rarray['real_full_path'] = preg_replace ("/^" . addcslashes("{$link_info['directory']}/{$link_info['name']}",'/') ."/", "{$link_info['link_directory']}/{$link_info['link_name']}", $rarray['real_full_path']);
 
-						$rarray['real_leading_dirs'] = $p->real_leading_dirs;
-						$rarray['real_extra_path'] = $p->real_extra_path;
-						$rarray['real_name'] = $p->real_name;
+							$p = $this->path_parts (array(
+									'string'	=> $rarray['real_full_path'],
+									'relatives'	=> array (RELATIVE_NONE|VFS_REAL),
+									'nolinks'	=> True
+								)
+							);
+
+							$rarray['real_leading_dirs'] = $p->real_leading_dirs;
+							$rarray['real_extra_path'] = $p->real_extra_path;
+							$rarray['real_name'] = $p->real_name;
+						}
 					}
 				}
 			}
@@ -1509,9 +1514,10 @@
 			   We have to count it before because new keys will be added,
 			   which would create an endless loop
 			*/
-			$count = count ($rarray);
-			reset ($rarray);
-			for ($i = 0; (list ($key, $value) = each ($rarray)) && $i != $count; $i++)
+			//$count = count ($rarray);
+			//reset ($rarray);
+			//for ($i = 0; (list ($key, $value) = each ($rarray)) && $i != $count; $i++)
+			foreach($rarray as $key => $value)
 			{
 				$rarray[$key . '_clean'] = $this->clean_string (array ('string' => $value));
 			}
@@ -1520,8 +1526,9 @@
 			{
 				$robject = new path_class;
 
-				reset ($rarray);
-				while (list ($key, $value) = each ($rarray))
+				//reset ($rarray);
+				//while (list ($key, $value) = each ($rarray))
+				foreach($rarray as $key => $value)
 				{
 					$robject->$key = $value;
 				}
@@ -1750,8 +1757,9 @@
 			}
 			$argc = count ($argv);
 
-			reset ($args);
-			while (list (,$arg_info) = each ($args))
+			//reset ($args);
+			//while (list (,$arg_info) = each ($args))
+			foreach($args as $key => $arg_info)
 			{
 				if ($arg_info['name'] == $argv[0])
 				{
