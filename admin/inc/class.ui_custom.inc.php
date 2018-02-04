@@ -479,7 +479,7 @@
 			);
 //_debug_array($values);
 
-			$appname	= lang('appname');
+			$appname	= lang($this->appname);
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('admin') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_attrib' => $data));
