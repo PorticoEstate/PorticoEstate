@@ -100,8 +100,9 @@
 				$name = 'country';
 			}
 			$str = "<select name=\"$name\" id=\"$name\">\n";
-			reset($this->country_array);
-			while(list($key,$value) = each($this->country_array))
+			//reset($this->country_array);
+			//while(list($key,$value) = each($this->country_array))
+			foreach($this->country_array as $key => $value)
 			{
 				$str .= ' <option value="'.$key.'"'.($selected == $key?' selected="selected"':'').'>'.$value.'</option>'."\n";
 			}

@@ -121,14 +121,18 @@
 			'Should the number of active sessions be displayed for you all the time.');
 	}
 
-	reset($GLOBALS['phpgw_info']['user']['apps']);
-	while (list($app) = each($GLOBALS['phpgw_info']['user']['apps']))
-	{
+	//reset($GLOBALS['phpgw_info']['user']['apps']);
+	//while (list($app) = each($GLOBALS['phpgw_info']['user']['apps']))
+        if (is_array($GLOBALS['phpgw_info']['user']['apps']))
+        {
+            foreach($GLOBALS['phpgw_info']['user']['apps'] as $app => $value)
+            {
 		if ($GLOBALS['phpgw_info']['apps'][$app]['status'] != 2 && $app)
 		{
 			$user_apps[$app] = $GLOBALS['phpgw_info']['apps'][$app]['title'] ? $GLOBALS['phpgw_info']['apps'][$app]['title'] : lang($app);
 		}
-	}
+            }
+        }
 	create_select_box('Default application','default_app',$user_apps,
 		"The default application will be started when you enter phpGroupWare or click on the homepage icon.<br>You can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to be configured in the preferences of each application).");
 

@@ -1,4 +1,10 @@
 %1 status - %2	setup	no	%1 status - %2
+%1 default values processed	setup	no	standardverdier for %1 er lagt inn
+%1 translations added	setup	no	Oversettinger for %1 er lagt inn
+Processing: %1	setup	no	Prosesserer %1
+notes	setup	no	Notes
+booking	setup	no	Booking
+property	setup	no	Property
 (account deletion in sql only)	setup	no	(account deletion in SQL Only)
 00 (disable)	setup	no	00 (disable / recomended)
 13 (ntp)	setup	no	13 (ntp)
@@ -313,7 +319,7 @@ step 3 - language management	setup	no	Steg 3 - Språk-administrasjon
 step 4 - advanced application management	setup	no	Steg 4 - Avansert modul-administrasjon
 table change messages	setup	no	Meldinger ved endring av tabeller
 tables dropped	setup	no	tabeller droppet
-tables installed, unless there are errors printed above	setup	no	tabelles er opprettet, dersom det ikke er skrevet ut feilmeldinger ovenfor
+tables installed, unless there are errors printed above	setup	no	tabeller er opprettet, dersom det ikke er skrevet ut feilmeldinger ovenfor
 tables upgraded	setup	no	tabeller oppdatert
 target version	setup	no	Target Version
 text entry	setup	no	Text Entry

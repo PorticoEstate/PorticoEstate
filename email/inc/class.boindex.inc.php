@@ -101,7 +101,8 @@
 				
 			);
 			// put these into $this->xi[] array
-			while(list($key,$value) = each($lang_strings))
+			//while(list($key,$value) = each($lang_strings))
+                        foreach($lang_strings as $key => $value)
 			{
 				$this->xi[$key] = $lang_strings[$key];
 			}

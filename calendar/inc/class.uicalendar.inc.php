@@ -4055,11 +4055,14 @@ HTML;
 					echo '<!-- how did this happen, too many alarms -->'."\n";
 				}
 				// if there was an error pick up what the user entered
-				if (@isset($event['alarm']))
+				if (is_array($event['alarm']))
 				{
 					@reset($event['alarm']);
 					// just get the first one see above!!!
-					list($key,$alarm) = @each($event['alarm']);
+					//list($key,$alarm) = @each($event['alarm']);
+					$key = key($event['alarm']);
+					$alarm = current($event['alarm']);
+					
 					$diff = $start - $alarm['time'];
 					$days = intval($diff / (24*3600));
 					$hours = intval(($diff - ($days * 24 * 3600))/3600);

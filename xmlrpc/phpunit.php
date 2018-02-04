@@ -225,7 +225,8 @@
 				{
 					// PHP4 introspection, submitted by Dylan Kuhn
 					$names = get_class_methods($classname);
-					while (list($key, $method) = each($names))
+					//while (list($key, $method) = each($names))
+					foreach($names as $key => $method)
 					{
 						if (preg_match('/^test/', $method) && $method != "testcase")
 						{
@@ -237,7 +238,8 @@
 				{
 					$dummy = new $classname("dummy");
 					$names = (array) $dummy;
-					while (list($key, $value) = each($names))
+					//while (list($key, $value) = each($names))
+					foreach($names as $key => $method)
 					{
 						$type = gettype($value);
 						if ($type == "user function" && preg_match('/^test/', $key)
@@ -260,8 +262,9 @@
 		{
 			/* Run all TestCases and TestSuites comprising this TestSuite,
 			accumulating results in the given TestResult object. */
-			reset($this->fTests);
-			while (list($na, $test) = each($this->fTests))
+			//reset($this->fTests);
+			//while (list($na, $test) = each($this->fTests))
+			foreach($this->fTests as $na => $test)
 			{
 				if ($testResult->shouldStop())
 				{
@@ -276,8 +279,9 @@
 			/* Number of TestCases comprising this TestSuite (including those
 			in any constituent TestSuites) */
 			$count = 0;
-			reset($fTests);
-			while (list($na, $test_case) = each($this->fTests))
+			//reset($fTests);
+			//while (list($na, $test_case) = each($this->fTests))
+			foreach($this->fTests as $na => $test_case)
 			{
 				$count += $test_case->countTestCases();
 			}
@@ -394,14 +398,16 @@
 
 			print("<ol>\n");
 			$failures = $this->getFailures();
-			while (list($i, $failure) = each($failures))
+			//while (list($i, $failure) = each($failures))
+			foreach($failures as $i => $failure)
 			{
 				$failedTestName = $failure->getTestName();
 				printf("<li>%s\n", $failedTestName);
 
 				$exceptions = $failure->getExceptions();
 				print("<ul>");
-				while (list($na, $exception) = each($exceptions))
+				//while (list($na, $exception) = each($exceptions))
+				foreach($exceptions as $na => $exception)
 				{
 					printf("<li>%s\n", $exception->getMessage());
 				}

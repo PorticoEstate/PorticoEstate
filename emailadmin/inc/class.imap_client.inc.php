@@ -732,11 +732,16 @@ class imap_client {
                         continue;
                     }
                     $pna = explode(')(', $data[$i]);
-                    while (list($k, $v) = each($pna)) {
-                        $lst = explode('"', $v);
-                        $delimiter = (isset($lst[3])) ? $lst[3] : '';
-                        $this->_namespace[$lst[1]] = array('name' => $lst[1], 'delimiter' => $delimiter, 'type' => $namespace_array[$i], 'hidden' => false);
-                    }
+                    //while (list($k, $v) = each($pna))
+					if (is_array($pna))
+					{
+						foreach($pna as $k => $v)
+						{
+							$lst = explode('"', $v);
+							$delimiter = (isset($lst[3])) ? $lst[3] : '';
+							$this->_namespace[$lst[1]] = array('name' => $lst[1], 'delimiter' => $delimiter, 'type' => $namespace_array[$i], 'hidden' => false);
+						}
+					}
                 }
             }
 

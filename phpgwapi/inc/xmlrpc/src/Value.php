@@ -310,7 +310,9 @@ class Value implements \Countable, \IteratorAggregate, \ArrayAccess
         //if (is_object($o) && (get_class($o) == 'xmlrpcval' || is_subclass_of($o, 'xmlrpcval')))
         //{
         reset($this->me);
-        list($typ, $val) = each($this->me);
+        //list($typ, $val) = each($this->me);
+		$typ = key($this->me);
+		$val = current($this->me);
 
         return '<value>' . $this->serializedata($typ, $val, $charsetEncoding) . "</value>\n";
         //}
@@ -364,7 +366,18 @@ class Value implements \Countable, \IteratorAggregate, \ArrayAccess
      */
     public function structeach()
     {
-        return each($this->me['struct']);
+        //return each($this->me['struct']);		
+		$k = key($this->me['struct']);
+		$v = current($this->me['struct']);
+		
+		if ($k === NULL)
+		{
+			return false;
+		}
+		
+		next($this->me['struct']);
+		
+		return array($k, $v);
     }
 
     /**
@@ -375,7 +388,8 @@ class Value implements \Countable, \IteratorAggregate, \ArrayAccess
     public function scalarval()
     {
         reset($this->me);
-        list(, $b) = each($this->me);
+        //list(, $b) = each($this->me);
+		$b = current($this->me);
 
         return $b;
     }
@@ -389,7 +403,8 @@ class Value implements \Countable, \IteratorAggregate, \ArrayAccess
     public function scalartyp()
     {
         reset($this->me);
-        list($a,) = each($this->me);
+        //list($a,) = each($this->me);
+		$a = key($this->me);
         if ($a == static::$xmlrpcI4) {
             $a = static::$xmlrpcInt;
         }
@@ -505,7 +520,8 @@ class Value implements \Countable, \IteratorAggregate, \ArrayAccess
             case 1:
 // todo: handle i4 vs int
                 reset($this->me);
-                list($type,) = each($this->me);
+                //list($type,) = each($this->me);
+				$type = key($this->me);
                 if ($type != $offset) {
                     throw new \Exception('');
                 }
@@ -556,7 +572,9 @@ class Value implements \Countable, \IteratorAggregate, \ArrayAccess
             case 1:
 // on bad type: null or exception?
                 reset($this->me);
-                list($type, $value) = each($this->me);
+                //list($type, $value) = each($this->me);
+				$type = key($this->me);
+				$value = current($this->me);
                 return $type == $offset ? $value : null;
             default:
 // return null or exception?

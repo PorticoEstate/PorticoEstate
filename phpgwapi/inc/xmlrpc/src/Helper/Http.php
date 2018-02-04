@@ -133,7 +133,9 @@ class Http
         }
         // be tolerant to line endings, and extra empty lines
         $ar = preg_split("/\r?\n/", trim(substr($data, 0, $pos)));
-        while (list(, $line) = @each($ar)) {
+        //while (list(, $line) = @each($ar))
+		foreach($ar as $key => $line)
+		{
             // take care of multi-line headers and cookies
             $arr = explode(':', $line, 2);
             if (count($arr) > 1) {

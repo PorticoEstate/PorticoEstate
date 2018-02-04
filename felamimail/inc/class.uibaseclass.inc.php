@@ -40,12 +40,16 @@
 				switch($GLOBALS['phpgw_info']['user']['preferences']['common']['account_selection'])
 				{
 					case 'popup':
-						while (is_array($event['participants']) && list($id) = each($event['participants']))
+						//while (is_array($event['participants']) && list($id) = each($event['participants']))
+						if (is_array($event['participants']))
 						{
-							if($id != intval($event['owner']))
+							foreach($event['participants'] as $id => $value)
 							{
-								$str .= '<option value="' . $id.$event['participants'][$id] . '"'.($event['participants'][$id]?' selected':'').'>('.$GLOBALS['phpgw']->accounts->get_type($id)
-										.') ' . $GLOBALS['phpgw']->common->grab_owner_name($id) . '</option>' . "\n"; 
+								if($id != intval($event['owner']))
+								{
+									$str .= '<option value="' . $id.$event['participants'][$id] . '"'.($event['participants'][$id]?' selected':'').'>('.$GLOBALS['phpgw']->accounts->get_type($id)
+											.') ' . $GLOBALS['phpgw']->common->grab_owner_name($id) . '</option>' . "\n"; 
+								}
 							}
 						}
 						$var[] = array

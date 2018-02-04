@@ -172,13 +172,18 @@
 		function _parse_in($buffer)
 		{
 			/* Following is a lot of pain and little magic */
-			while ( list($name,$value) = @each($buffer) )
+			//while ( list($name,$value) = @each($buffer) )
+			foreach($buffer as $name => $value)
 			{
 				$field  = explode(';',$name);
 
-				while (list($key,$val) = each($field))
+				//while (list($key,$val) = each($field))
+				if (is_array($field))
 				{
-					$field[$key] = strtoupper($val);
+					foreach($field as $key => $val)
+					{
+						$field[$key] = strtoupper($val);
+					}
 				}
 
 				$field[0] = preg_replace("/A\./",'',$field[0]);
@@ -191,7 +196,8 @@
 				case 'N':
 					reset($this->names);
 					$j=0;
-					while(list($myname,$myval) = each($this->names) )
+					//while(list($myname,$myval) = each($this->names) )
+					foreach($this->names as $myname => $myval)
 					{
 						//$namel = 'per_' . $myname;
 						$namel = $myname;
@@ -503,8 +509,9 @@
 			
 			$workaddr = $hoeaddr = $this->address;
 
-			reset($this->export);
-			while ( list($name,$value) = each($this->export) )
+			//reset($this->export);
+			//while ( list($name,$value) = each($this->export) )
+			foreach($this->export as $name => $value)
 			{
 				if (!empty($buffer[$value]))
 				{
@@ -603,10 +610,11 @@
 										$prefer = explode(';',$buffer[$value]);
 										if ($prefer[1])
 										{
-											while ($pref = strtoupper(each($prefer)))
+											//while ($pref = strtoupper(each($prefer)))
+											foreach($prefer as $k => $v)
 											{
-												$prefi[$pref] = ';PREF';
-											}
+												$prefi[strtoupper($v)] = ';PREF';
+											}											
 											//echo 'PREF1';
 										}
 										elseif ($prefer[0])
@@ -755,8 +763,9 @@
 			
 			$workaddr = $hoeaddr = $this->address;
 
-			reset($this->export);
-			while ( list($name,$value) = each($this->export) )
+			//reset($this->export);
+			//while ( list($name,$value) = each($this->export) )
+			foreach($this->export as $name => $value)
 			{
 				if (!empty($buffer[$value]))
 				{
@@ -855,10 +864,11 @@
 										$prefer = explode(';',$buffer[$value]);
 										if ($prefer[1])
 										{
-											while ($pref = strtoupper(each($prefer)))
+											//while ($pref = strtoupper(each($prefer)))
+											foreach($prefer as $k => $v)
 											{
-												$prefi[$pref] = ';PREF';
-											}
+												$prefi[strtoupper($v)] = ';PREF';
+											}													
 											//echo 'PREF1';
 										}
 										elseif ($prefer[0])
@@ -1092,8 +1102,9 @@
 					}
 				}
 
-				reset($this->import);
-				while ( list($fname,$fvalue) = each($this->import) )
+				//reset($this->import);
+				//while ( list($fname,$fvalue) = each($this->import) )
+				foreach($this->import as $fname => $fvalue)
 				{
 					if ( strstr(strtolower($name), $this->import[$fname]) )
 					{

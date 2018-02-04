@@ -848,8 +848,9 @@
 				SA_UIDNEXT	=> 'UIDNEXT',
 				SA_UIDVALIDITY	=> 'UIDVALIDITY'
 			);
-			@reset($available_options);
-			while(list($key,$value) = each($available_options))
+			//@reset($available_options);
+			//while(list($key,$value) = each($available_options))
+			foreach($available_options as $key => $value)
 			{
 				if($options & $key)
 				{
@@ -1076,10 +1077,14 @@
 		function total($field)
 		{
 			$total = 0;
-			reset($field);
-			while(list($key,$value) = each($field))
+			//reset($field);
+			//while(list($key,$value) = each($field))
+			if (is_array($field))
 			{
-				$total += intval($value);
+				foreach($field as $key => $value)
+				{
+					$total += intval($value);
+				}
 			}
 			return $total;
 		}
@@ -1171,12 +1176,16 @@
 				arsort($field_list);
 			}
 			$return_array = Array();
-			@reset($field_list);
+			//@reset($field_list);
 			$i = 1;
-			while(list($key,$value) = each($field_list))
+			//while(list($key,$value) = each($field_list))
+			if (is_array($field_list))
 			{
-				$return_array[] = $key;
-				if ($this->debug_dcom >= 2) { echo 'imap: sort: ('.$i++.') Field: <b>'.$value."</b>\t\tMsg Num: <b>".$key."</b><br />\r\n"; } 
+				foreach($field_list as $key => $value)
+				{
+					$return_array[] = $key;
+					if ($this->debug_dcom >= 2) { echo 'imap: sort: ('.$i++.') Field: <b>'.$value."</b>\t\tMsg Num: <b>".$key."</b><br />\r\n"; } 
+				}
 			}
 			@reset($return_array);
 			if ($this->debug_dcom >= 1) { echo 'imap: LEAVING sort<br />'; }

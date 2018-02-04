@@ -117,8 +117,10 @@ function newPHPTreeMenu(
 	}
 	$url = $protocol . $this_host . $me;
 	$query = "";
-	reset($_GET);
-	while (list($key, $value) = each($_GET)) {
+	//reset($_GET);
+	//while (list($key, $value) = each($_GET))
+	foreach($_GET as $key => $value)
+	{
 		if ($key != "p" && $value != "") {
 			$query .= "&amp;" . $key . "=" . $value;
 		}

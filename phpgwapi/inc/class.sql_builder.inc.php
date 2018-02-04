@@ -471,7 +471,8 @@
 			$from = $prev_data['identity'];
 			array_shift($path);
 			// repeat in all $path
-			while (list($entity, $data) = each($path))
+			//while (list($entity, $data) = each($path))
+			foreach($path as $entity => $data)
 			{
 				// get_link, will determine the type of JOIN,
 				// local_field, foreign_field, and the right alias,

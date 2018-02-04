@@ -71,22 +71,26 @@
 
 			$place_info = $this->bo->read();
 
-			while (is_array($place_info) && list(,$entry) = each($place_info))
+			//while (is_array($place_info) && list(,$entry) = each($place_info))
+			if (is_array($place_info))
 			{
+				foreach($place_info as $key => $entry)
+				{
 
-				$content[] = array
-				(
-					'name'					=> $entry['name'],
-					'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.edit', 'place_id'=> $entry['id'])),
-					'link_delete'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.delete', 'place_id'=> $entry['id'])),
-					'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.view', 'place_id'=> $entry['id'])),
-					'lang_view_place_text'			=> lang('view the place'),
-					'lang_edit_place_text'			=> lang('edit the place'),
-					'text_view'				=> lang('view'),
-					'text_edit'				=> lang('edit'),
-					'text_delete'				=> lang('delete'),
-					'lang_delete_place_text'		=> lang('delete the place'),
-				);
+					$content[] = array
+					(
+						'name'					=> $entry['name'],
+						'link_edit'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.edit', 'place_id'=> $entry['id'])),
+						'link_delete'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.delete', 'place_id'=> $entry['id'])),
+						'link_view'				=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uiplace.view', 'place_id'=> $entry['id'])),
+						'lang_view_place_text'			=> lang('view the place'),
+						'lang_edit_place_text'			=> lang('edit the place'),
+						'text_view'				=> lang('view'),
+						'text_edit'				=> lang('edit'),
+						'text_delete'				=> lang('delete'),
+						'lang_delete_place_text'		=> lang('delete the place'),
+					);
+				}
 			}
 
 //_debug_array($content);

@@ -129,8 +129,9 @@
 					'close',
 					'edit'
 				);
-				@reset($control_array);
-				while(list($key,$param) = each($control_array))
+				//@reset($control_array);
+				//while(list($key,$param) = each($control_array))
+				foreach($control_array as $key => $param)
 				{
 					if(isset($this->$param) && $this->$param)
 					{

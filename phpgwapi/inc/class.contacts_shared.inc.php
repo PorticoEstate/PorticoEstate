@@ -28,7 +28,8 @@
 
 		function split_stock_and_extras( $fields )
 		{
-			while (list($field, $value) = @each($fields))
+			//while (list($field, $value) = @each($fields))
+			foreach($fields as $field => $value)
 			{
 				/* Depending on how the array was built, this is needed. */
 				if (gettype($value) == 'integer')
@@ -51,11 +52,12 @@
 		function loop_addslashes( $fields )
 		{
 			$absf = $this->stock_contact_fields;
-			while ($t = each($absf))
+			//while ($t = each($absf))
+			foreach($absf as $key => $value)
 			{
-				$ta[] = $this->db->db_addslashes($fields[$t[0]]);
+				$ta[] = $this->db->db_addslashes($fields[$key]);
 			}
-			reset($absf);
+			//reset($absf);
 			return $ta;
 		}
 		/* This will take an array or integer */
@@ -213,15 +215,17 @@
 
 				if ($ldap_fields[$i]['uidnumber'][0])
 				{
-					reset($filterfields);
-					while (list($col, $filt) = each($filterfields))
+					//reset($filterfields);
+					//while (list($col, $filt) = each($filterfields))
+					foreach($filterfields as $col => $filt)
 					{
 						if ($col == 'phpgwcontactcatid')
 						{
 							$colarray = explode(',', $ldap_fields[$i][$col][0]);
 							if ($colarray[1])
 							{
-								while (list($key, $val) = each($colarray))
+								//while (list($key, $val) = each($colarray))
+								foreach($colarray as $key => $val)
 								{
 									if ($DEBUG)
 									{

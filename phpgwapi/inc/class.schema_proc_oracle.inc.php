@@ -240,7 +240,9 @@
 				if($colinfo[0] == 'enum')
 				{
 					/* set prec to length of longest enum-value */
-					for($prec=0; list($nul,$name) = @each($scales);)
+					//for($prec=0; list($nul,$name) = @each($scales);)
+					$prec = 0;
+					foreach($scales as $nul => $name)
 					{
 						if($prec < (strlen($name) - 2))
 						{

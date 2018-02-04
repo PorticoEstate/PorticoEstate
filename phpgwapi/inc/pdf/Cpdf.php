@@ -1016,7 +1016,48 @@ class pdf__ extends pdf___
             $res.= ' /W [';
             reset($cid_widths);
 			$opened = false;
-			while (list($k,$v) = each($cid_widths)) {
+			
+			while (($k = key($cid_widths)) !== NULL)
+			{
+				$v = current($cid_widths);
+				next($cid_widths);
+				$nextk = key($cid_widths);
+				$nextv = current($cid_widths);
+
+				if (empty($nextk))
+				{
+					$nextk = $k;
+					$nextv = $v;
+					break;
+				}
+
+				if (($k + 1) == $nextk)
+				{
+					if (!$opened)
+					{
+						$res .= ' '.$k.' ['.$v;
+						$opened = true;
+					}
+					else if ($opened)
+					{
+						$res .= ' '.$v;
+					}
+				}
+				else
+				{
+					if ($opened)
+					{
+						$res .= ' '.$v.']';
+					} 
+					else 
+					{
+						$res .= ' '.$k.' ['.$v.']';
+					}
+
+					$opened = false;
+				}
+			}
+			/*while (list($k,$v) = each($cid_widths)) {
 				list($nextk, $nextv) = each($cid_widths);
 				//echo "\n$k ($v) == $nextk ($nextv)";
 				if(($k + 1) == $nextk){
@@ -1037,13 +1078,13 @@ class pdf__ extends pdf___
 					$opened = false;
 					prev($cid_widths);
 				}
-			}
+			}*/
 			
 			if(isset($nextk) && isset($nextv)){
 				if($opened){
-					$res.= "]";
+					$res.= ']';
 				}
-				$res.= " $nextk [$nextv]";
+				$res.= ' '.$nextk.' ['.$nextv.']';
 			}
             
             $res.= ' ]';
@@ -2755,7 +2796,9 @@ class pdf__ extends pdf___
             reset($regs[0]);
             
             $prevEndTagIndex = 0;
-            while(list($k,$curTag) = each($regs[0])){
+            //while(list($k,$curTag) = each($regs[0]))
+			foreach($regs[0] as $k => $curTag)
+			{
                 $curTagIndex = mb_strlen(substr($text, 0, $curTag[1]), 'UTF-8');
                 $endTagIndex = $curTagIndex + strlen($curTag[0]);
                 

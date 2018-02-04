@@ -71,7 +71,8 @@
 			}
 			
 			// look for top level "filter_X" array
-			while(list($key,$value) = each($_POST))
+			//while(list($key,$value) = each($_POST))
+			foreach($_POST as $key => $value)
 			{
 				if (strstr($key, 'filter_'))
 				{
@@ -89,64 +90,68 @@
 					$this->filters[$this_idx]['matches'] = Array();
 					$this->filters[$this_idx]['actions'] = Array();
 					// extract match and action data from this filter_X data array
-					while(list($filter_X_key,$filter_X_value) = each($filter_X))
+					//while(list($filter_X_key,$filter_X_value) = each($filter_X))
+					if (is_array($filter_X))
 					{
-			/*!
-			@capability multidimentional filter data for Matching
-			@author Angles
-			@discussion extract multidimentional filter data embedded in this 1 dimentional array. 
-			php3 limits POST arrays to one level of array key,value pairs. 
-			Thus complex filtering instructions are containded in special strings submitted as controls names 
-			matching instructions willlook something like this example. 
-			@syntax * the "key" string "match_0_comparator" needs to be "decompressed" into an associative array
-			$filter_X ['match_0_comparator'] => 'contains'
-			* the string means this:
-			a: we are dealing with "match" data
-			b: when this data is "decompressed" this would be match[0] data
-			c: that this should be match[0] ["comparator"] where "comparator" is the key, and
-			d: that value of this match[0]["comparator"] = "contains"
-			* thus, we are looking at a match to see if something "contains" a string that will be described in the next key,value iteration
-			* such string may look like this in its raw form
-			[match_0_matchthis] => "@spammer.com"
-			* translates to this
-			match[0]["matchthis"] = "@spammer.com"
-						*/
-						if (strstr($filter_X_key, 'match_'))
+						foreach($filter_X as $filter_X_key => $filter_X_value)
 						{
-							// now we grab the index value from the key string
-							$match_this_idx = (int)$filter_X_key[6];
-							if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: match_this_idx grabbed value: ['.$match_this_idx.']<br />'; }
-							// grab "key" that comes after that match_this_idx we just got
-							// remember "substr" uses 1 as the first letter in a string, not 0, AND starts returning the letter AFTER the specified location
-							$match_grabbed_key = substr($filter_X_key, 8);
-							if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: match_grabbed_key value: ['.$match_grabbed_key.']<br />'; }
-							$this->filters[$this_idx]['matches'][$match_this_idx][$match_grabbed_key] = $filter_X[$filter_X_key];
-						}
-			/*!
-			@capability multidimentional filter data for Actions 
-			@discussion  extract multidimentional filter data embedded in this 1 dimentional array. 
-			php3 limits POST arrays to one level of array key,value pairs. 
-			Thus complex filtering instructions are containded in special strings submitted as controls names 
-			action instructions willlook something like this example.
-			@author Angles
-			@example * the "key" string "action_1_judgement" needs to be "decompressed" into an associative array 
-			$filter_X ['action_1_judgement'] => 'fileinto' 
-			* the string means this 
-			a: we are dealing with "action" instructions 
-			b: when this data is "decompressed" this would be action[1] data 
-			c: that this should be action[1] ["judgement"] where "judgement" is the key, and 
-			d: that value of this action[1] ["judgement"] = "fileinto" 
-						*/
-						elseif (strstr($filter_X_key, 'action_'))
-						{
-							// now we grab the index value from the key string
-							$action_this_idx = (int)$filter_X_key[7];
-							if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: action_this_idx grabbed value: ['.$action_this_idx.']<br />'; }
-							// grab "key" that comes after that match_this_idx we just got
-							// remember "substr" uses 1 as the first letter in a string, not 0, AND starts returning the letter AFTER the specified location
-							$action_grabbed_key = substr($filter_X_key, 9);
-							if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: action_grabbed_key value: ['.$action_grabbed_key.']<br />'; }
-							$this->filters[$this_idx]['actions'][$action_this_idx][$action_grabbed_key] = $filter_X[$filter_X_key];
+				/*!
+				@capability multidimentional filter data for Matching
+				@author Angles
+				@discussion extract multidimentional filter data embedded in this 1 dimentional array. 
+				php3 limits POST arrays to one level of array key,value pairs. 
+				Thus complex filtering instructions are containded in special strings submitted as controls names 
+				matching instructions willlook something like this example. 
+				@syntax * the "key" string "match_0_comparator" needs to be "decompressed" into an associative array
+				$filter_X ['match_0_comparator'] => 'contains'
+				* the string means this:
+				a: we are dealing with "match" data
+				b: when this data is "decompressed" this would be match[0] data
+				c: that this should be match[0] ["comparator"] where "comparator" is the key, and
+				d: that value of this match[0]["comparator"] = "contains"
+				* thus, we are looking at a match to see if something "contains" a string that will be described in the next key,value iteration
+				* such string may look like this in its raw form
+				[match_0_matchthis] => "@spammer.com"
+				* translates to this
+				match[0]["matchthis"] = "@spammer.com"
+							*/
+							if (strstr($filter_X_key, 'match_'))
+							{
+								// now we grab the index value from the key string
+								$match_this_idx = (int)$filter_X_key[6];
+								if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: match_this_idx grabbed value: ['.$match_this_idx.']<br />'; }
+								// grab "key" that comes after that match_this_idx we just got
+								// remember "substr" uses 1 as the first letter in a string, not 0, AND starts returning the letter AFTER the specified location
+								$match_grabbed_key = substr($filter_X_key, 8);
+								if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: match_grabbed_key value: ['.$match_grabbed_key.']<br />'; }
+								$this->filters[$this_idx]['matches'][$match_this_idx][$match_grabbed_key] = $filter_X[$filter_X_key];
+							}
+				/*!
+				@capability multidimentional filter data for Actions 
+				@discussion  extract multidimentional filter data embedded in this 1 dimentional array. 
+				php3 limits POST arrays to one level of array key,value pairs. 
+				Thus complex filtering instructions are containded in special strings submitted as controls names 
+				action instructions willlook something like this example.
+				@author Angles
+				@example * the "key" string "action_1_judgement" needs to be "decompressed" into an associative array 
+				$filter_X ['action_1_judgement'] => 'fileinto' 
+				* the string means this 
+				a: we are dealing with "action" instructions 
+				b: when this data is "decompressed" this would be action[1] data 
+				c: that this should be action[1] ["judgement"] where "judgement" is the key, and 
+				d: that value of this action[1] ["judgement"] = "fileinto" 
+							*/
+							elseif (strstr($filter_X_key, 'action_'))
+							{
+								// now we grab the index value from the key string
+								$action_this_idx = (int)$filter_X_key[7];
+								if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: action_this_idx grabbed value: ['.$action_this_idx.']<br />'; }
+								// grab "key" that comes after that match_this_idx we just got
+								// remember "substr" uses 1 as the first letter in a string, not 0, AND starts returning the letter AFTER the specified location
+								$action_grabbed_key = substr($filter_X_key, 9);
+								if ($this->debug_level > 1) { echo 'mail_filters: distill_filter_args: action_grabbed_key value: ['.$action_grabbed_key.']<br />'; }
+								$this->filters[$this_idx]['actions'][$action_this_idx][$action_grabbed_key] = $filter_X[$filter_X_key];
+							}
 						}
 					}
 				}

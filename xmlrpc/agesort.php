@@ -6,15 +6,19 @@
 $inAr=array("Dave" => 24, "Edd" => 45, "Joe" => 37, "Fred" => 27);
 
 include("xmlrpc.inc");
-reset($inAr);
+//reset($inAr);
 print "<BR>This was the input data<BR><PRE>";
-while (list($key, $val)=each($inAr)) {
-print $key . ", " . $val . "\n";
+//while (list($key, $val)=each($inAr))
+foreach($inAr as $key => $val)
+{
+	print $key . ", " . $val . "\n";
 }
 // create parameters from the input array
 $p=array();
-reset($inAr);
-while (list($key, $val)=each($inAr)) {
+//reset($inAr);
+//while (list($key, $val)=each($inAr))
+foreach($inAr as $key => $val)
+{
   $p[]=new xmlrpcval(array("name" => new xmlrpcval($key), 
 						   "age" => new xmlrpcval($val, "int")), "struct");
 }

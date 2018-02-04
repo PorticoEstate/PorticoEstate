@@ -166,38 +166,42 @@
 			
 			$filterList = $this->bofilter->getFilterList();
 			
-			while(list($key,$value)=@each($filterList))
+			//while(list($key,$value)=@each($filterList))
+			if (is_array($filterList))
 			{
-				$this->t->set_var("id",$key);
-				$this->t->set_var("filtername",$value['filterName']);
+				foreach($filterList as $key => $value)
+				{
+					$this->t->set_var("id",$key);
+					$this->t->set_var("filtername",$value['filterName']);
 
-				$linkData = array
-				(
-					'menuaction'	=> 'felamimail.uifilter.mainScreen',
-					'action'	=> 'editFilter',
-					'filterID'	=> $key
-				);
-				$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
-				$this->t->set_var("link_editFilter",$link);
+					$linkData = array
+					(
+						'menuaction'	=> 'felamimail.uifilter.mainScreen',
+						'action'	=> 'editFilter',
+						'filterID'	=> $key
+					);
+					$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
+					$this->t->set_var("link_editFilter",$link);
 
-				$linkData = array
-				(
-					'menuaction'	=> 'felamimail.uifilter.mainScreen',
-					'action'	=> 'deleteFilter',
-					'filterID'	=> $key
-				);
-				$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
-				$this->t->set_var("link_deleteFilter",$link);
+					$linkData = array
+					(
+						'menuaction'	=> 'felamimail.uifilter.mainScreen',
+						'action'	=> 'deleteFilter',
+						'filterID'	=> $key
+					);
+					$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
+					$this->t->set_var("link_deleteFilter",$link);
 
-				$linkData = array
-				(
-					'menuaction'	=> 'felamimail.uifelamimail.changeFilter',
-					'filter'	=> $key
-				);
-				$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
-				$this->t->set_var("link_activateFilter",$link);
+					$linkData = array
+					(
+						'menuaction'	=> 'felamimail.uifelamimail.changeFilter',
+						'filter'	=> $key
+					);
+					$link = $GLOBALS['phpgw']->link('/index.php',$linkData);
+					$this->t->set_var("link_activateFilter",$link);
 
-				$this->t->parse("filterrows","filterrow",true);
+					$this->t->parse("filterrows","filterrow",true);
+				}
 			}
 			$this->t->pparse("out","header");
 		}

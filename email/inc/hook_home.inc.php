@@ -201,7 +201,8 @@
 				'edit'     => Array('url' => '/set_box.php', 'app' => $app_id)
 			);
 	
-			while(list($key,$value) = each($var))
+			//while(list($key,$value) = each($var))
+			foreach($var as $key => $value)
 			{
 				$portalbox->set_controls($key,$value);
 			}

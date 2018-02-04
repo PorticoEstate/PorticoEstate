@@ -708,54 +708,60 @@
 			
 			if(is_array($selectboxes['toselectbox']) && (!$this->hideto))
 			{
-			reset($selectboxes['toselectbox']);
-			
-					while(list($k,$pair)=each($selectboxes['toselectbox']))
-					{
-						list($id,$value)=each($pair);
-						$this->toselectbox[$id]=$value;
-						$this->template->set_var('toselvalue',$id);
-						$this->template->set_var('toselname',$value);
-						$this->template->set_var('tosel_is_selected',"");
-						$this->template->set_var('hidden_value',$pair['email']);
-						$this->template->set_var('hidden_name',"emails[$id]");
-						$this->template->parse('V_hidden_emails_list','B_hidden_emails_list',True);
-						$this->template->parse('V_toselectbox','B_toselectbox',true);
-					}
+				//reset($selectboxes['toselectbox']);			
+				//while(list($k,$pair)=each($selectboxes['toselectbox']))
+				foreach($selectboxes['toselectbox'] as $k => $pair)
+				{
+					//list($id,$value)=each($pair);
+					$id = key($pair);
+					$value = current($pair);
+					$this->toselectbox[$id]=$value;
+					$this->template->set_var('toselvalue',$id);
+					$this->template->set_var('toselname',$value);
+					$this->template->set_var('tosel_is_selected',"");
+					$this->template->set_var('hidden_value',$pair['email']);
+					$this->template->set_var('hidden_name',"emails[$id]");
+					$this->template->parse('V_hidden_emails_list','B_hidden_emails_list',True);
+					$this->template->parse('V_toselectbox','B_toselectbox',true);
+				}
 			}
 			if(is_array($selectboxes['ccselectbox']) && (!$this->hidecc))
 			{
-			reset($selectboxes['ccselectbox']);
-			
-					while(list($k,$pair)=each($selectboxes['ccselectbox']))
-					{
-						list($id,$value)=each($pair);
-						$this->ccselectbox[$id]=$value;
-						$this->template->set_var('ccselvalue',$id);
-						$this->template->set_var('ccselname',$value);
-						$this->template->set_var('ccsel_is_selected',"");
-						$this->template->set_var('hidden_value',$pair['email']);
-						$this->template->set_var('hidden_name',"emails[$id]");
-						$this->template->parse('V_hidden_emails_list','B_hidden_emails_list',True);
-						$this->template->parse('V_ccselectbox','B_ccselectbox',true);
-					}
+				//reset($selectboxes['ccselectbox']);
+				//while(list($k,$pair)=each($selectboxes['ccselectbox']))
+				foreach($selectboxes['ccselectbox'] as $k => $pair)
+				{
+					//list($id,$value)=each($pair);
+					$id = key($pair);
+					$value = current($pair);		
+					$this->ccselectbox[$id]=$value;
+					$this->template->set_var('ccselvalue',$id);
+					$this->template->set_var('ccselname',$value);
+					$this->template->set_var('ccsel_is_selected',"");
+					$this->template->set_var('hidden_value',$pair['email']);
+					$this->template->set_var('hidden_name',"emails[$id]");
+					$this->template->parse('V_hidden_emails_list','B_hidden_emails_list',True);
+					$this->template->parse('V_ccselectbox','B_ccselectbox',true);
+				}
 			}
 			if(is_array($selectboxes['bccselectbox']) && (!$this->hidebcc))
 			{
-			reset($selectboxes['bccselectbox']);
-			
-					while(list($k,$pair)=each($selectboxes['bccselectbox']))
-					{
-						list($id,$value)=each($pair);
-						$this->bccselectbox[$id]=$value;
-						$this->template->set_var('bccselvalue',$id);
-						$this->template->set_var('bccselname',$value);
-						$this->template->set_var('bccsel_is_selected',"");
-						$this->template->set_var('hidden_value',$pair['email']);
-						$this->template->set_var('hidden_name',"emails[$id]");
-						$this->template->parse('V_hidden_emails_list','B_hidden_emails_list',True);
-						$this->template->parse('V_bccselectbox','B_bccselectbox',true);
-					}
+				//reset($selectboxes['bccselectbox']);
+				//while(list($k,$pair)=each($selectboxes['bccselectbox']))
+				foreach($selectboxes['bccselectbox'] as $k => $pair)
+				{
+					//list($id,$value)=each($pair);
+					$id = key($pair);
+					$value = current($pair);
+					$this->bccselectbox[$id]=$value;
+					$this->template->set_var('bccselvalue',$id);
+					$this->template->set_var('bccselname',$value);
+					$this->template->set_var('bccsel_is_selected',"");
+					$this->template->set_var('hidden_value',$pair['email']);
+					$this->template->set_var('hidden_name',"emails[$id]");
+					$this->template->parse('V_hidden_emails_list','B_hidden_emails_list',True);
+					$this->template->parse('V_bccselectbox','B_bccselectbox',true);
+				}
 			}
 			
 
@@ -792,18 +798,19 @@
 			$hide["toselectbox"]=$this->hideto;
 			$hide["ccselectbox"]=$this->hidecc;
 			$hide["bccselectbox"]=$this->hidebcc;
-			if($leftover)
+			
+			if(is_array($leftover))
 			{
-				
-				while(list($boxk,$boxar)=each($leftover))
+				//while(list($boxk,$boxar)=each($leftover))
+				foreach($leftover as $boxk => $boxar)
 				{
 					if(is_array($boxar) && (count($boxar) > 0))
 					{
 						if(!($hide[$boxk]==1) )
 						{
-							reset($boxar);
-
-							while(list($id,$namemail)=each($boxar))
+							//reset($boxar);
+							//while(list($id,$namemail)=each($boxar))
+							foreach($boxar as $id => $namemail)
 							{
 								$jsdestboxes[$boxk."_keys"][]=$id;
 								$jsdestboxes[$boxk."_email"][]=$namemail['email'];
@@ -878,17 +885,22 @@
 			}
 			$this->template->set_block('userdata_t','B_addressbook_record_inner');
 			$largest=0;
-			while(list($k,$v)=each($this->field_trans))
+			//while(list($k,$v)=each($this->field_trans))
+			if (is_array($this->field_trans))
 			{
-				$actualsize=strlen(lang($v));
-				if($actualsize > $largest)
+				foreach($this->field_trans as $k => $v)
 				{
-					$largest=$actualsize;
+					$actualsize=strlen(lang($v));
+					if($actualsize > $largest)
+					{
+						$largest=$actualsize;
+					}
 				}
 			}
-			reset($data);
+			//reset($data);
 			$counter=0;
-			while(list($k,$v)=each($data))
+			//while(list($k,$v)=each($data))
+			foreach($data as $k => $v)
 			{
 				if($this->field_trans[$k] && strlen($v))
 				{
@@ -921,14 +933,16 @@
 		function ary_to_js($ary)
 		{
 			//print_r($ary);
-			reset($ary);
-			while(list($k,$v)=each($ary))
+			//reset($ary);
+			//while(list($k,$v)=each($ary))
+			foreach($ary as $k => $v)
 			{
 				if(is_array($v) && (count($v)>0))
 				{
 					$ret=$ret."var ".$k.";";
 					$ret=$ret." $k = new Array(".count($v).");";
-					while(list($ak,$av)=each($v))
+					//while(list($ak,$av)=each($v))
+					foreach($v as $ak => $av)
 					{
 						$ret=$ret.$k.'['.$ak."]=\"".$av."\";"; 
 					}

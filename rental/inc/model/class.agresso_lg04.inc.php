@@ -338,7 +338,8 @@
 				$att_1_id = 'DR';
 				$dim_value_1 = ''; //endre til k.sted?
 				$dim_1 = $responsibility; //k.sted
-				$batch_id =  'PU' . sprintf("%010s",$this->billing_job->get_id());
+//				$batch_id =  'PU' . sprintf("%010s",$this->billing_job->get_id());
+				$batch_id =  'PU' . sprintf("%08s",$this->billing_job->get_id()) . '  ';
 				$client = '14';
 				$confirm_date = '';
 				$pay_method = 'BG';

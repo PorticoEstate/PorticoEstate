@@ -498,14 +498,18 @@ if(!$catlist)
 		{
 			exit("User Not Found!!");
 		}
-		while(list($k,$v)=each($entry[0]))
-		{
+		//while(list($k,$v)=each($entry[0]))
+                if (is_array($entry[0]))
+                {
+                    foreach($entry[0] as $k => $v)
+                    {
 			$actualsize=strlen($v);
 			if($actualsize > $largest)
 			{
 				$largest=$actualsize;
 			}
-		}
+                    }
+                }
 		$completename=$entry[0]["n_given"]." ".$entry[0]["n_family"];
 		$largest=($largest > strlen($completename)) ? $largest : strlen($completename);
 		$GLOBALS['phpgw']->template->set_var('record_col_num',$largest+10);

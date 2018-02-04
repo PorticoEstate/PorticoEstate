@@ -58,8 +58,9 @@
 		{
 			$ecode = $parms['code'];
 			$errorstack = $this->errorstack;
-			reset($errorstack);
-			while(list(,$err)=each($errorstack))
+			//reset($errorstack);
+			//while(list(,$err)=each($errorstack))
+			foreach($errorstack as $key => $err)
 			{
 				if ($ecode == $err->code)
 				{
@@ -73,8 +74,9 @@
 		{
 			$max = 'D';
 			$errorstack = $this->errorstack;
-			reset($errorstack);
-			while(list(,$err)=each($errorstack))
+			//reset($errorstack);
+			//while(list(,$err)=each($errorstack))
+			foreach($errorstack as $key => $err)
 			{
 				switch($err->severity)
 				{

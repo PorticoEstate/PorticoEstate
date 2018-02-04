@@ -171,7 +171,8 @@
 				{
 					$prefix = "{$partno}.";
 				}
-				while (list ($index, $sub_structure) = each($structure->parts))
+				//while (list ($index, $sub_structure) = each($structure->parts))
+				foreach($structure->parts as $index => $sub_structure)
 				{
 					$body = $this->_get_text_part($message_id, $sub_structure, $prefix . ($index + 1));
 					if (strlen($body))

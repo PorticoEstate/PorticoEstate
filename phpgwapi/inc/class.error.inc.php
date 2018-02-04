@@ -78,8 +78,9 @@
 				$this->msg = trim($etext);
 			}
 
-			@reset($parray);
-			while( list($key,$val) = each( $parray ) )
+			//@reset($parray);
+			//while( list($key,$val) = each( $parray ) )
+			foreach($parray as $key => $val)
 			{
 				$this->msg = preg_replace( "/%$key/", "'".$val."'", $this->msg );
 			}

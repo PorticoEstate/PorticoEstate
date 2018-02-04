@@ -255,23 +255,28 @@ class ADODB_text extends ADOConnection {
 					$projtypes = array($this->_types[$i]);
 					$projnames = array($n);
 
-					reset($where_arr);
-					while (list($k_a,$a) = each($where_arr)) {
-						if ($i == 0 && $this->_skiprow1) {
-							$projarray[] = array($n);
-							continue;
-						}
-
-						if ($distinct) {
-							$v = strtoupper($a[$i]);
-							if (! $distarr[$v]) {
-								$projarray[] = array($a[$i]);
-								$distarr[$v] = 1;
+					//reset($where_arr);
+					//while (list($k_a,$a) = each($where_arr))
+					if (is_array($where_arr))
+					{
+						foreach($where_arr as $k_a => $a)
+						{
+							if ($i == 0 && $this->_skiprow1) {
+								$projarray[] = array($n);
+								continue;
 							}
-						} else
-							$projarray[] = array($a[$i]);
 
-					} //foreach
+							if ($distinct) {
+								$v = strtoupper($a[$i]);
+								if (! $distarr[$v]) {
+									$projarray[] = array($a[$i]);
+									$distarr[$v] = 1;
+								}
+							} else
+								$projarray[] = array($a[$i]);
+
+						} //foreach
+					}
 					//print_r($projarray);
 				}
 			} // check 1 column in projection

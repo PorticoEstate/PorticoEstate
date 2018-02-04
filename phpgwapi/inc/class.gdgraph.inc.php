@@ -445,9 +445,10 @@
 			$this->img->SetColor(0, 0, 0);
 			$this->img->SetFont($this->x_font_size);
 			$linespace = ($this->graph_width - $this->margin_left - $this->margin_right) / ($this->num_lines_x - 1);
-			reset($this->line_captions_x);
+			//reset($this->line_captions_x);
 			$i = 0;
-			while (list(,$text) = each($this->line_captions_x))
+			//while (list(,$text) = each($this->line_captions_x))
+			foreach($this->line_captions_x as $key => $text)
 			{
 				$this->img->MoveTo($i * $linespace + $this->margin_left, $this->graph_height - $this->margin_bottom + 8);
 				$this->img->DrawText(array('text' => $text['date_formatted']));
@@ -811,8 +812,14 @@
 		
 		$dataURL = explode('~', $GLOBALS['data']);
 		$this->data = array();
-		while (list($junk, $line) = each($dataURL))
-			$this->data[] = explode(',', $line);
+		//while (list($junk, $line) = each($dataURL))
+		if (is_array($dataURL))
+		{
+			foreach($dataURL as $junk => $line)
+			{
+				$this->data[] = explode(',', $line);
+			}
+		}
 		
 		$this->colors = explode(',', $GLOBALS['colors']);
 		$this->color_legend = explode(',', $GLOBALS['color_legend']);
@@ -832,12 +839,15 @@
 		$url .= 'num_lines_x=' . $this->num_lines_x . '&';
 		$url .= 'num_lines_y=' . $this->num_lines_y . '&';
 		$url .= 'line_captions_x=' . rawurlencode(implode(',', $this->line_captions_x)) . '&';
-		reset($this->data);
+		//reset($this->data);
 		$dataURL = '';
-		while(list($junk, $line) = each($this->data))
+		//while(list($junk, $line) = each($this->data))
+		foreach($this->data as $junk => $line)
 		{
 			if ($dataURL != '')
+			{
 				$dataURL .= '~';
+			}
 			$dataURL .= implode(',', $line);
 		}
 		$url .= 'data=' . $dataURL . '&';

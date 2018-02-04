@@ -153,9 +153,13 @@
 				{
 					// otherwise the first arg is the message text and the rest are
 					// parameters to that message
-					list($k, $v) = each($arg_array);
+					//list($k, $v) = each($arg_array);
+					$k = key($arg_array);
+					$v = current($arg_array);
+					
 					$parms['text'] = $v;
-					while ( list($k, $v) = each($arg_array) )
+					//while ( list($k, $v) = each($arg_array) )
+					foreach($arg_array as $k => $v)
 					{
 						$parms['p'.$k] = $v;
 					}

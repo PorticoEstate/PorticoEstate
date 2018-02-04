@@ -539,8 +539,9 @@ HTML;
 					}
 
 					reset($GLOBALS['phpgw_domain']);
-					$default_domain = each($GLOBALS['phpgw_domain']);
-					$GLOBALS['phpgw_info']['server']['default_domain'] = $default_domain[0];
+					//$default_domain = each($GLOBALS['phpgw_domain']);
+					$default_domain = key($GLOBALS['phpgw_domain']);
+					$GLOBALS['phpgw_info']['server']['default_domain'] = $default_domain;
 					unset($default_domain); // we kill this for security reasons
 					$GLOBALS['phpgw_info']['server']['config_passwd'] = $GLOBALS['phpgw_domain'][$GLOBALS['phpgw_info']['server']['default_domain']]['config_passwd'];
 
