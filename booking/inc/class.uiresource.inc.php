@@ -84,7 +84,8 @@
 						),
 						array(
 							'key' => 'building_name',
-							'label' => lang('Building name')
+							'label' => lang('Building name'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'type',
@@ -96,15 +97,18 @@
 						),
 						array(
 							'key' => 'building_street',
-							'label' => lang('Street')
+							'label' => lang('Street'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'building_city',
-							'label' => lang('Postal city')
+							'label' => lang('Postal city'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'building_district',
-							'label' => lang('District')
+							'label' => lang('District'),
+							'sortable' => false
 						),
 						array(
 							'key' => 'active',
