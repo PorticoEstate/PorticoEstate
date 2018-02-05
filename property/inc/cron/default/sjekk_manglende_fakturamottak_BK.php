@@ -115,7 +115,7 @@
 				_debug_array($data);
 			}
 
-			$subject = 'Feil ved oppdatering av meldinger(bestillinger) fra Agresso';
+			$subject = 'Manglende fakturamottak i Agresso';
 			$from = "Ikke svar<IkkeSvar@Bergen.kommune.no>";
 			$to = "Sigurd.Nes@bergen.kommune.no";
 			$cc = "";
@@ -142,10 +142,6 @@
 			$url = "{$this->soap_url}/manglendevaremottak";
 			$username	= $this->soap_username; //'portico';
 			$password	= $this->soap_password; //'BgPor790gfol';
-
-			$url = "http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak";
-			$username	= 'portico';
-			$password	= 'BgPor790gfol';
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
