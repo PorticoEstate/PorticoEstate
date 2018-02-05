@@ -38,7 +38,8 @@
 		var $total_records = 0;
 		protected $global_lock = false;
 		protected $historylog;
-					function __construct()
+
+		function __construct()
 		{
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon = CreateObject('property.bocommon');
