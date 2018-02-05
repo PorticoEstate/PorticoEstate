@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -23,4 +22,23 @@ class AcceptanceTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
+
+    public function login() {
+        $I = $this;
+
+        // if snapshot exists - skipping login
+        if ($I->loadSessionSnapshot('login')) {
+            return;
+        }
+
+        // logging in
+        $I->amOnPage('/');
+        $I->fillField('login', 'sysadmin');
+        $I->fillField('passwd', 'sysadminPW0*');
+        $I->click('Login');
+
+         // saving snapshot
+        $I->saveSessionSnapshot('login');
+    }
+
 }

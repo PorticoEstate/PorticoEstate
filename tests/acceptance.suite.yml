@@ -22,3 +22,11 @@ modules:
             browser: chrome
         - Asserts
         - \Helper\Acceptance
+env:
+    development:
+        modules:
+            config:
+                Db:
+                    populate: false
+
+
