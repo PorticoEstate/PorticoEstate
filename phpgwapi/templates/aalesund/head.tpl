@@ -55,7 +55,10 @@ and open the template in the editor.
    <!--                         <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
                             <li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li> -->
                             <li class="nav-item active"><a class="nav-link" href="{manual_url}">{manual_text}</a></li>
-                            <li class="nav-item active"><a id="login" class="nav-link" href="{login_url}">{login_text}</a><span id="change"></span></li>
+                            <li class="nav-item active">
+								<a href="{org_url}">{login_text_org}</a>
+								<a id="login" class="nav-link" href="{login_url}">{login_text}</a>
+								<span id="change"></span></li>
                         </ul>   
                     </div>         
                 </div>
