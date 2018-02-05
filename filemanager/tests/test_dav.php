@@ -544,4 +544,3 @@ echo ' override locks : ';print_r($phpgw->vfs->override_locks);
 	html_text("Done in $time s");
 	html_page_close ();
 
-?>

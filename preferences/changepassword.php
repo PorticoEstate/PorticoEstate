@@ -107,4 +107,3 @@
 		$GLOBALS['phpgw']->template->pfp('out','form');
 		$GLOBALS['phpgw']->common->phpgw_footer();
 	}
-?>

@@ -30,4 +30,3 @@
 			$response->set_final(TRUE);
 		}
 	}
-?>

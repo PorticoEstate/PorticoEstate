@@ -338,4 +338,3 @@
 	function phpftp_rename($origfile,$newfile,$confirm) 
 	{
 	}
-?>

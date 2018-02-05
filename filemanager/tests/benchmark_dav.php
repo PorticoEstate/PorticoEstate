@@ -68,4 +68,3 @@ include("../../header.inc.php");
 		flush();
 	}
 	stats($times);
-?>

@@ -22,4 +22,3 @@
 		'url'         => '/index.php',
 		'extradata'   => array('menuaction' => 'admin.uiaclmanager.list_apps')
 	);
-?>

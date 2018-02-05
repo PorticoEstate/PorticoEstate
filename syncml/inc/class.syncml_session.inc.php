@@ -264,4 +264,4 @@
 			$sosession->set_next_nonce($this->id, $this->next_nonce);
 		 }
 	}
-?>
+

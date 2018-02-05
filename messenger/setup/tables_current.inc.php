@@ -31,4 +31,3 @@
 			'uc' => array('message_id')
 		)
 	);
-?>

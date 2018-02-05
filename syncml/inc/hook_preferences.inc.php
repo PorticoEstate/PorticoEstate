@@ -24,4 +24,3 @@
 	);
 	
 	display_section('syncml', $title, $file);
-?>

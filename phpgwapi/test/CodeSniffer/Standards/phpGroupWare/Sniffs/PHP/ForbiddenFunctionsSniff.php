@@ -79,4 +79,3 @@ class phpGroupWare_Sniffs_PHP_ForbiddenFunctionsSniff extends Generic_Sniffs_PHP
 
 }//end class
 
-?>

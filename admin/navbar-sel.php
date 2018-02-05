@@ -70,5 +70,3 @@ function getRGB($web_color) {
   ImageGif($im);
 	
   ImageDestroy($im);
-?>
-

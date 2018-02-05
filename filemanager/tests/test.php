@@ -299,4 +299,3 @@ html_break (2);
 html_text_bold ("The less output, the better.  Please file errors as a " . html_link ("https://sourceforge.net/tracker/?group_id=7305&atid=107305", "bug report", True, False) .  ". Be sure to include the system information line at the top, and anything special about your setup.  Thanks!");
 
 html_page_close ();
-?>

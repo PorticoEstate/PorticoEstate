@@ -62,4 +62,3 @@
 Enter a method to execute and one parameter';
 
 	$GLOBALS['phpgw']->common->phpgw_footer();
-?>

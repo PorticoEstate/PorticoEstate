@@ -673,4 +673,3 @@ $s=CreateObject('phpgwapi.xmlrpc_server',array( "examples.getStateName" =>
 
 														 ));
 // that should do all we need!
-?>

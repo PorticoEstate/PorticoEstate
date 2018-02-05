@@ -15,4 +15,3 @@
 		$GLOBALS['setup_info']['admin']['currentver'] = '0.9.17.001';
 		return $GLOBALS['setup_info']['admin']['currentver'];
 	}
-?>

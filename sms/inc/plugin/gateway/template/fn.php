@@ -1,4 +1,4 @@
-<?
+<?php
 
 if(!defined("_SECURE_")){die("Intruder: IP ".$_SERVER['REMOTE_ADDR']);};
 
@@ -60,5 +60,3 @@ function gw_set_incoming_action()
 // you must retrieve all informations needed by setsmsincomingaction()
 // from incoming sms, have a look gnokii gateway module
 }
-
-?>
