@@ -2,30 +2,23 @@
 
 	class PropertyMessagesCest
 	{
-		private $messageListPage = '/?menuaction=property.uitts.index';
-		private $priorityNames = [
-			'.priority1',
-			'.priority2',
-			'.priority3'
-		];
 
-		public function _before(AcceptanceTester $I)
+		public function _before(AcceptanceTester $I, \Page\PropertyMessageList $messageListPage)
 		{
 			$I->login();
-			$I->amOnPage($this->messageListPage);
+			$I->amOnPage($messageListPage::$URL);
+			$I->waitForElement($messageListPage::$priorityCSSClass[0], 5);
 		}
 
 		public function _after(AcceptanceTester $I)
 		{
 		}
 
-		public function prioritizedMessageHasDifferentColor(AcceptanceTester $I)
+		public function priorityLevelsDifferInColor(AcceptanceTester $I, \Page\PropertyMessageList $messageListPage)
 		{
-			$I->waitForElement($this->priorityNames[0], 5);
-
 			$priorityColors = [];
 
-			foreach ($this->priorityNames as $priority) {
+			foreach ($messageListPage::$priorityCSSClass as $priority) {
 				$priorityColors[] = $I->getCSSValue($priority, 'background-color');
 			}
 
@@ -33,14 +26,13 @@
 			$I->assertNotSame($priorityColors[1], $priorityColors[2]);
 		}
 
-		public function messageChangesColorOnSelection(AcceptanceTester $I)
+		public function messageChangesColorOnSelection(AcceptanceTester $I, \Page\PropertyMessageList $messageListPage)
 		{
-			$I->waitForElement($this->priorityNames[0], 5);
 
-			foreach ($this->priorityNames as $priority) {
+			foreach ($messageListPage::$priorityCSSClass as $priority) {
 				$priorityColorBefore = $I->getCSSValue($priority, 'background-color');
 
-				$I->click($priority);
+				$messageListPage->selectRow($priority);
 
 				$priorityColorAfter = $I->getCSSValue($priority, 'background-color');
 
@@ -48,17 +40,16 @@
 			}
 		}
 
-		public function messageRegainOriginalColorOnDeselect(AcceptanceTester $I)
+		public function messageRegainOriginalColorOnDeselect(AcceptanceTester $I, \Page\PropertyMessageList $messageListPage)
 		{
-			$I->waitForElement($this->priorityNames[0], 5);
 
-			foreach ($this->priorityNames as $priority) {
+			foreach ($messageListPage::$priorityCSSClass as $priority) {
 				$priorityColorBefore = $I->getCSSValue($priority, 'background-color');
 
-				$I->click($priority);
-				$I->click($priority);
+				$messageListPage->selectRow($priority);
+				$messageListPage->deSelectRow($priority);
 				// Click somewhere outside table to not see the :hover color on a row
-				$I->click('#top');
+				$messageListPage->moveCursor();
 
 				$priorityColorAfter = $I->getCSSValue($priority, 'background-color');
 
