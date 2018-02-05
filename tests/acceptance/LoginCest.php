@@ -18,10 +18,8 @@
 
 		public function loginWorks(AcceptanceTester $I)
 		{
-			$I->amOnPage('/');
-			$I->fillField('login', 'sysadmin');
-			$I->fillField('passwd', 'sysadminPW0*');
-			$I->click('Login');
+			$I->dontSee('Logg ut');
+			$I->login();
 			$I->see('Logg ut');
 		}
 	}

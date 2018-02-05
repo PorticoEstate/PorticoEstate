@@ -11,4 +11,4 @@ export DBDUMP=tests/_data/portico-test.sql
 export SELENIUMHOST=localhost
 
 cd ..
-./vendor/bin/codecept run --debug
+./vendor/bin/codecept run --env development --debug
