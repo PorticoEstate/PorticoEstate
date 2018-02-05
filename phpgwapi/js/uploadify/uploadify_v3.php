@@ -40,4 +40,3 @@ if (!empty($_FILES)) {
 		echo 'Invalid file type.';
 	}
 }
-?>

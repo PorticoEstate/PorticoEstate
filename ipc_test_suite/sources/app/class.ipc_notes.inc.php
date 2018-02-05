@@ -525,4 +525,3 @@
 			return $index_xml_item;
 		}
 	}
-?>

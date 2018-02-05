@@ -45,4 +45,3 @@
 		'appname'  => 'phpgwapi',
 		'versions' => array('0.9.17', '0.9.18')
 	);
-?>

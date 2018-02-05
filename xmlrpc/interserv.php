@@ -240,4 +240,3 @@
 	$GLOBALS['phpgw']->template->pfp('out','interserv');
 
 	$GLOBALS['phpgw']->common->phpgw_footer();
-?>

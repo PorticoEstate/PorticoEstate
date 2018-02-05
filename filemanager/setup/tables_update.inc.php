@@ -36,4 +36,3 @@
 	{
 		return $GLOBALS['setup_info']['filemanager']['currentver'] = '0.9.17.500';
 	}
-?>

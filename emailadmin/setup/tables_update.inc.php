@@ -258,4 +258,3 @@
 		));
 		return $GLOBALS['setup_info']['emailadmin']['currentver'] = '1.5.003';
 	}
-?>

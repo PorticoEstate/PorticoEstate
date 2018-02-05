@@ -126,4 +126,3 @@ and comment text.';
 			'docstring' => $getcomments_doc
 		)
 	));
-?>

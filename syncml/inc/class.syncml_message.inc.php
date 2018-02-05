@@ -283,4 +283,3 @@
 			return $more_to_send;
 		}
 	}
-?>

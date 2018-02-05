@@ -163,6 +163,3 @@ print "<h1> $elapsedTime :: Logout</h1>";
 
 $imapClient->disconnect();
 print "</pre>";
-
-
-?>

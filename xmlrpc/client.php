@@ -68,4 +68,3 @@
 enter a US state number to query its name';
 
 	$GLOBALS['phpgw']->common->phpgw_footer();
-?>

@@ -61,4 +61,3 @@
 			return $GLOBALS['phpgw']->session->create($username, $passwd, true);
 		}
 	}
-?>

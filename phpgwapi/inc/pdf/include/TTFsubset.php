@@ -531,5 +531,3 @@ class TTFchar {
 	$this->description = $description;
     }
 }
-
-?>

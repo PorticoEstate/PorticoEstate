@@ -456,5 +456,3 @@ it includes most of the basic information.</p>';
 
 	make_footer();
 }
-
-?>
