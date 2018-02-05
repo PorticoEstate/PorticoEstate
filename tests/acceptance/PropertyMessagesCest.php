@@ -1,18 +1,18 @@
 <?php
 
-use Facebook\WebDriver\WebDriver as WebDriver;
-
 	class PropertyMessagesCest
 	{
-
+		private $messageListPage = '/?menuaction=property.uitts.index';
 		private $priorityNames = [
-			'priority1',
-			'priority2',
-			'priority3'
+			'.priority1',
+			'.priority2',
+			'.priority3'
 		];
 
 		public function _before(AcceptanceTester $I)
 		{
+			$I->login();
+			$I->amOnPage($this->messageListPage);
 		}
 
 		public function _after(AcceptanceTester $I)
@@ -21,20 +21,12 @@ use Facebook\WebDriver\WebDriver as WebDriver;
 
 		public function prioritizedMessageHasDifferentColor(AcceptanceTester $I)
 		{
-			$I->amOnPage('/');
-			$I->fillField('login', 'sysadmin');
-			$I->fillField('passwd', 'sysadminPW0*');
-			$I->click('Login');
-
-			$I->amOnPage('/?menuaction=property.uitts.index');
-			$I->waitForElement('.' . $this->priorityNames[0], 5);
+			$I->waitForElement($this->priorityNames[0], 5);
 
 			$priorityColors = [];
 
 			foreach ($this->priorityNames as $priority) {
-				$priorityColors[] = $I->executeInSelenium(function(Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($priority) {
-					return $webdriver->findElement(WebDriverBy::className($priority))->getCSSValue('background-color');
-				});
+				$priorityColors[] = $I->getCSSValue($priority, 'background-color');
 			}
 
 			$I->assertNotSame($priorityColors[0], $priorityColors[1]);
@@ -43,24 +35,14 @@ use Facebook\WebDriver\WebDriver as WebDriver;
 
 		public function messageChangesColorOnSelection(AcceptanceTester $I)
 		{
-			$I->amOnPage('/');
-			$I->fillField('login', 'sysadmin');
-			$I->fillField('passwd', 'sysadminPW0*');
-			$I->click('Login');
-
-			$I->amOnPage('/?menuaction=property.uitts.index');
-			$I->waitForElement('.' . $this->priorityNames[0], 5);
+			$I->waitForElement($this->priorityNames[0], 5);
 
 			foreach ($this->priorityNames as $priority) {
-				$priorityColorBefore = $I->executeInSelenium(function(Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($priority) {
-					return $webdriver->findElement(WebDriverBy::className($priority))->getCSSValue('background-color');
-				});
+				$priorityColorBefore = $I->getCSSValue($priority, 'background-color');
 
-				$I->click(['class' => $priority]);
+				$I->click($priority);
 
-				$priorityColorAfter = $I->executeInSelenium(function(Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
-					return $webdriver->findElement(WebDriverBy::className('priority1'))->getCSSValue('background-color');
-				});
+				$priorityColorAfter = $I->getCSSValue($priority, 'background-color');
 
 				$I->assertNotSame($priorityColorBefore, $priorityColorAfter);
 			}
@@ -68,27 +50,17 @@ use Facebook\WebDriver\WebDriver as WebDriver;
 
 		public function messageRegainOriginalColorOnDeselect(AcceptanceTester $I)
 		{
-			$I->amOnPage('/');
-			$I->fillField('login', 'sysadmin');
-			$I->fillField('passwd', 'sysadminPW0*');
-			$I->click('Login');
-
-			$I->amOnPage('/?menuaction=property.uitts.index');
-			$I->waitForElement('.' . $this->priorityNames[0], 5);
+			$I->waitForElement($this->priorityNames[0], 5);
 
 			foreach ($this->priorityNames as $priority) {
-				$priorityColorBefore = $I->executeInSelenium(function(Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($priority) {
-					return $webdriver->findElement(WebDriverBy::className($priority))->getCSSValue('background-color');
-				});
+				$priorityColorBefore = $I->getCSSValue($priority, 'background-color');
 
-				$I->click(['class' => $priority]);
-				$I->click(['class' => $priority]);
+				$I->click($priority);
+				$I->click($priority);
 				// Click somewhere outside table to not see the :hover color on a row
-				$I->click(['id' => 'top']);
+				$I->click('#top');
 
-				$priorityColorAfter = $I->executeInSelenium(function(Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($priority) {
-					return $webdriver->findElement(WebDriverBy::className($priority))->getCSSValue('background-color');
-				});
+				$priorityColorAfter = $I->getCSSValue($priority, 'background-color');
 
 				$I->assertSame($priorityColorBefore, $priorityColorAfter);
 			}
