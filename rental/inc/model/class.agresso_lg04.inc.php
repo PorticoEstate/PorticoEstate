@@ -342,9 +342,9 @@
 				$batch_id =  'PU' . sprintf("%08s",$this->billing_job->get_id()) . '  ';
 				$client = '14';
 				$confirm_date = '';
-				$pay_method = 'BG';
-				$responsible ='NLSH';
-				$responsible2 ='NLSH';
+				$pay_method = '';
+				$responsible ='PORT';
+				$responsible2 ='PORT';
 				$terms_id = '14';
 				$voucher_type = 'SO';
 				$apar_id = $party->get_customer_id();//kundenr fra agresso
@@ -407,7 +407,7 @@
 				. sprintf("%-17s", '') // 	64		order_date
 				. sprintf("%09.9s", $serial_number) // 	65		order_id				DATA
 				. $order_type //'FS'  // 	66		order_type				DATA
-				. $pay_method  // 	67		pay_method				DATA
+				. sprintf("%2s", $pay_method)  // 	67		pay_method				DATA
 				//	(68)
 				. sprintf("%02s", '')
 				. sprintf("%04.4s", $bill_year)
