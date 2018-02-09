@@ -91,7 +91,7 @@
 			$groupmethod = "GROUP BY $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, org_name, $table.multiplier";
 			$sql = "SELECT DISTINCT $table.id, $table.title, $table.descr, $table.address, $table.entry_date, $table.user_id, $table.multiplier,"
 				. " count(condition_survey_id) AS cnt, org_name as vendor FROM {$table} "
-				. " {$this->_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
+				. " {$this->_left_join} fm_vendor ON {$table}.vendor_id = fm_vendor.id"
 				. " {$this->_left_join} fm_request ON {$table}.id =fm_request.condition_survey_id {$filtermethod} {$querymethod} {$groupmethod}";
 
 
