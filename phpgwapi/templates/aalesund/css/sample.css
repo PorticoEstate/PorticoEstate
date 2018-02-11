@@ -4,6 +4,7 @@ body {
     font-size: 16px;
 }
 
+/*
 .jumbotron {
   position: relative;
   background: url("../img/header2.jpg") no-repeat center center;
@@ -16,7 +17,7 @@ body {
   border-radius: 0;
   margin-bottom: 0;
 }
-
+*/
 @media screen and (max-width: 560px) {
     .jumbotron {
         display: none;
