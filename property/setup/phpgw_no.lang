@@ -564,6 +564,7 @@ dimb role user	property	no	Bruker/rolle/ansvarssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	Ansvarssted ikke valgt
 Please select dimb!	property	no	Angi ansvarssted
+Please select a valid dimb!	property	no	Angi et gyldig ansvarssted
 dim d	property	no	Dim 6
 dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
