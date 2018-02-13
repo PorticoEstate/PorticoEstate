@@ -349,6 +349,7 @@
 				$voucher_type = 'SO';
 				$apar_id = $party->get_customer_id();//kundenr fra agresso
 				$order_type = 'PO';
+				$service = '';
 			}
 
 			$order[] = // Header line
