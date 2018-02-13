@@ -177,7 +177,8 @@
 				{
 					continue;
 				}
-				if (isset($entry['choice_id']) && isset($entry['cat_id']))
+//				if (isset($entry['choice_id']) && isset($entry['cat_id']))
+				if (!empty($entry['cat_id']))
 				{
 					$activity_criteria[$entry['cat_id']]['activity_top_level'] = $entry['cat_id'];
 					$activity_criteria[$entry['cat_id']]['choice'][] = $entry;
