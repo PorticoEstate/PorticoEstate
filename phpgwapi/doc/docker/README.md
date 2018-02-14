@@ -1,8 +1,8 @@
 # Setup and run tests with docker compose
 
 ## Install
-- Install Docker CE
-- Install docker-compoe
+- Install [Docker CE](https://docs.docker.com/install/)
+- Install [docker-compose](https://docs.docker.com/compose/install/)
 - Add your user to docker group `sudo usermod -aG docker ${USER}`
 - Relogin to apply new group
 
