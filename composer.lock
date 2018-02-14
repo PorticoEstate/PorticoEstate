@@ -4,8 +4,61 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7f6d3ee397cfa99747ed52cf3079412",
-    "packages": [],
+    "content-hash": "b91d2b1c37164ec8fae1caa224f37d4a",
+    "packages": [
+        {
+            "name": "lbaey/chromedriver",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lbaey/chromedriver.git",
+                "reference": "0cbc21c0d8dbd90354f79e567cf1a3ab7f7bff81"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lbaey/chromedriver/zipball/0cbc21c0d8dbd90354f79e567cf1a3ab7f7bff81",
+                "reference": "0cbc21c0d8dbd90354f79e567cf1a3ab7f7bff81",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1",
+                "ext-zip": "*",
+                "php": ">=7.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Lbaey\\Composer\\ChromeDriverPlugin"
+            },
+            "autoload": {
+                "psr-0": {
+                    "Lbaey": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Laurent Baey",
+                    "email": "laurent.baey@gmail.com"
+                }
+            ],
+            "description": "Utility for installing Chromedriver, whatever platform you are on, for use with Behat",
+            "homepage": "https://github.com/lbaey",
+            "keywords": [
+                "Behat",
+                "Browser Testing",
+                "Chromedriver",
+                "MAC",
+                "linux",
+                "osx",
+                "selenium",
+                "windows"
+            ],
+            "time": "2017-10-12T08:33:15+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "behat/gherkin",

@@ -7,7 +7,7 @@ TEST_HEADER_INC=/var/www/html/portico/phpgwapi/doc/docker/testrunner/test-header
 sleep 5
 
 cd /var/www/html/portico
-composer install
+echo linux64 | composer install
 
 #Backup existing header.inc.php
 if [[ -f $HEADER_INC ]]; then
