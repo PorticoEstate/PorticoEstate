@@ -101,4 +101,3 @@ class phpGroupWare_Sniffs_Files_disallowTrailingWhitespaceSniff implements PHP_C
         }
     }
 }
-?>

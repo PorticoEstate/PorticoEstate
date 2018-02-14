@@ -422,4 +422,3 @@
 			$session->unset_var(SYNCML_ITEMLUID);
 		}
 	}
-?>

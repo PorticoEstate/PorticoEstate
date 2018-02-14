@@ -24,4 +24,4 @@
 	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'soap.test_methods.uitest_methods'));
 	
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>
+

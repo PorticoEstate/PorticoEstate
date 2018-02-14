@@ -1137,9 +1137,12 @@
 				);
 			}
 			
-			if(is_array($this->sessionData['attachments'])) {
-				reset($this->sessionData['attachments']);
-				while(list($key,$value) = @each($this->sessionData['attachments'])) {
+			if(is_array($this->sessionData['attachments'])) 
+			{
+				//reset($this->sessionData['attachments']);
+				//while(list($key,$value) = @each($this->sessionData['attachments']))
+				foreach($this->sessionData['attachments'] as $key => $value)
+				{
 					#print "$key: ".$value['file']."<br>";
 					if (!empty($value['file'])) {	// happens when forwarding mails
 						unlink($value['file']);

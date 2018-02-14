@@ -55,15 +55,15 @@ JS;
 	$stylesheets[] = "/phpgwapi/js/DataTables/DataTables/css/dataTables.jqueryui.min.css";
 	$stylesheets[] = "/phpgwapi/js/DataTables/Responsive/css/responsive.dataTables.min.css";
 	$stylesheets[] = "/{$app}/templates/base/css/base.css";
-        $stylesheets[] = "/{$app}/css/bookingfrontend.css";
+	$stylesheets[] = "/{$app}/css/bookingfrontend.css";
 	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/frontend.css";
 	//$stylesheets[] = "/phpgwapi/templates/bookingfrontend/themes/alesund_kommune.css";
-        $stylesheets[] = "/phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
-        $stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
-        $stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
-        $stylesheets[] = "/phpgwapi/templates/aalesund/css/sample.css";
-        
-        
+	$stylesheets[] = "/phpgwapi/templates/aalesund/bootstrap/css/bootstrap.min.css";
+	$stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
+	$stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
+	$stylesheets[] = "/phpgwapi/templates/aalesund/css/sample.css";
+
+
 
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
@@ -80,24 +80,66 @@ JS;
 		}
 	}
 
-      
+
+	if(!empty($GLOBALS['phpgw_info']['server']['bakcground_image']))
+	{
+		$bakcground_image = $GLOBALS['phpgw_info']['server']['bakcground_image'];
+	}
+	else
+	{
+		$bakcground_image = '../phpgwapi/templates/aalesund/img/header2.jpg';
+	}
+	$css_background = <<<CSS
+
+	.jumbotron {
+	position: relative;
+	background: url("{$bakcground_image}") no-repeat center center;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	padding-top: 3%;
+	padding-bottom: 3%;
+	border-radius: 0;
+	margin-bottom: 0;
+  }
+
+CSS;
+
 	$javascripts = array();
 	
 	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/minid.js";
-        
-        $logoimg = "/phpgwapi/templates/aalesund/img/Logoforslag_lilla.png";
-        
-        $bootstrapmainjs = "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.min.js";
-        $bootstrapjs= "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.bundle.min.js";
-        $samplejs = "/phpgwapi/templates/aalesund/js/sample.js";
-        
-        
-        $GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
-        $GLOBALS['phpgw']->template->set_var( 'samplejs', $webserver_url . $samplejs );
-        $GLOBALS['phpgw']->template->set_var( 'bootstrapjs', $webserver_url . $bootstrapjs );
-        $GLOBALS['phpgw']->template->set_var( 'bootstrapmainjs', $webserver_url . $bootstrapmainjs );
-      
-        
+
+	if(!empty($GLOBALS['phpgw_info']['server']['logo_url']))
+	{
+		$logoimg = $GLOBALS['phpgw_info']['server']['logo_url'];
+	}
+	else
+	{
+		$logoimg = $webserver_url .  "/phpgwapi/templates/aalesund/img/Logoforslag_lilla.png";
+	}
+	if(!empty($GLOBALS['phpgw_info']['server']['logo_title']))
+	{
+		$logo_title = $GLOBALS['phpgw_info']['server']['logo_title'];
+	}
+	else
+	{
+		$logo_title = 'Logo';
+	}
+
+
+	$bootstrapmainjs = "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.min.js";
+	$bootstrapjs= "/phpgwapi/templates/aalesund/bootstrap/js/bootstrap.bundle.min.js";
+	$samplejs = "/phpgwapi/templates/aalesund/js/sample.js";
+
+
+	$GLOBALS['phpgw']->template->set_var( 'logoimg', $logoimg );
+	$GLOBALS['phpgw']->template->set_var( 'logo_title', $logo_title );
+	$GLOBALS['phpgw']->template->set_var( 'samplejs', $webserver_url . $samplejs );
+	$GLOBALS['phpgw']->template->set_var( 'bootstrapjs', $webserver_url . $bootstrapjs );
+	$GLOBALS['phpgw']->template->set_var( 'bootstrapmainjs', $webserver_url . $bootstrapmainjs );
+
+
 //FIXME: To consider...
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
@@ -114,8 +156,13 @@ JS;
 	$config	= CreateObject('phpgwapi.config','booking')->read();
 	$logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
 
-	$bodoc = CreateObject('booking.bodocumentation');
-	$manual  =  $bodoc->so->getFrontendDoc();	
+	$manual = !empty($config_frontend['bookingfrontend_manual']) ? $config_frontend['bookingfrontend_manual'] : '';
+
+	if(!$manual)
+	{
+		$bodoc = CreateObject('booking.bodocumentation');
+		$manual  =  $bodoc->so->getFrontendDoc();
+	}
 
 	$menuaction = phpgw::get_var('menuaction', 'GET');
 	$id = phpgw::get_var('id', 'GET');
@@ -196,19 +243,20 @@ JS;
    phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);
 
 	$test = $GLOBALS['phpgw']->common->get_on_events();
-    $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
-    $test = str_replace("\n}\n","\n})\n",$test);
+	$test = str_replace('window.onload = function()','$(document).ready(function()',$test);
+	$test = str_replace("\n}\n","\n})\n",$test);
 
 	$tpl_vars = array
 	(
 		'css'			=> $GLOBALS['phpgw']->common->get_css(),
+		'css_background'	=> $css_background,
 		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
+		'img_icon'	  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'site_url'	=> $GLOBALS['phpgw']->link("/{$app}/", array()),
 		'webserver_url'	=> $webserver_url,
-        'win_on_events'	=> $test,
+		'win_on_events'	=> $test,
 		'metainfo_author' => $author,
 		'metainfo_keywords' => $keywords,
 		'metainfo_description' => $description,
@@ -217,7 +265,7 @@ JS;
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
-                
+
 	// if ($manual !== null) 
 	{
 		$tpl_vars['manual_text'] = lang('manual');
@@ -227,26 +275,26 @@ JS;
 //	_debug_array($user);
 
 	$bouser = CreateObject('bookingfrontend.bouser');
-    $org = CreateObject('bookingfrontend.uiorganization');
-    $orgid = $org->get_orgid($bouser->orgnr);
+	$org = CreateObject('bookingfrontend.uiorganization');
+	$orgid = $org->get_orgid($bouser->orgnr);
 	if($bouser->is_logged_in())
 	{
 		$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
 
 		$tpl_vars['change_org_header'] = lang('Change organization');
 
-        if ( $bouser->orgname == '000000000')
-        {
-            $tpl_vars['login_text_org'] = lang('SSN not registred');
-            $tpl_vars['login_text'] = lang('Logout');
-            $tpl_vars['org_url'] = '#';
-        }
-        else
-        {
-        	$tpl_vars['login_text_org'] = $bouser->orgname;
-            $tpl_vars['login_text'] = lang('Logout');
-            $tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
-        }
+		if ( $bouser->orgname == '000000000')
+		{
+			$tpl_vars['login_text_org'] = lang('SSN not registred');
+			$tpl_vars['login_text'] = lang('Logout');
+			$tpl_vars['org_url'] = '#';
+		}
+		else
+		{
+			$tpl_vars['login_text_org'] = $bouser->orgname;
+			$tpl_vars['login_text'] = lang('Logout');
+			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $orgid));
+		}
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url'] = 'logout.php';
 	}

@@ -78,4 +78,3 @@
 			return $this->path[key($this->path)];
 		}
 	}
-?>

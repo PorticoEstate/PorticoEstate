@@ -169,8 +169,9 @@
 
 			//_debug_array($control_array);
 
-			@reset($control_array);
-			while (list($param, $value) = each($control_array))
+			//@reset($control_array);
+			//while (list($param, $value) = each($control_array))
+			foreach($control_array as $param => $value)
 			{
 				if (isset($this->$param) && $this->$param)
 				{

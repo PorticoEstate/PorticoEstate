@@ -623,7 +623,7 @@
 				'doc_type' => $doc_type,
 				'entity_id' => $entity_id,
 				'cat_id' => $cat_id,
-				'num' => $item_id,
+				'p_num' => $item_id,
 				'location_item_id' => $item_id,
 			);
 			

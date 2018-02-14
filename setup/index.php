@@ -578,8 +578,9 @@
 			break;
 		case 10:
 			$langs_list = '';
-			reset ($GLOBALS['phpgw_info']['setup']['installed_langs']);
-			while (list ($key, $value) = each ($GLOBALS['phpgw_info']['setup']['installed_langs']))
+			//reset ($GLOBALS['phpgw_info']['setup']['installed_langs']);
+			//while (list ($key, $value) = each ($GLOBALS['phpgw_info']['setup']['installed_langs']))
+			foreach($GLOBALS['phpgw_info']['setup']['installed_langs'] as $key => $value)
 			{
 				if($value)
 				{

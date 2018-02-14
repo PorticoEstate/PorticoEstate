@@ -612,6 +612,7 @@
 				$application['modified'] = 'now';
 				$application['secret'] = $this->generate_secret();
 				$application['owner_id'] = $GLOBALS['phpgw_info']['user']['account_id'];
+				$application['building_name'] = $building['results'][0]['name'];
 
 				$errors = $this->validate($application);
 
@@ -705,7 +706,9 @@
 			}
 			array_set_default($application, 'building_id', phpgw::get_var('building_id', 'int'));
 
-			array_set_default($application, 'building_name', phpgw::get_var('building_name', 'string'));
+			$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
+
+			array_set_default($application, 'building_name', $_building['name']);
 
 			if (strstr($application['building_name'], "%"))
 			{
@@ -730,7 +733,6 @@
 			$top_level_activity = false;
 			if (!$activity_id)
 			{
-				$_building = $this->building_bo->so->read_single(phpgw::get_var('building_id', 'int'));
 				$activity_id = $_building['activity_id'];
 				$top_level_activity = $activity_id;
 			}

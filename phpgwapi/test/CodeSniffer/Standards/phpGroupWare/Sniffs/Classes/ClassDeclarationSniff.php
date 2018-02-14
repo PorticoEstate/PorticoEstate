@@ -106,4 +106,3 @@ class phpGroupWare_Sniffs_Classes_ClassDeclarationSniff implements PHP_CodeSniff
 
 }//end class
 
-?>

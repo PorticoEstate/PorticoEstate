@@ -65,4 +65,3 @@
 			'uc' => array(array('fm_signatureid','fm_accountid'))
 		)
 	);
-?>

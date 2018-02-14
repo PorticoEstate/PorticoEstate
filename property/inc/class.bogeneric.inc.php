@@ -189,6 +189,7 @@
 
 		public function read_single( $data = array() )
 		{
+			$values = array();
 			if (isset($data['location_info']) && $data['location_info']['type'])
 			{
 				$this->get_location_info($data['location_info']['type'], (int)$data['location_info']['type_id']);
@@ -199,7 +200,6 @@
 			if ($GLOBALS['phpgw']->locations->get_attrib_table($this->location_info['acl_app'], $this->location_info['acl_location']))
 			{
 				$custom_fields = true;
-				$values = array();
 				$values['attributes'] = $this->custom->find($this->location_info['acl_app'], $system_location, 0, '', 'ASC', 'attrib_sort', true, true);
 			}
 

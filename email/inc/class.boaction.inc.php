@@ -774,7 +774,8 @@
 			
 			// loop thru KNOWN POSSIBLE new_args_env elements, GATHER the ones that are filled for later use
 			reset($new_args_env);
-			while(list($key,$value) = each($new_args_env))
+			//while(list($key,$value) = each($new_args_env))
+                        foreach($new_args_env as $key => $value)
 			{
 				if ($this->debug_new_env > 1) { $GLOBALS['phpgw']->msg->dbug->out(' * ('.__LINE__.') $key: ['.$key.']  $value: ['.$value.']<br />'); } 
 				$known_arg = $key;
@@ -782,8 +783,9 @@
 				if ($key == 'index_php?menuaction')
 				{
 					//find the menuaction
-					reset($recovered_data);
-					while(list($recovered_key,$recovered_value) = each($recovered_data))
+					//reset($recovered_data);
+					//while(list($recovered_key,$recovered_value) = each($recovered_data))
+                                        foreach($recovered_data as $recovered_key => $recovered_value)
 					{
 						if ($this->debug_new_env > 1) { $GLOBALS['phpgw']->msg->dbug->out(' * * ('.__LINE__.') $recovered_key: ['.$recovered_key.']  $recovered_value: ['.$recovered_value.']<br />'); } 
 						if (stristr($recovered_key, 'menuaction'))
@@ -862,8 +864,9 @@
 			
 			// (b) LOOP thru Gathered Args, setting the class args to those values
 			if ($this->debug_new_env > 1) { $GLOBALS['phpgw']->msg->dbug->out('email.boaction.apply_new_args_env ('.__LINE__.'): continue by LOOPING thru Final Gathered Args, setting the class args to those values that are not still "-1" (that data was found for)<br />'); } 
-			reset($new_args_env);
-			while(list($key,$value) = each($new_args_env))
+			//reset($new_args_env);
+			//while(list($key,$value) = each($new_args_env))
+                        foreach($new_args_env as $key => $value)
 			{
 				$arg_name = $key;
 				$arg_value = $new_args_env[$key];

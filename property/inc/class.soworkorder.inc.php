@@ -38,7 +38,8 @@
 		var $total_records = 0;
 		protected $global_lock = false;
 		protected $historylog;
-					function __construct()
+
+		function __construct()
 		{
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bocommon = CreateObject('property.bocommon');
@@ -969,7 +970,7 @@
 					'descr' => $this->db->f('descr',true),
 					'status' => $this->db->f('status'),
 					'calculation' => $this->db->f('calculation'),
-					'b_account_id' => (int)$this->db->f('account_id'),
+					'b_account_id' => $this->db->f('account_id', true),
 					'addition_percentage' => (int)$this->db->f('addition'),
 					'addition_rs' => (int)$this->db->f('rig_addition'),
 					//		'act_mtrl_cost'			=> $this->db->f('act_mtrl_cost'),
@@ -1301,7 +1302,7 @@
 				$workorder['descr'],
 				(int)$workorder['budget'],
 				$combined_cost,
-				$workorder['b_account_id'],
+				$this->db->db_addslashes($workorder['b_account_id']),
 				$workorder['addition_rs'],
 				$workorder['addition_percentage'],
 				$workorder['key_deliver'],
@@ -1475,7 +1476,7 @@
 				'budget' => (int)$workorder['budget'],
 				'key_deliver' => $workorder['key_deliver'],
 				'key_fetch' => $workorder['key_fetch'],
-				'account_id' => $workorder['b_account_id'],
+				'account_id' => $this->db->db_addslashes($workorder['b_account_id']),
 				'rig_addition' => $workorder['addition_rs'],
 				'addition' => $workorder['addition_percentage'],
 				'charge_tenant' => $workorder['charge_tenant'],

@@ -1249,5 +1249,3 @@ class TTF {
 	return $ret;
     }
 }
-
-?>

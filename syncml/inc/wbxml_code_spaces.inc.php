@@ -162,5 +162,4 @@
 		'syncml:SYNCML1.1' => array(0xFD1, 0x00),
 		'syncml:metinf' => array(0xFD1, 0x01),
 		'syncml:devinf' => array(0xFD2, 0x00)
-	);	
-?>
+	);

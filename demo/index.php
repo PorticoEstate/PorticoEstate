@@ -38,4 +38,3 @@
 	}
 
 	$GLOBALS['phpgw']->redirect_link('/index.php', $start_page);
-?>

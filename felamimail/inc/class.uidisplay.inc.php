@@ -261,9 +261,14 @@
 			// reset $rawheaders
 			$rawheaders 	= "";
 			// create it new, with good line breaks
-			reset($newRawHeaders);
-			while(list($key,$value) = @each($newRawHeaders)) {
-				$rawheaders .= wordwrap($value, 90, "\n     ");
+			//reset($newRawHeaders);
+			//while(list($key,$value) = @each($newRawHeaders))
+			if (is_array($newRawHeaders))
+			{
+				foreach($newRawHeaders as $key => $value)
+				{
+					$rawheaders .= wordwrap($value, 90, "\n     ");
+				}
 			}
 
 			$this->display_app_header();
@@ -735,9 +740,14 @@
 			// reset $rawheaders
 			$rawheaders 	= "";
 			// create it new, with good line breaks
-			reset($newRawHeaders);
-			while(list($key,$value) = @each($newRawHeaders)) {
-				$rawheaders .= wordwrap($value, 90, "\n     ");
+			//reset($newRawHeaders);
+			//while(list($key,$value) = @each($newRawHeaders))
+			if (is_array($newRawHeaders))
+			{
+				foreach($newRawHeaders as $key => $value)
+				{
+					$rawheaders .= wordwrap($value, 90, "\n     ");
+				}
 			}
 
 			$this->bofelamimail->closeConnection();
@@ -1095,21 +1105,26 @@
 
 			// add line breaks to $rawheaders
 			$newRawHeaders = explode("\n",$rawheaders);
-			reset($newRawHeaders);
+			//reset($newRawHeaders);
 
 			// find the Organization header
 			// the header can also span multiple rows
-			while(is_array($newRawHeaders) && list($key,$value) = each($newRawHeaders)) {
-				#print $value."<br>";
-				if(preg_match("/Organization: (.*)/",$value,$matches)) {
-					$organization = $this->bofelamimail->decode_header(chop($matches[1]));
-					continue;
-				}
-				if(!empty($organization) && preg_match("/^\s+(.*)/",$value,$matches)) {
-					$organization .= $this->bofelamimail->decode_header(chop($matches[1]));
-					break;
-				} elseif(!empty($organization)) {
-					break;
+			//while(is_array($newRawHeaders) && list($key,$value) = each($newRawHeaders))
+			if (is_array($newRawHeaders))
+			{
+				foreach($newRawHeaders as $key => $value)
+				{
+					#print $value."<br>";
+					if(preg_match("/Organization: (.*)/",$value,$matches)) {
+						$organization = $this->bofelamimail->decode_header(chop($matches[1]));
+						continue;
+					}
+					if(!empty($organization) && preg_match("/^\s+(.*)/",$value,$matches)) {
+						$organization .= $this->bofelamimail->decode_header(chop($matches[1]));
+						break;
+					} elseif(!empty($organization)) {
+						break;
+					}
 				}
 			}
 

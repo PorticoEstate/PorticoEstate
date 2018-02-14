@@ -49,7 +49,8 @@
 
 // Determine last modification date of the files
 	$lastmodified = 0;
-	while (list(, $element) = each($elements))
+	//while (list(, $element) = each($elements))
+	foreach($elements as $key => $element)
 	{
 		$path = realpath($base . '/' . str_replace('--', '/', $element));
 
@@ -130,8 +131,9 @@
 
 		// Get contents of the files
 		$contents = '';
-		reset($elements);
-		while (list(, $element) = each($elements))
+		//reset($elements);
+		//while (list(, $element) = each($elements))
+		foreach($elements as $key => $element)
 		{
 			$path = realpath($base . '/' . str_replace('--', '/', $element));
 			$contents .= "\n\n" . file_get_contents($path);

@@ -172,7 +172,7 @@ alternative - link instead of uploading a file	property	no	Alternativt - link is
 amount	property	no	Sum
 amount not entered!	property	no	Sum ikke angitt
 amount of the invoice	property	no	Sum for fakturaen
-an unique code for this activity	property	no	En unik kode fo denne aktiviteten
+an unique code for this activity	property	no	En unik kode for denne aktiviteten
 apartment	property	no	Leilighet
 apartment has been edited	property	no	Leilighet er rettet
 apartment has been saved	property	no	leilighet er lagret
@@ -496,7 +496,6 @@ delete template	property	no	slett mal
 delete the actor	property	no	Slett aktør
 delete the agreement	property	no	Slett avtale
 delete the apartment	property	no	slett leilighet
-delete the attrib	property	no	slett egenskap
 delete the budget account	property	no	Slett kostnadsart
 delete the building	property	no	slett bygning
 delete the category	property	no	Slett kategori
@@ -565,6 +564,7 @@ dimb role user	property	no	Bruker/rolle/ansvarssted
 no authorities demands	property	no	Ingen myndighetskrav
 no dimb	property	no	Ansvarssted ikke valgt
 Please select dimb!	property	no	Angi ansvarssted
+Please select a valid dimb!	property	no	Angi et gyldig ansvarssted
 dim d	property	no	Dim 6
 dime	property	no	Kategori
 directory created	property	no	katalog er opprettet
@@ -602,7 +602,6 @@ edit activity	property	no	Endre aktivitet
 edit agreement	property	no	Endre avtale
 edit agreement group	property	no	Rette avtale gruppe
 edit apartment	property	no	Endre leilighet
-edit attribute	property	no	Endre egenskap
 edit budget account	property	no	Rette kostnadsart
 edit building	property	no	Endre bygning
 edit categories	property	no	Endre kategorier
@@ -640,7 +639,6 @@ edit the agreement	property	no	Endre avtale
 edit the agreement_group	property	no	Endre avtalegruppe
 edit the alarm	property	no	Endre alarm
 edit the apartment	property	no	Endre leilighet
-edit the attrib	property	no	Endre egenskap
 edit the budget account	property	no	Endre kostnadsart
 edit the building	property	no	Endre bygning
 edit the category	property	no	Endre kategorien
@@ -737,8 +735,6 @@ enter other branch if not found in the list	property	no	Angi andre fag, om det i
 enter project name	property	no	Angi prosjektnavn
 enter quantity of unit	property	no	Angi mengde
 enter request title	property	no	Angi beskrivende navn for tiltak
-enter the attribute id	property	no	Angi egenskap-id
-enter the attribute value for this entity	property	no	Angi egenskap verdi for denne posten
 enter the billable hour for the task	property	no	Angi egne timer for oppgaven
 enter the budget	property	no	Angi budsjett
 enter the budget account	property	no	Angi kostnadsart
@@ -1452,7 +1448,6 @@ save as template	property	no	lagre som mal
 save the actor and return back to the list	property	no	Lagre aktøren og returner til oversikten
 save the agreement and return back to the list	property	no	Lagre avtalen og returner til oversikten
 save the apartment	property	no	Lagre leilighet
-save the attribute	property	no	Lagre egenskap
 save the budget account	property	no	Lagre budsjettkotntoen
 save the building	property	no	lagre bygning
 save the category	property	no	Lagre kategorien
@@ -1913,7 +1908,6 @@ view request	property	no	Vis behov
 view template detail	property	no	Vis mal-detaljer
 view tender	property	no	Vis beskrivelse
 view the apartment	property	no	Vis leilighet
-view the attrib	property	no	Vis egenskap
 view the budget account	property	no	Vis kostnadsart
 view the building	property	no	Vis bygning
 view the category	property	no	Vis kategorien
@@ -2100,7 +2094,6 @@ columns and attributes	property	no	Kolonner og egenskaper
 attribute name for component id	property	no	Egenskapnavn for komponent id
 category template	property	no	Kategori mal
 profile	property	no	Profil
-new attribute	property	no	Ny egenskap
 report	property	no	Rapport
 canceled	property	no	Kansellert
 substitute	property	no	Vikar
@@ -2349,22 +2342,6 @@ entity	property	no	Entitet
 short description	property	no	Kort beskrivelse
 do you really want to convert to eav	property	no	Er du sikker på at du vil konvertere til eav?
 appname	property	no	modulnavn
-add attribute	property	no	Legg til egenskap
-column name	property	no	Kolonnenavn
-input text	property	no	Ledetekst
-statustext	property	no	Statustekst
-no group	property	no	Ingen gruppe
-no datatype	property	no	Ingen datatype
-precision	property	no	Presisjon
-scale	property	no	Scale
-nullable	property	no	Nullverdier
-select nullable	property	no	Velg nullverdi
-show in list	property	no	Vis i liste
-include in search	property	no	Inkluder i søk
-true	property	no	Sant
-false	property	no	Falsk
-history	property	no	Historie
-help	property	no	Hjelp
 do you really want to recalculate all actual cost for all workorders	property	no	Vil du omregne alle faktiske kostnader for alle arbeidsordre?
 custom function	property	no	Egendefinerte funksjoner
 list custom function	property	no	Liste over egendefinerte funksjoner

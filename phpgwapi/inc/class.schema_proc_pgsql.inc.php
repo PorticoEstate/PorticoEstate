@@ -645,26 +645,30 @@
 			$sDefault = '';
 			$bNullable = true;
 
-			reset($aColumnDef);
-			while(list($sAttr, $vAttrVal) = each($aColumnDef))
+			//reset($aColumnDef);
+			//while(list($sAttr, $vAttrVal) = each($aColumnDef))
+			if (is_array($aColumnDef))
 			{
-				switch ($sAttr)
+				foreach($aColumnDef as $sAttr => $vAttrVal)
 				{
-					case 'type':
-						$sType = $vAttrVal;
-						break;
-					case 'precision':
-						$iPrecision = (int)$vAttrVal;
-						break;
-					case 'scale':
-						$iScale = (int)$vAttrVal;
-						break;
-					case 'default':
-						$sDefault = $vAttrVal;
-						break;
-					case 'nullable':
-						$bNullable = $vAttrVal;
-						break;
+					switch ($sAttr)
+					{
+						case 'type':
+							$sType = $vAttrVal;
+							break;
+						case 'precision':
+							$iPrecision = (int)$vAttrVal;
+							break;
+						case 'scale':
+							$iScale = (int)$vAttrVal;
+							break;
+						case 'default':
+							$sDefault = $vAttrVal;
+							break;
+						case 'nullable':
+							$bNullable = $vAttrVal;
+							break;
+					}
 				}
 			}
 

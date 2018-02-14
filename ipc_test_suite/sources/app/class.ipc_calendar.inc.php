@@ -88,17 +88,21 @@
 
 					$event_array = $this->bo->event2array($event);
 					$fields = array();
-					while(list($key, $value) = each($event_array))
+					//while(list($key, $value) = each($event_array))
+					if (is_array($event_array))
 					{
-						if(isset($value['data']))
+						foreach($event_array as $key => $value)
 						{
-							if(is_array($value['data']))
+							if(isset($value['data']))
 							{
-								$fields[$key] = implode(',', $value['data']);
-							}
-							else
-							{
-								$fields[$key] = $value['data'];
+								if(is_array($value['data']))
+								{
+									$fields[$key] = implode(',', $value['data']);
+								}
+								else
+								{
+									$fields[$key] = $value['data'];
+								}
 							}
 						}
 					}
@@ -235,4 +239,3 @@
 		}
 
 	}
-?>

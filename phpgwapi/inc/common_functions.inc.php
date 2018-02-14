@@ -119,19 +119,23 @@
 				{
 					$types[$expected[$i]['name']] = $expected[$i]['type'];
 				}
-				while(list($key,$val) = each($recieved[0]))
+				//while(list($key,$val) = each($recieved[0]))
+				if (is_array($recieved[0]))
 				{
-					if($val !== '##DEFAULT##')
+					foreach($recieved[0] as $key => $val)
 					{
-						if(sanitize($val,$types[$key]) == True)
+						if($val !== '##DEFAULT##')
 						{
-							$args[$key] = $val;
-							unset($required[$key]);
-						}
-						else
-						{
-							echo 'Fatal Error: Invalid paramater type for '.$key.' on line '.$line.' of '.$file.'<br>';
-							exit;
+							if(sanitize($val,$types[$key]) == True)
+							{
+								$args[$key] = $val;
+								unset($required[$key]);
+							}
+							else
+							{
+								echo 'Fatal Error: Invalid paramater type for '.$key.' on line '.$line.' of '.$file.'<br>';
+								exit;
+							}
 						}
 					}
 				}
@@ -139,7 +143,8 @@
 		}
 		if(count($required) != 0)
 		{
-			while (list($key) = each($required))
+			//while (list($key) = each($required))
+			foreach($required as $key => $value)
 			{
 				echo 'Fatal Error: Missing required paramater '.$key.' on line '.$line.' of '.$file.'<br>';
 			}

@@ -64,8 +64,9 @@
 		{
 			if(is_array($extra))
 			{
-				@reset($extra);
-				while(list($var,$value) = each($extra))
+				//@reset($extra);
+				//while(list($var,$value) = each($extra))
+				foreach($extra as $var => $value)
 				{
 					$t_extras[] = $var . '=' . $value;
 				}
@@ -107,8 +108,9 @@
 			}
 			elseif($extravars && is_array($extravars))
 			{
-				@reset($extravars);
-				while(list($var,$value) = each($extravars))
+				//@reset($extravars);
+				//while(list($var,$value) = each($extravars))
+				foreach($extravars as $var => $value)
 				{
 					if($var != 'menuaction')
 					{

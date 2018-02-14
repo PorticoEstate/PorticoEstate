@@ -29,4 +29,3 @@
 		       );
 
 	$GLOBALS['phpgw']->redirect_link('/index.php',$parms);
-?>

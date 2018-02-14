@@ -36,4 +36,3 @@
 	include('../header.inc.php');
 
 	$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'notes.uinotes.index') );
-?>

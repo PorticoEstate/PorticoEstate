@@ -416,7 +416,8 @@
 			
 			$found=false;
 			//We iterate into each box
-			while(list($ak,$li)=each($aryboxes))
+			//while(list($ak,$li)=each($aryboxes))
+			foreach($aryboxes as $ak => $li)
 			{
 				//print $ak." ".$li."<br />";
 				//print_r($li);
@@ -426,22 +427,27 @@
 				{
 					//We iterate into the incoming box to search
 					//for its values in the cache
-					while(list($numary,$ary)=each($aryboxes[$ak]))
+					//while(list($numary,$ary)=each($aryboxes[$ak]))
+					foreach($aryboxes[$ak] as $numary => $ary)
 					{
 						//print "<br /> Iterating aryboxes $numary";	
 						//print_r($ary);
-						list($id,$name)=each($ary);
+						//list($id,$name)=each($ary);
+						$id = key($ary);
+						$name = current($ary);
 						//Look for this record in the cached destboxes
 						if(is_array($saveddestboxes[$ak]))
 						{
 							//Well, we found that we have this destboxed cached so
 							//now we will iterate through that
-							while(list($numarysave,$arysave)=each($saveddestboxes[$ak]))
+							//while(list($numarysave,$arysave)=each($saveddestboxes[$ak]))
+							foreach($saveddestboxes[$ak] as $numarysave => $arysave)
 							{
 								//We will try and get each addressbook key
 								//out of the cached destbox
-								list($sid,$sname)=each($arysave);
-								
+								//list($sid,$sname)=each($arysave);
+								$sid = key($arysave);
+								$sname = current($arysave);								
 								//print "<br /> Iterating destboxes $id -> $name / $sid $sname";	
 								//So we can compare it and set the email field in it
 								if($id==$sid)
@@ -479,7 +485,8 @@
 						}
 						else
 						{
-							while(list($num,$record)=each($this->result))
+							//while(list($num,$record)=each($this->result))
+							foreach ($this->result as $num => $record)
 							{
 								//print "<br> Iterating results $id   ---> $name <br>$record[id]---> $record[email]";
 								//Found what we are looking for

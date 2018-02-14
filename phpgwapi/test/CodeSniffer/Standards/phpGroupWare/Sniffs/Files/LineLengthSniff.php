@@ -60,4 +60,3 @@ class phpGroupWare_Sniffs_Files_LineLengthSniff extends Generic_Sniffs_Files_Lin
 
 }//end class
 
-?>

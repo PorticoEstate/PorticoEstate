@@ -542,4 +542,3 @@
 		}
 		return $GLOBALS['setup_info']['notes']['currentver'];
 	}
-?>

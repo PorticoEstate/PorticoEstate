@@ -140,14 +140,18 @@
 		{
 			print "<option value=\"0\">Choose a category</option>\n";
 		}
-		while(list($k,$v) = each($categories))
+		//while(list($k,$v) = each($categories))
+		if (is_array($categories))
 		{
-			print "<option value=\"" . $v['id'] ."\"";
-			if ($v['id']==$catid)
+			foreach($categories as $k => $v)
 			{
-				print ' selected';
+				print "<option value=\"" . $v['id'] ."\"";
+				if ($v['id']==$catid)
+				{
+					print ' selected';
+				}
+				print ">". $v['title'] . "</option>\n"; 
 			}
-			print ">". $v['title'] . "</option>\n"; 
 		}
 ?>
 </select></p>
@@ -162,14 +166,18 @@
 			{
 				print "<option value=\"0\">Choose a source</option>\n";
 			}
-			while(list($k,$v) = each($sources))
+			//while(list($k,$v) = each($sources))
+			if (is_array($sources))
 			{
-				print "<option value=\"" . $v['id'] ."\"";
-				if ($v['id']==$chanid)
+				foreach($sources as $k => $v)
 				{
-					print "\" selected=\"selected\"";
+					print "<option value=\"" . $v['id'] ."\"";
+					if ($v['id']==$chanid)
+					{
+						print "\" selected=\"selected\"";
+					}
+					print ">". $v['title'] . "</option>\n"; 
 				}
-				print ">". $v['title'] . "</option>\n"; 
 			}
 ?>
 </select>
@@ -191,33 +199,37 @@
 <h2>Stories available</h2>
 <table>
 <?php
-			while(list($k,$v) = each($stories))
+			//while(list($k,$v) = each($stories))
+			if (is_array($stories))
 			{
-				print "<tr>";
-				print "<td><b>" . $v['title'] . "</b><br />";
-				print $v['description'] . "<br />";
-				print "<em><a target=\"_blank\" href=\"" . 
-					 $v['link'] . "\">Read full story</a> ";
-				print "<a href=\"" . $GLOBALS['phpgw']->link('/xmlrpc/comment.php',"catid=${catid}&chanid=${chanid}&" .
-					 "oc=${oc}&comment=" . $v['id']) . "\">Comment on this story</a>";
-				print "</em>";
-				print "</td>";
-				print "</tr>\n";
-				// now look for existing comments
-				$res = dispatch($dclient, "discuss.getComments", array(CreateObject('phpgwapi.xmlrpcval',$v['id'])));
-				if (sizeof($res)>0)
+				foreach($stories as $k => $v)
 				{
-					 print "<tr><td bgcolor=\"#dddddd\"><p><b><i>" . "Comments on this story:</i></b></p>";
-					 for($i=0; $i<sizeof($res); $i++)
-					 {
-						 $s=$res[$i];
-						 print "<p><b>From:</b> " . htmlentities($s['name']) . "<br />";
-						 print "<b>Comment:</b> " . htmlentities($s['comment']) . "</p>";
+					print "<tr>";
+					print "<td><b>" . $v['title'] . "</b><br />";
+					print $v['description'] . "<br />";
+					print "<em><a target=\"_blank\" href=\"" . 
+						 $v['link'] . "\">Read full story</a> ";
+					print "<a href=\"" . $GLOBALS['phpgw']->link('/xmlrpc/comment.php',"catid=${catid}&chanid=${chanid}&" .
+						 "oc=${oc}&comment=" . $v['id']) . "\">Comment on this story</a>";
+					print "</em>";
+					print "</td>";
+					print "</tr>\n";
+					// now look for existing comments
+					$res = dispatch($dclient, "discuss.getComments", array(CreateObject('phpgwapi.xmlrpcval',$v['id'])));
+					if (sizeof($res)>0)
+					{
+						 print "<tr><td bgcolor=\"#dddddd\"><p><b><i>" . "Comments on this story:</i></b></p>";
+						 for($i=0; $i<sizeof($res); $i++)
+						 {
+							 $s=$res[$i];
+							 print "<p><b>From:</b> " . htmlentities($s['name']) . "<br />";
+							 print "<b>Comment:</b> " . htmlentities($s['comment']) . "</p>";
+						 }
+						 print "</td></tr>\n";
 					 }
-					 print "</td></tr>\n";
-				 }
-				 print "<tr><td><hr /></td></tr>\n";
-			 }
+					 print "<tr><td><hr /></td></tr>\n";
+				}
+			}
 ?>
 </table>
 

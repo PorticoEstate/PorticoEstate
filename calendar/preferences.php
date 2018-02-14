@@ -223,4 +223,3 @@
 
 	$p->pparse('out','pref');
 	$phpgw->common->phpgw_footer();
-?>

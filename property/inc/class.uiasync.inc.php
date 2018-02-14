@@ -310,7 +310,7 @@
 				$method_data=array();
 				foreach ($data_set as $key => $value)
 				{
-					$method_data[] = "{$key}={$value}";
+					$method_data[] = "{$key}::{$value}";
 				}
 				$entry['data']	= @implode (',',$method_data);
 			}
@@ -362,7 +362,7 @@
 			{
 				foreach ($data as $set)
 				{
-					$set = explode("=", $set);
+					$set = explode("::", $set);
 					$data_set[$set[0]] = $set[1];
 				}
 			}
@@ -411,14 +411,14 @@
 			{
 				$method = $this->bo->read_single($id);
 				$data_set = unserialize($method['data']);
-				//while (is_array($data_set) && list($key, $value) = each($data_set))
-                                if (is_array($data_set))
-                                {
-                                    foreach($data_set as $key => $value)
-                                    {
-					$method_data[] = $key . '=' . $value;
-                                    }
-                                }
+
+				if (is_array($data_set))
+				{
+					foreach($data_set as $key => $value)
+					{
+						$method_data[] = $key . '::' . $value;
+					}
+				}
 
 				$method_data = @implode(',', $method_data);
 				$function_msg = lang('edit method');
@@ -475,7 +475,6 @@
 
 			self::render_template_xsl(array('async', 'datatable_inline'), array('edit' => $data));
 
-//			$GLOBALS['phpgw']->xslttpl->set_var('phpgw',array('edit' => $data));
 		}
 
 		function delete()

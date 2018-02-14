@@ -578,129 +578,6 @@
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
 			}
-//			$datatable = array();
-
-			/* if( phpgw::get_var('phpgw_return_as') != 'json' )
-			  {
-
-			  if(!$lookup)
-			  {
-			  $datatable['menu']	= $this->bocommon->get_menu();
-			  }
-
-			  $datatable['config']['base_url'] = $GLOBALS['phpgw']->link('/index.php', array
-			  (
-			  'menuaction'=> 'property.uipricebook.agreement_group',
-			  'cat_id'	=> $this->cat_id,
-			  'filter'	=> $this->filter,
-			  'query'		=> $this->query
-
-			  )
-			  );
-
-			  $datatable['config']['allow_allrows'] = true;
-
-			  $datatable['config']['base_java_url'] = "menuaction:'property.uipricebook.agreement_group',"
-			  ."cat_id:'{$this->cat_id}',"
-			  ."filter:'{$this->filter}',"
-			  ."query:'{$this->query}'";
-
-
-			  $values_combo_box[0]  = $this->bo->select_status_list('filter',$this->cat_id);
-			  $default_value = array ('id'=>'','name'=>lang('No status'));
-			  array_unshift ($values_combo_box[0],$default_value);
-
-
-			  $datatable['actions']['form'] = array
-			  (
-			  array
-			  (
-			  'action'	=> $GLOBALS['phpgw']->link('/index.php',
-			  array
-			  (
-			  'menuaction' 	=> 'property.uipricebook.agreement_group',
-			  'cat_id'	=> $this->cat_id,
-			  'filter'	=> $this->filter,
-			  'query'		=> $this->query
-			  )
-			  ),
-			  'fields'	=> array
-			  (
-			  'field' => array
-			  (
-			  array
-			  (
-			  'id' => 'btn_cat_id',
-			  'name' => 'cat_id',
-			  'value'	=> lang('Category'),
-			  'type' => 'button',
-			  'style' => 'filter',
-			  'tab_index' => 2
-			  ),
-			  array
-			  (
-			  'type'	=> 'button',
-			  'id'	=> 'btn_new',
-			  'value'	=> lang('add'),
-			  'tab_index' => 5
-			  ),
-			  array
-			  ( //boton     SEARCH
-			  'id' => 'btn_search',
-			  'name' => 'search',
-			  'value'    => lang('search'),
-			  'type' => 'button',
-			  'tab_index' => 4
-			  ),
-			  array
-			  ( // TEXT IMPUT
-			  'name'     => 'query',
-			  'id'     => 'txt_query',
-			  'value'    => '',//$query,
-			  'type' => 'text',
-			  'onkeypress' => 'return pulsar(event)',
-			  'size'    => 28,
-			  'tab_index' => 3
-			  )
-			  ),
-			  'hidden_value' => array
-			  (
-			  array
-			  ( //div values  combo_box_0
-			  'id' => 'values_combo_box_0',
-			  'value'	=> $this->bocommon->select2String($values_combo_box[0]) //i.e.  id,value/id,vale/
-			  )
-			  )
-			  )
-			  )
-			  );
-			  } */
-
-//			$agreement_list = array();
-//			$agreement_list = $this->bo->read_agreement_group();
-//			$uicols = array (
-//				'input_type'	=>	array(text,text,text,text),
-//				'name'			=>	array(agreement_group_id,num,descr,status),
-//				'formatter'		=>	array('','','',''),
-//				'descr'			=>	array(lang('ID'),lang('Activity Num'),lang('Description'),lang('Status'))
-//			);
-//
-//			$j=0;
-//			if (isset($agreement_list) && is_array($agreement_list))
-//			{
-//				foreach ($agreement_list as $agreement)
-//				{
-//					for ($i=0;$i<count($uicols['name']);$i++)
-//					{
-//						$datatable['rows']['row'][$j]['column'][$i]['name'] 	= $uicols['name'][$i];
-//						$datatable['rows']['row'][$j]['column'][$i]['value'] 	= $agreement[$uicols['name'][$i]];												
-//					}
-//
-//					$j++;
-//				}
-//			}
-//			$datatable['rowactions']['action'] = array();
-
 			$parameters = array
 				(
 				'parameter' => array
@@ -786,7 +663,10 @@
 				{
 					$receipt['error'][] = array('msg' => lang('Please select a status !'));
 				}
-
+				if (!$values['descr'])
+				{
+					$receipt['error'][] = array('msg' => lang('please enter a description !'));
+				}
 
 				if ($values['num'] && !$agreement_group_id)
 				{
@@ -888,7 +768,6 @@
 
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit_agreement_group' => $data));
-			//	$GLOBALS['phpgw']->xslttpl->pp();
 		}
 
 		function prizing()

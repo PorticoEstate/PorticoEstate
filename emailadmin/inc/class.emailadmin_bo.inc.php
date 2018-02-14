@@ -282,14 +282,18 @@
 					
 					$string = imap_8bit($_string);
 					$stringParts = explode("=\r\n",$string);
-					while(list($key,$value) = each($stringParts))
+					//while(list($key,$value) = each($stringParts))
+					if (is_array($stringParts))
 					{
-						if(!empty($retString)) $retString .= " ";
-						$value = str_replace(" ","_",$value);
-						// imap_8bit does not convert "?"
-						// it does not need, but it should
-						$value = str_replace("?","=3F",$value);
-						$retString .= "=?".strtoupper($this->displayCharset)."?Q?" . $value. "?=";
+						foreach($stringParts as $key => $value)
+						{
+							if(!empty($retString)) $retString .= " ";
+							$value = str_replace(" ","_",$value);
+							// imap_8bit does not convert "?"
+							// it does not need, but it should
+							$value = str_replace("?","=3F",$value);
+							$retString .= "=?".strtoupper($this->displayCharset)."?Q?" . $value. "?=";
+						}
 					}
 					#exit;
 					return $retString;
@@ -387,7 +391,9 @@
 			{
 				if (is_array($profileData) && count($profileData)) {	// if we have a profile use that
 					reset($profileData);
-					list($found,$data) = each($profileData);
+					//list($found,$data) = each($profileData);
+					$found = key($profileData);
+					$data = current($profileData);
 					$this->profileID = $_profileID = $data['profileID'];
 				} elseif ($GLOBALS['phpgw_info']['server']['smtp_server']) { // create a default profile, from the data in the api config
 					$this->profileID = $_profileID = $this->soemailadmin->addProfile(array(

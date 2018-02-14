@@ -237,29 +237,37 @@
 				elseif ($this_item['widget'] == 'combobox')
 				{
 					// set up combobox available options as KEYS array with empty VALUES
-					reset($this_item['values']);
+					//reset($this_item['values']);
 					$combo_availables = Array();
 					$x = 0; 
-					while ( list ($key,$prop) = each ($this_item['values']))
+					//while ( list ($key,$prop) = each ($this_item['values']))
+					if (is_array($this_item['values']))
 					{
-						$combo_availables[$key]	= '';
-						$x++;
+						foreach($this_item['values'] as $key => $prop)
+						{
+							$combo_availables[$key]	= '';
+							$x++;
+						}
 					}
 					// fill the pref item in $combo_availables[this_item_value] to " selected"
 					$combo_available[$actual_user_prefs[$this_item['id']]] = ' selected';
 					// make the combobox HTML tags string
 					$combobox_html = '';
-					reset($this_item['values']);
+					//reset($this_item['values']);
 					$x = 0;
-					while ( list ($key,$prop) = each ($this_item['values']))
+					//while ( list ($key,$prop) = each ($this_item['values']))
+					if (is_array($this_item['values']))
 					{
-						if ( !isset($combo_available[$key]) || !$combo_available[$key])
+						foreach($this_item['values'] as $key => $prop)
 						{
-							$combo_available[$key] = '';
+							if ( !isset($combo_available[$key]) || !$combo_available[$key])
+							{
+								$combo_available[$key] = '';
+							}
+							$combobox_html .= 
+								'<option value="'.$key.'"'.$combo_available[$key].'>'.$prop.'</option>' ."\r\n";
+							$x++;
 						}
-						$combobox_html .= 
-							'<option value="'.$key.'"'.$combo_available[$key].'>'.$prop.'</option>' ."\r\n";
-						$x++;
 					}
 					$this_item_value = $combobox_html;
 					$this->tpl->set_var('pref_value', $this_item_value);

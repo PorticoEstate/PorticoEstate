@@ -258,7 +258,8 @@
 		{
 			if(is_array($extra))
 			{
-				while(list($var,$value) = each($extra))
+				//while(list($var,$value) = each($extra))
+				foreach($extra as $var => $value)
 				{
 					$t_extras[] = $var . '=' . $value;
 				}
@@ -550,7 +551,8 @@
 						);
 					}
 
-					while (is_array($this->extra_filters) && (list(,$efilter) = each($this->extra_filters)))
+					//while (is_array($this->extra_filters) && (list(,$efilter) = each($this->extra_filters)))
+					foreach($this->extra_filters as $key => $efilter)
 					{
 						$filter_obj[] = $efilter;
 					}

@@ -81,4 +81,4 @@ class PHP_CodeSniffer_Standards_phpGroupWare_phpGroupWareCodingStandard extends 
     }//end getIncludedSniffs()
 
 }//end class
-?>
+

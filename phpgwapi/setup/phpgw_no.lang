@@ -288,3 +288,29 @@ select all	common	no	Velg alle
 hidden	common	no	Gjemt
 rows selected	common	no	rader er valgt
 field has been updated	common	no	Feltet er oppdatert
+delete the attrib	common	no	slett egenskap
+edit attribute	common	no	Endre egenskap
+edit the attrib	common	no	Endre egenskap
+enter the attribute id	common	no	Angi egenskap-id
+enter the attribute value for this entity	common	no	Angi egenskap verdi for denne posten
+save the attribute	common	no	Lagre egenskap
+view the attrib	common	no	Vis egenskap
+new attribute	common	no	Ny egenskap
+add attribute	common	no	Legg til egenskap
+column name	common	no	Kolonnenavn
+input text	common	no	Ledetekst
+statustext	common	no	Statustekst
+no group	common	no	Ingen gruppe
+no datatype	common	no	Ingen datatype
+precision	common	no	Presisjon
+scale	common	no	Scale
+nullable	common	no	Nullverdier
+select nullable	common	no	Velg nullverdi
+show in list	common	no	Vis i liste
+include in search	common	no	Inkluder i søk
+true	common	no	Sant
+false	common	no	Usann
+history	common	no	Historie
+help	common	no	Hjelp
+attribute has not been saved	common	no	Egenskap er ikke lagret
+statustext not entered!	common	no	Statustekst er ikke angitt!

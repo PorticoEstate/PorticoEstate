@@ -826,55 +826,59 @@
 				);
 
 			$category_old	= '';
-			while (is_array($training) && list(,$entry) = each($training))
+			//while (is_array($training) && list(,$entry) = each($training))
+			if (is_array($training))
 			{
-
-				if($entry['category']!= $category_old)
+				foreach($training as $key => $entry)
 				{
+
+					if($entry['category']!= $category_old)
+					{
+						$content[] = array
+						(
+							'start_date'		=> '',
+							'sep'			=> '',
+							'end_date'		=> '',
+							'spacer'		=> '',
+							'what'			=> $entry['category']
+						);
+						$pdf->ezSetDy(-20);
+						$pdf->ezTable($content,'','',
+								array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 12,'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
+								,'cols'=>$table_header
+								)
+							);
+						unset($content);
+					}
+
+					$category_old	= $entry['category'];
+
+					if($entry['start_date'])
+					{
+						$entry['start_date']	= $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
+					}
+					if($entry['end_date'])
+					{
+						$entry['end_date']	= $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
+					}
+
 					$content[] = array
 					(
-						'start_date'		=> '',
-						'sep'			=> '',
-						'end_date'		=> '',
+						'start_date'		=> $entry['start_date'],
+						'sep'			=> '-',
+						'end_date'		=> $entry['end_date'],
 						'spacer'		=> '',
-						'what'			=> $entry['category']
+						'what'			=> $entry['title'] . ', ' . $entry['place']
 					);
-					$pdf->ezSetDy(-20);
+
 					$pdf->ezTable($content,'','',
-							array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 12,'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
-							,'cols'=>$table_header
-							)
-						);
+								array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
+								,'cols'=>$table_header
+								)
+							);
+
 					unset($content);
 				}
-
-				$category_old	= $entry['category'];
-
-				if($entry['start_date'])
-				{
-					$entry['start_date']	= $GLOBALS['phpgw']->common->show_date($entry['start_date'],$dateformat);
-				}
-				if($entry['end_date'])
-				{
-					$entry['end_date']	= $GLOBALS['phpgw']->common->show_date($entry['end_date'],$dateformat);
-				}
-
-				$content[] = array
-				(
-					'start_date'		=> $entry['start_date'],
-					'sep'			=> '-',
-					'end_date'		=> $entry['end_date'],
-					'spacer'		=> '',
-					'what'			=> $entry['title'] . ', ' . $entry['place']
-				);
-
-				$pdf->ezTable($content,'','',
-							array('xPos'=>50,'xOrientation'=>'right','width'=>500,0,'shaded'=>0,'fontSize' => 10,'gridlines'=> 0,'titleFontSize' => 12,'outerLineThickness'=>2,'showHeadings'=>0
-							,'cols'=>$table_header
-							)
-						);
-
-				unset($content);
 			}
 			$document = $pdf->ezOutput();
 			$pdf->print_pdf($document,'cv_'.$GLOBALS['phpgw']->accounts->id2name($user_id));

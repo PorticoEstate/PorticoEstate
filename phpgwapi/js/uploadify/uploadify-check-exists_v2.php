@@ -10,4 +10,3 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/uploads/' . $_POST['filename'])) {
 } else {
 	echo 0;
 }
-?>

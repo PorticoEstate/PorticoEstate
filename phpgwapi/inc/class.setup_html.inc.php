@@ -212,8 +212,9 @@
 				else
 				{
 					reset($GLOBALS['phpgw_domain']);
-					$default_domain = each($GLOBALS['phpgw_domain']);
-					$GLOBALS['setup_tpl']->set_var('default_domain_zero',$default_domain[0]);
+					//$default_domain = each($GLOBALS['phpgw_domain']);
+					$default_domain = key($GLOBALS['phpgw_domain']);
+					$GLOBALS['setup_tpl']->set_var('default_domain_zero',$default_domain);
 
 					/* Use BLOCK B_single_domain inside of login_stage_header */
 					$GLOBALS['setup_tpl']->parse('V_single_domain','B_single_domain');

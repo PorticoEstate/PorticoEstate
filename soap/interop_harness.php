@@ -32,10 +32,14 @@ function quickjump(dropdown) {
 	$soapclient = CreateObject('phpgwapi.phpgw_soapclient','http://www.xmethods.net/perl/soaplite.cgi');
 	$endpointArray = $soapclient->call('getAllEndpoints',array(),'http://soapinterop.org/ilab','http://soapinterop.org/ilab#getAllEndpoints');
 
-	@reset($endpointArray);
-	while(list($k,$v) = @each($endpointArray))
+	//@reset($endpointArray);
+	//while(list($k,$v) = @each($endpointArray))
+	if (is_array($endpointArray))
 	{
-		$servers[str_replace("+","",$v["name"])] = $v;
+		foreach($endpointArray as $k => $v)
+		{
+			$servers[str_replace("+","",$v["name"])] = $v;
+		}
 	}
 
 	// method test params
@@ -127,8 +131,9 @@ function quickjump(dropdown) {
 <option>Choose Server...
 	<?php
 	print isset($nserver) ? '<option value="' . $GLOBALS['phpgw']->link('/soap/interop_harness.php','nserver=' . $nserver) . '">' . $nserver : "";
-	@reset($servers);
-	while(list($k,$v) = @each($servers))
+	//@reset($servers);
+	//while(list($k,$v) = @each($servers))
+	foreach($servers as $k => $v)
 	{
 		echo '<option value="' . $GLOBALS['phpgw']->link('/soap/interop_harness.php','nserver=' . $k) . '">' . $k . "\n";
 	}
@@ -141,15 +146,17 @@ function quickjump(dropdown) {
 	{
 		$server = $servers[$nserver];
 		// print server info
-		@reset($server);
-		while(list($k,$v) = @each($server))
+		//@reset($server);
+		//while(list($k,$v) = @each($server))
+		foreach($server as $k => $v)
 		{
 			print "<strong>$k:</strong> $v<br>";
 		}
 		print "<br><br>";
 		// loop thru test suite
 		$method_keys = array_keys($method_params);
-		while(list(,$method) = @each($method_keys))
+		//while(list(,$method) = @each($method_keys))
+		foreach($method_keys as $key => $method)
 		{
 			// create soap message
 			if(!$soapmsg = CreateObject('phpgwapi.soapmsg',

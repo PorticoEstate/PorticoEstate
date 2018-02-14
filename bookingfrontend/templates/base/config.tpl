@@ -134,6 +134,10 @@
 			</td>
 			<td><input name="newsettings[bookingfrontend_host]" value="{value_bookingfrontend_host}"></td>
 		</tr>
+		<tr class="row_off">
+			<td>{lang_manual}:</td>
+			<td><input name="newsettings[bookingfrontend_manual]" value="{value_bookingfrontend_manual}"></td>
+		</tr>
 
 		<!-- END body -->
 		<!-- BEGIN footer -->

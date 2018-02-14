@@ -183,7 +183,8 @@
 				if (is_array($this->grants))
 				{
 					$grants = $this->grants;
-					while(list($user) = each($grants))
+					//while(list($user) = each($grants))
+					foreach($grants as $user => $value)
 					{
 						$public_user_list[] = $user;
 					}
@@ -331,7 +332,8 @@
 				if (is_array($this->grants))
 				{
 					$grants = $this->grants;
-					while(list($user) = each($grants))
+					//while(list($user) = each($grants))
+					foreach($grants as $user => $value)
 					{
 						$public_user_list[] = $user;
 					}
@@ -708,7 +710,8 @@
 			}
 
 			$cat_list = array();
-			while (is_array($cats) && list(,$cat) = each($cats))
+			//while (is_array($cats) && list(,$cat) = each($cats))
+			foreach($cats as $key => $cat)
 			{
 				if($cat['active'] == 2 && !in_array($cat['id'],$selected))//hidden
 				{

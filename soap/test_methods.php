@@ -45,8 +45,9 @@
 			//print '</xmp>';
 			if($endpointArray = @array_shift($return->decode()))
 			{
-				@reset($endpointArray);
-				while(list($k,$v) = @each($endpointArray))
+				//@reset($endpointArray);
+				//while(list($k,$v) = @each($endpointArray))
+				foreach($endpointArray as $k => $v)
 				{
 					$servers[str_replace('+','',$v['name'])] = $v;
 				}
@@ -142,12 +143,13 @@
 		'2001-04-25T09:31:41-07:00'
 	);
 
-	reset($method_params);
-	while(list($a,$b) = each($method_params))
+	//reset($method_params);
+	//while(list($a,$b) = each($method_params))
+	foreach($method_params as $a => $b)
 	{
 		$method_keys[$a] = $b;
 	}
-	reset($method_keys);
+	//reset($method_keys);
 
 	$servers['phpGroupWare'] = array(
 		'soapaction' => 'urn:soapinterop',
@@ -173,8 +175,9 @@
 <option>Choose Server...
 	<?php
 	echo isset($nserver) ? "<option value=\"$PHP_SELF?nserver=$nserver\">$nserver" : '';
-	@reset($servers);
-	while(list($k,$v) = @each($servers))
+	//@reset($servers);
+	//while(list($k,$v) = @each($servers))
+	foreach($servers as $k => $v)
 	{
 		echo '<option value="' . $k . '">' . $k . "\n";
 	}
@@ -183,9 +186,13 @@
 <select name="method" onChange="submit(this.form)">
 	<option>method:
 	<?php
-	while(list($func,$x) = each($method_keys))
+	//while(list($func,$x) = each($method_keys))
+	if (is_array($method_keys))
 	{
-		print '<option value="' . $func . '">' . $func . "\n";
+		foreach($method_keys as $func => $x)
+		{
+			print '<option value="' . $func . '">' . $func . "\n";
+		}
 	}
 	?>
 </select>

@@ -188,20 +188,24 @@
 
 			$categories= $this->so->select_category_list();
 
-			while (is_array($categories) && list(,$category) = each($categories))
+			//while (is_array($categories) && list(,$category) = each($categories))
+			if (is_array($categories))
 			{
-				$sel_category = '';
-				if ($category['id']==$selected)
+				foreach($categories as $key => $category)
 				{
-					$sel_category = 'selected';
-				}
+					$sel_category = '';
+					if ($category['id']==$selected)
+					{
+						$sel_category = 'selected';
+					}
 
-				$category_list[] = array
-				(
-					'cat_id'	=> $category['id'],
-					'name'		=> $category['name'],
-					'selected'	=> $sel_category
-				);
+					$category_list[] = array
+					(
+						'cat_id'	=> $category['id'],
+						'name'		=> $category['name'],
+						'selected'	=> $sel_category
+					);
+				}
 			}
 
 			for ($i=0;$i<count($category_list);$i++)
