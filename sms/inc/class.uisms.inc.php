@@ -623,7 +623,7 @@
 			  }
 			 */
 			$sms = CreateObject('sms.sms');
-			$max_length = $core_config['smsmaxlength'] = 160;
+			$max_length = $core_config['smsmaxlength'] = 804;
 			if ($sms_sender = $sms->username2sender($GLOBALS['phpgw_info']['user']['account_lid']))
 			{
 				$max_length = $max_length - strlen($sms_sender);
