@@ -177,7 +177,7 @@
 			$uid = (int)$this->account;
 
 			$mobile_sender = $this->username2mobile($username);
-			$max_length = 160;
+			$max_length = 804;
 			if ($sms_sender = $this->username2sender($username))
 			{
 				$max_length = $max_length - strlen($sms_sender) - 1;
@@ -237,7 +237,7 @@
 			$gateway_module_send = $this->gateway_module_send;
 			$uid = $GLOBALS['phpgw']->accounts->name2id($username);
 			$mobile_sender = $this->username2mobile($username);
-			$max_length = 160;
+			$max_length = 804;
 			if ($sms_sender = $this->username2sender($username))
 			{
 				$max_length = $max_length - strlen($sms_sender) - 1;
@@ -325,7 +325,7 @@
 						{
 							$p_num = $this->db->f('p_num');
 							$sms_to = $p_num;
-							$max_length = 160 - strlen($sms_sender) - 3;
+							$max_length = 804 - strlen($sms_sender) - 3;
 							if (strlen($message) > $max_length)
 							{
 								$message = substr($message, 0, $max_length - 1);

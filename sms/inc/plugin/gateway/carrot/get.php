@@ -73,7 +73,7 @@
 							$sms[$j]['message'] .= utf8_encode($bodyParts[$i]['body']) . "\n";
 						}
 
-						$sms[$j]['message'] = substr($sms[$j]['message'], 0, 160);
+						$sms[$j]['message'] = substr($sms[$j]['message'], 0, 804);
 						$j++;
 					}
 				}
