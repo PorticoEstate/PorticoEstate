@@ -1,5 +1,7 @@
 <?php
 
+	phpgw::import_class('phpgwapi.xmlhelper');
+
 	class sms_sms extends sms_sms_
 	{
 
@@ -38,108 +40,62 @@
 				$sms_to = "47{$sms_to}";
 			}
 
-			$arguments = array
+			$data = array
+			(
+				'CLIENT'	=> $this->pswin_param['login'],
+				'PW'		=> $this->pswin_param['password'],
+				'MSGLST'	=> array
 				(
-				'type' => '1', // text
-				'serviceid' => $this->pswin_param['serviceid'], //Unique identifier for service. Provided by pswin.
-//				'servicename'		=> '',	//Unique identifier for service. Provided by pswin.
-				'content' => utf8_decode($sms_msg),
-//				'uri'				=>  '',// Y if WAP push Used by WAP Push type, indicates the URL to be contained in wap push.
-				'originator' => $this->pswin_param['originator'], //$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],//$sms_sender,
-				'originatortype' => $this->pswin_param['originatortype'], //$this->pswin_param['originatortype'], //'The originator type, e.g. alphanumeric 1 = International number (e.g. +4741915558) 2 = Alphanumeric (e.g. pswin) max 11 chars 3 = Network specific (e.g. 1960) 4 = National number (e.g. 41915558)'
-				'recipient' => $sms_to,
-				'username' => $this->pswin_param['login'],
-				'password' => $this->pswin_param['password'],
-//				'priority'			=> '',
-//				'price'				=> '0',
-				'differentiator' => $this->pswin_param['differentiator'], //'Test',
-//				'TTL'				=> ''
+					'MSG'	=> array
+					(
+						'ID'	=> $smslog_id,
+						'TEXT'	=> $sms_msg,
+						'SND'	=> $this->pswin_param['originator'],
+						'RCV'	=> $sms_to
+					)
+				)
 			);
 
-			if ($this->pswin_param['type'] == 'GET')
+			$xmldata = utf8_decode(phpgwapi_xmlhelper::toXML($data, 'SESSION'));
+
+			$url = $this->pswin_param['send_url'];
+
+			$ch = curl_init($url);
+
+			if($this->pswin_param['proxy_host'])
 			{
-				$query = http_build_query($arguments);
-				$request = "{$this->pswin_param['send_url']}?{$query}";
-
-				$aContext = array
-					(
-					'http' => array
-						(
-						'proxy' => "{$this->pswin_param['proxy_host']}:{$this->pswin_param['proxy_port']}", // This needs to be the server and the port of the NTLM Authentication Proxy Server.
-						'request_fulluri' => True,
-					),
-				);
-
-				$cxContext = stream_context_create($aContext);
-
-				$response = file_get_contents($request, False, $cxContext);
-
-				$result = $this->parse_html($response);
-			}
-			else
-			{
-				require_once 'SMSService.php';
-
-				$options = array();
-				$options['soap_version'] = SOAP_1_1;
-				$options['location'] = $this->pswin_param['service_url'];
-				$options['uri'] = "http://sms.pswin.com/SOAP/SMS.asmx";
-				$options['trace'] = 1;
-				$options['proxy_host'] = $this->pswin_param['proxy_host'];
-				$options['proxy_port'] = $this->pswin_param['proxy_port'];
-				$options['encoding'] = 'iso-8859-1';//'UTF-8';
-
-				$service = new SMSService($this->pswin_param['wsdl'], $options);
-
-				$SMSMessage = new SMSMessage();
-
-				$SMSMessage->ReceiverNumber = (string)$arguments['recipient'];
-				$SMSMessage->SenderNumber = (string)$this->pswin_param['originator'];
-				$SMSMessage->Text = (string)$arguments['content'];
-				$SMSMessage->Network = (string)'';
-				$SMSMessage->TypeOfMessage = (string)'Text';
-				$SMSMessage->Tariff = (int)0;
-				$SMSMessage->TimeToLive = (int)0;
-				$SMSMessage->CPATag = '';
-				$SMSMessage->RequestReceipt = (bool)false;
-				$SMSMessage->SessionData = (string)'';
-				$SMSMessage->AffiliateProgram = (string)'';
-				$SMSMessage->DeliveryTime = (string)'';
-				$SMSMessage->ServiceCode = (string)'';
-
-				$SendSingleMessage = new SendSingleMessage();
-				$SendSingleMessage->username = $this->pswin_param['login'];
-				$SendSingleMessage->password = $this->pswin_param['password'];
-				$SendSingleMessage->m = $SMSMessage;
-
-
-				$ReturnValue = $service->SendSingleMessage($SendSingleMessage);
-
-				$result['statuscode'] = $ReturnValue->SendSingleMessageResult->Code;
-				$result['messageid'] = $ReturnValue->SendSingleMessageResult->Reference;
-				$result['description'] = $ReturnValue->SendSingleMessageResult->Description;
+				curl_setopt($ch, CURLOPT_PROXY, "{$this->pswin_param['proxy_host']}:{$this->pswin_param['proxy_port']}");
 			}
 
-			// p_status :
-			// 0 = pending
-			// 1 = delivered
-			// 2 = failed
-			// p_status :
-			// 500 = pending
-			// 200 = delivered
-			// 100 = failed
+			curl_setopt($ch, CURLOPT_MUTE, 1);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, "$xmldata");
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			$result = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+
+			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse->setEncoding('UTF-8');
+			$var_result = $xmlparse->parse($result);
 
 
-			if ($result['statuscode'] == 200)
+			// OK = delivered
+			// FAIL = failed
+
+
+			if ($var_result['LOGON'] == 'OK')
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
 				$ret = true;
 			}
-			else if ($result['statuscode'] == 100)
+			else
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 				$ret = false;
-				throw new Exception($result['description']);
+//				throw new Exception($var_result['INFO']);
 			}
 
 			return $ret;
@@ -148,16 +104,15 @@
 		function gw_set_delivery_status( $gp_code = "", $uid = "", $smslog_id = "", $p_datetime = "", $p_update = "" )
 		{
 			return;
-			// p_status :
-			// 0 = pending
-			// 1 = delivered
-			// 2 = failed
+			// OK = delivered
+			// FAIL = failed
 
-			if ($result['statuscode'] == 1)
+
+			if ($result['statuscode'] == 'OK')
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
 			}
-			else if ($result['statuscode'] == 5)
+			else if ($result['statuscode'] == 'FAIL')
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 			}
