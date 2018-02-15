@@ -709,7 +709,7 @@ account new	booking	no	Ny konteringsstreng
 external account	booking	no	Ekstern konto
 external customer output format	booking	no	Ekstern kunde output format
 external file linebreak	booking	no	Tegn for linjeskift
-export agresso	booking	no	Agresso eksport
+export invoice	booking	no	Faktura eksport
 export method	booking	no	Eksport metode
 export path	booking	no	Eksport sti
 ftp host	booking	no	Ftp vert
