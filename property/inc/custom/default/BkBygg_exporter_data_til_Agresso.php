@@ -65,6 +65,8 @@
 				$this->config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
 				$this->order_id = $param['order_id'];
 				$this->voucher_type = $param['voucher_type'];
+				$this->voucher_id = $param['external_voucher_id'];
+
 			}
 
 			public function create_transfer_xml( $param )

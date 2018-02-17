@@ -557,10 +557,10 @@
 						switch ($order_type)
 						{
 							case 'workorder':
-								$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount );
+								$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount, $_data['KEY'] );
 								break;
 							case 'ticket':
-								$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount );
+								$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount, $_data['KEY'] );
 								break;
 							default:
 								throw new Exception('Order type not supported');
