@@ -548,7 +548,7 @@
 
 					if(!$receive_order_performed && $this->config->config_data['export']['auto_receive_order'])
 					{
-						$received_amount = $this->get_total_received((int)$order_id);
+						$received_amount = $belop; //$this->get_total_received((int)$order_id);
 
 						$received_amount = $received_amount * 0.8; //shave off 25 % tax from the top.
 
@@ -557,10 +557,10 @@
 						switch ($order_type)
 						{
 							case 'workorder':
-								$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount );
+								$received = createObject('property.boworkorder')->receive_order( (int)$order_id, $received_amount, $_data['KEY'] );
 								break;
 							case 'ticket':
-								$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount );
+								$received = createObject('property.botts')->receive_order( (int)$order_id, $received_amount, $_data['KEY'] );
 								break;
 							default:
 								throw new Exception('Order type not supported');

@@ -66,6 +66,16 @@
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/leverandorer?leverandorNr=722920
 			//curl -s -u portico:BgPor790gfol http://tjenester.usrv.ubergenkom.no/api/agresso/manglendevaremottak
 
+
+			/*
+			 *
+			 * Nye:
+			 * agresso/ordre?id=
+			 * agresso/bilag?id=
+			 *
+			 */
+
+
 			if ($this->debug)
 			{
 			}
