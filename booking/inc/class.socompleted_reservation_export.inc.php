@@ -408,6 +408,10 @@
 			{
 				$export_format = 'kommfakt';
 			}
+			elseif ($config->config_data['internal_format'] == 'VISMA')
+			{
+				$export_format = 'visma';
+			}
 
 			if (is_array($reservations))
 			{
@@ -447,7 +451,7 @@
 			return $this->build_export_result($export_format, 0, 0.0);
 		}
 
-		protected function build_export_result( $export_format, $total_items, $total_cost, &$data = null )
+		protected function build_export_result( $export_format, $total_items, $total_cost, $data = null )
 		{
 			return array('total_items' => $total_items, 'total_cost' => $total_cost, 'export_format' => $export_format,
 				'export' => $data);
@@ -559,6 +563,19 @@
 			{
 				$combined_data[] = "csv_break";
 				$combined_data[] = substr($export['data'], strpos($export['data'], "\n") + 1); //Remove first line (i.e don't to repeat headers in file)
+			}
+		}
+
+		protected function combine_visma_export_data( array &$combined_data, $export )
+		{
+			if (count($combined_data) == 0)
+			{
+				$combined_data[] = $export['data'];
+			}
+			else
+			{
+				$combined_data[] = "\n";
+				$combined_data[] = $export['data'];
 			}
 		}
 
