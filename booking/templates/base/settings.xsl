@@ -9,7 +9,7 @@
 						<label for="field_user_can_delete_bookings">
 							<xsl:value-of select="php:function('lang', 'Frontend users can delete bookings/events')"/>
 						</label>
-						<select id="field_user_can_delete_bookings" name="config_data[user_can_delete_bookings]">
+						<select id="field_user_can_delete_bookings" name="config_data[user_can_delete_bookings]" class="pure-input-1-2" >
 							<option value="no">
 								<xsl:if test="config_data/user_can_delete_bookings='no'">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -28,7 +28,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Events is deleted from database')"/>
 						</label>
-						<select id="field_user_can_delete_events" name="config_data[user_can_delete_events]">
+						<select id="field_user_can_delete_events" name="config_data[user_can_delete_events]" class="pure-input-1-2" >
 							<option value="no">
 								<xsl:if test="config_data/user_can_delete_events='no'">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -47,7 +47,7 @@
 						<label for="field_user_can_delete_allocations">
 							<xsl:value-of select="php:function('lang', 'Frontend users can delete allocations')"/>
 						</label>
-						<select id="field_user_can_delete_allocations" name="config_data[user_can_delete_allocations]">
+						<select id="field_user_can_delete_allocations" name="config_data[user_can_delete_allocations]" class="pure-input-1-2" >
 							<option value="no">
 								<xsl:if test="config_data/user_can_delete_allocations='no'">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -72,7 +72,7 @@
 						<label for="field_extra_schedule">
 							<xsl:value-of select="php:function('lang', 'Activate extra kalendar field on building')"/>
 						</label>
-						<select id="field_extra_schedule" name="config_data[extra_schedule]">
+						<select id="field_extra_schedule" name="config_data[extra_schedule]" class="pure-input-1-2" >
 							<option value="no">
 								<xsl:if test="config_data/extra_schedule='no'">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -91,7 +91,7 @@
 						<label for="field_extra_schedule_ids">
 							<xsl:value-of select="php:function('lang', 'Ids that should be included in the calendar')"/>
 						</label>
-						<input id="field_extra_schedule_ids" type="text" name="config_data[extra_schedule_ids]">
+						<input id="field_extra_schedule_ids" type="text" name="config_data[extra_schedule_ids]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/extra_schedule_ids"/>
 							</xsl:attribute>
@@ -104,7 +104,7 @@
 						<label for="field_split_pool">
 							<xsl:value-of select="php:function('lang', 'Split mail when building has swiming pool')"/>
 						</label>
-						<select id="field_split_pool" name="config_data[split_pool]">
+						<select id="field_split_pool" name="config_data[split_pool]" class="pure-input-1-2" >
 							<option value="no">
 								<xsl:if test="config_data/split_pool='no'">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -123,7 +123,7 @@
 						<label for="field_split_pool_ids">
 							<xsl:value-of select="php:function('lang', 'activities that uses swimming pools')"/>
 						</label>
-						<input id="field_split_pool_ids" type="text" name="config_data[split_pool_ids]">
+						<input id="field_split_pool_ids" type="text" name="config_data[split_pool_ids]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/split_pool_ids"/>
 							</xsl:attribute>
@@ -133,7 +133,7 @@
 						<label for="fieldsplit_pool2_ids">
 							<xsl:value-of select="php:function('lang', 'other activities')"/>
 						</label>
-						<input id="field_split_pool2_ids" type="text" name="config_data[split_pool2_ids]">
+						<input id="field_split_pool2_ids" type="text" name="config_data[split_pool2_ids]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/split_pool2_ids"/>
 							</xsl:attribute>
@@ -143,7 +143,7 @@
 						<label for="fieldsplit_pool3_ids">
 							<xsl:value-of select="php:function('lang', 'activities that all should get except those in the next field.')"/>
 						</label>
-						<input id="field_split_pool3_ids" type="text" name="config_data[split_pool3_ids]">
+						<input id="field_split_pool3_ids" type="text" name="config_data[split_pool3_ids]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/split_pool3_ids"/>
 							</xsl:attribute>
@@ -153,7 +153,7 @@
 						<label for="fieldsplit_pool4_ids">
 							<xsl:value-of select="php:function('lang', 'activities that never should get mail')"/>
 						</label>
-						<input id="field_split_pool4_ids" type="text" name="config_data[split_pool4_ids]">
+						<input id="field_split_pool4_ids" type="text" name="config_data[split_pool4_ids]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="config_data/split_pool4_ids"/>
 							</xsl:attribute>
@@ -166,7 +166,7 @@
 						<label for="field_mail_users_season">
 							<xsl:value-of select="php:function('lang', 'Users of current season or users the last 300 days')"/>
 						</label>
-						<select id="field_mail_users_season" name="config_data[mail_users_season]">
+						<select id="field_mail_users_season" name="config_data[mail_users_season]" class="pure-input-1-2" >
 							<option value="no">
 								<xsl:if test="config_data/mail_users_season='no'">
 									<xsl:attribute name="selected">checked</xsl:attribute>
@@ -191,7 +191,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'One e-mail pr. line.')"/>
 						</label>
-						<textarea id="field_emails" class="full-width" name="config_data[emails]">
+						<textarea id="field_emails" name="config_data[emails]" class="pure-input-1-2" >
 							<xsl:value-of select="config_data/emails"/>
 						</textarea>
 					</div>
@@ -205,7 +205,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Current internal billing sequence number')"/>
 						</label>
-						<input type="number" name="billing[internal]">
+						<input type="number" name="billing[internal]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="billing/internal"/>
 							</xsl:attribute>
@@ -215,7 +215,7 @@
 						<label>
 							<xsl:value-of select="php:function('lang', 'Current external billing sequence number')"/>
 						</label>
-						<input type="number" name="billing[external]">
+						<input type="number" name="billing[external]" class="pure-input-1-2" >
 							<xsl:attribute name="value">
 								<xsl:value-of select="billing/external"/>
 							</xsl:attribute>
