@@ -17,6 +17,7 @@
 				'metatag_author' => 'string',
 				'metatag_robots' => 'string',
 				'frontpagetext' => 'html',
+                                'frontimagetext' => 'html',
 			);
 		}
 
@@ -50,7 +51,9 @@
 			$active_tab = 'meta';
 
 			$meta['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+                        
 			self::rich_text_editor('field_frontpagetext');
+                        self::rich_text_editor('field_frontimagetext');
 
 			self::render_template('metasettings', array('config_data' => $config->config_data,
 				'meta' => $meta));

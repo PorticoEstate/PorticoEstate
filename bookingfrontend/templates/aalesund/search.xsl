@@ -11,9 +11,10 @@
 
             <div class="header-text">          
                 <a href="{site_url}">
-                    <p class="header-style-m">Din portal til</p>
+                    <xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
+<!--                    <p class="header-style-m">Din portal til</p>
                     <p class="header-style-l">AKTIVITETER OG LOKALER</p>
-                    <p class="header-style-m">Nært deg.</p>
+                    <p class="header-style-m">Nært deg.</p>-->
                 </a>
             </div>
     </div>
@@ -21,11 +22,12 @@
 
         <section class="text-center">
             <div class="container-fluid">
-                <p class="lead">Søk etter anlegg eller ressurs som du ønsker å reservere</p>
-                <p>Bruk søkefeltene under, eller trykk avansert søk for filtrering</p>
+                <xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+<!--                <p class="lead">Søk etter anlegg eller ressurs som du ønsker å reservere</p>
+                <p>Bruk søkefeltene under, eller trykk avansert søk for filtrering</p>-->
             </div>
         </section>
-        <!-- Insert margins here instead of <br>-->
+
         <br/>
         <br/>
     </div>

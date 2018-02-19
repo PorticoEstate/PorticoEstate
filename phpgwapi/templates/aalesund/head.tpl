@@ -61,16 +61,14 @@ and open the template in the editor.
 					</a>
 					<div class="collapse navbar-collapse text-center" id="Navbar">
 						<ul class="navbar-nav ml-auto">
-							<li class="nav-item active">
-								<a class="nav-link" href="{site_url}">Hjem</a>
+                                                        <li class="nav-item active">
+								<a class="nav-link" href="{org_url}">{login_text_org}</a>
 							</li>
-   <!--						 <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
-							<li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li> -->
+							<li class="nav-item active">
+								<a class="nav-link" href="{site_url}">{home_text}</a>
+							</li>
 							<li class="nav-item active">
 								<a class="nav-link" href="{manual_url}">{manual_text}</a>
-							</li>
-							<li class="nav-item active">
-								<a class="nav-link" href="{org_url}">{login_text_org}</a>
 							</li>
 							<li class="nav-item active">
 								<a id="login" class="nav-link" href="{login_url}">{login_text}</a>
