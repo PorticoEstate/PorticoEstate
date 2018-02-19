@@ -30,6 +30,8 @@
 
 		function gw_send_sms( $mobile_sender, $sms_sender, $sms_to, $sms_msg, $gp_code = "", $uid = "", $smslog_id = "", $flash = false )
 		{
+			$debug = empty($this->pswin_param['debug']) ? false : true;
+
 			$result = array();
 //			$sms_msg = utf8_decode($sms_msg);
 
@@ -96,6 +98,20 @@
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 				$ret = false;
 //				throw new Exception($var_result['INFO']);
+			}
+
+			if($debug)
+			{
+				echo "data: </br>";
+				_debug_array($data);
+				echo "httpCode: $httpCode </br>";
+				echo "response: </br>";
+				_debug_array($var_result);
+
+				$url_outbox = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'));
+
+				echo "<a href='{$url_outbox}'>Outbox</a>";
+				die();
 			}
 
 			return $ret;
