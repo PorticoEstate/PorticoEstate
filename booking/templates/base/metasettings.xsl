@@ -25,7 +25,23 @@
 							</xsl:attribute>
 						</input>
 					</div>
-					<div class="pure-control-group">
+					
+                                         <div class="pure-control-group">
+						<label for="field_frontimagetext">
+							<xsl:value-of select="php:function('lang', 'frontimage text')"/>
+						</label>
+						<div class="pure-custom">
+							<textarea id="field_frontimagetext" class="full-width" name="frontimagetext">
+								<xsl:value-of disable-output-escaping="yes" select="config_data/frontimagetext"/>
+							</textarea>
+						</div>
+					</div>
+                                        
+                                    <br/><br/><br/>
+
+                                        
+                                       
+                                        <div class="pure-control-group">
 						<label for="field_frontpagetext">
 							<xsl:value-of select="php:function('lang', 'Frontpage text')"/>
 						</label>
@@ -35,8 +51,10 @@
 							</textarea>
 						</div>
 					</div>
+                                        
 				</div>
 			</div>
+                             
 			<div class="form-buttons">
 				<input type="submit" class="button pure-button pure-button-primary">
 					<xsl:attribute name="value">
