@@ -30,6 +30,8 @@
 
 		function gw_send_sms( $mobile_sender, $sms_sender, $sms_to, $sms_msg, $gp_code = "", $uid = "", $smslog_id = "", $flash = false )
 		{
+			$debug = empty($this->pswin_param['debug']) ? false : true;
+
 			$result = array();
 //			$sms_msg = utf8_decode($sms_msg);
 
@@ -82,6 +84,12 @@
 			$var_result = $xmlparse->parse($result);
 
 
+			if($debug)
+			{
+				echo "httpCode: $httpCode </br>";
+				echo "response: </br>";
+				_debug_array($var_result);
+			}
 			// OK = delivered
 			// FAIL = failed
 
