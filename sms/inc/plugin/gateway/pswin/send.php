@@ -84,12 +84,6 @@
 			$var_result = $xmlparse->parse($result);
 
 
-			if($debug)
-			{
-				echo "httpCode: $httpCode </br>";
-				echo "response: </br>";
-				_debug_array($var_result);
-			}
 			// OK = delivered
 			// FAIL = failed
 
@@ -104,6 +98,20 @@
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 				$ret = false;
 //				throw new Exception($var_result['INFO']);
+			}
+
+			if($debug)
+			{
+				echo "httpCode: $httpCode </br>";
+				echo "response: </br>";
+				_debug_array($var_result);
+				
+				
+				$url_outbox = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'));
+				
+				echo "<a href='{$url_outbox}'>Outbox</a>";
+				die();			
+				
 			}
 
 			return $ret;
