@@ -102,16 +102,16 @@
 
 			if($debug)
 			{
+				echo "data: </br>";
+				_debug_array($data);
 				echo "httpCode: $httpCode </br>";
 				echo "response: </br>";
 				_debug_array($var_result);
-				
-				
+
 				$url_outbox = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'));
-				
+
 				echo "<a href='{$url_outbox}'>Outbox</a>";
-				die();			
-				
+				die();
 			}
 
 			return $ret;
