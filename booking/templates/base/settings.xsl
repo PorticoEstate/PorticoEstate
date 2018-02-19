@@ -202,12 +202,22 @@
 						<xsl:value-of select="php:function('lang', 'Do not change these values unless you know what they are.')"/> 
 					</div>				
 					<div class="pure-control-group">
-						<label>						   
+						<label>
 							<xsl:value-of select="php:function('lang', 'Current internal billing sequence number')"/>
 						</label>
 						<input type="number" name="billing[internal]">
 							<xsl:attribute name="value">
 								<xsl:value-of select="billing/internal"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Current external billing sequence number')"/>
+						</label>
+						<input type="number" name="billing[external]">
+							<xsl:attribute name="value">
+								<xsl:value-of select="billing/external"/>
 							</xsl:attribute>
 						</input>
 					</div>
