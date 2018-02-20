@@ -1660,7 +1660,8 @@ JS;
 					$date = date('Ymd', $stop);
 					if($organization == 'nlsh')
 					{
-						$filename = '14PU' . sprintf("%08s",$id) . ".{$file_ending}";
+//						$filename = '14PU' . sprintf("%08s",$id) . ".{$file_ending}";
+						$filename = '14PU' . sprintf("%08s",$id) . ".txt";
 					}
 					else
 					{

@@ -1,70 +1,81 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-	<script type="text/javascript">
-		//		var selected_part_of_towns = "<xsl:value-of select="selected_part_of_towns"/>";
-	</script>
+    <script type="text/javascript">
+        //		var selected_part_of_towns = "<xsl:value-of select="selected_part_of_towns"/>";
+    </script>
 
 
-	<a href="#" class="scrollup">
-		<xsl:value-of select="php:function('lang', 'scroll to top')" />
-	</a>
-	<div class="jumbotron">
+    <a href="#" class="scrollup">
+        <xsl:value-of select="php:function('lang', 'scroll to top')" />
+    </a>
+    <div class="jumbotron">
 
-		<div class="header-text">
-			<a href="{site_url}">
-				<xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
-			</a>
-		</div>
-	</div>
-	<div class="container-fluid main-container" id="main-page">
+            <div class="header-text">
+                <a href="{site_url}">
+                    <xsl:value-of disable-output-escaping="yes" select="frontimagetext"/>
+                </a>
+            </div>
+    </div>
+    <div class="container-fluid main-container" id="main-page">
 
-		<section class="text-center">
-			<div class="container-fluid">
-				<xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
-			</div>
-		</section>
-
-		<br/>
-		<br/>
-	</div>
-
-
-	<div class="container">
-		<form method="GET" id="search">
-			<input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
-		</form>
+        <section class="text-center">
+            <div class="container-fluid">
+                <xsl:value-of disable-output-escaping="yes" select="frontpagetext"/>
+            </div>
+        </section>
+        <br/>
+        <br/>
+    </div>
 
 
-		<div id="building_container" class="search-container main-search">
-			<div class="form-group">
+    <div class="container">
+        <form method="GET" id="search">
+            <input type="hidden" id="menuaction" name="menuaction" value="bookingfrontend.uisearch.index" />
+        </form>
 
 
-				<div class="input-group">
-
-					<input id="field_searchterm"  class="form-control form-control-lg text-center" name="searchterm" type="text">
-						<xsl:attribute name="value">
-							<xsl:value-of select="searchterm"/>
-						</xsl:attribute>
-						<xsl:attribute name="placeholder">
-							<xsl:text> Søk i fritekst</xsl:text>
-						</xsl:attribute>
-					</input>
-					<span class="input-group-btn">
-
-						<button class="btn btn-default search-button" id="submit_searchterm" type="submit">
-							<i class="icon ion-search"/>
-						</button>
-					</span>
+        <div id="building_container" class="search-container main-search">
+           <div class="form-group">
 
 
-				</div>
+               <div class="input-group">
+
+                    <input id="field_searchterm"  class="form-control form-control-lg text-center" name="searchterm" type="text">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="searchterm"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="placeholder">
+                            <xsl:text> Søk i fritekst</xsl:text>
+                        </xsl:attribute>
+                    </input>
+                    <span class="input-group-btn">
+
+                        <button class="btn btn-default search-button" id="submit_searchterm" type="submit">
+                            <i class="icon ion-search"/>
+                        </button>
+                    </span>
+
+
+                </div>
+            <!--     <input id="field_building_name" name="building_name" class="form-control form-control-lg text-center" type="text">
+                    <xsl:attribute name="value">
+                        <xsl:value-of select="building_name"/>
+                    </xsl:attribute>
+                    <xsl:attribute name="placeholder">
+                        <xsl:text> Søk etter lokale/bygning/anlegg</xsl:text>
+                    </xsl:attribute>
+                </input>
+
+				<input id="field_building_id" name="building_id" class="form-control" type="hidden">
+					<xsl:attribute name="value">
+						<xsl:value-of select="building_id"/>
+					</xsl:attribute>
+				</input> -->
 
 				<p id="adv-search-toggler" class="adv-search-button text-right">Avansert søk</p>
 
 			</div>
 		</div>
-
 	</div>
-
 
 	<div id="advance-search-container" class="container-fluid advance-search bg-light">
 		<div class="container advance-search-padding">
@@ -127,8 +138,29 @@
 							</xsl:for-each>
 						</ul>
 					</div>
-
 				</div>
+
+				<!--div class="col-lg-4">
+
+					<div class="pure-u-1" id="activity_tree">
+						<p class="lead">
+							Velg type lokale/anlegg/utstyr.
+						</p>
+						<script type="text/javascript">
+							filter_tree = <xsl:value-of select="filter_tree"/>;
+						</script>
+						<div id="treecontrol">
+							<a id="collapse1" title="Collapse the entire tree below" href="#">
+								<xsl:value-of select="php:function('lang', 'collapse all')"/>
+							</a>
+							<xsl:text> | </xsl:text>
+							<a id="expand1" title="Expand the entire tree below" href="#">
+								<xsl:value-of select="php:function('lang', 'expand all')"/>
+							</a>
+						</div>
+						<div id="treeDiv1"></div>
+					</div>
+				</div-->
 
 				<div class="col-lg-4">
 					<div class="pure-u-1 select-box">

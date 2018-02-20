@@ -81,7 +81,7 @@
 				return ExecMethod('property.boworkorder.get_budget_amount',$id);
 			}
 
-			public function transfer( $id, $received_amount )
+			public function transfer( $id, $received_amount, $external_voucher_id )
 			{
 				$values = $this->values;
 	//		_debug_array($values);die();
@@ -134,7 +134,8 @@
 
 				$exporter_varemottak = new BkBygg_exporter_varemottak_til_Agresso(array(
 					'order_id' => $values['order_id'],
-					'voucher_type' => $voucher_type
+					'voucher_type' => $voucher_type,
+					'external_voucher_id' => $external_voucher_id
 					));
 				$exporter_varemottak->create_transfer_xml($param);
 
@@ -177,9 +178,10 @@
 			var $connection;
 			var $order_id;
 			var $voucher_type;
+			var $voucher_id;
 			var $batch_id;
 
-			public function __construct( $param )
+			public function __construct( $param, $transfer_action )
 			{
 				parent::__construct($param);
 			}
@@ -229,6 +231,9 @@
 				}
 				$voucher_type = $this->voucher_type;
 				$order_id = $this->order_id;
+
+				$ref = $this->voucher_id ? $this->voucher_id : $this->batchid;
+
 				if (!$voucher_type)
 				{
 					throw new Exception('BkBygg_exporter_varemottak_til_Agresso::create_file_name() Mangler bilagstype');
@@ -236,7 +241,7 @@
 
 				$fil_katalog = $this->config->config_data['export']['path'];
 
-				$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$order_id}_{$this->batchid}.xml";
+				$filename = "{$fil_katalog}/{$voucher_type}_varemottak_{$order_id}_{$ref}.xml";
 
 				//Sjekk om filen eksisterer
 				if (file_exists($filename))
@@ -252,5 +257,5 @@
 	if (!empty($id) && !empty($acl_location) && isset($transfer_action) && $transfer_action == 'receive_order')
 	{
 		$exporter_varemottak = new lag_agresso_varemottak($acl_location, $id);
-		$result = $exporter_varemottak->transfer($id, $received_amount);
+		$result = $exporter_varemottak->transfer($id, $received_amount, $external_voucher_id);
 	}

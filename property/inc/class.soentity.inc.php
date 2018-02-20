@@ -982,6 +982,8 @@
 				{
 					case 'loc1_name':
 						$ordermethod = " ORDER BY fm_location1.loc1_name {$sort}";
+						$xml_order = ",fm_location1.loc1_name";
+						$sql_custom_group .= ',fm_location1.loc1_name';
 						break;
 					case 'num':
 					case 'id':
@@ -1001,10 +1003,12 @@
 						if($custom_attribs[$order]['datatype'] == 'I')
 						{
 							$xml_order = ",CAST(json_representation->>'{$order}' AS integer) AS {$order}";
+							$ordermethod = " ORDER BY CAST(json_representation->>'{$order}' AS integer) {$sort}";
 						}
 						else
 						{
 							$xml_order = ",json_representation->>'{$order}' AS {$order}";
+							$ordermethod = " ORDER BY json_representation->>'{$order}' {$sort}";
 						}
 				}
 			}

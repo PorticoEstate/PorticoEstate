@@ -51,12 +51,11 @@ a:hover{
     max-width: 620px;
     margin-left: auto;
     margin-right: auto;
-
 }
 
 .header-text a{
     color: white;
-    font-family: Raleway;
+	font-family: Raleway;
 }
 
 .header-text a:hover{
@@ -354,4 +353,3 @@ dl.proplist{
 .card dt{
     display: none;
 }
-

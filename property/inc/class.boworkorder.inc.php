@@ -1019,7 +1019,7 @@ HTML;
 			}
 		}
 
-		public function receive_order( $id, $received_amount )
+		public function receive_order( $id, $received_amount, $external_voucher_id = 0 )
 		{
 			$transfer_action = 'receive_order'; // used as trigger within the custom function
 

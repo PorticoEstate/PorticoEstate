@@ -8,7 +8,7 @@
 		function __construct()
 		{
 			parent::__construct();
-			$this->pswin_param = $GLOBALS['phpgw_info']['sms_config']['pswin'];
+			$this->param = $GLOBALS['phpgw_info']['sms_config']['stavanger_kommune'];
 		}
 
 		function parse_html( $s_str )
@@ -30,7 +30,7 @@
 
 		function gw_send_sms( $mobile_sender, $sms_sender, $sms_to, $sms_msg, $gp_code = "", $uid = "", $smslog_id = "", $flash = false )
 		{
-			$debug = empty($this->pswin_param['debug']) ? false : true;
+			$debug = empty($this->param['debug']) ? false : true;
 
 			$result = array();
 //			$sms_msg = utf8_decode($sms_msg);
@@ -44,15 +44,15 @@
 
 			$data = array
 			(
-				'CLIENT'	=> $this->pswin_param['login'],
-				'PW'		=> $this->pswin_param['password'],
+				'CLIENT'	=> $this->param['login'],
+				'PW'		=> $this->param['password'],
 				'MSGLST'	=> array
 				(
 					'MSG'	=> array
 					(
 						'ID'	=> $smslog_id,
 						'TEXT'	=> $sms_msg,
-						'SND'	=> $this->pswin_param['originator'],
+						'SND'	=> $this->param['originator'],
 						'RCV'	=> $sms_to
 					)
 				)
@@ -60,13 +60,13 @@
 
 			$xmldata = utf8_decode(phpgwapi_xmlhelper::toXML($data, 'SESSION'));
 
-			$url = $this->pswin_param['send_url'];
+			$url = $this->param['send_url'];
 
 			$ch = curl_init($url);
 
-			if($this->pswin_param['proxy_host'])
+			if($this->param['proxy_host'])
 			{
-				curl_setopt($ch, CURLOPT_PROXY, "{$this->pswin_param['proxy_host']}:{$this->pswin_param['proxy_port']}");
+				curl_setopt($ch, CURLOPT_PROXY, "{$this->param['proxy_host']}:{$this->param['proxy_port']}");
 			}
 
 			curl_setopt($ch, CURLOPT_MUTE, 1);
