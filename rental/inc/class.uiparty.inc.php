@@ -432,7 +432,7 @@
 						{
 							$url2 = html_entity_decode(self::link(array('menuaction' => 'frontend.uihelpdesk.index',
 									'org_enhet_id' => $value['org_enhet_id'])));
-							$actions[] = '<a href="#" href="' . $url2 . '">' . lang('frontend_access') . '</a>';
+							$actions[] = '<a href="' . $url2 . '">' . lang('frontend_access') . '</a>';
 
 							$url3 = html_entity_decode(self::link(array('menuaction' => 'rental.uiparty.syncronize_party',
 									'org_enhet_id' => $value['org_enhet_id'], 'party_id' => $value['id'], 'phpgw_return_as' => 'json')));
