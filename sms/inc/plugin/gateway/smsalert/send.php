@@ -44,10 +44,8 @@
 				'username'	=> $this->param['login'],
 				'password'	=> $this->param['password'],
 				'message'	=> $sms_msg,
-				'sender'	=> $this->param['originator'],
+				'sender'	=> (string)$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],
 				'receiver'	=> $sms_to
-					
-				
 			);
 
 			$post_items = array();
