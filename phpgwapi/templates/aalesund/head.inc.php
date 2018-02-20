@@ -226,7 +226,7 @@ $GLOBALS['phpgw']->template->set_var('bootstrapmainjs', $webserver_url . $bootst
 	{
 		$footer_info = 'footer info settes i bookingfrontend config';
 	}
-}
+
 
 $config = CreateObject('phpgwapi.config', 'booking')->read();
 $logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
