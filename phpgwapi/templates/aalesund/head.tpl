@@ -32,9 +32,9 @@ and open the template in the editor.
 		{css}
 
 		<script type="text/javascript">
-			<!--
+	    <!--
 				var strBaseURL = '{str_base_url}';
-			//-->
+	    //-->
 		</script>
 
 		{javascript}
@@ -45,7 +45,7 @@ and open the template in the editor.
 		<script type="text/javascript">
 		<!--
 			{win_on_events}
-			//-->
+	    //-->
 		</script>
 
 	</head>
