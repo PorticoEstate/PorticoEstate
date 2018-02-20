@@ -131,10 +131,100 @@ $GLOBALS['phpgw']->template->set_var('bootstrapmainjs', $webserver_url . $bootst
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
 //	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
 
-foreach ($javascripts as $javascript) {
-	if (file_exists(PHPGW_SERVER_ROOT . $javascript)) {
-		$GLOBALS['phpgw']->template->set_var('javascript_uri', $webserver_url . $javascript);
-		$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+	foreach ( $javascripts as $javascript )
+	{
+		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
+		{
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript );
+			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
+		}
+	}
+
+	$config	= CreateObject('phpgwapi.config','booking')->read();
+	$logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
+
+	$manual = !empty($config_frontend['bookingfrontend_manual']) ? $config_frontend['bookingfrontend_manual'] : '';
+
+	if(!$manual)
+	{
+		$bodoc = CreateObject('booking.bodocumentation');
+		$manual  =  $bodoc->so->getFrontendDoc();
+	}
+
+	$menuaction = phpgw::get_var('menuaction', 'GET');
+	$id = phpgw::get_var('id', 'GET');
+	if (strpos($menuaction, 'organization'))
+	{
+		$boorganization = CreateObject('booking.boorganization');
+		$metainfo = $boorganization->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['shortname'].",".$metainfo['district'].",".$metainfo['city']; 
+	} 
+	elseif (strpos($menuaction, 'group'))
+	{
+		$bogroup = CreateObject('booking.bogroup');
+		$metainfo = $bogroup->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['shortname'].",".$metainfo['organization'].",".$metainfo['district'].",".$metainfo['city']; 
+	}	
+	elseif (strpos($menuaction, 'building'))
+	{
+		$bobuilding = CreateObject('booking.bobuilding');
+		$metainfo = $bobuilding->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['district'].",".$metainfo['city']; 
+	}
+	elseif (strpos($menuaction, 'resource'))
+	{
+		$boresource = CreateObject('booking.boresource');
+		$metainfo = $boresource->so->get_metainfo($id);
+		$description = preg_replace('/\s+/', ' ', strip_tags($metainfo['description']));
+		$keywords = $metainfo['name'].",".$metainfo['building'].",".$metainfo['district'].",".$metainfo['city']; 
+	}
+	if($keywords != '')
+	{
+		$keywords = '<meta name="keywords" content="'.$keywords.'">';
+	}
+	else
+	{
+		$keywords = '<meta name="keywords" content="phpGroupWare">';
+	}
+	if(!empty($description))
+	{
+		$description = '<meta name="description" content="'.$description.'">';
+	}
+	else
+	{
+		$description = '<meta name="description" content="phpGroupWare">';
+	}
+	if (!empty($config['metatag_author']))
+	{
+		$author = '<meta name="author" content="'.$config['metatag_author'].'">';
+	}
+	else
+	{
+		$author = '<meta name="author" content="phpGroupWare http://www.phpgroupware.org">';
+	}
+	if (!empty($config['metatag_robots']))
+	{
+		$robots = '<meta name="robots" content="'.$config['metatag_robots'].'">';
+	}
+	else
+	{
+		$robots = '<meta name="robots" content="none">';
+	}
+	if (!empty($config_frontend['site_title']))
+	{
+		$site_title = $config_frontend['site_title'];
+	}
+	else
+	{
+		$site_title = $GLOBALS['phpgw_info']['server']['site_title'];
+	}
+
+	if(! $footer_info = $config_frontend['footer_info'])
+	{
+		$footer_info = 'footer info settes i bookingfrontend config';
 	}
 }
 
