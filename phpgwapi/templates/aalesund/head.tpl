@@ -62,7 +62,7 @@ and open the template in the editor.
 					<div class="collapse navbar-collapse text-center" id="Navbar">
 						<ul class="navbar-nav ml-auto">
 							<li class="nav-item active">
-								<a class="nav-link" href="{site_url}">Hjem</a>
+								<a class="nav-link" href="{site_url}">{home_text}</a>
 							</li>
    <!--						 <li class="nav-item active"><a class="nav-link" href="#">Søk</a></li>
 							<li class="nav-item active"><a class="nav-link" href="#">Lokaler</a></li> -->

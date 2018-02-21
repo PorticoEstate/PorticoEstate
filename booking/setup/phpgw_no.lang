@@ -581,7 +581,8 @@ Tilsynsvakt telephone	booking	no	Telefon tilsynsvakt
 Metadata	common	no	Metadata
 Author	booking	no	Forfatter
 Robots	booking	no	Søkerobot parameter
-Frontpage text	booking	no	Forside tekst
+Frontpage text	booking	no	Forsidetekst
+frontimage text	booking	no	Tekst over forsidebilde
 Calendar text	booking	no	Tekst bak kalender knapp.
 Reference	booking	no	Referanse
 Event Mail Settings	booking	no	Arrangement E-post oppsett
