@@ -1,0 +1,13 @@
+<?php
+return array(
+	'default'=>array(
+		'db_host' => 'localhost',
+		'db_port' => '',
+		'db_name' => '',
+		'db_user' => '',
+		'db_pass' => '',
+		'db_type' => 'postgres',
+		'db_abstraction' => 'pdo',
+		'config_passwd' => ''
+	)
+);
