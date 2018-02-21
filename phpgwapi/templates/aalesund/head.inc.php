@@ -156,13 +156,8 @@ CSS;
 	$config	= CreateObject('phpgwapi.config','booking')->read();
 	$logofile_frontend = !empty($config['logopath_frontend']) ? $config['logopath_frontend'] : "/phpgwapi/templates/bkbooking/images/bergen_logo.png";
 
-	$manual = !empty($config_frontend['bookingfrontend_manual']) ? $config_frontend['bookingfrontend_manual'] : '';
-
-	if(!$manual)
-	{
-		$bodoc = CreateObject('booking.bodocumentation');
-		$manual  =  $bodoc->so->getFrontendDoc();
-	}
+	$bodoc = CreateObject('booking.bodocumentation');
+	$manual  =  $bodoc->so->getFrontendDoc();	
 
 	$menuaction = phpgw::get_var('menuaction', 'GET');
 	$id = phpgw::get_var('id', 'GET');
@@ -267,10 +262,11 @@ CSS;
 	);
 
 	// if ($manual !== null) 
-	{
+	
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
-	}
+                $tpl_vars['home_text'] = lang('home');
+	
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 

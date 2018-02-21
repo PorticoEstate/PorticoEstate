@@ -13,7 +13,7 @@ body {
   -o-background-size: cover;
   background-size: cover;
   padding-top: 3%;
-  padding-bottom: 3%; 
+  padding-bottom: 3%;
   border-radius: 0;
   margin-bottom: 0;
 }
@@ -38,13 +38,13 @@ a:hover{
 }
 
 .iconwrapper{
-      width: 100%;
-      max-height: 50px;
-      margin-bottom: 30px;
+	width: 100%;
+	max-height: 50px;
+	margin-bottom: 30px;
 }
 
 .iconwrapper a:hover{
-      font-size: 88px;
+	font-size: 88px;
 }
 
 .header-text{
@@ -55,6 +55,7 @@ a:hover{
 
 .header-text a{
     color: white;
+	font-family: Raleway;
 }
 
 .header-text a:hover{
@@ -78,7 +79,7 @@ a:hover{
 
 .navbar{
     background-color: white;
-/*    background-color: #123c84; */
+	/*    background-color: #123c84; */
     padding: 0;
 }
 
@@ -119,7 +120,7 @@ a:hover{
     #update-search-result {
         position: fixed;
         bottom: 30px;
-        right: 30px; 
+        right: 30px;
         z-index: 10;
     }
 } */
@@ -195,7 +196,7 @@ dl.proplist{
         width: 100%;
     }
 }
-  
+
 .details-wrapper{
     margin-top: 3rem;
 }
@@ -209,7 +210,7 @@ dl.proplist{
 }
 
 .main-search input:hover{
-/*    background-color: rgb(221,221,211);*/
+	/*    background-color: rgb(221,221,211);*/
     background-color: #f8f9fa;
 }
 
@@ -265,7 +266,7 @@ dl.proplist{
 #result{
     padding: 0;
 }
-  
+
 .form-control-lg{
     padding:0;
     height: 2.5em;
@@ -319,10 +320,10 @@ dl.proplist{
 
 
 @media (min-width: 768px) {
-  .modal-xl {
-    width: 90%;
-   max-width:1000px;
-  }
+	.modal-xl {
+		width: 90%;
+		max-width:1000px;
+	}
 }
 
 #fullSizeImage img{
