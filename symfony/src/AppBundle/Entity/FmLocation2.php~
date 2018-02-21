@@ -1,0 +1,433 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FmLocation2
+ *
+ * @ORM\Table(name="fm_location2", indexes={@ORM\Index(name="location_code_fm_location2_idx", columns={"location_code"})})
+ * @ORM\Entity
+ */
+class FmLocation2
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="loc1", type="string", length=8)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $loc1;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FmLocation1", inversedBy="buildings")
+     * @ORM\JoinColumn(name="loc1", referencedColumnName="location_code")
+     */
+    private $location1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="loc2", type="string", length=4)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $loc2;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="location_code", type="string", length=13, nullable=false)
+     */
+    private $locationCode;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="loc2_name", type="string", length=200, nullable=true)
+     */
+    private $loc2Name;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="entry_date", type="integer", nullable=true)
+     */
+    private $entryDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="category", type="integer", nullable=true)
+     */
+    private $category;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="user_id", type="integer", nullable=true)
+     */
+    private $userId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="merknader", type="text", nullable=true)
+     */
+    private $merknader;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="change_type", type="integer", nullable=true)
+     */
+    private $changeType;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="byggeaar", type="integer", nullable=true)
+     */
+    private $byggeaar;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="kostra_id", type="integer", nullable=true)
+     */
+    private $kostraId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="eierform", type="integer", nullable=true)
+     */
+    private $eierform;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tips_objekt", type="string", length=8, nullable=true)
+     */
+    private $tipsObjekt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tips_bygg", type="string", length=8, nullable=true)
+     */
+    private $tipsBygg;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="street_id", type="integer", nullable=true)
+     */
+    private $streetId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="googlemap", type="string", length=255, nullable=true)
+     */
+    private $googlemap;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tenant_id", type="integer", nullable=true)
+     */
+    private $tenantId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="location_code_old", type="string", length=8, nullable=true)
+     */
+    private $locationCodeOld;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="loc1_old", type="string", length=6, nullable=true)
+     */
+    private $loc1Old;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="loc2_old", type="string", length=4, nullable=true)
+     */
+    private $loc2Old;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="garanti_dato", type="datetime", nullable=true)
+     */
+    private $garantiDato;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="searskilt_objekt", type="integer", nullable=true)
+     */
+    private $searskiltObjekt;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="offentlig_paalegg", type="integer", nullable=true)
+     */
+    private $offentligPaalegg;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bygg_kostnad_1", type="integer", nullable=true)
+     */
+    private $byggKostnad1;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bygg_kostnad_2", type="integer", nullable=true)
+     */
+    private $byggKostnad2;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bygg_kostnad_3", type="integer", nullable=true)
+     */
+    private $byggKostnad3;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bygg_kostnad_4", type="integer", nullable=true)
+     */
+    private $byggKostnad4;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bygg_kostnad_5", type="integer", nullable=true)
+     */
+    private $byggKostnad5;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="bygg_kostnad_6", type="integer", nullable=true)
+     */
+    private $byggKostnad6;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="merknader_1", type="text", nullable=true)
+     */
+    private $merknader1;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="sistombygget", type="datetime", nullable=true)
+     */
+    private $sistombygget;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="inneklimagodkjent", type="integer", nullable=true)
+     */
+    private $inneklimagodkjent;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="svommebasseng", type="integer", nullable=true)
+     */
+    private $svommebasseng;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sdanlegg", type="integer", nullable=true)
+     */
+    private $sdanlegg;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="oppvarming", type="text", nullable=true)
+     */
+    private $oppvarming;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tjenesteomraadet_1", type="string", length=50, nullable=true)
+     */
+    private $tjenesteomraadet1;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tjenesteomraadet_2", type="string", length=50, nullable=true)
+     */
+    private $tjenesteomraadet2;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="brannklasse", type="integer", nullable=true)
+     */
+    private $brannklasse;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="risikoklasse", type="integer", nullable=true)
+     */
+    private $risikoklasse;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="brannobjekt", type="integer", nullable=true)
+     */
+    private $brannobjekt;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="asbest", type="integer", nullable=true)
+     */
+    private $asbest;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="roykluker", type="integer", nullable=true)
+     */
+    private $roykluker;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sprinkelanlegg", type="integer", nullable=true)
+     */
+    private $sprinkelanlegg;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="merknader_3", type="text", nullable=true)
+     */
+    private $merknader3;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="antikvar_status", type="integer", nullable=true)
+     */
+    private $antikvarStatus;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="area_gross", type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $areaGross = '0.00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="area_heated", type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $areaHeated = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="area_usable", type="decimal", precision=20, scale=2, nullable=true)
+     */
+    private $areaUsable = '0.00';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="street_number", type="string", length=5, nullable=true)
+     */
+    private $streetNumber;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="energiklasse", type="text", nullable=true)
+     */
+    private $energiklasse;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="modified_by", type="integer", nullable=true)
+     */
+    private $modifiedBy;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="modified_on", type="datetime", nullable=true)
+     */
+    private $modifiedOn = 'now()';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=true)
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="holtekategori", type="integer", nullable=true)
+     */
+    private $holtekategori;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="b_info_sist_endret", type="integer", nullable=true)
+     */
+    private $bInfoSistEndret;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="areal_sist_endret", type="integer", nullable=true)
+     */
+    private $arealSistEndret;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="areal_netto_endring", type="integer", nullable=true)
+     */
+    private $arealNettoEndring;
+
+
+}
+

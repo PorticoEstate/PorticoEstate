@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col">
+            <h1>Fmlocation1</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            <table class="table table-striped table-hover table-sm">
+                <tbody>
+                <tr>
+                    <th>Loc1</th>
+                    <td>{{ fmLocation1.loc1 }}</td>
+                </tr>
+                <tr>
+                    <th>Locationcode</th>
+                    <td>{{ fmLocation1.locationCode }}</td>
+                </tr>
+                <tr>
+                    <th>Loc1name</th>
+                    <td>{{ fmLocation1.loc1Name }}</td>
+                </tr>
+                <tr>
+                    <th>Partoftownid</th>
+                    <td>{{ fmLocation1.partOfTownId }}</td>
+                </tr>
+                <tr>
+                    <th>Entrydate</th>
+                    <td>{{ fmLocation1.entryDate }}</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>{{ fmLocation1.category }}</td>
+                </tr>
+                <tr>
+                    <th>Userid</th>
+                    <td>{{ fmLocation1.userId }}</td>
+                </tr>
+                <tr>
+                    <th>Ownerid</th>
+                    <td>{{ fmLocation1.ownerId }}</td>
+                </tr>
+                <tr>
+                    <th>Merknader</th>
+                    <td>{{ fmLocation1.merknader }}</td>
+                </tr>
+                <tr>
+                    <th>Changetype</th>
+                    <td>{{ fmLocation1.changeType }}</td>
+                </tr>
+                <tr>
+                    <th>Tipsobjekt</th>
+                    <td>{{ fmLocation1.tipsObjekt }}</td>
+                </tr>
+                <tr>
+                    <th>Merknader2</th>
+                    <td>{{ fmLocation1.merknader2 }}</td>
+                </tr>
+                <tr>
+                    <th>Adresse1</th>
+                    <td>{{ fmLocation1.adresse1 }}</td>
+                </tr>
+                <tr>
+                    <th>Adresse2</th>
+                    <td>{{ fmLocation1.adresse2 }}</td>
+                </tr>
+                <tr>
+                    <th>Postnummer</th>
+                    <td>{{ fmLocation1.postnummer }}</td>
+                </tr>
+                <tr>
+                    <th>Poststed</th>
+                    <td>{{ fmLocation1.poststed }}</td>
+                </tr>
+                <tr>
+                    <th>Merknader1</th>
+                    <td>{{ fmLocation1.merknader1 }}</td>
+                </tr>
+                <tr>
+                    <th>Aktiv</th>
+                    <td>{{ fmLocation1.aktiv }}</td>
+                </tr>
+                <tr>
+                    <th>Oljetank</th>
+                    <td>{{ fmLocation1.oljeTank }}</td>
+                </tr>
+                <tr>
+                    <th>Gasstank</th>
+                    <td>{{ fmLocation1.gassTank }}</td>
+                </tr>
+                <tr>
+                    <th>Septiktank</th>
+                    <td>{{ fmLocation1.septikTank }}</td>
+                </tr>
+                <tr>
+                    <th>Brannhydrant</th>
+                    <td>{{ fmLocation1.brannHydrant }}</td>
+                </tr>
+                <tr>
+                    <th>Areagross</th>
+                    <td>{{ fmLocation1.areaGross }}</td>
+                </tr>
+                <tr>
+                    <th>Bronn</th>
+                    <td>{{ fmLocation1.bronn }}</td>
+                </tr>
+                <tr>
+                    <th>Fettavskiller</th>
+                    <td>{{ fmLocation1.fettAvskiller }}</td>
+                </tr>
+                <tr>
+                    <th>Slamavskiller</th>
+                    <td>{{ fmLocation1.slamAvskiller }}</td>
+                </tr>
+                <tr>
+                    <th>Mva</th>
+                    <td>{{ fmLocation1.mva }}</td>
+                </tr>
+                <tr>
+                    <th>Modifiedby</th>
+                    <td>{{ fmLocation1.modifiedBy }}</td>
+                </tr>
+                <tr>
+                    <th>Modifiedon</th>
+                    <td>{% if fmLocation1.modifiedOn %}{{ fmLocation1.modifiedOn|date('Y-m-d H:i:s') }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ fmLocation1.id }}</td>
+                </tr>
+                <tr>
+                    <th>Deliveryaddress</th>
+                    <td>{{ fmLocation1.deliveryAddress }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <ul>
+                <li>
+                    <a href="{{ path('fmlocation1_locations') }}">Back to the list</a>
+                </li>
+                <li>
+                    <a href="{{ path('fmlocation1_edit', { 'loc1': fmLocation1.loc1 }) }}">Edit</a>
+                </li>
+                <li>
+                    {{ form_start(delete_form) }}
+                    <input type="submit" value="Delete">
+                    {{ form_end(delete_form) }}
+                </li>
+            </ul>
+
+        </div>
+    </div>
+{% endblock %}

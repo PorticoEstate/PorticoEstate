@@ -1,0 +1,104 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
+
+/**
+ * FmLocation1Category
+ *
+ * @ORM\Table(name="fm_location1_category")
+ * @ORM\Entity
+ */
+class FmLocation1Category implements JsonSerializable
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="fm_location1_category_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescr(): string
+    {
+        return $this->descr;
+    }
+
+    /**
+     * @param string $descr
+     */
+    public function setDescr(string $descr): void
+    {
+        $this->descr = $descr;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLocations()
+    {
+        return $this->locations;
+    }
+
+    /**
+     * @param mixed $locations
+     */
+    public function setLocations($locations): void
+    {
+        $this->locations = $locations;
+    }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descr", type="string", length=255, nullable=false)
+     */
+    private $descr;
+
+    /**
+    * @ORM\OneToMany(targetEntity="FmLocation1", mappedBy="category1")
+    */
+    private $locations;
+
+    public function __construct()
+    {
+        $this->locations = new ArrayCollection();
+    }
+
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return (object)get_object_vars($this);
+    }
+}
+

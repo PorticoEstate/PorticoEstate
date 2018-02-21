@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "bootstrap-sass": "^3.3.7",
+    "jquery": "^3.3.1"
+  }
+}

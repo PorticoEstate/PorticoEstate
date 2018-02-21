@@ -1,0 +1,83 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FmOwner
+ *
+ * @ORM\Table(name="fm_owner")
+ * @ORM\Entity
+ */
+class FmOwner
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="fm_owner_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="abid", type="integer", nullable=true)
+     */
+    private $abid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="org_name", type="string", length=50, nullable=true)
+     */
+    private $orgName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_name", type="string", length=50, nullable=true)
+     */
+    private $contactName;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="category", type="integer", nullable=false)
+     */
+    private $category;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="member_of", type="string", length=255, nullable=true)
+     */
+    private $memberOf;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="remark", type="string", length=255, nullable=true)
+     */
+    private $remark;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="entry_date", type="integer", nullable=true)
+     */
+    private $entryDate;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="owner_id", type="integer", nullable=true)
+     */
+    private $ownerId;
+
+
+}
+

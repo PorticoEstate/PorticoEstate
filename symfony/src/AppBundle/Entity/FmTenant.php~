@@ -1,0 +1,118 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FmTenant
+ *
+ * @ORM\Table(name="fm_tenant")
+ * @ORM\Entity
+ */
+class FmTenant
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="fm_tenant_id_seq", allocationSize=1, initialValue=1)
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="member_of", type="string", length=255, nullable=true)
+     */
+    private $memberOf;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="entry_date", type="integer", nullable=true)
+     */
+    private $entryDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="first_name", type="string", length=50, nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=50, nullable=true)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_phone", type="string", length=15, nullable=true)
+     */
+    private $contactPhone;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="category", type="integer", nullable=true)
+     */
+    private $category;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="account_lid", type="string", length=50, nullable=true)
+     */
+    private $accountLid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="account_pwd", type="string", length=32, nullable=true)
+     */
+    private $accountPwd;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="phpgw_account_id", type="integer", nullable=true)
+     */
+    private $phpgwAccountId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="account_status", type="integer", nullable=true)
+     */
+    private $accountStatus = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="owner_id", type="integer", nullable=true)
+     */
+    private $ownerId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=64, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contact_email", type="string", length=64, nullable=true)
+     */
+    private $contactEmail;
+
+
+}
+
