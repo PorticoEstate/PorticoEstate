@@ -2353,6 +2353,8 @@ JS;
 				)
 			);
 			$invoices = array_merge($active_invoices, $historical_invoices);
+			$config = CreateObject('phpgwapi.config', 'property');
+			$config->read();
 
 			foreach ($invoices as $entry)
 			{
