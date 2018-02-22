@@ -943,12 +943,17 @@
 					'text' => lang('gabnr'),
 					'image' => array('property', 'location_gabnr')
 				);
-				$children['summary'] = array
-					(
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.summary')),
-					'text' => lang('Summary'),
-					'image' => array('property', 'location_summary')
-				);
+				
+				if (!isset($config['suppress_location_summary']) || !$config['suppress_location_summary'])
+				{
+					$children['summary'] = array
+						(
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.summary')),
+						'text' => lang('Summary'),
+						'image' => array('property', 'location_summary')
+					);
+				}
+
 				$children['responsibility_role'] = array
 					(
 					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uilocation.responsiblility_role')),

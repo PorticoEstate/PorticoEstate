@@ -2294,6 +2294,7 @@ enter gab url	property	no	Skriv inn matrikkel url
 gab url paramtres	property	no	Matrikkel url parametre
 suppress old tenant	property	no	Deaktiver leietaker
 show billable hours	property	no	Vis egne timer
+suppress location summary	property	no	Deaktiver lokasjonssammendrag
 open translates to	property	no	Åpen oversetter til
 tts assign group candidates	property	no	Tts tildele gruppekandidater
 tts disable assign to user on add	property	no	Tts deaktivere tilordne til bruker på legg til
