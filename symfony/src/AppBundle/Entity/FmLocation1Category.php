@@ -31,7 +31,6 @@ class FmLocation1Category
      */
     private $descr;
 
-
     /**
      * @return int
      */
@@ -39,7 +38,6 @@ class FmLocation1Category
     {
         return $this->id;
     }
-
 
     /**
      * @return string
@@ -58,7 +56,6 @@ class FmLocation1Category
         $this->descr = $descr;
         return $this;
     }
-
 
     /**
      * Add location
@@ -93,12 +90,6 @@ class FmLocation1Category
     {
         return $this->locations;
     }
-
-
-
-
-
-
 
     /**
     * @ORM\OneToMany(targetEntity="FmLocation1", mappedBy="category1")

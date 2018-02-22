@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Events;
+
 /**
  * Category
  * @ORM\Entity
@@ -104,4 +106,5 @@ class Category
     {
         return $this->products;
     }
+
 }

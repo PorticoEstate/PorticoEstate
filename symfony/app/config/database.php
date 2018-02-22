@@ -2,9 +2,9 @@
 $dbal = array(
     'driver'   => 'pdo_pgsql',
     'host'     => 'localhost',
-    'dbname'   => 'portico',
-    'user'     => 'portico',
-    'password' => 'portico',
+    'dbname'   => '',
+    'user'     => '',
+    'password' => '',
     'port'     => '5432',
     'charset'  => 'UTF8'
 );
