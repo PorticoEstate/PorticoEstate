@@ -392,13 +392,10 @@
 			$voucher_list = array();
 			if ($voucher_id)
 			{
-				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id));
+				$voucher_list = $this->bo->get_vouchers(array('query' => $voucher_id, 'criteria' => 'voucher_id'));
 			}
 
-			if (!$voucher_list)
-			{
-				$voucher_list = array('id' => '', 'name' => lang('select'));
-			}
+			array_unshift($voucher_list, array('id' => '', 'name' => lang('select')));
 
 			foreach ($userlist_default as $default)
 			{
