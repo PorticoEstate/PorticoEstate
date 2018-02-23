@@ -1024,7 +1024,6 @@ JS;
 
 				try
 				{
-			//		parent.on_location_updated(aData["location_code"]);
 					window.parent.on_location_updated(aData["location_code"]);
 				}
 				catch(err)
