@@ -1140,10 +1140,10 @@
 			$bolocation = CreateObject('property.bolocation');
 
 			$location_data = $bolocation->initiate_ui_location(array(
-				'values' => $project['location_data'],
-				'type_id' => count(explode('-', $project['location_data']['location_code'])),
+				'values' => $workorder['location_data'] ? $workorder['location_data'] : $project['location_data'],
+				'type_id' => $workorder['location_data'] ? count(explode('-', $workorder['location_data']['location_code'])) : count(explode('-', $project['location_data']['location_code'])),
 				'no_link' => false, // disable lookup links for location type less than type_id
-				'tenant' => $project['location_data']['tenant_id'],
+				'tenant' => $workorder['location_data']['tenant_id'] ? $workorder['location_data']['tenant_id'] : $project['location_data']['tenant_id'],
 				'lookup_type' => 'view'
 			));
 
