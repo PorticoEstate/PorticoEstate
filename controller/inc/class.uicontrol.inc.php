@@ -757,15 +757,34 @@
 					}
 					else
 					{
-						$tabs['control_items'] = array('label' => "3: " . lang('Choose_control_items'));
-						$tabs['check_list'] = array('label' => "4: " . lang('Sort_check_list'));
+						$tabs['control_items'] = array(
+							'label' => "3: " . lang('Choose_control_items'),
+							'link' => $GLOBALS['phpgw']->link('/index.php', array(
+								'menuaction' => 'controller.uicontrol.view_control_items',
+								'control_id' => $control->get_id()))
+							);
+						$tabs['check_list'] = array(
+							'label' => "4: " . lang('Sort_check_list'),
+							'disable' => true
+							);
 					}
 				}
 				else
 				{
-					$tabs['control_groups'] = array('label' => "2: " . lang('Choose_control_groups'));
-					$tabs['control_items'] = array('label' => "3: " . lang('Choose_control_items'));
-					$tabs['check_list'] = array('label' => "4: " . lang('Sort_check_list'));
+					$tabs['control_groups'] = array(
+						'label' => "2: " . lang('Choose_control_groups'),
+						'link' => $GLOBALS['phpgw']->link('/index.php', array(
+								'menuaction' => 'controller.uicontrol.view_control_groups',
+								'control_id' => $control->get_id()))
+						);
+					$tabs['control_items'] = array(
+						'label' => "3: " . lang('Choose_control_items'),
+						'disable' => true
+						);
+					$tabs['check_list'] = array(
+						'label' => "4: " . lang('Sort_check_list'),
+						'disable' => true
+						);
 				}
 			}
 			else
