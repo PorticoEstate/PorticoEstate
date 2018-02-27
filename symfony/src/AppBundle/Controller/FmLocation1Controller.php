@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation1Category;
-use AppBundle\Service\FmLocation1Service;
+use AppBundle\Service\FmLocationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -200,7 +200,7 @@ class FmLocation1Controller extends Controller
      */
     public function barAction(){
         $fmLocations = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation1')->findAll();
-        $service = new FmLocation1Service($this->getDoctrine()->getManager());
+        $service = new FmLocationService($this->getDoctrine()->getManager());
         $service->addCustomFieldsForProperties($fmLocations);
         dump($fmLocations[400]->getCustomAttributes());
 dump($fmLocations[10]->getValue('aktiv'));

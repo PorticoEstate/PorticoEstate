@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use AppBundle\Service\FmLocation1Service;
+use AppBundle\Service\FmLocationService;
 
 /**
  * FmLocation1
@@ -279,7 +279,7 @@ class FmLocation1
     public function __construct()
     {
         $this->buildings = new ArrayCollection();
-        $this->customAttributes = new ArrayCollection();
+        $this->customAttributes = array();
     }
 
     /**
@@ -828,30 +828,22 @@ class FmLocation1
         return $this->buildings;
     }
 
-//    /** @ORM\PostLoad */
-//    public function doStuffOnPostLoad(LifecycleEventArgs $eventArgs){
-//        $this->merknader = 'Hello verden';
-//        $appForProperties = $eventArgs->getEntityManager()->getRepository(Application::class)->findAppForProperties();
-//        $gwLocationId = $appForProperties->getLocations()->first()->getId();
-//        $this->customAttributes = $eventArgs->getEntityManager()->getRepository(CustAttribute::class)->findProperties($gwLocationId);
-//    }
-
     /**
      * Get customAttributes
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      */
-    public function getCustomAttributes()
+    public function getCustomAttributes():array
     {
         return $this->customAttributes;
     }
 
     /**
      * Get customAttributes
-     * @param \Doctrine\ORM\Persisters\Collection $customAttributes
+     * @param array $customAttributes
      * @return FmLocation1
      */
-    public function setCustomAttributes($customAttributes): FmLocation1
+    public function setCustomAttributes(array $customAttributes): FmLocation1
     {
         $this->customAttributes = $customAttributes;
         return $this;
@@ -859,6 +851,6 @@ class FmLocation1
 
     public function getValue(string $property)
     {
-        return FmLocation1Service::getValue($property, get_object_vars($this), $this->customAttributes);
+        return FmLocationService::getValue($property, get_object_vars($this), $this->customAttributes);
     }
 }

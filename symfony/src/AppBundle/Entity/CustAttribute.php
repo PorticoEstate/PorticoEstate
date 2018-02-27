@@ -130,4 +130,28 @@ class CustAttribute
     {
         return $this->custChoices;
     }
+
+    public function getMinfiedArray(): array
+    {
+        $values = array();
+        /* @var $choice CustChoice */
+        foreach ($this->custChoices as $choice) {
+            $values[$choice->getId()] = $choice->getValue();
+        }
+        return array($this->getColumnName() => array('type' => $this->getDataType(), 'values' => $values));
+    }
+
+    public static function getDefaultValue(string $datatype){
+        switch($datatype){
+            case 'LB': // Listbox
+                return '';
+                break;
+            case 'R': // Multiple radio
+            case 'CH': // Multiple checkbox
+                return array();
+                break;
+            default:
+                '';
+        }
+    }
 }
