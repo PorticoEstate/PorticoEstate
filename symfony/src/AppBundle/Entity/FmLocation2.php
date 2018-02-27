@@ -297,9 +297,9 @@ class FmLocation2
     private $sdanlegg;
 
     /**
-     * @var string
+     * @var array
      *
-     * @ORM\Column(name="oppvarming", type="text", nullable=true)
+     * @ORM\Column(name="oppvarming", type="simple_array", nullable=true)
      * @Groups({"rest"})
      */
     private $oppvarming;
@@ -1309,21 +1309,20 @@ class FmLocation2
     /**
      * Set oppvarming
      *
-     * @param string $oppvarming
+     * @param array $oppvarming
      *
      * @return FmLocation2
      */
-    public function setOppvarming($oppvarming)
+    public function setOppvarming(array $oppvarming)
     {
         $this->oppvarming = $oppvarming;
-
         return $this;
     }
 
     /**
      * Get oppvarming
      *
-     * @return string
+     * @return array
      */
     public function getOppvarming()
     {

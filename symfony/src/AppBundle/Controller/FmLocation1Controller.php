@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation1Category;
+use AppBundle\Service\FmLocation1Service;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -193,4 +194,22 @@ class FmLocation1Controller extends Controller
             ->setMethod('DELETE')
             ->getForm();
     }
+
+    /**
+     * @Route("/bar", name="fmlocation1_bar")
+     */
+    public function barAction(){
+        $fmLocations = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation1')->findAll();
+        $service = new FmLocation1Service($this->getDoctrine()->getManager());
+        $service->addCustomFieldsForProperties($fmLocations);
+        dump($fmLocations[400]->getCustomAttributes());
+dump($fmLocations[10]->getValue('aktiv'));
+        dump($fmLocations[11]->getValue('aktiv'));
+        dump($fmLocations[12]->getValue('aktiv'));
+        dump($fmLocations[13]->getValue('aktiv'));
+
+        //        $repository->clear();
+        return new Response('<html><body>Hello!</body></html>');
+    }
+
 }

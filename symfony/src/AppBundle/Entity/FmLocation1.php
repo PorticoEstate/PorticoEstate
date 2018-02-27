@@ -5,6 +5,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Events;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use AppBundle\Service\FmLocation1Service;
 
 /**
  * FmLocation1
@@ -267,14 +269,17 @@ class FmLocation1
 
 
     /**
-    * @ORM\OneToMany(targetEntity="FmLocation2", mappedBy="location1")
-    * @Groups({"rest"})
-    */
+     * @ORM\OneToMany(targetEntity="FmLocation2", mappedBy="location1")
+     * @Groups({"rest"})
+     */
     private $buildings;
+
+    private $customAttributes;
 
     public function __construct()
     {
         $this->buildings = new ArrayCollection();
+        $this->customAttributes = new ArrayCollection();
     }
 
     /**
@@ -789,7 +794,6 @@ class FmLocation1
         $this->deliveryAddress = $deliveryAddress;
     }
 
-
     /**
      * Add building
      *
@@ -824,9 +828,37 @@ class FmLocation1
         return $this->buildings;
     }
 
-    /** @ORM\PostLoad */
-    public function doStuffOnPostLoad(){
-        $this->merknader = 'Hello verden';
+//    /** @ORM\PostLoad */
+//    public function doStuffOnPostLoad(LifecycleEventArgs $eventArgs){
+//        $this->merknader = 'Hello verden';
+//        $appForProperties = $eventArgs->getEntityManager()->getRepository(Application::class)->findAppForProperties();
+//        $gwLocationId = $appForProperties->getLocations()->first()->getId();
+//        $this->customAttributes = $eventArgs->getEntityManager()->getRepository(CustAttribute::class)->findProperties($gwLocationId);
+//    }
+
+    /**
+     * Get customAttributes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCustomAttributes()
+    {
+        return $this->customAttributes;
     }
 
+    /**
+     * Get customAttributes
+     * @param \Doctrine\ORM\Persisters\Collection $customAttributes
+     * @return FmLocation1
+     */
+    public function setCustomAttributes($customAttributes): FmLocation1
+    {
+        $this->customAttributes = $customAttributes;
+        return $this;
+    }
+
+    public function getValue(string $property)
+    {
+        return FmLocation1Service::getValue($property, get_object_vars($this), $this->customAttributes);
+    }
 }
