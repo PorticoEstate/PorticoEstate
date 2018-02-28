@@ -788,21 +788,33 @@
 #				$fakturalinje['adresse2'] = ;
 #				$fakturalinje['postnr'] = ;
 				$fakturalinje['betform'] = 'BG';
-				$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
-//				$fakturalinje['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+
+				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+				if (isset($config->config_data['dim_value_1']))
+				{
+//					$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+					$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
+				}
+
 				$fakturalinje['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
 
 				$fakturalinje['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
-				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
+				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 9, '0', STR_PAD_LEFT);
 				$fakturalinje['grunnlag'] = '000000001';
-				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
+				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 11, '0', STR_PAD_LEFT);
 #				$fakturalinje['saksnr'] = ;
 				//Linjetekst LT
 				$linjetekst = $this->get_visma_LT_row_template();
 				$linjetekst['posttype'] = 'LT';
 				$linjetekst['kundenr'] = $kundenr;
-				$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
-//				$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+
+				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+				if (isset($config->config_data['dim_value_1']))
+				{
+//					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
+				}
+
 				$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
 
 				$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
