@@ -32,11 +32,8 @@ this.notify_contact_lookup = function ()
  }
  */
 
-$(document).ready(function ()
-{
 
-	$("#notify_contact").bind('DOMAttrModified propertychange', function (evt)
-	{
-		refresh_notify_contact($(this).val());
-	});
-});
+window.on_contact_updated = function (contact_id)
+{
+	refresh_notify_contact(contact_id);
+};
