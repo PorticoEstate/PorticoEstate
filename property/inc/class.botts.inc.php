@@ -1083,6 +1083,7 @@
 				'street_name' => $location_details['street_name'],
 				'street_number' => $location_details['street_number'],
 				'location_name' => $location_details['loc1_name'],
+				'send_mail'		=> true
 			);
 
 			$result = $this->add($ticket);
@@ -1170,8 +1171,7 @@
 
 			$this->config->read();
 
-			if ((isset($data['send_mail']) && $data['send_mail']) || (isset($this->config->config_data['mailnotification']) && $this->config->config_data['mailnotification'])
-			)
+			if (!empty($data['send_mail']) || !empty($this->config->config_data['mailnotification']))
 			{
 				$receipt_mail = $this->mail_ticket($receipt['id'], false, $receipt, $data['location_code'], false, isset($data['send_mail']) && $data['send_mail'] ? true : false);
 			}
@@ -1851,7 +1851,7 @@ HTML;
 			return $values;
 		}
 
-		public function receive_order( $id, $received_amount )
+		public function receive_order( $id, $received_amount, $external_voucher_id = 0 )
 		{
 			$transfer_action = 'receive_order'; // used as trigger within the custom function
 			$acl_location = $this->acl_location;

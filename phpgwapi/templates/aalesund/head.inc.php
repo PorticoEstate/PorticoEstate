@@ -266,11 +266,9 @@ CSS;
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
 
-	// if ($manual !== null) 
-	{
 		$tpl_vars['manual_text'] = lang('manual');
 		$tpl_vars['manual_url'] = $manual;
-	}
+		$tpl_vars['home_text'] = lang('home');
 //	$user = $GLOBALS['phpgw']->accounts->get( $GLOBALS['phpgw_info']['user']['id'] );
 //	_debug_array($user);
 

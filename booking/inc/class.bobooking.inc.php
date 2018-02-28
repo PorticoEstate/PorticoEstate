@@ -36,7 +36,10 @@
 		function send_notification( $booking, $allocation, $maildata, $mailadresses, $valid_dates = null )
 		{
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
 				return;
+			}
+
 			$send = CreateObject('phpgwapi.send');
 
 			$config = CreateObject('phpgwapi.config', 'booking');

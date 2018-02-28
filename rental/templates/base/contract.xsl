@@ -93,20 +93,22 @@
 							</xsl:choose>
 							<xsl:value-of select="value_field_of_responsibility"/>
 						</div>
-						<div class="pure-control-group">
-							<label>
-								<xsl:value-of select="php:function('lang', 'contract_type')"/>
-							</label>
-							<select id="contract_type" name="contract_type">
-								<xsl:attribute name="data-validation">
-									<xsl:text>required</xsl:text>
-								</xsl:attribute>
-								<xsl:attribute name="data-validation-error-msg">
+						<xsl:if test="count(list_contract_type/*) &gt; 1">
+							<div class="pure-control-group">
+								<label>
 									<xsl:value-of select="php:function('lang', 'contract_type')"/>
-								</xsl:attribute>
-								<xsl:apply-templates select="list_contract_type/options"/>
-							</select>
-						</div>
+								</label>
+								<select id="contract_type" name="contract_type">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'contract_type')"/>
+									</xsl:attribute>
+									<xsl:apply-templates select="list_contract_type/options"/>
+								</select>
+							</div>
+						</xsl:if>
 						<div class="pure-control-group">
 							<label>
 								<xsl:value-of select="php:function('lang', 'executive_officer')"/>

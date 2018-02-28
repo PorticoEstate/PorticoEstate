@@ -1,14 +1,12 @@
 <?php
 
-	phpgw::import_class('phpgwapi.xmlhelper');
-
 	class sms_sms extends sms_sms_
 	{
 
 		function __construct()
 		{
 			parent::__construct();
-			$this->pswin_param = $GLOBALS['phpgw_info']['sms_config']['pswin'];
+			$this->param = $GLOBALS['phpgw_info']['sms_config']['smsalert'];
 		}
 
 		function parse_html( $s_str )
@@ -30,9 +28,8 @@
 
 		function gw_send_sms( $mobile_sender, $sms_sender, $sms_to, $sms_msg, $gp_code = "", $uid = "", $smslog_id = "", $flash = false )
 		{
-			$debug = empty($this->pswin_param['debug']) ? false : true;
+			$debug = empty($this->param['debug']) ? false : true;
 
-			$result = array();
 //			$sms_msg = utf8_decode($sms_msg);
 
 			$sms_to = ltrim($sms_to, '+');
@@ -42,53 +39,55 @@
 				$sms_to = "47{$sms_to}";
 			}
 
-			$data = array
+			$post_data = array
 			(
-				'CLIENT'	=> $this->pswin_param['login'],
-				'PW'		=> $this->pswin_param['password'],
-				'MSGLST'	=> array
-				(
-					'MSG'	=> array
-					(
-						'ID'	=> $smslog_id,
-						'TEXT'	=> $sms_msg,
-						'SND'	=> $this->pswin_param['originator'],
-						'RCV'	=> $sms_to
-					)
-				)
+				'username'	=> $this->param['login'],
+				'password'	=> $this->param['password'],
+				'message'	=> $sms_msg,
+				'sender'	=> (string)$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],
+				'receiver'	=> $sms_to
 			);
 
-			$xmldata = utf8_decode(phpgwapi_xmlhelper::toXML($data, 'SESSION'));
+			$post_items = array();
 
-			$url = $this->pswin_param['send_url'];
+			foreach ( $post_data as $key => $value)
+			{
+				$post_items[] = "{$key}={$value}";
+			}
+			//create the final string to be posted using implode()
+			$post_string = implode ('&', $post_items);
+
+			$url = $this->param['send_url'];
 
 			$ch = curl_init($url);
 
-			if($this->pswin_param['proxy_host'])
+			if($this->param['proxy_host'])
 			{
-				curl_setopt($ch, CURLOPT_PROXY, "{$this->pswin_param['proxy_host']}:{$this->pswin_param['proxy_port']}");
+				curl_setopt($ch, CURLOPT_PROXY, "{$this->param['proxy_host']}:{$this->param['proxy_port']}");
 			}
 
 			curl_setopt($ch, CURLOPT_MUTE, 1);
 			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "$xmldata");
+			curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$result = curl_exec($ch);
+			$result_xml = curl_exec($ch);
 
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
-			$xmlparse = CreateObject('property.XmlToArray');
-			$xmlparse->setEncoding('UTF-8');
-			$var_result = $xmlparse->parse($result);
+			$result = new SimpleXMLElement($result_xml);
 
+/*
+				 1	Ok
+				-1	General error
+				-2	Sms limit reached
+				-3	No recipients
+				-5	Invalid Sender
 
-			// OK = delivered
-			// FAIL = failed
-
-
-			if ($var_result['LOGON'] == 'OK')
+T
+ *  */
+			if ($result == 1)
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
 				$ret = true;
@@ -97,19 +96,15 @@
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 2);
 				$ret = false;
-//				throw new Exception($var_result['INFO']);
 			}
 
 			if($debug)
 			{
 				echo "data: </br>";
-				_debug_array($data);
+				_debug_array($post_data);
 				echo "httpCode: $httpCode </br>";
-				echo "response: </br>";
-				_debug_array($var_result);
-
+				echo "response: {$result}</br>";
 				$url_outbox = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'));
-
 				echo "<a href='{$url_outbox}'>Outbox</a>";
 				die();
 			}

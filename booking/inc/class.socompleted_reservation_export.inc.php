@@ -408,6 +408,10 @@
 			{
 				$export_format = 'kommfakt';
 			}
+			elseif ($config->config_data['internal_format'] == 'VISMA')
+			{
+				$export_format = 'visma';
+			}
 
 			if (is_array($reservations))
 			{
@@ -447,7 +451,7 @@
 			return $this->build_export_result($export_format, 0, 0.0);
 		}
 
-		protected function build_export_result( $export_format, $total_items, $total_cost, &$data = null )
+		protected function build_export_result( $export_format, $total_items, $total_cost, $data = null )
 		{
 			return array('total_items' => $total_items, 'total_cost' => $total_cost, 'export_format' => $export_format,
 				'export' => $data);
@@ -559,6 +563,19 @@
 			{
 				$combined_data[] = "csv_break";
 				$combined_data[] = substr($export['data'], strpos($export['data'], "\n") + 1); //Remove first line (i.e don't to repeat headers in file)
+			}
+		}
+
+		protected function combine_visma_export_data( array &$combined_data, $export )
+		{
+			if (count($combined_data) == 0)
+			{
+				$combined_data[] = $export['data'];
+			}
+			else
+			{
+				$combined_data[] = "\n";
+				$combined_data[] = $export['data'];
 			}
 		}
 
@@ -771,19 +788,35 @@
 #				$fakturalinje['adresse2'] = ;
 #				$fakturalinje['postnr'] = ;
 				$fakturalinje['betform'] = 'BG';
-				$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
-				$fakturalinje['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+
+				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+				if (isset($config->config_data['dim_value_1']))
+				{
+//					$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+					$fakturalinje['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
+				}
+
+				$fakturalinje['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+
 				$fakturalinje['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
-				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
+				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 9, '0', STR_PAD_LEFT);
 				$fakturalinje['grunnlag'] = '000000001';
-				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
+				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 11, '0', STR_PAD_LEFT);
 #				$fakturalinje['saksnr'] = ;
 				//Linjetekst LT
 				$linjetekst = $this->get_visma_LT_row_template();
 				$linjetekst['posttype'] = 'LT';
 				$linjetekst['kundenr'] = $kundenr;
-				$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
-				$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['responsible_code']), 4, '0', STR_PAD_LEFT);
+
+				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
+				if (isset($config->config_data['dim_value_1']))
+				{
+//					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['object_number']), 3, '0', STR_PAD_LEFT);
+					$linjetekst['oppdrgnr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['unit_number']), 3, '0', STR_PAD_LEFT);
+				}
+
+				$linjetekst['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
+
 				$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
 				$linjetekst['linjenr'] = $linjenr;
 				$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');

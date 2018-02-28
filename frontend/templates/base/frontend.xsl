@@ -55,12 +55,7 @@
 		    				<li>
 		    					<form action="{form_action}" method="post">
 			    					<select size="3" onchange="this.form.submit()" name="org_unit_id">
-			    						<option value="none">
-											<xsl:if test="'none' = //header/selected_org_unit">
-												<xsl:attribute name="selected" value="selected"/>
-											</xsl:if>
-				    						<xsl:value-of select="php:function('lang', 'none')"/>
-			    						</option>
+
 			    						<option value="all">
 											<xsl:if test="'all' = //header/selected_org_unit">
 												<xsl:attribute name="selected" value="selected"/>

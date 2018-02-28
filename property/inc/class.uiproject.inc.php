@@ -1468,11 +1468,11 @@ JS;
 			}
 
 			$default_ecodimb = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['dimb']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'] : '');
-			if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
-			{
-				$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
-				$GLOBALS['phpgw']->preferences->save_repository();
-			}
+//			if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
+//			{
+//				$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
+//				$GLOBALS['phpgw']->preferences->save_repository();
+//			}
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 				(
@@ -2353,6 +2353,8 @@ JS;
 				)
 			);
 			$invoices = array_merge($active_invoices, $historical_invoices);
+			$config = CreateObject('phpgwapi.config', 'property');
+			$config->read();
 
 			foreach ($invoices as $entry)
 			{
