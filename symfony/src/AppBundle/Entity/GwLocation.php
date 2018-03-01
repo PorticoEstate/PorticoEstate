@@ -35,7 +35,7 @@ class GwLocation
     private $appId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application", inversedBy="locations", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="GwApplication", inversedBy="locations", fetch="EAGER")
      * @ORM\JoinColumn(name="app_id", referencedColumnName="app_id")
      */
     private $gwApp;
@@ -77,9 +77,9 @@ class GwLocation
     }
 
     /**
-     * @return /Application
+     * @return /GwApplication
      */
-    public function getGwApp(): Application
+    public function getGwApp(): GwApplication
     {
         return $this->gwApp;
     }

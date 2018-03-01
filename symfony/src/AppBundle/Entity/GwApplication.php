@@ -15,9 +15,9 @@ use Doctrine\ORM\ArrayCollection as ArrayCollection;
  * FmOwner
  *
  * @ORM\Table(name="phpgw_applications")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ApplicationRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\GwApplicationRepository")
  */
-class Application
+class GwApplication
 {
     /**
      * @var integer

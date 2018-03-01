@@ -11,7 +11,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\FmLocation1 as FmLocation1;
 use Doctrine\ORM\ArrayCollection as ArrayCollection;
 use Doctrine\ORM\EntityManager as EntityManager;
-use AppBundle\Entity\Application;
+use AppBundle\Entity\GwApplication;
 use AppBundle\Entity\CustAttribute;
 
 class FmLocationService
@@ -28,7 +28,7 @@ class FmLocationService
      * @return \Doctrine\ORM\Persisters\Collection $customAttributes
      */
     private function getCustomAttributesForProperties(){
-        $appForProperties = $this->em->getRepository(Application::class)->findAppForProperties();
+        $appForProperties = $this->em->getRepository(GwApplication::class)->findAppForProperties();
         $gwLocationId = $appForProperties->getLocations()->first()->getId();
         return $this->em->getRepository(CustAttribute::class)->findProperties($gwLocationId);
     }

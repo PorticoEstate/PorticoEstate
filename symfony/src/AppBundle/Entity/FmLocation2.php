@@ -25,7 +25,7 @@ class FmLocation2
 
     /**
      * @ORM\ManyToOne(targetEntity="FmLocation1", inversedBy="buildings")
-     * @ORM\JoinColumn(name="loc1", referencedColumnName="loc1")
+     * @ORM\JoinColumn(name="loc1", referencedColumnName="location_code")
      * @Groups({"rest"})
      */
     private $location1;
@@ -34,7 +34,6 @@ class FmLocation2
      * @var string
      *
      * @ORM\Column(name="loc2", type="string", length=4)
-     * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      * @Groups({"rest"})
      */
@@ -42,7 +41,7 @@ class FmLocation2
 
     /**
      * @var string
-     *
+     * @ORM\Id
      * @ORM\Column(name="location_code", type="string", length=13, nullable=false)
      * @Groups({"rest"})
      */
@@ -1316,6 +1315,7 @@ class FmLocation2
     public function setOppvarming(array $oppvarming)
     {
         $this->oppvarming = $oppvarming;
+
         return $this;
     }
 

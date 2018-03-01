@@ -10,7 +10,7 @@ namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class ApplicationRepository extends EntityRepository
+class GwApplicationRepository extends EntityRepository
 {
 
 
@@ -18,7 +18,7 @@ class ApplicationRepository extends EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT a, g FROM AppBundle:Application a JOIN a.locations g WHERE a.name = \'property\' AND g.name = \'.location.1\''
+                'SELECT a, g FROM AppBundle:GwApplication a JOIN a.locations g WHERE a.name = \'property\' AND g.name = \'.location.1\''
             )
             ->setMaxResults(1)
             ->getSingleResult();
@@ -28,7 +28,7 @@ class ApplicationRepository extends EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery(
-                'SELECT a, g FROM AppBundle:Application a JOIN a.locations g WHERE a.name = \'property\' AND g.name = \'.location.2\''
+                'SELECT a, g FROM AppBundle:GwApplication a JOIN a.locations g WHERE a.name = \'property\' AND g.name = \'.location.2\''
             )
             ->setMaxResults(1)
             ->getSingleResult();

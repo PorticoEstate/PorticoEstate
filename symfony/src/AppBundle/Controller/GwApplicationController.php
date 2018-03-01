@@ -8,20 +8,20 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Application;
+use AppBundle\Entity\GwApplication;
 use AppBundle\Entity\CustAttribute;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use AppBundle\Repository\ApplicationRepository;
+use AppBundle\Repository\GwApplicationRepository;
 
 /**
  * Application controller.
  *
  * @Route("app")
  */
-class ApplicationController extends Controller
+class GwApplicationController extends Controller
 {
     /**
      * @Route("/list", name="app_application")
@@ -29,7 +29,7 @@ class ApplicationController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $applications = $em->getRepository('AppBundle:Application')->findOneBy(['name' => 'property']);
+        $applications = $em->getRepository('AppBundle:GwApplication')->findOneBy(['name' => 'property']);
 
 
         dump($applications->getLocations());
@@ -56,7 +56,7 @@ class ApplicationController extends Controller
     public function repAction()
     {
         $repository = $this->getDoctrine()
-            ->getRepository(Application::class);
+            ->getRepository(GwApplication::class);
         $app = $repository->findAppForBuildings();
         $gwLocationId = $app->getLocations()->first()->getId();
         $custAttributeRepository = $this->getDoctrine()

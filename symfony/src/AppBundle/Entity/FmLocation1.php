@@ -5,15 +5,13 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use AppBundle\Service\FmLocationService;
 
 /**
  * FmLocation1
  *
  * @ORM\Table(name="fm_location1", indexes={@ORM\Index(name="location_code_fm_location1_idx", columns={"location_code"})})
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FmLocation1Repository")
  */
 class FmLocation1
 {
