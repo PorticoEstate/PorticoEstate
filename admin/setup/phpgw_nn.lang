@@ -1,5 +1,5 @@
 account active	admin	nn	Bruker er aktiv
-account "%1" properties	admin	no	Brukar "%1" data
+account "%1" properties	admin	nn	Brukar "%1" data
 active	admin	nn	Aktiv
 all records and account information will be lost!	admin	nn	All historie og brukerinformasjon vil gå tapt!
 anonymous user	admin	nn	Anonym bruker
@@ -108,7 +108,7 @@ add user account	admin	nn	Legg til brukerkonto
 action	admin	nn	Handling
 file	admin	nn	Fil
 info	admin	nn	Informasjon
-notice	admin	no
+notice	admin	nn	Merknad
 hooks updated	admin	nn	Applikasjonskoblinger er oppdatert
 the new hooks should be available to all users	admin	nn	Nye applikasjonskoblinger er tilgjengelig for alle brukere
 async services last executed	admin	nn	Asynkrone servicer ble sist utført

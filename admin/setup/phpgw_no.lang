@@ -108,7 +108,7 @@ add user account	admin	no	Legg til brukerkonto
 action	admin	no	Handling
 file	admin	no	Fil
 info	admin	no	Informasjon
-notice	admin	no
+notice	admin	no	Merknad
 hooks updated	admin	no	Applikasjonskoblinger er oppdatert
 the new hooks should be available to all users	admin	no	Nye applikasjonskoblinger er tilgjengelig for alle brukere
 async services last executed	admin	no	Asynkrone servicer ble sist utført
