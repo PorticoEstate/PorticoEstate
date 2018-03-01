@@ -1,0 +1,722 @@
+current activities	booking	nn	Aktivitetar
+select	booking	nn	Velg
+-- select an activity --	booking	nn	Velg ein aktivitet
+-- select a building --	booking	nn	Velg ein bygning
+-- select a season --	booking	nn	Velg ein sesong
+when?	booking	nn	Når?
+who?	booking	nn	Kven?
+how many?	booking	nn	Kor mange?
+accept application	booking	nn	Godta søknaden
+accepted	booking	nn	AKSEPTERT
+account	booking	nn	Bruker
+actions	booking	nn	Handling
+active	booking	nn	Aktiv
+active applications	booking	nn	Aktive søknader
+activity	booking	nn	Aktivitet
+add a comment	booking	nn	Legg til ein kommentar
+add another date	booking	nn	Legg til dato
+add boundary	booking	nn	Legg til rammetid
+add comment	booking	nn	Legg til kommentar
+comment	booking	nn	Kommentar
+add document	booking	nn	Legg til dokument
+add new event	booking	nn	Legg til arrangement
+event settings	booking	nn	Innstillingar for arrangement
+application event settings	booking	nn	interntildeling/tildeling e-post oppsett for søknad
+add permission	booking	nn	Legg til tilgangar
+edit permission	booking	nn	Endre tilgangar
+admin 1	booking	nn	Bookingansvarlig 1
+admin 2	booking	nn	Bookingansvarlig 2
+admins	booking	nn	Bookingansvarlige
+age group	booking	nn	Aldersgruppe
+agegroup	booking	nn	Aldersgruppe
+allocation	booking	nn	Tildeling
+allocations	booking	nn	Tildelingar
+allocations colliding with existing bookings or allocations (%1)	booking	nn	Dobbel-booking som IKKJE vert lagra
+allocations that can be created (%1)	booking	nn	Tildelingar som kan opprettast
+application	booking	nn	Søknad
+applications	booking	nn	Søknader
+apr	booking	nn	april
+archived	booking	nn	Arkivert
+audience	booking	nn	Målgruppe
+aug	booking	nn	august
+bookable resources	booking	nn	Bookbare ressursar
+booking	booking	nn	Booking
+booking district	booking	nn	Område
+booking name	booking	nn	Namn på interntildeling
+bookings	booking	nn	Interntildelingar
+boundaries	booking	nn	Rammetid
+building	booking	nn	Bygg/anlegg
+building name	booking	nn	Bygg/anlegg
+building schedule	booking	nn	Kalendar
+buildings	booking	nn	Bygg/anlegg
+bygning	booking	nn	Bygg/anlegg
+cancel	booking	nn	Avbryt
+cancelled	booking	nn	Avbestilt
+case officer	booking	nn	Saksbehandlar
+category	booking	nn	Kategori
+choose a date	booking	nn	Velg dato
+choose a date	booking	nn	Velg ein dato
+choose file	booking	nn	Velg dokument
+city	booking	nn	Poststed
+click to sort ascending	booking	nn	Klikk for å sortere stigande
+click to sort descending	booking	nn	Klikk for å sortere synkande
+contact	booking	nn	Kontakt
+contact 1	booking	nn	Kontakt 1
+contact 2	booking	nn	Kontakt 2
+contact information	booking	nn	Kontaktinformasjon
+cost	booking	nn	Pris
+create	booking	nn	Lagre
+created	booking	nn	Oppretta
+dashboard	booking	nn	Skrivebord
+day of the week	booking	nn	Vekedag
+dec	booking	nn	desember
+description	booking	nn	Beskrivelse
+Extra information	booking	nn	Ekstra informasjon om arrangement
+district	booking	nn	Område/bydel
+document	booking	nn	Dokument
+document name	booking	nn	Dokumentnamn
+documents	booking	nn	Dokumenter
+drawing	booking	nn	Tegning
+edit	booking	nn	Rediger
+add agegroup	booking	nn	Ny aldersgruppe
+edit agegroup	booking	nn	Rediger aldersgruppe
+edit allocation	booking	nn	Rediger tildeling
+edit audience group	booking	nn	Rediger målgruppe
+edit booking	booking	nn	Rediger interntildeling
+edit event	booking	nn	Rediger arrangement
+edit organization	booking	nn	Rediger organisasjon
+editer	booking	nn	Rediger
+equipment	booking	nn	Utstyr
+equipment name	booking	nn	Namn på utstyr
+event	booking	nn	Arrangement
+events	booking	nn	Arrangementer
+feb	booking	nn	februar
+female	booking	nn	Kvinne
+filnavn	booking	nn	Dokument
+found %1 results	booking	nn	%1 treff
+fr	booking	nn	fr.
+from	booking	nn	Fra
+generate allocations	booking	nn	Kopier til kalendar
+generate allocations from week template	booking	nn	Lag tildelingar fra vekeplan
+go back to the template week	booking	nn	Gå attende til vekeplan
+group	booking	nn	Gruppe/Lag
+history and comments (%1)	booking	nn	Historikk (%1)
+History of Cost (%1)	booking	nn	Prishistorikk (%1)
+cost is set	booking	nn	Ny pris er angitt
+cost comment	booking	nn	Kommentar til ny pris
+hms document	booking	nn	HMS dokument
+homepage	booking	nn	Heimeside
+id	booking	nn	ID
+inactivate	booking	nn	Inaktivert
+inactive	booking	nn	Inaktiv
+invoice information	booking	nn	Fakturainformasjon
+responsible applicant	booking	nn	Ansvarleg søker
+jan	booking	nn	januar
+jul	booking	nn	juli
+jun	booking	nn	juni
+last modified	booking	nn	Sist endra
+joading...	booking	nn	Lastar...
+location	booking	nn	Lokale
+male	booking	nn	Mann
+mar	booking	nn	mars
+may	booking	nn	mai
+mo	booking	nn	ma.
+modified	booking	nn	Endra
+more info	booking	nn	Meir informasjon
+name	booking	nn	Namn
+new	booking	nn	NY
+new activity	booking	nn	Ny aktivitet
+new age group	booking	nn	Ny aldersgruppe
+new allocation	booking	nn	Ny tildeling
+new application	booking	nn	Ny søknad
+new audience group	booking	nn	Ny målgruppe
+new booking	booking	nn	Ny interntildeling
+new booking application	booking	nn	Ny søknad
+new building	booking	nn	Nytt bygg/anlegg
+new building permission	booking	nn	Nye tilgangar bygg/anlegg
+New Resource Permission	booking	nn	Nye tilgangar ressurs
+new contact	booking	nn	Ny kontakt
+new document	booking	nn	Nye dokumenter
+new equipment	booking	nn	Nytt utstyr
+new event	booking	nn	Nytt arrangement
+new group	booking	nn	Ny gruppe
+new organization	booking	nn	Ny organisasjon
+new resource	booking	nn	Ny ressurs
+new root permission	booking	nn	Nye systemtilgangar
+new season	booking	nn	Ny sesong
+new season permission	booking	nn	Nye tilgangar sesong
+no Data.	booking	nn	Ingen treff
+no description yet	booking	nn	Beskrivelse manglar
+no parents	booking	nn	Ingen overordna
+no records found.	booking	nn	Ingen treff
+no records found.	booking	nn	Ingen funnen!
+nov	booking	nn	november
+number of participants	booking	nn	Antal deltakarar
+estimated number of participants	booking	nn	Estimert Antal deltakarar
+oct	booking	nn	oktober
+of	booking	nn	av
+officer	booking	nn	Saksbehandlar
+organization	booking	nn	Organisasjon
+organization number	booking	nn	Organisasjonnummer
+organizations	booking	nn	Organisasjonar
+other	booking	nn	Anna
+parent activity	booking	nn	Overordna kategori
+parent id	booking	nn	Overordna id
+permissions	booking	nn	Tilgangar
+phone	booking	nn	Telefon
+picture	booking	nn	Bilete
+planning	booking	nn	Planlegging
+prev	booking	nn	Forrige
+preview	booking	nn	Forhåndsvisning
+price list	booking	nn	Prisliste
+primary admin	booking	nn	Kontaktperson 1
+primary contact	booking	nn	Kontaktperson 1
+published	booking	nn	Publisert
+reject application	booking	nn	Avslå søknad
+rejected	booking	nn	AVVIST
+resource	booking	nn	Ressurs
+resource name	booking	nn	Namn på ressurs
+resource schedule	booking	nn	Ressurskalender
+resource type	booking	nn	Type
+resources	booking	nn	Ressursar
+role	booking	nn	Rolle
+root permissions	booking	nn	Systemtilgangar
+Sa	booking	nn	lø.
+schedule	booking	nn	vekeplan
+season	booking	nn	Sesong
+season name	booking	nn	Sesong
+seasons	booking	nn	Sesongar
+secondary admin	booking	nn	Kontaktperson 2
+select a building first	booking	nn	Velg fyrst bygg/anlegg
+select category...	booking	nn	Velg ein kategori...
+select role...	booking	nn	Velg rolle...
+sep	booking	nn	september
+settings	booking	nn	Innstillingar
+show only active	booking	nn	Skjul
+showing items	booking	nn	Viser
+showing items {startRecord} - {endRecord} of {totalRecords}	booking	nn	Viser {startRecord} - {endRecord} av {totalRecords}
+social security number	booking	nn	Fødselsnummer (11 siffer)
+Ssn	booking	nn	Fødselsnummer (11 siffer)
+Date of birth or SSN	booking	nn	Fødselsdato eller fødselsnummer
+status	booking	nn	Status
+street	booking	nn	Gate
+su	booking	nn	sø
+submit	booking	nn	Lagre
+successfully created %1 allocations:	booking	nn	%1 tildelinger lagra
+surname	booking	nn	Etternavn
+target audience	booking	nn	Målgruppe
+telephone	booking	nn	Telefon
+terms and conditions	booking	nn	Juridiske betingelsar
+th	booking	nn	to.
+to	booking	nn	Til
+tu	booking	nn	ti.
+upload document	booking	nn	Last opp dokument
+user	booking	nn	Brukar
+we	booking	nn	on.
+week template	booking	nn	Vekeplan
+when	booking	nn	Når
+when?	booking	nn	Når?
+where	booking	nn	Kvar
+where?	booking	nn	Kvar?
+who	booking	nn	Kven
+who?	booking	nn	Kven?
+why	booking	nn	Kvifor
+why?	booking	nn	Kvifor?
+zip code	booking	nn	Postnummer
+postal city	booking	nn	Poststad
+team leaders	booking	nn	Ansvarlege gruppledere
+team leader 1	booking	nn	Ansvarleg gruppeleder 1
+team leader 2	booking	nn	Ansvarleg gruppeleder 2
+regulation	booking	nn	Reglement
+Object No.	booking	nn	Objektnr.
+Article	booking	nn	Artikkel
+Unit No.	booking	nn	Fagavdelingsnr.
+Unit Prefix	booking	nn	Fagavdelingskode (for buntnummeret)
+Invoice Instruction	booking	nn	Topptekst til faktura
+Responsible Code	booking	nn	Ansvarsstad
+Service	booking	nn	Teneste
+Project No.	booking	nn	Prosjektnr.
+Account Codes	booking	nn	Konteringsstrengar
+Account Codes	booking	nn	Konteringsstreng
+New Account Codes	booking	nn	Ny konteringsstreng
+- Actions -	booking	nn	- Valg -
+- Created -	booking	nn	- Oppretta -
+Create allocation	booking	nn	Lag tildeling
+Create booking	booking	nn	Lag interntildeling
+Create event	booking	nn	Lag arrangement
+Event was created	booking	nn	Arrangementet ble opprettet
+Loading...	booking	nn	Lastar ned...
+Back to season	booking	nn	Gå attende til sesong
+Field %1 is required	booking	nn	Feltet '%1' må fyllast ut
+Download	booking	nn	Last ned
+Invoice Data Exports	booking	nn	Fakturaeksporter
+Internal	booking	nn	Intern
+External	booking	nn	Ekstern
+Start date must be after %1	booking	nn	Frådato må vere etter %1
+To date must be before %1	booking	nn	Tildato må vere før %1
+Add Activity	booking	nn	Ny Aktivitet
+Completed	booking	nn	Klar for fakturering
+1 week	booking	nn	1 veke
+2 weeks	booking	nn	2 veker
+3 weeks	booking	nn	3 veker
+4 weeks	booking	nn	4 veker
+Interval	booking	nn	intervall
+Text written in the text area below will be sent as an email to all registered contact persons.	booking	nn	Tekst skreven i feltet nedanfor vil bli sendt som e-post til alle registrerte kontaktpersonar
+Inform contact persons	booking	nn	Informer kontaktpersonar
+Back to Dashboard	booking	nn	Attende til Skrivebord
+Booking changed	booking	nn	Ein interntildeling er endra
+Allocation changed	booking	nn	Ein tildeling er endra
+Event changed	booking	nn	Eit arrangement er endra
+send reminder for participants statistics	booking	nn	Purring brukarstatistikk
+Send reminder	booking	nn	Send purring
+Do not send reminder	booking	nn	Ikkje send purring
+User has responded to the reminder	booking	nn	Brukaren har svart på påminninga
+Reminder sent. Not responded to	booking	nn	Purring sendt. Ikkje besvart
+In order to work with this application, you must first	booking	nn	For å arbeide med denne søknaden, må du først
+assign yourself	booking	nn	bli saksbehandar
+as the case officer responsible for this application.	booking	nn	for denne søknaden
+In order to work with this application, you must therefore first	booking	nn	For å arbeide med denne søknaden må du difor først
+Last modified by public	booking	nn	Sist endret av public
+User '%s' was assigned	booking	nn	Brukaren '%s' vart saksbehandlar
+User '%s' was unassigned	booking	nn	Brukaren '%s' ble teken av saka
+Show only applications assigned to me	booking	nn	Vis berre mine søknader
+Confirm application	booking	nn	Stadfest søknad
+confirmed	booking	nn	Stadfesta
+One or more bookings, allocations or events needs to be created before an application can be Accepted	booking	nn	Ein eller fleire interntildelinger, tildelinger eller arrangementer må opprettast før ein søknad kan aksepterast
+Hide from my Dashboard until new activity occurs	booking	nn	Ikkje vis på mitt skrivebord før ny hending inntreff
+Display in my Dashboard	booking	nn	Vis på mitt skrivebord
+Re-assign to me	booking	nn	Bli saksbehandler
+Assign to me	booking	nn	Bli saksbehandler
+Currently assigned to user:	booking	nn	Gjeldande saksbehandler:
+Overlaps with existing event	booking	nn	Overlappar med eksisterande arrangement
+Overlaps with existing allocation	booking	nn	Overlappar med eksisterande tildeling
+Overlaps with existing booking	booking	nn	Overlappar med eksisterande booking
+This booking is not within the selected season	booking	nn	Denne interntildelingen ligg utanfor angjeven sesong
+Invalid from date	booking	nn	Ugyldig frådato
+invalid to date	booking	nn	Ugyldig tildato
+This booking is outside the organization's allocated time	booking	nn	Denne interntildelingen ligg utanfor organisasjonen si tildelte tid
+Overlaps other organizations allocation	booking	nn	Overlappar med ein annen organisasjon sin tildeling
+The booking uses resources not in the containing allocation	booking	nn	Interntildelingen nyttar ressursar som ikkje finnest i gjeven tildeling
+Field %1: Invalid format	booking	nn	Felt %1: Ugyldig format
+Missing file for document	booking	nn	Fil manglar
+Permission already exists	booking	nn	Tilgangen finnest
+TO needs to be later than FROM	booking	nn	TIL må kome etter FRÅ
+This boundary overlaps another boundary	booking	nn	Denne rammetida overlapper med ei anna rammetid
+COST needs to be non-negative	booking	nn	Pris kan ikkje være negativ
+This allocation overlaps another allocation	booking	nn	Denne tildelingen overlapper med ei anna tildeling
+This allocation is outside season boundaries	booking	nn	Denne tildelingen ligg uteafor sesongrammetida
+Could not update object due to insufficient permissions	booking	nn	Kunne ikkje oppdatere objektet på grunn av manglande tilgangar
+Could not add object due to insufficient permissions	booking	nn	Kunne ikkje opprette objektet på grunn av manglande tilgangar
+Invalid parent activity	booking	nn	Ugyldig foreldreaktivitet
+Invalid category	booking	nn	Ugyldig kategori
+Invalid Resource Type	booking	nn	Ugyldig ressurstype
+Invalid customer type	booking	nn	Ugyldig kundetype
+Nothing to export	booking	nn	Fann ingenting å eksportere
+Unable to export: Missing a valid Customer ID on some rows	booking	nn	Kunne ikkje eksportere: Manglar gyldig kundenummer på nokre rader
+The invoice data in this list already has generated files	booking	nn	Filene til fakturaene i lista er alt generert
+The user has accepted the following documents	booking	nn	Brukeren har akseptert følgjande dokument
+The user has accepted the document under point 8	booking	nn	Brukeren har akseptert dokumentene under punkt 8
+Send e-mail	booking	nn	Send e-post
+All fields are required	booking	nn	Alle feltene må fyllast ut
+Send e-mails	booking	nn	Send e-post
+Recipients	booking	nn	Mottakarar
+Mail subject	booking	nn	Emne
+Mail body	booking	nn	Melding
+The emails were sent successfully	booking	nn	E-postene blei sendt uten feil
+What	booking	nn	Kva
+Res. Type	booking	nn	Type
+Cust. Type	booking	nn	Kundetype
+Customer ID	booking	nn	Kundeid
+Exported	booking	nn	Eksportert
+Export File	booking	nn	Eksportfil
+Order id	booking	nn	Ordreid
+Export Settings	booking	nn	Eksportinnstillinger
+Export	booking	nn	Eksporter
+Not Generated	booking	nn	Ikkje generert
+Generated Files	booking	nn	Genererte filer
+Generate files	booking	nn	Generer filer
+Exported Files	booking	nn	Klar for generering
+All	booking	nn	Alle
+Choose	booking	nn	Velg
+Internal Account Codes	booking	nn	interne kontokoder
+External Account Codes	booking	nn	eksterne kontokoder
+Total Items	booking	nn	Antal elementer
+Total Cost	booking	nn	Totalsum
+Int. invoice file	booking	nn	Intern fakturafil
+Ext. invoice file	booking	nn	Ekstern fakturafil
+Asynchronous Tasks	booking	nn	Systemjobbar
+booking_async_task_update_reservation_state_enabled	booking	nn	Generer fakturagrunnlag
+booking_async_task_send_reminder_enabled	booking	nn	Send purremail til kontaktpersonar på tildelingar, interntildelingar og arrangementer
+Update	booking	nn	Oppdater
+Cannot generate files from empty list	booking	nn	Kan ikkje generere filer frå ei tom liste
+Associated items	booking	nn	Tilknytta element
+Unassign me	booking	nn	Gje frå meg søknaden
+Order	booking	nn	Sortering
+Completed reservations	booking	nn	Fullførte reservasjoner
+Edit completed reservation	booking	nn	Rediger fullført reservasjon
+Article Description	booking	nn	Artikkelbeskrivelse
+Customer Type	booking	nn	Kundetype
+Internal Customer	booking	nn	Intern kunde
+SMS total	booking	nn	SMS total
+Type	booking	nn	Type
+Participants	booking	nn	Deltakarar
+Format	booking	nn	Format
+Create report	booking	nn	Lag rapport
+No buildings selected	booking	nn	Du må velje minst eit bygg/anlegg
+Reports	booking	nn	Rapporter
+Unable to set classpath	booking	nn	Kunne ikkje sette "classpath"
+Unable to perform chdir	booking	nn	Kunne ikkje utføre "chdir"
+Corrupt template	booking	nn	Ugyldig mal
+Unable to fill report	booking	nn	Kunne ikkje fylle ut rapporten
+Corrupt report object	booking	nn	Ugyldig rapport-objekt
+Unable to export to PDF	booking	nn	Kunne ikkje eksportere til PDF
+Unable to export to CSV	booking	nn	Kunne ikkje eksportere til CSV
+Unable to export to XLS	booking	nn	Kunne ikkje eskportere til XLS
+Unable to parse configuration	booking	nn	Kunne ikkje parse konfigurasjonen
+Invalid output-type provided	booking	nn	Ugyldig output-type
+Unable to load the MySQL driver	booking	nn	Kunne ikkje laste inn MySQL-driver
+Unable to load the PostgreSQL driver	booking	nn	Kunne ikkje laste inn PostgreSQL-driver
+Unable to connect to database	booking	nn	Kunne ikkje koble seg mot database
+Missing report-name	booking	nn	Manglar raport-namn
+Invalid report-name	booking	nn	Feil rapport-namn
+Missing connection-string	booking	nn	Connection string mangler
+Missing DB-username	booking	nn	Databasenavn manglar
+Missing DB-password	booking	nn	Databasepassord manglar
+Missing configuration file	booking	nn	Manglar konfigurasjonsfil
+Participants Per Age Group Per Month	booking	nn	Deltakarar per aldersgruppe per måned
+Location Code	booking	nn	Lokasjonskode
+Edit Activity	booking	nn	Rediger aktivitet
+No parent	booking	nn	Ingen foreldreelement
+Sort order	booking	nn	Sortering
+Edit target audience	booking	nn	Rediger målgruppe
+Manager	booking	nn	Administrator
+Edit document	booking	nn	Rediger dokument
+Edit resource	booking	nn	Rediger ressurs
+Edit Group	booking	nn	Rediger gruppe
+Select Type	booking	nn	Velg type
+Customer number	booking	nn	Ressursnummer
+Send	booking	nn	Send
+Your application has now been registered and a confirmation email has been sent to you.	booking	nn	Søknaden er sendt inn, og ein kvittering er sendt til deg på e-post.
+A Case officer will review your application as soon as possible.	booking	nn	Ein saksbehandler vil behandle søknaden så fort som mogeleg.
+Please check your Spam Filter if you are missing mail.	booking	nn	Vi gjer merksam på at e-postsvar blir automatisk generert og derfor av og til vil ende i spamfilter/nettsøppel.
+customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	booking	nn	Fødselsdato/fødselsnummer er ikkje gyldig. Nummeret må bestå av 6 eller 11 siffer
+customer_organization_number is invalid	booking	nn	Organisasjonsnummer er ugyldig
+Organization_number	booking	nn	Organisasjonsnummer
+Select an organization first	booking	nn	Velg organisasjon først
+Add Resource	booking	nn	Ny ressurs
+%1 e-mails were sent successfully	booking	nn	%1 e-postar vart sendt
+%1 e-mails were not sent successfully	booking	nn	%1 e-postar kunne ikkje sendast (ugyldig adresse)
+activity_id	booking	nn	Aktivitet
+contact_email	booking	nn	E-post
+contact_name	booking	nn	Namn
+customer_identifier_type	booking	nn	Fakturainformasjon
+Or	booking	nn	eller
+group_id	booking	nn	Gruppe/Lag
+organization_id	booking	nn	Organisasjon
+season_id	booking	nn	Sesong
+from_	booking	nn	Fra
+to_	booking	nn	Til
+owner_id	booking	nn	Eigar
+object_id	booking	nn	Objekt
+building_id	booking	nn	Bygg/anlegg
+subject_id	booking	nn	Brukar
+export_configurations[external][account_code_set_id]	booking	nn	Velg eksterne kontokoder
+export_configurations[internal][account_code_set_id]	booking	nn	Velg interne kontokoder
+new target audience	booking	nn	Ny målgruppe
+Information about the event	booking	nn	Informasjon om aktiviteten/arrangementet
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	booking	nn	Gje ein kort beskrivelse av arrangementet /aktiviteten. For åpne arrangement, aktivitetar og trening i regi av organisasjonar og klubber, visest denne informasjonen på internett. For faste aktivitetar, oppgi intervall og tildato, f.eks. torsdager kl.19-20 fram til 23/6.
+To borrow premises you must verify that you have read terms and conditions	booking	nn	For å kunne låne lokaler må du bekrefte at du har lest dei juridiske betingelsane
+In order to send the invoice we need information about either customer organization number or norwegian social security number	booking	nn	For å kunne sende faktura treng vi opplysningar om organisasjonsnr. eller fødselsnr. Interne fra BK oppgir ressursnr. Organisasjonsnr. finn du her: www.brreg.no
+Event type	booking	nn	Arrangementstype
+Private event	booking	nn	Privat arrangement
+Public event	booking	nn	Offentleg arrangement
+customer_ssn contains an invalid Norwegian social security number (11 digits)	booking	nn	Fødselsnummer er ugyldig (11 siffer)
+show only unexported	booking	nn	Vis bare ikkje-eksporterte
+Free time	booking	nn	Ledig tid
+Weekdays	booking	nn	Ukedager
+Account Code Dimension	booking	nn	Konteringsdimensjoner
+Labels	booking	nn	Ledetekster
+account_code_dimension_helptext	booking	nn	Feltene under let deg redigere ledetekstene som dukker opp i oversikten over konteringsstrengen samt overskrift i CSV-eksporten. Tomme felter under fører til at tilhørende felter i CSV- og Agressoeksport ikkje kjem ut i filene.
+Access denied	booking	nn	Ingen tilgang
+Send to contact	booking	nn	Send melding til registrerte kontaktpersonar av arrangementet
+Send to contact for overlaping allocations/bookings	booking	nn	Send melding til registrerte kontaktpersonar der det er overlapping
+Message sent about the changes in the reservations	booking	nn	Melding sendt om endringar på reserverasjoner
+There are changes to your reservations	booking	nn	Din reserverasjon har vorte endra
+Multiple Events was created	booking	nn	Fleire arrangementer er oppretta
+Event created, Overlaps with existing allocation, Remember to send a notification	booking	nn	Arrangement oppretta. Overlapper ein eksisterande tildeling. Hugs å sende varsel
+Event created, Overlaps with existing booking, Remember to send a notification	booking	nn	Arrangement oppretta. Overlapper ein eksisterende booking. Hugs å sende varsel
+Print as PDF	booking	nn	Skriv ut som PDF
+Pending	booking	nn	UNDER HANDSAMING
+This booking is not connected to a season	booking	nn	Denne bookingen er ikkje kobla mot sesong
+Message from Bergen county - AktivBy	booking	nn	Melding fra AktivKommune
+Organization shortname	booking	nn	Kortnavnet (til organisasjon)
+Group shortname	booking	nn	Kortnavnet (til gruppa)
+contacts[0][email] contains an invalid email	booking	nn	Ugyldig epostadresse prøvd registrert  for ansvarlig gruppeleder 1
+contacts[1][email] contains an invalid email	booking	nn	Ugyldig epostadresse prøvd registrert  for ansvarlig gruppeleder 2
+Time is set wrong	booking	nn	Eit av klokkesletta er registrert feil
+title	booking	nn	Tittel
+Message	booking	nn	Melding
+New system message	booking	nn	Ny systemmelding
+New message	booking	nn	Ny melding
+System message	booking	nn	Systemmelding
+System messages	booking	nn	Systemmeldingar
+Edit System Message	booking	nn	Rediger systemmelding
+The user currently assigned as the responsible case officer for this application is	booking	nn	Brukeren som er saksbehandler for denne søknaden er
+Back	booking	nn	Attende
+Close	booking	nn	Lukk
+CLOSED	booking	nn	LUKKET
+Show all applications	booking	nn	Vis alle søknader
+Show all messages	booking	nn	Vis alle meldinger
+Show only messages assigned to me	booking	nn	Vis berre mine meldingar
+E-mail address	booking	nn	E-postadresse
+Confirm e-mail address	booking	nn	Bekreft e-postadressa
+The e-mail addresses you entered do not match	booking	nn	E-postadressene er ikkje like
+Lengt of shortname is to long, max 11 characters long	booking	nn	Kortnamn er for langt, maksimum 11 tegn
+Lengt of name is to long, max 50 characters long	booking	nn	Namn er for langt, maksimum 50 tegn
+The organization number is wrong or not present	booking	nn	Det er ikkje registrert fakturainformasjon på denne organisasjonen
+The resource number is wrong or not present	booking	nn	Det er ikkje registert et ressursnummer på denne organisasjonen
+Recurring allocation	booking	nn	Gjenta tildelingen
+weekday	booking	nn	Vekedag
+Out season	booking	nn	Ut denne sesongen
+Allocations colliding with existing allocations or bookings (%1)	booking	nn	Tildelinger ikkje kan opprettast
+Allocations that can be created	booking	nn	Tildelinger som kan opprettast
+There is set a cost, but no invoice data is filled inn	booking	nn	Det er sett en pris, men fakturainformasjon er ikkje gjeven
+Create new booking	booking	nn	Lag ny interntildeling
+Recurring booking	booking	nn	Gjenta interntildeling
+Repeat until	booking	nn	Gjenta til
+Bookings that can be created	booking	nn	Interntildelinger som kan opprettast
+Bookings and allocations	booking	nn	Kalender-vekeplan
+Send warning to building responsible	booking	nn	Send e-post til ansvarleg på bygget
+Optional e-mail adress	booking	nn	Valfri e-post adresse
+Message about new event	booking	nn	Melding om nytt arrangement
+Deactivate application	booking	nn	Deaktiver søknad (frontend)
+Deactivate calendar	booking	nn	Deaktiver kalender (frontend)
+Deactivate send message	booking	nn	Deaktiver funksjon for å sende melding(frontend)
+Can not repeat from a date in the past	booking	nn	Du kan ikkje repetere fra ein dato i fortida
+Can not create a booking in the past	booking	nn	Du kan ikkje opprette ein interntildeling i fortida
+Allocations  with existing allocations or bookings (%1)	booking	nn	Tildelingar med eksisterande tildelinger eller bookingar (%1)
+Contact information name is to long. max 50 characters	booking	nn	Namn i kontaktinformasjon er for langt. Maksimum 50 tegn
+Show in portal	booking	nn	Vis i portal
+NB! No data will be saved, if you navigate away you will loose all.	booking	nn	NB! Ingen data er lagra
+Activity	booking	nn	Aktivitetar
+Not selected	booking	nn	Ikkje valgt
+Delete until	booking	nn	Slett til
+Recurring allocation deletion	booking	nn	Slett i intervall
+Delete allocation	booking	nn	Slett tildeling
+Delete allocations	booking	nn	Slett tildelinger
+Delete booking	booking	nn	Slett interntildeling
+Delete bookings	booking	nn	Slett interntildelinger
+Allocations that will be deleted	booking	nn	Tildelingar som vert sletta
+Allocations  with existing bookings (%1)	booking	nn	Tildelingar med eksisterande interntildelingar (%1)
+Delete allocation also	booking	nn	Slett underliggande interntildelingar
+Bookings to be deleted	booking	nn	Booking for sletting
+Allocations that is going to be deleted	booking	nn	Tildelingar for sletting
+Allocations with still existing bookings (%1)	booking	nn	Tildelingar som ikkje vert sletta på grunn av eksisterande bookingar (%1)
+Messages	booking	nn	Meldingar
+cancelation	booking	nn	Avbestilling
+Cancelation of allocation from	booking	nn	Avbestilling av tildeling frå
+Cancelation of booking from	booking	nn	Avbestilling av interntildeling frå
+To cancel booking use this link	booking	nn	For å slette bookingen bruk lenka
+To cancel allocation use this link	booking	nn	For å slette tildelingen bruk lenka
+Show applications	booking	nn	Vis søknader
+Show messages	booking	nn	Vis meldingar
+Internal account	booking	nn	Internkontering
+Internal customer output format	booking	nn	Internkunde eksportformat
+Internal_account_helptext	booking	nn	Data som vert brukt for fakturaeksport av interne kunder
+searchfield	booking	nn	Fritekstsøk
+Backend	booking	nn	Backend
+Documentation	booking	nn	Dokumentasjon
+Upload manual	booking	nn	Last opp dokumentasjon
+Are you sure you want to delete?	booking	nn	Er du sikker på at søknad skal avvisast?
+Event id	booking	nn	Arrangement id
+Allocations deleted on	booking	nn	Tildelingar sletta på
+Allocation deleted on	booking	nn	Tildeling sletta på
+Booking and allocations deleted on	booking	nn	Interntildeling og tildeling er sletta på
+Booking deleted on	booking	nn	Interntildeling er sletta på
+Bookings and allocations deleted on	booking	nn	Interntildelingar og tildelingar er sletta på
+Bookings deleted on	booking	nn	Interntildelingar er slettet på
+Cancelation of booking and allocation from	booking	nn	Avbestilling av interntildeling og tildeling frå
+Cancelation of booking from	booking	nn	Avbestilling av interntildeling frå
+Cancelation of bookings and allocations from	booking	nn	Avbestilling av interntildelingar og tildelingar frå
+Cancelation of bookings from	booking	nn	Avbestilling av interntildelingar frå
+Booking system settings	booking	nn	Systeminnstillingar i Bookingmodul
+Frontend users can delete bookings and allocations	booking	nn	Brukere av frontend kan slette interntildelingar og tildelingar direkte
+Delete Information	booking	nn	Hvis du kun skal slette tildeling på valgt dato, velg Slett-knappen nederst og tiden blir vist som ledig i kalendaren, og kan tildelast andre klubbar/organisasjonar
+Delete information2	booking	nn	Skal du slette fleire, kan du velje Ut sesong eller Slett til og velg ein dato, du kan også velje intervall (f.eks. annan kvar veke).
+Booking Delete information	booking	nn	Dersom du skal slette booking på valgt dato, velg Slett-knappen nederst.
+Booking Delete information3	booking	nn	Dersom tiden skal bli vist som ledig i kalenderen, krysser du av for slett tildeling.
+Booking  Delete information2	booking	nn	Skal du slette fleire, kan du velje Ut sesong, eller Slett til og velg en dato, du kan også velje intervall (f.eks. annan kvar veke).
+There is a cost of %1 assosiated with the allocation you are useing	booking	nn	Det er en kostnad på kr %1 knytt til den tildelingen du bruker
+Export	booking	nn	Eksport
+Upload	booking	nn	Last opp
+Get all contact and invoice information from organization	booking	nn	Hent all kontakt/faktura informasjon fra Organisasjon
+Current internal billing sequence number	booking	nn	Gjeldande sekvensnummer for intern fakturering
+Current external billing sequence number	booking	nn	Gjeldande sekvensnummer for ekstern fakturering
+Billing sequence numbers	booking	nn	Sekvensnummer for fakturering
+Do not change these values unless you know what they are.	booking	nn	Ikkje endre desse verdiene med mindre du vei kva dei er.
+Organization is missing booking charge	booking	nn	Organisasjonen manglar bookingansvarlig
+Logfile	booking	nn	Loggfil
+log	booking	nn	Last ned
+Agegroups can not be larger than 9999 peoples	booking	nn	Det kan ikkje vere meir en 9999 personar i kvar målgruppe.
+Resourcenumber is wrong, 5 or 6 characters long	booking	nn	Ressursnummer er feil, skal vere 5 eller 6 tegn langt.
+office	booking	nn	Kontor
+office user	booking	nn	Saksbehandlar
+Mail Settings	booking	nn	E-post oppsett
+Application Settings	booking	nn	Søknads oppsett
+Booking application settings	booking	nn	Booking søknads oppsett.
+Booking email settings	booking	nn	Booking epost oppsett.
+System name	booking	nn	Systemnamn
+Subject	booking	nn	Tema
+Mail text for application created	booking	nn	E-post tekst for søknad opprettet.
+Mail text for application pending	booking	nn	E-post tekst for søknad under behandling.
+Mail text for application accepted	booking	nn	E-post tekst for søknad akseptert.
+Mail text for application rejected	booking	nn	E-post tekst for søknad avslegen.
+notify on accepted	booking	nn	Send kvittering til ansvarlig ved akseptert.
+Signature	booking	nn	Signatur
+Tilsynsvakt name	booking	nn	Namn på tilsynsvakt
+Tilsynsvakt email	booking	nn	E-post tilsynsvakt
+Tilsynsvakt telephone	booking	nn	Telefon tilsynsvakt
+Metadata	common	nn	Metadata
+Author	booking	nn	Forfattar
+Robots	booking	nn	Søkerobot parameter
+Frontpage text	booking	nn	Framsidetekst
+frontimage text	booking	nn	Tekst over framsidebilde
+Calendar text	booking	nn	Tekst bak kalenderknapp.
+Reference	booking	nn	Referanse
+Event Mail Settings	booking	nn	Arrangement E-post oppsett
+Booking event email settings	booking	nn	Arrangement epost oppsett
+Event Change Subject	booking	nn	E-post emne for endring
+Mail for event change	booking	nn	E-post tekst for endring
+Event Conflict Subject	booking	nn	E-post emne for overlapping
+Mail text to event contact when collision	booking	nn	E-post tekst til arrangement kontaktperson når konflikt
+Mail text to conflicting event contact when collision	booking	nn	E-post tekst til kontaktpersoner når konflikt
+Event message to building Subject	booking	nn	E-postemne for melding til tilsynsfører/bygg kontakt
+Mail text to building contact	booking	nn	E-posttekst til tilsynsfører/bygg kontakt
+Event Canceled Subject	booking	nn	E-post emne når arrangement avlysest
+Mail for event canceled	booking	nn	E-posttekst når arrangement avlysest
+Extra kalendar for public opening times	booking	nn	Aktiver ekstra kalender for publikumsbading
+Apply for time	booking	nn	Søk om tid
+Cancel booking/allocation email settings	booking	nn	Avbestill interntildeling/tildeling e-post oppsett
+Booking Canceled Subject	booking	nn	Interntildeling avbestilt e-postemne
+Mail for booking canceled	booking	nn	Interntildeling avbestilt e-posttekst
+Allocation Canceled Subject	booking	nn	Tildeling avbestilt e-postemne
+Mail for allocation canceled	booking	nn	Tildeling avbestilt e-posttekst
+Frontend users can delete bookings/events	booking	nn	Frontendbrukar kan slette tildelinger/arrangementer
+Events is deleted from database	booking	nn	Arrangementer sletta frå databasen
+Frontend users can delete allocations	booking	nn	Frontendbruker kan slette tildelinger
+Activate extra kalendar field on building	booking	nn	Aktiver ekstra kalenderfelt på bygg
+Ids that should be included in the calendar	booking	nn	Id som skal brukast i ekstra kalender
+Extra information for the event	booking	nn	Ekstrainformasjon på arrangement
+Event Edited Subject	booking	nn	E-Post emne når Arrangement vert redigert
+Mail for event edited	booking	nn	E-Post når når Arrangement vert redigert
+Email warnings	booking	nn	E-Postvarsel
+Cancelation Email Adresses	booking	nn	E-Postadresser som får varsel ved avbestilling(en adresse pr. linje)
+file configuration	common	nn	Filkonfigurasjon
+file attributes	common	nn	Filattributer
+file categories	common	nn	Filkategorier
+Outdoors	booking	nn	Utandørs
+Indoors	booking	nn	Innandørs
+Activities	booking	nn	Aktivitetar
+Application on this building is not possible.	booking	nn	Det er ikkje mogeleg å søkje om tid på dette bygget.
+Split mail if building contains swiming pools resources	booking	nn	Spesialbehandle bygg med svømmebasseng
+Split mail when building has swiming pool	booking	nn	Ikkje send e-post om symjing til andre idretter og omvendt.
+activities that uses swimming pools	booking	nn	Symjehallar
+other activities	booking	nn	Andre idrettar.
+activities that all should get except those in the next field.	booking	nn	Aktivitetar det alltid skal sendes e-post om.
+activities that never should get mail	booking	nn	Aktivitetar det aldri skal sendes e-post om kanselering til.
+Who get cancelation mails	booking	nn	Kven får kanselerings e-poster.
+Users of current season or users the last 300 days	booking	nn	Brukarar gjeldande sesong, eller brukarar de siste 300 dagar.
+Last 300 days	booking	nn	Siste 300 dagar
+Cancelation Email Addresses	booking	nn	Kven som skal få saksbehander e-post.
+One e-mail pr. line.	booking	nn	Berre ei e-postadresse pr. linje.
+Application email settings	booking	nn	Søknad epostinnstillinger
+Application comment email settings	booking	nn	Søknadskommentar epostinnstillinger
+Subject caseofficer	booking	nn	Emne Saksbehandlar
+Mail text for comment added	booking	nn	Ekstra eposttekst for kommentar
+organzations_ids_description	booking	nn	Her kan du legge inn en kommaseparert liste med organisasjons ID-ar, som vil få epost dersom nokon avbestiller denne ressursen.
+organzations_ids	booking	nn	Organisasjons ID-er
+cost history	booking	nn	Prishistorikk
+extra info	booking	nn	Tileggsinformasjon
+add group	booking	nn	Legg til gruppe
+agegroups	booking	nn	Aldersgruppee
+booking edit	booking	nn	Endre interntildeling
+booking new	booking	nn	Ny interntildeling
+building_name	booking	nn	Bygningsnavn
+custom field groups	booking	nn	Gruppe av tilpassede felt
+end date	booking	nn	Slutt dato
+entity %1 has been saved	booking	nn	Post %1 er lagret
+entity %1 has been updated	booking	nn	Post %1 er oppdatert
+minute	booking	nn	Minutt
+please enter a building	booking	nn	Velg ein bygning
+please enter a building name	booking	nn	Oppgje eit bygningsnavn
+please enter a contact name	booking	nn	Oppgje ein kontakt
+please enter a description	booking	nn	Oppgje ein beskrivelse
+please enter a organization	booking	nn	Oppgje ein organisasjon
+please enter a start date	booking	nn	Oppgje ein startdato
+please enter a valid end date	booking	nn	Oppgje ein gyldig sluttdato
+please enter a valid from date	booking	nn	Oppgje ein gyldig startdato
+please enter an end date	booking	nn	Oppgje ein sluttdato
+please enter an valid end date	booking	nn	Oppgje ein gyldig dato
+please select a customer type	booking	nn	Velg ein kundetype
+please select a group	booking	nn	Velg ei gruppe
+please select a season	booking	nn	Velg ein sesong
+please select an activity	booking	nn	Velg ein aktivitet
+select date	booking	nn	Velg dato
+start date	booking	nn	Startdato
+toggle show inactive	booking	nn	Veksle på å vise inaktive
+season edit	booking	nn	Endre sesong
+season show	booking	nn	Vis sesong
+application edit	booking	nn	Rediger søknad
+delegates	booking	nn	Delegater
+delegate	booking	nn	Delegert til
+new delegate	booking	nn	Ny delegert
+please enter a delegate	booking	nn	Angi namn på delegert til
+please enter an email	booking	nn	Angi en epost
+ssn is invalid	booking	nn	Fødselsnummeret er ikkje gyldig
+edit delegate	booking	nn	Endre delegert til
+duplicate ssn	booking	nn	Duplikat av f.nr for samme organisasjon
+building show	booking	nn	Vis bygning
+building edit	booking	nn	Endre bygning
+free	booking	nn	Ledig
+document new	booking	nn	Nytt dokument
+example	booking	nn	Eksempel
+booking settings	booking	nn	Bookinginnstillinger
+support email address	booking	nn	Brukerstøtte e-post adresse
+external host address	booking	nn	Ekstern verts adresse
+custom email sender	booking	nn	Tilpassa e-postsender
+logopath frontend	booking	nn	Sti til logo for frontend
+image maxheight	booking	nn	Makshøgde for bileter
+image maxwidth	booking	nn	Maksbreidde for bileter
+case_officer	booking	nn	Saksbehandlar
+allocation new	booking	nn	Ny tildeling
+event new	booking	nn	Nytt arrangement
+edit	booking	nn	Endre
+Delete	booking	nn	Slett
+season new	booking	nn	Ny sesong
+report participants	booking	nn	Deltaker rapport
+report freetime	booking	nn	Ledig tid rapport
+report new	booking	nn	Ny rapport
+participants per agegroupe	booking	nn	Deltaker per aldersguppe
+start time	booking	nn	Starttid
+end time	booking	nn	Slutttid
+variables	booking	nn	Variablar
+horizontal	booking	nn	Horisontal
+vertical	booking	nn	Vertikal
+permission add	booking	nn	Legg til tilgang
+activity new	booking	nn	Ny aktivitet
+account new	booking	nn	Ny konteringsstreng
+external account	booking	nn	Ekstern konto
+external customer output format	booking	nn	Ekstern kunde ut-format
+external file linebreak	booking	nn	Tegn for linjeskift
+export invoice	booking	nn	Fakturaeksport
+export method	booking	nn	Eksport metode
+export path	booking	nn	Eksport sti
+ftp host	booking	nn	Ftp vert
+ftp basedir	booking	nn	Ftp initiell katalog ved pålogging
+ftp user	booking	nn	Ftp bruker
+ftp password	booking	nn	Ftp passord
+last id	booking	nn	Siste ID
+do not edit!	booking	nn	Ikkje endre!
+approve	booking	nn	Godkjenn
+return to application	booking	nn	Tilbake til søknad
+application add	booking	nn	Ny søknad

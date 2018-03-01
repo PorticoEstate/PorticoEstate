@@ -1,0 +1,174 @@
+eventplanner	common	nn	Turneplanlegger
+Add	eventplanner	nn	Legg til
+Delete	eventplanner	nn	Slett
+Edit	eventplanner	nn	Rediger
+View	eventplanner	nn	Vis
+apply	eventplanner	nn	Mellomlagre
+list	eventplanner	nn	Liste
+general	eventplanner	nn	Generell
+dates	eventplanner	nn	Datoer
+event dates	eventplanner	nn	Arrangement-dato
+custom attributes	eventplanner	nn	Egendefinerte egenskaper
+no category	eventplanner	nn	Kategori ikke valgt
+time created	eventplanner	nn	Tidsstempel
+inline tables	eventplanner	nn	Tabeller
+table	eventplanner	nn	Tabell
+application	eventplanner	nn	Søknad
+old value	eventplanner	nn	Opprinnelig verdi
+new value	eventplanner	nn	Ny verdi
+all	eventplanner	nn	Alle
+registered	eventplanner	nn	Registrert
+pending	eventplanner	nn	Under behandling
+rejected	eventplanner	nn	Avvist
+approved	eventplanner	nn	Godkjent
+vendor	eventplanner	nn	Utøver
+vendor name	eventplanner	nn	Navn på utøver/utøvergruppe
+vendor description	eventplanner	nn	Beskrivelse av utøver
+new	eventplanner	nn	Ny
+show	eventplanner	nn	vis
+history	eventplanner	nn	Historikk
+date start	eventplanner	nn	Første arrangementsdato
+date end	eventplanner	nn	Siste arrangementsdato
+contact name	eventplanner	nn	Navn kontaktperson
+contact email	eventplanner	nn	Epost kontaktperson
+contact phone	eventplanner	nn	Tlf. kontaktperson
+contact email 2	eventplanner	nn	Epost 2
+case officer	eventplanner	nn	Saksbehandler
+active	eventplanner	nn	Aktiv
+inactive	eventplanner	nn	Inaktiv
+select	eventplanner	nn	Velg
+remark	eventplanner	nn	Merknad
+comment	eventplanner	nn	Kommentar
+demands	eventplanner	nn	Forutsetning
+payment	eventplanner	nn	Betaling
+labour support	eventplanner	nn	Opprigging/nedrigging
+rig up min before	eventplanner	nn	Antatt oppriggingstid
+rig down min after	eventplanner	nn	Antatt nedriggingstid
+technical support	eventplanner	nn	Teknisk støtte
+charge per unit	eventplanner	nn	Betaling pr arrangement
+event timespan	eventplanner	nn	Programvarighet (minutter)
+number of units	eventplanner	nn	Antall arrangement
+integer	eventplanner	nn	Heltall
+total amount	eventplanner	nn	Søknadssum
+number of granted events	eventplanner	nn	Antall innvilgede arrangementer
+created	eventplanner	nn	Registrert
+modified	eventplanner	nn	Endret
+id	eventplanner	nn	Id
+messages_saved_form	eventplanner	nn	Skjemaet er lagret
+field %1 is required	eventplanner	nn	Feltet %1 er påkrevd
+please select a category !	eventplanner	nn	Velg en kategori
+title	eventplanner	nn	Programtittel
+description	eventplanner	nn	Beskrivelse
+application description	eventplanner	nn	Omtale av program
+might be published	eventplanner	nn	Kan bli publisert på internett
+other participants	eventplanner	nn	Navn på utøvere
+arena requirement	eventplanner	nn	Krav til lokale
+stage	eventplanner	nn	Scene
+size of stage	eventplanner	nn	Scenestørrelse
+stage requirement	eventplanner	nn	Krav til scene
+width	eventplanner	nn	Bredde
+depth	eventplanner	nn	Dybde
+wardrobe	eventplanner	nn	Kryss av for behov for utøvergarderobe
+audience limit	eventplanner	nn	Maksimum antall publikum
+raider	eventplanner	nn	Andre ønsker
+vendor report	eventplanner	nn	Tilbakemelding fra utøver
+calendar	eventplanner	nn	Kalender
+from	eventplanner	nn	Fra
+event start	eventplanner	nn	Ønsket arrangement dato/tid
+select event start	eventplanner	nn	Klikk på og velg ønsket måned, dato og klokkeslett
+select all	eventplanner	nn	Velg alle
+enable	eventplanner	nn	Aktiver
+disable	eventplanner	nn	Deaktiver
+reports	eventplanner	nn	Tilbakemeldinger
+location	eventplanner	nn	Lokalisering
+who	eventplanner	nn	Hvem
+note	eventplanner	nn	Merknad
+customer	eventplanner	nn	Mottakersted
+customer report	eventplanner	nn	Tilbakemelding fra mottakersted
+organization number	eventplanner	nn	Organisasjonsnummer
+program type	eventplanner	nn	Programtype
+program title	eventplanner	nn	Programtittel
+program description	eventplanner	nn	Programbeskrivelse
+zip code	eventplanner	nn	Postnummer
+city	eventplanner	nn	Sted
+address	eventplanner	nn	Adresse
+account number	eventplanner	nn	Kontonummer
+history	eventplanner	nn	Endringslogg
+user	eventplanner	nn	Bruker
+proceedings	eventplanner	nn	Saksbehandling
+maximum of granted events are reached	eventplanner	nn	Maksimalt antall arrangement er nådd
+did not validate	eventplanner	nn	Feil med datasettet
+date is outside the scope	eventplanner	nn	Dato ligger utenfor tillat tidsrom
+can not delete booking with customer	eventplanner	nn	Kan ikke slette booking som er koplet med mottakersted
+report	eventplanner	nn	Tilbakemelding
+events	eventplanner	nn	Arrangementer
+event	eventplanner	nn	Arrangement
+please enter a valid organization number	eventplanner	nn	Angi et gyldig organisasjonsnummer
+please enter a valid account number	eventplanner	nn	Angi et gyldig kontonummer
+program data	eventplanner	nn	Om programmet
+booking	eventplanner	nn	Booking
+customer contact email	eventplanner	nn	Epost
+showall	eventplanner	nn	Vis alle
+read	eventplanner	nn	Les
+permission	eventplanner	nn	Rettighet
+maximum number of events	eventplanner	nn	Maksimum antall arrangement
+maximum of granted events per year (%1) are reached	eventplanner	nn	Maksimum antall arrangementer (%1) pr år er nådd
+number of users	eventplanner	nn	Ca. antall brukere
+disconnect	eventplanner	nn	Kople fra
+end date cannot be before start date	eventplanner	nn	Siste dato kan ikke være før første dato
+Time is already booked	eventplanner	nn	Tiden er allerede booking
+booking interval	eventplanner	nn	Booking intervall
+days	eventplanner	nn	dager
+hours	eventplanner	nn	Timer
+there is a minimum interval of %1 hours	eventplanner	nn	Det er et minimumsintervall på %1 time(r)
+summary	eventplanner	nn	kortversjon programbeskrivelse
+organization number already exists for %1	eventplanner	nn	Organisasjonsnummeret er allerede registrert på %1.
+you need to log in to access this page.	eventplanner	nn	Du må logge deg på for å få tilgang til denne siden.
+do you represent the owner of this entry?	eventplanner	nn	Representerer du eieren av denne posten?
+contact info	eventplanner	nn	Kontaktinformasjon
+vendor note	eventplanner	nn	Generelt for utøver
+customer note	eventplanner	nn	Generelt for Mottakersted
+when	eventplanner	nn	Når
+where	eventplanner	nn	Hvor
+vendor receipt text	eventplanner	nn	utøvernotat ved kvittering
+customer receipt text	eventplanner	nn	Mottakerstednotat ved kvittering
+receipt subject	eventplanner	nn	Kvitteringsoverskrift
+datetime event	eventplanner	nn	Dato/tid for arrangement
+add type	eventplanner	nn	Legg til type
+application category	eventplanner	nn	Søknadskategori
+application type	eventplanner	nn	Søknadstype
+back to the ticket list	eventplanner	nn	Tilbake til oversikten
+completed	eventplanner	nn	fullført
+custom field groups	eventplanner	nn	Gruppe av tilpassede felt
+customer category	eventplanner	nn	Tilpasset kategory
+minute	eventplanner	nn	Minutter
+select date	eventplanner	nn	Velg dato
+type	eventplanner	nn	Type
+vendor category	eventplanner	nn	Leverandør kategori
+add type	eventplannerfrontend	nn	Legg til type
+all	eventplannerfrontend	nn	Alle
+back to the ticket list	eventplannerfrontend	nn	Tilbake til oversikten
+completed	eventplannerfrontend	nn	fullført
+type	eventplannerfrontend	nn	Type
+receipt blind copy	eventplannerfrontend	nn	Blindkopi av kvittering til
+canceled subject	eventplannerfrontend	nn	Overskrift ved kansellering
+vendor canceled text	eventplannerfrontend	nn	Tekst til utøver ved kansellering
+customer canceled text	eventplannerfrontend	nn	Tekst til mottakersted ved kansellering
+default application category	eventplannerfrontend	nn	Standard søknadskategori
+want offer for non public	eventplanner	nn	 Ønsker å motta nærtilbud
+application public type	eventplanner	nn	 Nær/Bredde-tilbud
+application public type non public	eventplanner	nn	Nærtilbud (et arrangement der kun noen få brukere/beboere på en institusjon kan delta, f.eks. et skrivekurs, malekurs)
+application public type public	eventplanner	nn	 Breddetilbud (et arrangement der alle brukere/beboere på en institusjon kan delta)
+my applications	eventplanner	nn	Mine søknader
+new application	eventplanner	nn	Ny søknad
+new vendor	eventplanner	nn	Ny utøver
+default vendor category	eventplanner	nn	Default utøverkategori
+default application category	eventplanner	nn	Default søknadskategori
+vendor name	eventplanner	nn	Artistnavn/utøver/gruppe
+sum	eventplanner	nn	Sum
+active application year	eventplanner	nn	Aktivt søknadsår
+my bookings	eventplanner	nn	Mine bookinger
+My customer report	eventplanner	nn	Mine tilbakemeldinger
+send	eventplanner	nn	Send inn
+publishing	eventplanner	nn	Publisering
+user agreement	eventplanner	nn	Betingelser

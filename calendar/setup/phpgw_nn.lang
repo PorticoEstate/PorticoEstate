@@ -1,0 +1,53 @@
+(for weekly)	calendar	nn	(for Ukentlig)
+1 match found	calendar	nn	1 match funnet
+are you sure\nyou want to\ndelete this entry ?	calendar	nn	Er du sikker på at\ndu vil\nslette denne?
+are you sure\nyou want to\ndelete this entry ?\n\nthis will delete\nthis entry for all users.	calendar	nn	Er du sikker på at\ndu vil\nslette denne entry ?\n\nDette vil slette\ndenne entry for alle brukere.
+brief description	calendar	nn	Kort beskrivelse
+calendar	common	nn	kalender
+calendar - add	calendar	nn	Kalender - Tilføy
+calendar - edit	calendar	nn	Kalender - Edit
+daily	calendar	nn	Daglig
+days repeated	calendar	nn	dager gjentatt
+description	calendar	nn	Beskrivelse
+duration	calendar	nn	Varighet
+frequency	calendar	nn	Hvor ofte
+fri	calendar	nn	Fre
+full description	calendar	nn	Full beskrivelse
+generate printer-friendly version	calendar	nn	Generer printer-vennlig versjon
+go!	calendar	nn	Go!
+minutes	calendar	nn	minutter
+mon	calendar	nn	Man
+month	calendar	nn	Måned
+monthly (by date)	calendar	nn	Månedlig (etter dato)
+monthly (by day)	calendar	nn	Månedlig (etter dag)
+new entry	calendar	nn	Ny Entry
+no matches found.	calendar	nn	Ingen match funnet.
+participants	calendar	nn	Deltakere
+printer friendly	calendar	nn	Printer Vennlig
+repeat day	calendar	nn	Gjenta dag
+repeat end date	calendar	nn	Gjennta sluttdato
+repeat type	calendar	nn	Gjenta type
+repetition	calendar	nn	Gjenntakelse
+sat	calendar	nn	Lør
+search results	calendar	nn	Søk resultater
+sun	calendar	nn	Søn
+the following conflicts with the suggested time:<ul>%1</ul>	calendar	nn	De følgende konflikter ved den foreslåtte tidene:<ul>%1</ul>
+this month	calendar	nn	Denne måneden
+this week	calendar	nn	Denne uken
+thu	calendar	nn	Tor
+today	calendar	nn	I dag
+tue	calendar	nn	Tir
+use end date	calendar	nn	Bruk sluttdato
+view this entry	calendar	nn	Vis denne entry
+wed	calendar	nn	Ons
+week	calendar	nn	Uke
+weekly	calendar	nn	Ukentlig
+%1 matches found	calendar	nn	%1 match funnet
+year	calendar	nn	År
+yearly	calendar	nn	Årlig
+you have 1 high priority event on your calendar today.	common	nn	Du har 1 høy prioritets event i din kalender i dag.
+you have %1 high priority events on your calendar today.	common	nn	Du har %1 høy prioritets event i din kalender i dag.
+you have not entered a\nbrief description	calendar	nn	Du har ikke skrevet inn en\nkort beskrivelse
+you have not entered a\nvalid time of day.	calendar	nn	Du har ikke skrevet inn en\ngyldig tid.
+you must enter one or more search keywords	calendar	nn	Du må skrive inn ett eller flere søkeord
+your suggested time of <b> %1 - %2 </b> conflicts with the following existing calendar entries:	calendar	nn	Din foreslåtte tid av <B> %1 - %2 </B> er i konflikt med de følgende kalender entries:

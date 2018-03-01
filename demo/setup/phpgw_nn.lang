@@ -1,0 +1,15 @@
+demo app	demo	nn	Demonstrasjonsmodul
+demo	common	nn	Demo Modul
+Add	demo	nn	Legg til
+Delete	demo	nn	Slett
+Edit	demo	nn	Rediger
+View	demo	nn	Vis
+apply	demo	nn	Mellomlagre
+list	demo	nn	Liste
+general	demo	nn	Generell
+dates	demo	nn	Datoer
+custom attributes	demo	nn	Egendefinerte egenskaper
+no category	demo	nn	Kategori ikke valgt
+time created	demo	nn	Tidsstempel
+inline tables	demo	nn	Tabeller
+table	demo	nn	Tabell

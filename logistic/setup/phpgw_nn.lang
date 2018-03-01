@@ -1,0 +1,119 @@
+logistic	common	nn	Logistikk
+Logistic	common	nn	Logistikk
+project	logistic	nn	Prosjekt
+activity	logistic	nn	Aktivitet
+allocation	logistic	nn	Beholdning
+requirement	logistic	nn	Behov
+Resource requirement	logistic	nn	Ressursbehov
+Project name	logistic	nn	Navn
+Project type	logistic	nn	Type
+Project description	logistic	nn	Beskrivelse
+ID	logistic	nn	Id
+t_new_project	logistic	nn	Nytt prosjekt
+t_new_project_type	logistic	nn	Ny prosjekttype
+t_new_activity	logistic	nn	Opprett ny aktivitet på dette prosjektet
+t_new_requirement	logistic	nn	Registrer nytt behov på denne aktiviteten
+t_view_requirements	logistic	nn	Vis registrerte behov på denne aktiviteten
+t_new_allocation	logistic	nn	Tildel ressurser til denne aktiviteten
+t_view_allocations	logistic	nn	Vis tildelte ressurser til denne aktiviteten
+t_new_type_requirement	logistic	nn	Ny behovstype
+Project_type	logistic	nn	Prosjekttype
+settings	logistic	nn	innstillinger
+Project types	logistic	nn	Prosjekttyper
+Project type name	logistic	nn	Navn
+Project title	logistic	nn	Prosjektnavn
+Description	logistic	nn	Beskrivelse
+all_types	logistic	nn	Alle
+Activity name	logistic	nn	Aktivitetsnavn
+Start date	logistic	nn	Startdato
+End date	logistic	nn	Sluttdato
+Responsible user	logistic	nn	Ansvarlig
+my_activities	logistic	nn	Mine aktiviteter
+Project type name updated		logistic	nn	Prosjekttypenavn oppdatert
+Add activity	logistic	nn	Legg til aktivitet
+Add sub activity	logistic	nn	Legg til underaktivitet
+Entity	logistic	nn	Entitet
+Category	logistic	nn	Kategori
+Attributes	logistic	nn	Egenskaper
+Chosen attributes	logistic	nn	Valgte egenskaper
+Administrate requirements	logistic	nn	Administrer behovstype
+resource_type_requirement	logistic	nn	Ressurstypebehov
+Varchar	logistic	nn	Text
+Contact	logistic	nn	Kontakt
+Entity types	logistic	nn	Entitetstyper
+select value	logistic	nn	Velg
+Listbox	logistic	nn	Nedtrekksliste
+Custom listboks	logistic	nn	Egendefinert nedtrekksliste
+Memo	logistic	nn	Tekstfelt
+Integer	logistic	nn	Tall
+Muliple radio	logistic	nn	Flervalgs radioknapp
+Muliple checkbox	logistic	nn	Flervalgs avkrysningsboks
+event	logistic	nn	Hendelse
+Link	logistic	nn	Lenke
+Add requirement to activity	logistic	nn	Registrer behov for aktiviteten
+Add requirement	logistic	nn	Legg til behov
+Requirement details	logistic	nn	Detaljer for behov
+Add constraints	logistic	nn	Legg til kriterier på behovet
+No of items	logistic	nn	Antall
+Num required	logistic	nn	Trenger antall 
+Resource type	logistic	nn	Ressurstype
+t_new_booking_allocation	logistic	nn	Tildel dette behovet ressurser
+t_view_booking_allocations	logistic	nn	Vis tildelte ressurser på dette behovet
+error_msg_1	logistic	nn	Vennligst fyll inn dette feltet
+error_msg_2	logistic	nn	Vennligst velg en verdi i listen
+error_msg_3	logistic	nn	Vennligst angi sluttdato etter startdato
+Criterias	logistic	nn	Kriterier
+Add criterias	logistic	nn	Legg til kriterier på behovet
+favorites	logistic	nn	Favoritter
+toggle as favorite	logistic	nn	Legg til / fjern som favoritt
+Add allocation to requirement	logistic	nn	Tildel dette behovet ressurser
+Delete requirement	logistic	nn	Slett behov
+Allocate resources	logistic	nn	Tildel ressurser
+Num allocated	logistic	nn	Antall tildelte ressurser
+Status	logistic	nn	Status
+Requirement allocation	logistic	nn	Tildeling av ressurser
+Activity details	logistic	nn	Detaljer for aktivitet
+Status requirement	logistic	nn	Status behov
+select	logistic	nn	Velg
+Add project	logistic	nn	Nytt prosjekt
+Booking of resources	logistic	nn	Tildeling av ressurser
+Requirement to activity	logistic	nn	Behov for aktiviteten
+edit	logistic	nn	Rediger
+Overview projects	logistic	nn	Oversikt over prosjekter
+Overview for activity	logistic	nn	Oversikt for aktiviteten
+Add project	logistic	nn	Legg til prosjekt 
+Edit project	logistic	nn	Endre prosjekt
+Overview project types	logistic	nn	Oversikt over prosjekttyper
+Overview activities	logistic	nn	Oversikt over aktiviteter
+Overview for activity	logistic	nn	Oversikt for aktiviten
+Edit activity	logistic	nn	Endre aktivitet
+Add activity	logistic	nn	Legg til aktivitet
+Overview of resources for activity	logistic	nn	Oversikt over ressurser for aktivteten
+Allocated resouces	logistic	nn	Tildelte ressurser
+Click on table above to get allocations	logistic	nn	Klikk på en rad i tabellen over for å få frem visning
+Add activity to project	logistic	nn	Legg aktivitet til prosjektet
+View resources overview	logistic	nn	Vis ressursoversikt
+Edit requirement	logistic	nn	Endre behov
+Choose another project for the activity	logistic	nn	Velg et annet prosjekt for aktiviteten
+Choose another project	logistic	nn	Velg et annet prosjekt
+Choose the project in which the activity is part of	logistic	nn	Velg prosjektet som aktiviteten er en del av
+Choose project	logistic	nn	Velg prosjekt
+Choose another main activity for this sub activity	logistic	nn	Velg en annen hovedaktivitet for denne underaktiviteten
+Give name to this activity	logistic	nn	Gi name til denne aktiviteten
+Give start date to activity	logistic	nn	Angi startdato for aktiviteten
+Give end date to activity	logistic	nn	Angi sluttdato for aktiviteten
+Give description to activity	logistic	nn	Gi beskrivelse for aktiviteten
+Give start date to project	logistic	nn	Angi startdato for prosjektet
+Give end date to project	logistic	nn	Angi sluttdato for prosjektet
+Give description to the project	logistic	nn	Gi en beskrivelse av prosjektet
+Give project type	logistic	nn	Angi prosjekttype
+Give project name	logistic	nn	Angi prosjektnavn
+Show project overview	logistic	nn	Vis prosjektoversikt
+Start date	logistic	nn	Startdato
+End date	logistic	nn	Sluttdato
+Responsible person	logistic	nn	Ansvarlig bruker
+Responsible person for activity	logistic	nn	Angi hvilken person som skal være ansvarlig for aktiviteten
+allocated date	logistic	nn	Allokert når
+allocated where	logistic	nn	Allokert hvor
+assign ticket	logistic	nn	Bestill oppdrag
+assign	logistic	nn	Bestill

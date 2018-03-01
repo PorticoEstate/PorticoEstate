@@ -1,0 +1,2381 @@
+new coordinator	property	nn	Ny koordinator
+transfer budget	property	nn	Overfør budsjett
+economy	property	nn	Økonomi
+%1 buildings has been updated to not active of %2 already not active	property	nn	%1 Bygninger er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
+%1 entrances has been updated to not active of %2 already not active	property	nn	%1 Innganger er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
+%1 entries is added!	property	nn	%1 poster er lagt til
+%1 entries is updated!	property	nn	%1 poster er oppdatert
+%1 group	property	nn	%1 gruppe
+%1 is notified	property	nn	Melding sendt til %1
+%1 properties has been updated to not active of %2 already not active	property	nn	%1 Eiendommer er oppdatert til IKKE AKTIVE av %2 som var IKKE AKTIVE fra før
+expenses	property	nn	Utgifter
+income	property	nn	Inntekter
+about	common	nn	Om
+amount in	property	nn	Inn
+from project	property	nn	Fra prosjekt
+amount out	property	nn	Ut
+to project	property	nn	Til prosjekt
+access error	property	nn	Manglende tilgang
+accounting	property	nn	Regnskap
+accounting categories	property	nn	Kategorier regnskap
+accounting dim b	property	nn	Ansvarssted
+accounting dim d	property	nn	Regnskap dim 6
+accounting tax	property	nn	Regnskap mva-kode
+accounting voucher category	property	nn	Regnskap kategorier faktura
+accounting voucher type	property	nn	Regnskap type faktura
+accumulated	property	nn	Akkumulert
+acl_location is missing	property	nn	ACL-lokalisering mangler
+acquisition date	property	nn	Anskaffelsesdato
+action	property	nn	Handling
+activate tracking of dates in helpdesk main list	property	nn	Aktiver visning av datoer for denne entiteten i hovedliste for helpdesk
+active	property	nn	Aktiv
+activities	property	nn	Aktiviteter
+activity	property	nn	Aktivitet
+activity code	property	nn	Aktivitetskode
+activity has been edited	property	nn	Aktivitet er rettet
+activity has been saved	property	nn	Aktivitet er lagret
+activity id	property	nn	Aktivitet-id
+activity num	property	nn	Aktivitet num
+actor	property	nn	Aktør
+actual cost	property	nn	Betalt
+actual_cost	property	nn	Betalt
+actual cost changed	property	nn	Betalt sum er endret
+actual cost has been updated	property	nn	Betalt sum er oppdatert
+actual cost - paid so far	property	nn	Betalt sum - pr dd
+add a apartment	property	nn	Legg til leilighet
+add a attrib	property	nn	Legg til en attibutt
+add a budget account	property	nn	Legg til en kostnadsart
+add a budget query	property	nn	Legg til en budsjettspørring
+add a building	property	nn	Legg til bygning
+add a category	property	nn	Legg til en kategori
+add a claim	property	nn	Legg til et krav
+add activity	property	nn	Legg til aktivitet
+add a custom_function	property	nn	Legg til en egendefinert funksjon
+add a custom query	property	nn	Legg til en egendefinert spørring
+add a deviation	property	nn	Legg til et avvik
+add a document	property	nn	Legg til dokument
+add a entity	property	nn	Legg til en entitet
+add a entrance	property	nn	Legg til inngang
+add a equipment	property	nn	Legg til utstyr
+add a gab	property	nn	Legg til grunneiendom
+add agreement	property	nn	Legg til avtale
+add agreement group	property	nn	Legg til en avtalegruppe
+add a hour	property	nn	Legg til post
+add a hour to this template	property	nn	lett til en post til denne malen
+add a investment	property	nn	Legg til investering
+add alarm	property	nn	Legg til alarm
+add alarm for selected user	property	nn	Legg til alarm for valgt bruker
+add a location	property	nn	Legg til en lokalisering
+add a meter	property	nn	Legg til måler
+add a method	property	nn	Legg til en metode
+add an activity	property	nn	Legg til aktivitet
+add an actor	property	nn	Legg til en aktør
+add an agreement	property	nn	Legg til en avtale
+add an alarm	property	nn	Legg til en alarm
+add an entity	property	nn	Legg til en entitet
+add an investment	property	nn	Legg til en investering
+add an invoice	property	nn	Legg til en faktura
+add an item to the details	property	nn	Legg til en post til detaljer
+add another	property	nn	Legg til flere
+add apartment	property	nn	Legg til leilighet
+add a part of town	property	nn	Legg til en bydel
+add a project	property	nn	leg til prosjekt
+add a property	property	nn	Legg til eiendom
+add a rental agreement	property	nn	Legg til en utleieavtale
+add a request	property	nn	Legg til behov
+add a service agreement	property	nn	Legg til en service avtale
+add a standard	property	nn	Legg til standard
+add a template	property	nn	Legg til mal
+add a ticket	property	nn	Legg til melding
+add attribute	property	nn	Legg til attribute
+add a workorder	property	nn	Legg til bestilling
+add a workorder to this project	property	nn	Legg til en bestilling til dette prosjektet
+add budget account	property	nn	Legg til kostnadsart
+add building	property	nn	Legg til bygning
+add category	property	nn	Legg til kategori
+add common	property	nn	Legg til felles
+add custom	property	nn	Legg til tilpasset
+add custom function	property	nn	Legg til egendefinert funksjon
+add detail	property	nn	Legg til detalj
+add deviation	property	nn	Legg til avvik
+add document	property	nn	Legg til dokument
+added	property	nn	Lagt til
+add entity	property	nn	Legg til entitet
+add entrance	property	nn	Legg til inngang
+add equipment	property	nn	Legg til utstyr
+add first value for this prizing	property	nn	Legg til første verdi for denne prisingen
+add from prizebook	property	nn	Legg til fra prisbok
+add from template	property	nn	Legg til fra mal
+add gab	property	nn	Legg til grunneiendom
+add hour	property	nn	Legg til post
+add investment	property	nn	Legg til investering
+add invoice	property	nn	Legg til faktura
+add items from a predefined template	property	nn	Legg til poster fra mal
+add items from this vendors prizebook	property	nn	Legg til poster fra leverandørs prisbok
+additional notes	property	nn	Tilleggs kommentarer
+add meter	property	nn	Legg til måler
+add method	property	nn	Legg til metode
+add new comments	property	nn	Legg til ny kommentar
+add new ticket	property	nn	Legg til ny melding
+add project	property	nn	Legg til prosjekt
+add property	property	nn	Legg til prosjekt
+add request	property	nn	Legg til behov
+add request for this project	property	nn	Legg til behov til dette prosjektet
+add to project as order	property	nn	Legg bestilling til prosjekt
+add to project as relation	property	nn	Kople til prosjekt
+addressmasters	common	nn	Addressemaster
+address	property	nn	Adresse
+address not defined	property	nn	Adresse er ikke definert
+adds a new project - then a new workorder	property	nn	Legger til nytt prosjekt - så bestilling
+adds a new workorder to an existing project	property	nn	Legger til ny bestilling til eksisterende prosjekt
+add selected request to project	property	nn	Legg valgte tiltak til prosjektet
+add service	property	nn	Legg til service
+add single custom line	property	nn	Legg til en enkel tilpasset post
+add space	property	nn	Legg til areal
+add standard	property	nn	Legg til standard
+add status	property	nn	Legg til status
+adds this workorders calculation as a template for later use	property	nn	Legger kalkulasjonen for denne bestillingen som en mal for senere bruk
+add template	property	nn	Legg til mal
+add the selected items	property	nn	Legg til valgte element
+add this invoice	property	nn	Legg til denne fakturaen
+add this vendor to this activity	property	nn	Legg til denne leverandøren til denne aktiviteten
+add ticket	property	nn	Legg til melding
+add to project	property	nn	Legg til eksisterende prosjekt
+add workorder	property	nn	Legg til bestilling
+admin async services	property	nn	Administrer planlagte oppgaver
+admin custom functions	property	nn	Administrer tilpassede funksjoner
+admin entity	property	nn	Administrer entitet
+admin location	property	nn	Administrer lokalisering
+aesthetics	property	nn	Estetikk
+again	property	nn	igjen
+agreement	property	nn	Avtale
+agreement attributes	property	nn	Avtale egenskaper
+agreement code	property	nn	Avtale kode
+agreement group	property	nn	Avtale gruppe
+agreement group code	property	nn	Avtale gruppe kode
+agreement group has been edited	property	nn	Avtale gruppe er rettet
+agreement group has been saved	property	nn	Avtale gruppe er lagret
+agreement group id	property	nn	Avtale gruppe-id
+agreement has been edited	property	nn	avtale er rettet
+agreement has been saved	property	nn	avtale er lagret
+agreement id	property	nn	Avtale-id
+agreement_id	property	nn	Avtale-id
+agreement status	property	nn	Avtale status
+alarm	property	nn	Alarm
+alarm id	property	nn	Alarm-id
+all	property	nn	Alle
+all users	property	nn	Alle brukere
+altered	property	nn	Endret
+altered by	property	nn	Endret av
+altering columnname or datatype  - deletes your data in this column	property	nn	Endring av kolonnenavn eller datatype vil slette data i denne kolonnen
+alternative - link instead of uploading a file	property	nn	Alternativt - link istedet for opplasting av fil
+amount	property	nn	Sum
+amount not entered!	property	nn	Sum ikke angitt
+amount of the invoice	property	nn	Sum for fakturaen
+an unique code for this activity	property	nn	En unik kode for denne aktiviteten
+apartment	property	nn	Leilighet
+apartment has been edited	property	nn	Leilighet er rettet
+apartment has been saved	property	nn	leilighet er lagret
+apartment id	property	nn	leilighet-id
+applications	property	nn	Applikasjoner
+apply the values	property	nn	Bruke verdier
+apply	property	nn	Mellomlagre
+save and stay in form	property	nn	Lagre og bli stående i skjemaet
+approval	property	nn	Godkjenning
+approvals	property	nn	Godkjenninger
+approvals request	property	nn	Anmodninger om godkjenning
+approval from	property	nn	Godkjenning fra
+approval from is updated	property	nn	Godkjenning fra er oppdatert
+approve	property	nn	Godkjenn
+approve as	property	nn	Godkjenn som
+approved	property	nn	Godkjent
+approved amount	property	nn	Godkjent beløp
+archive	property	nn	Arkiv
+art	property	nn	Art
+ask for approval	property	nn	Be om godkjenning
+assigned from	property	nn	Tildelt fra
+assignedto	property	nn	Tildelt til
+assigned to	property	nn	Tildelt til
+reported by	property	nn	Innmeldt av
+assign to	property	nn	Til
+async	property	nn	async
+asynchronous timed services	property	nn	Planlagte oppgaver
+async method	property	nn	async metode
+async method has been saved	property	nn	async metode er lagret
+async services	property	nn	Planlagte oppgaver
+at the disposal	property	nn	Til disposisjon
+attach file	property	nn	Legg til som vedlegg
+attachments	property	nn	Vedlegg
+attribute	property	nn	Verdier
+list entity attribute group	property	nn	List egenskapgrupper
+attribute group	property	nn	Egenskap grupper
+attribute has been edited	property	nn	Egenskap er rettet
+attribute has been saved	property	nn	Egenskap er lagret
+attribute has not been deleted	property	nn	Egenskap er IKKE slettet
+attribute has not been edited	property	nn	Egenskap er IKKE endret
+attribute has not been saved	property	nn	Egenskap er IKKE lagret
+attribute id	property	nn	Egenskap-id
+attributes	property	nn	Egenskaper
+attributes for the attrib	property	nn	Verdier for egenskaper
+attributes for the entity category	property	nn	Egenskaper for entitet-kategori
+attributes for the location type	property	nn	Egenskaper for lokaliserings type
+attributes for the standard	property	nn	verdier for standard
+a unique code for this activity	property	nn	En unik kode fo denne aktiviteten
+authorities demands	property	nn	Myndighetskrav
+auto tax	property	nn	Auto MVA
+b_account	property	nn	Kostnadsart
+back to admin	property	nn	Tilbake til admin
+back to calculation	property	nn	Tilbake til kalkulasjon
+back to entity	property	nn	Returner til entitet
+back to investment list	property	nn	Tilbake til liste over investeringer
+back to list	property	nn	Tilbake til liste
+back to the list	property	nn	Tilbake til liste
+back to the ticket list	property	nn	Tilbake til meldingsliste uten å lagre
+back to the workorder list	property	nn	Tilbake til bestillingsliste
+base	property	nn	Grunnlag
+base description	property	nn	Beskrivelse av grunnlag
+basis	property	nn	Basis
+besiktigelse	property	nn	Besiktigelse
+bilagsnr	property	nn	Bilagsnr
+billable hours	property	nn	Egne timer
+billable hours changed	property	nn	Egne timer endret
+billable rate changed	property	nn	Fakturerbar sats endret
+billable hours has been updated	property	nn	Egne timer er oppdatert
+bill per unit	property	nn	Pris pr enhet, ex mva
+buffer	property	nn	Buffer
+bulk update status	property	nn	Masseoppdatering av status
+branch	property	nn	Fag
+b - responsible	property	nn	Anviser
+bruks nr	property	nn	Bruksnr.
+budget	property	nn	Budsjett
+budget account	property	nn	Kostnadsart
+budget account group	property	nn	Kontogruppe
+budget account is missing:	property	nn	Kostnadsart mangler
+budget changed	property	nn	Budsjett er endret
+budget code is missing from sub invoice in :	property	nn	Kostnadsart mangler fra underbilag i :
+budget cost	property	nn	Budsjett-beløp
+budget_cost	property	nn	Budsjett-beløp
+budget responsible	property	nn	Anviser
+budsjettsigndato	property	nn	Anvist dato
+building	property	nn	Bygning
+building common	property	nn	Bygnings felles
+building has been edited	property	nn	Bygning er endret
+building has been saved	property	nn	Bygning er lagret
+buildingname	property	nn	Bygningsnavn
+building id	property	nn	bygnings-id
+building part	property	nn	Bygningsdel
+building_part	property	nn	Bygningsdel
+bulk import - contacts	common	nn	Masseimport kontakter
+bulk import - csv	common	nn	Masseimport CSV
+but your message could not be sent by mail!	property	nn	Men din melding kunne ikke sendes med epost!
+calculate	property	nn	Kalkulèr
+calculate this workorder	property	nn	kalkuler bestillingen
+calculate workorder	property	nn	kalkuler bestillingen
+calculate workorder by adding items from vendors prizebook or adding general hours	property	nn	kalkuler bestillingen ved å legge til poster fra prisbok - eller egne tilpassede poster
+calculation	property	nn	Kalkulasjon
+cancel the import	property	nn	avbryt import
+categories	property	nn	Kategorier
+categories for the entity type	property	nn	Kategori for entitet-type
+categories for the location type	property	nn	Kategori for lokaliseringstype
+categorise persons	common	nn	Kategoriser personer
+category	common	nn	Kategori
+category changed	property	nn	Kategori er endret
+category has been edited	property	nn	Kategori er rettet
+category has been saved	property	nn	Kategori er lagret
+category has not been saved	property	nn	Kategori er IKKE lagret
+category id	property	nn	Kategori-id
+change main screen message	common	nn	Endre melding - hovedside
+change status	property	nn	Endre status
+change to	property	nn	Endre til
+change type	property	nn	Endringstype
+chapter	property	nn	Kapittel
+char	property	nn	Karakter
+character	property	nn	karakter
+charge tenant	property	nn	Fakturer leietaker
+check payments	property	nn	Sjekk betalinger
+check this to have the output to screen before import (recommended)	property	nn	Kryss av denne for å kontrollere importdata på skjerm før import (anbefalt)
+check this to notify your supervisor by email	property	nn	Kryss av for å varsle din foresatte med epost
+check this to send a mail to your supervisor for approval	property	nn	kryss av for å be din foresatte om godkjenning - epost
+check to activate custom function	property	nn	Merk av for å aktivere egendefinert funksjon
+Check to add text to order	property	nn	Merk for å legge teksten til i bestillingen
+check to delete file	property	nn	Merk for å slette fil
+check to delete this request from this project	property	nn	Merk for a slette dette tiltaket fra dette prosjektet
+check to inherit from this location	property	nn	Merk av for å arve fra denne lokalisering
+Check to publish text at frontend	property	nn	Merk av for å publisere i frontend
+check to reset the query	property	nn	Merk av for å nulle spørring
+check to show this attribue in lookup forms	property	nn	Merk av for å vise denne egenskapen i loaliseringsskjema
+check to show this attribute in entity list	property	nn	Merk av for å vise denne egenskapen i oversikt
+check to show this attribute in list	property	nn	Merk av for å vise denne egenskapen i oversikt
+check to show this attribute in location list	property	nn	Merk av for å vise denne egenskapen i oversikt
+check to update the email-address for this vendor	property	nn	kryss av for å oppdatere adressa til denne leverandøren
+Check to activate period	property	nn	Merk for å aktivere periode
+Check to close period	property	nn	Merk for å avslutte periode
+Check to delete period	property	nn	Merk for å slette periode
+child_date	property	nn	Dato for referert element
+choice	property	nn	Valg
+choose a category	property	nn	Velg en kategori
+choose an id	property	nn	Velg en-id
+choose charge tenant if the tenant i to pay for this project	property	nn	Kryss av for å belaste leietaker dersom leietakeren skal betale for arbeidene
+choose columns	common	nn	Velg kolonner
+choose copy hour to copy this hour to a new hour	property	nn	Kryss av for å kopiere denne posten til en ny post
+choose copy project to copy this project to a new project	property	nn	Kryss av for å kopiere dette prosjektet til et nytt prosjekt
+choose copy request to copy this request to a new request	property	nn	Kryss av for å kopiere dette behovet til et nytt behov
+choose copy workorder to copy this workorder to a new workorder	property	nn	Kryss av for å kopiere denne bestillingen til en ny bestilling
+choose generate id to automaticly assign new id based on type-prefix	property	nn	Kryss av for generere ny-id basert på type-prefiks
+choose the end date for the next period	property	nn	Velg slutt-dato for neste periode
+choose the start date for the next period	property	nn	Velg start-dato for neste periode
+choose to send mailnotification	property	nn	Velg å sende påminnelse på epost
+chose if this column is nullable	property	nn	Velg om denne kolonnen kan være uten verdier
+claim	property	nn	Krav
+claim id	property	nn	Krav-id
+claim %1 has been saved	property	nn	Krav nr %1 er lagret
+claim %1 has been edited	property	nn	Krav nr %1 er endret
+click this button to add a invice	property	nn	Klikk på denne knappen for å legg til en faktura
+click this button to add a invoice	property	nn	Klikk denne knappen for å legge til en faktura
+click this button to start the import	property	nn	Klikk denne knappen for å starte importen
+click this link to edit the period	property	nn	klikk denne linken for å rette perioden
+click this link to enter the list of sub-invoices	property	nn	Klikk her for å entre liste over underbilag
+click this link to select	property	nn	Klikk her for å velge
+click this link to select apartment	property	nn	klikk her for å velge leilighet
+click this link to select budget account	property	nn	klikk her for å velge kostnadsart
+click this link to select building	property	nn	klikk her for å velge bygning
+click this link to select customer	property	nn	Klikk her for å velge kunde
+click this link to select entrance	property	nn	klikk her for å velge inngang
+click this link to select equipment	property	nn	klikk her for å velge utstyr
+click this link to select property	property	nn	klikk her for å velge eiendom
+click this link to select tenant	property	nn	klikk her for å velge leietaker
+click this link to select vendor	property	nn	klikk her for å velge leverandør
+click this link to view the remark	property	nn	klikk her for å vise merknad
+click this to add an order to an existing project	property	nn	klikk her for å legge til en ny bestilling til et eksisterende prosjekt
+click this to generate a request with this information	property	nn	klikk her for å generere et behov med basis i denne informasjonen
+click this to generate a project with this information	property	nn	klikk her for å lage et nytt prosjekt med informasjon fra denne saken
+click this to link this request to an existing project	property	nn	klikk her for å lenke dette behovet til et eksisterende prosjekt
+click to view file	property	nn	Klikk for vise fil
+close	property	nn	Avslutt
+closed	property	nn	Avsluttet
+close order	property	nn	Avslutt ordre
+close this window	property	nn	Steng vindu
+code	property	nn	Kode
+collapse all	common	nn	Slå sammen
+column could not be added	property	nn	Kolonne kunne ikke legges til
+column description	property	nn	Beskrivelse av kolonne
+column name	property	nn	Kolonnenavn
+column name not entered!	property	nn	Manglende kolonnenavn
+columns	common	nn	Kolonner
+columns is updated	property	nn	Kolonner er oppdatert
+common costs	property	nn	Fellsekostnader
+communication descriptions manager	property	nn	Kommunikasjonsbeskrivelse
+communication types manager	property	nn	Type kommunikasjon
+composites	property	nn	Leieobjekter
+condition	property	nn	Tilstand
+condition degree	property	nn	Tilstandsgrad
+condition survey	property	nn	Tilstandsanalyse
+config	property	nn	Konfigurer
+configuration	property	nn	Konfigurasjon
+confirm status	property	nn	Bekreft status
+confirm status to the history	property	nn	Bekreft status til historikk
+consequence	property	nn	Konsekvens
+consequence type	property	nn	Konsekvenstype
+consequential damage	property	nn	Følgeskader
+consume	property	nn	Forbrukt
+consume date	property	nn	Dato historisk forbruk
+consume value	property	nn	Beløp historisk forbruk
+consume history	property	nn	Historisk forbruk
+continue	property	nn	Fortsett
+continuous	property	nn	Løpende
+contract	property	nn	Kontrakt
+line	property	nn	Linje
+sheet	property	nn	Ark
+choose file	property	nn	Velg fil
+choose sheet	property	nn	Velg ark
+choose start line	property	nn	Velg startlinje
+choose columns	property	nn	Velg kolonner
+table	property	nn	Tabell
+condition survey import	property	nn	Import av tilstandsanalyse
+periodization	property	nn	Periodisering
+periodization start	property	nn	Startperiode
+periodization outline	property	nn	Periodiseringsfordeling
+delete receipt	property	nn	Slett kvittering
+plan 	property	nn	Tidsplan
+planned year	property	nn	Planlagt år
+planning	property	nn	Planlagt
+planning date	property	nn	Dato planlagt disponering
+planning value	property	nn	Beløp planlagt disponering
+planning serie	property	nn	Planlagt disponering
+check to delete	property	nn	Merk for å slette
+check all	common	nn	Merk alle
+contact	property	nn	Kontakt
+contact email	property	nn	Epost
+contact phone	property	nn	Kontakttelefon
+contacts	common	nn	Kontakter
+content	property	nn	Innhold
+contractual obligations	property	nn	Regnskap
+contracts	property	nn	Kontrakter
+contract sum	property	nn	Kontraktsum
+conversion	property	nn	format
+coordination	property	nn	Koordinering
+coordinator	property	nn	Koordinator
+coordinator changed	property	nn	endret koordinator
+copy hour ?	property	nn	kopier post ?
+copy project ?	property	nn	kopier prosjekt ?
+copy request ?	property	nn	kopier behov ?
+copy workorder ?	property	nn	Kopier bestilling ?
+correct error	property	nn	Rett opp feil
+cost	property	nn	kostnad
+cost estimate	property	nn	Kostnadsestimat
+total cost estimate	property	nn	Totalt kostnadsestimat
+cost - either budget or calculation	property	nn	Beløp - enten budsjett eller kalkulasjon
+cost (incl tax):	property	nn	Kostnader (inkl mva)
+cost per unit	property	nn	Enhetspris
+could not find any location to save to!	property	nn	Kunne ikke finne lokalisering å lagre til
+count	property	nn	Antall
+currency	property	nn	Valuta
+custom	property	nn	Tilpasset
+customer	property	nn	Kunde
+custom function	property	nn	Egendefinert funksjon
+custom function file not chosen!	property	nn	Fil for egendefinert funskjon er ikke valgt
+custom function has been edited	property	nn	Egendefinert funksjon er  rettet
+custom function has not been saved	property	nn	Egendefinert funksjon er IKKE lagret
+custom function id	property	nn	Egendefinert funksjons-id
+custom functions	property	nn	Egendefinert funksjoner
+custom functions for the entity category	property	nn	Egendefinert funksjoner for entitet-kategori
+custom queries	property	nn	Egendefinerte spørringer
+daily	property	nn	Daglig
+data	property	nn	Data
+datatype	property	nn	datatype
+datatype type not chosen!	property	nn	datatype er ikke valgt
+date closed	property	nn	dato avsluttet
+date opened	property	nn	Startet
+date search	property	nn	Datosøk
+date from	property	nn	Fra dato
+date to	property	nn	Til Dato
+alter date	property	nn	Endre dato
+datetime	property	nn	dato-tid
+day	property	nn	dag
+day of week (0-6, 0=sun)	property	nn	Ukedag (0-6, 0=søndag)
+days	property	nn	Dager
+deadline	property	nn	Frist
+debug	common	nn	Debug
+debug output in browser	property	nn	Kontroller data før import
+decimal	property	nn	desimal
+default	property	nn	Standard
+default vendor category	property	nn	Standard leverandørkategori
+default vendor category is updated	property	nn	Standard leverandørkategori er oppdatert
+delay	property	nn	forsinkelse
+delete activity	property	nn	slett aktivitet
+delete agreement and all the activities associated with it!	property	nn	slett avtale og alle aktiviteter assosiert med den
+delete agreement group and all the activities associated with it!	property	nn	Slett avtalegruppe og alle aktiviteter som er assosiert med den
+delete apartment	property	nn	slett leilighet
+delete a single entry by passing the id.	property	nn	slett en enkelt post ved å sende id
+delete async method	property	nn	Slett async-metode
+delete budget account	property	nn	Slett kostnadsart
+delete building	property	nn	slett bygning
+delete claim	property	nn	Slett krav
+delete column	property	nn	Slett kolonne
+delete custom	property	nn	Slett egendefinert
+delete document	property	nn	slett dokument
+delete entity	property	nn	Slett entitet
+delete entity type	property	nn	Slett entitet-type
+delete entrance	property	nn	slett inngang
+delete equipment	property	nn	slett utstyr
+delete failed	property	nn	Sletting feilet
+delete file	property	nn	Slett fil
+delete investment history element	property	nn	slett historiepost for investering
+delete last entry	property	nn	slett siste post
+delete last index	property	nn	Slett siste index
+delete location	property	nn	Slett lokalisering
+delete location standard	property	nn	Slett lokaliseringskonfigurasjons verdi
+delete meter	property	nn	slett måler
+delete owner	property	nn	Slett eier
+delete part of town	property	nn	Slett bydel
+delete prize-index	property	nn	slett pris-indeks
+delete project	property	nn	slett prosjekt
+delete property	property	nn	slett eiendom
+delete request	property	nn	slett behov
+delete template	property	nn	slett mal
+delete the actor	property	nn	Slett aktør
+delete the agreement	property	nn	Slett avtale
+delete the apartment	property	nn	slett leilighet
+delete the budget account	property	nn	Slett kostnadsart
+delete the building	property	nn	slett bygning
+delete the category	property	nn	Slett kategori
+delete the claim	property	nn	Slett krav
+delete the custom_function	property	nn	Slett egendefinert funskjon
+delete the deviation	property	nn	Slett avvik
+delete the entity	property	nn	Slett entitet
+delete the entrance	property	nn	slett inngang
+delete the entry	property	nn	slett post
+delete the gab	property	nn	Slett grunneiendom
+delete the item	property	nn	Slett post
+delete the last index	property	nn	Slett siste index
+delete the location	property	nn	Slett lokalisering
+delete the meter	property	nn	slett måler
+delete the method	property	nn	Slett metode
+delete the part of town	property	nn	Slett bydel
+delete the project	property	nn	Slett prosjekt
+delete the property	property	nn	Slett eiendom
+delete the r_agreement	property	nn	Slett utleieavtale
+delete the request	property	nn	Slett tiltak
+delete the s_agreement	property	nn	Slett serviceavtale
+delete the standard	property	nn	Slett standard
+delete the template	property	nn	Slett mal
+delete the voucher	property	nn	Slett bilag
+delete this activity	property	nn	slett aktivitet
+delete this agreement	property	nn	slett avtale
+delete this agreement group	property	nn	Slett denne avtalegruppen
+delete this column from the output	property	nn	Fjern denne kolonnen fra visning
+delete this document	property	nn	slett dokument
+delete this entity	property	nn	Slett denne entiteten
+delete this entry	property	nn	slett post
+delete this equipment	property	nn	slett utstyr
+delete this hour	property	nn	slett post
+delete this item	property	nn	Slett denne posten
+delete this project	property	nn	slett prosjekt
+delete this request	property	nn	slett behov
+delete this value from the list of multiple choice	property	nn	Slett denne verdien fra listen over fler-valg
+delete this vendor from this activity	property	nn	slett denne leverandøren fra denne aktiviteten
+delete this workorder	property	nn	slett bestilling
+delete ticket	property	nn	slett melding
+delete value	property	nn	Slett verdi
+delete vendor activity	property	nn	Slett aktivitet
+delete voucher	property	nn	Slett bilag
+delete workorder	property	nn	Slett bestilling
+delivered	property	nn	Levert
+delivery address	property	nn	Leveringsadresse
+department	common	nn	Avdeling
+deposit claim	property	nn	Krav mot depositum
+deposition	property	nn	Avsetning
+description	property	nn	Beskrivelse
+description order	property	nn	Bestilling til leverandør
+descr	property	nn	Beskrivelse
+details	property	nn	Detaljer
+deviation	property	nn	Avvik
+deviation has been added	property	nn	Avvik er lagt til
+deviation has been edited	property	nn	Avvik er rettet
+deviation id	property	nn	Avvik-id
+difference	property	nn	Rest
+dim a	property	nn	Dim A
+dim a is missing	property	nn	Dim A mangler
+dima is missing from sub invoice in:	property	nn	Dim A mangler fra underbilag i :
+dim b	property	nn	Ansvarssted
+dimb	property	nn	Ansvarssted
+dimb roles	property	nn	Roller ansvarssted
+dimb role user	property	nn	Bruker/rolle/ansvarssted
+no authorities demands	property	nn	Ingen myndighetskrav
+no dimb	property	nn	Ansvarssted ikke valgt
+Please select dimb!	property	nn	Angi ansvarssted
+Please select a valid dimb!	property	nn	Angi et gyldig ansvarssted
+dim d	property	nn	Dim 6
+dime	property	nn	Kategori
+directory created	property	nn	katalog er opprettet
+disable	property	nn	Deaktiver
+disabled	property	nn	inaktivt
+district	property	nn	Område
+district_id	property	nn	Distrikt-id
+doc type	property	nn	Dokumenttype
+document	property	nn	Dokument
+document %1 has been edited	property	nn	Dokument %1 er rettet
+document %1 has been saved	property	nn	Dokument %1 er lagret
+documentation	property	nn	Dokumentasjon
+documentation for locations	property	nn	Dokumentasjon for arealer
+document categories	property	nn	Dokumentkategorier
+document date	property	nn	Dokumentdato
+document id	property	nn	Dokument id
+document name	property	nn	Dokumentnavn
+documents	property	nn	Dokumenter
+document status	property	nn	Dokumentstatus
+domain name for mail-address, eg. %1	property	nn	Domenenavn for e-post adresser
+do not add this invoice	property	nn	Ikke legg til denne fakturaen
+do not import this invoice	property	nn	Ikke importer dette bilaget
+down	property	nn	Ned
+download	common	nn	Last ned
+download table to your browser	common	nn	Last ned tabell til din nettleser
+do you really want to change the status to %1	property	nn	Vil du virkelig endre status til %1
+do you really want to change the priority to %1	property	nn	Vil du virkelig endre prioritet til %1
+do you really want to delete this entry	property	nn	Vil du virkelig slette denne posten
+do you really want to update the categories	property	nn	vil du virkelig oppdatere kategoriene
+do you really want to update the categories again	property	nn	vil du virkelig oppdatere kategoriene igjen
+do you want to perform this action	property	nn	Vil du gjennomføre denne handlingen
+draft	property	nn	UTKAST
+economy and progress	property	nn	Økonomi og fremdrift
+edit activity	property	nn	Endre aktivitet
+edit agreement	property	nn	Endre avtale
+edit agreement group	property	nn	Rette avtale gruppe
+edit apartment	property	nn	Endre leilighet
+edit budget account	property	nn	Rette kostnadsart
+edit building	property	nn	Endre bygning
+edit categories	property	nn	Endre kategorier
+edit category	property	nn	Endre kategori
+edit claim	property	nn	Endre klage
+edit custom fields	property	nn	Endre egendefinerte felt
+edit custom function	property	nn	Rette egendefinert funksjon
+edit/customise this hour	property	nn	Endre eller tilpass denne posten
+edit deviation	property	nn	Endre avvik
+edit document	property	nn	Endre dokument
+edit entity	property	nn	Endre entitet
+edit entrance	property	nn	Endre inngang
+edit equipment	property	nn	Endre utstyr
+edit gab	property	nn	Endre grunneiendom
+edit hour	property	nn	Endre post
+edit id	property	nn	Endre-id
+edit info	property	nn	Endre informasjon
+edit information about the document	property	nn	Endre informasjon om dokumentet
+edit location config for	property	nn	Endre konfigurasjon for lokalisering
+edit log levels	common	nn	Endre log nivåer
+edit meter	property	nn	Endre måler
+edit method	property	nn	Endre metode
+edit period	property	nn	Endre periode
+edit pricing	property	nn	Endre prising
+edit priority key	property	nn	Endre prioriteringsnøkkel
+edit project	property	nn	Endre prosjekt
+edit property	property	nn	Endre eiendom
+edit request	property	nn	Endre behov
+edit standard	property	nn	Endre standard
+edit status	property	nn	Endre status
+edit template	property	nn	Endre mal
+edit the account	property	nn	Endre kontoen
+edit the actor	property	nn	Endre aktør
+edit the agreement	property	nn	Endre avtale
+edit the agreement_group	property	nn	Endre avtalegruppe
+edit the alarm	property	nn	Endre alarm
+edit the apartment	property	nn	Endre leilighet
+edit the budget account	property	nn	Endre kostnadsart
+edit the building	property	nn	Endre bygning
+edit the category	property	nn	Endre kategorien
+edit the claim	property	nn	Endre kravet
+edit the column relation	property	nn	Endre kolonnerelasjonen
+edit the custom_function	property	nn	Endre egendefinert funksjon
+edit the deviation	property	nn	Endre avvik
+edit the entity	property	nn	Endre entitet
+edit the entrance	property	nn	Endre inngang
+edit the equipment	property	nn	Endre utstyr
+edit the gab	property	nn	Endre grunneiendom
+edit the location	property	nn	Endre lokalisering
+edit the meter	property	nn	Endre måler
+edit the method	property	nn	Endre metoden
+edit the part of town	property	nn	Endre bydelen
+edit the pricebook	property	nn	Endre prisbok
+edit the project	property	nn	Endre prosjekt
+edit the property	property	nn	Endre eiendom
+edit the r_agreement	property	nn	Endre utleieavtalen
+edit the request	property	nn	Endre behov
+edit the s_agreement	property	nn	Endre serviceavtalen
+edit the standard	property	nn	Endre standard
+edit the template	property	nn	Endre mal
+edit the workorder	property	nn	Endre bestilling
+edit this activity	property	nn	Endre aktivitet
+edit this entity	property	nn	Endre entiteten
+edit this entry	property	nn	Endre post
+edit this entry equipment	property	nn	Endre utstyr
+edit this entry project	property	nn	Endre prosjekt
+edit this entry request	property	nn	Endre behov
+edit this entry workorder	property	nn	Endre bestilling
+edit this meter	property	nn	Endre måler
+edit workorder	property	nn	Endre bestilling
+email-address of the user, eg. %1	property	nn	E-post adresse for bruker, %1
+enable	property	nn	Aktiver
+enabled	property	nn	Aktiv
+enable file upload	property	nn	Aktiver opplasting av filer
+enable history for this attribute	property	nn	Aktiver historikk for denne egenskapen
+enable link from location detail	property	nn	Aktiver link fra detaljer for areal
+enables help message for this attribute	property	nn	Hjelpetekst for denne egenskapen
+enable start project from this category	property	nn	Aktiviser mulighet for å starte prosjekt herfra
+end	property	nn	Slutt
+end date	property	nn	Sluttdato
+enter additional remarks to the description - if any	property	nn	gi en merknad - om noen
+enter a descr for the custom function	property	nn	Angi en beskrivelse av egendefinert funksjon
+enter a description for prerequisitions for this activity - if any	property	nn	gi en beskrivelse av nødvendige grunnlagsarbeid - om noen - for denne aktiviteten
+enter a description of the deviation	property	nn	Angi en beskrivelse av avviket
+enter a description of the document	property	nn	Gi en beskrivelse av dokumentet
+enter a description of the equipment	property	nn	Gi en beskrivelse av utstyret
+enter a description of the project	property	nn	Gi en beskrivelse av prosjektet
+enter a description of the request	property	nn	Gi en beskrivelse av tilstanden
+enter a description of the standard	property	nn	Gi en beskrivelse av standarden
+enter a description of the status	property	nn	Angi en beskrivelse av statusen
+enter a description the attribute	property	nn	Gi en beskrivelse av egenskapen
+enter a description the budget account	property	nn	Angi en beskrivelse av kostnadsarten
+enter a description the category	property	nn	Angi en beskrivelse av kategorien
+enter a description the method	property	nn	Angi en beskrivelse av metoden
+enter a description the standard	property	nn	Gi en beskrivelse av  standarden
+enter a meter id !	property	nn	Angi måler-id
+enter a name for the query	property	nn	Angi et navn for spørringen
+enter a name for this part of town	property	nn	Angi ett navn for denne bydelen
+enter a name of the standard	property	nn	gi standarden et navn
+enter a new grouping for this activity if not found in the list	property	nn	skriv inn en ny gruppering for denne posten om den ikke finnes i listen
+enter a new index	property	nn	Gi en ny index
+enter a new writeoff period if it is not in the list	property	nn	Skriv inn en ny avskrivningsperiode om den ikke finnes i listen
+enter any persentage addition per unit	property	nn	Angi prosentvis tillegg pr enhet
+enter any remarks regarding this apartment	property	nn	Angi merknader vedrørende denne leiligheten
+enter any remarks regarding this building	property	nn	Angi merknader vedrørende denne bygningen
+enter any remarks regarding this entrance	property	nn	Angi merknader vedrørende denne inngangen
+enter any round sum addition per order	property	nn	Angi riggtillegg
+enter apartment id	property	nn	Angi leilighets-id
+enter a remark for this claim	property	nn	Angi en merknad for dette kravet
+enter a remark for this entity	property	nn	Angi en merknad for denne entiteten
+enter a remark - if any	property	nn	gi en merknad - om noen
+enter a remark to add to the history of the project	property	nn	Legg til en merknad til historikken for prosjektet
+enter a short description of the workorder	property	nn	Gi en kort beskrivelse av bestillingen
+enter a short description of this template	property	nn	Gi en kort beskrivelse av malen
+enter a sql query	property	nn	Skriv inn en sql-spørring
+enter a standard prefix for the id	property	nn	Angi et prefix for-id
+enter a standard prefix for the id of the equipments	property	nn	Angi et standard prefix for utstyr av denne typen
+enter a statustext for the inputfield in forms	property	nn	Angi en statustekst for inputfeltet
+enter a value for the labour cost	property	nn	Angi arbeids kostnader
+enter a value for the material cost	property	nn	Angi materialkostnader
+Enter actual cost	property	nn	Angi betalt sum
+enter building id	property	nn	Angi bygnings-id
+enter document name	property	nn	Angi dokument-id
+enter document title	property	nn	Angi dokument tittel
+enter document version	property	nn	Angi dokument versjon
+enter entrance id	property	nn	Angi inngangs-id
+enter equipment id	property	nn	Angi utstyrs-id
+enter invoice number	property	nn	Angi bilagsnummer
+enter kid nr	property	nn	Angi KID nr
+enter other branch if not found in the list	property	nn	Angi andre fag, om det ikke finnes i listen
+enter project name	property	nn	Angi prosjektnavn
+enter quantity of unit	property	nn	Angi mengde
+enter request title	property	nn	Angi beskrivende navn for tiltak
+enter the billable hour for the task	property	nn	Angi egne timer for oppgaven
+enter the budget	property	nn	Angi budsjett
+enter the budget account	property	nn	Angi kostnadsart
+enter the category id	property	nn	Angi kategori-id
+enter the cost per unit	property	nn	Angi kostnad pr enhet
+enter the date for this reading	property	nn	Angi dato for denne avlesningen
+enter the default value	property	nn	Angi standard-verdi
+enter the description	property	nn	Angi beskrivelse
+enter the description for this activity	property	nn	Angi beskrivelse av denne aktiviteten
+enter the description for this template	property	nn	Angi beskrivelse av denne malen
+enter the details of this ticket	property	nn	Angi detaljer for meldingen
+enter the email-address for this user	property	nn	Oppgi epostadressen for denne brukeren
+enter the expected longevity in years	property	nn	Angi forventet levetid [år]
+enter the floor	property	nn	Angi etasje
+enter the floor id	property	nn	Angi etasje-id
+enter the general address	property	nn	Angi generell adresse
+enter the input text for records	property	nn	Angi ledetekst for datafelt
+enter the invoice date	property	nn	Angi fakturadato
+enter the meter id	property	nn	Angi måler-id
+enter the method id	property	nn	Angi metode-id
+enter the name for the column	property	nn	Angi navn for kolonne i database
+enter the name for this location	property	nn	Angi navn for denne lokaliseringen
+enter the name of the apartment	property	nn	Angi navn for leiligheten
+enter the name of the building	property	nn	Angi navn for bygningen
+enter the name of the entrance	property	nn	Angi navn for inngangen
+enter the name of the meter	property	nn	Angi navn for måleren
+enter the name of the property	property	nn	Angi navn for eiendommen
+enter the name the template	property	nn	Angi navn for malen
+enter the payment date or the payment delay	property	nn	Angi betalingsdato eller antall dager til forfall
+enter the power meter	property	nn	Legg til måleren
+enter the power_meter	property	nn	Angi måler
+enter the property id	property	nn	Angi eiendoms-id
+enter the purchase cost	property	nn	Angi anskaffelses kostnad
+enter the record length	property	nn	Angi lengde for datafelt
+enter the reserve	property	nn	Angi reserve
+enter the scale if type is decimal	property	nn	Angi skala dersom type er desimal
+enter the search string. to show all entries, empty this field and press the submit button again	property	nn	Angi søkestrengen. for å vise alle poster, tøm dette feltet og søk på nytt
+enter the standard id	property	nn	Angi standard-id
+enter the status id	property	nn	Angi statius-id
+enter the street number	property	nn	Angi gatenummer
+enter the subject of this ticket	property	nn	Angi overskrift for denne meldingen
+enter the total cost of this activity - if not to be calculated from unit-cost	property	nn	Angi total kostnad for denne posten - dersom den ikke skal beregnes fra enhetskostnader
+enter the workorder id to search by workorder - at any date	property	nn	Angi bestillings-id for å søke etter bestilling - gjelder alle datoer
+enter workorder title	property	nn	Angi bestillings tittel
+entity	property	nn	type
+entity has been added	property	nn	Post er lagt til
+entity has been edited	property	nn	Post er oppdatert
+entity %1 has been edited	property	nn	Post %1 er oppdatert
+entity has not been edited	property	nn	Post er IKKE oppdatert
+entity has not been saved	property	nn	Post er IKKE lagret
+entity id	property	nn	entitets-id
+entity name	property	nn	entitetsnavn
+entity not chosen	property	nn	Entitet er ikke valgt
+entity num	property	nn	Entitet num
+entity type	property	nn	entitetstype
+entity type not chosen!	property	nn	Entitet type er ikke valgt
+entrance	property	nn	inngang
+entrance has been edited	property	nn	Inngang er rettet
+entrance has been saved	property	nn	Inngang er lagret
+entrance id	property	nn	Inngangs-id
+entry date	common	nn	Registrert dato
+entry_date	common	nn	Registrert dato
+equipment	property	nn	Utstyr
+equipment %1 has been edited	property	nn	Utstyr %1 er rettet
+equipment %1 has been saved	property	nn	utstyr %1 er lagret
+equipment id	property	nn	utstyrs-id
+equipment_id	property	nn	utstyrs-id
+equipment type	property	nn	Type utstyr/anlegg
+estimate	property	nn	Kostnadsestimat
+event	property	nn	Hendelse
+event action	property	nn	Handling ved hendelse
+events	property	nn	Hendelser
+example	property	nn	Eksempel
+exception	property	nn	Utgår
+expand all	common	nn	Vis alle
+exp date	property	nn	Utgått dato
+export contacts	property	nn	Eksporter kontakter
+export date	property	nn	Eksport dato
+export invoice	property	nn	Overfør
+export to file	property	nn	Eksport til fil
+external ref	property	nn	Ekstern referanse
+extra	property	nn	Ekstra
+extra mail address	property	nn	Ekstra adresse
+f	property	nn	F
+failed to copy file !	property	nn	Kopiering av fil feilet!
+failed to create directory	property	nn	Klarte ikke å lage katalog
+failed to delete file	property	nn	Klarte ikke å slette fil
+failed to upload file !	property	nn	Opplasting av fil feilet!
+failure	property	nn	Svikt
+false	property	nn	False
+feste nr	property	nn	Festenr.
+fetch the history for this item	property	nn	Hent historikk for dette elementet
+file	property	nn	fil
+file deleted	property	nn	Fil er slettet
+filename	property	nn	Filnavn
+fileuploader	property	nn	Filopplasting
+find and register all application hooks	property	nn	Finn og registrer alle Hooks
+finnish date	property	nn	Ferdig dato
+finnish_date	property	nn	Ferdig dato
+finnish date changed	property	nn	Endret ferdig-dato
+first entry is added!	property	nn	Fil er lagt til
+firstname	property	nn	Fornavn
+first name of the user, eg. %1	property	nn	Fornavn til bruker, %1
+first note added	property	nn	Første notat er lagt til
+float	property	nn	Flyttall
+floor	property	nn	Etasje
+floor common	property	nn	Etasje felles
+floor id	property	nn	Etasje-id
+fm_vendor	property	nn	Leverandør
+force year for period	property	nn	Overstyr år for periode
+format type	property	nn	Format type
+formats	property	nn	Formater
+forward	property	nn	Videresend
+fraction	property	nn	Fraksjon
+fraction::dividend	property	nn	Brøk::teller
+fraction::divisor	property	nn	Brøk::nevner
+from	property	nn	Fra
+from date	property	nn	Fra dato
+funding	property	nn	Finansiering
+gaards nr	property	nn	Gårdsnr.
+gab	property	nn	Grunneiendom
+gabnr	property	nn	Grunneiendom
+gallery	property	nn	Bildearkiv
+general	property	nn	Generelt
+generic	property	nn	Generelt
+general address	property	nn	Generell adresse
+general info	property	nn	Generell informasjon
+generate a project from this request	property	nn	Generer et prosjekt basert på dette behovet
+generate id ?	property	nn	generer id
+generate order	property	nn	Lag bestilling
+generate project	property	nn	Lag nytt prosjekt
+generate request	property	nn	Registrer behov
+generate new project	property	nn	Registrer nytt prosjekt
+get list	property	nn	Hent liste
+global	property	nn	Global
+global categories	property	nn	Globale kategorier
+global configuration	property	nn	Global konfigurasjon
+grant access	property	nn	Gi tilgang
+group	property	nn	Gruppe
+grouping	property	nn	Gruppering
+helpdesk	property	nn	Meldinger
+help message	property	nn	Hjelpetekst
+highest	property	nn	Høyest
+history	property	nn	Historikk
+history not allowed for this datatype	property	nn	Historikk er ikke tilgjengelig for denne datatypen
+history of this attribute	property	nn	Historie for denne egenskapen
+hits	property	nn	Treff
+hour	property	nn	Time
+hour %1 has been deleted	property	nn	Post %1 er slettet
+hour %1 has been edited	property	nn	Post %1 er rettet
+hour %1 is added!	property	nn	Post %1 er lagt til
+hour category	property	nn	Post-kategori
+hour id	property	nn	Post-id
+html	property	nn	HTML
+id	property	nn	ID
+id control	property	nn	ID-kontroll
+id is updated	property	nn	ID er oppdatert
+id not entered!	property	nn	ID er ikke valgt
+if files can be uploaded for this category	property	nn	Om filer skal kunne lastes opp for denne kategorien
+if this entity type is to be linked to a location	property	nn	Om denne entitetstypen skal linkes til en lokalisering
+if this entity type is to be linked to documents	property	nn	Om denne entitetstypen skal linkes til dokumentasjon
+if this entity type is to look up tenants	property	nn	Om denne entiteten skal gjøre oppslag på leietakere
+import calculation	property	nn	Importer kalkulasjon
+import	property	nn	Import
+importance	property	nn	Viktighet
+import detail	property	nn	Importer detalj
+import details to this agreement from spreadsheet	property	nn	Import detaljer til denne avtalen fra regneark
+import from csv	property	nn	Fil-import til Faktura
+import invoice	property	nn	Import faktura
+import this invoice	property	nn	Importer denne fakturaen
+import vcard	common	nn	Importer visittkort
+incl tax	property	nn	inkl mva
+include in location form	property	nn	Inkluder i lokaliseringsskjema
+include in search	property	nn	Inkluder i søk
+include the workorder to this claim	property	nn	Inkluder bestillingen i dette kravet
+include this entity	property	nn	Inkluder denne entiteten
+index	property	nn	Indeks
+index count	property	nn	Antall
+index_count	property	nn	Indeks teller
+index date	property	nn	Dato for indeks
+indoor climate	property	nn	Innendørsklima
+initial category	property	nn	Initiell kategori
+initial coordinator	property	nn	Initiell koordinator
+initials	property	nn	Initialer
+initial status	property	nn	Initiell status
+initial value	property	nn	Initiell verdi
+in progress	property	nn	Påbegynt
+inputdata for the method	property	nn	Inputdata for metoden
+input data for the nethod	property	nn	Input data til metoden
+input text	property	nn	ledetekst
+input text not entered!	property	nn	Input tekst er ikke angitt!
+input type	property	nn	Input-type
+input name	property	nn	Input-navn
+invalid category	property	nn	Ugyldig kategori
+select value	property	nn	Angi verdi
+selected mail addresses	property	nn	Valgte adresser
+insert the date for the acquisition	property	nn	Angi dato for anskaffelsen
+insert the date for the initial value	property	nn	Angi dato for initiell verdi
+insert the value at the start-date as a positive amount	property	nn	Angi verdie ved startdatoen som en positiv verdi
+integer	property	nn	Heltall
+interval	property	nn	Intervall
+inventory	common	nn	Beholdning
+add inventory	common	nn	Legg til beholdning
+investment	property	nn	Investering
+investment added !	property	nn	Investering er lagt til
+investment history	property	nn	Investerings historie
+investment id	property	nn	Investerings-id
+investment id:	property	nn	Investerings-id:
+investment value	property	nn	Avskrivning
+invoice	property	nn	Faktura
+invoice address	property	nn	Fakturaadresse
+invoice date	property	nn	Fakturadato
+invoice id	property	nn	Faktura-id
+invoice id already taken for this vendor	property	nn	Fakturanummeret er allerede registrert for denne leverandøren
+invoice is not added!	property	nn	Fakturaen er IKKE lagt til!
+invoice number	property	nn	Fakturanr.
+invoice transferred	property	nn	Bilag er overført
+invoice line text	property	nn	Posteringstekst
+is id	property	nn	Er id
+is registered	property	nn	er registert
+is there a demand from the authorities to correct this condition?	property	nn	Finnes det myndighetskrav for å rette opp tilstanden?
+items	property	nn	Detaljer
+janitor	property	nn	Bestiller
+new janitor	property	nn	Ny bestiller
+jasper reports	property	nn	JasperReports
+jasper upload	property	nn	Opplasting av JasperReports
+key deliver location	property	nn	Sted for å levere nøkkel
+key fetch location	property	nn	Sted for å hente nøkkel
+key location	property	nn	Nøkkel lokalisert
+key responsible	property	nn	Nøkkel ansvarlig
+kid nr	property	nn	KID nr
+kommune nr	property	nn	Kommunenr.
+kreditnota	property	nn	Kreditnota
+labour cost	property	nn	Arbeid
+large	property	nn	Stor
+last index	property	nn	Siste indeks
+lastname	property	nn	Etternavn
+last name of the user, eg. %1	property	nn	Etternavn til bruker, %1
+laws and regulations	property	nn	Lover og forskrifter
+leave the actor untouched and return back to the list	property	nn	Forlat aktøren uendret og returner til oversikten
+leave the agreement untouched and return back to the list	property	nn	Forlat avtalen uendret og returner til oversikten
+leave the claim untouched and return back to the list	property	nn	Forlat kravet uendret og returner til oversikten
+leave the custom untouched and return back to the list	property	nn	Forlat egendefinert uendret og returner til oversikten
+leave the owner untouched and return back to the list	property	nn	Forlat eier uendret og returner til oversikten
+leave the part of town untouched and return back to the list	property	nn	Forlat bydel uendret og returner til oversikten
+leave the rental agreement untouched and return back to the list	property	nn	Forlat leieavtalen uendret og returner til oversikten
+leave the service agreement untouched and return back to the list	property	nn	Forlat serviceavtalen uendret og returner til oversikten
+let this entity show up in location form	property	nn	Vis denne entiteten i lokaliseringsskjemaet
+link	property	nn	Lenke
+link from location	property	nn	Lenke fra lokalisering
+link to the origin for this request	property	nn	Link til opprinnelsen for dette tiltaket
+link to the project originatet from this request	property	nn	Link til prosjektet som har opprinnelse fra dette tiltaket
+link to the project originatet from this ticket	property	nn	Link til prosjektet som har opprinnelse fra denne hendelsen
+link to the request for this project	property	nn	Link til tiltak omfattet av dette prosjektet
+link to the request originatet from this ticket	property	nn	Link til tiltak som har opprinnelse fra dette hendelsen
+link_view	property	nn	Vis lenke
+list	property	nn	Oversikt
+list %1	property	nn	List %1
+list activities per agreement	property	nn	List aktiviteter pr avtale
+list activities per agreement_group	property	nn	List aktiviteter pr avtalegruppe
+list agreement	property	nn	list avtale
+list agreement group	property	nn	List avtalegruppe
+list alarm	property	nn	Oversikt alarm
+list apartment	property	nn	List leilighet
+list async method	property	nn	List async-metode
+list attribute	property	nn	List egenskaper
+listbox	property	nn	Listbox
+list budget	property	nn	Oversikt budsjett
+list budget account	property	nn	list kostnadsart
+list building	property	nn	list bygning
+list claim	property	nn	Oversikt klage
+list config	property	nn	List konfigurasjon
+list consume	property	nn	list forbruk
+list custom	property	nn	List tilpasset
+list custom function	property	nn	List egendefinerte funksjoner
+list deviation	property	nn	List avvik
+list document	property	nn	list dokumenter
+list documents	property	nn	Oversikt dokument
+list entity attribute	property	nn	List entitets-egenskaper
+list entity custom function	property	nn	List egendefinerte funskjoner for entiteter
+list entity type	property	nn	List entitet-type
+list entrance	property	nn	list inngang
+list equipment	property	nn	list utstyr
+list gab	property	nn	List grunneiendom
+list gab detail	property	nn	List grunneiendomsdetaljer
+list hours	property	nn	List timer
+list investment	property	nn	List investeringer
+list invoice	property	nn	List bilag
+list location attribute	property	nn	List lokaliserings egenskaper
+list location standard	property	nn	List lokaliserings standard
+list meter	property	nn	List måler
+list obligations	property	nn	Oversikt regnskap
+list paid invoice	property	nn	List betalte bilag
+list pricebook	property	nn	List prisbok
+list pricebook per vendor	property	nn	List prisbok pr leverandør
+list project	property	nn	List prosjekt
+list property	property	nn	List eiendom
+list request	property	nn	List behov
+list standard description	property	nn	List standard beskrivelse
+list status	property	nn	List status
+list street	property	nn	List gate
+list template	property	nn	List mal
+list tenant	property	nn	List leietaker
+list ticket	property	nn	List melding
+list vendor	property	nn	Oversikt leverandører
+list vendors	property	nn	List leverandør
+list vendors per activity	property	nn	List leverandør pr aktivitet
+list voucher	property	nn	list underbilag
+list workorder	property	nn	List bestillinger
+location	property	nn	Lokalisering
+loc1 name	property	nn	Navn
+local files	property	nn	Lokale filer
+location changed	property	nn	Lokalisering er endret
+location code	property	nn	Lokaliserings kode
+location_code	property	nn	Lokaliserings kode
+location config	property	nn	Konfigurering av lokalisering
+location form	property	nn	Lokaliseringsskjema
+location level	property	nn	Lokaliserings-nivå
+location link level	property	nn	Fjern link til lokaliserings-nivå
+location manager	property	nn	Forvalter lokasjon
+location name	property	nn	Modul
+location not chosen!	property	nn	Lokalisering er ikke valgt
+location type	property	nn	Lokaliseringstype
+location type not chosen!	property	nn	Lokaliseringsnivå ikke valgt
+log	property	nn	Logg
+longevity	property	nn	Levetid
+lookup	property	nn	Slå opp
+lookup template	property	nn	Slå opp standardbeskrivelser
+lookup tenant	property	nn	Slå opp leietaker
+lowest	property	nn	Lavest
+mailing method is not chosen! (admin section)	property	nn	Mail metode er ikke valgt! (admin seksjon)
+main claim	property	nn	Hovedkrav
+maintenance	property	nn	Vedlikehold
+make order	property	nn	Lag bestilling
+manage	property	nn	Forvalte
+manage groups	property	nn	Administrere grupper
+manage users	property	nn	Administrere brukere
+map	property	nn	Kart
+mark as draft	property	nn	Merk som UTKAST
+mark the tender as draft	property	nn	Merk tilbud som UTKAST
+mask	property	nn	Masker
+material cost	property	nn	Materiell
+materials:__________	property	nn	Materialer:__________
+m_cost	property	nn	Materialkost
+medium consequences	property	nn	Middels store konsekvenser
+member	property	nn	Medlem
+member of	property	nn	Medlem av
+memo	property	nn	Memo
+meter	property	nn	Måler
+meter %1 has been edited	property	nn	Måler %1 er oppdatert
+meter %1 has been saved	property	nn	Måler %1 er lagret
+meter id	property	nn	Måler-id
+meter type	property	nn	Målertype
+method	property	nn	Metode
+method has been edited	property	nn	Metode er endret
+method id	property	nn	Metode-id
+migrate to alternative db	property	nn	Migrer til alternativ database
+mine tickets	property	nn	Mine meldinger
+mine orders	property	nn	Mine bestillinger
+mine projects	property	nn	Mine prosjekter
+mine vouchers	property	nn	Mine bilag
+minor	property	nn	Liten
+minor consequences	property	nn	Små konsekvenser
+minute	property	nn	Minutt
+minutes before the event	property	nn	Minutter til hendelse
+Missing log message	property	nn	Angi grunn for endring
+Missing value	property	nn	Mangler verdi
+missing value for %1	property	nn	Mangler verdi for %1
+month	property	nn	Måned
+Monthly (by day)	property	nn	Månedlig (dag)
+Monthly (by date)	property	nn	Månedlig (dato)
+move	property	nn	Flytt
+move budget and orders to another project	property	nn	Flytt budsjett og bestillinger til et annet prosjekt
+move to another project	property	nn	Flytt til et annet prosjekt
+moved to another project	property	nn	Flyttet til et annet prosjekt
+muliple checkbox	property	nn	Flervalgs avkrysningsknapp
+muliple radio	property	nn	Flervalgs radioknapp
+multiple checkbox	property	nn	Flervalgs avkrysningsknapp
+multiple radio	property	nn	Flervalgs radioknapp
+multiplier	property	nn	Skaleringsfaktor
+my preferences	property	nn	Mine innstillinger
+my assigned tickets	property	nn	Mine tildelte meldinger
+my submitted tickets	property	nn	Mine innmeldte meldinger
+name not entered!	property	nn	Navn er ikke angitt
+name of the user, eg. %1	property	nn	Navn til bruker, %1
+narrow the search by dates	property	nn	Avgrens søket med dato
+needs approval	property	nn	Behøver godkjenning
+new	property	nn	Ny
+new grouping	property	nn	Ny gruppering
+new index	property	nn	Ny index
+new note	property	nn	Ny kommentar
+new organisation	common	nn	Ny organisasjon
+new person	common	nn	Ny person
+new_ticket	common	nn	Ny melding
+new value	property	nn	Ny verdi
+new value for multiple choice	property	nn	Ny verdi for flervalg
+new values	property	nn	Nye verdier
+new record	property	nn	Ny post
+next run	property	nn	Neste kjøring
+no access	property	nn	Ingen tilgang
+no account	property	nn	Ingen konto
+no additional notes	property	nn	Ingen tilleggskommentarer
+no branch	property	nn	Fag ikke valgt
+no category	property	nn	Kategori ikke valgt
+no change type	property	nn	Ingen endringstype
+no conversion type could be located.	property	nn	Formatfilter ble ikke funnet
+no custom function	property	nn	Ingen egendfinert funksjon
+no criteria	property	nn	Kriterie ikke valgt
+no datatype	property	nn	Datatype ikke valgt
+no dim b	property	nn	Ansvarssted ikke valgt
+no dim d	property	nn	Dim 6 ikke valgt
+no district	property	nn	Distrikt ikke valgt
+no document type	property	nn	Ingen dokument-type
+no entity type	property	nn	Entitetstype ikke valgt
+no equipment type	property	nn	Utstyrstype ikke valgt
+no file selected	property	nn	Fil ikke valgt
+no granting group	property	nn	Ingen granting gruppe
+no group	property	nn	ingen gruppe
+no grouping	property	nn	Ingen gruppering
+no history	property	nn	Historie er ikke registert
+no history for this record	property	nn	Ingen historie for denne meldingen
+no hour category	property	nn	Ingen post-kategori
+no janitor	property	nn	Bestiller ikke valgt
+no location	property	nn	Lokalisering ikke valgt
+no mailaddress is selected	property	nn	E-post ikke valgt
+no member	property	nn	Ingen medlem
+no method	property	nn	Ingen metode
+none consequences	property	nn	Ingen konsekvenser
+no part of town	property	nn	Bydel ikke valgt
+no revision	property	nn	Ingen revisjon
+no role	property	nn	Rolle ikke valgt
+no status	property	nn	Status ikke valgt
+no such order: %1	property	nn	Ordre %1 finnes ikke
+no supervisor	property	nn	Attestant ikke valgt
+not allocated	property	nn	Ikke disponert
+note	property	nn	Notat
+nothing to do!	property	nn	Ingen ting å gjøre
+notify	property	nn	Varsle
+no type	property	nn	Type ikke valgt
+no user	property	nn	Bruker ikke valgt
+no user selected	property	nn	Bruker ikke valgt
+no vendor	property	nn	Leverandør ikke valgt
+no workorder budget	property	nn	Ingen budsjett bestilling
+no workorder bugdet	property	nn	Ingen bestillinger er budsjettert
+no year	property	nn	Ingen årstall
+notify client by sms	property	nn	Varsle kunde via SMS
+ns3420	property	nn	NS3420
+ns3420 description	property	nn	NS3420 beskrivelse
+nullable	property	nn	Kan være NULL
+nullable not chosen!	property	nn	Nullable ikke valgt
+num	property	nn	Num
+number	property	nn	Nummer
+obligations	property	nn	Regnskap
+obligation	property	nn	Forpliktet
+of	property	nn	av
+on behalf of assigned	property	nn	På vegne av tildelt
+on behalf of assigned - vacation mode	property	nn	På vegne av tildelt - feriemodus
+old value	property	nn	Opprinnelig verdi
+only private	property	nn	Bare privat
+open	property	nn	Åpen
+open date	property	nn	Startet dato
+opened	property	nn	Åpnet
+opened by	property	nn	Startet av
+open edit in new window	property	nn	Åpne endring i nytt vindu
+open JasperReport %1 in new window	property	nn	Åpne JasperReport %1 i nytt vindu
+open view in new window	property	nn	Åpne visning i nytt vindu
+operation	property	nn	Drift
+o&m	property	nn	D/V
+Operations and Maintenance	nn	Drift og vedlikehold
+order	property	nn	Bestilling
+order approval revoked	property	nn	Bestillingsgodkjenning opphevet
+order approved	property	nn	Bestilling godkjent
+order %1 approved for amount %2	property	nn	Bestilling %1 er godkjent med beløp %2
+order order %1 is not approved	property	nn	Bestilling %1 er ikke godkjent
+order_dim1	property	nn	Aktivitet
+order id	property	nn	Bestillingsnr.
+order_id	property	nn	Bestillingsnr.
+order # that initiated the invoice	property	nn	Bestillingsnr som referanse for fakturaen
+order template	property	nn	Standardtekster
+order text	property	nn	Bestillingstekst
+organisation	property	nn	Organisasjon
+other branch	property	nn	Andre fag
+override fraction	property	nn	Overstyrt faktor
+override fraction of common costs	property	nn	Overstyringsfaktor for felleskostnader
+overview	property	nn	Oversikt
+owner	property	nn	Eier
+owner attributes	property	nn	Eier egenskaper
+owner categories	property	nn	Eier kategorier
+owner type	property	nn	Eiertype
+paid	property	nn	Betalt
+paid percent	property	nn	Prosentvis betalt
+parked	property	nn	Parkert
+park invoice	property	nn	Parker faktura
+part of town	property	nn	Bydel
+part of town id	property	nn	Bydel
+payment	property	nn	Betaling
+payment date	property	nn	Forfallsdato
+pdf	property	nn	PDF
+per agreement	property	nn	pr. avtale
+percent	property	nn	Prosent
+percentage addition	property	nn	prosentvis tillegg
+performed	property	nn	Utført
+period	property	nn	Periode
+periods	property	nn	Perioder
+period transition	property	nn	Periode overgang
+permission	property	nn	Rettighet
+permissions	property	nn	Rettigheter
+permissions are updated!	property	nn	Rettigheter er oppdatert
+per vendor	property	nn	pr. leverandør
+phone	property	nn	Telefon
+php configuration	common	nn	php konfigurasjon
+phpinfo	common	nn	phpinformasjon
+picture	property	nn	Bilde
+plain	property	nn	Vanlig
+planned cost	property	nn	Planlagt
+pleace select a location - or an equipment !	property	nn	Velg en lokalisering - eller et utstyr
+Please select a condition!	property	nn	Angi tilstand
+Please select a building part!	property	nn	Angi bygningsdel
+please choose a conversion type	property	nn	Velg eksport type
+please choose a conversion type from the list	property	nn	Velg eksport type fra listen
+please choose a file	property	nn	Velg en fil
+please either select generate id or type a equipment id !	property	nn	enten velg GENERER-id eller angi et utstyrs-id
+please enter a apartment id !	property	nn	Angi leilighets-id
+please enter a building id !	property	nn	Angi bygg-id
+please enter a invoice num!	property	nn	Angi fakturanummer
+please enter a description!	property	nn	Angi en beskrivelse!
+please enter a entrance id !	property	nn	Angi inngangs-id
+please enter a index !	property	nn	Angi en indeks
+Please enter a title !	property	nn	Angi en overskrift
+please enter an activity code !	property	nn	Angi en aktivitets kode
+please enter an agreement code !	property	nn	Angi en avtale kode
+please enter an agreement group code !	property	nn	Angi en avtale-gruppe-kode
+please enter a name !	property	nn	Angi et navn
+please - enter an amount!	property	nn	Angi et beløp!
+please enter a new index for calkulating next value(s)!	property	nn	Angi en ny index for beregning av neste verdi(er)!
+please enter an integer !	property	nn	Angi heltall
+please enter an integer for order!	property	nn	Angi heltall for bestillingsnr
+please enter a project name !	property	nn	Angi prosjekt navn
+please enter a property id !	property	nn	Angi eiendoms-id
+please enter a request title !	property	nn	Angi tittel for behov
+please enter a sql query !	property	nn	Angi en sql-spørring
+please enter a value for either material cost, labour cost or both !	property	nn	Angi enten material kostnader, arbeidskostnader eller begge
+please enter a workorder title !	property	nn	Angi en bestillings tittel
+please enter either a budget or contrakt sum	property	nn	Angi enten budsjett eller konstraktsum (eller begge)
+Please enter value for attribute %1	property	nn	Angi verdi for felt %1
+Please enter integer for attribute %1	property	nn	Angi heltall for felt %1
+please enter precision as integer !	property	nn	Angi heltall for presisjon
+please enter scale as integer !	property	nn	Angi heltall for skalering
+please give som details !	property	nn	Angi detaljer
+please select a branch !	property	nn	Velg fag
+please select a budget account !	property	nn	Velg en kostnadsart
+please select a valid budget account !	property	nn	Velg en gyldig kostnadsart
+please select a budget reponsible!	property	nn	Velg en anviser
+please select a building id !	property	nn	Velg bygnings-id
+please select a category !	property	nn	Velg kategori
+please select a coordinator !	property	nn	Velg en koordinator
+please select a date !	property	nn	Velg dato
+please select a district !	property	nn	Velg et distrikt
+please select a entrance id !	property	nn	Velg inngangs-id
+please - select a file to import from !	property	nn	Velg en fil å importere fra
+please select a file to upload !	property	nn	Velg en fil for opplasting
+please - select a import format !	property	nn	Velg et import format
+please select a location !	property	nn	Velg lokalisering
+please select a location - or an entity!	property	nn	Velg en lokalisering eller en entitet
+please select an agreement !	property	nn	Velg en avtale
+please select an agreement_group !	property	nn	Velg en avtale-gruppe
+Please select an end date!	property	nn	Angi slutt-dato
+please select a period for write off !	property	nn	Velg en avskrivningsperiode
+please select a person or a group to handle the ticket !	property	nn	Velg en person eller gruppe for tildeling av melding
+please select a person to handle the ticket !	property	nn	Velg en person som saksbehandler for denne meldingen
+please select a property id !	property	nn	Velg en eiendoms-id
+please select a status !	property	nn	Velg status
+please select a type !	property	nn	Velg type
+please select a valid project !	property	nn	Velg et gyldig prosjekt
+please - select a vendor!	property	nn	Velg en leverandør
+please select a workorder !	property	nn	Velg en ordre!
+please - select budget responsible!	property	nn	Velg en anviser
+please select change type	property	nn	Velg en endringstype
+please - select either payment date or number of days from invoice date !	property	nn	Velg enten betalingsdato eller angi antall dager till forfall fra fakturadato
+please select entity type !	property	nn	Velg en entitets-type
+please select equipment type !	property	nn	Velg utstyrstype
+please select type	property	nn	Velg type
+please - select type invoice!	property	nn	Velg type bilag
+please - select type order!	property	nn	Velg type bestilling
+please - select vendor!	property	nn	Velg leverandør
+please set a initial value !	property	nn	Sett initiell verdi
+please set a new index !	property	nn	Angi ny index
+Please set default assign to in preferences for user %1!	property	nn	Angi standardverdi for ansvarlig saksbehandler for bruker %1
+Please set default category in preferences for user %1!	property	nn	Angi standardverdi for kategori for bruker %1
+please type a subject for this ticket !	property	nn	Angi overskrift for denne meldingen
+popup calendar	property	nn	Kalender
+post	property	nn	post
+power meter	property	nn	Strømmåler
+potential grants	property	nn	Potensiale offentlig tilskudd
+precision	property	nn	Presisjon
+prefix	property	nn	prefiks
+preview html	property	nn	Forhåndsvis som HTML
+preview pdf	property	nn	Forhåndsvis som PDF
+presumed finnish date	property	nn	Antatt ferdig-dato
+pricebook	property	nn	prisbok
+print view	property	nn	Vis utskrift
+priority changed	property	nn	Prioritet er endret
+priority key	property	nn	Prioriteringsnøkkel
+priority keys has been updated	property	nn	Prioriteringsnøkkel er oppdatert
+prizing	property	nn	Priser
+probability	property	nn	Sannsynlighet
+project	property	nn	Prosjekt
+project type	property	nn	Prosjekt type
+.project	property	nn	Prosjekt
+project.condition_survey	property	nn	Tilstandsanalyse
+project.workorder	property	nn	Prosjekt::Bestilling
+project %1 has been edited	property	nn	Prosjekt %1 er oppdatert
+project %1 has been saved	property	nn	Prosjekt %1 er lagret
+project %1 needs approval	property	nn	Prosjekt %1 venter på godkjenning
+project budget	property	nn	Prosjekt budsjett
+project categories	property	nn	Prosjekt-kategorier
+project coordinator	property	nn	Prosjekt-ansvarlig
+project end date	property	nn	Prosjekt-sluttdato
+project group	property	nn	Agresso prosjekt
+project id	property	nn	Prosjekt-id
+project info	property	nn	Prosjekt info.
+Project is closed	property	nn	Prosjektet er avsluttet.
+project name	property	nn	Prosjekt navn
+.project.request	property	nn	Behov
+project start date	property	nn	Prosjekt-startdato
+.project.workorder	property	nn	Bestilling
+propagate	property	nn	Propager
+property	common	nn	Eiendom
+property has been edited	property	nn	Eiendom er oppdatert
+property has been saved	property	nn	Eiendom er lagret
+property id	property	nn	eiendoms-id
+property name	property	nn	Eiendomsnavn
+public	property	nn	Vises for alle
+publish text	property	nn	Publiser tekst
+purchase cost	property	nn	Anskaffelseskostnad
+quantity	property	nn	Mengde
+read	property	nn	Les
+ready for processing claim	property	nn	Til fakturering
+re-assigned	property	nn	Videresendt
+re-assigned group	property	nn	Tildelt ny gruppe
+receipt	property	nn	Kvittering
+receipt date	property	nn	Kvitteringsdato
+reconciliation	property	nn	Avstemming
+recommended year	property	nn	Anbefalt tiltaksår
+record	property	nn	Post
+reference level	property	nn	Referanse nivå
+regulations	property	nn	Forskrifter
+related	property	nn	Relatert
+related info	property	nn	Relatert info
+remark	property	nn	Merknad
+remainder	property	nn	Rest
+reminder	property	nn	Påminning
+rental	property	nn	Utleie
+rental agreement	property	nn	Utleieavtale
+rental agreement attributes	property	nn	Leieavtale-egenskaper
+rental agreement categories	property	nn	Leieavtale-kategorier
+rental agreement item attributes	property	nn	Egenskaper for utleie - detaljer
+rental type	property	nn	Utleietype
+re-opened	property	nn	Gjenåpnet
+repeat	property	nn	Serie
+repeat type	property	nn	Type serie
+repeat day	property	nn	Gjenta dag
+request	property	nn	Behov
+set the status of the request	property	nn	Sett status for behovet
+reset approval	property	nn	Nullstill
+project.request	property	nn	Behov
+request attributes	property	nn	Behov egenskaper
+request an email receipt	property	nn	Be om kvittering
+request a confirmation email when your email is opened by the recipient	property	nn	Be om epost som kvittering når mottaker åpner eposten.
+request %1 has been edited	property	nn	Behov %1 er oppdatert
+request %1 has been saved	property	nn	Behov %1 er lagret
+request %1 has been deleted from project %2	property	nn	Behov %1 er koplet fra prosjekt %2
+request %1 has been added	property	nn	Behov %1 er lagt til
+request %1 has already been added to project %2	property	nn	Behov %1 er allerede koplet til prosjekt %2
+request budget	property	nn	Budsjett for tiltak
+request condition type	property	nn	Behov::konsekvenstype
+request descr	property	nn	Beskrivelse av tiltak
+request end date	property	nn	Behov frist
+request entry date	property	nn	Registreringsdato for tiltak
+request id	property	nn	Behov-id
+request start date	property	nn	Behov startdato
+request status	property	nn	Status for behov
+request title	property	nn	Tiltakstittel
+request description	property	nn	Tilstandbeskrivelse
+requirement	property	nn	Behov/pålegg
+resend workorder	property	nn	Send ordre på nytt
+reserve	property	nn	Reserve
+reserve remainder	property	nn	Rest av reserve
+reset	property	nn	Tilbakestill
+residential environment	property	nn	Bo-miljø
+residual demand	property	nn	Rest behov
+reponse template	property	nn	SMS::mal for standardtekster
+responsible	property	nn	Ansvarlig
+responsibility	property	nn	Ansvar
+responsible matrix	property	nn	Ansvarsmatrise
+responsibility role	property	nn	Rolle for ansvarsmatrise
+responsible unit	property	nn	Ansvarlig enhet
+result	property	nn	Resultat
+return back to the list	property	nn	Returner til oversikt
+revision	property	nn	Revisjon
+rig addition	property	nn	Rigg tillegg
+right	property	nn	Rettighet
+role	property	nn	Rolle
+roles	property	nn	Roller
+roll back	property	nn	Rull tilbake
+rollback invoice	property	nn	Rull  tilbake bilag
+run now	property	nn	Kjør nå
+run the method now	property	nn	Kjør metoden nå
+safety	property	nn	Sikkerhet
+save as template	property	nn	lagre som mal
+save the actor and return back to the list	property	nn	Lagre aktøren og returner til oversikten
+save the agreement and return back to the list	property	nn	Lagre avtalen og returner til oversikten
+save the apartment	property	nn	Lagre leilighet
+save the budget account	property	nn	Lagre budsjettkotntoen
+save the building	property	nn	lagre bygning
+save the category	property	nn	Lagre kategorien
+save the claim and return back to the list	property	nn	Lagre kravet og returner til oversikten
+save the custom and return back to the list	property	nn	Lagre egendefinert og returner til oversikten
+save the custom function	property	nn	Lagre egendefinert funksjon
+save the deviation	property	nn	Lagre avvik
+save the document	property	nn	lagre dokument
+save the entity	property	nn	Lagre entitet
+save the entrance	property	nn	Lagre inngang
+save the entry and return to list	property	nn	Lagre data og returner til hovedliste
+save the equipment	property	nn	Lagre utstyr
+save the gab	property	nn	Lagre grunneiendom
+save the investment	property	nn	lagre investering
+save the location	property	nn	Lagre lokalisering
+save the meter	property	nn	lagre måler
+save the method	property	nn	Lagre metoden
+save the owner and return back to the list	property	nn	Lagre eier og returner til oversikten
+save the part of town and return back to the list	property	nn	Lagre bydel og returner til oversikten
+save the project	property	nn	Lagre prosjekt
+save the property	property	nn	Lagre eiendom
+save the rental agreement and return back to the list	property	nn	Lagre utleieavtale og returner til oversikten
+save the request	property	nn	Lagre behov
+save the service agreement and return back to the list	property	nn	Lagre serviceavtale og returner til oversikten
+save the standard	property	nn	Lagre standard
+save the status	property	nn	Lagre status
+save the ticket	property	nn	Lagre melding og bli stående i skjema
+save the voucher	property	nn	Lagre bilag
+save the workorder	property	nn	Lagre bestilling
+save this workorder as a template for later use	property	nn	Lagre denne bestillingen som mal for senere bruk
+save values and exit	property	nn	Lagre verdier og gå til liste
+save new	property	nn	Lagre og ny
+scale	property	nn	Scale
+schedule	property	nn	Planlegge (tid)
+scheduled events	property	nn	Planlagte oppgaver
+schedule the method	property	nn	Tidsplanlegging
+score	property	nn	Poengsum
+search by bruk. to show all entries, empty all fields and press the submit button again	property	nn	Søk etter bruksnr.
+search by feste. to show all entries, empty all fields and press the submit button again	property	nn	Søk etter festenr.
+search by gaards nr. to show all entries, empty all fields and press the submit button again	property	nn	Søk etter gårdsnr.
+search by location_code. to show all entries, empty all fields and press the submit button again	property	nn	Søk etter lokaliseringskode
+search by property	property	nn	Søk ved eiendom
+search by seksjon. to show all entries, empty all fields and press the submit button again	property	nn	Søk etter seksjon
+search criteria	property	nn	Søkekriterie
+search for history at this location	property	nn	Søk etter historikk for denne lokaliseringen
+search for investment entries	property	nn	Søk etter investeringsposter
+search for paid invoices	property	nn	Søk etter betalte bilag
+search for voucher id	property	nn	Søk etter bilagsnr.
+see attachment	property	nn	Se vedlegg
+seksjons nr	property	nn	Seksjonsnr.
+select	property	nn	Velg
+select a actor type	property	nn	Velg en aktør-type
+select a agreement type	property	nn	Velg en avtale-type
+select a custom function	property	nn	Velg en egendefinert funsksjon
+select a datatype	property	nn	Velg en datatype
+select a entity type	property	nn	Velg en entitetstype
+select agreement	property	nn	Velg avtale
+select agreement group	property	nn	Velg en avtale-gruppe
+select agreement_group	property	nn	Velg avtalegruppe
+select all	property	nn	Velg alle
+select none	property	nn	Velg ingen
+select a location	property	nn	Velg en lokalisering
+select a location!	property	nn	Velg en lokalisering
+select a value	property	nn	Velg en verdi
+select a rental agreement type	property	nn	Velg en leieavtale-type
+select a service agreement type	property	nn	Velg en serviceavtale-type
+select a standard-code from the norwegian standard	property	nn	Velg en standard NS-kode
+select a tenant	property	nn	Velg en leietaker
+select branch	property	nn	Velg fag
+select b-responsible	property	nn	Velg anviser
+select building part	property	nn	Velg bygningsdel
+select category	property	nn	Velg kategori
+select chapter	property	nn	Velg kapittel
+select column	property	nn	Velg kolonne
+select conversion	property	nn	Velg filter
+select coordinator	property	nn	Velg koordinator
+select date	property	nn	Velg dato
+select date for the file to roll back	property	nn	Velg dato for fil som skal rulles tibake
+select date the document was created	property	nn	Velg dato for opprettelse av dokumentet
+select default vendor category	property	nn	Velg standard leverandør-kategori
+select either a location or an entity	property	nn	Velg enten en lokalisering eller en entitet
+select either a location or an equipment	property	nn	Velg enten en lokalisering eller ett utstyr
+select email	property	nn	Velg e-post
+select file to roll back	property	nn	Velg fil for tilbakerulling
+select file to upload	property	nn	Velg fil for opplasting
+select files	property	nn	Velg filer
+select grouping	property	nn	Velg gruppering
+select invoice type	property	nn	Velg art
+select key responsible	property	nn	Velg nøkkelansvarlig
+select location level	property	nn	Velg lokaliseringsnivå
+select nullable	property	nn	Velg nullable
+select owner	property	nn	Velg eier
+select per button !	property	nn	Velg ved hjelp av knappen !
+select rental type	property	nn	Velg utleietype
+select request	property	nn	Velg behov
+select responsible	property	nn	Velg ansvarlig
+select status	property	nn	Velg status
+select submodule	property	nn	Velg submodul
+select the account class the selection belongs to	property	nn	Velg kontoklasse
+select the agreement_group the pricebook belongs to. to do not use a category select no category	property	nn	Velg avtalegruppen denne prisboken tilhører
+select the agreement group this activity belongs to.	property	nn	Velg avtalegruppen denne aktiviteten tilhører
+select the agreement the pricebook belongs to. to do not use a category select no category	property	nn	Velg avtale denne prisboken tilhører
+select the agreement this activity belongs to.	property	nn	Velg avtale denne aktiviteten tilhører
+select the appropriate condition degree	property	nn	Velg tilstandsgrad
+select the appropriate consequence by breakdown of this component for this theme	property	nn	Velg konsekvens ved sammenbrudd av dennekomponenten for dette temaet
+select the appropriate propability for worsening of the condition	property	nn	Velg sannsynlighet for forverring
+select the appropriate tax code	property	nn	Velg mva-kode
+select the branches for this project	property	nn	Velg fag for dette prosjektet
+select the branches for this request	property	nn	Velg fag for dette behovet
+select the branch for this activity.	property	nn	Velg fag for denne aktiviteten
+select the branch for this document	property	nn	Velg fag for dette dokumentet
+select the budget responsible	property	nn	Velg anviser
+select the building part for this activity.	property	nn	Velg bygningsdel for denne aktiviteten
+select the category the actor belongs to. to do not use a category select no category	property	nn	Velg kategorien denne aktøren tilhører
+select the category the agreement belongs to. to do not use a category select no category	property	nn	Velg kategorien denne avtalen tilhører
+select the category the alarm belongs to. to do not use a category select no category	property	nn	Velg kategorien denne alarmen tilhører
+select the category the apartment belongs to. to do not use a category select no category	property	nn	Velg kategori leilighetene tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the building belongs to. to do not use a category select no category	property	nn	Velg kategori bygningene tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the claim belongs to. to do not use a category select no category	property	nn	Velg kategorien dette kravet tilhører
+select the category the custom belongs to. to do not use a category select no category	property	nn	Velg kategorien denne egentilpassede tilhører
+select the category the data belong to. to do not use a category select no category	property	nn	Velg kategorien posten tilhører
+select the category the document belongs to. to do not use a category select no category	property	nn	Velg kategori dokumentene tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the entrance belongs to. to do not use a category select no category	property	nn	Velg kategori inngang tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the equipment belongs to. to do not use a category select no category	property	nn	Velg kategori utstyr tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the investment belongs to. to do not use a category select no category	property	nn	Velg kategori investering tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the location belongs to. to do not use a category select no category	property	nn	Velg kategorien denne lokaliseringen tilhører
+select the category the meter belongs to. to do not use a category select no category	property	nn	Velg kategori måler tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the permissions belongs to. to do not use a category select no category	property	nn	Velg kategorien denne rettigheten tilhører
+select the category the pricebook belongs to. to do not use a category select no category	property	nn	Velg kategori prisbok tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the project belongs to. to do not use a category select no category	property	nn	Velg kategori prosjekt tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the property belongs to. to do not use a category select no category	property	nn	Velg kategori eiendom tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the r_agreement belongs to. to do not use a category select no category	property	nn	Velg kategorien denne utleieavtalen tilhører
+select the category the request belongs to. to do not use a category select no category	property	nn	Velg kategori behovet tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the s_agreement belongs to. to do not use a category select no category	property	nn	Velg kategorien denne serviceavtalen tilhører
+select the category the ticket belongs to. to do not use a category select no category	property	nn	Velg kategori melding tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category the workorder belongs to. to do not use a category select no category	property	nn	Velg kategori bestillingen tilhører. For ikke å bruke kategori velg KATEGORI IKKE VALGT
+select the category. to do not use a category select no category	property	nn	Velg kategori
+select the chapter (for tender) for this activity.	property	nn	Velg tilbudskapittel for denne posten
+select the coordinator the document belongs to. to do not use a category select no user	property	nn	Velg koordinator dokument tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
+select the coordinator the project belongs to. to do not use a category select no user	property	nn	Velg koordinator prosjekt tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
+select the coordinator the request belongs to. to do not use a category select no user	property	nn	Velg koordinator behovet tilhører. For ikke å bruke koordinator velg BRUKER IKKE VALG
+select the customer by clicking this link	property	nn	Velg kunde
+select the date for the first value	property	nn	Angi dato for første verdi
+select the date for the update	property	nn	Angi dato for oppdatering
+select the dim b for this invoice. to do not use dim b -  select no dim b	property	nn	Velg Ansvarssted for bilag. For ikke å bruke Ansvarssted - velg Ansvarssted IKKE VALGT
+select the dim d for this activity. to do not use dim d -  select no dim d	property	nn	Velg DIM 6 for bilag. For ikke å bruke DIM 6 - velg DIMD IKKE VALGT
+select the district the part of town belongs to.	property	nn	Velg hvilke distrikt denne bydelen tilhører
+select the district the selection belongs to. to do not use a district select no district	property	nn	Velg distrikt utvalget tilhører. For ikke å bruke distrikt velg DISTRIKT IKKE VALGT
+select the document type the document belongs to.	property	nn	Velg dokumenttype for dette dokumentet
+select the equipment type the document belongs to. to do not use a type select no equipment type	property	nn	Velg utstyrstype dokumenter tilhøre.rFor ikke å bruke utstyrstype velg TYPE IKKE VALGT
+select the estimated date for closing the task	property	nn	Velg beregnet dato for lukking av oppgave
+select the estimated end date for the agreement	property	nn	Angi estimert sluttdato for avtalen
+select the estimated end date for the project	property	nn	Angi estimert sluttdato for prosjektet
+select the estimated end date for the request	property	nn	Angi estimert sluttdato for behovet
+select the estimated start date for the request	property	nn	Angi ønsket startdato for behovet
+select the estimated termination date	property	nn	Angi estimert terminerings-dato
+select the file to import from	property	nn	Velg fil å importere
+select the filter. to show all entries select show all	property	nn	Velg filter. For å vise alle - velg VIS ALLE
+select the granting group. to do not use a granting group select no granting group	property	nn	Angi tildelingsgruppe
+select the grouping for this activity.	property	nn	Velg gruppering for denne posten
+select the grouping the selection belongs to	property	nn	Velg gruppering utvelgelsen gjelder
+select the janitor responsible for this invoice. to do not use janitor -  select no janitor	property	nn	Velg bestiller bilaget tilhører. For ikke å tildele bestiller velg BESTILLER IKKE VALG
+select the key responsible for this project	property	nn	Velg nøkkelansvarlig
+select the level for this information	property	nn	Velg nivå for denne informasjonen
+select the method for this times service	property	nn	Velg metode
+select the owner	property	nn	Velg eier
+select the owner type. to show all entries select show all	property	nn	Velg eiertype
+select the part of town the building belongs to. to do not use a part of town -  select no part of town	property	nn	Velg bydel bygg tilhører. For ikke å bruke bydel velg BYDEL IKKE VALGT
+select the part of town the investment belongs to. to do not use a part of town -  select no part of town	property	nn	Velg bydel investeriong tilhører. For ikke å bruke bydel velg BYDEL IKKE VALGT
+select the part of town the property belongs to. to do not use a part of town -  select no part of town	property	nn	Velg bydel eiendom tilhører. For ikke å bruke bydel velg BYDEL IKKE VALGT
+select the part of town the selection belongs to. to do not use a part of town select no part of town	property	nn	Velg bydel
+select the priority the selection belongs to.	property	nn	Velg prioritet
+select the property by clicking this link	property	nn	klikk her for å velge eiendom
+select the revision the selection belongs to	property	nn	Velg revisjonen utvelgelsen gjelder
+select the status the agreement belongs to. to do not use a category select no status	property	nn	Velg status avtale tilhører. For ikke å bruke status velg STATUS IKKE VALGT
+select the status the agreement group belongs to. to do not use a category select no status	property	nn	Velg status
+select the status the document belongs to. to do not use a category select no status	property	nn	Velg status dokument tilhører. For ikke å bruke status velg STATUS IKKE VALGT
+select the status. to do not use a status select no status	property	nn	Velg status
+select the street name	property	nn	Velg gatenavn
+select the supervisor responsible for this invoice. to do not use supervisor -  select no supervisor	property	nn	Velg attestant bilaget tilhører. For ikke å tildele bestiller velg ATTESTANT IKKE VALG
+select the template-chapter	property	nn	Velg kapittel
+select the tolerance for this activity.	property	nn	Velg toleranse for denne posten
+select the type  invoice. to do not use type -  select no type	property	nn	Velg type
+select the type of conversion:	property	nn	Velg type import:
+select the type of value	property	nn	Velg type verdi
+select the unit for this activity.	property	nn	Velg enhet for post
+select the users supervisor	property	nn	Velg brukers overordnet
+select the user the alarm belongs to.	property	nn	Velg bruker
+select the user the document belongs to. to do not use a category select no user	property	nn	Velg bruker dokument tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the project belongs to. to do not use a category select no user	property	nn	Velg bruker prosjekt tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the request belongs to. to do not use a category select no user	property	nn	Velg bruker behovet tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the selection belongs to. to do not use a user select no user	property	nn	Velg bruker utvalg tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the template belongs to. to do not use a category select no user	property	nn	Velg bruker mal tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user the workorder belongs to. to do not use a category select no user	property	nn	Velg bruker bestillingen tilhører. For ikke å bruke bruker velg BRUKER IKKE VALG
+select the user. to do not use a category select no user	property	nn	Velg bruker
+select the user to edit email	property	nn	Velg bruker for å rette epost
+select the vendor by clicking the button	property	nn	Velg leverandør
+select the vendor by clicking this button	property	nn	Velg leverandør
+select the vendor by clicking this link	property	nn	Velg leverandør
+select the vendor the agreement belongs to.	property	nn	Velg leverandør for avtalen
+select the vendor the r_agreement belongs to.	property	nn	Velg leverandør
+select the vendor the s_agreement belongs to.	property	nn	Velg leverandør
+select the workorder hour category	property	nn	Velg post-kategori
+select the year the selection belongs to	property	nn	Velg år utvelgelsen gjelder
+select this budget account	property	nn	Velg kostnadsart
+select this contact	property	nn	Velg denne kontakten
+select this dates	property	nn	Velg dato
+select this ns3420 - code	property	nn	Velg NS-kode
+select this street	property	nn	Velg gate
+select this template to view the details	property	nn	Velg mal for å liste detaljer
+select this tenant	property	nn	Velg leietaker
+select this vendor	property	nn	Velg denne leverandøren
+select tolerance	property	nn	Velg toleranse
+select unit	property	nn	Velg enhet
+select user	property	nn	Velg bruker
+select where to deliver the key	property	nn	Velg hvor nøkkel skal leveres
+select where to fetch the key	property	nn	Velg hvor nøkkel kan hentes
+select year	property	nn	Velg år
+send	property	nn	Send
+send as pdf	property	nn	Send som PDF
+send e-mail	property	nn	Send epost
+send order	property	nn	Send ordre
+Send pdf as attachment to email	property	nn	Send PDF som vedlegg til epost
+sent by email to	property	nn	Sendt med e-post til
+Sent by sms	property	nn	Sendt med SMS
+send the following sms-message to %1 to update status for this order:	property	nn	Send følgende SMS-melding til %1 for å oppdatere status for denne ordren:
+send this order by email	property	nn	Send denne ordren med e-post
+send workorder	property	nn	Send ordre
+serious	property	nn	Kraftig
+serious consequences	property	nn	Store konsekvenser
+service	property	nn	Tjeneste
+service agreement	property	nn	Serviceavtale
+service agreement attributes	property	nn	Serviceavtale egenskaper
+service agreement categories	property	nn	Serviceavtale kategorier
+service agreement item attributes	property	nn	Egenskaper for serviceavtaler - detaljer
+set grants	property	nn	Sett tillatelser
+set new status	property	nn	Sett ny status
+set tax	property	nn	Angi MVA
+set tax during import	property	nn	Registrer mva ifm import
+set the status of the ticket	property	nn	Sett status for meldingen
+shared use	property	nn	Delt bruk
+shift down	property	nn	Skift ned
+shift up	property	nn	Skift opp
+show all entities	common	nn	Vis alle poster
+show calculated cost	property	nn	Vis sum
+show calculated cost on the printview	property	nn	Vis sum på utskrift
+show details	property	nn	Vis detaljer
+show in list	property	nn	Vis i oversikt
+show in lookup forms	property	nn	Vis i oppslagsskjema
+site configuration	property	nn	Konfigurasjon nettsted
+small	property	nn	Liten
+sms	sms	nn	SMS
+sorting	property	nn	Sortering
+sort the tickets by their id	property	nn	sorter meldinger etter-id
+sort the tickets by their priority	property	nn	sorter meldinger etter prioritet
+space	property	nn	Areal
+split line	property	nn	Splitt linje
+sql	property	nn	SQL
+standard	property	nn	standard
+standard description	property	nn	NS 3420
+standard has been edited	property	nn	Standard er rettet
+standard has been saved	property	nn	Standard er lagret
+standard has not been edited	property	nn	Standard er ikke rettet
+standard id	property	nn	Standard-id
+standard prefix	property	nn	Prefiks fo standard
+start	property	nn	Start
+start date	property	nn	Startdato
+started	property	nn	Startet
+start project	property	nn	Start prosjekt
+start this entity	property	nn	Start denne entiteten
+start this entity from	property	nn	Start denne entiteten fra prosjekt
+start ticket	property	nn	Start melding
+started from	property	nn	Startet fra
+status	property	nn	Status
+status changed	property	nn	Status er endret
+status code	property	nn	Statuskode
+status confirmed	property	nn	Status bekreftet
+status for the entity category	property	nn	Status for entitets-kategorien
+status has been added	property	nn	Status er lagt til
+status has been edited	property	nn	Status er rettet
+status has not been saved	property	nn	Status er IKKE lagret!
+status id	property	nn	Status-id
+statustext	property	nn	Statustekst
+statustext not entered!	property	nn	Statustekst er ikke angitt!
+street name	property	nn	Gatenavn
+street number	property	nn	Gatenr.
+subject	property	nn	Overskrift
+subject changed	property	nn	Emne er endret
+subject has been updated	property	nn	Overskrift er oppdatert
+submit the search string	property	nn	Send søkestrengen
+sum estimated cost	property	nn	Sum estimert kostnad
+sum orders	property	nn	Forpliktet
+sum	property	nn	Sum
+sum calculation	property	nn	Sum kalkulasjon
+sum deviation	property	nn	Sum avvik
+summary	property	nn	Sammendrag
+summation	property	nn	Summering
+sum of calculation	property	nn	Sum kalkulasjon
+sum tax	property	nn	Sum mva
+sum workorder	property	nn	Sum bestilling
+supervisor	property	nn	Attestant
+sync account-contact	common	nn	Synkroniser brukere og kontakter
+table could not be added	property	nn	Tabell kunne ikke legges til i databasen
+table has not been saved	property	nn	Tabell er ikke lagret
+table name	property	nn	Tabellnavn
+take over	property	nn	Ta over
+take over the assignment for this ticket	property	nn	Ta over ansvaret for denne saken
+tax code	property	nn	MVA kode
+template	property	nn	Mal
+template %1 is added	property	nn	Mal %1 er lagt til
+template id	property	nn	Mal-id
+tenant	property	nn	Leietaker
+tenant attributes	property	nn	Leietaker egenskaper
+tenant categories	property	nn	Leietaker kategorier
+.tenant_claim	property	nn	Leietaker krav
+tenant claim	property	nn	Leietaker krav
+tenant claim categories	property	nn	Leietaker kategorier klager
+tenant claim is not issued for project in voucher %1	property	nn	Krav mot leietaker er ikke registert for prosjekt i bilag %1
+tenant global categories	property	nn	Leietaker globale kategorier
+tenant_id	property	nn	Leietaker-id
+tenant is not defined, claim not issued	property	nn	Leietaker er ikke definert - krav ikke lagret
+tenant phone	property	nn	Leietaker tlf
+tender chapter	property	nn	Beskrivelse kapittel
+termination date	property	nn	Oppsigelse dato
+test cron	property	nn	Test cron
+text	property	nn	Tekst
+text_view	property	nn	Vis tekst
+Ticket %1 has been saved	property	nn	Melding %1 er lagret
+that vendor id is not valid !	property	nn	Denne leverandør-id er ikke gyldig
+the address to which this order will be sendt	property	nn	Adressen ordren vil bli sendt til
+the apartment is private. if the apartment should be public, uncheck this box	property	nn	Leiligheter er ikke
+the apartment is public. if the apartment should be private, check this box	property	nn	leiligheten er merket public. Dersom den skulle være privat - kryss av denne boksen
+the building is private. if the building should be public, uncheck this box	property	nn	Bygningen er merket privat. Dersom den skulle være public - fjern krysset i denne boksen
+the building is public. if the building should be private, check this box	property	nn	Bygningen er merket public. Dersom den skulle være privat - kryss av denne boksen
+the entrance is private. if the entrance should be public, uncheck this box	property	nn	Inngangen er merket privat. Dersom den skulle være public - fjern krysset i denne boksen
+the entrance is public. if the entrance should be private, check this box	property	nn	Inngangen er merket public. Dersom den skulle være privat - kryss av denne boksen
+the file is already imported !	property	nn	Fila er allerede importert
+the mail server returned	property	nn	E-post serveren returnerte
+the number of %1 hour is added!	property	nn	%1 poster er lagt til
+The order will also be sent to this one	property	nn	Bestillinga blir også sendt til denne
+the project %1 does not exist	property	nn	Prosjekt %1 finnes ikke
+the project has not been saved	property	nn	Prosjektet er ikke lagret
+the property is private. if the property should be public, uncheck this box	property	nn	Eiendommen er merket privat. Dersom den skulle være public - fjern krysset i denne boksen
+the property is public. if the property should be private, check this box	property	nn	Eiendommen er merket public. Dersom den skulle være privat - kryss av denne boksen
+the recipient did not get the email:	property	nn	Addressaten fikk ikke epost:
+the total amount to claim	property	nn	Total sum for krav
+the workorder has not been saved	property	nn	Bestillingen er ikke lagret
+this account is not valid:	property	nn	Denne kontoen er ikke gyldig:
+this activity code is already registered!	property	nn	Denne aktivitetskoden er allrerede registert
+this agreement code is already registered!	property	nn	Denne avtalekoden er allrerede registert
+this agreement group code is already registered!	property	nn	Denne avtale-gruppe-koden er allerede registert!
+this apartment_id id does not exist!	property	nn	Denne leilighet-id eksisterer ikke
+this apartment is already registered!	property	nn	Denne leiligheten er allrerede registert
+this attribute turn up as disabled in the form	property	nn	Denne egenskapen vises som inaktivt i skjemaet
+this building id does not exist!	property	nn	Denne bygnings-id eksisterer ikke
+this building_id id does not exist!	property	nn	Denne bygnings-id eksisterer ikke
+this building is already registered!	property	nn	denne bygningen er allrerede registert
+this dim a is not valid:	property	nn	Dim A er ikke gyldig:
+this dim d is not valid:	property	nn	Denne dim 6 er ikke gyldig:
+dim d is mandatory	property	nn	Dim 6 er obligatorisk
+this entrance id does not exist!	property	nn	Denne inngang-id eksisterer ikke
+this entrance_id id does not exist!	property	nn	Denne bygnings-id eksisterer ikke
+this entrance is already registered!	property	nn	Denne inngangen er allrerede registert
+this equipment id already exists!	property	nn	Denne utstyrskoden er allrerede registert
+this equipment_id id does not exist!	property	nn	Denne bygnings-id eksisterer ikke
+this file already exists !	property	nn	denne filen finnes allrerede
+this location id does not exist!	property	nn	Denne lokaliserings-id finnes ikke!
+this location is already registered!	property	nn	Denne lokaliseringen er allerede registert!
+this location parent id does not exist!	property	nn	Denne lokaliserings-forelder-id finnes ikke!
+this meter id is already registered!	property	nn	Denne måler-id er allrerede registert
+this order is sent by %1 on behalf of %2	property	nn	Denne bestillinga er bestilt av %1 på vegne av %2
+this property id does not exist!	property	nn	Denne eiendoms-id eksisterer ikke
+this user has not defined an email address !	property	nn	Denne brukeren har ikke definert en epost adresse !
+this vendor is already registered for this activity	property	nn	Denne leverandøren er allerede registert for denne aktiviteten
+ticket	common	nn	Melding
+.ticket	property	nn	Melding
+ticket %1 has been deleted	property	nn	Melding %1 er slettet
+ticket categories	property	nn	Meldinger kategorier
+ticket has been saved	property	nn	Melding er lagret
+ticket has been updated	property	nn	melding er oppdatert
+ticket id	property	nn	Melding-id
+time and budget	property	nn	Budsjett og frister
+time created	property	nn	laget tid
+times	property	nn	Tider
+timestampopened	property	nn	Startet
+timing	property	nn	Timing
+title	property	nn	Tittel
+to	property	nn	Til
+to alter the priority key	property	nn	Endre nøkkel
+to date	property	nn	Til dato
+todays date, eg. %1	property	nn	Dagens dato, %1
+tolerance	property	nn	Toleranse
+total cost	property	nn	Total
+total sum	property	nn	Total sum
+tracking helpdesk	property	nn	Sporing helpdesk hovedliste
+transfer	property	nn	Overfør
+transfer time	property	nn	Overført
+true	property	nn	True
+tts	property	nn	Melding
+type	property	nn	Type
+type invoice ii	property	nn	Type
+type of changes	property	nn	Type av endring
+uncheck to debug the result	property	nn	Ta vekk avkryssning for debugging
+unit	property	nn	Enhet
+up	property	nn	Opp
+update	property	nn	Oppdater
+update a single entry by passing the fields.	property	nn	Oppdater en enkelt post
+update email	property	nn	Oppdater e-post
+update file	property	nn	Oppdater fil
+update location	property	nn	Oppdater lokasjon
+update project	property	nn	Oppdater prosjekt
+update selected investments	property	nn	Oppdater avmerkede investeringer
+update subject	property	nn	Oppdater overskrift
+update the category to not active based on if there is only nonactive apartments	property	nn	Oppdater kategori til utgått basert på om det bare finnes utgåtte leiligheter
+update the not active category for locations	property	nn	Oppdater kategori til utgått for lokaliseringer
+url	property	nn	URL
+used in	property	nn	Brukt i
+user	property	nn	Bruker
+user contact info	property	nn	Bruker kontaktinfo
+user gratification	property	nn	Bruker tilfredsstillelse
+username / group	property	nn	Brukernavn / Gruppe
+users	property	nn	Brukere
+users email is updated	property	nn	Brukers epost er oppdatert
+users phone is updated	property	nn	Brukers telefon er oppdatert
+value	property	nn	Verdi
+values	property	nn	Verdier
+varchar	property	nn	varchar
+vendor	property	nn	Leverandør
+vendor attributes	property	nn	Leverandør egenskaper
+vendor categories	property	nn	Leverandør kategorier
+vendor global categories	property	nn	Globale leverandør kategorier
+vendor has been added	property	nn	Leverandør er lagt til
+vendor id	property	nn	Lev-id
+vendor is not defined in order %1	property	nn	Leverandør er ikke definert i ordre %1
+vendor name	property	nn	Leverandørnavn
+vendor reminder	property	nn	Leverandørpurringer
+version	property	nn	versjon
+view apartment	property	nn	Vis leilighet
+view building	property	nn	Vis bygning
+view document	property	nn	Vis dokument
+view documents for this location/entity	property	nn	Vis dokumenter for denne lokaliseringen / entiteten
+view documents for this location/equipment	property	nn	Vis dokument for denne lokaliseringen/utstyret
+view/edit the history	property	nn	Vis/oppdater historikk
+view edit the prize for this activity	property	nn	Vis/oppdater pris for denne aktiviteten
+view entrance	property	nn	Vis inngang
+view equipment	property	nn	Vis utstyr
+view gab	property	nn	Vis grunneiendom
+view gab detail	property	nn	Vis grunneiendom-detaljer
+view gab-info	property	nn	Vis grunneiendom
+view information about the document	property	nn	Vis informasjon om dokumentet
+view investment	property	nn	Vis investering
+view map	property	nn	Vis kart
+view meter	property	nn	Vise måler
+view or edit prizing history of this element	property	nn	Vis eller oppdater prishistorikk for dette elementet
+view project	property	nn	Vis prosjekt
+view property	property	nn	Vis eiendom
+view request	property	nn	Vis behov
+view template detail	property	nn	Vis mal-detaljer
+view tender	property	nn	Vis beskrivelse
+view the apartment	property	nn	Vis leilighet
+view the budget account	property	nn	Vis kostnadsart
+view the building	property	nn	Vis bygning
+view the category	property	nn	Vis kategorien
+view the claim	property	nn	Vis kravet
+view the complete workorder	property	nn	Vis den komplette bestilling
+view the complete workorder as a tender for bidding	property	nn	Vis den komplette bestilling som beskrivelse
+view the document	property	nn	Vis dokument
+view the entity	property	nn	Vis entiteten
+view the entrance	property	nn	Vis inngang
+view the equipment	property	nn	Vis utstyr
+view the gab	property	nn	Vis grunneiendom
+view the location	property	nn	Vis lokalisering
+view the meter	property	nn	Vis måler
+view the method	property	nn	Vis metoden
+view the part of town	property	nn	Vis bydelen
+view the project	property	nn	Vis prosjekt
+view the property	property	nn	Vis eiendom
+view the request	property	nn	Vis behov
+view the standard	property	nn	Vis standard
+view the template	property	nn	Vis mal
+view the ticket	property	nn	Vis melding
+view the vendor(s) for this activity	property	nn	Vis leverandør(er) for dette elementet
+view the workorder	property	nn	Vis arberidsordre
+view this entity	property	nn	Vis denne entiteten
+view ticket detail	property	nn	Vis meldingsdetalj
+view workorder	property	nn	Vis bestilling
+voucher	property	nn	Bilag
+voucher date	property	nn	Bilagsdato
+voucher id	property	nn	Bilagsnr.
+voucher id already taken	property	nn	Bilagsnummer er allerede brukt
+voucher is updated	property	nn	Bilag er oppdatert
+voucher is updated:	property	nn	Bilag er oppdatert:
+voucher period is updated	property	nn	bilagsperiode er oppdatert
+voucher process code	property	nn	Årsakskode
+voucher process log	property	nn	Fakturalogg
+Warning: the record has to be saved in order to plan an event	property	nn	NB! posten må lagres før hendelse kan planlegges
+warning: show cost estimate	property	nn	Advarsel: kostnadsestimat blir synlig for leverandør
+w_cost	property	nn	Arbeidskostnad
+weekly	property	nn	Ukentlig
+weight for prioritising	property	nn	Vekting av prioritering
+what is the current status of this document ?	property	nn	Hva er status for dette dokumentet ?
+what is the current status of this equipment ?	property	nn	Hva er status for dette utstyret ?
+what is the current status of this project ?	property	nn	Hva er status for dette prosjektet ?
+what is the current status of this request ?	property	nn	Hva er status for dette behovet ?
+what is the current status of this workorder ?	property	nn	Hva er status for denne bestillingen ?
+when	property	nn	Når
+where	property	nn	Hvor
+where to deliver the key	property	nn	Nøkler leveres
+where to fetch the key	property	nn	Nøkler hentes
+where to pick up the key	property	nn	Nøkler hentes
+which entity type is to show up in location forms	property	nn	Hvilke entitet-type skal vises i lokaliseringsskjema
+work:____________	property	nn	Arbeid:____________
+workorder	property	nn	Bestilling
+workorder %1 has been edited	property	nn	Bestilling %1 er oppdatert
+workorder %1 has been saved	property	nn	Bestilling %1 er lagret
+workorder %1 needs approval	property	nn	Bestilling %1 venter på godkjenning
+workorder detail categories	property	nn	Detaljering av bestilling
+workorder end date	property	nn	Sluttdato
+workorder entry date	property	nn	Registreringsdato
+workorder id	property	nn	Bestilling
+Workorder %1 is sent by email to %2	property	nn	Bestilling %1 er sendt pr e-post til %2
+workorders status	property	nn	Status bestilling
+workorder start date	property	nn	Start dato for bestilling
+workorder status	property	nn	Status
+workorder template	property	nn	Bestillings mal
+workorder title	property	nn	Bestillings tittel
+workorder user	property	nn	Bruker
+write off	property	nn	Avskrivning
+write off period	property	nn	Avskrivningsperiode
+year	property	nn	År
+yearly	property	nn	Årlig
+you are not approved for this task	property	nn	Du mangler rettigheter for denne oppgaven
+you are not approved for this dimb: %1	property	nn	Du mangler rettigheter for dette ansvarsstedet: %1
+you have entered an invalid end date !	property	nn	Du har angitt en ugyldig slutt dato
+you have entered an invalid start date !	property	nn	Du har angitt en ugyldig start dato
+you have no edit right for this project	property	nn	Du har ikke redigeringsrettigheter for dette prosjektet
+you do not have permission to approve this order	property	nn	Du har ikke rettighteter for a godkjenne bestillingen
+you have to select a budget responsible for this invoice in order to add the invoice	property	nn	Du må velge en anviser for å kunne legge til en faktura
+you have to select a budget responsible for this invoice in order to make the import	property	nn	Du må velge en anviser for å importere
+you have to select the conversion for this import	property	nn	Du må velge importformat
+you have to select type of invoice	property	nn	Du må velge art
+your message could not be sent!	property	nn	Din melding kunne ikke sendes
+your message could not be sent by mail!	property	nn	Din melding kunne ikke sendes med epost!
+usertype	common	nn	Brukertype
+tenant	common	nn	Leietaker
+internal	common	nn	Intern
+in progress date	property	nn	Påbegynt dato
+inherit location	property	nn	Arve lokalisering til bestilling
+delivered date	property	nn	Utført dato
+checklist	property	nn	Sjekkliste
+closed date	property	nn	Avsluttet dato
+cost categories	property	nn	Kostnadskategori
+negative value for budget	property	nn	Negativ verdi for kostnadsestimat
+no symptoms	property	nn	Ingen avvik
+not a valid category	property	nn	Ugyldig kategori
+not a valid budget account	property	nn	Ugyldig kostnadsart
+minor symptoms	property	nn	Ikke vesentlig avvik
+medium symptoms	property	nn	Vesentlig avvik
+serious symptoms	property	nn	Stort eller vesentlig avvik
+condition not assessed	property	nn	Ikke udersøkt. Mulig risiko
+low probability	property	nn	Liten sannsynlighet
+medium probability	property	nn	Middels sannsynlighet
+modified date	property	nn	Oppdatert dato
+high probability	property	nn	Stor sannsynlighet
+weight	property	nn	Vekt
+risk	property	nn	Risiko
+elements_pr_page	property	nn	Poster pr. side
+shows_from	property	nn	Viser
+of_total	property	nn	av
+fictive	property	nn	Fiktiv
+first	property	nn	Første
+previous	property	nn	Forrige
+next	property	nn	Neste
+last	property	nn	Siste
+action year	property	nn	Tiltaksår
+action cost overview	property	nn	Kostnadsoversikt
+request-id condition	property	nn	Fra tilstandsanalyse-id
+request coordinator	property	nn	Byggforvalter
+request action mouseover title	property	nn	Beskriv tiltak
+request action title	property	nn	Tiltaksbeskrivelse
+request condition mouseover description	property	nn	Beskriv tilstand
+request condition description	property	nn	Tilstandsbeskrivelse
+cost operation	property	nn	Andel kostnad D/V i kr.
+cost investment	property	nn	Andel investering i kr.
+grant category	property	nn	Tilskuddskategori
+what	property	nn	Hva
+fictive periodization	property	nn	Periodiser løpende ut året
+tender deadline	property	nn	Tilbudsfrist
+tender received	property	nn	Mottatt tilbud
+inspection on completion	property	nn	Ferdigbefaring
+end date delay	property	nn	Forsinket utførelse
+tender delay	property	nn	Forsinket tilbud
+enable bulk	common	nn	Aktiver bulk
+enable controller	common	nn	Aktiver kontroll
+entity group	common	nn	Registergruppe
+modified on	common	nn	Oppdatert
+property type	property	nn	Type
+hjemmel	common	nn	Hjemmel
+record has been edited	common	nn	Data er redigert
+external project	property	nn	Eksternt prosjekt
+unspsc code	common	nn	UNSPSC-kode
+order received	property	nn	Varemottak
+receive order	property	nn	Motta vare
+check date type	property	nn	Dato filter type
+no date	property	nn	Ingen dato
+Please select an external project!	property	nn	Velg et tilnyttet eksternt prosjekt
+mine roles	property	nn	Mine roller
+account type	property	nn	Rolletype
+update ticket	property	nn	Oppdater melding
+make relation	property	nn	Opprett kopling
+request for approval	property	nn	Anmodning om godkjenning
+approval from %1 is required for order %2	property	nn	Godkjenning fra %1 er påkrevd for ordre %2
+missing recipient for order %1	property	nn	Mangler mottaker for ordre %1
+export	property	nn	Eksport
+simplified	property	nn	Forenklet
+implicitly from project	property	nn	Implisitt fra prosjekt
+generic import	property	nn	Generisk import
+import components	property	nn	Importer FDV-dokumentasjon
+path to temp files components	property	nn	Temporær katalog for filimport for FDV-dokumentasjon
+relations	property	nn	Koblinger
+components	property	nn	Komponenter
+locations	property	nn	Lokasjoner
+choose profile	property	nn	Velg profil
+attributes template	property	nn	Mal for feltmapping
+preview	property	nn	Forhåndsvis
+start upload	property	nn	Start opplasting
+cancel upload	property	nn	Kanseller opplasting
+add files	property	nn	Legg til filer
+start import	property	nn	Start import
+choose attribute	property	nn	Velg datafelt
+choose attribute name for component id	property	nn	Velg datafelt som skal representere komponent Id
+number files	property	nn	Antall filer
+without components	property	nn	Uten komponenter
+with components	property	nn	Med komponenter
+uncompressed	property	nn	Ukomprimert
+compressed	property	nn	Komprimert
+file name	property	nn	Filnavn
+row	property	nn	Rad
+download preview components	property	nn	Last ned forhåndsvisning av komponenter
+new attributes	property	nn	Nye egenskaper
+new categories	property	nn	Nye kategorier
+save profile	property	nn	Lagre profil
+columns and attributes	property	nn	Kolonner og egenskaper
+attribute name for component id	property	nn	Egenskapnavn for komponent id
+category template	property	nn	Kategori mal
+profile	property	nn	Profil
+report	property	nn	Rapport
+canceled	property	nn	Kansellert
+substitute	property	nn	Vikar
+set substitute	property	nn	Sett vikar
+circle reference	property	nn	Sirkelreferanse
+reports	property	nn	Rapporter
+report generator	property	nn	Rapportgenerator
+datasets	property	nn	Datasett
+dataset	property	nn	Datasett
+dataset name	property	nn	Navn på datasett
+group by	property	nn	Gruppering
+sort by	property	nn	Sortering
+count / sum	property	nn	Telling og summering
+criteria	property	nn	Kriterier
+operator	property	nn	Operator
+restricted value	property	nn	Felt for avgrensing
+conector	property	nn	Koblingstype
+report name	property	nn	Navn på rapport
+choose	property	nn	Velg
+unselect	property	nn	Nullstill
+get columns	property	nn	Hent kolonner
+and	property	nn	Og
+or	property	nn	Eller
+show	property	nn	Vis
+access not permitted	property	nn	Ingen tilgang
+activate	property	nn	aktiver
+add new document	property	nn	Legg til nytt dokument
+add report	property	nn	Legg til rapport
+all types	property	nn	Alle typer
+amount to transfer	property	nn	Beløp for overføring
+app	property	nn	App
+budget for selected year	property	nn	Budsjett for valgt år
+budget info	property	nn	Budsjett informasjon
+budget year	property	nn	Budsjettår
+building part has been updated	property	nn	Bygningsdel er oppdatert
+check to attach file	property	nn	Merk av for å legge ved fil
+check to delete year	property	nn	Merk av for å slette år
+choose dataset	property	nn	Velg datasett
+claim_id	property	nn	Krav-id
+click this button to start the export	property	nn	Klikk for å starte eksporten
+click to delete file	property	nn	Klikk for å slette fil
+click to select dimb	property	nn	Klikk for å velge ansvarssted
+click to select external project	property	nn	Klikk for å velge eksternt prosjekt
+condition survey categories	property	nn	Kategorier for tilstandsanalyse
+condition survey status	property	nn	Status for tilstandsanalyse
+convert to eav	property	nn	Konverter til EAV
+created	property	nn	Opprettet
+custom config	property	nn	Tilpasset konfigurasjon
+delete imported records	property	nn	Slett importerte verdier
+delete the ticket	property	nn	Slett melding
+download jasperreport %1 definition	property	nn	Last ned jasperreport %1 definisjonen
+edit serie	property	nn	Endre serie
+edit the jasper entry	property	nn	Endre jasper oppføringen
+enter a remark to add to the history of the order	property	nn	Skriv en merknad som blir lagt til historikken
+enter a value for:	property	nn	Angi en verdi for:
+filetype	property	nn	Filtype
+format	property	nn	Format
+gab info	property	nn	Matrikkel informasjon
+generic document	property	nn	Generisk dokument
+grand total	property	nn	Totalsum
+has been deleted	property	nn	Er slettet
+leave the record untouched and return to the list	property	nn	La posten være urørt, og returnere til listen
+list contacts	property	nn	List kontakter
+list pictures	property	nn	List bilder
+list report definitions	property	nn	List rapportdefinisjon
+location contact	property	nn	Lokasjonskontakt
+location has been updated	property	nn	Lokasjon er oppdatert
+mandatory actual cost	property	nn	Obligatorisk faktisk kostnad
+mandatory project group	property	nn	Obligatorisk prosjektgruppe
+mine documents	property	nn	Mine dokumenter
+mine tasks	property	nn	Mine oppgaver
+mobile	property	nn	Mobil
+no filetype	property	nn	Filtype ikke valgt
+number of reports	property	nn	Antall rapporter
+open vendor in new window	property	nn	Åpne leverandør i nytt vindu
+parent	property	nn	Forelder
+path	property	nn	Sti
+please - enter a invoice num!	property	nn	Angi et bilagsnummer
+please - enter an integer for order!	property	nn	Angi et heltall for bestiling
+please - select write off period or enter new number of period !	property	nn	Velg avskrivningsperiode, og antall perioder
+please enter a category !	property	nn	Angi en kategori
+please enter a description !	property	nn	Angi en beskrivelse
+please enter a multiplier !	property	nn	Angi en multiplikator
+please enter a status !	property	nn	Angi en status
+print the ticket	property	nn	Skriv ut melding
+project attributes	property	nn	Prosjektegenskaper
+project status	property	nn	Prosjektstatus
+projekt	property	nn	Prosjekt
+reporting	property	nn	Rapportering
+request categories	property	nn	Behovskategorier
+response template	property	nn	Respons mal
+s_agreement	property	nn	Serviceavtale
+save the record and return to the list	property	nn	Lagre posten og returner til listen
+select a group	property	nn	Velg en gruppe
+select an conector for:	property	nn	Velg en kobling for:
+select an operator for:	property	nn	Velg en operator for:
+select at least one column	property	nn	Velg minst en kolonne
+select at least one count/sum operation	property	nn	Velg minst en telle/sum operasjon
+select sub category	property	nn	Velg underkategori
+select the estimated start date for the project	property	nn	Angi estimert startdato for prosjektet
+select the priority the selection belongs to	property	nn	Angi prioritering
+select type	property	nn	Velg type
+send this workorder to vendor	property	nn	Send denne ordren til leverandør
+set responsible unit	property	nn	Angi ansvarlig enhet
+size	property	nn	Størrelse
+status filter	property	nn	Status filter
+status new	property	nn	Status ny
+street	property	nn	Gate
+target	property	nn	Mål
+target project	property	nn	Mål-prosjekt
+tenant category	property	nn	Leietakerkategori
+ticket attributes	property	nn	Meldingsegenskaper
+ticket config	property	nn	Meldingskonfigurasjon
+ticket priority	property	nn	Meldingsprioritet
+ticket status	property	nn	Meldingsstatus
+vendor category	property	nn	Leverandør kategori
+workorder recalculate actual cost	property	nn	Rekalkuler faktisk kostnad for bestillinger
+none selected	property	nn	Ingen valgt
+direction	property	nn	Retning
+directory	property	nn	Katalog
+select template	property	nn	Velg mal
+select parent	property	nn	Velg forelder
+attribute groups	property	nn	Egenskapgrupper
+sms text	property	nn	SMS-tekst
+character left	property	nn	Resterende tegn
+delivery address	property	nn	Leveringsadresse
+severity	property	nn	Alvorlighetsgrad
+location exception	property	nn	OBS varsel
+severity category	property	nn	Kategori for alvorlighetsgrad
+severity category text	property	nn	Tekster for kategori for alvorlighetsgrad
+reference	property	nn	Referanse
+alert vendor	property	nn	Varsle leverandør
+important information	property	nn	Viktig informasjon
+category content	property	nn	Tekster for kategori
+order deadline	property	nn	Frist for utførelse
+please update <a href="%1">your email address here</a>	property	nn	Vennligst oppdatert din <a href="%1">epost-adresse her</a>
+clear contact	property	nn	Fjern kontakperson
+deadline for start	property	nn	Frist for oppstart
+deadline for execution	property	nn	Frist for ferdigstillelse
+outside contract	property	nn	Utenfor rammeavtale
+refund	property	nn	Refusjon
+both	property	nn	Begge
+condition survey location level	property	nn	Tilstandsanalyse lokasjonsnivå
+condition survey import category	property	nn	Tilstandsanalyse importkategori
+show overdue projects on main screen	property	nn	Vis prosjekter over tiden på hovedskjermen
+link to projects you are assigned to	property	nn	Knytt til prosjekter du er tildelt
+show open tenant claims on main screen	property	nn	Vis åpne leietaker krav på hovedskjermen
+link to claims you are assigned to	property	nn	Knytt til krav du er tildelt
+the default group to assign a ticket in helpdesk-submodule	property	nn	Standardgruppen for å tildele en billett i helpdesk-submodule
+budget account as listbox	property	nn	Budsjettkonto som listeboks
+the input type for budget account	property	nn	Input typen for budsjettkonto
+default unspsc code	property	nn	Standard unspsc kode
+contact block 1	property	nn	Kontakt blokk 1
+contact block 2	property	nn	Kontakt blokk 2
+check missing project budget	property	nn	Sjekk manglende prosjekt budsjett
+request condition_type	property	nn	Forespør betingelsestype
+pending action type	property	nn	Venter på handlingstype
+use acl for document types. (not implementet) 	property	nn	Bruk acl for dokumenttyper . (Ikke implementert)
+org unit id	property	nn	Organsisasjonsnummer
+order footer header	property	nn	Overskrift for bestillings-avslutnings-tekst
+order footer	property	nn	bestillings-avslutnings-tekst
+order logo	property	nn	Logo på bestilling
+order logo width	property	nn	Bredde for logo på bestilling
+SMS client order notice	property	nn	SMS-varsling til kunde
+none selected	property	nn	Ingen valgt
+dimb responsible 1	property	nn	kostnadsstedsansvarlig 1
+dimb responsible 2	property	nn	kostnadsstedsansvarlig 2
+invoicehandler	property	nn	Fakturahåndterer
+invoice acl	property	nn	Kontroll av fakturarettigheter
+project status on approval	property	nn	Prosjektstatus ved godkjenning
+project status on last order closed	property	nn	Prosjektstatus ved siste ordre lukket
+workorder status on approval	property	nn	Arbeidsordre status ved godkjenning
+ticket status on approval	property	nn	Meldingsstatus ved godkjenning
+approval amount limit	property	nn	Godkjenningsgrense
+approval level	property	nn	Godkjenningsnivå
+workorder status on ordered	property	nn	Arbeidsordre status ved bestilling
+request status on project hookup	property	nn	Behovsstatus ved prosjektoppkobling
+request status on ticket hookup	property	nn	Behovsstatus ved meldingsoppkobling
+workorder status that are to be set when invoice is processed	property	nn	Arbeidsordre status som skal settes når fakturaen er behandlet
+workorder reopen status that are to be set when invoice is processed	property	nn	Arbeidsordre gjenåpne-status som skal settes når fakturaen er behandlet
+require building part at workorder	property	nn	Krever bygningsdel på arbeidsordre
+require vendor at workorder	property	nn	Krever leverandør på arbeidsordre
+delay operation workorder end date	property	nn	Utsett sluttdato for driftsarbeidsordre
+last day in year	property	nn	siste dag i året
+enable unspsc kode	property	nn	Aktiver unspsc kode
+enable order service id	property	nn	Aktiver dimensjonen tjeneste i bestilling
+default municipal number	property	nn	Standard kommunenummer
+tax	property	nn	MVA
+enter the location of files url	property	nn	Skriv inn adressen til filene (url)
+path to external files for use with location	property	nn	Sti til eksterne filer for bruk med plassering
+on windows use	property	nn	På Windows bruk
+max recursive level at external files	property	nn	Maks rekursivt nivå på eksterne filer
+filter at level at external files	property	nn	Filter på nivå ved eksterne filer
+enter map url 	property	nn	Skriv inn kart url
+enter gab location level	property	nn	Skriv inn matrikkel-lokasjonsnivå
+default value is	property	nn	Standardverdi er
+enter gab url	property	nn	Skriv inn matrikkel url
+gab url paramtres	property	nn	Matrikkel url parametre
+suppress old tenant	property	nn	Deaktiver leietaker
+show billable hours	property	nn	Vis egne timer
+open translates to	property	nn	Åpen oversetter til
+tts assign group candidates	property	nn	Tts tildele gruppekandidater
+tts disable assign to user on add	property	nn	Tts deaktivere tilordne til bruker på legg til
+tts simplified group	property	nn	Tts forenklet gruppe
+tts simplified categories	property	nn	Tts forenklet kategorier
+mail notification	property	nn	E-post varsling
+owner notification project	property	nn	Prosjekteier varsles
+owner notification tts	property	nn	Eier varsling tts
+assigned notification tts	property	nn	Tildelt varsling tts
+group notification tts	property	nn	Gruppe varsling tts
+tts file upload	property	nn	Tts filopplasting
+mandatory title tts	property	nn	Obligatorisk tittel for meldinger (tts)
+tts finnish date	property	nn	Tts ferdig dato
+tts order contact at location	property	nn	Tts bestille kontakt på stedet
+send response tts	property	nn	Sende svar tts
+project suppress meter	property	nn	Prosjekt: deaktiver måler
+project suppress coordination	property	nn	Prosjekt: deaktiver koordinering
+project optional category	property	nn	Prosjekt: valgfri kategori
+request show dates	property	nn	Behov: vis datoer
+request location level	property	nn	Behov: lokasjonsnivå
+request coordinator text	property	nn	Behov: koordinatortekst
+meter table	property	nn	Målertabell
+receive workorder status by sms	property	nn	Motta arbeidsordre status via SMS
+use acl for accessing location based information	property	nn	Bruk acl for å få tilgang til plasseringbasert informasjon
+bypass acl for accessing tickets	property	nn	Bypass acl for å få tilgang til meldinger
+bypass acl for accessing entities	property	nn	Bypass acl for å få tilgang til generiske entiteter
+use acl for helpdesk categories	property	nn	Bruk acl for meldingskategorier
+use location at workorder	property	nn	Bruk lokasjon på arbeidsordre
+budget at project level	property	nn	Budsjett på prosjektnivå
+common budget account at project level	property	nn	Felles budsjettkonto på prosjektnivå
+update project budget from order	property	nn	Oppdater prosjektbudsjett fra ordre
+disallow multiple condition types at demands	property	nn	Ikke tillat flere tilstandstyper på behov
+list location level	property	nn	List lokasjonsnivå
+ntlm alternative host	property	nn	Alternativ serverhost ved ntlm (filopplasting)
+uploader filetypes	property	nn	Opplastingsfiltyper
+filter buildingpart	property	nn	Filter for bygningsdel
+condition survey import category	property	nn	Importkategori for tilstandsanalyse
+initial status that are to be set when condition survey are imported	property	nn	Innledende status som skal settes når tilstandsanalysen blir importert
+hidden status that are to be set when condition survey are imported	property	nn	Skjulte statuser som skal settes når tilstandsanalyse blir importert
+obsolete status that are to be set for old records when condition survey are imported	property	nn	Foreldet status som skal settes for gamle poster når tilstandsundersøkelsen blir importert
+NO	property	nn	NEI
+YES	property	nn	JA
+None	property	nn	Ingen
+location_id	property	nn	Lokasjons ID
+entity	property	nn	Entitet
+short description	property	nn	Kort beskrivelse
+do you really want to convert to eav	property	nn	Er du sikker på at du vil konvertere til eav?
+appname	property	nn	modulnavn
+do you really want to recalculate all actual cost for all workorders	property	nn	Vil du omregne alle faktiske kostnader for alle arbeidsordre?
+custom function	property	nn	Egendefinerte funksjoner
+list custom function	property	nn	Liste over egendefinerte funksjoner
+pre commit	property	nn	Før lagring til databasen
+client side	property	nn	Klientside
+location	property	nn	Lokasjon
+list custom attribute	property	nn	Liste over egendefinerte egenskaper
+client-side	property	nn	Klientside
+default ticket categories	property	nn	Default meldingskategori
+default assign to tts	property	nn	Default tildele til, meldinger
+default group tts	property	nn	Default gruppe for meldinger
+dimb role	property	nn	DimB Rolle
+process code	property	nn	Årsakskode
+add timer	property	nn	Legg til tidsplan
+migrate	property	nn	Migrer
+list available domains	property	nn	Liste over domener
+db_host	property	nn	Db_server
+db_name	property	nn	Db_navn
+db_type	property	nn	Db_type
+distribute	property	nn	Distribuer
+distribute year	property	nn	Distribuerings år
+settings	property	nn	Innstillinger
+ask for workorder approval by email	property	nn	Be om betillingsgodkjenning via e-post
+ask for project approval by email	property	nn	Be om prosjektgodkjenning via e-post
+TTS default interface	property	nn	TTS default interface
+FM settings	property	nn	Innstillinger for eiendomsforvaltning
+pending action type	property	nn	Handlingstyper
+comma separated email addresses to be notified about tenant claim	property	nn	Kommmaseparert liste over hvem som skal ha e-post om leietakerkrav
+record has been saved	property	nn	Posten er lagret
+invoice remark	property	nn	Fakturanotat
+please select a part of town	property	nn	Vennligst velg bydel
+location %1 has been saved	property	nn	Lokasjon %1 er lagret
+location %1 has been edited	property	nn	Lokasjon %1 er endret
+update the locations	property	nn	Oppdater lokasjoner
+do you really want to update the locations	property	nn	Vil du oppdatere lokasjoner
+custom field has been created	property	nn	Egendefinert felt er lagt til
+group name	property	nn	gruppenavn

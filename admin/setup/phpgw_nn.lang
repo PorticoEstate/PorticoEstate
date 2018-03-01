@@ -1,0 +1,141 @@
+account active	admin	nn	Bruker er aktiv
+active	admin	nn	Aktiv
+all records and account information will be lost!	admin	nn	All historie og brukerinformasjon vil gå tapt!
+anonymous user	admin	nn	Anonym bruker
+are you sure you want to delete this account ?	admin	nn	Er du sikker på at du vil slette denne account?
+are you sure you want to delete this group ?	admin	nn	Er du sikker på du vil slette denne gruppen?
+are you sure you want to kill this session ?	admin	nn	Er du sikker på at du vil avslutte denne session?
+create group	admin	nn	Lag Gruppe
+delete message	admin	nn	Slett Melding
+disabled	admin	nn	Deaktivert
+disabled (not recomended)	admin	nn	Deaktivert (ikke anbefalt)
+fallback (after each pageview)	admin	nn	Fallback (etter hver sidevisning)
+display	admin	nn	Vis
+global message	admin	nn	Global Melding
+group name	admin	nn	Gruppenavn
+idle	admin	nn	idle
+ip	admin	nn	IP
+kill	admin	nn	Avslutt
+last time read	admin	nn	Lest siste gang
+last %1 logins	admin	nn	Siste %1 logins
+list of current users	admin	nn	liste over brukere
+login time	admin	nn	Login Tid
+loginid	admin	nn	Brukernavn
+manager	admin	nn	Manager
+message	admin	nn	Melding
+new group name	admin	nn	Nytt gruppenavn
+new password [ leave blank for no change ]	admin	nn	Nytt passord [ Ingenting hvis ingen forandring ]
+percent of users that logged out	admin	nn	Prosent av brukere som logget ut
+re-enter password	admin	nn	Skriv inn passord igjen
+site	admin	nn	Site
+that loginid has already been taken	admin	nn	Den loginID er opptatt
+the login and password can not be the same	admin	nn	Loging og passord kan ikke være det samme
+the two passwords are not the same	admin	nn	Passordene er ikke de sammme
+total records	admin	nn	Total historie
+user accounts	admin	nn	Bruker accounts
+user groups	admin	nn	Brukergrupper
+view access log	admin	nn	Vis Accesslog
+view sessions	admin	nn	Vis sesjoner
+you must enter a password	admin	nn	Du må skrive inn et passord
+you must select a file type	admin	nn	Du må velge en filtype
+home screen message	admin	nn	Melding på hjemmeskjerm
+title	admin	nn	Overskrift
+important message	admin	nn	Viktig informasjon
+enabled	admin	nn	Aktiv
+(To install new applications use<br><a href="setup/" target="setup">Setup</a> [Manage Applications] !!!)	admin	nn	(For å installere nye moduler, bruk<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)
+add a category	admin	nn	Legg til kategori
+add a section	admin	nn	Legg til seksjon
+add a subcategory	admin	nn	Legg til undekategori
+admins	admin	nn	Admins
+appearance	admin	nn	Utseende
+attribute	admin	nn	Egenskap
+attributes	admin	nn	Egenskaper
+attributes for this config section	admin	nn	Egenskaper for denne konfigurasjonsseksjonen
+category list	admin	nn	Kategoriliste
+check ip address of all sessions	admin	nn	Kontroller IP-adresse for sesjoner
+close window	admin	nn	Lukk vindu
+collect missing translations	admin	nn	Finn manglende oversettinger
+config	admin	nn	Konfigurasjon
+delete all log records	admin	nn	Slett alle poster fra loggen
+delete this category	admin	nn	Slett kategorien
+edit the config	admin	nn	Endre konfigurasjon
+edit this category	admin	nn	Endre kategorien
+email domain	admin	nn	E-post domene
+enter the background color for the login page	admin	nn	Angi bakgrunnsfarge for innloggingssiden
+enter the background color for the site title	admin	nn	Angi bakgrunnsfarge for nettstedstittelen
+enter the file name of your logo	admin	nn	Angi filnavnet for logo
+enter the file name of your logo at login	admin	nn	Angi filnavnet for logo for pålogging
+enter the search string. to show all entries, empty this field and press the submit button again	admin	nn	Angi søkestreng. For a vise alle poster, tøm dette feltet og klikk på knappen igjen.
+enter the title for your site	admin	nn	Angi tittel for nettstedet
+enter the title of your logo	admin	nn	Angi tittel for logoen
+enter the url where your logo should link to	admin	nn	Angi url for logo
+enter your smtp server password	admin	nn	Angi ditt SMTP passord
+enter your smtp server user	admin	nn	Angi ditt SMTP-server brukernavn
+fatal	admin	nn	Fatal
+first page	admin	nn	Første side
+installed applications	admin	nn	Innstallerte moduler
+language	admin	nn	Språk
+line	admin	nn	Linje
+list section	admin	nn	List seksjon
+log message	admin	nn	Loggmelding
+login screen	admin	nn	Innlogging
+main screen	admin	nn	Hovedside
+main screen message	admin	nn	Melding på hovedside
+module	admin	nn	Modul
+section	admin	nn	seksjon
+security	admin	nn	Sikkerhet
+severity	admin	nn	Alvorlighetsgrad
+smtp server port number	admin	nn	SMTP server port nummer
+smtp server timeout	admin	nn	smtp server timeout
+smtp settings	admin	nn	SMTP configurasjon
+smtpdebug	admin	nn	smtpdebug
+smtpsecure	admin	nn	smtpsecure
+submit the search string	admin	nn	Send søketekst
+support email address	admin	nn	E-post brukerstøtte
+total records: %1	admin	nn	Antall poster: %1
+use cookies to pass sessionid	admin	nn	Bruk cookier til å håndtere sesjoner
+use smtp auth	admin	nn	Bruk smtp autentisering
+users	admin	nn	Brukere
+view the config	admin	nn	Vis konfigurasjon
+warn	admin	nn	Varsel
+add category	admin	nn	Legg til kategori
+edit category	admin	nn	Endre kategori
+parent category	admin	nn	Foreldrekategori
+add user	admin	nn	Legg til bruker
+add user account	admin	nn	Legg til brukerkonto
+action	admin	nn	Handling
+file	admin	nn	Fil
+info	admin	nn	Informasjon
+notice	admin	no
+hooks updated	admin	nn	Applikasjonskoblinger er oppdatert
+the new hooks should be available to all users	admin	nn	Nye applikasjonskoblinger er tilgjengelig for alle brukere
+async services last executed	admin	nn	Asynkrone servicer ble sist utført
+run asynchronous services	admin	nn	Kjør asynkrone servicer
+asyncservices not yet installed or other error (%1) !!!	admin	nn	Asynkrone servicer er ikke installert, eller annen feil (%1) !!!
+crontab only (recomended)	admin	nn	Bare crontab (anbefalt)
+installed crontab	admin	nn	Installert crontab
+install crontab	admin	nn	Installer crontab
+for the times below (empty values count as '*', all empty = every minute)	admin	nn	For de tidene under (tomme verdier teller som '*', hvis alle er tom = hvert minutt)
+year	admin	nn	År
+month	admin	nn	Måned
+day of week (0-6, 0=sun)	admin	nn	Ukedag (0-6, 0=Søn)
+hour	admin	nn	Time
+minute	admin	nn	Minutt
+calculate next run	admin	nn	Kalkuler neste kjøring
+enable debug-messages	admin	nn	Aktiver feilsøkingsmeldinger
+cancel testjob!	admin	nn	Kanseller testjobb!
+start testjob!	admin	nn	Start testjobb!
+for the times above	admin	nn	For tidene over
+the testjob sends you a mail everytime it is called 	admin	nn	Testjobben sender deg en e-post hver gang den blir kjørt
+jobs	admin	nn	Jobber
+next run	admin	nn	Neste kjøring
+times	admin	nn	Tider
+update	admin	nn	Oppdater
+manual run	admin	nn	Manuell kjøring
+method	admin	nn	Metode
+data	admin	nn	Data
+settings	admin	nn	Innstillinger
+color selector	admin	nn	Farge velger
+would you like to check for a new version when admins login	admin	nn	Vil du sjekke om det finnes ny versjon når administratorer logger inn
+view error log	common	nn	Vis feilmeldingslogg
+please set a site name in admin &gt; siteconfig	common	nn	Vennligst angi tittelen for systemet i Administrasjon &gt; Admin &gt; Global konfigurasjon

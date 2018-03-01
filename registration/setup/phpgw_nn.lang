@@ -1,0 +1,47 @@
+lost password	registration	nn	Glemt passord
+account password retrieval	registration	nn	Sett nytt passord
+account registration	registration	nn	Ny bruker
+address	registration	nn	Adresse
+after you enter your username, instructions to change your password will be sent to you by e-mail to the address you gave when you registered.	registration	nn	Etter at du angir ditt brukernavn, vil du få en e-post til den adressen du oppga ved registrering for å resette passordet
+Birthday	registration	nn	Fødselsdag
+change password for user	registration	nn	Bytt passord for user
+checkbox	registration	nn	Checkbox
+City	registration	nn	Poststed
+Country	registration	nn	Land
+current fields:	registration	nn	Gjeldende felt:
+dropdown	registration	nn	Dropdown
+enter your new password	registration	nn	Skriv inn ditt nye passord
+gender	registration	nn	Kjønn
+i have read the terms and conditions and agree by them.	registration	nn	Jeg har lest og godkjent betingelsene.
+name (blank unless text, textarea, dropdown, checkbox; else alphanumeric only)	registration	nn	Navn (blank dersom ikke Text, Textarea, Dropdown, Checkbox; ellers bare alfanumerisk)
+order	registration	nn	Sortering
+phone	registration	nn	Telefon
+phpgroupware - account registration	registration	nn	Portico Estate - Bruker registrering
+re-enter password	registration	nn	skriv passordet på nytt
+re-enter your password	registration	nn	skriv ditt passord på nytt
+registration	common	nn	Registration
+remove	registration	nn	Slett
+report all problems and abuse to	registration	nn	Rapporter problemer og misbruk til
+required	registration	nn	Required
+sorry, that username does not exist.	registration	nn	Beklager, det brukernavnet finnes ikke.
+sorry, that username is already taken.	registration	nn	Beklager, det brukernavnet er allerede brukt.
+textarea	registration	nn	Tekstfelt
+the passwords you entered don't match	registration	nn	Passordene du anga er ikke like
+the two passwords are not the same	registration	nn	Passordene er ikke de samme
+Select One	registration	nn	Velg fra liste
+select	registration	nn	Velg
+type	registration	nn	Type
+update/add	registration	nn	Oppdater/Legg til
+Username	registration	nn	Brukernavn
+username as email	registration	nn	Angi epost som brukernavn
+values (for dropdown only; comma separated)	registration	nn	Verdi (bare for Dropdown; comma separert)
+wrong session	registration	nn	Feil session
+you have entered an invalid birthday	registration	nn	Du har angitt en ugyldig fødselsdag
+you have entered an invalid email address	registration	nn	Du har angitt en ugyldig e-post adresse
+you must enter a password	registration	nn	Du må angi et passord
+you must enter a username	registration	nn	Du må angi et brukernavn
+you must fill in all of the required fields	registration	nn	Alle obligatoriske felt må fylles ut
+you specified a value for 	registration	nn	Du anga en verdi for
+zip/postal	registration	nn	PostNr
+terms of service	registration	nn	Vilkår for tjenesten
+pending for approval	registration	nn	I påvente av godkjenning
