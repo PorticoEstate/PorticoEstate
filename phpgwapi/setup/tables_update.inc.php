@@ -3585,5 +3585,18 @@
 			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.557';
 			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
 		}
-
 	}
+
+	$test[] = '0.9.17.557';
+	function phpgwapi_upgrade0_9_17_557()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('nn','Norwegian NN','Yes')");
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.558';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+

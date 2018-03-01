@@ -71,7 +71,8 @@ should history navigation urls as breadcrumbs	preferences	no	Vis historisk navig
 activate nowrap in yui-tables	preferences	no	Aktiver no-wrap i YUI-tabeller
 select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	no	Velg språk for tekster og meldinger i BkBygg.<br/>Dersom en oversettelse mangler vil engelsk tekst/melding vises
 users choice	preferences	no	Brukers valg
-norwegian	preferences	no	Norsk
+norwegian	preferences	no	Norsk Bokmål
+norwegian no	preferences	nn	Nynorsk
 english	preferences	no	Engelsk
 no default	preferences	no	Ingen standard
 no sidecontent	preferences	no	Ingen sideinnhold
@@ -145,7 +146,6 @@ by email	preferences	no	Varsle prosjekt- eller ordre-eier per e-post ved endring
 default start page	preferences	no	Standard startside
 select your start-submodule	preferences	no	Velg undermodul du vil starte i når du går inn på modulen
 default project type	preferences	no	Standard prosjekttype
-norwegian	preferences	no	Norsk
 select your default project type	preferences	no	Velg standard prosjekttype for dine prosjekter
 default project year filter	preferences	no	Standard år-filter for prosjekt
 select your default project year filter	preferences	no	Velg standard år-filter for prosjekter
