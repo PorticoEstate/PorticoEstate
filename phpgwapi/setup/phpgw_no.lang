@@ -314,3 +314,7 @@ history	common	no	Historie
 help	common	no	Hjelp
 attribute has not been saved	common	no	Egenskap er ikke lagret
 statustext not entered!	common	no	Statustekst er ikke angitt!
+account status	common	no	Brukerstatus
+last login	common	no	Sist innlogget
+last password change	common	no	Siste passordskifte
+back	common	no	Tilbake

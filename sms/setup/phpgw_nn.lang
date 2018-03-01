@@ -1,0 +1,8 @@
+autoreply	sms	nn	Autosvar
+config	sms	nn	Konfigurasjon
+custom	sms	nn	Tilpasset
+daemon manual refresh	sms	nn	Manuell oppdatering
+inbox	sms	nn	Innbox
+log	sms	nn	Logg
+outbox	sms	nn	Utbox
+polls	sms	nn	Avstemninger

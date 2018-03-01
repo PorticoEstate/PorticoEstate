@@ -1,0 +1,5 @@
+section	rental	nn	Bruksenhet
+contract_type_eksternleie_feste	rental	nn	Trekk i lønn
+contract_type_eksternleie_leilighet	rental	nn	Faktura
+contract_type_eksternleie_annen	rental	nn	Avdeling/Ansvarssted
+
