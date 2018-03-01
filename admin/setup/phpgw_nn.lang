@@ -1,4 +1,5 @@
 account active	admin	nn	Bruker er aktiv
+account "%1" properties	admin	no	Brukar "%1" data
 active	admin	nn	Aktiv
 all records and account information will be lost!	admin	nn	All historie og brukerinformasjon vil gå tapt!
 anonymous user	admin	nn	Anonym bruker
@@ -32,7 +33,7 @@ that loginid has already been taken	admin	nn	Den loginID er opptatt
 the login and password can not be the same	admin	nn	Loging og passord kan ikke være det samme
 the two passwords are not the same	admin	nn	Passordene er ikke de sammme
 total records	admin	nn	Total historie
-user accounts	admin	nn	Bruker accounts
+user accounts	admin	nn	Brukerkontoer
 user groups	admin	nn	Brukergrupper
 view access log	admin	nn	Vis Accesslog
 view sessions	admin	nn	Vis sesjoner
@@ -96,6 +97,7 @@ total records: %1	admin	nn	Antall poster: %1
 use cookies to pass sessionid	admin	nn	Bruk cookier til å håndtere sesjoner
 use smtp auth	admin	nn	Bruk smtp autentisering
 users	admin	nn	Brukere
+user	admin	nn	Bruker
 view the config	admin	nn	Vis konfigurasjon
 warn	admin	nn	Varsel
 add category	admin	nn	Legg til kategori
