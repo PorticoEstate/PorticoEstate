@@ -5,4 +5,5 @@
 /.project
 /.vscode
 /.nbproject
-vendor
+/nbproject
+/vendor

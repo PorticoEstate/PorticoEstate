@@ -771,6 +771,22 @@ JS;
 				}
 			}
 
+			if(!empty($values['ecodimb']) || (!empty($values['ecodimb_name']) && empty($values['ecodimb'])))
+			{
+				$_ecodimb = execMethod('property.bogeneric.read_single', array(
+					'id' => $values['ecodimb'],
+					'location_info' => array(
+						'type' => 'dimb')));
+				if (!$_ecodimb || !$_ecodimb['active'])
+				{
+					$values['ecodimb'] = '';
+					$values['ecodimb_name'] = '';
+					$this->receipt['error'][] = array(
+						'msg' => lang('Please select a valid dimb!'));
+				}
+
+			}
+
 			if (!isset($values['location']))
 			{
 				$this->receipt['error'][] = array('msg' => lang('Please select a location !'));
@@ -1452,11 +1468,11 @@ JS;
 			}
 
 			$default_ecodimb = (isset($GLOBALS['phpgw_info']['user']['preferences']['property']['dimb']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['dimb'] : '');
-			if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
-			{
-				$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
-				$GLOBALS['phpgw']->preferences->save_repository();
-			}
+//			if(isset($values['ecodimb']) && $values['ecodimb'] && $values['ecodimb'] != $default_ecodimb)
+//			{
+//				$GLOBALS['phpgw']->preferences->add('property', 'dimb', $values['ecodimb'], 'user');
+//				$GLOBALS['phpgw']->preferences->save_repository();
+//			}
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
 				(
@@ -2337,6 +2353,8 @@ JS;
 				)
 			);
 			$invoices = array_merge($active_invoices, $historical_invoices);
+			$config = CreateObject('phpgwapi.config', 'property');
+			$config->read();
 
 			foreach ($invoices as $entry)
 			{

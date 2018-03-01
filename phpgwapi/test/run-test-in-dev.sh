@@ -10,5 +10,8 @@ export DBPASSWORD=portico
 export DBDUMP=tests/_data/portico-test.sql
 export SELENIUMHOST=localhost
 
-cd ..
-./vendor/bin/codecept run --env development --debug
+cd ../..
+./vendor/bin/chromedriver --port=4444 --url-base=/wd/hub &
+./vendor/bin/codecept run --env development --debug &
+wait -n
+pkill -P $$

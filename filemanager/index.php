@@ -22,4 +22,3 @@
 
 	$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'filemanager.uifilemanager.index'));
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>

@@ -65,10 +65,6 @@
 			if ($building_id)
 			{
 				$_filter_building['id'] = $building_id;
-			}
-
-			if(!empty($_filter_building['id']))
-			{
 				unset($_filter_building['part_of_town_id']);
 			}
 
@@ -95,7 +91,7 @@
 			}
 //			_debug_array($bui_result);
 
-			if (! $_filter_building && in_array('organization', $types))
+			if ($searchterm && in_array('organization', $types))
 			{
 				$org_result = $this->soorganization->read(array("query" => $searchterm, "sort" => "name",
 					"dir" => "asc", "filters" => array("active" => "1")));
@@ -161,9 +157,13 @@
 				{
 					if (isset($res['buildings']) && is_array($res['buildings']))
 					{
+						$building_names = array();
 						foreach ($res['buildings'] as $_building_id)
 						{
 							$_resource_buildings[$_building_id] = true;
+							$building = $this->sobuilding->read_single($_building_id);
+							$building_names[] = $building['name'];
+							$res['building_name'] = implode('</br>', $building_names);
 						}
 					}
 					else if (isset($res['building_id']) && $res['building_id'])

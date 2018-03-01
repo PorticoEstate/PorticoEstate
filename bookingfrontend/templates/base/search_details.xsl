@@ -35,7 +35,7 @@
 								<xsl:attribute name="href">
 									<xsl:value-of select="link"/>
 								</xsl:attribute>
-								<xsl:value-of select="name"/>
+								<xsl:value-of disable-output-escaping="yes" select="name"/>
 							</a>
 							(<xsl:value-of select="php:function('lang', string(type))"/>)
 						</div>

@@ -177,7 +177,7 @@
 			$uid = (int)$this->account;
 
 			$mobile_sender = $this->username2mobile($username);
-			$max_length = 160;
+			$max_length = 804;
 			if ($sms_sender = $this->username2sender($username))
 			{
 				$max_length = $max_length - strlen($sms_sender) - 1;
@@ -186,14 +186,9 @@
 			{
 				$message = substr($message, 0, $max_length - 1);
 			}
-			$sms_msg = $message;
-			$sms_msg = str_replace("\r", "", $sms_msg);
-			$sms_msg = str_replace("\n", "", $sms_msg);
-			$sms_msg = str_replace("\"", " ", $sms_msg);
-			$mobile_sender = str_replace("\'", "", $mobile_sender);
-			$mobile_sender = str_replace("\"", "", $mobile_sender);
-			$sms_sender = str_replace("\'", "", $sms_sender);
-			$sms_sender = str_replace("\"", "", $sms_sender);
+			$sms_msg = str_replace(array("\r","\n", "\""), array("", "", " "), html_entity_decode($message));
+			$mobile_sender = str_replace(array("\'","\""), array("", ""), $mobile_sender);
+			$sms_sender = str_replace(array("\'","\""), array("", ""), $sms_sender);
 			if (is_array($sms_to))
 			{
 				$array_sms_to = $sms_to;
@@ -204,8 +199,7 @@
 			}
 			for ($i = 0; $i < count($array_sms_to); $i++)
 			{
-				$c_sms_to = str_replace("\'", "", $array_sms_to[$i]);
-				$c_sms_to = str_replace("\"", "", $array_sms_to[$i]);
+				$c_sms_to = str_replace(array("\'","\""), array("", ""), $array_sms_to[$i]);
 				$message = $this->db->db_addslashes($message);
 
 				$db_query = "INSERT INTO phpgw_sms_tblsmsoutgoing
@@ -237,7 +231,7 @@
 			$gateway_module_send = $this->gateway_module_send;
 			$uid = $GLOBALS['phpgw']->accounts->name2id($username);
 			$mobile_sender = $this->username2mobile($username);
-			$max_length = 160;
+			$max_length = 804;
 			if ($sms_sender = $this->username2sender($username))
 			{
 				$max_length = $max_length - strlen($sms_sender) - 1;
@@ -325,7 +319,7 @@
 						{
 							$p_num = $this->db->f('p_num');
 							$sms_to = $p_num;
-							$max_length = 160 - strlen($sms_sender) - 3;
+							$max_length = 804 - strlen($sms_sender) - 3;
 							if (strlen($message) > $max_length)
 							{
 								$message = substr($message, 0, $max_length - 1);

@@ -461,8 +461,10 @@ function setTableFields($tableFields) {
 		$this->error("setTableFields: \$tableFields is a zero-length array.");
 		return false;
 	}
-	reset ($tableFields);
-	while (list($key, $value) = each($tableFields)) {
+	//reset ($tableFields);
+	//while (list($key, $value) = each($tableFields))
+	foreach($tableFields as $key => $value)
+	{
 		$this->tableFields[$key] = ($value == "") ? "''" : $value;
 	}
 	return true;
@@ -483,8 +485,10 @@ function setTableFields_i18n($tableFields_i18n) {
 		$this->error("setTableFields_i18n: \$tableFields_i18n is a zero-length array.");
 		return false;
 	}
-	reset ($tableFields_i18n);
-	while (list($key, $value) = each($tableFields_i18n)) {
+	//reset ($tableFields_i18n);
+	//while (list($key, $value) = each($tableFields_i18n))
+	foreach($tableFields_i18n as $key => $value)
+	{
 		$this->tableFields_i18n[$key] = ($value == "") ? "''" : $value;
 	}
 	return true;
@@ -635,22 +639,27 @@ function _getmicrotime() {
 * @return void
 */
 function _depthFirstSearch($tmpArray, $menu_name, $parent_id=1, $level) {
-	reset ($tmpArray);
-	while (list($id, $foobar) = each($tmpArray)) {
-		if (isset($foobar["parent_id"]) && $foobar["parent_id"] == $parent_id) {
-			unset($tmpArray[$id]);
-			unset($this->_tmpArray[$id]);
-			$cnt = count($this->tree) + 1;
-			$this->tree[$cnt]["level"] = $level;
-			$this->tree[$cnt]["text"] = $foobar["text"];
-			$this->tree[$cnt]["href"] = (isset($foobar["href"])?$foobar["href"]:'');
-			$this->tree[$cnt]["title"] = (isset($foobar["title"])?$foobar["title"]:'');
-			$this->tree[$cnt]["icon"] = (isset($foobar["icon"])?$foobar["icon"]:'');
-			$this->tree[$cnt]["target"] = (isset($foobar["target"])?$foobar["target"]:'');
-			$this->tree[$cnt]["expanded"] = (isset($foobar["expanded"])?$foobar["expanded"]:'');
-			unset($foobar);
-			if ($id != $parent_id) {
-				$this->_depthFirstSearch($this->_tmpArray, $menu_name, $id, $level+1);
+	//reset ($tmpArray);
+	//while (list($id, $foobar) = each($tmpArray))
+	if (is_array($tmpArray))
+	{
+		foreach($tmpArray as $id => $foobar)
+		{
+			if (isset($foobar["parent_id"]) && $foobar["parent_id"] == $parent_id) {
+				unset($tmpArray[$id]);
+				unset($this->_tmpArray[$id]);
+				$cnt = count($this->tree) + 1;
+				$this->tree[$cnt]["level"] = $level;
+				$this->tree[$cnt]["text"] = $foobar["text"];
+				$this->tree[$cnt]["href"] = (isset($foobar["href"])?$foobar["href"]:'');
+				$this->tree[$cnt]["title"] = (isset($foobar["title"])?$foobar["title"]:'');
+				$this->tree[$cnt]["icon"] = (isset($foobar["icon"])?$foobar["icon"]:'');
+				$this->tree[$cnt]["target"] = (isset($foobar["target"])?$foobar["target"]:'');
+				$this->tree[$cnt]["expanded"] = (isset($foobar["expanded"])?$foobar["expanded"]:'');
+				unset($foobar);
+				if ($id != $parent_id) {
+					$this->_depthFirstSearch($this->_tmpArray, $menu_name, $id, $level+1);
+				}
 			}
 		}
 	}

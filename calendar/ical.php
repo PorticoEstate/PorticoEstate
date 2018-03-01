@@ -175,6 +175,3 @@
 
 		echo $export->export( array('l_event_id' => $ids) );
 	}
-
-	
-?>

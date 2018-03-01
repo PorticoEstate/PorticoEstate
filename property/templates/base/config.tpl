@@ -333,6 +333,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td>{lang_suppress_location_summary}:</td>
+				<td>
+					<select name="newsettings[suppress_location_summary]">
+						<option value="" {selected_suppress_location_summary_}>NO</option>
+						<option value="1" {selected_suppress_location_summary_1}>YES</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">&nbsp;<b>{lang_TTS}::{lang_settings}</b></td>
 			</tr>
 			<tr>

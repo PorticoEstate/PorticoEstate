@@ -1,4 +1,4 @@
-<?
+<?php
 
 if(!defined("_SECURE_")){die("Intruder: IP ".$_SERVER['REMOTE_ADDR']);};
 
@@ -60,5 +60,3 @@ $error_string = "Gateway has been activated";
 header ("Location: menu_admin.php?inc=gwmod_template&op=manage&err=".urlencode($error_string));
 break;
 }
-
-?>

@@ -276,4 +276,3 @@
 				base64_decode($this->cred['data']) : $this->cred['data']);
 		}
 	}
-?>

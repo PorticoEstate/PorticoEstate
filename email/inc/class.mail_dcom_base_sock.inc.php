@@ -810,12 +810,16 @@
 		function convert_date_array($field_list)
 		{
 			$new_list = Array();
-			while(list($key,$value) = each($field_list))
+			//while(list($key,$value) = each($field_list))
+			if (is_array($field_list))
 			{
-				//$new_list[$key] = $this->convert_date($value);
-				$new_list[$key] = $this->make_udate($value);
-				if ($this->debug_dcom >= 2) { echo 'base_sock: convert_date_array: field_list: "'.$new_list[$key].'" was "'.$value.'"<br />'; }
-	
+				foreach($field_list as $key => $value)
+				{
+					//$new_list[$key] = $this->convert_date($value);
+					$new_list[$key] = $this->make_udate($value);
+					if ($this->debug_dcom >= 2) { echo 'base_sock: convert_date_array: field_list: "'.$new_list[$key].'" was "'.$value.'"<br />'; }
+
+				}
 			}
 			return $new_list;
 		}

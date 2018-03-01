@@ -26,4 +26,3 @@
 
 	Header('Location: '.$GLOBALS['phpgw']->link('/index.php',$parms));
 	$GLOBALS['phpgw']->common->phpgw_exit();
-?>

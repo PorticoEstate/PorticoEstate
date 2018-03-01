@@ -884,7 +884,8 @@
 				}
 				else  // createMode == 'modify'
 				{
-					while (list($key,$val) = each($oldEntry))
+					//while (list($key,$val) = each($oldEntry))
+					foreach($oldEntry as $key => $val)
 					{
 						if (!is_int($key))
 						{
@@ -1067,7 +1068,8 @@
 				}
 				else  // createMode == 'modify'
 				{
-					while (list($key,$val) = each($oldEntry))
+					//while (list($key,$val) = each($oldEntry))
+					foreach($oldEntry as $key => $val)
 					{
 						if (!is_int($key))
 						{

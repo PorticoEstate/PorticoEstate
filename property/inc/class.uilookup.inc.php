@@ -175,7 +175,16 @@
 			//trigger ajax-call
 			$action .= "parent.document.getElementsByName('{$contact_id}')[0].setAttribute('{$contact_id}','{$contact_id}',0);\r\n";
 
-			$action .= 'parent.JqueryPortico.onPopupClose("close");' . "\r";
+			$action .= <<<JS
+   try
+				{
+					window.parent.on_contact_updated(aData["contact_id"]);
+				}
+				catch(err)
+				{}
+				parent.JqueryPortico.onPopupClose("close");
+JS;
+
 
 			$data = array(
 				'left_click_action' => $action,
@@ -431,17 +440,29 @@
 				$org_name = 'vendor_name';
 			}
 
-			$action = '';
-			$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].value = "";' . "\r";
-			$action .= 'parent.document.getElementsByName("' . $org_name . '")[0].value = "";' . "\r";
-			$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].value = aData["id"];' . "\r";
-			$action .= 'parent.document.getElementsByName("' . $org_name . '")[0].value = aData["org_name"];' . "\r";
+			$action = <<<JS
+			parent.document.getElementsByName("{$contact_id}")[0].value = "";
+			parent.document.getElementsByName("{$org_name}")[0].value = "";
+			parent.document.getElementsByName("{$contact_id}")[0].value = aData["id"];
+			parent.document.getElementsByName("{$org_name}")[0].value = aData["org_name"];
+JS;
 			if ($contact_id == 'vendor_id')
 			{
-				$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].setAttribute("vendor_id","' . $contact_id . '",0);' . "\r";
-				$action .= 'parent.document.getElementsByName("' . $contact_id . '")[0].removeAttribute("vendor_id");' . "\r";
+				$action .= <<<JS
+				parent.document.getElementsByName("{$contact_id}")[0].setAttribute("vendor_id","{$contact_id}",0);
+				parent.document.getElementsByName("{$contact_id}")[0].removeAttribute("vendor_id");
+JS;
 			}
-			$action .= 'parent.JqueryPortico.onPopupClose("close");' . "\r";
+
+			$action .= <<<JS
+				try
+				{
+					window.parent.on_vendor_updated();
+				}
+				catch(err)
+				{}
+				parent.JqueryPortico.onPopupClose("close");
+JS;
 
 			$data = array(
 				'left_click_action' => $action,

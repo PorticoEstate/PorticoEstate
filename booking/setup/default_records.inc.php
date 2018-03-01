@@ -26,6 +26,7 @@
 	// Insert start values for billing sequential numbers
 	$oProc->query("INSERT INTO bb_billing_sequential_number_generator ( name, value ) VALUES ( 'internal', 1 ), ( 'external', 1 )");
 
+	$GLOBALS['phpgw']->locations->add('.admin', 'Admin section', 'booking');
 	$GLOBALS['phpgw']->locations->add('.office', 'office', 'booking');
 	$GLOBALS['phpgw']->locations->add('.office.user', 'office/user relation', 'booking', false, 'bb_office_user');
 	$GLOBALS['phpgw']->db = clone($GLOBALS['phpgw_setup']->oProc->m_odb);

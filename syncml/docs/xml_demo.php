@@ -23,4 +23,4 @@ foreach($syncbody[SYNCML_XML_ORIGINAL_ORDER] as $command) {
 			$command["CMDID"][0][SYNCML_XML_DATA],
 			$command[SYNCML_XML_TAG_NAME]);
 }
-?>
+

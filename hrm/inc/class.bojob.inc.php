@@ -351,28 +351,32 @@
 		function select_task_list($selected='',$id='', $job_id='')
 		{
 			$tasks= $this->so->select_task_list($id,$job_id);
-			while (is_array($tasks) && list(,$task) = each($tasks))
+			//while (is_array($tasks) && list(,$task) = each($tasks))
+			if (is_array($tasks))
 			{
-				if ($task['level'] > 0)
+				foreach($tasks as $key => $task)
 				{
-					$space = '--';
-					$spaceset = str_repeat($space,$task['level']);
-					$task['name'] = $spaceset . $task['name'];
+					if ($task['level'] > 0)
+					{
+						$space = '--';
+						$spaceset = str_repeat($space,$task['level']);
+						$task['name'] = $spaceset . $task['name'];
+					}
+
+					$sel_task = '';
+
+					if ($task['id']==$selected)
+					{
+						$sel_task = 'selected';
+					}
+
+					$task_list[] = array
+					(
+						'id'		=> $task['id'],
+						'name'		=> $task['name'],
+						'selected'	=> $sel_task
+					);
 				}
-
-				$sel_task = '';
-
-				if ($task['id']==$selected)
-				{
-					$sel_task = 'selected';
-				}
-
-				$task_list[] = array
-				(
-					'id'		=> $task['id'],
-					'name'		=> $task['name'],
-					'selected'	=> $sel_task
-				);
 			}
 
 			for ($i=0;$i<count($task_list);$i++)

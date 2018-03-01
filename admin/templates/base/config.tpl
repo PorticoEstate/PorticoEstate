@@ -159,34 +159,19 @@
 				<td><input name="newsettings[site_title]" value="{value_site_title}"></td>
 			</tr>
 
-			<tr>
-				<td>{lang_Enter_the_background_color_for_the_site_title}:</td>
-				<td>#<input name="newsettings[login_bg_color_title]" value="{value_login_bg_color_title}"></td>
-			</tr>
-
-			<tr class="pure-table-odd">
-				<td>{lang_Enter_the_background_color_for_the_login_page}:</td>
-				<td>#<input name="newsettings[login_bg_color]" value="{value_login_bg_color}"></td>
-			</tr>
-
-			<tr>
-				<td>{lang_Enter_the_file_name_of_your_logo_at_login}:</td>
-				<td><input name="newsettings[login_logo_file]" value="{value_login_logo_file}"></td>
-			</tr>
-
-			<tr class="pure-table-odd">
-				<td>{lang_Enter_the_file_name_of_your_logo}:</td>
-				<td><input name="newsettings[logo_file]" value="{value_logo_file}"></td>
-			</tr>
 
 			<tr>
 				<td>{lang_Enter_the_url_where_your_logo_should_link_to}:</td>
-				<td>http://<input name="newsettings[login_logo_url]" value="{value_login_logo_url}"></td>
+				<td>http://<input name="newsettings[logo_url]" value="{value_logo_url}"></td>
 			</tr>
 
 			<tr class="pure-table-odd">
 				<td>{lang_Enter_the_title_of_your_logo}:</td>
-				<td><input name="newsettings[login_logo_title]" value="{value_login_logo_title}"></td>
+				<td><input name="newsettings[logo_title]" value="{value_logo_title}"></td>
+			</tr>
+			<tr>
+				<td>{lang_Enter_the_url_where_your_bakcground_image_should_link_to}:</td>
+				<td>http://<input name="newsettings[bakcground_image]" value="{value_bakcground_image}"></td>
 			</tr>
 
 			<tr class="th">

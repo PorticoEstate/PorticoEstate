@@ -37,20 +37,25 @@
 		function set_params( $param )
 		{
 			$this->help(True);
-			@reset($param);
-			while (list($key, $value) = each($param))
+			//@reset($param);
+			//while (list($key, $value) = each($param))
+			if (is_array($param))
 			{
-				if ($key != 'title')
+				foreach($param as $key => $value)
 				{
-					//echo 'Setting '.$key.':'.$value."<br>\n";
-					$this->setvar($key, $value);
+					if ($key != 'title')
+					{
+						//echo 'Setting '.$key.':'.$value."<br>\n";
+						$this->setvar($key, $value);
+					}
 				}
 			}
 			$this->title = $param['title'];
 
 			if (isset($param['controls']) && is_array($param['controls']))
 			{
-				while (list($key, $value) = each($param['controls']))
+				//while (list($key, $value) = each($param['controls']))
+				foreach($param['controls'] as $key => $value)
 				{
 					$this->set_controls('app', $key, $value);
 				}

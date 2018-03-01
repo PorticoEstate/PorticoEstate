@@ -73,4 +73,3 @@ class folders_service
 		return array('content' => $return );
 	}
 }
-?>

@@ -22,7 +22,7 @@ services:
       - DBNAME=porticotest
       - DBUSER=portico
       - DBPASSWORD=portico
-      - DBDUMP=tests/_data/portico-test.sql
+      - DBDUMP=phpgwapi/test/_data/portico-test.sql
       - SELENIUMHOST=selenium-chrome
     depends_on:
       - "postgres"

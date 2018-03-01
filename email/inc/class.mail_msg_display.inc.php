@@ -279,10 +279,11 @@ class mail_msg extends mail_msg_wrappers
 		}
 		else
 		{
-			reset($local_args);
+			//reset($local_args);
 			// the feed args may not be an array, the @ will supress warnings
 			@reset($feed_args);
-			while(list($key,$value) = each($local_args))
+			//while(list($key,$value) = each($local_args))
+			foreach($local_args as $key => $value)
 			{
 				// DEBUG
 				if ($debug_widget) { $this->dbug->out('a: local_args: key=['.$key.'] value=['.(string)$value.']<br />'); }
@@ -324,9 +325,10 @@ class mail_msg extends mail_msg_wrappers
 
 		if ($this->get_arg_value('newsmode'))
 		{
-			while($pref = each($GLOBALS['phpgw_info']['user']['preferences']['nntp']))
+			//while($pref = each($GLOBALS['phpgw_info']['user']['preferences']['nntp']))
+			foreach($GLOBALS['phpgw_info']['user']['preferences']['nntp'] as $key => $value)
 			{
-				$GLOBALS['phpgw']->db->query('SELECT name FROM newsgroups WHERE con='.$pref[0]);
+				$GLOBALS['phpgw']->db->query('SELECT name FROM newsgroups WHERE con='.$key);
 				while($GLOBALS['phpgw']->db->next_record())
 				{
 					$item_tags = $item_tags .'<option value="' . urlencode($GLOBALS['phpgw']->db->f('name')) . '">' . $GLOBALS['phpgw']->db->f('name')
@@ -476,10 +478,11 @@ class mail_msg extends mail_msg_wrappers
 		}
 		else
 		{
-			reset($local_args);
+			//reset($local_args);
 			// the feed args may not be an array, the @ will supress warnings
 			@reset($feed_args);
-			while(list($key,$value) = each($local_args))
+			//while(list($key,$value) = each($local_args))
+			foreach($local_args as $key => $value)
 			{
 				// DEBUG
 				if ($debug_mega_listbox > 1) { $this->dbug->out('folders_mega_listbox('.__LINE__.'): a: local_args: key=['.$key.'] value=['.(string)$value.']<br />'); }
@@ -529,9 +532,10 @@ class mail_msg extends mail_msg_wrappers
 				// NNTP = BORKED CODE!!!  (ignore for now) ...
 				if ($this->get_arg_value('newsmode', $this_acctnum))
 				{
-					while($pref = each($GLOBALS['phpgw_info']['user']['preferences']['nntp']))
+					//while($pref = each($GLOBALS['phpgw_info']['user']['preferences']['nntp']))
+					foreach($GLOBALS['phpgw_info']['user']['preferences']['nntp'] as $key => $value)
 					{
-						$GLOBALS['phpgw']->db->query('SELECT name FROM newsgroups WHERE con='.$pref[0]);
+						$GLOBALS['phpgw']->db->query('SELECT name FROM newsgroups WHERE con='.$key);
 						while($GLOBALS['phpgw']->db->next_record())
 						{
 							$item_tags .= '<option value="' . urlencode($GLOBALS['phpgw']->db->f('name')) . '">' . $GLOBALS['phpgw']->db->f('name')
@@ -908,10 +912,11 @@ class mail_msg extends mail_msg_wrappers
 		}
 		else
 		{
-			reset($local_args);
+			//reset($local_args);
 			// the feed args may not be an array, the @ will supress warnings
 			@reset($feed_args); 
-			while(list($key,$value) = each($local_args))
+			//while(list($key,$value) = each($local_args))
+			foreach($local_args as $key => $value)
 			{
 				// DEBUG
 				if ($debug_widget) { $this->dbug->out('* a: local_args: key=['.$key.'] value=['.(string)$value.']<br />'); }
@@ -2354,7 +2359,8 @@ class mail_msg extends mail_msg_wrappers
 		$newText = '';
 		$lines = explode("\n",$data);
 
-		while ( list ($key,$line) = each ($lines))
+		//while ( list ($key,$line) = each ($lines))
+		foreach($lines as $key => $line)
 		{
 			$line = preg_replace("/([ \t]|^)www\./i"," http://www.",$line);
 			$line = preg_replace("/([ \t]|^)ftp\./'"," ftp://ftp.",$line);

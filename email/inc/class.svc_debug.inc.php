@@ -445,7 +445,8 @@ EOD;
 			{
 				//$str .= '<ul>';
 				$str .= '<ul style="list-style-type: none;">';
-				while (list($index, $subarray) = each($array) )
+				//while (list($index, $subarray) = each($array) )
+				foreach($array as $index => $subarray)
 				{
 					$str .= '<li>'.$index.' <code>=&gt;</code>';
 					//$str .= print_r($subarray,$print);

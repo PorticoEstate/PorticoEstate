@@ -244,7 +244,8 @@
 			//$tables = explode(',',$setup_info[$appname]['tables']);
 			$tables = $setup_info[$appname]['tables'];
 			// $i = 1;
-			while(list($key,$table) = @each($tables))
+			//while(list($key,$table) = @each($tables))
+			foreach($tables as $key => $table)
 			{
 				/*
 				if($i == count($tables))
@@ -290,13 +291,17 @@
 			if (file_exists ($f)) { include($f); }
 		}
 
-		while (list($key,$data) = @each($setup_info))
+		//while (list($key,$data) = @each($setup_info))
+		if (is_array($setup_info))
 		{
-			if ($data['tables'] && $data['title'])
+			foreach($setup_info as $key => $data)
 			{
-				$setup_tpl->set_var('appname',$data['name']);
-				$setup_tpl->set_var('apptitle',$data['title']);
-				$setup_tpl->pfp('out','appitem');
+				if ($data['tables'] && $data['title'])
+				{
+					$setup_tpl->set_var('appname',$data['name']);
+					$setup_tpl->set_var('apptitle',$data['title']);
+					$setup_tpl->pfp('out','appitem');
+				}
 			}
 		}
 		$setup_tpl->pfp('out','appfooter');

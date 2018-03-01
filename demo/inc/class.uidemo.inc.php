@@ -699,7 +699,8 @@
 
 				if (isset($insert_record['extra']) && is_array($insert_record['extra']))
 				{
-					while (is_array($insert_record['extra']) && list($key, $column) = each($insert_record['extra']))
+					//while (is_array($insert_record['extra']) && list($key, $column) = each($insert_record['extra']))
+                                        foreach($insert_record['extra'] as $key => $column)
 					{
 						if ($_POST[$key])
 						{

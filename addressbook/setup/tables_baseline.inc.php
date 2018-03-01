@@ -10,4 +10,3 @@
 	*/
 
 	$phpgw_baseline = array();
-?>

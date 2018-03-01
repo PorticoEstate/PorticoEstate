@@ -68,9 +68,11 @@
 	function parsedep($depends,$main=True)
 	{
 		$depstring = '(';
-		while (list($a,$b) = each ($depends))
+		//while (list($a,$b) = each ($depends))
+		foreach($depends as $a => $b)
 		{
-			while (list($c,$d) = each($b))
+			//while (list($c,$d) = each($b))
+			foreach($b as $c => $d)
 			{
 				if (is_array($d))
 				{
@@ -125,7 +127,8 @@
 		$appname = get_var('appname',Array('POST'));
 		$install = get_var('install',Array('POST'));
 
-		while (list($appname,$key) = @each($install))
+		//while (list($appname,$key) = @each($install))
+		foreach($install as $appname => $key)
 		{
 			$terror = array();
 			$terror[$appname]['name'] = $appname;
@@ -143,7 +146,8 @@
 			if (file_exists($appdir.'tables_baseline.inc.php'))
 			{
 				include($appdir.'tables_baseline.inc.php');
-				while(list($table,$null) = @each($phpgw_baseline))
+				//while(list($table,$null) = @each($phpgw_baseline))
+				foreach($phpgw_baseline as $table => $null)
 				{
 					$terror[$appname]['tables'][] = $table;
 					echo '<br />Adding app table: ' . $table;
@@ -186,29 +190,33 @@
 		$GLOBALS['setup_tpl']->set_var('description',lang('App details') . ':');
 		$GLOBALS['setup_tpl']->pparse('out','header');
 		
-		while (list($key,$val) = each($GLOBALS['setup_info'][$detail]))
+		//while (list($key,$val) = each($GLOBALS['setup_info'][$detail]))
+		if (is_array($GLOBALS['setup_info'][$detail]))
 		{
-			if ($i) { $i = 0; }
-			else    { $i = 1; }
-
-			//if(!$val) { $val = 'none'; }
-
-			if ($key == 'tables')
+			foreach($GLOBALS['setup_info'][$detail] as $key => $val)
 			{
-				if(is_array($val))
-				{
-					$key = '<a href="sqltoarray.php?appname=' . $detail . '&submit=True">' . $key . '</a>' . "\n";
-					$val = implode(',',$val);
-				}
-			}
-			if ($key == 'hooks')   { $val = implode(',',$val); }
-			if ($key == 'depends') { $val = parsedep($val); }
-			if (is_array($val))    { $val = implode(',',$val); }
+				if ($i) { $i = 0; }
+				else    { $i = 1; }
 
-			$GLOBALS['setup_tpl']->set_var('bg_color',$bgcolor[$i]);
-			$GLOBALS['setup_tpl']->set_var('name',$key);
-			$GLOBALS['setup_tpl']->set_var('details',$val);
-			$GLOBALS['setup_tpl']->pparse('out','detail');
+				//if(!$val) { $val = 'none'; }
+
+				if ($key == 'tables')
+				{
+					if(is_array($val))
+					{
+						$key = '<a href="sqltoarray.php?appname=' . $detail . '&submit=True">' . $key . '</a>' . "\n";
+						$val = implode(',',$val);
+					}
+				}
+				if ($key == 'hooks')   { $val = implode(',',$val); }
+				if ($key == 'depends') { $val = parsedep($val); }
+				if (is_array($val))    { $val = implode(',',$val); }
+
+				$GLOBALS['setup_tpl']->set_var('bg_color',$bgcolor[$i]);
+				$GLOBALS['setup_tpl']->set_var('name',$key);
+				$GLOBALS['setup_tpl']->set_var('details',$val);
+				$GLOBALS['setup_tpl']->pparse('out','detail');
+			}
 		}
 
 		echo '<br /><a href="schematoy.php">' . lang('Go back') . '</a>';
@@ -229,8 +237,9 @@
 		$GLOBALS['setup_tpl']->set_var('app_install',lang('Process'));
 		$GLOBALS['setup_tpl']->pparse('out','app_header');
 
-		@reset ($GLOBALS['setup_info']);
-		while (list ($key, $value) = each ($GLOBALS['setup_info']))
+		//@reset ($GLOBALS['setup_info']);
+		//while (list ($key, $value) = each ($GLOBALS['setup_info']))
+		foreach($GLOBALS['setup_info'] as $key => $value)
 		{
 			unset($test);
 			if (file_exists(PHPGW_SERVER_ROOT . '/' . $value['name'] . '/setup/tables_update.inc.php'))
@@ -238,15 +247,19 @@
 				include(PHPGW_SERVER_ROOT . '/' . $value['name'] . '/setup/tables_update.inc.php');
 			}
 
-			if (is_array($test))
+			/*if (is_array($test))
 			{
 				reset($test);
-			}
+			}*/
 
 			$s = '<option value="">&nbsp;</option>';
-			while (is_array($test) && list(,$versionnumber) = each($test))
+			if (is_array($test))
 			{
-				$s .= '<option value="' . $versionnumber . '">' . $versionnumber . '</option>';
+				//while (is_array($test) && list(,$versionnumber) = each($test))
+				foreach($test as $key => $versionnumber)
+				{
+					$s .= '<option value="' . $versionnumber . '">' . $versionnumber . '</option>';
+				}
 			}
 			$GLOBALS['setup_tpl']->set_var('select_version',$s);
 

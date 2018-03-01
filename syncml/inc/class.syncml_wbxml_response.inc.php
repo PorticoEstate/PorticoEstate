@@ -60,4 +60,3 @@
 				'-//SYNCML//DTD SyncML %s//EN', $version);
 		}
 	}
-?>

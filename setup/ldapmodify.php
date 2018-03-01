@@ -148,13 +148,17 @@
 					$sr = ldap_search($ldap,$config['ldap_group_context'],'cn='.$thisacctlid);
 					$entry = ldap_get_entries($ldap, $sr);
 
-					reset($entry[0]['objectclass']);
+					//reset($entry[0]['objectclass']);
 					$addclass = True;
-					while(list($key,$value) = @each($entry[0]['objectclass']))
+					//while(list($key,$value) = @each($entry[0]['objectclass']))
+					if (is_array($entry[0]['objectclass']))
 					{
-						if(strtolower($value) == 'phpgwGroup')
+						foreach($entry[0]['objectclass'] as $key => $value)
 						{
-							$addclass = False;
+							if(strtolower($value) == 'phpgwGroup')
+							{
+								$addclass = False;
+							}
 						}
 					}
 					
@@ -180,7 +184,8 @@
 					unset($add);
 
 					// Now make the members a member of this group in phpgw.
-					while (list($key,$members) = each($thismembers))
+					//while (list($key,$members) = each($thismembers))
+					foreach($thismembers as $key => $members)
 					{
 						if ($key == 'count')
 						{
@@ -188,8 +193,9 @@
 						}
 						/* echo '<br />members: ' . $members; */
 						$tmpid = 0;
-						@reset($account_info);
-						while(list($x,$y) = each($account_info))
+						//@reset($account_info);
+						//while(list($x,$y) = each($account_info))
+						foreach($account_info as $x => $y)
 						{
 							/* echo '<br />checking: '.$y['account_lid']; */
 							if ($members == $y['account_lid'])
@@ -217,8 +223,9 @@
 					// Now give this group some rights
 					$GLOBALS['phpgw_info']['user']['account_id'] = $thisacctid;
 					$acl->set_account_id(intval($thisacctid));
-					@reset($s_apps);
-					while (list($key,$app) = @each($s_apps))
+					//@reset($s_apps);
+					//while (list($key,$app) = @each($s_apps))
+					foreach($s_apps as $key => $app)
 					{
 						$acl->delete($app,'run',1);
 						$acl->add($app,'run',1);
@@ -247,9 +254,10 @@
 					$accounts->set_account(intval($thisacctid));
 					$sr = ldap_search($ldap,$config['ldap_context'],'uid='.$thisacctlid);
 					$entry = ldap_get_entries($ldap, $sr);
-					reset($entry[0]['objectclass']);
+					//reset($entry[0]['objectclass']);
 					$addclass = True;
-					while(list($key,$value) = each($entry[0]['objectclass']))
+					//while(list($key,$value) = each($entry[0]['objectclass']))
+					foreach($entry[0]['objectclass'] as $key => $value)
 					{
 						if(strtolower($value) == 'phpgwaccount')
 						{
@@ -311,8 +319,9 @@
 					*/
 					if(! (isset($_POST['ldapgroups']) && count($_POST['ldapgroups']) ) )
 					{
-						@reset($s_apps);
-						while (list($key,$app) = @each($s_apps))
+						//@reset($s_apps);
+						//while (list($key,$app) = @each($s_apps))
+						foreach($s_apps as $key => $app)
 						{
 							$acl->delete($app,'run',1);
 							$acl->add($app,'run',1);
@@ -368,41 +377,51 @@
 	$setup_tpl->set_block('ldap','footer','footer');
 
 	$user_list = '';
-	while (list($key,$account) = @each($account_info))
-	{
-		$user_list .= '<option value="' . $account['uidnumber'][0] . '">' . $account['cn'][0] . '(' . $account['uid'][0] . ')</option>';
-	}
-
-	@reset($account_info);
 	$admin_list = '';
-	while (list($key,$account) = @each($account_info))
+	
+	if (is_array($account_info))
 	{
-		$admin_list .= '<option value="' . $account['uidnumber'][0] . '">' . $account['cn'][0] . '(' . $account['uid'][0] . ')</option>';
+		foreach($account_info as $key => $account)
+		{
+			$user_list .= '<option value="' . $account['uidnumber'][0] . '">' . $account['cn'][0] . '(' . $account['uid'][0] . ')</option>';
+		}
+
+		foreach($account_info as $key => $account)
+		{
+			$admin_list .= '<option value="' . $account['uidnumber'][0] . '">' . $account['cn'][0] . '(' . $account['uid'][0] . ')</option>';
+		}
 	}
 
 	$group_list = '';
-	while (list($key,$group) = @each($group_info))
+	if (is_array($group_info))
 	{
-		$group_list .= '<option value="' . $group['gidnumber'][0] . '">' . $group['cn'][0]  . '</option>';
+		foreach($group_info as $key => $group)
+		{
+			$group_list .= '<option value="' . $group['gidnumber'][0] . '">' . $group['cn'][0]  . '</option>';
+		}
 	}
 
 	$app_list = '';
-	while(list($appname,$apptitle) = each($apps)) // TODO: IMHO This needs to go - skwashd Jul-04
+	//while(list($appname,$apptitle) = each($apps)) // TODO: IMHO This needs to go - skwashd Jul-04
+	if (is_array($apps))
 	{
-		if($appname == 'admin' ||
-			$appname == 'skel' ||
-			$appname == 'backup' ||
-			$appname == 'netsaint' ||
-			$appname == 'developer_tools' ||
-			$appname == 'phpsysinfo' ||
-			$appname == 'eldaptir' ||
-			$appname == 'qmailldap')
+		foreach($apps as $appname => $apptitle)
 		{
-			$app_list .= '<option value="' . $appname . '">' . $apptitle . '</option>';
-		}
-		else
-		{
-			$app_list .= '<option value="' . $appname . '" selected="selected">' . $apptitle . '</option>';
+			if($appname == 'admin' ||
+				$appname == 'skel' ||
+				$appname == 'backup' ||
+				$appname == 'netsaint' ||
+				$appname == 'developer_tools' ||
+				$appname == 'phpsysinfo' ||
+				$appname == 'eldaptir' ||
+				$appname == 'qmailldap')
+			{
+				$app_list .= '<option value="' . $appname . '">' . $apptitle . '</option>';
+			}
+			else
+			{
+				$app_list .= '<option value="' . $appname . '" selected="selected">' . $apptitle . '</option>';
+			}
 		}
 	}
 

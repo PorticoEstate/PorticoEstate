@@ -18,7 +18,8 @@
 		'ur-type'      => 2
 	);
 
-	while(list($key,$val) = each($soapTypes))
+	//while(list($key,$val) = each($soapTypes))
+	foreach($soapTypes as $key => $val)
 	{
 		$soapKeys[] = $val;
 	}

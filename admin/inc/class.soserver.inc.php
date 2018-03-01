@@ -54,4 +54,3 @@
 			return $this->is->delete($id);
 		}
 	}
-?>

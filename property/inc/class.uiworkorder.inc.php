@@ -738,6 +738,20 @@
 					$this->receipt['error'][] = array('msg' => lang('Please select dimb!'));
 					$error_id = true;
 				}
+				else
+				{
+					$_ecodimb = execMethod('property.bogeneric.read_single', array(
+						'id' => $values['ecodimb'],
+						'location_info' => array(
+							'type' => 'dimb')));
+					if (!$_ecodimb || !$_ecodimb['active'])
+					{
+						$values['ecodimb'] = '';
+						$values['ecodimb_name'] = '';
+						$this->receipt['error'][] = array(
+							'msg' => lang('Please select a valid dimb!'));
+					}
+				}
 			}
 
 			if (!$values['status'])

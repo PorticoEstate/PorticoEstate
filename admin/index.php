@@ -21,4 +21,3 @@
 	include('../header.inc.php');
 
 	$GLOBALS['phpgw']->redirect_link( '/index.php', array('menuaction' => 'admin.uimainscreen.mainscreen') );
-?>

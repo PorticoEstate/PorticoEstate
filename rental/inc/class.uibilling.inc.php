@@ -1613,11 +1613,11 @@ JS;
 					{
 						$url_delete = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.delete',
 								'id' => $value['id'], 'phpgw_return_as' => 'json')));
-						$actions[] = '<a onclick="onDelete(\'' . $url_delete . '\')">' . lang('delete') . '</a>';
+						$actions[] = '<a href="#" onclick="onDelete(\'' . $url_delete . '\')">' . lang('delete') . '</a>';
 
 						$url_commit = html_entity_decode(self::link(array('menuaction' => 'rental.uibilling.commit',
 								'id' => $value['id'], 'phpgw_return_as' => 'json')));
-						$actions[] = '<a onclick="onCommit(\'' . $url_commit . '\')">' . lang('commit') . '</a>';
+						$actions[] = '<a href="#" onclick="onCommit(\'' . $url_commit . '\')">' . lang('commit') . '</a>';
 
 						$value['other_operations'] = implode(' | ', $actions);
 					}
@@ -1634,6 +1634,10 @@ JS;
 			//$browser = CreateObject('phpgwapi.browser');
 			//$browser->content_header('export.txt','text/plain');
 
+			$config = CreateObject('phpgwapi.config', 'rental');
+			$config->read();
+			$organization = empty($config->config_data['organization']) ? 'bergen' : $config->config_data['organization'];
+
 			$stop = phpgw::get_var('date');
 
 			$cs15 = phpgw::get_var('generate_cs15');
@@ -1642,6 +1646,7 @@ JS;
 			{
 				if ($toExcel == null)
 				{
+					$id = phpgw::get_var('id', 'int');
 					$export_format = explode('_', phpgw::get_var('export_format'));
 					$file_ending = $export_format[1];
 					if ($file_ending == 'gl07')
@@ -1653,19 +1658,27 @@ JS;
 						$type = 'faktura';
 					}
 					$date = date('Ymd', $stop);
-					header('Content-type: text/plain');
-					header("Content-Disposition: attachment; filename=PE_{$type}_{$date}.{$file_ending}");
+					if($organization == 'nlsh')
+					{
+//						$filename = '14PU' . sprintf("%08s",$id) . ".{$file_ending}";
+						$filename = '14PU' . sprintf("%08s",$id) . ".txt";
+					}
+					else
+					{
+						$filename = "PE_{$type}_{$date}.{$file_ending}";
+					}
 
-					$id = phpgw::get_var('id');
+					header('Content-type: text/plain');
+					header("Content-Disposition: attachment; filename={$filename}");
+
 					$path = "/rental/billings/{$id}";
 
 					$vfs = CreateObject('phpgwapi.vfs');
 					$vfs->override_acl = 1;
 
-					print $vfs->read
-							(
+					print $vfs->read(
 							array
-								(
+							(
 								'string' => $path,
 								'relatives' => array( RELATIVE_NONE)
 							)
