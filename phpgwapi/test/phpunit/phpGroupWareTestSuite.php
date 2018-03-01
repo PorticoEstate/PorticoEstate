@@ -42,7 +42,7 @@ define('PHPGW_API_UNIT_TEST_PATH', dirname(__FILE__));
  * @link       http://davehall.com.au
  */
 
-class phpGroupWareTestSuite extends PHPUnit_Framework_TestSuite
+class phpGroupWareTestSuite extends \PHPUnit\Framework\TestSuite
 {
     protected static $login = 'sysadmin';
 
@@ -77,7 +77,7 @@ class phpGroupWareTestSuite extends PHPUnit_Framework_TestSuite
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $GLOBALS['phpgw_info']['flags'] = array
         (
@@ -100,7 +100,7 @@ class phpGroupWareTestSuite extends PHPUnit_Framework_TestSuite
      *
      * @return void
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $GLOBALS['phpgw']->session->destroy(self::$sessionid);
     }

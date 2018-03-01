@@ -27,12 +27,6 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/**
- * Require PHP Unit to run the test
- */
-require_once 'PHPUnit/Framework.php';
-
 /**
  * phpGroupWare custom fields tests
  *
@@ -45,7 +39,7 @@ require_once 'PHPUnit/Framework.php';
  * @version    Release: 0.9.18
  * @link       http://davehall.com.au
  */
-class TestCustomFields extends PHPUnit_Framework_TestCase
+class TestCustomFields extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var boolean $backupGlobals disable backup of GLOBALS which breaks things
@@ -72,12 +66,12 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
      * Clean up the environment after running a test
      *
      * @return void
-     */ 
+     */
     protected function clean()
     {
         $fields = $GLOBALS['phpgw']->custom_fields->find('phpgwapi', '.test');
         foreach ( $fields as $field ) {
-            $GLOBALS['phpgw']->custom_fields->delete('phpgwapi', 
+            $GLOBALS['phpgw']->custom_fields->delete('phpgwapi',
                                                     '.test', $field['id']);
         }
 
@@ -200,7 +194,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
      */
     public function testFindCount()
     {
-        $fields = $GLOBALS['phpgw']->custom_fields->find('phpgwapi', '.test', 
+        $fields = $GLOBALS['phpgw']->custom_fields->find('phpgwapi', '.test',
                                                         0, '', 'ASC', 'attrib_sort',
                                                         false, true);
 
@@ -228,7 +222,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     {
         $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi',
                                                     '.test', 1); //$this->fieldID);
-        
+
         $this->assertNotNull($field);
     }
 
@@ -241,7 +235,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     {
         $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi',
                                                     '.test', 2);
-        
+
         $this->assertNull($field);
     }
 
@@ -254,7 +248,7 @@ class TestCustomFields extends PHPUnit_Framework_TestCase
     {
         $field = $GLOBALS['phpgw']->custom_fields->get('phpgwapi', '.test', 1, true);
                                                        // $this->fieldID, true);
-        
+
         $this->clean();
         $this->assertArrayNotHasKey('choice', $field);
     }

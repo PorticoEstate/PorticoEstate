@@ -29,11 +29,6 @@
 
 
 /**
- * Require PHP Unit to run the test
- */
-require_once 'PHPUnit/Framework.php';
-
-/**
  * phpGroupWare custom functions tests
  *
  * @category   UnitTest
@@ -45,7 +40,7 @@ require_once 'PHPUnit/Framework.php';
  * @version    Release: 0.9.18
  * @link       http://davehall.com.au
  */
-class TestCustomFunctions extends PHPUnit_Framework_TestCase
+class TestCustomFunctions extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var boolean $backupGlobals disable backup of GLOBALS which breaks things
@@ -163,7 +158,7 @@ class TestCustomFunctions extends PHPUnit_Framework_TestCase
     {
         $func = $GLOBALS['phpgw']->custom_functions->get('phpgwapi',
                                                         '.test', 2, true);
-        
+
         $this->clean();
         $this->assertNull($func);
     }
