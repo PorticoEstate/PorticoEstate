@@ -95,9 +95,9 @@ female	booking	nn	Kvinne
 filnavn	booking	nn	Dokument
 found %1 results	booking	nn	%1 treff
 fr	booking	nn	fr.
-from	booking	nn	Fra
+from	booking	nn	Frå
 generate allocations	booking	nn	Kopier til kalendar
-generate allocations from week template	booking	nn	Lag tildelingar fra vekeplan
+generate allocations from week template	booking	nn	Lag tildelingar frå vekeplan
 go back to the template week	booking	nn	Gå attende til vekeplan
 group	booking	nn	Gruppe/Lag
 history and comments (%1)	booking	nn	Historikk (%1)
@@ -414,7 +414,7 @@ Or	booking	nn	eller
 group_id	booking	nn	Gruppe/Lag
 organization_id	booking	nn	Organisasjon
 season_id	booking	nn	Sesong
-from_	booking	nn	Fra
+from_	booking	nn	Frå
 to_	booking	nn	Til
 owner_id	booking	nn	Eigar
 object_id	booking	nn	Objekt
@@ -448,7 +448,7 @@ Event created, Overlaps with existing booking, Remember to send a notification	b
 Print as PDF	booking	nn	Skriv ut som PDF
 Pending	booking	nn	UNDER HANDSAMING
 This booking is not connected to a season	booking	nn	Denne bookingen er ikkje kobla mot sesong
-Message from Bergen county - AktivBy	booking	nn	Melding fra AktivKommune
+Message from Bergen county - AktivBy	booking	nn	Melding frå AktivKommune
 Organization shortname	booking	nn	Kortnavnet (til organisasjon)
 Group shortname	booking	nn	Kortnavnet (til gruppa)
 contacts[0][email] contains an invalid email	booking	nn	Ugyldig epostadresse prøvd registrert  for ansvarlig gruppeleder 1
@@ -492,7 +492,7 @@ Message about new event	booking	nn	Melding om nytt arrangement
 Deactivate application	booking	nn	Deaktiver søknad (frontend)
 Deactivate calendar	booking	nn	Deaktiver kalender (frontend)
 Deactivate send message	booking	nn	Deaktiver funksjon for å sende melding(frontend)
-Can not repeat from a date in the past	booking	nn	Du kan ikkje repetere fra ein dato i fortida
+Can not repeat from a date in the past	booking	nn	Du kan ikkje repetere frå ein dato i fortida
 Can not create a booking in the past	booking	nn	Du kan ikkje opprette ein interntildeling i fortida
 Allocations  with existing allocations or bookings (%1)	booking	nn	Tildelingar med eksisterande tildelinger eller bookingar (%1)
 Contact information name is to long. max 50 characters	booking	nn	Namn i kontaktinformasjon er for langt. Maksimum 50 tegn
@@ -549,7 +549,7 @@ Booking  Delete information2	booking	nn	Skal du slette fleire, kan du velje Ut s
 There is a cost of %1 assosiated with the allocation you are useing	booking	nn	Det er en kostnad på kr %1 knytt til den tildelingen du bruker
 Export	booking	nn	Eksport
 Upload	booking	nn	Last opp
-Get all contact and invoice information from organization	booking	nn	Hent all kontakt/faktura informasjon fra Organisasjon
+Get all contact and invoice information from organization	booking	nn	Hent all kontakt/faktura informasjon frå Organisasjon
 Current internal billing sequence number	booking	nn	Gjeldande sekvensnummer for intern fakturering
 Current external billing sequence number	booking	nn	Gjeldande sekvensnummer for ekstern fakturering
 Billing sequence numbers	booking	nn	Sekvensnummer for fakturering

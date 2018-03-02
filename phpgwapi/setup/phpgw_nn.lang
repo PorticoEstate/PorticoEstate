@@ -8,14 +8,14 @@ manage users	common	nn	Administrere brukere
 manage groups	common	nn	Administrere grupper
 clear cache	common	nn	Slett cache (minne)
 Global Categories	common	nn	Globale kategorier
-View Sessions	common	nn	Vis sesjoner
-View Access Log	common	nn	Vis tilgangslogger
-Find and Register all Application Hooks	common	nn	Finn og register alle applikasjonskoblinger
+View Sessions	common	nn	Vis sesjonar
+View Access Log	common	nn	Vis tilgangsloggar
+Find and Register all Application Hooks	common	nn	Finn og register alle applikasjonskoblingar
 Asynchronous timed services	common	nn	Asynkrone tidsbestemte tjenester
-list users	common	nn	brukerliste
+list users	common	nn	brukarliste
 list groups	common	nn	gruppeliste
-firstname	common	nn	Fornavn
-lastname	common	nn	Etternavn
+firstname	common	nn	Fornamn
+lastname	common	nn	Etternamn
 description	common	nn	Beskrivelse
 add sub	common	nn	Legg til underkategori
 color	common	nn	Farge
@@ -23,32 +23,32 @@ apply	common	nn	Aktiver
 enabled	common	nn	aktiv
 no category	common	nn	Ingen kategori
 inactive	common	nn	Inaktiv
-inactive and hidden	common	nn	Inaktiv og gjemt
+inactive and hidden	common	nn	Inaktiv og gøymd
 status	common	nn	Status
 contact	common	nn	Kontakt
 user data	common	nn	Bruker data
 Application	common	nn	Applikasjon
 User access	common	nn	Brukertilgang
 edit user	common	nn	Rediger bruker
-edit user account	common	nn	Rediger bruker konto
+edit user account	common	nn	Rediger brukerkonto
 group data	common	nn	Gruppe data
 edit group	common	nn	Rediger gruppe
 group	common	nn	Gruppe
-all users	common	nn	Alle brukere
+all users	common	nn	Alle brukarar
 members	common	nn	Medlemer
-applications	common	nn	Applikasjoner
+applications	common	nn	Applikasjonar
 You do not have edit access to addressmaster contacts	common	nn	Du har ikke tilgang til "AddresseMaster" kontakter
 Can change password	common	nn	Kan bytte passord
-Anonymous User (not shown in list sessions)	common	nn	Anonym bruker (vises ikke i sesjonslisten)
+Anonymous User (not shown in list sessions)	common	nn	Anonym brukar (visest ikkje i sesjonslista)
 expires	common	nn	Utløpsdato
 Never	common	nn	Aldri
 quota	common	nn	Kvote
 are you sure you want to clear cache	admin	nn	Er du sikker på at du vil slette cache (minne)?
-: activate to sort column ascending	common	nn	: sorter kolonne stigende
-: activate to sort column descending	common	nn	: sorter kolonne synkende
+: activate to sort column ascending	common	nn	: sorter kolonne stigande
+: activate to sort column descending	common	nn	: sorter kolonne, største først
 features	common	nn	Egenskaper
 select none	common	nn	Velg ingen
-bookmarks	common	nn	Snarveier
+bookmarks	common	nn	Snarvegar
 bookmark added	common	nn	Snarvei er lagret
 bookmark deleted	common	nn	Snarvei er slettet
 access	common	nn	Access
@@ -107,7 +107,7 @@ groups	common	nn	Grupper
 help	common	nn	Hjelp
 high	common	nn	Høy
 home	common	nn	Heim
-it has been more then %1 days since you changed your password	common	nn	Det er meir enn %1 dager siden du har endet ditt passord
+it has been more then %1 days since you changed your password	common	nn	Det er meir enn %1 dager siden du har endra passordet ditt
 january	common	nn	Januar
 july	common	nn	Juli
 june	common	nn	Juni
@@ -122,7 +122,7 @@ low	common	nn	Lav
 march	common	nn	Mars
 may	common	nn	Mai
 medium	common	nn	Medium
-monday	common	nn	Mandag
+monday	common	nn	Måndag
 name	common	nn	Navn
 name of the user, eg. %1	common	nn	Fullt navn på bruker, %1
 new entry added sucessfully	common	nn	Ny entry er lagt til
@@ -152,7 +152,7 @@ private	common	nn	Privat
 Processing...	common	nn	Prosesserer...
 rename	common	nn	Endre navn
 rental	common	nn	Leie
-saturday	common	nn	Lørdag
+saturday	common	nn	Laurdag
 save	common	nn	Lagre
 search	common	nn	Søk
 september	common	nn	September
@@ -177,7 +177,7 @@ this application requires an upgrade	common	nn	Denne modulen må oppdateres
 time	common	nn	Tid
 to	common	nn	til
 total	common	nn	Total
-tuesday	common	nn	Tirsdag
+tuesday	common	nn	Tysdag
 updated	common	nn	Oppdatert
 view	common	nn	Vis
 wednesday	common	nn	Onsdag
@@ -223,7 +223,7 @@ collection	common	nn	Samling..
 item	common	nn	Valg
 download visible data	common	nn	last ned innholdet i synlig tabell til excel
 download data	common	nn	last ned alt filtrert innholdet til excel
-previous week	common	nn	Forrige uke
+previous week	common	nn	Forrige veke
 next week	common	nn	Neste veke
 next	common	nn	Neste
 week	common	nn	Veke

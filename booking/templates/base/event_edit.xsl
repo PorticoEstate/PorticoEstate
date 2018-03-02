@@ -571,12 +571,14 @@
 					<xsl:value-of select="php:function('lang', 'approve')"/>
 				</xsl:attribute>
 			</input>
-			<a class="cancel pure-button pure-button-primary">
-				<xsl:attribute name="href">
-					<xsl:value-of select="event/application_link"/>
-				</xsl:attribute>
-				<xsl:value-of select="php:function('lang', 'back')" />
-			</a>
+			<xsl:if test="event/application_id != ''">
+				<a class="cancel pure-button pure-button-primary">
+					<xsl:attribute name="href">
+						<xsl:value-of select="event/application_link"/>
+					</xsl:attribute>
+					<xsl:value-of select="php:function('lang', 'back')" />
+				</a>
+			</xsl:if>
 			<a class="cancel pure-button pure-button-primary">
 				<xsl:attribute name="href">
 					<xsl:value-of select="event/cancel_link"/>
