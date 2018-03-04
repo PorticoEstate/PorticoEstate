@@ -1587,6 +1587,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] : 'csv';
+			$php_version = (float)PHP_VERSION;
 
 			switch ($export_format)
 			{
@@ -1594,12 +1595,160 @@
 					$this->csv_out($list, $name, $descr, $input_type, $identificator, $filename);
 					break;
 				case 'excel':
-					$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
+					if($php_version > 5.5)
+					{
+						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
+					}
+					else
+					{
+						$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
+					}
 					break;
 				case 'ods':
-					$this->ods_out($list, $name, $descr, $input_type, $identificator, $filename);
+					$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'ods');
 					break;
 			}
+		}
+
+		/**
+		 * downloads data as MsExcel to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 * @param array $identificator array containing 1.row for identification purposes in case of data import.
+		 * @param string $filename
+		 */
+		function phpspreadsheet_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' , $export_format = 'excel')
+		{
+			phpgw::import_class('phpgwapi.phpspreadsheet');
+
+			if ($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename = $filename_arr[0];
+			}
+			else
+			{
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
+			}
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			
+			switch ($export_format)
+			{
+				case 'excel':
+					$suffix = 'xlsx';
+					break;
+				case 'ods':
+					$suffix = 'ods';
+					break;
+				default:
+					$suffix = 'xlsx';
+					break;
+			}
+			$filename .= "_{$date_time}.{$suffix}";
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+//			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
+//			$cacheSettings = array('memoryCacheSize' => '32MB');
+//			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+
+			$spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+			$spreadsheet->getProperties()->setCreator($GLOBALS['phpgw_info']['user']['fullname'])
+				->setLastModifiedBy($GLOBALS['phpgw_info']['user']['fullname'])
+				->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}")
+				->setSubject("Office 2007 XLSX Document")
+				->setDescription("document for Office 2007 XLSX, generated using PHP classes.")
+				->setKeywords("office 2007 openxml php")
+				->setCategory("downloaded file");
+
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$spreadsheet->setActiveSheetIndex(0);
+
+			if ($identificator)
+			{
+				$_first_row = 2;
+				$i = 1;
+				foreach ($identificator as $key => $value)
+				{
+					$spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($i, 1, $value);
+					$i++;
+				}
+			}
+			else
+			{
+				$_first_row = 1;
+			}
+			$count_uicols_name = count($name);
+
+			$text_format = array();
+			$m = 1;
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+				{
+					if (preg_match('/^loc/i', $name[$k]))
+					{
+						$text_format[$m] = true;
+					}
+					$spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($m, $_first_row, $descr[$k]);
+					$m++;
+				}
+			}
+
+			$j = 0;
+			if (isset($list) && is_array($list))
+			{
+				foreach ($list as $entry)
+				{
+					$m = 0;
+					for ($k = 0; $k < $count_uicols_name; $k++)
+					{
+						if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+						{
+							$content[$j][$m] = str_replace("\r\n", " ", $entry[$name[$k]]);
+							$m++;
+						}
+					}
+					$j++;
+				}
+
+				$line = $_first_row;
+
+				foreach ($content as $row)
+				{
+					$col = 'A';
+					$line++;
+					$rows = count($row);
+					for ($i = 0; $i < $rows; $i++)
+					{
+						$cell = "{$col}{$line}";
+						if (isset($text_format[$i]))
+						{
+							$spreadsheet->getActiveSheet()->setCellValueExplicit($cell, $row[$i], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+						}
+						else
+						{
+							$spreadsheet->getActiveSheet()->setCellValue($cell, $row[$i]);
+						}
+						$col++;
+					}
+				}
+			}
+
+			if($export_format = 'ods')
+			{
+				$objWriter = new PhpOffice\PhpSpreadsheet\Writer\Ods($spreadsheet);
+			}
+			else// Save Excel 2007 file
+			{
+				$objWriter = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+			}
+			$objWriter->save('php://output');
 		}
 
 		/**
@@ -1730,64 +1879,6 @@
 			$objWriter->save('php://output');
 		}
 
-		function excel_out_old( $list, $name, $descr, $input_type = array() )
-		{
-			$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
-			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}.xls";
-
-			$workbook = CreateObject('phpgwapi.excel', "-");
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename, 'application/vnd.ms-excel');
-
-			$count_uicols_name = count($name);
-
-			$worksheet1 = & $workbook->add_worksheet('First One');
-
-			$m = 0;
-			for ($k = 0; $k < $count_uicols_name; $k++)
-			{
-				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
-				{
-					$worksheet1->write_string(0, $m, $this->utf2ascii($descr[$k]));
-					$m++;
-				}
-			}
-
-			$j = 0;
-			if (isset($list) AND is_array($list))
-			{
-				foreach ($list as $entry)
-				{
-					$m = 0;
-					for ($k = 0; $k < $count_uicols_name; $k++)
-					{
-						if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
-						{
-							$content[$j][$m] = str_replace("\r\n", " ", $entry[$name[$k]]);
-							$m++;
-						}
-					}
-					$j++;
-				}
-
-				$line = 0;
-
-				foreach ($content as $row)
-				{
-					$line++;
-					$rows = count($row);
-					for ($i = 0; $i < $rows; $i++)
-					{
-						$worksheet1->write($line, $i, $this->utf2ascii($row[$i]));
-					}
-				}
-			}
-//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
-//			die();
-
-			$workbook->close();
-		}
 
 		/**
 		 * downloads data as CSV to the browser
@@ -1859,97 +1950,6 @@
 				}
 			}
 			fclose($fp);
-		}
-
-		/**
-		 * downloads data as ODS to the browser
-		 *
-		 * @param array $list array with data to export
-		 * @param array $name array containing keys in $list
-		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		 * @param array $input_type array containing information whether fields are to be suppressed from the output
-		 */
-		function ods_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' )
-		{
-			if ($filename)
-			{
-				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0];
-			}
-			else
-			{
-				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
-			}
-
-			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}'.ods'";
-
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename, 'application/ods');
-
-			$count_uicols_name = count($name);
-
-			$ods = createObject('property.ods');
-			$object = $ods->newOds(); //create a new ods file
-
-			if ($identificator)
-			{
-				$_first_row = 1;
-				$i = 0;
-				foreach ($identificator as $key => $value)
-				{
-					$object->addCell(1, 0, $i, $value, 'string');
-					$i++;
-				}
-			}
-			else
-			{
-				$_first_row = 0;
-			}
-
-			$m = 0;
-			for ($k = 0; $k < $count_uicols_name; $k++)
-			{
-				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
-				{
-					$object->addCell(1, $_first_row, $m, $descr[$k], 'string');
-					$m++;
-				}
-			}
-
-			$j = 0;
-			if (isset($list) AND is_array($list))
-			{
-				foreach ($list as $entry)
-				{
-					$m = 0;
-					for ($k = 0; $k < $count_uicols_name; $k++)
-					{
-						if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
-						{
-							$content[$j][$m] = str_replace(array('&'), array('og'), $entry[$name[$k]]);//str_replace("\r\n"," ",$entry[$name[$k]]);
-							$m++;
-						}
-					}
-					$j++;
-				}
-
-				$line = $_first_row + 1;
-				foreach ($content as $row)
-				{
-					for ($i = 0; $i < count($row); $i++)
-					{
-						$object->addCell(1, $line, $i, $row[$i], 'string');
-					}
-					$line++;
-				}
-			}
-
-			$temp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			$ods->saveOds($object, "{$temp_dir}/{$filename}");
-
-			echo file_get_contents("{$temp_dir}/{$filename}");
-			unlink("{$temp_dir}/{$filename}");
 		}
 
 		function increment_id( $name )
