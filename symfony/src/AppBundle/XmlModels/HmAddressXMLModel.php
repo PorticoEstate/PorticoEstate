@@ -10,6 +10,7 @@ namespace AppBundle\XmlModels;
 
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation2;
+use AppBundle\Entity\FmStreetaddress;
 
 class HmAddressXMLModel
 {
@@ -37,22 +38,22 @@ class HmAddressXMLModel
      * @var string
      */
     protected $AddressName = '';
-    /**
-     * @var int
-     */
-    protected $Latitude = 0;
-    /**
-     * @var int
-     */
-    protected $Longitude = 0;
-    /**
-     * @var string
-     */
-    protected $Address3 = '';
-    /**
-     * @var string
-     */
-    protected $Address4 = '';
+//    /**
+//     * @var int
+//     */
+//    protected $Latitude = 0;
+//    /**
+//     * @var int
+//     */
+//    protected $Longitude = 0;
+//    /**
+//     * @var string
+//     */
+//    protected $Address3 = '';
+//    /**
+//     * @var string
+//     */
+//    protected $Address4 = '';
     /**
      * @var string
      */
@@ -73,7 +74,14 @@ class HmAddressXMLModel
     public static function constructFromBuilding($building)
     {
         $instance = new self();
-        // TODO
+        /* @var $streetAddress FmStreetaddress */
+        $streetAddress = $building->getStreet();
+        if (!is_null($instance->Address1)){
+            $instance->Address1 = $streetAddress->getDescr() ?? '';
+        }
+        $instance->StreetNo = $building->getStreetNumber() ?? '';
+        $instance->AddressName = $building->getLoc2Name() ?? '';
+
         return $instance;
     }
 
@@ -87,6 +95,7 @@ class HmAddressXMLModel
         $instance->Address1 = $loc->getAdresse1() ?? '';
         $instance->PostalArea = $loc->getPoststed() ?? '';
         $instance->PostalCode = $loc->getPostnummer() ?? '';
+        $instance->AddressName = $loc->getLoc1Name() ?? '';
         return $instance;
     }
 
@@ -137,38 +146,38 @@ class HmAddressXMLModel
     {
         return $this->AddressName;
     }
-
-    /**
-     * @return int
-     */
-    public function getLatitude(): int
-    {
-        return $this->Latitude;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLongitude(): int
-    {
-        return $this->Longitude;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress3(): string
-    {
-        return $this->Address3;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress4(): string
-    {
-        return $this->Address4;
-    }
+//
+//    /**
+//     * @return int
+//     */
+//    public function getLatitude(): int
+//    {
+//        return $this->Latitude;
+//    }
+//
+//    /**
+//     * @return int
+//     */
+//    public function getLongitude(): int
+//    {
+//        return $this->Longitude;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getAddress3(): string
+//    {
+//        return $this->Address3;
+//    }
+//
+//    /**
+//     * @return string
+//     */
+//    public function getAddress4(): string
+//    {
+//        return $this->Address4;
+//    }
 
     /**
      * @return string

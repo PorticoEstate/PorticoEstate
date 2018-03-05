@@ -29,10 +29,15 @@ class HmInstallationXMLModel
     protected $InstallationIDParent = 0;
     // ID of the employee responsible for the installation, must exist in Handyman
     /* @var int */
-    protected $ResponsibleNo = 0;
+    protected $ResponsibleNo = 198; // 198 = Bjørn Østrem
     /* @var int */
     protected $Status = 1;// Status 0=New (default for equipment), 1=Installed (default for site), 2=Paused, 3=Historical
-//    protected $Customer; // handyman_customer_xml_model
+
+    /* @var $Customer HmCustomerXMLModel */
+    protected $Customer;
+
+    protected $HSDepartmentID = 0; // From Handyman 12 - Kontroll pilot, 2 - Etat for bygg og eiendom
+
 
     /**
      * HmInstallationXMLModel constructor
@@ -40,6 +45,7 @@ class HmInstallationXMLModel
     public function __construct()
     {
         // allocate your stuff
+        $this->Customer = new HmCustomerXMLModel;
     }
     /* @var $building FmLocation2 */
     public static function constructFromBuilding(FmLocation2 $building)
@@ -123,6 +129,22 @@ class HmInstallationXMLModel
     public function getInstallationIDParent(): string
     {
         return $this->InstallationIDParent;
+    }
+
+    /**
+     * @return HmCustomerXMLModel
+     */
+    public function getCustomer(): HmCustomerXMLModel
+    {
+        return $this->Customer;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHSDepartmentID(): int
+    {
+        return $this->HSDepartmentID;
     }
 
 

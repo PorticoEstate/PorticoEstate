@@ -487,7 +487,12 @@ class FmLocation2
      */
     private $arealNettoEndring;
 
-
+    /**
+     * @ORM\ManyToOne(targetEntity="FmStreetaddress", inversedBy="buildings")
+     * @ORM\JoinColumn(name="street_id", referencedColumnName="id")
+     * @Groups({"rest"})
+     */
+    private $street;
 
     /**
      * Set loc1
@@ -1895,5 +1900,13 @@ class FmLocation2
     public function getLocation1()
     {
         return $this->location1;
+    }
+
+    /**
+     * @return FmStreetadress
+     */
+    public function getStreet()
+    {
+        return $this->street;
     }
 }

@@ -120,4 +120,30 @@ class FmLocation1Controller extends Controller
         $response->headers->set('Content-Type', 'application/xml');
         return $response;
     }
+
+    /**
+     * @Route("/import", name="fmlocation1_importxml")
+     */
+    public function importXML(){
+        $file = dirname(__FILE__) . '/../../../../OrderAndRegistration.xml';
+        if (file_exists($file)){
+            $xml = simplexml_load_file($file);
+        }
+
+        $orderHead = $xml->Order[0]->OrderHead;
+        dump($orderHead);
+        dump($orderHead->InstallationID->__toString());
+        dump($orderHead->InstallationList[0]->Installation);
+        $documentItem = $xml->Order[0]->DocumentList[0]->Document;
+        $checklistItem = $xml->Order[0]->ChecklistList[0]->ChecklistType;
+        $data = array();
+        $data['ChecklistTypeName']= $checklistItem->ChecklistTypeName->__toString();
+        $data['ChecklistName']= $checklistItem->ChecklistName->__toString();
+        $data['Description']= $checklistItem->Description->__toString();
+        $data['Document']= $checklistItem->Document->__toString();
+        $data['Comment']= $checklistItem->Comment->__toString();
+        $data['Finished']= $checklistItem->Finished->__toString();
+        dump($data);
+        return new Response('<html><body>Hello!</body></html>');
+    }
 }

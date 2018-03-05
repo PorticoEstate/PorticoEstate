@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\ArrayCollection as ArrayCollection;
 
 /**
  * FmStreetaddress
@@ -29,7 +30,18 @@ class FmStreetaddress
      */
     private $descr;
 
+    /**
+     * @ORM\OneToMany(targetEntity="FmLocation2", mappedBy="street")
+     */
+    private $buildings;
 
+    /**
+     * FmStreetaddress constructor.
+     */
+    public function __construct()
+    {
+        $this->buildings = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -42,20 +54,6 @@ class FmStreetaddress
     }
 
     /**
-     * Set descr
-     *
-     * @param string $descr
-     *
-     * @return FmStreetaddress
-     */
-    public function setDescr($descr)
-    {
-        $this->descr = $descr;
-
-        return $this;
-    }
-
-    /**
      * Get descr
      *
      * @return string
@@ -64,4 +62,15 @@ class FmStreetaddress
     {
         return $this->descr;
     }
+
+    /**
+     * Get buildings
+     *
+     * @return ArrayCollection
+     */
+    public function getBuildings(): ArrayCollection
+    {
+        return $this->buildings;
+    }
+
 }
