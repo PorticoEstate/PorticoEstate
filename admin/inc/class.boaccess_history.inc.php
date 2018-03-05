@@ -25,7 +25,7 @@
                         if (is_array($records))
                         {
                             foreach($records as $key => $record)
-                            {
+			{
 				if ($record['li'] && $record['lo'])
 				{
 					$total = ($record['lo'] - $record['li']);
@@ -72,7 +72,7 @@
 					'sessionid'  => $record['sessionid'],     
 					'total'      => $total
 				);
-                            }
+			}
                         }
 			return $_records;
 		}

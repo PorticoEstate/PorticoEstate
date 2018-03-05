@@ -59,11 +59,11 @@
                         if (is_array($this->currentrecord))
                         {
                             foreach($this->currentrecord as $name => $value)
-                            {
+			{
 				$buffer[$this->id][$name] = $value;
 				/* $buffer[$this->id]['private'] = $private; */
 				/* echo '<br />'.$name.' => '.$value; */
-                            }
+			}
                         }
 			return $buffer;
 		}

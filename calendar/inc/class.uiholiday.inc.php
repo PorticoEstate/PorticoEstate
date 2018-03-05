@@ -95,7 +95,7 @@
                                 if (is_array($locales))
                                 {
                                     foreach($locales as $key => $value)
-                                    {
+				{
 //					$tr_color = $GLOBALS['phpgw']->nextmatchs->alternate_row_class($tr_color);
 					$tr_color = $cnt % 2 ? 'row_on' : 'row_off';
 					if (! $value)  $value  = '&nbsp;';
@@ -111,8 +111,8 @@
 					$p->set_var($var);
 					$p->parse('rows','row',True);
 					$cnt++;
-                                    }
-                                }
+				}
+			}
 			}
 
 			$var = Array(
@@ -472,9 +472,9 @@
                                 if (is_array($holidays))
                                 {
                                     foreach($holidays as $key => $holiday)
-                                    {
+				{
 					echo "$locale\t$holiday[name]\t$holiday[day]\t$holiday[month]\t$holiday[occurence]\t$holiday[dow]\t$holiday[observance_rule]\n";
-                                    }
+				}
                                 }
 				$GLOBALS['phpgw']->common->phpgw_exit();
 			}

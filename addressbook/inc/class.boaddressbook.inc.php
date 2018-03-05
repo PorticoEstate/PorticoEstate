@@ -775,7 +775,7 @@
                                 if (is_array($qfields))
                                 {
                                     foreach($qfields as $pref => $x)
-                                    {
+				{
 					/* echo '<br />checking: ' . $pref . '=' . $prefs[$pref]; */
 					if ($prefs[$pref] == 'on')
 					{
@@ -785,8 +785,8 @@
 					{
 						$GLOBALS['phpgw']->preferences->delete('addressbook',$pref);
 					}
-                                    }
-                                }
+				}
+			}
 			}
 
 			if(is_array($other))

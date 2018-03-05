@@ -49,7 +49,7 @@
                         if (is_array($_menuData))
                         {
                             foreach($_menuData as $key => $value)
-                            {
+			{
 				if (!empty($value['extradata']))
 				{
 					$link = $GLOBALS['phpgw']->link($value['url'],'account_id=' . $GLOBALS['account_id'] . '&' . $value['extradata']);
@@ -60,7 +60,7 @@
 				}
 				$this->section_item($link,lang($value['description']),$this->rowColor[($i % 2)]);
 				$i++;
-                            }
+			}
                         }
 
 			$this->t->set_var('th_bg',$GLOBALS['phpgw_info']['theme']['th_bg']);

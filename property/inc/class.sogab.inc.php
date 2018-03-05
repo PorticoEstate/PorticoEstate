@@ -540,13 +540,13 @@
                                 if (is_array($location))
                                 {
                                     foreach($location as $input_name => $value)
-                                    {
-                                            if ($value)
-                                            {
-                                                    $col[] = 'loc' . ($input_name + 1);
-                                                    $val[] = $value;
-                                            }
-                                    }
+				{
+					if ($value)
+					{
+						$col[] = 'loc' . ($input_name + 1);
+						$val[] = $value;
+					}
+				}
                                 }
 
 				if ($col)

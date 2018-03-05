@@ -493,25 +493,25 @@
                         if (is_array($document['location']))
                         {
                             foreach($document['location'] as $input_name => $value)
-                            {
-                                    if ($value)
-                                    {
-                                            $cols[] = $input_name;
-                                            $vals[] = $value;
-                                    }
-                            }
+			{
+				if ($value)
+				{
+					$cols[] = $input_name;
+					$vals[] = $value;
+				}
+			}
                         }
 
                         if (is_array($document['extra']))
                         {
                             foreach($document['extra'] as $input_name => $value)
-                            {
-                                    if ($value)
-                                    {
-                                            $cols[] = $input_name;
-                                            $vals[] = $value;
-                                    }
-                            }
+			{
+				if ($value)
+				{
+					$cols[] = $input_name;
+					$vals[] = $value;
+				}
+			}
                         }
 
 			if ($cols)

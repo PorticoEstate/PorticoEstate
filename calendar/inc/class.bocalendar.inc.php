@@ -460,12 +460,12 @@
                         if (is_array($group_owners))
                         {
                             foreach($group_owners as $index => $group_info)
-                            {
+			{
 				if($this->owner == $this->contacts->is_contact($group_info['account_id']) )
 				{
 					return True;
 				}
-                            }
+			}
                         }
 			return False;
 		}
@@ -658,7 +658,7 @@
                         if (is_array($this->so->cal->deleted_events))
                         {
                             foreach($this->so->cal->deleted_events as $i => $event_id)
-                            {
+			{
 				$event = $this->so->read_entry($event_id);
 				if($this->check_perms(PHPGW_ACL_DELETE,$event))
 				{
@@ -668,7 +668,7 @@
 				{
 					unset($this->so->cal->deleted_events[$i]);
 				}
-                            }
+			}
                         }
 			$this->so->expunge();
 		}
@@ -1030,7 +1030,7 @@
 			
 			//while(!$uim && $event['participants'] && $security_equals && list($participant,$status) = each($event['participants']))
                         foreach($event['participants'] as $participant => $status)
-			{       
+			{
 				if($GLOBALS['phpgw']->accounts->get_type($participant) == 'g')
 				{
 					//@reset($security_equals);
@@ -1577,13 +1577,13 @@
                                 if (is_array($groups))
                                 {
                                     foreach($groups as $key => $group)
-                                    {
+				{
 					if (strpos(' '.implode(',',$event['groups']).' ',$group['account_id']))
 					{
 						return False;
 					}
-                                    }
-                                }
+				}
+			}
 			}
 			else
 			{
@@ -2700,7 +2700,7 @@
                         if (is_array($event['alarm']))
                         {
                             foreach($event['alarm'] as $key => $alarm)
-                            {
+			{
 				if($alarm['enabled'])
 				{
 					print_debug('TIME',$alarm['time'].' : '.$GLOBALS['phpgw']->common->show_date($alarm['time']).' ('.$event['id'].')');
@@ -2717,7 +2717,7 @@
 						$found = True;
 					}
 				}
-                            }
+			}
                         }
 			print_debug('Found',$found);
 			return $found;
@@ -2730,7 +2730,7 @@
                         if (is_array($old_event['participants']))
                         {
                             foreach($old_event['participants'] as $old_userid => $old_status)
-                            {
+			{
 				if(isset($new_event['participants'][$old_userid]))
 				{
 					print_debug('Modifying event for user',$old_userid);
@@ -2741,21 +2741,21 @@
 					print_debug('Deleting user from the event',$old_userid);
 					$this->deleted[intval($old_userid)] = $old_status;
 				}
-                            }
+			}
                         }
 			// Find new users.....
 			//while(list($new_userid,$new_status) = each($new_event['participants']))
                         if (is_array($new_event['participants']))
                         {
                             foreach($new_event['participants'] as $new_userid => $new_status)
-                            {
+			{
 				if(!isset($old_event['participants'][$new_userid]))
 				{
 					print_debug('Adding event for user',$new_userid);
 					$this->added[$new_userid] = 'U';
 					$new_event['participants'][$new_userid] = 'U';
 				}
-                            }
+			}
                         }
 		
 			if(count($this->added) > 0 || count($this->modified) > 0 || count($this->deleted) > 0)
@@ -2790,7 +2790,7 @@
                                 if (is_array($cached))
                                 {
                                     foreach($cached as $g => $event)
-                                    {
+				{
 					$end = date('Ymd',$this->maketime($event['end']));
 					print_debug('EVENT',_debug_array($event,False));
 				//	print_debug('start',$start);
@@ -2802,9 +2802,9 @@
 						$already_moved[$event['id']] = 1;
 						print_debug('Event moved');
 					}
-                                    }
-                                }
+				}
 			}
+		}
 		}
 		
 		function get_dirty_entries($lastmod=-1)

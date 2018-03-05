@@ -390,7 +390,7 @@
                         if (is_array($template_list))
                         {
                             foreach($template_list as $template)
-                            {
+			{
 
 				if ($template['grouping_descr'] != $grouping_descr_old)
 				{
@@ -430,7 +430,7 @@
 				unset($code);
 
 				$i++;
-                            }
+			}
                         }
 //            
 //            echo '<pre>'; print_r($content); echo '</pre>';exit('hour');
