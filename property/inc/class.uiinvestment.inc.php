@@ -180,7 +180,7 @@
                         if (is_array($investment_list))
                         {
                             foreach($investment_list as $investment)
-                            {
+			{
 				$link_history = $check = "";
 				if ($this->admin_invoice)
 				{
@@ -217,7 +217,7 @@
 					'counter' => $counter
 				);
 				$counter++;
-                            }
+			}
                         }
 
 			if ($export)

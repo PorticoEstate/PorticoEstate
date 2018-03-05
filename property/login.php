@@ -169,9 +169,9 @@
                 if (is_array($langs))
                 {
                     foreach($langs as $lang => $value)
-                    {
+		{
 			$langs[$lang] = $lang;
-                    }
+		}
                 }
 		$_POST['submit'] = true;
 		$_POST['lang_selected'] = $langs;

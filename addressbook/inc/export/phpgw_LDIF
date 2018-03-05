@@ -175,13 +175,13 @@
                                 if (is_array($this->export))
                                 {
                                     foreach($this->export as $name => $value)
-                                    {
+				{
 					if (($value != 'dn') && !empty($buffer[$i][$value]))
 					{
 						$tmp = ereg_replace(',','',$buffer[$i][$value]);
 						$entries .= $value . ': ' . $tmp . "\n";
 					}
-                                    }
+				}
                                 }
 				$entries .= 'objectClass: person' . "\n";
 				$entries .= 'objectClass: organizationalPerson' . "\n";

@@ -396,7 +396,7 @@
                         if (is_array($list))
                         {
                             foreach($list as $id => $alarm)
-                            {
+			{
 				if (is_array($alarm['times']))
 				{
 					//while (is_array($alarm['times']) && list($key, $value) = each($alarm['times']))
@@ -453,7 +453,7 @@
 				unset($link_edit);
 				unset($lang_edit_statustext);
 				unset($text_edit);
-                            }
+			}
                         }
 
 			$result_data = array('results' => $content);

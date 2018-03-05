@@ -939,7 +939,7 @@
                         if (is_array($values['counter']))
                         {
                             foreach($values['counter'] as $key => $value)
-                            {
+			{
 				$local_error = false;
 
 				//$n = $entry[0];
@@ -1075,7 +1075,7 @@
 
 					$receipt['message'][] = array('msg' => lang('Voucher is updated '));
 				}
-                            }
+			}
                         }
 
 			if ($update_status)

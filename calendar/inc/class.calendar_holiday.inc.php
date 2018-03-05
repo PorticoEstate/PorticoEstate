@@ -56,11 +56,11 @@ class calendar_holiday
                         if (is_array($this->users))
                         {
                             foreach($this->users as $key => $value)
-                            {
+			{
 				$this->is_network_load_needed($value);
-                            }
-                        }
+			}
 		}
+	}
 	}
 
 	function is_network_load_needed($locale)
@@ -250,13 +250,13 @@ class calendar_holiday
                 if (is_array($this->users))
                 {
                     foreach($this->users as $key => $value)
-                    {
+		{
 			if($find_it)
 			{
 				$find_it .= ',';
 			}
 			$find_it .= "'".$value."'";
-                    }
+		}
                 }
 		$sql .= $find_it.')';
 

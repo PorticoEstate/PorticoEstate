@@ -144,10 +144,10 @@
                         if (is_array($this->currentrecord))
                         {
                             foreach($this->currentrecord as $name => $value)
-                            {
+			{
 				$buffer[$this->id][$name] = $value;
 				//echo '<br>'.$name.' => '.$value;
-                            }
+			}
                         }
 			return $buffer;
 		}
@@ -162,10 +162,10 @@
                                 if (is_array($buffer[$i]))
                                 {
                                     foreach($buffer[$i] as $name => $value)
-                                    {
+				{
 					//echo '<br>'.$i.': '.$name.' => '.$value;
 					$entry[$i][$name] = $value;
-                                    }
+				}
                                 }
 				$entry[$i]['email_type']      = 'INTERNET';
 				$entry[$i]['email_home_type'] = 'INTERNET';

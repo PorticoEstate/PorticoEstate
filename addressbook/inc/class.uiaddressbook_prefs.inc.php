@@ -365,7 +365,7 @@ class uiaddressbook_prefs
                         if (is_array($this->contacts->stock_contact_fields))
                         {
                             foreach($this->contacts->stock_contact_fields as $falsefield => $english)
-                            {
+			{
 				//If it in selected_fields, then it has been selected, and it doesnt go into
 				//the fields_show_selectbox array
 				if(!isset($this->selected_fields[$this->org_or_person][$falsefield]) || !$this->selected_fields[$this->org_or_person][$falsefield])
@@ -399,7 +399,7 @@ class uiaddressbook_prefs
 
 				}
 			//Constructing commtype descriptions
-                            }
+			}
                         }
 
 			$possible_comtypes=$this->linearize_query($this->contacts->get_contact_comm_descr(),'comm_description');
@@ -745,7 +745,7 @@ class uiaddressbook_prefs
                 if (is_array($this->selected_fields[$this->org_or_person]))
                 {
                     foreach($this->selected_fields[$this->org_or_person] as $k => $v)
-                    {
+		{
 			if(!is_array($v))
 			{
 				$this->template->set_var('lang_selected_contact_field',$this->lang_fields[$k]);
@@ -775,7 +775,7 @@ class uiaddressbook_prefs
 				$arrays[]=$v;
 			}
 				
-                    }
+		}
                 }
 		if(is_array($arrays))
 		{
@@ -794,9 +794,9 @@ class uiaddressbook_prefs
 			{
 				//while(list($ok,$ov)=each($v))
                                 if (is_array($v))
-                                {
+			{
                                     foreach($v as $ok => $ov)
-                                    {
+				{
 					if($removelink)
 					{
 						$removelink=$GLOBALS['phpgw']->link
@@ -814,9 +814,9 @@ class uiaddressbook_prefs
 					$this->template->set_var('lang_selected_contact_field',$this->lang_fields[$ok]);
 					$this->template->set_var('remove_me_link',$removelink);
 					$this->template->parse('V_selected_rows','B_selected_rows',True);
-                                    }
-                                }
+				}
 			}
+		}
 		}
 
 		$this->template->parse('B_selected_rows','V_selected_rows');

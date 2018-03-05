@@ -397,7 +397,7 @@
                         if (is_array($custom['cols']))
                         {
                             foreach($custom['cols'] as $entry)
-                            {
+			{
 				$cols[] = array(
 					'id' => $entry['id'],
 					'name' => $entry['name'],
@@ -410,7 +410,7 @@
 						'resort' => 'down', 'cols_id' => $entry['id'], 'custom_id' => $custom_id)),
 					'delete' => $entry['id'],
 				);
-                            }
+			}
                         }
 
 			$datatable_def[] = array

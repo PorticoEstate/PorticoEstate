@@ -1,0 +1,138 @@
+Logged in as	frontend	nn	Innlogget som
+drawings	frontend	nn	Tegninger
+frontend	frontend	nn	Frontend
+pictures	frontend	nn	Bilder
+maintenance	frontend	nn	Vedlikehold
+refurbishment	frontend	nn	Oppgraderinger
+services	frontend	nn	Tjenester
+contract	frontend	nn	Kontrakter
+contract_in	frontend	nn	Innleiekontrakter
+contract_ex	frontend	nn	Eksternleiekontrakter
+contract_documents	frontend	nn	Kontraktsdokumenter
+helpdesk	frontend	nn	Melding om avvik
+subject	frontend	nn	Meldingstittel
+entry_date	frontend	nn	Dato
+status	frontend	nn	Status
+list ticket	frontend	nn	Meldingsoversikt
+locationdesc	frontend	nn	Sted
+description	frontend	nn	Beskrivelse
+file	frontend	nn	Legg til dokument
+Missing field(s)	frontend	nn	Alle felt må fylles ut
+user	frontend	nn	Meldt inn av
+Open	frontend	nn	Åpen
+Ticket added	frontend	nn	Avviksmelding registrert
+Opened	frontend	nn	Åpnet
+add ticket	frontend	nn	Ny avviksmelding
+Apply	frontend	nn	Lagre
+Priority changed	frontend	nn	Prioritet endret
+tab sorting	frontend	nn	Fanesortering
+frontend settings	frontend	nn	Frontend-innstillinger
+All	frontend	nn	Vis alle
+Closed	frontend	nn	Avsluttede
+not_implemented	frontend	nn	Ikke implementert
+select_unit	frontend	nn	Velg bygg
+under_planning	frontend	nn	Under planlegging
+active_single	frontend	nn	Aktiv
+ended	frontend	nn	 Avsluttet
+status_unknown	frontend	nn	Ukjent status
+old_contract_id	frontend 	nn	Kontraktsnummer
+date_start	frontend	nn	Startdato
+date_end	frontend	nn	Sluttdato
+contract_status	frontend	nn	Status
+rented_area	frontend	nn	Leid areal
+total_price	frontend	nn	Pris
+service_id	frontend	nn	Tjenestested
+responsibility_id	frontend	nn	Ansvarssted
+logout	frontend	nn	Logg ut
+help	frontend	nn	Hjelp
+contact_BKB	frontend	nn	Kontakt EBE
+folder	frontend	nn	Informasjon internleie
+number_of_units	frontend	nn	Antall bygg
+total_area	frontend	nn	Totalt areal
+total_price	frontend	nn	Total pris
+total_area_internal	frontend	nn	Totalt areal (internleie)
+total_price_internal	frontend	nn	Total pris (internleie)
+square_meters	frontend	nn	kvm
+currency	frontend	nn	kr
+contracts_not_included_in_totals	frontend	nn	Innleiekontrakter er ikke tatt med i totalt areal og pris
+organisational_units	frontend	nn	Resultatenheter
+all_organisational_units	frontend	nn	Alle enheter
+chosen_unit	frontend	nn	Valgt bygg
+choose_contract	frontend	nn	Velg kontrakt
+no_name_organisational_unit	frontend	nn	Resultatenheten har ingen navn
+no_name_unit	frontend	nn	--Ingen navn--
+new_ticket	frontend	nn	Skriv ny melding
+contract_type_eksternleie	frontend	nn	Eksternleie
+contract_type_eksternleie_feste	frontend	nn	Feste (1520)
+contract_type_eksternleie_leilighet	frontend	nn	Leilighet (1530)
+contract_type_eksternleie_annen	frontend	nn	Annen (1510)
+contract_type_innleie	frontend	nn	Innleie
+contract_type_internleie	frontend	nn	Internleie
+contract_type_internleie_egne	frontend	nn	Egne
+contract_type_internleie_innleie	frontend	nn	Innleie
+contract_type_internleie_investeringskontrakt	frontend	nn	Investeringskontrakt
+contract_type_internleie_KF	frontend	nn	KF
+contract_type_internleie_andre	frontend	nn	Andre
+contract_type_investeringskontrakt	frontend	nn	Investeringskontrakt
+contract_type	frontend	nn	Kontraktsområde / type
+no_end_date	frontend	nn	Ingen
+no_contracts	frontend	nn	Ingen kontrakter
+no_contract_details	frontend	nn	Ingen konktraktsdetaljer tilgjengelig
+Ingen	frontend	nn	Ingen
+contract_internal	frontend	nn	Internleiekontrakter
+active	frontend	nn	Aktive
+not_active	frontend	nn	Avsluttede
+find_user	frontend	nn	Finn bruker
+username	frontend	nn	Brukernavn
+firstname	frontend	nn	Fornavn
+lastname	frontend	nn	Etternavn
+no_hits	frontend	nn	Ingen treff
+no_delegates	frontend	nn	Ingen delegater
+btn_add	frontend	nn	Deleger tilgang til bruker
+btn_search	frontend	nn	Finn bruker
+btn_remove	frontend	nn	Fjern myndighet
+btn_send	frontend	nn	Send melding
+send_contract_message	frontend	nn	Send melding til EBE angående kontrakten
+user_found_in_Fellesdata	frontend	nn	Personen finnes i Fellesdata.
+user_found_in_PE	frontend	nn	Personen er bruker av dette systemet.
+user_not_found_in_PE	frontend	nn	Personen er IKKE bruker av dette systemet.
+delegation_successful	frontend	nn	Velykket delegering
+delegation_error	frontend	nn	Feil under delegering
+max_x_delegates	rental	nn	Det er en øvre grense på %1 delegater pr leder
+delegate limit	frontend	nn	Maks-delegater
+delegates	frontend	nn	Delegering
+no_buildings	frontend	nn	Ingen bygninger tilknyttet resultatenheten
+title_contract_message	frontend	nn	Melding angående kontrakt
+show_all_tickets	frontend	nn	Vis alle avviksmeldinger på bygget
+entry_date	frontend	nn	Meldt inn
+of	frontend	nn	av
+status	frontend	nn	Status
+vendor	frontend	nn	Leverandør
+assigned_to	frontend	nn	Tildelt
+contact	frontend	nn	Kontakt
+message	frontend	nn	Melding
+comments	frontend	nn	Kommentarer
+on	frontend	nn	den
+messages	frontend	nn	Innboks
+no_new_messages	frontend	nn	Innboks (0)
+home	frontend	nn	Hjem
+delegates_for_res_unit	frontend	nn	Delegater for valgt resultatenhet
+delegates_for_user	frontend	nn	Dine delegater uavhengig av resultatenhet
+deletage_to_all_res_units	frontend	nn	Myndighet vil bli gitt til alle resultateneheter du er leder for
+email_create_account_title	common	nn	BKBygg systemtilgang
+email_create_account_message	common	nn	Systemmelding fra BKBygg til %1 %2:<br/>Det er opprettet en tilgang for deg i BKBygg<br/><br/>Du får tilgang til systemet via kommunens intranett.<br/>Under verktøy i høyre kolonne, velg BKBygg.<br/>Brukerveiledning finner du i systemet, ved å velge "Hjelp" i toppmenyen.<br/>Har du spørsmål send en e-post til BKBygg brukerstøtte.<br/>
+email_remove_delegate_title	common	nn	BKBygg systemtilgang
+email_remove_delegate_message	common	nn	Systemmelding fra BKBygg til %1 %2:<br/>Din tilgang til BKBygg på vegne av %3 %4 er slettet.<br/>Har du spørsmål send en e-post til BKBygg brukerstøtte.<br/>
+email_add_delegate_title	common	nn	BKBygg systemtilgang
+email_add_delegate_message	common	nn	Systemmelding fra BKBygg til %1 %2:<br/>%3 %4 har gitt deg tilgang til BKBbygg for følgende resultatenhet:<br/>%5<br/><br/>Du får tilgang til systemet via kommunens intranett.<br/>Under verktøy i høyre kolonne, velg BKBygg.<br/>Brukerveiledning finner du i systemet, ved å velge "Hjelp" i toppmenyen.<br/>Har du spørsmål send en e-post til BKBygg brukerstøtte.<br/>
+error_delegating_unit	frontend	nn	En feil oppstod når det skulle under delegering til resultatenhet: %1
+searching_for_self	frontend	nn	Vennligst søk etter et annet brukernavn enn ditt eget
+remove_delegate_successful	frontend	nn	Delegaten ble fjernet
+remove_delegate_error	frontend	nn	Fjerning av delegaten var mislykket
+message_empty	frontend	nn	Meldingen kan ikke være tom
+upload_userdoc	frontend	nn	Last opp brukerveiledning
+filename	frontend	nn	Filnavn
+contracts	frontend	nn	Kontrakt
+max %1 delegates	frontend	nn	Maximum %1 delegerte
+monthly	frontend	nn	Månedlig
+remark	frontend	nn	Merknad

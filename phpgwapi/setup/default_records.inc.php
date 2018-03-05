@@ -91,6 +91,7 @@
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('ne','Nepali','No')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('nl','Dutch','Yes')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('no','Norwegian','Yes')");
+	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('nn','Norwegian NN','Yes')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('oc','Occitan','No')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('om','Oromo / Afan','No')");
 	$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO phpgw_languages (lang_id, lang_name, available) VALUES ('or','Oriya','No')");

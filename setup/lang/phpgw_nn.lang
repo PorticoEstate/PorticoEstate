@@ -1,0 +1,419 @@
+%1 status - %2	setup	nn	%1 status - %2
+%1 default values processed	setup	nn	standardverdier for %1 er lagt inn
+%1 translations added	setup	nn	Oversettinger for %1 er lagt inn
+Processing: %1	setup	nn	Prosesserer %1
+notes	setup	nn	Notes
+booking	setup	nn	Booking
+property	setup	nn	Property
+(account deletion in sql only)	setup	nn	(account deletion in SQL Only)
+00 (disable)	setup	nn	00 (disable / recomended)
+13 (ntp)	setup	nn	13 (ntp)
+80 (http)	setup	nn	80 (http)
+<b>!!!this will delete all existing accounts!!!</b><br>	setup	nn	<b>!!!DETTE VIL SLETTE ALLE EKSISTERENDE BRUKERE!!!</b><br>
+<b>note:</b> you must have cookies enabled to use setup and header admin!	setup	nn	<b>NB:</b> Du må ha aktivert bruk av cookies for å bruke setup og header admin!
+<br><b>this will delete all existing accounts.</b>	setup	nn	<br><b>Dette vil slette alle eksisterende brukere.</b>
+<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>	setup	nn	<p class="msg">Your header.inc.php needs upgrading.<br />WARNING! MAKE BACKUPS!</p>
+actions	setup	nn	Actions
+add a domain	setup	nn	Add a domain
+add auto-created users to this group ('default' will be attempted if this is empty.)	setup	nn	Add auto-created users to this group ('Default' will be attempted if this is empty.)
+additional settings	setup	nn	Additional settings
+admin first name	setup	nn	Admin fornavn
+admin last name	setup	nn	Admin etternavn
+admin password	setup	nn	Admin passord
+admin password to header manager	setup	nn	Admin password to header manager
+admin username	setup	nn	Admin brukernavn
+admins	setup	nn	Admins
+after retrieving the file, put it into place as the header.inc.php.  then, click "continue".	setup	nn	After retrieving the file, put it into place as the header.inc.php.  Then, click "continue".
+all core tables and the admin and preferences applications	setup	nn	alle fellestabeller, og modulene Admin og Innstillinger
+all users	setup	nn	All Users
+analysis	setup	nn	Analysis
+app details	setup	nn	App details
+app install/remove/upgrade	setup	nn	App install/remove/upgrade
+app process	setup	nn	App process
+app upgrade	setup	nn	App upgrade
+application	setup	nn	application
+application data	setup	nn	Application Data
+application list	setup	nn	Application List
+application management	setup	nn	Application Management
+application name and status	setup	nn	Application Name and Status
+application name and status information	setup	nn	Application Name and Status Information
+application title	setup	nn	Application Title
+applications	setup	nn	applications
+are you sure you want to delete your existing tables and data?	setup	nn	Er du sikker på at du vil slette alle dine tabeller og data?
+are you sure?	setup	nn	ER DU SIKKER?
+at your request, this script is going to attempt to create the database and assign the db user rights to it	setup	nn	At your request, this script is going to attempt to create the database and assign the db user rights to it
+at your request, this script is going to attempt to install the core tables and the admin and preferences applications for you	setup	nn	Forsøker å installere fellestabeller og modulene Admin og Innstillinger.
+at your request, this script is going to attempt to upgrade your old applications to the current versions	setup	nn	At your request, this script is going to attempt to upgrade your old applications to the current versions
+at your request, this script is going to attempt to upgrade your old tables to the new format	setup	nn	At your request, this script is going to attempt to upgrade your old tables to the new format
+at your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format	setup	nn	At your request, this script is going to take the evil action of deleting your existing tables and re-creating them in the new format
+at your request, this script is going to take the evil action of uninstalling all your apps, which deletes your existing tables and data	setup	nn	På din kommando vil dette skriptet utføre den onde handlingen å avinstallere alle dine moduler, noe som sletter alle tabeller og data
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	setup	nn	Attempt to use correct mimetype for FTP instead of default 'application/octet-stream'
+authentication / accounts	setup	nn	Authentication / Accounts
+auto create account records for authenticated users	setup	nn	Auto create account records for authenticated users
+auto-created user accounts expire	setup	nn	Auto-created user accounts expire
+automatically detect domain from hostname	setup	nn	Automatically detect domain from hostname
+available version	setup	nn	Available Version
+backupwarn	setup	nn	but we <u>highly recommend backing up</u> your tables in case the script causes damage to your data.<br><strong>These automated scripts can easily destroy your data.</strong><br><em>Please backup before going any further!</em>
+because an application it depends upon was upgraded	setup	nn	avdi en modul den er avhengig av er oppgradert
+because it depends upon	setup	nn	because it depends upon
+because it is not a user application, or access is controlled via acl	setup	nn	because it is not a user application, or access is controlled via acl
+because it requires manual table installation, <br>or the table definition was incorrect	setup	nn	because it requires manual table installation, <br>or the table definition was incorrect
+because it was manually disabled	setup	nn	because it was manually disabled
+because of a failed upgrade or install	setup	nn	because of a failed upgrade or install
+because of a failed upgrade, or the database is newer than the installed version of this app	setup	nn	because of a failed upgrade, or the database is newer than the installed version of this app
+because the enable flag for this app is set to 0, or is undefined	setup	nn	because the enable flag for this app is set to 0, or is undefined
+bottom	setup	nn	bottom
+bulk upgrade management	setup	nn	Bulk Upgrade Management
+cancel	setup	nn	Avbryt
+cannot create the header.inc.php due to file permission restrictions.<br> instead you can %1 the file.	setup	nn	Cannot create the header.inc.php due to file permission restrictions.<br> Instead you can %1 the file.
+charset	setup	nn	utf-8
+check ip address of all sessions	setup	nn	check ip address of all sessions
+click <a href="index.php">here</a> to return to setup.	setup	nn	Click <a href="index.php">here</a> to return to setup.
+click here	setup	nn	Click Here
+completed	setup	nn	Completed
+configuration	setup	nn	Configuration
+configuration completed	setup	nn	Konfigurasjonen er utført
+configuration password	setup	nn	Configuration Password
+configure now	setup	nn	Konfigurer nå
+continue	setup	nn	Continue
+could not open header.inc.php for writing!	setup	nn	Could not open header.inc.php for writing!
+country selection	setup	nn	Country Selection
+create	setup	nn	Create
+create accounts	setup	nn	Create Accounts
+create database	setup	nn	Lag database
+create demo accounts	setup	nn	Lag demobrukere
+create one now	setup	nn	Create one now
+create your header.inc.php	setup	nn	Generer din header.inc.php
+created	setup	nn	created
+creating tables	setup	nn	Oppretter tabeller
+current version	setup	nn	Current Version
+currently installed languages: %1	setup	nn	Installerte språk: %1
+datetime port.<br>if using port 13, please set firewall rules appropriately before submitting this page.<br>(port: 13 / host: 129.6.15.28)	setup	nn	Datetime port.<br>If using port 13, please set firewall rules appropriately before submitting this page.<br>(Port: 13 / Host: 129.6.15.28)
+db host	setup	nn	DB Host
+db name	setup	nn	DB Name
+db password	setup	nn	DB Password
+db root password	setup	nn	DB root password
+db root username	setup	nn	DB root username
+db type	setup	nn	DB Type
+db user	setup	nn	DB User
+default file system space per user/group ?	setup	nn	Default file system space per user/group ?
+delete	setup	nn	Delete
+delete all my tables and data	setup	nn	Delete all my tables and data
+delete all old languages and install new ones	setup	nn	Slett alle gamle språkinnstillinger - og installer nye
+deleting tables	setup	nn	Sletter tabeller
+demo server setup	setup	nn	Demo Server Setup
+deny access	setup	nn	Deny Access
+deny all users access to grant other users access to their entries ?	setup	nn	Deny all users access to grant other users access to their entries ?
+dependency failure	setup	nn	Dependency Failure
+deregistered	setup	nn	deregistered
+details for admin account	setup	nn	Details for Admin account
+developers' table schema toy	setup	nn	Developers' Table Schema Toy
+did not find any valid db support!	setup	nn	Did not find any valid DB support!
+do you want persistent connections (higher performance, but consumes more resources)	setup	nn	Do you want persistent connections (higher performance, but consumes more resources)
+do you want to manage homedirectory and loginshell attributes?	setup	nn	Do you want to manage homedirectory and loginshell attributes?
+domain	setup	nn	Domain
+domain select box on login	setup	nn	Domain select box on login
+domains	setup	nn	domains
+dont touch my data	setup	nn	Dont touch my data
+download	setup	nn	Download
+edit current configuration	setup	nn	Endre gjeldende konfigurasjon
+edit your existing header.inc.php	setup	nn	Edit your existing header.inc.php
+edit your header.inc.php	setup	nn	Edit your header.inc.php
+Enable custom error handle for heavy debugging	setup	nn	Enable custom error handle for heavy debugging
+enable debug messages	setup	nn	Aktiver debug-meldinger
+enable mcrypt	setup	nn	Enable MCrypt
+enter some random text for app session encryption	setup	nn	Enter some random text for app session encryption
+enter some random text for app_session <br>encryption (requires mcrypt)	setup	nn	Enter some random text for app_session <br>encryption (requires mcrypt)
+enter the full path for temporary files.<br>examples: /tmp, c:\temp	setup	nn	Enter the full path for temporary files.<br>Examples: /tmp, C:\TEMP
+enter the full path for users and group files.<br>examples: /files, e:\files	setup	nn	Enter the full path for users and group files.<br>Examples: /files, E:\FILES
+enter the hostname of the machine on which this server is running	setup	nn	Enter the hostname of the machine on which this server is running
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	setup	nn	Enter the location of phpGroupWare's URL.<br>Example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>No trailing slash</b>
+enter the site password for peer servers	setup	nn	Enter the site password for peer servers
+enter the site username for peer servers	setup	nn	Enter the site username for peer servers
+enter the title for your site	setup	nn	Enter the title for your site
+enter your default ftp server	setup	nn	Enter your default FTP server
+enter your http proxy server	setup	nn	Enter your HTTP proxy server
+enter your http proxy server port	setup	nn	Enter your HTTP proxy server port
+export has been completed!  you will need to set the user passwords manually.	setup	nn	Export has been completed!  You will need to set the user passwords manually.
+export phpgroupware accounts from sql to ldap	setup	nn	Export phpGroupWare accounts from SQL to LDAP
+export sql users to ldap	setup	nn	Export SQL users to LDAP
+failed to modify: 	setup	nn	failed to modify: 
+failed to modify: %1	setup	nn	failed to modify: %1
+file	setup	nn	FILE
+file type, size, version, etc.	setup	nn	file type, size, version, etc.
+for a new install, select import.  to convert existing sql accounts to ldap, select export	setup	nn	For a new install, select import.  To convert existing SQL accounts to LDAP, select export
+force selectbox	setup	nn	Force Selectbox
+found existing configuration file. loading settings from the file...	setup	nn	Found existing configuration file. Loading settings from the file...
+go back	setup	nn	Go back
+go to	setup	nn	Go to
+grant access	setup	nn	Grant Access
+has a version mismatch	setup	nn	has a version mismatch
+hooks deregistered	setup	nn	hooks deregistered
+hooks registered	setup	nn	hooks registered
+host information	setup	nn	Host information
+hostname/ip of database server	setup	nn	Hostname/IP of database server
+however, the application is otherwise installed	setup	nn	However, the application is otherwise installed
+however, the application may still work	setup	nn	Men, det kan være at den fortsatt fungerer
+if no acl records for user or any group the user is a member of	setup	nn	If no ACL records for user or any group the user is a member of
+if the application has no defined tables, selecting upgrade should remedy the problem	setup	nn	If the application has no defined tables, selecting upgrade should remedy the problem
+if using ldap	setup	nn	If using LDAP
+if using ldap, do you want to manage homedirectory and loginshell attributes?	setup	nn	If using LDAP, do you want to manage homedirectory and loginshell attributes?
+if you did not receive any errors, your applications have been	setup	nn	Dersom du ikke fikk noen feilmeldinger, er alle dine moduler
+if you did not receive any errors, your tables have been	setup	nn	Dersom du ikke fikk noen feilmeldinger, er dine tabeller
+if you running this the first time, don't forget to manualy %1 !!!	setup	nn	If you running this the first time, don't forget to manualy %1 !!!
+ignoring %1 for domain "%2"	setup	nn	ignorerer %1 for domain "%2"
+image type selection order	setup	nn	Image type selection order
+import accounts from ldap to the phpgroupware accounts table (for a new install using sql accounts)	setup	nn	Import accounts from LDAP to the phpGroupWare accounts table (for a new install using SQL accounts)
+import has been completed!	setup	nn	Import has been completed!
+import ldap users/groups	setup	nn	Import LDAP users/groups
+importing old settings into the new format....	setup	nn	Importing old settings into the new format....
+include root (this should be the same as server root unless you know what you are doing)	setup	nn	Include Root (this should be the same as Server Root unless you know what you are doing)
+insanity	setup	nn	Galskap
+install	setup	nn	Installer
+install all	setup	nn	Installer alt
+install applications	setup	nn	Installer aoduler
+install language	setup	nn	Installer oversettinger
+installed	setup	nn	installert
+invalid ip address	setup	nn	Ugyldig IP adresse
+invalid password	setup	nn	Ugyldig passord
+is broken	setup	nn	har feil
+is disabled	setup	nn	er deaktivert
+ldap account import/export	setup	nn	LDAP account import/export
+ldap accounts configuration	setup	nn	LDAP Accounts Configuration
+ldap accounts context	setup	nn	LDAP accounts context
+ldap config	setup	nn	LDAP Config
+ldap default homedirectory prefix (e.g. /home for /home/username)	setup	nn	LDAP Default homedirectory prefix (e.g. /home for /home/username)
+ldap default shell (e.g. /bin/bash)	setup	nn	LDAP Default shell (e.g. /bin/bash)
+ldap encryption type	setup	nn	LDAP encryption type
+ldap export users	setup	nn	LDAP export users
+ldap groups context	setup	nn	LDAP groups context
+ldap host	setup	nn	LDAP host
+ldap import users	setup	nn	LDAP import users
+ldap modify	setup	nn	LDAP Modify
+ldap root password	setup	nn	LDAP root password
+ldap rootdn	setup	nn	LDAP rootdn
+limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)	setup	nn	Limit access to setup to the following addresses or networks (e.g. 10.1.1,127.0.0.1)
+logout	setup	nn	Logg ut
+makesure	setup	nn	Make sure that your database is created and the account permissions are set
+manage applications	setup	nn	Administrer moduler
+manage languages	setup	nn	Administrer Oversettinger
+maximum account id (e.g. 65535 or 1000000)	setup	nn	Maximum account id (e.g. 65535 or 1000000)
+may be broken	setup	nn	Kan ha feil
+mcrypt algorithm (default tripledes)	setup	nn	Mcrypt algorithm (default TRIPLEDES)
+mcrypt initialization vector	setup	nn	MCrypt initialization vector
+mcrypt mode (default cbc)	setup	nn	Mcrypt mode (default CBC)
+mcrypt settings (requires mcrypt php extension)	setup	nn	Mcrypt Settings (requires mcrypt PHP extension)
+mcrypt version	setup	nn	MCrypt version
+minimum account id (e.g. 500 or 100, etc.)	setup	nn	Minimum account id (e.g. 500 or 100, etc.)
+modifications have been completed!	setup	nn	Endringer er utført!
+modify	setup	nn	Endre
+modify an existing ldap account store for use with phpgroupware (for a new install using ldap accounts)	setup	nn	Modify an existing LDAP account store for use with phpGroupWare (for a new install using LDAP accounts)
+multi-language support setup	setup	nn	Multi-Language support setup
+mysqlinstr %1	setup	nn	Instructions for creating the database in MySQL:<br>Login to mysql -<br><i>[user@server user]# mysql -u root -p</i><br>Create the empty database and grant user permissions -<br><i>mysql> create database %1;</i><br><i>mysql> grant all on %1.* to phpgroupware@localhost identified by 'password';</i>
+name of database	setup	nn	Navn på database
+name of db user phpgroupware uses to connect	setup	nn	Name of db user phpGroupWare uses to connect
+never	setup	nn	Aldri
+new	setup	nn	Ny
+no	setup	nn	Nei
+no algorithms available	setup	nn	no algorithms available
+no imap support found. disabling imap email access	setup	nn	No IMAP support found. Disabling IMAP email access
+no microsoft sql server support found. disabling	setup	nn	No Microsoft SQL Server support found. Disabling
+no modes available	setup	nn	no modes available
+no mysql support found. disabling	setup	nn	No MySQL support found. Disabling
+no odbc/sapdb support found. disabling	setup	nn	No ODBC/SAPDB support found. Disabling
+no oracle-db support found. disabling	setup	nn	No Oracle-DB support found. Disabling
+no postgres-db support found. disabling	setup	nn	No Postgres-DB support found. Disabling
+no xsl support found.	setup	nn	No XSL support found.
+not complete	setup	nn	Ikke ferdig
+not completed	setup	nn	Ikke ferdig
+not ready for this stage yet	setup	nn	Ikke klar for dette steget ennå
+note: this option will only work if show domain select box is off.	setup	nn	Note: This option will only work if show domain select box is off.
+note: you will be able to customize this later	setup	nn	Note: You will be able to customize this later
+now guessing better values for defaults...	setup	nn	Now guessing better values for defaults...
+ok	setup	nn	OK
+once the database is setup correctly	setup	nn	Once the database is setup correctly
+one month	setup	nn	one month
+one week	setup	nn	one week
+only add languages that are not in the database already	setup	nn	Bare legg til språk som ikke allerede finnes i databbasen
+only add new phrases	setup	nn	Bare legg til nye tekster
+or	setup	nn	eller
+or http://webdav.domain.com (webdav)	setup	nn	or http://webdav.domain.com (WebDAV)
+or we can attempt to create the database for you:	setup	nn	Eller vi kan prøve å opprette databasen for deg:
+password needed for configuration	setup	nn	Passord for configurasjon
+password of db user	setup	nn	Passord of db bruker
+passwords did not match, please re-enter	setup	nn	Passordene var ikke like, vennligst prøv på nytt
+path information	setup	nn	Path information
+path to user and group files has to be outside of the webservers document-root!!!	setup	nn	Path to user and group files HAS TO BE OUTSIDE of the webservers document-root!!!
+persistent connections	setup	nn	Persistent connections
+pgsqlinstr %1	setup	nn	Instructions for creating the database in PostgreSQL:<br>Start the postmaster<br><i>[user@server user]# postmaster -i -D /home/[username]/[dataDir]</i><br>Create the empty database -<br><i>[user@server user]# createdb %1</i>
+phpgroupware administration manual	setup	nn	phpGroupWare Administration Manual
+please check for sql scripts within the application's directory	setup	nn	Please check for sql scripts within the application's directory
+please check read/write permissions on directories, or back up and use another option.	setup	nn	Please check read/write permissions on directories, or back up and use another option.
+please configure phpgroupware for your environment	setup	nn	Vennligst konfigurer systemet til ditt miljø
+please consult the %1.	setup	nn	Please consult the %1.
+please install	setup	nn	Please install
+please login	setup	nn	Please login
+please login to phpgroupware and run the admin application for additional site configuration	setup	nn	Please login to phpgroupware and run the admin application for additional site configuration
+please wait...	setup	nn	Please Wait...
+possible reasons	setup	nn	Possible Reasons
+possible solutions	setup	nn	Possible Solutions
+post-install dependency failure	setup	nn	Post-install Dependency Failure
+potential problem	setup	nn	Potential Problem
+preferences	setup	nn	Innstillinger
+problem resolution	setup	nn	Problem resolution
+process	setup	nn	Process
+processing upgrade for %1	setup	nn	processing upgrade for %1
+re-check my database	setup	nn	Kontroller databasen
+re-check my installation	setup	nn	Kontroller installasjonen
+re-enter password	setup	nn	Skriv passordet på nytt
+read translations from	setup	nn	Read translations from
+really uninstall all applications	setup	nn	VIRKELIG avinstallere alle moduler
+recommended: filesystem	setup	nn	Recommended: Filesystem
+register globals = %1	setup	nn	register globals = %1
+registered	setup	nn	registered
+register_globals_	setup	nn	register_globals_
+remove	setup	nn	Remove
+remove all	setup	nn	Fjern alle
+requires reinstall or manual repair	setup	nn	Requires reinstall or manual repair
+requires upgrade	setup	nn	Requires upgrade
+resolve	setup	nn	Resolve
+run	setup	nn	run
+sample configuration not found. using built in defaults	setup	nn	Sample configuration not found. using built in defaults
+save	setup	nn	Save
+save this text as contents of your header.inc.php	setup	nn	Save this text as contents of your header.inc.php
+select an app, enter a target version, then submit to process to that version.<br>if you do not enter a version, only the baseline tables will be installed for the app.<br><blink>this will drop all of the apps' tables first!</blink>	setup	nn	Select an app, enter a target version, then submit to process to that version.<br>If you do not enter a version, only the baseline tables will be installed for the app.<br><blink>THIS WILL DROP ALL OF THE APPS' TABLES FIRST!</blink>
+select the default applications to which your users will have access	setup	nn	Select the default applications to which your users will have access
+select the desired action(s) from the available choices	setup	nn	Velg ønsket handling
+select to download file	setup	nn	Select to download file
+select where you want to store/retrieve file contents	setup	nn	Select where you want to store/retrieve file contents
+select where you want to store/retrieve filesystem information	setup	nn	Select where you want to store/retrieve filesystem information
+select where you want to store/retrieve user accounts	setup	nn	Select where you want to store/retrieve user accounts
+select which group(s) will be exported (group membership will be maintained)	setup	nn	Select which group(s) will be exported (group membership will be maintained)
+select which group(s) will be imported (group membership will be maintained)	setup	nn	Select which group(s) will be imported (group membership will be maintained)
+select which group(s) will be modified (group membership will be maintained)	setup	nn	Select which group(s) will be modified (group membership will be maintained)
+select which languages you would like to use	setup	nn	Select which languages you would like to use
+select which method of upgrade you would like to do	setup	nn	Select which method of upgrade you would like to do
+select which type of authentication you are using	setup	nn	Select which type of authentication you are using
+select which user(s) will also have admin privileges	setup	nn	Select which user(s) will also have admin privileges
+select which user(s) will be exported	setup	nn	Select which user(s) will be exported
+select which user(s) will be imported	setup	nn	Select which user(s) will be imported
+select which user(s) will be modified	setup	nn	Select which user(s) will be modified
+select which user(s) will have admin privileges	setup	nn	Select which user(s) will have admin privileges
+select your old version	setup	nn	Select your old version
+selectbox	setup	nn	Selectbox
+server root	setup	nn	Server Root
+sessions type	setup	nn	Sessions Type
+set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.	setup	nn	Set this to "old" for versions &lt; 2.4, otherwise the exact mcrypt version you use.
+settings	setup	nn	Settings
+setup	setup	nn	Setup
+setup demo accounts in ldap	setup	nn	Setup demo accounts in LDAP
+Setup an Admininstrator account	setup	nn	Definer en administrator
+and optional demo accounts.	setup	nn	og eventuelt demobrukere
+setup the database	setup	nn	Setup the database
+show 'powered by' logo on	setup	nn	Show 'powered by' logo on
+some or all of its tables are missing	setup	nn	Noen eller alle tabeller mangler
+status	setup	nn	Status
+step 1 - simple application management	setup	nn	Steg 1 - Enkel modul-administrasjon
+step 2 - configuration	setup	nn	Steg 2 - konfigurasjon
+step 3 - language management	setup	nn	Steg 3 - Språk-administrasjon
+step 4 - advanced application management	setup	nn	Steg 4 - Avansert modul-administrasjon
+table change messages	setup	nn	Meldinger ved endring av tabeller
+tables dropped	setup	nn	tabeller droppet
+tables installed, unless there are errors printed above	setup	nn	tabeller er opprettet, dersom det ikke er skrevet ut feilmeldinger ovenfor
+tables upgraded	setup	nn	tabeller oppdatert
+target version	setup	nn	Target Version
+text entry	setup	nn	Text Entry
+the db_type in defaults (%1) is not supported on this server. using first supported type.	setup	nn	The db_type in defaults (%1) is not supported on this server. using first supported type.
+the file	setup	nn	the file
+the table definition was correct, and the tables were installed	setup	nn	tabelldefinisjoner var korrekt, og tabellene ble opprettet
+the tables	setup	nn	tabellene
+there was a problem trying to connect to your ldap server. <br>	setup	nn	There was a problem trying to connect to your LDAP server. <br>
+there was a problem trying to connect to your ldap server. <br>please check your ldap server configuration	setup	nn	There was a problem trying to connect to your LDAP server. <br>please check your LDAP server configuration
+this has to be outside the webservers document-root!!!	setup	nn	This has to be outside the webservers document-root!!!
+this program will help you upgrade or install different languages for phpgroupware	setup	nn	This program will help you upgrade or install different languages for phpGroupWare
+this section will help you export users and groups from phpgroupware's account tables into your ldap tree	setup	nn	This section will help you export users and groups from phpGroupWare's account tables into your LDAP tree
+this section will help you import users and groups from your ldap tree into phpgroupware's account tables	setup	nn	This section will help you import users and groups from your LDAP tree into phpGroupWare's account tables
+this section will help you setup your ldap accounts for use with phpgroupware	setup	nn	This section will help you setup your LDAP accounts for use with phpGroupWare
+this should be around 32 bytes in length.<br>note: the default has been randomly generated.	setup	nn	This should be around 32 bytes in length.<br>Note: The default has been randomly generated.
+this stage is completed	setup	nn	Dette steget er utført
+this will create 1 admin account and 3 demo accounts<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!this will delete all existing accounts!!!</b><br>	setup	nn	This will create 1 admin account and 3 demo accounts<br>The username/passwords are: demo/guest, demo2/guest and demo3/guest.<br><b>!!!THIS WILL DELETE ALL EXISTING ACCOUNTS!!!</b><br>
+this will create an admin account and (optionally) 3 demo accounts.<br>the username/passwords are: demo/guest, demo2/guest and demo3/guest.<br>	setup	nn	This will create an admin account and (optionally) 3 demo accounts.<br>The username/passwords are: demo/guest, demo2/guest and demo3/guest.<br>
+to a version it does not know about	setup	nn	til en versjon den ikke har kjenskap til
+to setup 1 admin account and 3 demo accounts.<br><b>this will delete all existing accounts</b>	setup	nn	to setup 1 admin account and 3 demo accounts.<br><b>This will delete all existing accounts</b>
+to setup an admin account and (optionally) 3 demo accounts.	setup	nn	to setup an admin account and (optionally) 3 demo accounts.
+top	setup	nn	top
+translations added	setup	nn	Translations Added
+translations removed	setup	nn	Translations Removed
+translations upgraded	setup	nn	Translations Upgraded
+try to configure your php to support one of the above mentioned dbms, or install phpgroupware by hand.	setup	nn	Try to configure your php to support one of the above mentioned DBMS, or install phpGroupWare by hand.
+two weeks	setup	nn	two weeks
+uninstall	setup	nn	uninstall
+uninstall all applications	setup	nn	Avinstaller alle moduler
+uninstalled	setup	nn	Avinstallert
+upgrade	setup	nn	Oppdater
+upgrade all	setup	nn	Oppdater alle
+upgraded	setup	nn	Oppdatert
+upgrading tables	setup	nn	Oppdaterer tabeller
+use cookies to pass sessionid	setup	nn	Use cookies to pass sessionid
+use pure html compliant code (not fully working yet)	setup	nn	Use pure HTML compliant code (not fully working yet)
+users choice	setup	nn	Users Choice
+version mismatch	setup	nn	Version Mismatch
+view	setup	nn	Vis
+warning!	setup	nn	Advarsel!
+warning: all your passwords (database, phpgroupware admin,...)<br> will be shown in plain text after you log in for header administration.	setup	nn	Warning: All your passwords (database, phpGroupWare admin,...)<br> will be shown in plain text after you log in for header administration.
+we can proceed	setup	nn	vi kan fortsette
+we will automatically update your tables/records to %1	setup	nn	We will automatically update your tables/records to %1
+what type of sessions management do you want to use (php session management usually performs better)?	setup	nn	What type of sessions management do you want to use (PHP session management usually performs better)?
+which database type do you want to use with phpgroupware?	setup	nn	Which database type do you want to use with phpGroupWare?
+would you like phpgroupware to cache the phpgw info array ?	setup	nn	Would you like phpGroupWare to cache the phpgw info array ?
+would you like phpgroupware to check for a new version<br>when admins login ?	setup	nn	Would you like phpGroupWare to check for a new version<br>when admins login ?
+would you like to show each application's upgrade status ?	setup	nn	Would you like to show each application's upgrade status ?
+write config	setup	nn	Write config
+yes	setup	nn	Yes
+you appear to be running a pre-beta version of phpgroupware.<br>these versions are no longer supported, and there is no upgrade path for them in setup.<br> you may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.	setup	nn	You appear to be running a pre-beta version of phpGroupWare.<br>These versions are no longer supported, and there is no upgrade path for them in setup.<br> You may wish to first upgrade to 0.9.10 (the last version to support pre-beta upgrades) <br>and then upgrade from there with the current version.
+you appear to be running version %1 of phpgroupware	setup	nn	You appear to be running version %1 of phpGroupWare
+you appear to be using php %1+	setup	nn	You appear to be using PHP %1+
+you appear to be using php %1, phpgroupware requires version 5.2.0 or later	setup	nn	You appear to be using PHP %1, phpGroupWare requires version 5.2.0 or later
+you appear to have imap support enabled	setup	nn	You appear to have IMAP support enabled
+you appear to have microsoft sql server support enabled	setup	nn	You appear to have Microsoft SQL Server support enabled
+you appear to have mysql support enabled	setup	nn	You appear to have MySQL support enabled
+you appear to have odbc/sapdb support enabled	setup	nn	You appear to have ODBC/SAPDB support enabled
+you appear to have oracle support enabled	setup	nn	You appear to have Oracle support enabled
+you appear to have oracle v8 (oci) support enabled	setup	nn	You appear to have Oracle V8 (OCI) support enabled
+you appear to have postgres-db support enabled	setup	nn	You appear to have Postgres-DB support enabled
+you appear to have xml/xslt support enabled	setup	nn	You appear to have XML/XSLT support enabled
+you are ready for this stage, but this stage is not yet written.<br>	setup	nn	You are ready for this stage, but this stage is not yet written.<br>
+you didn't enter a config password for domain %1	setup	nn	You didn't enter a config password for domain %1
+you didn't enter a header admin password	setup	nn	You didn't enter a header admin password
+you do not have any languages installed. please install one now <br>	setup	nn	You do not have any languages installed. Please install one now <br>
+you have not created your header.inc.php yet!<br> you can create it now.	setup	nn	You have not created your header.inc.php yet!<br> You can create it now.
+you have successfully logged out	setup	nn	You have successfully logged out
+you must enter a username for the admin	setup	nn	You must enter a username for the admin
+you should either uninstall and then reinstall it, or attempt manual repairs	setup	nn	You should either uninstall and then reinstall it, or attempt manual repairs
+you're using an old configuration file format...	setup	nn	You're using an old configuration file format...
+you're using an old header.inc.php version...	setup	nn	You're using an old header.inc.php version...
+your applications are current	setup	nn	Modulene er av siste versjon
+your database does not exist	setup	nn	Databasen finnes ikke
+your database is not working!	setup	nn	Databasen fungerer ikke!
+your database is working, but you dont have any applications installed	setup	nn	Databasen fungerer, men ingen moduler er installert
+your header admin password is not set. please set it now!	setup	nn	Your header admin password is NOT set. Please set it now!
+your header.inc.php needs upgrading.	setup	nn	Your header.inc.php needs upgrading.
+<p class="msg">your header.inc.php needs upgrading.<br>warning! make backups!</p>	setup	nn	<p class="msg">Your header.inc.php needs upgrading.<br>WARNING! MAKE BACKUPS!</p>
+your tables are current	setup	nn	Tabellene er av siste versjon
+your tables may be altered and you may lose data	setup	nn	Tabellene kan bli endret, og du kan miste data.
+your tables will be dropped and you will lose data	setup	nn	Tabellene blir slettet, og du vil miste data !!
+Application Name	setup	nn	Modulnavn
+Application Status	setup	nn	Modulstatus
+Current Version	setup	nn	Installert versjon
+Available Version	setup	nn	Tigljengelig versjon
+Available to install	setup	nn	Tigljengelig for installasjon
+Resolve	setup	nn	Løs problem
+version	setup	nn	versjon
+This will create an admininstrator account	setup	nn	Dette vil definere en systemadministrator
+Details for admininstrator account	setup	nn	Detaljer om systemadministratoren
+Password must be at least 8 characters long, not %1	setup	nn	Passord må være minst på 8 tegn, du forsøker med %1
+Password must contain at least 2 upper case characters	setup	nn	Passord må inneholde minst 2 store bosktaver
+Password must contain at least 2 lower case characters	setup	nn	Passord må inneholde minst 2 små bosktaver
+Password must contain at least 1 number	setup	nn	Passord må inneholde minst 1 tall
+Password must contain at least 1 non alphanumeric character	setup	nn	Passord må inneholde minst 1 spesialtegn
+Done	setup	nn	Utført

@@ -596,12 +596,12 @@
 				}
 			}
 
-			//W3C Compliant in markup	
-			$term = '&amp;'; 
+			//W3C Compliant in markup
+			$term = '&amp;';
 			if ( $redirect )
 			{
 				// RFC Compliant for Header('Location: ...
-				$term = '&'; 
+				$term = '&';
 			}
 
 			/* first we process the $url to build the full scriptname */
@@ -769,7 +769,7 @@
 			// We cache the data for 5mins system wide as this is an expensive operation
 			$last_updated = 0; //phpgwapi_cache::system_get('phpgwapi', 'session_list_saved');
 
-			if ( is_null($last_updated) 
+			if ( is_null($last_updated)
 				|| $last_updated < 60 * 5 )
 			{
 				$data = array();
@@ -1455,7 +1455,7 @@
 
 			/*
 			   Yes recursive - from the manual
-			   There is an optional N argument to this [session.save_path] that determines 
+			   There is an optional N argument to this [session.save_path] that determines
 			   the number of directory levels your session files will be spread around in.
 			 */
 			$path = session_save_path();

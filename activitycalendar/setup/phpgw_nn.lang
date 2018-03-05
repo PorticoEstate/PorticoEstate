@@ -1,0 +1,443 @@
+current activities	activitycalendar	nn	Aktiviteter
+-- select an activity --	activitycalendar	nn	Velg en aktivitet
+where?	activitycalendar	nn	Hvor?
+when?	activitycalendar	nn	Når?
+who?	activitycalendar	nn	Hvem?
+how many?	activitycalendar	nn	Hvor mange?
+accept application	activitycalendar	nn	Godta søknaden
+accepted	activitycalendar	nn	Akseptert
+account	activitycalendar	nn	Bruker
+actions	activitycalendar	nn	Handling
+active	activitycalendar	nn	Aktiv
+active applications	activitycalendar	nn	Aktive søknader
+activity	activitycalendar	nn	Aktivitet
+add a comment	activitycalendar	nn	Legg til en kommentar
+add another date	activitycalendar	nn	Legg til dato
+add boundary	activitycalendar	nn	Legg til rammetid
+add comment	activitycalendar	nn	Legg til kommentar
+add document	activitycalendar	nn	Legg til dokument
+add new event	activitycalendar	nn	Legg til arrangement
+add permission	activitycalendar	nn	Legg til rettighet
+address	activitycalendar	nn	Besøksadresse
+admin 1	activitycalendar	nn	Bookingansvarlig 1
+admin 2	activitycalendar	nn	Bookingansvarlig 2
+admins	activitycalendar	nn	Bookingansvarlige
+age group	activitycalendar	nn	Aldersgruppe
+agegroup	activitycalendar	nn	Aldersgruppe
+allocation	activitycalendar	nn	Tildeling
+allocations	activitycalendar	nn	Tildelinger
+allocations colliding with existing bookings or allocations (%1)	activitycalendar	nn	Dobbel-booking som IKKE lagres
+allocations that can be created (%1)	activitycalendar	nn	Tildelinger som kan lages
+application	activitycalendar	nn	Søknad
+applications	activitycalendar	nn	Søknader
+apr	activitycalendar	nn	april
+archived	activitycalendar	nn	Arkivert
+audience	activitycalendar	nn	Målgruppe
+aug	activitycalendar	nn	august
+bookable resources	activitycalendar	nn	Bookbare ressurser
+booking	activitycalendar	nn	Booking
+booking district	activitycalendar	nn	Bydel
+booking name	activitycalendar	nn	Navn på booking
+bookings	activitycalendar	nn	Bookinger
+boundaries	activitycalendar	nn	Rammetid
+building	activitycalendar	nn	Bygg/anlegg
+building name	activitycalendar	nn	Bygg/anlegg
+building schedule	activitycalendar	nn	Kalender
+buildings	activitycalendar	nn	Bygg/anlegg
+bygning	activitycalendar	nn	Bygg/anlegg
+calendar_months	activitycalendar	nn	["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]
+calendar_weekdays	activitycalendar	nn	["Sø","Ma","Ti","On","To","Fr","Lø"]
+cancel	activitycalendar	nn	Avbryt
+clear	activitycalendar	nn	Nullstill
+cancelled	activitycalendar	nn	Avbestilt
+case officer	activitycalendar	nn	Saksbehandler
+category	activitycalendar	nn	Kategori
+choose a date	activitycalendar	nn	Velg dato
+choose a date	activitycalendar	nn	Velg en dato
+choose file	activitycalendar	nn	Velg dokument
+city	activitycalendar	nn	Poststed
+click to sort ascending	activitycalendar	nn	Klikk for å sortere stigende
+click to sort descending	activitycalendar	nn	Klikk for å sortere synkende
+contact	activitycalendar	nn	Kontakt
+contact 1	activitycalendar	nn	Kontakt 1
+contact 2	activitycalendar	nn	Kontakt 2
+contact person	activitycalendar	nn	Kontaktperson
+contact information	activitycalendar	nn	Kontaktinformasjon
+cost	activitycalendar	nn	Pris
+create	activitycalendar	nn	Lagre
+created	activitycalendar	nn	Opprettet
+dashboard	activitycalendar	nn	Skrivebord - Innkomne endringer
+day of the week	activitycalendar	nn	Ukedag
+dec	activitycalendar	nn	desember
+description	activitycalendar	nn	Beskrivelse
+district	activitycalendar	nn	Bydel
+document	activitycalendar	nn	Dokument
+documents	activitycalendar	nn	Dokumenter
+document name	activitycalendar	nn	Dokumentnavn
+drawing	activitycalendar	nn	Tegning
+edit	activitycalendar	nn	Rediger
+edit agegroup group	activitycalendar	nn	Rediger aldersgruppe
+edit allocation	activitycalendar	nn	Rediger tildeling
+edit Audience group	activitycalendar	nn	Rediger målgruppe
+edit booking	activitycalendar	nn	Rediger booking
+edit event	activitycalendar	nn	Rediger arrangement
+edit organization	activitycalendar	nn	Rediger organisasjon
+editer	activitycalendar	nn	Rediger
+equipment	activitycalendar	nn	Utstyr
+equipment name	activitycalendar	nn	Utstyr
+event	activitycalendar	nn	Arrangement
+events	activitycalendar	nn	Arrangementer
+feb	activitycalendar	nn	februar
+female	activitycalendar	nn	Kvinne
+filnavn	activitycalendar	nn	Dokument
+found %1 results	activitycalendar	nn	%1 treff
+fr	activitycalendar	nn	fr.
+from	activitycalendar	nn	Frå
+generate allocations	activitycalendar	nn	Lag tildelning
+generate allocations from week template	activitycalendar	nn	Lag tildelningar fra ukeplan
+go back to the template week	activitycalendar	nn	Gå tilbake til ukeplan
+group	activitycalendar	nn	Gruppe/Lag
+history and comments (%1)	activitycalendar	nn	Historikk (%1)
+hms document	activitycalendar	nn	HMS dokument
+homepage	activitycalendar	nn	Hjemmeside
+id	activitycalendar	nn	ID
+inactivate	activitycalendar	nn	Inaktivert
+inactive	activitycalendar	nn	Inaktiv
+invoice information	activitycalendar	nn	Fakturainformasjon
+responsible applicant	activitycalendar	nn	Ansvarlig søker
+jan	activitycalendar	nn	januar
+jul	activitycalendar	nn	juli
+jun	activitycalendar	nn	juni
+last modified	activitycalendar	nn	Sist endret
+location	activitycalendar	nn	Lokale
+log on	activitycalendar	nn	Logg inn
+log off	activitycalendar	nn	Logg ut
+male	activitycalendar	nn	Mann
+mar	activitycalendar	nn	mars
+may	activitycalendar	nn	mai
+mo	activitycalendar	nn	ma.
+modified	activitycalendar	nn	Endret
+more info	activitycalendar	nn	Mer informasjon
+name	activitycalendar	nn	Navn
+new	activitycalendar	nn	Ny
+new activity	activitycalendar	nn	Ny aktivitet
+new age group	activitycalendar	nn	Ny aldersgruppe
+new allocation	activitycalendar	nn	Ny tildeling
+new application	activitycalendar	nn	Ny søknad
+new audience group	activitycalendar	nn	Ny målgruppe
+new booking	activitycalendar	nn	Ny booking
+new booking application	activitycalendar	nn	Ny søknad
+new building	activitycalendar	nn	Nytt bygg/anlegg
+new building permission	activitycalendar	nn	Nye rettigheter bygg/anlegg
+new contact	activitycalendar	nn	Ny kontakt
+new document	activitycalendar	nn	Nye dokumenter
+new equipment	activitycalendar	nn	Nytt utstyr
+new event	activitycalendar	nn	Ny arrangement
+new group	activitycalendar	nn	Ny gruppe
+new organization	activitycalendar	nn	Ny organisajon
+new resource	activitycalendar	nn	Ny ressurs
+new root permission	activitycalendar	nn	Nye systemrettigheter
+new season	activitycalendar	nn	Ny sesong
+new season permission	activitycalendar	nn	Nye rettigheter sesong
+no Data.	activitycalendar	nn	Ingen treff.
+no description yet	activitycalendar	nn	Beskrivelse mangler
+no parents	activitycalendar	nn	Ingen overordnet
+no records found.	activitycalendar	nn	Ingen treff.
+no records found.	activitycalendar	nn	Ingen funnet!
+nov	activitycalendar	nn	november
+number of participants	activitycalendar	nn	Antall deltakere
+estimated number of participants	activitycalendar	nn	Estimert antall deltakere
+oct	activitycalendar	nn	oktober
+of	activitycalendar	nn	av
+officer	activitycalendar	nn	Saksbehandler
+organization	activitycalendar	nn	Organisasjon
+organization number	activitycalendar	nn	Organisasjonnummer
+organizations	activitycalendar	nn	Organisasjoner
+organization index	activitycalendar	nn	Organisasjonsoversikt
+other	activitycalendar	nn	Annet
+parent activity	activitycalendar	nn	Overordnet kategori
+parent id	activitycalendar	nn	Overordnet id
+permissions	activitycalendar	nn	Rettigheter
+phone	activitycalendar	nn	Telefon
+picture	activitycalendar	nn	Bilde
+planning	activitycalendar	nn	Planlegging
+prev	activitycalendar	nn	Forrige
+preview	activitycalendar	nn	Forhåndsvisning
+price list	activitycalendar	nn	Prisliste
+primary admin	activitycalendar	nn	Kontaktperson 1
+primary contact	activitycalendar	nn	Kontaktperson 1
+published	activitycalendar	nn	Publisert
+reject application	activitycalendar	nn	Avslå søknad
+rejected	activitycalendar	nn	Avvist
+resource	activitycalendar	nn	Ressurs
+resource name	activitycalendar	nn	Ressurs
+resource schedule	activitycalendar	nn	Ressurskalender
+resource type	activitycalendar	nn	Type
+resources	activitycalendar	nn	Ressurser
+role	activitycalendar	nn	Rolle
+root permissions	activitycalendar	nn	Systemrettigheter
+Sa	activitycalendar	nn	lø.
+schedule	activitycalendar	nn	Ukeplan
+season	activitycalendar	nn	Sesong
+season name	activitycalendar	nn	Sesong
+seasons	activitycalendar	nn	Sesonger
+secondary admin	activitycalendar	nn	Kontaktperson 2
+select_date	activitycalendar	nn	Velg dato
+select a building first	activitycalendar	nn	Velg bygg/anlegg først
+select a grooup	activitycalendar	nn	Velg en Gruppe
+select category...	activitycalendar	nn	Velg en kategori...
+select role...	activitycalendar	nn	Velg rolle...
+sep	activitycalendar	nn	september
+settings	activitycalendar	nn	Innstillinger
+show only active	activitycalendar	nn	Skjul
+showing items	activitycalendar	nn	Viser
+showing items {startRecord} - {endRecord} of {totalRecords}	activitycalendar	nn	Viser {startRecord} - {endRecord} av {totalRecords}
+social security number	activitycalendar	nn	Fødselsnummer (11 siffer)
+status	activitycalendar	nn	Status
+street	activitycalendar	nn	Gate
+su	activitycalendar	nn	sø
+submit	activitycalendar	nn	Lagre
+successfully created (%1) allocations:	activitycalendar	nn	(%1) tildelinger lagret
+surname	activitycalendar	nn	Etternavn
+target audience	activitycalendar	nn	Målgruppe
+telephone	activitycalendar	nn	Telefon
+terms and conditions	activitycalendar	nn	Juridiske betingelser
+th	activitycalendar	nn	to.
+to	activitycalendar	nn	Til
+tu	activitycalendar	nn	ti.
+upload document	activitycalendar	nn	Last opp dokument
+user	activitycalendar	nn	Bruker
+we	activitycalendar	nn	on.
+week template	activitycalendar	nn	Ukeplan
+when	activitycalendar	nn	Når
+when?	activitycalendar	nn	Når?
+where	activitycalendar	nn	Hvor
+where?	activitycalendar	nn	Hvor?
+who	activitycalendar	nn	Hvem
+who?	activitycalendar	nn	Hvem?
+why	activitycalendar	nn	Kvifor
+why?	activitycalendar	nn	Kvifor?
+zip code	activitycalendar	nn	Postnummer
+postal city	activitycalendar	nn	Poststed
+team leaders	activitycalendar	nn	Ansvarlige gruppeledere
+team leader 1	activitycalendar	nn	Ansvarlig gruppeleder 1
+team leader 2	activitycalendar	nn	Ansvarlig gruppeleder 2
+regulation	activitycalendar	nn	Reglement
+Object No.	activitycalendar	nn	Objektnr.
+Article	activitycalendar	nn	Artikkel
+Unit No.	activitycalendar	nn	Fagavdelningsnr.
+Unit Prefix	activitycalendar	nn	Fagavdelnings kode (for buntnummeret)
+Invoice Instruction	activitycalendar	nn	Topptekst til faktura
+Responsible Code	activitycalendar	nn	Ansvarssted
+Service	activitycalendar	nn	Tjeneste
+Project No.	activitycalendar	nn	Prosjektnr.
+Account Codes	activitycalendar	nn	Konteringsstrenger
+Account Codes	activitycalendar	nn	Konteringsstreng
+Field %1 is required	activitycalendar	nn	Feltet '%1' må fylles ut
+Field %1: Invalid format	activitycalendar	nn	Feltet '%1': ugyldig format
+Building users	activitycalendar	nn	Brukere av bygg/anlegg
+Ssn	activitycalendar	nn	Fødselsnummer (11 siffer)
+Date of birth or SSN	activitycalendar	nn	Fødselsdato eller fødselsnummer
+Interval	activitycalendar	nn	Interval
+Recurring booking	activitycalendar	nn	Gjenta booking
+Repeat until	activitycalendar	nn	Gjenta til
+1 week	activitycalendar	nn	1 uke
+2 weeks	activitycalendar	nn	2 uker
+3 weeks	activitycalendar	nn	3 uker
+4 weeks	activitycalendar	nn	4 uker
+Select a group	activitycalendar	nn	Velg Gruppe/Lag
+Bookings that can be created	activitycalendar	nn	Bookinger som kan lages
+Please enter correct numbers for the event	activitycalendar	nn	Vennlist oppgi korrekt deltakertall
+Report numbers	activitycalendar	nn	Rapporter deltakertall
+Thank you	activitycalendar	nn	Takk
+The data was successfully updated	activitycalendar	nn	Dataene ble oppdatert uten feil
+Close	activitycalendar	nn	Lukke
+Create new booking	activitycalendar	nn	Lag ny booking
+You must accept to follow all terms and conditions of lease first.	activitycalendar	nn	Du må akseptere alle juridiske betingelser først.
+Invalid from date	activitycalendar	nn	Ugyldig fradato
+The user has accepted the following documents	activitycalendar	nn	Brukeren har akseptert følgende dokument
+Send	activitycalendar	nn	Send
+Go back	activitycalendar	nn	Tilbake
+Your application has now been registered and a confirmation email has been sent to you.	activitycalendar	nn	Søknaden har blitt sendt inn, og en bekreftelse har blitt sendt til deg på e-post.
+A Case officer will review your application as soon as possible.	activitycalendar	nn	En saksbehandler vil behandle søknaden så fort som mulig.
+Loading...	activitycalendar	nn	Laster...
+customer_ssn contains an invalid Norwegian social security number (6 or 11 digits)	activitycalendar	nn	Fødselsdato/fødselsnummer er ikke gyldig. Nummeret må bestå av 6 eller 11 siffer
+customer_organization_number is invalid	activitycalendar	nn	Organisasjonsnummer er ugyldig
+Used buildings	activitycalendar	nn	Bygg/anlegg som brukes
+Add group	activitycalendar	nn	Ny gruppe
+Internal Customer	activitycalendar	nn	Intern kunde
+Customer number	activitycalendar	nn	Ressursnummer
+activity_id	activitycalendar	nn	Aktivitet
+contact_email	activitycalendar	nn	E-post
+contact_name	activitycalendar	nn	Navn
+customer_identifier_type	activitycalendar	nn	Fakturainformasjon
+group_id	activitycalendar	nn	Gruppe/Lag
+dates	activitycalendar	nn	Fra/Til
+Information about the event	activitycalendar	nn	Informasjon om arrangementet
+Short description. For public events, activities and training under the direction of organizations and clubs, this information will be displayed on the internet	activitycalendar	nn	Gi en kort beskrivelse av arrangementet. For åpne arrangement, aktiviteter og trening i regi av organisasjoner og klubber vises denne informasjonen på internett
+To borrow premises you must verify that you have read terms and conditions	activitycalendar	nn	For å låne lokaler må du bekrefte at du har lest juridiske betingelser
+In order to send the invoice we need information about either customer organization number or norwegian social security number	activitycalendar	nn	For å kunne sende faktura trenger vi opplysninger om organisasjonsnr. eller fødselsnr.
+Private event	activitycalendar	nn	Privat arrangement
+Mass update	activitycalendar	nn	Masseoppdatering
+You are now about to update all bookings from this date and to the end of the season.	activitycalendar	nn	Du er nå i ferd med å oppdatere alle bookinger fra dagens dato og ut sesongen.
+Please update the data and click the Next-button.	activitycalendar	nn	Vennligst oppdater dataene og klikk på Neste-knappen.
+When clicking the Next-button you will be presented to a list of bookings that will be updated.	activitycalendar	nn	Etter at du har klikket på Neste-knappen vil du få oversikt over hvilke bookinger som kommer til å bli oppdatert.
+Update	activitycalendar	nn	Oppdater
+%1 bookings will be updated.	activitycalendar	nn	%1 bookinger vil bli oppdatert.
+%1 bookings were updated.	activitycalendar	nn	%1 bookinger ble oppdatert.
+Access denied	activitycalendar	nn	Ingen tilgang
+Print as PDF	activitycalendar	nn	Skriv ut som PDF
+Out season	activitycalendar	nn	Ut sesong
+Can not repeat from a date in the past	activitycalendar	nn	Du kan ikke repetere fra en dato i fortiden.
+Can not create a booking in the past	activitycalendar	nn	Du kan ikke opprette en booking i fortiden.
+Overlaps with existing event	activitycalendar	nn	Overlapper med eksisterende arrangement
+Overlaps with existing allocation	activitycalendar	nn	Overlapper med eksisterende tildeling
+Overlaps with existing booking	activitycalendar	nn	Overlapper med eksisterende booking
+Overlaps other organizations allocation	activitycalendar	nn	Overlapper med en annen organisasjons tildeling
+The booking uses resources not in the containing allocation	activitycalendar	nn	Bookingen bruker ressurser som ikke finnes i gitt tildeling
+CONFIRMED	activitycalendar	nn	BEKREFTET
+Pending	activitycalendar	nn	Under behandling
+This booking is not connected to a season	activitycalendar	nn	Denne bookingen er ikke koblet mot en sesong
+The user has accepted the document under point 8.	activitycalendar	nn	Brukeren har akseptert dokumentene under punkt 8.
+Organization shortname	activitycalendar	nn	Kortnavn
+Group shortname	activitycalendar	nn	Kortnavn
+Edit Group	activitycalendar	nn	Rediger gruppe
+contacts[0][email] contains an invalid email	activitycalendar	nn	Ugyldig epost under ansvarlig gruppeleder 1
+contacts[1][email] contains an invalid email	activitycalendar	nn	Ugyldig epost under ansvarlig gruppeleder 2
+This booking is outside the organization's allocated time	activitycalendar	nn	Denne bookingen ligger utenfor organisasjonens tildelte tid
+Time is set wrong	activitycalendar	nn	Et av klokkeslettene er feil
+title	activitycalendar	nn	Tittel
+Message	activitycalendar	nn	Beskjed
+New system message	activitycalendar	nn	Ny system beskjed
+New message	activitycalendar	nn	Ny beskjed
+System message	activitycalendar	nn	System beskjed
+System messages	activitycalendar	nn	System beskjeder
+Edit System Message	activitycalendar	nn	Rediger system beskjed
+Send message	activitycalendar	nn	Send beskjed
+E-mail address	activitycalendar	nn	E-postadresse
+Confirm e-mail address	activitycalendar	nn	Bekreft e-postadressen
+The e-mail addresses you entered do not match	activitycalendar	nn	E-postadressene er ikke like
+Lengt of shortname is to long, max 11 characters long	activitycalendar	nn	Kortnavn er for langt, maks 11 tegn
+Go back to calendar	activitycalendar	nn	Tilbake til kalender
+Agegroups kan not be larger than 9999 peoples	activitycalendar	nn	Estimert antall deltakere kan ikke være større en 9999 personer
+Contact information name is to long. max 50 characters	activitycalendar	nn	Navn i kontakt informasjon er for langt. Maks 50 tegn
+Unable to fill report	activitycalendar	nn	Greide ikke å fylle ut rapport
+arena	activitycalendar	nn	Arena
+activitycalendar	common	nn	aktivitetsoversikt
+Activitycalendar	common	nn	Aktivitetsoversikt
+description	activitycalendar	nn	Beskrivelse
+date_start	activitycalendar	nn	Startdato
+date_end	activitycalendar	nn	Sluttdato
+special_adaptation	activitycalendar	nn	Spesielt tilpasset for utviklingshemmede
+target	activitycalendar	nn	Målgruppe
+contact_person_1	activitycalendar	nn	Kontaktperson 1 (Navn, e-post)
+contact_person_2	activitycalendar	nn	Kontaktperson 2 (Navn, e-post)
+Activities	activitycalendar	nn	Aktiviteter
+activities	activitycalendar	nn	Aktiviteter
+Arena	activitycalendar	nn	Arena
+arenas	activitycalendar	nn	Arena
+OrganizationList	activitycalendar	nn	Organisasjoner/Grupper
+f_new_activity	activitycalendar	nn	Ny aktivitet
+f_new_arena	activitycalendar	nn	Ny arena
+search_for	activitycalendar	nn	Søk etter
+activity_type	activitycalendar	nn	Aktivitetstype
+all	activitycalendar	nn	Alle
+not_internal	activitycalendar	nn	Ekstern
+organization_id	activitycalendar	nn	Organisasjon ID
+arena_type	activitycalendar	nn	Arenatype
+internal_arena_id	activitycalendar	nn	Intern arena ID
+internal_arena	activitycalendar	nn	Intern arena
+reset	activitycalendar	nn	Nullstill
+organization_number	activitycalendar	nn	Organisasjonsnummer
+elements_pr_page	activitycalendar	nn	elementer per side
+shows_from	activitycalendar	nn	Viser fra
+of_total	activitycalendar	nn	av totalt
+DATATABLE_MSG_EMPTY	activitycalendar	nn	Ingen elementer
+export_to	activitycalendar	nn	Eksporter til
+activity_state	activitycalendar	nn	Status
+processed	activitycalendar	nn	Behandlet
+show	activitycalendar	nn	Vis
+last_change_date	activitycalendar	nn	Sist endret
+first	activitycalendar	nn	Første
+last	activitycalendar	nn	Siste
+previous	activitycalendar	nn	Forrige
+state	activitycalendar	nn	Status
+state_0	activitycalendar	nn	Ingen
+state_1	activitycalendar	nn	Ny
+state_2	activitycalendar	nn	Endring
+state_3	activitycalendar	nn	Publisert
+state_4	activitycalendar	nn	Publisert
+state_5	activitycalendar	nn	Avvist
+activity_import	activitycalendar	nn	Importer aktiviteter
+office	activitycalendar	nn	Hovedansvarlig kulturkontor
+activity_helptext	activitycalendar	nn	Aktivitetsoversikten henter kontaktinformasjon og beskrivelse fra bookingmodulen.<br/>Før ny aktivitet kan registreres må du sjekke at organisasjon/gruppe finnes og er oppdatert,<br/>og at arena finnes og er oppdatert. Feltet vis i portal skal være satt til JA, i organisasjonsregisteret og evt. lag/gruppe. For nye aktiviteter vil dette bli satt automatisk.
+mail_subject_update	activitycalendar	nn	Melding fra AktivBy - Aktivitetsoversikt
+mail_body_update	activitycalendar	nn	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for «%1».<br/>Ber om at du kontrollerer at data er korrekt, og eventuelt endrer.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
+mail_body_update_frontend	activitycalendar	nn	Dette er en melding fra Bergen kommune/AktivBy.<br/><br/>I aktivitetsoversikten som ligger i kommuneportalen på internett, står du registrert som kontaktperson for %1.<br/>Det har kommet inn et endringsønske på denne aktiviteten. Bruk lenken under for å endre opplysningene om aktiviteten.<br/>%2<br/><br/>%3<br/><br/> Mvh %4 kulturkontor
+mail_body_state_3	activitycalendar	nn	Informasjon om din aktivitet «%1» er registrert og vil bli publisert i kommuneportalen i løpet av dagen.<br/>De som er registrert som kontaktpersoner får endre informasjonen, dette gjøres via nettsiden: https://www.bergen.kommune.no/tjenestetilbud/aktivitetsoversikt/<br/><br/><br/> Mvh %2 kulturkontor
+mail_body_state_4	activitycalendar	nn	Ditt forslag til ny aktivitet: «%1» er behandlet og vil bli  publisert i kommuneportalen.<br/><br/>Mvh %2 kulturkontor
+mail_body_state_5	activitycalendar	nn	Ditt forslag til ny aktivitet: «%1» er behandlet, men vil ikke bli publisert i kommuneportalen.<br/>Dersom du har spørsmål, ta gjerne kontakt med oss.<br/><br/>Mvh %2 kulturkontor
+send_mail	activitycalendar	nn	Send e-post
+marked_as	activitycalendar	nn	Status
+address_number	activitycalendar	nn	Husnummer
+changed_organizations_groups	activitycalendar	nn	Endrede organisasjoner
+changed_org_group	activitycalendar	nn	Endringer
+building	activitycalendar	nn	Kommunale bygg
+Download as excel	activitycalendar	nn	Last ned i Excel-format
+arena_name	activitycalendar	nn	Navn
+Send mail to selection	activitycalendar	nn	Send E-post til utvalg
+contact_person_2_address	activitycalendar	nn	Adresse for kulturkontoret
+contact_person_2_zip	activitycalendar	nn	Poststed for kulturkontoret
+active_arena	activitycalendar	nn	Aktiv
+inactive_arena	activitycalendar	nn	Inaktiv
+change_type	activitycalendar	nn	Endringstype
+added	activitycalendar	nn	Lagt til i organisasjonsregisteret
+store	activitycalendar	nn	Lagre til organisasjonsregisteret
+back	activitycalendar	nn	Tilbake
+arena_saved_form	activitycalendar	nn	Arena ble lagret
+activity_saved_form	activitycalendar	nn	Aktiviteten ble lagret
+organization_saved_form	activitycalendar	nn	Organisasjonen ble lagret
+group_saved_form	activitycalendar	nn	Gruppen ble lagret
+published	activitycalendar	nn	Publisert
+contactperson_not_set	activitycalendar	nn	Kontaktpersoner hentes fra valgt organisasjon/gruppe ved lagring.
+description_helptext	activitycalendar	nn	Hentes fra booking/grupperegister ved lagring/oppdatering.
+back_to_list	activitycalendar	nn	Tilbake til oversikt
+target_not_selected	activitycalendar	nn	Målgruppe må velges!
+district_not_selected	activitycalendar	nn	Distrikt må velges!
+title_helptext	activitycalendar	nn	Oppgi tittelen for aktiviteten. Kort og beskrivende.
+state_helptext	activitycalendar	nn	Status for aktiviteten. For at den skal vises i portalen må status settes til publisert.
+organization_helptext	activitycalendar	nn	Velg organisasjon eller registrer inn ny.<br/>Stå i feltet og skriv inn første bokstav for å få opp oversikt.
+group_helptext	activitycalendar	nn	Velg gruppe/lag, eller ingen.<br/>Feltet vis i portal må være satt til JA om lag/gruppe skal komme opp i listen.
+criteria_label	activitycalendar	nn	Valgkriterier/søkeord i portalen
+criteria_helptext	activitycalendar	nn	Feltene må fylles ut for at aktiviteten skal komme frem i søk i portalen, koder for kategori og målgruppe hentes fra booking.
+what	activitycalendar	nn	HVA
+where_when	activitycalendar	nn	HVOR/NÅR
+who	activitycalendar	nn	HVEM
+arena_helptext	activitycalendar	nn	Oppgi arena ved å velge kommunalt bygg eller eksterne bygg.
+external_arena	activitycalendar	nn	Eksterne bygg
+category_helptext	activitycalendar	nn	Velg kategori
+target_helptext	activitycalendar	nn	Velg målgruppe(r)
+district_helptext	activitycalendar	nn	Velg bydel(er) hvor aktiviteten foregår
+adaptation_helptext	activitycalendar	nn	Kryss av om aktiviteten er spesielt tilpasset
+time_helptext	activitycalendar	nn	Oppgi tidspunkt for aktiviteten, f.eks. onsdag kl. 20-21
+office_helptext	activitycalendar	nn	Oppgi kontor som saksbehandler aktiviteten
+contact_info	activitycalendar	nn	Kontaktinformasjon for kulturkontoret
+contact_info_helptext	activitycalendar	nn	Hentes fra booking/organisasjonsregister ved lagring.
+update_org	activitycalendar	nn	Oppdater organisasjonsregister
+edit_contact_info	activitycalendar	nn	For å redigere kontaktopplysninger:
+edit_contact_info_org	activitycalendar	nn	Gå til organisasjonsopplysninger
+edit_contact_info_group	activitycalendar	nn	Gå til gruppeopplysninger
+arena_helptext	activitycalendar	nn	I feltet Navn skal det stå navn på arena, som det heter på folkemunne.<br/>Når du redigerer feltet besøksadresse, gjøres det automatisk oppslag i gatetabellen, dette for å sikre at adresser skrives riktig, og kan kobles mot kart.<br/>Når du har funnet rett gateadresse , gå til feltet Husnummer og legg inn husnummer.<br/>Trykk lagre.
+org_not_transferred	activitycalendar	nn	Organisasjonen som aktiviteten er tilknyttet er ikke overført til organisasjonsregisteret.<br/>Før aktiviteten kan redigeres, må denne overføres.
+contact_person_1_name	activitycalendar	nn	Kontaktperson 1
+contact_person_1_phone	activitycalendar	nn	Kontaktperson 1 tlf
+contact_person_1_mail	activitycalendar	nn	Kontaktperson 1 epost
+contact_person_2_name	activitycalendar	nn	Kontaktperson 2
+contact_person_2_phone	activitycalendar	nn	Kontaktperson 2 tlf
+contact_person_2_mail	activitycalendar	nn	Kontaktperson 2 epost
+reject	activitycalendar	nn	Avvis organisasjon
+description	activitycalendar	nn	Beskrivelse
+e-post	activitycalendar	nn	E-post
+list %1	activitycalendar	nn	list %1
+select date	activitycalendar	nn	Velg dato
+select arena: internal or external	activitycalendar	nn	Arena (kommunal eller ekstern) må fylles ut!

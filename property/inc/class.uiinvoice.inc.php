@@ -232,9 +232,9 @@
                         if (is_array($list[0]))
                         {
                             foreach($list[0] as $name_entry => $value)
-                            {
+			{
 				$name[] = $name_entry;
-                            }
+			}
                         }
 
 			$descr = $name;

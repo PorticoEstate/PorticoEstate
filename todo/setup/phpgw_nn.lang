@@ -1,0 +1,16 @@
+access type	todo	nn	Access type
+are you sure you want to delete this entry	todo	nn	Er du sikker på at du vil slette denne entry?
+clear form	todo	nn	Slett innhold
+completed	todo	nn	ferdig
+created by	todo	nn	Laget av
+date due	todo	nn	Ferdig før
+last updated	todo	nn	Sist oppdatert
+status	todo	nn	Status
+todo	common	nn	Å-gjøre
+todo list	common	nn	Å-gjøre liste
+to do list	common	nn	Å-gjøre liste
+todo list - add	todo	nn	Å-gjøre liste - legg til
+todo list - edit	todo	nn	Å-gjøre liste - edit
+urgency	todo	nn	Prioritet
+which groups	todo	nn	Hvilke grupper
+you have entered an invailed date	todo	nn	du har skrevet inn en ugyldig dato

@@ -66,10 +66,10 @@
                                 if (is_array($cnam))
                                 {
                                     foreach($cnam as $key => $fn)
-                                    {
+				{
 					$head[$fn] = array();
-                                    }
-                                }
+				}
+			}
 			}
 
 			if ( gettype($head['_cols'])=="NULL")
@@ -117,9 +117,9 @@
                                         if (is_array($groupby))
                                         {
                                             foreach($groupby as $gname => $value)
-                                            {
+					{
 						$gkey .= $rows[$rno][$gname]['value'];
-                                            }
+					}
                                         }
 					$rows[$rno]['#gkey'] = $gkey;
 				}
@@ -129,12 +129,12 @@
                                 if (is_array($printlist))
                                 {
                                     foreach($printlist as $pc => $pcol)
-                                    {
+				{
 					$cname = $pcol['#name'];
 					$cparms = $this->arr_merge($head[$cname],$pcol,array('bgcolor'=>'FFFFFF'),$rows[$rno][$cname]);
 					$rows[$rno][$cname] = $cparms;
-                                    }
-                                }
+				}
+			}
 			}
 
 			// Grouping Suppression
@@ -201,7 +201,7 @@
                                 if (is_array($printlist))
                                 {
                                     foreach($printlist as $pc => $pcol)
-                                    {
+				{
 					$cname = $pcol['#name'];
 
 					$cp = $this->makeparms($row[$cname]);
@@ -213,8 +213,8 @@
 					{
 						$html .= "\t</tr>\n"; // \t<tr $rp>\n
 					}
-                                    }
-                                }
+				}
+			}
 			}
 			$html .= "</table>\n";
 			$html .= "</form>";
@@ -234,7 +234,7 @@
                         if (is_array($parmlist))
                         {
                             foreach($parmlist as $pname => $pvalue)
-                            {
+			{
 				switch($pname)
 				{
 					case 'value':
@@ -254,7 +254,7 @@
 							$comma = ', ';
 						}
 				}
-                            }
+			}
                         }
 			return $html;
 		}
@@ -281,10 +281,10 @@
                                 if (is_array($cnam))
                                 {
                                     foreach($cnam as $key => $fn)
-                                    {
+				{
 					$head[$fn] = array();
-                                    }
-                                }
+				}
+			}
 			}
 
 			if (isset($_cols))
@@ -418,14 +418,14 @@
                         if (is_array($opts))
                         {
                             foreach($opts as $key => $itm)
-                            {
+			{
 				$html .= '<option value="'.$itm.'" ';
 				if ($itm == $sel)
 				{
 					$html .= 'selected ';
 				}
 				$html .= '>'.$itm."</option>\n";
-                            }
+			}
                         }
 			$html .= "</select>\n";
 			return $html;
@@ -492,7 +492,7 @@
                         if (is_array($printlist))
                         {
                             foreach($printlist as $pc => $pcol)
-                            {
+			{
 				$cname = $pcol['#name'];
 				$values = $head[$cname];
 				$title = $values['#title'];
@@ -503,7 +503,7 @@
 				$cparms = $this->arr_merge($values['#parms_hdr'],$pcol);
 				$cparms['value']=$title;
 				$table[0][$pc] = $cparms;
-                            }
+			}
                         }
 			return $table;
 		}
@@ -524,7 +524,7 @@
                         if (is_array($row))
                         {
                             foreach($row as $key => $col)
-                            {
+			{
 				if (!$intr)
 				{
 					$html .= "\t<tr $rp>\n";
@@ -538,7 +538,7 @@
 					$html .= "\t</tr>\n";
 					$intr = false;
 				}
-                            }
+			}
                         }
 			return $html;
 		}
@@ -551,12 +551,12 @@
                         if (is_array($test))
                         {
                             foreach($test as $key => $val)
-                            {
+			{
 				if(is_array($val))
 				{
 					$out += $val;
 				}
-                            }
+			}
                         }
 			return $out;
 		}
@@ -568,9 +568,9 @@
                         if (is_array($fields))
                         {
                             foreach($fields as $key => $val)
-                            {
+			{
 				$fkeys .= $key . ',';
-                            }
+			}
                         }
 			$fkeys = substr($fkeys,0,-1);
 			if($array)

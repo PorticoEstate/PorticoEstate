@@ -2821,7 +2821,7 @@ JS;
                                 if (is_array($values))
                                 {
                                     foreach($values as $entry)
-                                    {
+				{
 					$content[] = array
 						(
 						'id' => $entry['id'],
@@ -2829,7 +2829,7 @@ JS;
 						'user' => $entry['owner'],
 						'time_created' => $GLOBALS['phpgw']->common->show_date($entry['datetime'], "{$dateformat} G:i:s")
 					);
-                                    }
+				}
                                 }
 
 				$draw = phpgw::get_var('draw', 'int');
