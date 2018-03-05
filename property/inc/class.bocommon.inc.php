@@ -1595,6 +1595,8 @@
 					$this->csv_out($list, $name, $descr, $input_type, $identificator, $filename);
 					break;
 				case 'excel':
+					/*Experimental*/
+//					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
 					if($php_version > 5.5)
 					{
 						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
@@ -1619,6 +1621,7 @@
 		 * @param array $input_type array containing information whether fields are to be suppressed from the output
 		 * @param array $identificator array containing 1.row for identification purposes in case of data import.
 		 * @param string $filename
+		 * @param string $export_format
 		 */
 		function phpspreadsheet_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' , $export_format = 'excel')
 		{
@@ -1634,7 +1637,7 @@
 				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
 			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			
+
 			switch ($export_format)
 			{
 				case 'excel':
@@ -1651,10 +1654,6 @@
 
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header($filename, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-
-//			$cacheMethod = PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp;
-//			$cacheSettings = array('memoryCacheSize' => '32MB');
-//			PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
 
 			$spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
 
@@ -1880,6 +1879,105 @@
 		}
 
 
+		/**
+		 * downloads data as xslx to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 */
+		function xslx_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' )
+		{
+			if ($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename = $filename_arr[0];
+			}
+			else
+			{
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
+			}
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename .= "_{$date_time}.xslx";
+
+			$writer = CreateObject('phpgwapi.xlsxwriter');
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($writer::sanitize_filename($filename), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+			$writer->setauthor($GLOBALS['phpgw_info']['user']['fullname']);
+
+			$count_uicols_name = count($name);
+
+			$header = array();
+
+			$m = 0;
+			$formats = array();
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+				{
+					if (preg_match('/^loc/i', $name[$k]))
+					{
+						$header[$descr[$k]] = 'string';
+						$formats[$m] = 'string';
+
+					}
+					else //fixme
+					{
+						$header[$descr[$k]] = 'string';
+						$formats[$m] = 'string';
+					}
+				}
+				$m++;
+			}
+
+			$_header = array();
+			if ($identificator)
+			{
+				$_identificator = array_values($identificator);
+				$i = 0;
+				foreach ($formats as $key => $format)
+				{
+					if(!empty($_identificator[$i]))
+					{
+						$_header[$_identificator[$i]] = $format;
+					}
+					else
+					{
+						$_header[$i] = $format;
+					}
+					$i++;
+				}
+				$writer->writeSheetHeader('Sheet1', $_header);
+
+				$writer->writeSheetRow('Sheet1', array_keys($header));
+			}
+			else
+			{
+				$writer->writeSheetHeader('Sheet1', $header);
+			}
+
+			unset($header);
+
+			if (is_array($list))
+			{
+				foreach ($list as $entry)
+				{
+					$row = array();
+					for ($i = 0; $i < $count_uicols_name; ++$i)
+					{
+						if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
+						{
+							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
+						}
+					}
+					$writer->writeSheetRow('Sheet1', $row);
+				}
+			}
+			$writer->writeToStdOut();
+		}
 		/**
 		 * downloads data as CSV to the browser
 		 *
