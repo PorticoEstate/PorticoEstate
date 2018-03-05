@@ -1584,16 +1584,16 @@
                         if (is_array($location))
                         {
                             foreach($location as $input_name => $value)
-                            {
-                                    if ($value)
-                                    {
-                                            if ($input_name == 'cat_id')
-                                            {
-                                                    $input_name = 'category';
-                                            }
-                                            $value_set[$input_name] = $this->db->db_addslashes($value);
-                                    }
-                            }
+			{
+				if ($value)
+				{
+					if ($input_name == 'cat_id')
+					{
+						$input_name = 'category';
+					}
+					$value_set[$input_name] = $this->db->db_addslashes($value);
+				}
+			}
                         }
 
 			if (isset($values_attribute) AND is_array($values_attribute))

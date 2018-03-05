@@ -55,7 +55,7 @@
                         if (is_array($fields))
                         {
                             foreach($fields as $key => $field_info)
-                            {
+			{
 				$orig_name = $field_info['field_name'];
 				unset($changed);
 
@@ -133,7 +133,7 @@
 					}
 					$this->so->insert_field($field_info);
 				}
-                            }
+			}
                         }
 
 			//reset($current_fields);
@@ -141,7 +141,7 @@
                         if (is_array($current_fields))
                         {
                             foreach($current_fields as $key => $field_info)
-                            {
+			{
 				if (!is_array($fields[$field_info['field_name']]))
 				{
 					if ($this->debug)
@@ -150,8 +150,8 @@
 					}
 					$this->so->remove_field($field_info);
 				}
-                            }
-                        }
+			}
+		}
 		}
 
 		function get_field_list()
@@ -193,7 +193,7 @@
                         if (is_array($fields))
                         {
                             foreach($fields as $num => $field_info)
-                            {
+			{
 				$name = $field_info['field_name'];
 				if ($post_vars[$name . '_remove'])
 				{
@@ -217,7 +217,7 @@
 
 					$this->fields[$post_vars[$name . '_name']] = $updated_field_info;
 				}
-                            }
+			}
                         }
 
 			$rv = $this->save_fields($this->fields);
@@ -232,12 +232,12 @@
                         if (is_array($fields))
                         {
                             foreach ($fields as $key => $field_info)        
-                            {
+			{
 				if ($field_info['field_order'] > $max)
 				{
 					$max = $field_info['field_order'];
 				}
-                            }
+			}
                         }
 
 			return ($max + 1);

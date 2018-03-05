@@ -32,7 +32,7 @@
                         if (is_array($algos))
                         {
                             foreach($algos as $key => $value)
-                            {
+			{
 				$found = True;
 				/* Only show each once - seems this is a problem in some installs */
 				if(!in_array($value,$listed))
@@ -50,7 +50,7 @@
 					$out .= '<option value="' . $value . '"' . $selected . '>' . $descr . '</option>' . "\n";
 					$listed[] = $value;
 				}
-                            }
+			}
                         }
 			if(!$found)
 			{
@@ -81,7 +81,7 @@
                         if (is_array($modes))
                         {
                             foreach($modes as $key => $value)
-                            {
+			{
 				$found = True;
 				/* Only show each once - seems this is a problem in some installs */
 				if(!in_array($value,$listed))
@@ -99,7 +99,7 @@
 					$out .= '<option value="' . $value . '"' . $selected . '>' . $descr . '</option>' . "\n";
 					$listed[] = $value;
 				}
-                            }
+			}
                         }
 			if(!$found)
 			{

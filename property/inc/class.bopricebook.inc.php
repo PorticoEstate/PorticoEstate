@@ -227,7 +227,7 @@
 
 			//while ($entry = @each($values['update']))
                         if (is_array($values['update']))
-                        {
+			{
                             foreach($values['update'] as $key => $value)
                             {
 				//$n = $entry[0];
@@ -269,7 +269,7 @@
 					'new_index' => $new_index,
 					'new_date' => $date,
 				);
-                            }
+			}
                         }
 			//_debug_array($update);
 

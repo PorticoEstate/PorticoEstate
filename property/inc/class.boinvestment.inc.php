@@ -177,20 +177,20 @@
                         if (is_array($categories))
                         {
                             foreach($categories as $category)
-                            {
-                                    $sel_category = '';
-                                    if ($category['period'] == $selected)
-                                    {
-                                            $sel_category = 'selected';
-                                    }
+			{
+				$sel_category = '';
+				if ($category['period'] == $selected)
+				{
+					$sel_category = 'selected';
+				}
 
-                                    $category_list[] = array
-                                            (
-                                            'id' => $category['period'],
-                                            'name' => $category['period'],
-                                            'selected' => $sel_category
-                                    );
-                            }
+				$category_list[] = array
+					(
+					'id' => $category['period'],
+					'name' => $category['period'],
+					'selected' => $sel_category
+				);
+			}
                         }
 
 			for ($i = 0; $i < count($category_list); $i++)
@@ -210,12 +210,12 @@
                         if (is_array($values['location']))
                         {
                             foreach($values['location'] as $value)
-                            {
-                                    if ($value)
-                                    {
-                                            $location[] = $value;
-                                    }
-                            }
+			{
+				if ($value)
+				{
+					$location[] = $value;
+				}
+			}
                         }
 
 			$values['location_code'] = implode("-", $location);

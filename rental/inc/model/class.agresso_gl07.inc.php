@@ -16,11 +16,11 @@
 		public function __construct( $billing_job = null)
 		{
 			if($billing_job)
-			{
-				$this->billing_job = $billing_job;
-				$this->date_str = date('Ymd', $billing_job->get_timestamp_stop());
-				$this->lines = null;
-			}
+		{
+			$this->billing_job = $billing_job;
+			$this->date_str = date('Ymd', $billing_job->get_timestamp_stop());
+			$this->lines = null;
+		}
 
 			$config = CreateObject('phpgwapi.config', 'rental')->read();
 			$organization = empty($config['organization']) ? 'bergen' : $config['organization'];
@@ -58,7 +58,7 @@
 
 		/**
 		 * Returns the file contents as a string.
-		 *
+		 * 
 		 * @see rental_exportable
 		 */
 		public function get_contents()
@@ -139,16 +139,16 @@
 			}
 
 			if($this->project_id_strlen)
+			  {
+			$project_id_out = $contract->get_project_id();
+			if ($project_id_out == null || $project_id_out == '')
 			{
-				$project_id_out = $contract->get_project_id();
-				if ($project_id_out == null || $project_id_out == '')
-				{
-					$missing_billing_info[] = 'Missing project id.';
-				}
+				$missing_billing_info[] = 'Missing project id.';
+			}
 				else if (strlen($project_id_out) > $this->project_id_strlen)
-				{
+			{
 					$missing_billing_info[] = "Project id can not be more than {$this->project_id_strlen} characters.";
-				}
+			}
 			}
 
 			$price_items = rental_socontract_price_item::get_instance()->get(0, 0, '', false, '', '', array(

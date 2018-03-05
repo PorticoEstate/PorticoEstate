@@ -309,25 +309,25 @@
                         if (is_array($categories))
                         {
                             foreach($categories as $category)
-                            {
-                                    if ($category['id'] == $selected)
-                                    {
-                                            $category_list[] = array
-                                                    (
-                                                    'cat_id' => $category['id'],
-                                                    'name' => $category['name'],
-                                                    'selected' => 'selected'
-                                            );
-                                    }
-                                    else
-                                    {
-                                            $category_list[] = array
-                                                    (
-                                                    'cat_id' => $category['id'],
-                                                    'name' => $category['name'],
-                                            );
-                                    }
-                            }
+			{
+				if ($category['id'] == $selected)
+				{
+					$category_list[] = array
+						(
+						'cat_id' => $category['id'],
+						'name' => $category['name'],
+						'selected' => 'selected'
+					);
+				}
+				else
+				{
+					$category_list[] = array
+						(
+						'cat_id' => $category['id'],
+						'name' => $category['name'],
+					);
+				}
+			}
                         }
 			return $category_list;
 		}

@@ -82,14 +82,14 @@
                         if (is_array($list))
                         {
                             foreach($list as $val => $key)
-                            {
+			{
 				$select .= '<option value="' . $key . '"';
 				if ($key == $id && $id != '')
 				{
 					$select .= ' selected';
 				}
 				$select .= '>' . lang($val) . '</option>'."\n";
-                            }
+			}
                         }
 
 			$select .= '</select>'."\n";
@@ -155,7 +155,7 @@
                         if (is_array($servers))
                         {
                             foreach($servers as $key => $server)
-                            {
+			{
 				$tr_color = $this->nextmatchs->alternate_row_class($tr_color);
 				$GLOBALS['phpgw']->template->set_var('tr_color',$tr_color);
 				$server_id = $server['server_id'];
@@ -173,7 +173,7 @@
 				$GLOBALS['phpgw']->template->set_var('delete',$GLOBALS['phpgw']->link('/index.php',array('menuaction'=>'admin.uiserver.delete','server_id' =>  $server_id)));
 				$GLOBALS['phpgw']->template->set_var('lang_delete_entry',lang('Delete'));
 				$GLOBALS['phpgw']->template->parse('list','server_list',True);
-                            }
+			}
                         }
 
 			$GLOBALS['phpgw']->template->parse('out','server_list_t',True);

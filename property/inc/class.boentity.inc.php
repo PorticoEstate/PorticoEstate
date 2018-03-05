@@ -715,12 +715,12 @@ JS;
                         if (is_array($values['location']))
                         {
                             foreach($values['location'] as $value)
-                            {
+			{
 				if ($value)
 				{
 					$location[] = $value;
 				}
-                            }
+			}
                         }
 
 			$values['location_code'] = (isset($location) ? implode("-", $location) : '');
