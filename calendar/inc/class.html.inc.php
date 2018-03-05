@@ -389,7 +389,7 @@ class calendar_html
                         }
                     }
                 }
-                
+
 		return $html;
 	}
 

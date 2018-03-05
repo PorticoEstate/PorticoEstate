@@ -298,7 +298,7 @@
                         if (is_array($config_info))
                         {
                             foreach($config_info as $key => $entry)
-                            {
+			{
 
 				$content[] = array
 				(
@@ -313,7 +313,7 @@
 					'lang_delete_config_text'	=> lang('delete the config'),
 					'lang_value_text'			=> lang('values for this config type'),
 				);
-                            }
+			}
                         }
 
 //_debug_array($content);
@@ -553,7 +553,7 @@
                         if (is_array($config_info))
                         {
                             foreach($config_info as $key => $entry)
-                            {
+			{
 
 				$content[] = array
 				(
@@ -570,7 +570,7 @@
 					'lang_delete_config_text'	=> lang('delete the config'),
 					'lang_value_text'			=> lang('value for this config type'),
 				);
-                            }
+			}
                         }
 
 //_debug_array($content);

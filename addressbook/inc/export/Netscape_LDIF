@@ -183,12 +183,12 @@
                                 if (is_array($this->export))
                                 {
                                     foreach($this->export as $name => $value)
-                                    {
+				{
 					if ($value != 'dn')
 					{
 						$entries .= $value . ":" . $buffer[$i][$value] . "\n";
 					}
-                                    }
+				}
                                 }
 				$entries .= 'xmozillauseconferenceserver: ' . $buffer[$i]['xmozillauseconferenceserver'] . "\n";
 				$entries .= 'xmozillanickname: '            . $buffer[$i]['xmozillanickname'] . "\n";

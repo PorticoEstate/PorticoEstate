@@ -389,7 +389,7 @@ class uiaddressbook
 		$cols='';
 		//while ($column = @each($columns_to_display))
                 if (is_array($columns_to_display))
-                {
+		{
                     foreach($columns_to_display as $key => $value)
                     {
 			$showcol = $this->bo->display_name($key);
@@ -401,12 +401,12 @@ class uiaddressbook
 					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id.'&nonavbar='.$this->nonavbar);
 			$cols .= '</td>';
 			$cols .= "\n";
-                    }
+		}
                 }
 		//FIXME: NEeed to determine how are we going to handle comm types translations
 		//while ($column = @each($comms_array))
                 if (is_array($comms_array))
-                {
+		{
                     foreach($comms_array as $key => $value)
                     {
 			$showcol = $key; 
@@ -416,7 +416,7 @@ class uiaddressbook
 					'&menuaction=addressbook.uiaddressbook.index&section='.$this->section.'&fcat_id='.$this->cat_id .'&nonavbar='.$this->nonavbar);
 			$cols .= '</td>';
 			$cols .= "\n";
-                    }
+		}
                 }
 
 		/* set basic vars and parse the header */

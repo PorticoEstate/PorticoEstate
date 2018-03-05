@@ -212,15 +212,15 @@
                                                 if (is_array($contacts->import))
                                                 {
                                                     foreach($contacts->import as $fname => $fvalue)
-                                                    {
+						{
 							if ( strstr(strtolower($name), $contacts->import[$fname]) )
 							{
 								$buffer = $contacts->import_new_attrib($buffer,$name,$value);
 							}
-                                                    }
-                                                }
+						}
 					}
 				}
+			}
 			}
 
 			fclose($fp);
@@ -247,14 +247,14 @@
                                 if (is_array($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
                                 {
                                     foreach($GLOBALS['phpgw_info']['user']['preferences']['addressbook'] as $col => $descr)
-                                    {
-                                        if ( substr($col,0,6) == 'extra_' )
+				{
+				if ( substr($col,0,6) == 'extra_' )
 					{
 						$field = preg_replace('/extra_/','',$col);
 							$field = preg_replace('/ /','_',$field);
 						$customfields[$field] = ucfirst($field);
 					}
-                                    }
+				}
                                 }
 
 				if (!empty($cat_id))
@@ -273,9 +273,9 @@
                                         if (is_array($contacts->currentrecord))
                                         {
                                             foreach($contacts->currentrecord as $name => $value)
-                                            {
+					{
 						$buffer = $contacts->export_new_attrib($buffer,$name,$value);
-                                            }
+					}
                                         }
 					$buffer = $contacts->export_end_record($buffer);
 				}

@@ -259,7 +259,7 @@
                         if (is_array($categories))
                         {
                             foreach($categories as $key => $category)
-                            {
+			{
 				$sel_category = '';
 				if ($category['id']==$selected)
 				{
@@ -272,7 +272,7 @@
 					'name'		=> $category['name'],
 					'selected'	=> $sel_category
 				);
-                            }
+			}
                         }
 
 			for ($i=0;$i<count($category_list);$i++)

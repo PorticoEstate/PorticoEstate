@@ -115,7 +115,7 @@
                         if (is_array($GLOBALS['acl_manager']))
                         {
                             foreach($GLOBALS['acl_manager'] as $app => $locations)
-                            {
+			{
 				$icon = $GLOBALS['phpgw']->common->image($app, array('navbar.gif', $app.'.gif'));
 				$this->_template->set_var('icon_backcolor', $GLOBALS['phpgw_info']['theme']['row_off']);
 				$this->_template->set_var('link_backcolor', $GLOBALS['phpgw_info']['theme']['row_off']);
@@ -136,15 +136,15 @@
                                 if (is_array($locations))
                                 {
                                     foreach($locations as $loc => $value)
-                                    {
+				{
 					$total_rights = 0;
 					//while (list($k, $v) = each($value['rights']))
                                         if (is_array($value['rights']))
                                         {
                                             foreach($value['rights'] as $k => $v)
-                                            {
+					{
 						$total_rights += $v;
-                                            }
+					}
                                         }
 					reset($value['rights']);
 
@@ -163,11 +163,11 @@
 						$this->_template->set_var('lang_location', lang($value['name']));
 						$this->_template->fp('rows', 'link_row', true);
 					}
-                                    }
+				}
                                 }
 
 				$this->_template->parse('rows', 'spacer_row', true);
-                            }
+			}
                         }
 			$this->_template->pfp('out', 'list');
 		}

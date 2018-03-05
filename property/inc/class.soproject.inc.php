@@ -1223,25 +1223,25 @@
                         if (is_array($project['location']))
                         {
                             foreach($project['location'] as $input_name => $value)
-                            {
+			{
 				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
-                            }
+			}
 			}
 
                         if (is_array($project['extra']))
                         {
                             foreach($project['extra'] as $input_name => $value)
-                            {
+			{
 				if ($value)
 				{
 					$cols[] = $input_name;
 					$vals[] = $value;
 				}
-                            }
+			}
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_project', $values_attribute);
@@ -1516,17 +1516,17 @@
 			if (is_array($project['location']))
                         {
                             foreach($project['location'] as $input_name => $value)
-                            {
-                                    $value_set[$input_name] = $value;
-                            }
+			{
+				$value_set[$input_name] = $value;
+			}
                         }
-			
+
                         if (is_array($project['extra']))
                         {
                             foreach($project['extra'] as $input_name => $value)
-                            {
-                                    $value_set[$input_name] = $value;
-                            }
+			{
+				$value_set[$input_name] = $value;
+			}
                         }
 
 			$value_set = $this->db->validate_update($value_set);

@@ -126,9 +126,9 @@
                         if (is_array($this->export))
                         {
                             foreach($this->export as $name => $value)
-                            {
+			{
 				$entries .= $value . ',';
-                            }
+			}
 			}
 			$entries = substr($entries,0,-1);
 			$entries .= "\r\n";
@@ -142,9 +142,9 @@
                                 if (is_array($this->export))
                                 {
                                     foreach($this->export as $name => $value)
-                                    {
+				{
 					$entries .= $buffer[$i][$value] . ',';
-                                    }
+				}
                                 }
 				$entries = substr($entries,0,-1);
 				$entries .= "\r\n";

@@ -28,14 +28,14 @@
                 if (is_array($list))
                 {
                     foreach($list as $key => $val)
-                    {
+		{
 			$select .= '<option value="' . $key . '"';
 			if ($key == $id && $id != '')
 			{
 				$select .= ' selected';
 			}
 			$select .= '>' . $val . '</option>'."\n";
-                    }
+		}
                 }
 
 		$select .= '</select>'."\n";
@@ -143,7 +143,7 @@
                 if (is_array($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
                 {
                     foreach($GLOBALS['phpgw_info']['user']['preferences']['addressbook'] as $col => $descr)
-                    {
+		{
 			if ( substr($col,0,6) == 'extra_' )
 			{
 				$fields[$j]['name'] = preg_replace('/extra_/','',$col);
@@ -162,7 +162,7 @@
 				}
 			}
 			$i++;
-                    }
+		}
                 }
 		@reset($fields);
 		return $fields;

@@ -61,9 +61,9 @@
                 if (is_array($arr))
                 {
                     foreach($arr as $key => $val)
-                    {
+		{
 			$ret .= ($ret ? ',' : '(') . "'$key' => '$val'\n";
-                    }
+		}
                 }
 		return $ret.')';
 	}
@@ -74,12 +74,12 @@
                 if (is_array($arr))
                 {
                     foreach($arr as $key => $val)
-                    {
+		{
 			if($value == $val)
 			{
 				return $key;
 			}
-                    }
+		}
                 }
 		return False;
 	}
@@ -135,9 +135,9 @@
                         if (is_array($config->config_data['custom_fields']))
                         {
                             foreach($config->config_data['custom_fields'] as $name => $descr)
-                            {
+			{
 				$addr_names[$name] = $descr;
-                            }
+			}
                         }
 			unset($config);
 
@@ -306,7 +306,7 @@
                                 if (is_array($addr_fields))
                                 {
                                     foreach($addr_fields as $csv_idx => $addr)
-                                    {
+				{
 					//echo "<p>$csv: $addr".($_POST['trans'][$csv] ? ': '.$_POST['trans'][$csv] : '')."</p>";
 					$val = $fields[$csv_idx];
 					if(isset($_POST['trans'][$csv_idx]))
@@ -316,7 +316,7 @@
                                                 if (is_array($trans_csv))
                                                 {
                                                     foreach($trans_csv as $pattern => $replace)
-                                                    {
+						{
 							if(preg_match("/$pattern/",$val))
 							{
 								// echo "<p>csv_idx='$csv_idx',info='$addr',trans_csv=".dump_array($trans_csv).",ereg_replace('$pattern','$replace','$val') = ";
@@ -350,8 +350,8 @@
 									break; 
 								}
 							}
-                                                    }
-                                                }
+						}
+					}
 					}
 					//$values[$addr] = $val;
 					if(in_array($addr, $comm_fields))
@@ -371,7 +371,7 @@
 					}
 
 					$log .= "\t\t<td>$val</td>\n";
-                                    }
+				}
                                 }
 				$fields_to_add['categories'] = array($cat_id);
 				$fields_to_add['access'] = $access;

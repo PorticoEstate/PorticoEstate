@@ -191,9 +191,9 @@
                                 if (is_array($this->export))
                                 {
                                     foreach($this->export as $name => $value)
-                                    {
+				{
 					$entries .= $value . ":\t" . $buffer[$i][$value] . "\n";
-                                    }
+				}
                                 }
 				$entries .= "\r\n";
 			}

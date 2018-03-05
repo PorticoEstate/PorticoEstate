@@ -228,7 +228,7 @@
                                                 if (is_array($cats))
                                                 {
                                                     foreach($cats as $key => $contactscat)
-                                                    {
+						{
 							if ($contactscat && in_array(intval($contactscat),$subcats))
 							{
 								//$catinfo = $this->cat->return_single(intval($contactscat));
@@ -238,7 +238,7 @@
 								$catname .= $categories->id2name(intval($contactscat)) . '; ';
 							}
 							//$c++;
-                                                    }
+						}
                                                 }
 						//echo "<pre>cat_info: "; print_r($catname); echo "</pre> \n";
 						//$entries[$entry['contact_id']]['cat_id'] = explode(',',$cats);
