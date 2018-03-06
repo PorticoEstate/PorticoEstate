@@ -1596,15 +1596,15 @@
 					break;
 				case 'excel':
 					/*Experimental*/
-//					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
-					if($php_version > 5.5)
-					{
-						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
-					}
-					else
-					{
-						$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
-					}
+					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
+//					if($php_version > 5.5)
+//					{
+//						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
+//					}
+//					else
+//					{
+//						$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
+//					}
 					break;
 				case 'ods':
 					$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'ods');

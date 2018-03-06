@@ -399,8 +399,11 @@ HTML;
 
 			foreach ($custom_cols as $col)
 			{
-				$name[] = $col;
-				$descr[] = lang(str_replace('_', ' ', $col));
+				if(!in_array($col, $name))
+				{
+					$name[] = $col;
+					$descr[] = lang(str_replace('_', ' ', $col));
+				}
 			}
 
 			$this->bocommon->download($list, $name, $descr);
