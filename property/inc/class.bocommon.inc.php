@@ -1596,15 +1596,15 @@
 					break;
 				case 'excel':
 					/*Experimental*/
-//					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
-					if($php_version > 5.5)
-					{
-						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
-					}
-					else
-					{
-						$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
-					}
+					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
+//					if($php_version > 5.5)
+//					{
+//						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
+//					}
+//					else
+//					{
+//						$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
+//					}
 					break;
 				case 'ods':
 					$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'ods');
@@ -1907,10 +1907,49 @@
 			$browser->content_header($writer::sanitize_filename($filename), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
 			$writer->setauthor($GLOBALS['phpgw_info']['user']['fullname']);
+			$writer->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}");
 
 			$count_uicols_name = count($name);
 
 			$header = array();
+
+
+			$loop = 0;
+			foreach ($list as $entry)
+			{
+				for ($i = 0; $i < $count_uicols_name; ++$i)
+				{
+					if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
+					{
+						$test = $entry[$name[$i]];
+						if(ctype_digit((string)$test))
+						{
+							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+							{
+								$header[$descr[$i]] = 'integer';
+							}
+						}
+						else if(is_numeric((string)$test))
+						{
+							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+							{
+								$header[$descr[$i]] = '0.00';
+							}
+						}
+						else
+						{
+							$header[$descr[$i]] = 'string';
+						}
+					}
+				}
+
+				$loop++;
+				if($loop > 40)
+				{
+					break;
+				}
+			}
+
 
 			$m = 0;
 			$formats = array();
@@ -1923,11 +1962,6 @@
 						$header[$descr[$k]] = 'string';
 						$formats[$m] = 'string';
 
-					}
-					else //fixme
-					{
-						$header[$descr[$k]] = 'string';
-						$formats[$m] = 'string';
 					}
 				}
 				$m++;
@@ -2007,6 +2041,9 @@
 			{
 				die('Unable to write to "php://output" - pleace notify the Administrator');
 			}
+
+			$BOM = "\xEF\xBB\xBF"; // UTF-8 BOM
+			fwrite($fp, $BOM); // NEW LINE
 
 			if ($identificator)
 			{
