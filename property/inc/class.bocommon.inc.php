@@ -2042,6 +2042,9 @@
 				die('Unable to write to "php://output" - pleace notify the Administrator');
 			}
 
+			$BOM = "\xEF\xBB\xBF"; // UTF-8 BOM
+			fwrite($fp, $BOM); // NEW LINE
+
 			if ($identificator)
 			{
 				$_identificator = array();
