@@ -65,6 +65,13 @@
 					<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
 				</td>
 			</tr>
+			<tr>
+				<td>{lang_alternative_to_contract} 1:</td>
+				<td><input name="newsettings[alternative_to_contract_1]" value="{value_alternative_to_contract_1}"></td>
+			</tr>
+			<tr>
+				<td>{lang_alternative_to_contract} 2:</td>
+				<td><input name="newsettings[alternative_to_contract_2]" value="{value_alternative_to_contract_2}"></td>
 			</tr>
 			<tr>
 				<td>{lang_dimb_responsible_1}:</td>
