@@ -229,6 +229,10 @@
 					)
 				);
 
+			}
+
+			if ( $acl->check('.custom',PHPGW_ACL_READ, 'helpdesk') ) //manage
+			{
 				$custom_menu_items = CreateObject('helpdesk.sogeneric','custom_menu_items')->read_tree(array('type' => 'custom_menu_items',
 							'filter' => array('location' => '.ticket')));
 
@@ -244,7 +248,7 @@
 					{
 						if(empty($item['local_files']))
 						{
-							$item['url'] .= '&' . get_phpgw_session_url();							
+							$item['url'] .= '&' . get_phpgw_session_url();
 						}
 						$menus['navigation']['report']['children'][] = $item;
 					}
