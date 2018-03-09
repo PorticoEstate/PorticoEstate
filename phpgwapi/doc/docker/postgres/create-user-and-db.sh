@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+psql -h localhost -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+    CREATE ROLE portico LOGIN SUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+    CREATE DATABASE porticotest;
+EOSQL
