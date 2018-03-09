@@ -1,0 +1,41 @@
+FROM ubuntu:16.04
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+    apache2 \
+    libapache2-mod-php \
+    php \
+    php-curl \
+    php-intl \
+    php-xdebug \
+    php-apcu \
+    php-dev \
+    php-xmlrpc \
+    php-xsl \
+    php-pgsql\
+    php-json \
+    php-gd \
+    php-imagick \
+    php-imap \
+    php-soap \
+    php-zip \
+    php-mbstring \
+    php-pear \
+    libaio1 \
+    locales
+
+RUN sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/apache2/php.ini && \
+    sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/cli/php.ini
+
+COPY custom-apache.conf /etc/php/7.0/apache2/conf.d/91-app.ini
+RUN ln -s /etc/php/7.0/apache2/conf.d/91-app.ini /etc/php/7.0/cli/conf.d/91-app.ini
+
+RUN mkdir /var/www/html/portico /felles_ebe_portico && chown www-data /felles_ebe_portico
+
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+#ENV APACHE_LOG_DIR /var/log/apache2
+
+
+EXPOSE 80
+
+ENTRYPOINT ["apachectl"]
+CMD ["-D FOREGROUND"]
