@@ -387,16 +387,16 @@
 			$entity_id = phpgw::get_var('entity_id');
 			$cat_id = phpgw::get_var('cat_id');
 			$type = phpgw::get_var('type');
-			
-			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', 
-					array('menuaction' => 'property.uientity.handle_multi_upload_file', 
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php',
+					array('menuaction' => 'property.uientity.handle_multi_upload_file',
 								'id' => $id,
 								'entity_id' => $entity_id,
 								'cat_id' => $cat_id,
 								'type' => $type));
-			
+
 			phpgw::import_class('property.multiuploader');
-			
+
 			$values = $this->bo->read_single(array('entity_id' => $entity_id, 'cat_id' => $cat_id,
 				'id' => $id));
 
@@ -410,7 +410,7 @@
 			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
 			$options['script_url'] = html_entity_decode($multi_upload_action);
 			$upload_handler = new property_multiuploader($options, false);
-			
+
 			switch ($_SERVER['REQUEST_METHOD']) {
 				case 'OPTIONS':
 				case 'HEAD':
@@ -430,24 +430,24 @@
 				default:
 					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
 			}
-		
+
 			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
-		
+
 		public function build_multi_upload_file()
 		{
 			phpgwapi_jquery::init_multi_upload_file();
-			
+
 			$id = phpgw::get_var('id');
 			$entity_id = phpgw::get_var('_entity_id');
 			$cat_id = phpgw::get_var('_cat_id');
 			$type = phpgw::get_var('_type');
-			
+
 			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
 			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
-			
-			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', 
-					array('menuaction' => 'property.uientity.handle_multi_upload_file', 
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php',
+					array('menuaction' => 'property.uientity.handle_multi_upload_file',
 								'id' => $id,
 								'entity_id' => $entity_id,
 								'cat_id' => $cat_id,
@@ -455,13 +455,13 @@
 
 			$data = array
 				(
-				'multi_upload_action' => $multi_upload_action					
+				'multi_upload_action' => $multi_upload_action
 			);
-	
+
 			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
-		
+
 		private function _get_filters( $selected = 0 )
 		{
 			$values_combo_box = array();
@@ -626,12 +626,12 @@
 				'p_num' => $item_id,
 				'location_item_id' => $item_id,
 			);
-			
+
 			$document = CreateObject('property.sodocument');
 			$documents = $document->read_at_location($params);
 			$total_records = $document->total_records;
-		
-			foreach ($documents as $item) 
+
+			foreach ($documents as $item)
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uidocument.view_file', 'id'=>$item['document_id'])).'" target="_blank">'.$item['document_name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
@@ -648,12 +648,12 @@
 			$params['cat_id'] = $doc_type;
 			$documents2 = $generic_document->read($params);
 			$total_records += $generic_document->total_records;
-			foreach ($documents2 as $item) 
+			foreach ($documents2 as $item)
 			{
 				$document_name = '<a href="'.self::link(array('menuaction'=>'property.uigeneric_document.view_file', 'file_id'=>$item['id'])).'" target="_blank">'.$item['name'].'</a>';
 				$values[] =  array('document_name' => $document_name, 'title'=> $item['title']);
 			}
-			
+
 			$result_data = array('results' => $values);
 
 			$result_data['total_records'] = $total_records;
@@ -1028,6 +1028,29 @@
 						);
 					}
 				}
+			}
+
+			$workorders = CreateObject('property.soworkorder')->get_entity_relation($this->entity_id,$this->cat_id, $id);
+			$lang_workorder = lang('workorder');
+
+			foreach ($workorders as $workorder)
+			{
+				$_link = $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction' => "property.uiworkorder.view",
+						'id' => $workorder['id']
+					)
+				);
+				$values[] = array
+				(
+					'url' => "<a href=\"{$_link}\" > {$workorder['id']}</a>",
+					'type' => $lang_workorder,
+					'title' => $workorder['title'],
+					'status' => $workorder['statustext'],
+					'user' => $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString(),
+					'entry_date' => $GLOBALS['phpgw']->common->show_date($workorder['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+				);
+
 			}
 
 //			$controller_cases = array();
@@ -1997,7 +2020,7 @@
 				  }
 				 */
 			}
-				
+
 // ---- START INTEGRATION -------------------------
 
 			$custom_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location));
@@ -2121,7 +2144,7 @@
 			if ($id)
 			{
 				$location_id = $GLOBALS['phpgw']->locations->get_id($this->type_app[$this->type], $this->acl_location);
-				
+
 				$check_doc = $this->bocommon->get_lookup_entity('document');
 				foreach ($check_doc as $_check)
 				{
@@ -2137,7 +2160,7 @@
 					$get_docs = true;
 
 					$tabs['document'] = array('label' => lang('document'), 'link' => '#document', 'disable' => 0);
-					
+
 					$cats = CreateObject('phpgwapi.categories', -1, 'property', '.document');
 					$cats->supress_info = true;
 					$categories = $cats->formatted_xslt_list(array('format' => 'filter', 'selected' => '',
@@ -2150,7 +2173,7 @@
 						$_category['id'] = $_category['cat_id'];
 					}
 					$doc_type_filter = $categories['cat_list'];
-				
+
 					$documents_tabletools = array
 						(
 						'my_name' => 'add',
@@ -2159,7 +2182,7 @@
 						'className' => 'add',
 						'custom_code' => "
 								var oArgs = " . json_encode(array(
-									'menuaction' => 'property.uidocument.edit',							
+									'menuaction' => 'property.uidocument.edit',
 									'p_entity_id' => $this->entity_id,
 									'p_cat_id' => $this->cat_id,
 									'p_num' => $values['num']
@@ -2167,7 +2190,7 @@
 								newDocument(oArgs);
 							"
 					);
-					
+
 					$documents_def = array
 						(
 						array('key' => 'document_name', 'label' => lang('name'), 'sortable' => false, 'resizeable' => true),
@@ -2177,7 +2200,7 @@
 					$datatable_def[] = array
 						(
 						'container' => 'datatable-container_7',
-						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents', 
+						'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uientity.get_documents',
 							'location_id' => $location_id, 'entity_id' => $this->entity_id, 'cat_id' => $this->cat_id, 'item_id' => $id, 'phpgw_return_as' => 'json'))),
 						'data' => "",
 						'tabletools' => ($mode == 'edit') ? $documents_tabletools : array(),
@@ -2191,7 +2214,7 @@
 				if ($category['fileupload'] || (isset($values['files']) && $values['files']))
 				{
 					$tabs['files'] = array('label' => lang('files'), 'link' => '#files', 'disable' => 0);
-					
+
 					$link_file_data = array
 						(
 						'menuaction' => 'property.uientity.view_file',
@@ -2223,7 +2246,7 @@
 						)
 					);
 				}
-				
+
 				if (!$category['enable_bulk'])
 				{
 					$tabs['related'] = array('label' => lang('log'), 'link' => '#related', 'disable' => 0);
@@ -2314,7 +2337,7 @@
 						)
 					);
 				}
-				
+
 				if ($_enable_controller)
 				{
 					$_controls = $this->get_controls_at_component($location_id, $id);
@@ -2447,7 +2470,7 @@
 						)
 					);
 				}
-				
+
 			}
 
 			//$category['org_unit'] =1;
@@ -2457,7 +2480,7 @@
 
 				$_autocomplete = <<<JS
 
-					$(document).ready(function () 
+					$(document).ready(function ()
 					{
 						var oArgs = {menuaction:'property.bogeneric.get_autocomplete', type:'org_unit'};
 						var strURL = phpGWLink('index.php', oArgs, true);
@@ -2560,7 +2583,7 @@ JS;
 				'doc_type_filter' => array('options' => $doc_type_filter),
 				'documents' => $get_docs ? 1 : 0,
 				/*'requestUrlDoc' => $requestUrlDoc ? $requestUrlDoc : '',*/
-						
+
 				'lean' => $_lean ? 1 : 0,
 				'entity_group_list' => array('options' => $entity_group_list),
 				'entity_group_name' => $entity_group_name,
