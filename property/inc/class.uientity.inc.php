@@ -1030,6 +1030,29 @@
 				}
 			}
 
+			$workorders = CreateObject('property.soworkorder')->get_entity_relation($this->entity_id,$this->cat_id, $id);
+			$lang_workorder = lang('workorder');
+
+			foreach ($workorders as $workorder)
+			{
+				$_link = $GLOBALS['phpgw']->link('/index.php', array
+					(
+						'menuaction' => "property.uiworkorder.view",
+						'id' => $workorder['id']
+					)
+				);
+				$values[] = array
+				(
+					'url' => "<a href=\"{$_link}\" > {$workorder['id']}</a>",
+					'type' => $lang_workorder,
+					'title' => $workorder['title'],
+					'status' => $workorder['statustext'],
+					'user' => $GLOBALS['phpgw']->accounts->get($workorder['user_id'])->__toString(),
+					'entry_date' => $GLOBALS['phpgw']->common->show_date($workorder['entry_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+				);
+
+			}
+
 //			$controller_cases = array();
 //			if (isset($GLOBALS['phpgw_info']['user']['apps']['controller']))
 //			{
