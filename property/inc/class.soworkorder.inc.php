@@ -2539,7 +2539,7 @@
 				}
 
 				$entry['deviation_period'] = $deviation;
-				
+
 				$entry['active'] = isset($active_period[$entry['period']]) && $active_period[$entry['period']] ? $active_period[$entry['period']] : 0;
 				if ($entry['active'] != 2)
 				{
