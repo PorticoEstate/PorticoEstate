@@ -30,8 +30,6 @@
 		{
 			$debug = empty($this->param['debug']) ? false : true;
 
-//			$sms_msg = utf8_decode($sms_msg);
-
 			$sms_to = ltrim($sms_to, '+');
 
 			if (strlen($sms_to) < 9)
@@ -48,14 +46,7 @@
 				'receiver'	=> $sms_to
 			);
 
-			$post_items = array();
-
-			foreach ( $post_data as $key => $value)
-			{
-				$post_items[] = "{$key}={$value}";
-			}
-			//create the final string to be posted using implode()
-			$post_string = implode ('&', $post_items);
+			$post_string = http_build_query($post_data);
 
 			$url = $this->param['send_url'];
 
@@ -84,9 +75,7 @@
 				-2	Sms limit reached
 				-3	No recipients
 				-5	Invalid Sender
-
-T
- *  */
+*/
 			if ($result == 1)
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
