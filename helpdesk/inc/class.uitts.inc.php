@@ -917,6 +917,7 @@ HTML;
 			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
 			self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
 			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
