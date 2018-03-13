@@ -330,9 +330,10 @@
 
 			if ($order_id)
 			{
-				$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$order_id}'", __LINE__, __FILE__);
+				$this->db->query("SELECT id, status FROM fm_tts_tickets WHERE order_id= '{$order_id}'", __LINE__, __FILE__);
 				$this->db->next_record();
 				$id = $this->db->f('id');
+				$old_status = $this->db->f('status');
 			}
 
 			if (!$id)
@@ -344,17 +345,36 @@
 			$this->db->query("UPDATE fm_tts_tickets SET external_project_id = '{$external_project}' WHERE id={$id}", __LINE__, __FILE__);
 
 			$ok = true;
-			if (preg_match('/(^C|^P)/i', $prosjektstatus))
-			{
-				$ticket = array
-					(
-					'status' => 'C8' //Avsluttet og fakturert (C)
-				);
 
-				if ($this->sotts->update_status($ticket, $id))
-				{
-					$this->updated_tickects_per_file[$id] = true;
-				}
+			$update_ticket = array();
+			switch ($prosjektstatus)
+			{
+				case 'C':
+				case 'P':
+					if($old_status != 'C8')
+					{
+						$update_ticket = array
+						(
+							'status' => 'C8' //Avsluttet og fakturert (C)
+						);
+					}
+					break;
+				case 'N':
+					if($old_status == 'C8')
+					{
+						$update_ticket = array
+						(
+							'status' => 'C7' //I bestilling/ under utføring (B)
+						);
+					}
+					break;
+				default:
+					break;
+			}
+
+			if ($update_ticket && $this->sotts->update_status($update_ticket, $id))
+			{
+				$this->updated_tickects_per_file[$id] = true;
 			}
 
 			return $ok;

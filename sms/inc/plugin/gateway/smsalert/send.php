@@ -30,8 +30,6 @@
 		{
 			$debug = empty($this->param['debug']) ? false : true;
 
-//			$sms_msg = utf8_decode($sms_msg);
-
 			$sms_to = ltrim($sms_to, '+');
 
 			if (strlen($sms_to) < 9)
@@ -41,23 +39,17 @@
 
 			$post_data = array
 			(
-				'username'	=> $this->param['login'],
-				'password'	=> $this->param['password'],
-				'message'	=> $sms_msg,
-				'sender'	=> (string)$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],
-				'receiver'	=> $sms_to
+				'sUser'	=> $this->param['login'],
+				'sPass'	=> $this->param['password'],
+				'sSM'	=> $sms_msg,
+				'sOriginator'	=> (string)$GLOBALS['phpgw_info']['sms_config']['common']['gateway_number'],
+				'sMSISDN'	=> $sms_to,
+				'nForeignId' => 0//$smslog_id
 			);
 
-			$post_items = array();
+			$url = 'smsalert.no/systorsmsvarious/systorsmsvarious.asmx/SendSM';
 
-			foreach ( $post_data as $key => $value)
-			{
-				$post_items[] = "{$key}={$value}";
-			}
-			//create the final string to be posted using implode()
-			$post_string = implode ('&', $post_items);
-
-			$url = $this->param['send_url'];
+			$post_string = http_build_query($post_data);
 
 			$ch = curl_init($url);
 
@@ -79,15 +71,10 @@
 			$result = new SimpleXMLElement($result_xml);
 
 /*
-				 1	Ok
-				-1	General error
-				-2	Sms limit reached
-				-3	No recipients
-				-5	Invalid Sender
-
-T
- *  */
-			if ($result == 1)
+				> 0	Ok
+				0	General error
+*/
+			if ($result > 0)
 			{
 				$this->setsmsdeliverystatus($smslog_id, $uid, 1);
 				$ret = true;
