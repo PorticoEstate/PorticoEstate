@@ -64,7 +64,7 @@
 		*
 		* @returns string the html needed for importing the css into a page
 		*/
-		function get_css_links()
+		function get_css_links($cache_refresh_token = '')
 		{
 			/**
 			* 'combine' Won't work for referencing images.
@@ -105,7 +105,7 @@
 									{
 										//echo "file: {$this->webserver_url}/{$app}/templates/{$tpl}/css/{$file}.css <br>";
 										$links .= <<<HTML
-					<link href="{$this->webserver_url}/{$app}/templates/{$tpl}/css/{$file}.css" type="text/css" rel="stylesheet">
+					<link href="{$this->webserver_url}/{$app}/templates/{$tpl}/css/{$file}.css{$cache_refresh_token}" type="text/css" rel="stylesheet">
 
 HTML;
 
@@ -131,7 +131,7 @@ HTML;
 					else
 					{
 						$links .= <<<HTML
-						<link href="{$this->webserver_url}/{$file}" type="text/css"  rel="stylesheet">
+						<link href="{$this->webserver_url}/{$file}{$cache_refresh_token}" type="text/css"  rel="stylesheet">
 
 HTML;
 					}
