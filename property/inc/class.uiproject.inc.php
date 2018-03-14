@@ -76,7 +76,8 @@
 			'get_ecodimb'	=> true,
 			'handle_multi_upload_file' => true,
 			'build_multi_upload_file' => true,
-			'get_files'				=> true
+			'get_files'				=> true,
+			'view_image'			=> true
 		);
 
 		function __construct()
@@ -167,6 +168,68 @@
 			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
 		}
 
+		function view_image()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$img_id = phpgw::get_var('img_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($img_id)
+			{
+				$file_info = $bofiles->vfs->get_info($img_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 100);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 100);
+				readfile($thumbfile);
+			}
+			else if ($img_id)
+			{
+				$bofiles->get_file($img_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -183,7 +246,8 @@
 
 
 			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
-			$values = $this->bo->read_single($id);
+
+			$values = $this->bo->get_files($id);
 
 			$content_files = array();
 			$img_types = array(
@@ -193,7 +257,7 @@
 			);
 
 			$z = 0;
-			foreach ($values['files'] as $_entry)
+			foreach ($values as $_entry)
 			{
 				$content_files[] = array(
 					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
@@ -205,7 +269,7 @@
 					$content_files[$z]['file_name'] = $_entry['name'];
 					$content_files[$z]['img_id'] = $_entry['file_id'];
 					$content_files[$z]['img_url'] = self::link(array(
-							'menuaction' => 'helpdesk.uiproject.view_image',
+							'menuaction' => 'property.uiproject.view_image',
 							'img_id'	=>  $_entry['file_id'],
 							'file' => $_entry['directory'] . '/' . $_entry['file_name']
 					));
@@ -2086,6 +2150,8 @@ JS;
 				(
 				array('key' => 'file_name', 'label' => lang('Filename'), 'sortable' => false,
 					'resizeable' => true),
+				array('key' => 'picture', 'label' => lang('picture'), 'sortable' => false,
+					'resizeable' => true, 'formatter' => 'JqueryPortico.showPicture'),
 				array('key' => 'delete_file', 'label' => lang('Delete file'), 'sortable' => false,
 					'resizeable' => true)
 			);
