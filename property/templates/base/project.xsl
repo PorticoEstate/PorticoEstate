@@ -909,6 +909,9 @@
 									</xsl:if>
 								</xsl:for-each>
 							</div>
+							<script type="text/javascript">
+								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+							</script>
 							<xsl:call-template name="file_upload"/>
 						</fieldset>
 					</div>
