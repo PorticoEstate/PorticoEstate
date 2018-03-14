@@ -460,3 +460,22 @@ window.get_location_exception = function (location_code)
 		}
 	});
 };
+
+this.fileuploader = function ()
+{
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+		close: true,
+		closejs: function ()
+		{
+			refresh_files()
+		}
+	});
+};
+
+this.refresh_files = function ()
+{
+	var oArgs = {menuaction:'property.uiproject.get_files',id:project_id};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper(oTable5, strURL);
+};

@@ -3066,9 +3066,6 @@ HTML;
 				'pref_send_mail' => isset($GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification']) ? $GLOBALS['phpgw_info']['user']['preferences']['property']['tts_user_mailnotification'] : '',
 				'fileupload' => isset($this->bo->config->config_data['fmttsfileupload']) ? $this->bo->config->config_data['fmttsfileupload'] : '',
 				'multiple_uploader' => true,
-				/*'fileuploader_action' => "{menuaction:'property.fileuploader.add',"
-				. "upload_target:'property.botts.addfiles',"
-				. "id:'{$id}'}",*/
 				'multi_upload_parans' => "{menuaction:'property.uitts.build_multi_upload_file', id:'{$id}'}",
 				'link_view_file' => $GLOBALS['phpgw']->link('/index.php', $link_file_data),
 				'link_to_files' => isset($this->bo->config->config_data['files_url']) ? $this->bo->config->config_data['files_url'] : '',

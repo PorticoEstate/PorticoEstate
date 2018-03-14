@@ -73,7 +73,10 @@
 			'get_vouchers' => true,
 			'check_missing_project_budget' => true,
 			'get_external_project'=> true,
-			'get_ecodimb'	=> true
+			'get_ecodimb'	=> true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true,
+			'get_files'				=> true
 		);
 
 		function __construct()
@@ -162,6 +165,122 @@
 					'perm' => 1, 'acl_location' => $this->acl_location));
 			}
 			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+		}
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'helpdesk.uiproject.view_file',
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+			$values = $this->bo->read_single($id);
+
+			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$z = 0;
+			foreach ($values['files'] as $_entry)
+			{
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'helpdesk.uiproject.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['base_dir'] = 'project/'.$id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uiproject.handle_multi_upload_file', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiproject.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
 
 		function columns()
@@ -2237,7 +2356,9 @@ JS;
 				'lang_edit' => lang('Edit'),
 				'decimal_separator' => $this->decimal_separator,
 				'validator' => phpgwapi_jquery::formvalidator_generate(array('location',
-					'date', 'security', 'file'))
+					'date', 'security', 'file')),
+				'multiple_uploader' => true,
+				'multi_upload_parans' => "{menuaction:'property.uiproject.build_multi_upload_file', id:'{$id}'}",
 			);
 
 			if ($auto_create)
