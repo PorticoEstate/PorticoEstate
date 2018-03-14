@@ -63,7 +63,7 @@
 	/**
 	* @global string $phpgw_info['server']['header_admin_password'] Setup administrator password
 	*/
-	$GLOBALS['phpgw_info']['server']['header_admin_password'] = 'portico-empty-start';
+	$GLOBALS['phpgw_info']['server']['header_admin_password'] = 'porticotest';
 
 	/**
 	* @global string $phpgw_info['server']['default_lang'] The default language
@@ -88,7 +88,7 @@
 		// Look at the README file
 		'db_type' => 'postgres',
 		'db_abstraction' => 'pdo',
-		'config_passwd' => 'portico-empty-start'
+		'config_passwd' => 'porticotest'
 	);
 
 

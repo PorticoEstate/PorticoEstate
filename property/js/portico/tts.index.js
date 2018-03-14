@@ -60,20 +60,6 @@ this.addFooterDatatable2 = function (nRow, aaData, iStart, iEnd, aiDisplay, oTab
 	}
 }
 
-$(document).ready(function ()
-{
-
-	$("#datatable-container").on("click", "tr", function ()
-	{
-
-		$('td', this).removeClass('priority1');
-		$('td', this).removeClass('priority2');
-		$('td', this).removeClass('priority3');
-
-	});
-
-});
-
 JqueryPortico.formatLinkRelated = function (key, oData)
 {
 
