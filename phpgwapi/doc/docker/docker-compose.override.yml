@@ -8,6 +8,8 @@ services:
 
   postgres:
     build: ./postgres
+    environment:
+      - PGDATA=/temp/pgdata
     ports:
       - "5432:5432"
 

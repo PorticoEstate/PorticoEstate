@@ -4,7 +4,7 @@ HEADER_INC_BACKUP=/var/www/html/portico/header.inc.php.backup
 TEST_HEADER_INC=/var/www/html/portico/phpgwapi/doc/docker/testrunner/test-header.inc.php
 
 #Wait for postgres container
-sleep 5
+sleep 10
 
 cd /var/www/html/portico
 composer install
