@@ -2,14 +2,15 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.10
--- Dumped by pg_dump version 9.6.6
+-- Dumped from database version 9.6.8
+-- Dumped by pg_dump version 9.6.8
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
@@ -28,13 +29,11 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
-SET search_path = public, pg_catalog;
-
 --
 -- Name: seq_controller_check_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_check_item
+CREATE SEQUENCE public.seq_controller_check_item
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -42,7 +41,7 @@ CREATE SEQUENCE seq_controller_check_item
     CACHE 1;
 
 
-ALTER TABLE seq_controller_check_item OWNER TO portico;
+ALTER TABLE public.seq_controller_check_item OWNER TO portico;
 
 SET default_tablespace = '';
 
@@ -52,20 +51,20 @@ SET default_with_oids = false;
 -- Name: controller_check_item; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_check_item (
-    id integer DEFAULT nextval('seq_controller_check_item'::regclass) NOT NULL,
+CREATE TABLE public.controller_check_item (
+    id integer DEFAULT nextval('public.seq_controller_check_item'::regclass) NOT NULL,
     control_item_id integer,
     check_list_id integer
 );
 
 
-ALTER TABLE controller_check_item OWNER TO portico;
+ALTER TABLE public.controller_check_item OWNER TO portico;
 
 --
 -- Name: seq_controller_check_item_case; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_check_item_case
+CREATE SEQUENCE public.seq_controller_check_item_case
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -73,14 +72,14 @@ CREATE SEQUENCE seq_controller_check_item_case
     CACHE 1;
 
 
-ALTER TABLE seq_controller_check_item_case OWNER TO portico;
+ALTER TABLE public.seq_controller_check_item_case OWNER TO portico;
 
 --
 -- Name: controller_check_item_case; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_check_item_case (
-    id integer DEFAULT nextval('seq_controller_check_item_case'::regclass) NOT NULL,
+CREATE TABLE public.controller_check_item_case (
+    id integer DEFAULT nextval('public.seq_controller_check_item_case'::regclass) NOT NULL,
     check_item_id integer NOT NULL,
     status integer NOT NULL,
     measurement character varying(50),
@@ -97,13 +96,13 @@ CREATE TABLE controller_check_item_case (
 );
 
 
-ALTER TABLE controller_check_item_case OWNER TO portico;
+ALTER TABLE public.controller_check_item_case OWNER TO portico;
 
 --
 -- Name: seq_controller_check_item_status; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_check_item_status
+CREATE SEQUENCE public.seq_controller_check_item_status
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -111,14 +110,14 @@ CREATE SEQUENCE seq_controller_check_item_status
     CACHE 1;
 
 
-ALTER TABLE seq_controller_check_item_status OWNER TO portico;
+ALTER TABLE public.seq_controller_check_item_status OWNER TO portico;
 
 --
 -- Name: controller_check_item_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_check_item_status (
-    id integer DEFAULT nextval('seq_controller_check_item_status'::regclass) NOT NULL,
+CREATE TABLE public.controller_check_item_status (
+    id integer DEFAULT nextval('public.seq_controller_check_item_status'::regclass) NOT NULL,
     name character varying(50) NOT NULL,
     open smallint,
     closed smallint,
@@ -127,13 +126,13 @@ CREATE TABLE controller_check_item_status (
 );
 
 
-ALTER TABLE controller_check_item_status OWNER TO portico;
+ALTER TABLE public.controller_check_item_status OWNER TO portico;
 
 --
 -- Name: seq_controller_check_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_check_list
+CREATE SEQUENCE public.seq_controller_check_list
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -141,14 +140,14 @@ CREATE SEQUENCE seq_controller_check_list
     CACHE 1;
 
 
-ALTER TABLE seq_controller_check_list OWNER TO portico;
+ALTER TABLE public.seq_controller_check_list OWNER TO portico;
 
 --
 -- Name: controller_check_list; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_check_list (
-    id integer DEFAULT nextval('seq_controller_check_list'::regclass) NOT NULL,
+CREATE TABLE public.controller_check_list (
+    id integer DEFAULT nextval('public.seq_controller_check_list'::regclass) NOT NULL,
     control_id integer,
     status smallint NOT NULL,
     comment text,
@@ -167,13 +166,13 @@ CREATE TABLE controller_check_list (
 );
 
 
-ALTER TABLE controller_check_list OWNER TO portico;
+ALTER TABLE public.controller_check_list OWNER TO portico;
 
 --
 -- Name: seq_controller_control; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control
+CREATE SEQUENCE public.seq_controller_control
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -181,14 +180,14 @@ CREATE SEQUENCE seq_controller_control
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control OWNER TO portico;
+ALTER TABLE public.seq_controller_control OWNER TO portico;
 
 --
 -- Name: controller_control; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control (
-    id integer DEFAULT nextval('seq_controller_control'::regclass) NOT NULL,
+CREATE TABLE public.controller_control (
+    id integer DEFAULT nextval('public.seq_controller_control'::regclass) NOT NULL,
     title character varying(100) NOT NULL,
     description text,
     start_date bigint,
@@ -204,13 +203,13 @@ CREATE TABLE controller_control (
 );
 
 
-ALTER TABLE controller_control OWNER TO portico;
+ALTER TABLE public.controller_control OWNER TO portico;
 
 --
 -- Name: seq_controller_control_component_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_component_list
+CREATE SEQUENCE public.seq_controller_control_component_list
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -218,14 +217,14 @@ CREATE SEQUENCE seq_controller_control_component_list
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_component_list OWNER TO portico;
+ALTER TABLE public.seq_controller_control_component_list OWNER TO portico;
 
 --
 -- Name: controller_control_component_list; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_component_list (
-    id integer DEFAULT nextval('seq_controller_control_component_list'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_component_list (
+    id integer DEFAULT nextval('public.seq_controller_control_component_list'::regclass) NOT NULL,
     control_id integer NOT NULL,
     location_id integer NOT NULL,
     component_id integer NOT NULL,
@@ -233,13 +232,13 @@ CREATE TABLE controller_control_component_list (
 );
 
 
-ALTER TABLE controller_control_component_list OWNER TO portico;
+ALTER TABLE public.controller_control_component_list OWNER TO portico;
 
 --
 -- Name: seq_controller_control_group; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_group
+CREATE SEQUENCE public.seq_controller_control_group
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -247,14 +246,14 @@ CREATE SEQUENCE seq_controller_control_group
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_group OWNER TO portico;
+ALTER TABLE public.seq_controller_control_group OWNER TO portico;
 
 --
 -- Name: controller_control_group; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_group (
-    id integer DEFAULT nextval('seq_controller_control_group'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_group (
+    id integer DEFAULT nextval('public.seq_controller_control_group'::regclass) NOT NULL,
     group_name character varying(255) NOT NULL,
     procedure_id integer,
     control_area_id integer,
@@ -264,13 +263,13 @@ CREATE TABLE controller_control_group (
 );
 
 
-ALTER TABLE controller_control_group OWNER TO portico;
+ALTER TABLE public.controller_control_group OWNER TO portico;
 
 --
 -- Name: seq_controller_control_group_component_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_group_component_list
+CREATE SEQUENCE public.seq_controller_control_group_component_list
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -278,26 +277,26 @@ CREATE SEQUENCE seq_controller_control_group_component_list
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_group_component_list OWNER TO portico;
+ALTER TABLE public.seq_controller_control_group_component_list OWNER TO portico;
 
 --
 -- Name: controller_control_group_component_list; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_group_component_list (
-    id integer DEFAULT nextval('seq_controller_control_group_component_list'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_group_component_list (
+    id integer DEFAULT nextval('public.seq_controller_control_group_component_list'::regclass) NOT NULL,
     control_group_id integer NOT NULL,
     location_id integer NOT NULL
 );
 
 
-ALTER TABLE controller_control_group_component_list OWNER TO portico;
+ALTER TABLE public.controller_control_group_component_list OWNER TO portico;
 
 --
 -- Name: seq_controller_control_group_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_group_list
+CREATE SEQUENCE public.seq_controller_control_group_list
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -305,27 +304,27 @@ CREATE SEQUENCE seq_controller_control_group_list
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_group_list OWNER TO portico;
+ALTER TABLE public.seq_controller_control_group_list OWNER TO portico;
 
 --
 -- Name: controller_control_group_list; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_group_list (
-    id integer DEFAULT nextval('seq_controller_control_group_list'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_group_list (
+    id integer DEFAULT nextval('public.seq_controller_control_group_list'::regclass) NOT NULL,
     control_id integer NOT NULL,
     control_group_id integer NOT NULL,
     order_nr integer
 );
 
 
-ALTER TABLE controller_control_group_list OWNER TO portico;
+ALTER TABLE public.controller_control_group_list OWNER TO portico;
 
 --
 -- Name: seq_controller_control_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_item
+CREATE SEQUENCE public.seq_controller_control_item
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -333,14 +332,14 @@ CREATE SEQUENCE seq_controller_control_item
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_item OWNER TO portico;
+ALTER TABLE public.seq_controller_control_item OWNER TO portico;
 
 --
 -- Name: controller_control_item; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_item (
-    id integer DEFAULT nextval('seq_controller_control_item'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_item (
+    id integer DEFAULT nextval('public.seq_controller_control_item'::regclass) NOT NULL,
     title character varying(255) NOT NULL,
     required boolean DEFAULT false,
     what_to_do text NOT NULL,
@@ -351,13 +350,13 @@ CREATE TABLE controller_control_item (
 );
 
 
-ALTER TABLE controller_control_item OWNER TO portico;
+ALTER TABLE public.controller_control_item OWNER TO portico;
 
 --
 -- Name: seq_controller_control_item_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_item_list
+CREATE SEQUENCE public.seq_controller_control_item_list
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -365,27 +364,27 @@ CREATE SEQUENCE seq_controller_control_item_list
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_item_list OWNER TO portico;
+ALTER TABLE public.seq_controller_control_item_list OWNER TO portico;
 
 --
 -- Name: controller_control_item_list; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_item_list (
-    id integer DEFAULT nextval('seq_controller_control_item_list'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_item_list (
+    id integer DEFAULT nextval('public.seq_controller_control_item_list'::regclass) NOT NULL,
     control_id integer,
     control_item_id integer,
     order_nr integer
 );
 
 
-ALTER TABLE controller_control_item_list OWNER TO portico;
+ALTER TABLE public.controller_control_item_list OWNER TO portico;
 
 --
 -- Name: seq_controller_control_item_option; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_item_option
+CREATE SEQUENCE public.seq_controller_control_item_option
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -393,26 +392,26 @@ CREATE SEQUENCE seq_controller_control_item_option
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_item_option OWNER TO portico;
+ALTER TABLE public.seq_controller_control_item_option OWNER TO portico;
 
 --
 -- Name: controller_control_item_option; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_item_option (
-    id integer DEFAULT nextval('seq_controller_control_item_option'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_item_option (
+    id integer DEFAULT nextval('public.seq_controller_control_item_option'::regclass) NOT NULL,
     option_value character varying(255) NOT NULL,
     control_item_id integer
 );
 
 
-ALTER TABLE controller_control_item_option OWNER TO portico;
+ALTER TABLE public.controller_control_item_option OWNER TO portico;
 
 --
 -- Name: seq_controller_control_location_list; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_location_list
+CREATE SEQUENCE public.seq_controller_control_location_list
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -420,26 +419,26 @@ CREATE SEQUENCE seq_controller_control_location_list
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_location_list OWNER TO portico;
+ALTER TABLE public.seq_controller_control_location_list OWNER TO portico;
 
 --
 -- Name: controller_control_location_list; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_location_list (
-    id integer DEFAULT nextval('seq_controller_control_location_list'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_location_list (
+    id integer DEFAULT nextval('public.seq_controller_control_location_list'::regclass) NOT NULL,
     control_id integer NOT NULL,
     location_code character varying(30) NOT NULL
 );
 
 
-ALTER TABLE controller_control_location_list OWNER TO portico;
+ALTER TABLE public.controller_control_location_list OWNER TO portico;
 
 --
 -- Name: seq_controller_control_serie; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_serie
+CREATE SEQUENCE public.seq_controller_control_serie
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -447,14 +446,14 @@ CREATE SEQUENCE seq_controller_control_serie
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_serie OWNER TO portico;
+ALTER TABLE public.seq_controller_control_serie OWNER TO portico;
 
 --
 -- Name: controller_control_serie; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_serie (
-    id integer DEFAULT nextval('seq_controller_control_serie'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_serie (
+    id integer DEFAULT nextval('public.seq_controller_control_serie'::regclass) NOT NULL,
     control_relation_id integer NOT NULL,
     control_relation_type character varying(10) NOT NULL,
     assigned_to integer,
@@ -467,13 +466,13 @@ CREATE TABLE controller_control_serie (
 );
 
 
-ALTER TABLE controller_control_serie OWNER TO portico;
+ALTER TABLE public.controller_control_serie OWNER TO portico;
 
 --
 -- Name: seq_controller_control_serie_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_control_serie_history
+CREATE SEQUENCE public.seq_controller_control_serie_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -481,27 +480,27 @@ CREATE SEQUENCE seq_controller_control_serie_history
     CACHE 1;
 
 
-ALTER TABLE seq_controller_control_serie_history OWNER TO portico;
+ALTER TABLE public.seq_controller_control_serie_history OWNER TO portico;
 
 --
 -- Name: controller_control_serie_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_control_serie_history (
-    id integer DEFAULT nextval('seq_controller_control_serie_history'::regclass) NOT NULL,
+CREATE TABLE public.controller_control_serie_history (
+    id integer DEFAULT nextval('public.seq_controller_control_serie_history'::regclass) NOT NULL,
     serie_id integer NOT NULL,
     assigned_to integer NOT NULL,
     assigned_date bigint NOT NULL
 );
 
 
-ALTER TABLE controller_control_serie_history OWNER TO portico;
+ALTER TABLE public.controller_control_serie_history OWNER TO portico;
 
 --
 -- Name: seq_controller_document; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_document
+CREATE SEQUENCE public.seq_controller_document
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -509,14 +508,14 @@ CREATE SEQUENCE seq_controller_document
     CACHE 1;
 
 
-ALTER TABLE seq_controller_document OWNER TO portico;
+ALTER TABLE public.seq_controller_document OWNER TO portico;
 
 --
 -- Name: controller_document; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_document (
-    id integer DEFAULT nextval('seq_controller_document'::regclass) NOT NULL,
+CREATE TABLE public.controller_document (
+    id integer DEFAULT nextval('public.seq_controller_document'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     procedure_id integer,
     title character varying(255),
@@ -525,13 +524,13 @@ CREATE TABLE controller_document (
 );
 
 
-ALTER TABLE controller_document OWNER TO portico;
+ALTER TABLE public.controller_document OWNER TO portico;
 
 --
 -- Name: seq_controller_document_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_document_types
+CREATE SEQUENCE public.seq_controller_document_types
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -539,25 +538,25 @@ CREATE SEQUENCE seq_controller_document_types
     CACHE 1;
 
 
-ALTER TABLE seq_controller_document_types OWNER TO portico;
+ALTER TABLE public.seq_controller_document_types OWNER TO portico;
 
 --
 -- Name: controller_document_types; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_document_types (
-    id integer DEFAULT nextval('seq_controller_document_types'::regclass) NOT NULL,
+CREATE TABLE public.controller_document_types (
+    id integer DEFAULT nextval('public.seq_controller_document_types'::regclass) NOT NULL,
     title character varying(255) NOT NULL
 );
 
 
-ALTER TABLE controller_document_types OWNER TO portico;
+ALTER TABLE public.controller_document_types OWNER TO portico;
 
 --
 -- Name: seq_controller_procedure; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_controller_procedure
+CREATE SEQUENCE public.seq_controller_procedure
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -565,14 +564,14 @@ CREATE SEQUENCE seq_controller_procedure
     CACHE 1;
 
 
-ALTER TABLE seq_controller_procedure OWNER TO portico;
+ALTER TABLE public.seq_controller_procedure OWNER TO portico;
 
 --
 -- Name: controller_procedure; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE controller_procedure (
-    id integer DEFAULT nextval('seq_controller_procedure'::regclass) NOT NULL,
+CREATE TABLE public.controller_procedure (
+    id integer DEFAULT nextval('public.seq_controller_procedure'::regclass) NOT NULL,
     title character varying(255) NOT NULL,
     purpose text,
     responsibility text,
@@ -590,13 +589,13 @@ CREATE TABLE controller_procedure (
 );
 
 
-ALTER TABLE controller_procedure OWNER TO portico;
+ALTER TABLE public.controller_procedure OWNER TO portico;
 
 --
 -- Name: seq_fm_action_pending; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_action_pending
+CREATE SEQUENCE public.seq_fm_action_pending
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -604,14 +603,14 @@ CREATE SEQUENCE seq_fm_action_pending
     CACHE 1;
 
 
-ALTER TABLE seq_fm_action_pending OWNER TO portico;
+ALTER TABLE public.seq_fm_action_pending OWNER TO portico;
 
 --
 -- Name: fm_action_pending; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_action_pending (
-    id integer DEFAULT nextval('seq_fm_action_pending'::regclass) NOT NULL,
+CREATE TABLE public.fm_action_pending (
+    id integer DEFAULT nextval('public.seq_fm_action_pending'::regclass) NOT NULL,
     item_id bigint NOT NULL,
     location_id integer NOT NULL,
     responsible integer NOT NULL,
@@ -629,13 +628,13 @@ CREATE TABLE fm_action_pending (
 );
 
 
-ALTER TABLE fm_action_pending OWNER TO portico;
+ALTER TABLE public.fm_action_pending OWNER TO portico;
 
 --
 -- Name: seq_fm_action_pending_category; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_action_pending_category
+CREATE SEQUENCE public.seq_fm_action_pending_category
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -643,27 +642,27 @@ CREATE SEQUENCE seq_fm_action_pending_category
     CACHE 1;
 
 
-ALTER TABLE seq_fm_action_pending_category OWNER TO portico;
+ALTER TABLE public.seq_fm_action_pending_category OWNER TO portico;
 
 --
 -- Name: fm_action_pending_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_action_pending_category (
-    id integer DEFAULT nextval('seq_fm_action_pending_category'::regclass) NOT NULL,
+CREATE TABLE public.fm_action_pending_category (
+    id integer DEFAULT nextval('public.seq_fm_action_pending_category'::regclass) NOT NULL,
     num character varying(25),
     name character varying(50),
     descr text
 );
 
 
-ALTER TABLE fm_action_pending_category OWNER TO portico;
+ALTER TABLE public.fm_action_pending_category OWNER TO portico;
 
 --
 -- Name: fm_activities; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_activities (
+CREATE TABLE public.fm_activities (
     id integer NOT NULL,
     num character varying(25) NOT NULL,
     base_descr text,
@@ -679,13 +678,13 @@ CREATE TABLE fm_activities (
 );
 
 
-ALTER TABLE fm_activities OWNER TO portico;
+ALTER TABLE public.fm_activities OWNER TO portico;
 
 --
 -- Name: fm_activity_price_index; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_activity_price_index (
+CREATE TABLE public.fm_activity_price_index (
     activity_id integer NOT NULL,
     agreement_id integer NOT NULL,
     index_count integer NOT NULL,
@@ -700,13 +699,13 @@ CREATE TABLE fm_activity_price_index (
 );
 
 
-ALTER TABLE fm_activity_price_index OWNER TO portico;
+ALTER TABLE public.fm_activity_price_index OWNER TO portico;
 
 --
 -- Name: fm_agreement; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_agreement (
+CREATE TABLE public.fm_agreement (
     group_id integer NOT NULL,
     id integer NOT NULL,
     vendor_id integer NOT NULL,
@@ -723,13 +722,13 @@ CREATE TABLE fm_agreement (
 );
 
 
-ALTER TABLE fm_agreement OWNER TO portico;
+ALTER TABLE public.fm_agreement OWNER TO portico;
 
 --
 -- Name: fm_agreement_group; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_agreement_group (
+CREATE TABLE public.fm_agreement_group (
     id integer NOT NULL,
     num character varying(25) NOT NULL,
     descr character varying(50) NOT NULL,
@@ -737,25 +736,25 @@ CREATE TABLE fm_agreement_group (
 );
 
 
-ALTER TABLE fm_agreement_group OWNER TO portico;
+ALTER TABLE public.fm_agreement_group OWNER TO portico;
 
 --
 -- Name: fm_agreement_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_agreement_status (
+CREATE TABLE public.fm_agreement_status (
     id character varying(20) NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_agreement_status OWNER TO portico;
+ALTER TABLE public.fm_agreement_status OWNER TO portico;
 
 --
 -- Name: fm_async_method; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_async_method (
+CREATE TABLE public.fm_async_method (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     data text,
@@ -763,13 +762,13 @@ CREATE TABLE fm_async_method (
 );
 
 
-ALTER TABLE fm_async_method OWNER TO portico;
+ALTER TABLE public.fm_async_method OWNER TO portico;
 
 --
 -- Name: fm_authorities_demands; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_authorities_demands (
+CREATE TABLE public.fm_authorities_demands (
     id integer NOT NULL,
     name character varying(200) NOT NULL,
     user_id integer,
@@ -778,13 +777,13 @@ CREATE TABLE fm_authorities_demands (
 );
 
 
-ALTER TABLE fm_authorities_demands OWNER TO portico;
+ALTER TABLE public.fm_authorities_demands OWNER TO portico;
 
 --
 -- Name: fm_b_account; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_b_account (
+CREATE TABLE public.fm_b_account (
     id character varying(20) NOT NULL,
     category integer NOT NULL,
     descr character varying(100) NOT NULL,
@@ -797,13 +796,13 @@ CREATE TABLE fm_b_account (
 );
 
 
-ALTER TABLE fm_b_account OWNER TO portico;
+ALTER TABLE public.fm_b_account OWNER TO portico;
 
 --
 -- Name: fm_b_account_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_b_account_category (
+CREATE TABLE public.fm_b_account_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL,
     active smallint DEFAULT 0,
@@ -811,26 +810,26 @@ CREATE TABLE fm_b_account_category (
 );
 
 
-ALTER TABLE fm_b_account_category OWNER TO portico;
+ALTER TABLE public.fm_b_account_category OWNER TO portico;
 
 --
 -- Name: fm_branch; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_branch (
+CREATE TABLE public.fm_branch (
     id integer NOT NULL,
     num character varying(20) NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_branch OWNER TO portico;
+ALTER TABLE public.fm_branch OWNER TO portico;
 
 --
 -- Name: fm_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_budget (
+CREATE TABLE public.fm_budget (
     id integer NOT NULL,
     year integer NOT NULL,
     b_account_id character varying(20) NOT NULL,
@@ -846,13 +845,13 @@ CREATE TABLE fm_budget (
 );
 
 
-ALTER TABLE fm_budget OWNER TO portico;
+ALTER TABLE public.fm_budget OWNER TO portico;
 
 --
 -- Name: fm_budget_basis; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_budget_basis (
+CREATE TABLE public.fm_budget_basis (
     id integer NOT NULL,
     year integer NOT NULL,
     b_group character varying(4) NOT NULL,
@@ -869,13 +868,13 @@ CREATE TABLE fm_budget_basis (
 );
 
 
-ALTER TABLE fm_budget_basis OWNER TO portico;
+ALTER TABLE public.fm_budget_basis OWNER TO portico;
 
 --
 -- Name: seq_fm_budget_cost; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_budget_cost
+CREATE SEQUENCE public.seq_fm_budget_cost
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -883,14 +882,14 @@ CREATE SEQUENCE seq_fm_budget_cost
     CACHE 1;
 
 
-ALTER TABLE seq_fm_budget_cost OWNER TO portico;
+ALTER TABLE public.seq_fm_budget_cost OWNER TO portico;
 
 --
 -- Name: fm_budget_cost; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_budget_cost (
-    id integer DEFAULT nextval('seq_fm_budget_cost'::regclass) NOT NULL,
+CREATE TABLE public.fm_budget_cost (
+    id integer DEFAULT nextval('public.seq_fm_budget_cost'::regclass) NOT NULL,
     year integer NOT NULL,
     month integer NOT NULL,
     b_account_id character varying(20) NOT NULL,
@@ -898,13 +897,13 @@ CREATE TABLE fm_budget_cost (
 );
 
 
-ALTER TABLE fm_budget_cost OWNER TO portico;
+ALTER TABLE public.fm_budget_cost OWNER TO portico;
 
 --
 -- Name: fm_budget_period; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_budget_period (
+CREATE TABLE public.fm_budget_period (
     year integer NOT NULL,
     month integer NOT NULL,
     b_account_id character varying(4) NOT NULL,
@@ -915,13 +914,13 @@ CREATE TABLE fm_budget_period (
 );
 
 
-ALTER TABLE fm_budget_period OWNER TO portico;
+ALTER TABLE public.fm_budget_period OWNER TO portico;
 
 --
 -- Name: fm_building_part; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_building_part (
+CREATE TABLE public.fm_building_part (
     id character varying(5) NOT NULL,
     descr character varying(50),
     filter_1 smallint,
@@ -931,37 +930,37 @@ CREATE TABLE fm_building_part (
 );
 
 
-ALTER TABLE fm_building_part OWNER TO portico;
+ALTER TABLE public.fm_building_part OWNER TO portico;
 
 --
 -- Name: fm_cache; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_cache (
+CREATE TABLE public.fm_cache (
     name character varying(50) NOT NULL,
     value text
 );
 
 
-ALTER TABLE fm_cache OWNER TO portico;
+ALTER TABLE public.fm_cache OWNER TO portico;
 
 --
 -- Name: fm_chapter; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_chapter (
+CREATE TABLE public.fm_chapter (
     id integer NOT NULL,
     descr character varying(50) NOT NULL
 );
 
 
-ALTER TABLE fm_chapter OWNER TO portico;
+ALTER TABLE public.fm_chapter OWNER TO portico;
 
 --
 -- Name: fm_condition_survey; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_condition_survey (
+CREATE TABLE public.fm_condition_survey (
     id integer NOT NULL,
     title character varying(255) NOT NULL,
     p_num character varying(15),
@@ -986,13 +985,13 @@ CREATE TABLE fm_condition_survey (
 );
 
 
-ALTER TABLE fm_condition_survey OWNER TO portico;
+ALTER TABLE public.fm_condition_survey OWNER TO portico;
 
 --
 -- Name: seq_fm_condition_survey_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_condition_survey_history
+CREATE SEQUENCE public.seq_fm_condition_survey_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1000,14 +999,14 @@ CREATE SEQUENCE seq_fm_condition_survey_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_condition_survey_history OWNER TO portico;
+ALTER TABLE public.seq_fm_condition_survey_history OWNER TO portico;
 
 --
 -- Name: fm_condition_survey_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_condition_survey_history (
-    history_id integer DEFAULT nextval('seq_fm_condition_survey_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_condition_survey_history (
+    history_id integer DEFAULT nextval('public.seq_fm_condition_survey_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -1018,13 +1017,13 @@ CREATE TABLE fm_condition_survey_history (
 );
 
 
-ALTER TABLE fm_condition_survey_history OWNER TO portico;
+ALTER TABLE public.fm_condition_survey_history OWNER TO portico;
 
 --
 -- Name: fm_condition_survey_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_condition_survey_status (
+CREATE TABLE public.fm_condition_survey_status (
     id integer NOT NULL,
     descr character varying(255) NOT NULL,
     closed smallint,
@@ -1034,13 +1033,13 @@ CREATE TABLE fm_condition_survey_status (
 );
 
 
-ALTER TABLE fm_condition_survey_status OWNER TO portico;
+ALTER TABLE public.fm_condition_survey_status OWNER TO portico;
 
 --
 -- Name: seq_fm_cron_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_cron_log
+CREATE SEQUENCE public.seq_fm_cron_log
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1048,14 +1047,14 @@ CREATE SEQUENCE seq_fm_cron_log
     CACHE 1;
 
 
-ALTER TABLE seq_fm_cron_log OWNER TO portico;
+ALTER TABLE public.seq_fm_cron_log OWNER TO portico;
 
 --
 -- Name: fm_cron_log; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_cron_log (
-    id integer DEFAULT nextval('seq_fm_cron_log'::regclass) NOT NULL,
+CREATE TABLE public.fm_cron_log (
+    id integer DEFAULT nextval('public.seq_fm_cron_log'::regclass) NOT NULL,
     cron smallint,
     cron_date timestamp without time zone DEFAULT now() NOT NULL,
     process character varying(255) NOT NULL,
@@ -1063,13 +1062,13 @@ CREATE TABLE fm_cron_log (
 );
 
 
-ALTER TABLE fm_cron_log OWNER TO portico;
+ALTER TABLE public.fm_cron_log OWNER TO portico;
 
 --
 -- Name: fm_custom; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_custom (
+CREATE TABLE public.fm_custom (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
     sql_text text NOT NULL,
@@ -1078,13 +1077,13 @@ CREATE TABLE fm_custom (
 );
 
 
-ALTER TABLE fm_custom OWNER TO portico;
+ALTER TABLE public.fm_custom OWNER TO portico;
 
 --
 -- Name: fm_custom_cols; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_custom_cols (
+CREATE TABLE public.fm_custom_cols (
     custom_id integer NOT NULL,
     id integer NOT NULL,
     name character varying(100) NOT NULL,
@@ -1093,13 +1092,13 @@ CREATE TABLE fm_custom_cols (
 );
 
 
-ALTER TABLE fm_custom_cols OWNER TO portico;
+ALTER TABLE public.fm_custom_cols OWNER TO portico;
 
 --
 -- Name: seq_fm_custom_menu_items; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_custom_menu_items
+CREATE SEQUENCE public.seq_fm_custom_menu_items
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1107,14 +1106,14 @@ CREATE SEQUENCE seq_fm_custom_menu_items
     CACHE 1;
 
 
-ALTER TABLE seq_fm_custom_menu_items OWNER TO portico;
+ALTER TABLE public.seq_fm_custom_menu_items OWNER TO portico;
 
 --
 -- Name: fm_custom_menu_items; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_custom_menu_items (
-    id integer DEFAULT nextval('seq_fm_custom_menu_items'::regclass) NOT NULL,
+CREATE TABLE public.fm_custom_menu_items (
+    id integer DEFAULT nextval('public.seq_fm_custom_menu_items'::regclass) NOT NULL,
     parent_id integer,
     text character varying(200) NOT NULL,
     url text,
@@ -1127,26 +1126,26 @@ CREATE TABLE fm_custom_menu_items (
 );
 
 
-ALTER TABLE fm_custom_menu_items OWNER TO portico;
+ALTER TABLE public.fm_custom_menu_items OWNER TO portico;
 
 --
 -- Name: fm_district; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_district (
+CREATE TABLE public.fm_district (
     id smallint NOT NULL,
     descr character varying(50),
     delivery_address text
 );
 
 
-ALTER TABLE fm_district OWNER TO portico;
+ALTER TABLE public.fm_district OWNER TO portico;
 
 --
 -- Name: seq_fm_document; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_document
+CREATE SEQUENCE public.seq_fm_document
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1154,14 +1153,14 @@ CREATE SEQUENCE seq_fm_document
     CACHE 1;
 
 
-ALTER TABLE seq_fm_document OWNER TO portico;
+ALTER TABLE public.seq_fm_document OWNER TO portico;
 
 --
 -- Name: fm_document; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_document (
-    id integer DEFAULT nextval('seq_fm_document'::regclass) NOT NULL,
+CREATE TABLE public.fm_document (
+    id integer DEFAULT nextval('public.seq_fm_document'::regclass) NOT NULL,
     title character varying(100),
     document_name character varying(50),
     link text,
@@ -1188,13 +1187,13 @@ CREATE TABLE fm_document (
 );
 
 
-ALTER TABLE fm_document OWNER TO portico;
+ALTER TABLE public.fm_document OWNER TO portico;
 
 --
 -- Name: seq_fm_document_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_document_history
+CREATE SEQUENCE public.seq_fm_document_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1202,14 +1201,14 @@ CREATE SEQUENCE seq_fm_document_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_document_history OWNER TO portico;
+ALTER TABLE public.seq_fm_document_history OWNER TO portico;
 
 --
 -- Name: fm_document_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_document_history (
-    history_id integer DEFAULT nextval('seq_fm_document_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_document_history (
+    history_id integer DEFAULT nextval('public.seq_fm_document_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -1220,13 +1219,13 @@ CREATE TABLE fm_document_history (
 );
 
 
-ALTER TABLE fm_document_history OWNER TO portico;
+ALTER TABLE public.fm_document_history OWNER TO portico;
 
 --
 -- Name: seq_fm_document_relation; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_document_relation
+CREATE SEQUENCE public.seq_fm_document_relation
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1234,14 +1233,14 @@ CREATE SEQUENCE seq_fm_document_relation
     CACHE 1;
 
 
-ALTER TABLE seq_fm_document_relation OWNER TO portico;
+ALTER TABLE public.seq_fm_document_relation OWNER TO portico;
 
 --
 -- Name: fm_document_relation; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_document_relation (
-    id integer DEFAULT nextval('seq_fm_document_relation'::regclass) NOT NULL,
+CREATE TABLE public.fm_document_relation (
+    id integer DEFAULT nextval('public.seq_fm_document_relation'::regclass) NOT NULL,
     document_id integer NOT NULL,
     location_id integer NOT NULL,
     location_item_id integer NOT NULL,
@@ -1249,25 +1248,25 @@ CREATE TABLE fm_document_relation (
 );
 
 
-ALTER TABLE fm_document_relation OWNER TO portico;
+ALTER TABLE public.fm_document_relation OWNER TO portico;
 
 --
 -- Name: fm_document_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_document_status (
+CREATE TABLE public.fm_document_status (
     id character varying(20) NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_document_status OWNER TO portico;
+ALTER TABLE public.fm_document_status OWNER TO portico;
 
 --
 -- Name: seq_fm_eco_period_transition; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_eco_period_transition
+CREATE SEQUENCE public.seq_fm_eco_period_transition
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1275,14 +1274,14 @@ CREATE SEQUENCE seq_fm_eco_period_transition
     CACHE 1;
 
 
-ALTER TABLE seq_fm_eco_period_transition OWNER TO portico;
+ALTER TABLE public.seq_fm_eco_period_transition OWNER TO portico;
 
 --
 -- Name: fm_eco_period_transition; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_eco_period_transition (
-    id integer DEFAULT nextval('seq_fm_eco_period_transition'::regclass) NOT NULL,
+CREATE TABLE public.fm_eco_period_transition (
+    id integer DEFAULT nextval('public.seq_fm_eco_period_transition'::regclass) NOT NULL,
     month integer NOT NULL,
     day integer,
     hour integer,
@@ -1293,26 +1292,26 @@ CREATE TABLE fm_eco_period_transition (
 );
 
 
-ALTER TABLE fm_eco_period_transition OWNER TO portico;
+ALTER TABLE public.fm_eco_period_transition OWNER TO portico;
 
 --
 -- Name: fm_eco_periodization; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_eco_periodization (
+CREATE TABLE public.fm_eco_periodization (
     id integer NOT NULL,
     descr character varying(64) NOT NULL,
     active smallint DEFAULT 0
 );
 
 
-ALTER TABLE fm_eco_periodization OWNER TO portico;
+ALTER TABLE public.fm_eco_periodization OWNER TO portico;
 
 --
 -- Name: seq_fm_eco_periodization_outline; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_eco_periodization_outline
+CREATE SEQUENCE public.seq_fm_eco_periodization_outline
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1320,14 +1319,14 @@ CREATE SEQUENCE seq_fm_eco_periodization_outline
     CACHE 1;
 
 
-ALTER TABLE seq_fm_eco_periodization_outline OWNER TO portico;
+ALTER TABLE public.seq_fm_eco_periodization_outline OWNER TO portico;
 
 --
 -- Name: fm_eco_periodization_outline; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_eco_periodization_outline (
-    id integer DEFAULT nextval('seq_fm_eco_periodization_outline'::regclass) NOT NULL,
+CREATE TABLE public.fm_eco_periodization_outline (
+    id integer DEFAULT nextval('public.seq_fm_eco_periodization_outline'::regclass) NOT NULL,
     periodization_id integer NOT NULL,
     month integer,
     value numeric(20,6) DEFAULT 0.000000 NOT NULL,
@@ -1337,38 +1336,38 @@ CREATE TABLE fm_eco_periodization_outline (
 );
 
 
-ALTER TABLE fm_eco_periodization_outline OWNER TO portico;
+ALTER TABLE public.fm_eco_periodization_outline OWNER TO portico;
 
 --
 -- Name: fm_eco_service; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_eco_service (
+CREATE TABLE public.fm_eco_service (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     active smallint DEFAULT 1
 );
 
 
-ALTER TABLE fm_eco_service OWNER TO portico;
+ALTER TABLE public.fm_eco_service OWNER TO portico;
 
 --
 -- Name: fm_ecoart; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecoart (
+CREATE TABLE public.fm_ecoart (
     id integer NOT NULL,
     descr character varying(25) NOT NULL
 );
 
 
-ALTER TABLE fm_ecoart OWNER TO portico;
+ALTER TABLE public.fm_ecoart OWNER TO portico;
 
 --
 -- Name: fm_ecoavvik; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecoavvik (
+CREATE TABLE public.fm_ecoavvik (
     bilagsnr integer NOT NULL,
     belop numeric(20,2) DEFAULT 0 NOT NULL,
     fakturadato timestamp without time zone NOT NULL,
@@ -1388,13 +1387,13 @@ CREATE TABLE fm_ecoavvik (
 );
 
 
-ALTER TABLE fm_ecoavvik OWNER TO portico;
+ALTER TABLE public.fm_ecoavvik OWNER TO portico;
 
 --
 -- Name: seq_fm_ecobilag; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_ecobilag
+CREATE SEQUENCE public.seq_fm_ecobilag
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1402,14 +1401,14 @@ CREATE SEQUENCE seq_fm_ecobilag
     CACHE 1;
 
 
-ALTER TABLE seq_fm_ecobilag OWNER TO portico;
+ALTER TABLE public.seq_fm_ecobilag OWNER TO portico;
 
 --
 -- Name: fm_ecobilag; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecobilag (
-    id integer DEFAULT nextval('seq_fm_ecobilag'::regclass) NOT NULL,
+CREATE TABLE public.fm_ecobilag (
+    id integer DEFAULT nextval('public.seq_fm_ecobilag'::regclass) NOT NULL,
     bilagsnr integer NOT NULL,
     bilagsnr_ut integer NOT NULL,
     kidnr character varying(30),
@@ -1459,25 +1458,25 @@ CREATE TABLE fm_ecobilag (
 );
 
 
-ALTER TABLE fm_ecobilag OWNER TO portico;
+ALTER TABLE public.fm_ecobilag OWNER TO portico;
 
 --
 -- Name: fm_ecobilag_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecobilag_category (
+CREATE TABLE public.fm_ecobilag_category (
     id smallint NOT NULL,
     descr character varying(25) NOT NULL
 );
 
 
-ALTER TABLE fm_ecobilag_category OWNER TO portico;
+ALTER TABLE public.fm_ecobilag_category OWNER TO portico;
 
 --
 -- Name: fm_ecobilag_process_code; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecobilag_process_code (
+CREATE TABLE public.fm_ecobilag_process_code (
     id character varying(10) NOT NULL,
     name character varying(200) NOT NULL,
     user_id integer,
@@ -1486,13 +1485,13 @@ CREATE TABLE fm_ecobilag_process_code (
 );
 
 
-ALTER TABLE fm_ecobilag_process_code OWNER TO portico;
+ALTER TABLE public.fm_ecobilag_process_code OWNER TO portico;
 
 --
 -- Name: seq_fm_ecobilag_process_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_ecobilag_process_log
+CREATE SEQUENCE public.seq_fm_ecobilag_process_log
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1500,14 +1499,14 @@ CREATE SEQUENCE seq_fm_ecobilag_process_log
     CACHE 1;
 
 
-ALTER TABLE seq_fm_ecobilag_process_log OWNER TO portico;
+ALTER TABLE public.seq_fm_ecobilag_process_log OWNER TO portico;
 
 --
 -- Name: fm_ecobilag_process_log; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecobilag_process_log (
-    id integer DEFAULT nextval('seq_fm_ecobilag_process_log'::regclass) NOT NULL,
+CREATE TABLE public.fm_ecobilag_process_log (
+    id integer DEFAULT nextval('public.seq_fm_ecobilag_process_log'::regclass) NOT NULL,
     bilagsnr integer NOT NULL,
     process_code character varying(10),
     process_log text,
@@ -1517,41 +1516,41 @@ CREATE TABLE fm_ecobilag_process_log (
 );
 
 
-ALTER TABLE fm_ecobilag_process_log OWNER TO portico;
+ALTER TABLE public.fm_ecobilag_process_log OWNER TO portico;
 
 --
 -- Name: fm_ecobilag_sum_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_ecobilag_sum_view AS
+CREATE VIEW public.fm_ecobilag_sum_view AS
  SELECT DISTINCT fm_ecobilag.bilagsnr,
     sum(fm_ecobilag.godkjentbelop) AS approved_amount,
     sum(fm_ecobilag.belop) AS amount
-   FROM fm_ecobilag
+   FROM public.fm_ecobilag
   GROUP BY fm_ecobilag.bilagsnr
   ORDER BY fm_ecobilag.bilagsnr;
 
 
-ALTER TABLE fm_ecobilag_sum_view OWNER TO portico;
+ALTER TABLE public.fm_ecobilag_sum_view OWNER TO portico;
 
 --
 -- Name: fm_ecobilagkilde; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecobilagkilde (
+CREATE TABLE public.fm_ecobilagkilde (
     id smallint NOT NULL,
     name character varying(20) NOT NULL,
     description text
 );
 
 
-ALTER TABLE fm_ecobilagkilde OWNER TO portico;
+ALTER TABLE public.fm_ecobilagkilde OWNER TO portico;
 
 --
 -- Name: fm_ecobilagoverf; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecobilagoverf (
+CREATE TABLE public.fm_ecobilagoverf (
     id integer NOT NULL,
     bilagsnr integer NOT NULL,
     bilagsnr_ut integer NOT NULL,
@@ -1605,13 +1604,13 @@ CREATE TABLE fm_ecobilagoverf (
 );
 
 
-ALTER TABLE fm_ecobilagoverf OWNER TO portico;
+ALTER TABLE public.fm_ecobilagoverf OWNER TO portico;
 
 --
 -- Name: fm_ecodimb; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecodimb (
+CREATE TABLE public.fm_ecodimb (
     id integer NOT NULL,
     descr character varying(50) NOT NULL,
     org_unit_id integer NOT NULL,
@@ -1619,25 +1618,25 @@ CREATE TABLE fm_ecodimb (
 );
 
 
-ALTER TABLE fm_ecodimb OWNER TO portico;
+ALTER TABLE public.fm_ecodimb OWNER TO portico;
 
 --
 -- Name: fm_ecodimb_role; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecodimb_role (
+CREATE TABLE public.fm_ecodimb_role (
     id integer NOT NULL,
     name character varying(25) NOT NULL
 );
 
 
-ALTER TABLE fm_ecodimb_role OWNER TO portico;
+ALTER TABLE public.fm_ecodimb_role OWNER TO portico;
 
 --
 -- Name: seq_fm_ecodimb_role_user; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_ecodimb_role_user
+CREATE SEQUENCE public.seq_fm_ecodimb_role_user
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1645,14 +1644,14 @@ CREATE SEQUENCE seq_fm_ecodimb_role_user
     CACHE 1;
 
 
-ALTER TABLE seq_fm_ecodimb_role_user OWNER TO portico;
+ALTER TABLE public.seq_fm_ecodimb_role_user OWNER TO portico;
 
 --
 -- Name: fm_ecodimb_role_user; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecodimb_role_user (
-    id integer DEFAULT nextval('seq_fm_ecodimb_role_user'::regclass) NOT NULL,
+CREATE TABLE public.fm_ecodimb_role_user (
+    id integer DEFAULT nextval('public.seq_fm_ecodimb_role_user'::regclass) NOT NULL,
     ecodimb integer NOT NULL,
     user_id integer NOT NULL,
     role_id integer NOT NULL,
@@ -1666,13 +1665,13 @@ CREATE TABLE fm_ecodimb_role_user (
 );
 
 
-ALTER TABLE fm_ecodimb_role_user OWNER TO portico;
+ALTER TABLE public.fm_ecodimb_role_user OWNER TO portico;
 
 --
 -- Name: seq_fm_ecodimb_role_user_substitute; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_ecodimb_role_user_substitute
+CREATE SEQUENCE public.seq_fm_ecodimb_role_user_substitute
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1680,38 +1679,38 @@ CREATE SEQUENCE seq_fm_ecodimb_role_user_substitute
     CACHE 1;
 
 
-ALTER TABLE seq_fm_ecodimb_role_user_substitute OWNER TO portico;
+ALTER TABLE public.seq_fm_ecodimb_role_user_substitute OWNER TO portico;
 
 --
 -- Name: fm_ecodimb_role_user_substitute; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecodimb_role_user_substitute (
-    id integer DEFAULT nextval('seq_fm_ecodimb_role_user_substitute'::regclass) NOT NULL,
+CREATE TABLE public.fm_ecodimb_role_user_substitute (
+    id integer DEFAULT nextval('public.seq_fm_ecodimb_role_user_substitute'::regclass) NOT NULL,
     user_id integer NOT NULL,
     substitute_user_id integer NOT NULL
 );
 
 
-ALTER TABLE fm_ecodimb_role_user_substitute OWNER TO portico;
+ALTER TABLE public.fm_ecodimb_role_user_substitute OWNER TO portico;
 
 --
 -- Name: fm_ecodimd; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecodimd (
+CREATE TABLE public.fm_ecodimd (
     id character varying(5) NOT NULL,
     descr character varying(25) NOT NULL
 );
 
 
-ALTER TABLE fm_ecodimd OWNER TO portico;
+ALTER TABLE public.fm_ecodimd OWNER TO portico;
 
 --
 -- Name: fm_ecologg; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecologg (
+CREATE TABLE public.fm_ecologg (
     batchid integer NOT NULL,
     ecobilagid integer,
     status smallint,
@@ -1720,39 +1719,39 @@ CREATE TABLE fm_ecologg (
 );
 
 
-ALTER TABLE fm_ecologg OWNER TO portico;
+ALTER TABLE public.fm_ecologg OWNER TO portico;
 
 --
 -- Name: fm_ecomva; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecomva (
+CREATE TABLE public.fm_ecomva (
     id integer NOT NULL,
     percent integer,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_ecomva OWNER TO portico;
+ALTER TABLE public.fm_ecomva OWNER TO portico;
 
 --
 -- Name: fm_ecouser; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ecouser (
+CREATE TABLE public.fm_ecouser (
     id integer NOT NULL,
     lid character varying(25) NOT NULL,
     initials character varying(6)
 );
 
 
-ALTER TABLE fm_ecouser OWNER TO portico;
+ALTER TABLE public.fm_ecouser OWNER TO portico;
 
 --
 -- Name: fm_entity; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_entity (
+CREATE TABLE public.fm_entity (
     location_id integer NOT NULL,
     id integer NOT NULL,
     name character varying(20) NOT NULL,
@@ -1763,13 +1762,13 @@ CREATE TABLE fm_entity (
 );
 
 
-ALTER TABLE fm_entity OWNER TO portico;
+ALTER TABLE public.fm_entity OWNER TO portico;
 
 --
 -- Name: fm_entity_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_entity_category (
+CREATE TABLE public.fm_entity_category (
     location_id integer NOT NULL,
     entity_id integer NOT NULL,
     id integer NOT NULL,
@@ -1795,13 +1794,13 @@ CREATE TABLE fm_entity_category (
 );
 
 
-ALTER TABLE fm_entity_category OWNER TO portico;
+ALTER TABLE public.fm_entity_category OWNER TO portico;
 
 --
 -- Name: seq_fm_entity_group; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_entity_group
+CREATE SEQUENCE public.seq_fm_entity_group
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1809,14 +1808,14 @@ CREATE SEQUENCE seq_fm_entity_group
     CACHE 1;
 
 
-ALTER TABLE seq_fm_entity_group OWNER TO portico;
+ALTER TABLE public.seq_fm_entity_group OWNER TO portico;
 
 --
 -- Name: fm_entity_group; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_entity_group (
-    id integer DEFAULT nextval('seq_fm_entity_group'::regclass) NOT NULL,
+CREATE TABLE public.fm_entity_group (
+    id integer DEFAULT nextval('public.seq_fm_entity_group'::regclass) NOT NULL,
     name character varying(100) NOT NULL,
     descr text,
     active smallint DEFAULT 0,
@@ -1826,13 +1825,13 @@ CREATE TABLE fm_entity_group (
 );
 
 
-ALTER TABLE fm_entity_group OWNER TO portico;
+ALTER TABLE public.fm_entity_group OWNER TO portico;
 
 --
 -- Name: seq_fm_entity_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_entity_history
+CREATE SEQUENCE public.seq_fm_entity_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1840,14 +1839,14 @@ CREATE SEQUENCE seq_fm_entity_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_entity_history OWNER TO portico;
+ALTER TABLE public.seq_fm_entity_history OWNER TO portico;
 
 --
 -- Name: fm_entity_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_entity_history (
-    history_id integer DEFAULT nextval('seq_fm_entity_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_entity_history (
+    history_id integer DEFAULT nextval('public.seq_fm_entity_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_attrib_id integer NOT NULL,
@@ -1859,26 +1858,26 @@ CREATE TABLE fm_entity_history (
 );
 
 
-ALTER TABLE fm_entity_history OWNER TO portico;
+ALTER TABLE public.fm_entity_history OWNER TO portico;
 
 --
 -- Name: fm_entity_lookup; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_entity_lookup (
+CREATE TABLE public.fm_entity_lookup (
     entity_id integer NOT NULL,
     location character varying(15) NOT NULL,
     type character varying(15) NOT NULL
 );
 
 
-ALTER TABLE fm_entity_lookup OWNER TO portico;
+ALTER TABLE public.fm_entity_lookup OWNER TO portico;
 
 --
 -- Name: seq_fm_event; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_event
+CREATE SEQUENCE public.seq_fm_event
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1886,14 +1885,14 @@ CREATE SEQUENCE seq_fm_event
     CACHE 1;
 
 
-ALTER TABLE seq_fm_event OWNER TO portico;
+ALTER TABLE public.seq_fm_event OWNER TO portico;
 
 --
 -- Name: fm_event; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_event (
-    id integer DEFAULT nextval('seq_fm_event'::regclass) NOT NULL,
+CREATE TABLE public.fm_event (
+    id integer DEFAULT nextval('public.seq_fm_event'::regclass) NOT NULL,
     location_id integer NOT NULL,
     location_item_id integer NOT NULL,
     attrib_id character varying(50) DEFAULT 0,
@@ -1912,13 +1911,13 @@ CREATE TABLE fm_event (
 );
 
 
-ALTER TABLE fm_event OWNER TO portico;
+ALTER TABLE public.fm_event OWNER TO portico;
 
 --
 -- Name: fm_event_action; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_event_action (
+CREATE TABLE public.fm_event_action (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
     action character varying(100) NOT NULL,
@@ -1930,13 +1929,13 @@ CREATE TABLE fm_event_action (
 );
 
 
-ALTER TABLE fm_event_action OWNER TO portico;
+ALTER TABLE public.fm_event_action OWNER TO portico;
 
 --
 -- Name: fm_event_exception; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_event_exception (
+CREATE TABLE public.fm_event_exception (
     event_id integer NOT NULL,
     exception_time integer NOT NULL,
     descr text,
@@ -1946,13 +1945,13 @@ CREATE TABLE fm_event_exception (
 );
 
 
-ALTER TABLE fm_event_exception OWNER TO portico;
+ALTER TABLE public.fm_event_exception OWNER TO portico;
 
 --
 -- Name: fm_event_receipt; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_event_receipt (
+CREATE TABLE public.fm_event_receipt (
     event_id integer NOT NULL,
     receipt_time integer NOT NULL,
     descr text,
@@ -1962,13 +1961,13 @@ CREATE TABLE fm_event_receipt (
 );
 
 
-ALTER TABLE fm_event_receipt OWNER TO portico;
+ALTER TABLE public.fm_event_receipt OWNER TO portico;
 
 --
 -- Name: fm_event_schedule; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_event_schedule (
+CREATE TABLE public.fm_event_schedule (
     event_id integer NOT NULL,
     schedule_time integer NOT NULL,
     descr text,
@@ -1978,13 +1977,13 @@ CREATE TABLE fm_event_schedule (
 );
 
 
-ALTER TABLE fm_event_schedule OWNER TO portico;
+ALTER TABLE public.fm_event_schedule OWNER TO portico;
 
 --
 -- Name: fm_external_project; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_external_project (
+CREATE TABLE public.fm_external_project (
     id character varying(10) NOT NULL,
     name character varying(255) NOT NULL,
     budget integer,
@@ -1992,13 +1991,13 @@ CREATE TABLE fm_external_project (
 );
 
 
-ALTER TABLE fm_external_project OWNER TO portico;
+ALTER TABLE public.fm_external_project OWNER TO portico;
 
 --
 -- Name: fm_gab_location; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_gab_location (
+CREATE TABLE public.fm_gab_location (
     location_code character varying(20) NOT NULL,
     gab_id character varying(20) NOT NULL,
     user_id integer,
@@ -2015,13 +2014,13 @@ CREATE TABLE fm_gab_location (
 );
 
 
-ALTER TABLE fm_gab_location OWNER TO portico;
+ALTER TABLE public.fm_gab_location OWNER TO portico;
 
 --
 -- Name: seq_fm_generic_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_generic_history
+CREATE SEQUENCE public.seq_fm_generic_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2029,14 +2028,14 @@ CREATE SEQUENCE seq_fm_generic_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_generic_history OWNER TO portico;
+ALTER TABLE public.seq_fm_generic_history OWNER TO portico;
 
 --
 -- Name: fm_generic_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_generic_history (
-    history_id integer DEFAULT nextval('seq_fm_generic_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_generic_history (
+    history_id integer DEFAULT nextval('public.seq_fm_generic_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_owner integer NOT NULL,
     history_status character(2) NOT NULL,
@@ -2049,13 +2048,13 @@ CREATE TABLE fm_generic_history (
 );
 
 
-ALTER TABLE fm_generic_history OWNER TO portico;
+ALTER TABLE public.fm_generic_history OWNER TO portico;
 
 --
 -- Name: fm_idgenerator; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_idgenerator (
+CREATE TABLE public.fm_idgenerator (
     name character varying(30) NOT NULL,
     start_date integer DEFAULT 0 NOT NULL,
     value integer NOT NULL,
@@ -2064,13 +2063,13 @@ CREATE TABLE fm_idgenerator (
 );
 
 
-ALTER TABLE fm_idgenerator OWNER TO portico;
+ALTER TABLE public.fm_idgenerator OWNER TO portico;
 
 --
 -- Name: fm_investment; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_investment (
+CREATE TABLE public.fm_investment (
     entity_id character varying(20) NOT NULL,
     invest_id integer NOT NULL,
     entity_type character varying(20),
@@ -2088,13 +2087,13 @@ CREATE TABLE fm_investment (
 );
 
 
-ALTER TABLE fm_investment OWNER TO portico;
+ALTER TABLE public.fm_investment OWNER TO portico;
 
 --
 -- Name: fm_investment_value; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_investment_value (
+CREATE TABLE public.fm_investment_value (
     entity_id character varying(20) NOT NULL,
     invest_id integer NOT NULL,
     index_count integer NOT NULL,
@@ -2106,13 +2105,13 @@ CREATE TABLE fm_investment_value (
 );
 
 
-ALTER TABLE fm_investment_value OWNER TO portico;
+ALTER TABLE public.fm_investment_value OWNER TO portico;
 
 --
 -- Name: seq_fm_jasper; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_jasper
+CREATE SEQUENCE public.seq_fm_jasper
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2120,14 +2119,14 @@ CREATE SEQUENCE seq_fm_jasper
     CACHE 1;
 
 
-ALTER TABLE seq_fm_jasper OWNER TO portico;
+ALTER TABLE public.seq_fm_jasper OWNER TO portico;
 
 --
 -- Name: fm_jasper; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_jasper (
-    id integer DEFAULT nextval('seq_fm_jasper'::regclass) NOT NULL,
+CREATE TABLE public.fm_jasper (
+    id integer DEFAULT nextval('public.seq_fm_jasper'::regclass) NOT NULL,
     location_id integer NOT NULL,
     title character varying(100),
     descr character varying(255),
@@ -2141,24 +2140,24 @@ CREATE TABLE fm_jasper (
 );
 
 
-ALTER TABLE fm_jasper OWNER TO portico;
+ALTER TABLE public.fm_jasper OWNER TO portico;
 
 --
 -- Name: fm_jasper_format_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_jasper_format_type (
+CREATE TABLE public.fm_jasper_format_type (
     id character varying(20) NOT NULL
 );
 
 
-ALTER TABLE fm_jasper_format_type OWNER TO portico;
+ALTER TABLE public.fm_jasper_format_type OWNER TO portico;
 
 --
 -- Name: seq_fm_jasper_input; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_jasper_input
+CREATE SEQUENCE public.seq_fm_jasper_input
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2166,14 +2165,14 @@ CREATE SEQUENCE seq_fm_jasper_input
     CACHE 1;
 
 
-ALTER TABLE seq_fm_jasper_input OWNER TO portico;
+ALTER TABLE public.seq_fm_jasper_input OWNER TO portico;
 
 --
 -- Name: fm_jasper_input; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_jasper_input (
-    id integer DEFAULT nextval('seq_fm_jasper_input'::regclass) NOT NULL,
+CREATE TABLE public.fm_jasper_input (
+    id integer DEFAULT nextval('public.seq_fm_jasper_input'::regclass) NOT NULL,
     jasper_id integer NOT NULL,
     input_type_id integer NOT NULL,
     is_id smallint,
@@ -2182,13 +2181,13 @@ CREATE TABLE fm_jasper_input (
 );
 
 
-ALTER TABLE fm_jasper_input OWNER TO portico;
+ALTER TABLE public.fm_jasper_input OWNER TO portico;
 
 --
 -- Name: seq_fm_jasper_input_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_jasper_input_type
+CREATE SEQUENCE public.seq_fm_jasper_input_type
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2196,39 +2195,39 @@ CREATE SEQUENCE seq_fm_jasper_input_type
     CACHE 1;
 
 
-ALTER TABLE seq_fm_jasper_input_type OWNER TO portico;
+ALTER TABLE public.seq_fm_jasper_input_type OWNER TO portico;
 
 --
 -- Name: fm_jasper_input_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_jasper_input_type (
-    id integer DEFAULT nextval('seq_fm_jasper_input_type'::regclass) NOT NULL,
+CREATE TABLE public.fm_jasper_input_type (
+    id integer DEFAULT nextval('public.seq_fm_jasper_input_type'::regclass) NOT NULL,
     name character varying(20) NOT NULL,
     descr character varying(255)
 );
 
 
-ALTER TABLE fm_jasper_input_type OWNER TO portico;
+ALTER TABLE public.fm_jasper_input_type OWNER TO portico;
 
 --
 -- Name: fm_key_loc; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_key_loc (
+CREATE TABLE public.fm_key_loc (
     id integer NOT NULL,
     num character varying(20) NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_key_loc OWNER TO portico;
+ALTER TABLE public.fm_key_loc OWNER TO portico;
 
 --
 -- Name: fm_location1; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location1 (
+CREATE TABLE public.fm_location1 (
     id integer,
     location_code character varying(16) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2253,25 +2252,25 @@ CREATE TABLE fm_location1 (
 );
 
 
-ALTER TABLE fm_location1 OWNER TO portico;
+ALTER TABLE public.fm_location1 OWNER TO portico;
 
 --
 -- Name: fm_location1_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location1_category (
+CREATE TABLE public.fm_location1_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_location1_category OWNER TO portico;
+ALTER TABLE public.fm_location1_category OWNER TO portico;
 
 --
 -- Name: fm_location1_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location1_history (
+CREATE TABLE public.fm_location1_history (
     id integer,
     location_code character varying(16) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2297,13 +2296,13 @@ CREATE TABLE fm_location1_history (
 );
 
 
-ALTER TABLE fm_location1_history OWNER TO portico;
+ALTER TABLE public.fm_location1_history OWNER TO portico;
 
 --
 -- Name: fm_location2; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location2 (
+CREATE TABLE public.fm_location2 (
     id integer,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2324,25 +2323,25 @@ CREATE TABLE fm_location2 (
 );
 
 
-ALTER TABLE fm_location2 OWNER TO portico;
+ALTER TABLE public.fm_location2 OWNER TO portico;
 
 --
 -- Name: fm_location2_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location2_category (
+CREATE TABLE public.fm_location2_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_location2_category OWNER TO portico;
+ALTER TABLE public.fm_location2_category OWNER TO portico;
 
 --
 -- Name: fm_location2_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location2_history (
+CREATE TABLE public.fm_location2_history (
     id integer,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2364,13 +2363,13 @@ CREATE TABLE fm_location2_history (
 );
 
 
-ALTER TABLE fm_location2_history OWNER TO portico;
+ALTER TABLE public.fm_location2_history OWNER TO portico;
 
 --
 -- Name: fm_location3; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location3 (
+CREATE TABLE public.fm_location3 (
     id integer,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2392,25 +2391,25 @@ CREATE TABLE fm_location3 (
 );
 
 
-ALTER TABLE fm_location3 OWNER TO portico;
+ALTER TABLE public.fm_location3 OWNER TO portico;
 
 --
 -- Name: fm_location3_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location3_category (
+CREATE TABLE public.fm_location3_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_location3_category OWNER TO portico;
+ALTER TABLE public.fm_location3_category OWNER TO portico;
 
 --
 -- Name: fm_location3_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location3_history (
+CREATE TABLE public.fm_location3_history (
     id integer,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2433,13 +2432,13 @@ CREATE TABLE fm_location3_history (
 );
 
 
-ALTER TABLE fm_location3_history OWNER TO portico;
+ALTER TABLE public.fm_location3_history OWNER TO portico;
 
 --
 -- Name: fm_location4; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location4 (
+CREATE TABLE public.fm_location4 (
     id integer,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2465,25 +2464,25 @@ CREATE TABLE fm_location4 (
 );
 
 
-ALTER TABLE fm_location4 OWNER TO portico;
+ALTER TABLE public.fm_location4 OWNER TO portico;
 
 --
 -- Name: fm_location4_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location4_category (
+CREATE TABLE public.fm_location4_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_location4_category OWNER TO portico;
+ALTER TABLE public.fm_location4_category OWNER TO portico;
 
 --
 -- Name: fm_location4_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location4_history (
+CREATE TABLE public.fm_location4_history (
     id integer,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2510,13 +2509,13 @@ CREATE TABLE fm_location4_history (
 );
 
 
-ALTER TABLE fm_location4_history OWNER TO portico;
+ALTER TABLE public.fm_location4_history OWNER TO portico;
 
 --
 -- Name: fm_location_config; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_config (
+CREATE TABLE public.fm_location_config (
     column_name character varying(20) NOT NULL,
     location_type integer NOT NULL,
     input_text character varying(50),
@@ -2534,13 +2533,13 @@ CREATE TABLE fm_location_config (
 );
 
 
-ALTER TABLE fm_location_config OWNER TO portico;
+ALTER TABLE public.fm_location_config OWNER TO portico;
 
 --
 -- Name: seq_fm_location_contact; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_location_contact
+CREATE SEQUENCE public.seq_fm_location_contact
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2548,14 +2547,14 @@ CREATE SEQUENCE seq_fm_location_contact
     CACHE 1;
 
 
-ALTER TABLE seq_fm_location_contact OWNER TO portico;
+ALTER TABLE public.seq_fm_location_contact OWNER TO portico;
 
 --
 -- Name: fm_location_contact; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_contact (
-    id integer DEFAULT nextval('seq_fm_location_contact'::regclass) NOT NULL,
+CREATE TABLE public.fm_location_contact (
+    id integer DEFAULT nextval('public.seq_fm_location_contact'::regclass) NOT NULL,
     contact_id integer NOT NULL,
     location_code character varying(20) NOT NULL,
     user_id integer NOT NULL,
@@ -2564,13 +2563,13 @@ CREATE TABLE fm_location_contact (
 );
 
 
-ALTER TABLE fm_location_contact OWNER TO portico;
+ALTER TABLE public.fm_location_contact OWNER TO portico;
 
 --
 -- Name: seq_fm_location_exception; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_location_exception
+CREATE SEQUENCE public.seq_fm_location_exception
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2578,14 +2577,14 @@ CREATE SEQUENCE seq_fm_location_exception
     CACHE 1;
 
 
-ALTER TABLE seq_fm_location_exception OWNER TO portico;
+ALTER TABLE public.seq_fm_location_exception OWNER TO portico;
 
 --
 -- Name: fm_location_exception; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_exception (
-    id integer DEFAULT nextval('seq_fm_location_exception'::regclass) NOT NULL,
+CREATE TABLE public.fm_location_exception (
+    id integer DEFAULT nextval('public.seq_fm_location_exception'::regclass) NOT NULL,
     location_code character varying(20) NOT NULL,
     severity_id integer NOT NULL,
     category_id integer NOT NULL,
@@ -2601,13 +2600,13 @@ CREATE TABLE fm_location_exception (
 );
 
 
-ALTER TABLE fm_location_exception OWNER TO portico;
+ALTER TABLE public.fm_location_exception OWNER TO portico;
 
 --
 -- Name: seq_fm_location_exception_category; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_location_exception_category
+CREATE SEQUENCE public.seq_fm_location_exception_category
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2615,26 +2614,26 @@ CREATE SEQUENCE seq_fm_location_exception_category
     CACHE 1;
 
 
-ALTER TABLE seq_fm_location_exception_category OWNER TO portico;
+ALTER TABLE public.seq_fm_location_exception_category OWNER TO portico;
 
 --
 -- Name: fm_location_exception_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_exception_category (
-    id integer DEFAULT nextval('seq_fm_location_exception_category'::regclass) NOT NULL,
+CREATE TABLE public.fm_location_exception_category (
+    id integer DEFAULT nextval('public.seq_fm_location_exception_category'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     parent_id integer
 );
 
 
-ALTER TABLE fm_location_exception_category OWNER TO portico;
+ALTER TABLE public.fm_location_exception_category OWNER TO portico;
 
 --
 -- Name: seq_fm_location_exception_category_text; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_location_exception_category_text
+CREATE SEQUENCE public.seq_fm_location_exception_category_text
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2642,38 +2641,38 @@ CREATE SEQUENCE seq_fm_location_exception_category_text
     CACHE 1;
 
 
-ALTER TABLE seq_fm_location_exception_category_text OWNER TO portico;
+ALTER TABLE public.seq_fm_location_exception_category_text OWNER TO portico;
 
 --
 -- Name: fm_location_exception_category_text; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_exception_category_text (
-    id integer DEFAULT nextval('seq_fm_location_exception_category_text'::regclass) NOT NULL,
+CREATE TABLE public.fm_location_exception_category_text (
+    id integer DEFAULT nextval('public.seq_fm_location_exception_category_text'::regclass) NOT NULL,
     category_id integer NOT NULL,
     content text
 );
 
 
-ALTER TABLE fm_location_exception_category_text OWNER TO portico;
+ALTER TABLE public.fm_location_exception_category_text OWNER TO portico;
 
 --
 -- Name: fm_location_exception_severity; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_exception_severity (
+CREATE TABLE public.fm_location_exception_severity (
     id integer NOT NULL,
     name character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_location_exception_severity OWNER TO portico;
+ALTER TABLE public.fm_location_exception_severity OWNER TO portico;
 
 --
 -- Name: fm_location_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_location_type (
+CREATE TABLE public.fm_location_type (
     id integer NOT NULL,
     name character varying(20),
     descr character varying(50),
@@ -2687,13 +2686,13 @@ CREATE TABLE fm_location_type (
 );
 
 
-ALTER TABLE fm_location_type OWNER TO portico;
+ALTER TABLE public.fm_location_type OWNER TO portico;
 
 --
 -- Name: seq_fm_locations; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_locations
+CREATE SEQUENCE public.seq_fm_locations
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2701,14 +2700,14 @@ CREATE SEQUENCE seq_fm_locations
     CACHE 1;
 
 
-ALTER TABLE seq_fm_locations OWNER TO portico;
+ALTER TABLE public.seq_fm_locations OWNER TO portico;
 
 --
 -- Name: fm_locations; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_locations (
-    id integer DEFAULT nextval('seq_fm_locations'::regclass) NOT NULL,
+CREATE TABLE public.fm_locations (
+    id integer DEFAULT nextval('public.seq_fm_locations'::regclass) NOT NULL,
     level integer NOT NULL,
     location_code character varying(50) NOT NULL,
     loc1 character varying(6) NOT NULL,
@@ -2716,13 +2715,13 @@ CREATE TABLE fm_locations (
 );
 
 
-ALTER TABLE fm_locations OWNER TO portico;
+ALTER TABLE public.fm_locations OWNER TO portico;
 
 --
 -- Name: fm_ns3420; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_ns3420 (
+CREATE TABLE public.fm_ns3420 (
     id integer NOT NULL,
     num character varying(20) NOT NULL,
     parent_id integer,
@@ -2737,13 +2736,13 @@ CREATE TABLE fm_ns3420 (
 );
 
 
-ALTER TABLE fm_ns3420 OWNER TO portico;
+ALTER TABLE public.fm_ns3420 OWNER TO portico;
 
 --
 -- Name: fm_workorder; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_workorder (
+CREATE TABLE public.fm_workorder (
     id bigint NOT NULL,
     num character varying(20) NOT NULL,
     project_id integer NOT NULL,
@@ -2808,13 +2807,13 @@ CREATE TABLE fm_workorder (
 );
 
 
-ALTER TABLE fm_workorder OWNER TO portico;
+ALTER TABLE public.fm_workorder OWNER TO portico;
 
 --
 -- Name: fm_workorder_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_workorder_status (
+CREATE TABLE public.fm_workorder_status (
     id character varying(20) NOT NULL,
     descr character varying(255) NOT NULL,
     approved smallint,
@@ -2825,41 +2824,41 @@ CREATE TABLE fm_workorder_status (
 );
 
 
-ALTER TABLE fm_workorder_status OWNER TO portico;
+ALTER TABLE public.fm_workorder_status OWNER TO portico;
 
 --
 -- Name: fm_open_workorder_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_open_workorder_view AS
+CREATE VIEW public.fm_open_workorder_view AS
  SELECT fm_workorder.id,
     fm_workorder.project_id,
     fm_workorder_status.descr
-   FROM (fm_workorder
-     JOIN fm_workorder_status ON (((fm_workorder.status)::text = (fm_workorder_status.id)::text)))
+   FROM (public.fm_workorder
+     JOIN public.fm_workorder_status ON (((fm_workorder.status)::text = (fm_workorder_status.id)::text)))
   WHERE ((fm_workorder_status.delivered IS NULL) AND (fm_workorder_status.closed IS NULL));
 
 
-ALTER TABLE fm_open_workorder_view OWNER TO portico;
+ALTER TABLE public.fm_open_workorder_view OWNER TO portico;
 
 --
 -- Name: fm_order_dim1; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_order_dim1 (
+CREATE TABLE public.fm_order_dim1 (
     id integer NOT NULL,
     num character varying(20) NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_order_dim1 OWNER TO portico;
+ALTER TABLE public.fm_order_dim1 OWNER TO portico;
 
 --
 -- Name: seq_fm_order_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_order_template
+CREATE SEQUENCE public.seq_fm_order_template
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2867,14 +2866,14 @@ CREATE SEQUENCE seq_fm_order_template
     CACHE 1;
 
 
-ALTER TABLE seq_fm_order_template OWNER TO portico;
+ALTER TABLE public.seq_fm_order_template OWNER TO portico;
 
 --
 -- Name: fm_order_template; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_order_template (
-    id integer DEFAULT nextval('seq_fm_order_template'::regclass) NOT NULL,
+CREATE TABLE public.fm_order_template (
+    id integer DEFAULT nextval('public.seq_fm_order_template'::regclass) NOT NULL,
     name character varying(200) NOT NULL,
     content text,
     public smallint,
@@ -2884,38 +2883,38 @@ CREATE TABLE fm_order_template (
 );
 
 
-ALTER TABLE fm_order_template OWNER TO portico;
+ALTER TABLE public.fm_order_template OWNER TO portico;
 
 --
 -- Name: fm_orders; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_orders (
+CREATE TABLE public.fm_orders (
     id integer DEFAULT 0 NOT NULL,
     type character varying(50) NOT NULL
 );
 
 
-ALTER TABLE fm_orders OWNER TO portico;
+ALTER TABLE public.fm_orders OWNER TO portico;
 
 --
 -- Name: fm_orders_actual_cost_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_orders_actual_cost_view AS
+CREATE VIEW public.fm_orders_actual_cost_view AS
  SELECT fm_ecobilagoverf.pmwrkord_code AS order_id,
     sum(fm_ecobilagoverf.godkjentbelop) AS actual_cost
-   FROM fm_ecobilagoverf
+   FROM public.fm_ecobilagoverf
   GROUP BY fm_ecobilagoverf.pmwrkord_code;
 
 
-ALTER TABLE fm_orders_actual_cost_view OWNER TO portico;
+ALTER TABLE public.fm_orders_actual_cost_view OWNER TO portico;
 
 --
 -- Name: fm_orders_paid_or_pending_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_orders_paid_or_pending_view AS
+CREATE VIEW public.fm_orders_paid_or_pending_view AS
  SELECT orders_paid_or_pending.order_id,
     orders_paid_or_pending.periode,
     orders_paid_or_pending.amount,
@@ -2928,7 +2927,7 @@ CREATE VIEW fm_orders_paid_or_pending_view AS
             fm_ecobilagoverf.periodization,
             fm_ecobilagoverf.periodization_start,
             fm_ecobilagoverf.mvakode
-           FROM fm_ecobilagoverf
+           FROM public.fm_ecobilagoverf
           GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode, fm_ecobilagoverf.periodization, fm_ecobilagoverf.periodization_start, fm_ecobilagoverf.mvakode
         UNION ALL
          SELECT fm_ecobilag.pmwrkord_code AS order_id,
@@ -2937,31 +2936,31 @@ CREATE VIEW fm_orders_paid_or_pending_view AS
             fm_ecobilag.periodization,
             fm_ecobilag.periodization_start,
             fm_ecobilag.mvakode
-           FROM fm_ecobilag
+           FROM public.fm_ecobilag
           GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode, fm_ecobilag.periodization, fm_ecobilag.periodization_start, fm_ecobilag.mvakode) orders_paid_or_pending
   ORDER BY orders_paid_or_pending.periode, orders_paid_or_pending.order_id;
 
 
-ALTER TABLE fm_orders_paid_or_pending_view OWNER TO portico;
+ALTER TABLE public.fm_orders_paid_or_pending_view OWNER TO portico;
 
 --
 -- Name: fm_orders_pending_cost_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_orders_pending_cost_view AS
+CREATE VIEW public.fm_orders_pending_cost_view AS
  SELECT fm_ecobilag.pmwrkord_code AS order_id,
     sum(fm_ecobilag.godkjentbelop) AS pending_cost
-   FROM fm_ecobilag
+   FROM public.fm_ecobilag
   GROUP BY fm_ecobilag.pmwrkord_code;
 
 
-ALTER TABLE fm_orders_pending_cost_view OWNER TO portico;
+ALTER TABLE public.fm_orders_pending_cost_view OWNER TO portico;
 
 --
 -- Name: fm_org_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_org_unit (
+CREATE TABLE public.fm_org_unit (
     id integer NOT NULL,
     parent_id integer,
     name character varying(200) NOT NULL,
@@ -2973,13 +2972,13 @@ CREATE TABLE fm_org_unit (
 );
 
 
-ALTER TABLE fm_org_unit OWNER TO portico;
+ALTER TABLE public.fm_org_unit OWNER TO portico;
 
 --
 -- Name: fm_owner; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_owner (
+CREATE TABLE public.fm_owner (
     id integer NOT NULL,
     abid integer,
     org_name character varying(50),
@@ -2992,25 +2991,25 @@ CREATE TABLE fm_owner (
 );
 
 
-ALTER TABLE fm_owner OWNER TO portico;
+ALTER TABLE public.fm_owner OWNER TO portico;
 
 --
 -- Name: fm_owner_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_owner_category (
+CREATE TABLE public.fm_owner_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_owner_category OWNER TO portico;
+ALTER TABLE public.fm_owner_category OWNER TO portico;
 
 --
 -- Name: seq_fm_part_of_town; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_part_of_town
+CREATE SEQUENCE public.seq_fm_part_of_town
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3018,27 +3017,27 @@ CREATE SEQUENCE seq_fm_part_of_town
     CACHE 1;
 
 
-ALTER TABLE seq_fm_part_of_town OWNER TO portico;
+ALTER TABLE public.seq_fm_part_of_town OWNER TO portico;
 
 --
 -- Name: fm_part_of_town; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_part_of_town (
-    id integer DEFAULT nextval('seq_fm_part_of_town'::regclass) NOT NULL,
+CREATE TABLE public.fm_part_of_town (
+    id integer DEFAULT nextval('public.seq_fm_part_of_town'::regclass) NOT NULL,
     name character varying(150) NOT NULL,
     district_id smallint NOT NULL,
     delivery_address text
 );
 
 
-ALTER TABLE fm_part_of_town OWNER TO portico;
+ALTER TABLE public.fm_part_of_town OWNER TO portico;
 
 --
 -- Name: fm_project; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_project (
+CREATE TABLE public.fm_project (
     id integer NOT NULL,
     parent_id integer,
     project_type_id smallint,
@@ -3082,13 +3081,13 @@ CREATE TABLE fm_project (
 );
 
 
-ALTER TABLE fm_project OWNER TO portico;
+ALTER TABLE public.fm_project OWNER TO portico;
 
 --
 -- Name: fm_project_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_project_budget (
+CREATE TABLE public.fm_project_budget (
     project_id integer NOT NULL,
     year integer NOT NULL,
     month smallint DEFAULT 0 NOT NULL,
@@ -3102,13 +3101,13 @@ CREATE TABLE fm_project_budget (
 );
 
 
-ALTER TABLE fm_project_budget OWNER TO portico;
+ALTER TABLE public.fm_project_budget OWNER TO portico;
 
 --
 -- Name: fm_workorder_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_workorder_budget (
+CREATE TABLE public.fm_workorder_budget (
     order_id bigint NOT NULL,
     year integer NOT NULL,
     month smallint DEFAULT 0 NOT NULL,
@@ -3122,40 +3121,40 @@ CREATE TABLE fm_workorder_budget (
 );
 
 
-ALTER TABLE fm_workorder_budget OWNER TO portico;
+ALTER TABLE public.fm_workorder_budget OWNER TO portico;
 
 --
 -- Name: fm_project_budget_year_from_order_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_project_budget_year_from_order_view AS
+CREATE VIEW public.fm_project_budget_year_from_order_view AS
  SELECT DISTINCT fm_workorder.project_id,
     fm_workorder_budget.year
-   FROM (fm_workorder_budget
-     JOIN fm_workorder ON ((fm_workorder.id = fm_workorder_budget.order_id)))
+   FROM (public.fm_workorder_budget
+     JOIN public.fm_workorder ON ((fm_workorder.id = fm_workorder_budget.order_id)))
   ORDER BY fm_workorder.project_id;
 
 
-ALTER TABLE fm_project_budget_year_from_order_view OWNER TO portico;
+ALTER TABLE public.fm_project_budget_year_from_order_view OWNER TO portico;
 
 --
 -- Name: fm_project_budget_year_view; Type: VIEW; Schema: public; Owner: portico
 --
 
-CREATE VIEW fm_project_budget_year_view AS
+CREATE VIEW public.fm_project_budget_year_view AS
  SELECT DISTINCT fm_project_budget.project_id,
     fm_project_budget.year
-   FROM fm_project_budget
+   FROM public.fm_project_budget
   ORDER BY fm_project_budget.project_id;
 
 
-ALTER TABLE fm_project_budget_year_view OWNER TO portico;
+ALTER TABLE public.fm_project_budget_year_view OWNER TO portico;
 
 --
 -- Name: seq_fm_project_buffer_budget; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_project_buffer_budget
+CREATE SEQUENCE public.seq_fm_project_buffer_budget
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3163,14 +3162,14 @@ CREATE SEQUENCE seq_fm_project_buffer_budget
     CACHE 1;
 
 
-ALTER TABLE seq_fm_project_buffer_budget OWNER TO portico;
+ALTER TABLE public.seq_fm_project_buffer_budget OWNER TO portico;
 
 --
 -- Name: fm_project_buffer_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_project_buffer_budget (
-    id integer DEFAULT nextval('seq_fm_project_buffer_budget'::regclass) NOT NULL,
+CREATE TABLE public.fm_project_buffer_budget (
+    id integer DEFAULT nextval('public.seq_fm_project_buffer_budget'::regclass) NOT NULL,
     year integer NOT NULL,
     month smallint DEFAULT 0 NOT NULL,
     buffer_project_id integer NOT NULL,
@@ -3185,13 +3184,13 @@ CREATE TABLE fm_project_buffer_budget (
 );
 
 
-ALTER TABLE fm_project_buffer_budget OWNER TO portico;
+ALTER TABLE public.fm_project_buffer_budget OWNER TO portico;
 
 --
 -- Name: seq_fm_project_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_project_history
+CREATE SEQUENCE public.seq_fm_project_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3199,14 +3198,14 @@ CREATE SEQUENCE seq_fm_project_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_project_history OWNER TO portico;
+ALTER TABLE public.seq_fm_project_history OWNER TO portico;
 
 --
 -- Name: fm_project_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_project_history (
-    history_id integer DEFAULT nextval('seq_fm_project_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_project_history (
+    history_id integer DEFAULT nextval('public.seq_fm_project_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -3217,13 +3216,13 @@ CREATE TABLE fm_project_history (
 );
 
 
-ALTER TABLE fm_project_history OWNER TO portico;
+ALTER TABLE public.fm_project_history OWNER TO portico;
 
 --
 -- Name: fm_project_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_project_status (
+CREATE TABLE public.fm_project_status (
     id character varying(20) NOT NULL,
     descr character varying(255) NOT NULL,
     approved smallint,
@@ -3231,25 +3230,25 @@ CREATE TABLE fm_project_status (
 );
 
 
-ALTER TABLE fm_project_status OWNER TO portico;
+ALTER TABLE public.fm_project_status OWNER TO portico;
 
 --
 -- Name: fm_projectbranch; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_projectbranch (
+CREATE TABLE public.fm_projectbranch (
     project_id integer NOT NULL,
     branch_id integer NOT NULL
 );
 
 
-ALTER TABLE fm_projectbranch OWNER TO portico;
+ALTER TABLE public.fm_projectbranch OWNER TO portico;
 
 --
 -- Name: fm_regulations; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_regulations (
+CREATE TABLE public.fm_regulations (
     id integer NOT NULL,
     parent_id integer,
     name character varying(255) NOT NULL,
@@ -3261,13 +3260,13 @@ CREATE TABLE fm_regulations (
 );
 
 
-ALTER TABLE fm_regulations OWNER TO portico;
+ALTER TABLE public.fm_regulations OWNER TO portico;
 
 --
 -- Name: fm_request; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request (
+CREATE TABLE public.fm_request (
     id integer NOT NULL,
     condition_survey_id integer,
     title text,
@@ -3310,13 +3309,13 @@ CREATE TABLE fm_request (
 );
 
 
-ALTER TABLE fm_request OWNER TO portico;
+ALTER TABLE public.fm_request OWNER TO portico;
 
 --
 -- Name: fm_request_condition; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_condition (
+CREATE TABLE public.fm_request_condition (
     request_id integer NOT NULL,
     condition_type integer NOT NULL,
     reference integer DEFAULT 0,
@@ -3328,13 +3327,13 @@ CREATE TABLE fm_request_condition (
 );
 
 
-ALTER TABLE fm_request_condition OWNER TO portico;
+ALTER TABLE public.fm_request_condition OWNER TO portico;
 
 --
 -- Name: fm_request_condition_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_condition_type (
+CREATE TABLE public.fm_request_condition_type (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     descr character varying(50),
@@ -3342,13 +3341,13 @@ CREATE TABLE fm_request_condition_type (
 );
 
 
-ALTER TABLE fm_request_condition_type OWNER TO portico;
+ALTER TABLE public.fm_request_condition_type OWNER TO portico;
 
 --
 -- Name: seq_fm_request_consume; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_request_consume
+CREATE SEQUENCE public.seq_fm_request_consume
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3356,14 +3355,14 @@ CREATE SEQUENCE seq_fm_request_consume
     CACHE 1;
 
 
-ALTER TABLE seq_fm_request_consume OWNER TO portico;
+ALTER TABLE public.seq_fm_request_consume OWNER TO portico;
 
 --
 -- Name: fm_request_consume; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_consume (
-    id integer DEFAULT nextval('seq_fm_request_consume'::regclass) NOT NULL,
+CREATE TABLE public.fm_request_consume (
+    id integer DEFAULT nextval('public.seq_fm_request_consume'::regclass) NOT NULL,
     request_id integer NOT NULL,
     amount integer NOT NULL,
     date bigint NOT NULL,
@@ -3373,13 +3372,13 @@ CREATE TABLE fm_request_consume (
 );
 
 
-ALTER TABLE fm_request_consume OWNER TO portico;
+ALTER TABLE public.fm_request_consume OWNER TO portico;
 
 --
 -- Name: seq_fm_request_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_request_history
+CREATE SEQUENCE public.seq_fm_request_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3387,14 +3386,14 @@ CREATE SEQUENCE seq_fm_request_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_request_history OWNER TO portico;
+ALTER TABLE public.seq_fm_request_history OWNER TO portico;
 
 --
 -- Name: fm_request_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_history (
-    history_id integer DEFAULT nextval('seq_fm_request_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_request_history (
+    history_id integer DEFAULT nextval('public.seq_fm_request_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -3405,13 +3404,13 @@ CREATE TABLE fm_request_history (
 );
 
 
-ALTER TABLE fm_request_history OWNER TO portico;
+ALTER TABLE public.fm_request_history OWNER TO portico;
 
 --
 -- Name: seq_fm_request_planning; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_request_planning
+CREATE SEQUENCE public.seq_fm_request_planning
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3419,14 +3418,14 @@ CREATE SEQUENCE seq_fm_request_planning
     CACHE 1;
 
 
-ALTER TABLE seq_fm_request_planning OWNER TO portico;
+ALTER TABLE public.seq_fm_request_planning OWNER TO portico;
 
 --
 -- Name: fm_request_planning; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_planning (
-    id integer DEFAULT nextval('seq_fm_request_planning'::regclass) NOT NULL,
+CREATE TABLE public.fm_request_planning (
+    id integer DEFAULT nextval('public.seq_fm_request_planning'::regclass) NOT NULL,
     request_id integer NOT NULL,
     amount integer NOT NULL,
     date bigint NOT NULL,
@@ -3436,26 +3435,26 @@ CREATE TABLE fm_request_planning (
 );
 
 
-ALTER TABLE fm_request_planning OWNER TO portico;
+ALTER TABLE public.fm_request_planning OWNER TO portico;
 
 --
 -- Name: fm_request_responsible_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_responsible_unit (
+CREATE TABLE public.fm_request_responsible_unit (
     id smallint NOT NULL,
     name character varying(50) NOT NULL,
     descr text
 );
 
 
-ALTER TABLE fm_request_responsible_unit OWNER TO portico;
+ALTER TABLE public.fm_request_responsible_unit OWNER TO portico;
 
 --
 -- Name: fm_request_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_request_status (
+CREATE TABLE public.fm_request_status (
     id character varying(20) NOT NULL,
     descr character varying(255) NOT NULL,
     closed smallint,
@@ -3465,13 +3464,13 @@ CREATE TABLE fm_request_status (
 );
 
 
-ALTER TABLE fm_request_status OWNER TO portico;
+ALTER TABLE public.fm_request_status OWNER TO portico;
 
 --
 -- Name: seq_fm_response_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_response_template
+CREATE SEQUENCE public.seq_fm_response_template
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3479,14 +3478,14 @@ CREATE SEQUENCE seq_fm_response_template
     CACHE 1;
 
 
-ALTER TABLE seq_fm_response_template OWNER TO portico;
+ALTER TABLE public.seq_fm_response_template OWNER TO portico;
 
 --
 -- Name: fm_response_template; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_response_template (
-    id integer DEFAULT nextval('seq_fm_response_template'::regclass) NOT NULL,
+CREATE TABLE public.fm_response_template (
+    id integer DEFAULT nextval('public.seq_fm_response_template'::regclass) NOT NULL,
     name character varying(200) NOT NULL,
     content text,
     public smallint,
@@ -3496,13 +3495,13 @@ CREATE TABLE fm_response_template (
 );
 
 
-ALTER TABLE fm_response_template OWNER TO portico;
+ALTER TABLE public.fm_response_template OWNER TO portico;
 
 --
 -- Name: seq_fm_responsibility; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_responsibility
+CREATE SEQUENCE public.seq_fm_responsibility
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3510,14 +3509,14 @@ CREATE SEQUENCE seq_fm_responsibility
     CACHE 1;
 
 
-ALTER TABLE seq_fm_responsibility OWNER TO portico;
+ALTER TABLE public.seq_fm_responsibility OWNER TO portico;
 
 --
 -- Name: fm_responsibility; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_responsibility (
-    id integer DEFAULT nextval('seq_fm_responsibility'::regclass) NOT NULL,
+CREATE TABLE public.fm_responsibility (
+    id integer DEFAULT nextval('public.seq_fm_responsibility'::regclass) NOT NULL,
     name character varying(50) NOT NULL,
     descr character varying(255),
     created_on integer NOT NULL,
@@ -3525,13 +3524,13 @@ CREATE TABLE fm_responsibility (
 );
 
 
-ALTER TABLE fm_responsibility OWNER TO portico;
+ALTER TABLE public.fm_responsibility OWNER TO portico;
 
 --
 -- Name: seq_fm_responsibility_contact; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_responsibility_contact
+CREATE SEQUENCE public.seq_fm_responsibility_contact
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3539,14 +3538,14 @@ CREATE SEQUENCE seq_fm_responsibility_contact
     CACHE 1;
 
 
-ALTER TABLE seq_fm_responsibility_contact OWNER TO portico;
+ALTER TABLE public.seq_fm_responsibility_contact OWNER TO portico;
 
 --
 -- Name: fm_responsibility_contact; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_responsibility_contact (
-    id integer DEFAULT nextval('seq_fm_responsibility_contact'::regclass) NOT NULL,
+CREATE TABLE public.fm_responsibility_contact (
+    id integer DEFAULT nextval('public.seq_fm_responsibility_contact'::regclass) NOT NULL,
     responsibility_role_id integer NOT NULL,
     contact_id integer,
     location_code character varying(20),
@@ -3564,13 +3563,13 @@ CREATE TABLE fm_responsibility_contact (
 );
 
 
-ALTER TABLE fm_responsibility_contact OWNER TO portico;
+ALTER TABLE public.fm_responsibility_contact OWNER TO portico;
 
 --
 -- Name: fm_responsibility_module; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_responsibility_module (
+CREATE TABLE public.fm_responsibility_module (
     responsibility_id integer NOT NULL,
     location_id integer NOT NULL,
     cat_id integer NOT NULL,
@@ -3580,13 +3579,13 @@ CREATE TABLE fm_responsibility_module (
 );
 
 
-ALTER TABLE fm_responsibility_module OWNER TO portico;
+ALTER TABLE public.fm_responsibility_module OWNER TO portico;
 
 --
 -- Name: seq_fm_responsibility_role; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_responsibility_role
+CREATE SEQUENCE public.seq_fm_responsibility_role
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3594,14 +3593,14 @@ CREATE SEQUENCE seq_fm_responsibility_role
     CACHE 1;
 
 
-ALTER TABLE seq_fm_responsibility_role OWNER TO portico;
+ALTER TABLE public.seq_fm_responsibility_role OWNER TO portico;
 
 --
 -- Name: fm_responsibility_role; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_responsibility_role (
-    id integer DEFAULT nextval('seq_fm_responsibility_role'::regclass) NOT NULL,
+CREATE TABLE public.fm_responsibility_role (
+    id integer DEFAULT nextval('public.seq_fm_responsibility_role'::regclass) NOT NULL,
     name character varying(200) NOT NULL,
     remark text,
     location_level character varying(200),
@@ -3613,13 +3612,13 @@ CREATE TABLE fm_responsibility_role (
 );
 
 
-ALTER TABLE fm_responsibility_role OWNER TO portico;
+ALTER TABLE public.fm_responsibility_role OWNER TO portico;
 
 --
 -- Name: fm_s_agreement; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_s_agreement (
+CREATE TABLE public.fm_s_agreement (
     id integer DEFAULT 0 NOT NULL,
     vendor_id integer,
     name character varying(100) NOT NULL,
@@ -3637,13 +3636,13 @@ CREATE TABLE fm_s_agreement (
 );
 
 
-ALTER TABLE fm_s_agreement OWNER TO portico;
+ALTER TABLE public.fm_s_agreement OWNER TO portico;
 
 --
 -- Name: fm_s_agreement_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_s_agreement_budget (
+CREATE TABLE public.fm_s_agreement_budget (
     agreement_id integer NOT NULL,
     year integer NOT NULL,
     budget_account character varying(15) NOT NULL,
@@ -3657,25 +3656,25 @@ CREATE TABLE fm_s_agreement_budget (
 );
 
 
-ALTER TABLE fm_s_agreement_budget OWNER TO portico;
+ALTER TABLE public.fm_s_agreement_budget OWNER TO portico;
 
 --
 -- Name: fm_s_agreement_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_s_agreement_category (
+CREATE TABLE public.fm_s_agreement_category (
     id integer DEFAULT 0 NOT NULL,
     descr character varying(50)
 );
 
 
-ALTER TABLE fm_s_agreement_category OWNER TO portico;
+ALTER TABLE public.fm_s_agreement_category OWNER TO portico;
 
 --
 -- Name: fm_s_agreement_detail; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_s_agreement_detail (
+CREATE TABLE public.fm_s_agreement_detail (
     agreement_id integer DEFAULT 0 NOT NULL,
     id integer DEFAULT 0 NOT NULL,
     location_code character varying(30),
@@ -3694,13 +3693,13 @@ CREATE TABLE fm_s_agreement_detail (
 );
 
 
-ALTER TABLE fm_s_agreement_detail OWNER TO portico;
+ALTER TABLE public.fm_s_agreement_detail OWNER TO portico;
 
 --
 -- Name: seq_fm_s_agreement_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_s_agreement_history
+CREATE SEQUENCE public.seq_fm_s_agreement_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3708,14 +3707,14 @@ CREATE SEQUENCE seq_fm_s_agreement_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_s_agreement_history OWNER TO portico;
+ALTER TABLE public.seq_fm_s_agreement_history OWNER TO portico;
 
 --
 -- Name: fm_s_agreement_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_s_agreement_history (
-    history_id integer DEFAULT nextval('seq_fm_s_agreement_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_s_agreement_history (
+    history_id integer DEFAULT nextval('public.seq_fm_s_agreement_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_detail_id integer NOT NULL,
@@ -3728,13 +3727,13 @@ CREATE TABLE fm_s_agreement_history (
 );
 
 
-ALTER TABLE fm_s_agreement_history OWNER TO portico;
+ALTER TABLE public.fm_s_agreement_history OWNER TO portico;
 
 --
 -- Name: fm_s_agreement_pricing; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_s_agreement_pricing (
+CREATE TABLE public.fm_s_agreement_pricing (
     agreement_id integer DEFAULT 0 NOT NULL,
     item_id integer DEFAULT 0 NOT NULL,
     id integer DEFAULT 0 NOT NULL,
@@ -3747,38 +3746,38 @@ CREATE TABLE fm_s_agreement_pricing (
 );
 
 
-ALTER TABLE fm_s_agreement_pricing OWNER TO portico;
+ALTER TABLE public.fm_s_agreement_pricing OWNER TO portico;
 
 --
 -- Name: fm_standard_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_standard_unit (
+CREATE TABLE public.fm_standard_unit (
     id integer NOT NULL,
     name character varying(20) NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_standard_unit OWNER TO portico;
+ALTER TABLE public.fm_standard_unit OWNER TO portico;
 
 --
 -- Name: fm_streetaddress; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_streetaddress (
+CREATE TABLE public.fm_streetaddress (
     id integer NOT NULL,
     descr character varying(150) NOT NULL
 );
 
 
-ALTER TABLE fm_streetaddress OWNER TO portico;
+ALTER TABLE public.fm_streetaddress OWNER TO portico;
 
 --
 -- Name: seq_fm_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_template
+CREATE SEQUENCE public.seq_fm_template
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3786,14 +3785,14 @@ CREATE SEQUENCE seq_fm_template
     CACHE 1;
 
 
-ALTER TABLE seq_fm_template OWNER TO portico;
+ALTER TABLE public.seq_fm_template OWNER TO portico;
 
 --
 -- Name: fm_template; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_template (
-    id integer DEFAULT nextval('seq_fm_template'::regclass) NOT NULL,
+CREATE TABLE public.fm_template (
+    id integer DEFAULT nextval('public.seq_fm_template'::regclass) NOT NULL,
     name character varying(50),
     descr character varying(255),
     owner integer,
@@ -3802,13 +3801,13 @@ CREATE TABLE fm_template (
 );
 
 
-ALTER TABLE fm_template OWNER TO portico;
+ALTER TABLE public.fm_template OWNER TO portico;
 
 --
 -- Name: seq_fm_template_hours; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_template_hours
+CREATE SEQUENCE public.seq_fm_template_hours
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3816,14 +3815,14 @@ CREATE SEQUENCE seq_fm_template_hours
     CACHE 1;
 
 
-ALTER TABLE seq_fm_template_hours OWNER TO portico;
+ALTER TABLE public.seq_fm_template_hours OWNER TO portico;
 
 --
 -- Name: fm_template_hours; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_template_hours (
-    id integer DEFAULT nextval('seq_fm_template_hours'::regclass) NOT NULL,
+CREATE TABLE public.fm_template_hours (
+    id integer DEFAULT nextval('public.seq_fm_template_hours'::regclass) NOT NULL,
     template_id integer NOT NULL,
     record integer,
     owner integer NOT NULL,
@@ -3846,13 +3845,13 @@ CREATE TABLE fm_template_hours (
 );
 
 
-ALTER TABLE fm_template_hours OWNER TO portico;
+ALTER TABLE public.fm_template_hours OWNER TO portico;
 
 --
 -- Name: fm_tenant; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tenant (
+CREATE TABLE public.fm_tenant (
     id integer NOT NULL,
     member_of character varying(255),
     entry_date integer,
@@ -3869,25 +3868,25 @@ CREATE TABLE fm_tenant (
 );
 
 
-ALTER TABLE fm_tenant OWNER TO portico;
+ALTER TABLE public.fm_tenant OWNER TO portico;
 
 --
 -- Name: fm_tenant_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tenant_category (
+CREATE TABLE public.fm_tenant_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_tenant_category OWNER TO portico;
+ALTER TABLE public.fm_tenant_category OWNER TO portico;
 
 --
 -- Name: seq_fm_tenant_claim; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tenant_claim
+CREATE SEQUENCE public.seq_fm_tenant_claim
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3895,14 +3894,14 @@ CREATE SEQUENCE seq_fm_tenant_claim
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tenant_claim OWNER TO portico;
+ALTER TABLE public.seq_fm_tenant_claim OWNER TO portico;
 
 --
 -- Name: fm_tenant_claim; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tenant_claim (
-    id integer DEFAULT nextval('seq_fm_tenant_claim'::regclass) NOT NULL,
+CREATE TABLE public.fm_tenant_claim (
+    id integer DEFAULT nextval('public.seq_fm_tenant_claim'::regclass) NOT NULL,
     project_id integer NOT NULL,
     tenant_id integer NOT NULL,
     amount numeric(20,2) DEFAULT 0,
@@ -3915,25 +3914,25 @@ CREATE TABLE fm_tenant_claim (
 );
 
 
-ALTER TABLE fm_tenant_claim OWNER TO portico;
+ALTER TABLE public.fm_tenant_claim OWNER TO portico;
 
 --
 -- Name: fm_tenant_claim_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tenant_claim_category (
+CREATE TABLE public.fm_tenant_claim_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_tenant_claim_category OWNER TO portico;
+ALTER TABLE public.fm_tenant_claim_category OWNER TO portico;
 
 --
 -- Name: seq_fm_tenant_claim_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tenant_claim_history
+CREATE SEQUENCE public.seq_fm_tenant_claim_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3941,14 +3940,14 @@ CREATE SEQUENCE seq_fm_tenant_claim_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tenant_claim_history OWNER TO portico;
+ALTER TABLE public.seq_fm_tenant_claim_history OWNER TO portico;
 
 --
 -- Name: fm_tenant_claim_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tenant_claim_history (
-    history_id integer DEFAULT nextval('seq_fm_tenant_claim_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_tenant_claim_history (
+    history_id integer DEFAULT nextval('public.seq_fm_tenant_claim_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -3959,13 +3958,13 @@ CREATE TABLE fm_tenant_claim_history (
 );
 
 
-ALTER TABLE fm_tenant_claim_history OWNER TO portico;
+ALTER TABLE public.fm_tenant_claim_history OWNER TO portico;
 
 --
 -- Name: seq_fm_tts_budget; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tts_budget
+CREATE SEQUENCE public.seq_fm_tts_budget
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3973,14 +3972,14 @@ CREATE SEQUENCE seq_fm_tts_budget
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tts_budget OWNER TO portico;
+ALTER TABLE public.seq_fm_tts_budget OWNER TO portico;
 
 --
 -- Name: fm_tts_budget; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_budget (
-    id integer DEFAULT nextval('seq_fm_tts_budget'::regclass) NOT NULL,
+CREATE TABLE public.fm_tts_budget (
+    id integer DEFAULT nextval('public.seq_fm_tts_budget'::regclass) NOT NULL,
     ticket_id integer NOT NULL,
     amount numeric(20,2) DEFAULT 0 NOT NULL,
     period integer NOT NULL,
@@ -3990,13 +3989,13 @@ CREATE TABLE fm_tts_budget (
 );
 
 
-ALTER TABLE fm_tts_budget OWNER TO portico;
+ALTER TABLE public.fm_tts_budget OWNER TO portico;
 
 --
 -- Name: seq_fm_tts_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tts_history
+CREATE SEQUENCE public.seq_fm_tts_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4004,14 +4003,14 @@ CREATE SEQUENCE seq_fm_tts_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tts_history OWNER TO portico;
+ALTER TABLE public.seq_fm_tts_history OWNER TO portico;
 
 --
 -- Name: fm_tts_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_history (
-    history_id integer DEFAULT nextval('seq_fm_tts_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_tts_history (
+    history_id integer DEFAULT nextval('public.seq_fm_tts_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -4023,13 +4022,13 @@ CREATE TABLE fm_tts_history (
 );
 
 
-ALTER TABLE fm_tts_history OWNER TO portico;
+ALTER TABLE public.fm_tts_history OWNER TO portico;
 
 --
 -- Name: seq_fm_tts_payments; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tts_payments
+CREATE SEQUENCE public.seq_fm_tts_payments
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4037,14 +4036,14 @@ CREATE SEQUENCE seq_fm_tts_payments
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tts_payments OWNER TO portico;
+ALTER TABLE public.seq_fm_tts_payments OWNER TO portico;
 
 --
 -- Name: fm_tts_payments; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_payments (
-    id integer DEFAULT nextval('seq_fm_tts_payments'::regclass) NOT NULL,
+CREATE TABLE public.fm_tts_payments (
+    id integer DEFAULT nextval('public.seq_fm_tts_payments'::regclass) NOT NULL,
     ticket_id integer NOT NULL,
     amount numeric(20,2) DEFAULT 0 NOT NULL,
     period integer NOT NULL,
@@ -4054,25 +4053,25 @@ CREATE TABLE fm_tts_payments (
 );
 
 
-ALTER TABLE fm_tts_payments OWNER TO portico;
+ALTER TABLE public.fm_tts_payments OWNER TO portico;
 
 --
 -- Name: fm_tts_priority; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_priority (
+CREATE TABLE public.fm_tts_priority (
     id integer NOT NULL,
     name character varying(100)
 );
 
 
-ALTER TABLE fm_tts_priority OWNER TO portico;
+ALTER TABLE public.fm_tts_priority OWNER TO portico;
 
 --
 -- Name: seq_fm_tts_status; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tts_status
+CREATE SEQUENCE public.seq_fm_tts_status
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4080,14 +4079,14 @@ CREATE SEQUENCE seq_fm_tts_status
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tts_status OWNER TO portico;
+ALTER TABLE public.seq_fm_tts_status OWNER TO portico;
 
 --
 -- Name: fm_tts_status; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_status (
-    id integer DEFAULT nextval('seq_fm_tts_status'::regclass) NOT NULL,
+CREATE TABLE public.fm_tts_status (
+    id integer DEFAULT nextval('public.seq_fm_tts_status'::regclass) NOT NULL,
     name character varying(50) NOT NULL,
     color character varying(10),
     closed smallint,
@@ -4099,13 +4098,13 @@ CREATE TABLE fm_tts_status (
 );
 
 
-ALTER TABLE fm_tts_status OWNER TO portico;
+ALTER TABLE public.fm_tts_status OWNER TO portico;
 
 --
 -- Name: seq_fm_tts_tickets; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_tts_tickets
+CREATE SEQUENCE public.seq_fm_tts_tickets
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4113,14 +4112,14 @@ CREATE SEQUENCE seq_fm_tts_tickets
     CACHE 1;
 
 
-ALTER TABLE seq_fm_tts_tickets OWNER TO portico;
+ALTER TABLE public.seq_fm_tts_tickets OWNER TO portico;
 
 --
 -- Name: fm_tts_tickets; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_tickets (
-    id integer DEFAULT nextval('seq_fm_tts_tickets'::regclass) NOT NULL,
+CREATE TABLE public.fm_tts_tickets (
+    id integer DEFAULT nextval('public.seq_fm_tts_tickets'::regclass) NOT NULL,
     group_id integer,
     priority smallint NOT NULL,
     user_id integer,
@@ -4181,38 +4180,38 @@ CREATE TABLE fm_tts_tickets (
 );
 
 
-ALTER TABLE fm_tts_tickets OWNER TO portico;
+ALTER TABLE public.fm_tts_tickets OWNER TO portico;
 
 --
 -- Name: fm_tts_views; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_tts_views (
+CREATE TABLE public.fm_tts_views (
     id integer NOT NULL,
     account_id integer,
     "time" integer NOT NULL
 );
 
 
-ALTER TABLE fm_tts_views OWNER TO portico;
+ALTER TABLE public.fm_tts_views OWNER TO portico;
 
 --
 -- Name: fm_unspsc_code; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_unspsc_code (
+CREATE TABLE public.fm_unspsc_code (
     id character varying(15) NOT NULL,
     name character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_unspsc_code OWNER TO portico;
+ALTER TABLE public.fm_unspsc_code OWNER TO portico;
 
 --
 -- Name: fm_vendor; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_vendor (
+CREATE TABLE public.fm_vendor (
     id integer NOT NULL,
     entry_date bigint DEFAULT date_part('epoch'::text, now()),
     org_name character varying(100),
@@ -4227,25 +4226,25 @@ CREATE TABLE fm_vendor (
 );
 
 
-ALTER TABLE fm_vendor OWNER TO portico;
+ALTER TABLE public.fm_vendor OWNER TO portico;
 
 --
 -- Name: fm_vendor_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_vendor_category (
+CREATE TABLE public.fm_vendor_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_vendor_category OWNER TO portico;
+ALTER TABLE public.fm_vendor_category OWNER TO portico;
 
 --
 -- Name: seq_fm_view_dataset; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_view_dataset
+CREATE SEQUENCE public.seq_fm_view_dataset
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4253,14 +4252,14 @@ CREATE SEQUENCE seq_fm_view_dataset
     CACHE 1;
 
 
-ALTER TABLE seq_fm_view_dataset OWNER TO portico;
+ALTER TABLE public.seq_fm_view_dataset OWNER TO portico;
 
 --
 -- Name: fm_view_dataset; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_view_dataset (
-    id integer DEFAULT nextval('seq_fm_view_dataset'::regclass) NOT NULL,
+CREATE TABLE public.fm_view_dataset (
+    id integer DEFAULT nextval('public.seq_fm_view_dataset'::regclass) NOT NULL,
     view_name character varying(100) NOT NULL,
     dataset_name character varying(100) NOT NULL,
     owner_id integer,
@@ -4268,13 +4267,13 @@ CREATE TABLE fm_view_dataset (
 );
 
 
-ALTER TABLE fm_view_dataset OWNER TO portico;
+ALTER TABLE public.fm_view_dataset OWNER TO portico;
 
 --
 -- Name: seq_fm_view_dataset_report; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_view_dataset_report
+CREATE SEQUENCE public.seq_fm_view_dataset_report
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4282,14 +4281,14 @@ CREATE SEQUENCE seq_fm_view_dataset_report
     CACHE 1;
 
 
-ALTER TABLE seq_fm_view_dataset_report OWNER TO portico;
+ALTER TABLE public.seq_fm_view_dataset_report OWNER TO portico;
 
 --
 -- Name: fm_view_dataset_report; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_view_dataset_report (
-    id integer DEFAULT nextval('seq_fm_view_dataset_report'::regclass) NOT NULL,
+CREATE TABLE public.fm_view_dataset_report (
+    id integer DEFAULT nextval('public.seq_fm_view_dataset_report'::regclass) NOT NULL,
     dataset_id integer NOT NULL,
     report_name character varying(100) NOT NULL,
     report_definition jsonb,
@@ -4298,13 +4297,13 @@ CREATE TABLE fm_view_dataset_report (
 );
 
 
-ALTER TABLE fm_view_dataset_report OWNER TO portico;
+ALTER TABLE public.fm_view_dataset_report OWNER TO portico;
 
 --
 -- Name: fm_wo_h_deviation; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_wo_h_deviation (
+CREATE TABLE public.fm_wo_h_deviation (
     workorder_id bigint NOT NULL,
     hour_id integer NOT NULL,
     id integer NOT NULL,
@@ -4314,13 +4313,13 @@ CREATE TABLE fm_wo_h_deviation (
 );
 
 
-ALTER TABLE fm_wo_h_deviation OWNER TO portico;
+ALTER TABLE public.fm_wo_h_deviation OWNER TO portico;
 
 --
 -- Name: seq_fm_wo_hours; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_wo_hours
+CREATE SEQUENCE public.seq_fm_wo_hours
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4328,14 +4327,14 @@ CREATE SEQUENCE seq_fm_wo_hours
     CACHE 1;
 
 
-ALTER TABLE seq_fm_wo_hours OWNER TO portico;
+ALTER TABLE public.seq_fm_wo_hours OWNER TO portico;
 
 --
 -- Name: fm_wo_hours; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_wo_hours (
-    id integer DEFAULT nextval('seq_fm_wo_hours'::regclass) NOT NULL,
+CREATE TABLE public.fm_wo_hours (
+    id integer DEFAULT nextval('public.seq_fm_wo_hours'::regclass) NOT NULL,
     record integer,
     owner integer NOT NULL,
     workorder_id bigint NOT NULL,
@@ -4360,25 +4359,25 @@ CREATE TABLE fm_wo_hours (
 );
 
 
-ALTER TABLE fm_wo_hours OWNER TO portico;
+ALTER TABLE public.fm_wo_hours OWNER TO portico;
 
 --
 -- Name: fm_wo_hours_category; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_wo_hours_category (
+CREATE TABLE public.fm_wo_hours_category (
     id integer NOT NULL,
     descr character varying(255) NOT NULL
 );
 
 
-ALTER TABLE fm_wo_hours_category OWNER TO portico;
+ALTER TABLE public.fm_wo_hours_category OWNER TO portico;
 
 --
 -- Name: seq_fm_workorder_history; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_fm_workorder_history
+CREATE SEQUENCE public.seq_fm_workorder_history
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4386,14 +4385,14 @@ CREATE SEQUENCE seq_fm_workorder_history
     CACHE 1;
 
 
-ALTER TABLE seq_fm_workorder_history OWNER TO portico;
+ALTER TABLE public.seq_fm_workorder_history OWNER TO portico;
 
 --
 -- Name: fm_workorder_history; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE fm_workorder_history (
-    history_id integer DEFAULT nextval('seq_fm_workorder_history'::regclass) NOT NULL,
+CREATE TABLE public.fm_workorder_history (
+    history_id integer DEFAULT nextval('public.seq_fm_workorder_history'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     history_appname character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -4404,13 +4403,13 @@ CREATE TABLE fm_workorder_history (
 );
 
 
-ALTER TABLE fm_workorder_history OWNER TO portico;
+ALTER TABLE public.fm_workorder_history OWNER TO portico;
 
 --
 -- Name: phpgw_access_log; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_access_log (
+CREATE TABLE public.phpgw_access_log (
     sessionid character(64) NOT NULL,
     loginid character varying(100) NOT NULL,
     ip character varying(100) DEFAULT '::1'::character varying NOT NULL,
@@ -4420,13 +4419,13 @@ CREATE TABLE phpgw_access_log (
 );
 
 
-ALTER TABLE phpgw_access_log OWNER TO portico;
+ALTER TABLE public.phpgw_access_log OWNER TO portico;
 
 --
 -- Name: seq_phpgw_account_delegates; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_account_delegates
+CREATE SEQUENCE public.seq_phpgw_account_delegates
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4434,14 +4433,14 @@ CREATE SEQUENCE seq_phpgw_account_delegates
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_account_delegates OWNER TO portico;
+ALTER TABLE public.seq_phpgw_account_delegates OWNER TO portico;
 
 --
 -- Name: phpgw_account_delegates; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_account_delegates (
-    delegate_id integer DEFAULT nextval('seq_phpgw_account_delegates'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_account_delegates (
+    delegate_id integer DEFAULT nextval('public.seq_phpgw_account_delegates'::regclass) NOT NULL,
     account_id integer NOT NULL,
     owner_id integer NOT NULL,
     location_id integer NOT NULL,
@@ -4453,13 +4452,13 @@ CREATE TABLE phpgw_account_delegates (
 );
 
 
-ALTER TABLE phpgw_account_delegates OWNER TO portico;
+ALTER TABLE public.phpgw_account_delegates OWNER TO portico;
 
 --
 -- Name: seq_phpgw_accounts; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_accounts
+CREATE SEQUENCE public.seq_phpgw_accounts
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4467,14 +4466,14 @@ CREATE SEQUENCE seq_phpgw_accounts
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_accounts OWNER TO portico;
+ALTER TABLE public.seq_phpgw_accounts OWNER TO portico;
 
 --
 -- Name: phpgw_accounts; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_accounts (
-    account_id integer DEFAULT nextval('seq_phpgw_accounts'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_accounts (
+    account_id integer DEFAULT nextval('public.seq_phpgw_accounts'::regclass) NOT NULL,
     account_lid character varying(100) NOT NULL,
     account_pwd character varying(115) NOT NULL,
     account_firstname character varying(50) NOT NULL,
@@ -4492,25 +4491,25 @@ CREATE TABLE phpgw_accounts (
 );
 
 
-ALTER TABLE phpgw_accounts OWNER TO portico;
+ALTER TABLE public.phpgw_accounts OWNER TO portico;
 
 --
 -- Name: phpgw_accounts_data; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_accounts_data (
+CREATE TABLE public.phpgw_accounts_data (
     account_id integer NOT NULL,
     account_data jsonb
 );
 
 
-ALTER TABLE phpgw_accounts_data OWNER TO portico;
+ALTER TABLE public.phpgw_accounts_data OWNER TO portico;
 
 --
 -- Name: phpgw_acl; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_acl (
+CREATE TABLE public.phpgw_acl (
     acl_account integer,
     acl_rights integer,
     acl_grantor integer DEFAULT '-1'::integer,
@@ -4521,13 +4520,13 @@ CREATE TABLE phpgw_acl (
 );
 
 
-ALTER TABLE phpgw_acl OWNER TO portico;
+ALTER TABLE public.phpgw_acl OWNER TO portico;
 
 --
 -- Name: seq_phpgw_applications; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_applications
+CREATE SEQUENCE public.seq_phpgw_applications
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4535,14 +4534,14 @@ CREATE SEQUENCE seq_phpgw_applications
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_applications OWNER TO portico;
+ALTER TABLE public.seq_phpgw_applications OWNER TO portico;
 
 --
 -- Name: phpgw_applications; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_applications (
-    app_id integer DEFAULT nextval('seq_phpgw_applications'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_applications (
+    app_id integer DEFAULT nextval('public.seq_phpgw_applications'::regclass) NOT NULL,
     app_name character varying(25) NOT NULL,
     app_enabled integer NOT NULL,
     app_order integer NOT NULL,
@@ -4551,13 +4550,13 @@ CREATE TABLE phpgw_applications (
 );
 
 
-ALTER TABLE phpgw_applications OWNER TO portico;
+ALTER TABLE public.phpgw_applications OWNER TO portico;
 
 --
 -- Name: phpgw_async; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_async (
+CREATE TABLE public.phpgw_async (
     id character varying(255) NOT NULL,
     next integer NOT NULL,
     times character varying(255) NOT NULL,
@@ -4567,13 +4566,13 @@ CREATE TABLE phpgw_async (
 );
 
 
-ALTER TABLE phpgw_async OWNER TO portico;
+ALTER TABLE public.phpgw_async OWNER TO portico;
 
 --
 -- Name: phpgw_cache_user; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_cache_user (
+CREATE TABLE public.phpgw_cache_user (
     item_key character varying(100) NOT NULL,
     user_id integer NOT NULL,
     cache_data text NOT NULL,
@@ -4581,13 +4580,13 @@ CREATE TABLE phpgw_cache_user (
 );
 
 
-ALTER TABLE phpgw_cache_user OWNER TO portico;
+ALTER TABLE public.phpgw_cache_user OWNER TO portico;
 
 --
 -- Name: seq_phpgw_categories; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_categories
+CREATE SEQUENCE public.seq_phpgw_categories
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4595,14 +4594,14 @@ CREATE SEQUENCE seq_phpgw_categories
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_categories OWNER TO portico;
+ALTER TABLE public.seq_phpgw_categories OWNER TO portico;
 
 --
 -- Name: phpgw_categories; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_categories (
-    cat_id integer DEFAULT nextval('seq_phpgw_categories'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_categories (
+    cat_id integer DEFAULT nextval('public.seq_phpgw_categories'::regclass) NOT NULL,
     cat_main integer DEFAULT 0 NOT NULL,
     cat_parent integer DEFAULT 0 NOT NULL,
     cat_level smallint DEFAULT 0 NOT NULL,
@@ -4618,26 +4617,26 @@ CREATE TABLE phpgw_categories (
 );
 
 
-ALTER TABLE phpgw_categories OWNER TO portico;
+ALTER TABLE public.phpgw_categories OWNER TO portico;
 
 --
 -- Name: phpgw_config; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_config (
+CREATE TABLE public.phpgw_config (
     config_app character varying(50) NOT NULL,
     config_name character varying(255) NOT NULL,
     config_value text
 );
 
 
-ALTER TABLE phpgw_config OWNER TO portico;
+ALTER TABLE public.phpgw_config OWNER TO portico;
 
 --
 -- Name: phpgw_config2_attrib; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_config2_attrib (
+CREATE TABLE public.phpgw_config2_attrib (
     section_id integer NOT NULL,
     id integer NOT NULL,
     input_type character varying(10) NOT NULL,
@@ -4646,13 +4645,13 @@ CREATE TABLE phpgw_config2_attrib (
 );
 
 
-ALTER TABLE phpgw_config2_attrib OWNER TO portico;
+ALTER TABLE public.phpgw_config2_attrib OWNER TO portico;
 
 --
 -- Name: phpgw_config2_choice; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_config2_choice (
+CREATE TABLE public.phpgw_config2_choice (
     section_id integer NOT NULL,
     attrib_id integer NOT NULL,
     id integer NOT NULL,
@@ -4660,13 +4659,13 @@ CREATE TABLE phpgw_config2_choice (
 );
 
 
-ALTER TABLE phpgw_config2_choice OWNER TO portico;
+ALTER TABLE public.phpgw_config2_choice OWNER TO portico;
 
 --
 -- Name: phpgw_config2_section; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_config2_section (
+CREATE TABLE public.phpgw_config2_section (
     id integer NOT NULL,
     location_id integer NOT NULL,
     name character varying(50) NOT NULL,
@@ -4675,13 +4674,13 @@ CREATE TABLE phpgw_config2_section (
 );
 
 
-ALTER TABLE phpgw_config2_section OWNER TO portico;
+ALTER TABLE public.phpgw_config2_section OWNER TO portico;
 
 --
 -- Name: phpgw_config2_value; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_config2_value (
+CREATE TABLE public.phpgw_config2_value (
     section_id integer NOT NULL,
     attrib_id integer NOT NULL,
     id integer NOT NULL,
@@ -4689,13 +4688,13 @@ CREATE TABLE phpgw_config2_value (
 );
 
 
-ALTER TABLE phpgw_config2_value OWNER TO portico;
+ALTER TABLE public.phpgw_config2_value OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact
+CREATE SEQUENCE public.seq_phpgw_contact
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4703,14 +4702,14 @@ CREATE SEQUENCE seq_phpgw_contact
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact OWNER TO portico;
 
 --
 -- Name: phpgw_contact; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact (
-    contact_id integer DEFAULT nextval('seq_phpgw_contact'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact (
+    contact_id integer DEFAULT nextval('public.seq_phpgw_contact'::regclass) NOT NULL,
     owner integer NOT NULL,
     access character varying(7),
     cat_id character varying(200),
@@ -4718,13 +4717,13 @@ CREATE TABLE phpgw_contact (
 );
 
 
-ALTER TABLE phpgw_contact OWNER TO portico;
+ALTER TABLE public.phpgw_contact OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_addr; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_addr
+CREATE SEQUENCE public.seq_phpgw_contact_addr
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4732,14 +4731,14 @@ CREATE SEQUENCE seq_phpgw_contact_addr
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_addr OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_addr OWNER TO portico;
 
 --
 -- Name: phpgw_contact_addr; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_addr (
-    contact_addr_id integer DEFAULT nextval('seq_phpgw_contact_addr'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_addr (
+    contact_addr_id integer DEFAULT nextval('public.seq_phpgw_contact_addr'::regclass) NOT NULL,
     contact_id integer NOT NULL,
     addr_type_id integer,
     add1 character varying(64),
@@ -4758,13 +4757,13 @@ CREATE TABLE phpgw_contact_addr (
 );
 
 
-ALTER TABLE phpgw_contact_addr OWNER TO portico;
+ALTER TABLE public.phpgw_contact_addr OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_addr_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_addr_type
+CREATE SEQUENCE public.seq_phpgw_contact_addr_type
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4772,25 +4771,25 @@ CREATE SEQUENCE seq_phpgw_contact_addr_type
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_addr_type OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_addr_type OWNER TO portico;
 
 --
 -- Name: phpgw_contact_addr_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_addr_type (
-    addr_type_id integer DEFAULT nextval('seq_phpgw_contact_addr_type'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_addr_type (
+    addr_type_id integer DEFAULT nextval('public.seq_phpgw_contact_addr_type'::regclass) NOT NULL,
     description character varying(50) NOT NULL
 );
 
 
-ALTER TABLE phpgw_contact_addr_type OWNER TO portico;
+ALTER TABLE public.phpgw_contact_addr_type OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_comm; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_comm
+CREATE SEQUENCE public.seq_phpgw_contact_comm
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4798,14 +4797,14 @@ CREATE SEQUENCE seq_phpgw_contact_comm
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_comm OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_comm OWNER TO portico;
 
 --
 -- Name: phpgw_contact_comm; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_comm (
-    comm_id integer DEFAULT nextval('seq_phpgw_contact_comm'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_comm (
+    comm_id integer DEFAULT nextval('public.seq_phpgw_contact_comm'::regclass) NOT NULL,
     contact_id integer NOT NULL,
     comm_descr_id integer NOT NULL,
     preferred character(1) DEFAULT 'N'::bpchar NOT NULL,
@@ -4817,13 +4816,13 @@ CREATE TABLE phpgw_contact_comm (
 );
 
 
-ALTER TABLE phpgw_contact_comm OWNER TO portico;
+ALTER TABLE public.phpgw_contact_comm OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_comm_descr; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_comm_descr
+CREATE SEQUENCE public.seq_phpgw_contact_comm_descr
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4831,26 +4830,26 @@ CREATE SEQUENCE seq_phpgw_contact_comm_descr
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_comm_descr OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_comm_descr OWNER TO portico;
 
 --
 -- Name: phpgw_contact_comm_descr; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_comm_descr (
-    comm_descr_id integer DEFAULT nextval('seq_phpgw_contact_comm_descr'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_comm_descr (
+    comm_descr_id integer DEFAULT nextval('public.seq_phpgw_contact_comm_descr'::regclass) NOT NULL,
     comm_type_id integer NOT NULL,
     descr character varying(50)
 );
 
 
-ALTER TABLE phpgw_contact_comm_descr OWNER TO portico;
+ALTER TABLE public.phpgw_contact_comm_descr OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_comm_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_comm_type
+CREATE SEQUENCE public.seq_phpgw_contact_comm_type
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4858,27 +4857,27 @@ CREATE SEQUENCE seq_phpgw_contact_comm_type
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_comm_type OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_comm_type OWNER TO portico;
 
 --
 -- Name: phpgw_contact_comm_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_comm_type (
-    comm_type_id integer DEFAULT nextval('seq_phpgw_contact_comm_type'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_comm_type (
+    comm_type_id integer DEFAULT nextval('public.seq_phpgw_contact_comm_type'::regclass) NOT NULL,
     type character varying(50),
     active character varying(30),
     class character varying(30)
 );
 
 
-ALTER TABLE phpgw_contact_comm_type OWNER TO portico;
+ALTER TABLE public.phpgw_contact_comm_type OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_note; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_note
+CREATE SEQUENCE public.seq_phpgw_contact_note
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4886,14 +4885,14 @@ CREATE SEQUENCE seq_phpgw_contact_note
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_note OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_note OWNER TO portico;
 
 --
 -- Name: phpgw_contact_note; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_note (
-    contact_note_id integer DEFAULT nextval('seq_phpgw_contact_note'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_note (
+    contact_note_id integer DEFAULT nextval('public.seq_phpgw_contact_note'::regclass) NOT NULL,
     contact_id integer NOT NULL,
     note_type_id integer NOT NULL,
     note_text text NOT NULL,
@@ -4904,13 +4903,13 @@ CREATE TABLE phpgw_contact_note (
 );
 
 
-ALTER TABLE phpgw_contact_note OWNER TO portico;
+ALTER TABLE public.phpgw_contact_note OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_note_type; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_note_type
+CREATE SEQUENCE public.seq_phpgw_contact_note_type
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4918,25 +4917,25 @@ CREATE SEQUENCE seq_phpgw_contact_note_type
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_note_type OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_note_type OWNER TO portico;
 
 --
 -- Name: phpgw_contact_note_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_note_type (
-    note_type_id integer DEFAULT nextval('seq_phpgw_contact_note_type'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_note_type (
+    note_type_id integer DEFAULT nextval('public.seq_phpgw_contact_note_type'::regclass) NOT NULL,
     description character varying(30) NOT NULL
 );
 
 
-ALTER TABLE phpgw_contact_note_type OWNER TO portico;
+ALTER TABLE public.phpgw_contact_note_type OWNER TO portico;
 
 --
 -- Name: phpgw_contact_org; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_org (
+CREATE TABLE public.phpgw_contact_org (
     org_id integer NOT NULL,
     name character varying(80) NOT NULL,
     active character(1) DEFAULT 'Y'::bpchar,
@@ -4948,13 +4947,13 @@ CREATE TABLE phpgw_contact_org (
 );
 
 
-ALTER TABLE phpgw_contact_org OWNER TO portico;
+ALTER TABLE public.phpgw_contact_org OWNER TO portico;
 
 --
 -- Name: phpgw_contact_org_person; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_org_person (
+CREATE TABLE public.phpgw_contact_org_person (
     org_id integer NOT NULL,
     person_id integer NOT NULL,
     addr_id integer,
@@ -4964,13 +4963,13 @@ CREATE TABLE phpgw_contact_org_person (
 );
 
 
-ALTER TABLE phpgw_contact_org_person OWNER TO portico;
+ALTER TABLE public.phpgw_contact_org_person OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_others; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_others
+CREATE SEQUENCE public.seq_phpgw_contact_others
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -4978,14 +4977,14 @@ CREATE SEQUENCE seq_phpgw_contact_others
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_others OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_others OWNER TO portico;
 
 --
 -- Name: phpgw_contact_others; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_others (
-    other_id integer DEFAULT nextval('seq_phpgw_contact_others'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_others (
+    other_id integer DEFAULT nextval('public.seq_phpgw_contact_others'::regclass) NOT NULL,
     contact_id integer NOT NULL,
     contact_owner integer NOT NULL,
     other_name character varying(255) NOT NULL,
@@ -4993,13 +4992,13 @@ CREATE TABLE phpgw_contact_others (
 );
 
 
-ALTER TABLE phpgw_contact_others OWNER TO portico;
+ALTER TABLE public.phpgw_contact_others OWNER TO portico;
 
 --
 -- Name: phpgw_contact_person; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_person (
+CREATE TABLE public.phpgw_contact_person (
     person_id integer NOT NULL,
     first_name character varying(64) NOT NULL,
     last_name character varying(64) NOT NULL,
@@ -5020,13 +5019,13 @@ CREATE TABLE phpgw_contact_person (
 );
 
 
-ALTER TABLE phpgw_contact_person OWNER TO portico;
+ALTER TABLE public.phpgw_contact_person OWNER TO portico;
 
 --
 -- Name: seq_phpgw_contact_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_contact_types
+CREATE SEQUENCE public.seq_phpgw_contact_types
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5034,26 +5033,26 @@ CREATE SEQUENCE seq_phpgw_contact_types
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_contact_types OWNER TO portico;
+ALTER TABLE public.seq_phpgw_contact_types OWNER TO portico;
 
 --
 -- Name: phpgw_contact_types; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_contact_types (
-    contact_type_id integer DEFAULT nextval('seq_phpgw_contact_types'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_contact_types (
+    contact_type_id integer DEFAULT nextval('public.seq_phpgw_contact_types'::regclass) NOT NULL,
     contact_type_descr character varying(50),
     contact_type_table character varying(50)
 );
 
 
-ALTER TABLE phpgw_contact_types OWNER TO portico;
+ALTER TABLE public.phpgw_contact_types OWNER TO portico;
 
 --
 -- Name: phpgw_cust_attribute; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_cust_attribute (
+CREATE TABLE public.phpgw_cust_attribute (
     location_id integer NOT NULL,
     group_id integer DEFAULT 0,
     id integer NOT NULL,
@@ -5083,13 +5082,13 @@ CREATE TABLE phpgw_cust_attribute (
 );
 
 
-ALTER TABLE phpgw_cust_attribute OWNER TO portico;
+ALTER TABLE public.phpgw_cust_attribute OWNER TO portico;
 
 --
 -- Name: phpgw_cust_attribute_group; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_cust_attribute_group (
+CREATE TABLE public.phpgw_cust_attribute_group (
     location_id integer NOT NULL,
     id integer NOT NULL,
     parent_id integer,
@@ -5100,13 +5099,13 @@ CREATE TABLE phpgw_cust_attribute_group (
 );
 
 
-ALTER TABLE phpgw_cust_attribute_group OWNER TO portico;
+ALTER TABLE public.phpgw_cust_attribute_group OWNER TO portico;
 
 --
 -- Name: phpgw_cust_choice; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_cust_choice (
+CREATE TABLE public.phpgw_cust_choice (
     location_id integer NOT NULL,
     attrib_id integer NOT NULL,
     id integer NOT NULL,
@@ -5116,13 +5115,13 @@ CREATE TABLE phpgw_cust_choice (
 );
 
 
-ALTER TABLE phpgw_cust_choice OWNER TO portico;
+ALTER TABLE public.phpgw_cust_choice OWNER TO portico;
 
 --
 -- Name: phpgw_cust_function; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_cust_function (
+CREATE TABLE public.phpgw_cust_function (
     location_id integer NOT NULL,
     id integer NOT NULL,
     descr text,
@@ -5134,26 +5133,26 @@ CREATE TABLE phpgw_cust_function (
 );
 
 
-ALTER TABLE phpgw_cust_function OWNER TO portico;
+ALTER TABLE public.phpgw_cust_function OWNER TO portico;
 
 --
 -- Name: phpgw_group_map; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_group_map (
+CREATE TABLE public.phpgw_group_map (
     group_id integer NOT NULL,
     account_id integer NOT NULL,
     arights integer DEFAULT 1 NOT NULL
 );
 
 
-ALTER TABLE phpgw_group_map OWNER TO portico;
+ALTER TABLE public.phpgw_group_map OWNER TO portico;
 
 --
 -- Name: seq_phpgw_history_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_history_log
+CREATE SEQUENCE public.seq_phpgw_history_log
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5161,14 +5160,14 @@ CREATE SEQUENCE seq_phpgw_history_log
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_history_log OWNER TO portico;
+ALTER TABLE public.seq_phpgw_history_log OWNER TO portico;
 
 --
 -- Name: phpgw_history_log; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_history_log (
-    history_id integer DEFAULT nextval('seq_phpgw_history_log'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_history_log (
+    history_id integer DEFAULT nextval('public.seq_phpgw_history_log'::regclass) NOT NULL,
     history_record_id integer NOT NULL,
     app_id character varying(64) NOT NULL,
     history_owner integer NOT NULL,
@@ -5180,13 +5179,13 @@ CREATE TABLE phpgw_history_log (
 );
 
 
-ALTER TABLE phpgw_history_log OWNER TO portico;
+ALTER TABLE public.phpgw_history_log OWNER TO portico;
 
 --
 -- Name: seq_phpgw_hooks; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_hooks
+CREATE SEQUENCE public.seq_phpgw_hooks
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5194,27 +5193,27 @@ CREATE SEQUENCE seq_phpgw_hooks
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_hooks OWNER TO portico;
+ALTER TABLE public.seq_phpgw_hooks OWNER TO portico;
 
 --
 -- Name: phpgw_hooks; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_hooks (
-    hook_id integer DEFAULT nextval('seq_phpgw_hooks'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_hooks (
+    hook_id integer DEFAULT nextval('public.seq_phpgw_hooks'::regclass) NOT NULL,
     hook_appname character varying(255),
     hook_location character varying(255),
     hook_filename character varying(255)
 );
 
 
-ALTER TABLE phpgw_hooks OWNER TO portico;
+ALTER TABLE public.phpgw_hooks OWNER TO portico;
 
 --
 -- Name: seq_phpgw_interlink; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_interlink
+CREATE SEQUENCE public.seq_phpgw_interlink
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5222,14 +5221,14 @@ CREATE SEQUENCE seq_phpgw_interlink
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_interlink OWNER TO portico;
+ALTER TABLE public.seq_phpgw_interlink OWNER TO portico;
 
 --
 -- Name: phpgw_interlink; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_interlink (
-    interlink_id integer DEFAULT nextval('seq_phpgw_interlink'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_interlink (
+    interlink_id integer DEFAULT nextval('public.seq_phpgw_interlink'::regclass) NOT NULL,
     location1_id integer NOT NULL,
     location1_item_id integer NOT NULL,
     location2_id integer NOT NULL,
@@ -5242,13 +5241,13 @@ CREATE TABLE phpgw_interlink (
 );
 
 
-ALTER TABLE phpgw_interlink OWNER TO portico;
+ALTER TABLE public.phpgw_interlink OWNER TO portico;
 
 --
 -- Name: seq_phpgw_interserv; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_interserv
+CREATE SEQUENCE public.seq_phpgw_interserv
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5256,14 +5255,14 @@ CREATE SEQUENCE seq_phpgw_interserv
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_interserv OWNER TO portico;
+ALTER TABLE public.seq_phpgw_interserv OWNER TO portico;
 
 --
 -- Name: phpgw_interserv; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_interserv (
-    server_id integer DEFAULT nextval('seq_phpgw_interserv'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_interserv (
+    server_id integer DEFAULT nextval('public.seq_phpgw_interserv'::regclass) NOT NULL,
     server_name character varying(64),
     server_host character varying(255),
     server_url character varying(255),
@@ -5278,13 +5277,13 @@ CREATE TABLE phpgw_interserv (
 );
 
 
-ALTER TABLE phpgw_interserv OWNER TO portico;
+ALTER TABLE public.phpgw_interserv OWNER TO portico;
 
 --
 -- Name: phpgw_lang; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_lang (
+CREATE TABLE public.phpgw_lang (
     message_id character varying(255) NOT NULL,
     app_name character varying(30) DEFAULT 'common'::character varying NOT NULL,
     lang character varying(5) NOT NULL,
@@ -5292,26 +5291,26 @@ CREATE TABLE phpgw_lang (
 );
 
 
-ALTER TABLE phpgw_lang OWNER TO portico;
+ALTER TABLE public.phpgw_lang OWNER TO portico;
 
 --
 -- Name: phpgw_languages; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_languages (
+CREATE TABLE public.phpgw_languages (
     lang_id character varying(2) NOT NULL,
     lang_name character varying(50) NOT NULL,
     available character(3) DEFAULT 'No'::bpchar NOT NULL
 );
 
 
-ALTER TABLE phpgw_languages OWNER TO portico;
+ALTER TABLE public.phpgw_languages OWNER TO portico;
 
 --
 -- Name: seq_phpgw_locations; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_locations
+CREATE SEQUENCE public.seq_phpgw_locations
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5319,14 +5318,14 @@ CREATE SEQUENCE seq_phpgw_locations
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_locations OWNER TO portico;
+ALTER TABLE public.seq_phpgw_locations OWNER TO portico;
 
 --
 -- Name: phpgw_locations; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_locations (
-    location_id integer DEFAULT nextval('seq_phpgw_locations'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_locations (
+    location_id integer DEFAULT nextval('public.seq_phpgw_locations'::regclass) NOT NULL,
     app_id integer NOT NULL,
     name character varying(50) NOT NULL,
     descr character varying(100) NOT NULL,
@@ -5337,13 +5336,13 @@ CREATE TABLE phpgw_locations (
 );
 
 
-ALTER TABLE phpgw_locations OWNER TO portico;
+ALTER TABLE public.phpgw_locations OWNER TO portico;
 
 --
 -- Name: seq_phpgw_log; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_log
+CREATE SEQUENCE public.seq_phpgw_log
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5351,14 +5350,14 @@ CREATE SEQUENCE seq_phpgw_log
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_log OWNER TO portico;
+ALTER TABLE public.seq_phpgw_log OWNER TO portico;
 
 --
 -- Name: phpgw_log; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_log (
-    log_id integer DEFAULT nextval('seq_phpgw_log'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_log (
+    log_id integer DEFAULT nextval('public.seq_phpgw_log'::regclass) NOT NULL,
     log_date timestamp without time zone NOT NULL,
     log_account_id integer NOT NULL,
     log_account_lid character varying(100) NOT NULL,
@@ -5370,13 +5369,13 @@ CREATE TABLE phpgw_log (
 );
 
 
-ALTER TABLE phpgw_log OWNER TO portico;
+ALTER TABLE public.phpgw_log OWNER TO portico;
 
 --
 -- Name: seq_phpgw_mail_handler; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_mail_handler
+CREATE SEQUENCE public.seq_phpgw_mail_handler
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5384,14 +5383,14 @@ CREATE SEQUENCE seq_phpgw_mail_handler
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_mail_handler OWNER TO portico;
+ALTER TABLE public.seq_phpgw_mail_handler OWNER TO portico;
 
 --
 -- Name: phpgw_mail_handler; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_mail_handler (
-    handler_id integer DEFAULT nextval('seq_phpgw_mail_handler'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_mail_handler (
+    handler_id integer DEFAULT nextval('public.seq_phpgw_mail_handler'::regclass) NOT NULL,
     target_email character varying(75) NOT NULL,
     handler character varying(50) NOT NULL,
     is_active integer NOT NULL,
@@ -5400,13 +5399,13 @@ CREATE TABLE phpgw_mail_handler (
 );
 
 
-ALTER TABLE phpgw_mail_handler OWNER TO portico;
+ALTER TABLE public.phpgw_mail_handler OWNER TO portico;
 
 --
 -- Name: phpgw_mapping; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_mapping (
+CREATE TABLE public.phpgw_mapping (
     ext_user character varying(100) NOT NULL,
     auth_type character varying(25) NOT NULL,
     status character(1) DEFAULT 'A'::bpchar NOT NULL,
@@ -5415,25 +5414,25 @@ CREATE TABLE phpgw_mapping (
 );
 
 
-ALTER TABLE phpgw_mapping OWNER TO portico;
+ALTER TABLE public.phpgw_mapping OWNER TO portico;
 
 --
 -- Name: phpgw_nextid; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_nextid (
+CREATE TABLE public.phpgw_nextid (
     id integer,
     appname character varying(25) NOT NULL
 );
 
 
-ALTER TABLE phpgw_nextid OWNER TO portico;
+ALTER TABLE public.phpgw_nextid OWNER TO portico;
 
 --
 -- Name: seq_phpgw_notification; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_notification
+CREATE SEQUENCE public.seq_phpgw_notification
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5441,14 +5440,14 @@ CREATE SEQUENCE seq_phpgw_notification
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_notification OWNER TO portico;
+ALTER TABLE public.seq_phpgw_notification OWNER TO portico;
 
 --
 -- Name: phpgw_notification; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_notification (
-    id integer DEFAULT nextval('seq_phpgw_notification'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_notification (
+    id integer DEFAULT nextval('public.seq_phpgw_notification'::regclass) NOT NULL,
     location_id integer NOT NULL,
     location_item_id bigint NOT NULL,
     contact_id integer NOT NULL,
@@ -5459,26 +5458,26 @@ CREATE TABLE phpgw_notification (
 );
 
 
-ALTER TABLE phpgw_notification OWNER TO portico;
+ALTER TABLE public.phpgw_notification OWNER TO portico;
 
 --
 -- Name: phpgw_preferences; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_preferences (
+CREATE TABLE public.phpgw_preferences (
     preference_owner integer NOT NULL,
     preference_app character varying(25) NOT NULL,
     preference_value text NOT NULL
 );
 
 
-ALTER TABLE phpgw_preferences OWNER TO portico;
+ALTER TABLE public.phpgw_preferences OWNER TO portico;
 
 --
 -- Name: phpgw_sessions; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_sessions (
+CREATE TABLE public.phpgw_sessions (
     session_id character varying(255) NOT NULL,
     ip character varying(100),
     data text,
@@ -5486,13 +5485,13 @@ CREATE TABLE phpgw_sessions (
 );
 
 
-ALTER TABLE phpgw_sessions OWNER TO portico;
+ALTER TABLE public.phpgw_sessions OWNER TO portico;
 
 --
 -- Name: seq_phpgw_vfs; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_vfs
+CREATE SEQUENCE public.seq_phpgw_vfs
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5500,14 +5499,14 @@ CREATE SEQUENCE seq_phpgw_vfs
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_vfs OWNER TO portico;
+ALTER TABLE public.seq_phpgw_vfs OWNER TO portico;
 
 --
 -- Name: phpgw_vfs; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_vfs (
-    file_id integer DEFAULT nextval('seq_phpgw_vfs'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_vfs (
+    file_id integer DEFAULT nextval('public.seq_phpgw_vfs'::regclass) NOT NULL,
     owner_id integer NOT NULL,
     createdby_id integer,
     modifiedby_id integer,
@@ -5529,13 +5528,13 @@ CREATE TABLE phpgw_vfs (
 );
 
 
-ALTER TABLE phpgw_vfs OWNER TO portico;
+ALTER TABLE public.phpgw_vfs OWNER TO portico;
 
 --
 -- Name: seq_phpgw_vfs_file_relation; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_phpgw_vfs_file_relation
+CREATE SEQUENCE public.seq_phpgw_vfs_file_relation
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5543,14 +5542,14 @@ CREATE SEQUENCE seq_phpgw_vfs_file_relation
     CACHE 1;
 
 
-ALTER TABLE seq_phpgw_vfs_file_relation OWNER TO portico;
+ALTER TABLE public.seq_phpgw_vfs_file_relation OWNER TO portico;
 
 --
 -- Name: phpgw_vfs_file_relation; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_vfs_file_relation (
-    relation_id integer DEFAULT nextval('seq_phpgw_vfs_file_relation'::regclass) NOT NULL,
+CREATE TABLE public.phpgw_vfs_file_relation (
+    relation_id integer DEFAULT nextval('public.seq_phpgw_vfs_file_relation'::regclass) NOT NULL,
     file_id integer NOT NULL,
     location_id integer NOT NULL,
     location_item_id integer NOT NULL,
@@ -5562,25 +5561,25 @@ CREATE TABLE phpgw_vfs_file_relation (
 );
 
 
-ALTER TABLE phpgw_vfs_file_relation OWNER TO portico;
+ALTER TABLE public.phpgw_vfs_file_relation OWNER TO portico;
 
 --
 -- Name: phpgw_vfs_filedata; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE phpgw_vfs_filedata (
+CREATE TABLE public.phpgw_vfs_filedata (
     file_id integer NOT NULL,
     metadata jsonb NOT NULL
 );
 
 
-ALTER TABLE phpgw_vfs_filedata OWNER TO portico;
+ALTER TABLE public.phpgw_vfs_filedata OWNER TO portico;
 
 --
 -- Name: seq_rental_adjustment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_adjustment
+CREATE SEQUENCE public.seq_rental_adjustment
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5588,14 +5587,14 @@ CREATE SEQUENCE seq_rental_adjustment
     CACHE 1;
 
 
-ALTER TABLE seq_rental_adjustment OWNER TO portico;
+ALTER TABLE public.seq_rental_adjustment OWNER TO portico;
 
 --
 -- Name: rental_adjustment; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_adjustment (
-    id integer DEFAULT nextval('seq_rental_adjustment'::regclass) NOT NULL,
+CREATE TABLE public.rental_adjustment (
+    id integer DEFAULT nextval('public.seq_rental_adjustment'::regclass) NOT NULL,
     price_item_id integer,
     responsibility_id integer NOT NULL,
     adjustment_date bigint,
@@ -5609,13 +5608,13 @@ CREATE TABLE rental_adjustment (
 );
 
 
-ALTER TABLE rental_adjustment OWNER TO portico;
+ALTER TABLE public.rental_adjustment OWNER TO portico;
 
 --
 -- Name: seq_rental_application; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_application
+CREATE SEQUENCE public.seq_rental_application
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5623,14 +5622,14 @@ CREATE SEQUENCE seq_rental_application
     CACHE 1;
 
 
-ALTER TABLE seq_rental_application OWNER TO portico;
+ALTER TABLE public.seq_rental_application OWNER TO portico;
 
 --
 -- Name: rental_application; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_application (
-    id integer DEFAULT nextval('seq_rental_application'::regclass) NOT NULL,
+CREATE TABLE public.rental_application (
+    id integer DEFAULT nextval('public.seq_rental_application'::regclass) NOT NULL,
     ecodimb_id integer NOT NULL,
     district_id integer NOT NULL,
     composite_type_id integer NOT NULL,
@@ -5661,13 +5660,13 @@ CREATE TABLE rental_application (
 );
 
 
-ALTER TABLE rental_application OWNER TO portico;
+ALTER TABLE public.rental_application OWNER TO portico;
 
 --
 -- Name: seq_rental_application_comment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_application_comment
+CREATE SEQUENCE public.seq_rental_application_comment
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5675,14 +5674,14 @@ CREATE SEQUENCE seq_rental_application_comment
     CACHE 1;
 
 
-ALTER TABLE seq_rental_application_comment OWNER TO portico;
+ALTER TABLE public.seq_rental_application_comment OWNER TO portico;
 
 --
 -- Name: rental_application_comment; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_application_comment (
-    id integer DEFAULT nextval('seq_rental_application_comment'::regclass) NOT NULL,
+CREATE TABLE public.rental_application_comment (
+    id integer DEFAULT nextval('public.seq_rental_application_comment'::regclass) NOT NULL,
     application_id integer NOT NULL,
     "time" bigint NOT NULL,
     author text NOT NULL,
@@ -5691,13 +5690,13 @@ CREATE TABLE rental_application_comment (
 );
 
 
-ALTER TABLE rental_application_comment OWNER TO portico;
+ALTER TABLE public.rental_application_comment OWNER TO portico;
 
 --
 -- Name: seq_rental_application_composite; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_application_composite
+CREATE SEQUENCE public.seq_rental_application_composite
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5705,26 +5704,26 @@ CREATE SEQUENCE seq_rental_application_composite
     CACHE 1;
 
 
-ALTER TABLE seq_rental_application_composite OWNER TO portico;
+ALTER TABLE public.seq_rental_application_composite OWNER TO portico;
 
 --
 -- Name: rental_application_composite; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_application_composite (
-    id integer DEFAULT nextval('seq_rental_application_composite'::regclass) NOT NULL,
+CREATE TABLE public.rental_application_composite (
+    id integer DEFAULT nextval('public.seq_rental_application_composite'::regclass) NOT NULL,
     application_id integer NOT NULL,
     composite_id integer NOT NULL
 );
 
 
-ALTER TABLE rental_application_composite OWNER TO portico;
+ALTER TABLE public.rental_application_composite OWNER TO portico;
 
 --
 -- Name: seq_rental_billing; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_billing
+CREATE SEQUENCE public.seq_rental_billing
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5732,14 +5731,14 @@ CREATE SEQUENCE seq_rental_billing
     CACHE 1;
 
 
-ALTER TABLE seq_rental_billing OWNER TO portico;
+ALTER TABLE public.seq_rental_billing OWNER TO portico;
 
 --
 -- Name: rental_billing; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_billing (
-    id integer DEFAULT nextval('seq_rental_billing'::regclass) NOT NULL,
+CREATE TABLE public.rental_billing (
+    id integer DEFAULT nextval('public.seq_rental_billing'::regclass) NOT NULL,
     total_sum numeric(20,2),
     success boolean DEFAULT false NOT NULL,
     created_by integer,
@@ -5756,13 +5755,13 @@ CREATE TABLE rental_billing (
 );
 
 
-ALTER TABLE rental_billing OWNER TO portico;
+ALTER TABLE public.rental_billing OWNER TO portico;
 
 --
 -- Name: seq_rental_billing_info; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_billing_info
+CREATE SEQUENCE public.seq_rental_billing_info
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5770,14 +5769,14 @@ CREATE SEQUENCE seq_rental_billing_info
     CACHE 1;
 
 
-ALTER TABLE seq_rental_billing_info OWNER TO portico;
+ALTER TABLE public.seq_rental_billing_info OWNER TO portico;
 
 --
 -- Name: rental_billing_info; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_billing_info (
-    id integer DEFAULT nextval('seq_rental_billing_info'::regclass) NOT NULL,
+CREATE TABLE public.rental_billing_info (
+    id integer DEFAULT nextval('public.seq_rental_billing_info'::regclass) NOT NULL,
     billing_id integer NOT NULL,
     location_id integer NOT NULL,
     term_id integer NOT NULL,
@@ -5787,13 +5786,13 @@ CREATE TABLE rental_billing_info (
 );
 
 
-ALTER TABLE rental_billing_info OWNER TO portico;
+ALTER TABLE public.rental_billing_info OWNER TO portico;
 
 --
 -- Name: seq_rental_billing_term; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_billing_term
+CREATE SEQUENCE public.seq_rental_billing_term
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5801,26 +5800,26 @@ CREATE SEQUENCE seq_rental_billing_term
     CACHE 1;
 
 
-ALTER TABLE seq_rental_billing_term OWNER TO portico;
+ALTER TABLE public.seq_rental_billing_term OWNER TO portico;
 
 --
 -- Name: rental_billing_term; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_billing_term (
-    id integer DEFAULT nextval('seq_rental_billing_term'::regclass) NOT NULL,
+CREATE TABLE public.rental_billing_term (
+    id integer DEFAULT nextval('public.seq_rental_billing_term'::regclass) NOT NULL,
     title character varying(255) NOT NULL,
     months integer NOT NULL
 );
 
 
-ALTER TABLE rental_billing_term OWNER TO portico;
+ALTER TABLE public.rental_billing_term OWNER TO portico;
 
 --
 -- Name: seq_rental_composite; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_composite
+CREATE SEQUENCE public.seq_rental_composite
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5828,14 +5827,14 @@ CREATE SEQUENCE seq_rental_composite
     CACHE 1;
 
 
-ALTER TABLE seq_rental_composite OWNER TO portico;
+ALTER TABLE public.seq_rental_composite OWNER TO portico;
 
 --
 -- Name: rental_composite; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_composite (
-    id integer DEFAULT nextval('seq_rental_composite'::regclass) NOT NULL,
+CREATE TABLE public.rental_composite (
+    id integer DEFAULT nextval('public.seq_rental_composite'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     description text,
     is_active boolean DEFAULT true NOT NULL,
@@ -5858,38 +5857,38 @@ CREATE TABLE rental_composite (
 );
 
 
-ALTER TABLE rental_composite OWNER TO portico;
+ALTER TABLE public.rental_composite OWNER TO portico;
 
 --
 -- Name: rental_composite_standard; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_composite_standard (
+CREATE TABLE public.rental_composite_standard (
     id integer NOT NULL,
     name character varying(255) NOT NULL,
     factor numeric(20,2)
 );
 
 
-ALTER TABLE rental_composite_standard OWNER TO portico;
+ALTER TABLE public.rental_composite_standard OWNER TO portico;
 
 --
 -- Name: rental_composite_type; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_composite_type (
+CREATE TABLE public.rental_composite_type (
     id integer NOT NULL,
     name character varying(255) NOT NULL
 );
 
 
-ALTER TABLE rental_composite_type OWNER TO portico;
+ALTER TABLE public.rental_composite_type OWNER TO portico;
 
 --
 -- Name: rental_contract; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract (
+CREATE TABLE public.rental_contract (
     id integer NOT NULL,
     date_start bigint,
     date_end bigint,
@@ -5927,13 +5926,13 @@ CREATE TABLE rental_contract (
 );
 
 
-ALTER TABLE rental_contract OWNER TO portico;
+ALTER TABLE public.rental_contract OWNER TO portico;
 
 --
 -- Name: seq_rental_contract_composite; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_contract_composite
+CREATE SEQUENCE public.seq_rental_contract_composite
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5941,52 +5940,52 @@ CREATE SEQUENCE seq_rental_contract_composite
     CACHE 1;
 
 
-ALTER TABLE seq_rental_contract_composite OWNER TO portico;
+ALTER TABLE public.seq_rental_contract_composite OWNER TO portico;
 
 --
 -- Name: rental_contract_composite; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_composite (
-    id integer DEFAULT nextval('seq_rental_contract_composite'::regclass) NOT NULL,
+CREATE TABLE public.rental_contract_composite (
+    id integer DEFAULT nextval('public.seq_rental_contract_composite'::regclass) NOT NULL,
     contract_id integer NOT NULL,
     composite_id integer NOT NULL
 );
 
 
-ALTER TABLE rental_contract_composite OWNER TO portico;
+ALTER TABLE public.rental_contract_composite OWNER TO portico;
 
 --
 -- Name: rental_contract_last_edited; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_last_edited (
+CREATE TABLE public.rental_contract_last_edited (
     contract_id integer NOT NULL,
     account_id integer NOT NULL,
     edited_on bigint NOT NULL
 );
 
 
-ALTER TABLE rental_contract_last_edited OWNER TO portico;
+ALTER TABLE public.rental_contract_last_edited OWNER TO portico;
 
 --
 -- Name: rental_contract_party; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_party (
+CREATE TABLE public.rental_contract_party (
     contract_id integer NOT NULL,
     party_id integer NOT NULL,
     is_payer boolean DEFAULT false NOT NULL
 );
 
 
-ALTER TABLE rental_contract_party OWNER TO portico;
+ALTER TABLE public.rental_contract_party OWNER TO portico;
 
 --
 -- Name: seq_rental_contract_price_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_contract_price_item
+CREATE SEQUENCE public.seq_rental_contract_price_item
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -5994,14 +5993,14 @@ CREATE SEQUENCE seq_rental_contract_price_item
     CACHE 1;
 
 
-ALTER TABLE seq_rental_contract_price_item OWNER TO portico;
+ALTER TABLE public.seq_rental_contract_price_item OWNER TO portico;
 
 --
 -- Name: rental_contract_price_item; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_price_item (
-    id integer DEFAULT nextval('seq_rental_contract_price_item'::regclass) NOT NULL,
+CREATE TABLE public.rental_contract_price_item (
+    id integer DEFAULT nextval('public.seq_rental_contract_price_item'::regclass) NOT NULL,
     price_item_id integer NOT NULL,
     contract_id integer NOT NULL,
     title character varying(255) NOT NULL,
@@ -6019,13 +6018,13 @@ CREATE TABLE rental_contract_price_item (
 );
 
 
-ALTER TABLE rental_contract_price_item OWNER TO portico;
+ALTER TABLE public.rental_contract_price_item OWNER TO portico;
 
 --
 -- Name: seq_rental_contract_responsibility; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_contract_responsibility
+CREATE SEQUENCE public.seq_rental_contract_responsibility
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6033,14 +6032,14 @@ CREATE SEQUENCE seq_rental_contract_responsibility
     CACHE 1;
 
 
-ALTER TABLE seq_rental_contract_responsibility OWNER TO portico;
+ALTER TABLE public.seq_rental_contract_responsibility OWNER TO portico;
 
 --
 -- Name: rental_contract_responsibility; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_responsibility (
-    id integer DEFAULT nextval('seq_rental_contract_responsibility'::regclass) NOT NULL,
+CREATE TABLE public.rental_contract_responsibility (
+    id integer DEFAULT nextval('public.seq_rental_contract_responsibility'::regclass) NOT NULL,
     location_id integer NOT NULL,
     title character varying(255) NOT NULL,
     notify_before integer NOT NULL,
@@ -6053,25 +6052,25 @@ CREATE TABLE rental_contract_responsibility (
 );
 
 
-ALTER TABLE rental_contract_responsibility OWNER TO portico;
+ALTER TABLE public.rental_contract_responsibility OWNER TO portico;
 
 --
 -- Name: rental_contract_responsibility_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_responsibility_unit (
+CREATE TABLE public.rental_contract_responsibility_unit (
     id integer NOT NULL,
     name character varying(255) NOT NULL
 );
 
 
-ALTER TABLE rental_contract_responsibility_unit OWNER TO portico;
+ALTER TABLE public.rental_contract_responsibility_unit OWNER TO portico;
 
 --
 -- Name: seq_rental_contract_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_contract_types
+CREATE SEQUENCE public.seq_rental_contract_types
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6079,27 +6078,27 @@ CREATE SEQUENCE seq_rental_contract_types
     CACHE 1;
 
 
-ALTER TABLE seq_rental_contract_types OWNER TO portico;
+ALTER TABLE public.seq_rental_contract_types OWNER TO portico;
 
 --
 -- Name: rental_contract_types; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_contract_types (
-    id integer DEFAULT nextval('seq_rental_contract_types'::regclass) NOT NULL,
+CREATE TABLE public.rental_contract_types (
+    id integer DEFAULT nextval('public.seq_rental_contract_types'::regclass) NOT NULL,
     label character varying(255) NOT NULL,
     responsibility_id integer NOT NULL,
     account character varying(255)
 );
 
 
-ALTER TABLE rental_contract_types OWNER TO portico;
+ALTER TABLE public.rental_contract_types OWNER TO portico;
 
 --
 -- Name: seq_rental_document; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_document
+CREATE SEQUENCE public.seq_rental_document
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6107,14 +6106,14 @@ CREATE SEQUENCE seq_rental_document
     CACHE 1;
 
 
-ALTER TABLE seq_rental_document OWNER TO portico;
+ALTER TABLE public.seq_rental_document OWNER TO portico;
 
 --
 -- Name: rental_document; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_document (
-    id integer DEFAULT nextval('seq_rental_document'::regclass) NOT NULL,
+CREATE TABLE public.rental_document (
+    id integer DEFAULT nextval('public.seq_rental_document'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     contract_id integer,
     party_id integer,
@@ -6124,13 +6123,13 @@ CREATE TABLE rental_document (
 );
 
 
-ALTER TABLE rental_document OWNER TO portico;
+ALTER TABLE public.rental_document OWNER TO portico;
 
 --
 -- Name: seq_rental_document_types; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_document_types
+CREATE SEQUENCE public.seq_rental_document_types
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6138,25 +6137,25 @@ CREATE SEQUENCE seq_rental_document_types
     CACHE 1;
 
 
-ALTER TABLE seq_rental_document_types OWNER TO portico;
+ALTER TABLE public.seq_rental_document_types OWNER TO portico;
 
 --
 -- Name: rental_document_types; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_document_types (
-    id integer DEFAULT nextval('seq_rental_document_types'::regclass) NOT NULL,
+CREATE TABLE public.rental_document_types (
+    id integer DEFAULT nextval('public.seq_rental_document_types'::regclass) NOT NULL,
     title character varying(255) NOT NULL
 );
 
 
-ALTER TABLE rental_document_types OWNER TO portico;
+ALTER TABLE public.rental_document_types OWNER TO portico;
 
 --
 -- Name: seq_rental_email_out; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_email_out
+CREATE SEQUENCE public.seq_rental_email_out
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6164,14 +6163,14 @@ CREATE SEQUENCE seq_rental_email_out
     CACHE 1;
 
 
-ALTER TABLE seq_rental_email_out OWNER TO portico;
+ALTER TABLE public.seq_rental_email_out OWNER TO portico;
 
 --
 -- Name: rental_email_out; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_email_out (
-    id integer DEFAULT nextval('seq_rental_email_out'::regclass) NOT NULL,
+CREATE TABLE public.rental_email_out (
+    id integer DEFAULT nextval('public.seq_rental_email_out'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     remark text,
     subject text NOT NULL,
@@ -6182,13 +6181,13 @@ CREATE TABLE rental_email_out (
 );
 
 
-ALTER TABLE rental_email_out OWNER TO portico;
+ALTER TABLE public.rental_email_out OWNER TO portico;
 
 --
 -- Name: seq_rental_email_out_party; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_email_out_party
+CREATE SEQUENCE public.seq_rental_email_out_party
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6196,27 +6195,27 @@ CREATE SEQUENCE seq_rental_email_out_party
     CACHE 1;
 
 
-ALTER TABLE seq_rental_email_out_party OWNER TO portico;
+ALTER TABLE public.seq_rental_email_out_party OWNER TO portico;
 
 --
 -- Name: rental_email_out_party; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_email_out_party (
-    id integer DEFAULT nextval('seq_rental_email_out_party'::regclass) NOT NULL,
+CREATE TABLE public.rental_email_out_party (
+    id integer DEFAULT nextval('public.seq_rental_email_out_party'::regclass) NOT NULL,
     email_out_id integer,
     party_id integer,
     status smallint DEFAULT 0
 );
 
 
-ALTER TABLE rental_email_out_party OWNER TO portico;
+ALTER TABLE public.rental_email_out_party OWNER TO portico;
 
 --
 -- Name: seq_rental_email_template; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_email_template
+CREATE SEQUENCE public.seq_rental_email_template
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6224,14 +6223,14 @@ CREATE SEQUENCE seq_rental_email_template
     CACHE 1;
 
 
-ALTER TABLE seq_rental_email_template OWNER TO portico;
+ALTER TABLE public.seq_rental_email_template OWNER TO portico;
 
 --
 -- Name: rental_email_template; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_email_template (
-    id integer DEFAULT nextval('seq_rental_email_template'::regclass) NOT NULL,
+CREATE TABLE public.rental_email_template (
+    id integer DEFAULT nextval('public.seq_rental_email_template'::regclass) NOT NULL,
     name character varying(255) NOT NULL,
     content text,
     public smallint,
@@ -6241,13 +6240,13 @@ CREATE TABLE rental_email_template (
 );
 
 
-ALTER TABLE rental_email_template OWNER TO portico;
+ALTER TABLE public.rental_email_template OWNER TO portico;
 
 --
 -- Name: seq_rental_invoice; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_invoice
+CREATE SEQUENCE public.seq_rental_invoice
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6255,14 +6254,14 @@ CREATE SEQUENCE seq_rental_invoice
     CACHE 1;
 
 
-ALTER TABLE seq_rental_invoice OWNER TO portico;
+ALTER TABLE public.seq_rental_invoice OWNER TO portico;
 
 --
 -- Name: rental_invoice; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_invoice (
-    id integer DEFAULT nextval('seq_rental_invoice'::regclass) NOT NULL,
+CREATE TABLE public.rental_invoice (
+    id integer DEFAULT nextval('public.seq_rental_invoice'::regclass) NOT NULL,
     contract_id integer NOT NULL,
     billing_id integer NOT NULL,
     party_id integer NOT NULL,
@@ -6281,13 +6280,13 @@ CREATE TABLE rental_invoice (
 );
 
 
-ALTER TABLE rental_invoice OWNER TO portico;
+ALTER TABLE public.rental_invoice OWNER TO portico;
 
 --
 -- Name: seq_rental_invoice_price_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_invoice_price_item
+CREATE SEQUENCE public.seq_rental_invoice_price_item
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6295,14 +6294,14 @@ CREATE SEQUENCE seq_rental_invoice_price_item
     CACHE 1;
 
 
-ALTER TABLE seq_rental_invoice_price_item OWNER TO portico;
+ALTER TABLE public.seq_rental_invoice_price_item OWNER TO portico;
 
 --
 -- Name: rental_invoice_price_item; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_invoice_price_item (
-    id integer DEFAULT nextval('seq_rental_invoice_price_item'::regclass) NOT NULL,
+CREATE TABLE public.rental_invoice_price_item (
+    id integer DEFAULT nextval('public.seq_rental_invoice_price_item'::regclass) NOT NULL,
     invoice_id integer NOT NULL,
     title character varying(255) NOT NULL,
     area numeric(20,2),
@@ -6317,13 +6316,13 @@ CREATE TABLE rental_invoice_price_item (
 );
 
 
-ALTER TABLE rental_invoice_price_item OWNER TO portico;
+ALTER TABLE public.rental_invoice_price_item OWNER TO portico;
 
 --
 -- Name: seq_rental_location_factor; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_location_factor
+CREATE SEQUENCE public.seq_rental_location_factor
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6331,14 +6330,14 @@ CREATE SEQUENCE seq_rental_location_factor
     CACHE 1;
 
 
-ALTER TABLE seq_rental_location_factor OWNER TO portico;
+ALTER TABLE public.seq_rental_location_factor OWNER TO portico;
 
 --
 -- Name: rental_location_factor; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_location_factor (
-    id integer DEFAULT nextval('seq_rental_location_factor'::regclass) NOT NULL,
+CREATE TABLE public.rental_location_factor (
+    id integer DEFAULT nextval('public.seq_rental_location_factor'::regclass) NOT NULL,
     part_of_town_id integer NOT NULL,
     factor numeric(20,2) DEFAULT 1.00 NOT NULL,
     remark text,
@@ -6348,13 +6347,13 @@ CREATE TABLE rental_location_factor (
 );
 
 
-ALTER TABLE rental_location_factor OWNER TO portico;
+ALTER TABLE public.rental_location_factor OWNER TO portico;
 
 --
 -- Name: seq_rental_movein; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_movein
+CREATE SEQUENCE public.seq_rental_movein
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6362,14 +6361,14 @@ CREATE SEQUENCE seq_rental_movein
     CACHE 1;
 
 
-ALTER TABLE seq_rental_movein OWNER TO portico;
+ALTER TABLE public.seq_rental_movein OWNER TO portico;
 
 --
 -- Name: rental_movein; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_movein (
-    id integer DEFAULT nextval('seq_rental_movein'::regclass) NOT NULL,
+CREATE TABLE public.rental_movein (
+    id integer DEFAULT nextval('public.seq_rental_movein'::regclass) NOT NULL,
     contract_id integer NOT NULL,
     account_id integer NOT NULL,
     created bigint DEFAULT date_part('epoch'::text, now()) NOT NULL,
@@ -6377,13 +6376,13 @@ CREATE TABLE rental_movein (
 );
 
 
-ALTER TABLE rental_movein OWNER TO portico;
+ALTER TABLE public.rental_movein OWNER TO portico;
 
 --
 -- Name: seq_rental_movein_comment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_movein_comment
+CREATE SEQUENCE public.seq_rental_movein_comment
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6391,14 +6390,14 @@ CREATE SEQUENCE seq_rental_movein_comment
     CACHE 1;
 
 
-ALTER TABLE seq_rental_movein_comment OWNER TO portico;
+ALTER TABLE public.seq_rental_movein_comment OWNER TO portico;
 
 --
 -- Name: rental_movein_comment; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_movein_comment (
-    id integer DEFAULT nextval('seq_rental_movein_comment'::regclass) NOT NULL,
+CREATE TABLE public.rental_movein_comment (
+    id integer DEFAULT nextval('public.seq_rental_movein_comment'::regclass) NOT NULL,
     movein_id integer NOT NULL,
     "time" bigint DEFAULT date_part('epoch'::text, now()) NOT NULL,
     author text NOT NULL,
@@ -6407,13 +6406,13 @@ CREATE TABLE rental_movein_comment (
 );
 
 
-ALTER TABLE rental_movein_comment OWNER TO portico;
+ALTER TABLE public.rental_movein_comment OWNER TO portico;
 
 --
 -- Name: seq_rental_moveout; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_moveout
+CREATE SEQUENCE public.seq_rental_moveout
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6421,14 +6420,14 @@ CREATE SEQUENCE seq_rental_moveout
     CACHE 1;
 
 
-ALTER TABLE seq_rental_moveout OWNER TO portico;
+ALTER TABLE public.seq_rental_moveout OWNER TO portico;
 
 --
 -- Name: rental_moveout; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_moveout (
-    id integer DEFAULT nextval('seq_rental_moveout'::regclass) NOT NULL,
+CREATE TABLE public.rental_moveout (
+    id integer DEFAULT nextval('public.seq_rental_moveout'::regclass) NOT NULL,
     contract_id integer NOT NULL,
     account_id integer NOT NULL,
     created bigint DEFAULT date_part('epoch'::text, now()) NOT NULL,
@@ -6436,13 +6435,13 @@ CREATE TABLE rental_moveout (
 );
 
 
-ALTER TABLE rental_moveout OWNER TO portico;
+ALTER TABLE public.rental_moveout OWNER TO portico;
 
 --
 -- Name: seq_rental_moveout_comment; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_moveout_comment
+CREATE SEQUENCE public.seq_rental_moveout_comment
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6450,14 +6449,14 @@ CREATE SEQUENCE seq_rental_moveout_comment
     CACHE 1;
 
 
-ALTER TABLE seq_rental_moveout_comment OWNER TO portico;
+ALTER TABLE public.seq_rental_moveout_comment OWNER TO portico;
 
 --
 -- Name: rental_moveout_comment; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_moveout_comment (
-    id integer DEFAULT nextval('seq_rental_moveout_comment'::regclass) NOT NULL,
+CREATE TABLE public.rental_moveout_comment (
+    id integer DEFAULT nextval('public.seq_rental_moveout_comment'::regclass) NOT NULL,
     moveout_id integer NOT NULL,
     "time" bigint DEFAULT date_part('epoch'::text, now()) NOT NULL,
     author text NOT NULL,
@@ -6466,13 +6465,13 @@ CREATE TABLE rental_moveout_comment (
 );
 
 
-ALTER TABLE rental_moveout_comment OWNER TO portico;
+ALTER TABLE public.rental_moveout_comment OWNER TO portico;
 
 --
 -- Name: seq_rental_notification; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_notification
+CREATE SEQUENCE public.seq_rental_notification
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6480,14 +6479,14 @@ CREATE SEQUENCE seq_rental_notification
     CACHE 1;
 
 
-ALTER TABLE seq_rental_notification OWNER TO portico;
+ALTER TABLE public.seq_rental_notification OWNER TO portico;
 
 --
 -- Name: rental_notification; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_notification (
-    id integer DEFAULT nextval('seq_rental_notification'::regclass) NOT NULL,
+CREATE TABLE public.rental_notification (
+    id integer DEFAULT nextval('public.seq_rental_notification'::regclass) NOT NULL,
     location_id integer,
     account_id integer,
     contract_id integer NOT NULL,
@@ -6499,13 +6498,13 @@ CREATE TABLE rental_notification (
 );
 
 
-ALTER TABLE rental_notification OWNER TO portico;
+ALTER TABLE public.rental_notification OWNER TO portico;
 
 --
 -- Name: seq_rental_notification_workbench; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_notification_workbench
+CREATE SEQUENCE public.seq_rental_notification_workbench
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6513,14 +6512,14 @@ CREATE SEQUENCE seq_rental_notification_workbench
     CACHE 1;
 
 
-ALTER TABLE seq_rental_notification_workbench OWNER TO portico;
+ALTER TABLE public.seq_rental_notification_workbench OWNER TO portico;
 
 --
 -- Name: rental_notification_workbench; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_notification_workbench (
-    id integer DEFAULT nextval('seq_rental_notification_workbench'::regclass) NOT NULL,
+CREATE TABLE public.rental_notification_workbench (
+    id integer DEFAULT nextval('public.seq_rental_notification_workbench'::regclass) NOT NULL,
     account_id integer NOT NULL,
     date bigint NOT NULL,
     notification_id integer,
@@ -6529,13 +6528,13 @@ CREATE TABLE rental_notification_workbench (
 );
 
 
-ALTER TABLE rental_notification_workbench OWNER TO portico;
+ALTER TABLE public.rental_notification_workbench OWNER TO portico;
 
 --
 -- Name: seq_rental_party; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_party
+CREATE SEQUENCE public.seq_rental_party
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6543,14 +6542,14 @@ CREATE SEQUENCE seq_rental_party
     CACHE 1;
 
 
-ALTER TABLE seq_rental_party OWNER TO portico;
+ALTER TABLE public.seq_rental_party OWNER TO portico;
 
 --
 -- Name: rental_party; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_party (
-    id integer DEFAULT nextval('seq_rental_party'::regclass) NOT NULL,
+CREATE TABLE public.rental_party (
+    id integer DEFAULT nextval('public.seq_rental_party'::regclass) NOT NULL,
     identifier character varying(255),
     customer_id integer,
     first_name character varying(255),
@@ -6578,13 +6577,13 @@ CREATE TABLE rental_party (
 );
 
 
-ALTER TABLE rental_party OWNER TO portico;
+ALTER TABLE public.rental_party OWNER TO portico;
 
 --
 -- Name: seq_rental_price_item; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_price_item
+CREATE SEQUENCE public.seq_rental_price_item
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6592,14 +6591,14 @@ CREATE SEQUENCE seq_rental_price_item
     CACHE 1;
 
 
-ALTER TABLE seq_rental_price_item OWNER TO portico;
+ALTER TABLE public.seq_rental_price_item OWNER TO portico;
 
 --
 -- Name: rental_price_item; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_price_item (
-    id integer DEFAULT nextval('seq_rental_price_item'::regclass) NOT NULL,
+CREATE TABLE public.rental_price_item (
+    id integer DEFAULT nextval('public.seq_rental_price_item'::regclass) NOT NULL,
     title character varying(255) NOT NULL,
     agresso_id character varying(255),
     is_area boolean DEFAULT true NOT NULL,
@@ -6612,13 +6611,13 @@ CREATE TABLE rental_price_item (
 );
 
 
-ALTER TABLE rental_price_item OWNER TO portico;
+ALTER TABLE public.rental_price_item OWNER TO portico;
 
 --
 -- Name: seq_rental_unit; Type: SEQUENCE; Schema: public; Owner: portico
 --
 
-CREATE SEQUENCE seq_rental_unit
+CREATE SEQUENCE public.seq_rental_unit
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -6626,26 +6625,26 @@ CREATE SEQUENCE seq_rental_unit
     CACHE 1;
 
 
-ALTER TABLE seq_rental_unit OWNER TO portico;
+ALTER TABLE public.seq_rental_unit OWNER TO portico;
 
 --
 -- Name: rental_unit; Type: TABLE; Schema: public; Owner: portico
 --
 
-CREATE TABLE rental_unit (
-    id integer DEFAULT nextval('seq_rental_unit'::regclass) NOT NULL,
+CREATE TABLE public.rental_unit (
+    id integer DEFAULT nextval('public.seq_rental_unit'::regclass) NOT NULL,
     composite_id integer NOT NULL,
     location_code character varying(50) NOT NULL
 );
 
 
-ALTER TABLE rental_unit OWNER TO portico;
+ALTER TABLE public.rental_unit OWNER TO portico;
 
 --
 -- Data for Name: controller_check_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_check_item (id, control_item_id, check_list_id) FROM stdin;
+COPY public.controller_check_item (id, control_item_id, check_list_id) FROM stdin;
 \.
 
 
@@ -6653,7 +6652,7 @@ COPY controller_check_item (id, control_item_id, check_list_id) FROM stdin;
 -- Data for Name: controller_check_item_case; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_check_item_case (id, check_item_id, status, measurement, location_id, location_item_id, descr, user_id, entry_date, modified_date, modified_by, location_code, component_location_id, component_id) FROM stdin;
+COPY public.controller_check_item_case (id, check_item_id, status, measurement, location_id, location_item_id, descr, user_id, entry_date, modified_date, modified_by, location_code, component_location_id, component_id) FROM stdin;
 \.
 
 
@@ -6661,7 +6660,7 @@ COPY controller_check_item_case (id, check_item_id, status, measurement, locatio
 -- Data for Name: controller_check_item_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_check_item_status (id, name, open, closed, pending, sorting) FROM stdin;
+COPY public.controller_check_item_status (id, name, open, closed, pending, sorting) FROM stdin;
 \.
 
 
@@ -6669,7 +6668,7 @@ COPY controller_check_item_status (id, name, open, closed, pending, sorting) FRO
 -- Data for Name: controller_check_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_check_list (id, control_id, status, comment, deadline, original_deadline, planned_date, completed_date, component_id, serie_id, location_code, location_id, num_open_cases, num_pending_cases, assigned_to, billable_hours) FROM stdin;
+COPY public.controller_check_list (id, control_id, status, comment, deadline, original_deadline, planned_date, completed_date, component_id, serie_id, location_code, location_id, num_open_cases, num_pending_cases, assigned_to, billable_hours) FROM stdin;
 \.
 
 
@@ -6677,7 +6676,7 @@ COPY controller_check_list (id, control_id, status, comment, deadline, original_
 -- Data for Name: controller_control; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control (id, title, description, start_date, end_date, procedure_id, requirement_id, costresponsibility_id, responsibility_id, control_area_id, repeat_type, repeat_interval, enabled) FROM stdin;
+COPY public.controller_control (id, title, description, start_date, end_date, procedure_id, requirement_id, costresponsibility_id, responsibility_id, control_area_id, repeat_type, repeat_interval, enabled) FROM stdin;
 \.
 
 
@@ -6685,7 +6684,7 @@ COPY controller_control (id, title, description, start_date, end_date, procedure
 -- Data for Name: controller_control_component_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_component_list (id, control_id, location_id, component_id, enabled) FROM stdin;
+COPY public.controller_control_component_list (id, control_id, location_id, component_id, enabled) FROM stdin;
 \.
 
 
@@ -6693,7 +6692,7 @@ COPY controller_control_component_list (id, control_id, location_id, component_i
 -- Data for Name: controller_control_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_group (id, group_name, procedure_id, control_area_id, building_part_id, component_location_id, component_criteria) FROM stdin;
+COPY public.controller_control_group (id, group_name, procedure_id, control_area_id, building_part_id, component_location_id, component_criteria) FROM stdin;
 \.
 
 
@@ -6701,7 +6700,7 @@ COPY controller_control_group (id, group_name, procedure_id, control_area_id, bu
 -- Data for Name: controller_control_group_component_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_group_component_list (id, control_group_id, location_id) FROM stdin;
+COPY public.controller_control_group_component_list (id, control_group_id, location_id) FROM stdin;
 \.
 
 
@@ -6709,7 +6708,7 @@ COPY controller_control_group_component_list (id, control_group_id, location_id)
 -- Data for Name: controller_control_group_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_group_list (id, control_id, control_group_id, order_nr) FROM stdin;
+COPY public.controller_control_group_list (id, control_id, control_group_id, order_nr) FROM stdin;
 \.
 
 
@@ -6717,7 +6716,7 @@ COPY controller_control_group_list (id, control_id, control_group_id, order_nr) 
 -- Data for Name: controller_control_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_item (id, title, required, what_to_do, how_to_do, control_group_id, control_area_id, type) FROM stdin;
+COPY public.controller_control_item (id, title, required, what_to_do, how_to_do, control_group_id, control_area_id, type) FROM stdin;
 \.
 
 
@@ -6725,7 +6724,7 @@ COPY controller_control_item (id, title, required, what_to_do, how_to_do, contro
 -- Data for Name: controller_control_item_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_item_list (id, control_id, control_item_id, order_nr) FROM stdin;
+COPY public.controller_control_item_list (id, control_id, control_item_id, order_nr) FROM stdin;
 \.
 
 
@@ -6733,7 +6732,7 @@ COPY controller_control_item_list (id, control_id, control_item_id, order_nr) FR
 -- Data for Name: controller_control_item_option; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_item_option (id, option_value, control_item_id) FROM stdin;
+COPY public.controller_control_item_option (id, option_value, control_item_id) FROM stdin;
 \.
 
 
@@ -6741,7 +6740,7 @@ COPY controller_control_item_option (id, option_value, control_item_id) FROM std
 -- Data for Name: controller_control_location_list; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_location_list (id, control_id, location_code) FROM stdin;
+COPY public.controller_control_location_list (id, control_id, location_code) FROM stdin;
 \.
 
 
@@ -6749,7 +6748,7 @@ COPY controller_control_location_list (id, control_id, location_code) FROM stdin
 -- Data for Name: controller_control_serie; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_serie (id, control_relation_id, control_relation_type, assigned_to, start_date, repeat_type, repeat_interval, service_time, controle_time, enabled) FROM stdin;
+COPY public.controller_control_serie (id, control_relation_id, control_relation_type, assigned_to, start_date, repeat_type, repeat_interval, service_time, controle_time, enabled) FROM stdin;
 \.
 
 
@@ -6757,7 +6756,7 @@ COPY controller_control_serie (id, control_relation_id, control_relation_type, a
 -- Data for Name: controller_control_serie_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_control_serie_history (id, serie_id, assigned_to, assigned_date) FROM stdin;
+COPY public.controller_control_serie_history (id, serie_id, assigned_to, assigned_date) FROM stdin;
 \.
 
 
@@ -6765,7 +6764,7 @@ COPY controller_control_serie_history (id, serie_id, assigned_to, assigned_date)
 -- Data for Name: controller_document; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_document (id, name, procedure_id, title, description, type_id) FROM stdin;
+COPY public.controller_document (id, name, procedure_id, title, description, type_id) FROM stdin;
 \.
 
 
@@ -6773,7 +6772,7 @@ COPY controller_document (id, name, procedure_id, title, description, type_id) F
 -- Data for Name: controller_document_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_document_types (id, title) FROM stdin;
+COPY public.controller_document_types (id, title) FROM stdin;
 1	procedures
 \.
 
@@ -6782,7 +6781,7 @@ COPY controller_document_types (id, title) FROM stdin;
 -- Data for Name: controller_procedure; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY controller_procedure (id, title, purpose, responsibility, description, reference, attachment, start_date, end_date, procedure_id, revision_no, revision_date, control_area_id, modified_date, modified_by) FROM stdin;
+COPY public.controller_procedure (id, title, purpose, responsibility, description, reference, attachment, start_date, end_date, procedure_id, revision_no, revision_date, control_area_id, modified_date, modified_by) FROM stdin;
 \.
 
 
@@ -6790,7 +6789,7 @@ COPY controller_procedure (id, title, purpose, responsibility, description, refe
 -- Data for Name: fm_action_pending; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_action_pending (id, item_id, location_id, responsible, responsible_type, action_category, action_requested, action_deadline, action_performed, reminder, created_on, created_by, expired_on, expired_by, remark) FROM stdin;
+COPY public.fm_action_pending (id, item_id, location_id, responsible, responsible_type, action_category, action_requested, action_deadline, action_performed, reminder, created_on, created_by, expired_on, expired_by, remark) FROM stdin;
 \.
 
 
@@ -6798,7 +6797,7 @@ COPY fm_action_pending (id, item_id, location_id, responsible, responsible_type,
 -- Data for Name: fm_action_pending_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_action_pending_category (id, num, name, descr) FROM stdin;
+COPY public.fm_action_pending_category (id, num, name, descr) FROM stdin;
 1	approval	Approval	Please approve the item requested
 2	remind	Remind	This is a reminder of task assigned
 3	accept_delivery	Accept delivery	Please accept delivery on this item
@@ -6809,7 +6808,7 @@ COPY fm_action_pending_category (id, num, name, descr) FROM stdin;
 -- Data for Name: fm_activities; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_activities (id, num, base_descr, unit, ns3420, remarkreq, minperae, billperae, dim_d, descr, branch_id, agreement_group_id) FROM stdin;
+COPY public.fm_activities (id, num, base_descr, unit, ns3420, remarkreq, minperae, billperae, dim_d, descr, branch_id, agreement_group_id) FROM stdin;
 \.
 
 
@@ -6817,7 +6816,7 @@ COPY fm_activities (id, num, base_descr, unit, ns3420, remarkreq, minperae, bill
 -- Data for Name: fm_activity_price_index; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_activity_price_index (activity_id, agreement_id, index_count, current_index, this_index, m_cost, w_cost, total_cost, entry_date, index_date, user_id) FROM stdin;
+COPY public.fm_activity_price_index (activity_id, agreement_id, index_count, current_index, this_index, m_cost, w_cost, total_cost, entry_date, index_date, user_id) FROM stdin;
 \.
 
 
@@ -6825,7 +6824,7 @@ COPY fm_activity_price_index (activity_id, agreement_id, index_count, current_in
 -- Data for Name: fm_agreement; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_agreement (group_id, id, vendor_id, contract_id, name, descr, status, entry_date, start_date, end_date, termination_date, category, user_id) FROM stdin;
+COPY public.fm_agreement (group_id, id, vendor_id, contract_id, name, descr, status, entry_date, start_date, end_date, termination_date, category, user_id) FROM stdin;
 \.
 
 
@@ -6833,7 +6832,7 @@ COPY fm_agreement (group_id, id, vendor_id, contract_id, name, descr, status, en
 -- Data for Name: fm_agreement_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_agreement_group (id, num, descr, status) FROM stdin;
+COPY public.fm_agreement_group (id, num, descr, status) FROM stdin;
 \.
 
 
@@ -6841,7 +6840,7 @@ COPY fm_agreement_group (id, num, descr, status) FROM stdin;
 -- Data for Name: fm_agreement_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_agreement_status (id, descr) FROM stdin;
+COPY public.fm_agreement_status (id, descr) FROM stdin;
 closed	Closed
 active	Active agreement
 planning	Planning
@@ -6852,7 +6851,7 @@ planning	Planning
 -- Data for Name: fm_async_method; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_async_method (id, name, data, descr) FROM stdin;
+COPY public.fm_async_method (id, name, data, descr) FROM stdin;
 \.
 
 
@@ -6860,7 +6859,7 @@ COPY fm_async_method (id, name, data, descr) FROM stdin;
 -- Data for Name: fm_authorities_demands; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_authorities_demands (id, name, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_authorities_demands (id, name, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -6868,7 +6867,7 @@ COPY fm_authorities_demands (id, name, user_id, entry_date, modified_date) FROM 
 -- Data for Name: fm_b_account; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_b_account (id, category, descr, mva, responsible, active, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_b_account (id, category, descr, mva, responsible, active, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -6876,7 +6875,7 @@ COPY fm_b_account (id, category, descr, mva, responsible, active, user_id, entry
 -- Data for Name: fm_b_account_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_b_account_category (id, descr, active, external_project) FROM stdin;
+COPY public.fm_b_account_category (id, descr, active, external_project) FROM stdin;
 \.
 
 
@@ -6884,7 +6883,7 @@ COPY fm_b_account_category (id, descr, active, external_project) FROM stdin;
 -- Data for Name: fm_branch; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_branch (id, num, descr) FROM stdin;
+COPY public.fm_branch (id, num, descr) FROM stdin;
 1	rør	rørlegger
 2	maler	maler
 3	tomrer	Tømrer
@@ -6896,7 +6895,7 @@ COPY fm_branch (id, num, descr) FROM stdin;
 -- Data for Name: fm_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_budget (id, year, b_account_id, district_id, revision, access, user_id, entry_date, budget_cost, remark, ecodimb, category) FROM stdin;
+COPY public.fm_budget (id, year, b_account_id, district_id, revision, access, user_id, entry_date, budget_cost, remark, ecodimb, category) FROM stdin;
 \.
 
 
@@ -6904,7 +6903,7 @@ COPY fm_budget (id, year, b_account_id, district_id, revision, access, user_id, 
 -- Data for Name: fm_budget_basis; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_budget_basis (id, year, b_group, district_id, revision, access, user_id, entry_date, budget_cost, remark, distribute_year, ecodimb, category) FROM stdin;
+COPY public.fm_budget_basis (id, year, b_group, district_id, revision, access, user_id, entry_date, budget_cost, remark, distribute_year, ecodimb, category) FROM stdin;
 \.
 
 
@@ -6912,7 +6911,7 @@ COPY fm_budget_basis (id, year, b_group, district_id, revision, access, user_id,
 -- Data for Name: fm_budget_cost; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_budget_cost (id, year, month, b_account_id, amount) FROM stdin;
+COPY public.fm_budget_cost (id, year, month, b_account_id, amount) FROM stdin;
 \.
 
 
@@ -6920,7 +6919,7 @@ COPY fm_budget_cost (id, year, month, b_account_id, amount) FROM stdin;
 -- Data for Name: fm_budget_period; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_budget_period (year, month, b_account_id, per_cent, user_id, entry_date, remark) FROM stdin;
+COPY public.fm_budget_period (year, month, b_account_id, per_cent, user_id, entry_date, remark) FROM stdin;
 \.
 
 
@@ -6928,7 +6927,7 @@ COPY fm_budget_period (year, month, b_account_id, per_cent, user_id, entry_date,
 -- Data for Name: fm_building_part; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_building_part (id, descr, filter_1, filter_2, filter_3, filter_4) FROM stdin;
+COPY public.fm_building_part (id, descr, filter_1, filter_2, filter_3, filter_4) FROM stdin;
 \.
 
 
@@ -6936,7 +6935,7 @@ COPY fm_building_part (id, descr, filter_1, filter_2, filter_3, filter_4) FROM s
 -- Data for Name: fm_cache; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_cache (name, value) FROM stdin;
+COPY public.fm_cache (name, value) FROM stdin;
 sql_single_1	eNptTk8LwiAU/yqPnVwMYXSJxU6xoKgJ1V1E3RCahgrRt8+k0WY7vcfvv6vW5abKrs2p2d2gG+jdcOaV0SUOV/bGvoA5CD9VopjydOSxkI7bryoiVLNBzsTYPLW0aQR+MOup6agP9B+5KoRy3ir+qQbYX8gZEAKYrYQjObQRig1AWkCw2FyPGqxEnv980w0L9mRinThiWLZ9AxeCdOE=
 uicols_single_1	eNqV0FEOwiAMBuCz2BMM3aJ2l/AGhGyYEN0g0EWXhbtbR0jgyfjWn0K/UIUtbgFFg2Bmt5Ck1WnoFXa4GWz6wH0g/SboDYo6Hut4qmNbxrjXs5rq2VeEpx2ETI0EdAijDoMvhO+dLFwQ7GvWXpoxK4KfOOVJ2rskbu6tWE4qSD48lNyZs9eT8o8MsuC8ddrTmlHeTsb2MqaNBVK0hPTDf4nbLyJ+AJnPe84=
 cols_return_single_1	eNo9j1kOgzAMBe+SE5CyFMxhIiuk1GqJUYiEUNW711nUT888vzgIuoEPQTMfMICyGA0taibQAnSbiVs5XMbj5pK4iZhAvdnqP2tTWEv4iX51Jl57xl0pDW7D8Eqgr6WyjJHYG8tLTg4iulKaxruMIyg+vQv1njGt9qB2DNHww0SRVU319YWOGMiWH3x/BqtFCg==
@@ -6981,7 +6980,7 @@ cols_return_2__1_f	eNpLtDKzqs60MrAutjKyUspMUbLOtDIEcgyNrZRy8pMTSzLz8+KT81NSQRJGQ
 -- Data for Name: fm_chapter; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_chapter (id, descr) FROM stdin;
+COPY public.fm_chapter (id, descr) FROM stdin;
 \.
 
 
@@ -6989,7 +6988,7 @@ COPY fm_chapter (id, descr) FROM stdin;
 -- Data for Name: fm_condition_survey; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_condition_survey (id, title, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, descr, address, status_id, category, coordinator_id, vendor_id, report_date, user_id, entry_date, modified_date, multiplier) FROM stdin;
+COPY public.fm_condition_survey (id, title, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, descr, address, status_id, category, coordinator_id, vendor_id, report_date, user_id, entry_date, modified_date, multiplier) FROM stdin;
 \.
 
 
@@ -6997,7 +6996,7 @@ COPY fm_condition_survey (id, title, p_num, p_entity_id, p_cat_id, location_code
 -- Data for Name: fm_condition_survey_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_condition_survey_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_condition_survey_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -7005,7 +7004,7 @@ COPY fm_condition_survey_history (history_id, history_record_id, history_appname
 -- Data for Name: fm_condition_survey_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_condition_survey_status (id, descr, closed, in_progress, delivered, sorting) FROM stdin;
+COPY public.fm_condition_survey_status (id, descr, closed, in_progress, delivered, sorting) FROM stdin;
 \.
 
 
@@ -7013,7 +7012,7 @@ COPY fm_condition_survey_status (id, descr, closed, in_progress, delivered, sort
 -- Data for Name: fm_cron_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_cron_log (id, cron, cron_date, process, message) FROM stdin;
+COPY public.fm_cron_log (id, cron, cron_date, process, message) FROM stdin;
 \.
 
 
@@ -7021,7 +7020,7 @@ COPY fm_cron_log (id, cron, cron_date, process, message) FROM stdin;
 -- Data for Name: fm_custom; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_custom (id, name, sql_text, entry_date, user_id) FROM stdin;
+COPY public.fm_custom (id, name, sql_text, entry_date, user_id) FROM stdin;
 1	test query	select * from phpgw_accounts	\N	\N
 \.
 
@@ -7030,7 +7029,7 @@ COPY fm_custom (id, name, sql_text, entry_date, user_id) FROM stdin;
 -- Data for Name: fm_custom_cols; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_custom_cols (custom_id, id, name, descr, sorting) FROM stdin;
+COPY public.fm_custom_cols (custom_id, id, name, descr, sorting) FROM stdin;
 1	1	account_id	ID	1
 1	2	account_lid	Lid	2
 1	3	account_firstname	First Name	3
@@ -7042,7 +7041,7 @@ COPY fm_custom_cols (custom_id, id, name, descr, sorting) FROM stdin;
 -- Data for Name: fm_custom_menu_items; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_custom_menu_items (id, parent_id, text, url, target, location, local_files, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_custom_menu_items (id, parent_id, text, url, target, location, local_files, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7050,7 +7049,7 @@ COPY fm_custom_menu_items (id, parent_id, text, url, target, location, local_fil
 -- Data for Name: fm_district; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_district (id, descr, delivery_address) FROM stdin;
+COPY public.fm_district (id, descr, delivery_address) FROM stdin;
 1	District 1	\N
 2	District 2	\N
 3	District 3	\N
@@ -7061,7 +7060,7 @@ COPY fm_district (id, descr, delivery_address) FROM stdin;
 -- Data for Name: fm_document; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_document (id, title, document_name, link, descr, version, document_date, entry_date, status, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, address, coordinator, vendor_id, branch_id, category, user_id, access) FROM stdin;
+COPY public.fm_document (id, title, document_name, link, descr, version, document_date, entry_date, status, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, address, coordinator, vendor_id, branch_id, category, user_id, access) FROM stdin;
 \.
 
 
@@ -7069,7 +7068,7 @@ COPY fm_document (id, title, document_name, link, descr, version, document_date,
 -- Data for Name: fm_document_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_document_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_document_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -7077,7 +7076,7 @@ COPY fm_document_history (history_id, history_record_id, history_appname, histor
 -- Data for Name: fm_document_relation; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_document_relation (id, document_id, location_id, location_item_id, entry_date) FROM stdin;
+COPY public.fm_document_relation (id, document_id, location_id, location_item_id, entry_date) FROM stdin;
 \.
 
 
@@ -7085,7 +7084,7 @@ COPY fm_document_relation (id, document_id, location_id, location_item_id, entry
 -- Data for Name: fm_document_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_document_status (id, descr) FROM stdin;
+COPY public.fm_document_status (id, descr) FROM stdin;
 draft	Draft
 final	Final
 obsolete	obsolete
@@ -7096,7 +7095,7 @@ obsolete	obsolete
 -- Data for Name: fm_eco_period_transition; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_eco_period_transition (id, month, day, hour, remark, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_eco_period_transition (id, month, day, hour, remark, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7104,7 +7103,7 @@ COPY fm_eco_period_transition (id, month, day, hour, remark, user_id, entry_date
 -- Data for Name: fm_eco_periodization; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_eco_periodization (id, descr, active) FROM stdin;
+COPY public.fm_eco_periodization (id, descr, active) FROM stdin;
 \.
 
 
@@ -7112,7 +7111,7 @@ COPY fm_eco_periodization (id, descr, active) FROM stdin;
 -- Data for Name: fm_eco_periodization_outline; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_eco_periodization_outline (id, periodization_id, month, value, dividend, divisor, remark) FROM stdin;
+COPY public.fm_eco_periodization_outline (id, periodization_id, month, value, dividend, divisor, remark) FROM stdin;
 \.
 
 
@@ -7120,7 +7119,7 @@ COPY fm_eco_periodization_outline (id, periodization_id, month, value, dividend,
 -- Data for Name: fm_eco_service; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_eco_service (id, name, active) FROM stdin;
+COPY public.fm_eco_service (id, name, active) FROM stdin;
 \.
 
 
@@ -7128,7 +7127,7 @@ COPY fm_eco_service (id, name, active) FROM stdin;
 -- Data for Name: fm_ecoart; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecoart (id, descr) FROM stdin;
+COPY public.fm_ecoart (id, descr) FROM stdin;
 1	faktura
 2	kreditnota
 \.
@@ -7138,7 +7137,7 @@ COPY fm_ecoart (id, descr) FROM stdin;
 -- Data for Name: fm_ecoavvik; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecoavvik (bilagsnr, belop, fakturadato, forfallsdato, artid, godkjentbelop, spvend_code, oppsynsmannid, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato, utbetalingsigndato, overftid) FROM stdin;
+COPY public.fm_ecoavvik (bilagsnr, belop, fakturadato, forfallsdato, artid, godkjentbelop, spvend_code, oppsynsmannid, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato, utbetalingsigndato, overftid) FROM stdin;
 \.
 
 
@@ -7146,7 +7145,7 @@ COPY fm_ecoavvik (bilagsnr, belop, fakturadato, forfallsdato, artid, godkjentbel
 -- Data for Name: fm_ecobilag; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecobilag (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, project_id, kostra_id, pmwrkord_code, belop, fakturadato, periode, forfallsdato, fakturanr, spbudact_code, regtid, artid, godkjentbelop, spvend_code, dima, loc1, dimb, mvakode, dimd, dime, oppsynsmannid, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato, utbetalingsigndato, merknad, splitt, kreditnota, pre_transfer, item_type, item_id, external_ref, currency, process_log, process_code, periodization, periodization_start, line_text, external_voucher_id) FROM stdin;
+COPY public.fm_ecobilag (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, project_id, kostra_id, pmwrkord_code, belop, fakturadato, periode, forfallsdato, fakturanr, spbudact_code, regtid, artid, godkjentbelop, spvend_code, dima, loc1, dimb, mvakode, dimd, dime, oppsynsmannid, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato, utbetalingsigndato, merknad, splitt, kreditnota, pre_transfer, item_type, item_id, external_ref, currency, process_log, process_code, periodization, periodization_start, line_text, external_voucher_id) FROM stdin;
 \.
 
 
@@ -7154,7 +7153,7 @@ COPY fm_ecobilag (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, project_id,
 -- Data for Name: fm_ecobilag_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecobilag_category (id, descr) FROM stdin;
+COPY public.fm_ecobilag_category (id, descr) FROM stdin;
 1	Drift, vedlikehold
 2	Prosjekt, Kontrakt
 3	Prosjekt, Tillegg
@@ -7167,7 +7166,7 @@ COPY fm_ecobilag_category (id, descr) FROM stdin;
 -- Data for Name: fm_ecobilag_process_code; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecobilag_process_code (id, name, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_ecobilag_process_code (id, name, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7175,7 +7174,7 @@ COPY fm_ecobilag_process_code (id, name, user_id, entry_date, modified_date) FRO
 -- Data for Name: fm_ecobilag_process_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecobilag_process_log (id, bilagsnr, process_code, process_log, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_ecobilag_process_log (id, bilagsnr, process_code, process_log, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7183,7 +7182,7 @@ COPY fm_ecobilag_process_log (id, bilagsnr, process_code, process_log, user_id, 
 -- Data for Name: fm_ecobilagkilde; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecobilagkilde (id, name, description) FROM stdin;
+COPY public.fm_ecobilagkilde (id, name, description) FROM stdin;
 \.
 
 
@@ -7191,7 +7190,7 @@ COPY fm_ecobilagkilde (id, name, description) FROM stdin;
 -- Data for Name: fm_ecobilagoverf; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecobilagoverf (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, project_id, kostra_id, pmwrkord_code, belop, fakturadato, periode, forfallsdato, fakturanr, spbudact_code, regtid, artid, godkjentbelop, spvend_code, dima, loc1, dimb, mvakode, dimd, dime, oppsynsmannid, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato, utbetalingsigndato, overftid, ordrebelop, merknad, splitt, filnavn, kreditnota, item_type, item_id, external_ref, currency, process_log, process_code, periodization, periodization_start, manual_record, line_text, external_voucher_id) FROM stdin;
+COPY public.fm_ecobilagoverf (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, project_id, kostra_id, pmwrkord_code, belop, fakturadato, periode, forfallsdato, fakturanr, spbudact_code, regtid, artid, godkjentbelop, spvend_code, dima, loc1, dimb, mvakode, dimd, dime, oppsynsmannid, saksbehandlerid, budsjettansvarligid, utbetalingid, oppsynsigndato, saksigndato, budsjettsigndato, utbetalingsigndato, overftid, ordrebelop, merknad, splitt, filnavn, kreditnota, item_type, item_id, external_ref, currency, process_log, process_code, periodization, periodization_start, manual_record, line_text, external_voucher_id) FROM stdin;
 \.
 
 
@@ -7199,7 +7198,7 @@ COPY fm_ecobilagoverf (id, bilagsnr, bilagsnr_ut, kidnr, typeid, kildeid, projec
 -- Data for Name: fm_ecodimb; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecodimb (id, descr, org_unit_id, active) FROM stdin;
+COPY public.fm_ecodimb (id, descr, org_unit_id, active) FROM stdin;
 \.
 
 
@@ -7207,7 +7206,7 @@ COPY fm_ecodimb (id, descr, org_unit_id, active) FROM stdin;
 -- Data for Name: fm_ecodimb_role; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecodimb_role (id, name) FROM stdin;
+COPY public.fm_ecodimb_role (id, name) FROM stdin;
 1	Bestiller
 2	Attestant
 3	Anviser
@@ -7218,7 +7217,7 @@ COPY fm_ecodimb_role (id, name) FROM stdin;
 -- Data for Name: fm_ecodimb_role_user; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecodimb_role_user (id, ecodimb, user_id, role_id, default_user, active_from, active_to, created_on, created_by, expired_on, expired_by) FROM stdin;
+COPY public.fm_ecodimb_role_user (id, ecodimb, user_id, role_id, default_user, active_from, active_to, created_on, created_by, expired_on, expired_by) FROM stdin;
 \.
 
 
@@ -7226,7 +7225,7 @@ COPY fm_ecodimb_role_user (id, ecodimb, user_id, role_id, default_user, active_f
 -- Data for Name: fm_ecodimb_role_user_substitute; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecodimb_role_user_substitute (id, user_id, substitute_user_id) FROM stdin;
+COPY public.fm_ecodimb_role_user_substitute (id, user_id, substitute_user_id) FROM stdin;
 \.
 
 
@@ -7234,7 +7233,7 @@ COPY fm_ecodimb_role_user_substitute (id, user_id, substitute_user_id) FROM stdi
 -- Data for Name: fm_ecodimd; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecodimd (id, descr) FROM stdin;
+COPY public.fm_ecodimd (id, descr) FROM stdin;
 \.
 
 
@@ -7242,7 +7241,7 @@ COPY fm_ecodimd (id, descr) FROM stdin;
 -- Data for Name: fm_ecologg; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecologg (batchid, ecobilagid, status, melding, tid) FROM stdin;
+COPY public.fm_ecologg (batchid, ecobilagid, status, melding, tid) FROM stdin;
 \.
 
 
@@ -7250,7 +7249,7 @@ COPY fm_ecologg (batchid, ecobilagid, status, melding, tid) FROM stdin;
 -- Data for Name: fm_ecomva; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecomva (id, percent, descr) FROM stdin;
+COPY public.fm_ecomva (id, percent, descr) FROM stdin;
 2	\N	Mva 2
 1	\N	Mva 1
 0	\N	ingen
@@ -7264,7 +7263,7 @@ COPY fm_ecomva (id, percent, descr) FROM stdin;
 -- Data for Name: fm_ecouser; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ecouser (id, lid, initials) FROM stdin;
+COPY public.fm_ecouser (id, lid, initials) FROM stdin;
 \.
 
 
@@ -7272,7 +7271,7 @@ COPY fm_ecouser (id, lid, initials) FROM stdin;
 -- Data for Name: fm_entity; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_entity (location_id, id, name, descr, location_form, documentation, lookup_entity) FROM stdin;
+COPY public.fm_entity (location_id, id, name, descr, location_form, documentation, lookup_entity) FROM stdin;
 \.
 
 
@@ -7280,7 +7279,7 @@ COPY fm_entity (location_id, id, name, descr, location_form, documentation, look
 -- Data for Name: fm_entity_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level, location_link_level, fileupload, loc_link, start_project, start_ticket, is_eav, enable_bulk, enable_controller, jasperupload, parent_id, level, org_unit, entity_group_id) FROM stdin;
+COPY public.fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup_tenant, tracking, location_level, location_link_level, fileupload, loc_link, start_project, start_ticket, is_eav, enable_bulk, enable_controller, jasperupload, parent_id, level, org_unit, entity_group_id) FROM stdin;
 \.
 
 
@@ -7288,7 +7287,7 @@ COPY fm_entity_category (location_id, entity_id, id, name, descr, prefix, lookup
 -- Data for Name: fm_entity_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_entity_group (id, name, descr, active, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_entity_group (id, name, descr, active, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7296,7 +7295,7 @@ COPY fm_entity_group (id, name, descr, active, user_id, entry_date, modified_dat
 -- Data for Name: fm_entity_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_entity_history (history_id, history_record_id, history_appname, history_attrib_id, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_entity_history (history_id, history_record_id, history_appname, history_attrib_id, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -7304,7 +7303,7 @@ COPY fm_entity_history (history_id, history_record_id, history_appname, history_
 -- Data for Name: fm_entity_lookup; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_entity_lookup (entity_id, location, type) FROM stdin;
+COPY public.fm_entity_lookup (entity_id, location, type) FROM stdin;
 \.
 
 
@@ -7312,7 +7311,7 @@ COPY fm_entity_lookup (entity_id, location, type) FROM stdin;
 -- Data for Name: fm_event; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_event (id, location_id, location_item_id, attrib_id, responsible_id, action_id, descr, start_date, end_date, repeat_type, repeat_day, repeat_interval, enabled, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_event (id, location_id, location_item_id, attrib_id, responsible_id, action_id, descr, start_date, end_date, repeat_type, repeat_day, repeat_interval, enabled, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7320,7 +7319,7 @@ COPY fm_event (id, location_id, location_item_id, attrib_id, responsible_id, act
 -- Data for Name: fm_event_action; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_event_action (id, name, action, data, descr, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_event_action (id, name, action, data, descr, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7328,7 +7327,7 @@ COPY fm_event_action (id, name, action, data, descr, user_id, entry_date, modifi
 -- Data for Name: fm_event_exception; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_event_exception (event_id, exception_time, descr, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_event_exception (event_id, exception_time, descr, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7336,7 +7335,7 @@ COPY fm_event_exception (event_id, exception_time, descr, user_id, entry_date, m
 -- Data for Name: fm_event_receipt; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_event_receipt (event_id, receipt_time, descr, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_event_receipt (event_id, receipt_time, descr, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7344,7 +7343,7 @@ COPY fm_event_receipt (event_id, receipt_time, descr, user_id, entry_date, modif
 -- Data for Name: fm_event_schedule; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_event_schedule (event_id, schedule_time, descr, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_event_schedule (event_id, schedule_time, descr, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7352,7 +7351,7 @@ COPY fm_event_schedule (event_id, schedule_time, descr, user_id, entry_date, mod
 -- Data for Name: fm_external_project; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_external_project (id, name, budget, active) FROM stdin;
+COPY public.fm_external_project (id, name, budget, active) FROM stdin;
 \.
 
 
@@ -7360,7 +7359,7 @@ COPY fm_external_project (id, name, budget, active) FROM stdin;
 -- Data for Name: fm_gab_location; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_gab_location (location_code, gab_id, user_id, entry_date, loc1, loc2, loc3, loc4, address, split, remark, owner, spredning) FROM stdin;
+COPY public.fm_gab_location (location_code, gab_id, user_id, entry_date, loc1, loc2, loc3, loc4, address, split, remark, owner, spredning) FROM stdin;
 \.
 
 
@@ -7368,7 +7367,7 @@ COPY fm_gab_location (location_code, gab_id, user_id, entry_date, loc1, loc2, lo
 -- Data for Name: fm_generic_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_generic_history (history_id, history_record_id, history_owner, history_status, history_new_value, history_old_value, history_timestamp, history_attrib_id, location_id, app_id) FROM stdin;
+COPY public.fm_generic_history (history_id, history_record_id, history_owner, history_status, history_new_value, history_old_value, history_timestamp, history_attrib_id, location_id, app_id) FROM stdin;
 \.
 
 
@@ -7376,7 +7375,7 @@ COPY fm_generic_history (history_id, history_record_id, history_owner, history_s
 -- Data for Name: fm_idgenerator; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_idgenerator (name, start_date, value, increment, descr) FROM stdin;
+COPY public.fm_idgenerator (name, start_date, value, increment, descr) FROM stdin;
 Bilagsnummer	0	2003100000	\N	Bilagsnummer
 bilagsnr_ut	0	0	\N	Bilagsnummer utgående
 Ecobatchid	0	1	\N	Ecobatchid
@@ -7391,7 +7390,7 @@ request	0	1000	\N	request
 -- Data for Name: fm_investment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_investment (entity_id, invest_id, entity_type, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, address, descr, writeoff_year) FROM stdin;
+COPY public.fm_investment (entity_id, invest_id, entity_type, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, address, descr, writeoff_year) FROM stdin;
 \.
 
 
@@ -7399,7 +7398,7 @@ COPY fm_investment (entity_id, invest_id, entity_type, p_num, p_entity_id, p_cat
 -- Data for Name: fm_investment_value; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_investment_value (entity_id, invest_id, index_count, current_index, this_index, initial_value, value, index_date) FROM stdin;
+COPY public.fm_investment_value (entity_id, invest_id, index_count, current_index, this_index, initial_value, value, index_date) FROM stdin;
 \.
 
 
@@ -7407,7 +7406,7 @@ COPY fm_investment_value (entity_id, invest_id, index_count, current_index, this
 -- Data for Name: fm_jasper; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_jasper (id, location_id, title, descr, formats, version, access, user_id, entry_date, modified_by, modified_date) FROM stdin;
+COPY public.fm_jasper (id, location_id, title, descr, formats, version, access, user_id, entry_date, modified_by, modified_date) FROM stdin;
 \.
 
 
@@ -7415,7 +7414,7 @@ COPY fm_jasper (id, location_id, title, descr, formats, version, access, user_id
 -- Data for Name: fm_jasper_format_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_jasper_format_type (id) FROM stdin;
+COPY public.fm_jasper_format_type (id) FROM stdin;
 PDF
 CSV
 XLS
@@ -7428,7 +7427,7 @@ DOCX
 -- Data for Name: fm_jasper_input; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_jasper_input (id, jasper_id, input_type_id, is_id, name, descr) FROM stdin;
+COPY public.fm_jasper_input (id, jasper_id, input_type_id, is_id, name, descr) FROM stdin;
 \.
 
 
@@ -7436,7 +7435,7 @@ COPY fm_jasper_input (id, jasper_id, input_type_id, is_id, name, descr) FROM std
 -- Data for Name: fm_jasper_input_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_jasper_input_type (id, name, descr) FROM stdin;
+COPY public.fm_jasper_input_type (id, name, descr) FROM stdin;
 1	integer	Integer
 2	float	Float
 3	text	Text
@@ -7452,7 +7451,7 @@ COPY fm_jasper_input_type (id, name, descr) FROM stdin;
 -- Data for Name: fm_key_loc; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_key_loc (id, num, descr) FROM stdin;
+COPY public.fm_key_loc (id, num, descr) FROM stdin;
 \.
 
 
@@ -7460,7 +7459,7 @@ COPY fm_key_loc (id, num, descr) FROM stdin;
 -- Data for Name: fm_location1; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location1 (id, location_code, loc1, loc1_name, part_of_town_id, entry_date, category, user_id, owner_id, status, mva, remark, kostra_id, change_type, rental_area, area_gross, area_net, area_usable, delivery_address, modified_by, modified_on) FROM stdin;
+COPY public.fm_location1 (id, location_code, loc1, loc1_name, part_of_town_id, entry_date, category, user_id, owner_id, status, mva, remark, kostra_id, change_type, rental_area, area_gross, area_net, area_usable, delivery_address, modified_by, modified_on) FROM stdin;
 1	5000	5000	Location name	1	\N	1	6	1	1	\N	remark	\N	\N	0.00	0.00	0.00	0.00	\N	\N	2018-01-12 12:30:10.053485
 \.
 
@@ -7469,7 +7468,7 @@ COPY fm_location1 (id, location_code, loc1, loc1_name, part_of_town_id, entry_da
 -- Data for Name: fm_location1_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location1_category (id, descr) FROM stdin;
+COPY public.fm_location1_category (id, descr) FROM stdin;
 1	SOMETHING
 99	not active
 \.
@@ -7479,7 +7478,7 @@ COPY fm_location1_category (id, descr) FROM stdin;
 -- Data for Name: fm_location1_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location1_history (id, location_code, loc1, loc1_name, part_of_town_id, entry_date, category, user_id, owner_id, status, mva, remark, kostra_id, change_type, rental_area, area_gross, area_net, area_usable, delivery_address, exp_date, modified_by, modified_on) FROM stdin;
+COPY public.fm_location1_history (id, location_code, loc1, loc1_name, part_of_town_id, entry_date, category, user_id, owner_id, status, mva, remark, kostra_id, change_type, rental_area, area_gross, area_net, area_usable, delivery_address, exp_date, modified_by, modified_on) FROM stdin;
 \.
 
 
@@ -7487,7 +7486,7 @@ COPY fm_location1_history (id, location_code, loc1, loc1_name, part_of_town_id, 
 -- Data for Name: fm_location2; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location2 (id, location_code, loc1, loc2, loc2_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, modified_by, modified_on) FROM stdin;
+COPY public.fm_location2 (id, location_code, loc1, loc2, loc2_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, modified_by, modified_on) FROM stdin;
 2	5000-01	5000	01	Location name	\N	1	6	1	remark	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
 \.
 
@@ -7496,7 +7495,7 @@ COPY fm_location2 (id, location_code, loc1, loc2, loc2_name, entry_date, categor
 -- Data for Name: fm_location2_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location2_category (id, descr) FROM stdin;
+COPY public.fm_location2_category (id, descr) FROM stdin;
 1	SOMETHING
 99	not active
 \.
@@ -7506,7 +7505,7 @@ COPY fm_location2_category (id, descr) FROM stdin;
 -- Data for Name: fm_location2_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location2_history (id, location_code, loc1, loc2, loc2_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, exp_date, modified_by, modified_on) FROM stdin;
+COPY public.fm_location2_history (id, location_code, loc1, loc2, loc2_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, exp_date, modified_by, modified_on) FROM stdin;
 \.
 
 
@@ -7514,7 +7513,7 @@ COPY fm_location2_history (id, location_code, loc1, loc2, loc2_name, entry_date,
 -- Data for Name: fm_location3; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location3 (id, location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, modified_by, modified_on) FROM stdin;
+COPY public.fm_location3 (id, location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, modified_by, modified_on) FROM stdin;
 3	5000-01-01	5000	01	01	entrance name1	1087745654	1	6	1	\N	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
 4	5000-01-02	5000	01	02	entrance name2	1087745654	1	6	1	\N	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
 5	5000-01-03	5000	01	03	entrance name3	1087745654	1	6	1	\N	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
@@ -7525,7 +7524,7 @@ COPY fm_location3 (id, location_code, loc1, loc2, loc3, loc3_name, entry_date, c
 -- Data for Name: fm_location3_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location3_category (id, descr) FROM stdin;
+COPY public.fm_location3_category (id, descr) FROM stdin;
 1	SOMETHING
 99	not active
 \.
@@ -7535,7 +7534,7 @@ COPY fm_location3_category (id, descr) FROM stdin;
 -- Data for Name: fm_location3_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location3_history (id, location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, exp_date, modified_by, modified_on) FROM stdin;
+COPY public.fm_location3_history (id, location_code, loc1, loc2, loc3, loc3_name, entry_date, category, user_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, exp_date, modified_by, modified_on) FROM stdin;
 \.
 
 
@@ -7543,7 +7542,7 @@ COPY fm_location3_history (id, location_code, loc1, loc2, loc3, loc3_name, entry
 -- Data for Name: fm_location4; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location4 (id, location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, modified_by, modified_on) FROM stdin;
+COPY public.fm_location4 (id, location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, modified_by, modified_on) FROM stdin;
 6	5000-01-01-001	5000	01	01	001	apartment name1	1087745753	1	1	1A	6	1	1	\N	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
 7	5000-01-01-002	5000	01	01	002	apartment name2	1087745753	1	1	1B	6	2	1	\N	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
 8	5000-01-02-001	5000	01	02	001	apartment name3	1087745753	1	1	2A	6	3	1	\N	\N	0.00	0.00	0.00	0.00	\N	2018-01-12 12:30:10.053485
@@ -7557,7 +7556,7 @@ COPY fm_location4 (id, location_code, loc1, loc2, loc3, loc4, loc4_name, entry_d
 -- Data for Name: fm_location4_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location4_category (id, descr) FROM stdin;
+COPY public.fm_location4_category (id, descr) FROM stdin;
 1	SOMETHING
 99	not active
 \.
@@ -7567,7 +7566,7 @@ COPY fm_location4_category (id, descr) FROM stdin;
 -- Data for Name: fm_location4_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location4_history (id, location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, exp_date, modified_by, modified_on) FROM stdin;
+COPY public.fm_location4_history (id, location_code, loc1, loc2, loc3, loc4, loc4_name, entry_date, category, street_id, street_number, user_id, tenant_id, status, remark, change_type, rental_area, area_gross, area_net, area_usable, exp_date, modified_by, modified_on) FROM stdin;
 \.
 
 
@@ -7575,7 +7574,7 @@ COPY fm_location4_history (id, location_code, loc1, loc2, loc3, loc4, loc4_name,
 -- Data for Name: fm_location_config; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_config (column_name, location_type, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) FROM stdin;
+COPY public.fm_location_config (column_name, location_type, input_text, lookup_form, f_key, ref_to_category, query_value, reference_table, reference_id, datatype, precision_, scale, default_value, nullable) FROM stdin;
 tenant_id	4	\N	1	1	\N	0	fm_tenant	id	int	4	\N	\N	True
 street_id	4	\N	1	1	\N	1	fm_streetaddress	id	int	4	\N	\N	True
 owner_id	1	\N	\N	1	1	\N	fm_owner	id	int	4	\N	\N	True
@@ -7587,7 +7586,7 @@ part_of_town_id	1	\N	\N	1	\N	\N	fm_part_of_town	id	int	4	\N	\N	True
 -- Data for Name: fm_location_contact; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_contact (id, contact_id, location_code, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_location_contact (id, contact_id, location_code, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7595,7 +7594,7 @@ COPY fm_location_contact (id, contact_id, location_code, user_id, entry_date, mo
 -- Data for Name: fm_location_exception; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_exception (id, location_code, severity_id, category_id, category_text_id, descr, start_date, end_date, reference, alert_vendor, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_location_exception (id, location_code, severity_id, category_id, category_text_id, descr, start_date, end_date, reference, alert_vendor, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7603,7 +7602,7 @@ COPY fm_location_exception (id, location_code, severity_id, category_id, categor
 -- Data for Name: fm_location_exception_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_exception_category (id, name, parent_id) FROM stdin;
+COPY public.fm_location_exception_category (id, name, parent_id) FROM stdin;
 \.
 
 
@@ -7611,7 +7610,7 @@ COPY fm_location_exception_category (id, name, parent_id) FROM stdin;
 -- Data for Name: fm_location_exception_category_text; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_exception_category_text (id, category_id, content) FROM stdin;
+COPY public.fm_location_exception_category_text (id, category_id, content) FROM stdin;
 \.
 
 
@@ -7619,7 +7618,7 @@ COPY fm_location_exception_category_text (id, category_id, content) FROM stdin;
 -- Data for Name: fm_location_exception_severity; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_exception_severity (id, name) FROM stdin;
+COPY public.fm_location_exception_severity (id, name) FROM stdin;
 \.
 
 
@@ -7627,7 +7626,7 @@ COPY fm_location_exception_severity (id, name) FROM stdin;
 -- Data for Name: fm_location_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_location_type (id, name, descr, pk, ix, uc, list_info, list_address, list_documents, enable_controller) FROM stdin;
+COPY public.fm_location_type (id, name, descr, pk, ix, uc, list_info, list_address, list_documents, enable_controller) FROM stdin;
 1	property	Property	loc1	location_code	\N	a:1:{i:1;s:1:"1";}	\N	\N	\N
 2	building	Building	loc1,loc2	location_code	\N	a:2:{i:1;s:1:"1";i:2;s:1:"2";}	\N	\N	\N
 3	entrance	Entrance	loc1,loc2,loc3	location_code	\N	a:3:{i:1;s:1:"1";i:2;s:1:"2";i:3;s:1:"3";}	\N	\N	\N
@@ -7639,7 +7638,7 @@ COPY fm_location_type (id, name, descr, pk, ix, uc, list_info, list_address, lis
 -- Data for Name: fm_locations; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_locations (id, level, location_code, loc1, name) FROM stdin;
+COPY public.fm_locations (id, level, location_code, loc1, name) FROM stdin;
 1	1	5000	5000	Location name
 2	2	5000-01	5000	Location name, Location name
 3	3	5000-01-01	5000	Location name, Location name, entrance name1
@@ -7658,7 +7657,7 @@ COPY fm_locations (id, level, location_code, loc1, name) FROM stdin;
 -- Data for Name: fm_ns3420; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_ns3420 (id, num, parent_id, enhet, tekst1, tekst2, tekst3, tekst4, tekst5, tekst6, type) FROM stdin;
+COPY public.fm_ns3420 (id, num, parent_id, enhet, tekst1, tekst2, tekst3, tekst4, tekst5, tekst6, type) FROM stdin;
 1	D00	\N	RS	RIGGING, KLARGJØRING	\N	\N	\N	\N	\N	\N
 2	D20	\N	RS	RIGGING, ANLEGGSTOMT	TILFØRSEL- OG FORSYNINGSANLEGG	\N	\N	\N	\N	\N
 \.
@@ -7668,7 +7667,7 @@ COPY fm_ns3420 (id, num, parent_id, enhet, tekst1, tekst2, tekst3, tekst4, tekst
 -- Data for Name: fm_order_dim1; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_order_dim1 (id, num, descr) FROM stdin;
+COPY public.fm_order_dim1 (id, num, descr) FROM stdin;
 \.
 
 
@@ -7676,7 +7675,7 @@ COPY fm_order_dim1 (id, num, descr) FROM stdin;
 -- Data for Name: fm_order_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_order_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_order_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7684,7 +7683,7 @@ COPY fm_order_template (id, name, content, public, user_id, entry_date, modified
 -- Data for Name: fm_orders; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_orders (id, type) FROM stdin;
+COPY public.fm_orders (id, type) FROM stdin;
 \.
 
 
@@ -7692,7 +7691,7 @@ COPY fm_orders (id, type) FROM stdin;
 -- Data for Name: fm_org_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_org_unit (id, parent_id, name, active, created_on, created_by, modified_by, modified_on) FROM stdin;
+COPY public.fm_org_unit (id, parent_id, name, active, created_on, created_by, modified_by, modified_on) FROM stdin;
 \.
 
 
@@ -7700,7 +7699,7 @@ COPY fm_org_unit (id, parent_id, name, active, created_on, created_by, modified_
 -- Data for Name: fm_owner; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_owner (id, abid, org_name, contact_name, category, member_of, remark, entry_date, owner_id) FROM stdin;
+COPY public.fm_owner (id, abid, org_name, contact_name, category, member_of, remark, entry_date, owner_id) FROM stdin;
 1	1	demo-owner 1	\N	1	\N	\N	\N	\N
 \.
 
@@ -7709,7 +7708,7 @@ COPY fm_owner (id, abid, org_name, contact_name, category, member_of, remark, en
 -- Data for Name: fm_owner_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_owner_category (id, descr) FROM stdin;
+COPY public.fm_owner_category (id, descr) FROM stdin;
 1	Owner category 1
 \.
 
@@ -7718,7 +7717,7 @@ COPY fm_owner_category (id, descr) FROM stdin;
 -- Data for Name: fm_part_of_town; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_part_of_town (id, name, district_id, delivery_address) FROM stdin;
+COPY public.fm_part_of_town (id, name, district_id, delivery_address) FROM stdin;
 1	Part of town 1	1	\N
 \.
 
@@ -7727,7 +7726,7 @@ COPY fm_part_of_town (id, name, district_id, delivery_address) FROM stdin;
 -- Data for Name: fm_project; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_project (id, parent_id, project_type_id, name, user_id, access, category, entry_date, start_date, end_date, coordinator, status, descr, budget, reserve, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, address, tenant_id, contact_phone, key_fetch, key_deliver, other_branch, key_responsible, external_project_id, planned_cost, account_id, ecodimb, contact_id, account_group, b_account_id, inherit_location, periodization_id, delivery_address) FROM stdin;
+COPY public.fm_project (id, parent_id, project_type_id, name, user_id, access, category, entry_date, start_date, end_date, coordinator, status, descr, budget, reserve, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, address, tenant_id, contact_phone, key_fetch, key_deliver, other_branch, key_responsible, external_project_id, planned_cost, account_id, ecodimb, contact_id, account_group, b_account_id, inherit_location, periodization_id, delivery_address) FROM stdin;
 \.
 
 
@@ -7735,7 +7734,7 @@ COPY fm_project (id, parent_id, project_type_id, name, user_id, access, category
 -- Data for Name: fm_project_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_project_budget (project_id, year, month, budget, order_amount, closed, active, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_project_budget (project_id, year, month, budget, order_amount, closed, active, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7743,7 +7742,7 @@ COPY fm_project_budget (project_id, year, month, budget, order_amount, closed, a
 -- Data for Name: fm_project_buffer_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_project_buffer_budget (id, year, month, buffer_project_id, entry_date, amount_in, from_project, amount_out, to_project, active, user_id, remark) FROM stdin;
+COPY public.fm_project_buffer_budget (id, year, month, buffer_project_id, entry_date, amount_in, from_project, amount_out, to_project, active, user_id, remark) FROM stdin;
 \.
 
 
@@ -7751,7 +7750,7 @@ COPY fm_project_buffer_budget (id, year, month, buffer_project_id, entry_date, a
 -- Data for Name: fm_project_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_project_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_project_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -7759,7 +7758,7 @@ COPY fm_project_history (history_id, history_record_id, history_appname, history
 -- Data for Name: fm_project_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_project_status (id, descr, approved, closed) FROM stdin;
+COPY public.fm_project_status (id, descr, approved, closed) FROM stdin;
 \.
 
 
@@ -7767,7 +7766,7 @@ COPY fm_project_status (id, descr, approved, closed) FROM stdin;
 -- Data for Name: fm_projectbranch; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_projectbranch (project_id, branch_id) FROM stdin;
+COPY public.fm_projectbranch (project_id, branch_id) FROM stdin;
 \.
 
 
@@ -7775,7 +7774,7 @@ COPY fm_projectbranch (project_id, branch_id) FROM stdin;
 -- Data for Name: fm_regulations; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_regulations (id, parent_id, name, descr, external_ref, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_regulations (id, parent_id, name, descr, external_ref, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7783,7 +7782,7 @@ COPY fm_regulations (id, parent_id, name, descr, external_ref, user_id, entry_da
 -- Data for Name: fm_request; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request (id, condition_survey_id, title, project_id, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, descr, category, owner, access, floor, address, tenant_id, contact_phone, entry_date, amount_investment, amount_operation, amount_potential_grants, status, branch_id, coordinator, responsible_unit, authorities_demands, score, recommended_year, start_date, end_date, building_part, closed_date, in_progress_date, delivered_date, regulations, multiplier) FROM stdin;
+COPY public.fm_request (id, condition_survey_id, title, project_id, p_num, p_entity_id, p_cat_id, location_code, loc1, loc2, loc3, loc4, descr, category, owner, access, floor, address, tenant_id, contact_phone, entry_date, amount_investment, amount_operation, amount_potential_grants, status, branch_id, coordinator, responsible_unit, authorities_demands, score, recommended_year, start_date, end_date, building_part, closed_date, in_progress_date, delivered_date, regulations, multiplier) FROM stdin;
 \.
 
 
@@ -7791,7 +7790,7 @@ COPY fm_request (id, condition_survey_id, title, project_id, p_num, p_entity_id,
 -- Data for Name: fm_request_condition; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_condition (request_id, condition_type, reference, degree, probability, consequence, user_id, entry_date) FROM stdin;
+COPY public.fm_request_condition (request_id, condition_type, reference, degree, probability, consequence, user_id, entry_date) FROM stdin;
 \.
 
 
@@ -7799,7 +7798,7 @@ COPY fm_request_condition (request_id, condition_type, reference, degree, probab
 -- Data for Name: fm_request_condition_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_condition_type (id, name, descr, priority_key) FROM stdin;
+COPY public.fm_request_condition_type (id, name, descr, priority_key) FROM stdin;
 1	safety	\N	10
 2	aesthetics	\N	2
 3	indoor climate	\N	5
@@ -7813,7 +7812,7 @@ COPY fm_request_condition_type (id, name, descr, priority_key) FROM stdin;
 -- Data for Name: fm_request_consume; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_consume (id, request_id, amount, date, user_id, entry_date, descr) FROM stdin;
+COPY public.fm_request_consume (id, request_id, amount, date, user_id, entry_date, descr) FROM stdin;
 \.
 
 
@@ -7821,7 +7820,7 @@ COPY fm_request_consume (id, request_id, amount, date, user_id, entry_date, desc
 -- Data for Name: fm_request_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_request_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -7829,7 +7828,7 @@ COPY fm_request_history (history_id, history_record_id, history_appname, history
 -- Data for Name: fm_request_planning; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_planning (id, request_id, amount, date, user_id, entry_date, descr) FROM stdin;
+COPY public.fm_request_planning (id, request_id, amount, date, user_id, entry_date, descr) FROM stdin;
 \.
 
 
@@ -7837,7 +7836,7 @@ COPY fm_request_planning (id, request_id, amount, date, user_id, entry_date, des
 -- Data for Name: fm_request_responsible_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_responsible_unit (id, name, descr) FROM stdin;
+COPY public.fm_request_responsible_unit (id, name, descr) FROM stdin;
 \.
 
 
@@ -7845,7 +7844,7 @@ COPY fm_request_responsible_unit (id, name, descr) FROM stdin;
 -- Data for Name: fm_request_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_request_status (id, descr, closed, in_progress, delivered, sorting) FROM stdin;
+COPY public.fm_request_status (id, descr, closed, in_progress, delivered, sorting) FROM stdin;
 request	Request	\N	\N	\N	\N
 canceled	Canceled	\N	\N	\N	\N
 closed	avsluttet	\N	\N	\N	\N
@@ -7856,7 +7855,7 @@ closed	avsluttet	\N	\N	\N	\N
 -- Data for Name: fm_response_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_response_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_response_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7864,7 +7863,7 @@ COPY fm_response_template (id, name, content, public, user_id, entry_date, modif
 -- Data for Name: fm_responsibility; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_responsibility (id, name, descr, created_on, created_by) FROM stdin;
+COPY public.fm_responsibility (id, name, descr, created_on, created_by) FROM stdin;
 \.
 
 
@@ -7872,7 +7871,7 @@ COPY fm_responsibility (id, name, descr, created_on, created_by) FROM stdin;
 -- Data for Name: fm_responsibility_contact; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_responsibility_contact (id, responsibility_role_id, contact_id, location_code, p_num, p_entity_id, p_cat_id, priority, active_from, active_to, created_on, created_by, expired_on, expired_by, remark) FROM stdin;
+COPY public.fm_responsibility_contact (id, responsibility_role_id, contact_id, location_code, p_num, p_entity_id, p_cat_id, priority, active_from, active_to, created_on, created_by, expired_on, expired_by, remark) FROM stdin;
 \.
 
 
@@ -7880,7 +7879,7 @@ COPY fm_responsibility_contact (id, responsibility_role_id, contact_id, location
 -- Data for Name: fm_responsibility_module; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_responsibility_module (responsibility_id, location_id, cat_id, active, created_on, created_by) FROM stdin;
+COPY public.fm_responsibility_module (responsibility_id, location_id, cat_id, active, created_on, created_by) FROM stdin;
 \.
 
 
@@ -7888,7 +7887,7 @@ COPY fm_responsibility_module (responsibility_id, location_id, cat_id, active, c
 -- Data for Name: fm_responsibility_role; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_responsibility_role (id, name, remark, location_level, responsibility_id, appname, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_responsibility_role (id, name, remark, location_level, responsibility_id, appname, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7896,7 +7895,7 @@ COPY fm_responsibility_role (id, name, remark, location_level, responsibility_id
 -- Data for Name: fm_s_agreement; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_s_agreement (id, vendor_id, name, descr, status, category, member_of, entry_date, start_date, end_date, termination_date, user_id, actual_cost, account_id) FROM stdin;
+COPY public.fm_s_agreement (id, vendor_id, name, descr, status, category, member_of, entry_date, start_date, end_date, termination_date, user_id, actual_cost, account_id) FROM stdin;
 \.
 
 
@@ -7904,7 +7903,7 @@ COPY fm_s_agreement (id, vendor_id, name, descr, status, category, member_of, en
 -- Data for Name: fm_s_agreement_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_s_agreement_budget (agreement_id, year, budget_account, ecodimb, category, budget, actual_cost, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_s_agreement_budget (agreement_id, year, budget_account, ecodimb, category, budget, actual_cost, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -7912,7 +7911,7 @@ COPY fm_s_agreement_budget (agreement_id, year, budget_account, ecodimb, categor
 -- Data for Name: fm_s_agreement_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_s_agreement_category (id, descr) FROM stdin;
+COPY public.fm_s_agreement_category (id, descr) FROM stdin;
 \.
 
 
@@ -7920,7 +7919,7 @@ COPY fm_s_agreement_category (id, descr) FROM stdin;
 -- Data for Name: fm_s_agreement_detail; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_s_agreement_detail (agreement_id, id, location_code, address, p_num, p_entity_id, p_cat_id, descr, unit, quantity, frequency, user_id, entry_date, test, cost) FROM stdin;
+COPY public.fm_s_agreement_detail (agreement_id, id, location_code, address, p_num, p_entity_id, p_cat_id, descr, unit, quantity, frequency, user_id, entry_date, test, cost) FROM stdin;
 \.
 
 
@@ -7928,7 +7927,7 @@ COPY fm_s_agreement_detail (agreement_id, id, location_code, address, p_num, p_e
 -- Data for Name: fm_s_agreement_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_s_agreement_history (history_id, history_record_id, history_appname, history_detail_id, history_attrib_id, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_s_agreement_history (history_id, history_record_id, history_appname, history_detail_id, history_attrib_id, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -7936,7 +7935,7 @@ COPY fm_s_agreement_history (history_id, history_record_id, history_appname, his
 -- Data for Name: fm_s_agreement_pricing; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_s_agreement_pricing (agreement_id, item_id, id, current_index, this_index, cost, index_date, user_id, entry_date) FROM stdin;
+COPY public.fm_s_agreement_pricing (agreement_id, item_id, id, current_index, this_index, cost, index_date, user_id, entry_date) FROM stdin;
 \.
 
 
@@ -7944,7 +7943,7 @@ COPY fm_s_agreement_pricing (agreement_id, item_id, id, current_index, this_inde
 -- Data for Name: fm_standard_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_standard_unit (id, name, descr) FROM stdin;
+COPY public.fm_standard_unit (id, name, descr) FROM stdin;
 1	mm	Millimeter
 2	m	Meter
 3	m2	Square meters
@@ -7962,7 +7961,7 @@ COPY fm_standard_unit (id, name, descr) FROM stdin;
 -- Data for Name: fm_streetaddress; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_streetaddress (id, descr) FROM stdin;
+COPY public.fm_streetaddress (id, descr) FROM stdin;
 1	street name 1
 \.
 
@@ -7971,7 +7970,7 @@ COPY fm_streetaddress (id, descr) FROM stdin;
 -- Data for Name: fm_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_template (id, name, descr, owner, chapter_id, entry_date) FROM stdin;
+COPY public.fm_template (id, name, descr, owner, chapter_id, entry_date) FROM stdin;
 \.
 
 
@@ -7979,7 +7978,7 @@ COPY fm_template (id, name, descr, owner, chapter_id, entry_date) FROM stdin;
 -- Data for Name: fm_template_hours; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_template_hours (id, template_id, record, owner, activity_id, activity_num, grouping_id, grouping_descr, hours_descr, remark, billperae, vendor_id, unit, ns3420_id, tolerance, building_part, quantity, cost, dim_d, entry_date) FROM stdin;
+COPY public.fm_template_hours (id, template_id, record, owner, activity_id, activity_num, grouping_id, grouping_descr, hours_descr, remark, billperae, vendor_id, unit, ns3420_id, tolerance, building_part, quantity, cost, dim_d, entry_date) FROM stdin;
 \.
 
 
@@ -7987,7 +7986,7 @@ COPY fm_template_hours (id, template_id, record, owner, activity_id, activity_nu
 -- Data for Name: fm_tenant; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tenant (id, member_of, entry_date, first_name, last_name, contact_phone, contact_email, category, phpgw_account_id, account_lid, account_pwd, account_status, owner_id) FROM stdin;
+COPY public.fm_tenant (id, member_of, entry_date, first_name, last_name, contact_phone, contact_email, category, phpgw_account_id, account_lid, account_pwd, account_status, owner_id) FROM stdin;
 1	\N	\N	First name1	Last name1	\N	\N	1	\N	\N	\N	1	\N
 2	\N	\N	First name2	Last name2	\N	\N	2	\N	\N	\N	1	\N
 3	\N	\N	First name3	Last name3	\N	\N	1	\N	\N	\N	1	\N
@@ -8001,7 +8000,7 @@ COPY fm_tenant (id, member_of, entry_date, first_name, last_name, contact_phone,
 -- Data for Name: fm_tenant_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tenant_category (id, descr) FROM stdin;
+COPY public.fm_tenant_category (id, descr) FROM stdin;
 1	male
 2	female
 3	organization
@@ -8012,7 +8011,7 @@ COPY fm_tenant_category (id, descr) FROM stdin;
 -- Data for Name: fm_tenant_claim; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tenant_claim (id, project_id, tenant_id, amount, b_account_id, category, status, remark, user_id, entry_date) FROM stdin;
+COPY public.fm_tenant_claim (id, project_id, tenant_id, amount, b_account_id, category, status, remark, user_id, entry_date) FROM stdin;
 \.
 
 
@@ -8020,7 +8019,7 @@ COPY fm_tenant_claim (id, project_id, tenant_id, amount, b_account_id, category,
 -- Data for Name: fm_tenant_claim_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tenant_claim_category (id, descr) FROM stdin;
+COPY public.fm_tenant_claim_category (id, descr) FROM stdin;
 \.
 
 
@@ -8028,7 +8027,7 @@ COPY fm_tenant_claim_category (id, descr) FROM stdin;
 -- Data for Name: fm_tenant_claim_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tenant_claim_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_tenant_claim_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -8036,7 +8035,7 @@ COPY fm_tenant_claim_history (history_id, history_record_id, history_appname, hi
 -- Data for Name: fm_tts_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_budget (id, ticket_id, amount, period, remark, created_on, created_by) FROM stdin;
+COPY public.fm_tts_budget (id, ticket_id, amount, period, remark, created_on, created_by) FROM stdin;
 \.
 
 
@@ -8044,7 +8043,7 @@ COPY fm_tts_budget (id, ticket_id, amount, period, remark, created_on, created_b
 -- Data for Name: fm_tts_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp, publish) FROM stdin;
+COPY public.fm_tts_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp, publish) FROM stdin;
 1	1	tts	1002	O	1517584417		2018-02-02 15:13:37	\N
 2	1	tts	1002	S	Message 1 with high priority		2018-02-02 15:14:41	\N
 3	2	tts	1002	O	1517584533		2018-02-02 15:15:33	\N
@@ -8057,7 +8056,7 @@ COPY fm_tts_history (history_id, history_record_id, history_appname, history_own
 -- Data for Name: fm_tts_payments; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_payments (id, ticket_id, amount, period, remark, created_on, created_by) FROM stdin;
+COPY public.fm_tts_payments (id, ticket_id, amount, period, remark, created_on, created_by) FROM stdin;
 \.
 
 
@@ -8065,7 +8064,7 @@ COPY fm_tts_payments (id, ticket_id, amount, period, remark, created_on, created
 -- Data for Name: fm_tts_priority; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_priority (id, name) FROM stdin;
+COPY public.fm_tts_priority (id, name) FROM stdin;
 1	1 - Highest
 2	2
 3	3 - Lowest
@@ -8076,7 +8075,7 @@ COPY fm_tts_priority (id, name) FROM stdin;
 -- Data for Name: fm_tts_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_status (id, name, color, closed, approved, in_progress, delivered, actual_cost, sorting) FROM stdin;
+COPY public.fm_tts_status (id, name, color, closed, approved, in_progress, delivered, actual_cost, sorting) FROM stdin;
 \.
 
 
@@ -8084,7 +8083,7 @@ COPY fm_tts_status (id, name, color, closed, approved, in_progress, delivered, a
 -- Data for Name: fm_tts_tickets; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_tickets (id, group_id, priority, user_id, assignedto, subject, cat_id, billable_hours, billable_rate, status, details, location_code, p_num, p_entity_id, p_cat_id, loc1, loc2, loc3, loc4, floor, address, contact_phone, contact_email, tenant_id, entry_date, finnish_date, finnish_date2, contact_id, order_id, ordered_by, vendor_id, contract_id, tax_code, external_project_id, unspsc_code, service_id, order_descr, b_account_id, ecodimb, budget, actual_cost, actual_cost_year, order_cat_id, building_part, order_dim1, publish_note, branch_id, modified_date, order_sent, order_received, order_received_amount, mail_recipients, file_attachments, delivery_address, continuous, order_deadline, order_deadline2, invoice_remark) FROM stdin;
+COPY public.fm_tts_tickets (id, group_id, priority, user_id, assignedto, subject, cat_id, billable_hours, billable_rate, status, details, location_code, p_num, p_entity_id, p_cat_id, loc1, loc2, loc3, loc4, floor, address, contact_phone, contact_email, tenant_id, entry_date, finnish_date, finnish_date2, contact_id, order_id, ordered_by, vendor_id, contract_id, tax_code, external_project_id, unspsc_code, service_id, order_descr, b_account_id, ecodimb, budget, actual_cost, actual_cost_year, order_cat_id, building_part, order_dim1, publish_note, branch_id, modified_date, order_sent, order_received, order_received_amount, mail_recipients, file_attachments, delivery_address, continuous, order_deadline, order_deadline2, invoice_remark) FROM stdin;
 1	1000	1	1002	\N	Message 1 with high priority	4	\N	\N	O	Details of message 1	5000-01	\N	\N	\N	5000	01	\N	\N	\N	Location name	\N	\N	\N	1517584417	0	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0.00	\N	\N	\N	\N	1	\N	1517584481	\N	\N	0.00	\N	\N	\N	\N	\N	\N	\N
 2	1000	2	1002	\N	Message 2 with medium priority	5	\N	\N	O	Message 2	5000-01	\N	\N	\N	5000	01	\N	\N	\N	Location name	\N	\N	\N	1517584533	0	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0.00	\N	\N	\N	\N	1	\N	1517584586	\N	\N	0.00	\N	\N	\N	\N	\N	\N	\N
 3	1000	3	1002	\N	Message 3 with low priority	4	\N	\N	O	Message 3	5000-01	\N	\N	\N	5000	01	\N	\N	\N	Location name	\N	\N	\N	1517584650	0	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	0.00	\N	\N	\N	\N	1	\N	1517584650	\N	\N	0.00	\N	\N	\N	\N	\N	\N	\N
@@ -8095,7 +8094,7 @@ COPY fm_tts_tickets (id, group_id, priority, user_id, assignedto, subject, cat_i
 -- Data for Name: fm_tts_views; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_tts_views (id, account_id, "time") FROM stdin;
+COPY public.fm_tts_views (id, account_id, "time") FROM stdin;
 1	1002	1517584417
 2	1002	1517584547
 3	1002	1517584650
@@ -8106,7 +8105,7 @@ COPY fm_tts_views (id, account_id, "time") FROM stdin;
 -- Data for Name: fm_unspsc_code; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_unspsc_code (id, name) FROM stdin;
+COPY public.fm_unspsc_code (id, name) FROM stdin;
 \.
 
 
@@ -8114,7 +8113,7 @@ COPY fm_unspsc_code (id, name) FROM stdin;
 -- Data for Name: fm_vendor; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_vendor (id, entry_date, org_name, email, contact_phone, klasse, member_of, category, mva, owner_id, active) FROM stdin;
+COPY public.fm_vendor (id, entry_date, org_name, email, contact_phone, klasse, member_of, category, mva, owner_id, active) FROM stdin;
 1	1515760210	Demo vendor	demo@vendor.org	5555555	\N	\N	1	\N	\N	1
 \.
 
@@ -8123,7 +8122,7 @@ COPY fm_vendor (id, entry_date, org_name, email, contact_phone, klasse, member_o
 -- Data for Name: fm_vendor_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_vendor_category (id, descr) FROM stdin;
+COPY public.fm_vendor_category (id, descr) FROM stdin;
 1	kateogory 1
 \.
 
@@ -8132,7 +8131,7 @@ COPY fm_vendor_category (id, descr) FROM stdin;
 -- Data for Name: fm_view_dataset; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_view_dataset (id, view_name, dataset_name, owner_id, entry_date) FROM stdin;
+COPY public.fm_view_dataset (id, view_name, dataset_name, owner_id, entry_date) FROM stdin;
 \.
 
 
@@ -8140,7 +8139,7 @@ COPY fm_view_dataset (id, view_name, dataset_name, owner_id, entry_date) FROM st
 -- Data for Name: fm_view_dataset_report; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_view_dataset_report (id, dataset_id, report_name, report_definition, owner_id, entry_date) FROM stdin;
+COPY public.fm_view_dataset_report (id, dataset_id, report_name, report_definition, owner_id, entry_date) FROM stdin;
 \.
 
 
@@ -8148,7 +8147,7 @@ COPY fm_view_dataset_report (id, dataset_id, report_name, report_definition, own
 -- Data for Name: fm_wo_h_deviation; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_wo_h_deviation (workorder_id, hour_id, id, amount, descr, entry_date) FROM stdin;
+COPY public.fm_wo_h_deviation (workorder_id, hour_id, id, amount, descr, entry_date) FROM stdin;
 \.
 
 
@@ -8156,7 +8155,7 @@ COPY fm_wo_h_deviation (workorder_id, hour_id, id, amount, descr, entry_date) FR
 -- Data for Name: fm_wo_hours; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_wo_hours (id, record, owner, workorder_id, activity_id, activity_num, grouping_id, grouping_descr, entry_date, hours_descr, remark, billperae, vendor_id, unit, ns3420_id, tolerance, building_part, quantity, cost, dim_d, category, cat_per_cent) FROM stdin;
+COPY public.fm_wo_hours (id, record, owner, workorder_id, activity_id, activity_num, grouping_id, grouping_descr, entry_date, hours_descr, remark, billperae, vendor_id, unit, ns3420_id, tolerance, building_part, quantity, cost, dim_d, category, cat_per_cent) FROM stdin;
 \.
 
 
@@ -8164,7 +8163,7 @@ COPY fm_wo_hours (id, record, owner, workorder_id, activity_id, activity_num, gr
 -- Data for Name: fm_wo_hours_category; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_wo_hours_category (id, descr) FROM stdin;
+COPY public.fm_wo_hours_category (id, descr) FROM stdin;
 \.
 
 
@@ -8172,7 +8171,7 @@ COPY fm_wo_hours_category (id, descr) FROM stdin;
 -- Data for Name: fm_workorder; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_workorder (id, num, project_id, user_id, access, category, chapter_id, entry_date, start_date, end_date, tender_deadline, tender_received, inspection_on_completion, coordinator, vendor_id, status, descr, title, budget, calculation, combined_cost, deviation, act_mtrl_cost, act_vendor_cost, actual_cost, addition, rig_addition, account_id, key_fetch, key_deliver, integration, charge_tenant, claim_issued, paid, ecodimb, p_num, p_entity_id, p_cat_id, location_code, address, tenant_id, contact_phone, paid_percent, event_id, billable_hours, contract_sum, approved, mail_recipients, continuous, fictive_periodization, contract_id, tax_code, unspsc_code, service_id, building_part, order_dim1, order_sent, order_received, order_received_amount, delivery_address, file_attachments) FROM stdin;
+COPY public.fm_workorder (id, num, project_id, user_id, access, category, chapter_id, entry_date, start_date, end_date, tender_deadline, tender_received, inspection_on_completion, coordinator, vendor_id, status, descr, title, budget, calculation, combined_cost, deviation, act_mtrl_cost, act_vendor_cost, actual_cost, addition, rig_addition, account_id, key_fetch, key_deliver, integration, charge_tenant, claim_issued, paid, ecodimb, p_num, p_entity_id, p_cat_id, location_code, address, tenant_id, contact_phone, paid_percent, event_id, billable_hours, contract_sum, approved, mail_recipients, continuous, fictive_periodization, contract_id, tax_code, unspsc_code, service_id, building_part, order_dim1, order_sent, order_received, order_received_amount, delivery_address, file_attachments) FROM stdin;
 \.
 
 
@@ -8180,7 +8179,7 @@ COPY fm_workorder (id, num, project_id, user_id, access, category, chapter_id, e
 -- Data for Name: fm_workorder_budget; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_workorder_budget (order_id, year, month, budget, contract_sum, combined_cost, active, user_id, entry_date, modified_date) FROM stdin;
+COPY public.fm_workorder_budget (order_id, year, month, budget, contract_sum, combined_cost, active, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -8188,7 +8187,7 @@ COPY fm_workorder_budget (order_id, year, month, budget, contract_sum, combined_
 -- Data for Name: fm_workorder_history; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_workorder_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
+COPY public.fm_workorder_history (history_id, history_record_id, history_appname, history_owner, history_status, history_new_value, history_old_value, history_timestamp) FROM stdin;
 \.
 
 
@@ -8196,7 +8195,7 @@ COPY fm_workorder_history (history_id, history_record_id, history_appname, histo
 -- Data for Name: fm_workorder_status; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY fm_workorder_status (id, descr, approved, in_progress, delivered, closed, canceled) FROM stdin;
+COPY public.fm_workorder_status (id, descr, approved, in_progress, delivered, closed, canceled) FROM stdin;
 active	Active	\N	\N	\N	\N	\N
 ordered	Ordered	\N	\N	\N	\N	\N
 request	Request	\N	\N	\N	\N	\N
@@ -8208,7 +8207,7 @@ closed	Closed	\N	\N	\N	\N	\N
 -- Data for Name: phpgw_access_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_access_log (sessionid, loginid, ip, li, lo, account_id) FROM stdin;
+COPY public.phpgw_access_log (sessionid, loginid, ip, li, lo, account_id) FROM stdin;
 7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515491600	0	1002
 bad login or password                                           	sysadmin	10.0.2.2	1515661010	0	0
 7p2ufde9erdpaga88pe2090qt6                                      	sysadmin	10.0.2.2	1515661016	0	1002
@@ -8346,7 +8345,7 @@ mve68hrpo5ldppgq18p25g50b7                                      	sysadmin	10.0.2
 -- Data for Name: phpgw_account_delegates; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_account_delegates (delegate_id, account_id, owner_id, location_id, data, active_from, active_to, created_on, created_by) FROM stdin;
+COPY public.phpgw_account_delegates (delegate_id, account_id, owner_id, location_id, data, active_from, active_to, created_on, created_by) FROM stdin;
 \.
 
 
@@ -8354,7 +8353,7 @@ COPY phpgw_account_delegates (delegate_id, account_id, owner_id, location_id, da
 -- Data for Name: phpgw_accounts; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_accounts (account_id, account_lid, account_pwd, account_firstname, account_lastname, account_permissions, account_groups, account_lastlogin, account_lastloginfrom, account_lastpwd_change, account_status, account_expires, account_type, person_id, account_quota) FROM stdin;
+COPY public.phpgw_accounts (account_id, account_lid, account_pwd, account_firstname, account_lastname, account_permissions, account_groups, account_lastlogin, account_lastloginfrom, account_lastpwd_change, account_status, account_expires, account_type, person_id, account_quota) FROM stdin;
 1000	default		Default	Group	\N	\N	\N	\N	\N	A	-1	g	1	-1
 1001	admins		Admins	Group	\N	\N	\N	\N	\N	A	-1	g	2	-1
 1003	rental_group		Rental	Group	\N	\N	\N	\N	\N	A	-1	g	4	-1
@@ -8371,7 +8370,7 @@ COPY phpgw_accounts (account_id, account_lid, account_pwd, account_firstname, ac
 -- Data for Name: phpgw_accounts_data; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_accounts_data (account_id, account_data) FROM stdin;
+COPY public.phpgw_accounts_data (account_id, account_data) FROM stdin;
 \.
 
 
@@ -8379,7 +8378,7 @@ COPY phpgw_accounts_data (account_id, account_data) FROM stdin;
 -- Data for Name: phpgw_acl; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, modified_on, modified_by) FROM stdin;
+COPY public.phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, modified_on, modified_by) FROM stdin;
 1000	1	-1	0	5	1515488476	-1
 1002	1	-1	0	7	1515488476	-1
 1002	1	-1	0	3	1515488476	-1
@@ -9819,8 +9818,7 @@ COPY phpgw_acl (acl_account, acl_rights, acl_grantor, acl_type, location_id, mod
 -- Data for Name: phpgw_applications; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_applications (app_id, app_name, app_enabled, app_order, app_tables, app_version) FROM stdin;
-1	phpgwapi	3	1	phpgw_access_log,phpgw_accounts,phpgw_accounts_data,phpgw_account_delegates,phpgw_acl,phpgw_applications,phpgw_app_sessions,phpgw_async,phpgw_cache_user,phpgw_categories,phpgw_config,phpgw_contact,phpgw_contact_addr,phpgw_contact_addr_type,phpgw_contact_comm,phpgw_contact_comm_descr,phpgw_contact_comm_type,phpgw_contact_note,phpgw_contact_note_type,phpgw_contact_org,phpgw_contact_org_person,phpgw_contact_others,phpgw_contact_person,phpgw_contact_types,phpgw_cust_attribute_group,phpgw_cust_attribute,phpgw_cust_choice,phpgw_cust_function,phpgw_group_map,phpgw_history_log,phpgw_hooks,phpgw_interlink,phpgw_interserv,phpgw_lang,phpgw_languages,phpgw_locations,phpgw_log,phpgw_mail_handler,phpgw_mapping,phpgw_nextid,phpgw_preferences,phpgw_sessions,phpgw_vfs,phpgw_vfs_filedata,phpgw_vfs_file_relation,phpgw_config2_section,phpgw_config2_attrib,phpgw_config2_choice,phpgw_config2_value,phpgw_notification	0.9.17.557
+COPY public.phpgw_applications (app_id, app_name, app_enabled, app_order, app_tables, app_version) FROM stdin;
 2	admin	1	1		0.9.17.001
 3	preferences	1	1		0.9.17.501
 5	addressbook	1	4		0.9.17.502
@@ -9829,6 +9827,7 @@ COPY phpgw_applications (app_id, app_name, app_enabled, app_order, app_tables, a
 8	frontend	1	9		0.6
 9	mobilefrontend	1	80		0.1.2
 4	property	1	8	fm_district,fm_part_of_town,fm_gab_location,fm_streetaddress,fm_tenant,fm_tenant_category,fm_vendor,fm_vendor_category,fm_locations,fm_location1_category,fm_location1,fm_location1_history,fm_location2_category,fm_location2,fm_location2_history,fm_location3_category,fm_location3,fm_location3_history,fm_location4_category,fm_location4,fm_location4_history,fm_location_type,fm_location_config,fm_location_contact,fm_location_exception,fm_location_exception_severity,fm_location_exception_category,fm_location_exception_category_text,fm_building_part,fm_b_account,fm_b_account_category,fm_workorder,fm_workorder_budget,fm_workorder_history,fm_workorder_status,fm_activities,fm_agreement_group,fm_agreement,fm_agreement_status,fm_activity_price_index,fm_branch,fm_wo_hours,fm_wo_hours_category,fm_wo_h_deviation,fm_key_loc,fm_authorities_demands,fm_condition_survey_status,fm_condition_survey_history,fm_condition_survey,fm_request,fm_request_responsible_unit,fm_request_condition_type,fm_request_condition,fm_request_status,fm_request_history,fm_request_consume,fm_request_planning,fm_template,fm_template_hours,fm_chapter,fm_ns3420,fm_project_status,fm_project,fm_project_buffer_budget,fm_projectbranch,fm_external_project,fm_unspsc_code,fm_project_history,fm_project_budget,fm_tts_status,fm_tts_priority,fm_tts_tickets,fm_tts_history,fm_tts_views,fm_tts_payments,fm_tts_budget,fm_org_unit,fm_ecoart,fm_ecoavvik,fm_ecobilag_process_code,fm_ecobilag_process_log,fm_ecobilag,fm_ecobilagkilde,fm_ecobilagoverf,fm_ecobilag_category,fm_eco_service,fm_ecodimb,fm_ecodimb_role,fm_ecodimb_role_user,fm_ecodimb_role_user_substitute,fm_ecodimd,fm_ecologg,fm_ecomva,fm_ecouser,fm_eco_periodization,fm_eco_periodization_outline,fm_eco_period_transition,fm_event,fm_event_action,fm_event_exception,fm_event_schedule,fm_investment,fm_investment_value,fm_event_receipt,fm_idgenerator,fm_document,fm_document_relation,fm_document_history,fm_document_status,fm_standard_unit,fm_owner,fm_owner_category,fm_cache,fm_entity,fm_entity_category,fm_entity_lookup,fm_entity_history,fm_entity_group,fm_custom,fm_custom_cols,fm_orders,fm_order_dim1,fm_order_template,fm_response_template,fm_s_agreement,fm_s_agreement_budget,fm_s_agreement_category,fm_s_agreement_detail,fm_s_agreement_pricing,fm_s_agreement_history,fm_async_method,fm_cron_log,fm_tenant_claim,fm_tenant_claim_category,fm_tenant_claim_history,fm_budget_basis,fm_budget,fm_budget_period,fm_budget_cost,fm_responsibility,fm_responsibility_role,fm_responsibility_contact,fm_responsibility_module,fm_action_pending,fm_action_pending_category,fm_jasper,fm_jasper_input_type,fm_jasper_format_type,fm_jasper_input,fm_custom_menu_items,fm_regulations,fm_generic_history,fm_view_dataset,fm_view_dataset_report	0.9.17.726
+1	phpgwapi	3	1	phpgw_access_log,phpgw_accounts,phpgw_accounts_data,phpgw_account_delegates,phpgw_acl,phpgw_applications,phpgw_app_sessions,phpgw_async,phpgw_cache_user,phpgw_categories,phpgw_config,phpgw_contact,phpgw_contact_addr,phpgw_contact_addr_type,phpgw_contact_comm,phpgw_contact_comm_descr,phpgw_contact_comm_type,phpgw_contact_note,phpgw_contact_note_type,phpgw_contact_org,phpgw_contact_org_person,phpgw_contact_others,phpgw_contact_person,phpgw_contact_types,phpgw_cust_attribute_group,phpgw_cust_attribute,phpgw_cust_choice,phpgw_cust_function,phpgw_group_map,phpgw_history_log,phpgw_hooks,phpgw_interlink,phpgw_interserv,phpgw_lang,phpgw_languages,phpgw_locations,phpgw_log,phpgw_mail_handler,phpgw_mapping,phpgw_nextid,phpgw_preferences,phpgw_sessions,phpgw_vfs,phpgw_vfs_filedata,phpgw_vfs_file_relation,phpgw_config2_section,phpgw_config2_attrib,phpgw_config2_choice,phpgw_config2_value,phpgw_notification	0.9.17.558
 \.
 
 
@@ -9836,7 +9835,7 @@ COPY phpgw_applications (app_id, app_name, app_enabled, app_order, app_tables, a
 -- Data for Name: phpgw_async; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_async (id, next, times, method, data, account_id) FROM stdin;
+COPY public.phpgw_async (id, next, times, method, data, account_id) FROM stdin;
 rental_populate_workbench_notifications	1517616000	a:1:{s:3:"day";s:3:"*/1";}	rental.sonotification.populate_workbench_notifications	a:1:{s:4:"time";i:1517616000;}	0
 rental_run_adjustments	1517616000	a:1:{s:3:"day";s:3:"*/1";}	rental.soadjustment.run_adjustments	a:1:{s:4:"time";i:1517616000;}	0
 \.
@@ -9846,7 +9845,7 @@ rental_run_adjustments	1517616000	a:1:{s:3:"day";s:3:"*/1";}	rental.soadjustment
 -- Data for Name: phpgw_cache_user; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_cache_user (item_key, user_id, cache_data, lastmodts) FROM stdin;
+COPY public.phpgw_cache_user (item_key, user_id, cache_data, lastmodts) FROM stdin;
 \.
 
 
@@ -9854,7 +9853,7 @@ COPY phpgw_cache_user (item_key, user_id, cache_data, lastmodts) FROM stdin;
 -- Data for Name: phpgw_categories; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_categories (cat_id, cat_main, cat_parent, cat_level, cat_owner, cat_access, cat_appname, cat_name, cat_description, cat_data, last_mod, location_id, active) FROM stdin;
+COPY public.phpgw_categories (cat_id, cat_main, cat_parent, cat_level, cat_owner, cat_access, cat_appname, cat_name, cat_description, cat_data, last_mod, location_id, active) FROM stdin;
 1	1	0	0	-1	public	property	Picture	Picture		1515760210	30	0
 2	2	0	0	-1	public	property	Report	Report		1515760210	30	0
 3	3	0	0	-1	public	property	Instruction	Instruction		1515760210	30	0
@@ -9867,7 +9866,7 @@ COPY phpgw_categories (cat_id, cat_main, cat_parent, cat_level, cat_owner, cat_a
 -- Data for Name: phpgw_config; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_config (config_app, config_name, config_value) FROM stdin;
+COPY public.phpgw_config (config_app, config_name, config_value) FROM stdin;
 phpgwapi	max_access_log_age	90
 phpgwapi	block_time	30
 phpgwapi	num_unsuccessful_id	3
@@ -9913,7 +9912,7 @@ mobilefrontend	usecookies	True
 -- Data for Name: phpgw_config2_attrib; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_config2_attrib (section_id, id, input_type, name, descr) FROM stdin;
+COPY public.phpgw_config2_attrib (section_id, id, input_type, name, descr) FROM stdin;
 1	1	text	host	Host
 1	2	text	user	User
 1	3	password	password	Password
@@ -9935,7 +9934,7 @@ COPY phpgw_config2_attrib (section_id, id, input_type, name, descr) FROM stdin;
 -- Data for Name: phpgw_config2_choice; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_config2_choice (section_id, attrib_id, id, value) FROM stdin;
+COPY public.phpgw_config2_choice (section_id, attrib_id, id, value) FROM stdin;
 1	4	1	local
 1	4	2	ftp
 1	4	3	ssh
@@ -9948,7 +9947,7 @@ COPY phpgw_config2_choice (section_id, attrib_id, id, value) FROM stdin;
 -- Data for Name: phpgw_config2_section; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_config2_section (id, location_id, name, descr, data) FROM stdin;
+COPY public.phpgw_config2_section (id, location_id, name, descr, data) FROM stdin;
 1	29	common	common invoice config	\N
 2	29	import	import invoice config	\N
 3	29	export	Invoice export	\N
@@ -9959,7 +9958,7 @@ COPY phpgw_config2_section (id, location_id, name, descr, data) FROM stdin;
 -- Data for Name: phpgw_config2_value; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_config2_value (section_id, attrib_id, id, value) FROM stdin;
+COPY public.phpgw_config2_value (section_id, attrib_id, id, value) FROM stdin;
 \.
 
 
@@ -9967,7 +9966,7 @@ COPY phpgw_config2_value (section_id, attrib_id, id, value) FROM stdin;
 -- Data for Name: phpgw_contact; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact (contact_id, owner, access, cat_id, contact_type_id) FROM stdin;
+COPY public.phpgw_contact (contact_id, owner, access, cat_id, contact_type_id) FROM stdin;
 1	-3	public		2
 2	-3	public		2
 3	-3	public		1
@@ -9984,7 +9983,7 @@ COPY phpgw_contact (contact_id, owner, access, cat_id, contact_type_id) FROM std
 -- Data for Name: phpgw_contact_addr; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_addr (contact_addr_id, contact_id, addr_type_id, add1, add2, add3, city, state, postal_code, country, tz, preferred, created_on, created_by, modified_on, modified_by) FROM stdin;
+COPY public.phpgw_contact_addr (contact_addr_id, contact_id, addr_type_id, add1, add2, add3, city, state, postal_code, country, tz, preferred, created_on, created_by, modified_on, modified_by) FROM stdin;
 \.
 
 
@@ -9992,7 +9991,7 @@ COPY phpgw_contact_addr (contact_addr_id, contact_id, addr_type_id, add1, add2, 
 -- Data for Name: phpgw_contact_addr_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_addr_type (addr_type_id, description) FROM stdin;
+COPY public.phpgw_contact_addr_type (addr_type_id, description) FROM stdin;
 1	work
 2	home
 \.
@@ -10002,7 +10001,7 @@ COPY phpgw_contact_addr_type (addr_type_id, description) FROM stdin;
 -- Data for Name: phpgw_contact_comm; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_comm (comm_id, contact_id, comm_descr_id, preferred, comm_data, created_on, created_by, modified_on, modified_by) FROM stdin;
+COPY public.phpgw_contact_comm (comm_id, contact_id, comm_descr_id, preferred, comm_data, created_on, created_by, modified_on, modified_by) FROM stdin;
 \.
 
 
@@ -10010,7 +10009,7 @@ COPY phpgw_contact_comm (comm_id, contact_id, comm_descr_id, preferred, comm_dat
 -- Data for Name: phpgw_contact_comm_descr; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_comm_descr (comm_descr_id, comm_type_id, descr) FROM stdin;
+COPY public.phpgw_contact_comm_descr (comm_descr_id, comm_type_id, descr) FROM stdin;
 1	1	home email
 2	1	work email
 3	2	home phone
@@ -10039,7 +10038,7 @@ COPY phpgw_contact_comm_descr (comm_descr_id, comm_type_id, descr) FROM stdin;
 -- Data for Name: phpgw_contact_comm_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_comm_type (comm_type_id, type, active, class) FROM stdin;
+COPY public.phpgw_contact_comm_type (comm_type_id, type, active, class) FROM stdin;
 1	email	\N	\N
 2	phone	\N	\N
 3	mobile phone	\N	\N
@@ -10054,7 +10053,7 @@ COPY phpgw_contact_comm_type (comm_type_id, type, active, class) FROM stdin;
 -- Data for Name: phpgw_contact_note; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_note (contact_note_id, contact_id, note_type_id, note_text, created_on, created_by, modified_on, modified_by) FROM stdin;
+COPY public.phpgw_contact_note (contact_note_id, contact_id, note_type_id, note_text, created_on, created_by, modified_on, modified_by) FROM stdin;
 \.
 
 
@@ -10062,7 +10061,7 @@ COPY phpgw_contact_note (contact_note_id, contact_id, note_type_id, note_text, c
 -- Data for Name: phpgw_contact_note_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_note_type (note_type_id, description) FROM stdin;
+COPY public.phpgw_contact_note_type (note_type_id, description) FROM stdin;
 1	general
 2	vcard
 3	system
@@ -10073,7 +10072,7 @@ COPY phpgw_contact_note_type (note_type_id, description) FROM stdin;
 -- Data for Name: phpgw_contact_org; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_org (org_id, name, active, parent, created_on, created_by, modified_on, modified_by) FROM stdin;
+COPY public.phpgw_contact_org (org_id, name, active, parent, created_on, created_by, modified_on, modified_by) FROM stdin;
 1	!Default Group	Y	\N	1515488476	0	1515488476	0
 2	!Admins Group	Y	\N	1515488476	0	1515488476	0
 4	!Rental Group	Y	\N	1515760639	0	1515760639	0
@@ -10105,7 +10104,7 @@ COPY phpgw_contact_org (org_id, name, active, parent, created_on, created_by, mo
 -- Data for Name: phpgw_contact_org_person; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_org_person (org_id, person_id, addr_id, preferred, created_on, created_by) FROM stdin;
+COPY public.phpgw_contact_org_person (org_id, person_id, addr_id, preferred, created_on, created_by) FROM stdin;
 \.
 
 
@@ -10113,7 +10112,7 @@ COPY phpgw_contact_org_person (org_id, person_id, addr_id, preferred, created_on
 -- Data for Name: phpgw_contact_others; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_others (other_id, contact_id, contact_owner, other_name, other_value) FROM stdin;
+COPY public.phpgw_contact_others (other_id, contact_id, contact_owner, other_name, other_value) FROM stdin;
 \.
 
 
@@ -10121,7 +10120,7 @@ COPY phpgw_contact_others (other_id, contact_id, contact_owner, other_name, othe
 -- Data for Name: phpgw_contact_person; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_person (person_id, first_name, last_name, middle_name, prefix, suffix, birthday, pubkey, title, department, initials, sound, active, created_on, created_by, modified_on, modified_by) FROM stdin;
+COPY public.phpgw_contact_person (person_id, first_name, last_name, middle_name, prefix, suffix, birthday, pubkey, title, department, initials, sound, active, created_on, created_by, modified_on, modified_by) FROM stdin;
 3	System	Administrator	\N	\N	\N	\N	\N	\N	\N	\N	\N	Y	1515488476	0	1515488476	0
 5	Rental	Administrator	\N	\N	\N	\N	\N	\N	\N	\N	\N	Y	1515760639	0	1515760639	0
 6	Rental	Internal	\N	\N	\N	\N	\N	\N	\N	\N	\N	Y	1515760639	0	1515760639	0
@@ -10135,7 +10134,7 @@ COPY phpgw_contact_person (person_id, first_name, last_name, middle_name, prefix
 -- Data for Name: phpgw_contact_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_contact_types (contact_type_id, contact_type_descr, contact_type_table) FROM stdin;
+COPY public.phpgw_contact_types (contact_type_id, contact_type_descr, contact_type_table) FROM stdin;
 1	Persons	phpgw_contact_person
 2	Organizations	phpgw_contact_org
 \.
@@ -10145,7 +10144,7 @@ COPY phpgw_contact_types (contact_type_id, contact_type_descr, contact_type_tabl
 -- Data for Name: phpgw_cust_attribute; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_cust_attribute (location_id, group_id, id, column_name, input_text, statustext, datatype, search, history, list, attrib_sort, size, precision_, scale, default_value, nullable, disabled, lookup_form, custom, helpmsg, get_list_function, get_list_function_input, get_single_function, get_single_function_input, short_description, javascript_action) FROM stdin;
+COPY public.phpgw_cust_attribute (location_id, group_id, id, column_name, input_text, statustext, datatype, search, history, list, attrib_sort, size, precision_, scale, default_value, nullable, disabled, lookup_form, custom, helpmsg, get_list_function, get_list_function_input, get_single_function, get_single_function_input, short_description, javascript_action) FROM stdin;
 44	0	1	abid	Contact	Contakt person	AB	\N	\N	1	1	\N	4	\N	\N	True	\N	\N	1	\N	\N	\N	\N	\N	\N	\N
 44	0	2	org_name	Name	The name of the owner	V	1	\N	1	2	\N	50	\N	\N	True	\N	\N	1	\N	\N	\N	\N	\N	\N	\N
 44	0	3	remark	remark	remark	T	\N	\N	1	3	\N	\N	\N	\N	True	\N	\N	1	\N	\N	\N	\N	\N	\N	\N
@@ -10240,7 +10239,7 @@ COPY phpgw_cust_attribute (location_id, group_id, id, column_name, input_text, s
 -- Data for Name: phpgw_cust_attribute_group; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_cust_attribute_group (location_id, id, parent_id, name, group_sort, descr, remark) FROM stdin;
+COPY public.phpgw_cust_attribute_group (location_id, id, parent_id, name, group_sort, descr, remark) FROM stdin;
 \.
 
 
@@ -10248,7 +10247,7 @@ COPY phpgw_cust_attribute_group (location_id, id, parent_id, name, group_sort, d
 -- Data for Name: phpgw_cust_choice; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_cust_choice (location_id, attrib_id, id, value, title, choice_sort) FROM stdin;
+COPY public.phpgw_cust_choice (location_id, attrib_id, id, value, title, choice_sort) FROM stdin;
 43	7	1	Active	\N	0
 43	7	2	Banned	\N	0
 17	10	1	OK	\N	0
@@ -10266,7 +10265,7 @@ COPY phpgw_cust_choice (location_id, attrib_id, id, value, title, choice_sort) F
 -- Data for Name: phpgw_cust_function; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_cust_function (location_id, id, descr, file_name, active, pre_commit, client_side, custom_sort) FROM stdin;
+COPY public.phpgw_cust_function (location_id, id, descr, file_name, active, pre_commit, client_side, custom_sort) FROM stdin;
 \.
 
 
@@ -10274,7 +10273,7 @@ COPY phpgw_cust_function (location_id, id, descr, file_name, active, pre_commit,
 -- Data for Name: phpgw_group_map; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_group_map (group_id, account_id, arights) FROM stdin;
+COPY public.phpgw_group_map (group_id, account_id, arights) FROM stdin;
 1000	1002	1
 1001	1002	1
 1003	1004	1
@@ -10289,7 +10288,7 @@ COPY phpgw_group_map (group_id, account_id, arights) FROM stdin;
 -- Data for Name: phpgw_history_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_history_log (history_id, history_record_id, app_id, history_owner, history_status, history_new_value, history_timestamp, history_old_value, location_id) FROM stdin;
+COPY public.phpgw_history_log (history_id, history_record_id, app_id, history_owner, history_status, history_new_value, history_timestamp, history_old_value, location_id) FROM stdin;
 \.
 
 
@@ -10297,9 +10296,7 @@ COPY phpgw_history_log (history_id, history_record_id, app_id, history_owner, hi
 -- Data for Name: phpgw_hooks; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_hooks (hook_id, hook_appname, hook_location, hook_filename) FROM stdin;
-1	phpgwapi	menu	phpgwapi.menu_apps.get_menu
-2	phpgwapi	login	phpgwapi.menu.clear
+COPY public.phpgw_hooks (hook_id, hook_appname, hook_location, hook_filename) FROM stdin;
 3	admin	acl_manager	hook_acl_manager.inc.php
 4	admin	add_def_pref	hook_add_def_pref.inc.php
 5	admin	after_navbar	hook_after_navbar.inc.php
@@ -10362,6 +10359,8 @@ COPY phpgw_hooks (hook_id, hook_appname, hook_location, hook_filename) FROM stdi
 98	property	editgroup	property.hook_helper.clear_userlist
 99	property	registration	property.hook_helper.add_location_contact
 100	property	after_navbar	property.hook_helper.after_navbar
+101	phpgwapi	menu	phpgwapi.menu_apps.get_menu
+102	phpgwapi	login	phpgwapi.menu.clear
 \.
 
 
@@ -10369,7 +10368,7 @@ COPY phpgw_hooks (hook_id, hook_appname, hook_location, hook_filename) FROM stdi
 -- Data for Name: phpgw_interlink; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_interlink (interlink_id, location1_id, location1_item_id, location2_id, location2_item_id, is_private, account_id, entry_date, start_date, end_date) FROM stdin;
+COPY public.phpgw_interlink (interlink_id, location1_id, location1_item_id, location2_id, location2_item_id, is_private, account_id, entry_date, start_date, end_date) FROM stdin;
 \.
 
 
@@ -10377,7 +10376,7 @@ COPY phpgw_interlink (interlink_id, location1_id, location1_item_id, location2_i
 -- Data for Name: phpgw_interserv; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_interserv (server_id, server_name, server_host, server_url, trust_level, trust_rel, username, password, admin_name, admin_email, server_mode, server_security) FROM stdin;
+COPY public.phpgw_interserv (server_id, server_name, server_host, server_url, trust_level, trust_rel, username, password, admin_name, admin_email, server_mode, server_security) FROM stdin;
 1	phpGW cvsdemo	\N	http://www.phpgroupware.org/cvsdemo/xmlrpc.php	99	0	\N	\N	\N	\N	xmlrpc	\N
 \.
 
@@ -10386,7 +10385,7 @@ COPY phpgw_interserv (server_id, server_name, server_host, server_url, trust_lev
 -- Data for Name: phpgw_lang; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_lang (message_id, app_name, lang, content) FROM stdin;
+COPY public.phpgw_lang (message_id, app_name, lang, content) FROM stdin;
 new coordinator	property	no	Ny koordinator
 transfer budget	property	no	Overfør budsjett
 economy	property	no	Økonomi
@@ -11946,422 +11945,7 @@ new user	login	en	New User
 forgotten password	login	en	Forgotten Password or Username
 you have been successfully logged out	login	en	You have been successfully logged out
 your session could not be verified.	login	en	Your session could not be verified.
-%1 - %2 of %3 user accounts	admin	en	%1 - %2 of %3 user accounts
-%1 not found or not executable !!!	admin	en	%1 not found or not executable !!!
-(stored password will not be shown here)	admin	en	(Stored password will not be shown here)
-(to install new applications use<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)	admin	en	(To install new applications use<br><a href="setup/" target="setup">Setup</a> [Manage Applications] !!!)
-accesslog and bruteforce defense	admin	en	AccessLog and BruteForce defense
-account active	admin	en	Account active
-account list	admin	en	Account list
-account permissions	admin	en	Account permissions
-account preferences	admin	en	Account Preferences
-acl manager	admin	en	ACL Manager
-acl rights	admin	en	ACL Rights
-action	admin	en	Action
-add a category	admin	en	add a category
-add a group	admin	en	add a group
-add a new account.	admin	en	Add a new account.
-add a subcategory	admin	en	add a subcategory
-add a user	admin	en	add a user
-add account	admin	en	Add account
-add application	admin	en	Add application
-add auto-created users to this group ('default' will be attempted if this is empty.)	admin	en	Add auto-created users to this group ('Default' will be attempted if this is empty.)
-add global category	admin	en	Add global category
-add global category for %1	admin	en	Add global category for %1
-add group	admin	en	Add group
-add new account	admin	en	Add new account
-add new application	admin	en	Add new application
-add peer server	admin	en	Add Peer Server
-add sub-category	admin	en	Add sub-category
-admin email	admin	en	Admin Email
-admin email addresses (comma-separated) to be notified about the blocking (empty for no notify)	admin	en	Admin email addresses (comma-separated) to be notified about the blocking (empty for no notify)
-admin name	admin	en	Admin Name
-administration	admin	en	Administration
-admins	admin	en	Admins
-after how many unsuccessful attempts to login, an account should be blocked (default 3) ?	admin	en	After how many unsuccessful attempts to login, an account should be blocked (default 3) ?
-after how many unsuccessful attempts to login, an ip should be blocked (default 3) ?	admin	en	After how many unsuccessful attempts to login, an IP should be blocked (default 3) ?
-all records and account information will be lost!	admin	en	All records and account information will be lost!
-all users	admin	en	All Users
-allow anonymous access to this app	admin	en	Allow anonymous access to this app
-anonymous user	admin	en	Anonymous user
-anonymous user (not shown in list sessions)	admin	en	Anonymous User (not shown in list sessions)
-appearance	admin	en	Appearance
-application	admin	en	Application
-application name	admin	en	Application name
-application title	admin	en	Application title
-applications	admin	en	Applications
-apply	admin	en	apply
-applications list	admin	en	Applications list
-are you sure you want to delete the application %1 ?	admin	en	Are you sure you want to delete the application %1 ?
-are you sure you want to delete this account ?	admin	en	Are you sure you want to delete this account ?
-are you sure you want to delete this application ?	admin	en	Are you sure you want to delete this application ?
-are you sure you want to delete this global category ?	admin	en	Are you sure you want to delete this global category ?
-message has been updated	admin	en	message has been updated
-are you sure you want to delete this group ?	admin	en	Are you sure you want to delete this group ?
-are you sure you want to delete this server?	admin	en	Are you sure you want to delete this server?
-are you sure you want to kill this session ?	admin	en	Are you sure you want to kill this session ?
-async services last executed	admin	en	Async services last executed
-asynchronous timed services	admin	en	Asynchronous timed services
-asyncservices not yet installed or other error (%1) !!!	admin	en	asyncservices not yet installed or other error (%1) !!!
-attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	admin	en	Attempt to use correct mimetype for FTP instead of default 'application/octet-stream'
-authentication / accounts	admin	en	Authentication / Accounts
-auto create account records for authenticated users	admin	en	Auto create account records for authenticated users
-back to the list	admin	en	back to the list
-bi-dir passthrough	admin	en	bi-dir passthrough
-bi-directional	admin	en	bi-directional
-bottom	admin	en	bottom
-category %1 has been saved !	admin	en	Category %1 has been saved !
-calculate next run	admin	en	Calculate next run
-can change password	admin	en	Can change password
-cancel testjob!	admin	en	Cancel TestJob!
-categories list	admin	en	Categories list
-category list	admin	en	Category list
-change acl rights	admin	en	change ACL Rights
-change config settings	admin	en	Change config settings
-change main screen message	admin	en	Change main screen message
-check ip address of all sessions	admin	en	check ip address of all sessions
-check items to <b>%1</b> to %2 for %3	admin	en	Check items to <b>%1</b> to %2 for %3
-country selection	admin	en	Country Selection
-create group	admin	en	Create Group
-crontab only (recomended)	admin	en	crontab only (recomended)
-data	admin	en	Data
-day	admin	en	Day
-day of week<br>(0-6, 0=sun)	admin	en	Day of week<br>(0-6, 0=Sun)
-default	admin	en	Default
-default file system space per user	admin	en	Default file system space per user
-default file system space per user/group ?	admin	en	Default file system space per user/group ?
-delete account	admin	en	Delete account
-delete all records	admin	en	Delete All Records
-delete the category	admin	en	delete the category
-delete the group	admin	en	delete the group
-delete this category	admin	en	delete this category
-delete this group	admin	en	delete this group
-delete this user	admin	en	delete this user
-delete application	admin	en	Delete application
-delete category	admin	en	Delete category
-delete group	admin	en	Delete group
-delete peer server	admin	en	Delete peer server
-deny access to access log	admin	en	Deny access to access log
-deny access to application registery	admin	en	Deny access to application registery
-deny access to applications	admin	en	Deny access to applications
-deny access to asynchronous timed services	admin	en	Deny access to asynchronous timed services
-deny access to current sessions	admin	en	Deny access to current sessions
-deny access to error log	admin	en	Deny access to error log
-deny access to global categories	admin	en	Deny access to global categories
-deny access to groups	admin	en	Deny access to groups
-deny access to mainscreen message	admin	en	Deny access to mainscreen message
-deny access to peer servers	admin	en	Deny access to peer servers
-deny access to phpinfo	admin	en	Deny access to phpinfo
-deny access to site configuration	admin	en	Deny access to site configuration
-deny access to user accounts	admin	en	Deny access to user accounts
-deny all users access to grant other users access to their entries ?	admin	en	Deny all users access to grant other users access to their entries ?
-description can not exceed 255 characters in length !	admin	en	Description can not exceed 255 characters in length !
-disable "auto completion" of the login form	admin	en	Disable "auto completion" of the login form
-disabled (not recomended)	admin	en	disabled (not recomended)
-display	admin	en	Display
-do not delete the category and return back to the list	admin	en	do NOT delete the category and return back to the list
-do you also want to delete all global subcategories ?	admin	en	Do you also want to delete all global subcategories ?
-do you want to delete all global subcategories ?	admin	en	Do you want to delete all global subcategories ?
-do you want to move all global subcategories one level down ?	admin	en	Do you want to move all global subcategories one level down ?
-edit account	admin	en	Edit account
-edit application	admin	en	Edit application
-edit global category	admin	en	Edit global category
-edit global category for %1	admin	en	Edit global category for %1
-edit group	admin	en	Edit Group
-edit login screen message	admin	en	Edit login screen message
-edit main screen message	admin	en	Edit main screen message
-edit peer server	admin	en	Edit Peer Server
-edit table format	admin	en	Edit Table format
-edit this category	admin	en	edit this category
-edit this group	admin	en	edit this group
-edit this user	admin	en	edit this user
-edit user	admin	en	edit user
-edit user account	admin	en	Edit user account
-enable debug-messages	admin	en	Enable debug-messages
-enabled - hidden from navbar	admin	en	Enabled - Hidden from navbar
-enter a description for the category	admin	en	enter a description for the category
-help off	preferences	en	Help off
-maximum entries in click path history	admin	en	Maximum entries in click path history
-method	admin	en	Method
-enter some random text for app_session <br>encryption (requires mcrypt)	admin	en	Enter some random text for app_session <br>encryption (requires mcrypt)
-enter the background color for the login page	admin	en	Enter the background color for the login page
-enter the background color for the site title	admin	en	Enter the background color for the site title
-enter the file name of your login logo	admin	en	Enter the file name of your login logo
-enter the file name of your logo	admin	en	Enter the file name of your logo
-enter the full path for temporary files.<br>examples: /tmp, c:\\temp	admin	en	Enter the full path for temporary files.<br>Examples: /tmp, C:\\TEMP
-enter the full path for users and group files.<br>examples: /files, e:\\files	admin	en	Enter the full path for users and group files.<br>Examples: /files, E:\\FILES
-enter the hostname of the machine on which this server is running	admin	en	Enter the hostname of the machine on which this server is running
-enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	admin	en	Enter the location of phpGroupWare's URL.<br>Example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>No trailing slash</b>
-enter the search string. to show all entries, empty this field and press the submit button again	admin	en	Enter the search string. To show all entries, empty this field and press the SUBMIT button again
-enter the site password for peer servers	admin	en	Enter the site password for peer servers
-enter the site username for peer servers	admin	en	Enter the site username for peer servers
-enter the title for your site	admin	en	Enter the title for your site
-enter the title of your logo	admin	en	Enter the title of your logo
-enter the url where your logo should link to	admin	en	Enter the url where your logo should link to
-enter your default ftp server	admin	en	Enter your default FTP server
-enter your http proxy server	admin	en	Enter your HTTP proxy server
-enter your http proxy server port	admin	en	Enter your HTTP proxy server port
-error canceling timer, maybe there's none set !!!	admin	en	Error canceling timer, maybe there's none set !!!
-error setting timer, wrong syntax or maybe there's one already running !!!	admin	en	Error setting timer, wrong syntax or maybe there's one already running !!!
-error: %1 not found or other error !!!	admin	en	Error: %1 not found or other error !!!
-expires	admin	en	Expires
-fallback (after each pageview)	admin	en	fallback (after each pageview)
-file space	admin	en	File space
-file space must be an integer	admin	en	File space must be an integer
-find and register all application hooks	admin	en	Find and Register all Application Hooks
-for the times above	admin	en	for the times above
-for the times below (empty values count as '*', all empty = every minute)	admin	en	for the times below (empty values count as '*', all empty = every minute)
-force selectbox	admin	en	Force Selectbox
-global categories	admin	en	Global Categories
-group ?	admin	en	group ?
-group list	admin	en	Group list
-group manager	admin	en	Group Manager
-group name	admin	en	Group Name
-hide php information	admin	en	hide php information
-home directory	admin	en	Home directory
-host information	admin	en	Host information
-hour<br>(0-23)	admin	en	Hour<br>(0-23)
-how many days should entries stay in the access log, before they get deleted (default 90) ?	admin	en	How many days should entries stay in the access log, before they get deleted (default 90) ?
-how many minutes should an account or ip be blocked (default 30) ?	admin	en	How many minutes should an account or IP be blocked (default 30) ?
-idle	admin	en	idle
-if no acl records for user or any group the user is a member of	admin	en	If no ACL records for user or any group the user is a member of
-if using ldap, do you want to manage homedirectory and loginshell attributes?	admin	en	If using LDAP, do you want to manage homedirectory and loginshell attributes?
-inbound	admin	en	inbound
-install crontab	admin	en	Install crontab
-installed crontab	admin	en	Installed crontab
-interface	admin	en	Interface
-ip	admin	en	IP
-jobs	admin	en	Jobs
-kill	admin	en	Kill
-kill session	admin	en	Kill session
-last %1 logins	admin	en	Last %1 logins
-last %1 logins for %2	admin	en	Last %1 logins for %2
-last login	admin	en	last login
-last login from	admin	en	last login from
-last time read	admin	en	Last Time Read
-ldap accounts context	admin	en	LDAP accounts context
-ldap default homedirectory prefix (e.g. /home for /home/username)	admin	en	LDAP Default homedirectory prefix (e.g. /home for /home/username)
-ldap default shell (e.g. /bin/bash)	admin	en	LDAP Default shell (e.g. /bin/bash)
-ldap encryption type	admin	en	LDAP encryption type
-ldap groups context	admin	en	LDAP groups context
-ldap host	admin	en	LDAP host
-ldap root password	admin	en	LDAP root password
-ldap rootdn	admin	en	LDAP rootdn
-leave the category untouched and return back to the list	admin	en	leave the category untouched and return back to the list
-leave the group untouched and return back to the list	admin	en	Leave the group untouched and return back to the list
-list config settings	admin	en	List config settings
-list current sessions	admin	en	List current sessions
-list of current users	admin	en	list of current users
-login history	admin	en	Login History
-login message	admin	en	Login message
-login screen	admin	en	Login screen
-login shell	admin	en	Login shell
-login time	admin	en	Login Time
-loginid	admin	en	LoginID
-main screen message	admin	en	Main screen message
-manager	admin	en	Manager
-maximum account id (e.g. 65535 or 1000000)	admin	en	Maximum account id (e.g. 65535 or 1000000)
-minimum account id (e.g. 500 or 100, etc.)	admin	en	Minimum account id (e.g. 500 or 100, etc.)
-minute	admin	en	Minute
-mode	admin	en	Mode
-month	admin	en	Month
-new group name	admin	en	New group name
-new password [ leave blank for no change ]	admin	en	New password [ Leave blank for no change ]
-next run	admin	en	Next run
-no algorithms available	admin	en	no algorithms available
-no jobs in the database !!!	admin	en	No jobs in the database !!!
-no login history exists for this user	admin	en	No login history exists for this user
-no matches found	admin	en	No matches found
-no modes available	admin	en	no modes available
-no permission to add groups	admin	en	no permission to add groups
-no permission to add users	admin	en	no permission to add users
-no permission to create groups	admin	en	no permission to create groups
-note: ssl available only if php is compiled with curl support	admin	en	Note: SSL available only if PHP is compiled with curl support
-outbound	admin	en	outbound
-passthrough	admin	en	passthrough
-path information	admin	en	Path information
-peer server list	admin	en	Peer server list
-peer servers	admin	en	Peer servers
-percent of users that logged out	admin	en	Percent of users that logged out
-percent this user has logged out	admin	en	Percent this user has logged out
-permissions	admin	en	Permissions
-permissions this group has	admin	en	Permissions this group has
-phpinfo	admin	en	PHP information
-please enter a name	admin	en	Please enter a name
-please enter a name for that server !	admin	en	Please enter a name for that server !
-please run setup to become current	admin	en	Please run setup to become current
-please select	admin	en	Please Select
-preferences	admin	en	Preferences
-re-enter password	admin	en	Re-enter password
-read this list of methods.	admin	en	Read this list of methods.
-register application hooks	admin	en	Register application hooks
-remove all users from this group	admin	en	Remove all users from this group
-remove all users from this group ?	admin	en	Remove all users from this group ?
-return to admin mainscreen	admin	en	return to admin mainscreen
-return to view account	admin	en	Return to view account
-save the category	admin	en	save the category
-save the category and return back to the list	admin	en	save the category and return back to the list
-run asynchronous services	admin	en	Run Asynchronous services
-search accounts	admin	en	Search accounts
-search categories	admin	en	Search categories
-search groups	admin	en	Search groups
-search peer servers	admin	en	Search peer servers
-security	admin	en	Security
-select group managers	admin	en	Select Group Managers
-select permissions this group will have	admin	en	Select permissions this group will have
-select the parent category. if this is a main category select no category	admin	en	Select the parent category. If this is a main category select NO CATEGORY
-select users for inclusion	admin	en	Select users for inclusion
-select where you want to store/retrieve filesystem information	admin	en	Select where you want to store/retrieve filesystem information
-select where you want to store/retrieve user accounts	admin	en	Select where you want to store/retrieve user accounts
-select which location this app should appear on the navbar, lowest (left) to highest (right)	admin	en	Select which location this app should appear on the navbar, lowest (left) to highest (right)
-selectbox	admin	en	Selectbox
-server %1 has been updated	admin	en	Server %1 has been updated
-server list	admin	en	Server List
-server password	admin	en	Server Password
-server type(mode)	admin	en	Server Type(mode)
-server url	admin	en	Server URL
-server username	admin	en	Server Username
-set preference values.	admin	en	Set preference values.
-show 'powered by' logo on	admin	en	Show 'powered by' logo on
-show access log	admin	en	Show access log
-show current action	admin	en	Show current action
-show error log	admin	en	Show error log
-show phpinfo()	admin	en	Show phpinfo()
-show session ip address	admin	en	Show session IP address
-site	admin	en	Site
-site configuration	admin	en	Site configuration
-soap	admin	en	SOAP
-sorry, that group name has already been taken.	admin	en	Sorry, that group name has already been taken.
-sorry, the follow users are still a member of the group %1	admin	en	Sorry, the follow users are still a member of the group %1
-sort the entries	admin	en	sort the entries
-ssl	admin	en	ssl
-standard	admin	en	standard
-start testjob!	admin	en	Start TestJob!
-submit changes	admin	en	Submit Changes
-submit the search string	admin	en	Submit the search string
-template selection	admin	en	Template Selection
-text entry	admin	en	Text Entry
-that application name already exists.	admin	en	That application name already exists.
-that application order must be a number.	admin	en	That application order must be a number.
-that loginid has already been taken	admin	en	That loginid has already been taken
-that name has been used already	admin	en	That name has been used already
-that server name has been used already !	admin	en	That server name has been used already !
-the api is current	admin	en	The API is current
-the api requires an upgrade	admin	en	The API requires an upgrade
-the login and password can not be the same	admin	en	The login and password can not be the same
-the loginid can not be more then 8 characters	admin	en	The loginid can not be more then 8 characters
-the testjob sends you a mail everytime it is called.	admin	en	The TestJob sends you a mail everytime it is called.
-the two passwords are not the same	admin	en	The two passwords are not the same
-the users bellow are still members of group %1	admin	en	the users bellow are still members of group %1
-they must be removed before you can continue	admin	en	They must be removed before you can continue
-this application is current	admin	en	This application is current
-this application requires an upgrade	admin	en	This application requires an upgrade
-this category is currently being used by applications as a parent category	admin	en	This category is currently being used by applications as a parent category.
-timeout for application session data in seconds (default 86400 = 1 day)	admin	en	Timeout for application session data in seconds (default 86400 = 1 day)
-timeout for sessions in seconds (default 14400 = 4 hours)	admin	en	Timeout for sessions in seconds (default 14400 = 4 hours)
-times	admin	en	Times
-top	admin	en	top
-total records	admin	en	Total records
-trust level	admin	en	Trust Level
-trust relationship	admin	en	Trust Relationship
-under windows you can only use the fallback mode at the moment. fallback means the jobs get only checked after each page-view !!!	admin	en	Under windows you can only use the fallback mode at the moment. Fallback means the jobs get only checked after each page-view !!!
-use cookies to pass sessionid	admin	en	Use cookies to pass sessionid
-use pure html compliant code (not fully working yet)	admin	en	Use pure HTML compliant code (not fully working yet)
-use theme	admin	en	Use theme
-user accounts	admin	en	User accounts
-user data	admin	en	User Data
-user groups	admin	en	User groups
-userdata	admin	en	userdata
-users choice	admin	en	Users Choice
-view access log	admin	en	View access log
-view account	admin	en	View account
-view category	admin	en	View category
-view error log	admin	en	View error log
-view sessions	admin	en	View sessions
-view this user	admin	en	view this user
-view user account	admin	en	View user account
-who would you like to transfer all records owned by the deleted user to?	admin	en	Who would you like to transfer ALL records owned by the deleted user to?
-would you like phpgroupware to cache the phpgw info array ?	admin	en	Would you like phpGroupWare to cache the phpgw info array ?
-would you like phpgroupware to check for new application versions when admins login ?	admin	en	Would you like phpGroupWare to check for new application versions when admins login ?
-would you like to automaticaly load new langfiles (at login-time) ?	admin	en	Would you like to automaticaly load new langfiles (at login-time) ?
-would you like to show each application's upgrade status ?	admin	en	Would you like to show each application's upgrade status ?
-xml-rpc	admin	en	XML-RPC
-you have entered an invalid expiration date	admin	en	You have entered an invalid expiration date
-you must add at least 1 permission or group to this account	admin	en	You must add at least 1 permission or group to this account
-you must enter a group name.	admin	en	You must enter a group name.
-you must enter a loginid	admin	en	You must enter a loginid
-you must enter an application name and title.	admin	en	You must enter an application name and title.
-you must enter an application name.	admin	en	You must enter an application name.
-you must enter an application title.	admin	en	You must enter an application title.
-you must select a file type	admin	en	You must select a file type
-you will need to remove the subcategories before you can delete this category	admin	en	You will need to remove the subcategories before you can delete this category !
-%1 - preferences	preferences	en	%1 - Preferences
-%1 hours	preferences	en	%1 hours
-12 hour	preferences	en	12 hour
-24 hour	preferences	en	24 hour
-a template defines the layout of phpgroupware and it contains icons for each application.	preferences	en	A template defines the layout of phpGroupWare and it contains icons for each application.
-a theme defines the colors and fonts used by the template.	preferences	en	A theme defines the colors and fonts used by the template.
-acl grants have been updated	preferences	en	ACL grants have been updated
-any listing in phpgw will show you this number of entries or lines per page.<br>to many slow down the page display, to less will cost you the overview.	preferences	en	Any listing in phpGW will show you this number of entries or lines per page.<br>To many slow down the page display, to less will cost you the overview.
-are you sure you want to delete this category ?	preferences	en	Are you sure you want to delete this category ?
-change your password	preferences	en	Change your Password
-change your profile	preferences	en	Change your profile
-change your settings	preferences	en	Change your Settings
-country	preferences	en	Country
-date format	preferences	en	Date format
-default	preferences	en	default
-default application	preferences	en	Default application
-default preferences	preferences	en	Default Preferences
-delete categories	preferences	en	Delete Categories
-description can not exceed 255 characters in length !	preferences	en	Description can not exceed 255 characters in length !
-do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.	preferences	en	Do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.
-edit custom fields	preferences	en	edit custom fields
-enter your new password	preferences	en	Enter your new password
-error: there was a problem finding the preference file for %1 in %2	preferences	en	Error: There was a problem finding the preference file for %1 in %2
-forced preferences	preferences	en	Forced Preferences
-hours	preferences	en	hours
-how do you like to display accounts	preferences	en	How do you like to display accounts
 edit user account	common	no	Rediger bruker konto
-how do you like to select accounts	preferences	en	How do you like to select accounts
-how many hours are you in front or after the timezone of the server.<br>if you are in the same time zone as the server select 0 hours, else select your locale date and time.	preferences	en	How many hours are you in front or after the timezone of the server.<br>If you are in the same time zone as the server select 0 hours, else select your locale date and time.
-how should phpgroupware display dates for you.	preferences	en	How should phpGroupWare display dates for you.
-icons and text	preferences	en	Icons and text
-icons only	preferences	en	icons only
-in which country are you. this is used to set certain defaults for you.	preferences	en	In which country are you. This is used to set certain defaults for you.
-interface/template selection	preferences	en	Interface/Template Selection
-language	preferences	en	Language
-max matches per page	preferences	en	Max matches per page
-no default	preferences	en	No default
-note: this feature does *not* change your email password. this will need to be done manually.	preferences	en	Note: This feature does *not* change your email password. This will need to be done manually.
-please, select a new theme	preferences	en	Please, select a new theme
-popup with search	preferences	en	Popup with search
-re-enter your password	preferences	en	Re-Enter your password
-select different theme	preferences	en	Select different Theme
-select one	preferences	en	Select one
-select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	en	Select the language of texts and messages within phpGroupWare.<br>Some languages may not contain all messages, in that case you will see an english message.
-selectbox	preferences	en	Selectbox
-set this to your convenience. for security reasons, you might not want to show your loginname in public.	preferences	en	Set this to your convenience. For security reasons, you might not want to show your Loginname in public.
-should the number of active sessions be displayed for you all the time.	preferences	en	Should the number of active sessions be displayed for you all the time.
-should this help messages shown up always, when you enter the preferences or only on request.	preferences	en	Should this help messages shown up always, when you enter the preferences or only on request.
-show helpmessages by default	preferences	en	Show helpmessages by default
-show navigation bar as	preferences	en	Show navigation bar as
-show number of current users	preferences	en	Show number of current users
-show text on navigation icons	preferences	en	Show text on navigation icons
-text only	preferences	en	Text only
-the default application will be started when you enter phpgroupware or click on the homepage icon.<br>you can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to	preferences	en	The default application will be started when you enter phpGroupWare or click on the homepage icon.<br>You can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to be configured in the preferences of each application).
-the selectbox shows all available users (can be very slow on big installs with many users). the popup can search users by name or group.	preferences	en	The selectbox shows all available users (can be very slow on big installs with many users). The popup can search users by name or group.
-the two passwords are not the same	preferences	en	The two passwords are not the same
-theme (colors/fonts) selection	preferences	en	Theme (colors/fonts) Selection
-this server is located in the %1 timezone	preferences	en	This server is located in the %1 timezone
-time format	preferences	en	Time format
-use default	preferences	en	Use default
-users choice	preferences	en	Users choice
-which currency symbol or name should be used in phpgroupware.	preferences	en	Which currency symbol or name should be used in phpGroupWare.
-you can show the applications as icons only, icons with app-name or both.	preferences	en	You can show the applications as icons only, icons with app-name or both.
-you do not have permission to set acl's in this mode!	preferences	en	You do not have permission to set ACL's in this mode!
-you must enter a password	preferences	en	You must enter a password
-your current theme is: %1	preferences	en	your current theme is: %1
-your preferences	preferences	en	Your Preferences
 attachments	common	no	Vedlegg
 add attachment	common	no	Legg til vedlegg
 booking	common	no	Booking
@@ -12637,146 +12221,7 @@ hidden	common	no	Gjemt
 change your password	common	no	Endre passord
 grant access	common	no	Gi tilgang
 edit categories	common	no	Rediger kategorier
-are you sure you want to clear cache	admin	no	Er du sikker på at du vil slette cache (minne)?
-account active	admin	no	Account aktiv
-active	admin	no	Aktiv
-all records and account information will be lost!	admin	no	All historie og brukerinformasjon vil gå tapt!
-anonymous user	admin	no	Anonym bruker
-are you sure you want to delete this account ?	admin	no	Er du sikker på at du vil slette denne account?
-are you sure you want to delete this group ?	admin	no	Er du sikker på du vil slette denne gruppen?
-are you sure you want to kill this session ?	admin	no	Er du sikker på at du vil avslutte denne session?
-create group	admin	no	Lag Gruppe
-delete message	admin	no	Slett Melding
-disabled	admin	no	Deaktivert
-disabled (not recomended)	admin	no	Deaktivert (ikke anbefalt)
-fallback (after each pageview)	admin	no	Fallback (etter hver sidevisning)
-display	admin	no	Vis
-global message	admin	no	Global Melding
-group name	admin	no	Gruppenavn
-idle	admin	no	idle
-ip	admin	no	IP
-kill	admin	no	Avslutt
-last time read	admin	no	Lest siste gang
-last %1 logins	admin	no	Siste %1 logins
-list of current users	admin	no	liste over brukere
-login time	admin	no	Login Tid
-loginid	admin	no	LoginID
-manager	admin	no	Manager
-message	admin	no	Melding
-new group name	admin	no	Nytt gruppenavn
-new password [ leave blank for no change ]	admin	no	Nytt passord [ Ingenting hvis ingen forandring ]
-percent of users that logged out	admin	no	Prosent av brukere som logget ut
-re-enter password	admin	no	Skriv inn passord igjen
-site	admin	no	Site
-that loginid has already been taken	admin	no	Den loginID er opptatt
-the login and password can not be the same	admin	no	Loging og passord kan ikke være det samme
-the two passwords are not the same	admin	no	Passordene er ikke de sammme
-total records	admin	no	Total historie
-user accounts	admin	no	Bruker accounts
-user groups	admin	no	Brukergrupper
-view access log	admin	no	Vis Accesslog
-view sessions	admin	no	Vis sesjoner
-you must enter a password	admin	no	Du må skrive inn et passord
-you must select a file type	admin	no	Du må velge en filtype
-home screen message	admin	no	Melding på hjemmeskjerm
-title	admin	no	Overskrift
-important message	admin	no	Viktig informasjon
-enabled	admin	no	Aktiv
-(to install new applications use<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)	admin	no	(For å installere nye moduler, bruk<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)
-add a category	admin	no	Legg til kategori
-add a section	admin	no	Legg til seksjon
-add a subcategory	admin	no	Legg til undekategori
-admins	admin	no	Admins
-appearance	admin	no	Utseende
-attribute	admin	no	Egenskap
-attributes	admin	no	Egenskaper
-attributes for this config section	admin	no	Egenskaper for denne konfigurasjonsseksjonen
-category list	admin	no	Kategoriliste
-check ip address of all sessions	admin	no	Kontroller IP-adresse for sesjoner
-close window	admin	no	Lukk vindu
-collect missing translations	admin	no	Finn manglende oversettinger
-config	admin	no	Konfigurasjon
-delete all log records	admin	no	Slett alle poster fra loggen
-delete this category	admin	no	Slett kategorien
-edit the config	admin	no	Endre konfigurasjon
-edit this category	admin	no	Endre kategorien
-email domain	admin	no	E-post domene
-enter the background color for the login page	admin	no	Angi bakgrunnsfarge for innloggingssiden
-enter the background color for the site title	admin	no	Angi bakgrunnsfarge for nettstedstittelen
-enter the file name of your logo	admin	no	Angi filnavnet for logo
-enter the file name of your logo at login	admin	no	Angi filnavnet for logo for pålogging
-enter the search string. to show all entries, empty this field and press the submit button again	admin	no	Angi søkestreng. For a vise alle poster, tøm dette feltet og klikk på knappen igjen.
-enter the title for your site	admin	no	Angi tittel for nettstedet
-enter the title of your logo	admin	no	Angi tittel for logoen
-enter the url where your logo should link to	admin	no	Angi url for logo
-enter your smtp server password	admin	no	Angi ditt SMTP passord
-enter your smtp server user	admin	no	Angi ditt SMTP-server brukernavn
-fatal	admin	no	Fatal
-first page	admin	no	Første side
 location	property	no	Lokalisering
-installed applications	admin	no	Innstallerte moduler
-language	admin	no	Språk
-line	admin	no	Linje
-list section	admin	no	List seksjon
-log message	admin	no	Loggmelding
-login screen	admin	no	Innlogging
-main screen	admin	no	Hovedside
-main screen message	admin	no	Melding på hovedside
-module	admin	no	Modul
-section	admin	no	seksjon
-security	admin	no	Sikkerhet
-severity	admin	no	Alvorlighetsgrad
-smtp server port number	admin	no	SMTP server port nummer
-smtp server timeout	admin	no	smtp server timeout
-smtp settings	admin	no	SMTP configurasjon
-smtpdebug	admin	no	smtpdebug
-smtpsecure	admin	no	smtpsecure
-submit the search string	admin	no	Send søketekst
-support email address	admin	no	E-post brukerstøtte
-total records: %1	admin	no	Antall poster: %1
-use cookies to pass sessionid	admin	no	Bruk cookier til å håndtere sesjoner
-use smtp auth	admin	no	Bruk smtp autentisering
-users	admin	no	Brukere
-view the config	admin	no	Vis konfigurasjon
-warn	admin	no	Varsel
-add category	admin	no	Legg til kategori
-edit category	admin	no	Endre kategori
-parent category	admin	no	Foreldrekategori
-add user	admin	no	Legg til bruker
-add user account	admin	no	Legg til brukerkonto
-account aktiv	admin	no	Konto aktiv
-action	admin	no	Handling
-file	admin	no	Fil
-info	admin	no	Informasjon
-hooks updated	admin	no	Applikasjonskoblinger er oppdatert
-the new hooks should be available to all users	admin	no	Nye applikasjonskoblinger er tilgjengelig for alle brukere
-async services last executed	admin	no	Asynkrone servicer ble sist utført
-run asynchronous services	admin	no	Kjør asynkrone servicer
-asyncservices not yet installed or other error (%1) !!!	admin	no	Asynkrone servicer er ikke installert, eller annen feil (%1) !!!
-crontab only (recomended)	admin	no	Bare crontab (anbefalt)
-installed crontab	admin	no	Installert crontab
-install crontab	admin	no	Installer crontab
-for the times below (empty values count as '*', all empty = every minute)	admin	no	For de tidene under (tomme verdier teller som '*', hvis alle er tom = hvert minutt)
-year	admin	no	År
-month	admin	no	Måned
-day of week (0-6, 0=sun)	admin	no	Ukedag (0-6, 0=Søn)
-hour	admin	no	Time
-minute	admin	no	Minutt
-calculate next run	admin	no	Kalkuler neste kjøring
-enable debug-messages	admin	no	Aktiver feilsøkingsmeldinger
-cancel testjob!	admin	no	Kanseller testjobb!
-start testjob!	admin	no	Start testjobb!
-for the times above	admin	no	For tidene over
-the testjob sends you a mail everytime it is called	admin	no	Testjobben sender deg en e-post hver gang den blir kjørt
-jobs	admin	no	Jobber
-next run	admin	no	Neste kjøring
-times	admin	no	Tider
-update	admin	no	Oppdater
-manual run	admin	no	Manuell kjøring
-method	admin	no	Metode
-data	admin	no	Data
-settings	admin	no	Innstillinger
-color selector	admin	no	Farge velger
 login	login	no	Login
 password	login	no	Passord
 sorry, your login has expired	login	no	Beklager, din bruker er utgått
@@ -12789,194 +12234,8 @@ you have been successfully logged out	login	no	Du har nå logget ut
 info: you have changed domain from "%1" to "%2"	login	no	Informasjon: Du har endret domene fra "%1" til "%2"
 remark	home	no	Merknad
 about %1	about	no	Om %1
-change your password	preferences	no	Endre passord
-change your settings	preferences	no	Endre innstillinger
-date format	preferences	no	Dato format
-email signature	preferences	no	E-Post signatur
-enter your new password	preferences	no	Skriv inn ditt nye passord
-language	preferences	no	Språk
-use default	preferences	no	Bruk standard
-max matches per page	preferences	no	Antall treff per side
-any listing in phpgw will show you this number of entries or lines per page.<br>to many slow down the page display, to less will cost you the overview.	preferences	no	Alle lister vil vise dette antall treff per side.<br/>For mange vil gå utover innlastingstiden, for få vil hindre oversikt
-interface/template selection	preferences	no	Template-sett
-a template defines the layout of phpgroupware and it contains icons for each application.	preferences	no	En template definerer utseende for BkBygg og inneholder ikoner for alle moduler.
-default	preferences	no	Standard
-theme (colors/fonts) selection	preferences	no	Tema (farger/fonter)
-a theme defines the colors and fonts used by the template.	preferences	no	Et tema definerer farger og fonter som brukes at templaten.
-note: this feature does *not* change your email password. this will need to be done manually.	preferences	no	NB: Denne funksjonen endrer *ikke* ditt epost passord. Dette må gjøres manuelt.
-please, select a new theme	preferences	no	Vennligst velg et nytt tema
-re-enter your password	preferences	no	Skriv inn ditt passord igjen
-select different theme	preferences	no	Velg annet tema
-show birthday reminders on main screen	preferences	no	Vis fødselsdags påminnere på hovedskjerm
-default ticket status 3	preferences	no	Standard meldingsstatus 3
-show current users on navigation bar	preferences	no	Vis current brukere i navigation bar
 tax code	property	no	MVA kode
-show high priority events on main screen	preferences	no	Vis høyprioritets events på hovedskjermen
-show new messages on main screen	preferences	no	Vis nye meldinger på hovedskjerm
-show text on navigation icons	preferences	no	Vis tekst på navigasjons ikoner
-the two passwords are not the same	preferences	no	Passordene stemmer ikke overens
-this server is located in the %1 timezone	preferences	no	tids-sonen
-time format	preferences	no	Tids format
-time zone offset	preferences	no	Tids-sone offset
-weekday starts on	preferences	no	Ukedag begynner på
-work day ends on	preferences	no	Arbeidsdag slutter på
-work day starts on	preferences	no	Arbeidsdag begynner på
-you must enter a password	preferences	no	Du må skrive inn et passord
-your current theme is: %1	preferences	no	</b>
-your preferences	preferences	no	Dine innstillinger
-default preferences	preferences	no	Standardinnstillinger
-forced preferences	preferences	no	Påkrevde innstillinger
-time zone	preferences	no	Tidssone
-how should phpgroupware display dates for you.	preferences	no	Hvordan datoer vises for deg
-do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.	preferences	no	Foretrekker du 24-timersformat eller 12-timersformat med am/pm?
-country	preferences	no	Land
-in which country are you. this is used to set certain defaults for you.	preferences	no	Hvilket land er du i? Denne brukes for å sette standardverdier basert på landet du er i
-show number of current users	preferences	no	Vis antall innloggede brukere
-should the number of active sessions be displayed for you all the time.	preferences	no	Skal antall aktive brukere vises?
-currency	preferences	no	Valuta
-which currency symbol or name should be used in phpgroupware.	preferences	no	Hvilket valuta-symbol eller navn skal brukes i BkBygg
-how do you like to select accounts	preferences	no	Hvordan vil du velge konto?
-selectbox	preferences	no	Nedtrekksliste
-popup with search	preferences	no	Pop-up vindu med søk
-the selectbox shows all available users (can be very slow on big installs with many users). the popup can search users by name or group.	preferences	no	Nedtrekkslisten viser alle tilgjengelige brukere (kan være treg på installasjoner med mange brukere). Pop-up vinduet kan søke på navn eller gruppe
-how do you like to display accounts	preferences	no	Hvordan vil du vise kontoer?
-firstname	preferences	no	Fornavn
-lastname	preferences	no	Etternavn
-12 hour	preferences	no	12-timer
-24 hour	preferences	no	24-timer
-rich text (wysiwyg) editor	preferences	no	Rik tekst (WISYWIG) editor
-which editor would you like to use for editing html and other rich content?	preferences	no	Hvilken editor skal brukes for å redigere HTML og annet rikt tekst-innhold?
-show helpmessages by default	preferences	no	Vis hjelpemeldinger som standard
-should this help messages shown up always, when you enter the preferences or only on request.	preferences	no	Skal hjelpemeldinger alltid vises, når du skriver inn innstillingene eller på forepørsel?
-sidecontent	preferences	no	Sideinnhold
-do you want your menues as sidecontent	preferences	no	Vil du ha menyer vist som sideinnhold?
-show breadcrumbs	preferences	no	Vis brødsmulesti
-select user	preferences	no	Velg bruker
-default application	preferences	no	Standardmodul
-the default application will be started when you enter phpgroupware or click on the homepage icon.<br>you can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to	preferences	no	Standardmodul som vises når du logger inn i BkBygg eller klikker på Hjemme-lenken.
-a time zone is a region of the earth that has uniform standard time, usually referred to as the local time. by convention, time zones compute their local time as an offset from utc	preferences	no	En tidssone er en region som har en uniform standardtid, som oftest referert til som lokal tid. Tidssoner beregner sin lokale tid basert på avstand fra UTC
-set this to your convenience. for security reasons, you might not want to show your loginname in public.	preferences	no	Sett denne til det du ønsker. Av sikkerhetsmessige hensyn bør ikke påloggingsnavnet vises offentlig.
-should history navigation urls as breadcrumbs	preferences	no	Vis historisk navigasjon som brødsmulesti
-activate nowrap in yui-tables	preferences	no	Aktiver no-wrap i YUI-tabeller
-select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	no	Velg språk for tekster og meldinger i BkBygg.<br/>Dersom en oversettelse mangler vil engelsk tekst/melding vises
-users choice	preferences	no	Brukers valg
-norwegian	preferences	no	Norsk
-english	preferences	no	Engelsk
-no default	preferences	no	Ingen standard
-no sidecontent	preferences	no	Ingen sideinnhold
-choose property filter	preferences	no	Velg eiendomsfilter
-filter by owner or owner type	preferences	no	Filtrer på eier eller eiertype
-group filters in single query	preferences	no	Grupper filtre i en spørring
-group filters - means that one has to hit the search button to apply the filter	preferences	no	Grupper filtre betyr at en må klikke på Søk-knappen for å aktivere filtreringsvalg
-show new/updated tickets on main screen	preferences	no	Vis nye/oppdaterte meldinger på hjemmeskjermen
-link to tickets you are assigned to	preferences	no	Lenke til meldinger tildelt deg
-default ticket status	preferences	no	Standard meldingsstatus
-the default status when entering the helpdesk and mainscreen	preferences	no	Standard meldingsstatus når en går inn på meldinger
-custom title on main screen tickets	preferences	no	Egendefinert tittel på meldinger på hjemmeskjermen
-show updated tickets on main screen 2	preferences	no	Vis oppdaterte meldinger på hjemmeskjerm 2
-default ticket status 2	preferences	no	Standard meldingsstatus 2
-show updated tickets on main screen 3	preferences	no	Vis oppdaterte meldinger på hjemmeskjerm 3
-show updated tickets on main screen 4	preferences	no	Vis oppdaterte meldinger på hjemmeskjerm 4
-default ticket status 4	preferences	no	Standard meldingsstatus 4
-show pending vendor reminders on main screen	preferences	no	Vis ventende leverandør-purringer på hjemmeskjerm
-reminder issued to vendors	preferences	no	Purringer sendt til leverandører
-custom title on pending vendor reminders	preferences	no	Egendefinert tittel på leverandørpurringer
-show your pending request for approvals on main screen	preferences	no	Vis ventende godkjenningsforespørsler på hjemmeskjerm
-your requests for approvals waiting decisions	preferences	no	Dine meldinger som avventer godkjenning
-custom title on pending request for approvals	preferences	no	Egendefinert tittel på ventende godkjenningsforespørsler
-show pending approvals on main screen	preferences	no	Vis meldinger du må godkjenne på hjemmeskjerm
-approvals waiting for your decisions	preferences	no	Meldinger sendt til deg for godkjenning
-custom title on pending approvals	preferences	no	Egendefinert tittel på godkjenningsforespørsler
-default updated ticket status when creating project	preferences	no	Standard oppdatert meldingsstatus ved oppretting av prosjekt
-autocreate project from ticket	preferences	no	Opprett prosjekt fra melding
-your projects on main screen - list 1	preferences	no	Vis dine prosjekter på hjemmeskjerm - liste 1
-link to your projects	preferences	no	Lenke til dine prosjekter
-default project status 1	preferences	no	Standard prosjektstatus 1
-the default status for list 1 when entering the mainscreen	preferences	no	Standard status for liste 1 når du går inn på hjemmeskjerm
-the default status for list 2 when entering the mainscreen	preferences	no	Standard status for liste 2 når du går inn på hjemmeskjerm
-custom title on projects on main screen - list 1	preferences	no	Egendefinert tittel på prosjekter på hjemmeskjerm - liste 1
-your workorders on main screen - list 1	preferences	no	Dine arbeidsordre på hjemmeskjerm - liste 1
-link to your workorders	preferences	no	Lenke til dine arbeidsordre
-default workorder status 1	preferences	no	Standard arbeidsordrestatus 1
-custom title on workorders on main screen - list 1	preferences	no	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 1
-your workorders on main screen - list 2	preferences	no	Dine arbeidsordre på hjemmeskjerm - liste 2
-default workorder status 2	preferences	no	Standard arbeidsordrestatus 2
-custom title on workorders on main screen - list 2	preferences	no	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 2
-custom title workorders on main screen - list 2	preferences	no	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 2
-show quick link for changing status for tickets	preferences	no	Vis hurtiglenke for å endre meldingsstatus
-enables to set status wihout entering the ticket	preferences	no	Muliggjør å sette meldingsstatus uten å åpne meldingen
-default group tts	preferences	no	Standardgruppe tts
-the default group to assign a ticket in helpdesk-submodul	preferences	no	Standardgruppe for tildeling av meldinger i helpdesk
-default assign to tts	preferences	no	Standardbruker tts
-the default user to assign a ticket in helpdesk-submodule	preferences	no	Standardbruker for tildeling av meldinger i helpdesk
-default priority tts	preferences	no	Standardprioritet tts
-the default priority for tickets in the helpdesk-submodule	preferences	no	Standardprioritet for meldinger i helpdesk
-default ticket categories	preferences	no	Standard meldingskategori
-the default category for tts	preferences	no	Standard meldingskategori i tts
-notify me by mail when ticket is assigned or altered	preferences	no	Varsle meg på e-post når meldinger er tildelt eller endret
-send e-mail from tts	preferences	no	Send e-post fra tts
-send e-mail from tts as default	preferences	no	Sendt e-post fra tts som standard
-refresh tts every (seconds)	preferences	no	Oppfrisk tts hvert (sekunder)
-the intervall for helpdesk refresh - cheking for new tickets	preferences	no	Intervall for oppfrisking av helpdesk - sjekk om det er nye meldinger
-set myself as contact when adding a ticket	preferences	no	Sett meg selv som kontaktperson ved oppretting av nye meldinger
-default degree request safety	preferences	no	Standard grad av alvorlighet
-the degree of seriousness	preferences	no	Grad av alvorlighet
-default degree request aesthetics	preferences	no	Standard estetikk-grad på behov
-default degree request indoor climate	preferences	no	Standard inneklima-grad på behov
-default degree request consequential damage	preferences	no	Standard konsekvens-grad på behov
-default degree request user gratification	preferences	no	Standard bruker-grad på behov
-default degree request residential environment	preferences	no	Standard miljø-grad på behov
-send order receipt as email	preferences	no	Send ordrebekreftelse som e-post
-send the order as bcc to the user	preferences	no	Send blindkopi av ordre til bruker
-notify owner of project/order on change	preferences	no	Varsle prosjekt-/ordre-eier ved endring
-by email	preferences	no	Varsle prosjekt- eller ordre-eier per e-post ved endringer
-default start page	preferences	no	Standard startside
-select your start-submodule	preferences	no	Velg undermodul du vil starte i når du går inn på modulen
-default project type	preferences	no	Standard prosjekttype
-select your default project type	preferences	no	Velg standard prosjekttype for dine prosjekter
-default project year filter	preferences	no	Standard år-filter for prosjekt
-select your default project year filter	preferences	no	Velg standard år-filter for prosjekter
-default project status	preferences	no	Stardard prosjektstatus
-the default status for your projects	preferences	no	Velg standard prosjektstatus for dine prosjekter
-default workorder status	preferences	no	Standard arbeidsordre-status
-the default status for your workorders	preferences	no	Velg standard status for dine arbeidsordre
-default project categories	preferences	no	Standard prosjektkategori
 loc1 name	property	no	Navn
-the default category for your projects and workorders	preferences	no	Velg standard kategori for dine prosjekter og arbeidsordre
-default district-filter	preferences	no	Standard distrikt-filter
-your default district-filter	preferences	no	Velg standard distrikt-filter
-your cellphone	preferences	no	Ditt mobiltelefonnummer
-ressursnr	preferences	no	Ditt ressursnummer
-default dimb	preferences	no	Standard ansvarssted
-your email	preferences	no	Din e-postadresse
-insert your email address	preferences	no	Legg inn din e-postadresse
-branch tts	preferences	no	Vis fag for melding
-enable branch in tts-orders	preferences	no	Vis fag for melding-bestilling
-default vendor type	preferences	no	Standard leverandørtype
-which agreement	preferences	no	Velg leverandørtype du vil ha som standard
-with of textarea	preferences	no	Bredde på tekstbokser
-with of textarea in forms	preferences	no	Legg inn ønsket bredde på tekstbokser i skjema
-height of textarea	preferences	no	Høyde på tekstbokser
-height of textarea in forms	preferences	no	Legg inn ønsket høyde på tekstbokser i skjema
-show horisontal menues	preferences	no	Vis horisontale menyer
-horisontal menues are shown in top of page	preferences	no	Horisontale menyer vises i toppen av siden
-remove navbar	preferences	no	Fjern navigasjonslinje
-navigation bar is removed	preferences	no	Skal navigasjonslinje vises eller ikke
-tabel export format	preferences	no	Eksportformat for lister og tabeller
-choose which format to export from the system for tables	preferences	no	Velg hvilket format som skal brukes ved eksport av tabeller og lister
-order email	preferences	no	E-postformat for ordre
-current year	preferences	no	Gjeldende år
-workorder approval from	preferences	no	Godkjenning av arbeidsordre gis av
-if you need approval from your supervisor for projects/workorders	preferences	no	Dersom du trenger godkjenning av leder for prosjekter eller arbeidsordre angis denne her
-eiendom - preferences	preferences	no	Eiendom - innstillinger
-0 - 2	preferences	no	0 - 2
-as in "." or ","	preferences	no	Velg "." eller ","
-number of planned controls on home page	preferences	no	Antall planlagte kontroller på hjemmeskjerm
-number of assigned controls on home page	preferences	no	Antall tildelte kontroller på hjemmeskjerm
-filter tickets on assigned to me	preferences	no	Filtrer meldinger på tildelt til meg.
-do you want av csv download button for main tables?	preferences	no	Ønsker du en CSV nedlastingsknapp for hovedtabeller?
-csv download button	preferences	no	CSV nedlastingsknapp
-help off	preferences	no	Slå av hjelp
 link to the project originatet from this request	property	no	Link til prosjektet som har opprinnelse fra dette tiltaket
 link to the project originatet from this ticket	property	no	Link til prosjektet som har opprinnelse fra denne hendelsen
 link to the request for this project	property	no	Link til tiltak omfattet av dette prosjektet
@@ -16089,8 +15348,6 @@ communications	addressbook	en	Communications
 company	common	en	Company
 company name	common	en	Company Name
 contacts	common	en	Contacts
-contact application	admin	en	Contact application
-contact settings	admin	en	Contact Settings
 no district	controller	no	Distrikt ikke valgt
 copied by %1, from record #%2.	addressbook	en	Copied by %1, from record #%2.
 country	common	en	Country
@@ -16109,7 +15366,6 @@ department	common	en	Department
 domestic	addressbook	en	Domestic
 download	addressbook	en	Download
 edit custom field	addressbook	en	Edit Custom Field
-edit custom fields	admin	en	Edit Custom Fields
 empty	addressbook	en	Empty
 export contacts	addressbook	en	Export Contacts
 export file name	addressbook	en	Export file name
@@ -16146,10 +15402,6 @@ import from outlook	addressbook	en	Import from Outlook
 international	addressbook	en	International
 isdn phone	addressbook	en	ISDN Phone
 label	addressbook	en	Label
-ldap context for contacts	admin	en	LDAP context for contacts
-ldap host for contacts	admin	en	LDAP host for contacts
-ldap root dn for contacts	admin	en	LDAP root dn for contacts
-ldap root pw for contacts	admin	en	LDAP root pw for contacts
 ldif	addressbook	en	LDIF
 line 2	addressbook	en	Line 2
 message phone	addressbook	en	Message Phone
@@ -16186,10 +15438,8 @@ reason	addressbook	en	reason
 record access	addressbook	en	Record Access
 record owner	addressbook	en	Record owner
 remove	addressbook	en	remove
-retrieve contacts	admin	en	retrieve contacts
 search:	addressbook	en	Search:
 select fields	addressbook	en	select fields
-select where you want to store	admin	en	Select where you want to store
 show birthday reminders on main screen	addressbook	en	Show birthday reminders on main screen
 startrecord	addressbook	en	Startrecord
 state	common	en	State
@@ -16212,7 +15462,6 @@ vcards require a first name entry.	addressbook	en	VCards require a first name en
 vcards require a last name entry.	addressbook	en	Vcards require a last name entry.
 video phone	addressbook	en	Video Phone
 voice phone	addressbook	en	Voice Phone
-warning!! ldap is valid only if you are not using contacts for accounts storage!	admin	en	WARNING!! LDAP is valid only if you are NOT using contacts for accounts storage!
 work phone	addressbook	en	Work Phone
 you must select a vcard. (*.vcf)	addressbook	en	You must select a vcard. (*.vcf)
 you must select at least 1 column to display	addressbook	en	You must select at least 1 column to display
@@ -17435,6 +16684,749 @@ monthly	frontend	no	Månedlig
 remark	frontend	no	Merknad
 mobilefrontend	common	no	Mobil Frontend
 mobilefrontend	common	en	Mobile Frontend
+account active	admin	no	Bruker er aktiv
+account "%1" properties	admin	no	Bruker "%1" egenskaper
+active	admin	no	Aktiv
+all records and account information will be lost!	admin	no	All historie og brukerinformasjon vil gå tapt!
+anonymous user	admin	no	Anonym bruker
+are you sure you want to delete this account ?	admin	no	Er du sikker på at du vil slette denne account?
+are you sure you want to delete this group ?	admin	no	Er du sikker på du vil slette denne gruppen?
+are you sure you want to kill this session ?	admin	no	Er du sikker på at du vil avslutte denne session?
+create group	admin	no	Lag Gruppe
+delete message	admin	no	Slett Melding
+disabled	admin	no	Deaktivert
+disabled (not recomended)	admin	no	Deaktivert (ikke anbefalt)
+fallback (after each pageview)	admin	no	Fallback (etter hver sidevisning)
+display	admin	no	Vis
+global message	admin	no	Global Melding
+group name	admin	no	Gruppenavn
+idle	admin	no	idle
+ip	admin	no	IP
+kill	admin	no	Avslutt
+last time read	admin	no	Lest siste gang
+last %1 logins	admin	no	Siste %1 logins
+list of current users	admin	no	liste over brukere
+login time	admin	no	Login Tid
+loginid	admin	no	Brukernavn
+manager	admin	no	Manager
+message	admin	no	Melding
+new group name	admin	no	Nytt gruppenavn
+new password [ leave blank for no change ]	admin	no	Nytt passord [ Ingenting hvis ingen forandring ]
+percent of users that logged out	admin	no	Prosent av brukere som logget ut
+re-enter password	admin	no	Skriv inn passord igjen
+site	admin	no	Site
+that loginid has already been taken	admin	no	Den loginID er opptatt
+the login and password can not be the same	admin	no	Loging og passord kan ikke være det samme
+the two passwords are not the same	admin	no	Passordene er ikke de sammme
+total records	admin	no	Total historie
+user accounts	admin	no	Brukerkontoer
+user groups	admin	no	Brukergrupper
+view access log	admin	no	Vis Accesslog
+view sessions	admin	no	Vis sesjoner
+you must enter a password	admin	no	Du må skrive inn et passord
+you must select a file type	admin	no	Du må velge en filtype
+home screen message	admin	no	Melding på hjemmeskjerm
+title	admin	no	Overskrift
+important message	admin	no	Viktig informasjon
+enabled	admin	no	Aktiv
+(to install new applications use<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)	admin	no	(For å installere nye moduler, bruk<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)
+add a category	admin	no	Legg til kategori
+add a section	admin	no	Legg til seksjon
+add a subcategory	admin	no	Legg til undekategori
+admins	admin	no	Admins
+appearance	admin	no	Utseende
+attribute	admin	no	Egenskap
+attributes	admin	no	Egenskaper
+attributes for this config section	admin	no	Egenskaper for denne konfigurasjonsseksjonen
+category list	admin	no	Kategoriliste
+check ip address of all sessions	admin	no	Kontroller IP-adresse for sesjoner
+close window	admin	no	Lukk vindu
+collect missing translations	admin	no	Finn manglende oversettinger
+config	admin	no	Konfigurasjon
+delete all log records	admin	no	Slett alle poster fra loggen
+delete this category	admin	no	Slett kategorien
+edit the config	admin	no	Endre konfigurasjon
+edit this category	admin	no	Endre kategorien
+email domain	admin	no	E-post domene
+enter the background color for the login page	admin	no	Angi bakgrunnsfarge for innloggingssiden
+enter the background color for the site title	admin	no	Angi bakgrunnsfarge for nettstedstittelen
+enter the file name of your logo	admin	no	Angi filnavnet for logo
+enter the file name of your logo at login	admin	no	Angi filnavnet for logo for pålogging
+enter the search string. to show all entries, empty this field and press the submit button again	admin	no	Angi søkestreng. For a vise alle poster, tøm dette feltet og klikk på knappen igjen.
+enter the title for your site	admin	no	Angi tittel for nettstedet
+enter the title of your logo	admin	no	Angi tittel for logoen
+enter the url where your logo should link to	admin	no	Angi url for logo
+enter your smtp server password	admin	no	Angi ditt SMTP passord
+enter your smtp server user	admin	no	Angi ditt SMTP-server brukernavn
+fatal	admin	no	Fatal
+first page	admin	no	Første side
+installed applications	admin	no	Innstallerte moduler
+language	admin	no	Språk
+line	admin	no	Linje
+list section	admin	no	List seksjon
+log message	admin	no	Loggmelding
+login screen	admin	no	Innlogging
+main screen	admin	no	Hovedside
+main screen message	admin	no	Melding på hovedside
+module	admin	no	Modul
+section	admin	no	seksjon
+security	admin	no	Sikkerhet
+severity	admin	no	Alvorlighetsgrad
+smtp server port number	admin	no	SMTP server port nummer
+smtp server timeout	admin	no	smtp server timeout
+smtp settings	admin	no	SMTP configurasjon
+smtpdebug	admin	no	smtpdebug
+smtpsecure	admin	no	smtpsecure
+submit the search string	admin	no	Send søketekst
+support email address	admin	no	E-post brukerstøtte
+total records: %1	admin	no	Antall poster: %1
+use cookies to pass sessionid	admin	no	Bruk cookier til å håndtere sesjoner
+use smtp auth	admin	no	Bruk smtp autentisering
+users	admin	no	Brukere
+user	admin	no	Bruker
+view the config	admin	no	Vis konfigurasjon
+warn	admin	no	Varsel
+add category	admin	no	Legg til kategori
+edit category	admin	no	Endre kategori
+parent category	admin	no	Foreldrekategori
+add user	admin	no	Legg til bruker
+add user account	admin	no	Legg til brukerkonto
+action	admin	no	Handling
+file	admin	no	Fil
+info	admin	no	Informasjon
+notice	admin	no	Merknad
+hooks updated	admin	no	Applikasjonskoblinger er oppdatert
+the new hooks should be available to all users	admin	no	Nye applikasjonskoblinger er tilgjengelig for alle brukere
+async services last executed	admin	no	Asynkrone servicer ble sist utført
+run asynchronous services	admin	no	Kjør asynkrone servicer
+asyncservices not yet installed or other error (%1) !!!	admin	no	Asynkrone servicer er ikke installert, eller annen feil (%1) !!!
+crontab only (recomended)	admin	no	Bare crontab (anbefalt)
+installed crontab	admin	no	Installert crontab
+install crontab	admin	no	Installer crontab
+for the times below (empty values count as '*', all empty = every minute)	admin	no	For de tidene under (tomme verdier teller som '*', hvis alle er tom = hvert minutt)
+year	admin	no	År
+month	admin	no	Måned
+day of week (0-6, 0=sun)	admin	no	Ukedag (0-6, 0=Søn)
+hour	admin	no	Time
+minute	admin	no	Minutt
+calculate next run	admin	no	Kalkuler neste kjøring
+enable debug-messages	admin	no	Aktiver feilsøkingsmeldinger
+cancel testjob!	admin	no	Kanseller testjobb!
+start testjob!	admin	no	Start testjobb!
+for the times above	admin	no	For tidene over
+the testjob sends you a mail everytime it is called	admin	no	Testjobben sender deg en e-post hver gang den blir kjørt
+jobs	admin	no	Jobber
+next run	admin	no	Neste kjøring
+times	admin	no	Tider
+update	admin	no	Oppdater
+manual run	admin	no	Manuell kjøring
+method	admin	no	Metode
+data	admin	no	Data
+settings	admin	no	Innstillinger
+color selector	admin	no	Farge velger
+would you like to check for a new version when admins login	admin	no	Vil du sjekke om det finnes ny versjon når administratorer logger inn
+please set a site name in admin &gt; siteconfig	common	no	Vennligst angi tittelen for systemet i Administrasjon &gt; Admin &gt; Global konfigurasjon
+%1 - %2 of %3 user accounts	admin	en	%1 - %2 of %3 user accounts
+%1 not found or not executable !!!	admin	en	%1 not found or not executable !!!
+(stored password will not be shown here)	admin	en	(Stored password will not be shown here)
+(to install new applications use<br><a href="setup/" target="setup">setup</a> [manage applications] !!!)	admin	en	(To install new applications use<br><a href="setup/" target="setup">Setup</a> [Manage Applications] !!!)
+accesslog and bruteforce defense	admin	en	AccessLog and BruteForce defense
+account active	admin	en	Account active
+account list	admin	en	Account list
+account permissions	admin	en	Account permissions
+account preferences	admin	en	Account Preferences
+acl manager	admin	en	ACL Manager
+acl rights	admin	en	ACL Rights
+action	admin	en	Action
+add a category	admin	en	add a category
+add a group	admin	en	add a group
+add a new account.	admin	en	Add a new account.
+add a subcategory	admin	en	add a subcategory
+add a user	admin	en	add a user
+add account	admin	en	Add account
+add application	admin	en	Add application
+add auto-created users to this group ('default' will be attempted if this is empty.)	admin	en	Add auto-created users to this group ('Default' will be attempted if this is empty.)
+add global category	admin	en	Add global category
+add global category for %1	admin	en	Add global category for %1
+add group	admin	en	Add group
+add new account	admin	en	Add new account
+add new application	admin	en	Add new application
+add peer server	admin	en	Add Peer Server
+add sub-category	admin	en	Add sub-category
+admin email	admin	en	Admin Email
+admin email addresses (comma-separated) to be notified about the blocking (empty for no notify)	admin	en	Admin email addresses (comma-separated) to be notified about the blocking (empty for no notify)
+admin name	admin	en	Admin Name
+administration	admin	en	Administration
+admins	admin	en	Admins
+after how many unsuccessful attempts to login, an account should be blocked (default 3) ?	admin	en	After how many unsuccessful attempts to login, an account should be blocked (default 3) ?
+after how many unsuccessful attempts to login, an ip should be blocked (default 3) ?	admin	en	After how many unsuccessful attempts to login, an IP should be blocked (default 3) ?
+all records and account information will be lost!	admin	en	All records and account information will be lost!
+all users	admin	en	All Users
+allow anonymous access to this app	admin	en	Allow anonymous access to this app
+anonymous user	admin	en	Anonymous user
+anonymous user (not shown in list sessions)	admin	en	Anonymous User (not shown in list sessions)
+appearance	admin	en	Appearance
+application	admin	en	Application
+application name	admin	en	Application name
+application title	admin	en	Application title
+applications	admin	en	Applications
+apply	admin	en	apply
+applications list	admin	en	Applications list
+are you sure you want to delete the application %1 ?	admin	en	Are you sure you want to delete the application %1 ?
+are you sure you want to delete this account ?	admin	en	Are you sure you want to delete this account ?
+are you sure you want to delete this application ?	admin	en	Are you sure you want to delete this application ?
+are you sure you want to delete this global category ?	admin	en	Are you sure you want to delete this global category ?
+are you sure you want to delete this group ?	admin	en	Are you sure you want to delete this group ?
+are you sure you want to delete this server?	admin	en	Are you sure you want to delete this server?
+are you sure you want to kill this session ?	admin	en	Are you sure you want to kill this session ?
+async services last executed	admin	en	Async services last executed
+asynchronous timed services	admin	en	Asynchronous timed services
+asyncservices not yet installed or other error (%1) !!!	admin	en	asyncservices not yet installed or other error (%1) !!!
+attempt to use correct mimetype for ftp instead of default 'application/octet-stream'	admin	en	Attempt to use correct mimetype for FTP instead of default 'application/octet-stream'
+authentication / accounts	admin	en	Authentication / Accounts
+auto create account records for authenticated users	admin	en	Auto create account records for authenticated users
+back to the list	admin	en	back to the list
+bi-dir passthrough	admin	en	bi-dir passthrough
+bi-directional	admin	en	bi-directional
+bottom	admin	en	bottom
+category %1 has been saved !	admin	en	Category %1 has been saved !
+calculate next run	admin	en	Calculate next run
+can change password	admin	en	Can change password
+cancel testjob!	admin	en	Cancel TestJob!
+categories list	admin	en	Categories list
+category list	admin	en	Category list
+change acl rights	admin	en	change ACL Rights
+change config settings	admin	en	Change config settings
+change main screen message	admin	en	Change main screen message
+check ip address of all sessions	admin	en	check ip address of all sessions
+check items to <b>%1</b> to %2 for %3	admin	en	Check items to <b>%1</b> to %2 for %3
+country selection	admin	en	Country Selection
+create group	admin	en	Create Group
+crontab only (recomended)	admin	en	crontab only (recomended)
+data	admin	en	Data
+day	admin	en	Day
+day of week<br>(0-6, 0=sun)	admin	en	Day of week<br>(0-6, 0=Sun)
+default	admin	en	Default
+default file system space per user	admin	en	Default file system space per user
+default file system space per user/group ?	admin	en	Default file system space per user/group ?
+delete account	admin	en	Delete account
+delete all records	admin	en	Delete All Records
+delete the category	admin	en	delete the category
+delete the group	admin	en	delete the group
+delete this category	admin	en	delete this category
+delete this group	admin	en	delete this group
+delete this user	admin	en	delete this user
+delete application	admin	en	Delete application
+delete category	admin	en	Delete category
+delete group	admin	en	Delete group
+delete peer server	admin	en	Delete peer server
+deny access to access log	admin	en	Deny access to access log
+deny access to application registery	admin	en	Deny access to application registery
+deny access to applications	admin	en	Deny access to applications
+deny access to asynchronous timed services	admin	en	Deny access to asynchronous timed services
+deny access to current sessions	admin	en	Deny access to current sessions
+deny access to error log	admin	en	Deny access to error log
+deny access to global categories	admin	en	Deny access to global categories
+deny access to groups	admin	en	Deny access to groups
+deny access to mainscreen message	admin	en	Deny access to mainscreen message
+deny access to peer servers	admin	en	Deny access to peer servers
+deny access to phpinfo	admin	en	Deny access to phpinfo
+deny access to site configuration	admin	en	Deny access to site configuration
+deny access to user accounts	admin	en	Deny access to user accounts
+deny all users access to grant other users access to their entries ?	admin	en	Deny all users access to grant other users access to their entries ?
+description can not exceed 255 characters in length !	admin	en	Description can not exceed 255 characters in length !
+disable "auto completion" of the login form	admin	en	Disable "auto completion" of the login form
+disabled (not recomended)	admin	en	disabled (not recomended)
+display	admin	en	Display
+do not delete the category and return back to the list	admin	en	do NOT delete the category and return back to the list
+do you also want to delete all global subcategories ?	admin	en	Do you also want to delete all global subcategories ?
+do you want to delete all global subcategories ?	admin	en	Do you want to delete all global subcategories ?
+do you want to move all global subcategories one level down ?	admin	en	Do you want to move all global subcategories one level down ?
+edit account	admin	en	Edit account
+edit application	admin	en	Edit application
+edit global category	admin	en	Edit global category
+edit global category for %1	admin	en	Edit global category for %1
+edit group	admin	en	Edit Group
+edit login screen message	admin	en	Edit login screen message
+edit main screen message	admin	en	Edit main screen message
+edit peer server	admin	en	Edit Peer Server
+edit table format	admin	en	Edit Table format
+edit this category	admin	en	edit this category
+edit this group	admin	en	edit this group
+edit this user	admin	en	edit this user
+edit user	admin	en	edit user
+edit user account	admin	en	Edit user account
+enable debug-messages	admin	en	Enable debug-messages
+enabled - hidden from navbar	admin	en	Enabled - Hidden from navbar
+enter a description for the category	admin	en	enter a description for the category
+enter some random text for app_session <br>encryption (requires mcrypt)	admin	en	Enter some random text for app_session <br>encryption (requires mcrypt)
+enter the background color for the login page	admin	en	Enter the background color for the login page
+enter the background color for the site title	admin	en	Enter the background color for the site title
+enter the file name of your login logo	admin	en	Enter the file name of your login logo
+enter the file name of your logo	admin	en	Enter the file name of your logo
+enter the full path for temporary files.<br>examples: /tmp, c:\\temp	admin	en	Enter the full path for temporary files.<br>Examples: /tmp, C:\\TEMP
+enter the full path for users and group files.<br>examples: /files, e:\\files	admin	en	Enter the full path for users and group files.<br>Examples: /files, E:\\FILES
+enter the hostname of the machine on which this server is running	admin	en	Enter the hostname of the machine on which this server is running
+enter the location of phpgroupware's url.<br>example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>no trailing slash</b>	admin	en	Enter the location of phpGroupWare's URL.<br>Example: http://www.domain.com/phpgroupware &nbsp; or &nbsp; /phpgroupware<br><b>No trailing slash</b>
+enter the search string. to show all entries, empty this field and press the submit button again	admin	en	Enter the search string. To show all entries, empty this field and press the SUBMIT button again
+enter the site password for peer servers	admin	en	Enter the site password for peer servers
+enter the site username for peer servers	admin	en	Enter the site username for peer servers
+enter the title for your site	admin	en	Enter the title for your site
+enter the title of your logo	admin	en	Enter the title of your logo
+enter the url where your logo should link to	admin	en	Enter the url where your logo should link to
+enter your default ftp server	admin	en	Enter your default FTP server
+enter your http proxy server	admin	en	Enter your HTTP proxy server
+enter your http proxy server port	admin	en	Enter your HTTP proxy server port
+error canceling timer, maybe there's none set !!!	admin	en	Error canceling timer, maybe there's none set !!!
+error setting timer, wrong syntax or maybe there's one already running !!!	admin	en	Error setting timer, wrong syntax or maybe there's one already running !!!
+error: %1 not found or other error !!!	admin	en	Error: %1 not found or other error !!!
+expires	admin	en	Expires
+fallback (after each pageview)	admin	en	fallback (after each pageview)
+file space	admin	en	File space
+file space must be an integer	admin	en	File space must be an integer
+find and register all application hooks	admin	en	Find and Register all Application Hooks
+for the times above	admin	en	for the times above
+for the times below (empty values count as '*', all empty = every minute)	admin	en	for the times below (empty values count as '*', all empty = every minute)
+force selectbox	admin	en	Force Selectbox
+global categories	admin	en	Global Categories
+group ?	admin	en	group ?
+group list	admin	en	Group list
+group manager	admin	en	Group Manager
+group name	admin	en	Group Name
+hide php information	admin	en	hide php information
+home directory	admin	en	Home directory
+host information	admin	en	Host information
+hour<br>(0-23)	admin	en	Hour<br>(0-23)
+how many days should entries stay in the access log, before they get deleted (default 90) ?	admin	en	How many days should entries stay in the access log, before they get deleted (default 90) ?
+how many minutes should an account or ip be blocked (default 30) ?	admin	en	How many minutes should an account or IP be blocked (default 30) ?
+idle	admin	en	idle
+if no acl records for user or any group the user is a member of	admin	en	If no ACL records for user or any group the user is a member of
+if using ldap, do you want to manage homedirectory and loginshell attributes?	admin	en	If using LDAP, do you want to manage homedirectory and loginshell attributes?
+inbound	admin	en	inbound
+install crontab	admin	en	Install crontab
+installed crontab	admin	en	Installed crontab
+interface	admin	en	Interface
+ip	admin	en	IP
+jobs	admin	en	Jobs
+kill	admin	en	Kill
+kill session	admin	en	Kill session
+last %1 logins	admin	en	Last %1 logins
+last %1 logins for %2	admin	en	Last %1 logins for %2
+last login	admin	en	last login
+last login from	admin	en	last login from
+last time read	admin	en	Last Time Read
+ldap accounts context	admin	en	LDAP accounts context
+ldap default homedirectory prefix (e.g. /home for /home/username)	admin	en	LDAP Default homedirectory prefix (e.g. /home for /home/username)
+ldap default shell (e.g. /bin/bash)	admin	en	LDAP Default shell (e.g. /bin/bash)
+ldap encryption type	admin	en	LDAP encryption type
+ldap groups context	admin	en	LDAP groups context
+ldap host	admin	en	LDAP host
+ldap root password	admin	en	LDAP root password
+ldap rootdn	admin	en	LDAP rootdn
+leave the category untouched and return back to the list	admin	en	leave the category untouched and return back to the list
+leave the group untouched and return back to the list	admin	en	Leave the group untouched and return back to the list
+list config settings	admin	en	List config settings
+list current sessions	admin	en	List current sessions
+list of current users	admin	en	list of current users
+login history	admin	en	Login History
+login message	admin	en	Login message
+login screen	admin	en	Login screen
+login shell	admin	en	Login shell
+login time	admin	en	Login Time
+loginid	admin	en	LoginID
+main screen message	admin	en	Main screen message
+manager	admin	en	Manager
+maximum account id (e.g. 65535 or 1000000)	admin	en	Maximum account id (e.g. 65535 or 1000000)
+maximum entries in click path history	admin	en	Maximum entries in click path history
+message has been updated	admin	en	message has been updated
+method	admin	en	Method
+minimum account id (e.g. 500 or 100, etc.)	admin	en	Minimum account id (e.g. 500 or 100, etc.)
+minute	admin	en	Minute
+mode	admin	en	Mode
+month	admin	en	Month
+new group name	admin	en	New group name
+new password [ leave blank for no change ]	admin	en	New password [ Leave blank for no change ]
+next run	admin	en	Next run
+no algorithms available	admin	en	no algorithms available
+no jobs in the database !!!	admin	en	No jobs in the database !!!
+no login history exists for this user	admin	en	No login history exists for this user
+no matches found	admin	en	No matches found
+no modes available	admin	en	no modes available
+no permission to add groups	admin	en	no permission to add groups
+no permission to add users	admin	en	no permission to add users
+no permission to create groups	admin	en	no permission to create groups
+note: ssl available only if php is compiled with curl support	admin	en	Note: SSL available only if PHP is compiled with curl support
+outbound	admin	en	outbound
+passthrough	admin	en	passthrough
+path information	admin	en	Path information
+peer server list	admin	en	Peer server list
+peer servers	admin	en	Peer servers
+percent of users that logged out	admin	en	Percent of users that logged out
+percent this user has logged out	admin	en	Percent this user has logged out
+permissions	admin	en	Permissions
+permissions this group has	admin	en	Permissions this group has
+phpinfo	admin	en	PHP information
+please enter a name	admin	en	Please enter a name
+please enter a name for that server !	admin	en	Please enter a name for that server !
+please run setup to become current	admin	en	Please run setup to become current
+please select	admin	en	Please Select
+preferences	admin	en	Preferences
+re-enter password	admin	en	Re-enter password
+read this list of methods.	admin	en	Read this list of methods.
+register application hooks	admin	en	Register application hooks
+remove all users from this group	admin	en	Remove all users from this group
+remove all users from this group ?	admin	en	Remove all users from this group ?
+return to admin mainscreen	admin	en	return to admin mainscreen
+return to view account	admin	en	Return to view account
+save the category	admin	en	save the category
+save the category and return back to the list	admin	en	save the category and return back to the list
+run asynchronous services	admin	en	Run Asynchronous services
+search accounts	admin	en	Search accounts
+search categories	admin	en	Search categories
+search groups	admin	en	Search groups
+search peer servers	admin	en	Search peer servers
+security	admin	en	Security
+select group managers	admin	en	Select Group Managers
+select permissions this group will have	admin	en	Select permissions this group will have
+select the parent category. if this is a main category select no category	admin	en	Select the parent category. If this is a main category select NO CATEGORY
+select users for inclusion	admin	en	Select users for inclusion
+select where you want to store/retrieve filesystem information	admin	en	Select where you want to store/retrieve filesystem information
+select where you want to store/retrieve user accounts	admin	en	Select where you want to store/retrieve user accounts
+select which location this app should appear on the navbar, lowest (left) to highest (right)	admin	en	Select which location this app should appear on the navbar, lowest (left) to highest (right)
+selectbox	admin	en	Selectbox
+server %1 has been updated	admin	en	Server %1 has been updated
+server list	admin	en	Server List
+server password	admin	en	Server Password
+server type(mode)	admin	en	Server Type(mode)
+server url	admin	en	Server URL
+server username	admin	en	Server Username
+set preference values.	admin	en	Set preference values.
+show 'powered by' logo on	admin	en	Show 'powered by' logo on
+show access log	admin	en	Show access log
+show current action	admin	en	Show current action
+show error log	admin	en	Show error log
+show phpinfo()	admin	en	Show phpinfo()
+show session ip address	admin	en	Show session IP address
+site	admin	en	Site
+site configuration	admin	en	Site configuration
+soap	admin	en	SOAP
+sorry, that group name has already been taken.	admin	en	Sorry, that group name has already been taken.
+sorry, the follow users are still a member of the group %1	admin	en	Sorry, the follow users are still a member of the group %1
+sort the entries	admin	en	sort the entries
+ssl	admin	en	ssl
+standard	admin	en	standard
+start testjob!	admin	en	Start TestJob!
+submit changes	admin	en	Submit Changes
+submit the search string	admin	en	Submit the search string
+template selection	admin	en	Template Selection
+text entry	admin	en	Text Entry
+that application name already exists.	admin	en	That application name already exists.
+that application order must be a number.	admin	en	That application order must be a number.
+that loginid has already been taken	admin	en	That loginid has already been taken
+that name has been used already	admin	en	That name has been used already
+that server name has been used already !	admin	en	That server name has been used already !
+the api is current	admin	en	The API is current
+the api requires an upgrade	admin	en	The API requires an upgrade
+the login and password can not be the same	admin	en	The login and password can not be the same
+the loginid can not be more then 8 characters	admin	en	The loginid can not be more then 8 characters
+the testjob sends you a mail everytime it is called.	admin	en	The TestJob sends you a mail everytime it is called.
+the two passwords are not the same	admin	en	The two passwords are not the same
+the users bellow are still members of group %1	admin	en	the users bellow are still members of group %1
+they must be removed before you can continue	admin	en	They must be removed before you can continue
+this application is current	admin	en	This application is current
+this application requires an upgrade	admin	en	This application requires an upgrade
+this category is currently being used by applications as a parent category	admin	en	This category is currently being used by applications as a parent category.
+timeout for application session data in seconds (default 86400 = 1 day)	admin	en	Timeout for application session data in seconds (default 86400 = 1 day)
+timeout for sessions in seconds (default 14400 = 4 hours)	admin	en	Timeout for sessions in seconds (default 14400 = 4 hours)
+times	admin	en	Times
+top	admin	en	top
+total records	admin	en	Total records
+trust level	admin	en	Trust Level
+trust relationship	admin	en	Trust Relationship
+under windows you can only use the fallback mode at the moment. fallback means the jobs get only checked after each page-view !!!	admin	en	Under windows you can only use the fallback mode at the moment. Fallback means the jobs get only checked after each page-view !!!
+use cookies to pass sessionid	admin	en	Use cookies to pass sessionid
+use pure html compliant code (not fully working yet)	admin	en	Use pure HTML compliant code (not fully working yet)
+use theme	admin	en	Use theme
+user accounts	admin	en	User accounts
+user data	admin	en	User Data
+user groups	admin	en	User groups
+userdata	admin	en	userdata
+users choice	admin	en	Users Choice
+view access log	admin	en	View access log
+view account	admin	en	View account
+view category	admin	en	View category
+view error log	admin	en	View error log
+view sessions	admin	en	View sessions
+view this user	admin	en	view this user
+view user account	admin	en	View user account
+who would you like to transfer all records owned by the deleted user to?	admin	en	Who would you like to transfer ALL records owned by the deleted user to?
+would you like phpgroupware to cache the phpgw info array ?	admin	en	Would you like phpGroupWare to cache the phpgw info array ?
+would you like phpgroupware to check for new application versions when admins login ?	admin	en	Would you like phpGroupWare to check for new application versions when admins login ?
+would you like to automaticaly load new langfiles (at login-time) ?	admin	en	Would you like to automaticaly load new langfiles (at login-time) ?
+would you like to show each application's upgrade status ?	admin	en	Would you like to show each application's upgrade status ?
+xml-rpc	admin	en	XML-RPC
+you have entered an invalid expiration date	admin	en	You have entered an invalid expiration date
+you must add at least 1 permission or group to this account	admin	en	You must add at least 1 permission or group to this account
+you must enter a group name.	admin	en	You must enter a group name.
+you must enter a loginid	admin	en	You must enter a loginid
+you must enter an application name and title.	admin	en	You must enter an application name and title.
+you must enter an application name.	admin	en	You must enter an application name.
+you must enter an application title.	admin	en	You must enter an application title.
+you must select a file type	admin	en	You must select a file type
+you will need to remove the subcategories before you can delete this category	admin	en	You will need to remove the subcategories before you can delete this category !
+change your password	preferences	no	Endre passord
+change your settings	preferences	no	Endre innstillinger
+date format	preferences	no	Dato format
+email signature	preferences	no	E-Post signatur
+enter your new password	preferences	no	Skriv inn ditt nye passord
+language	preferences	no	Språk
+use default	preferences	no	Bruk standard
+max matches per page	preferences	no	Antall treff per side
+any listing in phpgw will show you this number of entries or lines per page.<br>to many slow down the page display, to less will cost you the overview.	preferences	no	Alle lister vil vise dette antall treff per side.<br/>For mange vil gå utover innlastingstiden, for få vil hindre oversikt
+interface/template selection	preferences	no	Template-sett
+a template defines the layout of phpgroupware and it contains icons for each application.	preferences	no	En template definerer utseende for BkBygg og inneholder ikoner for alle moduler.
+default	preferences	no	Standard
+theme (colors/fonts) selection	preferences	no	Tema (farger/fonter)
+a theme defines the colors and fonts used by the template.	preferences	no	Et tema definerer farger og fonter som brukes at templaten.
+note: this feature does *not* change your email password. this will need to be done manually.	preferences	no	NB: Denne funksjonen endrer *ikke* ditt epost passord. Dette må gjøres manuelt.
+please, select a new theme	preferences	no	Vennligst velg et nytt tema
+re-enter your password	preferences	no	Skriv inn ditt passord igjen
+select different theme	preferences	no	Velg annet tema
+show birthday reminders on main screen	preferences	no	Vis fødselsdags påminnere på hovedskjerm
+show current users on navigation bar	preferences	no	Vis current brukere i navigation bar
+show high priority events on main screen	preferences	no	Vis høyprioritets events på hovedskjermen
+show new messages on main screen	preferences	no	Vis nye meldinger på hovedskjerm
+show text on navigation icons	preferences	no	Vis tekst på navigasjons ikoner
+the two passwords are not the same	preferences	no	Passordene stemmer ikke overens
+this server is located in the %1 timezone	preferences	no	tids-sonen
+time format	preferences	no	Tids format
+time zone offset	preferences	no	Tids-sone offset
+weekday starts on	preferences	no	Ukedag begynner på
+work day ends on	preferences	no	Arbeidsdag slutter på
+work day starts on	preferences	no	Arbeidsdag begynner på
+you must enter a password	preferences	no	Du må skrive inn et passord
+your current theme is: %1	preferences	no	</b>
+your preferences	preferences	no	Dine innstillinger
+default preferences	preferences	no	Standardinnstillinger
+forced preferences	preferences	no	Påkrevde innstillinger
+time zone	preferences	no	Tidssone
+how should phpgroupware display dates for you.	preferences	no	Hvordan datoer vises for deg
+do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.	preferences	no	Foretrekker du 24-timersformat eller 12-timersformat med am/pm?
+country	preferences	no	Land
+in which country are you. this is used to set certain defaults for you.	preferences	no	Hvilket land er du i? Denne brukes for å sette standardverdier basert på landet du er i
+show number of current users	preferences	no	Vis antall innloggede brukere
+should the number of active sessions be displayed for you all the time.	preferences	no	Skal antall aktive brukere vises?
+currency	preferences	no	Valuta
+which currency symbol or name should be used in phpgroupware.	preferences	no	Hvilket valuta-symbol eller navn skal brukes i BkBygg
+how do you like to select accounts	preferences	no	Hvordan vil du velge konto?
+selectbox	preferences	no	Nedtrekksliste
+popup with search	preferences	no	Pop-up vindu med søk
+the selectbox shows all available users (can be very slow on big installs with many users). the popup can search users by name or group.	preferences	no	Nedtrekkslisten viser alle tilgjengelige brukere (kan være treg på installasjoner med mange brukere). Pop-up vinduet kan søke på navn eller gruppe
+how do you like to display accounts	preferences	no	Hvordan vil du vise kontoer?
+firstname	preferences	no	Fornavn
+lastname	preferences	no	Etternavn
+12 hour	preferences	no	12-timer
+24 hour	preferences	no	24-timer
+rich text (wysiwyg) editor	preferences	no	Rik tekst (WISYWIG) editor
+which editor would you like to use for editing html and other rich content?	preferences	no	Hvilken editor skal brukes for å redigere HTML og annet rikt tekst-innhold?
+show helpmessages by default	preferences	no	Vis hjelpemeldinger som standard
+should this help messages shown up always, when you enter the preferences or only on request.	preferences	no	Skal hjelpemeldinger alltid vises, når du skriver inn innstillingene eller på forepørsel?
+sidecontent	preferences	no	Sideinnhold
+do you want your menues as sidecontent	preferences	no	Vil du ha menyer vist som sideinnhold?
+show breadcrumbs	preferences	no	Vis brødsmulesti
+select user	preferences	no	Velg bruker
+default application	preferences	no	Standardmodul
+the default application will be started when you enter phpgroupware or click on the homepage icon.<br>you can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to 	preferences	no	Standardmodul som vises når du logger inn i BkBygg eller klikker på Hjemme-lenken.
+a time zone is a region of the earth that has uniform standard time, usually referred to as the local time. by convention, time zones compute their local time as an offset from utc	preferences	no	En tidssone er en region som har en uniform standardtid, som oftest referert til som lokal tid. Tidssoner beregner sin lokale tid basert på avstand fra UTC
+set this to your convenience. for security reasons, you might not want to show your loginname in public.	preferences	no	Sett denne til det du ønsker. Av sikkerhetsmessige hensyn bør ikke påloggingsnavnet vises offentlig.
+should history navigation urls as breadcrumbs	preferences	no	Vis historisk navigasjon som brødsmulesti
+activate nowrap in yui-tables	preferences	no	Aktiver no-wrap i YUI-tabeller
+select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	no	Velg språk for tekster og meldinger i BkBygg.<br/>Dersom en oversettelse mangler vil engelsk tekst/melding vises
+users choice	preferences	no	Brukers valg
+norwegian	preferences	no	Norsk Bokmål
+english	preferences	no	Engelsk
+no default	preferences	no	Ingen standard
+no sidecontent	preferences	no	Ingen sideinnhold
+choose property filter	preferences	no	Velg eiendomsfilter
+filter by owner or owner type	preferences	no	Filtrer på eier eller eiertype
+group filters in single query	preferences	no	Grupper filtre i en spørring
+group filters - means that one has to hit the search button to apply the filter	preferences	no	Grupper filtre betyr at en må klikke på Søk-knappen for å aktivere filtreringsvalg
+show new/updated tickets on main screen	preferences	no	Vis nye/oppdaterte meldinger på hjemmeskjermen
+link to tickets you are assigned to	preferences	no	Lenke til meldinger tildelt deg
+default ticket status	preferences	no	Standard meldingsstatus
+the default status when entering the helpdesk and mainscreen	preferences	no	Standard meldingsstatus når en går inn på meldinger
+custom title on main screen tickets	preferences	no	Egendefinert tittel på meldinger på hjemmeskjermen
+show updated tickets on main screen 2	preferences	no	Vis oppdaterte meldinger på hjemmeskjerm 2
+default ticket status 2	preferences	no	Standard meldingsstatus 2
+show updated tickets on main screen 3	preferences	no	Vis oppdaterte meldinger på hjemmeskjerm 3
+default ticket status 3	preferences	no	Standard meldingsstatus 3
+show updated tickets on main screen 4	preferences	no	Vis oppdaterte meldinger på hjemmeskjerm 4
+default ticket status 4	preferences	no	Standard meldingsstatus 4
+show pending vendor reminders on main screen	preferences	no	Vis ventende leverandør-purringer på hjemmeskjerm
+reminder issued to vendors	preferences	no	Purringer sendt til leverandører
+custom title on pending vendor reminders	preferences	no	Egendefinert tittel på leverandørpurringer
+show your pending request for approvals on main screen	preferences	no	Vis ventende godkjenningsforespørsler på hjemmeskjerm
+your requests for approvals waiting decisions	preferences	no	Dine meldinger som avventer godkjenning
+custom title on pending request for approvals	preferences	no	Egendefinert tittel på ventende godkjenningsforespørsler
+show pending approvals on main screen	preferences	no	Vis meldinger du må godkjenne på hjemmeskjerm
+approvals waiting for your decisions	preferences	no	Meldinger sendt til deg for godkjenning
+custom title on pending approvals	preferences	no	Egendefinert tittel på godkjenningsforespørsler
+default updated ticket status when creating project	preferences	no	Standard oppdatert meldingsstatus ved oppretting av prosjekt
+autocreate project from ticket	preferences	no	Opprett prosjekt fra melding
+your projects on main screen - list 1	preferences	no	Vis dine prosjekter på hjemmeskjerm - liste 1
+link to your projects	preferences	no	Lenke til dine prosjekter
+default project status 1	preferences	no	Standard prosjektstatus 1
+the default status for list 1 when entering the mainscreen	preferences	no	Standard status for liste 1 når du går inn på hjemmeskjerm
+the default status for list 2 when entering the mainscreen	preferences	no	Standard status for liste 2 når du går inn på hjemmeskjerm
+custom title on projects on main screen - list 1	preferences	no	Egendefinert tittel på prosjekter på hjemmeskjerm - liste 1
+your workorders on main screen - list 1	preferences	no	Dine arbeidsordre på hjemmeskjerm - liste 1
+link to your workorders	preferences	no	Lenke til dine arbeidsordre
+default workorder status 1	preferences	no	Standard arbeidsordrestatus 1
+custom title on workorders on main screen - list 1	preferences	no	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 1
+your workorders on main screen - list 2	preferences	no	Dine arbeidsordre på hjemmeskjerm - liste 2
+default workorder status 2	preferences	no	Standard arbeidsordrestatus 2
+custom title on workorders on main screen - list 2	preferences	no	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 2
+custom title workorders on main screen - list 2	preferences	no	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 2
+show quick link for changing status for tickets	preferences	no	Vis hurtiglenke for å endre meldingsstatus
+enables to set status wihout entering the ticket	preferences	no	Muliggjør å sette meldingsstatus uten å åpne meldingen
+default group tts	preferences	no	Standardgruppe tts
+the default group to assign a ticket in helpdesk-submodul	preferences	no	Standardgruppe for tildeling av meldinger i helpdesk
+default assign to tts	preferences	no	Standardbruker tts
+the default user to assign a ticket in helpdesk-submodule	preferences	no	Standardbruker for tildeling av meldinger i helpdesk
+default priority tts	preferences	no	Standardprioritet tts
+the default priority for tickets in the helpdesk-submodule	preferences	no	Standardprioritet for meldinger i helpdesk
+default ticket categories	preferences	no	Standard meldingskategori
+the default category for tts	preferences	no	Standard meldingskategori i tts
+notify me by mail when ticket is assigned or altered	preferences	no	Varsle meg på e-post når meldinger er tildelt eller endret
+send e-mail from tts	preferences	no	Send e-post fra tts
+send e-mail from tts as default	preferences	no	Sendt e-post fra tts som standard
+refresh tts every (seconds)	preferences	no	Oppfrisk tts hvert (sekunder)
+the intervall for helpdesk refresh - cheking for new tickets	preferences	no	Intervall for oppfrisking av helpdesk - sjekk om det er nye meldinger
+set myself as contact when adding a ticket	preferences	no	Sett meg selv som kontaktperson ved oppretting av nye meldinger
+default degree request safety	preferences	no	Standard grad av alvorlighet
+the degree of seriousness	preferences	no	Grad av alvorlighet
+default degree request aesthetics	preferences	no	Standard estetikk-grad på behov
+default degree request indoor climate	preferences	no	Standard inneklima-grad på behov
+default degree request consequential damage	preferences	no	Standard konsekvens-grad på behov
+default degree request user gratification	preferences	no	Standard bruker-grad på behov
+default degree request residential environment	preferences	no	Standard miljø-grad på behov
+send order receipt as email	preferences	no	Send ordrebekreftelse som e-post
+send the order as bcc to the user	preferences	no	Send blindkopi av ordre til bruker
+notify owner of project/order on change	preferences	no	Varsle prosjekt-/ordre-eier ved endring
+by email	preferences	no	Varsle prosjekt- eller ordre-eier per e-post ved endringer
+default start page	preferences	no	Standard startside
+select your start-submodule	preferences	no	Velg undermodul du vil starte i når du går inn på modulen
+default project type	preferences	no	Standard prosjekttype
+select your default project type	preferences	no	Velg standard prosjekttype for dine prosjekter
+default project year filter	preferences	no	Standard år-filter for prosjekt
+select your default project year filter	preferences	no	Velg standard år-filter for prosjekter
+default project status	preferences	no	Stardard prosjektstatus
+the default status for your projects	preferences	no	Velg standard prosjektstatus for dine prosjekter
+default workorder status	preferences	no	Standard arbeidsordre-status
+the default status for your workorders	preferences	no	Velg standard status for dine arbeidsordre
+default project categories	preferences	no	Standard prosjektkategori
+the default category for your projects and workorders	preferences	no	Velg standard kategori for dine prosjekter og arbeidsordre
+default district-filter	preferences	no	Standard distrikt-filter
+your default district-filter	preferences	no	Velg standard distrikt-filter
+your cellphone	preferences	no	Ditt mobiltelefonnummer
+ressursnr	preferences	no	Ditt ressursnummer
+default dimb	preferences	no	Standard ansvarssted
+your email	preferences	no	Din e-postadresse
+insert your email address	preferences	no	Legg inn din e-postadresse
+branch tts	preferences	no	Vis fag for melding
+enable branch in tts-orders	preferences	no	Vis fag for melding-bestilling
+default vendor type	preferences	no	Standard leverandørtype
+which agreement	preferences	no	Velg leverandørtype du vil ha som standard
+with of textarea	preferences	no	Bredde på tekstbokser
+with of textarea in forms	preferences	no	Legg inn ønsket bredde på tekstbokser i skjema
+height of textarea	preferences	no	Høyde på tekstbokser
+height of textarea in forms	preferences	no	Legg inn ønsket høyde på tekstbokser i skjema
+show horisontal menues	preferences	no	Vis horisontale menyer
+horisontal menues are shown in top of page	preferences	no	Horisontale menyer vises i toppen av siden
+remove navbar	preferences	no	Fjern navigasjonslinje
+navigation bar is removed	preferences	no	Skal navigasjonslinje vises eller ikke
+tabel export format	preferences	no	Eksportformat for lister og tabeller
+choose which format to export from the system for tables	preferences	no	Velg hvilket format som skal brukes ved eksport av tabeller og lister
+order email	preferences	no	E-postformat for ordre
+current year	preferences	no	Gjeldende år
+workorder approval from	preferences	no	Godkjenning av arbeidsordre gis av
+if you need approval from your supervisor for projects/workorders	preferences	no	Dersom du trenger godkjenning av leder for prosjekter eller arbeidsordre angis denne her
+eiendom - preferences	preferences	no	Eiendom - innstillinger
+0 - 2	preferences	no	0 - 2
+as in "." or ","	preferences	no	Velg "." eller ","
+number of planned controls on home page	preferences	no	Antall planlagte kontroller på hjemmeskjerm
+number of assigned controls on home page	preferences	no	Antall tildelte kontroller på hjemmeskjerm
+filter tickets on assigned to me	preferences	no	Filtrer meldinger på tildelt til meg.
+do you want av csv download button for main tables?	preferences	no	Ønsker du en CSV nedlastingsknapp for hovedtabeller?
+csv download button	preferences	no	CSV nedlastingsknapp
+help off	preferences	no	Slå av hjelp
+%1 - preferences	preferences	en	%1 - Preferences
+%1 hours	preferences	en	%1 hours
+12 hour	preferences	en	12 hour
+24 hour	preferences	en	24 hour
+a template defines the layout of phpgroupware and it contains icons for each application.	preferences	en	A template defines the layout of phpGroupWare and it contains icons for each application.
+a theme defines the colors and fonts used by the template.	preferences	en	A theme defines the colors and fonts used by the template.
+acl grants have been updated	preferences	en	ACL grants have been updated
+any listing in phpgw will show you this number of entries or lines per page.<br>to many slow down the page display, to less will cost you the overview.	preferences	en	Any listing in phpGW will show you this number of entries or lines per page.<br>To many slow down the page display, to less will cost you the overview.
+are you sure you want to delete this category ?	preferences	en	Are you sure you want to delete this category ?
+change your password	preferences	en	Change your Password
+change your profile	preferences	en	Change your profile
+change your settings	preferences	en	Change your Settings
+country	preferences	en	Country
+date format	preferences	en	Date format
+default	preferences	en	default
+default application	preferences	en	Default application
+default preferences	preferences	en	Default Preferences
+delete categories	preferences	en	Delete Categories
+description can not exceed 255 characters in length !	preferences	en	Description can not exceed 255 characters in length !
+do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.	preferences	en	Do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.
+edit custom fields	preferences	en	edit custom fields
+enter your new password	preferences	en	Enter your new password
+error: there was a problem finding the preference file for %1 in %2	preferences	en	Error: There was a problem finding the preference file for %1 in %2
+forced preferences	preferences	en	Forced Preferences
+help off	preferences	en	Help off
+hours	preferences	en	hours
+how do you like to display accounts	preferences	en	How do you like to display accounts
+how do you like to select accounts	preferences	en	How do you like to select accounts
+how many hours are you in front or after the timezone of the server.<br>if you are in the same time zone as the server select 0 hours, else select your locale date and time.	preferences	en	How many hours are you in front or after the timezone of the server.<br>If you are in the same time zone as the server select 0 hours, else select your locale date and time.
+how should phpgroupware display dates for you.	preferences	en	How should phpGroupWare display dates for you.
+icons and text	preferences	en	Icons and text
+icons only	preferences	en	icons only
+in which country are you. this is used to set certain defaults for you.	preferences	en	In which country are you. This is used to set certain defaults for you.
+interface/template selection	preferences	en	Interface/Template Selection
+language	preferences	en	Language
+max matches per page	preferences	en	Max matches per page
+no default	preferences	en	No default
+note: this feature does *not* change your email password. this will need to be done manually.	preferences	en	Note: This feature does *not* change your email password. This will need to be done manually.
+please, select a new theme	preferences	en	Please, select a new theme
+popup with search	preferences	en	Popup with search
+re-enter your password	preferences	en	Re-Enter your password
+select different theme	preferences	en	Select different Theme
+select one	preferences	en	Select one
+select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	en	Select the language of texts and messages within phpGroupWare.<br>Some languages may not contain all messages, in that case you will see an english message.
+selectbox	preferences	en	Selectbox
+set this to your convenience. for security reasons, you might not want to show your loginname in public.	preferences	en	Set this to your convenience. For security reasons, you might not want to show your Loginname in public.
+should the number of active sessions be displayed for you all the time.	preferences	en	Should the number of active sessions be displayed for you all the time.
+should this help messages shown up always, when you enter the preferences or only on request.	preferences	en	Should this help messages shown up always, when you enter the preferences or only on request.
+show helpmessages by default	preferences	en	Show helpmessages by default
+show navigation bar as	preferences	en	Show navigation bar as
+show number of current users	preferences	en	Show number of current users
+show text on navigation icons	preferences	en	Show text on navigation icons
+text only	preferences	en	Text only
+the default application will be started when you enter phpgroupware or click on the homepage icon.<br>you can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to 	preferences	en	The default application will be started when you enter phpGroupWare or click on the homepage icon.<br>You can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to be configured in the preferences of each application).
+the selectbox shows all available users (can be very slow on big installs with many users). the popup can search users by name or group.	preferences	en	The selectbox shows all available users (can be very slow on big installs with many users). The popup can search users by name or group.
+the two passwords are not the same	preferences	en	The two passwords are not the same
+theme (colors/fonts) selection	preferences	en	Theme (colors/fonts) Selection
+this server is located in the %1 timezone	preferences	en	This server is located in the %1 timezone
+time format	preferences	en	Time format
+use default	preferences	en	Use default
+users choice	preferences	en	Users choice
+which currency symbol or name should be used in phpgroupware.	preferences	en	Which currency symbol or name should be used in phpGroupWare.
+you can show the applications as icons only, icons with app-name or both.	preferences	en	You can show the applications as icons only, icons with app-name or both.
+you do not have permission to set acl's in this mode!	preferences	en	You do not have permission to set ACL's in this mode!
+you must enter a password	preferences	en	You must enter a password
+your current theme is: %1	preferences	en	your current theme is: %1
+your preferences	preferences	en	Your Preferences
 \.
 
 
@@ -17442,7 +17434,7 @@ mobilefrontend	common	en	Mobile Frontend
 -- Data for Name: phpgw_languages; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_languages (lang_id, lang_name, available) FROM stdin;
+COPY public.phpgw_languages (lang_id, lang_name, available) FROM stdin;
 aa	Afar	No 
 ab	Abkhazian	No 
 af	Afrikaans	No 
@@ -17582,6 +17574,7 @@ yo	Yoruba	No
 zh	Chinese (Simplified)	No 
 zt	Chinese (Traditional)	Yes
 zu	Zulu	No 
+nn	Norwegian NN	Yes
 \.
 
 
@@ -17589,7 +17582,7 @@ zu	Zulu	No
 -- Data for Name: phpgw_locations; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_locations (location_id, app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table, allow_c_function) FROM stdin;
+COPY public.phpgw_locations (location_id, app_id, name, descr, allow_grant, allow_c_attrib, c_attrib_table, allow_c_function) FROM stdin;
 1	1	run	Automatically added on install - run phpgwapi	0	\N	\N	0
 2	1	admin	Allow app admins - phpgwapi	0	\N	\N	0
 3	2	run	Automatically added on install - run admin	0	\N	\N	0
@@ -17704,7 +17697,7 @@ COPY phpgw_locations (location_id, app_id, name, descr, allow_grant, allow_c_att
 -- Data for Name: phpgw_log; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_log (log_id, log_date, log_account_id, log_account_lid, log_app, log_severity, log_file, log_line, log_msg) FROM stdin;
+COPY public.phpgw_log (log_id, log_date, log_account_id, log_account_lid, log_app, log_severity, log_file, log_line, log_msg) FROM stdin;
 1	2018-01-11 08:56:56	1002	sysadmin	controller	W 	dummy	0	Attempted to access ''controller''
 2	2018-01-12 12:44:47	1002	sysadmin	frontend	F 	/path/to/phpgroupware/phpgwapi/inc/class.db_pdo.inc.php	464	Error: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "phpgw_messenger_messages" does not exist\nLINE 1: select count(*) as cnt from phpgw_messenger_messages where m...\n                                    ^<br>SQL: select count(*) as cnt from phpgw_messenger_messages where message_owner=''1002''  AND message_status = ''N''\n in File: /var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php\n on Line: 103\n\n&nbsp;#0\tcreateObject(frontend.uicontroller) [/var/www/html/portico/index.php:95]\n#1\tphpgwapi_object_factory::createObject(frontend_uicontroller, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_) [/var/www/html/portico/phpgwapi/inc/common_functions.inc.php:243]\n#2\tfrontend_uicontroller->__construct() [/var/www/html/portico/phpgwapi/inc/class.object_factory.inc.php:90]\n#3\tfrontend_uicommon->__construct() [/var/www/html/portico/frontend/inc/class.uicontroller.inc.php:54]\n#4\tbomessenger->total_messages( AND message_status = ''N'') [/var/www/html/portico/frontend/inc/class.uicommon.inc.php:272]\n#5\tsomessenger->total_messages( AND message_status = ''N'') [/var/www/html/portico/messenger/inc/class.bomessenger.inc.php:411]\n#6\tphpgwapi_db_pdo->query(select count(*) as cnt from phpgw_messenger_messages where message_owner=''1002''  AND message_status = ''N'', 103, /var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php) [/var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php:103]\n#7\ttrigger_error(Error: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "phpgw_messenger_messages" does not exist\nLINE 1: select count(*) as cnt from phpgw_messenger_messages where m...\n                                    ^<br>SQL: select count(*) as cnt from phpgw_messenger_messages where message_owner=''1002''  AND message_status = ''N''\n in File: /var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php\n on Line: 103\n, 256) [/var/www/html/portico/phpgwapi/inc/class.db_pdo.inc.php:464]
 3	2018-01-12 12:45:09	1002	sysadmin	frontend	F 	/path/to/phpgroupware/phpgwapi/inc/class.db_pdo.inc.php	464	Error: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "phpgw_messenger_messages" does not exist\nLINE 1: select count(*) as cnt from phpgw_messenger_messages where m...\n                                    ^<br>SQL: select count(*) as cnt from phpgw_messenger_messages where message_owner=''1002''  AND message_status = ''N''\n in File: /var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php\n on Line: 103\n\n&nbsp;#0\tcreateObject(frontend.uidelegates) [/var/www/html/portico/index.php:95]\n#1\tphpgwapi_object_factory::createObject(frontend_uidelegates, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_, _UNDEF_) [/var/www/html/portico/phpgwapi/inc/common_functions.inc.php:243]\n#2\tfrontend_uidelegates->__construct() [/var/www/html/portico/phpgwapi/inc/class.object_factory.inc.php:90]\n#3\tfrontend_uicommon->__construct() [/var/www/html/portico/frontend/inc/class.uidelegates.inc.php:17]\n#4\tbomessenger->total_messages( AND message_status = ''N'') [/var/www/html/portico/frontend/inc/class.uicommon.inc.php:272]\n#5\tsomessenger->total_messages( AND message_status = ''N'') [/var/www/html/portico/messenger/inc/class.bomessenger.inc.php:411]\n#6\tphpgwapi_db_pdo->query(select count(*) as cnt from phpgw_messenger_messages where message_owner=''1002''  AND message_status = ''N'', 103, /var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php) [/var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php:103]\n#7\ttrigger_error(Error: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "phpgw_messenger_messages" does not exist\nLINE 1: select count(*) as cnt from phpgw_messenger_messages where m...\n                                    ^<br>SQL: select count(*) as cnt from phpgw_messenger_messages where message_owner=''1002''  AND message_status = ''N''\n in File: /var/www/html/portico/messenger/inc/class.somessenger_sql.inc.php\n on Line: 103\n, 256) [/var/www/html/portico/phpgwapi/inc/class.db_pdo.inc.php:464]
@@ -17715,7 +17708,7 @@ COPY phpgw_log (log_id, log_date, log_account_id, log_account_lid, log_app, log_
 -- Data for Name: phpgw_mail_handler; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_mail_handler (handler_id, target_email, handler, is_active, lastmod, lastmod_user) FROM stdin;
+COPY public.phpgw_mail_handler (handler_id, target_email, handler, is_active, lastmod, lastmod_user) FROM stdin;
 \.
 
 
@@ -17723,7 +17716,7 @@ COPY phpgw_mail_handler (handler_id, target_email, handler, is_active, lastmod, 
 -- Data for Name: phpgw_mapping; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_mapping (ext_user, auth_type, status, location, account_lid) FROM stdin;
+COPY public.phpgw_mapping (ext_user, auth_type, status, location, account_lid) FROM stdin;
 \.
 
 
@@ -17731,7 +17724,7 @@ COPY phpgw_mapping (ext_user, auth_type, status, location, account_lid) FROM std
 -- Data for Name: phpgw_nextid; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_nextid (id, appname) FROM stdin;
+COPY public.phpgw_nextid (id, appname) FROM stdin;
 1003	groups
 1008	accounts
 \.
@@ -17741,7 +17734,7 @@ COPY phpgw_nextid (id, appname) FROM stdin;
 -- Data for Name: phpgw_notification; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_notification (id, location_id, location_item_id, contact_id, is_active, notification_method, user_id, entry_date) FROM stdin;
+COPY public.phpgw_notification (id, location_id, location_item_id, contact_id, is_active, notification_method, user_id, entry_date) FROM stdin;
 \.
 
 
@@ -17749,7 +17742,7 @@ COPY phpgw_notification (id, location_id, location_item_id, contact_id, is_activ
 -- Data for Name: phpgw_preferences; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_preferences (preference_owner, preference_app, preference_value) FROM stdin;
+COPY public.phpgw_preferences (preference_owner, preference_app, preference_value) FROM stdin;
 -2	common	a:12:{s:9:"maxmatchs";i:10;s:12:"template_set";s:7:"portico";s:5:"theme";s:7:"portico";s:9:"tz_offset";i:0;s:10:"dateformat";s:5:"Y/m/d";s:4:"lang";s:2:"no";s:10:"timeformat";i:24;s:11:"default_app";s:0:"";s:8:"currency";s:1:"$";s:9:"show_help";i:0;s:15:"account_display";s:8:"lastname";s:8:"rteditor";s:8:"ckeditor";}
 -2	addressbook	a:0:{}
 -2	calendar	a:5:{s:13:"workdaystarts";i:9;s:11:"workdayends";i:17;s:13:"weekdaystarts";s:6:"Monday";s:15:"defaultcalendar";s:5:"month";s:24:"planner_start_with_group";i:1000;}
@@ -17761,7 +17754,7 @@ COPY phpgw_preferences (preference_owner, preference_app, preference_value) FROM
 -- Data for Name: phpgw_sessions; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_sessions (session_id, ip, data, lastmodts) FROM stdin;
+COPY public.phpgw_sessions (session_id, ip, data, lastmodts) FROM stdin;
 \.
 
 
@@ -17769,7 +17762,7 @@ COPY phpgw_sessions (session_id, ip, data, lastmodts) FROM stdin;
 -- Data for Name: phpgw_vfs; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_vfs (file_id, owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name, version, content, external_id, md5_sum) FROM stdin;
+COPY public.phpgw_vfs (file_id, owner_id, createdby_id, modifiedby_id, created, modified, size, mime_type, deleteable, comment, app, directory, name, link_directory, link_name, version, content, external_id, md5_sum) FROM stdin;
 1	0	0	0	1970-01-01 00:00:00	\N	\N	Directory	Y	\N	\N	/		\N	\N	0.0.0.0	\N	\N	\N
 2	0	0	0	1970-01-01 00:00:00	\N	\N	Directory	Y	\N	\N	/	home	\N	\N	0.0.0.0	\N	\N	\N
 \.
@@ -17779,7 +17772,7 @@ COPY phpgw_vfs (file_id, owner_id, createdby_id, modifiedby_id, created, modifie
 -- Data for Name: phpgw_vfs_file_relation; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_vfs_file_relation (relation_id, file_id, location_id, location_item_id, is_private, account_id, entry_date, start_date, end_date) FROM stdin;
+COPY public.phpgw_vfs_file_relation (relation_id, file_id, location_id, location_item_id, is_private, account_id, entry_date, start_date, end_date) FROM stdin;
 \.
 
 
@@ -17787,7 +17780,7 @@ COPY phpgw_vfs_file_relation (relation_id, file_id, location_id, location_item_i
 -- Data for Name: phpgw_vfs_filedata; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY phpgw_vfs_filedata (file_id, metadata) FROM stdin;
+COPY public.phpgw_vfs_filedata (file_id, metadata) FROM stdin;
 \.
 
 
@@ -17795,7 +17788,7 @@ COPY phpgw_vfs_filedata (file_id, metadata) FROM stdin;
 -- Data for Name: rental_adjustment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_adjustment (id, price_item_id, responsibility_id, adjustment_date, adjustment_type, new_price, percent, adjustment_interval, is_manual, extra_adjustment, is_executed) FROM stdin;
+COPY public.rental_adjustment (id, price_item_id, responsibility_id, adjustment_date, adjustment_type, new_price, percent, adjustment_interval, is_manual, extra_adjustment, is_executed) FROM stdin;
 \.
 
 
@@ -17803,7 +17796,7 @@ COPY rental_adjustment (id, price_item_id, responsibility_id, adjustment_date, a
 -- Data for Name: rental_application; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_application (id, ecodimb_id, district_id, composite_type_id, cleaning, payment_method, date_start, date_end, assign_date_start, assign_date_end, entry_date, identifier, adjustment_type, firstname, lastname, job_title, company_name, department, address1, address2, postal_code, place, phone, email, account_number, unit_leader, status, executive_officer) FROM stdin;
+COPY public.rental_application (id, ecodimb_id, district_id, composite_type_id, cleaning, payment_method, date_start, date_end, assign_date_start, assign_date_end, entry_date, identifier, adjustment_type, firstname, lastname, job_title, company_name, department, address1, address2, postal_code, place, phone, email, account_number, unit_leader, status, executive_officer) FROM stdin;
 \.
 
 
@@ -17811,7 +17804,7 @@ COPY rental_application (id, ecodimb_id, district_id, composite_type_id, cleanin
 -- Data for Name: rental_application_comment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_application_comment (id, application_id, "time", author, comment, type) FROM stdin;
+COPY public.rental_application_comment (id, application_id, "time", author, comment, type) FROM stdin;
 \.
 
 
@@ -17819,7 +17812,7 @@ COPY rental_application_comment (id, application_id, "time", author, comment, ty
 -- Data for Name: rental_application_composite; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_application_composite (id, application_id, composite_id) FROM stdin;
+COPY public.rental_application_composite (id, application_id, composite_id) FROM stdin;
 \.
 
 
@@ -17827,7 +17820,7 @@ COPY rental_application_composite (id, application_id, composite_id) FROM stdin;
 -- Data for Name: rental_billing; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_billing (id, total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, title, deleted, export_format, export_data, serial_start, serial_end) FROM stdin;
+COPY public.rental_billing (id, total_sum, success, created_by, timestamp_start, timestamp_stop, timestamp_commit, location_id, title, deleted, export_format, export_data, serial_start, serial_end) FROM stdin;
 \.
 
 
@@ -17835,7 +17828,7 @@ COPY rental_billing (id, total_sum, success, created_by, timestamp_start, timest
 -- Data for Name: rental_billing_info; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_billing_info (id, billing_id, location_id, term_id, year, month, deleted) FROM stdin;
+COPY public.rental_billing_info (id, billing_id, location_id, term_id, year, month, deleted) FROM stdin;
 \.
 
 
@@ -17843,7 +17836,7 @@ COPY rental_billing_info (id, billing_id, location_id, term_id, year, month, del
 -- Data for Name: rental_billing_term; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_billing_term (id, title, months) FROM stdin;
+COPY public.rental_billing_term (id, title, months) FROM stdin;
 1	monthly	1
 2	annually	12
 3	half-year	6
@@ -17855,7 +17848,7 @@ COPY rental_billing_term (id, title, months) FROM stdin;
 -- Data for Name: rental_composite; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_composite (id, name, description, is_active, status_id, address_1, address_2, house_number, postcode, place, has_custom_address, object_type_id, composite_type_id, area, furnish_type_id, standard_id, part_of_town_id, custom_price_factor, custom_price, price_type_id) FROM stdin;
+COPY public.rental_composite (id, name, description, is_active, status_id, address_1, address_2, house_number, postcode, place, has_custom_address, object_type_id, composite_type_id, area, furnish_type_id, standard_id, part_of_town_id, custom_price_factor, custom_price, price_type_id) FROM stdin;
 \.
 
 
@@ -17863,7 +17856,7 @@ COPY rental_composite (id, name, description, is_active, status_id, address_1, a
 -- Data for Name: rental_composite_standard; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_composite_standard (id, name, factor) FROM stdin;
+COPY public.rental_composite_standard (id, name, factor) FROM stdin;
 \.
 
 
@@ -17871,7 +17864,7 @@ COPY rental_composite_standard (id, name, factor) FROM stdin;
 -- Data for Name: rental_composite_type; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_composite_type (id, name) FROM stdin;
+COPY public.rental_composite_type (id, name) FROM stdin;
 1	Type 1
 2	Type 2
 \.
@@ -17881,7 +17874,7 @@ COPY rental_composite_type (id, name) FROM stdin;
 -- Data for Name: rental_contract; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract (id, date_start, date_end, billing_start, billing_end, location_id, term_id, security_type, security_amount, old_contract_id, executive_officer, created, created_by, comment, last_updated, service_id, responsibility_id, reference, customer_order_id, invoice_header, account_in, account_out, project_id, due_date, contract_type_id, rented_area, adjustment_interval, adjustment_share, adjustment_year, adjustable, override_adjustment_start, publish_comment, notify_on_expire, notified_time) FROM stdin;
+COPY public.rental_contract (id, date_start, date_end, billing_start, billing_end, location_id, term_id, security_type, security_amount, old_contract_id, executive_officer, created, created_by, comment, last_updated, service_id, responsibility_id, reference, customer_order_id, invoice_header, account_in, account_out, project_id, due_date, contract_type_id, rented_area, adjustment_interval, adjustment_share, adjustment_year, adjustable, override_adjustment_start, publish_comment, notify_on_expire, notified_time) FROM stdin;
 \.
 
 
@@ -17889,7 +17882,7 @@ COPY rental_contract (id, date_start, date_end, billing_start, billing_end, loca
 -- Data for Name: rental_contract_composite; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_composite (id, contract_id, composite_id) FROM stdin;
+COPY public.rental_contract_composite (id, contract_id, composite_id) FROM stdin;
 \.
 
 
@@ -17897,7 +17890,7 @@ COPY rental_contract_composite (id, contract_id, composite_id) FROM stdin;
 -- Data for Name: rental_contract_last_edited; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_last_edited (contract_id, account_id, edited_on) FROM stdin;
+COPY public.rental_contract_last_edited (contract_id, account_id, edited_on) FROM stdin;
 \.
 
 
@@ -17905,7 +17898,7 @@ COPY rental_contract_last_edited (contract_id, account_id, edited_on) FROM stdin
 -- Data for Name: rental_contract_party; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_party (contract_id, party_id, is_payer) FROM stdin;
+COPY public.rental_contract_party (contract_id, party_id, is_payer) FROM stdin;
 \.
 
 
@@ -17913,7 +17906,7 @@ COPY rental_contract_party (contract_id, party_id, is_payer) FROM stdin;
 -- Data for Name: rental_contract_price_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end, is_billed, is_one_time, billing_id) FROM stdin;
+COPY public.rental_contract_price_item (id, price_item_id, contract_id, title, area, count, agresso_id, is_area, price, total_price, date_start, date_end, is_billed, is_one_time, billing_id) FROM stdin;
 \.
 
 
@@ -17921,7 +17914,7 @@ COPY rental_contract_price_item (id, price_item_id, contract_id, title, area, co
 -- Data for Name: rental_contract_responsibility; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_responsibility (id, location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out, project_number, agresso_export_format) FROM stdin;
+COPY public.rental_contract_responsibility (id, location_id, title, notify_before, notify_before_due_date, notify_after_termination_date, account_in, account_out, project_number, agresso_export_format) FROM stdin;
 1	86	contract_type_internleie	183	183	366	119001	119001	9	agresso_gl07
 2	87	contract_type_innleie	183	183	366	\N	\N	\N	\N
 3	88	contract_type_eksternleie	183	183	366	\N	1510	\N	agresso_lg04
@@ -17932,7 +17925,7 @@ COPY rental_contract_responsibility (id, location_id, title, notify_before, noti
 -- Data for Name: rental_contract_responsibility_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_responsibility_unit (id, name) FROM stdin;
+COPY public.rental_contract_responsibility_unit (id, name) FROM stdin;
 \.
 
 
@@ -17940,7 +17933,7 @@ COPY rental_contract_responsibility_unit (id, name) FROM stdin;
 -- Data for Name: rental_contract_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_contract_types (id, label, responsibility_id, account) FROM stdin;
+COPY public.rental_contract_types (id, label, responsibility_id, account) FROM stdin;
 1	contract_type_internleie_egne	1	\N
 2	contract_type_internleie_innleie	1	\N
 3	contract_type_internleie_investeringskontrakt	1	\N
@@ -17956,7 +17949,7 @@ COPY rental_contract_types (id, label, responsibility_id, account) FROM stdin;
 -- Data for Name: rental_document; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_document (id, name, contract_id, party_id, title, description, type_id) FROM stdin;
+COPY public.rental_document (id, name, contract_id, party_id, title, description, type_id) FROM stdin;
 \.
 
 
@@ -17964,7 +17957,7 @@ COPY rental_document (id, name, contract_id, party_id, title, description, type_
 -- Data for Name: rental_document_types; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_document_types (id, title) FROM stdin;
+COPY public.rental_document_types (id, title) FROM stdin;
 1	contracts
 2	fire_drawings
 3	calculations_internal_investment
@@ -17975,7 +17968,7 @@ COPY rental_document_types (id, title) FROM stdin;
 -- Data for Name: rental_email_out; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_email_out (id, name, remark, subject, content, user_id, created, modified) FROM stdin;
+COPY public.rental_email_out (id, name, remark, subject, content, user_id, created, modified) FROM stdin;
 \.
 
 
@@ -17983,7 +17976,7 @@ COPY rental_email_out (id, name, remark, subject, content, user_id, created, mod
 -- Data for Name: rental_email_out_party; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_email_out_party (id, email_out_id, party_id, status) FROM stdin;
+COPY public.rental_email_out_party (id, email_out_id, party_id, status) FROM stdin;
 \.
 
 
@@ -17991,7 +17984,7 @@ COPY rental_email_out_party (id, email_out_id, party_id, status) FROM stdin;
 -- Data for Name: rental_email_template; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_email_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
+COPY public.rental_email_template (id, name, content, public, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -17999,7 +17992,7 @@ COPY rental_email_template (id, name, content, public, user_id, entry_date, modi
 -- Data for Name: rental_invoice; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_invoice (id, contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, serial_number) FROM stdin;
+COPY public.rental_invoice (id, contract_id, billing_id, party_id, timestamp_created, timestamp_start, timestamp_end, total_sum, total_area, header, account_in, account_out, service_id, responsibility_id, project_id, serial_number) FROM stdin;
 \.
 
 
@@ -18007,7 +18000,7 @@ COPY rental_invoice (id, contract_id, billing_id, party_id, timestamp_created, t
 -- Data for Name: rental_invoice_price_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_invoice_price_item (id, invoice_id, title, area, count, agresso_id, is_area, is_one_time, price, total_price, date_start, date_end) FROM stdin;
+COPY public.rental_invoice_price_item (id, invoice_id, title, area, count, agresso_id, is_area, is_one_time, price, total_price, date_start, date_end) FROM stdin;
 \.
 
 
@@ -18015,7 +18008,7 @@ COPY rental_invoice_price_item (id, invoice_id, title, area, count, agresso_id, 
 -- Data for Name: rental_location_factor; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_location_factor (id, part_of_town_id, factor, remark, user_id, entry_date, modified_date) FROM stdin;
+COPY public.rental_location_factor (id, part_of_town_id, factor, remark, user_id, entry_date, modified_date) FROM stdin;
 \.
 
 
@@ -18023,7 +18016,7 @@ COPY rental_location_factor (id, part_of_town_id, factor, remark, user_id, entry
 -- Data for Name: rental_movein; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_movein (id, contract_id, account_id, created, modified) FROM stdin;
+COPY public.rental_movein (id, contract_id, account_id, created, modified) FROM stdin;
 \.
 
 
@@ -18031,7 +18024,7 @@ COPY rental_movein (id, contract_id, account_id, created, modified) FROM stdin;
 -- Data for Name: rental_movein_comment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_movein_comment (id, movein_id, "time", author, comment, type) FROM stdin;
+COPY public.rental_movein_comment (id, movein_id, "time", author, comment, type) FROM stdin;
 \.
 
 
@@ -18039,7 +18032,7 @@ COPY rental_movein_comment (id, movein_id, "time", author, comment, type) FROM s
 -- Data for Name: rental_moveout; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_moveout (id, contract_id, account_id, created, modified) FROM stdin;
+COPY public.rental_moveout (id, contract_id, account_id, created, modified) FROM stdin;
 \.
 
 
@@ -18047,7 +18040,7 @@ COPY rental_moveout (id, contract_id, account_id, created, modified) FROM stdin;
 -- Data for Name: rental_moveout_comment; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_moveout_comment (id, moveout_id, "time", author, comment, type) FROM stdin;
+COPY public.rental_moveout_comment (id, moveout_id, "time", author, comment, type) FROM stdin;
 \.
 
 
@@ -18055,7 +18048,7 @@ COPY rental_moveout_comment (id, moveout_id, "time", author, comment, type) FROM
 -- Data for Name: rental_notification; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_notification (id, location_id, account_id, contract_id, message, date, last_notified, recurrence, deleted) FROM stdin;
+COPY public.rental_notification (id, location_id, account_id, contract_id, message, date, last_notified, recurrence, deleted) FROM stdin;
 \.
 
 
@@ -18063,7 +18056,7 @@ COPY rental_notification (id, location_id, account_id, contract_id, message, dat
 -- Data for Name: rental_notification_workbench; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_notification_workbench (id, account_id, date, notification_id, workbench_message, dismissed) FROM stdin;
+COPY public.rental_notification_workbench (id, account_id, date, notification_id, workbench_message, dismissed) FROM stdin;
 \.
 
 
@@ -18071,7 +18064,7 @@ COPY rental_notification_workbench (id, account_id, date, notification_id, workb
 -- Data for Name: rental_party; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_party (id, identifier, customer_id, first_name, last_name, comment, is_inactive, title, company_name, department, address_1, address_2, postal_code, place, phone, mobile_phone, fax, email, url, account_number, reskontro, location_id, result_unit_number, org_enhet_id, unit_leader) FROM stdin;
+COPY public.rental_party (id, identifier, customer_id, first_name, last_name, comment, is_inactive, title, company_name, department, address_1, address_2, postal_code, place, phone, mobile_phone, fax, email, url, account_number, reskontro, location_id, result_unit_number, org_enhet_id, unit_leader) FROM stdin;
 \.
 
 
@@ -18079,7 +18072,7 @@ COPY rental_party (id, identifier, customer_id, first_name, last_name, comment, 
 -- Data for Name: rental_price_item; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_price_item (id, title, agresso_id, is_area, is_inactive, is_adjustable, standard, price, responsibility_id, type) FROM stdin;
+COPY public.rental_price_item (id, title, agresso_id, is_area, is_inactive, is_adjustable, standard, price, responsibility_id, type) FROM stdin;
 1	Unknown	UNKNOWN	f	f	f	f	0.00	0	1
 2	Leie	INNLEIE	f	f	f	f	0.00	87	1
 \.
@@ -18089,7 +18082,7 @@ COPY rental_price_item (id, title, agresso_id, is_area, is_inactive, is_adjustab
 -- Data for Name: rental_unit; Type: TABLE DATA; Schema: public; Owner: portico
 --
 
-COPY rental_unit (id, composite_id, location_code) FROM stdin;
+COPY public.rental_unit (id, composite_id, location_code) FROM stdin;
 \.
 
 
@@ -18097,868 +18090,868 @@ COPY rental_unit (id, composite_id, location_code) FROM stdin;
 -- Name: seq_controller_check_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_check_item', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_check_item', 1, false);
 
 
 --
 -- Name: seq_controller_check_item_case; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_check_item_case', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_check_item_case', 1, false);
 
 
 --
 -- Name: seq_controller_check_item_status; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_check_item_status', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_check_item_status', 1, false);
 
 
 --
 -- Name: seq_controller_check_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_check_list', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_check_list', 1, false);
 
 
 --
 -- Name: seq_controller_control; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control', 1, false);
 
 
 --
 -- Name: seq_controller_control_component_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_component_list', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_component_list', 1, false);
 
 
 --
 -- Name: seq_controller_control_group; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_group', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_group', 1, false);
 
 
 --
 -- Name: seq_controller_control_group_component_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_group_component_list', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_group_component_list', 1, false);
 
 
 --
 -- Name: seq_controller_control_group_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_group_list', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_group_list', 1, false);
 
 
 --
 -- Name: seq_controller_control_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_item', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_item', 1, false);
 
 
 --
 -- Name: seq_controller_control_item_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_item_list', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_item_list', 1, false);
 
 
 --
 -- Name: seq_controller_control_item_option; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_item_option', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_item_option', 1, false);
 
 
 --
 -- Name: seq_controller_control_location_list; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_location_list', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_location_list', 1, false);
 
 
 --
 -- Name: seq_controller_control_serie; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_serie', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_serie', 1, false);
 
 
 --
 -- Name: seq_controller_control_serie_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_control_serie_history', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_control_serie_history', 1, false);
 
 
 --
 -- Name: seq_controller_document; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_document', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_document', 1, false);
 
 
 --
 -- Name: seq_controller_document_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_document_types', 1, true);
+SELECT pg_catalog.setval('public.seq_controller_document_types', 1, true);
 
 
 --
 -- Name: seq_controller_procedure; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_controller_procedure', 1, false);
+SELECT pg_catalog.setval('public.seq_controller_procedure', 1, false);
 
 
 --
 -- Name: seq_fm_action_pending; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_action_pending', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_action_pending', 1, false);
 
 
 --
 -- Name: seq_fm_action_pending_category; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_action_pending_category', 3, true);
+SELECT pg_catalog.setval('public.seq_fm_action_pending_category', 3, true);
 
 
 --
 -- Name: seq_fm_budget_cost; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_budget_cost', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_budget_cost', 1, false);
 
 
 --
 -- Name: seq_fm_condition_survey_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_condition_survey_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_condition_survey_history', 1, false);
 
 
 --
 -- Name: seq_fm_cron_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_cron_log', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_cron_log', 1, false);
 
 
 --
 -- Name: seq_fm_custom_menu_items; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_custom_menu_items', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_custom_menu_items', 1, false);
 
 
 --
 -- Name: seq_fm_document; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_document', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_document', 1, false);
 
 
 --
 -- Name: seq_fm_document_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_document_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_document_history', 1, false);
 
 
 --
 -- Name: seq_fm_document_relation; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_document_relation', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_document_relation', 1, false);
 
 
 --
 -- Name: seq_fm_eco_period_transition; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_eco_period_transition', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_eco_period_transition', 1, false);
 
 
 --
 -- Name: seq_fm_eco_periodization_outline; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_eco_periodization_outline', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_eco_periodization_outline', 1, false);
 
 
 --
 -- Name: seq_fm_ecobilag; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_ecobilag', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_ecobilag', 1, false);
 
 
 --
 -- Name: seq_fm_ecobilag_process_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_ecobilag_process_log', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_ecobilag_process_log', 1, false);
 
 
 --
 -- Name: seq_fm_ecodimb_role_user; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_ecodimb_role_user', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_ecodimb_role_user', 1, false);
 
 
 --
 -- Name: seq_fm_ecodimb_role_user_substitute; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_ecodimb_role_user_substitute', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_ecodimb_role_user_substitute', 1, false);
 
 
 --
 -- Name: seq_fm_entity_group; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_entity_group', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_entity_group', 1, false);
 
 
 --
 -- Name: seq_fm_entity_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_entity_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_entity_history', 1, false);
 
 
 --
 -- Name: seq_fm_event; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_event', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_event', 1, false);
 
 
 --
 -- Name: seq_fm_generic_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_generic_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_generic_history', 1, false);
 
 
 --
 -- Name: seq_fm_jasper; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_jasper', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_jasper', 1, false);
 
 
 --
 -- Name: seq_fm_jasper_input; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_jasper_input', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_jasper_input', 1, false);
 
 
 --
 -- Name: seq_fm_jasper_input_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_jasper_input_type', 8, true);
+SELECT pg_catalog.setval('public.seq_fm_jasper_input_type', 8, true);
 
 
 --
 -- Name: seq_fm_location_contact; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_location_contact', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_location_contact', 1, false);
 
 
 --
 -- Name: seq_fm_location_exception; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_location_exception', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_location_exception', 1, false);
 
 
 --
 -- Name: seq_fm_location_exception_category; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_location_exception_category', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_location_exception_category', 1, false);
 
 
 --
 -- Name: seq_fm_location_exception_category_text; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_location_exception_category_text', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_location_exception_category_text', 1, false);
 
 
 --
 -- Name: seq_fm_locations; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_locations', 11, true);
+SELECT pg_catalog.setval('public.seq_fm_locations', 11, true);
 
 
 --
 -- Name: seq_fm_order_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_order_template', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_order_template', 1, false);
 
 
 --
 -- Name: seq_fm_part_of_town; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_part_of_town', 1, true);
+SELECT pg_catalog.setval('public.seq_fm_part_of_town', 1, true);
 
 
 --
 -- Name: seq_fm_project_buffer_budget; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_project_buffer_budget', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_project_buffer_budget', 1, false);
 
 
 --
 -- Name: seq_fm_project_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_project_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_project_history', 1, false);
 
 
 --
 -- Name: seq_fm_request_consume; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_request_consume', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_request_consume', 1, false);
 
 
 --
 -- Name: seq_fm_request_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_request_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_request_history', 1, false);
 
 
 --
 -- Name: seq_fm_request_planning; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_request_planning', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_request_planning', 1, false);
 
 
 --
 -- Name: seq_fm_response_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_response_template', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_response_template', 1, false);
 
 
 --
 -- Name: seq_fm_responsibility; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_responsibility', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_responsibility', 1, false);
 
 
 --
 -- Name: seq_fm_responsibility_contact; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_responsibility_contact', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_responsibility_contact', 1, false);
 
 
 --
 -- Name: seq_fm_responsibility_role; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_responsibility_role', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_responsibility_role', 1, false);
 
 
 --
 -- Name: seq_fm_s_agreement_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_s_agreement_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_s_agreement_history', 1, false);
 
 
 --
 -- Name: seq_fm_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_template', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_template', 1, false);
 
 
 --
 -- Name: seq_fm_template_hours; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_template_hours', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_template_hours', 1, false);
 
 
 --
 -- Name: seq_fm_tenant_claim; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tenant_claim', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_tenant_claim', 1, false);
 
 
 --
 -- Name: seq_fm_tenant_claim_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tenant_claim_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_tenant_claim_history', 1, false);
 
 
 --
 -- Name: seq_fm_tts_budget; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_budget', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_tts_budget', 1, false);
 
 
 --
 -- Name: seq_fm_tts_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_history', 5, true);
+SELECT pg_catalog.setval('public.seq_fm_tts_history', 5, true);
 
 
 --
 -- Name: seq_fm_tts_payments; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_payments', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_tts_payments', 1, false);
 
 
 --
 -- Name: seq_fm_tts_status; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_status', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_tts_status', 1, false);
 
 
 --
 -- Name: seq_fm_tts_tickets; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_tts_tickets', 3, true);
+SELECT pg_catalog.setval('public.seq_fm_tts_tickets', 3, true);
 
 
 --
 -- Name: seq_fm_view_dataset; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_view_dataset', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_view_dataset', 1, false);
 
 
 --
 -- Name: seq_fm_view_dataset_report; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_view_dataset_report', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_view_dataset_report', 1, false);
 
 
 --
 -- Name: seq_fm_wo_hours; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_wo_hours', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_wo_hours', 1, false);
 
 
 --
 -- Name: seq_fm_workorder_history; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_fm_workorder_history', 1, false);
+SELECT pg_catalog.setval('public.seq_fm_workorder_history', 1, false);
 
 
 --
 -- Name: seq_phpgw_account_delegates; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_account_delegates', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_account_delegates', 1, false);
 
 
 --
 -- Name: seq_phpgw_accounts; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_accounts', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_accounts', 1, false);
 
 
 --
 -- Name: seq_phpgw_applications; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_applications', 9, true);
+SELECT pg_catalog.setval('public.seq_phpgw_applications', 9, true);
 
 
 --
 -- Name: seq_phpgw_categories; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_categories', 5, true);
+SELECT pg_catalog.setval('public.seq_phpgw_categories', 5, true);
 
 
 --
 -- Name: seq_phpgw_contact; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact', 9, true);
+SELECT pg_catalog.setval('public.seq_phpgw_contact', 9, true);
 
 
 --
 -- Name: seq_phpgw_contact_addr; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_addr', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_addr', 1, false);
 
 
 --
 -- Name: seq_phpgw_contact_addr_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_addr_type', 2, true);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_addr_type', 2, true);
 
 
 --
 -- Name: seq_phpgw_contact_comm; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_comm', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_comm', 1, false);
 
 
 --
 -- Name: seq_phpgw_contact_comm_descr; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_comm_descr', 21, true);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_comm_descr', 21, true);
 
 
 --
 -- Name: seq_phpgw_contact_comm_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_comm_type', 7, true);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_comm_type', 7, true);
 
 
 --
 -- Name: seq_phpgw_contact_note; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_note', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_note', 1, false);
 
 
 --
 -- Name: seq_phpgw_contact_note_type; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_note_type', 3, true);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_note_type', 3, true);
 
 
 --
 -- Name: seq_phpgw_contact_others; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_others', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_others', 1, false);
 
 
 --
 -- Name: seq_phpgw_contact_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_contact_types', 2, true);
+SELECT pg_catalog.setval('public.seq_phpgw_contact_types', 2, true);
 
 
 --
 -- Name: seq_phpgw_history_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_history_log', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_history_log', 1, false);
 
 
 --
 -- Name: seq_phpgw_hooks; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_hooks', 100, true);
+SELECT pg_catalog.setval('public.seq_phpgw_hooks', 102, true);
 
 
 --
 -- Name: seq_phpgw_interlink; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_interlink', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_interlink', 1, false);
 
 
 --
 -- Name: seq_phpgw_interserv; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_interserv', 1, true);
+SELECT pg_catalog.setval('public.seq_phpgw_interserv', 1, true);
 
 
 --
 -- Name: seq_phpgw_locations; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_locations', 108, true);
+SELECT pg_catalog.setval('public.seq_phpgw_locations', 108, true);
 
 
 --
 -- Name: seq_phpgw_log; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_log', 3, true);
+SELECT pg_catalog.setval('public.seq_phpgw_log', 3, true);
 
 
 --
 -- Name: seq_phpgw_mail_handler; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_mail_handler', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_mail_handler', 1, false);
 
 
 --
 -- Name: seq_phpgw_notification; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_notification', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_notification', 1, false);
 
 
 --
 -- Name: seq_phpgw_vfs; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_vfs', 2, true);
+SELECT pg_catalog.setval('public.seq_phpgw_vfs', 2, true);
 
 
 --
 -- Name: seq_phpgw_vfs_file_relation; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_phpgw_vfs_file_relation', 1, false);
+SELECT pg_catalog.setval('public.seq_phpgw_vfs_file_relation', 1, false);
 
 
 --
 -- Name: seq_rental_adjustment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_adjustment', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_adjustment', 1, false);
 
 
 --
 -- Name: seq_rental_application; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_application', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_application', 1, false);
 
 
 --
 -- Name: seq_rental_application_comment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_application_comment', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_application_comment', 1, false);
 
 
 --
 -- Name: seq_rental_application_composite; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_application_composite', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_application_composite', 1, false);
 
 
 --
 -- Name: seq_rental_billing; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_billing', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_billing', 1, false);
 
 
 --
 -- Name: seq_rental_billing_info; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_billing_info', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_billing_info', 1, false);
 
 
 --
 -- Name: seq_rental_billing_term; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_billing_term', 4, true);
+SELECT pg_catalog.setval('public.seq_rental_billing_term', 4, true);
 
 
 --
 -- Name: seq_rental_composite; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_composite', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_composite', 1, false);
 
 
 --
 -- Name: seq_rental_contract_composite; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_contract_composite', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_contract_composite', 1, false);
 
 
 --
 -- Name: seq_rental_contract_price_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_contract_price_item', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_contract_price_item', 1, false);
 
 
 --
 -- Name: seq_rental_contract_responsibility; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_contract_responsibility', 3, true);
+SELECT pg_catalog.setval('public.seq_rental_contract_responsibility', 3, true);
 
 
 --
 -- Name: seq_rental_contract_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_contract_types', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_contract_types', 1, false);
 
 
 --
 -- Name: seq_rental_document; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_document', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_document', 1, false);
 
 
 --
 -- Name: seq_rental_document_types; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_document_types', 3, true);
+SELECT pg_catalog.setval('public.seq_rental_document_types', 3, true);
 
 
 --
 -- Name: seq_rental_email_out; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_email_out', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_email_out', 1, false);
 
 
 --
 -- Name: seq_rental_email_out_party; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_email_out_party', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_email_out_party', 1, false);
 
 
 --
 -- Name: seq_rental_email_template; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_email_template', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_email_template', 1, false);
 
 
 --
 -- Name: seq_rental_invoice; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_invoice', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_invoice', 1, false);
 
 
 --
 -- Name: seq_rental_invoice_price_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_invoice_price_item', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_invoice_price_item', 1, false);
 
 
 --
 -- Name: seq_rental_location_factor; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_location_factor', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_location_factor', 1, false);
 
 
 --
 -- Name: seq_rental_movein; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_movein', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_movein', 1, false);
 
 
 --
 -- Name: seq_rental_movein_comment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_movein_comment', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_movein_comment', 1, false);
 
 
 --
 -- Name: seq_rental_moveout; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_moveout', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_moveout', 1, false);
 
 
 --
 -- Name: seq_rental_moveout_comment; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_moveout_comment', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_moveout_comment', 1, false);
 
 
 --
 -- Name: seq_rental_notification; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_notification', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_notification', 1, false);
 
 
 --
 -- Name: seq_rental_notification_workbench; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_notification_workbench', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_notification_workbench', 1, false);
 
 
 --
 -- Name: seq_rental_party; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_party', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_party', 1, false);
 
 
 --
 -- Name: seq_rental_price_item; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_price_item', 2, true);
+SELECT pg_catalog.setval('public.seq_rental_price_item', 2, true);
 
 
 --
 -- Name: seq_rental_unit; Type: SEQUENCE SET; Schema: public; Owner: portico
 --
 
-SELECT pg_catalog.setval('seq_rental_unit', 1, false);
+SELECT pg_catalog.setval('public.seq_rental_unit', 1, false);
 
 
 --
 -- Name: controller_check_item_case controller_check_item_case_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_check_item_case
+ALTER TABLE ONLY public.controller_check_item_case
     ADD CONSTRAINT controller_check_item_case_pkey PRIMARY KEY (id);
 
 
@@ -18966,7 +18959,7 @@ ALTER TABLE ONLY controller_check_item_case
 -- Name: controller_check_item controller_check_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_check_item
+ALTER TABLE ONLY public.controller_check_item
     ADD CONSTRAINT controller_check_item_pkey PRIMARY KEY (id);
 
 
@@ -18974,7 +18967,7 @@ ALTER TABLE ONLY controller_check_item
 -- Name: controller_check_item_status controller_check_item_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_check_item_status
+ALTER TABLE ONLY public.controller_check_item_status
     ADD CONSTRAINT controller_check_item_status_pkey PRIMARY KEY (id);
 
 
@@ -18982,7 +18975,7 @@ ALTER TABLE ONLY controller_check_item_status
 -- Name: controller_check_list controller_check_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_check_list
+ALTER TABLE ONLY public.controller_check_list
     ADD CONSTRAINT controller_check_list_pkey PRIMARY KEY (id);
 
 
@@ -18990,7 +18983,7 @@ ALTER TABLE ONLY controller_check_list
 -- Name: controller_control_component_list controller_control_component_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_component_list
+ALTER TABLE ONLY public.controller_control_component_list
     ADD CONSTRAINT controller_control_component_list_pkey PRIMARY KEY (id);
 
 
@@ -18998,7 +18991,7 @@ ALTER TABLE ONLY controller_control_component_list
 -- Name: controller_control_group_component_list controller_control_group_component_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_group_component_list
+ALTER TABLE ONLY public.controller_control_group_component_list
     ADD CONSTRAINT controller_control_group_component_list_pkey PRIMARY KEY (id);
 
 
@@ -19006,7 +18999,7 @@ ALTER TABLE ONLY controller_control_group_component_list
 -- Name: controller_control_group_list controller_control_group_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_group_list
+ALTER TABLE ONLY public.controller_control_group_list
     ADD CONSTRAINT controller_control_group_list_pkey PRIMARY KEY (id);
 
 
@@ -19014,7 +19007,7 @@ ALTER TABLE ONLY controller_control_group_list
 -- Name: controller_control_group controller_control_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_group
+ALTER TABLE ONLY public.controller_control_group
     ADD CONSTRAINT controller_control_group_pkey PRIMARY KEY (id);
 
 
@@ -19022,7 +19015,7 @@ ALTER TABLE ONLY controller_control_group
 -- Name: controller_control_item_list controller_control_item_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_item_list
+ALTER TABLE ONLY public.controller_control_item_list
     ADD CONSTRAINT controller_control_item_list_pkey PRIMARY KEY (id);
 
 
@@ -19030,7 +19023,7 @@ ALTER TABLE ONLY controller_control_item_list
 -- Name: controller_control_item_option controller_control_item_option_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_item_option
+ALTER TABLE ONLY public.controller_control_item_option
     ADD CONSTRAINT controller_control_item_option_pkey PRIMARY KEY (id);
 
 
@@ -19038,7 +19031,7 @@ ALTER TABLE ONLY controller_control_item_option
 -- Name: controller_control_item controller_control_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_item
+ALTER TABLE ONLY public.controller_control_item
     ADD CONSTRAINT controller_control_item_pkey PRIMARY KEY (id);
 
 
@@ -19046,7 +19039,7 @@ ALTER TABLE ONLY controller_control_item
 -- Name: controller_control_location_list controller_control_location_list_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_location_list
+ALTER TABLE ONLY public.controller_control_location_list
     ADD CONSTRAINT controller_control_location_list_pkey PRIMARY KEY (id);
 
 
@@ -19054,7 +19047,7 @@ ALTER TABLE ONLY controller_control_location_list
 -- Name: controller_control controller_control_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control
+ALTER TABLE ONLY public.controller_control
     ADD CONSTRAINT controller_control_pkey PRIMARY KEY (id);
 
 
@@ -19062,7 +19055,7 @@ ALTER TABLE ONLY controller_control
 -- Name: controller_control_serie_history controller_control_serie_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_serie_history
+ALTER TABLE ONLY public.controller_control_serie_history
     ADD CONSTRAINT controller_control_serie_history_pkey PRIMARY KEY (id);
 
 
@@ -19070,7 +19063,7 @@ ALTER TABLE ONLY controller_control_serie_history
 -- Name: controller_control_serie controller_control_serie_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_serie
+ALTER TABLE ONLY public.controller_control_serie
     ADD CONSTRAINT controller_control_serie_pkey PRIMARY KEY (id);
 
 
@@ -19078,7 +19071,7 @@ ALTER TABLE ONLY controller_control_serie
 -- Name: controller_document controller_document_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_document
+ALTER TABLE ONLY public.controller_document
     ADD CONSTRAINT controller_document_pkey PRIMARY KEY (id);
 
 
@@ -19086,7 +19079,7 @@ ALTER TABLE ONLY controller_document
 -- Name: controller_document_types controller_document_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_document_types
+ALTER TABLE ONLY public.controller_document_types
     ADD CONSTRAINT controller_document_types_pkey PRIMARY KEY (id);
 
 
@@ -19094,7 +19087,7 @@ ALTER TABLE ONLY controller_document_types
 -- Name: controller_procedure controller_procedure_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_procedure
+ALTER TABLE ONLY public.controller_procedure
     ADD CONSTRAINT controller_procedure_pkey PRIMARY KEY (id);
 
 
@@ -19102,7 +19095,7 @@ ALTER TABLE ONLY controller_procedure
 -- Name: fm_action_pending_category fm_action_pending_category_num_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_action_pending_category
+ALTER TABLE ONLY public.fm_action_pending_category
     ADD CONSTRAINT fm_action_pending_category_num_key UNIQUE (num);
 
 
@@ -19110,7 +19103,7 @@ ALTER TABLE ONLY fm_action_pending_category
 -- Name: fm_action_pending_category fm_action_pending_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_action_pending_category
+ALTER TABLE ONLY public.fm_action_pending_category
     ADD CONSTRAINT fm_action_pending_category_pkey PRIMARY KEY (id);
 
 
@@ -19118,7 +19111,7 @@ ALTER TABLE ONLY fm_action_pending_category
 -- Name: fm_action_pending fm_action_pending_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_action_pending
+ALTER TABLE ONLY public.fm_action_pending
     ADD CONSTRAINT fm_action_pending_pkey PRIMARY KEY (id);
 
 
@@ -19126,7 +19119,7 @@ ALTER TABLE ONLY fm_action_pending
 -- Name: fm_activities fm_activities_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_activities
+ALTER TABLE ONLY public.fm_activities
     ADD CONSTRAINT fm_activities_pkey PRIMARY KEY (id);
 
 
@@ -19134,7 +19127,7 @@ ALTER TABLE ONLY fm_activities
 -- Name: fm_activity_price_index fm_activity_price_index_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_activity_price_index
+ALTER TABLE ONLY public.fm_activity_price_index
     ADD CONSTRAINT fm_activity_price_index_pkey PRIMARY KEY (activity_id, agreement_id, index_count);
 
 
@@ -19142,7 +19135,7 @@ ALTER TABLE ONLY fm_activity_price_index
 -- Name: fm_agreement_group fm_agreement_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_agreement_group
+ALTER TABLE ONLY public.fm_agreement_group
     ADD CONSTRAINT fm_agreement_group_pkey PRIMARY KEY (id);
 
 
@@ -19150,7 +19143,7 @@ ALTER TABLE ONLY fm_agreement_group
 -- Name: fm_agreement fm_agreement_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_agreement
+ALTER TABLE ONLY public.fm_agreement
     ADD CONSTRAINT fm_agreement_pkey PRIMARY KEY (group_id, id);
 
 
@@ -19158,7 +19151,7 @@ ALTER TABLE ONLY fm_agreement
 -- Name: fm_agreement_status fm_agreement_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_agreement_status
+ALTER TABLE ONLY public.fm_agreement_status
     ADD CONSTRAINT fm_agreement_status_pkey PRIMARY KEY (id);
 
 
@@ -19166,7 +19159,7 @@ ALTER TABLE ONLY fm_agreement_status
 -- Name: fm_async_method fm_async_method_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_async_method
+ALTER TABLE ONLY public.fm_async_method
     ADD CONSTRAINT fm_async_method_pkey PRIMARY KEY (id);
 
 
@@ -19174,7 +19167,7 @@ ALTER TABLE ONLY fm_async_method
 -- Name: fm_authorities_demands fm_authorities_demands_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_authorities_demands
+ALTER TABLE ONLY public.fm_authorities_demands
     ADD CONSTRAINT fm_authorities_demands_pkey PRIMARY KEY (id);
 
 
@@ -19182,7 +19175,7 @@ ALTER TABLE ONLY fm_authorities_demands
 -- Name: fm_b_account_category fm_b_account_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_b_account_category
+ALTER TABLE ONLY public.fm_b_account_category
     ADD CONSTRAINT fm_b_account_category_pkey PRIMARY KEY (id);
 
 
@@ -19190,7 +19183,7 @@ ALTER TABLE ONLY fm_b_account_category
 -- Name: fm_b_account fm_b_account_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_b_account
+ALTER TABLE ONLY public.fm_b_account
     ADD CONSTRAINT fm_b_account_pkey PRIMARY KEY (id);
 
 
@@ -19198,7 +19191,7 @@ ALTER TABLE ONLY fm_b_account
 -- Name: fm_branch fm_branch_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_branch
+ALTER TABLE ONLY public.fm_branch
     ADD CONSTRAINT fm_branch_pkey PRIMARY KEY (id);
 
 
@@ -19206,7 +19199,7 @@ ALTER TABLE ONLY fm_branch
 -- Name: fm_budget_basis fm_budget_basis_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget_basis
+ALTER TABLE ONLY public.fm_budget_basis
     ADD CONSTRAINT fm_budget_basis_pkey PRIMARY KEY (id);
 
 
@@ -19214,7 +19207,7 @@ ALTER TABLE ONLY fm_budget_basis
 -- Name: fm_budget_basis fm_budget_basis_year_b_group_district_id_revision_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget_basis
+ALTER TABLE ONLY public.fm_budget_basis
     ADD CONSTRAINT fm_budget_basis_year_b_group_district_id_revision_key UNIQUE (year, b_group, district_id, revision);
 
 
@@ -19222,7 +19215,7 @@ ALTER TABLE ONLY fm_budget_basis
 -- Name: fm_budget_cost fm_budget_cost_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget_cost
+ALTER TABLE ONLY public.fm_budget_cost
     ADD CONSTRAINT fm_budget_cost_pkey PRIMARY KEY (id);
 
 
@@ -19230,7 +19223,7 @@ ALTER TABLE ONLY fm_budget_cost
 -- Name: fm_budget_cost fm_budget_cost_year_month_b_account_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget_cost
+ALTER TABLE ONLY public.fm_budget_cost
     ADD CONSTRAINT fm_budget_cost_year_month_b_account_id_key UNIQUE (year, month, b_account_id);
 
 
@@ -19238,7 +19231,7 @@ ALTER TABLE ONLY fm_budget_cost
 -- Name: fm_budget_period fm_budget_period_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget_period
+ALTER TABLE ONLY public.fm_budget_period
     ADD CONSTRAINT fm_budget_period_pkey PRIMARY KEY (year, month, b_account_id);
 
 
@@ -19246,7 +19239,7 @@ ALTER TABLE ONLY fm_budget_period
 -- Name: fm_budget fm_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget
+ALTER TABLE ONLY public.fm_budget
     ADD CONSTRAINT fm_budget_pkey PRIMARY KEY (id);
 
 
@@ -19254,7 +19247,7 @@ ALTER TABLE ONLY fm_budget
 -- Name: fm_budget fm_budget_year_b_account_id_district_id_revision_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_budget
+ALTER TABLE ONLY public.fm_budget
     ADD CONSTRAINT fm_budget_year_b_account_id_district_id_revision_key UNIQUE (year, b_account_id, district_id, revision);
 
 
@@ -19262,7 +19255,7 @@ ALTER TABLE ONLY fm_budget
 -- Name: fm_building_part fm_building_part_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_building_part
+ALTER TABLE ONLY public.fm_building_part
     ADD CONSTRAINT fm_building_part_pkey PRIMARY KEY (id);
 
 
@@ -19270,7 +19263,7 @@ ALTER TABLE ONLY fm_building_part
 -- Name: fm_cache fm_cache_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_cache
+ALTER TABLE ONLY public.fm_cache
     ADD CONSTRAINT fm_cache_pkey PRIMARY KEY (name);
 
 
@@ -19278,7 +19271,7 @@ ALTER TABLE ONLY fm_cache
 -- Name: fm_chapter fm_chapter_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_chapter
+ALTER TABLE ONLY public.fm_chapter
     ADD CONSTRAINT fm_chapter_pkey PRIMARY KEY (id);
 
 
@@ -19286,7 +19279,7 @@ ALTER TABLE ONLY fm_chapter
 -- Name: fm_condition_survey_history fm_condition_survey_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_condition_survey_history
+ALTER TABLE ONLY public.fm_condition_survey_history
     ADD CONSTRAINT fm_condition_survey_history_pkey PRIMARY KEY (history_id);
 
 
@@ -19294,7 +19287,7 @@ ALTER TABLE ONLY fm_condition_survey_history
 -- Name: fm_condition_survey fm_condition_survey_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_condition_survey
+ALTER TABLE ONLY public.fm_condition_survey
     ADD CONSTRAINT fm_condition_survey_pkey PRIMARY KEY (id);
 
 
@@ -19302,7 +19295,7 @@ ALTER TABLE ONLY fm_condition_survey
 -- Name: fm_condition_survey_status fm_condition_survey_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_condition_survey_status
+ALTER TABLE ONLY public.fm_condition_survey_status
     ADD CONSTRAINT fm_condition_survey_status_pkey PRIMARY KEY (id);
 
 
@@ -19310,7 +19303,7 @@ ALTER TABLE ONLY fm_condition_survey_status
 -- Name: fm_cron_log fm_cron_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_cron_log
+ALTER TABLE ONLY public.fm_cron_log
     ADD CONSTRAINT fm_cron_log_pkey PRIMARY KEY (id);
 
 
@@ -19318,7 +19311,7 @@ ALTER TABLE ONLY fm_cron_log
 -- Name: fm_custom_cols fm_custom_cols_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_custom_cols
+ALTER TABLE ONLY public.fm_custom_cols
     ADD CONSTRAINT fm_custom_cols_pkey PRIMARY KEY (custom_id, id);
 
 
@@ -19326,7 +19319,7 @@ ALTER TABLE ONLY fm_custom_cols
 -- Name: fm_custom_menu_items fm_custom_menu_items_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_custom_menu_items
+ALTER TABLE ONLY public.fm_custom_menu_items
     ADD CONSTRAINT fm_custom_menu_items_pkey PRIMARY KEY (id);
 
 
@@ -19334,7 +19327,7 @@ ALTER TABLE ONLY fm_custom_menu_items
 -- Name: fm_custom fm_custom_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_custom
+ALTER TABLE ONLY public.fm_custom
     ADD CONSTRAINT fm_custom_pkey PRIMARY KEY (id);
 
 
@@ -19342,7 +19335,7 @@ ALTER TABLE ONLY fm_custom
 -- Name: fm_district fm_district_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_district
+ALTER TABLE ONLY public.fm_district
     ADD CONSTRAINT fm_district_pkey PRIMARY KEY (id);
 
 
@@ -19350,7 +19343,7 @@ ALTER TABLE ONLY fm_district
 -- Name: fm_document_history fm_document_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_document_history
+ALTER TABLE ONLY public.fm_document_history
     ADD CONSTRAINT fm_document_history_pkey PRIMARY KEY (history_id);
 
 
@@ -19358,7 +19351,7 @@ ALTER TABLE ONLY fm_document_history
 -- Name: fm_document fm_document_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_document
+ALTER TABLE ONLY public.fm_document
     ADD CONSTRAINT fm_document_pkey PRIMARY KEY (id);
 
 
@@ -19366,7 +19359,7 @@ ALTER TABLE ONLY fm_document
 -- Name: fm_document_relation fm_document_relation_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_document_relation
+ALTER TABLE ONLY public.fm_document_relation
     ADD CONSTRAINT fm_document_relation_pkey PRIMARY KEY (id);
 
 
@@ -19374,7 +19367,7 @@ ALTER TABLE ONLY fm_document_relation
 -- Name: fm_document_status fm_document_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_document_status
+ALTER TABLE ONLY public.fm_document_status
     ADD CONSTRAINT fm_document_status_pkey PRIMARY KEY (id);
 
 
@@ -19382,7 +19375,7 @@ ALTER TABLE ONLY fm_document_status
 -- Name: fm_eco_period_transition fm_eco_period_transition_month_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_period_transition
+ALTER TABLE ONLY public.fm_eco_period_transition
     ADD CONSTRAINT fm_eco_period_transition_month_key UNIQUE (month);
 
 
@@ -19390,7 +19383,7 @@ ALTER TABLE ONLY fm_eco_period_transition
 -- Name: fm_eco_period_transition fm_eco_period_transition_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_period_transition
+ALTER TABLE ONLY public.fm_eco_period_transition
     ADD CONSTRAINT fm_eco_period_transition_pkey PRIMARY KEY (id);
 
 
@@ -19398,7 +19391,7 @@ ALTER TABLE ONLY fm_eco_period_transition
 -- Name: fm_eco_periodization_outline fm_eco_periodization_outline_periodization_id_month_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_periodization_outline
+ALTER TABLE ONLY public.fm_eco_periodization_outline
     ADD CONSTRAINT fm_eco_periodization_outline_periodization_id_month_key UNIQUE (periodization_id, month);
 
 
@@ -19406,7 +19399,7 @@ ALTER TABLE ONLY fm_eco_periodization_outline
 -- Name: fm_eco_periodization_outline fm_eco_periodization_outline_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_periodization_outline
+ALTER TABLE ONLY public.fm_eco_periodization_outline
     ADD CONSTRAINT fm_eco_periodization_outline_pkey PRIMARY KEY (id);
 
 
@@ -19414,7 +19407,7 @@ ALTER TABLE ONLY fm_eco_periodization_outline
 -- Name: fm_eco_periodization fm_eco_periodization_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_periodization
+ALTER TABLE ONLY public.fm_eco_periodization
     ADD CONSTRAINT fm_eco_periodization_pkey PRIMARY KEY (id);
 
 
@@ -19422,7 +19415,7 @@ ALTER TABLE ONLY fm_eco_periodization
 -- Name: fm_eco_service fm_eco_service_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_service
+ALTER TABLE ONLY public.fm_eco_service
     ADD CONSTRAINT fm_eco_service_pkey PRIMARY KEY (id);
 
 
@@ -19430,7 +19423,7 @@ ALTER TABLE ONLY fm_eco_service
 -- Name: fm_ecoart fm_ecoart_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecoart
+ALTER TABLE ONLY public.fm_ecoart
     ADD CONSTRAINT fm_ecoart_pkey PRIMARY KEY (id);
 
 
@@ -19438,7 +19431,7 @@ ALTER TABLE ONLY fm_ecoart
 -- Name: fm_ecoavvik fm_ecoavvik_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecoavvik
+ALTER TABLE ONLY public.fm_ecoavvik
     ADD CONSTRAINT fm_ecoavvik_pkey PRIMARY KEY (bilagsnr);
 
 
@@ -19446,7 +19439,7 @@ ALTER TABLE ONLY fm_ecoavvik
 -- Name: fm_ecobilag_category fm_ecobilag_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecobilag_category
+ALTER TABLE ONLY public.fm_ecobilag_category
     ADD CONSTRAINT fm_ecobilag_category_pkey PRIMARY KEY (id);
 
 
@@ -19454,7 +19447,7 @@ ALTER TABLE ONLY fm_ecobilag_category
 -- Name: fm_ecobilag fm_ecobilag_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecobilag
+ALTER TABLE ONLY public.fm_ecobilag
     ADD CONSTRAINT fm_ecobilag_pkey PRIMARY KEY (id);
 
 
@@ -19462,7 +19455,7 @@ ALTER TABLE ONLY fm_ecobilag
 -- Name: fm_ecobilag_process_code fm_ecobilag_process_code_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecobilag_process_code
+ALTER TABLE ONLY public.fm_ecobilag_process_code
     ADD CONSTRAINT fm_ecobilag_process_code_pkey PRIMARY KEY (id);
 
 
@@ -19470,7 +19463,7 @@ ALTER TABLE ONLY fm_ecobilag_process_code
 -- Name: fm_ecobilag_process_log fm_ecobilag_process_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecobilag_process_log
+ALTER TABLE ONLY public.fm_ecobilag_process_log
     ADD CONSTRAINT fm_ecobilag_process_log_pkey PRIMARY KEY (id);
 
 
@@ -19478,7 +19471,7 @@ ALTER TABLE ONLY fm_ecobilag_process_log
 -- Name: fm_ecobilagkilde fm_ecobilagkilde_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecobilagkilde
+ALTER TABLE ONLY public.fm_ecobilagkilde
     ADD CONSTRAINT fm_ecobilagkilde_pkey PRIMARY KEY (id);
 
 
@@ -19486,7 +19479,7 @@ ALTER TABLE ONLY fm_ecobilagkilde
 -- Name: fm_ecobilagoverf fm_ecobilagoverf_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecobilagoverf
+ALTER TABLE ONLY public.fm_ecobilagoverf
     ADD CONSTRAINT fm_ecobilagoverf_pkey PRIMARY KEY (id);
 
 
@@ -19494,7 +19487,7 @@ ALTER TABLE ONLY fm_ecobilagoverf
 -- Name: fm_ecodimb fm_ecodimb_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb
+ALTER TABLE ONLY public.fm_ecodimb
     ADD CONSTRAINT fm_ecodimb_pkey PRIMARY KEY (id);
 
 
@@ -19502,7 +19495,7 @@ ALTER TABLE ONLY fm_ecodimb
 -- Name: fm_ecodimb_role fm_ecodimb_role_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb_role
+ALTER TABLE ONLY public.fm_ecodimb_role
     ADD CONSTRAINT fm_ecodimb_role_pkey PRIMARY KEY (id);
 
 
@@ -19510,7 +19503,7 @@ ALTER TABLE ONLY fm_ecodimb_role
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb_role_user
+ALTER TABLE ONLY public.fm_ecodimb_role_user
     ADD CONSTRAINT fm_ecodimb_role_user_pkey PRIMARY KEY (id);
 
 
@@ -19518,7 +19511,7 @@ ALTER TABLE ONLY fm_ecodimb_role_user
 -- Name: fm_ecodimb_role_user_substitute fm_ecodimb_role_user_substitute_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb_role_user_substitute
+ALTER TABLE ONLY public.fm_ecodimb_role_user_substitute
     ADD CONSTRAINT fm_ecodimb_role_user_substitute_pkey PRIMARY KEY (id);
 
 
@@ -19526,7 +19519,7 @@ ALTER TABLE ONLY fm_ecodimb_role_user_substitute
 -- Name: fm_ecodimd fm_ecodimd_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimd
+ALTER TABLE ONLY public.fm_ecodimd
     ADD CONSTRAINT fm_ecodimd_pkey PRIMARY KEY (id);
 
 
@@ -19534,7 +19527,7 @@ ALTER TABLE ONLY fm_ecodimd
 -- Name: fm_ecomva fm_ecomva_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecomva
+ALTER TABLE ONLY public.fm_ecomva
     ADD CONSTRAINT fm_ecomva_pkey PRIMARY KEY (id);
 
 
@@ -19542,7 +19535,7 @@ ALTER TABLE ONLY fm_ecomva
 -- Name: fm_ecouser fm_ecouser_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecouser
+ALTER TABLE ONLY public.fm_ecouser
     ADD CONSTRAINT fm_ecouser_pkey PRIMARY KEY (id);
 
 
@@ -19550,7 +19543,7 @@ ALTER TABLE ONLY fm_ecouser
 -- Name: fm_entity_category fm_entity_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_entity_category
+ALTER TABLE ONLY public.fm_entity_category
     ADD CONSTRAINT fm_entity_category_pkey PRIMARY KEY (entity_id, id);
 
 
@@ -19558,7 +19551,7 @@ ALTER TABLE ONLY fm_entity_category
 -- Name: fm_entity_group fm_entity_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_entity_group
+ALTER TABLE ONLY public.fm_entity_group
     ADD CONSTRAINT fm_entity_group_pkey PRIMARY KEY (id);
 
 
@@ -19566,7 +19559,7 @@ ALTER TABLE ONLY fm_entity_group
 -- Name: fm_entity_history fm_entity_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_entity_history
+ALTER TABLE ONLY public.fm_entity_history
     ADD CONSTRAINT fm_entity_history_pkey PRIMARY KEY (history_id);
 
 
@@ -19574,7 +19567,7 @@ ALTER TABLE ONLY fm_entity_history
 -- Name: fm_entity_lookup fm_entity_lookup_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_entity_lookup
+ALTER TABLE ONLY public.fm_entity_lookup
     ADD CONSTRAINT fm_entity_lookup_pkey PRIMARY KEY (entity_id, location, type);
 
 
@@ -19582,7 +19575,7 @@ ALTER TABLE ONLY fm_entity_lookup
 -- Name: fm_entity fm_entity_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_entity
+ALTER TABLE ONLY public.fm_entity
     ADD CONSTRAINT fm_entity_pkey PRIMARY KEY (id);
 
 
@@ -19590,7 +19583,7 @@ ALTER TABLE ONLY fm_entity
 -- Name: fm_event_action fm_event_action_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_event_action
+ALTER TABLE ONLY public.fm_event_action
     ADD CONSTRAINT fm_event_action_pkey PRIMARY KEY (id);
 
 
@@ -19598,7 +19591,7 @@ ALTER TABLE ONLY fm_event_action
 -- Name: fm_event_exception fm_event_exception_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_event_exception
+ALTER TABLE ONLY public.fm_event_exception
     ADD CONSTRAINT fm_event_exception_pkey PRIMARY KEY (event_id, exception_time);
 
 
@@ -19606,7 +19599,7 @@ ALTER TABLE ONLY fm_event_exception
 -- Name: fm_event fm_event_location_id_location_item_id_attrib_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_event
+ALTER TABLE ONLY public.fm_event
     ADD CONSTRAINT fm_event_location_id_location_item_id_attrib_id_key UNIQUE (location_id, location_item_id, attrib_id);
 
 
@@ -19614,7 +19607,7 @@ ALTER TABLE ONLY fm_event
 -- Name: fm_event fm_event_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_event
+ALTER TABLE ONLY public.fm_event
     ADD CONSTRAINT fm_event_pkey PRIMARY KEY (id);
 
 
@@ -19622,7 +19615,7 @@ ALTER TABLE ONLY fm_event
 -- Name: fm_event_receipt fm_event_receipt_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_event_receipt
+ALTER TABLE ONLY public.fm_event_receipt
     ADD CONSTRAINT fm_event_receipt_pkey PRIMARY KEY (event_id, receipt_time);
 
 
@@ -19630,7 +19623,7 @@ ALTER TABLE ONLY fm_event_receipt
 -- Name: fm_event_schedule fm_event_schedule_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_event_schedule
+ALTER TABLE ONLY public.fm_event_schedule
     ADD CONSTRAINT fm_event_schedule_pkey PRIMARY KEY (event_id, schedule_time);
 
 
@@ -19638,7 +19631,7 @@ ALTER TABLE ONLY fm_event_schedule
 -- Name: fm_external_project fm_external_project_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_external_project
+ALTER TABLE ONLY public.fm_external_project
     ADD CONSTRAINT fm_external_project_pkey PRIMARY KEY (id);
 
 
@@ -19646,7 +19639,7 @@ ALTER TABLE ONLY fm_external_project
 -- Name: fm_gab_location fm_gab_location_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_gab_location
+ALTER TABLE ONLY public.fm_gab_location
     ADD CONSTRAINT fm_gab_location_pkey PRIMARY KEY (gab_id, location_code);
 
 
@@ -19654,7 +19647,7 @@ ALTER TABLE ONLY fm_gab_location
 -- Name: fm_generic_history fm_generic_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_generic_history
+ALTER TABLE ONLY public.fm_generic_history
     ADD CONSTRAINT fm_generic_history_pkey PRIMARY KEY (history_id);
 
 
@@ -19662,7 +19655,7 @@ ALTER TABLE ONLY fm_generic_history
 -- Name: fm_idgenerator fm_idgenerator_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_idgenerator
+ALTER TABLE ONLY public.fm_idgenerator
     ADD CONSTRAINT fm_idgenerator_pkey PRIMARY KEY (name, start_date);
 
 
@@ -19670,7 +19663,7 @@ ALTER TABLE ONLY fm_idgenerator
 -- Name: fm_investment fm_investment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_investment
+ALTER TABLE ONLY public.fm_investment
     ADD CONSTRAINT fm_investment_pkey PRIMARY KEY (entity_id, invest_id);
 
 
@@ -19678,7 +19671,7 @@ ALTER TABLE ONLY fm_investment
 -- Name: fm_investment_value fm_investment_value_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_investment_value
+ALTER TABLE ONLY public.fm_investment_value
     ADD CONSTRAINT fm_investment_value_pkey PRIMARY KEY (entity_id, invest_id, index_count);
 
 
@@ -19686,7 +19679,7 @@ ALTER TABLE ONLY fm_investment_value
 -- Name: fm_jasper_format_type fm_jasper_format_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_jasper_format_type
+ALTER TABLE ONLY public.fm_jasper_format_type
     ADD CONSTRAINT fm_jasper_format_type_pkey PRIMARY KEY (id);
 
 
@@ -19694,7 +19687,7 @@ ALTER TABLE ONLY fm_jasper_format_type
 -- Name: fm_jasper_input fm_jasper_input_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_jasper_input
+ALTER TABLE ONLY public.fm_jasper_input
     ADD CONSTRAINT fm_jasper_input_pkey PRIMARY KEY (id);
 
 
@@ -19702,7 +19695,7 @@ ALTER TABLE ONLY fm_jasper_input
 -- Name: fm_jasper_input_type fm_jasper_input_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_jasper_input_type
+ALTER TABLE ONLY public.fm_jasper_input_type
     ADD CONSTRAINT fm_jasper_input_type_pkey PRIMARY KEY (id);
 
 
@@ -19710,7 +19703,7 @@ ALTER TABLE ONLY fm_jasper_input_type
 -- Name: fm_jasper fm_jasper_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_jasper
+ALTER TABLE ONLY public.fm_jasper
     ADD CONSTRAINT fm_jasper_pkey PRIMARY KEY (id);
 
 
@@ -19718,7 +19711,7 @@ ALTER TABLE ONLY fm_jasper
 -- Name: fm_key_loc fm_key_loc_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_key_loc
+ALTER TABLE ONLY public.fm_key_loc
     ADD CONSTRAINT fm_key_loc_pkey PRIMARY KEY (id);
 
 
@@ -19726,7 +19719,7 @@ ALTER TABLE ONLY fm_key_loc
 -- Name: fm_location1_category fm_location1_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location1_category
+ALTER TABLE ONLY public.fm_location1_category
     ADD CONSTRAINT fm_location1_category_pkey PRIMARY KEY (id);
 
 
@@ -19734,7 +19727,7 @@ ALTER TABLE ONLY fm_location1_category
 -- Name: fm_location1 fm_location1_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location1
+ALTER TABLE ONLY public.fm_location1
     ADD CONSTRAINT fm_location1_pkey PRIMARY KEY (loc1);
 
 
@@ -19742,7 +19735,7 @@ ALTER TABLE ONLY fm_location1
 -- Name: fm_location2_category fm_location2_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location2_category
+ALTER TABLE ONLY public.fm_location2_category
     ADD CONSTRAINT fm_location2_category_pkey PRIMARY KEY (id);
 
 
@@ -19750,7 +19743,7 @@ ALTER TABLE ONLY fm_location2_category
 -- Name: fm_location2 fm_location2_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location2
+ALTER TABLE ONLY public.fm_location2
     ADD CONSTRAINT fm_location2_pkey PRIMARY KEY (loc1, loc2);
 
 
@@ -19758,7 +19751,7 @@ ALTER TABLE ONLY fm_location2
 -- Name: fm_location3_category fm_location3_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location3_category
+ALTER TABLE ONLY public.fm_location3_category
     ADD CONSTRAINT fm_location3_category_pkey PRIMARY KEY (id);
 
 
@@ -19766,7 +19759,7 @@ ALTER TABLE ONLY fm_location3_category
 -- Name: fm_location3 fm_location3_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location3
+ALTER TABLE ONLY public.fm_location3
     ADD CONSTRAINT fm_location3_pkey PRIMARY KEY (loc1, loc2, loc3);
 
 
@@ -19774,7 +19767,7 @@ ALTER TABLE ONLY fm_location3
 -- Name: fm_location4_category fm_location4_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location4_category
+ALTER TABLE ONLY public.fm_location4_category
     ADD CONSTRAINT fm_location4_category_pkey PRIMARY KEY (id);
 
 
@@ -19782,7 +19775,7 @@ ALTER TABLE ONLY fm_location4_category
 -- Name: fm_location4 fm_location4_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location4
+ALTER TABLE ONLY public.fm_location4
     ADD CONSTRAINT fm_location4_pkey PRIMARY KEY (loc1, loc2, loc3, loc4);
 
 
@@ -19790,7 +19783,7 @@ ALTER TABLE ONLY fm_location4
 -- Name: fm_location_config fm_location_config_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_config
+ALTER TABLE ONLY public.fm_location_config
     ADD CONSTRAINT fm_location_config_pkey PRIMARY KEY (column_name);
 
 
@@ -19798,7 +19791,7 @@ ALTER TABLE ONLY fm_location_config
 -- Name: fm_location_contact fm_location_contact_contact_id_location_code_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_contact
+ALTER TABLE ONLY public.fm_location_contact
     ADD CONSTRAINT fm_location_contact_contact_id_location_code_key UNIQUE (contact_id, location_code);
 
 
@@ -19806,7 +19799,7 @@ ALTER TABLE ONLY fm_location_contact
 -- Name: fm_location_contact fm_location_contact_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_contact
+ALTER TABLE ONLY public.fm_location_contact
     ADD CONSTRAINT fm_location_contact_pkey PRIMARY KEY (id);
 
 
@@ -19814,7 +19807,7 @@ ALTER TABLE ONLY fm_location_contact
 -- Name: fm_location_exception_category fm_location_exception_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception_category
+ALTER TABLE ONLY public.fm_location_exception_category
     ADD CONSTRAINT fm_location_exception_category_pkey PRIMARY KEY (id);
 
 
@@ -19822,7 +19815,7 @@ ALTER TABLE ONLY fm_location_exception_category
 -- Name: fm_location_exception_category_text fm_location_exception_category_text_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception_category_text
+ALTER TABLE ONLY public.fm_location_exception_category_text
     ADD CONSTRAINT fm_location_exception_category_text_pkey PRIMARY KEY (id);
 
 
@@ -19830,7 +19823,7 @@ ALTER TABLE ONLY fm_location_exception_category_text
 -- Name: fm_location_exception fm_location_exception_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception
+ALTER TABLE ONLY public.fm_location_exception
     ADD CONSTRAINT fm_location_exception_pkey PRIMARY KEY (id);
 
 
@@ -19838,7 +19831,7 @@ ALTER TABLE ONLY fm_location_exception
 -- Name: fm_location_exception_severity fm_location_exception_severity_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception_severity
+ALTER TABLE ONLY public.fm_location_exception_severity
     ADD CONSTRAINT fm_location_exception_severity_pkey PRIMARY KEY (id);
 
 
@@ -19846,7 +19839,7 @@ ALTER TABLE ONLY fm_location_exception_severity
 -- Name: fm_location_type fm_location_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_type
+ALTER TABLE ONLY public.fm_location_type
     ADD CONSTRAINT fm_location_type_pkey PRIMARY KEY (id);
 
 
@@ -19854,7 +19847,7 @@ ALTER TABLE ONLY fm_location_type
 -- Name: fm_locations fm_locations_location_code_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_locations
+ALTER TABLE ONLY public.fm_locations
     ADD CONSTRAINT fm_locations_location_code_key UNIQUE (location_code);
 
 
@@ -19862,7 +19855,7 @@ ALTER TABLE ONLY fm_locations
 -- Name: fm_locations fm_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_locations
+ALTER TABLE ONLY public.fm_locations
     ADD CONSTRAINT fm_locations_pkey PRIMARY KEY (id);
 
 
@@ -19870,7 +19863,7 @@ ALTER TABLE ONLY fm_locations
 -- Name: fm_ns3420 fm_ns3420_num_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ns3420
+ALTER TABLE ONLY public.fm_ns3420
     ADD CONSTRAINT fm_ns3420_num_key UNIQUE (num);
 
 
@@ -19878,7 +19871,7 @@ ALTER TABLE ONLY fm_ns3420
 -- Name: fm_ns3420 fm_ns3420_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ns3420
+ALTER TABLE ONLY public.fm_ns3420
     ADD CONSTRAINT fm_ns3420_pkey PRIMARY KEY (id);
 
 
@@ -19886,7 +19879,7 @@ ALTER TABLE ONLY fm_ns3420
 -- Name: fm_order_dim1 fm_order_dim1_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_order_dim1
+ALTER TABLE ONLY public.fm_order_dim1
     ADD CONSTRAINT fm_order_dim1_pkey PRIMARY KEY (id);
 
 
@@ -19894,7 +19887,7 @@ ALTER TABLE ONLY fm_order_dim1
 -- Name: fm_order_template fm_order_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_order_template
+ALTER TABLE ONLY public.fm_order_template
     ADD CONSTRAINT fm_order_template_pkey PRIMARY KEY (id);
 
 
@@ -19902,7 +19895,7 @@ ALTER TABLE ONLY fm_order_template
 -- Name: fm_orders fm_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_orders
+ALTER TABLE ONLY public.fm_orders
     ADD CONSTRAINT fm_orders_pkey PRIMARY KEY (id);
 
 
@@ -19910,7 +19903,7 @@ ALTER TABLE ONLY fm_orders
 -- Name: fm_org_unit fm_org_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_org_unit
+ALTER TABLE ONLY public.fm_org_unit
     ADD CONSTRAINT fm_org_unit_pkey PRIMARY KEY (id);
 
 
@@ -19918,7 +19911,7 @@ ALTER TABLE ONLY fm_org_unit
 -- Name: fm_owner_category fm_owner_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_owner_category
+ALTER TABLE ONLY public.fm_owner_category
     ADD CONSTRAINT fm_owner_category_pkey PRIMARY KEY (id);
 
 
@@ -19926,7 +19919,7 @@ ALTER TABLE ONLY fm_owner_category
 -- Name: fm_owner fm_owner_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_owner
+ALTER TABLE ONLY public.fm_owner
     ADD CONSTRAINT fm_owner_pkey PRIMARY KEY (id);
 
 
@@ -19934,7 +19927,7 @@ ALTER TABLE ONLY fm_owner
 -- Name: fm_part_of_town fm_part_of_town_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_part_of_town
+ALTER TABLE ONLY public.fm_part_of_town
     ADD CONSTRAINT fm_part_of_town_pkey PRIMARY KEY (id);
 
 
@@ -19942,7 +19935,7 @@ ALTER TABLE ONLY fm_part_of_town
 -- Name: fm_project_budget fm_project_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_project_budget
+ALTER TABLE ONLY public.fm_project_budget
     ADD CONSTRAINT fm_project_budget_pkey PRIMARY KEY (project_id, year, month);
 
 
@@ -19950,7 +19943,7 @@ ALTER TABLE ONLY fm_project_budget
 -- Name: fm_project_buffer_budget fm_project_buffer_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_project_buffer_budget
+ALTER TABLE ONLY public.fm_project_buffer_budget
     ADD CONSTRAINT fm_project_buffer_budget_pkey PRIMARY KEY (id);
 
 
@@ -19958,7 +19951,7 @@ ALTER TABLE ONLY fm_project_buffer_budget
 -- Name: fm_project_history fm_project_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_project_history
+ALTER TABLE ONLY public.fm_project_history
     ADD CONSTRAINT fm_project_history_pkey PRIMARY KEY (history_id);
 
 
@@ -19966,7 +19959,7 @@ ALTER TABLE ONLY fm_project_history
 -- Name: fm_project fm_project_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_project
+ALTER TABLE ONLY public.fm_project
     ADD CONSTRAINT fm_project_pkey PRIMARY KEY (id);
 
 
@@ -19974,7 +19967,7 @@ ALTER TABLE ONLY fm_project
 -- Name: fm_project_status fm_project_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_project_status
+ALTER TABLE ONLY public.fm_project_status
     ADD CONSTRAINT fm_project_status_pkey PRIMARY KEY (id);
 
 
@@ -19982,7 +19975,7 @@ ALTER TABLE ONLY fm_project_status
 -- Name: fm_projectbranch fm_projectbranch_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_projectbranch
+ALTER TABLE ONLY public.fm_projectbranch
     ADD CONSTRAINT fm_projectbranch_pkey PRIMARY KEY (project_id, branch_id);
 
 
@@ -19990,7 +19983,7 @@ ALTER TABLE ONLY fm_projectbranch
 -- Name: fm_regulations fm_regulations_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_regulations
+ALTER TABLE ONLY public.fm_regulations
     ADD CONSTRAINT fm_regulations_pkey PRIMARY KEY (id);
 
 
@@ -19998,7 +19991,7 @@ ALTER TABLE ONLY fm_regulations
 -- Name: fm_request_condition fm_request_condition_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_condition
+ALTER TABLE ONLY public.fm_request_condition
     ADD CONSTRAINT fm_request_condition_pkey PRIMARY KEY (request_id, condition_type);
 
 
@@ -20006,7 +19999,7 @@ ALTER TABLE ONLY fm_request_condition
 -- Name: fm_request_condition_type fm_request_condition_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_condition_type
+ALTER TABLE ONLY public.fm_request_condition_type
     ADD CONSTRAINT fm_request_condition_type_pkey PRIMARY KEY (id);
 
 
@@ -20014,7 +20007,7 @@ ALTER TABLE ONLY fm_request_condition_type
 -- Name: fm_request_consume fm_request_consume_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_consume
+ALTER TABLE ONLY public.fm_request_consume
     ADD CONSTRAINT fm_request_consume_pkey PRIMARY KEY (id);
 
 
@@ -20022,7 +20015,7 @@ ALTER TABLE ONLY fm_request_consume
 -- Name: fm_request_history fm_request_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_history
+ALTER TABLE ONLY public.fm_request_history
     ADD CONSTRAINT fm_request_history_pkey PRIMARY KEY (history_id);
 
 
@@ -20030,7 +20023,7 @@ ALTER TABLE ONLY fm_request_history
 -- Name: fm_request fm_request_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request
+ALTER TABLE ONLY public.fm_request
     ADD CONSTRAINT fm_request_pkey PRIMARY KEY (id);
 
 
@@ -20038,7 +20031,7 @@ ALTER TABLE ONLY fm_request
 -- Name: fm_request_planning fm_request_planning_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_planning
+ALTER TABLE ONLY public.fm_request_planning
     ADD CONSTRAINT fm_request_planning_pkey PRIMARY KEY (id);
 
 
@@ -20046,7 +20039,7 @@ ALTER TABLE ONLY fm_request_planning
 -- Name: fm_request_responsible_unit fm_request_responsible_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_responsible_unit
+ALTER TABLE ONLY public.fm_request_responsible_unit
     ADD CONSTRAINT fm_request_responsible_unit_pkey PRIMARY KEY (id);
 
 
@@ -20054,7 +20047,7 @@ ALTER TABLE ONLY fm_request_responsible_unit
 -- Name: fm_request_status fm_request_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_status
+ALTER TABLE ONLY public.fm_request_status
     ADD CONSTRAINT fm_request_status_pkey PRIMARY KEY (id);
 
 
@@ -20062,7 +20055,7 @@ ALTER TABLE ONLY fm_request_status
 -- Name: fm_response_template fm_response_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_response_template
+ALTER TABLE ONLY public.fm_response_template
     ADD CONSTRAINT fm_response_template_pkey PRIMARY KEY (id);
 
 
@@ -20070,7 +20063,7 @@ ALTER TABLE ONLY fm_response_template
 -- Name: fm_responsibility_contact fm_responsibility_contact_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_contact
+ALTER TABLE ONLY public.fm_responsibility_contact
     ADD CONSTRAINT fm_responsibility_contact_pkey PRIMARY KEY (id);
 
 
@@ -20078,7 +20071,7 @@ ALTER TABLE ONLY fm_responsibility_contact
 -- Name: fm_responsibility_module fm_responsibility_module_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_module
+ALTER TABLE ONLY public.fm_responsibility_module
     ADD CONSTRAINT fm_responsibility_module_pkey PRIMARY KEY (responsibility_id, location_id, cat_id);
 
 
@@ -20086,7 +20079,7 @@ ALTER TABLE ONLY fm_responsibility_module
 -- Name: fm_responsibility fm_responsibility_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility
+ALTER TABLE ONLY public.fm_responsibility
     ADD CONSTRAINT fm_responsibility_pkey PRIMARY KEY (id);
 
 
@@ -20094,7 +20087,7 @@ ALTER TABLE ONLY fm_responsibility
 -- Name: fm_responsibility_role fm_responsibility_role_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_role
+ALTER TABLE ONLY public.fm_responsibility_role
     ADD CONSTRAINT fm_responsibility_role_pkey PRIMARY KEY (id);
 
 
@@ -20102,7 +20095,7 @@ ALTER TABLE ONLY fm_responsibility_role
 -- Name: fm_s_agreement_budget fm_s_agreement_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_s_agreement_budget
+ALTER TABLE ONLY public.fm_s_agreement_budget
     ADD CONSTRAINT fm_s_agreement_budget_pkey PRIMARY KEY (agreement_id, year);
 
 
@@ -20110,7 +20103,7 @@ ALTER TABLE ONLY fm_s_agreement_budget
 -- Name: fm_s_agreement_category fm_s_agreement_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_s_agreement_category
+ALTER TABLE ONLY public.fm_s_agreement_category
     ADD CONSTRAINT fm_s_agreement_category_pkey PRIMARY KEY (id);
 
 
@@ -20118,7 +20111,7 @@ ALTER TABLE ONLY fm_s_agreement_category
 -- Name: fm_s_agreement_detail fm_s_agreement_detail_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_s_agreement_detail
+ALTER TABLE ONLY public.fm_s_agreement_detail
     ADD CONSTRAINT fm_s_agreement_detail_pkey PRIMARY KEY (agreement_id, id);
 
 
@@ -20126,7 +20119,7 @@ ALTER TABLE ONLY fm_s_agreement_detail
 -- Name: fm_s_agreement_history fm_s_agreement_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_s_agreement_history
+ALTER TABLE ONLY public.fm_s_agreement_history
     ADD CONSTRAINT fm_s_agreement_history_pkey PRIMARY KEY (history_id);
 
 
@@ -20134,7 +20127,7 @@ ALTER TABLE ONLY fm_s_agreement_history
 -- Name: fm_s_agreement fm_s_agreement_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_s_agreement
+ALTER TABLE ONLY public.fm_s_agreement
     ADD CONSTRAINT fm_s_agreement_pkey PRIMARY KEY (id);
 
 
@@ -20142,7 +20135,7 @@ ALTER TABLE ONLY fm_s_agreement
 -- Name: fm_s_agreement_pricing fm_s_agreement_pricing_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_s_agreement_pricing
+ALTER TABLE ONLY public.fm_s_agreement_pricing
     ADD CONSTRAINT fm_s_agreement_pricing_pkey PRIMARY KEY (agreement_id, item_id, id);
 
 
@@ -20150,7 +20143,7 @@ ALTER TABLE ONLY fm_s_agreement_pricing
 -- Name: fm_standard_unit fm_standard_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_standard_unit
+ALTER TABLE ONLY public.fm_standard_unit
     ADD CONSTRAINT fm_standard_unit_pkey PRIMARY KEY (id);
 
 
@@ -20158,7 +20151,7 @@ ALTER TABLE ONLY fm_standard_unit
 -- Name: fm_streetaddress fm_streetaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_streetaddress
+ALTER TABLE ONLY public.fm_streetaddress
     ADD CONSTRAINT fm_streetaddress_pkey PRIMARY KEY (id);
 
 
@@ -20166,7 +20159,7 @@ ALTER TABLE ONLY fm_streetaddress
 -- Name: fm_template_hours fm_template_hours_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_template_hours
+ALTER TABLE ONLY public.fm_template_hours
     ADD CONSTRAINT fm_template_hours_pkey PRIMARY KEY (id);
 
 
@@ -20174,7 +20167,7 @@ ALTER TABLE ONLY fm_template_hours
 -- Name: fm_template fm_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_template
+ALTER TABLE ONLY public.fm_template
     ADD CONSTRAINT fm_template_pkey PRIMARY KEY (id);
 
 
@@ -20182,7 +20175,7 @@ ALTER TABLE ONLY fm_template
 -- Name: fm_tenant_category fm_tenant_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tenant_category
+ALTER TABLE ONLY public.fm_tenant_category
     ADD CONSTRAINT fm_tenant_category_pkey PRIMARY KEY (id);
 
 
@@ -20190,7 +20183,7 @@ ALTER TABLE ONLY fm_tenant_category
 -- Name: fm_tenant_claim_category fm_tenant_claim_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tenant_claim_category
+ALTER TABLE ONLY public.fm_tenant_claim_category
     ADD CONSTRAINT fm_tenant_claim_category_pkey PRIMARY KEY (id);
 
 
@@ -20198,7 +20191,7 @@ ALTER TABLE ONLY fm_tenant_claim_category
 -- Name: fm_tenant_claim_history fm_tenant_claim_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tenant_claim_history
+ALTER TABLE ONLY public.fm_tenant_claim_history
     ADD CONSTRAINT fm_tenant_claim_history_pkey PRIMARY KEY (history_id);
 
 
@@ -20206,7 +20199,7 @@ ALTER TABLE ONLY fm_tenant_claim_history
 -- Name: fm_tenant_claim fm_tenant_claim_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tenant_claim
+ALTER TABLE ONLY public.fm_tenant_claim
     ADD CONSTRAINT fm_tenant_claim_pkey PRIMARY KEY (id);
 
 
@@ -20214,7 +20207,7 @@ ALTER TABLE ONLY fm_tenant_claim
 -- Name: fm_tenant fm_tenant_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tenant
+ALTER TABLE ONLY public.fm_tenant
     ADD CONSTRAINT fm_tenant_pkey PRIMARY KEY (id);
 
 
@@ -20222,7 +20215,7 @@ ALTER TABLE ONLY fm_tenant
 -- Name: fm_tts_budget fm_tts_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_budget
+ALTER TABLE ONLY public.fm_tts_budget
     ADD CONSTRAINT fm_tts_budget_pkey PRIMARY KEY (id);
 
 
@@ -20230,7 +20223,7 @@ ALTER TABLE ONLY fm_tts_budget
 -- Name: fm_tts_history fm_tts_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_history
+ALTER TABLE ONLY public.fm_tts_history
     ADD CONSTRAINT fm_tts_history_pkey PRIMARY KEY (history_id);
 
 
@@ -20238,7 +20231,7 @@ ALTER TABLE ONLY fm_tts_history
 -- Name: fm_tts_payments fm_tts_payments_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_payments
+ALTER TABLE ONLY public.fm_tts_payments
     ADD CONSTRAINT fm_tts_payments_pkey PRIMARY KEY (id);
 
 
@@ -20246,7 +20239,7 @@ ALTER TABLE ONLY fm_tts_payments
 -- Name: fm_tts_priority fm_tts_priority_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_priority
+ALTER TABLE ONLY public.fm_tts_priority
     ADD CONSTRAINT fm_tts_priority_pkey PRIMARY KEY (id);
 
 
@@ -20254,7 +20247,7 @@ ALTER TABLE ONLY fm_tts_priority
 -- Name: fm_tts_status fm_tts_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_status
+ALTER TABLE ONLY public.fm_tts_status
     ADD CONSTRAINT fm_tts_status_pkey PRIMARY KEY (id);
 
 
@@ -20262,7 +20255,7 @@ ALTER TABLE ONLY fm_tts_status
 -- Name: fm_tts_tickets fm_tts_tickets_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_tickets
+ALTER TABLE ONLY public.fm_tts_tickets
     ADD CONSTRAINT fm_tts_tickets_pkey PRIMARY KEY (id);
 
 
@@ -20270,7 +20263,7 @@ ALTER TABLE ONLY fm_tts_tickets
 -- Name: fm_unspsc_code fm_unspsc_code_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_unspsc_code
+ALTER TABLE ONLY public.fm_unspsc_code
     ADD CONSTRAINT fm_unspsc_code_pkey PRIMARY KEY (id);
 
 
@@ -20278,7 +20271,7 @@ ALTER TABLE ONLY fm_unspsc_code
 -- Name: fm_vendor_category fm_vendor_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_vendor_category
+ALTER TABLE ONLY public.fm_vendor_category
     ADD CONSTRAINT fm_vendor_category_pkey PRIMARY KEY (id);
 
 
@@ -20286,7 +20279,7 @@ ALTER TABLE ONLY fm_vendor_category
 -- Name: fm_vendor fm_vendor_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_vendor
+ALTER TABLE ONLY public.fm_vendor
     ADD CONSTRAINT fm_vendor_pkey PRIMARY KEY (id);
 
 
@@ -20294,7 +20287,7 @@ ALTER TABLE ONLY fm_vendor
 -- Name: fm_view_dataset fm_view_dataset_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_view_dataset
+ALTER TABLE ONLY public.fm_view_dataset
     ADD CONSTRAINT fm_view_dataset_pkey PRIMARY KEY (id);
 
 
@@ -20302,7 +20295,7 @@ ALTER TABLE ONLY fm_view_dataset
 -- Name: fm_view_dataset_report fm_view_dataset_report_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_view_dataset_report
+ALTER TABLE ONLY public.fm_view_dataset_report
     ADD CONSTRAINT fm_view_dataset_report_pkey PRIMARY KEY (id);
 
 
@@ -20310,7 +20303,7 @@ ALTER TABLE ONLY fm_view_dataset_report
 -- Name: fm_wo_h_deviation fm_wo_h_deviation_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_wo_h_deviation
+ALTER TABLE ONLY public.fm_wo_h_deviation
     ADD CONSTRAINT fm_wo_h_deviation_pkey PRIMARY KEY (workorder_id, hour_id, id);
 
 
@@ -20318,7 +20311,7 @@ ALTER TABLE ONLY fm_wo_h_deviation
 -- Name: fm_wo_hours_category fm_wo_hours_category_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_wo_hours_category
+ALTER TABLE ONLY public.fm_wo_hours_category
     ADD CONSTRAINT fm_wo_hours_category_pkey PRIMARY KEY (id);
 
 
@@ -20326,7 +20319,7 @@ ALTER TABLE ONLY fm_wo_hours_category
 -- Name: fm_wo_hours fm_wo_hours_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_wo_hours
+ALTER TABLE ONLY public.fm_wo_hours
     ADD CONSTRAINT fm_wo_hours_pkey PRIMARY KEY (id);
 
 
@@ -20334,7 +20327,7 @@ ALTER TABLE ONLY fm_wo_hours
 -- Name: fm_workorder_budget fm_workorder_budget_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_workorder_budget
+ALTER TABLE ONLY public.fm_workorder_budget
     ADD CONSTRAINT fm_workorder_budget_pkey PRIMARY KEY (order_id, year, month);
 
 
@@ -20342,7 +20335,7 @@ ALTER TABLE ONLY fm_workorder_budget
 -- Name: fm_workorder_history fm_workorder_history_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_workorder_history
+ALTER TABLE ONLY public.fm_workorder_history
     ADD CONSTRAINT fm_workorder_history_pkey PRIMARY KEY (history_id);
 
 
@@ -20350,7 +20343,7 @@ ALTER TABLE ONLY fm_workorder_history
 -- Name: fm_workorder fm_workorder_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_workorder
+ALTER TABLE ONLY public.fm_workorder
     ADD CONSTRAINT fm_workorder_pkey PRIMARY KEY (id);
 
 
@@ -20358,7 +20351,7 @@ ALTER TABLE ONLY fm_workorder
 -- Name: fm_workorder_status fm_workorder_status_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_workorder_status
+ALTER TABLE ONLY public.fm_workorder_status
     ADD CONSTRAINT fm_workorder_status_pkey PRIMARY KEY (id);
 
 
@@ -20366,7 +20359,7 @@ ALTER TABLE ONLY fm_workorder_status
 -- Name: phpgw_account_delegates phpgw_account_delegates_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_account_delegates
+ALTER TABLE ONLY public.phpgw_account_delegates
     ADD CONSTRAINT phpgw_account_delegates_pkey PRIMARY KEY (delegate_id);
 
 
@@ -20374,7 +20367,7 @@ ALTER TABLE ONLY phpgw_account_delegates
 -- Name: phpgw_accounts phpgw_accounts_account_lid_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_accounts
+ALTER TABLE ONLY public.phpgw_accounts
     ADD CONSTRAINT phpgw_accounts_account_lid_key UNIQUE (account_lid);
 
 
@@ -20382,7 +20375,7 @@ ALTER TABLE ONLY phpgw_accounts
 -- Name: phpgw_accounts_data phpgw_accounts_data_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_accounts_data
+ALTER TABLE ONLY public.phpgw_accounts_data
     ADD CONSTRAINT phpgw_accounts_data_pkey PRIMARY KEY (account_id);
 
 
@@ -20390,7 +20383,7 @@ ALTER TABLE ONLY phpgw_accounts_data
 -- Name: phpgw_accounts phpgw_accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_accounts
+ALTER TABLE ONLY public.phpgw_accounts
     ADD CONSTRAINT phpgw_accounts_pkey PRIMARY KEY (account_id);
 
 
@@ -20398,7 +20391,7 @@ ALTER TABLE ONLY phpgw_accounts
 -- Name: phpgw_applications phpgw_applications_app_name_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_applications
+ALTER TABLE ONLY public.phpgw_applications
     ADD CONSTRAINT phpgw_applications_app_name_key UNIQUE (app_name);
 
 
@@ -20406,7 +20399,7 @@ ALTER TABLE ONLY phpgw_applications
 -- Name: phpgw_applications phpgw_applications_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_applications
+ALTER TABLE ONLY public.phpgw_applications
     ADD CONSTRAINT phpgw_applications_pkey PRIMARY KEY (app_id);
 
 
@@ -20414,7 +20407,7 @@ ALTER TABLE ONLY phpgw_applications
 -- Name: phpgw_async phpgw_async_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_async
+ALTER TABLE ONLY public.phpgw_async
     ADD CONSTRAINT phpgw_async_pkey PRIMARY KEY (id);
 
 
@@ -20422,7 +20415,7 @@ ALTER TABLE ONLY phpgw_async
 -- Name: phpgw_cache_user phpgw_cache_user_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_cache_user
+ALTER TABLE ONLY public.phpgw_cache_user
     ADD CONSTRAINT phpgw_cache_user_pkey PRIMARY KEY (item_key, user_id);
 
 
@@ -20430,7 +20423,7 @@ ALTER TABLE ONLY phpgw_cache_user
 -- Name: phpgw_categories phpgw_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_categories
+ALTER TABLE ONLY public.phpgw_categories
     ADD CONSTRAINT phpgw_categories_pkey PRIMARY KEY (cat_id);
 
 
@@ -20438,7 +20431,7 @@ ALTER TABLE ONLY phpgw_categories
 -- Name: phpgw_config2_attrib phpgw_config2_attrib_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_config2_attrib
+ALTER TABLE ONLY public.phpgw_config2_attrib
     ADD CONSTRAINT phpgw_config2_attrib_pkey PRIMARY KEY (section_id, id);
 
 
@@ -20446,7 +20439,7 @@ ALTER TABLE ONLY phpgw_config2_attrib
 -- Name: phpgw_config2_choice phpgw_config2_choice_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_config2_choice
+ALTER TABLE ONLY public.phpgw_config2_choice
     ADD CONSTRAINT phpgw_config2_choice_pkey PRIMARY KEY (section_id, attrib_id, id);
 
 
@@ -20454,7 +20447,7 @@ ALTER TABLE ONLY phpgw_config2_choice
 -- Name: phpgw_config2_choice phpgw_config2_choice_section_id_attrib_id_value_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_config2_choice
+ALTER TABLE ONLY public.phpgw_config2_choice
     ADD CONSTRAINT phpgw_config2_choice_section_id_attrib_id_value_key UNIQUE (section_id, attrib_id, value);
 
 
@@ -20462,7 +20455,7 @@ ALTER TABLE ONLY phpgw_config2_choice
 -- Name: phpgw_config2_section phpgw_config2_section_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_config2_section
+ALTER TABLE ONLY public.phpgw_config2_section
     ADD CONSTRAINT phpgw_config2_section_pkey PRIMARY KEY (id);
 
 
@@ -20470,7 +20463,7 @@ ALTER TABLE ONLY phpgw_config2_section
 -- Name: phpgw_config2_value phpgw_config2_value_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_config2_value
+ALTER TABLE ONLY public.phpgw_config2_value
     ADD CONSTRAINT phpgw_config2_value_pkey PRIMARY KEY (section_id, attrib_id, id);
 
 
@@ -20478,7 +20471,7 @@ ALTER TABLE ONLY phpgw_config2_value
 -- Name: phpgw_config phpgw_config_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_config
+ALTER TABLE ONLY public.phpgw_config
     ADD CONSTRAINT phpgw_config_pkey PRIMARY KEY (config_app, config_name);
 
 
@@ -20486,7 +20479,7 @@ ALTER TABLE ONLY phpgw_config
 -- Name: phpgw_contact_addr phpgw_contact_addr_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_addr
+ALTER TABLE ONLY public.phpgw_contact_addr
     ADD CONSTRAINT phpgw_contact_addr_pkey PRIMARY KEY (contact_addr_id);
 
 
@@ -20494,7 +20487,7 @@ ALTER TABLE ONLY phpgw_contact_addr
 -- Name: phpgw_contact_addr_type phpgw_contact_addr_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_addr_type
+ALTER TABLE ONLY public.phpgw_contact_addr_type
     ADD CONSTRAINT phpgw_contact_addr_type_pkey PRIMARY KEY (addr_type_id);
 
 
@@ -20502,7 +20495,7 @@ ALTER TABLE ONLY phpgw_contact_addr_type
 -- Name: phpgw_contact_comm_descr phpgw_contact_comm_descr_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_comm_descr
+ALTER TABLE ONLY public.phpgw_contact_comm_descr
     ADD CONSTRAINT phpgw_contact_comm_descr_pkey PRIMARY KEY (comm_descr_id);
 
 
@@ -20510,7 +20503,7 @@ ALTER TABLE ONLY phpgw_contact_comm_descr
 -- Name: phpgw_contact_comm phpgw_contact_comm_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_comm
+ALTER TABLE ONLY public.phpgw_contact_comm
     ADD CONSTRAINT phpgw_contact_comm_pkey PRIMARY KEY (comm_id);
 
 
@@ -20518,7 +20511,7 @@ ALTER TABLE ONLY phpgw_contact_comm
 -- Name: phpgw_contact_comm_type phpgw_contact_comm_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_comm_type
+ALTER TABLE ONLY public.phpgw_contact_comm_type
     ADD CONSTRAINT phpgw_contact_comm_type_pkey PRIMARY KEY (comm_type_id);
 
 
@@ -20526,7 +20519,7 @@ ALTER TABLE ONLY phpgw_contact_comm_type
 -- Name: phpgw_contact_note phpgw_contact_note_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_note
+ALTER TABLE ONLY public.phpgw_contact_note
     ADD CONSTRAINT phpgw_contact_note_pkey PRIMARY KEY (contact_note_id);
 
 
@@ -20534,7 +20527,7 @@ ALTER TABLE ONLY phpgw_contact_note
 -- Name: phpgw_contact_note_type phpgw_contact_note_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_note_type
+ALTER TABLE ONLY public.phpgw_contact_note_type
     ADD CONSTRAINT phpgw_contact_note_type_pkey PRIMARY KEY (note_type_id);
 
 
@@ -20542,7 +20535,7 @@ ALTER TABLE ONLY phpgw_contact_note_type
 -- Name: phpgw_contact_org_person phpgw_contact_org_person_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_org_person
+ALTER TABLE ONLY public.phpgw_contact_org_person
     ADD CONSTRAINT phpgw_contact_org_person_pkey PRIMARY KEY (org_id, person_id);
 
 
@@ -20550,7 +20543,7 @@ ALTER TABLE ONLY phpgw_contact_org_person
 -- Name: phpgw_contact_others phpgw_contact_others_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_others
+ALTER TABLE ONLY public.phpgw_contact_others
     ADD CONSTRAINT phpgw_contact_others_pkey PRIMARY KEY (other_id);
 
 
@@ -20558,7 +20551,7 @@ ALTER TABLE ONLY phpgw_contact_others
 -- Name: phpgw_contact_person phpgw_contact_person_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_person
+ALTER TABLE ONLY public.phpgw_contact_person
     ADD CONSTRAINT phpgw_contact_person_pkey PRIMARY KEY (person_id);
 
 
@@ -20566,7 +20559,7 @@ ALTER TABLE ONLY phpgw_contact_person
 -- Name: phpgw_contact phpgw_contact_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact
+ALTER TABLE ONLY public.phpgw_contact
     ADD CONSTRAINT phpgw_contact_pkey PRIMARY KEY (contact_id);
 
 
@@ -20574,7 +20567,7 @@ ALTER TABLE ONLY phpgw_contact
 -- Name: phpgw_contact_types phpgw_contact_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_contact_types
+ALTER TABLE ONLY public.phpgw_contact_types
     ADD CONSTRAINT phpgw_contact_types_pkey PRIMARY KEY (contact_type_id);
 
 
@@ -20582,7 +20575,7 @@ ALTER TABLE ONLY phpgw_contact_types
 -- Name: phpgw_cust_attribute_group phpgw_cust_attribute_group_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_cust_attribute_group
+ALTER TABLE ONLY public.phpgw_cust_attribute_group
     ADD CONSTRAINT phpgw_cust_attribute_group_pkey PRIMARY KEY (location_id, id);
 
 
@@ -20590,7 +20583,7 @@ ALTER TABLE ONLY phpgw_cust_attribute_group
 -- Name: phpgw_cust_attribute phpgw_cust_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_cust_attribute
+ALTER TABLE ONLY public.phpgw_cust_attribute
     ADD CONSTRAINT phpgw_cust_attribute_pkey PRIMARY KEY (location_id, id);
 
 
@@ -20598,7 +20591,7 @@ ALTER TABLE ONLY phpgw_cust_attribute
 -- Name: phpgw_cust_choice phpgw_cust_choice_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_cust_choice
+ALTER TABLE ONLY public.phpgw_cust_choice
     ADD CONSTRAINT phpgw_cust_choice_pkey PRIMARY KEY (location_id, attrib_id, id);
 
 
@@ -20606,7 +20599,7 @@ ALTER TABLE ONLY phpgw_cust_choice
 -- Name: phpgw_cust_function phpgw_cust_function_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_cust_function
+ALTER TABLE ONLY public.phpgw_cust_function
     ADD CONSTRAINT phpgw_cust_function_pkey PRIMARY KEY (location_id, id);
 
 
@@ -20614,7 +20607,7 @@ ALTER TABLE ONLY phpgw_cust_function
 -- Name: phpgw_group_map phpgw_group_map_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_group_map
+ALTER TABLE ONLY public.phpgw_group_map
     ADD CONSTRAINT phpgw_group_map_pkey PRIMARY KEY (group_id, account_id);
 
 
@@ -20622,7 +20615,7 @@ ALTER TABLE ONLY phpgw_group_map
 -- Name: phpgw_history_log phpgw_history_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_history_log
+ALTER TABLE ONLY public.phpgw_history_log
     ADD CONSTRAINT phpgw_history_log_pkey PRIMARY KEY (history_id);
 
 
@@ -20630,7 +20623,7 @@ ALTER TABLE ONLY phpgw_history_log
 -- Name: phpgw_hooks phpgw_hooks_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_hooks
+ALTER TABLE ONLY public.phpgw_hooks
     ADD CONSTRAINT phpgw_hooks_pkey PRIMARY KEY (hook_id);
 
 
@@ -20638,7 +20631,7 @@ ALTER TABLE ONLY phpgw_hooks
 -- Name: phpgw_interlink phpgw_interlink_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_interlink
+ALTER TABLE ONLY public.phpgw_interlink
     ADD CONSTRAINT phpgw_interlink_pkey PRIMARY KEY (interlink_id);
 
 
@@ -20646,7 +20639,7 @@ ALTER TABLE ONLY phpgw_interlink
 -- Name: phpgw_interserv phpgw_interserv_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_interserv
+ALTER TABLE ONLY public.phpgw_interserv
     ADD CONSTRAINT phpgw_interserv_pkey PRIMARY KEY (server_id);
 
 
@@ -20654,7 +20647,7 @@ ALTER TABLE ONLY phpgw_interserv
 -- Name: phpgw_lang phpgw_lang_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_lang
+ALTER TABLE ONLY public.phpgw_lang
     ADD CONSTRAINT phpgw_lang_pkey PRIMARY KEY (message_id, app_name, lang);
 
 
@@ -20662,7 +20655,7 @@ ALTER TABLE ONLY phpgw_lang
 -- Name: phpgw_languages phpgw_languages_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_languages
+ALTER TABLE ONLY public.phpgw_languages
     ADD CONSTRAINT phpgw_languages_pkey PRIMARY KEY (lang_id);
 
 
@@ -20670,7 +20663,7 @@ ALTER TABLE ONLY phpgw_languages
 -- Name: phpgw_locations phpgw_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_locations
+ALTER TABLE ONLY public.phpgw_locations
     ADD CONSTRAINT phpgw_locations_pkey PRIMARY KEY (location_id);
 
 
@@ -20678,7 +20671,7 @@ ALTER TABLE ONLY phpgw_locations
 -- Name: phpgw_log phpgw_log_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_log
+ALTER TABLE ONLY public.phpgw_log
     ADD CONSTRAINT phpgw_log_pkey PRIMARY KEY (log_id);
 
 
@@ -20686,7 +20679,7 @@ ALTER TABLE ONLY phpgw_log
 -- Name: phpgw_mail_handler phpgw_mail_handler_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_mail_handler
+ALTER TABLE ONLY public.phpgw_mail_handler
     ADD CONSTRAINT phpgw_mail_handler_pkey PRIMARY KEY (handler_id);
 
 
@@ -20694,7 +20687,7 @@ ALTER TABLE ONLY phpgw_mail_handler
 -- Name: phpgw_mapping phpgw_mapping_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_mapping
+ALTER TABLE ONLY public.phpgw_mapping
     ADD CONSTRAINT phpgw_mapping_pkey PRIMARY KEY (ext_user, location, auth_type);
 
 
@@ -20702,7 +20695,7 @@ ALTER TABLE ONLY phpgw_mapping
 -- Name: phpgw_nextid phpgw_nextid_appname_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_nextid
+ALTER TABLE ONLY public.phpgw_nextid
     ADD CONSTRAINT phpgw_nextid_appname_key UNIQUE (appname);
 
 
@@ -20710,7 +20703,7 @@ ALTER TABLE ONLY phpgw_nextid
 -- Name: phpgw_notification phpgw_notification_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_notification
+ALTER TABLE ONLY public.phpgw_notification
     ADD CONSTRAINT phpgw_notification_pkey PRIMARY KEY (id);
 
 
@@ -20718,7 +20711,7 @@ ALTER TABLE ONLY phpgw_notification
 -- Name: phpgw_preferences phpgw_preferences_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_preferences
+ALTER TABLE ONLY public.phpgw_preferences
     ADD CONSTRAINT phpgw_preferences_pkey PRIMARY KEY (preference_owner, preference_app);
 
 
@@ -20726,7 +20719,7 @@ ALTER TABLE ONLY phpgw_preferences
 -- Name: phpgw_sessions phpgw_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_sessions
+ALTER TABLE ONLY public.phpgw_sessions
     ADD CONSTRAINT phpgw_sessions_pkey PRIMARY KEY (session_id);
 
 
@@ -20734,7 +20727,7 @@ ALTER TABLE ONLY phpgw_sessions
 -- Name: phpgw_vfs_file_relation phpgw_vfs_file_relation_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_vfs_file_relation
+ALTER TABLE ONLY public.phpgw_vfs_file_relation
     ADD CONSTRAINT phpgw_vfs_file_relation_pkey PRIMARY KEY (relation_id);
 
 
@@ -20742,7 +20735,7 @@ ALTER TABLE ONLY phpgw_vfs_file_relation
 -- Name: phpgw_vfs_filedata phpgw_vfs_filedata_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_vfs_filedata
+ALTER TABLE ONLY public.phpgw_vfs_filedata
     ADD CONSTRAINT phpgw_vfs_filedata_pkey PRIMARY KEY (file_id);
 
 
@@ -20750,7 +20743,7 @@ ALTER TABLE ONLY phpgw_vfs_filedata
 -- Name: phpgw_vfs phpgw_vfs_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_vfs
+ALTER TABLE ONLY public.phpgw_vfs
     ADD CONSTRAINT phpgw_vfs_pkey PRIMARY KEY (file_id);
 
 
@@ -20758,7 +20751,7 @@ ALTER TABLE ONLY phpgw_vfs
 -- Name: rental_adjustment rental_adjustment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_adjustment
+ALTER TABLE ONLY public.rental_adjustment
     ADD CONSTRAINT rental_adjustment_pkey PRIMARY KEY (id);
 
 
@@ -20766,7 +20759,7 @@ ALTER TABLE ONLY rental_adjustment
 -- Name: rental_application_comment rental_application_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_application_comment
+ALTER TABLE ONLY public.rental_application_comment
     ADD CONSTRAINT rental_application_comment_pkey PRIMARY KEY (id);
 
 
@@ -20774,7 +20767,7 @@ ALTER TABLE ONLY rental_application_comment
 -- Name: rental_application_composite rental_application_composite_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_application_composite
+ALTER TABLE ONLY public.rental_application_composite
     ADD CONSTRAINT rental_application_composite_pkey PRIMARY KEY (id);
 
 
@@ -20782,7 +20775,7 @@ ALTER TABLE ONLY rental_application_composite
 -- Name: rental_application rental_application_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_application
+ALTER TABLE ONLY public.rental_application
     ADD CONSTRAINT rental_application_pkey PRIMARY KEY (id);
 
 
@@ -20790,7 +20783,7 @@ ALTER TABLE ONLY rental_application
 -- Name: rental_billing_info rental_billing_info_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_billing_info
+ALTER TABLE ONLY public.rental_billing_info
     ADD CONSTRAINT rental_billing_info_pkey PRIMARY KEY (id);
 
 
@@ -20798,7 +20791,7 @@ ALTER TABLE ONLY rental_billing_info
 -- Name: rental_billing rental_billing_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_billing
+ALTER TABLE ONLY public.rental_billing
     ADD CONSTRAINT rental_billing_pkey PRIMARY KEY (id);
 
 
@@ -20806,7 +20799,7 @@ ALTER TABLE ONLY rental_billing
 -- Name: rental_billing_term rental_billing_term_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_billing_term
+ALTER TABLE ONLY public.rental_billing_term
     ADD CONSTRAINT rental_billing_term_pkey PRIMARY KEY (id);
 
 
@@ -20814,7 +20807,7 @@ ALTER TABLE ONLY rental_billing_term
 -- Name: rental_composite rental_composite_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_composite
+ALTER TABLE ONLY public.rental_composite
     ADD CONSTRAINT rental_composite_pkey PRIMARY KEY (id);
 
 
@@ -20822,7 +20815,7 @@ ALTER TABLE ONLY rental_composite
 -- Name: rental_composite_standard rental_composite_standard_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_composite_standard
+ALTER TABLE ONLY public.rental_composite_standard
     ADD CONSTRAINT rental_composite_standard_pkey PRIMARY KEY (id);
 
 
@@ -20830,7 +20823,7 @@ ALTER TABLE ONLY rental_composite_standard
 -- Name: rental_composite_type rental_composite_type_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_composite_type
+ALTER TABLE ONLY public.rental_composite_type
     ADD CONSTRAINT rental_composite_type_pkey PRIMARY KEY (id);
 
 
@@ -20838,7 +20831,7 @@ ALTER TABLE ONLY rental_composite_type
 -- Name: rental_contract_composite rental_contract_composite_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_composite
+ALTER TABLE ONLY public.rental_contract_composite
     ADD CONSTRAINT rental_contract_composite_pkey PRIMARY KEY (id);
 
 
@@ -20846,7 +20839,7 @@ ALTER TABLE ONLY rental_contract_composite
 -- Name: rental_contract_last_edited rental_contract_last_edited_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_last_edited
+ALTER TABLE ONLY public.rental_contract_last_edited
     ADD CONSTRAINT rental_contract_last_edited_pkey PRIMARY KEY (contract_id, account_id);
 
 
@@ -20854,7 +20847,7 @@ ALTER TABLE ONLY rental_contract_last_edited
 -- Name: rental_contract_party rental_contract_party_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_party
+ALTER TABLE ONLY public.rental_contract_party
     ADD CONSTRAINT rental_contract_party_pkey PRIMARY KEY (contract_id, party_id);
 
 
@@ -20862,7 +20855,7 @@ ALTER TABLE ONLY rental_contract_party
 -- Name: rental_contract rental_contract_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract
+ALTER TABLE ONLY public.rental_contract
     ADD CONSTRAINT rental_contract_pkey PRIMARY KEY (id);
 
 
@@ -20870,7 +20863,7 @@ ALTER TABLE ONLY rental_contract
 -- Name: rental_contract_price_item rental_contract_price_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_price_item
+ALTER TABLE ONLY public.rental_contract_price_item
     ADD CONSTRAINT rental_contract_price_item_pkey PRIMARY KEY (id);
 
 
@@ -20878,7 +20871,7 @@ ALTER TABLE ONLY rental_contract_price_item
 -- Name: rental_contract_responsibility rental_contract_responsibility_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_responsibility
+ALTER TABLE ONLY public.rental_contract_responsibility
     ADD CONSTRAINT rental_contract_responsibility_pkey PRIMARY KEY (id);
 
 
@@ -20886,7 +20879,7 @@ ALTER TABLE ONLY rental_contract_responsibility
 -- Name: rental_contract_responsibility_unit rental_contract_responsibility_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_responsibility_unit
+ALTER TABLE ONLY public.rental_contract_responsibility_unit
     ADD CONSTRAINT rental_contract_responsibility_unit_pkey PRIMARY KEY (id);
 
 
@@ -20894,7 +20887,7 @@ ALTER TABLE ONLY rental_contract_responsibility_unit
 -- Name: rental_contract_types rental_contract_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_types
+ALTER TABLE ONLY public.rental_contract_types
     ADD CONSTRAINT rental_contract_types_pkey PRIMARY KEY (id);
 
 
@@ -20902,7 +20895,7 @@ ALTER TABLE ONLY rental_contract_types
 -- Name: rental_document rental_document_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_document
+ALTER TABLE ONLY public.rental_document
     ADD CONSTRAINT rental_document_pkey PRIMARY KEY (id);
 
 
@@ -20910,7 +20903,7 @@ ALTER TABLE ONLY rental_document
 -- Name: rental_document_types rental_document_types_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_document_types
+ALTER TABLE ONLY public.rental_document_types
     ADD CONSTRAINT rental_document_types_pkey PRIMARY KEY (id);
 
 
@@ -20918,7 +20911,7 @@ ALTER TABLE ONLY rental_document_types
 -- Name: rental_email_out_party rental_email_out_party_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_email_out_party
+ALTER TABLE ONLY public.rental_email_out_party
     ADD CONSTRAINT rental_email_out_party_pkey PRIMARY KEY (id);
 
 
@@ -20926,7 +20919,7 @@ ALTER TABLE ONLY rental_email_out_party
 -- Name: rental_email_out rental_email_out_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_email_out
+ALTER TABLE ONLY public.rental_email_out
     ADD CONSTRAINT rental_email_out_pkey PRIMARY KEY (id);
 
 
@@ -20934,7 +20927,7 @@ ALTER TABLE ONLY rental_email_out
 -- Name: rental_email_template rental_email_template_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_email_template
+ALTER TABLE ONLY public.rental_email_template
     ADD CONSTRAINT rental_email_template_pkey PRIMARY KEY (id);
 
 
@@ -20942,7 +20935,7 @@ ALTER TABLE ONLY rental_email_template
 -- Name: rental_invoice rental_invoice_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_invoice
+ALTER TABLE ONLY public.rental_invoice
     ADD CONSTRAINT rental_invoice_pkey PRIMARY KEY (id);
 
 
@@ -20950,7 +20943,7 @@ ALTER TABLE ONLY rental_invoice
 -- Name: rental_invoice_price_item rental_invoice_price_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_invoice_price_item
+ALTER TABLE ONLY public.rental_invoice_price_item
     ADD CONSTRAINT rental_invoice_price_item_pkey PRIMARY KEY (id);
 
 
@@ -20958,7 +20951,7 @@ ALTER TABLE ONLY rental_invoice_price_item
 -- Name: rental_location_factor rental_location_factor_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_location_factor
+ALTER TABLE ONLY public.rental_location_factor
     ADD CONSTRAINT rental_location_factor_pkey PRIMARY KEY (id);
 
 
@@ -20966,7 +20959,7 @@ ALTER TABLE ONLY rental_location_factor
 -- Name: rental_movein_comment rental_movein_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_movein_comment
+ALTER TABLE ONLY public.rental_movein_comment
     ADD CONSTRAINT rental_movein_comment_pkey PRIMARY KEY (id);
 
 
@@ -20974,7 +20967,7 @@ ALTER TABLE ONLY rental_movein_comment
 -- Name: rental_movein rental_movein_contract_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_movein
+ALTER TABLE ONLY public.rental_movein
     ADD CONSTRAINT rental_movein_contract_id_key UNIQUE (contract_id);
 
 
@@ -20982,7 +20975,7 @@ ALTER TABLE ONLY rental_movein
 -- Name: rental_movein rental_movein_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_movein
+ALTER TABLE ONLY public.rental_movein
     ADD CONSTRAINT rental_movein_pkey PRIMARY KEY (id);
 
 
@@ -20990,7 +20983,7 @@ ALTER TABLE ONLY rental_movein
 -- Name: rental_moveout_comment rental_moveout_comment_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_moveout_comment
+ALTER TABLE ONLY public.rental_moveout_comment
     ADD CONSTRAINT rental_moveout_comment_pkey PRIMARY KEY (id);
 
 
@@ -20998,7 +20991,7 @@ ALTER TABLE ONLY rental_moveout_comment
 -- Name: rental_moveout rental_moveout_contract_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_moveout
+ALTER TABLE ONLY public.rental_moveout
     ADD CONSTRAINT rental_moveout_contract_id_key UNIQUE (contract_id);
 
 
@@ -21006,7 +20999,7 @@ ALTER TABLE ONLY rental_moveout
 -- Name: rental_moveout rental_moveout_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_moveout
+ALTER TABLE ONLY public.rental_moveout
     ADD CONSTRAINT rental_moveout_pkey PRIMARY KEY (id);
 
 
@@ -21014,7 +21007,7 @@ ALTER TABLE ONLY rental_moveout
 -- Name: rental_notification rental_notification_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification
+ALTER TABLE ONLY public.rental_notification
     ADD CONSTRAINT rental_notification_pkey PRIMARY KEY (id);
 
 
@@ -21022,7 +21015,7 @@ ALTER TABLE ONLY rental_notification
 -- Name: rental_notification_workbench rental_notification_workbench_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification_workbench
+ALTER TABLE ONLY public.rental_notification_workbench
     ADD CONSTRAINT rental_notification_workbench_pkey PRIMARY KEY (id);
 
 
@@ -21030,7 +21023,7 @@ ALTER TABLE ONLY rental_notification_workbench
 -- Name: rental_party rental_party_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_party
+ALTER TABLE ONLY public.rental_party
     ADD CONSTRAINT rental_party_pkey PRIMARY KEY (id);
 
 
@@ -21038,7 +21031,7 @@ ALTER TABLE ONLY rental_party
 -- Name: rental_price_item rental_price_item_agresso_id_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_price_item
+ALTER TABLE ONLY public.rental_price_item
     ADD CONSTRAINT rental_price_item_agresso_id_key UNIQUE (agresso_id);
 
 
@@ -21046,7 +21039,7 @@ ALTER TABLE ONLY rental_price_item
 -- Name: rental_price_item rental_price_item_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_price_item
+ALTER TABLE ONLY public.rental_price_item
     ADD CONSTRAINT rental_price_item_pkey PRIMARY KEY (id);
 
 
@@ -21054,7 +21047,7 @@ ALTER TABLE ONLY rental_price_item
 -- Name: rental_unit rental_unit_composite_id_location_code_key; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_unit
+ALTER TABLE ONLY public.rental_unit
     ADD CONSTRAINT rental_unit_composite_id_location_code_key UNIQUE (composite_id, location_code);
 
 
@@ -21062,7 +21055,7 @@ ALTER TABLE ONLY rental_unit
 -- Name: rental_unit rental_unit_pkey; Type: CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_unit
+ALTER TABLE ONLY public.rental_unit
     ADD CONSTRAINT rental_unit_pkey PRIMARY KEY (id);
 
 
@@ -21070,1017 +21063,1007 @@ ALTER TABLE ONLY rental_unit
 -- Name: access_phpgw_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX access_phpgw_contact_idx ON phpgw_contact USING btree (access);
+CREATE INDEX access_phpgw_contact_idx ON public.phpgw_contact USING btree (access);
 
 
 --
 -- Name: acl_account_phpgw_acl_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX acl_account_phpgw_acl_idx ON phpgw_acl USING btree (acl_account);
+CREATE INDEX acl_account_phpgw_acl_idx ON public.phpgw_acl USING btree (acl_account);
 
 
 --
 -- Name: active_phpgw_contact_comm_type_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX active_phpgw_contact_comm_type_idx ON phpgw_contact_comm_type USING btree (active);
+CREATE INDEX active_phpgw_contact_comm_type_idx ON public.phpgw_contact_comm_type USING btree (active);
 
 
 --
 -- Name: active_phpgw_contact_org_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX active_phpgw_contact_org_idx ON phpgw_contact_org USING btree (active);
+CREATE INDEX active_phpgw_contact_org_idx ON public.phpgw_contact_org USING btree (active);
 
 
 --
 -- Name: addr_id_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX addr_id_phpgw_contact_org_person_idx ON phpgw_contact_org_person USING btree (addr_id);
+CREATE INDEX addr_id_phpgw_contact_org_person_idx ON public.phpgw_contact_org_person USING btree (addr_id);
 
 
 --
 -- Name: addr_type_id_phpgw_contact_addr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX addr_type_id_phpgw_contact_addr_idx ON phpgw_contact_addr USING btree (addr_type_id);
+CREATE INDEX addr_type_id_phpgw_contact_addr_idx ON public.phpgw_contact_addr USING btree (addr_type_id);
 
 
 --
 -- Name: app_id_phpgw_locations_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX app_id_phpgw_locations_idx ON phpgw_locations USING btree (app_id);
+CREATE INDEX app_id_phpgw_locations_idx ON public.phpgw_locations USING btree (app_id);
 
 
 --
 -- Name: class_phpgw_contact_comm_type_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX class_phpgw_contact_comm_type_idx ON phpgw_contact_comm_type USING btree (class);
+CREATE INDEX class_phpgw_contact_comm_type_idx ON public.phpgw_contact_comm_type USING btree (class);
 
 
 --
 -- Name: comm_data_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX comm_data_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree (comm_data);
+CREATE INDEX comm_data_phpgw_contact_comm_idx ON public.phpgw_contact_comm USING btree (comm_data);
 
 
 --
 -- Name: comm_descr_id_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX comm_descr_id_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree (comm_descr_id);
+CREATE INDEX comm_descr_id_phpgw_contact_comm_idx ON public.phpgw_contact_comm USING btree (comm_descr_id);
 
 
 --
 -- Name: comm_type_id_phpgw_contact_comm_descr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX comm_type_id_phpgw_contact_comm_descr_idx ON phpgw_contact_comm_descr USING btree (comm_type_id);
+CREATE INDEX comm_type_id_phpgw_contact_comm_descr_idx ON public.phpgw_contact_comm_descr USING btree (comm_type_id);
 
 
 --
 -- Name: contact_id_phpgw_contact_addr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_id_phpgw_contact_addr_idx ON phpgw_contact_addr USING btree (contact_id);
+CREATE INDEX contact_id_phpgw_contact_addr_idx ON public.phpgw_contact_addr USING btree (contact_id);
 
 
 --
 -- Name: contact_id_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_id_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree (contact_id);
+CREATE INDEX contact_id_phpgw_contact_comm_idx ON public.phpgw_contact_comm USING btree (contact_id);
 
 
 --
 -- Name: contact_id_phpgw_contact_note_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_id_phpgw_contact_note_idx ON phpgw_contact_note USING btree (contact_id);
+CREATE INDEX contact_id_phpgw_contact_note_idx ON public.phpgw_contact_note USING btree (contact_id);
 
 
 --
 -- Name: contact_id_phpgw_contact_others_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_id_phpgw_contact_others_idx ON phpgw_contact_others USING btree (contact_id);
+CREATE INDEX contact_id_phpgw_contact_others_idx ON public.phpgw_contact_others USING btree (contact_id);
 
 
 --
 -- Name: contact_owner_phpgw_contact_others_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_owner_phpgw_contact_others_idx ON phpgw_contact_others USING btree (contact_owner);
+CREATE INDEX contact_owner_phpgw_contact_others_idx ON public.phpgw_contact_others USING btree (contact_owner);
 
 
 --
 -- Name: contact_type_descr_phpgw_contact_types_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_type_descr_phpgw_contact_types_idx ON phpgw_contact_types USING btree (contact_type_descr);
+CREATE INDEX contact_type_descr_phpgw_contact_types_idx ON public.phpgw_contact_types USING btree (contact_type_descr);
 
 
 --
 -- Name: contact_type_id_phpgw_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX contact_type_id_phpgw_contact_idx ON phpgw_contact USING btree (contact_type_id);
+CREATE INDEX contact_type_id_phpgw_contact_idx ON public.phpgw_contact USING btree (contact_type_id);
 
 
 --
 -- Name: descr_phpgw_contact_comm_descr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX descr_phpgw_contact_comm_descr_idx ON phpgw_contact_comm_descr USING btree (descr);
+CREATE INDEX descr_phpgw_contact_comm_descr_idx ON public.phpgw_contact_comm_descr USING btree (descr);
 
 
 --
 -- Name: entity_id_fm_investment_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX entity_id_fm_investment_idx ON fm_investment USING btree (entity_id);
+CREATE INDEX entity_id_fm_investment_idx ON public.fm_investment USING btree (entity_id);
 
 
 --
 -- Name: first_name_phpgw_contact_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX first_name_phpgw_contact_person_idx ON phpgw_contact_person USING btree (first_name);
+CREATE INDEX first_name_phpgw_contact_person_idx ON public.phpgw_contact_person USING btree (first_name);
 
 
 --
 -- Name: is_active_phpgw_mail_handler_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX is_active_phpgw_mail_handler_idx ON phpgw_mail_handler USING btree (is_active);
+CREATE INDEX is_active_phpgw_mail_handler_idx ON public.phpgw_mail_handler USING btree (is_active);
 
 
 --
 -- Name: last_name_phpgw_contact_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX last_name_phpgw_contact_person_idx ON phpgw_contact_person USING btree (last_name);
+CREATE INDEX last_name_phpgw_contact_person_idx ON public.phpgw_contact_person USING btree (last_name);
 
 
 --
 -- Name: lastmodts_phpgw_cache_user_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX lastmodts_phpgw_cache_user_idx ON phpgw_cache_user USING btree (lastmodts);
+CREATE INDEX lastmodts_phpgw_cache_user_idx ON public.phpgw_cache_user USING btree (lastmodts);
 
 
 --
 -- Name: lastmodts_phpgw_sessions_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX lastmodts_phpgw_sessions_idx ON phpgw_sessions USING btree (lastmodts);
+CREATE INDEX lastmodts_phpgw_sessions_idx ON public.phpgw_sessions USING btree (lastmodts);
 
 
 --
 -- Name: location_code_fm_document_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_document_idx ON fm_document USING btree (location_code);
+CREATE INDEX location_code_fm_document_idx ON public.fm_document USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_gab_location_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_gab_location_idx ON fm_gab_location USING btree (location_code);
+CREATE INDEX location_code_fm_gab_location_idx ON public.fm_gab_location USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_investment_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_investment_idx ON fm_investment USING btree (location_code);
+CREATE INDEX location_code_fm_investment_idx ON public.fm_investment USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_location1_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_location1_idx ON fm_location1 USING btree (location_code);
+CREATE INDEX location_code_fm_location1_idx ON public.fm_location1 USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_location2_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_location2_idx ON fm_location2 USING btree (location_code);
+CREATE INDEX location_code_fm_location2_idx ON public.fm_location2 USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_location3_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_location3_idx ON fm_location3 USING btree (location_code);
+CREATE INDEX location_code_fm_location3_idx ON public.fm_location3 USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_location4_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_location4_idx ON fm_location4 USING btree (location_code);
+CREATE INDEX location_code_fm_location4_idx ON public.fm_location4 USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_project_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_project_idx ON fm_project USING btree (location_code);
+CREATE INDEX location_code_fm_project_idx ON public.fm_project USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_request_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_request_idx ON fm_request USING btree (location_code);
+CREATE INDEX location_code_fm_request_idx ON public.fm_request USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_responsibility_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_responsibility_contact_idx ON fm_responsibility_contact USING btree (location_code);
+CREATE INDEX location_code_fm_responsibility_contact_idx ON public.fm_responsibility_contact USING btree (location_code);
 
 
 --
 -- Name: location_code_fm_tts_tickets_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_code_fm_tts_tickets_idx ON fm_tts_tickets USING btree (location_code);
+CREATE INDEX location_code_fm_tts_tickets_idx ON public.fm_tts_tickets USING btree (location_code);
 
 
 --
 -- Name: location_id_phpgw_acl_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX location_id_phpgw_acl_idx ON phpgw_acl USING btree (location_id);
+CREATE INDEX location_id_phpgw_acl_idx ON public.phpgw_acl USING btree (location_id);
 
 
 --
 -- Name: name_phpgw_locations_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX name_phpgw_locations_idx ON phpgw_locations USING btree (name);
+CREATE INDEX name_phpgw_locations_idx ON public.phpgw_locations USING btree (name);
 
 
 --
 -- Name: note_type_id_phpgw_contact_note_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX note_type_id_phpgw_contact_note_idx ON phpgw_contact_note USING btree (note_type_id);
+CREATE INDEX note_type_id_phpgw_contact_note_idx ON public.phpgw_contact_note USING btree (note_type_id);
 
 
 --
 -- Name: org_id_phpgw_contact_org_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX org_id_phpgw_contact_org_idx ON phpgw_contact_org USING btree (org_id);
+CREATE INDEX org_id_phpgw_contact_org_idx ON public.phpgw_contact_org USING btree (org_id);
 
 
 --
 -- Name: org_id_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX org_id_phpgw_contact_org_person_idx ON phpgw_contact_org_person USING btree (org_id);
+CREATE INDEX org_id_phpgw_contact_org_person_idx ON public.phpgw_contact_org_person USING btree (org_id);
 
 
 --
 -- Name: other_name_phpgw_contact_others_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX other_name_phpgw_contact_others_idx ON phpgw_contact_others USING btree (other_name);
+CREATE INDEX other_name_phpgw_contact_others_idx ON public.phpgw_contact_others USING btree (other_name);
 
 
 --
 -- Name: owner_phpgw_contact_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX owner_phpgw_contact_idx ON phpgw_contact USING btree (owner);
+CREATE INDEX owner_phpgw_contact_idx ON public.phpgw_contact USING btree (owner);
 
 
 --
 -- Name: person_id_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX person_id_phpgw_contact_org_person_idx ON phpgw_contact_org_person USING btree (person_id);
+CREATE INDEX person_id_phpgw_contact_org_person_idx ON public.phpgw_contact_org_person USING btree (person_id);
 
 
 --
 -- Name: preferred_phpgw_contact_addr_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX preferred_phpgw_contact_addr_idx ON phpgw_contact_addr USING btree (preferred);
+CREATE INDEX preferred_phpgw_contact_addr_idx ON public.phpgw_contact_addr USING btree (preferred);
 
 
 --
 -- Name: preferred_phpgw_contact_comm_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX preferred_phpgw_contact_comm_idx ON phpgw_contact_comm USING btree (preferred);
+CREATE INDEX preferred_phpgw_contact_comm_idx ON public.phpgw_contact_comm USING btree (preferred);
 
 
 --
 -- Name: preferred_phpgw_contact_org_person_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX preferred_phpgw_contact_org_person_idx ON phpgw_contact_org_person USING btree (preferred);
+CREATE INDEX preferred_phpgw_contact_org_person_idx ON public.phpgw_contact_org_person USING btree (preferred);
 
 
 --
 -- Name: target_email_phpgw_mail_handler_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX target_email_phpgw_mail_handler_idx ON phpgw_mail_handler USING btree (target_email);
+CREATE INDEX target_email_phpgw_mail_handler_idx ON public.phpgw_mail_handler USING btree (target_email);
 
 
 --
 -- Name: type_phpgw_contact_comm_type_idx; Type: INDEX; Schema: public; Owner: portico
 --
 
-CREATE INDEX type_phpgw_contact_comm_type_idx ON phpgw_contact_comm_type USING btree (type);
+CREATE INDEX type_phpgw_contact_comm_type_idx ON public.phpgw_contact_comm_type USING btree (type);
 
 
 --
 -- Name: controller_check_item_case controller_check_item_case_check_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_check_item_case
-    ADD CONSTRAINT controller_check_item_case_check_item_id_fkey FOREIGN KEY (check_item_id) REFERENCES controller_check_item(id);
+ALTER TABLE ONLY public.controller_check_item_case
+    ADD CONSTRAINT controller_check_item_case_check_item_id_fkey FOREIGN KEY (check_item_id) REFERENCES public.controller_check_item(id);
 
 
 --
 -- Name: controller_control_serie_history controller_control_serie_history_serie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_control_serie_history
-    ADD CONSTRAINT controller_control_serie_history_serie_id_fkey FOREIGN KEY (serie_id) REFERENCES controller_control_serie(id);
+ALTER TABLE ONLY public.controller_control_serie_history
+    ADD CONSTRAINT controller_control_serie_history_serie_id_fkey FOREIGN KEY (serie_id) REFERENCES public.controller_control_serie(id);
 
 
 --
 -- Name: controller_document controller_document_procedure_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_document
-    ADD CONSTRAINT controller_document_procedure_id_fkey FOREIGN KEY (procedure_id) REFERENCES controller_procedure(id);
+ALTER TABLE ONLY public.controller_document
+    ADD CONSTRAINT controller_document_procedure_id_fkey FOREIGN KEY (procedure_id) REFERENCES public.controller_procedure(id);
 
 
 --
 -- Name: controller_document controller_document_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY controller_document
-    ADD CONSTRAINT controller_document_type_id_fkey FOREIGN KEY (type_id) REFERENCES controller_document_types(id);
+ALTER TABLE ONLY public.controller_document
+    ADD CONSTRAINT controller_document_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.controller_document_types(id);
 
 
 --
 -- Name: fm_document_relation fm_document_relation_document_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_document_relation
-    ADD CONSTRAINT fm_document_relation_document_id_fkey FOREIGN KEY (document_id) REFERENCES fm_document(id);
+ALTER TABLE ONLY public.fm_document_relation
+    ADD CONSTRAINT fm_document_relation_document_id_fkey FOREIGN KEY (document_id) REFERENCES public.fm_document(id);
 
 
 --
 -- Name: fm_eco_periodization_outline fm_eco_periodization_outline_periodization_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_eco_periodization_outline
-    ADD CONSTRAINT fm_eco_periodization_outline_periodization_id_fkey FOREIGN KEY (periodization_id) REFERENCES fm_eco_periodization(id);
+ALTER TABLE ONLY public.fm_eco_periodization_outline
+    ADD CONSTRAINT fm_eco_periodization_outline_periodization_id_fkey FOREIGN KEY (periodization_id) REFERENCES public.fm_eco_periodization(id);
 
 
 --
 -- Name: fm_ecodimb fm_ecodimb_org_unit_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb
-    ADD CONSTRAINT fm_ecodimb_org_unit_id_fkey FOREIGN KEY (org_unit_id) REFERENCES fm_org_unit(id);
+ALTER TABLE ONLY public.fm_ecodimb
+    ADD CONSTRAINT fm_ecodimb_org_unit_id_fkey FOREIGN KEY (org_unit_id) REFERENCES public.fm_org_unit(id);
 
 
 --
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_ecodimb_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb_role_user
-    ADD CONSTRAINT fm_ecodimb_role_user_ecodimb_fkey FOREIGN KEY (ecodimb) REFERENCES fm_ecodimb(id);
+ALTER TABLE ONLY public.fm_ecodimb_role_user
+    ADD CONSTRAINT fm_ecodimb_role_user_ecodimb_fkey FOREIGN KEY (ecodimb) REFERENCES public.fm_ecodimb(id);
 
 
 --
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb_role_user
-    ADD CONSTRAINT fm_ecodimb_role_user_role_id_fkey FOREIGN KEY (role_id) REFERENCES fm_ecodimb_role(id);
+ALTER TABLE ONLY public.fm_ecodimb_role_user
+    ADD CONSTRAINT fm_ecodimb_role_user_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.fm_ecodimb_role(id);
 
 
 --
 -- Name: fm_ecodimb_role_user fm_ecodimb_role_user_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_ecodimb_role_user
-    ADD CONSTRAINT fm_ecodimb_role_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.fm_ecodimb_role_user
+    ADD CONSTRAINT fm_ecodimb_role_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: fm_jasper_input fm_jasper_input_input_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_jasper_input
-    ADD CONSTRAINT fm_jasper_input_input_type_id_fkey FOREIGN KEY (input_type_id) REFERENCES fm_jasper_input_type(id);
+ALTER TABLE ONLY public.fm_jasper_input
+    ADD CONSTRAINT fm_jasper_input_input_type_id_fkey FOREIGN KEY (input_type_id) REFERENCES public.fm_jasper_input_type(id);
 
 
 --
 -- Name: fm_jasper_input fm_jasper_input_jasper_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_jasper_input
-    ADD CONSTRAINT fm_jasper_input_jasper_id_fkey FOREIGN KEY (jasper_id) REFERENCES fm_jasper(id);
+ALTER TABLE ONLY public.fm_jasper_input
+    ADD CONSTRAINT fm_jasper_input_jasper_id_fkey FOREIGN KEY (jasper_id) REFERENCES public.fm_jasper(id);
 
 
 --
 -- Name: fm_location1 fm_location1_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location1
-    ADD CONSTRAINT fm_location1_category_fkey FOREIGN KEY (category) REFERENCES fm_location1_category(id);
+ALTER TABLE ONLY public.fm_location1
+    ADD CONSTRAINT fm_location1_category_fkey FOREIGN KEY (category) REFERENCES public.fm_location1_category(id);
 
 
 --
 -- Name: fm_location2 fm_location2_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location2
-    ADD CONSTRAINT fm_location2_category_fkey FOREIGN KEY (category) REFERENCES fm_location2_category(id);
+ALTER TABLE ONLY public.fm_location2
+    ADD CONSTRAINT fm_location2_category_fkey FOREIGN KEY (category) REFERENCES public.fm_location2_category(id);
 
 
 --
 -- Name: fm_location2 fm_location2_loc1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location2
-    ADD CONSTRAINT fm_location2_loc1_fkey FOREIGN KEY (loc1) REFERENCES fm_location1(loc1);
+ALTER TABLE ONLY public.fm_location2
+    ADD CONSTRAINT fm_location2_loc1_fkey FOREIGN KEY (loc1) REFERENCES public.fm_location1(loc1);
 
 
 --
 -- Name: fm_location3 fm_location3_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location3
-    ADD CONSTRAINT fm_location3_category_fkey FOREIGN KEY (category) REFERENCES fm_location3_category(id);
+ALTER TABLE ONLY public.fm_location3
+    ADD CONSTRAINT fm_location3_category_fkey FOREIGN KEY (category) REFERENCES public.fm_location3_category(id);
 
 
 --
 -- Name: fm_location3 fm_location3_loc1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location3
-    ADD CONSTRAINT fm_location3_loc1_fkey FOREIGN KEY (loc1, loc2) REFERENCES fm_location2(loc1, loc2);
+ALTER TABLE ONLY public.fm_location3
+    ADD CONSTRAINT fm_location3_loc1_fkey FOREIGN KEY (loc1, loc2) REFERENCES public.fm_location2(loc1, loc2);
 
 
 --
 -- Name: fm_location4 fm_location4_category_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location4
-    ADD CONSTRAINT fm_location4_category_fkey FOREIGN KEY (category) REFERENCES fm_location4_category(id);
+ALTER TABLE ONLY public.fm_location4
+    ADD CONSTRAINT fm_location4_category_fkey FOREIGN KEY (category) REFERENCES public.fm_location4_category(id);
 
 
 --
 -- Name: fm_location4 fm_location4_loc1_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location4
-    ADD CONSTRAINT fm_location4_loc1_fkey FOREIGN KEY (loc1, loc2, loc3) REFERENCES fm_location3(loc1, loc2, loc3);
+ALTER TABLE ONLY public.fm_location4
+    ADD CONSTRAINT fm_location4_loc1_fkey FOREIGN KEY (loc1, loc2, loc3) REFERENCES public.fm_location3(loc1, loc2, loc3);
 
 
 --
 -- Name: fm_location_contact fm_location_contact_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_contact
-    ADD CONSTRAINT fm_location_contact_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES phpgw_contact(contact_id);
+ALTER TABLE ONLY public.fm_location_contact
+    ADD CONSTRAINT fm_location_contact_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES public.phpgw_contact(contact_id);
 
 
 --
 -- Name: fm_location_contact fm_location_contact_location_code_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_contact
-    ADD CONSTRAINT fm_location_contact_location_code_fkey FOREIGN KEY (location_code) REFERENCES fm_locations(location_code);
+ALTER TABLE ONLY public.fm_location_contact
+    ADD CONSTRAINT fm_location_contact_location_code_fkey FOREIGN KEY (location_code) REFERENCES public.fm_locations(location_code);
 
 
 --
 -- Name: fm_location_exception fm_location_exception_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception
-    ADD CONSTRAINT fm_location_exception_category_id_fkey FOREIGN KEY (category_id) REFERENCES fm_location_exception_category(id);
+ALTER TABLE ONLY public.fm_location_exception
+    ADD CONSTRAINT fm_location_exception_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.fm_location_exception_category(id);
 
 
 --
 -- Name: fm_location_exception_category_text fm_location_exception_category_text_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception_category_text
-    ADD CONSTRAINT fm_location_exception_category_text_category_id_fkey FOREIGN KEY (category_id) REFERENCES fm_location_exception_category(id);
+ALTER TABLE ONLY public.fm_location_exception_category_text
+    ADD CONSTRAINT fm_location_exception_category_text_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.fm_location_exception_category(id);
 
 
 --
 -- Name: fm_location_exception fm_location_exception_severity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_location_exception
-    ADD CONSTRAINT fm_location_exception_severity_id_fkey FOREIGN KEY (severity_id) REFERENCES fm_location_exception_severity(id);
+ALTER TABLE ONLY public.fm_location_exception
+    ADD CONSTRAINT fm_location_exception_severity_id_fkey FOREIGN KEY (severity_id) REFERENCES public.fm_location_exception_severity(id);
 
 
 --
 -- Name: fm_part_of_town fm_part_of_town_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_part_of_town
-    ADD CONSTRAINT fm_part_of_town_district_id_fkey FOREIGN KEY (district_id) REFERENCES fm_district(id);
+ALTER TABLE ONLY public.fm_part_of_town
+    ADD CONSTRAINT fm_part_of_town_district_id_fkey FOREIGN KEY (district_id) REFERENCES public.fm_district(id);
 
 
 --
 -- Name: fm_project_budget fm_project_budget_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_project_budget
-    ADD CONSTRAINT fm_project_budget_project_id_fkey FOREIGN KEY (project_id) REFERENCES fm_project(id);
+ALTER TABLE ONLY public.fm_project_budget
+    ADD CONSTRAINT fm_project_budget_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.fm_project(id);
 
 
 --
 -- Name: fm_request_consume fm_request_consume_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_consume
-    ADD CONSTRAINT fm_request_consume_request_id_fkey FOREIGN KEY (request_id) REFERENCES fm_request(id);
+ALTER TABLE ONLY public.fm_request_consume
+    ADD CONSTRAINT fm_request_consume_request_id_fkey FOREIGN KEY (request_id) REFERENCES public.fm_request(id);
 
 
 --
 -- Name: fm_request_planning fm_request_planning_request_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_request_planning
-    ADD CONSTRAINT fm_request_planning_request_id_fkey FOREIGN KEY (request_id) REFERENCES fm_request(id);
+ALTER TABLE ONLY public.fm_request_planning
+    ADD CONSTRAINT fm_request_planning_request_id_fkey FOREIGN KEY (request_id) REFERENCES public.fm_request(id);
 
 
 --
 -- Name: fm_responsibility_contact fm_responsibility_contact_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_contact
-    ADD CONSTRAINT fm_responsibility_contact_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES phpgw_contact(contact_id);
+ALTER TABLE ONLY public.fm_responsibility_contact
+    ADD CONSTRAINT fm_responsibility_contact_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES public.phpgw_contact(contact_id);
 
 
 --
 -- Name: fm_responsibility_contact fm_responsibility_contact_responsibility_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_contact
-    ADD CONSTRAINT fm_responsibility_contact_responsibility_role_id_fkey FOREIGN KEY (responsibility_role_id) REFERENCES fm_responsibility_role(id);
+ALTER TABLE ONLY public.fm_responsibility_contact
+    ADD CONSTRAINT fm_responsibility_contact_responsibility_role_id_fkey FOREIGN KEY (responsibility_role_id) REFERENCES public.fm_responsibility_role(id);
 
 
 --
 -- Name: fm_responsibility_module fm_responsibility_module_cat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_module
-    ADD CONSTRAINT fm_responsibility_module_cat_id_fkey FOREIGN KEY (cat_id) REFERENCES phpgw_categories(cat_id);
+ALTER TABLE ONLY public.fm_responsibility_module
+    ADD CONSTRAINT fm_responsibility_module_cat_id_fkey FOREIGN KEY (cat_id) REFERENCES public.phpgw_categories(cat_id);
 
 
 --
 -- Name: fm_responsibility_module fm_responsibility_module_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_module
-    ADD CONSTRAINT fm_responsibility_module_location_id_fkey FOREIGN KEY (location_id) REFERENCES phpgw_locations(location_id);
+ALTER TABLE ONLY public.fm_responsibility_module
+    ADD CONSTRAINT fm_responsibility_module_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.phpgw_locations(location_id);
 
 
 --
 -- Name: fm_responsibility_module fm_responsibility_module_responsibility_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_module
-    ADD CONSTRAINT fm_responsibility_module_responsibility_id_fkey FOREIGN KEY (responsibility_id) REFERENCES fm_responsibility(id);
+ALTER TABLE ONLY public.fm_responsibility_module
+    ADD CONSTRAINT fm_responsibility_module_responsibility_id_fkey FOREIGN KEY (responsibility_id) REFERENCES public.fm_responsibility(id);
 
 
 --
 -- Name: fm_responsibility_role fm_responsibility_role_responsibility_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_responsibility_role
-    ADD CONSTRAINT fm_responsibility_role_responsibility_id_fkey FOREIGN KEY (responsibility_id) REFERENCES fm_responsibility(id);
+ALTER TABLE ONLY public.fm_responsibility_role
+    ADD CONSTRAINT fm_responsibility_role_responsibility_id_fkey FOREIGN KEY (responsibility_id) REFERENCES public.fm_responsibility(id);
 
 
 --
 -- Name: fm_tts_budget fm_tts_budget_ticket_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_budget
-    ADD CONSTRAINT fm_tts_budget_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES fm_tts_tickets(id);
+ALTER TABLE ONLY public.fm_tts_budget
+    ADD CONSTRAINT fm_tts_budget_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES public.fm_tts_tickets(id);
 
 
 --
 -- Name: fm_tts_payments fm_tts_payments_ticket_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_tts_payments
-    ADD CONSTRAINT fm_tts_payments_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES fm_tts_tickets(id);
+ALTER TABLE ONLY public.fm_tts_payments
+    ADD CONSTRAINT fm_tts_payments_ticket_id_fkey FOREIGN KEY (ticket_id) REFERENCES public.fm_tts_tickets(id);
 
 
 --
 -- Name: fm_view_dataset_report fm_view_dataset_report_dataset_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_view_dataset_report
-    ADD CONSTRAINT fm_view_dataset_report_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES fm_view_dataset(id);
+ALTER TABLE ONLY public.fm_view_dataset_report
+    ADD CONSTRAINT fm_view_dataset_report_dataset_id_fkey FOREIGN KEY (dataset_id) REFERENCES public.fm_view_dataset(id);
 
 
 --
 -- Name: fm_workorder_budget fm_workorder_budget_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY fm_workorder_budget
-    ADD CONSTRAINT fm_workorder_budget_order_id_fkey FOREIGN KEY (order_id) REFERENCES fm_workorder(id);
+ALTER TABLE ONLY public.fm_workorder_budget
+    ADD CONSTRAINT fm_workorder_budget_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.fm_workorder(id);
 
 
 --
 -- Name: phpgw_accounts_data phpgw_accounts_data_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_accounts_data
-    ADD CONSTRAINT phpgw_accounts_data_account_id_fkey FOREIGN KEY (account_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.phpgw_accounts_data
+    ADD CONSTRAINT phpgw_accounts_data_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: phpgw_notification phpgw_notification_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_notification
-    ADD CONSTRAINT phpgw_notification_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES phpgw_contact(contact_id);
+ALTER TABLE ONLY public.phpgw_notification
+    ADD CONSTRAINT phpgw_notification_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES public.phpgw_contact(contact_id);
 
 
 --
 -- Name: phpgw_vfs_file_relation phpgw_vfs_file_relation_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_vfs_file_relation
-    ADD CONSTRAINT phpgw_vfs_file_relation_file_id_fkey FOREIGN KEY (file_id) REFERENCES phpgw_vfs(file_id);
+ALTER TABLE ONLY public.phpgw_vfs_file_relation
+    ADD CONSTRAINT phpgw_vfs_file_relation_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.phpgw_vfs(file_id);
 
 
 --
 -- Name: phpgw_vfs_filedata phpgw_vfs_filedata_file_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY phpgw_vfs_filedata
-    ADD CONSTRAINT phpgw_vfs_filedata_file_id_fkey FOREIGN KEY (file_id) REFERENCES phpgw_vfs(file_id);
+ALTER TABLE ONLY public.phpgw_vfs_filedata
+    ADD CONSTRAINT phpgw_vfs_filedata_file_id_fkey FOREIGN KEY (file_id) REFERENCES public.phpgw_vfs(file_id);
 
 
 --
 -- Name: rental_application_comment rental_application_comment_application_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_application_comment
-    ADD CONSTRAINT rental_application_comment_application_id_fkey FOREIGN KEY (application_id) REFERENCES rental_application(id);
+ALTER TABLE ONLY public.rental_application_comment
+    ADD CONSTRAINT rental_application_comment_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.rental_application(id);
 
 
 --
 -- Name: rental_application_composite rental_application_composite_application_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_application_composite
-    ADD CONSTRAINT rental_application_composite_application_id_fkey FOREIGN KEY (application_id) REFERENCES rental_application(id);
+ALTER TABLE ONLY public.rental_application_composite
+    ADD CONSTRAINT rental_application_composite_application_id_fkey FOREIGN KEY (application_id) REFERENCES public.rental_application(id);
 
 
 --
 -- Name: rental_application_composite rental_application_composite_composite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_application_composite
-    ADD CONSTRAINT rental_application_composite_composite_id_fkey FOREIGN KEY (composite_id) REFERENCES rental_composite(id);
+ALTER TABLE ONLY public.rental_application_composite
+    ADD CONSTRAINT rental_application_composite_composite_id_fkey FOREIGN KEY (composite_id) REFERENCES public.rental_composite(id);
 
 
 --
 -- Name: rental_billing rental_billing_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_billing
-    ADD CONSTRAINT rental_billing_created_by_fkey FOREIGN KEY (created_by) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_billing
+    ADD CONSTRAINT rental_billing_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_billing_info rental_billing_info_billing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_billing_info
-    ADD CONSTRAINT rental_billing_info_billing_id_fkey FOREIGN KEY (billing_id) REFERENCES rental_billing(id);
+ALTER TABLE ONLY public.rental_billing_info
+    ADD CONSTRAINT rental_billing_info_billing_id_fkey FOREIGN KEY (billing_id) REFERENCES public.rental_billing(id);
 
 
 --
 -- Name: rental_billing rental_billing_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_billing
-    ADD CONSTRAINT rental_billing_location_id_fkey FOREIGN KEY (location_id) REFERENCES phpgw_locations(location_id);
+ALTER TABLE ONLY public.rental_billing
+    ADD CONSTRAINT rental_billing_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.phpgw_locations(location_id);
 
 
 --
 -- Name: rental_contract_composite rental_contract_composite_composite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_composite
-    ADD CONSTRAINT rental_contract_composite_composite_id_fkey FOREIGN KEY (composite_id) REFERENCES rental_composite(id);
+ALTER TABLE ONLY public.rental_contract_composite
+    ADD CONSTRAINT rental_contract_composite_composite_id_fkey FOREIGN KEY (composite_id) REFERENCES public.rental_composite(id);
 
 
 --
 -- Name: rental_contract_composite rental_contract_composite_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_composite
-    ADD CONSTRAINT rental_contract_composite_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_contract_composite
+    ADD CONSTRAINT rental_contract_composite_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_contract rental_contract_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract
-    ADD CONSTRAINT rental_contract_created_by_fkey FOREIGN KEY (created_by) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_contract
+    ADD CONSTRAINT rental_contract_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_contract_last_edited rental_contract_last_edited_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_last_edited
-    ADD CONSTRAINT rental_contract_last_edited_account_id_fkey FOREIGN KEY (account_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_contract_last_edited
+    ADD CONSTRAINT rental_contract_last_edited_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_contract_last_edited rental_contract_last_edited_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_last_edited
-    ADD CONSTRAINT rental_contract_last_edited_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_contract_last_edited
+    ADD CONSTRAINT rental_contract_last_edited_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_contract rental_contract_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract
-    ADD CONSTRAINT rental_contract_location_id_fkey FOREIGN KEY (location_id) REFERENCES phpgw_locations(location_id);
+ALTER TABLE ONLY public.rental_contract
+    ADD CONSTRAINT rental_contract_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.phpgw_locations(location_id);
 
 
 --
 -- Name: rental_contract_party rental_contract_party_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_party
-    ADD CONSTRAINT rental_contract_party_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_contract_party
+    ADD CONSTRAINT rental_contract_party_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_contract_party rental_contract_party_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_party
-    ADD CONSTRAINT rental_contract_party_party_id_fkey FOREIGN KEY (party_id) REFERENCES rental_party(id);
+ALTER TABLE ONLY public.rental_contract_party
+    ADD CONSTRAINT rental_contract_party_party_id_fkey FOREIGN KEY (party_id) REFERENCES public.rental_party(id);
 
 
 --
 -- Name: rental_contract_price_item rental_contract_price_item_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_price_item
-    ADD CONSTRAINT rental_contract_price_item_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_contract_price_item
+    ADD CONSTRAINT rental_contract_price_item_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_contract_price_item rental_contract_price_item_price_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_price_item
-    ADD CONSTRAINT rental_contract_price_item_price_item_id_fkey FOREIGN KEY (price_item_id) REFERENCES rental_price_item(id);
+ALTER TABLE ONLY public.rental_contract_price_item
+    ADD CONSTRAINT rental_contract_price_item_price_item_id_fkey FOREIGN KEY (price_item_id) REFERENCES public.rental_price_item(id);
 
 
 --
 -- Name: rental_contract_responsibility rental_contract_responsibility_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_responsibility
-    ADD CONSTRAINT rental_contract_responsibility_location_id_fkey FOREIGN KEY (location_id) REFERENCES phpgw_locations(location_id);
+ALTER TABLE ONLY public.rental_contract_responsibility
+    ADD CONSTRAINT rental_contract_responsibility_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.phpgw_locations(location_id);
 
 
 --
 -- Name: rental_contract rental_contract_term_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract
-    ADD CONSTRAINT rental_contract_term_id_fkey FOREIGN KEY (term_id) REFERENCES rental_billing_term(id);
+ALTER TABLE ONLY public.rental_contract
+    ADD CONSTRAINT rental_contract_term_id_fkey FOREIGN KEY (term_id) REFERENCES public.rental_billing_term(id);
 
 
 --
 -- Name: rental_contract_types rental_contract_types_responsibility_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_contract_types
-    ADD CONSTRAINT rental_contract_types_responsibility_id_fkey FOREIGN KEY (responsibility_id) REFERENCES rental_contract_responsibility(id);
+ALTER TABLE ONLY public.rental_contract_types
+    ADD CONSTRAINT rental_contract_types_responsibility_id_fkey FOREIGN KEY (responsibility_id) REFERENCES public.rental_contract_responsibility(id);
 
 
 --
 -- Name: rental_document rental_document_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_document
-    ADD CONSTRAINT rental_document_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_document
+    ADD CONSTRAINT rental_document_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_document rental_document_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_document
-    ADD CONSTRAINT rental_document_party_id_fkey FOREIGN KEY (party_id) REFERENCES rental_party(id);
+ALTER TABLE ONLY public.rental_document
+    ADD CONSTRAINT rental_document_party_id_fkey FOREIGN KEY (party_id) REFERENCES public.rental_party(id);
 
 
 --
 -- Name: rental_document rental_document_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_document
-    ADD CONSTRAINT rental_document_type_id_fkey FOREIGN KEY (type_id) REFERENCES rental_document_types(id);
+ALTER TABLE ONLY public.rental_document
+    ADD CONSTRAINT rental_document_type_id_fkey FOREIGN KEY (type_id) REFERENCES public.rental_document_types(id);
 
 
 --
 -- Name: rental_email_out_party rental_email_out_party_email_out_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_email_out_party
-    ADD CONSTRAINT rental_email_out_party_email_out_id_fkey FOREIGN KEY (email_out_id) REFERENCES rental_email_out(id);
+ALTER TABLE ONLY public.rental_email_out_party
+    ADD CONSTRAINT rental_email_out_party_email_out_id_fkey FOREIGN KEY (email_out_id) REFERENCES public.rental_email_out(id);
 
 
 --
 -- Name: rental_email_out_party rental_email_out_party_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_email_out_party
-    ADD CONSTRAINT rental_email_out_party_party_id_fkey FOREIGN KEY (party_id) REFERENCES rental_party(id);
+ALTER TABLE ONLY public.rental_email_out_party
+    ADD CONSTRAINT rental_email_out_party_party_id_fkey FOREIGN KEY (party_id) REFERENCES public.rental_party(id);
 
 
 --
 -- Name: rental_invoice rental_invoice_billing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_invoice
-    ADD CONSTRAINT rental_invoice_billing_id_fkey FOREIGN KEY (billing_id) REFERENCES rental_billing(id);
+ALTER TABLE ONLY public.rental_invoice
+    ADD CONSTRAINT rental_invoice_billing_id_fkey FOREIGN KEY (billing_id) REFERENCES public.rental_billing(id);
 
 
 --
 -- Name: rental_invoice rental_invoice_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_invoice
-    ADD CONSTRAINT rental_invoice_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_invoice
+    ADD CONSTRAINT rental_invoice_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_invoice rental_invoice_party_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_invoice
-    ADD CONSTRAINT rental_invoice_party_id_fkey FOREIGN KEY (party_id) REFERENCES rental_party(id);
+ALTER TABLE ONLY public.rental_invoice
+    ADD CONSTRAINT rental_invoice_party_id_fkey FOREIGN KEY (party_id) REFERENCES public.rental_party(id);
 
 
 --
 -- Name: rental_invoice_price_item rental_invoice_price_item_invoice_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_invoice_price_item
-    ADD CONSTRAINT rental_invoice_price_item_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES rental_invoice(id);
+ALTER TABLE ONLY public.rental_invoice_price_item
+    ADD CONSTRAINT rental_invoice_price_item_invoice_id_fkey FOREIGN KEY (invoice_id) REFERENCES public.rental_invoice(id);
 
 
 --
 -- Name: rental_location_factor rental_location_factor_part_of_town_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_location_factor
-    ADD CONSTRAINT rental_location_factor_part_of_town_id_fkey FOREIGN KEY (part_of_town_id) REFERENCES fm_part_of_town(id);
+ALTER TABLE ONLY public.rental_location_factor
+    ADD CONSTRAINT rental_location_factor_part_of_town_id_fkey FOREIGN KEY (part_of_town_id) REFERENCES public.fm_part_of_town(id);
 
 
 --
 -- Name: rental_movein rental_movein_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_movein
-    ADD CONSTRAINT rental_movein_account_id_fkey FOREIGN KEY (account_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_movein
+    ADD CONSTRAINT rental_movein_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_movein_comment rental_movein_comment_movein_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_movein_comment
-    ADD CONSTRAINT rental_movein_comment_movein_id_fkey FOREIGN KEY (movein_id) REFERENCES rental_movein(id);
+ALTER TABLE ONLY public.rental_movein_comment
+    ADD CONSTRAINT rental_movein_comment_movein_id_fkey FOREIGN KEY (movein_id) REFERENCES public.rental_movein(id);
 
 
 --
 -- Name: rental_movein rental_movein_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_movein
-    ADD CONSTRAINT rental_movein_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_movein
+    ADD CONSTRAINT rental_movein_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_moveout rental_moveout_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_moveout
-    ADD CONSTRAINT rental_moveout_account_id_fkey FOREIGN KEY (account_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_moveout
+    ADD CONSTRAINT rental_moveout_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_moveout_comment rental_moveout_comment_moveout_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_moveout_comment
-    ADD CONSTRAINT rental_moveout_comment_moveout_id_fkey FOREIGN KEY (moveout_id) REFERENCES rental_moveout(id);
+ALTER TABLE ONLY public.rental_moveout_comment
+    ADD CONSTRAINT rental_moveout_comment_moveout_id_fkey FOREIGN KEY (moveout_id) REFERENCES public.rental_moveout(id);
 
 
 --
 -- Name: rental_moveout rental_moveout_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_moveout
-    ADD CONSTRAINT rental_moveout_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_moveout
+    ADD CONSTRAINT rental_moveout_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_notification rental_notification_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification
-    ADD CONSTRAINT rental_notification_account_id_fkey FOREIGN KEY (account_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_notification
+    ADD CONSTRAINT rental_notification_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_notification rental_notification_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification
-    ADD CONSTRAINT rental_notification_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES rental_contract(id);
+ALTER TABLE ONLY public.rental_notification
+    ADD CONSTRAINT rental_notification_contract_id_fkey FOREIGN KEY (contract_id) REFERENCES public.rental_contract(id);
 
 
 --
 -- Name: rental_notification rental_notification_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification
-    ADD CONSTRAINT rental_notification_location_id_fkey FOREIGN KEY (location_id) REFERENCES phpgw_locations(location_id);
+ALTER TABLE ONLY public.rental_notification
+    ADD CONSTRAINT rental_notification_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.phpgw_locations(location_id);
 
 
 --
 -- Name: rental_notification_workbench rental_notification_workbench_account_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification_workbench
-    ADD CONSTRAINT rental_notification_workbench_account_id_fkey FOREIGN KEY (account_id) REFERENCES phpgw_accounts(account_id);
+ALTER TABLE ONLY public.rental_notification_workbench
+    ADD CONSTRAINT rental_notification_workbench_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.phpgw_accounts(account_id);
 
 
 --
 -- Name: rental_notification_workbench rental_notification_workbench_notification_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_notification_workbench
-    ADD CONSTRAINT rental_notification_workbench_notification_id_fkey FOREIGN KEY (notification_id) REFERENCES rental_notification(id);
+ALTER TABLE ONLY public.rental_notification_workbench
+    ADD CONSTRAINT rental_notification_workbench_notification_id_fkey FOREIGN KEY (notification_id) REFERENCES public.rental_notification(id);
 
 
 --
 -- Name: rental_unit rental_unit_composite_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: portico
 --
 
-ALTER TABLE ONLY rental_unit
-    ADD CONSTRAINT rental_unit_composite_id_fkey FOREIGN KEY (composite_id) REFERENCES rental_composite(id);
-
-
---
--- Name: public; Type: ACL; Schema: -; Owner: postgres
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+ALTER TABLE ONLY public.rental_unit
+    ADD CONSTRAINT rental_unit_composite_id_fkey FOREIGN KEY (composite_id) REFERENCES public.rental_composite(id);
 
 
 --

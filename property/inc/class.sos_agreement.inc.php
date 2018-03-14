@@ -1118,9 +1118,9 @@
                         if (is_array($values['extra']))
                         {
                             foreach($values['extra'] as $column => $value)
-                            {
+			{
 				$value_set[$column] = $value;
-                            }
+			}
                         }
 
 			if (isset($values_attribute) AND is_array($values_attribute))

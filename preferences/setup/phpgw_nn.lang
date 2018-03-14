@@ -1,0 +1,191 @@
+change your password	preferences	nn	Endre passord
+change your settings	preferences	nn	Endre innstillinger
+date format	preferences	nn	Dato format
+email signature	preferences	nn	E-Post signatur
+enter your new password	preferences	nn	Skriv inn ditt nye passord
+language	preferences	nn	Språk
+use default	preferences	nn	Bruk standard
+max matches per page	preferences	nn	Antall treff per side
+any listing in phpgw will show you this number of entries or lines per page.<br>to many slow down the page display, to less will cost you the overview.	preferences	nn	Alle lister vil vise dette antall treff per side.<br/>For mange vil gå utover innlastingstiden, for få vil hindre oversikt
+interface/template selection	preferences	nn	Template-sett
+a template defines the layout of phpgroupware and it contains icons for each application.	preferences	nn	En template definerer utseende for BkBygg og inneholder ikoner for alle moduler.
+default	preferences	nn	Standard
+theme (colors/fonts) selection	preferences	nn	Tema (farger/fonter)
+a theme defines the colors and fonts used by the template.	preferences	nn	Et tema definerer farger og fonter som brukes at templaten.
+note: this feature does *not* change your email password. this will need to be done manually.	preferences	nn	NB: Denne funksjonen endrer *ikke* ditt epost passord. Dette må gjøres manuelt.
+please, select a new theme	preferences	nn	Vennligst velg et nytt tema
+re-enter your password	preferences	nn	Skriv inn ditt passord igjen
+select different theme	preferences	nn	Velg annet tema
+show birthday reminders on main screen	preferences	nn	Vis fødselsdags påminnere på hovedskjerm
+show current users on navigation bar	preferences	nn	Vis current brukere i navigation bar
+show high priority events on main screen	preferences	nn	Vis høyprioritets events på hovedskjermen
+show new messages on main screen	preferences	nn	Vis nye meldinger på hovedskjerm
+show text on navigation icons	preferences	nn	Vis tekst på navigasjons ikoner
+the two passwords are not the same	preferences	nn	Passordene stemmer ikke overens
+this server is located in the %1 timezone	preferences	nn	 tids-sonen
+time format	preferences	nn	Tids format
+time zone offset	preferences	nn	Tids-sone offset
+weekday starts on	preferences	nn	Ukedag begynner på
+work day ends on	preferences	nn	Arbeidsdag slutter på
+work day starts on	preferences	nn	Arbeidsdag begynner på
+you must enter a password	preferences	nn	Du må skrive inn et passord
+your current theme is: %1	preferences	nn	</b>
+Your Preferences	preferences	nn	Dine innstillinger
+Default Preferences	preferences	nn	Standardinnstillinger
+Forced Preferences	preferences	nn	Påkrevde innstillinger
+Change your Password	common	nn	Endre passord
+grant access	common	nn	Gi tilgang
+edit categories	common	nn	Rediger kategorier
+grant access	common	nn	Gi tilgang
+time zone	preferences	nn	Tidssone
+how should phpgroupware display dates for you.	preferences	nn	Hvordan datoer vises for deg
+do you prefer a 24 hour time format, or a 12 hour one with am/pm attached.	preferences	nn	Foretrekker du 24-timersformat eller 12-timersformat med am/pm?
+country	preferences	nn	Land
+in which country are you. this is used to set certain defaults for you.	preferences	nn	Hvilket land er du i? Denne brukes for å sette standardverdier basert på landet du er i
+show number of current users	preferences	nn	Vis antall innloggede brukere
+should the number of active sessions be displayed for you all the time.	preferences	nn	Skal antall aktive brukere vises?
+currency	preferences	nn	Valuta
+which currency symbol or name should be used in phpgroupware.	preferences	nn	Hvilket valuta-symbol eller navn skal brukes i BkBygg
+how do you like to select accounts	preferences	nn	Hvordan vil du velge konto?
+selectbox	preferences	nn	Nedtrekksliste
+popup with search	preferences	nn	Pop-up vindu med søk
+the selectbox shows all available users (can be very slow on big installs with many users). the popup can search users by name or group.	preferences	nn	Nedtrekkslisten viser alle tilgjengelige brukere (kan være treg på installasjoner med mange brukere). Pop-up vinduet kan søke på navn eller gruppe
+how do you like to display accounts	preferences	nn	Hvordan vil du vise kontoer?
+firstname	preferences	nn	Fornavn
+lastname	preferences	nn	Etternavn
+12 hour	preferences	nn	12-timer
+24 hour	preferences	nn	24-timer
+rich text (wysiwyg) editor	preferences	nn	Rik tekst (WISYWIG) editor
+which editor would you like to use for editing html and other rich content?	preferences	nn	Hvilken editor skal brukes for å redigere HTML og annet rikt tekst-innhold?
+show helpmessages by default	preferences	nn	Vis hjelpemeldinger som standard
+should this help messages shown up always, when you enter the preferences or only on request.	preferences	nn	Skal hjelpemeldinger alltid vises, når du skriver inn innstillingene eller på forepørsel?
+sidecontent	preferences	nn	Sideinnhold
+do you want your menues as sidecontent	preferences	nn	Vil du ha menyer vist som sideinnhold?
+show breadcrumbs	preferences	nn	Vis brødsmulesti
+select user	preferences	nn	Velg bruker
+default application	preferences	nn	Standardmodul
+the default application will be started when you enter phpgroupware or click on the homepage icon.<br>you can also have more than one application showing up on the homepage, if you don't choose a specific application here (has to be configured in the preferences of each application).	preferences	nn	Standardmodul som vises når du logger inn i BkBygg eller klikker på Hjemme-lenken.
+a time zone is a region of the earth that has uniform standard time, usually referred to as the local time. by convention, time zones compute their local time as an offset from utc	preferences	nn	En tidssone er en region som har en uniform standardtid, som oftest referert til som lokal tid. Tidssoner beregner sin lokale tid basert på avstand fra UTC
+set this to your convenience. for security reasons, you might not want to show your loginname in public.	preferences	nn	Sett denne til det du ønsker. Av sikkerhetsmessige hensyn bør ikke påloggingsnavnet vises offentlig.
+should history navigation urls as breadcrumbs	preferences	nn	Vis historisk navigasjon som brødsmulesti
+activate nowrap in yui-tables	preferences	nn	Aktiver no-wrap i YUI-tabeller
+select the language of texts and messages within phpgroupware.<br>some languages may not contain all messages, in that case you will see an english message.	preferences	nn	Velg språk for tekster og meldinger i BkBygg.<br/>Dersom en oversettelse mangler vil engelsk tekst/melding vises
+users choice	preferences	nn	Brukers valg
+norwegian	preferences	nn	Norsk Bokmål
+norwegian nn	preferences	nn	Nynorsk
+english	preferences	nn	Engelsk
+no default	preferences	nn	Ingen standard
+no sidecontent	preferences	nn	Ingen sideinnhold
+choose property filter	preferences	nn	Velg eiendomsfilter
+filter by owner or owner type	preferences	nn	Filtrer på eier eller eiertype
+group filters in single query	preferences	nn	Grupper filtre i en spørring
+group filters - means that one has to hit the search button to apply the filter	preferences	nn	Grupper filtre betyr at en må klikke på Søk-knappen for å aktivere filtreringsvalg
+show new/updated tickets on main screen	preferences	nn	Vis nye/oppdaterte meldinger på hjemmeskjermen
+link to tickets you are assigned to	preferences	nn	Lenke til meldinger tildelt deg
+default ticket status	preferences	nn	Standard meldingsstatus
+the default status when entering the helpdesk and mainscreen	preferences	nn	Standard meldingsstatus når en går inn på meldinger
+custom title on main screen tickets	preferences	nn	Egendefinert tittel på meldinger på hjemmeskjermen
+show updated tickets on main screen 2	preferences	nn	Vis oppdaterte meldinger på hjemmeskjerm 2
+default ticket status 2	preferences	nn	Standard meldingsstatus 2
+show updated tickets on main screen 3	preferences	nn	Vis oppdaterte meldinger på hjemmeskjerm 3
+default ticket status 3	preferences	nn	Standard meldingsstatus 3
+show updated tickets on main screen 4	preferences	nn	Vis oppdaterte meldinger på hjemmeskjerm 4
+default ticket status 4	preferences	nn	Standard meldingsstatus 4
+show pending vendor reminders on main screen	preferences	nn	Vis ventende leverandør-purringer på hjemmeskjerm
+reminder issued to vendors	preferences	nn	Purringer sendt til leverandører
+custom title on pending vendor reminders	preferences	nn	Egendefinert tittel på leverandørpurringer
+show your pending request for approvals on main screen	preferences	nn	Vis ventende godkjenningsforespørsler på hjemmeskjerm
+your requests for approvals waiting decisions	preferences	nn	Dine meldinger som avventer godkjenning
+custom title on pending request for approvals	preferences	nn	Egendefinert tittel på ventende godkjenningsforespørsler
+show pending approvals on main screen	preferences	nn	Vis meldinger du må godkjenne på hjemmeskjerm
+approvals waiting for your decisions	preferences	nn	Meldinger sendt til deg for godkjenning
+custom title on pending approvals	preferences	nn	Egendefinert tittel på godkjenningsforespørsler
+default updated ticket status when creating project	preferences	nn	Standard oppdatert meldingsstatus ved oppretting av prosjekt
+autocreate project from ticket	preferences	nn	Opprett prosjekt fra melding
+your projects on main screen - list 1	preferences	nn	Vis dine prosjekter på hjemmeskjerm - liste 1
+link to your projects	preferences	nn	Lenke til dine prosjekter
+default project status 1	preferences	nn	Standard prosjektstatus 1
+the default status for list 1 when entering the mainscreen	preferences	nn	Standard status for liste 1 når du går inn på hjemmeskjerm
+the default status for list 2 when entering the mainscreen	preferences	nn	Standard status for liste 2 når du går inn på hjemmeskjerm
+custom title on projects on main screen - list 1	preferences	nn	Egendefinert tittel på prosjekter på hjemmeskjerm - liste 1
+your workorders on main screen - list 1	preferences	nn	Dine arbeidsordre på hjemmeskjerm - liste 1
+link to your workorders	preferences	nn	Lenke til dine arbeidsordre
+default workorder status 1	preferences	nn	Standard arbeidsordrestatus 1
+custom title on workorders on main screen - list 1	preferences	nn	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 1
+your workorders on main screen - list 2	preferences	nn	Dine arbeidsordre på hjemmeskjerm - liste 2
+default workorder status 2	preferences	nn	Standard arbeidsordrestatus 2
+custom title on workorders on main screen - list 2	preferences	nn	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 2
+custom title workorders on main screen - list 2	preferences	nn	Egendefinert tittel på arbeidsordre på hjemmeskjerm - liste 2
+show quick link for changing status for tickets	preferences	nn	Vis hurtiglenke for å endre meldingsstatus
+enables to set status wihout entering the ticket	preferences	nn	Muliggjør å sette meldingsstatus uten å åpne meldingen
+default group tts	preferences	nn	Standardgruppe tts
+the default group to assign a ticket in helpdesk-submodul	preferences	nn	Standardgruppe for tildeling av meldinger i helpdesk
+default assign to tts	preferences	nn	Standardbruker tts
+the default user to assign a ticket in helpdesk-submodule	preferences	nn	Standardbruker for tildeling av meldinger i helpdesk
+default priority tts	preferences	nn	Standardprioritet tts
+the default priority for tickets in the helpdesk-submodule	preferences	nn	Standardprioritet for meldinger i helpdesk
+default ticket categories	preferences	nn	Standard meldingskategori
+the default category for tts	preferences	nn	Standard meldingskategori i tts
+notify me by mail when ticket is assigned or altered	preferences	nn	Varsle meg på e-post når meldinger er tildelt eller endret
+send e-mail from tts	preferences	nn	Send e-post fra tts
+send e-mail from tts as default	preferences	nn	Sendt e-post fra tts som standard
+refresh tts every (seconds)	preferences	nn	Oppfrisk tts hvert (sekunder)
+the intervall for helpdesk refresh - cheking for new tickets	preferences	nn	Intervall for oppfrisking av helpdesk - sjekk om det er nye meldinger
+set myself as contact when adding a ticket	preferences	nn	Sett meg selv som kontaktperson ved oppretting av nye meldinger
+default degree request safety	preferences	nn	Standard grad av alvorlighet
+the degree of seriousness	preferences	nn	Grad av alvorlighet
+default degree request aesthetics	preferences	nn	Standard estetikk-grad på behov
+default degree request indoor climate	preferences	nn	Standard inneklima-grad på behov
+default degree request consequential damage	preferences	nn	Standard konsekvens-grad på behov
+default degree request user gratification	preferences	nn	Standard bruker-grad på behov
+default degree request residential environment	preferences	nn	Standard miljø-grad på behov
+send order receipt as email	preferences	nn	Send ordrebekreftelse som e-post
+send the order as bcc to the user	preferences	nn	Send blindkopi av ordre til bruker
+notify owner of project/order on change	preferences	nn	Varsle prosjekt-/ordre-eier ved endring
+by email	preferences	nn	Varsle prosjekt- eller ordre-eier per e-post ved endringer
+default start page	preferences	nn	Standard startside
+select your start-submodule	preferences	nn	Velg undermodul du vil starte i når du går inn på modulen
+default project type	preferences	nn	Standard prosjekttype
+select your default project type	preferences	nn	Velg standard prosjekttype for dine prosjekter
+default project year filter	preferences	nn	Standard år-filter for prosjekt
+select your default project year filter	preferences	nn	Velg standard år-filter for prosjekter
+default project status	preferences	nn	Stardard prosjektstatus
+the default status for your projects	preferences	nn	Velg standard prosjektstatus for dine prosjekter
+default workorder status	preferences	nn	Standard arbeidsordre-status
+the default status for your workorders	preferences	nn	Velg standard status for dine arbeidsordre
+default project categories	preferences	nn	Standard prosjektkategori
+the default category for your projects and workorders	preferences	nn	Velg standard kategori for dine prosjekter og arbeidsordre
+default district-filter	preferences	nn	Standard distrikt-filter
+your default district-filter	preferences	nn	Velg standard distrikt-filter
+your cellphone	preferences	nn	Ditt mobiltelefonnummer
+ressursnr	preferences	nn	Ditt ressursnummer
+default dimb	preferences	nn	Standard ansvarssted
+your email	preferences	nn	Din e-postadresse
+insert your email address	preferences	nn	Legg inn din e-postadresse
+branch tts	preferences	nn	Vis fag for melding
+enable branch in tts-orders	preferences	nn	Vis fag for melding-bestilling
+default vendor type	preferences	nn	Standard leverandørtype
+which agreement	preferences	nn	Velg leverandørtype du vil ha som standard
+with of textarea	preferences	nn	Bredde på tekstbokser
+with of textarea in forms	preferences	nn	Legg inn ønsket bredde på tekstbokser i skjema
+height of textarea	preferences	nn	Høyde på tekstbokser
+height of textarea in forms	preferences	nn	Legg inn ønsket høyde på tekstbokser i skjema
+show horisontal menues	preferences	nn	Vis horisontale menyer
+horisontal menues are shown in top of page	preferences	nn	Horisontale menyer vises i toppen av siden
+remove navbar	preferences	nn	Fjern navigasjonslinje
+navigation bar is removed	preferences	nn	Skal navigasjonslinje vises eller ikke
+tabel export format	preferences	nn	Eksportformat for lister og tabeller
+choose which format to export from the system for tables	preferences	nn	Velg hvilket format som skal brukes ved eksport av tabeller og lister
+order email	preferences	nn	E-postformat for ordre
+current year	preferences	nn	Gjeldende år
+workorder approval from	preferences	nn	Godkjenning av arbeidsordre gis av
+if you need approval from your supervisor for projects/workorders	preferences	nn	Dersom du trenger godkjenning av leder for prosjekter eller arbeidsordre angis denne her
+Eiendom - preferences	preferences	nn	Eiendom - innstillinger
+0 - 2	preferences	nn	0 - 2
+as in "." or ","	preferences	nn	Velg "." eller ","
+number of planned controls on home page	preferences	nn	Antall planlagte kontroller på hjemmeskjerm
+number of assigned controls on home page	preferences	nn	Antall tildelte kontroller på hjemmeskjerm
+filter tickets on assigned to me	preferences	nn	Filtrer meldinger på tildelt til meg.
+Do you want av CSV download button for main tables?	preferences	nn	Ønsker du en CSV nedlastingsknapp for hovedtabeller?
+CSV download button	preferences	nn	CSV nedlastingsknapp
+help off	preferences	nn	Slå av hjelp

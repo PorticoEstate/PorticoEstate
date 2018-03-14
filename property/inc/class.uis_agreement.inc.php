@@ -621,12 +621,12 @@
                                 if (is_array($insert_record['extra']))
                                 {
                                     foreach($insert_record['extra'] as $key => $column)
-                                    {
+				{
 					if ($_POST[$key])
 					{
 						$values['extra'][$column] = phpgw::get_var($key, 'string', 'POST');
 					}
-                                    }
+				}
                                 }
 
 				if (!$values['cat_id'])

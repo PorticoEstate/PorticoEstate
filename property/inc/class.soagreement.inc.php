@@ -856,7 +856,7 @@
                         if (is_array($values['select']))
                         {
                             foreach($values['select'] as $activity_id)
-                            {
+			{
 
 				if ($values['id'][$activity_id] > 0)
 				{
@@ -868,7 +868,7 @@
 
 					$receipt['message'][] = array('msg' => lang('Activity %1 has been updated for index', $activity_id));
 				}
-                            }
+			}
                         }
 
 			$this->db->transaction_commit();

@@ -2539,7 +2539,7 @@
 				}
 
 				$entry['deviation_period'] = $deviation;
-				
+
 				$entry['active'] = isset($active_period[$entry['period']]) && $active_period[$entry['period']] ? $active_period[$entry['period']] : 0;
 				if ($entry['active'] != 2)
 				{
@@ -3162,5 +3162,34 @@
 				}
 			}
 			return $this->db->transaction_commit();
+		}
+
+		public function get_entity_relation( $entity_id, $cat_id, $id)
+		{
+			$id			= (int)$id;
+			$entity_id	= (int)$entity_id;
+			$cat_id		= (int)$cat_id;
+
+			$sql = "SELECT fm_workorder.id, fm_workorder.user_id, fm_workorder.title, fm_workorder.entry_date, fm_workorder_status.descr as statustext"
+				. " FROM fm_workorder"
+				. " {$this->join} fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " WHERE p_entity_id = {$entity_id} AND p_cat_id = {$cat_id} AND p_num = '{$id}'";
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id' => $this->db->f('id'),
+					'statustext' => $this->db->f('statustext', true),
+					'user_id' => $this->db->f('user_id'),
+					'entry_date' => $this->db->f('entry_date'),
+					'title' => $this->db->f('title', true),
+					'descr' => $this->db->f('descr', true),
+				);
+			}
+
+			return $values;
 		}
 	}

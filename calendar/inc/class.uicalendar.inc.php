@@ -710,7 +710,7 @@
                                 if (is_array($event['participants']))
                                 {
                                     foreach($event['participants'] as $user => $short_status)
-                                    {
+				{
 					if ($GLOBALS['phpgw_info']['user']['account_id'] == $user)
 					{
 						$var = array(
@@ -722,8 +722,8 @@
 						$p->set_var($var);
 						echo $p->fp('out','form_button');
 					}
-                                    }
-                                }
+				}
+			}
 			}
 
 			$var = array(
@@ -1698,15 +1698,15 @@
                                 if (is_array($this->planner_group_members))
                                 {
                                     foreach($this->planner_group_members as $user_name => $id)
-                                    {
+				{
 					$status = (isset($event['participants'][$id])?$event['participants'][$id]:'');
 					if ($status && $status != 'R')
 					{
 						$this->planner_update_row($user_name,$user_name,$event,$cat,$start_cell,$end_cell);
 					}
-                                    }
-                                }
+				}
 			}
+		}
 		}
 
 		function planner_pad_rows()
@@ -1722,7 +1722,7 @@
                                 if (is_array($this->planner_group_members))
                                 {
                                     foreach($this->planner_group_members as $user_name => $id)
-                                    {
+				{
 					$k  = $user_name.'_1';
 					$ka = '.nr_'.$k;
 					if (!isset($rows[$k]))
@@ -1732,8 +1732,8 @@
 						$rows[$k]['._name'] = ' nowrap';
 						$rows[$ka] = 0;
 					}
-                                    }
-                                }
+				}
+			}
 			}
 
 			// fill the remaining cols
@@ -2930,7 +2930,7 @@ HTML;
                         if (is_array($id_array))
                         {
                             foreach($id_array as $index => $id)
-                            {
+			{
 				if (!isset($cats[$id]))
 				{
 					$cat_arr = $this->cat->return_single( $id );
@@ -2938,7 +2938,7 @@ HTML;
 					$cats[$id]['color'] = strstr($cats[$id]['description'],'#');
 				}
 				$ret_val[] = $cats[$id];
-                            }
+			}
                         }
 			return $ret_val;
 		}
@@ -4360,7 +4360,7 @@ HTML;
                         if (is_array($participant))
                         {
                             foreach($participant as $id => $contact)
-                            {
+			{
 				$p->set_var('hidden_delete_name','participant[]');
 				$p->set_var('hidden_delete_value',$id);
 				$p->set_var('ckbox_delete_name','delete[]');
@@ -4368,7 +4368,7 @@ HTML;
 				$p->set_var('ckbox_delete_participant',$contact['name']);
 				$p->parse('V_partlist','B_partlist',True);
 				$total_contacts++;
-                            }
+			}
                         }
 
 			if ($total_contacts == 0)

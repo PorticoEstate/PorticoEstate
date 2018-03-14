@@ -1587,6 +1587,7 @@
 			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
 
 			$export_format = isset($GLOBALS['phpgw_info']['user']['preferences']['common']['export_format']) && $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] ? $GLOBALS['phpgw_info']['user']['preferences']['common']['export_format'] : 'csv';
+			$php_version = (float)PHP_VERSION;
 
 			switch ($export_format)
 			{
@@ -1594,12 +1595,159 @@
 					$this->csv_out($list, $name, $descr, $input_type, $identificator, $filename);
 					break;
 				case 'excel':
-					$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
+					/*Experimental*/
+					$this->xslx_out($list, $name, $descr, $input_type, $identificator, $filename);
+//					if($php_version > 5.5)
+//					{
+//						$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'excel');
+//					}
+//					else
+//					{
+//						$this->excel_out($list, $name, $descr, $input_type, $identificator, $filename);
+//					}
 					break;
 				case 'ods':
-					$this->ods_out($list, $name, $descr, $input_type, $identificator, $filename);
+					$this->phpspreadsheet_out($list, $name, $descr, $input_type, $identificator, $filename, 'ods');
 					break;
 			}
+		}
+
+		/**
+		 * downloads data as MsExcel to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 * @param array $identificator array containing 1.row for identification purposes in case of data import.
+		 * @param string $filename
+		 * @param string $export_format
+		 */
+		function phpspreadsheet_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' , $export_format = 'excel')
+		{
+			phpgw::import_class('phpgwapi.phpspreadsheet');
+
+			if ($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename = $filename_arr[0];
+			}
+			else
+			{
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
+			}
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+
+			switch ($export_format)
+			{
+				case 'excel':
+					$suffix = 'xlsx';
+					break;
+				case 'ods':
+					$suffix = 'ods';
+					break;
+				default:
+					$suffix = 'xlsx';
+					break;
+			}
+			$filename .= "_{$date_time}.{$suffix}";
+
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header($filename, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+			$spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+			$spreadsheet->getProperties()->setCreator($GLOBALS['phpgw_info']['user']['fullname'])
+				->setLastModifiedBy($GLOBALS['phpgw_info']['user']['fullname'])
+				->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}")
+				->setSubject("Office 2007 XLSX Document")
+				->setDescription("document for Office 2007 XLSX, generated using PHP classes.")
+				->setKeywords("office 2007 openxml php")
+				->setCategory("downloaded file");
+
+			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+			$spreadsheet->setActiveSheetIndex(0);
+
+			if ($identificator)
+			{
+				$_first_row = 2;
+				$i = 1;
+				foreach ($identificator as $key => $value)
+				{
+					$spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($i, 1, $value);
+					$i++;
+				}
+			}
+			else
+			{
+				$_first_row = 1;
+			}
+			$count_uicols_name = count($name);
+
+			$text_format = array();
+			$m = 1;
+			for ($k = 0; $k < $count_uicols_name; $k++)
+			{
+				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+				{
+					if (preg_match('/^loc/i', $name[$k]))
+					{
+						$text_format[$m] = true;
+					}
+					$spreadsheet->getActiveSheet()->setCellValueByColumnAndRow($m, $_first_row, $descr[$k]);
+					$m++;
+				}
+			}
+
+			$j = 0;
+			if (isset($list) && is_array($list))
+			{
+				foreach ($list as $entry)
+				{
+					$m = 0;
+					for ($k = 0; $k < $count_uicols_name; $k++)
+					{
+						if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+						{
+							$content[$j][$m] = str_replace("\r\n", " ", $entry[$name[$k]]);
+							$m++;
+						}
+					}
+					$j++;
+				}
+
+				$line = $_first_row;
+
+				foreach ($content as $row)
+				{
+					$col = 'A';
+					$line++;
+					$rows = count($row);
+					for ($i = 0; $i < $rows; $i++)
+					{
+						$cell = "{$col}{$line}";
+						if (isset($text_format[$i]))
+						{
+							$spreadsheet->getActiveSheet()->setCellValueExplicit($cell, $row[$i], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+						}
+						else
+						{
+							$spreadsheet->getActiveSheet()->setCellValue($cell, $row[$i]);
+						}
+						$col++;
+					}
+				}
+			}
+
+			if($export_format = 'ods')
+			{
+				$objWriter = new PhpOffice\PhpSpreadsheet\Writer\Ods($spreadsheet);
+			}
+			else// Save Excel 2007 file
+			{
+				$objWriter = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+			}
+			$objWriter->save('php://output');
 		}
 
 		/**
@@ -1730,65 +1878,140 @@
 			$objWriter->save('php://output');
 		}
 
-		function excel_out_old( $list, $name, $descr, $input_type = array() )
-		{
-			$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
-			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}.xls";
 
-			$workbook = CreateObject('phpgwapi.excel', "-");
+		/**
+		 * downloads data as xslx to the browser
+		 *
+		 * @param array $list array with data to export
+		 * @param array $name array containing keys in $list
+		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
+		 * @param array $input_type array containing information whether fields are to be suppressed from the output
+		 */
+		function xslx_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' )
+		{
+			if ($filename)
+			{
+				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
+				$filename = $filename_arr[0];
+			}
+			else
+			{
+				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
+			}
+			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
+			$filename .= "_{$date_time}.xslx";
+
+			$writer = CreateObject('phpgwapi.xlsxwriter');
+
 			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename, 'application/vnd.ms-excel');
+			$browser->content_header($writer::sanitize_filename($filename), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+			$writer->setauthor($GLOBALS['phpgw_info']['user']['fullname']);
+			$writer->setTitle("Download from {$GLOBALS['phpgw_info']['server']['system_name']}");
 
 			$count_uicols_name = count($name);
 
-			$worksheet1 = & $workbook->add_worksheet('First One');
+			$header = array();
+
+
+			$loop = 0;
+			foreach ($list as $entry)
+			{
+				for ($i = 0; $i < $count_uicols_name; ++$i)
+				{
+					if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
+					{
+						$test = $entry[$name[$i]];
+						if(ctype_digit((string)$test))
+						{
+							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+							{
+								$header[$descr[$i]] = 'integer';
+							}
+						}
+						else if(is_numeric((string)$test))
+						{
+							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+							{
+								$header[$descr[$i]] = '0.00';
+							}
+						}
+						else
+						{
+							$header[$descr[$i]] = 'string';
+						}
+					}
+				}
+
+				$loop++;
+				if($loop > 40)
+				{
+					break;
+				}
+			}
+
 
 			$m = 0;
+			$formats = array();
 			for ($k = 0; $k < $count_uicols_name; $k++)
 			{
 				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
 				{
-					$worksheet1->write_string(0, $m, $this->utf2ascii($descr[$k]));
-					$m++;
+					if (preg_match('/^loc/i', $name[$k]))
+					{
+						$header[$descr[$k]] = 'string';
+						$formats[$m] = 'string';
+
+					}
 				}
+				$m++;
 			}
 
-			$j = 0;
-			if (isset($list) AND is_array($list))
+			$_header = array();
+			if ($identificator)
+			{
+				$_identificator = array_values($identificator);
+				$i = 0;
+				foreach ($formats as $key => $format)
+				{
+					if(!empty($_identificator[$i]))
+					{
+						$_header[$_identificator[$i]] = $format;
+					}
+					else
+					{
+						$_header[$i] = $format;
+					}
+					$i++;
+				}
+				$writer->writeSheetHeader('Sheet1', $_header);
+
+				$writer->writeSheetRow('Sheet1', array_keys($header));
+			}
+			else
+			{
+				$writer->writeSheetHeader('Sheet1', $header);
+			}
+
+			unset($header);
+
+			if (is_array($list))
 			{
 				foreach ($list as $entry)
 				{
-					$m = 0;
-					for ($k = 0; $k < $count_uicols_name; $k++)
+					$row = array();
+					for ($i = 0; $i < $count_uicols_name; ++$i)
 					{
-						if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
+						if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
 						{
-							$content[$j][$m] = str_replace("\r\n", " ", $entry[$name[$k]]);
-							$m++;
+							$row[] = preg_replace("/\r\n/", ' ', $entry[$name[$i]]);
 						}
 					}
-					$j++;
-				}
-
-				$line = 0;
-
-				foreach ($content as $row)
-				{
-					$line++;
-					$rows = count($row);
-					for ($i = 0; $i < $rows; $i++)
-					{
-						$worksheet1->write($line, $i, $this->utf2ascii($row[$i]));
-					}
+					$writer->writeSheetRow('Sheet1', $row);
 				}
 			}
-//			echo "Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB";
-//			die();
-
-			$workbook->close();
+			$writer->writeToStdOut();
 		}
-
 		/**
 		 * downloads data as CSV to the browser
 		 *
@@ -1818,6 +2041,9 @@
 			{
 				die('Unable to write to "php://output" - pleace notify the Administrator');
 			}
+
+			$BOM = "\xEF\xBB\xBF"; // UTF-8 BOM
+			fwrite($fp, $BOM); // NEW LINE
 
 			if ($identificator)
 			{
@@ -1859,97 +2085,6 @@
 				}
 			}
 			fclose($fp);
-		}
-
-		/**
-		 * downloads data as ODS to the browser
-		 *
-		 * @param array $list array with data to export
-		 * @param array $name array containing keys in $list
-		 * @param array $descr array containing Names for the heading of the output for the coresponding keys in $list
-		 * @param array $input_type array containing information whether fields are to be suppressed from the output
-		 */
-		function ods_out( $list, $name, $descr, $input_type = array(), $identificator = array(), $filename = '' )
-		{
-			if ($filename)
-			{
-				$filename_arr = explode('.', str_replace(' ', '_', basename($filename)));
-				$filename = $filename_arr[0];
-			}
-			else
-			{
-				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
-			}
-
-			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}'.ods'";
-
-			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header($filename, 'application/ods');
-
-			$count_uicols_name = count($name);
-
-			$ods = createObject('property.ods');
-			$object = $ods->newOds(); //create a new ods file
-
-			if ($identificator)
-			{
-				$_first_row = 1;
-				$i = 0;
-				foreach ($identificator as $key => $value)
-				{
-					$object->addCell(1, 0, $i, $value, 'string');
-					$i++;
-				}
-			}
-			else
-			{
-				$_first_row = 0;
-			}
-
-			$m = 0;
-			for ($k = 0; $k < $count_uicols_name; $k++)
-			{
-				if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
-				{
-					$object->addCell(1, $_first_row, $m, $descr[$k], 'string');
-					$m++;
-				}
-			}
-
-			$j = 0;
-			if (isset($list) AND is_array($list))
-			{
-				foreach ($list as $entry)
-				{
-					$m = 0;
-					for ($k = 0; $k < $count_uicols_name; $k++)
-					{
-						if (!isset($input_type[$k]) || $input_type[$k] != 'hidden')
-						{
-							$content[$j][$m] = str_replace(array('&'), array('og'), $entry[$name[$k]]);//str_replace("\r\n"," ",$entry[$name[$k]]);
-							$m++;
-						}
-					}
-					$j++;
-				}
-
-				$line = $_first_row + 1;
-				foreach ($content as $row)
-				{
-					for ($i = 0; $i < count($row); $i++)
-					{
-						$object->addCell(1, $line, $i, $row[$i], 'string');
-					}
-					$line++;
-				}
-			}
-
-			$temp_dir = $GLOBALS['phpgw_info']['server']['temp_dir'];
-			$ods->saveOds($object, "{$temp_dir}/{$filename}");
-
-			echo file_get_contents("{$temp_dir}/{$filename}");
-			unlink("{$temp_dir}/{$filename}");
 		}
 
 		function increment_id( $name )

@@ -1,0 +1,34 @@
+compose	messenger	nn	Ny melding
+compose global message	admin	en	Ny global melding
+compose message	messenger	nn	Ny melding
+delete a message.	messenger	nn	slett en melding.
+delete selected	messenger	nn	Slett valgt
+forward	messenger	nn	Videresend
+forward a message	messenger	nn	Videresend a en melding
+forward a message to another user.	messenger	nn	Videresend a en melding til en anne bruker.
+forwarded	messenger	nn	Videresent
+from	messenger	nn	Fra
+global message	messenger	nn	Global Melding
+i can't find the username %1 on the system	messenger	nn	Finner ikke bruker %1 i systemet
+inbox	messenger	nn	Innboks
+message from	messenger	nn	Melding fra
+messenger	common	en	Messenger
+new	messenger	nn	Ny
+read a list of messages.	messenger	nn	Les liste av meldinger.
+read a single message.	messenger	nn	Les en enkelt melding.
+read message	messenger	nn	Les melding
+replied	messenger	nn	Svart på
+reply	messenger	nn	Svar
+reply to a message	messenger	nn	Svar på en melding
+reply to a received message.	messenger	nn	Svar på en mottatt melding.
+send	messenger	nn	Send
+send a global message.	messenger	nn	Send en global melding.
+send a message to a single recipient.	messenger	nn	Send en melding til en enkelt mottaker.
+send message to	messenger	nn	Send melding til
+sorry, %1's account is not currently active	messenger	nn	Beklager, %1's konto er ikke aktiv
+you didn't enter anything for the message	messenger	nn	Meldingen er tom
+you have %1 new message	messenger	nn	Du har %1 ny melding
+you have %1 new messages	messenger	nn	Du har %1 nye meldinger
+you have no messages	messenger	nn	Du har ingen meldinger
+you must enter a subject	messenger	nn	Du må skrive en tittel
+you must enter the username this message is for	messenger	nn	Du må velge en addressat for meldingen

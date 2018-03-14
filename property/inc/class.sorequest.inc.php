@@ -77,9 +77,9 @@
                         if (is_array($values['priority_key']))
                         {
                             foreach($values['priority_key'] as $id => $priority_key)
-                            {
-                                    $this->_db->query("UPDATE fm_request_condition_type SET priority_key = $priority_key WHERE id = $id", __LINE__, __FILE__);
-                            }
+			{
+				$this->_db->query("UPDATE fm_request_condition_type SET priority_key = $priority_key WHERE id = $id", __LINE__, __FILE__);
+			}
                         }
 
 			$this->update_score();
@@ -1202,17 +1202,17 @@
 			if (is_array($request['location']))
                         {
                             foreach($request['location'] as $input_name => $value)
-                            {
+			{
 				$value_set[$input_name] = $value;
-                            }
+			}
 			}
 
 			if (is_array($request['extra']))
                         {
                             foreach($request['extra'] as $input_name => $value)
-                            {
+			{
 				$value_set[$input_name] = $value;
-                            }
+			}
 			}
 
 			$data_attribute = $this->custom->prepare_for_db('fm_request', $values_attribute, $request['id']);

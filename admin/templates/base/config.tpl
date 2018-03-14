@@ -23,6 +23,10 @@
 			</tr-->
 
 			<tr>
+				<td>{lang_cache_refresh_token}:</td>
+				<td><input size="8" name="newsettings[cache_refresh_token]" value="{value_cache_refresh_token}"></td>
+			</tr>
+			<tr>
 				<td>{lang_Timeout_for_sessions_in_seconds} (default 14400 = 4 hours):</td>
 				<td><input size="8" name="newsettings[sessions_timeout]" value="{value_sessions_timeout}"></td>
 			</tr>
@@ -111,7 +115,7 @@
 			</tr>
 			<tr class="pure-table-odd">
 				<td>{lang_Enter_your_SMTP_server_password}:</td>
-				<td><input type= "password" name="newsettings[smtpPassword]" value="{value_smtpPassword}"></td>
+				<td><input type= "password" name="newsettings[smtpPassword]" value="{value_smtpPassword}" autocomplete="off"></td>
 			</tr>
 			<tr>
 				<td>{lang_SMTPSecure}:</td>

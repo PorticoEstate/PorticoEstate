@@ -1685,13 +1685,13 @@ class calendar_boicalendar
                 if (is_array($this->parameter))
                 {
                     foreach($this->parameter as $key => $param_array)
-                    {
+		{
 			if(isset($param_array['properties'][$property]) && $param_array['properties'][$property])
 			{
 				$param[] = $key;
 				$this->debug('Property : '.$property.' = Parameter : '.$key);
 			}
-                    }
+		}
                 }
 		reset($param);
 		$cached_returns[$property] = $param;
@@ -1713,12 +1713,12 @@ class calendar_boicalendar
                 if (is_array($this->property))
                 {
                     foreach($this->property as $key => $param_array)
-                    {
+		{
 			if(isset($param_array[$ical_type]) && $param_array[$ical_type])
 			{
 				$prop[] = $key;
 			}
-                    }
+		}
                 }
 		reset($prop);
 		$cached_returns[$ical_type] = $prop;
@@ -1953,9 +1953,9 @@ class calendar_boicalendar
                         if (is_array($event))
                         {
                             foreach($event as $key => $value)
-                            {
+			{
 				$exdates[] = $this->switch_date($value);
-                            }
+			}
                         }
 			return ':'.implode($exdates,',');
 		}
@@ -1966,9 +1966,9 @@ class calendar_boicalendar
                                 if (is_array($event))
                                 {
                                     foreach($event as $key => $value)
-                                    {
+				{
 					$rdates[] = $this->switch_date($value);
-                                    }
+				}
                                 }
 				return ':'.implode($rdates,',');
 			}
@@ -3506,7 +3506,7 @@ class calendar_boicalendar
                         if (is_array($datetime_vars))
                         {
                             foreach($datetime_vars as $e_datevar => $i_datevar)
-                            {
+			{
 				if(isset($ical['event'][$i][$i_datevar]))
 				{
 					$temp_time = $so_event->maketime($ical['event'][$i][$i_datevar]) + phpgwapi_datetime::user_timezone();
@@ -3515,13 +3515,13 @@ class calendar_boicalendar
                                         if (is_array($date_array))
                                         {
                                             foreach($date_array as $key => $var)
-                                            {
+					{
 						$event[$e_datevar][$var] = intval(date($key,$temp_time));
-                                            }
+					}
                                         }
 					$so_event->set_date($e_datevar,$event[$e_datevar]['year'],$event[$e_datevar]['month'],$event[$e_datevar]['mday'],$event[$e_datevar]['hour'],$event[$e_datevar]['min'] + $offset_mins, $event[$e_datevar]['sec']);
 				}
-                            }
+			}
                         }
 
 			// If a Timestamp is given from the sync module add it to the event
@@ -3550,7 +3550,7 @@ class calendar_boicalendar
 				$cat_id_nums = array();
 				//while(list($key,$cat) = each($ical_cats))
                                 foreach($ical_cats as $key => $cat)
-                                {
+				{
 					if(!$cats->exists('appandmains',$cat))
 					{
 						$cats->add(
@@ -3567,7 +3567,7 @@ class calendar_boicalendar
 					//							echo 'Category Name : '.$cat.' : Category ID :'.$temp_id."<br />\n";
 					//							$cat_id_nums[] = $temp_id;
 					$cat_id_nums[] = $cats->name2id($cat);
-                                }
+				}
 				@reset($cat_id_nums);
 				if(count($cat_id_nums) > 1)
 				{

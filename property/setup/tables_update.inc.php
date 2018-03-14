@@ -703,7 +703,7 @@
                 if (is_array($condition))
                 {
                     foreach($condition as $value)
-                    {
+		{
 			$GLOBALS['phpgw_setup']->oProc->query("INSERT INTO fm_request_condition (request_id,condition_type,degree,probability,consequence,user_id,entry_date) "
 				. "VALUES ('"
 			. $value['request_id'] . "','"
@@ -776,7 +776,7 @@
 			$GLOBALS['phpgw_setup']->oProc->next_record();
 			$score = $GLOBALS['phpgw_setup']->oProc->f('score');
 			$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_request SET score = $score WHERE id = $id", __LINE__, __FILE__);
-                    }
+		}
                 }
 
 		$GLOBALS['phpgw_setup']->oProc->DropTable('fm_request_priority_key');

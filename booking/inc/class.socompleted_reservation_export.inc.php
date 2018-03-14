@@ -716,12 +716,13 @@
 
 			$internal = false;
 
-			$ant_post = 0;
 			$linjenr = 1;
 			$lopenr = 1;
 
 			foreach ($reservations as &$reservation)
 			{
+				$ant_post = 0;
+
 				if ($this->get_cost_value($reservation['cost']) <= 0)
 				{
 					continue; //Don't export costless rows
@@ -755,6 +756,13 @@
 					}
 				}
 
+				$ant_post ++;
+
+				//Startpost ST
+				$startpost = $this->get_visma_ST_row_template();
+				$startpost['posttype'] = 'ST';
+				$startpost['referanse'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['invoice_instruction']), 0, 60), 60, ' ');
+
 				$type = $reservation['customer_type'];
 
 				$order_id = $sequential_number_generator->increment()->get_current();
@@ -774,11 +782,8 @@
 					$name = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['organization_name']), 40, ' ');
 				}
 
-				//Startpost ST
-				$startpost = $this->get_visma_ST_row_template();
-				$startpost['posttype'] = 'ST';
-				$startpost['referanse'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['article_description']), 0, 60), 60, ' ');
-#				$startpost['referanse'] = str_pad(substr(iconv("utf-8","ISO-8859-1//TRANSLIT",$account_codes['invoice_instruction']), 0, 60), 60, ' ');
+				$ant_post ++;
+
 				//Fakturalinje FL
 				$fakturalinje = $this->get_visma_FL_row_template();
 				$fakturalinje['posttype'] = 'FL';
@@ -799,10 +804,13 @@
 				$fakturalinje['varenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $account_codes['article']), 4, '0', STR_PAD_LEFT);
 
 				$fakturalinje['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
-				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 9, '0', STR_PAD_LEFT);
+				$fakturalinje['pris'] = str_pad($reservation['cost'] * 100, 8, '0', STR_PAD_LEFT) . ' ';
 				$fakturalinje['grunnlag'] = '000000001';
-				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 11, '0', STR_PAD_LEFT);
+				$fakturalinje['belop'] = str_pad($reservation['cost'] * 100, 10, '0', STR_PAD_LEFT) . ' ';
 #				$fakturalinje['saksnr'] = ;
+
+				$ant_post ++;
+
 				//Linjetekst LT
 				$linjetekst = $this->get_visma_LT_row_template();
 				$linjetekst['posttype'] = 'LT';
@@ -820,14 +828,12 @@
 				$linjetekst['lopenr'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $lopenr), 2, '0', STR_PAD_LEFT);
 				$linjetekst['linjenr'] = $linjenr;
 				$linjetekst['tekst'] = str_pad(iconv("utf-8", "ISO-8859-1//TRANSLIT", $reservation['description']), 50, ' ');
-				$ant_post += 3;
 
+				$ant_post ++;
 				//Sluttpost SL
 				$sluttpost = $this->get_visma_SL_row_template();
 				$sluttpost['posttype'] = 'SL';
-				$sluttpost['antpost'] = str_pad(intval($ant_post) + 1, 8, '0', STR_PAD_LEFT);
-				$ant_post = 0;
-
+				$sluttpost['antpost'] = str_pad($ant_post, 8, '0', STR_PAD_LEFT);
 
 				$log_order_id = $order_id;
 
@@ -883,6 +889,8 @@
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $fakturalinje));
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $linjetekst));
 				$output[] = implode('', str_replace(array("\n", "\r"), '', $sluttpost));
+
+				$lopenr ++;
 			}
 
 			if (count($export_info) == 0)
