@@ -1,4 +1,4 @@
-FROM postgres:9.5
+FROM postgres:9.6
 
 COPY create-user-and-db.sh /docker-entrypoint-initdb.d/
 

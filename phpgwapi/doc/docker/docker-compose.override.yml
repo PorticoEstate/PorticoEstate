@@ -8,8 +8,10 @@ services:
 
   postgres:
     build: ./postgres
+    restart: always
     environment:
-      - PGDATA=/temp/pgdata
+      # Make sure postgres does not save to a persistent volume
+      - PGDATA=/tmp/pgdata
     ports:
       - "5432:5432"
 

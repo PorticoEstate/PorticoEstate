@@ -9,6 +9,7 @@ services:
 
   postgres:
     build: ./postgres
+    restart: always
 
   testrunner:
     build: ./testrunner
