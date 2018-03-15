@@ -73,7 +73,7 @@
 	<div class="pure-control-group">
 		<xsl:choose>
 			<xsl:when test="not(hide_row)">
-				<label>
+				<label id="label_{name}">
 					<xsl:choose>
 						<xsl:when test="helpmsg=1">
 							<xsl:variable name="help_url">
@@ -675,7 +675,7 @@
 						</xsl:choose>
 					</xsl:when>
 					<xsl:when test="datatype='I'">
-						<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
+						<input data-validation="number" data-validation-allowing="negative" id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">
@@ -691,7 +691,7 @@
 						</input>
 					</xsl:when>
 					<xsl:when test="datatype='N'">
-						<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" size="30">
+						<input data-validation="number" data-validation-allowing="float" data-validation-decimal-separator="." id="id_{name}" type="text" name="values_attribute[{id}][value]" value="{value}" class="pure-input-1-2" >
 							<xsl:choose>
 								<xsl:when test="disabled!=''">
 									<xsl:attribute name="disabled">

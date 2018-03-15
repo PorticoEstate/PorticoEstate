@@ -662,6 +662,7 @@
 				'file_name' => array('type' => 'varchar','precision' => 255,'nullable' => false),
 				'active' => array('type' => 'int','precision' => 2,'nullable' => true),
 				'pre_commit' => array('type' => 'int','precision' => 2,'nullable' => true),//otherwise: post commit
+				'ajax' => array('type' => 'int','precision' => 2,'nullable' => true),//otherwise: post commit
 				'client_side' => array('type' => 'int','precision' => 2,'nullable' => true),//otherwise: server-side
 				'custom_sort' => array('type' => 'int','precision' => 4,'nullable' => true)
 			),

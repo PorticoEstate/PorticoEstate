@@ -3600,3 +3600,21 @@
 		}
 	}
 
+	$test[] = '0.9.17.558';
+	function phpgwapi_upgrade0_9_17_558()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('phpgw_cust_function','ajax', array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+		));
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['phpgwapi']['currentver'] = '0.9.17.559';
+			return $GLOBALS['setup_info']['phpgwapi']['currentver'];
+		}
+	}
+
