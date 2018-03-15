@@ -54,7 +54,8 @@
 				'view_image'		=> true,
 				'get_reverse_assignee'=>true,
 				'handle_multi_upload_file' => true,
-				'build_multi_upload_file' => true
+				'build_multi_upload_file' => true,
+				'custom_ajax'			=> true
 			);
 
 		/**
@@ -2304,6 +2305,52 @@ JS;
 			return phpgwapi_jquery::tabview_generate($tabs, $tab, 'ticket_tabview');
 		}
 
+		public function custom_ajax()
+		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$acl_location = phpgw::get_var('acl_location');
+
+			if (!$acl_location)
+			{
+				return false;
+			}
+
+			$criteria = array
+			(
+				'appname'	=> 'helpdesk',
+				'location'	=> $acl_location,
+				'allrows'	=> true
+			);
+
+			if (!$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria))
+			{
+				return false;
+			}
+
+			$ajax_result = array();
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['ajax'])
+				{
+					require $file;
+				}
+			}
+
+			return $ajax_result;
+		}
 		/**
 		 *
 		 */
@@ -2331,11 +2378,11 @@ JS;
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
 				if ($entry['active'] && $entry['client_side'] && is_file($file))
 				{
-					$GLOBALS['phpgw']->js->add_external_file("/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
+					$GLOBALS['phpgw']->js->add_external_file("/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
 					$js_found = true;
 				}
 			}
