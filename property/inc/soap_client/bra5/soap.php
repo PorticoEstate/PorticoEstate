@@ -251,7 +251,7 @@
 	<head>
 		<meta charset="utf-8">
 		<style TYPE="text/css">
-			<!--{$css}-->
+			{$css}
 		</style>
 	</head>
 		<body>
@@ -275,8 +275,11 @@ HTML;
 
 	$skip_field = array
 		(
+		'ASTA',
 		'ASTA_Signatur',
 		'Adresse',
+		'Eiendomsnummer',
+		'GNR/BNR',
 		'Sakstype',
 		'Saksnr',
 		'Tiltakstype',
@@ -287,7 +290,7 @@ HTML;
 		'Team'
 	);
 	$content = <<<HTML
-	<table class="pure-table pure-table-bordered">
+	<table class="pure-table pure-table-bordered pure-table-striped">
 		<thead>
 HTML;
 
@@ -336,36 +339,30 @@ HTML;
 				continue;
 			}
 
-			if ($attribute->Name == 'Saksdato')
+			if ($attribute->Name == 'Dato')
 			{
-				$_key = strtotime($attribute->Value->anyType);
+				$_key = strtotime($attribute->Value->anyType[0]);
 			}
 
 			$_html .='<td>';
 
 			if (is_array($attribute->Value->anyType))
 			{
-				$_html .= '<table>';
-
-				foreach ($attribute->Value->anyType as $value)
+				foreach ($attribute->Value->anyType as $key => $value)
 				{
-					$_html .= '<tr>';
-					$_html .= '<td>';
-
-					if (isset($value->enc_stype) && $value->enc_stype == 'Matrikkel')
+					if ($attribute->Name == 'Dato' && $value != null)
 					{
-						$_html .= $value->enc_value->GNr;
-						$_html .= '/' . $value->enc_value->BNr;
+						$_html .= date('d.m.Y', strtotime($value));
 					}
 					else
 					{
+						if($key > 0)
+						{
+							$_html .= ', ';
+						}
 						$_html .= $value;
 					}
-
-					$_html .= '</td>';
-					$_html .= '</tr>';
 				}
-				$_html .= '</table>';
 			}
 			else
 			{
@@ -379,7 +376,7 @@ HTML;
 		$case_array[$_key][] = $_html;
 	}
 
-	ksort($case_array);
+	krsort($case_array);
 //_debug_array($case_array);
 	foreach ($case_array as $case)
 	{
