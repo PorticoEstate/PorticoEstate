@@ -1899,7 +1899,7 @@
 				$filename = str_replace(' ', '_', $GLOBALS['phpgw_info']['user']['account_lid']);
 			}
 			$date_time = str_replace(array(' ', '/'), '_', $GLOBALS['phpgw']->common->show_date(time()));
-			$filename .= "_{$date_time}.xslx";
+			$filename .= "_{$date_time}.xlsx";
 
 			$writer = CreateObject('phpgwapi.xlsxwriter');
 
