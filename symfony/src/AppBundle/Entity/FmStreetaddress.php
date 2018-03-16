@@ -66,9 +66,9 @@ class FmStreetaddress
     /**
      * Get buildings
      *
-     * @return ArrayCollection
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function getBuildings(): ArrayCollection
+    public function getBuildings(): \Doctrine\Common\Collections\Collection
     {
         return $this->buildings;
     }

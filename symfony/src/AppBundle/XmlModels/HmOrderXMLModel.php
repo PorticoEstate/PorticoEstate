@@ -9,6 +9,8 @@
 namespace AppBundle\XmlModels;
 
 
+use AppBundle\Entity\FmLocation1;
+
 class HmOrderXMLModel
 {
     /**
@@ -16,5 +18,6 @@ class HmOrderXMLModel
      */
     public function __construct()
     {
+        //
     }
 }
