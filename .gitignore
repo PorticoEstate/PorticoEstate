@@ -8,3 +8,8 @@
 /nbproject
 /vendor
 /phpgwapi/test/_output
+dbconfig.php
+.idea/
+symfony/var/cache/
+symfony/var/sessions/
+symfony/app/config/parameters.yml
