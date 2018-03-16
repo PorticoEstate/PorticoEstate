@@ -139,13 +139,17 @@
 				$all_groups	= $GLOBALS['phpgw']->accounts->get_list('groups');
 				$all_user	= $GLOBALS['phpgw']->accounts->get_list('accounts');
 
-				while(is_array($all_groups) && (list(,$agroup) = each($all_groups)))
+				//while(is_array($all_groups) && (list(,$agroup) = each($all_groups)))
+				if (is_array($all_groups))
 				{
-					$user_groups[] = array
-					(
-						'account_id'	=> $agroup->id,
-						'account_name'	=> $agroup->firstname
-					);
+					foreach($all_groups as $key => $agroup)
+					{
+						$user_groups[] = array
+						(
+							'account_id'	=> $agroup->id,
+							'account_name'	=> $agroup->firstname
+						);
+					}
 				}
 
 			//	$i = 0;
@@ -168,33 +172,37 @@
 //_debug_array($user_groups);
 			}
 
-			while ( isset($user_groups) && is_array($user_groups) && (list(,$group) = each($user_groups)) )
+			//while ( isset($user_groups) && is_array($user_groups) && (list(,$group) = each($user_groups)) )
+			if (is_array($user_groups))
 			{
-				$i = 0;
-				if (in_array($group->id, $app_groups))
+				foreach($user_groups as $key => $group)
 				{
-					$this->t->set_var('tr_class', $nextmatches->alternate_row_class(++$i%2));
-					//$link_data['group_id'] = $group['account_id'];
-					$this->t->set_var('link_user_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group->id) ) );
-					$this->t->set_var('name_user_group', $group->lid);
-					$this->t->set_var('account_display', $GLOBALS['phpgw']->common->grab_owner_name($group->id));
-					$this->t->set_var('accountid', $group->id);
-					switch($app)
+					$i = 0;
+					if (in_array($group->id, $app_groups))
 					{
-						case 'addressbook':
-						default:
-							$this->t->fp('other','group_other',true);
-					}
-				}
-				else
-				{
-//_debug_array($group['account_id']);
-					if ($app != 'admin')
-					{
-						$this->t->set_var('link_all_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group->id) ) );
-						$this->t->set_var('name_all_group', $group->lid);
+						$this->t->set_var('tr_class', $nextmatches->alternate_row_class(++$i%2));
+						//$link_data['group_id'] = $group['account_id'];
+						$this->t->set_var('link_user_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group->id) ) );
+						$this->t->set_var('name_user_group', $group->lid);
+						$this->t->set_var('account_display', $GLOBALS['phpgw']->common->grab_owner_name($group->id));
 						$this->t->set_var('accountid', $group->id);
-						$this->t->fp('all', 'group_all', true);
+						switch($app)
+						{
+							case 'addressbook':
+							default:
+								$this->t->fp('other','group_other',true);
+						}
+					}
+					else
+					{
+	//_debug_array($group['account_id']);
+						if ($app != 'admin')
+						{
+							$this->t->set_var('link_all_group', $GLOBALS['phpgw']->link('/index.php', array('menuaction' => $action, 'group_id' => (int)$group->id) ) );
+							$this->t->set_var('name_all_group', $group->lid);
+							$this->t->set_var('accountid', $group->id);
+							$this->t->fp('all', 'group_all', true);
+						}
 					}
 				}
 			}

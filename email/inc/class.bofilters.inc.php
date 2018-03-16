@@ -600,13 +600,16 @@
 			if ($this->debug_set_prefs > 2) { echo '.process_submitted_data('.__LINE__.'): $this_filter[source_accounts] dump:<pre>'; print_r($this_filter['source_accounts']); echo '</pre>'."\r\n"; }
 			
 			// --- "deep" array form data ---
-			@reset($GLOBALS['phpgw']->msg->ref_POST);
+			//@reset($GLOBALS['phpgw']->msg->ref_POST);
 			// init sub arrays
 			$this_filter['matches'] = Array();
 			$this_filter['actions'] = Array();
 			// look for top level "match_X[]" and "action_X[]" items
-			while(list($key,$value) = each($GLOBALS['phpgw']->msg->ref_POST))
-			{
+			//while(list($key,$value) = each($GLOBALS['phpgw']->msg->ref_POST))
+                        if (is_array($GLOBALS['phpgw']->msg->ref_POST))
+                        {
+                            foreach($GLOBALS['phpgw']->msg->ref_POST as $key => $value)
+                            {
 				// do not walk thru data we already obtained
 				if (($key == 'filter_num')
 				|| ($key == 'filtername')
@@ -656,7 +659,8 @@
 						if ($this->debug_set_prefs > 1) { echo 'bofilters.process_submitted_data('.__LINE__.'): $this_filter[actions][$action_this_idx]: ['.serialize($this_filter['actions'][$action_this_idx]).']<br />'; }
 					}
 				}
-			}
+                            }
+                        }
 			if ($this->debug_set_prefs > 2) { echo 'bofilters.process_submitted_data('.__LINE__.'): $this_filter[] dump <strong><pre>'; print_r($this_filter); echo "</pre></strong>\r\n"; }
 			$this->all_filters[$found_filter_num] = array();
 			$this->all_filters[$found_filter_num] = $this_filter;
@@ -674,12 +678,16 @@
 			ksort($this->all_filters);
 			
 			$new_all_filters = array();
-			while(list($key,$value) = each($this->all_filters))
-			{
+			//while(list($key,$value) = each($this->all_filters))
+                        if (is_array($this->all_filters))
+                        {
+                            foreach($this->all_filters as $key => $value)
+                            {
 				$next_pos = count($new_all_filters);
 				$this_filter = $this->all_filters[$key];
 				$new_all_filters[$next_pos] = $this_filter;
-			}
+                            }
+                        }
 			// ok, now we have a compacted list with no gaps
 			$this->all_filters = array();
 			$this->all_filters = $new_all_filters;

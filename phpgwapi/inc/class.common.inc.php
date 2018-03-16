@@ -1019,12 +1019,12 @@ HTML;
 		* @author Dave Hall skwashd at phpgroupware.org
 		* @return string Template including CSS definitions
 		*/
-		public function get_css()
+		public function get_css($cache_refresh_token = '')
 		{
 			$all_css = '';
 			if( isset($GLOBALS['phpgw']->css) && is_object($GLOBALS['phpgw']->css) )
 			{
-				$all_css .= $GLOBALS['phpgw']->css->get_css_links();
+				$all_css .= $GLOBALS['phpgw']->css->get_css_links($cache_refresh_token);
 			}
 
 			if ( isset($GLOBALS['phpgw_info']['flags']['css_link']) )
@@ -1073,12 +1073,12 @@ HTML;
 		* @author Dave Hall skwashd at phpgroupware.org
 		* @return string The JavaScript code to include
 		*/
-		public function get_javascript()
+		public function get_javascript($cache_refresh_token = '')
 		{
 			$js = '';
 			if( isset($GLOBALS['phpgw']->js) && is_object($GLOBALS['phpgw']->js))
 			{
-				$js .= $GLOBALS['phpgw']->js->get_script_links();
+				$js .= $GLOBALS['phpgw']->js->get_script_links($cache_refresh_token);
 			}
 			if( isset($GLOBALS['phpgw']->yuical) && is_object($GLOBALS['phpgw']->yuical))
 			{

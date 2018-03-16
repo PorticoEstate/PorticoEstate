@@ -223,7 +223,7 @@
 					<div class="heading">
 						<legend>
 							<h3>
-								<xsl:value-of select="php:function('lang', 'Export agresso')"/>
+								<xsl:value-of select="php:function('lang', 'export invoice')"/>
 							</h3>
 						</legend>
 					</div>

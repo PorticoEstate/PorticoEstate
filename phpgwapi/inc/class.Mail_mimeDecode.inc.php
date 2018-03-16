@@ -217,7 +217,9 @@ class Mail_mimeDecode
         }
 
         reset($headers);
-        while (list($key, $value) = each($headers)) {
+        //while (list($key, $value) = each($headers))
+		foreach($headers as $key => $value)
+		{
             $headers[$key]['name'] = strtolower($headers[$key]['name']);
             switch ($headers[$key]['name']) {
 
@@ -229,8 +231,10 @@ class Mail_mimeDecode
                         $return->ctype_secondary = $regs[2];
                     }
 
-                    if (isset($content_type['other'])) {
-                        while (list($p_name, $p_value) = each($content_type['other'])) {
+                    if (is_array($content_type['other'])) {
+                        //while (list($p_name, $p_value) = each($content_type['other']))
+						foreach($content_type['other'] as $p_name => $p_value)
+						{
                             $return->ctype_parameters[$p_name] = $p_value;
                         }
                     }
@@ -239,8 +243,10 @@ class Mail_mimeDecode
                 case 'content-disposition';
                     $content_disposition = $this->_parseHeaderValue($headers[$key]['value']);
                     $return->disposition   = $content_disposition['value'];
-                    if (isset($content_disposition['other'])) {
-                        while (list($p_name, $p_value) = each($content_disposition['other'])) {
+                    if (is_array($content_disposition['other'])) {
+                        //while (list($p_name, $p_value) = each($content_disposition['other']))
+						foreach($content_disposition['other'] as $p_name => $p_value)
+						{
                             $return->d_parameters[$p_name] = $p_value;
                         }
                     }

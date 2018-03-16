@@ -124,80 +124,84 @@
 		function parse_contactquery($contactquery)
 		{
 			$notfirsttime=False;
-			while(list($k,$v)=each($contactquery))
+			//while(list($k,$v)=each($contactquery))
+			if (is_array($contactquery))
 			{
-				switch($k)
+				foreach($contactquery as $k => $v)
 				{
-					case 'filter':
-						{
-							switch($v)
+					switch($k)
+					{
+						case 'filter':
 							{
+								switch($v)
+								{
 
-								case 'none':
-									{
-										$this->contactquery['filter']=$this->contactquery['filter'].
-											($notfirsttime ? "," :"")."tid=n";
-										$notfirsttime=True;
-										break;
-									}
-								case 'user_only':
-									{
-										$this->contactquery['filter']=$this->contactquery['filter'].
-											($notfirsttime ? "," :"").
-											'owner='.$GLOBALS['phpgw_info']['user']['account_id'];
-										$notfirsttime=True;
-										break;
-									}
-								case 'directory':
-									{
-										if(!$contactquery['directory_uid'])
+									case 'none':
 										{
-
 											$this->contactquery['filter']=$this->contactquery['filter'].
-												($notfirsttime ? "," :"")."tid=p";
+												($notfirsttime ? "," :"")."tid=n";
+											$notfirsttime=True;
+											break;
 										}
-										else
+									case 'user_only':
 										{
-											 $this->contactquery['filter']=$this->contactquery['filter'].
-											 	      ($notfirsttime ? "," :"")."owner=".
-												      $contactquery['directory_uid'];
+											$this->contactquery['filter']=$this->contactquery['filter'].
+												($notfirsttime ? "," :"").
+												'owner='.$GLOBALS['phpgw_info']['user']['account_id'];
+											$notfirsttime=True;
+											break;
 										}
-										$notfirsttime=True;
-										break;
-									}
-								case 'private':
-									{
-										$this->contactquery['filter']=$this->contactquery['filter'].
-											($notfirsttime ? "," :"").'owner='.
-											$GLOBALS['phpgw_info']['user']['account_id'].
-											',access=private';
-										$notfirsttime=True;
-										break;
-									}
+									case 'directory':
+										{
+											if(!$contactquery['directory_uid'])
+											{
+
+												$this->contactquery['filter']=$this->contactquery['filter'].
+													($notfirsttime ? "," :"")."tid=p";
+											}
+											else
+											{
+												 $this->contactquery['filter']=$this->contactquery['filter'].
+														  ($notfirsttime ? "," :"")."owner=".
+														  $contactquery['directory_uid'];
+											}
+											$notfirsttime=True;
+											break;
+										}
+									case 'private':
+										{
+											$this->contactquery['filter']=$this->contactquery['filter'].
+												($notfirsttime ? "," :"").'owner='.
+												$GLOBALS['phpgw_info']['user']['account_id'].
+												',access=private';
+											$notfirsttime=True;
+											break;
+										}
+								}
+								$notfirsttime=false;
+								break;
 							}
-							$notfirsttime=false;
-							break;
-						}
-					case 'categories':
-						{
-							if($v)
+						case 'categories':
 							{
-								$this->contactquery['filter']=$this->contactquery['filter'].
-										 ($notfirsttime ? "," :"")."cat_id=".$v;
-							$notfirsttime=true;
+								if($v)
+								{
+									$this->contactquery['filter']=$this->contactquery['filter'].
+											 ($notfirsttime ? "," :"")."cat_id=".$v;
+								$notfirsttime=true;
+								}
+								break;
 							}
-							break;
-						}
-					case 'query':
-						{
-							if($v)
+						case 'query':
 							{
-								$this->contactquery['query']=$v;
+								if($v)
+								{
+									$this->contactquery['query']=$v;
+								}
 							}
-						}
-							
-				}//end switch
-			}//end while
+
+					}//end switch
+				}//end while
+			}
 //			print "<br /> built query";
 //			print_r($this->contactquery);
 		}//end function
@@ -274,9 +278,13 @@
 		{
 			if($this->get_destboxes())
 			{
-				while(list($name,$list)=each($this->destboxes))
+				//while(list($name,$list)=each($this->destboxes))
+				if (is_array($this->destboxes))
 				{
+					foreach($this->destboxes as $name => $list)
+					{
 					$this->forget_destbox($name);
+					}
 				}
 				$this->set_destboxes($this->destboxes);
 			}
@@ -304,84 +312,96 @@
 		//	print_r($saveddestboxes);
 			$found=false;
 			//We iterate into each box
-			while(list($ak,$li)=each($aryboxes))
+			//while(list($ak,$li)=each($aryboxes))
+			if (is_array($aryboxes))
 			{
-//				print $ak." ".$li."<br />";
-//				print_r($li);
-//				print "<br />";
-				//We make shure this box has an array in it
-				if($aryboxes[$ak])
+				foreach($aryboxes as $ak => $li)
 				{
-					//We iterate into the incoming box to search
-					//for its values in the cache
-					while(list($numary,$ary)=each($aryboxes[$ak]))
+	//				print $ak." ".$li."<br />";
+	//				print_r($li);
+	//				print "<br />";
+					//We make shure this box has an array in it
+					if(is_array($aryboxes[$ak]))
 					{
-//						print "<br /> Iterating aryboxes $numary";	
-//						print_r($ary);
-						list($id,$name)=each($ary);
-						//Look for this record in the cached destboxes
-						if(is_array($saveddestboxes[$ak]))
+						//We iterate into the incoming box to search
+						//for its values in the cache
+						//while(list($numary,$ary)=each($aryboxes[$ak]))
+						foreach($aryboxes[$ak] as $numary => $ary)
 						{
-							//Well, we found that we have this destboxed cached so
-							//now we will iterate through that
-							while(list($numarysave,$arysave)=each($saveddestboxes[$ak]))
+	//						print "<br /> Iterating aryboxes $numary";	
+	//						print_r($ary);
+							//list($id,$name)=each($ary);
+							$id = key($ary);
+							$name = current($ary);
+							//Look for this record in the cached destboxes
+							if(is_array($saveddestboxes[$ak]))
 							{
-								//We will try and get each addressbook key
-								//out of the cached destbox
-								list($sid,$sname)=each($arysave);
-								
-//								print "<br /> Iterating destboxes $id -> $name / $sid $sname";	
-								//So we can compare it and set the email field in it
-								if($id==$sid)
+								//Well, we found that we have this destboxed cached so
+								//now we will iterate through that
+								//while(list($numarysave,$arysave)=each($saveddestboxes[$ak]))
+								foreach($saveddestboxes[$ak] as $numarysave => $arysave)
 								{
-//									print "<br /> found $id in $ak";
-//									print "<br /> seting mail to $arysave[email]";
-									$ary['email']=$arysave['email'];
-									$aryboxes[$ak][$numary]=$ary;
-									
-									$found=true;
+									//We will try and get each addressbook key
+									//out of the cached destbox
+									//list($sid,$sname)=each($arysave);
+									$sid = key($arysave);
+									$sname = current($arysave);
+	//								print "<br /> Iterating destboxes $id -> $name / $sid $sname";	
+									//So we can compare it and set the email field in it
+									if($id==$sid)
+									{
+	//									print "<br /> found $id in $ak";
+	//									print "<br /> seting mail to $arysave[email]";
+										$ary['email']=$arysave['email'];
+										$aryboxes[$ak][$numary]=$ary;
+
+										$found=true;
+									}
+
 								}
-
+								reset($saveddestboxes[$ak]);
 							}
-							reset($saveddestboxes[$ak]);
-						}
-						//couldnt find it in saved destboxes, lookfor ir in result
-						//This redundant POSH makes me angry....
-						//Now we look into our names cache...im not shure why, if i 
-						//try and evade this search when i find it in the cache, 
-						//it all goes borken
-						//We iterate into the query cache
-						while(list($num,$record)=each($this->result))
-						{
-//							print "<br /> Iterating results $id   ---> $name <br />$record[id]---> $record[email]";
-							//Found what we are looking for
-							if($id == $record["id"])
+							//couldnt find it in saved destboxes, lookfor ir in result
+							//This redundant POSH makes me angry....
+							//Now we look into our names cache...im not shure why, if i 
+							//try and evade this search when i find it in the cache, 
+							//it all goes borken
+							//We iterate into the query cache
+							//while(list($num,$record)=each($this->result))
+							if (is_array($this->result))
 							{
-								//Set the mail record to what it should be
-//								print "<br /> seting mail to $record[email] <br />";
-								$ary['email']=($record["email"] ? $record["email"] : $record["home_email"]);
-								$aryboxes[$ak][$numary]=$ary;
-								$retboxes[$ak][$id]['email']= $ary['email'];
-								$retboxes[$ak][$id]['name']= $name;
-								
-							}
-						}
-						reset($this->result);
-						$found=false;
-					}
+								foreach($this->result as $num => $record)
+								{
+		//							print "<br /> Iterating results $id   ---> $name <br />$record[id]---> $record[email]";
+									//Found what we are looking for
+									if($id == $record["id"])
+									{
+										//Set the mail record to what it should be
+		//								print "<br /> seting mail to $record[email] <br />";
+										$ary['email']=($record["email"] ? $record["email"] : $record["home_email"]);
+										$aryboxes[$ak][$numary]=$ary;
+										$retboxes[$ak][$id]['email']= $ary['email'];
+										$retboxes[$ak][$id]['name']= $name;
 
-				}
-				elseif(!$deleted[$ak])
-				{
-//					print "<br />Saving $ak from destination data $deleted[$ak]<br />";
-//					print_r($deleted);
-					//Delete the destboxes that need deletion
-					$aryboxes[$ak]=$saveddestboxes[$ak];
+									}
+								}
+							}
+							reset($this->result);
+							$found=false;
+						}
+					}
+					elseif(!$deleted[$ak])
+					{
+	//					print "<br />Saving $ak from destination data $deleted[$ak]<br />";
+	//					print_r($deleted);
+						//Delete the destboxes that need deletion
+						$aryboxes[$ak]=$saveddestboxes[$ak];
+					}
 				}
 			}
 //			print "<br />modified<br />";
 //				print_r($aryboxes);
-				reset($aryboxes);
+			reset($aryboxes);
 			//Save the resulting destboxes
 			$this->save_destboxes($aryboxes);
 			//We return what we couldnt find in cache so the caller can evaluate

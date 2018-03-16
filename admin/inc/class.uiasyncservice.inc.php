@@ -261,6 +261,11 @@
 		{
 			$to = $data['to'];
 			$from = $GLOBALS['phpgw']->preferences->values['email'];
+
+			if (!CreateObject('phpgwapi.EmailAddressValidator')->check_email_address($from))
+			{
+				$from = "Noreply@notdefined.org";
+			}
 			if (!is_object($GLOBALS['phpgw']->send))
 			{
 				$GLOBALS['phpgw']->send = CreateObject('phpgwapi.send');
@@ -269,9 +274,8 @@
 
 			if (!$returncode)	// not nice, but better than failing silently
 			{
-				echo "<p>bocalendar::send_update: sending message to '$to' subject='$subject' failed !!!<br>\n"; 
+				echo "<p>uiasynservice::test: sending message to '$to' subject='$subject' failed !!!<br>\n";
 				echo $GLOBALS['phpgw']->send->err['desc']."</p>\n";
 			}
-			//print_r($GLOBALS['phpgw_info']['user']);
 		}
 	}

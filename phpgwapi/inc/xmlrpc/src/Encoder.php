@@ -34,7 +34,9 @@ class Encoder
             case 'scalar':
                 if (in_array('extension_api', $options)) {
                     reset($xmlrpcVal->me);
-                    list($typ, $val) = each($xmlrpcVal->me);
+                    //list($typ, $val) = each($xmlrpcVal->me);
+					$typ = key($xmlrpcVal->me);
+					$val = current($xmlrpcVal->me);
                     switch ($typ) {
                         case 'dateTime.iso8601':
                             $xmlrpcVal->scalar = $val;
@@ -180,8 +182,10 @@ class Encoder
                     $xmlrpcVal = new Value($phpVal->format('Ymd\TH:i:s'), Value::$xmlrpcStruct);
                 } else {
                     $arr = array();
-                    reset($phpVal);
-                    while (list($k, $v) = each($phpVal)) {
+                    //reset($phpVal);
+                    //while (list($k, $v) = each($phpVal))
+					foreach($phpVal as $k => $v)
+					{
                         $arr[$k] = $this->encode($v, $options);
                     }
                     $xmlrpcVal = new Value($arr, Value::$xmlrpcStruct);

@@ -3,7 +3,7 @@
  * Logiciel : HTML2PDF - classe FPDF_Formulaire
  * 
  * permet la gestion de champs de formulaire dans un PDF 
- * Inspiré des sources de http://fpdf.org/fr/script/script36.php et http://fpdf.org/fr/script/script40.php
+ * Inspirï¿½ des sources de http://fpdf.org/fr/script/script36.php et http://fpdf.org/fr/script/script40.php
  *
  * @author		Laurent MINGUET <webmaster@spipu.net>
  */
@@ -17,8 +17,8 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 	class FPDF_Formulaire extends FPDF_BookMark
 	{
 		var $javascript = '';	//javascript code
-		var $n_js;				//numéro de l'objet javascript
-		var $n_cata;			//numéro de l'objet catalogue
+		var $n_js;				//numï¿½ro de l'objet javascript
+		var $n_cata;			//numï¿½ro de l'objet catalogue
 		var $ur;				//
 		
 		function FPDF_Formulaire($orientation='P',$unit='mm',$format='A4')
@@ -71,7 +71,7 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 		/*
 		* Create a javascript PDF string.
 		* @access protected
-		* @author Johannes Güntert, Nicola Asuni
+		* @author Johannes Gï¿½ntert, Nicola Asuni
 		*/
 		function _putjavascript()
 		{
@@ -157,13 +157,17 @@ if (!defined('__CLASS_FPDF_FORMULAIRE__'))
 			$this->javascript .= "if(this.getField('pdfoldsaved') && this.getField('pdfoldsaved').value != 'saved') {";
 			$this->javascript .= sprintf("f".$name."=this.addField('%s','%s',%d,[%.2F,%.2F,%.2F,%.2F]);", $name, $type, $this->PageNo()-1, $x*$this->k, ($this->h-$y)*$this->k+1, ($x+$w)*$this->k, ($this->h-$y-$h)*$this->k+1)."\n";
 			$this->javascript .= 'f'.$name.'.textSize='.$this->FontSizePt.";\n";
-			while (list($key, $val) = each($prop))
+			//while (list($key, $val) = each($prop))
+			if (is_array($prop))
 			{
-				if (strcmp(substr($key, -5), 'Color') == 0)
-					$val = $this->_JScolor($val);
-				else
-					$val = '"'.$val.'"';
-				$this->javascript .= 'f'.$name.'.'.$key.'='.$val.";\n";
+				foreach($prop as $key => $val)
+				{
+					if (strcmp(substr($key, -5), 'Color') == 0)
+						$val = $this->_JScolor($val);
+					else
+						$val = '"'.$val.'"';
+					$this->javascript .= 'f'.$name.'.'.$key.'='.$val.";\n";
+				}
 			}
 			
 			$this->javascript .= '}';

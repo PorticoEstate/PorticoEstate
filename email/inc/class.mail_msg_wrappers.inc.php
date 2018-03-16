@@ -3122,9 +3122,10 @@ Array
 				$count_embeded = count($embeded_data);
 				if ($count_embeded == 1)
 				{
-					@reset($embeded_data);
+					//@reset($embeded_data);
 					$new_top_level = array();
-					while(list($key,$value) = each($embeded_data))
+					//while(list($key,$value) = each($embeded_data))
+					foreach($embeded_data as $key => $value)
 					{
 						$new_top_level = $embeded_data[$key];
 						//break;
@@ -3167,7 +3168,8 @@ Array
 			}
 			// parse_str will "urldecode" the folder string, we need to re-urlencode it, 
 			// because "prep_folder_in" is supposed to be where it gets urldecoded
-			while(list($key,$value) = each($embeded_data))
+			//while(list($key,$value) = each($embeded_data))
+			foreach($embeded_data as $key => $value)
 			{
 				if ((strstr($key, 'folder'))
 				&& ((string)$embeded_data[$key] != ''))
@@ -3232,7 +3234,8 @@ Array
 			// NOTE this WILL ALTER $_POST inserting processed values for later use (could this be avoided?)
 			if (is_array($this->ref_POST))
 			{
-				while(list($key,$value) = each($this->ref_POST))
+				//while(list($key,$value) = each($this->ref_POST))
+				foreach($this->ref_POST as $key => $value)
 				{
 					if ($this->debug_args_input_flow > 2) { $this->dbug->out('mail_msg: grab_class_args_gpc('.__LINE__.'): looking for "_fake_uri" token in HTTP_POST_VARS ['.$key.'] = '.$this->ref_POST[$key].'<br />'); }
 					if ($key == 'delmov_list')
@@ -3440,39 +3443,43 @@ Array
 			
 			if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): get acctnum from feed args if possible<br />'); }
 			$found_acctnum = False;
-			while(list($key,$value) = each($args_array))
+			//while(list($key,$value) = each($args_array))
+			if (is_array($args_array))
 			{
-				if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) this loop feed arg : ['.$key.'] => ['.serialize($args_array[$key]).'] <br />'); }
-				// try to find feed acctnum value
-				if ($key == 'fldball')
+				foreach($args_array as $key => $value)
 				{
-					$fldball = $args_array[$key];
-					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) $args_array passed in $fldball[] : '.serialize($fldball).'<br />'); }
-					$acctnum = (int)$fldball['acctnum'];
-					
-					// SET OUR ACCTNUM ACCORDING TO FEED ARGS
-					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) ACCTNUM from $args_array fldball : ['.$acctnum.']<br />'); }
-					$found_acctnum = True;
-					break;
-				}
-				elseif ($key == 'msgball')
-				{
-					$msgball = $args_array[$key];
-					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) $args_array passed in $msgball[] : '.serialize($msgball).'<br />'); }
-					$acctnum = (int)$msgball['acctnum'];
-					// SET OUR ACCTNUM ACCORDING TO FEED ARGS
-					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) ACCTNUM from $args_array msgball : ['.$acctnum.']<br />'); }
-					$found_acctnum = True;
-					break;
-				}
-				elseif ($key == 'acctnum')
-				{
-					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) $args_array passed in "acctnum" : '.serialize($args_array[$key]).'<br />'); }
-					$acctnum = (int)$args_array[$key];
-					// SET OUR ACCTNUM ACCORDING TO FEED ARGS
-					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) ACCTNUM from $args_array "acctnum" feed args : ['.$acctnum.']<br />'); }
-					$found_acctnum = True;
-					break;
+					if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) this loop feed arg : ['.$key.'] => ['.serialize($args_array[$key]).'] <br />'); }
+					// try to find feed acctnum value
+					if ($key == 'fldball')
+					{
+						$fldball = $args_array[$key];
+						if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) $args_array passed in $fldball[] : '.serialize($fldball).'<br />'); }
+						$acctnum = (int)$fldball['acctnum'];
+
+						// SET OUR ACCTNUM ACCORDING TO FEED ARGS
+						if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) ACCTNUM from $args_array fldball : ['.$acctnum.']<br />'); }
+						$found_acctnum = True;
+						break;
+					}
+					elseif ($key == 'msgball')
+					{
+						$msgball = $args_array[$key];
+						if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) $args_array passed in $msgball[] : '.serialize($msgball).'<br />'); }
+						$acctnum = (int)$msgball['acctnum'];
+						// SET OUR ACCTNUM ACCORDING TO FEED ARGS
+						if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) ACCTNUM from $args_array msgball : ['.$acctnum.']<br />'); }
+						$found_acctnum = True;
+						break;
+					}
+					elseif ($key == 'acctnum')
+					{
+						if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) $args_array passed in "acctnum" : '.serialize($args_array[$key]).'<br />'); }
+						$acctnum = (int)$args_array[$key];
+						// SET OUR ACCTNUM ACCORDING TO FEED ARGS
+						if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: get_best_acctnum('.__LINE__.'): (acctnum search) ACCTNUM from $args_array "acctnum" feed args : ['.$acctnum.']<br />'); }
+						$found_acctnum = True;
+						break;
+					}
 				}
 			}
 			// did the above work?
@@ -3675,7 +3682,8 @@ Array
 			
 			// add these items to the args array for the appropriate account
 			if ($this->debug_args_input_flow > 1) { $this->dbug->out('mail_msg: init_internal_args: about to add $internal_args to acounts class args array<br />'); }
-			while(list($key,$value) = each($internal_args))
+			//while(list($key,$value) = each($internal_args))
+			foreach($internal_args as $key => $value)
 			{
 				if ($this->debug_args_input_flow > 2) { $this->dbug->out(' * mail_msg: init_internal_args: (looping) setting internal arg: $this->set_arg_value('.$key.', '.$internal_args[$key].', '.$acctnum.'); <br />'); }
 				$this->set_arg_value($key, $internal_args[$key], $acctnum);

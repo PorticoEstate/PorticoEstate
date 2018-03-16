@@ -63,7 +63,8 @@
 			else
 			{
 		//		$_jquery_core = 'jquery-2.1.4';
-				$_jquery_core = 'jquery-3.2.1';
+		//		$_jquery_core = 'jquery-3.2.1';
+				$_jquery_core = 'jquery-3.3.1';
 	//			$_jquery_migrate = 'jquery-migrate-3.0.0.min';
 			}
 
@@ -294,11 +295,30 @@
 				$scrollToTopOnError = 'true';
 			}
 
+			switch ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'])
+			{
+				case 'no':
+				case 'nn':
+					$lang = 'no';
+					break;
+				case 'fr':
+				case 'de':
+				case 'se':
+				case 'sv':
+				case 'en':
+				case 'pt':
+					$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+					break;
+				default:
+					$lang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
+					break;
+			}
+
 			$translation = '';
 			if (!$times_loaded)//first time only
 			{
 				//TODO: use translations from the package
-				if ($GLOBALS['phpgw_info']['user']['preferences']['common']['lang'] == 'no')
+				if ($lang == 'no')
 				{
 					$translation = <<<JS
 
@@ -396,7 +416,7 @@ JS;
 			$(document).ready(function () 
 			{
 				$.validate({
-					lang: '{$GLOBALS['phpgw_info']['user']['preferences']['common']['lang']}', // (supported languages are fr, de, se, sv, en, pt, no)
+					lang: '{$lang}', // (supported languages are fr, de, se, sv, en, pt, no)
 					modules : {$modules_js},
 					form: '#{$form_id}',
 					validateOnBlur : false,

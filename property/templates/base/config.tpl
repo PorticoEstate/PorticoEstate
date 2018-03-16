@@ -65,6 +65,17 @@
 					<textarea cols="40" rows="4" name="newsettings[sms_client_order_notice]" wrap="virtual">{value_sms_client_order_notice}</textarea>
 				</td>
 			</tr>
+			<tr>
+				<td>{lang_alternative_to_contract} 1:</td>
+				<td><input name="newsettings[alternative_to_contract_1]" value="{value_alternative_to_contract_1}"></td>
+			</tr>
+			<tr>
+				<td>{lang_alternative_to_contract} 2:</td>
+				<td><input name="newsettings[alternative_to_contract_2]" value="{value_alternative_to_contract_2}"></td>
+			</tr>
+			<tr>
+				<td>{lang_alternative_to_contract} 3:</td>
+				<td><input name="newsettings[alternative_to_contract_3]" value="{value_alternative_to_contract_3}"></td>
 			</tr>
 			<tr>
 				<td>{lang_dimb_responsible_1}:</td>
@@ -329,6 +340,15 @@
 					<select name="newsettings[show_billable_hours]">
 						<option value="" {selected_show_billable_hours_}>NO</option>
 						<option value="1" {selected_show_billable_hours_1}>YES</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>{lang_suppress_location_summary}:</td>
+				<td>
+					<select name="newsettings[suppress_location_summary]">
+						<option value="" {selected_suppress_location_summary_}>NO</option>
+						<option value="1" {selected_suppress_location_summary_1}>YES</option>
 					</select>
 				</td>
 			</tr>
@@ -727,6 +747,13 @@
 					<select name="newsettings[condition_survey_obsolete_status]">
 						{hook_condition_survey_obsolete_status}
 					</select>
+				</td>
+			</tr>
+
+			<tr>
+				<td>{lang_path_to_temp_files_components}:</td>
+				<td>
+					<input name="newsettings[temp_files_components]" value="{value_temp_files_components}" size="40">
 				</td>
 			</tr>
 		</tbody>

@@ -74,7 +74,9 @@ function tagprint($tagname, $attary, $tagtype){
 		$fulltag = '<' . $tagname;
 		if (is_array($attary) && sizeof($attary)){
 			$atts = Array();
-			while (list($attname, $attvalue) = each($attary)){
+			//while (list($attname, $attvalue) = each($attary))
+			foreach($attary as $attname => $attvalue)
+			{
 				array_push($atts, "$attname=$attvalue");
 			}
 			$fulltag .= ' ' . join(' ', $atts);
@@ -543,8 +545,13 @@ function deent($attvalue){
 	 */
 	$trans = array_flip($trans);
 	unset($trans{'&quot;'});
-	while (list($ent, $val) = each($trans)){
-		$attvalue = preg_replace('/' . $ent . '*/si', $val, $attvalue);
+	//while (list($ent, $val) = each($trans))
+	if (is_array($trans))
+	{
+		foreach($trans as $ent => $val)
+		{
+			$attvalue = preg_replace('/' . $ent . '*/si', $val, $attvalue);
+		}
 	}
 	/**
 	 * Now translate numbered entities from 1 to 255 if needed.
@@ -584,47 +591,52 @@ function fixatts($tagname,
 								 ){
 	$me = 'fixatts';
 	$this->spew("$me: Fixing attributes\n");
-	while (list($attname, $attvalue) = each($attary)){
-		/**
-		 * See if this attribute should be removed.
-		 */
-		foreach ($rm_attnames as $matchtag=>$matchattrs){
-			if (preg_match($matchtag, $tagname)){
-				foreach ($matchattrs as $matchattr){
-					if (preg_match($matchattr, $attname)){
-						$this->spew("$me: Attribute '$attname' defined as bad.\n");
-						$this->spew("$me: Removing.\n");
-						unset($attary{$attname});
-						continue;
+	//while (list($attname, $attvalue) = each($attary))
+	if (is_array($attary))
+	{
+		foreach($attary as $attname => $attvalue)
+		{
+			/**
+			 * See if this attribute should be removed.
+			 */
+			foreach ($rm_attnames as $matchtag=>$matchattrs){
+				if (preg_match($matchtag, $tagname)){
+					foreach ($matchattrs as $matchattr){
+						if (preg_match($matchattr, $attname)){
+							$this->spew("$me: Attribute '$attname' defined as bad.\n");
+							$this->spew("$me: Removing.\n");
+							unset($attary{$attname});
+							continue;
+						}
 					}
 				}
 			}
-		}
-		/**
-		 * Remove any entities.
-		 */
-		$attvalue = $this->deent($attvalue);
-		
-		/**
-		 * Now let's run checks on the attvalues.
-		 * I don't expect anyone to comprehend this. If you do,
-		 * get in touch with me so I can drive to where you live and
-		 * shake your hand personally. :)
-		 */
-		foreach ($bad_attvals as $matchtag=>$matchattrs){
-			if (preg_match($matchtag, $tagname)){
-				foreach ($matchattrs as $matchattr=>$valary){
-					if (preg_match($matchattr, $attname)){
-						/**
-						 * There are two arrays in valary.
-						 * First is matches.
-						 * Second one is replacements
-						 */
-						list($valmatch, $valrepl) = $valary;
-						$newvalue = preg_replace($valmatch, $valrepl, $attvalue);
-						if ($newvalue != $attvalue){
-							$this->spew("$me: attvalue is now $newvalue\n");
-							$attary{$attname} = $newvalue;
+			/**
+			 * Remove any entities.
+			 */
+			$attvalue = $this->deent($attvalue);
+
+			/**
+			 * Now let's run checks on the attvalues.
+			 * I don't expect anyone to comprehend this. If you do,
+			 * get in touch with me so I can drive to where you live and
+			 * shake your hand personally. :)
+			 */
+			foreach ($bad_attvals as $matchtag=>$matchattrs){
+				if (preg_match($matchtag, $tagname)){
+					foreach ($matchattrs as $matchattr=>$valary){
+						if (preg_match($matchattr, $attname)){
+							/**
+							 * There are two arrays in valary.
+							 * First is matches.
+							 * Second one is replacements
+							 */
+							list($valmatch, $valrepl) = $valary;
+							$newvalue = preg_replace($valmatch, $valrepl, $attvalue);
+							if ($newvalue != $attvalue){
+								$this->spew("$me: attvalue is now $newvalue\n");
+								$attary{$attname} = $newvalue;
+							}
 						}
 					}
 				}

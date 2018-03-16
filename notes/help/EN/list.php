@@ -55,4 +55,3 @@
 
 	$GLOBALS['phpgw']->help->xdraw($values);
 	$GLOBALS['phpgw']->xslttpl->set_var('phpgw',$GLOBALS['phpgw']->help->output);
-?>

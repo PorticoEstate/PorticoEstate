@@ -247,7 +247,8 @@
 			$numofentry=0;
 			$rjournal=array();
 			
-			while(list (, $entry_journal) = each ($journal))
+			//while(list (, $entry_journal) = each ($journal))
+			foreach($journal as $key => $entry_journal)
 			{
 				++$numofentry;
 				$rjournal[]=$entry_journal; 

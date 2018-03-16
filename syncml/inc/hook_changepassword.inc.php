@@ -19,4 +19,3 @@
 			$GLOBALS['phpgw']->session->appsession('password', 'phpgwapi')
 		)
 	);
-?>

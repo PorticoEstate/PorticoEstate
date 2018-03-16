@@ -4531,7 +4531,8 @@
 							$is_edited = false;
 
 							reset($comm_media);
-							while (list($key, $comm) = each($comm_media))
+							//while (list($key, $comm) = each($comm_media))
+							foreach($comm_media as $key => $comm)
 							{
 								if ($comm['comm_descr'] == $old_comm['comm_descr'])
 								{

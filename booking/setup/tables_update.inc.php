@@ -3658,3 +3658,21 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.29 to 0.2.30
+	 *
+	 */
+	$test[] = '0.2.29';
+	function booking_upgrade0_2_29()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw']->locations->add('.admin', 'Admin section', 'booking');
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.30';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

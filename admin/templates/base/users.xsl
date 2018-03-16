@@ -50,7 +50,7 @@
 			<th><a href="{sort_status}"><xsl:value-of select="lang_status"/></a></th>
 			<th><xsl:value-of select="lang_view" /></th>
 			<th><xsl:value-of select="lang_edit" /></th>
-			<th><xsl:value-of select="lang_delete" /></th>
+			<!--<th><xsl:value-of select="lang_delete" /></th>-->
 		</tr>
 	</xsl:template>
 
@@ -84,9 +84,9 @@
 			<td class="action">
 				<a href="{edit_url}"><xsl:value-of select="lang_edit"/></a>
 			</td>
-			<td class="action">
+<!--			<td class="action">
 				<a href="{delete_url}"><xsl:value-of select="lang_delete"/></a>
-			</td>
+			</td>-->
 		</tr>
 	</xsl:template>
 

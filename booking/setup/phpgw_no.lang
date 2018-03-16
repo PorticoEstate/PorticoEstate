@@ -581,7 +581,8 @@ Tilsynsvakt telephone	booking	no	Telefon tilsynsvakt
 Metadata	common	no	Metadata
 Author	booking	no	Forfatter
 Robots	booking	no	Søkerobot parameter
-Frontpage text	booking	no	Forside tekst
+Frontpage text	booking	no	Forsidetekst
+frontimage text	booking	no	Tekst over forsidebilde
 Calendar text	booking	no	Tekst bak kalender knapp.
 Reference	booking	no	Referanse
 Event Mail Settings	booking	no	Arrangement E-post oppsett
@@ -709,7 +710,7 @@ account new	booking	no	Ny konteringsstreng
 external account	booking	no	Ekstern konto
 external customer output format	booking	no	Ekstern kunde output format
 external file linebreak	booking	no	Tegn for linjeskift
-export agresso	booking	no	Agresso eksport
+export invoice	booking	no	Faktura eksport
 export method	booking	no	Eksport metode
 export path	booking	no	Eksport sti
 ftp host	booking	no	Ftp vert
@@ -720,3 +721,4 @@ last id	booking	no	Siste ID
 do not edit!	booking	no	Ikke endre!
 approve	booking	no	Godkjenn
 return to application	booking	no	Tilbake til søknad
+application add	booking	no	Ny søknad

@@ -470,7 +470,8 @@
 
 			if (isset($values['extra']) && is_array($values['extra']))
 			{
-				while (is_array($values['extra']) && list($input_name, $value) = each($values['extra']))
+				//while (is_array($values['extra']) && list($input_name, $value) = each($values['extra']))
+                                foreach($values['extra'] as $input_name => $value)
 				{
 					if ($value)
 					{
@@ -558,7 +559,8 @@
 
 			if (isset($values['extra']) && is_array($values['extra']))
 			{
-				while (is_array($values['extra']) && list($column, $value) = each($values['extra']))
+				//while (is_array($values['extra']) && list($column, $value) = each($values['extra']))
+                                foreach($values['extra'] as $column => $value)
 				{
 					$value_set[$column] = $value;
 				}

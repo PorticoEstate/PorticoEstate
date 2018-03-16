@@ -129,7 +129,7 @@
 		*
 		* @returns string the html needed for importing the js into a page
 		*/
-		public function get_script_links()
+		public function get_script_links($cache_refresh_token = '')
 		{
 			$combine = true;
 			$combine = false; // Temporary
@@ -171,7 +171,7 @@
 									{
 										//echo "file: {$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js <br>";
 										$links .= '<script type="text/javascript" '
-										. "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js\">"
+										. "src=\"{$this->webserver_url}/{$app}/js/{$pkg}/{$file}.js{$cache_refresh_token}\">"
 									 	. "</script>\n";
 									}
 								}
@@ -193,7 +193,7 @@
 					else
 					{
 						$links .= <<<HTML
-						<script type="text/javascript" src="{$this->webserver_url}/{$file}" >
+						<script type="text/javascript" src="{$this->webserver_url}/{$file}{$cache_refresh_token}" >
 						</script>
 HTML;
 					}

@@ -291,53 +291,65 @@
 
 			$i = 0;
 
-			while (is_array($values) && list(,$job_id) = each($values['select']))
+			//while (is_array($values) && list(,$job_id) = each($values['select']))
+			if (is_array($values['select']))
 			{
-				if($i > 0)
+				foreach($values['select'] as $key => $job_id)
 				{
-					$pdf->ezNewPage();
-				}
-				$job_info = $this->bo->read_single_job($job_id);
-				$qualification = $this->bo->read_qualification($job_id);
-				$task = $this->bo->read_task($job_id);
-				$i++;
+					if($i > 0)
+					{
+						$pdf->ezNewPage();
+					}
+					$job_info = $this->bo->read_single_job($job_id);
+					$qualification = $this->bo->read_qualification($job_id);
+					$task = $this->bo->read_task($job_id);
+					$i++;
 
-				$pdf->ezSetY(720);
-				$pdf->ezText($job_info['name'],14);
-				$pdf->ezSetDy(-10);
-				$pdf->ezText(lang('tasks') . ':',12);
-				$pdf->ezSetDy(-5);
-				$j = 1;
-				while (is_array($task) && list(,$entry) = each($task))
-				{
-					if($entry['descr'])
+					$pdf->ezSetY(720);
+					$pdf->ezText($job_info['name'],14);
+					$pdf->ezSetDy(-10);
+					$pdf->ezText(lang('tasks') . ':',12);
+					$pdf->ezSetDy(-5);
+					$j = 1;
+					//while (is_array($task) && list(,$entry) = each($task))
+					if (is_array($task))
 					{
-						$pdf->ezText($j . ' ' . $entry['name'] . ': ',12,array('left' => 10));
-						$pdf->ezText($entry['descr'],12,array('left' => 30));
+						foreach($task as $key => $entry)
+						{
+							if($entry['descr'])
+							{
+								$pdf->ezText($j . ' ' . $entry['name'] . ': ',12,array('left' => 10));
+								$pdf->ezText($entry['descr'],12,array('left' => 30));
+							}
+							else
+							{
+								$pdf->ezText($j . ' ' . $entry['name'],12,array('left' => 10));
+							}
+							$j++;
+						}
 					}
-					else
-					{
-						$pdf->ezText($j . ' ' . $entry['name'],12,array('left' => 10));
-					}
-					$j++;
-				}
-				$pdf->ezSetDy(-10);
+					$pdf->ezSetDy(-10);
 
-				$pdf->ezText(lang('qualification') . ':',12);
-				$pdf->ezSetDy(-5);
-				$j = 1;
-				while (is_array($qualification) && list(,$entry) = each($qualification))
-				{
-					if($entry['descr'])
+					$pdf->ezText(lang('qualification') . ':',12);
+					$pdf->ezSetDy(-5);
+					$j = 1;
+					//while (is_array($qualification) && list(,$entry) = each($qualification))
+					if (is_array($qualification))
 					{
-						$pdf->ezText($j . ' ' . $entry['name'] . ': ',12,array('left' => 10));
-						$pdf->ezText($entry['descr'],12,array('left' => 30));
+						foreach($qualification as $key => $entry)
+						{
+							if($entry['descr'])
+							{
+								$pdf->ezText($j . ' ' . $entry['name'] . ': ',12,array('left' => 10));
+								$pdf->ezText($entry['descr'],12,array('left' => 30));
+							}
+							else
+							{
+								$pdf->ezText($j . ' ' . $entry['name'],12,array('left' => 10));
+							}
+							$j++;
+						}
 					}
-					else
-					{
-						$pdf->ezText($j . ' ' . $entry['name'],12,array('left' => 10));
-					}
-					$j++;
 				}
 			}
 
@@ -377,32 +389,36 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			while (is_array($qualification) && list(,$entry) = each($qualification))
+			//while (is_array($qualification) && list(,$entry) = each($qualification))
+			if (is_array($qualification))
 			{
+				foreach($qualification as $key => $entry)
+				{
 
-				$content[] = array
-				(
-					'sorting'		=> $entry['value_sort'],
-					'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'resort'=> 'up', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
-					'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'resort'=> 'down', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
-					'text_up'		=> lang('up'),
-					'text_down'		=> lang('down'),
+					$content[] = array
+					(
+						'sorting'		=> $entry['value_sort'],
+						'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'resort'=> 'up', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+						'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.qualification', 'resort'=> 'down', 'id'=> $entry['quali_id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+						'text_up'		=> lang('up'),
+						'text_down'		=> lang('down'),
 
-					'id'			=> $entry['quali_id'],
-					'name'			=> $entry['name'],
-					'descr'			=> $entry['descr'],
-					'remark'		=> $entry['remark'],
-					'category'		=> $entry['category'],
-					'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
-					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
-					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
-					'lang_view_text'	=> lang('view qualification item'),
-					'lang_edit_text'	=> lang('edit qualification item'),
-					'lang_delete_text'	=> lang('delete qualification item'),
-					'text_view'		=> lang('view'),
-					'text_edit'		=> lang('edit'),
-					'text_delete'		=> lang('delete')
-				);
+						'id'			=> $entry['quali_id'],
+						'name'			=> $entry['name'],
+						'descr'			=> $entry['descr'],
+						'remark'		=> $entry['remark'],
+						'category'		=> $entry['category'],
+						'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
+						'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
+						'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_qualification', 'job_id'=> $job_id, 'quali_id'=> $entry['quali_id'])),
+						'lang_view_text'	=> lang('view qualification item'),
+						'lang_edit_text'	=> lang('edit qualification item'),
+						'lang_delete_text'	=> lang('delete qualification item'),
+						'text_view'		=> lang('view'),
+						'text_edit'		=> lang('edit'),
+						'text_delete'		=> lang('delete')
+					);
+				}
 			}
 
 
@@ -530,32 +546,35 @@
 
 			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
 
-			while (is_array($task) && list(,$entry) = each($task))
+			//while (is_array($task) && list(,$entry) = each($task))
+			if (is_array($task))
 			{
+				foreach($task as $key => $entry)
+				{
 
-				$content[] = array
-				(
-					'sorting'		=> $entry['value_sort'],
-					'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'resort'=> 'up', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
-					'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'resort'=> 'down', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
-					'text_up'		=> lang('up'),
-					'text_down'		=> lang('down'),
+					$content[] = array
+					(
+						'sorting'		=> $entry['value_sort'],
+						'link_up'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'resort'=> 'up', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+						'link_down'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.task', 'resort'=> 'down', 'id'=> $entry['id'], 'job_id'=> $job_id, 'allrows'=> $this->allrows)),
+						'text_up'		=> lang('up'),
+						'text_down'		=> lang('down'),
 
-					'id'			=> $entry['id'],
-					'name'			=> $entry['name'],
-					'descr'			=> $entry['descr'],
-					'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
-					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
-					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
-					'lang_view_text'	=> lang('view task item'),
-					'lang_edit_text'	=> lang('edit task item'),
-					'lang_delete_text'	=> lang('delete task item'),
-					'text_view'		=> lang('view'),
-					'text_edit'		=> lang('edit'),
-					'text_delete'		=> lang('delete')
-				);
+						'id'			=> $entry['id'],
+						'name'			=> $entry['name'],
+						'descr'			=> $entry['descr'],
+						'link_edit'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
+						'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.view_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
+						'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.delete_task', 'job_id'=> $job_id, 'id'=> $entry['id'])),
+						'lang_view_text'	=> lang('view task item'),
+						'lang_edit_text'	=> lang('edit task item'),
+						'lang_delete_text'	=> lang('delete task item'),
+						'text_view'		=> lang('view'),
+						'text_edit'		=> lang('edit'),
+						'text_delete'		=> lang('delete')
+					);
+				}
 			}
-
 
 			$table_header[] = array
 			(
@@ -865,33 +884,34 @@
 				$allowed_edit = true;
 			}
 
-
-			while (is_array($qualification) && list(,$entry) = each($qualification))
+			//while (is_array($qualification) && list(,$entry) = each($qualification))
+			if (is_array($qualification))
 			{
-
-				if ($allowed_edit)
+				foreach($qualification as $key => $entry)
 				{
-					$link_edit		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
-					$text_edit		= lang('edit');
+					if ($allowed_edit)
+					{
+						$link_edit		= $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
+						$text_edit		= lang('edit');
+					}
+
+					$content[] = array
+					(
+						'id'			=> $entry['id'],
+						'name'			=> $entry['name'],
+						'descr'			=> $entry['descr'],
+						'link_edit'		=> $link_edit,
+	//					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
+	//					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
+						'lang_select'		=> lang('select'),
+						'text_delete'		=> lang('delete'),
+						'text_edit'		=> $text_edit,
+						'lang_edit_text'	=> lang('edit this item')
+					);
+					unset ($link_edit);
+					unset ($text_edit);
 				}
-
-				$content[] = array
-				(
-					'id'			=> $entry['id'],
-					'name'			=> $entry['name'],
-					'descr'			=> $entry['descr'],
-					'link_edit'		=> $link_edit,
-//					'link_view'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
-//					'link_delete'		=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uijob.edit_qualification_type', 'quali_type_id'=> $entry['id']));
-					'lang_select'		=> lang('select'),
-					'text_delete'		=> lang('delete'),
-					'text_edit'		=> $text_edit,
-					'lang_edit_text'	=> lang('edit this item')
-				);
-				unset ($link_edit);
-				unset ($text_edit);
 			}
-
 
 			$table_header[] = array
 			(

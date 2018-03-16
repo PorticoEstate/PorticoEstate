@@ -966,8 +966,14 @@
 						}
 					}
 					$receipt = $this->bo->update($event);
-				//	$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
-					$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+					if(empty($event['application_id']))
+					{
+						$this->redirect(array('menuaction' => 'booking.uievent.edit', 'id' => $event['id']));
+					}
+					else
+					{
+						$this->redirect(array('menuaction' => 'booking.uiapplication.show', 'id' => $event['application_id']));
+					}
 				}
 			}
 

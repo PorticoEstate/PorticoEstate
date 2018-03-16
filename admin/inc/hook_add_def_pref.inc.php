@@ -7,4 +7,4 @@
 //  $GLOBALS['pref']->add('common','dateformat','m/d/Y');
 //  $GLOBALS['pref']->add('common','timeformat',12);
 //  $GLOBALS['pref']->add('common','lang','en');
-?>
+

@@ -819,6 +819,9 @@
 			<xsl:value-of select="lang_client_side"/>
 		</td>
 		<td class="th_text" width="5%" align="center">
+			<xsl:value-of select="lang_ajax"/>
+		</td>
+		<td class="th_text" width="5%" align="center">
 			<xsl:value-of select="lang_active"/>
 		</td>
 		<td class="th_text" width="10%" align="center">
@@ -873,6 +876,9 @@
 		</td>
 		<td align = 'center'>
 			<xsl:value-of select="client_side"/>
+		</td>
+		<td align = 'center'>
+			<xsl:value-of select="ajax"/>
 		</td>
 		<td align = 'center'>
 			<xsl:value-of select="active"/>
@@ -1051,6 +1057,23 @@
 								<xsl:text>otherwise: server-side</xsl:text>
 							</xsl:attribute>
 							<xsl:if test="value_client_side = '1'">
+								<xsl:attribute name="checked">
+									<xsl:text>checked</xsl:text>
+								</xsl:attribute>
+							</xsl:if>
+						</input>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Ajax
+					</td>
+					<td>
+						<input type="checkbox" name="values[ajax]" value="1">
+							<xsl:attribute name="title">
+								<xsl:text>otherwise: server-side</xsl:text>
+							</xsl:attribute>
+							<xsl:if test="value_ajax = '1'">
 								<xsl:attribute name="checked">
 									<xsl:text>checked</xsl:text>
 								</xsl:attribute>

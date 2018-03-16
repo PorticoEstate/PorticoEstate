@@ -244,7 +244,8 @@
 								break;
 
 							case 'array':
-								list($first_key) = each($val);
+								//list($first_key) = each($val);
+								$first_key = key($val);
 								if($new_index && is_int($first_key))
 								{
 									foreach ( $val as $subval )
@@ -469,7 +470,9 @@
 
 				if ( count($this->doctype) == 1 )
 				{
-					list($doctype_name, $doctype_uri) = each($this->doctype);
+					//list($doctype_name, $doctype_uri) = each($this->doctype);
+					$doctype_name = key($this->doctype);
+					$doctype_uri = current($this->doctype);
 					$result .= "<!DOCTYPE {$doctype_name} SYSTEM \"{$doctype_uri}\">\n";
 				}
 

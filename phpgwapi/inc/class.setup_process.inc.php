@@ -189,8 +189,9 @@
 			}
 
 			/* now return the list */
-			@reset($passed);
-			while(list($key,$value) = @each($passed))
+			//@reset($passed);
+			//while(list($key,$value) = @each($passed))
+			foreach($passed as $key => $value)
 			{
 				$setup_info[$value['name']] = $passed[$value['name']];
 			}
@@ -436,8 +437,9 @@
 		 */
 		function drop_langs($setup_info,$DEBUG=False)
 		{
-			@reset($setup_info);
-			while(list($key,$null) = @each($setup_info))
+			//@reset($setup_info);
+			//while(list($key,$null) = @each($setup_info))
+			foreach($setup_info as $key => $null)
 			{
 				$appname = $setup_info[$key]['name'];
 				$this->translation->drop_langs($appname,$DEBUG);
@@ -457,8 +459,9 @@
 		 */
 		function upgrade_langs($setup_info,$DEBUG=False)
 		{
-			@reset($setup_info);
-			while(list($key,$null) = @each($setup_info))
+			//@reset($setup_info);
+			//while(list($key,$null) = @each($setup_info))
+			foreach($setup_info as $key => $null)
 			{
 				/* Don't upgrade lang files in the middle of an upgrade */
 				if($setup_info[$key]['status'] == 'R')

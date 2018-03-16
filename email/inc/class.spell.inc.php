@@ -1087,8 +1087,9 @@
 				if (is_array($GLOBALS['phpgw']->msg->ref_POST))
 				{
 					if ($this->debug_spell_finished > 1) { echo '$GLOBALS[HTTP_POST_VARS] is array<br />'; }
-					@reset($GLOBALS['phpgw']->msg->ref_POST);
-					while(list($key,$value) = each($GLOBALS['phpgw']->msg->ref_POST))
+					//@reset($GLOBALS['phpgw']->msg->ref_POST);
+					//while(list($key,$value) = each($GLOBALS['phpgw']->msg->ref_POST))
+					foreach($GLOBALS['phpgw']->msg->ref_POST as $key => $value)
 					{
 						// looking for any key like this: "lineX_wordX_alphachars"
 						if (stristr($key, '_word'))

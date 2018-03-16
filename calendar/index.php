@@ -33,4 +33,3 @@
 			'menuaction'	=> 'calendar.uicalendar.index',
 			'date'		=> date('Ymd', phpgwapi_datetime::user_localtime() )
 	));
-?>

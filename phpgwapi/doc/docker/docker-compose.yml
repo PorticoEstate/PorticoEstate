@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web:
+    build: ./webserver
+    restart: always
+    volumes:
+      - ../../..:/var/www/html/portico

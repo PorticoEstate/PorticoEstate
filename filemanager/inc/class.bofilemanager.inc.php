@@ -677,7 +677,8 @@
 		function f_apply_edit_name()
 		{
 			//_debug_array($this->changes);
-			while (list ($from, $to) = each ($this->changes))
+			//while (list ($from, $to) = each ($this->changes))
+			foreach($this->changes as $from => $to)
 			{
 				if ($badchar = $this->bad_chars($to,True,True))
 				{

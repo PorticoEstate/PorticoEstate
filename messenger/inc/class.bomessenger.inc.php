@@ -324,7 +324,8 @@
 				$new_content_array[] = ' ';
 				$new_content_array[] = '> ' . $acct->__toString() . ' wrote:';
 				$new_content_array[] = '>';
-				while (list(, $line) = each($content_array))
+				//while (list(, $line) = each($content_array))
+				foreach($content_array as $key => $line)
 				{
 					$new_content_array[] = '> ' . $line;
 				}
@@ -349,7 +350,8 @@
 				return False;
 			}
 			$this->so->transaction_begin();
-			while (list(, $message_id) = each($messages))
+			//while (list(, $message_id) = each($messages))
+			foreach($messages as $key => $message_id)
 			{
 				$this->so->delete_message($message_id);
 			}

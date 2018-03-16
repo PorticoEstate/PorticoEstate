@@ -280,7 +280,12 @@ else
 
 function populateTableChkResources(building_id, selection)
 {
-	oArgs = {menuaction: 'bookingfrontend.uiresource.index_json', sort: 'name', filter_building_id: building_id, sub_activity_id: $("#field_activity").val()};
+	var oArgs = {
+		menuaction: 'bookingfrontend.uiresource.index_json',
+		sort: 'name',
+//		sub_activity_id: $("#field_activity").val(),
+		filter_building_id: building_id
+	};
 	var url = phpGWLink('bookingfrontend/', oArgs, true);
 	var container = 'resources_container';
 	var colDefsResources = [{label: '', object: [{type: 'input', attrs: [

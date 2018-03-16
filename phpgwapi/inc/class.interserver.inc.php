@@ -164,11 +164,13 @@
 			}
 			else
 			{
-				while(list($key,$val) = @each($args))
+				//while(list($key,$val) = @each($args))
+				foreach($args as $key => $val)
 				{
 					if(gettype($val) == 'array')
 					{
-						while(list($x,$y) = each($val))
+						//while(list($x,$y) = each($val))
+						foreach($val as $x => $y)
 						{
 							$tmp[$x] = new xmlrpcval($y, 'string');
 						}
@@ -217,11 +219,13 @@
 			}
 			else
 			{
-				while(list($key,$val) = @each($args))
+				//while(list($key,$val) = @each($args))
+				foreach($args as $key => $val)
 				{
 					if(gettype($val) == 'array')
 					{
-						while(list($x,$y) = each($val))
+						//while(list($x,$y) = each($val))
+						foreach($val as $x => $y)
 						{
 							$tmp[$x] = new xmlrpcval($y, 'string');
 						}
@@ -437,7 +441,8 @@
 
 			$x = '';
 			$slist = $this->get_list('','','','','',$x);
-			while (list($key,$val) = each($slist))
+			//while (list($key,$val) = each($slist))
+			foreach($slist as $key => $val)
 			{
 				$foundservers = True;
 				$select .= '<option value="' . $val['server_id'] . '"';

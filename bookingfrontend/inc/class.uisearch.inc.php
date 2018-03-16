@@ -48,11 +48,20 @@
 				$frontpagetext = 'Velkommen til AktivBy.<br />Her finner du informasjon om idrettsanlegg som leies ut<br />av idrettsavdelingen.';
 			}
 
+			if ($config->config_data['frontimagetext'] != '')
+			{
+				$frontimagetext = $config->config_data['frontimagetext'];
+			}
+			else
+			{
+				$frontimagetext = '<h2>Din portal til</h2><h1><b>AKTIVITETER OG LOKALER</b></h1><h2>Nært deg.</h2>';
+			}
 
 			$params = array(
 				'baseurl' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}",
 				'frontimage' => "{$GLOBALS['phpgw_info']['server']['webserver_url']}/phpgwapi/templates/bkbooking/images/newlayout/forsidebilde.jpg",
 				'frontpagetext' => $frontpagetext,
+				'frontimagetext' => $frontimagetext,
 				'activity_top_level' => $activity_top_level
 			);
 
@@ -177,7 +186,8 @@
 				{
 					continue;
 				}
-				if (isset($entry['choice_id']) && isset($entry['cat_id']))
+//				if (isset($entry['choice_id']) && isset($entry['cat_id']))
+				if (!empty($entry['cat_id']))
 				{
 					$activity_criteria[$entry['cat_id']]['activity_top_level'] = $entry['cat_id'];
 					$activity_criteria[$entry['cat_id']]['choice'][] = $entry;

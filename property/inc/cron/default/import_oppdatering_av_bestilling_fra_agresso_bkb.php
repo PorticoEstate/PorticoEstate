@@ -257,7 +257,7 @@
 			}
 
 			//prosjektnummer;prosjektstatus;bestillingsnummer;beløp
-			$external_project = trim($data[0]);
+			$external_project_id = trim($data[0]);
 			$prosjektstatus = trim($data[1]);
 			$order_id = trim($data[2]);
 
@@ -275,7 +275,7 @@
 
 			if (!$id)
 			{
-				$this->receipt['error'][] = array('msg' => "Oppdatere beløp for agresso prosjekt {$external_project}: fant ikke bestillingen, hopper over: {$order_id}");
+				$this->receipt['error'][] = array('msg' => "Oppdatere beløp for agresso prosjekt {$external_project_id}: fant ikke bestillingen, hopper over: {$order_id}");
 				return false;
 			}
 
@@ -298,11 +298,11 @@
 			$values_cost = $this->db->validate_insert(array_values($value_set_cost));
 			$this->db->query("INSERT INTO fm_tts_payments ({$cols_cost}) VALUES ({$values_cost})");
 
-			$this->receipt['message'][] = array('msg' => "Oppdaterer melding #{$id} for agresso prosjekt {$external_project}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
+			$this->receipt['message'][] = array('msg' => "Oppdaterer melding #{$id} for agresso prosjekt {$external_project_id}: gammelt beløp: {$old_actual_cost}, nytt beløp: {$new_actual_cost}");
 			$this->historylog->add('AC', $id, $new_actual_cost, $old_actual_cost);
 
 			$value_set = array(
-				'external_project_id' => $external_project,
+				'external_project_id' => $external_project_id,
 				'actual_cost' => $new_actual_cost,
 				'actual_cost_year' => date('Y'),
 				'modified_date' => time()
@@ -322,7 +322,7 @@
 
 		private function update_status( $data )
 		{
-			$external_project = trim($data[0]);
+			$external_project_id = trim($data[0]);
 			$prosjektstatus = trim($data[1]);
 			$order_id = trim($data[2]);
 
@@ -330,31 +330,55 @@
 
 			if ($order_id)
 			{
-				$this->db->query("SELECT id FROM fm_tts_tickets WHERE order_id= '{$order_id}'", __LINE__, __FILE__);
+				$this->db->query("SELECT id, status, external_project_id FROM fm_tts_tickets WHERE order_id= '{$order_id}'", __LINE__, __FILE__);
 				$this->db->next_record();
 				$id = $this->db->f('id');
+				$old_status = $this->db->f('status');
+				$old_external_project_id = $this->db->f('external_project_id');
 			}
 
 			if (!$id)
 			{
-				$this->receipt['error'][] = array('msg' => "Oppdatere status: fant ikke bestillingen for agresso prosjekt {$external_project}");
+				$this->receipt['error'][] = array('msg' => "Oppdatere status: fant ikke bestillingen for agresso prosjekt {$external_project_id}");
 				return false;
 			}
 
-			$this->db->query("UPDATE fm_tts_tickets SET external_project_id = '{$external_project}' WHERE id={$id}", __LINE__, __FILE__);
+			if($external_project_id != $old_external_project_id)
+			{
+				$this->db->query("UPDATE fm_tts_tickets SET external_project_id = '{$external_project_id}' WHERE id={$id}", __LINE__, __FILE__);
+			}
 
 			$ok = true;
-			if (preg_match('/(^C|^P)/i', $prosjektstatus))
-			{
-				$ticket = array
-					(
-					'status' => 'C8' //Avsluttet og fakturert (C)
-				);
 
-				if ($this->sotts->update_status($ticket, $id))
-				{
-					$this->updated_tickects_per_file[$id] = true;
-				}
+			$update_ticket = array();
+			switch ($prosjektstatus)
+			{
+				case 'C':
+				case 'P':
+					if($old_status != 'C8')
+					{
+						$update_ticket = array
+						(
+							'status' => 'C8' //Avsluttet og fakturert (C)
+						);
+					}
+					break;
+				case 'N':
+					if($old_status == 'C8')
+					{
+						$update_ticket = array
+						(
+							'status' => 'C7' //I bestilling/ under utføring (B)
+						);
+					}
+					break;
+				default:
+					break;
+			}
+
+			if ($update_ticket && $this->sotts->update_status($update_ticket, $id))
+			{
+				$this->updated_tickects_per_file[$id] = true;
 			}
 
 			return $ok;

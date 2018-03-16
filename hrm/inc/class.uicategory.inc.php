@@ -75,24 +75,28 @@
 
 			$category_list = $this->bo->read($type,$type_id);
 
-			while (is_array($category_list) && list(,$category) = each($category_list))
+			//while (is_array($category_list) && list(,$category) = each($category_list))
+			if (is_array($category_list))
 			{
-				$words = explode(' ',$category['descr']);
-				$first = "$words[0] $words[1] $words[2] $words[3]";
+				foreach($category_list as $key => $category)
+				{
+					$words = explode(' ',$category['descr']);
+					$first = "$words[0] $words[1] $words[2] $words[3]";
 
-				$content[] = array
-				(
-					'id'				=> $category['id'],
-					'first'				=> $first,
-					'link_edit'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uicategory.edit', 'id'=> $category['id'], 'type'=> $type,  'type_id'=> $type_id)),
-					'link_delete'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uicategory.delete', 'id'=> $category['id'], 'type'=> $type,  'type_id'=> $type_id)),
-					'lang_view_categorytext'	=> lang('view the category'),
-					'lang_edit_categorytext'	=> lang('edit the category'),
-					'lang_delete_categorytext'	=> lang('delete the category'),
-					'text_view'			=> lang('view'),
-					'text_edit'			=> lang('edit'),
-					'text_delete'			=> lang('delete')
-				);
+					$content[] = array
+					(
+						'id'				=> $category['id'],
+						'first'				=> $first,
+						'link_edit'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uicategory.edit', 'id'=> $category['id'], 'type'=> $type,  'type_id'=> $type_id)),
+						'link_delete'			=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'hrm.uicategory.delete', 'id'=> $category['id'], 'type'=> $type,  'type_id'=> $type_id)),
+						'lang_view_categorytext'	=> lang('view the category'),
+						'lang_edit_categorytext'	=> lang('edit the category'),
+						'lang_delete_categorytext'	=> lang('delete the category'),
+						'text_view'			=> lang('view'),
+						'text_edit'			=> lang('edit'),
+						'text_delete'			=> lang('delete')
+					);
+				}
 			}
 
 //_debug_array($content);

@@ -152,7 +152,8 @@ And turned it into nylon";
 			$expected = '37210';
 			$expect_array = array('ctLeftAngleBrackets','ctRightAngleBrackets','ctAmpersands','ctApostrophes','ctQuotes');
 
-			while(list(,$val) = each($expect_array))
+			//while(list(,$val) = each($expect_array))
+			foreach($expect_array as $key => $val)
 			{
 				$b = $v->structmem($val);
 				$got .= $b->me['int'];

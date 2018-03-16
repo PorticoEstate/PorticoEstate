@@ -131,6 +131,7 @@
 				'descr'			=> $this->_db->db_addslashes($custom_function['descr']),
 				'active'		=> !!$custom_function['active'],
 				'pre_commit'	=> !!$custom_function['pre_commit'],
+				'ajax'			=> !!$custom_function['ajax'],
 				'client_side'	=> !!$custom_function['client_side'],
 				'custom_sort'	=> $custom_sort
 			);
@@ -220,6 +221,7 @@
 				'file_name'		=> $custom_function['custom_function_file'],
 				'active'		=> $custom_function['active'],
 				'pre_commit'	=> $custom_function['pre_commit'],
+				'ajax'			=> $custom_function['ajax'],
 				'client_side'	=> $custom_function['client_side'],
 			);
 			unset($custom_function);
@@ -294,6 +296,11 @@
 				$querymethod = " AND pre_commit = 1";
 			}
 
+			if ( isset($data['ajax']) )
+			{
+				$querymethod = " AND ajax = 1";
+			}
+
 			$sql = 'FROM phpgw_cust_function'
 				. " WHERE location_id = {$location_id} {$querymethod}";
 
@@ -324,6 +331,7 @@
 					'descr'			=> $this->_db->f('descr'),
 					'active'		=> !!$this->_db->f('active'),
 					'pre_commit'	=> !!$this->_db->f('pre_commit'),
+					'ajax'			=> !!$this->_db->f('ajax'),
 					'client_side'	=> !!$this->_db->f('client_side')
 				);
 			}
@@ -367,6 +375,7 @@
 				'custom_function_file'	=> $this->_db->f('file_name'),
 				'active'				=> !!$this->_db->f('active'),
 				'pre_commit'			=> !!$this->_db->f('pre_commit'),
+				'ajax'					=> !!$this->_db->f('ajax'),
 				'client_side'			=> !!$this->_db->f('client_side')
 			);
 		}

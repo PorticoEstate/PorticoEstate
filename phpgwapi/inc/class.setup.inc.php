@@ -235,7 +235,8 @@
 			if(is_array($allowed_ips))
 			{
 				$foundip = False;
-				while(list(,$value) = @each($allowed_ips))
+				//while(list(,$value) = @each($allowed_ips))
+				foreach($allowed_ips as $key => $value)
 				{
 					$test = preg_split("/\./",$value);
 					if(count($test) < 3)

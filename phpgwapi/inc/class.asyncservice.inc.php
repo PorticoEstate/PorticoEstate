@@ -331,7 +331,25 @@
 			}
 			if ($exists = $this->read('##last-check-run##'))
 			{
-				list(,$last_run) = each($exists);
+				$last_run = current($exists);
+			}
+			else
+			{
+				$this->write(
+					array(
+					'id'		=> '##last-check-run##',
+					'account_id'=> 0,
+					'next'		=> 0,
+					'times'		=> array(),
+					'method'	=> 'none',
+					'data'		=> array
+					(
+						'run_by'=> $run_by,
+						'start' => time(),
+						'end'   => 0
+					)
+				));
+
 			}
 			//echo "last_run (from db)=<pre>"; print_r($last_run); echo "</pre>\n";
 

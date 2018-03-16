@@ -689,7 +689,7 @@
 								'msg' => lang('you are not approved for this dimb: %1', $project['ecodimb'] ? $project['ecodimb'] : $values['ecodimb'] ));
 							$error_id = true;
 						}
-						
+
 						if (!$approve_role['is_supervisor'] && !$approve_role['is_budget_responsible'])
 						{
 							$this->receipt['error'][] = array(
@@ -737,6 +737,20 @@
 				{
 					$this->receipt['error'][] = array('msg' => lang('Please select dimb!'));
 					$error_id = true;
+				}
+				else
+				{
+					$_ecodimb = execMethod('property.bogeneric.read_single', array(
+						'id' => $values['ecodimb'],
+						'location_info' => array(
+							'type' => 'dimb')));
+					if (!$_ecodimb || !$_ecodimb['active'])
+					{
+						$values['ecodimb'] = '';
+						$values['ecodimb_name'] = '';
+						$this->receipt['error'][] = array(
+							'msg' => lang('Please select a valid dimb!'));
+					}
 				}
 			}
 
@@ -981,7 +995,7 @@
 								if(!$approvals)
 								{
 									$substitute = $sosubstitute->get_substitute($_account_id);
-									
+
 									if($substitute)
 									{
 										$_account_id = $substitute;
@@ -1917,7 +1931,7 @@
 //						$url = $GLOBALS['phpgw']->link('/index.php', $link_data_invoice1);
 //					}
 				}
-				
+
 				$link_voucher_id = "<a href='" . $url . "'>" . $voucher_out_id . "</a>";
 
 				$content_invoice[] = array
@@ -2564,7 +2578,7 @@
 					'attach_file' => "<input type='checkbox' $_checked  name='values[file_attach][]' value='{$_entry['file_id']}' title='{$lang_select_file}'>"
 				);
 			}
-			
+
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_8',
@@ -3229,10 +3243,29 @@
 		public function get_vendor_contract($vendor_id = 0, $selected = 0)
 		{
 			$contract_list = $this->bocommon->get_vendor_contract($vendor_id, $selected);
+			$config = CreateObject('phpgwapi.config', 'property')->read();
+
 			if($contract_list)
 			{
-				array_unshift($contract_list, array('id' => -1, 'name' => lang('outside contract')));
+				if(!empty($config['alternative_to_contract_1']))
+				{
+					$contract_list[] = array('id' => -1, 'name' => $config['alternative_to_contract_1']);
+				}
+				else
+				{
+					$contract_list[] = array('id' => -1, 'name' => lang('outside contract'));
+				}
+
+				if(!empty($config['alternative_to_contract_2']))
+				{
+					$contract_list[] = array('id' => -2, 'name' => $config['alternative_to_contract_2']);
+				}
+				if(!empty($config['alternative_to_contract_3']))
+				{
+					$contract_list[] = array('id' => -3, 'name' => $config['alternative_to_contract_3']);
+				}
 			}
+
 			if($selected)
 			{
 				foreach ($contract_list as &$contract)

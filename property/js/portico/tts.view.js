@@ -230,16 +230,12 @@ this.fetch_vendor_contract = function ()
 	}
 };
 
-this.onDOMAttrModified = function (e)
+window.on_vendor_updated = function ()
 {
-	var attr = e.attrName || e.propertyName;
-	var target = e.target || e.srcElement;
-	if (attr.toLowerCase() === 'vendor_id')
-	{
-		fetch_vendor_contract();
-		fetch_vendor_email();
-	}
+	fetch_vendor_contract();
+	fetch_vendor_email();
 };
+
 
 this.fileuploader = function ()
 {
@@ -287,23 +283,6 @@ this.make_relation = function (id)
 		alert('Velg type');
 	}
 };
-
-window.addEventListener("load", function ()
-{
-	d = document.getElementById('vendor_id');
-	if (d)
-	{
-
-		if (d.attachEvent)
-		{
-			d.attachEvent('onpropertychange', onDOMAttrModified, false);
-		}
-		else
-		{
-			d.addEventListener('DOMAttrModified', onDOMAttrModified, false);
-		}
-	}
-});
 
 var oArgs = {menuaction: 'property.uitts.get_eco_service'};
 var strURL = phpGWLink('index.php', oArgs, true);

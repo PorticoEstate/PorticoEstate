@@ -66,4 +66,3 @@
 				SYNCML_STATUS_OK);
 		}
 	}
-?>

@@ -1049,4 +1049,3 @@
 		$GLOBALS['setup_info']['calendar']['currentver'] = '0.9.18.002';
 		return $GLOBALS['setup_info']['calendar']['currentver'];
 	}
-?>

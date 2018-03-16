@@ -54,7 +54,8 @@
 				'view_image'		=> true,
 				'get_reverse_assignee'=>true,
 				'handle_multi_upload_file' => true,
-				'build_multi_upload_file' => true
+				'build_multi_upload_file' => true,
+				'custom_ajax'			=> true
 			);
 
 		/**
@@ -818,10 +819,10 @@ HTML;
 					'name' => lang('my assigned tickets'),
 					'selected'	=> ((int)$this->user_id < 0  || (int)$filter_tts_assigned_to_me == 1) ? 1 : 0));
 
-				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
+//				array_unshift($values_combo_box[4], array('id' => '', 'name' => lang('assigned to')));
 				$combos[] = array(
 					'type' => 'filter',
-//					'multiple'	=> true,
+					'multiple'	=> true,
 					'name' => 'user_id',
 					'extra' => '',
 					'text' => lang('assigned to'),
@@ -911,26 +912,13 @@ HTML;
 				return;
 			}
 
-			if (!empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval']) && (int)$GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] > 0)
-			{
-				$refreshinterval = (int) $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] * 1000;
-
-			$js =<<<JS
-				setInterval( function () {
-					var api = oTable.api();
-					api.ajax.reload();
-			}, {$refreshinterval} );
-//			$("#user_id").material_select();
-JS;
-
-				$GLOBALS['phpgw']->js->add_code('', $js, true);
-			}
-
 			phpgwapi_jquery::load_widget('numberformat');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.jeditable.js');
 			self::add_javascript('phpgwapi', 'jquery', 'editable/jquery.dataTables.editable.js');
 			self::add_javascript('helpdesk', 'portico', 'tts.index.js');
-//			self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
+			self::add_javascript('phpgwapi', 'materialize', 'js/materialize.min.js');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize.css');
+			$GLOBALS['phpgw']->css->add_external_file('phpgwapi/js/materialize/css/materialize_override.css');
 
 			$start_date = urldecode($this->start_date);
 			$end_date = urldecode($this->end_date);
@@ -992,6 +980,38 @@ JS;
 			foreach ($filters as $filter)
 			{
 				array_unshift($data['form']['toolbar']['item'], $filter);
+			}
+
+			$js ='';
+
+			if (!empty($GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval']) && (int)$GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] > 0)
+			{
+				$refreshinterval = (int) $GLOBALS['phpgw_info']['user']['preferences']['helpdesk']['refreshinterval'] * 1000;
+
+				$js =<<<JS
+					setInterval( function () {
+						var api = oTable.api();
+						api.ajax.reload();
+				}, {$refreshinterval} );
+JS;
+			}
+
+			foreach ($filters as $filter)
+			{
+				if($filter['type'] == 'filter')
+				{
+					$js .=<<<JS
+
+					$("#{$filter['name']}").hide();
+					$("#{$filter['name']}").material_select();
+JS;
+
+				}
+			}
+
+			if($js)
+			{
+				$GLOBALS['phpgw']->js->add_code('', $js, true);
 			}
 
 			$parameters = array(
@@ -2285,6 +2305,52 @@ JS;
 			return phpgwapi_jquery::tabview_generate($tabs, $tab, 'ticket_tabview');
 		}
 
+		public function custom_ajax()
+		{
+			if(!$this->acl_read)
+			{
+				phpgw::no_access();
+			}
+
+			$acl_location = phpgw::get_var('acl_location');
+
+			if (!$acl_location)
+			{
+				return false;
+			}
+
+			$criteria = array
+			(
+				'appname'	=> 'helpdesk',
+				'location'	=> $acl_location,
+				'allrows'	=> true
+			);
+
+			if (!$custom_functions = $GLOBALS['phpgw']->custom_functions->find($criteria))
+			{
+				return false;
+			}
+
+			$ajax_result = array();
+
+			foreach ($custom_functions as $entry)
+			{
+				// prevent path traversal
+				if (preg_match('/\.\./', $entry['file_name']))
+				{
+					continue;
+				}
+
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+
+				if ($entry['active'] && is_file($file) && !$entry['client_side'] && $entry['ajax'])
+				{
+					require $file;
+				}
+			}
+
+			return $ajax_result;
+		}
 		/**
 		 *
 		 */
@@ -2312,11 +2378,11 @@ JS;
 					continue;
 				}
 
-				$file = PHPGW_SERVER_ROOT . "/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
+				$file = PHPGW_SERVER_ROOT . "/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}";
 
 				if ($entry['active'] && $entry['client_side'] && is_file($file))
 				{
-					$GLOBALS['phpgw']->js->add_external_file("/property/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
+					$GLOBALS['phpgw']->js->add_external_file("/helpdesk/inc/custom/{$GLOBALS['phpgw_info']['user']['domain']}/{$entry['file_name']}");
 					$js_found = true;
 				}
 			}

@@ -186,7 +186,8 @@
 			// FIXME this is ugly - skwashd oct07
 			if (is_array($_POST))
 			{
-				while( list($key, $val) = each($_POST))
+				//while( list($key, $val) = each($_POST))
+				foreach($_POST as $key => $val)
 				{
 					if (preg_match("/(.*)_x/",$key,$varName) && $_POST[$varName[1]."_y"])
 					{

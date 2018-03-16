@@ -10,6 +10,12 @@
 
 	$app = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
+	$cache_refresh_token = '';
+	if(!empty($GLOBALS['phpgw_info']['server']['cache_refresh_token']))
+	{
+		$cache_refresh_token = "?n={$GLOBALS['phpgw_info']['server']['cache_refresh_token']}";
+	}
+
 	$GLOBALS['phpgw']->template->set_root(PHPGW_TEMPLATE_DIR);
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
@@ -50,10 +56,6 @@
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
 
-        // // // // // // // // // //
-
-
-
 //	$stylesheets[] = "/phpgwapi/js/materialize/css/materialize.min.css";
 	$stylesheets[] = "/phpgwapi/templates/pure/css/global.css";
 //	$stylesheets[] = "/phpgwapi/templates/pure/css/demo_mmenu.css";
@@ -67,9 +69,7 @@
 	$stylesheets[] = "/phpgwapi/templates/portico/css/base.css";
 
 
-
-
-        if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
+    if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
 		$stylesheets[] = "/phpgwapi/templates/portico/css/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
 	}
@@ -89,7 +89,7 @@
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $stylesheet ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet );
+			$GLOBALS['phpgw']->template->set_var( 'stylesheet_uri', $webserver_url . $stylesheet . $cache_refresh_token);
 			$GLOBALS['phpgw']->template->parse('stylesheets', 'stylesheet', true);
 		}
 	}
@@ -98,7 +98,7 @@
 	{
 		if( file_exists( PHPGW_SERVER_ROOT . $javascript ) )
 		{
-			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript );
+			$GLOBALS['phpgw']->template->set_var( 'javascript_uri', $webserver_url . $javascript . $cache_refresh_token );
 			$GLOBALS['phpgw']->template->parse('javascripts', 'javascript', true);
 		}
 	}
@@ -162,9 +162,9 @@ HTML;
 	(
 		'noheader'		=> isset($GLOBALS['phpgw_info']['flags']['noheader_xsl']) && $GLOBALS['phpgw_info']['flags']['noheader_xsl'] ? 'true' : 'false',
 		'nofooter'		=> isset($GLOBALS['phpgw_info']['flags']['nofooter']) && $GLOBALS['phpgw_info']['flags']['nofooter'] ? 'true' : 'false',
-		'css'			=> $GLOBALS['phpgw']->common->get_css(),
-		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
+		'css'			=> $GLOBALS['phpgw']->common->get_css($cache_refresh_token),
+		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript($cache_refresh_token),
+		'img_icon'  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> "{$GLOBALS['phpgw_info']['server']['site_title']}",
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'webserver_url'	=> $webserver_url,

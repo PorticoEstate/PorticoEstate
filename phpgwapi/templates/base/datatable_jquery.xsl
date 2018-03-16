@@ -1089,6 +1089,12 @@
 							sValue[ $(this).attr('name') ] = $(this).val().replace('"', '"');
 							temp[ $(this).attr('name') ] = $(this).val().replace('"', '"');
 						}
+						if ( $(this).attr('name') && $(this).val() != null && $(this).val().constructor == Array)
+						{
+							sValue[ $(this).attr('name') ] = $(this).val();
+							temp[ $(this).attr('name') ] = $(this).val();
+						}
+
 					});
 					for (var attrname in sValue)
 					{
@@ -1123,7 +1129,25 @@
 								{
 									if (clear_state !== true)
 									{
-										oControl.val( value );
+										if(value.constructor == Array)
+										{
+											$.each(value, function(i,e){
+												 oControl.find("option[value="+e+"]").prop("selected", "selected");
+											});
+
+											try
+											{
+												oControl.material_select();
+											}
+											catch(err)
+											{
+											}
+
+										}
+										else
+										{
+											oControl.val( value );
+										}
 									}
 								}
 							});
@@ -1169,6 +1193,11 @@
 							value = $(this).val().replace('"', '"');
 							aoData[ $(this).attr('name') ] = value;
 						}
+						if ( $(this).attr('name') && test != null && test.constructor === Array)
+						{
+							value = $(this).val();
+							aoData[ $(this).attr('name') ] = value;
+						}
 
 //						if(value && value !=0 )
 //						{
@@ -1187,7 +1216,7 @@
 				fnRowCallback: function(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 							if(typeof(aData['priority'])!= undefined && aData['priority'] > 0)
 							{
-								$('td', nRow).addClass('priority' + aData['priority']);
+								$(nRow).addClass('priority' + aData['priority']);
 							}
 							//In case the row is folded as result of responsive behaviour
 							$('td', nRow).parents('tr').addClass('context-menu');

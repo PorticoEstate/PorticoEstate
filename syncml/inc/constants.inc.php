@@ -111,4 +111,3 @@
 	define('WBXML_LITERAL', 0x04);
 	define('WBXML_STR_T', 0x83);
 	define('WBXML_OPAQUE', 0xC3);
-?>

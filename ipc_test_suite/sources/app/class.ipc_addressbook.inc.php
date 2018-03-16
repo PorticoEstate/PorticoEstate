@@ -171,7 +171,8 @@
 				if(is_array($loclist))
 				{
 					$fieldlist['locations'] = array();
-					while(list($no_use, $loc) = each($loclist))
+					//while(list($no_use, $loc) = each($loclist))
+					foreach($loclist as $no_use => $loc)
 					{
 						$addr_id = $loc['key_addr_id'];
 						$fieldlist['locations'][$addr_id] = array(
@@ -190,7 +191,8 @@
 				if(is_array($commlist))
 				{
 					$fieldlist['comm_media'] = array();
-					while(list($no_use, $comm) = each($commlist))
+					//while(list($no_use, $comm) = each($commlist))
+					foreach($commlist as $no_use => $comm)
 					{
 						$comm_type = $comm['comm_description'];
 						$fieldlist['comm_media'][$comm_type] = $comm['comm_data'];
@@ -198,10 +200,16 @@
 				}
 
 				$cats = $this->contacts->get_cats_by_org($id);
-				while(list($no_use, $cat_id) = each($cats))
+				//while(list($no_use, $cat_id) = each($cats))
+				if (is_array($cats))
 				{
-					if($cat_id)
-						$cat_id_list[] = $cat_id;
+					foreach($cats as $no_use => $cat_id)
+					{
+						if ($cat_id)
+						{
+							$cat_id_list[] = $cat_id;
+						}
+					}
 				}
 				$cats = $cat_id_list;
 				$fields['cat_id'] = implode(",", $cats);
@@ -219,7 +227,8 @@
 			{
 				// locations[loc_id][type] is work or home
 				// loc_id is not  interested here, but the type is important!
-				while ( list($loc_id, $loc_data) = each($fieldlist['locations']) )
+				//while ( list($loc_id, $loc_data) = each($fieldlist['locations']) )
+				foreach($fieldlist['locations'] as $loc_id => $loc_data)
 				{
 					$loc_type_id = $this->contacts->search_location_type($loc_data['type']);
 					switch($loc_type_id)
@@ -495,28 +504,32 @@
 			$buffer = array();
 			$temp_line = '';
 
-			while(list(, $line) = each($data_lines))
+			//while(list(, $line) = each($data_lines))
+			if (is_array($data_lines))
 			{
-				$line = trim($line);
-				if(substr($line, -1) == '=')
+				foreach($data_lines as $k => $line)
 				{
-					// '=' at end-of-line --line to be continued with next line
-					$temp_line .= substr($line, 0, -1);
-					continue;
-				}
-				else
-				{
-					$line = $temp_line . $line;
-					$temp_line = ''; // important for next line which ends with =
-				}
+					$line = trim($line);
+					if(substr($line, -1) == '=')
+					{
+						// '=' at end-of-line --line to be continued with next line
+						$temp_line .= substr($line, 0, -1);
+						continue;
+					}
+					else
+					{
+						$line = $temp_line . $line;
+						$temp_line = ''; // important for next line which ends with =
+					}
 
-				if (strstr($line, 'BEGIN:VCARD'))
-				{
-					// added for p800 vcards: problem if vcard starts with "<![CDATA["
-					$line = strstr($line, 'BEGIN:VCARD');
-				}
+					if (strstr($line, 'BEGIN:VCARD'))
+					{
+						// added for p800 vcards: problem if vcard starts with "<![CDATA["
+						$line = strstr($line, 'BEGIN:VCARD');
+					}
 
-				$buffer += $this->vcard->parse_vcard_line($line);
+					$buffer += $this->vcard->parse_vcard_line($line);
+				}
 			}
 			
 			if(count($buffer) == 0)
@@ -544,7 +557,8 @@
 			$myexport = $this->vcard->export;
 			// check that each $fields exists in the export array and
 			// set a new array to equal the translation and original value
-			while( list($name,$value) = each($fields) )
+			//while( list($name,$value) = each($fields) )
+			foreach($fields as $name => $value)
 			{
 				if ($myexport[$name] && ($value != "") )
 				{
@@ -857,7 +871,8 @@
 			$elem_contact = $dom_doc->create_element('contact');
 			$node_contact = $dom_doc->append_child($elem_contact);
 			
-			while(list($element, $value) = each($fields))
+			//while(list($element, $value) = each($fields))
+			foreach($fields as $element => $value)
 			{
 				// contact/<element>
 				$xmlElement = $dom_doc->create_element($element);
@@ -900,4 +915,3 @@
 			return $index_xml_item;
 		}
 	}
-?>

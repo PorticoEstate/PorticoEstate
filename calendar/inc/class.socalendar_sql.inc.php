@@ -148,7 +148,10 @@ class calendar_socalendar_ extends calendar_socalendar__
 		{
 			return False;
 		}
-		list($id,$job) = each($jobs);
+		//list($id,$job) = each($jobs);
+		$id = key($jobs);
+		$job = current($jobs);
+		
 		$alarm         = $job['data'];	// text, enabled
 		$alarm['id']   = $id;
 		$alarm['time'] = $job['next'];

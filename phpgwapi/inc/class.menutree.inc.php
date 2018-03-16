@@ -96,8 +96,9 @@
 			{
 				$ta = explode("\n",$treefile);
 			}
-			reset($ta);
-			while (list($null,$buffer) = each($ta))
+			//reset($ta);
+			//while (list($null,$buffer) = each($ta))
+			foreach($ta as $null => $buffer)
 			{
 				$cnt++;
 				$tree[$cnt][0]=strspn($buffer,".");

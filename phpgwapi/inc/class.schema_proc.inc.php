@@ -334,35 +334,39 @@
 			reset($aTableDef['fd']);
 			unset($sbufTriggerFD);
 			$sbufTriggerFD = array(); 
-			while(list($sFieldName, $aFieldAttr) = each($aTableDef['fd']))
+			//while(list($sFieldName, $aFieldAttr) = each($aTableDef['fd']))
+			if (is_array($aTableDef['fd']))
 			{
-				$sFieldSQL = '';
-
-				try
+				foreach($aTableDef['fd'] as $sFieldName => $aFieldAttr)
 				{
-					$this->_GetFieldSQL($aFieldAttr, $sFieldSQL);
-				}
-				catch(Exception $e)
-				{
-					$_message = "Error: GetFieldSQL failed for <b>{$sTableName}::{$sFieldName}</b>. ";
-					$_message .=  $e->getMessage();
-					throw new Exception($_message);
-					return False;
-				}
+					$sFieldSQL = '';
 
-				if($sTableSQL != '')
-				{
-					$sTableSQL .= ",\n";
-				}
-
-				$sTableSQL .= "$sFieldName $sFieldSQL";
-
-				if($aFieldAttr['type'] == 'auto')
-				{
-					$sbufTriggerFD[] = $sFieldName;
-					if($this->m_oTranslator->GetSequenceSQL($sTableName, $sSequenceSQL))
+					try
 					{
-						$sTableSQL .= sprintf(" DEFAULT nextval('seq_%s')", $sTableName);
+						$this->_GetFieldSQL($aFieldAttr, $sFieldSQL);
+					}
+					catch(Exception $e)
+					{
+						$_message = "Error: GetFieldSQL failed for <b>{$sTableName}::{$sFieldName}</b>. ";
+						$_message .=  $e->getMessage();
+						throw new Exception($_message);
+						return False;
+					}
+
+					if($sTableSQL != '')
+					{
+						$sTableSQL .= ",\n";
+					}
+
+					$sTableSQL .= "$sFieldName $sFieldSQL";
+
+					if($aFieldAttr['type'] == 'auto')
+					{
+						$sbufTriggerFD[] = $sFieldName;
+						if($this->m_oTranslator->GetSequenceSQL($sTableName, $sSequenceSQL))
+						{
+							$sTableSQL .= sprintf(" DEFAULT nextval('seq_%s')", $sTableName);
+						}
 					}
 				}
 			}
@@ -472,8 +476,9 @@
 			$sDefault = '';
 			$bNullable = true;
 
-			reset($aField);
-			while(list($sAttr, $vAttrVal) = each($aField))
+			//reset($aField);
+			//while(list($sAttr, $vAttrVal) = each($aField))
+			foreach($aField as $sAttr => $vAttrVal)
 			{
 				switch ($sAttr)
 				{
@@ -560,8 +565,9 @@
 			}
 
 			$sFields = '';
-			reset($aFields);
-			while(list($key, $sField) = each($aFields))
+			//reset($aFields);
+			//while(list($key, $sField) = each($aFields))
+			foreach($aFields as $key => $sField)
 			{
 				if($sFields != '')
 				{

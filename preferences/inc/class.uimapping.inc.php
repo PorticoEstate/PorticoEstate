@@ -67,8 +67,11 @@
 
 			$account_lid =  $GLOBALS['phpgw_info']['user']['account_lid'];
 			$data =  $GLOBALS['phpgw']->mapping->get_list($account_lid);
-			while(is_array($data) && (list(,$item) = each($data)))
-			{
+			//while(is_array($data) && (list(,$item) = each($data)))
+                        if (is_array($data))
+                        {
+                            foreach($data as $key => $item)
+                            {
 				$ext_user = $item['ext_user'];
 				$location = $item['location'];
 				$auth_type = $item['auth_type'];
@@ -107,7 +110,8 @@
 				}
 		
 				$app_data['table_row'][] = $item;
-			}
+                            }
+                        }
 			
 			$app_data['msg'] = get_var('msg', 'GET', '');
 
@@ -190,4 +194,4 @@
 			}
 		}
 	}
-?>
+

@@ -96,14 +96,16 @@
 			}
 
 			$hookAppLinkData = $GLOBALS['phpgw']->hooks->process('getFolderLinkData');
-			while(list($app_name, $app_linkdata) = each($hookAppLinkData))
+			//while(list($app_name, $app_linkdata) = each($hookAppLinkData))
+			foreach($hookAppLinkData as $app_name => $app_linkdata)
 			{
 				if(!is_array($app_linkdata) || (count($app_linkdata)==0))
 				{
 					continue;
 				}
 				
-				while(list($link_param_name, $link_param_value) = each($app_linkdata))
+				//while(list($link_param_name, $link_param_value) = each($app_linkdata))
+				foreach($app_linkdata as $link_param_name => $link_param_value)
 				{
 					$parameters[$app_name.'_'.$link_param_name] = $link_param_value;
 				}

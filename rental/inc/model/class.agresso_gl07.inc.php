@@ -393,6 +393,46 @@
 			$bill_year = $this->billing_job->get_year();
 			$bill_month = $this->billing_job->get_month();
 			$responsibility = $invoice->get_responsibility_id();
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			$contract = rental_socontract::get_instance()->get_single($invoice->get_contract_id());
+			$party_names = explode('<br/>', rtrim($contract->get_party_name(), '<br/>'));
+			$serialized_party = $invoice->get_party()->serialize();
+			$party_address = $serialized_party['address'];
+			$party_name = $serialized_party['name'];
+			$_party_names = array();
+
+			if (count($party_names) > 1)
+			{
+				foreach ($party_names as $value)
+				{
+					if ($party_name == $value)
+					{
+						continue;
+					}
+					$_party_names[] = $value;
+				}
+			}
+			else
+			{
+				$_party_names = $party_names;
+			}
+
+			//navn på leieboer,
+			$party_full_name = implode(', ', $_party_names);
+			$composite_name = '';
+			// We need to get the composites to get a composite name for the Agresso export
+			$composites = rental_socomposite::get_instance()->get(0, 0, '', false, '', '', array(
+				'contract_id' => $invoice->get_contract_id()));
+			if ($composites != null && count($composites) > 0)
+			{
+				$keys = array_keys($composites);
+				$composite_name = $composites[$keys[0]]->get_name();
+			}
+
+			$start_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_start_date(), $dateformat);
+			$end_date = $GLOBALS['phpgw']->common->show_date($contract->get_contract_date()->get_end_date(), $dateformat);
+			$billing_start_date = $GLOBALS['phpgw']->common->show_date($contract->get_billing_start_date(), $dateformat);
+			$billing_end_date = $GLOBALS['phpgw']->common->show_date($contract->get_billing_end_date(), $dateformat);
 
 			$item_counter = $counter;
 			$order = array(
@@ -404,16 +444,23 @@
 				'bill_year' => $bill_year,
 				'bill_month' => $bill_month,
 				'building' => $building,
-				'name' => $party_name,
+				'composite_name'=>$composite_name,
+				'name' => $party_full_name,
+				'address' => $party_address,
+				'Leieboer' => $party_full_name,
 				'amount' => $this->get_formatted_amount_excel($amount),
-				'article description' => utf8_decode($product_item['article_description']),
-				'article_code' => $part_no, //$product_item['article_code'],
+//				'article description' => utf8_decode($price_item->get_title()),
+				'article_code' => $part_no,
+				'start_date' => $start_date,
+				'end_date' => $end_date,
+				'billing_start_date' => $billing_start_date,
+				'billing_end_date' => $billing_end_date,
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',
 				'responsibility' => $responsibility,
 				'service' => $service,
 				'project' => $project,
-				'part_no' => $part_no,
+		//		'part_no' => $part_no,
 				'counter' => ++$item_counter,
 				'batch_id' => "BKBPE{$this->date_str}",
 				'client' => 'BY',

@@ -64,7 +64,8 @@
 		{
 			$appLinkData = array();
 
-			while(list($req_param, $req_value) = each($_REQUEST))
+			//while(list($req_param, $req_value) = each($_REQUEST))
+			foreach($_REQUEST as $req_param => $req_value)
 			{
 				$search_param = $targetAppName.'_';
 				if(strstr($req_param, $search_param) === false)
@@ -88,11 +89,13 @@
 			$hookContent = $GLOBALS['phpgw']->hooks->process('getFolderContent');
 
 			$folderContent = array();
-			while(list($key, $value) = each($hookContent))
+			//while(list($key, $value) = each($hookContent))
+			foreach($hookContent as $key => $value)
 			{
 				if (is_array($hookContent[$key]['content']))
 				{
-					while (list($xkey, $value) = each($hookContent[$key]['content']))
+					//while (list($xkey, $value) = each($hookContent[$key]['content']))
+					foreach($hookContent[$key]['content'] as $xkey => $val)
 					{
 						$folderContent[$xkey] = $hookContent[$key]['content'][$xkey];
 					}

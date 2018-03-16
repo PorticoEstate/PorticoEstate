@@ -442,7 +442,8 @@
 				'start'			=> $start,
  				'num_records'	=> count($account_info),
  				'all_records'	=> $total,
-				'link_data'		=> $link_data
+				'link_data'		=> $link_data,
+				'query'			=> $query
 			);
 
 			$data = array
@@ -721,7 +722,8 @@
  				'all_records'		=> $total,
 				'link_data'			=> $link_data,
 				'allow_all_rows'	=> true,
-				'allrows'			=> $allrows
+				'allrows'			=> $allrows,
+				'query'				=> $query
 			);
 
 			$data = array
@@ -1829,6 +1831,7 @@
 		 */
 		public function delete_user()
 		{
+			phpgw::no_access();
 			$GLOBALS['phpgw_info']['flags']['menu_selection'] .= '::users';
 
 			if ( $this->_acl->check('account_access', phpgwapi_acl::GROUP_MANAGERS, 'admin')

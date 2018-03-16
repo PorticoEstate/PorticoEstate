@@ -4,8 +4,12 @@
 /.settings
 /.project
 /.vscode
-/.idea/workspace.xml
 /.nbproject
+/nbproject
+/vendor
+/phpgwapi/test/_output
 dbconfig.php
-.idea/php.xml
 .idea/
+symfony/var/cache/
+symfony/var/sessions/
+symfony/app/config/parameters.yml

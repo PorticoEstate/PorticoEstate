@@ -43,4 +43,3 @@
 	{
 		return $GLOBALS['setup_info']['email']['currentver']= '0.9.17.500';
 	}
-?>

@@ -451,5 +451,3 @@
 		}
 		return $user_list;
 	}
-
-?>

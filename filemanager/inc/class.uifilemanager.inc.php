@@ -439,8 +439,9 @@
 					'mime_type' => 'Directory'));
 
 					//_debug_array($ls_array);
-					reset($ls_array);
-					while(list($num,$dir) = each($ls_array))
+					//reset($ls_array);
+					//while(list($num,$dir) = each($ls_array))
+					foreach($ls_array as $num => $dir)
 					{
 						$dirs[] = $dir;
 					}
@@ -448,8 +449,9 @@
 					
 					// Then we get the directories in their membership's home directories
 
-					reset($this->bofilemanager->memberships);
-					while(list($num,$group_array) = each($this->bofilemanager->memberships))
+					//reset($this->bofilemanager->memberships);
+					//while(list($num,$group_array) = each($this->bofilemanager->memberships))
+					foreach($this->bofilemanager->memberships as $num => $group_array)
 					{
 						$dirs[] = Array(
 						'directory' => $this->bofilemanager->fakebase,
@@ -462,7 +464,8 @@
 						'checksubdirs'	=> True,
 						'mime_type' => 'Directory'
 						));
-						while(list($num,$dir) = each($ls_array))
+						//while(list($num,$dir) = each($ls_array))
+						foreach($ls_array as $num => $dir)
 						{
 							$dirs[] = $dir;
 						}
@@ -471,8 +474,9 @@
 					//_debug_array($dirs);
 
 					$dir_list = array();
-					reset($dirs);
-					while(list($num, $dir) = each($dirs))
+					//reset($dirs);
+					//while(list($num, $dir) = each($dirs))
+					foreach($dirs as $num => $dir)
 					{
 						if(!$dir['directory'])
 						{
@@ -614,8 +618,9 @@
 				$file = $files_array[$i];
 				$file_output[$i]['checkbox'] = array('widget' => array( 'type' => 'checkbox','name' => 'fileman[]','value' => $file['name'],
 																		'checked' => (isset($this->bofilemanager->changes[$file['name']]) && $this->bofilemanager->changes[$file['name']] == $file['name']?True:False)));
-				@reset($this->bofilemanager->file_attributes);
-				while(list($internal,$displayed) = each($this->bofilemanager->file_attributes))
+				//@reset($this->bofilemanager->file_attributes);
+				//while(list($internal,$displayed) = each($this->bofilemanager->file_attributes))
+				foreach($this->bofilemanager->file_attributes as $internal => $displayed)
 				{
 					if (isset($this->bofilemanager->settings[$internal]))
 					{
@@ -933,8 +938,9 @@
 			for($i=0;$i<count($files_array);$i++)
 			{
 				$file = $files_array[$i];
-				@reset($this->bofilemanager->file_attributes);
-				while(list($internal,$displayed) = each($this->bofilemanager->file_attributes))
+				//@reset($this->bofilemanager->file_attributes);
+				//while(list($internal,$displayed) = each($this->bofilemanager->file_attributes))
+				foreach($this->bofilemanager->file_attributes as $internal => $displayed)
 				{
 					if (isset($this->bofilemanager->settings[$internal]))
 					{

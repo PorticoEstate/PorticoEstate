@@ -172,7 +172,7 @@
 					$info = array
 						(
 						'table' => 'fm_ecodimd',
-						'id' => array('name' => 'id', 'type' => 'int'),
+						'id' => array('name' => 'id', 'type' => 'varhcar'),
 						'fields' => array
 							(
 							array

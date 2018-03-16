@@ -74,10 +74,10 @@
 			switch ($role)
 			{
 				case 'target':
-					$sql = "SELECT location2_id as linkend_location, location2_item_id as linkend_id, account_id,entry_date FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id} ORDER by location2_id DESC";
+					$sql = "SELECT DISTINCT location2_id as linkend_location, location2_item_id as linkend_id, account_id,entry_date FROM phpgw_interlink WHERE location1_id = {$location_id} AND location1_item_id = {$id} ORDER by location2_id DESC";
 					break;
 				default:
-					$sql = "SELECT location1_id as linkend_location, location1_item_id as linkend_id, account_id,entry_date FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id} ORDER by location1_id DESC";
+					$sql = "SELECT DISTINCT location1_id as linkend_location, location1_item_id as linkend_id, account_id,entry_date FROM phpgw_interlink WHERE location2_id = {$location_id} AND location2_item_id = {$id} ORDER by location1_id DESC";
 			}
 
 			$this->_db->query($sql, __LINE__, __FILE__);
