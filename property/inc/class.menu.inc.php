@@ -895,7 +895,12 @@
 						'text' => lang('substitute'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.edit',
 							'acl_app' => 'property'))
-					)
+					),
+					'b_account_user' => array
+						(
+						'text' => lang('budget account user'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uib_account_user.index'))
+					),
 				);
 
 				$menus['toolbar'][] = array
