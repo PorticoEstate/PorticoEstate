@@ -52,8 +52,8 @@
 				$check_user_id = $this->account_id;
 			}
 
-			$filtermethod = '';
-			$where = 'WHERE';
+			$filtermethod = ' WHERE active = 1';
+			$where = 'AND';
 			if ($check_user_id)
 			{
 				$filtermethod .= "{$where} ( fm_b_account_user.user_id = {$check_user_id} OR fm_b_account_user.user_id IS NULL )";
@@ -82,12 +82,38 @@
 				$values[] = array
 				(
 					'b_account_id' => $this->db->f('b_account_id'),
-					'descr' => $this->db->f('descr'),
+					'descr' => $this->db->f('descr', true),
 					'user_id' => $check_user_id,
 					'active' => !!$user_id,
 				);
 			}
 
+			return $values;
+		}
+
+		public function get_favorite( $user_id )
+		{
+			$user_id = (int)$user_id;
+
+			$sql = "SELECT fm_b_account.id AS b_account_id, descr, fm_b_account_user.user_id"
+				. " FROM fm_b_account"
+				. " {$this->join} fm_b_account_user ON fm_b_account.id = fm_b_account_user.b_account_id"
+				. " WHERE active = 1 AND fm_b_account_user.user_id = {$user_id}"
+				. " ORDER BY b_account_id ASC ";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$user_id = $this->db->f('user_id');
+
+				$values[] = array
+				(
+					'id' => $this->db->f('b_account_id'),
+					'name' => $this->db->f('descr', true),
+				);
+			}
 
 			return $values;
 		}
