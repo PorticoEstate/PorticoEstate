@@ -7229,7 +7229,7 @@
  			FROM ( SELECT fm_ecobilagoverf.pmwrkord_code AS order_id, fm_ecobilagoverf.periode, sum(fm_ecobilagoverf.godkjentbelop) AS amount
                    FROM fm_ecobilagoverf
                  GROUP BY fm_ecobilagoverf.pmwrkord_code, fm_ecobilagoverf.periode
-        		UNION ALL 
+        		UNION ALL
                  	SELECT fm_ecobilag.pmwrkord_code AS order_id, fm_ecobilag.periode, sum(fm_ecobilag.godkjentbelop) AS amount
                    FROM fm_ecobilag
                  GROUP BY fm_ecobilag.pmwrkord_code, fm_ecobilag.periode) orders_paid_or_pending';
@@ -7661,7 +7661,7 @@
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
 
-		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS' 
+		$sql = 'CREATE OR REPLACE VIEW fm_project_budget_year_view AS'
  			. ' SELECT DISTINCT fm_project_budget.project_id, fm_project_budget.year'
  			. ' FROM fm_project_budget'
  			. ' ORDER BY fm_project_budget.project_id';
@@ -9988,6 +9988,38 @@
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
 			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.726';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	* Update property version from 0.9.17.726 to 0.9.17.727
+	*
+	*/
+	$test[] = '0.9.17.726';
+
+	function property_upgrade0_9_17_726()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_b_account_user', array(
+				'fd' => array(
+					'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
+					'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+					'modified_on' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				),
+				'pk' => array('b_account_id', 'user_id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array()
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.727';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
