@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * FmLocation2
  *
  * @ORM\Table(name="fm_location2", indexes={@ORM\Index(name="location_code_fm_location2_idx", columns={"location_code"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FmLocation2Repository")
  */
 class FmLocation2
 {
@@ -23,9 +23,12 @@ class FmLocation2
      */
     private $loc1;
 
+
+
+// ORM\ManyToOne(targetEntity="FmLocation1", inversedBy="buildings", fetch="EAGER")
     /**
      * @ORM\ManyToOne(targetEntity="FmLocation1", inversedBy="buildings")
-     * @ORM\JoinColumn(name="loc1", referencedColumnName="location_code")
+     * @ORM\JoinColumn(name="loc1", referencedColumnName="loc1")
      * @Groups({"rest"})
      */
     private $location1;
@@ -1897,7 +1900,7 @@ class FmLocation2
     /**
      * @return /FmLocation1
      */
-    public function getLocation1()
+    public function getLocation1(): FmLocation1
     {
         return $this->location1;
     }

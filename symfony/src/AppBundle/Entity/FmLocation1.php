@@ -20,8 +20,6 @@ class FmLocation1
      *
      * @ORM\Column(name="loc1", type="string", length=8)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="fm_location1_loc1_seq", allocationSize=1, initialValue=1)
      * @Groups({"rest"})
      */
     private $loc1;
@@ -252,7 +250,6 @@ class FmLocation1
 
     /**
      * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=true)
      * @Groups({"rest"})
      */

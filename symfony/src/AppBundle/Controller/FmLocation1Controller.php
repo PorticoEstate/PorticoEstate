@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\XmlModels\HmInstallationListXMLModel;
 use AppBundle\Entity\FmLocation1;
+use AppBundle\Entity\FmLocation2;
 use AppBundle\Entity\FmLocation1Category;
 use AppBundle\Service\FmLocationService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -103,7 +104,6 @@ class FmLocation1Controller extends Controller
 		return new Response('<html><body>Hello!</body></html>');
 	}
 
-
 	/**
 	 * @Route("/xml", name="fmlocation1_xml")
 	 */
@@ -122,33 +122,6 @@ class FmLocation1Controller extends Controller
 	}
 
 	/**
-	 * @Route("/import", name="fmlocation1_importxml")
-	 */
-	public function importXML()
-	{
-		$file = dirname(__FILE__) . '/../../../../OrderAndRegistration.xml';
-		if (file_exists($file)) {
-			$xml = simplexml_load_file($file);
-		}
-
-		$orderHead = $xml->Order[0]->OrderHead;
-		dump($orderHead);
-		dump($orderHead->InstallationID->__toString());
-		dump($orderHead->InstallationList[0]->Installation);
-		$documentItem = $xml->Order[0]->DocumentList[0]->Document;
-		$checklistItem = $xml->Order[0]->ChecklistList[0]->ChecklistType;
-		$data = array();
-		$data['ChecklistTypeName'] = $checklistItem->ChecklistTypeName->__toString();
-		$data['ChecklistName'] = $checklistItem->ChecklistName->__toString();
-		$data['Description'] = $checklistItem->Description->__toString();
-		$data['Document'] = $checklistItem->Document->__toString();
-		$data['Comment'] = $checklistItem->Comment->__toString();
-		$data['Finished'] = $checklistItem->Finished->__toString();
-		dump($data);
-		return new Response('<html><body>Hello!</body></html>');
-	}
-
-	/**
 	 * @Route("/j", name="fmlocation1_bygg")
 	 **/
 	public function byggAction()
@@ -158,5 +131,20 @@ class FmLocation1Controller extends Controller
 
 		dump($buildings);
 		return new Response('<html><body>Hello!</body></html>');
+	}
+
+
+	/**
+	 * @Route("/y", name="fmlocation1_yeah")
+	 **/
+	public function yeahAction(){
+		/* @var FmLocation2 $loc2_0 */
+		$loc2_0 = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation2')->findLocationWithAddress('1102-01');
+		dump($loc2_0);
+		/* @var FmLocation2 $loc2_1 */
+		$loc2_1 = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation2')->find('1102-01');
+		dump($loc2_1);
+		dump($loc2_1->getLocation1()->getLoc1Name());
+		return new Response('<html><body>yeahAction!</body></html>');
 	}
 }
