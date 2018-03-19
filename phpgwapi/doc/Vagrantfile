@@ -117,19 +117,22 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
    config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update
+    #Add repository for php v.7.1
+    sudo add-apt-repository -y ppa:ondrej/php
+
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
+	sudo apt-get update -y
     sudo apt-get install -y apt-utils
     sudo apt-get install -y apache2
     sudo apt-get install -y mysql-client-core-5.7
-    sudo apt-get install -y libapache2-mod-php7.0 php7.0 php7.0-curl php7.0-intl php7.0-mysql php-xdebug php-apcu php7.0-dev php7.0-xmlrpc php7.0-xml php7.0-gd php7.0-xsl php7.0-sybase php7.0-pgsql php7.0-json php7.0-gd php-imagick php7.0-imap php7.0-soap php7.0-zip php7.0-mbstring php-pear libaio1 locales
+    sudo apt-get install -y libapache2-mod-php7.1 php7.1 php7.1-curl php7.1-intl php7.1-mysql php-xdebug php-apcu php7.1-dev php7.1-xmlrpc php7.1-xml php7.1-gd php7.1-xsl php7.1-sybase php7.1-pgsql php7.1-json php7.1-gd php-imagick php7.1-imap php7.1-soap php7.1-zip php7.1-mbstring php-pear libaio1 locales
 
     sudo apt-get install -y git
     sudo apt-get install -y less vim-tiny
 	sudo apt-get install -y subversion
     sudo apt-get install -y apg
-	sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-	wget -q https://www.postgresql.org/media/keys/ACCC4CF8.asc -O - | sudo apt-key add -
-	sudo apt-get update
+
 	sudo apt-get install -y postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6
 
     # fix permissions
@@ -137,12 +140,12 @@ Vagrant.configure("2") do |config|
     sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/9.6/main/postgresql.conf
     echo "-------------------- fixing postgres pg_hba.conf file"
     # replace the ipv4 host line with the above line
-  
+
     sudo cat >> /etc/postgresql/9.6/main/pg_hba.conf <<EOF
     # Accept all IPv4 connections - FOR DEVELOPMENT ONLY!!!
     host    all         all         0.0.0.0/0             md5
 EOF
-  
+
     echo "-------------------- creating postgres vagrant role with password vagrant"
     # Create Role and login
 
@@ -156,11 +159,11 @@ EOF
 	sudo chown portico.users /var/www/html/portico
 
     sudo apt-get upgrade -y
-  
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/apache2/php.ini
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.0/cli/php.ini
- 
-    sudo cat > /etc/php/7.0/apache2/conf.d/91-app.ini <<EOF
+
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.1/apache2/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.1/cli/php.ini
+
+    sudo cat > /etc/php/7.1/apache2/conf.d/91-app.ini <<EOF
 xdebug.max_nesting_level=200
 xdebug.overload_var_dump=Off
 xdebug.remote_autostart=Off
@@ -181,8 +184,14 @@ post_max_size = 20M
 upload_max_filesize = 8M
 EOF
 
-    sudo cp /etc/php/7.0/apache2/conf.d/91-app.ini /etc/php/7.0/cli/conf.d/91-app.ini
- 
+    sudo cp /etc/php/7.1/apache2/conf.d/91-app.ini /etc/php/7.1/cli/conf.d/91-app.ini
+
+    # Allow htaccess in symfony web directory
+    sudo sed -i '/DocumentRoot/a <Directory /var/www/html/portico/hm>\\n AllowOverride All\\n</Directory>' /etc/apache2/sites-enabled/000-default.conf
+
+    # Enable mod_rewrite
+    sudo a2enmod rewrite
+
     sudo service postgresql restart
     sudo service apache2 restart
    SHELL
