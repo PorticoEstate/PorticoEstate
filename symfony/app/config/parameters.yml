@@ -1,0 +1,11 @@
+# This file is auto-generated during the composer install
+parameters:
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: d52d3eaa0bacf97ceb7dc12efd089a25d2793eab
+    handyman_file_dir: /vagrant/GSGroup/Filutv
+    handyman_export_ext: BYT
+    handyman_export_schema_file: OrdersAndRegistrations.xsd
+    bkbygg_user_id_to_use_when_not_found: 10
