@@ -9992,3 +9992,29 @@
 		}
 	}
 
+	/**
+	 * Update property version from 0.9.17.725 to 0.9.17.726
+	 *
+	 */
+	$test[] = '0.9.17.726';
+	function property_upgrade0_9_17_726()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'handyman_checklist_id', array(
+				'type' =>	'int',
+				'precision' => 8,
+				'nullable' => true
+			)
+		);
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'handyman_order_number', array(
+				'type' =>	'int',
+				'precision' => 8,
+				'nullable' => true
+			)
+		);
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.727';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
