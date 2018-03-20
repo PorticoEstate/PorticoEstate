@@ -136,6 +136,13 @@ update_table = function (location_code)
 		$("[name='status']").parent().hide();
 		$("[for='status']").parent().hide();
 	}
+	else
+	{
+		$("[name='all_items']").parent().show();
+		$("[for='all_items']").parent().show();
+		$("[name='status']").parent().show();
+		$("[for='status']").parent().show();
+	}
 
 	var requestUrl = $("#queryForm").attr("action");
 	requestUrl += '&phpgw_return_as=json' + "&" + $("#queryForm").serialize() + "&location_code=" + location_code;

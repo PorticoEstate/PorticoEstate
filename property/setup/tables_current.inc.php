@@ -1450,7 +1450,10 @@
 				'periodization_start' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'manual_record' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'line_text' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
-				'external_voucher_id' => array('type' => 'int', 'precision' => '8', 'nullable' => True)
+				'external_voucher_id' => array('type' => 'int', 'precision' => '8', 'nullable' => True),
+				'external_updated' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
+				'netto_belop' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
+					'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

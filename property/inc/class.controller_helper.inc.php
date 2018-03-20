@@ -484,7 +484,7 @@ HTML;
 						'id' => $check_list->get_id(),
 						'control_name' => "<a href=\"{$_link}\" >{$_control_name}</a>",
 						'status' => $_statustext[$check_list->get_status()],
-						'user' => $GLOBALS['phpgw']->accounts->get($check_list->get_assigned_to())->__toString(),
+						'user' => $check_list->get_assigned_to() ? $GLOBALS['phpgw']->accounts->get($check_list->get_assigned_to())->__toString() : 'N/A',
 						'deadline' => $GLOBALS['phpgw']->common->show_date($check_list->get_deadline(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 						'planned_date' => $GLOBALS['phpgw']->common->show_date($check_list->get_planned_date(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 						'completed_date' => $GLOBALS['phpgw']->common->show_date($check_list->get_completed_date(), $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
