@@ -10024,3 +10024,34 @@
 		}
 	}
 
+	/**
+	* Update property version from 0.9.17.727 to 0.9.17.728
+	*
+	*/
+	$test[] = '0.9.17.727';
+
+	function property_upgrade0_9_17_727()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf', 'external_updated',array(
+			'type' => 'int',
+			'precision' => 2,
+			'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecobilagoverf', 'netto_belop',array(
+			'type' => 'decimal',
+			'precision' => 20,
+			'scale' => 2,
+			'nullable' => True
+			)
+		);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.728';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
