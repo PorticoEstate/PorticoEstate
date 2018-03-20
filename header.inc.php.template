@@ -80,10 +80,10 @@
 	{domains}
 
 	// To make it possible to hold dbconfig in seperated file
-	if(file_exists('dbconfig.php')){
-		$dbconfig = include_once('dbconfig.php');
+	if(file_exists(dirname(__FILE__).DIRECTORY_SEPARATOR.'dbconfig.php')){
+		$dbconfig = include(dirname(__FILE__).DIRECTORY_SEPARATOR.'dbconfig.php');
 		$GLOBALS['phpgw_domain'] = array_merge($GLOBALS['phpgw_domain'],$dbconfig);
-	} 
+	}
 	/**
 	* @global boolean $phpgw_info['server']['show_domain_selectbox']
 	* If you want to have your domains in a select box, change to True
