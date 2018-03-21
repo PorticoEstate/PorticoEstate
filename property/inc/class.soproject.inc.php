@@ -799,6 +799,7 @@
 					$project['budget'] = 0;
 					$project['obligation'] = 0;
 					$project['actual_cost'] = 0;
+					$project['diff'] = (float)0;
 
 					if ($project['project_type_id'] == 3)//buffer
 					{
