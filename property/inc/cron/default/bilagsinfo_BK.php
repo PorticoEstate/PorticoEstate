@@ -118,7 +118,7 @@
 				if (in_array($line['account'], $this->b_accounts))
 				{
 					$value_set['netto_belop'] += $line['amount'];
-					$value_set['mvakode'] = $line['tax_code'];
+					$value_set['mvakode'] = $line['tax_code'] == '6A' ? 0 :  $line['tax_code'];
 				}
 			}
 
