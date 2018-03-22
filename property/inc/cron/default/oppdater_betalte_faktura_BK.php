@@ -40,6 +40,7 @@
 		public function __construct()
 		{
 			parent::__construct();
+			echo 'test';
 
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('property');
