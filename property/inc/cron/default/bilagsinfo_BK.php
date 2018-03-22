@@ -43,16 +43,27 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('property');
-			$this->function_msg = 'Hent bilagsinformasjon fra Agresso';
+			$this->function_msg = 'Hent bilagsinformasjon fra Agresso - og oppdatert Portico';
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
 		}
 
 		function execute()
 		{
-			set_time_limit(9000);
+			$start = time();
+
+			set_time_limit(900);
 
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
+
+			try
+			{
+				$this->update_order();
+			}
+			catch (Exception $e)
+			{
+				$this->receipt['error'][] = array('msg' => $e->getMessage());
+			}
 
 			$sql = "SELECT fm_b_account.id AS b_account_id FROM fm_b_account";// WHERE active = 1";
 
@@ -83,15 +94,138 @@
 			foreach ($bilagserie as $bilagsnr)
 			{
 				$bilag = $this->get_bilag($bilagsnr);
-				$this->update_bilag($bilag, $bilagsnr);
+				if($bilag)
+				{
+					$this->update_bilag($bilag, $bilagsnr);
+					$this->receipt['message'][] = array('msg' => "{$bilagsnr} er oppdatert med data fra Argesso");
+				}
 			}
 
-			$messages = array();
-			foreach ($messages as $message)
+			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
+			$this->cron_log($msg, $cron);
+			echo "$msg\n";
+			$this->receipt['message'][] = array('msg' => $msg);
+
+		}
+
+		function cron_log( $receipt = '' )
+		{
+
+			$insert_values = array(
+				$this->cron,
+				date($this->db->datetime_format()),
+				$this->function_name,
+				$receipt
+			);
+
+			$insert_values = $this->db->validate_insert($insert_values);
+
+			$sql = "INSERT INTO fm_cron_log (cron,cron_date,process,message) "
+				. "VALUES ($insert_values)";
+			$this->db->query($sql, __LINE__, __FILE__);
+		}
+
+		private function update_order()
+		{
+			$config = CreateObject('phpgwapi.config', 'property')->read();
+			$sql = "SELECT DISTINCT pmwrkord_code, external_voucher_id FROM fm_ecobilag";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$vouchers = array();
+			while ($this->db->next_record())
 			{
-				$this->receipt['message'][] = array('msg' => $message);
+				$vouchers[] = array
+				(
+					'order_id' => $this->db->f('pmwrkord_code'),
+					'voucher_id' => $this->db->f('external_voucher_id')
+				);
 			}
 
+			$socommon = CreateObject('property.socommon');
+			$soworkorder = CreateObject('property.soworkorder');
+			$sotts = CreateObject('property.sotts');
+			$workorder_closed_status = !empty($config['workorder_closed_status']) ? $config['workorder_closed_status'] : false;
+
+			if(!$workorder_closed_status)
+			{
+				throw new Exception('Order closed status not defined');
+			}
+
+			$metadata = $this->db->metadata('fm_ecobilag');
+			$cols = array_keys($metadata);
+
+			foreach ($vouchers as $voucher)
+			{
+				if(!$this->get_bilag($voucher['voucher_id']))
+				{
+					$this->receipt['error'][] = array('msg' => "{$voucher['voucher_id']} er ikke betalt");
+					continue;
+				}
+
+				$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er betalt");
+
+				$ok = false;
+				$order_type = $socommon->get_order_type($voucher['order_id']);
+				switch ($order_type)
+				{
+					case 's_agreement':
+						break;
+					case 'workorder':
+						$workorder = $soworkorder->read_single($voucher['order_id']);
+						if($workorder['continuous'])
+						{
+							$ok = true;
+						}
+						else
+						{
+							$ok = $soworkorder->update_status(array('order_id' => $voucher['order_id'],'status' => $workorder_closed_status));
+						}
+						break;
+					case 'ticket':
+						$this->db->query("SELECT id, continuous FROM fm_tts_tickets WHERE order_id= '{$voucher['order_id']}'", __LINE__, __FILE__);
+						$this->db->next_record();
+						$ticket_id = $this->db->f('id');
+
+						if($this->db->f('continuous'))
+						{
+							$ok = true;
+						}
+						else
+						{
+							$ticket = array(
+									'status' => 'C8' //Avsluttet og fakturert (C)
+								);
+							$ok = $sotts->update_status($ticket, $ticket_id);
+						}
+						break;
+					default:
+						throw new Exception('Order type not supported');
+				}
+
+				if($ok)
+				{
+					echo "Overfører {$voucher['voucher_id']} til historikk". PHP_EOL;
+
+					$this->db->transaction_begin();
+					$value_set = array();
+					$this->db->query("SELECT * FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
+					$this->db->next_record();
+					foreach ($cols as $col)
+					{
+						$value_set[$col] = $this->db->f($col);
+					}
+					$value_set['filnavn'] = date('d.m.Y-H:i:s', phpgwapi_datetime::user_localtime());
+					$value_set['ordrebelop'] = $value_set['belop'];
+					unset($value_set['pre_transfer']);
+
+					$_cols = implode(',', array_keys($value_set));
+					$values = $this->db->validate_insert(array_values($value_set));
+					$this->db->query("INSERT INTO fm_ecobilagoverf ({$_cols}) VALUES ({$values})", __LINE__, __FILE__);
+					$this->db->query("DELETE FROM fm_ecobilag WHERE external_voucher_id= '{$voucher['voucher_id']}'", __LINE__, __FILE__);
+					$this->db->transaction_commit();
+					$this->receipt['message'][] = array('msg' => "{$voucher['voucher_id']} er overført til historikk");
+
+				}
+			}
 		}
 
 		function update_bilag($bilag, $bilagsnr)
@@ -125,15 +259,15 @@
 			$value_set = $this->db->validate_update($value_set);
 			$this->db->query("UPDATE fm_ecobilagoverf SET {$value_set} WHERE external_voucher_id = '{$bilagsnr}'", __LINE__, __FILE__);
 
-
-			echo $value_set. PHP_EOL;
+			if($this->debug)
+			{
+				echo $value_set. PHP_EOL;
+			}
 
 		}
 
 		function get_bilag($bilagsnr)
 		{
-			$debug = false;
-
 			$username = 'WEBSER';
 			$password = 'wser10';
 			$client = 'BY';
@@ -150,16 +284,6 @@
 			$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[0]->setFromValue($bilagsnr)->setToValue($bilagsnr);
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue('201701')->setToValue('201812');
-			if($debug)
-			{
-				_debug_array($searchProp);
-
-				echo "====== REQUEST HEADERS =====" . PHP_EOL;
-				print_r($service->__getLastRequestHeaders());
-				echo "========= REQUEST ==========" . PHP_EOL;
-				print_r($service->__getLastRequest());
-				echo "========= RESPONSE =========" . PHP_EOL;
-			}
 
 			// Create the InputForTemplateResult class and set values
 			$input = new InputForTemplateResult($TemplateId);
@@ -173,37 +297,12 @@
 			$options->FirstRecord= false;
 			$options->LastRecord= false;
 
-			if($debug)
-			{
-				echo "====== REQUEST HEADERS =====" . PHP_EOL;
-				print_r($service->__getLastRequestHeaders());
-				echo "========= REQUEST ==========" . PHP_EOL;
-				print_r($service->__getLastRequest());
-				echo "========= RESPONSE =========" . PHP_EOL;
-			}
-
 			$input->setTemplateResultOptions($options);
 			// Get new values to SearchCriteria (if that’s what you want to do
 			$input->setSearchCriteriaPropertiesList($searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList());
 			//Retrieve result
-			if($debug)
-			{
-				echo "====== REQUEST HEADERS =====" . PHP_EOL;
-				print_r($service->__getLastRequestHeaders());
-				echo "========= REQUEST ==========" . PHP_EOL;
-				print_r($service->__getLastRequest());
-				echo "========= RESPONSE =========" . PHP_EOL;
-			}
 
 			$result = $service->GetTemplateResultAsDataSet(new \GetTemplateResultAsDataSet($input, $Credentials));
-			if($debug)
-			{
-				echo "====== REQUEST HEADERS =====" . PHP_EOL;
-				print_r($service->__getLastRequestHeaders());
-				echo "========= REQUEST ==========" . PHP_EOL;
-				print_r($service->__getLastRequest());
-				echo "========= RESPONSE =========" . PHP_EOL;
-			}
 
 			$data = $result->getGetTemplateResultAsDataSetResult()->getTemplateResult()->getAny();
 
@@ -214,10 +313,18 @@
 
 			if($var_result)
 			{
+				if($this->debug)
+				{
+					echo "Bilag {$bilagsnr} ER betalt" . PHP_EOL;
+				}
 				$ret = $var_result['Agresso'][0]['AgressoQE'];
 			}
 			else
 			{
+				if($this->debug)
+				{
+					echo "Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL;
+				}
 				$ret = array();
 			}
 
