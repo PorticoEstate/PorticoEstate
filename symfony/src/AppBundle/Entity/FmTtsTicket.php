@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * FmTtsTicket
  *
  * @ORM\Table(name="fm_tts_tickets")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FmTtsTicketRepository")
  */
 class FmTtsTicket
 {
@@ -114,7 +114,13 @@ class FmTtsTicket
 	 * @ORM\Column(name="entry_date", type="integer")
 	 */
 	protected $entry_date;
-//protected $finnish_date;
+
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="finnish_date", type="integer")
+	 */
+	protected $finnish_date;
 //protected $finnish_date2;
 //protected $loc5;
 	/**
@@ -160,6 +166,22 @@ class FmTtsTicket
 //protected $invoice_remark;
 
 	/**
+	 * Added with property version 0.9.17.727
+	 * @var integer
+	 *
+	 * @ORM\Column(name="handyman_checklist_id", type="integer")
+	 */
+	protected $handyman_checklist_id;
+
+	/**
+	 * Added with property version 0.9.17.727
+	 * @var integer
+	 *
+	 * @ORM\Column(name="handyman_order_number", type="integer")
+	 */
+	protected $handyman_order_number;
+
+	/**
 	 * @param $property string
 	 * @return mixed
 	 **/
@@ -185,14 +207,16 @@ class FmTtsTicket
 		return $this;
 	}
 
-	public function set_default_values(){
+	public function set_default_values()
+	{
 		// 14 = Teknisk drift
 		$this->group_id = 14;
 		// 10 Bygg Teknisk
 		$this->cat_id = 10;
-		// status = 0: ny melding, 4: Hos teknisk person på bygget
-		$this->status = 0;
+		// status = 'O': ny melding, 4: Hos teknisk person på bygget
+		$this->status = 'O'; // as in Oscar for Open ticket
 		$this->priority = 2; // 2 = Medium
-		$this->entry_date  = time();
+		$this->entry_date = time();
+		$this->finnish_date = 0;
 	}
 }

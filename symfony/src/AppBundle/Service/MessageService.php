@@ -11,8 +11,11 @@
 
 namespace AppBundle\Service;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager as EntityManager;
 use AppBundle\Entity\FmTtsTicket;
+use AppBundle\Entity\GwPreference;
+use AppBundle\Entity\HmTechnicalContactForBuildingView;
 use SimpleXMLElement;
 
 class MessageService
@@ -31,26 +34,20 @@ class MessageService
 	private $dir = '';
 	private $ext = '';
 
+	/* @var EntityManager $em */
+	private $em;
+
 	/**
 	 * MessageService constructor.
+	 * @param EntityManager $em
 	 * @param $dir
 	 * @param $ext
 	 */
-	public function __construct($dir, $ext)
+	public function __construct(EntityManager $em, $dir, $ext)
 	{
+		$this->em = $em;
 		$this->dir = $dir;
 		$this->ext = $ext;
-	}
-
-	public function import_files()
-	{
-		// Read the files
-		$this->find_files();
-		/* @var $file string */
-		foreach ($this->files as &$file) {
-			$this->import_file($file);
-		}
-		$this->delete_files();
 	}
 
 	/*
@@ -69,20 +66,19 @@ class MessageService
 		return $this->message;
 	}
 
-	private function delete_files()
+	public function delete_files()
 	{
-		$this->message .= '\nFiles not deleted';
+		$this->message .= '\nERROR\tFiles not deleted';
 	}
 
-	private function find_files()
+	public function find_files(): array
 	{
 		$pattern = $this->dir . DIRECTORY_SEPARATOR . Self::FILE_PREFIX . '*.' . $this->ext;
 		$this->files = glob($pattern);
-		if (count($this->files) > 0) {
-			$this->message .= '\n' . count($this->files) . ' files red';
-		} else {
-			$this->message .= 'No files found';
+		if (count($this->files) == 0) {
+			$this->message .= '\nERROR\t No export files found.';
 		}
+		return $this->files;
 	}
 
 	/*
@@ -137,10 +133,10 @@ class MessageService
 		return true;
 	}
 
-	private function import_file(string $file)
+	public function import_file(string $file)
 	{
 		if (!file_exists($file)) {
-			$this->message .= $file . ' not found';
+			$this->message .= '\nERROR\t File don\' exist: ' . $file;
 			return;
 		}
 
@@ -148,7 +144,7 @@ class MessageService
 		$xml = simplexml_load_file($file);
 		if (!isset($xml->Order)) {
 			// The xml list did not read correctly or is empty
-			$this->message .= 'Error in the XML file: ' . $file;
+			$this->message .= '\nERROR\t Unable to read the XML file: ' . $file;
 			return;
 		}
 
@@ -166,41 +162,99 @@ class MessageService
 		}
 	}
 
-	/*
-	 * @var SimpleXMLElement $order
+	/**
+	 * @param SimpleXMLElement $order
 	 */
 	private function parse_order_and_create_ticket(SimpleXMLElement $order)
 	{
+		$this->messages = array();
 		/* @var SimpleXMLElement $checlist */
 		foreach ($order->ChecklistList->ChecklistType as $checklist) {
 			$this->get_data_from_checklist($checklist, (int)$order->OrderHead->Manager, (int)$order->HSOrderNumber, (string)$order->OrderHead->OrderName);
 		}
 
+		$this->update_message_users();
+
 		/* @var MessageData $message */
-		foreach($this->messages as $message){
-			$title = implode($message->checklist_name);
-			$description = implode($message->checklist_description);
+		foreach ($this->messages as $message) {
+			if ($message->isValid) {
+				$fm_ticket = new FmTtsTicket();
+				$fm_ticket->set_default_values();
+				$this->message_to_ticket($message, $fm_ticket);
+				$this->tickets[] = $fm_ticket;
+			}
+		}
+	}
+
+
+	private function update_message_users()
+	{
+		$ids = array();
+		/* @var MessageData $message */
+		foreach ($this->messages as $message) {
+			if ($message->emloyee_from_handyman) {
+				$ids[] = $message->emloyee_from_handyman;
+			}
+			if ($message->soneleder_fra_handyman) {
+				$ids[] = $message->soneleder_fra_handyman;
+			}
 		}
 
+		// Get the users based on those IDs. they come from Agresso, and is located in the Instilliner->Eiendom->Ditt ressursnummer
+		$preferences = $this->em->getRepository('AppBundle:GwPreference')->findUsersByAgressoID($ids);
 
-		$fm_ticket = new FmTtsTicket();
-		$fm_ticket->set_default_values();
+		/* @var MessageData $message */
+		foreach ($this->messages as $message) {
+			if ($message->emloyee_from_handyman) {
+				$message->user_id = $this->find_user_id_in_preferences($preferences, $message->emloyee_from_handyman);
+			} else {
+				$this->message .= '\nWARNING\tUser with Handyman ID ' . $message->emloyee_from_handyman . ' not found in BK Bygg.';
+				$message->isValid = false;
+			}
+			if ($message->soneleder_fra_handyman) {
+				$message->assigned_to = $this->find_user_id_in_preferences($preferences, $message->soneleder_fra_handyman);
+			} else {
+				$this->message .= '\nWARNING\tManager with Handyman ID ' . $message->soneleder_fra_handyman . ' not found in BK Bygg.';
+				$message->isValid = false;
+			}
+		}
+	}
 
-//		$user_id = null;
-//		$assignedto = null;
-//		$subject = null;
-//		$location_code = null;
-//		$loc1 = null;
-//		$loc2 = null;
-//		$contact_id = null;
-//		$checklist_id = null;
-//		$order_id = null;
-//		$soneleder_fra_handyman = null;
-//		$emloyee_from_handyman = null;
-//		$order_name = null;
+	/**
+	 * @param $preferences
+	 * @param $agresso_id
+	 * @return string
+	 */
+	private function find_user_id_in_preferences($preferences, $agresso_id): string
+	{
+		/* @var GwPreference $pref */
+		foreach ($preferences as $pref) {
+			if ($pref->resource_number == $agresso_id) {
+				return $pref->preference_owner;
+			}
+		}
+		return '';
+	}
 
+	/**
+	 * @var MessageData $message
+	 * @var FmTtsTicket $ticket
+	 */
+	private function message_to_ticket(MessageData $message, FmTtsTicket $ticket)
+	{
+		$title = '#' . $message->order_id . ' ' . implode($message->checklist_name, ' ');
+		$description = implode($message->checklist_description, ' ') . '\r\n' . 'Laget av Handyman';
+		$ticket->handyman_order_number = $message->order_id;
+		$ticket->handyman_checklist_id = $message->checklist_id;
+		$ticket->subject = $title;
+		$ticket->details = $description;
+		$ticket->location_code = $message->location_code;
+		$ticket->loc1 = $message->loc1;
+		$ticket->loc2 = $message->loc2;
+		$ticket->user_id = $message->user_id;
+		$ticket->assignedto = $message->assigned_to;
+		$ticket->contact_id = $message->contact_id;
 
-		$this->tickets[] = $fm_ticket;
 	}
 
 	/* @var SimpleXMLElement $order
@@ -215,7 +269,8 @@ class MessageService
 		$oneChecklistHasData = false;
 		/* @var SimpleXMLElement $checklist_type */
 		foreach ($order->ChecklistList->ChecklistType as $checklist_type) {
-			$oneChecklistHasData = $oneChecklistHasData OR $this->do_checklist_item_have_report_data($checklist_type);
+			$a = $this->do_checklist_item_have_report_data($checklist_type);
+			$oneChecklistHasData = ($oneChecklistHasData OR $a);
 		}
 		return $oneChecklistHasData;
 	}
@@ -223,7 +278,7 @@ class MessageService
 	/* @var SimpleXMLElement $checklist_type
 	 * @return bool
 	 */
-	private function do_checklist_item_have_report_data(SimpleXMLElement $checklist_type)
+	private function do_checklist_item_have_report_data(SimpleXMLElement $checklist_type): bool
 	{
 		if (!(isset($checklist_type->Finished) && $checklist_type->Finished)) {
 			return false;
@@ -262,6 +317,45 @@ class MessageService
 	}
 
 	/**
+	 * @param string $installation_id
+	 * @return bool
+	 */
+	private function is_installation_id_valid(string $installation_id): bool
+	{
+		// XXXX-XX
+		$pattern = '/^([0-9]{4})(-){1}([0-9]{2})$/';
+		return preg_match($pattern, $installation_id, $match);
+	}
+
+	/**
+	 * @param string $installation_id
+	 * @return string
+	 */
+	private function getLoc1Code(string $installation_id): string
+	{
+		// XXXX
+		$pattern = '/^([0-9]{4})/';
+		if (preg_match($pattern, $installation_id, $match)) {
+			return $match[0];
+		}
+		return '';
+	}
+
+	/**
+	 * @param string $installation_id
+	 * @return string
+	 */
+	private function getLoc2Code(string $installation_id): string
+	{
+		// NNNN-XX
+		$pattern = '/([0-9]{2})$/';
+		if (preg_match($pattern, $installation_id, $match)) {
+			return $match[0];
+		}
+		return '';
+	}
+
+	/**
 	 * @param SimpleXMLElement $checklist
 	 * @param int $soneleder_fra_handyman
 	 * @param int $order_id
@@ -278,23 +372,50 @@ class MessageService
 		$message->order_name = $order_name;
 		$message->checklist_id = (int)$checklist->HSChecklistID;
 		$message->emloyee_from_handyman = (int)$checklist->EmployeeNo;
-		$message->checklist_description[] = $checklist->ChecklistTypeName;
-		$message->checklist_description[] = $checklist->ChecklistName;
+		$message->checklist_description[] = (string)$checklist->ChecklistTypeName;
+		$message->checklist_description[] = (string)$checklist->ChecklistName;
+		$message->isValid = true;
+
+		$installation_id = trim((string)$checklist->InstallationID);
+		if ($this->is_installation_id_valid($installation_id)) {
+			$message->location_code = $installation_id;
+			$message->loc1 = $this->getLoc1Code($installation_id);
+			$message->loc2 = $this->getLoc2Code($installation_id);
+			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
+		} else {
+			$message->isValid = false;
+			$this->message .= '\nWARNING\tBuilding ID is not valid: ' . $installation_id;
+		}
 
 		/* @var array $name_and_descriptions */
-		$name_and_descriptions = $this->checklist_item_titles();
+		$name_and_descriptions = $this->checklist_item_titles($checklist->Checklist);
 		if (count($name_and_descriptions) > 0) {
 			foreach ($name_and_descriptions as $item) {
 				$current_message = $message->clone();
 				$current_message->checklist_name[] = $item['title'];
-				$current_message->checklist_description[] = $item['description'];
-				$current_message->checklist_description[] = $item['comment'];
-				$current_message->checklist_description[] = $checklist->ChecklistTypeName;
-				$current_message->checklist_description[] = $checklist->ChecklistName;
+				$current_message->checklist_description[] = (string)$item['description'];
+				$current_message->checklist_description[] = (string)$item['comment'];
+				$current_message->checklist_description[] = (string)$checklist->ChecklistTypeName;
+				$current_message->checklist_description[] = (string)$checklist->ChecklistName;
 				$this->messages[] = $current_message;
 			}
 		}
 	}
+
+	/**
+	 * @param string $location_code
+	 * @return int
+	 */
+	public function find_contact_id_from_location_code(string $location_code): ?int
+	{
+		/* @var HmTechnicalContactForBuildingView $contact*/
+		$contact = $this->em->getRepository('AppBundle:HmTechnicalContactForBuildingView')->find($location_code);
+		if(!$contact){
+			return null;
+		}
+		return $contact->contact_id;
+	}
+
 
 	/**
 	 * @var SimpleXMLElement $checklist
@@ -304,8 +425,11 @@ class MessageService
 	{
 		$result = array();
 		$comment = '';
-		if ((string)$checklist->Check[count($checklist->Check) - 1]->Text == 'Kommentar') {
-			$comment = (string)$checklist->Check[count($checklist->Check) - 1]->Text;
+
+		/* @var SimpleXMLElement checks */
+		$checks = $checklist->Check;
+		if ((string)$checks[$checks->count() - 1]->Text == 'Kommentar') {
+			$comment = (string)$checks[$checks->count() - 1]->Text;
 		}
 
 		$found_discrepancy = false;
@@ -337,12 +461,17 @@ class MessageService
 		return $result;
 	}
 
+	public function clear_tickets()
+	{
+		$this->tickets = array();
+	}
+
 }
 
 class MessageData
 {
 	public $user_id = null;
-	public $assignedto = null;
+	public $assigned_to = null;
 	public $subject = null;
 	public $description = null;
 	public $location_code = null;
@@ -354,6 +483,7 @@ class MessageData
 	public $soneleder_fra_handyman = null;
 	public $emloyee_from_handyman = null;
 	public $order_name = null;
+	public $isValid = false;
 
 
 	public $checklist_name = array();
