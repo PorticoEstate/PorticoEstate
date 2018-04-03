@@ -11,6 +11,7 @@ namespace AppBundle\XmlModels;
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation2;
 use AppBundle\Entity\FmStreetaddress;
+use AppBundle\Entity\FmBuildingExportView;
 
 class HmAddressXMLModel
 {
@@ -67,37 +68,21 @@ class HmAddressXMLModel
         // Stuff
     }
 
-    /**
-     * @var $building FmLocation2
-     * @return HmAddressXMLModel
-     */
-    public static function constructFromBuilding($building)
-    {
-        $instance = new self();
-        /* @var $streetAddress FmStreetaddress */
-        $streetAddress = $building->getStreet();
-        if (!is_null($instance->Address1)){
-            $instance->Address1 = $streetAddress->getDescr() ?? '';
-        }
-        $instance->StreetNo = $building->getStreetNumber() ?? '';
-        $instance->AddressName = $building->getLoc2Name() ?? '';
+	/**
+	 * @var $building FmBuildingExportView
+	 * @return HmAddressXMLModel
+	 */
+	public static function constructBuildingExport(FmBuildingExportView $building): HmAddressXMLModel
+	{
+		$instance = new self();
+		$instance->Address1 = $building->getAddress() ?? '' ;
+		$instance->PostalArea = $building->getPoststed() ?? '';
+		$instance->PostalCode = $building->getPostnummer() ?? '';
+		$instance->AddressName = $building->getLoc2Name() ?? '';
+		$instance->StreetNo = $building->getStreetNumber() ?? '';
+		return $instance;
+	}
 
-        return $instance;
-    }
-
-    /**
-     * @var $loc FmLocation1
-     * @return HmAddressXMLModel
-     */
-    public static function constructFromLocation($loc)
-    {
-        $instance = new self();
-        $instance->Address1 = $loc->getAdresse1() ?? '';
-        $instance->PostalArea = $loc->getPoststed() ?? '';
-        $instance->PostalCode = $loc->getPostnummer() ?? '';
-        $instance->AddressName = $loc->getLoc1Name() ?? '';
-        return $instance;
-    }
 
     /**
      * @return string

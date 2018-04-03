@@ -10,6 +10,7 @@ namespace AppBundle\XmlModels;
 
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation2;
+use AppBundle\Entity\FmBuildingExportView;
 
 class HmInstallationXMLModel
 {
@@ -47,25 +48,16 @@ class HmInstallationXMLModel
         // allocate your stuff
         $this->Customer = new HmCustomerXMLModel;
     }
-    /* @var $building FmLocation2 */
-    public static function constructFromBuilding(FmLocation2 $building)
-    {
-        $instance = new self();
-        $instance->Name = $building->getLoc2Name() ?? '';
-        $instance->InstallationID = $building->getLocationCode() ?? '';
-        $instance->InstallationIDParent = $building->getLoc1() ?? '';
-        $instance->Address = HmAddressXMLModel::constructFromBuilding($building);
-        return $instance;
-    }
-    /* @var $loc FmLocation1 */
-    public static function constructFromLocation(FmLocation1 $loc)
-    {
-        $instance = new self();
-        $instance->Address = HmAddressXMLModel::constructFromLocation($loc);
-        $instance->Name = $loc->getLoc1Name() ?? '';
-        $instance->InstallationID = $loc->getLocationCode() ?? '';
-        return $instance;
-    }
+
+	/* @var $building FmBuildingExportView */
+	public static function constructFromBuildingExport(FmBuildingExportView $building)
+	{
+		$instance = new self();
+		$instance->Address = HmAddressXMLModel::constructBuildingExport($building);
+		$instance->Name = $building->getLoc2Name() ?? '';
+		$instance->InstallationID = $building->getLocationCode() ?? '';
+		return $instance;
+	}
 
     /**
      * @return string

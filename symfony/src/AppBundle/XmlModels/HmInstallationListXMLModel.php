@@ -27,16 +27,25 @@ class HmInstallationListXMLModel
         }
     }
 
-    public function __construct(array $fmLocations)
+    public function __construct()
     {
         $this->Installation = array();
-        /* @var $loc FmLocation1 */
-        foreach ($fmLocations as $loc) {
-            $this->Installation[] = HmInstallationXMLModel::constructFromLocation($loc);
-            $fmBuildings = $loc->getBuildings()->toArray();
-            $this->addBuildings($fmBuildings);
-        }
     }
+
+	/* @var $fm_building_exports \FmBuildingExportView[] */
+    public static function construct_from_building_export(array $fm_building_exports){
+		$instance = new self();
+		$instance->parseBuldingExports($fm_building_exports);
+		return $instance;
+	}
+
+	/* @var $fm_building_exports \FmBuildingExportView[]  */
+	public function parseBuldingExports(array $fm_building_exports){
+		/* @var $building FmBuildingExportView */
+		foreach ($fm_building_exports as $building) {
+			$this->Installation[] = HmInstallationXMLModel::constructFromBuildingExport($building);
+		}
+	}
 
     /**
      * @return \HMInstallationXMLModel[]

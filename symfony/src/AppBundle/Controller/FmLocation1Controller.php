@@ -109,12 +109,12 @@ class FmLocation1Controller extends Controller
 	 */
 	public function xmlExportAction()
 	{
-		$fmLocations = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation1')->findAllFmLocation1();
-		$installations = new HmInstallationListXMLModel($fmLocations);
+		$fm_buildings = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmBuildingExportView')->findAll();
+		$buildings = HmInstallationListXMLModel::construct_from_building_export($fm_buildings);
 		$encoders = array(new XmlEncoder('InstallationList'));
 		$normalizers = array(new ObjectNormalizer());
 		$serializer = new Serializer($normalizers, $encoders);
-		$xml = $serializer->serialize($installations, 'xml');
+		$xml = $serializer->serialize($buildings, 'xml');
 		$response = new Response();
 		$response->setContent($xml);
 		$response->headers->set('Content-Type', 'application/xml');

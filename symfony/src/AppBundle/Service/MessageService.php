@@ -177,7 +177,7 @@ class MessageService
 
 		/* @var MessageData $message */
 		foreach ($this->messages as $message) {
-			if ($message->isValid) {
+			if ($message->validate()) {
 				$fm_ticket = new FmTtsTicket();
 				$fm_ticket->set_default_values();
 				$this->message_to_ticket($message, $fm_ticket);
@@ -209,13 +209,13 @@ class MessageService
 				$message->user_id = $this->find_user_id_in_preferences($preferences, $message->emloyee_from_handyman);
 			} else {
 				$this->message .= '\nWARNING\tUser with Handyman ID ' . $message->emloyee_from_handyman . ' not found in BK Bygg.';
-				$message->isValid = false;
+				$message->is_valid = false;
 			}
 			if ($message->soneleder_fra_handyman) {
 				$message->assigned_to = $this->find_user_id_in_preferences($preferences, $message->soneleder_fra_handyman);
 			} else {
 				$this->message .= '\nWARNING\tManager with Handyman ID ' . $message->soneleder_fra_handyman . ' not found in BK Bygg.';
-				$message->isValid = false;
+				$message->is_valid = false;
 			}
 		}
 	}
@@ -223,9 +223,9 @@ class MessageService
 	/**
 	 * @param $preferences
 	 * @param $agresso_id
-	 * @return string
+	 * @return int
 	 */
-	private function find_user_id_in_preferences($preferences, $agresso_id): string
+	private function find_user_id_in_preferences($preferences, $agresso_id): ?int
 	{
 		/* @var GwPreference $pref */
 		foreach ($preferences as $pref) {
@@ -233,7 +233,7 @@ class MessageService
 				return $pref->preference_owner;
 			}
 		}
-		return '';
+		return null;
 	}
 
 	/**
@@ -254,7 +254,6 @@ class MessageService
 		$ticket->user_id = $message->user_id;
 		$ticket->assignedto = $message->assigned_to;
 		$ticket->contact_id = $message->contact_id;
-
 	}
 
 	/* @var SimpleXMLElement $order
@@ -374,7 +373,7 @@ class MessageService
 		$message->emloyee_from_handyman = (int)$checklist->EmployeeNo;
 		$message->checklist_description[] = (string)$checklist->ChecklistTypeName;
 		$message->checklist_description[] = (string)$checklist->ChecklistName;
-		$message->isValid = true;
+		$message->is_valid = true;
 
 		$installation_id = trim((string)$checklist->InstallationID);
 		if ($this->is_installation_id_valid($installation_id)) {
@@ -383,7 +382,7 @@ class MessageService
 			$message->loc2 = $this->getLoc2Code($installation_id);
 			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
 		} else {
-			$message->isValid = false;
+			$message->is_valid = false;
 			$this->message .= '\nWARNING\tBuilding ID is not valid: ' . $installation_id;
 		}
 
@@ -483,7 +482,7 @@ class MessageData
 	public $soneleder_fra_handyman = null;
 	public $emloyee_from_handyman = null;
 	public $order_name = null;
-	public $isValid = false;
+	public $is_valid = false;
 
 
 	public $checklist_name = array();
@@ -493,5 +492,9 @@ class MessageData
 	public function clone(): MessageData
 	{
 		return clone $this;
+	}
+
+	public function validate(){
+		return $this->is_valid AND isset($this->user_id) AND isset($this->assigned_to) AND isset($this->location_code) AND isset($this->loc1);
 	}
 }
