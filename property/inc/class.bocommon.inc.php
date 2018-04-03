@@ -1972,15 +1972,15 @@
 			{
 				$_identificator = array_values($identificator);
 				$i = 0;
-				foreach ($formats as $key => $format)
+				foreach ($header as $key => $format)
 				{
 					if(!empty($_identificator[$i]))
 					{
-						$_header[$_identificator[$i]] = $format;
+						$_header[$_identificator[$i]] = 'string';
 					}
 					else
 					{
-						$_header[$i] = $format;
+						$_header[$i] = 'string';
 					}
 					$i++;
 				}
