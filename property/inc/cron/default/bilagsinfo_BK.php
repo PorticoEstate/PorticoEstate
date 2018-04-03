@@ -203,7 +203,7 @@
 
 				if($ok)
 				{
-					echo "Overfører {$voucher['voucher_id']} til historikk". PHP_EOL;
+					_debug_array("Overfører {$voucher['voucher_id']} til historikk". PHP_EOL);
 
 					$this->db->transaction_begin();
 					$value_set = array();
@@ -261,7 +261,7 @@
 
 			if($this->debug)
 			{
-				echo $value_set. PHP_EOL;
+				_debug_array($value_set. PHP_EOL);
 			}
 
 		}
@@ -281,7 +281,15 @@
 
 
 			// Get the default settings for a template (templateId)
-			$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
+			try
+			{
+				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
+			}
+			catch (SoapFault $fault)
+			{
+			    trigger_error("SOAP Fault:<br/> faultcode: {$fault->faultcode},<br/> faultstring: {$fault->faultstring}", E_USER_ERROR);
+			}
+
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[0]->setFromValue($bilagsnr)->setToValue($bilagsnr);
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[2]->setFromValue('201701')->setToValue('201812');
 
@@ -315,7 +323,7 @@
 			{
 				if($this->debug)
 				{
-					echo "Bilag {$bilagsnr} ER betalt" . PHP_EOL;
+					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
 				}
 				$ret = $var_result['Agresso'][0]['AgressoQE'];
 			}
@@ -323,7 +331,7 @@
 			{
 				if($this->debug)
 				{
-					echo "Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL;
+					_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
 				}
 				$ret = array();
 			}
