@@ -266,8 +266,9 @@
 
 		}
 
-		function get_bilag($bilagsnr)
+		function get_bilag_old($bilagsnr)
 		{
+			static $first_connect = false;
 			$username = 'WEBSER';
 			$password = 'wser10';
 			$client = 'BY';
@@ -285,6 +286,12 @@
 			try
 			{
 				$searchProp = $service->GetSearchCriteria(new \GetSearchCriteria($TemplateId, true, $Credentials));
+				if(!$first_connect)
+				{
+					echo "SOAP HEADERS:\n" . $service->__getLastRequestHeaders() . PHP_EOL;
+					echo "SOAP REQUEST:\n" . $service->__getLastRequest() . PHP_EOL;
+				}
+				$first_connect = true;
 			}
 			catch (SoapFault $fault)
 			{
@@ -343,5 +350,162 @@
 
 		}
 
-	}
+		function get_bilag( $bilagsnr )
+		{
+			//Data, connection, auth
+			$soapUser = "WEBSER";  //  username
+			$soapPassword = "wser10"; // password
+			$CLIENT = 'BY';
 
+			// xml post structure
+	$soap_request = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://services.agresso.com/QueryEngineService/QueryEngineV201101">
+	<SOAP-ENV:Body>
+		<ns1:GetTemplateResultAsDataSet>
+			<ns1:input>
+				<ns1:TemplateId>11176</ns1:TemplateId>
+				<ns1:TemplateResultOptions>
+					<ns1:ShowDescriptions>true</ns1:ShowDescriptions>
+					<ns1:Aggregated>false</ns1:Aggregated>
+					<ns1:OverrideAggregation>false</ns1:OverrideAggregation>
+					<ns1:CalculateFormulas>false</ns1:CalculateFormulas>
+					<ns1:FormatAlternativeBreakColumns>false</ns1:FormatAlternativeBreakColumns>
+					<ns1:RemoveHiddenColumns>true</ns1:RemoveHiddenColumns>
+					<ns1:FirstRecord>0</ns1:FirstRecord>
+					<ns1:LastRecord>0</ns1:LastRecord>
+				</ns1:TemplateResultOptions>
+				<ns1:SearchCriteriaPropertiesList>
+					<ns1:SearchCriteriaProperties>
+						<ns1:ColumnName>voucher_no</ns1:ColumnName>
+						<ns1:Description>Bilagsnr</ns1:Description>
+						<ns1:RestrictionType>=</ns1:RestrictionType>
+						<ns1:FromValue>{$bilagsnr}</ns1:FromValue>
+						<ns1:ToValue>{$bilagsnr}</ns1:ToValue>
+						<ns1:DataType>21</ns1:DataType>
+						<ns1:DataLength>18</ns1:DataLength>
+						<ns1:DataCase>0</ns1:DataCase>
+						<ns1:IsParameter>true</ns1:IsParameter>
+						<ns1:IsVisible>true</ns1:IsVisible>
+						<ns1:IsPrompt>false</ns1:IsPrompt>
+						<ns1:IsMandatory>false</ns1:IsMandatory>
+						<ns1:CanBeOverridden>false</ns1:CanBeOverridden>
+						<ns1:RelDateCrit></ns1:RelDateCrit>
+					</ns1:SearchCriteriaProperties>
+					<ns1:SearchCriteriaProperties>
+						<ns1:ColumnName>order_id</ns1:ColumnName>
+						<ns1:Description>Ordrenr</ns1:Description>
+						<ns1:RestrictionType>&lt;&gt;</ns1:RestrictionType>
+						<ns1:FromValue>40000000</ns1:FromValue>
+						<ns1:ToValue>49999999</ns1:ToValue>
+						<ns1:DataType>21</ns1:DataType>
+						<ns1:DataLength>18</ns1:DataLength>
+						<ns1:DataCase>0</ns1:DataCase>
+						<ns1:IsParameter>true</ns1:IsParameter>
+						<ns1:IsVisible>true</ns1:IsVisible>
+						<ns1:IsPrompt>false</ns1:IsPrompt>
+						<ns1:IsMandatory>false</ns1:IsMandatory>
+						<ns1:CanBeOverridden>false</ns1:CanBeOverridden>
+						<ns1:RelDateCrit></ns1:RelDateCrit>
+					</ns1:SearchCriteriaProperties>
+					<ns1:SearchCriteriaProperties>
+						<ns1:ColumnName>period</ns1:ColumnName>
+						<ns1:Description>Periode</ns1:Description>
+						<ns1:RestrictionType>&lt;&gt;</ns1:RestrictionType>
+						<ns1:FromValue>201701</ns1:FromValue>
+						<ns1:ToValue>201812</ns1:ToValue>
+						<ns1:DataType>3</ns1:DataType>
+						<ns1:DataLength>6</ns1:DataLength>
+						<ns1:DataCase>2</ns1:DataCase>
+						<ns1:IsParameter>true</ns1:IsParameter>
+						<ns1:IsVisible>true</ns1:IsVisible>
+						<ns1:IsPrompt>false</ns1:IsPrompt>
+						<ns1:IsMandatory>false</ns1:IsMandatory>
+						<ns1:CanBeOverridden>false</ns1:CanBeOverridden>
+						<ns1:RelDateCrit></ns1:RelDateCrit>
+					</ns1:SearchCriteriaProperties>
+					<ns1:SearchCriteriaProperties>
+						<ns1:ColumnName>client</ns1:ColumnName>
+						<ns1:Description>Firma</ns1:Description>
+						<ns1:RestrictionType>=</ns1:RestrictionType>
+						<ns1:FromValue>$CLIENT</ns1:FromValue>
+						<ns1:ToValue></ns1:ToValue>
+						<ns1:DataType>10</ns1:DataType>
+						<ns1:DataLength>25</ns1:DataLength>
+						<ns1:DataCase>2</ns1:DataCase>
+						<ns1:IsParameter>true</ns1:IsParameter>
+						<ns1:IsVisible>false</ns1:IsVisible>
+						<ns1:IsPrompt>false</ns1:IsPrompt>
+						<ns1:IsMandatory>false</ns1:IsMandatory>
+						<ns1:CanBeOverridden>false</ns1:CanBeOverridden>
+						<ns1:RelDateCrit></ns1:RelDateCrit>
+					</ns1:SearchCriteriaProperties>
+				</ns1:SearchCriteriaPropertiesList>
+			</ns1:input>
+			<ns1:credentials>
+				<ns1:Username>{$soapUser}</ns1:Username>
+				<ns1:Client>BY</ns1:Client>
+				<ns1:Password>{$soapPassword}</ns1:Password>
+			</ns1:credentials>
+		</ns1:GetTemplateResultAsDataSet>
+	</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+XML;
+
+			$headers = array(
+			"Accept: text/xml",
+			"Cache-Control: no-cache",
+			"User-Agent: PHP-SOAP/7.1.15-1+ubuntu16.04.1+deb.sury.org+2",
+			"Content-Type: text/xml; charset=utf-8",
+			"SOAPAction: http://services.agresso.com/QueryEngineService/QueryEngineV201101/GetTemplateResultAsDataSet",
+			"Content-length: ".strlen($soap_request)
+			);
+
+			$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
+
+			$ch = curl_init($soapUrl);
+
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $soap_request);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	//		curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT,10);
+
+			$response = curl_exec($ch);
+
+			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+			curl_close($ch);
+
+			// converting
+			$response1 = str_replace(array("<soap:Body>", "</soap:Body>"),"",$response);
+			// convertingc to XML
+
+			$xmlparse = CreateObject('property.XmlToArray');
+			$xmlparse->setEncoding('utf-8');
+			$xmlparse->setDecodesUTF8Automaticly(false);
+			$var_result = $xmlparse->parse($response1);
+
+			if(!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
+			{
+		//		if($this->debug)
+				{
+					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
+				}
+				$ret = $var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE'];
+			}
+			else
+			{
+		//		if($this->debug)
+				{
+					_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
+				}
+				$ret = array();
+			}
+
+			return $ret;
+		}
+	}
