@@ -847,7 +847,7 @@
 				array_set_default($_POST, 'accepted_documents', array());
 
 				$application = array_merge($application, extract_values($_POST, $this->fields));
-				$application['message'] = phpgw::get_var('comment', 'string', 'POST');
+				$application['message'] = phpgw::get_var('comment', 'html', 'POST');
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
 
@@ -1044,7 +1044,7 @@
 				}
 				elseif ($_POST['comment'])
 				{
-					$application['comment'] = phpgw::get_var('comment', 'string', 'POST');
+					$application['comment'] = phpgw::get_var('comment', 'html', 'POST');
 					$this->add_comment($application, $application['comment']);
 					$update = true;
 					$notify = true;
