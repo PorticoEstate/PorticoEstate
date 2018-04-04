@@ -10018,3 +10018,60 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	 * Update property version from 0.9.17.726 to 0.9.17.727
+	 *
+	 */
+	$test[] = '0.9.17.727';
+	function property_upgrade0_9_17_727()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$sql = 'CREATE OR REPLACE VIEW hm_technical_contact_for_building AS '
+			. ' SELECT fm_location1.loc1_name,'
+			. ' fm_location1.location_code,'
+			. ' fm_responsibility_contact.contact_id,'
+			. ' phpgw_contact_person.first_name,'
+			. ' phpgw_contact_person.last_name'
+			. ' FROM fm_location1'
+			. ' LEFT JOIN fm_responsibility_contact ON fm_responsibility_contact.location_code::text = fm_location1.location_code::text'
+			. ' LEFT JOIN phpgw_contact_person ON fm_responsibility_contact.contact_id = phpgw_contact_person.person_id'
+			. ' WHERE fm_location1.category <> 99 '
+			. ' AND (fm_responsibility_contact.responsibility_role_id = 1 '
+			. ' OR fm_responsibility_contact.responsibility_role_id = 5) '
+			. ' AND fm_location1.loc1::text ~ \'^\d+$\'::text '
+			. ' AND fm_location1.loc1::integer > 0 '
+			. ' AND fm_location1.loc1::integer < 7900 '
+			. ' AND fm_responsibility_contact.expired_on IS NULL '
+			. ' ORDER BY fm_responsibility_contact.location_code, fm_responsibility_contact.id;';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+		$sql = 'CREATE OR REPLACE VIEW hm_building_export AS '
+			. ' SELECT location.location_code,'
+			. ' location.loc1, '
+			. ' location.loc2, '
+			. ' location.loc2_name, '
+			. ' location.merknader, '
+			. ' location.street_number, '
+			. ' fm_streetaddress.descr AS address, '
+			. ' fm_location2_category.descr AS category, '
+			. ' fm_location1.postnummer, '
+			. ' fm_location1.poststed '
+			. ' FROM fm_location2 location '
+			. ' LEFT JOIN fm_streetaddress ON location.street_id = fm_streetaddress.id '
+			. ' LEFT JOIN fm_location2_category ON location.category = fm_location2_category.id '
+			. ' LEFT JOIN fm_location1 ON location.loc1::text = fm_location1.loc1::text '
+			. ' WHERE location.loc1::text ~ \'^\d+$\'::text AND location.category <> 99 AND location.loc2::text <> \'00\'::text '
+			. ' ORDER BY location.loc1, location.loc2;';
+
+		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.727';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
