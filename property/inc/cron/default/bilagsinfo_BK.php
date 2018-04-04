@@ -279,6 +279,7 @@
 			$Credentials->setPassword($password);
 			$Credentials->setClient($client);
 
+			echo "tester bilag {$bilagsnr}". PHP_EOL;
 
 			// Get the default settings for a template (templateId)
 			try
@@ -287,7 +288,9 @@
 			}
 			catch (SoapFault $fault)
 			{
-			    trigger_error("SOAP Fault:<br/> faultcode: {$fault->faultcode},<br/> faultstring: {$fault->faultstring}", E_USER_ERROR);
+				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
+				echo $msg . PHP_EOL;
+				trigger_error(nl2br($msg), E_USER_ERROR);
 			}
 
 			$searchProp->getGetSearchCriteriaResult()->getSearchCriteriaPropertiesList()->getSearchCriteriaProperties()[0]->setFromValue($bilagsnr)->setToValue($bilagsnr);
@@ -321,7 +324,7 @@
 
 			if($var_result)
 			{
-				if($this->debug)
+		//		if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} ER betalt" . PHP_EOL);
 				}
@@ -329,7 +332,7 @@
 			}
 			else
 			{
-				if($this->debug)
+		//		if($this->debug)
 				{
 					_debug_array("Bilag {$bilagsnr} er IKKE betalt" . PHP_EOL);
 				}
