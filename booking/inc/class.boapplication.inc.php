@@ -15,7 +15,10 @@
 		function send_notification( $application, $created = false, $assocciated = false )
 		{
 			if (!(isset($GLOBALS['phpgw_info']['server']['smtp_server']) && $GLOBALS['phpgw_info']['server']['smtp_server']))
+			{
 				return;
+			}
+
 			$send = CreateObject('phpgwapi.send');
 
 			$config = CreateObject('phpgwapi.config', 'booking');
