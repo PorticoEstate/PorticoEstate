@@ -380,7 +380,7 @@
 					<xsl:if test="application/customer_identifier_type = 'ssn'">
 						<dt>
 							<label for="field_ssn_number">
-								<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
+								<xsl:value-of select="php:function('lang', 'SSN')" />
 							</label>
 						</dt>
 						<dd>

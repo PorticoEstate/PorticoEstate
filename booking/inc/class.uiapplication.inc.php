@@ -768,7 +768,7 @@
 
 			$this->install_customer_identifier_ui($application);
 
-			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
+			$application['customer_identifier_types']['ssn'] = 'SSN';
 			if ($orgnr)
 			{
 				$application['customer_identifier_type'] = 'organization_number';
@@ -899,7 +899,7 @@
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
-			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
+			$application['customer_identifier_types']['ssn'] = 'SSN';
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
 			//test
 
