@@ -90,6 +90,9 @@
 						'key' => 'application_id',
 						'column' => 'resource_id'
 					)),
+				'responsible_street' => array('type' => 'string'),
+				'responsible_zip_code' => array('type' => 'string'),
+				'responsible_city' => array('type' => 'string'),
 				)
 			);
 		}

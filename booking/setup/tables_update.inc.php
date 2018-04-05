@@ -3676,3 +3676,28 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.30 to 0.2.31
+	 *
+	 */
+	$test[] = '0.2.30';
+	function booking_upgrade0_2_30()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_application', 'responsible_street',
+			array('type' => 'varchar', 'precision' => '255', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_application', 'responsible_zip_code',
+			array('type' => 'varchar', 'precision' => '16', 'nullable' => True));
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('bb_application', 'responsible_city',
+			array('type' => 'varchar', 'precision' => '255', 'nullable' => True));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.31';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

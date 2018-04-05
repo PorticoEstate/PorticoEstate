@@ -53,7 +53,7 @@
 			$this->fields = array('description', 'equipment', 'resources', 'activity_id',
 				'building_id', 'building_name', 'contact_name',
 				'contact_email', 'contact_phone', 'audience',
-				'active', 'accepted_documents');
+				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city');
 		}
 		// --- SIGURD::START EXAMPLE -- //
 

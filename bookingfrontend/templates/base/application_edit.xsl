@@ -404,6 +404,30 @@
 							<xsl:value-of select="php:function('lang', 'responsible applicant')" /> / <xsl:value-of select="php:function('lang', 'invoice information')" />
 						</div>
 						<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
+						<dt>
+							<label for="field_street">
+								<xsl:value-of select="php:function('lang', 'Street')"/>
+							</label>
+						</dt>
+						<dd>
+							<input id="field_responsible_street" name="responsible_street" type="text" value="{application/responsible_street}" class="pure-u-1"/>
+						</dd>
+						<dt>
+							<label for="field_zip_code">
+								<xsl:value-of select="php:function('lang', 'Zip code')"/>
+							</label>
+						</dt>
+						<dd>
+							<input type="text" name="responsible_zip_code" id="field_responsible_zip_code" value="{application/responsible_zip_code}" class="pure-u-1"/>
+						</dd>
+						<dt>
+							<label for="field_responsible_city">
+								<xsl:value-of select="php:function('lang', 'Postal City')"/>
+							</label>
+						</dt>
+						<dd>
+							<input type="text" name="responsible_city" id="field_responsible_city" value="{application/responsible_city}" class="pure-u-1"/>
+						</dd>
 					</dl>
 				</div>
 				<div class="pure-u-1 pure-u-md-1-2 pure-u-1-3">

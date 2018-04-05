@@ -243,6 +243,9 @@
 				'customer_ssn' => array('type' => 'varchar', 'precision' => '12', 'nullable' => True),
 				'type' => array('type' => 'varchar', 'precision' => '11', 'nullable' => false,
 					'default' => 'application'),
+				'responsible_street' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
+				'responsible_zip_code' => array('type' => 'varchar', 'precision' => '16', 'nullable' => True),
+				'responsible_city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
