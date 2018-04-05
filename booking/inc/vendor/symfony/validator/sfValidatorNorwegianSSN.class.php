@@ -53,6 +53,7 @@
 		}
 
 		/**
+		 * @todo: implement proper validation of ssn
 		 * @see sfValidatorString
 		 */
 		protected function doClean( $value )
@@ -63,9 +64,11 @@
 			{
 				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
-			if (!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{2}(\\d{5})?$/', $clean))
+	//		if (!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{2}(\\d{5})?$/', $clean))
+			if (!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{7}$/', $clean))
 			{
-				throw new sfValidatorError($this, 'invalid2', array('value' => $value));
+//				throw new sfValidatorError($this, 'invalid2', array('value' => $value));
+				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
 			return $clean;
 		}
