@@ -444,6 +444,30 @@
 							</p>
 						</xsl:if>
 						<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
+						<dt>
+							<label for="field_street">
+								<xsl:value-of select="php:function('lang', 'Street')"/>
+							</label>
+						</dt>
+						<dd>
+							<input id="field_responsible_street" name="responsible_street" type="text" value="{application/responsible_street}"/>
+						</dd>
+						<dt>
+							<label for="field_zip_code">
+								<xsl:value-of select="php:function('lang', 'Zip code')"/>
+							</label>
+						</dt>
+						<dd>
+							<input type="text" name="responsible_zip_code" id="field_responsible_zip_code" value="{application/responsible_zip_code}"/>
+						</dd>
+						<dt>
+							<label for="field_responsible_city">
+								<xsl:value-of select="php:function('lang', 'Postal City')"/>
+							</label>
+						</dt>
+						<dd>
+							<input type="text" name="responsible_city" id="field_responsible_city" value="{application/responsible_city}"/>
+						</dd>
 						<br />
 						<xsl:if test="config/application_invoice_information">
 							<p>

@@ -16,6 +16,7 @@
 		function __construct()
 		{
 			$this->event_so = CreateObject('booking.soevent');
+			$this->application_bo = CreateObject('booking.boapplication');
 			$this->allocation_bo = CreateObject('booking.boallocation');
 			$this->booking_bo = CreateObject('booking.bobooking');
 			$this->event_bo = CreateObject('booking.boevent');
@@ -734,10 +735,50 @@
 					continue; //Don't export costless rows
 				}
 
+
+				$application_id = null;
+
+				if ($reservation['reservation_type'] == 'event')
+				{
+					$data = $this->event_bo->read_single($reservation['reservation_id']);
+					$application_id = $data['application_id'];
+				}
+				else if ($reservation['reservation_type'] == 'booking')
+				{
+					$data = $this->booking_bo->read_single($reservation['reservation_id']);
+					$application_id = $data['application_id'];
+				}
+				else
+				{
+					$data = $this->allocation_bo->read_single($reservation['reservation_id']);
+					$application_id = $data['application_id'];
+				}
+
+				if($application_id)
+				{
+					$application = $this->application_bo->read_single($application_id);
+					$street = $application['responsible_street'];
+					$zip_code = $application['responsible_zip_code'];
+					$city = $application['responsible_city'];
+				}
+				else
+				{
+					$street = '';
+					$zip_code = '';
+					$city = '';
+				}
+
+
 				if (!empty($reservation['organization_id']))
 				{
 					$org = $this->organization_bo->read_single($reservation['organization_id']);
 					$reservation['organization_name'] = $org['name'];
+					if(empty($street))
+					{
+						$street = $org['street'];
+						$zip_code = $org['zip_code'];
+						$city = $org['city'];
+					}
 				}
 				else
 				{
@@ -745,6 +786,12 @@
 					if (!empty($data['id']))
 					{
 						$reservation['organization_name'] = $data['name'];
+						if(empty($street))
+						{
+							$street = $data['street'];
+							$zip_code = $data['zip_code'];
+							$city = $data['city'];
+						}
 					}
 					else
 					{
@@ -797,9 +844,11 @@
 				$fakturalinje['posttype'] = 'FL';
 				$fakturalinje['kundenr'] = $kundenr;
 				$fakturalinje['navn'] = $name;
-#				$fakturalinje['adresse1'] = ;
-#				$fakturalinje['adresse2'] = ;
-#				$fakturalinje['postnr'] = ;
+
+				$fakturalinje['adresse1'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $street), 0, 40), 40, ' '); //40 chars long
+				$fakturalinje['adresse2'] = str_pad(substr(iconv("utf-8", "ISO-8859-1//TRANSLIT", $city), 0, 40), 40, ' '); //40 chars long
+				$fakturalinje['postnr'] = str_pad(substr($zip_code, 0, 4), 4, ' '); //4 chars long
+
 				$fakturalinje['betform'] = 'BG';
 
 				//Skal leverer oppdragsgiver, blir et nr. pr. fagavdeling. XXXX, et pr. fagavdeling
