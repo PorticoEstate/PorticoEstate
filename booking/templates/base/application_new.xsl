@@ -436,19 +436,40 @@
 									<label for="field_street">
 										<xsl:value-of select="php:function('lang', 'Street')"/>
 									</label>
-									<input id="field_responsible_street" name="responsible_street" type="text" value="{application/responsible_street}" class="pure-u-1"/>
+									<input id="field_responsible_street" name="responsible_street" type="text" value="{application/responsible_street}" class="pure-u-1">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Street')"/>
+										</xsl:attribute>
+									</input>
 								</div>
 								<div class="pure-control-group">
 									<label for="field_zip_code">
 										<xsl:value-of select="php:function('lang', 'Zip code')"/>
 									</label>
-									<input type="text" name="responsible_zip_code" id="field_responsible_zip_code" value="{application/responsible_zip_code}" class="pure-u-1"/>
+									<input type="text" name="responsible_zip_code" id="field_responsible_zip_code" value="{application/responsible_zip_code}" class="pure-u-1">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Zip code')"/>
+										</xsl:attribute>
+									</input>
 								</div>
 								<div class="pure-control-group">
 									<label for="field_responsible_city">
 										<xsl:value-of select="php:function('lang', 'Postal City')"/>
 									</label>
-									<input type="text" name="responsible_city" id="field_responsible_city" value="{application/responsible_city}" class="pure-u-1"/>
+									<input type="text" name="responsible_city" id="field_responsible_city" value="{application/responsible_city}" class="pure-u-1">
+										<xsl:attribute name="data-validation">
+											<xsl:text>required</xsl:text>
+										</xsl:attribute>
+										<xsl:attribute name="data-validation-error-msg">
+											<xsl:value-of select="php:function('lang', 'Postal City')"/>
+										</xsl:attribute>
+									</input>
 								</div>
 								<p>
 									<xsl:value-of select="php:function('lang', 'In order to send the invoice we need information about either customer organization number or norwegian social security number')" />
