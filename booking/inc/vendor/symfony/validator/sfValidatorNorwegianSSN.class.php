@@ -70,7 +70,7 @@
 				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
 
-			if ($clean && $this->mod11OfNumberWithControlDigit($clean)!= 9)
+			if ($clean && !$this->mod11OfNumberWithControlDigit($clean))
 			{
 				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
@@ -85,6 +85,7 @@
 			$sumForMod = 0;
 
 			$arr = str_split($input);
+
 			$length = strlen($input);
 
 			for ($i = $length - 2; $i >= 0; --$i)
@@ -96,7 +97,10 @@
 				}
 			}
 			$result = (11 - ($sumForMod % 11));
+			$result === 11 ? 0 : $result;
+			$control_digit = end($arr);
+			$ret = $result == $control_digit ? true : false;
 
-			return $result === 11 ? 0 : $result;
+			return $ret;
 		}
 	}
