@@ -124,7 +124,7 @@ jul	bookingfrontend	no	juli
 jun	bookingfrontend	no	juni
 last modified	bookingfrontend	no	Sist endret
 location	bookingfrontend	no	Lokale
-log on	bookingfrontend	no	Logg inn
+log on	bookingfrontend	no	Innlogging for lag/ organisasjoner
 log off	bookingfrontend	no	Logg ut
 login	common	no	Logg inn
 logout	common	no	Logg ut
@@ -133,7 +133,7 @@ No valid identification returned from login	common	no	Ingen gyldig identifikasjo
 male	bookingfrontend	no	Mann
 mar	bookingfrontend	no	mars
 may	bookingfrontend	no	mai
-mo	bookingfrontend	no	ma.
+mo	bookingfrontend	no	man
 modified	bookingfrontend	no	Endret
 more info	bookingfrontend	no	Mer informasjon
 name	bookingfrontend	no	Navn

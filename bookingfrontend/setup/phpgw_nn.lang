@@ -49,7 +49,7 @@ applications	bookingfrontend	nn	Søknadar
 apr	bookingfrontend	nn	april
 archived	bookingfrontend	nn	Arkivert
 audience	bookingfrontend	nn	Målgruppe/publikum
-aug	bookingfrontend	nn	August
+aug	bookingfrontend	nn	august
 bookable resources	bookingfrontend	nn	Ressursar du kan booke
 booking	bookingfrontend	nn	Interntildeling
 booking district	bookingfrontend	nn	Område/bydel
@@ -123,7 +123,7 @@ jul	bookingfrontend	nn	juli
 jun	bookingfrontend	nn	juni
 last modified	bookingfrontend	nn	Sist endra
 location	bookingfrontend	nn	Lokale
-log on	bookingfrontend	nn	Logg inn
+log on	bookingfrontend	nn	Innlogging for lag/ organisasjonar
 log off	bookingfrontend	nn	Logg ut
 login	common	nn	Logg inn
 logout	common	nn	Logg ut
@@ -132,7 +132,7 @@ No valid identification returned from login	common	nn	Ingen gyldig identifikasjo
 male	bookingfrontend	nn	Mann
 mar	bookingfrontend	nn	mars
 may	bookingfrontend	nn	mai
-mo	bookingfrontend	nn	ma.
+mo	bookingfrontend	nn	mån
 modified	bookingfrontend	nn	Endra
 more info	bookingfrontend	nn	Meir informasjon
 name	bookingfrontend	nn	Namn
@@ -211,7 +211,7 @@ showing items {startRecord} - {endRecord} of {totalRecords}	bookingfrontend	nn	V
 social security number	bookingfrontend	nn	Fødselsnummer (11 siffer)
 status	bookingfrontend	nn	Status
 street	bookingfrontend	nn	Gate
-su	bookingfrontend	nn	søn
+su	bookingfrontend	nn	sun
 submit	bookingfrontend	nn	Lagre
 successfully created (%1) allocations:	bookingfrontend	nn	(%1) tildelingar lagra
 surname	bookingfrontend	nn	Etternamn
@@ -220,7 +220,7 @@ telephone	bookingfrontend	nn	Telefon
 terms and conditions	bookingfrontend	nn	Juridiske vilkår
 th	bookingfrontend	nn	tor
 to	bookingfrontend	nn	Til
-tu	bookingfrontend	nn	tir
+tu	bookingfrontend	nn	tys
 upload document	bookingfrontend	nn	Last opp dokument
 user	bookingfrontend	nn	Brukar
 we	bookingfrontend	nn	ons
@@ -433,6 +433,6 @@ User	bookingfrontend	nn	Brukar
 account status	bookingfrontend	nn	konto status
 last login	bookingfrontend	nn	siste innlogging
 last password change	bookingfrontend	nn	siste passordendring
-application add	bookingfrontend	nn	søknad 
+application add	bookingfrontend	nn	søknad
 back	bookingfrontend	nn	tilbake
-
+update results	bookingfrontend	nn	Oppdater søkeresultat
