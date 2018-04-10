@@ -629,6 +629,7 @@
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/create_case_message'), $data);
 		}
@@ -864,6 +865,7 @@
 
 			self::add_javascript('controller', 'controller', 'custom_ui.js');
 			self::add_javascript('controller', 'controller', 'ajax.js');
+			self::add_javascript('controller', 'controller', 'check_list_update_status.js');
 
 			self::render_template_xsl(array('check_list/fragments/check_list_menu', 'case/view_case_message'), $data);
 		}
