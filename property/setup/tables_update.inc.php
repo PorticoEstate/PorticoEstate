@@ -9993,7 +9993,7 @@
 	}
 
 	/**
-	 * Update property version from 0.9.17.725 to 0.9.17.726
+	 * Update property version from 0.9.17.726 to 0.9.17.727
 	 *
 	 */
 	$test[] = '0.9.17.726';
@@ -10020,7 +10020,7 @@
 	}
 
 	/**
-	 * Update property version from 0.9.17.726 to 0.9.17.727
+	 * Update property version from 0.9.17.727 to 0.9.17.728
 	 *
 	 */
 	$test[] = '0.9.17.727';
@@ -10044,7 +10044,7 @@
 			. ' AND fm_location1.loc1::integer > 0 '
 			. ' AND fm_location1.loc1::integer < 7900 '
 			. ' AND fm_responsibility_contact.expired_on IS NULL '
-			. ' ORDER BY fm_responsibility_contact.location_code, fm_responsibility_contact.id;';
+			. ' ORDER BY fm_responsibility_contact.location_code, fm_responsibility_contact.responsibility_role_id;';
 
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
@@ -10071,7 +10071,39 @@
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.727';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.728';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
+
+	/**
+	 * Update property version from 0.9.17.728 to 0.9.17.729
+	 *
+	 */
+	$test[] = '0.9.17.728';
+	function property_upgrade0_9_17_728()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_handyman_documents', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 8, 'nullable' => False),
+				'hs_document_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'file_path' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'file_extension' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'hm_installation_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
+				'created_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
+				'retrieved_from_handyman' => array('type' => 'int', 'precision' => 1, 'default' => '0'),
+				'retrieved_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'uc' => array()
+		));
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit()) {
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.729';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

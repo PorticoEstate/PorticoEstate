@@ -1101,7 +1101,7 @@
 		. ' AND fm_location1.loc1::integer > 0 '
 		. ' AND fm_location1.loc1::integer < 7900 '
 		. ' AND fm_responsibility_contact.expired_on IS NULL '
-		. ' ORDER BY fm_responsibility_contact.location_code, fm_responsibility_contact.id;';
+		. ' ORDER BY fm_responsibility_contact.location_code, fm_responsibility_contact.responsibility_role_id;';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
