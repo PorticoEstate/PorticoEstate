@@ -19,6 +19,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use \DOMDocument;
 use Symfony\Component\Routing\Loader\DirectoryLoader;
 use AppBundle\Service\MessageService;
+use AppBundle\Service\ParseMessageXMLService;
+
 
 /**
  * Fmlocation1 controller.
@@ -85,6 +87,19 @@ class MessageController extends Controller
 //		$response->setContent($message_service->get_message());
 //		$response->headers->set('Content-Type', 'text/plain');
 //		return $response;
+	}
+
+	/**
+	 * @Route("/re", name="fmlocation1_re")
+	 **/
+	public function reAction(){
+		$dir = $this->getParameter('handyman_file_dir');
+		$ext = $this->getParameter('handyman_export_ext');
+		$em = $this->getDoctrine()->getManager();
+
+		$xml_message_service= new ParseMessageXMLService($em, $dir, $ext);
+		$xml_message_service->parseDir();
+		return new Response('<html><body>Hei</body></html>');
 	}
 
 

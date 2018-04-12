@@ -26,18 +26,18 @@ class HmInstallationXMLModel
     /* @var HmAddressXMLModel */
     protected $Address;// Address is a handyman_address_xml_model
 
-    /* @var string */
-    protected $InstallationIDParent = 0;
+//    /* @var string */
+//    protected $InstallationIDParent = 0;
     // ID of the employee responsible for the installation, must exist in Handyman
     /* @var int */
-    protected $ResponsibleNo = 198; // 198 = Bjørn Østrem
+    protected $ResponsibleNo = 35919; // 35919 = Bjørn // TODO Figure out who to put here
     /* @var int */
     protected $Status = 1;// Status 0=New (default for equipment), 1=Installed (default for site), 2=Paused, 3=Historical
 
     /* @var $Customer HmCustomerXMLModel */
     protected $Customer;
 
-    protected $HSDepartmentID = 0; // From Handyman 12 - Kontroll pilot, 2 - Etat for bygg og eiendom
+    protected $HSDepartmentID = 2; // From Handyman 12 - Kontroll pilot, 2 - Etat for bygg og eiendom
 
 
     /**
@@ -115,13 +115,13 @@ class HmInstallationXMLModel
         return $this->Status;
     }
 
-    /**
-     * @return string
-     */
-    public function getInstallationIDParent(): string
-    {
-        return $this->InstallationIDParent;
-    }
+//    /**
+//     * @return string
+//     */
+//    public function getInstallationIDParent(): string
+//    {
+//        return $this->InstallationIDParent;
+//    }
 
     /**
      * @return HmCustomerXMLModel

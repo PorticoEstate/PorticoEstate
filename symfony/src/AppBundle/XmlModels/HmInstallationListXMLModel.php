@@ -9,6 +9,7 @@
 namespace AppBundle\XmlModels;
 
 use AppBundle\Entity\FmLocation1;
+use AppBundle\Entity\FmBuildingExportView;
 
 class HmInstallationListXMLModel
 {
@@ -43,6 +44,11 @@ class HmInstallationListXMLModel
 	public function parseBuldingExports(array $fm_building_exports){
 		/* @var $building FmBuildingExportView */
 		foreach ($fm_building_exports as $building) {
+			if ($building->getLocationCode() == '2173-01'){
+				// Some items is encoded twice...
+				$foo = html_entity_decode(html_entity_decode($building->getLoc2Name()));
+				$foo = $foo;
+			}
 			$this->Installation[] = HmInstallationXMLModel::constructFromBuildingExport($building);
 		}
 	}

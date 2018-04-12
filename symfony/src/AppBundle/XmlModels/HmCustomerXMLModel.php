@@ -13,7 +13,7 @@ class HmCustomerXMLModel
     /**
      * @var string
      */
-    protected $CustomerNo = 26; // 26 = Bergen kommune
+    protected $CustomerNo = -1; // -1 = Bergen Kommune
     /**
      * @var string
      */

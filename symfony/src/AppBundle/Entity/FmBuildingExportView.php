@@ -135,7 +135,7 @@ class FmBuildingExportView
 	 */
 	public function getLoc2Name(): string
 	{
-		return $this->loc2_name ?? '';
+		return html_entity_decode(html_entity_decode($this->loc2_name ?? ''));
 	}
 
 	/**
