@@ -10083,19 +10083,23 @@
 	$test[] = '0.9.17.728';
 	function property_upgrade0_9_17_728()
 	{
+//		'modified_on' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp')
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
 		$GLOBALS['phpgw_setup']->oProc->CreateTable(
 			'fm_handyman_documents', array(
 			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' => 8, 'nullable' => False),
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
 				'hs_document_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'file_path' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'file_extension' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
 				'hm_installation_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'created_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true),
-				'retrieved_from_handyman' => array('type' => 'int', 'precision' => 1, 'default' => '0'),
-				'retrieved_date' => array('type' => 'int', 'precision' => 8, 'nullable' => true)
+				'created_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
+				'retrieved_from_handyman' => array('type' => 'int', 'precision' => 2, 'default' => '0'),
+				'retrieved_date' => array('type' => 'timestamp', 'nullable' => True),
+				'message_id' => array('type' => 'int', 'precision' => 4, 'default' => 0),
+				'hs_order_number' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'hs_checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
 			),
 			'pk' => array('id'),
 			'ix' => array(),

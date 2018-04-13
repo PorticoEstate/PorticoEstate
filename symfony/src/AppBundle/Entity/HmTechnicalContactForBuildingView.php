@@ -74,4 +74,14 @@ class HmTechnicalContactForBuildingView
 
 		return $this;
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getContactId(): int
+	{
+		return $this->contact_id;
+	}
+
+
 }

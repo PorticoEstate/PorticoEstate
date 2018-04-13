@@ -54,7 +54,7 @@ class MessageController extends Controller
 			/* @var FmTtsTicket $fm_ticket */
 			foreach ($fm_tickets as $fm_ticket) {
 				if ($fm_ticket->__get('handyman_order_number')) {
-					$handyman_order_numbers[] = $fm_ticket->handyman_order_number;
+					$handyman_order_numbers[] = $fm_ticket->getHandymanOrderNumber();
 				}
 			}
 
@@ -69,7 +69,7 @@ class MessageController extends Controller
 
 			/* @var FmTtsTicket $fm_ticket */
 			foreach ($fm_tickets as $fm_ticket) {
-				if (in_array($fm_ticket->handyman_order_number, $arrOfIds)) {
+				if (in_array($fm_ticket->getHandymanOrderNumber(), $arrOfIds)) {
 					continue;
 				}
 
@@ -90,7 +90,7 @@ class MessageController extends Controller
 	}
 
 	/**
-	 * @Route("/re", name="fmlocation1_re")
+	 * @Route("/re", name="message_re")
 	 **/
 	public function reAction(){
 		$dir = $this->getParameter('handyman_file_dir');

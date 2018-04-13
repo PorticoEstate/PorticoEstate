@@ -47,27 +47,93 @@ class GwPreference
 	protected $resource_number;
 
 	/**
-	 * @param $property string
-	 * @return mixed
-	 **/
-	public function __get($property)
+	 * @return int
+	 */
+	public function getPreferenceOwner(): int
 	{
-		if (property_exists($this, $property)) {
-			return $this->$property;
-		}
+		return $this->preference_owner;
 	}
 
 	/**
-	 * @param $property string
-	 * @param $value mixed
-	 * @return GwPreference
-	 **/
-	public function __set($property, $value)
+	 * @param int $preference_owner
+	 */
+	public function setPreferenceOwner(int $preference_owner): void
 	{
-		if (property_exists($this, $property)) {
-			$this->$property = $value;
-		}
-
-		return $this;
+		$this->preference_owner = $preference_owner;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getPreferenceApp(): string
+	{
+		return $this->preference_app;
+	}
+
+	/**
+	 * @param string $preference_app
+	 */
+	public function setPreferenceApp(string $preference_app): void
+	{
+		$this->preference_app = $preference_app;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getPreferenceValue(): array
+	{
+		return $this->preference_value;
+	}
+
+	/**
+	 * @param array $preference_value
+	 */
+	public function setPreferenceValue(array $preference_value): void
+	{
+		$this->preference_value = $preference_value;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getResourceNumber(): string
+	{
+		return $this->resource_number;
+	}
+
+	/**
+	 * @param string $resource_number
+	 */
+	public function setResourceNumber(string $resource_number): void
+	{
+		$this->resource_number = $resource_number;
+	}
+
+
+
+//	/**
+//	 * @param $property string
+//	 * @return mixed
+//	 **/
+//	public function __get($property)
+//	{
+//		if (property_exists($this, $property)) {
+//			return $this->$property;
+//		}
+//	}
+//
+//	/**
+//	 * @param $property string
+//	 * @param $value mixed
+//	 * @return GwPreference
+//	 **/
+//	public function __set($property, $value)
+//	{
+//		if (property_exists($this, $property)) {
+//			$this->$property = $value;
+//		}
+//
+//		return $this;
+//	}
 }

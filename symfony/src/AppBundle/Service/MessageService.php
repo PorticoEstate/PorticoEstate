@@ -242,18 +242,18 @@ class MessageService
 	 */
 	private function message_to_ticket(MessageData $message, FmTtsTicket $ticket)
 	{
-		$title = '#' . $message->order_id . ' ' . implode($message->checklist_name, ' ');
-		$description = implode($message->checklist_description, ' ') . '\r\n' . 'Laget av Handyman';
-		$ticket->handyman_order_number = $message->order_id;
-		$ticket->handyman_checklist_id = $message->checklist_id;
-		$ticket->subject = $title;
-		$ticket->details = $description;
-		$ticket->location_code = $message->location_code;
-		$ticket->loc1 = $message->loc1;
-		$ticket->loc2 = $message->loc2;
-		$ticket->user_id = $message->user_id;
-		$ticket->assignedto = $message->assigned_to;
-		$ticket->contact_id = $message->contact_id;
+//		$title = '#' . $message->order_id . ' ' . implode($message->checklist_name, ' ');
+//		$description = implode($message->checklist_description, ' ') . '\r\n' . 'Laget av Handyman';
+//		$ticket->handyman_order_number = $message->order_id;
+//		$ticket->handyman_checklist_id = $message->checklist_id;
+//		$ticket->subject = $title;
+//		$ticket->details = $description;
+//		$ticket->location_code = $message->location_code;
+//		$ticket->loc1 = $message->loc1;
+//		$ticket->loc2 = $message->loc2;
+//		$ticket->user_id = $message->user_id;
+//		$ticket->assignedto = $message->assigned_to;
+//		$ticket->contact_id = $message->contact_id;
 	}
 
 	/* @var SimpleXMLElement $order
@@ -467,7 +467,7 @@ class MessageService
 
 }
 
-class MessageData
+class MessageData2
 {
 	public $user_id = null;
 	public $assigned_to = null;
@@ -488,8 +488,8 @@ class MessageData
 	public $checklist_name = array();
 	public $checklist_description = array();
 
-	/* @return MessageData */
-	public function clone(): MessageData
+	/* @return MessageData2 */
+	public function clone(): MessageData2
 	{
 		return clone $this;
 	}

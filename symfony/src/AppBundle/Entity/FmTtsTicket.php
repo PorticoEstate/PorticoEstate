@@ -181,31 +181,31 @@ class FmTtsTicket
 	 */
 	protected $handyman_order_number;
 
-	/**
-	 * @param $property string
-	 * @return mixed
-	 **/
-	public function __get($property)
-	{
-		if (property_exists($this, $property)) {
-			return $this->$property;
-		}
-	}
-
-	/**
-	 * @param $property string
-	 * @param $value mixed
-	 * @return FmTtsTicket
-	 **/
-	public function __set($property, $value)
-	{
-		if (property_exists($this, $property)) {
-			$this->$property = $value;
-			$this->modified_date = time();
-		}
-
-		return $this;
-	}
+//	/**
+//	 * @param $property string
+//	 * @return mixed
+//	 **/
+//	public function __get($property)
+//	{
+//		if (property_exists($this, $property)) {
+//			return $this->$property;
+//		}
+//	}
+//
+//	/**
+//	 * @param $property string
+//	 * @param $value mixed
+//	 * @return FmTtsTicket
+//	 **/
+//	public function __set($property, $value)
+//	{
+//		if (property_exists($this, $property)) {
+//			$this->$property = $value;
+//			$this->modified_date = time();
+//		}
+//
+//		return $this;
+//	}
 
 	public function set_default_values()
 	{
@@ -219,4 +219,293 @@ class FmTtsTicket
 		$this->entry_date = time();
 		$this->finnish_date = 0;
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getId(): int
+	{
+		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+	 */
+	public function setId(int $id): void
+	{
+		$this->id = $id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getGroupId(): int
+	{
+		return $this->group_id;
+	}
+
+	/**
+	 * @param int $group_id
+	 */
+	public function setGroupId(int $group_id): void
+	{
+		$this->group_id = $group_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getPriority(): int
+	{
+		return $this->priority;
+	}
+
+	/**
+	 * @param int $priority
+	 */
+	public function setPriority(int $priority): void
+	{
+		$this->priority = $priority;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getUserId(): int
+	{
+		return $this->user_id;
+	}
+
+	/**
+	 * @param int $user_id
+	 */
+	public function setUserId(int $user_id): void
+	{
+		$this->user_id = $user_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getAssignedto(): int
+	{
+		return $this->assignedto;
+	}
+
+	/**
+	 * @param int $assignedto
+	 */
+	public function setAssignedto(int $assignedto): void
+	{
+		$this->assignedto = $assignedto;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSubject(): string
+	{
+		return $this->subject;
+	}
+
+	/**
+	 * @param string $subject
+	 */
+	public function setSubject(string $subject): void
+	{
+		$this->subject = $subject;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getCatId(): int
+	{
+		return $this->cat_id;
+	}
+
+	/**
+	 * @param int $cat_id
+	 */
+	public function setCatId(int $cat_id): void
+	{
+		$this->cat_id = $cat_id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getStatus(): string
+	{
+		return $this->status;
+	}
+
+	/**
+	 * @param string $status
+	 */
+	public function setStatus(string $status): void
+	{
+		$this->status = $status;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDetails(): string
+	{
+		return $this->details;
+	}
+
+	/**
+	 * @param string $details
+	 */
+	public function setDetails(string $details): void
+	{
+		$this->details = $details;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLocationCode(): string
+	{
+		return $this->location_code;
+	}
+
+	/**
+	 * @param string $location_code
+	 */
+	public function setLocationCode(string $location_code): void
+	{
+		$this->location_code = $location_code;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLoc1(): string
+	{
+		return $this->loc1;
+	}
+
+	/**
+	 * @param string $loc1
+	 */
+	public function setLoc1(string $loc1): void
+	{
+		$this->loc1 = $loc1;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLoc2(): string
+	{
+		return $this->loc2;
+	}
+
+	/**
+	 * @param string $loc2
+	 */
+	public function setLoc2(string $loc2): void
+	{
+		$this->loc2 = $loc2;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getEntryDate(): int
+	{
+		return $this->entry_date;
+	}
+
+	/**
+	 * @param int $entry_date
+	 */
+	public function setEntryDate(int $entry_date): void
+	{
+		$this->entry_date = $entry_date;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getFinnishDate(): int
+	{
+		return $this->finnish_date;
+	}
+
+	/**
+	 * @param int $finnish_date
+	 */
+	public function setFinnishDate(int $finnish_date): void
+	{
+		$this->finnish_date = $finnish_date;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getContactId(): int
+	{
+		return $this->contact_id;
+	}
+
+	/**
+	 * @param int $contact_id
+	 */
+	public function setContactId(int $contact_id): void
+	{
+		$this->contact_id = $contact_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getModifiedDate(): int
+	{
+		return $this->modified_date;
+	}
+
+	/**
+	 * @param int $modified_date
+	 */
+	public function setModifiedDate(int $modified_date): void
+	{
+		$this->modified_date = $modified_date;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getHandymanChecklistId(): int
+	{
+		return $this->handyman_checklist_id;
+	}
+
+	/**
+	 * @param int $handyman_checklist_id
+	 */
+	public function setHandymanChecklistId(int $handyman_checklist_id): void
+	{
+		$this->handyman_checklist_id = $handyman_checklist_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getHandymanOrderNumber(): int
+	{
+		return $this->handyman_order_number;
+	}
+
+	/**
+	 * @param int $handyman_order_number
+	 */
+	public function setHandymanOrderNumber(int $handyman_order_number): void
+	{
+		$this->handyman_order_number = $handyman_order_number;
+	}
+
 }

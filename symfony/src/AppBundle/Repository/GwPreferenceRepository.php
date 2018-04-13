@@ -35,8 +35,8 @@ class GwPreferenceRepository extends EntityRepository
 
 		/* @var GwPreference $pref */
 		foreach ($result as $pref) {
-			if (isset($pref->preference_value['ressursnr'])) {
-				$pref->resource_number = $pref->preference_value['ressursnr'];
+			if (isset($pref->getPreferenceValue()['ressursnr'])) {
+				$pref->setResourceNumber($pref->getPreferenceValue()['ressursnr']);
 			}
 		}
 		return $result;
