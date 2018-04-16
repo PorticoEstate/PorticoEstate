@@ -12,7 +12,9 @@ use AppBundle\Entity\FmTtsTicket;
 use AppBundle\Entity\GwPreference;
 use AppBundle\Entity\HmTechnicalContactForBuildingView;
 use AppBundle\Repository\GwPreferenceRepository;
+use AppBundle\Repository\FmTtsTicketRepository;
 use DateTime;
+use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use PHPMailer\PHPMailer\Exception;
@@ -53,6 +55,7 @@ class ParseMessageXMLService
 		$files = $this->find_files();
 		/* @var $file string */
 		foreach ($files as $file) {
+			$this->tickets = array();
 			if (!file_exists($file)) {
 				return;
 			}
@@ -60,7 +63,10 @@ class ParseMessageXMLService
 			/* @var SimpleXMLElement $xml */
 			$xml = simplexml_load_file($file);
 			$this->parse_xml($xml);
+
+			$this->filter_and_save_tickets();
 		}
+		$this->delete_files($files);
 	}
 
 	private function find_files(): array
@@ -533,6 +539,72 @@ class ParseMessageXMLService
 		}
 		return null;
 	}
+
+	/**
+	 * @return array
+	 */
+	private function getHMOrderNumbers(): array
+	{
+		$result = array();
+		/* @var FmTtsTicket $fm_ticket */
+		foreach ($this->tickets as $fm_ticket) {
+			if ($fm_ticket->getHandymanOrderNumber()) {
+				$result[] = $fm_ticket->getHandymanOrderNumber();
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * @param $listOfTicketsToPreventDuplicates
+	 * @return array
+	 */
+	private function extractIdsFromTicketList($listOfTicketsToPreventDuplicates): array
+	{
+		$result = array();
+		/* @var array $ticket */
+		foreach ($listOfTicketsToPreventDuplicates as $ticket) {
+			$result[] = $ticket['handyman_order_number'];
+		}
+		return $result;
+	}
+
+	/**
+	 * Will save any new tickets, old tickets will not be duplicated
+	 */
+	private function filter_and_save_tickets()
+	{
+		$handyman_order_numbers = $this->getHMOrderNumbers();
+		/* @var FmTtsTicketRepository $rep */
+		$rep = $this->em->getRepository('AppBundle:FmTtsTicket');
+		$listOfTicketsToPreventDuplicates = $rep->findTicketsWithHandymanOrderIDasArray($handyman_order_numbers);
+		$arrOfIds = $this->extractIdsFromTicketList($listOfTicketsToPreventDuplicates);
+
+		/* @var FmTtsTicket $fm_ticket */
+		foreach ($this->tickets as $fm_ticket) {
+			if (in_array($fm_ticket->getHandymanOrderNumber(), $arrOfIds)) {
+				continue;
+			}
+
+			try {
+				$this->em->persist($fm_ticket);
+				$this->em->flush();
+				$this->em->clear();
+			} catch (OptimisticLockException $e) {
+			} catch (ORMException $e) {
+			} catch (MappingException $e) {
+			}
+		}
+	}
+
+	private function delete_files($files)
+	{
+		foreach($files as $file){
+			if(is_file($file)) {
+				unlink($file); // delete file
+			}
+		}
+	}
 }
 
 
@@ -577,7 +649,7 @@ class MessageData
 		$result->set_default_values();
 		$result->setSubject('#' . $this->order_id . ' ' . implode($this->checklist_name, ' '));
 		$result->setDetails(implode($this->checklist_description, ' ') . '\r\n' . 'Laget av Handyman');
-		$result->getHandymanOrderNumber($this->order_id);
+		$result->setHandymanOrderNumber($this->order_id);
 		$result->setHandymanChecklistId($this->checklist_id);
 		$result->setLocationCode($this->location_code);
 		$result->setLoc1($this->loc1);

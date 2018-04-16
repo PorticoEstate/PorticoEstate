@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
 
 class FmTtsTicketRepository extends EntityRepository
 {
-	public function findTicketsWithHandymanOrderIDinArray(array $ids)
+	public function findTicketsWithHandymanOrderIDasArray(array $ids)
 	{
 		if (count($ids) == 0){
 			return array();
