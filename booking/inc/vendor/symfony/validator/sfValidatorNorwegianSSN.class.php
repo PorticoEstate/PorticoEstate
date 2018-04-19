@@ -68,10 +68,10 @@
 				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
 
-//			if ($clean && !$this->mod11OfNumberWithControlDigit($clean))
-//			{
-//				throw new sfValidatorError($this, 'invalid', array('value' => $value));
-//			}
+			if ($clean && !$this->mod11OfNumberWithControlDigit($clean))
+			{
+				throw new sfValidatorError($this, 'invalid', array('value' => $value));
+			}
 
 			return $clean;
 		}
