@@ -12,6 +12,9 @@ parameters:
     handyman_export_ext: BYT
     handyman_export_schema_file: OrdersAndRegistrations.xsd
     bkbygg_user_id_to_use_when_not_found: 10
+    handyman_document_url: http://192.168.99.94:8091/Document/Download/
+    # 3978 = HM Handyman
+    bkbygg_handyman_user: 3978
 
 framework:
     #esi: ~

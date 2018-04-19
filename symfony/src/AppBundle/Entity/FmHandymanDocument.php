@@ -286,6 +286,4 @@ class FmHandymanDocument
 	{
 		$this->hs_checklist_id = $hs_checklist_id;
 	}
-
-
 }

@@ -10,6 +10,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\FmTtsTicket;
 use AppBundle\Entity\GwPreference;
+use AppBundle\Entity\GwVfs;
 use AppBundle\Entity\HmTechnicalContactForBuildingView;
 use AppBundle\Repository\GwPreferenceRepository;
 use AppBundle\Repository\FmTtsTicketRepository;
@@ -21,6 +22,7 @@ use PHPMailer\PHPMailer\Exception;
 use SimpleXMLElement;
 use Doctrine\ORM\EntityManager as EntityManager;
 use AppBundle\Entity\FmHandymanDocument;
+use AppBundle\Entity\GwConfig;
 
 class ParseMessageXMLService
 {
@@ -30,25 +32,33 @@ class ParseMessageXMLService
 	private $em;
 	private $dir;
 	private $ext;
-
+	private $hm_user;
+	private $admin_user;
 	private $messagesData = array();
 	private $tickets;
-
 	private $error_message;
+
+	/* @var GetDocumentFromHandymanService $document_service */
+	private $document_service;
 
 	/**
 	 * MessageService constructor.
 	 * @param EntityManager $em
-	 * @param $dir
-	 * @param $ext
+	 * @param string $dir Where do we pick ut the files
+	 * @param string $ext Extension to the Handyman files
+	 * @param string $url URL to web server, serving the files form Handyman
+	 * @param int $hm_user The user named Handyman in BKBygg, used as owner of images
+	 * @param int $admin_user The admin/soneleder user to use if the responsible person did not match any user
 	 */
-	public function __construct(EntityManager $em, $dir, $ext)
+	public function __construct(EntityManager $em, $dir, $ext, $url, $hm_user, $admin_user)
 	{
 		$this->em = $em;
 		$this->dir = $dir;
 		$this->ext = $ext;
+		$this->hm_user = $hm_user;
+		$this->admin_user = $admin_user;
+		$this->document_service = new GetDocumentFromHandymanService($url);
 	}
-
 
 	public function parseDir()
 	{
@@ -71,7 +81,7 @@ class ParseMessageXMLService
 
 	private function find_files(): array
 	{
-		$pattern = $this->dir . DIRECTORY_SEPARATOR . Self::FILE_PREFIX . '*.' . $this->ext;
+		$pattern = $this->dir . DIRECTORY_SEPARATOR . $this::FILE_PREFIX . '*.' . $this->ext;
 		return glob($pattern);
 	}
 
@@ -81,7 +91,7 @@ class ParseMessageXMLService
 	private function parse_xml(SimpleXMLElement $xml)
 	{
 		$orders = $xml->xpath('Order');
-		if(empty($orders)){
+		if (empty($orders)) {
 			return;
 		}
 		/* @var SimpleXMLElement $order */
@@ -221,7 +231,7 @@ class ParseMessageXMLService
 		/* @var MessageData $message */
 		foreach ($this->messagesData as $message) {
 			if ($message->validate()) {
-				$fm_ticket = $message->message_to_ticket();
+				$fm_ticket = $message->message_to_ticket() + $this->error_message;
 				$this->tickets[] = $fm_ticket;
 			}
 		}
@@ -237,9 +247,7 @@ class ParseMessageXMLService
 		$documents = $order->xpath('DocumentList/Document');
 		/* @var SimpleXMLElement $document */
 		foreach ($documents as $document) {
-			$document_data = array();
 			if ($this->document_contain_data($document)) {
-
 				try {
 					// Do this exist in the DB
 					$existing = $this->em->getRepository('AppBundle:FmHandymanDocument')->findOneBy(array('hs_document_id' => (int)$document->HSDocumentID));
@@ -275,9 +283,7 @@ class ParseMessageXMLService
 	 */
 	private function has_document_data(SimpleXMLElement $order): bool
 	{
-
 		$documents = $order->xpath('DocumentList/Document');
-
 		if (!(bool)$documents) {
 			return false;
 		}
@@ -315,7 +321,7 @@ class ParseMessageXMLService
 	 */
 	private function mine_data_from_checklist(SimpleXMLElement $checklist, SimpleXMLElement $order)
 	{
-		if(!$this->checklist_contain_data($checklist)){
+		if (!$this->checklist_contain_data($checklist)) {
 			return;
 		}
 
@@ -336,6 +342,7 @@ class ParseMessageXMLService
 			$message->loc2 = $this->getLoc2Code($installation_id);
 			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
 		} else {
+			// We are not able to figure out the building ID
 			$message->is_valid = false;
 		}
 
@@ -389,7 +396,7 @@ class ParseMessageXMLService
 			// State 2 : No
 			if ((int)$check->DataType == 3 && (int)$check->State == 2) {
 				$found_discrepancy = true;
-				$found_name = (string)$check->Instructions;
+				$found_name = (string)$check->Text . " " . (string)$check->Instructions;
 			} else {
 				$found_discrepancy = false;
 				$found_name = '';
@@ -397,23 +404,24 @@ class ParseMessageXMLService
 		}
 		return $result;
 	}
+
 	/**
 	 * @param SimpleXMLElement $checklist
 	 * @return bool
 	 */
-	private function checklist_contain_data( SimpleXMLElement $checklist): bool
+	private function checklist_contain_data(SimpleXMLElement $checklist): bool
 	{
-		if(empty($checklist->Finished)){
+		if (empty($checklist->Finished)) {
 			return false;
 		}
-		if(empty($checklist->Checklist)){
+		if (empty($checklist->Checklist)) {
 			return false;
 		}
 
 		// Was the previous item a checkbox
 		$found_discrepancy = false;
 		/* @var SimpleXMLElement $checkItem */
-		foreach($checklist->xpath('Checklist/Check') as $check){
+		foreach ($checklist->xpath('Checklist/Check') as $check) {
 			if ($found_discrepancy) {
 				// DataType 4 = Text field
 				if ((int)$check->SubItem == 1 && (int)$check->DataType == 4) {
@@ -478,10 +486,10 @@ class ParseMessageXMLService
 	 */
 	public function find_contact_id_from_location_code(string $location_code): ?int
 	{
-		/* @var HmTechnicalContactForBuildingView $contact*/
+		/* @var HmTechnicalContactForBuildingView $contact */
 		$contact = $this->em->getRepository('AppBundle:HmTechnicalContactForBuildingView')->find($location_code);
-		if(!$contact){
-			return null;
+		if (!$contact) {
+			return $this->hm_user;
 		}
 		return $contact->getContactId();
 	}
@@ -499,27 +507,27 @@ class ParseMessageXMLService
 			}
 		}
 
-		try {
-			// Get the users based on those IDs. they come from Agresso, and is located in the Instilliner->Eiendom->Ditt ressursnummer
-			/* @var GwPreferenceRepository $rep */
-			$rep = $this->em->getRepository('AppBundle:GwPreference');
-			$preferences = $rep->findUsersByAgressoID($ids);
-		} catch (ORMException $e) {
-			$this->error_message .= '\nWARNING\tUnable to find User from phpgw_preferences.';
-		}
+		// Get the users based on those IDs. they come from Agresso, and is located in the Instilliner->Eiendom->Ditt ressursnummer
+		/* @var GwPreferenceRepository $rep */
+		$rep = $this->em->getRepository('AppBundle:GwPreference');
+		$preferences = $rep->findUsersByAgressoID($ids);
+
 		/* @var MessageData $message */
 		foreach ($this->messagesData as $message) {
 			if ($message->emloyee_from_handyman) {
 				$message->user_id = $this->find_user_id_in_preferences($preferences, $message->emloyee_from_handyman);
 			} else {
-				$this->error_message .= '\nWARNING\tUser with Handyman ID ' . $message->emloyee_from_handyman . ' not found in BK Bygg.';
-				$message->is_valid = false;
+				$this->error_message .= '\Vedlikeholds teknikker med Handyman ID ' . $message->emloyee_from_handyman . 'ble ikke funnet i BK Bygg.';
+				// Set the sender as Handyman user
+				$message->user_id = $this->hm_user;
 			}
 			if ($message->soneleder_fra_handyman) {
 				$message->assigned_to = $this->find_user_id_in_preferences($preferences, $message->soneleder_fra_handyman);
 			} else {
-				$this->error_message .= '\nWARNING\tManager with Handyman ID ' . $message->soneleder_fra_handyman . ' not found in BK Bygg.';
-				$message->is_valid = false;
+				$this->error_message .= '\nManager/soneleder med Handyman ID ' . $message->soneleder_fra_handyman . ' ble ikke funnet i BK Bygg. Overført til adm.';
+				// Set the user to the ID set in config.yml, the "soneleder" who is to get all messages we can't figure out who comes from
+				$message->assigned_to = $this->admin_user;
+
 			}
 		}
 	}
@@ -574,11 +582,20 @@ class ParseMessageXMLService
 	 */
 	private function filter_and_save_tickets()
 	{
+		if (empty($this->tickets)) {
+			return;
+		}
 		$handyman_order_numbers = $this->getHMOrderNumbers();
 		/* @var FmTtsTicketRepository $rep */
 		$rep = $this->em->getRepository('AppBundle:FmTtsTicket');
 		$listOfTicketsToPreventDuplicates = $rep->findTicketsWithHandymanOrderIDasArray($handyman_order_numbers);
 		$arrOfIds = $this->extractIdsFromTicketList($listOfTicketsToPreventDuplicates);
+		$doc_rep = $this->em->getRepository('AppBundle:FmHandymanDocument');
+		$config_rep = $this->em->getRepository('AppBundle:GwConfig');
+
+		/* @var GwConfig $file_dir_config */
+		$file_dir_config = $config_rep->findOneBy(array('config_app' => 'phpgwapi', 'config_name' => 'files_dir'));
+		$file_dir = $file_dir_config->getConfigValue();
 
 		/* @var FmTtsTicket $fm_ticket */
 		foreach ($this->tickets as $fm_ticket) {
@@ -589,7 +606,22 @@ class ParseMessageXMLService
 			try {
 				$this->em->persist($fm_ticket);
 				$this->em->flush();
+				$id = $fm_ticket->getId();
+				$user_id = $fm_ticket->getUserId();
+				$hs_checklist_id = $fm_ticket->getHandymanChecklistId();
 				$this->em->clear();
+
+				$docs = $doc_rep->findBy(array('hs_checklist_id' => $hs_checklist_id));
+				// Is there files to fetch?
+				if (!empty($docs)) {
+					$dir = "/property/fmticket/" . (string)$id;
+					$full_dir = $file_dir . $dir;
+					mkdir($full_dir, 0700, true);
+					/* @var FmHandymanDocument $doc */
+					foreach ($docs as $doc) {
+						$this->create_and_save_vfs_documents($doc, $full_dir, $dir, $user_id);
+					}
+				}
 			} catch (OptimisticLockException $e) {
 			} catch (ORMException $e) {
 			} catch (MappingException $e) {
@@ -597,11 +629,61 @@ class ParseMessageXMLService
 		}
 	}
 
+
 	private function delete_files($files)
 	{
-		foreach($files as $file){
-			if(is_file($file)) {
-				unlink($file); // delete file
+//		foreach($files as $file){
+//			if(is_file($file)) {
+//				unlink($file); // delete file
+//			}
+//		}
+	}
+
+	/**
+	 * @param FmHandymanDocument $doc The Handymandocument we are to retrieve
+	 * @param string $full_dir Full path to the file
+	 * @param string $dir Part of the path as stored in phpgw_vfs
+	 * @param int $user_id The BKBygg ID of the user who created the ticket
+	 * @throws MappingException
+	 * @throws ORMException
+	 */
+	private function create_and_save_vfs_documents(FmHandymanDocument $doc, string $full_dir, string $dir, int $user_id)
+	{
+		$file_path = $this->document_service->retrieve_file_from_handyman($doc, $full_dir);
+		if (!empty($file_path)) {
+			try {
+				/* @var GwVfs $vfs */
+				$vfs = new GwVfs();
+				$vfs->setOwnerId($user_id);
+				$vfs->setCreatedbyId($user_id);
+				$vfs->setCreated(new DateTime());
+				$vfs->setSize(filesize($file_path));
+				$vfs->setMimeType(mime_content_type($file_path));
+				$vfs->setApp('property');
+				$vfs->setDirectory($dir);
+				$vfs->setName($this->document_service->sanitize_file_name($doc->getFilePath()));
+				$vfs->setVersion('0.0.0.1');
+				$this->em->persist($vfs);
+				$this->em->flush();
+				$this->em->clear();
+
+				$vfs = new GwVfs();
+				$vfs->setOwnerId($user_id);
+				$vfs->setCreatedbyId($user_id);
+				$vfs->setCreated(new DateTime());
+				$vfs->setMimeType('journal');
+				$vfs->setComment('Created');
+				$vfs->setApp('property');
+				$vfs->setDirectory($dir);
+				$vfs->setName($this->document_service->sanitize_file_name($doc->getFilePath()));
+				$vfs->setVersion('0.0.0.0');
+				$this->em->persist($vfs);
+				$this->em->flush();
+				$this->em->clear();
+			} catch (ORMException $e) {
+				throw $e;
+			} catch (MappingException $e) {
+				throw $e;
 			}
 		}
 	}
@@ -635,7 +717,8 @@ class MessageData
 		return clone $this;
 	}
 
-	public function validate(){
+	public function validate()
+	{
 		return $this->is_valid AND isset($this->user_id) AND isset($this->assigned_to) AND isset($this->location_code) AND isset($this->loc1);
 	}
 
@@ -644,7 +727,7 @@ class MessageData
 	 */
 	public function message_to_ticket(): ?FmTtsTicket
 	{
-		/* @var FmTtsTicket $result*/
+		/* @var FmTtsTicket $result */
 		$result = new FmTtsTicket();
 		$result->set_default_values();
 		$result->setSubject('#' . $this->order_id . ' ' . implode($this->checklist_name, ' '));
