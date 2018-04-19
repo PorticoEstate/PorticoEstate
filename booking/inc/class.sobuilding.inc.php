@@ -166,4 +166,27 @@
 			}
 			return $buildings;
 		}
+
+		protected function doValidate( $entity, booking_errorstack $errors )
+		{
+
+			if (count($errors) > 0)
+			{
+				return; /* Basic validation failed */
+			}
+
+			$building_id = $entity['id'] ? (int)$entity['id'] : 0;
+			$name = $this->db->db_addslashes($entity['name']);
+
+			$this->db->query("SELECT count(*) as cnt FROM bb_building
+								WHERE name = '{$name}' AND id != {$building_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$count = $this->db->f('cnt');
+
+			if($building_id && $count > 1 ||(!$building_id && $count > 0) )
+			{
+				$errors['building'] = lang('duplicate in name');
+			}
+		}
+
 	}
