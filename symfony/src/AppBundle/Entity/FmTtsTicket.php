@@ -181,6 +181,14 @@ class FmTtsTicket
 	 */
 	protected $handyman_order_number;
 
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="document_required", type="integer")
+	 */
+	protected $document_required;
+
+
 //	/**
 //	 * @param $property string
 //	 * @return mixed
@@ -399,7 +407,7 @@ class FmTtsTicket
 	/**
 	 * @return string
 	 */
-	public function getLoc2(): string
+	public function getLoc2(): ?string
 	{
 		return $this->loc2;
 	}
@@ -506,6 +514,22 @@ class FmTtsTicket
 	public function setHandymanOrderNumber(int $handyman_order_number): void
 	{
 		$this->handyman_order_number = $handyman_order_number;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getDocumentRequired(): ?int
+	{
+		return $this->document_required;
+	}
+
+	/**
+	 * @param int $document_required
+	 */
+	public function setDocumentRequired(int $document_required): void
+	{
+		$this->document_required = $document_required;
 	}
 
 }

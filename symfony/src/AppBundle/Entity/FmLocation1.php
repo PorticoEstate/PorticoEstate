@@ -230,13 +230,6 @@ class FmLocation1
     /**
      * @var integer
      *
-     * @ORM\Column(name="mva", type="integer", nullable=true)
-     */
-    private $mva;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="modified_by", type="integer", nullable=true)
      */
     private $modifiedBy;
@@ -254,14 +247,6 @@ class FmLocation1
      * @Groups({"rest"})
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="delivery_address", type="text", nullable=true)
-     */
-    private $deliveryAddress;
-
 
     /**
      * @ORM\OneToMany(targetEntity="FmLocation2", mappedBy="location1")
@@ -712,22 +697,6 @@ class FmLocation1
     /**
      * @return int
      */
-    public function getMva()
-    {
-        return $this->mva;
-    }
-
-    /**
-     * @param int $mva
-     */
-    public function setMva($mva)
-    {
-        $this->mva = $mva;
-    }
-
-    /**
-     * @return int
-     */
     public function getModifiedBy()
     {
         return $this->modifiedBy;
@@ -771,22 +740,6 @@ class FmLocation1
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDeliveryAddress()
-    {
-        return $this->deliveryAddress;
-    }
-
-    /**
-     * @param string $deliveryAddress
-     */
-    public function setDeliveryAddress($deliveryAddress)
-    {
-        $this->deliveryAddress = $deliveryAddress;
     }
 
     /**

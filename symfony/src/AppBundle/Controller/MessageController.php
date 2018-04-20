@@ -8,6 +8,9 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\FmGab;
+use AppBundle\Entity\FmLocation1;
+use AppBundle\Entity\FmLocation2;
 use Doctrine\Common\Annotations\AnnotationReader;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -20,7 +23,7 @@ use \DOMDocument;
 use Symfony\Component\Routing\Loader\DirectoryLoader;
 use AppBundle\Service\MessageService;
 use AppBundle\Service\ParseMessageXMLService;
-
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Fmlocation1 controller.
@@ -32,7 +35,8 @@ class MessageController extends Controller
 	/**
 	 * @Route("/re", name="message_re")
 	 **/
-	public function reAction(){
+	public function reAction()
+	{
 		$dir = $this->getParameter('handyman_file_dir');
 		$ext = $this->getParameter('handyman_export_ext');
 		$url = $this->getParameter('handyman_document_url');
@@ -42,7 +46,7 @@ class MessageController extends Controller
 
 		$em = $this->getDoctrine()->getManager();
 
-		$xml_message_service= new ParseMessageXMLService($em, $dir, $ext, $url, $hm_user, $admin_user);
+		$xml_message_service = new ParseMessageXMLService($em, $dir, $ext, $url, $hm_user, $admin_user);
 		$xml_message_service->parseDir();
 		return new Response('<html><body>Hei</body></html>');
 	}
@@ -50,113 +54,72 @@ class MessageController extends Controller
 
 	/**
 	 * @Route("/j", name="message_bygg")
+	 *
 	 **/
 	public function byggAction()
 	{
 
-		$tickets = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmTtsTicket')->find('123346 ');
+		$tickets = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmTtsTicket')->find('123346');
 
 		dump($tickets);
 		return new Response('<html><body>Hello!</body></html>');
 	}
 
 	/**
-	 * @Route("/vt", name="message_vt")
+	 * @Route("/show/{id}", name="message_show")
 	 */
-	public function vtAction(){
-		$dir = $this->getParameter('handyman_file_dir');
-		$file = $dir."/".'VT.csv';
-		$csv = $this->csv_to_array($file, ';');
-//		dump($csv);
-		$file2 = $dir."/".'people.csv';
-		$people = $this->csv_to_array($file2, ';');
-//		dump($people);
-		foreach($csv as &$vt){
-			foreach($people as $person){
-				if($vt['vt'] == $person['vt']){
-					$vt['id'] = $person['id'];
-				}
-			}
-		}
-		dump($csv);
+	public function showAction($id)
+	{
+		$data = array('id' => null,
+			'subject' => null,
+			'loc1' => null,
+			'loc2' => null,
+			'location_name' => null,
+			'building_name' => null,
+			'building_number' => null,
+			'gnr' => null,
+			'bnr' => null,
+			'street_name' => null,
+			'street_number' => null,
+			'documentation_required' => null);
 
-		$outcsv = array();
-		$outcsv[] = array_keys($csv[0]);
-		foreach($csv as $p){
-			$outcsv[] = array_values($p);
-		}
-		dump($outcsv);
-
-		$file3 = $dir."/".'filtered.csv';
-		$fp = fopen($file3, 'w');
-		foreach($outcsv as $row){
-			fputcsv($fp,$row,";");
-		}
-		fclose($fp);
-		return new Response('<html><body>Hello!</body></html>');
-	}
-	/**
-	 * @Route("/sl", name="message_sl")
-	 */
-	public function slAction()
-	{$dir = $this->getParameter('handyman_file_dir');
-		$file = $dir."/".'soneledere.csv';
-		$csv = $this->csv_to_array($file, ';');
-		dump($csv);
-
-		$file2 = $dir."/".'people.csv';
-		$people = $this->csv_to_array($file2, ';');
-//		dump($people);
-		foreach($csv as &$vt){
-			foreach($people as $person){
-				if($vt['soneleder'] == $person['vt']){
-					$vt['id'] = $person['id'];
-				}
-			}
-		}
-		dump($csv);
-
-		$outcsv = array();
-		$outcsv[] = array_keys($csv[0]);
-		foreach($csv as $p){
-			$outcsv[] = array_values($p);
-		}
-		dump($outcsv);
-
-		$file3 = $dir."/".'soneledere_id.csv';
-		$fp = fopen($file3, 'w');
-		foreach($outcsv as $row){
-			fputcsv($fp,$row,";");
-		}
-		fclose($fp);
-		return new Response('<html><body>Hello!</body></html>');
-	}
-
-	private function csv_to_array($filename = '', $delimiter = ',', $asHash = true) {
-		if (!(is_readable($filename) || (($status = get_headers($filename)) && strpos($status[0], '200')))) {
-			return FALSE;
-		}
-
-		$header = NULL;
-		$data = array();
-		if (($handle = fopen($filename, 'r')) !== FALSE) {
-			if ($asHash) {
-				while ($row = fgetcsv($handle, 0, $delimiter)) {
-					if (!$header) {
-						$header = $row;
-					} else {
-						$data[] = array_combine($header, $row);
-					}
-				}
-			} else {
-				while ($row = fgetcsv($handle, 0, $delimiter)) {
-					$data[] = $row;
-				}
+		/* @var FmTtsTicket $ticket */
+		$ticket = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmTtsTicket')->find($id);
+		if (!empty($ticket)) {
+			/* @var FmLocation1 $location */
+			$location = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation1')->findOneBy(array('loc1' => $ticket->getLoc1()));
+			if (!empty($location)) {
+				$data['location_name'] = $location->getLoc1Name();
 			}
 
-			fclose($handle);
+			/* @var FmLocation2 $building */
+			$building = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation2')->findOneBy(array('loc1' => $ticket->getLoc1(), 'loc2' => $ticket->getLoc2()));
+			if (!empty($building)) {
+				$data['building_name'] = $building->getLoc2Name();
+
+				$data['building_number'] = $building->getBygningsnummer();
+				/* @var FmGab $gab */
+				$gab = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmGab')->find($building->getLocationCode());
+				if (!empty($gab)) {
+					$data['gnr'] = $gab->getFormattedGab()['gnr'];
+					$data['bnr'] = $gab->getFormattedGab()['bnr'];
+				}
+				$data['street_number'] = $building->getStreetNumber();
+				$data['street_name'] = $building->getStreet()->getDescr();
+			}
+			$data['id'] = $ticket->getId();
+			$data['subject'] = $ticket->getSubject();
+			$data['loc1'] = $ticket->getLoc1();
+			$data['loc2'] = $ticket->getLoc2();
+			$data['documentation_required'] = $ticket->getDocumentRequired();
+		} else {
+			throw new NotFoundHttpException("Ticket not found");
 		}
 
-		return $data;
+		$response = new Response();
+		$response->setContent(json_encode($data));
+		$response->headers->set('Content-Type', 'application/json');
+		return $response;
 	}
+
 }
