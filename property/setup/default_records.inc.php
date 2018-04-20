@@ -1124,3 +1124,22 @@
 		. ' ORDER BY location.loc1, location.loc2;';
 
 	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
+
+	$sql = 'CREATE OR REPLACE VIEW hm_manager_for_building AS '
+		. ' SELECT fm_location1.loc1_name,'
+		. ' fm_location1.location_code,'
+		. ' sl.contact_id,'
+		. ' sl_name.first_name,'
+		. ' sl_name.last_name'
+		. ' FROM fm_location1'
+		. ' LEFT JOIN fm_responsibility_contact as sl ON sl.location_code::text = fm_location1.location_code::text'
+		. ' LEFT JOIN phpgw_contact_person as sl_name ON sl.contact_id = sl_name.person_id'
+		. ' WHERE fm_location1.category <> 99 '
+		. ' AND fm_location1.loc1::text ~ \'^\d+$\'::text '
+		. ' AND fm_location1.loc1::integer > 0 '
+		. ' AND fm_location1.loc1::integer < 7900 '
+		. ' AND sl.expired_on IS NULL '
+		. ' AND sl.responsibility_role_id = 11 '
+		. ' ORDER BY sl.location_code, sl.responsibility_role_id;';
+
+	$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);

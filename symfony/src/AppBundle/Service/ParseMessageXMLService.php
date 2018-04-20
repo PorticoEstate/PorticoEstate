@@ -11,6 +11,7 @@ namespace AppBundle\Service;
 use AppBundle\Entity\FmTtsTicket;
 use AppBundle\Entity\GwPreference;
 use AppBundle\Entity\GwVfs;
+use AppBundle\Entity\HmManagerForBuildingView;
 use AppBundle\Entity\HmTechnicalContactForBuildingView;
 use AppBundle\Repository\GwPreferenceRepository;
 use AppBundle\Repository\FmTtsTicketRepository;
@@ -231,8 +232,8 @@ class ParseMessageXMLService
 		/* @var MessageData $message */
 		foreach ($this->messagesData as $message) {
 			if ($message->validate()) {
-				$fm_ticket = $message->message_to_ticket() + $this->error_message;
-				$this->tickets[] = $fm_ticket;
+				$message->description .= $this->error_message;
+				$this->tickets[] = $message->message_to_ticket();
 			}
 		}
 	}
@@ -341,6 +342,7 @@ class ParseMessageXMLService
 			$message->loc1 = $this->getLoc1Code($installation_id);
 			$message->loc2 = $this->getLoc2Code($installation_id);
 			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
+			$message->soneleder_fra_byggid = $this->find_manager_id_from_location_code($message->loc1);
 		} else {
 			// We are not able to figure out the building ID
 			$message->is_valid = false;
@@ -494,6 +496,23 @@ class ParseMessageXMLService
 		return $contact->getContactId();
 	}
 
+	/**
+	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
+	 * @param string $location_code
+	 * @return int
+	 */
+	public function find_manager_id_from_location_code(string $location_code): ?int
+	{
+		/* @var HmManagerForBuildingView $contact */
+		$contact = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->find($location_code);
+		if (!$contact) {
+			return $this->hm_user;
+		}
+		return $contact->getContactId();
+	}
+
+
+
 	private function update_message_users()
 	{
 		$ids = array();
@@ -516,18 +535,24 @@ class ParseMessageXMLService
 		foreach ($this->messagesData as $message) {
 			if ($message->emloyee_from_handyman) {
 				$message->user_id = $this->find_user_id_in_preferences($preferences, $message->emloyee_from_handyman);
+				$message->user_id = $message->user_id ?? $this->hm_user;
 			} else {
-				$this->error_message .= '\Vedlikeholds teknikker med Handyman ID ' . $message->emloyee_from_handyman . 'ble ikke funnet i BK Bygg.';
+				$this->error_message .= '<br/>Vedlikeholds teknikker med Handyman ID ' . $message->emloyee_from_handyman . 'ble ikke funnet i BK Bygg.';
 				// Set the sender as Handyman user
 				$message->user_id = $this->hm_user;
+				$message->is_valid = false;
 			}
 			if ($message->soneleder_fra_handyman) {
 				$message->assigned_to = $this->find_user_id_in_preferences($preferences, $message->soneleder_fra_handyman);
+				// If we did not find a manager by Agresso ID, use the manager of the building
+				$message->assigned_to = $message->assigned_to ?? $message->soneleder_fra_byggid;
+				// If we still don't have a manager, use the admin set in config.yml
+				$message->assigned_to = $message->assigned_to ?? $this->admin_user;
 			} else {
-				$this->error_message .= '\nManager/soneleder med Handyman ID ' . $message->soneleder_fra_handyman . ' ble ikke funnet i BK Bygg. Overført til adm.';
+				$this->error_message .= '<br/>Manager/soneleder med Handyman ID ' . $message->soneleder_fra_handyman . ' ble ikke funnet i BK Bygg. Overført til adm.';
 				// Set the user to the ID set in config.yml, the "soneleder" who is to get all messages we can't figure out who comes from
 				$message->assigned_to = $this->admin_user;
-
+				$message->is_valid = false;
 			}
 		}
 	}
@@ -703,6 +728,7 @@ class MessageData
 	public $checklist_id = null;
 	public $order_id = null;
 	public $soneleder_fra_handyman = null;
+	public $soneleder_fra_byggid = null;
 	public $emloyee_from_handyman = null;
 	public $order_name = null;
 	public $is_valid = false;
@@ -731,7 +757,7 @@ class MessageData
 		$result = new FmTtsTicket();
 		$result->set_default_values();
 		$result->setSubject('#' . $this->order_id . ' ' . implode($this->checklist_name, ' '));
-		$result->setDetails(implode($this->checklist_description, ' ') . '\r\n' . 'Laget av Handyman');
+		$result->setDetails(implode($this->checklist_description, '<br/>') . '<br/> Laget av Handyman');
 		$result->setHandymanOrderNumber($this->order_id);
 		$result->setHandymanChecklistId($this->checklist_id);
 		$result->setLocationCode($this->location_code);
