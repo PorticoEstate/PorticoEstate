@@ -27,7 +27,7 @@
 				$this->redirect(array('menuaction' => 'bookingfrontend.uisearch.index'));
 			}
 
-			$comment = phpgw::get_var('comment', 'string', 'POST');
+			$comment = phpgw::get_var('comment', 'html', 'POST');
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST' && $comment)
 			{

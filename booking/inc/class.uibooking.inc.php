@@ -752,7 +752,7 @@
 					try
 					{
 						$receipt = $this->bo->update($booking);
-						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'string', 'POST'));
+						$this->send_mailnotification_to_group($group, lang('Booking changed'), phpgw::get_var('mail', 'html', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uibooking.show', 'id' => $booking['id']));
 					}
 					catch (booking_unauthorized_exception $e)

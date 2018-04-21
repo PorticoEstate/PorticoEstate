@@ -190,11 +190,14 @@
 
 					$(el).css('display', 'block');
 
-					if ($(el).attr("name") == 'customer_ssn') {				
-						$(el).attr("placeholder", "6 siffer (DDMMÅÅ) eller 11 siffer");
-					} else if ($(el).attr("name") == 'customer_organization_number') {
+					if ($(el).attr("name") == 'customer_ssn')
+					{
+						$(el).attr("placeholder", "11 siffer");
+					}
+					else if($(el).attr("name") == 'customer_organization_number')
+					{
 						$(el).attr("placeholder", "9 siffer");
-				}
+					}
 					$(el).focus();
 					$(el).select();
 				};

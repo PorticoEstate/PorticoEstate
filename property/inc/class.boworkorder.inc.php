@@ -216,7 +216,12 @@
 				'name' => lang('budget account'),
 				'sortable' => true
 			);
-
+			$columns['external_project_id'] = array
+				(
+				'id' => 'external_project_id',
+				'name' => lang('external project'),
+				'sortable' => true
+			);
 			return $columns;
 		}
 

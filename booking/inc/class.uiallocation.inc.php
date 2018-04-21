@@ -598,7 +598,7 @@
 					{
 						$receipt = $this->bo->update($allocation);
 						$this->bo->so->update_id_string();
-						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'string', 'POST'));
+						$this->send_mailnotification_to_organization($organization, lang('Allocation changed'), phpgw::get_var('mail', 'html', 'POST'));
 						$this->redirect(array('menuaction' => 'booking.uiallocation.show', 'id' => $allocation['id']));
 					}
 					catch (booking_unauthorized_exception $e)

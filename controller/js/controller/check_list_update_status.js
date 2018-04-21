@@ -41,7 +41,7 @@ $(document).ready(function ()
 					}
 					else
 					{
-						$(submitBnt).val("Ikke utført");
+						$(submitBnt).val("Sett status: Utført");
 						$("#update-check-list-status-value").val(1);
 						//         $("#update-check-list-status-icon.not_done").show();
 						//         $("#update-check-list-status-icon-done.done").hide();

@@ -24,6 +24,36 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
+
+
+		<!-- ==================  CHANGE STATUS FOR CHECKLIST  ===================== -->
+				<div class="box-2 select-box">
+					<xsl:variable name="action_url">
+						<xsl:value-of select="php:function('get_phpgw_link', '/index.php', 'menuaction:controller.uicheck_list.update_status,phpgw_return_as:json')" />
+					</xsl:variable>
+					<form id="update-check-list-status" class="done" action="{$action_url}" method="post">
+						<input type="hidden" name="check_list_id" value="{check_list/id}" />
+						<xsl:choose>
+							<xsl:when test="check_list/status = 0">
+								<input id='update-check-list-status-value' type="hidden" name="status" value="1" />
+								<input id="status_submit" type="submit" class="pure-button pure-button-primary bigmenubutton">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'set status: done')" />
+									</xsl:attribute>
+								</input>
+							</xsl:when>
+							<xsl:otherwise>
+								<input id='update-check-list-status-value' type="hidden" name="status" value="0" />
+								<input type="submit" class="pure-button pure-button-primary bigmenubutton">
+									<xsl:attribute name="value">
+										<xsl:value-of select="php:function('lang', 'is_executed')" />
+									</xsl:attribute>
+								</input>
+							</xsl:otherwise>
+						</xsl:choose>
+					</form>
+				</div>
+
 			<!-- ==================  CHECKLIST TAB MENU  ===================== -->
 			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable">
 				<ul class="pure-menu-list">

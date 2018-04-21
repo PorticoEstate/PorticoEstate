@@ -63,10 +63,42 @@
 			{
 				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
-			if (!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{2}(\\d{5})?$/', $clean))
+			if (!$this->getOption('full_required') && !preg_match('/^(0[1-9]|[12]\\d|3[01])([04][1-9]|[15][0-2])\\d{7}$/', $clean))
 			{
-				throw new sfValidatorError($this, 'invalid2', array('value' => $value));
+				throw new sfValidatorError($this, 'invalid', array('value' => $value));
 			}
+
+			if ($clean && !$this->mod11OfNumberWithControlDigit($clean))
+			{
+				throw new sfValidatorError($this, 'invalid', array('value' => $value));
+			}
+
 			return $clean;
+		}
+
+
+		private function mod11OfNumberWithControlDigit( $input )
+		{
+			$controlNumber = 2;
+			$sumForMod = 0;
+
+			$arr = str_split($input);
+
+			$length = strlen($input);
+
+			for ($i = $length - 2; $i >= 0; --$i)
+			{
+				$sumForMod += $arr[$i] * $controlNumber;
+				if (++$controlNumber > 7)
+				{
+					$controlNumber = 2;
+				}
+			}
+			$result = (11 - ($sumForMod % 11));
+			$result === 11 ? 0 : $result;
+			$control_digit = end($arr);
+			$ret = $result == $control_digit ? true : false;
+
+			return $ret;
 		}
 	}

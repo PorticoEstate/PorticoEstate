@@ -1,5 +1,6 @@
 <?php
 	phpgw::import_class('phpgwapi.uicommon_jquery');
+	phpgw::import_class('phpgwapi.datetime');
 
 	/**
 	 * Cherry pick selected values into a new array
@@ -110,7 +111,9 @@
 	function pretty_timestamp( $date )
 	{
 		if (empty($date))
+		{
 			return "";
+		}
 
 		if (is_array($date) && is_object($date[0]) && $date[0] instanceof DOMNode)
 		{
@@ -128,7 +131,8 @@
 		{
 			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
 		}
-		$text = date($dateformat, $timestamp);
+
+		$text = date($dateformat, $timestamp - phpgwapi_datetime::user_timezone());
 
 		return $text;
 	}

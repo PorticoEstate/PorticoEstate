@@ -35,8 +35,8 @@
 //						'column' => 'location_code'
 //					),
 					'multiple_join' => array(
-						'statement' => ' JOIN fm_locations ON fm_locations.location_code = bb_building.location_code'
-						. ' JOIN fm_location1 ON fm_location1.loc1 = fm_locations.loc1',
+						'statement' => ' LEFT JOIN fm_locations ON fm_locations.location_code = bb_building.location_code'
+						. ' LEFT JOIN fm_location1 ON fm_location1.loc1 = fm_locations.loc1',
 						'column' => 'fm_location1.part_of_town_id'
 					)),
 				'street' => array('type' => 'string', 'query' => true),
@@ -166,4 +166,27 @@
 			}
 			return $buildings;
 		}
+
+		protected function doValidate( $entity, booking_errorstack $errors )
+		{
+
+			if (count($errors) > 0)
+			{
+				return; /* Basic validation failed */
+			}
+
+			$building_id = $entity['id'] ? (int)$entity['id'] : 0;
+			$name = $this->db->db_addslashes($entity['name']);
+
+			$this->db->query("SELECT count(*) as cnt FROM bb_building
+								WHERE name = '{$name}' AND id != {$building_id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$count = $this->db->f('cnt');
+
+			if($count > 0)
+			{
+				$errors['building'] = lang('duplicate in name');
+			}
+		}
+
 	}

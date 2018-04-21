@@ -53,7 +53,7 @@
 			$this->fields = array('description', 'equipment', 'resources', 'activity_id',
 				'building_id', 'building_name', 'contact_name',
 				'contact_email', 'contact_phone', 'audience',
-				'active', 'accepted_documents');
+				'active', 'accepted_documents', 'responsible_street', 'responsible_zip_code', 'responsible_city');
 		}
 		// --- SIGURD::START EXAMPLE -- //
 
@@ -768,7 +768,7 @@
 
 			$this->install_customer_identifier_ui($application);
 
-			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
+			$application['customer_identifier_types']['ssn'] = 'SSN';
 			if ($orgnr)
 			{
 				$application['customer_identifier_type'] = 'organization_number';
@@ -847,7 +847,7 @@
 				array_set_default($_POST, 'accepted_documents', array());
 
 				$application = array_merge($application, extract_values($_POST, $this->fields));
-				$application['message'] = phpgw::get_var('comment', 'string', 'POST');
+				$application['message'] = phpgw::get_var('comment', 'html', 'POST');
 				$this->agegroup_bo->extract_form_data($application);
 				$this->extract_customer_identifier($application);
 
@@ -899,7 +899,7 @@
 			$audience = $this->audience_bo->fetch_target_audience($top_level_activity);
 			$audience = $audience['results'];
 			$this->install_customer_identifier_ui($application);
-			$application['customer_identifier_types']['ssn'] = 'Date of birth or SSN';
+			$application['customer_identifier_types']['ssn'] = 'SSN';
 			$application['audience_json'] = json_encode(array_map('intval', $application['audience']));
 			//test
 
@@ -1044,7 +1044,7 @@
 				}
 				elseif ($_POST['comment'])
 				{
-					$application['comment'] = phpgw::get_var('comment', 'string', 'POST');
+					$application['comment'] = phpgw::get_var('comment', 'html', 'POST');
 					$this->add_comment($application, $application['comment']);
 					$update = true;
 					$notify = true;

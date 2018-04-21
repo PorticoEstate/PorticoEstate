@@ -461,6 +461,30 @@
 									</span>
 								</xsl:if>
 							</div>
+							<div class="pure-control-group">
+								<label for="field_street">
+									<xsl:value-of select="php:function('lang', 'Street')"/>
+								</label>
+								<span>
+									<xsl:value-of select="application/responsible_street"/>
+								</span>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_zip_code">
+									<xsl:value-of select="php:function('lang', 'Zip code')"/>
+								</label>
+								<span>
+									<xsl:value-of select="application/responsible_zip_code"/>
+								</span>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_responsible_city">
+									<xsl:value-of select="php:function('lang', 'Postal City')"/>
+								</label>
+								<span>
+									<xsl:value-of select="application/responsible_city"/>
+								</span>
+							</div>
 						</div>
 					</div>
 					<div class="pure-g">

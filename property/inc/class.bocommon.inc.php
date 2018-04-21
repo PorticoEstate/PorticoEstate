@@ -1922,18 +1922,18 @@
 					if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
 					{
 						$test = $entry[$name[$i]];
-						if(ctype_digit((string)$test))
-						{
-							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
-							{
-								$header[$descr[$i]] = 'integer';
-							}
-						}
-						else if(is_numeric((string)$test))
+						if(is_float($test))
 						{
 							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
 							{
 								$header[$descr[$i]] = '0.00';
+							}
+						}
+						else if(ctype_digit((string)$test))
+						{
+							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+							{
+								$header[$descr[$i]] = 'integer';
 							}
 						}
 						else
@@ -1944,7 +1944,7 @@
 				}
 
 				$loop++;
-				if($loop > 40)
+				if($loop > 4)
 				{
 					break;
 				}
@@ -1972,15 +1972,15 @@
 			{
 				$_identificator = array_values($identificator);
 				$i = 0;
-				foreach ($formats as $key => $format)
+				foreach ($header as $key => $format)
 				{
 					if(!empty($_identificator[$i]))
 					{
-						$_header[$_identificator[$i]] = $format;
+						$_header[$_identificator[$i]] = 'string';
 					}
 					else
 					{
-						$_header[$i] = $format;
+						$_header[$i] = 'string';
 					}
 					$i++;
 				}

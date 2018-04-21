@@ -542,6 +542,18 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'fm_b_account_user' => array(
+			'fd' => array(
+				'b_account_id' => array('type' => 'varchar', 'precision' => '20', 'nullable' => False),
+				'user_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'modified_by' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'modified_on' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+			),
+			'pk' => array('b_account_id', 'user_id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array()
+		),
 		'fm_workorder' => array(
 			'fd' => array(
 				'id' => array('type' => 'int', 'precision' => '8', 'nullable' => False),
@@ -1442,7 +1454,10 @@
 				'periodization_start' => array('type' => 'int', 'precision' => '4', 'nullable' => True),
 				'manual_record' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
 				'line_text' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
-				'external_voucher_id' => array('type' => 'int', 'precision' => '8', 'nullable' => True)
+				'external_voucher_id' => array('type' => 'int', 'precision' => '8', 'nullable' => True),
+				'external_updated' => array('type' => 'int', 'precision' => '2', 'nullable' => True),
+				'netto_belop' => array('type' => 'decimal', 'precision' => '20', 'scale' => '2',
+					'nullable' => True),
 			),
 			'pk' => array('id'),
 			'ix' => array(),
