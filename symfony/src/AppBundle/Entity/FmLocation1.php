@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Events;
@@ -115,14 +116,6 @@ class FmLocation1
     /**
      * @var string
      *
-     * @ORM\Column(name="merknader_2", type="text", nullable=true)
-     * @Groups({"rest"})
-     */
-    private $merknader2;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="adresse1", type="string", length=50, nullable=true)
      * @Groups({"rest"})
      */
@@ -167,65 +160,6 @@ class FmLocation1
      * @Groups({"rest"})
      */
     private $aktiv;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="olje_tank", type="integer", nullable=true)
-     * @Groups({"rest"})
-     */
-    private $oljeTank;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="gass_tank", type="integer", nullable=true)
-     */
-    private $gassTank;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="septik_tank", type="integer", nullable=true)
-     * @Groups({"rest"})
-     */
-    private $septikTank;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="brann_hydrant", type="integer", nullable=true)
-     */
-    private $brannHydrant;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="area_gross", type="decimal", precision=20, scale=2, nullable=true)
-     * @Groups({"rest"})
-     */
-    private $areaGross = '0.00';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="bronn", type="integer", nullable=true)
-     */
-    private $bronn;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="fett_avskiller", type="integer", nullable=true)
-     */
-    private $fettAvskiller;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="slam_avskiller", type="integer", nullable=true)
-     */
-    private $slamAvskiller;
 
     /**
      * @var integer
@@ -343,7 +277,7 @@ class FmLocation1
     }
 
     /**
-     * @return /FmLocation1Category
+     * @return FmLocation1Category
      */
     public function getCategory1()
     {
@@ -351,7 +285,7 @@ class FmLocation1
     }
 
     /**
-     * @param mixed $category1
+     * @param FmLocation1Category $category1
      */
     public function setCategory1(FmLocation1Category $category1)
     {
@@ -457,22 +391,6 @@ class FmLocation1
     /**
      * @return string
      */
-    public function getMerknader2()
-    {
-        return $this->merknader2;
-    }
-
-    /**
-     * @param string $merknader2
-     */
-    public function setMerknader2($merknader2)
-    {
-        $this->merknader2 = $merknader2;
-    }
-
-    /**
-     * @return string
-     */
     public function getAdresse1()
     {
         return $this->adresse1;
@@ -564,134 +482,6 @@ class FmLocation1
     public function setAktiv($aktiv)
     {
         $this->aktiv = $aktiv;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOljeTank()
-    {
-        return $this->oljeTank;
-    }
-
-    /**
-     * @param int $oljeTank
-     */
-    public function setOljeTank($oljeTank)
-    {
-        $this->oljeTank = $oljeTank;
-    }
-
-    /**
-     * @return int
-     */
-    public function getGassTank()
-    {
-        return $this->gassTank;
-    }
-
-    /**
-     * @param int $gassTank
-     */
-    public function setGassTank($gassTank)
-    {
-        $this->gassTank = $gassTank;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSeptikTank()
-    {
-        return $this->septikTank;
-    }
-
-    /**
-     * @param int $septikTank
-     */
-    public function setSeptikTank($septikTank)
-    {
-        $this->septikTank = $septikTank;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBrannHydrant()
-    {
-        return $this->brannHydrant;
-    }
-
-    /**
-     * @param int $brannHydrant
-     */
-    public function setBrannHydrant($brannHydrant)
-    {
-        $this->brannHydrant = $brannHydrant;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAreaGross()
-    {
-        return $this->areaGross;
-    }
-
-    /**
-     * @param string $areaGross
-     */
-    public function setAreaGross($areaGross)
-    {
-        $this->areaGross = $areaGross;
-    }
-
-    /**
-     * @return int
-     */
-    public function getBronn()
-    {
-        return $this->bronn;
-    }
-
-    /**
-     * @param int $bronn
-     */
-    public function setBronn($bronn)
-    {
-        $this->bronn = $bronn;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFettAvskiller()
-    {
-        return $this->fettAvskiller;
-    }
-
-    /**
-     * @param int $fettAvskiller
-     */
-    public function setFettAvskiller($fettAvskiller)
-    {
-        $this->fettAvskiller = $fettAvskiller;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSlamAvskiller()
-    {
-        return $this->slamAvskiller;
-    }
-
-    /**
-     * @param int $slamAvskiller
-     */
-    public function setSlamAvskiller($slamAvskiller)
-    {
-        $this->slamAvskiller = $slamAvskiller;
     }
 
     /**
