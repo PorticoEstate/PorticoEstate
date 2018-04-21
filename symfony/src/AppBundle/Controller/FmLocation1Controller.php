@@ -30,20 +30,6 @@ use Doctrine\Common\Annotations\AnnotationReader;
  */
 class FmLocation1Controller extends Controller
 {
-    /**
-     * @Route("/i", name="fmlocation1_locations")
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-        $fmLocation1s = $em->getRepository('AppBundle:FmLocation1')->findAll();
-
-        return $this->render('FmLocation1/index.html.twig', array(
-            'fmLocation1s' => $fmLocation1s,
-        ));
-    }
-
-
 	private function generateSerializer(): Serializer
 	{
 		$encoders = array(new XmlEncoder(), new JsonEncoder());
@@ -72,39 +58,6 @@ class FmLocation1Controller extends Controller
 	}
 
 	/**
-	 * Finds and displays a fmLocation1 entity.
-	 *
-	 * @Route("/{loc1}/show", name="fmlocation1_show")
-	 * @Method("GET")
-	 */
-	public function showAction($loc1)
-	{
-		$em = $this->getDoctrine()->getManager();
-		$fmLocation1 = $em->getRepository('AppBundle:FmLocation1')->find($loc1);
-		$deleteForm = $this->createDeleteForm($fmLocation1);
-
-		return $this->render('fmlocation1/show.html.twig', array(
-			'fmLocation1' => $fmLocation1,
-			'delete_form' => $deleteForm->createView(),
-		));
-	}
-
-	/**
-	 * @Route("/bar", name="fmlocation1_bar")
-	 */
-	public function barAction()
-	{
-		$fmLocations = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation1')->findAll();
-		$service = new FmLocationService($this->getDoctrine()->getManager());
-		$service->addCustomFieldsForProperties($fmLocations);
-		dump($fmLocations[400]->getCustomAttributes());
-		dump($fmLocations[13]->getValue('aktiv'));
-
-		//        $repository->clear();
-		return new Response('<html><body>Hello!</body></html>');
-	}
-
-	/**
 	 * @Route("/xml", name="fmlocation1_xml")
 	 */
 	public function xmlExportAction()
@@ -119,32 +72,5 @@ class FmLocation1Controller extends Controller
 		$response->setContent($xml);
 		$response->headers->set('Content-Type', 'application/xml');
 		return $response;
-	}
-
-	/**
-	 * @Route("/j", name="fmlocation1_bygg")
-	 **/
-	public function byggAction()
-	{
-
-        $buildings = $this->getDoctrine()->getManager()->getRepository('AppBundle:EbeByggoversiktBrutto')->findAll();
-
-		dump($buildings);
-		return new Response('<html><body>Hello!</body></html>');
-	}
-
-
-	/**
-	 * @Route("/y", name="fmlocation1_yeah")
-	 **/
-	public function yeahAction(){
-		/* @var FmLocation2 $loc2_0 */
-		$loc2_0 = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation2')->findLocationWithAddress('1102-01');
-		dump($loc2_0);
-		/* @var FmLocation2 $loc2_1 */
-		$loc2_1 = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmLocation2')->find('1102-01');
-		dump($loc2_1);
-		dump($loc2_1->getLocation1()->getLoc1Name());
-		return new Response('<html><body>yeahAction!</body></html>');
 	}
 }

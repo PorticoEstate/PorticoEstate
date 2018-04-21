@@ -3,7 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\ArrayCollection as ArrayCollection;
+//use Doctrine\ORM\ArrayCollection
+use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 
 /**
  * FmStreetaddress

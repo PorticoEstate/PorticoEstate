@@ -917,13 +917,17 @@ class FmLocation2
      */
     public function getStreet(): FmStreetaddress
     {
-        return $this->street;
+
+        if(empty($this->street)){
+        	return new FmStreetaddress();
+		}
+		return $this->street;
     }
 
 	/**
 	 * @return string
 	 */
-	public function getBygningsnummer(): string
+	public function getBygningsnummer(): ?string
 	{
 		return $this->bygningsnummer;
 	}
