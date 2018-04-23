@@ -84,4 +84,34 @@
 			}
 			return $values;
 		}
-	}
+
+		public function populate_grid_data($filter_top_level = 0)
+		{
+			if (phpgw::get_var('filter_top_level', 'int', 'REQUEST', 0) == 1)
+			{
+				$filter_top_level = 1;
+			}
+			$activities = $this->read();
+
+			$results = array();
+			$total_records = 0;
+			foreach ($activities['results'] as $activity) {
+				if ($filter_top_level && $activity['parent_id'] != null)
+				{
+					continue;
+				}
+				$results[] = $activity;
+				$total_records++;
+			}
+
+			$data = array(
+				'total_records' => $total_records,
+				'start' => $activities['start'],
+				'sort' => $activities['sort'],
+				'dir' => $activities['dir'],
+				'results' => $results,
+			);
+			return $data;
+		}
+
+}

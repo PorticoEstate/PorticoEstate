@@ -3701,3 +3701,49 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.31 to 0.2.32
+	 *
+	 */
+	$test[] = '0.2.31';
+	function booking_upgrade0_2_31()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_rescategory', array(
+				'fd' => array(
+					'id' => array('type' => 'auto', 'nullable' => false),
+					'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+					'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
+				),
+				'pk' => array('id'),
+				'fk' => array(),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_rescategory_activity', array(
+				'fd' => array(
+					'rescategory_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				),
+				'pk' => array('rescategory_id', 'activity_id'),
+				'fk' => array(
+					'bb_rescategory' => array('rescategory_id' => 'id'),
+					'bb_activity' => array('activity_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.32';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}
+

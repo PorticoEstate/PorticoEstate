@@ -249,6 +249,12 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uipermission_root.index',
 								'appname' => 'booking'))
 						),
+						'rescategory' => array
+							(
+							'text' => lang('Resource categories'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uirescategory.index',
+								'appname' => 'booking'))
+						),
 						'activity' => array
 							(
 							'text' => lang('Activity'),
@@ -375,6 +381,12 @@
 						'text' => lang('Configure Access Permissions'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'preferences.uiadmin_acl.list_acl',
 							'acl_app' => 'booking'))
+					),
+					'rescategory' => array
+						(
+						'text' => lang('Resource categories'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uirescategory.index',
+							'appname' => 'booking'))
 					),
 					'activity' => array
 						(
