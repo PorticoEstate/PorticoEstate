@@ -82,6 +82,24 @@ class FmBuildingExportView
 	 */
 	protected $poststed;
 
+
+	/**
+	 * @var string
+	 */
+	protected $manager_name = '';
+	/**
+	 * @var string
+	 */
+	protected $manager_agresso_id = '';
+	/**
+	 * @var int
+	 */
+	protected $manager_user_id = null;
+	/**
+	 * @var int
+	 */
+	protected $manager_account_id = null;
+
 	/**
 	 * @return string
 	 */
@@ -241,5 +259,70 @@ class FmBuildingExportView
 	{
 		$this->poststed = $poststed;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getManagerName(): string
+	{
+		return $this->manager_name;
+	}
+
+	/**
+	 * @param string $manager_name
+	 */
+	public function setManagerName(string $manager_name): void
+	{
+		$this->manager_name = $manager_name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getManagerAgressoId(): string
+	{
+		return $this->manager_agresso_id;
+	}
+
+	/**
+	 * @param string $manager_agresso_id
+	 */
+	public function setManagerAgressoId(string $manager_agresso_id): void
+	{
+		$this->manager_agresso_id = $manager_agresso_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getManagerUserId(): ?int
+	{
+		return $this->manager_user_id;
+	}
+
+	/**
+	 * @param int $manager_user_id
+	 */
+	public function setManagerUserId(int $manager_user_id): void
+	{
+		$this->manager_user_id = $manager_user_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getManagerAccountId(): ?int
+	{
+		return $this->manager_account_id;
+	}
+
+	/**
+	 * @param int $manager_account_id
+	 */
+	public function setManagerAccountId(int $manager_account_id): void
+	{
+		$this->manager_account_id = $manager_account_id;
+	}
+
 
 }

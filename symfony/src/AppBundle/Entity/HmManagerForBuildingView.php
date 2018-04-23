@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * FmTtsTicket
  *
  * @ORM\Table(name="hm_manager_for_building")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\HmManagerForBuildingRepository")
  */
 class HmManagerForBuildingView
 {
@@ -51,29 +51,13 @@ class HmManagerForBuildingView
 	protected $last_name;
 
 	/**
-	 * @param $property string
-	 * @return mixed
-	 **/
-	public function __get($property)
-	{
-		if (property_exists($this, $property)) {
-			return $this->$property;
-		}
-	}
+	 * @ORM\ManyToOne(targetEntity = "GwAccount")
+	 * @ORM\JoinColumn(name = "contact_id", referencedColumnName = "person_id")
+	 */
+	protected $account;
 
-	/**
-	 * @param $property string
-	 * @param $value mixed
-	 * @return HmManagerForBuilding
-	 **/
-	public function __set($property, $value)
-	{
-		if (property_exists($this, $property)) {
-			$this->$property = $value;
-		}
-
-		return $this;
-	}
+	/* @var string $agresso_id */
+	protected $agresso_id;
 
 	/**
 	 * @return int
@@ -82,4 +66,94 @@ class HmManagerForBuildingView
 	{
 		return $this->contact_id;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getLocationCode(): string
+	{
+		return $this->location_code;
+	}
+
+	/**
+	 * @param string $location_code
+	 */
+	public function setLocationCode(string $location_code): void
+	{
+		$this->location_code = $location_code;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLoc1Name(): string
+	{
+		return $this->loc1_name;
+	}
+
+	/**
+	 * @param string $loc1_name
+	 */
+	public function setLoc1Name(string $loc1_name): void
+	{
+		$this->loc1_name = $loc1_name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFirstName(): string
+	{
+		return $this->first_name;
+	}
+
+	/**
+	 * @param string $first_name
+	 */
+	public function setFirstName(string $first_name): void
+	{
+		$this->first_name = $first_name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLastName(): string
+	{
+		return $this->last_name;
+	}
+
+	/**
+	 * @param string $last_name
+	 */
+	public function setLastName(string $last_name): void
+	{
+		$this->last_name = $last_name;
+	}
+
+	/**
+	 * @return GwAccount
+	 */
+	public function getAccount(): GwAccount
+	{
+		return $this->account;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAgressoId(): string
+	{
+		return $this->agresso_id ?? '';
+	}
+
+	/**
+	 * @param string $agresso_id
+	 */
+	public function setAgressoId(string $agresso_id): void
+	{
+		$this->agresso_id = $agresso_id;
+	}
+
+
 }
