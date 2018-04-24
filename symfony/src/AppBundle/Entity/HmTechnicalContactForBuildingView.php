@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * FmTtsTicket
  *
  * @ORM\Table(name="hm_technical_contact_for_building")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\HmTechnicalContactForBuildingRepository")
  */
 class HmTechnicalContactForBuildingView
 {
@@ -49,6 +49,12 @@ class HmTechnicalContactForBuildingView
 	 * @ORM\Column(name="last_name", type="string", length=50)
 	 */
 	protected $last_name;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity = "GwAccount")
+	 * @ORM\JoinColumn(name = "contact_id", referencedColumnName = "person_id")
+	 */
+	protected $account;
 
 	/**
 	 * @param $property string

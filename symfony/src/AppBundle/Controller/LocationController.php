@@ -28,11 +28,11 @@ use Doctrine\ORM\Query;
 //use AppBundle\Component\Serializer\CustomObjectNormalizer;
 
 /**
- * Fmlocation1 controller.
+ * Location1 controller.
  *
- * @Route("fmlocation1")
+ * @Route("location")
  */
-class FmLocation1Controller extends Controller
+class LocationController extends Controller
 {
 	private function generateSerializer(): Serializer
 	{
@@ -62,11 +62,11 @@ class FmLocation1Controller extends Controller
 //	}
 
 	/**
-	 * @Route("/xml", name="fmlocation1_xml")
+	 * @Route("/xml", name="Location_xml")
 	 */
 	public function xmlExportAction()
 	{
-		$fm_buildings = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmBuildingExportView')->findAll();
+		$fm_buildings = $this->getBuildings();
 		$buildings = HmInstallationListXMLModel::construct_from_building_export($fm_buildings);
 		$encoders = array(new XmlEncoder('InstallationList'));
 		$normalizers = array(new ObjectNormalizer());
@@ -78,25 +78,20 @@ class FmLocation1Controller extends Controller
 		return $response;
 	}
 
-	/**
-	 * @Route("/foo", name="fmlocation1_foo")
-	 */
-	public function fooAction()
+
+	private function getBuildings()
 	{
 		$buildings = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmBuildingExportView')->findAll();
-		$managers = $this->getManagers();
+		$managers = $this->getDoctrine()->getManager()->getRepository('AppBundle:HmManagerForBuildingView')->findAllIncludingAccount();
 		$this->addAgressoIDToManager($managers);
 		/* @var FmBuildingExportView $building */
 		foreach ($buildings as $building) {
-			$this->findManager($building, $managers);
+			$this->addManagerDataToBuilding($building, $managers);
 		}
-
-		dump($buildings);
-
-		return new Response('<html><body>Hei</body></html>');
+		return $buildings;
 	}
 
-	private function findManager(FmBuildingExportView &$building, array $managers)
+	private function addManagerDataToBuilding(FmBuildingExportView &$building, array $managers)
 	{
 		/* @var HmManagerForBuildingView $manager */
 		foreach ($managers as $manager) {
@@ -139,13 +134,5 @@ class FmLocation1Controller extends Controller
 				unset($managers[$key]);
 			}
 		}
-	}
-
-	/**
-	 * @return array
-	 */
-	private function getManagers(): array
-	{
-		return $this->getDoctrine()->getManager()->getRepository('AppBundle:HmManagerForBuildingView')->findAllIncludingAccount();
 	}
 }

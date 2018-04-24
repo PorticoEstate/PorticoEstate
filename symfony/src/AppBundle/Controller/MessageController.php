@@ -12,6 +12,7 @@ use AppBundle\Entity\FmGab;
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation2;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\ORM\ORMException;
 use SimpleXMLElement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\FmTtsTicket;
@@ -45,9 +46,26 @@ class MessageController extends Controller
 		$admin_user = $this->getParameter('bkbygg_user_id_to_use_when_not_found');
 		$em = $this->getDoctrine()->getManager();
 
-		$xml_message_service = new ParseMessageXMLService($em, $dir, $ext, $url, $hm_user, $admin_user);
+		try {
+			$xml_message_service = new ParseMessageXMLService($em, $dir, $ext, $url, $hm_user, $admin_user);
+		} catch (ORMException $e) {
+			dump($e);
+			return new Response('<html><body>Hello!</body></html>');
+//			$response = new Response();
+//			$response->setContent('<data><success>false</success><error>Failed to parse Handyman XML files</error></data>');
+//			$response->headers->set('Content-Type', 'application/xml');
+//			return $response;
+		}
+
 		$xml_message_service->parseDir();
-		return new Response('<html><body>Hei</body></html>');
+
+		dump($xml_message_service);
+		return new Response('<html><body>Hello!</body></html>');
+
+//		$response = new Response();
+//		$response->setContent('<data><success>true</success></data>');
+//		$response->headers->set('Content-Type', 'application/xml');
+//		return $response;
 	}
 
 

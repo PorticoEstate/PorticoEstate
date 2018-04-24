@@ -9,6 +9,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\FmTtsTicket;
+use AppBundle\Entity\GwAccount;
 use AppBundle\Entity\GwPreference;
 use AppBundle\Entity\GwVfs;
 use AppBundle\Entity\HmManagerForBuildingView;
@@ -38,9 +39,13 @@ class ParseMessageXMLService
 	private $messagesData = array();
 	private $tickets;
 	private $error_message;
+	private $current_file = '';
 
 	/* @var GetDocumentFromHandymanService $document_service */
 	private $document_service;
+
+	/* @var array<GwPreference> $users_with_agresso_id */
+	private $users_with_agresso_id;
 
 	/**
 	 * MessageService constructor.
@@ -50,6 +55,7 @@ class ParseMessageXMLService
 	 * @param string $url URL to web server, serving the files form Handyman
 	 * @param int $hm_user The user named Handyman in BKBygg, used as owner of images
 	 * @param int $admin_user The admin/soneleder user to use if the responsible person did not match any user
+	 * @throws ORMException
 	 */
 	public function __construct(EntityManager $em, $dir, $ext, $url, $hm_user, $admin_user)
 	{
@@ -59,6 +65,7 @@ class ParseMessageXMLService
 		$this->hm_user = $hm_user;
 		$this->admin_user = $admin_user;
 		$this->document_service = new GetDocumentFromHandymanService($url);
+		$this->users_with_agresso_id = $this->em->getRepository('AppBundle:GwPreference')->findUsersWithPropertyResourceNr();
 	}
 
 	public function parseDir()
@@ -66,6 +73,7 @@ class ParseMessageXMLService
 		$files = $this->find_files();
 		/* @var $file string */
 		foreach ($files as $file) {
+			$this->current_file = $file;
 			$this->tickets = array();
 			if (!file_exists($file)) {
 				return;
@@ -341,11 +349,12 @@ class ParseMessageXMLService
 			$message->location_code = $installation_id;
 			$message->loc1 = $this->getLoc1Code($installation_id);
 			$message->loc2 = $this->getLoc2Code($installation_id);
-			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
-			$message->soneleder_fra_byggid = $this->find_manager_id_from_location_code($message->loc1);
+//			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
+//			$message->soneleder_fra_byggid = $this->find_manager_id_from_location_code($message->loc1);
 		} else {
 			// We are not able to figure out the building ID
 			$message->is_valid = false;
+			return;
 		}
 
 		// Loop through all Checklists to collect one title and one message for each checklist containing a diversion
@@ -480,94 +489,120 @@ class ParseMessageXMLService
 		}
 		return '';
 	}
+//
+//	/**
+//	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
+//	 * @param string $location_code
+//	 * @return int
+//	 */
+//	public function find_contact_id_from_location_code(string $location_code): ?int
+//	{
+//		/* @var HmTechnicalContactForBuildingView $contact */
+//		$contact = $this->em->getRepository('AppBundle:HmTechnicalContactForBuildingView')->find($location_code);
+//		if (!$contact) {
+//			return $this->hm_user;
+//		}
+//		return $contact->getContactId();
+//	}
+//
+//	/**
+//	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
+//	 * @param string $location_code
+//	 * @return int
+//	 */
+//	public function find_manager_id_from_location_code(string $location_code): ?int
+//	{
+//		/* @var HmManagerForBuildingView $contact */
+//		$contact = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->find($location_code);
+//
+//		if (!$contact) {
+//			return $this->hm_user;
+//		}
+//		return $contact->getContactId();
+//	}
 
 	/**
-	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
-	 * @param string $location_code
+	 * @param MessageData $message
 	 * @return int
 	 */
-	public function find_contact_id_from_location_code(string $location_code): ?int
+	private function get_user_id(MessageData $message): int
 	{
-		/* @var HmTechnicalContactForBuildingView $contact */
-		$contact = $this->em->getRepository('AppBundle:HmTechnicalContactForBuildingView')->find($location_code);
-		if (!$contact) {
+		// Who created this message, as account ID
+		// We have the agresso ID for the techinican and a default user "Handyman"
+
+		/* @var GwPreference $pref */
+		$pref = $this->find_account_id_in_preferences($message->emloyee_from_handyman);
+		if ($pref) {
+			return $pref->getPreferenceOwner();
+		} else {
+			$message->post_message .= '<br/>Vedlikeholds teknikker med Agresso ID ' . $message->emloyee_from_handyman . ' ble ikke funnet i BK Bygg.';
 			return $this->hm_user;
 		}
-		return $contact->getContactId();
 	}
 
 	/**
-	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
-	 * @param string $location_code
+	 * @param MessageData $message
 	 * @return int
 	 */
-	public function find_manager_id_from_location_code(string $location_code): ?int
+	private function get_contact_id(MessageData $message): int
 	{
-		/* @var HmManagerForBuildingView $contact */
-		$contact = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->find($location_code);
-		if (!$contact) {
-			return $this->hm_user;
+		// Who is the recipient of the Ticket
+		// This is a contact user, and not a account ID in BK Bygg
+
+		// We have the agresso id for the manager in Handyman, the building number, and the fallback manager in bk bygg.
+		/* @var GwPreference $pref */
+		$pref = $this->find_account_id_in_preferences($message->soneleder_fra_handyman);
+		$contact_id = null;
+		if ($pref) {
+			$contact_id = $pref->getAccount()->getPersonId();
 		}
-		return $contact->getContactId();
+
+		if (!$contact_id) {
+
+			/* @var HmManagerForBuildingView $contact */
+			$manager = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->find($message->loc1);
+			if(!empty($manager)){
+				$contact_id = $manager->getAccount()->getPersonId();
+				$message->post_message .= '<br/>Manager med Agresso ID ' . $message->soneleder_fra_handyman . ' ble ikke funnet i BK Bygg. Overført til Soneleder.';
+			}
+		}
+		if(!$contact_id){
+			/* @var GwAccount $account */
+			$account = $this->em->getRepository('AppBundle:GwAccount')->findOneBy(array('account_id'=>$this->admin_user));
+			$contact_id = $account->getPersonId();
+			$message->post_message .= '<br/>Hverken Manager eller Soneleder for bygget ble funnet. Overført til admin.';
+		}
+
+		return $contact_id;
 	}
-
-
 
 	private function update_message_users()
 	{
-		$ids = array();
-		/* @var MessageData $message */
-		foreach ($this->messagesData as $message) {
-			if ($message->emloyee_from_handyman) {
-				$ids[] = $message->emloyee_from_handyman;
-			}
-			if ($message->soneleder_fra_handyman) {
-				$ids[] = $message->soneleder_fra_handyman;
-			}
+		if (empty($this->messagesData)) {
+			return;
 		}
 
-		// Get the users based on those IDs. they come from Agresso, and is located in the Instilliner->Eiendom->Ditt ressursnummer
-		/* @var GwPreferenceRepository $rep */
-		$rep = $this->em->getRepository('AppBundle:GwPreference');
-		$preferences = $rep->findUsersByAgressoID($ids);
-
 		/* @var MessageData $message */
 		foreach ($this->messagesData as $message) {
-			if ($message->emloyee_from_handyman) {
-				$message->user_id = $this->find_user_id_in_preferences($preferences, $message->emloyee_from_handyman);
-				$message->user_id = $message->user_id ?? $this->hm_user;
-			} else {
-				$this->error_message .= '<br/>Vedlikeholds teknikker med Handyman ID ' . $message->emloyee_from_handyman . 'ble ikke funnet i BK Bygg.';
-				// Set the sender as Handyman user
-				$message->user_id = $this->hm_user;
-				$message->is_valid = false;
-			}
-			if ($message->soneleder_fra_handyman) {
-				$message->assigned_to = $this->find_user_id_in_preferences($preferences, $message->soneleder_fra_handyman);
-				// If we did not find a manager by Agresso ID, use the manager of the building
-				$message->assigned_to = $message->assigned_to ?? $message->soneleder_fra_byggid;
-				// If we still don't have a manager, use the admin set in config.yml
-				$message->assigned_to = $message->assigned_to ?? $this->admin_user;
-			} else {
-				$this->error_message .= '<br/>Manager/soneleder med Handyman ID ' . $message->soneleder_fra_handyman . ' ble ikke funnet i BK Bygg. Overført til adm.';
-				// Set the user to the ID set in config.yml, the "soneleder" who is to get all messages we can't figure out who comes from
-				$message->assigned_to = $this->admin_user;
-				$message->is_valid = false;
-			}
+			$message->user_id = $this->get_user_id($message);
+			$message->contact_id = $this->get_contact_id($message);
 		}
 	}
 
 	/**
 	 * @param $preferences
 	 * @param $agresso_id
-	 * @return int
+	 * @return GwPreference
 	 */
-	private function find_user_id_in_preferences($preferences, $agresso_id): ?int
+	private function find_account_id_in_preferences($agresso_id): ?GwPreference
 	{
+		if (empty($agresso_id)) {
+			return null;
+		}
 		/* @var GwPreference $pref */
-		foreach ($preferences as $pref) {
+		foreach ($this->users_with_agresso_id as $pref) {
 			if ($pref->getResourceNumber() == $agresso_id) {
-				return $pref->getPreferenceOwner();
+				return $pref;
 			}
 		}
 		return null;
@@ -718,7 +753,7 @@ class ParseMessageXMLService
 class MessageData
 {
 	public $user_id = null;
-	public $assigned_to = null;
+//	public $assigned_to = null;
 	public $subject = null;
 	public $description = null;
 	public $location_code = null;
@@ -728,10 +763,11 @@ class MessageData
 	public $checklist_id = null;
 	public $order_id = null;
 	public $soneleder_fra_handyman = null;
-	public $soneleder_fra_byggid = null;
+//	public $soneleder_fra_byggid = null;
 	public $emloyee_from_handyman = null;
 	public $order_name = null;
 	public $is_valid = false;
+	public $post_message = '';
 
 
 	public $checklist_name = array();
@@ -745,7 +781,7 @@ class MessageData
 
 	public function validate()
 	{
-		return $this->is_valid AND isset($this->user_id) AND isset($this->assigned_to) AND isset($this->location_code) AND isset($this->loc1);
+		return $this->is_valid && isset($this->user_id) && isset($this->location_code) && isset($this->loc1);
 	}
 
 	/**
@@ -757,14 +793,14 @@ class MessageData
 		$result = new FmTtsTicket();
 		$result->set_default_values();
 		$result->setSubject('#' . $this->order_id . ' ' . implode($this->checklist_name, ' '));
-		$result->setDetails(implode($this->checklist_description, '<br/>') . '<br/> Laget av Handyman');
+		$result->setDetails(implode($this->checklist_description, '<br/>') . $this->post_message . '<br/> Laget av Handyman');
 		$result->setHandymanOrderNumber($this->order_id);
 		$result->setHandymanChecklistId($this->checklist_id);
 		$result->setLocationCode($this->location_code);
 		$result->setLoc1($this->loc1);
 		$result->setLoc2($this->loc2);
 		$result->setUserId($this->user_id);
-		$result->setAssignedto($this->assigned_to);
+//		$result->setAssignedto($this->assigned_to);
 		$result->setContactId($this->contact_id);
 		return $result;
 	}

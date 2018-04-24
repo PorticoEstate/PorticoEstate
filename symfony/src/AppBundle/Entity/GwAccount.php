@@ -43,7 +43,6 @@ class GwAccount
 	 * @var integer
 	 *
 	 * @ORM\Column(name="person_id", type="integer")
-	 * @ORM\Id
 	 */
 	protected $person_id;
 

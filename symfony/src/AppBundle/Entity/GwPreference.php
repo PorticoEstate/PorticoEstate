@@ -47,6 +47,12 @@ class GwPreference
 	protected $resource_number;
 
 	/**
+	 * @ORM\ManyToOne(targetEntity = "GwAccount")
+	 * @ORM\JoinColumn(name = "preference_owner", referencedColumnName = "account_id")
+	 */
+	protected $account;
+
+	/**
 	 * @return int
 	 */
 	public function getPreferenceOwner(): int
@@ -110,30 +116,13 @@ class GwPreference
 		$this->resource_number = $resource_number;
 	}
 
+	/**
+	 * @return GwAccount
+	 */
+	public function getAccount(): GwAccount
+	{
+		return $this->account;
+	}
 
 
-//	/**
-//	 * @param $property string
-//	 * @return mixed
-//	 **/
-//	public function __get($property)
-//	{
-//		if (property_exists($this, $property)) {
-//			return $this->$property;
-//		}
-//	}
-//
-//	/**
-//	 * @param $property string
-//	 * @param $value mixed
-//	 * @return GwPreference
-//	 **/
-//	public function __set($property, $value)
-//	{
-//		if (property_exists($this, $property)) {
-//			$this->$property = $value;
-//		}
-//
-//		return $this;
-//	}
 }
