@@ -94,8 +94,8 @@
 					$controlNumber = 2;
 				}
 			}
-			$result = (11 - ($sumForMod % 11));
-			$result === 11 ? 0 : $result;
+			$_result = (11 - ($sumForMod % 11));
+			$result = $_result === 11 ? 0 : $_result;
 			$control_digit = end($arr);
 			$ret = $result == $control_digit ? true : false;
 
