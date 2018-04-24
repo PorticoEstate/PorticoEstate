@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,11 +59,11 @@ class FmHandymanDocument
 	 */
 	protected $hm_installation_id;
 	/**
-	 * @var \DateTime
+	 * @var DateTime
 	 *
 	 * @ORM\Column(name="created_date", type="datetime", nullable=true)
 	 */
-	protected $created_date = 'now()';
+	protected $created_date;
 	/**
 	 * @var int
 	 *
@@ -70,7 +71,7 @@ class FmHandymanDocument
 	 */
 	protected $retrieved_from_handyman = 0;
 	/**
-	 * @var \DateTime
+	 * @var DateTime
 	 *
 	 * @ORM\Column(name="retrieved_date", type="datetime", nullable=true)
 	 */
@@ -192,17 +193,17 @@ class FmHandymanDocument
 	}
 
 	/**
-	 * @return \DateTime
+	 * @return DateTime
 	 */
-	public function getCreatedDate(): \DateTime
+	public function getCreatedDate(): DateTime
 	{
 		return $this->created_date;
 	}
 
 	/**
-	 * @param \DateTime $created_date
+	 * @param DateTime $created_date
 	 */
-	public function setCreatedDate(\DateTime $created_date)
+	public function setCreatedDate(DateTime $created_date)
 	{
 		$this->created_date = $created_date;
 	}
@@ -224,17 +225,17 @@ class FmHandymanDocument
 	}
 
 	/**
-	 * @return \DateTime
+	 * @return DateTime
 	 */
-	public function getRetrievedDate(): \DateTime
+	public function getRetrievedDate(): DateTime
 	{
 		return $this->retrieved_date;
 	}
 
 	/**
-	 * @param \DateTime $retrieved_date
+	 * @param DateTime $retrieved_date
 	 */
-	public function setRetrievedDate(\DateTime $retrieved_date)
+	public function setRetrievedDate(DateTime $retrieved_date)
 	{
 		$this->retrieved_date = $retrieved_date;
 	}

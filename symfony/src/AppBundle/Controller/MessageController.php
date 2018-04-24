@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\FmGab;
+use AppBundle\Entity\FmHandymanLog;
 use AppBundle\Entity\FmLocation1;
 use AppBundle\Entity\FmLocation2;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -49,23 +50,29 @@ class MessageController extends Controller
 		try {
 			$xml_message_service = new ParseMessageXMLService($em, $dir, $ext, $url, $hm_user, $admin_user);
 		} catch (ORMException $e) {
-			dump($e);
-			return new Response('<html><body>Hello!</body></html>');
-//			$response = new Response();
-//			$response->setContent('<data><success>false</success><error>Failed to parse Handyman XML files</error></data>');
-//			$response->headers->set('Content-Type', 'application/xml');
-//			return $response;
+//			dump($e);
+//			return new Response('<html><body>Hello!</body></html>');
+			$response = new Response();
+			$response->setContent('<data><success>false</success><error>Failed to parse Handyman XML files</error></data>');
+			$response->headers->set('Content-Type', 'application/xml');
+			return $response;
 		}
 
 		$xml_message_service->parseDir();
+		$log = new FmHandymanLog();
+		$log->setComment('XML file parsed');
+		$log->setSuccess(true);
+		$log->setNumOfMessages($xml_message_service->getNumberOfTickets());
+		$em->persist($log);
+		$em->flush();
 
-		dump($xml_message_service);
-		return new Response('<html><body>Hello!</body></html>');
+//		dump($xml_message_service);
+//		return new Response('<html><body>Hello!</body></html>');
 
-//		$response = new Response();
-//		$response->setContent('<data><success>true</success></data>');
-//		$response->headers->set('Content-Type', 'application/xml');
-//		return $response;
+		$response = new Response();
+		$response->setContent('<data><success>true</success><numberOfMessagesSaved>'.(string)$xml_message_service->getNumberOfTickets().'</numberOfMessagesSaved></data>');
+		$response->headers->set('Content-Type', 'application/xml');
+		return $response;
 	}
 
 

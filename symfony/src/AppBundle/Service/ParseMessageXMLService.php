@@ -8,6 +8,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\FmHandymanLog;
 use AppBundle\Entity\FmTtsTicket;
 use AppBundle\Entity\GwAccount;
 use AppBundle\Entity\GwPreference;
@@ -40,6 +41,9 @@ class ParseMessageXMLService
 	private $tickets;
 	private $error_message;
 	private $current_file = '';
+	private $number_of_tickets = 0;
+	/* @var DateTime $previous_import_date */
+	private $previous_import_date;
 
 	/* @var GetDocumentFromHandymanService $document_service */
 	private $document_service;
@@ -66,6 +70,14 @@ class ParseMessageXMLService
 		$this->admin_user = $admin_user;
 		$this->document_service = new GetDocumentFromHandymanService($url);
 		$this->users_with_agresso_id = $this->em->getRepository('AppBundle:GwPreference')->findUsersWithPropertyResourceNr();
+
+		/* @var FmHandymanLog $previous_import_log */
+		$previous_import_log = $this->em->getRepository('AppBundle:FmHandymanLog')->findLast();
+		if ($previous_import_log) {
+			$this->previous_import_date = $previous_import_log->getLogDate();
+		} else {
+			$this->previous_import_date = new DateTime('2000-01-01'); // some date in the far past
+		}
 	}
 
 	public function parseDir()
@@ -73,17 +85,25 @@ class ParseMessageXMLService
 		$files = $this->find_files();
 		/* @var $file string */
 		foreach ($files as $file) {
+			if (!file_exists($file)) {
+				continue;
+			}
+			if (!is_readable($file)) {
+				continue;
+			}
+			if (filectime($file) <= $this->previous_import_date->getTimestamp()) {
+				continue;
+			}
+
 			$this->current_file = $file;
 			$this->tickets = array();
-			if (!file_exists($file)) {
-				return;
-			}
 
 			/* @var SimpleXMLElement $xml */
 			$xml = simplexml_load_file($file);
 			$this->parse_xml($xml);
 
 			$this->filter_and_save_tickets();
+			$this->number_of_tickets += count($this->tickets);
 		}
 		$this->delete_files($files);
 	}
@@ -349,8 +369,6 @@ class ParseMessageXMLService
 			$message->location_code = $installation_id;
 			$message->loc1 = $this->getLoc1Code($installation_id);
 			$message->loc2 = $this->getLoc2Code($installation_id);
-//			$message->contact_id = $this->find_contact_id_from_location_code($message->loc1);
-//			$message->soneleder_fra_byggid = $this->find_manager_id_from_location_code($message->loc1);
 		} else {
 			// We are not able to figure out the building ID
 			$message->is_valid = false;
@@ -489,37 +507,6 @@ class ParseMessageXMLService
 		}
 		return '';
 	}
-//
-//	/**
-//	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
-//	 * @param string $location_code
-//	 * @return int
-//	 */
-//	public function find_contact_id_from_location_code(string $location_code): ?int
-//	{
-//		/* @var HmTechnicalContactForBuildingView $contact */
-//		$contact = $this->em->getRepository('AppBundle:HmTechnicalContactForBuildingView')->find($location_code);
-//		if (!$contact) {
-//			return $this->hm_user;
-//		}
-//		return $contact->getContactId();
-//	}
-//
-//	/**
-//	 * Retrieve the BKBygg ID of the technical responsible person for a bulding/property in BK Bygg
-//	 * @param string $location_code
-//	 * @return int
-//	 */
-//	public function find_manager_id_from_location_code(string $location_code): ?int
-//	{
-//		/* @var HmManagerForBuildingView $contact */
-//		$contact = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->find($location_code);
-//
-//		if (!$contact) {
-//			return $this->hm_user;
-//		}
-//		return $contact->getContactId();
-//	}
 
 	/**
 	 * @param MessageData $message
@@ -561,14 +548,14 @@ class ParseMessageXMLService
 
 			/* @var HmManagerForBuildingView $contact */
 			$manager = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->find($message->loc1);
-			if(!empty($manager)){
+			if (!empty($manager)) {
 				$contact_id = $manager->getAccount()->getPersonId();
 				$message->post_message .= '<br/>Manager med Agresso ID ' . $message->soneleder_fra_handyman . ' ble ikke funnet i BK Bygg. Overført til Soneleder.';
 			}
 		}
-		if(!$contact_id){
+		if (!$contact_id) {
 			/* @var GwAccount $account */
-			$account = $this->em->getRepository('AppBundle:GwAccount')->findOneBy(array('account_id'=>$this->admin_user));
+			$account = $this->em->getRepository('AppBundle:GwAccount')->findOneBy(array('account_id' => $this->admin_user));
 			$contact_id = $account->getPersonId();
 			$message->post_message .= '<br/>Hverken Manager eller Soneleder for bygget ble funnet. Overført til admin.';
 		}
@@ -747,6 +734,15 @@ class ParseMessageXMLService
 			}
 		}
 	}
+
+	/**
+	 * @return int
+	 */
+	public function getNumberOfTickets(): int
+	{
+		return $this->number_of_tickets;
+	}
+
 }
 
 
