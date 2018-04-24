@@ -58,7 +58,7 @@
 			$fellesdata = new fellesdata();
 			$deceased = $fellesdata->get_deceased($checklist);
 
-			$cols = array('person_nr', 'navn', 'f_dato', 'd_dato','postens_adresse', 'objekt_id', 'leie_id');
+			$cols = array('navn', 'f_dato', 'd_dato','postens_adresse', 'objekt_id', 'leie_id', 'flytte_id');
 
 			$html =<<<HTML
 			<!DOCTYPE html>
@@ -80,13 +80,13 @@
 					<table>
 					 <caption>Leietakere som er registrert som død i folkeregisteret - men ikke i BOEI</caption>
 					<tr>
-						<th>Personnr</th>
 						<th>Navn</th>
 						<th>Født dato</th>
 						<th>Død dato</th>
 						<th>Postens adresse</th>
 						<th>Objekt ID</th>
 						<th>Leie ID</th>
+						<th>Flytte ID</th>
 					</tr>
 HTML;
 
@@ -209,7 +209,7 @@ HTML;
 
 		function get_checklist()
 		{
-			$sql = "SELECT TOP 100 PERCENT Leietaker.Fodt_dato, Leietaker.Personnr, Leieobjekt.Objekt_ID, Leieobjekt.Leie_ID"
+			$sql = "SELECT TOP 100 PERCENT Leietaker.Fodt_dato, Leietaker.Personnr, Leietaker.Flytte_ID, Leieobjekt.Objekt_ID, Leieobjekt.Leie_ID"
 				. " FROM Leieobjekt INNER JOIN Leietaker ON Leieobjekt.Leietaker_ID = Leietaker.Leietaker_ID"
 				. " WHERE (Leietaker.Personnr Is Not Null) AND (Leietaker.DodDato = '' OR Leietaker.DodDato IS NULL)";
 
@@ -229,6 +229,7 @@ HTML;
 					'person_nr'	=> $person_nr,
 					'objekt_id'	=> $this->db->f('Objekt_ID'),
 					'leie_id'	=> $this->db->f('Leie_ID'),
+					'flytte_id'	=> $this->db->f('Flytte_ID'),
 				);
 
 			}
