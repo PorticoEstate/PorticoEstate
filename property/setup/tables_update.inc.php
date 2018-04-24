@@ -10164,9 +10164,23 @@
 
 		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
 
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'fm_handyman_log', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'comment' => array('type' => 'text'),
+				'log_date' => array('type' => 'timestamp', 'default' => 'current_timestamp'),
+				'success' => array('type' => 'bool', 'nullable' => false, 'default' => 'false'),
+				'num_of_messages' => array('type' => 'int', 'precision' => 4)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'uc' => array()
+		));
+
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{
-			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.727';
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.729';
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}

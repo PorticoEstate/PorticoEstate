@@ -2993,5 +2993,17 @@
 			'pk' => array('id'),
 			'ix' => array(),
 			'uc' => array()
+		),
+			'fm_handyman_log', array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
+				'comment' => array('type' => 'text'),
+				'log_date' => array('type' => 'timestamp', 'default' => 'current_timestamp'),
+				'success' => array('type' => 'bool', 'nullable' => false, 'default' => 'false'),
+				'num_of_messages' => array('type' => 'int', 'precision' => 4)
+			),
+			'pk' => array('id'),
+			'ix' => array(),
+			'uc' => array()
 		)
 	);
