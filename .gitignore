@@ -12,3 +12,5 @@ dbconfig.php
 .idea/
 symfony/var/cache/
 symfony/var/sessions/
+symfony/app/config/parameters.yml
+symfony/vendor/
