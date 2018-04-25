@@ -10,6 +10,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\FmBuildingExportView;
 use AppBundle\Entity\FmLocation1 as FmLocation1;
+use AppBundle\Entity\GwPreference;
 use AppBundle\Entity\HmManagerForBuildingView;
 use Doctrine\ORM\ArrayCollection as ArrayCollection;
 use Doctrine\ORM\EntityManager as EntityManager;
@@ -24,34 +25,6 @@ class FmLocationService
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
-    }
-
-    /**
-     * @return \Doctrine\ORM\Persisters\Collection $customAttributes
-     */
-    private function getCustomAttributesForProperties(){
-        $appForProperties = $this->em->getRepository(GwApplication::class)->findAppForProperties();
-        $gwLocationId = $appForProperties->getLocations()->first()->getId();
-        return $this->em->getRepository(CustAttribute::class)->findProperties($gwLocationId);
-    }
-
-    private function minifyObjectArrayOfProperties(array $customAttributes ){
-        $result = array();
-        /* @var $customAttribute CustAttribute */
-        foreach($customAttributes as $customAttribute){
-            $result = array_merge($result, $customAttribute->getMinfiedArray());
-        }
-        return $result;
-    }
-
-    public function addCustomFieldsForProperties($locations)
-    {
-        $customAttributes = $this->getCustomAttributesForProperties();
-        $minifiedCA = $this->minifyObjectArrayOfProperties($customAttributes);
-        /* @var $location FmLocation1 */
-        foreach ($locations as $location){
-            $location->setCustomAttributes($minifiedCA);
-        }
     }
 
     /**
