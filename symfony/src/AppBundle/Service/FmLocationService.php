@@ -35,7 +35,7 @@ class FmLocationService
      * @param array $customAttributes
      * @return mixed
      */
-    public static function getValue(string $property, array $objectVars, array $customAttributes)
+    public static function get_value(string $property, array $objectVars, array $customAttributes)
     {
         if (!array_key_exists($property, $objectVars)) {
             return null;
@@ -67,19 +67,19 @@ class FmLocationService
     }
 
 
-	public function getBuildings(): array
+	public function get_buildings(): array
 	{
 		$buildings = $this->em->getRepository('AppBundle:FmBuildingExportView')->findAll();
 		$managers = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->findAllIncludingAccount();
-		$this->addAgressoIDToManager($managers);
+		$this->add_agresso_id_to_manager($managers);
 		/* @var FmBuildingExportView $building */
 		foreach ($buildings as $building) {
-			$this->addManagerDataToBuilding($building, $managers);
+			$this->add_manager_data_to_building($building, $managers);
 		}
 		return $buildings;
 	}
 
-	private function addManagerDataToBuilding(FmBuildingExportView &$building, array $managers)
+	private function add_manager_data_to_building(FmBuildingExportView &$building, array $managers)
 	{
 		/* @var HmManagerForBuildingView $manager */
 		foreach ($managers as $manager) {
@@ -102,7 +102,7 @@ class FmLocationService
 		}
 	}
 
-	private function addAgressoIDToManager(array &$managers)
+	private function add_agresso_id_to_manager(array &$managers)
 	{
 		$users_with_agresso_id = $this->em->getRepository('AppBundle:GwPreference')->findUsersWithPropertyResourceNr();
 		/* @var HmManagerForBuildingView $manager */

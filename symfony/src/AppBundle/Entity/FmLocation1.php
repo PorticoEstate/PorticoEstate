@@ -589,6 +589,6 @@ class FmLocation1
 
     public function getValue(string $property)
     {
-        return FmLocationService::getValue($property, get_object_vars($this), $this->customAttributes);
+        return FmLocationService::get_value($property, get_object_vars($this), $this->customAttributes);
     }
 }

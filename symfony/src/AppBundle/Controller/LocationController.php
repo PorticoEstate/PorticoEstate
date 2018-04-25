@@ -27,7 +27,7 @@ class LocationController extends Controller
 	{
 		/* @var FmLocationService $location_service */
 		$location_service = new FmLocationService($this->getDoctrine()->getManager());
-		$fm_buildings = $location_service->getBuildings();
+		$fm_buildings = $location_service->get_buildings();
 		$this->filter_buildings($fm_buildings);
 		$buildings = HmInstallationListXMLModel::construct_from_building_export($fm_buildings);
 		$encoders = array(new XmlEncoder('InstallationList'));
