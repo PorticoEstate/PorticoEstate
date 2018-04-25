@@ -39,22 +39,7 @@ class HmAddressXMLModel
      * @var string
      */
     protected $AddressName = '';
-//    /**
-//     * @var int
-//     */
-//    protected $Latitude = 0;
-//    /**
-//     * @var int
-//     */
-//    protected $Longitude = 0;
-//    /**
-//     * @var string
-//     */
-//    protected $Address3 = '';
-//    /**
-//     * @var string
-//     */
-//    protected $Address4 = '';
+
     /**
      * @var string
      */
@@ -72,7 +57,7 @@ class HmAddressXMLModel
 	 * @var $building FmBuildingExportView
 	 * @return HmAddressXMLModel
 	 */
-	public static function constructBuildingExport(FmBuildingExportView $building): HmAddressXMLModel
+	public static function construct_building_export(FmBuildingExportView $building): HmAddressXMLModel
 	{
 		$instance = new self();
 		$instance->Address1 = $building->getAddress() ?? '' ;
@@ -131,38 +116,6 @@ class HmAddressXMLModel
     {
         return $this->AddressName;
     }
-//
-//    /**
-//     * @return int
-//     */
-//    public function getLatitude(): int
-//    {
-//        return $this->Latitude;
-//    }
-//
-//    /**
-//     * @return int
-//     */
-//    public function getLongitude(): int
-//    {
-//        return $this->Longitude;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getAddress3(): string
-//    {
-//        return $this->Address3;
-//    }
-//
-//    /**
-//     * @return string
-//     */
-//    public function getAddress4(): string
-//    {
-//        return $this->Address4;
-//    }
 
     /**
      * @return string

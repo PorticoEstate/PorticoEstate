@@ -18,32 +18,45 @@ class HmInstallationXMLModel
 	/**
 	 * agressoIdToDepartmentNo is a key value array with managers agressoID and the department they belong to in Handyman
 	 */
-	const agressoIdToDepartmentNo = array
+	const AGRESSO_ID_TO_DEPARTMENT_NUMBER = array
 	(
 		'35919'	=>	'12'
 	);
 
     /* @var string */
     protected $InstallationID;
-    /* @var int */
-    protected $InstallationOrigin = 0; // $InstallationOrigin 0 = default(Own) 1 = preinstalled
+
+    /**
+	 *
+	 * $InstallationOrigin 0 = default(Own) 1 = preinstalled
+	 * @var int
+	 */
+    protected $InstallationOrigin = 0;
     /* @var string */
     protected $Name = '';
-    /* @var int */
-    protected $Site = 1; //Site 0=Equipment, 1=Site
-
-    /* @var HmAddressXMLModel */
-    protected $Address;// Address is a handyman_address_xml_model
-
-    // ID of the employee responsible for the installation, must exist in Handyman
-    /* @var int */
+    /**
+	 * /Site 0=Equipment, 1=Site
+	 * @var int
+	 */
+    protected $Site = 1;
+    /**
+	 * Address is a handyman_address_xml_model
+	 * @var HmAddressXMLModel
+	 */
+    protected $Address;//
+    /**
+	 * ID of the employee responsible for the installation, must exist in Handyman
+	 * @var int
+	 */
     protected $ResponsibleNo;
-    /* @var int */
-    protected $Status = 1;// Status 0=New (default for equipment), 1=Installed (default for site), 2=Paused, 3=Historical
-
+    /**
+	 * Status 0=New (default for equipment), 1=Installed (default for site), 2=Paused, 3=Historical
+	 * @var int
+	 */
+    protected $Status = 1;
     /* @var $Customer HmCustomerXMLModel */
     protected $Customer;
-
+	/* @var int */
     protected $HSDepartmentID;
 
     /**
@@ -51,7 +64,6 @@ class HmInstallationXMLModel
      */
     public function __construct()
     {
-        // allocate your stuff
         $this->Customer = new HmCustomerXMLModel;
     }
 
@@ -59,7 +71,7 @@ class HmInstallationXMLModel
 	public static function constructFromBuildingExport(FmBuildingExportView $building)
 	{
 		$instance = new self();
-		$instance->Address = HmAddressXMLModel::constructBuildingExport($building);
+		$instance->Address = HmAddressXMLModel::construct_building_export($building);
 		$instance->Name = $building->getLoc2Name() ?? '';
 		$instance->InstallationID = $building->getLocationCode() ?? '';
 		$instance->ResponsibleNo = HmInstallationXMLModel::findResponsible($building);
@@ -89,11 +101,10 @@ class HmInstallationXMLModel
 		$result = 12;
 
 		if($building->getManagerAgressoId()){
-			if(isset(HmInstallationXMLModel::agressoIdToDepartmentNo[$building->getManagerAgressoId()])){
-				$result = HmInstallationXMLModel::agressoIdToDepartmentNo[$building->getManagerAgressoId()];
+			if(isset(HmInstallationXMLModel::AGRESSO_ID_TO_DEPARTMENT_NUMBER[$building->getManagerAgressoId()])){
+				$result = HmInstallationXMLModel::AGRESSO_ID_TO_DEPARTMENT_NUMBER[$building->getManagerAgressoId()];
 			}
 		}
-
 		return $result;
 	}
 
@@ -153,14 +164,6 @@ class HmInstallationXMLModel
         return $this->Status;
     }
 
-//    /**
-//     * @return string
-//     */
-//    public function getInstallationIDParent(): string
-//    {
-//        return $this->InstallationIDParent;
-//    }
-
     /**
      * @return HmCustomerXMLModel
      */
@@ -176,7 +179,4 @@ class HmInstallationXMLModel
     {
         return $this->HSDepartmentID;
     }
-
-
-
 }

@@ -11,9 +11,10 @@ namespace AppBundle\XmlModels;
 class HmCustomerXMLModel
 {
     /**
+	 * -1 = Bergen Kommune
      * @var string
      */
-    protected $CustomerNo = -1; // -1 = Bergen Kommune
+    protected $CustomerNo = -1;
     /**
      * @var string
      */
@@ -47,9 +48,10 @@ class HmCustomerXMLModel
      */
     protected $VATNumber;
     /**
+	 *  0= no, 1 = yes
      * @var integer
      */
-    protected $Company = 1; // = = no, 1 = yes
+    protected $Company = 1;
     /**
      * @var string
      */
@@ -70,6 +72,4 @@ class HmCustomerXMLModel
     {
         return $this->CustomerNo;
     }
-
-
 }
