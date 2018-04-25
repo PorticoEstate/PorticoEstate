@@ -8,7 +8,9 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\FmBuildingExportView;
 use AppBundle\Entity\FmLocation1 as FmLocation1;
+use AppBundle\Entity\HmManagerForBuildingView;
 use Doctrine\ORM\ArrayCollection as ArrayCollection;
 use Doctrine\ORM\EntityManager as EntityManager;
 use AppBundle\Entity\GwApplication;
@@ -91,4 +93,61 @@ class FmLocationService
         }
     }
 
+
+	public function getBuildings(): array
+	{
+		$buildings = $this->em->getRepository('AppBundle:FmBuildingExportView')->findAll();
+		$managers = $this->em->getRepository('AppBundle:HmManagerForBuildingView')->findAllIncludingAccount();
+		$this->addAgressoIDToManager($managers);
+		/* @var FmBuildingExportView $building */
+		foreach ($buildings as $building) {
+			$this->addManagerDataToBuilding($building, $managers);
+		}
+		return $buildings;
+	}
+
+	private function addManagerDataToBuilding(FmBuildingExportView &$building, array $managers)
+	{
+		/* @var HmManagerForBuildingView $manager */
+		foreach ($managers as $manager) {
+			if (empty($manager->getLocationCode())) {
+				continue;
+			}
+			if (empty($manager->getAgressoId())) {
+				continue;
+			}
+			if (empty($manager->getAccount())) {
+				continue;
+			}
+			if ($building->getLoc1() == $manager->getLocationCode()) {
+				$building->setManagerAgressoId($manager->getAgressoId() ?? '');
+				$building->setManagerUserId($manager->getContactId() ?? '');
+				$name = Trim(($manager->getFirstName() ?? '') . ' ' . ($manager->getLastName() ?? ''));
+				$building->setManagerName($name);
+				$building->setManagerAccountId($manager->getAccount()->getAccountId());
+			}
+		}
+	}
+
+	private function addAgressoIDToManager(array &$managers)
+	{
+		$users_with_agresso_id = $this->em->getRepository('AppBundle:GwPreference')->findUsersWithPropertyResourceNr();
+		/* @var HmManagerForBuildingView $manager */
+		foreach ($managers as $key=>&$manager) {
+			if(empty($manager->getContactId())){
+				unset($managers[$key]);
+				continue;
+			}
+
+			/* @var GwPreference $pref_user */
+			foreach ($users_with_agresso_id as $pref_user) {
+				if ($pref_user->getPreferenceOwner() == $manager->getAccount()->getAccountId()) {
+					$manager->setAgressoId($pref_user->getResourceNumber());
+				}
+			}
+			if(empty($manager->getAgressoId())){
+				unset($managers[$key]);
+			}
+		}
+	}
 }

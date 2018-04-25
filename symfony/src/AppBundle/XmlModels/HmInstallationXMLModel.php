@@ -18,7 +18,10 @@ class HmInstallationXMLModel
 	/**
 	 * agressoIdToDepartmentNo is a key value array with managers agressoID and the department they belong to in Handyman
 	 */
-	const agressoIdToDepartmentNo = array('35919'=>'12');
+	const agressoIdToDepartmentNo = array
+	(
+		'35919'	=>	'12'
+	);
 
     /* @var string */
     protected $InstallationID;

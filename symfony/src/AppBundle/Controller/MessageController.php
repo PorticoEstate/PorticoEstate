@@ -24,7 +24,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use \DOMDocument;
 use Symfony\Component\Routing\Loader\DirectoryLoader;
-use AppBundle\Service\MessageService;
 use AppBundle\Service\ParseMessageXMLService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -38,7 +37,7 @@ class MessageController extends Controller
 	/**
 	 * @Route("/import", name="message_re")
 	 **/
-	public function importAction()
+	public function import_action()
 	{
 		$dir = $this->getParameter('handyman_file_dir');
 		$ext = $this->getParameter('handyman_export_ext');
@@ -58,11 +57,11 @@ class MessageController extends Controller
 			return $response;
 		}
 
-		$xml_message_service->parseDir();
+		$xml_message_service->parse_dir();
 		$log = new FmHandymanLog();
 		$log->setComment('XML file parsed');
 		$log->setSuccess(true);
-		$log->setNumOfMessages($xml_message_service->getNumberOfTickets());
+		$log->setNumOfMessages($xml_message_service->get_number_of_tickets());
 		$em->persist($log);
 		$em->flush();
 
@@ -70,22 +69,9 @@ class MessageController extends Controller
 //		return new Response('<html><body>Hello!</body></html>');
 
 		$response = new Response();
-		$response->setContent('<data><success>true</success><numberOfMessagesSaved>'.(string)$xml_message_service->getNumberOfTickets().'</numberOfMessagesSaved></data>');
+		$response->setContent('<data><success>true</success><numberOfMessagesSaved>'.(string)$xml_message_service->get_number_of_tickets().'</numberOfMessagesSaved></data>');
 		$response->headers->set('Content-Type', 'application/xml');
 		return $response;
-	}
-
-
-	/**
-	 * @Route("/foo", name="message_foo")
-	 *
-	 **/
-	public function fooAction()
-	{
-		$tickets = $this->getDoctrine()->getManager()->getRepository('AppBundle:FmTtsTicket')->find('123346');
-
-		dump($tickets);
-		return new Response('<html><body>Hello!</body></html>');
 	}
 
 	/**
@@ -93,7 +79,7 @@ class MessageController extends Controller
 	 *
 	 * @Route("/show/{id}", name="message_show")
 	 */
-	public function showAction($id)
+	public function show_action($id)
 	{
 		$em = $this->getDoctrine()->getManager();
 
@@ -102,7 +88,7 @@ class MessageController extends Controller
 		if (!$ticket) {
 			throw new NotFoundHttpException("Ticket not found");
 		}
-		$data = $this->collectTicketData($ticket);
+		$data = $this->collect_ticket_data($ticket);
 		$response = new JsonResponse();
 		$response->setContent(json_encode(array('data' => $data)));
 		return $response;
@@ -113,7 +99,7 @@ class MessageController extends Controller
 	 *
 	 * @Route("/update", name="message_update")
 	 */
-	public function updateAction(Request $request)
+	public function update_action(Request $request)
 	{
 		$id = $request->request->get('id');
 		$dr = $request->request->get('documentation_required');
@@ -133,7 +119,7 @@ class MessageController extends Controller
 		$em->persist($ticket);
 		$em->flush();
 
-		$data = $this->collectTicketData($ticket);
+		$data = $this->collect_ticket_data($ticket);
 		$response = new JsonResponse();
 		$response->setContent(json_encode(array('data' => $data, 'success'=>true)));
 		return $response;
@@ -143,7 +129,7 @@ class MessageController extends Controller
 	 * @param FmTtsTicket $ticket
 	 * @return array
 	 */
-	private function collectTicketData(FmTtsTicket $ticket): array
+	private function collect_ticket_data(FmTtsTicket $ticket): array
 	{
 		$data = array('id' => null,
 			'subject' => null,

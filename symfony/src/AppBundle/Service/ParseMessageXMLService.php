@@ -37,7 +37,7 @@ class ParseMessageXMLService
 	private $ext;
 	private $hm_user;
 	private $admin_user;
-	private $messagesData = array();
+	private $messages_data = array();
 	private $tickets;
 	private $error_message;
 	private $current_file = '';
@@ -80,7 +80,7 @@ class ParseMessageXMLService
 		}
 	}
 
-	public function parseDir()
+	public function parse_dir()
 	{
 		$files = $this->find_files();
 		/* @var $file string */
@@ -250,7 +250,7 @@ class ParseMessageXMLService
 	 */
 	private function collect_order_data(SimpleXMLElement $order)
 	{
-		$this->messagesData = array();
+		$this->messages_data = array();
 		/* @var SimpleXMLElement $checlist */
 		foreach ($order->xpath('ChecklistList/ChecklistType') as $checklist) {
 			$this->mine_data_from_checklist($checklist, $order);
@@ -258,7 +258,7 @@ class ParseMessageXMLService
 
 		$this->update_message_users();
 		/* @var MessageData $message */
-		foreach ($this->messagesData as $message) {
+		foreach ($this->messages_data as $message) {
 			if ($message->validate()) {
 				$message->description .= $this->error_message;
 				$this->tickets[] = $message->message_to_ticket();
@@ -367,8 +367,8 @@ class ParseMessageXMLService
 		$installation_id = trim((string)$checklist->InstallationID);
 		if ($this->is_installation_id_valid($installation_id)) {
 			$message->location_code = $installation_id;
-			$message->loc1 = $this->getLoc1Code($installation_id);
-			$message->loc2 = $this->getLoc2Code($installation_id);
+			$message->loc1 = $this->get_loc1_code($installation_id);
+			$message->loc2 = $this->get_loc2_code($installation_id);
 		} else {
 			// We are not able to figure out the building ID
 			$message->is_valid = false;
@@ -385,7 +385,7 @@ class ParseMessageXMLService
 				$current_message->checklist_description[] = (string)$item['comment'];
 				$current_message->checklist_description[] = (string)$checklist->ChecklistTypeName;
 				$current_message->checklist_description[] = (string)$checklist->ChecklistName;
-				$this->messagesData[] = $current_message;
+				$this->messages_data[] = $current_message;
 			}
 		}
 	}
@@ -484,7 +484,7 @@ class ParseMessageXMLService
 	 * @param string $installation_id
 	 * @return string
 	 */
-	private static function getLoc1Code(string $installation_id): string
+	private static function get_loc1_code(string $installation_id): string
 	{
 		// XXXX
 		$pattern = '/^([0-9]{4})/';
@@ -498,7 +498,7 @@ class ParseMessageXMLService
 	 * @param string $installation_id
 	 * @return string
 	 */
-	private static function getLoc2Code(string $installation_id): string
+	private static function get_loc2_code(string $installation_id): string
 	{
 		// NNNN-XX
 		$pattern = '/([0-9]{2})$/';
@@ -565,12 +565,12 @@ class ParseMessageXMLService
 
 	private function update_message_users()
 	{
-		if (empty($this->messagesData)) {
+		if (empty($this->messages_data)) {
 			return;
 		}
 
 		/* @var MessageData $message */
-		foreach ($this->messagesData as $message) {
+		foreach ($this->messages_data as $message) {
 			$message->user_id = $this->get_user_id($message);
 			$message->contact_id = $this->get_contact_id($message);
 		}
@@ -598,7 +598,7 @@ class ParseMessageXMLService
 	/**
 	 * @return array
 	 */
-	private function getHMOrderNumbers(): array
+	private function get_hm_order_numbers(): array
 	{
 		$result = array();
 		/* @var FmTtsTicket $fm_ticket */
@@ -614,7 +614,7 @@ class ParseMessageXMLService
 	 * @param $listOfTicketsToPreventDuplicates
 	 * @return array
 	 */
-	private function extractIdsFromTicketList($listOfTicketsToPreventDuplicates): array
+	private function extract_tds_from_ticket_list($listOfTicketsToPreventDuplicates): array
 	{
 		$result = array();
 		/* @var array $ticket */
@@ -632,11 +632,11 @@ class ParseMessageXMLService
 		if (empty($this->tickets)) {
 			return;
 		}
-		$handyman_order_numbers = $this->getHMOrderNumbers();
+		$handyman_order_numbers = $this->get_hm_order_numbers();
 		/* @var FmTtsTicketRepository $rep */
 		$rep = $this->em->getRepository('AppBundle:FmTtsTicket');
 		$listOfTicketsToPreventDuplicates = $rep->findTicketsWithHandymanOrderIDasArray($handyman_order_numbers);
-		$arrOfIds = $this->extractIdsFromTicketList($listOfTicketsToPreventDuplicates);
+		$arrOfIds = $this->extract_tds_from_ticket_list($listOfTicketsToPreventDuplicates);
 		$doc_rep = $this->em->getRepository('AppBundle:FmHandymanDocument');
 		$config_rep = $this->em->getRepository('AppBundle:GwConfig');
 
@@ -738,11 +738,10 @@ class ParseMessageXMLService
 	/**
 	 * @return int
 	 */
-	public function getNumberOfTickets(): int
+	public function get_number_of_tickets(): int
 	{
 		return $this->number_of_tickets;
 	}
-
 }
 
 
