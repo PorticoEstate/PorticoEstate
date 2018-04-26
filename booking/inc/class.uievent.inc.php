@@ -20,11 +20,13 @@
 			'info' => true,
 			'toggle_show_inactive' => true,
 		);
-		protected $customer_id;
+		protected $customer_id,
+			$account;
 
 		public function __construct()
 		{
 			parent::__construct();
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo = CreateObject('booking.boevent');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->activity_bo = CreateObject('booking.boactivity');
@@ -93,6 +95,10 @@
 						array(
 							'key' => 'contact_name',
 							'label' => lang('Contact'),
+						),
+						array(
+							'key' => 'contact_phone',
+							'label' => lang('phone')
 						),
 						array(
 							'key' => 'building_name',
@@ -757,10 +763,10 @@
 
 				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
-					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST')) && phpgw::get_var('active', 'POST'))
+					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST') ||  phpgw::get_var('sendsmstocontact', 'POST')) && phpgw::get_var('active', 'POST'))
 					{
 
-						if (phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
+						if (phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendsmstocontact', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event, $errors);
 
@@ -823,6 +829,34 @@
 								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'];
 								$this->add_comment($event, $comment);
 							}
+							//sms
+                            if (phpgw::get_var('sendsmstocontact', 'POST'))
+							{
+                                $rool = phpgw::get_var('mail','html', 'POST');
+                                $phone_number = phpgw::get_var('contact_phone', 'string', 'POST');
+                                $text_message  = array('text' => $rool);
+                                $newArray = array_map(function($v)
+								{
+									return trim(strip_tags($v));
+                                 }, $text_message);
+
+								$phone_number = str_replace(' ', '', $phone_number);
+
+								if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $phone_number,  $matches ) )
+								{
+									$phone_number_validated = 1;
+									//implement validation
+								}
+
+								 $sms_res = CreateObject('sms.sms')->websend2pv($this->account, $phone_number, $newArray['text']);
+
+								if($sms_res[0][0])
+								{
+									$comment = $comment_text_log . '<br />Denne er sendt til ' . $phone_number;
+									$this->add_comment($event, $comment);
+								}
+							}
+
 							if (phpgw::get_var('sendtorbuilding', 'POST'))
 							{
 
