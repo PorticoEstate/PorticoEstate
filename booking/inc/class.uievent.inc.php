@@ -852,7 +852,7 @@
 
 								if($sms_res[0][0])
 								{
-									$comment = $comment_text_log . '<br />Denne er sendt til ' . $phone_number;
+									$comment = $rool . '<br />Denne er sendt til ' . $phone_number;
 									$this->add_comment($event, $comment);
 								}
 							}
