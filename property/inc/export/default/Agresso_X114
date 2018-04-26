@@ -1052,6 +1052,8 @@
 
 		protected function increment_voucher_id()
 		{
+			static $bilagsnr_test = array();
+
 			$name = 'bilagsnr_ut';
 			$now = time();
 			$this->db->query("SELECT value, start_date FROM fm_idgenerator WHERE name='{$name}' AND start_date < {$now} ORDER BY start_date DESC");
@@ -1059,6 +1061,16 @@
 			$next_id = $this->db->f('value') + 1;
 			$start_date = (int)$this->db->f('start_date');
 			$this->db->query("UPDATE fm_idgenerator SET value = $next_id WHERE name = '{$name}' AND start_date = {$start_date}");
+
+			/*
+			 * Test for duplicates within session
+			 */
+			if(in_array($next_id, $bilagsnr_test))
+			{
+				$next_id = $this->increment_voucher_id();
+			}
+
+			$bilagsnr_test[] = $next_id;
 
 			return $next_id;
 		}
