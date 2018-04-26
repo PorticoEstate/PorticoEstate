@@ -26,6 +26,7 @@ use \DOMDocument;
 use Symfony\Component\Routing\Loader\DirectoryLoader;
 use AppBundle\Service\ParseMessageXMLService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  * Fmlocation1 controller.
@@ -96,7 +97,7 @@ class MessageController extends Controller
 
 	/**
 	 * Changing the status from shcema builder to tell if a message need documentation
-	 * @TODO set to POST
+	 * @Method({"POST"})
 	 * @Route("/update", name="message_update")
 	 */
 	public function update_action(Request $request)
