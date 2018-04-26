@@ -661,12 +661,12 @@ class ParseMessageXMLService
 				$docs = $doc_rep->findBy(array('hs_checklist_id' => $hs_checklist_id));
 				// Is there files to fetch?
 				if (!empty($docs)) {
-					$dir = "/property/fmticket/" . (string)$id;
+					$dir = '/property/fmticket/' . (string)$id;
 					$full_dir = $file_dir . $dir;
 					mkdir($full_dir, 0700, true);
 					/* @var FmHandymanDocument $doc */
 					foreach ($docs as $doc) {
-						$this->create_and_save_vfs_documents($doc, $full_dir, $dir, $user_id);
+						$this->create_and_save_vfs_documents($doc, $full_dir, $dir, $user_id, $id);
 					}
 				}
 			} catch (OptimisticLockException $e) {
@@ -691,15 +691,46 @@ class ParseMessageXMLService
 	 * @param string $full_dir Full path to the file
 	 * @param string $dir Part of the path as stored in phpgw_vfs
 	 * @param int $user_id The BKBygg ID of the user who created the ticket
+	 * @param int $fm_ticket_id
 	 * @throws MappingException
 	 * @throws ORMException
 	 */
-	private function create_and_save_vfs_documents(FmHandymanDocument $doc, string $full_dir, string $dir, int $user_id)
+	private function create_and_save_vfs_documents(FmHandymanDocument $doc, string $full_dir, string $dir, int $user_id, int $id)
 	{
 		$file_path = $this->document_service->retrieve_file_from_handyman($doc, $full_dir);
 		if (!empty($file_path)) {
 			try {
 				/* @var GwVfs $vfs */
+
+				$vfs = new GwVfs();
+				$vfs->setOwnerId($user_id);
+				$vfs->setCreatedbyId($user_id);
+				$vfs->setCreated(new DateTime());
+				$vfs->setSize(4096);
+				$vfs->setMimeType('Directory');
+				$vfs->setApp('property');
+				$vfs->setDirectory('/property/fmticket');
+				$vfs->setName((string)$id);
+				$vfs->setVersion('0.0.0.1');
+				$this->em->persist($vfs);
+				$this->em->flush();
+				$this->em->clear();
+
+				$vfs = new GwVfs();
+				$vfs->setOwnerId($user_id);
+				$vfs->setCreatedbyId($user_id);
+				$vfs->setCreated(new DateTime());
+				$vfs->setSize(4096);
+				$vfs->setMimeType('journal');
+				$vfs->setComment('Created');
+				$vfs->setApp('property');
+				$vfs->setDirectory('/property/fmticket');
+				$vfs->setName((string)$id);
+				$vfs->setVersion('0.0.0.0');
+				$this->em->persist($vfs);
+				$this->em->flush();
+				$this->em->clear();
+
 				$vfs = new GwVfs();
 				$vfs->setOwnerId($user_id);
 				$vfs->setCreatedbyId($user_id);
@@ -724,6 +755,13 @@ class ParseMessageXMLService
 				$vfs->setDirectory($dir);
 				$vfs->setName($this->document_service->sanitize_file_name($doc->getFilePath()));
 				$vfs->setVersion('0.0.0.0');
+				$this->em->persist($vfs);
+				$this->em->flush();
+				$this->em->clear();
+
+				$doc->setRetrievedFromHandyman(true);
+				$doc->setRetrievedDate(new DateTime());
+				$doc->setMessageId($id);
 				$this->em->persist($vfs);
 				$this->em->flush();
 				$this->em->clear();
