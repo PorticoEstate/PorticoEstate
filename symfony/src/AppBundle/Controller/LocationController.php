@@ -30,7 +30,11 @@ class LocationController extends Controller
 		$location_service = new FmLocationService($this->getDoctrine()->getManager());
 		$fm_buildings = $location_service->get_buildings();
 		$this->filter_buildings($fm_buildings);
-		$buildings = HmInstallationListXMLModel::construct_from_building_export($fm_buildings);
+
+		/* @var array user_agressoid_in_groupid */
+		$user_agressoid_in_groupid = $this->getParameter('user_agressoid_in_groupid');
+
+		$buildings = HmInstallationListXMLModel::construct_from_building_export($fm_buildings, $user_agressoid_in_groupid);
 		$encoders = array(new XmlEncoder('InstallationList'));
 		$normalizers = array(new ObjectNormalizer());
 		$serializer = new Serializer($normalizers, $encoders);

@@ -15,6 +15,9 @@ parameters:
     handyman_document_url: http://192.168.99.94:8091/Document/Download/
     # 3978 = HM Handyman
     bkbygg_handyman_user: 3978
+    # List of users Agresso IDs and their user group, used for the xml building list
+    user_agressoid_in_groupid:
+        35919	:	12
 
 framework:
     #esi: ~

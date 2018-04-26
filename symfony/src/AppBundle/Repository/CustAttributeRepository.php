@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CustAttributeRepository extends EntityRepository
 {
-    public function findProperties(int $locationId)
+    public function find_properties(int $locationId)
     {
         // CH Multiple checkbox, LB Listbox, R = Multiple Radio
         return $this->getEntityManager()

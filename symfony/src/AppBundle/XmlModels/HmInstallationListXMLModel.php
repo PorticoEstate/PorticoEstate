@@ -18,6 +18,8 @@ class HmInstallationListXMLModel
      **/
     private $Installation;
 
+    private $user_agressoid_in_groupid;
+
     /* @var $fmBuildings \FmLocation2[] */
     private function addBuildings(array $fmBuildings)
     {
@@ -28,14 +30,19 @@ class HmInstallationListXMLModel
         }
     }
 
-    public function __construct()
+    public function __construct(array $user_agressoid_in_groupid)
     {
         $this->Installation = array();
+		$this->user_agressoid_in_groupid = $user_agressoid_in_groupid;
     }
 
-	/* @var $fm_building_exports \FmBuildingExportView[] */
-    public static function construct_from_building_export(array $fm_building_exports){
-		$instance = new self();
+	/**
+	 * @param array $fm_building_exports
+	 * @param array $user_agressoid_in_groupid
+	 * @return HmInstallationListXMLModel
+	 */
+	public static function construct_from_building_export(array $fm_building_exports, array $user_agressoid_in_groupid){
+		$instance = new self($user_agressoid_in_groupid);
 		$instance->parseBuldingExports($fm_building_exports);
 		return $instance;
 	}
@@ -44,7 +51,7 @@ class HmInstallationListXMLModel
 	public function parseBuldingExports(array $fm_building_exports){
 		/* @var $building FmBuildingExportView */
 		foreach ($fm_building_exports as $building) {
-			$this->Installation[] = HmInstallationXMLModel::constructFromBuildingExport($building);
+			$this->Installation[] = HmInstallationXMLModel::constructFromBuildingExport($building, $this->user_agressoid_in_groupid);
 		}
 	}
 

@@ -96,7 +96,7 @@ class MessageController extends Controller
 
 	/**
 	 * Changing the status from shcema builder to tell if a message need documentation
-	 *
+	 * @TODO set to POST
 	 * @Route("/update", name="message_update")
 	 */
 	public function update_action(Request $request)
