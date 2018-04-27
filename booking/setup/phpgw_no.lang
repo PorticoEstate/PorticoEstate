@@ -729,3 +729,5 @@ New resource category	booking	no	Ny ressurskategori
 Not a top level activity	booking	no	Det er valgt aktiviteter som ikke er på toppnivå
 Resource categories	booking	no	Ressurskategorier
 Resource category	booking	no	Ressurskategori
+Send as sms	booking	no	Send som sms
+Send sms to contact	booking	no	Send sms til registrerte kontaktpersoner

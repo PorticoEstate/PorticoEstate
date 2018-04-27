@@ -536,6 +536,12 @@
 									<xsl:value-of select="php:function('lang', 'Send to contact')" />
 								</label>
 							</div>
+                            <div class="pure-control-group">
+								<label>
+									<input type="checkbox" value="1" name="sendsmstocontact" />
+									<xsl:value-of select="php:function('lang', 'Send as sms')" />
+								</label>
+							</div>
 							<div class="pure-control-group">
 								<label>
 									<input type="checkbox" value="1" name="sendtocollision" />
