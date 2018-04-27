@@ -88,7 +88,11 @@
 				if($order)
 				{
 					$this->db->query("UPDATE fm_workorder SET verified_transfered = 1 WHERE id = '{$order_id}'", __LINE__, __FILE__);
-					$this->receipt['message'][] = array('msg' => "{$order_id} er oppdatert som overført til Argesso");
+//					$this->receipt['message'][] = array('msg' => "{$order_id} er oppdatert som overført til Argesso");
+				}
+				else
+				{
+					echo "Ordre: {$order_id}, dato: {$entry['date']} er ikke registrert i Agresso <br/>";
 				}
 			}
 
