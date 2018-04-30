@@ -679,11 +679,11 @@ class ParseMessageXMLService
 
 	private function delete_files($files)
 	{
-//		foreach($files as $file){
-//			if(is_file($file)) {
-//				unlink($file); // delete file
-//			}
-//		}
+		foreach($files as $file){
+			if(is_file($file)) {
+				unlink($file); // delete file
+			}
+		}
 	}
 
 	/**
