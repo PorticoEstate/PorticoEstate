@@ -58,4 +58,31 @@
 			}
 		}
 
+
+		/**
+		 * Gets resource categories which belong to the given top level activities
+		 *
+		 * @param array activity_ids
+		 * @return array resource categories
+		 */
+		function get_rescategories_by_activities($activity_ids = array())
+		{
+			$rescategories = array();
+			if (count($activity_ids) == 0)
+			{
+				return $rescategories;
+			}
+			$sql = 'SELECT DISTINCT br.* FROM bb_rescategory br ' .
+					'JOIN bb_rescategory_activity bra on bra.rescategory_id=br.id ' .
+					'JOIN bb_activity ba on bra.activity_id=ba.id ' .
+					'WHERE br.active=1 and ba.parent_id is NULL and bra.activity_id in (' . implode(',', $activity_ids) . ')' .
+					'ORDER BY br.name';
+			$this->db->query($sql, __LINE__, __FILE__);
+			while ($this->db->next_record())
+			{
+				$rescategories[] = array('id' => $this->db->f('id'), 'name' => $this->db->f('name'));
+			}
+			return $rescategories;
+		}
+
 	}

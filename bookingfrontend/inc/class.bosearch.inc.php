@@ -11,6 +11,7 @@
 			$this->soorganization = CreateObject('booking.soorganization');
 			$this->soresource = CreateObject('booking.soresource');
 			$this->soevent = CreateObject('booking.soevent');
+			$this->borescategory = CreateObject('booking.borescategory');
 		}
 
 		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() )
@@ -242,5 +243,53 @@
 			$final_array = array_merge_recursive($bui_result, $org_result, $res_result, $event_result);
 			$final_array['total_records_sum'] = array_sum((array)$final_array['total_records']);
 			return $final_array;
+		}
+
+
+		function get_filterboxdata()
+		{
+			$config = CreateObject('phpgwapi.config', 'booking');
+			$config->read();
+
+			$data = array();
+			$datatext = $config->config_data['frontpage_filterboxdata'];
+			if ($datatext != null)
+			{
+				$lines = preg_split("[\r\n|\r|\n]", $datatext);
+				foreach ($lines as $line)
+				{
+					$parts = explode(':', $line);
+					if (count($parts) != 2)
+					{
+						// Ignore line as it doesn't conform to syntax
+						continue;
+					}
+
+					$boxtext = trim($parts[0]);
+					if ($boxtext == '')
+					{
+						continue;
+					}
+
+					$activities = explode(',', $parts[1]);
+					$activity_ids = array();
+					foreach ($activities as $activity)
+					{
+						$activity_id = trim($activity);
+						if ($activity_id != '' && ctype_digit($activity_id))
+						{
+							$activity_ids[] = $activity_id;
+						}
+					}
+					if (count($activity_ids) == 0)
+					{
+						continue;
+					}
+					$rescategories = $this->borescategory->get_rescategories_by_activities($activity_ids);
+
+					$data[] = array('text' => $boxtext, 'rescategories' => $rescategories);
+				}
+			}
+			return $data;
 		}
 	}

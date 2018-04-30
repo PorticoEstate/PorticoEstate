@@ -195,6 +195,20 @@
 							<xsl:value-of select="config_data/emails"/>
 						</textarea>
 					</div>
+					<div class="pure-control-group">
+						<xsl:value-of select="php:function('lang', 'Front page filtering')"/>
+					</div>
+					<div class="pure-control-group">
+						<xsl:value-of select="php:function('lang', 'Text and activity IDs for each filter box')"/>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'One filter box per line')"/>
+						</label>
+						<textarea id="field_frontpage_filterboxdata" name="config_data[frontpage_filterboxdata]" class="pure-input-1-2">
+							<xsl:value-of select="config_data/frontpage_filterboxdata"/>
+						</textarea>
+					</div>
 					<div class="pure-control-group">					
 						<xsl:value-of select="php:function('lang', 'Billing sequence numbers')"/>
 					</div>

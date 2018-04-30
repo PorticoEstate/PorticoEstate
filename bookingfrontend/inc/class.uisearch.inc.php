@@ -6,8 +6,9 @@
 
 		public $public_functions = array
 			(
-			'index' => true,
-			'query' => true
+			'get_filterboxdata' => true,
+			'index'             => true,
+			'query'             => true,
 		);
 
 		function __construct()
@@ -207,4 +208,11 @@
 			}
 			self::render_template_xsl('search_details', $data);
 		}
+
+
+		function get_filterboxdata()
+		{
+			return $this->bo->get_filterboxdata();
+		}
+
 	}

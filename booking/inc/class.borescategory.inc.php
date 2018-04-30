@@ -43,6 +43,22 @@
 		}
 		
 
+		function get_rescategories_by_activities($activity_ids = null)
+		{
+			$idlist = array();
+			if (gettype($activity_ids == 'array'))
+			{
+				$idlist = $activity_ids;
+			}
+			else
+			{
+				$idlist[] = $activity_ids;
+			}
+			$rescategories = $this->so->get_rescategories_by_activities($idlist);
+			return $rescategories;
+		}
+
+
 		function list_id_name($results = [])
 		{
 			$list = array();

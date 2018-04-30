@@ -723,9 +723,12 @@ application add	booking	nn	Ny søknad
 duplicate in name	booking	nn	Navnet finnest frå før
 At least one activity must be selected	booking	no	Det må velges minst én aktivitet
 edit resource category	booking	no	Rediger ressurskategori
+Front page filtering	booking	no	Filtrering på forside
 New resource category	booking	no	Ny ressurskategori
 Not a top level activity	booking	no	Det er valgt aktiviteter som ikke er på toppnivå
+One filter box per line	booking	no	Bare én filtreringsboks per linje
 Resource categories	booking	nn	Ressurskategorier
 Resource category	booking	no	Ressurskategori
 Send as sms	booking	nn	Send som sms
 Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner
+Text and activity IDs for each filter box	booking	no	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
