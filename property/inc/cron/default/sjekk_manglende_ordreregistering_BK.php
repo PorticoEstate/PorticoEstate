@@ -57,11 +57,14 @@
 			require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/agresso/autoload.php';
 
 			$sql = "SELECT fm_workorder.id AS order_id, fm_workorder.status,"
-				. " to_char(to_timestamp(entry_date ),'DD/MM-YYYY') as date,"
-				. " to_char(to_timestamp(entry_date ),'YYYYMMDD') as sorteringsdato,"
-				. " account_id as kostnadsart,"
-				. " to_char(to_timestamp(order_sent ),'DD/MM-YYYY') as overfort_dato"
+				. " to_char(to_timestamp(fm_workorder.entry_date ),'DD/MM-YYYY') as date,"
+				. " to_char(to_timestamp(fm_workorder.entry_date ),'YYYYMMDD') as sorteringsdato,"
+				. " fm_workorder.account_id as kostnadsart,"
+				. " to_char(to_timestamp(fm_workorder.order_sent ),'DD/MM-YYYY') as overfort_dato, "
+				. " fm_workorder.combined_cost as budget,"
+				. " account_firstname, account_lastname"
 				. " FROM fm_workorder JOIN fm_workorder_status ON fm_workorder.status = fm_workorder_status.id"
+				. " JOIN phpgw_accounts ON fm_workorder.user_id = phpgw_accounts.account_id"
 				. " WHERE (order_sent IS NOT NULL OR canceled IS NULL)"
 				. " AND fm_workorder.id > 45000000"
 				. " AND verified_transfered IS NULL"
@@ -77,7 +80,10 @@
 					'status' => $this->db->f('status'),
 					'date' => $this->db->f('date'),
 					'kostnadsart' => $this->db->f('kostnadsart'),
-					'overfort_dato' => $this->db->f('overfort_dato')
+					'overfort_dato' => $this->db->f('overfort_dato'),
+					'budget' => $this->db->f('budget'),
+					'account_lastname' => $this->db->f('account_lastname'),
+					'account_firstname' => $this->db->f('account_firstname'),
 					);
 			}
 
@@ -88,11 +94,11 @@
 				if($order)
 				{
 					$this->db->query("UPDATE fm_workorder SET verified_transfered = 1 WHERE id = '{$order_id}'", __LINE__, __FILE__);
-//					$this->receipt['message'][] = array('msg' => "{$order_id} er oppdatert som overført til Argesso");
+					$this->receipt['message'][] = array('msg' => "{$order_id} er oppdatert som overført til Argesso");
 				}
 				else
 				{
-					echo "Ordre: {$order_id}, dato: {$entry['date']} er ikke registrert i Agresso <br/>";
+					$this->receipt['error'][] = array('msg' => "Ordre: {$order_id}; dato: {$entry['date']}; budsjett:{$entry['budget']}; bestiller: {$entry['account_lastname']}, {$entry['account_firstname']};  er ikke registrert i Agresso");
 				}
 			}
 
@@ -411,7 +417,6 @@ XML;
 			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $soap_request);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	//		curl_setopt($ch, CURLOPT_VERBOSE, true);
 			curl_setopt($ch, CURLOPT_TIMEOUT,10);
 
 			$response = curl_exec($ch);
@@ -427,10 +432,10 @@ XML;
 			$xmlparse->setEncoding('utf-8');
 			$xmlparse->setDecodesUTF8Automaticly(false);
 			$var_result = $xmlparse->parse($response1);
-	//		_debug_array($var_result);
+
 			if(!empty($var_result['s:Body'][0]['GetTemplateResultAsDataSetResponse']['0']['GetTemplateResultAsDataSetResult'][0]['TemplateResult'][0]['diffgr:diffgram'][0]['Agresso'][0]['AgressoQE']))
 			{
-		//		if($this->debug)
+				if($this->debug)
 				{
 					_debug_array("Ordre {$order_id} ER registrert" . PHP_EOL);
 				}
@@ -438,7 +443,7 @@ XML;
 			}
 			else
 			{
-		//		if($this->debug)
+				if($this->debug)
 				{
 					_debug_array("Ordre {$order_id} er IKKE registrert" . PHP_EOL);
 				}
