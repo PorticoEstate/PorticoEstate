@@ -58,7 +58,7 @@
 			$fellesdata = new fellesdata();
 			$deceased = $fellesdata->get_deceased($checklist);
 
-			$cols = array('navn', 'f_dato', 'd_dato','postens_adresse', 'objekt_id', 'leie_id', 'flytte_id');
+			$cols = array('navn', 'f_dato', 'd_dato','postens_adresse', 'objekt_id', 'leie_id', 'flyttenr');
 
 			$html =<<<HTML
 			<!DOCTYPE html>
@@ -86,7 +86,7 @@
 						<th>Postens adresse</th>
 						<th>Objekt ID</th>
 						<th>Leie ID</th>
-						<th>Flytte ID</th>
+						<th>Flytte NR</th>
 					</tr>
 HTML;
 
@@ -209,7 +209,7 @@ HTML;
 
 		function get_checklist()
 		{
-			$sql = "SELECT TOP 100 PERCENT Leietaker.Fodt_dato, Leietaker.Personnr, Leietaker.Flytte_ID, Leieobjekt.Objekt_ID, Leieobjekt.Leie_ID"
+			$sql = "SELECT TOP 100 PERCENT Leietaker.Fodt_dato, Leietaker.Personnr, Leieobjekt.Objekt_ID, Leieobjekt.Leie_ID, Leieobjekt.Flyttenr"
 				. " FROM Leieobjekt INNER JOIN Leietaker ON Leieobjekt.Leietaker_ID = Leietaker.Leietaker_ID"
 				. " WHERE (Leietaker.Personnr Is Not Null) AND (Leietaker.DodDato = '' OR Leietaker.DodDato IS NULL)";
 
@@ -229,7 +229,7 @@ HTML;
 					'person_nr'	=> $person_nr,
 					'objekt_id'	=> $this->db->f('Objekt_ID'),
 					'leie_id'	=> $this->db->f('Leie_ID'),
-					'flytte_id'	=> $this->db->f('Flytte_ID'),
+					'flyttenr'	=> $this->db->f('Flyttenr'),
 				);
 
 			}
