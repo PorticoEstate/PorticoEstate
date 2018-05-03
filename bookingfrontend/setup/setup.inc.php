@@ -35,5 +35,6 @@
 		(
 		'menu' => 'bookingfrontend.menu.get_menu',
 		'set_cookie_domain' => 'bookingfrontend.hook_helper.set_cookie_domain',
+		'after_navbar'		=> 'bookingfrontend.hook_helper.after_navbar',
 		'config'
 	);
