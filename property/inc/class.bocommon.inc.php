@@ -1922,18 +1922,20 @@
 					if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
 					{
 						$test = $entry[$name[$i]];
-						if(is_float($test))
-						{
-							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
-							{
-								$header[$descr[$i]] = '0.00';
-							}
-						}
-						else if(ctype_digit((string)$test))
+						if(ctype_digit((string)$test))
 						{
 							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
 							{
 								$header[$descr[$i]] = 'integer';
+							}
+						}
+					//	else if(is_float($test))
+					//	else if(preg_match('/([0-9]{1,})\.([0-9]{2,2})/', $test))
+						else if(filter_var($test, FILTER_VALIDATE_FLOAT))
+						{
+							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+							{
+								$header[$descr[$i]] = '0.00';
 							}
 						}
 						else
