@@ -2380,4 +2380,5 @@ do you really want to update the locations	property	nn	Vil du oppdatere lokasjon
 custom field has been created	property	nn	Egendefinert felt er lagt til
 group name	property	nn	gruppenavn
 alternative to contract	property	nn	Alternativ til rammeavtale
-budget account user	property	no	Art koblet til bruker
+budget account user	property	nn	Art koblet til bruker
+order sum	property	nn	Bestillingssum
