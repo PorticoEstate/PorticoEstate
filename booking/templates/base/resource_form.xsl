@@ -42,6 +42,33 @@
 						</select>
 					</div>
 				</xsl:if>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Resource category')" />
+						</label>
+						<input id="field_schema_rescategory_id" type="hidden" name="schema_rescategory_id" value=""/>
+						<select id="field_rescategory_id" name="rescategory_id">
+							<xsl:attribute name="data-validation">
+								<xsl:text>required</xsl:text>
+							</xsl:attribute>
+								<xsl:attribute name="data-validation-error-msg">
+								<xsl:value-of select="php:function('lang', 'Please select a resource category')" />
+							</xsl:attribute>
+							<option value=''>
+								<xsl:value-of select="php:function('lang', 'Select category...')" />
+							</option>
+							<xsl:for-each select="rescategorydata">
+								<option value="{id}">
+									<xsl:if test="id=../resource/rescategory_id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="name" />
+								</option>
+							</xsl:for-each>
+						</select>
+					</div>
+				</xsl:if>
 				<div class="pure-control-group">
 					<label>
 						<xsl:value-of select="php:function('lang', 'Sort order')" />
@@ -196,4 +223,7 @@
 			</input>
 		</div>
 	</form>
+	<script type="text/javascript">
+		var lang = <xsl:value-of select="php:function('js_lang', 'Select category...')"/>;
+	</script>
 </xsl:template>

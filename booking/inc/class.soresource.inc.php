@@ -20,6 +20,7 @@
 				'activity_id' => array('type' => 'int', 'required' => false),
 				'organizations_ids' => array('type' => 'string'),
 				'json_representation' => array('type' => 'json'),
+				'rescategory_id' => array('type' => 'int', 'required' => false),
 				'building_id' => array(
 					'type' => 'int',
 					'query' => true,
@@ -68,6 +69,13 @@
 						'fkey' => 'activity_id',
 						'key' => 'id',
 						'column' => 'name'
+					)),
+				'rescategory_name' => array('type' => 'string', 'query' => true,
+					'join' => array(
+						'table' => 'bb_rescategory',
+						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'name',
 					)),
 				'buildings' => array('type' => 'int', 'required' => true,
 					'manytomany' => array(

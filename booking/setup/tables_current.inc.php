@@ -125,10 +125,12 @@
 				'sort' => array('type' => 'int', 'precision' => '4', 'nullable' => False, 'default' => 0),
 				'organizations_ids' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
+				'rescategory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(
-				'bb_activity' => array('activity_id' => 'id')),
+				'bb_activity' => array('activity_id' => 'id'),
+				'bb_rescategory' => array('rescategory_id' => 'id')),
 			'ix' => array(),
 			'uc' => array()
 		),

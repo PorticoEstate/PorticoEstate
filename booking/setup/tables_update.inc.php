@@ -3747,3 +3747,21 @@
 		}
 	}
 
+	/**
+	 * Update booking version from 0.2.32 to 0.2.33
+	 *
+	 */
+	$test[] = '0.2.32';
+	function booking_upgrade0_2_32()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD COLUMN rescategory_id int");
+		$GLOBALS['phpgw_setup']->oProc->m_odb->query("ALTER TABLE bb_resource ADD CONSTRAINT bb_resource_rescategory_id_fkey FOREIGN KEY (rescategory_id) REFERENCES bb_rescategory(id)");
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.33';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

@@ -10,6 +10,7 @@ $(document).ready(function ()
 	$("#field_activity_id").change(function ()
 	{
 		get_custom_fields($(this).val());
+		populate_rescategory_select($(this).val());
 	});
 });
 
@@ -103,4 +104,28 @@ ChangeSchema = function (key, oData)
 	{
 		return oData[key];
 	}
+};
+
+
+populate_rescategory_select = function (activity_id)
+{
+	var oArgs = {menuaction: 'booking.uiresource.get_rescategories', activity_id: $("#field_activity_id").val()};
+	var requestUrl = phpGWLink('index.php', oArgs, true);
+	$.ajax({
+		type: 'POST',
+		dataType: 'JSON',
+		url: requestUrl,
+		success: function (data)
+		{
+			if (data != null)
+			{
+				var $select = $("#field_rescategory_id");
+				$select.empty();
+				$select.append($("<option></option>").attr("value", "").text(lang['Select category...']));
+				$.each(data, function(key,value) {
+					$select.append($("<option></option>").attr("value", value.id).text(value.name));
+				});
+			}
+		}
+	});
 };

@@ -46,7 +46,7 @@
 		function get_rescategories_by_activities($activity_ids = null)
 		{
 			$idlist = array();
-			if (gettype($activity_ids == 'array'))
+			if (is_array($activity_ids))
 			{
 				$idlist = $activity_ids;
 			}

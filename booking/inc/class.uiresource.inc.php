@@ -21,6 +21,7 @@
 			'show' => true,
 			'schedule' => true,
 			'toggle_show_inactive' => true,
+			'get_rescategories' => true,
 			'get_buildings' => true,
 			'add_building' => true,
 			'remove_building' => true
@@ -35,6 +36,7 @@
 
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->rescategory_bo = CreateObject('booking.borescategory');
 			$this->fields = array(
 				'name' => 'string',
 				'description' => 'html',
@@ -43,6 +45,7 @@
 				'type' => 'string',
 				'sort' => 'string',
 				'organizations_ids' => 'string',
+				'rescategory_id' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources');
 		}
@@ -94,6 +97,10 @@
 						array(
 							'key' => 'activity_name',
 							'label' => lang('Activity')
+						),
+						array(
+							'key' => 'rescategory_name',
+							'label' => lang('Resource category'),
 						),
 						array(
 							'key' => 'building_street',
@@ -242,6 +249,9 @@
 			{
 				$activity_data['results'][$acKey]['resource_id'] = $resource['activity_id'];
 			}
+			$activity_path = $this->activity_bo->get_path($resource['activity_id']);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+			$rescategory_data = $this->rescategory_bo->get_rescategories_by_activities($top_level_activity);
 			$tabs = array();
 			$tabs['generic'] = array('label' => lang('edit permission'), 'link' => '#resource');
 			$active_tab = 'generic';
@@ -251,7 +261,7 @@
 					'date', 'security', 'file'));
 
 			self::render_template_xsl(array('resource_form', 'datatable_inline'), array('datatable_def' => self::get_building_datatable_def($id),
-				'resource' => $resource, 'activitydata' => $activity_data));
+				'resource' => $resource, 'activitydata' => $activity_data, 'rescategorydata' => $rescategory_data));
 		}
 
 		private function get_location()
@@ -300,6 +310,17 @@
 			$GLOBALS['phpgw']->xslttpl->add_file(array("attributes_{$type}"));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('custom_fields' => $data));
 		}
+
+
+		function get_rescategories()
+		{
+			$activity_id = phpgw::get_var('activity_id', 'int');
+			$activity_path = $this->activity_bo->get_path($activity_id);
+			$top_level_activity = $activity_path ? $activity_path[0]['id'] : 0;
+			$rescategory_data = $this->rescategory_bo->get_rescategories_by_activities($top_level_activity);
+			return $rescategory_data;
+		}
+
 
 		private static function get_building_columns()
 		{
