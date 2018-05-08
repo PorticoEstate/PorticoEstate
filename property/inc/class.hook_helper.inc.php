@@ -220,6 +220,9 @@
 				$values = $soproject->read(array(
 					'filter' => $accound_id,
 					'overdue' => time(),
+					'sort'	=>  'ASC',
+					'order' =>  'end_date'
+
 				));
 				$total_records = $soproject->total_records;
 				$portalbox = CreateObject('phpgwapi.listbox', array
@@ -360,10 +363,21 @@
 			if (isset($prefs['property']['mainscreen_show_new_updated_tts']) && $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
 			{
 
-				$default_status = isset($prefs['property']['tts_status']) ? $prefs['property']['tts_status'] : '';
+				$default_status = array('O');
+
+				if(!empty($prefs['property']['tts_status']))
+				{
+					$default_status[] = $prefs['property']['tts_status'];
+				}
+
 				$tts = CreateObject('property.sotts');
-				$tickets = $tts->read(array('user_id' => $accound_id, 'status_id' => array(
-						$default_status, 'O'), 'new' => true));
+				$tickets = $tts->read(array(
+					'user_id' => $accound_id,
+					'status_id' => $default_status,
+			//		'new' => true,
+					'sort' => 'ASC',
+					'order' => 'id'
+					));
 				$total_records = $tts->total_records;
 
 				$portalbox = CreateObject('phpgwapi.listbox', array
@@ -395,6 +409,16 @@
 				$portalbox->data = array();
 				foreach ($tickets as $ticket)
 				{
+					if($ticket['modified_date'])
+					{
+						$_date = $ticket['modified_date'];
+					}
+					else
+					{
+						$_date = $ticket['entry_date'];
+		
+					}
+					$__date = $GLOBALS['phpgw']->common->show_date($_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 					if (!$ticket['subject'])
 					{
 						if (!isset($category_name[$ticket['cat_id']]))
@@ -418,7 +442,7 @@
 					}
 					$portalbox->data[] = array
 						(
-						'text' => "{$location['loc1_name']} :: {$ticket['subject']}{$group}",
+						'text' => "{$__date}::{$location['loc1_name']} :: {$ticket['subject']}{$group}",
 						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
 							'id' => $ticket['id']))
 					);
