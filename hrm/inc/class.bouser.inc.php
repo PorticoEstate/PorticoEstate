@@ -247,9 +247,29 @@
 				'email_home' => 'email_home',
 			);
 
+			$this->boaddressbook  = CreateObject('addressbook.boaddressbook');
+
+			$contact = $this->boaddressbook->get_principal_persons_data($account_info->person_id);
+			$userformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+
+			$contact['per_birthday'] = phpgwapi_datetime::convertDate($contact['per_birthday'], $this->boaddressbook->bday_internformat, $userformat);
+
+
 			$fields = $contacts->are_users($account_info->person_id, $qcols);
 
-			$this->boaddressbook  = CreateObject('addressbook.boaddressbook');
+			$qcols = array
+			(
+				'n_given'    => 'n_given',
+				'n_family'   => 'n_family',
+				'per_birthday'	=> 'per_birthday',
+				'tel_work'   => 'tel_work',
+				'tel_home'   => 'tel_home',
+				'tel_cell'   => 'tel_cell',
+				'title'      => 'title',
+				'email'      => 'email',
+				'email_home' => 'email_home',
+			);
+
 			$comms = $this->boaddressbook->get_comm_contact_data($fields[0]['contact_id']);
 
 			if(is_array($comms) && isset($comms[$fields[0]['contact_id']]) )
@@ -303,10 +323,12 @@
 				$email_home = $fields[0]['email_home'];
 			}
 
+			$fields[0]['per_birthday'] = $contact['per_birthday'];
 			$qcols_extra = array
 			(
 				array('name' =>lang('first name'), 'type' => 'link', 'link_value' =>$contact_link),
 				array('name' =>lang('last name'), 'type' => 'text'),
+				array('name' =>lang('birthday'), 'type' => 'text'),
 				array('name' =>lang('work phone'), 'type' => 'text'),
 				array('name' =>lang('home phone'), 'type' => 'text'),
 				array('name' =>lang('cellular phone'), 'type' => 'text'),
@@ -314,17 +336,19 @@
 				array('name' =>lang('work email'), 'type' => 'mail', 'link_value' => $email_work),
 				array('name' =>lang('home email'), 'type' => 'mail', 'link_value' => $email_home),
 			);
-
+			$user_values = array();
 			if(is_array($fields))
 			{
 				$qcols = array_keys($qcols);
 				$j=0;
 				for ($i=0;$i<count($qcols);$i++)
 				{
-					$user_values[$j]['value'] = $fields[0][$qcols[$i]];
-					$user_values[$j]['name'] = $qcols_extra[$i]['name'];
-					$user_values[$j]['type'] = $qcols_extra[$i]['type'];
-					$user_values[$j]['link_value'] = isset($qcols_extra[$i]['link_value']) ? $qcols_extra[$i]['link_value'] : '';
+					$user_values[] = array(
+						'value' => $qcols[$i] == 'email' ? $email_work : $fields[0][$qcols[$i]],
+						'name' => $qcols_extra[$i]['name'],
+						'type' => $qcols_extra[$i]['type'],
+						'link_value' => isset($qcols_extra[$i]['link_value']) ? $qcols_extra[$i]['link_value'] : ''
+					);
 					$j++;
 				}
 			}

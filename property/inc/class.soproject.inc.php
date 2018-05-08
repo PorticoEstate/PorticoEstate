@@ -257,8 +257,8 @@
 				$cols_return[] = 'budget';
 				$uicols['input_type'][] = 'text';
 				$uicols['name'][] = 'budget';
-				$uicols['descr'][] = lang('budget');
-				$uicols['statustext'][] = lang('Project budget');
+				$uicols['descr'][] = lang('order sum');
+				$uicols['statustext'][] = lang('order sum');
 				$uicols['exchange'][] = false;
 				$uicols['align'][] = '';
 				$uicols['datatype'][] = '';
