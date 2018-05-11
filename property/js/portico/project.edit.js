@@ -325,11 +325,11 @@ check_button_names = function ()
 
 	if (Number(project_id) === 0)
 	{
-		if (active_tab === 'general')
+		if (active_tab === 'location')
 		{
 			$("#submitform").val(lang['next']);
 		}
-		else if (active_tab === 'location')
+		else if (active_tab === 'general')
 		{
 			$("#submitform").val(lang['next']);
 		}
@@ -349,14 +349,14 @@ validate_submit = function ()
 		return;
 	}
 
-	if (active_tab === 'general' && Number(project_id) === 0)
+	if (active_tab === 'location' && Number(project_id) === 0)
 	{
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
 		$("#submitform").val(lang['next']);
 		$("#active_tab").val('location');
 	}
-	else if (active_tab === 'location' && Number(project_id) === 0)
+	else if (active_tab === 'general' && Number(project_id) === 0)
 	{
 		$('#tab-content').responsiveTabs('enable', 2);
 		$('#tab-content').responsiveTabs('activate', 2);
@@ -402,6 +402,8 @@ window.on_location_updated = function (location_code)
 	location_code = location_code || $("#loc1").val();
 
 	get_location_exception(location_code);
+
+	get_other_projects(location_code);
 
 	if(	$("#delivery_address").val() )
 	{
@@ -479,3 +481,10 @@ this.refresh_files = function ()
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper(oTable5, strURL);
 };
+
+this.get_other_projects = function (location_code)
+{
+	var oArgs = {menuaction:'property.uiproject.get_other_projects',location_code:location_code,id:project_id};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_7', strURL);
+}

@@ -3549,4 +3549,50 @@
 				}
 			}
 		}
+
+		public function get_other_projects($id, $location_code)
+		{
+			if(!$location_code)
+			{
+				return array();
+			}
+
+			$location_arr = explode('-', $location_code);
+			$values = array();
+			$now = time();
+			$_location_arr = array();
+			foreach ($location_arr as $loc)
+			{
+				$_location_arr[] = $this->db->db_addslashes($loc);
+
+				$_location_code = implode('-', $_location_arr);
+
+				$sql = "SELECT DISTINCT fm_project.id, fm_project.location_code,"
+					. " fm_project.start_date, fm_project.name,"
+					. " account_lid as coordinator, fm_project_status.descr as status "
+					. " FROM fm_project"
+					. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
+					. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
+					. " WHERE location_code = '{$_location_code}'"
+					. " AND fm_project.id !=" . (int) $id;
+
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				while($this->db->next_record())
+				{
+					$values[] = array(
+						'id'				=> $this->db->f('id', true),
+						'location_code'		=> $this->db->f('location_code', true),
+						'start_date'		=> $this->db->f('start_date'),
+						'name'				=> $this->db->f('name', true),
+						'coordinator'		=> $this->db->f('coordinator', true),
+						'status'			=> $this->db->f('status', true),
+					);
+				}
+			}
+
+			return $values;
+		}
+
 	}

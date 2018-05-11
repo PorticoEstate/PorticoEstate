@@ -2382,3 +2382,4 @@ group name	property	nn	gruppenavn
 alternative to contract	property	nn	Alternativ til rammeavtale
 budget account user	property	nn	Art koblet til bruker
 order sum	property	nn	Bestillingssum
+other projects	property	no	Andre prosjekter
