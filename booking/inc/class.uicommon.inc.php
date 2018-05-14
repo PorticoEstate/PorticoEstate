@@ -132,7 +132,8 @@
 			$timestamp = mktime(0, 0, 0, $match[2], $match[3], $match[1]);
 		}
 
-		$text = date($dateformat, $timestamp - phpgwapi_datetime::user_timezone());
+//		$text = date($dateformat, $timestamp - phpgwapi_datetime::user_timezone());
+		$text = date($dateformat, $timestamp);
 
 		return $text;
 	}
