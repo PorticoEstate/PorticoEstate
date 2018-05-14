@@ -1487,7 +1487,7 @@ HTML;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-					$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
+					$values['file_name'] = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
 
 					if ($values['file_name'] && $receipt['id'])
 					{
@@ -1951,7 +1951,8 @@ HTML;
 					$bofiles->delete_file("/fmticket/{$id}/", $values);
 				}
 
-				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
+//				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
+				$values['file_name'] = str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
 
 				if ($values['file_name'])
 				{
