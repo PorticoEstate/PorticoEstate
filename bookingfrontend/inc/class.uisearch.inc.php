@@ -9,6 +9,7 @@
 			'get_filterboxdata' => true,
 			'index'             => true,
 			'query'             => true,
+			'resquery'          => true,
 		);
 
 		function __construct()
@@ -207,6 +208,13 @@
 				);
 			}
 			self::render_template_xsl('search_details', $data);
+		}
+
+
+		function resquery()
+		{
+			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
+			return $this->bo->resquery(array('rescategory_id' => $rescategory_id));
 		}
 
 

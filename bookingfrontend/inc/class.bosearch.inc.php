@@ -246,6 +246,36 @@
 		}
 
 
+		function resquery($params = array())
+		{
+			$resource_filters = array();
+			if (isset($params['rescategory_id']))
+			{
+				$resource_filters['rescategory_id'] = $params['rescategory_id'];
+			}
+			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'name'));
+
+			// Get data on the buildings to which the resources belong
+			$building_resources = array();
+			foreach ($resources['results'] as $resource)
+			{
+				foreach ($resource['buildings'] as $building_id)
+				{
+					$building_resources[$building_id][] = $resource;
+				}
+			}
+			$building_filters = array('id' => array_keys($building_resources));
+			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
+			foreach ($buildings['results'] as &$building)
+			{
+				$building['resources'] = $building_resources[$building['id']];
+			}
+			unset($building);
+
+			return array('buildings' => $buildings);
+		}
+
+
 		function get_filterboxdata()
 		{
 			$config = CreateObject('phpgwapi.config', 'booking');
