@@ -805,8 +805,9 @@ HTML;
 					'list' => $values_combo_box[4]
 				);
 
-				$values_combo_box[5] = $this->bo->get_reported_by($this->reported_by);
 			}
+
+			$values_combo_box[5] = $this->bo->get_reported_by($this->reported_by);
 
 			array_unshift($values_combo_box[5], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'name' => lang('my submitted tickets')));
