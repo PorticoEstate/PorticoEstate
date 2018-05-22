@@ -248,26 +248,48 @@
 
 		function resquery($params = array())
 		{
-			$resource_filters = array();
-			if (isset($params['rescategory_id']))
+			$fields_resource = array('id','name');
+			$fields_building = array('id','name','street','zip_code','city');
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
+			// Validate parameters
+			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
 			{
-				$resource_filters['rescategory_id'] = $params['rescategory_id'];
+				return array();
 			}
-			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'name'));
 
-			// Get data on the buildings to which the resources belong
+			// Get resources
+			$resource_filters['rescategory_id'] = $params['rescategory_id'];
+			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort'));
+
+			// Group the resources on buildings, and get data on the buildings to which the resources belong
 			$building_resources = array();
-			foreach ($resources['results'] as $resource)
+			foreach ($resources['results'] as &$resource)
 			{
-				foreach ($resource['buildings'] as $building_id)
+				$building_ids = $resource['buildings'];
+				foreach ($resource as $k => $v)
+				{
+					if (!in_array($k,$fields_resource))
+					{
+						unset($resource[$k]);
+					}
+				}
+				foreach ($building_ids as $building_id)
 				{
 					$building_resources[$building_id][] = $resource;
 				}
 			}
-			$building_filters = array('id' => array_keys($building_resources));
+			unset($resource);
+			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
 			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
 			foreach ($buildings['results'] as &$building)
 			{
+				foreach ($building as $k => $v)
+				{
+					if (!in_array($k,$fields_building))
+					{
+						unset($building[$k]);
+					}
+				}
 				$building['resources'] = $building_resources[$building['id']];
 			}
 			unset($building);

@@ -77,6 +77,13 @@
 						'key' => 'id',
 						'column' => 'name',
 					)),
+				'rescategory_active' => array('type' => 'int',
+					'join' => array(
+						'table' => 'bb_rescategory',
+						'fkey' => 'rescategory_id',
+						'key' => 'id',
+						'column' => 'active',
+					)),
 				'buildings' => array('type' => 'int', 'required' => true,
 					'manytomany' => array(
 						'table' => 'bb_building_resource',
