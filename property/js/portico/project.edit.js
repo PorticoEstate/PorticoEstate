@@ -354,7 +354,7 @@ validate_submit = function ()
 		$('#tab-content').responsiveTabs('enable', 1);
 		$('#tab-content').responsiveTabs('activate', 1);
 		$("#submitform").val(lang['next']);
-		$("#active_tab").val('location');
+		$("#active_tab").val('general');
 	}
 	else if (active_tab === 'general' && Number(project_id) === 0)
 	{

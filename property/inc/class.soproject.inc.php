@@ -3557,6 +3557,8 @@
 				return array();
 			}
 
+			$id = (int) $id;
+
 			$location_arr = explode('-', $location_code);
 			$values = array();
 			$now = time();
@@ -3574,7 +3576,8 @@
 					. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
 					. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
 					. " WHERE location_code = '{$_location_code}'"
-					. " AND fm_project.id !=" . (int) $id;
+					. " AND fm_project.id !={$id}"
+					. " ORDER BY fm_project.id DESC";
 
 
 				$this->db->query($sql, __LINE__, __FILE__);
