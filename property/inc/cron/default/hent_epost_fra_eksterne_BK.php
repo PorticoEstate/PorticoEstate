@@ -42,14 +42,10 @@
 	use \jamesiarmes\PhpEws\Enumeration\DefaultShapeNamesType;
 	use \jamesiarmes\PhpEws\Enumeration\DistinguishedFolderIdNameType;
 	use \jamesiarmes\PhpEws\Enumeration\ResponseClassType;
-//	use \jamesiarmes\PhpEws\Enumeration\UnindexedFieldURIType;
 
-//	use \jamesiarmes\PhpEws\Type\AndType;
 	use \jamesiarmes\PhpEws\Type\ConstantValueType;
 	use \jamesiarmes\PhpEws\Type\DistinguishedFolderIdType;
 	use \jamesiarmes\PhpEws\Type\FieldURIOrConstantType;
-//	use \jamesiarmes\PhpEws\Type\IsGreaterThanOrEqualToType;
-//	use \jamesiarmes\PhpEws\Type\IsLessThanOrEqualToType;
 	use \jamesiarmes\PhpEws\Type\ItemResponseShapeType;
 	use \jamesiarmes\PhpEws\Type\PathToUnindexedFieldType;
 	use \jamesiarmes\PhpEws\Type\RestrictionType;
@@ -66,6 +62,17 @@
 	use \jamesiarmes\PhpEws\Type\ItemChangeType;
 	use \jamesiarmes\PhpEws\Type\SetItemFieldType;
 	use \jamesiarmes\PhpEws\Type\MessageType;
+
+	// Folder info
+	use \jamesiarmes\PhpEws\Request\FindFolderType;
+	use \jamesiarmes\PhpEws\Enumeration\ContainmentComparisonType;
+	use \jamesiarmes\PhpEws\Enumeration\ContainmentModeType;
+	use \jamesiarmes\PhpEws\Enumeration\FolderQueryTraversalType;
+	use \jamesiarmes\PhpEws\Enumeration\UnindexedFieldURIType;
+	use \jamesiarmes\PhpEws\Type\FolderResponseShapeType;
+	//
+
+	use \jamesiarmes\PhpEws\Request\MoveItemType;
 
 	class hent_epost_fra_eksterne_BK extends property_cron_parent
 	{
@@ -128,6 +135,7 @@
 
 			$client = new Client($host, $username, $password, $version);
 
+			$folder_info = $this->find_folder($client);
 			$IsEqualTo_isread = new IsEqualToType();
 			$IsEqualTo_isread->FieldURI = new PathToUnindexedFieldType();
 			$IsEqualTo_isread->FieldURI->FieldURI = 'message:IsRead';
@@ -206,7 +214,7 @@
 						$attachments = array();
 						foreach ($response_message2->Items->Message as $item3)
 						{
-							$ticket_id = $this->handle_message($client, $item3);
+							$ticket_id = $this->handle_message($client, $item3, $folder_info);
 
 							// If there are no attachments for the item, move on to the next
 							// message.
@@ -237,9 +245,66 @@
 			}
 		}
 
-		function handle_message($client, $item3)
+		function find_folder($client)
 		{
-			$subject = $item3->Subject;		
+			// Build the request.
+			$request = new FindFolderType();
+			$request->FolderShape = new FolderResponseShapeType();
+			$request->FolderShape->BaseShape = DefaultShapeNamesType::ALL_PROPERTIES;
+			$request->ParentFolderIds = new NonEmptyArrayOfBaseFolderIdsType();
+			$request->Restriction = new RestrictionType();
+
+			// Search recursively.
+			$request->Traversal = FolderQueryTraversalType::DEEP;
+
+			// Search within the root folder. Combined with the traversal set above, this
+			// should search through all folders in the user's mailbox.
+			$parent = new DistinguishedFolderIdType();
+			$parent->Id = DistinguishedFolderIdNameType::ROOT;
+			$request->ParentFolderIds->DistinguishedFolderId[] = $parent;
+
+			// Build the restriction that will search for folders containing "Cal".
+			$contains = new \jamesiarmes\PhpEws\Type\ContainsExpressionType();
+			$contains->FieldURI = new PathToUnindexedFieldType();
+			$contains->FieldURI->FieldURI = UnindexedFieldURIType::FOLDER_DISPLAY_NAME;
+			$contains->Constant = new ConstantValueType();
+			$contains->Constant->Value = 'Behandlet';
+			$contains->ContainmentComparison = ContainmentComparisonType::EXACT;
+			$contains->ContainmentMode = ContainmentModeType::EXACT_PHRASE;
+			$request->Restriction->Contains = $contains;
+
+			$response = $client->FindFolder($request);
+
+			// Iterate over the results, printing any error messages or folder names and
+			// ids.
+			$response_messages = $response->ResponseMessages->FindFolderResponseMessage;
+			foreach ($response_messages as $response_message)
+			{
+				// Make sure the request succeeded.
+				if ($response_message->ResponseClass != ResponseClassType::SUCCESS)
+				{
+					$code = $response_message->ResponseCode;
+					$message = $response_message->MessageText;
+					fwrite(STDERR, "Failed to find folders with \"$code: $message\"\n");
+					continue;
+				}
+
+				$folders = $response_message->RootFolder->Folders->Folder;
+
+				$folder_info = array(
+					'name' => $folders[0]->DisplayName,
+					'id' => $folders[0]->FolderId->Id,
+					'changekey' => $folders[0]->FolderId->ChangeKey
+				);
+			}
+
+			return $folder_info;
+		}
+
+		function handle_message($client, $item3, $folder_info)
+		{
+			_debug_array($folder_info);
+			$subject = $item3->Subject;
 			_debug_array($subject);
 			$rool =$item3->Body->_;
 			$text_message  = array('text' => $rool);
@@ -254,6 +319,7 @@
 			$this->create_ticket($subject, $body);
 
 			$this->update_message($client, $item3);
+			$this->move_message($client, $item3, $folder_info);
 
 		}
 
@@ -345,7 +411,20 @@
 			$response = $client->UpdateItem($request);
 
 		}
-		
+
+		function move_message($client, $item3, $folder_info)
+		{
+			$request = new MoveItemType();
+
+			$request->ToFolderId->FolderId->Id = $folder_info['id'];
+			$request->ToFolderId->FolderId->ChangeKey = $folder_info['changekey'];
+
+			$request->ItemIds->ItemId->Id = $item3->ItemId->Id;
+			$request->ItemIds->ItemId->ChangeKey = $item3->ItemId->ChangeKey;
+
+			$response = $client->MoveItem($request);
+		}
+
 		function handle_attachments($client, $attachments, $response_message2)
 		{
 			$saved_attachments = array();
