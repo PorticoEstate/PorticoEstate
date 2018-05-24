@@ -441,18 +441,20 @@
 				$this->agegroup_bo->extract_form_data($booking);
 
 				$errors = $this->bo->validate($booking);
+				$_errors = $errors;
+				unset($_errors['event']);
 
 				if (!$booking['season_id'] && $_POST['outseason'] == 'on')
 				{
-					$errors['booking'] = lang('This booking is not connected to a season');
+					$_errors['booking'] = lang('This booking is not connected to a season');
 				}
 
-				if (!$errors)
+				if (!$_errors)
 				{
 					$step++;
 				}
 
-				if (!$errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
+				if (!$_errors && $_POST['recurring'] != 'on' && $_POST['outseason'] != 'on')
 				{
 					if ($noallocation)
 					{
@@ -483,7 +485,7 @@
 					}
 					$this->redirect(array('menuaction' => 'booking.uimassbooking.schedule', 'id' => $booking['building_id']));
 				}
-				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$errors && $step > 1)
+				else if (($_POST['recurring'] == 'on' || $_POST['outseason'] == 'on') && !$_errors && $step > 1)
 				{
 					if ($_POST['recurring'] == 'on')
 					{
