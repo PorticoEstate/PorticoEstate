@@ -303,9 +303,10 @@
 
 		function handle_message($client, $item3, $folder_info)
 		{
-			_debug_array($folder_info);
+			$ticket_id = 0;
+//			_debug_array($item3);die();
 			$subject = $item3->Subject;
-			_debug_array($subject);
+//			_debug_array($subject);
 			$rool =$item3->Body->_;
 			$text_message  = array('text' => $rool);
 			$newArray = array_map(function($v)
@@ -314,22 +315,94 @@
 			 }, $text_message);
 
 			$body = $newArray['text'];
-			_debug_array($body);
+//			_debug_array($body);
 
-			$this->create_ticket($subject, $body);
+			if(preg_match("/^ISS:/" , $subject ))
+			{
+				$ticket_id = $this->create_ticket($subject, $body);
+			}
+			else if(preg_match("/^Kvittering status:/" , $subject ))
+			{
+				$this->set_order_status($subject, $body);
+			}
+			else
+			{
+				return 0;
+			}
 
-			$this->update_message($client, $item3);
-			$this->move_message($client, $item3, $folder_info);
+	//		$this->update_message($client, $item3);
+	//		$this->move_message($client, $item3, $folder_info);
+
+			return $ticket_id;
 
 		}
 
+		function set_order_status ($subject, $body)
+		{
+			$order_arr = explode(':', $subject);
+			$order_id = trim($order_arr[1]);
+
+			_debug_array($order_id);
+			$text = trim($body);
+			$textAr = explode(PHP_EOL, $text);
+			$textAr = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
+			$message_details_arr = array($subject);
+			foreach ($textAr as $line)
+			{
+
+				if(preg_match("/Untitled document/" , $line ))
+				{
+					continue;
+				}
+				if(preg_match("/Status:/" , $line ))
+				{
+					$tatus_arr = explode(':', $line);
+					$tatus_text = trim($tatus_arr[1]);
+				}
+				if(preg_match("/Lukketekst:/" , $line ))
+				{
+					$remark_arr = explode(':', $line);
+					$remark_text = trim($remark_arr[1]);
+				}
+			_debug_array($line);
+			}
+		}
 		function create_ticket ($subject, $body)
 		{
+//			_debug_array($subject);
+//			_debug_array($body);
 
-			return 0;
+			$text = trim($body);
+			$textAr = explode(PHP_EOL, $text);
+			$textAr = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
+			$message_details_arr = array($subject);
+			foreach ($textAr as $line)
+			{
 
-			//implement me
+				if(preg_match("/Untitled document/" , $line ))
+				{
+					continue;
+				}
 
+				if(preg_match("/Lokasjonskode:/" , $line ))
+				{
+					$location_arr = explode(':', $line);
+					$location_code = trim($location_arr[1]);
+				}
+				else if(preg_match("/Avviket gjelder:/" , $line ))
+				{
+					$message_title_arr = explode(':', $line);
+					$message_title = trim($message_title_arr[1]);
+				}
+				else
+				{
+					$message_details_arr[] = trim($line);
+				}
+			}
+			$message_details = implode(PHP_EOL, $message_details_arr);
+
+			$priority = 1;
+			$message_cat_id = 10006; // IK eksterne
 			$ticket = array
 			(
 				'location_code' => $location_code,
@@ -337,8 +410,10 @@
 				'priority' => $priority, //valgfri (1-3)
 				'title' => $message_title,
 				'details' => $message_details,
-				'file_input_name' => 'file' // navn på felt som inneholder fil
+//				'file_input_name' => 'file' // navn på felt som inneholder fil
 			);
+//_debug_array($ticket);
+			return 0;
 
 			return CreateObject('property.botts')->add_ticket($ticket);
 		}
