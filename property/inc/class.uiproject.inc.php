@@ -2204,8 +2204,11 @@ JS;
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_5',
-				'requestUrl' => "''",
-				'data' => json_encode($content_files),
+//				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_files',
+						'id' => $id, 'phpgw_return_as' => 'json'))),
+//				'data' => json_encode($content_files),
+				'data' => json_encode(array()),
 				'ColumnDefs' => $files_def,
 				'config' => array(
 					array('disableFilter' => true),

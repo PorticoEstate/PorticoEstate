@@ -713,3 +713,23 @@ window.get_location_exception = function (location_code)
 		}
 	});
 };
+
+this.fileuploader = function ()
+{
+	var sUrl = phpGWLink('index.php', multi_upload_parans);
+	TINY.box.show({iframe: sUrl, boxid: 'frameless', width: 750, height: 450, fixed: false, maskid: 'darkmask', maskopacity: 40, mask: true, animate: true,
+		close: true,
+		closejs: function ()
+		{
+			refresh_files()
+		}
+	});
+};
+
+this.refresh_files = function ()
+{
+	var oArgs = {menuaction:'property.uiworkorder.get_files',id:order_id};
+	var strURL = phpGWLink('index.php', oArgs, true);
+	JqueryPortico.updateinlineTableHelper('datatable-container_1', strURL);
+	JqueryPortico.updateinlineTableHelper('datatable-container_8', strURL + "&attachments=true");
+};
