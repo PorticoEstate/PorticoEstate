@@ -43,7 +43,7 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('property');
-			$this->function_msg = 'Hent bilagsinformasjon fra Agresso - og oppdatert Portico';
+			$this->function_msg = 'Hent bilagsinformasjon fra Agresso - og oppdatere Portico';
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
 		}
