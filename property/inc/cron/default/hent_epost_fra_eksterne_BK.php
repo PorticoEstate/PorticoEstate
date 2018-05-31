@@ -95,10 +95,7 @@
 		function execute()
 		{
 			$start = time();
-
-			$emails = $this->find_message();
-			die();
-
+			$this->process_messages();
 			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
@@ -125,7 +122,7 @@
 
 
 
-		function find_message()
+		function process_messages()
 		{
 			// Set connection information.
 			$host = 'epost.bergen.kommune.no';
@@ -214,7 +211,7 @@
 						$attachments = array();
 						foreach ($response_message2->Items->Message as $item3)
 						{
-							$ticket_id = $this->handle_message($client, $item3, $folder_info);
+							$target = $this->handle_message($client, $item3, $folder_info);
 
 							// If there are no attachments for the item, move on to the next
 							// message.
@@ -236,9 +233,9 @@
 							$saved_attachments = $this->handle_attachments($client, $attachments, $response_message2);
 						}
 
-						if($ticket_id && $saved_attachments)
+						if(!empty($target['id']) && $saved_attachments)
 						{
-
+							$this->add_attacthment_to_target($target, $saved_attachments);
 						}
 					}
 				}
@@ -303,10 +300,8 @@
 
 		function handle_message($client, $item3, $folder_info)
 		{
-			$ticket_id = 0;
-//			_debug_array($item3);die();
+			$target = array();
 			$subject = $item3->Subject;
-//			_debug_array($subject);
 			$rool =$item3->Body->_;
 			$text_message  = array('text' => $rool);
 			$newArray = array_map(function($v)
@@ -315,41 +310,72 @@
 			 }, $text_message);
 
 			$body = $newArray['text'];
-//			_debug_array($body);
 
 			if(preg_match("/^ISS:/" , $subject ))
 			{
 				$ticket_id = $this->create_ticket($subject, $body);
+				if($ticket_id)
+				{
+					$this->receipt['message'][] = array('msg' => "Melding #{$ticket_id} er opprettet");
+					$target['type'] = 'fmticket';
+					$target['id'] = $ticket_id;
+					$this->update_message($client, $item3);
+					$this->move_message($client, $item3, $folder_info);
+				}
 			}
 			else if(preg_match("/^Kvittering status:/" , $subject ))
 			{
-				$this->set_order_status($subject, $body);
+				$order_id = $this->set_order_status($subject, $body, $item3->LastModifiedName);
+
+				if($order_id)
+				{
+					$target['type'] = 'workorder';
+					$target['id'] = $order_id;
+					$this->receipt['message'][] = array('msg' => "Status for ordre #{$order_id} er oppdatert");
+					$this->update_message($client, $item3);
+					$this->move_message($client, $item3, $folder_info);
+				}
 			}
-			else
+			else if(preg_match("/^ISS vedlegg:/" , $subject ))
 			{
-				return 0;
+				$ticket_id = $this->get_ticket($subject);
+
+				if($ticket_id)
+				{
+					$target['type'] = 'fmticket';
+					$target['id'] = $ticket_id;
+				}
 			}
 
-	//		$this->update_message($client, $item3);
-	//		$this->move_message($client, $item3, $folder_info);
-
-			return $ticket_id;
+			return $target;
 
 		}
+		function get_ticket ($subject)
+		{
+			//ISS vedlegg: vedlegg til #ID: <din WO ID>
+			$subject_arr = explode('#', $subject);
+			$id_arr = explode(':', $subject_arr[1]);
+			$external_ticket_id = (int)($id_arr[1]);
+			$sql = "SELECT id"
+				. " FROM fm_tts_tickets"
+				. " WHERE external_ticket_id = {$external_ticket_id}";
+			$this->db->query($sql, __LINE__, __FILE__);
+			$this->db->next_record();
+			$ticket_id =  $this->db->f('id');
+			return $ticket_id;
+		}
 
-		function set_order_status ($subject, $body)
+		function set_order_status ($subject, $body, $from)
 		{
 			$order_arr = explode(':', $subject);
 			$order_id = trim($order_arr[1]);
 
-			_debug_array($order_id);
 			$text = trim($body);
 			$textAr = explode(PHP_EOL, $text);
 			$textAr = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
-			$message_details_arr = array($subject);
+			$message_details_arr = array();
 			foreach ($textAr as $line)
 			{
-
 				if(preg_match("/Untitled document/" , $line ))
 				{
 					continue;
@@ -362,16 +388,134 @@
 				if(preg_match("/Lukketekst:/" , $line ))
 				{
 					$remark_arr = explode(':', $line);
-					$remark_text = trim($remark_arr[1]);
+					$message_details_arr[] = trim($remark_arr[1]);
 				}
-			_debug_array($line);
+				else
+				{
+					$message_details_arr[] = trim($line);
+				}
 			}
+
+			$message_details = implode(PHP_EOL, $message_details_arr);
+
+			switch ($tatus_text)
+			{
+				case 'Utført EBF':
+					$status_id = 1;
+					break;
+				case 'Igangsatt EBF':
+					$status_id = 3;
+					break;
+				case 'Akseptert':
+					$status_id = 4;
+					break;
+
+				default:
+					break;
+			}
+
+			$ok = false;
+			if($order_id && $status_id)
+			{
+				$ok = $this->update_order_status($order_id, $status_id,$tatus_text, $from);
+			}
+
+			return $ok ? $order_id : false;
 		}
+
+		function update_order_status( $order_id, $status_id ,$tatus_text, $from)
+		{
+			$status_code = array
+			(
+				1 => 'utført',
+				2 => 'ikke_tilgang',
+				3 => 'i_arbeid',
+			);
+
+			$historylog = CreateObject('property.historylog', 'workorder');
+			// temporary - fix this
+			$historylog->account = 6;
+
+			$ok = false;
+			if ($status = $status_code[$status_id])
+			{
+				$this->db->query("SELECT project_id, status FROM fm_workorder WHERE id='{$order_id}'", __LINE__, __FILE__);
+				if ($this->db->next_record())
+				{
+					$project_id = (int)$this->db->f('project_id');
+					$status_old = $this->db->f('status');
+					$this->db->query("UPDATE fm_workorder SET status = '{$status}' WHERE id='{$order_id}'", __LINE__, __FILE__);
+					$historylog->add('S', $order_id, $status, $status_old);
+					$historylog->add('RM', $order_id, 'Status endret av: ' . $from);
+
+					if (in_array($status_id, array(1, 3)))
+					{
+						$this->db->query("SELECT status FROM fm_project WHERE id='{$project_id}'", __LINE__, __FILE__);
+						$this->db->next_record();
+						$status_old = $this->db->f('status');
+						if ($status_old != 'i_arbeid')
+						{
+							$this->db->query("UPDATE fm_project SET status = 'i_arbeid' WHERE id='{$project_id}'", __LINE__, __FILE__);
+							$historylog_project = CreateObject('property.historylog', 'project');
+							$historylog_project->account = 6;
+							$historylog_project->add('S', $project_id, 'i_arbeid', $status_old);
+							$historylog_project->add('RM', $project_id, "Bestilling {$order_id} endret av: {$from}");
+						}
+
+		//				execMethod('property.soworkorder.check_project_status',$order_id);
+
+						$project_status_on_last_order_closed = 'utført';
+
+						$this->db->query("SELECT count(id) AS orders_at_project FROM fm_workorder WHERE project_id= {$project_id}", __LINE__, __FILE__);
+						$this->db->next_record();
+						$orders_at_project = (int)$this->db->f('orders_at_project');
+
+						$this->db->query("SELECT count(fm_workorder.id) AS closed_orders_at_project"
+							. " FROM fm_workorder"
+							. " JOIN fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id)"
+							. " WHERE project_id= {$project_id}"
+							. " AND (fm_workorder_status.closed = 1 OR fm_workorder_status.delivered = 1)", __LINE__, __FILE__);
+
+						$this->db->next_record();
+						$closed_orders_at_project = (int)$this->db->f('closed_orders_at_project');
+
+						$this->db->query("SELECT fm_project_status.closed AS closed_project, fm_project.status as old_status"
+							. " FROM fm_project"
+							. " JOIN fm_project_status ON (fm_project.status = fm_project_status.id)"
+							. " WHERE fm_project.id= {$project_id}", __LINE__, __FILE__);
+
+						$this->db->next_record();
+						$closed_project = !!$this->db->f('closed_project');
+						$old_status = $this->db->f('old_status');
+
+						if ($status == 'utført' && $orders_at_project == $closed_orders_at_project && $old_status != $project_status_on_last_order_closed)
+						{
+							$this->db->query("UPDATE fm_project SET status = '{$project_status_on_last_order_closed}' WHERE id= {$project_id}", __LINE__, __FILE__);
+
+							$historylog_project = CreateObject('property.historylog', 'project');
+
+							$historylog_project->add('S', $project_id, $project_status_on_last_order_closed, $old_status);
+							$historylog_project->add('RM', $project_id, 'Status endret ved at siste bestilling er satt til utført');
+						}
+					}
+
+					$ok = true;
+				}
+			}
+			else
+			{
+				$historylog->add('RM', $order_id, "{$from}: $tatus_text");
+				$ok = true;
+			}
+
+			return $ok;
+		}
+
 		function create_ticket ($subject, $body)
 		{
-//			_debug_array($subject);
-//			_debug_array($body);
-
+			$subject_arr = explode('#', $subject);
+			$id_arr = explode(':', $subject_arr[1]);
+			$external_ticket_id = trim($id_arr[1]);
 			$text = trim($body);
 			$textAr = explode(PHP_EOL, $text);
 			$textAr = array_filter($textAr, 'trim'); // remove any extra \r characters left behind
@@ -410,24 +554,25 @@
 				'priority' => $priority, //valgfri (1-3)
 				'title' => $message_title,
 				'details' => $message_details,
-//				'file_input_name' => 'file' // navn på felt som inneholder fil
+				'external_ticket_id'	=> $external_ticket_id
 			);
-//_debug_array($ticket);
-			return 0;
 
 			return CreateObject('property.botts')->add_ticket($ticket);
 		}
 
-		function add_attacthment_to_ticket( $ticket_id, $saved_attachments )
+		function add_attacthment_to_target( $target, $saved_attachments )
 		{
+			$target['type'];
+			$target['id'];
+
 			$bofiles = CreateObject('property.bofiles');
 			foreach ($saved_attachments as $saved_attachment)
 			{
 				$file_name = str_replace(array(' ', '..'), array('_', '.'), $saved_attachment['name']);
 
-				if ($file_name && $ticket_id)
+				if ($file_name && $target['id'])
 				{
-					$to_file = "{$bofiles->fakebase}/fmticket/{$ticket_id}/{$file_name}";
+					$to_file = "{$bofiles->fakebase}/{$target['type']}/{$target['id']}/{$file_name}";
 
 					if ($bofiles->vfs->file_exists(array(
 							'string' => $to_file,
@@ -438,7 +583,7 @@
 					}
 					else
 					{
-						$bofiles->create_document_dir("fmticket/{$ticket_id}");
+						$bofiles->create_document_dir("{$target['type']}/{$target['id']}");
 						$bofiles->vfs->override_acl = 1;
 
 						if (!$bofiles->vfs->cp(array(
@@ -456,7 +601,6 @@
 
 		function update_message($client, $item3)
 		{
-			//_debug_array($item3);
 			$message_id = $item3->ItemId->Id;
 			$message_change_key = $item3->ItemId->ChangeKey;
 

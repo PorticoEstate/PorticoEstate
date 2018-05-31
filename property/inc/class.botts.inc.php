@@ -1083,7 +1083,8 @@
 				'street_name' => $location_details['street_name'],
 				'street_number' => $location_details['street_number'],
 				'location_name' => $location_details['loc1_name'],
-				'send_mail'		=> true
+				'send_mail'		=> true,
+				'external_ticket_id' => !empty($data['external_ticket_id']) ? $data['external_ticket_id'] : null,
 			);
 
 			$result = $this->add($ticket);
