@@ -316,8 +316,8 @@
 					// Scan directory
 					$files = array();
 					echo "Scanning {$directory_remote}<br/>";
-					$dir = "ssh2.sftp://$sftp$directory_remote";
-			//		$dir = "ssh2.sftp://" . (int)$sftp . "$directory_remote";
+			//		$dir = "ssh2.sftp://$sftp$directory_remote";
+					$dir = "ssh2.sftp://" . (int)$sftp . "$directory_remote";
 					$handle = opendir($dir);
 					while (false !== ($file = readdir($handle)))
 					{
@@ -327,17 +327,18 @@
 							continue;
 						}
 
-						/* 						if ($this->debug)
-						  {
-						  $size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
-						  echo "File $file Size: $size<br/>";
+						/*
+						if ($this->debug)
+						{
+							$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
+							echo "File $file Size: $size<br/>";
 
-						  $stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
-						  $contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
-						  @fclose($stream);
-						  echo "CONTENTS: $contents<br/><br/>";
-						  }
-						 */
+							$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
+							$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
+							@fclose($stream);
+							echo "CONTENTS: $contents<br/><br/>";
+						}
+						*/
 						$files[] = $file;
 					}
 
@@ -355,10 +356,10 @@
 								$file_remote = "{$directory_remote}/{$file_name}";
 								$file_local = "{$directory_local}/{$file_name}";
 
-							//	$stream = fopen("ssh2.sftp://" . (int)$sftp . "$file_remote", 'r');
-								$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
-							//	$contents = fread($stream, filesize("ssh2.sftp://" . (int)$sftp . "$file_remote"));
-								$contents = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
+								$stream = fopen("ssh2.sftp://" . (int)$sftp . "$file_remote", 'r');
+							//	$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
+								$contents = fread($stream, filesize("ssh2.sftp://" . (int)$sftp . "$file_remote"));
+							//	$contents = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
 								fclose($stream);
 
 								$fp = fopen($file_local, "wb");
