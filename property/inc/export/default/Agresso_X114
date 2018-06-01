@@ -31,6 +31,10 @@
 	 * @package property
 	 */
 	phpgw::import_class('phpgwapi.datetime');
+	require_once PHPGW_API_INC . '/flysystem/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\Sftp\SftpAdapter;
 
 	class export_conv
 	{
@@ -1108,11 +1112,12 @@
 						$transfer_ok = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
 						break;
 					case 'ssh';
-						$sftp = ssh2_sftp($connection);
-						$stream = @fopen("ssh2.sftp://" . (int)$sftp . "$remote_file", 'w');
-						$data_to_send = @file_get_contents($Filnavn);
-						fwrite($stream, $data_to_send);
-						$transfer_ok = @fclose($stream);
+//						$sftp = ssh2_sftp($connection);
+//						$stream = @fopen("ssh2.sftp://" . (int)$sftp . "$remote_file", 'w');
+//						$data_to_send = @file_get_contents($Filnavn);
+//						fwrite($stream, $data_to_send);
+//						$transfer_ok = @fclose($stream);
+						$transfer_ok = $connection->write(basename($Filnavn), $data_to_send);
 						break;
 					default:
 						$transfer_ok = false;
@@ -1144,6 +1149,7 @@
 			$server = $this->config->config_data['common']['host'];
 			$user = $this->config->config_data['common']['user'];
 			$password = $this->config->config_data['common']['password'];
+			$basedir = $this->config->config_data['export']['remote_basedir'];
 			$port = 22;
 
 			switch ($this->config->config_data['common']['method'])
@@ -1155,26 +1161,35 @@
 					}
 					break;
 				case 'ssh';
-					if (!function_exists("ssh2_connect"))
-					{
-						die("function ssh2_connect doesn't exist");
-					}
-					if (!($connection = ssh2_connect("$server", $port)))
-					{
-						$message = "fail: unable to establish connection";
-						_debug_array($message);
-						//$receipt['error'][]= array('msg' => $message);
-					}
-					else
-					{
-						// try to authenticate with username root, password secretpassword
-						if (!ssh2_auth_password($connection, $user, $password))
-						{
-							$message = "fail: unable to authenticate";
-							_debug_array($message);
-							//$receipt['error'][]= array('msg' => $message);
-						}
-					}
+					$connection = new Filesystem(new SftpAdapter([
+						'host' => $server,
+						'port' => $port,
+						'username' => $user,
+						'password' => $password,
+						'root' => $basedir,
+						'timeout' => 10,
+					]));
+
+//					if (!function_exists("ssh2_connect"))
+//					{
+//						die("function ssh2_connect doesn't exist");
+//					}
+//					if (!($connection = ssh2_connect("$server", $port)))
+//					{
+//						$message = "fail: unable to establish connection";
+//						_debug_array($message);
+//						//$receipt['error'][]= array('msg' => $message);
+//					}
+//					else
+//					{
+//						// try to authenticate with username root, password secretpassword
+//						if (!ssh2_auth_password($connection, $user, $password))
+//						{
+//							$message = "fail: unable to authenticate";
+//							_debug_array($message);
+//							//$receipt['error'][]= array('msg' => $message);
+//						}
+//					}
 					break;
 			}
 			$this->connection = $connection;
