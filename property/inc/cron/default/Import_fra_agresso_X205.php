@@ -355,7 +355,7 @@
 						$file_remote = $file_name;
 						$file_local = "{$directory_local}/{$file_name}";
 
-						$contents = $filesystem->read($file);
+						$contents = $filesystem->read($file_name);
 
 						$fp = fopen($file_local, "wb");
 						fwrite($fp, $contents);
@@ -380,6 +380,10 @@
 								}
 							}
 						}
+					}
+					else
+					{
+						echo "skip {$file_name}<br/>";
 					}
 				}
 			}
