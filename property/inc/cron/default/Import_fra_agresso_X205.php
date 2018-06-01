@@ -32,6 +32,10 @@
 	 * @package property
 	 */
 	include_class('property', 'cron_parent', 'inc/cron/');
+	require_once PHPGW_API_INC . '/flysystem/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\Sftp\SftpAdapter;
 
 	class Import_fra_agresso_X205 extends property_cron_parent
 	{
@@ -290,100 +294,89 @@
 			$directory_local = rtrim($this->config->config_data['import']['local_path'], '/');
 			$port = 22;
 
-			if (!function_exists("ssh2_connect"))
+			$filesystem = new Filesystem(new SftpAdapter([
+				'host' => $server,
+				'port' => $port,
+				'username' => $user,
+				'password' => $password,
+				'root' => $directory_remote,
+				'timeout' => 10,
+			]));
+	
+			try
 			{
-				die("function ssh2_connect doesn't exist");
+				$listing = $filesystem->listContents();
 			}
-			if (!($connection = ssh2_connect($server, $port)))
+			catch (Exception $exc)
 			{
-				echo "fail: unable to establish connection\n";
+				echo $exc->getMessage();
+				return;
+			}
+
+			// allright, we're in!
+			echo "okay: logged in...<br/>\n";
+
+			// Scan directory
+			$files = array();
+			echo "Scanning {$directory_remote}<br/>\n";
+
+			foreach ($listing as $object)
+			{
+				$file = $object['basename'];
+
+				if ($object['type'] == 'dir')
+				{
+					echo "Directory: $file<br/>\n";
+					continue;
+				}
+
+				$size = $filesystem->getSize($file);
+				echo "File $file Size: $size<br/>\n";
+
+				if ($this->debug)
+				{
+					$contents = $filesystem->read($file);
+					echo "CONTENTS: $contents<br/><br/>\n\n";
+				}
+
+				$files[] = $file;
+			}
+
+			if ($this->debug)
+			{
+				_debug_array($files);
 			}
 			else
 			{
-				// try to authenticate with username root, password secretpassword
-				if (!ssh2_auth_password($connection, $user, $password))
+				foreach ($files as $file_name)
 				{
-					echo "fail: unable to authenticate\n";
-				}
-				else
-				{
-					// allright, we're in!
-					echo "okay: logged in...<br/>";
-
-					// Enter "sftp" mode
-					$sftp = @ssh2_sftp($connection);
-
-					// Scan directory
-					$files = array();
-					echo "Scanning {$directory_remote}<br/>";
-			//		$dir = "ssh2.sftp://$sftp$directory_remote";
-					$dir = "ssh2.sftp://" . (int)$sftp . "$directory_remote";
-					$handle = opendir($dir);
-					while (false !== ($file = readdir($handle)))
+					if(preg_match("/^Px205/" , $file_name ))
 					{
-						if (is_dir($file))
-						{
-							echo "Directory: $file<br/>";
-							continue;
-						}
+						$file_remote = $file_name;
+						$file_local = "{$directory_local}/{$file_name}";
 
-						/*
-						if ($this->debug)
-						{
-							$size = filesize("ssh2.sftp://$sftp$directory_remote/$file");
-							echo "File $file Size: $size<br/>";
+						$contents = $filesystem->read($file);
 
-							$stream = @fopen("ssh2.sftp://$sftp$directory_remote/$file", 'r');
-							$contents = fread($stream, filesize("ssh2.sftp://$sftp$directory_remote/$file"));
-							@fclose($stream);
-							echo "CONTENTS: $contents<br/><br/>";
-						}
-						*/
-						$files[] = $file;
-					}
+						$fp = fopen($file_local, "wb");
+						fwrite($fp, $contents);
 
-					if ($this->debug)
-					{
-						_debug_array($files);
-					}
-					else
-					{
-						foreach ($files as $file_name)
+						if (fclose($fp))
 						{
-							if (stripos($file_name, 'Px205') === 0)
+							echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
+							if ($filesystem->has("archive/{$file_name}") && $filesystem->delete("archive/{$file_name}"))
 							{
-								//		_debug_array($file_name);
-								$file_remote = "{$directory_remote}/{$file_name}";
-								$file_local = "{$directory_local}/{$file_name}";
-
-								$stream = fopen("ssh2.sftp://" . (int)$sftp . "$file_remote", 'r');
-							//	$stream = fopen("ssh2.sftp://$sftp$file_remote", 'r');
-								$contents = fread($stream, filesize("ssh2.sftp://" . (int)$sftp . "$file_remote"));
-							//	$contents = fread($stream, filesize("ssh2.sftp://$sftp$file_remote"));
-								fclose($stream);
-
-								$fp = fopen($file_local, "wb");
-								fwrite($fp, $contents);
-
-								if (fclose($fp))
+								echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
+							}
+							if ($filesystem->rename($file_remote, "archive/{$file_name}"))
+							{
+								echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
+							}
+							else
+							{
+								echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
+								if (unlink($file_local))
 								{
-									echo "File remote: {$file_remote} was copied to local: $file_local<br/>";
-									if (ssh2_sftp_unlink($sftp, "{$directory_remote}/archive/{$file_name}"))
-									{
-										echo "Deleted duplicate File remote: {$directory_remote}/archive/{$file_name}<br/>";
-									}
-									if (ssh2_sftp_rename($sftp, $file_remote, "{$directory_remote}/archive/{$file_name}"))
-									{
-										echo "File remote: {$file_remote} was moved to remote: {$directory_remote}/archive/{$file_name}<br/>";
-									}
-									else
-									{
-										echo "ERROR! File remote: {$file_remote} failed to move to remote: {$directory_remote}/archive/{$file_name}<br/>";
-										if (unlink($file_local))
-										{
-											echo "Lokal file was deleted: {$file_local}<br/>";
-										}
-									}
+									echo "Lokal file was deleted: {$file_local}<br/>";
 								}
 							}
 						}
