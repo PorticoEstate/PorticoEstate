@@ -513,7 +513,6 @@
 						ftp_quit($this->connection);
 						break;
 					case 'ssh';
-						ssh2_exec($this->connection, 'exit');
 						break;
 				}
 			}
@@ -1112,11 +1111,7 @@
 						$transfer_ok = ftp_put($connection, $remote_file, $Filnavn, FTP_BINARY);
 						break;
 					case 'ssh';
-//						$sftp = ssh2_sftp($connection);
-//						$stream = @fopen("ssh2.sftp://" . (int)$sftp . "$remote_file", 'w');
-//						$data_to_send = @file_get_contents($Filnavn);
-//						fwrite($stream, $data_to_send);
-//						$transfer_ok = @fclose($stream);
+						$data_to_send = @file_get_contents($Filnavn);
 						$transfer_ok = $connection->write(basename($Filnavn), $data_to_send);
 						break;
 					default:
