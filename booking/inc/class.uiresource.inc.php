@@ -17,6 +17,7 @@
 			'query' => true,
 			'add' => true,
 			'edit' => true,
+			'edit_activities' => true,
 			'get_custom' => true,
 			'show' => true,
 			'schedule' => true,
@@ -46,6 +47,7 @@
 				'sort' => 'string',
 				'organizations_ids' => 'string',
 				'rescategory_id' => 'int',
+				'activities' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources');
 		}
@@ -96,7 +98,7 @@
 						),
 						array(
 							'key' => 'activity_name',
-							'label' => lang('Activity')
+							'label' => lang('Main activity')
 						),
 						array(
 							'key' => 'rescategory_name',
@@ -272,6 +274,69 @@
 			return ".resource.{$top_level_activity}";
 		}
 
+
+		public function edit_activities()
+		{
+			$id = phpgw::get_var('id', 'int');
+			$resource = $this->bo->read_single($id);
+			$resource['id'] = $id;
+
+			$errors = array();
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('edit resource activities'), 'link' => '#resource_edit_activities');
+			$active_tab = 'generic';
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				array_set_default($_POST, 'activities', array());
+				$resource = array_merge($resource, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($resource);
+				if (!$errors)
+				{
+					// Exclude any activities that don't belong to the main activity. Such activities can't normally be
+					// added in UI, but check for this nonetheless. Also check that the activities are active
+					$activitylist = $this->activity_bo->fetch_activities_hierarchy();
+					$childactivities = array();
+					if (array_key_exists($resource['activity_id'], $activitylist))
+					{
+						$childactivities = $activitylist[$resource['activity_id']]['children'];
+					}
+					$resactivities = array();
+					foreach ($resource['activities'] as $activity_id)
+					{
+						if (array_key_exists($activity_id, $childactivities))
+						{
+							$childactivity = $childactivities[$activity_id];
+							if ($childactivity['active'])
+							{
+								$resactivities[] = $activity_id;
+							}
+						}
+					}
+					$resource['activities'] = $resactivities;
+
+					try
+					{
+						$receipt = $this->bo->update($resource);
+						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+					}
+					catch (booking_unauthorized_exception $e)
+					{
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
+				}
+			}
+
+			$this->flash_form_errors($errors);
+			$resource['activities_json'] = json_encode(array_map('intval', $resource['activities']));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array());
+
+			self::render_template_xsl('resource_edit_activities', array('resource' => $resource));
+		}
+
+
 		public function get_custom()
 		{
 			$type = phpgw::get_var('type', 'string', 'REQUEST', 'form');
@@ -445,6 +510,31 @@
 			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.index'));
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
+			$resource['edit_activities_link'] = self::link(array('menuaction' => 'booking.uiresource.edit_activities',
+					'id' => $resource['id']));
+
+			// Add a list of activities. Only active activities are included, and only activities belonging to the top
+			// level activity defined for the resource
+			$activitylist = $this->activity_bo->fetch_activities_hierarchy();
+			$childactivities = array();
+			if (array_key_exists($resource['activity_id'], $activitylist))
+			{
+				$childactivities = $activitylist[$resource['activity_id']]['children'];
+			}
+			$resactivities = array();
+			foreach ($resource['activities'] as $activity_id)
+			{
+				if (array_key_exists($activity_id, $childactivities))
+				{
+					$childactivity = $childactivities[$activity_id];
+					if ($childactivity['active'])
+					{
+						$resactivities[] = $childactivity['name'];
+					}
+				}
+			}
+			usort($resactivities, function ($a,$b) { return strcmp($a['name'],$b['name']); });
+			$resource['activities_list'] = implode(', ', $resactivities);
 
 			$tabs = array();
 			$tabs['generic'] = array(

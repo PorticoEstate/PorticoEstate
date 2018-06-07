@@ -724,8 +724,11 @@ return to application	booking	no	Tilbake til søknad
 application add	booking	no	Ny søknad
 duplicate in name	booking	no	Navnet finnes fra før
 At least one activity must be selected	booking	no	Det må velges minst én aktivitet
+Edit activities	booking	no	Rediger aktiviteter
+edit resource activities	booking	no	Rediger ressursaktiviteter
 edit resource category	booking	no	Rediger ressurskategori
 Front page filtering	booking	no	Filtrering på forside
+Main activity	booking	no	Hovedaktivitet
 New resource category	booking	no	Ny ressurskategori
 Not a top level activity	booking	no	Det er valgt aktiviteter som ikke er på toppnivå
 One filter box per line	booking	no	Bare én filtreringsboks per linje

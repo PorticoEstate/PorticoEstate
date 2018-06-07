@@ -3765,3 +3765,35 @@
 			return $GLOBALS['setup_info']['booking']['currentver'];
 		}
 	}
+
+	/**
+	 * Update booking version from 0.2.33 to 0.2.34
+	 *
+	 */
+	$test[] = '0.2.33';
+	function booking_upgrade0_2_33()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->CreateTable(
+			'bb_resource_activity', array(
+				'fd' => array(
+					'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+					'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				),
+				'pk' => array('resource_id', 'activity_id'),
+				'fk' => array(
+					'bb_resource' => array('resource_id' => 'id'),
+					'bb_activity' => array('activity_id' => 'id')
+				),
+				'ix' => array(),
+				'uc' => array(),
+			)
+		);
+
+		if ($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['booking']['currentver'] = '0.2.34';
+			return $GLOBALS['setup_info']['booking']['currentver'];
+		}
+	}

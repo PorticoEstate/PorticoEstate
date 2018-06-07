@@ -90,6 +90,12 @@
 						'key' => 'resource_id',
 						'column' => 'building_id'
 					)),
+				'activities' => array('type' => 'int',
+					'manytomany' => array(
+						'table' => 'bb_resource_activity',
+						'key' => 'resource_id',
+						'column' => 'activity_id',
+					)),
 				)
 			);
 			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];

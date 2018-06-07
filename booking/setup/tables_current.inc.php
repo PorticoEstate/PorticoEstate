@@ -134,6 +134,19 @@
 			'ix' => array(),
 			'uc' => array()
 		),
+		'bb_resource_activity' => array(
+			'fd' => array(
+				'resource_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'activity_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+			),
+			'pk' => array('resource_id', 'activity_id'),
+			'fk' => array(
+				'bb_resource' => array('resource_id' => 'id'),
+				'bb_activity' => array('activity_id' => 'id')
+			),
+			'ix' => array(),
+			'uc' => array(),
+		),
 		'bb_building_resource' => array(
 			'fd' => array(
 				'building_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),

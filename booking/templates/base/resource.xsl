@@ -42,19 +42,6 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
-						<xsl:value-of select="php:function('lang', 'Activity')" />
-					</label>
-					<span>
-						<xsl:value-of select="resource/activity_name"/>
-					</span>
-					<script type="text/javascript">
-						var default_schema = "<xsl:value-of select="resource/activity_name"/>";
-						var schema_type = "view";
-					</script>
-
-				</div>
-				<div class="pure-control-group">
-					<label>
 						<xsl:value-of select="php:function('lang', 'Resource category')"/>
 					</label>
 					<span>
@@ -70,6 +57,39 @@
 					</span>
 				</div>
 				<input type= "hidden" id="field_activity_id" value="{resource/activity_id}"/>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Main activity')" />
+					</label>
+					<span>
+						<xsl:value-of select="resource/activity_name"/>
+					</span>
+					<script type="text/javascript">
+						var default_schema = "<xsl:value-of select="resource/activity_name"/>";
+						var schema_type = "view";
+					</script>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Activities')"/>
+					</label>
+					<span>
+						<xsl:value-of select="resource/activities_list"/>
+					</span>
+				</div>
+				<xsl:if test="resource/permission/write">
+					<div class="pure-control-group">
+						<label></label>
+					    <span>
+							<a class='button'>
+								<xsl:attribute name="href">
+									<xsl:value-of select="resource/edit_activities_link"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Edit activities')" />
+							</a>
+						</span>
+					</div>
+				</xsl:if>
 				<div id="custom_fields"></div>
 				<div class="pure-control-group">
 					<label>

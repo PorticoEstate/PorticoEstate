@@ -27,24 +27,6 @@
 				<xsl:if test="not(new_form)">
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Activity')" />
-						</label>
-						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
-						<select id="field_activity_id" name="activity_id">
-							<xsl:for-each select="activitydata/results">
-								<option value="{id}">
-									<xsl:if test="resource_id=id">
-										<xsl:attribute name="selected">selected</xsl:attribute>
-									</xsl:if>
-									<xsl:value-of select="name" />
-								</option>
-							</xsl:for-each>
-						</select>
-					</div>
-				</xsl:if>
-				<xsl:if test="not(new_form)">
-					<div class="pure-control-group">
-						<label>
 							<xsl:value-of select="php:function('lang', 'Resource category')" />
 						</label>
 						<input id="field_schema_rescategory_id" type="hidden" name="schema_rescategory_id" value=""/>
@@ -61,6 +43,24 @@
 							<xsl:for-each select="rescategorydata">
 								<option value="{id}">
 									<xsl:if test="id=../resource/rescategory_id">
+										<xsl:attribute name="selected">selected</xsl:attribute>
+									</xsl:if>
+									<xsl:value-of select="name" />
+								</option>
+							</xsl:for-each>
+						</select>
+					</div>
+				</xsl:if>
+				<xsl:if test="not(new_form)">
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'Main activity')" />
+						</label>
+						<input id="field_schema_activity_id" type="hidden" name="schema_activity_id" value=""/>
+						<select id="field_activity_id" name="activity_id">
+							<xsl:for-each select="activitydata/results">
+								<option value="{id}">
+									<xsl:if test="resource_id=id">
 										<xsl:attribute name="selected">selected</xsl:attribute>
 									</xsl:if>
 									<xsl:value-of select="name" />

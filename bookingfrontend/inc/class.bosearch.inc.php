@@ -12,6 +12,7 @@
 			$this->soresource = CreateObject('booking.soresource');
 			$this->soevent = CreateObject('booking.soevent');
 			$this->borescategory = CreateObject('booking.borescategory');
+			$this->boactivity = CreateObject('booking.boactivity');
 		}
 
 		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() )
@@ -250,7 +251,10 @@
 		{
 			$fields_resource = array('id','name');
 			$fields_building = array('id','name','street','zip_code','city');
-			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
+
+			// Get a list of all activities, grouped on top level activities
+			$activitylist = $this->boactivity->fetch_activities_hierarchy();
+
 			// Validate parameters
 			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
 			{
@@ -258,14 +262,19 @@
 			}
 
 			// Get resources
+			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
 			$resource_filters['rescategory_id'] = $params['rescategory_id'];
 			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort'));
 
-			// Group the resources on buildings, and get data on the buildings to which the resources belong
+			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
+			// activities
 			$building_resources = array();
+			$all_activities = array();
 			foreach ($resources['results'] as &$resource)
 			{
 				$building_ids = $resource['buildings'];
+				$toplevelactivity_id = $resource['activity_id'];
+				$activity_ids = $resource['activities'];
 				foreach ($resource as $k => $v)
 				{
 					if (!in_array($k,$fields_resource))
@@ -273,12 +282,39 @@
 						unset($resource[$k]);
 					}
 				}
+				// Add a list of activities with id and name. Only active activities are included, and only activities
+				// belonging to the top level activity defined for the resource
+				$childactivities = array();
+				if (array_key_exists($toplevelactivity_id, $activitylist))
+				{
+					$childactivities = $activitylist[$toplevelactivity_id]['children'];
+				}
+				$resource['activities'] = array();
+				foreach ($activity_ids as $activity_id)
+				{
+					if (array_key_exists($activity_id, $childactivities))
+					{
+						$childactivity = $childactivities[$activity_id];
+						if ($childactivity['active'])
+						{
+							$resource['activities'][] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
+							if (!array_key_exists($childactivity['id'], $all_activities))
+							{
+								$all_activities[$childactivity['id']] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
+							}
+						}
+					}
+				}
+				usort($resource['activities'], function ($a,$b) { return strcmp($a['name'],$b['name']); });
 				foreach ($building_ids as $building_id)
 				{
 					$building_resources[$building_id][] = $resource;
 				}
 			}
 			unset($resource);
+			$all_activities_list = array_values($all_activities);
+			usort($all_activities_list, function ($a,$b) { return strcmp($a['name'],$b['name']); });
+
 			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
 			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
 			foreach ($buildings['results'] as &$building)
@@ -294,7 +330,7 @@
 			}
 			unset($building);
 
-			return array('buildings' => $buildings);
+			return array('buildings' => $buildings, 'activities' => $all_activities_list);
 		}
 
 
