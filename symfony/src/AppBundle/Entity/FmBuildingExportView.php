@@ -271,7 +271,7 @@ class FmBuildingExportView
 	/**
 	 * @param string $manager_name
 	 */
-	public function setManagerName(string $manager_name): void
+	public function setManagerName(string $manager_name)
 	{
 		$this->manager_name = $manager_name;
 	}
@@ -287,7 +287,7 @@ class FmBuildingExportView
 	/**
 	 * @param string $manager_agresso_id
 	 */
-	public function setManagerAgressoId(string $manager_agresso_id): void
+	public function setManagerAgressoId(string $manager_agresso_id)
 	{
 		$this->manager_agresso_id = $manager_agresso_id;
 	}
@@ -295,7 +295,7 @@ class FmBuildingExportView
 	/**
 	 * @return int
 	 */
-	public function getManagerUserId(): ?int
+	public function getManagerUserId()
 	{
 		return $this->manager_user_id;
 	}
@@ -303,7 +303,7 @@ class FmBuildingExportView
 	/**
 	 * @param int $manager_user_id
 	 */
-	public function setManagerUserId(int $manager_user_id): void
+	public function setManagerUserId(int $manager_user_id)
 	{
 		$this->manager_user_id = $manager_user_id;
 	}
@@ -311,7 +311,7 @@ class FmBuildingExportView
 	/**
 	 * @return int
 	 */
-	public function getManagerAccountId(): ?int
+	public function getManagerAccountId()
 	{
 		return $this->manager_account_id;
 	}
@@ -319,7 +319,7 @@ class FmBuildingExportView
 	/**
 	 * @param int $manager_account_id
 	 */
-	public function setManagerAccountId(int $manager_account_id): void
+	public function setManagerAccountId(int $manager_account_id)
 	{
 		$this->manager_account_id = $manager_account_id;
 	}

@@ -57,7 +57,7 @@ class GwAccount
 	/**
 	 * @param int $account_id
 	 */
-	public function setAccountId(int $account_id): void
+	public function setAccountId(int $account_id)
 	{
 		$this->account_id = $account_id;
 	}
@@ -73,7 +73,7 @@ class GwAccount
 	/**
 	 * @param string $account_firstname
 	 */
-	public function setAccountFirstname(string $account_firstname): void
+	public function setAccountFirstname(string $account_firstname)
 	{
 		$this->account_firstname = $account_firstname;
 	}
@@ -89,7 +89,7 @@ class GwAccount
 	/**
 	 * @param string $account_lastname
 	 */
-	public function setAccountLastname(string $account_lastname): void
+	public function setAccountLastname(string $account_lastname)
 	{
 		$this->account_lastname = $account_lastname;
 	}
@@ -105,7 +105,7 @@ class GwAccount
 	/**
 	 * @param int $person_id
 	 */
-	public function setPersonId(int $person_id): void
+	public function setPersonId(int $person_id)
 	{
 		$this->person_id = $person_id;
 	}

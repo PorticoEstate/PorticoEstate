@@ -60,7 +60,7 @@ class FmGab
 	/**
 	 * @param string $location_code
 	 */
-	public function setLocationCode(string $location_code): void
+	public function setLocationCode(string $location_code)
 	{
 		$this->location_code = $location_code;
 	}
@@ -76,7 +76,7 @@ class FmGab
 	/**
 	 * @param string $loc1
 	 */
-	public function setLoc1(string $loc1): void
+	public function setLoc1(string $loc1)
 	{
 		$this->loc1 = $loc1;
 	}
@@ -92,7 +92,7 @@ class FmGab
 	/**
 	 * @param string $loc2
 	 */
-	public function setLoc2(string $loc2): void
+	public function setLoc2(string $loc2)
 	{
 		$this->loc2 = $loc2;
 	}
@@ -108,7 +108,7 @@ class FmGab
 	/**
 	 * @param string $address
 	 */
-	public function setAddress(string $address): void
+	public function setAddress(string $address)
 	{
 		$this->address = $address;
 	}
@@ -124,7 +124,7 @@ class FmGab
 	/**
 	 * @param string $gab_id
 	 */
-	public function setGabId(string $gab_id): void
+	public function setGabId(string $gab_id)
 	{
 		$this->gab_id = $gab_id;
 	}

@@ -63,7 +63,7 @@ class GwPreference
 	/**
 	 * @param int $preference_owner
 	 */
-	public function setPreferenceOwner(int $preference_owner): void
+	public function setPreferenceOwner(int $preference_owner)
 	{
 		$this->preference_owner = $preference_owner;
 	}
@@ -79,7 +79,7 @@ class GwPreference
 	/**
 	 * @param string $preference_app
 	 */
-	public function setPreferenceApp(string $preference_app): void
+	public function setPreferenceApp(string $preference_app)
 	{
 		$this->preference_app = $preference_app;
 	}
@@ -95,7 +95,7 @@ class GwPreference
 	/**
 	 * @param array $preference_value
 	 */
-	public function setPreferenceValue(array $preference_value): void
+	public function setPreferenceValue(array $preference_value)
 	{
 		$this->preference_value = $preference_value;
 	}
@@ -111,7 +111,7 @@ class GwPreference
 	/**
 	 * @param string $resource_number
 	 */
-	public function setResourceNumber(string $resource_number): void
+	public function setResourceNumber(string $resource_number)
 	{
 		$this->resource_number = $resource_number;
 	}

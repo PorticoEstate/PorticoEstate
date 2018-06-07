@@ -78,7 +78,7 @@ class HmManagerForBuildingView
 	/**
 	 * @param string $location_code
 	 */
-	public function setLocationCode(string $location_code): void
+	public function setLocationCode(string $location_code)
 	{
 		$this->location_code = $location_code;
 	}
@@ -94,7 +94,7 @@ class HmManagerForBuildingView
 	/**
 	 * @param string $loc1_name
 	 */
-	public function setLoc1Name(string $loc1_name): void
+	public function setLoc1Name(string $loc1_name)
 	{
 		$this->loc1_name = $loc1_name;
 	}
@@ -110,7 +110,7 @@ class HmManagerForBuildingView
 	/**
 	 * @param string $first_name
 	 */
-	public function setFirstName(string $first_name): void
+	public function setFirstName(string $first_name)
 	{
 		$this->first_name = $first_name;
 	}
@@ -126,7 +126,7 @@ class HmManagerForBuildingView
 	/**
 	 * @param string $last_name
 	 */
-	public function setLastName(string $last_name): void
+	public function setLastName(string $last_name)
 	{
 		$this->last_name = $last_name;
 	}
@@ -150,7 +150,7 @@ class HmManagerForBuildingView
 	/**
 	 * @param string $agresso_id
 	 */
-	public function setAgressoId(string $agresso_id): void
+	public function setAgressoId(string $agresso_id)
 	{
 		$this->agresso_id = $agresso_id;
 	}

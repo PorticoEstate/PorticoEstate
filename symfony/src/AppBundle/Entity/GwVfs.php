@@ -110,7 +110,7 @@ class GwVfs
 	/**
 	 * @param int $file_id
 	 */
-	public function setFileId(int $file_id): void
+	public function setFileId(int $file_id)
 	{
 		$this->file_id = $file_id;
 	}
@@ -126,7 +126,7 @@ class GwVfs
 	/**
 	 * @param int $owner_id
 	 */
-	public function setOwnerId(int $owner_id): void
+	public function setOwnerId(int $owner_id)
 	{
 		$this->owner_id = $owner_id;
 	}
@@ -142,7 +142,7 @@ class GwVfs
 	/**
 	 * @param int $createdby_id
 	 */
-	public function setCreatedbyId(int $createdby_id): void
+	public function setCreatedbyId(int $createdby_id)
 	{
 		$this->createdby_id = $createdby_id;
 	}
@@ -158,7 +158,7 @@ class GwVfs
 	/**
 	 * @param datetime $created
 	 */
-	public function setCreated(datetime $created): void
+	public function setCreated(datetime $created)
 	{
 		$this->created = $created;
 	}
@@ -174,7 +174,7 @@ class GwVfs
 	/**
 	 * @param int $size
 	 */
-	public function setSize(int $size): void
+	public function setSize(int $size)
 	{
 		$this->size = $size;
 	}
@@ -190,7 +190,7 @@ class GwVfs
 	/**
 	 * @param string $mime_type
 	 */
-	public function setMimeType(string $mime_type): void
+	public function setMimeType(string $mime_type)
 	{
 		$this->mime_type = $mime_type;
 	}
@@ -206,7 +206,7 @@ class GwVfs
 	/**
 	 * @param string $comment
 	 */
-	public function setComment(string $comment): void
+	public function setComment(string $comment)
 	{
 		$this->comment = $comment;
 	}
@@ -222,7 +222,7 @@ class GwVfs
 	/**
 	 * @param string $app
 	 */
-	public function setApp(string $app): void
+	public function setApp(string $app)
 	{
 		$this->app = $app;
 	}
@@ -238,7 +238,7 @@ class GwVfs
 	/**
 	 * @param string $directory
 	 */
-	public function setDirectory(string $directory): void
+	public function setDirectory(string $directory)
 	{
 		$this->directory = $directory;
 	}
@@ -254,7 +254,7 @@ class GwVfs
 	/**
 	 * @param string $name
 	 */
-	public function setName(string $name): void
+	public function setName(string $name)
 	{
 		$this->name = $name;
 	}
@@ -270,7 +270,7 @@ class GwVfs
 	/**
 	 * @param string $version
 	 */
-	public function setVersion(string $version): void
+	public function setVersion(string $version)
 	{
 		$this->version = $version;
 	}

@@ -50,7 +50,7 @@ class GwConfig
 	/**
 	 * @param string $config_app
 	 */
-	public function setConfigApp(string $config_app): void
+	public function setConfigApp(string $config_app)
 	{
 		$this->config_app = $config_app;
 	}
@@ -66,7 +66,7 @@ class GwConfig
 	/**
 	 * @param string $config_name
 	 */
-	public function setConfigName(string $config_name): void
+	public function setConfigName(string $config_name)
 	{
 		$this->config_name = $config_name;
 	}
@@ -82,7 +82,7 @@ class GwConfig
 	/**
 	 * @param string $config_value
 	 */
-	public function setConfigValue(string $config_value): void
+	public function setConfigValue(string $config_value)
 	{
 		$this->config_value = $config_value;
 	}

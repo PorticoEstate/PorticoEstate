@@ -239,7 +239,7 @@ class FmTtsTicket
 	/**
 	 * @param int $id
 	 */
-	public function setId(int $id): void
+	public function setId(int $id)
 	{
 		$this->id = $id;
 	}
@@ -255,7 +255,7 @@ class FmTtsTicket
 	/**
 	 * @param int $group_id
 	 */
-	public function setGroupId(int $group_id): void
+	public function setGroupId(int $group_id)
 	{
 		$this->group_id = $group_id;
 	}
@@ -271,7 +271,7 @@ class FmTtsTicket
 	/**
 	 * @param int $priority
 	 */
-	public function setPriority(int $priority): void
+	public function setPriority(int $priority)
 	{
 		$this->priority = $priority;
 	}
@@ -287,7 +287,7 @@ class FmTtsTicket
 	/**
 	 * @param int $user_id
 	 */
-	public function setUserId(int $user_id): void
+	public function setUserId(int $user_id)
 	{
 		$this->user_id = $user_id;
 	}
@@ -303,7 +303,7 @@ class FmTtsTicket
 	/**
 	 * @param int $assignedto
 	 */
-	public function setAssignedto(int $assignedto): void
+	public function setAssignedto(int $assignedto)
 	{
 		$this->assignedto = $assignedto;
 	}
@@ -319,7 +319,7 @@ class FmTtsTicket
 	/**
 	 * @param string $subject
 	 */
-	public function setSubject(string $subject): void
+	public function setSubject(string $subject)
 	{
 		$this->subject = $subject;
 	}
@@ -335,7 +335,7 @@ class FmTtsTicket
 	/**
 	 * @param int $cat_id
 	 */
-	public function setCatId(int $cat_id): void
+	public function setCatId(int $cat_id)
 	{
 		$this->cat_id = $cat_id;
 	}
@@ -351,7 +351,7 @@ class FmTtsTicket
 	/**
 	 * @param string $status
 	 */
-	public function setStatus(string $status): void
+	public function setStatus(string $status)
 	{
 		$this->status = $status;
 	}
@@ -367,7 +367,7 @@ class FmTtsTicket
 	/**
 	 * @param string $details
 	 */
-	public function setDetails(string $details): void
+	public function setDetails(string $details)
 	{
 		$this->details = $details;
 	}
@@ -383,7 +383,7 @@ class FmTtsTicket
 	/**
 	 * @param string $location_code
 	 */
-	public function setLocationCode(string $location_code): void
+	public function setLocationCode(string $location_code)
 	{
 		$this->location_code = $location_code;
 	}
@@ -399,7 +399,7 @@ class FmTtsTicket
 	/**
 	 * @param string $loc1
 	 */
-	public function setLoc1(string $loc1): void
+	public function setLoc1(string $loc1)
 	{
 		$this->loc1 = $loc1;
 	}
@@ -407,7 +407,7 @@ class FmTtsTicket
 	/**
 	 * @return string
 	 */
-	public function getLoc2(): ?string
+	public function getLoc2()
 	{
 		return $this->loc2;
 	}
@@ -415,7 +415,7 @@ class FmTtsTicket
 	/**
 	 * @param string $loc2
 	 */
-	public function setLoc2(string $loc2): void
+	public function setLoc2(string $loc2)
 	{
 		$this->loc2 = $loc2;
 	}
@@ -431,7 +431,7 @@ class FmTtsTicket
 	/**
 	 * @param int $entry_date
 	 */
-	public function setEntryDate(int $entry_date): void
+	public function setEntryDate(int $entry_date)
 	{
 		$this->entry_date = $entry_date;
 	}
@@ -447,7 +447,7 @@ class FmTtsTicket
 	/**
 	 * @param int $finnish_date
 	 */
-	public function setFinnishDate(int $finnish_date): void
+	public function setFinnishDate(int $finnish_date)
 	{
 		$this->finnish_date = $finnish_date;
 	}
@@ -463,7 +463,7 @@ class FmTtsTicket
 	/**
 	 * @param int $contact_id
 	 */
-	public function setContactId(int $contact_id): void
+	public function setContactId(int $contact_id)
 	{
 		$this->contact_id = $contact_id;
 	}
@@ -479,7 +479,7 @@ class FmTtsTicket
 	/**
 	 * @param int $modified_date
 	 */
-	public function setModifiedDate(int $modified_date): void
+	public function setModifiedDate(int $modified_date)
 	{
 		$this->modified_date = $modified_date;
 	}
@@ -495,7 +495,7 @@ class FmTtsTicket
 	/**
 	 * @param int $handyman_checklist_id
 	 */
-	public function setHandymanChecklistId(int $handyman_checklist_id): void
+	public function setHandymanChecklistId(int $handyman_checklist_id)
 	{
 		$this->handyman_checklist_id = $handyman_checklist_id;
 	}
@@ -511,7 +511,7 @@ class FmTtsTicket
 	/**
 	 * @param int $handyman_order_number
 	 */
-	public function setHandymanOrderNumber(int $handyman_order_number): void
+	public function setHandymanOrderNumber(int $handyman_order_number)
 	{
 		$this->handyman_order_number = $handyman_order_number;
 	}
@@ -519,7 +519,7 @@ class FmTtsTicket
 	/**
 	 * @return int
 	 */
-	public function getDocumentRequired(): ?int
+	public function getDocumentRequired()
 	{
 		return $this->document_required;
 	}
@@ -527,7 +527,7 @@ class FmTtsTicket
 	/**
 	 * @param int $document_required
 	 */
-	public function setDocumentRequired(int $document_required): void
+	public function setDocumentRequired(int $document_required)
 	{
 		$this->document_required = $document_required;
 	}

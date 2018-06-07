@@ -581,7 +581,7 @@ class ParseMessageXMLService
 	 * @param $agresso_id
 	 * @return GwPreference
 	 */
-	private function find_account_id_in_preferences($agresso_id): ?GwPreference
+	private function find_account_id_in_preferences($agresso_id)
 	{
 		if (empty($agresso_id)) {
 			return null;
@@ -722,6 +722,7 @@ class ParseMessageXMLService
 				$vfs->setCreated(new DateTime());
 				$vfs->setSize(4096);
 				$vfs->setMimeType('journal');
+				$vfs->setMimeType('journal');
 				$vfs->setComment('Created');
 				$vfs->setApp('property');
 				$vfs->setDirectory('/property/fmticket');
@@ -820,7 +821,7 @@ class MessageData
 	/**
 	 * @return FmTtsTicket|null
 	 */
-	public function message_to_ticket(): ?FmTtsTicket
+	public function message_to_ticket(): FmTtsTicket
 	{
 		/* @var FmTtsTicket $result */
 		$result = new FmTtsTicket();

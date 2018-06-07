@@ -927,7 +927,7 @@ class FmLocation2
 	/**
 	 * @return string
 	 */
-	public function getBygningsnummer(): ?string
+	public function getBygningsnummer()
 	{
 		return $this->bygningsnummer;
 	}
@@ -935,7 +935,7 @@ class FmLocation2
 	/**
 	 * @param string $bygningsnummer
 	 */
-	public function setBygningsnummer(string $bygningsnummer): void
+	public function setBygningsnummer(string $bygningsnummer)
 	{
 		$this->bygningsnummer = $bygningsnummer;
 	}

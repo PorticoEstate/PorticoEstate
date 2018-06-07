@@ -71,7 +71,7 @@ class FmHandymanLog
 	/**
 	 * @param int $id
 	 */
-	public function setId(int $id): void
+	public function setId(int $id)
 	{
 		$this->id = $id;
 	}
@@ -87,7 +87,7 @@ class FmHandymanLog
 	/**
 	 * @param string $comment
 	 */
-	public function setComment(string $comment): void
+	public function setComment(string $comment)
 	{
 		$this->comment = $comment;
 	}
@@ -103,7 +103,7 @@ class FmHandymanLog
 	/**
 	 * @param DateTime $log_date
 	 */
-	public function setLogDate(DateTime $log_date): void
+	public function setLogDate(DateTime $log_date)
 	{
 		$this->log_date = $log_date;
 	}
@@ -119,7 +119,7 @@ class FmHandymanLog
 	/**
 	 * @param bool $success
 	 */
-	public function setSuccess(bool $success): void
+	public function setSuccess(bool $success)
 	{
 		$this->success = $success;
 	}
@@ -135,7 +135,7 @@ class FmHandymanLog
 	/**
 	 * @param int $num_of_messages
 	 */
-	public function setNumOfMessages(int $num_of_messages): void
+	public function setNumOfMessages(int $num_of_messages)
 	{
 		$this->num_of_messages = $num_of_messages;
 	}
