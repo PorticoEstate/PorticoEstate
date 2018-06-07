@@ -360,13 +360,18 @@
 
 		function get_org( $orgnumber )
 		{
-			$sql = "SELECT id,name FROM bb_organization WHERE (organization_number='" . $orgnumber . "' OR customer_organization_number='" . $orgnumber . "') AND active != 0";
+			$sql = "SELECT id,name,street,zip_code,city FROM bb_organization WHERE (organization_number='" . $orgnumber . "' OR customer_organization_number='" . $orgnumber . "') AND active != 0";
 
 			$this->db->limit_query($sql, 0, __LINE__, __FILE__, 1);
 			if ($this->db->next_record())
 			{
-				$results = array('id' => $this->db->f('id', false),
-					'name' => $this->db->f('name', false));
+				$results = array(
+					'id' => $this->db->f('id', false),
+					'name' => $this->db->f('name', false),
+					'street' => $this->db->f('street', false),
+					'zip_code' => $this->db->f('zip_code', false),
+					'city' => $this->db->f('city', false),
+					);
 			}
 			else
 			{

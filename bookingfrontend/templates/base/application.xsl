@@ -380,12 +380,38 @@
 					<xsl:if test="application/customer_identifier_type = 'ssn'">
 						<dt>
 							<label for="field_ssn_number">
-								<xsl:value-of select="php:function('lang', 'Date of birth or SSN')" />
+								<xsl:value-of select="php:function('lang', 'SSN')" />
 							</label>
 						</dt>
 						<dd>
 							<xsl:value-of select="application/customer_ssn"/>
 						</dd>
+						<dt>
+							<label for="field_street">
+								<xsl:value-of select="php:function('lang', 'Street')"/>
+							</label>
+						</dt>
+						<dd>
+							<xsl:value-of select="application/responsible_street"/>
+
+						</dd>
+						<dt>
+							<label for="field_zip_code">
+								<xsl:value-of select="php:function('lang', 'Zip code')"/>
+							</label>
+						</dt>
+						<dd>
+							<xsl:value-of select="application/responsible_zip_code"/>
+						</dd>
+						<dt>
+							<label for="field_responsible_city">
+								<xsl:value-of select="php:function('lang', 'Postal City')"/>
+							</label>
+						</dt>
+						<dd>
+							<xsl:value-of select="application/responsible_city"/>
+						</dd>
+
 					</xsl:if>
 				</dl>
 			</div>

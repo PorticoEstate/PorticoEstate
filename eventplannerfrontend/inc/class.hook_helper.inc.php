@@ -1,12 +1,11 @@
 <?php
 	/**
-	 * property - Hook helper
+	 * eventplanner - Hook helper
 	 *
-	 * @author Dave Hall <skwashd@phpgroupware.org>
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2007,2008 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2017 Free Software Foundation, Inc. http://www.fsf.org/
 	 * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
-	 * @package property
+	 * @package eventplanner
 	 * @version $Id: class.hook_helper.inc.php 14726 2016-02-11 20:07:07Z sigurdne $
 	 */
 	/*

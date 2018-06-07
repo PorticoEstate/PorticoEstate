@@ -720,3 +720,6 @@ do not edit!	booking	nn	Ikkje endre!
 approve	booking	nn	Godkjenn
 return to application	booking	nn	Tilbake til søknad
 application add	booking	nn	Ny søknad
+duplicate in name	booking	nn	Navnet finnest frå før
+Send as sms	booking	nn	Send som sms
+Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner

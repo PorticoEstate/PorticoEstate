@@ -209,9 +209,31 @@ JS;
 	$orgid = $org->get_orgid($bouser->orgnr);
 	if($bouser->is_logged_in())
 	{
-		$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
 
-		$tpl_vars['change_org_header'] = lang('Change organization');
+		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+
+		$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+
+		function get_ids_from_array($org)
+		{
+			return $org['orgnumber'];
+		}
+
+		if($session_org_id && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
+		{
+			try
+			{
+				$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+				if($org_number)
+				{
+					$bouser->change_org($org_number);
+				}
+			}
+			catch (sfValidatorError $e)
+			{
+				$session_org_id = -1;
+			}
+		}
 
 		if ( $bouser->orgname == '000000000')
 		{

@@ -71,7 +71,11 @@
 			'get_ecodimb'	=> true,
 			'get_b_account'	=> true,
 			'get_unspsc_code'=> true,
-			'receive_order'	=> true
+			'receive_order'	=> true,
+			'handle_multi_upload_file' => true,
+			'build_multi_upload_file' => true,
+			'get_files'				=> true,
+			'view_image'			=> true,
 		);
 
 		function __construct()
@@ -138,6 +142,185 @@
 					'acl_location' => $this->acl_location));
 			}
 			ExecMethod('property.bofiles.get_file', phpgw::get_var('file_id', 'int'));
+		}
+
+		function view_image()
+		{
+			$GLOBALS['phpgw_info']['flags']['noheader'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+			$GLOBALS['phpgw_info']['flags']['xslt_app'] = false;
+
+			if (!$this->acl_read)
+			{
+				$GLOBALS['phpgw']->common->phpgw_exit();
+			}
+
+			$thumb = phpgw::get_var('thumb', 'bool');
+			$img_id = phpgw::get_var('img_id', 'int');
+
+			$bofiles = CreateObject('property.bofiles');
+
+			if($img_id)
+			{
+				$file_info = $bofiles->vfs->get_info($img_id);
+				$file = "{$file_info['directory']}/{$file_info['name']}";
+			}
+			else
+			{
+				$file = urldecode(phpgw::get_var('file'));
+			}
+
+			$source = "{$bofiles->rootdir}{$file}";
+			$thumbfile = "$source.thumb";
+
+			// prevent path traversal
+			if (preg_match('/\.\./', $source))
+			{
+				return false;
+			}
+
+			$uigallery = CreateObject('property.uigallery');
+
+			$re_create = false;
+			if ($uigallery->is_image($source) && $thumb && $re_create)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 100);
+				readfile($thumbfile);
+			}
+			else if ($thumb && is_file($thumbfile))
+			{
+				readfile($thumbfile);
+			}
+			else if ($uigallery->is_image($source) && $thumb)
+			{
+				$uigallery->create_thumb($source, $thumbfile, $thumb_size = 100);
+				readfile($thumbfile);
+			}
+			else if ($img_id)
+			{
+				$bofiles->get_file($img_id);
+			}
+			else
+			{
+				$bofiles->view_file('', $file);
+			}
+		}
+
+		function get_files()
+		{
+			$id = phpgw::get_var('id', 'int');
+
+			if (!$this->acl_read)
+			{
+				return;
+			}
+
+			$link_file_data = array
+				(
+				'menuaction' => 'property.uiworkorder.view_file',
+			);
+
+
+			$link_view_file = $GLOBALS['phpgw']->link('/index.php', $link_file_data);
+
+			$values = $this->bo->get_files($id);
+
+			$content_files = array();
+			$img_types = array(
+				'image/jpeg',
+				'image/png',
+				'image/gif'
+			);
+
+			$z = 0;
+			foreach ($values as $_entry)
+			{
+				$content_files[] = array(
+					'file_name' => '<a href="' . $link_view_file . '&amp;file_id=' . $_entry['file_id'] . '" target="_blank" title="' . lang('click to view file') . '">' . $_entry['name'] . '</a>',
+					'delete_file' => '<input type="checkbox" name="values[file_action][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to delete file') . '">',
+					'attach_file' => '<input type="checkbox" name="values[file_attach][]" value="' . $_entry['file_id'] . '" title="' . lang('Check to attach file') . '">'
+				);
+				if ( in_array($_entry['mime_type'], $img_types))
+				{
+					$content_files[$z]['file_name'] = $_entry['name'];
+					$content_files[$z]['img_id'] = $_entry['file_id'];
+					$content_files[$z]['img_url'] = self::link(array(
+							'menuaction' => 'property.uiworkorder.view_image',
+							'img_id'	=>  $_entry['file_id'],
+							'file' => $_entry['directory'] . '/' . $_entry['file_name']
+					));
+					$content_files[$z]['thumbnail_flag'] = 'thumb=1';
+				}
+				$z ++;
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($content_files);
+
+				return array
+					(
+					'data' => $content_files,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+			return $content_files;
+		}
+
+		public function handle_multi_upload_file()
+		{
+			$id = phpgw::get_var('id');
+
+			phpgw::import_class('property.multiuploader');
+
+			$options['base_dir'] = 'workorder/'.$id;
+			$options['upload_dir'] = $GLOBALS['phpgw_info']['server']['files_dir'].'/property/'.$options['base_dir'].'/';
+			$options['script_url'] = html_entity_decode(self::link(array('menuaction' => 'property.uiworkorder.handle_multi_upload_file', 'id' => $id)));
+			$upload_handler = new property_multiuploader($options, false);
+
+			switch ($_SERVER['REQUEST_METHOD']) {
+				case 'OPTIONS':
+				case 'HEAD':
+					$upload_handler->head();
+					break;
+				case 'GET':
+					$upload_handler->get();
+					break;
+				case 'PATCH':
+				case 'PUT':
+				case 'POST':
+					$upload_handler->add_file();
+					break;
+				case 'DELETE':
+					$upload_handler->delete_file();
+					break;
+				default:
+					$upload_handler->header('HTTP/1.1 405 Method Not Allowed');
+			}
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
+		}
+
+		public function build_multi_upload_file()
+		{
+			phpgwapi_jquery::init_multi_upload_file();
+			$id = phpgw::get_var('id', 'int');
+
+			$GLOBALS['phpgw_info']['flags']['noframework'] = true;
+			$GLOBALS['phpgw_info']['flags']['nofooter'] = true;
+
+			$multi_upload_action = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uiworkorder.handle_multi_upload_file', 'id' => $id));
+
+			$data = array
+				(
+				'multi_upload_action' => $multi_upload_action
+			);
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('files', 'multi_upload_file'));
+			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('multi_upload' => $data));
 		}
 
 		function columns()
@@ -1698,13 +1881,33 @@
 				'required' => true
 			));
 
-			$b_account_list = execMethod('property.bogeneric.get_list', array(
+			$b_account_list_favorite = ExecMethod('property.sob_account_user.get_favorite', $this->account);
+
+			if($b_account_list_favorite)
+			{
+				$b_account_list = $b_account_list_favorite;
+			}
+			else
+			{
+				$b_account_list = execMethod('property.bogeneric.get_list', array(
 						'type' => 'budget_account', 'selected' => $values['b_account_id'] ? $values['b_account_id'] : $project['b_account_id'], 'add_empty' => true, 'filter' => array('active' => 1)));
 
+			}
+
+			$_b_account_found = false;
 			foreach ($b_account_list as &$entry)
 			{
 				$entry['name'] = "{$entry['id']} {$entry['name']}";
+				if(!empty($b_account_data['value_b_account_id']) && $b_account_data['value_b_account_id'] == $entry['id'])
+				{
+					$_b_account_found = true;
+				}
 			}
+			if(!empty($b_account_data['value_b_account_id']) && !$_b_account_found)
+			{
+				array_unshift($b_account_list, array('id' => $b_account_data['value_b_account_id'], 'name' => "{$b_account_data['value_b_account_id']} {$b_account_data['value_b_account_name']}"));
+			}
+
 			unset($entry);
 
 			$ecodimb_data = $this->bocommon->initiate_ecodimb_lookup(array
@@ -1839,6 +2042,12 @@
 					'label' => lang('Filename'),
 					'sortable' => false,
 					'resizeable' => true),
+				array('key' => 'picture',
+					'label' => lang('picture'),
+					'sortable' => false,
+					'resizeable' => true,
+					'formatter' => 'JqueryPortico.showPicture'
+					),
 				array(
 					'key' => 'delete_file',
 					'label' => lang('Delete file'),
@@ -1850,8 +2059,10 @@
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_1',
-				'requestUrl' => "''",
-				'data' => json_encode($content_files),
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiworkorder.get_files',
+						'id' => $id, 'phpgw_return_as' => 'json'))),
+//				'data' => json_encode($content_files),
+				'data' => json_encode(array()),
 				'ColumnDefs' => $files_def,
 				'config' => array(
 					array(
@@ -2526,6 +2737,12 @@
 					'sortable' => false,
 					'resizeable' => true
 					),
+//				array('key' => 'picture',
+//					'label' => lang('picture'),
+//					'sortable' => false,
+//					'resizeable' => true,
+//					'formatter' => 'JqueryPortico.showPicture'
+//					),
 				array(
 					'key' => 'attach_file',
 					'label' => lang('attach file'),
@@ -2772,7 +2989,9 @@
 				'value_order_sent'	=> !!$values['order_sent'],
 				'value_order_received'	=> $values['order_received'] ? $GLOBALS['phpgw']->common->show_date($values['order_received']) : '[ DD/MM/YYYY - H:i ]',
 				'value_order_received_amount' => (int) $values['order_received_amount'],
-				'value_delivery_address'	=> $delivery_address
+				'value_delivery_address'	=> $delivery_address,
+				'multiple_uploader' => true,
+				'multi_upload_parans' => "{menuaction:'property.uiworkorder.build_multi_upload_file', id:'{$id}'}",
 			);
 
 			$appname = lang('Workorder');

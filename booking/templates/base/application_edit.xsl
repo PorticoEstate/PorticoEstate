@@ -421,6 +421,45 @@
 							<div class="pure-control-group">
 								<xsl:copy-of select="phpgw:booking_customer_identifier(application, '')"/>
 							</div>
+							<div class="pure-control-group">
+								<label for="field_street">
+									<xsl:value-of select="php:function('lang', 'Street')"/>
+								</label>
+								<input id="field_responsible_street" name="responsible_street" type="text" value="{application/responsible_street}" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Street')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_zip_code">
+									<xsl:value-of select="php:function('lang', 'Zip code')"/>
+								</label>
+								<input type="text" name="responsible_zip_code" id="field_responsible_zip_code" value="{application/responsible_zip_code}" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Zip code')"/>
+									</xsl:attribute>
+								</input>
+							</div>
+							<div class="pure-control-group">
+								<label for="field_responsible_city">
+									<xsl:value-of select="php:function('lang', 'Postal City')"/>
+								</label>
+								<input type="text" name="responsible_city" id="field_responsible_city" value="{application/responsible_city}" class="pure-u-1 pure-u-sm-1-2 pure-u-md-1">
+									<xsl:attribute name="data-validation">
+										<xsl:text>required</xsl:text>
+									</xsl:attribute>
+									<xsl:attribute name="data-validation-error-msg">
+										<xsl:value-of select="php:function('lang', 'Postal City')"/>
+									</xsl:attribute>
+								</input>
+							</div>
 						</div>
 						<div class="pure-u-1 pure-u-md-10-24 pure-u-lg-14-24">
 							<div class="pure-g">

@@ -272,6 +272,7 @@
 
 		function initiate_ui_location( $data )
 		{
+			$insert_record = array();
 			$config = CreateObject('phpgwapi.config', 'property');
 			$config->read();
 			if (isset($config->config_data['suppress_tenant']) && $config->config_data['suppress_tenant'])
@@ -661,11 +662,7 @@
 				$GLOBALS['phpgw']->js->add_code('', $function_blank_entity_values);
 			}
 
-
-			if (isset($insert_record))
-			{
-				phpgwapi_cache::session_set('property', 'insert_record', $insert_record);
-			}
+			phpgwapi_cache::session_set('property', 'insert_record', $insert_record);
 
 			if (isset($lookup_functions) && is_array($lookup_functions))
 			{

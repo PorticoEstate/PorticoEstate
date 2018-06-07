@@ -1243,8 +1243,28 @@
 
 			$formatted_gab_id = $this->get_gab_id($location_code);
 
+			$location_exceptions = createObject('property.solocation')->get_location_exception($location_code, $alert_vendor = true);
+
+			$important_imformation = '';
+			if($location_exceptions)
+			{
+				$important_imformation .= "<h4>" . lang('important information') . '</h4>';
+				$important_imformation_arr = array();
+				foreach ($location_exceptions as $location_exception)
+				{
+					$important_imformation_arr[] = $location_exception['category_text'];
+
+					if($location_exception['location_descr'])
+					{
+						$important_imformation_arr[] = $location_exception['location_descr'];
+					}
+				}
+				$important_imformation .= implode("<br/>", $important_imformation_arr);
+			}
+
 			$email_data = array
 				(
+				'important_imformation' => $important_imformation,
 				'formatted_gab_id' => $formatted_gab_id,
 				'org_name' => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
 				'location_data_local' => $location_data,
@@ -2122,12 +2142,35 @@ HTML;
 				)
 			));
 
+			$location_exceptions = createObject('property.solocation')->get_location_exception($location_code, $alert_vendor = true);
+
+			if($location_exceptions)
+			{
+				$pdf->ezSetDy(-10);
+				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica-Bold.afm');
+				$pdf->ezText(lang('important information'), 14);
+				$pdf->selectFont(PHPGW_API_INC . '/pdf/fonts/Helvetica.afm');
+			}
+
+			foreach ($location_exceptions as $location_exception)
+			{
+				$pdf->ezText($location_exception['category_text'], 12);
+
+				if($location_exception['location_descr'])
+				{
+					$pdf->ezText($location_exception['location_descr'], 12);
+				}
+			}
 
 			if (isset($this->config->config_data['order_footer_header']) && $this->config->config_data['order_footer_header'])
 			{
-				if (!$content)
+				if ($content)
 				{
-					$pdf->ezSetDy(-100);
+					$pdf->ezSetDy(-10);
+				}
+				else
+				{
+					$pdf->ezSetDy(-80);
 				}
 				$pdf->ezText($this->config->config_data['order_footer_header'], 12);
 				$pdf->ezText($this->config->config_data['order_footer'], 10);

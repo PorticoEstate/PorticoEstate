@@ -118,7 +118,19 @@
 			 * Her kaller du tjenesten som gjør spørringen mot Brønnøysund.
 			 *	$fodselsnr er som det skal være (ikke hash)
 			 */
-			$orgs = $this->get_orgs_from_external_service($fodselsnr);
+			try
+			{
+				$orgs = $this->get_orgs_from_external_service($fodselsnr);
+			}
+			catch (Exception $e)
+			{
+				$log =& $GLOBALS['phpgw']->log;
+				$log->error(array(
+					'text'	=> "<b>Exception:</b>\n". $e->getMessage() . "\n" . $e->getTraceAsString(),
+					'line'	=> $e->getline(),
+					'file'	=> $e->getfile()
+				));
+			}
 
 			if($orgs && is_array($orgs))
 			{
@@ -139,7 +151,7 @@
 			$this->db->query("SELECT bb_organization.organization_number, bb_organization.name AS organization_name"
 				. " FROM bb_delegate"
 				. " JOIN  bb_organization ON bb_delegate.organization_id = bb_organization.id"
-				. " WHERE bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
+				. " WHERE bb_delegate.active = 1 AND bb_delegate.ssn = '{$ssn}'", __LINE__, __FILE__);
 
 			while($this->db->next_record())
 			{

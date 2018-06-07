@@ -20,11 +20,13 @@
 			'info' => true,
 			'toggle_show_inactive' => true,
 		);
-		protected $customer_id;
+		protected $customer_id,
+			$account;
 
 		public function __construct()
 		{
 			parent::__construct();
+			$this->account = $GLOBALS['phpgw_info']['user']['account_id'];
 			$this->bo = CreateObject('booking.boevent');
 			$this->customer_id = CreateObject('booking.customer_identifier');
 			$this->activity_bo = CreateObject('booking.boactivity');
@@ -93,6 +95,10 @@
 						array(
 							'key' => 'contact_name',
 							'label' => lang('Contact'),
+						),
+						array(
+							'key' => 'contact_phone',
+							'label' => lang('phone')
 						),
 						array(
 							'key' => 'building_name',
@@ -757,10 +763,10 @@
 
 				if (!$errors['event'] and ! $errors['resource_number'] and ! $errors['organization_number'] and ! $errors['invoice_data'] && !$errors['contact_name'] && !$errors['cost'])
 				{
-					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST')) && phpgw::get_var('active', 'POST'))
+					if (( phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtocollision', 'POST') ||  phpgw::get_var('sendsmstocontact', 'POST')) && phpgw::get_var('active', 'POST'))
 					{
 
-						if (phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST'))
+						if (phpgw::get_var('sendtocollision', 'POST') || phpgw::get_var('sendtocontact', 'POST') || phpgw::get_var('sendtorbuilding', 'POST') || phpgw::get_var('sendsmstocontact', 'POST'))
 						{
 							$maildata = $this->create_sendt_mail_notification_comment_text($event, $errors);
 
@@ -781,7 +787,7 @@
 							{
 
 								$subject = $config->config_data['event_conflict_mail_subject'];
-								$body = "<p>" . $config->config_data['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail', 'POST') . "\n";
+								$body = "<p>" . $config->config_data['event_mail_conflict_contact_active_collision'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "\n";
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$body .= "<p>" . $config->config_data['application_mail_signature'] . "</p>";
 								$mail_sendt_to = '';
@@ -810,25 +816,53 @@
 								}
 								if (strpos($mail_sendt_to, '@') !== False)
 								{
-									$comment = "<p>Melding om konflikt er sendt til" . $mail_sendt_to . "<br />\n" . phpgw::get_var('mail', 'POST') . "</p>";
+									$comment = "<p>Melding om konflikt er sendt til" . $mail_sendt_to . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
 									$this->add_comment($event, $comment);
 								}
 							}
 							if (phpgw::get_var('sendtocontact', 'POST'))
 							{
 								$subject = $config->config_data['event_change_mail_subject'];
-								$body = "<p>" . $config->config_data['event_change_mail'] . "\n" . phpgw::get_var('mail', 'POST');
+								$body = "<p>" . $config->config_data['event_change_mail'] . "\n" . phpgw::get_var('mail','html', 'POST');
 								$body .= '<br /><a href="' . $link . '">Link til ' . $config->config_data['application_mail_systemname'] . '</a></p>';
 								$this->send_mailnotification($event['contact_email'], $subject, $body);
 								$comment = $comment_text_log . '<br />Denne er sendt til ' . $event['contact_email'];
 								$this->add_comment($event, $comment);
 							}
+							//sms
+                            if (phpgw::get_var('sendsmstocontact', 'POST'))
+							{
+                                $rool = phpgw::get_var('mail','html', 'POST');
+                                $phone_number = phpgw::get_var('contact_phone', 'string', 'POST');
+                                $text_message  = array('text' => $rool);
+                                $newArray = array_map(function($v)
+								{
+									return trim(strip_tags($v));
+                                 }, $text_message);
+
+								$phone_number = str_replace(' ', '', $phone_number);
+
+								if(  preg_match( '/^(\d{2})(\d{2})(\d{2})(\d{2})$/', $phone_number,  $matches ) )
+								{
+									$phone_number_validated = 1;
+									//implement validation
+								}
+
+								 $sms_res = CreateObject('sms.sms')->websend2pv($this->account, $phone_number, $newArray['text']);
+
+								if($sms_res[0][0])
+								{
+									$comment = $rool . '<br />Denne er sendt til ' . $phone_number;
+									$this->add_comment($event, $comment);
+								}
+							}
+
 							if (phpgw::get_var('sendtorbuilding', 'POST'))
 							{
 
 								$subject = $config->config_data['event_mail_building_subject'];
 
-								$body = "<p>" . $config->config_data['event_mail_building'] . "<br />\n" . phpgw::get_var('mail', 'POST') . "</p>";
+								$body = "<p>" . $config->config_data['event_mail_building'] . "<br />\n" . phpgw::get_var('mail','html', 'POST') . "</p>";
 
 								if ($event['customer_organization_name'])
 								{
@@ -895,7 +929,7 @@
 								}
 								else
 								{
-									$comment_text_log = phpgw::get_var('mail', 'POST');
+									$comment_text_log = phpgw::get_var('mail','string', 'POST');
 									$comment = 'Melding om endring er sendt til ansvarlig for bygg: ' . $mail_sendt_to . '<br />' . $comment_text_log;
 									$this->add_comment($event, $comment);
 								}
@@ -905,7 +939,7 @@
 						{
 
 							$subject = $config->config_data['event_canceled_mail_subject'];
-							$body = $config->config_data['event_canceled_mail'] . "\n" . phpgw::get_var('mail', 'POST');
+							$body = $config->config_data['event_canceled_mail'] . "\n" . phpgw::get_var('mail','html', 'POST');
 
 							if ($event['customer_organization_name'])
 							{
@@ -958,7 +992,7 @@
 							}
 							else
 							{
-								$comment = '<span style="color:red;">Dette arrangemenet er kanselert</span>. Denne er sendt til ' . $mail_sendt_to . '<br />' . phpgw::get_var('mail', 'POST');
+								$comment = '<span style="color:red;">Dette arrangemenet er kanselert</span>. Denne er sendt til ' . $mail_sendt_to . '<br />' . phpgw::get_var('mail','string', 'POST');
 								$this->add_comment($event, $comment);
 							}
 //						$receipt = $this->bo->update($event);

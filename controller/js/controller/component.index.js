@@ -136,6 +136,13 @@ update_table = function (location_code)
 		$("[name='status']").parent().hide();
 		$("[for='status']").parent().hide();
 	}
+	else
+	{
+		$("[name='all_items']").parent().show();
+		$("[for='all_items']").parent().show();
+		$("[name='status']").parent().show();
+		$("[for='status']").parent().show();
+	}
 
 	var requestUrl = $("#queryForm").attr("action");
 	requestUrl += '&phpgw_return_as=json' + "&" + $("#queryForm").serialize() + "&location_code=" + location_code;
@@ -241,26 +248,12 @@ update_table = function (location_code)
 					var time_sum = components_data.time_sum;
 					var time_sum_actual = components_data.time_sum_actual;
 
-					console.log(show_months);
+//					console.log(show_months);
+					var filter_months = data.filter_months;
+					console.log(filter_months);
 
-//					if(show_months.length > 0)
-//					{
-//						for (i = 0; i < 13; i++)
-//						{
-//							$("#month" + i).hide();
-//							$("#head" + i).hide();
-//						}
-//						for (i = 0; i < show_months.length; i++)
-//						{
-//							$("#month" + show_months[i]).show();
-//							$("#head" + show_months[i]).show();
-//						}
-//						show_months = [];
-//					}
-//					else
+//					if (custom_frontend == 1)
 					{
-						var filter_months = data.filter_months;
-						console.log(filter_months);
 						for (i = 0; i < 13; i++)
 						{
 							$("#month" + i).hide();

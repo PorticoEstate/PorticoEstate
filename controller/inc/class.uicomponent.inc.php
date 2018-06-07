@@ -322,7 +322,9 @@
 			);
 
 			$filter_month = phpgw::get_var('month', 'int');
-			$filter_month = $filter_month ? $filter_month : date('n');
+
+			$default_filter_month = !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']) ? date('n') : 0;
+			$filter_month = $filter_month ? $filter_month : $default_filter_month;
 			for ($_month = 1; $_month < 13; $_month++)
 			{
 				$month_list[] = array
@@ -488,7 +490,7 @@
 					'key' => $filter_month,
 				);
 			}
-			else if($year == date('Y') && $this->user_id < 0)
+			else if($year == date('Y') && $this->user_id < 0 && !empty($GLOBALS['phpgw_info']['flags']['custom_frontend']))
 			{
 				$current_month = date('n') -1;
 
@@ -1386,7 +1388,7 @@
 				{
 					$filter_status = $filter_status ? $filter_status : 'filter_month';
 
-					$row[$filter_month] = $this->translate_calendar_info($entry[$filter_month], $year, $filter_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'],$control_link_data);
+					$row[$filter_month] = $this->translate_calendar_info($entry[$filter_month], $year, $filter_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'],$control_link_data, $url_target);
 					if(true)// ($row[$filter_month] && (!$user_id || $entry[$filter_month]['info']['assigned_to'] == $user_id))
 					{
 						$row_sum[$filter_month] = (float)$entry[$filter_month]['info']['service_time'] + (float)$entry[$filter_month]['info']['controle_time'];
@@ -1414,7 +1416,7 @@
 				{
 					for ($_month = 1; $_month < 13; $_month++)
 					{
-						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'], $control_link_data);
+						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'], $control_link_data, $url_target);
 					//	if($total_hours)// || $keep_only_assigned_to == $entry[$_month]['info']['assigned_to'])//
 						if($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
 						{
@@ -1542,7 +1544,7 @@
 			);
 		}
 
-		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data )
+		private function translate_calendar_info( $param = array(), $year, $month, $filter_status = '', &$found_at_least_one = false, $keep_only_assigned_to, $location_code ='', &$control_link_data, $url_target)
 		{
 			if (!isset($param['repeat_type']))
 			{

@@ -238,6 +238,8 @@
 				$cols .= ",fm_workorder.inspection_on_completion as inspection_on_completion";
 				$cols_return[] = 'inspection_on_completion';
 
+				$cols.= ",fm_project.external_project_id";
+				$cols_return[] = 'external_project_id';
 				$cols.= ",fm_project.ecodimb";
 				$cols_return[] = 'ecodimb';
 				$cols.= ",fm_workorder.service_id";
@@ -326,8 +328,8 @@
 				$cols_return[] = 'budget';
 				$uicols['input_type'][] = 'text';
 				$uicols['name'][] = 'budget';
-				$uicols['descr'][] = lang('budget');
-				$uicols['statustext'][] = lang('budget');
+				$uicols['descr'][] = lang('order sum');
+				$uicols['statustext'][] = lang('order sum');
 				$uicols['exchange'][] = false;
 				$uicols['align'][] = '';
 				$uicols['datatype'][] = '';
@@ -337,17 +339,6 @@
 
 //				$cols .= ',fm_workorder.combined_cost';
 //				$cols_return[] = 'combined_cost';
-				$uicols['input_type'][] = 'text';
-				$uicols['name'][] = 'obligation';
-				$uicols['descr'][] = lang('sum orders');
-				$uicols['statustext'][] = lang('Cost - either budget or calculation');
-				$uicols['exchange'][] = false;
-				$uicols['align'][] = '';
-				$uicols['datatype'][] = '';
-				$uicols['formatter'][] = 'myFormatCount2';
-				$uicols['classname'][] = 'rightClasss';
-				$uicols['sortable'][] = false;
-
 				$cols .= ',fm_workorder.actual_cost';
 				$cols_return[] = 'actual_cost';
 				$uicols['input_type'][] = 'text';
@@ -360,6 +351,18 @@
 				$uicols['formatter'][] = 'myFormatCount2';
 				$uicols['classname'][] = 'rightClasss';
 				$uicols['sortable'][] = true;
+
+				$uicols['input_type'][] = 'text';
+				$uicols['name'][] = 'obligation';
+				$uicols['descr'][] = lang('sum orders');
+				$uicols['statustext'][] = lang('Cost - either budget or calculation');
+				$uicols['exchange'][] = false;
+				$uicols['align'][] = '';
+				$uicols['datatype'][] = '';
+				$uicols['formatter'][] = 'myFormatCount2';
+				$uicols['classname'][] = 'rightClasss';
+				$uicols['sortable'][] = false;
+
 
 				$uicols['input_type'][] = 'text';
 				$uicols['name'][] = 'diff';

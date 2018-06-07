@@ -257,8 +257,8 @@
 				$cols_return[] = 'budget';
 				$uicols['input_type'][] = 'text';
 				$uicols['name'][] = 'budget';
-				$uicols['descr'][] = lang('budget');
-				$uicols['statustext'][] = lang('Project budget');
+				$uicols['descr'][] = lang('order sum');
+				$uicols['statustext'][] = lang('order sum');
 				$uicols['exchange'][] = false;
 				$uicols['align'][] = '';
 				$uicols['datatype'][] = '';
@@ -799,6 +799,7 @@
 					$project['budget'] = 0;
 					$project['obligation'] = 0;
 					$project['actual_cost'] = 0;
+					$project['diff'] = (float)0;
 
 					if ($project['project_type_id'] == 3)//buffer
 					{
@@ -1800,11 +1801,9 @@
 					$close_workorders = true;
 				}
 
-
 				if ($this->db->f('approved'))
 				{
 					$close_pending_action = true;
-
 
 					$sosubstitute = CreateObject('property.sosubstitute');
 					$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
@@ -1821,20 +1820,21 @@
 						'deadline' => ''
 					);
 
-					$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
+					$pending_action = createObject('property.sopending_action');
 
-					foreach ($approvals as $approval)
+					foreach ($users_for_substitute as $_responsible)
 					{
-						if(in_array($approval['responsible'],$users_for_substitute))
+						$action_params['responsible'] = $_responsible;
+						if($pending_action->get_pending_action($action_params))
 						{
-							$take_responsibility_for[] = $approval['responsible'];
+							$take_responsibility_for[] = $_responsible;
 						}
 					}
 
 					foreach ($take_responsibility_for as $__account_id)
 					{
 						$action_params['responsible'] = $__account_id;
-						execMethod('property.sopending_action.close_pending_action', $action_params);
+						$pending_action->close_pending_action($action_params);
 					}
 					unset($action_params);
 
@@ -3497,10 +3497,11 @@
 
 			$historylog = CreateObject('property.historylog', 'workorder');
 			$sosubstitute = CreateObject('property.sosubstitute');
+			$pending_action = createObject('property.sopending_action');
+			$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
 
 			foreach ($ids as $order_id)
 			{
-				$users_for_substitute = $sosubstitute->get_users_for_substitute($this->account);
 				$take_responsibility_for = array($this->account);
 
 				$action_params = array(
@@ -3511,41 +3512,90 @@
 					'action' => 'approval',
 					'remark' => '',
 					'deadline' => '',
-					'closed' => true
-
 				);
 
-				$approvals = execMethod('property.sopending_action.get_pending_action', $action_params);
 
-				foreach ($approvals as $approval)
+				foreach ($users_for_substitute as $_responsible)
 				{
-					if(in_array($approval['responsible'],$users_for_substitute))
+					$action_params['responsible'] = $_responsible;
+					if($pending_action->get_pending_action($action_params))
 					{
-						$take_responsibility_for[] = $approval['responsible'];
+						$take_responsibility_for[] = $_responsible;
 					}
 				}
 
 				foreach ($take_responsibility_for as $__account_id)
 				{
 					$action_params['responsible'] = $__account_id;
-					//check for approved
-					if(execMethod('property.sopending_action.get_pending_action', $action_params))
-					{
-						continue;
-					}
-					unset($action_params['closed']);
+//					//check for approved
+//					$action_params['closed'] = true;
+//					if($pending_action->get_pending_action($action_params))
+//					{
+//						continue;
+//					}
+//					unset($action_params['closed']);
 					//approval_substitute
-					if(!execMethod('property.sopending_action.get_pending_action', $action_params))
+					if(!$pending_action->get_pending_action($action_params))
 					{
-						execMethod('property.sopending_action.set_pending_action', $action_params);
+						$pending_action->set_pending_action($action_params);
 					}
-					execMethod('property.sopending_action.close_pending_action', $action_params);
-					$budget_amount = execMethod('property.boworkorder.get_budget_amount', $order_id);
 
-					$historylog->add('OA', $order_id, $GLOBALS['phpgw']->accounts->get($this->account)->__toString() . "::{$budget_amount}");
-
-					phpgwapi_cache::message_set(lang('order %1 approved for amount %2', $order_id, $budget_amount),'message');
+					if($pending_action->close_pending_action($action_params))
+					{
+						$budget_amount = execMethod('property.boworkorder.get_budget_amount', $order_id);
+						$historylog->add('OA', $order_id, $GLOBALS['phpgw']->accounts->get($this->account)->__toString() . "::{$budget_amount}");
+						phpgwapi_cache::message_set(lang('order %1 approved for amount %2', $order_id, $budget_amount),'message');
+					}
 				}
 			}
 		}
+
+		public function get_other_projects($id, $location_code)
+		{
+			if(!$location_code)
+			{
+				return array();
+			}
+
+			$id = (int) $id;
+
+			$location_arr = explode('-', $location_code);
+			$values = array();
+			$now = time();
+			$_location_arr = array();
+			foreach ($location_arr as $loc)
+			{
+				$_location_arr[] = $this->db->db_addslashes($loc);
+
+				$_location_code = implode('-', $_location_arr);
+
+				$sql = "SELECT DISTINCT fm_project.id, fm_project.location_code,"
+					. " fm_project.start_date, fm_project.name,"
+					. " account_lid as coordinator, fm_project_status.descr as status "
+					. " FROM fm_project"
+					. " {$this->join} phpgw_accounts ON (fm_project.coordinator = phpgw_accounts.account_id)"
+					. " {$this->join} fm_project_status ON (fm_project.status = fm_project_status.id)"
+					. " WHERE location_code = '{$_location_code}'"
+					. " AND fm_project.id !={$id}"
+					. " ORDER BY fm_project.id DESC";
+
+
+				$this->db->query($sql, __LINE__, __FILE__);
+
+				while($this->db->next_record())
+				{
+					$values[] = array(
+						'id'				=> $this->db->f('id', true),
+						'location_code'		=> $this->db->f('location_code', true),
+						'start_date'		=> $this->db->f('start_date'),
+						'name'				=> $this->db->f('name', true),
+						'coordinator'		=> $this->db->f('coordinator', true),
+						'status'			=> $this->db->f('status', true),
+					);
+				}
+			}
+
+			return $values;
+		}
+
 	}

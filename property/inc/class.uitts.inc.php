@@ -805,8 +805,9 @@ HTML;
 					'list' => $values_combo_box[4]
 				);
 
-				$values_combo_box[5] = $this->bo->get_reported_by($this->reported_by);
 			}
+
+			$values_combo_box[5] = $this->bo->get_reported_by($this->reported_by);
 
 			array_unshift($values_combo_box[5], array('id' => $GLOBALS['phpgw_info']['user']['account_id'],
 				'name' => lang('my submitted tickets')));
@@ -1487,7 +1488,7 @@ HTML;
 					$receipt = $this->bo->add($values, $values_attribute);
 
 					//------------ files
-					$values['file_name'] = @str_replace(' ', '_', $_FILES['file']['name']);
+					$values['file_name'] = @str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
 
 					if ($values['file_name'] && $receipt['id'])
 					{
@@ -1951,7 +1952,8 @@ HTML;
 					$bofiles->delete_file("/fmticket/{$id}/", $values);
 				}
 
-				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
+//				$values['file_name'] = str_replace(' ', '_', $_FILES['file']['name']);
+				$values['file_name'] = str_replace(array(' ', '..'), array('_', '.'), $_FILES['file']['name']);
 
 				if ($values['file_name'])
 				{
