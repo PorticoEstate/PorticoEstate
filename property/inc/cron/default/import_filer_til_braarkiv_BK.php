@@ -44,7 +44,9 @@
 
 		protected $config,
 			$secKey,
-			$fields;
+			$fields,
+			$baseclassname,
+			$classname;
 
 		public function __construct()
 		{
@@ -64,6 +66,10 @@
 			$location_url = $c->config_data[$section]['location_url'];//'http://braarkiv.adm.bgo/service/services.asmx';
 			$braarkiv_user = $c->config_data[$section]['braarkiv_user'];
 			$braarkiv_pass = $c->config_data[$section]['braarkiv_pass'];
+
+			$this->classname = "FDV EBF";
+			$this->baseclassname = "Eiendomsarkiver";
+
 			$this->config = $c;
 
 			if (!isset($c->config_data) || !$c->config_data)
@@ -97,16 +103,27 @@
 				}
 			}
 
+
+			$bra5ServiceLogin = new Bra5ServiceLogin();
+			if ($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user, $braarkiv_pass)))
+			{
+				$this->secKey = $bra5ServiceLogin->getResult()->getLoginResult()->LoginResult;
+			}
+			else
+			{
+				throw new Exception('vfs_fileoperation_braArkiv::Login failed');
+			}
+
+//			_debug_array($this->secKey);
+//			$Bra5ServiceGet = new Bra5ServiceGet();
 //
-//			$bra5ServiceLogin = new Bra5ServiceLogin();
-//			if ($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user, $braarkiv_pass)))
-//			{
-//				$this->secKey = $bra5ServiceLogin->getResult()->getLoginResult()->LoginResult;
-//			}
-//			else
-//			{
-//				throw new Exception('vfs_fileoperation_braArkiv::Login failed');
-//			}
+//	//		$test = $Bra5ServiceGet->getDocumentSplitTypes(new Bra5StructGetDocumentSplitTypes('FDV EBF', $this->secKey));
+//			$test = $Bra5ServiceGet->getDocumentSplitTypes(new Bra5StructGetDocumentSplitTypes(10, $this->secKey));
+//
+//			_debug_array($test);
+//			_debug_array($test->getResult()->getDocumentSplitTypesResult());
+//			die();
+
 		}
 
 		private function init_config()
@@ -164,7 +181,7 @@
 		function execute()
 		{
 			$start = time();
-
+//			$this->get_document_test();
 
 			$files = $this->get_files();
 
@@ -177,6 +194,40 @@
 			$this->cron_log($msg, $cron);
 			echo "$msg\n";
 			$this->receipt['message'][] = array('msg' => $msg);
+		}
+
+		function get_document_test( )
+		{
+			$fileid = 20869646; // org
+		//	$fileid = 20980311;
+			
+			$bra5ServiceGet = new Bra5ServiceGet();
+
+//			$bra5ServiceGet->getAvailableAttributes(new Bra5StructGetAvailableAttributes($this->secKey,$_baseclassname = 'Eiendomsarkiver',$_classname = 'FDV EBF'));
+//			$file_result = $bra5ServiceGet->getResult()->getAvailableAttributesResult;
+//			_debug_array($file_result);
+//			die();
+//
+
+			$bra5ServiceGet->getDocument(new Bra5StructGetDocument($this->secKey,$fileid) );
+			$file_result = $bra5ServiceGet->getResult();
+			_debug_array($file_result);
+			die();
+
+
+			$bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($this->secKey, $fileid));
+			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
+			$file = base64_decode($file_result->getFileAsByteArrayResult);
+			/*
+			  $bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
+			  $filename = $bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
+			 */
+			$browser = CreateObject('phpgwapi.browser');
+			$browser->content_header("{$fileid}.pdf", 'application/pdf');
+
+			echo $file;
+
+			$GLOBALS['phpgw']->common->phpgw_exit();
 		}
 
 		function cron_log( $receipt = '' )
@@ -320,25 +371,53 @@
 		 */
 		function process_file( $file_info )
 		{
+_debug_array($file_info);
 			$gnr = $file_info['gnr'];
 			$bnr = $file_info['bnr'];
 			$byggNummer = $file_info['byggNummer'];
 			$lokasjonskode = $file_info['Lokasjonskode'];
-			$file = $file_info['file'];
+			$file = str_replace('\\', '/', $file_info['file']);
 			$fileDokumentTittel = $file_info['fileDokumentTittel'];
 			$fileKategorier = $file_info['fileKategorier'];
 			$fileBygningsdeler = $file_info['fileBygningsdeler'];
 			$fileFag = $file_info['fileFag'];
 
-			try
+			$path_parts	= pathinfo($file);
+			$extension	= $path_parts['extension'];
+			$path		= $path_parts['dirname'];
+			$lock		= basename($file,$extension) . 'lck' ;
+
+			if(is_file("{$path}/{$lock}"))
 			{
-				$result = $this->uploadFile($gnr, $bnr, $byggNummer, $file, $fileDokumentTittel, $fileKategorier, $fileBygningsdeler, $fileFag, $lokasjonskode);
+				$this->receipt['error'][] = array('msg' => "'{$path}/{$file}' er allerede behandlet");
+				return false;
 			}
-			catch (Exception $e)
+
+			if(is_file($file))
 			{
-				echo $e->getTraceAsString();
-				$this->receipt['error'][] = array('msg' => $e->getMessage());
+				try
+				{
+					$ok = $this->uploadFile($gnr, $bnr, $byggNummer, $file, $fileDokumentTittel, $fileKategorier, $fileBygningsdeler, $fileFag, $lokasjonskode);
+				}
+				catch (Exception $e)
+				{
+					echo $e->getTraceAsString();
+					$this->receipt['error'][] = array('msg' => $e->getMessage());
+				}
+
+				if($ok)
+				{
+					$this->receipt['message'][] = array('msg' => "'{$path}/{$file}' er importert");
+					touch("{$path}/{$lock}");
+					die();
+				}
 			}
+			if(is_file($file))
+			{
+				die();
+			}
+
+
 		}
 
 		function uploadFile( $gnr, $bnr, $byggNummer, $file, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode )
@@ -355,6 +434,8 @@
 
 			$document = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode);
 
+			_debug_array($document);
+die();
 			$bra5ServiceCreate = new Bra5ServiceCreate();
 			$bra5ServiceCreateDocument = new Bra5StructCreateDocument($_assignDocKey = false, $this->secKey, $document);
 //			_debug_array($bra5ServiceCreateDocument);
@@ -367,10 +448,10 @@
 			{
 		//		_debug_array($bra5ServiceCreate->getLastError());
 
-				throw new Exception($bra5ServiceCreate->getLastError());
+		//		throw new Exception($bra5ServiceCreate->getLastError());
 			}
 
-			$document_id = $bra5ServiceCreate->getResult()->getCreateDocumentResult()->getcreateDocumentResult()->ID;
+			$document_id =  $bra5ServiceCreate->getResult()->getCreateDocumentResult()->getcreateDocumentResult()->ID;
 
 			if (!$document_id)
 			{
@@ -422,7 +503,7 @@
 				_debug_array($bra5ServiceFile->getLastError());
 			}
 
-//	_debug_array($document_id);
+	_debug_array($document_id);
 			return $ok;
 		}
 
@@ -438,12 +519,12 @@
 				* @param int $_docSplitTypeID
 			*/
 
-			$doc = new Bra5StructDocument(false, false, false, 0, 0, 1, 0);
+			$doc = new Bra5StructDocument(false, false, false, 5, 1, 1001);
 			$attribs = new Bra5StructArrayOfAttribute();
 
 			$asta = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$asta->setName("ASTA");
-			$asta->setStringValue("bkbygg/[saknr]");
+			$asta->setName("ASTA_Signatur");
+			$asta->setStringValue("bkbygg/saknr]");
 			$attribs->add($asta->build());
 
 			$lokasjonskode = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
@@ -451,18 +532,18 @@
 			$lokasjonskode->setStringValue($byggNummer);
 			$attribs->add($lokasjonskode->build());
 
-			$byggnavn = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$byggnavn->setName("Byggnavn");
-			$byggnavn->setStringValue("Bergen rådhus");
-			$attribs->add($byggnavn->build());
+//			$byggnavn = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+//			$byggnavn->setName("Byggnavn");
+//			$byggnavn->setStringValue("Bergen rådhus");
+//			$attribs->add($byggnavn->build());
 
 			$matrikkel = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVMATRIKKEL);
-			$matrikkel->setName("GNR/BNR");
+			$matrikkel->setName("Eiendom");
 			$matrikkel->setMatrikkelValue($gnr, $bnr, 0, 0);
 			$attribs->add($matrikkel->build());
 
 			$bygningsnummer = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$bygningsnummer->setName("Bygningsnummer");
+			$bygningsnummer->setName("Byggnr");
 			$bygningsnummer->setStringValue($byggNummer);
 			$attribs->add($bygningsnummer->build());
 
@@ -471,20 +552,20 @@
 			$innhold->setStringValue($dokumentTittel);
 			$attribs->add($innhold->build());
 
-			$now = date('Y-m-d');
-			$dato = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE);
-			$dato->setName("Dato");
-			$dato->setDateValue($now);
-			$attribs->add($dato->build());
+//			$now = date('Y-m-d H:i:s');
+//			$dato = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE);
+//			$dato->setName("Dokumentdato");
+//			$dato->setDateValue($now);
+//			$attribs->add($dato->build());
 
 			$dokumentkategorier = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$dokumentkategorier->setName("Dokumentkategorier");
+			$dokumentkategorier->setName("Dokumentkategori");
 			$dokumentkategorier->setStringArrayValue(explode(";", $kategorier));
 			$dokumentkategorier->build();
 			$attribs->add($dokumentkategorier->build());
 
 			$fagAttrib = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$fagAttrib->setName("Fag/Tema");
+			$fagAttrib->setName("Fag");
 			$fagAttrib->setStringArrayValue(explode(";", $fag));
 			$attribs->add($fagAttrib->build());
 
@@ -493,18 +574,15 @@
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
 			$attribs->add($bygningsdelAttrib->build());
 
-			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-			$merknad->setName("Merknad");
-			$merknad->setStringValue("[BkBygg bestillings tittel]");
-			$attribs->add($merknad->build());
+//			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+//			$merknad->setName("Kapittel");
+//			$merknad->setStringValue("");
+//			$attribs->add($merknad->build());
 
 			$doc->setAttributes($attribs);
 
-			$baseclassname = "Etat for bygg og eiendom";
-			$classname = "FDV";
-			// TODO FIXME  - Make baseclass and classname config options
-			$doc->setBaseClassName($baseclassname);
-			$doc->setClassName($classname);
+			$doc->setBaseClassName($this->baseclassname);
+			$doc->setClassName($this->classname);
 			$doc->setClassified(false);
 
 			return $doc;
