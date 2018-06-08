@@ -583,6 +583,7 @@
 			// into different directories or replacing hidden system files.
 			// Also remove control characters and spaces (\x00..\x20) around the filename:
 			$name = trim($this->basename(stripslashes($name)), ".\x00..\x20");
+			$name = str_replace(array(' ', '..'), array('_', '.'), $name);
 			// Use a timestamp for empty filenames:
 			if (!$name)
 			{

@@ -764,6 +764,11 @@
 			{
 				foreach($user_values as $entry)
 				{
+					if(empty($entry['value']))
+					{
+						continue;
+					}
+
 					$content_heading[] = array
 					(
 						'name'	=> $entry['name'],

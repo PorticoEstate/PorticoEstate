@@ -1068,4 +1068,9 @@
 		{
 			return $this->so->get_missing_project_budget();
 		}
+
+		public function get_other_projects($id, $location_code)
+		{
+			return $this->so->get_other_projects($id, $location_code);
+		}
 	}

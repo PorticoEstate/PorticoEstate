@@ -10057,126 +10057,21 @@
 	}
 
 	/**
-	 * Update property version from 0.9.17.728 to 0.9.17.729
-	 *
-	 */
+	* Update property version from 0.9.17.728 to 0.9.17.729
+	*
+	*/
 	$test[] = '0.9.17.728';
+
 	function property_upgrade0_9_17_728()
 	{
 		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'handyman_checklist_id', array(
-				'type' =>	'int',
-				'precision' => 8,
-				'nullable' => true
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'external_ticket_id',array(
+			'type' => 'int',
+			'precision' => 4,
+			'nullable' => true
 			)
 		);
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'handyman_order_number', array(
-				'type' =>	'int',
-				'precision' => 8,
-				'nullable' => true
-			)
-		);
-
-		$sql = 'CREATE OR REPLACE VIEW hm_technical_contact_for_building AS '
-			. ' SELECT fm_location1.loc1_name,'
-			. ' fm_location1.location_code,'
-			. ' fm_responsibility_contact.contact_id,'
-			. ' phpgw_contact_person.first_name,'
-			. ' phpgw_contact_person.last_name'
-			. ' FROM fm_location1'
-			. ' LEFT JOIN fm_responsibility_contact ON fm_responsibility_contact.location_code::text = fm_location1.location_code::text'
-			. ' LEFT JOIN phpgw_contact_person ON fm_responsibility_contact.contact_id = phpgw_contact_person.person_id'
-			. ' WHERE fm_location1.category <> 99 '
-			. ' AND (fm_responsibility_contact.responsibility_role_id = 1 '
-			. ' OR fm_responsibility_contact.responsibility_role_id = 5) '
-			. ' AND fm_location1.loc1::text ~ \'^\d+$\'::text '
-			. ' AND fm_location1.loc1::integer > 0 '
-			. ' AND fm_location1.loc1::integer < 7900 '
-			. ' AND fm_responsibility_contact.expired_on IS NULL '
-			. ' ORDER BY fm_responsibility_contact.location_code, fm_responsibility_contact.responsibility_role_id;';
-
-		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
-
-		$sql = 'CREATE OR REPLACE VIEW hm_building_export AS '
-			. ' SELECT location.location_code,'
-			. ' location.loc1, '
-			. ' location.loc2, '
-			. ' location.loc2_name, '
-			. ' location.merknader, '
-			. ' location.street_number, '
-			. ' fm_streetaddress.descr AS address, '
-			. ' fm_location2_category.descr AS category, '
-			. ' fm_location1.postnummer, '
-			. ' fm_location1.poststed '
-			. ' FROM fm_location2 location '
-			. ' LEFT JOIN fm_streetaddress ON location.street_id = fm_streetaddress.id '
-			. ' LEFT JOIN fm_location2_category ON location.category = fm_location2_category.id '
-			. ' LEFT JOIN fm_location1 ON location.loc1::text = fm_location1.loc1::text '
-			. ' WHERE location.loc1::text ~ \'^\d+$\'::text AND location.category <> 99 AND location.loc2::text <> \'00\'::text '
-			. ' ORDER BY location.loc1, location.loc2;';
-
-		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
-
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'fm_handyman_documents', array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-				'hs_document_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'name' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'file_path' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'file_extension' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'hm_installation_id' => array('type' => 'varchar', 'precision' => 20, 'nullable' => False),
-				'created_date' => array('type' => 'timestamp', 'nullable' => True, 'default' => 'current_timestamp'),
-				'retrieved_from_handyman' => array('type' => 'int', 'precision' => 2, 'default' => '0'),
-				'retrieved_date' => array('type' => 'timestamp', 'nullable' => True),
-				'message_id' => array('type' => 'int', 'precision' => 4, 'default' => 0),
-				'hs_order_number' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
-				'hs_checklist_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True)
-			),
-			'pk' => array('id'),
-			'ix' => array(),
-			'uc' => array()
-		));
-
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_tts_tickets', 'document_required', array(
-				'type' =>	'int',
-				'precision' => 4,
-				'nullable' => True
-			)
-		);
-
-		$sql = 'CREATE OR REPLACE VIEW hm_manager_for_building AS '
-			. ' SELECT fm_location1.loc1_name,'
-			. ' fm_location1.location_code,'
-			. ' sl.contact_id,'
-			. ' sl_name.first_name,'
-			. ' sl_name.last_name'
-			. ' FROM fm_location1'
-			. ' LEFT JOIN fm_responsibility_contact as sl ON sl.location_code::text = fm_location1.location_code::text'
-			. ' LEFT JOIN phpgw_contact_person as sl_name ON sl.contact_id = sl_name.person_id'
-			. ' WHERE fm_location1.category <> 99 '
-			. ' AND fm_location1.loc1::text ~ \'^\d+$\'::text '
-			. ' AND fm_location1.loc1::integer > 0 '
-			. ' AND fm_location1.loc1::integer < 7900 '
-			. ' AND sl.expired_on IS NULL '
-			. ' AND sl.responsibility_role_id = 11 '
-			. ' ORDER BY sl.location_code, sl.responsibility_role_id;';
-
-		$GLOBALS['phpgw_setup']->oProc->query($sql, __LINE__, __FILE__);
-
-		$GLOBALS['phpgw_setup']->oProc->CreateTable(
-			'fm_handyman_log', array(
-			'fd' => array(
-				'id' => array('type' => 'auto', 'precision' => 4, 'nullable' => False),
-				'comment' => array('type' => 'text'),
-				'log_date' => array('type' => 'timestamp', 'default' => 'current_timestamp'),
-				'success' => array('type' => 'bool', 'nullable' => false, 'default' => 'false'),
-				'num_of_messages' => array('type' => 'int', 'precision' => 4)
-			),
-			'pk' => array('id'),
-			'ix' => array(),
-			'uc' => array()
-		));
 
 		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
 		{

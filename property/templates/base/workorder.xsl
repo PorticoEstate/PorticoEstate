@@ -1284,6 +1284,9 @@
 									</xsl:for-each>
 								</div>
 							</div>
+							<script type="text/javascript">
+								var multi_upload_parans = <xsl:value-of select="multi_upload_parans"/>;
+							</script>
 							<xsl:call-template name="file_upload"/>
 							<div class="pure-control-group">
 								<label for="name">

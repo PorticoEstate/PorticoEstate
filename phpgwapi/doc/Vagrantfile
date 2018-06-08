@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "ubuntu/xenial64"
+  config.vm.box = "ubuntu/bionic64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -126,8 +126,7 @@ Vagrant.configure("2") do |config|
     sudo apt-get install -y apt-utils
     sudo apt-get install -y apache2
     sudo apt-get install -y mysql-client-core-5.7
-    sudo apt-get install -y libapache2-mod-php7.1 php7.1 php7.1-curl php7.1-intl php7.1-mysql php-xdebug php-apcu php7.1-dev php7.1-xmlrpc php7.1-xml php7.1-gd php7.1-xsl php7.1-sybase php7.1-pgsql php7.1-json php7.1-gd php-imagick php7.1-imap php7.1-soap php7.1-zip php7.1-mbstring php-pear libaio1 locales
-
+    sudo apt-get install -y libapache2-mod-php7.2 php7.2 php7.2-curl php7.2-intl php7.2-mysql php-xdebug php-apcu php7.2-dev php7.2-xmlrpc php7.2-xml php7.2-gd php7.2-xsl php7.2-sybase php7.2-pgsql php7.2-json php7.2-gd php-imagick php7.2-imap php7.2-soap php7.2-zip php7.2-mbstring php-pear libaio1 locales
     sudo apt-get install -y git
     sudo apt-get install -y less vim-tiny
 	sudo apt-get install -y subversion
@@ -160,10 +159,10 @@ EOF
 
     sudo apt-get upgrade -y
 
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.1/apache2/php.ini
-    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.1/cli/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/apache2/php.ini
+    sudo sed -i 's/"GP"/"GPCS"/' /etc/php/7.2/cli/php.ini
 
-    sudo cat > /etc/php/7.1/apache2/conf.d/91-app.ini <<EOF
+    sudo cat > /etc/php/7.2/apache2/conf.d/91-app.ini <<EOF
 xdebug.max_nesting_level=200
 xdebug.overload_var_dump=Off
 xdebug.remote_autostart=Off
@@ -184,7 +183,13 @@ post_max_size = 20M
 upload_max_filesize = 8M
 EOF
 
-    sudo cp /etc/php/7.1/apache2/conf.d/91-app.ini /etc/php/7.1/cli/conf.d/91-app.ini
+ #   Edit the /etc/ssh/sshd_config file.
+ #   Change PasswordAuthentication and ChallengeResponseAuthentication to yes.
+ #   Restart ssh /etc/init.d/ssh restart.
+sudo sed -i "s/PasswordAuthentication.*/PasswordAuthentication yes/" /etc/ssh/sshd_config
+sudo sed -i "s/ChallengeResponseAuthentication.*/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config
+
+    sudo cp /etc/php/7.2/apache2/conf.d/91-app.ini /etc/php/7.2/cli/conf.d/91-app.ini
 
     # Allow htaccess in symfony web directory
     sudo sed -i '/DocumentRoot/a <Directory /var/www/html/portico/hm>\\n AllowOverride All\\n</Directory>' /etc/apache2/sites-enabled/000-default.conf

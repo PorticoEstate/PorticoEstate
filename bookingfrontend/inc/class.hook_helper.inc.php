@@ -61,4 +61,109 @@
 			}
 			$GLOBALS['phpgw_info']['server']['usecookies'] = $config->config_data['usecookies'];
 		}
+
+		public function after_navbar()
+		{
+			if(!$this->perform_action)
+			{
+				return;
+			}
+
+			$orgs = array();
+
+			$bouser = CreateObject('bookingfrontend.bouser');
+			$org = CreateObject('bookingfrontend.uiorganization');
+			if($bouser->is_logged_in())
+			{
+				$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
+			}
+
+			if(!empty($orgs) && is_array($orgs) && count($orgs) > 1)
+			{
+				$org_id = $bouser->orgnr;
+			}
+			else
+			{
+				return;
+			}
+
+			$lang_none = lang('none');
+			$org_option ="";
+			foreach ($orgs as $org)
+			{
+				$selected = '';
+				if ($org_id == (int)$org['orgnumber'])
+				{
+					$selected = ' selected="selected"';
+				}
+
+				$org_option .= <<<HTML
+
+				<option value='{$org['orgnumber']}'{$selected}>{$org['orgname']}</option>
+HTML;
+			}
+
+			if ($orgs)
+			{
+				if(!empty($_GET['menuaction']))
+				{
+					$action = $GLOBALS['phpgw']->link('/bookingfrontend/',
+						array
+						(
+							'menuaction' => phpgw::get_var('menuaction')
+						)
+					);
+					$base = 'bookingfrontend/';
+					$oArgs = '{menuaction:"' . phpgw::get_var('menuaction') .'"}';
+				}
+				else
+				{
+					$action = $GLOBALS['phpgw']->link('/bookingfrontend/index.php');
+					$base = 'bookingfrontend/index.php';
+					$oArgs = '{}';
+				}
+
+				$message = 'Velg organisasjon';
+
+				$org_select = <<<HTML
+
+					<label for="session_org_id">Velg Organisasjon:</label>
+					<select name="session_org_id" id="session_org_id">
+						{$org_option}
+					</select>
+
+HTML;
+			}
+
+			$html = <<<HTML
+
+			<div id="organsation_select">
+				$org_select
+			</div>
+HTML;
+
+
+			echo $html;
+
+
+			$js = <<<JS
+	<script type="text/javascript">
+		$(document).ready(function ()
+		{
+
+			$("#session_org_id").change(function ()
+			{
+				var session_org_id = $(this).val();
+				var oArgs = {$oArgs};
+				oArgs.session_org_id = session_org_id;
+				var requestUrl = phpGWLink('{$base}', oArgs);
+				window.open(requestUrl, "_self");
+			});
+		});
+	</script>
+JS;
+			echo $js;
+
+		}
+
 	}

@@ -734,21 +734,22 @@ SQL;
 			}
 			$sql = 'INSERT INTO fm_vendor (id, org_name,category, owner_id, active, adresse, postnr, poststed, org_nr, konto_nr)'
 				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-			if($vendors)
+
+			if($vendors && !$error)
 			{
 				$GLOBALS['phpgw']->db->insert($sql, $vendors, __LINE__, __FILE__);
+			
+				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0", __LINE__, __FILE__);
+
+				$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET"
+					. " active = 1,"
+					. " org_name = fm_vendor_temp.navn,"
+					. " adresse = fm_vendor_temp.adresse,"
+					. " postnr = fm_vendor_temp.postnummer,"
+					. " poststed = fm_vendor_temp.sted,"
+					. " org_nr = fm_vendor_temp.organisasjonsnr"
+					. " FROM fm_vendor_temp WHERE fm_vendor.id = fm_vendor_temp.id", __LINE__, __FILE__);
 			}
-
-			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET active = 0", __LINE__, __FILE__);
-
-			$GLOBALS['phpgw']->db->query("UPDATE fm_vendor SET"
-				. " active = 1,"
-				. " org_name = fm_vendor_temp.navn,"
-				. " adresse = fm_vendor_temp.adresse,"
-				. " postnr = fm_vendor_temp.postnummer,"
-				. " poststed = fm_vendor_temp.sted,"
-				. " org_nr = fm_vendor_temp.organisasjonsnr"
-				. " FROM fm_vendor_temp WHERE fm_vendor.id = fm_vendor_temp.id", __LINE__, __FILE__);
 
 			$GLOBALS['phpgw']->db->transaction_commit();
 		}

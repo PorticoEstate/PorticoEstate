@@ -1,48 +1,49 @@
 Add	hrm	no	Legg til
-address	hrm	no	adresse
-add training	hrm	no	legg til utdanning / erfaring
-apply	hrm	no	bruk
-category	hrm	no	kategori
-cellular phone	hrm	no	mobiltelefon
+address	hrm	no	Adresse
+add training	hrm	no	Legg til utdanning / erfaring
+apply	hrm	no	Bruk
+category	hrm	no	Kategori
+cellular phone	hrm	no	Mobiltelefon
 credits	hrm	no	Studiepoeng
-descr	hrm	no	beskrivelse
+descr	hrm	no	Beskrivelse
 Descr	hrm	no	Beskrivelse
 edit place	hrm	no	Rette sted
-end date	hrm	no	sluttdato
+end date	hrm	no	Sluttdato
 Entry date	hrm	no	Registrert dato
-home email	hrm	no	epost hjemme
-home phone	hrm	no	tlf hjemme
+home email	hrm	no	Epost hjemme
+home phone	hrm	no	Tlf hjemme
 hrm	hrm	no	Kompetansestyring
-job	hrm	no	jobb
-job has been edited	hrm	no	jobb er rettet
-Job type	hrm	no	jobb-type
-list job	hrm	no	liste jobber
-list place	hrm	no	liste sted
-list training	hrm	no	list utdanning / erfaring
-new place	hrm	no	nytt sted
-no category	hrm	no	ingen kategori
+job	hrm	no	Jobb
+job has been edited	hrm	no	Jobb er rettet
+Job type	hrm	no	Jobb-type
+list job	hrm	no	Liste jobber
+list place	hrm	no	Liste sted
+list training	hrm	no	List utdanning / erfaring
+new place	hrm	no	Nytt sted
+no category	hrm	no	Ingen kategori
 Organisation	hrm	no	Organisasjon
-parent	hrm	no	overordnet
+parent	hrm	no	Overordnet
 Place	hrm	no	Sted
 Postition	hrm	no	Stilling
-reference	hrm	no	referanse
-remark	hrm	no	merknad
-select a place	hrm	no	velg et sted
-select a skill	hrm	no	velg et erfaringsnivå
+reference	hrm	no	Referanse
+remark	hrm	no	Merknad
+select a place	hrm	no	Velg et sted
+select a skill	hrm	no	Velg et erfaringsnivå
 Skill	hrm	no	Erfaringsnivå
-start date	hrm	no	startdato
+start date	hrm	no	Startdato
 task	hrm	no	oppgave
-tasks	hrm	no	oppgaver
-qualification	hrm	no	kvalifikasjon
-title	hrm	no	tittel
-town	hrm	no	poststed
-training	hrm	no	utdanning / erfaring
+tasks	hrm	no	Oppgaver
+qualification	hrm	no	Kvalifikasjon
+title	hrm	no	Tittel
+town	hrm	no	Toststed
+training	hrm	no	Utdanning / erfaring
 training ID	hrm	no	ID
-Training item has been edited	hrm	no	utdanning / erfaring er rettet
+Training item has been edited	hrm	no	Utdanning / erfaring er rettet
 User	hrm	no	Arbeidstaker
-view job	hrm	no	vis jobb
-view place	hrm	no	vis sted
-view training	hrm	no	vis utdanning / erfaring
-work email	hrm	no	epost arbeid
-work phone	hrm	no	tlf arbeid
-zip	hrm	no	postnr
+view job	hrm	no	Vis jobb
+view place	hrm	no	Vis sted
+view training	hrm	no	Vis utdanning / erfaring
+work email	hrm	no	Epost arbeid
+work phone	hrm	no	Tlf arbeid
+zip	hrm	no	Postnr
+birthday	hrm	no	Fødselsdag

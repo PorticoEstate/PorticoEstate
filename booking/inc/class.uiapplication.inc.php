@@ -1042,13 +1042,6 @@
 					$this->check_application_assigned_to_current_user($application);
 					$update = $this->set_display_in_dashboard($application, $this->extract_display_in_dashboard_value());
 				}
-				elseif ($_POST['comment'])
-				{
-					$application['comment'] = phpgw::get_var('comment', 'html', 'POST');
-					$this->add_comment($application, $application['comment']);
-					$update = true;
-					$notify = true;
-				}
 				elseif ($_POST['status'])
 				{
 					$this->check_application_assigned_to_current_user($application);
@@ -1118,6 +1111,17 @@
 					}
 
 					/** End attachment * */
+				}
+
+				/**
+				 * Sigurd 1/5-2018: har på forespørsel fra Lindås flyttet comment ut i egen blokk - sjekk om det får utilsiktede konskveser.
+				 */
+				if ($_POST['comment'])
+				{
+					$application['comment'] = phpgw::get_var('comment', 'html', 'POST');
+					$this->add_comment($application, $application['comment']);
+					$update = true;
+					$notify = true;
 				}
 
 				$update AND $receipt = $this->bo->update($application);

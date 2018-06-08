@@ -77,7 +77,8 @@
 			'handle_multi_upload_file' => true,
 			'build_multi_upload_file' => true,
 			'get_files'				=> true,
-			'view_image'			=> true
+			'view_image'			=> true,
+			'get_other_projects'	=> true
 		);
 
 		function __construct()
@@ -230,6 +231,50 @@
 			}
 		}
 
+		function get_other_projects($id = 0, $location_code = '')
+		{
+			if (!$this->acl_read)
+			{
+				return array();
+			}
+
+			if(!$id)
+			{
+				$id = phpgw::get_var('id', 'int');
+			}
+
+			if(!$location_code)
+			{
+				$location_code = phpgw::get_var('location_code', 'string');
+			}
+
+			$values = $this->bo->get_other_projects($id, $location_code);
+
+			$dateformat = $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat'];
+			foreach ($values as &$entry)
+			{
+				$link = self::link(array('menuaction' => 'property.uiproject.view', 'id' => $entry['id']));
+				$entry['url'] = "<a href='{$link}'>{$entry['id']}</a>";
+				$entry['start_date'] =$GLOBALS['phpgw']->common->show_date($entry['start_date'], $dateformat);
+			}
+
+			if (phpgw::get_var('phpgw_return_as') == 'json')
+			{
+
+				$total_records = count($values);
+
+				return array
+					(
+					'data' => $values,
+					'draw' => phpgw::get_var('draw', 'int'),
+					'recordsTotal' => $total_records,
+					'recordsFiltered' => $total_records
+				);
+			}
+
+			return $values;
+		}
+
 		function get_files()
 		{
 			$id = phpgw::get_var('id', 'int');
@@ -241,7 +286,7 @@
 
 			$link_file_data = array
 				(
-				'menuaction' => 'helpdesk.uiproject.view_file',
+				'menuaction' => 'property.uiproject.view_file',
 			);
 
 
@@ -2159,8 +2204,11 @@ JS;
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_5',
-				'requestUrl' => "''",
-				'data' => json_encode($content_files),
+//				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_files',
+						'id' => $id, 'phpgw_return_as' => 'json'))),
+//				'data' => json_encode($content_files),
+				'data' => json_encode(array()),
 				'ColumnDefs' => $files_def,
 				'config' => array(
 					array('disableFilter' => true),
@@ -2220,6 +2268,31 @@ JS;
 				)
 			);
 
+
+		$other_projects = $this->get_other_projects($id, $values['location_data']['location_code']);
+			$other_projects_def = array
+				(
+				array('key' => 'url', 'label' => lang('id'), 'sortable' => true),
+				array('key' => 'location_code', 'label' => lang('location'), 'sortable' => true),
+				array('key' => 'name', 'label' => lang('name'), 'sortable' => false),
+				array('key' => 'start_date', 'label' => lang('start date'), 'sortable' => false),
+				array('key' => 'coordinator', 'label' => lang('coordinator'), 'sortable' => true),
+				array('key' => 'status', 'label' => lang('status'), 'sortable' => true),
+			);
+
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_7',
+				'requestUrl' => "''",
+				'data' => json_encode($other_projects),
+				'ColumnDefs' => $other_projects_def,
+				'config' => array(
+					array('disableFilter' => true),
+		//			array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'desc')))
+				)
+			);
+
 			//----------------------------------------------datatable settings--------
 
 			$suppresscoordination = isset($config->config_data['project_suppresscoordination']) && $config->config_data['project_suppresscoordination'] ? 1 : '';
@@ -2268,7 +2341,7 @@ JS;
 			$msgbox_data = $this->bocommon->msgbox_data($this->receipt);
 
 			$project_type_id = isset($values['project_type_id']) && $values['project_type_id'] ? $values['project_type_id'] : $GLOBALS['phpgw_info']['user']['preferences']['property']['default_project_type'];
-			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'general');
+			$active_tab = phpgw::get_var('active_tab', 'string', 'REQUEST', 'location');
 
 			$delivery_address = $values['delivery_address'];
 
@@ -2293,7 +2366,7 @@ JS;
 				'ecodimb_data' => $ecodimb_data,
 				'contact_data' => $contact_data,
 				'tabs' => self::_generate_tabs($tabs, $active_tab, $_disable = array(
-					'location' => !$id && empty($this->receipt['error']) ? true : false,
+					'general' => !$id && empty($this->receipt['error']) ? true : false,
 					'budget' => !$id && empty($this->receipt['error']) ? true : false,
 					'coordination' => $id ? false : true,
 					'documents' => $id ? false : true,
@@ -2960,12 +3033,12 @@ JS;
 			return $this->bocommon->get_external_project_name($id);
 		}
 
-		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'general', $_disable = array() )
+		protected function _generate_tabs( $tabs_ = array(), $active_tab = 'location', $_disable = array() )
 		{
 			$tabs = array
 				(
-				'general' => array('label' => lang('general'), 'link' => '#general'),//, 'function' => "set_tab('general')"),
 				'location' => array('label' => lang('location'), 'link' => '#location'),//, 'function' => "set_tab('location')"),
+				'general' => array('label' => lang('general'), 'link' => '#general'),//, 'function' => "set_tab('general')"),
 				'budget' => array('label' => lang('Time and budget'), 'link' => '#budget'),//, 'function' => "set_tab('budget')"),
 				'coordination' => array('label' => lang('coordination'), 'link' => '#coordination'),//,'function' => "set_tab('coordination')"),
 				'documents' => array('label' => lang('documents'), 'link' => '#documents'),//, 'function' => "set_tab('documents')"),

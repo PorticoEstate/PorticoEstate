@@ -1096,4 +1096,25 @@ HTML;
 		{
 			return $this->so->get_order_list($project_id);
 		}
+
+		public function get_files( $id = 0 )
+		{
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$files = $vfs->ls(array(
+				'string' => "/property/workorder/{$id}",
+				'relatives' => array(RELATIVE_NONE)
+			));
+
+			$vfs->override_acl = 0;
+
+			$j = count($files);
+			for ($i = 0; $i < $j; $i++)
+			{
+				$files[$i]['file_name'] = urlencode($files[$i]['name']);
+			}
+			return $files;
+		}
+
 	}

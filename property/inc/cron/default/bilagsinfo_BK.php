@@ -43,7 +43,7 @@
 
 			$this->function_name = get_class($this);
 			$this->sub_location = lang('property');
-			$this->function_msg = 'Hent bilagsinformasjon fra Agresso - og oppdatert Portico';
+			$this->function_msg = 'Hent bilagsinformasjon fra Agresso - og oppdatere Portico';
 			$this->db = & $GLOBALS['phpgw']->db;
 			$this->join = & $this->db->join;
 		}
@@ -461,7 +461,8 @@ XML;
 			"Content-length: ".strlen($soap_request)
 			);
 
-			$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
+	//		$soapUrl = "http://10.19.14.242/agresso-webservices/service.svc?QueryEngineService/QueryEngineV201101"; // asmx URL of WSDL
+			$soapUrl = "http://agrpweb.adm.bgo/UBW-webservices/service.svc?QueryEngineService/QueryEngineV201101";
 
 			$ch = curl_init($soapUrl);
 
