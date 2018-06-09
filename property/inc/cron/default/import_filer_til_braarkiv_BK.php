@@ -35,7 +35,7 @@
 	/**
 	 * Load autoload
 	 */
-	require_once PHPGW_API_INC . '/soap_client/bra5/Bra5Autoload.php';
+	require_once PHPGW_SERVER_ROOT . '/property/inc/soap_client/bra51/autoload.php';
 
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -46,7 +46,8 @@
 			$secKey,
 			$fields,
 			$baseclassname,
-			$classname;
+			$classname,
+			$services;
 
 		public function __construct()
 		{
@@ -82,47 +83,25 @@
 				throw new Exception('braArkiv is not configured');
 			}
 
-			$wdsl = "{$location_url}?WSDL";
+			$wsdl = "{$location_url}?WSDL";
 			$options = array();
 
-			$options[Bra5WsdlClass::WSDL_URL] = $wdsl;
-			$options[Bra5WsdlClass::WSDL_ENCODING] = 'UTF-8';
-			$options[Bra5WsdlClass::WSDL_TRACE] = false;
-			$options[Bra5WsdlClass::WSDL_SOAP_VERSION] = SOAP_1_2;
+			$options['wsdl_url'] = $wsdl;
+			$options['wsdl_encoding'] = 'UTF-8';
+			$options['wsdl_trace'] = true;
+			$options['wsdl_soap_version'] = SOAP_1_2;
 
-			try
-			{
-				$wsdlObject = new Bra5WsdlClass($options);
-			}
-			catch (Exception $e)
-			{
-				if ($e)
-				{
-					phpgwapi_cache::message_set($e->getMessage(), 'error');
-					return false;
-				}
-			}
+			$services = new \Services($options, $wsdl);
 
 
-			$bra5ServiceLogin = new Bra5ServiceLogin();
-			if ($bra5ServiceLogin->Login(new Bra5StructLogin($braarkiv_user, $braarkiv_pass)))
+			if(!$this->secKey =  $services->Login(new \Login($braarkiv_user, $braarkiv_pass))->getLoginResult())
 			{
-				$this->secKey = $bra5ServiceLogin->getResult()->getLoginResult()->LoginResult;
-			}
-			else
-			{
+				echo "SOAP HEADERS:\n" . $services->__getLastRequestHeaders() . PHP_EOL;
+				echo "SOAP REQUEST:\n" . $services->__getLastRequest() . PHP_EOL;
 				throw new Exception('vfs_fileoperation_braArkiv::Login failed');
 			}
 
-//			_debug_array($this->secKey);
-//			$Bra5ServiceGet = new Bra5ServiceGet();
-//
-//	//		$test = $Bra5ServiceGet->getDocumentSplitTypes(new Bra5StructGetDocumentSplitTypes('FDV EBF', $this->secKey));
-//			$test = $Bra5ServiceGet->getDocumentSplitTypes(new Bra5StructGetDocumentSplitTypes(10, $this->secKey));
-//
-//			_debug_array($test);
-//			_debug_array($test->getResult()->getDocumentSplitTypesResult());
-//			die();
+			$this->services = $services;
 
 		}
 
@@ -201,7 +180,6 @@
 			$fileid = 20869646; // org
 		//	$fileid = 20980311;
 			
-			$bra5ServiceGet = new Bra5ServiceGet();
 
 //			$bra5ServiceGet->getAvailableAttributes(new Bra5StructGetAvailableAttributes($this->secKey,$_baseclassname = 'Eiendomsarkiver',$_classname = 'FDV EBF'));
 //			$file_result = $bra5ServiceGet->getResult()->getAvailableAttributesResult;
@@ -209,15 +187,13 @@
 //			die();
 //
 
-			$bra5ServiceGet->getDocument(new Bra5StructGetDocument($this->secKey,$fileid) );
-			$file_result = $bra5ServiceGet->getResult();
+			$file_result = $this->services->getDocument(new \GetDocument($this->secKey,$fileid))->getDocumentResult;
 			_debug_array($file_result);
 			die();
 
 
-			$bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($this->secKey, $fileid));
-			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
-			$file = base64_decode($file_result->getFileAsByteArrayResult);
+			$file_result = $this->services->getFileAsByteArray(new \GetFileAsByteArray($this->secKey, $fileid))->getFileAsByteArrayResult;
+			$file = base64_decode($file_result);
 			/*
 			  $bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
 			  $filename = $bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
@@ -436,24 +412,12 @@ _debug_array($file_info);
 
 			_debug_array($document);
 die();
-			$bra5ServiceCreate = new Bra5ServiceCreate();
-			$bra5ServiceCreateDocument = new Bra5StructCreateDocument($_assignDocKey = false, $this->secKey, $document);
-//			_debug_array($bra5ServiceCreateDocument);
-//			die();
-			if ($bra5ServiceCreate->createDocument($bra5ServiceCreateDocument))
-			{
-//				_debug_array($bra5ServiceCreate->getResult());
-			}
-			else
-			{
-		//		_debug_array($bra5ServiceCreate->getLastError());
+			$$CreateDocument = new \CreateDocument();
+			$CreateDocument->assignDocKey = false;
+			$CreateDocument->secKey = $this->secKey;
+			$CreateDocument->doc = $document;
 
-		//		throw new Exception($bra5ServiceCreate->getLastError());
-			}
-
-			$document_id =  $bra5ServiceCreate->getResult()->getCreateDocumentResult()->getcreateDocumentResult()->ID;
-
-			if (!$document_id)
+			if (!$document_id = $this->services->createDocument(new \CreateDocument($CreateDocument))->getCreateDocumentResult()->getID())
 			{
 				return false;
 			}
@@ -472,14 +436,9 @@ die();
 			$filename = basename($file);
 			$content = file_get_contents($file);
 
-			$bra5ServiceFile = new Bra5ServiceFile();
-			if ($bra5ServiceFile->fileTransferSendChunkedInit(new Bra5StructFileTransferSendChunkedInit($this->secKey, $document_id, $filename)))
+			if (!$transaction_id = $this->services->fileTransferSendChunkedInit(new \fileTransferSendChunkedInit($this->secKey, $document_id, $filename))->getFileTransferSendChunkedInitResult())
 			{
-				$transaction_id = $bra5ServiceFile->getResult()->getfileTransferSendChunkedInitResult()->fileTransferSendChunkedInitResult;
-			}
-			else
-			{
-				_debug_array($bra5ServiceFile->getLastError());
+				_debug_array("feiler på manglende transaction_id");
 				die();
 			}
 
@@ -489,10 +448,10 @@ die();
 
 			foreach ($content_arr as $content_part)
 			{
-				$bra5ServiceFile->fileTransferSendChunk(new Bra5StructFileTransferSendChunk($this->secKey, $transaction_id, $content_part));
+				$this->services->fileTransferSendChunk(new \fileTransferSendChunk($this->secKey, $transaction_id, $content_part));
 			}
 
-			$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
+			$ok = !!$this->services->fileTransferSendChunkedEnd(new \fileTransferSendChunkedEnd($this->secKey, $transaction_id));
 			/*
 			  _debug_array($bra5ServiceFile->getResult());
 			 */
@@ -500,7 +459,7 @@ die();
 
 			if (!$ok)
 			{
-				_debug_array($bra5ServiceFile->getLastError());
+				_debug_array("feiler på lagring");
 			}
 
 	_debug_array($document_id);
@@ -519,65 +478,72 @@ die();
 				* @param int $_docSplitTypeID
 			*/
 
-			$doc = new Bra5StructDocument(false, false, false, 5, 1, 1001);
-			$attribs = new Bra5StructArrayOfAttribute();
+			$doc = new \Document(false, false, false, 5);
+			$doc->setProductionLineID(1);
+			$doc->setDocSplitTypeID(101);
 
-			$asta = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$attribs = new \ArrayOfAttribute();
+
+			$attribute_arr = array();
+
+			$asta = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$asta->setName("ASTA_Signatur");
 			$asta->setStringValue("bkbygg/saknr]");
-			$attribs->add($asta->build());
+			$attribute_arr[] = $asta->build();
 
-			$lokasjonskode = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$lokasjonskode = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$lokasjonskode->setName("Lokasjonskode");
 			$lokasjonskode->setStringValue($byggNummer);
-			$attribs->add($lokasjonskode->build());
+			$attribute_arr[] = $lokasjonskode->build();
 
-//			$byggnavn = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+//			$byggnavn = new AttributeFactory(braArkivAttributeType::braArkivString);
 //			$byggnavn->setName("Byggnavn");
 //			$byggnavn->setStringValue("Bergen rådhus");
-//			$attribs->add($byggnavn->build());
+//			$attribute_arr[] = $byggnavn->build();
 
-			$matrikkel = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVMATRIKKEL);
+			$matrikkel = new AttributeFactory(braArkivAttributeType::braArkivMatrikkel);
 			$matrikkel->setName("Eiendom");
 			$matrikkel->setMatrikkelValue($gnr, $bnr, 0, 0);
-			$attribs->add($matrikkel->build());
+			$attribute_arr[] = $matrikkel->build();
 
-			$bygningsnummer = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$bygningsnummer = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$bygningsnummer->setName("Byggnr");
 			$bygningsnummer->setStringValue($byggNummer);
-			$attribs->add($bygningsnummer->build());
+			$attribute_arr[] = $bygningsnummer->build();
 
-			$innhold = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$innhold = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$innhold->setName("Innhold");
 			$innhold->setStringValue($dokumentTittel);
-			$attribs->add($innhold->build());
+			$attribute_arr[] = $innhold->build();
 
-//			$now = date('Y-m-d H:i:s');
-//			$dato = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE);
-//			$dato->setName("Dokumentdato");
-//			$dato->setDateValue($now);
-//			$attribs->add($dato->build());
+			$now = date('Y-m-d');
+			$dato = new AttributeFactory(braArkivAttributeType::braArkivDate);
+			$dato->setName("Dokumentdato");
+			$dato->setDateValue($now);
+			$attribute_arr[] = $dato->build();
 
-			$dokumentkategorier = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$dokumentkategorier = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$dokumentkategorier->setName("Dokumentkategori");
 			$dokumentkategorier->setStringArrayValue(explode(";", $kategorier));
 			$dokumentkategorier->build();
-			$attribs->add($dokumentkategorier->build());
+			$attribute_arr[] = $dokumentkategorier->build();
 
-			$fagAttrib = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$fagAttrib = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$fagAttrib->setName("Fag");
 			$fagAttrib->setStringArrayValue(explode(";", $fag));
-			$attribs->add($fagAttrib->build());
+			$attribute_arr[] = $fagAttrib->build();
 
-			$bygningsdelAttrib = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$bygningsdelAttrib = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$bygningsdelAttrib->setName("Bygningsdel");
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
-			$attribs->add($bygningsdelAttrib->build());
+			$attribute_arr[] = $bygningsdelAttrib->build();
 
-//			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+//			$merknad = new AttributeFactory(braArkivAttributeType::braArkivString);
 //			$merknad->setName("Kapittel");
 //			$merknad->setStringValue("");
-//			$attribs->add($merknad->build());
+//			$attribute_arr[] = $merknad->build();
+
+			$attribs->setAttribute($attribute_arr);
 
 			$doc->setAttributes($attribs);
 
@@ -596,7 +562,7 @@ die();
 
 		function __construct($_attribType)
 		{
-			$this->attribute = new Bra5StructAttribute($_usesLookupValues = false,$_attribType);
+			$this->attribute = new \Attribute($_usesLookupValues = false,$_attribType);
 		}
 
 		public function setType( $type )
@@ -620,12 +586,14 @@ die();
 
 		public function setStringArrayValue( $values )
 		{
-			$attributeValue = new Bra5StructArrayOfAnyType();
+			$attributeValue = new \ArrayOfAnyType();
 
-			foreach ($values as $value)
-			{
-				$attributeValue->add($value);
-			}
+			$attributeValue->setAnyType($values);
+
+//			foreach ($values as $value)
+//			{
+//				$attributeValue->add($value);
+//			}
 
 			$this->attribute->setValue($attributeValue);
 			return $this;
@@ -633,23 +601,25 @@ die();
 
 		public function setMatrikkelValue( $gnr, $bnr, $fnr, $snr )
 		{
-			$gnrBnrValue = new Bra5StructArrayOfAnyType();
-			$matrikkel = new Bra5StructMatrikkel();
+			$gnrBnrValue = new ArrayOfAnyType();
+			$matrikkel = new Matrikkel();
 
 			$matrikkel->setGNr((int)$gnr);
 			$matrikkel->setBNr((int)$bnr);
 			$matrikkel->setFNr((int)$fnr);
 			$matrikkel->setSNr((int)$snr);
 
-			$gnrBnrValue->add($matrikkel);
+//			$gnrBnrValue->add($matrikkel);
+			$gnrBnrValue->setAnyType($matrikkel);
 			$this->attribute->setValue($gnrBnrValue);
 			return $this;
 		}
 
 		public function setDateValue( $date )
 		{
-			$datoValue = new Bra5StructArrayOfAnyType();
-			$datoValue->add($date);
+			$datoValue = new ArrayOfAnyType();
+			$datoValue->setAnyType(array($date));
+//			$datoValue->add($date);
 			$this->attribute->setValue($datoValue);
 			return $this;
 		}
