@@ -86,10 +86,10 @@
 			$wsdl = "{$location_url}?WSDL";
 			$options = array();
 
-			$options['wsdl_url'] = $wsdl;
-			$options['wsdl_encoding'] = 'UTF-8';
-			$options['wsdl_trace'] = true;
-			$options['wsdl_soap_version'] = SOAP_1_2;
+			$options['location'] = $location_url;
+			$options['encoding'] = 'UTF-8';
+			$options['trace'] = true;
+			$options['soap_version'] = SOAP_1_2;
 
 			$services = new \Services($options, $wsdl);
 
@@ -177,27 +177,23 @@
 
 		function get_document_test( )
 		{
-			$fileid = 20869646; // org
-		//	$fileid = 20980311;
-			
+			$fileid = 20905420; // org
+			$fileid = 20980324;
 
-//			$bra5ServiceGet->getAvailableAttributes(new Bra5StructGetAvailableAttributes($this->secKey,$_baseclassname = 'Eiendomsarkiver',$_classname = 'FDV EBF'));
+
+//			this->services->getAvailableAttributes(new GetAvailableAttributes($this->secKey,$_baseclassname = 'Eiendomsarkiver',$_classname = 'FDV EBF'));
 //			$file_result = $bra5ServiceGet->getResult()->getAvailableAttributesResult;
 //			_debug_array($file_result);
 //			die();
 //
 
-			$file_result = $this->services->getDocument(new \GetDocument($this->secKey,$fileid))->getDocumentResult;
+			$file_result = $this->services->getDocument(new \getDocument($this->secKey,$fileid))->getGetDocumentResult();
 			_debug_array($file_result);
 			die();
 
 
 			$file_result = $this->services->getFileAsByteArray(new \GetFileAsByteArray($this->secKey, $fileid))->getFileAsByteArrayResult;
 			$file = base64_decode($file_result);
-			/*
-			  $bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
-			  $filename = $bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
-			 */
 			$browser = CreateObject('phpgwapi.browser');
 			$browser->content_header("{$fileid}.pdf", 'application/pdf');
 
@@ -409,15 +405,28 @@ _debug_array($file_info);
 			}
 
 			$document = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode);
-
 			_debug_array($document);
-die();
-			$$CreateDocument = new \CreateDocument();
-			$CreateDocument->assignDocKey = false;
-			$CreateDocument->secKey = $this->secKey;
-			$CreateDocument->doc = $document;
+			$createDocument = new \createDocument($this->secKey, false, $document);
 
-			if (!$document_id = $this->services->createDocument(new \CreateDocument($CreateDocument))->getCreateDocumentResult()->getID())
+			try
+			{
+				$savedDoc = $this->services->createDocument($createDocument);
+			}
+			catch (SoapFault $fault)
+			{
+				$msg = "SOAP Fault:\n faultcode: {$fault->faultcode},\n faultstring: {$fault->faultstring}";
+		//		echo $msg . PHP_EOL;
+				trigger_error(nl2br($msg), E_USER_ERROR);
+			}
+
+				echo "SOAP HEADERS:\n</br>";
+				echo $this->services->__getLastRequestHeaders();
+				echo "</br>SOAP REQUEST:\n</br>";
+				echo $this->services->__getLastRequest();
+
+			$document_id = $savedDoc->getCreateDocumentResult()->getID();
+
+			if (!$document_id)
 			{
 				return false;
 			}
@@ -480,7 +489,7 @@ die();
 
 			$doc = new \Document(false, false, false, 5);
 			$doc->setProductionLineID(1);
-			$doc->setDocSplitTypeID(101);
+			$doc->setDocSplitTypeID(1001);
 
 			$attribs = new \ArrayOfAttribute();
 
@@ -491,10 +500,10 @@ die();
 			$asta->setStringValue("bkbygg/saknr]");
 			$attribute_arr[] = $asta->build();
 
-			$lokasjonskode = new AttributeFactory(braArkivAttributeType::braArkivString);
-			$lokasjonskode->setName("Lokasjonskode");
-			$lokasjonskode->setStringValue($byggNummer);
-			$attribute_arr[] = $lokasjonskode->build();
+			$objekt = new AttributeFactory(braArkivAttributeType::braArkivString);
+			$objekt->setName("Lokasjonskode");
+			$objekt->setStringValue($lokasjonskode);
+			$attribute_arr[] = $objekt->build();
 
 //			$byggnavn = new AttributeFactory(braArkivAttributeType::braArkivString);
 //			$byggnavn->setName("Byggnavn");
@@ -506,6 +515,18 @@ die();
 			$matrikkel->setMatrikkelValue($gnr, $bnr, 0, 0);
 			$attribute_arr[] = $matrikkel->build();
 
+//			$att3 = new Attribute(false, braArkivAttributeType::braArkivMatrikkel);
+//			$att3->setName("Eiendom");
+//			$ArrayOfAnyType = new ArrayOfAnyType();
+//			$Matrikkel = new Matrikkel();
+//			$Matrikkel->setGNr($gnr);
+//			$Matrikkel->setBNr($bnr);
+//			$Matrikkel->setFNr(0);
+//			$Matrikkel->setSNr(0);
+//			$ArrayOfAnyType->setAnyType(array($Matrikkel));
+//			$att3->setValue($ArrayOfAnyType);
+//			$attribute_arr[] = $att3;
+
 			$bygningsnummer = new AttributeFactory(braArkivAttributeType::braArkivString);
 			$bygningsnummer->setName("Byggnr");
 			$bygningsnummer->setStringValue($byggNummer);
@@ -516,24 +537,27 @@ die();
 			$innhold->setStringValue($dokumentTittel);
 			$attribute_arr[] = $innhold->build();
 
-			$now = date('Y-m-d');
-			$dato = new AttributeFactory(braArkivAttributeType::braArkivDate);
-			$dato->setName("Dokumentdato");
-			$dato->setDateValue($now);
-			$attribute_arr[] = $dato->build();
+//			$now = date('Y-m-d');
+//			$dato = new AttributeFactory(braArkivAttributeType::braArkivDate);
+//			$dato->setName("Dokumentdato");
+//			$dato->setDateValue($now);
+//			$attribute_arr[] = $dato->build();
 
 			$dokumentkategorier = new AttributeFactory(braArkivAttributeType::braArkivString);
+			$dokumentkategorier->setUsesLookupValues(true);
 			$dokumentkategorier->setName("Dokumentkategori");
 			$dokumentkategorier->setStringArrayValue(explode(";", $kategorier));
 			$dokumentkategorier->build();
 			$attribute_arr[] = $dokumentkategorier->build();
 
 			$fagAttrib = new AttributeFactory(braArkivAttributeType::braArkivString);
+			$fagAttrib->setUsesLookupValues(true);
 			$fagAttrib->setName("Fag");
 			$fagAttrib->setStringArrayValue(explode(";", $fag));
 			$attribute_arr[] = $fagAttrib->build();
 
 			$bygningsdelAttrib = new AttributeFactory(braArkivAttributeType::braArkivString);
+			$bygningsdelAttrib->setUsesLookupValues(true);
 			$bygningsdelAttrib->setName("Bygningsdel");
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
 			$attribute_arr[] = $bygningsdelAttrib->build();
@@ -565,6 +589,11 @@ die();
 			$this->attribute = new \Attribute($_usesLookupValues = false,$_attribType);
 		}
 
+		public function setUsesLookupValues( $_usesLookupValues )
+		{
+			$this->attribute->setUsesLookupValues($_usesLookupValues);
+			return $this;
+		}
 		public function setType( $type )
 		{
 			$this->attribute->setAttribType($type);
@@ -587,14 +616,7 @@ die();
 		public function setStringArrayValue( $values )
 		{
 			$attributeValue = new \ArrayOfAnyType();
-
 			$attributeValue->setAnyType($values);
-
-//			foreach ($values as $value)
-//			{
-//				$attributeValue->add($value);
-//			}
-
 			$this->attribute->setValue($attributeValue);
 			return $this;
 		}
@@ -604,13 +626,12 @@ die();
 			$gnrBnrValue = new ArrayOfAnyType();
 			$matrikkel = new Matrikkel();
 
-			$matrikkel->setGNr((int)$gnr);
-			$matrikkel->setBNr((int)$bnr);
-			$matrikkel->setFNr((int)$fnr);
-			$matrikkel->setSNr((int)$snr);
+			$matrikkel->setGNr("{$gnr}");
+			$matrikkel->setBNr("{$bnr}");
+			$matrikkel->setFNr("{$fnr}");
+			$matrikkel->setSNr("{$snr}");
 
-//			$gnrBnrValue->add($matrikkel);
-			$gnrBnrValue->setAnyType($matrikkel);
+			$gnrBnrValue->setAnyType(array($matrikkel));
 			$this->attribute->setValue($gnrBnrValue);
 			return $this;
 		}
@@ -619,7 +640,6 @@ die();
 		{
 			$datoValue = new ArrayOfAnyType();
 			$datoValue->setAnyType(array($date));
-//			$datoValue->add($date);
 			$this->attribute->setValue($datoValue);
 			return $this;
 		}
