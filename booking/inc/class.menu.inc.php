@@ -261,6 +261,12 @@
 							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index',
 								'appname' => 'booking'))
 						),
+						'facility' => array
+							(
+							'text' => lang('Facilities'),
+							'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uifacility.index',
+								'appname' => 'booking'))
+						),
 						'custom_fields_example' => array
 							(
 							'text' => 'TEMPORARY:custom fields example',
@@ -392,6 +398,12 @@
 						(
 						'text' => lang('Activity'),
 						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uiactivity.index',
+							'appname' => 'booking'))
+					),
+					'facility' => array
+						(
+						'text' => lang('Facilities'),
+						'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'booking.uifacility.index',
 							'appname' => 'booking'))
 					),
 					'audience' => array

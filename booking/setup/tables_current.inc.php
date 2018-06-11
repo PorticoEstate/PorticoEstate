@@ -1015,4 +1015,15 @@
 			'ix' => array(),
 			'uc' => array(),
 		),
+		'bb_facility' => array(
+			'fd' => array(
+				'id' => array('type' => 'auto', 'nullable' => false),
+				'name' => array('type' => 'varchar', 'precision' => '100', 'nullable' => false),
+				'active' => array('type' => 'int', 'nullable' => false, 'precision' => '4', 'default' => 1),
+			),
+			'pk' => array('id'),
+			'fk' => array(),
+			'ix' => array(),
+			'uc' => array(),
+		),
 	);
