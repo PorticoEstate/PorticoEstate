@@ -102,7 +102,7 @@
 
 			$_lag_seconds -= phpgwapi_datetime::user_timezone();
 
-//_debug_array($period_transition);			
+//_debug_array($period_transition);
 			$time = time();
 			$timestamp_at_start_month = mktime($hour = 0, $minute = 0, $second = 0, $month = date("n"), $day = 0, $year = date("Y"));
 
@@ -1164,27 +1164,6 @@
 						'root' => $basedir,
 						'timeout' => 10,
 					]));
-
-//					if (!function_exists("ssh2_connect"))
-//					{
-//						die("function ssh2_connect doesn't exist");
-//					}
-//					if (!($connection = ssh2_connect("$server", $port)))
-//					{
-//						$message = "fail: unable to establish connection";
-//						_debug_array($message);
-//						//$receipt['error'][]= array('msg' => $message);
-//					}
-//					else
-//					{
-//						// try to authenticate with username root, password secretpassword
-//						if (!ssh2_auth_password($connection, $user, $password))
-//						{
-//							$message = "fail: unable to authenticate";
-//							_debug_array($message);
-//							//$receipt['error'][]= array('msg' => $message);
-//						}
-//					}
 					break;
 			}
 			$this->connection = $connection;
