@@ -177,7 +177,10 @@
 			$ok = array();
 			foreach ($files as $file_info)
 			{
-				$ok[] = $this->process_file($file_info);
+				if($this->process_file($file_info))
+				{
+					$ok[] = true;
+				}
 			}
 
 			if($this->input_file)
@@ -283,7 +286,7 @@
 
 					$extension = pathinfo($file, PATHINFO_EXTENSION);
 					$processing_file =  basename($file,$extension) . 'process' ;
-//					$lock =  basename($file,$extension) . 'lck' ;
+					$lock =  basename($file,$extension) . 'lck' ;
 
 					if(is_file("{$path}/{$lock}"))
 					{
@@ -375,7 +378,7 @@
 
 			if(is_file("{$path}/{$lock}"))
 			{
-				$this->receipt['error'][] = array('msg' => "'{$path}/{$file}' er allerede behandlet");
+				$this->receipt['error'][] = array('msg' => "{$file} er allerede behandlet");
 				return true;
 			}
 
@@ -393,7 +396,7 @@
 
 				if($ok)
 				{
-					$this->receipt['message'][] = array('msg' => "'{$path}/{$file}' er importert");
+					$this->receipt['message'][] = array('msg' => "{$file} er importert");
 					touch("{$path}/{$lock}");
 				}
 			}
