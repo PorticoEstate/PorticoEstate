@@ -98,7 +98,7 @@
 
 				if (isset($config->config_data['application_notify_on_accepted']) && $config->config_data['application_notify_on_accepted'] == 1)
 				{
-					$buildingemail = $this->get_tilsyn_email($application['building_name']);
+					$buildingemail = $this->so->get_tilsyn_email($application['building_name']);
 					if ($buildingemail['email1'] != '' || $buildingemail['email2'] != '' || $buildingemail['email3'] != '')
 					{
 						$resourcename = implode(",", $this->get_resource_name($application['resources']));
