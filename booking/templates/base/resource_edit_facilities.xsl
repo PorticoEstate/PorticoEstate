@@ -4,7 +4,7 @@
 		<input type="hidden" name="tab" value=""/>
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="resource/tabs"/>
-			<div id="resource_edit_activities" class="booking-container">
+			<div id="resource_edit_facilities" class="booking-container">
 				<fieldset>
 					<div class="pure-control-group">
 						<label for="field_name">
@@ -24,9 +24,9 @@
 					</div>
 					<div class="pure-control-group">
 						<label>
-							<xsl:value-of select="php:function('lang', 'Activities')" />
+							<xsl:value-of select="php:function('lang', 'Facilities')" />
 						</label>
-						<div id="activities_container" class="custom-container">
+						<div id="facilities_container" class="custom-container">
 						</div>
 					</div>
 				</fieldset>
@@ -47,21 +47,20 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		initialSelection = <xsl:value-of select="resource/activities_json"/>;
-		var parent_id = <xsl:value-of select="resource/activity_id"/>;
+		initialSelection = <xsl:value-of select="resource/facilities_json"/>;
 		var lang = <xsl:value-of select="php:function('js_lang', 'Name')"/>;
 	    <![CDATA[
-            var activitiesURL    = 'index.php?menuaction=booking.uiactivity.index&parent_id=' + parent_id + '&sort=name&phpgw_return_as=json';
+            var facilitiesURL = 'index.php?menuaction=booking.uifacility.index&phpgw_return_as=json';
 	        ]]>
 		var colDefsRespurces = [
 			{label: '', object: [
 				{type: 'input', attrs: [
 					{name: 'type', value: 'checkbox'},
-					{name: 'name', value: 'activities[]'}
+					{name: 'name', value: 'facilities[]'}
 				]}],
 				value: 'id', checked: initialSelection},
 			{key: 'name', label: lang['Name']},
 		];
-		createTable('activities_container', activitiesURL, colDefsRespurces);
+		createTable('facilities_container', facilitiesURL, colDefsRespurces);
 	</script>
 </xsl:template>

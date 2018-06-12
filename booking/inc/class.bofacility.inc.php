@@ -11,6 +11,19 @@
 		}
 
 
+		public function get_facilities()
+		{
+			$facilities = array();
+			$facilitylist = $this->so->read();
+			foreach ($facilitylist['results'] as $facility)
+			{
+				$id = $facility['id'];
+				$facilities[$id] = $facility;
+			}
+			return $facilities;
+		}
+
+
 		public function populate_grid_data ($params)
 		{
 			$facilities = $this->so->read($params);

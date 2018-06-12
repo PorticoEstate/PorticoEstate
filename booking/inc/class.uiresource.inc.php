@@ -18,6 +18,7 @@
 			'add' => true,
 			'edit' => true,
 			'edit_activities' => true,
+			'edit_facilities' => true,
 			'get_custom' => true,
 			'show' => true,
 			'schedule' => true,
@@ -37,6 +38,7 @@
 
 			$this->bo = CreateObject('booking.boresource');
 			$this->activity_bo = CreateObject('booking.boactivity');
+			$this->facility_bo = CreateObject('booking.bofacility');
 			$this->rescategory_bo = CreateObject('booking.borescategory');
 			$this->fields = array(
 				'name' => 'string',
@@ -48,6 +50,7 @@
 				'organizations_ids' => 'string',
 				'rescategory_id' => 'int',
 				'activities' => 'int',
+				'facilities' => 'int',
 			);
 			self::set_active_menu('booking::buildings::resources');
 		}
@@ -337,6 +340,49 @@
 		}
 
 
+		public function edit_facilities()
+		{
+			$id = phpgw::get_var('id', 'int');
+			$resource = $this->bo->read_single($id);
+			$resource['id'] = $id;
+
+			$errors = array();
+			$tabs = array();
+			$tabs['generic'] = array('label' => lang('edit resource facilities'), 'link' => '#resource_edit_facilities');
+			$active_tab = 'generic';
+
+			if ($_SERVER['REQUEST_METHOD'] == 'POST')
+			{
+				array_set_default($_POST, 'facilities', array());
+				$resource = array_merge($resource, extract_values($_POST, $this->fields));
+				$errors = $this->bo->validate($resource);
+				if (!$errors)
+				{
+					// Unlike the editing of activities, a check for active facilities is not done, as adding an
+					// inactive facility in UI is unlikely and the consequences are not grave (an inactive facility
+					// will be excluded when the resource is used)
+					try
+					{
+						$receipt = $this->bo->update($resource);
+						$this->redirect(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+					}
+					catch (booking_unauthorized_exception $e)
+					{
+						$errors['global'] = lang('Could not update object due to insufficient permissions');
+					}
+				}
+			}
+
+			$this->flash_form_errors($errors);
+			$resource['facilities_json'] = json_encode(array_map('intval', $resource['facilities']));
+			$resource['cancel_link'] = self::link(array('menuaction' => 'booking.uiresource.show', 'id' => $resource['id']));
+			$resource['tabs'] = phpgwapi_jquery::tabview_generate($tabs, $active_tab);
+			$resource['validator'] = phpgwapi_jquery::formvalidator_generate(array());
+
+			self::render_template_xsl('resource_edit_facilities', array('resource' => $resource));
+		}
+
+
 		public function get_custom()
 		{
 			$type = phpgw::get_var('type', 'string', 'REQUEST', 'form');
@@ -499,7 +545,6 @@
 			$bui_result = $this->sobuilding->read(array("sort" => "name", "dir" => "asc",
 				"filters" => $_filter_building));
 
-
 			$resource['edit_link'] = self::link(array('menuaction' => 'booking.uiresource.edit',
 					'id' => $resource['id']));
 			$resource['building_link'] = self::link(array('menuaction' => 'booking.uibuilding.show',
@@ -511,6 +556,8 @@
 			$resource['add_document_link'] = booking_uidocument::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['add_permission_link'] = booking_uipermission::generate_inline_link('resource', $resource['id'], 'add');
 			$resource['edit_activities_link'] = self::link(array('menuaction' => 'booking.uiresource.edit_activities',
+					'id' => $resource['id']));
+			$resource['edit_facilities_link'] = self::link(array('menuaction' => 'booking.uiresource.edit_facilities',
 					'id' => $resource['id']));
 
 			// Add a list of activities. Only active activities are included, and only activities belonging to the top
@@ -533,8 +580,25 @@
 					}
 				}
 			}
-			usort($resactivities, function ($a,$b) { return strcmp($a['name'],$b['name']); });
+			usort($resactivities, function ($a,$b) { return strcmp(strtolower($a),strtolower($b)); });
 			$resource['activities_list'] = implode(', ', $resactivities);
+
+			// Add a list of facilities. Only active facilities are included
+			$facilitylist = $this->facility_bo->get_facilities();
+			$resfacilities = array();
+			foreach ($resource['facilities'] as $facility_id)
+			{
+				if (array_key_exists($facility_id, $facilitylist))
+				{
+					$facility = $facilitylist[$facility_id];
+					if ($facility['active'])
+					{
+						$resfacilities[] = $facility['name'];
+					}
+				}
+			}
+			usort($resfacilities, function ($a,$b) { return strcmp(strtolower($a),strtolower($b)); });
+			$resource['facilities_list'] = implode(', ', $resfacilities);
 
 			$tabs = array();
 			$tabs['generic'] = array(

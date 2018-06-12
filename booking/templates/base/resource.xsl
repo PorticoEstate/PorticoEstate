@@ -90,6 +90,27 @@
 						</span>
 					</div>
 				</xsl:if>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Facilities')"/>
+					</label>
+					<span>
+						<xsl:value-of select="resource/facilities_list"/>
+					</span>
+				</div>
+				<xsl:if test="resource/permission/write">
+					<div class="pure-control-group">
+						<label></label>
+					    <span>
+							<a class='button'>
+								<xsl:attribute name="href">
+									<xsl:value-of select="resource/edit_facilities_link"/>
+								</xsl:attribute>
+								<xsl:value-of select="php:function('lang', 'Edit facilities')" />
+							</a>
+						</span>
+					</div>
+				</xsl:if>
 				<div id="custom_fields"></div>
 				<div class="pure-control-group">
 					<label>

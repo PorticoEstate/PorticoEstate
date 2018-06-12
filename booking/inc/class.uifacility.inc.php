@@ -66,14 +66,24 @@
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
 			$columns = phpgw::get_var('columns');
+			if ($order)
+			{
+				$sort = $columns[$order[0]['column']]['data'];
+				$dir = $order[0]['dir'];
+			}
+			else
+			{
+				$sort = 'name';
+				$dir = 'asc';
+			}
 
 			$params = array(
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
 				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $columns[$order[0]['column']]['data'],
-				'dir' => $order[0]['dir'],
+				'sort' => $sort,
+				'dir' => $dir,
 			);
 
 			$facilities = $this->bo->populate_grid_data($params);

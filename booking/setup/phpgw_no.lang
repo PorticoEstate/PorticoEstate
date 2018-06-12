@@ -725,9 +725,11 @@ application add	booking	no	Ny søknad
 duplicate in name	booking	no	Navnet finnes fra før
 At least one activity must be selected	booking	no	Det må velges minst én aktivitet
 Edit activities	booking	no	Rediger aktiviteter
+Edit facilities	booking	no	Rediger fasiliteter
 edit facility	booking	no	Rediger fasilitet
 edit resource activities	booking	no	Rediger ressursaktiviteter
 edit resource category	booking	no	Rediger ressurskategori
+edit resource facilities	booking	no	Rediger ressursfasiliteter
 Facilities	booking	no	Fasiliteter
 Facility	booking	no	Fasilitet
 Front page filtering	booking	no	Filtrering på forside
