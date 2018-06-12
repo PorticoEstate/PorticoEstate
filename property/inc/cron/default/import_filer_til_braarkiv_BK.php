@@ -47,7 +47,8 @@
 			$fields,
 			$baseclassname,
 			$classname,
-			$input_file;
+			$input_file,
+			$file_map;
 
 		public function __construct()
 		{
@@ -113,6 +114,8 @@
 			{
 				throw new Exception('vfs_fileoperation_braArkiv::Login failed');
 			}
+
+			$this->file_map = array();
 		}
 
 		private function init_config()
@@ -169,10 +172,29 @@
 
 		function execute()
 		{
+			set_time_limit(1000);
+
 			$start = time();
 //			$this->get_document_test();
 
 			$files = $this->get_files();
+
+			if($this->input_file)
+			{
+				$path_parts	= pathinfo($this->input_file);
+				$extension	= $path_parts['extension'];
+				$path		= $path_parts['dirname'];
+				$mapping		= basename($this->input_file,$extension) . 'mapping' ;
+				$processing_file =  basename($this->input_file,$extension) . 'process' ;
+				$lock =  basename($this->input_file,$extension) . 'lck' ;
+
+				if (!$fp_process = fopen("{$path}/{$processing_file}", 'a'))
+				{
+					echo "Unable to write to \"{$path}/{$processing_file}\" - pleace notify the Administrator\n";
+					die();
+				}
+			}
+
 
 			$ok = array();
 			foreach ($files as $file_info)
@@ -181,22 +203,41 @@
 				{
 					$ok[] = true;
 				}
+				$file = str_replace('\\', '/', $file_info['file']);
+				fwrite($fp_process, "{$file}\n"); // NEW LINE
 			}
+			fclose($fp_process);
 
 			if($this->input_file)
 			{
-				$path_parts	= pathinfo($this->input_file);
-				$extension	= $path_parts['extension'];
-				$path		= $path_parts['dirname'];
-				$lock		= basename($file,$extension) . 'lck' ;
-				$processing_file =  basename($this->input_file,$extension) . 'process' ;
-				$lock =  basename($this->input_file,$extension) . 'lck' ;
-
 				if(count($ok) == count($files))
 				{
 					touch("{$path}/{$lock}");
-					unlink($processing_file);
 				}
+				
+				$create_map = false;
+				if(!is_file("{$path}/{$mapping}"))
+				{
+					array_unshift($this->file_map, array('ID','File'));
+					$create_map = true;
+				}
+
+				if (!$fp = fopen("{$path}/{$mapping}", 'a'))
+				{
+					echo "Unable to write to \"{$path}/{$mapping}\" - pleace notify the Administrator\n";
+				}
+
+				if($create_map)
+				{
+					$BOM = "\xEF\xBB\xBF"; // UTF-8 BOM
+					fwrite($fp, $BOM); // NEW LINE
+				}
+
+				foreach ($this->file_map as $row)
+				{
+					fputcsv($fp, $row, ';');		
+				}
+				fclose($fp);
 			}
 
 			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
@@ -350,7 +391,7 @@
 				}
 			}
 
-			$this->receipt['message'][] = array('msg' => "'{$path}' contained " . count($result) . " lines");
+			$this->receipt['message'][] = array('msg' => "'{$input_file}' contained " . count($result) . " lines");
 
 			return $result;
 		}
@@ -411,21 +452,19 @@
 				'pdf', 'tif', 'gif');
 			$extension = pathinfo($file, PATHINFO_EXTENSION);
 
-			if ($extension == null || $extension == "" || !in_array($extension, $accepted_file_formats))
+			if ($extension == null || $extension == "" || !in_array(strtolower($extension), $accepted_file_formats))
 			{
-				throw new Exception("Fileformat not accepted: {$extension}");
+				$this->receipt['error'][] = array('msg' => "Fileformat not accepted: {$extension}");
+				return false;
 			}
 
-			$document = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode);
+			$file_date = date('Y-m-d', filemtime($file));
+			$document = $this->setupDocument($gnr, $bnr, $byggNummer, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date);
 
 			$bra5ServiceCreate = new Bra5ServiceCreate();
 			$bra5CreateDocument = new Bra5StructCreateDocument($_assignDocKey = false, $this->secKey, $document);
 
-			if ($bra5ServiceCreate->createDocument($bra5CreateDocument))
-			{
-//				_debug_array($bra5ServiceCreate->getResult()->getCreateDocumentResult()->getcreateDocumentResult());
-			}
-			else
+			if (!$bra5ServiceCreate->createDocument($bra5CreateDocument))
 			{
 				_debug_array($bra5ServiceCreate->getLastError());
 				throw new Exception($bra5ServiceCreate->getLastError());
@@ -436,7 +475,6 @@
 //			echo $bra5ServiceCreate->getSoapClient()->__getLastRequestHeaders();
 //			echo "</br>SOAP REQUEST:\n</br>";
 //			echo $bra5ServiceCreate->getSoapClient()->__getLastRequest();
-
 
 			$document_id =  $bra5ServiceCreate->getResult()->getCreateDocumentResult()->getcreateDocumentResult()->ID;
 
@@ -457,9 +495,9 @@
 		public function write( $file, $document_id = 0 )
 		{
 			$filename = basename($file);
-			$content = file_get_contents($file);
 
 			$bra5ServiceFile = new Bra5ServiceFile();
+
 			if ($bra5ServiceFile->fileTransferSendChunkedInit(new Bra5StructFileTransferSendChunkedInit($this->secKey, $document_id, $filename)))
 			{
 				$transaction_id = $bra5ServiceFile->getResult()->getfileTransferSendChunkedInitResult()->fileTransferSendChunkedInitResult;
@@ -469,9 +507,9 @@
 				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
 			}
 
-			$new_string = chunk_split(base64_encode($content), 1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
+			$new_string = chunk_split(base64_encode(file_get_contents($file)), 1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
 
-			$content_arr = explode('\r\n', $new_string);
+			$content_arr = explode("\r\n", $new_string);
 
 			foreach ($content_arr as $content_part)
 			{
@@ -480,7 +518,11 @@
 
 			$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
 
-			if (!$ok)
+			if ($ok)
+			{
+				$this->file_map[] = array($document_id, $file);
+			}
+			else
 			{
 				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
 			}
@@ -488,7 +530,7 @@
 			return $ok;
 		}
 
-		private function setupDocument( $gnr, $bnr, $byggNummer, $dokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode )
+		private function setupDocument( $gnr, $bnr, $byggNummer, $dokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode, $file_date )
 		{
 			/*
 				* @param boolean $_bFDoubleSided
@@ -529,10 +571,9 @@
 			$innhold->setStringValue($dokumentTittel);
 			$attribute_arr[] = $innhold->build();
 
-			$now = date('Y-m-d');
 			$dato = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVDATE);
 			$dato->setName("Dokumentdato");
-			$dato->setDateValue($now);
+			$dato->setDateValue($file_date);
 			$attribute_arr[] = $dato->build();
 
 			$dokumentkategorier = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
