@@ -548,7 +548,7 @@
 
 			$asta = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
 			$asta->setName("ASTA_Signatur");
-			$asta->setStringValue("bkbygg/saknr]");
+			$asta->setStringValue("masseimport av filer");
 			$attribute_arr[] = $asta->build();
 
 			$objekt = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
