@@ -51,7 +51,7 @@
 
 		protected function get_user_org_id()
 		{
-			$ipdp = $_SERVER['HTTP_UID'];
+			$ipdp = (string)$_SERVER['HTTP_UID'];
 			$bregorgs = $this->get_breg_orgs($ipdp);
 			$myorgnr = array();
 			if ($bregorgs == array())
@@ -102,6 +102,11 @@
 					die();
 				}
 				return null;
+			}
+
+			if($this->debug)
+			{
+				die();
 			}
 		}
 

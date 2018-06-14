@@ -48,7 +48,8 @@
 			$baseclassname,
 			$classname,
 			$input_file,
-			$file_map;
+			$file_map,
+			$all_files;
 
 		public function __construct()
 		{
@@ -238,6 +239,15 @@
 					fputcsv($fp, $row, ';');		
 				}
 				fclose($fp);
+
+
+				if($this->all_files)
+				{
+					foreach ($this->all_files as $missing_file => $dummy)
+					{
+						$this->receipt['error'][] = array('msg' => "Missing file: '{$missing_file}'");
+					}
+				}
 			}
 
 			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
@@ -288,13 +298,16 @@
 			foreach ($data as $entry)
 			{
 				$matrikkel_info = explode('/', $entry[0]);
+				$file = str_replace('\\', '/', "{$path}/{$entry[7]}");//filnavn inkl fil-sti
+
+				$this->all_files[$file] = true;
 
 				$files[] = array(
 					'gnr'					=> $matrikkel_info[0],
 					'bnr'					=> $matrikkel_info[1],
 					'Lokasjonskode'			=> $entry[2],
 					'byggNummer'			=> $entry[1],
-					'file'					=> "{$path}/{$entry[7]}",//filnavn inkl fil-sti
+					'file'					=> $file,//filnavn inkl fil-sti
 					'fileDokumentTittel'	=> basename($entry[7]),
 					'fileKategorier'		=> $entry[6],
 					'fileBygningsdeler'		=> $entry[5] ? "{$entry[4]};$entry[5]" : $entry[4],
@@ -417,6 +430,11 @@
 			$path		= $path_parts['dirname'];
 			$lock		= basename($file,$extension) . 'lck' ;
 
+			if(is_file($file))
+			{
+				unset($this->all_files[$file]);
+			}
+
 			if(is_file("{$path}/{$lock}"))
 			{
 				$this->receipt['error'][] = array('msg' => "{$file} er allerede behandlet");
@@ -448,8 +466,18 @@
 		function uploadFile( $gnr, $bnr, $byggNummer, $file, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode )
 		{
 
-			$accepted_file_formats = array('dwg', 'dxf', 'jpg', 'doc', 'docx', 'xls', 'xlsx',
-				'pdf', 'tif', 'gif');
+			$accepted_file_formats = array(
+				'dwg',
+				'dxf',
+				'jpg',
+				'doc',
+				'docx',
+				'xls',
+				'xlsx',
+				'pdf',
+				'tif',
+				'gif'
+				);
 			$extension = pathinfo($file, PATHINFO_EXTENSION);
 
 			if ($extension == null || $extension == "" || !in_array(strtolower($extension), $accepted_file_formats))
