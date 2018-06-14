@@ -12,7 +12,7 @@ parameters:
     handyman_export_ext: BYT
     handyman_export_schema_file: OrdersAndRegistrations.xsd
     bkbygg_user_id_to_use_when_not_found: 10
-    handyman_document_url: http://192.168.99.94:8091/Document/Download/
+    handyman_document_url: http://handyman01a.adm.bgo/document/download/
     # 3978 = HM Handyman
     bkbygg_handyman_user: 3978
     # List of users Agresso IDs and their user group, used for the xml building list
