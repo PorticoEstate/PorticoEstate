@@ -188,33 +188,6 @@ class FmTtsTicket
 	 */
 	protected $document_required;
 
-
-//	/**
-//	 * @param $property string
-//	 * @return mixed
-//	 **/
-//	public function __get($property)
-//	{
-//		if (property_exists($this, $property)) {
-//			return $this->$property;
-//		}
-//	}
-//
-//	/**
-//	 * @param $property string
-//	 * @param $value mixed
-//	 * @return FmTtsTicket
-//	 **/
-//	public function __set($property, $value)
-//	{
-//		if (property_exists($this, $property)) {
-//			$this->$property = $value;
-//			$this->modified_date = time();
-//		}
-//
-//		return $this;
-//	}
-
 	public function set_default_values()
 	{
 		// 14 = Teknisk drift
@@ -223,7 +196,7 @@ class FmTtsTicket
 		$this->cat_id = 10;
 		// status = 'O': ny melding, 4: Hos teknisk person på bygget
 		$this->status = 'O'; // as in Oscar for Open ticket
-		$this->priority = 2; // 2 = Medium
+		$this->priority = 1; // 1= High, 2 = Medium, 3 = Low
 		$this->entry_date = time();
 		$this->finnish_date = 0;
 	}
