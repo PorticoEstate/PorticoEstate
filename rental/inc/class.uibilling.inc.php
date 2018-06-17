@@ -1503,15 +1503,14 @@ JS;
 			{
 				if($result)
 				{
-					$message['message'][] = array('msg' => $billing_job->get_title() . ' ' . lang('has been committed'));
+					$this->message['message'][] = array('msg' => $billing_job->get_title() . ' ' . lang('has been committed'));
 				}
 				else
 				{
-					$message['error'][] = array('msg'=>$billing_job->get_title().' '.lang('not committed'));
+					$this->message['error'][] = array('msg'=>$billing_job->get_title() .' '. lang('not committed'));
 				}
 
-				$ret =  array_merge($message, $this->message);
-				return $ret;
+				return $this->message;
 			}
 		}
 
@@ -1532,6 +1531,14 @@ JS;
 			$organization = empty($config_rental['organization']) ? 'bergen' : $config_rental['organization'];
 			if($organization == 'nlsh')
 			{
+				/**
+				 * For now...not activated.
+				 */
+				if($type == 'intern')
+				{
+					return true;
+				}
+
 				$filename = '14PU' . sprintf("%08s",$id) . ".txt";
 			}
 			else
@@ -1545,11 +1552,11 @@ JS;
 			$vfs->override_acl = 1;
 
 			$content = $vfs->read(
-					array
-					(
-						'string' => $path,
-						'relatives' => array( RELATIVE_NONE)
-					)
+				array
+				(
+					'string' => $path,
+					'relatives' => array( RELATIVE_NONE)
+				)
 			);
 
 			if(empty($content))
@@ -1594,7 +1601,7 @@ JS;
 				}
 				if (!$transfer_ok)
 				{
-					$$this->message['error'][] = array('msg' => lang('transfer failed'));
+					$this->message['error'][] = array('msg' => lang('transfer failed'));
 				}
 			}
 			return $transfer_ok;

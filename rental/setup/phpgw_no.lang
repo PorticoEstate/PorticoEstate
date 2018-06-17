@@ -686,3 +686,5 @@ syncronize all	rental	no	Synkroniser alle
 customer id	rental	no	Kundenummer
 customer order id	rental	no	Kundens ordrenr.
 transfer failed	rental	no	Overføring feilet
+has been committed	rental	no	er avsluttet
+not committed	rental	no	er ikke avsluttet
