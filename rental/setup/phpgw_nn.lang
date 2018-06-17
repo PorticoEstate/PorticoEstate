@@ -687,4 +687,4 @@ customer id	rental	nn	Kundenummer
 customer order id	rental	nn	Kundens ordrenr.
 transfer failed	rental	nn	Overføring feila
 has been committed	rental	nn	er avslutta
-not committed	rental	nn	er ikke avslutta
+not committed	rental	nn	er ikkje avslutta
