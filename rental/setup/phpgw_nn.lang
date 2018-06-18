@@ -688,3 +688,4 @@ customer order id	rental	nn	Kundens ordrenr.
 transfer failed	rental	nn	Overføring feila
 has been committed	rental	nn	er avslutta
 not committed	rental	nn	er ikkje avslutta
+has been transferred	rental	nn	er overført
