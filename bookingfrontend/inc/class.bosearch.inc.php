@@ -13,6 +13,7 @@
 			$this->soevent = CreateObject('booking.soevent');
 			$this->borescategory = CreateObject('booking.borescategory');
 			$this->boactivity = CreateObject('booking.boactivity');
+			$this->bofacility = CreateObject('booking.bofacility');
 		}
 
 		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() )
@@ -252,8 +253,9 @@
 			$fields_resource = array('id','name');
 			$fields_building = array('id','name','street','zip_code','city');
 
-			// Get a list of all activities, grouped on top level activities
+			// Get a list of all activities, grouped on top level activities, as well as all facilities
 			$activitylist = $this->boactivity->fetch_activities_hierarchy();
+			$facilitylist = $this->bofacility->get_facilities();
 
 			// Validate parameters
 			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
@@ -267,14 +269,16 @@
 			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort'));
 
 			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
-			// activities
+			// activities and facilities
 			$building_resources = array();
 			$all_activities = array();
+			$all_facilities = array();
 			foreach ($resources['results'] as &$resource)
 			{
 				$building_ids = $resource['buildings'];
 				$toplevelactivity_id = $resource['activity_id'];
 				$activity_ids = $resource['activities'];
+				$facility_ids = $resource['facilities'];
 				foreach ($resource as $k => $v)
 				{
 					if (!in_array($k,$fields_resource))
@@ -305,7 +309,26 @@
 						}
 					}
 				}
-				usort($resource['activities'], function ($a,$b) { return strcmp($a['name'],$b['name']); });
+				usort($resource['activities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+				// Add a list of facilities with id and name. Only active facilities are included
+				$resource['facilities'] = array();
+				foreach ($facility_ids as $facility_id)
+				{
+					if (array_key_exists($facility_id,$facilitylist))
+					{
+						$facility = $facilitylist[$facility_id];
+						if ($facility['active'])
+						{
+							$resource['facilities'][] = array('id' => $facility['id'], 'name' => $facility['name']);
+							if (!array_key_exists($facility['id']))
+							{
+								$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
+							}
+						}
+					}
+				}
+				usort($resource['facilities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+				// Add the resource to the building
 				foreach ($building_ids as $building_id)
 				{
 					$building_resources[$building_id][] = $resource;
@@ -313,7 +336,9 @@
 			}
 			unset($resource);
 			$all_activities_list = array_values($all_activities);
-			usort($all_activities_list, function ($a,$b) { return strcmp($a['name'],$b['name']); });
+			usort($all_activities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+			$all_facilities_list = array_values($all_facilities);
+			usort($all_facilities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 
 			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
 			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
@@ -330,7 +355,7 @@
 			}
 			unset($building);
 
-			return array('buildings' => $buildings, 'activities' => $all_activities_list);
+			return array('buildings' => $buildings, 'activities' => $all_activities_list, 'facilities' => $all_facilities_list);
 		}
 
 
