@@ -1651,7 +1651,11 @@
 			{
 				$this->_cookie_domain = ''; // Sigurd august 08: somehow setcookie does not accept localhost as a valid domain.
 			}
-			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
+			/**
+			 * Test if the cookie make it through a reverse proxy where the request switch from https to http
+			 */
+//			$secure = phpgw::get_var('HTTPS', 'bool', 'SERVER');
+			$secure = false;
 
 			if( isset( $GLOBALS['phpgw_info']['server']['webserver_url'] ) )
 			{

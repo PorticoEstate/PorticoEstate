@@ -18,13 +18,16 @@ function onCommit(requestUrl)
 	JqueryPortico.execute_ajax(requestUrl, function (result)
 	{
 
+		var htmlString = "";
 		document.getElementById('message').innerHTML = '';
 
 		if (typeof (result.message) !== 'undefined')
 		{
 			$.each(result.message, function (k, v)
 			{
-				document.getElementById('message').innerHTML = v.msg;
+				htmlString += "<div class=\"msg_good\">";
+				htmlString += v.msg;
+				htmlString += '</div>';
 			});
 		}
 
@@ -32,9 +35,13 @@ function onCommit(requestUrl)
 		{
 			$.each(result.error, function (k, v)
 			{
-				document.getElementById('message').innerHTML = v.msg;
+				htmlString += "<div class=\"error\">";
+				htmlString += v.msg;
+				htmlString += '</div>';
 			});
 		}
+
+		document.getElementById('message').innerHTML = htmlString;
 
 		oTable.fnDraw();
 

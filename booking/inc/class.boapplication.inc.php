@@ -28,7 +28,16 @@
 
 			$subject = $config->config_data['application_mail_subject'];
 
-			$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id=' . $application['id'] . '&secret=' . $application['secret'];
+
+			if ($GLOBALS['phpgw_info']['server']['webserver_url'] != '' && isset($config->config_data['external_site_address']))
+			{
+				$link = $external_site_address . $GLOBALS['phpgw_info']['server']['webserver_url'] . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id=' . $application['id'] . '&secret=' . $application['secret'];
+
+			}
+			else
+			{
+				$link = $external_site_address . '/bookingfrontend/?menuaction=bookingfrontend.uiapplication.show&id=' . $application['id'] . '&secret=' . $application['secret'];
+			}
 
 			if ($created)
 			{

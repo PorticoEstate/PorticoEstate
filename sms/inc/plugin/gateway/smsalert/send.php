@@ -68,11 +68,19 @@
 			$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
 
-			$result = new SimpleXMLElement($result_xml);
+
+			try
+			{
+				$result = new SimpleXMLElement($result_xml);
+			}
+			catch (Exception $ex)
+			{
+				$result = 0;
+			}
 
 /*
-				> 0	Ok
-				0	General error
+			> 0	Ok
+			  0	General error
 */
 			if ($result > 0)
 			{
@@ -90,7 +98,7 @@
 				echo "data: </br>";
 				_debug_array($post_data);
 				echo "httpCode: $httpCode </br>";
-				echo "response: {$result}</br>";
+				echo "response: {$result_xml}</br>";
 				$url_outbox = $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'sms.uisms.outbox'));
 				echo "<a href='{$url_outbox}'>Outbox</a>";
 				die();
