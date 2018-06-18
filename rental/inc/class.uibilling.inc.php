@@ -1599,7 +1599,11 @@ JS;
 					default:
 						$transfer_ok = false;
 				}
-				if (!$transfer_ok)
+				if ($transfer_ok)
+				{
+					$this->message['message'][] = array('msg' => basename($filename) . ' ' . lang('has been transferred'));
+				}
+				else
 				{
 					$this->message['error'][] = array('msg' => lang('transfer failed'));
 				}
