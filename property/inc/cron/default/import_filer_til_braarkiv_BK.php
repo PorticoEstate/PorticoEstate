@@ -300,6 +300,8 @@
 				$matrikkel_info = explode('/', $entry[0]);
 				$file = str_replace('\\', '/', "{$path}/{$entry[7]}");//filnavn inkl fil-sti
 
+				$dokument_title = str_replace("{$path}/", '', $file);
+
 				$this->all_files[$file] = true;
 
 				$files[] = array(
@@ -308,7 +310,7 @@
 					'Lokasjonskode'			=> $entry[2],
 					'byggNummer'			=> $entry[1],
 					'file'					=> $file,//filnavn inkl fil-sti
-					'fileDokumentTittel'	=> basename($entry[7]),
+					'fileDokumentTittel'	=> $dokument_title,
 					'fileKategorier'		=> $entry[6],
 					'fileBygningsdeler'		=> $entry[5] ? "{$entry[4]};$entry[5]" : $entry[4],
 					'fileFag'				=> $entry[3]
@@ -342,13 +344,17 @@
 					$processing_file =  basename($file,$extension) . 'process' ;
 					$lock =  basename($file,$extension) . 'lck' ;
 
+					if(!in_array($extension, $accepted_file_formats))
+					{
+						continue;
+					}
+
 					if(is_file("{$path}/{$lock}"))
 					{
 						$this->receipt['error'][] = array('msg' => "'{$path}/{$file}' er allerede behandlet");
 						return array();
 					}
-
-					if(in_array($extension, $accepted_file_formats) && !is_file("{$path}/{$lock}"))
+					else
 					{
 						touch("{$path}/{$processing_file}");
 						$input_file = "{$path}/{$file}";
@@ -428,7 +434,7 @@
 			$path_parts	= pathinfo($file);
 			$extension	= $path_parts['extension'];
 			$path		= $path_parts['dirname'];
-			$lock		= basename($file,$extension) . 'lck' ;
+			$lock		= basename($file) . '.lck' ;
 
 			if(is_file($file))
 			{
@@ -476,13 +482,14 @@
 				'xlsx',
 				'pdf',
 				'tif',
-				'gif'
+				'gif',
+//				'txt'
 				);
 			$extension = pathinfo($file, PATHINFO_EXTENSION);
 
 			if ($extension == null || $extension == "" || !in_array(strtolower($extension), $accepted_file_formats))
 			{
-				$this->receipt['error'][] = array('msg' => "Fileformat not accepted: {$extension}");
+				$this->receipt['error'][] = array('msg' => "{$file}: Fileformat not accepted: {$extension}");
 				return false;
 			}
 
@@ -621,10 +628,10 @@
 			$bygningsdelAttrib->setName("Bygningsdel");
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
 			$attribute_arr[] = $bygningsdelAttrib->build();
-
+		
 //			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-//			$merknad->setName("Kapittel");
-//			$merknad->setStringValue("");
+//			$merknad->setName("Merknad");
+//			$merknad->setStringValue("Sandviksveien 95. Ombygging 2015.");
 //			$attribute_arr[] = $merknad->build();
 
 			$attribs->setAttribute($attribute_arr);
