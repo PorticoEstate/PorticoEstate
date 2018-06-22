@@ -199,8 +199,8 @@ JS;
    phpgwapi_cache::session_set('phpgwapi', 'footer_info', $footer_info);
 
 	//$test = $GLOBALS['phpgw']->common->get_on_events();
-    $test = str_replace('window.onload = function()','$(document).ready(function()',$test);
-    $test = str_replace("\n}\n","\n})\n",$test);
+	$test = str_replace('window.onload = function()','$(document).ready(function()',$test);
+	$test = str_replace("\n}\n","\n})\n",$test);
 
 	$tpl_vars = array
 	(
@@ -211,7 +211,7 @@ JS;
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'site_url'	=> $GLOBALS['phpgw']->link("/{$app}/", array()),
 		'webserver_url'	=> $webserver_url,
-        'win_on_events'	=> $test,
+		'win_on_events'	=> $test,
 		'metainfo_author' => $author,
 		'metainfo_keywords' => $keywords,
 		'metainfo_description' => $description,
@@ -230,26 +230,48 @@ JS;
 //	_debug_array($user);
 
 	$bouser = CreateObject('bookingfrontend.bouser');
-    $org = CreateObject('bookingfrontend.uiorganization');
-    $orgid = $org->get_orgid($bouser->orgnr);
+	$org = CreateObject('bookingfrontend.uiorganization');
+	$orgid = $org->get_orgid($bouser->orgnr);
 	if($bouser->is_logged_in())
 	{
-		$tpl_vars['organization_json'] = json_encode(phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY));
 
-		$tpl_vars['change_org_header'] = lang('Change organization');
+		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
 
-        if ( $bouser->orgname == '000000000')
-        {
-            $tpl_vars['login_text_org'] = lang('SSN not registred');
-            $tpl_vars['login_text'] = lang('Logout');
-            $tpl_vars['org_url'] = '#';
-        }
-        else
-        {
-        	$tpl_vars['login_text_org'] = $bouser->orgname;
-            $tpl_vars['login_text'] = lang('Logout');
-            $tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
-        }
+		$session_org_id = phpgw::get_var('session_org_id','int', 'GET');
+
+		function get_ids_from_array($org)
+		{
+			return $org['orgnumber'];
+		}
+
+		if($session_org_id && in_array($session_org_id, array_map("get_ids_from_array", $orgs)))
+		{
+			try
+			{
+				$org_number = createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($session_org_id);
+				if($org_number)
+				{
+					$bouser->change_org($org_number);
+				}
+			}
+			catch (sfValidatorError $e)
+			{
+				$session_org_id = -1;
+			}
+		}
+
+		if ( $bouser->orgname == '000000000')
+		{
+			$tpl_vars['login_text_org'] = lang('SSN not registred');
+			$tpl_vars['login_text'] = lang('Logout');
+			$tpl_vars['org_url'] = '#';
+		}
+		else
+		{
+			$tpl_vars['login_text_org'] = $bouser->orgname;
+			$tpl_vars['login_text'] = lang('Logout');
+			$tpl_vars['org_url'] = "/bookingfrontend/?menuaction=bookingfrontend.uiorganization.show&id=".$orgid;
+		}
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url'] = 'logout.php';
 	}
