@@ -178,4 +178,3 @@
             document.head.appendChild(script);			
         </script>
 </xsl:template>
-

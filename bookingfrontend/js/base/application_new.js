@@ -68,15 +68,20 @@ function applicationModel()  {
     self.participantMenO20 = ko.observable("").extend({ required: true, number: true });
     self.participantWomenO20 = ko.observable("").extend({ required: true, number: true });
     self.specialRequirements = ko.observable("");
-    self.submit = function () {
-            console.log(self.errors().length);
-            var checkboxes = $("input[type='checkbox']");
-        console.log(!checkboxes.is(":checked"));
+    self.addApplication = function () {
+        if(self.errors().length > 0) {
+            self.errors.showAllMessages();
+        }
+        //    var checkboxes = $("input[type='checkbox']");
+        //console.log(!checkboxes.is(":checked"));
         
-        self.errors.showAllMessages();
-        
+    };
+    
+    self.GoToConfirmPage = function () {
+        if(self.errors().length == 0) {
+            window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.confirm&building_id="+urlParams['building_id'];
+        }
     }
-
 }
 var am = new applicationModel();
 am.errors = ko.validation.group(am);

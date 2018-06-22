@@ -34,6 +34,8 @@
 		phoneUS: 'Vennlist spesifiser ett korrekt telefonnummer',
 		equal: 'Verdiene må være like',
 		notEqual: 'Vennligst velg en annen verdi',
-		unique: 'Vennligst sørg for at verdien er unik'
+		unique: 'Vennligst sørg for at verdien er unik',
+                fodselNR: 'Fyll inn korrekt nummer',
+                phoneNO: 'Vennlist spesifiser ett korrekt telefonnummer'
 	});
 }));

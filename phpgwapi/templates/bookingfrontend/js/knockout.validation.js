@@ -953,6 +953,40 @@ kv.rules['phoneUS'] = {
 	message: 'Please specify a valid phone number.'
 };
 
+kv.rules['phoneNO'] = {
+	validator: function ($phone, validate) {
+		$result = false;
+                if(typeof $phone !== "undefined") {
+                    //Remove bad characters
+                    $phone = strip_bad_characters($phone);
+                    //If there is a prefix replace this with 0
+                    $phone = $phone.replace('+47', '');
+                    //Cellphone number 8 digits
+                    if (check_length_e($phone, 8)) {
+                        $array_of_chars = ['40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
+                        $result = check_substr_chars($phone, $array_of_chars, 0, 2);
+                        if(!$result) {
+                            $array_of_chars = ['2', '3', '5', '6', '7', '8'];
+                            $result = check_substr_chars($phone, $array_of_chars, 0, 1);
+                        }
+                    }
+                    return $result;
+                }
+	},
+	message: 'Please specify a valid phone number.'
+};
+
+kv.rules['fodselNR'] = {
+	validator: function (phoneNumber, validate) {
+		if (!validate) { return true; }
+		if (kv.utils.isEmptyVal(phoneNumber)) { return true; } // makes it optional, use 'required' rule if it should be required
+		if (typeof (phoneNumber) !== 'string') { return false; }
+		phoneNumber = phoneNumber.replace(/\s+/g, "");
+		return validate && phoneNumber.length > 9 && phoneNumber.match(/^[0-3][1-9]{1}[0,1][0-9][0-9]{2}[ ]?[0-9]{5}$/);
+	},
+	message: 'Please specify a valid personal number.'
+};
+
 kv.rules['equal'] = {
 	validator: function (val, params) {
 		var otherValue = params;
@@ -1509,3 +1543,38 @@ ko.validatedObservable = function (initialValue, options) {
 	return obsv;
 };
 ;}));
+
+
+function strip_bad_characters ($string) {
+    //Remove bad characters
+    $string = $string.replace(' ', '');
+    $string = $string.replace('/', '');
+    $string = $string.replace('\\', '');
+    $string = $string.replace(';', '');
+    $string = $string.replace(',', '');
+    $string = $string.replace('.', '');
+    $string = $string.replace('-', '');
+    $string = $string.replace('#', '');
+    $string = $string.replace('#', '');
+    $string = $string.replace('&', '');
+    $string = $string.replace('*', '');
+    return $string;
+}    
+
+function check_length_e ($field, $lenght) {
+    if(($field).length == $lenght) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function check_substr_chars ($field, $array_of_chars, $start, $lenght) {
+    for (var i=0; i<$array_of_chars.length; i++) {
+        $value = $array_of_chars[i];
+        $sub_str = $field.substr($start, $lenght);
+        if ($value == $sub_str)
+            return true;
+    }
+    return false;
+}
