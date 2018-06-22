@@ -6,10 +6,9 @@
 
 		public $public_functions = array
 			(
-			'get_filterboxdata' => true,
-			'index'             => true,
-			'query'             => true,
-			'resquery'          => true,
+			'index' => true,
+			'query' => true,
+                        'autocomplete' => true
 		);
 
 		function __construct()
@@ -118,9 +117,7 @@
 					'children' => $organized_fields,
 				);
 			}
-//_debug_array($filter_tree);
-//die();
-//			$params['part_of_towns'] = execMethod('property.sogeneric.get_list', array('type' => 'part_of_town'));
+                        $params['part_of_towns'] = execMethod('property.sogeneric.get_list', array('type' => 'part_of_town'));
 			$params['part_of_towns'] = execMethod('property.solocation.get_booking_part_of_towns');
 
 			foreach ($params['part_of_towns'] as &$part_of_town)
@@ -209,18 +206,14 @@
 			}
 			self::render_template_xsl('search_details', $data);
 		}
-
-
-		function resquery()
-		{
-			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
-			return $this->bo->resquery(array('rescategory_id' => $rescategory_id));
-		}
-
-
-		function get_filterboxdata()
-		{
-			return $this->bo->get_filterboxdata();
-		}
-
+                
+                function autocomplete() {
+                                        
+                    self::link(array(
+			'menuaction' => 'bookingfrontend.uisearch.autocomplete',
+                        'phpgw_return_as' => 'json'));
+    
+                    echo json_encode($this->bo->getAutoCompleteData());
+                    exit();
+                }
 	}

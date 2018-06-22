@@ -1,59 +1,68 @@
-<!doctype html>
-<!-- BEGIN head -->
+ <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
-		{metainfo_author}
-		{metainfo_description}
-		{metainfo_keywords}
-		{metainfo_robots}
-		<title>{site_title}</title>
-
-
-
-		<link href="{img_icon}" type="image/x-ico" rel="icon">
-		<link href="{img_icon}" rel="shortcut icon">
-		<!-- BEGIN stylesheet -->
-		<link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+        <!-- BEGIN stylesheet -->
+        <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
+        
+        <script type="text/javascript" src="{jqueryjs}"></script>
+        <script type="text/javascript" src="{popperjs}"></script>
+        <script type="text/javascript" src="{bootstrapmainjs}"></script>
+        <script type="text/javascript" src="{knockoutjs}"></script>
+        <script type="text/javascript" src="{knockoutjsvalid}"></script>
+        <script type="text/javascript" src="{knockoutjsvalidlocale}"></script>
+        <script type="text/javascript" src="{auijs}"></script>
+        <script type="text/javascript" src="{jqueryautocomplete}"></script>
+        <script type="text/javascript" src="{commonjs}"></script>
+    </head>
+    <body>
+        <!--<nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                  <img class="navbar-left" src="https://kgv.doffin.no/SupplierLogoTypes/2165/Logo-redusert.jpg" width="50" height="50" />
+                  <a class="navbar-brand" href="#"><span>Bergen</span><span>Kommune</span></a>
+              </div>
+              <ul class="nav navbar-nav pull-right">
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#" class="loginLink"></a></li>
+              </ul>
+            </div>
+        </nav>-->
 
-		{css}
+        
+         <nav class="navbar navbar-expand-md bg-light navbar-light fixed-top">
+            <!-- Brand -->
+            <img class="navbar-brand" src="{logoimg}" width="50" height="57"/>
+            <a class="navbar-brand" href="{site_url}"><span>Aktiv Kommune</span><span>Bergen</span></a>
 
-		<script type="text/javascript">
-			<!--
-			var strBaseURL = '{str_base_url}';
-			//-->
-		</script>
-		{javascript}
-		<!-- BEGIN javascript -->
-		<script type="text/javascript" src="{javascript_uri}"></script>
-		<!-- END javascript -->
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-		<script type="text/javascript">
-		<!--
-			{win_on_events}
-			//-->
-		</script>
-	</head>
-	<body>
-		<div class="home-menu custom-menu-wrapper">
-			<div class="pure-menu custom-menu custom-menu-top">
-				<a href="{site_url}" class="pure-menu-heading custom-menu-brand">{site_title}</a>
-				<a href="#" class="custom-menu-toggle" id="toggle"><s class="bar"></s><s class="bar"></s></a>
-			</div>
-			<div class="pure-menu pure-menu-horizontal pure-menu-scrollable custom-menu custom-menu-bottom custom-menu-tucked" id="tuckedMenu">
-				<div class="custom-menu-screen"></div>
-				<ul class="pure-menu-list">
-					<li class="pure-menu-item"><a href="{manual_url}" class="pure-menu-link">{manual_text}</a></li>
-					<li class="pure-menu-item"><a href="{org_url}" class="pure-menu-link">{login_text_org}</a></li>
-					<li class="pure-menu-item"><a id="login" href="{login_url}" class="pure-menu-link">{login_text}</a><span id="change"></span></li>
-				</ul>
-			</div>
-		</div>
-
-		<div id="content-wrapper">
-			<!-- END head -->
-
-
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Om tjenesten</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Brukerveiledning</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="{login_url}"><strong>Logg inn</strong></a>
+                </li>
+              </ul>
+            </div>
+          </nav> 
+                
+         <div class="overlay">
+            <div id="loading-img"><i class="fas fa-spinner fa-spin fa-3x"></i></div>
+        </div>
+                
+        <div class="showMe" style="display: none;">      
+    </body>
+</html>

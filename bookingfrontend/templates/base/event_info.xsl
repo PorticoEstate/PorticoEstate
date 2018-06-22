@@ -34,14 +34,6 @@
 					</a>:
 				</xsl:if>
 				<xsl:value-of select="event/contact_name"/>
-                <xsl:if test="event/contact_email != ''">
-					<br/>
-                    E-post: <xsl:value-of select="event/contact_email"/>
-                </xsl:if>
-                <xsl:if test="event/contact_phone != ''">
-					<br/>
-                    Telefon: <xsl:value-of select="event/contact_phone"/>
-                </xsl:if>
 			</dd>
 		</xsl:if>
 		<xsl:if test="event/is_public=0">

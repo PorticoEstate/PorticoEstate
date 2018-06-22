@@ -11,9 +11,6 @@
 			$this->soorganization = CreateObject('booking.soorganization');
 			$this->soresource = CreateObject('booking.soresource');
 			$this->soevent = CreateObject('booking.soevent');
-			$this->borescategory = CreateObject('booking.borescategory');
-			$this->boactivity = CreateObject('booking.boactivity');
-			$this->bofacility = CreateObject('booking.bofacility');
 		}
 
 		function search( $searchterm, $building_id, $filter_part_of_town, $filter_top_level, $activity_criteria = array() )
@@ -161,12 +158,15 @@
 					if (isset($res['buildings']) && is_array($res['buildings']))
 					{
 						$building_names = array();
+                                                $building_district = array();
 						foreach ($res['buildings'] as $_building_id)
 						{
 							$_resource_buildings[$_building_id] = true;
 							$building = $this->sobuilding->read_single($_building_id);
 							$building_names[] = $building['name'];
+                                                        $building_district[] = $building['district'];
 							$res['building_name'] = implode('</br>', $building_names);
+                                                        $res['district'] = implode('</br>', $building_district);
 						}
 					}
 					else if (isset($res['building_id']) && $res['building_id'])
@@ -246,163 +246,33 @@
 			$final_array['total_records_sum'] = array_sum((array)$final_array['total_records']);
 			return $final_array;
 		}
-
-
-		function resquery($params = array())
-		{
-			$fields_resource = array('id','name');
-			$fields_building = array('id','name','street','zip_code','city');
-
-			// Get a list of all activities, grouped on top level activities, as well as all facilities
-			$activitylist = $this->boactivity->fetch_activities_hierarchy();
-			$facilitylist = $this->bofacility->get_facilities();
-
-			// Validate parameters
-			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
+                
+                function getAutoCompleteData() {
+                    $sql = "SELECT DISTINCT bb_organization.name AS names,
+                                'organisasjon' AS type,
+                                'bookingfrontend.uiorganization.show' AS menuaction,
+                                bb_organization.id AS id 
+                                FROM bb_organization
+                                UNION
+                                SELECT DISTINCT bb_building.name AS names,
+                                'bygg' AS type,
+                                'bookingfrontend.uibuilding.show' AS menuaction,
+                                bb_building.id AS id
+                                FROM bb_building 
+                                ORDER BY names asc";
+                                                
+			$results = array();
+			$db = & $GLOBALS['phpgw']->db;
+			$db->query($sql, __LINE__, __FILE__);
+                        $i = 0;
+			while ($db->next_record())
 			{
-				return array();
+				$results[$i]["name"] = $db->f('names', true);
+                                $results[$i]["type"] = $db->f('type', true);
+                                $results[$i]["id"] = $db->f('id', true);
+                                $results[$i]["menuaction"] = $db->f('menuaction', true);
+                                $i++;
 			}
-
-			// Get resources
-			$resource_filters = array('active' => 1, 'rescategory_active' => 1);
-			$resource_filters['rescategory_id'] = $params['rescategory_id'];
-			$resources = $this->soresource->read(array('filters' => $resource_filters, 'sort' => 'sort'));
-
-			// Group the resources on buildings, and get data on the buildings to which the resources belong as well as
-			// activities and facilities
-			$building_resources = array();
-			$all_activities = array();
-			$all_facilities = array();
-			foreach ($resources['results'] as &$resource)
-			{
-				$building_ids = $resource['buildings'];
-				$toplevelactivity_id = $resource['activity_id'];
-				$activity_ids = $resource['activities'];
-				$facility_ids = $resource['facilities'];
-				foreach ($resource as $k => $v)
-				{
-					if (!in_array($k,$fields_resource))
-					{
-						unset($resource[$k]);
-					}
-				}
-				// Add a list of activities with id and name. Only active activities are included, and only activities
-				// belonging to the top level activity defined for the resource
-				$childactivities = array();
-				if (array_key_exists($toplevelactivity_id, $activitylist))
-				{
-					$childactivities = $activitylist[$toplevelactivity_id]['children'];
-				}
-				$resource['activities'] = array();
-				foreach ($activity_ids as $activity_id)
-				{
-					if (array_key_exists($activity_id, $childactivities))
-					{
-						$childactivity = $childactivities[$activity_id];
-						if ($childactivity['active'])
-						{
-							$resource['activities'][] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
-							if (!array_key_exists($childactivity['id'], $all_activities))
-							{
-								$all_activities[$childactivity['id']] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
-							}
-						}
-					}
-				}
-				usort($resource['activities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-				// Add a list of facilities with id and name. Only active facilities are included
-				$resource['facilities'] = array();
-				foreach ($facility_ids as $facility_id)
-				{
-					if (array_key_exists($facility_id,$facilitylist))
-					{
-						$facility = $facilitylist[$facility_id];
-						if ($facility['active'])
-						{
-							$resource['facilities'][] = array('id' => $facility['id'], 'name' => $facility['name']);
-							if (!array_key_exists($facility['id']))
-							{
-								$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
-							}
-						}
-					}
-				}
-				usort($resource['facilities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-				// Add the resource to the building
-				foreach ($building_ids as $building_id)
-				{
-					$building_resources[$building_id][] = $resource;
-				}
-			}
-			unset($resource);
-			$all_activities_list = array_values($all_activities);
-			usort($all_activities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-			$all_facilities_list = array_values($all_facilities);
-			usort($all_facilities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-
-			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
-			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
-			foreach ($buildings['results'] as &$building)
-			{
-				foreach ($building as $k => $v)
-				{
-					if (!in_array($k,$fields_building))
-					{
-						unset($building[$k]);
-					}
-				}
-				$building['resources'] = $building_resources[$building['id']];
-			}
-			unset($building);
-
-			return array('buildings' => $buildings, 'activities' => $all_activities_list, 'facilities' => $all_facilities_list);
-		}
-
-
-		function get_filterboxdata()
-		{
-			$config = CreateObject('phpgwapi.config', 'booking');
-			$config->read();
-
-			$data = array();
-			$datatext = $config->config_data['frontpage_filterboxdata'];
-			if ($datatext != null)
-			{
-				$lines = preg_split("[\r\n|\r|\n]", $datatext);
-				foreach ($lines as $line)
-				{
-					$parts = explode(':', $line);
-					if (count($parts) != 2)
-					{
-						// Ignore line as it doesn't conform to syntax
-						continue;
-					}
-
-					$boxtext = trim($parts[0]);
-					if ($boxtext == '')
-					{
-						continue;
-					}
-
-					$activities = explode(',', $parts[1]);
-					$activity_ids = array();
-					foreach ($activities as $activity)
-					{
-						$activity_id = trim($activity);
-						if ($activity_id != '' && ctype_digit($activity_id))
-						{
-							$activity_ids[] = $activity_id;
-						}
-					}
-					if (count($activity_ids) == 0)
-					{
-						continue;
-					}
-					$rescategories = $this->borescategory->get_rescategories_by_activities($activity_ids);
-
-					$data[] = array('text' => $boxtext, 'rescategories' => $rescategories);
-				}
-			}
-			return $data;
-		}
+                        return $results;
+                }
 	}
