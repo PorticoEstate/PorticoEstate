@@ -1,5 +1,6 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
 	<div class="container new-application-page">
+            <form action="" data-bind='submit: addApplication' method="POST" id='application_form' name="form">
             <div class="row">
                 
                 <div class="col-md-8 offset-md-2">
@@ -43,7 +44,7 @@
                         <span data-bind="ifnot: isResourceSelected" class="isSelected validationMessage">Ingen ressurs valgt!</span> 
                     </div>
                     
-                    <form class="form-group" data-bind="submit: addDate">
+                    <div class="form-group" >
                         <div class="form-inline">
                             <div class="form-group mr-5">
                                 <input type="text" for="date" onkeydown="return false" class="form-control datepicker-btn" data-bind="textInput: bookingDate" placeholder="Dato"/>
@@ -63,8 +64,8 @@
                         </div>
                         
                         
-                        <button class="btn btn-outline-light btn-sm mt-2" type="submit"><i class="fas fa-plus"></i> Legg til dato</button>
-                    </form>
+                        <button class="btn btn-outline-light btn-sm mt-2" type="button" data-bind="click: addDate"><i class="fas fa-plus"></i> Legg til dato</button>
+                    </div>
                     
                     <div class="form-group">
                         <span class="font-weight-bold d-block mt-2 span-label">Valgte datoer</span>
@@ -161,12 +162,12 @@
                     <hr class="mt-5 mb-5"></hr>
                     
                     <div class="form-group float-right">
-                        <button class="btn btn-outline-light btn-sm">Legg til flere søknader</button>
-                        <button id="goToConfirmPage" class="btn btn-light" type="submit" data-bind='click: submit'>Gå til kontakt og fakturainformasjon</button>                        
+                        <button class="btn btn-outline-light btn-sm" type="submit">Legg til flere søknader</button>
+                        <button id="goToConfirmPage" class="btn btn-light" data-bind='click: GoToConfirmPage'>Gå til kontakt og fakturainformasjon</button>                        
                     </div>
                 </div>
             </div>
-            
+            </form>
             <pre data-bind="text: ko.toJSON(am, null, 2)"></pre> 
                 
             <div class="push"></div>
