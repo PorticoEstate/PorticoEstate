@@ -85,11 +85,8 @@
 			}
 
 
-			if ($this->debug)
-			{
-				echo 'External user:<br>';
-				_debug_array($external_user);
-			}
+			$this->log('External user', print_r($external_user, true));
+
 			try
 			{
 				return createObject('booking.sfValidatorNorwegianOrganizationNumber')->clean($external_user->login);
@@ -102,11 +99,6 @@
 					die();
 				}
 				return null;
-			}
-
-			if($this->debug)
-			{
-				die();
 			}
 		}
 
@@ -202,21 +194,11 @@
 				'apikey'	=> $apikey,
 				'id'		=> $fodselsnr
 			);
-			foreach ( $post_data as $key => $value)
-			{
-				$post_items[] = $key . '=' . $value;
-			}
 
-			$post_string = implode ('&', $post_items);
+			$post_string = http_build_query($post_data);
 
-
-			if ($this->debug)
-			{
-				echo "POST:<br/>";
-				_debug_array($webservicehost);
-				_debug_array($post_data);
-			}
-
+			$this->log('webservicehost', print_r($webservicehost, true));
+			$this->log('POST data', print_r($post_data, true));
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
@@ -231,13 +213,9 @@
 
 			$ret = json_decode($result, true);
 
-			if ($this->debug)
-			{
-				echo "httpCode:<br/>";
-				_debug_array($httpCode);
-				echo "Returdata:<br/>";
-				_debug_array($ret);
-			}
+			$this->log('webservice httpCode', print_r($httpCode, true));
+			$this->log('webservice returdata', print_r($ret, true));
+
 
 
 			if(isset($ret['orgnr']))
@@ -249,4 +227,21 @@
 				return $ret;
 			}
 		}
+
+		private function log( $what, $value = '' )
+		{
+			if (!empty($GLOBALS['phpgw_info']['server']['log_levels']['module']['login']))
+			{
+				$bt = debug_backtrace();
+				$GLOBALS['phpgw']->log->debug(array(
+					'text' => "what: %1, <br/>value: %2",
+					'p1' => $what,
+					'p2' => $value ? $value : ' ',
+					'line' => __LINE__,
+					'file' => __FILE__
+				));
+				unset($bt);
+			}
+		}
+
 	}

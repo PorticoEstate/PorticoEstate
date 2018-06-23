@@ -109,7 +109,7 @@
 						'row_severity'  => $record['log_severity'],
 						'row_file'      => $record['log_file'],
 						'row_line'      => $record['log_line'],
-						'row_message'   => $record['log_msg'],
+						'row_message'   => str_replace("''", "'", $record['log_msg']),
 						'tr_class'		=> $tr_class
 					));
 					$t->parse('rows_access', 'row', true);
