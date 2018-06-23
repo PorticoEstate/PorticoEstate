@@ -1608,6 +1608,11 @@ JS;
 					$this->message['error'][] = array('msg' => lang('transfer failed'));
 				}
 			}
+			else
+			{
+				$this->message['error'][] = array('msg' => lang('transfer is not configured'));
+				$transfer_ok = true;
+			}
 			return $transfer_ok;
 
 		}

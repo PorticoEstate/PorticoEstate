@@ -689,3 +689,4 @@ transfer failed	rental	no	Overføring feilet
 has been committed	rental	no	er avsluttet
 not committed	rental	no	er ikke avsluttet
 has been transferred	rental	no	er overført
+transfer is not configured	rental	no	Overføring er ikke konfigurert
