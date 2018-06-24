@@ -214,9 +214,8 @@
 			$ret = json_decode($result, true);
 
 			$this->log('webservice httpCode', print_r($httpCode, true));
-			$this->log('webservice returdata', print_r($ret, true));
-
-
+			$this->log('webservice returdata as json', $result);
+			$this->log('webservice returdata as array', print_r($ret, true));
 
 			if(isset($ret['orgnr']))
 			{
