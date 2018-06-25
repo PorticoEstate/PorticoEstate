@@ -279,7 +279,7 @@
 					{
 						$trace = '<h2>' .lang('back trace') . "</h2>\n"
 									. '<p>' . lang('Please include the following output when you report this incident on our bug tracker - %1',
-											'<a href="https://savannah.nongnu.org/bugs/?group=fmsystem" target="_blank">https://savannah.nongnu.org/bugs/?group=fmsystem</a>') . "</p>\n"
+											'<a href="https://github.com/PorticoEstate/PorticoEstate/issues" target="_blank">https://github.com/PorticoEstate/PorticoEstate/issues</a>') . "</p>\n"
 									. '<pre>' . implode("\n", $msg_array) . '</pre>';
 					}
 				}
