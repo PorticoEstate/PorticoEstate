@@ -18,6 +18,7 @@
 			'index' => true,
 			'query' => true,
 			'add' => true,
+            'confirm' => true,
 			'show' => true,
 			'edit' => true,
 			'associated' => true,
@@ -823,6 +824,10 @@
 				'activities' => $activities, 'agegroups' => $agegroups, 'audience' => $audience,
 				'config' => $application_text));
 		}
+                
+        public function confirm() {
+        	self::render_template_xsl('application_new_confirm', array());
+        }
 
 		public function edit()
 		{

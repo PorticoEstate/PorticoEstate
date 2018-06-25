@@ -7,6 +7,7 @@
 		public $public_functions = array
 			(
 			'add' => true,
+            'confirm' => true,
 			'edit' => true,
 			'show' => true,
 			'get_activity_data' => true
