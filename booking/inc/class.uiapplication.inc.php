@@ -18,7 +18,7 @@
 			'index' => true,
 			'query' => true,
 			'add' => true,
-                        'confirm' => true,
+            'confirm' => true,
 			'show' => true,
 			'edit' => true,
 			'associated' => true,
@@ -587,9 +587,7 @@
 			$errors = array();
 
 			if ($_SERVER['REQUEST_METHOD'] == 'POST')
-			{echo "<h1>test</h1>";
-                        echo "<script>console.log( 'Debug Objects: ' );</script>";
-
+			{
 				$building = $this->building_bo->so->read(array('filters' => array('id' => phpgw::get_var('building_id', 'int'))));
 
 				array_set_default($_POST, 'resources', array());
@@ -827,9 +825,9 @@
 				'config' => $application_text));
 		}
                 
-                public function confirm() {
-                    self::render_template_xsl('application_new_confirm', array());
-                }
+        public function confirm() {
+        	self::render_template_xsl('application_new_confirm', array());
+        }
 
 		public function edit()
 		{
