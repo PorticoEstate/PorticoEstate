@@ -74,7 +74,7 @@ function applicationModel()  {
         }
         //    var checkboxes = $("input[type='checkbox']");
         //console.log(!checkboxes.is(":checked"));
-        
+    
     };
     
     self.GoToConfirmPage = function () {

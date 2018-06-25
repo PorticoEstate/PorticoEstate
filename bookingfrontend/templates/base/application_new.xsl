@@ -147,7 +147,7 @@
                                      <input class="form-control sm-input" placeholder="mann" data-bind="textInput: participantMenO20"/>
                                 </div>
                                 <div class="col-4">
-                                     <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: participantWomenO20" required=""/>
+                                     <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: participantWomenO20"/>
                                 </div>
                             </div>    
                                                                                        
