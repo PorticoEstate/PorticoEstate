@@ -14,7 +14,8 @@
 		public function get_facilities()
 		{
 			$facilities = array();
-			$facilitylist = $this->so->read();
+			$params = array();
+			$facilitylist = $this->so->read($params);
 			foreach ($facilitylist['results'] as $facility)
 			{
 				$id = $facility['id'];
