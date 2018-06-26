@@ -224,6 +224,12 @@
 				catch (Exception $e)
 				{
 					// TODO: Inform user if something goes wrong
+					$GLOBALS['phpgw']->log->error(array(
+						'text'	=> 'booking_boapplication::send_admin_notification() : error when trying to send email. Error: %1',
+						'p1'	=> $e->getMessage(),
+						'line'	=> __LINE__,
+						'file'	=> __FILE__
+					));
 				}
 			}
 		}
