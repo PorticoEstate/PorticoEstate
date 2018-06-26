@@ -24,6 +24,22 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Opening hours')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="resource/opening_hours" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Contact information')" />
+					</label>
+					<div class="custom-container">
+						<xsl:value-of select="resource/contact_info" disable-output-escaping="yes"/>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'Building')"/>
 					</label>
 					<div class = 'pure-u-md-1-2'>

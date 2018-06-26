@@ -191,6 +191,26 @@
 				</div>
 				<div class="pure-control-group">
 					<label>
+						<xsl:value-of select="php:function('lang', 'Opening hours')" />
+					</label>
+					<div class="custom-container">
+						<textarea id="field_opening_hours" name="opening_hours" type="text">
+							<xsl:value-of select="resource/opening_hours"/>
+						</textarea>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
+						<xsl:value-of select="php:function('lang', 'Contact information')" />
+					</label>
+					<div class="custom-container">
+						<textarea id="field_contact_info" name="contact_info" type="text">
+							<xsl:value-of select="resource/contact_info"/>
+						</textarea>
+					</div>
+				</div>
+				<div class="pure-control-group">
+					<label>
 						<xsl:value-of select="php:function('lang', 'organzations_ids')" />
 					</label>
 				</div>

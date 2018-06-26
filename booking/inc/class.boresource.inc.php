@@ -62,7 +62,8 @@
 				),
 				booking_sopermission::ROLE_CASE_OFFICER => array
 					(
-					'write' => array_fill_keys(array('name', 'description', 'activity_id', 'type'), true),
+					'write' => array_fill_keys(array('name', 'description', 'opening_hours', 'contact_info',
+						'activity_id', 'type', 'rescategory_id'), true),
 				),
 				'parent_role_permissions' => array
 					(

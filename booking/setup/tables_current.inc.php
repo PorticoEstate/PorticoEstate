@@ -45,6 +45,7 @@
 				'city' => array('type' => 'varchar', 'precision' => '255', 'nullable' => True),
 				'description' => array('type' => 'text', 'nullable' => True),
 				'calendar_text' => array('type' => 'text', 'nullable' => True),
+				'opening_hours' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(),
@@ -126,6 +127,8 @@
 				'organizations_ids' => array('type' => 'varchar', 'precision' => '50', 'nullable' => True),
 				'json_representation' => array('type' => 'jsonb', 'nullable' => true),
 				'rescategory_id' => array('type' => 'int', 'precision' => 4, 'nullable' => True),
+				'opening_hours' => array('type' => 'text', 'nullable' => True),
+				'contact_info' => array('type' => 'text', 'nullable' => True),
 			),
 			'pk' => array('id'),
 			'fk' => array(

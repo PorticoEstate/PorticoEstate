@@ -17,6 +17,8 @@
 				'name' => array('type' => 'string', 'query' => true, 'required' => true),
 				'type' => array('type' => 'string', 'query' => true, 'required' => true),
 				'description' => array('type' => 'string', 'query' => true, 'required' => false),
+				'opening_hours' => array('type' => 'string'),
+				'contact_info' => array('type' => 'string'),
 				'activity_id' => array('type' => 'int', 'required' => false),
 				'organizations_ids' => array('type' => 'string'),
 				'json_representation' => array('type' => 'json'),
