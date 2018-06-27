@@ -47,7 +47,16 @@
 
 		public function show()
 		{
-			$organization = $this->bo->read_single(phpgw::get_var('id', 'int'));
+			$id = phpgw::get_var('id', 'int');
+
+			$session_org_id = phpgw::get_var('session_org_id');
+
+			if(!$id && $session_org_id)
+			{
+				$id = CreateObject('bookingfrontend.uiorganization')->get_orgid($session_org_id);
+			}
+
+			$organization = $this->bo->read_single($id);
 			$organization['organizations_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.index'));
 			$organization['edit_link'] = self::link(array('menuaction' => $this->module . '.uiorganization.edit',
 					'id' => $organization['id']));
@@ -71,7 +80,9 @@
 			$organization['new_delegate_link'] = self::link(array('menuaction' => $this->module . '.uidelegate.edit',
 					'organization_id' => $organization['id']));
 			if ($bouser->is_organization_admin($organization['id']))
+			{
 				$organization['logged_on'] = true;
+			}
 
 			phpgwapi_jquery::load_widget("core");
 
