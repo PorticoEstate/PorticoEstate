@@ -1,9 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
 CreateUrlParams(window.location.search);
@@ -78,8 +72,19 @@ function applicationModel()  {
     };
     
     self.GoToConfirmPage = function () {
+        var requestUrl = baseURL + "?menuaction=bookingfrontend.uiapplication.add&phpgw_return_as=json";
+            $.post(requestUrl, function( data ) {
+                console.log(data);
+            });
+
         if(self.errors().length == 0) {
-            window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.confirm&building_id="+urlParams['building_id'];
+            var requestUrl = baseURL + "?menuaction=bookingfrontend.uiapplication.add";
+            $.post(requestUrl, function( data ) {
+                console.log(data);
+            });
+            //window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.confirm&building_id="+urlParams['building_id'];
+        } else {
+            self.errors.showAllMessages();
         }
     }
 }
@@ -155,6 +160,7 @@ YUI({ lang: 'nb-no' }).use(
         popover: {
           zIndex: 99999
         },
+        mask: 'kl. %H:%M',
         on: {
           selectionChange: function(event) { 
               new Date(event.newSelection);
@@ -177,6 +183,7 @@ YUI({ lang: 'nb-no' }).use(
         popover: {
           zIndex: 99999
         },
+        mask: 'kl. %H:%M',
         on: {
           selectionChange: function(event) { 
               new Date(event.newSelection);
