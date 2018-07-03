@@ -41,21 +41,18 @@ JS;
 	$GLOBALS['phpgw']->template->set_unknowns('remove');
 	$GLOBALS['phpgw']->template->set_file('head', 'head.tpl');
 	$GLOBALS['phpgw']->template->set_block('head', 'stylesheet', 'stylesheets');
-	//$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts'); BRUKER KUN MINID JS
+	$GLOBALS['phpgw']->template->set_block('head', 'javascript', 'javascripts');
 
-
-	phpgwapi_jquery::load_widget('core');
 
 	$stylesheets = array();
-        
-        
-        $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
-        $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
-        $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
-        $stylesheets[] = "https://fonts.googleapis.com/css?family=Roboto";
-        $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/custom.css";
-        $stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
-        
+
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/bootstrap.min.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/fontawesome.all.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/jquery.autocompleter.css";
+	$stylesheets[] = "https://fonts.googleapis.com/css?family=Roboto";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/custom.css";
+	$stylesheets[] = "/phpgwapi/templates/bookingfrontend/css/normalize.css";
+
 	if(isset($GLOBALS['phpgw_info']['user']['preferences']['common']['theme']))
 	{
 		$stylesheets[] = "/phpgwapi/templates/bookingfrontend/themes/{$GLOBALS['phpgw_info']['user']['preferences']['common']['theme']}.css";
@@ -71,39 +68,23 @@ JS;
 		}
 	}
 
-      
-	$javascripts = array();
-	
-	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/minid.js";
-        
-        $logoimg = "/phpgwapi/templates/bookingfrontend/img/bergen-logo.png";
-        
+	$logoimg = "/phpgwapi/templates/bookingfrontend/img/bergen-logo.png";
+	$GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
 
-        
-        $jqueryjs= "/phpgwapi/templates/bookingfrontend/js/jquery.min.js";
-        $popperjs = "/phpgwapi/templates/bookingfrontend/js/popper.min.js";
-        $bootstrapmainjs = "/phpgwapi/templates/bookingfrontend/js/bootstrap.min.js";
-        $knockoutjs = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
-        $knockoutjsvalid = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
-        $auijs = "/phpgwapi/templates/bookingfrontend/js/aui-min.js";
-        $jqueryautocomplete = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
-        $commonjs = "/phpgwapi/templates/bookingfrontend/js/common.js";
-        $knockoutjsvalidlocale = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
-                
-        $GLOBALS['phpgw']->template->set_var( 'logoimg', $webserver_url . $logoimg );
-        $GLOBALS['phpgw']->template->set_var( 'jqueryjs', $webserver_url . $jqueryjs );
-        $GLOBALS['phpgw']->template->set_var( 'popperjs', $webserver_url . $popperjs );
-        $GLOBALS['phpgw']->template->set_var( 'bootstrapmainjs', $webserver_url . $bootstrapmainjs );
-        $GLOBALS['phpgw']->template->set_var( 'knockoutjs', $webserver_url . $knockoutjs );
-        $GLOBALS['phpgw']->template->set_var( 'knockoutjsvalid', $webserver_url . $knockoutjsvalid );
-        $GLOBALS['phpgw']->template->set_var( 'knockoutjsvalidlocale', $webserver_url . $knockoutjsvalidlocale );
-        $GLOBALS['phpgw']->template->set_var( 'auijs', $webserver_url . $auijs );
-        $GLOBALS['phpgw']->template->set_var( 'jqueryautocomplete', $webserver_url . $jqueryautocomplete );
-        $GLOBALS['phpgw']->template->set_var( 'commonjs', $webserver_url . $commonjs );
-        
-//FIXME: To consider...
-//	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/headroom.min.js";
-//	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jQuery.headroom.js";
+	//loads jquery
+//	phpgwapi_jquery::load_widget('core');
+
+	$javascripts = array();
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jquery.min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/popper.min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/bootstrap.min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/knockout-min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/knockout.validation.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/aui-min.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/jquery.autocompleter.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/common.js";
+	$javascripts[] = "/phpgwapi/templates/bookingfrontend/js/nb-NO.js";
+
 
 	foreach ( $javascripts as $javascript )
 	{
@@ -204,9 +185,9 @@ JS;
 
 	$tpl_vars = array
 	(
-		'css'           => $GLOBALS['phpgw']->common->get_css(),
-		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
-		'img_icon'      => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
+		'css'		   => $GLOBALS['phpgw']->common->get_css(),
+//		'javascript'	=> $GLOBALS['phpgw']->common->get_javascript(),
+		'img_icon'	  => $GLOBALS['phpgw']->common->find_image('phpgwapi', 'favicon.ico'),
 		'site_title'	=> $site_title,
 		'str_base_url'	=> $GLOBALS['phpgw']->link('/', array(), true),
 		'site_url'	=> $GLOBALS['phpgw']->link("/{$app}/", array()),
@@ -220,7 +201,7 @@ JS;
 		'logofile'		=> $logofile_frontend,
 		'header_search_class'	=> 'hidden'//(isset($_GET['menuaction']) && $_GET['menuaction'] == 'bookingfrontend.uisearch.index' ? 'hidden' : '')
 	);
-                
+
 	// if ($manual !== null) 
 	{
 		$tpl_vars['manual_text'] = lang('manual');

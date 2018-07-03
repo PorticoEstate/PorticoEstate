@@ -5,7 +5,8 @@ var tags = ko.observableArray();
 var filterSelectList = ko.observableArray();
 var filterResultOne = ko.observableArray();
 var filterResultTwo = ko.observableArray();
-var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+//var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
 
 var ViewModel = function(data) {
     var self = this;
@@ -110,7 +111,8 @@ $(document).ready(function ()
 });
 
 function GetFilterData() {
-    var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.get_filterboxdata&phpgw_return_as=json";
+ //   var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.get_filterboxdata&phpgw_return_as=json";
+    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.get_filterboxdata"}, true);
     
     $.getJSON(requestURL, function(result){
         
@@ -131,7 +133,8 @@ function GetFilterData() {
 function GetAutocompleteData() {
     
     var autocompleteData = [];
-    var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.autocomplete&phpgw_return_as=json";
+//  var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.autocomplete&phpgw_return_as=json";
+	var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.autocomplete"}, true);
     
     $.getJSON(requestURL, function(result){
         $.each(result, function(i, field){
@@ -148,7 +151,8 @@ function GetAutocompleteData() {
             callback: function(value, index, object, event) {
                 selectedAutocompleteValue = true;
                 $('#mainSearchInput').val(autocompleteData[value].label);
-                window.location.href = baseURL + "?menuaction=" + autocompleteData[value].menuaction + "&id=" + autocompleteData[value].id;
+              //  window.location.href = baseURL + "?menuaction=" + autocompleteData[value].menuaction + "&id=" + autocompleteData[value].id;
+				window.location.href = phpGWLink('bookingfrontend/', {menuaction:autocompleteData[value].menuaction, id: autocompleteData[value].id}, false);
                 return;
             }
         });
@@ -168,7 +172,7 @@ function doSearch() {
     var oArgs = {
         menuaction: 'bookingfrontend.uisearch.query'
     };
-    var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+ //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
     var requestUrl = this.phpGWLink('bookingfrontend/', oArgs, true);
     var searchTerm = $("#mainSearchInput").val();
 
@@ -188,12 +192,18 @@ function doSearch() {
             for(var i=0; i<response.results.results.length; i++) {
                 var url = "";
                 if(response.results.results[i].type == "building") {
-                     url = baseURL + "?menuaction=bookingfrontend.uibuilding.show&id=" + response.results.results[i].id;
+ //                 url = baseURL + "?menuaction=bookingfrontend.uibuilding.show&id=" + response.results.results[i].id;
+					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:response.results.results[i].id}, false);
+
                 } else if(response.results.results[i].type == "resource") {
-                     url = baseURL + "?menuaction=bookingfrontend.uiresource.show&id=" + response.results.results[i].id
-                            + "&buildingid=" + response.results.results[i].building_id;
-                } else if(response.results.results[i].type == "organization") {
-                     url = baseURL + "?menuaction=bookingfrontend.uiorganization.show&id=" + response.results.results[i].id;
+//                    url = baseURL + "?menuaction=bookingfrontend.uiresource.show&id=" + response.results.results[i].id
+//                            + "&buildingid=" + response.results.results[i].building_id;
+					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show",id:response.results.results[i].id,
+								buildingid: response.results.results[i].building_id}, false);
+
+				} else if(response.results.results[i].type == "organization") {
+ //                 url = baseURL + "?menuaction=bookingfrontend.uiorganization.show&id=" + response.results.results[i].id;
+					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiorganization.show",id:response.results.results[i].id}, false);
                 }
                 results.push({name: response.results.results[i].name, 
                     activity_name: response.results.results[i].activity_name,
@@ -234,7 +244,8 @@ function doFilterSearch(resCategory) {
     $("#mainSearchInput").blur(); 
     $("#welcomeResult").hide();
 
-    var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+//    var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+
 
     $.ajax({
         url: baseURL,
@@ -282,8 +293,11 @@ function doFilterSearch(resCategory) {
 
                     results.push({name: response.buildings.results[i].name + " " + response.buildings.results[i].resources[k].name, 
                         activity_name: "test",
-                        itemLink: baseURL + "?menuaction=bookingfrontend.uiresource.show&id=" + response.buildings.results[i].resources[k].id
-                        + "&buildingid=" + response.buildings.results[i].id,
+//                        itemLink: baseURL + "?menuaction=bookingfrontend.uiresource.show&id=" + response.buildings.results[i].resources[k].id
+//                        + "&buildingid=" + response.buildings.results[i].id,
+						itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show",id:response.buildings.results[i].resources[k].id,
+									buildingid:response.buildings.results[i].id}, false),
+
                         resultType: "R",
                         type: "resource",
                         filterResultOne: facilities,
@@ -296,7 +310,8 @@ function doFilterSearch(resCategory) {
 
                 results.push({name: response.buildings.results[i].name, 
                     activity_name: "test",
-                    itemLink: baseURL + "?menuaction=bookingfrontend.uibuilding.show&id=" + response.buildings.results[i].id,
+//                  itemLink: baseURL + "?menuaction=bookingfrontend.uibuilding.show&id=" + response.buildings.results[i].id,
+					itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:response.buildings.results[i].id}, false),
                     resultType: "B",
                     type: "building",
                     filterResultOne: buildingFacilities,
@@ -324,26 +339,28 @@ function selectThisTag(filterLevel, value) {
     searchViewModel.filterDist(this);
 }
 
-function phpGWLink(strURL, oArgs, bAsJSON)
-{
-	//var arURLParts = strBaseURL.split('?');
-    var arURLParts = document.location.origin + "/" + window.location.pathname.split('/')[1];
-	var strNewURL = arURLParts + "/"+ strURL + '?';
-
-	if ( oArgs == null )
-	{
-		oArgs = new Object();
-	}
-
-	for (obj in oArgs)
-	{
-		strNewURL += obj + '=' + oArgs[obj] + '&';
-	}
-	strNewURL += arURLParts[1];
-
-	if ( bAsJSON )
-	{
-		strNewURL += '&phpgw_return_as=json';
-	}
-	return strNewURL;
-}
+//Denne må være tilgjengelig overalt - legger den inn i common
+//
+//function phpGWLink(strURL, oArgs, bAsJSON)
+//{
+//	//var arURLParts = strBaseURL.split('?');
+//    var arURLParts = document.location.origin + "/" + window.location.pathname.split('/')[1];
+//	var strNewURL = arURLParts + "/"+ strURL + '?';
+//
+//	if ( oArgs == null )
+//	{
+//		oArgs = new Object();
+//	}
+//
+//	for (obj in oArgs)
+//	{
+//		strNewURL += obj + '=' + oArgs[obj] + '&';
+//	}
+//	strNewURL += arURLParts[1];
+//
+//	if ( bAsJSON )
+//	{
+//		strNewURL += '&phpgw_return_as=json';
+//	}
+//	return strNewURL;
+//}
