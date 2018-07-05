@@ -574,8 +574,8 @@
 			</tr>
 
 			<tr>
-				<td>{lang_meter_table}:</td>
-				<td><input name="newsettings[meter_table]" value="{value_meter_table}"></td>
+				<td>{lang_meter_register} (ex: <b>entity_1_11</b>):</td>
+				<td><input name="newsettings[meter_register]" value="{value_meter_register}"></td>
 			</tr>
 			<tr>
 				<td>{lang_comma_separated_email_addresses_to_be_notified_about_tenant_claim}:</td>
