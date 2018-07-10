@@ -87,7 +87,7 @@ class MessageController extends Controller
 		/* @var FmTtsTicket $ticket */
 		$ticket = $em->getRepository('AppBundle:FmTtsTicket')->find($id);
 		if (!$ticket) {
-			throw new NotFoundHttpException("Ticket not found");
+			throw new NotFoundHttpException('Ticket not found');
 		}
 		$data = $this->collect_ticket_data($ticket);
 		$response = new JsonResponse();
