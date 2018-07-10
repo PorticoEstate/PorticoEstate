@@ -8,7 +8,7 @@ imports:
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
-    handyman_file_dir: /felles_ebe_portico/Handyman_filutv
+    handyman_file_dir: /vagrant/GSGroup
     handyman_export_ext: BYT
     handyman_export_schema_file: OrdersAndRegistrations.xsd
     bkbygg_user_id_to_use_when_not_found: 10
