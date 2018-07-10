@@ -9,7 +9,7 @@ $dbal = array(
     'charset'  => 'UTF8'
 );
 
-$dbFilePath = dirname(__FILE__).'/../../../dbconfig.php';
+$dbFilePath = dirname(__FILE__).'/../../../../dbconfig.php';
 if(file_exists($dbFilePath)){
     $dbConfig = include_once($dbFilePath);
     $dbal['driver']   = 'pdo_pgsql';
