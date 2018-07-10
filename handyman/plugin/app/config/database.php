@@ -12,15 +12,15 @@
 		'charset'  =>	'UTF8'
 	);
 
-	$dbFilePath = dirname(__FILE__).'/../../../../dbconfig.php';
-	if(file_exists($dbFilePath)){
-		$dbConfig = include_once($dbFilePath);
+	$db_file_path = dirname(__FILE__).'/../../../../dbconfig.php';
+	if(file_exists($db_file_path)){
+		$db_config = include_once($db_file_path);
 		$dbal['driver']   = 'pdo_pgsql';
-		$dbal['host']     = $dbConfig['default']['db_host'];
-		$dbal['dbname']   = $dbConfig['default']['db_name'];
-		$dbal['user']     = $dbConfig['default']['db_user'];
-		$dbal['password'] = $dbConfig['default']['db_pass'];
-		$dbal['port']     = !empty($dbConfig['default']['db_port']) ? $dbConfig['default']['db_port'] : $dbal['port'];
+		$dbal['host']     = $db_config['default']['db_host'];
+		$dbal['dbname']   = $db_config['default']['db_name'];
+		$dbal['user']     = $db_config['default']['db_user'];
+		$dbal['password'] = $db_config['default']['db_pass'];
+		$dbal['port']     = !empty($db_config['default']['db_port']) ? $db_config['default']['db_port'] : $dbal['port'];
 		$dbal['charset']  = 'UTF8';
 	}
 

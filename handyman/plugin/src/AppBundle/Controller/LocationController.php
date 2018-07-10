@@ -31,7 +31,7 @@
 		public function xml_export_action()
 		{
 			// Will fire exit() if not run from localhost
-			$this->hasAccess();
+//			$this->has_access();
 			$reply = '';
 			/* @var FmLocationService $location_service */
 			$location_service = new FmLocationService($this->getDoctrine()->getManager());
@@ -60,7 +60,7 @@
 
 		//region Helperfunctions
 
-		private function hasAccess(){
+		private function has_access(){
 			if (!in_array(@$_SERVER['REMOTE_ADDR'], array(
 				'127.0.0.1',
 				'::1',

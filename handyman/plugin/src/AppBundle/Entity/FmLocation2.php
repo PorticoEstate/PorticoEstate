@@ -15,6 +15,7 @@
 	 */
 	class FmLocation2
 	{
+		//region Properties
 		/**
 		 * @var string
 		 *
@@ -246,7 +247,9 @@
 		 * @Groups({"rest"})
 		 */
 		private $street;
+		//endregion
 
+		//region Getters and Setters
 		/**
 		 * Set loc1
 		 *
@@ -939,4 +942,5 @@
 		{
 			$this->bygningsnummer = $bygningsnummer;
 		}
+		//endregion
 	}

@@ -25,7 +25,7 @@
 		 * @ORM\Column(name="location_id", type="integer")
 		 * @ORM\Id
 		 */
-		private $locationId;
+		private $location_id;
 		/**
 		 * @var integer
 		 *
@@ -91,7 +91,7 @@
 		 */
 		public function getLocationId()
 		{
-			return $this->locationId;
+			return $this->location_id;
 		}
 
 		/**

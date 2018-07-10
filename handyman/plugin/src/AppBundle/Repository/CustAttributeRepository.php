@@ -12,14 +12,14 @@
 
 	class CustAttributeRepository extends EntityRepository
 	{
-		public function find_properties(int $locationId)
+		public function find_properties(int $location_id)
 		{
 			// CH Multiple checkbox, LB Listbox, R = Multiple Radio
 			return $this->getEntityManager()
 				->createQuery(
-					'SELECT a FROM AppBundle:CustAttribute a WHERE a.locationId = :locationId AND (a.dataType = \'CH\' OR a.dataType = \'LB\' OR a.dataType = \'R\')'
+					'SELECT a FROM AppBundle:CustAttribute a WHERE a.location_id = :location_id AND (a.dataType = \'CH\' OR a.dataType = \'LB\' OR a.dataType = \'R\')'
 				)
-				->setParameter('locationId', $locationId)
+				->setParameter('location_id', $location_id)
 				->getResult();
 		}
 	}
