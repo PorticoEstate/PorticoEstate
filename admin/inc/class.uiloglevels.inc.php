@@ -22,7 +22,7 @@
 
 		public function __construct()
 		{
-			
+
 			if ($GLOBALS['phpgw']->acl->check('error_log_access',1,'admin'))
 			{
 				$GLOBALS['phpgw']->redirect_link('/index.php');
@@ -39,8 +39,8 @@
 
   			// foo removes the module template.  I don't understand Templates enough to
   			// know why I needed it.  Trial and error.
-			$this->template->set_block('loglevels','module', 'foo'); 
-			$this->template->set_block('loglevels','module_add', 'foo'); 
+			$this->template->set_block('loglevels','module', 'foo');
+			$this->template->set_block('loglevels','module_add', 'foo');
 		}
 
 		public function edit_log_levels()
@@ -52,8 +52,8 @@
 
 			// If log_levels have ever been set before, go ahead and set them.
 			// There's probably a more correct place to do this.
-			
-			if ( ! isset($GLOBALS['phpgw_info']['server']['log_levels'] ) ) 
+
+			if ( ! isset($GLOBALS['phpgw_info']['server']['log_levels'] ) )
 			{
 				$GLOBALS['phpgw_info']['server']['log_levels'] = array( 'global_level' => 'E', 'module' => array(), 'user' => array());
 			}
@@ -79,43 +79,45 @@
 					$this->update_level('user', $level_key, phpgw::get_var('user_add_level_select'));
 				}
 			}
-		    
+
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('Admin').' - '.lang('Edit Log Levels');
-			
+
 			$GLOBALS['phpgw']->common->phpgw_header();
 			echo parse_navbar();
 
-			$this->add_modules_list(); 
-			$this->add_users_list(); 
-				
-			$var['lang_set_levels'] = "Set Logging Levels"; 
-			$var['lang_global_level'] = "Global logging level"; 
-			$var['lang_module_level'] = "Module Logging Levels"; 
-			$var['lang_user_level'] = "User Logging Levels"; 
+			$this->add_modules_list();
+			$this->add_users_list();
+
+			$var['lang_set_levels'] = "Set Logging Levels";
+			$var['lang_global_level'] = "Global logging level";
+			$var['lang_module_level'] = "Module Logging Levels";
+			$var['lang_user_level'] = "User Logging Levels";
 			$var['global_option'] = $this->create_select_box('global', '', $GLOBALS['phpgw_info']['server']['log_levels']['global_level']);
 			$this->template->set_var($var);
 
 			$this->template->pfp('out','loglevels');
 		}
-		
-		
-		private function add_modules_list() 
+
+
+		private function add_modules_list()
 		{
 			$apps_with_logging = $GLOBALS['phpgw_info']['server']['log_levels']['module'];
 			$sorted_apps = array();
 			$app_add_list = array();
 			foreach ( $GLOBALS['phpgw_info']['apps'] as $app => $app_data )
 			{
-				$sorted_apps[$app] = $app_data['title']; 
+				$sorted_apps[$app] = $app_data['title'];
 			}
 
+			$sorted_apps['login'] = 'Login';
+
 			asort($sorted_apps);
-			
+
 			$add_options = '';
-			$tr_class = 'row_on';
-		    foreach ( $sorted_apps as $app => $title) 
+			$tr_class = 'pure-table-odd';
+		    foreach ( $sorted_apps as $app => $title)
 		    {
-		    	if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['module'][$app]) ) 
+		    	if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['module'][$app]) )
 		    	{
 					$var = array(
 						'tr_class' 		=> $tr_class,
@@ -127,22 +129,22 @@
 					);
 					$this->template->set_var($var);
 					$this->template->fp('module_list','module',True);
-					if ($tr_class == 'row_on' )
+					if ($tr_class == 'pure-table-odd' )
 					{
-						$tr_class = 'row_off';
+						$tr_class = '';
 					}
 					else
 					{
-						$tr_class = 'row_on';
+						$tr_class = 'pure-table-odd';
 					}
 		    	}
-		    	else 
+		    	else
 		    	{
 					$add_options .= "<option value=\"{$app}\">{$title}</option>\n";
 		    	}
-		    }	
-				
-			if ( $add_options ) 
+		    }
+
+			if ( $add_options )
 			{
 				$var = array(
 					'tr_class' 		=> $tr_class,
@@ -161,19 +163,19 @@
 				$this->template->set_var($var);
 				$this->template->fp('module_add_row','module_add',True);
 			}
-			
+
 		}
-		
-		private function add_users_list() 
+
+		private function add_users_list()
 		{
 			$add_options = '';
-			$tr_class = 'row_on';
+			$tr_class = 'pure-table-odd';
 			$accounts = $GLOBALS['phpgw']->accounts->get_list('accounts');
 			foreach ( $accounts as $account )
 			{
 				$account_lid = $account->lid;
 				$name = (string) $account;
-		    	if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['user'][$account_lid]) ) 
+		    	if ( isset($GLOBALS['phpgw_info']['server']['log_levels']['user'][$account_lid]) )
 		    	{
 					$var = array
 					(
@@ -187,22 +189,22 @@
 					$this->template->set_var($var);
 					$this->template->fp('user_list', 'module', true);
 
-					if ($tr_class == 'row_on')
+					if ($tr_class == 'pure-table-odd')
 					{
-						$tr_class = 'row_off';
+						$tr_class = '';
 					}
 					else
 					{
-						$tr_class = 'row_on';
+						$tr_class = 'pure-table-odd';
 					}
 		    	}
-		    	else 
+		    	else
 		    	{
 					$add_options .= "<option value=\"{$account_lid}\">{$name}</option>\n";
 		    	}
-		    }	
-				
-			if ( $add_options ) 
+		    }
+
+			if ( $add_options )
 			{
 				$var = array(
 					'type'   		=> 'user',
@@ -220,8 +222,8 @@
 				$this->template->set_var($var);
 				$this->template->fp('user_add_row','module_add',True);
 			}
-		}		
-		
+		}
+
 		private function create_select_box($level_type, $level_key, $current_level)
 		{
 			$select_name = "{$level_type}_{$level_key}_select";
@@ -249,20 +251,20 @@
 				'S_selected'	=> '',
 				'DP_selected'	=> ''
 			);
-			
-			if ( $current_level ) 
+
+			if ( $current_level )
 			{
-				$var[$current_level . '_selected'] = 'selected';	
+				$var[$current_level . '_selected'] = 'selected';
 			}
-			else 
+			else
 			{
-				$var['I_selected'] = 'selected';	
+				$var['I_selected'] = 'selected';
 			}
-				
+
 			$this->template->set_var($var);
-			return $this->template->fp('select', 'log_level_select');	
+			return $this->template->fp('select', 'log_level_select');
 		}
-		
+
 		private function update_level($level_type, $level_key, $new_level)
 		{
 			if ( $new_level )
@@ -278,12 +280,12 @@
 					$GLOBALS['phpgw_info']['server']['log_levels'][$level_type][$level_key] = $new_level;
 				}
 			}
-			else 
+			else
 			{
 				log_info('Removing log level for %1 %2', $level_type, $level_key);
 				unset($GLOBALS['phpgw_info']['server']['log_levels'][$level_type][$level_key]);
 			}
-			
+
 			// save it...  It would be nice if phpgwapi.config had an method for just saving one setting.
 
 			$c = CreateObject('phpgwapi.config','phpgwapi');
@@ -291,5 +293,5 @@
 			$c->value('log_levels', $GLOBALS['phpgw_info']['server']['log_levels']);
 			$c->save_repository();
 		}
-		
+
 	}

@@ -198,7 +198,7 @@
 				"deleted = '" . ($billing->is_deleted() ? 'true' : 'false') . "'",
 				'export_format = ' . $this->marshal($billing->get_export_format(), 'string'),
 			);
-			$result = $this->db->query("UPDATE rental_billing SET " . join(',', $values) . " WHERE id={$billing->get_id()}", __LINE__, __FILE__);
+			return $this->db->query("UPDATE rental_billing SET " . join(',', $values) . " WHERE id={$billing->get_id()}", __LINE__, __FILE__);
 		}
 
 		/**

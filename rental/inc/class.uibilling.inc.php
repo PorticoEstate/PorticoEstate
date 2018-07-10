@@ -6,6 +6,11 @@
 	include_class('rental', 'contract', 'inc/model/');
 	include_class('rental', 'billing', 'inc/model/');
 
+	require_once PHPGW_API_INC . '/flysystem/autoload.php';
+
+	use League\Flysystem\Filesystem;
+	use League\Flysystem\Sftp\SftpAdapter;
+
 	class rental_uibilling extends rental_uicommon
 	{
 
@@ -20,6 +25,8 @@
 			'download' => true,
 			'download_export' => true
 		);
+
+		public $message = array();
 
 		public function __construct()
 		{
@@ -1397,8 +1404,8 @@ JS;
 			var decimalPlaces = '{$this->decimalPlaces}';
 			var currency_suffix = '{$this->currency_suffix}';
 			var area_suffix = '{$this->area_suffix}';
-				
-			function formatterPrice (key, oData) 
+
+			function formatterPrice (key, oData)
 			{
 				var amount = $.number( oData[key], decimalPlaces, decimalSeparator, thousandsSeparator ) + ' ' + currency_suffix;
 				return amount;
@@ -1478,21 +1485,168 @@ JS;
 			{
 				phpgw::no_access();
 			}
-			$billing_job = rental_sobilling::get_instance()->get_single((int)phpgw::get_var('id'));
-			$billing_job->set_timestamp_commit(time());
-			$result = rental_sobilling::get_instance()->store($billing_job);
+
+			$id = phpgw::get_var('id', 'int');
+
+			$billing_job = rental_sobilling::get_instance()->get_single($id);
+			$export_format = $billing_job->get_export_format();
+			$result_transfer = $this->transfer($id, $export_format);
+			$result = null;
+
+			if($result_transfer)
+			{
+				$billing_job->set_timestamp_commit(time());
+				$result = rental_sobilling::get_instance()->store($billing_job);
+			}
 
 			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				/* if ($result) {
-				  $message['message'][] = array('msg'=>$billing_job->get_title().' '.lang('has been committed'));
-				  } else {
-				  $message['error'][] = array('msg'=>$billing_job->get_title().' '.lang('not committed'));
-				  } */
+				if($result)
+				{
+					$this->message['message'][] = array('msg' => $billing_job->get_title() . ' ' . lang('has been committed'));
+				}
+				else
+				{
+					$this->message['error'][] = array('msg'=>$billing_job->get_title() .' '. lang('not committed'));
+				}
 
-				$message['message'][] = array('msg' => $billing_job->get_title() . ' ' . lang('has been committed'));
-				return $message;
+				return $this->message;
 			}
+		}
+
+		private function transfer( $id, $export_format )
+		{
+			$export_format_arr = explode('_', $export_format);
+			$file_ending = $export_format_arr[1];
+			if ($file_ending == 'gl07')
+			{
+				$type = 'intern';
+			}
+			else if ($file_ending == 'lg04')
+			{
+				$type = 'faktura';
+			}
+			$date = date('Ymd', $stop);
+			$config_rental = CreateObject('phpgwapi.config', 'rental')->read();
+			$organization = empty($config_rental['organization']) ? 'bergen' : $config_rental['organization'];
+			if($organization == 'nlsh')
+			{
+				/**
+				 * For now...not activated.
+				 */
+				if($type == 'intern')
+				{
+					return true;
+				}
+
+				$filename = '14PU' . sprintf("%08s",$id) . ".txt";
+			}
+			else
+			{
+				$filename = "PE_{$type}_{$date}.{$file_ending}";
+			}
+
+			$path = "/rental/billings/{$id}";
+
+			$vfs = CreateObject('phpgwapi.vfs');
+			$vfs->override_acl = 1;
+
+			$content = $vfs->read(
+				array
+				(
+					'string' => $path,
+					'relatives' => array( RELATIVE_NONE)
+				)
+			);
+
+			if(empty($content))
+			{
+				$this->message['error'][] = array('msg' => lang('transfer failed'));
+				return false;
+			}
+
+			$transfer_ok = false;
+
+			$config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+
+			if ($config->config_data['common']['method'] == 'ftp' || $config->config_data['common']['method'] == 'ssh')
+			{
+				$connection = $this->phpftp_connect( $config );
+
+				$basedir = $config->config_data['export']['remote_basedir'];
+				if ($basedir)
+				{
+					$remote_file = $basedir . '/' . basename($filename);
+				}
+				else
+				{
+					$remote_file = basename($filename);
+				}
+
+				switch ($config->config_data['common']['method'])
+				{
+					case 'ftp';
+						$tmpfname = tempnam(sys_get_temp_dir());
+						$handle = fopen($tmpfname, "w");
+						fwrite($handle, $content);
+						fclose($handle);
+						$transfer_ok = ftp_put($connection, $remote_file, $tmpfname, FTP_BINARY);
+						unlink($tmpfname);
+						break;
+					case 'ssh';
+						$transfer_ok = $connection->write(basename($filename), $content);
+						break;
+					default:
+						$transfer_ok = false;
+				}
+				if ($transfer_ok)
+				{
+					$this->message['message'][] = array('msg' => basename($filename) . ' ' . lang('has been transferred'));
+				}
+				else
+				{
+					$this->message['error'][] = array('msg' => lang('transfer failed'));
+				}
+			}
+			else
+			{
+				$this->message['error'][] = array('msg' => lang('transfer is not configured'));
+				$transfer_ok = true;
+			}
+			return $transfer_ok;
+
+		}
+
+		protected function phpftp_connect($config)
+		{
+			$server = $config->config_data['common']['host'];
+			$user = $config->config_data['common']['user'];
+			$password = $config->config_data['common']['password'];
+			$basedir = $config->config_data['export']['remote_basedir'];
+			$port = 22;
+
+			$connection = null;
+
+			switch ($config->config_data['common']['method'])
+			{
+				case 'ftp';
+					if ($connection = ftp_connect($server))
+					{
+						ftp_login($connection, $user, $password);
+					}
+					break;
+				case 'ssh';
+					$connection = new Filesystem(new SftpAdapter([
+						'host' => $server,
+						'port' => $port,
+						'username' => $user,
+						'password' => $password,
+						'root' => $basedir,
+						'timeout' => 10,
+					]));
+					break;
+			}
+			return $connection;
 		}
 
 		public function query()

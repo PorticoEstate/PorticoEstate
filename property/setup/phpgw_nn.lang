@@ -2316,6 +2316,7 @@ request show dates	property	nn	Behov: vis datoer
 request location level	property	nn	Behov: lokasjonsnivå
 request coordinator text	property	nn	Behov: koordinatortekst
 meter table	property	nn	Målertabell
+meter register	property	nn	Målerregister
 receive workorder status by sms	property	nn	Motta arbeidsordre status via SMS
 use acl for accessing location based information	property	nn	Bruk acl for å få tilgang til plasseringbasert informasjon
 bypass acl for accessing tickets	property	nn	Bypass acl for å få tilgang til meldinger

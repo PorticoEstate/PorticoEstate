@@ -27,10 +27,13 @@
 
 		function update_data( $values, $values_attribute = array() )
 		{
+			if(empty($values['location_code']))
+			{
+				return;
+			}
 
 			$location_id_maaler = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.11');
 
-//			$sql = "SELECT maaler_nr as maaler_nr FROM fm_entity_1_11 WHERE location_code='{$values['location_code']}'";
 			$sql = "SELECT json_representation->>'maaler_nr' as maaler_nr FROM fm_bim_item"
 				. " WHERE location_id = {$location_id_maaler}"
 				. " AND location_code='{$values['location_code']}'";
@@ -43,7 +46,6 @@
 				if ($maaler_nr)
 				{
 					$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
-//					$sql = "UPDATE fm_entity_2_17 SET maaler_nr= '{$maaler_nr}' WHERE location_code='{$values['location_code']}'";
 					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{maaler_nr}', '\"{$maaler_nr}\"', true)"
 						. " WHERE location_id = {$location_id_rapport}"
 						. " AND location_code='{$values['location_code']}'"
@@ -53,7 +55,6 @@
 			}
 
 			$location_id_bod = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
-//			$sql = "SELECT beskrivelse FROM fm_entity_1_14 WHERE location_code='{$values['location_code']}'";
 			$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse FROM fm_bim_item"
 				. " WHERE location_id = {$location_id_bod}"
 				. " AND location_code='{$values['location_code']}'";
@@ -66,7 +67,6 @@
 			{
 				if ($bod_beskrivelse)
 				{
-//					$sql = "UPDATE fm_entity_2_17 SET boder_antall= '{$bod_beskrivelse}' WHERE location_code='{$values['location_code']}'";
 					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{boder_antall}', '\"{$bod_beskrivelse}\"', true)"
 						. " WHERE location_id = {$location_id_rapport}"
 						. " AND location_code='{$values['location_code']}'"
@@ -96,7 +96,8 @@
 								{
 									$address = $this->db->db_addslashes($values['location_name']);
 								}
-								$this->soproject->update_power_meter($entry['value'], $values['location_code'], $address);
+
+								$id = $this->soproject->update_power_meter($entry['value'], $values['location_code'], $address);
 
 								$maaler_nr = $entry['value'];
 							}
@@ -107,7 +108,6 @@
 							{
 								$new_value = $entry['value'];
 
-//								$sql = "SELECT maaler_stand, id FROM fm_entity_1_11 WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'";
 								$sql = "SELECT json_representation->>'maaler_stand' as maaler_stand, id FROM fm_bim_item"
 									. " WHERE location_id = {$location_id_maaler}"
 									. " AND location_code='{$values['location_code']}'"
@@ -124,7 +124,6 @@
 										$historylog = CreateObject('property.historylog', 'entity_1_11');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
 
-//										$sql ="UPDATE fm_entity_1_11 SET maaler_stand = '{$new_value}' WHERE maaler_nr = '{$maaler_nr}' AND location_code ='{$values['location_code']}'";
 										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{maaler_stand}', '\"{$new_value}\"', true)"
 											. " WHERE location_id = {$location_id_maaler}"
 											. " AND location_code='{$values['location_code']}'";
@@ -140,7 +139,6 @@
 								$new_value = $entry['value'];
 
 								//	$location_id_bod
-//								$sql = "SELECT beskrivelse, id FROM fm_entity_1_14 WHERE location_code ='{$values['location_code']}'";
 								$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse, id FROM fm_bim_item"
 									. " WHERE location_id = {$location_id_bod}"
 									. " AND location_code='{$values['location_code']}'";
@@ -155,7 +153,6 @@
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_14');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-//										$sql = "UPDATE fm_entity_1_14 SET beskrivelse = '{$new_value}' WHERE location_code ='{$values['location_code']}'";
 										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{beskrivelse}', '\"{$new_value}\"', true)"
 											. " WHERE location_id = {$location_id_bod}"
 											. " AND location_code='{$values['location_code']}'";
@@ -182,7 +179,6 @@
 							{
 								$location_id_br_slokk_app = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.10');
 								$new_value = $entry['value'];
-//								$sql = "SELECT skiftet, id FROM fm_entity_1_10 WHERE location_code ='{$values['location_code']}'";
 								$sql = "SELECT json_representation->>'skiftet' as skiftet, id FROM fm_bim_item"
 									. " WHERE location_id = {$location_id_br_slokk_app}"
 									. " AND location_code='{$values['location_code']}'";
@@ -197,7 +193,6 @@
 									{
 										$historylog = CreateObject('property.historylog', 'entity_1_10');
 										$historylog->add('SO', $id, $new_value, false, $attrib_id, $besiktet_dato);
-										//									$sql = "UPDATE fm_entity_1_10 SET skiftet = '{$new_value}' WHERE location_code ='{$values['location_code']}'";
 										$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{skiftet}', '\"{$new_value}\"', true)"
 											. " WHERE location_id = {$location_id_br_slokk_app}"
 											. " AND location_code='{$values['location_code']}'";
@@ -288,4 +283,3 @@
 	}
 	$data_sync = new entity_data_sync();
 	$data_sync->update_data($values, $values_attribute, $action);
-

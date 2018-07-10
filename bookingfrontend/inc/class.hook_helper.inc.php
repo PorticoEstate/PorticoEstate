@@ -72,7 +72,7 @@
 			$orgs = array();
 
 			$bouser = CreateObject('bookingfrontend.bouser');
-			$org = CreateObject('bookingfrontend.uiorganization');
+
 			if($bouser->is_logged_in())
 			{
 				$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);

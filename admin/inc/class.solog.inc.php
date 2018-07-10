@@ -38,12 +38,12 @@
 			{
 				$records[] = array(
 					'log_date'        	=> $this->db->f('log_date'),
-					'log_account_lid' 	=> $this->db->f('log_account_lid'),
-					'log_app'         	=> $this->db->f('log_app'),
+					'log_account_lid' 	=> $this->db->f('log_account_lid', true),
+					'log_app'         	=> $this->db->f('log_app', true),
 					'log_severity'    	=> $this->db->f('log_severity'),
-					'log_file' 			=> $this->db->f('log_file'),
+					'log_file' 			=> $this->db->f('log_file', true),
 					'log_line'  		=> $this->db->f('log_line'),
-					'log_msg'  			=> $this->db->f('log_msg')
+					'log_msg'  			=> $this->db->f('log_msg',true)
 				);
 			}
 			return $records;
