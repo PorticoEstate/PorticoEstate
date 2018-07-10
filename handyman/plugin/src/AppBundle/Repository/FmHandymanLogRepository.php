@@ -17,11 +17,12 @@ class FmHandymanLogRepository extends EntityRepository
 	/**
 	 * @return mixed|null
 	 */
-	public function findLast() {
+	public function findLast()
+	{
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('lo');
 		$qb->from('AppBundle:FmHandymanLog', 'lo');
-		$qb->setMaxResults( 1 );
+		$qb->setMaxResults(1);
 		$qb->orderBy('lo.log_date', 'DESC');
 		try {
 			return $qb->getQuery()->getSingleResult();

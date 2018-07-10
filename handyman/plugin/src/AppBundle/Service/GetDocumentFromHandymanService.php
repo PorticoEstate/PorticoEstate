@@ -31,15 +31,15 @@ class GetDocumentFromHandymanService
 	public function retrieve_file_from_handyman(FmHandymanDocument $doc, string $path): string
 	{
 		$file_path = $path . '/' . $this->sanitize_file_name($doc->getFilePath());
-		if(file_exists($file_path)){
+		if (file_exists($file_path)) {
 			return $file_path;
 		}
 		$fp = fopen($file_path, "w");
-		$curl_url = $this->url.(string)$doc->getHsDocumentId();
+		$curl_url = $this->url . (string)$doc->getHsDocumentId();
 		$curl_options = array(
-			CURLOPT_FILE    => $fp,
-			CURLOPT_TIMEOUT =>  10, // set this to 10 seconds
-			CURLOPT_URL     => $curl_url,
+			CURLOPT_FILE => $fp,
+			CURLOPT_TIMEOUT => 10, // set this to 10 seconds
+			CURLOPT_URL => $curl_url,
 		);
 		$ch = curl_init();
 		curl_setopt_array($ch, $curl_options);

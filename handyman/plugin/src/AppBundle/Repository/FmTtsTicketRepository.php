@@ -14,7 +14,7 @@ class FmTtsTicketRepository extends EntityRepository
 {
 	public function findTicketsWithHandymanOrderIDasArray(array $ids)
 	{
-		if (count($ids) == 0){
+		if (count($ids) == 0) {
 			return array();
 		}
 		$qb = $this->getEntityManager()->createQueryBuilder();

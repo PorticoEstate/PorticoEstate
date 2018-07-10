@@ -42,7 +42,8 @@ class GwPreferenceRepository extends EntityRepository
 		return $result;
 	}
 
-	public function findUsersWithPropertyResourceNr(){
+	public function findUsersWithPropertyResourceNr()
+	{
 		$result = $this->getEntityManager()
 			->createQuery(
 				'SELECT p,a FROM AppBundle:GwPreference p JOIN p.account a WHERE p.preference_app LIKE \'property\' AND p.preference_value LIKE \'%:9:"ressursnr";s:%\' ORDER BY p.preference_owner ASC'
@@ -56,8 +57,8 @@ class GwPreferenceRepository extends EntityRepository
 		}
 
 		/* @var GwPreference $pref */
-		foreach ($result as $key=>$pref) {
-			if(empty($pref->getResourceNumber())){
+		foreach ($result as $key => $pref) {
+			if (empty($pref->getResourceNumber())) {
 				unset($result[$key]);
 			}
 		}

@@ -7,6 +7,7 @@
  */
 
 namespace AppBundle\Entity;
+
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -274,7 +275,6 @@ class GwVfs
 	{
 		$this->version = $version;
 	}
-
 
 
 }

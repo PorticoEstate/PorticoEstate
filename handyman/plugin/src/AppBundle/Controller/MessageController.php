@@ -70,7 +70,7 @@ class MessageController extends Controller
 //		return new Response('<html><body>Hello!</body></html>');
 
 		$response = new Response();
-		$response->setContent('<data><success>true</success><numberOfMessagesSaved>'.(string)$xml_message_service->get_number_of_tickets().'</numberOfMessagesSaved></data>');
+		$response->setContent('<data><success>true</success><numberOfMessagesSaved>' . (string)$xml_message_service->get_number_of_tickets() . '</numberOfMessagesSaved></data>');
 		$response->headers->set('Content-Type', 'application/xml');
 		return $response;
 	}
@@ -122,7 +122,7 @@ class MessageController extends Controller
 
 		$data = $this->collect_ticket_data($ticket);
 		$response = new JsonResponse();
-		$response->setContent(json_encode(array('data' => $data, 'success'=>true)));
+		$response->setContent(json_encode(array('data' => $data, 'success' => true)));
 		return $response;
 	}
 

@@ -19,52 +19,52 @@ use AppBundle\Entity\CustAttribute;
 
 class FmLocationService
 {
-    /* @var $em EntityManager */
-    private  $em;
+	/* @var $em EntityManager */
+	private $em;
 
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-    }
+	public function __construct(EntityManager $em)
+	{
+		$this->em = $em;
+	}
 
-    /**
-     * Return the value(s) for a given property, if the property is in both arrays it will look itself up in custom attributes and return its representation
-     *
-     * @param string $property
-     * @param array $objectVars
-     * @param array $customAttributes
-     * @return mixed
-     */
-    public static function get_value(string $property, array $objectVars, array $customAttributes)
-    {
-        if (!array_key_exists($property, $objectVars)) {
-            return null;
-        }
-        if (!array_key_exists($property, $customAttributes)) {
-            return $objectVars[$property];
-        }
+	/**
+	 * Return the value(s) for a given property, if the property is in both arrays it will look itself up in custom attributes and return its representation
+	 *
+	 * @param string $property
+	 * @param array $objectVars
+	 * @param array $customAttributes
+	 * @return mixed
+	 */
+	public static function get_value(string $property, array $objectVars, array $customAttributes)
+	{
+		if (!array_key_exists($property, $objectVars)) {
+			return null;
+		}
+		if (!array_key_exists($property, $customAttributes)) {
+			return $objectVars[$property];
+		}
 
-        $index = $objectVars[$property];
-        $type = $customAttributes[$property]['type'];
-        if (!$index){
-            return CustAttribute::getDefaultValue($type);
-        }
+		$index = $objectVars[$property];
+		$type = $customAttributes[$property]['type'];
+		if (!$index) {
+			return CustAttribute::getDefaultValue($type);
+		}
 
-        switch ($type){
-            case 'LB':
-                return $customAttributes[$property]['values'][$index];
-                break;
-            case 'R':
-            case 'CH':
-                if(!is_array($index)){
-                    $index = array_filter(explode(',', $index));
-                }
-                return array_intersect_key($customAttributes[$property]['values'],array_flip($index));
-                break;
-            default:
-                return CustAttribute::getDefaultValue($type);
-        }
-    }
+		switch ($type) {
+			case 'LB':
+				return $customAttributes[$property]['values'][$index];
+				break;
+			case 'R':
+			case 'CH':
+				if (!is_array($index)) {
+					$index = array_filter(explode(',', $index));
+				}
+				return array_intersect_key($customAttributes[$property]['values'], array_flip($index));
+				break;
+			default:
+				return CustAttribute::getDefaultValue($type);
+		}
+	}
 
 
 	public function get_buildings(): array
@@ -106,8 +106,8 @@ class FmLocationService
 	{
 		$users_with_agresso_id = $this->em->getRepository('AppBundle:GwPreference')->findUsersWithPropertyResourceNr();
 		/* @var HmManagerForBuildingView $manager */
-		foreach ($managers as $key=>&$manager) {
-			if(empty($manager->getContactId())){
+		foreach ($managers as $key => &$manager) {
+			if (empty($manager->getContactId())) {
 				unset($managers[$key]);
 				continue;
 			}
@@ -118,7 +118,7 @@ class FmLocationService
 					$manager->setAgressoId($pref_user->getResourceNumber());
 				}
 			}
-			if(empty($manager->getAgressoId())){
+			if (empty($manager->getAgressoId())) {
 				unset($managers[$key]);
 			}
 		}

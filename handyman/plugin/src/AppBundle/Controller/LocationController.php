@@ -39,12 +39,10 @@ class LocationController extends Controller
 		$normalizers = array(new ObjectNormalizer());
 		$serializer = new Serializer($normalizers, $encoders);
 		$xml = $serializer->serialize($buildings, 'xml');
-		if (!$this->save_xml($xml)){
+		if (!$this->save_xml($xml)) {
 			$reply = '<data><error>Unable to write xml file</error></data>';
-		}
-		else
-		{
-			$reply = '<data><success>File sucessfully written to disk '.$this->get_xml_file_path().'</success></data>';
+		} else {
+			$reply = '<data><success>File sucessfully written to disk ' . $this->get_xml_file_path() . '</success></data>';
 		}
 		$response = new Response();
 		$response->setContent($reply);
@@ -55,10 +53,10 @@ class LocationController extends Controller
 	private function save_xml(string $xml): bool
 	{
 		$file = fopen($this->get_xml_file_path(), "w");
-		if(!$file){
+		if (!$file) {
 			return false;
 		}
-		fwrite($file,$xml);
+		fwrite($file, $xml);
 		fclose($file);
 		return true;
 	}
@@ -79,8 +77,8 @@ class LocationController extends Controller
 	{
 		$blacklist = array('0000', '2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011');
 		/* @var FmBuildingExportView $building */
-		foreach($fm_buildings as $key=>$building){
-			if(in_array($building->getLoc1(),$blacklist)){
+		foreach ($fm_buildings as $key => $building) {
+			if (in_array($building->getLoc1(), $blacklist)) {
 				unset($fm_buildings[$key]);
 			}
 		}

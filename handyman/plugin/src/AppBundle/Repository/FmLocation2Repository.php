@@ -17,6 +17,6 @@ class FmLocation2Repository extends EntityRepository
 		return $this->getEntityManager()
 			->createQuery(
 				'SELECT b, l, s FROM AppBundle:FmLocation2 b LEFT JOIN b.location1 l LEFT JOIN b.street s WHERE b.locationCode = :location_code'
-			)->setParameter('location_code',$location_code)->getSingleResult();
+			)->setParameter('location_code', $location_code)->getSingleResult();
 	}
 }
