@@ -1,9 +1,9 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: eskil.saatvedt
- * Date: 08.03.2018
- * Time: 10:31
+ * This class handle request for messages in BK Bygg
+ * Import xml files to generate messages from handyman
+ * Show message data for schemabuilder
+ * Save status for schemabuilder
  */
 
 namespace AppBundle\Controller;
@@ -35,6 +35,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  */
 class MessageController extends Controller
 {
+	//region GET
 	/**
 	 * @Route("/import", name="message_re")
 	 **/
@@ -94,7 +95,9 @@ class MessageController extends Controller
 		$response->setContent(json_encode(array('data' => $data)));
 		return $response;
 	}
+	//endregion
 
+	//region POST
 	/**
 	 * Changing the status from shcema builder to tell if a message need documentation
 	 * @Method({"POST"})
@@ -125,7 +128,9 @@ class MessageController extends Controller
 		$response->setContent(json_encode(array('data' => $data, 'success' => true)));
 		return $response;
 	}
+	//endregion
 
+	//region Private functions
 	/**
 	 * @param FmTtsTicket $ticket
 	 * @return array
@@ -174,4 +179,5 @@ class MessageController extends Controller
 		$data['documentation_required'] = $ticket->getDocumentRequired();
 		return $data;
 	}
+	//endregion
 }

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * Controller file for Location extraction from handyman
+ * This file create an xml import file for Handyman located in directory specified in config.yml:handyman_file_dir
+ * It is meant for one-time use and can only be run from localhost
+ */
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\FmBuildingExportView;
@@ -20,11 +24,14 @@ use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
  */
 class LocationController extends Controller
 {
+	//region GET
 	/**
 	 * @Route("/xml", name="Location_xml")
 	 */
 	public function xml_export_action()
 	{
+		// Will fire exit() if not run from localhost
+		$this->hasAccess();
 		$reply = '';
 		/* @var FmLocationService $location_service */
 		$location_service = new FmLocationService($this->getDoctrine()->getManager());
@@ -48,6 +55,19 @@ class LocationController extends Controller
 		$response->setContent($reply);
 		$response->headers->set('Content-Type', 'application/xml');
 		return $response;
+	}
+	//endregion
+
+	//region Helperfunctions
+
+	private function hasAccess(){
+		if (!in_array(@$_SERVER['REMOTE_ADDR'], array(
+			'127.0.0.1',
+			'::1',
+		))) {
+			header('HTTP/1.0 403 Forbidden');
+			exit('This script is only accessible from localhost.');
+		}
 	}
 
 	private function save_xml(string $xml): bool
@@ -83,4 +103,5 @@ class LocationController extends Controller
 			}
 		}
 	}
+	//endregion
 }
