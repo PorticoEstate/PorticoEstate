@@ -48,7 +48,8 @@
 			$baseclassname,
 			$classname,
 			$input_file,
-			$file_map;
+			$file_map,
+			$all_files;
 
 		public function __construct()
 		{
@@ -238,6 +239,22 @@
 					fputcsv($fp, $row, ';');		
 				}
 				fclose($fp);
+
+
+				if($this->all_files)
+				{
+					foreach ($this->all_files as $_file => $dummy)
+					{
+						if($this->debug && is_file($_file))
+						{
+							$this->receipt['message'][] = array('msg' => "Filen finnes: '{$_file}'");
+						}
+						else
+						{
+							$this->receipt['error'][] = array('msg' => "Missing file: '{$_file}'");
+						}
+					}
+				}
 			}
 
 			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
@@ -287,15 +304,21 @@
 
 			foreach ($data as $entry)
 			{
+				$relative_file = ltrim($entry[7], '/');
 				$matrikkel_info = explode('/', $entry[0]);
+				$file = str_replace('\\', '/', "{$path}/{$relative_file}");//filnavn inkl fil-sti
+
+				$dokument_title = str_replace("{$path}/", '', $file);
+
+				$this->all_files[$file] = true;
 
 				$files[] = array(
 					'gnr'					=> $matrikkel_info[0],
 					'bnr'					=> $matrikkel_info[1],
 					'Lokasjonskode'			=> $entry[2],
 					'byggNummer'			=> $entry[1],
-					'file'					=> "{$path}/{$entry[7]}",//filnavn inkl fil-sti
-					'fileDokumentTittel'	=> basename($entry[7]),
+					'file'					=> $file,//filnavn inkl fil-sti
+					'fileDokumentTittel'	=> $dokument_title,
 					'fileKategorier'		=> $entry[6],
 					'fileBygningsdeler'		=> $entry[5] ? "{$entry[4]};$entry[5]" : $entry[4],
 					'fileFag'				=> $entry[3]
@@ -329,13 +352,17 @@
 					$processing_file =  basename($file,$extension) . 'process' ;
 					$lock =  basename($file,$extension) . 'lck' ;
 
+					if(!in_array($extension, $accepted_file_formats))
+					{
+						continue;
+					}
+
 					if(is_file("{$path}/{$lock}"))
 					{
 						$this->receipt['error'][] = array('msg' => "'{$path}/{$file}' er allerede behandlet");
 						return array();
 					}
-
-					if(in_array($extension, $accepted_file_formats) && !is_file("{$path}/{$lock}"))
+					else
 					{
 						touch("{$path}/{$processing_file}");
 						$input_file = "{$path}/{$file}";
@@ -415,7 +442,12 @@
 			$path_parts	= pathinfo($file);
 			$extension	= $path_parts['extension'];
 			$path		= $path_parts['dirname'];
-			$lock		= basename($file,$extension) . 'lck' ;
+			$lock		= basename($file) . '.lck' ;
+
+			if(is_file($file))
+			{
+				unset($this->all_files[$file]);
+			}
 
 			if(is_file("{$path}/{$lock}"))
 			{
@@ -448,13 +480,24 @@
 		function uploadFile( $gnr, $bnr, $byggNummer, $file, $DokumentTittel, $kategorier, $bygningsdeler, $fag, $lokasjonskode )
 		{
 
-			$accepted_file_formats = array('dwg', 'dxf', 'jpg', 'doc', 'docx', 'xls', 'xlsx',
-				'pdf', 'tif', 'gif');
+			$accepted_file_formats = array(
+				'dwg',
+				'dxf',
+				'jpg',
+				'doc',
+				'docx',
+				'xls',
+				'xlsx',
+				'pdf',
+				'tif',
+				'gif',
+//				'txt'
+				);
 			$extension = pathinfo($file, PATHINFO_EXTENSION);
 
 			if ($extension == null || $extension == "" || !in_array(strtolower($extension), $accepted_file_formats))
 			{
-				$this->receipt['error'][] = array('msg' => "Fileformat not accepted: {$extension}");
+				$this->receipt['error'][] = array('msg' => "{$file}: Fileformat not accepted: {$extension}");
 				return false;
 			}
 
@@ -494,6 +537,7 @@
 		 */
 		public function write( $file, $document_id = 0 )
 		{
+			$ok = false;
 			$filename = basename($file);
 
 			$bra5ServiceFile = new Bra5ServiceFile();
@@ -504,19 +548,23 @@
 			}
 			else
 			{
-				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
+//				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
+				$this->receipt['error'][] = array('msg' => "{$file}: lagring av fil feilet, document_id: {$document_id}");
 			}
 
-			$new_string = chunk_split(base64_encode(file_get_contents($file)), 1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
-
-			$content_arr = explode("\r\n", $new_string);
-
-			foreach ($content_arr as $content_part)
+			if($transaction_id)
 			{
-				$bra5ServiceFile->fileTransferSendChunk(new Bra5StructFileTransferSendChunk($this->secKey, $transaction_id, $content_part));
-			}
+				$new_string = chunk_split(base64_encode(file_get_contents($file)), 1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
 
-			$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
+				$content_arr = explode("\r\n", $new_string);
+
+				foreach ($content_arr as $content_part)
+				{
+					$bra5ServiceFile->fileTransferSendChunk(new Bra5StructFileTransferSendChunk($this->secKey, $transaction_id, $content_part));
+				}
+
+				$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
+			}
 
 			if ($ok)
 			{
@@ -524,7 +572,7 @@
 			}
 			else
 			{
-				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
+				$this->file_map[] = array($document_id, "Feilet: {$file}");
 			}
 
 			return $ok;
@@ -593,11 +641,11 @@
 			$bygningsdelAttrib->setName("Bygningsdel");
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
 			$attribute_arr[] = $bygningsdelAttrib->build();
-
-//			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-//			$merknad->setName("Kapittel");
-//			$merknad->setStringValue("");
-//			$attribute_arr[] = $merknad->build();
+		
+			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$merknad->setName("Merknad");
+			$merknad->setStringValue("P nr 3449 Rehab Møhlenpris fase I 2018.");
+			$attribute_arr[] = $merknad->build();
 
 			$attribs->setAttribute($attribute_arr);
 

@@ -1,6 +1,6 @@
 <!-- BEGIN loglevels -->
 <h1>{lang_set_levels}</h1>
-<table>
+<table class="pure-table">
 	<tbody>
 		<tr class="{tr_class}">
 			<td>{lang_global_level}</td>
@@ -9,7 +9,7 @@
  		<tr>
 			<td>{lang_module_level}</td>
 			<td>
-				<table>
+				<table class="pure-table pure-table-bordered">
 					{module_list}
 					{module_add_row}
 				</table>
@@ -18,7 +18,7 @@
 		<tr>
 			<td>{lang_user_level}</td>
 			<td>
-				<table>
+				<table class="pure-table">
 					{user_list}
 					{user_add_row}
 				</table>

@@ -246,6 +246,14 @@
 		public function edit()
 		{
 			$id = phpgw::get_var('id', 'int');
+
+			$session_org_id = phpgw::get_var('session_org_id');
+
+			if(!$id && $session_org_id)
+			{
+				$id = CreateObject('bookingfrontend.uiorganization')->get_orgid($session_org_id);
+			}
+
 			$organization = $this->bo->read_single($id);
 			$organization['id'] = $id;
 			$organization['organizations_link'] = self::link(array('menuaction' => 'booking.uiorganization.index'));
