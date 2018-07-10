@@ -2,10 +2,10 @@
 
 use Symfony\Component\HttpFoundation\Request;
 
-require __DIR__.'/../symfony/vendor/autoload.php';
-require_once __DIR__ . '/../symfony/app/AppKernel.php';
+require __DIR__ . '/../plugin/vendor/autoload.php';
+require_once __DIR__ . '/../plugin/app/AppKernel.php';
 if (PHP_VERSION_ID < 70000) {
-    include_once __DIR__.'/../symfony/var/bootstrap.php.cache';
+    include_once __DIR__ . '/../plugin/var/bootstrap.php.cache';
 }
 
 $kernel = new AppKernel('prod', false);

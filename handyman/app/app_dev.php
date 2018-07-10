@@ -19,9 +19,9 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
     header('HTTP/1.0 403 Forbidden');
     exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
 }
-require __DIR__.'/../symfony/vendor/autoload.php';
-require_once __DIR__ . '/../symfony/var/bootstrap.php.cache';
-require_once __DIR__ . '/../symfony/app/AppKernel.php';
+require __DIR__ . '/../plugin/vendor/autoload.php';
+require_once __DIR__ . '/../plugin/var/bootstrap.php.cache';
+require_once __DIR__ . '/../plugin/app/AppKernel.php';
 Debug::enable();
 $kernel = new AppKernel('dev', true);
 
