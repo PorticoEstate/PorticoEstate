@@ -62,6 +62,7 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/sample.css";
+	$stylesheets[] = "/phpgwapi/templates/aalesund/css/calendar.css";
 
 
 

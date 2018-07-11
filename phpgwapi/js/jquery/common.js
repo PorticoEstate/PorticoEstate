@@ -1781,9 +1781,20 @@ function frontendScheduleDateColumn(data, col, date)
 		{
 			name = formatScheduleShorten('Privat arr.', 9);
 		}
+		classes = "cellInfo" + " " + type;
+		
+		if(name === "closed" || name === "Stengt"){
+			classes+= " " + "calender-closed";
+		} else if (type === "allocation"){
+			classes += " " + "calender-allocation";
+		} else if (type === "booking"){
+			classes += " " + "calender-booking";
+		} else if (type === "event"){
+			classes += " " + "calender-event";
+		}
 
 		text = name;
-		classes = "cellInfo " + colorCell + " " + type;
+		
 		trFunction.push(
 		{
 			event: 'click',
@@ -1791,6 +1802,13 @@ function frontendScheduleDateColumn(data, col, date)
 			{
 				var resource = $(this).parent().attr('resource');
 				schedule.showInfo(data[k]['info_url'], resource);
+
+				// close modal on overlay click
+				setTimeout(function() {
+					document.querySelector(".ui-widget-overlay").addEventListener("click", function() {
+						document.querySelector(".ui-dialog-titlebar-close").click();
+					});
+				}, 200);
 			}
 		}
 		);
@@ -1798,7 +1816,7 @@ function frontendScheduleDateColumn(data, col, date)
 	else
 	{
 		text = lang['free'] || "free";
-		classes = "free";
+		classes = "calender-free";
 		trFunction.push(
 		{
 			event: 'click',
