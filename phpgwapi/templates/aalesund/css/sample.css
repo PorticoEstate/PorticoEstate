@@ -339,6 +339,10 @@ dl.proplist{
     padding-bottom: 1rem;
 }
 
+.navbar-toggler{
+	margin-left:15px;
+}
+
 .header-style-m{
     font-family: Raleway;
     font-size: 20pt;
