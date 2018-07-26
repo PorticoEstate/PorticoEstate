@@ -284,8 +284,9 @@ SEARCH PAGE STYLE
 .dropdown .btn:focus,
 .dropdown .show > .dropdown .btn-secondary.dropdown-toggle
 {
-    background-color: transparent;
-    color: #000;
+    background-color: transparent !important;
+    color: #000 !important;
+    min-width: 10em;
     border: 1px #008DD1 solid;
     border-radius: 0;
 }
@@ -359,11 +360,17 @@ input:focus {
 
 .badge {
     margin: 0 0.5em 0.5em 0;
+    padding: 0.5em;
     color: #fff;
 }
 
 .badge-default {
-    background-color: #414141 !important; 
+    background-color: #414141; 
+}
+
+.badge-default:hover {
+    background-color: #5a5a5a;
+    color: #82c1fc;
 }
 
 .bygg-li {

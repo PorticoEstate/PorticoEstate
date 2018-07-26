@@ -1,6 +1,8 @@
 var urlParams = [];
 CreateUrlParams(window.location.search);
-var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+//var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
+
 var contacts = ko.observableArray();
 var groups = ko.observableArray();
 //ko.applyBindings({contacts, groups});
@@ -12,7 +14,8 @@ $(document).ready(function ()
 
 function PopulateOrganizationData() {
 
-    getJsonURL = baseURL+"?menuaction=bookingfrontend.uiorganization.show&id="+urlParams['id']+"&phpgw_return_as=json";
+ //   getJsonURL = baseURL+"?menuaction=bookingfrontend.uiorganization.show&id="+urlParams['id']+"&phpgw_return_as=json";
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiorganization.show", id:urlParams['id']}, true);
 
     $.getJSON(getJsonURL, function(result){
         $("#main-item-header").text(result.organization.name);
@@ -37,7 +40,8 @@ function PopulateOrganizationData() {
         
     });
     
-    getJsonURL = baseURL+"?menuaction=bookingfrontend.uigroup.index&filter_organization_id="+urlParams['id']+"&phpgw_return_as=json";
+//    getJsonURL = baseURL+"?menuaction=bookingfrontend.uigroup.index&filter_organization_id="+urlParams['id']+"&phpgw_return_as=json";
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uigroup.index", filter_organization_id:urlParams['id']}, true);
 
     $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.data.length; i++) {

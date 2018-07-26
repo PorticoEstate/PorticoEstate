@@ -1,7 +1,5 @@
 <xsl:template match="data" xmlns:php="http://php.net/xsl">
-    
-    
-    
+   
     <div class="jumbotron jumbotron-fluid">
         <div class="container searchContainer my-container-top-fix">
             <h2 class="text-center font-weight-bold">Bygg og lokaler til utleie</h2>
@@ -20,40 +18,17 @@
         
         <div class="row justify-content-center">
             <div class="col-auto dropdown">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                    Leie lokal til idrett
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Møterom</a>
-                    <a class="dropdown-item" href="#">Styrkerom</a>
-                    <a class="dropdown-item" href="#">Aktivitetssal</a>
-                </div>
+                <select class="btn btn-default dropdown-toggle custom-select" data-bind="options: firstLevel, optionsText: 'text', value: selectedFirstLevel, optionsCaption: 'Velg'">
+                </select>
+            </div>
+            <div class="col-auto dropdown" data-bind="with: selectedFirstLevel">
+                <select class="btn btn-default dropdown-toggle custom-select" data-bind="options: secondLevel, optionsText: 'text', value: $root.selectedFirstList, optionsCaption: 'Velg'">
+                </select>
             </div>
 
-            <div class="col-auto dropdown">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                    Leie andre lokaler
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">1</a>
-                    <a class="dropdown-item" href="#">2</a>
-                    <a class="dropdown-item" href="#">3</a>
-                </div>
-            </div>
-            
-            <div class="col-auto dropdown">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-                    Leie utendør
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">1</a>
-                    <a class="dropdown-item" href="#">2</a>
-                    <a class="dropdown-item" href="#">3</a>
-                </div>
-            </div>
         </div>
         
-        
+
     </div>
   
     <div class="container pageResults">
@@ -120,21 +95,15 @@
             
             <div class="row filter-bar">
                 <div class="col-auto dropdown">
-                    <!--Tilrette lagt for -->
+                    <!--Filter based results -->
                     <select id="filterActivity" class="custom-select" data-bind="options: filters, value: filter"></select>
                 </div>
 
                 <div class="col-auto dropdown">
-                    <!-- Bydel -->
+                    <!-- Filter based results -->
                     <select id="filterDist" class="custom-select" data-bind="options: filtersDist, value: filterDist"></select>
                 </div>
-                
-                
-                <div class="col-auto float-right">
-                    <a href="#" class="filter-link">Vis i nærheten</a>
-                    <a href="#" class="filter-link">Vis i kart</a>
-                    <div class="filter-link"><i class="far fa-calendar-alt"></i> <input class="datepicker" data-provide="datepicker" placeholder=" Tilgjenglig dato"/></div>
-                </div>
+
             </div>
             
             <div class="row" id="result-items" data-bind="foreach: filteredItems">
@@ -156,30 +125,13 @@
                             <div class="col-8 desc">
                                 <span class="font-weight-bold" data-bind="text: name"></span>
                                 <h4 class="font-weight-bold" data-bind="text: activity_name"></h4>
-                                <div data-bind="foreach: tags">
-                                    <span class="badge badge-pill badge-default text-uppercase" data-bind="text: tag"></span>
+                                <div data-bind="foreach: tagItems">
+                                    <span class="badge badge-pill badge-default text-uppercase" data-bind="text: $rawData, click: selectThisTag" ></span>
                                 </div>
                             </div>
                         </div>
                     </a>
                 </div>
-                <!--
-                <div class="col-lg-6">
-                    <a href="/PorticoEstate/bookingfrontend/?menuaction=bookingfrontend.uibuilding.show" class="custom-card-link">
-                        <div class="row custom-card">
-                            <div class="col-3 date-circle">
-                                <img width="90" height="90" src="https://www.shareicon.net/download/2016/08/04/806836_sports_512x512.png"/>
-                            </div>
-                            <div class="col-8 desc">
-                                <span class="font-weight-bold">TASTAHALLEN</span>
-                                <h4 class="font-weight-bold">Svømmehall</h4>
-                                <span class="badge badge-pill badge-default text-uppercase">prosjektor</span>
-                                <span class="badge badge-pill badge-default text-uppercase">20 pers</span>
-                                <span class="badge badge-pill badge-default text-uppercase">kjøkken</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>-->
             </div>
         
         </div>
@@ -191,8 +143,7 @@
         <script type="text/javascript">
             
             var script = document.createElement("script"); 
-            script.src = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/" + "js/base/search.js";
-
+			script.src = strBaseURL.split('?')[0] + "bookingfrontend/js/base/search.js";
             document.head.appendChild(script);			
         </script>
   

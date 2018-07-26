@@ -1,11 +1,35 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+* Emulate phpGW's link function
+*
+* @param String strURL target URL
+* @param Object oArgs Query String args as associate array object
+* @param bool bAsJSON ask that the request be returned as JSON (experimental feature)
+* @returns String URL
+*/
+function phpGWLink(strURL, oArgs, bAsJSON)
+{
+	var arURLParts = strBaseURL.split('?');
+	var strNewURL = arURLParts[0] + strURL + '?';
+
+	if ( oArgs == null )
+	{
+		oArgs = new Object();
+	}
+
+	for (obj in oArgs)
+	{
+		strNewURL += obj + '=' + oArgs[obj] + '&';
+	}
+	strNewURL += arURLParts[1];
+
+	if ( bAsJSON )
+	{
+		strNewURL += '&phpgw_return_as=json';
+	}
+	return strNewURL;
+}
 
 
-//JqueryPortico = {};
 function showContent() {
     $('.showMe').css("display", "");
 }
