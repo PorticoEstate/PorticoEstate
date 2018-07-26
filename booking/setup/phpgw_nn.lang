@@ -721,25 +721,25 @@ approve	booking	nn	Godkjenn
 return to application	booking	nn	Tilbake til søknad
 application add	booking	nn	Ny søknad
 duplicate in name	booking	nn	Navnet finnest frå før
-At least one activity must be selected	booking	no	Det må velges minst én aktivitet
-Edit activities	booking	no	Rediger aktiviteter
-Edit facilities	booking	no	Rediger fasiliteter
-edit facility	booking	no	Rediger fasilitet
-edit resource activities	booking	no	Rediger ressursaktiviteter
-edit resource category	booking	no	Rediger ressurskategori
-edit resource facilities	booking	no	Rediger ressursfasiliteter
-Facilities	booking	no	Fasiliteter
-Facility	booking	no	Fasilitet
-Front page filtering	booking	no	Filtrering på forside
-Main activity	booking	no	Hovedaktivitet
-New facility	booking	no	Ny fasilitet
-New resource category	booking	no	Ny ressurskategori
-Not a top level activity	booking	no	Det er valgt aktiviteter som ikke er på toppnivå
-One filter box per line	booking	no	Bare én filtreringsboks per linje
-Opening hours	booking	no	Åpningstider
-Please select a resource category	booking	no	Velg en ressurskategori
+At least one activity must be selected	booking	nn	Det må velges minst én aktivitet
+Edit activities	booking	nn	Rediger aktiviteter
+Edit facilities	booking	nn	Rediger fasiliteter
+edit facility	booking	nn	Rediger fasilitet
+edit resource activities	booking	nn	Rediger ressursaktiviteter
+edit resource category	booking	nn	Rediger ressurskategori
+edit resource facilities	booking	nn	Rediger ressursfasiliteter
+Facilities	booking	nn	Fasiliteter
+Facility	booking	nn	Fasilitet
+Front page filtering	booking	nn	Filtrering på forside
+Main activity	booking	nn	Hovedaktivitet
+New facility	booking	nn	Ny fasilitet
+New resource category	booking	nn	Ny ressurskategori
+Not a top level activity	booking	nn	Det er valgt aktiviteter som ikke er på toppnivå
+One filter box per line	booking	nn	Bare én filtreringsboks per linje
+Opening hours	booking	nn	Åpningstider
+Please select a resource category	booking	nn	Velg en ressurskategori
 Resource categories	booking	nn	Ressurskategorier
-Resource category	booking	no	Ressurskategori
+Resource category	booking	nn	Ressurskategori
 Send as sms	booking	nn	Send som sms
 Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner
-Text and activity IDs for each filter box	booking	no	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
+Text and activity IDs for each filter box	booking	nn	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
