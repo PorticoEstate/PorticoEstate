@@ -62,6 +62,7 @@ JS;
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/bootstrap.css";
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/ionicons.css";
 	$stylesheets[] = "/phpgwapi/templates/aalesund/css/sample.css";
+	$stylesheets[] = "/phpgwapi/templates/aalesund/css/calendar.css";
 
 
 
@@ -274,7 +275,7 @@ CSS;
 
 	$bouser = CreateObject('bookingfrontend.bouser');
 	$org = CreateObject('bookingfrontend.uiorganization');
-	$orgid = $org->get_orgid($bouser->orgnr);
+
 	if($bouser->is_logged_in())
 	{
 		$orgs = phpgwapi_cache::session_get($bouser->get_module(), $bouser::ORGARRAY_SESSION_KEY);
@@ -312,7 +313,7 @@ CSS;
 		{
 			$tpl_vars['login_text_org'] = $bouser->orgname;
 			$tpl_vars['login_text'] = lang('Logout');
-			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $orgid));
+			$tpl_vars['org_url'] = $GLOBALS['phpgw']->link("/{$app}/", array('menuaction'=>'bookingfrontend.uiorganization.show', 'id'=> $org->get_orgid($bouser->orgnr)));
 		}
 		$tpl_vars['login_text'] = $bouser->orgnr . ' :: ' . lang('Logout');
 		$tpl_vars['login_url'] = 'logout.php';

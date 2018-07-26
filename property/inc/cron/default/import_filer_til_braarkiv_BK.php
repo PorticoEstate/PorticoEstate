@@ -243,9 +243,16 @@
 
 				if($this->all_files)
 				{
-					foreach ($this->all_files as $missing_file => $dummy)
+					foreach ($this->all_files as $_file => $dummy)
 					{
-						$this->receipt['error'][] = array('msg' => "Missing file: '{$missing_file}'");
+						if($this->debug && is_file($_file))
+						{
+							$this->receipt['message'][] = array('msg' => "Filen finnes: '{$_file}'");
+						}
+						else
+						{
+							$this->receipt['error'][] = array('msg' => "Missing file: '{$_file}'");
+						}
 					}
 				}
 			}
@@ -297,8 +304,9 @@
 
 			foreach ($data as $entry)
 			{
+				$relative_file = ltrim($entry[7], '/');
 				$matrikkel_info = explode('/', $entry[0]);
-				$file = str_replace('\\', '/', "{$path}/{$entry[7]}");//filnavn inkl fil-sti
+				$file = str_replace('\\', '/', "{$path}/{$relative_file}");//filnavn inkl fil-sti
 
 				$dokument_title = str_replace("{$path}/", '', $file);
 
@@ -529,6 +537,7 @@
 		 */
 		public function write( $file, $document_id = 0 )
 		{
+			$ok = false;
 			$filename = basename($file);
 
 			$bra5ServiceFile = new Bra5ServiceFile();
@@ -539,19 +548,23 @@
 			}
 			else
 			{
-				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
+//				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
+				$this->receipt['error'][] = array('msg' => "{$file}: lagring av fil feilet, document_id: {$document_id}");
 			}
 
-			$new_string = chunk_split(base64_encode(file_get_contents($file)), 1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
-
-			$content_arr = explode("\r\n", $new_string);
-
-			foreach ($content_arr as $content_part)
+			if($transaction_id)
 			{
-				$bra5ServiceFile->fileTransferSendChunk(new Bra5StructFileTransferSendChunk($this->secKey, $transaction_id, $content_part));
-			}
+				$new_string = chunk_split(base64_encode(file_get_contents($file)), 1048576);// Definerer en bufferstørrelse/pakkestørrelse på ca 1mb.
 
-			$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
+				$content_arr = explode("\r\n", $new_string);
+
+				foreach ($content_arr as $content_part)
+				{
+					$bra5ServiceFile->fileTransferSendChunk(new Bra5StructFileTransferSendChunk($this->secKey, $transaction_id, $content_part));
+				}
+
+				$ok = !!$bra5ServiceFile->fileTransferSendChunkedEnd(new Bra5StructFileTransferSendChunkedEnd($this->secKey, $transaction_id));
+			}
 
 			if ($ok)
 			{
@@ -559,7 +572,7 @@
 			}
 			else
 			{
-				trigger_error(nl2br($bra5ServiceFile->getLastError()), E_USER_ERROR);
+				$this->file_map[] = array($document_id, "Feilet: {$file}");
 			}
 
 			return $ok;
@@ -629,10 +642,10 @@
 			$bygningsdelAttrib->setStringArrayValue(explode(";", $bygningsdeler));
 			$attribute_arr[] = $bygningsdelAttrib->build();
 		
-//			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
-//			$merknad->setName("Merknad");
-//			$merknad->setStringValue("Sandviksveien 95. Ombygging 2015.");
-//			$attribute_arr[] = $merknad->build();
+			$merknad = new AttributeFactory(Bra5EnumBraArkivAttributeType::VALUE_BRAARKIVSTRING);
+			$merknad->setName("Merknad");
+			$merknad->setStringValue("P nr 3449 Rehab Møhlenpris fase I 2018.");
+			$attribute_arr[] = $merknad->build();
 
 			$attribs->setAttribute($attribute_arr);
 

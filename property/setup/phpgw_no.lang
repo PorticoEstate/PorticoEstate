@@ -2317,6 +2317,7 @@ request show dates	property	no	Behov: vis datoer
 request location level	property	no	Behov: lokasjonsnivå
 request coordinator text	property	no	Behov: koordinatortekst
 meter table	property	no	Målertabell
+meter register	property	no	Målerregister
 receive workorder status by sms	property	no	Motta arbeidsordre status via SMS
 use acl for accessing location based information	property	no	Bruk acl for å få tilgang til plasseringbasert informasjon
 bypass acl for accessing tickets	property	no	Bypass acl for å få tilgang til meldinger

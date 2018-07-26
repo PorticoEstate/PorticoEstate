@@ -171,6 +171,12 @@
 
 	if ($fileid)
 	{
+
+		$Bra5ServiceGet = new Bra5ServiceGet();
+
+		$Bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
+		$filename = $Bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
+
 		$get_chunked = true;
 		if($get_chunked)
 		{
@@ -195,7 +201,7 @@
 			$Bra5ServiceFile->fileTransferRequestChunkedEnd(new Bra5StructFileTransferRequestChunkedEnd($secKey, $_fileid));
 
 			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header("{$fileid}.pdf", 'application/pdf');
+			$browser->content_header($filename);
 
 			// Read what we have written.
 			rewind($fp);
@@ -208,12 +214,8 @@
 			$bra5ServiceGet->getFileAsByteArray(new Bra5StructGetFileAsByteArray($secKey, $fileid));
 			$file_result = $bra5ServiceGet->getResult()->getFileAsByteArrayResult;
 			$file = base64_decode($file_result->getFileAsByteArrayResult);
-			/*
-			  $bra5ServiceGet->getFileName(new Bra5StructGetFileName($secKey, $fileid));
-			  $filename = $bra5ServiceGet->getResult()->getFileNameResult->getFileNameResult;
-			 */
 			$browser = CreateObject('phpgwapi.browser');
-			$browser->content_header("{$fileid}.pdf", 'application/pdf');
+			$browser->content_header($filename);
 
 			echo $file;
 

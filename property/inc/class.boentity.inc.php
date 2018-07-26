@@ -711,19 +711,19 @@ JS;
 
 		function save( $values, $values_attribute, $action = '', $entity_id, $cat_id )
 		{
-			//while (is_array($values['location']) && list(, $value) = each($values['location']))
-                        if (is_array($values['location']))
-                        {
-                            foreach($values['location'] as $value)
-			{
-				if ($value)
+           if (is_array($values['location']))
+           {
+				$location = array();
+				foreach($values['location'] as $value)
 				{
-					$location[] = $value;
+					if ($value)
+					{
+						$location[] = $value;
+					}
 				}
 			}
-                        }
 
-			$values['location_code'] = (isset($location) ? implode("-", $location) : '');
+			$values['location_code'] = !empty($location) ? implode('-', $location) : '';
 
 			$values['date'] = $this->bocommon->date_to_timestamp($values['date']);
 

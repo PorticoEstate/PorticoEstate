@@ -50,7 +50,7 @@ and open the template in the editor.
 
 	</head>
 	<body class="">
-		<nav class="navbar navbar-expand-md">
+		<nav class="navbar navbar-light navbar-expand-md">
 
 				<div class="container header-container">
 					<button class="navbar-toggler mr-auto active" type="button" data-toggle="collapse" data-target="#Navbar">
