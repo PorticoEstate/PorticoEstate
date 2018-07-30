@@ -87,6 +87,34 @@
 					);
 			}
 
+			$html =<<<HTML
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<style>
+					table, th, td {
+						border: 1px solid black;
+					}
+					th, td {
+						padding: 10px;
+					}
+					th {
+						text-align: left;
+					}
+					</style>
+				</head>
+				<body>
+					<table>
+					 <caption>Manglende ordreregistering i Agresso fra Portico</caption>
+					<tr>
+						<th>Ordre</th>
+						<th>Dato</th>
+						<th>Bestillingssum</th>
+						<th>Bestiller</th>
+						<th>#</th>
+					</tr>
+HTML;
+			$i = 0;
 			foreach ($orderserie as $entry)
 			{
 				$order_id = $entry['order_id'];
@@ -99,8 +127,41 @@
 				else
 				{
 					$this->receipt['error'][] = array('msg' => "Ordre: {$order_id}; dato: {$entry['date']}; budsjett:{$entry['budget']}; bestiller: {$entry['account_lastname']}, {$entry['account_firstname']};  er ikke registrert i Agresso");
+
+				$i++;
+
+				$html .=<<<HTML
+					<tr>
+						<td>{$order_id}</td>
+						<td>{$entry['date']}</td>
+						<td>{$entry['budget']}</td>
+						<td>{$entry['account_lastname']}, {$entry['account_firstname']}</td>
+						<td>{$i}</td>
+					</tr>
+HTML;
 				}
 			}
+
+			$html .=<<<HTML
+					</table>
+				</body>
+			</html>
+HTML;
+
+			$subject = 'Manglende ordreregistering i Agresso fra Portico';
+
+			$toarray = array('hc483@bergen.kommune.no');
+			$to = implode(';', $toarray);
+
+			try
+			{
+				$rc = CreateObject('phpgwapi.send')->msg('email', $to, $subject, $html, '', $cc='', $bcc='', 'hc483@bergen.kommune.no', 'Ikke svar', 'html');
+			}
+			catch (Exception $e)
+			{
+				$this->receipt['error'][] = array('msg' => $e->getMessage());
+			}
+
 
 			$msg = 'Tidsbruk: ' . (time() - $start) . ' sekunder';
 			$this->cron_log($msg, $cron);
