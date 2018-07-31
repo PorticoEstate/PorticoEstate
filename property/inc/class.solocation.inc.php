@@ -949,7 +949,7 @@
 					{
 						if(strpos($query, ' '))
 						{
-							$query_arr = explode(' ', $query);
+							$query_arr = explode(" ", str_replace("  ", " ", $query));
 							$sub_query = " OR to_tsvector(fm_tenant.first_name || ' ' || fm_tenant.last_name ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
 							$sub_query .= " OR to_tsvector(fm_tenant.last_name || ' ' || fm_tenant.first_name ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
 						}
@@ -961,9 +961,9 @@
 
 					if ($sub_query_street)
 					{
-						if(strpos($query, ' '))
+						if(strpos($query, " "))
 						{
-							$query_arr = explode(' ', $query);
+							$query_arr = explode(" ", str_replace("  ", " ", $query));
 							$sub_query .= " OR to_tsvector(fm_streetaddress.descr || ' ' || street_number ) @@ to_tsquery('{$query_arr[0]} & {$query_arr[1]}')";
 						}
 						else
