@@ -496,7 +496,7 @@
 			foreach ($workorder as &$entry)
 			{
 				$entry['tender_delay'] = phpgwapi_datetime::get_working_days($entry['tender_deadline'], $entry['tender_received']);
-				$entry['end_date_delay'] = phpgwapi_datetime::get_working_days($entry['end_date'], $entry['inspection_on_completion']);
+				$entry['end_date_delay'] = round(phpgwapi_datetime::get_working_days($entry['end_date'], $entry['inspection_on_completion'] ? $entry['inspection_on_completion'] : time()));
 
 				//Formatting
 				$entry['entry_date'] = $GLOBALS['phpgw']->common->show_date($entry['entry_date'], $dateformat);
