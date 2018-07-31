@@ -211,11 +211,10 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     if (m == resourceIds.length) {
                         events = eventsArray;
                         events.sort(compare);
-                        setTimeout(() => {
+                        setTimeout(function() {
                             events.reverse();
                             GenerateCalendarForEvents(date);
-                        }, 1000);
-                        
+                        }, 1000);    
                         $(".calendar-tool").removeClass("invisible");
                         
                     }
