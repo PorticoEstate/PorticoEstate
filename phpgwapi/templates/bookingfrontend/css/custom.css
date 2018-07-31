@@ -550,7 +550,7 @@ BUILDING PAGE STYLE
 .building-accordion {
     width: 100%;
 }
-
+.tooltip { pointer-events: none; }
 .building-images img {
     margin-bottom: 1em;
 }
@@ -562,6 +562,8 @@ BUILDING PAGE STYLE
 .scheduler-event-disabled {
     background-image: none !important;
     color: #fff !important;
+    opacity: 1 !important;
+    max-width: 100%;
 }
 
 
