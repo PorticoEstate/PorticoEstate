@@ -1442,7 +1442,7 @@
 				$id = $soentity->_save_eav( $data, $location_id_meter_register );
 
 				$num = sprintf("%04s", $id);
-				$this->db->query("UPDATE"
+				$this->db->query("UPDATE fm_bim_item SET"
 					. " json_representation=jsonb_set(json_representation, '{num}', '\"{$num}\"', true)"
 					. " WHERE location_id = {$location_id_meter_register}"
 					. " AND id='{$id}'", __LINE__, __FILE__);

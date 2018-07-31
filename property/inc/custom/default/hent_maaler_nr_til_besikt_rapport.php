@@ -43,9 +43,9 @@
 
 			if ($action != 'edit')
 			{
+				$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
 				if ($maaler_nr)
 				{
-					$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
 					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{maaler_nr}', '\"{$maaler_nr}\"', true)"
 						. " WHERE location_id = {$location_id_rapport}"
 						. " AND location_code='{$values['location_code']}'"
