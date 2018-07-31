@@ -18,95 +18,194 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	phpgw::import_class('addressbook.catalog_manager');
+	//phpgw::import_class('addressbook.catalog_manager');
+	phpgw::import_class('phpgwapi.uicommon');
 
-	class addressbook_uicatalog_contact_note_type extends addressbook_catalog_manager
+	class addressbook_uicatalog_contact_note_type extends phpgwapi_uicommon
 	{
-		var $public_functions = array('view' => True);
-		var $modify = False;
+		var $public_functions = array
+		(
+			'view' => True,
+			'save' => True,
+			'delete' => True,
+			'edit' => True
+		);
+		
+		private $receipt = array();
 
 		function __construct()
 		{
 			parent::__construct();
 
 			$this->bo = CreateObject('addressbook.bocatalog_contact_note_type');
-
-			$this->form_action = array('menuaction' => 'addressbook.uicatalog_contact_note_type.view');
-			$this->catalog_name = 'note_types';
-			$this->headers = array('Type', 'Edit', 'Delete');
-			$this->array_name = 'note_types_array';
-			$this->index = 'key_note_id';
-			$this->title = 'Notes Type - Catalog';
-			$this->catalog_button_name = 'note_types_add_row';
-			$this->key_edit_name = 'note_type_id';
-			$this->num_cols = 1;
-
-			$this->form_fields = array(1 => array('Type', $this->get_column_data(
-								      array('type' => 'text',
-									    'name' => 'entry[note_description]',
-									    'value'=> $this->entry['note_description']))));
-
-			$this->objs_data = array('value'=> array('type' => 'data',
-								 'field' => 'note_description'),
-						 'edit' => array('type' => 'link',
-								 'mode' => 'edit',
-								 'key'  => 'note_type_id',
-								 'action'=> 'note_types_edit_row',
-								 'extra'=> ''),
-						 'delete'=>array('type' => 'link',
-								 'mode' => 'delete',
-								 'key'  => 'note_type_id',
-								 'action'=> 'note_types_del_row',
-								 'extra'=> ''));
+			$this->template	= &$GLOBALS['phpgw']->template;
 		}
 
 		function view()
 		{
-			$this->get_vars();
-			$this->validate_action($this->action);
-			$this->create_window($this->catalog_name, $this->entry, $this->title);
-			if($this->modify)
+			if (phpgw::get_var('phpgw_return_as') == 'json')
 			{
-				$contacts = CreateObject('phpgwapi.contacts');
-				$contacts->delete_sessiondata('note_type');
-				$contacts->delete_sessiondata('note_type_flag');
+				return $this->query();
 			}
+					
+			$tabs = array();
+			$tabs['notes_type'] = array('label' => lang('Notes Types'), 'link' => '#notes_type');
+
+			$tabletools[] = array
+				(
+				'my_name' => 'delete',
+				'text' => lang('delete'),
+				'type' => 'custom',
+				'custom_code' => "
+					var oArgs = " . json_encode(array(
+					'menuaction' => "{$this->currentapp}.uicatalog_contact_note_type.delete",
+					'phpgw_return_as' => 'json'
+				)) . ";
+					var parameters = " . json_encode(array('parameter' => array(array('name' => 'note_type_id',
+							'source' => 'note_type_id')))) . ";
+					deleteNoteType(oArgs, parameters);
+				"
+			);
+
+			$tabletools[] = array
+				(
+				'my_name' => 'edit',
+				'text' => lang('edit'),
+				'type' => 'custom',
+				'custom_code' => "
+					var oArgs = " . json_encode(array(
+					'menuaction' => "{$this->currentapp}.uicatalog_contact_note_type.edit",
+					'phpgw_return_as' => 'json'
+				)) . ";
+					var parameters = " . json_encode(array('parameter' => array(array('name' => 'note_type_id',
+							'source' => 'note_type_id')))) . ";
+					updateNoteType(oArgs, parameters);
+				"
+			);
+			
+			$datatable_def[] = array
+				(
+				'container' => 'datatable-container_0',
+				'requestUrl' => json_encode(self::link(array('menuaction' => "{$this->currentapp}.uicatalog_contact_note_type.view", 
+						'phpgw_return_as' => 'json'))),
+				'data' => json_encode(array()),
+				'ColumnDefs' => array(
+					array('key' => 'note_type_id', 'label' => lang('Id'), 'className' => '', 'sortable' => false, 'hidden' => true),
+					array('key' => 'note_description', 'label' => lang('notes types'), 'className' => '', 'sortable' => false, 'hidden' => false)
+				),
+				'tabletools' => $tabletools,
+				'config' => array(
+					array('disableFilter' => true, 'singleSelect' => true)
+				)
+			);
+				
+			$data = array(
+				'datatable_def' => $datatable_def,
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'value_active_tab' => 0,
+				'confirm_msg' => lang('do you really want to delete this entry'),
+				'lang_name' => lang('Please enter a name'),
+			);
+			
+			self::add_javascript('addressbook', 'portico', 'catalog_note_type.js');
+			self::render_template_xsl(array('catalog_note_type', 'datatable_inline'), array('view' => $data));
 		}
 
-		function select_catalog()
+		public function query($relaxe_acl = false)
 		{
-			$this->note_types_array = $this->bo->select_catalog();
+			$draw = phpgw::get_var('draw', 'int');
+			$start = phpgw::get_var('start', 'int', 'REQUEST', 0);
+			$num_rows = phpgw::get_var('length', 'int', 'REQUEST', 10);
+			
+			$entries = $this->bo->select_catalog();
+			$values = array();
+			
+			foreach ($entries as $entry)
+			{
+				$values[] = array('note_type_id' => $entry['note_type_id'], 'note_description' => $entry['note_description']);
+			}
+
+			if ($num_rows == -1)
+			{
+				$out = $values;
+			}
+			else
+			{
+				$page = ceil(( $start / $num_rows));
+				$files_part = array_chunk($values, $num_rows);
+				$out = $files_part[$page];
+			}
+			
+			$result_data = array('results' => $out);
+			$result_data['total_records'] = count($values);
+			$result_data['draw'] = $draw;
+
+			return $this->jquery_results($result_data);
 		}
-
-		function insert($fields)
+		
+		private function _populate( $data = array() )
 		{
-			$this->bo->insert($fields);
-			$this->modify = True;
+			$values['id'] = phpgw::get_var('note_type_id');
+			$values['description'] = array('note_description' => phpgw::get_var('note_description'));
+			
+			if (!$values['description'])
+			{
+				$this->receipt['error'][] = array('msg' => lang('Please enter a name !'));
+			}
+			
+			return $values;
+		}	
+	
+		public function save()
+		{
+			$values = $this->_populate();
+			
+			if ($this->receipt['error'])
+			{
+				return $this->receipt;
+			}
+			
+			try
+			{
+				if ($values['id'])
+				{						
+					$this->bo->update($values['id'], $values['description']);
+				}
+				else
+				{ 
+					$this->bo->insert($values['description']);
+				}					
+			}
+			catch (Exception $e)
+			{
+				if ($e)
+				{
+					$this->receipt['error'][] = array('msg' => $e->getMessage());				
+				}
+			}
+			
+			$this->receipt['message'][] = array('msg' => lang('note type has been saved'));
+			
+			return $this->receipt;
 		}
-
-		function delete($key)
+		
+		function delete()
 		{
-			$this->bo->delete($key);
-			$this->modify = True;
+			$ids = phpgw::get_var('note_type_id');
+			
+			foreach($ids as $id)
+			{
+				$this->bo->delete($id);
+			}
+			
+			return true;
 		}
-
-		function update($key, $fields)
+		
+		function edit()
 		{
-			$this->bo->update($key, $fields);
-			$this->modify = True;
-		}
-
-		function edit($key)
-		{
-			$this->catalog_button_name = 'note_types_update_row';
-			$this->key_edit_name = 'note_type_id';
-			$this->key_edit_id = $key;
-
-			$record = $this->bo->get_record($key);
-			$this->entry['note_description'] = $record[0]['note_description'];
-			$this->form_fields = array(1 => array('Type', $this->get_column_data(
-								      array('type' => 'text',
-									    'name' => 'entry[note_description]',
-									    'value'=> $this->entry['note_description']))));
+			$ids = phpgw::get_var('note_type_id');
+			$record = $this->bo->get_record($ids[0]);
+			
+			return array('id'=>$record[0]['note_type_id'], 'description'=>$record[0]['note_description']);
 		}
 	}

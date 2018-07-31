@@ -22,68 +22,10 @@
 		var $so;
 		var $contacts;
 
-		var $start;
-		var $limit;
-		var $query;
-		var $sort;
-		var $order;
-		var $filter;
-		var $cat_id;
-
-		var $use_session = False;
-
 		function __construct($session=False)
 		{
 			$this->contacts = $GLOBALS['phpgw']->contacts;
 			$this->so = CreateObject('addressbook.soaddressbook');
-			if($session)
-			{
-				$this->read_sessiondata();
-				$this->use_session = True;
-			}
-			global $start,$limit,$query,$sort,$order,$filter,$cat_id;
-
-			if($start || $start == 0)  { $this->start = $start; }
-			if($limit)  { $this->limit  = $limit;  }
-			if($query)  { $this->query  = $query;  }
-			if($sort)   { $this->sort   = $sort;   }
-			if($order)  { $this->order  = $order;  }
-			if($filter) { $this->filter = $filter; }
-			$this->cat_id = $cat_id;
-		}
-
-		function save_sessiondata()
-		{
-			global $start,$limit,$query,$sort,$order,$filter,$cat_id;
-
-			if ($this->use_session)
-			{
-				$data = array(
-					'start'  => $start,
-					'limit'  => $limit,
-					'query'  => $query,
-					'sort'   => $sort,
-					'order'  => $order,
-					'filter' => $filter,
-					'cat_id' => $cat_id
-				);
-				if($this->debug) { echo '<br />Save:'; _debug_array($data); }
-				$GLOBALS['phpgw']->session->appsession('session_data','addressbook',$data);
-			}
-		}
-
-		function read_sessiondata()
-		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','addressbook');
-			if($this->debug) { echo '<br />Read:'; _debug_array($data); }
-
-			$this->start  = $data['start'];
-			$this->limit  = $data['limit'];
-			$this->query  = $data['query'];
-			$this->sort   = $data['sort'];
-			$this->order  = $data['order'];
-			$this->filter = $data['filter'];
-			$this->cat_id = $data['cat_id'];
 		}
 
 		function import($tsvfile,$conv_type,$private,$fcat_id)
@@ -207,20 +149,18 @@
 					}
 					elseif ($name && $value)
 					{
-						//reset($contacts->import);
-						//while ( list($fname,$fvalue) = each($contacts->import) )
-                                                if (is_array($contacts->import))
-                                                {
-                                                    foreach($contacts->import as $fname => $fvalue)
+						if (is_array($contacts->import))
 						{
-							if ( strstr(strtolower($name), $contacts->import[$fname]) )
+							foreach($contacts->import as $fname => $fvalue)
 							{
-								$buffer = $contacts->import_new_attrib($buffer,$name,$value);
+								if ( strstr(strtolower($name), $contacts->import[$fname]) )
+								{
+									$buffer = $contacts->import_new_attrib($buffer,$name,$value);
+								}
 							}
 						}
 					}
 				}
-			}
 			}
 
 			fclose($fp);
@@ -234,7 +174,7 @@
 		function export($conv_type,$cat_id='',$both_types='',$sub_cats='')
 		{
 			include (PHPGW_APP_INC . '/export/' . $conv_type);
-			
+	
 			$buffer=array();
 			$contacts = new export_conv;
 			
@@ -243,19 +183,18 @@
 			{
 				// Read in user custom fields, if any
 				$customfields = array();
-				//while (list($col,$descr) = @each($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
-                                if (is_array($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
-                                {
-                                    foreach($GLOBALS['phpgw_info']['user']['preferences']['addressbook'] as $col => $descr)
+				if (is_array($GLOBALS['phpgw_info']['user']['preferences']['addressbook']))
 				{
-				if ( substr($col,0,6) == 'extra_' )
+					foreach($GLOBALS['phpgw_info']['user']['preferences']['addressbook'] as $col => $descr)
 					{
-						$field = preg_replace('/extra_/','',$col);
+						if ( substr($col,0,6) == 'extra_' )
+						{
+							$field = preg_replace('/extra_/','',$col);
 							$field = preg_replace('/ /','_',$field);
-						$customfields[$field] = ucfirst($field);
+							$customfields[$field] = ucfirst($field);
+						}
 					}
 				}
-                                }
 
 				if (!empty($cat_id))
 				{
@@ -269,14 +208,13 @@
 				for ($i=0;$i<count($contacts->ids);$i++)
 				{
 					$buffer = $contacts->export_start_record($buffer);
-					//while( list($name,$value) = each($contacts->currentrecord) )
-                                        if (is_array($contacts->currentrecord))
-                                        {
-                                            foreach($contacts->currentrecord as $name => $value)
+					if (is_array($contacts->currentrecord))
 					{
-						$buffer = $contacts->export_new_attrib($buffer,$name,$value);
+						foreach($contacts->currentrecord as $name => $value)
+						{
+							$buffer = $contacts->export_new_attrib($buffer,$name,$value);
+						}
 					}
-                                        }
 					$buffer = $contacts->export_end_record($buffer);
 				}
 
@@ -284,7 +222,6 @@
 				$buffer = $contacts->export_end_file($buffer);
 
 				$tsvfilename = "{$GLOBALS['phpgw_info']['server']['temp_dir']}/{$tsvfilename}";
-
 			}
 			else // this is the openoffice section
 			{

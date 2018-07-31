@@ -212,6 +212,7 @@ this.fetch_vendor_contract = function ()
 					}
 					else
 					{
+						$("#vendor_contract_id").removeAttr("data-validation");
 						htmlString = "<option value=''> kontrakter ikke funnet</option>";
 					}
 

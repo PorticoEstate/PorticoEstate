@@ -12,8 +12,10 @@
   \**************************************************************************/
 
   /* $Id$ */
+	
+	phpgw::import_class('phpgwapi.uicommon');
 
-	class uivcard
+	class uivcard extends phpgwapi_uicommon
 	{
 		var $template;
 		var $contacts;
@@ -34,39 +36,29 @@
 
 		function __construct()
 		{
-			$this->template = $GLOBALS['phpgw']->template;
+			parent::__construct();
+			
+			//$this->template = $GLOBALS['phpgw']->template;
 			$this->contacts = CreateObject('phpgwapi.contacts');
 			$this->browser  = CreateObject('phpgwapi.browser');
 			$this->vcard    = CreateObject('phpgwapi.vcard');
 			$this->bo = CreateObject('addressbook.boaddressbook',True);
+			self::set_active_menu("{$this->currentapp}::uivcard");
 		}
 
 		function in()
 		{
-			$action = $_POST['action'] ? $_POST['action'] : $_GET['action'];
+			$tabs = array();
+			$tabs['import'] = array('label' => lang('VCard in'), 'link' => '#import');
 
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
-			$this->template->set_root(PHPGW_APP_TPL);
-//			echo '<body bgcolor="' . $GLOBALS['phpgw_info']['theme']['bg_color'] . '">';
-  
-			if ($action == 'GetFile')
-			{
-				echo '<b><center>' . lang('You must select a vcard. (*.vcf)') . '</b></center><br /><br />';
-			}
-
-			$this->template->set_file(array('vcardin' => 'vcardin.tpl'));
-
-			$this->template->set_var('vcard_header','<p>&nbsp;<b>' . lang('Address book - VCard in') . '</b><hr /><p>');
-			$this->template->set_var('action_url',$GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.boaddressbook.add_vcard')));
-			$this->template->set_var('lang_access',lang('Access'));
-			$this->template->set_var('lang_groups',lang('Which groups'));
-			$this->template->set_var('access_option',$access_option);
-			$this->template->set_var('group_option',$group_option);
-
-			$this->template->pparse('out','vcardin');
-
-			$GLOBALS['phpgw']->common->phpgw_footer();
+			$data = array(
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.boaddressbook.add_vcard")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uiaddressbook_persons.index",)),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'value_active_tab' => 0
+			);
+				
+			self::render_template_xsl(array('vcard'), array('in' => $data));
 		}
 
 		function out()
@@ -83,12 +75,12 @@
 
 			if(!$ab_id)
 			{
-				$GLOBALS['phpgw']->redirect_link('/addressbook/index.php');
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index'));
 			}
 
 			if(!$this->contacts->check_edit($ab_id))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.index'));
+				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index'));
 			}
 			
 			// First, make sure they have permission to this entry
@@ -247,8 +239,7 @@
 				echo '<br /><br /><center>';
 				echo lang("This person's first name was not in the address book.") .'<br />';
 				echo lang('Vcards require a first name entry.') . '<br /><br />';
-				echo '<a href="' . $GLOBALS['phpgw']->link('/addressbook/index.php',
-					"order=$order&start=$start&filter=$filter&query=$query&sort=$sort&cat_id=$cat_id") . '">' . lang('OK') . '</a>';
+				echo '<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index')) . '">' . lang('OK') . '</a>';
 				echo '</center>';
 			}
 
@@ -257,8 +248,7 @@
 				echo '<br /><br /><center>';
 				echo lang("This person's last name was not in the address book.") . '<br />';
 				echo lang('Vcards require a last name entry.') . '<br /><br />';
-				echo '<a href="' . $GLOBALS['phpgw']->link('/addressbook/index.php',
-					"order=$order&start=$start&filter=$filter&query=$query&sort=$sort&cat_id=$cat_id") . '">' . lang('OK') . '</a>';
+				echo '<a href="' . $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index')) . '">' . lang('OK') . '</a>';
 				echo '</center>';
 			}
 

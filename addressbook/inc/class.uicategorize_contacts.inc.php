@@ -17,67 +17,118 @@
   *  option) any later version.                                              *
   \**************************************************************************/
 
-	class uicategorize_contacts
+	phpgw::import_class('phpgwapi.uicommon');
+	phpgw::import_class('phpgwapi.datetime');
+	
+	class uicategorize_contacts extends phpgwapi_uicommon
 	{
-		var $public_functions = array(
+		var $public_functions = array
+		(
 			'index' => True,
-			'java_script' => True
-			);
+			'save' => True,
+			'get_persons_by_cat' => true
+		);
 		
 		function __construct()
 		{
+			parent::__construct();
+			
 			$this->template	= &$GLOBALS['phpgw']->template;
-			$this->lists = CreateObject('addressbook.widget_lists', 'Categories', 'categorize_contacts_form');
+			$this->bo = createObject('addressbook.boaddressbook');
 			$this->cat = CreateObject('phpgwapi.categories');
 			$this->contacts = CreateObject('phpgwapi.contacts');
+			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
+		}
+		
+		private function _populate( $data = array() )
+		{
+			$cat_id = phpgw::get_var('all_cats');
+
+			$new_persons = phpgw::get_var('current_persons');
+			
+			$persons = $this->get_persons($cat_id);
+			$current_persons = array();
+			
+			foreach($persons as $person)
+			{
+				$current_persons[] = $person['id'];
+			}
+			
+			$values['cat_id'] = $cat_id;
+			$values['persons'] = $this->bo->diff_arrays($current_persons, $new_persons);
+				
+			return $values;
 		}
 		
 		function index()
 		{
-			$this->get_vars();
+			$all_cats = $this->get_categories();
+		
+			$all_persons = $this->get_persons();
+					
+			$tabs = array();
+			$tabs['categories'] = array('label' => lang('Categories'), 'link' => '#categories');
 
-			$this->lists->set_left_combo('Category', 'all_cats', $this->get_categories(), $this->selected_cat, True);
-			$this->lists->set_all_option_list('All Persons', 'person_all[]', $this->get_all_persons());
-			$this->lists->set_selected_option_list('Current Persons', 'person_current[]', 
-							       $this->get_persons_by_cat($this->selected_cat));
-
-			switch($this->action)
-			{
-			case 'save':
-				$persons = $this->lists->get_resul_list();
-				$this->save_categories_by_person($this->selected_cat, $persons);
-				$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'addressbook.uicategorize_contacts.index', 'all_cats' => $this->selected_cat));
-			case 'cancel':
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.index', 'section' => 'Persons'));
-			}
-			$this->draw_form();
+			$data = array(
+				'form_action' => self::link(array('menuaction' => "{$this->currentapp}.uicategorize_contacts.save")),
+				'cancel_url' => self::link(array('menuaction' => "{$this->currentapp}.uiaddressbook_persons.index")),
+				'all_persons' => array('options' => $all_persons),
+				'current_persons' => array('options' => array()),
+				'categories' => array('options' => $all_cats),
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'image_loader' => $GLOBALS['phpgw']->common->image('property', 'ajax-loader', '.gif', false),
+				'value_active_tab' => 0
+			);
+			
+			self::add_javascript('addressbook', 'portico', 'categorize_contacts.index.js');
+			self::render_template_xsl(array('categorize'), array('edit' => $data));
 		}
 
-		function draw_form()
+		public function save()
 		{
-			$this->template->set_file(array('manage_cats_t' => 'categorize_contacts.tpl'));
+			if (!$_POST)
+			{
+				return $this->index();
+			}
 
-			$list_widget = $this->lists->get_widget();
-			$onsubjs = $this->lists->get_onsubmit_js_string();
-			$GLOBALS['phpgw']->common->phpgw_header();
-			echo parse_navbar();
-			$this->template->set_var('action', 
-						 $GLOBALS['phpgw']->link('/index.php',
-									 array('menuaction' => 'addressbook.uicategorize_contacts.index')));
-			$this->template->set_var('form_name', 'categorize_contacts_form');
-			$this->template->set_var('onsubjs', $onsubjs);
-			$this->template->set_var('widget_lists', $list_widget);
-			$this->template->pfp('out', 'manage_cats_t');
-			$GLOBALS['phpgw']->common->phpgw_exit();
+			/*
+			 * Overrides with incoming data from POST
+			 */
+			$values = $this->_populate();
+
+			if ($this->receipt['error'])
+			{
+				$this->index();
+			}
+			else
+			{
+				try
+				{
+					$this->save_categories_by_person($values);
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						phpgwapi_cache::message_set($e->getMessage(), 'error');
+						$this->index();
+						return;					
+					}
+				}
+
+				self::redirect(array('menuaction' => "{$this->currentapp}.uicategorize_contacts.index"));
+			}
 		}
 		
-		function save_categories_by_person($selected_cat, $persons=array())
+		function save_categories_by_person($values=array())
 		{
-			$delete = $persons['delete'];
-			$insert = $persons['insert'];
-			$edit = $persons['edit'];
+			$selected_cat = $values['cat_id'];
 			
-			if($selected_cat==-1)
+			$delete = $values['persons']['delete'];
+			$insert = $values['persons']['insert'];
+			$edit = $values['persons']['edit'];
+			
+			if(empty($selected_cat))
 			{
 				return;
 			}
@@ -116,70 +167,67 @@
 			}
 		}
 		
-		function get_all_persons()
+		function get_persons_by_cat()
 		{
-			return $this->get_persons();
-		}
-		
-		function get_persons_by_cat($cat_id='')
-		{
-			if($cat_id)
+			$cat_id = phpgw::get_var('cat_id');
+			
+			$persons = $this->get_persons();
+			$all_persons = array();
+			$current_persons = array();
+			
+			if ($cat_id)
 			{
-				return $this->get_persons($cat_id);
+				$persons_by_cat = $this->get_persons($cat_id);
+				$_current_persons = array();
+				
+				foreach($persons_by_cat as $person)
+				{
+					$_current_persons[] = $person['id'];
+				}
 			}
+
+			foreach ($persons as $person)
+			{
+				if (in_array($person['id'], $_current_persons))
+				{
+					$current_persons[] = $person;
+				}
+				else
+				{
+					$all_persons[] = $person;
+				}
+			}
+			
+			return array('all_persons'=>$all_persons, 'current_persons'=>$current_persons);
 		}
 
 		function get_persons($cat_id=PHPGW_CONTACTS_CATEGORIES_ALL, $access=PHPGW_CONTACTS_ALL)
 		{
-			$criteria = $this->contacts->criteria_for_index(
-				$GLOBALS['phpgw_info']['user']['account_id'], $access, $cat_id);
-			$persons = $this->contacts->get_persons(
-				array('person_id', 'per_full_name'),
-				'', '', 'last_name','ASC','',$criteria);
+			$criteria = $this->contacts->criteria_for_index($GLOBALS['phpgw_info']['user']['account_id'], $access, $cat_id);
+			$persons = $this->contacts->get_persons(array('person_id', 'per_full_name'), '', '', 'last_name','ASC','',$criteria);
 			
 			if(is_array($persons))
 			{
-				foreach($persons as $key => $data)
+				foreach($persons as $data)
 				{
-					$persons_data[$data['person_id']] = $data['per_full_name'];
+					$persons_data[] = array('id'=> $data['person_id'], 'name' => $data['per_full_name']);
 				}
-				asort($persons_data);
+				//asort($persons_data);
 			}
 			return $persons_data;
 		}
 
 		function get_categories()
 		{
-			$cats = $this->cat->return_array($type,$start,$limit,$query,$sort,$order,False);
-			$categories[-1] = 'Select one...';
-			if(is_array($cats))
+			$cats = $this->cat->return_array('all', 0, false, '', '', '', true);
+			$all_cats = array();
+			
+			$all_cats[] = array('id' => '', 'name' => lang('Select option'));
+			foreach ($cats as $data)
 			{
-				foreach($cats as $data)
-				{
-					$categories[$data['id']] = $data['name'];
-				}
+				$all_cats[] = array('id'=> $data['id'], 'name' => $data['name']);
 			}
-			return $categories;
-		}
 
-		function java_script()
-		{
-			return $this->lists->java_script();
-		}
-
-		function get_vars()
-		{
-			$save = phpgw::get_var('save');
-			$cancel = phpgw::get_var('cancel');
-
-			if($save)
-			{
-				$this->action = 'save';
-			}
-			elseif($cancel)
-			{
-				$this->action = 'cancel';
-			}
-			$this->selected_cat = phpgw::get_var('all_cats');
+			return $all_cats;
 		}
 	}

@@ -149,7 +149,7 @@
 		*/
 		function get_orgs($fields, $start='', $limit='', $orderby='', $sort='', $criteria='', $token_criteria='')
 		{
-			return $this->contacts->get_orgs($fields, $start, $limit, $orderby, $sort, $criteria, $token_criteria);
+			return $this->contacts->get_orgs($fields, $limit, $start, $orderby, $sort, $criteria, $token_criteria);
 		}
 
 		/**
@@ -399,54 +399,26 @@
 		/*************************************************************\
 		* Edit contact section                                        *
 		\*************************************************************/
-
-		function edit_person($person_id, $fields)
+		
+		function edit_person($fields)
 		{
-			$fields['tab_address'] = isset($fields['tab_address']['tmp_data']['addr']) ? $fields['tab_address']['tmp_data']['addr'] : array();
-
-			$principal['owner'] = $fields['owner'];
-			$principal['access'] = $fields['tab_person_data']['ispublic'];
-			$preferred_force_addr = isset($fields['tab_address']['addr_preferred']) ? $fields['tab_address']['addr_preferred'] : 0;
-
-			$cats = array();
-			if(is_array($fields['tab_cats']['my_cats']))
-			{
-				foreach($fields['tab_cats']['my_cats'] as $cat)
-				{
-					if($cat)
-					{
-						$cats[] = $cat;
-					}
-				}
-			}
-
-			$principal['cat_id'] = $cats;
-			$person = array_merge($fields['tab_person_data'], $fields['tab_extra']);
-//			$person = array_merge($person, $fields['tab_address']);
-//_debug_array($person);
-//_debug_array($fields);die();
+			$person_id = $fields['person_data']['contact_id'];
+			
+			$principal['owner'] = $fields['person_data']['owner'];
+			$principal['access'] = $fields['person_data']['access'];
+			$principal['cat_id'] = $fields['categories'];
+			
+			$person = $fields['person_data'];
 			
 			$orgs = $fields['edit_orgs'];
-			$orgs['preferred_org'] = isset($fields['tab_orgs']['preferred_org']) ? $fields['tab_orgs']['preferred_org'] : 0;
-			$queries = $fields['transactions'];
+			$orgs['preferred_org'] = $fields['preferred_org'];
 
-			//unset($fields['tab_person_data']);
-			unset($fields['tab_extra']);
-			unset($fields['tab_orgs']);
-			unset($fields['edit_orgs']);
-			unset($fields['tab_cats']);
-			unset($fields['old_my_orgs']);
-//			unset($fields['tab_address']);
-			unset($fields['addr_data']);
-			unset($fields['transactions']);
-			//unset($fields['tab_comms']);
-			unset($fields['old_comm']);
+			$this->contacts->edit_contact($person_id, $principal, PHPGW_SQL_RUN_SQL);
+			$this->contacts->edit_person($person_id, $person, PHPGW_SQL_RUN_SQL);
 
-			$queries[] = $this->contacts->edit_contact($person_id, $principal, PHPGW_SQL_RETURN_SQL);
-			$queries[] = $this->contacts->edit_person($person_id, $person, PHPGW_SQL_RETURN_SQL);
 			foreach($orgs['delete'] as $org_id)
 			{
-				$queries[] = $this->contacts->delete_org_person_relation($org_id, $person_id, PHPGW_SQL_RETURN_SQL);
+				$this->contacts->delete_org_person_relation($org_id, $person_id, PHPGW_SQL_RUN_SQL);
 			}
 
 			if($orgs['preferred_org'])
@@ -469,97 +441,48 @@
 				}
 
 				$data =  array('my_preferred' => 'N');
-				$queries[] = $this->contacts->edit_org_person_relation('', $person_id, $data, PHPGW_SQL_RETURN_SQL);
-				$data = array('my_preferred' => 'Y',
-					      'my_addr_id' => $fields['preferred_address']);
-				$queries[] = $this->contacts->edit_org_person_relation($orgs['preferred_org'], $person_id, $data, PHPGW_SQL_RETURN_SQL);
+				$this->contacts->edit_org_person_relation('', $person_id, $data, PHPGW_SQL_RUN_SQL);
+				
+				$data = array('my_preferred' => 'Y', 'my_addr_id' => $fields['preferred_address']);
+				$this->contacts->edit_org_person_relation($orgs['preferred_org'], $person_id, $data, PHPGW_SQL_RUN_SQL);
 			}
 			
-			$comm_preferred = $fields['tab_comms']['preferred'];
+			$comm_preferred = $fields['preferred_comm_data'];
 
 			//FIXME this is a hack cos i am sick of fixing broken written by lazy developers! skwashd 20060908
-			@$this->upgrade_comms($fields['edit_comms']['insert'], 
+			$this->upgrade_comms($fields['edit_comms']['insert'], 
 					     $fields['edit_comms']['delete'], 
 					     $fields['edit_comms']['edit'],
 			    	     $fields['comm_data'], $comm_preferred, $person_id);
 
-			//FIXME this is a hack cos i am sick of fixing broken written by lazy developers! skwashd 20060908
-			@$this->upgrade_others($fields['edit_others']['insert'],
-					      $fields['edit_others']['delete'],
-					      $fields['edit_others']['edit'],
-					      $fields['tab_others']['other_value'], $person_id);
 
-			if($preferred_force_addr && $preferred_force_addr!='')
+			if($fields['addr_data']['addr_id'])
 			{
-				$preferred_force_addr = $this->get_preferred_location($person_id, $preferred_force_addr);
-
-				$queries[] = $this->contacts->edit_location_by_contact(
-						$person_id,
-						array('addr_preferred' => 'N'),
-						PHPGW_SQL_RETURN_SQL);
-
-
-				$queries[] = $this->contacts->edit_location(
-					$preferred_force_addr,
-					$fields['tab_address'],
-					//array('addr_preferred' => 'Y'),
-					PHPGW_SQL_RETURN_SQL);
+				$this->contacts->edit_location($fields['addr_data']['addr_id'], $fields['addr_data'], PHPGW_SQL_RUN_SQL);
 			}
 			else
 			{
-//_debug_array($fields['tab_address']);die();
-				$queries[] = $this->add_location($fields['tab_address'], $person_id, PHPGW_SQL_RETURN_SQL);
-			}
-//_debug_array($queries);die();
-			$this->execute_queries($queries);
-			/* Update the first and last name in accounts */
-			if($fields['tab_person_data'])
-			{
-				$account_id = $this->contacts->get_account_id($person_id);
-				if($account_id)
-				{
-					$account = CreateObject('phpgwapi.accounts',$account_id,'u');
-					$account_data = $account->read();
-					$account_data->firstname = $fields['tab_person_data']['per_first_name'];
-					$account_data->lastname = $fields['tab_person_data']['per_last_name'];
-					$account->update_data($account_data);
-					$account->save_repository();
-				}
+				$this->add_location($fields['addr_data'], $person_id, PHPGW_SQL_RUN_SQL);
 			}
 			
-			$this->contacts->finalize_edit($person_id);
-
-
+			return $person_id;
 		}
 		
-		function edit_org($org_id, $fields)
+		function edit_org($fields)
 		{
-			$principal['owner'] = $fields['owner'];
-			$principal['access'] = $fields['tab_org_data']['ispublic'];
-			$preferred_force_addr = $fields['tab_address']['addr_preferred'];
-
-			if(is_array($fields['tab_cats']['my_cats']))
-			{
-				foreach($fields['tab_cats']['my_cats'] as $cat)
-				{
-					if($cat)
-					{
-						$cats[] = $cat;
-					}
-				}
-			}
-			else
-			{
-				$cats = '';
-			}
+			$org_id = $fields['org_data']['contact_id'];
 			
-			$principal['cat_id'] = $cats;
-			$org = $fields['tab_org_data'];
-			$persons = $fields['edit_persons'];
-			$queries = $fields['transactions'];
+			$principal['owner'] = $fields['org_data']['owner'];
+			$principal['access'] = $fields['org_data']['access'];
+			$principal['cat_id'] = $fields['categories'];
+			
+			$org = $fields['org_data'];
 
+			$persons = $fields['edit_persons'];
+			
 			$this->contacts->edit_contact($org_id, $principal, PHPGW_SQL_RUN_SQL);
 			$this->contacts->edit_org($org_id, $org, PHPGW_SQL_RUN_SQL);
+			
 			foreach($persons['delete'] as $person_id)
 			{
 				$this->contacts->delete_org_person_relation($org_id, $person_id, PHPGW_SQL_RUN_SQL);
@@ -567,32 +490,24 @@
 			
 			$this->contacts->add_people_for_organzation($persons['insert'], $org_id, PHPGW_SQL_RUN_SQL);
 
+			$comm_preferred = $fields['preferred_comm_data'];
+			
 			$this->upgrade_comms($fields['edit_comms']['insert'], 
 					     $fields['edit_comms']['delete'], 
 					     $fields['edit_comms']['edit'],
-					     $fields['comm_data'], '', $org_id);
-			
-			$this->upgrade_others($fields['edit_others']['insert'],
-					      $fields['edit_others']['delete'],
-					      $fields['edit_others']['edit'],
-					      $fields['tab_others']['other_value'], $org_id);
-			
- 			$this->execute_queries($queries);
+			    	     $fields['comm_data'], $comm_preferred, $org_id);
 
-			if($preferred_force_addr && $preferred_force_addr!='')
+
+			if($fields['addr_data']['addr_id'])
 			{
-				$preferred_force_addr = $this->get_preferred_location($org_id, $preferred_force_addr);
-
-				$this->contacts->edit_location_by_contact(
-					$org_id,
-					array('addr_preferred' => 'N'),
-					PHPGW_SQL_RUN_SQL);
-
-				$this->contacts->edit_location(
-					$preferred_force_addr,
-					array('addr_preferred' => 'Y'),
-					PHPGW_SQL_RUN_SQL);
+				$this->contacts->edit_location($fields['addr_data']['addr_id'], $fields['addr_data'], PHPGW_SQL_RUN_SQL);
 			}
+			else
+			{
+				$this->add_location($fields['addr_data'], $org_id, PHPGW_SQL_RUN_SQL);
+			}
+			
+			return $org_id;
 		}
 
 		function get_preferred_location($contact_id, $preferred_forced)
@@ -661,107 +576,75 @@
 		* Add contact section                                        *
 		\*************************************************************/
 
-		//used
 		function add_person($fields)
 		{			
-			$principal = array_merge($fields['tab_person_data'], $fields['tab_extra']);
-			
-			if(!is_array($fields['tab_comms']['comm_data']))
+			if ($fields['preferred_org'])
 			{
-				$fields['tab_comms']['comm_data']=array();
-			}
-			
-			$comms = array();
-			foreach($fields['tab_comms']['comm_data'] as $type_descr => $data)
-			{
-				if($data)
-				{
-					$comms[] = array('comm_descr' 		=> $this->contacts->search_comm_descr($type_descr),
-							 'comm_data' 		=> $data,
-							 'comm_preferred' 	=> ($type_descr==$fields['tab_comms']['preferred']?'Y':'N'));
-				}
-			}
-			
-			$addr = array();
-			if( isset($fields['addr_data']) && isset($fields['tab_address']['addr_preferred'])
-				&& is_array($fields['addr_data']))
-			{
-				$fields['addr_data'][$fields['tab_address']['addr_preferred']]['addr_preferred']='Y';
-				$addr = $fields['addr_data'];
-			}
-
-			if( isset($fields['others_data'])
-				&& is_array($fields['others_data']) )
-			{
-				foreach($fields['others_data'] as $key => $data)
-				{
-					$fields['others_data'][$key]['other_value'] = $fields['tab_others']['other_value'][$key];
-				}
-			}
-			$others = $fields['others_data'];
-			
-			$orgs = isset($fields['tab_orgs']['my_orgs']) ? $fields['tab_orgs']['my_orgs'] : array();
-			$principal['preferred_org'] = isset($fields['tab_orgs']['preferred_org']) ? $fields['tab_orgs']['preferred_org'] : 0;
-
-			if( isset($fields['tab_orgs']['preferred_org'])
-				&& $fields['tab_orgs']['preferred_org'] )
-			{
-				$principal['preferred_address'] = $this->contacts->get_location_pref_org($principal['preferred_org']);
+				$fields['preferred_address'] = $this->contacts->get_location_pref_org($fields['preferred_org']);
 			}
 			else
 			{
-				$principal['preferred_address'] = 0;
+				$fields['preferred_address'] = 0;
 			}
 
-			$cats = isset($fields['tab_cats']['my_cats']) ? $fields['tab_cats']['my_cats'] : array();
-
+			$comms = array();
+			foreach($fields['comm_data'] as $type_descr => $data)
+			{
+				if ($data)
+				{
+					$comms[] = array('comm_descr' => $this->contacts->search_comm_descr($type_descr),
+							 'comm_data' 		  => $data,
+							 'comm_preferred' 	  => ($type_descr == $fields['preferred_comm_data']) ? 'Y' : 'N'
+						);
+				}
+			}
+			
 			$type = $this->contacts->search_contact_type($this->contacts->get_person_name());
-			$c_id = $this->contacts->add_contact($type, $principal, $comms, $addr, $cats, $others, $orgs);
+			
+			$addr = array();
+			$addr[] = $fields['addr_data'];
+			
+			$categories = $fields['categories'];
+			$orgs = $fields['orgs'];
+			
+			$c_id = $this->contacts->add_contact($type, $fields['person_data'], $comms, $addr, $categories, array(), $orgs);
 
 			return $c_id;
 		}
 
-		//used
 		function add_org($fields)
 		{
-			$principal = $fields['tab_org_data'];
-
-			if(!is_array($fields['tab_comms']['comm_data']))
+			if ($fields['preferred_org'])
 			{
-				$fields['tab_comms']['comm_data']=array();
+				$fields['preferred_address'] = $this->contacts->get_location_pref_org($fields['preferred_org']);
+			}
+			else
+			{
+				$fields['preferred_address'] = 0;
 			}
 
-			foreach($fields['tab_comms']['comm_data'] as $type_descr => $data)
+			$comms = array();
+			foreach($fields['comm_data'] as $type_descr => $data)
 			{
-				if($data)
+				if ($data)
 				{
-					$comms[] = array('comm_descr' 		=> $this->contacts->search_comm_descr($type_descr),
-							 'comm_data' 		=> $data,
-							 'comm_preferred' 	=> ($type_descr==$fields['tab_comms']['preferred']?'Y':'N'));
+					$comms[] = array('comm_descr' => $this->contacts->search_comm_descr($type_descr),
+							 'comm_data' 		  => $data,
+							 'comm_preferred' 	  => ($type_descr == $fields['preferred_comm_data']) ? 'Y' : 'N'
+						);
 				}
-			}
+			}		
 			
-			if(is_array($fields['addr_data']))
-			{
-				$fields['addr_data'][$fields['tab_address']['addr_preferred']]['addr_preferred']='Y';
-				$addr = $fields['addr_data'];
-			}
-			
-			if(is_array($fields['others_data']))
-			{
-				foreach($fields['others_data'] as $key => $data)
-				{
-					$fields['others_data'][$key]['other_value'] = $fields['tab_others']['other_value'][$key];
-				}
-			}
-			$others = $fields['others_data'];
-			
-			$persons = $fields['tab_persons']['my_person'];
-			
-			$cats = $fields['tab_cats']['my_cats'];
-
 			$type = $this->contacts->search_contact_type($this->contacts->get_org_name());
-			$c_id = $this->contacts->add_contact($type, $principal, $comms, $addr, $cats, $others, $persons);
+			
+			$addr = array();
+			$addr[] = $fields['addr_data'];
+			
+			$categories = $fields['categories'];
+			$persons = $fields['persons'];
+			
+			$c_id = $this->contacts->add_contact($type, $fields['org_data'], $comms, $addr, $categories, array(), $persons);
+
 			return $c_id;
 		}
 

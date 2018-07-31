@@ -1231,4 +1231,11 @@
 				echo '</div>';
 			}
 		}
+
+		function delete_addressbook( $data )
+		{
+			$contact_id = (int) $data['contact_id'];
+			$sql = "DELETE FROM fm_responsibility_contact WHERE contact_id = {$contact_id}";
+			$GLOBALS['phpgw']->db->query($sql, __LINE__, __FILE__);
+		}
 	}

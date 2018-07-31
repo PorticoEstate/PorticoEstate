@@ -286,7 +286,7 @@
 				$contact_link   = $GLOBALS['phpgw']->link('/index.php',
 					array
 					(
-						'menuaction'	=> 'addressbook.uiaddressbook.add_person',
+						'menuaction'	=> 'addressbook.uiaddressbook_persons.add',
 						'entry'			=> $sfields,
 					)
 				);
@@ -296,7 +296,7 @@
 				$contact_link   = $GLOBALS['phpgw']->link('/index.php',
 					array
 					(
-						'menuaction'	=> 'addressbook.uiaddressbook.view_person',
+						'menuaction'	=> 'addressbook.uiaddressbook_persons.view',
 						'ab_id'		=> $fields[0]['contact_id']
 					)
 				);
