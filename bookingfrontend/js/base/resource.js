@@ -3,7 +3,8 @@ var date = new Date();
 //var urlParams = new URLSearchParams(window.location.search);
 var urlParams = [];
 CreateUrlParams(window.location.search);
-var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+//var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
 
 $(document).ready(function ()
 {
@@ -28,7 +29,8 @@ function CreateUrlParams(params) {
 }
 
 function PopulateResourceData() {
-    getJsonURL = baseURL+"?menuaction=bookingfrontend.uiresource.index_json&filter_building_id="+urlParams['buildingid']+"&phpgw_return_as=json";
+//    getJsonURL = baseURL+"?menuaction=bookingfrontend.uiresource.index_json&filter_building_id="+urlParams['buildingid']+"&phpgw_return_as=json";
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['buildingid']}, true);
 
     $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.results.length; i++) {
@@ -41,12 +43,15 @@ function PopulateResourceData() {
         }
     });
     
-    getJsonURL = baseURL+"?menuaction=booking.uidocument_resource.index&filter_owner_id="+urlParams['id']+"&phpgw_return_as=json";
+ //   getJsonURL = baseURL+"?menuaction=booking.uidocument_resource.index&filter_owner_id="+urlParams['id']+"&phpgw_return_as=json";
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"booking.uidocument_resource.index", filter_owner_id:urlParams['id']}, true);
     $.getJSON(getJsonURL, function(result){
         if(result.data.length > 0) {
-            $(".main-picture").attr("src", baseURL + "?menuaction=bookingfrontend.uidocument_resource.download&id="+result.data[0].id+"&filter_owner_id="+urlParams['id']);
+ //         $(".main-picture").attr("src", baseURL + "?menuaction=bookingfrontend.uidocument_resource.download&id="+result.data[0].id+"&filter_owner_id="+urlParams['id']);
+            $(".main-picture").attr("src", phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.data[0].id, filter_owner_id:urlParams['id']}, false));
             for(var i=0; i<result.data.length; i++) {
-                var src = baseURL + "?menuaction=bookingfrontend.uidocument_resource.download&id="+result.data[i].id+"&filter_owner_id="+urlParams['id'];
+ //             var src = baseURL + "?menuaction=bookingfrontend.uidocument_resource.download&id="+result.data[i].id+"&filter_owner_id="+urlParams['id'];
+                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_resource.download", id:result.data[i].id, filter_owner_id:urlParams['id']}, false);
                 var imgTag = '<img src="'+src+'" class="img-thumbnail m-1" alt=""></img>';
                 $("#list-img-thumbs").append(imgTag);
             }
@@ -62,7 +67,9 @@ function PopulateCalendarEvents() {
     var eventsArray = [];
     var paramDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
 
-    getJsonURL = baseURL+"?menuaction=bookingfrontend.uibooking.resource_schedule&resource_id="+urlParams['id']+"&date="+paramDate+"&phpgw_return_as=json";
+//  getJsonURL = baseURL+"?menuaction=bookingfrontend.uibooking.resource_schedule&resource_id="+urlParams['id']+"&date="+paramDate+"&phpgw_return_as=json";
+	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:urlParams['id'], date:paramDate}, true);
+
         $.getJSON(getJsonURL, function(result){
             if(result.ResultSet.totalResultsAvailable > 1) {
                 for(var k=0; k<result.ResultSet.Result.length; k++) {

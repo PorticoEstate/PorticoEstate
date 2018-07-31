@@ -880,11 +880,17 @@
 			return array();
 		}
 
-		function get_meter_table()
+		function get_meter_register()
 		{
-			$config = CreateObject('phpgwapi.config', 'property');
-			$config->read();
-			return isset($config->config_data['meter_table']) ? $config->config_data['meter_table'] : '';
+			$config_data = CreateObject('phpgwapi.config', 'property')->read();
+			$meter_register = !empty($config_data['meter_register']) ? $config_data['meter_register'] : '';
+
+			if($meter_register)
+			{
+				$meter_register_location = '.' . str_replace('_', '.',ltrim($meter_register, '.'));
+			}
+
+			return 	$location_id_meter_register = $GLOBALS['phpgw']->locations->get_id('property', $meter_register_location);
 		}
 
 		function read_single( $project_id, $values = array() )
@@ -964,53 +970,30 @@
 
 		function get_power_meter( $location_code = '' )
 		{
-			if (!$meter_table = $this->get_meter_table())
-			{
-				return false;
-			}
-
-			$meter_table_arr = explode('_', $meter_table);
-
-			foreach ($meter_table_arr as $key => $value)
-			{
-				if (ctype_digit($value))
-				{
-					break;
-				}
-			}
-
-			$entity_id = $meter_table_arr[$key];
-
-			if (!$cat_id = $meter_table_arr[($key + 1)])
+			if (!$location_id_meter_register = $this->get_meter_register())
 			{
 				return false;
 			}
 
 			$admin_entity = CreateObject('property.soadmin_entity');
 
-			$category = $admin_entity->read_single_category($entity_id, $cat_id);
+			$category = $admin_entity->get_single_category($location_id_meter_register, true);
 
 			if ($category['is_eav'])
 			{
 				$sql = "SELECT json_representation->>'maaler_nr' as maaler_nr FROM fm_bim_item"
 					. " WHERE location_code = '{$location_code}'"
 					. " AND location_id = '{$category['location_id']}'"
-					. " AND  json_representation->>'category' = '1'";
-				//	. " AND xmlexists('//category[text() = ''1'']' PASSING BY REF xml_representation)";
+					. " AND json_representation->>'category' = '1'";
 
 				$this->db->query($sql, __LINE__, __FILE__);
-
 				$this->db->next_record();
-
-	//			$xmldata = $this->db->f('xml_representation');
-	//			$xml = new DOMDocument('1.0', 'utf-8');
-	//			$xml->loadXML($xmldata);
-	//			return $xml->getElementsByTagName('maaler_nr')->item(0)->nodeValue;
 				return $this->db->f('maaler_nr');
 			}
 			else
 			{
-				$this->db->query("SELECT maaler_nr as power_meter FROM $meter_table where location_code='$location_code' and category='1'", __LINE__, __FILE__);
+				$meter_table = "fm_entity_{$category['entity_id']}_{$category['id']}";
+				$this->db->query("SELECT maaler_nr as power_meter FROM $meter_table WHERE location_code='$location_code' and category='1'", __LINE__, __FILE__);
 				$this->db->next_record();
 				return $this->db->f('power_meter');
 			}
@@ -1391,69 +1374,81 @@
 
 		function update_power_meter( $power_meter, $location_code, $address )
 		{
-			if (!$meter_table = $this->get_meter_table())
+			if (!$location_id_meter_register = $this->get_meter_register())
 			{
 				return;
 			}
 
-			//Disabled for now
-			return;
-
-			$location = explode('-', $location_code);
-
-			$i = 1;
-			if (isset($location) AND is_array($location))
-			{
-				foreach ($location as $location_entry)
-				{
-					$cols[] = 'loc' . $i;
-					$vals[] = $location_entry;
-
-					$i++;
-				}
-			}
-
-			if ($cols)
-			{
-				$cols = "," . implode(",", $cols);
-				$vals = ",'" . implode("','", $vals) . "'";
-			}
-
-			$this->db->query("SELECT count(*) as cnt FROM $meter_table where location_code='$location_code' and category=1", __LINE__, __FILE__);
+			$this->db->query("SELECT id,"
+				. " json_representation->>'maaler_nr' as maaler_nr"
+				. " FROM fm_bim_item"
+				. " WHERE location_id = {$location_id_meter_register}"
+				. " AND location_code='{$location_code}'"
+				. " AND json_representation->>'category' = '1'", __LINE__, __FILE__);
 
 			$this->db->next_record();
+			$id = $this->db->f('id');
+			$old_power_meter = $this->db->f('maaler_nr');
 
-			if ($this->db->f('cnt'))
+			if ($id)
 			{
-				$this->db->query("update $meter_table set maaler_nr='$power_meter',address='$address' where location_code='$location_code' and category='1'", __LINE__, __FILE__);
+				$address = $this->db->db_addslashes($address);
+				$this->db->query("UPDATE fm_bim_item SET address='$address',"
+					. " json_representation=jsonb_set(json_representation, '{address}', '\"{$address}\"', true),"
+					. " modified_on = " . time() . ","
+					. " modified_by = {$this->account}"
+					. " WHERE location_id = {$location_id_meter_register}"
+					. " AND id = {$id}", __LINE__, __FILE__);
+
+				$this->db->query("UPDATE fm_bim_item SET"
+					. " json_representation=jsonb_set(json_representation, '{maaler_nr}', '\"{$power_meter}\"', true)"
+					. " WHERE location_id = {$location_id_meter_register}"
+					. " AND id = {$id}", __LINE__, __FILE__);
+
+				if($old_power_meter != $power_meter)
+				{
+					$this->db->query("SELECT id AS attrib_id FROM phpgw_cust_attribute WHERE location_id = {$location_id_meter_register} AND column_name = 'maaler_nr'", __LINE__, __FILE__);
+					$this->db->next_record();
+					$attrib_id = $this->db->f('attrib_id');
+
+					$meter_info = $GLOBALS['phpgw']->locations->get_name($location_id_meter_register);
+					$meter_location = str_replace('.','_', ltrim($meter_info['location'], '.'));
+					$historylog = CreateObject('property.historylog', $meter_location);
+					$historylog->add('SO', $id, $power_meter, $old_power_meter, $attrib_id);
+				}
 			}
 			else
 			{
-				$id = $this->bocommon->next_id($meter_table);
+				$soentity = createObject('property.soentity');
 
-				$meter_id = $this->generate_meter_id($meter_table);
-				$this->db->query("insert into $meter_table (id,num,maaler_nr,category,location_code,entry_date,user_id,address $cols) "
-					. "VALUES ('"
-					. $id . "','"
-					. $meter_id . "','"
-					. $power_meter . "',"
-					. "1,'"
-					. $location_code . "',"
-					. time() . ",$this->account, '$address' $vals)", __LINE__, __FILE__);
+				$data = array(
+					'address' => $address,
+					'location_code' => $location_code,
+					'category'		=> 1
+				);
+
+				$location = explode('-', $location_code);
+
+				$i = 1;
+				if (isset($location) AND is_array($location))
+				{
+					foreach ($location as $location_entry)
+					{
+						$data["loc{$i}"] = $location_entry;
+						$i++;
+					}
+				}
+
+				$id = $soentity->_save_eav( $data, $location_id_meter_register );
+
+				$num = sprintf("%04s", $id);
+				$this->db->query("UPDATE"
+					. " json_representation=jsonb_set(json_representation, '{num}', '\"{$num}\"', true)"
+					. " WHERE location_id = {$location_id_meter_register}"
+					. " AND id='{$id}'", __LINE__, __FILE__);
 			}
-		}
 
-		function generate_meter_id( $meter_table )
-		{
-			$prefix = 'meter';
-			$pos = strlen($prefix);
-			$this->db->query("select max(num) as current from $meter_table where num $this->like ('$prefix%')");
-			$this->db->next_record();
-
-			$max = $this->bocommon->add_leading_zero(substr($this->db->f('current'), $pos));
-
-			$meter_id = $prefix . $max;
-			return $meter_id;
+			return $id;
 		}
 
 		function edit( $project, $values_attribute = array() )

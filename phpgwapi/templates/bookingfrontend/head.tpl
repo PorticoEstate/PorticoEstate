@@ -6,17 +6,16 @@
         <!-- BEGIN stylesheet -->
         <link href="{stylesheet_uri}" type="text/css" rel="StyleSheet">
         <!-- END stylesheet -->
-        
-        <script type="text/javascript" src="{jqueryjs}"></script>
-        <script type="text/javascript" src="{popperjs}"></script>
-        <script type="text/javascript" src="{bootstrapmainjs}"></script>
-        <script type="text/javascript" src="{knockoutjs}"></script>
-        <script type="text/javascript" src="{knockoutjsvalid}"></script>
-        <script type="text/javascript" src="{knockoutjsvalidlocale}"></script>
-        <script type="text/javascript" src="{auijs}"></script>
-        <script type="text/javascript" src="{jqueryautocomplete}"></script>
-        <script type="text/javascript" src="{commonjs}"></script>
-    </head>
+    		<!-- BEGIN javascript -->
+		<script type="text/javascript" src="{javascript_uri}"></script>
+		<!-- END javascript -->
+
+		<script type="text/javascript">
+			<!--
+				var strBaseURL = '{str_base_url}';
+			//-->
+		</script>
+     </head>
     <body>
         <!--<nav class="navbar navbar-default">
             <div class="container-fluid">
