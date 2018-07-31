@@ -40,26 +40,33 @@ $(document).ready(function () {
 	});
 
 	// temp disable input while calendar is preping
-	var inputs = document.getElementsByClassName("date-container");
-	for (var i = 0; i < inputs.length; i++) {
-		var getInputs = inputs[i].querySelectorAll("input");
-		for (var x = 0; x < getInputs.length; x++) {
-			getInputs[x].setAttribute("disabled", true);
-		}
-	}
-
+// Sigurd 2018/08/31: temporary disabled new calendar
+//
+//
+//	var inputs = document.getElementsByClassName("date-container");
+//	for (var i = 0; i < inputs.length; i++) {
+//		var getInputs = inputs[i].querySelectorAll("input");
+//		for (var x = 0; x < getInputs.length; x++) {
+//			getInputs[x].setAttribute("disabled", true);
+//		}
+//	}
+//
 	// add event to add date
-	document.querySelector("#add-date-link").addEventListener("click", function () {
-		setTimeout(function () {
-			cloneInputs();
-		}, 100);
-	});
+
+//Sigurd 2018/08/31: temporary disabled new calendar
+//
+//	document.querySelector("#add-date-link").addEventListener("click", function () {
+//		setTimeout(function () {
+//			cloneInputs();
+//		}, 100);
+//	});
 
 	// add stylesheets
 	addStyleSheets();
 
 	// remove jQuery calendar onload
-	removeCalendar();
+//Sigurd 2018/08/31: temporary disabled new calendar
+//	removeCalendar();
 
 	JqueryPortico.autocompleteHelper(phpGWLink('bookingfrontend/', { menuaction: 'bookingfrontend.uibuilding.index' }, true), 'field_building_name', 'field_building_id', 'building_container');
 
