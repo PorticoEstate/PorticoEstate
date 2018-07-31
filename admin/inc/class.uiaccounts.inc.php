@@ -1458,7 +1458,7 @@
 					$url_contacts_text = lang('Edit entry');
 					$url_contacts =   $GLOBALS['phpgw']->link('/index.php', array
 					(
-						'menuaction'    => 'addressbook.uiaddressbook.edit_person',
+						'menuaction'    => 'addressbook.uiaddressbook_persons.edit',
 						'ab_id'         => $user_data['person_id'],
 						'referer'       => $GLOBALS['phpgw']->link('/index.php', array
 											(

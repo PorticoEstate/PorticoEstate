@@ -250,6 +250,7 @@
 		'editgroup'				=> 'property.hook_helper.clear_userlist',
 		'registration'			=> 'property.hook_helper.add_location_contact',
 		'after_navbar'			=> 'property.hook_helper.after_navbar',
+		'delete_addressbook'	=> 'property.hook_helper.delete_addressbook',
 	);
 
 	/* Dependencies for this app to work */

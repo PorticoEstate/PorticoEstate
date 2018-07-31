@@ -166,7 +166,7 @@
 				'name' => "{$count}",
 				'values' => json_encode($content),
 				'total_records' => count($content),
-				'edit_action' => json_encode($GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.view_person'))),
+				'edit_action' => json_encode($GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.view'))),
 				'is_paginator' => 1,
 				'footer' => 0
 			);
