@@ -59,120 +59,85 @@
 			$this->tab_main_persons = $this->so->tab_main_persons;
 			$this->tab_main_organizations = $this->so->tab_main_organizations;
 			$this->bday_internformat = 'Y-m-d'; // use ISO 8601 for internal bday represantation
-			
- 			if($session)
- 			{
-				$this->read_sessiondata();
-				$this->use_session = true;
- 			}
-			$this->_set_session_data();
+
 		}
 
-		//used
-		function save_sessiondata($data)
+		function save_organizations( $values )
 		{
-			if ($this->use_session)
+			if ($values['action'] == 'edit')
 			{
-				if($this->debug) { echo '<br />Save:'; _debug_array($data); }
- 				$GLOBALS['phpgw']->session->appsession('session_data','addressbook',$data);
-			}
-		}
+				foreach($values['comm_data'] as $k => $v)
+				{
+					if (trim($v) != '')
+					{
+						$new_comm[$k] = $v;
+					}
+				}
 
-		//used
-		function read_sessiondata()
+				$current_comm_data = $this->get_comm_contact_data($values['org_data']['contact_id'], '', true); 
+
+				foreach($current_comm_data as $k => $v)
+				{
+					$old_comm[$v['comm_description']] =  $v['comm_data'];
+				}
+				
+				$values['edit_comms'] = $this->diff_arrays($old_comm, $new_comm, 'keys');
+				$values['comm_data'] = $current_comm_data; 
+				
+				$current_persons = $this->get_person_orgs_data($values['org_data']['contact_id']);
+				
+				$old_persons = isset($current_persons['my_person']) ? $current_persons['my_person'] : array() ;
+				$new_persons = isset($values['persons']) ? $values['persons'] : array();
+				$values['edit_persons'] = $this->diff_arrays($old_persons, $new_persons);
+			
+				$receipt = $this->so->edit_org($values);
+			}
+			else
+			{
+				$receipt = $this->so->add_org($values);
+			}
+
+			return $receipt;
+		}
+		
+		function save_persons( $values )
 		{
-			$data = $GLOBALS['phpgw']->session->appsession('session_data','addressbook');
-			if($this->debug) { echo '<br />Read:'; _debug_array($data); }
-
-			if ( is_array($data) && count($data) )
+			if ($values['action'] == 'edit')
 			{
-				$this->start  = $data['start'];
-				$this->limit  = $data['limit'];
-				$this->query  = $data['query'];
-				$this->sort   = $data['sort'];
-				$this->order  = $data['order'];
-				$this->filter = $data['filter'];
-				$this->cat_id = $data['cat_id'];
-				$this->qfield = $data['qfield'];
+				foreach($values['comm_data'] as $k => $v)
+				{
+					if (trim($v) != '')
+					{
+						$new_comm[$k] = $v;
+					}
+				}
+
+				$current_comm_data = $this->get_comm_contact_data($values['person_data']['contact_id'], '', true); 
+
+				foreach($current_comm_data as $k => $v)
+				{
+					$old_comm[$v['comm_description']] =  $v['comm_data'];
+				}
+				
+				$values['edit_comms'] = $this->diff_arrays($old_comm, $new_comm, 'keys');
+				$values['comm_data'] = $current_comm_data; 
+				
+				$current_orgs = $this->get_orgs_person_data($values['person_data']['contact_id']);
+				
+				$old_orgs = isset($current_orgs['my_orgs']) ? $current_orgs['my_orgs'] : array() ;
+				$new_orgs = isset($values['orgs']) ? $values['orgs'] : array();
+				$values['edit_orgs'] = $this->diff_arrays($old_orgs, $new_orgs);
+			
+				$receipt = $this->so->edit_person($values);
 			}
-			if($this->debug) { echo '<br />read_sessiondata();'; $this->_debug_sqsof(); }
+			else
+			{
+				$receipt = $this->so->add_person($values);
+			}
+
+			return $receipt;
 		}
-
-		function _set_session_data()
-		{
-			/* _debug_array($GLOBALS['HTTP_POST_VARS']); */
-			/* Might change this to '' at the end---> */
-			$_start		= phpgw::get_var('start');
-			$_query		= phpgw::get_var('query');
-			$_qfield	= phpgw::get_var('qfield');
-			$_limit		= phpgw::get_var('limit');
-			$_sort		= phpgw::get_var('sort');
-			$_order		= phpgw::get_var('order');
-			$_filter	= phpgw::get_var('filter');
-			$_cat_id	= phpgw::get_var('cat_id');
-			$_fcat_id	= phpgw::get_var('fcat_id');
-
-			if(!empty($_start) || ($_start == '0') || ($_start == 0))
-			{
-				if($this->debug) { echo '<br />overriding $start: "' . $this->start . '" now "' . $_start . '"'; }
-				$this->start = $_start;
-			}
-			
-			if($_limit)
-			{
-				$this->limit  = $_limit;
-			}
-			
-			if((empty($_query) && !empty($this->query)) || !empty($_query))
-			{
-				if($this->debug) { echo '<br />overriding $query: "' . $this->query . '" now "' . urldecode(addslashes($_query)) . '"'; }
-				if($this->query != urldecode(addslashes($_query)))
-				{
-					$this->start = 0;
-				}
-				$this->query  = $_query;
-			}
-
-			if(isset($_fcat_id) && $_fcat_id!='')
-			{
-				if($this->debug) { echo '<br />overriding $cat_id: "' . $this->cat_id . '" now "' . $_fcat_id . '"'; }
-				if($this->cat_id != $_fcat_id)
-				{
-					$this->start = 0;
-				}
-				$this->cat_id = $_fcat_id;
-			}
-
-			if(isset($_sort)   && !empty($_sort))
-			{
-				if($this->debug) { echo '<br />overriding $sort: "' . $this->sort . '" now "' . $_sort . '"'; }
-				$this->sort   = $_sort;
-			}
-
-			if(isset($_order)  && !empty($_order))
-			{
-				if($this->debug) { echo '<br />overriding $order: "' . $this->order . '" now "' . $_order . '"'; }
-				$this->order  = $_order;
-			}
-
-			if(isset($_filter) && !empty($_filter))
-			{
-				if($this->debug) { echo '<br />overriding $filter: "' . $this->filter . '" now "' . $_filter . '"'; }
-				if($this->filter != $_filter)
-				{
-					$this->start = 0;
-				}
-				$this->filter = $_filter;
-			}
-
-			if(isset($_qfield) && !empty($_qfield))
-			{
-				$this->qfield = $_qfield;
-			}
-			
-			if($this->debug) { $this->_debug_sqsof(); }
-		}
-
+		
 		/*************************************************************\
 		* Person Functions Section                                    *
 		\*************************************************************/
@@ -196,37 +161,16 @@
 		* @return array The array with all data from person, this also 
 		* separate the cats and extra tab
 		*/
+
 		function get_principal_persons_data($person_id, $get_org=True)
 		{
 			$entry = $this->so->get_principal_persons_data($person_id, $get_org);
-
-			$entry[0]['org_link'] = '';
-			if ( isset($entry[0]['org_id']) && $entry[0]['org_id'] > 0 )
-			{
-				$entry[0]['org_link'] = $GLOBALS['phpgw']->link('/index.php', 
-				array
-				(
-					'menuaction'	=> 'addressbook.uiaddressbook.view_org',
-					'ab_id'		=> $entry[0]['org_id']
-				));
-			}
 			
-			$entry[0]['tab_cats']['my_cats'] = explode(",", $entry[0]['cat_id']);
-			$entry[0]['tab_extra']['per_suffix'] = $entry[0]['per_suffix'];
-			$entry[0]['tab_extra']['per_sound'] = $entry[0]['per_sound'];
-			$entry[0]['tab_extra']['per_initials'] = $entry[0]['per_initials'];
-			$entry[0]['tab_extra']['per_pubkey'] = $entry[0]['per_pubkey'];
-			
-			unset($entry[0]['org_id']);
-			unset($entry[0]['cat_id']);
-			unset($entry[0]['per_suffix']);
-			unset($entry[0]['per_sound']);
-			unset($entry[0]['per_initials']);
-			unset($entry[0]['per_pubkey']);
+			$entry[0]['my_cats'] = explode(",", $entry[0]['cat_id']);
 
 			return $entry[0];
 		}
-
+		
 		/**
 		* Get the organizations for the  person what you want
 		*
@@ -286,7 +230,7 @@
 		* @return 
 		*/
 		function edit_person($person_id, $fields)
-		{
+		{			
  			$old_orgs = isset($fields['old_my_orgs']['my_orgs']) ? $fields['old_my_orgs']['my_orgs'] : array() ;
  			$new_orgs = isset($fields['tab_orgs']['my_orgs']) ? $fields['tab_orgs']['my_orgs'] : array();
  			$fields['edit_orgs'] = $this->diff_arrays($old_orgs, $new_orgs);
@@ -298,9 +242,10 @@
 			$old_others = $fields['old_others'];
 			$new_others = $fields['others_data'];
 			$fields['edit_others'] = $this->diff_arrays($old_others, $new_others, 'keys');
+			
  			return $this->so->edit_person($person_id, $fields);
 		}
-
+		
 		//used
 		function get_count_persons($criteria='')
 		{
@@ -329,14 +274,15 @@
 		* @return array The array with all data from person, this also 
 		* separate the cats and extra tab
 		*/
+
 		function get_principal_organizations_data($org_id)
 		{
 			$entry = $this->so->get_principal_organizations_data($org_id);
-			$entry[0]['tab_cats']['my_cats'] = explode(",", $entry[0]['cat_id']);
-			unset($entry[0]['cat_id']);
+			
+			$entry[0]['my_cats'] = explode(",", $entry[0]['cat_id']);
+
 			return $entry[0];
 		}
-
 		/**
 		* Get the persons for the organization what you want
 		*
@@ -593,9 +539,9 @@
 		* 
 		* @param integer|array $id Key of the other field what you want
 		*/
-		function delete_specified_other($id)
+		function delete_specified_other($id, $action='')
 		{
-			return $this->so->delete_specified_other($id);
+			return $this->so->delete_specified_other($id, $action);
 		}
 
 		/**
@@ -608,9 +554,9 @@
 			return $this->so->delete_specified_note($id);
 		}
 
-		function get_insert_others($contact_id, $fields)
+		function get_insert_others($contact_id, $fields, $action='')
 		{
-			return $this->so->add_others($fields, $contact_id);
+			return $this->so->add_others($fields, $contact_id, $action);
 		}
 		
 		function get_update_others($contact_id, $fields)
@@ -719,7 +665,9 @@
 		{
 			if(!is_array($_FILES['uploadedfile']) || ($_FILES['uploadedfile']['error'] != UPLOAD_ERR_OK))
 			{
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uivcard.in', 'action' => 'GetFile'));
+				phpgwapi_cache::message_set('You must select a vcard. (*.vcf)', 'error');
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uivcard.in'));
 			}
 			else
 			{
@@ -750,7 +698,10 @@
 				/* Delete the temp file. */
 				unlink($filename);
 				unlink($filename . '.info');
-				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uiaddressbook.view_person', 'ab_id' => $ab_id));
+				
+				phpgwapi_cache::message_set('vcard has been added', 'message');
+				
+				$GLOBALS['phpgw']->redirect_link('/index.php',array('menuaction' => 'addressbook.uiaddressbook_persons.view', 'ab_id' => $ab_id, 'vcard' => 1));
 			}
 		}
 
@@ -770,23 +721,21 @@
 			$GLOBALS['phpgw']->preferences->read();
 			if (is_array($prefs))
 			{
-				/* _debug_array($prefs);exit; */
-				//while (list($pref,$x) = each($qfields))
-                                if (is_array($qfields))
-                                {
-                                    foreach($qfields as $pref => $x)
+				if (is_array($qfields))
 				{
-					/* echo '<br />checking: ' . $pref . '=' . $prefs[$pref]; */
-					if ($prefs[$pref] == 'on')
+					foreach($qfields as $pref => $x)
 					{
-						$GLOBALS['phpgw']->preferences->add('addressbook',$pref,'addressbook_on');
-					}
-					else
-					{
-						$GLOBALS['phpgw']->preferences->delete('addressbook',$pref);
+						/* echo '<br />checking: ' . $pref . '=' . $prefs[$pref]; */
+						if ($prefs[$pref] == 'on')
+						{
+							$GLOBALS['phpgw']->preferences->add('addressbook',$pref,'addressbook_on');
+						}
+						else
+						{
+							$GLOBALS['phpgw']->preferences->delete('addressbook',$pref);
+						}
 					}
 				}
-			}
 			}
 
 			if(is_array($other))
