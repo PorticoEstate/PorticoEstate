@@ -138,5 +138,7 @@ $(document).ready(function ()
 
 
 function ForwardToNewApplication() {
-    window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.add&building_id="+urlParams['id'];
+    //window.location = baseURL+"?menuaction=bookingfrontend.uiapplication.add&building_id="+urlParams['id'];
+
+    window.location.href = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['id']}, false);
 }
