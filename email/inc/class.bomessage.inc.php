@@ -658,7 +658,7 @@ $msg_headers->udate = $new_time;
 								'/index.php',
 								array
 								(
-									'menuaction' => 'addressbook.uiaddressbook.add_email',
+									'menuaction' => 'addressbook.uiaddressbook_persons.add_email',
 									'add_email' => urlencode($from_plain),
 									'name' => urlencode($from_personal),
 									'referer' => urlencode($get_back_here_url)
@@ -737,7 +737,7 @@ $msg_headers->udate = $new_time;
 					$to_addybook_add = $GLOBALS['phpgw']->msg->href_maketag(
 						$GLOBALS['phpgw']->link(
 							 '/index.php',array(
-							 'menuaction'=>'addressbook.uiaddressbook.add_email',
+							 'menuaction'=>'addressbook.uiaddressbook_persons.add_email',
 							'add_email'=>urlencode($to_plain),
 							'name'=>urlencode($to_personal),
 							'referer'=>urlencode($get_back_here_url))),
@@ -808,7 +808,7 @@ $msg_headers->udate = $new_time;
 					$cc_addybook_add = $GLOBALS['phpgw']->msg->href_maketag(
 						$GLOBALS['phpgw']->link(
 							 '/index.php',array(
-							 'menuaction'=>'addressbook.uiaddressbook.add_email',
+							 'menuaction'=>'addressbook.uiaddressbook_persons.add_email',
 							'add_email'=>urlencode($cc_plain),
 							'name'=>urlencode($cc_personal),
 							'referer'=>urlencode($get_back_here_url))),

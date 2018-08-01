@@ -45,7 +45,8 @@
 				{
 					@krsort($GLOBALS['phpgw_info']['user']['preferences']['portal_order']);
 				}
-				while(list($seq_order,$appid) = each($GLOBALS['phpgw_info']['user']['preferences']['portal_order']))
+				//while(list($seq_order,$appid) = each($GLOBALS['phpgw_info']['user']['preferences']['portal_order']))
+				foreach($GLOBALS['phpgw_info']['user']['preferences']['portal_order'] as $seq_order => $appid)
 				{
 					if($seq_order != $value_to_check)
 					{

@@ -45,7 +45,7 @@
 				'addressbook'	=> array
 				(
 					'text'	=> $GLOBALS['phpgw']->translation->translate('Contacts', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'addressbook.uiaddressbook.index', 'section' => 'Persons') ),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction'=> 'addressbook.uiaddressbook_persons.index') ),
 					'image'	=> array('addressbook', 'navbar'),
 					'order'	=> 2,
 					'group'	=> 'office'
@@ -126,14 +126,14 @@
 			(
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New Person', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_person'))
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Person', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_persons.index'))
 				),
 				
 				array
 				(
-					'text'	=> $GLOBALS['phpgw']->translation->translate('New Organisation', array(), true),
-					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook.add_org'))
+					'text'	=> $GLOBALS['phpgw']->translation->translate('Organisation', array(), true),
+					'url'	=> $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'addressbook.uiaddressbook_organizations.index'))
 				),
 
 				array
