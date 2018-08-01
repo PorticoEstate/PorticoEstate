@@ -126,6 +126,7 @@ this.local_DrawCallback2 = function (container)
 $(document).ready(function ()
 {
 	check_button_names();
+	load_google_map();
 
 	$.formUtils.addValidator({
 		name: 'category',
@@ -405,6 +406,8 @@ window.on_location_updated = function (location_code)
 
 	get_other_projects(location_code);
 
+	load_google_map();
+
 	if(	$("#delivery_address").val() )
 	{
 		return;
@@ -487,4 +490,25 @@ this.get_other_projects = function (location_code)
 	var oArgs = {menuaction:'property.uiproject.get_other_projects',location_code:location_code,id:project_id};
 	var strURL = phpGWLink('index.php', oArgs, true);
 	JqueryPortico.updateinlineTableHelper('datatable-container_7', strURL);
-}
+};
+
+this.load_google_map = function (location_code)
+{
+
+	var street_name = $("#street_name").val();
+	var street_number = $("#street_number").val();
+	var address = street_name + ' ' + street_number;
+	var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
+	var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
+
+	if( address.length > 1 )
+	{
+		$("#gmap-container").show();
+		$("#googlemapiframe").attr("src", iurl);
+		$("#googlemaplink").attr("href", linkurl);
+	}
+	else
+	{
+		$("#gmap-container").hide();
+	}
+};

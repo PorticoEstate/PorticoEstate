@@ -363,6 +363,13 @@
 							<xsl:value-of select="value_delivery_address"/>
 						</textarea>
 					</div>
+					<div id="gmap-container" class="pure-control-group" style="display:none">
+						<label>
+							<a href="" id="googlemaplink" style="color:#0000FF;text-align:left" target="_new">Vis større kart</a>
+						</label>
+						<iframe width="500" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="googlemapiframe" src="">
+						</iframe>
+					</div>
 					<div class="pure-control-group">
 						<label for="name">
 							<xsl:value-of select="php:function('lang', 'other projects')"/>
