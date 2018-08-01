@@ -2498,8 +2498,9 @@ JS;
 					'date', 'security', 'file')),
 				'multiple_uploader' => true,
 				'multi_upload_parans' => "{menuaction:'property.uiproject.build_multi_upload_file', id:'{$id}'}",
+				'street_name' => $values['location_data']['street_name'],
+				'street_number' => $values['location_data']['street_number'],
 			);
-
 			if ($auto_create)
 			{
 				$location = explode('-', $values['location_data']['location_code']);
@@ -2510,8 +2511,6 @@ JS;
 					$values['location']["loc$i"] = $location[($i - 1)];
 				}
 
-				$values['street_name'] = $values['location_data']['street_name'];
-				$values['street_number'] = $values['location_data']['street_number'];
 				$values['location_name'] = $values['location_data']["loc{$level}_name"];
 				$values['extra'] = $values['p'][0];
 
