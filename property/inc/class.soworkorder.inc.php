@@ -540,6 +540,10 @@
 						$order_field = ", fm_workorder.account_id";
 						$ordermethod = " ORDER BY fm_workorder.account_id {$sort}, fm_workorder.id";
 						break;
+					case 'org_name':
+						$order_field = ", fm_vendor.org_name";
+						$ordermethod = " ORDER BY fm_vendor.org_name {$sort}, fm_workorder.id";
+						break;
 					default:
 						$order_field = ", {$order}";
 				}
