@@ -73,7 +73,8 @@ function applicationModel()  {
     
     self.GoToConfirmPage = function () {
         var requestUrl = baseURL + "?menuaction=bookingfrontend.uiapplication.add&phpgw_return_as=json";
-            $.post(requestUrl, function( data ) {
+            $.post(requestUrl,{  })
+            .done(function( data ) {
                 console.log(data);
             });
 

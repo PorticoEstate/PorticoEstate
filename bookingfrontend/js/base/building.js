@@ -1,16 +1,9 @@
 var bookableResources = ko.observableArray();
 var events = ko.observableArray();
 var resourceIds = [];
-var colors = [ ["#878f99", false], ["#b2ad7f", false], ["#82b74b", false], ["#ff7b25", false], ["#034f84", false], ["#c94c4c", false],["#3e4444", false], ["#5b9aa0", false], ["#618685", false]];
 var date = new Date();
-
-
-//var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
-
+var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var urlParams = [];
-
-
 $(".bookable-resource-link-href").attr('data-bind', "attr: {'href': resourceItemLink }");
 ko.applyBindings({
     bookableResource: (bookableResources),
@@ -21,11 +14,9 @@ $(document).ready(function ()
 {
     //urlParams = new URLSearchParams(window.location.search); //not ie supported
     $(".overlay").show();
-    CreateUrlParams(window.location.search);
-    
+    CreateUrlParams(window.location.search);    
     PopulateBuildingData(baseURL, urlParams);
-    PopulateBookableResources(baseURL, urlParams);
-    
+    PopulateBookableResources(baseURL, urlParams);    
     
     $(document).on('change', '.choosenResource', function (e) {
         for(var i=0; i<resourceIds.length; i++) {
@@ -34,9 +25,7 @@ $(document).ready(function ()
             }
         }
         EventsOptionsChanged($("#"+e.target.id).text(), e.target.checked);   // get the current value of the input field.
-    });
-    
-    
+    });    
 
     $(document).on('click', '.img-thumbnail', function () {
         $("#lightbox").find($('img')).attr("src",$(this).attr('src'));
@@ -65,30 +54,21 @@ function getResourceVisible(resourceName) {
     }
 }
 
-function getResourceColor(resourceName) {
-    for(var i=0; i<resourceIds.length; i++) {
-        if(resourceIds[i].name == resourceName) {
-            return resourceIds[i].color;
-        }
-    }
-}
-
 function PopulateCalendarEvents(baseURL, urlParams) {
     $(".overlay").show();
     var eventsArray = [];
     var paramDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     var m = 0;
-
+    
     for(var i=0; i<resourceIds.length; i++) {
-//        getJsonURL = baseURL+"?menuaction=bookingfrontend.uibooking.resource_schedule&resource_id="+resourceIds[i].id+"&date="+paramDate+"&phpgw_return_as=json";
-        getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:resourceIds[i].id, date:paramDate}, true);
+        getJsonURL = baseURL+"?menuaction=bookingfrontend.uibooking.resource_schedule&resource_id="+resourceIds[i].id+"&date="+paramDate+"&phpgw_return_as=json";
         $.getJSON(getJsonURL, function(result){
             if(result.ResultSet.totalResultsAvailable > 1) {
 
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
                     //var visible = getResourceVisible(result.ResultSet.Result[k].resource);
                     var visible = true;
-                    var color = getResourceColor(result.ResultSet.Result[k].resource);
+                    color = "#2875c2";
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
                     {
@@ -97,8 +77,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Sun.description);
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Sun.description,
                             startDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString()),
@@ -115,8 +96,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Mon.to_, result.ResultSet.Result[k].Mon.organization_name, 
                         result.ResultSet.Result[k].Mon.description);
                         eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Mon.description,
                             startDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString()),
@@ -133,8 +115,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Tue.description);
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Tue.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Tue.description,
                             startDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.to_).toString()),
@@ -151,8 +134,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Wed.description);
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Wed.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Wed.description,
                             startDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.to_).toString()),
@@ -169,8 +153,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Thu.description);
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Thu.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Thu.description,
                             startDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.to_).toString()),
@@ -187,8 +172,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Fri.description);
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Fri.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Fri.description,
                             startDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.to_).toString()),
@@ -205,8 +191,9 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                         result.ResultSet.Result[k].Sat.description);
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Sat.id + result.ResultSet.Result[k].resource,
+                            name: result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Sat.description,
                             startDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.to_).toString()),
@@ -223,18 +210,29 @@ function PopulateCalendarEvents(baseURL, urlParams) {
                     m++;
                     if (m == resourceIds.length) {
                         events = eventsArray;
-                        GenerateCalendarForEvents(date);
+                        events.sort(compare);
+                        setTimeout(function() {
+                            events.reverse();
+                            GenerateCalendarForEvents(date);
+                        }, 1000);    
                         $(".calendar-tool").removeClass("invisible");
                         
                     }
                 });
-    }
-    
+    }    
+
 }
 
+function compare(a,b) {
+    if (a.name < b.name)
+      return -1;
+    if (a.name > b.name)
+      return 1;
+    return 0;
+  }
+
 function PopulateBuildingData(baseURL, urlParams) {
- //   getJsonURL = baseURL+"?menuaction=bookingfrontend.uibuilding.show&id="+urlParams['id']+"&phpgw_return_as=json";
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show", id:urlParams['id']}, true);
+    getJsonURL = baseURL+"?menuaction=bookingfrontend.uibuilding.show&id="+urlParams['id']+"&phpgw_return_as=json";
     $.getJSON(getJsonURL, function(result){
         $("#main-item-header").text(result.building.name);
         $("#item-street").text(result.building.street);
@@ -242,15 +240,12 @@ function PopulateBuildingData(baseURL, urlParams) {
         $("#item-description").html(result.building.description);        
     });
     
-//    getJsonURL = baseURL+"?menuaction=bookingfrontend.uidocument_building.index_images&filter_owner_id="+urlParams['id']+"&phpgw_return_as=json";
-	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.index_images", filter_owner_id:urlParams['id']}, true);
+    getJsonURL = baseURL+"?menuaction=bookingfrontend.uidocument_building.index_images&filter_owner_id="+urlParams['id']+"&phpgw_return_as=json";
     $.getJSON(getJsonURL, function(result){
         if(result.ResultSet.Result.length > 0) {
- //           $("#item-main-picture").attr("src", baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[0].id+"&filter_owner_id="+urlParams['id']);
-            $("#item-main-picture").attr("src", phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.download", id:result.ResultSet.Result[0].id,filter_owner_id: urlParams['id']}, false));
+            $("#item-main-picture").attr("src", baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[0].id+"&filter_owner_id="+urlParams['id']);
             for(var i=0; i<result.ResultSet.Result.length; i++) {
- //             var src = baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[i].id+"&filter_owner_id="+urlParams['id'];
-                var src = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uidocument_building.download", id:result.ResultSet.Result[i].id,filter_owner_id: urlParams['id']}, false);
+                var src = baseURL + "?menuaction=bookingfrontend.uidocument_building.download&id="+result.ResultSet.Result[i].id+"&filter_owner_id="+urlParams['id'];
                 var imgTag = '<img id="modal-img-'+i+'" src="'+src+'" data-toggle="modal" data-target="#lightbox" class="img-thumbnail m-1" alt=""></img>';
                 $(".building-images").append(imgTag);
             }
@@ -262,16 +257,13 @@ function PopulateBuildingData(baseURL, urlParams) {
 }
 
 function PopulateBookableResources(baseURL, urlParams) {
- //   getJsonURL = baseURL+"?menuaction=bookingfrontend.uiresource.index_json&filter_building_id="+urlParams['id']+"&phpgw_return_as=json";
- 	getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.index_json", filter_building_id:urlParams['id']}, true);
-   $.getJSON(getJsonURL, function(result){
+    getJsonURL = baseURL+"?menuaction=bookingfrontend.uiresource.index_json&filter_building_id="+urlParams['id']+"&phpgw_return_as=json";
+    $.getJSON(getJsonURL, function(result){
         for(var i=0; i<result.results.length; i++) {
- //         bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
-            bookableResources.push({name: result.results[i].name, resourceItemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show", id:result.results[i].id,buildingid: urlParams['id']}, false)});
-            resourceIds.push({id: result.results[i].id, color: getRandomColor(), name: result.results[i].name, visible: true});
+            bookableResources.push({name: result.results[i].name, resourceItemLink: baseURL+"?menuaction=bookingfrontend.uiresource.show&id="+result.results[i].id+"&buildingid="+urlParams['id']});
+            resourceIds.push({id: result.results[i].id, name: result.results[i].name, visible: true});
         }
         PopulateCalendarEvents(baseURL, urlParams);
-        
     });
 }
 
@@ -324,8 +316,7 @@ function GenerateCalendarForEvents(date) {
                         }
                     }
                 });
-                
-                               
+                         
                 new Y.Scheduler(
                         {
                             boundingBox: '#myScheduler',
@@ -374,6 +365,19 @@ function GenerateCalendarForEvents(date) {
                 $(".overlay").hide();
                 
                 $('.popover-title').remove();
+
+                var width = 100 / resourceIds.length;
+                $(".scheduler-event-disabled").css("max-width", width + "%"); 
+                $(".scheduler-event-title").text("");                
+
+                $(".scheduler-event-disabled").hover(function () {
+                    $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+                });
+
+                $( ".scheduler-event-disabled" ).mouseleave(function() {
+                    $("[data-toggle='tooltip']").tooltip('hide');
+                });
+
             }
     );
 }
@@ -400,14 +404,3 @@ YUI({ lang: 'nb-no' }).use(
     );
   }
 );
-
-function getRandomColor() {
-  
-    for(var i=0; i<colors.length; i++) {
-        if(colors[i][1] === false) {
-            colors[i][1] = true;
-            return colors[i][0];
-        }
-    }
-    
-}
