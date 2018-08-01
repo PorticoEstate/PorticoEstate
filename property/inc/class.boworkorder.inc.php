@@ -123,6 +123,12 @@
 		function get_column_list()
 		{
 			$columns = array();
+			$columns['org_name'] = array
+				(
+				'id' => 'org_name',
+				'name' => lang('Vendor name'),
+				'sortable' => true
+			);
 			$columns['continuous'] = array
 				(
 				'id' => 'continuous',
