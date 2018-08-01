@@ -254,11 +254,20 @@
 		function resquery($params = array())
 		{
 			$fields_resource = array('id','name');
-			$fields_building = array('id','name','street','zip_code','city');
+			$fields_building = array('id','name','street','zip_code','city','part_of_town_name');
 
 			// Get a list of all activities, grouped on top level activities, as well as all facilities
 			$activitylist = $this->boactivity->fetch_activities_hierarchy();
 			$facilitylist = $this->bofacility->get_facilities();
+			// Also get a list of all part_of_town that are used for buildings, creating a list keyed on the
+			// part_of_town id
+			$partoftownlist = array();
+			$potlist = execMethod('property.solocation.get_booking_part_of_towns');
+			foreach ($potlist as $pot)
+			{
+				$id = $pot['id'];
+				$partoftownlist[$id] = $pot;
+			}
 
 			// Validate parameters
 			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
@@ -323,7 +332,7 @@
 						if ($facility['active'])
 						{
 							$resource['facilities'][] = array('id' => $facility['id'], 'name' => $facility['name']);
-							if (!array_key_exists($facility['id']))
+							if (!array_key_exists($facility['id'], $all_facilities))
 							{
 								$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
 							}
@@ -342,11 +351,26 @@
 			usort($all_activities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 			$all_facilities_list = array_values($all_facilities);
 			usort($all_facilities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-
+			// Get building data
+			$all_partoftown = array();
 			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
 			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
 			foreach ($buildings['results'] as &$building)
 			{
+				if (array_key_exists($building['part_of_town_id'],$partoftownlist))
+				{
+					$partoftown = $partoftownlist[$building['part_of_town_id']];
+					$building['part_of_town_name'] = $partoftown['name'];
+					if (!array_key_exists($partoftown['id'], $all_partoftown))
+					{
+						$all_partoftown[$partoftown['id']] = array('id' => $partoftown['id'], 'name' => $partoftown['name']);
+					}
+				}
+				else
+				{
+					$building['part_of_town_name'] = $building['district'];
+				}
+
 				foreach ($building as $k => $v)
 				{
 					if (!in_array($k,$fields_building))
@@ -357,8 +381,11 @@
 				$building['resources'] = $building_resources[$building['id']];
 			}
 			unset($building);
+			$all_partoftown_list = array_values($all_partoftown);
+			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 
-			return array('buildings' => $buildings, 'activities' => $all_activities_list, 'facilities' => $all_facilities_list);
+			return array('buildings' => $buildings, 'activities' => $all_activities_list, 'facilities' => $all_facilities_list,
+				'partoftowns' => $all_partoftown_list);
 		}
 
 
