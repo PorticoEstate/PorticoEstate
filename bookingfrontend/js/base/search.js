@@ -169,11 +169,9 @@ function doSearch() {
     $("#welcomeResult").hide();
     searchViewModel.selectedFirstLevel(null);
     searchViewModel.selectedFirstList(null);
-    var oArgs = {
-        menuaction: 'bookingfrontend.uisearch.query'
-    };
+
  //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-    var requestUrl = this.phpGWLink('bookingfrontend/', oArgs, true);
+    var requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.query"}, true);
     var searchTerm = $("#mainSearchInput").val();
 
     $.ajax({

@@ -74,7 +74,7 @@ function PopulateCalendarEvents() {
             if(result.ResultSet.totalResultsAvailable > 1) {
                 for(var k=0; k<result.ResultSet.Result.length; k++) {
                     var visible = true;
-                    var color = "blue";
+                    color = "#2875c2";
                     
                     if(typeof result.ResultSet.Result[k].Sun !== "undefined" &&
                             $.inArray(result.ResultSet.Result[k].Sun.id, eventsArray))
@@ -86,7 +86,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Sun.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Sun.description,
                             startDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sun.date + "T" + result.ResultSet.Result[k].Sun.to_).toString()),
@@ -105,7 +105,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Mon.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             startDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Mon.date + "T" + result.ResultSet.Result[k].Mon.to_).toString()),
                             disabled: true,
@@ -121,7 +121,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Tue.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Tue.description,
                             startDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Tue.date + "T" + result.ResultSet.Result[k].Tue.to_).toString()),
@@ -138,7 +138,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Wed.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Wed.description,
                             startDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Wed.date + "T" + result.ResultSet.Result[k].Wed.to_).toString()),
@@ -155,7 +155,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Thu.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Thu.description,
                             startDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Thu.date + "T" + result.ResultSet.Result[k].Thu.to_).toString()),
@@ -172,7 +172,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Fri.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Fri.description,
                             startDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Fri.date + "T" + result.ResultSet.Result[k].Fri.to_).toString()),
@@ -189,7 +189,7 @@ function PopulateCalendarEvents() {
                         
                         eventsArray.push({ id: result.ResultSet.Result[k].Sat.id + result.ResultSet.Result[k].resource,
                             color: color,
-                            content: "<span class='event-resource' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'>"+result.ResultSet.Result[k].resource+"</span>",
+                            content: "<span class='event-resource' value='"+result.ResultSet.Result[k].resource+"' data-toggle='tooltip' data-html='true' data-placement='right' title='"+toolTipTitle+"'></span>",
                             description: result.ResultSet.Result[k].Sat.description,
                             startDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.from_).toString()),
                             endDate: new Date((result.ResultSet.Result[k].Sat.date + "T" + result.ResultSet.Result[k].Sat.to_).toString()),
@@ -235,6 +235,7 @@ function GenerateCalendarForEvents(date) {
                     on: {
                         save: function(event) {
                             //alert('Save Event:' + this.isNew() + ' --- '  + '-----' + new Date(this.getClearStartDate()) );
+                            $(".overlay").show();
                             console.log(new Date(this.getTemplateData().startDate));
                             ForwardToNewApplication(this.getTemplateData().startDate, this.getTemplateData().endDate);
                         }
@@ -291,7 +292,15 @@ function GenerateCalendarForEvents(date) {
                 
                 $('.popover-title').remove();
 
+                $(".scheduler-event-title").text("");                
 
+                $(".scheduler-event-disabled").hover(function () {
+                    $(this).find( "[data-toggle='tooltip']" ).tooltip("show");
+                });
+
+                $( ".scheduler-event-disabled" ).mouseleave(function() {
+                    $("[data-toggle='tooltip']").tooltip('hide');
+                });
             }
     );
 }
@@ -306,7 +315,7 @@ YUI({ lang: 'nb-no' }).use(
           zIndex: 99999
         },
         on: {
-          selectionChange: function(event) { 
+          selectionChange: function(event) {
               date = new Date(event.newSelection);
               PopulateCalendarEvents(baseURL, urlParams);
 

@@ -72,8 +72,21 @@ function applicationModel()  {
     };
     
     self.GoToConfirmPage = function () {
-        var requestUrl = baseURL + "?menuaction=bookingfrontend.uiapplication.add&phpgw_return_as=json";
-            $.post(requestUrl,{  })
+	    //getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibooking.resource_schedule", resource_id:resourceIds[i].id, date:paramDate}, true);
+        
+        var requestUrl = phpGWLink('bookingfrontend/', { menuaction: "bookingfrontend.uiapplication.add", building_id: 10, }, true);
+        
+            $.post(requestUrl,{ 
+                resources: ["test", "test1"],
+                accepted_documents: ["test"],
+                from_: [new Date()],
+                to_: [new Date(new Date().getDate() + 1)],
+                contact_email: "test@test.com",
+                contact_email2: "test@test.com",
+                //agegroups: ["test"],
+                customer_identifier_type: "organization_number",
+                customer_organization_number: 995838931
+            })
             .done(function( data ) {
                 console.log(data);
             });
