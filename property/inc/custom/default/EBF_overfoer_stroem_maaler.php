@@ -164,14 +164,16 @@
 
 			$subject = "Måleroverføring: {$address}";
 
-//			$toarray = array('kundepost@bkk.no' );
+			$toarray = array('kundepost@bkk.no' );
 //			$toarray = array('hc483@bergen.kommune.no' );
 			$to = implode(';', $toarray);
 
 			$from_name = $GLOBALS['phpgw_info']['user']['fullname'];
 			$from_email = "{$from_name}<{$GLOBALS['phpgw_info']['user']['preferences']['property']['email']}>";
 
-			$cc = $from_email;
+			$ccarray = array('Muhammed.Ibrahim@bergen.kommune.no',$from_email );
+			$cc = implode(';', $ccarray);
+
 			$bcc = 'hc483@bergen.kommune.no';
 
 			$html =<<<HTML
