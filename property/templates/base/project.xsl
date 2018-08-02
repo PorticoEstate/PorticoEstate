@@ -336,6 +336,16 @@
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:call-template name="location_view"/>
+							<input type="hidden" id="street_name">
+								<xsl:attribute name="value">
+									<xsl:value-of select="street_name"/>
+								</xsl:attribute>
+							</input>
+							<input type="hidden" id="street_number">
+								<xsl:attribute name="value">
+									<xsl:value-of select="street_number"/>
+								</xsl:attribute>
+							</input>
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:choose>
