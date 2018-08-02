@@ -134,6 +134,7 @@
 		 */
 		function update_tables()
 		{
+			$this->update_table_LeieobjektTVSignal();
 			$this->update_table_eier();
 			$this->update_table_gateadresse();
 			$this->update_table_Objekt();
@@ -143,6 +144,52 @@
 			$this->update_table_leietaker();
 			$this->update_table_reskontro();
 		}
+
+
+		function update_table_LeieobjektTVSignal()
+		{
+			$metadata = $this->db->metadata('boei_leieobjekt_tv_signal');
+//_debug_array($metadata);
+			if (!$metadata)
+			{
+				$sql_table = <<<SQL
+				CREATE TABLE boei_leieobjekt_tv_signal
+				(
+				  id integer NOT NULL,
+				  navn character varying(50),
+				  CONSTRAINT boei_tv_signal_pkey PRIMARY KEY (id)
+				);
+SQL;
+				$this->db->query($sql_table, __LINE__, __FILE__);
+			}
+			$this->db->query('DELETE FROM boei_leieobjekt_tv_signal', __LINE__, __FILE__);
+			$sql_boei = 'SELECT TOP 100 PERCENT id,CAST(TVSignal as TEXT) AS TVSignal FROM LeieobjektTVSignal';
+			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
+			// using stored prosedures
+			$sql = 'INSERT INTO boei_leieobjekt_tv_signal (id, navn)'
+				. ' VALUES(?, ?)';
+			$valueset = array();
+
+			while ($this->db_boei->next_record())
+			{
+				$valueset[] = array
+					(
+					1 => array
+						(
+						'value' => (int)$this->db_boei->f('id'),
+						'type' => PDO::PARAM_INT
+					),
+					2 => array
+						(
+						'value' => $this->db->db_addslashes($this->db_boei->f('TVSignal')),
+						'type' => PDO::PARAM_STR
+					)
+				);
+			}
+
+			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
+		}
+
 
 		function update_table_eier()
 		{
@@ -181,7 +228,7 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('Navn')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Navn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
@@ -235,7 +282,7 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('GateNavn')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('GateNavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
@@ -293,7 +340,7 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Navn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
@@ -369,7 +416,7 @@ SQL;
 					),
 					3 => array
 						(
-						'value' => $this->db->db_addslashes(($this->db_boei->f('ByggNavn'))),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('ByggNavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					4 => array
@@ -433,7 +480,7 @@ SQL;
 					),
 					4 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('Beskrivelse')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Beskrivelse'))),
 						'type' => PDO::PARAM_STR
 					)
 				);
@@ -471,6 +518,7 @@ SQL;
 					driftsstatus_id smallint,
 					leietaker_id integer,
 					beregnet_boa numeric(20,2),
+					tv_signal_id smallint,
 
 				  CONSTRAINT boei_leieobjekt_pkey PRIMARY KEY (objekt_id, bygg_id, seksjons_id, leie_id)
 				);
@@ -480,15 +528,15 @@ SQL;
 			$this->db->query('DELETE FROM boei_leieobjekt', __LINE__, __FILE__);
 			$sql_boei = 'SELECT TOP 100 PERCENT Objekt_ID, Bygg_ID, Seksjons_ID, Leie_ID, Flyttenr,'
 				. ' Formaal_ID, Gateadresse_ID, Gatenr, Etasje, AntallRom, Boareal,'
-				. ' AndelAvFellesareal, Livslopsstd, Heis, Driftsstatus_ID, Leietaker_ID, Beregnet_Boa'
+				. ' AndelAvFellesareal, Livslopsstd, Heis, Driftsstatus_ID, Leietaker_ID, Beregnet_Boa, TVSignal_ID'
 				. ' FROM Leieobjekt';
 
 			$this->db_boei->query($sql_boei, __LINE__, __FILE__);
 			// using stored prosedures
 			$sql = 'INSERT INTO boei_leieobjekt (objekt_id, bygg_id, seksjons_id, leie_id, flyttenr,'
 				. ' formaal_id, gateadresse_id, gatenr, etasje, antallrom, boareal,'
-				. ' andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa)'
-				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+				. ' andelavfellesareal,livslopsstd, heis, driftsstatus_id, leietaker_id,beregnet_boa, tv_signal_id)'
+				. ' VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			$valueset = array();
 
 			while ($this->db_boei->next_record())
@@ -532,7 +580,7 @@ SQL;
 					),
 					8 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('Gatenr')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Gatenr'))),
 						'type' => PDO::PARAM_STR
 					),
 					9 => array
@@ -579,10 +627,15 @@ SQL;
 						(
 						'value' => (float)$this->db_boei->f('Beregnet_Boa'),
 						'type' => PDO::PARAM_STR
+					),
+					18 => array
+						(
+						'value' => (int)$this->db_boei->f('TVSignal_ID'),
+						'type' => PDO::PARAM_INT
 					)
 				);
 			}
-
+//			_debug_array($valueset);
 			$this->db->insert($sql, $valueset, __LINE__, __FILE__);
 		}
 
@@ -635,12 +688,12 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('Fornavn')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Fornavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
 						(
-						'value' => $this->db->db_addslashes($this->db_boei->f('Etternavn')),
+						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Etternavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					4 => array
@@ -1000,11 +1053,20 @@ SQL;
 
 		function legg_til_leieobjekt_phpgw()
 		{
+			$this->db->query("SELECT * FROM boei_leieobjekt_tv_signal", __LINE__, __FILE__);
+			
+			$tv_signaler = array();
+			while ($this->db->next_record())
+			{
+				$tv_signaler[$this->db->f('id')] = $this->db->f('navn');
+			}
+
+
 			$sql = "SELECT boei_leieobjekt.objekt_id || '-' || boei_leieobjekt.bygg_id || '-' || boei_leieobjekt.seksjons_id || '-' || boei_leieobjekt.leie_id AS location_code,"
 				. " boei_leieobjekt.objekt_id, boei_leieobjekt.leie_id, boei_leieobjekt.bygg_id, boei_leieobjekt.seksjons_id,"
 				. " boei_leieobjekt.formaal_id, boei_leieobjekt.gateadresse_id, boei_leieobjekt.gatenr, boei_leieobjekt.etasje, boei_leieobjekt.antallrom,"
 				. " boei_leieobjekt.boareal, boei_leieobjekt.livslopsstd, boei_leieobjekt.heis, boei_leieobjekt.driftsstatus_id, boei_leieobjekt.leietaker_id,"
-				. " boei_leieobjekt.beregnet_boa, boei_leieobjekt.flyttenr"
+				. " boei_leieobjekt.beregnet_boa, boei_leieobjekt.flyttenr, boei_leieobjekt.tv_signal_id"
 				. " FROM boei_leieobjekt LEFT OUTER JOIN"
 				. " fm_location4 ON boei_leieobjekt.objekt_id = fm_location4.loc1 AND boei_leieobjekt.leie_id = fm_location4.loc4"
 				. " WHERE fm_location4.loc1 IS NULL";
@@ -1034,7 +1096,8 @@ SQL;
 					'driftsstatus_id' => $this->db->f('driftsstatus_id'),
 					'tenant_id' => $this->db->f('leietaker_id'),
 					'beregnet_boa' => $this->db->f('beregnet_boa'),
-					'flyttenr' => $this->db->f('flyttenr')
+					'flyttenr' => $this->db->f('flyttenr'),
+					'tv_signal' => $tv_signaler[$this->db->f('tv_signal_id')]
 				);
 			}
 
@@ -1043,7 +1106,7 @@ SQL;
 			foreach ($leieobjekt_latin as $leieobjekt)
 			{
 				$sql2 = "INSERT INTO fm_location4 (location_code, loc1, loc4, loc2, loc3, category, street_id, street_number, etasje, antallrom, boareal, livslopsstd, heis, driftsstatus_id,
-                      tenant_id, beregnet_boa, flyttenr)"
+                      tenant_id, beregnet_boa, flyttenr, tv_signal)"
 					. "VALUES (" . $this->db->validate_insert($leieobjekt) . ")";
 
 				$this->db->query($sql2, __LINE__, __FILE__);
@@ -1164,8 +1227,18 @@ SQL;
 
 		function oppdater_leieobjekt()
 		{
-			$sql = "SELECT boei_leieobjekt.objekt_id,boei_leieobjekt.leie_id,boei_leieobjekt.leietaker_id, boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, boei_leieobjekt.flyttenr, innflyttetdato"
-				. " FROM  boei_leieobjekt LEFT JOIN boei_reskontro ON boei_leieobjekt.objekt_id=boei_reskontro.objekt_id AND boei_leieobjekt.leie_id=boei_reskontro.leie_id"
+			$this->db->query("SELECT * FROM boei_leieobjekt_tv_signal", __LINE__, __FILE__);
+
+			$tv_signaler = array();
+			while ($this->db->next_record())
+			{
+				$tv_signaler[$this->db->f('id')] = $this->db->f('navn');
+			}
+
+			$sql = "SELECT boei_leieobjekt.objekt_id,boei_leieobjekt.leie_id,boei_leieobjekt.leietaker_id,"
+				. " boareal, formaal_id, gateadresse_id, gatenr, etasje,driftsstatus_id, boei_leieobjekt.flyttenr, innflyttetdato, boei_leieobjekt.tv_signal_id"
+				. " FROM  boei_leieobjekt"
+				. " LEFT JOIN boei_reskontro ON boei_leieobjekt.objekt_id=boei_reskontro.objekt_id AND boei_leieobjekt.leie_id=boei_reskontro.leie_id"
 				. " AND boei_leieobjekt.flyttenr=boei_reskontro.flyttenr AND boei_leieobjekt.leietaker_id=boei_reskontro.leietaker_id";
 
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -1185,7 +1258,8 @@ SQL;
 					. " driftsstatus_id = '" . $this->db->f('driftsstatus_id') . "',"
 					. " boareal = '" . $this->db->f('boareal') . "',"
 					. " flyttenr = '" . $this->db->f('flyttenr') . "',"
-					. " innflyttetdato = '" . date("M d Y", strtotime($this->db->f('innflyttetdato'))) . "'"
+					. " innflyttetdato = '" . date("M d Y", strtotime($this->db->f('innflyttetdato'))) . "',"
+					. " tv_signal = '" . $tv_signaler[$this->db->f('tv_signal_id')] . "'"
 					. " WHERE  loc1 = '" . $this->db->f('objekt_id') . "'  AND  loc4= '" . $this->db->f('leie_id') . "'";
 
 				$this->db2->query($sql2, __LINE__, __FILE__);
