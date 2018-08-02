@@ -241,7 +241,7 @@ HTML;
 			}
 			catch (Exception $e)
 			{
-				$this->receipt['error'][] = array('msg' => $e->getMessage());
+				phpgwapi_cache::message_set($e->getMessage(),'error');
 			}
 
 			/**
@@ -249,6 +249,9 @@ HTML;
 			 */
 			if($rc)
 			{
+
+				phpgwapi_cache::message_set("Epost er sendt til BKK om overføring av måler",'message');
+
 				$now = date(phpgwapi_db::date_format());
 
 				$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{epost_bkk}', '\"{$now}\"', true)"
