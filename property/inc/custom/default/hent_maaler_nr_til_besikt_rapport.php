@@ -25,7 +25,7 @@
 			}
 		}
 
-		function update_data( $values, $values_attribute = array() )
+		function update_data( $values, $values_attribute = array(), $action )
 		{
 			if(empty($values['location_code']))
 			{

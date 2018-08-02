@@ -472,51 +472,56 @@
 				return '';
 			}
 
-			foreach ( $values_attribute as &$attrib )
+			$ret = array();
+
+			foreach ( $values_attribute as $attrib )
 			{
-				if ( !$attrib['value'] )
+				if ( $attrib['value'] )
 				{
-					continue;
+					switch ( $attrib['datatype'] )
+					{
+						case 'CH':
+							$attrib['value'] = ',' . implode(',', $attrib['value']) . ',';
+							break;
+
+						case 'R':
+							$attrib['value'] = $attrib['value'][0];
+							break;
+
+						case 'I':
+							$attrib['value'] = (int)$attrib['value'];
+							break;
+
+						case 'N':
+							$attrib['value'] = str_replace(',', '.', $attrib['value']);
+							break;
+
+						case 'D':
+							$ts = phpgwapi_datetime::date_to_timestamp($attrib['value']) - phpgwapi_datetime::user_timezone();
+							$attrib['value'] = date($this->_dateformat, $ts);
+							break;
+
+						case 'DT':
+							if($attrib['value']['date'])
+							{
+								$date_array	= phpgwapi_datetime::date_array($attrib['value']['date']);
+								$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']) - phpgwapi_datetime::user_timezone();
+								$attrib['value'] = date($this->_datetimeformat, $ts);
+							}
+							else
+							{
+								$attrib['value'] = '';
+							}
+							break;
+					}
 				}
 
-				switch ( $attrib['datatype'] )
+				if(!$attrib['disabled'])
 				{
-					case 'CH':
-						$attrib['value'] = ',' . implode(',', $attrib['value']) . ',';
-						break;
-
-					case 'R':
-						$attrib['value'] = $attrib['value'][0];
-						break;
-
-					case 'I':
-						$attrib['value'] = (int)$attrib['value'];
-						break;
-
-					case 'N':
-						$attrib['value'] = str_replace(',', '.', $attrib['value']);
-						break;
-
-					case 'D':
-						$ts = phpgwapi_datetime::date_to_timestamp($attrib['value']) - phpgwapi_datetime::user_timezone();
-						$attrib['value'] = date($this->_dateformat, $ts);
-						break;
-
-					case 'DT':
-						if($attrib['value']['date'])
-						{
-							$date_array	= phpgwapi_datetime::date_array($attrib['value']['date']);
-							$ts = mktime ((int)$attrib['value']['hour'], (int)$attrib['value']['min'], 0, $date_array['month'], $date_array['day'], $date_array['year']) - phpgwapi_datetime::user_timezone();
-							$attrib['value'] = date($this->_datetimeformat, $ts);
-						}
-						else
-						{
-							$attrib['value'] = '';
-						}
-						break;
+					$ret[] = $attrib;
 				}
 			}
-			return $values_attribute;
+			return $ret;
 		}
 
 		/**
