@@ -2482,29 +2482,18 @@
 
 			$location_name = str_replace('.', '_', $location_name);
 
-//			phpgw::import_class('phpgwapi.xmlhelper');
-//
-//			$xmldata = phpgwapi_xmlhelper::toXML($data, $location_name);
-//			$doc = new DOMDocument;
-//			$doc->preserveWhiteSpace = true;
-//			$doc->loadXML($xmldata);
-//			$domElement = $doc->getElementsByTagName($location_name)->item(0);
-//			$domAttribute = $doc->createAttribute('appname');
-//			$domAttribute->value = $this->type_app[$this->type];
-//
-//			// Don't forget to append it to the element
-//			$domElement->appendChild($domAttribute);
-//
-//			// Append it to the document itself
-//			$doc->appendChild($domElement);
-//
-//			$doc->formatOutput = true;
-//			$xml = $doc->saveXML();
+			$this->db->query("SELECT json_representation FROM fm_bim_item WHERE fm_bim_item.id = {$id} AND location_id = $location_id", __LINE__, __FILE__);
+			$this->db->next_record();
+			$jsondata = json_decode($this->db->f('json_representation'), true);
+
+			foreach ($data as $key => $value)
+			{
+				$jsondata[$key] = $value;
+			}
 
 			$value_set = array
 				(
-//				'xml_representation' => $this->db->db_addslashes($xml),
-				'json_representation' => json_encode($data),
+				'json_representation' => json_encode($jsondata),
 				'p_location_id' => isset($data['p_location_id']) && $data['p_location_id'] ? $data['p_location_id'] : '',
 				'p_id' => isset($data['p_id']) && $data['p_id'] ? $data['p_id'] : '',
 				'location_code' => $data['location_code'],
