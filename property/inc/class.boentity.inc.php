@@ -765,6 +765,7 @@ JS;
 			else
 			{
 				$receipt = $this->so->add($values, $values_attribute, $entity_id, $cat_id);
+				$values['id'] = $receipt['id'];
 			}
 
 			reset($custom_functions);
