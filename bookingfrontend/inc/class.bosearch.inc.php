@@ -253,8 +253,14 @@
 
 		function resquery($params = array())
 		{
+			$returnres = array(
+				'buildings'   => array(),
+				'activities'  => array(),
+				'facilities'  => array(),
+				'partoftowns' => array(),
+				);
 			$fields_resource = array('id','name');
-			$fields_building = array('id','name','street','zip_code','city','part_of_town_name');
+			$fields_building = array('id','name','street','zip_code','city','part_of_town_id','part_of_town_name');
 
 			// Get a list of all activities, grouped on top level activities, as well as all facilities
 			$activitylist = $this->boactivity->fetch_activities_hierarchy();
@@ -270,9 +276,41 @@
 			}
 
 			// Validate parameters
-			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
+			$invalid_params = False;
+			if (!isset($params['rescategory_id']))
 			{
-				return array();
+				$invalid_params = True;
+			}
+			$intparams = array('rescategory_id', 'activity_id', 'part_of_town_id');
+			foreach ($intparams as $intparam)
+			{
+				if (isset($params[$intparam]) && !(is_int($params[$intparam]) && $params[$intparam] > 0))
+				{
+					$invalid_params = True;
+					break;
+				}
+			}
+			if (isset($params['facility_id']))
+			{
+				if (empty($params['facility_id']))
+				{
+					$params['facility_id'] = null;
+				}
+				else
+				{
+					foreach ($params['facility_id'] as $fid)
+					{
+						if (!(is_int($fid) && $fid > 0))
+						{
+							$invalid_params = True;
+							break;
+						}
+					}
+				}
+			}
+			if ($invalid_params)
+			{
+				return $returnres;
 			}
 
 			// Get resources
@@ -306,6 +344,7 @@
 					$childactivities = $activitylist[$toplevelactivity_id]['children'];
 				}
 				$resource['activities'] = array();
+				$include_on_activity = False;
 				foreach ($activity_ids as $activity_id)
 				{
 					if (array_key_exists($activity_id, $childactivities))
@@ -313,10 +352,17 @@
 						$childactivity = $childactivities[$activity_id];
 						if ($childactivity['active'])
 						{
+							// Include the activity for the resource
 							$resource['activities'][] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
 							if (!array_key_exists($childactivity['id'], $all_activities))
 							{
+								// Include the activity for the all activities list
 								$all_activities[$childactivity['id']] = array('id' => $childactivity['id'], 'name' => $childactivity['name']);
+							}
+							// Check filter criteria
+							if (isset($params['activity_id']) && $activity_id == $params['activity_id'])
+							{
+								$include_on_activity = True;
 							}
 						}
 					}
@@ -324,6 +370,7 @@
 				usort($resource['activities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 				// Add a list of facilities with id and name. Only active facilities are included
 				$resource['facilities'] = array();
+				$include_on_facility = False;
 				foreach ($facility_ids as $facility_id)
 				{
 					if (array_key_exists($facility_id,$facilitylist))
@@ -331,16 +378,26 @@
 						$facility = $facilitylist[$facility_id];
 						if ($facility['active'])
 						{
+							// Include the facility for the resource
 							$resource['facilities'][] = array('id' => $facility['id'], 'name' => $facility['name']);
 							if (!array_key_exists($facility['id'], $all_facilities))
 							{
+								// Include the facility for the all facilities list
 								$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
+							}
+							// Check filter criteria
+							if ((!$include_on_facility) && isset($params['facility_id']) && in_array($facility_id, $params['facility_id']))
+							{
+								$include_on_facility = True;
 							}
 						}
 					}
 				}
 				usort($resource['facilities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
-				// Add the resource to the building
+				// Add the resource to the building, unless given filter criterias are not met
+				if ((isset($params['activity_id']) && !$include_on_activity) || (isset($params['facility_id']) && !$include_on_facility)) {
+					$resource['ignore'] = True;
+				}
 				foreach ($building_ids as $building_id)
 				{
 					$building_resources[$building_id][] = $resource;
@@ -351,24 +408,33 @@
 			usort($all_activities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 			$all_facilities_list = array_values($all_facilities);
 			usort($all_facilities_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
+
 			// Get building data
 			$all_partoftown = array();
 			$building_filters = array('id' => array_keys($building_resources), 'active' => 1);
-			$buildings = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
-			foreach ($buildings['results'] as &$building)
+			$buildingsres = $this->sobuilding->read(array('filters' => $building_filters, 'sort' => 'name'));
+			$buildings = array();
+			foreach ($buildingsres['results'] as &$building)
 			{
 				if (array_key_exists($building['part_of_town_id'],$partoftownlist))
 				{
 					$partoftown = $partoftownlist[$building['part_of_town_id']];
+					// Include the part of town name for the building
 					$building['part_of_town_name'] = $partoftown['name'];
 					if (!array_key_exists($partoftown['id'], $all_partoftown))
 					{
+						// Include the part of town name for the all parts of town list
 						$all_partoftown[$partoftown['id']] = array('id' => $partoftown['id'], 'name' => $partoftown['name']);
 					}
 				}
 				else
 				{
 					$building['part_of_town_name'] = $building['district'];
+				}
+				// Check filter criteria
+				if (isset($params['part_of_town_id']) && $building['part_of_town_id'] != $params['part_of_town_id'])
+				{
+					continue;
 				}
 
 				foreach ($building as $k => $v)
@@ -378,14 +444,30 @@
 						unset($building[$k]);
 					}
 				}
-				$building['resources'] = $building_resources[$building['id']];
+				// When adding resources to the building ignore those that are so marked. If no resources for a
+				// building, ignore the building
+				$building['resources'] = array();
+				foreach ($building_resources[$building['id']] as $resource)
+				{
+					if (!$resource['ignore'])
+					{
+						$building['resources'][] = $resource;
+					}
+				}
+				if (!empty($building['resources']))
+				{
+					$buildings[] = $building;
+				}
 			}
 			unset($building);
 			$all_partoftown_list = array_values($all_partoftown);
 			usort($all_partoftown_list, function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
 
-			return array('buildings' => $buildings, 'activities' => $all_activities_list, 'facilities' => $all_facilities_list,
-				'partoftowns' => $all_partoftown_list);
+			$returnres['buildings']   = $buildings;
+			$returnres['activities']  = $all_activities_list;
+			$returnres['facilities']  = $all_facilities_list;
+			$returnres['partoftowns'] = $all_partoftown_list;
+			return $returnres;
 		}
 
 

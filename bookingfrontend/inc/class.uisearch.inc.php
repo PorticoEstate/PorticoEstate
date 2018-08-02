@@ -215,7 +215,20 @@
 		function resquery()
 		{
 			$rescategory_id = phpgw::get_var('rescategory_id', 'int', 'REQUEST', null);
-			return $this->bo->resquery(array('rescategory_id' => $rescategory_id));
+			$activity_id = phpgw::get_var('activity_id', 'int', 'REQUEST', null);
+			$part_of_town_id = phpgw::get_var('part_of_town_id', 'int', 'REQUEST', null);
+			$_facility_ids = explode(',', phpgw::get_var('facility_id', 'string', 'REQUEST', null));
+			$facility_ids = array();
+			foreach ($_facility_ids as $facility_id)
+			{
+				if (ctype_digit($facility_id))
+				{
+					$facility_ids[] = (int)$facility_id;
+				}
+			}
+			$facility_ids = array_unique($facility_ids);
+			return $this->bo->resquery(array('rescategory_id' => $rescategory_id,
+				'activity_id' => $activity_id, 'facility_id' => $facility_ids, 'part_of_town_id' => $part_of_town_id));
 		}
 
 
