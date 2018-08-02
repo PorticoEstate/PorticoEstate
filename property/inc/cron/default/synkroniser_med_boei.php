@@ -384,8 +384,8 @@ SQL;
 				(
 					objekt_id character varying(4) NOT NULL,
 					bygg_id character varying(2) NOT NULL,
-					byggnavn character varying(50),
-					generelladresse character varying(50),
+					byggnavn character varying(100),
+					generelladresse character varying(100),
 					driftstatus smallint,
 				  CONSTRAINT boei_bygg_pkey PRIMARY KEY (objekt_id, bygg_id)
 				);
@@ -652,8 +652,8 @@ SQL;
 				CREATE TABLE boei_leietaker
 				(
 					leietaker_id integer NOT NULL,
-					fornavn character varying(30),
-					etternavn character varying(30),
+					fornavn character varying(40),
+					etternavn character varying(40),
 					kjonn_juridisk smallint,
 					oppsagtdato character varying(10),
 					namssakstatusdrift_id smallint,
