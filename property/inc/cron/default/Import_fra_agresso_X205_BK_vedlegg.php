@@ -51,6 +51,7 @@
 		{
 			$this->get_files();
 			$dirname = $this->config->config_data['import']['local_path'];
+			$re_check = $this->config->config_data['import']['re_check'];
 			// prevent path traversal
 			if (preg_match('/\./', $dirname) || !is_dir($dirname))
 			{
@@ -58,7 +59,14 @@
 			}
 
 			$file_list = array();
-			$dir = new DirectoryIterator($dirname);
+			if($re_check)
+			{
+				$dir = new DirectoryIterator("{$dirname}/arkiv");
+			}
+			else
+			{
+				$dir = new DirectoryIterator($dirname);
+			}
 			if (is_object($dir))
 			{
 				foreach ($dir as $file)
@@ -70,7 +78,14 @@
 
 					if(preg_match('/^Portico/i', (string)$file ))
 					{
-						$file_list[] = (string)"{$dirname}/{$file}";
+						if($re_check)
+						{
+							$file_list[] = (string)"{$dirname}/arkiv/{$file}";
+						}
+						else
+						{
+							$file_list[] = (string)"{$dirname}/{$file}";
+						}
 					}
 				}
 			}
@@ -85,27 +100,34 @@
 						_debug_array("Behandler fil: {$file}");
 					}
 
-					if ($bilagsnr)
+					if($re_check)
 					{
-						// move file
-						$_file = basename($file);
-						$movefrom = "{$dirname}/{$_file}";
-						$moveto = "{$dirname}/arkiv/{$_file}";
-
-						if (is_file($moveto))
-						{
-							@unlink($moveto);//in case of duplicates
-						}
-
-						$ok = @rename($movefrom, $moveto);
-						if (!$ok) // Should never happen.
-						{
-							$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil {$file} til arkiv");
-						}
+						$this->receipt['message'][] = array('msg' => "Pakket ut vedlegg på nytt for {$bilagsnr}");
 					}
 					else
 					{
-						$this->receipt['error'][] = array('msg' => "Refererer ikke til et gyldig bilag: {$file}");
+						if ($bilagsnr)
+						{
+							// move file
+							$_file = basename($file);
+							$movefrom = "{$dirname}/{$_file}";
+							$moveto = "{$dirname}/arkiv/{$_file}";
+
+							if (is_file($moveto))
+							{
+								@unlink($moveto);//in case of duplicates
+							}
+
+							$ok = @rename($movefrom, $moveto);
+							if (!$ok) // Should never happen.
+							{
+								$this->receipt['error'][] = array('msg' => "Kunne ikke flytte importfil {$file} til arkiv");
+							}
+						}
+						else
+						{
+							$this->receipt['error'][] = array('msg' => "Refererer ikke til et gyldig bilag: {$file}");
+						}
 					}
 				}
 			}
@@ -398,8 +420,16 @@
 						for($j = 0; $j < $zip->numFiles; $j++)
 						{
 							$filename = $zip->getNameIndex($j);
-//	_debug_array("{$directory_attachment}/{$filename}");
-							copy("zip://".$tmpfname."#".$filename, "{$directory_attachment}/{$filename}");
+							$path_parts = explode('.', $filename);
+							$new_filename = $filename;
+							if(count($path_parts) == 2)
+							{
+								$suffix_parts = explode(' ', $path_parts[1]);
+								$suffix = $suffix_parts[0];
+								$new_filename = "{$path_parts[0]}.{$suffix}";
+
+							}
+							copy("zip://".$tmpfname."#".$filename, "{$directory_attachment}/{$new_filename}");
 						}
 						$zip->close();
 					}

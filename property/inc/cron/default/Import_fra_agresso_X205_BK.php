@@ -320,8 +320,16 @@
 						for($j = 0; $j < $zip->numFiles; $j++)
 						{
 							$filename = $zip->getNameIndex($j);
-//	_debug_array("{$directory_attachment}/{$filename}");
-							copy("zip://".$tmpfname."#".$filename, "{$directory_attachment}/{$filename}");
+							$path_parts = explode('.', $filename);
+							$new_filename = $filename;
+							if(count($path_parts) == 2)
+							{
+								$suffix_parts = explode(' ', $path_parts[1]);
+								$suffix = $suffix_parts[0];
+								$new_filename = "{$path_parts[0]}.{$suffix}";
+
+							}
+							copy("zip://".$tmpfname."#".$filename, "{$directory_attachment}/{$new_filename}");
 						}
 						$zip->close();
 					}
