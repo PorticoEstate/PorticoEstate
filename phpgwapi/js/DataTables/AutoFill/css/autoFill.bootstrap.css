@@ -79,3 +79,9 @@ div.dt-autofill-background {
   background: radial-gradient(ellipse farthest-corner at center, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.7) 100%);
   z-index: 10;
 }
+
+div.dt-autofill-list div.dt-autofill-question input[type=number] {
+  padding: 6px;
+  width: 60px;
+  margin: -2px 0;
+}

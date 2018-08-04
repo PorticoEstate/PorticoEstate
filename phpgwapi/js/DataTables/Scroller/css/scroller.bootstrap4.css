@@ -19,6 +19,6 @@ div.DTS div.dataTables_length {
   display: none;
 }
 
-div.DTS tbody tr.even {
+div.DTS div.dataTables_scrollBody table {
   background-color: white;
 }
