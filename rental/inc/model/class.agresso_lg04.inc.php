@@ -6,17 +6,43 @@
 	class rental_agresso_lg04 implements rental_exportable
 	{
 
+		protected static $bo;
 		protected $billing_job;
 		protected $date_str;
 		protected $orders;
 		protected $prizebook;
 		protected $batch_id;
+		protected $check_customer_id;
 
-		public function __construct( $billing_job )
+		public function __construct( $billing_job = null)
 		{
-			$this->billing_job = $billing_job;
-			$this->date_str = date('ymd', $billing_job->get_timestamp_stop());
+			if($billing_job)
+			{
+				$this->billing_job = $billing_job;
+				$this->date_str = date('ymd', $billing_job->get_timestamp_stop());
+			}
 			$this->orders = null;
+
+			$config = CreateObject('phpgwapi.config', 'rental')->read();
+			$organization = empty($config['organization']) ? 'bergen' : $config['organization'];
+
+			if($organization == 'bergen')
+			{
+				$this->check_customer_id = false;
+			}
+			else//nlsh
+			{
+				$this->check_customer_id = true;
+			}
+		}
+
+		public static function get_instance()
+		{
+			if (self::$bo == null)
+			{
+				self::$bo = new rental_agresso_lg04();
+			}
+			return self::$bo;
 		}
 
 		/**
@@ -68,9 +94,16 @@
 			}
 
 			$payer_id = $contract->get_payer_id();
-			if ($payer_id == null || $payer_id = 0)
+
+			if ($payer_id == null || $payer_id == 0)
 			{
 				$missing_billing_info[] = 'Missing payer id.';
+			}
+
+			$customer_id = $contract_parties[$payer_id]->get_customer_id();
+			if($this->check_customer_id && empty($customer_id))
+			{
+				$missing_billing_info[] = 'Missing customer id.';
 			}
 
 			if(!$contract->get_billing_start_date())

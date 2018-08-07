@@ -690,3 +690,4 @@ has been committed	rental	nn	er avslutta
 not committed	rental	nn	er ikkje avslutta
 has been transferred	rental	nn	er overført
 transfer is not configured	rental	nn	Overføring er ikke konfigurert
+missing customer id.	rental	nn	Manglar kundenr.
