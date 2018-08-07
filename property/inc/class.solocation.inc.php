@@ -2479,4 +2479,25 @@
 
 			return $exceptions;
 		}
+
+
+		function edit_field( $data )
+		{
+			$id			= (int) $data['id'];
+			$field_name = $data['field_name'];
+			$value		= $this->db->db_addslashes($data['value']);
+
+			if($field_name != 'contact_phone')
+			{
+				return;
+			}
+
+			$this->db->query("SELECT tenant_id FROM fm_location4"
+				. " WHERE id = {$id}", __LINE__, __FILE__);
+			$this->db->next_record();
+			$tenant_id	= $this->db->f('tenant_id');
+
+			return $this->db->query("UPDATE fm_tenant SET contact_phone = '{$value}'"
+			. " WHERE id = {$tenant_id}", __LINE__, __FILE__);
+		}
 	}
