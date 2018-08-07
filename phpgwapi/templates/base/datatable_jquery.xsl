@@ -1221,8 +1221,7 @@
 							//In case the row is folded as result of responsive behaviour
 							$('td', nRow).parents('tr').addClass('context-menu');
                 },
-				fnDrawCallback: function (oSettings) {
-//				console.log(oSettings);
+				fnDrawCallback: function () {
 					oTable.makeEditable({
 							sUpdateURL: editor_action,
 							fnOnEditing: function(input){
