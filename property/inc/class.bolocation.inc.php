@@ -1192,4 +1192,8 @@ JS;
 			return $this->so->get_location_exception($location_code, $alert_vendor = false);
 		}
 
+		function edit_field( $data )
+		{
+			return $this->so->edit_field($data);
+		}
 	}
