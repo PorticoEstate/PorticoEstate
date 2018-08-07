@@ -41,36 +41,44 @@
 			$this->db->next_record();
 			$maaler_nr = $this->db->f('maaler_nr');
 
+			$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
+			$location_id_bod = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
+
 			if ($action != 'edit')
 			{
-				$location_id_rapport = $GLOBALS['phpgw']->locations->get_id('property', '.entity.2.17');
 				if ($maaler_nr)
 				{
 					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{maaler_nr}', '\"{$maaler_nr}\"', true)"
 						. " WHERE location_id = {$location_id_rapport}"
-						. " AND location_code='{$values['location_code']}'"
-						. " AND json_representation->>'maaler_nr' IS NULL";
+						. " AND id='{$values['id']}'";
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
-			}
 
-			$location_id_bod = $GLOBALS['phpgw']->locations->get_id('property', '.entity.1.14');
-			$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse FROM fm_bim_item"
-				. " WHERE location_id = {$location_id_bod}"
-				. " AND location_code='{$values['location_code']}'";
-			$this->db->query($sql, __LINE__, __FILE__);
-			$this->db->next_record();
-			$bod_beskrivelse = $this->db->f('beskrivelse');
+				$sql = "SELECT json_representation->>'beskrivelse' as beskrivelse FROM fm_bim_item"
+					. " WHERE location_id = {$location_id_bod}"
+					. " AND location_code='{$values['location_code']}'";
+				$this->db->query($sql, __LINE__, __FILE__);
+				$this->db->next_record();
+				$bod_beskrivelse = $this->db->f('beskrivelse');
 
 
-			if ($action != 'edit')
-			{
 				if ($bod_beskrivelse)
 				{
 					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{boder_antall}', '\"{$bod_beskrivelse}\"', true)"
 						. " WHERE location_id = {$location_id_rapport}"
-						. " AND location_code='{$values['location_code']}'"
-						. " AND json_representation->>'boder_antall' IS NULL";
+						. " AND id='{$values['id']}'";
+					$this->db->query($sql, __LINE__, __FILE__);
+				}
+
+				$this->db->query("SELECT tv_signal FROM fm_location4 WHERE location_code = '{$values['location_code']}'", __LINE__, __FILE__);
+				$this->db->next_record();
+				$tv_signal = $this->db->f('tv_signal');
+
+				if ($tv_signal)
+				{
+					$sql = "UPDATE fm_bim_item SET json_representation=jsonb_set(json_representation, '{tv_signal}', '\"{$tv_signal}\"', true)"
+						. " WHERE location_id = {$location_id_rapport}"
+						. " AND id='{$values['id']}'";
 					$this->db->query($sql, __LINE__, __FILE__);
 				}
 			}

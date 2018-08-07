@@ -798,8 +798,8 @@
 
 //			$GLOBALS['phpgw']->jqcal->add_listener('start_date', 'datetime');
 //			$GLOBALS['phpgw']->jqcal->add_listener('end_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime');
-			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime');
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['from_']) :0);
+			$GLOBALS['phpgw']->jqcal2->add_listener('end_date', 'datetime', !empty($default_dates) ? strtotime($default_dates[0]['to_']) :0);
 
 			if ($GLOBALS['phpgw_info']['flags']['currentapp'] != 'bookingfrontend')
 			{

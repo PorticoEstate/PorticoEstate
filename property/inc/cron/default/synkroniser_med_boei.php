@@ -228,7 +228,7 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Navn'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
@@ -282,7 +282,7 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('GateNavn'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('GateNavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
@@ -340,7 +340,7 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Navn'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('Navn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
@@ -384,8 +384,8 @@ SQL;
 				(
 					objekt_id character varying(4) NOT NULL,
 					bygg_id character varying(2) NOT NULL,
-					byggnavn character varying(50),
-					generelladresse character varying(50),
+					byggnavn character varying(100),
+					generelladresse character varying(100),
 					driftstatus smallint,
 				  CONSTRAINT boei_bygg_pkey PRIMARY KEY (objekt_id, bygg_id)
 				);
@@ -416,7 +416,7 @@ SQL;
 					),
 					3 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('ByggNavn'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('ByggNavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					4 => array
@@ -480,7 +480,7 @@ SQL;
 					),
 					4 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Beskrivelse'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('Beskrivelse'))),
 						'type' => PDO::PARAM_STR
 					)
 				);
@@ -580,7 +580,7 @@ SQL;
 					),
 					8 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Gatenr'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('Gatenr'))),
 						'type' => PDO::PARAM_STR
 					),
 					9 => array
@@ -652,8 +652,8 @@ SQL;
 				CREATE TABLE boei_leietaker
 				(
 					leietaker_id integer NOT NULL,
-					fornavn character varying(30),
-					etternavn character varying(30),
+					fornavn character varying(40),
+					etternavn character varying(40),
 					kjonn_juridisk smallint,
 					oppsagtdato character varying(10),
 					namssakstatusdrift_id smallint,
@@ -688,12 +688,12 @@ SQL;
 					),
 					2 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Fornavn'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('Fornavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					3 => array
 						(
-						'value' => $this->db->db_addslashes(utf8_encode($this->db_boei->f('Etternavn'))),
+						'value' => $this->db->db_addslashes(($this->db_boei->f('Etternavn'))),
 						'type' => PDO::PARAM_STR
 					),
 					4 => array
