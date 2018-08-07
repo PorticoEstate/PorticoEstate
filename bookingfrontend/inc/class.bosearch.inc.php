@@ -307,6 +307,10 @@
 						}
 					}
 				}
+				if (!$invalid_params)
+				{
+					sort($params['facility_id']);
+				}
 			}
 			if ($invalid_params)
 			{
@@ -371,6 +375,7 @@
 				// Add a list of facilities with id and name. Only active facilities are included
 				$resource['facilities'] = array();
 				$include_on_facility = False;
+				$facilities_matched = array();
 				foreach ($facility_ids as $facility_id)
 				{
 					if (array_key_exists($facility_id,$facilitylist))
@@ -386,11 +391,20 @@
 								$all_facilities[$facility['id']] = array('id' => $facility['id'], 'name' => $facility['name']);
 							}
 							// Check filter criteria
-							if ((!$include_on_facility) && isset($params['facility_id']) && in_array($facility_id, $params['facility_id']))
+							if (isset($params['facility_id']) && in_array($facility_id, $params['facility_id']))
 							{
-								$include_on_facility = True;
+								$facilities_matched[] = $facility_id;
 							}
 						}
+					}
+				}
+				// If applicable, check if all facility criterias are met
+				if (!empty($facilities_matched))
+				{
+					sort($facilities_matched);
+					if ($facilities_matched === $params['facility_id'])
+					{
+						$include_on_facility = True;
 					}
 				}
 				usort($resource['facilities'], function ($a,$b) { return strcmp(strtolower($a['name']),strtolower($b['name'])); });
