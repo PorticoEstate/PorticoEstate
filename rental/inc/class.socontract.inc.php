@@ -361,7 +361,7 @@
 				$columns[] = 'contract.id AS contract_id, contract.notify_on_expire, contract.notified_time';
 				$columns[] = 'contract.date_start, contract.date_end, contract.old_contract_id, contract.executive_officer, contract.last_updated, contract.location_id, contract.billing_start, contract.billing_end, contract.service_id, contract.responsibility_id, contract.reference, contract.customer_order_id, contract.invoice_header, contract.project_id, billing.deleted, contract.account_in, contract.account_out, contract.term_id, contract.security_type, contract.security_amount, contract.comment, contract.due_date, contract.contract_type_id,contract.rented_area,contract.adjustable,contract.adjustment_interval,contract.adjustment_share,contract.adjustment_year,override_adjustment_start,contract.publish_comment';
 				$columns[] = 'party.id AS party_id';
-				$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id';
+				$columns[] = 'party.first_name, party.last_name, party.company_name, party.department, party.org_enhet_id, party.customer_id';
 				$columns[] = 'c_t.is_payer';
 				$columns[] = 'composite.id AS composite_id';
 				$columns[] = 'composite.name AS composite_name';
@@ -477,6 +477,7 @@
 				$party->set_company_name($this->unmarshal($this->db->f('company_name', true), 'string'));
 				$party->set_department($this->unmarshal($this->db->f('department', true), 'string'));
 				$party->set_org_enhet_id($this->unmarshal($this->db->f('org_enhet_id'), 'int'));
+				$party->set_customer_id($this->unmarshal($this->db->f('customer_id'), 'int'));
 				$is_payer = $this->unmarshal($this->db->f('is_payer', true), 'bool');
 				if ($is_payer)
 				{

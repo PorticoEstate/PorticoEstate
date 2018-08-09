@@ -78,6 +78,7 @@
 			'get_checklists'=>true,
 			'get_cases_for_checklist' => true,
 			'get_location_data' => true,
+			'edit_field'		=> true
 		);
 
 		function __construct()
@@ -1081,7 +1082,9 @@ JS;
 						'export' => true,
 						'allrows' => true)),
 					'allrows' => true,
-					'editor_action' => '',
+					'editor_action' => self::link(array('menuaction' => 'property.uilocation.edit_field',
+						'type_id' => $type_id,
+						'phpgw_return_as' => 'json')),
 					'field' => array()
 				)
 			);
@@ -1138,6 +1141,10 @@ JS;
 				else if ($uicols['name'][$k] == 'street_name')
 				{
 					$params['sortable'] = true;
+				}
+				else if ($uicols['name'][$k] == 'contact_phone')
+				{
+					$params['editor'] = true;
 				}
 				else if (isset($uicols['cols_return_extra'][$k]) && ($uicols['cols_return_extra'][$k] != 'T' || $uicols['cols_return_extra'][$k] != 'CH'))
 				{
@@ -3148,5 +3155,50 @@ JS;
 		function get_assigned_history()
 		{
 			return $this->controller_helper->get_assigned_history();
+		}
+
+		public function edit_field()
+		{
+			$id = phpgw::get_var('id', 'int', 'POST');
+			$field_name = phpgw::get_var('field_name', 'string', 'GET');
+
+			if (!$this->acl_edit)
+			{
+				return "ERROR";
+			}
+
+
+			if($field_name != 'contact_phone')
+			{
+				return "ERROR";
+			}
+
+			if ($id && $field_name)
+			{
+
+				$data = array
+				(
+					'id' => $id,
+					'field_name' => $field_name,
+					'value' => phpgw::get_var('value')
+				);
+
+				try
+				{
+					$this->bo->edit_field($data);
+				}
+				catch (Exception $e)
+				{
+					if ($e)
+					{
+						echo $e->getMessage();
+					}
+				}
+				return; true;
+			}
+			else
+			{
+				return "ERROR";
+			}
 		}
 	}

@@ -1226,7 +1226,19 @@
 							sUpdateURL: editor_action,
 							fnOnEditing: function(input){
 								cell = input.parents("td");
-									id = input.parents("tr").children("td:first").text();
+
+								//it is a hack...but it works
+								var rowIndex = cell.parents("tr")[0]._DT_RowIndex;
+								/* Does not work correctly for responsive*/
+						//		var rowIndex = cell.parents("tr").index()
+
+								console.log(rowIndex);
+							//	console.log(oTable);
+								var aData = oTable.fnGetData( rowIndex );
+							//	console.log(aData);
+							//	id = input.parents("tr").children("td:first").text();
+								id = aData.id;
+							//	console.log(id);
 								return true;
 							},
 							fnOnEdited: function(status, sOldValue, sNewCellDisplayValue, aPos0, aPos1, aPos2)

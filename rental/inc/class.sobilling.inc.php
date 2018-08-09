@@ -251,7 +251,7 @@
 						$info = rental_agresso_gl07::get_instance()->get_missing_billing_info($contract);
 						break;
 					case 'agresso_lg04':
-						$info = rental_agresso_lg04::get_missing_billing_info($contract);
+						$info = rental_agresso_lg04::get_instance()->get_missing_billing_info($contract);
 						break;
 				}
 				if ($info != null && count($info) > 0)
