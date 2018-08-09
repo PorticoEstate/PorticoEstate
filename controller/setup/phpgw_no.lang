@@ -419,3 +419,12 @@ modified date	controller	no	Dato siste endring
 modified by	controller	no	Endret av
 set status: done	controller	no	Sett status: utført
 in queue	controller	no	I kø
+change to	controller	no	Endre til
+assign	controller	no	Tildel
+where	controller	no	Hvor
+start date	controller	no	Startdato
+repeat type	controller	no	Intervalltype
+bulk update assigned	controller	no	Masseoppdatering av tildeling
+deadline	controller	no	Frist
+planned	controller	no	Planlagt
+serie	controller	no	Serie

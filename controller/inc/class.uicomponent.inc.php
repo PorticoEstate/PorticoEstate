@@ -792,6 +792,7 @@
 				$filter_component_arr = explode('_', $filter_component_str);
 				$location_id = $filter_component_arr[0];
 				$filter_component = $filter_component_arr[1];
+				$this->user_id = $user_id = 0;
 			}
 			else
 			{

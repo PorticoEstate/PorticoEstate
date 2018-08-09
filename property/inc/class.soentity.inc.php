@@ -2235,6 +2235,11 @@
 
 			$short_description = implode(', ', $_short_description);
 
+			if(!$short_description)
+			{
+				$short_description = "{$system_location[$location_id]['descr']} # {$id}";
+			}
+
 			return $short_description;
 		}
 
