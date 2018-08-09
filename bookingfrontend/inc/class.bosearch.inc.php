@@ -275,19 +275,26 @@
 				$partoftownlist[$id] = $pot;
 			}
 
-			// Validate parameters
+			// Validate parameters. rescategory_id must always be present
 			$invalid_params = False;
-			if (!isset($params['rescategory_id']))
+			if (!(isset($params['rescategory_id']) && is_int($params['rescategory_id']) && $params['rescategory_id'] > 0))
 			{
 				$invalid_params = True;
 			}
-			$intparams = array('rescategory_id', 'activity_id', 'part_of_town_id');
+			$intparams = array('activity_id', 'part_of_town_id');
 			foreach ($intparams as $intparam)
 			{
-				if (isset($params[$intparam]) && !(is_int($params[$intparam]) && $params[$intparam] > 0))
+				if (isset($params[$intparam]))
 				{
-					$invalid_params = True;
-					break;
+					if (empty($params[$intparam]))
+					{
+						$params[$intparam] = null;
+					}
+					elseif (!(is_int($params[$intparam]) && $params[$intparam] > 0))
+					{
+						$invalid_params = True;
+						break;
+					}
 				}
 			}
 			if (isset($params['facility_id']))
