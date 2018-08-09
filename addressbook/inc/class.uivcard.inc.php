@@ -17,7 +17,6 @@
 
 	class uivcard extends phpgwapi_uicommon
 	{
-		var $template;
 		var $contacts;
 		var $browser;
 		var $vcard;
@@ -38,7 +37,6 @@
 		{
 			parent::__construct();
 			
-			//$this->template = $GLOBALS['phpgw']->template;
 			$this->contacts = CreateObject('phpgwapi.contacts');
 			$this->browser  = CreateObject('phpgwapi.browser');
 			$this->vcard    = CreateObject('phpgwapi.vcard');

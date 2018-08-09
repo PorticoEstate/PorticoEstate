@@ -115,6 +115,11 @@
 				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicomponent.index', 'get_locations' => true)),
 				'image' => array('property', 'location_1'),
 			);
+			$menus['navigation']['bulk_update_assigned'] = array(
+				'text' => lang('bulk update assigned'),
+				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uibulk_update.assign' )),
+				'image' => array('property', 'location_1'),
+			);
 
 			if ($GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') || $GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'controller'))
 			{
