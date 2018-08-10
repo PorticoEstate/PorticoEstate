@@ -311,6 +311,7 @@ SEARCH PAGE STYLE
     padding: 1em;
     border: 1px #dedede solid;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .custom-card:hover {
@@ -326,6 +327,16 @@ SEARCH PAGE STYLE
     font-size: 14px;
 }
 
+.custom-subcard {
+    background-color: #fff;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding: 1em;
+    border: 1px #dedede solid;
+    border-bottom: 0px;
+    width: 100%;
+}
+
 #welcomeResult .custom-card .desc span {
     font-size: 12px;
     display: block;
@@ -333,7 +344,7 @@ SEARCH PAGE STYLE
 }
 
 .custom-card-link:hover {
-    text-decoration: none;
+    text-decoration: none;    
 }
 
 .filter-bar {
@@ -356,6 +367,16 @@ input {
 
 input:focus {
     outline: none;
+}
+
+.textTagsItems {
+    font-size: 13px;
+    display: inline-block;
+}
+
+.tagTitle {
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .badge {
@@ -550,9 +571,20 @@ BUILDING PAGE STYLE
 .building-accordion {
     width: 100%;
 }
+
 .tooltip { pointer-events: none; }
+
 .building-images img {
     margin-bottom: 1em;
+}
+
+.scheduler-view-day-header-day span:nth-child(1) {
+    text-transform: capitalize;
+}
+
+.scheduler-view-day-header-day span:nth-child(2) {
+    font-size: 27px !important;
+    display: block;
 }
 
 .scheduler-base-controls {

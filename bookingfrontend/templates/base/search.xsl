@@ -16,23 +16,56 @@
             <div id="search-autocomplete"></div>
         </div>
         
-        <div class="row justify-content-center">
-            <div class="col-auto dropdown">
-                <select class="btn btn-default dropdown-toggle custom-select" data-bind="options: firstLevel, optionsText: 'text', value: selectedFirstLevel, optionsCaption: 'Velg'">
-                </select>
-            </div>
-            <div class="col-auto dropdown" data-bind="with: selectedFirstLevel">
-                <select class="btn btn-default dropdown-toggle custom-select" data-bind="options: secondLevel, optionsText: 'text', value: $root.selectedFirstList, optionsCaption: 'Velg'">
-                </select>
-            </div>
-
-        </div>
-        
-
     </div>
   
     <div class="container pageResults">
         
+        <!-- FILTER BOXES> -->
+        <div class="row" data-bind="if: filterboxes().length > 0">
+            <div data-bind="foreach: filterboxes">
+                    <div class="dropdown d-inline-block mr-2">
+                        <button class="btn btn-secondary dropdown-toggle d-inline" data-bind="text: filterboxCaption" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            
+                        </button>
+                        <div class="dropdown-menu" data-bind="foreach: filterbox" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" data-bind="text: filterboxOption, id: filterboxOptionId, click: $root.filterboxSelected" href="#"></a>
+                        </div>
+                    </div>            
+            </div>
+        </div>
+
+        <div class="row mt-3" data-bind="if: selectedFilterbox">
+            <div class="dropdown d-inline-block" data-bind="if: activities().length > 0">
+                <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Aktiviteter      
+                </button>
+                <div class="dropdown-menu" data-bind="foreach: activities" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" data-bind="text: activityOption, id: activityOptionId, click: $root.activitySelected" href="#"></a>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block" data-bind="if: facilities().length > 0">
+                <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Fasiliteter      
+                </button>
+                <div class="dropdown-menu" data-bind="foreach: facilities" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item d-inline" data-bind="text: facilityOption, id: facilityOptionId, click: $root.facilitySelected" href="#">
+                         </a><span class="d-inline" data-bind="if: selected">&#10004;</span>
+                </div>
+            </div>
+
+            <div class="dropdown d-inline-block" data-bind="if: towns().length > 0">
+                <button class="btn btn-secondary dropdown-toggle d-inline mr-2" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Bydel      
+                </button>
+                <div class="dropdown-menu" data-bind="foreach: towns" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" data-bind="text: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- UPCOMMING ARRAGEMENTS -->
         <div id="welcomeResult">
             <h1 class="text-center result-title">Dette skjer i Stavanger</h1>
 
@@ -90,23 +123,11 @@
         
         </div>
         
+        <!-- SEARCH RESULT -->
         <div id="searchResult" class="invisible">
-            <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: filteredItems().length"></span>)</h1>
-            
-            <div class="row filter-bar">
-                <div class="col-auto dropdown">
-                    <!--Filter based results -->
-                    <select id="filterActivity" class="custom-select" data-bind="options: filters, value: filter"></select>
-                </div>
-
-                <div class="col-auto dropdown">
-                    <!-- Filter based results -->
-                    <select id="filterDist" class="custom-select" data-bind="options: filtersDist, value: filterDist"></select>
-                </div>
-
-            </div>
-            
-            <div class="row" id="result-items" data-bind="foreach: filteredItems">
+            <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: items().length"></span>)</h1>
+           
+            <div class="row" id="result-items" data-bind="foreach: items">
                 <div class="col-lg-6">
                     <a class="custom-card-link-href" data-bind="">
                         <div class="row custom-card">
@@ -131,6 +152,62 @@
                             </div>
                         </div>
                     </a>
+                </div>
+            </div>
+        
+        </div>
+
+        
+        <!-- FILTER SEARCH RESULT -->
+        <div id="filterSearchResult" data-bind="if: filterSearchItems().length > 0">
+            
+            <div class="row" data-bind="foreach: filterSearchItems">
+                <div class="col-lg-6">
+                    <a class="custom-card-link-href" data-bind="">
+                        <div class="row custom-card">
+                            <div class="col-3 date-circle">
+                                <!--<img width="90" height="90" data-bind="" class="result-icon-image"/>-->
+                                
+                                <svg width="90" height="90">
+                                    <circle cx="45" cy="45" r="37" fill="#008DD1" />
+                                    <text x="50%" y="50%" text-anchor="middle" font-size="40px" fill="white" font-family="Arial" font-weight="bold" dy=".3em" data-bind="text: resultType">>
+                                        
+                                    </text>
+                                    
+                                </svg>
+                                                               
+                            </div>
+                            <div class="col-8 desc">
+                                <h4 class="font-weight-bold" data-bind="text: name"></h4>
+                                <span data-bind="text: street"></span>
+                                <span class="d-block" data-bind="text: postcode"></span>
+                            </div>
+
+                        </div>
+                        
+                    </a>
+                    
+                    <div class="row" style="width: 100%" data-bind="foreach: filterSearchItemsResources">
+                        <div class="custom-subcard">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="font-weight-bold" data-bind="text: name"></h5>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-light float-right">Book</button>
+                                        </div>
+                                    </div>
+                                    <div data-bind="foreach: facilities">
+                                        <span class="tagTitle" data-bind="if: $index() == 0">Fasiliteter: </span>
+                                        <span class="mr-2 textTagsItems" data-bind="text: name" ></span>
+                                    </div>
+                                    <div data-bind="foreach: activities">
+                                    <span class="tagTitle" data-bind="if: $index() == 0">Aktiviteter: </span>
+                                        <span class="mr-2 textTagsItems" data-bind="text: name" ></span>
+                                    </div>
+                                </div>
+                    </div>
+
                 </div>
             </div>
         

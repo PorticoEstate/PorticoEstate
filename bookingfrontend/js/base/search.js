@@ -1,88 +1,62 @@
 var selectedAutocompleteValue = false;
 $(".custom-card-link-href").attr('data-bind', "attr: {'href': itemLink }");
+$(".filterboxFirst").attr('data-bind', "attr: {'id': rescategory_id }");
+
 var results = ko.observableArray();
 var tags = ko.observableArray();
-var filterSelectList = ko.observableArray();
-var filterResultOne = ko.observableArray();
-var filterResultTwo = ko.observableArray();
 //var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
 var baseURL = strBaseURL.split('?')[0] + "bookingfrontend/";
-
 var ViewModel = function(data) {
     var self = this;
-    self.filters = filterResultOne;
-    self.filtersDist = filterResultTwo;
-    self.filter = ko.observable('');
-    self.filterDist = ko.observable('');
-    self.items = ko.observableArray(data.items);
-    self.firstLevel = filterSelectList;        
-    self.selectedFirstLevel = ko.observable();
-    self.secondLevel = ko.observable();
-    self.selectedFirstList = ko.observable();
-    self.selectedFirstList.subscribe(function(selected) {
-        if(selected) {
-            doFilterSearch(selected.value());
-        } 
-    });
-    self.filteredItems = ko.computed(function() {
-        self.items = results;
-        var filter = self.filter();
-        var filterDist = self.filterDist();
-        
-        var filterOne = $("#filterActivity").prop('selectedIndex');
-        var filterTwo = $("#filterDist").prop('selectedIndex');
-        
-        if (filterOne < 1 && filterTwo < 1) {
-            return self.items();
-        } else {
-            
-            if(filterOne > 0 && filterTwo < 1) {
-                return ko.utils.arrayFilter(self.items(), function(i) {                    
-                    for(var k=0; k<i.filterResultOne.length; k++) {
-                         if(i.filterResultOne[k].toLowerCase() == (filter).toLowerCase()) {
-                            return ko.utils.arrayGetDistinctValues(i.filterResultOne[k].toLowerCase(), filter.toLowerCase());
-                         }
-                    }
-                });
-            } else if(filterTwo > 0 && filterOne < 1) {
-                return ko.utils.arrayFilter(self.items(), function(i) {
-                    for(var k=0; k<i.filterResultTwo.length; k++) {
-                        if(i.filterResultTwo[k].toLowerCase() == (filterDist).toLowerCase()) {
-                           return ko.utils.arrayGetDistinctValues(i.filterResultTwo[k].toLowerCase(), filterDist.toLowerCase());
-                        }
-                    }
-                });
-
-            } else if(filterOne > 0 && filterTwo > 0) {
-                return ko.utils.arrayFilter(self.items(), function(i) {
-
-                    for(var k=0; k<i.filterResultOne.length; k++) {
-                        for(var m=0; m<i.filterResultTwo.length; m++) {
-                            if(i.filterResultOne[k].toLowerCase() == (filter).toLowerCase() && i.filterResultTwo[m].toLowerCase() == (filterDist).toLowerCase()) {
-                                return ko.utils.arrayGetDistinctValues(i.filterResultOne[k].toLowerCase(), filter.toLowerCase()) && i.filterResultTwo[m].toLowerCase() == filterDist.toLowerCase();
-                             }
-                        }
-                    }                  
-                });
-            }
-        }      
     
-    });    
-};
+    self.items = (results);
+        
+    self.filterboxes = ko.observableArray();
+    self.filterbox = ko.observableArray();
+    self.selectedFilterbox = ko.observable(false);    
+    self.filterboxCaption = ko.observable();
+    self.selectedFilterboxValue = ko.observable("");
+    self.selectedFacilities = ko.observableArray("");
+    self.selectedActivity = ko.observable("");
+    self.selectedTown = ko.observable("");
+    self.filterboxSelected = function(e) {
+        self.selectedActivity("");
+        self.selectedFacilities.removeAll();
+        self.selectedTown("");
+        self.selectedFilterboxValue(e.filterboxOptionId);
+        self.selectedFilterbox(true);
+        DoFilterSearch(e.filterboxOptionId, self.selectedFacilities(), self.selectedActivity());
+    };
+    self.facilities = ko.observableArray();
+    self.activities = ko.observableArray();
+    self.towns = ko.observableArray();
+    self.filterSearchItems = ko.observableArray();
 
-var StartOption = function(value, text, options1) {
-    var self = this;
-    self.value = ko.observable(value);
-    self.text = ko.observable(text);
-    self.secondLevel = ko.observableArray(options1 || []);
+    self.facilitySelected = function(e) {
+        var exists = ko.utils.arrayFirst(self.selectedFacilities(), function(current) {
+            return current == e.facilityOptionId; // <-- is this the desired seat?
+        });
+        if(!exists) {
+            self.selectedFacilities.push(e.facilityOptionId);
+        } else {
+            self.selectedFacilities.remove(function(item) {
+                return item == e.facilityOptionId;
+            });
+        }        
+        DoFilterSearch();
+    };
+    self.activitySelected = function(e) {
+        self.selectedActivity(e.activityOptionId);
+        DoFilterSearch();
+    };
+    self.townSelected = function(e) {
+        self.selectedTown(e.townOptionId);
+        DoFilterSearch();
+    }   
 };
 
 var initialData = {
-    filters: filterResultOne,
-    filtersDist: filterResultTwo,
-    items: [],
-    filter: "",
-    filterDist: "",
+    items: []
 };
 
 var searchViewModel = new ViewModel(initialData);
@@ -106,24 +80,27 @@ $(document).ready(function ()
             $(this).trigger("enterKey");
         }
     });
-
-    GetFilterData();
+    
+    GetFilterBoxData();
 });
 
-function GetFilterData() {
- //   var requestURL = baseURL + "?menuaction=bookingfrontend.uisearch.get_filterboxdata&phpgw_return_as=json";
+
+function GetFilterBoxData() {
     var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.get_filterboxdata"}, true);
-    
     $.getJSON(requestURL, function(result){
-        
-        $.each(result, function(i, field){
-            var item = [];
-            
-            for(var i=0; i<field.rescategories.length; i++) {
-                item.push(new StartOption(field.rescategories[i].id, field.rescategories[i].name));
+        var boxes = [];
+        for(var i=0; i<result.length; i++) {
+            var caption = result[i].text;
+            var options = [];
+            for(var k=0; k<result[i].rescategories.length; k++) {
+                options.push({  
+                    filterboxOption: result[i].rescategories[k].name,
+                    filterboxOptionId: result[i].rescategories[k].id,
+                    filterboxSelected: "filterboxSelected" });
             }
-            filterSelectList.push(new StartOption(field.id, field.text, item));
-        });
+            boxes.push({filterboxCaption: caption, filterbox: options });
+        }
+        searchViewModel.filterboxes(boxes);
 
     }).done(function () {
         GetAutocompleteData();
@@ -163,13 +140,15 @@ function GetAutocompleteData() {
 
 
 function doSearch() {
-
     $(".overlay").show();    
     $("#mainSearchInput").blur(); 
-    $("#welcomeResult").hide();
-    searchViewModel.selectedFirstLevel(null);
-    searchViewModel.selectedFirstList(null);
-
+    $("#welcomeResult").hide(); $("#filterSearchResult").attr("class","invisible");
+    searchViewModel.filterSearchItems.removeAll();
+    searchViewModel.selectedFacilities.removeAll();
+    searchViewModel.selectedFilterboxValue("");
+    searchViewModel.selectedActivity("");
+    searchViewModel.selectedTown("");
+    searchViewModel.selectedFilterbox(false);
  //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
     var requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.query"}, true);
     var searchTerm = $("#mainSearchInput").val();
@@ -182,25 +161,16 @@ function doSearch() {
         success: function (response) {
             
             results.removeAll();
-            
-            filterResultTwo.removeAll();
-            filterResultOne.removeAll();
-            filterResultTwo.push("Alle Bydel");
-            filterResultOne.push("Alle");
             for(var i=0; i<response.results.results.length; i++) {
                 var url = "";
                 if(response.results.results[i].type == "building") {
- //                 url = baseURL + "?menuaction=bookingfrontend.uibuilding.show&id=" + response.results.results[i].id;
 					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:response.results.results[i].id}, false);
 
                 } else if(response.results.results[i].type == "resource") {
-//                    url = baseURL + "?menuaction=bookingfrontend.uiresource.show&id=" + response.results.results[i].id
-//                            + "&buildingid=" + response.results.results[i].building_id;
 					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show",id:response.results.results[i].id,
 								buildingid: response.results.results[i].building_id}, false);
 
 				} else if(response.results.results[i].type == "organization") {
- //                 url = baseURL + "?menuaction=bookingfrontend.uiorganization.show&id=" + response.results.results[i].id;
 					url = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiorganization.show",id:response.results.results[i].id}, false);
                 }
                 results.push({name: response.results.results[i].name, 
@@ -208,19 +178,8 @@ function doSearch() {
                     itemLink: url,
                     resultType: (response.results.results[i].type).charAt(0).toUpperCase(),
                     type: response.results.results[i].type,
-                    filterResultOne: [response.results.results[i].activity_name],
-                    filterResultTwo: [response.results.results[i].district],
                     tagItems: []
                 });
-
-                if (filterResultOne.indexOf(response.results.results[i].activity_name) < 0) {
-                    filterResultOne.push(response.results.results[i].activity_name);
-                }
-
-                if (filterResultTwo.indexOf(response.results.results[i].district) < 0) {
-                    filterResultTwo.push(response.results.results[i].district);
-                }
-                
             }
             $('html, body').animate({
                 scrollTop: $("#searchResult").offset().top - 100
@@ -235,130 +194,75 @@ function doSearch() {
     });
 }
 
-
-function doFilterSearch(resCategory) {
-    $(".overlay").show();
-    
+function DoFilterSearch() {
+    $(".overlay").show();    
     $("#mainSearchInput").blur(); 
     $("#welcomeResult").hide();
-
-//    var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
-
-
-    $.ajax({
-        url: baseURL,
-        type: "get",
-        contentType: 'text/plain',
-        data: {rescategory_id: resCategory, phpgw_return_as: "json", menuaction: "bookingfrontend.uisearch.resquery"},
-        success: function (response) {
-            results.removeAll();
-            
-            filterResultTwo.removeAll();
-            filterResultOne.removeAll();
-            filterResultTwo.push("Velg aktivitet");
-            filterResultOne.push("Velg fasilitet");
-            for(var i=0; i<response.buildings.results.length; i++) {
-                let buildingFacilities = [];
-                let buildingActivity = [];
-
-                for(var k=0; k<response.buildings.results[i].resources.length; k++) {
-                    let facilities = [];
-                    let activity = [];
-
-                    for(var m=0; m<response.buildings.results[i].resources[k].facilities.length; m++) {
-                        if (facilities.indexOf(response.buildings.results[i].resources[k].facilities[m].name) < 0) {
-                            facilities.push(response.buildings.results[i].resources[k].facilities[m].name);
-                        }
-                        if (filterResultOne.indexOf(response.buildings.results[i].resources[k].facilities[m].name) < 0) {
-                            filterResultOne.push(response.buildings.results[i].resources[k].facilities[m].name);
-                        }
-                        if (buildingFacilities.indexOf(response.buildings.results[i].resources[k].facilities[m].name) < 0) {
-                            buildingFacilities.push(response.buildings.results[i].resources[k].facilities[m].name);
-                        }               
-                        
-                    }
-                    for(var m=0; m<response.buildings.results[i].resources[k].activities.length; m++) {
-                        if (activity.indexOf(response.buildings.results[i].resources[k].activities[m].name) < 0) {
-                            activity.push(response.buildings.results[i].resources[k].activities[m].name);
-                        }
-                        if (filterResultTwo.indexOf(response.buildings.results[i].resources[k].activities[m].name) < 0) {
-                            filterResultTwo.push(response.buildings.results[i].resources[k].activities[m].name);
-                        }
-                        if (buildingActivity.indexOf(response.buildings.results[i].resources[k].activities[m].name) < 0) {
-                            buildingActivity.push(response.buildings.results[i].resources[k].activities[m].name);
-                        }
-                    }
-
-                    results.push({name: response.buildings.results[i].name + " " + response.buildings.results[i].resources[k].name, 
-                        activity_name: "test",
-//                        itemLink: baseURL + "?menuaction=bookingfrontend.uiresource.show&id=" + response.buildings.results[i].resources[k].id
-//                        + "&buildingid=" + response.buildings.results[i].id,
-						itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiresource.show",id:response.buildings.results[i].resources[k].id,
-									buildingid:response.buildings.results[i].id}, false),
-
-                        resultType: "R",
-                        type: "resource",
-                        filterResultOne: facilities,
-                        filterResultTwo: activity,
-                        tagItems: facilities.concat(activity)
-                    });
-                    
-                }
-                
-
-                results.push({name: response.buildings.results[i].name, 
-                    activity_name: "test",
-//                  itemLink: baseURL + "?menuaction=bookingfrontend.uibuilding.show&id=" + response.buildings.results[i].id,
-					itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:response.buildings.results[i].id}, false),
-                    resultType: "B",
-                    type: "building",
-                    filterResultOne: buildingFacilities,
-                    filterResultTwo: buildingActivity,
-                    tagItems: buildingFacilities.concat(buildingActivity)
+    $("#searchResult").attr("class","invisible");
+    results.removeAll();
+    var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTown(), activity_id: searchViewModel.selectedActivity()  }, true);
+    
+    searchViewModel.facilities.removeAll();
+    searchViewModel.activities.removeAll();
+    searchViewModel.towns.removeAll();    
+    $.getJSON(requestURL, function(result){
+            for(var i=0; i<result.facilities.length; i++) {
+                var selected = false;
+                var alreadySelected = ko.utils.arrayFirst(searchViewModel.selectedFacilities(), function(current) {
+                    return current == result.facilities[i].id;
                 });
-                
+                if(alreadySelected) {
+                    selected = true;
+                }
+                console.log(selected);
+                searchViewModel.facilities.push(ko.observable({ index: i, facilityOption: result.facilities[i].name, 
+                    facilityOptionId: result.facilities[i].id,
+                    facilitySelected: "facilitySelected",
+                    selected: ko.observable(selected) }));
             }
-            $('html, body').animate({
-                scrollTop: $("#searchResult").offset().top - 100
-            }, 1000);
-            $("#searchResult").attr("class","visible");
-            
+
+            for(var i=0; i<result.activities.length; i++) {
+                searchViewModel.activities.push({ activityOption: result.activities[i].name, 
+                    activityOptionId: result.activities[i].id,
+                    activitySelected: "activitySelected" });
+            }
+
+            for(var i=0; i<result.partoftowns.length; i++) {
+                searchViewModel.towns.push({ townOption: result.partoftowns[i].name, 
+                    townOptionId: result.partoftowns[i].id,
+                    townSelected: "townSelected" });
+            }            
+
+            var items = [];
+            for(var i=0; i<result.buildings.length; i++) {
+                var resources = [];
+                for(var k=0; k<result.buildings[i].resources.length; k++) {
+                    var facilities = [];
+                    var activities = [];
+                    for(var f=0; f<result.buildings[i].resources[k].facilities.length; f++) {
+                        facilities.push({name: result.buildings[i].resources[k].facilities[f].name});
+                    }
+                    for(var f=0; f<result.buildings[i].resources[k].activities.length; f++) {
+                        activities.push({name: result.buildings[i].resources[k].activities[f].name});
+                    }                    
+                    resources.push({name: result.buildings[i].resources[k].name, id: result.buildings[i].resources[k].id, facilities: facilities, activities: activities });
+                }
+                items.push({resultType: "B", 
+                name: result.buildings[i].name, 
+                street: result.buildings[i].street,
+                postcode: result.buildings[i].zip_code + " " + result.buildings[i].city,
+                filterSearchItemsResources: resources,
+                itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:result.buildings[i].id}, false) });
+            }
+            searchViewModel.filterSearchItems(items);
+            if(searchViewModel.selectedFacilities().length == 0 && searchViewModel.selectedActivity() == "" && searchViewModel.selectedTown() == "") {
+                $('html, body').animate({
+                    scrollTop: $("#filterSearchResult").offset().top - 100
+                }, 1000);
+                $("#filterSearchResult").attr("class","visible");
+            }
+
+
             $(".overlay").hide();
-            
-        },
-        error: function (xhr) {
-            
-        }
-    });
+        });
 }
-
-function selectThisTag(filterLevel, value) {
-    searchViewModel.filter(this);
-    searchViewModel.filterDist(this);
-}
-
-//Denne må være tilgjengelig overalt - legger den inn i common
-//
-//function phpGWLink(strURL, oArgs, bAsJSON)
-//{
-//	//var arURLParts = strBaseURL.split('?');
-//    var arURLParts = document.location.origin + "/" + window.location.pathname.split('/')[1];
-//	var strNewURL = arURLParts + "/"+ strURL + '?';
-//
-//	if ( oArgs == null )
-//	{
-//		oArgs = new Object();
-//	}
-//
-//	for (obj in oArgs)
-//	{
-//		strNewURL += obj + '=' + oArgs[obj] + '&';
-//	}
-//	strNewURL += arURLParts[1];
-//
-//	if ( bAsJSON )
-//	{
-//		strNewURL += '&phpgw_return_as=json';
-//	}
-//	return strNewURL;
-//}
