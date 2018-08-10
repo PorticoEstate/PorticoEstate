@@ -17,15 +17,32 @@ var ViewModel = function(data) {
     self.filterboxCaption = ko.observable();
     self.selectedFilterboxValue = ko.observable("");
     self.selectedFacilities = ko.observableArray("");
-    self.selectedActivity = ko.observable("");
-    self.selectedTown = ko.observable("");
+    self.selectedActivity = ko.observableArray("");
+    self.selectedTown = ko.observableArray("");
+    self.selectedTags = ko.observableArray();
+    self.clearTag = function(e) {
+        if(e.type == "town") {
+            self.selectedTown("");
+            
+        } else {
+            self.selectedActivity("");
+        }
+        self.selectedTags.remove(function(item) {
+            return item.value == e.value && item.type == e.type;
+        });
+        self.selectedFacilities.remove(function(item) {
+            return item == e.id;
+        });
+        DoFilterSearch();
+    };   
     self.filterboxSelected = function(e) {
         self.selectedActivity("");
         self.selectedFacilities.removeAll();
         self.selectedTown("");
         self.selectedFilterboxValue(e.filterboxOptionId);
+        self.selectedTags.removeAll();
         self.selectedFilterbox(true);
-        DoFilterSearch(e.filterboxOptionId, self.selectedFacilities(), self.selectedActivity());
+        DoFilterSearch(e.filterboxOptionId);
     };
     self.facilities = ko.observableArray();
     self.activities = ko.observableArray();
@@ -38,18 +55,33 @@ var ViewModel = function(data) {
         });
         if(!exists) {
             self.selectedFacilities.push(e.facilityOptionId);
+            self.selectedTags.push({id: e.facilityOptionId, type: "facility", value: e.facilityOption});
         } else {
             self.selectedFacilities.remove(function(item) {
                 return item == e.facilityOptionId;
+            });
+            self.selectedTags.remove(function(item) {
+                return item.id == e.facilityOptionId && item.type == "facility";
             });
         }        
         DoFilterSearch();
     };
     self.activitySelected = function(e) {
+        self.selectedTags.remove(function(current) {
+            return current.type == "activity";
+        });
+        self.selectedTags.push({id: e.activityOptionId, type: "activity", value: e.activityOption});
+
         self.selectedActivity(e.activityOptionId);
         DoFilterSearch();
     };
     self.townSelected = function(e) {
+        
+        self.selectedTags.remove(function(current) {
+            return current.type == "town";
+        })
+        self.selectedTags.push({id: e.townOptionId, type: "town", value: e.townOption});
+        
         self.selectedTown(e.townOptionId);
         DoFilterSearch();
     }   
@@ -142,7 +174,7 @@ function GetAutocompleteData() {
 function doSearch() {
     $(".overlay").show();    
     $("#mainSearchInput").blur(); 
-    $("#welcomeResult").hide(); $("#filterSearchResult").attr("class","invisible");
+    $("#welcomeResult").hide();
     searchViewModel.filterSearchItems.removeAll();
     searchViewModel.selectedFacilities.removeAll();
     searchViewModel.selectedFilterboxValue("");
@@ -150,6 +182,7 @@ function doSearch() {
     searchViewModel.selectedTown("");
     searchViewModel.selectedFilterbox(false);
  //   var baseURL = document.location.origin + "/" + window.location.pathname.split('/')[1] + "/bookingfrontend/";
+    searchViewModel.selectedTags.removeAll();
     var requestUrl = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.query"}, true);
     var searchTerm = $("#mainSearchInput").val();
 
@@ -184,7 +217,6 @@ function doSearch() {
             $('html, body').animate({
                 scrollTop: $("#searchResult").offset().top - 100
             }, 1000);
-            $("#searchResult").attr("class","visible");
             
             $(".overlay").hide();
             
@@ -194,11 +226,9 @@ function doSearch() {
     });
 }
 
-function DoFilterSearch() {
-    $(".overlay").show();    
+function DoFilterSearch() { 
     $("#mainSearchInput").blur(); 
     $("#welcomeResult").hide();
-    $("#searchResult").attr("class","invisible");
     results.removeAll();
     var requestURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uisearch.resquery", rescategory_id: searchViewModel.selectedFilterboxValue(), facility_id: searchViewModel.selectedFacilities(), part_of_town_id: searchViewModel.selectedTown(), activity_id: searchViewModel.selectedActivity()  }, true);
     
@@ -255,14 +285,8 @@ function DoFilterSearch() {
                 itemLink: phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uibuilding.show",id:result.buildings[i].id}, false) });
             }
             searchViewModel.filterSearchItems(items);
-            if(searchViewModel.selectedFacilities().length == 0 && searchViewModel.selectedActivity() == "" && searchViewModel.selectedTown() == "") {
-                $('html, body').animate({
-                    scrollTop: $("#filterSearchResult").offset().top - 100
-                }, 1000);
-                $("#filterSearchResult").attr("class","visible");
-            }
 
-
-            $(".overlay").hide();
+            
         });
 }
+

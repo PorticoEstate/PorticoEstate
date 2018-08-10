@@ -379,6 +379,16 @@ input:focus {
     font-weight: bold;
 }
 
+.tags {
+    padding: 0.5em;
+    background-color: #fff;
+    border: 1px #dedede solid;
+}
+
+.tagsRemoveIcon {
+    margin-left: 5px;
+}
+
 .badge {
     margin: 0 0.5em 0.5em 0;
     padding: 0.5em;

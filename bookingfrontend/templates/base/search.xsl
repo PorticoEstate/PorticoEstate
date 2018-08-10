@@ -62,7 +62,13 @@
                         <a class="dropdown-item" data-bind="text: townOption, id: townOptionId, click: $root.townSelected" href="#"></a>
                 </div>
             </div>
+        </div>
 
+        <div class="row mt-5" data-bind="if: selectedTags().length > 0">
+            <div data-bind="foreach: selectedTags">
+                <div class="tags d-inline"><span data-bind="text: value, click: $root.clearTag" ></span>
+                <a href="" data-bind="click: $root.clearTag"><i class="fa fa-times tagsRemoveIcon" aria-hidden="true"></i></a></div>
+            </div>
         </div>
 
         <!-- UPCOMMING ARRAGEMENTS -->
@@ -124,7 +130,7 @@
         </div>
         
         <!-- SEARCH RESULT -->
-        <div id="searchResult" class="invisible">
+        <div id="searchResult" data-bind="ifnot: selectedFilterbox">
             <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: items().length"></span>)</h1>
            
             <div class="row" id="result-items" data-bind="foreach: items">
@@ -159,7 +165,9 @@
 
         
         <!-- FILTER SEARCH RESULT -->
-        <div id="filterSearchResult" data-bind="if: filterSearchItems().length > 0">
+        <div id="filterSearchResult" data-bind="if: selectedFilterbox"> 
+            <h1 class="text-center result-title">Søkeresultat (<span data-bind="text: filterSearchItems().length"></span>)</h1>
+            <div data-bind="if: filterSearchItems().length > 0">
             
             <div class="row" data-bind="foreach: filterSearchItems">
                 <div class="col-lg-6">
@@ -211,6 +219,7 @@
                 </div>
             </div>
         
+        </div>
         </div>
         
     </div>
