@@ -34,7 +34,7 @@ function applicationModel()  {
         if(k > 0) { return true; }
        return false;       
     }).extend({ required: true });
-
+self.activityId = ko.observable();
     self.date = ko.observableArray().extend({
         minLength: 1
     });
@@ -99,10 +99,10 @@ function applicationModel()  {
       
 $(document).ready(function ()
 {
-    
-    
+    var activityId;    
     getJsonURL = phpGWLink('bookingfrontend/', {menuaction:"bookingfrontend.uiapplication.add", building_id: urlParams['building_id'], phpgw_return_as: "json"}, true);
     $.getJSON(getJsonURL, function(result){
+        activityId = result.application.activity_id;
         for(var i=0; i<result.agegroups.length; i++) {
             agegroup.push({name: result.agegroups[i].name, agegroupLabel: result.agegroups[i].name, 
                 inputCountMale: ko.observable("").extend({ required: true, number: true }),
@@ -120,6 +120,7 @@ $(document).ready(function ()
         });
     }).done(function() {
         am = new applicationModel();
+        am.activityId(activityId);
         ko.applyBindings(am);
         showContent();
     });
@@ -157,7 +158,7 @@ function AddApplication() {
                 responsible_street: "oslo",
                 responsible_zip_code: 0050,
                 responsible_city: "oslo",
-                //activity_id: 97,
+                activity_id: am.activityId(),
                 audience: [37]
     };
             
@@ -191,13 +192,10 @@ function AddApplication() {
                 
             })*/
             
-            /*$.post(requestUrl, parameter)
+            $.post(requestUrl, parameter)
             .done(function( data ) {
                 console.log(data);
-            });*/
-
-            window.location.href = phpGWLink('bookingfrontend/', { menuaction: "bookingfrontend.uiapplication.confirm", building_id: 10 }, false);
-            
+            });
 }
 
 function formatDate(date, end) {
