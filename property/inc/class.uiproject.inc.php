@@ -2044,7 +2044,7 @@ JS;
 			$order_data = $this->bo->get_orders(array(
 				'start' => 0,
 				'project_id' => $id,
-				'year' => date('Y'),
+			//	'year' => date('Y'),
 				'order' => 'workorder_id',
 				'sort' => 'desc',
 				'results' => -1,
