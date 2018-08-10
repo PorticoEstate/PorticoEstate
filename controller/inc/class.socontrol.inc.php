@@ -1868,43 +1868,52 @@
 		{
 			$from = (int)$data['from'];
 			$to = (int)$data['to'];
+			$serie_ids = (array)$data['serie_ids'];
+			$check_list_ids = (array)$data['check_list_ids'];
 
 			if($from == $to)
 			{
 				return;
 			}
 
-			$sql = "SELECT id FROM controller_control_serie"
-				. " WHERE assigned_to = {$from}";
-			$this->db->query($sql, __LINE__, __FILE__);
-			$ids = array();
-			while ($this->db->next_record())
+			if($serie_ids && is_array($serie_ids))
 			{
-				$ids[] = $this->db->f('id');
-			}
-			if ($ids)
-			{
-				$this->update_control_serie(array(
-					'ids' => $ids,
-					'action' => 'edit',
-					'assigned_to' => $to,
-//					'start_date' => $start_date,
-//					'repeat_type' => $repeat_type,
-//					'repeat_interval' => $repeat_interval,
-//					'controle_time' => $controle_time,
-//					'service_time' => $service_time,
-				));
-//				$ret = $this->update_control_serie($data = array(
-//					'ids' => array($serie_id),
-//					'action' => 'enable',
-//				));
+				$sql = "SELECT id FROM controller_control_serie"
+					. " WHERE assigned_to = {$from}"
+					. " AND id IN (" . implode(',', $serie_ids) . ')';
+				$this->db->query($sql, __LINE__, __FILE__);
+				$ids = array();
+				while ($this->db->next_record())
+				{
+					$ids[] = $this->db->f('id');
+				}
+				if ($ids)
+				{
+					$this->update_control_serie(array(
+						'ids' => $ids,
+						'action' => 'edit',
+						'assigned_to' => $to,
+	//					'start_date' => $start_date,
+	//					'repeat_type' => $repeat_type,
+	//					'repeat_interval' => $repeat_interval,
+	//					'controle_time' => $controle_time,
+	//					'service_time' => $service_time,
+					));
+	//				$ret = $this->update_control_serie($data = array(
+	//					'ids' => array($serie_id),
+	//					'action' => 'enable',
+	//				));
 
+				}
+			}
+
+			if($check_list_ids && is_array($check_list_ids))
+			{
 				$now = time();
 				$sql = "UPDATE controller_check_list SET assigned_to = $to"
-					. " WHERE deadline > {$now} AND assigned_to = {$from}";
+					. " WHERE deadline > {$now} AND assigned_to = {$from}"
+					. " AND id IN (" . implode(',', $check_list_ids) . ')';
 				$this->db->query($sql, __LINE__, __FILE__);
 			}
-
 		}
-
 	}
