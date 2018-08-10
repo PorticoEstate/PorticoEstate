@@ -259,16 +259,54 @@
 
 			$selected = $this->bo->get_substitute($user_id);
 
+			$substitute_user_list = $this->bo->get_substitute_list($user_id);
+
 			$appname = lang('substitute');
 			$function_msg = lang('set substitute');
 			$GLOBALS['phpgw_info']['flags']['app_header'] = lang('property') . ' - ' . $appname . ': ' . $function_msg;
-			$GLOBALS['phpgw']->xslttpl->add_file(array('substitute'));
+			$controls_def = array
+			(
+				array('key' => 'id', 'hidden' => true),
+				array('key' => 'user_name', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'start_time', 'label' => lang('Start time'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'end_time', 'label' => lang('End time'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'select','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
+			);
+
+			$tabletools = array
+			(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
+			);
+
+			$datatable_def[] = array
+			(
+				'container' => 'datatable-container_0',
+				'requestUrl' => "''",
+				'ColumnDefs' => $controls_def,
+				'data' => json_encode($substitute_user_list),
+				'tabletools' => $tabletools,
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
+				)
+			);
+
+			$tabs = array();
+			$tabs['assign'] = array('label' => lang('assign'), 'link' => '#assign');
 
 			$data = array
 			(
+				'datatable_def' => $datatable_def,
+				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
+				'value_active_tab' => 0,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.edit')),
 				'user_list' => array('options' => $this->_get_user_list($selected)),
 			);
+
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_time', 'datetime');
+
+			$GLOBALS['phpgw']->xslttpl->add_file(array('substitute', 'datatable_inline'));
 
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 		}

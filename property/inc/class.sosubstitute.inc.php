@@ -159,4 +159,25 @@
 			}
 			return $users;
 		}
+
+
+		public function get_substitute_list( $user_id)
+		{
+			$this->db->query('SELECT * FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
+			$values = array();
+
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id' => $this->db->f('id'),
+					'start_time' => $this->db->f('start_time'),
+					'end_time' => $this->db->f('end_time'),
+					'substitute_user_id' => $this->db->f('substitute_user_id'),
+				);
+			}
+
+			return $values;
+		}
+
 	}

@@ -114,7 +114,7 @@
 	<form class="pure-form pure-form-aligned" id="form" name="form" method="post" action="{$form_action}">
 		<div id="tab-content">
 			<xsl:value-of disable-output-escaping="yes" select="tabs"/>
-			<div id="general">
+			<div id="assign">
 				<fieldset>
 					<div class="pure-control-group">
 						<xsl:variable name="lang_substitute">
@@ -133,6 +133,36 @@
 							<xsl:apply-templates select="user_list/options"/>
 						</select>
 					</div>
+					<div class="pure-control-group">
+						<label for="start_time">
+							<xsl:value-of select="php:function('lang', 'start date')"/>
+						</label>
+						<input type="text" id="start_time" name="start_time" size="20" value="{value_start_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'start date')"/>
+							</xsl:attribute>
+						</input>
+					</div>
+					<div class="pure-control-group">
+						<label>
+							<xsl:value-of select="php:function('lang', 'serie')"/>
+						</label>
+						<div class="pure-u-md-1-2" >
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_0'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl'/>
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs'/>
+										<xsl:with-param name="data" select ='data'/>
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="config" select ='config'/>
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+
 				</fieldset>
 			</div>
 		</div>

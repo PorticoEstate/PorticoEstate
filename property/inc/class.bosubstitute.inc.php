@@ -89,4 +89,9 @@
 		{
 			return $this->so->get_substitute($user_id);
 		}
+
+		public function get_substitute_list( $user_id)
+		{
+			return $this->so->get_substitute_list($user_id);
+		}
 	}

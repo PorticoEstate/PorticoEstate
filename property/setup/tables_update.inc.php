@@ -10079,3 +10079,38 @@
 			return $GLOBALS['setup_info']['property']['currentver'];
 		}
 	}
+
+	/**
+	* Update property version from 0.9.17.729 to 0.9.17.730
+	*
+	*/
+	$test[] = '0.9.17.729';
+
+	function property_upgrade0_9_17_729()
+	{
+		$GLOBALS['phpgw_setup']->oProc->m_odb->transaction_begin();
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb_role_user_substitute', 'start_time',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => true
+			)
+		);
+
+		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb_role_user_substitute', 'end_time',array(
+			'type' => 'int',
+			'precision' => 8,
+			'nullable' => true
+			)
+		);
+
+		$now = time();
+
+		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecodimb_role_user_substitute SET start_time = {$now}", __LINE__, __FILE__);
+
+		if($GLOBALS['phpgw_setup']->oProc->m_odb->transaction_commit())
+		{
+			$GLOBALS['setup_info']['property']['currentver'] = '0.9.17.730';
+			return $GLOBALS['setup_info']['property']['currentver'];
+		}
+	}
