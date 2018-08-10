@@ -60,10 +60,13 @@
 			$from = phpgw::get_var('from', 'int');
 			$to = phpgw::get_var('to', 'int');
 			$save = phpgw::get_var('save', 'bool', 'POST');
+			$serie_ids = phpgw::get_var('serie_ids', 'int');
+			$check_list_ids = phpgw::get_var('check_list_ids', 'int');
+
 
 			if($save && $from && $to)
 			{
-				$this->so->save_bulk_uppdate_assign(array('from' => $from, 'to' => $to));
+				$this->so->save_bulk_uppdate_assign(array('from' => $from, 'to' => $to, 'serie_ids' => $serie_ids, 'check_list_ids' => $check_list_ids));
 			}
 
 			$tabs = array();
@@ -77,7 +80,7 @@
 				(
 					'id' => $user['account_id'],
 					'name' => "{$user['account_lastname']}, {$user['account_firstname']}",
-					'selected' =>  $user['account_id'] == $from ? 1 : 0
+					'selected' => 0
 				);
 			}
 			unset($user);
@@ -114,11 +117,17 @@
 					'resizeable' => true),
 				array('key' => 'serie_enabled', 'label' => lang('enabled'), 'sortable' => false,
 					'resizeable' => true),
-//				array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true),
+				array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 				array('key' => 'location_id', 'hidden' => true),
 				array('key' => 'component_id', 'hidden' => true),
 				array('key' => 'id', 'hidden' => true),
 				array('key' => 'assigned_to', 'hidden' => true),
+			);
+
+			$tabletools = array
+			(
+				array('my_name' => 'select_all'),
+				array('my_name' => 'select_none')
 			);
 
 			$datatable_def[] = array
@@ -127,6 +136,7 @@
 				'requestUrl' => "''",
 				'ColumnDefs' => $controls_def,
 				'data' => json_encode(array()),
+				'tabletools' => $tabletools,
 				'config' => array(
 					array('disableFilter' => true),
 					array('disablePagination' => true)
@@ -142,6 +152,7 @@
 				array('key' => 'user', 'label' => lang('user'), 'sortable' => false),
 				array('key' => 'deadline', 'label' => lang('deadline'), 'sortable' => false),
 				array('key' => 'planned_date', 'label' => lang('planned date'), 'sortable' => true),
+				array('key' => 'select','label'=>lang('select'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 			);
 
 			$datatable_def[] = array
@@ -153,7 +164,7 @@
 					'config' => array(
 						array('disableFilter' => true),
 						array('disablePagination' => true),
-						array('singleSelect' => true)
+		//				array('singleSelect' => true)
 					)
 				);
 
@@ -213,6 +224,7 @@
 				$entry['start_date'] = $GLOBALS['phpgw']->common->show_date($entry['start_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
 				$entry['repeat_type'] = $repeat_type_array[$entry['repeat_type']];
 				$entry['total_time'] = $entry['service_time'] + $entry['controle_time'];
+				$entry['select'] = '<input type="checkbox" name="serie_ids[]" class="mychecks" value="' . $entry['serie_id'] . '" title="'. $entry['serie_id'] .'"/>';
 			}
 
 			$result_data = array
@@ -264,6 +276,7 @@
 					'user' => $assigned_to_name,
 					'deadline' => $GLOBALS['phpgw']->common->show_date($check_list['deadline'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
 					'planned_date' => $GLOBALS['phpgw']->common->show_date($check_list['planned_date'], $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']),
+					'select'	=> '<input type="checkbox" name="check_list_ids[]" class="mychecks" value="' . $check_list['id'] . '" title="'. $check_list['id'] .'"/>'
 				);
 				unset($_link);
 			}
