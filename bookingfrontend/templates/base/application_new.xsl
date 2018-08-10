@@ -100,7 +100,7 @@
                         <textarea class="form-control" data-bind="textInput: aboutArrangement"></textarea>
                     </div>
                     
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <label>ESTIMERT ANTALL DELTAGERE</label>
                         <div class="p-2 border">
                             <div class="row mb-2">
@@ -152,7 +152,39 @@
                             </div>    
                                                                                        
                         </div>
+                    </div>-->
+
+                    <div class="form-group">
+                        <label>ESTIMERT ANTALL DELTAGERE</label>
+                        <div class="p-2 border">
+                            <div class="row mb-2">
+                                <div class="col-3">
+                                    <span class="span-label mt-2"></span>
+                                </div>
+                                <div class="col-4">
+                                    <span>Menn</span>
+                                </div>
+                                <div class="col-4">
+                                     <span>Kvinner</span>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-2" data-bind="foreach: agegroup">
+                                <span data-bind="text: id, visible: false"/>
+                                <div class="col-3">
+                                    <span class="mt-2" data-bind="text: agegroupLabel"></span>
+                                </div>
+                                <div class="col-4">                                    
+                                    <input class="form-control sm-input" placeholder="mann" data-bind="textInput: inputCountMale"/>
+                                </div>
+                                <div class="col-4">
+                                    <input class="form-control sm-input" placeholder="kvinne" data-bind="textInput: inputCountFemale"/>
+                                </div>
+                            </div>
+                                                                                       
+                        </div>
                     </div>
+                    
                     
                     <div class="form-group">
                         <label>BEHOV FOR SPESIELL TILRETTELEGGING</label>
