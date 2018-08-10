@@ -956,4 +956,37 @@
 
 			return $ret;
 		}
+
+		function get_assigned_future_checklist( $assigned_to )
+		{
+			$assigned_to = (int) $assigned_to;
+			$now = time();
+
+			$sql = "SELECT controller_check_list.*, controller_control.title AS control_name  FROM controller_check_list"
+				. " JOIN controller_control ON controller_control.id = controller_check_list.control_id"
+				. " WHERE assigned_to = $assigned_to"
+				. " AND planned_date > $now"
+				. " AND completed_date IS NULL";
+
+			$this->db->query($sql, __LINE__, __FILE__);
+			$values = array();
+			while ($this->db->next_record())
+			{
+				$values[] = array
+				(
+					'id' => $this->db->f('id'),
+					'control_id' => $this->db->f('control_id'),
+					'status'  => $this->db->f('status'),
+					'comment'  => $this->db->f('comment', true),
+					'deadline'  => $this->db->f('deadline'),
+					'planned_date'  => $this->db->f('planned_date'),
+					'component_id'  => $this->db->f('component_id'),
+					'location_id'  => $this->db->f('location_id'),
+					'billable_hours'  => $this->db->f('billable_hours'),
+					'serie_id'  => $this->db->f('serie_id'),
+					'control_name'  => $this->db->f('control_name', true),
+				);
+			}
+			return $values;
+		}
 	}

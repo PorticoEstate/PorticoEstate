@@ -419,3 +419,12 @@ modified date	controller	nn	Dato siste endring
 modified by	controller	nn	Endret av
 set status: done	controller	nn	Sett status: utført
 in queue	controller	nn	I kø
+change to	controller	nn	Endre til
+assign	controller	nn	Tildel
+where	controller	nn	Hvor
+start date	controller	nn	Startdato
+repeat type	controller	nn	Intervalltype
+bulk update assigned	controller	nn	Masseoppdatering av tildeling
+deadline	controller	nn	Frist
+planned	controller	nn	Planlagt
+serie	controller	nn	Serie
