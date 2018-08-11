@@ -51,20 +51,19 @@
 
 			$substitute_user_id = (int)$data['substitute_user_id'];
 
-			$filtermethod = '';
-			$where = 'WHERE';
+			$filtermethod = 'WHERE end_time IS NULL';
+
 			if ($user_id)
 			{
-				$filtermethod .= "{$where} user_id = $user_id";
-				$where = 'AND';
+				$filtermethod .= " AND user_id = $user_id";
 			}
 			if ($substitute_user_id)
 			{
-				$filtermethod .= "{$where} substitute_user_id = $substitute_user_id";
-				$where = 'AND';
+				$filtermethod .= " AND substitute_user_id = $substitute_user_id";
 			}
 
-			$sql = "SELECT id, user_id, substitute_user_id FROM fm_ecodimb_role_user_substitute {$filtermethod}";
+			$sql = "SELECT id, start_time, user_id, substitute_user_id FROM fm_ecodimb_role_user_substitute {$filtermethod}"
+			. " ORDER BY user_id, start_time";
 
 //_debug_array($sql);
 			$this->db->query($sql, __LINE__, __FILE__);
@@ -76,6 +75,7 @@
 					'id' => $this->db->f('id'),
 					'user_id' => $this->db->f('user_id'),
 					'substitute_user_id' => $this->db->f('substitute_user_id'),
+					'start_time' => $this->db->f('start_time'),
 				);
 			}
 
@@ -86,7 +86,8 @@
 		{
 			if($data)
 			{
-				return $this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE id IN (' . implode(', ', $data) . ')', __LINE__, __FILE__);
+				$now = time();
+				return $this->db->query("UPDATE fm_ecodimb_role_user_substitute SET end_time = {$now} WHERE id IN (" . implode(', ', $data) . ')', __LINE__, __FILE__);
 			}
 		}
 
@@ -96,38 +97,37 @@
 		 * @param int $substitute_user_id
 		 * @return boolean true on success
 		 */
-		public function update_substitute( $user_id, $substitute_user_id = 0 )
+		public function update_substitute( $user_id, $substitute_user_id = 0, $start_time)
 		{
+			if(!$substitute_user_id)
+			{
+				return false;
+			}
+
 			$error = false;
 			$this->db->transaction_begin();
-			$this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
-			if($substitute_user_id)
+//			$this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
+			/*
+			 * Check for circle reference
+			 */
+			$sql = 'SELECT id FROM fm_ecodimb_role_user_substitute WHERE substitute_user_id =' . (int) $user_id . ' AND user_id = ' . (int) $substitute_user_id;
+			$this->db->query($sql, __LINE__, __FILE__);
+			if($this->db->next_record() || $user_id == $substitute_user_id)
 			{
-				/*
-				 * Check for circle reference
-				 */
-				$sql = 'SELECT id FROM fm_ecodimb_role_user_substitute WHERE substitute_user_id =' . (int) $user_id . ' AND user_id = ' . (int) $substitute_user_id;
-				$this->db->query($sql, __LINE__, __FILE__);
-				if($this->db->next_record())
-				{
-					phpgwapi_cache::message_set(lang('substitute') . ' ' .lang('circle reference'), 'error');
-					$error = true;
-				}
-				else
-				{
-					$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id ) VALUES (' . (int)$user_id . ',' . (int) $substitute_user_id . ')', __LINE__, __FILE__);
-				}
+				phpgwapi_cache::message_set(lang('substitute') . ' ' .lang('circle reference'), 'error');
+				$error = true;
 			}
+			else
+			{
+				$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id, start_time ) VALUES ('
+					. (int)$user_id
+					. ',' . (int) $substitute_user_id
+					. ',' . (int) $start_time
+					. ')', __LINE__, __FILE__);
+			}
+
 			if($this->db->transaction_commit() && !$error)
 			{
-				if($substitute_user_id)
-				{
-					phpgwapi_cache::message_set(lang('substitute') .': ' . $GLOBALS['phpgw']->accounts->get($substitute_user_id)->__toString(), 'message');
-				}
-				else
-				{
-					phpgwapi_cache::message_set(lang('substitute') . ' ' .lang('deleted'), 'message');
-				}
 				return true;
 			}
 		}
@@ -139,7 +139,10 @@
 		 */
 		public function get_substitute( $user_id)
 		{
-			$this->db->query('SELECT substitute_user_id FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
+			$this->db->query('SELECT substitute_user_id FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id
+				. ' AND end_time IS NULL'
+				. ' AND start_time < ' . time()
+				. ' ORDER BY start_time DESC', __LINE__, __FILE__);
 			$this->db->next_record();
 			return (int)$this->db->f('substitute_user_id');
 		}
@@ -163,17 +166,22 @@
 
 		public function get_substitute_list( $user_id)
 		{
-			$this->db->query('SELECT * FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
+
+			$active_user_subsitute_id = $this->get_substitute($user_id);
+
+			$this->db->query('SELECT * FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id . ' ORDER BY start_time ASC', __LINE__, __FILE__);
 			$values = array();
 
 			while ($this->db->next_record())
 			{
+				$user_subsitute_id = $this->db->f('substitute_user_id');
 				$values[] = array
 				(
 					'id' => $this->db->f('id'),
 					'start_time' => $this->db->f('start_time'),
 					'end_time' => $this->db->f('end_time'),
-					'substitute_user_id' => $this->db->f('substitute_user_id'),
+					'substitute_user_id' => $user_subsitute_id,
+					'active'			=> $active_user_subsitute_id == $user_subsitute_id ? 'X' : ''
 				);
 			}
 

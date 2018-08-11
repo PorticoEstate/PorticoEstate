@@ -80,9 +80,9 @@
 			return $values;
 		}
 
-		public function update_substitute( $user_id, $substitute_user_id )
+		public function update_substitute( $user_id, $substitute_user_id, $start_time )
 		{
-			return $this->so->update_substitute($user_id, $substitute_user_id);
+			return $this->so->update_substitute($user_id, $substitute_user_id, $start_time);
 		}
 
 		public function get_substitute( $user_id)

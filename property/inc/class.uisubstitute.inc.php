@@ -101,6 +101,10 @@
 					'label' => lang('substitute'),
 					'sortable' => false
 				),
+				array(
+					'key' => 'formatted_start_time',
+					'label' => lang('Start time'),
+					'sortable' => false),
 				array
 					(
 					'key' => 'delete',
@@ -164,6 +168,7 @@
 
 			foreach ($values as &$entry)
 			{
+				$entry['formatted_start_time'] = $GLOBALS['phpgw']->common->show_date($entry['start_time']);
 				$entry['delete'] = "<input class=\"delete\" id=\"delete\" type =\"checkbox\" name=\"delete[]\" value=\"{$entry['id']}\">";
 				$results['results'][] = $entry;
 			}
@@ -250,16 +255,31 @@
 		{
 			$user_id = $this->account_id;
 			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int', 'POST');
+			$start_time = phpgw::get_var('start_time', 'date', 'POST');
 			$save = phpgw::get_var('save', 'string', 'POST');
 
 			if($save)
 			{
-				$this->bo->update_substitute($user_id, $substitute_user_id);
+				$this->bo->update_substitute($user_id, $substitute_user_id, $start_time);
+				if ($delete = phpgw::get_var('delete', 'int'))
+				{
+					$this->bo->delete($delete);
+				}
 			}
 
 			$selected = $this->bo->get_substitute($user_id);
 
 			$substitute_user_list = $this->bo->get_substitute_list($user_id);
+
+			$i = 1;
+			foreach ($substitute_user_list as &$substitute_user)
+			{
+				$substitute_user['sort_key'] = $i++;
+				$substitute_user['formatted_start_time'] = $GLOBALS['phpgw']->common->show_date($substitute_user['start_time']);
+				$substitute_user['formatted_end_time']	= $GLOBALS['phpgw']->common->show_date($substitute_user['end_time']);
+				$substitute_user['user_name']			= $GLOBALS['phpgw']->accounts->get($substitute_user['substitute_user_id'])->__toString();
+				$substitute_user['select']				= '<input type="checkbox" name="delete[]" class="mychecks" value="' . $substitute_user['id'] . '" title="'. $substitute_user['id'] .'"/>';
+			}
 
 			$appname = lang('substitute');
 			$function_msg = lang('set substitute');
@@ -267,9 +287,11 @@
 			$controls_def = array
 			(
 				array('key' => 'id', 'hidden' => true),
+				array('key' => 'sort_key', 'label' => '#', 'sortable' => true, 'resizeable' => true,'className' => 'center'),
 				array('key' => 'user_name', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'start_time', 'label' => lang('Start time'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'end_time', 'label' => lang('End time'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'formatted_start_time', 'label' => lang('Start time'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'formatted_end_time', 'label' => lang('End time'), 'sortable' => false, 'resizeable' => true),
+				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 				array('key' => 'select','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 			);
 
@@ -288,7 +310,8 @@
 				'tabletools' => $tabletools,
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => "[0 , 'asc']")
 				)
 			);
 
