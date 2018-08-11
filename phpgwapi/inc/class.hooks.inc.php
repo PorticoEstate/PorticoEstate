@@ -153,7 +153,7 @@
 			/* First include the ordered apps hook file */
 			if (isset($this->found_hooks[$appname][$location]) || $try_unregistered)
 			{
-				$parts = null;
+				$parts = array();
 				if(isset($this->found_hooks[$appname][$location]))
 				{
 					$parts = explode('.',$method = $this->found_hooks[$appname][$location]);
