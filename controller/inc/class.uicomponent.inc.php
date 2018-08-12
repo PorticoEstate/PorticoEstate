@@ -108,6 +108,19 @@
 			$this->custom = createObject('phpgwapi.custom_fields');
 			$user_id = phpgw::get_var('user_id', 'string', 'REQUEST', -1);
 			$this->user_id = $user_id == 'all' ? 0 : (int) $user_id;
+
+			if ($user_id < 0)
+			{
+				$user_id = $user_id * -1;
+			}
+			$sosubstitute = CreateObject('property.sosubstitute');
+			$users_for_substitute = $sosubstitute->get_users_for_substitute($user_id);
+			if($user_id)
+			{
+				$users_for_substitute[] = $user_id;
+				$this->user_id = $users_for_substitute;
+			}
+
 			$this->currentapp = $GLOBALS['phpgw_info']['flags']['currentapp'];
 
 		}
@@ -1121,7 +1134,7 @@
 										continue;
 									}
 
-									if (isset($_month_info['info']['assigned_to']) && $_month_info['info']['assigned_to'] == $user_id)
+									if (isset($_month_info['info']['assigned_to']) && ($_month_info['info']['assigned_to'] == $user_id || (is_array($user_id) && in_array($_month_info['info']['assigned_to'],$user_id ))))
 									{
 										$found_assigned_to = true;
 										break;
@@ -1419,7 +1432,7 @@
 					{
 						$row[$_month] = $this->translate_calendar_info($entry[$_month], $year, $_month, $filter_status, $found_at_least_one, $keep_only_assigned_to, $entry['location_code'], $control_link_data, $url_target);
 					//	if($total_hours)// || $keep_only_assigned_to == $entry[$_month]['info']['assigned_to'])//
-						if($row[$_month] && (!$user_id || $entry[$_month]['info']['assigned_to'] == $user_id))
+						if($row[$_month] && (!$user_id || ($entry[$_month]['info']['assigned_to'] == $user_id  || (is_array($user_id) && in_array($entry[$_month]['info']['assigned_to'], $user_id) ))))
 						{
 							$row_sum[$_month] = (float)$entry[$_month]['info']['service_time'] + (float)$entry[$_month]['info']['controle_time'];
 							$row_sum_actual[$_month] = + (float)$entry[$_month]['info']['billable_hours'];
@@ -1557,10 +1570,24 @@
 			$billable_hours = (float)$param['info']['billable_hours'];
 			$time .= " / {$billable_hours}";
 
-			if ($keep_only_assigned_to && $keep_only_assigned_to != $param['info']['assigned_to'])
+
+			if($keep_only_assigned_to)
 			{
-				return "<br/><br/><br/><pre>{$time}</pre>";
+				if(is_array($keep_only_assigned_to) && !in_array($param['info']['assigned_to'], $keep_only_assigned_to))
+				{
+					return "<br/><br/><br/><pre>{$time}</pre>";
+
+				}
+				else if(!is_array($keep_only_assigned_to) && $keep_only_assigned_to != $param['info']['assigned_to'])
+				{
+					return "<br/><br/><br/><pre>{$time}</pre>";
+				}
 			}
+
+//			if ($keep_only_assigned_to && $keep_only_assigned_to != $param['info']['assigned_to'])
+//			{
+//				return "<br/><br/><br/><pre>{$time}</pre>";
+//			}
 
 			if ($filter_status)
 			{
