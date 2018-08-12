@@ -263,7 +263,7 @@
 				}
 			}
 
-			$selected = $this->bo->get_substitute($user_id);
+//			$selected = $this->bo->get_substitute($user_id);
 
 			$substitute_user_list = $this->bo->get_substitute_list($user_id);
 
@@ -320,7 +320,7 @@
 				'tabs' => phpgwapi_jquery::tabview_generate($tabs, 0),
 				'value_active_tab' => 0,
 				'form_action' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uisubstitute.edit')),
-				'user_list' => array('options' => $this->_get_user_list($selected)),
+				'user_list' => array('options' => $this->_get_user_list()),
 			);
 
 			$GLOBALS['phpgw']->jqcal2->add_listener('start_time', 'datetime');
@@ -330,7 +330,7 @@
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('edit' => $data));
 		}
 
-		private function _get_user_list($selected)
+		private function _get_user_list($selected = 0)
 		{
 			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.project', 'property');
 			$user_list = array();
