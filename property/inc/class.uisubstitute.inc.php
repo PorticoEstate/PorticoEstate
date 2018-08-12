@@ -272,7 +272,6 @@
 			{
 				$substitute_user['sort_key'] = $i++;
 				$substitute_user['formatted_start_time'] = $GLOBALS['phpgw']->common->show_date($substitute_user['start_time']);
-//				$substitute_user['formatted_end_time']	= $GLOBALS['phpgw']->common->show_date($substitute_user['end_time']);
 				$substitute_user['user_name']			= $GLOBALS['phpgw']->accounts->get($substitute_user['substitute_user_id'])->__toString();
 				$substitute_user['select']				= '<input type="checkbox" name="delete[]" class="mychecks" value="' . $substitute_user['id'] . '" title="'. $substitute_user['id'] .'"/>';
 			}
@@ -286,7 +285,6 @@
 				array('key' => 'sort_key', 'label' => '#', 'sortable' => true, 'resizeable' => true,'className' => 'center'),
 				array('key' => 'user_name', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'formatted_start_time', 'label' => lang('Start time'), 'sortable' => false, 'resizeable' => true),
-//				array('key' => 'formatted_end_time', 'label' => lang('End time'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 				array('key' => 'select','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 			);

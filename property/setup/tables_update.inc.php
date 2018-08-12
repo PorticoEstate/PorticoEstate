@@ -10097,13 +10097,6 @@
 			)
 		);
 
-		$GLOBALS['phpgw_setup']->oProc->AddColumn('fm_ecodimb_role_user_substitute', 'end_time',array(
-			'type' => 'int',
-			'precision' => 8,
-			'nullable' => true
-			)
-		);
-
 		$now = time();
 
 		$GLOBALS['phpgw_setup']->oProc->query("UPDATE fm_ecodimb_role_user_substitute SET start_time = {$now}", __LINE__, __FILE__);

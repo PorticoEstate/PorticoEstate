@@ -51,7 +51,7 @@
 
 			$substitute_user_id = (int)$data['substitute_user_id'];
 
-			$filtermethod = 'WHERE end_time IS NULL';
+			$filtermethod = 'WHERE 1=1';
 
 			if ($user_id)
 			{
@@ -123,8 +123,7 @@
 				 */
 				$sql = 'SELECT id FROM fm_ecodimb_role_user_substitute WHERE user_id =' . (int) $user_id
 					. ' AND substitute_user_id = ' . (int) $substitute_user_id
-					. ' AND start_time = ' . (int) $start_time
-					. ' AND end_time IS NULL';
+					. ' AND start_time = ' . (int) $start_time;
 				$this->db->query($sql, __LINE__, __FILE__);
 				if($this->db->next_record())
 				{
@@ -153,7 +152,6 @@
 		public function get_substitute( $user_id)
 		{
 			$this->db->query('SELECT substitute_user_id FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id
-				. ' AND end_time IS NULL'
 				. ' AND start_time < ' . time()
 				. ' ORDER BY start_time DESC', __LINE__, __FILE__);
 			$this->db->next_record();
@@ -169,7 +167,6 @@
 		{
 			$this->db->query('SELECT DISTINCT user_id FROM (SELECT user_id FROM fm_ecodimb_role_user_substitute'
 				. ' WHERE substitute_user_id = ' . (int)$substitute_user_id
-				. ' AND end_time IS NULL'
 				. ' AND start_time < ' . time()
 				. ' ORDER BY start_time DESC) as t', __LINE__, __FILE__);
 
@@ -197,7 +194,6 @@
 				(
 					'id' => $this->db->f('id'),
 					'start_time' => $this->db->f('start_time'),
-					'end_time' => $this->db->f('end_time'),
 					'substitute_user_id' => $user_subsitute_id,
 					'active'			=> $active_user_subsitute_id == $user_subsitute_id ? 'X' : ''
 				);
