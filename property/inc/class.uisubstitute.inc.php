@@ -128,7 +128,7 @@
 				)
 			);
 
-			$user_list = $this->bocommon->get_user_list_right2('select', PHPGW_ACL_READ, 0, '.invoice');
+			$user_list = $this->_get_user_list();
 			$substitute_list = $user_list;
 
 			array_unshift($user_list, array('id' => '', 'name' => lang('select')));
@@ -330,32 +330,63 @@
 
 		private function _get_user_list($selected = 0)
 		{
-			$users = $GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.project', 'property');
-			$user_list = array();
-			$selected_found = false;
-			foreach ($users as $user)
+			$users_controller = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.checklist', 'controller');
+			$users_property = (array)$GLOBALS['phpgw']->acl->get_user_list_right(PHPGW_ACL_EDIT, '.project', 'property');
+
+			$users_gross = array();
+
+
+			foreach ($users_controller as $user)
 			{
 				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
-				$user_list[] = array(
+				$users_gross[$user['account_id']] = array(
 					'id' => $user['account_id'],
-					'name' => $name,
-					'selected' => $user['account_id'] == $selected ? 1 : 0
+					'name' => $name
 				);
+			}
+			unset($user);
+			foreach ($users_property as $user)
+			{
+				$name = (isset($user['account_lastname']) ? $user['account_lastname'] . ' ' : '') . $user['account_firstname'];
+				$users_gross[$user['account_id']] = array(
+					'id' => $user['account_id'],
+					'name' => $name
+				);
+			}
 
+			$user_list = array();
+			$account_name = array();
+			$selected_found = false;
+			foreach ($users_gross as $value)
+			{
+				$user_list[] = $value;
+				$account_name[] = $value['name'];
 				if (!$selected_found)
 				{
-					$selected_found = $user['account_id'] == $selected ? true : false;
+					$selected_found = $value['id'] == $selected ? true : false;
 				}
 			}
+
 			if ($selected && !$selected_found)
 			{
+				$name = $GLOBALS['phpgw']->accounts->get($selected)->__toString();
 				$user_list[] = array
 					(
 					'id' => $selected,
-					'name' => $GLOBALS['phpgw']->accounts->get($selected)->__toString(),
+					'name' => $name,
 					'selected' => 1
 				);
+
+				$account_name[] = $name;
 			}
+	
+			// Sort the data with account_name ascending
+			// Add $data as the last parameter, to sort by the common key
+			if ($user_list)
+			{
+				array_multisort($account_name, SORT_ASC, $user_list);
+			}
+
 			return $user_list;
 		}
 
