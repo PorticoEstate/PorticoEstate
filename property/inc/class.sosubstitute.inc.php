@@ -3,7 +3,7 @@
 	 * phpGroupWare - registration
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2018 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -87,7 +87,7 @@
 			if($data)
 			{
 				$now = time();
-				return $this->db->query("UPDATE fm_ecodimb_role_user_substitute SET end_time = {$now} WHERE id IN (" . implode(', ', $data) . ')', __LINE__, __FILE__);
+				return $this->db->query("DELETE FROM fm_ecodimb_role_user_substitute WHERE id IN (" . implode(', ', $data) . ')', __LINE__, __FILE__);
 			}
 		}
 
@@ -99,14 +99,13 @@
 		 */
 		public function update_substitute( $user_id, $substitute_user_id = 0, $start_time)
 		{
-			if(!$substitute_user_id)
+			if(!$substitute_user_id || !$start_time)
 			{
 				return false;
 			}
 
 			$error = false;
 			$this->db->transaction_begin();
-//			$this->db->query('DELETE FROM fm_ecodimb_role_user_substitute WHERE user_id = ' . (int)$user_id, __LINE__, __FILE__);
 			/*
 			 * Check for circle reference
 			 */
@@ -119,6 +118,20 @@
 			}
 			else
 			{
+				/**
+				 * Avoid duplicates
+				 */
+				$sql = 'SELECT id FROM fm_ecodimb_role_user_substitute WHERE user_id =' . (int) $user_id
+					. ' AND substitute_user_id = ' . (int) $substitute_user_id
+					. ' AND start_time = ' . (int) $start_time
+					. ' AND end_time IS NULL';
+				$this->db->query($sql, __LINE__, __FILE__);
+				if($this->db->next_record())
+				{
+					$this->db->transaction_abort();
+					return false;
+				}
+
 				$this->db->query('INSERT INTO fm_ecodimb_role_user_substitute (user_id, substitute_user_id, start_time ) VALUES ('
 					. (int)$user_id
 					. ',' . (int) $substitute_user_id
@@ -154,7 +167,12 @@
 		 */
 		public function get_users_for_substitute( $substitute_user_id)
 		{
-			$this->db->query('SELECT user_id FROM fm_ecodimb_role_user_substitute WHERE substitute_user_id = ' . (int)$substitute_user_id, __LINE__, __FILE__);
+			$this->db->query('SELECT DISTINCT user_id FROM (SELECT user_id FROM fm_ecodimb_role_user_substitute'
+				. ' WHERE substitute_user_id = ' . (int)$substitute_user_id
+				. ' AND end_time IS NULL'
+				. ' AND start_time < ' . time()
+				. ' ORDER BY start_time DESC) as t', __LINE__, __FILE__);
+
 			$users = array();
 			while ($this->db->next_record())
 			{

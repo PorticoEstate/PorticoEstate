@@ -3,7 +3,7 @@
 	 * phpGroupWare - registration
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2018 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -135,25 +135,21 @@
 			array_unshift($substitute_list, array('id' => '', 'name' => lang('select')));
 
 			$data = array
-				(
+			(
 				'datatable_def' => $datatable_def,
 				'msgbox_data' => $msgbox_data,
 				'filter_form' => array
-					(
+				(
 					'user_list' => array('options' => $user_list),
 					'substitute_list' => array('options' => $substitute_list),
 				),
 				'update_action' => self::link(array('menuaction' => 'property.uisubstitute.edit2'))
 			);
 
-			$GLOBALS['phpgw']->jqcal->add_listener('query_start');
-			$GLOBALS['phpgw']->jqcal->add_listener('query_end');
-			$GLOBALS['phpgw']->jqcal->add_listener('active_from');
-			$GLOBALS['phpgw']->jqcal->add_listener('active_to');
-
 			self::add_javascript('property', 'portico', 'substitute.index.js');
 
 			self::add_jquery_translation($data);
+			$GLOBALS['phpgw']->jqcal2->add_listener('start_time', 'datetime');
 			$GLOBALS['phpgw']->xslttpl->add_file(array('substitute', 'datatable_inline'));
 			$GLOBALS['phpgw']->xslttpl->set_var('phpgw', array('table' => $data));
 		}
@@ -162,7 +158,6 @@
 		{
 			$user_id = phpgw::get_var('user_id', 'int');
 			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int');
-
 
 			$values = $this->bo->read(array('user_id' => $user_id, 'substitute_user_id' => $substitute_user_id));
 
@@ -196,12 +191,13 @@
 
 			$user_id = phpgw::get_var('user_id', 'int');
 			$substitute_user_id = phpgw::get_var('substitute_user_id', 'int');
+			$start_time = phpgw::get_var('start_time', 'date', 'POST', time());
 
 			$save = phpgw::get_var('save', 'string');
 
 			if($save && $user_id && $substitute_user_id)
 			{
-				if($this->bo->update_substitute($user_id, $substitute_user_id))
+				if($this->bo->update_substitute($user_id, $substitute_user_id, $start_time))
 				{
 					$result = array
 						(
@@ -276,7 +272,7 @@
 			{
 				$substitute_user['sort_key'] = $i++;
 				$substitute_user['formatted_start_time'] = $GLOBALS['phpgw']->common->show_date($substitute_user['start_time']);
-				$substitute_user['formatted_end_time']	= $GLOBALS['phpgw']->common->show_date($substitute_user['end_time']);
+//				$substitute_user['formatted_end_time']	= $GLOBALS['phpgw']->common->show_date($substitute_user['end_time']);
 				$substitute_user['user_name']			= $GLOBALS['phpgw']->accounts->get($substitute_user['substitute_user_id'])->__toString();
 				$substitute_user['select']				= '<input type="checkbox" name="delete[]" class="mychecks" value="' . $substitute_user['id'] . '" title="'. $substitute_user['id'] .'"/>';
 			}
@@ -290,7 +286,7 @@
 				array('key' => 'sort_key', 'label' => '#', 'sortable' => true, 'resizeable' => true,'className' => 'center'),
 				array('key' => 'user_name', 'label' => lang('User'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'formatted_start_time', 'label' => lang('Start time'), 'sortable' => false, 'resizeable' => true),
-				array('key' => 'formatted_end_time', 'label' => lang('End time'), 'sortable' => false, 'resizeable' => true),
+//				array('key' => 'formatted_end_time', 'label' => lang('End time'), 'sortable' => false, 'resizeable' => true),
 				array('key' => 'active','label'=>lang('active'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 				array('key' => 'select','label'=>lang('delete'),'sortable'=>false,'resizeable'=>true,'className' => 'center'),
 			);

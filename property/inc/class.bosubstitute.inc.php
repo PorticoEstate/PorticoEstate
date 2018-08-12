@@ -4,7 +4,7 @@
 	 * phpGroupWare - registration
 	 *
 	 * @author Sigurd Nes <sigurdne@online.no>
-	 * @copyright Copyright (C) 2011,2012 Free Software Foundation, Inc. http://www.fsf.org/
+	 * @copyright Copyright (C) 2018 Free Software Foundation, Inc. http://www.fsf.org/
 	 * This file is part of phpGroupWare.
 	 *
 	 * phpGroupWare is free software; you can redistribute it and/or modify
@@ -72,12 +72,6 @@
 		public function delete( $data )
 		{
 			return $this->so->delete($data);
-		}
-
-		public function edit( $data )
-		{
-			$values = $this->so->edit($data);
-			return $values;
 		}
 
 		public function update_substitute( $user_id, $substitute_user_id, $start_time )

@@ -1,4 +1,3 @@
-
 <!-- $Id: tts.xsl 16389 2017-02-28 17:35:22Z sigurdne $ -->
 
 <xsl:template match="data">
@@ -77,17 +76,20 @@
 
 <xsl:template name="filter_list" xmlns:php="http://php.net/xsl">
 	<tr>
-		<td colspan = '1'>
+		<td>
 			<table>
 				<tr>
-					<td>
+					<th>
 						<xsl:value-of select="php:function('lang', 'user')" />
-					</td>
-					<td>
+					</th>
+					<th>
 						<xsl:value-of select="php:function('lang', 'substitute')" />
-					</td>
+					</th>
+					<th>
+						<xsl:value-of select="php:function('lang', 'start time')" />
+					</th>
 				</tr>
-				<tr id="filters">
+				<tr>
 					<td>
 						<select id="user_id" name="user_id">
 							<xsl:apply-templates select="user_list/options"/>
@@ -97,6 +99,13 @@
 						<select id="substitute_user_id" name="substitute_user_id">
 							<xsl:apply-templates select="substitute_list/options"/>
 						</select>
+					</td>
+					<td>
+						<input type="text" id="start_time" name="start_time" size="20" value="{value_start_date}" readonly="readonly">
+							<xsl:attribute name="title">
+								<xsl:value-of select="php:function('lang', 'start time')"/>
+							</xsl:attribute>
+						</input>
 					</td>
 				</tr>
 			</table>
@@ -135,11 +144,11 @@
 					</div>
 					<div class="pure-control-group">
 						<label for="start_time">
-							<xsl:value-of select="php:function('lang', 'start date')"/>
+							<xsl:value-of select="php:function('lang', 'start time')"/>
 						</label>
 						<input type="text" id="start_time" name="start_time" size="20" value="{value_start_date}" readonly="readonly">
 							<xsl:attribute name="title">
-								<xsl:value-of select="php:function('lang', 'start date')"/>
+								<xsl:value-of select="php:function('lang', 'start time')"/>
 							</xsl:attribute>
 						</input>
 					</div>
