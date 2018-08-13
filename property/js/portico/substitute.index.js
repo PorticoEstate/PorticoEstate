@@ -19,7 +19,13 @@ $(document).ready(function ()
 		var requestUrl = $(thisForm).attr("action");
 		$.ajax({
 			type: 'POST',
-			url: requestUrl + "&phpgw_return_as=json&save=save&substitute_user_id=" + $("#substitute_user_id").val() +'&user_id=' + $("#user_id").val() + '&' + $(thisForm).serialize(),
+			url: requestUrl + '&phpgw_return_as=json&' + $(thisForm).serialize(),
+			data: {
+				save:true,
+				substitute_user_id: $("#substitute_user_id").val(),
+				user_id: $("#user_id").val(),
+				start_time: $("#start_time").val()
+			},
 			success: function (data)
 			{
 				if (data)
@@ -95,5 +101,5 @@ var addFooterDatatable = function (oTable)
 {
 	var api = oTable.api();
 	var newTD = JqueryPortico.CreateRowChecked("delete");
-	$(api.column(2).footer()).html(newTD);
+	$(api.column(3).footer()).html(newTD);
 };
