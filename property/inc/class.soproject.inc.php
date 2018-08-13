@@ -1005,7 +1005,7 @@
 			$project_id = (int)$data['project_id'];
 			$year = (int)$data['year'];
 			$sort = isset($data['sort']) ? $data['sort'] : 'DESC';
-			$order = isset($data['order']) ? $data['order'] : 'fm_workorder';
+			$order = isset($data['order']) ? $data['order'] : 'workorder_id';
 			$results = (isset($data['results']) ? $data['results'] : 0);
 			$query = isset($data['query']) ? $data['query'] : '';
 
@@ -1026,6 +1026,9 @@
 						break;
 					case 'status':
 						$ordermethod = "ORDER BY fm_workorder_status.descr {$sort}";
+						break;
+					case 'year':
+						$ordermethod = "ORDER BY fm_workorder_budget.year {$sort}, fm_workorder.id asc";
 						break;
 				}
 			}
@@ -1113,6 +1116,7 @@
 
 			foreach ($values as &$entry)
 			{
+				$_year = $entry['year'];
 				foreach ($order_budgets[$entry['workorder_id']] as $budget)
 				{
 					if ($budget['active'] == 2)// || $entry['canceled'])
@@ -1128,9 +1132,9 @@
 						continue;
 					}
 
-					if ($year)
+					if ($_year)
 					{
-						if ($budget['year'] == $year)
+						if ($budget['year'] == $_year)
 						{
 							$entry['actual_cost'] += $budget['actual_cost'];
 							$entry['combined_cost'] += $budget['sum_orders'];
