@@ -770,7 +770,7 @@
 					</xsl:choose>
 					<div class="pure-control-group">
 						<label for="name">
-							<xsl:value-of select="lang_workorder_id"/>
+							<xsl:value-of select="php:function('lang', 'year')"/>
 						</label>
 						<xsl:choose>
 							<xsl:when test="value_project_id = 0">

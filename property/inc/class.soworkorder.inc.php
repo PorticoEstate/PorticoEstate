@@ -1995,6 +1995,12 @@
 		 */
 		function get_budget( $order_id, $calculate_fictive_periods = true )
 		{
+			static $cache_result = array();
+			if(!empty($cache_result[$order_id][(int)$calculate_fictive_periods]))
+			{
+				return $cache_result[$order_id][(int)$calculate_fictive_periods];
+			}
+
 			// Som før: Periodisering der det er definert
 			// Som før: Enkelt posteringer for gjeldende periode der periodisering ikke er definert
 			// Ny: Fiktiv periodisering over 12 mnd med startperiode for inneværende mnd for løpende som ikke er periodisert
@@ -2008,6 +2014,7 @@
 			$cached_info = phpgwapi_cache::system_get('property', "budget_order_{$order_id}");
 			if ($cached_info && is_array($cached_info))
 			{
+				$cache_result[$order_id][(int)$calculate_fictive_periods] = $cached_info;
 				return $cached_info;
 			}
 
@@ -2564,6 +2571,7 @@
 			}
 //			_debug_array($values);die();
 			phpgwapi_cache::system_set('property', "budget_order_{$order_id}", $values);
+			$cache_result[$order_id][(int)$calculate_fictive_periods] = $values;
 
 			return $values;
 		}
