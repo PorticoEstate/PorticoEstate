@@ -500,8 +500,7 @@ this.load_google_map = function (location_code)
 	var address = street_name + ' ' + street_number;
 	var iurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&output=embed&geocode=&q=' + address;
 	var linkurl = 'https://maps.google.com/maps?f=q&source=s_q&hl=no&geocode=&q=' + address;
-
-	if( address.length > 1 )
+	if( typeof(street_name) != 'undefined' && address.length > 1 )
 	{
 		$("#gmap-container").show();
 		$("#googlemapiframe").attr("src", iurl);

@@ -2045,20 +2045,34 @@ JS;
 				'start' => 0,
 				'project_id' => $id,
 			//	'year' => date('Y'),
-				'order' => 'workorder_id',
-				'sort' => 'desc',
+				'order' => 'year',
+				'sort' => 'asc',
 				'results' => -1,
 				'query' => '',
 				)
 			);
+
+			$first_year = false;
+			$_order_data = array();
 			foreach ($order_data as & $_order_entry)
 			{
+				if(!empty($_order_entry['year']) && ! $first_year)
+				{
+					$first_year = $_order_entry['year'];
+				}
+
+				if($first_year && $first_year != $_order_entry['year'])
+				{
+					continue;
+				}
+
 				$_order_entry['send_order'] = '';
 				if (isset($_order_entry['mail_recipients'][0]) && $_order_entry['mail_recipients'][0])
 				{
 					$_title = implode(';', $_order_entry['mail_recipients']);
 					$_order_entry['send_order'] = "<input type='checkbox' name='values[send_order][]' value='{$_order_entry['workorder_id']}' title='{$_title}'>";
 				}
+				$_order_data[] = $_order_entry;
 			}
 
 			$datatable_def[] = array
@@ -2067,11 +2081,12 @@ JS;
 //				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_orders',
 //						'project_id' => $id, 'year' => date('Y'), 'phpgw_return_as' => 'json'))),
 				'requestUrl' => "''",
-				'data' => json_encode($order_data),
+				'data' => json_encode($_order_data),
 				'ColumnDefs' => $orders_def,
 				'config' => array(
 			//		array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('order' => json_encode(array(1, 'asc')))
 				)
 			);
 
@@ -2104,8 +2119,11 @@ JS;
 			$datatable_def[] = array
 				(
 				'container' => 'datatable-container_2',
-				'requestUrl' => json_encode(self::link(array('menuaction' => 'property.uiproject.get_vouchers',
-						'project_id' => $id, 'year' => date('Y'), 'phpgw_return_as' => 'json'))),
+				'requestUrl' => json_encode(self::link(array(
+					'menuaction' => 'property.uiproject.get_vouchers',
+					'project_id' => $id,
+					'year' => $first_year,
+					'phpgw_return_as' => 'json'))),
 				'data' => json_encode(array()),
 				'ColumnDefs' => $invoice_def,
 				'config' => array(
@@ -2378,7 +2396,7 @@ JS;
 				'value_origin_type' => isset($origin) ? $origin : '',
 				'value_origin_id' => isset($origin_id) ? $origin_id : '',
 				'year_list' => array('options' => $year_list),
-				'order_time_span' => array('options' => $this->bo->get_order_time_span($id)),
+				'order_time_span' => array('options' => $this->bo->get_order_time_span($id, $first_year)),
 				'periodization_list' => array('options' => $periodization_list),
 				'lang_select_request_statustext' => lang('Add request for this project'),
 				'lang_request_statustext' => lang('Link to the request for this project'),

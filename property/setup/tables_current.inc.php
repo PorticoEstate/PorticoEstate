@@ -1530,6 +1530,7 @@
 				'id' => array('type' => 'auto', 'precision' => '4', 'nullable' => False),
 				'user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
 				'substitute_user_id' => array('type' => 'int', 'precision' => '4', 'nullable' => False),
+				'start_time' => array('type' => 'int', 'precision' => 8, 'nullable' => false),
 			),
 			'pk' => array('id'),
 			'ix' => array(),

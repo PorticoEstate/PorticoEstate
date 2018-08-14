@@ -2385,3 +2385,6 @@ alternative to contract	property	no	Alternativ til rammeavtale
 budget account user	property	no	Art koblet til bruker
 order sum	property	no	Bestillingssum
 other projects	property	no	Andre prosjekter
+assign	property	no	Tildel
+start time	property	no	Starttid
+serie	property	no	Serie
