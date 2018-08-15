@@ -1263,8 +1263,7 @@
 			}
 
 			$email_data = array
-				(
-				'important_imformation' => $important_imformation,
+			(
 				'formatted_gab_id' => $formatted_gab_id,
 				'org_name' => isset($this->config->config_data['org_name']) ? "{$this->config->config_data['org_name']}::" : '',
 				'location_data_local' => $location_data,
@@ -1289,7 +1288,7 @@
 				'lang_title' => lang('Title'),
 				'title' => $workorder['title'],
 				'lang_descr' => lang('Description'),
-				'descr' => $workorder['descr'],
+				'descr' => $workorder['descr'] . $important_imformation,
 				'lang_budget_account' => lang('Budget account'),
 				'budget_account' => $workorder['b_account_id'],
 				'lang_sum_calculation' => lang('Sum of calculation'),
