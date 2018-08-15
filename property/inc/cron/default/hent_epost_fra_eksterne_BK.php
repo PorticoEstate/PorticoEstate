@@ -409,7 +409,9 @@
 				case 'Akseptert':
 					$status_id = 4;
 					break;
-
+				case 'Akseptert med endret Due Date':
+					$status_id = 4;
+					break;
 				default:
 					break;
 			}
