@@ -26,11 +26,11 @@
 		function __construct($_composeID = '', $_charSet = 'utf-8')
 		{
 			$this->displayCharset	= strtolower($_charSet);
-			$this->bopreferences	=& CreateObject('felamimail.bopreferences');
-			$this->bosignatures	=& CreateObject('felamimail.felamimail_bosignatures');
-			$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$_charSet);
+			$this->bopreferences	= CreateObject('felamimail.bopreferences');
+			$this->bosignatures	= CreateObject('felamimail.felamimail_bosignatures');
+			$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$_charSet);
 			$this->preferences	= $this->bopreferences->getPreferences();
-			$this->botranslation	=& CreateObject('felamimail.translation');
+			$this->botranslation	= CreateObject('felamimail.translation');
 			$this->preferencesArray =& $GLOBALS['phpgw_info']['user']['preferences']['felamimail'];
 			//force the default for the forwarding -> asmail
 			if (is_array($this->preferencesArray)) {
@@ -321,7 +321,7 @@
 		{
 			$this->sessionData['to'] = array();
 			
-			$bofelamimail =& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$bofelamimail = CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$bofelamimail->openConnection();
 			$bofelamimail->reopen($_folder);
 			
@@ -478,7 +478,7 @@
 			if  ($this->preferencesArray['message_forwarding'] == 'inline') {
 				$this->getReplyData('forward', $_icServer, $_folder, $_uid, $_partID);
 			}
-			$bofelamimail    =& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$bofelamimail    = CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$bofelamimail->openConnection();
 			$bofelamimail->reopen($_folder);
 
@@ -535,7 +535,7 @@
 		{
 			$foundAddresses = array();
 			
-			$bofelamimail    =& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$bofelamimail    = CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$bofelamimail->openConnection();
 			$bofelamimail->reopen($_folder);
 			
@@ -779,7 +779,7 @@
 
 		function createMessage(&$_mailObject, $_formData, $_identity, $_signature = false) 
 		{
-			$bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
 			$userLang = $GLOBALS['phpgw_info']['user']['preferences']['common']['lang'];
 			$langFile = PHPGW_SERVER_ROOT."/phpgwapi/setup/phpmailer.lang-$userLang.php";
 			if(file_exists($langFile)) {
@@ -921,8 +921,8 @@
 
 		function saveAsDraft($_formData)
 		{
-			$bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
-			$mail		=& CreateObject('phpgwapi.mailer_smtp');
+			$bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$mail		= CreateObject('phpgwapi.mailer_smtp');
 			$identity	= $this->preferences->getIdentity((int)$this->sessionData['identity']);
 			$flags = '\\Seen \\Draft';
 			$BCCmail = '';
@@ -976,8 +976,8 @@
 
 		function send($_formData)
 		{
-			$bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
-			$mail 		=& CreateObject('phpgwapi.mailer_smtp');
+			$bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$mail 		= CreateObject('phpgwapi.mailer_smtp');
 			$messageIsDraft	=  false;
 
 			$this->sessionData['identity']	= $_formData['identity'];
@@ -1061,7 +1061,7 @@
 			#error_log("Number of Folders to move copy the message to:".count($folder));
 			if ((count($folder) > 0) || (isset($this->sessionData['uid']) && isset($this->sessionData['messageFolder']))
                 || (isset($this->sessionData['forwardFlag']) && isset($this->sessionData['sourceFolder']))) {
-				$bofelamimail =& CreateObject('felamimail.bofelamimail');
+				$bofelamimail = CreateObject('felamimail.bofelamimail');
 				$bofelamimail->openConnection();
 				//$bofelamimail->reopen($this->sessionData['messageFolder']);
 				#error_log("(re)opened Connection");
@@ -1077,7 +1077,7 @@
 				}
 				$BCCmail='';
 				if (count($mailAddr)>0) $BCCmail = $mail->AddrAppend("Bcc",$mailAddr);
-				//$bofelamimail =& CreateObject('felamimail.bofelamimail');
+				//$bofelamimail = CreateObject('felamimail.bofelamimail');
 				//$bofelamimail->openConnection();
 				foreach($folder as $folderName) {
 					if($bofelamimail->isSentFolder($folderName)) {
@@ -1104,7 +1104,7 @@
 			if((isset($this->sessionData['uid']) && isset($this->sessionData['messageFolder'])) 
 				|| (isset($this->sessionData['forwardFlag']) && isset($this->sessionData['sourceFolder']))) {
 				// mark message as answered
-				//$bofelamimail =& CreateObject('felamimail.bofelamimail');
+				//$bofelamimail = CreateObject('felamimail.bofelamimail');
 				$bofelamimail->openConnection();
 				$bofelamimail->reopen($this->sessionData['messageFolder']);
 				// if the draft folder is a starting part of the messages folder, the draft message will be deleted after the send
@@ -1128,7 +1128,7 @@
 			//error_log("performing Infolog Stuff");
 			// attension: we dont return from infolog. cleanups will be done there.
 			if ($_formData['to_infolog'] == 'on') {
-				$uiinfolog =& CreateObject('infolog.uiinfolog');
+				$uiinfolog = CreateObject('infolog.uiinfolog');
 				$uiinfolog->import_mail(
 					$this->sessionData['to'],
 					$this->sessionData['subject'],

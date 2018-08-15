@@ -80,10 +80,10 @@
 			$dot_atom = $atext.'+(\.'.$atext.'+)*';
 			$Email_RegExp_Match = $dot_atom.'(%'.$Host_RegExp_Match.')?@'.$Host_RegExp_Match;
 
-			$this->t 		=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t 		= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			$this->displayCharset   = 'utf-8';
-			$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
-			$this->bopreferences	=& CreateObject('felamimail.bopreferences');
+			$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$this->bopreferences	= CreateObject('felamimail.bopreferences');
 			$this->botranslation	= CreateObject('felamimail.translation');
 
 			$this->mailPreferences	= $this->bopreferences->getPreferences();
@@ -214,9 +214,9 @@
 			$partID		= $_GET['part'];
 			if (!empty($_GET['mailbox'])) $this->mailbox  = base64_decode($_GET['mailbox']);
 			
-			$transformdate	=& CreateObject('felamimail.transformdate');
-			$htmlFilter	=& CreateObject('felamimail.htmlfilter');
-			$uiWidgets	=& CreateObject('felamimail.uiwidgets');
+			$transformdate	= CreateObject('felamimail.transformdate');
+			$htmlFilter	= CreateObject('felamimail.htmlfilter');
+			$uiWidgets	= CreateObject('felamimail.uiwidgets');
 			// (regis) seems to be necessary to reopen...
 			$this->bofelamimail->reopen($this->mailbox);
 			#print "$this->mailbox, $this->uid, $partID<br>";
@@ -717,9 +717,9 @@
 			$partID		= $_GET['part'];
 			if (!empty($_GET['mailbox'])) $this->mailbox  = base64_decode($_GET['mailbox']);
 
-			$transformdate	=& CreateObject('felamimail.transformdate');
-			$htmlFilter	=& CreateObject('felamimail.htmlfilter');
-			$uiWidgets	=& CreateObject('felamimail.uiwidgets');
+			$transformdate	= CreateObject('felamimail.transformdate');
+			$htmlFilter	= CreateObject('felamimail.htmlfilter');
+			$uiWidgets	= CreateObject('felamimail.uiwidgets');
 			// (regis) seems to be necessary to reopen...
 			$this->bofelamimail->reopen($this->mailbox);
 			#$headers	= $this->bofelamimail->getMessageHeader($this->mailbox, $this->uid, $partID);
@@ -1077,9 +1077,9 @@
 			$partID		= $_GET['part'];
 			if (!empty($_GET['folder'])) $this->mailbox  = base64_decode($_GET['folder']);
 
-			$transformdate	=& CreateObject('felamimail.transformdate');
-			$htmlFilter	=& CreateObject('felamimail.htmlfilter');
-			$uiWidgets	=& CreateObject('felamimail.uiwidgets');
+			$transformdate	= CreateObject('felamimail.transformdate');
+			$htmlFilter	= CreateObject('felamimail.htmlfilter');
+			$uiWidgets	= CreateObject('felamimail.uiwidgets');
 			// (regis) seems to be necessary to reopen...
 			$folder = $this->mailbox;
 			// the folder for callfromcompose is hardcoded, because the message to be printed from the compose window is saved as draft, and can be

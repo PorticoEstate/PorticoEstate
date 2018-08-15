@@ -99,7 +99,7 @@
 	
 		function setRules($_scriptName, $_rules) 
 		{
-			$script         =& CreateObject('felamimail.Script',$_scriptName);
+			$script         = CreateObject('felamimail.Script',$_scriptName);
 			$script->debug = $this->debug;
 
 			if($script->retrieveRules($this)) {
@@ -115,7 +115,7 @@
 		function setVacation($_scriptName, $_vacation) 
 		{
 			if ($this->debug) error_log(__CLASS__.'::'.__METHOD__."($_scriptName,".print_r($_vacation,true).')');
-			$script         =& CreateObject('felamimail.Script',$_scriptName);
+			$script         = CreateObject('felamimail.Script',$_scriptName);
 			$script->debug = $this->debug;
 
 			if($script->retrieveRules($this)) {
@@ -124,7 +124,7 @@
 				
 				// setting up an async job to enable/disable the vacation message
 				include_once(PHPGW_API_INC.'/class.asyncservice.inc.php');
-				$async =& new asyncservice();
+				$async = new asyncservice();
 				$user = $GLOBALS['phpgw_info']['user']['account_id'];
 				$async->delete($async_id ="felamimail-vacation-$user");
 				$end_date = $_vacation['end_date'] + 24*3600;	// end-date is inclusive, so we have to add 24h
@@ -148,7 +148,7 @@
 		function async_vacation($_vacation)
 		{
 			if ($this->debug) error_log(__CLASS__.'::'.__METHOD__.'('.print_r($_vacation,true).')');
-			$bopreferences    =& CreateObject('felamimail.bopreferences');
+			$bopreferences    = CreateObject('felamimail.bopreferences');
 			$mailPreferences  = $bopreferences->getPreferences();
 			$icServer = $mailPreferences->getIncomingServer(0);
 			
@@ -166,7 +166,7 @@
 	    		$_emailNotification['externalEmail'] = '';
 	    	}
 
-	    	$script =& CreateObject('felamimail.Script',$_scriptName);
+	    	$script = CreateObject('felamimail.Script',$_scriptName);
 	    	if ($script->retrieveRules($this)) {
 	    		$script->emailNotification = $_emailNotification;
 	    		return $script->updateScript($this);
@@ -175,7 +175,7 @@
 		}
 
 		function retrieveRules($_scriptName) {
-			$script         =& CreateObject('felamimail.Script',$_scriptName);
+			$script         = CreateObject('felamimail.Script',$_scriptName);
 			
 			if($script->retrieveRules($this)) {
 				$this->rules = $script->rules;

@@ -37,7 +37,7 @@
 		{
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
 
-			$xajax =& new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
+			$xajax = new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
 			$xajax->waitCursorOff();
 			$xajax->registerFunction("doXMLHTTP");
 
@@ -48,9 +48,9 @@
 			$this->t = & $GLOBALS['phpgw']->template;
 			$this->charset = 'utf-8';
 
-			$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->charset);
-			$this->bopreferences	=& CreateObject('felamimail.bopreferences');
-			$this->uiwidgets	=& CreateObject('felamimail.uiwidgets');
+			$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$this->charset);
+			$this->bopreferences	= CreateObject('felamimail.bopreferences');
+			$this->uiwidgets	= CreateObject('felamimail.uiwidgets');
 			$this->bofelamimail->openConnection();
 			
 			
@@ -117,7 +117,7 @@
 		
 		function editForwardingAddress()
 		{
-			$bofelamimail	=& CreateObject('felamimail.bofelamimail','utf-8');
+			$bofelamimail	= CreateObject('felamimail.bofelamimail','utf-8');
 			$mailPrefs	= $bofelamimail->getMailPreferences();
 			$ogServer	= $mailPrefs->getOutgoingServer(0);
 			
@@ -215,8 +215,8 @@
 		
 		function editAccountData()
 		{
-			$boPreferences	=& CreateObject('felamimail.bopreferences');
-			$preferences =& $boPreferences->getPreferences();
+			$boPreferences	= CreateObject('felamimail.bopreferences');
+			$preferences = $boPreferences->getPreferences();
 			
 			if(!($preferences->userDefinedAccounts || $preferences->userDefinedIdentities)) {
 				die('you are not allowed to be here');
@@ -224,7 +224,7 @@
 
 			if($_POST['save'] || $_POST['apply']) {
 				// IMAP connection settings
-				$icServer =& CreateObject('emailadmin.defaultimap');
+				$icServer = CreateObject('emailadmin.defaultimap');
 				if(is_array($_POST['ic'])) {
 					foreach($_POST['ic'] as $key => $value) {
 						switch($key) {
@@ -246,7 +246,7 @@
 				}
 				
 				// SMTP connection settings
-				$ogServer =& CreateObject('emailadmin.defaultsmtp');
+				$ogServer = CreateObject('emailadmin.defaultsmtp');
 				if(is_array($_POST['og'])) {
 					foreach($_POST['og'] as $key => $value) {
 						$ogServer->$key = $value;
@@ -256,7 +256,7 @@
 				}
 
 				// identity settings
-				$identity =& CreateObject('emailadmin.ea_identity');
+				$identity = CreateObject('emailadmin.ea_identity');
 				if(is_array($_POST['identity'])) {
 					foreach($_POST['identity'] as $key => $value) {
 						$identity->$key = $value;
@@ -518,7 +518,7 @@
 			switch($_GET['display'])
 			{
 				#case 'acl':
-				#	$uiBaseClass =& CreateObject('felamimail.uibaseclass');
+				#	$uiBaseClass = CreateObject('felamimail.uibaseclass');
 				#	#$uiBaseClass->accounts_popup('calendar');
 				#	$this->t->parse('settings_view','folder_acl',True);
 				#	break;
@@ -621,7 +621,7 @@
 		function listAccountData()
 		{
 			$this->display_app_header(TRUE);
-			$boPreferences  =& CreateObject('felamimail.bopreferences');
+			$boPreferences  = CreateObject('felamimail.bopreferences');
 			$preferences =& $boPreferences->getPreferences();
 			$allAccountData    = $boPreferences->getAllAccountData($preferences);
 			if ($allAccountData) {

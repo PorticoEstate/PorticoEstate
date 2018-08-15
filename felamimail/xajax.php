@@ -96,7 +96,7 @@
 			error_log($_SERVER['PHP_SELF']. ' stopped for security reason. '.$arg0.' is not valid. class- or function-name must start with ajax!!!');
 			exit;
 		}
-		$ajaxClass =& CreateObject($appName.'.'.$className);
+		$ajaxClass = CreateObject($appName.'.'.$className);
 		
 		$translation = CreateObject('felamimail.translation');
 		if($argList)

@@ -60,13 +60,13 @@
 
 			$this->displayCharset	= 'utf-8';
 
-			$this->t 		=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
- 			$this->botranslation	=& CreateObject('phpgwapi.translation');
+			$this->t 		= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+ 			$this->botranslation	= CreateObject('phpgwapi.translation');
 
-			$this->bopreferences    =& CreateObject('felamimail.bopreferences');
+			$this->bopreferences    = CreateObject('felamimail.bopreferences');
 			$this->mailPreferences  = $this->bopreferences->getPreferences();
 			
-			$config 		=& CreateObject('phpgwapi.config','felamimail');
+			$config 		= CreateObject('phpgwapi.config','felamimail');
 			$config->read();
 			$this->felamimailConfig	= $config->config_data;
 			unset($config);
@@ -76,7 +76,7 @@
 			$icServer = $this->mailPreferences->getIncomingServer(0);
 			
 			if(is_a($icServer,'defaultimap') && $icServer->enableSieve) {
-				$this->bosieve		=& CreateObject('felamimail.bosieve',$icServer);
+				$this->bosieve		= CreateObject('felamimail.bosieve',$icServer);
 				$this->timed_vacation = is_a($icServer,'cyrusimap') && $icServer->enableCyrusAdmin && 
 					$icServer->adminUsername && $icServer->adminPassword;
 			} else {
@@ -89,7 +89,7 @@
 		
 		function addScript() {
 			if($scriptName = $_POST['newScriptName']) {
-				#$script	=& CreateObject('felamimail.Script',$scriptName);
+				#$script	= CreateObject('felamimail.Script',$scriptName);
 				#$script->updateScript($this->sieve);
 				$this->bosieve->installScript($scriptName, '');
 
@@ -389,8 +389,8 @@
 			}
 			$this->t->set_var('value_ruleID',$_ruleID);
 			
-			#$bofelamimail		=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
-			#$uiwidgets		=& CreateObject('felamimail.uiwidgets');
+			#$bofelamimail		= CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			#$uiwidgets		= CreateObject('felamimail.uiwidgets');
 			#$connectionStatus	= $bofelamimail->openConnection();
 			#$folders = $bofelamimail->getFolderObjects(false);
 			
@@ -498,7 +498,7 @@
 		function editVacation() {
 			$preferences = ExecMethod('felamimail.bopreferences.getPreferences');
 			
-			$uiwidgets	=& CreateObject('felamimail.uiwidgets',PHPGW_APP_TPL);
+			$uiwidgets	= CreateObject('felamimail.uiwidgets',PHPGW_APP_TPL);
 			$boemailadmin	= new emailadmin_bo();
 
 			if ($this->timed_vacation)
@@ -523,7 +523,7 @@
 				// store text as default
 				if (isset($_POST['set_as_default']))
 				{
-					$config =& new config('felamimail');
+					$config = new config('felamimail');
 					$config->save_value('default_vacation_text',$_POST['vacation_text'],'felamimail');
 				}
 				$this->t->set_var('set_as_default','<input type="submit" name="set_as_default" value="'.htmlspecialchars(lang('Set as default')).'" />');
@@ -582,7 +582,7 @@
 				
 			// vacation text
 			if (empty($vacation['text'])) {
-				$config =& new config('felamimail');
+				$config = new config('felamimail');
 				$config = $config->read();
 				$vacation['text'] = $config['default_vacation_text'];
 			}
@@ -645,7 +645,7 @@
 		function editEmailNotification() {
 			$preferences = ExecMethod('felamimail.bopreferences.getPreferences');
 
-			$uiwidgets  =& CreateObject('felamimail.uiwidgets',PHPGW_APP_TPL);
+			$uiwidgets  = CreateObject('felamimail.uiwidgets',PHPGW_APP_TPL);
 			$boemailadmin = new emailadmin_bo();
 
 			if($this->bosieve->getScript($this->scriptName)) {
@@ -730,7 +730,7 @@
 		{
 			$preferences = ExecMethod('felamimail.bopreferences.getPreferences');
 			
-			$uiwidgets	=& CreateObject('felamimail.uiwidgets', PHPGW_APP_TPL);
+			$uiwidgets	= CreateObject('felamimail.uiwidgets', PHPGW_APP_TPL);
 			$boemailadmin	= new emailadmin_bo();
 
 			$this->getRules();	/* ADDED BY GHORTH */
@@ -857,8 +857,8 @@
 			$GLOBALS['phpgw']->js->validate_file('jscode','editSieveRule','felamimail');
 			$GLOBALS['phpgw']->common->egw_header();
 
-			$bofelamimail		=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
-			$uiwidgets		=& CreateObject('felamimail.uiwidgets');
+			$bofelamimail		= CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$uiwidgets		= CreateObject('felamimail.uiwidgets');
 			$connectionStatus	= $bofelamimail->openConnection();
 
 			$folderObjects = $bofelamimail->getFolderObjects(false);
