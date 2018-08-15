@@ -836,15 +836,6 @@
 					<xsl:apply-templates select="sms_data"/>
 				</xsl:when>
 			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="important_imformation!=''">
-					<tr>
-						<td>
-							<xsl:value-of disable-output-escaping="yes" select="important_imformation"/>
-						</td>
-					</tr>
-				</xsl:when>
-			</xsl:choose>
 
 			<xsl:choose>
 				<xsl:when test="order_footer_header!=''">
