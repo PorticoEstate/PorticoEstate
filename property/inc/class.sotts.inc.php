@@ -1035,7 +1035,15 @@
 
 			$cols = implode(',', array_keys($value_set));
 			$values = $this->db->validate_insert(array_values($value_set));
-			$this->db->transaction_begin();
+
+			if ($this->db->get_transaction())
+			{
+				$this->global_lock = true;
+			}
+			else
+			{
+				$this->db->transaction_begin();
+			}
 
 			$this->db->query("INSERT INTO {$table} ({$cols}) VALUES ({$values})", __LINE__, __FILE__);
 
@@ -1098,7 +1106,13 @@
 				$interlink->add($interlink_data, $this->db);
 			}
 
-			if ($this->db->transaction_commit())
+			$add_history = true;
+			if (!$this->global_lock)
+			{
+				$add_history = $this->db->transaction_commit();
+			}
+
+			if ($add_history)
 			{
 				$this->historylog->add('O', $id, time(), '');
 				if ($ticket['finnish_date'])
