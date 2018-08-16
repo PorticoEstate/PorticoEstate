@@ -46,7 +46,7 @@
 		{
 			require_once(PHPGW_SERVER_ROOT.'/felamimail/inc/xajax.inc.php');
 
-			$xajax =& new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
+			$xajax = new xajax($GLOBALS['phpgw']->link('/felamimail/xajax.php',false,true), 'xajax_', 'utf-8');
 			$xajax->waitCursorOff();
 			$xajax->registerFunction("doXMLHTTP");
 
@@ -56,12 +56,12 @@
 			$this->timeCounter = microtime(true);
 
 			$this->displayCharset	= 'utf-8';
-			$this->bofelamimail     =& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$this->bofelamimail     = CreateObject('felamimail.bofelamimail',$this->displayCharset);
 
-			$this->bofilter		=& CreateObject('felamimail.bofilter');
-			$this->bopreferences	=& CreateObject('felamimail.bopreferences');
+			$this->bofilter		= CreateObject('felamimail.bofilter');
+			$this->bopreferences	= CreateObject('felamimail.bopreferences');
 			$this->preferences	= $this->bopreferences->getPreferences();
-			$this->botranslation	=& CreateObject('phpgwapi.translation');
+			$this->botranslation	= CreateObject('phpgwapi.translation');
 
 			$this->bofelamimail->saveSessionData();
 
@@ -71,7 +71,7 @@
 			$this->sortReverse 	= $this->bofelamimail->sessionData['sortReverse'];
 	#		$this->filter 		= $this->bofelamimail->sessionData['activeFilter'];
 
-			$this->t			=& CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
+			$this->t			= CreateObject('phpgwapi.Template',PHPGW_APP_TPL);
 			#$this->grants[$this->account]	= PHPGW_ACL_READ + PHPGW_ACL_ADD + PHPGW_ACL_EDIT + PHPGW_ACL_DELETE;
 			// this need to fixed
 			// this does not belong to here
@@ -105,7 +105,7 @@
 			fwrite($fp, $attachment['attachment']);
 			fclose($fp);
 			
-			$vcard =& CreateObject('phpgwapi.vcard');
+			$vcard = CreateObject('phpgwapi.vcard');
 			$entry = $vcard->in_file($tmpfname);
 			$entry['owner'] = $GLOBALS['phpgw_info']['user']['account_id'];
 			$entry['access'] = 'private';
@@ -327,9 +327,9 @@
 		function viewMainScreen()
 		{
 			#printf ("this->uifelamimail->viewMainScreen() start: %s<br>",date("H:i:s",mktime()));
-			$bopreferences		=& CreateObject('felamimail.bopreferences');
-			$bofilter		=& CreateObject('felamimail.bofilter');
-			$uiwidgets		=& CreateObject('felamimail.uiwidgets');
+			$bopreferences		= CreateObject('felamimail.bopreferences');
+			$bofilter		= CreateObject('felamimail.bofilter');
+			$uiwidgets		= CreateObject('felamimail.uiwidgets');
 
 			$preferences		=& $bopreferences->getPreferences();
 			$urlMailbox		=  urlencode($this->mailbox);
@@ -366,7 +366,7 @@
 			$this->t->set_var('reloadView',$refreshURL);
 			// display a warning if vacation notice is active
 			if(is_a($imapServer,'defaultimap') && $imapServer->enableSieve) {
-				$this->bosieve		=& CreateObject('felamimail.bosieve',$imapServer);
+				$this->bosieve		= CreateObject('felamimail.bosieve',$imapServer);
 				$this->bosieve->retrieveRules($this->bosieve->scriptName);
 				$vacation = $this->bosieve->getVacation($this->bosieve->scriptName);
 			}

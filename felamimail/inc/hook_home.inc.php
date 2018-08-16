@@ -26,7 +26,7 @@
 
 		$title = lang('felamimail');
 	
-		$portalbox =& CreateObject('phpgwapi.listbox',
+		$portalbox = CreateObject('phpgwapi.listbox',
 			Array(
 				'title'				=> $title,
 				'primary'			=> $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -60,7 +60,7 @@
 		}
 		
 		$this->displayCharset	= 'utf-8';
-		$this->bofelamimail	=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
+		$this->bofelamimail	= CreateObject('felamimail.bofelamimail',$this->displayCharset);
 		
 		if(!$this->bofelamimail->openConnection()) {
 			$extra_data = lang("can't connect to INBOX!!");

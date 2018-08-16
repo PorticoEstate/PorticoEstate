@@ -22,7 +22,7 @@
 	{
 		$my_msg_bootstrap = '';
 
-		$my_msg_bootstrap =& CreateObject("felamimail.bofelamimail");
+		$my_msg_bootstrap = CreateObject("felamimail.bofelamimail");
 
 		$connectionStatus = $my_msg_bootstrap->openConnection();
 
