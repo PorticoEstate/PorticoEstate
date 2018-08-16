@@ -704,7 +704,9 @@ class xajax
 		if ($this->bErrorHandler) restore_error_handler();
 		
 		if ($this->bExitAllowed)
+		{
 			exit();
+		}
 	}
 
 	/**			

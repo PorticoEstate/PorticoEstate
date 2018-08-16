@@ -38,7 +38,7 @@
 			$this->foldername	= $_foldername;
 			$this->accountid	= $GLOBALS['phpgw_info']['user']['account_id'];
 			
-			$this->socaching	=& CreateObject('felamimail.socaching',
+			$this->socaching	= CreateObject('felamimail.socaching',
 							$this->hostname, $this->accountname, $this->foldername, $this->accountid);
 			
 			$status = $this->socaching->getImapStatus();

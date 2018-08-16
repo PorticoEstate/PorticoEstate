@@ -77,16 +77,26 @@
 			 * Check for multiple projects
 			 * Related projects for the ticket
 			 */
-			$related_projects  = $this->interlink->get_relation('property', '.ticket', $id, 'target');
+			$related  = $this->interlink->get_relation('property', '.ticket', $id, 'target');
 
-			if(empty($related_projects[0]['data']))
+			$related_projects = array();
+			foreach ($related as $entry)
+			{
+				if($entry['location'] == ".project")
+				{
+					$related_projects = $entry['data'];
+				}
+
+			}
+
+			if(empty($related_projects))
 			{
 				return;
 			}
 
 			$date_info = array();
 
-			foreach ($related_projects[0]['data'] as $_project)
+			foreach ($related_projects as $_project)
 			{
 				$_project_id = (int)$_project['id'];
 
