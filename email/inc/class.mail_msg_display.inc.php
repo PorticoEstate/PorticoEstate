@@ -2143,8 +2143,7 @@ class mail_msg extends mail_msg_wrappers
 		//error check
 		if ($new_mime_dumb == $not_set)
 		{
-			$smart_mime_number = 'error 1 in mime_number_smart';
-			break;
+			return	$smart_mime_number = 'error 1 in mime_number_smart';
 		}
 
 		// explode new_mime_dumb into an array

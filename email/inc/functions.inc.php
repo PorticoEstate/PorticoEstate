@@ -19,4 +19,4 @@
 			
 			this is undesirable so we turn it off
 	*/
-	@set_magic_quotes_runtime(0);
+	//@set_magic_quotes_runtime(0);
