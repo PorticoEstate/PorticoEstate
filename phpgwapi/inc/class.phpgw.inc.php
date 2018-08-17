@@ -249,7 +249,7 @@
 				echo "<html>\n<head>\n<title>Redirecting to $url</title>";
 				echo "\n<meta http-equiv=\"refresh\ content=\"0; URL=$url\">";
 				echo "\n</head>\n<body>";
-				echo "\n<h1>Please continue to <a href=\"$url\">this page</a></h1>";
+				echo "\n<h3>Please continue to <a href=\"$url\">this page</a></h3>";
 				echo "\n</body>\n</html>";
 				exit;
 			}
