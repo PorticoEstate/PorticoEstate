@@ -130,10 +130,15 @@
 			phpgwapi_cache::session_set('property', 'import_settings', $_POST);
 
 			$download_template = phpgw::get_var('download_template');
+			$this->debug = phpgw::get_var('debug', 'bool');
 
 			if ($download_template)
 			{
 				$this->get_template($this->location_id);
+			}
+			else
+			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
 			}
 
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
@@ -170,7 +175,6 @@
 				}
 
 
-				$this->debug = phpgw::get_var('debug', 'bool');
 				$this->import_conversion = new import_conversion($this->location_id, $this->debug);
 
 				// Get the path for user input or use a default path
@@ -402,6 +406,11 @@ HTML;
 
 		protected function get_template( $location_id = 0 )
 		{
+			if($this->debug)
+			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
+			}
+
 			$_identificator = array();
 			$data = array();
 			$_fields = array();
