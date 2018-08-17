@@ -2,15 +2,24 @@
 
 	class import_conversion
 	{
-		protected $botts;
+		protected $botts
+			,$debug;
 		public $messages = array();
 		public $warnings = array();
 		public $errors = array();
+		public $fields = array('location_code','cat_id','priority','title','details','Tildelt_gruppe');
+		public $filename_template;
 
-		public function __construct()
+		public function __construct( $location_id, $debug = false)
 		{
 			$this->account = (int)$GLOBALS['phpgw_info']['user']['account_id'];
 			$this->botts = CreateObject('property.botts');
+			if ($debug)
+			{
+				$this->debug = true;
+				$this->boinvoice->debug = true;
+			}
+			$this->filename_template = 'import_melding_mal';
 		}
 
 		public function add( $data )
