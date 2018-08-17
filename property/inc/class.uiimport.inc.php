@@ -34,9 +34,11 @@
 		protected $download_template_button_label;
 		protected $defalt_values;
 		private $valid_tables = array();
+		private $start_time;
 
 		public function __construct()
 		{
+			$this->start_time = time();
 			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -144,8 +146,7 @@
 				}
 
 
-				$start_time = time(); // Start time of import
-				$start = date("G:i:s", $start_time);
+				$start = date("G:i:s", $this->start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 
@@ -229,7 +230,7 @@
 
 				echo "</ul>";
 				$end_time = time();
-				$difference = ($end_time - $start_time) / 60;
+				$difference = ($end_time - $this->start_time) / 60;
 				$end = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 
@@ -657,8 +658,6 @@ HTML;
 			}
 
 
-			$start_time = time();
-
 			$datalines = $this->csvdata;
 
 			$ok = true;
@@ -678,7 +677,7 @@ HTML;
 
 			if ($ok)
 			{
-				$this->messages[] = "Imported data. (" . (time() - $start_time) . " seconds)";
+				$this->messages[] = "Imported data. (" . (time() - $this->start_time) . " seconds)";
 				if ($this->debug)
 				{
 					$this->db->transaction_abort();
@@ -692,10 +691,14 @@ HTML;
 			}
 			else
 			{
-				$this->errors[] = "Import of data failed. (" . (time() - $start_time) . " seconds)";
+				$this->errors[] = "Import of data failed. (" . (time() - $this->start_time) . " seconds)";
 				$this->db->transaction_abort();
 				return false;
 			}
+
+			$this->messages = array_merge($this->messages, $this->import_conversion->messages);
+			$this->warnings = array_merge($this->warnings, $this->import_conversion->warnings);
+			$this->errors = array_merge($this->errors, $this->import_conversion->errors);
 		}
 		
 		private function _xml2array ( $xmlObject, $out = array () )
@@ -739,7 +742,7 @@ HTML;
 
 			fclose($handle);
 
-			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "Read '{$path}' file in " . (time() - $this->start_time) . " seconds";
 			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
@@ -791,7 +794,7 @@ HTML;
 				$result[] = $_result;
 			}
 
-			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "Read '{$path}' file in " . (time() - $this->start_time) . " seconds";
 			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
@@ -948,9 +951,7 @@ HTML;
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
 				}
 
-
-				$start_time = time(); // Start time of import
-				$start = date("G:i:s", $start_time);
+				$start = date("G:i:s", $this->start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 
@@ -1115,7 +1116,7 @@ HTML;
 				
 				echo "</ul>";
 				$end_time = time();
-				$difference = ($end_time - $start_time) / 60;
+				$difference = ($end_time - $this->start_time) / 60;
 				$end = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 
