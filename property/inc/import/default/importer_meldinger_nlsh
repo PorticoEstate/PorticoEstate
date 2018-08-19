@@ -17,7 +17,6 @@
 			if ($debug)
 			{
 				$this->debug = true;
-				$this->boinvoice->debug = true;
 			}
 			$this->filename_template = 'import_melding_mal';
 		}
