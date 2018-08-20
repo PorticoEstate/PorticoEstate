@@ -1915,43 +1915,55 @@
 
 
 			$loop = 0;
-			foreach ($list as $entry)
+			if($list)
 			{
-				for ($i = 0; $i < $count_uicols_name; ++$i)
+				foreach ($list as $entry)
+				{
+					for ($i = 0; $i < $count_uicols_name; ++$i)
+					{
+						if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
+						{
+							$test = $entry[$name[$i]];
+							if(ctype_digit((string)$test))
+							{
+								if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+								{
+									$header[$descr[$i]] = 'integer';
+								}
+							}
+						//	else if(is_float($test))
+						//	else if(preg_match('/([0-9]{1,})\.([0-9]{2,2})/', $test))
+							else if(filter_var($test, FILTER_VALIDATE_FLOAT))
+							{
+								if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
+								{
+									$header[$descr[$i]] = '0.00';
+								}
+							}
+							else
+							{
+								$header[$descr[$i]] = 'string';
+							}
+						}
+					}
+
+					$loop++;
+					if($loop > 4)
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				for ($i = 0; $i < $count_uicols_name; $i++)
 				{
 					if (!isset($input_type[$i]) || $input_type[$i] != 'hidden')
 					{
-						$test = $entry[$name[$i]];
-						if(ctype_digit((string)$test))
-						{
-							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
-							{
-								$header[$descr[$i]] = 'integer';
-							}
-						}
-					//	else if(is_float($test))
-					//	else if(preg_match('/([0-9]{1,})\.([0-9]{2,2})/', $test))
-						else if(filter_var($test, FILTER_VALIDATE_FLOAT))
-						{
-							if(empty($header[$descr[$i]]) ||(!empty($header[$descr[$i]]) && $header[$descr[$i]] !=='string'))
-							{
-								$header[$descr[$i]] = '0.00';
-							}
-						}
-						else
-						{
-							$header[$descr[$i]] = 'string';
-						}
+						$header[$descr[$i]] = 'string';
 					}
 				}
-
-				$loop++;
-				if($loop > 4)
-				{
-					break;
-				}
 			}
-
 
 			$m = 0;
 			$formats = array();

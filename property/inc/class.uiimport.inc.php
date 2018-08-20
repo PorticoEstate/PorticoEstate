@@ -130,10 +130,15 @@
 			phpgwapi_cache::session_set('property', 'import_settings', $_POST);
 
 			$download_template = phpgw::get_var('download_template');
+			$this->debug = phpgw::get_var('debug', 'bool');
 
 			if ($download_template)
 			{
 				$this->get_template($this->location_id);
+			}
+			else
+			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
 			}
 
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
@@ -170,7 +175,6 @@
 				}
 
 
-				$this->debug = phpgw::get_var('debug', 'bool');
 				$this->import_conversion = new import_conversion($this->location_id, $this->debug);
 
 				// Get the path for user input or use a default path
@@ -326,45 +330,43 @@ HTML;
 				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
 				<div id="messageHolder">{$import_message}</div>
-				<form action="{$action}" method="post" enctype="multipart/form-data">
+				<form action="{$action}" method="post" enctype="multipart/form-data" class="pure-form pure-form-aligned">
 					<fieldset>
-						<p>
+						<div class="pure-control-group">
 							<label for="file">Choose file:</label>
-							<input type="file" name="file" id="file" title = 'Single file'/>
+							<input type="file" name="file" id="file" title = 'Single file'class="pure-input-1-2"/>
 						</p>
-						<p>
+						<div class="pure-control-group">
 							<label for="path">Local path:</label>
-							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
-						</p>
-						<p>
+							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen' class="pure-input-1-2"/>
+						</div>
+						<div class="pure-control-group">
 							<label for="conv_type">Choose conversion:</label>
-							<select name="conv_type" id="conv_type">
-							{$conv_option}
-						</select>
-						</p>
-						<p>
+							<select name="conv_type" id="conv_type" class="pure-input-1-2">
+								{$conv_option}
+							</select>
+						</div>
+						<div class="pure-control-group">
 							<label for="table">Choose Table:</label>
-							<select name="table" id="table">
-							{$table_option}
-						</select>
-						</p>
-						<p>
+							<select name="table" id="table" class="pure-input-1-2">
+								{$table_option}
+							</select>
+						</div>
+						<div class="pure-control-group">
 							<label for="category">Choose category:</label>
-							<select name="location_id" id="category">
-							{$category_option}
-						</select>
-						</p>
+							<select name="location_id" id="category" class="pure-input-1-2">
+								{$category_option}
+							</select>
+						</div>
 
-						<p>
+						<div class="pure-control-group">
 							<label for="debug">Debug:</label>
 							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
-						</p>
-						<p>
-							<input type="submit" name="download_template" value="{$this->download_template_button_label}"  />
-						</p>
-						<p>
-							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
-						</p>
+						</div>
+						<div class="pure-controls">
+							<input type="submit" name="download_template" value="{$this->download_template_button_label}" class="pure-button pure-button-primary"/>
+							<input type="submit" name="importsubmit" value="{$this->import_button_label}" class="pure-button pure-button-primary"/>
+						</div>
 		 			</fieldset>
 				</form>
 				<br><a href='$home'>Home</a>
@@ -402,6 +404,11 @@ HTML;
 
 		protected function get_template( $location_id = 0 )
 		{
+			if($this->debug)
+			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
+			}
+
 			$_identificator = array();
 			$data = array();
 			$_fields = array();
@@ -1169,20 +1176,20 @@ HTML;
 				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
 				<div id="messageHolder">{$import_message}</div>
-				<form action="{$action}" method="post" enctype="multipart/form-data">
+				<form action="{$action}" method="post" enctype="multipart/form-data" class="pure-form pure-form-aligned">
 					<fieldset>
-						<p>
+						<div class="pure-control-group">
 							<label for="file">Choose file:</label>
 							<input type="file" name="file" id="file" title = 'Single file'/>
-						</p>
-						<p>
+						</div>
+						<div class="pure-control-group">
 							<label for="path">Local path:</label>
 							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
-						</p>
-						<p>
+						</div>
+						<div class="pure-control-group">
 							<label for="debug">Debug:</label>
 							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
-						</p>
+						</div>
 						<p>
 							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
 						</p>
