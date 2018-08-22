@@ -289,7 +289,8 @@
 		{
 			$sql = "SELECT * FROM phpgw_cust_attribute "
 				. " WHERE location_id = {$location_id}"
-				. " AND (custom = 1 OR column_name = 'category')";
+				. " AND (custom = 1 OR column_name = 'category')"
+				. " AND list IS NULL";
 
 			$this->db->query($sql, __LINE__, __FILE__);
 			$attribs = array();
@@ -754,15 +755,32 @@
 
 			$this->db->query("SELECT DISTINCT * FROM $attribute_table WHERE (list=1 OR lookup_form=1) AND $attribute_filter $user_column_filter ORDER BY attrib_sort ASC");
 			$i = count($uicols['name']);
+			
+			$attribute_info = array();
+
 			while ($this->db->next_record())
 			{
+				$attribute_info[] = array(
+					'column_name' => $this->db->f('column_name'),
+					'lookup_form' => 	$this->db->f('lookup_form'),
+					'list' =>	$this->db->f('list'),
+					'input_text' =>	$this->db->f('input_text'),
+					'statustext' =>	$this->db->f('statustext'),
+					'datatype' =>	$this->db->f('datatype'),
+					'id' =>	$this->db->f('id')
+				);
+			}
+
+			foreach ($attribute_info as $_attribute_info)
+			{
+
 				$input_type = 'text';
-				if ($this->db->f('lookup_form') == 1 && $this->db->f('list') != 1)
+				if ($_attribute_info['lookup_form'] == 1 && $_attribute_info['list'] != 1)
 				{
 					$input_type = 'hidden';
 					$exchange = true;
 				}
-				else if ($this->db->f('lookup_form') == 1)
+				else if ($_attribute_info['lookup_form'] == 1)
 				{
 					$exchange = true;
 				}
@@ -773,21 +791,21 @@
 				}
 
 				$uicols['input_type'][] = $input_type;
-				$uicols['name'][] = $this->db->f('column_name');
-				$uicols['descr'][] = $this->db->f('input_text');
-				$uicols['statustext'][] = $this->db->f('statustext');
-				$uicols['datatype'][$i] = $this->db->f('datatype');
+				$uicols['name'][] = $_attribute_info['column_name'];
+				$uicols['descr'][] = $_attribute_info['input_text'];
+				$uicols['statustext'][] = $_attribute_info['statustext'];
+				$uicols['datatype'][$i] = $_attribute_info['datatype'];
 				$uicols['formatter'][] = '';
 				$uicols['exchange'][] = $exchange;
 				$uicols['cols_return_extra'][$i] = array
 					(
-					'name' => $this->db->f('column_name'),
-					'datatype' => $this->db->f('datatype'),
-					'attrib_id' => $this->db->f('id')
+					'name' => $_attribute_info['column_name'],
+					'datatype' => $_attribute_info['datatype'],
+					'attrib_id' => $_attribute_info['id']
 				);
 
 				//TODO: move alignment to ui
-				switch ($this->db->f('datatype'))
+				switch ($_attribute_info['datatype'])
 				{
 					case 'V':
 					case 'C':
@@ -802,13 +820,13 @@
 						$uicols['align'][] = 'center';
 				}
 
-				if ($this->db->f('column_name') == 'category')
+				if ($_attribute_info['column_name'] == 'category')
 				{
 					$i++;
 					$cols.= ",fm_location{$type_id}_category.descr as category_text";
 					$uicols['input_type'][] = 'text';
 					$uicols['name'][] = 'category_text';
-					$uicols['descr'][] = $this->db->f('input_text') . ' ' . lang('name');
+					$uicols['descr'][] = $_attribute_info['input_text'] . ' ' . lang('name');
 					$uicols['statustext'][] = '';
 					$uicols['datatype'][$i] = 'V';
 					$uicols['formatter'][] = '';
