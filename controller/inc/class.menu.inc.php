@@ -94,12 +94,12 @@
 					'image' => array('property', 'location_1')
 					);
 
-				$menus['navigation']['procedure'] = array(
-					'text' => lang('Procedure'),
-					'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiprocedure.index')),
-					'image' => array('property', 'location_1'),
-				);
 			}
+			$menus['navigation']['procedure'] = array(
+				'text' => lang('Procedure'),
+				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uiprocedure.index')),
+				'image' => array('property', 'location_1'),
+			);
 			$menus['navigation']['calendar_overview'] = array(
 				'text' => lang('Calendar_overview'),
 				'url' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'controller.uicalendar.view_calendar_for_year')),
