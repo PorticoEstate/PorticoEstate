@@ -363,26 +363,9 @@
 			if (isset($prefs['property']['mainscreen_show_new_updated_tts']) && $prefs['property']['mainscreen_show_new_updated_tts'] == 'yes')
 			{
 
-				$default_status = array('O');
-
-				if(!empty($prefs['property']['tts_status']))
-				{
-					$default_status[] = $prefs['property']['tts_status'];
-				}
-
-				$tts = CreateObject('property.sotts');
-				$tickets = $tts->read(array(
-					'user_id' => $accound_id,
-					'status_id' => $default_status,
-			//		'new' => true,
-					'sort' => 'ASC',
-					'order' => 'id'
-					));
-				$total_records = $tts->total_records;
-
 				$portalbox = CreateObject('phpgwapi.listbox', array
 					(
-					'title' => isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title'] ? "{$prefs['property']['mainscreen_tts_title']} ({$total_records})" : lang('Helpdesk') . " ({$total_records})",
+					'title' => isset($prefs['property']['mainscreen_tts_title']) && $prefs['property']['mainscreen_tts_title'] ? "{$prefs['property']['mainscreen_tts_title']}" : lang('Helpdesk'),
 					'primary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 					'secondary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
 					'tertiary' => $GLOBALS['phpgw_info']['theme']['navbar_bg'],
@@ -404,56 +387,70 @@
 					$portalbox->set_controls($key, $value);
 				}
 
-				$category_name = array(); // caching
-
 				$portalbox->data = array();
-				foreach ($tickets as $ticket)
-				{
-					if($ticket['modified_date'])
-					{
-						$_date = $ticket['modified_date'];
-					}
-					else
-					{
-						$_date = $ticket['entry_date'];
-		
-					}
-					$__date = $GLOBALS['phpgw']->common->show_date($_date, $GLOBALS['phpgw_info']['user']['preferences']['common']['dateformat']);
-					if (!$ticket['subject'])
-					{
-						if (!isset($category_name[$ticket['cat_id']]))
-						{
-							$ticket['subject'] = execMethod('property.botts.get_category_name', $ticket['cat_id']);
-							$category_name[$ticket['cat_id']] = $ticket['subject'];
-						}
-						else
-						{
-							$ticket['subject'] = $category_name[$ticket['cat_id']];
-						}
-					}
-
-					$location = execMethod('property.bolocation.read_single', array('location_code' => $ticket['location_code'],
-						'extra' => array('view' => true)));
-
-					$group = '';
-					if ($ticket['group_id'])
-					{
-						$group = '[' . $GLOBALS['phpgw']->accounts->get($ticket['group_id'])->__toString() . ']';
-					}
-					$portalbox->data[] = array
-						(
-						'text' => "{$__date}::{$location['loc1_name']} :: {$ticket['subject']}{$group}",
-						'link' => $GLOBALS['phpgw']->link('/index.php', array('menuaction' => 'property.uitts.view',
-							'id' => $ticket['id']))
-					);
-				}
 
 				echo "\n" . '<!-- BEGIN ticket info -->' . "\n<div class='property_tickets' style='padding-left: 10px;'>" . $portalbox->draw() . "</div>\n" . '<!-- END ticket info -->' . "\n";
+
+
+				echo '<div id="ticket_info_container"></div>';
+
+				$lang = js_lang( 'Name', 'address', 'subject', 'id', 'assigned to', 'modified date');
+
+
+				$default_status = array('O');
+
+				if(!empty($prefs['property']['tts_status']))
+				{
+					$default_status[] = $prefs['property']['tts_status'];
+				}
+
+				$status_filter = '';
+				foreach ($default_status as $_default_status)
+				{
+					$status_filter .= "'&status_id[]={$_default_status}'";
+				}
+
+				$js = <<<JS
+					<script type="text/javascript">
+					var building_id = 1;
+					var lang = $lang;
+					var ticket_infoURL = phpGWLink('index.php', {
+						menuaction:'property.uitts.query2',
+						order:'id',
+						sort:'asc',
+						user_id:{$accound_id}
+						}, true);
+
+						ticket_infoURL += {$status_filter};
+					var rTicket_info = [{n: 'ResultSet'},{n: 'Result'}];
+		//			var rTicket_info = 'data';
+
+					var colDefsTicket_info = [
+						{key: 'id', label: lang['id'], formatter: genericLink},
+						{key: 'subject', label: lang['subject']},
+						{key: 'address', label: lang['address']},
+						{key: 'assignedto', label: lang['assigned to']},
+						{key: 'modified_date', label: lang['modified date']}
+
+						];
+
+					var paginatorTableTicket_info = new Array();
+					paginatorTableTicket_info.limit = 10;
+					createPaginatorTable('ticket_info_container', paginatorTableTicket_info);
+
+					createTable('ticket_info_container', ticket_infoURL, colDefsTicket_info, rTicket_info, '', paginatorTableTicket_info);
+
+					</script>
+
+JS;
+
+				echo $js;
 
 				unset($tts);
 				unset($portalbox);
 				unset($category_name);
 				unset($default_status);
+				unset($_default_status);
 			}
 
 

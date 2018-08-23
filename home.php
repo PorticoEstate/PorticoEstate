@@ -65,6 +65,7 @@
 	{
 		phpgw::import_class('phpgwapi.jquery');
 		phpgwapi_jquery::load_widget('core');
+		$GLOBALS['phpgw']->js->validate_file('jquery', 'common', 'phpgwapi');
 		$GLOBALS['phpgw']->common->phpgw_header();
 		echo parse_navbar();
 	}
