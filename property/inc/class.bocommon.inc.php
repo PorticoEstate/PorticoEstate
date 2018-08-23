@@ -1295,6 +1295,7 @@
 				$cols_return[] = 'loc' . $location_types[$i]['id'];
 			}
 
+			$lang_name = lang('name');
 			$location_relation_data = array();
 			$custom = createObject('property.custom_fields');
 			for ($i = 1; $i < ($type_id + 1); $i++)
@@ -1305,7 +1306,7 @@
 				$cols_return_lookup[] = "loc{$i}_name";
 				$uicols['input_type'][] = in_array($i, $list_location_level) ? 'text' : 'hidden';
 				$uicols['name'][] = "loc{$i}_name";
-				$uicols['descr'][] = $location_types[($i - 1)]['name'];
+				$uicols['descr'][] = "{$location_types[($i - 1)]['name']} {$lang_name}";
 				$uicols['statustext'][] = $location_types[$i - 1]['descr'];
 				$uicols['exchange'][] = $lookup;
 				$uicols['align'][] = '';
