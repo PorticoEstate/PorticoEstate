@@ -228,6 +228,12 @@
 				'name' => lang('external project'),
 				'sortable' => true
 			);
+			$columns['category'] = array
+				(
+				'id' => 'category',
+				'name' => lang('category'),
+				'sortable' => true
+			);
 			return $columns;
 		}
 

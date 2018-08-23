@@ -250,6 +250,8 @@
 				$cols_return[] = 'approved';
 				$cols.= ",fm_workorder.account_id as b_account_id";
 				$cols_return[] = 'b_account_id';
+				$cols.= ",phpgw_categories.cat_name AS category";
+				$cols_return[] = 'category';
 
 				/*
 				  $uicols['input_type'][]		= 'text';
@@ -308,6 +310,8 @@
 				$paranthesis .='(';
 
 				$joinmethod .= " {$this->join} fm_workorder_status ON (fm_workorder.status = fm_workorder_status.id))";
+				$paranthesis .='(';
+				$joinmethod .= " {$this->join} phpgw_categories ON (fm_workorder.category = phpgw_categories.cat_id))";
 				$paranthesis .='(';
 
 				$cols .= ',fm_workorder_status.closed';
@@ -543,6 +547,10 @@
 					case 'org_name':
 						$order_field = ", fm_vendor.org_name";
 						$ordermethod = " ORDER BY fm_vendor.org_name {$sort}, fm_workorder.id";
+						break;
+					case 'category':
+						$order_field = ", phpgw_categories.cat_name";
+						$ordermethod = " ORDER BY phpgw_categories.cat_name {$sort}, fm_workorder.id";
 						break;
 					default:
 						$order_field = ", {$order}";
@@ -1002,7 +1010,6 @@
 					'p_cat_id' => $this->db->f('p_cat_id'),
 					'contact_phone' => $this->db->f('contact_phone'),
 					'tenant_id' => $this->db->f('tenant_id'),
-					'cat_id' => $this->db->f('category'),
 					'billable_hours' => $this->db->f('billable_hours'),
 					'approved' => $this->db->f('approved'),
 					'mail_recipients' => explode(',', trim($this->db->f('mail_recipients'), ',')),
