@@ -61,7 +61,8 @@
 			'check_purchase_right'=> true,
 			'show_attachment'	=> true,
 			'handle_multi_upload_file' => true,
-			'build_multi_upload_file' => true
+			'build_multi_upload_file' => true,
+			'query2'	=> true
 		);
 
 		/**
@@ -128,6 +129,7 @@
 		{
 			$search = phpgw::get_var('search');
 			$order = phpgw::get_var('order');
+			$sort = phpgw::get_var('sort');
 			$draw = phpgw::get_var('draw', 'int');
 			$columns = phpgw::get_var('columns');
 			$export = phpgw::get_var('export', 'bool');
@@ -136,9 +138,9 @@
 				'start' => phpgw::get_var('start', 'int', 'REQUEST', 0),
 				'results' => phpgw::get_var('length', 'int', 'REQUEST', 0),
 				'query' => $search['value'],
-				'order' => $columns[$order[0]['column']]['data'],
-				'sort' => $order[0]['dir'],
-				'dir' => $order[0]['dir'],
+				'order' => is_array($order) ? $columns[$order[0]['column']]['data'] : $order,
+				'sort' => is_array($order) ? $order[0]['dir'] : $sort,
+				'dir' => is_array($order) ? $order[0]['dir'] : $sort,
 				'cat_id' => phpgw::get_var('cat_id', 'int', 'REQUEST', 0),
 				'allrows' => phpgw::get_var('length', 'int') == -1 || $export,
 				'status_id' => $this->bo->status_id,
@@ -214,6 +216,29 @@
 			array_walk($result_data['results'], array($this, '_add_links'), $link_data);
 //			_debug_array($result_data);
 			return $this->jquery_results($result_data);
+		}
+
+
+		function query2(  )
+		{
+			$num_rows = !empty($GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs']) ? (int)$GLOBALS['phpgw_info']['user']['preferences']['common']['maxmatchs'] : 15;
+			$_REQUEST['start'] = phpgw::get_var('startIndex');
+			$_REQUEST['results'] = $num_rows;
+
+			$values = $this->query();
+
+			return array(
+				'ResultSet' => array(
+					"totalResultsAvailable" => $values['recordsTotal'],
+					"totalRecords" => $values['recordsTotal'],
+					"Result" => $values['data'],
+					'recordsReturned' => count( $values['data']),
+					'pageSize' => $num_rows,
+					'startIndex' => $this->start,
+					'sortKey' => $this->order,
+					'sortDir' => $this->sort,
+				)
+			);
 		}
 
 		function _print()
