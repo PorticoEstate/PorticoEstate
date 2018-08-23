@@ -115,7 +115,7 @@
 			}
 			$sosubstitute = CreateObject('property.sosubstitute');
 			$users_for_substitute = $sosubstitute->get_users_for_substitute($user_id);
-			if($user_id)
+			if((int)$user_id)
 			{
 				$users_for_substitute[] = $user_id;
 				$this->user_id = $users_for_substitute;
