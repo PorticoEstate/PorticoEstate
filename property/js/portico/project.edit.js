@@ -248,6 +248,14 @@ $(document).ready(function ()
 		});
 	}
 
+	$("#datatable-container_2 tr").on("click", function (e)
+	{
+		var voucher_id = $('td', this).eq(1).text();
+		var oArgs = {menuaction: 'property.uiproject.get_attachment', voucher_id: voucher_id};
+		var requestUrl = phpGWLink('index.php', oArgs, true);
+		JqueryPortico.updateinlineTableHelper('datatable-container_8', requestUrl);
+	});
+
 });
 
 function addSubEntry()
