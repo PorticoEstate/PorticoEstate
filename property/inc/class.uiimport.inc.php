@@ -34,9 +34,11 @@
 		protected $download_template_button_label;
 		protected $defalt_values;
 		private $valid_tables = array();
+		private $start_time;
 
 		public function __construct()
 		{
+			$this->start_time = time();
 			if (!$GLOBALS['phpgw']->acl->check('run', phpgwapi_acl::READ, 'admin') && !$GLOBALS['phpgw']->acl->check('admin', phpgwapi_acl::ADD, 'property'))
 			{
 				$GLOBALS['phpgw_info']['flags']['xslt_app'] = true;
@@ -128,10 +130,15 @@
 			phpgwapi_cache::session_set('property', 'import_settings', $_POST);
 
 			$download_template = phpgw::get_var('download_template');
+			$this->debug = phpgw::get_var('debug', 'bool');
 
 			if ($download_template)
 			{
 				$this->get_template($this->location_id);
+			}
+			else
+			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
 			}
 
 			// If the parameter 'importsubmit' exist (submit button in import form), set path
@@ -144,8 +151,7 @@
 				}
 
 
-				$start_time = time(); // Start time of import
-				$start = date("G:i:s", $start_time);
+				$start = date("G:i:s", $this->start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 
@@ -169,7 +175,6 @@
 				}
 
 
-				$this->debug = phpgw::get_var('debug', 'bool');
 				$this->import_conversion = new import_conversion($this->location_id, $this->debug);
 
 				// Get the path for user input or use a default path
@@ -229,7 +234,7 @@
 
 				echo "</ul>";
 				$end_time = time();
-				$difference = ($end_time - $start_time) / 60;
+				$difference = ($end_time - $this->start_time) / 60;
 				$end = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 
@@ -325,45 +330,43 @@ HTML;
 				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
 				<div id="messageHolder">{$import_message}</div>
-				<form action="{$action}" method="post" enctype="multipart/form-data">
+				<form action="{$action}" method="post" enctype="multipart/form-data" class="pure-form pure-form-aligned">
 					<fieldset>
-						<p>
+						<div class="pure-control-group">
 							<label for="file">Choose file:</label>
-							<input type="file" name="file" id="file" title = 'Single file'/>
+							<input type="file" name="file" id="file" title = 'Single file'class="pure-input-1-2"/>
 						</p>
-						<p>
+						<div class="pure-control-group">
 							<label for="path">Local path:</label>
-							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
-						</p>
-						<p>
+							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen' class="pure-input-1-2"/>
+						</div>
+						<div class="pure-control-group">
 							<label for="conv_type">Choose conversion:</label>
-							<select name="conv_type" id="conv_type">
-							{$conv_option}
-						</select>
-						</p>
-						<p>
+							<select name="conv_type" id="conv_type" class="pure-input-1-2">
+								{$conv_option}
+							</select>
+						</div>
+						<div class="pure-control-group">
 							<label for="table">Choose Table:</label>
-							<select name="table" id="table">
-							{$table_option}
-						</select>
-						</p>
-						<p>
+							<select name="table" id="table" class="pure-input-1-2">
+								{$table_option}
+							</select>
+						</div>
+						<div class="pure-control-group">
 							<label for="category">Choose category:</label>
-							<select name="location_id" id="category">
-							{$category_option}
-						</select>
-						</p>
+							<select name="location_id" id="category" class="pure-input-1-2">
+								{$category_option}
+							</select>
+						</div>
 
-						<p>
+						<div class="pure-control-group">
 							<label for="debug">Debug:</label>
 							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
-						</p>
-						<p>
-							<input type="submit" name="download_template" value="{$this->download_template_button_label}"  />
-						</p>
-						<p>
-							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
-						</p>
+						</div>
+						<div class="pure-controls">
+							<input type="submit" name="download_template" value="{$this->download_template_button_label}" class="pure-button pure-button-primary"/>
+							<input type="submit" name="importsubmit" value="{$this->import_button_label}" class="pure-button pure-button-primary"/>
+						</div>
 		 			</fieldset>
 				</form>
 				<br><a href='$home'>Home</a>
@@ -401,6 +404,11 @@ HTML;
 
 		protected function get_template( $location_id = 0 )
 		{
+			if($this->debug)
+			{
+				$GLOBALS['phpgw']->common->phpgw_header(true);
+			}
+
 			$_identificator = array();
 			$data = array();
 			$_fields = array();
@@ -657,8 +665,6 @@ HTML;
 			}
 
 
-			$start_time = time();
-
 			$datalines = $this->csvdata;
 
 			$ok = true;
@@ -678,7 +684,7 @@ HTML;
 
 			if ($ok)
 			{
-				$this->messages[] = "Imported data. (" . (time() - $start_time) . " seconds)";
+				$this->messages[] = "Imported data. (" . (time() - $this->start_time) . " seconds)";
 				if ($this->debug)
 				{
 					$this->db->transaction_abort();
@@ -692,10 +698,14 @@ HTML;
 			}
 			else
 			{
-				$this->errors[] = "Import of data failed. (" . (time() - $start_time) . " seconds)";
+				$this->errors[] = "Import of data failed. (" . (time() - $this->start_time) . " seconds)";
 				$this->db->transaction_abort();
 				return false;
 			}
+
+			$this->messages = array_merge($this->messages, $this->import_conversion->messages);
+			$this->warnings = array_merge($this->warnings, $this->import_conversion->warnings);
+			$this->errors = array_merge($this->errors, $this->import_conversion->errors);
 		}
 		
 		private function _xml2array ( $xmlObject, $out = array () )
@@ -739,7 +749,7 @@ HTML;
 
 			fclose($handle);
 
-			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "Read '{$path}' file in " . (time() - $this->start_time) . " seconds";
 			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
@@ -791,7 +801,7 @@ HTML;
 				$result[] = $_result;
 			}
 
-			$this->messages[] = "Read '{$path}' file in " . (time() - $start_time) . " seconds";
+			$this->messages[] = "Read '{$path}' file in " . (time() - $this->start_time) . " seconds";
 			$this->messages[] = "'{$path}' contained " . count($result) . " lines";
 
 			return $result;
@@ -948,9 +958,7 @@ HTML;
 					$GLOBALS['phpgw']->redirect_link('/index.php', array('menuaction' => 'property.uiimport.components'));
 				}
 
-
-				$start_time = time(); // Start time of import
-				$start = date("G:i:s", $start_time);
+				$start = date("G:i:s", $this->start_time);
 				echo "<h3>Import started at: {$start}</h3>";
 				echo "<ul>";
 
@@ -1115,7 +1123,7 @@ HTML;
 				
 				echo "</ul>";
 				$end_time = time();
-				$difference = ($end_time - $start_time) / 60;
+				$difference = ($end_time - $this->start_time) / 60;
 				$end = date("G:i:s", $end_time);
 				echo "<h3>Import ended at: {$end}. Import lasted {$difference} minutes.";
 
@@ -1168,20 +1176,20 @@ HTML;
 				$html = <<<HTML
 				<h1><img src="rental/templates/base/images/32x32/actions/document-save.png" /> Importer ( MsExcel / CSV )</h1>
 				<div id="messageHolder">{$import_message}</div>
-				<form action="{$action}" method="post" enctype="multipart/form-data">
+				<form action="{$action}" method="post" enctype="multipart/form-data" class="pure-form pure-form-aligned">
 					<fieldset>
-						<p>
+						<div class="pure-control-group">
 							<label for="file">Choose file:</label>
 							<input type="file" name="file" id="file" title = 'Single file'/>
-						</p>
-						<p>
+						</div>
+						<div class="pure-control-group">
 							<label for="path">Local path:</label>
 							<input type="text" name="path" id="path" value = '{$import_settings['path']}' title = 'Alle filer i katalogen'/>
-						</p>
-						<p>
+						</div>
+						<div class="pure-control-group">
 							<label for="debug">Debug:</label>
 							<input type="checkbox" name="debug" id="debug" {$debug_checked} value ='1' />
-						</p>
+						</div>
 						<p>
 							<input type="submit" name="importsubmit" value="{$this->import_button_label}"  />
 						</p>

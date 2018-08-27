@@ -109,12 +109,15 @@
 
 		function set_internal($data='')
 		{
-			if($data=='' && !count($this->data))
+			if(empty($data) && !count($this->data))
 			{
 				$data = '&nbsp;';
 			}
-			$this->p->set_var('output',$data);
-			$this->p->parse('row','portal_row',true);
+			if(!empty($data))
+			{
+				$this->p->set_var('output',$data);
+				$this->p->parse('row','portal_row',true);
+			}
 		}
 
 		function draw_box()

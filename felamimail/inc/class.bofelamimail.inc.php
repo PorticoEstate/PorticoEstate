@@ -66,9 +66,9 @@
 			//$this->foldername	= $this->sessionData['mailbox'];
 			$this->accountid	= $GLOBALS['phpgw_info']['user']['account_id'];
 			
-			$this->bopreferences	=& CreateObject('felamimail.bopreferences');
-			$this->sofelamimail	=& CreateObject('felamimail.sofelamimail');
-			$this->botranslation	=& CreateObject('felamimail.translation');
+			$this->bopreferences	= CreateObject('felamimail.bopreferences');
+			$this->sofelamimail	= CreateObject('felamimail.sofelamimail');
+			$this->botranslation	= CreateObject('felamimail.translation');
 
 			$this->mailPreferences	= $this->bopreferences->getPreferences();
 
@@ -1091,7 +1091,7 @@
 		
 		function getEMailProfile()
 		{
-			$config =& CreateObject('phpgwapi.config','felamimail');
+			$config = CreateObject('phpgwapi.config','felamimail');
 			$config->read();
 			$felamimailConfig = $config->config_data;
 			
@@ -2265,7 +2265,7 @@
 		
 		function setEMailProfile($_profileID)
 		{
-			$config =& CreateObject('phpgwapi.config','felamimail');
+			$config = CreateObject('phpgwapi.config','felamimail');
 			$config->read();
 			$config->value('profileID',$_profileID);
 			$config->save_repository();

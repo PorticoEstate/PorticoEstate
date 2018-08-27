@@ -78,7 +78,8 @@
 			'build_multi_upload_file' => true,
 			'get_files'				=> true,
 			'view_image'			=> true,
-			'get_other_projects'	=> true
+			'get_other_projects'	=> true,
+			'get_attachment'		=> true
 		);
 
 		function __construct()
@@ -2128,7 +2129,8 @@ JS;
 				'ColumnDefs' => $invoice_def,
 				'config' => array(
 					array('disableFilter' => true),
-					array('disablePagination' => true)
+					array('disablePagination' => true),
+					array('singleSelect' => true)
 				)
 			);
 
@@ -2308,6 +2310,34 @@ JS;
 					array('disableFilter' => true),
 		//			array('disablePagination' => true),
 					array('order' => json_encode(array(1, 'desc')))
+				)
+			);
+
+			$attachmen_def = array(
+				array(
+					'key' => 'voucher_id',
+					'label' => 'key',
+					'hidden' => false
+					),
+				array(
+					'key' => 'file_name',
+					'label' => lang('attachments'),
+					'hidden' => false,
+					'sortable' => true,
+					)
+			);
+
+			$datatable_def[] = array(
+				'container' => 'datatable-container_8',
+//				'requestUrl' => "''",
+				'requestUrl' => json_encode(self::link(array(
+					'menuaction' => 'property.uiproject.get_attachment',
+					'phpgw_return_as' => 'json'))),
+				'data' => json_encode(array()),
+				'ColumnDefs' => $attachmen_def,
+				'config' => array(
+					array('disableFilter' => true),
+					array('disablePagination' => true)
 				)
 			);
 
@@ -3073,4 +3103,57 @@ JS;
 
 			return phpgwapi_jquery::tabview_generate($tabs, $active_tab);
 		}
+
+		function get_attachment()
+		{
+			$voucher_id = phpgw::get_var('voucher_id');
+
+			$attachmen_list = array();
+			if ($voucher_id)
+			{
+				$invoice_config = CreateObject('admin.soconfig', $GLOBALS['phpgw']->locations->get_id('property', '.invoice'));
+				$directory_attachment = rtrim($invoice_config->config_data['import']['local_path'], '/') . "/attachment/{$voucher_id}/";
+				try
+				{
+					$dir = new DirectoryIterator($directory_attachment);
+					if (is_object($dir))
+					{
+						foreach ($dir as $file)
+						{
+							if ($file->isDot() || !$file->isFile() || !$file->isReadable())
+							{
+								continue;
+							}
+
+							$url = self::link(array(
+								'menuaction'=> 'property.uitts.show_attachment',
+								'file_name' => urlencode((string)$file),
+								'key'=> $voucher_id
+								));
+
+							$attachmen_list[] = array(
+								'voucher_id'	=> $voucher_id,
+								'file_name'		=> "<a href='{$url}' target='_blank'>" . (string)$file . "</a>"
+							);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+
+				}
+			}
+
+			$total_records = count($attachmen_list);
+
+			return array
+				(
+				'data' => $attachmen_list,
+				'draw' => phpgw::get_var('draw', 'int'),
+				'recordsTotal' => $total_records,
+				'recordsFiltered' => $total_records
+			);
+
+		}
+
 	}

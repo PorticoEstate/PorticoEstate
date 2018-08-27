@@ -1037,6 +1037,7 @@
 		function add_ticket( $data )
 		{
 
+			$cancel_attachment = empty($data['cancel_attachment']) ? false : true;
 			$boloc = CreateObject('property.bolocation');
 			$location_details = $boloc->read_single($data['location_code'], array('noattrib' => true));
 
@@ -1051,6 +1052,18 @@
 
 			$assignedto = execMethod('property.boresponsible.get_responsible', array('location' => $location,
 				'cat_id' => $data['cat_id']));
+
+			if($assignedto)
+			{
+				$group_or_user = get_class($GLOBALS['phpgw']->accounts->get($assignedto));
+			}
+
+			if($group_or_user == "phpgwapi_group")
+			{
+				$data['group_id'] = !empty($data['group_id']) ? $data['group_id'] : $assignedto;		
+				$assignedto = 0;
+			}
+
 
 			if (!$assignedto)
 			{
@@ -1093,7 +1106,7 @@
 			$file_input_name = isset($data['file_input_name']) && $data['file_input_name'] ? $data['file_input_name'] : 'file';
 
 			$file_name = @str_replace(' ', '_', $_FILES[$file_input_name]['name']);
-			if ($file_name && $result['id'])
+			if (!$cancel_attachment && $file_name && $result['id'])
 			{
 				$bofiles = CreateObject('property.bofiles');
 				$to_file = "{$bofiles->fakebase}/fmticket/{$result['id']}/{$file_name}";
@@ -1127,7 +1140,7 @@
 		{
 			if ((!isset($data['location_code']) || !$data['location_code']) && isset($data['location']) && is_array($data['location']))
 			{
-                                foreach($data['location'] as $value)
+				foreach($data['location'] as $value)
 				{
 					if ($value)
 					{

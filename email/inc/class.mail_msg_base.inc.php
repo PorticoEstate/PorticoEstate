@@ -1415,7 +1415,7 @@
 				$GLOBALS['phpgw_dcom_'.$acctnum] = new mail_dcom_holder;
 				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom = CreateObject("email.mail_dcom", $this_server_type);
 				// initialize the dcom class variables
-				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->mail_dcom_base();
+				//$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->mail_dcom_base();
 				
 				// ----  there are 2 settings from this mail_msg object we need to pass down to the child dcom object:  ----
 				// (1)  Do We Use UTF7 encoding/decoding of folder names
@@ -1728,7 +1728,7 @@
 				if ($this->debug_logins > 1) { $this->dbug->out('mail_msg: ensure_stream_and_folder: creating new dcom_holder at $GLOBALS["phpgw_dcom_'.$acctnum.'] = new mail_dcom_holder'.'<br />'); }
 				$GLOBALS['phpgw_dcom_'.$acctnum] = new mail_dcom_holder;
 				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom = CreateObject("email.mail_dcom", $this_server_type);
-				$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->mail_dcom_base();
+		//		$GLOBALS['phpgw_dcom_'.$acctnum]->dcom->mail_dcom_base();
 
 				if (($this->get_isset_pref('enable_utf7', $acctnum))
 						&& ($this->get_pref_value('enable_utf7', $acctnum)))

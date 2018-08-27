@@ -135,7 +135,7 @@
 					 print "<script type=\"text/javascript\">alert('".lang("Error: Could not save Message as Draft")."');</script>";
 					return;
 				} 
-				$uidisplay   =& CreateObject('felamimail.uidisplay');
+				$uidisplay   = CreateObject('felamimail.uidisplay');
 				$uidisplay->printMessage($messageUid, $formData['printit']);
 				//$GLOBALS['phpgw']->link('/index.php',array('menuaction' => 'felamimail.uidisplay.printMessage','uid'=>$messageUid));
 				return;
@@ -417,14 +417,14 @@
 
 			if(!@is_object($GLOBALS['phpgw']->js))
 			{
-				$GLOBALS['phpgw']->js =& CreateObject('phpgwapi.javascript');
+				$GLOBALS['phpgw']->js = CreateObject('phpgwapi.javascript');
 			}
 			$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXCommon');
 			$GLOBALS['phpgw']->js->validate_file('dhtmlxtree','js/dhtmlXTree');
 			$GLOBALS['phpgw']->js->validate_file('jscode','composeMessage','felamimail');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
-			#$uiwidgets		=& CreateObject('felamimail.uiwidgets');
+			#$uiwidgets		= CreateObject('felamimail.uiwidgets');
 
 			$this->t->set_file(array("composeForm" => "composeForm.tpl"));
 			$this->t->set_block('composeForm','fileSelector','fileSelector');
@@ -462,7 +462,7 @@
 
 		function getAttachment()
 		{
-			$bocompose  =& CreateObject('felamimail.bocompose', $_GET['_composeID']);
+			$bocompose  = CreateObject('felamimail.bocompose', $_GET['_composeID']);
 			$attachment =  $bocompose->sessionData['attachments'][$_GET['attID']] ;
 			header ("Content-Type: ".$attachment['type']."; name=\"". $this->bofelamimail->decode_header($attachment['name']) ."\"");
 			header ("Content-Disposition: inline; filename=\"". $this->bofelamimail->decode_header($attachment['name']) ."\"");
@@ -484,8 +484,8 @@
 			$GLOBALS['phpgw']->js->validate_file('jscode','composeMessage','felamimail');
 			$GLOBALS['phpgw']->common->phpgw_header();
 
-			$bofelamimail		=& CreateObject('felamimail.bofelamimail',$this->displayCharset);
-			$uiwidgets		=& CreateObject('felamimail.uiwidgets');
+			$bofelamimail		= CreateObject('felamimail.bofelamimail',$this->displayCharset);
+			$uiwidgets		= CreateObject('felamimail.uiwidgets');
 			$connectionStatus	= $bofelamimail->openConnection();
 
 			$folderObjects = $bofelamimail->getFolderObjects(false);

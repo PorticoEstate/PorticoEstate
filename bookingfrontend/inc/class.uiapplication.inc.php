@@ -10,7 +10,8 @@
             'confirm' => true,
 			'edit' => true,
 			'show' => true,
-			'get_activity_data' => true
+			'get_activity_data' => true,
+			'get_partials' => true,
 		);
 
 		function get_activity_data()
@@ -156,4 +157,5 @@
 				)
 			);
 		}
+
 	}
