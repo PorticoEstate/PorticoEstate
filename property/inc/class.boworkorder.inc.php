@@ -228,6 +228,12 @@
 				'name' => lang('external project'),
 				'sortable' => true
 			);
+			$columns['category'] = array
+				(
+				'id' => 'category',
+				'name' => lang('category'),
+				'sortable' => true
+			);
 			return $columns;
 		}
 
@@ -624,6 +630,7 @@
 			$events = execMethod('property.soevent.read_at_location', $event_criteria);
 			$workorder['event_id'] = $events ? $events[0]['id'] : '';
 			$workorder['origin_data'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'origin');
+			$workorder['origin_data'] = array_merge($workorder['origin_data'], $this->interlink->get_relation('property', '.project', $workorder['project_id'], 'origin'));
 			$workorder['target'] = $this->interlink->get_relation('property', '.project.workorder', $workorder_id, 'target');
 
 			return $workorder;

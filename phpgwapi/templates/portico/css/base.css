@@ -545,3 +545,10 @@ SPAN.expander {
     border-spacing:1.2em;
     text-align: left;
 }
+/* TABLE PAGINATOR */
+.tablePaginator {margin-bottom: 10px;}
+.tablePaginator li {display: inline;}
+.tablePaginator li a {text-decoration: underline;}
+.tablePaginator li a.disabled {cursor: not-allowed;text-decoration: none;}
+.tablePaginator li a.enabled {cursor: pointer;}
+.tablePaginatorText {margin: 0 15px;}

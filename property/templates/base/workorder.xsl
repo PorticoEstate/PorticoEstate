@@ -270,6 +270,26 @@
 						</label>
 						<xsl:value-of select="value_project_name"/>
 					</div>
+					<div class="pure-control-group">
+						<label for="name">
+							<xsl:value-of select="php:function('lang', 'related')"/>
+						</label>
+						<div class="pure-custom pure-input-1-2">
+							<xsl:for-each select="datatable_def">
+								<xsl:if test="container = 'datatable-container_7'">
+									<xsl:call-template name="table_setup">
+										<xsl:with-param name="container" select ='container'/>
+										<xsl:with-param name="requestUrl" select ='requestUrl' />
+										<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
+										<xsl:with-param name="tabletools" select ='tabletools' />
+										<xsl:with-param name="data" select ='data' />
+										<xsl:with-param name="config" select ='config' />
+									</xsl:call-template>
+								</xsl:if>
+							</xsl:for-each>
+						</div>
+					</div>
+
 					<xsl:choose>
 						<xsl:when test="value_workorder_id!='' and mode='edit'">
 							<div class="pure-control-group">
@@ -381,25 +401,6 @@
 									</div>
 								</xsl:when>
 							</xsl:choose>
-							<div class="pure-control-group">
-								<label for="name">
-									<xsl:value-of select="php:function('lang', 'related')"/>
-								</label>
-								<div class="pure-custom pure-input-1-2">
-									<xsl:for-each select="datatable_def">
-										<xsl:if test="container = 'datatable-container_7'">
-											<xsl:call-template name="table_setup">
-												<xsl:with-param name="container" select ='container'/>
-												<xsl:with-param name="requestUrl" select ='requestUrl' />
-												<xsl:with-param name="ColumnDefs" select ='ColumnDefs' />
-												<xsl:with-param name="tabletools" select ='tabletools' />
-												<xsl:with-param name="data" select ='data' />
-												<xsl:with-param name="config" select ='config' />
-											</xsl:call-template>
-										</xsl:if>
-									</xsl:for-each>
-								</div>
-							</div>
 						</xsl:when>
 						<xsl:otherwise>
 							<xsl:for-each select="value_origin">
