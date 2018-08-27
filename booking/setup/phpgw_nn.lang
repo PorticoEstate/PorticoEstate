@@ -734,6 +734,7 @@ Front page filtering	booking	nn	Filtrering på forside
 Main activity	booking	nn	Hovedaktivitet
 New facility	booking	nn	Ny fasilitet
 New resource category	booking	nn	Ny ressurskategori
+No session ID found, application aborted	booking	nn	Ingen sesjons-ID funnet, lagring av søknaden er avbrutt
 Not a top level activity	booking	nn	Det er valgt aktiviteter som ikke er på toppnivå
 One filter box per line	booking	nn	Bare én filtreringsboks per linje
 Opening hours	booking	nn	Åpningstider
@@ -743,3 +744,4 @@ Resource category	booking	nn	Ressurskategori
 Send as sms	booking	nn	Send som sms
 Send sms to contact	booking	nn	Send sms til registrerte kontaktpersoner
 Text and activity IDs for each filter box	booking	nn	Tekst og aktivitet-IDer for hver filtreringsboks (eks.: Tekst:1,2)
+Your application with event details has been added. You can add another application, or finalise the application with contact details.	booking	nn	Din søknad med informasjon om aktiviteten/arrangementet er lagt til. Du kan legge til en ny søknad, eller fullføre søknaden ved å legge til kontaktinformasjon.
